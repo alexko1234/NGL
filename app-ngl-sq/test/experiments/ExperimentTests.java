@@ -1,7 +1,11 @@
 package experiments;
 
 import static org.fest.assertions.Assertions.assertThat;
+import static play.test.Helpers.callAction;
+import static play.test.Helpers.fakeRequest;
+import static play.test.Helpers.status;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,12 +18,17 @@ import models.laboratory.common.instance.property.PropertyImgValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
+import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.ManytoOneContainer;
 import models.laboratory.instrument.instance.InstrumentUsed;
+import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
+import models.utils.instance.ExperimentHelper;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
@@ -27,79 +36,97 @@ import org.mongojack.DBUpdate;
 import play.Logger;
 import play.Logger.ALogger;
 import play.data.validation.ValidationError;
+import play.libs.Json;
+import play.mvc.Result;
 import utils.AbstractTests;
 import utils.Constants;
+import utils.InitDataHelper;
 import validation.ContextValidation;
 import validation.experiment.instance.ExperimentValidationHelper;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import controllers.experiments.api.Experiments;
 import fr.cea.ig.MongoDBDAO;
 
 public class ExperimentTests extends AbstractTests{
-	
-	protected static ALogger logger=Logger.of("ExperimentTest");
 
+	protected static ALogger logger=Logger.of("ExperimentTest");
+	final String CONTAINER_CODE="ADI_RD1";
 	
+	@BeforeClass
+	public static void initData() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		InitDataHelper.initForProcessesTest();
+	}
+
+	@AfterClass
+	public static void resetData(){
+		InitDataHelper.endTest();
+	}
+
 	@Test
 	public void validatePropertiesFileImgErr() {
 		Experiment exp = ExperimentTestHelper.getFakeExperiment();
-		
+
 		PropertyImgValue pImgValue = new  PropertyImgValue();
 		byte[] data = new byte[] { (byte)0xe0, 0x4f, (byte)0xd0,
-			    0x20, (byte)0xea, 0x3a, 0x69, 0x10, (byte)0xa2, (byte)0xd8, 0x08, 0x00, 0x2b,
-			    0x30, 0x30, (byte)0x9d };
+				0x20, (byte)0xea, 0x3a, 0x69, 0x10, (byte)0xa2, (byte)0xd8, 0x08, 0x00, 0x2b,
+				0x30, 0x30, (byte)0x9d };
 		pImgValue.value = data;
 		pImgValue.fullname = "phylogeneticTree2.jpg";
 		pImgValue.extension = "jpg";
 		pImgValue.width = 250;
 		pImgValue.height = 250;
-		
+
 		ContextValidation cv = new ContextValidation(Constants.TEST_USER); 
 		cv.putObject("stateCode", "IP");
-		
+
 		PropertyDefinition pDef = getPropertyImgDefinition();
-		
+
 		Map<String, PropertyDefinition> hm= new HashMap<String, PropertyDefinition>();
 		hm.put("restrictionEnzyme", pDef);
-		
+
 		cv.putObject("propertyDefinitions", hm.values());
-		
+
 		pImgValue.validate(cv);
-		
+
 		exp.instrumentProperties.put("enzymeChooser", pImgValue);
-		
+
 		showErrors(cv);
-		
+
 		MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
-		
+
 		Experiment expBase = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, "TESTYANNEXP");
-		
+
 		assertThat(expBase.instrumentProperties.get("enzymeChooser").value);
-		
+
 		ExperimentValidationHelper.validateInstrumentUsed(exp.instrument,exp.instrumentProperties,cv);
-		
+
 		pImgValue.fullname = "test";
-		
+
 		expBase.instrumentProperties.clear();
 		expBase.instrumentProperties.put("enzymeChooser", pImgValue);
-		
+
 		MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, 
 				DBQuery.is("code", expBase.code),
 				DBUpdate.set("instrumentProperties",expBase.instrumentProperties));
-		
+
 		Experiment expBase2 = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, ExperimentTestHelper.EXP_CODE);
-		
+
 		MongoDBDAO.deleteByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, "TESTYANNEXP");
-		
+
 		assertThat(expBase2.instrumentProperties.get("enzymeChooser").value);
-		
+
 	}
-	
+
 	@Test
 	public void validateFlowCellCalculations() {
 		Experiment exp = ExperimentTestHelper.getFakeExperiment();
 		exp.state.code = "IP";
 		ManytoOneContainer atomicTransfert = ExperimentTestHelper.getManytoOneContainer();
-		
+
 		ContainerUsed containerIn1 = ExperimentTestHelper.getContainerUsed("containerUsedIn1");
 		containerIn1.percentage = 50.0;
 		containerIn1.concentration = new PropertySingleValue(new Integer(10)); 
@@ -110,25 +137,25 @@ public class ExperimentTests extends AbstractTests{
 		containerIn1.experimentProperties.put("phixConcentration", new PropertySingleValue(new Double(0.020)));
 		containerIn1.experimentProperties.put("finalConcentration2", new PropertySingleValue(new Double(0.014)));
 		containerIn1.experimentProperties.put("finalVolume2", new PropertySingleValue(new Double(1000)));
-		
+
 		ContainerUsed containerOut1 = ExperimentTestHelper.getContainerUsed("containerUsedOut1");
 		containerOut1.experimentProperties.put("phixPercent", new PropertySingleValue(new Double(1)));
 		containerOut1.experimentProperties.put("finalVolume", new PropertySingleValue(new Double(120)));
-		
+
 		atomicTransfert.inputContainerUseds.add(containerIn1);
 		atomicTransfert.outputContainerUsed = containerOut1;
-		
+
 		exp.atomicTransfertMethods.put(0, atomicTransfert);
-		
+
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		contextValidation.setUpdateMode();
 		contextValidation.putObject("stateCode", exp.state.code);
 		contextValidation.putObject("typeCode", exp.typeCode);
-		
+
 		ExperimentValidationHelper.validateAtomicTransfertMethodes(exp.atomicTransfertMethods, contextValidation);
-		
-		Experiments.doCalculations(exp);
-		
+
+		ExperimentHelper.doCalculations(exp,Experiments.calculationsRules);
+
 		ManytoOneContainer atomicTransfertResult = (ManytoOneContainer)exp.atomicTransfertMethods.get(0);		
 		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("requiredVolume1")).isNotNull();
 		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("requiredVolume1").value).isInstanceOf(Double.class);
@@ -151,9 +178,9 @@ public class ExperimentTests extends AbstractTests{
 		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("requiredVolume3")).isNotNull();
 		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("requiredVolume3").value).isInstanceOf(Double.class);
 		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("requiredVolume3").value).isEqualTo(new Double(60)); 
-		
+
 	}
-	
+
 	@Test
 	public void validateExperimentPrepaflowcell() {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
@@ -161,9 +188,9 @@ public class ExperimentTests extends AbstractTests{
 		ExperimentValidationHelper.validateRules(exp, contextValidation);
 		contextValidation.displayErrors(logger);
 		assertThat(contextValidation.hasErrors()).isFalse();
-				
+
 	}
-	
+
 	@Test
 	public void validateExperimentSameTagInPosition() {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
@@ -174,19 +201,19 @@ public class ExperimentTests extends AbstractTests{
 		content.properties.put("tag", new PropertySingleValue("IND1"));
 		content.properties.put("tagCategory", new PropertySingleValue("TAGCATEGORIE"));
 		container.contents.add(content);
-		
+
 		ContainerUsed containerUsed=new ContainerUsed(container);
 		containerUsed.percentage= 0.0;
 		exp.atomicTransfertMethods.get(0).getInputContainers().add(containerUsed);
-		
+
 		ExperimentValidationHelper.validateRules(exp, contextValidation);
 		contextValidation.displayErrors(logger);
 		assertThat(contextValidation.hasErrors()).isTrue();
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
-				
+
 	}
-	
-	
+
+
 	@Test
 	public void validateExperimentManyTagCategory() {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
@@ -197,18 +224,18 @@ public class ExperimentTests extends AbstractTests{
 		content.properties.put("tag", new PropertySingleValue("IND11"));
 		content.properties.put("tagCategory", new PropertySingleValue("OTHERCATEGORIE"));
 		container.contents.add(content);
-		
+
 		ContainerUsed containerUsed=new ContainerUsed(container);
 		containerUsed.percentage= 0.0;
 		exp.atomicTransfertMethods.get(0).getInputContainers().add(containerUsed);
-		
+
 		ExperimentValidationHelper.validateRules(exp, contextValidation);
 		contextValidation.displayErrors(logger);
 		assertThat(contextValidation.hasErrors()).isTrue();
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
-				
+
 	}
-	
+
 	@Test
 	public void validateExperimentSumPercentInPutContainer() {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
@@ -219,18 +246,18 @@ public class ExperimentTests extends AbstractTests{
 		content.properties.put("tag", new PropertySingleValue("IND11"));
 		content.properties.put("tagCategory", new PropertySingleValue("TAGCATEGORIE"));
 		container.contents.add(content);
-		
+
 		ContainerUsed containerUsed=new ContainerUsed(container);
 		containerUsed.percentage= 10.0;
 		exp.atomicTransfertMethods.get(0).getInputContainers().add(containerUsed);
-		
+
 		ExperimentValidationHelper.validateRules(exp, contextValidation);
 		contextValidation.displayErrors(logger);
 		assertThat(contextValidation.hasErrors()).isTrue();
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
-				
+
 	}
-	
+
 	@Test
 	public void validateExperimentPrepaflowcellLaneNotNull() {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
@@ -240,15 +267,15 @@ public class ExperimentTests extends AbstractTests{
 		contextValidation.displayErrors(logger);
 		assertThat(contextValidation.hasErrors()).isTrue();
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
-				
+
 	}
-	
-	
+
+
 	@Test
 	public void validateExperimentDuplicateContainerInLane() {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
-		
+
 		ContainerUsed container1_1=ExperimentTestHelper.getContainerUsed("CONTAINER1_1");
 		container1_1.percentage=0.0;
 		Content content1_1=new Content("CONTENT1_1","TYPE","CATEGORIE");
@@ -259,90 +286,143 @@ public class ExperimentTests extends AbstractTests{
 		content1_1.properties.put("tag", new PropertySingleValue("IND2"));
 		content1_1.properties.put("tagCategory", new PropertySingleValue("TAGCATEGORIE"));
 		container1_1.contents.add(content1_1);
-		
+
 		exp.atomicTransfertMethods.get(0).getInputContainers().add(container1_1);
-		
+
 		ExperimentValidationHelper.validateRules(exp, contextValidation);
 		contextValidation.displayErrors(logger);
 		assertThat(contextValidation.hasErrors()).isTrue();
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
-				
+
 	}
-	
+
 	@Test
 	public void validateExperimentPrepaflowcellInstrumentProperties() {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
-		
+
 		exp.instrument=new InstrumentUsed();
 		exp.instrument.code="cBot Fluor A";
 		exp.instrument.outContainerSupportCategoryCode="flowcell-1";
 		exp.instrumentProperties=new HashMap<String, PropertyValue>();
 		exp.instrumentProperties.put("control", new PropertySingleValue("3"));
-			
+
 		ExperimentValidationHelper.validateRules(exp, contextValidation);
 		contextValidation.displayErrors(logger);
 		assertThat(contextValidation.hasErrors()).isTrue();
 		assertThat(contextValidation.errors.get("instrument").size()).isEqualTo(2);
-				
+
 	}
 	
-	/*@Test
-	public void saveExperiment(){
-		Experiment exp = ExperimentTestHelper.getFakePrepFlowcell();
+	
+	@Test
+	public void updateDataMethodExperiment(){
+
+		Experiment exp=ExperimentTestHelper.getFakeExperiment();
+		ManytoOneContainer atomicTransfert1 = ExperimentTestHelper.getManytoOneContainer();
+		atomicTransfert1.position=1;
+		ManytoOneContainer atomicTransfert2 = ExperimentTestHelper.getManytoOneContainer();
+		atomicTransfert2.position=2;
 		
+		exp.atomicTransfertMethods.put(0,atomicTransfert1);
+		exp.atomicTransfertMethods.put(1, atomicTransfert2);
+		
+		atomicTransfert1.inputContainerUseds=new ArrayList<ContainerUsed>();
+		ContainerUsed containerUsed = new ContainerUsed(CONTAINER_CODE);
+		containerUsed.locationOnContainerSupport=new LocationOnContainerSupport();
+		containerUsed.locationOnContainerSupport.code=CONTAINER_CODE;
+		atomicTransfert1.inputContainerUseds.add(containerUsed);
+
+		assertThat(exp.projectCodes).isNull();
+		assertThat(exp.sampleCodes).isNull();
+		assertThat(exp.inputContainerSupportCodes).isNull();
+		exp=ExperimentHelper.updateData(exp);
+		assertThat("ADI").isIn(exp.projectCodes);
+		assertThat("ADI_RD").isIn(exp.sampleCodes);
+		assertThat("ADI_RD1").isIn(exp.inputContainerSupportCodes);
+		
+		
+	}
+
+	@Test
+	public void saveExperiment() throws JsonParseException, JsonMappingException, IOException{
+		
+		List<Experiment> exps = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME+"_new", Experiment.class,DBQuery.is("typeCode", "prepa-flowcell")).toList();
+		Experiment exp=exps.get(0);
+		exp._id=null;
 		Result result = callAction(controllers.experiments.api.routes.ref.Experiments.save(),fakeRequest().withJsonBody(Json.toJson(exp)));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+
+		ObjectMapper mapper=new ObjectMapper();
+
+		exp=mapper.readValue(play.test.Helpers.contentAsString(result),Experiment.class);
+		assertThat(exp.state.code).isEqualTo("N");
+		assertThat(exp.projectCodes).isNotNull();
+		assertThat(exp.sampleCodes).isNotNull();
+		assertThat(exp.inputContainerSupportCodes).isNotNull();
+		assertThat(exp.outputContainerSupportCodes).isNull();
+		//Valide process = "IP", InputContainer ="IW-E"
+		List<ContainerUsed> containersUsed=exp.getAllInPutContainer();
+		for(ContainerUsed containerUsed:containersUsed){
+			Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.code);
+			assertThat(container.state.code).isEqualTo("IW-E");
+			List<Process> processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code", container.inputProcessCodes)).toList();
+			for(Process process:processes){
+				assertThat(process.state.code).isEqualTo("N");
+			}
+		}
+		
+		
 	}
-	
+	/*
 	@Test
 	public void updateExperimentProperties(){
 		Experiment exp = ExperimentTestHelper.getFakePrepFlowcell();
-		
+
 		Result result = callAction(controllers.experiments.api.routes.ref.Experiments.updateExperimentProperties(exp.code),fakeRequest().withJsonBody(Json.toJson(exp)));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 	}
-	
+
 	@Test
 	public void updateExperimentInformations(){
 		Experiment exp = ExperimentTestHelper.getFakePrepFlowcell();
-		
+
 		Result result = callAction(controllers.experiments.api.routes.ref.Experiments.updateExperimentInformations(exp.code),fakeRequest().withJsonBody(Json.toJson(exp)));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 	}
-	
+
 	@Test
 	public void updateContainers(){
 		Experiment exp = ExperimentTestHelper.getFakePrepFlowcell();
-		
+
 		Result result = callAction(controllers.experiments.api.routes.ref.Experiments.updateContainers(exp.code),fakeRequest().withJsonBody(Json.toJson(exp)));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 	}
-	
+
 	@Test
 	public void updateInstrumentInformations(){
 		Experiment exp = ExperimentTestHelper.getFakePrepFlowcell();
-		
+
 		Result result = callAction(controllers.experiments.api.routes.ref.Experiments.updateInstrumentInformations(exp.code),fakeRequest().withJsonBody(Json.toJson(exp)));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 	}
-	
+
 	@Test
 	public void updateInstrumentProperties(){
 		Experiment exp = ExperimentTestHelper.getFakePrepFlowcell();
-		
+
 		Result result = callAction(controllers.experiments.api.routes.ref.Experiments.updateInstrumentProperties(exp.code),fakeRequest().withJsonBody(Json.toJson(exp)));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 	}
-	
+
 	@Test
 	public void nextState(){
 		Experiment exp = ExperimentTestHelper.getFakePrepFlowcell();
-		
+
 		Result result = callAction(controllers.experiments.api.routes.ref.Experiments.nextState(exp.code),fakeRequest().withJsonBody(Json.toJson(exp)));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 	}*/
-	
+
 	public PropertyDefinition getPropertyImgDefinition() {
 		PropertyDefinition pDef = new PropertyDefinition();
 		pDef.code = "restrictionEnzyme";
@@ -353,7 +433,7 @@ public class ExperimentTests extends AbstractTests{
 		//pDef.propertyType = "Img";
 		return pDef;
 	}
-	
+
 	private void showErrors(ContextValidation cv) {
 		if(cv.errors.size() > 0){
 			for(Entry<String, List<ValidationError>> e : cv.errors.entrySet()){

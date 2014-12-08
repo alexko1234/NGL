@@ -108,7 +108,7 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 			Map<String,PropertyValue> properties=ExperimentHelper.getAllPropertiesFromAtomicTransfertMethod(this,experiment);
 			ContainerHelper.addContent(outputContainer, this.getInputContainers(), experiment, properties);
 			ContainerSupportHelper.updateData(support, this.getInputContainers(), experiment, properties);
-			experiment.outputContainerCodes = experiment.getOutputContainerCodes();
+			experiment.outputContainerSupportCodes = ExperimentHelper.getOutputContainerSupportCodes(experiment);
 			contextValidation.setCreationMode();
 			ContainerSupportHelper.save(support, contextValidation);
 

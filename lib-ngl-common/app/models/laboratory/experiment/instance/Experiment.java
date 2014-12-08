@@ -60,9 +60,9 @@ public class Experiment extends DBObject implements IValidation {
 	
 	public List<String> sampleCodes;
 	
-	public List<String> inputContainerCodes;
+	public List<String> inputContainerSupportCodes;
 	
-	public List<String> outputContainerCodes;
+	public List<String> outputContainerSupportCodes;
 	
 	public Experiment(){
 		traceInformation=new TraceInformation();
@@ -99,42 +99,6 @@ public class Experiment extends DBObject implements IValidation {
 
 		}
 		return containersUSed;
-	}
-	
-	@JsonIgnore
-	public List<String> getInputContainerCodes(){
-		List<String> codes = new ArrayList<String>();
-		List<ContainerUsed> containersUSed=new ArrayList<ContainerUsed>();
-		if(this.atomicTransfertMethods!=null){
-			for(int i = 0; i < this.atomicTransfertMethods.size() ; i++){
-				if(this.atomicTransfertMethods.get(i).getInputContainers().size()!=0){
-					containersUSed.addAll(this.atomicTransfertMethods.get(i).getInputContainers());
-				}
-			}
-			for(int i = 0; i < containersUSed.size(); i++)
-			{
-				codes.add(containersUSed.get(i).locationOnContainerSupport.code);
-			}
-		}
-		return codes;
-	}
-	
-	@JsonIgnore
-	public List<String> getOutputContainerCodes(){
-		List<String> codes = new ArrayList<String>();
-		List<ContainerUsed> containersUSed=new ArrayList<ContainerUsed>();
-		if(this.atomicTransfertMethods!=null){
-			for(int i = 0; i < this.atomicTransfertMethods.size() ; i++){
-				if(this.atomicTransfertMethods.get(i).getInputContainers().size()!=0){
-					containersUSed.addAll(this.atomicTransfertMethods.get(i).getOutputContainers());
-				}
-			}
-			for(int i = 0; i < containersUSed.size(); i++)
-			{
-				codes.add(containersUSed.get(i).locationOnContainerSupport.code);
-			}
-		}
-		return codes;
 	}
 	
 	@JsonIgnore

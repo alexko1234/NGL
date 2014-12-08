@@ -16,12 +16,10 @@ import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.processes.instance.Process;
-import models.laboratory.experiment.instance.ManytoOneContainer;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
+import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import models.utils.instance.ExperimentHelper;
@@ -36,15 +34,12 @@ import org.mongojack.DBUpdate;
 import org.mongojack.DBUpdate.Builder;
 
 import play.Logger;
-import play.Play;
 import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Result;
 import play.mvc.Results;
-import rules.services.RulesException;
-import rules.services.RulesServices;
 import validation.ContextValidation;
 import validation.experiment.instance.ExperimentValidationHelper;
 import views.components.datatable.DatatableResponse;
@@ -54,7 +49,6 @@ import com.mongodb.BasicDBObject;
 
 import controllers.CodeHelper;
 import controllers.CommonController;
-import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
@@ -64,15 +58,18 @@ public class Experiments extends CommonController{
 	final static Form<Comment> commentForm = form(Comment.class);
 	final static Form<ExperimentSearchForm> experimentSearchForm = form(ExperimentSearchForm.class);
 
-	private static final String calculationsRules ="calculations";
+	public static final String calculationsRules ="calculations";
 
 
 	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public static Result updateExperimentInformations(String code){
+		
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
-
-		if (!experimentFilledForm.hasErrors()) {
+		ContextValidation ctx =new ContextValidation(getCurrentUser(),experimentFilledForm.errors());
+		ExperimentValidationHelper.validationExperimentType(exp.typeCode, exp.experimentProperties, ctx);
+		
+		if (!ctx.hasErrors()) {
 
 			Builder builder = new DBUpdate.Builder();
 			builder=builder.set("typeCode",exp.typeCode);
@@ -280,11 +277,11 @@ public class Experiments extends CommonController{
 		ExperimentValidationHelper.validateRules(exp, ctxValidation);
 
 		if(!ctxValidation.hasErrors()){
-			doCalculations(exp);
+			ExperimentHelper.doCalculations(exp,calculationsRules);
 
 			Builder builder = new DBUpdate.Builder();
 			builder=builder.set("atomicTransfertMethods",exp.atomicTransfertMethods);
-			builder=builder.set("projectCodes",exp.projectCodes).set("sampleCodes",exp.sampleCodes);
+			builder=builder.set("projectCodes",exp.projectCodes).set("sampleCodes",exp.sampleCodes).set("inputContainerSupportCodes", exp.inputContainerSupportCodes);
 			builder = builder.set("traceInformation", ExperimentHelper.getUpdateTraceInformation(exp.traceInformation, getCurrentUser()));
 
 			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
@@ -311,7 +308,7 @@ public class Experiments extends CommonController{
 		State newState = new State();
 		newState.code=stateCode;
 		newState.date=new Date();
-		newState.user=InstanceHelpers.getUser();
+		newState.user=getCurrentUser();
 
 		Workflows.setExperimentState(exp,newState,ctxValidation);
 
@@ -330,7 +327,7 @@ public class Experiments extends CommonController{
 
 		Logger.info(Json.toJson(exp).toString());
 
-		doCalculations(exp);
+		ExperimentHelper.doCalculations(exp,calculationsRules);
 
 		Form<Experiment> experimentFilledForm = experimentForm.fill(exp);
 
@@ -365,11 +362,10 @@ public class Experiments extends CommonController{
 			if (!ctxValidation.hasErrors()) {
 				ctxValidation.setCreationMode();
 				exp.validate(ctxValidation);
-				doCalculations(exp);
-
+				ExperimentHelper.doCalculations(exp,calculationsRules);
+				ExperimentHelper.updateData(exp);
+				
 				if(!ctxValidation.hasErrors()){
-					exp.inputContainerCodes = exp.getInputContainerCodes();
-					
 					MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME,exp);
 
 					MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME,Process.class,
@@ -427,6 +423,20 @@ public class Experiments extends CommonController{
 	}	
 
 
+	public static Result updateData(String experimentCode){
+		Experiment experiment= MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
+		if(experiment!=null){
+			ExperimentHelper.updateData(experiment);
+			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class,DBQuery.is("code",experimentCode)
+					,DBUpdate.set("projectCodes",experiment.projectCodes).set("sampleCodes",experiment.sampleCodes).set("inputContainerSupportCodes", experiment.inputContainerSupportCodes));
+			return ok(Json.toJson(experiment));
+		}else {
+			return notFound();
+		}
+	
+	}
+
+	
 	public static Result updateContainerSupportCode(String experimentCode,String containerSupportCode){
 
 		Experiment experiment= MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
@@ -459,20 +469,6 @@ public class Experiments extends CommonController{
 			return notFound();
 		}
 	}
-
-	public static Result updateData(String experimentCode){
-		Experiment experiment= MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
-		if(experiment!=null){
-			ExperimentHelper.updateData(experiment);
-			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class,DBQuery.is("code",experimentCode)
-					,DBUpdate.set("projectCodes",experiment.projectCodes).set("sampleCodes",experiment.sampleCodes));
-			return ok(Json.toJson(experiment));
-		}else {
-			return notFound();
-		}
-
-	}
-
 
 	/**
 	 * Construct the experiment query
@@ -584,7 +580,7 @@ public class Experiments extends CommonController{
 
 	}
 
-	private static String findRegExpFromStringList(List<String> searchList) {
+	/*private static String findRegExpFromStringList(List<String> searchList) {
 		String regex = ".*("; 
 		for (String itemList : searchList) {
 			regex += itemList + "|"; 
@@ -592,32 +588,5 @@ public class Experiments extends CommonController{
 		regex = regex.substring(0,regex.length()-1);
 		regex +=  ").*";
 		return regex;
-	}
-
-	public static void doCalculations(Experiment exp){
-		ArrayList<Object> facts = new ArrayList<Object>();
-		facts.add(exp);
-		for(int i=0;i<exp.atomicTransfertMethods.size();i++){
-			if(ManytoOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
-				ManytoOneContainer atomic = (ManytoOneContainer) exp.atomicTransfertMethods.get(i);
-				facts.add(atomic);
-			}
-		}
-
-		RulesServices rulesServices = new RulesServices();
-		List<Object> factsAfterRules = null;
-		try {
-			factsAfterRules = rulesServices.callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), calculationsRules, facts);
-		} catch (RulesException e) {
-			throw new RuntimeException();
-		}
-
-		for(Object obj:factsAfterRules){
-			if(ManytoOneContainer.class.isInstance(obj)){
-				exp.atomicTransfertMethods.remove(((ManytoOneContainer)obj).position-1);
-				exp.atomicTransfertMethods.put(((ManytoOneContainer)obj).position-1,(ManytoOneContainer) obj);
-			}
-		}
-
-	}
+	}*/
 }

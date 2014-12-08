@@ -10,6 +10,7 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.ManytoOneContainer;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
@@ -18,7 +19,13 @@ import models.utils.dao.DAOException;
 import org.mongojack.DBQuery;
 
 import play.Logger;
+import play.Play;
+import rules.services.RulesException;
+import rules.services.RulesServices;
 import validation.ContextValidation;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import fr.cea.ig.MongoDBDAO;
 
 public class ExperimentHelper extends InstanceHelpers {
@@ -71,6 +78,7 @@ public class ExperimentHelper extends InstanceHelpers {
 				Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, c.code);
 				exp.sampleCodes = InstanceHelpers.addCodesList(container.sampleCodes,exp.sampleCodes);
 				exp.projectCodes = InstanceHelpers.addCodesList(container.projectCodes,exp.projectCodes);
+				exp.inputContainerSupportCodes=ExperimentHelper.getInputContainerSupportCodes(exp);
 			}	
 		return exp;
 	}
@@ -120,6 +128,76 @@ public class ExperimentHelper extends InstanceHelpers {
 		}
 		return processCodes;
 		
+	}
+
+
+
+
+	@JsonIgnore
+	public static List<String> getOutputContainerSupportCodes(Experiment exp){
+		List<String> codes = new ArrayList<String>();
+		List<ContainerUsed> containersUSed=new ArrayList<ContainerUsed>();
+		if(exp.atomicTransfertMethods!=null){
+			for(int i = 0; i < exp.atomicTransfertMethods.size() ; i++){
+				if(exp.atomicTransfertMethods.get(i).getInputContainers().size()!=0){
+					containersUSed.addAll(exp.atomicTransfertMethods.get(i).getOutputContainers());
+				}
+			}
+			for(int i = 0; i < containersUSed.size(); i++)
+			{
+				codes.add(containersUSed.get(i).locationOnContainerSupport.code);
+			}
+		}
+		return codes;
+	}
+
+
+
+
+	@JsonIgnore
+	public static List<String> getInputContainerSupportCodes(Experiment exp){
+		List<String> codes = new ArrayList<String>();
+		List<ContainerUsed> containersUSed=new ArrayList<ContainerUsed>();
+		if(exp.atomicTransfertMethods!=null){
+			for(int i = 0; i < exp.atomicTransfertMethods.size() ; i++){
+				if(exp.atomicTransfertMethods.get(i).getInputContainers().size()!=0){
+					containersUSed.addAll(exp.atomicTransfertMethods.get(i).getInputContainers());
+				}
+			}
+			for(int i = 0; i < containersUSed.size(); i++)
+			{
+				codes.add(containersUSed.get(i).locationOnContainerSupport.code);
+			}
+		}
+		return codes;
+	}
+
+
+	public static void doCalculations(Experiment exp,String rulesName){
+		ArrayList<Object> facts = new ArrayList<Object>();
+		facts.add(exp);
+		for(int i=0;i<exp.atomicTransfertMethods.size();i++){
+			if(ManytoOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
+				ManytoOneContainer atomic = (ManytoOneContainer) exp.atomicTransfertMethods.get(i);
+				facts.add(atomic);
+			}
+		}
+	
+		RulesServices rulesServices = new RulesServices();
+		List<Object> factsAfterRules = null;
+		try {
+			factsAfterRules = rulesServices.callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), rulesName, facts);
+		} catch (RulesException e) {
+			throw new RuntimeException();
+		}
+	
+		for(Object obj:factsAfterRules){
+			if(ManytoOneContainer.class.isInstance(obj)){
+				exp.atomicTransfertMethods.remove(((ManytoOneContainer)obj).position-1);
+				exp.atomicTransfertMethods.put(((ManytoOneContainer)obj).position-1,(ManytoOneContainer) obj);
+			}
+		}
+	
 	}
 
 }
