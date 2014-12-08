@@ -118,10 +118,10 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	};
 	
 	$scope.search = function(){	
-		$scope.errors = {};
-		if($scope.form.projectCodes || $scope.form.sampleCodes || $scope.form.processType || $scope.form.containerSupportCode 
-				|| $scope.form.fromExperimentTypeCodes || $scope.form.containerSupportCategory  || $scope.form.valuations){
-			var jsonSearch = {};
+		$scope.errors.processCategory = {};
+		//if($scope.form.projectCodes || $scope.form.sampleCodes || $scope.form.processType || $scope.form.containerSupportCode || $scope.form.fromExperimentTypeCodes || $scope.form.containerSupportCategory  || $scope.form.valuations){
+		if($scope.form.processCategory){
+		var jsonSearch = {};
 			jsonSearch.stateCode = 'IW-P';
 			if($scope.form.projectCodes){
 				jsonSearch.projectCodes = $scope.form.projectCodes;
@@ -157,6 +157,9 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			if($scope.form.processCategory === undefined || $scope.form.processCategory === "" ){
 				$scope.errors.processCategory = "alert alert-danger";
 			}
+			$scope.datatable.setData({},0);
+			$scope.basket.reset();
+			
 		}
 	};
 	
@@ -392,6 +395,6 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 	$scope.datatable = datatable($scope, $scope.datatableConfig);
 	$scope.basket = mainService.getBasket();
 	$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);		
-	$scope.datatable.selectAll(true);
+	$scope.datatable.selectAll(false);
 	$scope.swithView();
 }]);
