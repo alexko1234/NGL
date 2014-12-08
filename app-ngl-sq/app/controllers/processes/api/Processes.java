@@ -77,7 +77,9 @@ public class Processes extends CommonController{
 				value.code = CodeHelper.generateProcessCode(value);
 				
 				Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, value.containerInputCode);
-				ProcessHelper.updateContainer(container,value.typeCode, value.code);
+				List<String> processCodes=new ArrayList<String>();
+				processCodes.add(value.code);
+				ProcessHelper.updateContainer(container,value.typeCode, processCodes);
 				ProcessHelper.updateContainerSupportFromContainer(container);
 				Logger.info("New process code : "+value.code);
 			} else {
@@ -119,6 +121,7 @@ public class Processes extends CommonController{
 				
 				List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("support.code", supportCode)).toList();
 				for(Container container:containers){
+					List<String> processCodes=new ArrayList<String>();
 					value.containerInputCode = container.code;
 					for(String s:container.sampleCodes){
 						//ContextValidation contextValidation=new ContextValidation(getCurrentUser(), filledForm.errors());
@@ -127,9 +130,11 @@ public class Processes extends CommonController{
 						//code and name generation
 						value.code = CodeHelper.generateProcessCode(value);
 						InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,value, contextValidation);
+						processCodes.add(value.code);
 					}
-					ProcessHelper.updateContainer(container,value.typeCode, value.code);
+					ProcessHelper.updateContainer(container,value.typeCode, processCodes);
 					ProcessHelper.updateContainerSupportFromContainer(container);
+					
 				}
 				
 				Logger.info("New process code : "+value.code);
