@@ -141,7 +141,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		m.put("maxSizeReadsPercent", new PropertySingleValue(100));
 
 		PropertyObjectListValue lpObj = new PropertyObjectListValue();
-		List l = new ArrayList();
+		List<Map<String, ?>> l = new ArrayList<Map<String, ?>>();
 		
 		HashMap<String, Object> m2 = new HashMap<String, Object>(); 
 		m2.put("adapterName", "RNA_PCR_MK1(rev)");
@@ -157,7 +157,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		m.put("adapterContaminationDetails", lpObj);
 		
 		PropertyObjectListValue lpObj2 = new PropertyObjectListValue();
-		List l2 = new ArrayList();
+		List<Map<String, ?>> l2 = new ArrayList<Map<String, ?>>();
 		
 		HashMap<String, Object> m4 = new HashMap<String, Object>();
 		m4.put("numberOfN",1);
@@ -174,7 +174,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		
 		/***/
 		PropertyObjectListValue lpObj3 = new PropertyObjectListValue();
-		List l3 = new ArrayList();
+		List<Map<String, ?>> l3 = new ArrayList<Map<String, ?>>();
 		
 		HashMap<String, Object> m6 = new HashMap<String, Object>();
 		m6.put("positionInReads",1);
@@ -186,7 +186,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		
 		/***/
 		PropertyObjectListValue lpObj4 = new PropertyObjectListValue();
-		List l4 = new ArrayList();
+		List<Map<String, ?>> l4 = new ArrayList<Map<String, ?>>();
 		
 		HashMap<String, Object> m7 = new HashMap<String, Object>();
 		m7.put("readsLength",1);
@@ -198,7 +198,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		
 		/***/
 		PropertyObjectListValue lpObj5 = new PropertyObjectListValue();
-		List l5 = new ArrayList();
+		List<Map<String, ?>> l5 = new ArrayList<Map<String, ?>>();
 		
 		HashMap<String, Object> m8 = new HashMap<String, Object>();
 		m8.put("position",1);
@@ -217,7 +217,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		
 		/***/
 		PropertyObjectListValue lpObj6 = new PropertyObjectListValue();
-		List l6 = new ArrayList();
+		List<Map<String, ?>> l6 = new ArrayList<Map<String, ?>>();
 		
 		HashMap<String, Object> m9 = new HashMap<String, Object>();
 		m9.put("readPosition",1);
@@ -233,7 +233,7 @@ public class TreatmentValidationTest extends AbstractTests {
 		
 		/***/
 		PropertyObjectListValue lpObj7 = new PropertyObjectListValue();
-		List l7 = new ArrayList();
+		List<Map<String, ?>> l7 = new ArrayList<Map<String, ?>>();
 		
 		HashMap<String, Object> m10 = new HashMap<String, Object>();
 		m10.put("percentGCcontent",1.F);
@@ -535,10 +535,7 @@ public class TreatmentValidationTest extends AbstractTests {
     
     
 	 @Test
-	 public void testValidationTreatmentErrorMissingCode() {	
-		Boolean b = false;
-		String msgErreur = "";
-		
+	 public void testValidationTreatmentErrorMissingCode() {			
 		Treatment t = getNewTreatmentForReadSet();
 		t.code =  null;	// NO CODE!	
 				
