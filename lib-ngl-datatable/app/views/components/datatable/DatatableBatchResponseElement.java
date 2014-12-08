@@ -6,6 +6,10 @@ public class DatatableBatchResponseElement {
 	public Object data;
 	public Integer index;
 	
+	public DatatableBatchResponseElement(){
+		
+	}
+	
 	public DatatableBatchResponseElement(Integer status, Object data, Integer index) {
 		super();
 		this.status = status;

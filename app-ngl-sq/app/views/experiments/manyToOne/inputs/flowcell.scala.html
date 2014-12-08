@@ -127,7 +127,7 @@
 							{{flowcell.code}}
 						</td>
 						<td>
-							<input class="form-control valueInput" type="text" placeholder='@Messages("containers.table.percentage")' title='@Messages("containers.table.percentage")' ng-readonly="!experiment.experimentProperties.enabled" class="input-small" ng-model="flowcell.percentage" />
+							<input class="form-control valueInput" type="text" title='@Messages("containers.table.percentage")' ng-readonly="!experiment.experimentProperties.enabled" class="input-small" ng-model="flowcell.percentage" />
 						</td>
 						<td>							
 							<div list-resize="sampleAndTag in getSampleAndTags(flowcell) | unique" id="SampleTagCell" below vertical></div>

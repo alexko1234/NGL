@@ -38,7 +38,8 @@
 				"header":Messages("containers.table.sampleCodes"),
 				"property":"sampleCodes",
 				"order":true,
-				"type":"text"
+				"type":"text",
+				"render":"<div list-resize='value.data.sampleCodes | unique' below-only-deploy>",
 			});
 			columns.push({
 				"header":Messages("containers.table.state.code"),

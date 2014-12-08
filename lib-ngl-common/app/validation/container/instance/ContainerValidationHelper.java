@@ -58,7 +58,7 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 				percentageSum = percentageSum + t.percentage;
 			}							
 		}
-		if(!((100.00-percentageSum)>=0.00 && (100.00-percentageSum)<0.02)){
+		if(!((100.00-percentageSum)>=0.00 && (100.00-percentageSum)<=0.20)){
 			contextValidation.addKeyToRootKeyName("contents");
 			contextValidation.addErrors("percentageSum", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, "percentages");
 			contextValidation.addKeyToRootKeyName("contents");

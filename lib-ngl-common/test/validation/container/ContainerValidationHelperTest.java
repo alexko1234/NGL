@@ -416,7 +416,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	
 	@Test
 	public void validationProcessCodes(){
-		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);		
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		List<String> inputProcessCodes = new ArrayList<String>();
 		inputProcessCodes.add(process1.code);
 		inputProcessCodes.add(process2.code);
@@ -429,7 +429,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public void validationProcessCodesNull(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		List<String> inputProcessCodes = new ArrayList<String>();		
+		List<String> inputProcessCodes = new ArrayList<String>();
 		inputProcessCodes.add("");
 		inputProcessCodes.add("");
 		inputProcessCodes.add("");

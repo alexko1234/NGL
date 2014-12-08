@@ -53,7 +53,7 @@ public class Containers extends CommonController {
 			return ok(Json.toJson(container));
 		}
 
-		return badRequest();
+		return notFound();
 	}
 	
 	public static Result head(String code) {
@@ -71,7 +71,10 @@ public class Containers extends CommonController {
 		
 		for(Form<ContainerBatchElement> filledForm: filledForms){
 			ContainerBatchElement element = filledForm.get();
-			Container container = findContainer(element.data.code);
+			Container container = null;
+			if(null!=element.data){
+				container = findContainer(element.data.code);
+			}
 			if(null != container){
 				State state = element.data.state;
 				state.date = new Date();
@@ -84,7 +87,7 @@ public class Containers extends CommonController {
 					response.add(new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(), element.index));
 				}
 			}else {
-				response.add(new DatatableBatchResponseElement(BAD_REQUEST, element.index));
+				response.add(new DatatableBatchResponseElement(NOT_FOUND, element.index));
 			}
 			
 		}		

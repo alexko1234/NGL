@@ -2,7 +2,7 @@
 //and add a button to deploy and see all the values
 //A title is placed on this button, so that the user can see all the value when the pointer hovering on it
 //If the value is not an Array, this directive add a span with ng-bind="value"
-//Example: <div list-resize="getSampleAndTags(flowcell)" list-resize-min-size="5"></div>
+//Example: <div list-resize="getSampleAndTags(flowcell)" list-resize-min-size="5" [below,below-only-deploy] [vertical]></div>
 angular.module('commonsServices').directive('listResize',['$parse', function($parse) {
 	return {
 		template:'<div ng-if="isArray"><span ng-repeat="v in listValue | limitTo:nbItem">{{v}}{{getSeparator($last)}}<br ng-if="vertical && !$last"><br ng-if="below && $last"></span>'+
@@ -41,17 +41,18 @@ angular.module('commonsServices').directive('listResize',['$parse', function($pa
 					model = $parse(match[2]);
 				}
 				
-			//Attribut below	
+			//The user can add  the below attribute for place the deploy/undeploy-button below the list of values.	
 			if(attrs.below !== undefined){
 				scope.below = true;
-			}
+			}			
 			
-			//Attribut below-only-deploy
+			//The user can add  the below-only-deploy attribute for place the undeploy-button only below the list of values.
 			if(attrs.belowOnlyDeploy !== undefined){
 				scope.belowOnlyDeployed = true;
 			}
 			
-			//Attribut vertical
+			
+			//The user can add  the vertical attribute to set the list of values vertically, with a carriage return behind each item.
 			if(attrs.vertical !== undefined){
 				scope.vertical = true;
 			}
