@@ -1197,6 +1197,13 @@ angular.module('datatableServices', []).
 		    				return (this.allResult === undefined || this.allResult === null || this.allResult.length === 0);
 		    			},
 		    			
+		    			/**
+		    			 * Function to show (or not) the "CSV Export" button
+		    			 */ 
+		    			isShowExportCSVButton: function(){
+		    				return (this.config.exportCSV.active && this.config.exportCSV.showButton);
+		    			},
+		    			
 		    			isShowButton: function(configParam, column){
 		    				if(column){
 		    					return (this.config[configParam].active && this.config[configParam].showButton && column[configParam]);
@@ -1634,12 +1641,7 @@ angular.module('datatableServices', []).
 		    				return format;
 		    			},
 		    			
-		    			/**
-		    			 * Function to show (or not) the "CSV Export" button
-		    			 */ 
-		    			isShowExportCSVButton: function(){
-		    				return (this.config.exportCSV.active && this.config.exportCSV.showButton);
-		    			},
+		    			
 		    			
 		    			/**
 		    			 * Function to enable/disable the "CSV Export" button 
@@ -1949,11 +1951,8 @@ angular.module('datatableServices', []).
   		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.remove\')}}</span>'
   		    		+	'</button>'  		    	
   		    		+'</div>'
-  		    		
-  		    		
-
-  		    		+'<div class="btn-group" ng-if="dtTable.isShowExportCSVButton()">'
-  		    		+'<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.exportCSV\')}}">'
+  		     		+'<div class="btn-group" ng-if="dtTable.isShowExportCSVButton()">'
+  		    		+'<button data-toggle="dropdown" ng-disabled="dtTable.isEmpty()" class="btn btn-default dropdown-toggle" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.exportCSV\')}}">'
   		    		+	'<i class="fa fa-file-text-o"></i> '
   		    		+	'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.exportCSV\')}}</span>'
   		    		+	'<span class="caret" />'
@@ -1962,7 +1961,7 @@ angular.module('datatableServices', []).
   		    		/* Basic Export */
   		    		+	'<li><a href="#" ng-click="dtTableFunctions.exportCSV(\'all\')" ng-disabled="!dtTable.canExportCSV()"><i class="fa fa-file-text-o"></i> {{dtTableFunctions.messagesDatatable(\'datatable.button.basicExportCSV\')}}</a></li>'
   		    		/* Grouped Export */
-  		    		+	'<li><a href="#" ng-click="dtTableFunctions.exportCSV(\'groupsOnly\')" ng-disabled="!dtTable.canExportCSV()"><i class="fa fa-file-text-o"></i> {{dtTableFunctions.messagesDatatable(\'datatable.button.groupedExportCSV\')}}</a></li>'
+  		    		+	'<li ng-if="dtTable.config.group.active"><a href="#" ng-click="dtTableFunctions.exportCSV(\'groupsOnly\')" ng-disabled="!dtTable.canExportCSV()><i class="fa fa-file-text-o"></i> {{dtTableFunctions.messagesDatatable(\'datatable.button.groupedExportCSV\')}}</a></li>'
   		    		+'</ul>'
   		    		+'</div>'
   		    		
