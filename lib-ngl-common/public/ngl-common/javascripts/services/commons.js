@@ -851,7 +851,7 @@ angular.module('commonsServices', []).
     		}
     	}).filter('countDistinct', ['$parse',function($parse) {
     	    return function(array, key) {
-    	    	if (!array)return undefined;
+    	    	if (!array || array.length === 0)return undefined;
     	    	if (!angular.isArray(array) && (angular.isObject(array) || angular.isNumber(array) || angular.isString(array) || angular.isDate(array))) array = [array];
     	    	else if(!angular.isArray(array)) throw "input is not an array, object, number or string !";
     	    	
