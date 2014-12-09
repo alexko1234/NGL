@@ -21,10 +21,10 @@ public class Parameters extends CommonController {
 
     }
 	
-	public static Result get(String typeCode,String code) throws DAOException {
-		List<Index> index=MongoDBDAO.find(InstanceConstants.PARAMETER_COLL_NAME, Index.class, DBQuery.is("typeCode", typeCode).is("code", code)).toList();
-		if(index!=null && index.size()>0){
-			return ok(Json.toJson(index.get(0)));
+	public static Result get(String typeCode, String code) throws DAOException {
+		Index index=MongoDBDAO.findOne(InstanceConstants.PARAMETER_COLL_NAME, Index.class, DBQuery.is("typeCode", typeCode).is("code", code));
+		if(index != null){
+			return ok(Json.toJson(index));
 		}
 		else { return notFound(); }
 
