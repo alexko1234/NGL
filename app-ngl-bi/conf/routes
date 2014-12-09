@@ -215,6 +215,11 @@ GET		/tpl/stats/config/:type						controllers.stats.tpl.Stats.config(type: java.
 GET		/tpl/stats/show								controllers.stats.tpl.Stats.show()
 GET		/tpl/stats/js-routes						controllers.stats.tpl.Stats.javascriptRoutes()
 
+
+#parameters
+GET		/api/parameters/:typeCode					controllers.commons.api.Parameters.list(typeCode: java.lang.String)
+GET		/api/parameters/:typeCode/:code				controllers.commons.api.Parameters.get(typeCode: java.lang.String, code: java.lang.String)
+
 ->  /authentication authentication.Routes
 
 # Map static resources from the /public folder to the /assets URL path
