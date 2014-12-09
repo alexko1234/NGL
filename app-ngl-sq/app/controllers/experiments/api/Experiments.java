@@ -67,6 +67,7 @@ public class Experiments extends CommonController{
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
 		ContextValidation ctx =new ContextValidation(getCurrentUser(),experimentFilledForm.errors());
+		ctx.putObject("stateCode", exp.state.code);
 		ExperimentValidationHelper.validationExperimentType(exp.typeCode, exp.experimentProperties, ctx);
 		
 		if (!ctx.hasErrors()) {

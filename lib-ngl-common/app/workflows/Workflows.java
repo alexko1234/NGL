@@ -265,6 +265,18 @@ public class Workflows {
 				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME,  Process.class, 
 						DBQuery.is("code", process.code),
 						DBUpdate.set("state", process.state).set("traceInformation",process.traceInformation));
+				
+				//Process F, reset fromExperimentTypeCodes if Collab's container 
+				if(process.state.code.equals("F")){
+					ProcessType processType;
+					try {
+						processType = ProcessType.find.findByCode(process.typeCode);
+						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,Container.class
+								,DBQuery.is("code", process.containerInputCode).in("fromExperimentTypeCodes", processType.voidExperimentType.code)
+								,DBUpdate.unset("fromExperimentTypeCodes"));
+					} catch (DAOException e) {
+					}
+				}
 			}	
 
 		}
