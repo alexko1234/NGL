@@ -12,9 +12,11 @@ import java.util.List;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
+import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.processes.instance.Process;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
+import models.utils.ListObject;
 import models.utils.instance.ContainerHelper;
 
 import org.junit.AfterClass;
@@ -50,11 +52,11 @@ public class ContainerTest extends AbstractTests {
 	@AfterClass
 	public static void resetData(){
 		InitDataHelper.endTest();
-	}
-	
+	}	
 	
 	protected static ALogger logger=Logger.of("ContainerTest");
 	
+/**********************************Tests of ContainerHelper class methods (DAO Helper)***************************************************/	
 	@Test
 	public void validateCalculPercentageContent() {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
@@ -93,9 +95,7 @@ public class ContainerTest extends AbstractTests {
 		
 		Content c7 = new Content();
 		c7.percentage = 0.03;	
-		cnt.contents.add(c7);
-		
-		
+		cnt.contents.add(c7);		
 		
 		//good given ContentPercentage
 		ContainerHelper.calculPercentageContent(cnt.contents, 80.0);
@@ -107,8 +107,7 @@ public class ContainerTest extends AbstractTests {
 		assertThat(c5.percentage).isEqualTo(32.79);
 		assertThat(c6.percentage).isEqualTo(0.36);
 		assertThat(c7.percentage).isEqualTo(0.02);
-		
-		
+				
 		//Big Percentage Content
 		c1.percentage = 10.0;
 		c2.percentage = null;
@@ -140,6 +139,8 @@ public class ContainerTest extends AbstractTests {
 		assertThat(c6.percentage).isEqualTo(0.00);		
 	}
 	
+/**********************************Tests of Container class methods (DBObject)***************************************************/		
+	
 	@Test
 	public void validateGetCurrentProcesses() {		
 		Container cnt =  ContainerTestHelper.getFakeContainer("tube");
@@ -160,6 +161,8 @@ public class ContainerTest extends AbstractTests {
 		cnt.inputProcessCodes = null;
 		assertThat(cnt.getCurrentProcesses()).isNullOrEmpty();				
 	}
+	
+/**********************************Tests of Containers class methods (Controller)***************************************************/	
 	
 	@Test
 	public void valideGet() {			
@@ -254,14 +257,13 @@ public class ContainerTest extends AbstractTests {
 	@Test
 	public void validateListWithDatatable() {
 		ContainersSearchForm csf = ContainerTestHelper.getFakeContainersSearchForm();
-		
+		csf.datatable=true;
 		MapperHelper mh = new MapperHelper();
 		Container c = new Container();
 		List <Container> lc = new ArrayList<Container>();
 		DatatableResponseForTest<Container> dr= new DatatableResponseForTest<Container>();
 		
-		//Test with projectCode (good projectCode)
-		csf.datatable=true;
+		//Test with projectCode (good projectCode)		
 		csf.projectCode = "ADI";
 		Result result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&projectCodes="+csf.projectCode));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
@@ -360,44 +362,155 @@ public class ContainerTest extends AbstractTests {
 	}
 	*/
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	public void validateListWithList() {
-		ContainersSearchForm csf = ContainerTestHelper.getFakeContainersSearchForm();		
-		MapperHelper mh = new MapperHelper();
-		Container c = new Container();
-		List <Container> lc = new ArrayList<Container>();
-		DatatableResponseForTest<Container> dr= new DatatableResponseForTest<Container>();
-		csf.datatable=false;
+		ContainersSearchForm csf = ContainerTestHelper.getFakeContainersSearchForm();
 		csf.list=true;
-		csf.code="BFB_msCGP_d1";
+		MapperHelper mh = new MapperHelper();
+		ListObject lo = new ListObject();
+		List <ListObject> lc = new ArrayList<ListObject>();
 		
+		
+		//Test with code (good request)		
+		csf.code="BFB_msCGP_d1";		
 		Result result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&code="+csf.code));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
+		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});				
+		assertThat(lc.size()).isEqualTo(1);	
+		assertThat(lc.get(0).code).isEqualTo("BFB_msCGP_d1");
 		
+		//Test with code (bad request)
+		csf.code="validateListWithListBadCode";		
+		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&code="+csf.code));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
+		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});		
+		assertThat(lc).isNullOrEmpty();
 		
+		//Test with projectCode (good request)
+		csf.projectCode = "AHX";
+		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&projectCode="+csf.projectCode));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
+		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});		
+		assertThat(lc.size()).isEqualTo(8);	
 		
+		csf.projectCode = "BFB";
+		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&projectCode="+csf.projectCode));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
+		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});		
+		assertThat(lc.size()).isEqualTo(1);
+		
+		lo = lc.get(0);
+		assertThat(lo.code).isEqualTo("BFB_msCGP_d1");
+		
+		//Test with projectCode (bad request)
+		csf.projectCode = "validateListWithListBadProjectCode";
+		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&projectCode="+csf.projectCode));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);		
+		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});	
+		assertThat(lc).isNullOrEmpty();		
+		
+		//Test with date (good request)
+		csf.fromDate = new Date(2014-1900, 9, 10) ;
+		csf.toDate = new Date(2014-1900, 9, 10) ;
+		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&fromDate="+csf.fromDate.getTime()+"&toDate="+csf.toDate.getTime()));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		
+		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});		
+		assertThat(lc.size()).isEqualTo(1);
+		
+		lo = lc.get(0);
+		assertThat(lo.code).isEqualTo("BFB_msCGP_d1");		
+		
+		//Test with date (bad request)
+		csf.fromDate = new Date(2014-1900, 0, 1) ;
+		csf.toDate = new Date(2014-1900, 0, 5) ;
+		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&fromDate="+csf.fromDate.getTime()+"&toDate="+csf.toDate.getTime()));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		
+		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});		
+		assertThat(lc).isNullOrEmpty();		
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	public void validateList() {
 		ContainersSearchForm csf = ContainerTestHelper.getFakeContainersSearchForm();
+		csf.list=true;
+		MapperHelper mh = new MapperHelper();
+		Container c = new Container();
+		List <Container> lc = new ArrayList<Container>();
+
+		//Test with code (good request)		
+		
+		csf.code="BFB_msCGP_d1";		
+		Result result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&code="+csf.code));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+
+		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<Container>>(){});				
+		assertThat(lc.size()).isEqualTo(1);	
+		assertThat(lc.get(0).code).isEqualTo("BFB_msCGP_d1");
+
+		//Test with code (bad request)
+		csf.code="validateListWithListBadCode";		
+		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&code="+csf.code));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+
+		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<Container>>(){});		
+		assertThat(lc).isNullOrEmpty();
+
+		//Test with projectCode (good request)
+		csf.projectCode = "AHX";
+		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&projectCode="+csf.projectCode));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+
+		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<Container>>(){});		
+		assertThat(lc.size()).isEqualTo(8);
+		
+		csf.projectCode = "BFB";
+		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&projectCode="+csf.projectCode));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		
+		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});		
+		assertThat(lc.size()).isEqualTo(1);
+		
+		c = lc.get(0);
+		assertThat(c.code).isEqualTo("BFB_msCGP_d1");
+
+		//Test with projectCode (bad request)
+		csf.projectCode = "validateListWithListBadProjectCode";
+		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&projectCode="+csf.projectCode));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);		
+		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<Container>>(){});	
+		assertThat(lc).isNullOrEmpty();		
+
+		//Test with date (good request)
+		csf.fromDate = new Date(2014-1900, 9, 10) ;
+		csf.toDate = new Date(2014-1900, 9, 10) ;
+		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&fromDate="+csf.fromDate.getTime()+"&toDate="+csf.toDate.getTime()));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+
+		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<Container>>(){});		
+		assertThat(lc.size()).isEqualTo(1);
+		
+		c = lc.get(0);
+		assertThat(c.code).isEqualTo("BFB_msCGP_d1");	
+
+		//Test with date (bad request)
+		csf.fromDate = new Date(2014-1900, 0, 1) ;
+		csf.toDate = new Date(2014-1900, 0, 5) ;
+		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&fromDate="+csf.fromDate.getTime()+"&toDate="+csf.toDate.getTime()));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+
+		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<Container>>(){});		
+		assertThat(lc).isNullOrEmpty();
+		Logger.info("");
 		
 	}
-	
-	@Test
-	public void validateList_supports() {
-		
-	}
-	
-	@Test
-	public void validateGetQuery() {
-		
-	}	
-	
 	
 	/*
 	@Test
