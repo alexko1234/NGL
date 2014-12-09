@@ -167,6 +167,11 @@ public class ExperimentImport {
 		experiment.sampleCodes = sampleCodes;	
 		
 		//TODO : add runStartDate
+		
+		
+		//set limsCode
+		experiment.experimentProperties = new HashMap<String, PropertyValue>();
+		experiment.experimentProperties.put("limsCode", new PropertySingleValue(rs.getString("lims_code")));
 
 		//return the object with this main attributes defined
 		return experiment;

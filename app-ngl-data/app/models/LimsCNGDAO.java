@@ -846,10 +846,10 @@ public class LimsCNGDAO {
 	
 	
 	/*************************************************************************************************************************************/
+	/*
+	 * for eventually find all the "depot" (in case of a migration) 
+	 */
 	public List<Experiment> findAllIlluminaDepotExperimentToCreate(final ContextValidation contextError, final String protocoleCode) throws DAOException {
-		/*****************************************************/
-		//JUST FOR DEV : add WHERE code_exp < 'ILLUMINA-DEPOT_20141107_140602'
-		/*****************************************************/
 		List<Experiment> results = this.jdbcTemplate.query("SELECT * FROM v_depotfc_tongl_reprise ORDER BY 1", new Object[]{} 
 		,new RowMapper<Experiment>() {
 			public Experiment mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -863,9 +863,30 @@ public class LimsCNGDAO {
 		return results;
 	}
 	
+	/*************************************************************************************************************************************/
+	/*
+	 * for normal use
+	 */
+	public List<Experiment> findIlluminaDepotExperiment(final ContextValidation contextError, final String protocoleCode) throws DAOException {
+		List<Experiment> results = this.jdbcTemplate.query("SELECT * FROM v_depotfc_tongl ORDER BY 1", new Object[]{} 
+		,new RowMapper<Experiment>() {
+			public Experiment mapRow(ResultSet rs, int rowNum) throws SQLException {
+				ResultSet rs0 = rs;
+				int rowNum0 = rowNum;
+				ContextValidation ctxErr = contextError; 
+				Experiment e = ExperimentImport.experimentDepotIlluminaMapRow(rs0, rowNum0, ctxErr, protocoleCode); 
+				return e;
+			}
+		}); 
+		return results;
+	}
+	
+	
 	/***********************************************************************************************************************************/
+	/*
+	 * to get the indexes and update the "Parameter" collection
+	 */
 	public List<Index> findIndexIlluminaToCreate(final ContextValidation contextError)throws SQLException {
-		//TODO : define view 
 		List<Index> results = this.jdbcTemplate.query("select distinct short_name as code,(CASE WHEN type = 1 THEN 'SINGLE-INDEX'::text WHEN type = 2 THEN 'DUAL-INDEX'::text WHEN type = 3 THEN 'MID'::text ELSE NULL::text END) AS code_category,sequence from t_index order by 1" 
 				,new RowMapper<Index>() {
 					@SuppressWarnings("rawtypes")
@@ -880,7 +901,6 @@ public class LimsCNGDAO {
 					}
 				});
 		return results;
-
 	}
 
 	
@@ -1035,8 +1055,8 @@ public class LimsCNGDAO {
 	 */
 	public void updateLimsDepotExperiment(List<Experiment> experiments, ContextValidation contextError, String mode) throws DAOException {
 		String key, column;
-		key = "update_date";
-		column = "ngl_date";			
+		key = "update_synchroDate";
+		column = "ngl_synchro_date";			
 		
 		contextError.addKeyToRootKeyName(key);
 		
