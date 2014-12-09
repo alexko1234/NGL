@@ -34,6 +34,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import containers.DatatableResponseForTest;
 import controllers.processes.api.ProcessesSearchForm;
 import fr.cea.ig.MongoDBDAO;
 
@@ -156,7 +157,7 @@ public class ProcessesTest extends AbstractTests{
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		mapper=new ObjectMapper();
 		JsonNode jsonNode=Json.parse(play.test.Helpers.contentAsString(result));
-		DatatableResponse<Process> datatableResponse=mapper.convertValue(jsonNode,new TypeReference<DatatableResponse<Process>>(){});
+		DatatableResponseForTest<Process> datatableResponse=mapper.convertValue(jsonNode,new TypeReference<DatatableResponseForTest<Process>>(){});
 		assertThat(datatableResponse.data.size()).isEqualTo(0);
 		
 	}
