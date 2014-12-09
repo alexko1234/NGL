@@ -600,7 +600,7 @@ angular.module('datatableServices', []).
 		    					var orderProperty = this.config.order.by.property;
 		    					orderProperty += (this.config.order.by.filter)?'|'+this.config.order.by.filter:'';
 		    					
-		    					if(this.config.group.active && this.config.group.by ){
+		    					if(this.config.group.active && this.config.group.by && this.config.group.by !== "all"){
 		    						var orderSense = (this.config.order.reverse)?'-':'+';
 		    						this.allResult = $filter('orderBy')(this.allResult,[this.config.group.by.property, orderSense+orderProperty]);		    						
 		    					}else{
