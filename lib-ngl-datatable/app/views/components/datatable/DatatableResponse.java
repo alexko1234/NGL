@@ -7,7 +7,7 @@ public class DatatableResponse<T> {
 	public List<T> data;
 	public Integer recordsNumber;
 	
-	//This default constructor is needed for mapping and convert a JsonNode to a Java object.
+	//This default constructor is needed for mapping and converting a JsonNode to a Java object when doing a test.
 	public DatatableResponse(){
 		
 	}
