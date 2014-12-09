@@ -867,14 +867,17 @@ angular.module('commonsServices', []).
     	    			}
     	    		}
     	    		else if (!params.key && angular.isObject(value)) throw "missing key !";
-    	    		else if (value !== oldValue) allValues.push(value); 
-    	    		oldValue = value;
+    	    		else if (value !== oldValue) allValues.push(value.trim()); 
+    	    		oldValue = value.trim();
     	    	}, params);
     	    	
     	    	//reduce array to unique values
     	    	var uniqueValues = allValues.filter(function(item, pos, self) {
     	    	    return self.indexOf(item) === pos;
     	    	});
+    	    	//remove undefined value
+    	    	uniqueValues.splice(uniqueValues.indexOf(undefined),uniqueValues.indexOf(undefined)+1);
+    	    	uniqueValues.splice(uniqueValues.indexOf(""),uniqueValues.indexOf("")+1);
     	    	params.countDistinct = uniqueValues.length;
     	    	
     	    	return params.countDistinct;
