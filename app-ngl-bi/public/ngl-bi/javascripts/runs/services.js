@@ -116,7 +116,7 @@
 			searchService.lists.refresh.types({objectTypeCode:"Run"});
 			searchService.lists.refresh.resolutions({objectTypeCode:"Run"});
 			searchService.lists.refresh.runs();
-			searchService.lists.refresh.instruments({categoryCode:"seq-illumina"});
+			searchService.lists.refresh.instruments({categoryCode:"illumina-sequencer"});
 			searchService.lists.refresh.users();
 			
 			searchService.lists.refresh.valuationCriterias({objectTypeCode:"Run",orderBy:'name'});
