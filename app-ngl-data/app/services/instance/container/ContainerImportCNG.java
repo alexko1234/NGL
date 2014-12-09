@@ -33,8 +33,8 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		loadContainers("lane");
 		updateContainers("lane");
 		
-		//loadContainers("tube");
-		//updateContainers("tube");
+		loadContainers("tube");
+		updateContainers("tube");
 
 		Logger.debug("end loading");			
 	}
