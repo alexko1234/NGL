@@ -875,7 +875,7 @@ angular.module('commonsServices', []).
     	    	var uniqueValues = allValues.filter(function(item, pos, self) {
     	    	    return self.indexOf(item) === pos;
     	    	});
-    	    	//remove undefined value
+    	    	//remove undefined and empty string
     	    	uniqueValues.splice(uniqueValues.indexOf(undefined),uniqueValues.indexOf(undefined)+1);
     	    	uniqueValues.splice(uniqueValues.indexOf(""),uniqueValues.indexOf("")+1);
     	    	params.countDistinct = uniqueValues.length;
