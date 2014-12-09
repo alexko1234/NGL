@@ -1961,7 +1961,7 @@ angular.module('datatableServices', []).
   		    		/* Basic Export */
   		    		+	'<li><a href="#" ng-click="dtTableFunctions.exportCSV(\'all\')" ng-disabled="!dtTable.canExportCSV()"><i class="fa fa-file-text-o"></i> {{dtTableFunctions.messagesDatatable(\'datatable.button.basicExportCSV\')}}</a></li>'
   		    		/* Grouped Export */
-  		    		+	'<li ng-if="dtTable.config.group.active"><a href="#" ng-click="dtTableFunctions.exportCSV(\'groupsOnly\')" ng-disabled="!dtTable.canExportCSV()><i class="fa fa-file-text-o"></i> {{dtTableFunctions.messagesDatatable(\'datatable.button.groupedExportCSV\')}}</a></li>'
+  		    		+	'<li ng-if="dtTable.config.group.active"><a href="#" ng-click="dtTableFunctions.exportCSV(\'groupsOnly\')" ng-disabled="!dtTable.canExportCSV()"><i class="fa fa-file-text-o"></i> {{dtTableFunctions.messagesDatatable(\'datatable.button.groupedExportCSV\')}}</a></li>'
   		    		+'</ul>'
   		    		+'</div>'
   		    		
