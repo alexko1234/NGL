@@ -279,8 +279,7 @@ public class ContainerTest extends AbstractTests {
 		
 		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<Container>>(){});		
 		lc = dr.data;		
-		assertThat(lc).isNullOrEmpty();
-		
+		assertThat(lc).isNullOrEmpty();		
 
 		//Test with samples (good request)
 		c = ContainerTestHelper.getFakeContainerWithCode("validateListWithDatatableContainer");
@@ -320,6 +319,8 @@ public class ContainerTest extends AbstractTests {
 		}		
 
 		//Test with dates (matched period)
+		csf = ContainerTestHelper.getFakeContainersSearchForm();
+		csf.datatable=true;
 		csf.fromDate = new Date(2014-1900, 2, 20) ;
 		csf.toDate = new Date(2014-1900, 2, 20) ;		
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest( play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&fromDate="+csf.fromDate.getTime()+"&toDate="+csf.toDate.getTime()));		
@@ -338,13 +339,64 @@ public class ContainerTest extends AbstractTests {
 		
 		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<Container>>(){});
 		lc = dr.data;
-		Logger.info("");
 		for(int i=0;i<lc.size();i++){
 			c = (Container) lc.get(i);
 			assertThat(c.code).isNotEqualTo("ADI_RD1");	
-		}	
+		}
+		
+		//Test with containerSupportCategory (good request)
+		csf = ContainerTestHelper.getFakeContainersSearchForm();
+		csf.datatable=true;
+		csf.containerSupportCategory = "tube";
+		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest( play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&containerSupportCategory="+csf.containerSupportCategory));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		
+		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<Container>>(){});
+		lc = dr.data;
+		assertThat(lc.size()).isEqualTo(2);
+		
+		for(int i=0;i<lc.size();i++){
+			c = (Container) lc.get(i);
+			Logger.info(c.categoryCode);
+			assertThat(c.categoryCode).isEqualTo("tube");
+			Logger.info("");
+		}
+		
+		//Test with containerSupportCategory (bad request)
+		csf.containerSupportCategory = "validateListWithDatatableBadContainerSupportCategory";
+		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest( play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&containerSupportCategory="+csf.containerSupportCategory));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+
+		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<Container>>(){});
+		lc = dr.data;
+		assertThat(lc).isNullOrEmpty();
+		
+		//Test with experimentTypeCode (good request)
+		csf = ContainerTestHelper.getFakeContainersSearchForm();
+		csf.datatable=true;
+		csf.experimentTypeCode= "prepa-flowcell";		
+		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest( play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&experimentTypeCode="+csf.experimentTypeCode));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		
+		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<Container>>(){});
+		lc = dr.data;
+		assertThat(lc.size()).isEqualTo(1);
+		
+		for(int i=0;i<lc.size();i++){
+			c = (Container) lc.get(i);
+			assertThat("solution-stock").isIn(c.fromExperimentTypeCodes);			
+			Logger.info("");
+		}
 		
 		
+		//Test with experimentTypeCode (bad request)
+		csf.experimentTypeCode= "solution-stock";
+		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest( play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&experimentTypeCode="+csf.experimentTypeCode));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		
+		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<Container>>(){});
+		lc = dr.data;
+		assertThat(lc).isNullOrEmpty();
 	}
 	
 	/*
@@ -389,6 +441,8 @@ public class ContainerTest extends AbstractTests {
 		assertThat(lc).isNullOrEmpty();
 		
 		//Test with projectCode (good request)
+		csf = ContainerTestHelper.getFakeContainersSearchForm();
+		csf.list=true;
 		csf.projectCode = "AHX";
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&projectCode="+csf.projectCode));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
@@ -414,6 +468,8 @@ public class ContainerTest extends AbstractTests {
 		assertThat(lc).isNullOrEmpty();		
 		
 		//Test with date (good request)
+		csf = ContainerTestHelper.getFakeContainersSearchForm();
+		csf.list=true;
 		csf.fromDate = new Date(2014-1900, 9, 10) ;
 		csf.toDate = new Date(2014-1900, 9, 10) ;
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&fromDate="+csf.fromDate.getTime()+"&toDate="+csf.toDate.getTime()));
@@ -463,6 +519,8 @@ public class ContainerTest extends AbstractTests {
 		assertThat(lc).isNullOrEmpty();
 
 		//Test with projectCode (good request)
+		csf = ContainerTestHelper.getFakeContainersSearchForm();
+		csf.list=true;
 		csf.projectCode = "AHX";
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&projectCode="+csf.projectCode));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
@@ -488,6 +546,8 @@ public class ContainerTest extends AbstractTests {
 		assertThat(lc).isNullOrEmpty();		
 
 		//Test with date (good request)
+		csf = ContainerTestHelper.getFakeContainersSearchForm();
+		csf.list=true;
 		csf.fromDate = new Date(2014-1900, 9, 10) ;
 		csf.toDate = new Date(2014-1900, 9, 10) ;
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&fromDate="+csf.fromDate.getTime()+"&toDate="+csf.toDate.getTime()));
@@ -506,9 +566,7 @@ public class ContainerTest extends AbstractTests {
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 
 		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<Container>>(){});		
-		assertThat(lc).isNullOrEmpty();
-		Logger.info("");
-		
+		assertThat(lc).isNullOrEmpty();		
 	}
 	
 	/*
