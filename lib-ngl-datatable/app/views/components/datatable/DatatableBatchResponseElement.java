@@ -4,11 +4,7 @@ public class DatatableBatchResponseElement {
 	
 	public Integer status;
 	public Object data;
-	public Integer index;
-	
-	public DatatableBatchResponseElement(){
-		
-	}
+	public Integer index;	
 	
 	public DatatableBatchResponseElement(Integer status, Object data, Integer index) {
 		super();

@@ -5,12 +5,7 @@ import java.util.List;
 public class DatatableResponse<T> {
 	
 	public List<T> data;
-	public Integer recordsNumber;
-	
-	//This default constructor is needed for mapping and converting a JsonNode to a Java object when doing a test.
-	public DatatableResponse(){
-		
-	}
+	public Integer recordsNumber;	
 	
 	public DatatableResponse(List<T> data) {
 		super();

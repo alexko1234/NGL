@@ -6,21 +6,17 @@ public class DatatableBatchResponseElementForTest<T> extends DatatableBatchRespo
 	
 	
 	public DatatableBatchResponseElementForTest(){
-		
+		super(null,null);
 	}
 	
 	
 	public DatatableBatchResponseElementForTest(Integer status, T data, Integer index) {
-		super();
-		this.status = status;
-		this.data = data;
-		this.index = index;
+		super(status, data, index);
+		
 	}
 	
 	public DatatableBatchResponseElementForTest(Integer status, Integer index) {
-		super();
-		this.status = status;
-		this.index = index;
+		super(status, index);		
 	}
 	
 

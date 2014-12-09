@@ -319,8 +319,8 @@ public class ContainerTest extends AbstractTests {
 		}		
 
 		//Test with dates (matched period)
-		csf.fromDate = new Date(114, 2, 20) ;
-		csf.toDate = new Date(114, 2, 20) ;		
+		csf.fromDate = new Date(2014-1900, 2, 20) ;
+		csf.toDate = new Date(2014-1900, 2, 20) ;		
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest( play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&fromDate="+csf.fromDate.getTime()+"&toDate="+csf.toDate.getTime()));		
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
@@ -330,8 +330,8 @@ public class ContainerTest extends AbstractTests {
 		assertThat(c.code).isEqualTo("ADI_RD1");		
 		
 		//Test with dates (unmatched period)
-		csf.fromDate = new Date(114, 0, 1) ;
-		csf.toDate = new Date(114, 2, 19) ;		
+		csf.fromDate = new Date(2014-1900, 0, 1) ;
+		csf.toDate = new Date(2014-1900, 2, 19) ;		
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest( play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&fromDate="+csf.fromDate.getTime()+"&toDate="+csf.toDate.getTime()));		
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
@@ -363,11 +363,20 @@ public class ContainerTest extends AbstractTests {
 	@Test
 	public void validateListWithList() {
 		ContainersSearchForm csf = ContainerTestHelper.getFakeContainersSearchForm();		
+		MapperHelper mh = new MapperHelper();
+		Container c = new Container();
 		List <Container> lc = new ArrayList<Container>();
+		DatatableResponseForTest<Container> dr= new DatatableResponseForTest<Container>();
 		csf.datatable=false;
-		csf.code="";
+		csf.list=true;
+		csf.code="BFB_msCGP_d1";
 		
-		//result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest( play.test.Helpers.GET, );
+		Result result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&code="+csf.code));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		
+		
+		
+		
 		
 		
 		

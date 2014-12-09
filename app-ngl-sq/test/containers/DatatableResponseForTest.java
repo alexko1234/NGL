@@ -7,7 +7,7 @@ import views.components.datatable.DatatableResponse;
 public class DatatableResponseForTest<T> extends DatatableResponse<T> {
 
 	public DatatableResponseForTest(){
-		
+		super(null,null);
 	}
 	
 	public DatatableResponseForTest(List<T> data) {
@@ -16,9 +16,7 @@ public class DatatableResponseForTest<T> extends DatatableResponse<T> {
 	}
 
 	public DatatableResponseForTest(List<T> data, Integer recordsNumber) {
-		super(data, recordsNumber);
-		this.data = data;
-		this.recordsNumber = recordsNumber;
+		super(data, recordsNumber);		
 	}
 
 }
