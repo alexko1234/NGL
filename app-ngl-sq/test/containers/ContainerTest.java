@@ -12,7 +12,6 @@ import java.util.List;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
-import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.processes.instance.Process;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
@@ -475,7 +474,7 @@ public class ContainerTest extends AbstractTests {
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&projectCode="+csf.projectCode));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
-		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});		
+		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<Container>>(){});		
 		assertThat(lc.size()).isEqualTo(1);
 		
 		c = lc.get(0);
