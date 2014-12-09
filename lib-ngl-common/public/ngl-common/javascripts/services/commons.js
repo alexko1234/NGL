@@ -857,29 +857,20 @@ angular.module('commonsServices', []).
     	    	
     	    	if(key && !angular.isString(key))throw "key is not valid, only string is authorized";
     	    	
-    	    	var params = {countDistinct:0, key:key};
-    	    	var oldValue = undefined;
-    	    	var allValues = new Array(); 
-    	    	angular.forEach(array, function(value, index){
-    	    		if (params.key && angular.isObject(value)) {
-    	    			if ((oldValue === undefined) || ($parse(params.key)(value) !== $parse(params.key)(oldValue))) {
-    	    				allValues.push($parse(params.key)(value)); 
+    	    	var possibleValues = [];
+    	    	angular.forEach(array, function(element){
+    	    		if (angular.isObject(element)) {
+    	    			var currentValue = $parse(key)(element);
+    	    			if(undefined !== currentValue && null !== currentValue && possibleValues.indexOf(currentValue) === -1){
+       	    				possibleValues.push(currentValue);
     	    			}
+    	    			
+    	    			
+    	    		}else if (!params.key && angular.isObject(value)){
+    	    			throw "missing key !";
     	    		}
-    	    		else if (!params.key && angular.isObject(value)) throw "missing key !";
-    	    		else if (value !== oldValue) allValues.push(value.trim()); 
-    	    		oldValue = value.trim();
-    	    	}, params);
-    	    	
-    	    	//reduce array to unique values
-    	    	var uniqueValues = allValues.filter(function(item, pos, self) {
-    	    	    return self.indexOf(item) === pos;
+    	    		
     	    	});
-    	    	//remove undefined and empty string
-    	    	uniqueValues.splice(uniqueValues.indexOf(undefined),uniqueValues.indexOf(undefined)+1);
-    	    	uniqueValues.splice(uniqueValues.indexOf(""),uniqueValues.indexOf("")+1);
-    	    	params.countDistinct = uniqueValues.length;
-    	    	
-    	    	return params.countDistinct;
+    	    	return possibleValues.length;    	    	
     	    };
     	}]);
