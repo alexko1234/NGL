@@ -1564,15 +1564,17 @@ angular.module('datatableServices', []).
 		    							}else{
 		    								header = Messages(column.header);
 		    							}
-		    							if(column.groupMethod === "sum"){
-		    								header = header + Messages('datatable.export.sum'); 
-		    							}else if(column.groupMethod === "average"){
-		    								header = header + Messages('datatable.export.average');
-		    							}else if(column.groupMethod === "unique"){
-		    								header = header + Messages('datatable.export.unique');
-		    							}else if(column.groupMethod === "countDistinct"){
-		    								header = header + Messages('datatable.export.countDistinct');
-		    							} 
+		    							if(this.isGroupActive()){
+			    							if(column.groupMethod === "sum"){
+			    								header = header + Messages('datatable.export.sum'); 
+			    							}else if(column.groupMethod === "average"){
+			    								header = header + Messages('datatable.export.average');
+			    							}else if(column.groupMethod === "unique"){
+			    								header = header + Messages('datatable.export.unique');
+			    							}else if(column.groupMethod === "countDistinct"){
+			    								header = header + Messages('datatable.export.countDistinct');
+			    							} 
+		    							}
 		    							lineValue = lineValue + header + delimiter;
 		    							}
 		    						}); 
