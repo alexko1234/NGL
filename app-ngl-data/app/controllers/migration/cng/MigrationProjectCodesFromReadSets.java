@@ -3,8 +3,8 @@ package controllers.migration.cng;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import models.LimsCNGDAO;
@@ -31,6 +31,7 @@ import fr.cea.ig.MongoDBDAO;
  * Update projectCodes from readSets
  * @author dnoisett
  * 03-12-2014
+ * Refactoring 10-12-2014
  */
 public class MigrationProjectCodesFromReadSets  extends CommonController {
 	
@@ -52,8 +53,7 @@ public class MigrationProjectCodesFromReadSets  extends CommonController {
 		
 		Logger.info("Migration contents of containers Finish : " + intResultsArray[0] + " contents and projectCodes of containers updated !");
 		Logger.info("Migration contents of container supports Finish : " + intResultsArray[1] + " projectCodes of container supports updated !");
-	
-		
+			
 		return ok("End");
 	}
 	
@@ -71,8 +71,7 @@ public class MigrationProjectCodesFromReadSets  extends CommonController {
 	
 	
 	
-	private static int[] migrateContainer(String type) {
-		
+	private static int[] migrateContainer(String type) {		
 		int[] intResultsArray = new int[] {0,0};
 		String errorMsg = "", oldErrorMsg = "", errorMsg2 = "", oldErrorMsg2 = "";
 		boolean bFindReadSet;
@@ -86,16 +85,16 @@ public class MigrationProjectCodesFromReadSets  extends CommonController {
 		for (ContainerSupport oldSupportContainer : oldSupportContainers) {
 			
 			bFindReadSet = false;
-			HashMap<String, String> hmSupportContainers = new HashMap<String, String>();
+			HashMap<String, String> hmSamplesAndProjectsInReadSets = new HashMap<String, String>();
+			HashMap<String, HashSet<String>> hmLaneNumbersAndSamplesInReadSets = new HashMap<String, HashSet<String>>();
 			
 			//find run for this container support
 			List<Run> runs = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class,  
 					DBQuery.and(DBQuery.is("containerSupportCode", oldSupportContainer.code), DBQuery.notEquals("state.code", "FE-S"))).toList();
 			if (runs == null || runs.size() == 0) {
 				errorMsg = "ERROR 1 : No run found for container support " + oldSupportContainer.code;
-				if (!errorMsg.equals(oldErrorMsg)) {
-					//Logger.error(errorMsg);
-				}
+				//I don't log this message to not polluate the others.
+				//Logger.error(errorMsg);
 			}
 			else if (runs.size() > 1) {
 				errorMsg = "ERROR 2 : Multiple runs found container support " + oldSupportContainer.code;
@@ -114,24 +113,48 @@ public class MigrationProjectCodesFromReadSets  extends CommonController {
 				}
 				else {
 					bFindReadSet = true;
+					HashSet<String> tmpSampleCodes = new HashSet<String>();
+					
 					//find sampleCodes and projectCodes
 					for (ReadSet rd : rds) {
-						hmSupportContainers.put(rd.sampleCode, rd.projectCode); 
+						hmSamplesAndProjectsInReadSets.put(rd.sampleCode, rd.projectCode); 
+						
+						tmpSampleCodes.add(rd.sampleCode); 
+						
+						hmLaneNumbersAndSamplesInReadSets.put(rd.laneNumber.toString(), tmpSampleCodes);
+					}
+					
+					//new : check number of readsets
+					if (oldSupportContainer.categoryCode.equals("flowcell-1") &&  hmLaneNumbersAndSamplesInReadSets.size() != 1) {
+						errorMsg = "ERROR 4.1 : Nb readSets found : "+ hmLaneNumbersAndSamplesInReadSets.size() + ", expected : 1 (container support :"+ oldSupportContainer.code + ")";
+					}
+					else if (oldSupportContainer.categoryCode.equals("flowcell-2") &&  hmLaneNumbersAndSamplesInReadSets.size() != 2) {
+						errorMsg = "ERROR 4.2 : Nb readSets found : "+ hmLaneNumbersAndSamplesInReadSets.size() + ", expected : 2 (container support :"+ oldSupportContainer.code + ")";
+					}
+					else if (oldSupportContainer.categoryCode.equals("flowcell-4") &&  hmLaneNumbersAndSamplesInReadSets.size() != 4) {
+						errorMsg = "ERROR 4.3 : Nb readSets found : "+ hmLaneNumbersAndSamplesInReadSets.size() + ", expected : 4 (container support :"+ oldSupportContainer.code + ")";
+					}
+					else if (oldSupportContainer.categoryCode.equals("flowcell-8") &&  hmLaneNumbersAndSamplesInReadSets.size() != 8) {
+						errorMsg = "ERROR 4.4 : Nb readSets found : "+ hmLaneNumbersAndSamplesInReadSets.size() + ", expected : 8 (container support :"+ oldSupportContainer.code + ")";
+					}
+					if (!errorMsg.equals(oldErrorMsg)) {
+						Logger.error(errorMsg);
 					}
 				}
 			}
 			
 			
 			if (bFindReadSet) {
-				//RQ : si plusieurs fois même project ????
-				
-				//RQ : mise à jours des sampleCodes ????
 				
 				//update container support
-				WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", oldSupportContainer.code),   
-						DBUpdate.set("projectCodes", hmSupportContainers.values()));				
+				List<String> listSampleCodesInSupport = new ArrayList<String>(hmSamplesAndProjectsInReadSets.keySet()); 			
+				HashSet<String> listProjectCodesInSupport = new HashSet<String>(hmSamplesAndProjectsInReadSets.values()); 
+				
+				WriteResult<ContainerSupport, String> r = (WriteResult<ContainerSupport, String>) MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, 
+						DBQuery.is("code", oldSupportContainer.code),   
+						DBUpdate.set("sampleCodes", listSampleCodesInSupport).set("projectCodes", listProjectCodesInSupport));				
 				if(StringUtils.isNotEmpty(r.getError())){
-					Logger.error("ERROR 4 : Set container support project codes: "+oldSupportContainer.code+" / "+ r.getError());
+					Logger.error("ERROR 5 : Set container support project codes: "+oldSupportContainer.code+" / "+ r.getError());
 				}						
 				else {
 					intResultsArray[0]++; 
@@ -140,38 +163,68 @@ public class MigrationProjectCodesFromReadSets  extends CommonController {
 				//find containers associated with this container support
 				List<Container> oldContainers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code", oldSupportContainer.code)).toList();
 				
-				ArrayList<String> containersSampleCodes = new ArrayList<String>();
+				ArrayList<String> sampleCodesInContainers = new ArrayList<String>();				
+				ArrayList<String> projectCodesInContainers = new ArrayList<String>();
 				
 				//iterate over the containers
 				for (Container oldContainer : oldContainers) {
-					HashMap<String, String> hmContainers = new HashMap<String, String>();
+					HashMap<String, String> hmSampleAndProjectInContainer = new HashMap<String, String>();
 					
 					for (Content content : oldContainer.contents) {
-						if (hmSupportContainers.containsKey(content.sampleCode)) {
-							content.projectCode = hmSupportContainers.get(content.sampleCode);
-							hmContainers.put(content.sampleCode, content.projectCode); 
+						
+						if (hmLaneNumbersAndSamplesInReadSets.containsKey(oldContainer.support.line)) {
+							if (hmSamplesAndProjectsInReadSets.containsKey(content.sampleCode)) {
+								content.projectCode = hmSamplesAndProjectsInReadSets.get(content.sampleCode);
+								hmSampleAndProjectInContainer.put(content.sampleCode, content.projectCode); 
+							}
+							else {
+								//error missing sample code in container support
+								errorMsg2 = "ERROR 6 : Missing sample code " + content.sampleCode + " in container support " + oldSupportContainer.code + " OR wrong sample code in a content of container " + oldContainer.code; 
+								if (!errorMsg2.equals(oldErrorMsg2)) {
+									Logger.error(errorMsg2);
+								}
+								oldErrorMsg2 = errorMsg2; 
+							}
 						}
 						else {
-							//error missing sample code in container support
-							errorMsg2 = "ERROR 5 : Missing sample code " + content.sampleCode + " in container support " + oldSupportContainer.code + " OR wrong sample code in a content of container " + oldContainer.code; 
+							//error
+							errorMsg2 ="ERROR 7 : No lane with number " + oldContainer.support.line + " found in the readSets collection";
 							if (!errorMsg2.equals(oldErrorMsg2)) {
 								Logger.error(errorMsg2);
 							}
 							oldErrorMsg2 = errorMsg2; 
-						}					
-						if (!containersSampleCodes.contains(content.sampleCode)) {
-							containersSampleCodes.add(content.sampleCode);
+						} 
+						
+						//for further control *
+						if (!sampleCodesInContainers.contains(content.sampleCode)) {
+							sampleCodesInContainers.add(content.sampleCode);
 						}
+						if (!projectCodesInContainers.contains(content.projectCode)) {
+							projectCodesInContainers.add(content.projectCode);
+						}
+
 					}
 					
 					//update each container
-					//RQ : si plusieurs fois même project ????
-					//RQ : mise à jours des sampleCodes ????
-					//RQ Si erreur on met quand même à jour ???
-					r = (WriteResult) MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", oldContainer.code),   
-							DBUpdate.set("contents", oldContainer.contents).set("projectCodes", hmContainers.values()));					
-					if(StringUtils.isNotEmpty(r.getError())){
-						Logger.error("ERROR 6 : Set container: "+oldContainer.code+" with contents and projectCodes / "+ r.getError());
+					List<String> listSampleCodesInContainer = new ArrayList<String>(hmSampleAndProjectInContainer.keySet()); 
+					HashSet<String> listProjectCodesInContainer = new HashSet<String>(hmSampleAndProjectInContainer.values());
+					
+					/*
+					 //to debug
+					if (oldContainer.code.equals("C3FA2ACXX_6")) {
+						Logger.debug("hmSampleAndProjectInContainer.size = "+ hmSampleAndProjectInContainer.size());
+						Logger.debug("listSampleCodesInContainer.size = "+ listSampleCodesInContainer.size());
+						Logger.debug("listProjectCodesInContainer.size = "+ listProjectCodesInContainer.size());
+					}
+					*/
+					
+					
+					WriteResult<Container, String> r2 = (WriteResult<Container, String>) MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
+							DBQuery.is("code", oldContainer.code),   
+							DBUpdate.set("contents", oldContainer.contents).set("sampleCodes", listSampleCodesInContainer).set("projectCodes", listProjectCodesInContainer));					
+					if(StringUtils.isNotEmpty(r2.getError())){
+						Logger.error("ERROR 8 : Set container: "+oldContainer.code+" with contents, sampleCodes and projectCodes / "+ r2.getError());
+
 					}						
 					else {
 						intResultsArray[1]++; 
@@ -179,28 +232,81 @@ public class MigrationProjectCodesFromReadSets  extends CommonController {
 					
 				}
 				
-				
-				//reverse control
-				
-				//RQ Comprend pas ce test !!!!!
-				if (hmSupportContainers.size() > containersSampleCodes.size()) {
-					//error too many sample code in container support 
-					for (Map.Entry<String, String> e : hmSupportContainers.entrySet()) {
-						if (!containersSampleCodes.contains(e.getKey())) {
-							errorMsg = "ERROR 7 : The sample code " + e.getKey()  + " is not in the list of sample codes for the container support " + oldSupportContainer.code;
-							if (!errorMsg.equals(oldErrorMsg)) {
-								Logger.error(errorMsg);
-							}
+				//* 
+				// control sampleCodes in the support
+				boolean bFind = false;
+				for (String sampleCode : listSampleCodesInSupport) {
+					for (String sampleCode2 : sampleCodesInContainers) {
+						if (sampleCode.equals(sampleCode2)) {
+							bFind = true;
 							break;
 						}
 					}
+					if (!bFind) {
+						errorMsg = "ERROR 9 : Sample code " + sampleCode + " in support " + oldSupportContainer.code + " not in all his containers";
+						if (!errorMsg.equals(oldErrorMsg)) {
+							Logger.error(errorMsg);
+						}
+					}
 				}
-			}
-			
-			
+
+					
 				
+				//control projectCodes in the support
+				bFind = false;
+				for (String projectCode : listProjectCodesInSupport) {
+					for (String projectCode2 : projectCodesInContainers) {
+						if (projectCode.equals(projectCode2)) {
+							bFind = true;
+							break;
+						}
+					}
+					if (!bFind) {
+						errorMsg = "ERROR 10 : Project code " + projectCode + " in support " + oldSupportContainer.code + " not in all his containers";
+						if (!errorMsg.equals(oldErrorMsg)) {
+							Logger.error(errorMsg);
+						}
+					}
+				}
 
+				
+				//reverse control for sampleCodes
+				bFind = false;
+				for (String sCode : sampleCodesInContainers) {
+					for (String sCode2 : listSampleCodesInSupport) {
+						if (sCode.equals(sCode2)) {
+							bFind = true;
+							break;
+						}
+					}
+					if (!bFind) {
+						errorMsg = "ERROR 11 : Sample code " + sCode + " in a container  not in the list of sample codes of his support (" + oldSupportContainer + ")";
+						if (!errorMsg.equals(oldErrorMsg)) {
+							Logger.error(errorMsg);
+						}
+					}
+				}
+				
+				//reverse control for projectCodes
+				bFind = false;
+				for (String pCode : projectCodesInContainers) {
+					for (String pCode2 : projectCodesInContainers) {
+						if (pCode.equals(pCode2)) {
+							bFind = true;
+							break;
+						}
+					}
+					if (!bFind) {
+						errorMsg = "ERROR 12 : Project code " + pCode + " in a container not in the list of project codes of his support (" + oldSupportContainer + ")";
+						if (!errorMsg.equals(oldErrorMsg)) {
+							Logger.error(errorMsg);
+						}
+					}
+				}
+					
 
+			} // end of bFindReadSet test
+			
 			//just for not repeated the same error msg
 			oldErrorMsg = errorMsg;
 
@@ -210,3 +316,4 @@ public class MigrationProjectCodesFromReadSets  extends CommonController {
 	}
 
 }
+				
