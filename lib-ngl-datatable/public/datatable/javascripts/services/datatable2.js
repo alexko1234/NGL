@@ -1564,7 +1564,7 @@ angular.module('datatableServices', []).
 		    							}else{
 		    								header = Messages(column.header);
 		    							}
-		    							if(this.isGroupActive()){
+		    							if(that.isGroupActive()){
 			    							if(column.groupMethod === "sum"){
 			    								header = header + Messages('datatable.export.sum'); 
 			    							}else if(column.groupMethod === "average"){
