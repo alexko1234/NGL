@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.container.description.ContainerSupportCategory;
@@ -19,8 +20,8 @@ import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
-import org.mongojack.DBQuery;
 
+import org.mongojack.DBQuery;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -253,7 +254,7 @@ public class Containers extends CommonController {
 		}
 
 		if(StringUtils.isNotEmpty(containersSearch.supportCode)){
-			queryElts.add(DBQuery.is("support.code", containersSearch.supportCode));
+			queryElts.add(DBQuery.regex("support.code", Pattern.compile(containersSearch.supportCode)));
 		}
 		
 		if(StringUtils.isNotEmpty(containersSearch.containerSupportCategory)){

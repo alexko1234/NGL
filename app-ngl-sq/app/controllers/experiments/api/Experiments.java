@@ -526,42 +526,6 @@ public class Experiments extends CommonController{
 			
 			qs.add(DBQuery.regex("inputContainerSupportCodes",Pattern.compile(experimentSearch.containerSupportCode)));
 			qs.add(DBQuery.regex("outputContainerSupportCodes",Pattern.compile(experimentSearch.containerSupportCode)));
-			
-			/*
-			Boolean isAtomicTransfertMethods = MongoDBDAO.checkObjectExist(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class, DBQuery.exists("atomicTransfertMethods.0")) ;
-
-			for(int i=0; isAtomicTransfertMethods; i++){
-				Boolean isInputContainerUseds = MongoDBDAO.checkObjectExist(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class, DBQuery.exists("atomicTransfertMethods."+ i +".inputContainerUseds.0.code")) ;
-
-				if (isInputContainerUseds){
-					for(int j=0; isInputContainerUseds ; j++){
-						qs.add(DBQuery.regex("atomicTransfertMethods."+ i +".inputContainerUseds."+j+".code", Pattern.compile(experimentSearch.containerSupportCode)));													
-						isInputContainerUseds = MongoDBDAO.checkObjectExist(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class, DBQuery.exists("atomicTransfertMethods."+ i +".inputContainerUseds."+(j+1)+".code"));
-					}	
-				}else{
-					qs.add(DBQuery.regex("atomicTransfertMethods."+ i +".inputContainerUsed.code", Pattern.compile(experimentSearch.containerSupportCode)));
-				}				
-
-				Boolean isOuputContainerUseds = MongoDBDAO.checkObjectExist(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class, DBQuery.exists("atomicTransfertMethods."+ i +".ouputContainerUseds.0.code")) ;
-
-				if (isOuputContainerUseds){
-					for(int j=0; isOuputContainerUseds ; j++){
-						qs.add(DBQuery.regex("atomicTransfertMethods."+ i +".outputContainerUseds."+j+".code", Pattern.compile(experimentSearch.containerSupportCode)));
-						qs.add(DBQuery.regex("atomicTransfertMethods."+ i +".outputContainerUseds.locationOnContainerSupport."+j+".code", Pattern.compile(experimentSearch.containerSupportCode)));
-						isOuputContainerUseds = MongoDBDAO.checkObjectExist(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class, DBQuery.exists("atomicTransfertMethods."+ i +".ouputContainerUseds."+(j+1)+".code"));
-					}
-				}else{
-					qs.add(DBQuery.regex("atomicTransfertMethods."+ i +".outputContainerUsed.code", Pattern.compile(experimentSearch.containerSupportCode)));
-					qs.add(DBQuery.regex("atomicTransfertMethods."+ i +".outputContainerUsed.locationOnContainerSupport.code", Pattern.compile(experimentSearch.containerSupportCode)));				
-				}
-
-
-
-
-				isAtomicTransfertMethods = MongoDBDAO.checkObjectExist(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class, DBQuery.exists("atomicTransfertMethods."+ (i+1))) ;
-
-			}*/
-
 			queryElts.add(DBQuery.or(qs.toArray(new DBQuery.Query[qs.size()])));
 
 		}
