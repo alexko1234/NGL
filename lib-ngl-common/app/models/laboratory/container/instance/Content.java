@@ -54,7 +54,7 @@ public class Content implements IValidation{
 		ContentValidationHelper.validateSampleCode(sampleCode, contextValidation);
 		SampleValidationHelper.validateSampleCategoryCode(sampleCategoryCode,contextValidation);
 		ContentValidationHelper.validateSampleTypeCode(sampleTypeCode,contextValidation);
-	//	ContentValidationHelper.validatePercentageContent(percentage, contextValidation);
+		ContentValidationHelper.validatePercentageContent(percentage, contextValidation);
 		
 		//SampleUsedValidationHelper.validateProjectCode(projectCode, contextValidation);
 	}

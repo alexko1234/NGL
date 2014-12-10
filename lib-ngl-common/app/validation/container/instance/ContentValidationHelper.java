@@ -25,7 +25,7 @@ public class ContentValidationHelper extends CommonValidationHelper {
 		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, sampleCode, "sampleCode", Sample.class, InstanceConstants.SAMPLE_COLL_NAME, false);
 
 	}
-/*
+
 	public static void validatePercentageContent(Double percentage, ContextValidation contextValidation){
 
 		if(required(contextValidation, percentage, "percentage")){
@@ -38,5 +38,5 @@ public class ContentValidationHelper extends CommonValidationHelper {
 		}
 	}
 
-*/
+
 }

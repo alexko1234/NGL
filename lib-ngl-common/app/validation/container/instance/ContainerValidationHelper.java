@@ -46,12 +46,12 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 					Logger.debug("==> content." + i);
 			}		
 
-			//validateContentPercentageSum(contents, contextValidation);
+			validateContentPercentageSum(contents, contextValidation);
 		}
 	}
-	/*
+	
 	//Check the sum of percentage of contents is 100
-	public static boolean validateContentPercentageSum(List<Content> contents, ContextValidation contextValidation){
+	public static void validateContentPercentageSum(List<Content> contents, ContextValidation contextValidation){
 		Double percentageSum = 0.00;
 		for(Content t:contents){			
 			if(t.percentage!=null){
@@ -61,13 +61,10 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 		if(!((100.00-percentageSum)>=0.00 && (100.00-percentageSum)<=0.20)){
 			contextValidation.addKeyToRootKeyName("contents");
 			contextValidation.addErrors("percentageSum", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, "percentages");
-			contextValidation.addKeyToRootKeyName("contents");
-			return false;
-		}else{
-			return true;
+			contextValidation.addKeyToRootKeyName("contents");			
 		}
 	}
-*/
+
 	public static void validateContainerSupport(LocationOnContainerSupport support,
 			ContextValidation contextValidation) {
 		if(ValidationHelper.required(contextValidation, support, "support")) {

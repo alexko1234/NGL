@@ -522,7 +522,12 @@ public class Experiments extends CommonController{
 		}
 
 		if(StringUtils.isNotBlank(experimentSearch.containerSupportCode)){			
-			List<DBQuery.Query> qs = new ArrayList<DBQuery.Query>();				
+			List<DBQuery.Query> qs = new ArrayList<DBQuery.Query>();
+			
+			qs.add(DBQuery.regex("inputContainerSupportCodes",Pattern.compile(experimentSearch.containerSupportCode)));
+			qs.add(DBQuery.regex("outputContainerSupportCodes",Pattern.compile(experimentSearch.containerSupportCode)));
+			
+			/*
 			Boolean isAtomicTransfertMethods = MongoDBDAO.checkObjectExist(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class, DBQuery.exists("atomicTransfertMethods.0")) ;
 
 			for(int i=0; isAtomicTransfertMethods; i++){
@@ -555,7 +560,7 @@ public class Experiments extends CommonController{
 
 				isAtomicTransfertMethods = MongoDBDAO.checkObjectExist(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class, DBQuery.exists("atomicTransfertMethods."+ (i+1))) ;
 
-			}
+			}*/
 
 			queryElts.add(DBQuery.or(qs.toArray(new DBQuery.Query[qs.size()])));
 

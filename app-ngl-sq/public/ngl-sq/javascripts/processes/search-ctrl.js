@@ -29,6 +29,11 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 	$scope.search = function(){	
 		$scope.searchService.search();
 	};
+	/*
+	$scope.changeProcessesSupportCode = function(val){
+		console.log(val);
+		return $scope.searchService.changeProcessesSupportCode(val);		 
+	}*/
 	
 	//init
 	if(angular.isUndefined($scope.getHomePage())){

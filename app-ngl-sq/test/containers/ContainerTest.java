@@ -318,9 +318,7 @@ public class ContainerTest extends AbstractTests {
 
 		}		
 
-		//Test with dates (matched period)
-		csf = ContainerTestHelper.getFakeContainersSearchForm();
-		csf.datatable=true;
+		//Test with dates (matched period)		
 		csf.fromDate = new Date(2014-1900, 2, 20) ;
 		csf.toDate = new Date(2014-1900, 2, 20) ;		
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest( play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&fromDate="+csf.fromDate.getTime()+"&toDate="+csf.toDate.getTime()));		
@@ -344,9 +342,7 @@ public class ContainerTest extends AbstractTests {
 			assertThat(c.code).isNotEqualTo("ADI_RD1");	
 		}
 		
-		//Test with containerSupportCategory (good request)
-		csf = ContainerTestHelper.getFakeContainersSearchForm();
-		csf.datatable=true;
+		//Test with containerSupportCategory (good request)			
 		csf.containerSupportCategory = "tube";
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest( play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&containerSupportCategory="+csf.containerSupportCategory));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
@@ -371,9 +367,7 @@ public class ContainerTest extends AbstractTests {
 		lc = dr.data;
 		assertThat(lc).isNullOrEmpty();
 		
-		//Test with experimentTypeCode (good request)
-		csf = ContainerTestHelper.getFakeContainersSearchForm();
-		csf.datatable=true;
+		//Test with experimentTypeCode (good request)		
 		csf.experimentTypeCode= "prepa-flowcell";		
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest( play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&experimentTypeCode="+csf.experimentTypeCode));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
@@ -440,9 +434,7 @@ public class ContainerTest extends AbstractTests {
 		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});		
 		assertThat(lc).isNullOrEmpty();
 		
-		//Test with projectCode (good request)
-		csf = ContainerTestHelper.getFakeContainersSearchForm();
-		csf.list=true;
+		//Test with projectCode (good request)		
 		csf.projectCode = "AHX";
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&projectCode="+csf.projectCode));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
@@ -467,9 +459,7 @@ public class ContainerTest extends AbstractTests {
 		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});	
 		assertThat(lc).isNullOrEmpty();		
 		
-		//Test with date (good request)
-		csf = ContainerTestHelper.getFakeContainersSearchForm();
-		csf.list=true;
+		//Test with date (good request)		
 		csf.fromDate = new Date(2014-1900, 9, 10) ;
 		csf.toDate = new Date(2014-1900, 9, 10) ;
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&fromDate="+csf.fromDate.getTime()+"&toDate="+csf.toDate.getTime()));
@@ -518,9 +508,7 @@ public class ContainerTest extends AbstractTests {
 		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<Container>>(){});		
 		assertThat(lc).isNullOrEmpty();
 
-		//Test with projectCode (good request)
-		csf = ContainerTestHelper.getFakeContainersSearchForm();
-		csf.list=true;
+		//Test with projectCode (good request)		
 		csf.projectCode = "AHX";
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&projectCode="+csf.projectCode));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
@@ -545,9 +533,7 @@ public class ContainerTest extends AbstractTests {
 		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<Container>>(){});	
 		assertThat(lc).isNullOrEmpty();		
 
-		//Test with date (good request)
-		csf = ContainerTestHelper.getFakeContainersSearchForm();
-		csf.list=true;
+		//Test with date (good request)		
 		csf.fromDate = new Date(2014-1900, 9, 10) ;
 		csf.toDate = new Date(2014-1900, 9, 10) ;
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&fromDate="+csf.fromDate.getTime()+"&toDate="+csf.toDate.getTime()));

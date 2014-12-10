@@ -254,7 +254,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	 * Percentage Contents
 	 * 
 	 */	
-	/*
+	
 	@Test
 	public void validationPercentageContentsWithGoodValues(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
@@ -327,7 +327,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
 	}
 	
-	*/
+	
 
 	/**
 	 * 

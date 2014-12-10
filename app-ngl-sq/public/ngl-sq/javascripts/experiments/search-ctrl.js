@@ -28,7 +28,7 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 		$scope.searchService.resetForm();		
 	};
 	
-
+	
 	$scope.changeContainerSupportCode = function(val){
 		console.log(val);
 		return $scope.searchService.changeContainerSupportCode(val);		 

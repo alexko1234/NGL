@@ -22,6 +22,9 @@ import models.utils.InstanceConstants;
 import models.utils.instance.ContainerHelper;
 import play.Logger;
 import play.mvc.Result;
+import validation.ContextValidation;
+import validation.container.instance.ContainerValidationHelper;
+import validation.container.instance.ContentValidationHelper;
 import fr.cea.ig.MongoDBDAO;
 
 public class AddPercentageContent extends CommonController{
@@ -58,13 +61,10 @@ public class AddPercentageContent extends CommonController{
 
 		Logger.debug("Migre "+containers.size()+" CONTAINERS");
 
-
-
-
 		for(Container container: containers){	
 
 			int contentsArraySize = container.contents.size();
-			Logger.info("Container: code="+container.code+", "+contentsArraySize+" contents");
+			//Logger.info("Container: code="+container.code+", "+contentsArraySize+" contents");
 
 			Double equiPercent = ContainerHelper.getEquiPercentValue(contentsArraySize);
 
@@ -74,26 +74,25 @@ public class AddPercentageContent extends CommonController{
 
 				if(content.properties.containsKey("percentPerLane")){						
 					PropertySingleValue field =(PropertySingleValue) content.properties.get("percentPerLane");
-					content.percentage= Double.valueOf(field.value.toString());					
+					BigDecimal bg = new BigDecimal(field.value.toString()).setScale(2, RoundingMode.HALF_UP);
+					content.percentage= bg.doubleValue();					
 					if(content.percentage==0.00){											
 						content.percentage= equiPercent;
 					}
 				}else{	
 					content.percentage= equiPercent;
-				}				
+				}
 				
 			}			
-			try{
-				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
-						DBQuery.is("code", container.code),
-						DBUpdate.set("contents", container.contents));
-			}catch(MongoException e) {
-				Logger.error("MongoException type error !");
-			}
+				try{
+					MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
+							DBQuery.is("code", container.code),
+							DBUpdate.set("contents", container.contents));
+				}catch(MongoException e) {
+					Logger.error("MongoException type error !");
+				}			
 		}
 	}
-
-
 
 
 	private static void backupContainerCollection() {
