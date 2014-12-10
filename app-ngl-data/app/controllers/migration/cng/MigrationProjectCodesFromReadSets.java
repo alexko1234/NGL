@@ -123,6 +123,9 @@ public class MigrationProjectCodesFromReadSets  extends CommonController {
 			
 			
 			if (bFindReadSet) {
+				//RQ : si plusieurs fois même project ????
+				
+				//RQ : mise à jours des sampleCodes ????
 				
 				//update container support
 				WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", oldSupportContainer.code),   
@@ -162,6 +165,9 @@ public class MigrationProjectCodesFromReadSets  extends CommonController {
 					}
 					
 					//update each container
+					//RQ : si plusieurs fois même project ????
+					//RQ : mise à jours des sampleCodes ????
+					//RQ Si erreur on met quand même à jour ???
 					r = (WriteResult) MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", oldContainer.code),   
 							DBUpdate.set("contents", oldContainer.contents).set("projectCodes", hmContainers.values()));					
 					if(StringUtils.isNotEmpty(r.getError())){
@@ -175,6 +181,8 @@ public class MigrationProjectCodesFromReadSets  extends CommonController {
 				
 				
 				//reverse control
+				
+				//RQ Comprend pas ce test !!!!!
 				if (hmSupportContainers.size() > containersSampleCodes.size()) {
 					//error too many sample code in container support 
 					for (Map.Entry<String, String> e : hmSupportContainers.entrySet()) {
