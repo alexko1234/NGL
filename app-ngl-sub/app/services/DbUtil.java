@@ -109,20 +109,21 @@ public class DbUtil {
 	public void cleanDataBase(String submissionCode) {
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submission.instance.Submission.class, submissionCode);
 
+		if (submission==null){
+			return;
+		}
 		// On verifie que la donnée n'est pas connu de l'EBI avant de detruire
 		if (submission.accession == null || submission.accession.equals("")) {
-			if (! submission.studyCodes.isEmpty()) {
-				for (String studyCode : submission.studyCodes){
-					// verifier que study n'est pas utilisé par autre objet submission avant destruction
-					List <Submission> submissionList = MongoDBDAO.find(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, DBQuery.in("studyCodes", studyCode)).toList();
-					if (submissionList.size() > 1) {
-						for (Submission sub: submissionList) {
-							System.out.println(studyCode + " utilise par objet Submission " + sub.code);
-						}
-					} else {
-						System.out.println("deletion dans base pour " + studyCode);
-						MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.study.instance.Study.class, studyCode);
+			if ( submission.studyCode != null) {
+				// verifier que study n'est pas utilisé par autre objet submission avant destruction
+				List <Submission> submissionList = MongoDBDAO.find(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, DBQuery.in("studyCode", submission.studyCode)).toList();
+				if (submissionList.size() > 1) {
+					for (Submission sub: submissionList) {
+						System.out.println(submission.studyCode + " utilise par objet Submission " + sub.code);
 					}
+				} else {
+					System.out.println("deletion dans base pour " + submission.studyCode);
+					MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.study.instance.Study.class, submission.studyCode);
 				}
 			}
 			if (! submission.sampleCodes.isEmpty()) {

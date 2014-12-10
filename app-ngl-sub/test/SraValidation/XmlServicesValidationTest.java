@@ -1,5 +1,5 @@
-package submission;
-
+package SraValidation;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,33 +8,28 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.run.instance.ReadSet;
 import models.sra.configuration.instance.Configuration;
+import models.sra.experiment.instance.Experiment;
 import models.sra.study.instance.Study;
+import models.sra.submission.instance.Submission;
 import models.sra.utils.SraException;
 import models.sra.utils.VariableSRA;
 import models.utils.InstanceConstants;
 
+import org.junit.Assert;
 import org.junit.Test;
 
-import services.DbUtil;
+import play.Logger;
 import services.SubmissionServices;
-import utils.AbstractTests;
+import services.XmlServices;
+import utils.AbstractTestsSRA;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
-import play.Logger;
-
-public class SubmissionTest extends AbstractTests {
+public class XmlServicesValidationTest extends AbstractTestsSRA {
 	
-/*	@AfterClass
-	public void finalize()
-	{
-	
-	}
-	*/
 	@Test
-	public void testSubmission() throws IOException, SraException
-	{
+	public void validationXmlServicesSuccess() throws IOException, SraException {
+
 		SubmissionServices submissionServices = new SubmissionServices();
-		DbUtil sraDbServices = new DbUtil();
 		String user = "william";
 		ContextValidation contextValidation = new ContextValidation(user);
 		contextValidation.setCreationMode();		
@@ -95,13 +90,30 @@ public class SubmissionTest extends AbstractTests {
 		//String directory = "/env/cns/submit_traces/SRA/SNTS_output_xml/mesTEST/lastTest";
 		//xmlServices.writeAllXml(submissionCode, directory);
 		
+
+		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submission.instance.Submission.class,  submissionCode);
+		File studyFile = new File("/env/cns/submit_traces/SRA/ngl-sub/mesTests/study.xml");
+		File sampleFile = new File("/env/cns/submit_traces/SRA/ngl-sub/mesTests/sample.xml");
+		File experimentFile = new File("/env/cns/submit_traces/SRA/ngl-sub/mesTests/experiment.xml");
+		File runFile = new File("/env/cns/submit_traces/SRA/ngl-sub/mesTests/run.xml");
+		File submissionFile = new File("/env/cns/submit_traces/SRA/ngl-sub/mesTests/submission.xml");
+		XmlServices.writeStudyXml(submission, studyFile);
+		XmlServices.writeSampleXml(submission, sampleFile);
+		XmlServices.writeExperimentXml(submission, experimentFile);
+		XmlServices.writeRunXml(submission, runFile);
+		XmlServices.writeSubmissionXml(submission, submissionFile);
+		
+		String resultDirectory = "/env/cns/submit_traces/SRA/ngl-sub/mesTests2/";
+		XmlServices.writeAllXml(submissionCode, resultDirectory);
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.study.instance.Study.class, study.code);
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, models.sra.configuration.instance.Configuration.class, config.code);
+		SubmissionServices.cleanDataBase(submission.code);
+
+		//XmlServices xmlServices = new XmlServices();
+		//XmlServices.writeAllXml(submissionCode);
 		
-		DbUtil dbUtil = new DbUtil();
-		
-		//dbUtil.cleanDataBase(submissionCode);
-		//////////MongoDBDAO.save(InstanceConstants.SRA_STUDY_COLL_NAME, study);
-		
+		System.out.println("\ndisplayErrors pour validationXmlServicesSuccess :");
+		contextValidation.displayErrors(Logger.of("SRA"));		
+		Assert.assertTrue(contextValidation.errors.size()==0); // si aucune erreur
 	}
 }

@@ -14,7 +14,7 @@ import fr.cea.ig.MongoDBDAO;
 
 public class Run implements IValidation {
 	// RunType
-	public String code;            // champs alias required mais remplacé par code et valeur = projectCode_num
+	public String code;            // champs alias required mais remplacé par code 
 	public Date runDate;           
 	public String runCenter;       // required pour nos stats valeur fixee à GSC 
 	public String accession;       // numeros d'accession attribué par ebi 

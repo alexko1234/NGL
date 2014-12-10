@@ -13,6 +13,7 @@ import org.junit.Test;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
 import utils.AbstractTestsSRA;
+import play.Logger;
 
 
 // Pour les tests utilisant MongoDb mettre extents AbstractTests
@@ -26,9 +27,9 @@ public class StudyValidationTest extends AbstractTestsSRA {
 		// Tests study avec infos obligatoires presentes et bonnes valeurs et mode
 		// creation ou update.		
 		study.centerName=VariableSRA.centerName;
-		study.projectCode = "test";
-		study.centerProjectName = "test";
-		study.code = "study_test_1";
+		study.projectCode = "AWK";
+		study.centerProjectName = "AWK";
+		study.code = "study_AWK_1";
 		study.existingStudyType="Metagenomics";
 		ContextValidation contextValidation = new ContextValidation(userContext);
 		contextValidation.setCreationMode();
@@ -37,9 +38,8 @@ public class StudyValidationTest extends AbstractTestsSRA {
 		contextValidation.setUpdateMode();
 		study.validate(contextValidation);
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.study.instance.Study.class, study.code);
-
-		//contextValidation.getContextObjects().put("stateCode", "F");
-		System.out.println(contextValidation.errors.toString());
+		System.out.println("contextValidation.errors pour validationStudySuccess :");
+		contextValidation.displayErrors(Logger.of("SRA"));
 		Assert.assertTrue(contextValidation.errors.size()==0); // si aucune erreur
 		//Assert.assertTrue(contextValidation.errors.size()==1ou > ); // si aucune erreur
 	}
@@ -60,9 +60,8 @@ public class StudyValidationTest extends AbstractTestsSRA {
 		study.validate(contextValidation);
 		MongoDBDAO.save(InstanceConstants.SRA_STUDY_COLL_NAME, study);
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.study.instance.Study.class, study.code);
-
-		System.out.println(contextValidation.errors.toString());
-		System.out.println("nbre d'erreurs : "+contextValidation.errors.size());
+		System.out.println("contextValidation.errors pour validationStudyEchec :");
+		contextValidation.displayErrors(Logger.of("SRA"));
 		Assert.assertTrue(contextValidation.errors.size()==4); // On attend 5 erreurs
 	}
 

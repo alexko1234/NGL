@@ -9,8 +9,9 @@ public interface VariableSRA {
 	
 	static final String centerName = "GSC";
 	static final String laboratoryName = "Genoscope - CEA";
-	static final String submissionDirectory = "/env/cns/submit_traces/SRA/SNTS_output_xml";
+	static final String submissionRootDirectory = "/env/cns/submit_traces/SRA/SNTS_output_xml";
 	static final String libraryConstructionProtocol = "none provided";
+	static final String admin = "william";
 	
 	static final Map<String, String> mapCenterName =  new HashMap<String, String>() {
 		{

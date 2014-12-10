@@ -3,7 +3,6 @@ package services;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import models.sra.experiment.instance.Experiment;
 import models.sra.experiment.instance.RawData;
@@ -12,6 +11,7 @@ import models.sra.experiment.instance.Run;
 import models.sra.sample.instance.Sample;
 import models.sra.study.instance.Study;
 import models.sra.submission.instance.Submission;
+import models.sra.utils.SraException;
 import models.utils.InstanceConstants;
 import fr.cea.ig.MongoDBDAO;
 
@@ -19,13 +19,18 @@ public class XmlServices {
 
 	
 
-	public void writeAllXml(String submissionCode) throws IOException {
+	public static void writeAllXml(String submissionCode) throws IOException, SraException {
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submission.instance.Submission.class, submissionCode);
 		String resultDirectory = submission.submissionDirectory;
 		writeAllXml(submissionCode, resultDirectory);
 	}
 	
-	public void writeAllXml(String submissionCode, String resultDirectory) throws IOException {
+	public static void writeAllXml(String submissionCode, String resultDirectory, Boolean release) throws IOException, SraException {
+		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submission.instance.Submission.class, submissionCode);
+		writeAllXml(submissionCode, resultDirectory);
+	}
+		
+	public static void writeAllXml(String submissionCode, String resultDirectory) throws IOException, SraException {
 		System.out.println("creation des fichiers xml pour l'ensemble de la soumission "+ submissionCode);
 		// Recuperer l'objet submission:
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submission.instance.Submission.class, submissionCode);
@@ -34,33 +39,39 @@ public class XmlServices {
 		File experimentFile = new File(resultDirectory + File.separator + "experiment.xml");
 		File runFile = new File(resultDirectory + File.separator + "run.xml");
 		File submissionFile = new File(resultDirectory + File.separator + "submission.xml");
-		writeStudyXml(submission, studyFile); 
+		writeStudyXml(submission, studyFile);
 		writeSampleXml(submission, sampleFile); 
 		writeExperimentXml(submission, experimentFile); 
 		writeRunXml(submission, runFile); 
 		writeSubmissionXml(submission, submissionFile); 	
 	}
 
-	public void writeStudyXml (Submission submission, File outputFile) throws IOException {
-				
-		if (! submission.studyCodes.isEmpty()) {
+	public static void writeStudyXml (Submission submission, File outputFile) throws IOException, SraException {	
+		if (submission == null) {
+			return;
+		}
+		if ( submission.studyCode != null) {
 			System.out.println("Creation du fichier " + outputFile);
 			// ouvrir fichier en ecriture
 			BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile));
-			
 			String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
 			chaine = chaine + "<STUDY_SET>\n";
-			for (String studyCode : submission.studyCodes){
+			String studyCode = submission.studyCode;
 				// Recuperer objet study dans la base :
 				Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.study.instance.Study.class, studyCode);
 				//output_buffer.write("//\n");
+				if (study == null){
+					throw new SraException("study impossible à recuperer dans base :"+ studyCode);
+				}
 				System.out.println("Ecriture du study " + studyCode);
 
 				chaine = chaine + "  <STUDY alias=\""+ studyCode + "\"";
-				
-				if ( (study.accession != null) && (! study.accession.equals("")) ) {
-					chaine = chaine + "accession=\"" + study.accession + "\"";
+				if (study.accession != null){
+					if (!study.accession.equals("")){
+						chaine = chaine + "accession=\"" + study.accession + "\"";
+					}
 				}
+				
 				chaine = chaine + ">\n";
 				chaine = chaine + "    <DESCRIPTOR>\n";
 				chaine = chaine + "      <STUDY_TITLE>" + study.title + "</STUDY_TITLE>\n";
@@ -82,17 +93,18 @@ public class XmlServices {
 				chaine = chaine + "      <STUDY_DESCRIPTION>"+study.description+"</STUDY_DESCRIPTION>\n";
 				chaine = chaine + "    </DESCRIPTOR>\n";
 				chaine = chaine + "  </STUDY>\n";
-			}
+			//} // end for
 			chaine = chaine + "</STUDY_SET>\n";
 			output_buffer.write(chaine);
 			output_buffer.close();
-		}
-		
-		
-	}
+		} // end if		
+	} // end writeStudyXml
 	   
-	public void writeSampleXml (Submission submission, File outputFile) throws IOException {
-		
+	public static void writeSampleXml (Submission submission, File outputFile) throws IOException, SraException {
+		System.out.println("sample = "  + submission.sampleCodes.get(0));
+		if (submission == null) {
+			return;
+		}
 		if (! submission.sampleCodes.isEmpty()) {	
 			// ouvrir fichier en ecriture
 			System.out.println("Creation du fichier " + outputFile);
@@ -101,22 +113,31 @@ public class XmlServices {
 			String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
 			chaine = chaine + "<SAMPLE_SET>\n";
 			for (String sampleCode : submission.sampleCodes){
-				// Recuperer objet study dans la base :
+				System.out.println("sampleCode = '" + sampleCode +"'");
+				// Recuperer objet sample dans la base :
 				Sample sample = MongoDBDAO.findByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, models.sra.sample.instance.Sample.class, sampleCode);
+				if (sample == null){
+					throw new SraException("sample impossible à recuperer dans base :"+ sampleCode);
+				}
 				//output_buffer.write("//\n");
 				System.out.println("Ecriture du sample " + sampleCode);
 
 				chaine = chaine + "  <SAMPLE alias=\""+ sampleCode + "\"";
 				
-				if ( (sample.accession != null) && (! sample.accession.equals("")) ) {
-					chaine = chaine + "accession=\"" + sample.accession + "\"";
+				if (sample.accession != null) {
+					if (! sample.accession.equals("") ) {
+						chaine = chaine + "accession=\"" + sample.accession + "\"";
+					}
 				}
+			
 				chaine = chaine + ">\n";
 				chaine = chaine + "    <TITLE>" + sample.title + "</TITLE>\n";
 				chaine = chaine + "    <SAMPLE_NAME>\n";
 				chaine = chaine + "      <TAXON_ID>" + sample.taxonId + "</TAXON_ID>\n";
+				chaine = chaine + "      <SCIENTIFIC_NAME>" + sample.scientificName + "</SCIENTIFIC_NAME>\n";
 				chaine = chaine + "      <COMMON_NAME>" + sample.commonName + "</COMMON_NAME>\n";
 				chaine = chaine + "    </SAMPLE_NAME>\n";
+				chaine = chaine + "      <DESCRIPTION>" + sample.commonName + "</DESCRIPTION>\n";
 				chaine = chaine + "  </SAMPLE>\n";
 			}
 			chaine = chaine + "</SAMPLE_SET>\n";
@@ -124,7 +145,10 @@ public class XmlServices {
 			output_buffer.close();
 		}
 	}
-	public void writeExperimentXml (Submission submission, File outputFile) throws IOException {
+	public static void writeExperimentXml (Submission submission, File outputFile) throws IOException, SraException {
+		if (submission == null) {
+			return;
+		}
 		if (! submission.experimentCodes.isEmpty()) {	
 			// ouvrir fichier en ecriture
 			System.out.println("Creation du fichier " + outputFile);
@@ -132,15 +156,19 @@ public class XmlServices {
 			String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
 			chaine = chaine + "<EXPERIMENT_SET>\n";
 			for (String experimentCode : submission.experimentCodes){
-				// Recuperer objet study dans la base :
+				// Recuperer objet experiment dans la base :
 				Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.experiment.instance.Experiment.class, experimentCode);
 				//output_buffer.write("//\n");
 				System.out.println("Ecriture du experiment " + experimentCode);
-
+				if (experiment == null){
+					throw new SraException("study impossible à recuperer dans base :"+ experimentCode);
+				}
 				chaine = chaine + "  <EXPERIMENT alias=\""+ experimentCode + "\"";
 				
-				if ( (experiment.accession != null) && (! experiment.accession.equals("")) ) {
-					chaine = chaine + "accession=\"" + experiment.accession + "\"";
+				if (experiment.accession != null) {
+					if (! experiment.accession.equals(""))  {
+						chaine = chaine + "accession=\"" + experiment.accession + "\"";
+					}
 				}
 				chaine = chaine + ">\n";
 				chaine = chaine + "    <TITLE>" + experiment.title + "</TITLE>\n";
@@ -185,7 +213,10 @@ public class XmlServices {
 			output_buffer.close();
 		}
 	}
-	public void writeRunXml (Submission submission, File outputFile) throws IOException {
+	public static void writeRunXml (Submission submission, File outputFile) throws IOException, SraException {
+		if (submission == null) {
+			return;
+		}
 		// On accede au run via l'experiment:
 		if (! submission.experimentCodes.isEmpty()) {	
 			// ouvrir fichier en ecriture
@@ -194,9 +225,15 @@ public class XmlServices {
 			String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
 			chaine = chaine + "<RUN_SET>\n";
 			for (String experimentCode : submission.experimentCodes){
-				// Recuperer objet study dans la base :
+				// Recuperer objet experiment dans la base :
 				Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.experiment.instance.Experiment.class, experimentCode);
+				if (experiment == null) {
+					throw new SraException("experiment impossible à recuperer dans base :"+ experimentCode);
+				}
 				Run run = experiment.run;
+				if (run == null){
+					throw new SraException("run impossible à recuperer dans objet experiment:"+ experimentCode);
+				}
 				//output_buffer.write("//\n");
 				String runCode = run.code;
 				System.out.println("Ecriture du run " + runCode);
@@ -219,55 +256,60 @@ public class XmlServices {
 				chaine = chaine + "      </FILES>\n";
 				chaine = chaine + "    </DATABLOCK>\n";
 				chaine = chaine + "  </RUN>\n";
+				}
+				chaine = chaine + "</RUN_SET>\n";
+				output_buffer.write(chaine);
+				output_buffer.close();
 			}
-			chaine = chaine + "</RUN_SET>\n";
-			output_buffer.write(chaine);
-			output_buffer.close();
 		}
-	}
+	
+
 		
-	public void writeSubmissionXml (Submission submission, File outputFile) throws IOException {
+	public static void writeSubmissionXml (Submission submission, File outputFile) throws IOException {
+		if (submission == null) {
+			return;
+		}
 		
-		if (! submission.sampleCodes.isEmpty()) {	
-			// ouvrir fichier en ecriture
-			System.out.println("Creation du fichier " + outputFile);
-			BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile));
-			String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
-			chaine = chaine + "<SUBMISSION_SET>\n";
-			
-			System.out.println("Ecriture du submission " + submission.code);
-			chaine = chaine + "  <SUBMISSION alias=\""+ submission.code + "\"";
-				
-			if ( (submission.accession != null) && (! submission.accession.equals("")) ) {
+		
+		// ouvrir fichier en ecriture
+		System.out.println("Creation du fichier " + outputFile);
+		BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile));
+		String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
+		chaine = chaine + "<SUBMISSION_SET>\n";
+		
+		System.out.println("Ecriture du submission " + submission.code);
+		chaine = chaine + "  <SUBMISSION alias=\""+ submission.code + "\"";
+		
+		if (submission.accession != null) {
+			if (! submission.accession.equals("")) {
 				chaine = chaine + "accession=\"" + submission.accession + "\"";
 			}
-			chaine = chaine + ">\n";
-			
-			chaine = chaine + "    <CONTACTS>\n";
-			chaine = chaine + "      <CONTACT>  name=\"william\" inform_on_status=\"william@genoscope.cns.fr\" inform_on_error=\"william@genoscope.cns.fr\"/>\n";
-			chaine = chaine + "    </CONTACTS>\n";
-			
-			chaine = chaine + "    <ACTIONS>\n";
-			if (!submission.studyCodes.isEmpty()) {
-				chaine = chaine + "      <ACTION>\n        <HOLD/> Verifier ou placer la contrainte dans objet ????\n      </ACTION>\n";
-			}
-			if (!submission.studyCodes.isEmpty()){
-				chaine = chaine + "      <ACTION>\n        <ADD source=\"study.xml\" schema=\"study\"/>\n      </ACTION>\n";
-			}
-			if (!submission.sampleCodes.isEmpty()){
-				chaine = chaine + "      <ACTION>\n        <ADD source=\"sample.xml\" schema=\"sample\"/>\n      </ACTION>\n";
-			}
-			if (!submission.experimentCodes.isEmpty()){
-				chaine = chaine + "      <ACTION>\n        <ADD source=\"experiment.xml\" schema=\"experiment\"/>\n      </ACTION>\n";
-				chaine = chaine + "      <ACTION>\n        <ADD source=\"run.xml\" schema=\"run\"/>\n      </ACTION>\n";
-			}
-			chaine = chaine + "    </ACTIONS>\n";
-
-			chaine = chaine + "  </SUBMISSION>\n";
-			chaine = chaine + "</SUBMISSION_SET>\n";
-			output_buffer.write(chaine);
-			output_buffer.close();
 		}
+		chaine = chaine + ">\n";	
+		chaine = chaine + "    <CONTACTS>\n";
+		chaine = chaine + "      <CONTACT>  name=\"william\" inform_on_status=\"william@genoscope.cns.fr\" inform_on_error=\"william@genoscope.cns.fr\"/>\n";
+		chaine = chaine + "    </CONTACTS>\n";
+			
+		chaine = chaine + "    <ACTIONS>\n";
+		if (!submission.release)  {
+			chaine = chaine + "      <ACTION>\n        <HOLD/> Verifier ou placer la contrainte dans objet ????\n      </ACTION>\n";
+		}
+		if (submission.studyCode != null){
+			chaine = chaine + "      <ACTION>\n        <ADD source=\"study.xml\" schema=\"study\"/>\n      </ACTION>\n";
+		}
+		if (!submission.sampleCodes.isEmpty()){
+			chaine = chaine + "      <ACTION>\n        <ADD source=\"sample.xml\" schema=\"sample\"/>\n      </ACTION>\n";
+		}
+		if (!submission.experimentCodes.isEmpty()){
+			chaine = chaine + "      <ACTION>\n        <ADD source=\"experiment.xml\" schema=\"experiment\"/>\n      </ACTION>\n";
+			chaine = chaine + "      <ACTION>\n        <ADD source=\"run.xml\" schema=\"run\"/>\n      </ACTION>\n";
+		}
+		chaine = chaine + "    </ACTIONS>\n";
+		
+		chaine = chaine + "  </SUBMISSION>\n";
+		chaine = chaine + "</SUBMISSION_SET>\n";
+		output_buffer.write(chaine);
+		output_buffer.close();	
 	}
 
 

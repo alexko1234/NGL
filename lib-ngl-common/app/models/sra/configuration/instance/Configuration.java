@@ -22,11 +22,13 @@ public class Configuration  extends DBObject implements IValidation {
 		//public String studyCode = null;
 		public String strategySample = null;  // required et constraint :
 		//("STRATEGY_SAMPLE_TAXON", "STRATEGY_SAMPLE_CLONE", "STRATEGY_NO_SAMPLE");
+		public String strategyStudy = null; // required et contraint existingStudyType
+		// Whole Genome Sequencing, Metagenomics, transcriptome analysis
 		
-		/*Informations de library obligatoires qui sont prises dans le lims mais qui peuvent etre surchargées 
-		 * par le la configuration ou encore par le  fichier User_Experiments.csv si les valeurs sont specifiques 
-		 de chaque experiment:
-		 */
+		// Informations de library obligatoires qui sont prises dans le lims mais qui peuvent etre surchargées 
+		// par le la configuration ou encore par le  fichier User_Experiments.csv si les valeurs sont specifiques 
+		// de chaque experiment:
+		 
 		public String librarySelection = null;// required et constraint: champs de la proc surchargeable dans conf ou par utilisateurs */
 		public String libraryStrategy = null; // required et constraint. Valeur mise par defaut à "WGS" mais surchargeable */
 		public String librarySource = null;   // required et constraint. Valeur mise par defaut à "GENOMIC" mais surchargeable */

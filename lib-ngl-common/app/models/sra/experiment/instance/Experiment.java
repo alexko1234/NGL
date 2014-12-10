@@ -3,20 +3,18 @@ package models.sra.experiment.instance;
 import java.util.ArrayList;
 import java.util.List;
 
-import play.Logger;
-
-
-
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.sra.utils.VariableSRA;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
-import fr.cea.ig.DBObject;
-
 import validation.sra.SraValidationHelper;
 import validation.utils.ValidationHelper;
+import fr.cea.ig.DBObject;
+import fr.cea.ig.MongoDBDAO;
+
+// todo : ajouter instrumentModel et libraryName dans la validation
 
 // Declaration d'une collection Experiment (herite de DBObject)
 public class Experiment extends DBObject implements IValidation {
@@ -51,10 +49,10 @@ public class Experiment extends DBObject implements IValidation {
 							 // pour gerer les differents etats de l'objet.
 							 // Les etapes utilisateurs = (new, inWaitingConfiguration,) inProgressConfiguration, finishConfiguration, 
 							 // Les etapes automatisables via birds : inWaitingSubmission, inProgressSubmission, finishSubmission, submit
-	public TraceInformation traceInformation; // new TraceInformation .Reference sur "models.laboratory.common.instance.TraceInformation" 
+	public TraceInformation traceInformation= new TraceInformation();// .Reference sur "models.laboratory.common.instance.TraceInformation" 
 		// pour loguer les dernieres modifications utilisateurs
 
-	
+	// ajouter instrumentModel et libraryName.
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		contextValidation.addKeyToRootKeyName("experiment::");
@@ -74,23 +72,33 @@ public class Experiment extends DBObject implements IValidation {
 		}
 		ValidationHelper.required(contextValidation, this.libraryLayoutNominalLength , "libraryLayoutNominalLength");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayoutOrientation, VariableSRA.mapLibraryLayoutOrientation, "libraryLayoutOrientation");
-		ValidationHelper.required(contextValidation, this.libraryName , "libraryName");
+		//ValidationHelper.required(contextValidation, this.libraryName , "libraryName");
 		ValidationHelper.required(contextValidation, this.libraryConstructionProtocol , "libraryConstructionProtocol");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.typePlatform, VariableSRA.mapTypePlatform, "typePlatform");
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.instrumentModel, VariableSRA.mapInstrumentModel, "instrumentModel");
+		//SraValidationHelper.requiredAndConstraint(contextValidation, this.instrumentModel, VariableSRA.mapInstrumentModel, "instrumentModel");
 		ValidationHelper.required(contextValidation, this.spotLength , "spotLength");
 		ValidationHelper.required(contextValidation, this.sampleCode , "sampleCode");
 		ValidationHelper.required(contextValidation, this.studyCode , "studyCode");
 		ValidationHelper.required(contextValidation, this.readSetCode , "readSetCode");
-
 		// Verifier les readSpec :
-		SraValidationHelper.validateReadSpecs(contextValidation, this);
+		//SraValidationHelper.validateReadSpecs(contextValidation, this);
 		// Verifier le run :
-		this.run.validate(contextValidation);
+		if (this.run == null) {
+			contextValidation.addErrors("run", " aucune valeur");
+		} else {
+			this.run.validate(contextValidation);
+		}
 		// verifier que code est bien renseigné
 		SraValidationHelper.validateCode(this, InstanceConstants.SRA_EXPERIMENT_COLL_NAME, contextValidation);
 		SraValidationHelper.validateId(this, contextValidation);
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
+
+		// todo :
+		//if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, "readSetCode", this.readSetCode)) {
+			//throw new SraException("le readSetcode "+ experiment.run.code + " existe deja dans la collection Experiment de la base");
+			//mess += "le readSetcode "+ this.run.code + " existe deja dans la collection Experiment de la base";
+		//}
+		
 		contextValidation.removeKeyFromRootKeyName("experiment::");
 
 	}

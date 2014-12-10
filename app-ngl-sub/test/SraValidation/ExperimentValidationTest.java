@@ -37,7 +37,8 @@ public class ExperimentValidationTest extends AbstractTestsSRA {
 		ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, codeReadSet);
 
 		SubmissionServices submissionServices = new SubmissionServices();
-		Experiment experiment = submissionServices.createExperimentEntity(readSet, projectCode);
+	 
+		Experiment experiment = submissionServices.createExperimentEntity(readSet, projectCode, userContext);
 		experiment.librarySelection = "random";
 		experiment.librarySource = "genomic";
 		experiment.libraryStrategy = "wgs";
@@ -48,10 +49,10 @@ public class ExperimentValidationTest extends AbstractTestsSRA {
 		experiment.studyCode = "study_code_test";
 		ContextValidation contextValidation = new ContextValidation(userContext);
 		contextValidation.setCreationMode();
-		contextValidation.addKeyToRootKeyName("experiment::");
 		experiment.validate(contextValidation);
 		MongoDBDAO.save(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, experiment);
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.experiment.instance.Experiment.class, experiment.code);
+		System.out.println("contextValidation.errors pour validationExperimentSuccess :");
 		contextValidation.displayErrors(Logger.of("SRA"));
 		Assert.assertTrue(contextValidation.errors.size()==0); // si aucune erreur
 		//Assert.assertTrue(contextValidation.errors.size()==1ou > ); // si aucune erreur

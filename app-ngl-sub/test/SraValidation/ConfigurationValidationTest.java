@@ -4,6 +4,7 @@ package SraValidation;
 import java.io.IOException;
 import java.util.Date;
 
+import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.sra.configuration.instance.Configuration;
 import models.sra.utils.SraException;
@@ -37,7 +38,7 @@ public class ConfigurationValidationTest extends AbstractTestsSRA {
 		String user = "william";
 		config.traceInformation = new TraceInformation(); 
 		config.traceInformation.setTraceInformation(user);
-
+		//config.state = new State("new");
 		ContextValidation contextValidation = new ContextValidation(userContext);
 		contextValidation.setCreationMode();
 		config.validate(contextValidation);

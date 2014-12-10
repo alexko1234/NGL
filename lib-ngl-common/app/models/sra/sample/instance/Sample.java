@@ -13,7 +13,7 @@ import fr.cea.ig.DBObject;
 public class Sample extends DBObject implements IValidation {
 
 	// SampleType
-	//public String alias;         // required mais remplacé par code herité de DBObject, et valeur = projectCode_num
+	//public String alias;         // required mais remplacé par code herité de DBObject
 	public String projectCode;     // required pour nos stats //Reference code de la collection project NGL  
 	public int taxonId;            // required 
 	public String classification;     
@@ -28,14 +28,15 @@ public class Sample extends DBObject implements IValidation {
 	 // pour gerer les differents etats de l'objet.
 	 // Les etapes utilisateurs = (new, inWaitingConfiguration,) inProgressConfiguration, finishConfiguration, 
 	 // Les etapes automatisables via birds : inWaitingSubmission, inProgressSubmission, finishSubmission, submit
-	public TraceInformation traceInformation;// new TraceInformation .Reference sur "models.laboratory.common.instance.TraceInformation" 
-	// pour loguer les dernieres modifications utilisateurs
+	public TraceInformation traceInformation = new TraceInformation(); 
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
+		contextValidation.addKeyToRootKeyName("sample::");
 		SraValidationHelper.validateCode(this, InstanceConstants.SRA_SAMPLE_COLL_NAME, contextValidation);
 		SraValidationHelper.validateId(this, contextValidation);
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
+		contextValidation.removeKeyFromRootKeyName("sample::");
 	}
 
 }
