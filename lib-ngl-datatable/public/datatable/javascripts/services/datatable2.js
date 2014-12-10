@@ -333,7 +333,9 @@ angular.module('datatableServices', []).
 		    				
 		    			},
 		    			
-		    			
+		    			isGroupActive : function(){
+		    				return (this.config.group.active && this.config.group.data !== undefined);
+		    			},
 		    			
 		    			/**
 		    			 * set the order column name
@@ -441,7 +443,7 @@ angular.module('datatableServices', []).
 	    					}, displayResultTmp);
 		    				
 		    				//group function
-		    				if(this.config.group.active && this.config.group.data){
+		    				if(this.isGroupActive()){
 		    					this.displayResult = this.addGroup(displayResultTmp);					
 		    				}else{
 		    					this.displayResult = displayResultTmp;
@@ -1534,6 +1536,7 @@ angular.module('datatableServices', []).
 		    			 * Function to export data in a CSV file
 		    			 */
 		    			exportCSV : function(exportType) {
+		    				this.config.exportCSV.start = true;
 		    				var cas, delimiter = this.config.exportCSV.delimiter, lineValue = "", colValue, that = this; 		    				
 		    				
 		    				//calcule results ( code extracted from method computeDisplayResult() )
@@ -1544,7 +1547,7 @@ angular.module('datatableServices', []).
 	    						 this.push({data:value, line:line});
 	    					}, displayResultTmp);
 		    				_displayResult = undefined;
-		    				if(this.config.group.active && this.config.group.data){
+		    				if(this.isGroupActive()){
 		    					displayResultTmp = this.addGroup(displayResultTmp);					
 		    				}
 		    				//manage results
@@ -1565,7 +1568,11 @@ angular.module('datatableServices', []).
 		    								header = header + Messages('datatable.export.sum'); 
 		    							}else if(column.groupMethod === "average"){
 		    								header = header + Messages('datatable.export.average');
-		    							}
+		    							}else if(column.groupMethod === "unique"){
+		    								header = header + Messages('datatable.export.unique');
+		    							}else if(column.groupMethod === "countDistinct"){
+		    								header = header + Messages('datatable.export.countDistinct');
+		    							} 
 		    							lineValue = lineValue + header + delimiter;
 		    							}
 		    						}); 
@@ -1622,7 +1629,8 @@ angular.module('datatableServices', []).
 		    				}
 		    				else {
 		    					alert("No data to print. Select the data you need");
-		    				}	
+		    				}
+		    				this.config.exportCSV.start = false;
 		    			},
 		    			
 		    			/**
@@ -1647,7 +1655,7 @@ angular.module('datatableServices', []).
 		    			 * Function to enable/disable the "CSV Export" button 
 		    			 */
 		    			canExportCSV: function(){
-		    				if(this.config.exportCSV.active && !this.config.exportCSV.start){
+		    				if(this.config.exportCSV.active && !this.config.exportCSV.start && !this.isEmpty()){
 		    					if(this.config.edit.active && this.config.edit.start){
 		    						return false;
 		    					}else{
@@ -1919,11 +1927,11 @@ angular.module('datatableServices', []).
   		    	template:'<div name="dt-toolbar" class="row margin-bottom-3"><div class="col-md-12 col-lg-12">'
   		    		+'<div class="btn-toolbar pull-left" name="dt-toolbar-buttons" ng-if="dtTable.isShowToolbarButtons()">'
   		    		+'<div class="btn-group"  ng-switch on="dtTable.config.select.isSelectAll">'
-  		    		+	'<button class="btn btn-default" ng-click="dtTable.selectAll(true)" ng-show="dtTable.isShowButton(\'select\')" ng-switch-when="false" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.selectall\')}}">'
+  		    		+	'<button class="btn btn-default" ng-disabled="dtTable.isEmpty()" ng-click="dtTable.selectAll(true)" ng-show="dtTable.isShowButton(\'select\')" ng-switch-when="false" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.selectall\')}}">'
   		    		+		'<i class="fa fa-check-square"></i>'
   		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.selectall\')}}</span>'
   		    		+	'</button>'
-  		    		+	'<button class="btn btn-default" ng-click="dtTable.selectAll(false)" ng-show="dtTable.isShowButton(\'select\')" ng-switch-when="true" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.unselectall\')}}">'
+  		    		+	'<button class="btn btn-default" ng-disabled="dtTable.isEmpty()" ng-click="dtTable.selectAll(false)" ng-show="dtTable.isShowButton(\'select\')" ng-switch-when="true" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.unselectall\')}}">'
   		    		+		'<i class="fa fa-square"></i>'
     				+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.unselectall\')}}</span>'
   		    		+	'</button>'
@@ -1951,18 +1959,26 @@ angular.module('datatableServices', []).
   		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.remove\')}}</span>'
   		    		+	'</button>'  		    	
   		    		+'</div>'
-  		     		+'<div class="btn-group" ng-if="dtTable.isShowExportCSVButton()">'
-  		    		+'<button data-toggle="dropdown" ng-disabled="dtTable.isEmpty()" class="btn btn-default dropdown-toggle" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.exportCSV\')}}">'
+  		    		
+  		     		+'<div class="btn-group" ng-if="dtTable.isShowExportCSVButton()" ng-switch on="dtTable.config.group.active">'
+  		     		
+  		     		+'<button ng-switch-when="false" class="btn btn-default" ng-click="dtTableFunctions.exportCSV(\'all\')" ng-disabled="!dtTable.canExportCSV()" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.exportCSV\')}}">'
+  		    		+	'<i class="fa fa-file-text-o"></i>'
+  		    		+	'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.basicExportCSV\')}}</span>'
+  		    		+'</button>'	
+  		    		
+  		    		+'<button ng-switch-when="true" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-disabled="!dtTable.canExportCSV()"  title="{{dtTableFunctions.messagesDatatable(\'datatable.button.exportCSV\')}}">'
   		    		+	'<i class="fa fa-file-text-o"></i> '
   		    		+	'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.exportCSV\')}}</span>'
-  		    		+	'<span class="caret" />'
+  		    		+	'<span class="caret"/>'
   		    		+'</button>'
   		    		+'<ul class="dropdown-menu">'
   		    		/* Basic Export */
-  		    		+	'<li><a href="#" ng-click="dtTableFunctions.exportCSV(\'all\')" ng-disabled="!dtTable.canExportCSV()"><i class="fa fa-file-text-o"></i> {{dtTableFunctions.messagesDatatable(\'datatable.button.basicExportCSV\')}}</a></li>'
+  		    		+	'<li><a href="#" ng-click="dtTableFunctions.exportCSV(\'all\')"><i class="fa fa-file-text-o"></i> {{dtTableFunctions.messagesDatatable(\'datatable.button.basicExportCSV\')}}</a></li>'
   		    		/* Grouped Export */
-  		    		+	'<li ng-if="dtTable.config.group.active"><a href="#" ng-click="dtTableFunctions.exportCSV(\'groupsOnly\')" ng-disabled="!dtTable.canExportCSV()"><i class="fa fa-file-text-o"></i> {{dtTableFunctions.messagesDatatable(\'datatable.button.groupedExportCSV\')}}</a></li>'
+  		    		+	'<li><a href="#" ng-click="dtTableFunctions.exportCSV(\'groupsOnly\')"><i class="fa fa-file-text-o"></i> {{dtTableFunctions.messagesDatatable(\'datatable.button.groupedExportCSV\')}}</a></li>'
   		    		+'</ul>'
+  		    		
   		    		+'</div>'
   		    		
   		    		+'<div class="btn-group" ng-if="dtTable.isShowButton(\'group\')">'
@@ -2055,7 +2071,7 @@ angular.module('datatableServices', []).
   		    		+	'<span ng-bind="dtTableFunctions.messagesDatatable(column.header)"/>'
   		    		+	'<div class="btn-group pull-right">'
   		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setEdit(column)" ng-if="dtTable.isShowButton(\'edit\', column)" ng-disabled="!dtTable.canEdit()" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.edit\')}}"><i class="fa fa-edit"></i></button>'
-  		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setOrderColumn(column)" ng-if="dtTable.isShowButton(\'order\', column)" ng-disabled="!dtTable.canOrder()" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.sort\')}}"><i ng-class="dtTable.getOrderColumnClass(column.id)"></i></button>'
+  		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setOrderColumn(column)" ng-disabled="dtTable.isEmpty()" ng-if="dtTable.isShowButton(\'order\', column)" ng-disabled="!dtTable.canOrder()" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.sort\')}}"><i ng-class="dtTable.getOrderColumnClass(column.id)"></i></button>'
   		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setGroupColumn(column)" ng-disabled="dtTable.isEmpty()" ng-if="dtTable.isShowButton(\'group\', column)" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.group\')}}"><i ng-class="dtTable.getGroupColumnClass(column.id)"></i></button>'  		    		  		    		
   		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setHideColumn(column)" ng-if="dtTable.isShowButton(\'hide\', column)" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.hide\')}}"><i class="fa fa-eye-slash"></i></button>'
   		    		+	'</div>'

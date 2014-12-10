@@ -23,6 +23,8 @@ datatable.msg.error.remove =  Il y a {0} suppression(s) en erreur.
 
 datatable.export.sum =  (Somme)
 datatable.export.average =  (Moyenne)
+datatable.export.unique =  (Valeur uniq.)
+datatable.export.countDistinct =  (Nb. distinct d'occurence)
 
 datatable.remove.confirm = Pouvez-vous confirmer la suppression ?
 
