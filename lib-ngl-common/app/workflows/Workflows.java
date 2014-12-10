@@ -119,7 +119,7 @@ public class Workflows {
 		}
 
 		if(state.code!=null){
-			setContainerState(experiment.getAllInPutContainer(), state, contextValidation);
+			setContainerState(experiment.getAllInPutContainer(), experiment, state, contextValidation);
 			//Il faut mettre à jour le state du container dans l'experiment.atomicTransfereMethod
 		}
 	}
@@ -138,7 +138,7 @@ public class Workflows {
 				nextState.code="A-PURIF";
 			}else if(experiment.state.code.equals("F") && doTransfert()){
 				nextState.code="A-TRANSFERT";
-				}*/else if(experiment.state.code.equals("F") && endOfProcess(containerUsed.code,experiment.typeCode)){
+				}*/else if(experiment.state.code.equals("F") && endOfProcess(containerUsed,experiment.typeCode)){
 					if(experiment.typeCode.equals("opgen-depot")){
 						nextState.code="F";
 					}else {
@@ -156,7 +156,7 @@ public class Workflows {
 			}
 
 			if(nextState.code!=null && containerUsed!=null){
-				setContainerState(containerUsed.code, nextState, contextValidation);
+				setContainerState(containerUsed.code, experiment, nextState, contextValidation);
 				//Il faut mettre à jour le state du container dans l'experiment.atomicTransfereMethod
 			}
 		}
@@ -164,14 +164,32 @@ public class Workflows {
 	}
 
 
-	private static boolean endOfProcess(String code, String typeCode) {
-		Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME,Container.class,code);
+	private static boolean endOfProcess(ContainerUsed containerUsed, String experimentTypeCode) {
+		Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME,Container.class,containerUsed.code);
 		ProcessType processType;
 		try {
-			Logger.debug("Container :"+code);
+			Logger.debug("Container :"+containerUsed.code);
 			if(container.getCurrentProcesses()==null) return true;
 			processType = ProcessType.find.findByCode(container.getCurrentProcesses().get(0).typeCode);
-			if(processType.lastExperimentType.code.equals(typeCode)){
+			if(processType.lastExperimentType.code.equals(experimentTypeCode)){
+				return true;
+			}else {
+				return false;
+			}
+
+		} catch (DAOException e) {
+			throw new RuntimeException();
+		}
+	}
+	
+	
+	private static boolean endOfProcess(String processCode, String experimentTypeCode) {
+		Process process=MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME,Process.class,processCode);
+		ProcessType processType;
+		try {
+			Logger.debug("Process "+processCode);
+			processType = ProcessType.find.findByCode(process.typeCode);
+			if(processType.lastExperimentType.code.equals(experimentTypeCode)){
 				return true;
 			}else {
 				return false;
@@ -209,44 +227,37 @@ public class Workflows {
 	}
 
 	//TODO à finir
-	public static void nextProcessState(Container container,ContextValidation contextValidation){
-		State state=new State();
-		state.date=new Date();
-		state.user=contextValidation.getUser();
+	public static void nextProcessState(Container container, Experiment exp,ContextValidation contextValidation){
 
-		if(container.state.code.equals("IU") && checkProcessState("N",container.inputProcessCodes)){
-			state.code="IP";
-		}else if(container.state.code.equals("UA") && checkProcessState("IP",container.inputProcessCodes)){
-			state.code="F";
-		}
+		for(String processCode: container.inputProcessCodes){
 
-		/*if(container.state.code.equals("IW-E")){//?
+			State processState=new State();
+			processState.date=new Date();
+			processState.user=contextValidation.getUser();
+
+			if(container.state.code.equals("IU") && checkProcessState("N",processCode)){
+				processState.code="IP";
+			}else if(container.state.code.equals("UA") && checkProcessState("IP",processCode) && endOfProcess(processCode, exp.typeCode)){
+				processState.code="F";
+			}
+
+			/*if(container.state.code.equals("IW-E")){//?
 			state.code= "IP";
 		} */
 
-		if(state.code != null){
-			setProcessState(container.inputProcessCodes,state,contextValidation);
-			if(state.code.equals("F")){
-				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code", container.code),DBUpdate.unset("inputProcessCodes"));
+			if(processState.code != null){
+				setProcessState(processCode,processState,contextValidation);
+/*				if(processState.code.equals("F")){
+					MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code", container.code),DBUpdate.unset("inputProcessCodes"));
+				}*/
 			}
+
 		}
 	}
-
 
 	private static boolean checkProcessState(String stateCode,
-			List<String> inputProcessCodes) {
-		return MongoDBDAO.checkObjectExist(InstanceConstants.PROCESS_COLL_NAME,Process.class, DBQuery.in("code", inputProcessCodes).is("state.code", stateCode));
-	}
-
-	private static void setProcessState(List<String> inputProcessCodes, State state,
-			ContextValidation contextValidation) {
-
-		if(inputProcessCodes!=null){
-			for(String processCode : inputProcessCodes){
-				setProcessState(processCode,state,contextValidation);
-			}
-		}
-
+			String processCode) {
+		return MongoDBDAO.checkObjectExist(InstanceConstants.PROCESS_COLL_NAME,Process.class, DBQuery.is("code", processCode).is("state.code", stateCode));
 	}
 
 	private static void setProcessState(String  processCode, State nextState,
@@ -258,14 +269,14 @@ public class Workflows {
 			ContainerValidationHelper.validateStateCode(nextState.code, contextValidation);
 			if(!contextValidation.hasErrors() && !nextState.code.equals(process.state)){
 
-				
+
 				process.state=StateHelper.updateHistoricalNextState(process.state,nextState);
 				process.traceInformation=StateHelper.updateTraceInformation(process.traceInformation, nextState);
-				
+
 				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME,  Process.class, 
 						DBQuery.is("code", process.code),
 						DBUpdate.set("state", process.state).set("traceInformation",process.traceInformation));
-				
+
 				//Process F, reset fromExperimentTypeCodes if Collab's container 
 				if(process.state.code.equals("F")){
 					ProcessType processType;
@@ -283,7 +294,7 @@ public class Workflows {
 
 	}
 
-	public static void setContainerState(String containerCode,State nextState,ContextValidation contextValidation){
+	public static void setContainerState(String containerCode,Experiment exp, State nextState,ContextValidation contextValidation){
 		Container container =MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", containerCode));
 
 		if(container==null){
@@ -296,7 +307,7 @@ public class Workflows {
 			/*if(nextState.code.equals("IW-P")){
 				container.inputProcessCodes=null;
 			}*/
-			
+
 			container.state=StateHelper.updateHistoricalNextState(container.state,nextState);
 			container.traceInformation=StateHelper.updateTraceInformation(container.traceInformation, nextState);
 			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,  Container.class, 
@@ -305,7 +316,7 @@ public class Workflows {
 		}	
 		container.state=nextState;
 		nextContainerSupportState(container,contextValidation);
-		nextProcessState(container,contextValidation);
+		nextProcessState(container,exp,contextValidation);
 	}
 
 	private static void nextContainerSupportState(Container container,
@@ -327,7 +338,7 @@ public class Workflows {
 
 			containerSupport.state=StateHelper.updateHistoricalNextState(containerSupport.state,nextState);
 			containerSupport.traceInformation=StateHelper.updateTraceInformation(containerSupport.traceInformation, nextState);
-			
+
 			MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME,  Container.class, 
 					DBQuery.is("code", containerSupport.code),
 					DBUpdate.set("state", containerSupport.state).set("traceInformation",containerSupport.traceInformation));
@@ -337,22 +348,22 @@ public class Workflows {
 	}
 
 
-	public static void setContainerState(List<ContainerUsed> containersUsed,State state,ContextValidation contextValidation){
+	public static void setContainerState(List<ContainerUsed> containersUsed, Experiment exp,State state,ContextValidation contextValidation){
 		for(ContainerUsed containerUsed:containersUsed){
-			Workflows.setContainerState(containerUsed.code, state, contextValidation);
+			Workflows.setContainerState(containerUsed.code, exp, state, contextValidation);
 		}
 	}
 
 
 
-	public static void nextContainerState(Process process,
+	public static void nextContainerState(Process process, Experiment exp,
 			ContextValidation contextValidation) {
 		State nextState=new State();
 		if(process.state != null && process.state.code.equals("N")){
 			nextState.code="A";
 		}
 
-		setContainerState(process.containerInputCode, nextState, contextValidation);
+		setContainerState(process.containerInputCode, exp,nextState, contextValidation);
 
 	}
 

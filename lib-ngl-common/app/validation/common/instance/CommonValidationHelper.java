@@ -521,7 +521,7 @@ public class CommonValidationHelper {
 			List<String> experimentTypeCodes, ContextValidation contextValidation) {
 		if(experimentTypeCodes!=null){
 			for(String s: experimentTypeCodes){
-				BusinessValidationHelper.validateExistDescriptionCode(contextValidation, s, "experimentTypeCode", ExperimentType.find);
+				BusinessValidationHelper.validateExistDescriptionCode(contextValidation, s, "experimentTypeCodes", ExperimentType.find);
 			}
 		}
 	}

@@ -75,12 +75,6 @@ public class Processes extends CommonController{
 				value.state = new State("N", getCurrentUser());
 				//code and name generation
 				value.code = CodeHelper.generateProcessCode(value);
-				
-				Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, value.containerInputCode);
-				List<String> processCodes=new ArrayList<String>();
-				processCodes.add(value.code);
-				ProcessHelper.updateContainer(container,value.typeCode, processCodes);
-				ProcessHelper.updateContainerSupportFromContainer(container);
 				Logger.info("New process code : "+value.code);
 			} else {
 				value.traceInformation.setTraceInformation(getCurrentUser());
@@ -91,7 +85,12 @@ public class Processes extends CommonController{
 				contextValidation.setCreationMode();
 				value = (Process) InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,value, contextValidation);
 				if(!contextValidation.hasErrors()){
-					Workflows.nextContainerState(value,new ContextValidation(getCurrentUser(), filledForm.errors()));
+					Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, value.containerInputCode);
+					List<String> processCodes=new ArrayList<String>();
+					processCodes.add(value.code);
+					ProcessHelper.updateContainer(container,value.typeCode, processCodes,contextValidation);
+					ProcessHelper.updateContainerSupportFromContainer(container,contextValidation);
+					Workflows.nextContainerState(value,null,new ContextValidation(getCurrentUser(), filledForm.errors()));
 				}
 			}
 		}
@@ -132,8 +131,8 @@ public class Processes extends CommonController{
 						InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,value, contextValidation);
 						processCodes.add(value.code);
 					}
-					ProcessHelper.updateContainer(container,value.typeCode, processCodes);
-					ProcessHelper.updateContainerSupportFromContainer(container);
+					ProcessHelper.updateContainer(container,value.typeCode, processCodes,contextValidation);
+					ProcessHelper.updateContainerSupportFromContainer(container,contextValidation);
 					
 				}
 				
@@ -147,7 +146,7 @@ public class Processes extends CommonController{
 				contextValidation.setCreationMode();
 				value = (Process) InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,value, contextValidation);*/
 				if(!contextValidation.hasErrors()){
-					Workflows.nextContainerState(value,new ContextValidation(getCurrentUser(), filledForm.errors()));
+					Workflows.nextContainerState(value,null,new ContextValidation(getCurrentUser(), filledForm.errors()));
 				}
 			}
 		}

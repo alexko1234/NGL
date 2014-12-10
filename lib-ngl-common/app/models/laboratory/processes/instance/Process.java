@@ -49,6 +49,7 @@ public class Process extends DBObject implements IValidation{
 	
 	public String containerInputCode;
 	
+	public String newContainerCodes;
 
 	@JsonIgnore
 	@Override

@@ -17,6 +17,7 @@ import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 
 import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
 
 import play.Logger;
 import play.Play;
@@ -52,9 +53,9 @@ public class ExperimentHelper extends InstanceHelpers {
 				contextValidation.errors.putAll(exp.atomicTransfertMethods.get(i).saveOutputContainers(exp, contextValidation).errors);
 			}
 
-
+			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class,DBQuery.is("code", exp.code)
+					,DBUpdate.set("outputContainerSupportCodes", ExperimentHelper.getOutputContainerSupportCodes(exp)));
 		}
-
 
 	}
 
