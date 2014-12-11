@@ -126,16 +126,16 @@ public class MigrationProjectCodesFromReadSets  extends CommonController {
 					
 					//new : check number of readsets
 					if (oldSupportContainer.categoryCode.equals("flowcell-1") &&  hmLaneNumbersAndSamplesInReadSets.size() != 1) {
-						errorMsg = "ERROR 4.1 : Nb lanes found : "+ hmLaneNumbersAndSamplesInReadSets.size() + ", expected : 1 (container support :"+ oldSupportContainer.code + ")";
+						errorMsg = "ERROR 4.1 : Nb lanes found : "+ hmLaneNumbersAndSamplesInReadSets.size() + ", expected: 1 (container support: "+ oldSupportContainer.code + ", type: " + oldSupportContainer.categoryCode + ")";
 					}
 					else if (oldSupportContainer.categoryCode.equals("flowcell-2") &&  hmLaneNumbersAndSamplesInReadSets.size() != 2) {
-						errorMsg = "ERROR 4.2 : Nb lanes found : "+ hmLaneNumbersAndSamplesInReadSets.size() + ", expected : 2 (container support :"+ oldSupportContainer.code + ")";
+						errorMsg = "ERROR 4.2 : Nb lanes found : "+ hmLaneNumbersAndSamplesInReadSets.size() + ", expected: 2 (container support: "+ oldSupportContainer.code + ", type: " + oldSupportContainer.categoryCode + ")";
 					}
 					else if (oldSupportContainer.categoryCode.equals("flowcell-4") &&  hmLaneNumbersAndSamplesInReadSets.size() != 4) {
-						errorMsg = "ERROR 4.3 : Nb lanes found : "+ hmLaneNumbersAndSamplesInReadSets.size() + ", expected : 4 (container support :"+ oldSupportContainer.code + ")";
+						errorMsg = "ERROR 4.3 : Nb lanes found : "+ hmLaneNumbersAndSamplesInReadSets.size() + ", expected: 4 (container support: "+ oldSupportContainer.code + ", type: " + oldSupportContainer.categoryCode + ")";
 					}
 					else if (oldSupportContainer.categoryCode.equals("flowcell-8") &&  hmLaneNumbersAndSamplesInReadSets.size() != 8) {
-						errorMsg = "ERROR 4.4 : Nb lanes found : "+ hmLaneNumbersAndSamplesInReadSets.size() + ", expected : 8 (container support :"+ oldSupportContainer.code + ")";
+						errorMsg = "ERROR 4.4 : Nb lanes found : "+ hmLaneNumbersAndSamplesInReadSets.size() + ", expected: 8 (container support: "+ oldSupportContainer.code + ", type: " + oldSupportContainer.categoryCode + ")";
 					}
 					if (!errorMsg.equals(oldErrorMsg)) {
 						Logger.error(errorMsg);
