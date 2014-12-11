@@ -181,8 +181,8 @@ public class Workflows {
 			throw new RuntimeException();
 		}
 	}
-	
-	
+
+
 	private static boolean endOfProcess(String processCode, String experimentTypeCode) {
 		Process process=MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME,Process.class,processCode);
 		ProcessType processType;
@@ -228,30 +228,31 @@ public class Workflows {
 
 	//TODO à finir
 	public static void nextProcessState(Container container, Experiment exp,ContextValidation contextValidation){
+		if(container.inputProcessCodes!=null ){
+			for(String processCode: container.inputProcessCodes){
 
-		for(String processCode: container.inputProcessCodes){
+				State processState=new State();
+				processState.date=new Date();
+				processState.user=contextValidation.getUser();
 
-			State processState=new State();
-			processState.date=new Date();
-			processState.user=contextValidation.getUser();
+				if(container.state.code.equals("IU") && checkProcessState("N",processCode)){
+					processState.code="IP";
+				}else if(container.state.code.equals("UA") && checkProcessState("IP",processCode) && endOfProcess(processCode, exp.typeCode)){
+					processState.code="F";
+				}
 
-			if(container.state.code.equals("IU") && checkProcessState("N",processCode)){
-				processState.code="IP";
-			}else if(container.state.code.equals("UA") && checkProcessState("IP",processCode) && endOfProcess(processCode, exp.typeCode)){
-				processState.code="F";
-			}
-
-			/*if(container.state.code.equals("IW-E")){//?
+				/*if(container.state.code.equals("IW-E")){//?
 			state.code= "IP";
 		} */
 
-			if(processState.code != null){
-				setProcessState(processCode,processState,contextValidation);
-/*				if(processState.code.equals("F")){
+				if(processState.code != null){
+					setProcessState(processCode,processState,contextValidation);
+					/*				if(processState.code.equals("F")){
 					MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code", container.code),DBUpdate.unset("inputProcessCodes"));
 				}*/
-			}
+				}
 
+			}
 		}
 	}
 
