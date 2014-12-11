@@ -126,16 +126,16 @@ public class MigrationProjectCodesFromReadSets  extends CommonController {
 					
 					//new : check number of readsets
 					if (oldSupportContainer.categoryCode.equals("flowcell-1") &&  hmLaneNumbersAndSamplesInReadSets.size() != 1) {
-						errorMsg = "ERROR 4.1 : Nb readSets found : "+ hmLaneNumbersAndSamplesInReadSets.size() + ", expected : 1 (container support :"+ oldSupportContainer.code + ")";
+						errorMsg = "ERROR 4.1 : Nb lanes found : "+ hmLaneNumbersAndSamplesInReadSets.size() + ", expected : 1 (container support :"+ oldSupportContainer.code + ")";
 					}
 					else if (oldSupportContainer.categoryCode.equals("flowcell-2") &&  hmLaneNumbersAndSamplesInReadSets.size() != 2) {
-						errorMsg = "ERROR 4.2 : Nb readSets found : "+ hmLaneNumbersAndSamplesInReadSets.size() + ", expected : 2 (container support :"+ oldSupportContainer.code + ")";
+						errorMsg = "ERROR 4.2 : Nb lanes found : "+ hmLaneNumbersAndSamplesInReadSets.size() + ", expected : 2 (container support :"+ oldSupportContainer.code + ")";
 					}
 					else if (oldSupportContainer.categoryCode.equals("flowcell-4") &&  hmLaneNumbersAndSamplesInReadSets.size() != 4) {
-						errorMsg = "ERROR 4.3 : Nb readSets found : "+ hmLaneNumbersAndSamplesInReadSets.size() + ", expected : 4 (container support :"+ oldSupportContainer.code + ")";
+						errorMsg = "ERROR 4.3 : Nb lanes found : "+ hmLaneNumbersAndSamplesInReadSets.size() + ", expected : 4 (container support :"+ oldSupportContainer.code + ")";
 					}
 					else if (oldSupportContainer.categoryCode.equals("flowcell-8") &&  hmLaneNumbersAndSamplesInReadSets.size() != 8) {
-						errorMsg = "ERROR 4.4 : Nb readSets found : "+ hmLaneNumbersAndSamplesInReadSets.size() + ", expected : 8 (container support :"+ oldSupportContainer.code + ")";
+						errorMsg = "ERROR 4.4 : Nb lanes found : "+ hmLaneNumbersAndSamplesInReadSets.size() + ", expected : 8 (container support :"+ oldSupportContainer.code + ")";
 					}
 					if (!errorMsg.equals(oldErrorMsg)) {
 						Logger.error(errorMsg);
@@ -209,16 +209,7 @@ public class MigrationProjectCodesFromReadSets  extends CommonController {
 					List<String> listSampleCodesInContainer = new ArrayList<String>(hmSampleAndProjectInContainer.keySet()); 
 					HashSet<String> listProjectCodesInContainer = new HashSet<String>(hmSampleAndProjectInContainer.values());
 					
-					/*
-					 //to debug
-					if (oldContainer.code.equals("C3FA2ACXX_6")) {
-						Logger.debug("hmSampleAndProjectInContainer.size = "+ hmSampleAndProjectInContainer.size());
-						Logger.debug("listSampleCodesInContainer.size = "+ listSampleCodesInContainer.size());
-						Logger.debug("listProjectCodesInContainer.size = "+ listProjectCodesInContainer.size());
-					}
-					*/
-					
-					
+
 					WriteResult<Container, String> r2 = (WriteResult<Container, String>) MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
 							DBQuery.is("code", oldContainer.code),   
 							DBUpdate.set("contents", oldContainer.contents).set("sampleCodes", listSampleCodesInContainer).set("projectCodes", listProjectCodesInContainer));					
