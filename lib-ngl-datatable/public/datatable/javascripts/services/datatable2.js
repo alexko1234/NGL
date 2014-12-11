@@ -19,7 +19,7 @@ angular.module('datatableServices', []).
 													"render" : function() //render the column used to add style around value
 													"id":'', //the column id
 													"edit":false, //can be edited or not
-													"conversionValue":{
+													"convertValue":{
 														active:false, //True if the value have to be converted when displayed to the user
 														displayMeasureValue:"",//The unit display to the user, mandatory if active=true
 														saveMeasureValue:"" //The unit in database,  mandatory if active=true
