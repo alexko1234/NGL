@@ -2,14 +2,14 @@ package validation.container.instance;
 
 import java.util.List;
 
-import play.Logger;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.processes.instance.Process;
 import models.laboratory.processes.description.ProcessType;
+import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
+import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
@@ -58,7 +58,7 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 				percentageSum = percentageSum + t.percentage;
 			}							
 		}
-		if(!((100.00-percentageSum)>=0.30 && (100.00-percentageSum)<=0.30)){
+		if(!(Math.abs(100.00-percentageSum)<=0.40)){
 			contextValidation.addKeyToRootKeyName("contents");
 			contextValidation.addErrors("percentageSum", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, percentageSum);
 			contextValidation.addKeyToRootKeyName("contents");			
