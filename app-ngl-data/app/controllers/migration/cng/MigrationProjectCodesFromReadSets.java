@@ -74,7 +74,7 @@ public class MigrationProjectCodesFromReadSets  extends CommonController {
 	private static int[] migrateContainer(String type) {		
 		int[] intResultsArray = new int[] {0,0};
 		String errorMsg = "", oldErrorMsg = "", errorMsg2 = "", oldErrorMsg2 = "";
-		boolean bFindReadSet;
+		boolean bFindReadSet, bError4_4;
 
 			
 		//find container supports
@@ -85,6 +85,7 @@ public class MigrationProjectCodesFromReadSets  extends CommonController {
 		for (ContainerSupport oldSupportContainer : oldSupportContainers) {
 			
 			bFindReadSet = false;
+			bError4_4 = false;
 			HashMap<String, String> hmSamplesAndProjectsInReadSets = new HashMap<String, String>();
 			HashMap<String, HashSet<String>> hmLaneNumbersAndSamplesInReadSets = new HashMap<String, HashSet<String>>();
 			
@@ -135,11 +136,15 @@ public class MigrationProjectCodesFromReadSets  extends CommonController {
 						errorMsg = "ERROR 4.3 : Nb lanes found : "+ hmLaneNumbersAndSamplesInReadSets.size() + ", expected: 4 (container support: "+ oldSupportContainer.code + ", type: " + oldSupportContainer.categoryCode + ")";
 					}
 					else if (oldSupportContainer.categoryCode.equals("flowcell-8") &&  hmLaneNumbersAndSamplesInReadSets.size() != 8) {
+						bError4_4 = true;
 						errorMsg = "ERROR 4.4 : Nb lanes found : "+ hmLaneNumbersAndSamplesInReadSets.size() + ", expected: 8 (container support: "+ oldSupportContainer.code + ", type: " + oldSupportContainer.categoryCode + ")";
 					}
 					if (!errorMsg.equals(oldErrorMsg)) {
 						Logger.error(errorMsg);
 					}
+					
+					
+					
 				}
 			}
 			
@@ -150,9 +155,18 @@ public class MigrationProjectCodesFromReadSets  extends CommonController {
 				List<String> listSampleCodesInSupport = new ArrayList<String>(hmSamplesAndProjectsInReadSets.keySet()); 			
 				HashSet<String> listProjectCodesInSupport = new HashSet<String>(hmSamplesAndProjectsInReadSets.values()); 
 				
-				WriteResult<ContainerSupport, String> r = (WriteResult<ContainerSupport, String>) MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, 
+				WriteResult<ContainerSupport, String> r;
+				if (!bError4_4) {
+					r = (WriteResult<ContainerSupport, String>) MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, 
 						DBQuery.is("code", oldSupportContainer.code),   
-						DBUpdate.set("sampleCodes", listSampleCodesInSupport).set("projectCodes", listProjectCodesInSupport));				
+						DBUpdate.set("sampleCodes", listSampleCodesInSupport).set("projectCodes", listProjectCodesInSupport));
+				}
+				else {
+					//bug identified, we update the categoryCode too
+					r = (WriteResult<ContainerSupport, String>) MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, 
+							DBQuery.is("code", oldSupportContainer.code),   
+							DBUpdate.set("sampleCodes", listSampleCodesInSupport).set("projectCodes", listProjectCodesInSupport).set("categoryCode", "flowcell-2"));
+				}
 				if(StringUtils.isNotEmpty(r.getError())){
 					Logger.error("ERROR 5 : Set container support project codes: "+oldSupportContainer.code+" / "+ r.getError());
 				}						
