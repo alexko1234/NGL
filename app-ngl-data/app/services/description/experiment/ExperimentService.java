@@ -6,6 +6,7 @@ import static services.description.DescriptionFactory.newPropertiesDefinition;
 import static services.description.DescriptionFactory.newProtocol;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -95,7 +96,7 @@ public class ExperimentService {
 			Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 
-		l.add(newExperimentType("Void Opgen Illumina","ext-to-opgen-depot",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newExperimentType("Void Opgen Illumina","ext-to-opgen-depot",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null /* getPropertyDefinitionExtToOpgenDepot()*/, null, null,"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		l.add(newExperimentType("Depot Opgen", "opgen-depot"
 				, ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),null, getProtocols("depot_opgen_ptr_1"), getInstrumentUsedTypes("ARGUS"), "ManyToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		//Prepaflowcell : to finish
@@ -134,7 +135,7 @@ public class ExperimentService {
 			
 			//Depot solexa
 			l.add(newExperimentType("Depot Illumina", "illumina-depot"
-					, ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(), getProtocols("depot_illumina_ptr_1","depot_illumina_ptr_2","depot_illumina_ptr_3"), getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500"), "OneToVoid", DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)));
+					, ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(), getProtocols("depot_illumina_ptr_1","depot_illumina_ptr_2","depot_illumina_ptr_3","sop_depot_1"), getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500"), "OneToVoid", DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)));
 
 		}
 
@@ -269,8 +270,16 @@ public class ExperimentService {
 	
 	private static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepot() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", LevelService.getLevels(Level.CODE.Experiment),Integer.class, false, "single"));		
+		propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", LevelService.getLevels(Level.CODE.Experiment), Integer.class, false, "single"));	
+		//propertyDefinitions.add(newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, false, "single"));
 		return propertyDefinitions;
 	}
+	
+	
+	private static List<PropertyDefinition> getPropertyDefinitionExtToOpgenDepot() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, false, "single"));
+		return propertyDefinitions;
+	}	
 
 }
