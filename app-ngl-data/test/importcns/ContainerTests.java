@@ -86,20 +86,30 @@ public class ContainerTests extends AbstractTests {
 
 		ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
 		List<String> solutionStocks=new ArrayList<String>();
+		
 		solutionStocks.add("AXD_msCCH_d1");
 		String sql="pl_SolutionStockToNGL @noms=\'"+StringUtils.join(solutionStocks,",")+"\'";
+		
 		ContainerImportCNS.createContainers(contextValidation,sql,"tube","F","solution-stock","pl_ContentFromContainer @matmanom=?");
 		Assert.assertEquals(contextValidation.errors.size(),0);
+		
 		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code", solutionStocks)).toList();
+		Assert.assertTrue(containers.size()>0);
+		
+		List<ContainerSupport> containerSupports=MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("code", solutionStocks)).toList();
+		Assert.assertEquals(containerSupports.size(),solutionStocks.size());
+
 		for(Container container:containers){
 			assertThat(container.contents.get(0).properties.get("libProcessTypeCode")).isNotNull();
 			assertThat(((PropertySingleValue) container.mesuredConcentration).unit).isEqualTo("nM");
 			assertThat(container.contents.get(0).percentage).isNotNull();
+			for(ContainerSupport support:containerSupports){
+				if(support.code.equals(container.support.code)){
+					assertThat(container.state.code).isEqualTo(support.state.code);
+				}
+			}
 		}
-		Assert.assertTrue(containers.size()>0);
-		List<ContainerSupport> containerSupports=MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("code", solutionStocks)).toList();
-		Assert.assertEquals(containerSupports.size(),solutionStocks.size());
-		
+
 	}
 	
 	

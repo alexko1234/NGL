@@ -154,6 +154,8 @@ public class ContainerHelper {
 				}
 				newSupport.projectCodes = new  ArrayList<String>(container.projectCodes);
 				newSupport.sampleCodes = new  ArrayList<String>(container.sampleCodes);
+				newSupport.state=container.state;
+				
 				if(null != container.fromExperimentTypeCodes){//TODO Must be manage for CNG
 					newSupport.fromExperimentTypeCodes = new  ArrayList<String>(container.fromExperimentTypeCodes);
 				}
