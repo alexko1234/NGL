@@ -22,6 +22,7 @@ public class ProjectImportCNG extends AbstractImportDataCNG{
 
 	@Override
 	public void runImport() throws SQLException, DAOException {
+		Logger.debug("start loading projects");
 		
 		//creation
 		List<Project> projects = limsServices.findProjectToCreate(contextError);
@@ -41,6 +42,8 @@ public class ProjectImportCNG extends AbstractImportDataCNG{
 		projs=InstanceHelpers.save(InstanceConstants.PROJECT_COLL_NAME,projects,contextError, true);
 		//update "update date" 
 		limsServices.updateLimsProjects(projs, contextError, "update");
+		
+		Logger.debug("end loading projects");
 		
 	}
 

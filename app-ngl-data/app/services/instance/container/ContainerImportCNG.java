@@ -25,18 +25,14 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 
 	@Override
 	public void runImport() throws SQLException, DAOException {		
-		Logger.debug("start loading");
-		
 		loadSamples();		
 		updateSamples();
 		
 		loadContainers("lane");
 		updateContainers("lane");
 		
-		//loadContainers("tube");
-		//updateContainers("tube");
-
-		Logger.debug("end loading");			
+		loadContainers("tube");
+		updateContainers("tube");
 	}
 	
 	
@@ -48,6 +44,8 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		List<Sample> samps=InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME, samples, contextError, true);
 			
 		limsServices.updateLimsSamples(samps, contextError, "creation");
+		
+		Logger.debug("end loading samples");
 	}
 	
 	public void updateSamples() throws SQLException, DAOException {
@@ -64,11 +62,13 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		}
 		List<Sample> samps=InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME, samples, contextError, true);
 			
-		limsServices.updateLimsSamples(samps, contextError, "update");		
+		limsServices.updateLimsSamples(samps, contextError, "update");	
+		
+		Logger.debug("end updating samples");
 	}
 	
 	public void loadContainers(String containerCategoryCode) throws SQLException, DAOException {
-		Logger.debug("start loading containers");		
+		Logger.debug("start loading containers of type " + containerCategoryCode);		
 		
 		List<Container> containers = limsServices.findContainerToCreate(contextError, containerCategoryCode);
 		
@@ -88,11 +88,13 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		else {
 			limsServices.updateLimsTubes(ctrs, contextError, "creation");
 		}
+		
+		Logger.debug("end loading containers of type " + containerCategoryCode);		
 	}
 	
 	
 	public void updateContainers(String containerCategoryCode) throws SQLException, DAOException {
-		Logger.debug("start updating containers");		
+		Logger.debug("start updating containers of type " + containerCategoryCode);		
 		
 		List<Container> containers = limsServices.findContainerToModify(contextError, containerCategoryCode);
 		
@@ -119,6 +121,8 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		else {
 			limsServices.updateLimsTubes(ctrs, contextError, "update");
 		}
+		
+		Logger.debug("end updating containers of type " + containerCategoryCode);	
 	}
 	
 

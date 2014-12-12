@@ -23,11 +23,7 @@ public class ExperimentImportCNG extends AbstractImportDataCNG{
 
 	@Override
 	public void runImport() throws SQLException, DAOException {		
-		Logger.debug("start loading");
-		
 		updateExperimentDepots();
-		
-		Logger.debug("end loading");			
 	}
 	
 	
@@ -63,6 +59,8 @@ public class ExperimentImportCNG extends AbstractImportDataCNG{
 		
 		limsServices.updateLimsDepotExperiment(expsU, contextError, "update");
 		limsServices.updateLimsDepotExperiment(expsC, contextError, "creation");
+		
+		Logger.debug("end loading experiments of type 'depot'");
 	}
 	
 	
