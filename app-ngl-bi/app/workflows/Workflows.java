@@ -201,7 +201,6 @@ public class Workflows {
 			}
 			
 		}else if("F-VQC".equals(readSet.state.code)){
-			Spring.getBeanOfType(ILimsRunServices.class).valuationReadSet(readSet, true);	
 			if(TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)){
 				readSet.bioinformaticValuation.valid = readSet.productionValuation.valid;
 				readSet.bioinformaticValuation.user = readSet.productionValuation.user;
@@ -210,6 +209,8 @@ public class Workflows {
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
 						DBQuery.is("code", readSet.code), DBUpdate.set("bioinformaticValuation", readSet.bioinformaticValuation));
 			}
+			Spring.getBeanOfType(ILimsRunServices.class).valuationReadSet(readSet, true);	
+			
 		} else if("IW-BA".equals(readSet.state.code)){
 			readSet.bioinformaticValuation.valid = TBoolean.UNSET;
 			readSet.bioinformaticValuation.date = null;
