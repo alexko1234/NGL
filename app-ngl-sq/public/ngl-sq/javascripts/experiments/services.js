@@ -41,6 +41,21 @@
 							"type":"date"
 						},
 						{
+							"header":Messages("containers.table.sampleCodes"),
+							"property":"sampleCodes",
+							"order":true,
+							"hide":true,
+							"type":"text",
+							"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
+						},
+						{
+							"header":Messages("experiments.table.projectCodes"),
+							"property":"projectCodes",
+							"order":true,
+							"hide":true,
+							"type":"text"
+						},					
+						{
 							"header":Messages("experiments.table.creationDate"),
 							"property":"traceInformation.creationDate",
 							"order":true,
@@ -53,21 +68,6 @@
 							"order":true,
 							"hide":true,
 							"type":"text"
-						},
-						{
-							"header":Messages("experiments.table.projectCodes"),
-							"property":"projectCodes",
-							"order":true,
-							"hide":true,
-							"type":"text"
-						},
-						{
-							"header":Messages("containers.table.sampleCodes"),
-							"property":"sampleCodes",
-							"order":true,
-							"hide":true,
-							"type":"text",
-							"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
 						}
 						];
 			

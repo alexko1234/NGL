@@ -17,10 +17,17 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"type":"text"
 		},
 		{
-			"header":Messages("containers.table.creationDate"),
-			"property":"traceInformation.creationDate",
+			"header":Messages("containers.table.fromExperimentTypeCodes"),
+			"property":"fromExperimentTypeCodes",
 			"order":true,
-			"type":"date"
+			"type":"text"
+		},
+		{
+			"header":Messages("containers.table.stateCode"), 
+			"property":"state.code", 
+			"order":true,
+			"type":"text",
+			"filter":"codes:'state'"
 		},
 		{
 			"header":Messages("containers.table.sampleCodes"),
@@ -34,13 +41,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"property":"projectCodes",
 			"order":true,
 			"type":"text"
-		},
-		{
-			"header":Messages("containers.table.fromExperimentTypeCodes"),
-			"property":"fromExperimentTypeCodes",
-			"order":true,
-			"type":"text"
-		},
+		},		
 		{
 			"header":Messages("containers.table.valid"),
 			"property":"valuation.valid",
@@ -49,17 +50,16 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"filter":"codes:'valuation'",
 		},
 		{
+			"header":Messages("containers.table.creationDate"),
+			"property":"traceInformation.creationDate",
+			"order":true,
+			"type":"date"
+		},
+		{
 			"header":Messages("containers.table.createUser"),
 			"property":"traceInformation.createUser",
 			"order":true,
 			"type":"text"
-		},
-		{
-			"header":Messages("containers.table.stateCode"), 
-			"property":"state.code", 
-			"order":true,
-			"type":"text",
-			"filter":"codes:'state'"
 		}],	
 		search:{
 			url:jsRoutes.controllers.supports.api.Supports.list()

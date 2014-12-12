@@ -405,14 +405,14 @@ public class Experiments extends CommonController{
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("code", 1);
 			if(null == experimentsSearch.orderBy)experimentsSearch.orderBy = "code";
-			if(null == experimentsSearch.orderSense)experimentsSearch.orderSense = 0;
+			if(null == experimentsSearch.orderSense)experimentsSearch.orderSense = 0;				
+			
 			MongoDBResult<Experiment> results = mongoDBFinder(InstanceConstants.EXPERIMENT_COLL_NAME, experimentsSearch, Experiment.class, query, keys);
 			List<Experiment> experiments = results.toList();
 			List<ListObject> los = new ArrayList<ListObject>();
-			for(Experiment p: experiments){
-				los.add(new ListObject(p.code, p.code));
+			for(Experiment p: experiments){					
+					los.add(new ListObject(p.code, p.code));								
 			}
-
 			return Results.ok(Json.toJson(los));
 		}else{
 			if(null == experimentsSearch.orderBy)experimentsSearch.orderBy = "code";
@@ -421,8 +421,9 @@ public class Experiments extends CommonController{
 			List<Experiment> experiments = results.toList();
 			return ok(Json.toJson(experiments));
 		}
-	}	
-
+	}
+	
+	
 
 	public static Result updateData(String experimentCode){
 		Experiment experiment= MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
@@ -483,7 +484,7 @@ public class Experiments extends CommonController{
 		Logger.info("Experiment Query : "+experimentSearch);
 
 		if(StringUtils.isNotEmpty(experimentSearch.code)){
-			queryElts.add(DBQuery.is("code", experimentSearch.code));
+			queryElts.add(DBQuery.regex("code", Pattern.compile(experimentSearch.code)));
 		}
 
 		if(CollectionUtils.isNotEmpty(experimentSearch.codes)){
@@ -528,7 +529,7 @@ public class Experiments extends CommonController{
 			qs.add(DBQuery.regex("outputContainerSupportCodes",Pattern.compile(experimentSearch.containerSupportCode)));
 			queryElts.add(DBQuery.or(qs.toArray(new DBQuery.Query[qs.size()])));
 
-		}
+		}	
 
 		if(experimentSearch.sampleCode != null){
 			queryElts.add(DBQuery.in("sampleCodes", experimentSearch.sampleCode));

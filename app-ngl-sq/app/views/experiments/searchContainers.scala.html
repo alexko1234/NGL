@@ -8,7 +8,8 @@
 			}
 			<hr>
 			@formGroup{		
-				<input class="form-control" type="text" ng-model="form.user" typeahead="user.name as user.name for user in lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("containers.placeholder.user")' title='@Messages("containers.placeholder.user")'>
+				<div bt-select placeholder="@Messages("processes.select.processCategory")" class="form-control" ng-model="form.processCategory"  bt-options="processCategory.code as processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()" auto-select>
+				</div>				
 			}
 			@formGroup{
 				<div class="form-control" bt-select ng-model="form.projectCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.projects")' bt-options="project.code as project.code for project in lists.getProjects()"></div>
@@ -22,7 +23,8 @@
 			}
 			<hr>
 			@formGroup{		
-				<input class="form-control" type="text" ng-model="form.fromDate" placeholder='@Messages("containers.placeholder.fromDate")' title='@Messages("containers.placeholder.fromDate")'>
+				<div bt-select placeholder="@Messages("processes.select.processType")" class="form-control" ng-model="form.processType" bt-options="processType.code as processType.name for processType in lists.getProcessTypes()" ng-change="changeProcessType()" auto-select>
+				</div>				
 			}
 			@formGroup{		
 				<div class="form-control" bt-select ng-model="form.sampleCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.samples")' bt-options="sample.code as sample.code for sample in lists.getSamples()" ng-focus="refreshSamples()"></div>			
@@ -35,7 +37,7 @@
 			}
 			<hr>
 			@formGroup{		
-				<input class="form-control" type="text" ng-model="form.toDate" placeholder='@Messages("containers.placeholder.toDate")' title='@Messages("containers.placeholder.toDate")'>
+				<input class="form-control" type="text" ng-model="form.fromDate" placeholder='@Messages("containers.placeholder.fromDate")' title='@Messages("containers.placeholder.fromDate")'>				
 			}
 			@formGroup{		
 				<input class="form-control" type="text" ng-model="form.supportCode" placeholder='@Messages("search.placeholder.support")' title='@Messages("search.placeholder.support")'>
@@ -48,14 +50,10 @@
 			}
 			<hr>
 			@formGroup{
-				<div bt-select placeholder="@Messages("processes.select.processCategory")" class="form-control" ng-model="form.processCategory"  bt-options="processCategory.code as processCategory.name for processCategory in lists.getProcessCategories()" ng-change="changeProcessCategory()" auto-select>
-				</div>
+				<input class="form-control" type="text" ng-model="form.toDate" placeholder='@Messages("containers.placeholder.toDate")' title='@Messages("containers.placeholder.toDate")'>
 			}
 			@formGroup{
-			
-			<div class="form-control" bt-select ng-model="form.valuations" multiple="true" placeholder="@Messages("search.placeholder.valuation")" 
-				bt-options="valuation.code as valuation.name for valuation in lists.getValuations()">
-			</div>	
+			<input class="form-control" type="text" ng-model="form.user" typeahead="user.name as user.name for user in lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("containers.placeholder.user")' title='@Messages("containers.placeholder.user")'>			
 		}
 						
 		}
@@ -66,13 +64,15 @@
 			}
 			<hr>
 			@formGroup{	
-				<div bt-select placeholder="@Messages("processes.select.processType")" class="form-control" ng-model="form.processType" bt-options="processType.code as processType.name for processType in lists.getProcessTypes()" ng-change="changeProcessType()" auto-select>
-				</div>		
+				<div class="form-control" bt-select ng-model="form.fromExperimentTypeCodes" multiple="true" placeholder="@Messages("containers.select.fromExperimentTypeCodes")" 
+				bt-options="expType.code as expType.name for expType in lists.getExperimentTypes()">
+				</div>						
 			}
 			@formGroup{
-			<div class="form-control" bt-select ng-model="form.fromExperimentTypeCodes" multiple="true" placeholder="@Messages("containers.select.fromExperimentTypeCodes")" 
-				bt-options="expType.code as expType.name for expType in lists.getExperimentTypes()">
-			</div>
+			<div class="form-control" bt-select ng-model="form.valuations" multiple="true" placeholder="@Messages("search.placeholder.valuation")" 
+				bt-options="valuation.code as valuation.name for valuation in lists.getValuations()">
+			</div>	
+			
 		}
 		}
 }
