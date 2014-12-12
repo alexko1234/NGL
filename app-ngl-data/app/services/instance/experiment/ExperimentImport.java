@@ -11,6 +11,7 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
@@ -21,6 +22,7 @@ import models.laboratory.instrument.instance.InstrumentUsed;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
+import models.utils.instance.ExperimentHelper;
 
 import org.mongojack.DBQuery;
 
@@ -143,6 +145,15 @@ public class ExperimentImport {
 				atomicTransfertMethod.inputContainerUsed.code = c.code;
 				atomicTransfertMethod.inputContainerUsed.state = new State(); 		
 				atomicTransfertMethod.inputContainerUsed.state.code = c.state.code;
+				
+				LocationOnContainerSupport locationOnContainerSupport = new LocationOnContainerSupport(); 
+				locationOnContainerSupport.code = rs.getString("code_flowcell"); 
+				locationOnContainerSupport.line = c.support.line; 
+				locationOnContainerSupport.column = "1"; 
+				atomicTransfertMethod.inputContainerUsed.locationOnContainerSupport = locationOnContainerSupport;
+				
+				
+				
 								
 				hm.put(i, atomicTransfertMethod);
 				i++;
@@ -165,13 +176,17 @@ public class ExperimentImport {
 		//projectCodes & sampleCodes from the container 
 		experiment.projectCodes = projectCodes;
 		experiment.sampleCodes = sampleCodes;	
-		
-		//TODO : add runStartDate
-		
+
 		
 		//set limsCode
 		experiment.experimentProperties = new HashMap<String, PropertyValue>();
 		experiment.experimentProperties.put("limsCode", new PropertySingleValue(rs.getString("lims_code")));
+		
+		//set runStartDate
+		//experiment.experimentProperties.put("runStartDate", new PropertySingleValue(rs.getDate("min_date")));
+		
+		//set inputContainerSupportCodes
+		experiment.inputContainerSupportCodes = ExperimentHelper.getInputContainerSupportCodes(experiment);
 
 		//return the object with this main attributes defined
 		return experiment;
