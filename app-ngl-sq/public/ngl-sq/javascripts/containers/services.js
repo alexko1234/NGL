@@ -56,6 +56,9 @@
 				"property":"valuation.valid",
 				"order":true,
 				"type":"text",
+				"edit":true,
+				"choiceInList": true,
+				"possibleValues":"searchService.lists.getValuations()", 
 				"filter":"codes:'valuation'",
 			});
 			columns.push({

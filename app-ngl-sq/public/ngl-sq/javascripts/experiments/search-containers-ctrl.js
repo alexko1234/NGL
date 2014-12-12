@@ -75,7 +75,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		}
 	};
 	
-	$scope.changeExperimentType = function(){
+	$scope.changeExperimentType = function(experimentCategory){
 		tabService.removeTab(2);
 		tabService.removeTab(1);
 
@@ -85,6 +85,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		if($scope.form.experimentType){
 			$scope.lists.refresh.containerSupportCategories({experimentTypeCode:$scope.form.experimentType});
 		}
+		$scope.form.experimentCategory = experimentCategory;
 		this.search();
 	};
 	
@@ -114,11 +115,11 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		var stateCode = "A";
 		console.log(experimentCategory);
 		switch(experimentCategory){
-			case "qualitycontrol": stateCode = 'A-QC';
+			case "qualitycontrols": stateCode = 'A-QC';
 								   break;
-			case "transfert": 	   stateCode = 'A-TF';
+			case "transferts": 	   stateCode = 'A-TF';
 							       break;
-			case "purification":   stateCode = 'A-PF';
+			case "purifications":   stateCode = 'A-PF';
 								   break;
 			default:               stateCode = 'A';
 		}

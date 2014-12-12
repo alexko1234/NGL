@@ -3,7 +3,7 @@
 @form() = {
 	@columnSearchForm{			
 			@formGroup{	
-			<div bt-select placeholder="@Messages("experiments.select.experimentType.transformations")" class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in lists.get('transformations')" ng-change="changeExperimentType()" auto-select>
+			<div bt-select placeholder="@Messages("experiments.select.experimentType.transformations")" class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in lists.get('transformations')" ng-change="changeExperimentType('transformations')" auto-select>
 			</div>
 			}
 			<hr>
@@ -17,7 +17,7 @@
 		}
 		@columnSearchForm{
 			@formGroup{	
-				<div bt-select placeholder="@Messages("experiments.select.experimentType.purifications")" class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in lists.get('purifications')" ng-change="changeExperimentType()" auto-select>
+				<div bt-select placeholder="@Messages("experiments.select.experimentType.purifications")" class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in lists.get('purifications')" ng-change="changeExperimentType('purifications')" auto-select>
 				</div>
 			}
 			<hr>
@@ -30,7 +30,7 @@
 		}
 		@columnSearchForm{
 			@formGroup{	
-				<div bt-select placeholder="@Messages("experiments.select.experimentType.qualitycontrols")" class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in lists.get('qualitycontrols')" ng-change="changeExperimentType()" auto-select>
+				<div bt-select placeholder="@Messages("experiments.select.experimentType.qualitycontrols")" class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in lists.get('qualitycontrols')" ng-change="changeExperimentType('qualitycontrols')" auto-select>
 				</div>
 			}
 			<hr>
@@ -43,7 +43,7 @@
 		}
 		@columnSearchForm{
 			@formGroup{	
-			<div bt-select placeholder="@Messages("experiments.select.experimentType.transferts")" class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in lists.get('transferts')" ng-change="changeExperimentType()" auto-select>
+			<div bt-select placeholder="@Messages("experiments.select.experimentType.transferts")" class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in lists.get('transferts')" ng-change="changeExperimentType('transferts')" auto-select>
 			</div>
 			}
 			<hr>
