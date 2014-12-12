@@ -146,7 +146,7 @@ public class ExperimentHelper extends InstanceHelpers {
 			}
 			for(int i = 0; i < containersUSed.size(); i++)
 			{
-				codes.add(containersUSed.get(i).locationOnContainerSupport.code);
+				InstanceHelpers.addCode(containersUSed.get(i).locationOnContainerSupport.code, codes);
 			}
 		}
 		return codes;
@@ -171,7 +171,8 @@ public class ExperimentHelper extends InstanceHelpers {
 				if(containersUSed.get(i).locationOnContainerSupport==null){
 					code=containersUSed.get(i).code;
 				}else { code=containersUSed.get(i).locationOnContainerSupport.code;}
-				codes.add(code);
+				
+				InstanceHelpers.addCode(code, codes);
 			}
 		}
 		return codes;
