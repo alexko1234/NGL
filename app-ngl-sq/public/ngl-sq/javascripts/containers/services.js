@@ -29,17 +29,10 @@
 				"type":"text"
 			});
 			columns.push({
-				"header":Messages("containers.table.projectCodes"),
-				"property":"projectCodes",
+				"header":Messages("containers.table.fromExperimentTypeCodes"),
+				"property":"fromExperimentTypeCodes",
 				"order":true,
 				"type":"text"
-			});
-			columns.push({
-				"header":Messages("containers.table.sampleCodes"),
-				"property":"sampleCodes",
-				"order":true,
-				"type":"text",
-				"render":"<div list-resize='value.data.sampleCodes | unique' below-only-deploy>",
 			});
 			columns.push({
 				"header":Messages("containers.table.state.code"),
@@ -51,6 +44,19 @@
 				"possibleValues":"searchService.lists.getStates()", 
 				"filter":"codes:'state'"
 			});
+			columns.push({
+				"header":Messages("containers.table.sampleCodes"),
+				"property":"sampleCodes",
+				"order":true,
+				"type":"text",
+				"render":"<div list-resize='value.data.sampleCodes | unique' below-only-deploy>",
+			});	
+			columns.push({
+				"header":Messages("containers.table.projectCodes"),
+				"property":"projectCodes",
+				"order":true,
+				"type":"text"
+			});					
 			columns.push({
 				"header":Messages("containers.table.valid"),
 				"property":"valuation.valid",
@@ -67,12 +73,7 @@
 				"order":true,
 				"type":"date"
 			});
-			columns.push({
-				"header":Messages("containers.table.fromExperimentTypeCodes"),
-				"property":"fromExperimentTypeCodes",
-				"order":true,
-				"type":"text"
-			});
+			
 			
 			return columns;
 		};
