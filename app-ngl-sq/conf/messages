@@ -70,7 +70,7 @@ processes.tabs.create = Création Processus
 processes.create = Créé un processus
 processes.save = Sauvegarder
 
-processes.table.code = Processus
+processes.table.code = Code Processus
 processes.table.typeCode = Type Processus
 processes.table.projectCode = Projet(s)
 processes.table.projectCodes = Projet(s)
@@ -79,7 +79,7 @@ processes.table.containerInputCode = Container Initial
 processes.table.stateCode = Etat processus
 processes.table.resolutionCode = Résolution
 processes.table.resolutionCodes = Résolutions
-processes.table.creationDate = Création processus
+processes.table.creationDate = Date de création processus
 processes.table.comments = Commentaires
 processes.table.currentExperimentTypeCode = Type expérience courante
 processes.table.properties.robotUsing = Robot à utiliser pour la prep. de lib.
@@ -183,7 +183,7 @@ experiments.select.intrumentCategory = Sélect. un type de contenant
 experiments.select.experimentTypeCode = Sélect. un type d''expérience
 experiments.select.outContainerSupportCategoryCode = Sélect. un type de sortie
 experiments.select.state = Sélect. un état expérience
-search.placeholder.valuation = Sélect une évaluation
+search.placeholder.valuation = Sélect. évaluation
 
 experiments.table.code = Code Expérience
 experiments.table.projectCodes = Projet(s)

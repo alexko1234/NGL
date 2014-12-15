@@ -49,18 +49,12 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 				"type":"text"
 			},
 			{
-				"header":Messages("containers.table.valid"),
-				"property":"valuation.valid",
-				"order":true,
-				"type":"text",
-				"filter":"codes:'valuation'"
-			},
-			{
-				"header":Messages("processes.table.projectCodes"),
-				"property":"projectCodes",
+				"header":Messages("containers.table.state.code"),
+				"property":"state.code",
 				"order":true,
 				"hide":true,
-				"type":"text"
+				"type":"text",
+				"filter":"codes:'state'"
 			},
 			{
 				"header":Messages("containers.table.sampleCodes"),
@@ -70,12 +64,18 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 				"type":"text"
 			},
 			{
-				"header":Messages("containers.table.state.code"),
-				"property":"state.code",
+				"header":Messages("processes.table.projectCodes"),
+				"property":"projectCodes",
 				"order":true,
 				"hide":true,
+				"type":"text"
+			},
+			{
+				"header":Messages("containers.table.valid"),
+				"property":"valuation.valid",
+				"order":true,
 				"type":"text",
-				"filter":"codes:'state'"
+				"filter":"codes:'valuation'"
 			}
 		],
 		search:{
