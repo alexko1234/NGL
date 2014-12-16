@@ -24,7 +24,7 @@ public class Analyses extends CommonController {
 	public static Result get(String code) {
 		return ok(home.render("search")); 
 	}
-	
+	/*TEST COMMIT*/
 	public static Result valuation(String code) {
 		return ok(home.render("valuation")); 
 	}
