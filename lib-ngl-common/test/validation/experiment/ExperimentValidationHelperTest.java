@@ -129,6 +129,17 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 		ExperimentValidationHelper.validateResolutionCodes(experimentType.code,null, contextValidation);
 		Assert.assertTrue(contextValidation.errors.size()==0);
 	}
+	
+	
+	@Test 
+	public void validationInputOutputContainerSupportNull(){
+		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
+		contextValidation.getContextObjects().put("stateCode", "F");
+		Experiment exp=new Experiment();
+		ExperimentValidationHelper.validateInputOutputContainerSupport(exp, contextValidation);
+		Assert.assertTrue(contextValidation.errors.size()==1);
+		Assert.assertFalse(contextValidation.errors.containsKey("outputContainerSupportCodes"));
+	}
 			
 	//@Test
 	public void validationInstrumentUsedFinishTest() throws DAOException{

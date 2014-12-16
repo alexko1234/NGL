@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
+
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.experiment.description.ExperimentCategory;
@@ -28,21 +30,21 @@ import validation.utils.ValidationHelper;
 public class ExperimentValidationHelper  extends CommonValidationHelper {
 
 	public static void validationProtocol(String typeCode,String protocolCode,
-			 ContextValidation contextValidation)  {
+			ContextValidation contextValidation)  {
 		String stateCode = getObjectFromContext(STATE_CODE, String.class, contextValidation);
 		if(!stateCode.equals("N")){
-					if(required(contextValidation, protocolCode, "protocol")){
-						try {
-							if(!Protocol.find.isCodeExistForTypeCode(protocolCode, typeCode) ){
-								contextValidation.addErrors("code", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, protocolCode);
-							}
-						} catch (DAOException e) {
-							throw new RuntimeException(e);
-						}
+			if(required(contextValidation, protocolCode, "protocol")){
+				try {
+					if(!Protocol.find.isCodeExistForTypeCode(protocolCode, typeCode) ){
+						contextValidation.addErrors("code", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, protocolCode);
 					}
+				} catch (DAOException e) {
+					throw new RuntimeException(e);
+				}
+			}
 		}
 	}
-	
+
 	public static void validateResolutionCodes(String typeCode,List<String> resoCodes,ContextValidation contextValidation){
 		String stateCode= getObjectFromContext(STATE_CODE, String.class, contextValidation);
 		if(stateCode.equals("F")){
@@ -53,13 +55,13 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			CommonValidationHelper.validateResolutionCodes(typeCode,resoCodes,contextValidation);
 		}
 	}
-	
+
 	public static void validateState(String typeCode, State state, ContextValidation contextValidation){
 		if(contextValidation.getObject(STATE_CODE)!=null){
 			CommonValidationHelper.validateState(typeCode, state, contextValidation);
 		}
 	}
-	
+
 	public static void validationExperimentType(
 			String typeCode, Map<String,PropertyValue> properties, ContextValidation contextValidation) {
 		ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ExperimentType.find,true);
@@ -74,12 +76,12 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			}
 		}
 	}
-	
+
 	public static void validationExperimentCategoryCode(String categoryCode,
 			ContextValidation contextValidation) {
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "categoryCode", ExperimentCategory.find,false);
 	}
-	
+
 	public static void validateNewState(Experiment experiment,
 			ContextValidation contextValidation){
 		ExperimentValidationHelper.validateResolutionCodes(experiment.typeCode,experiment.state.resolutionCodes,contextValidation);
@@ -111,22 +113,22 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 
 	public static void validateInstrumentUsed(InstrumentUsed instrumentUsed,Map<String,PropertyValue> properties, ContextValidation contextValidation) {
 		String stateCode = getObjectFromContext(STATE_CODE, String.class, contextValidation);
-			if(ValidationHelper.required(contextValidation, instrumentUsed, "instrumentUsed")){
-				InstrumentUsedType instrumentUsedType =BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, instrumentUsed.typeCode, "typeCode", InstrumentUsedType.find,true);
-				if(instrumentUsedType!=null){
-					if(!stateCode.equals("N")){
-						contextValidation.addKeyToRootKeyName("properties");
-						ValidationHelper.validateProperties(contextValidation, properties, instrumentUsedType.getPropertiesDefinitionDefaultLevel(), false);
-						contextValidation.removeKeyFromRootKeyName("properties");
-					}
+		if(ValidationHelper.required(contextValidation, instrumentUsed, "instrumentUsed")){
+			InstrumentUsedType instrumentUsedType =BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, instrumentUsed.typeCode, "typeCode", InstrumentUsedType.find,true);
+			if(instrumentUsedType!=null){
+				if(!stateCode.equals("N")){
+					contextValidation.addKeyToRootKeyName("properties");
+					ValidationHelper.validateProperties(contextValidation, properties, instrumentUsedType.getPropertiesDefinitionDefaultLevel(), false);
+					contextValidation.removeKeyFromRootKeyName("properties");
 				}
-				
-				contextValidation.addKeyToRootKeyName("instrumentUsed");
-				instrumentUsed.validate(contextValidation); 
-				contextValidation.removeKeyFromRootKeyName("instrumentUsed");
 			}
+
+			contextValidation.addKeyToRootKeyName("instrumentUsed");
+			instrumentUsed.validate(contextValidation); 
+			contextValidation.removeKeyFromRootKeyName("instrumentUsed");
+		}
 	}
-		
+
 	public static void validateRules(Experiment exp,ContextValidation contextValidation){
 		ArrayList<Object> validationfacts = new ArrayList<Object>();
 		validationfacts.add(exp);
@@ -139,5 +141,29 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 		ExperimentValidationHelper.validateRules(validationfacts, contextValidation);
 	}
 
-	
+	public static void validateInputOutputContainerSupport(Experiment experiment,
+			ContextValidation contextValidation) {
+		String stateCode = getObjectFromContext(STATE_CODE, String.class, contextValidation);
+
+		if(CollectionUtils.isNotEmpty(experiment.outputContainerSupportCodes)){
+			contextValidation.addKeyToRootKeyName("outputContainerSupportCodes");
+			for(String supportCode:experiment.outputContainerSupportCodes){
+				CommonValidationHelper.validateContainerSupportCode(supportCode, contextValidation);
+			}
+			contextValidation.removeKeyFromRootKeyName("outputContainerSupportCodes");
+		}
+
+		if(!stateCode.equals("N")){
+			if(required(contextValidation, experiment.inputContainerSupportCodes, "inputContainerSupportCodes")){
+				contextValidation.addKeyToRootKeyName("inputContainerSupportCodes");
+				for(String supportCode:experiment.inputContainerSupportCodes){
+					CommonValidationHelper.validateContainerSupportCode(supportCode, contextValidation);
+				}
+				contextValidation.removeKeyFromRootKeyName("inputContainerSupportCodes");
+			}
+		}
+
+	}
+
+
 }

@@ -345,7 +345,7 @@ public class ExperimentTests extends AbstractTests{
 	}
 
 	@Test
-	public void saveExperiment() throws JsonParseException, JsonMappingException, IOException{
+	public void saveManyToOneExperiment() throws JsonParseException, JsonMappingException, IOException{
 		
 		List<Experiment> exps = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME+"_new", Experiment.class,DBQuery.is("typeCode", "prepa-flowcell")).toList();
 		Experiment exp=exps.get(0);
@@ -374,6 +374,9 @@ public class ExperimentTests extends AbstractTests{
 		
 		
 	}
+	
+	
+	
 	/*
 	@Test
 	public void updateExperimentProperties(){

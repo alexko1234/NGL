@@ -11,6 +11,7 @@ import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.ManytoOneContainer;
+import models.laboratory.processes.instance.Process;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
@@ -53,8 +54,12 @@ public class ExperimentHelper extends InstanceHelpers {
 				contextValidation.errors.putAll(exp.atomicTransfertMethods.get(i).saveOutputContainers(exp, contextValidation).errors);
 			}
 
+			List<String> containerSupportCodes=ExperimentHelper.getOutputContainerSupportCodes(exp);
 			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class,DBQuery.is("code", exp.code)
-					,DBUpdate.set("outputContainerSupportCodes", ExperimentHelper.getOutputContainerSupportCodes(exp)));
+					,DBUpdate.set("outputContainerSupportCodes", containerSupportCodes));
+			
+			MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,DBQuery.in("experimentCodes", exp.code),
+					DBUpdate.pushAll("newContainerSupportCodes",containerSupportCodes),true);
 		}
 
 	}

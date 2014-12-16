@@ -119,6 +119,8 @@ public class Experiment extends DBObject implements IValidation {
 		ExperimentValidationHelper.validateReagents(reagentsUsed,contextValidation);
 		ExperimentValidationHelper.validateTraceInformation(traceInformation, contextValidation);		
 		ExperimentValidationHelper.validateRules(this,contextValidation);
+		ExperimentValidationHelper.validateInputOutputContainerSupport(this,contextValidation);
+		
 
 	}
 

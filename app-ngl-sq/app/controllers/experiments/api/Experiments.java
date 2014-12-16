@@ -367,11 +367,11 @@ public class Experiments extends CommonController{
 				ExperimentHelper.updateData(exp);
 				
 				if(!ctxValidation.hasErrors()){
-					MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME,exp);
+					Experiment newExp=MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME,exp);
 
 					MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME,Process.class,
 							DBQuery.in("code", ExperimentHelper.getAllProcessCodesFromExperiment(exp))
-							,DBUpdate.set("currentExperimentTypeCode", exp.typeCode),true);
+							,DBUpdate.set("currentExperimentTypeCode", exp.typeCode).push("experimentCodes", exp.code),true);
 
 					State state = StateHelper.cloneState(exp.state);
 					state.user=getCurrentUser();

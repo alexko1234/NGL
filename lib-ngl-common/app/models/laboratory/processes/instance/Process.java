@@ -46,10 +46,10 @@ public class Process extends DBObject implements IValidation{
 	public String sampleCode;
 
 	public String currentExperimentTypeCode;
-	
 	public String containerInputCode;
 	
-	public String newContainerCodes;
+	public List<String> newContainerSupportCodes;
+	public List<String> experimentCodes;
 
 	@JsonIgnore
 	@Override
