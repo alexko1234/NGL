@@ -65,6 +65,7 @@ public class Process extends DBObject implements IValidation{
 		ProcessValidationHelper.validateProjectCode(projectCode, contextValidation);
 		ProcessValidationHelper.validateSampleCode(sampleCode, projectCode, contextValidation);
 		ProcessValidationHelper.validateCurrentExperimentTypeCode(currentExperimentTypeCode,contextValidation);
+		//ProcessValidationHelper.validateExperimentCodes(experimentCodes, contextValidation);
 	}
 	
 }

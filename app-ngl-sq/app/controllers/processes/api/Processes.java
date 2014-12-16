@@ -264,10 +264,6 @@ public class Processes extends CommonController{
 			queryElts.add(DBQuery.in("experimentCodes", processesSearch.experimentCode));
 		}
 		
-		if(StringUtils.isNotEmpty(processesSearch.newContainerSupportCodes)){
-			queryElts.add(DBQuery.in("newContainerSupportCodes", processesSearch.newContainerSupportCodes));
-		}
-		
 		if(StringUtils.isNotEmpty(processesSearch.typeCode)){
 			queryElts.add(DBQuery.is("typeCode", processesSearch.typeCode));
 		}
@@ -291,7 +287,7 @@ public class Processes extends CommonController{
 			queryElts.add(DBQuery.lessThanEquals("traceInformation.creationDate", (DateUtils.addDays(processesSearch.toDate, 1))));
 		}
 		
-		if(StringUtils.isNotEmpty(processesSearch.supportCode) || StringUtils.isNotEmpty(processesSearch.containerSupportCategory)){
+		if(StringUtils.isNotEmpty(processesSearch.supportCode) || StringUtils.isNotEmpty(processesSearch.containerSupportCategory) ){
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("code", 1);
@@ -306,14 +302,24 @@ public class Processes extends CommonController{
 			for(Container c: containers){
 				queryContainer.add(DBQuery.is("containerInputCode", c.code));
 			}
+
+			Logger.debug("newContainerSupportCodes :"+processesSearch.supportCode);
+			queryContainer.add(DBQuery.in("newContainerSupportCodes",processesSearch.supportCode));
+
 			
 			if(queryContainer.size()!=0){
 				queryElts.add(DBQuery.or(queryContainer.toArray(new Query[queryContainer.size()])));
-			}else {
-				queryElts.add(DBQuery.notExists("containerInputCode"));
+			}
+			else {
+				queryElts.add(DBQuery.exists("code"));
 			}
 			
 			Logger.debug("Nb containers find"+containers.size());
+		}
+		
+		
+		if(StringUtils.isNotEmpty(processesSearch.experimentCode)){
+			queryElts.add(DBQuery.in("experimentCodes",processesSearch.experimentCode));
 		}
 		
 		if(queryElts.size() > 0){

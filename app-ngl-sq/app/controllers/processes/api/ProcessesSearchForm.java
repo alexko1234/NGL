@@ -19,7 +19,6 @@ public class ProcessesSearchForm extends ListForm{
 	public Date toDate;
 	public List<String> users;
 	public String experimentCode;
-	public String newContainerSupportCodes;
 	
 	@Override
 	public String toString() {
@@ -28,7 +27,6 @@ public class ProcessesSearchForm extends ListForm{
 				+ ", sampleCodes=" + sampleCodes
 				+ ", projectCode=" + projectCode + ",supportCode="+supportCode 
 				+ ", stateCode="+stateCode+", containerSupportCategory="+containerSupportCategory +", experimentCode="+experimentCode
-				+", newContainerSupportCodes="+newContainerSupportCodes
 				+"]";
 	}
 }

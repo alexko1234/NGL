@@ -1,6 +1,9 @@
 package validation.processes.instance;
 
+import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.collections.CollectionUtils;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.experiment.description.ExperimentType;
@@ -31,6 +34,15 @@ public class ProcessValidationHelper extends CommonValidationHelper {
 	public static void validateCurrentExperimentTypeCode(String currentExperimentTypeCode,
 			ContextValidation contextValidation) {
 		BusinessValidationHelper.validateExistDescriptionCode(contextValidation, currentExperimentTypeCode, "currentExperimentTypeCode", ExperimentType.find,false);
+	}
+
+	public static void validateExperimentCodes(List<String> experimentCodes, ContextValidation contextValidation) {
+
+		if(CollectionUtils.isNotEmpty(experimentCodes)){
+			for(String expCode:experimentCodes){
+				CommonValidationHelper.validateExperimenCode(expCode, contextValidation);
+			}
+		}
 	}
 
 }

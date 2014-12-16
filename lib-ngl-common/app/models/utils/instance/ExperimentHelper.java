@@ -7,6 +7,7 @@ import java.util.Map;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
@@ -17,6 +18,7 @@ import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
@@ -57,7 +59,7 @@ public class ExperimentHelper extends InstanceHelpers {
 			List<String> containerSupportCodes=ExperimentHelper.getOutputContainerSupportCodes(exp);
 			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class,DBQuery.is("code", exp.code)
 					,DBUpdate.set("outputContainerSupportCodes", containerSupportCodes));
-			
+
 			MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,DBQuery.in("experimentCodes", exp.code),
 					DBUpdate.pushAll("newContainerSupportCodes",containerSupportCodes),true);
 		}
@@ -89,7 +91,7 @@ public class ExperimentHelper extends InstanceHelpers {
 		return exp;
 	}
 
-	
+
 	public static Map<String,PropertyValue> getAllPropertiesFromAtomicTransfertMethod(AtomicTransfertMethod atomicTransfertMethod,Experiment experiment){
 		List<ContainerUsed> inputContainerUseds=atomicTransfertMethod.getInputContainers();
 
@@ -107,7 +109,7 @@ public class ExperimentHelper extends InstanceHelpers {
 			if(inputContainerUsed.instrumentProperties!=null)
 				properties.putAll(inputContainerUsed.instrumentProperties);
 		}		
-		
+
 		List<ContainerUsed> outputContainerUseds=atomicTransfertMethod.getOutputContainers();
 		for(ContainerUsed outputContainerUsed:outputContainerUseds){
 			if(outputContainerUsed.experimentProperties!=null)
@@ -115,25 +117,29 @@ public class ExperimentHelper extends InstanceHelpers {
 			if(outputContainerUsed.instrumentProperties!=null)
 				properties.putAll(outputContainerUsed.instrumentProperties);
 		}
-		
+
 		return properties;
 	}
-	
+
 	public static List<String> getAllProcessCodesFromExperiment(Experiment exp){
-		
+
 		List<String> containerCodes=new ArrayList<String>();
 		List<String> processCodes=new ArrayList<String>();
 		for(ContainerUsed containerUsed:exp.getAllInPutContainer()){
 			containerCodes.add(containerUsed.code);
 		}
-		
+
 		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.in("code",containerCodes)).toList();
-		
-		for(Container container:containers){
-			processCodes.addAll(container.inputProcessCodes);
+
+		if(CollectionUtils.isNotEmpty(containers))
+		{
+			for(Container container:containers){
+				if(CollectionUtils.isNotEmpty(container.inputProcessCodes))
+					processCodes.addAll(container.inputProcessCodes);
+			}
 		}
 		return processCodes;
-		
+
 	}
 
 
@@ -151,7 +157,11 @@ public class ExperimentHelper extends InstanceHelpers {
 			}
 			for(int i = 0; i < containersUSed.size(); i++)
 			{
-				InstanceHelpers.addCode(containersUSed.get(i).locationOnContainerSupport.code, codes);
+				if(containersUSed.get(i).locationOnContainerSupport==null){
+					InstanceHelpers.addCode(containersUSed.get(i).code, codes);
+				}else {
+					InstanceHelpers.addCode(containersUSed.get(i).locationOnContainerSupport.code, codes);
+				}
 			}
 		}
 		return codes;
@@ -176,7 +186,7 @@ public class ExperimentHelper extends InstanceHelpers {
 				if(containersUSed.get(i).locationOnContainerSupport==null){
 					code=containersUSed.get(i).code;
 				}else { code=containersUSed.get(i).locationOnContainerSupport.code;}
-				
+
 				InstanceHelpers.addCode(code, codes);
 			}
 		}
@@ -193,7 +203,7 @@ public class ExperimentHelper extends InstanceHelpers {
 				facts.add(atomic);
 			}
 		}
-	
+
 		RulesServices rulesServices = new RulesServices();
 		List<Object> factsAfterRules = null;
 		try {
@@ -201,14 +211,14 @@ public class ExperimentHelper extends InstanceHelpers {
 		} catch (RulesException e) {
 			throw new RuntimeException();
 		}
-	
+
 		for(Object obj:factsAfterRules){
 			if(ManytoOneContainer.class.isInstance(obj)){
 				exp.atomicTransfertMethods.remove(((ManytoOneContainer)obj).position-1);
 				exp.atomicTransfertMethods.put(((ManytoOneContainer)obj).position-1,(ManytoOneContainer) obj);
 			}
 		}
-	
+
 	}
 
 }

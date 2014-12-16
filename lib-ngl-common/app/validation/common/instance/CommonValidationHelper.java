@@ -11,6 +11,7 @@ import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.project.instance.Project;
 import models.laboratory.resolutions.instance.ResolutionConfigurations;
 import models.laboratory.sample.instance.Sample;
@@ -22,7 +23,6 @@ import models.utils.dao.DAOException;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
-import play.Logger;
 import play.Play;
 import rules.services.RulesException;
 import rules.services.RulesServices;
@@ -524,6 +524,11 @@ public class CommonValidationHelper {
 				BusinessValidationHelper.validateExistDescriptionCode(contextValidation, s, "experimentTypeCodes", ExperimentType.find);
 			}
 		}
+	}
+
+
+	public static void validateExperimenCode(String expCode, ContextValidation contextValidation) {
+		BusinessValidationHelper.validateExistInstanceCode(contextValidation, "experimentCode",expCode, Experiment.class, InstanceConstants.EXPERIMENT_COLL_NAME);
 	}
 
 }
