@@ -34,12 +34,11 @@ public class MigrationNGLSEQ extends CommonController{
 		
 		Logger.info(">>>>>>>>>>> Migration NGL-SQ in Containers and Experiment starts");
 
-		/*backupOneCollection(InstanceConstants.CONTAINER_COLL_NAME,Container.class);
+		backupOneCollection(InstanceConstants.CONTAINER_COLL_NAME,Container.class);
 		updateProjectAndTagCategoryAndMeasureValueContainer();
-		backupOneCollection(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class);*/
-		//updateExperimentInputContainerSupportCodes();
-		
-		//backupOneCollection(InstanceConstants.PROCESS_COLL_NAME,Process.class);
+		backupOneCollection(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class);
+		updateExperimentInputContainerSupportCodes();
+		backupOneCollection(InstanceConstants.PROCESS_COLL_NAME,Process.class);
 		udpdateProcessExperimentAndSupportCodes();
 		
 		Logger.info(" Migration NGL-SQ in Containers and Experiment ends <<<<<<<");
@@ -56,12 +55,15 @@ public class MigrationNGLSEQ extends CommonController{
 				.unset("newContainerSupportCodes"),true);
 
 		for(Experiment exp:experiments){
+			DBUpdate.Builder update=new DBUpdate.Builder();
 			List<String> codes=ExperimentHelper.getAllProcessCodesFromExperiment(exp);
 
+			update.push("experimentCodes", exp.code);
+			if(CollectionUtils.isNotEmpty( exp.outputContainerSupportCodes)){
+				update.pushAll("newContainerSupportCodes", exp.outputContainerSupportCodes);
+			}
 			if(CollectionUtils.isNotEmpty(codes)){
-			MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,DBQuery.in("code", codes),
-					DBUpdate.push("experimentCodes", exp.code)
-					.pushAll("newContainerSupportCodes", exp.outputContainerSupportCodes),true);
+				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,DBQuery.in("code", codes),update,true);
 			}
 		}
 	}
@@ -131,6 +133,8 @@ public class MigrationNGLSEQ extends CommonController{
 		
 		for(Experiment experiment:experiments){
 			DBUpdate.Builder update=new DBUpdate.Builder();
+			
+			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class,DBQuery.is("code", experiment.code),DBUpdate.unset("outputContainerSupportCodes").unset("inputContainerSupportCodes"));
 			
 			experiment.inputContainerSupportCodes=ExperimentHelper.getInputContainerSupportCodes(experiment);
 			update.set("inputContainerSupportCodes", experiment.inputContainerSupportCodes);
