@@ -41,7 +41,7 @@ public class ExperimentTypes extends CommonController{
 		
 		try{		
 			
-			if(experimentTypesSearch.categoryCode != null && experimentTypesSearch.withoutOneToVoid){
+			if(experimentTypesSearch.categoryCode != null && experimentTypesSearch.withoutOneToVoid !=null && experimentTypesSearch.withoutOneToVoid){
 				experimentTypes = ExperimentType.find.findByCategoryCodeWithoutOneToVoid(experimentTypesSearch.categoryCode);				
 			}else if(experimentTypesSearch.categoryCode != null && experimentTypesSearch.processTypeCode == null){
 				experimentTypes = ExperimentType.find.findByCategoryCode(experimentTypesSearch.categoryCode);
