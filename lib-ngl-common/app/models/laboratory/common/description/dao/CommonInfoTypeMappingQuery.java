@@ -42,6 +42,7 @@ public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType>{
 			commonInfoType.id = rs.getLong("cId");
 			commonInfoType.name = rs.getString("name");
 			commonInfoType.code = rs.getString("codeSearch");
+			commonInfoType.displayOrder = rs.getInt("displayOrder");
 			//Get object Type
 			ObjectType objectType = new ObjectType();
 			objectType.id = rs.getLong("oId");

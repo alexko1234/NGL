@@ -43,11 +43,14 @@ import models.utils.dao.DAOException;
 import org.junit.Test;
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import play.Logger;
+import play.Logger.ALogger;
 import play.api.modules.spring.Spring;
-
 import utils.AbstractTests;
 
 public class FindDAOTest extends AbstractTests {
+	
+	protected static ALogger logger=Logger.of("FindDAOTest");
 	
 	@Test
 	public void CommonInfoTypeFindTest() throws DAOException {
@@ -233,6 +236,8 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertNotNull(et5);
 		ExperimentType et6 = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode("fragmentation").get(0);
 		Assert.assertNotNull(et6);
+		ExperimentType et7 = ExperimentType.find.findByCategoryCodeWithoutOneToVoid("transformation").get(0);
+		Assert.assertNotNull(et7);
 		List<String> lstr = ExperimentType.find.findVoidProcessExperimentTypeCode("");
 		Assert.assertEquals(0, lstr.size()); 
 		//internal fct

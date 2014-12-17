@@ -8,6 +8,7 @@ import java.util.List;
 import models.laboratory.experiment.description.ExperimentType;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
+import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -36,14 +37,16 @@ public class ExperimentTypes extends CommonController{
 	public static Result list() throws DAOException{
 		Form<ExperimentTypesSearchForm> experimentTypeFilledForm = filledFormQueryString(experimentTypeForm,ExperimentTypesSearchForm.class);
 		ExperimentTypesSearchForm experimentTypesSearch = experimentTypeFilledForm.get();
-		
-		List<ExperimentType> experimentTypes;
+		Logger.info("experimentTypesSearch = "+ experimentTypesSearch.toString());
+		List<ExperimentType> experimentTypes = new ArrayList<ExperimentType>();
 		
 		try{		
-			if(experimentTypesSearch.categoryCode != null && experimentTypesSearch.processTypeCode == null){
+			if(experimentTypesSearch.categoryCode != null && experimentTypesSearch.processTypeCode == null && experimentTypesSearch.withoutOneToVoid==null){
 				experimentTypes = ExperimentType.find.findByCategoryCode(experimentTypesSearch.categoryCode);
-			}else if(experimentTypesSearch.categoryCode != null && experimentTypesSearch.processTypeCode != null){
+			}else if(experimentTypesSearch.categoryCode != null && experimentTypesSearch.processTypeCode != null && experimentTypesSearch.withoutOneToVoid==null){
 				experimentTypes = ExperimentType.find.findByCategoryCodeAndProcessTypeCode(experimentTypesSearch.categoryCode, experimentTypesSearch.processTypeCode);
+			}else if(experimentTypesSearch.categoryCode != null && experimentTypesSearch.withoutOneToVoid){
+				experimentTypes = ExperimentType.find.findByCategoryCodeWithoutOneToVoid(experimentTypesSearch.categoryCode);
 			}else{
 				experimentTypes = ExperimentType.find.findAll();
 			}
@@ -64,4 +67,6 @@ public class ExperimentTypes extends CommonController{
 			return  Results.internalServerError(e.getMessage());
 		}	
 	}
+	
+	
 }

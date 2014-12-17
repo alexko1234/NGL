@@ -29,7 +29,9 @@ import play.api.modules.spring.Spring;
 public class CommonInfoType extends Model<CommonInfoType>{
 
 	public String name; //used as label
-
+	
+	public Integer displayOrder; //position on display
+	
 	public List<State> states = new ArrayList<State>();
 	public List<Resolution> resolutions = new ArrayList<Resolution>();
 
@@ -41,7 +43,8 @@ public class CommonInfoType extends Model<CommonInfoType>{
 	
 	public List<ValuationCriteria> criterias = new ArrayList<ValuationCriteria>();
 
-	public static CommonInfoTypeFinder find = new CommonInfoTypeFinder(); 
+	public static CommonInfoTypeFinder find = new CommonInfoTypeFinder();	
+	
 
 	public CommonInfoType() {
 		super(CommonInfoTypeDAO.class.getName());
@@ -73,6 +76,8 @@ public class CommonInfoType extends Model<CommonInfoType>{
 		
 		this.institutes=commonInfoType.institutes;
 		this.criterias=commonInfoType.criterias;
+		//position on display
+		this.displayOrder=commonInfoType.displayOrder;
 	}
 
 	/**

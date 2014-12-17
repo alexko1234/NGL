@@ -7,4 +7,6 @@ public class ExperimentTypesSearchForm extends ListForm{
 	public String categoryCode;
 	
 	public String processTypeCode;
+	
+	public Boolean withoutOneToVoid;
 }

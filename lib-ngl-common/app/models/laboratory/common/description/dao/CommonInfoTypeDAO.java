@@ -27,7 +27,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 
 	public CommonInfoTypeDAO() {
 		super("common_info_type", CommonInfoType.class, CommonInfoTypeMappingQuery.class, 
-				"SELECT distinct t.id as cId, t.name, t.code as codeSearch, o.id as oId, o.code as codeObject, o.generic "+
+				"SELECT distinct t.id as cId, t.name, t.code as codeSearch, t.display_order as displayOrder, o.id as oId, o.code as codeObject, o.generic "+
 				"FROM common_info_type as t "+
 				"JOIN object_type as o ON o.id=t.fk_object_type "+DAOHelpers.getCommonInfoTypeSQLForInstitute("t"), true);
 				
@@ -48,6 +48,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		parameters.put("name", cit.name);
 		parameters.put("code", cit.code);
 		parameters.put("fk_object_type", cit.objectType.id);
+		parameters.put("display_order", cit.displayOrder);
 		Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
 		cit.id = newId;
 		

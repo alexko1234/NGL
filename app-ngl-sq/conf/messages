@@ -8,7 +8,7 @@ containers.menu.search = Rechercher
 containers.tabs.search = Recherche Container
 
 #Containers table
-containers.table.code = Container
+containers.table.code = Code Container
 containers.table.supportCategoryCode = Catégorie support
 containers.table.categoryCode = Catégorie Support
 containers.table.projectCodes = Projet(s)

@@ -616,6 +616,37 @@ public class DescriptionFactory {
 		ExperimentType et = new ExperimentType();
 		et.code =code.toLowerCase();
 		et.name =name;
+		et.displayOrder = null;
+		et.category = category;
+		et.objectType = ObjectType.find.findByCode(ObjectType.CODE.Experiment.name());
+		et.propertiesDefinitions = propertiesDefinitions;
+		et.protocols = protocols;
+		et.instrumentUsedTypes = instrumentUsedTypes;
+		et.states = State.find.findByObjectTypeCode(ObjectType.CODE.Experiment);
+		//et.resolutions = models.laboratory.common.description.Resolution.find.findByObjectTypeCode(ObjectType.CODE.Experiment);
+		et.atomicTransfertMethod=atomicTransfertMethod;		
+		et.institutes = institutes;
+		return et;
+	}
+	
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @param category
+	 * @param propertiesDefinitions
+	 * @param protocols
+	 * @param instrumentUsedTypes
+	 * @param atomicTransfertMethod
+	 * @param institutes
+	 * @return
+	 * @throws DAOException
+	 */
+	public static ExperimentType newExperimentType(String name, String code, Integer displayOrder, ExperimentCategory category, List<PropertyDefinition> propertiesDefinitions, List<Protocol> protocols, List<InstrumentUsedType> instrumentUsedTypes,String atomicTransfertMethod, List<Institute> institutes) throws DAOException {
+		ExperimentType et = new ExperimentType();
+		et.code =code.toLowerCase();
+		et.name =name;
+		et.displayOrder = displayOrder;
 		et.category = category;
 		et.objectType = ObjectType.find.findByCode(ObjectType.CODE.Experiment.name());
 		et.propertiesDefinitions = propertiesDefinitions;

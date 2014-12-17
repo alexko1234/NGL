@@ -29,6 +29,12 @@
 				"type":"text"
 			});
 			columns.push({
+				"header":Messages("containers.table.code"),
+				"property":"code",
+				"order":true,
+				"type":"text"
+			});
+			columns.push({
 				"header":Messages("containers.table.fromExperimentTypeCodes"),
 				"property":"fromExperimentTypeCodes",
 				"order":true,
@@ -49,7 +55,7 @@
 				"property":"sampleCodes",
 				"order":true,
 				"type":"text",
-				"render":"<div list-resize='value.data.sampleCodes | unique' below-only-deploy>",
+				"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
 			});	
 			columns.push({
 				"header":Messages("containers.table.projectCodes"),
@@ -85,7 +91,7 @@
 			if(!isInit){
 				lists.refresh.containerSupportCategories();
 				lists.refresh.containerCategories();
-				lists.refresh.experimentTypes({"categoryCode":"transformation"});
+				lists.refresh.experimentTypes({categoryCode:"transformation", withoutOneToVoid:true});
 				lists.refresh.supports();
 				lists.refresh.projects();
 				lists.refresh.processCategories();

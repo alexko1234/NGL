@@ -20,13 +20,15 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import play.Logger;
+import play.Logger.ALogger;
 import play.test.FakeApplication;
 import play.test.Helpers;
-
 import utils.AbstractTests;
 
 public class AbstractTypeDAOTest extends AbstractTests{
 
+	protected static ALogger logger=Logger.of("AbstractTypeDAOTest");
 
 	@Test
 	public void experimentTypeFindTest() throws DAOException {
@@ -42,6 +44,7 @@ public class AbstractTypeDAOTest extends AbstractTests{
 		Assert.assertNotNull(ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(experimentType.code));
 		Assert.assertNotNull(ExperimentType.find.findNextExperimentTypeForAnExperimentTypeCode(experimentType.code));
 		Assert.assertNotNull(ExperimentType.find.findByCategoryCode(""));
+		Assert.assertNotNull(ExperimentType.find.findByCategoryCodeWithoutOneToVoid("transformation"));
 	}
 
 	@Test
