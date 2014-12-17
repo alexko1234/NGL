@@ -34,12 +34,12 @@ public class Submission extends DBObject implements IValidation {
 	public String submissionDirectory;
 	public Boolean release = false;
 	public String type = null; // SRA ou WGS
-	public String xmlStudys = "study.xml"; // nom relatif du fichier xml des studys 
-	public String xmlSamples = "sample.xml";
-	public String xmlExperiments = "experiment.xml";
-	public String xmlRuns = "run.xml";
-	public String xmlSubmission = "submission.xml";
-	public String resultSendXml = "ResultSendXml.xml"; // Fichier resultat de la commande curl qui doit contenir les AC attribués par l'EBI
+	public String xmlStudys = null; // nom relatif du fichier xml des studys 
+	public String xmlSamples = null;
+	public String xmlExperiments = null;
+	public String xmlRuns = null;
+	public String xmlSubmission = null;
+	public String resultSendXml = null; // Fichier resultat de la commande curl qui doit contenir les AC attribués par l'EBI
 	//public String userSubmission; // login du bioinfo qui a creer ticket.
 	public State state;// = new State(); // Reference sur "models.laboratory.common.instance.state" 
 		// pour gerer les differents etats de l'objet.
@@ -79,12 +79,13 @@ public class Submission extends DBObject implements IValidation {
 		// verifier que champs contraints presents avec valeurs autorisees:
 		ValidationHelper.required(contextValidation, this.submissionDate , "submissionDate");
 		ValidationHelper.required(contextValidation, this.submissionDirectory , "submissionDirectory");
-		ValidationHelper.required(contextValidation, this.xmlStudys , "xmlStudys");
+		/*ValidationHelper.required(contextValidation, this.xmlStudys , "xmlStudys");
 		ValidationHelper.required(contextValidation, this.xmlSamples , "xmlSamples");
 		ValidationHelper.required(contextValidation, this.xmlExperiments , "xmlExperiments");
 		ValidationHelper.required(contextValidation, this.xmlRuns , "xmlRuns");
 		ValidationHelper.required(contextValidation, this.xmlSubmission , "xmlSubmission");
-		//ValidationHelper.required(contextValidation, this.userSubmission , "userSubmission");
+		ValidationHelper.required(contextValidation, this.resultSendXml , "resultSendXml");
+		*/	
 		if (this.studyCode == null && this.sampleCodes.size() == 0 &&  this.experimentCodes.size() == 0) {
 			contextValidation.addErrors("studyCode, sampleCodes et experimentCodes ::", "Les 3 champs ne peuvent pas etre vides pour une soumission" + "taille des experiments = " +  this.experimentCodes.size() + ", taille des sample = "+ this.sampleCodes.size());
 		}

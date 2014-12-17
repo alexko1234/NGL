@@ -12,6 +12,12 @@ public interface VariableSRA {
 	static final String submissionRootDirectory = "/env/cns/submit_traces/SRA/SNTS_output_xml";
 	static final String libraryConstructionProtocol = "none provided";
 	static final String admin = "william";
+	static final String xmlSubmission = "submission.xml";
+	static final String xmlStudys = "study.xml";
+	static final String xmlSamples = "sample.xml";
+	static final String xmlExperiments = "experiement.xml";
+	static final String xmlRuns = "run.xml";
+	static final String resultSendXml = "resultEbi_codeSubmission.xml";
 	
 	static final Map<String, String> mapCenterName =  new HashMap<String, String>() {
 		{
