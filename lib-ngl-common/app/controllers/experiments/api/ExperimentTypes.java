@@ -37,16 +37,16 @@ public class ExperimentTypes extends CommonController{
 	public static Result list() throws DAOException{
 		Form<ExperimentTypesSearchForm> experimentTypeFilledForm = filledFormQueryString(experimentTypeForm,ExperimentTypesSearchForm.class);
 		ExperimentTypesSearchForm experimentTypesSearch = experimentTypeFilledForm.get();
-		Logger.info("experimentTypesSearch = "+ experimentTypesSearch.toString());
 		List<ExperimentType> experimentTypes = new ArrayList<ExperimentType>();
 		
 		try{		
-			if(experimentTypesSearch.categoryCode != null && experimentTypesSearch.processTypeCode == null && experimentTypesSearch.withoutOneToVoid==null){
+			
+			if(experimentTypesSearch.categoryCode != null && experimentTypesSearch.withoutOneToVoid){
+				experimentTypes = ExperimentType.find.findByCategoryCodeWithoutOneToVoid(experimentTypesSearch.categoryCode);				
+			}else if(experimentTypesSearch.categoryCode != null && experimentTypesSearch.processTypeCode == null){
 				experimentTypes = ExperimentType.find.findByCategoryCode(experimentTypesSearch.categoryCode);
-			}else if(experimentTypesSearch.categoryCode != null && experimentTypesSearch.processTypeCode != null && experimentTypesSearch.withoutOneToVoid==null){
+			}else if(experimentTypesSearch.categoryCode != null && experimentTypesSearch.processTypeCode != null){
 				experimentTypes = ExperimentType.find.findByCategoryCodeAndProcessTypeCode(experimentTypesSearch.categoryCode, experimentTypesSearch.processTypeCode);
-			}else if(experimentTypesSearch.categoryCode != null && experimentTypesSearch.withoutOneToVoid){
-				experimentTypes = ExperimentType.find.findByCategoryCodeWithoutOneToVoid(experimentTypesSearch.categoryCode);
 			}else{
 				experimentTypes = ExperimentType.find.findAll();
 			}

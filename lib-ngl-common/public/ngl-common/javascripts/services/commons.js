@@ -204,13 +204,7 @@ angular.module('commonsServices', []).
     			getSupports : function(){return results['supports'];},
     			getContainerCategories : function(){return results['containerCategories'];},
     			getExperimentCategories : function(){return results['experimentCategories'];},
-    			getExperimentTypes : function(params){
-										if(params != undefined){
-											return results[params+'experimentTypes'];
-										}else{
-											return results['experimentTypes'];
-										}
-    								},
+    			getExperimentTypes : function(){return results['experimentTypes'];},
     			getStates : function(){return results['states'];},
     			getRuns : function(){return results['runs'];},
     			getInstrumentCategories : function(){return results['instrumentCategories'];},

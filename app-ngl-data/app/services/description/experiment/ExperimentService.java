@@ -97,7 +97,7 @@ public class ExperimentService {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 
 		l.add(newExperimentType("Void Opgen Illumina","ext-to-opgen-depot",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null /* getPropertyDefinitionExtToOpgenDepot()*/, null, null,"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(newExperimentType("Depot Opgen", "opgen-depot"
+		l.add(newExperimentType("Depot Opgen", "opgen-depot",1400
 				, ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),null, getProtocols("depot_opgen_ptr_1"), getInstrumentUsedTypes("ARGUS"), "ManyToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		//Prepaflowcell : to finish
 		l.add(newExperimentType("Void Depot Illumina","ext-to-prepa-flowcell",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
