@@ -70,13 +70,13 @@ public class Submissions extends SubmissionsController{
 			return badRequest("Submission with code "+code+" not exist");
 		}
 		try {
-			XmlServices.writeAllXml(code);
+			submission = XmlServices.writeAllXml(code);
 		} catch (IOException e) {
 			return badRequest(e.getMessage());
 		} catch (SraException e) {
 			return badRequest(e.getMessage());
 		}
-		return ok();
+		return ok(Json.toJson(submission));
 	}
 
 	

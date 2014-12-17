@@ -59,7 +59,8 @@ public class AbstractTestData {
 		//config.put("playjongo.gridfs.enabled","false");
 		
 		config.put("institute", "CNS");
-	
+		config.put("mail.smtp.host", "smtp.genoscope.cns.fr");
+
 		return config;
 		
 	}

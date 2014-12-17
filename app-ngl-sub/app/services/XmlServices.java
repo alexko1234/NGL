@@ -3,6 +3,7 @@ package services;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 import models.sra.experiment.instance.Experiment;
 import models.sra.experiment.instance.RawData;
@@ -12,17 +13,22 @@ import models.sra.sample.instance.Sample;
 import models.sra.study.instance.Study;
 import models.sra.submission.instance.Submission;
 import models.sra.utils.SraException;
+import models.sra.utils.VariableSRA;
 import models.utils.InstanceConstants;
+
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+
 import fr.cea.ig.MongoDBDAO;
 
 public class XmlServices {
 
 	
 
-	public static void writeAllXml(String submissionCode) throws IOException, SraException {
+	public static Submission writeAllXml(String submissionCode) throws IOException, SraException {
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submission.instance.Submission.class, submissionCode);
 		String resultDirectory = submission.submissionDirectory;
-		writeAllXml(submissionCode, resultDirectory);
+		return writeAllXml(submissionCode, resultDirectory);
 	}
 	
 	public static void writeAllXml(String submissionCode, String resultDirectory, Boolean release) throws IOException, SraException {
@@ -30,20 +36,25 @@ public class XmlServices {
 		writeAllXml(submissionCode, resultDirectory);
 	}
 		
-	public static void writeAllXml(String submissionCode, String resultDirectory) throws IOException, SraException {
+	public static Submission writeAllXml(String submissionCode, String resultDirectory) throws IOException, SraException {
 		System.out.println("creation des fichiers xml pour l'ensemble de la soumission "+ submissionCode);
 		// Recuperer l'objet submission:
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submission.instance.Submission.class, submissionCode);
-		File studyFile = new File(resultDirectory + File.separator + "study.xml");
-		File sampleFile = new File(resultDirectory + File.separator + "sample.xml");
-		File experimentFile = new File(resultDirectory + File.separator + "experiment.xml");
-		File runFile = new File(resultDirectory + File.separator + "run.xml");
-		File submissionFile = new File(resultDirectory + File.separator + "submission.xml");
+		File studyFile = new File(resultDirectory + File.separator + VariableSRA.xmlStudys);
+		File sampleFile = new File(resultDirectory + File.separator + VariableSRA.xmlSamples);
+		File experimentFile = new File(resultDirectory + File.separator + VariableSRA.xmlExperiments);
+		File runFile = new File(resultDirectory + File.separator + VariableSRA.xmlRuns);
+		File submissionFile = new File(resultDirectory + File.separator + VariableSRA.xmlSubmission);
 		writeStudyXml(submission, studyFile);
 		writeSampleXml(submission, sampleFile); 
 		writeExperimentXml(submission, experimentFile); 
 		writeRunXml(submission, runFile); 
-		writeSubmissionXml(submission, submissionFile); 	
+		writeSubmissionXml(submission, submissionFile);
+		// mettre à jour dans la base l'objet submission pour les champs xml...
+		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, 
+				DBQuery.is("code", submissionCode),
+				DBUpdate.set("xmlSubmission", submission.xmlSubmission).set("xmlStudys", submission.xmlStudys).set("xmlSamples", submission.xmlSamples).set("xmlExperiments", submission.xmlExperiments).set("xmlRun", submission.xmlRuns).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date()));
+		return submission;
 	}
 
 	public static void writeStudyXml (Submission submission, File outputFile) throws IOException, SraException {	
@@ -97,6 +108,7 @@ public class XmlServices {
 			chaine = chaine + "</STUDY_SET>\n";
 			output_buffer.write(chaine);
 			output_buffer.close();
+			submission.xmlStudys = outputFile.getName();
 		} // end if		
 	} // end writeStudyXml
 	   
@@ -143,6 +155,7 @@ public class XmlServices {
 			chaine = chaine + "</SAMPLE_SET>\n";
 			output_buffer.write(chaine);
 			output_buffer.close();
+			submission.xmlSamples = outputFile.getName();
 		}
 	}
 	public static void writeExperimentXml (Submission submission, File outputFile) throws IOException, SraException {
@@ -211,6 +224,7 @@ public class XmlServices {
 			chaine = chaine + "</EXPERIMENT_SET>\n";
 			output_buffer.write(chaine);
 			output_buffer.close();
+			submission.xmlExperiments = outputFile.getName();
 		}
 	}
 	public static void writeRunXml (Submission submission, File outputFile) throws IOException, SraException {
@@ -260,6 +274,7 @@ public class XmlServices {
 				chaine = chaine + "</RUN_SET>\n";
 				output_buffer.write(chaine);
 				output_buffer.close();
+				submission.xmlRuns = outputFile.getName();
 			}
 		}
 	
@@ -310,6 +325,7 @@ public class XmlServices {
 		chaine = chaine + "</SUBMISSION_SET>\n";
 		output_buffer.write(chaine);
 		output_buffer.close();	
+		submission.xmlSubmission = outputFile.getName();
 	}
 
 

@@ -63,7 +63,8 @@ public abstract class AbstractTests {
 		
 		
 		config.put("institute", "CNS");
-	
+		config.put("mail.smtp.host", "smtp.genoscope.cns.fr");
+
 		return config;
 		
 	}

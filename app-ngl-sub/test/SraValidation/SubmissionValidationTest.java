@@ -54,5 +54,6 @@ public class SubmissionValidationTest extends AbstractTestsSRA {
 		contextValidation.displayErrors(Logger.of("SRA"));
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, models.sra.configuration.instance.Configuration.class, config.code);
 		Assert.assertTrue(contextValidation.errors.size()==0); // si aucune erreur
+		
 	}
 }
