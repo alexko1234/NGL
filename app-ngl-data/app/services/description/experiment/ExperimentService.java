@@ -241,15 +241,15 @@ public class ExperimentService {
 	private static List<PropertyDefinition> getPropertyDefinitionsLibIndexing() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		//Ajouter la liste des index illumina
-		propertyDefinitions.add(newPropertiesDefinition("Index","tag", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.SampleUsed),String.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Index","tag", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content),String.class, true, "single"));
 		return propertyDefinitions;
 	}
 
 	private static List<PropertyDefinition> getPropertyDefinitionsLibDualIndexing() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		//Ajouter la liste des index illumina
-		propertyDefinitions.add(newPropertiesDefinition("Index1","tag1", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.SampleUsed),String.class, true, "single"));
-		propertyDefinitions.add(newPropertiesDefinition("Index2","tag2", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.SampleUsed),String.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Index1","tag1", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content),String.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Index2","tag2", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content),String.class, true, "single"));
 		return propertyDefinitions;
 	}
 
