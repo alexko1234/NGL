@@ -13,6 +13,7 @@ import java.util.Map;
 import play.data.Form;
 import play.data.Form.Field;
 import play.i18n.Messages;
+import views.components.datatable.DatatableColumn;
 public class DatatableHelpers {
 	public static DatatableColumn getColumn(String property, String header) {
 		return getColumn(property, header, false, false, false);
@@ -46,6 +47,18 @@ public class DatatableHelpers {
 		column1.hide=hide;
 		column1.filter=filter;
 		
+		return column1;
+	}
+	
+	public static DatatableColumn getColumn(String property, String header, Boolean order, Boolean edit, Boolean hide, String filter,String render) {
+		DatatableColumn column1 = new DatatableColumn();
+		column1.property = property;		
+		column1.header = Messages.get(header);
+		column1.order=order;
+		column1.edit=edit;
+		column1.hide=hide;
+		column1.filter=filter;
+		column1.render=render;
 		return column1;
 	}
 	
