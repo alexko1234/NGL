@@ -58,7 +58,7 @@
 					var _form = angular.copy(this.form);
 					if(_form.projectCodes || _form.sampleCodes || _form.processType 
 							|| _form.processCategory || _form.processesSupportCode || _form.state || _form.user
-							|| _form.fromDate || _form.toDate){
+							|| _form.fromDate || _form.toDate || _form.experimentCode){
 						var jsonSearch = {};
 						if(_form.projectCodes){
 							jsonSearch.projectCodes = _form.projectCodes;
@@ -67,6 +67,11 @@
 						if(_form.sampleCodes){
 							jsonSearch.sampleCodes = _form.sampleCodes;
 						}				
+						
+						if(_form.experimentCode)
+						{
+							jsonSearch.experimentCode = _form.experimentCode;
+						}
 						
 						if(_form.processType){
 							jsonSearch.typeCode = _form.processType;

@@ -59,6 +59,7 @@ search.placeholder.instruments = Sélect. des instruments
 search.placeholder.types = Sélect. des types
 search.placeholder.user = Créé par
 search.placeholder.support = Regex pour code support
+search.placeholder.experiment = Regex pour experiment
 
 #processes
 processes.title = Processus
@@ -76,6 +77,8 @@ processes.table.projectCode = Projet(s)
 processes.table.projectCodes = Projet(s)
 processes.table.sampleCode = Echantillon(s)
 processes.table.containerInputCode = Container Initial
+processes.table.newContainerSupportCodes= Supports Containers enfants
+processes.table.experimentCodes= Expériences
 processes.table.stateCode = Etat processus
 processes.table.resolutionCode = Résolution
 processes.table.resolutionCodes = Résolutions

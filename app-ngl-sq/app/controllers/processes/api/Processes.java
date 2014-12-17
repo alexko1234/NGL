@@ -4,6 +4,7 @@ import static play.data.Form.form;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
@@ -304,7 +305,7 @@ public class Processes extends CommonController{
 			}
 
 			Logger.debug("newContainerSupportCodes :"+processesSearch.supportCode);
-			queryContainer.add(DBQuery.in("newContainerSupportCodes",processesSearch.supportCode));
+			queryContainer.add(DBQuery.regex("newContainerSupportCodes",Pattern.compile(processesSearch.supportCode)));
 
 			
 			if(queryContainer.size()!=0){
@@ -319,7 +320,7 @@ public class Processes extends CommonController{
 		
 		
 		if(StringUtils.isNotEmpty(processesSearch.experimentCode)){
-			queryElts.add(DBQuery.in("experimentCodes",processesSearch.experimentCode));
+			queryElts.add(DBQuery.regex("experimentCodes",Pattern.compile(processesSearch.experimentCode)));
 		}
 		
 		if(queryElts.size() > 0){

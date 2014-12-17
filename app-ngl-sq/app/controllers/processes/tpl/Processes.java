@@ -62,6 +62,8 @@ public class Processes extends CommonController{
 		columns.add(DatatableHelpers.getColumn("containerInputCode", Messages.get("processes.table.containerInputCode"), true, false, false));
 		columns.add(DatatableHelpers.getColumn("sampleCode", Messages.get("processes.table.sampleCode"), true, false, false));
 		columns.add(DatatableHelpers.getColumn("projectCode", Messages.get("processes.table.projectCode"), true, false, false));
+		columns.add(DatatableHelpers.getColumn("newContainerSupportCodes", Messages.get("processes.table.newContainerSupportCodes"), true, false, false,"","<div list-resize='value.data.newContainerSupportCodes | unique' below-only-deploy>"));//
+		columns.add(DatatableHelpers.getColumn("experimentCodes", Messages.get("processes.table.experimentCodes"), true, false, false,"","<div list-resize='value.data.experimentCodes | unique' below-only-deploy>"));
 		columns.add( DatatableHelpers.getDateColumn("traceInformation.creationDate", Messages.get("processes.table.creationDate"), true, false, false));
 		
 		

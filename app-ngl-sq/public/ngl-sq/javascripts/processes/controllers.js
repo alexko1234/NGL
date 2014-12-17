@@ -71,6 +71,20 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 				"type":"text"
 			},
 			{
+				"header":Messages("processes.table.newContainerSupportCodes"),
+				"property":"newContainerSupportCodes",
+				"hide":true,
+				"type":"text",
+				"render":"<div list-resize='value.data.newContainerSupportCodes | unique' below-only-deploy>"
+			},
+			{
+				"header":Messages("processes.table.experimentCodes"),
+				"property":"experimentCodes",
+				"hide":true,
+				"type":"text",
+				"render":"<div list-resize='value.data.experimentCodes | unique' below-only-deploy>"
+			},
+			{
 				"header":Messages("containers.table.valid"),
 				"property":"valuation.valid",
 				"order":true,
