@@ -264,9 +264,9 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		return libProcessTypeCodes;
 	};
 	
-	$scope.getTemplate = function(){
-		console.log("GET TEMPLATE "+$scope.experiment.inputTemplate);
+	$scope.getTemplate = function(){		
 		if($scope.experiment.inputTemplate != undefined){
+			console.log("GET TEMPLATE "+$scope.experiment.inputTemplate);
 			$scope.experiment.value.atomicTransfertMethods = [];
 		}
 		
@@ -434,8 +434,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 				$scope.experiment.experimentInformation.enabled = true;
 				$scope.experiment.instrumentProperties.enabled = true;
 				$scope.experiment.instrumentInformation.enabled = true;
-				$scope.setEditConfig(true);
-				
+				$scope.setEditConfig(true);				
 				$scope.$broadcast('refresh');
 				$scope.saveInProgress = false;
 				
@@ -491,11 +490,16 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 			$scope.$broadcast('refresh');
 			$scope.saveInProgress = false;
 		},function(reason) {
+			$scope.message.clazz = "alert alert-danger";
+			$scope.message.text = Messages('experiments.msg.save.error');
+			
 		    $scope.experiment.experimentProperties.enabled = true;
 			$scope.experiment.experimentInformation.enabled = true;
 			$scope.experiment.instrumentProperties.enabled = true;
 			$scope.experiment.instrumentInformation.enabled = true;
 			$scope.setEditConfig(true);
+			$scope.message.details = reason.data;
+			$scope.message.isDetails = true;
 			$scope.$broadcast('refresh');
 			$scope.saveInProgress = false;
 		  });
@@ -593,13 +597,14 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 				$scope.experiment.instrumentInformation.enabled = true;
 				$scope.setEditConfig(true);
 				
-				$scope.message.details = data;
+				$scope.message.details = reason.data;
 				$scope.message.isDetails = true;
-				$scope.saveInProgress = false;
+				$scope.saveInProgress = false;				
+				
 				
 			});
 		}, function(reason){
-		    $scope.message.clazz = "alert alert-danger";
+			$scope.message.clazz = "alert alert-danger";
 			$scope.message.text = Messages('experiments.msg.save.error');
 			
 			$scope.experiment.experimentProperties.enabled = true;
@@ -607,10 +612,11 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 			$scope.experiment.instrumentProperties.enabled = true;
 			$scope.experiment.instrumentInformation.enabled = true;
 			$scope.setEditConfig(true);
-			
-			$scope.message.details = data;
+			$scope.$broadcast('refresh');
+			$scope.message.details = reason.data;
 			$scope.message.isDetails = true;
 			$scope.saveInProgress = false;
+			
 		});
 	};
 
