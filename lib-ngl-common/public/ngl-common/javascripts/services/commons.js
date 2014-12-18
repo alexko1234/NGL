@@ -373,23 +373,38 @@ angular.module('commonsServices', []).
                     });
                 }
             };
+        //Convert the date in format(view) to a timestamp date(model)
         }]).directive('dateTimestamp', function() {
             return {
                 require: 'ngModel',
                 link: function(scope, ele, attr, ngModel) {
-                	var dateConverter = function(date){
-                		var format = Messages("date.format");
-                		date = moment(date, format.toUpperCase()).valueOf();
+                	var convertToTimestamp = function(date){
+                		var format = Messages("date.format").toUpperCase();
+                		date = moment.unix(date).format(format);
                 		return date;
                 	};
                 	
-                    // view to model
+                	var convertToDate = function(date){
+                		var format = Messages("date.format").toUpperCase();
+    					return moment(date, format).valueOf();
+    				};
+                	
+                	scope.$watch(
+    						function(){
+    							return ngModel.$modelValue;
+    						}, function(newValue, oldValue){
+    							if(newValue !== undefined){
+	    							var date = convertToTimestamp(newValue);
+	    							ngModel.$setViewValue(date);
+									ngModel.$render();
+    							}
+                    	});
+                	
                     ngModel.$parsers.push(function(value) {
-                    	var date = dateConverter(value); // date convert needed: MM/dd/yyyy
-                    	if(!isNaN(date) && value.length==10){
-                    		return date;
+                    	if(value.length === 10){//When the date is complete
+                    		var date = convertToDate(value)/1000;
                     	}
-                    	return value;
+						return date;
                     });
                 }
             }
