@@ -69,13 +69,15 @@
 	vertical-align: middle;
 	cursor: pointer;
 	background-image: none;
-	border: 1px solid transparent;
+	border: 1px solid #DDD;
 	white-space: nowrap;
 	padding: 6px 12px;
 	font-size: 12px;
 	line-height: 1.33333333;
 	border-radius: 4px;
 	-webkit-user-select: none;
+	background: #FFF;
+	color: #333;	
 }
 
 .valueInput{
