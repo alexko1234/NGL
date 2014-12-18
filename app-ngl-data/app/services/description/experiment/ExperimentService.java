@@ -99,78 +99,166 @@ public class ExperimentService {
 			Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 
-		l.add(newExperimentType("Void Opgen Illumina","ext-to-opgen-depot",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null /* getPropertyDefinitionExtToOpgenDepot()*/, null, null,"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newExperimentType("Void Opgen Illumina","ext-to-opgen-depot",
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), getPropertyDefinitionExtToOpgenDepot(), null, null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
 		l.add(newExperimentType("Depot Opgen", "opgen-depot"
-				, ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),null, getProtocols("depot_opgen_ptr_1"), getInstrumentUsedTypes("ARGUS"), "ManyToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+				, ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),null, getProtocols("depot_opgen_ptr_1"), 
+				getInstrumentUsedTypes("ARGUS"), "ManyToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
 		//Prepaflowcell : to finish
-		l.add(newExperimentType("Void Depot Illumina","ext-to-prepa-flowcell",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(newExperimentType("Preparation flowcell", "prepa-flowcell",1200, ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcell(),  getProtocols("prepfc_cbot_ptr_sox139_1"), getInstrumentUsedTypes("cBot-interne","cBot"), "ManyToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(newExperimentType("Void Depot Illumina","ext-to-prepa-flowcell",
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
+		l.add(newExperimentType("Preparation flowcell", "prepa-flowcell",1200, 
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcell(),  
+				getProtocols("prepfc_cbot_ptr_sox139_1"), getInstrumentUsedTypes("cBot-interne","cBot"), "ManyToOne", 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		
 			//transformation CNS
 
 			//library
-			l.add(newExperimentType("Fragmentation","fragmentation",200,ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("fragmentation_ptr_sox140_1"), getInstrumentUsedTypes("hand","covaris-s2","covaris-e210"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
-			l.add(newExperimentType("Librairie indexée","librairie-indexing",400,ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibIndexing(), getProtocols("bqspri_ptr_sox142_1"), getInstrumentUsedTypes("hand","spri"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-			l.add(newExperimentType("Librairie dual indexing","librairie-dualindexing",600,ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibDualIndexing(), getProtocols("bqspri_ptr_sox142_1"), getInstrumentUsedTypes("hand","spri"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-			l.add(newExperimentType("Amplification","amplification",800,ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("amplif_ptr_sox144_1") , getInstrumentUsedTypes("hand","thermocycler"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+			l.add(newExperimentType("Fragmentation","fragmentation",200,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, 
+					getProtocols("fragmentation_ptr_sox140_1"), getInstrumentUsedTypes("hand","covaris-s2","covaris-e210"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
+			
+			l.add(newExperimentType("Librairie indexée","librairie-indexing",400,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibIndexing(), 
+					getProtocols("bqspri_ptr_sox142_1"), getInstrumentUsedTypes("hand","spri"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+			
+			l.add(newExperimentType("Librairie dual indexing","librairie-dualindexing",600,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibDualIndexing(), 
+					getProtocols("bqspri_ptr_sox142_1"), getInstrumentUsedTypes("hand","spri"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+			
+			l.add(newExperimentType("Amplification","amplification",800,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, 
+					getProtocols("amplif_ptr_sox144_1") , getInstrumentUsedTypes("hand","thermocycler"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 
-			//pre-sequencing
 			//attention proto, attention robot voir avec julie
-			l.add(newExperimentType("Solution stock","solution-stock",1000,ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("amplif_ptr_sox144_1") , getInstrumentUsedTypes("hand"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-
-			//qc
-			l.add(newExperimentType("Bioanalyzer Non Ampli","bioanalyzer-na",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsBioanalyzer(), getProtocols("proto_qc_v1"), getInstrumentUsedTypes("agilent-2100"),"OneToVoid", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-			l.add(newExperimentType("Bioanalyzer Ampli","bioanalyzer-a",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsBioanalyzer(), getProtocols("proto_qc_v1"), getInstrumentUsedTypes("agilent-2100"),"OneToVoid", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-// PROB...	l.add(newExperimentType("QuBit","qubit",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, getProtocols("proto_qc_v1"), getInstrumentUsedTypes("iqubit"),"OneToVoid", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-			l.add(newExperimentType("qPCR","qpcr",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, getProtocols("proto_qc_v1"), getInstrumentUsedTypes("iqpcr"),"OneToVoid", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-
-			//purif
-			l.add(newExperimentType("Ampure Non Ampli","ampure-na",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null, null, getInstrumentUsedTypes("hand"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-			l.add(newExperimentType("Ampure Ampli","ampure-a",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null, null, getInstrumentUsedTypes("hand"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-
-			//void
-			l.add(newExperimentType("Void Banque","ext-to-library",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-			l.add(newExperimentType("Void qPCR","ext-to-qpcr",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-			l.add(newExperimentType("Void Depot Illumina","ext-to-prepa-flowcell",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-
+			l.add(newExperimentType("Solution stock","solution-stock",1000,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, 
+					getProtocols("amplif_ptr_sox144_1") , getInstrumentUsedTypes("hand"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
 			//Depot solexa
-			l.add(newExperimentType("Depot Illumina", "illumina-depot"
-					, ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(), getProtocols("depot_illumina_ptr_1","depot_illumina_ptr_2","depot_illumina_ptr_3","sop_depot_1"), getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500"), "OneToVoid", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+			l.add(newExperimentType("Depot Illumina", "illumina-depot", 
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(), 
+					getProtocols("depot_illumina_ptr_1","depot_illumina_ptr_2","depot_illumina_ptr_3","sop_depot_1"), 
+					getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500"), "OneToVoid", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+
+			//quality control
+
+			//purif
+			l.add(newExperimentType("Ampure Non Ampli","ampure-na",
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null, 
+					null, getInstrumentUsedTypes("hand"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
+			l.add(newExperimentType("Ampure Ampli","ampure-a",
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null, null, 
+					getInstrumentUsedTypes("hand"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+
+			//void
+			l.add(newExperimentType("Void Banque","ext-to-library",
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+			
+			l.add(newExperimentType("Void qPCR","ext-to-qpcr",
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+			
+			l.add(newExperimentType("Void Depot Illumina","ext-to-prepa-flowcell",
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+
+			
+
+			
+			/**********************************************************************************/
+			//transformation CNG & CNS
+			/*
+			l.add(newExperimentType("Migration sur puce","chip-migration",
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
+					getProtocols("proto_qc_v1"), getInstrumentUsedTypes("agilent-2100-bioanalyzer","labChipGX"),"OneToVoid", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+			*/
+			
+			l.add(newExperimentType("Migration sur puce (ampli)","chip-migration-post-pcr",
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
+					getProtocols("proto_qc_v1"), getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchipGX"),"OneToVoid", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)));
+			
+			l.add(newExperimentType("Migration sur puce (non ampli)","chip-migration-pre-pcr",
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
+					getProtocols("proto_qc_v1"), getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchipGX"),"OneToVoid", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)));
+			
+			
+			l.add(newExperimentType("Dosage fluorimétrique","fluo-quantification",
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
+					getProtocols("proto_qc_v1"), getInstrumentUsedTypes("qubit"),"OneToVoid", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)));
+			
+			l.add(newExperimentType("Quantification qPCR","qPCR-quantification",
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
+					getProtocols("proto_qc_v1"), getInstrumentUsedTypes("rocheLightCycler-qPCR"),"OneToVoid", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG))); 			
+			
+			/**********************************************************************************/
 			
 			//17-12-2014 transformation CNG
 
 			//library
-			l.add(newExperimentType("Fragmentation","fragmentation",200,ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("SOP101v2","SOP102v1"), getInstrumentUsedTypes("hand","covaris-le220","covaris-e210"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNG) ));
-			l.add(newExperimentType("Librairie indexée","librairie-indexing",400,ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibIndexing(), getProtocols("SOP"), getInstrumentUsedTypes("hand"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-			l.add(newExperimentType("Librairie dual indexing","librairie-dualindexing",600,ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibDualIndexing(), getProtocols("SOP"), getInstrumentUsedTypes("hand"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-			l.add(newExperimentType("PCR","pcr",800,ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("SOP") , getInstrumentUsedTypes("hand","thermocycler"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+			l.add(newExperimentType("Fragmentation","fragmentation",200,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, 
+					getProtocols("SOP101v2","SOP102v1"), getInstrumentUsedTypes("hand","covaris-le220","covaris-e210"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNG) ));
+			
+			l.add(newExperimentType("Librairie indexée","librairie-indexing",400,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibIndexing(), 
+					getProtocols("SOP"), getInstrumentUsedTypes("hand"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+			
+			l.add(newExperimentType("Librairie dual indexing","librairie-dualindexing",600,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibDualIndexing(), 
+					getProtocols("SOP"), getInstrumentUsedTypes("hand"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+			
+			l.add(newExperimentType("PCR","pcr",800,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, 
+					getProtocols("SOP") , getInstrumentUsedTypes("hand","thermocycler"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 
 			//pre-sequencing
-			//attention proto, attention robot voir avec julie
-			l.add(newExperimentType("SolutionX nM","solution-X-nM",1000,ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, getProtocols("SOP") , getInstrumentUsedTypes("hand"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+			l.add(newExperimentType("SolutionX nM","solution-X-nM",1000,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, 
+					getProtocols("SOP") , getInstrumentUsedTypes("hand"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 
 			// NO qc au CNG ??
-			//l.add(newExperimentType("Bioanalyzer Non Ampli","bioanalyzer-na",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsBioanalyzer(), getProtocols("proto_qc_v1"), getInstrumentUsedTypes("agilent-2100"),"OneToVoid", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-			//l.add(newExperimentType("Bioanalyzer Ampli","bioanalyzer-a",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsBioanalyzer(), getProtocols("proto_qc_v1"), getInstrumentUsedTypes("agilent-2100"),"OneToVoid", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-			//l.add(newExperimentType("QuBit","qubit",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, getProtocols("proto_qc_v1"), getInstrumentUsedTypes("iqubit"),"OneToVoid", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-			//l.add(newExperimentType("qPCR","qpcr",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, getProtocols("proto_qc_v1"), getInstrumentUsedTypes("iqpcr"),"OneToVoid", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-
 			//NO purif au CNG ??
-			//l.add(newExperimentType("Ampure Non Ampli","ampure-na",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null, null, getInstrumentUsedTypes("hand"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-			//l.add(newExperimentType("Ampure Ampli","ampure-a",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null, null, getInstrumentUsedTypes("hand"),"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-
 			//NO void au CNG ??
-			//l.add(newExperimentType("Void Banque","ext-to-library",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-			//l.add(newExperimentType("Void qPCR","ext-to-qpcr",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-			l.add(newExperimentType("Preparation flowcell","prepa-flowcell",ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,getProtocols("SOP") , null,"ManyToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-
 			
+			l.add(newExperimentType("Preparation flowcell","prepa-flowcell",
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
+					getProtocols("SOP") , getInstrumentUsedTypes("cBot, cBot-onboard"),"ManyToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+
 			//Depot solexa
-			l.add(newExperimentType("Depot sur sequenceur Illumina", "illumina-depot", ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(), getProtocols("sop_depot_1"), getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500"), "OneToVoid", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+			l.add(newExperimentType("Depot sur sequenceur Illumina", "illumina-depot", 
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(), 
+					getProtocols("sop_depot_1"), getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500"), "OneToVoid", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 	
 		}
 
@@ -194,14 +282,29 @@ public class ExperimentService {
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 
 			newExperimentTypeNode("ext-to-library", getExperimentTypes("ext-to-library").get(0), false, false, null, null, null).save();
-			newExperimentTypeNode("ext-to-qpcr", getExperimentTypes("ext-to-qpcr").get(0), false, false, null, null, null).save();							
-			newExperimentTypeNode("fragmentation", getExperimentTypes("fragmentation").get(0), false, false, getExperimentTypeNodes("ext-to-library"), getExperimentTypes("ampure-na"), getExperimentTypes("bioanalyzer-na")).save();
-			newExperimentTypeNode("librairie-indexing", getExperimentTypes("librairie-indexing").get(0), false, false, getExperimentTypeNodes("fragmentation"), getExperimentTypes("ampure-na"), getExperimentTypes("qubit","bioanalyzer-na")).save();
-			newExperimentTypeNode("librairie-dualindexing", getExperimentTypes("librairie-dualindexing").get(0), false, false, getExperimentTypeNodes("fragmentation"), getExperimentTypes("ampure-na"), getExperimentTypes("qubit","bioanalyzer-na")).save();
-			newExperimentTypeNode("amplification", getExperimentTypes("amplification").get(0), false, false, getExperimentTypeNodes("librairie-indexing","librairie-dualindexing"), getExperimentTypes("ampure-na"), getExperimentTypes("bioanalyzer-na")).save();
-			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false,false,getExperimentTypeNodes("ext-to-qpcr","amplification"),null,null).save();
-			newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","solution-stock"),null,null).save();
-			newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false,false,getExperimentTypeNodes("prepa-flowcell"),null,null).save();
+			newExperimentTypeNode("ext-to-qpcr", getExperimentTypes("ext-to-qpcr").get(0), false, false, null, null, null).save();	
+			
+			//REM : experimentTypes list confirmées par Julie
+			newExperimentTypeNode("fragmentation", getExperimentTypes("fragmentation").get(0), false, false, getExperimentTypeNodes("ext-to-library"), 
+					getExperimentTypes("ampure-na"), getExperimentTypes("fluo-quantification","chip-migration-pre-pcr")).save();
+			
+			newExperimentTypeNode("librairie-indexing", getExperimentTypes("librairie-indexing").get(0), false, false, getExperimentTypeNodes("fragmentation"), 
+					getExperimentTypes("ampure-na"), getExperimentTypes("fluo-quantification","chip-migration-pre-pcr")).save();
+			
+			newExperimentTypeNode("librairie-dualindexing", getExperimentTypes("librairie-dualindexing").get(0), false, false, getExperimentTypeNodes("fragmentation"), 
+					getExperimentTypes("ampure-na"), getExperimentTypes("fluo-quantification","chip-migration-pre-pcr")).save();
+			
+			newExperimentTypeNode("amplification", getExperimentTypes("amplification").get(0), false, false, getExperimentTypeNodes("librairie-indexing","librairie-dualindexing"), 
+					getExperimentTypes("ampure-a"), getExperimentTypes("fluo-quantification","chip-migration-post-pcr")).save();
+			
+			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false,false,getExperimentTypeNodes("ext-to-qpcr","amplification"),
+					null,null).save();
+			
+			newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","solution-stock"),
+					null,null).save();
+			
+			newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false,false,getExperimentTypeNodes("prepa-flowcell"),
+					null,null).save();
 		}
 		
 
@@ -292,7 +395,7 @@ public class ExperimentService {
 	//TODO
 	// Propriete taille en output et non en input ?
 	// Valider les keys
-	public static List<PropertyDefinition> getPropertyDefinitionsBioanalyzer() throws DAOException {
+	public static List<PropertyDefinition> getPropertyDefinitionsChipMigration() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		// A supprimer une fois le type de support category sera géré
 		propertyDefinitions.add(newPropertiesDefinition("Position","location", LevelService.getLevels(Level.CODE.ContainerIn),Integer.class, true, "single"));
@@ -306,7 +409,7 @@ public class ExperimentService {
 	private static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepot() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", LevelService.getLevels(Level.CODE.Experiment), Integer.class, false, "single"));	
-		//propertyDefinitions.add(newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, false, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, false, "single"));
 		return propertyDefinitions;
 	}
 	
