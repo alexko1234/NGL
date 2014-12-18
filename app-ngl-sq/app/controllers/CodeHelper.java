@@ -15,7 +15,7 @@ public class CodeHelper {
 	
 	//ProcessusTypeCode-ProjectCode-SampeCode-YYYYMMDDHHMMSSSS
 	public static String generateProcessCode(Process process) {		
-		return ("P_"+process.typeCode+"-"+process.projectCode+"-"+process.sampleCode+"-"+new SimpleDateFormat("yyyyMMdd_HHmmssSS").format(new Date())).toUpperCase();		
+		return ("P-"+process.typeCode+"-"+process.projectCode+"-"+process.sampleCode+"-"+new SimpleDateFormat("yyyyMMdd_HHmmssSS").format(new Date())).toUpperCase();		
 	}
 	
 	public static String generateExperiementCode(Experiment exp) {		
