@@ -47,14 +47,17 @@ public class InstrumentService {
 		Logger.debug("End Instrument service");
 	}
 	
+	
 	public static void saveInstrumentCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<InstrumentCategory> l = new ArrayList<InstrumentCategory>();
 		l.add(newInstrumentCategory("Covaris","covaris"));
 		l.add(newInstrumentCategory("Spri","spri"));
-		l.add(newInstrumentCategory("Thermocycleur","thermo"));
+		l.add(newInstrumentCategory("Thermocycleur","thermocycler"));
 		l.add(newInstrumentCategory("Agilent","agilent"));
-		l.add(newInstrumentCategory("QuBit","qubit"));
-		l.add(newInstrumentCategory("qPCR","qpcr"));
+		//l.add(newInstrumentCategory("QuBit","qubit"));
+		//l.add(newInstrumentCategory("qPCR","qpcr"));
+		// 17-12-2014 creation "quantification" remplace QuBit et qPCR"
+		l.add(newInstrumentCategory("Quantification","quantification"));
 		l.add(newInstrumentCategory("Main","hand"));
 		l.add(newInstrumentCategory("CBot","cbot"));
 		l.add(newInstrumentCategory("Sequenceur Illumina","illumina-sequencer"));
@@ -74,18 +77,21 @@ public class InstrumentService {
 						createInstrument("Main", "Main", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ),
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
 		l.add(newInstrumentUsedType("Covaris S2", "covaris-s2", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 
 				getInstruments(
 						createInstrument("Covaris1", "Covaris1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
 						createInstrument("Covaris2", "Covaris2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ) ,
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
 		l.add(newInstrumentUsedType("Covaris E210", "covaris-e210", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 
 				getInstruments(
 						createInstrument("Covaris3", "Covaris3", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
 						createInstrument("Covaris4", "Covaris4", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ) , 
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
 		l.add(newInstrumentUsedType("Spri", "spri", InstrumentCategory.find.findByCode("spri"), getSpriProperties(), 
 				getInstruments(
 						createInstrument("Spri1", "Spri1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
@@ -93,38 +99,19 @@ public class InstrumentService {
 						createInstrument("Spri3", "Spri3", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ), 
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(newInstrumentUsedType("Thermo", "thermo", InstrumentCategory.find.findByCode("thermo"), getThermoProperties(), 
-				getInstruments(
-						createInstrument("ThermoS1", "ThermoS1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
-						createInstrument("ThermoS2", "ThermoS2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
-						createInstrument("ThermoS3", "ThermoS3", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ), 
-				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(newInstrumentUsedType("Agilent 2100", "agilent-2100", InstrumentCategory.find.findByCode("agilent"), getAgilentProperties(), 
-				getInstruments(
-						createInstrument("BioAnalyzer1", "BioAnalyzer1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
-						createInstrument("BioAnalyzer2", "BioAnalyzer2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ), 
-				getContainerSupportCategories(new String[]{"tube"}),null, 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(newInstrumentUsedType("iQuBit", "iqubit", InstrumentCategory.find.findByCode("qubit"), getQuBitProperties(), 
+		
+		l.add(newInstrumentUsedType("iQuBit", "iqubit", InstrumentCategory.find.findByCode("quantification"), getQuBitProperties(), 
 				getInstruments(
 						createInstrument("QuBit1", "QuBit1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
 						createInstrument("QuBit2", "QuBit2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ) , 
 				getContainerSupportCategories(new String[]{"tube"}),null, 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(newInstrumentUsedType("iqPCR", "iqpcr", InstrumentCategory.find.findByCode("qpcr"), getQPCRProperties(), 
+		
+		
+		l.add(newInstrumentUsedType("iqPCR", "iqpcr", InstrumentCategory.find.findByCode("quantification"), getQPCRProperties(), 
 				getInstruments(
 						createInstrument("qPCR1", "qPCR1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ), 
 				getContainerSupportCategories(new String[]{"tube"}), null, 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		
-		l.add(newInstrumentUsedType("cBot", "cBot", InstrumentCategory.find.findByCode("cbot"), getPropertiesCBot(), 
-				getInstruments(
-						createInstrument("cBot1", "cBot1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)),
-						createInstrument("cBot2", "cBot2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)),
-						createInstrument("cBot3", "cBot3", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)),
-						createInstrument("cBot4", "cBot4", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS))), 
-				getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-8","flowcell-2"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		l.add(newInstrumentUsedType("cBot-interne", "cBot-interne", InstrumentCategory.find.findByCode("cbot"), getPropertiesCBotInterne(), 
@@ -137,6 +124,7 @@ public class InstrumentService {
 						createInstrument("cBot Melisse", "cBot-Melisse", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS))), 
 				getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-2","flowcell-1"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+
 		
 		l.add(newInstrumentUsedType("ARGUS", "ARGUS", InstrumentCategory.find.findByCode("opt-map-opgen"), getArgusProperties(), 
 				getInstrumentOpgen(),
@@ -149,28 +137,106 @@ public class InstrumentService {
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		//CNG et CNS
+		
 		l.add(newInstrumentUsedType("GAIIx", "GAIIx", InstrumentCategory.find.findByCode("illumina-sequencer"), null, 
 				getInstrumentGAII(),
 				getContainerSupportCategories(new String[]{"flowcell-8"}), null, 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG,Institute.CODE.CNS)));
+		
 		l.add(newInstrumentUsedType("MISEQ", "MISEQ", InstrumentCategory.find.findByCode("illumina-sequencer"), getMiseqProperties(), 
 				getInstrumentMiSeq(),
 				getContainerSupportCategories(new String[]{"flowcell-1"}), null, 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG,Institute.CODE.CNS)));
+		
 		l.add(newInstrumentUsedType("HISEQ2000", "HISEQ2000", InstrumentCategory.find.findByCode("illumina-sequencer"), getHiseq2000Properties(), 
 				getInstrumentHiseq2000(),
 				getContainerSupportCategories(new String[]{"flowcell-8"}), null, 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG,Institute.CODE.CNS)));
+		
 		l.add(newInstrumentUsedType("HISEQ2500", "HISEQ2500", InstrumentCategory.find.findByCode("illumina-sequencer"), getHiseq2500Properties(), 
 				getInstrumentHiseq2500(),
 				getContainerSupportCategories(new String[]{"flowcell-8","flowcell-2"}), null, 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG,Institute.CODE.CNS)));
+		
+		l.add(newInstrumentUsedType("Agilent 2100", "agilent-2100", InstrumentCategory.find.findByCode("agilent"), getAgilentProperties(), 
+				getInstruments(
+						createInstrument("BioAnalyzer1", "BioAnalyzer1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG )), 
+						createInstrument("BioAnalyzer2", "BioAnalyzer2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ), 
+				getContainerSupportCategories(new String[]{"tube"}),null, 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)));
+		
+		l.add(newInstrumentUsedType("Thermocycler", "thermocycler", InstrumentCategory.find.findByCode("thermocycler"), getThermocyclerProperties(), 
+				getInstruments(
+						createInstrument("ThermoS1", "thermoS1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
+						createInstrument("ThermoS2", "thermoS2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
+						createInstrument("ThermoS3", "thermoS3", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
+						createInstrument("Thermo1", "thermo1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG)), 
+						createInstrument("Thermo2", "thermo2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG)), 
+						createInstrument("Thermo3", "thermo3", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG)),
+						createInstrument("Thermo4", "thermo4", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG)) 
+						), 
+				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)));
+		
+		l.add(newInstrumentUsedType("cBot", "cBot", InstrumentCategory.find.findByCode("cbot"), getPropertiesCBot(), 
+				getInstruments(
+						createInstrument("cBot1", "cBot1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)),
+						createInstrument("cBot2", "cBot2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)),
+						createInstrument("cBot3", "cBot3", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)),
+						createInstrument("cBot4", "cBot4", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG))), 
+				getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-8","flowcell-2"}), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)));
+		
+
 		
 		//CNG
 		l.add(newInstrumentUsedType("NEXTSEQ500", "NEXTSEQ500", InstrumentCategory.find.findByCode("illumina-sequencer"), getNEXTSEQ500Properties(), 
 				getInstrumentNEXTSEQ500(),
 				getContainerSupportCategories(new String[]{"flowcell-4"}), null, 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));		
+		
+		l.add(newInstrumentUsedType("LabChip GX", "labChipGX", InstrumentCategory.find.findByCode("quantification"), null, 
+				getInstruments(
+						createInstrument("Lab_GX", "labGX", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG))) , 
+				getContainerSupportCategories(new String[]{"tube"}),null, 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		
+		l.add(newInstrumentUsedType("RocheLightCycler", "rocheLightCycler", InstrumentCategory.find.findByCode("quantification"), getQPCRProperties(), 
+				getInstruments(
+						createInstrument("qPCR1", "qPCR1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG)),
+						createInstrument("qPCR2", "qPCR2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG))
+						),
+				getContainerSupportCategories(new String[]{"tube"}), null, 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		
+		l.add(newInstrumentUsedType("QuBit", "qubit", InstrumentCategory.find.findByCode("quantification"), getQuBitProperties(), 
+				getInstruments(
+						createInstrument("QuBit1", "qubit1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG))), 
+				getContainerSupportCategories(new String[]{"tube"}),null, 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		
+		l.add(newInstrumentUsedType("Covaris E210", "covaris-e210", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 
+				getInstruments(
+						createInstrument("Cov1", "cov1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG))) , 
+				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		
+		l.add(newInstrumentUsedType("Covaris LE220", "covaris-le220", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 
+				getInstruments(
+						createInstrument("Cov2", "cov2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG)) ) , 
+				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		
+		l.add(newInstrumentUsedType("cBot-onboard", "cBot-onboard", InstrumentCategory.find.findByCode("cbot"), getPropertiesCBotInterne(), 
+				getInstruments(
+						createInstrument("cBot-interne-Hi9", "cBot-Hi9", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG)),
+						createInstrument("cBot-interne-Hi10", "cBot-Hi10", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG)),
+						createInstrument("cBot-interne-Hi11", "cBot-Hi11", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG)),
+						createInstrument("cBot-interne-Miseq1", "cBot-Miseq1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG)),
+						createInstrument("cBot-interne-Nextseq1", "cBot-NextSeq1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG))), 
+				getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-2","flowcell-1"}), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+
 
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
@@ -292,6 +358,7 @@ public class InstrumentService {
 		instruments.add( createInstrument("PHOSPHORE", "PHOSPHORE", true, "/env/atelier/solexa_PHOSPHORE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		return instruments;
 	}
+	
 
 	
 	private static List<Instrument> getInstrumentGAII() throws DAOException {
@@ -341,7 +408,7 @@ public class InstrumentService {
 		return l;
 	}
 	
-	private static List<PropertyDefinition> getThermoProperties() throws DAOException {
+	private static List<PropertyDefinition> getThermocyclerProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("15","18"), "single"));		
 		return l;
@@ -362,6 +429,12 @@ public class InstrumentService {
 	private static List<PropertyDefinition> getQPCRProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		l.add(newPropertiesDefinition("Nb. Echantillon", "sampleNumber", LevelService.getLevels(Level.CODE.Instrument), Integer.class, true, "single"));		
+		return l;
+	}
+	
+	private static List<PropertyDefinition> getRocheLightCyclerProperties() throws DAOException {
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		// actuellement non defini l.add(newPropertiesDefinition("Nb. Echantillon", "sampleNumber", LevelService.getLevels(Level.CODE.Instrument), Integer.class, true, "single"));		
 		return l;
 	}
 	
