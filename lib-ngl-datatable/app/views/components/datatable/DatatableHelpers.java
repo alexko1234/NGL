@@ -111,6 +111,19 @@ public class DatatableHelpers {
 		return column1;
 	}
 	
+	public static DatatableColumn getColumn(String property, String header, Boolean order, Boolean edit, Boolean hide, Boolean choiceInList,Map<Integer,String> headers,String render) {
+		DatatableColumn column1 = new DatatableColumn();
+		column1.property = property;		
+		column1.header = Messages.get(header);
+		column1.order=order;
+		column1.edit=edit;
+		column1.hide=hide;
+		column1.choiceInList = choiceInList;
+		column1.extraHeaders = headers;
+		column1.render=render;
+		return column1;
+	}
+	
 	public static DatatableColumn getDateColumn(String property, String header, Boolean order, Boolean edit, Boolean hide, String filter) {
 		DatatableColumn column1 = new DatatableColumn();
 		column1.property = property;		
