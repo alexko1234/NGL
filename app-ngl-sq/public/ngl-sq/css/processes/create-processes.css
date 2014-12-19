@@ -7,6 +7,8 @@
 .SelectContainerProcess .datatable .btn-toolbar>.btn-group>.btn:last-child:not(:first-child)[ng-click="swithView()"]{
 	margin-left: 5px;
 	width: 180px;	
+	background: #FFF;
+	color: #333;	
 }
 
 .SelectContainerProcess .datatable .btn-toolbar>.btn-group>.btn:first-child:not(:last-child):not(.dropdown-toggle)[ng-click="save()"]{
