@@ -35,8 +35,8 @@ containers.table.sampleTypes = Type samples
 containers.table.libProcessTypeCodes = Type librairie
 containers.table.sampleCodeAndTags = Sample / Tag
 
-containers.placeholder.fromDate = Création container depuis le (jj/mm/aaaa)
-containers.placeholder.toDate = Création container jusqu''au (jj/mm/aaaa)
+containers.placeholder.fromDate = Container depuis le (jj/mm/aaaa)
+containers.placeholder.toDate = Container jusqu''au (jj/mm/aaaa)
 containers.placeholder.user = Container créé par
 
 containers.select.state =  Sélect. un état container

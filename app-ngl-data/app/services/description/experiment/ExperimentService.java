@@ -198,13 +198,13 @@ public class ExperimentService {
 					getProtocols("proto_qc_v1"), getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchipGX"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)));
 			
-			l.add(newExperimentType("Migration sur puce (non ampli)","chip-migration-pre-pcr",450,
+			l.add(newExperimentType("Migration sur puce (non ampli)","chip-migration-pre-pcr",250,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
 					getProtocols("proto_qc_v1"), getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchipGX"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)));
 			
 			
-			l.add(newExperimentType("Dosage fluorimétrique","fluo-quantification",250,
+			l.add(newExperimentType("Dosage fluorimétrique","fluo-quantification",450,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
 					getProtocols("proto_qc_v1"), getInstrumentUsedTypes("qubit"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)));
