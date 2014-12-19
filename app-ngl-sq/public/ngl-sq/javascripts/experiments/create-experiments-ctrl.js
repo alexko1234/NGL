@@ -1,4 +1,4 @@
-angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','lists','$parse','$q','$position','$routeParams','$location','mainService','tabService', function($scope,$window, $http,lists,$parse,$q,$position,$routeParams,$location,mainService,tabService) {
+angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$http','lists','$parse','$q','$position','$routeParams','$location','mainService','tabService', function($scope,$sce,$window, $http,lists,$parse,$q,$position,$routeParams,$location,mainService,tabService) {
 	$scope.experiment = {
 		outputGenerated:false,
 		containerOutProperties:[],
@@ -872,6 +872,11 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 			modifyDate:""
 		}
 	};
+	
+	$scope.convertToBr = function(text){
+		return $sce.trustAsHtml(text.replace(/\n/g, "<br>"));
+	};
+	
 	if($routeParams.experimentCode){
 	   promise = $http.get(jsRoutes.controllers.experiments.api.Experiments.get($routeParams.experimentCode).url)
 		.success(function(data, status, headers, config) {

@@ -309,8 +309,8 @@
    		<b>{{com.createUser}}</b><br>
     	{{com.creationDate | date:'yyyy-MM-dd HH:mm:ss'}}
    	</div>
-    <div class="col-lg-8">
-     	{{com.comment}}
+    <div class="col-lg-8"  ng-bind-html="convertToBr(com.comment)">
+     	
     </div>    
     <button class="btn commentsButtons pull-right" ng-show="com.createUser == '@currentUser'" ng-click="experiment.comments.delete(com)"><i class="fa fa-trash-o"></i></button>
     <button class="btn commentsButtons pull-right" ng-show="com.createUser == '@currentUser'" data-toggle="modal" data-target="#myModal" ng-click="experiment.comment = com"><i class="fa fa-edit"></i></button>
