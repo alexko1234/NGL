@@ -77,7 +77,8 @@
 	border-radius: 4px;
 	-webkit-user-select: none;
 	background: #FFF;
-	color: #333;	
+	color: #333;
+	font-weight: bold;	
 }
 
 .valueInput{
