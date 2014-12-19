@@ -80,7 +80,7 @@ public class Experiments extends CommonController{
 		columns.add(DatatableHelpers.getColumn("code", Messages.get("containers.table.code"), true, false, true,false,extraHeaders));	
 		columns.add(DatatableHelpers.getColumn("projectCodes", Messages.get("containers.table.projectCodes"), true, false, true,false,extraHeaders));
 		columns.add(DatatableHelpers.getColumn("sampleCodes", Messages.get("containers.table.sampleCodes"), true, false, true,false,extraHeaders,"<div list-resize='value.data.sampleCodes | unique'>"));		
-		columns.add(DatatableHelpers.getColumn("sampleCodes.length",  Messages.get("containers.table.sampleCodes.length"), true, false, true,false,extraHeaders));
+		//columns.add(DatatableHelpers.getColumn("sampleCodes.length",  Messages.get("containers.table.sampleCodes.length"), true, false, true,false,extraHeaders));
 		DatatableColumn dc = DatatableHelpers.getColumn("state.code", Messages.get("containers.table.stateCode"), true, false, true,false,extraHeaders);
 		dc.filter = "codes:'state'";
 		columns.add(dc);

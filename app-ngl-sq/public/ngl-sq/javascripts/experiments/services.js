@@ -41,6 +41,13 @@
 							"type":"date"
 						},
 						{
+							"header":Messages("containers.table.sampleCodes.length"),
+							"property":"sampleCodes.length",
+							"order":true,
+							"hide":true,
+							"type":"text"
+						},
+						{
 							"header":Messages("containers.table.sampleCodes"),
 							"property":"sampleCodes",
 							"order":true,

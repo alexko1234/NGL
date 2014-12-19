@@ -57,14 +57,14 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 				"filter":"codes:'state'"
 			},
 			{
-				"header":Messages("containers.table.sampleCodes"),
+				"header":Messages("containers.table.sampleCode"),
 				"property":"sampleCodes",
 				"order":true,
 				"hide":true,
 				"type":"text"
 			},
 			{
-				"header":Messages("processes.table.projectCodes"),
+				"header":Messages("processes.table.projectCode"),
 				"property":"projectCodes",
 				"order":true,
 				"hide":true,
