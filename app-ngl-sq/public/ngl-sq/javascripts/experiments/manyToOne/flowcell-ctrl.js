@@ -58,7 +58,8 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			        	 "order":true,
 			        	 "type":"text",
 			        	 "edit":false,
-			        	 "extraHeaders":{0:"solution stock"}
+			        	 "extraHeaders":{0:"solution stock"},
+			        	 "filter":"codes:'state'"
 			         },
 			         {
 			        	 "header":Messages("containers.table.percentage"),
