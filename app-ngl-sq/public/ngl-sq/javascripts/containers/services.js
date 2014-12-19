@@ -130,7 +130,7 @@
 				convertForm : function(){
 					var _form = angular.copy(this.form);
 					if(_form.projectCodes || _form.sampleCodes || (_form.fromExperimentTypeCodes && _form.fromExperimentTypeCodes.length > 0) || _form.containerCategory 
-							|| _form.containerSupportCategory || _form.state || _form.containerSupportCode  || _form.valuations || _form.fromDate || _form.toDate){	
+							|| _form.containerSupportCategory || _form.state || _form.containerSupportCode  || _form.valuations || _form.fromDate || _form.toDate || _form.processType){	
 							
 							var jsonSearch = {};
 							
@@ -143,6 +143,10 @@
 							
 							if(_form.valuations){
 								jsonSearch.valuations = _form.valuations;
+							}
+							
+							if(_form.processType){
+								jsonSearch.processTypeCode = _form.processType;
 							}
 							
 							if(_form.fromExperimentTypeCodes){
@@ -218,7 +222,7 @@
 				changeProcessCategory : function(){
 					this.form.processType = undefined;
 					if(this.form.processCategory){
-						lists.refresh.processTypes({processCategoryCode:this.form.processCategory.code});
+						lists.refresh.processTypes({processCategoryCode:this.form.processCategory});
 					}
 				},
 				/**

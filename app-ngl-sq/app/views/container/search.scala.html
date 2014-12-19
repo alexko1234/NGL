@@ -12,7 +12,7 @@
 								
 		}	
 		@formGroup{
-			<div bt-select placeholder="@Messages("processes.select.processCategory")" class="form-control" ng-model="searchService.form.processCategory" bt-options="processCategory.name for processCategory in searchService.lists.getProcessCategories()" ng-change="searchService.changeProcessCategory()" auto-select>
+			<div bt-select placeholder="@Messages("processes.select.processCategory")" class="form-control" ng-model="searchService.form.processCategory" bt-options="processCategory.code as processCategory.name for processCategory in searchService.lists.getProcessCategories()" ng-change="searchService.changeProcessCategory()" auto-select>
 			</div>								
 			}
 	}
@@ -26,7 +26,7 @@
 			</div>
 		}		
 		@formGroup{
-			<div bt-select placeholder="@Messages("processes.select.processType")" class="form-control" ng-model="searchService.form.processType" bt-options="processType.name for processType in searchService.lists.getProcessTypes()" ng-change="searchService.changeProcessType()" auto-select>
+			<div bt-select placeholder="@Messages("processes.select.processType")" class="form-control" ng-model="searchService.form.processType" bt-options="processType.code as processType.name for processType in searchService.lists.getProcessTypes()" ng-change="searchService.changeProcessType()" auto-select>
 			</div>					
 		}
 		
