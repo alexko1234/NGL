@@ -37,6 +37,7 @@ import fr.cea.ig.MongoDBDAO;
  */
 
 @Repository
+@Deprecated
 public class MigrationProjectCodes extends CommonController {
 		
 	protected static LimsCNGDAO limsServices= Spring.getBeanOfType(LimsCNGDAO.class);	

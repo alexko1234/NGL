@@ -193,15 +193,15 @@ public class InstrumentService {
 				getContainerSupportCategories(new String[]{"tube"}),null, 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)));
 		
-		l.add(newInstrumentUsedType("Thermocycler", "thermocycler", InstrumentCategory.find.findByCode("thermocycler"), getThermocyclerProperties(), 
+		l.add(newInstrumentUsedType("Thermocycleur", "thermocycler", InstrumentCategory.find.findByCode("thermocycler"), getThermocyclerProperties(), 
 				getInstruments(
-						createInstrument("ThermoS1", "thermoS1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
-						createInstrument("ThermoS2", "thermoS2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
-						createInstrument("ThermoS3", "thermoS3", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
-						createInstrument("Thermo1", "thermo1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG)), 
-						createInstrument("Thermo2", "thermo2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG)), 
-						createInstrument("Thermo3", "thermo3", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG)),
-						createInstrument("Thermo4", "thermo4", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG)) 
+						createInstrument("thermoS1", "ThermoS1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
+						createInstrument("thermoS2", "ThermoS2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
+						createInstrument("thermoS3", "ThermoS3",  true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
+						createInstrument("thermo1", "Thermo1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG)), 
+						createInstrument("thermo2", "Thermo2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG)), 
+						createInstrument("thermo3", "Thermo3", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG)),
+						createInstrument("thermo4", "Thermo4", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG)) 
 						), 
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)));
@@ -217,8 +217,8 @@ public class InstrumentService {
 		
 		l.add(newInstrumentUsedType("Covaris E210", "covaris-e210", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 
 				getInstruments(
-						createInstrument("Covaris3", "Covaris3", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
-						createInstrument("Covaris4", "Covaris4", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)),
+						createInstrument("covaris3", "Covaris3", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)), 
+						createInstrument("covaris4", "Covaris4", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)),
 						createInstrument("cov1", "Cov1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG)) 
 						) , 
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
