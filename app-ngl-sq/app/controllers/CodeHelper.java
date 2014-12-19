@@ -17,7 +17,7 @@ public class CodeHelper {
 	//ProcessusTypeCode-ProjectCode-SampeCode-YYYYMMDDHHMMSSSS
 	public static String generateProcessCode(Process process) {		
 		 Random randomGenerator = new Random();
-		return ("P-"+process.typeCode+"-"+process.projectCode+"-"+process.sampleCode+"-"+new SimpleDateFormat("yyyyMMdd_HHmmssSS").format(new Date())+randomGenerator.nextInt(100)).toUpperCase();		
+		return ("P-"+process.typeCode+"-"+process.sampleCode+"-"+new SimpleDateFormat("yyyyMMdd_HHmmssSS").format(new Date())+randomGenerator.nextInt(100)).toUpperCase();		
 	}
 	
 	public static String generateExperiementCode(Experiment exp) {		
