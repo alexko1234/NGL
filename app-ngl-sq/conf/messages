@@ -13,6 +13,7 @@ containers.table.supportCategoryCode = Catégorie support
 containers.table.categoryCode = Catégorie Support
 containers.table.projectCodes = Projet(s)
 containers.table.sampleCodes = Echantillon(s)
+containers.table.sampleCodes.length = Nb d''échantillon(s)
 containers.table.fromExperimentTypeCodes = Issu du type d''expérience
 containers.table.state.code = Etat container
 containers.table.support.name = Support container
