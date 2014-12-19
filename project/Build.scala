@@ -155,7 +155,17 @@ object ApplicationBuild extends Build {
 		libraryDependencies ++= nglframeworkwebDependencies,
        resolvers := Seq(nexusig),
 	   sbt.Keys.fork in Test := false,
-       publishTo := Some(nexusigpublish)      
+       publishTo := Some(nexusigpublish),
+        packagedArtifacts in publishLocal := {
+		  val artifacts: Map[sbt.Artifact, java.io.File] = (packagedArtifacts in publishLocal).value
+		  val assets: java.io.File = (playPackageAssets in Compile).value
+		  artifacts + (Artifact(moduleName.value, "asset", "jar", "assets") -> assets)
+	   },
+	   packagedArtifacts in publish := {
+		  val artifacts: Map[sbt.Artifact, java.io.File] = (packagedArtifacts in publishLocal).value
+		  val assets: java.io.File = (playPackageAssets in Compile).value
+		  artifacts + (Artifact(moduleName.value, "asset", "jar", "assets") -> assets)
+	   }
     ).dependsOn(ngldatatable)
     
     
