@@ -103,7 +103,7 @@ public class ExperimentService {
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), getPropertyDefinitionExtToOpgenDepot(), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
-		l.add(newExperimentType("Depot Opgen", "opgen-depot"
+		l.add(newExperimentType("Depot Opgen", "opgen-depot",1600
 				, ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),null, getProtocols("depot_opgen_ptr_1"), 
 				getInstrumentUsedTypes("ARGUS"), "ManyToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
@@ -149,7 +149,7 @@ public class ExperimentService {
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
 			//Depot solexa
-			l.add(newExperimentType("Depot Illumina", "illumina-depot", 
+			l.add(newExperimentType("Depot Illumina", "illumina-depot", 1400,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(), 
 					getProtocols("depot_illumina_ptr_1","depot_illumina_ptr_2","depot_illumina_ptr_3","sop_depot_1"), 
 					getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500"), "OneToVoid", 
@@ -193,23 +193,23 @@ public class ExperimentService {
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 			*/
 			
-			l.add(newExperimentType("Migration sur puce (ampli)","chip-migration-post-pcr",
+			l.add(newExperimentType("Migration sur puce (ampli)","chip-migration-post-pcr",200,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
 					getProtocols("proto_qc_v1"), getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchipGX"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)));
 			
-			l.add(newExperimentType("Migration sur puce (non ampli)","chip-migration-pre-pcr",
+			l.add(newExperimentType("Migration sur puce (non ampli)","chip-migration-pre-pcr",400,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
 					getProtocols("proto_qc_v1"), getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchipGX"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)));
 			
 			
-			l.add(newExperimentType("Dosage fluorimétrique","fluo-quantification",
+			l.add(newExperimentType("Dosage fluorimétrique","fluo-quantification",600,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
 					getProtocols("proto_qc_v1"), getInstrumentUsedTypes("qubit"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)));
 			
-			l.add(newExperimentType("Quantification qPCR","qPCR-quantification",
+			l.add(newExperimentType("Quantification qPCR","qPCR-quantification",800,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
 					getProtocols("proto_qc_v1"), getInstrumentUsedTypes("rocheLightCycler-qPCR"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG))); 			

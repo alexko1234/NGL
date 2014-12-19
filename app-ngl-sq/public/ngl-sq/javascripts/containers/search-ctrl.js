@@ -17,7 +17,12 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 			active:true,
 			url:jsRoutes.controllers.containers.api.Containers.updateBatch().url,
 			batch:true,
-			method:'put'
+			method:'put',
+			callback: function(reason, error){
+				
+				console.log("callback reason=" + reason);
+				console.log("callback error=" + error);
+			}
 		}
 	};
 
