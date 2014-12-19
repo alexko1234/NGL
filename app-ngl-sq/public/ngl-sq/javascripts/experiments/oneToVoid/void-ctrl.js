@@ -86,7 +86,7 @@ angular.module('home').controller('VoidCtrl',['$scope', '$window','datatable','$
 					if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties[data[j].code]){
 						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties[data[j].code].value);
 					}else{
-						getter.assign($scope,"");
+						getter.assign($scope,undefined);
 					}
 				}
 			}
@@ -98,10 +98,17 @@ angular.module('home').controller('VoidCtrl',['$scope', '$window','datatable','$
 			for(var j=0; j<data.length;j++){
 				if($scope.getLevel( data[j].levels, "ContainerIn")){
 					var getter = $parse("datatable.displayResult["+i+"].inputExperimentProperties."+data[j].code+".value");
-					if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code]){
+					if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties){
 						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code].value);
 					}else{
-						getter.assign($scope,"");
+						getter.assign($scope,undefined);
+					}
+				}else if($scope.getLevel( data[j].levels, "Experiment")){
+					var getter = $parse("experiment.value.experimentProperties."+data[j].code);
+					if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code] !== undefined && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code].value !== undefined && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code].value !== ""){
+						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code]);
+					}else{
+						getter.assign($scope,undefined);
 					}
 				}
 			}

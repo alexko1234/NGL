@@ -80,6 +80,13 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 							$scope.inputContainers = that.containersToContainerUseds(containers);
 						});
 					},
+					removeNullProperties : function(properties){
+						for (var p in properties) {
+							if(properties[p] != undefined && (properties[p].value === undefined || properties[p].value === null || properties[p].value === "")){
+								properties[p] = undefined;
+							}
+						}
+					},
 					loadContainer : function(containerUsed){
 						var results = {container:{},promise:{}};
 						var line = 1;
@@ -137,6 +144,8 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 									for(var i=0;i<allData.length;i++){
 										$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties = allData[i].inputInstrumentProperties;
 										$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties = allData[i].inputExperimentProperties;
+										varExperimentCommonFunctions.removeNullProperties($scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties);
+										varExperimentCommonFunctions.removeNullProperties($scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties);
 									}
 									input.setData(allData, allData.length);
 								}
@@ -227,6 +236,8 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 										for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[0].length;j++){
 											$scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[j].instrumentProperties = allData[i].inputInstrumentProperties;
 											$scope.experiment.value.atomicTransfertMethods[0].inputContainerUsed[j].experimentProperties = allData[i].inputExperimentProperties;
+											varExperimentCommonFunctions.removeNullProperties($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[j].instrumentProperties);
+											varExperimentCommonFunctions.removeNullProperties($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[j].experimentProperties);
 											i++;
 										}
 									}
@@ -320,7 +331,9 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 								for(var i=0;i<allData.length;i++){
 									if($scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed != undefined){
 										$scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed.instrumentProperties = allData[i].outputInstrumentProperties;					
-										$scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed.experimentProperties = allData[i].outputExperimentProperties;					
+										$scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed.experimentProperties = allData[i].outputExperimentProperties;	
+										varExperimentCommonFunctions.removeNullProperties($scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed.experimentProperties);
+										varExperimentCommonFunctions.removeNullProperties($scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed.instrumentProperties);
 									}
 								}
 								output.setData(allData,allData.lenght);
@@ -331,9 +344,11 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 								for(var i=0;i<allData.length;i++){
 									if(allData[i].outputInstrumentProperties != undefined){
 										$scope.experiment.value.atomicTransfertMethods[(allData[i].outputPositionX-1)].outputContainerUsed.instrumentProperties = allData[i].outputInstrumentProperties;
+										varExperimentCommonFunctions.removeNullProperties($scope.experiment.value.atomicTransfertMethods[(allData[i].outputPositionX-1)].outputContainerUsed.instrumentProperties);
 									}
 									if(allData[i].outputExperimentProperties!= undefined){
 										$scope.experiment.value.atomicTransfertMethods[(allData[i].outputPositionX-1)].outputContainerUsed.experimentProperties = allData[i].outputExperimentProperties;	
+										varExperimentCommonFunctions.removeNullProperties($scope.experiment.value.atomicTransfertMethods[(allData[i].outputPositionX-1)].outputContainerUsed.experimentProperties);
 									}
 								}
 								output.setData(allData,allData.lenght);
@@ -392,6 +407,8 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 									for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[0].length;j++){
 										$scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[j].instrumentProperties = allData[i].outputInstrumentProperties;
 										$scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[j].experimentProperties = allData[i].outputExperimentProperties;
+										varExperimentCommonFunctions.removeNullProperties($scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[j].experimentProperties);
+										varExperimentCommonFunctions.removeNullProperties($scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[j].instrumentProperties);
 										i++;
 									}
 								}
@@ -811,6 +828,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 						datatable.setData(containers,containers.length);
 						$scope.getInstrumentProperties($scope.experiment.value.instrument.typeCode,true);
 						$scope.getInstruments(true);
+						$scope.addExperimentPropertiesInputsColumns();
 					});
 				},
 				loadExperiment : function(input){
@@ -822,6 +840,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 					if(inputType === "datatable"){
 						varexperimentCommonFunctions.newExperimentDatatable(input);
 					}
+					$scope.addExperimentPropertiesInputsColumns();
 				}
 			};
 			

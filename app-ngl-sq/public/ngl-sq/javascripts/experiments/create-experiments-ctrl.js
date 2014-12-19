@@ -31,6 +31,13 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 	};
 	$scope.message = {};
 	
+	$scope.getType = function(type){
+		if(type === "java.util.Date"){
+			return "date";
+		}
+		return type;
+	};
+	
 	$scope.setImage = function(imageData, imageName, imageFullSizeWidth, imageFullSizeHeight) {
 		$scope.modalImage = imageData;
 		
@@ -277,6 +284,14 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 		}
 	};
 	
+	$scope.removeNullProperties = function(properties){
+		for (var p in properties) {
+			if(properties[p] != undefined && (properties[p].value === undefined || properties[p].value === null || properties[p].value === "")){
+				properties[p] = undefined;
+			}
+		}
+	};
+	
 	$scope.experiment.experimentProperties = {
 			enabled:true,
 			toggleEdit:function(){
@@ -287,6 +302,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 					
 					$scope.$broadcast('InputToExperiment', $scope.experimentType.atomicTransfertMethod);
 					$scope.$broadcast('OutputToExperiment', $scope.experimentType.atomicTransfertMethod);
+					
+					$scope.removeNullProperties($scope.experiment.value.experimentProperties);
 					
 					return $http.put(jsRoutes.controllers.experiments.api.Experiments.updateExperimentProperties($scope.experiment.value.code).url, $scope.experiment.value)
 					.success(function(data, status, headers, config) {
@@ -359,6 +376,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 				$scope.clearMessages();
 				$scope.$broadcast('inputToExperiment', $scope.experimentType.atomicTransfertMethod);
 				$scope.$broadcast('outputToExperiment', $scope.experimentType.atomicTransfertMethod);
+				
+				$scope.removeNullProperties($scope.experiment.value.instrumentProperties);
 				
 				return $http.put(jsRoutes.controllers.experiments.api.Experiments.updateInstrumentProperties($scope.experiment.value.code).url, $scope.experiment.value)
 				.success(function(data, status, headers, config) {
@@ -460,7 +479,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope', '$window','$http','
 			promises.push($scope.experiment.experimentInformation.save());
 	
 			promises.push($scope.experiment.experimentProperties.save());
-	
+			
 			promises.push($scope.saveContainers());
 		}else{
 			$scope.$broadcast('inputToExperiment', $scope.experimentType.atomicTransfertMethod);
