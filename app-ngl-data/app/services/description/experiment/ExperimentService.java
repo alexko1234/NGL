@@ -193,23 +193,23 @@ public class ExperimentService {
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 			*/
 			
-			l.add(newExperimentType("Migration sur puce (ampli)","chip-migration-post-pcr",200,
+			l.add(newExperimentType("Migration sur puce (ampli)","chip-migration-post-pcr",650,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
 					getProtocols("proto_qc_v1"), getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchipGX"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)));
 			
-			l.add(newExperimentType("Migration sur puce (non ampli)","chip-migration-pre-pcr",400,
+			l.add(newExperimentType("Migration sur puce (non ampli)","chip-migration-pre-pcr",450,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
 					getProtocols("proto_qc_v1"), getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchipGX"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)));
 			
 			
-			l.add(newExperimentType("Dosage fluorimétrique","fluo-quantification",600,
+			l.add(newExperimentType("Dosage fluorimétrique","fluo-quantification",250,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
 					getProtocols("proto_qc_v1"), getInstrumentUsedTypes("qubit"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)));
 			
-			l.add(newExperimentType("Quantification qPCR","qPCR-quantification",800,
+			l.add(newExperimentType("Quantification qPCR","qPCR-quantification",850,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
 					getProtocols("proto_qc_v1"), getInstrumentUsedTypes("rocheLightCycler-qPCR"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG))); 			
