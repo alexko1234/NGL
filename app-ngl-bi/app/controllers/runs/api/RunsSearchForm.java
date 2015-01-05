@@ -37,5 +37,5 @@ public class RunsSearchForm extends ListForm {
     public List<String> laneResolutionCodes;
     public List<String> resolutionCodes;
     
-
+    public List<String> existingFields, notExistingFields;
 }
