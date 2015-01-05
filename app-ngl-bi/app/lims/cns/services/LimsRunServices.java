@@ -111,7 +111,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 	public ContainerSupport getContainerSupport(String supportCode) {
 		List<LimsLibrary> limsReadSets = dao.geContainerSupport(supportCode);
 		Flowcell flowcell = null;
-		if (limsReadSets.size() > 0) {
+		if (limsReadSets != null && limsReadSets.size() > 0) {
 			flowcell = new Flowcell();
 			flowcell.containerSupportCode = supportCode;
 
