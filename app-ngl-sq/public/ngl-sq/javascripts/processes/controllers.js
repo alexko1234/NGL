@@ -224,7 +224,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 		$scope.lists.refresh.processCategories();
 		$scope.lists.refresh.supports();
 		$scope.lists.refresh.containerSupportCategories();
-		$scope.lists.refresh.experimentTypes({"categoryCode":"transformation"});
+		lists.refresh.experimentTypes({categoryCode:"transformation", withoutOneToVoid:true});
 		
 	}else{
 		$scope.form = mainService.getForm();			
@@ -287,9 +287,9 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			otherButtons :{
 				active:true,
 				template:'<button  class="btn" ng-click="save()"><i class="fa fa-save"></i></button><button ng-click="swithView()" ng-disabled="loadView"  class="btn btn-info" ng-switch="supportView">'+Messages("baskets.switchView")+
-							' '+'<b ng-switch-when="true">'+
+							' '+'<b ng-switch-when="true" class="switchLabel">'+
 							Messages("baskets.switchView.containers")+'</b>'+
-							'<b ng-switch-when="false">'+Messages("baskets.switchView.supports")+'</b></button></button>'
+							'<b ng-switch-when="false" class="switchLabel">'+Messages("baskets.switchView.supports")+'</b></button></button>'
 			}
 	};
 	

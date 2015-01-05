@@ -11,6 +11,7 @@ public class ContainersSearchForm extends ListForm{
 	public String projectCode;
 	public List<String> projectCodes;
 	public String stateCode;
+	public List<String> stateCodes;
 	public String sampleCode;
 	public List<String> sampleCodes;
 	public String categoryCode;

@@ -75,8 +75,7 @@
 	font-size: 12px;
 	line-height: 1.33333333;
 	border-radius: 4px;
-	-webkit-user-select: none;
-	font-weight: bold;	
+	-webkit-user-select: none;		
 }
 
 .valueInput{

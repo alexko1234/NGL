@@ -7,7 +7,7 @@
 				</div>
 			}
 			@formGroup{
-			<div bt-select placeholder="@Messages("experiments.select.state")" class="form-control" ng-model="searchService.form.state" bt-options="stateCode.code as stateCode.name for stateCode in searchService.lists.getStates()" ng-change="search()" auto-select>
+			<div bt-select placeholder="@Messages("experiments.select.state")" multiple="true" filter="true" class="form-control" ng-model="searchService.form.states" bt-options="stateCode.code as stateCode.name for stateCode in searchService.lists.getStates()" auto-select>
 			</div>
 			}			
 			@formGroup{

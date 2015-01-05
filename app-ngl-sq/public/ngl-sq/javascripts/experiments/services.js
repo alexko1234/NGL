@@ -124,7 +124,7 @@
 				},
 				convertForm : function(){
 					var _form = angular.copy(this.form);
-					if(_form.processType || _form.experimentType || _form.projectCodes || _form.sampleCodes || _form.type || _form.fromDate || _form.toDate || _form.state || _form.user || _form.code || _form.containerSupportCode){
+					if(_form.processType || _form.experimentType || _form.projectCodes || _form.sampleCodes || _form.type || _form.fromDate || _form.toDate || _form.state || _form.states || _form.user || _form.code || _form.containerSupportCode){
 						var jsonSearch = {};			
 
 						if(_form.projectCodes){
@@ -148,6 +148,10 @@
 						if(_form.state){
 							jsonSearch.stateCode = _form.state;
 						}
+						
+						if(_form.states){
+							jsonSearch.stateCodes = _form.states;
+						}
 
 						if(_form.user){
 							jsonSearch.users = _form.user;
@@ -165,9 +169,12 @@
 						if(_form.toDate)jsonSearch.toDate = this.useMoment(_form.toDate, Messages("date.format").toUpperCase());
 						
 						return jsonSearch;	
+					}else{
+						this.datatable.setData({},0);
+						return undefined;
 					}
 					
-					return undefined;
+					
 				},
 				
 				resetForm : function(){					

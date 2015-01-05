@@ -57,7 +57,7 @@
 				convertForm : function(){
 					var _form = angular.copy(this.form);
 					if(_form.projectCodes || _form.sampleCodes || _form.processType 
-							|| _form.processCategory || _form.processesSupportCode || _form.state || _form.user
+							|| _form.processCategory || _form.processesSupportCode || _form.state || _form.states || _form.user
 							|| _form.fromDate || _form.toDate || _form.experimentCode){
 						var jsonSearch = {};
 						if(_form.projectCodes){
@@ -87,6 +87,10 @@
 						
 						if(_form.state){
 							jsonSearch.stateCode = _form.state;
+						}
+						
+						if(_form.states){
+							jsonSearch.stateCodes = _form.states;
 						}
 						
 						if(_form.user){

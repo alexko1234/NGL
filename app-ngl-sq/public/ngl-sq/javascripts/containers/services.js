@@ -130,7 +130,7 @@
 				convertForm : function(){
 					var _form = angular.copy(this.form);
 					if(_form.projectCodes || _form.sampleCodes || (_form.fromExperimentTypeCodes && _form.fromExperimentTypeCodes.length > 0) || _form.containerCategory 
-							|| _form.containerSupportCategory || _form.state || _form.containerSupportCode  || _form.valuations || _form.fromDate || _form.toDate || _form.processType){	
+							|| _form.containerSupportCategory || _form.state || _form.states || _form.containerSupportCode  || _form.valuations || _form.fromDate || _form.toDate){	
 							
 							var jsonSearch = {};
 							
@@ -143,10 +143,6 @@
 							
 							if(_form.valuations){
 								jsonSearch.valuations = _form.valuations;
-							}
-							
-							if(_form.processType){
-								jsonSearch.processTypeCode = _form.processType;
 							}
 							
 							if(_form.fromExperimentTypeCodes){
@@ -164,7 +160,11 @@
 							
 							if(_form.state){
 								jsonSearch.stateCode = _form.state;
-							}	
+							}
+							
+							if(_form.states){
+								jsonSearch.stateCodes = _form.states;
+							}
 							
 							if(_form.containerSupportCode){
 								jsonSearch.supportCode = _form.containerSupportCode;
@@ -176,9 +176,12 @@
 							mainService.setForm(_form);
 						
 							return jsonSearch;
+					}else{
+						this.datatable.setData({},0);
+						return undefined;
+						
 					}
 					
-					return undefined;
 				},
 				
 				resetForm : function(){
@@ -222,7 +225,7 @@
 				changeProcessCategory : function(){
 					this.form.processType = undefined;
 					if(this.form.processCategory){
-						lists.refresh.processTypes({processCategoryCode:this.form.processCategory});
+						lists.refresh.processTypes({processCategoryCode:this.form.processCategory.code});
 					}
 				},
 				/**

@@ -16,14 +16,14 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessType;
-import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
 
-import org.mongojack.DBQuery;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
 
 import play.Logger;
 import play.data.Form;
@@ -118,7 +118,7 @@ public class Containers extends CommonController {
 		Form<ContainersSearchForm> containerFilledForm = filledFormQueryString(containerForm,ContainersSearchForm.class);
 		ContainersSearchForm containersSearch = containerFilledForm.get();
 		containersSearch.orderBy="code";
-		DBQuery.Query query = getQuery(containersSearch);
+		DBQuery.Query query = getQuery(containersSearch);		
 		if(containersSearch.datatable){
 			MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query);
 			List<Container> containers = results.toList();
@@ -229,6 +229,8 @@ public class Containers extends CommonController {
 	 */
 	public static DBQuery.Query getQuery(ContainersSearchForm containersSearch) throws DAOException {
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
+		Query query = null;
+		
 		if(containersSearch.projectCodes != null){
 			queryElts.add(DBQuery.in("projectCodes", containersSearch.projectCodes));
 		}else if(containersSearch.projectCode != null){
@@ -239,7 +241,9 @@ public class Containers extends CommonController {
 			queryElts.add(DBQuery.is("code", containersSearch.code));
 		}
 
-		if(StringUtils.isNotEmpty(containersSearch.stateCode)){
+		if(containersSearch.stateCodes !=null){
+			queryElts.add(DBQuery.in("state.code", containersSearch.stateCodes));
+		}else if(containersSearch.stateCode !=null){
 			queryElts.add(DBQuery.is("state.code", containersSearch.stateCode));
 		}
 
@@ -334,7 +338,12 @@ public class Containers extends CommonController {
 		if(StringUtils.isNotEmpty(containersSearch.processTypeCode) && StringUtils.isNotEmpty(containersSearch.experimentTypeCode)){
 			queryElts.add(DBQuery.is("processTypeCode", containersSearch.processTypeCode));
 		}
+		
+		if(queryElts.size() > 0){
+			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
+		}
+		
 
-		return DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
+		return query;
 	}
 }

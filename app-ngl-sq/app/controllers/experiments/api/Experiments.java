@@ -539,7 +539,9 @@ public class Experiments extends CommonController{
 			queryElts.add(DBQuery.in("traceInformation.createUser", experimentSearch.users));
 		}
 
-		if(experimentSearch.stateCode != null){
+		if(experimentSearch.stateCodes !=null){
+			queryElts.add(DBQuery.in("state.code", experimentSearch.stateCodes));
+		}else if(experimentSearch.stateCode != null){
 			queryElts.add(DBQuery.in("state.code", experimentSearch.stateCode));
 		}
 

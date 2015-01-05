@@ -273,7 +273,9 @@ public class Processes extends CommonController{
 			queryElts.add(DBQuery.is("categoryCode", processesSearch.categoryCode));
 		}
 		
-		if(StringUtils.isNotEmpty(processesSearch.stateCode)){
+		if(processesSearch.stateCodes != null ){
+			queryElts.add(DBQuery.in("state.code", processesSearch.stateCodes));
+		}else if(processesSearch.stateCode != null){
 			queryElts.add(DBQuery.is("state.code", processesSearch.stateCode));
 		}
 		if(processesSearch.users != null){

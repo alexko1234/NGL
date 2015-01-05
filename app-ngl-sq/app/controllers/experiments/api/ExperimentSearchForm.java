@@ -18,6 +18,7 @@ public class ExperimentSearchForm extends ListForm{
 	public Date fromDate;
 	public Date toDate;
 	public String stateCode;
+	public List<String> stateCodes;
 	public List<String> users;
 	public String containerSupportCode;	
 	public String atomicTransfertMethods;

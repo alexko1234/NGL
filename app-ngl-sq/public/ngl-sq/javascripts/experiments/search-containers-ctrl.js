@@ -109,7 +109,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		$scope.lists.refresh.experimentTypes({categoryCode:"purification"}, "purifications");
 		$scope.lists.refresh.experimentTypes({categoryCode:"qualitycontrol"}, "qualitycontrols");
 		$scope.lists.refresh.experimentTypes({categoryCode:"transfert"}, "transferts");
-		$scope.lists.refresh.experimentTypes({categoryCode:"transformation"}, "transformations");
+		$scope.lists.refresh.experimentTypes({categoryCode:"transformation", withoutOneToVoid:true});
 	};
 	
 	$scope.refreshSamples = function(){
@@ -238,7 +238,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	
 	$scope.lists.refresh.projects();
 	$scope.lists.refresh.types({objectTypeCode:"Process"}, true);
-	$scope.lists.refresh.experimentTypes({"categoryCode":"transformation"});
+	$scope.lists.refresh.experimentTypes({categoryCode:"transformation"},"transformations");
 	$scope.lists.refresh.processCategories();
 	$scope.lists.refresh.experimentCategories();
 	$scope.lists.refresh.users();
