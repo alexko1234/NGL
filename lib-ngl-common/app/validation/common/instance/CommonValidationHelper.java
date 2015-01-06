@@ -363,7 +363,7 @@ public class CommonValidationHelper {
 		}		
 	}
 	
-	public static void validateStateCode(String typeCode, String stateCode, ContextValidation contextValidation){
+	private static void validateStateCode(String typeCode, String stateCode, ContextValidation contextValidation){
 		try {
 			if (required(contextValidation, stateCode, "code")) {
 				if (!models.laboratory.common.description.State.find.isCodeExistForTypeCode(stateCode, typeCode)) {
