@@ -5,6 +5,8 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import models.laboratory.processes.description.ProcessType;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
@@ -26,7 +28,7 @@ public class ProcessTypes extends CommonController{
 		List<ProcessType> processTypes;
 		
 		try{	
-			if(processTypesSearch.processCategoryCode != null){
+			if(StringUtils.isNotBlank(processTypesSearch.processCategoryCode)){
 				processTypes = ProcessType.find.findByProcessCategoryCode(processTypesSearch.processCategoryCode);
 			}else{
 				processTypes = ProcessType.find.findAll();

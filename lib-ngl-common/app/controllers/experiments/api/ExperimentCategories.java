@@ -5,6 +5,9 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.Protocol;
 import models.utils.ListObject;
@@ -26,7 +29,7 @@ public class ExperimentCategories extends CommonController{
 		try{
 			List<ExperimentCategory> experimentCategories;
 			
-			if(experimentCategoriesSearch.processTypeCode != null){
+			if(StringUtils.isNotBlank(experimentCategoriesSearch.processTypeCode)){
 				experimentCategories = ExperimentCategory.find.findByProcessTypeCode(experimentCategoriesSearch.processTypeCode);
 			}else{
 				experimentCategories = ExperimentCategory.find.findAll();

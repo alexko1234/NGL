@@ -5,6 +5,8 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.State;
 import models.utils.ListObject;
@@ -29,7 +31,7 @@ public class States extends CommonController {
 			    .valueOf(statesSearch.objectTypeCode));
 		}
 		else {
-			if (null != statesSearch.objectTypeCode) 
+			if (StringUtils.isNotBlank(statesSearch.objectTypeCode)) 
 			    values = State.find.findByObjectTypeCode(ObjectType.CODE.valueOf(statesSearch.objectTypeCode));
 			else 
 				return notFound();

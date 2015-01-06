@@ -5,6 +5,9 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import models.laboratory.experiment.description.ExperimentType;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
@@ -41,11 +44,11 @@ public class ExperimentTypes extends CommonController{
 		
 		try{		
 			
-			if(experimentTypesSearch.categoryCode != null && experimentTypesSearch.withoutOneToVoid !=null && experimentTypesSearch.withoutOneToVoid){
+			if(StringUtils.isNotBlank(experimentTypesSearch.categoryCode) && experimentTypesSearch.withoutOneToVoid !=null  && experimentTypesSearch.withoutOneToVoid){
 				experimentTypes = ExperimentType.find.findByCategoryCodeWithoutOneToVoid(experimentTypesSearch.categoryCode);				
-			}else if(experimentTypesSearch.categoryCode != null && experimentTypesSearch.processTypeCode == null){
+			}else if(StringUtils.isNotBlank(experimentTypesSearch.categoryCode) && experimentTypesSearch.processTypeCode == null){
 				experimentTypes = ExperimentType.find.findByCategoryCode(experimentTypesSearch.categoryCode);
-			}else if(experimentTypesSearch.categoryCode != null && experimentTypesSearch.processTypeCode != null){
+			}else if(StringUtils.isNotBlank(experimentTypesSearch.categoryCode) && StringUtils.isNotBlank(experimentTypesSearch.processTypeCode)){
 				experimentTypes = ExperimentType.find.findByCategoryCodeAndProcessTypeCode(experimentTypesSearch.categoryCode, experimentTypesSearch.processTypeCode);
 			}else{
 				experimentTypes = ExperimentType.find.findAll();

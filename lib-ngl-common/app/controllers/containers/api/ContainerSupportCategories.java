@@ -5,6 +5,8 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.utils.ListObject;
@@ -26,9 +28,9 @@ public class ContainerSupportCategories extends CommonController{
 
 		List<ContainerSupportCategory> containerSupportCategories;
 		try{
-			if(containerSupportCategoriesSearch.instrumentUsedTypeCode != null){
+			if(StringUtils.isNotBlank(containerSupportCategoriesSearch.instrumentUsedTypeCode)){
 				containerSupportCategories = InstrumentUsedType.find.findByCode(containerSupportCategoriesSearch.instrumentUsedTypeCode).outContainerSupportCategories;
-			}else if(containerSupportCategoriesSearch.experimentTypeCode != null){
+			}else if(StringUtils.isNotBlank(containerSupportCategoriesSearch.experimentTypeCode)){
 				containerSupportCategories = ContainerSupportCategory.find.findByExperimentTypeCode(containerSupportCategoriesSearch.experimentTypeCode);
 			}else{
 				containerSupportCategories = ContainerSupportCategory.find.findAll();

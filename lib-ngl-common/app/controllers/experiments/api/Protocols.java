@@ -5,6 +5,8 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
 import models.utils.ListObject;
@@ -28,7 +30,7 @@ final static Form<ProtocolsSearchForm> protocolForm = form(ProtocolsSearchForm.c
 		List<Protocol> protocols = new ArrayList<Protocol>();
 		
 		try{		
-			if(protocolSearch.experimentTypeCode != null){
+			if(StringUtils.isNotBlank(protocolSearch.experimentTypeCode)){
 				protocols = Protocol.find.findByExperimentTypeCode(protocolSearch.experimentTypeCode);
 			}else{
 				protocols = Protocol.find.findAll();

@@ -5,6 +5,8 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import models.laboratory.processes.description.ExperimentTypeNode;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
@@ -25,7 +27,7 @@ public class ExperimentTypeNodes extends CommonController{
 		try{
 			List<ExperimentTypeNode> experimentTypeNodes = new ArrayList<ExperimentTypeNode>();
 			
-			if(experimentTypeNodesSearch.code != null){
+			if(StringUtils.isNotBlank(experimentTypeNodesSearch.code)){
 				experimentTypeNodes.add(ExperimentTypeNode.find.findByCode(experimentTypeNodesSearch.code));
 			}else{
 				experimentTypeNodes = ExperimentTypeNode.find.findAll();

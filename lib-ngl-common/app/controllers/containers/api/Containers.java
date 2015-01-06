@@ -20,6 +20,7 @@ import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
@@ -231,39 +232,39 @@ public class Containers extends CommonController {
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
 		Query query = null;
 		
-		if(containersSearch.projectCodes != null){
+		if(CollectionUtils.isNotEmpty(containersSearch.projectCodes)){
 			queryElts.add(DBQuery.in("projectCodes", containersSearch.projectCodes));
-		}else if(containersSearch.projectCode != null){
+		}else if(StringUtils.isNotBlank(containersSearch.projectCode)){
 			queryElts.add(DBQuery.in("projectCodes", containersSearch.projectCode));
 		}
 		
-		if(StringUtils.isNotEmpty(containersSearch.code)){
+		if(StringUtils.isNotBlank(containersSearch.code)){
 			queryElts.add(DBQuery.is("code", containersSearch.code));
 		}
 
-		if(containersSearch.stateCodes !=null){
+		if(CollectionUtils.isNotEmpty(containersSearch.stateCodes)){
 			queryElts.add(DBQuery.in("state.code", containersSearch.stateCodes));
-		}else if(containersSearch.stateCode !=null){
+		}else if(StringUtils.isNotBlank(containersSearch.stateCode)){
 			queryElts.add(DBQuery.is("state.code", containersSearch.stateCode));
 		}
 
-		if(StringUtils.isNotEmpty(containersSearch.categoryCode)){
+		if(StringUtils.isNotBlank(containersSearch.categoryCode)){
 			queryElts.add(DBQuery.is("categoryCode", containersSearch.categoryCode));
 		}
 
-		if(containersSearch.sampleCodes != null){
+		if(CollectionUtils.isNotEmpty(containersSearch.sampleCodes)){
 			queryElts.add(DBQuery.in("sampleCodes", containersSearch.sampleCodes));
-		}else if(containersSearch.sampleCode != null){
+		}else if(StringUtils.isNotBlank(containersSearch.sampleCode)){
 			queryElts.add(DBQuery.in("sampleCodes", containersSearch.sampleCode));
 		}
 
-		if(StringUtils.isNotEmpty(containersSearch.supportCode)){
+		if(StringUtils.isNotBlank(containersSearch.supportCode)){
 			queryElts.add(DBQuery.regex("support.code", Pattern.compile(containersSearch.supportCode)));
 		}
 		
-		if(StringUtils.isNotEmpty(containersSearch.containerSupportCategory)){
+		if(StringUtils.isNotBlank(containersSearch.containerSupportCategory)){
 			queryElts.add(DBQuery.is("support.categoryCode", containersSearch.containerSupportCategory));
-		}else if(!StringUtils.isEmpty(containersSearch.experimentTypeCode)){
+		}else if(StringUtils.isNotBlank(containersSearch.experimentTypeCode)){
 			List<ContainerSupportCategory> containerSupportCategories = ContainerSupportCategory.find.findByExperimentTypeCode(containersSearch.experimentTypeCode);
 			List<String> cs = new ArrayList<String>();
 			for(ContainerSupportCategory c:containerSupportCategories){
@@ -274,7 +275,7 @@ public class Containers extends CommonController {
 			}
 		}
 		
-		if(StringUtils.isNotEmpty(containersSearch.processTypeCode) && StringUtils.isEmpty(containersSearch.experimentTypeCode)){
+		if(StringUtils.isNotBlank(containersSearch.processTypeCode) && StringUtils.isNotBlank(containersSearch.experimentTypeCode)){
 			List<String> listePrevious = ExperimentType.find.findVoidProcessExperimentTypeCode(containersSearch.processTypeCode);
 			ProcessType processType = ProcessType.find.findByCode(containersSearch.processTypeCode);
 			List<ExperimentType> experimentTypes = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(processType.firstExperimentType.code);
@@ -289,7 +290,7 @@ public class Containers extends CommonController {
 			
 		}
 		
-		if(containersSearch.fromExperimentTypeCodes != null){
+		if(CollectionUtils.isNotEmpty(containersSearch.fromExperimentTypeCodes)){
 			queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes)));
 		}
 		
@@ -301,7 +302,7 @@ public class Containers extends CommonController {
 			queryElts.add(DBQuery.lessThanEquals("traceInformation.creationDate", (DateUtils.addDays(containersSearch.toDate, 1))));
 		}
 		
-		if(containersSearch.valuations != null){
+		if(CollectionUtils.isNotEmpty(containersSearch.valuations)){
 			queryElts.add(DBQuery.or(DBQuery.in("valuation.valid", containersSearch.valuations)));
 		}
 

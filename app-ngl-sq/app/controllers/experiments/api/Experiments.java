@@ -483,7 +483,7 @@ public class Experiments extends CommonController{
 
 		Logger.info("Experiment Query : "+experimentSearch);
 
-		if(StringUtils.isNotEmpty(experimentSearch.code)){
+		if(StringUtils.isNotBlank(experimentSearch.code)){
 			queryElts.add(DBQuery.regex("code", Pattern.compile(experimentSearch.code)));
 		}
 
@@ -493,15 +493,15 @@ public class Experiments extends CommonController{
 			queryElts.add(DBQuery.regex("code", Pattern.compile(experimentSearch.code)));
 		}
 
-		if(StringUtils.isNotEmpty(experimentSearch.typeCode)){
+		if(StringUtils.isNotBlank(experimentSearch.typeCode)){
 			queryElts.add(DBQuery.is("typeCode", experimentSearch.typeCode));
 		}
 
-		if(experimentSearch.projectCodes != null){
+		if(CollectionUtils.isNotEmpty(experimentSearch.projectCodes)){
 			queryElts.add(DBQuery.in("projectCodes", experimentSearch.projectCodes));
 		}
 
-		if(experimentSearch.projectCode != null){
+		if(StringUtils.isNotBlank(experimentSearch.projectCode)){
 			queryElts.add(DBQuery.in("projectCodes", experimentSearch.projectCode));
 		}
 
@@ -513,12 +513,12 @@ public class Experiments extends CommonController{
 			queryElts.add(DBQuery.lessThanEquals("traceInformation.creationDate", (DateUtils.addDays(experimentSearch.toDate, 1))));
 		}
 
-		if(experimentSearch.sampleCodes != null){
+		if(CollectionUtils.isNotEmpty(experimentSearch.sampleCodes)){
 			queryElts.add(DBQuery.in("sampleCodes", experimentSearch.sampleCodes));
 		}
 		
 		
-		if(experimentSearch.codes != null){
+		if(CollectionUtils.isNotEmpty(experimentSearch.codes)){
 			queryElts.add(DBQuery.in("codes", experimentSearch.codes));
 		}
 
@@ -531,15 +531,15 @@ public class Experiments extends CommonController{
 
 		}	
 
-		if(experimentSearch.sampleCode != null){
+		if(StringUtils.isNotBlank(experimentSearch.sampleCode)){
 			queryElts.add(DBQuery.in("sampleCodes", experimentSearch.sampleCode));
 		}
 
-		if(experimentSearch.users != null){
+		if(CollectionUtils.isNotEmpty(experimentSearch.users)){
 			queryElts.add(DBQuery.in("traceInformation.createUser", experimentSearch.users));
 		}
 
-		if(experimentSearch.stateCodes !=null){
+		if(CollectionUtils.isNotEmpty(experimentSearch.stateCodes)){
 			queryElts.add(DBQuery.in("state.code", experimentSearch.stateCodes));
 		}else if(experimentSearch.stateCode != null){
 			queryElts.add(DBQuery.in("state.code", experimentSearch.stateCode));

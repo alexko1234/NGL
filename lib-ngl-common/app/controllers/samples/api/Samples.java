@@ -11,8 +11,9 @@ import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
-import org.mongojack.DBQuery;
 
+import org.mongojack.DBQuery;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import play.data.Form;
@@ -79,11 +80,11 @@ public class Samples extends CommonController{
 	 */
 	private static DBQuery.Query getQuery(SamplesSearchForm samplesSearch) {
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
-		if(StringUtils.isNotEmpty(samplesSearch.projectCode)){
+		if(StringUtils.isNotBlank(samplesSearch.projectCode)){
 			queryElts.add(DBQuery.in("projectCodes", samplesSearch.projectCode));
 		}
 
-		if(samplesSearch.projectCodes != null && samplesSearch.projectCodes.size() > 0){
+		if(CollectionUtils.isNotEmpty(samplesSearch.projectCodes)){ 				//samplesSearch.projectCodes != null && samplesSearch.projectCodes.size() > 0
 			queryElts.add(DBQuery.in("projectCodes", samplesSearch.projectCodes));
 		}
 

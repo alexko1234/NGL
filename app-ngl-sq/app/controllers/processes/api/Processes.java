@@ -261,24 +261,24 @@ public class Processes extends CommonController{
 			queryElts.add(DBQuery.is("sampleCode", processesSearch.sampleCode));
 		}
 
-		if(StringUtils.isNotEmpty(processesSearch.experimentCode)){
+		if(StringUtils.isNotBlank(processesSearch.experimentCode)){
 			queryElts.add(DBQuery.in("experimentCodes", processesSearch.experimentCode));
 		}
 		
-		if(StringUtils.isNotEmpty(processesSearch.typeCode)){
+		if(StringUtils.isNotBlank(processesSearch.typeCode)){
 			queryElts.add(DBQuery.is("typeCode", processesSearch.typeCode));
 		}
 		
-		if(StringUtils.isNotEmpty(processesSearch.categoryCode)){
+		if(StringUtils.isNotBlank(processesSearch.categoryCode)){
 			queryElts.add(DBQuery.is("categoryCode", processesSearch.categoryCode));
 		}
 		
-		if(processesSearch.stateCodes != null ){
+		if(CollectionUtils.isNotEmpty(processesSearch.stateCodes)){
 			queryElts.add(DBQuery.in("state.code", processesSearch.stateCodes));
-		}else if(processesSearch.stateCode != null){
+		}else if(StringUtils.isNotBlank(processesSearch.stateCode)){
 			queryElts.add(DBQuery.is("state.code", processesSearch.stateCode));
 		}
-		if(processesSearch.users != null){
+		if(CollectionUtils.isNotEmpty(processesSearch.users)){
 			queryElts.add(DBQuery.in("traceInformation.createUser", processesSearch.users));
 		}
 		
@@ -290,7 +290,7 @@ public class Processes extends CommonController{
 			queryElts.add(DBQuery.lessThanEquals("traceInformation.creationDate", (DateUtils.addDays(processesSearch.toDate, 1))));
 		}
 		
-		if(StringUtils.isNotEmpty(processesSearch.supportCode) || StringUtils.isNotEmpty(processesSearch.containerSupportCategory) ){
+		if(StringUtils.isNotBlank(processesSearch.supportCode) || StringUtils.isNotBlank(processesSearch.containerSupportCategory) ){
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("code", 1);
@@ -321,7 +321,7 @@ public class Processes extends CommonController{
 		}
 		
 		
-		if(StringUtils.isNotEmpty(processesSearch.experimentCode)){
+		if(StringUtils.isNotBlank(processesSearch.experimentCode)){
 			queryElts.add(DBQuery.regex("experimentCodes",Pattern.compile(processesSearch.experimentCode)));
 		}
 		

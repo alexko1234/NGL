@@ -5,6 +5,8 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
+
 import com.avaje.ebean.Expr;
 
 import models.administration.authorisation.User;
@@ -34,7 +36,7 @@ public class Users extends CommonController{
 
 		List<User> users;
 		
-			if(usersSearch.logins != null){
+			if(CollectionUtils.isNotEmpty(usersSearch.logins)){
 				users =  User.find.where(Expr.in("login", usersSearch.logins)).findList();
 			}else{
 				users = User.find.all();

@@ -4,6 +4,8 @@ import static play.data.Form.form;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import models.laboratory.common.description.Resolution;
 import models.utils.dao.DAOException;
 import play.Logger;
@@ -24,7 +26,7 @@ public class Resolutions extends CommonController{
 		List<Resolution> resolutions;
 
 		try{		
-			if(resolutionsSearch.typeCode != null){
+			if(StringUtils.isNotBlank(resolutionsSearch.typeCode)){
 				resolutions = Resolution.find.findByTypeCode(resolutionsSearch.typeCode);
 			}
 			else if(resolutionsSearch.objectTypeCode != null){

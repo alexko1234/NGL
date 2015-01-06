@@ -5,6 +5,8 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.StateHierarchy;
 import models.utils.ListObject;
@@ -25,7 +27,7 @@ public class StatesHierarchy extends CommonController {
 	
 		List<StateHierarchy> values = new ArrayList<StateHierarchy>(0);
 
-		if (null != statesHierarchySearch.objectTypeCode) 
+		if (StringUtils.isNotBlank(statesHierarchySearch.objectTypeCode)) 
 		    values = StateHierarchy.find.findByObjectTypeCode(ObjectType.CODE.valueOf(statesHierarchySearch.objectTypeCode));
 		else 
 			return notFound();

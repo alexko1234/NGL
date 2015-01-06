@@ -15,6 +15,7 @@ import models.utils.ListObject;
 import models.utils.dao.DAOException;
 
 import org.mongojack.DBQuery;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import play.Logger;
@@ -136,11 +137,11 @@ public class Supports extends CommonController {
 				queryElts.add(DBQuery.in("code", supports));
 			}
 		}
-		if(supportsSearch.code != null){
+		if(StringUtils.isNotBlank(supportsSearch.code)){
 			queryElts.add(DBQuery.is("code", supportsSearch.code));
 		}
 		
-		if(supportsSearch.projectCodes != null){
+		if(CollectionUtils.isNotEmpty(supportsSearch.projectCodes)){
 			queryElts.add(DBQuery.in("projectCodes", supportsSearch.projectCodes));
 		}
 		
@@ -152,15 +153,15 @@ public class Supports extends CommonController {
 			queryElts.add(DBQuery.lessThanEquals("traceInformation.creationDate", supportsSearch.toDate));
 		}
 		
-		if(supportsSearch.codeRegex != null){
+		if(StringUtils.isNotBlank(supportsSearch.codeRegex)){
 			queryElts.add(DBQuery.regex("code", Pattern.compile(supportsSearch.codeRegex)));
 		}
 		
-		if(null != supportsSearch.users){
+		if(CollectionUtils.isNotEmpty(supportsSearch.users)){
 			queryElts.add(DBQuery.in("traceInformation.createUser", supportsSearch.users));
 		}
 		
-		if(supportsSearch.sampleCodes != null){
+		if(CollectionUtils.isNotEmpty(supportsSearch.sampleCodes)){
 			queryElts.add(DBQuery.in("sampleCodes", supportsSearch.sampleCodes));
 		}
 
