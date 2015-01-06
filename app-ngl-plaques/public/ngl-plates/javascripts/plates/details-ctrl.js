@@ -25,6 +25,12 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 				withoutSelect:true,
 				showButton:false
 			},
+			hide : {
+				active : true,
+				showButton:false,
+				showButtonColumn:true
+				
+			},
 			remove:{
 				active:true,
 				withEdit:true,
@@ -61,34 +67,46 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 			columns : [
 					    {  	property:"code",
 					    	header: Messages("plates.table.well.code"),					    	
-					    	type :"String"
+					    	type :"String",
+					    	hide:true
 						},
 						{  	property:"name",
 					    	header: Messages("plates.table.well.name"),
-					    	type :"String"
+					    	type :"String",
+					    	hide:true
 						},
 						{  	property:"typeName",
 					    	header: Messages("plates.table.typeName"),
-					    	type :"String"
+					    	type :"String",
+					    	hide:true
 						},
 						{  	property:"typeMaterial",
 					    	header: Messages("plates.table.typeMaterial"),
-					    	type :"String"
+					    	type :"String",
+					    	hide:true
 						},
 						{  	property:"x",
 					    	header: Messages("plates.table.well.x"),
 					    	type :"String",
-					    	edit:true
+					    	edit:true,
+					    	hide:true
 						}, 
 						{  	property:"y",
 					    	header: Messages("plates.table.well.y"),
 					    	type :"String",
-					    	edit:true
+					    	edit:true,
+					    	hide:true
 						},
+						{  	property:"y+x",
+							header: Messages("plates.table.well.yx"),
+					    	type :"String",
+					    	edit:false,
+					    	hide:true
+						}
 					]
 		};
 	
-	$scope.init = function(){
+	var init = function(){
 		$scope.clearMessages();		
 		$scope.datatable = datatable(datatableConfig);
 		$scope.plate = {code:undefined, wells:undefined, typeCode:undefined, typeName:undefined, validQC:'UNSET', validRun:'UNSET'};
@@ -315,4 +333,6 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		}
         return "";
      }
+	
+	init();
 }]);
