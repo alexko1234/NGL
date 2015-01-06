@@ -1592,7 +1592,9 @@ angular.module('datatableServices', []).
 			    			    				if(column.convertValue !== undefined && column.convertValue.active === true){
 			    			    					property += "| convert:"+JSON.stringify(column.convertValue);
 			    			    				}
-					    						property += that.getFormatter(column); 
+			    			    				if(column.type !== "number"){ //to preserve number in excel file
+			    			    					property += that.getFormatter(column);
+			    			    				}
 				    							colValue = $parse(property)(result.data);
 				    							lineValue = lineValue + ((colValue!==null)&&(colValue)?colValue:"") + delimiter;
 			    			    			} else if(result.line.group) {
