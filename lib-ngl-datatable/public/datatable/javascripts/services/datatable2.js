@@ -125,6 +125,12 @@ angular.module('datatableServices', []).
 								active:true,
 								showButton:true
 							},
+							exportCSV:{
+								active:false,
+								showButton:true,
+								delimiter:";",
+								start:false
+							},
 							otherButtons:{
 								active:false,
 								template:undefined
@@ -141,9 +147,6 @@ angular.module('datatableServices', []).
 									return Messages(key, args);
 								}
 							},
-							spinner:{
-								start:false
-							},
 							group:{
 								active:false,
 								by:undefined,
@@ -152,13 +155,11 @@ angular.module('datatableServices', []).
 								columns:{}
 							},
 							showTotalNumberRecords:true,
-							compact:true, //mode compact pour le nom des bouttons
-							exportCSV:{
-								active:false,
-								showButton:true,
-								delimiter:";",
+							spinner:{
 								start:false
-							}
+							},
+							compact:true //mode compact pour le nom des bouttons
+							
 						},
 						config:undefined,
     					configMaster:undefined,
@@ -665,7 +666,7 @@ angular.module('datatableServices', []).
 		    			 * indicate if we can order the table
 		    			 */
 		    			canOrder: function(){
-		    				return (this.config.edit.active ? !this.config.edit.start : this.config.order.active);
+		    				return (this.config.edit.active ? !this.config.edit.start : (this.config.order.active && !this.isEmpty()));
 		    			},
 		    			//show
 		    			/**
@@ -1208,7 +1209,7 @@ angular.module('datatableServices', []).
 		    			
 		    			isShowButton: function(configParam, column){
 		    				if(column){
-		    					return (this.config[configParam].active && this.config[configParam].showButton && column[configParam]);
+		    					return (this.config[configParam].active && ((this.config[configParam].showButtonColumn !== undefined && this.config[configParam].showButtonColumn) || this.config[configParam].showButton) && column[configParam]);
 		    				}else{
 		    					return (this.config[configParam].active && this.config[configParam].showButton);
 		    				}
@@ -1585,36 +1586,36 @@ angular.module('datatableServices', []).
 		    						columnsToPrint.forEach(function(column) {	
 		    							if(!that.config.hide.columns[column.id]){
 		    							//algo to set colValue (value of the column)
-		    			    			if (!result.line.group && !angular.isDefined(column.url) && exportType!=='groupsOnly') {
-		    			    				var property = column.property;
-		    			    				property += (column.filter)?'|'+column.filter:'';
-		    			    				if(column.convertValue !== undefined && column.convertValue.active === true){
-		    			    					property += "| convert:"+JSON.stringify(column.convertValue);
-		    			    				}
-				    						property += that.getFormatter(column); 
-			    							colValue = $parse(property)(result.data);
-			    							lineValue = lineValue + ((colValue!==null)&&(colValue)?colValue:"") + delimiter;
-		    			    			} else if(result.line.group) {
-		    			    				
-		    			    				var v = $parse("group."+column.id)(result.data);
-		    			    				//if error in group function
-		    			    				if (angular.isDefined(v) && angular.isString(v) &&v.charAt(0) === "#") {
-		    			    					colValue = v;
-		    			    				} else if(angular.isDefined(v) && !that.config.group.columns[column.id]) {
-		    			    					//not filtered properties because used during the compute
-		    			    					colValue = $parse("group."+column.id+that.getFormatter(column))(result.data);
-		    			    				} else if(angular.isDefined(v) && that.config.group.columns[column.id]) {
-		    			    					var expression = column.id;
-		    			    					expression += (column.filter)?'|'+column.filter:'';
-		    			    					colValue = $parse("group."+expression+that.getFormatter(column))(result.data);
-		    			    				} else {
-		    			    					colValue =  undefined;
-		    			    				}
-		    			    				lineValue = lineValue + ((colValue!==null)&&(colValue)?colValue:"") + delimiter;
-		    			    			}else if(!result.line.group && angular.isDefined(column.url)) {
-		    			    				colValue =  undefined;
-		    			    				alert("Url column is not yet implemented !");
-		    			    			}
+			    			    			if (!result.line.group && !angular.isDefined(column.url) && exportType!=='groupsOnly') {
+			    			    				var property = column.property;
+			    			    				property += (column.filter)?'|'+column.filter:'';
+			    			    				if(column.convertValue !== undefined && column.convertValue.active === true){
+			    			    					property += "| convert:"+JSON.stringify(column.convertValue);
+			    			    				}
+					    						property += that.getFormatter(column); 
+				    							colValue = $parse(property)(result.data);
+				    							lineValue = lineValue + ((colValue!==null)&&(colValue)?colValue:"") + delimiter;
+			    			    			} else if(result.line.group) {
+			    			    				
+			    			    				var v = $parse("group."+column.id)(result.data);
+			    			    				//if error in group function
+			    			    				if (angular.isDefined(v) && angular.isString(v) &&v.charAt(0) === "#") {
+			    			    					colValue = v;
+			    			    				} else if(angular.isDefined(v) && !that.config.group.columns[column.id]) {
+			    			    					//not filtered properties because used during the compute
+			    			    					colValue = $parse("group."+column.id+that.getFormatter(column))(result.data);
+			    			    				} else if(angular.isDefined(v) && that.config.group.columns[column.id]) {
+			    			    					var expression = column.id;
+			    			    					expression += (column.filter)?'|'+column.filter:'';
+			    			    					colValue = $parse("group."+expression+that.getFormatter(column))(result.data);
+			    			    				} else {
+			    			    					colValue =  undefined;
+			    			    				}
+			    			    				lineValue = lineValue + ((colValue!==null)&&(colValue)?colValue:"") + delimiter;
+			    			    			}else if(!result.line.group && angular.isDefined(column.url)) {
+			    			    				colValue =  undefined;
+			    			    				alert("Url column is not yet implemented !");
+			    			    			}
 		    							}	
 		    						});
 		    						if ((exportType==='all') || ((exportType==='groupsOnly') && result.line.group)) {
@@ -1669,127 +1670,8 @@ angular.module('datatableServices', []).
 		    				} else {
 		    					return false;
 		    				}
-		    			},
-		    			
-		    			
-		    			/*
-		    			
-		    			getNgModel : function(col, header){
-		    				if(header){
-        			    		return  "dtTable.config.edit.columns."+col.id+".value";
-        			    	}else if(angular.isFunction(col.property)){
-        			    		return "dtTable.config.columns[$index].property(value.data)";
-        			    	}else if(col.type === "compute"){
-        			    		return col.property;
-							}else{
-        			    		return "value.data."+col.property;        			    		
-        			    	}		    				
-				    	},
-	  		    		getFormatter : function(col){
-		    				var format = "";
-		    				if(col.type === "date"){
-		    					format += " | date:'"+(col.format?col.format:Messages("date.format"))+"'";
-		    				}else if(col.type === "datetime"){
-		    					format += " | date:'"+(col.format?col.format:Messages("datetime.format"))+"'";
-		    				}else if(col.type === "number"){
-								format += " | number"+(col.format?':'+col.format:'');
-							}	    				
-		    				return format;
-		    			},
-		    			
-		    			getFilter : function(col){
-		    				if(col.filter){
-		    					return '|'+col.filter;
-		    				}
-		    				return '';
-		    			},
-		    			
-		    			getValueElement : function(col){  
-	    					if(angular.isDefined(col.render) && col.render !== null){
-	    						if(angular.isFunction(col.render)){
-	    							return '<span dt-compile="dtTable.config.columns[$index].render(value.data, value.line)"></span>';
-	    						}else if(angular.isString(col.render)){
-	    							return '<span dt-compile="dtTable.config.columns[$index].render"></span>';
-	    						}
-		    				}else{
-		    					if(col.type === "boolean"){
-		    						return '<div ng-switch on="'+this.getNgModel(col)+'"><i ng-switch-when="true" class="fa fa-check-square-o"></i><i ng-switch-default class="fa fa-square-o"></i></div>';	    						
-		    					}else if(col.type === "img" || col.type === "image"){
-		    						if(!col.format)console.log("missing format for img !!");
-		    						return '<img ng-src="data:image/'+col.format+';base64,{{'+this.getNgModel(col)+'}}" style="max-width:{{col.width}}"/>';		    					    
-		    					} else{
-		    						return '<span ng-bind="'+this.getNgModel(col)+this.getFilter(col)+this.getFormatter(col)+'"></span>';
-		    					}
-		    				}	  					    				
-		    			},
-		    			
-		    			getOptions : function(col){
-		    				if(angular.isString(col.possibleValues)){
-		    					return col.possibleValues;
-		    				}else{ //function
-		    					return 'col.possibleValues';
-		    				}
-		    			},
-		    			
-		    			getGroupBy : function(col){
-		    				if(angular.isString(col.groupBy)){
-		    					return 'group by opt.'+col.groupBy;
-		    				}else{
-		    					return '';
-		    				}
-		    					
-		    			},
-		    			
-		    			getDateTimestamp : function(colType){
-		    				if(colType==="date"){
-		    					return 'date-timestamp';
-		    				}
-		    				
-		    				return '';
-		    			},
-		    			
-		    			
-		    			getHeader : function(value){
-		    				return Messages(value);
-		    			},
-		    			
-		    			
-		    			
-		    			getEditElement : function(col, header){
-		    				var editElement = '';
-		    				var ngChange = '"';
-	    			    	if(header){
-	    			    		ngChange = '" ng-change="dtTable.updateColumn(col.property, col.id)"';	    			    		
-	    			    	}
-		    						    				
-		    				if(col.type === "boolean"){
-		    					editElement = '<input class="form-control" dt-html-filter="{{col.type}}" type="checkbox" class="input-small" ng-model="'+this.getNgModel(col, header)+ngChange+'/>';
-		    				}else if(!col.choiceInList){
-		    					editElement = '<input class="form-control" dt-html-filter="{{col.type}}" type="'+col.type+'" class="input-small" ng-model="'+this.getNgModel(col, header)+ngChange+this.getDateTimestamp(col.type)+'/>';
-		    				}else if(col.choiceInList){
-		    					switch (col.listStyle) { 
-		    						case "radio":
-		    							editElement = '<label ng-repeat="opt in col.possibleValues"  for="radio{{col.id}}"><input id="radio{{col.id}}" dt-html-filter="{{col.type}}" type="radio" ng-model="'+this.getNgModel(col,hearder)+ngChange+' value="{{opt.name}}">{{opt.name}}<br></label>';
-		    							break;		    						
-		    						case "multiselect":
-		    							editElement = '<select class="form-control" multiple="true" ng-options="opt.code as opt.name '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+this.getFormatter(col)+'" ng-model="'+this.getNgModel(col,header)+ngChange+'></select>';
-			    						break;
-		    						case "bt-select":
-		    							editElement = '<div class="form-control" bt-select placeholder="" bt-dropdown-class="dropdown-menu-right" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+this.getFormatter(col)+'" ng-model="'+this.getNgModel(col,header)+ngChange+'></div>';			        		  	    	
-		    							break;
-		    						case "bt-select-multiple":
-		    							editElement = '<div class="form-control" bt-select multiple="true" bt-dropdown-class="dropdown-menu-right" placeholder="" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+this.getFormatter(col)+'" ng-model="'+this.getNgModel(col,header)+ngChange+'></div>';			        		  	    	
-		    							break;
-		    						default:
-		    							editElement = '<select class="form-control" ng-options="opt.code as opt.name '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+this.getFormatter(col)+'" ng-model="'+this.getNgModel(col,header)+ngChange+'></select>';
-			    						break;
-    		  	    			}		    					
-		    				}else{
-		    					editElement = "Edit Not Defined for col.type !";
-		    				}		    						    				
-		    				return '<div class="form-group">'+editElement+'</div>';
 		    			}
-		    			*/
+		    					    			
     			};
 				
 				if(arguments.length == 2){
@@ -2075,10 +1957,10 @@ angular.module('datatableServices', []).
   		    		+	'<th id="{{column.id}}" ng-repeat="column in dtTable.getColumnsConfig()" ng-if="!dtTable.isHide(column.id)">'
   		    		+	'<span ng-bind="dtTableFunctions.messagesDatatable(column.header)"/>'
   		    		+	'<div class="btn-group pull-right">'
-  		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setEdit(column)" ng-if="dtTable.isShowButton(\'edit\', column)" ng-disabled="!dtTable.canEdit()" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.edit\')}}"><i class="fa fa-edit"></i></button>'
-  		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setOrderColumn(column)" ng-disabled="dtTable.isEmpty()" ng-if="dtTable.isShowButton(\'order\', column)" ng-disabled="!dtTable.canOrder()" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.sort\')}}"><i ng-class="dtTable.getOrderColumnClass(column.id)"></i></button>'
-  		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setGroupColumn(column)" ng-disabled="dtTable.isEmpty()" ng-if="dtTable.isShowButton(\'group\', column)" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.group\')}}"><i ng-class="dtTable.getGroupColumnClass(column.id)"></i></button>'  		    		  		    		
-  		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setHideColumn(column)" ng-if="dtTable.isShowButton(\'hide\', column)" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.hide\')}}"><i class="fa fa-eye-slash"></i></button>'
+  		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setEdit(column)"        ng-if="dtTable.isShowButton(\'edit\', column)"  ng-disabled="!dtTable.canEdit()" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.edit\')}}"><i class="fa fa-edit"></i></button>'
+  		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setOrderColumn(column)" ng-if="dtTable.isShowButton(\'order\', column)" ng-disabled="!dtTable.canOrder()" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.sort\')}}"><i ng-class="dtTable.getOrderColumnClass(column.id)"></i></button>'
+  		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setGroupColumn(column)" ng-if="dtTable.isShowButton(\'group\', column)" ng-disabled="dtTable.isEmpty()"  data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.group\')}}"><i ng-class="dtTable.getGroupColumnClass(column.id)"></i></button>'  		    		  		    		
+  		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setHideColumn(column)"  ng-if="dtTable.isShowButton(\'hide\', column)"  data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.hide\')}}"><i class="fa fa-eye-slash"></i></button>'
   		    		+	'</div>'
   		    		+	'</th>'
   		    		+'</tr>'
