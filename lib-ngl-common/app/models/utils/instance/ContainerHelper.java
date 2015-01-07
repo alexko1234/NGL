@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
@@ -131,11 +132,12 @@ public class ContainerHelper {
 
 
 	private static SimpleDateFormat getSimpleDateFormat(){
-		return new SimpleDateFormat("yyyyMMddHHmmssSS");
+		return new SimpleDateFormat("yyyyMMdd_HHmmss");
 	}
 
 	public static String generateContainerCode(String categoryCode){
-		return (categoryCode+"-"+getSimpleDateFormat().format(new Date())).toUpperCase();
+		Random randomGenerator = new Random();
+		return (categoryCode+"-"+getSimpleDateFormat().format(new Date())+randomGenerator.nextInt(100)).toUpperCase();
 	}
 
 
