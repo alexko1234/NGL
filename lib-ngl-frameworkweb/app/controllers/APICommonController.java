@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.PropertyAccessorFactory;
+
 import com.fasterxml.jackson.databind.JsonNode;
 
 import play.data.DynamicForm;
@@ -103,6 +106,37 @@ public abstract class APICommonController<T> extends Controller{
 		return filledForm;
 	}
 
+	/**
+	 * Fill a form from the request query string
+	 * @param clazz
+	 * @return
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 */
+	protected <T> T filledFormQueryString(Class<T> clazz) {		
+		try{
+			Map<String, String[]> queryString = request().queryString();
+			
+			BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(clazz.newInstance());
+			wrapper.setAutoGrowNestedPaths(true);
+			
+			for(String key :queryString.keySet()){
+				
+				try {
+					if(isNotEmpty(queryString.get(key))){	
+						wrapper.setPropertyValue(key, queryString.get(key));
+					}
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				} 
+	
+			}
+			return (T)wrapper.getWrappedInstance();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} 
+
+	}
 
 	private boolean isNotEmpty(String[] strings) {
 		if(null == strings)return false;

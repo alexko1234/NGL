@@ -3,6 +3,7 @@ package controllers;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,13 +12,15 @@ import java.util.Map;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate.Builder;
-
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.PropertyAccessorFactory;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 import org.bson.BSONObject;
 
+import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
@@ -79,7 +82,7 @@ public abstract class CommonController extends Controller{
 	protected static <T> Form<T> filledFormQueryString(Form<T> form, Class<T> clazz) {		
 		Map<String, String[]> queryString =request().queryString();
 		Map<String, Object> transformMap = new HashMap<String, Object>();
-		for(String key :queryString.keySet()){			
+		for(String key :queryString.keySet()){
 			try {
 				if(isNotEmpty(queryString.get(key))){				
 					Field field = clazz.getField(key);
@@ -102,7 +105,40 @@ public abstract class CommonController extends Controller{
 		return filledForm;
 	}
 
+	/**
+	 * Fill a form in json mode
+	 * @param form
+	 * @param clazz
+	 * @return
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 */
+	protected static <T> T filledFormQueryString(Class<T> clazz) {		
+		try{
+			Map<String, String[]> queryString = request().queryString();
+			
+			BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(clazz.newInstance());
+			wrapper.setAutoGrowNestedPaths(true);
+			
+			for(String key :queryString.keySet()){
+				
+				try {
+					if(isNotEmpty(queryString.get(key))){	
+						wrapper.setPropertyValue(key, queryString.get(key));
+					}
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				} 
+	
+			}
+			return (T)wrapper.getWrappedInstance();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} 
 
+	}
+	
+	
 	private static boolean isNotEmpty(String[] strings) {
 		if(null == strings)return false;
 		if(strings.length == 0)return false;
@@ -247,4 +283,6 @@ public abstract class CommonController extends Controller{
 		}	
 		
 	}
+	
+	
 }
