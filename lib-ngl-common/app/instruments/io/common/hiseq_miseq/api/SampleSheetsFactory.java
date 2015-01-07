@@ -1,4 +1,4 @@
-package instruments.io.common.hiseq.api;
+package instruments.io.common.hiseq_miseq.api;
 
 import instruments.io.utils.AbstractSampleSheetsfactory;
 
@@ -20,7 +20,7 @@ public class SampleSheetsFactory extends AbstractSampleSheetsfactory{
 	public String generate() {
 		List<Container> containers = getContainersFromExperiment();
 		
-		String content = format(sampleSheet_1.render(containers).body());
+		String content = format(sampleSheet_1.render(varExperiment, containers).body());
 		play.api.libs.Files.writeFile(new File(containers.get(0).support.code+".csv"), content);
 		
 		return content;

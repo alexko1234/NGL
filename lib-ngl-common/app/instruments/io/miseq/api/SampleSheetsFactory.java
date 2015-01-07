@@ -17,13 +17,9 @@ public class SampleSheetsFactory extends AbstractSampleSheetsfactory{
 
 	@Override
 	public String generate() {
+		instruments.io.common.hiseq_miseq.api.SampleSheetsFactory sampleSheet = new instruments.io.common.hiseq_miseq.api.SampleSheetsFactory(this.experiment);
 		
-		List<Container> containers = getContainersFromExperiment();
-		String content = format(sampleSheet_1.render(this.experiment, containers).body());
-		play.api.libs.Files.writeFile(new File(containers.get(0).support.code+".csv"), content);
-		
-		
-		return content;
+		return sampleSheet.generate();
 	}
 
 }

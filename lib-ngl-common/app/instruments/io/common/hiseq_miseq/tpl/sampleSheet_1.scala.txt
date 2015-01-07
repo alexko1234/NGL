@@ -1,0 +1,34 @@
+@(experiment: models.laboratory.experiment.instance.Experiment, containers: List[models.laboratory.container.instance.Container])
+
+@import _root_.instruments.io.utils._;
+@import java.text.SimpleDateFormat
+@import java.util.Locale
+
+[Header]
+IEMFileVersion,4
+Investigator Name,
+Project Name,
+Experiment Name,@experiment.code
+Date,@(new SimpleDateFormat("dd/MM/yyyy", new Locale("sv", "SE")).format(experiment.experimentProperties.get("runStartDate").value))
+Workflow,GenerateFASTQ
+Application,HiSeq FASTQ Only
+Assay,Genoscope
+Description,
+Chemistry,Default
+
+[Reads]
+@experiment.instrumentProperties.get("nbCyclesRead1").value
+@experiment.instrumentProperties.get("nbCyclesRead2").value
+
+[Settings]
+ReverseComplement,0
+Adapter,AGATCGGAAGAGCACACGTCTGAACTCCAGTCA
+AdapterRead2,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT
+
+[Data]
+Lane,Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,I5_Index_ID,index2,Sample_Project,Description
+@for(c <- containers){
+	@for(co <- c.contents){
+		@(c.support.line),@(co.sampleCode)_@(AbstractSampleSheetsfactory.getContentProperty(co,"tag")),@(c.support.code),,,@AbstractSampleSheetsfactory.getIndex("indexIllumina",AbstractSampleSheetsfactory.getContentProperty(co,"tag")).supplierName.get("illuminaName"),@AbstractSampleSheetsfactory.getIndex("indexIllumina",AbstractSampleSheetsfactory.getContentProperty(co,"tag")).sequence,,,,@(AbstractSampleSheetsfactory.getContentProperty(co,"tag"))_@(BigDecimal(AbstractSampleSheetsfactory.getContentDoubleProperty(co,"percentPerLane")).setScale(2, BigDecimal.RoundingMode.DOWN))
+	}
+}

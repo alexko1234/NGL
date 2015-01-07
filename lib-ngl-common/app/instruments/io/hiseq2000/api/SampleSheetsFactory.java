@@ -15,7 +15,7 @@ public class SampleSheetsFactory extends AbstractSampleSheetsfactory{
 
 	@Override
 	public String generate() {
-		instruments.io.common.hiseq.api.SampleSheetsFactory sampleSheet = new instruments.io.common.hiseq.api.SampleSheetsFactory(this.experiment);
+		instruments.io.common.hiseq_miseq.api.SampleSheetsFactory sampleSheet = new instruments.io.common.hiseq_miseq.api.SampleSheetsFactory(this.experiment);
 	
 		return sampleSheet.generate();
 	}
