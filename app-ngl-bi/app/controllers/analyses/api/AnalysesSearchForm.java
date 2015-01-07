@@ -1,6 +1,8 @@
 package controllers.analyses.api;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import controllers.ListForm;
 
@@ -28,6 +30,10 @@ public class AnalysesSearchForm extends ListForm{
 	
 	public String analyseValuationUser;
     
+	public List<String> existingFields, notExistingFields;
    
+    public Map<String, List<String>> properties = new HashMap<String, List<String>>();
+    public Map<String, Map<String, List<String>>> treatmentProperties = new HashMap<String, Map<String, List<String>>>();
+    
 	 
 }

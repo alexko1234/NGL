@@ -11,12 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.mongodb.BasicDBObject;
-
+import models.laboratory.common.description.Level;
+import models.laboratory.common.description.Level.CODE;
+import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
@@ -25,40 +22,40 @@ import models.laboratory.common.instance.Valuation;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
-import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
+import models.utils.dao.DAOException;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
-import org.mongojack.WriteResult;
+
 import play.Logger;
-import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
 import validation.run.instance.ReadSetValidationHelper;
-import validation.run.instance.RunValidationHelper;
-import views.components.datatable.DatatableBatchRequestElement;
+import validation.utils.ValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableForm;
-import views.components.datatable.DatatableResponse;
 import workflows.Workflows;
-import controllers.CommonController;
+
+import com.mongodb.BasicDBObject;
+
+import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
-import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBDatatableResponseChunks;
 import fr.cea.ig.MongoDBResult;
-import fr.cea.ig.MongoDBResult.Sort;
 
 
 
 public class ReadSets extends ReadSetsController{
 
 	final static Form<ReadSet> readSetForm = form(ReadSet.class);
-	final static Form<ReadSetsSearchForm> searchForm = form(ReadSetsSearchForm.class);
+	//final static Form<ReadSetsSearchForm> searchForm = form(ReadSetsSearchForm.class);
 	final static Form<ReadSetValuation> valuationForm = form(ReadSetValuation.class);
 	final static Form<State> stateForm = form(State.class);
 	
@@ -68,8 +65,11 @@ public class ReadSets extends ReadSetsController{
 	final static  List<String> defaultKeys =  Arrays.asList("code", "runCode", "runTypeCode", "laneNumber", "projectCode", "sampleCode", "runSequencingStartDate", "state", "productionValuation", "bioinformaticValuation", "properties");
 	//@Permission(value={"reading"})
 	public static Result list() {
-		Form<ReadSetsSearchForm> filledForm = filledFormQueryString(searchForm, ReadSetsSearchForm.class);
-		ReadSetsSearchForm form = filledForm.get();
+		//Form<ReadSetsSearchForm> filledForm = filledFormQueryString(searchForm, ReadSetsSearchForm.class);
+		//ReadSetsSearchForm form = filledForm.get();
+		
+		ReadSetsSearchForm form = filledFormQueryString(ReadSetsSearchForm.class);
+		Logger.debug("form = "+form);
 		
 		Query q = getQuery(form);		
 		BasicDBObject keys = getKeys(updateForm(form));
@@ -175,6 +175,7 @@ public class ReadSets extends ReadSetsController{
 		if(null != form.productionValuationUser){
 			queries.add(DBQuery.is("productionValuation.user", form.productionValuationUser));
 		}
+		//TODO must be change to used a generic system (see below)
 		
 		if (StringUtils.isNotBlank(form.isSentCCRT)) {
 			if (Boolean.valueOf(form.isSentCCRT)) { 
@@ -184,7 +185,6 @@ public class ReadSets extends ReadSetsController{
 				queries.add(DBQuery.notEquals("properties.isSentCCRT.value", !Boolean.valueOf(form.isSentCCRT))); 
 			}
 		}
-		//TODO must be change to used a generic system
 		if (StringUtils.isNotBlank(form.isSentCollaborator)) {
 			if (Boolean.valueOf(form.isSentCollaborator)) { 
 				queries.add(DBQuery.is("properties.isSentCollaborator.value", Boolean.valueOf(form.isSentCollaborator)));
@@ -193,6 +193,11 @@ public class ReadSets extends ReadSetsController{
 				queries.add(DBQuery.notEquals("properties.isSentCollaborator.value", !Boolean.valueOf(form.isSentCollaborator))); 
 			}
 		}
+		//END TODO
+		
+		queries.addAll(NGLControllerHelper.generateQueriesForProperties(form.properties, Level.CODE.ReadSet, "properties"));
+		queries.addAll(NGLControllerHelper.generateQueriesForProperties(form.sampleOnContainerProperties, Level.CODE.Content, "sampleOnContainer.properties"));
+		queries.addAll(NGLControllerHelper.generateQueriesForTreatmentProperties(form.treatmentProperties, Level.CODE.ReadSet, "treatments"));
 		
 		if (CollectionUtils.isNotEmpty(form.existingFields)) { //all
 			for(String field : form.existingFields){
@@ -212,9 +217,6 @@ public class ReadSets extends ReadSetsController{
 		
 		return query;
 	}
-	
-	
-	
 	
 	//@Permission(value={"reading"})
 	public static Result get(String readSetCode) {
@@ -309,6 +311,7 @@ public class ReadSets extends ReadSetsController{
 		
 		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
 		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
+		
 		Form<ReadSet> filledForm = getFilledForm(readSetForm, ReadSet.class);
 		ReadSet readSetInput = filledForm.get();
 		

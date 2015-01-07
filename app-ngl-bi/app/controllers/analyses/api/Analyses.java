@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
@@ -44,13 +45,14 @@ import akka.actor.Props;
 import com.mongodb.BasicDBObject;
 
 import controllers.DocumentController;
+import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 @Controller
 public class Analyses extends DocumentController<Analysis>{
 
-	final static Form<AnalysesSearchForm> searchForm = form(AnalysesSearchForm.class);
+	//final static Form<AnalysesSearchForm> searchForm = form(AnalysesSearchForm.class);
 	final static Form<Valuation> valuationForm = form(Valuation.class);
 	final static Form<State> stateForm = form(State.class);
 	final static Form<AnalysesBatchElement> batchElementForm = form(AnalysesBatchElement.class);
@@ -65,9 +67,10 @@ public class Analyses extends DocumentController<Analysis>{
 	
 	//@Permission(value={"reading"})
 	public Result list() {
-		Form<AnalysesSearchForm> filledForm = filledFormQueryString(searchForm, AnalysesSearchForm.class);
-		AnalysesSearchForm form = filledForm.get();
+		//Form<AnalysesSearchForm> filledForm = filledFormQueryString(searchForm, AnalysesSearchForm.class);
+		//AnalysesSearchForm form = filledForm.get();
 		
+		AnalysesSearchForm form = filledFormQueryString( AnalysesSearchForm.class);
 		Query q = getQuery(form);
 		BasicDBObject keys = getKeys(form);
 		if(form.datatable){			
@@ -120,6 +123,22 @@ public class Analyses extends DocumentController<Analysis>{
 		
 		if (StringUtils.isNotBlank(form.analyseValuationUser)) {
 			queries.add(DBQuery.is("valuation.user", form.analyseValuationUser));
+		}
+		
+		queries.addAll(NGLControllerHelper.generateQueriesForProperties(form.properties, Level.CODE.Analysis, "properties"));
+		queries.addAll(NGLControllerHelper.generateQueriesForTreatmentProperties(form.treatmentProperties, Level.CODE.Analysis, "treatments"));
+		
+		
+		if (CollectionUtils.isNotEmpty(form.existingFields)) { //all
+			for(String field : form.existingFields){
+				queries.add(DBQuery.exists(field));
+			}		
+		}
+		
+		if (CollectionUtils.isNotEmpty(form.notExistingFields)) { //all
+			for(String field : form.notExistingFields){
+				queries.add(DBQuery.notExists(field));
+			}
 		}
 		
 		if(queries.size() > 0){

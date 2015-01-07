@@ -4,6 +4,7 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
 import controllers.CommonController;
+import controllers.NGLControllerHelper;
 import fr.cea.ig.MongoDBDAO;
 
 public class ReadSetsController extends CommonController {

@@ -1,10 +1,11 @@
 package controllers.runs.api;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import play.data.format.Formats.DateTime;
-
 import controllers.ListForm;
 
 public class RunsSearchForm extends ListForm {
@@ -38,4 +39,8 @@ public class RunsSearchForm extends ListForm {
     public List<String> resolutionCodes;
     
     public List<String> existingFields, notExistingFields;
+    
+    public Map<String, List<String>> properties = new HashMap<String, List<String>>();
+    public Map<String, Map<String, List<String>>> treatmentProperties = new HashMap<String, Map<String, List<String>>>();
+    public Map<String, Map<String, List<String>>> treatmentLanesProperties = new HashMap<String, Map<String, List<String>>>();
 }

@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
@@ -42,6 +43,7 @@ import akka.actor.Props;
 
 import com.mongodb.BasicDBObject;
 
+import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
@@ -52,7 +54,7 @@ import fr.cea.ig.MongoDBResult;
 public class Runs extends RunsController {
 
 	
-	final static Form<RunsSearchForm> searchForm = form(RunsSearchForm.class); 
+	//final static Form<RunsSearchForm> searchForm = form(RunsSearchForm.class); 
 	final static Form<Run> runForm = form(Run.class);
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static Form<Valuation> valuationForm = form(Valuation.class);
@@ -63,8 +65,9 @@ public class Runs extends RunsController {
 	//@Permission(value={"reading"})
 	public static Result list(){
 
-		Form<RunsSearchForm> filledForm = filledFormQueryString(searchForm, RunsSearchForm.class);
-		RunsSearchForm form = filledForm.get();
+		//Form<RunsSearchForm> filledForm = filledFormQueryString(searchForm, RunsSearchForm.class);
+		//RunsSearchForm form = filledForm.get();
+		RunsSearchForm form = filledFormQueryString(RunsSearchForm.class);
 		BasicDBObject keys = getKeys(form);
 		if(form.datatable){			
 			MongoDBResult<Run> results = mongoDBFinder(InstanceConstants.RUN_ILLUMINA_COLL_NAME, form, Run.class, getQuery(form), keys);			
@@ -166,6 +169,11 @@ public class Runs extends RunsController {
 		if(null != form.valuationUser){
 			queries.add(DBQuery.is("valuation.user", form.valuationUser));
 		}
+		
+		
+		queries.addAll(NGLControllerHelper.generateQueriesForProperties(form.properties, Level.CODE.Run, "properties"));
+		queries.addAll(NGLControllerHelper.generateQueriesForTreatmentProperties(form.treatmentProperties, Level.CODE.Run, "treatments"));
+		queries.addAll(NGLControllerHelper.generateQueriesForTreatmentProperties(form.treatmentLanesProperties, Level.CODE.Lane, "lanes.treatments"));
 		
 		
 		if (CollectionUtils.isNotEmpty(form.existingFields)) { //all
