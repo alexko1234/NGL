@@ -31,7 +31,6 @@ import org.junit.Test;
 
 import play.Logger;
 import play.data.validation.ValidationError;
-
 import utils.AbstractTests;
 import utils.Constants;
 import validation.common.instance.CommonValidationHelper;
@@ -40,7 +39,6 @@ import fr.cea.ig.MongoDBDAO;
 
 public class InstanceValidationHelperTest extends AbstractTests {
 		
-	
 	static Project project;
 	static Project project1;
 	
@@ -305,7 +303,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		c.sampleCodes = ls;
 		
 		State state = new State();
-		state.code = "A";
+		state.code = "N";
 		state.date = new Date();
 		state.user = "ngl";
 		c.state = state;
@@ -332,7 +330,6 @@ public class InstanceValidationHelperTest extends AbstractTests {
 				
 		c.validate(contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
-		
 
 		for (String s : contextValidation.errors.keySet()) {
 			assertThat(s).isEqualTo("contents");
@@ -378,7 +375,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		c.sampleCodes = ls;
 		
 		State state = new State();
-		state.code = "A";
+		state.code = "N";
 		state.date = new Date();
 		state.user = "ngl";
 		c.state = state;
