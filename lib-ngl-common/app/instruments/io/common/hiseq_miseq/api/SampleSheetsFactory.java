@@ -8,7 +8,7 @@ import java.util.List;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.Experiment;
 
-import instruments.io.common.hiseq.tpl.txt.*;
+import instruments.io.common.hiseq_miseq.tpl.txt.*;
 
 public class SampleSheetsFactory extends AbstractSampleSheetsfactory{
 
@@ -20,7 +20,7 @@ public class SampleSheetsFactory extends AbstractSampleSheetsfactory{
 	public String generate() {
 		List<Container> containers = getContainersFromExperiment();
 		
-		String content = format(sampleSheet_1.render(varExperiment, containers).body());
+		String content = format(sampleSheet_1.render(experiment, containers).body());
 		play.api.libs.Files.writeFile(new File(containers.get(0).support.code+".csv"), content);
 		
 		return content;
