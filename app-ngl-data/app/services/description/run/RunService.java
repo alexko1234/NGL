@@ -79,6 +79,11 @@ public class RunService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("isSentCCRT","isSentCCRT",LevelService.getLevels(Level.CODE.ReadSet), Boolean.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("isSentCollaborator","isSentCollaborator",LevelService.getLevels(Level.CODE.ReadSet), Boolean.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("md5","md5",LevelService.getLevels(Level.CODE.File), String.class, false, "single"));
+		
+		//use only for dynamic filters
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("libProcessTypeCode","libProcessTypeCode",LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
+		
+		
 		return propertyDefinitions;
 	}
 	
