@@ -12,14 +12,19 @@ import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.LocationOnContainerSupport;
+import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
 import models.utils.instance.ContainerSupportHelper;
+import models.utils.instance.ContainerUsedHelper;
 import models.utils.instance.ExperimentHelper;
+import models.utils.instance.ProcessHelper;
 
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
+import org.mongojack.DBUpdate;
 
 import play.Logger;
 import validation.ContextValidation;
@@ -134,7 +139,7 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 				
 				if(!contextValidation.hasErrors()){
 					ContainerHelper.save(outputContainer,contextValidation);
-					
+					ProcessHelper.updateNewContainerSupportCodes(outputContainerUsed,inputContainerUseds,experiment);
 				}
 
 			} else {

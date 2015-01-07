@@ -60,8 +60,6 @@ public class ExperimentHelper extends InstanceHelpers {
 			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class,DBQuery.is("code", exp.code)
 					,DBUpdate.set("outputContainerSupportCodes", containerSupportCodes));
 
-			MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,DBQuery.in("experimentCodes", exp.code),
-					DBUpdate.pushAll("newContainerSupportCodes",containerSupportCodes),true);
 		}
 
 	}

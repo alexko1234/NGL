@@ -5,6 +5,7 @@ import static validation.utils.ValidationHelper.required;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
@@ -342,14 +343,12 @@ public class CommonValidationHelper {
 	}
 	
 	public static void validateStateCode(String stateCode,ContextValidation contextValidation) {
-		contextValidation.addKeyToRootKeyName("state");
 		if (contextValidation.getContextObjects().containsKey(FIELD_TYPE_CODE)) {
 			String typeCode = getObjectFromContext(FIELD_TYPE_CODE, String.class, contextValidation);
 			validateStateCode(typeCode, stateCode, contextValidation);
 		} else {
-			validateRequiredDescriptionCode(contextValidation, stateCode,"code", models.laboratory.common.description.State.find);
+			validateRequiredDescriptionCode(contextValidation, stateCode,"state.code", models.laboratory.common.description.State.find);
 		}
-		contextValidation.removeKeyFromRootKeyName("state");
 	}
 	
 	
@@ -375,6 +374,21 @@ public class CommonValidationHelper {
 		}
 		
 	}
+	
+	
+	protected  static void validateStateCode(String stateCode, ObjectType.CODE objectType, ContextValidation contextValidation) {
+		try {
+			if (required(contextValidation, stateCode, "code")) {
+				if (!models.laboratory.common.description.State.find.isCodeExistForObjectTypeCode(stateCode, objectType)) {
+					contextValidation.addErrors("code", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, stateCode);
+				}
+			}
+		} catch(DAOException e) {
+			throw new RuntimeException(e);
+		}
+		
+	}
+
 	
 	public static void validateResolutionCodes(List<String> resoCodes,ContextValidation contextValidation){
 		String typeCode = getObjectFromContext(FIELD_TYPE_CODE, String.class, contextValidation);

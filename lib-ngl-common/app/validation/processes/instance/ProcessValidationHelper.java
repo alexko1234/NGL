@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 
+import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessCategory;
@@ -43,6 +44,12 @@ public class ProcessValidationHelper extends CommonValidationHelper {
 				CommonValidationHelper.validateExperimenCode(expCode, contextValidation);
 			}
 		}
+	}
+	
+	public static void validateStateCode(String stateCode,ContextValidation contextValidation){
+		contextValidation.addKeyToRootKeyName("state");
+		CommonValidationHelper.validateStateCode(stateCode,ObjectType.CODE.Process, contextValidation);
+		contextValidation.removeKeyFromRootKeyName("state");
 	}
 
 }

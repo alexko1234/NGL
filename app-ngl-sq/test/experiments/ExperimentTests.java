@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Map.Entry;
 
 import models.laboratory.common.description.PropertyDefinition;
@@ -25,6 +26,7 @@ import models.laboratory.experiment.instance.ManytoOneContainer;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
+import models.utils.InstanceHelpers;
 import models.utils.instance.ExperimentHelper;
 
 import org.junit.AfterClass;
@@ -32,6 +34,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+import org.mongojack.DBUpdate.Builder;
+import org.mvel2.ast.Instance;
 
 import play.Logger;
 import play.Logger.ALogger;
@@ -377,54 +381,127 @@ public class ExperimentTests extends AbstractTests{
 	
 	
 	
-	/*
+	
 	@Test
 	public void updateExperimentProperties(){
 		Experiment exp = ExperimentTestHelper.getFakePrepFlowcell();
-
+		MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
+		exp.experimentProperties=new HashMap<String, PropertyValue>();
+		exp.experimentProperties.put("TEST", new PropertySingleValue("VALUE"));
 		Result result = callAction(controllers.experiments.api.routes.ref.Experiments.updateExperimentProperties(exp.code),fakeRequest().withJsonBody(Json.toJson(exp)));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		Experiment expsave=MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, exp.code);
+		assertThat(expsave.experimentProperties).isNotEmpty();
+		Logger.debug("Experiment "+exp.code);
+		MongoDBDAO.deleteByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class,exp.code);
 	}
 
+	
 	@Test
 	public void updateExperimentInformations(){
 		Experiment exp = ExperimentTestHelper.getFakePrepFlowcell();
-
+		MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
+		exp.protocolCode="Protocol";
+		
 		Result result = callAction(controllers.experiments.api.routes.ref.Experiments.updateExperimentInformations(exp.code),fakeRequest().withJsonBody(Json.toJson(exp)));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		
+		Experiment expSave=MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, exp.code);
+		assertThat(expSave.protocolCode).isEqualTo(exp.protocolCode);
+		
+		MongoDBDAO.deleteByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class,exp.code);
+	}
+	
+	
+	@Test
+	public void updateInstrumentInformations(){
+		Experiment exp = new Experiment(); 
+		Random randomGenerator=new Random();
+		exp.code = "TEST"+randomGenerator.nextInt(1000);
+		MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
+		
+		exp.instrument=new InstrumentUsed();
+        exp.instrument.code= "APOLLON";
+        exp.instrument.categoryCode= "opt-map-opgen";
+        exp.instrument.inContainerSupportCategoryCode= "tube";
+        exp.instrument.outContainerSupportCategoryCode= "mapcard";
+        exp.instrument.typeCode= "ARGUS";
+    
+		Result result = callAction(controllers.experiments.api.routes.ref.Experiments.updateInstrumentInformations(exp.code),fakeRequest().withJsonBody(Json.toJson(exp)));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		
+		Experiment expSave=MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, exp.code);
+		MongoDBDAO.deleteByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class,exp.code);
+
+		assertThat(expSave.instrument).isNotNull();
+		assertThat(expSave.instrument.code).isEqualTo(exp.instrument.code);
+		assertThat(expSave.instrument.typeCode).isEqualTo(exp.instrument.typeCode);
+		assertThat(expSave.instrument.categoryCode).isEqualTo(exp.instrument.categoryCode);
+		assertThat(expSave.instrument.inContainerSupportCategoryCode).isEqualTo(exp.instrument.inContainerSupportCategoryCode);
+		assertThat(expSave.instrument.outContainerSupportCategoryCode).isEqualTo(exp.instrument.outContainerSupportCategoryCode);
+		
 	}
 
+	
+	@Test
+	public void updateInstrumentProperties(){
+		Experiment exp = ExperimentTestHelper.getFakePrepFlowcell();		
+		MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
+
+		exp.experimentProperties=new HashMap<String, PropertyValue>();
+		exp.experimentProperties.put("Test", new PropertySingleValue("VALUE"));
+		Result result = callAction(controllers.experiments.api.routes.ref.Experiments.updateInstrumentProperties(exp.code),fakeRequest().withJsonBody(Json.toJson(exp)));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		
+		Experiment expSave=MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, exp.code);
+		MongoDBDAO.deleteByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class,exp.code);
+		assertThat(expSave.experimentProperties).isEmpty();
+
+	}
+
+	
 	@Test
 	public void updateContainers(){
 		Experiment exp = ExperimentTestHelper.getFakePrepFlowcell();
-
+		MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
+		
+		Experiment expFake=ExperimentTestHelper.getFakeExperimentWithAtomicExperimentManyToOne("prepa-flowcell");
+		exp.atomicTransfertMethods=expFake.atomicTransfertMethods;
+		
 		Result result = callAction(controllers.experiments.api.routes.ref.Experiments.updateContainers(exp.code),fakeRequest().withJsonBody(Json.toJson(exp)));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		
+		Experiment expSave=MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, exp.code);
+		MongoDBDAO.deleteByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class,exp.code);
+		assertThat(expSave.atomicTransfertMethods).isNotEmpty();
+		assertThat(expSave.projectCodes).isNotEmpty();
+		assertThat(expSave.sampleCodes).isNotEmpty();
+		assertThat(expSave.inputContainerSupportCodes).isNotEmpty();
 	}
-
-	@Test
-	public void updateInstrumentInformations(){
-		Experiment exp = ExperimentTestHelper.getFakePrepFlowcell();
-
-		Result result = callAction(controllers.experiments.api.routes.ref.Experiments.updateInstrumentInformations(exp.code),fakeRequest().withJsonBody(Json.toJson(exp)));
-		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
-	}
-
-	@Test
-	public void updateInstrumentProperties(){
-		Experiment exp = ExperimentTestHelper.getFakePrepFlowcell();
-
-		Result result = callAction(controllers.experiments.api.routes.ref.Experiments.updateInstrumentProperties(exp.code),fakeRequest().withJsonBody(Json.toJson(exp)));
-		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
-	}
-
+	
+	
 	@Test
 	public void nextState(){
-		Experiment exp = ExperimentTestHelper.getFakePrepFlowcell();
-
-		Result result = callAction(controllers.experiments.api.routes.ref.Experiments.nextState(exp.code),fakeRequest().withJsonBody(Json.toJson(exp)));
+		
+		String code="PREPA-FLOWCELL-20150107_105554";
+		Result result = callAction(controllers.experiments.api.routes.ref.Experiments.nextState(code),fakeRequest());
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
-	}*/
+		
+		Experiment expUpdate=MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, code);
+		assertThat(expUpdate.state.code).isEqualTo("IP");
+		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.in("support.code", expUpdate.inputContainerSupportCodes) ).toList();
+		assertThat(containers).isNotEmpty();
+		List<String> processCodes=new ArrayList<String>();
+		for(Container container:containers){
+			assertThat(container.state.code).isEqualTo("IU");
+			InstanceHelpers.addCodesList(container.inputProcessCodes,processCodes);
+		}
+		List<Process> processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME,Process.class,DBQuery.in("code", processCodes) ).toList();
+		for(Process process:processes){
+			assertThat(process.state.code).isEqualTo("IP");
+			assertThat(code).isIn(process.experimentCodes);
+		}
+	}
 
 	public PropertyDefinition getPropertyImgDefinition() {
 		PropertyDefinition pDef = new PropertyDefinition();

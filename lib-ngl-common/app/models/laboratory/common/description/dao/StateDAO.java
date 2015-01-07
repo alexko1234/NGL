@@ -15,6 +15,7 @@ import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
@@ -178,6 +179,16 @@ public class StateDAO extends AbstractDAOMapping<State>{
 		sqlParameters[1] = new SqlParameter("o.code", Types.VARCHAR);
 		
 		return initializeMapping(sql, (SqlParameter[])sqlParameters).execute(display, objectTypeCode.name());	
+	}
+
+
+	public boolean isCodeExistForObjectTypeCode(String code, CODE objectTypeCode) throws DAOException {
+		String sql = sqlCommon +
+				"JOIN state_object_type cs ON cs.fk_state=t.id "+
+				"JOIN object_type c on c.id =cs.fk_object_type "+
+				" where t.code=? and c.code=?";		
+		return( initializeMapping(sql, new SqlParameter("t.code", Types.VARCHAR),
+				 new SqlParameter("c.code", Types.VARCHAR)).findObject(code, objectTypeCode) != null )? true : false;	
 	}
 
 }

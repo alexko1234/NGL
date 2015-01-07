@@ -124,7 +124,7 @@ public class Container extends DBObject implements IValidation {
 		
     	ContainerValidationHelper.validateId(this, contextValidation);
 		ContainerValidationHelper.validateCode(this, InstanceConstants.CONTAINER_COLL_NAME, contextValidation);
-		ContainerValidationHelper.validateStateCode(this.state.code, contextValidation);
+		ContainerValidationHelper.validateStateCode(this, contextValidation);
 		ContainerValidationHelper.validateTraceInformation(this.traceInformation, contextValidation);
 		ContainerValidationHelper.validateContainerCategoryCode(categoryCode, contextValidation);
 		ContainerValidationHelper.validateProcessTypeCode(processTypeCode, contextValidation);

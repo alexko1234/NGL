@@ -2,6 +2,7 @@ package experiments;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -79,8 +80,10 @@ public class ExperimentTestHelper {
 	};
 	
 	public static Experiment getFakePrepFlowcell(){
-		String code = "TEST-PREPFLOWCELL";
+		Random randomGenerator=new Random();
+		String code = "TEST-PREPFLOWCELL"+randomGenerator.nextInt(1000);
 		Experiment exp = getFakeExperimentWithAtomicExperimentManyToOne("prepa-flowcell");
+		exp.code=code;
 		exp.categoryCode = "transformation";
 		exp.instrument = getInstrumentPrepFlowcell();
 		
@@ -142,9 +145,9 @@ public class ExperimentTestHelper {
 		exp.atomicTransfertMethods.put(0,atomicTransfert1);
 		exp.atomicTransfertMethods.put(1, atomicTransfert2);
 		
-		ContainerUsed container1_1=ExperimentTestHelper.getContainerUsed("A7PE4");
+		ContainerUsed container1_1=ExperimentTestHelper.getContainerUsed("ADI_RD1");
 		container1_1.percentage=20.0;
-		Content content1_1=new Content("CONTENT1_1","TYPE","CATEGORIE");
+		Content content1_1=new Content("ADI_RD","MeTa-DNA","DNA");
 		container1_1.contents=new ArrayList<Content>();
 		content1_1.properties=new HashMap<String, PropertyValue>();
 		content1_1.properties.put("tag", new PropertySingleValue("IND1"));
@@ -153,9 +156,9 @@ public class ExperimentTestHelper {
 		content1_1.properties.put("tagCategory", new PropertySingleValue("TAGCATEGORIE"));
 		container1_1.contents.add(content1_1);
 		
-		ContainerUsed container1_2=ExperimentTestHelper.getContainerUsed("A72F0");
+		ContainerUsed container1_2=ExperimentTestHelper.getContainerUsed("C2EV3ACXX_3");
 		container1_2.percentage= 80.0;
-		Content content1_2=new Content("CONTENT1_2","TYPE","CATEGORIE");
+		Content content1_2=new Content("BFB_AABA","amplicon","amplicon");
 		container1_2.contents=new ArrayList<Content>();
 		content1_2.properties=new HashMap<String, PropertyValue>();
 		content1_2.properties.put("tag", new PropertySingleValue("IND1"));
@@ -165,9 +168,9 @@ public class ExperimentTestHelper {
 		atomicTransfert1.inputContainerUseds.add(container1_1);
 		atomicTransfert1.inputContainerUseds.add(container1_2);
 		
-		ContainerUsed container2_2=ExperimentTestHelper.getContainerUsed("C37T3ACXX");
+		ContainerUsed container2_2=ExperimentTestHelper.getContainerUsed("C2EV3ACXX_5");
 		container2_2.percentage= 100.0;
-		Content content2_2=new Content("CONTENT2_2","TYPE","CATEGORIE");
+		Content content2_2=new Content("ADI_RD","MeTa-DNA","DNA");
 		container2_2.contents=new ArrayList<Content>();
 		content2_2.properties=new HashMap<String, PropertyValue>();
 		container2_2.contents.add(content2_2);

@@ -2,7 +2,13 @@ package validation.container.instance;
 
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import models.laboratory.common.description.ObjectType;
+import models.laboratory.common.description.ObjectType.CODE;
 import models.laboratory.container.description.ContainerCategory;
+import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.instance.Experiment;
@@ -81,5 +87,17 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 			}
 		}
 	}
+
+	
+	public static void validateStateCode(Container container,ContextValidation contextValidation) {
+		if(CollectionUtils.isEmpty(container.inputProcessCodes) && container.state.code.equals("A") ){
+			contextValidation.addErrors("state.code",ValidationConstants.ERROR_BADSTATE_MSG,container.code );
+		}
+		contextValidation.addKeyToRootKeyName("state");
+		CommonValidationHelper.validateStateCode(container.state.code,ObjectType.CODE.Container, contextValidation);
+		contextValidation.removeKeyFromRootKeyName("state");
+
+	}
+
 
 }

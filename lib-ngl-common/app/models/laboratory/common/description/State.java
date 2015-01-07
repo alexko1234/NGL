@@ -51,6 +51,12 @@ public class State extends Model<State> {
 		    return ((StateDAO) getInstance()).isCodeExistForTypeCode(code,
 			    typeCode);
 		}
+		
+		public boolean isCodeExistForObjectTypeCode(String code, CODE objectTypeCode)
+				throws DAOException {
+			    return ((StateDAO) getInstance()).isCodeExistForObjectTypeCode(code,
+				    objectTypeCode);
+			}
 	
 		public List<ListObject> findAllForContainerList() throws DAOException {
 		    return ((StateDAO) getInstance()).findAllForContainerList();

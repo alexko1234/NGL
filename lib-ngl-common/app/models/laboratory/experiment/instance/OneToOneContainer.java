@@ -8,15 +8,10 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import controllers.authorisation.PermissionHelper;
-
 import validation.ContextValidation;
-
-
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
-
 import models.laboratory.common.instance.State;
-
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.description.ContainerSupportCategory;
@@ -29,8 +24,7 @@ import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
 import models.utils.instance.ContainerSupportHelper;
 import models.utils.instance.ExperimentHelper;
-
-
+import models.utils.instance.ProcessHelper;
 import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
@@ -113,6 +107,7 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 
 			if(!contextValidation.hasErrors()){
 				ContainerHelper.save(outputContainer, contextValidation);
+				ProcessHelper.updateNewContainerSupportCodes(outputContainerUsed, inputContainerUsed, experiment);
 			}
 
 

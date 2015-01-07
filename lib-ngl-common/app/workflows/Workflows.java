@@ -3,6 +3,7 @@ package workflows;
 import java.util.Date;
 import java.util.List;
 
+import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
@@ -26,8 +27,10 @@ import org.mongojack.DBUpdate;
 import controllers.CommonController;
 import play.Logger;
 import validation.ContextValidation;
+import validation.common.instance.CommonValidationHelper;
 import validation.container.instance.ContainerValidationHelper;
 import validation.experiment.instance.ExperimentValidationHelper;
+import validation.processes.instance.ProcessValidationHelper;
 import fr.cea.ig.MongoDBDAO;
 
 public class Workflows {
@@ -133,7 +136,6 @@ public class Workflows {
 			if(experiment.categoryCode.equals("transformation")){
 				if(experiment.state.code.equals("F") && doQC(experiment)){
 					nextState.code="A-QC";
-					//nextState.code="IW-QC";
 				}/*else if(experiment.state.code.equals("F") && doPurif()){
 				nextState.code="A-PURIF";
 			}else if(experiment.state.code.equals("F") && doTransfert()){
@@ -226,7 +228,6 @@ public class Workflows {
 
 	}
 
-	//TODO à finir
 	public static void nextProcessState(Container container, Experiment exp,ContextValidation contextValidation){
 		if(container.inputProcessCodes!=null ){
 			for(String processCode: container.inputProcessCodes){
@@ -241,15 +242,11 @@ public class Workflows {
 					processState.code="F";
 				}
 
-				/*if(container.state.code.equals("IW-E")){//?
-			state.code= "IP";
-		} */
-
 				if(processState.code != null){
 					setProcessState(processCode,processState,contextValidation);
-					/*				if(processState.code.equals("F")){
-					MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code", container.code),DBUpdate.unset("inputProcessCodes"));
-				}*/
+					if(exp.code.equals("F")){
+						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code", container.code),DBUpdate.unset("inputProcessCodes"));
+					}
 				}
 
 			}
@@ -267,7 +264,7 @@ public class Workflows {
 
 		if(process!=null){ 
 			Logger.debug("Process e"+process.code);
-			ContainerValidationHelper.validateStateCode(nextState.code, contextValidation);
+			ProcessValidationHelper.validateStateCode(nextState.code,contextValidation);
 			if(!contextValidation.hasErrors() && !nextState.code.equals(process.state)){
 
 
@@ -301,16 +298,12 @@ public class Workflows {
 		if(container==null){
 			Logger.error("Container "+containerCode+" not exists");
 		} 
+		String lastStateCode=container.state.code;
+		container.state=StateHelper.updateHistoricalNextState(container.state,nextState);
+		container.traceInformation=StateHelper.updateTraceInformation(container.traceInformation, nextState);
 		//Validate state for Container
-		ContainerValidationHelper.validateStateCode(nextState.code, contextValidation);
-		if(!contextValidation.hasErrors() && !nextState.code.equals(container.state.code)){
-
-			/*if(nextState.code.equals("IW-P")){
-				container.inputProcessCodes=null;
-			}*/
-
-			container.state=StateHelper.updateHistoricalNextState(container.state,nextState);
-			container.traceInformation=StateHelper.updateTraceInformation(container.traceInformation, nextState);
+		ContainerValidationHelper.validateStateCode(container, contextValidation);
+		if(!contextValidation.hasErrors() && !nextState.code.equals(lastStateCode)){
 			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,  Container.class, 
 					DBQuery.is("code", container.code),
 					DBUpdate.set("state", container.state).set("traceInformation",container.traceInformation));

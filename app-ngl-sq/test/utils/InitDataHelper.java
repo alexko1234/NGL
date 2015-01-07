@@ -5,9 +5,10 @@ import java.util.List;
 
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.processes.instance.Process;
 import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
-import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;
@@ -23,6 +24,7 @@ public class InitDataHelper {
 		initSupports();
 		initProjects();
 		initProcesses();
+		initExperiments();
 	}
 	
 	private static void initProcesses() {
@@ -45,6 +47,11 @@ public class InitDataHelper {
 		List<ContainerSupport> supports = MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME+INIT_MONGO_SUFFIX, ContainerSupport.class).toList();
 		MongoDBDAO.save(InstanceConstants.SUPPORT_COLL_NAME, supports);
 	}
+
+	public static void initExperiments(){
+		List<Experiment> experiments = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME+INIT_MONGO_SUFFIX, Experiment.class).toList();
+		MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, experiments);
+	}
 	
 	public static void initContainers(){
 			List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME+INIT_MONGO_SUFFIX, Container.class).toList();
@@ -56,13 +63,14 @@ public class InitDataHelper {
 			MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, containers);
 	}
 	
+	
 	public static void endTest(){
 		 MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.exists("code"));
 		 MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.exists("code"));
 		 MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.exists("code"));
 		 MongoDBDAO.delete(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.exists("code"));
 		 MongoDBDAO.delete(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.exists("code"));
-
+		 MongoDBDAO.delete(InstanceConstants.EXPERIMENT_COLL_NAME, Process.class, DBQuery.exists("code"));
 	}
 	
 	public static List<String> getContainerCodesInContext(){

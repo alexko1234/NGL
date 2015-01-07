@@ -126,18 +126,18 @@ public class InstanceHelpers {
 
 
 	// Add unique codes from list to list
-	public static List<String> addCodesList(List<String> codes, List<String> listCodes){
-		if(listCodes==null){
-			listCodes=new ArrayList<String>();
+	public static List<String> addCodesList(List<String> codes, List<String> listUpdated){
+		if(listUpdated==null){
+			listUpdated=new ArrayList<String>();
 		}
 
 		for(int i=0;i<codes.size();i++){
-			if(!listCodes.contains(codes.get(i))){
-				listCodes.add(codes.get(i));
+			if(!listUpdated.contains(codes.get(i))){
+				listUpdated.add(codes.get(i));
 			}
 
 		}
-		return listCodes;
+		return listUpdated;
 	}
 
 
