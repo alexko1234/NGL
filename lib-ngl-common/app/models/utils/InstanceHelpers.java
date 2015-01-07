@@ -252,6 +252,7 @@ public class InstanceHelpers {
 		sc.sampleCode = readSet.sampleCode;
 		sc.sampleTypeCode = content.sampleTypeCode;
 		sc.sampleCategoryCode = content.sampleCategoryCode;
+		sc.percentage = content.percentage;
 		sc.properties = content.properties;
 		return sc;
 	}

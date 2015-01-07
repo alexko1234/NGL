@@ -204,6 +204,36 @@ public class ValidationHelper {
 	}
 
 	/**
+	 * Convert a String to the good object
+	 * @param type
+	 * @param value
+	 * @return
+	 */
+	public static Object convertStringToType(String type, String value){
+		try{
+			Class<?> valueClass = getClass(type);
+			return convertValue(valueClass, value, null);
+		}catch(Throwable e){
+			Logger.error(e.getMessage(),e);			
+		}
+		return null;		
+	}
+	
+	public static List<Object> convertStringToType(String type, List<String> values){
+		try{
+			Class<?> valueClass = getClass(type);
+			List<Object> objects = new ArrayList<Object>(values.size());
+			for(String value : values){
+				objects.add(convertValue(valueClass, value, null));
+			}			
+			return objects;
+		}catch(Throwable e){
+			Logger.error(e.getMessage(),e);			
+		}
+		return null;		
+	}
+	
+	/**
 	 * 
 	 * @param type : final type
 	 * @param value : the value

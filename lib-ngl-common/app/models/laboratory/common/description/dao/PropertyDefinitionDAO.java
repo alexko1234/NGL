@@ -1,5 +1,6 @@
 package models.laboratory.common.description.dao;
 
+import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,32 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 	{
 		throw new UnsupportedOperationException("PropertyDefinition does not have a unique code, pass bu type to retrieve PropertyDefinitions");
 	}
+	
+	public PropertyDefinition findUnique(String code, Level.CODE levelCode){
+		
+		String sql = 
+				"select distinct pd.code, pd.type, pd.property_value_type, pd.choice_in_list" 
+				+"	from  NGL.property_definition pd"
+				+"	inner join NGL.property_definition_level pdf on pdf.fk_property_definition = pd.id"
+				+"	inner join NGL.level l on l.id = pdf.fk_level and l.code = ?"
+				+"	inner join NGL.common_info_type cit on cit.id = pd.fk_common_info_type"
+			    +"	inner join NGL.object_type ot on ot.id = cit.fk_object_type"
+			    +" where pd.code = ?";
+		
+		PropertyDefinitionMappingQuery propertyDefinitionMappingQuery=new PropertyDefinitionMappingQuery(dataSource, sql, true, new SqlParameter("l.code",Types.VARCHAR), new SqlParameter("pd.code",Types.VARCHAR));
+		List<PropertyDefinition> l = propertyDefinitionMappingQuery.execute(levelCode.toString(), code);
+		
+		
+		if(l.size() == 1){
+			return l.get(0);
+		}else{
+			Logger.error("PropertyDefinition findUnique query return more than one result: "+sql);
+			return null;
+		}		
+	}
+	
+	
+	
 	public PropertyDefinition save(PropertyDefinition propertyDefinition, long idCommonInfoType) throws DAOException
 	{
 		if(null == propertyDefinition.levels || propertyDefinition.levels.size()==0){

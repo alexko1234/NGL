@@ -26,6 +26,8 @@ public class SampleOnContainer {
 	public String containerCode;
 	// Properties of the content in the container
 	public Map<String,PropertyValue> properties;
+	//Percentage of content on the container
+	public Double percentage;
 	
 	@Override
 	public String toString() {

@@ -6,7 +6,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import models.laboratory.common.description.dao.PropertyDefinitionDAO;
 import models.laboratory.common.instance.property.PropertySingleValue;
+import models.laboratory.instrument.description.Instrument;
+import models.laboratory.instrument.description.InstrumentQueryParams;
+import models.laboratory.instrument.description.dao.InstrumentDAO;
+import models.utils.ListObject;
 import models.utils.Model;
+import models.utils.Model.Finder;
+import models.utils.dao.AbstractDAOCommonInfoType;
+import models.utils.dao.DAOException;
 import play.data.validation.Constraints.Required;
 
 /**
@@ -45,11 +52,22 @@ public class PropertyDefinition extends Model<PropertyDefinition>{
 	public MeasureUnit displayMeasureValue;
 	
 	@JsonIgnore
-	public static Finder<PropertyDefinition> find = new Finder<PropertyDefinition>(PropertyDefinitionDAO.class.getName()); 
+	public static PropertyDefinitionFinder find = new PropertyDefinitionFinder(); 
 
 	@JsonIgnore
 	public PropertyDefinition() {
 		super(PropertyDefinitionDAO.class.getName());
 	}
 
+	
+	public static class PropertyDefinitionFinder extends Finder<PropertyDefinition>{
+
+		public PropertyDefinitionFinder() {
+			super(PropertyDefinitionDAO.class.getName());			
+		}
+		
+		public PropertyDefinition findUnique(String code, Level.CODE levelCode) throws DAOException{
+			return ((PropertyDefinitionDAO)getInstance()).findUnique(code, levelCode);
+		}
+	}
 }
