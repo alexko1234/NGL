@@ -86,6 +86,13 @@
 				"order":true,
 				"type":"date"
 			});
+			columns.push({
+				"header":Messages("containers.table.inputProcessCodes"),
+				"property":"inputProcessCodes",
+				"order":true,
+				"type":"text",
+				"render":"<div list-resize='value.data.inputProcessCodes | unique' list-resize-min-size='3'>",
+			});
 			
 			
 			return columns;
