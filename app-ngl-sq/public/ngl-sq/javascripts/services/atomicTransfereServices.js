@@ -37,6 +37,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 							});
 						},
 					newExperimentDatatable : function(datatable){
+						var that = this;
 						this.newExperiment(function(containers){
 							datatable.setData(containers,containers.length);
 						});
@@ -67,6 +68,8 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 									sampleCodeAndTags.push(content.sampleCode+" "+content.properties.tag.value);
 								}
 							});*/
+							console.log("SUPPORT");
+							console.log(container.support);
 							containerUseds.push({"code":container.code,"state":container.state,"instrumentProperties":{},"experimentProperties":{},
 								"percentage":100,"categoryCode":container.categoryCode,"volume":container.mesuredVolume,
 								"concentration":container.mesuredConcentration,"contents":container.contents/*,"contentsInput":{"tags":tags,"sampleTypes":sampleTypes,"libProcessTypeCodes":libProcessTypeCodes}*/,"locationOnContainerSupport":container.support});

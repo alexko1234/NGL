@@ -79,6 +79,7 @@ angular.module('home').controller('VoidCtrl',['$scope', '$window','datatable','$
 	});
 	
 	$scope.$on('addInstrumentPropertiesInputToScope', function(e, data) {
+		console.log("ADD INPUT INSTRUMENT PROPERTIES");
 		for(var i=0;i<$scope.datatable.getData().length;i++){
 			for(var j=0; j<data.length;j++){
 				if($scope.getLevel( data[j].levels, "ContainerIn")){
@@ -86,7 +87,7 @@ angular.module('home').controller('VoidCtrl',['$scope', '$window','datatable','$
 					if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties[data[j].code]){
 						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties[data[j].code].value);
 					}else{
-						getter.assign($scope,undefined);
+						//getter.assign($scope,undefined);
 					}
 				}
 			}
@@ -105,8 +106,9 @@ angular.module('home').controller('VoidCtrl',['$scope', '$window','datatable','$
 					}
 				}else if($scope.getLevel( data[j].levels, "Experiment")){
 					var getter = $parse("experiment.value.experimentProperties."+data[j].code);
-					if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code] !== undefined && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code].value !== undefined && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code].value !== ""){
-						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code]);
+					console.log($scope.experiment.value.experimentProperties);
+					if($scope.experiment.value.experimentProperties && $scope.experiment.value.experimentProperties[data[j].code] !== undefined && $scope.experiment.value.experimentProperties[data[j].code].value !== undefined && $scope.experiment.value.experimentProperties[data[j].code].value !== ""){
+						getter.assign($scope,$scope.experiment.value.experimentProperties[data[j].code]);
 					}else{
 						getter.assign($scope,undefined);
 					}
@@ -133,7 +135,7 @@ angular.module('home').controller('VoidCtrl',['$scope', '$window','datatable','$
 	$scope.init_atomicTransfert = function(containers, atomicTransfertMethod){
 		angular.forEach(containers, function(container,index){
 			$scope.experiment.value.atomicTransfertMethods[index] = {class:atomicTransfertMethod, inputContainerUsed:[]};
-			$scope.experiment.value.atomicTransfertMethods[index].inputContainerUsed = {code:container.code,instrumentProperties:{},experimentProperties:{},state:container.state};
+			$scope.experiment.value.atomicTransfertMethods[index].inputContainerUsed = {code:container.code,instrumentProperties:{},experimentProperties:{},state:container.state, locationOnContainerSupport:container.support};
 			$scope.experiment.outputVoid = true;
 
 		});
