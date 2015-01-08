@@ -97,9 +97,9 @@ object ApplicationBuild extends Build {
 
 		)
 	val nglsqDependencies = Seq(
-		javaCore, javaJdbc
+		javaCore, javaJdbc,
 		  // Add your project dependencies here,
-
+		"org.assertj" % "assertj-core" % "1.7.1"
 		)
 	val nglauthDependencies = Seq(
 	javaCore, javaJdbc,javaEbean,

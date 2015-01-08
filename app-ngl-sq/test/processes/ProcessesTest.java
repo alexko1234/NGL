@@ -25,6 +25,7 @@ import org.mongojack.DBQuery;
 import play.libs.Json;
 import play.mvc.Result;
 import utils.AbstractTests;
+import utils.DatatableResponseForTest;
 import utils.InitDataHelper;
 import views.components.datatable.DatatableResponse;
 
@@ -34,7 +35,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import containers.DatatableResponseForTest;
 import controllers.processes.api.ProcessesSearchForm;
 import fr.cea.ig.MongoDBDAO;
 

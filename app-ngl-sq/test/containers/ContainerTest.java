@@ -1,11 +1,14 @@
 package containers;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static play.test.Helpers.callAction;
 import static play.test.Helpers.fakeRequest;
 import static play.test.Helpers.status;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -29,6 +32,8 @@ import play.mvc.Result;
 import utils.AbstractTests;
 import utils.Constants;
 import utils.ContainerBatchElementHelper;
+import utils.DatatableBatchResponseElementForTest;
+import utils.DatatableResponseForTest;
 import utils.InitDataHelper;
 import utils.MapperHelper;
 import validation.ContextValidation;
@@ -60,9 +65,7 @@ public class ContainerTest extends AbstractTests {
 	public void validateCalculPercentageContent() {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		Container cnt =  ContainerTestHelper.getFakeContainer();
-		
-		//validate good ContentPercentage values
-		
+				
 		//good value
 		Content c1 = new Content();
 		c1.percentage = 2.00;	
@@ -138,6 +141,35 @@ public class ContainerTest extends AbstractTests {
 		assertThat(c6.percentage).isEqualTo(0.00);		
 	}
 	
+
+	@Test
+	public void validateGenerateContainerCode(){
+		String t = "tube";
+		String cod = ContainerHelper.generateContainerCode(t);		
+		//good value
+		assertThat(cod).containsIgnoringCase(t);
+		
+		//good value in uppercase
+		assertThat(cod).contains(t.toUpperCase());
+		
+		//good value with date
+		Date d = new Date();
+		DateFormat df = new SimpleDateFormat("yyyyMMdd");
+		assertThat(cod).contains(df.format(d));
+		
+		//bad value
+		assertThat(cod).doesNotContain("lane");
+		
+		//bad date value		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(d);
+		cal.add(Calendar.MILLISECOND, 1);
+		d = cal.getTime();
+		df = new SimpleDateFormat("yyyyMMddHHmmssSS");
+		assertThat(cod).doesNotContain(df.format(d));
+	}
+	
+	
 /**********************************Tests of Container class methods (DBObject)***************************************************/		
 	
 	@Test
@@ -150,8 +182,7 @@ public class ContainerTest extends AbstractTests {
 		cnt.inputProcessCodes.add("validateGetCurrentProcesses");
 		List<Process> processes =  cnt.getCurrentProcesses();
 		MongoDBDAO.delete(InstanceConstants.PROCESS_COLL_NAME, p);		
-		assertThat(processes).isNotNull();
-		assertThat(processes).isNotEmpty();		
+		assertThat(processes).isNotNull().isNotEmpty();		
 	}
 	
 	@Test
@@ -202,8 +233,11 @@ public class ContainerTest extends AbstractTests {
 	public void validateUpdateBatchBadRequestWithNull() throws JsonProcessingException {
 		
 		Container c1 = null;			
-		Container c2 = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,"C2EV3ACXX_2");			
-		Container c3 = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,"C2EV3ACXX_3");			
+		Container c2 = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,"C2EV3ACXX_2");	
+		c2.state.code="A";
+		c2.inputProcessCodes=null;
+		Container c3 = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,"C2EV3ACXX_3");
+		c3.state.code="N";
 		List<ContainerBatchElement> lc = ContainerTestHelper.getFakeListContainerBatchElements(c1,c2,c3);	
 		Result result = callAction(controllers.containers.api.routes.ref.Containers.updateBatch(), fakeRequest().withJsonBody(Json.toJson(lc)));		
 		List<DatatableBatchResponseElementForTest<Container>> ld = ContainerBatchElementHelper.getElementListObjectMapper(result);
@@ -213,7 +247,7 @@ public class ContainerTest extends AbstractTests {
 		Logger.debug("");
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		assertThat(db1.status).isEqualTo(play.mvc.Http.Status.NOT_FOUND);
-		assertThat(db2.status).isEqualTo(play.mvc.Http.Status.OK);
+		assertThat(db2.status).isEqualTo(play.mvc.Http.Status.BAD_REQUEST);
 		assertThat(db3.status).isEqualTo(play.mvc.Http.Status.OK);
 			
 	}
@@ -269,8 +303,10 @@ public class ContainerTest extends AbstractTests {
 				
 		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<Container>>(){});		
 		lc = dr.data;
-		c = (Container) lc.get(0);
-		assertThat("ADI").isIn(c.projectCodes);			
+		for (int i=0;i<lc.size();i++){
+			c = (Container) lc.get(i);
+			assertThat("ADI").isIn(c.projectCodes);	
+		}				
 		
 		//Test with projectCode (bad projectCode)
 		csf.projectCode = "validateListWithDatatableBadRequest";
@@ -319,15 +355,18 @@ public class ContainerTest extends AbstractTests {
 		}		
 
 		//Test with dates (matched period)		
-		csf.fromDate = new Date(2014-1900, 2, 20) ;
-		csf.toDate = new Date(2014-1900, 2, 20) ;		
+		csf.fromDate = new Date(2014-1900, 2, 19) ;
+		csf.toDate = new Date(2014-1900, 2, 21) ;		
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest( play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&fromDate="+csf.fromDate.getTime()+"&toDate="+csf.toDate.getTime()));		
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<Container>>(){});
-		lc = dr.data;		
-		c = (Container) lc.get(0);
-		assertThat(c.code).isEqualTo("ADI_RD1");		
+		lc = dr.data;
+		for (int i=0;i<lc.size();i++){
+			c = (Container) lc.get(i);
+			assertThat(c.traceInformation.creationDate).isBetween(csf.fromDate, csf.toDate, true,true);
+		}
+				
 		
 		//Test with dates (unmatched period)
 		csf.fromDate = new Date(2014-1900, 0, 1) ;
@@ -339,7 +378,7 @@ public class ContainerTest extends AbstractTests {
 		lc = dr.data;
 		for(int i=0;i<lc.size();i++){
 			c = (Container) lc.get(i);
-			assertThat(c.code).isNotEqualTo("ADI_RD1");	
+			assertThat(c.traceInformation.creationDate).isNotBetween(csf.fromDate, csf.toDate, true,true);	
 		}
 		
 		//Test with containerSupportCategory (good request)			
@@ -349,14 +388,15 @@ public class ContainerTest extends AbstractTests {
 		
 		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<Container>>(){});
 		lc = dr.data;
-		assertThat(lc.size()).isEqualTo(2);
 		
 		for(int i=0;i<lc.size();i++){
 			c = (Container) lc.get(i);
 			Logger.info(c.categoryCode);
 			assertThat(c.categoryCode).isEqualTo("tube");
-			Logger.info("");
+			Logger.info("");			
 		}
+		
+		
 		
 		//Test with containerSupportCategory (bad request)
 		csf.containerSupportCategory = "validateListWithDatatableBadContainerSupportCategory";
@@ -374,7 +414,6 @@ public class ContainerTest extends AbstractTests {
 		
 		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<Container>>(){});
 		lc = dr.data;
-		assertThat(lc.size()).isEqualTo(1);
 		
 		for(int i=0;i<lc.size();i++){
 			c = (Container) lc.get(i);
@@ -422,10 +461,10 @@ public class ContainerTest extends AbstractTests {
 		Result result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&code="+csf.code));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
-		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});				
-		assertThat(lc.size()).isEqualTo(1);	
-		assertThat(lc.get(0).code).isEqualTo("BFB_msCGP_d1");
-		
+		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});
+		for (int i=0;i<lc.size();i++){
+		assertThat(lc.get(i).code).isEqualTo("BFB_msCGP_d1");
+		}
 		//Test with code (bad request)
 		csf.code="validateListWithListBadCode";		
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&code="+csf.code));
@@ -440,18 +479,23 @@ public class ContainerTest extends AbstractTests {
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});		
-		assertThat(lc.size()).isEqualTo(8);	
+		for(int i=0;i<lc.size();i++){
+			lo = lc.get(i);
+			assertThat("AHX").isIn((MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, lo.code)).projectCodes);					
+			Logger.info("");
+		}
+		
 		
 		csf.projectCode = "BFB";
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&projectCode="+csf.projectCode));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});		
-		assertThat(lc.size()).isEqualTo(1);
-		
-		lo = lc.get(0);
-		assertThat(lo.code).isEqualTo("BFB_msCGP_d1");
-		
+		for(int i=0;i<lc.size();i++){
+			lo = lc.get(i);
+			assertThat("BFB").isIn((MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, lo.code)).projectCodes);					
+			Logger.info("");
+		}
 		//Test with projectCode (bad request)
 		csf.projectCode = "validateListWithListBadProjectCode";
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&projectCode="+csf.projectCode));
@@ -460,16 +504,18 @@ public class ContainerTest extends AbstractTests {
 		assertThat(lc).isNullOrEmpty();		
 		
 		//Test with date (good request)		
-		csf.fromDate = new Date(2014-1900, 9, 10) ;
-		csf.toDate = new Date(2014-1900, 9, 10) ;
+		csf.fromDate = new Date(2014-1900, 9, 9) ;
+		csf.toDate = new Date(2014-1900, 9, 11) ;
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&fromDate="+csf.fromDate.getTime()+"&toDate="+csf.toDate.getTime()));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});		
-		assertThat(lc.size()).isEqualTo(1);
-		
-		lo = lc.get(0);
-		assertThat(lo.code).isEqualTo("BFB_msCGP_d1");		
+		for(int i=0;i<lc.size();i++){
+			lo = lc.get(i);
+			assertThat((MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, lo.code)).traceInformation.creationDate).isBetween(csf.fromDate, csf.toDate, true, true);					
+			Logger.info("");
+		}
+			
 		
 		//Test with date (bad request)
 		csf.fromDate = new Date(2014-1900, 0, 1) ;
@@ -485,7 +531,8 @@ public class ContainerTest extends AbstractTests {
 	@Test
 	public void validateList() {
 		ContainersSearchForm csf = ContainerTestHelper.getFakeContainersSearchForm();
-		csf.list=true;
+		csf.list=false;
+		csf.datatable=false;
 		MapperHelper mh = new MapperHelper();
 		Container c = new Container();
 		List <Container> lc = new ArrayList<Container>();
@@ -497,9 +544,9 @@ public class ContainerTest extends AbstractTests {
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 
 		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<Container>>(){});				
-		assertThat(lc.size()).isEqualTo(1);	
-		assertThat(lc.get(0).code).isEqualTo("BFB_msCGP_d1");
-
+		for (int i=0; i<lc.size();i++){
+		assertThat(lc.get(i).code).isEqualTo("BFB_msCGP_d1");
+		}
 		//Test with code (bad request)
 		csf.code="validateListWithListBadCode";		
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&code="+csf.code));
@@ -514,17 +561,18 @@ public class ContainerTest extends AbstractTests {
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 
 		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<Container>>(){});		
-		assertThat(lc.size()).isEqualTo(8);
+		for(int i=0; i<lc.size();i++){
+			assertThat("AHX").isIn(lc.get(i).projectCodes);
+		}
 		
 		csf.projectCode = "BFB";
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&projectCode="+csf.projectCode));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<Container>>(){});		
-		assertThat(lc.size()).isEqualTo(1);
-		
-		c = lc.get(0);
-		assertThat(c.code).isEqualTo("BFB_msCGP_d1");
+		for(int i=0; i<lc.size();i++){
+			assertThat("BFB").isIn(lc.get(i).projectCodes);
+		}		
 
 		//Test with projectCode (bad request)
 		csf.projectCode = "validateListWithListBadProjectCode";
@@ -534,17 +582,16 @@ public class ContainerTest extends AbstractTests {
 		assertThat(lc).isNullOrEmpty();		
 
 		//Test with date (good request)		
-		csf.fromDate = new Date(2014-1900, 9, 10) ;
-		csf.toDate = new Date(2014-1900, 9, 10) ;
+		csf.fromDate = new Date(2014-1900, 9, 9) ;
+		csf.toDate = new Date(2014-1900, 9, 11) ;
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&fromDate="+csf.fromDate.getTime()+"&toDate="+csf.toDate.getTime()));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 
 		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<Container>>(){});		
-		assertThat(lc.size()).isEqualTo(1);
-		
-		c = lc.get(0);
-		assertThat(c.code).isEqualTo("BFB_msCGP_d1");	
-
+		for(int i=0; i<lc.size();i++){
+		c = lc.get(i);
+		assertThat(c.traceInformation.creationDate).isBetween(csf.fromDate, csf.toDate, true,true);	
+		}
 		//Test with date (bad request)
 		csf.fromDate = new Date(2014-1900, 0, 1) ;
 		csf.toDate = new Date(2014-1900, 0, 5) ;

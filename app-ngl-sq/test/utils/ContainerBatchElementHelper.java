@@ -9,8 +9,6 @@ import play.mvc.Result;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 
-import containers.DatatableBatchResponseElementForTest;
-
 
 public class ContainerBatchElementHelper{
 
