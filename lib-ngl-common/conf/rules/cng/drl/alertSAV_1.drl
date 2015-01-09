@@ -26,7 +26,7 @@ rule "BAD alerte"
         $lane : Lane( $treatment : treatments["sav"], $treatment!=null) from $run.lanes
         $result : Entry () from $treatment.results.entrySet()
         $mapValue : Map() from $result.getValue()
-        $alertValue : Entry($keyAlert : key, $toEval : ((PropertyValue)value).value) from $mapValue.entrySet()
+        $alertValue : Entry($keyAlert : key, $toEval : ((PropertyValue)value).getValue()) from $mapValue.entrySet()
         $alertSAVInfo : AlertSAVInfo(flagEvaluate==false)
         eval ($keyAlert.equals("clusterDensity") && ((Long)$toEval<200 || (Long)$toEval>1000)) || 
         eval ($keyAlert.equals("clusterPFPerc") && (Double)$toEval<75) ||
@@ -57,7 +57,7 @@ rule "FLAG alerte"
         $lane : Lane( $treatment : treatments["sav"], $treatment != null) from $run.lanes
         $result : Entry () from $treatment.results.entrySet()
         $mapValue : Map() from $result.getValue()
-        $alertValue : Entry($keyAlert : key, $toEval : ((PropertyValue)value).value) from $mapValue.entrySet()
+        $alertValue : Entry($keyAlert : key, $toEval : ((PropertyValue)value).getValue()) from $mapValue.entrySet()
         $alertSAVInfo : AlertSAVInfo()
         eval ( $keyAlert.equals("clusterDensity") && ( ( (Long)$toEval>=200 && (Long)$toEval<=250 ) || ( (Long)$toEval>=850 && (Long)$toEval<=1000 ) ) ) || 
         eval ($keyAlert.equals("clusterPFPerc") && ((Double)$toEval>=75 && (Double)$toEval<=80 )) ||

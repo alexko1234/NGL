@@ -41,4 +41,9 @@ public abstract class PropertyValue<T> implements IValidation {
 	}
 	public T value;
 	
+	public T getValue() {
+		return value;
+	}
+	
+	
 }
