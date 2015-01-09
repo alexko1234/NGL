@@ -1,16 +1,22 @@
 package models.laboratory.common.description.dao;
 
+import java.sql.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.Level;
+import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
 import models.utils.dao.AbstractDAODefault;
 import models.utils.dao.DAOException;
-
+import models.utils.dao.DAOHelpers;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
+
+import play.Logger;
 
 @Repository
 public class ValueDAO extends AbstractDAODefault<Value>{
@@ -55,5 +61,18 @@ public class ValueDAO extends AbstractDAODefault<Value>{
 		
 	}
 
+	public List<Value> findUnique(String propertyDefinitionCode){
+		String sql = 
+				"select distinct v.value "
+				+"from  NGL.value v "
+			    +"inner join NGL.property_definition pd on pd.id = v.fk_property_definition "
+				+"inner join NGL.common_info_type cit on cit.id = pd.fk_common_info_type "
+				+DAOHelpers.getCommonInfoTypeSQLForInstitute("cit")
+			    +"where pd.code = ? "
+			    +"order by v.value";
+		
+		BeanPropertyRowMapper<Value> mapper = new BeanPropertyRowMapper<Value>(Value.class);
+		return this.jdbcTemplate.query(sql, mapper, propertyDefinitionCode);		
+	}
 
 }

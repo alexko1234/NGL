@@ -22,7 +22,7 @@ public class Resolution implements IValidation, Comparable<Resolution>  {
 		
     	contextValidation.putObject("resolutions", this);
     	
-    	CommonValidationHelper.validateUniqueFieldValue(contextValidation, "code", this.code, ResolutionConfigurations.class, InstanceConstants.RESOLUTION_COLL_NAME );
+    	CommonValidationHelper.validateUniqueFieldValue(contextValidation, "code", this.code, ResolutionConfiguration.class, InstanceConstants.RESOLUTION_COLL_NAME );
     	
     	ValidationHelper.required(contextValidation, this.name, "name");
     	

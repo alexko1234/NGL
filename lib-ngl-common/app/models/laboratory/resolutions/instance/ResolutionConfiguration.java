@@ -15,7 +15,7 @@ import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationHelper;
 import fr.cea.ig.DBObject;
 
-public class ResolutionConfigurations extends DBObject implements IValidation {
+public class ResolutionConfiguration extends DBObject implements IValidation {
 	
 	public String  code;
     public String objectTypeCode;
