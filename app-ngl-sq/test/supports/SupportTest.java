@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.property.PropertySingleValue;
-import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.utils.InstanceConstants;
