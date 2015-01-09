@@ -55,6 +55,11 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 			cancel : {
 				showButton:false
 			},
+			exportCSV : {
+				active:true,
+				showButton:false,
+				delimiter:','
+			},
 			lines : {
 				trClass : function(value){
 					if(value.valid === "TRUE"){
