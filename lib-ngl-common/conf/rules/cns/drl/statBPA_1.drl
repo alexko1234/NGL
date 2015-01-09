@@ -17,15 +17,15 @@ rule "Calculate lostBasesPercent for contigFilterBA treatment"
 		$assemblyContigSize : Entry(key=="assemblyContigSize") from $mapValueABA.entrySet()
 		$storedBases : Entry(key=="storedBases") from $mapValueCFBA.entrySet()
 	then
-		Logger.debug("Calculate lostBasesPercent for analysis "+$analysis.getCode());
-		Integer storedBases = (Integer)((PropertyValue)$storedBases.getValue()).getValue();
-		Integer assemblyContigSize = (Integer)((PropertyValue)$assemblyContigSize.getValue()).getValue();
+		Logger.debug("Calculate lostBasesPercent for analysis "+$analysis.code);
+		Integer storedBases = (Integer)((PropertyValue)$storedBases.getValue()).value;
+		Integer assemblyContigSize = (Integer)((PropertyValue)$assemblyContigSize.getValue()).value;
 		Double lostBasesPercent = roundValue((double)(assemblyContigSize - storedBases)/assemblyContigSize*100);
 		//Create new PropertyValue
 		PropertySingleValue propertylostBasesPercent = new PropertySingleValue(lostBasesPercent);
 		$mapValueCFBA.put("lostBasesPercent", propertylostBasesPercent);
 		//Update analysis
-		MongoDBDAO.updateSet(InstanceConstants.ANALYSIS_COLL_NAME, $analysis, "treatments."+$treatmentCFBA.getCode(), $treatmentCFBA);
+		MongoDBDAO.updateSet(InstanceConstants.ANALYSIS_COLL_NAME, $analysis, "treatments."+$treatmentCFBA.code, $treatmentCFBA);
 end
 
 
@@ -37,7 +37,7 @@ rule "Set ReadSet properties to Analysis"
 	when
 		$analysis : Analysis ( $masterReadSetCode : masterReadSetCodes.get(0) )		
 	then
-		Logger.debug("Set ReadSet properties to Analysis "+$analysis.getCode());
+		Logger.debug("Set ReadSet properties to Analysis "+$analysis.code);
 		BasicDBObject keys = new BasicDBObject();
 		keys.put("sampleOnContainer.properties.taxonSize", 1);
 		keys.put("treatments.global.default.usefulBases", 1);
