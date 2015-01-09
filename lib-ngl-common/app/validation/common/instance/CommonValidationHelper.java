@@ -14,7 +14,7 @@ import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.project.instance.Project;
-import models.laboratory.resolutions.instance.ResolutionConfigurations;
+import models.laboratory.resolutions.instance.ResolutionConfiguration;
 import models.laboratory.sample.instance.Sample;
 import models.laboratory.valuation.instance.ValuationCriteria;
 import models.utils.InstanceConstants;
@@ -403,7 +403,7 @@ public class CommonValidationHelper {
 				List<String> typeCodes = new ArrayList<String>();
 				typeCodes.add(typeCode);
 				
-				if (! MongoDBDAO.checkObjectExist(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfigurations.class, DBQuery.and(DBQuery.is("resolutions.code", resoCode), DBQuery.in("typeCodes", typeCodes)))) {
+				if (! MongoDBDAO.checkObjectExist(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, DBQuery.and(DBQuery.is("resolutions.code", resoCode), DBQuery.in("typeCodes", typeCodes)))) {
 					contextValidation.addErrors("resolutionCodes["+i+"]", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, resoCode);
 				}
 				i++;
