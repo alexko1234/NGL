@@ -8,7 +8,7 @@ import java.util.List;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.Experiment;
 
-import instruments.io.common.hiseq_miseq.tpl.txt.*;
+import instruments.io.miseq.tpl.txt.*;
 
 public class SampleSheetsFactory extends AbstractSampleSheetsfactory{
 
