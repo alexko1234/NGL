@@ -13,7 +13,7 @@ import fr.cea.ig.MongoDBDAO;
 import validation.ContextValidation;
 import models.laboratory.resolutions.instance.Resolution;
 import models.laboratory.resolutions.instance.ResolutionCategory;
-import models.laboratory.resolutions.instance.ResolutionConfigurations;
+import models.laboratory.resolutions.instance.ResolutionConfiguration;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 
@@ -212,7 +212,7 @@ public class ResolutionService {
 		l.add(newResolution("tiles out","QC-tilesOut", resolutionCategories.get("QC"), (short) 2));
 		l.add(newResolution("saut de chimie","QC-sautChimie", resolutionCategories.get("QC"), (short) 3));
 		
-		ResolutionConfigurations r = new ResolutionConfigurations();
+		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "runReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Run";
@@ -222,7 +222,7 @@ public class ResolutionService {
 		al.add("RHS2500R");
 		r.typeCodes = al;
 		
-		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfigurations.class, "runReso");
+		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "runReso");
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME,r,ctx, false);
 	}
 	
@@ -259,7 +259,7 @@ public class ResolutionService {
 		
 		l.add(newResolution("erreur Experimental Type","LIMS-erreurExpType", resolutionCategories.get("LIMS"),(short) 1));
 		
-		ResolutionConfigurations r = new ResolutionConfigurations();
+		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "readSetReso";
 		r.resolutions = l;
 		r.objectTypeCode = "ReadSet";
@@ -267,7 +267,7 @@ public class ResolutionService {
 		al.add("default-readset");
 		r.typeCodes = al;
 		
-		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfigurations.class, "readSetReso");
+		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "readSetReso");
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME,r,ctx, false);
 	}
 	
@@ -324,7 +324,7 @@ public class ResolutionService {
 		l.add(newResolution("remboursement","Info-remboursement", resolutionCategories.get("Info"), (short) 4));
 		l.add(newResolution("flowcell redéposée","Info-FCredeposee", resolutionCategories.get("Info"), (short) 5));		
 		
-		ResolutionConfigurations r = new ResolutionConfigurations();
+		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "runReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Run";
@@ -337,7 +337,7 @@ public class ResolutionService {
 		al.add("RARGUS");
 		r.typeCodes = al;
 		
-		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfigurations.class, "runReso");
+		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "runReso");
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME,r,ctx, false);
 	}
 	
@@ -382,7 +382,7 @@ public class ResolutionService {
 		
 		l.add(newResolution("test Dev","Info-testDev", resolutionCategories.get("Info"),(short) 1));
 		
-		ResolutionConfigurations r = new ResolutionConfigurations();
+		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "readSetReso";
 		r.resolutions = l;
 		r.objectTypeCode = "ReadSet";
@@ -391,7 +391,7 @@ public class ResolutionService {
 		 al.add("RSARGUS");
 		r.typeCodes = al;
 		
-		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfigurations.class, "readSetReso");
+		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "readSetReso");
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME,r,ctx, false);
 	}
 	
@@ -425,7 +425,7 @@ public class ResolutionService {
 		l.add(newResolution("corrected gap count","GAP-correctedCount", resolutionCategories.get("GAP"),(short) 4));
 		l.add(newResolution("% N","GAP-Npercent", resolutionCategories.get("GAP"),(short) 5));
 		
-		ResolutionConfigurations r = new ResolutionConfigurations();
+		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "analysisReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Analysis";
@@ -433,7 +433,7 @@ public class ResolutionService {
 		al.add("BPA");
 		r.typeCodes = al;
 		
-		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfigurations.class, "analysisReso");
+		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "analysisReso");
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME,r,ctx, false);
 	}
 
@@ -445,7 +445,7 @@ public class ResolutionService {
 		l.add(newResolution("déroulement correct",	"correct", resolutionCategories.get("Default"), (short) 1));
 		l.add(newResolution("échec expérience", "echec-experience", resolutionCategories.get("Default"), (short) 2));	
 		
-		ResolutionConfigurations r = new ResolutionConfigurations();
+		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "experimentReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
@@ -469,7 +469,7 @@ public class ResolutionService {
 	    al.add("illumina-depot");
 		r.typeCodes = al;
 		
-		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfigurations.class, "experimentReso");
+		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "experimentReso");
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
 	}
 	
@@ -483,7 +483,7 @@ public class ResolutionService {
 		l.add(newResolution("surface cassée", "echec-surface", resolutionCategories.get("Default"), (short) 4));	
 		l.add(newResolution("problème digestion", "echec-digestion", resolutionCategories.get("Default"), (short) 5));	
 		
-		ResolutionConfigurations r = new ResolutionConfigurations();
+		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "expODReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
@@ -492,7 +492,7 @@ public class ResolutionService {
 		al.add("opgen-depot");		
 		r.typeCodes = al;
 		
-		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfigurations.class, "expODReso");
+		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "expODReso");
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
 	}
 	
