@@ -243,12 +243,13 @@ public class Workflows {
 				}
 
 				if(processState.code != null){
-					setProcessState(processCode,processState,contextValidation);
-					if(exp.code.equals("F")){
-						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code", container.code),DBUpdate.unset("inputProcessCodes"));
-					}
+					setProcessState(processCode,processState,contextValidation);					
 				}
 
+				/*if(exp.state.code.equals("F")){
+					Logger.debug("Update inputProcessCodes");
+					MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code", container.code),DBUpdate.unset("inputProcessCodes"));
+				}*/
 			}
 		}
 	}
@@ -263,7 +264,6 @@ public class Workflows {
 		Process process =MongoDBDAO.findOne(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("code", processCode));
 
 		if(process!=null){ 
-			Logger.debug("Process e"+process.code);
 			ProcessValidationHelper.validateStateCode(nextState.code,contextValidation);
 			if(!contextValidation.hasErrors() && !nextState.code.equals(process.state)){
 

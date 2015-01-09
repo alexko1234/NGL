@@ -481,14 +481,18 @@ public class ExperimentTests extends AbstractTests{
 	
 	
 	@Test
-	public void nextState(){
+	public void nextStateManyToOne() throws JsonParseException, JsonMappingException, IOException{
 		
 		String code="PREPA-FLOWCELL-20150107_105554";
+		
+		// Experiment PREPA-FLOWCELL-20150107_105554 update state code "N" to "IP"
 		Result result = callAction(controllers.experiments.api.routes.ref.Experiments.nextState(code),fakeRequest());
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		Experiment expUpdate=MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, code);
 		assertThat(expUpdate.state.code).isEqualTo("IP");
+		assertThat(expUpdate.getAllOutPutContainerWhithInPutContainer()).isNotEmpty();
+		
 		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.in("support.code", expUpdate.inputContainerSupportCodes) ).toList();
 		assertThat(containers).isNotEmpty();
 		List<String> processCodes=new ArrayList<String>();
@@ -501,6 +505,93 @@ public class ExperimentTests extends AbstractTests{
 			assertThat(process.state.code).isEqualTo("IP");
 			assertThat(code).isIn(process.experimentCodes);
 		}
+		
+		
+		// Experiment PREPA-FLOWCELL-20150107_105554 update state "IP" to state "F"
+		result = callAction(controllers.experiments.api.routes.ref.Experiments.nextState(code),fakeRequest());
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		expUpdate=MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, code);
+		assertThat(expUpdate.state.code).isEqualTo("F");
+		assertThat(expUpdate.inputContainerSupportCodes).isNotEmpty();
+		assertThat(expUpdate.outputContainerSupportCodes).isNotEmpty();
+		
+		containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.in("support.code", expUpdate.inputContainerSupportCodes) ).toList();
+		assertThat(containers).isNotEmpty();
+		for(Container container:containers){
+			assertThat(container.state.code).isEqualTo("UA");
+			//assertThat(container.inputProcessCodes).isNull();
+		}
+		processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME,Process.class,DBQuery.in("code", processCodes) ).toList();
+		for(Process process:processes){
+			assertThat(process.state.code).isEqualTo("IP");
+			assertThat(process.currentExperimentTypeCode).isNotNull();
+			assertThat(code).isIn(process.experimentCodes);
+			assertThat(expUpdate.outputContainerSupportCodes.get(0)).isIn(process.newContainerSupportCodes);
+		}
+		
+		List<Container> outPutContainers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.in("support.code", expUpdate.outputContainerSupportCodes) ).toList();
+		assertThat(outPutContainers).isNotEmpty();
+		assertThat(outPutContainers.size()).isEqualTo(expUpdate.atomicTransfertMethods.size());
+		for(Container outContainer:outPutContainers){
+			assertThat(expUpdate.typeCode).isIn(outContainer.fromExperimentTypeCodes);
+			assertThat(outContainer.projectCodes).isNotEmpty();
+			assertThat(outContainer.sampleCodes).isNotEmpty();
+			assertThat(outContainer.processTypeCode).isNotEmpty();
+			assertThat(outContainer.inputProcessCodes).isNotEmpty();
+			for(String processCode:outContainer.inputProcessCodes){
+				assertThat(processCode).isIn(processCodes);
+			}
+		}
+		
+		//Create depot solexa from container previously created by prepa-flowcell experiment
+		List<Experiment> exps = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME+"_new", Experiment.class,DBQuery.is("typeCode", "illumina-depot")).toList();
+		Experiment exp=exps.get(0);
+		exp._id=null;
+		result = callAction(controllers.experiments.api.routes.ref.Experiments.save(),fakeRequest().withJsonBody(Json.toJson(exp)));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		
+		ObjectMapper mapper=new ObjectMapper();
+
+		exp=mapper.readValue(play.test.Helpers.contentAsString(result),Experiment.class);
+		assertThat(exp.state.code).isEqualTo("N");
+		assertThat(exp.projectCodes).isNotNull();
+		assertThat(exp.sampleCodes).isNotNull();
+		assertThat(exp.inputContainerSupportCodes.get(0)).isEqualTo(expUpdate.outputContainerSupportCodes.get(0));
+		assertThat(exp.outputContainerSupportCodes).isNull();
+		
+		result = callAction(controllers.experiments.api.routes.ref.Experiments.nextState(exp.code),fakeRequest());
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		
+		expUpdate=MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, exp.code);
+		assertThat(expUpdate.state.code).isEqualTo("IP");
+		assertThat(expUpdate.getAllOutPutContainerWhithInPutContainer()).isEmpty();
+		
+		processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME,Process.class,DBQuery.in("code", processCodes) ).toList();
+		for(Process process:processes){
+			assertThat(process.state.code).isEqualTo("IP");
+			assertThat(process.currentExperimentTypeCode).isEqualTo(exp.typeCode);
+			assertThat(exp.code).isIn(process.experimentCodes);
+		}
+		
+		result = callAction(controllers.experiments.api.routes.ref.Experiments.nextState(exp.code),fakeRequest());
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		
+		expUpdate=MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, exp.code);
+		assertThat(expUpdate.state.code).isEqualTo("F");
+		
+		containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.in("support.code", expUpdate.inputContainerSupportCodes) ).toList();
+		assertThat(containers).isNotEmpty();
+		for(Container container:containers){
+			assertThat(container.state.code).isEqualTo("UA");
+			//assertThat(container.inputProcessCodes).isNull();
+		}
+		
+		processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME,Process.class,DBQuery.in("code", processCodes) ).toList();
+		for(Process process:processes){
+			assertThat(process.state.code).isEqualTo("F");
+			assertThat(process.currentExperimentTypeCode).isEqualTo(exp.typeCode);
+		}
+		
 	}
 
 	public PropertyDefinition getPropertyImgDefinition() {

@@ -7,7 +7,7 @@ import models.laboratory.experiment.instance.ContainerUsed;
 
 public class ContainerUsedHelper {
 
-	public static Object getContainerCodes(List<ContainerUsed> inputContainerUseds) {
+	public static List<String> getContainerCodes(List<ContainerUsed> inputContainerUseds) {
 	
 		List<String> containerCodes=new ArrayList<String>();
 		
@@ -17,7 +17,7 @@ public class ContainerUsedHelper {
 		return containerCodes;
 	}
 
-	public static Object getContainerSupportCodes(List<ContainerUsed> inputContainerUseds) {
+	public static List<String> getContainerSupportCodes(List<ContainerUsed> inputContainerUseds) {
 		List<String> containerSupportCodes=new ArrayList<String>();
 		for(ContainerUsed containerUsed:inputContainerUseds){
 			containerSupportCodes.add(containerUsed.locationOnContainerSupport.code);

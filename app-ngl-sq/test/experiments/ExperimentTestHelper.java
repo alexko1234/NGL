@@ -8,6 +8,7 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Content;
+import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
@@ -59,7 +60,8 @@ public class ExperimentTestHelper {
 		containerUsed.state.code = "IW-E";
 		containerUsed.experimentProperties =  new HashMap<String, PropertyValue>();
 		containerUsed.instrumentProperties =  new HashMap<String, PropertyValue>();
-		
+		containerUsed.locationOnContainerSupport=new LocationOnContainerSupport();
+		containerUsed.locationOnContainerSupport.code=code;
 		return containerUsed;
 	}
 	
