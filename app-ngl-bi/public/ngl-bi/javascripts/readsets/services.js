@@ -218,6 +218,7 @@
 				//TODO Warn if pass to one application page
 				lists.refresh.reportConfigs({pageCodes:["readsets"+"-"+mainService.getHomePage()]});
 				lists.refresh.reportConfigs({pageCodes:["readsets-addcolumns"]}, "readsets-addcolumns");
+				lists.refresh.filterConfigs({pageCodes:["readsets-addfilters"]}, "readsets-addfilters");
 				
 				lists.refresh.resolutions({objectTypeCode:"ReadSet"});
 				lists.refresh.users();
@@ -233,7 +234,8 @@
 				form : undefined,
 				reportingConfigurationCode:undefined,
 				reportingConfiguration:undefined,
-				additionalsColumns:[],
+				additionalColumns:[],
+				additionalFilters:[],
 				selectedAddColumns:[],
 				setRouteParams:function($routeParams){
 					var count = 0;
@@ -330,7 +332,7 @@
 				},
 				
 				initAdditionalColumns:function(){
-					this.additionalsColumns=[];
+					this.additionalColumns=[];
 					this.selectedAddColumns=[];
 					
 					if(lists.get("readsets-addcolumns") && lists.get("readsets-addcolumns").length === 1){
@@ -340,24 +342,55 @@
 						for(var i = 0; i  < 5 && allColumns.length > 0 ; i++){
 							formColumns.push(allColumns.splice(0, nbElementByColumn));	    								
 						}
-						this.additionalsColumns = formColumns;
+						//complete to 5 five element to have a great design 
+						while(formColumns.length < 5){
+							formColumns.push([]);
+						}
+						this.additionalColumns = formColumns;
 					}
 				},
 				
 				getAddColumnsToForm : function(){
-					if(this.additionalsColumns.length === 0){
+					if(this.additionalColumns.length === 0){
 						this.initAdditionalColumns();
 					}
-					return this.additionalsColumns;									
-				},				
+					return this.additionalColumns;									
+				},	
+				
+				initAdditionalFilters:function(){
+					this.additionalFilters=[];
+					
+					if(lists.get("readsets-addfilters") && lists.get("readsets-addfilters").length === 1){
+						var formFilters = [];
+						var allFilters = angular.copy(lists.get("readsets-addfilters")[0].filters);
+						var nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
+						for(var i = 0; i  < 5 && allFilters.length > 0 ; i++){
+							formFilters.push(allFilters.splice(0, nbElementByColumn));	    								
+						}
+						//complete to 5 five element to have a great design 
+						while(formFilters.length < 5){
+							formFilters.push([]);
+						}
+							
+						this.additionalFilters = formFilters;
+					}
+				},
+				
+				getAddFiltersToForm : function(){
+					if(this.additionalFilters.length === 0){
+						this.initAdditionalFilters();
+					}
+					return this.additionalFilters;									
+				},	
+				
 				addColumnsToDatatable:function(){
 					this.reportingConfiguration = undefined;
 					this.reportingConfigurationCode = undefined;
 					this.selectedAddColumns = [];
-					for(var i = 0 ; i < this.additionalsColumns.length ; i++){
-						for(var j = 0; j < this.additionalsColumns[i].length; j++){
-							if(this.additionalsColumns[i][j].select){
-								this.selectedAddColumns.push(this.additionalsColumns[i][j]);
+					for(var i = 0 ; i < this.additionalColumns.length ; i++){
+						for(var j = 0; j < this.additionalColumns[i].length; j++){
+							if(this.additionalColumns[i][j].select){
+								this.selectedAddColumns.push(this.additionalColumns[i][j]);
 							}
 						}
 					}
