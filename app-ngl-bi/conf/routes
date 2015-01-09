@@ -145,6 +145,12 @@ POST 	/api/reporting/configs							controllers.reporting.api.ReportingConfigurat
 PUT    	/api/reporting/configs/:code					controllers.reporting.api.ReportingConfigurations.update(code)
 DELETE	/api/reporting/configs/:code					controllers.reporting.api.ReportingConfigurations.delete(code: java.lang.String)
 
+GET    	/api/reporting/filters    	           			@controllers.reporting.api.FilteringConfigurations.list()
+GET	   	/api/reporting/filters/:code					@controllers.reporting.api.FilteringConfigurations.get(code)
+POST 	/api/reporting/filters							@controllers.reporting.api.FilteringConfigurations.save()
+PUT    	/api/reporting/filters/:code					@controllers.reporting.api.FilteringConfigurations.update(code)
+DELETE	/api/reporting/filters/:code					@controllers.reporting.api.FilteringConfigurations.delete(code: java.lang.String)
+
 
 #valuation configuration
 GET    	/api/valuation/criterias    	        		controllers.valuation.api.ValuationCriterias.list()
@@ -219,6 +225,11 @@ GET		/tpl/stats/js-routes						controllers.stats.tpl.Stats.javascriptRoutes()
 #parameters
 GET		/api/parameters/:typeCode					controllers.commons.api.Parameters.list(typeCode: java.lang.String)
 GET		/api/parameters/:typeCode/:code				controllers.commons.api.Parameters.get(typeCode: java.lang.String, code: java.lang.String)
+
+
+#value of property definition
+GET		/api/values									controllers.commons.api.Values.list()
+
 
 ->  /authentication authentication.Routes
 

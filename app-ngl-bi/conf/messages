@@ -59,6 +59,10 @@ sentCCRT.value.FALSE = Non
 sentCollaborator.value.TRUE = Oui
 sentCollaborator.value.FALSE = Non
 
+boolean.value.TRUE = Oui
+boolean.value.FALSE = Non
+
+
 search.placeholder.projects = Sélect. des projets
 search.placeholder.samples = Sélect. des échantillons
 search.placeholder.project = Sélect. un projet
