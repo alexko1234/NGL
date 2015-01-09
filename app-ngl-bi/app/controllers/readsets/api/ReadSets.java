@@ -176,7 +176,7 @@ public class ReadSets extends ReadSetsController{
 			queries.add(DBQuery.is("productionValuation.user", form.productionValuationUser));
 		}
 		//TODO must be change to used a generic system (see below)
-		
+		/*
 		if (StringUtils.isNotBlank(form.isSentCCRT)) {
 			if (Boolean.valueOf(form.isSentCCRT)) { 
 				queries.add(DBQuery.is("properties.isSentCCRT.value", Boolean.valueOf(form.isSentCCRT)));
@@ -193,6 +193,7 @@ public class ReadSets extends ReadSetsController{
 				queries.add(DBQuery.notEquals("properties.isSentCollaborator.value", !Boolean.valueOf(form.isSentCollaborator))); 
 			}
 		}
+		*/
 		//END TODO
 		
 		queries.addAll(NGLControllerHelper.generateQueriesForProperties(form.properties, Level.CODE.ReadSet, "properties"));

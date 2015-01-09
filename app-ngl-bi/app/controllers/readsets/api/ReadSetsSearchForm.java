@@ -47,7 +47,7 @@ public class ReadSetsSearchForm extends ListForm{
     
     public List<String> existingFields, notExistingFields;
     
-    public String isSentCCRT, isSentCollaborator;
+    //public String isSentCCRT, isSentCollaborator;
 
     public Map<String, List<String>> properties = new HashMap<String, List<String>>();
     public Map<String, List<String>> sampleOnContainerProperties = new HashMap<String, List<String>>();
