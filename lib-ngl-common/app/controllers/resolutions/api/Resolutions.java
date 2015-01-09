@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import models.laboratory.resolutions.instance.Resolution;
-import models.laboratory.resolutions.instance.ResolutionConfigurations;
+import models.laboratory.resolutions.instance.ResolutionConfiguration;
 import models.utils.InstanceConstants;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -30,13 +30,13 @@ import fr.cea.ig.MongoDBResult;
  *
  */
 @Controller
-public class Resolutions extends DocumentController<ResolutionConfigurations> {
+public class Resolutions extends DocumentController<ResolutionConfiguration> {
 	
 	final static Form<ResolutionConfigurationsSearchForm> searchForm = form(ResolutionConfigurationsSearchForm.class); 
-	final static Form<ResolutionConfigurations> resolutionConfigurationsForm = form(ResolutionConfigurations.class);
+	final static Form<ResolutionConfiguration> resolutionConfigurationsForm = form(ResolutionConfiguration.class);
 	
 	public Resolutions() {
-		super(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfigurations.class);		
+		super(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class);		
 	}
 
 
@@ -45,17 +45,17 @@ public class Resolutions extends DocumentController<ResolutionConfigurations> {
 		ResolutionConfigurationsSearchForm form = filledForm.get();
 		Query q = getQuery(form);
 		
-		MongoDBResult<ResolutionConfigurations> results = mongoDBFinder(form, q);			
-		List<ResolutionConfigurations> resolutionConfigurations = results.toList();			
+		MongoDBResult<ResolutionConfiguration> results = mongoDBFinder(form, q);			
+		List<ResolutionConfiguration> resolutionConfigurations = results.toList();			
 		return ok(Json.toJson(toListResolutions(resolutionConfigurations)));
 		
 	}
 	
 	
 	
-	private List<Resolution> toListResolutions(List<ResolutionConfigurations> resolutionConfigurations){
+	private List<Resolution> toListResolutions(List<ResolutionConfiguration> resolutionConfigurations){
 		List<Resolution> resos = new ArrayList<Resolution>();
-		for(ResolutionConfigurations rc : resolutionConfigurations){
+		for(ResolutionConfiguration rc : resolutionConfigurations){
 			for (Resolution reso : rc.resolutions) {
 				resos.add(reso);
 			}
