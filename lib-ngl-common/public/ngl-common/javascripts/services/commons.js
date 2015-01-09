@@ -69,14 +69,13 @@ angular.module('commonsServices', []).
     		}
     		return constructor;
     	}).factory('lists', ['$http', function($http){
-    		
+    		var inProgress = {};
     		var results = {
     				valuations : [{code:"TRUE", name:Messages("valuation.value.TRUE")},
     				                 {code:"FALSE", name:Messages("valuation.value.FALSE")},
     				                 {code:"UNSET", name:Messages("valuation.value.UNSET")}],
-    				sentCCRT : [{value:"true", name:Messages("sentCCRT.value.TRUE")}, {value:"false", name:Messages("sentCCRT.value.FALSE")}],
-    				sentCollaborator : [{value:"true", name:Messages("sentCollaborator.value.TRUE")}, {value:"false", name:Messages("sentCollaborator.value.FALSE")}]
-    		};    		
+    				booleans : [{code:"true", name:Messages("boolean.value.TRUE")}, {code:"false", name:Messages("boolean.value.FALSE")}]
+    			};    		
     		
     		var refresh = {
     				resolutions : function(params, key){
@@ -155,6 +154,12 @@ angular.module('commonsServices', []).
     				reportConfigs : function(params, key){
     					load(jsRoutes.controllers.reporting.api.ReportingConfigurations.list().url,params,(key)?key:'reportConfigs');    				
     				},
+    				filterConfigs : function(params, key){
+    					load(jsRoutes.controllers.reporting.api.FilteringConfigurations.list().url,params,(key)?key:'filterConfigs');    				
+    				},
+    				values : function(params, key){
+    					load(jsRoutes.controllers.commons.api.Values.list().url,params,(key)?key:'values');    				
+    				},
     				
     				all : function(params){
     					this.resolutions(params);
@@ -176,13 +181,17 @@ angular.module('commonsServices', []).
     		
     		
     		function load(url, params, key){
-    			if(angular.isUndefined(params)){
-    				params = {};
+    			if(inProgress[key] === undefined){
+	    			inProgress[key] = true; //avoid multiple load in parallele
+	    			if(angular.isUndefined(params)){
+	    				params = {};
+	    			}
+	    			params.list = true;
+	    			$http.get(url,{params:params,key:key}).success(function(data, status, headers, config) {
+	    				results[config.key]=data;
+	    				inProgress[key] === undefined
+	    			});
     			}
-    			params.list = true;
-    			$http.get(url,{params:params,key:key}).success(function(data, status, headers, config) {
-    				results[config.key]=data;    				
-    			});
     		}
     		
     		return {
@@ -217,9 +226,12 @@ angular.module('commonsServices', []).
     					   },
     			getInstruments : function(){return results['instruments'];},		   
     			getValuations : function(){return results['valuations'];},
-    			getSentCCRT : function(){return results['sentCCRT'];},
-    			getSentCollaborator : function(){return results['sentCollaborator'];}
-    			
+    			getValues : function(params, key){
+    				if(results[key] === undefined){
+    					refresh.values(params, key);
+    				}
+    				return results[key];
+    			}			
     		};
     		
     	}]).factory('convertValueServices', [function() {
