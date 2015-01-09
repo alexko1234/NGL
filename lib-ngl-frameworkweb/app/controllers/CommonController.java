@@ -38,7 +38,7 @@ import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import fr.cea.ig.MongoDBResult.Sort;
 
-
+@Deprecated
 @With({fr.cea.ig.authentication.Authenticate.class, UserHistory.class})
 public abstract class CommonController extends Controller{
 
