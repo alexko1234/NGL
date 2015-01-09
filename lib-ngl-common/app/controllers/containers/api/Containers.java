@@ -284,7 +284,7 @@ public class Containers extends CommonController {
 				listePrevious.add(e.code);
 			}
 			
-			if(null != listePrevious && listePrevious.size() > 0){
+			if(CollectionUtils.isNotEmpty(listePrevious)){
 				queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", listePrevious),DBQuery.notExists("fromExperimentTypeCodes"),DBQuery.size("fromExperimentTypeCodes", 0)));
 			}	    		 
 			
@@ -314,7 +314,7 @@ public class Containers extends CommonController {
 					previousString.add(e.code);
 				}
 
-				if(previousString.size() != 0){//If there is no previous, we take all the containers Available
+				if(CollectionUtils.isNotEmpty(previousString)){//If there is no previous, we take all the containers Available
 					queryElts.add(DBQuery.in("fromExperimentTypeCodes", previousString));
 				}
 				

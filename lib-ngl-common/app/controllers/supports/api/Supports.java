@@ -102,31 +102,40 @@ public class Supports extends CommonController {
 
 		if(StringUtils.isNotEmpty(supportsSearch.categoryCode)){
 			queryElts.add(DBQuery.is("categoryCode", supportsSearch.categoryCode));
-		}else if(StringUtils.isNotEmpty(supportsSearch.experimentTypeCode)){
-			List<ContainerSupportCategory> containerSupportCategories = ContainerSupportCategory.find.findByExperimentTypeCode(supportsSearch.experimentTypeCode);
-			List<String> cs = new ArrayList<String>();
-			for(ContainerSupportCategory c:containerSupportCategories){
-				cs.add(c.code);
-			}
-			if(cs.size() > 0){
-				queryElts.add(DBQuery.in("categoryCode", cs));
-			}
 		}
 
-		BasicDBObject keys = new BasicDBObject();
-		keys.put("_id", 0);//Don't need the _id field
-		keys.put("support", 1);
+		if(CollectionUtils.isNotEmpty(supportsSearch.fromExperimentTypeCodes)){
+			queryElts.add(DBQuery.in("fromExperimentTypeCodes", supportsSearch.fromExperimentTypeCodes));
+		}		
 
+		//These fields are not in the ContainerSupport collection then we use the Container collection
 		if(StringUtils.isNotEmpty(supportsSearch.experimentTypeCode) || StringUtils.isNotEmpty(supportsSearch.processTypeCode) || StringUtils.isNotEmpty(supportsSearch.stateCode)){
+			/*
+			//If the categoryCode is null or empty, we use the ContainerSupportCategory data table to enhance the query
+			if(StringUtils.isNotEmpty(supportsSearch.experimentTypeCode) && StringUtils.isEmpty(supportsSearch.categoryCode)){
+				List<ContainerSupportCategory> containerSupportCategories = ContainerSupportCategory.find.findByExperimentTypeCode(supportsSearch.experimentTypeCode);
+				List<String> ls = new ArrayList<String>();
+				for(ContainerSupportCategory c:containerSupportCategories){
+					ls.add(c.code);
+				}
+				if(ls.size() > 0){
+					queryElts.add(DBQuery.in("categoryCode", ls));
+				}
+			}
+			*/
+			
+			//Using the Container collection for reaching container support
 			ContainersSearchForm cs = new ContainersSearchForm();
 			cs.experimentTypeCode = supportsSearch.experimentTypeCode;
 			cs.processTypeCode = supportsSearch.processTypeCode;
-			cs.stateCode = supportsSearch.stateCode;
-			cs.fromExperimentTypeCodes = supportsSearch.fromExperimentTypeCodes;
+			cs.stateCode = supportsSearch.stateCode;		
 			if(CollectionUtils.isNotEmpty(supportsSearch.valuations)){
 				cs.valuations = supportsSearch.valuations;
 			}
-
+			
+			BasicDBObject keys = new BasicDBObject();
+			keys.put("_id", 0);//Don't need the _id field
+			keys.put("support", 1);
 			List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, Containers.getQuery(cs), keys).toList();
 			Logger.debug("Containers "+containers.size());
 			List<String> supports  =new ArrayList<String>();
@@ -138,6 +147,9 @@ public class Supports extends CommonController {
 				queryElts.add(DBQuery.in("code", supports));
 			}
 		}
+
+
+
 		if(StringUtils.isNotBlank(supportsSearch.code)){
 			queryElts.add(DBQuery.is("code", supportsSearch.code));
 		}
@@ -169,3 +181,4 @@ public class Supports extends CommonController {
 		return DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 	}
 }
+

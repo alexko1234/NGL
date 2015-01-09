@@ -582,8 +582,8 @@ public class ContainerTest extends AbstractTests {
 		assertThat(lc).isNullOrEmpty();		
 
 		//Test with date (good request)		
-		csf.fromDate = new Date(2014-1900, 9, 9) ;
-		csf.toDate = new Date(2014-1900, 9, 11) ;
+		csf.fromDate = new Date(2014-1900, 9, 9);
+		csf.toDate = new Date(2014-1900, 9, 11);
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&fromDate="+csf.fromDate.getTime()+"&toDate="+csf.toDate.getTime()));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 
@@ -593,8 +593,8 @@ public class ContainerTest extends AbstractTests {
 		assertThat(c.traceInformation.creationDate).isBetween(csf.fromDate, csf.toDate, true,true);	
 		}
 		//Test with date (bad request)
-		csf.fromDate = new Date(2014-1900, 0, 1) ;
-		csf.toDate = new Date(2014-1900, 0, 5) ;
+		csf.fromDate = new Date(2014-1900, 0, 1);
+		csf.toDate = new Date(2014-1900, 0, 5);
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(csf.list)+"&fromDate="+csf.fromDate.getTime()+"&toDate="+csf.toDate.getTime()));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 
