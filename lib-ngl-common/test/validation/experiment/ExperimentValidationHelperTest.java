@@ -13,7 +13,7 @@ import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentQueryParams;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.resolutions.instance.Resolution;
-import models.laboratory.resolutions.instance.ResolutionConfigurations;
+import models.laboratory.resolutions.instance.ResolutionConfiguration;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 import org.mongojack.DBQuery;
@@ -48,9 +48,9 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 
 		List<String> experimentTypes = new ArrayList<String>();
 		experimentTypes.add(experimentType.code);		
-		List<ResolutionConfigurations> resolutionConfigurations = MongoDBDAO.find(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfigurations.class, DBQuery.in("typeCodes", experimentTypes)).toList();
+		List<ResolutionConfiguration> resolutionConfigurations = MongoDBDAO.find(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, DBQuery.in("typeCodes", experimentTypes)).toList();
 		resolutionList=new ArrayList<String>();
-		for (ResolutionConfigurations rc : resolutionConfigurations) {
+		for (ResolutionConfiguration rc : resolutionConfigurations) {
 			for(Resolution reso: rc.resolutions) {
 				resolutionList.add(reso.code);
 			}
