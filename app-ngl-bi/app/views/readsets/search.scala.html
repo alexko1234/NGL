@@ -67,28 +67,6 @@
 	}					
 }
 
-@formsupp() = {
-	@columnSearchForm{
-		@formGroup{			
-			<div class="form-control" bt-select ng-model="searchService.form.isSentCCRT" placeholder="@Messages("search.placeholder.isSentCCRT")" bt-options="valid.value as valid.name for valid in searchService.lists.getSentCCRT()"></div>
-		}
-	}
-	
-	@columnSearchForm{
-		@formGroup{
-			<div class="form-control" bt-select ng-model="searchService.form.isSentCollaborator" placeholder="@Messages("search.placeholder.isSentCollaborator")" bt-options="valid.value as valid.name for valid in searchService.lists.getSentCollaborator()"></div>
-		}
-	}	
-	@columnSearchForm{
-	}
-	@columnSearchForm{
-	}
-	@columnSearchForm{
-	}
-	
-}
-
-
 @buttons() = {
 	@formGroup{
 		<div class="form-control" bt-select ng-model="searchService.reportingConfigurationCode" ng-change="searchService.updateColumn()" placeholder="@Messages("search.placeholder.reporting.configuration")" bt-options="valid.code as valid.name for valid in searchService.lists.get('reportConfigs')" ng-if="searchService.lists.get('reportConfigs').length > 0"></div>
@@ -104,8 +82,8 @@
 	<div dt-form>
 		<ul class="nav nav-tabs margin-bottom-5">
 	   	<li class="active"><a href="#" data-target="#filters" data-toggle="tab">@Messages("search.tab.filters")</a></li>
-	   	<li ><a href="#" data-target="#addfilters" data-toggle="tab">@Messages("search.tab.addfilters")</a></li>    
-	   	<li ><a href="#" data-target="#addcolumns" data-toggle="tab">@Messages("search.tab.addcolumns")</a></li>    	
+	   	<li ng-if="searchService.getAddFiltersToForm().length > 0"><a href="#" data-target="#addfilters" data-toggle="tab">@Messages("search.tab.addfilters")</a></li>    
+	   	<li ng-if="searchService.getAddColumnsToForm().length > 0"><a href="#" data-target="#addcolumns" data-toggle="tab">@Messages("search.tab.addcolumns")</a></li>    	
 	    </ul>
 			
 		<div class="tab-content">
@@ -136,7 +114,12 @@
 	<div class="tab-pane" id="addfilters">
 	<form class="well well-small">
 			<div class="row">
-				@formsupp
+				<div class="col-md-2 col-lg-2" ng-repeat="filters in searchService.getAddFiltersToForm()">
+					<div class="form-group" ng-repeat="filter in filters">
+						<div dt-compile="filter.html"></div> <!-- used directive from datatable to compile html -->
+					</div>
+				</div>
+				
 				@columnSearchForm{
 				@formGroup{
 				<div class="btn-toolbar">
