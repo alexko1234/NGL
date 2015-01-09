@@ -1537,108 +1537,110 @@ angular.module('datatableServices', []).
 		    			 * Function to export data in a CSV file
 		    			 */
 		    			exportCSV : function(exportType) {
-		    				this.config.exportCSV.start = true;
-		    				var cas, delimiter = this.config.exportCSV.delimiter, lineValue = "", colValue, that = this; 		    				
-		    				
-		    				//calcule results ( code extracted from method computeDisplayResult() )
-		    				var displayResultTmp = [], _displayResult = [];
-		    				_displayResult = angular.copy(this.allResult);		    					
-		    				angular.forEach(_displayResult, function(value, key){
-		    					 var line = {edit:undefined, selected:undefined, trClass:undefined, group:false};
-	    						 this.push({data:value, line:line});
-	    					}, displayResultTmp);
-		    				_displayResult = undefined;
-		    				if(this.isGroupActive()){
-		    					displayResultTmp = this.addGroup(displayResultTmp);					
+		    				if(this.config.exportCSV.active){
+			    				this.config.exportCSV.start = true;
+			    				var cas, delimiter = this.config.exportCSV.delimiter, lineValue = "", colValue, that = this; 		    				
+			    				
+			    				//calcule results ( code extracted from method computeDisplayResult() )
+			    				var displayResultTmp = [], _displayResult = [];
+			    				_displayResult = angular.copy(this.allResult);		    					
+			    				angular.forEach(_displayResult, function(value, key){
+			    					 var line = {edit:undefined, selected:undefined, trClass:undefined, group:false};
+		    						 this.push({data:value, line:line});
+		    					}, displayResultTmp);
+			    				_displayResult = undefined;
+			    				if(this.isGroupActive()){
+			    					displayResultTmp = this.addGroup(displayResultTmp);					
+			    				}
+			    				//manage results
+			    				if (displayResultTmp) {
+			    						    					
+			    					var columnsToPrint = this.config.columns;
+			    					//header
+			    					columnsToPrint.forEach(function(column) {
+			    						if(!that.config.hide.columns[column.id]){
+			    							
+			    							var header = column.header;
+			    							if(typeof header == 'function'){
+			    								header = header();
+			    							}else{
+			    								header = Messages(column.header);
+			    							}
+			    							if(that.isGroupActive()){
+				    							if(column.groupMethod === "sum"){
+				    								header = header + Messages('datatable.export.sum'); 
+				    							}else if(column.groupMethod === "average"){
+				    								header = header + Messages('datatable.export.average');
+				    							}else if(column.groupMethod === "unique"){
+				    								header = header + Messages('datatable.export.unique');
+				    							}else if(column.groupMethod === "countDistinct"){
+				    								header = header + Messages('datatable.export.countDistinct');
+				    							} 
+			    							}
+			    							lineValue = lineValue + header + delimiter;
+			    							}
+			    						}); 
+			    					lineValue += "\n";
+			    					//data
+			    					displayResultTmp.forEach(function(result) {
+			    						
+			    						columnsToPrint.forEach(function(column) {	
+			    							if(!that.config.hide.columns[column.id]){
+			    							//algo to set colValue (value of the column)
+				    			    			if (!result.line.group && !angular.isDefined(column.url) && exportType!=='groupsOnly') {
+				    			    				var property = column.property;
+				    			    				property += (column.filter)?'|'+column.filter:'';
+				    			    				if(column.convertValue !== undefined && column.convertValue.active === true){
+				    			    					property += "| convert:"+JSON.stringify(column.convertValue);
+				    			    				}
+				    			    				if(column.type !== "number"){ //to preserve number in excel file
+				    			    					property += that.getFormatter(column);
+				    			    				}
+					    							colValue = $parse(property)(result.data);
+					    							lineValue = lineValue + ((colValue!==null)&&(colValue)?colValue:"") + delimiter;
+				    			    			} else if(result.line.group) {
+				    			    				
+				    			    				var v = $parse("group."+column.id)(result.data);
+				    			    				//if error in group function
+				    			    				if (angular.isDefined(v) && angular.isString(v) &&v.charAt(0) === "#") {
+				    			    					colValue = v;
+				    			    				} else if(angular.isDefined(v) && !that.config.group.columns[column.id]) {
+				    			    					//not filtered properties because used during the compute
+				    			    					colValue = $parse("group."+column.id+that.getFormatter(column))(result.data);
+				    			    				} else if(angular.isDefined(v) && that.config.group.columns[column.id]) {
+				    			    					var expression = column.id;
+				    			    					expression += (column.filter)?'|'+column.filter:'';
+				    			    					colValue = $parse("group."+expression+that.getFormatter(column))(result.data);
+				    			    				} else {
+				    			    					colValue =  undefined;
+				    			    				}
+				    			    				lineValue = lineValue + ((colValue!==null)&&(colValue)?colValue:"") + delimiter;
+				    			    			}else if(!result.line.group && angular.isDefined(column.url)) {
+				    			    				colValue =  undefined;
+				    			    				alert("Url column is not yet implemented !");
+				    			    			}
+			    							}	
+			    						});
+			    						if ((exportType==='all') || ((exportType==='groupsOnly') && result.line.group)) {
+			    							lineValue = lineValue + "\n";
+			    						}
+			    					});
+			    					displayResultTmp = undefined;
+			    					
+			    					//fix for the accents in Excel : add BOM (byte-order-mark)
+			    					var fixedstring = "\ufeff" + lineValue;		    							    					
+			    					
+			    					//save
+			    					var blob = new Blob([fixedstring], {type: "text/plain;charset=utf-8"}); 
+			    					var currdatetime = $filter('date')(new Date(), 'yyyyMMdd_HHmmss');
+			    					var text_filename = (this.config.name || this.configDefault.name) + "_" + currdatetime;		    					
+			    					saveAs(blob, text_filename + ".csv");
+			    				}
+			    				else {
+			    					alert("No data to print. Select the data you need");
+			    				}
+			    				this.config.exportCSV.start = false;
 		    				}
-		    				//manage results
-		    				if (displayResultTmp) {
-		    						    					
-		    					var columnsToPrint = this.config.columns;
-		    					//header
-		    					columnsToPrint.forEach(function(column) {
-		    						if(!that.config.hide.columns[column.id]){
-		    							
-		    							var header = column.header;
-		    							if(typeof header == 'function'){
-		    								header = header();
-		    							}else{
-		    								header = Messages(column.header);
-		    							}
-		    							if(that.isGroupActive()){
-			    							if(column.groupMethod === "sum"){
-			    								header = header + Messages('datatable.export.sum'); 
-			    							}else if(column.groupMethod === "average"){
-			    								header = header + Messages('datatable.export.average');
-			    							}else if(column.groupMethod === "unique"){
-			    								header = header + Messages('datatable.export.unique');
-			    							}else if(column.groupMethod === "countDistinct"){
-			    								header = header + Messages('datatable.export.countDistinct');
-			    							} 
-		    							}
-		    							lineValue = lineValue + header + delimiter;
-		    							}
-		    						}); 
-		    					lineValue += "\n";
-		    					//data
-		    					displayResultTmp.forEach(function(result) {
-		    						
-		    						columnsToPrint.forEach(function(column) {	
-		    							if(!that.config.hide.columns[column.id]){
-		    							//algo to set colValue (value of the column)
-			    			    			if (!result.line.group && !angular.isDefined(column.url) && exportType!=='groupsOnly') {
-			    			    				var property = column.property;
-			    			    				property += (column.filter)?'|'+column.filter:'';
-			    			    				if(column.convertValue !== undefined && column.convertValue.active === true){
-			    			    					property += "| convert:"+JSON.stringify(column.convertValue);
-			    			    				}
-			    			    				if(column.type !== "number"){ //to preserve number in excel file
-			    			    					property += that.getFormatter(column);
-			    			    				}
-				    							colValue = $parse(property)(result.data);
-				    							lineValue = lineValue + ((colValue!==null)&&(colValue)?colValue:"") + delimiter;
-			    			    			} else if(result.line.group) {
-			    			    				
-			    			    				var v = $parse("group."+column.id)(result.data);
-			    			    				//if error in group function
-			    			    				if (angular.isDefined(v) && angular.isString(v) &&v.charAt(0) === "#") {
-			    			    					colValue = v;
-			    			    				} else if(angular.isDefined(v) && !that.config.group.columns[column.id]) {
-			    			    					//not filtered properties because used during the compute
-			    			    					colValue = $parse("group."+column.id+that.getFormatter(column))(result.data);
-			    			    				} else if(angular.isDefined(v) && that.config.group.columns[column.id]) {
-			    			    					var expression = column.id;
-			    			    					expression += (column.filter)?'|'+column.filter:'';
-			    			    					colValue = $parse("group."+expression+that.getFormatter(column))(result.data);
-			    			    				} else {
-			    			    					colValue =  undefined;
-			    			    				}
-			    			    				lineValue = lineValue + ((colValue!==null)&&(colValue)?colValue:"") + delimiter;
-			    			    			}else if(!result.line.group && angular.isDefined(column.url)) {
-			    			    				colValue =  undefined;
-			    			    				alert("Url column is not yet implemented !");
-			    			    			}
-		    							}	
-		    						});
-		    						if ((exportType==='all') || ((exportType==='groupsOnly') && result.line.group)) {
-		    							lineValue = lineValue + "\n";
-		    						}
-		    					});
-		    					displayResultTmp = undefined;
-		    					
-		    					//fix for the accents in Excel : add BOM (byte-order-mark)
-		    					var fixedstring = "\ufeff" + lineValue;		    							    					
-		    					
-		    					//save
-		    					var blob = new Blob([fixedstring], {type: "text/plain;charset=utf-8"}); 
-		    					var currdatetime = $filter('date')(new Date(), 'yyyyMMdd_HHmmss');
-		    					var text_filename = (this.config.name || this.configDefault.name) + "_" + currdatetime;		    					
-		    					saveAs(blob, text_filename + ".csv");
-		    				}
-		    				else {
-		    					alert("No data to print. Select the data you need");
-		    				}
-		    				this.config.exportCSV.start = false;
 		    			},
 		    			
 		    			/**
