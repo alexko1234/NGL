@@ -105,7 +105,7 @@ public class InstrumentService {
 				getInstruments(
 						createInstrument("Stratagene1", "Stratagene1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS))),
 				getContainerSupportCategories(new String[]{"tube","sheet-96"}), null, 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		l.add(newInstrumentUsedType("cBot-interne", "cBot-interne", InstrumentCategory.find.findByCode("cbot"), getPropertiesCBotInterne(), 
 				getInstruments(

@@ -211,7 +211,7 @@ public class ExperimentService {
 			
 			l.add(newExperimentType("Quantification qPCR","qPCR-quantification",850,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
-					getProtocols("proto_qc_v1"), getInstrumentUsedTypes("rocheLightCycler-qPCR"),"OneToVoid", 
+					getProtocols("proto_qc_v1"), getInstrumentUsedTypes("rocheLightCycler-qPCR","stratagene-qPCR"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG))); 			
 			
 			/**********************************************************************************/

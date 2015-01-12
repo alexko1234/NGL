@@ -1,21 +1,21 @@
 package services.instance.resolution;
 
-import static services.description.DescriptionFactory.*;
+import static services.description.DescriptionFactory.newResolution;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import play.Logger;
-
-import fr.cea.ig.MongoDBDAO;
-
-import validation.ContextValidation;
+import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.resolutions.instance.Resolution;
 import models.laboratory.resolutions.instance.ResolutionCategory;
 import models.laboratory.resolutions.instance.ResolutionConfiguration;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
+import models.utils.dao.DAOException;
+import play.Logger;
+import validation.ContextValidation;
+import fr.cea.ig.MongoDBDAO;
 
 /**
  * Create Resolutions : for more flexibility, these data are created in a specific collection (in MongoDB) 
@@ -134,8 +134,9 @@ public class ResolutionService {
 		createRunResolutionCNS(ctx); 
 		createReadSetResolutionCNS(ctx); 
 		createAnalysisResolutionCNS(ctx); 
-		createExperimentResolutionCNS(ctx); 
 		createOpgenDepotResolutionCNS(ctx);
+		createExperimentResolutionCNS(ctx); 
+
 	}
 	
 	
@@ -449,27 +450,26 @@ public class ResolutionService {
 		r.code = "experimentReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
-		ArrayList<String> al = new ArrayList<String>();
+		ArrayList<String> al = new ArrayList<String>(); 
 		
-		al.add("void-illumina-depot");
-		al.add("prepa-flowcell");
-		al.add("fragmentation");
-		al.add("librairie-indexing");
-	    al.add("librairie-dualindexing");
-	    al.add("amplification");
-	    al.add("solution-stock");
-	    al.add("bioanalyzer-na");
-	    al.add("bioanalyzer-a");
-	    al.add("qubit");
-	    al.add("qpcr");
-	    al.add("ampure-na");
-	    al.add("ampure-a");
-	    al.add("void-banque");
-	    al.add("void-qpcr");
-	    al.add("illumina-depot");
+		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class,r.code);
+		List<String> typeCodes=MongoDBDAO.getCollection(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class).distinct("typeCodes");
+		
+		try {
+			List<ExperimentType> expTypes=ExperimentType.find.findAll();
+			for(ExperimentType expType:expTypes){
+				if(!typeCodes.contains(expType.code)){
+					Logger.debug("Add experimentType default resolution "+ expType.code);
+					al.add(expType.code);
+				}
+				
+			}
+		} catch (DAOException e) {
+			Logger.error("Creation Resolution for ExperimentType error "+e.getMessage());
+		}
+		
 		r.typeCodes = al;
 		
-		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "experimentReso");
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
 	}
 	
@@ -492,7 +492,7 @@ public class ResolutionService {
 		al.add("opgen-depot");		
 		r.typeCodes = al;
 		
-		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "expODReso");
+		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
 	}
 	
