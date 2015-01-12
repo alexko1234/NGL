@@ -102,9 +102,13 @@ public class ExperimentService {
 		l.add(newExperimentType("Void Opgen Illumina","ext-to-opgen-depot",
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), getPropertyDefinitionExtToOpgenDepot(), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		
+		/*
 		l.add(newExperimentType("Depot Opgen", "opgen-depot",1600
 				, ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),null, getProtocols("depot_opgen_ptr_1"), 
+				getInstrumentUsedTypes("ARGUS"), "ManyToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS))); */
+		
+		l.add(newExperimentType("Depot Opgen", "opgen-depot",1600
+				, ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionOpgenDepot(), getProtocols("depot_opgen_ptr_1"), 
 				getInstrumentUsedTypes("ARGUS"), "ManyToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		//Prepaflowcell : to finish
@@ -419,5 +423,11 @@ public class ExperimentService {
 		propertyDefinitions.add(newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, false, "single"));
 		return propertyDefinitions;
 	}	
+	
+	private static List<PropertyDefinition> getPropertyDefinitionOpgenDepot() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, false, "single"));
+		return propertyDefinitions;
+	}
 
 }
