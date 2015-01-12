@@ -30,6 +30,7 @@
 				lists.refresh.supports();
 				lists.refresh.users();
 				lists.refresh.states({objectTypeCode:"Process"});
+				lists.refresh.processTypes();
 				isInit=true;
 			}
 		};

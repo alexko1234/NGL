@@ -52,7 +52,7 @@ public class Processes extends CommonController{
 		
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();		
 		columns.add(DatatableHelpers.getColumn("code", Messages.get("processes.table.code"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("typeCode", Messages.get("processes.table.typeCode"), true, false, false));
+		columns.add(DatatableHelpers.getColumn("typeCode", Messages.get("processes.table.typeCode"), true, false, false, "codes:'type'"));
 		if(processesSearch.typeCode != null){
 			columns.addAll(getPropertiesDefinitionsColumns(processesSearch.typeCode ,true));
 		}		
