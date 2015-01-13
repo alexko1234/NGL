@@ -16,9 +16,7 @@ http://www.springframework.org/schema/jee http://www.springframework.org/schema/
 	<context:component-scan base-package="models" />
 
   	<jee:jndi-lookup id="ngl" jndi-name="ngl" />
-  	<jee:jndi-lookup id="tara" jndi-name="tara" /> 
-	<jee:jndi-lookup id="lims" jndi-name="lims" />
-
+  	
 	<!-- Define the transaction strategy depends environment here JDBC. Reference 
 		dataSource -->
   	<bean id="txManager"
