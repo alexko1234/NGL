@@ -26,12 +26,13 @@ public class Submission extends DBObject implements IValidation {
 	public String projectCode;     // required pour nos stats //Reference code de la collection project NGL
  	public String accession;       // numeros d'accession attribué par ebi */
 	public Date submissionDate;
-	public String studyCode;       // liste des codes des study à soumettre à l'ebi
+	public String studyCode;       // study à soumettre à l'ebi
 	public List<String> sampleCodes = new ArrayList<String>(); // liste des codes des sample à soumettre à l'ebi
 	public List<String> experimentCodes = new ArrayList<String>(); // liste des codes des experiments à soumettre à l'ebi
+	public List<String> runCodes = new ArrayList<String>(); // liste des codes des runs à soumettre à l'ebi
 	public Configuration config = null;
 	public String configCode = null;
-	public String submissionDirectory;
+	public String submissionDirectory = null;
 	public Boolean release = false;
 	public String type = null; // SRA ou WGS
 	public String xmlStudys = null; // nom relatif du fichier xml des studys 
@@ -44,7 +45,7 @@ public class Submission extends DBObject implements IValidation {
 	public State state;// = new State(); // Reference sur "models.laboratory.common.instance.state" 
 		// pour gerer les differents etats de l'objet.
 		// Les etapes utilisateurs = (new, inWaitingConfiguration,) inProgressConfiguration, finishConfiguration, 
-		// Les etapes automatisables via birds : inWaitingSubmission, inProgressSubmission, finishSubmission, submit
+		// Les etapes automatisables via birds : inWaitingSubmission, inProgressSubmission, submit
 	public TraceInformation traceInformation;// .Reference sur "models.laboratory.common.instance.TraceInformation" 
 		// pour loguer les dernieres modifications utilisateurs
 
