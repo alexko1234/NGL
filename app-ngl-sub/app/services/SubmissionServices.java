@@ -147,6 +147,9 @@ public class SubmissionServices {
 				if(!submission.experimentCodes.contains(experiment.code)){
 					listExperiments.add(experiment);
 					submission.experimentCodes.add(experiment.code);
+					if(experiment.run != null) {
+						submission.runCodes.add(experiment.run.code);
+					}
 				}
 			}
 		}
@@ -589,14 +592,17 @@ public class SubmissionServices {
 	
 	
 	public static void cleanDataBase(String submissionCode) {
+		System.out.println("Recherche objet submission dans la base pour "+ submissionCode);
+
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submission.instance.Submission.class, submissionCode);
 
 		if (submission==null){
+			System.out.println("Aucun objet submission dans la base pour "+ submissionCode);
 			return;
 		}
 		// On verifie que la donnée n'est pas connu de l'EBI avant de detruire
 		if (submission.accession == null || submission.accession.equals("")) {
-			// l'objet study est laissé dans la base, il n'a pas ete crée par le service.
+			System.out.println("L'objet submission contient un AC. submissionCode = "+ submissionCode + " et submissionAC = "+ submission.accession);
 			if (! submission.sampleCodes.isEmpty()) {
 				for (String sampleCode : submission.sampleCodes){
 					// verifier que sample n'est pas utilisé par autre objet submission avant destruction

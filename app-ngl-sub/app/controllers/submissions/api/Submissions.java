@@ -79,7 +79,7 @@ public class Submissions extends SubmissionsController{
 		return ok(Json.toJson(submission));
 	}
 
-	
+
 	public static Result updateState(String code, String stateCode)
 	{
 		Submission submission = getSubmission(code);
