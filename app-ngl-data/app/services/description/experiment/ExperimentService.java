@@ -179,11 +179,11 @@ public class ExperimentService {
 			
 			l.add(newExperimentType("Void qPCR","ext-to-qpcr",
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", 
-					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)));
 			
 			l.add(newExperimentType("Void Depot Illumina","ext-to-prepa-flowcell",
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", 
-					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)));
 
 			
 
@@ -253,17 +253,18 @@ public class ExperimentService {
 			//NO purif au CNG ??
 			//NO void au CNG ??
 			
-			l.add(newExperimentType("Preparation flowcell","prepa-flowcell",
+			//Nom a revoir et properties à ajouter 
+			l.add(newExperimentType("Préparation flowcell","prepa-flowcell-CNG",1100,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
-					getProtocols("SOP") , getInstrumentUsedTypes("cBot, cBot-onboard"),"ManyToOne", 
+					getProtocols("SOP") , getInstrumentUsedTypes("cBot", "cBot-onboard"),"ManyToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 
 			//Depot solexa
-			l.add(newExperimentType("Depot sur sequenceur Illumina", "illumina-depot", 
+			l.add(newExperimentType("Dépot sur sequenceur Illumina", "illumina-depot-CNG", 1200,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(), 
 					getProtocols("sop_depot_1"), getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500"), "OneToVoid", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-	
+				
 		}
 
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
@@ -305,6 +306,16 @@ public class ExperimentService {
 					null,null).save();
 			
 			newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","solution-stock"),
+					null,null).save();
+
+			newExperimentTypeNode("solution-X-nM",getExperimentTypes("solution-X-nM").get(0),false,false,getExperimentTypeNodes("ext-to-qpcr"),
+					null,null).save();
+
+			
+			newExperimentTypeNode("prepa-flowcell-CNG",getExperimentTypes("prepa-flowcell-CNG").get(0),false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","solution-X-nM"),
+					null,null).save();
+			
+			newExperimentTypeNode("illumina-depot-CNG",getExperimentTypes("illumina-depot-CNG").get(0),false,false,getExperimentTypeNodes("prepa-flowcell-CNG"),
 					null,null).save();
 			
 			newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false,false,getExperimentTypeNodes("prepa-flowcell"),
