@@ -2,12 +2,14 @@ package controllers.submissions.api;
 
 import static play.data.Form.form;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import mail.MailServiceException;
 import models.sra.experiment.instance.Experiment;
 import models.sra.experiment.instance.RawData;
 import models.sra.submission.instance.Submission;
@@ -20,6 +22,7 @@ import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
+import services.FileAcServices;
 import services.XmlServices;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
@@ -79,7 +82,7 @@ public class Submissions extends SubmissionsController{
 		return ok(Json.toJson(submission));
 	}
 
-
+	
 	public static Result updateState(String code, String stateCode)
 	{
 		Submission submission = getSubmission(code);
