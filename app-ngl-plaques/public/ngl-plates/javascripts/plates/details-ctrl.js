@@ -70,7 +70,14 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 				}
 			},
 			columns : [
-					    {  	property:"code",
+					    
+						{  	property:"y+x", //first position to be compatible with the lapchip sample import
+							header: Messages("plates.table.well.yx"),
+					    	type :"String",
+					    	edit:false,
+					    	hide:true
+						},
+						{  	property:"code",
 					    	header: Messages("plates.table.well.code"),					    	
 					    	type :"String",
 					    	hide:true
@@ -100,12 +107,6 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 					    	header: Messages("plates.table.well.y"),
 					    	type :"String",
 					    	edit:true,
-					    	hide:true
-						},
-						{  	property:"y+x",
-							header: Messages("plates.table.well.yx"),
-					    	type :"String",
-					    	edit:false,
 					    	hide:true
 						}
 					]
