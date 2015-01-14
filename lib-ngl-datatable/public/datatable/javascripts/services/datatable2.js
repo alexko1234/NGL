@@ -1580,7 +1580,7 @@ angular.module('datatableServices', []).
 			    							lineValue = lineValue + header + delimiter;
 			    							}
 			    						}); 
-			    					lineValue += "\n";
+			    					lineValue = lineValue.substr(0, lineValue.length-1) + "\n";
 			    					//data
 			    					displayResultTmp.forEach(function(result) {
 			    						
@@ -1622,7 +1622,7 @@ angular.module('datatableServices', []).
 			    							}	
 			    						});
 			    						if ((exportType==='all') || ((exportType==='groupsOnly') && result.line.group)) {
-			    							lineValue = lineValue + "\n";
+			    							lineValue = lineValue.substr(0, lineValue.length-1) + "\n";
 			    						}
 			    					});
 			    					displayResultTmp = undefined;
