@@ -305,7 +305,7 @@ public class ContainerTest extends AbstractTests {
 		lc = dr.data;
 		for (int i=0;i<lc.size();i++){
 			c = (Container) lc.get(i);
-			assertThat("ADI").isIn(c.projectCodes);	
+			assertThat(csf.projectCode).isIn(c.projectCodes);	
 		}				
 		
 		//Test with projectCode (bad projectCode)
@@ -331,7 +331,7 @@ public class ContainerTest extends AbstractTests {
 		for(int i=0;i<lc.size();i++){
 			c = (Container) lc.get(i);
 			for(int j=0;j<c.sampleCodes.size();j++){
-				assertThat(c.sampleCodes.get(j)).matches("AHX_.*");
+				assertThat(c.sampleCodes.get(j)).matches(projectCode+"_.*");
 			}
 			
 		}
@@ -392,7 +392,7 @@ public class ContainerTest extends AbstractTests {
 		for(int i=0;i<lc.size();i++){
 			c = (Container) lc.get(i);
 			Logger.info(c.categoryCode);
-			assertThat(c.categoryCode).isEqualTo("tube");
+			assertThat(c.categoryCode).isEqualTo(csf.containerSupportCategory);
 			Logger.info("");			
 		}
 		
@@ -408,8 +408,8 @@ public class ContainerTest extends AbstractTests {
 		assertThat(lc).isNullOrEmpty();
 		
 		//Test with experimentTypeCode (good request)		
-		csf.experimentTypeCode= "prepa-flowcell";		
-		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest( play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&experimentTypeCode="+csf.experimentTypeCode));
+		csf.nextExperimentTypeCode= "prepa-flowcell";		
+		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest( play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&experimentTypeCode="+csf.nextExperimentTypeCode));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<Container>>(){});
@@ -423,8 +423,8 @@ public class ContainerTest extends AbstractTests {
 		
 		
 		//Test with experimentTypeCode (bad request)
-		csf.experimentTypeCode= "solution-stock";
-		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest( play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&experimentTypeCode="+csf.experimentTypeCode));
+		csf.nextExperimentTypeCode= "solution-stock";
+		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest( play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&experimentTypeCode="+csf.nextExperimentTypeCode));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<Container>>(){});
@@ -463,7 +463,7 @@ public class ContainerTest extends AbstractTests {
 		
 		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});
 		for (int i=0;i<lc.size();i++){
-		assertThat(lc.get(i).code).isEqualTo("BFB_msCGP_d1");
+		assertThat(lc.get(i).code).isEqualTo(csf.code);
 		}
 		//Test with code (bad request)
 		csf.code="validateListWithListBadCode";		
@@ -481,7 +481,7 @@ public class ContainerTest extends AbstractTests {
 		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});		
 		for(int i=0;i<lc.size();i++){
 			lo = lc.get(i);
-			assertThat("AHX").isIn((MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, lo.code)).projectCodes);					
+			assertThat(csf.projectCode).isIn((MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, lo.code)).projectCodes);					
 			Logger.info("");
 		}
 		
@@ -493,7 +493,7 @@ public class ContainerTest extends AbstractTests {
 		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});		
 		for(int i=0;i<lc.size();i++){
 			lo = lc.get(i);
-			assertThat("BFB").isIn((MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, lo.code)).projectCodes);					
+			assertThat(csf.projectCode).isIn((MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, lo.code)).projectCodes);					
 			Logger.info("");
 		}
 		//Test with projectCode (bad request)
@@ -545,7 +545,7 @@ public class ContainerTest extends AbstractTests {
 
 		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<Container>>(){});				
 		for (int i=0; i<lc.size();i++){
-		assertThat(lc.get(i).code).isEqualTo("BFB_msCGP_d1");
+		assertThat(lc.get(i).code).isEqualTo(csf.code);
 		}
 		//Test with code (bad request)
 		csf.code="validateListWithListBadCode";		
@@ -562,7 +562,7 @@ public class ContainerTest extends AbstractTests {
 
 		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<Container>>(){});		
 		for(int i=0; i<lc.size();i++){
-			assertThat("AHX").isIn(lc.get(i).projectCodes);
+			assertThat(csf.projectCode).isIn(lc.get(i).projectCodes);
 		}
 		
 		csf.projectCode = "BFB";
@@ -571,7 +571,7 @@ public class ContainerTest extends AbstractTests {
 		
 		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<Container>>(){});		
 		for(int i=0; i<lc.size();i++){
-			assertThat("BFB").isIn(lc.get(i).projectCodes);
+			assertThat(csf.projectCode).isIn(lc.get(i).projectCodes);
 		}		
 
 		//Test with projectCode (bad request)

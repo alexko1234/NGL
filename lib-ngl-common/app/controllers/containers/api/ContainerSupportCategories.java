@@ -26,12 +26,12 @@ public class ContainerSupportCategories extends CommonController{
 		Form<ContainerSupportCategoriesSearchForm>  containerCategoryFilledForm = filledFormQueryString(containerSupportCategoriesTypeForm,ContainerSupportCategoriesSearchForm.class);
 		ContainerSupportCategoriesSearchForm containerSupportCategoriesSearch = containerCategoryFilledForm.get();
 
-		List<ContainerSupportCategory> containerSupportCategories;
+		List<ContainerSupportCategory> containerSupportCategories = new ArrayList<ContainerSupportCategory>();
 		try{
 			if(StringUtils.isNotBlank(containerSupportCategoriesSearch.instrumentUsedTypeCode)){
 				containerSupportCategories = InstrumentUsedType.find.findByCode(containerSupportCategoriesSearch.instrumentUsedTypeCode).outContainerSupportCategories;
 			}else if(StringUtils.isNotBlank(containerSupportCategoriesSearch.experimentTypeCode)){
-				containerSupportCategories = ContainerSupportCategory.find.findByExperimentTypeCode(containerSupportCategoriesSearch.experimentTypeCode);
+				containerSupportCategories = ContainerSupportCategory.find.findByExperimentTypeCode(containerSupportCategoriesSearch.experimentTypeCode); 
 			}else{
 				containerSupportCategories = ContainerSupportCategory.find.findAll();
 			}

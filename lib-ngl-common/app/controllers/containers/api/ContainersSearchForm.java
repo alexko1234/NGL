@@ -15,7 +15,7 @@ public class ContainersSearchForm extends ListForm{
 	public String sampleCode;
 	public List<String> sampleCodes;
 	public String categoryCode;
-	public String experimentTypeCode;
+	public String nextExperimentTypeCode;
 	public String processTypeCode;
 	public String supportCode;
 	public String containerSupportCategory;
@@ -31,8 +31,8 @@ public class ContainersSearchForm extends ListForm{
 		return "ContainersSearchForm [projectCode=" + projectCode
 				+ ", projectCodes=" + projectCodes + ", stateCode=" + stateCode
 				+ ", sampleCode=" + sampleCode + ", sampleCodes=" + sampleCodes
-				+ ", categoryCode=" + categoryCode + ", experimentTypeCode="
-				+ experimentTypeCode + ", processTypeCode=" + processTypeCode
+				+ ", categoryCode=" + categoryCode + ", nextExperimentTypeCode="
+				+ nextExperimentTypeCode + ", processTypeCode=" + processTypeCode
 				+ ", supportCode=" + supportCode
 				+ ", containerSupportCategory=" + containerSupportCategory
 				+ ", fromExperimentTypeCodes=" + fromExperimentTypeCodes

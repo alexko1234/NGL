@@ -11,7 +11,7 @@ public class SupportsSearchForm extends ListForm {
 	
 	public String categoryCode;
 	public String stateCode;
-	public String experimentTypeCode;
+	public String nextExperimentTypeCode;
 	public String processTypeCode;
 	public List<String> projectCodes;
 	public List<String> sampleCodes;
@@ -26,7 +26,7 @@ public class SupportsSearchForm extends ListForm {
 	public String toString() {
 		return "SupportsSearchForm [code=" + code + ", categoryCode="
 				+ categoryCode + ", stateCode=" + stateCode
-				+ ", experimentTypeCode=" + experimentTypeCode
+				+ ", nextExperimentTypeCode=" + nextExperimentTypeCode
 				+ ", processTypeCode=" + processTypeCode + ", projectCodes="
 				+ projectCodes + ", sampleCodes=" + sampleCodes
 				+ ", fromExperimentTypeCodes=" + fromExperimentTypeCodes

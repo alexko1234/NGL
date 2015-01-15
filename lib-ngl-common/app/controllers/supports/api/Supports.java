@@ -107,8 +107,10 @@ public class Supports extends CommonController {
 		}		
 
 		//These fields are not in the ContainerSupport collection then we use the Container collection
-		if(StringUtils.isNotEmpty(supportsSearch.experimentTypeCode) || StringUtils.isNotEmpty(supportsSearch.processTypeCode) || StringUtils.isNotEmpty(supportsSearch.stateCode)){
-			/*
+		if(StringUtils.isNotEmpty(supportsSearch.nextExperimentTypeCode) || StringUtils.isNotEmpty(supportsSearch.processTypeCode)){
+
+
+			/*Don't need anymore 09/01/2015
 			//If the categoryCode is null or empty, we use the ContainerSupportCategory data table to enhance the query
 			if(StringUtils.isNotEmpty(supportsSearch.experimentTypeCode) && StringUtils.isEmpty(supportsSearch.categoryCode)){
 				List<ContainerSupportCategory> containerSupportCategories = ContainerSupportCategory.find.findByExperimentTypeCode(supportsSearch.experimentTypeCode);
@@ -120,17 +122,13 @@ public class Supports extends CommonController {
 					queryElts.add(DBQuery.in("categoryCode", ls));
 				}
 			}
-			*/
-			
+			 */
+
 			//Using the Container collection for reaching container support
 			ContainersSearchForm cs = new ContainersSearchForm();
-			cs.experimentTypeCode = supportsSearch.experimentTypeCode;
-			cs.processTypeCode = supportsSearch.processTypeCode;
-			cs.stateCode = supportsSearch.stateCode;		
-			if(CollectionUtils.isNotEmpty(supportsSearch.valuations)){
-				cs.valuations = supportsSearch.valuations;
-			}
-			
+			cs.nextExperimentTypeCode = supportsSearch.nextExperimentTypeCode;
+			cs.processTypeCode = supportsSearch.processTypeCode;		
+
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("support", 1);
@@ -141,12 +139,19 @@ public class Supports extends CommonController {
 				supports.add(c.support.code);
 			}
 
-			if(StringUtils.isNotEmpty(cs.experimentTypeCode) || StringUtils.isNotEmpty(cs.processTypeCode) || StringUtils.isNotEmpty(cs.stateCode)){
+			if(StringUtils.isNotEmpty(cs.nextExperimentTypeCode) || StringUtils.isNotEmpty(cs.processTypeCode)){
 				queryElts.add(DBQuery.in("code", supports));
 			}
 		}
+		
 
+		if(CollectionUtils.isNotEmpty(supportsSearch.valuations)){
+			queryElts.add(DBQuery.or(DBQuery.in("valuation.valid", supportsSearch.valuations)));
+		}
 
+		if(StringUtils.isNotEmpty(supportsSearch.stateCode)){
+			queryElts.add(DBQuery.in("state.code", supportsSearch.stateCode));
+		}
 
 		if(StringUtils.isNotBlank(supportsSearch.code)){
 			queryElts.add(DBQuery.is("code", supportsSearch.code));

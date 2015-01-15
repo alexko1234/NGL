@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.property.PropertySingleValue;
+import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.utils.InstanceConstants;
@@ -22,6 +23,7 @@ import models.utils.instance.ContainerSupportHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mongojack.DBQuery;
 
 import play.Logger;
 import play.Logger.ALogger;
@@ -91,7 +93,7 @@ public class SupportTest extends AbstractTests {
 		assertThat(cs.state.user).isEqualTo("TEST_User");
 		Date d = new Date();
 		
-		assertThat(d).isEqualTo(cs.state.date);
+		assertThat(d.getTime()).isEqualTo((cs.state.date).getTime());
 		assertThat(cs.valuation.valid).isEqualTo(TBoolean.UNSET);		
 	}
 	
@@ -139,7 +141,7 @@ public class SupportTest extends AbstractTests {
 		dcs = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<ContainerSupport>>(){});
 		lcs = dcs.data;		
 		for(int i=0; i<lcs.size();i++){
-			assertThat(lcs.get(i).categoryCode).isEqualTo("tube");
+			assertThat(lcs.get(i).categoryCode).isEqualTo(ssf.categoryCode);
 		}		
 		
 		//Test with categoryCode (bad categoryCode)
@@ -161,7 +163,7 @@ public class SupportTest extends AbstractTests {
 		lcs = dcs.data;
 		Logger.info("");
 		for(int i=0; i<lcs.size();i++){
-			assertThat(lcs.get(i).fromExperimentTypeCodes).contains("solution-stock");
+			assertThat(lcs.get(i).fromExperimentTypeCodes).contains(ssf.fromExperimentTypeCodes.get(0));
 			Logger.info("");
 		}	
 		
@@ -175,10 +177,10 @@ public class SupportTest extends AbstractTests {
 		lcs = dcs.data;		
 		assertThat(lcs).isEmpty();
 		
-		
-		//Test with experimentTypeCode (good experimentTypeCode)		
-		ssf.experimentTypeCode="prepa-flowcell";
-		result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?datatable="+String.valueOf(ssf.datatable)+"&experimentTypeCode="+ssf.experimentTypeCode));
+	
+		//Test with nextExperimentTypeCode (good nextExperimentTypeCode)		
+		ssf.nextExperimentTypeCode="prepa-flowcell";
+		result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?datatable="+String.valueOf(ssf.datatable)+"&nextExperimentTypeCode="+ssf.nextExperimentTypeCode));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		dcs = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<ContainerSupport>>(){});
@@ -189,19 +191,19 @@ public class SupportTest extends AbstractTests {
 			assertThat("solution-stock").isIn(lcs.get(i).fromExperimentTypeCodes);			
 		}		
 		
-		/*
-		//Test with experimentTypeCode (bad experimentTypeCode)
-		ssf.experimentTypeCode="badExperimentTypeCode";
+		
+		//Test with nextExperimentTypeCode (bad nextExperimentTypeCode)
+		ssf.nextExperimentTypeCode="badNextExperimentTypeCode";
 		ssf.stateCode="";
 		ssf.processTypeCode="";
 		ssf.valuations=null;
-		result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?datatable="+String.valueOf(ssf.datatable)+"&experimentTypeCode="+ssf.experimentTypeCode));
+		result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?datatable="+String.valueOf(ssf.datatable)+"&nextExperimentTypeCode="+ssf.nextExperimentTypeCode));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		dcs = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<ContainerSupport>>(){});
 		lcs = dcs.data;
 		Logger.info("");
-		assertThat(lcs).isEmpty();	*/	
+		assertThat(lcs.size()).isEqualTo(new Long(MongoDBDAO.getCollection(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class).count()).intValue());			
 		
 	}
 	
@@ -222,7 +224,7 @@ public class SupportTest extends AbstractTests {
 		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});
 		for (int i=0;i<lc.size();i++){
 			lo = lc.get(i);
-			assertThat("BBA").isIn((MongoDBDAO.findByCode(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, lo.code)).projectCodes);					
+			assertThat(ssf.projectCodes.get(0)).isIn((MongoDBDAO.findByCode(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, lo.code)).projectCodes);					
 			Logger.info("");
 		}
 		
@@ -235,14 +237,38 @@ public class SupportTest extends AbstractTests {
 		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});
 		assertThat(lc).isNullOrEmpty();	
 		
+		//Test with processTypeCode (good processTypeCode)
+		ssf.processTypeCode = "illumina-run";
+		ssf.nextExperimentTypeCode="prepa-flowcell";
 		
+		result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&nextExperimentTypeCode="+ssf.nextExperimentTypeCode+"&processTypeCode="+ssf.processTypeCode));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
-		//Test with processTypeCode (good processTypeCode)		
+		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});
+		List<Container> l = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("processTypeCode", ssf.processTypeCode)).toList();
+		List<String> lst = new ArrayList<String>();
+		for(Container c:l){
+			lst.add(c.support.code);
+		}
+		
+		for (int i=0;i<lc.size();i++){
+			lo = lc.get(i);
+			Logger.info("");
+			assertThat(lst).contains(lo.code);
+			Logger.info("");
+		}
+		
 		
 		//Test with processTypeCode (bad processTypeCode)		
+		ssf.processTypeCode = "badProcessTypeCode";
+		ssf.nextExperimentTypeCode="badNextExperimentTypeCode";
 		
-					
+		result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&nextExperimentTypeCode="+ssf.nextExperimentTypeCode+"&processTypeCode="+ssf.processTypeCode));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
+		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});
+		assertThat(lc.size()).isEqualTo(new Long(MongoDBDAO.getCollection(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class).count()).intValue());			
+			
 	
 	}
 	
@@ -280,12 +306,12 @@ public class SupportTest extends AbstractTests {
 		assertThat(lcs).isNullOrEmpty();	
 		
 		//Test with regex (matched pattern)
-		ssf.codeRegex="^B";
+		ssf.codeRegex="^B.*1$";
 		result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&codeRegex="+ssf.codeRegex));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		lcs = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ContainerSupport>>(){});
-		Pattern p = Pattern.compile("^B.*");
+		Pattern p = Pattern.compile(ssf.codeRegex);
 		for (int i=0;i<lcs.size();i++){
 			cs = lcs.get(i);
 			assertThat(cs.code).matches(p);					
@@ -301,8 +327,25 @@ public class SupportTest extends AbstractTests {
 		assertThat(lcs).isNullOrEmpty();
 		
 		//Test with stateCode (good stateCode)		
+		ssf.stateCode="IW-P";
+		result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&stateCode="+ssf.stateCode));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
-		//Test with stateCode (bad stateCode)	
+		lcs = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ContainerSupport>>(){});	
+		for (int i=0;i<lcs.size();i++){
+			cs = lcs.get(i);
+			assertThat(cs.state.code).isEqualTo(ssf.stateCode);					
+			Logger.info("");
+		}
+		
+		//Test with stateCode (bad stateCode)
+		ssf.stateCode="BadStateCode";
+		result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&stateCode="+ssf.stateCode));
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		
+		lcs = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ContainerSupport>>(){});	
+		assertThat(lcs).isNullOrEmpty();
+		
 	}
 	
 	/*

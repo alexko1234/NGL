@@ -44,7 +44,7 @@ import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
 public class Containers extends CommonController {
-	
+
 	final static Form<Container> containersForm = form(Container.class);
 	final static Form<ContainersSearchForm> containerForm = form(ContainersSearchForm.class);
 	final static Form<ContainerBatchElement> batchElementForm = form(ContainerBatchElement.class);
@@ -57,7 +57,7 @@ public class Containers extends CommonController {
 
 		return notFound();
 	}
-	
+
 	public static Result head(String code) {
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, code)){			
 			return ok();					
@@ -65,12 +65,12 @@ public class Containers extends CommonController {
 			return notFound();
 		}	
 	}
-	
+
 	public static Result updateBatch(){
 		List<Form<ContainerBatchElement>> filledForms =  getFilledFormList(batchElementForm, ContainerBatchElement.class);
-		
+
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
-		
+
 		for(Form<ContainerBatchElement> filledForm: filledForms){
 			ContainerBatchElement element = filledForm.get();
 			Container container = null;
@@ -91,19 +91,19 @@ public class Containers extends CommonController {
 			}else {
 				response.add(new DatatableBatchResponseElement(NOT_FOUND, element.index));
 			}
-			
+
 		}		
 		return ok(Json.toJson(response));
 	}
-	
+
 	private static Container findContainer(String containerCode){
 		return  MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code",containerCode));
 	}
-	
+
 	public static Result update(String containerCode){
 		if(MongoDBDAO.checkObjectExist(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", containerCode))){
 			Form<Container> containerFilledForm = getFilledForm(containersForm,Container.class);
-			
+
 			if(!containerFilledForm.hasErrors()){
 				Container container = containerFilledForm.get();
 				if(container.code.equals(containerCode)){
@@ -114,7 +114,7 @@ public class Containers extends CommonController {
 		}
 		return badRequest();
 	}
-	
+
 	public static Result list() throws DAOException{
 		Form<ContainersSearchForm> containerFilledForm = filledFormQueryString(containerForm,ContainersSearchForm.class);
 		ContainersSearchForm containersSearch = containerFilledForm.get();
@@ -154,7 +154,7 @@ public class Containers extends CommonController {
 			return ok(Json.toJson(results));
 		}
 	}
-	
+
 	public static Result list_supports() throws DAOException{
 		Form<ContainersSearchForm> containerFilledForm = filledFormQueryString(containerForm,ContainersSearchForm.class);
 		ContainersSearchForm containersSearch = containerFilledForm.get();
@@ -162,31 +162,31 @@ public class Containers extends CommonController {
 		DBQuery.Query query = getQuery(containersSearch);
 		if(containersSearch.datatable){
 			List<LocationOnContainerSupport> containerSupports = new ArrayList<LocationOnContainerSupport>();
-			
+
 			BasicDBObject keysSupport = new BasicDBObject();
 			BasicDBObject test = new BasicDBObject();
 			keysSupport.put("support.code",true);
 			keysSupport.put("support.categoryCode",true);
-		    
+
 			BasicDBList supportDBObject = (BasicDBList) MongoDB.getCollection(InstanceConstants.CONTAINER_COLL_NAME, Container.class, String.class).group(keysSupport, test, test,"function ( curr, result ) { }");
 			Iterator itr = supportDBObject.iterator();
-		    
+
 			while(itr.hasNext()) {
-		         BasicDBObject element = (BasicDBObject) itr.next();
-		         String supportCode  = (String)element.get("support.code");
-		         LocationOnContainerSupport cs = new LocationOnContainerSupport();
-		         cs.code = (String)element.get("support.code");
-		         cs.categoryCode = (String)element.get("support.categoryCode");
-		         containerSupports.add(cs);
-		    }
-		
+				BasicDBObject element = (BasicDBObject) itr.next();
+				String supportCode  = (String)element.get("support.code");
+				LocationOnContainerSupport cs = new LocationOnContainerSupport();
+				cs.code = (String)element.get("support.code");
+				cs.categoryCode = (String)element.get("support.categoryCode");
+				containerSupports.add(cs);
+			}
+
 			return ok(Json.toJson(new DatatableResponse<LocationOnContainerSupport>(containerSupports, containerSupports.size())));
 		}else if(containersSearch.list){
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("support", 1);
-			
-			
+
+
 			MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query);
 			List<Container> containers = results.toList();
 			List<LocationOnContainerSupport> containerSupports = new ArrayList<LocationOnContainerSupport>();
@@ -216,12 +216,12 @@ public class Containers extends CommonController {
 					containerSupports.add(c.support);
 				}
 			}
-			
+
 			return ok(Json.toJson(containerSupports));
 		}
 	}
-	
-	
+
+
 	/**
 	 * Construct the container query
 	 * @param containersSearch
@@ -231,13 +231,13 @@ public class Containers extends CommonController {
 	public static DBQuery.Query getQuery(ContainersSearchForm containersSearch) throws DAOException {
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
 		Query query = null;
-		
+
 		if(CollectionUtils.isNotEmpty(containersSearch.projectCodes)){
 			queryElts.add(DBQuery.in("projectCodes", containersSearch.projectCodes));
 		}else if(StringUtils.isNotBlank(containersSearch.projectCode)){
 			queryElts.add(DBQuery.in("projectCodes", containersSearch.projectCode));
 		}
-		
+
 		if(StringUtils.isNotBlank(containersSearch.code)){
 			queryElts.add(DBQuery.is("code", containersSearch.code));
 		}
@@ -261,11 +261,11 @@ public class Containers extends CommonController {
 		if(StringUtils.isNotBlank(containersSearch.supportCode)){
 			queryElts.add(DBQuery.regex("support.code", Pattern.compile(containersSearch.supportCode)));
 		}
-		
+
 		if(StringUtils.isNotBlank(containersSearch.containerSupportCategory)){
 			queryElts.add(DBQuery.is("support.categoryCode", containersSearch.containerSupportCategory));
-		}else if(StringUtils.isNotBlank(containersSearch.experimentTypeCode)){
-			List<ContainerSupportCategory> containerSupportCategories = ContainerSupportCategory.find.findByExperimentTypeCode(containersSearch.experimentTypeCode);
+		}else if(StringUtils.isNotBlank(containersSearch.nextExperimentTypeCode)){
+			List<ContainerSupportCategory> containerSupportCategories = ContainerSupportCategory.find.findByExperimentTypeCode(containersSearch.nextExperimentTypeCode);
 			List<String> cs = new ArrayList<String>();
 			for(ContainerSupportCategory c:containerSupportCategories){
 				cs.add(c.code);
@@ -274,26 +274,29 @@ public class Containers extends CommonController {
 				queryElts.add(DBQuery.in("support.categoryCode", cs));
 			}
 		}
-		
-		if(StringUtils.isNotBlank(containersSearch.processTypeCode) && StringUtils.isNotBlank(containersSearch.experimentTypeCode)){
+
+		if(StringUtils.isNotBlank(containersSearch.processTypeCode) && StringUtils.isNotBlank(containersSearch.nextExperimentTypeCode)){
 			List<String> listePrevious = ExperimentType.find.findVoidProcessExperimentTypeCode(containersSearch.processTypeCode);
 			ProcessType processType = ProcessType.find.findByCode(containersSearch.processTypeCode);
-			List<ExperimentType> experimentTypes = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(processType.firstExperimentType.code);
+			List<ExperimentType> experimentTypes = new ArrayList<ExperimentType>();
+			if(null !=processType){
+			experimentTypes = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(processType.firstExperimentType.code);
 			
 			for(ExperimentType e:experimentTypes){
 				listePrevious.add(e.code);
 			}
-			
+			}
+
 			if(CollectionUtils.isNotEmpty(listePrevious)){
 				queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", listePrevious),DBQuery.notExists("fromExperimentTypeCodes"),DBQuery.size("fromExperimentTypeCodes", 0)));
 			}	    		 
-			
+
 		}
-		
+
 		if(CollectionUtils.isNotEmpty(containersSearch.fromExperimentTypeCodes)){
 			queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes)));
 		}
-		
+
 		if(null != containersSearch.fromDate){
 			queryElts.add(DBQuery.greaterThanEquals("traceInformation.creationDate", containersSearch.fromDate));
 		}
@@ -301,23 +304,25 @@ public class Containers extends CommonController {
 		if(null != containersSearch.toDate){
 			queryElts.add(DBQuery.lessThanEquals("traceInformation.creationDate", (DateUtils.addDays(containersSearch.toDate, 1))));
 		}
-		
+
 		if(CollectionUtils.isNotEmpty(containersSearch.valuations)){
 			queryElts.add(DBQuery.or(DBQuery.in("valuation.valid", containersSearch.valuations)));
 		}
 
-		if(StringUtils.isNotEmpty(containersSearch.experimentTypeCode)){
+		if(StringUtils.isNotBlank(containersSearch.nextExperimentTypeCode)){
 			try {
-				List<ExperimentType> previous = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(containersSearch.experimentTypeCode);
+				List<ExperimentType> previous = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(containersSearch.nextExperimentTypeCode);
 				List<String> previousString = new ArrayList<String>();
+
 				for(ExperimentType e:previous){
 					previousString.add(e.code);
 				}
 
+
 				if(CollectionUtils.isNotEmpty(previousString)){//If there is no previous, we take all the containers Available
 					queryElts.add(DBQuery.in("fromExperimentTypeCodes", previousString));
 				}
-				
+
 				for(String s:previousString){
 					Logger.info("Previous: "+s);
 				}
@@ -326,24 +331,24 @@ public class Containers extends CommonController {
 				e.printStackTrace();
 			}
 		}
-		
-		if(StringUtils.isNotEmpty(containersSearch.column)){
+
+		if(StringUtils.isNotBlank(containersSearch.column)){
 			queryElts.add(DBQuery.is("support.column", containersSearch.column));
-			
+
 		}
-		
-		if(StringUtils.isNotEmpty(containersSearch.line)){
+
+		if(StringUtils.isNotBlank(containersSearch.line)){
 			queryElts.add(DBQuery.is("support.line", containersSearch.line));
 		}
-		
-		if(StringUtils.isNotEmpty(containersSearch.processTypeCode) && StringUtils.isNotEmpty(containersSearch.experimentTypeCode)){
+
+		if(StringUtils.isNotBlank(containersSearch.processTypeCode)){   
 			queryElts.add(DBQuery.is("processTypeCode", containersSearch.processTypeCode));
 		}
-		
+
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 		}
-		
+
 
 		return query;
 	}

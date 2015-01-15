@@ -3,7 +3,7 @@
 @form() = {
 	@columnSearchForm{			
 			@formGroup{	
-			<div bt-select placeholder="@Messages("experiments.select.experimentType.transformations")" class="form-control" ng-model="form.experimentType" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in lists.get('transformations')" ng-change="changeExperimentType('transformations')" auto-select>
+			<div bt-select placeholder="@Messages("experiments.select.experimentType.transformations")" class="form-control" ng-model="form.nextExperimentType" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in lists.get('transformations')" ng-change="changeExperimentType('transformations')" auto-select>
 			</div>
 			}
 			<hr>
