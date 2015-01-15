@@ -275,22 +275,25 @@ public class Containers extends CommonController {
 			}
 		}
 
-		if(StringUtils.isNotBlank(containersSearch.processTypeCode) && StringUtils.isNotBlank(containersSearch.nextExperimentTypeCode)){
-			List<String> listePrevious = ExperimentType.find.findVoidProcessExperimentTypeCode(containersSearch.processTypeCode);
-			ProcessType processType = ProcessType.find.findByCode(containersSearch.processTypeCode);
-			List<ExperimentType> experimentTypes = new ArrayList<ExperimentType>();
-			if(null !=processType){
-			experimentTypes = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(processType.firstExperimentType.code);
-			
-			for(ExperimentType e:experimentTypes){
-				listePrevious.add(e.code);
+		if(StringUtils.isNotBlank(containersSearch.nextExperimentTypeCode)){
+			List<String> listePrevious = new ArrayList<String>();
+			if(StringUtils.isNotBlank(containersSearch.processTypeCode)){
+				listePrevious = ExperimentType.find.findVoidProcessExperimentTypeCode(containersSearch.processTypeCode);
+				ProcessType processType = ProcessType.find.findByCode(containersSearch.processTypeCode);
+				List<ExperimentType> experimentTypes = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(processType.firstExperimentType.code);
+
+				for(ExperimentType e:experimentTypes){
+					listePrevious.add(e.code);
+				}
 			}
+			List<ExperimentType> previous = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(containersSearch.nextExperimentTypeCode);
+			for(ExperimentType e:previous){
+				listePrevious.add(e.code);
 			}
 
 			if(CollectionUtils.isNotEmpty(listePrevious)){
 				queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", listePrevious),DBQuery.notExists("fromExperimentTypeCodes"),DBQuery.size("fromExperimentTypeCodes", 0)));
-			}	    		 
-
+			}
 		}
 
 		if(CollectionUtils.isNotEmpty(containersSearch.fromExperimentTypeCodes)){
@@ -309,32 +312,8 @@ public class Containers extends CommonController {
 			queryElts.add(DBQuery.or(DBQuery.in("valuation.valid", containersSearch.valuations)));
 		}
 
-		if(StringUtils.isNotBlank(containersSearch.nextExperimentTypeCode)){
-			try {
-				List<ExperimentType> previous = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(containersSearch.nextExperimentTypeCode);
-				List<String> previousString = new ArrayList<String>();
-
-				for(ExperimentType e:previous){
-					previousString.add(e.code);
-				}
-
-
-				if(CollectionUtils.isNotEmpty(previousString)){//If there is no previous, we take all the containers Available
-					queryElts.add(DBQuery.in("fromExperimentTypeCodes", previousString));
-				}
-
-				for(String s:previousString){
-					Logger.info("Previous: "+s);
-				}
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
 		if(StringUtils.isNotBlank(containersSearch.column)){
 			queryElts.add(DBQuery.is("support.column", containersSearch.column));
-
 		}
 
 		if(StringUtils.isNotBlank(containersSearch.line)){
