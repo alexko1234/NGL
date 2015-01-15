@@ -89,8 +89,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		$scope.basket.reset();
 		$scope.form.containerSupportCategory = undefined;
 		$scope.lists.clear("containerSupportCategories");
-		if($scope.form.experimentType){
-			$scope.lists.refresh.containerSupportCategories({experimentTypeCode:$scope.form.experimentType});
+		if($scope.form.nextExperimentType){
+			$scope.lists.refresh.containerSupportCategories({experimentTypeCode:$scope.form.nextExperimentType});
 		}
 		$scope.form.experimentCategory = experimentCategory;
 		this.search();
@@ -139,7 +139,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		$scope.errors.containerSupportCategory = {};
 		
 		
-		if($scope.form.experimentType && $scope.form.containerSupportCategory){ 		
+		if($scope.form.nextExperimentType && $scope.form.containerSupportCategory){ 		
 			var jsonSearch = {};
 			
 			jsonSearch.stateCode = $scope.getContainerStateCode($scope.form.experimentCategory);	 
@@ -159,8 +159,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 				jsonSearch.categoryCode = $scope.form.containerSupportCategory;
 			}
 			
-			if($scope.form.experimentType){
-				jsonSearch.experimentTypeCode = $scope.form.experimentType;
+			if($scope.form.nextExperimentType){
+				jsonSearch.nextExperimentTypeCode = $scope.form.nextExperimentType;
 			}
 			
 			
@@ -187,7 +187,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			
 			$scope.datatable.search(jsonSearch);
 		}else{
-			if(!$scope.form.experimentType){
+			if(!$scope.form.nextExperimentType){
 				$scope.errors.experimentType = "alert alert-danger";
 			}else{
 				$scope.errors.containerSupportCategory = "alert alert-danger";
@@ -203,8 +203,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			console.log(containers[i]);
 		}
 		
-		if(($scope.form.experimentType) && this.basket.length() > 0 && tabService.getTabs().length === 1){
-			tabService.addTabs({label:$scope.form.experimentType,href:"/experiments/new/"+$scope.form.experimentType,remove:false});
+		if(($scope.form.nextExperimentType) && this.basket.length() > 0 && tabService.getTabs().length === 1){
+			tabService.addTabs({label:$scope.form.nextExperimentType,href:"/experiments/new/"+$scope.form.nextExperimentType,remove:false});
 		}
 	};
 	
@@ -251,7 +251,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		
 	} else {
 		$scope.form = mainService.getForm();
-		$scope.lists.refresh.containerSupportCategories({experimentTypeCode:$scope.form.experimentType});
+		$scope.lists.refresh.containerSupportCategories({experimentTypeCode:$scope.form.nextExperimentType});
 		$scope.search();
 	}
 }]);

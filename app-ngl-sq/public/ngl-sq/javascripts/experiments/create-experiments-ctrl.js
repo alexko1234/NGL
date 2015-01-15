@@ -673,10 +673,10 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 	
 	$scope.init_experiment = function(containers,atomicTransfertMethod){
 		if($scope.form != undefined && $scope.form.experiment != undefined){
-			$scope.form.experiment = $scope.experiment;
+			$scope.form.experiment = $scope.nextExperiment;
 			mainService.setForm($scope.form);
 		}
-		$scope.experiment.value.categoryCode = $scope.experimentType.category.code;
+		$scope.experiment.value.categoryCode = $scope.nextExperimentType.category.code;
 		$scope.experiment.value.atomicTransfertMethods = {};
 		if($scope.experiment.value.code === ""){
 			$scope.create_experiment(containers,atomicTransfertMethod);
