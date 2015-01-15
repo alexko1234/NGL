@@ -100,7 +100,7 @@ angular.module('home').controller('MapcardCtrl',['$scope', '$window','datatable'
 	$scope.init_atomicTransfert = function(containers, atomicTransfertMethod){
 			$scope.experiment.value.atomicTransfertMethods[0] = {class:atomicTransfertMethod, inputContainerUseds:[], position:1};
 			angular.forEach(containers, function(container){
-				$scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds.push({code:container.code,instrumentProperties:{},experimentProperties:{},state:container.state});
+				$scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds.push({code:container.code,instrumentProperties:{},experimentProperties:{},state:container.state,locationOnContainerSupport:container.support});
 			});
 	};
 	
