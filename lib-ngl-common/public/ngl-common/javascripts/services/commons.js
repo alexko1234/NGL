@@ -390,7 +390,9 @@ angular.module('commonsServices', []).
             return {
                 require: 'ngModel',
                 link: function(scope, ele, attr, ngModel) {
-                	var convertToTimestamp = function(date){
+					var typedDate = "01/01/1970";//Initialisation of the date
+					
+                	var convertToDate = function(date){
                 		if(date !== null && date !== undefined && date !== ""){
 	                		var format = Messages("date.format").toUpperCase();
 	                		date = moment.unix(date).format(format);
@@ -399,29 +401,33 @@ angular.module('commonsServices', []).
                 		return "";
                 	};
                 	
-                	var convertToDate = function(date){
+                	var convertToTimestamp = function(date){
                 		if(date !== null && date !== undefined && date !== ""){
 	                		var format = Messages("date.format").toUpperCase();
 	    					return moment(date, format).valueOf();
                 		}
                 		return "";
     				};
-                	
+					
+                	//model to view
                 	scope.$watch(
 						function(){
 							return ngModel.$modelValue;
 						}, function(newValue, oldValue){
-							if(newValue !== null && newValue !== undefined && newValue !== ""){
-    							var date = convertToTimestamp(newValue);
+							//We check if the
+							if(newValue !== null && newValue !== undefined && newValue !== "" && typedDate.length === 10){
+    							var date = convertToDate(newValue);
     							ngModel.$setViewValue(date);
 								ngModel.$render();
 							}
                     });
-                	
+					
+                	//view to model
                     ngModel.$parsers.push(function(value) {
                     	var date = value;
+						typedDate = date;//The date of the user
                     	if(value.length === 10){//When the date is complete
-                    		date = convertToDate(value)/1000;
+                    		date = convertToTimestamp(value)/1000;
                     	}
 						return date;
                     });
