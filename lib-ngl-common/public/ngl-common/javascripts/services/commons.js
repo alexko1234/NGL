@@ -189,7 +189,7 @@ angular.module('commonsServices', []).
 	    			params.list = true;
 	    			$http.get(url,{params:params,key:key}).success(function(data, status, headers, config) {
 	    				results[config.key]=data;
-	    				inProgress[key] === undefined
+	    				inProgress[key] = undefined;
 	    			});
     			}
     		}
