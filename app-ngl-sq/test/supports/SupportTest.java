@@ -267,7 +267,7 @@ public class SupportTest extends AbstractTests {
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});
-		assertThat(lc.size()).isEqualTo(new Long(MongoDBDAO.getCollection(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class).count()).intValue());			
+		assertThat(lc).isNullOrEmpty();			
 			
 	
 	}
