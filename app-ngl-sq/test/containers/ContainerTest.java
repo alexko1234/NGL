@@ -407,9 +407,9 @@ public class ContainerTest extends AbstractTests {
 		lc = dr.data;
 		assertThat(lc).isNullOrEmpty();
 		
-		//Test with experimentTypeCode (good request)		
+		//Test with nextExperimentTypeCode (good request)		
 		csf.nextExperimentTypeCode= "prepa-flowcell";		
-		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest( play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&experimentTypeCode="+csf.nextExperimentTypeCode));
+		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest( play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&nextExperimentTypeCode="+csf.nextExperimentTypeCode));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<Container>>(){});
@@ -422,9 +422,9 @@ public class ContainerTest extends AbstractTests {
 		}
 		
 		
-		//Test with experimentTypeCode (bad request)
+		//Test with nextExperimentTypeCode (bad request)
 		csf.nextExperimentTypeCode= "solution-stock";
-		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest( play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&experimentTypeCode="+csf.nextExperimentTypeCode));
+		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest( play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&nextExperimentTypeCode="+csf.nextExperimentTypeCode));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<Container>>(){});
