@@ -157,8 +157,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 				jsonSearch.valuations = $scope.form.valuations;
 			}
 			
-			if($scope.form.processType){
-				jsonSearch.processTypeCode = $scope.form.processType;
+			if($scope.form.nextProcessTypeCode){
+				jsonSearch.nextProcessTypeCode = $scope.form.nextProcessTypeCode;
 			}
 			
 			if($scope.form.containerSupportCode){
@@ -180,11 +180,11 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	$scope.addToBasket = function(containers){
 		$scope.errors.processType = {};
 		$scope.errors.processCategory = {};
-		if($scope.form.processType){
+		if($scope.form.nextProcessTypeCode){
 			for(var i=0;i<containers.length;i++){
 				this.basket.add(containers[i]);
 			}
-			tabService.addTabs({label:$scope.form.processType,href:$scope.form.processType,remove:false});
+			tabService.addTabs({label:$scope.form.nextProcessTypeCode,href:$scope.form.nextProcessTypeCode,remove:false});
 		}else{
 			if(!$scope.form.processCategory){
 				$scope.errors.processCategory = "alert-danger";
@@ -234,7 +234,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http','mainService','$q', function($scope, datatable,$http,mainService,$q) {
 	
 	$scope.datatableConfig = {
-			columnsUrl:jsRoutes.controllers.processes.tpl.Processes.newProcessesColumns(mainService.getForm().processType).url,
+			columnsUrl:jsRoutes.controllers.processes.tpl.Processes.newProcessesColumns(mainService.getForm().nextProcessTypeCode).url,
 			pagination:{
 				active:false
 			},		
@@ -266,7 +266,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 						val.properties.receptionDate = undefined;
 						var process = {
 								projectCode: val.projectCodes[0],
-								typeCode:$scope.form.processType,
+								typeCode:$scope.form.nextProcessTypeCode,
 								categoryCode:$scope.form.processCategory,
 								properties:val.properties
 						};
@@ -327,7 +327,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 							projectCode: processData.projectCodes[0],
 							sampleCode: processData.sampleCodes[j],
 							containerInputCode: processData.code,
-							typeCode:$scope.form.processType,
+							typeCode:$scope.form.nextProcessTypeCode,
 							categoryCode:$scope.form.processCategory,
 							properties:processData.properties
 					};		
@@ -385,8 +385,8 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 	
 	$scope.getColumns = function(){
 		var typeCode = "";
-		if($scope.form.processType){
-			typeCode = $scope.form.processType;
+		if($scope.form.nextProcessTypeCode){
+			typeCode = $scope.form.nextProcessTypeCode;
 		}
 		
 		$http.get(jsRoutes.controllers.processes.tpl.Processes.searchColumns().url,{params:{"typeCode":typeCode}})

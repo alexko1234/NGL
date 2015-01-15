@@ -275,25 +275,33 @@ public class Containers extends CommonController {
 			}
 		}
 
-		if(StringUtils.isNotBlank(containersSearch.nextExperimentTypeCode)){
-			List<String> listePrevious = new ArrayList<String>();
-			if(StringUtils.isNotBlank(containersSearch.processTypeCode)){
-				listePrevious = ExperimentType.find.findVoidProcessExperimentTypeCode(containersSearch.processTypeCode);
-				ProcessType processType = ProcessType.find.findByCode(containersSearch.processTypeCode);
-				List<ExperimentType> experimentTypes = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(processType.firstExperimentType.code);
-
-				for(ExperimentType e:experimentTypes){
-					listePrevious.add(e.code);
-				}
+		List<String> listePrevious = new ArrayList<String>();
+		if(StringUtils.isNotBlank(containersSearch.nextProcessTypeCode)){
+			listePrevious = ExperimentType.find.findVoidProcessExperimentTypeCode(containersSearch.nextProcessTypeCode);
+			ProcessType processType = ProcessType.find.findByCode(containersSearch.nextProcessTypeCode);
+			List<ExperimentType> experimentTypes = new ArrayList<ExperimentType>();
+			if(processType != null){
+				experimentTypes = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(processType.firstExperimentType.code);
+			}else{
+				Logger.error("NGL-SQ bad nextProcessTypeCode: "+containersSearch.nextProcessTypeCode);
+				return DBQuery.empty();
 			}
+
+			for(ExperimentType e:experimentTypes){
+				Logger.info(e.code);
+				listePrevious.add(e.code);
+			}
+		}
+
+		if(StringUtils.isNotBlank(containersSearch.nextExperimentTypeCode)){
 			List<ExperimentType> previous = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(containersSearch.nextExperimentTypeCode);
 			for(ExperimentType e:previous){
 				listePrevious.add(e.code);
 			}
+		}
 
-			if(CollectionUtils.isNotEmpty(listePrevious)){
-				queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", listePrevious),DBQuery.notExists("fromExperimentTypeCodes"),DBQuery.size("fromExperimentTypeCodes", 0)));
-			}
+		if(CollectionUtils.isNotEmpty(listePrevious)){
+			queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", listePrevious)));
 		}
 
 		if(CollectionUtils.isNotEmpty(containersSearch.fromExperimentTypeCodes)){
