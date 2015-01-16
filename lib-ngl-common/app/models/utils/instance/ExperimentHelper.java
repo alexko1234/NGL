@@ -181,11 +181,11 @@ public class ExperimentHelper extends InstanceHelpers {
 			for(int i = 0; i < containersUSed.size(); i++)
 			{
 				String code;
-				if(containersUSed.get(i).locationOnContainerSupport==null){
-					code=containersUSed.get(i).code;
-				}else { code=containersUSed.get(i).locationOnContainerSupport.code;}
-
-				InstanceHelpers.addCode(code, codes);
+				if(containersUSed.get(i).locationOnContainerSupport!=null){
+					code=containersUSed.get(i).locationOnContainerSupport.code; 
+					InstanceHelpers.addCode(code, codes);
+				}
+				else { Logger.error("No locationOnContainerSupport in ContainerUSed "+ containersUSed.get(i).code);}	
 			}
 		}
 		return codes;
