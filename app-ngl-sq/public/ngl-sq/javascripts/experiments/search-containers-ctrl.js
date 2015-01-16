@@ -93,7 +93,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			$scope.lists.refresh.containerSupportCategories({experimentTypeCode:$scope.form.nextExperimentType});
 		}
 		$scope.form.experimentCategory = experimentCategory;
-		this.search();
+		//this.search();
 	};
 	
 	$scope.changeProcessCategory = function(){
@@ -188,9 +188,9 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			$scope.datatable.search(jsonSearch);
 		}else{
 			if(!$scope.form.nextExperimentType){
-				$scope.errors.experimentType = "alert alert-danger";
+				$scope.errors.experimentType = "has-error";
 			}else{
-				$scope.errors.containerSupportCategory = "alert alert-danger";
+				$scope.errors.containerSupportCategory = "has-error";
 			}
 			$scope.datatable.setData({},0);
 			$scope.basket.reset();
@@ -204,7 +204,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		}
 		
 		if(($scope.form.nextExperimentType) && this.basket.length() > 0 && tabService.getTabs().length === 1){
-			tabService.addTabs({label:$scope.form.nextExperimentType,href:"/experiments/new/"+$scope.form.nextExperimentType,remove:false});
+			tabService.addTabs({label:$filter('codes')($scope.form.nextExperimentType,'type'),href:"/experiments/new/"+$scope.form.nextExperimentType,remove:false});
 		}
 	};
 	
@@ -252,6 +252,6 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	} else {
 		$scope.form = mainService.getForm();
 		$scope.lists.refresh.containerSupportCategories({experimentTypeCode:$scope.form.nextExperimentType});
-		$scope.search();
+		//$scope.search();
 	}
 }]);

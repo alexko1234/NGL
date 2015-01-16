@@ -124,57 +124,50 @@
 				},
 				convertForm : function(){
 					var _form = angular.copy(this.form);
-					if(_form.processType || _form.experimentType || _form.projectCodes || _form.sampleCodes || _form.type || _form.fromDate || _form.toDate || _form.state || _form.states || _form.user || _form.code || _form.containerSupportCode){
-						var jsonSearch = {};			
+					var jsonSearch = {};			
 
-						if(_form.projectCodes){
-							jsonSearch.projectCodes = _form.projectCodes;
-						}			
-						if(_form.sampleCodes){
-							jsonSearch.sampleCodes = _form.sampleCodes;
-						}			
-						if(_form.processType){
-							jsonSearch.processTypeCode = _form.processType;
-						}		
-						
-						if(_form.containerSupportCode){
-							jsonSearch.containerSupportCode = _form.containerSupportCode;
-						}
-						
-						if(_form.type){
-							jsonSearch.typeCode = _form.type;
-						}
-						
-						if(_form.state){
-							jsonSearch.stateCode = _form.state;
-						}
-						
-						if(_form.states){
-							jsonSearch.stateCodes = _form.states;
-						}
-
-						if(_form.user){
-							jsonSearch.users = _form.user;
-						}
-						
-						if(_form.code){
-							jsonSearch.code = _form.code;
-						}
-						
-						if(_form.experimentType){
-							jsonSearch.typeCode = _form.experimentType;
-						}
-						
-						if(_form.fromDate)jsonSearch.fromDate = this.useMoment(_form.fromDate, Messages("date.format").toUpperCase());
-						if(_form.toDate)jsonSearch.toDate = this.useMoment(_form.toDate, Messages("date.format").toUpperCase());
-						
-						return jsonSearch;	
-					}else{
-						this.datatable.setData({},0);
-						return undefined;
+					if(_form.projectCodes){
+						jsonSearch.projectCodes = _form.projectCodes;
+					}			
+					if(_form.sampleCodes){
+						jsonSearch.sampleCodes = _form.sampleCodes;
+					}			
+					if(_form.processType){
+						jsonSearch.processTypeCode = _form.processType;
+					}		
+					
+					if(_form.containerSupportCode){
+						jsonSearch.containerSupportCode = _form.containerSupportCode;
 					}
 					
+					if(_form.type){
+						jsonSearch.typeCode = _form.type;
+					}
 					
+					if(_form.state){
+						jsonSearch.stateCode = _form.state;
+					}
+					
+					if(_form.states){
+						jsonSearch.stateCodes = _form.states;
+					}
+
+					if(_form.user){
+						jsonSearch.users = _form.user;
+					}
+					
+					if(_form.code){
+						jsonSearch.code = _form.code;
+					}
+					
+					if(_form.experimentType){
+						jsonSearch.typeCode = _form.experimentType;
+					}
+					
+					if(_form.fromDate)jsonSearch.fromDate = this.useMoment(_form.fromDate, Messages("date.format").toUpperCase());
+					if(_form.toDate)jsonSearch.toDate = this.useMoment(_form.toDate, Messages("date.format").toUpperCase());
+					
+					return jsonSearch;
 				},
 				
 				resetForm : function(){					
@@ -194,7 +187,7 @@
 					}
 				},
 				changeTypeCode : function(){
-					this.search();
+					//this.search();
 				},
 				useMoment: function(date, format){
 					//ex: 2014-10-02

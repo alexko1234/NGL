@@ -57,9 +57,6 @@
 				},
 				convertForm : function(){
 					var _form = angular.copy(this.form);
-					if(_form.projectCodes || _form.sampleCodes || _form.processType 
-							|| _form.processCategory || _form.processesSupportCode || _form.state || _form.states || _form.user
-							|| _form.fromDate || _form.toDate || _form.experimentCode){
 						var jsonSearch = {};
 						if(_form.projectCodes){
 							jsonSearch.projectCodes = _form.projectCodes;
@@ -106,11 +103,6 @@
 						if(_form.toDate)jsonSearch.toDate = moment(_form.toDate, Messages("date.format").toUpperCase()).valueOf();
 						
 						return jsonSearch;
-					}else{
-						this.datatable.setData({},0);
-						
-						return undefined;
-					}
 				},
 				
 				resetForm : function(){
@@ -123,6 +115,7 @@
 					mainService.setForm(this.form);
 					var jsonSearch = this.convertForm();
 					if(jsonSearch != undefined){
+						searchService.getColumns();
 						this.datatable.search(jsonSearch);
 					}
 				},
@@ -133,14 +126,14 @@
 				},
 				changeProcessCategory : function(){
 					this.lists.clear("processTypes");
+					this.form.processType = undefined;
 					if(this.form.processCategory){
 						this.lists.refresh.processTypes({processCategoryCode:this.form.processCategory});
 					}
 				},
 				changeProcessTypeCode : function(){
 					if(this.form.processCategory){
-						searchService.getColumns();
-						searchService.search();
+						//searchService.search();
 					}else{
 						this.form.processType = undefined;	
 					}

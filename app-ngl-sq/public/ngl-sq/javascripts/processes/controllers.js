@@ -108,9 +108,10 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	
 	
 	$scope.changeProcessCategory = function(){
-		if($scope.form.processCategory){
+		if($scope.form.processCategory !== undefined && $scope.form.processCategory !== null){
 			$scope.lists.refresh.processTypes({processCategoryCode:$scope.form.processCategory});
 		}else{
+			$scope.form.nextProcessTypeCode = undefined; 
 			$scope.lists.clear("processTypes");
 		}
 	};
@@ -118,7 +119,6 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	$scope.changeProcessType = function(){
 		$scope.removeTab(1);
 		$scope.basket.reset();
-		this.search();
 	};
 	
 	$scope.reset = function(){
@@ -133,8 +133,9 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	
 	$scope.search = function(){	
 		$scope.errors.processCategory = {};
+		$scope.errors.processType = {};
 		//if($scope.form.projectCodes || $scope.form.sampleCodes || $scope.form.processType || $scope.form.containerSupportCode || $scope.form.fromExperimentTypeCodes || $scope.form.containerSupportCategory  || $scope.form.valuations){
-		if($scope.form.processCategory){
+		if($scope.form.processCategory && $scope.form.nextProcessTypeCode){
 		var jsonSearch = {};
 			jsonSearch.stateCode = 'IW-P';
 			if($scope.form.projectCodes){
@@ -168,8 +169,13 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			$scope.datatable.search(jsonSearch);
 			mainService.setForm($scope.form);
 		}else{
-			if($scope.form.processCategory === undefined || $scope.form.processCategory === "" ){
-				$scope.errors.processCategory = "alert alert-danger";
+			if($scope.form.processCategory === null || $scope.form.processCategory === undefined || $scope.form.processCategory === "" ){
+				$scope.errors.processCategory = "has-error";
+				$scope.errors.processType = "has-error";
+				$scope.form.nextProcessTypeCode = undefined;
+			}
+			if($scope.form.nextProcessTypeCode === null || $scope.form.nextProcessTypeCode === undefined || $scope.form.nextProcessTypeCode === "" ){
+				$scope.errors.processType = "has-error";
 			}
 			$scope.datatable.setData({},0);
 			$scope.basket.reset();
@@ -184,13 +190,13 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			for(var i=0;i<containers.length;i++){
 				this.basket.add(containers[i]);
 			}
-			tabService.addTabs({label:$scope.form.nextProcessTypeCode,href:$scope.form.nextProcessTypeCode,remove:false});
+			tabService.addTabs({label:$filter('codes')($scope.form.nextProcessTypeCode,"type"),href:$scope.form.nextProcessTypeCode,remove:false});
 		}else{
 			if(!$scope.form.processCategory){
-				$scope.errors.processCategory = "alert-danger";
+				$scope.errors.processCategory = "has-error";
 			}
 			
-			$scope.errors.processType = "alert-danger";
+			$scope.errors.processType = "has-error";
 		}
 	};
 	
@@ -342,7 +348,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 						}
 					})
 					.error(function(data, status, headers, config) {
-						$scope.message.clazz = "alert alert-danger";
+						$scope.message.clazz = "has-error";
 						$scope.message.text = Messages('experiments.msg.save.error');
 		
 						$scope.message.details = data;
