@@ -22,6 +22,7 @@ PUT		/api/containers/:code											controllers.containers.api.Containers.updat
 #processes tpl
 GET 	/processes/:homecode/home										controllers.processes.tpl.Processes.home(homecode:java.lang.String)
 GET		/tpl/processes/searchColmuns									controllers.processes.tpl.Processes.searchColumns()
+GET		/tpl/processes/get-properties-definitions/:processTypeCode		controllers.processes.tpl.Processes.getPropertiesDefinitions(processTypeCode:java.lang.String)
 GET		/tpl/processes/search/:processTypeCode							controllers.processes.tpl.Processes.search(processTypeCode:java.lang.String)
 GET		/tpl/processes/searchContainers									controllers.processes.tpl.Processes.searchContainers()
 GET		/tpl/processes/newProcesses/:processTypeCode					controllers.processes.tpl.Processes.newProcesses(processTypeCode:java.lang.String)

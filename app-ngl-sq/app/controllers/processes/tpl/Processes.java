@@ -91,6 +91,21 @@ public class Processes extends CommonController{
 		return ok(Json.toJson(columns));
 	}
 
+	
+	public static Result getPropertiesDefinitions(String processTypeCode){
+		ProcessType processType;
+		try {
+			processType = ProcessType.find.findByCode(processTypeCode);
+			if(processType != null && processType.propertiesDefinitions != null) {
+				return ok(Json.toJson(processType.propertiesDefinitions));
+			}
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return badRequest();
+	}
 
 	private static List<DatatableColumn> getPropertiesDefinitionsColumns(String processTypeCode,Boolean edit){
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();		

@@ -54,6 +54,6 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 	
 	
 	if($scope.form.experimentType){
-		$scope.search();
+		//$scope.search();
 	}
 }]);

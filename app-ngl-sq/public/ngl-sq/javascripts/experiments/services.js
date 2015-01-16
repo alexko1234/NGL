@@ -201,7 +201,7 @@
 					return moment(date, Messages("date.format").toUpperCase()).valueOf();
 				},
 				changeExperimentType : function(){
-					this.search();
+					//this.search();
 				},
 				
 				changeProcessCategory : function(){

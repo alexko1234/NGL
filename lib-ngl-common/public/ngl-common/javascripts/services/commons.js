@@ -812,25 +812,25 @@ angular.module('commonsServices', []).
 	    		}
     			
     		      collection = (angular.isObject(collection)) ? toArray(collection) : collection;
+				  if(collection !== undefined){
+					  if (isUndefined(property)) {
+						return collection.filter(function (elm, pos, self) {
+						  return self.indexOf(elm) === pos;
+						})
+					  }
+					  //store all unique members
+					  var uniqueItems = [],
+						  get = $parse(property);
 
-    		      if (isUndefined(property)) {
-    		        return collection.filter(function (elm, pos, self) {
-    		          return self.indexOf(elm) === pos;
-    		        })
-    		      }
-    		      //store all unique members
-    		      var uniqueItems = [],
-    		          get = $parse(property);
-
-    		      return collection.filter(function (elm) {
-    		        var prop = get(elm);
-    		        if(some(uniqueItems, prop)) {
-    		          return false;
-    		        }
-    		        uniqueItems.push(prop);
-    		        return true;
-    		      });
-
+					  return collection.filter(function (elm) {
+						var prop = get(elm);
+						if(some(uniqueItems, prop)) {
+						  return false;
+						}
+						uniqueItems.push(prop);
+						return true;
+					  });
+				  }
     		      //checked if the unique identifier is already exist
     		      function some(array, member) {
     		        if(isUndefined(member)) {
