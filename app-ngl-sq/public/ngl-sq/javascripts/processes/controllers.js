@@ -412,7 +412,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 	$scope.message = {};
 	$scope.supportView = false;
 	$scope.containers = [];
-	$scope.datatable = datatable($scope, $scope.datatableConfig);
+	$scope.datatable = datatable($scope.datatableConfig);
 	$scope.basket = mainService.getBasket();
 	$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);		
 	$scope.datatable.selectAll(false);

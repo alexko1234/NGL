@@ -125,8 +125,9 @@
 					}
 				},
 				changeProcessCategory : function(){
-					this.lists.clear("processTypes");
 					this.form.processType = undefined;
+					this.lists.clear("processTypes");
+					
 					if(this.form.processCategory){
 						this.lists.refresh.processTypes({processCategoryCode:this.form.processCategory});
 					}
