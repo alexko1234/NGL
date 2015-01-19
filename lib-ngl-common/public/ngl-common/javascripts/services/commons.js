@@ -812,7 +812,7 @@ angular.module('commonsServices', []).
 	    		}
     			
     		      collection = (angular.isObject(collection)) ? toArray(collection) : collection;
-				  if(collection !== undefined){
+				  if(collection !== undefined && collection !== null){
 					  if (isUndefined(property)) {
 						return collection.filter(function (elm, pos, self) {
 						  return self.indexOf(elm) === pos;
