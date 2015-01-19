@@ -53,7 +53,6 @@ public class InstrumentService {
 		l.add(newInstrumentCategory("Covaris","covaris"));
 		l.add(newInstrumentCategory("Spri","spri"));
 		l.add(newInstrumentCategory("Thermocycleur","thermocycler"));
-		l.add(newInstrumentCategory("Agilent","agilent"));
 		
 		l.add(newInstrumentCategory("Quantification par fluorométrie","fluorometer"));
 		l.add(newInstrumentCategory("Appareil de qPCR","qPCR-system"));
@@ -107,7 +106,7 @@ public class InstrumentService {
 				getContainerSupportCategories(new String[]{"tube","sheet-96"}), null, 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
-		l.add(newInstrumentUsedType("cBot-interne", "cBot-interne", InstrumentCategory.find.findByCode("cbot"), getPropertiesCBotInterne(), 
+		l.add(newInstrumentUsedType("cBot-interne", "cBot-interne", InstrumentCategory.find.findByCode("cbot"), getCBotInterneProperties(), 
 				getInstruments(
 						createInstrument("cBot Fluor A", "cBot-Fluor-A", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)),
 						createInstrument("cBot Fluor B", "cBot-Fluor-B", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)),
@@ -186,7 +185,7 @@ public class InstrumentService {
 				getContainerSupportCategories(new String[]{"flowcell-8","flowcell-2"}), null, 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG,Institute.CODE.CNS)));
 		
-		l.add(newInstrumentUsedType("Agilent 2100 bioanalyzer", "agilent-2100-bioanalyzer", InstrumentCategory.find.findByCode("chip-electrophoresis"), getAgilentProperties(), 
+		l.add(newInstrumentUsedType("Agilent 2100 bioanalyzer", "agilent-2100-bioanalyzer", InstrumentCategory.find.findByCode("chip-electrophoresis"), getChipElectrophoresisProperties(), 
 				getInstruments(
 						createInstrument("bioAnalyzer1", "BioAnalyzer1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG )), 
 						createInstrument("bioAnalyzer2", "BioAnalyzer2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)) ), 
@@ -206,7 +205,7 @@ public class InstrumentService {
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)));
 		
-		l.add(newInstrumentUsedType("cBot", "cBot", InstrumentCategory.find.findByCode("cbot"), getPropertiesCBot(), 
+		l.add(newInstrumentUsedType("cBot", "cBot", InstrumentCategory.find.findByCode("cbot"), getCBotProperties(), 
 				getInstruments(
 						createInstrument("cBot1", "cBot1", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)),
 						createInstrument("cBot2", "cBot2", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)),
@@ -258,7 +257,7 @@ public class InstrumentService {
 		
 		
 		
-		l.add(newInstrumentUsedType("cBot-onboard", "cBot-onboard", InstrumentCategory.find.findByCode("cbot"), getPropertiesCBotInterne(), 
+		l.add(newInstrumentUsedType("cBot-onboard", "cBot-onboard", InstrumentCategory.find.findByCode("cbot"), getCBotInterneProperties(), 
 				getInstruments(
 						createInstrument("cBot-Hi9", "cBot-interne-Hi9", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG)),
 						createInstrument("cBot-Hi10", "cBot-interne-Hi10", true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG)),
@@ -273,9 +272,7 @@ public class InstrumentService {
 	}
 
 	
-
-	
-	private static List<PropertyDefinition> getPropertiesCBot() throws DAOException {
+	private static List<PropertyDefinition> getCBotProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType"
         		, LevelService.getLevels(Level.CODE.Instrument,Level.CODE.ContainerSupport),String.class, true,DescriptionFactory.newValues("SR","PE"),"single"));
@@ -286,8 +283,9 @@ public class InstrumentService {
         		"2","3","4","5","6","7","8"),"single"));
         return propertyDefinitions;
 	}
+
 	
-	private static List<PropertyDefinition> getPropertiesCBotInterne() throws DAOException {
+	private static List<PropertyDefinition> getCBotInterneProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType"
         		, LevelService.getLevels(Level.CODE.Instrument,Level.CODE.ContainerSupport),String.class, true,DescriptionFactory.newValues("SR","PE"),"single"));
@@ -447,7 +445,7 @@ public class InstrumentService {
 		return l;
 	}
 	
-	private static List<PropertyDefinition> getAgilentProperties() throws DAOException {
+	private static List<PropertyDefinition> getChipElectrophoresisProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		l.add(newPropertiesDefinition("Type puce", "chipType", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("DNA HS", "DNA 12000", "RNA"), "single"));		
 		return l;
