@@ -53,8 +53,8 @@ public class Supports extends CommonController {
 	}
 
 	public static Result list() throws DAOException{
-		Form<SupportsSearchForm> supportFilledForm = filledFormQueryString(supportForm,SupportsSearchForm.class);
-		SupportsSearchForm supportsSearch = supportFilledForm.get();
+		//Form<SupportsSearchForm> supportFilledForm = filledFormQueryString(supportForm,SupportsSearchForm.class);
+		SupportsSearchForm supportsSearch = filledFormQueryString(SupportsSearchForm.class);
 
 		DBQuery.Query query = getQuery(supportsSearch);
 		if(supportsSearch.datatable){
@@ -128,7 +128,7 @@ public class Supports extends CommonController {
 			ContainersSearchForm cs = new ContainersSearchForm();
 			cs.nextExperimentTypeCode = supportsSearch.nextExperimentTypeCode;
 			cs.processTypeCode = supportsSearch.processTypeCode;		
-
+			cs.properties = supportsSearch.properties;	
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("support", 1);

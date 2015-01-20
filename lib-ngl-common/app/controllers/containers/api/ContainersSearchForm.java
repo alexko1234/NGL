@@ -1,7 +1,9 @@
 package controllers.containers.api;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import controllers.ListForm;
 
@@ -26,6 +28,7 @@ public class ContainersSearchForm extends ListForm{
 	public Date toDate;
 	public String column;
 	public String line;
+	public Map<String, List<String>> properties = new HashMap<String, List<String>>();
 	
 	@Override
 	public String toString() {

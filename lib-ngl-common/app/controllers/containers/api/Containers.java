@@ -10,12 +10,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessType;
+import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
@@ -40,6 +42,7 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 
 import controllers.CommonController;
+import controllers.NGLControllerHelper;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
@@ -116,8 +119,8 @@ public class Containers extends CommonController {
 	}
 
 	public static Result list() throws DAOException{
-		Form<ContainersSearchForm> containerFilledForm = filledFormQueryString(containerForm,ContainersSearchForm.class);
-		ContainersSearchForm containersSearch = containerFilledForm.get();
+		//Form<ContainersSearchForm> containerFilledForm = filledFormQueryString(containerForm,ContainersSearchForm.class);
+		ContainersSearchForm containersSearch = filledFormQueryString(ContainersSearchForm.class);
 		containersSearch.orderBy="code";
 		DBQuery.Query query = getQuery(containersSearch);		
 		if(containersSearch.datatable){
@@ -156,8 +159,8 @@ public class Containers extends CommonController {
 	}
 
 	public static Result list_supports() throws DAOException{
-		Form<ContainersSearchForm> containerFilledForm = filledFormQueryString(containerForm,ContainersSearchForm.class);
-		ContainersSearchForm containersSearch = containerFilledForm.get();
+		//Form<ContainersSearchForm> containerFilledForm = filledFormQueryString(containerForm,ContainersSearchForm.class);
+		ContainersSearchForm containersSearch = filledFormQueryString(ContainersSearchForm.class);
 
 		DBQuery.Query query = getQuery(containersSearch);
 		if(containersSearch.datatable){
@@ -231,7 +234,22 @@ public class Containers extends CommonController {
 	public static DBQuery.Query getQuery(ContainersSearchForm containersSearch) throws DAOException {
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
 		Query query = null;
-
+		
+		List<String> processCodes = new ArrayList<String>();
+		if(containersSearch.properties.size() > 0){
+			List<DBQuery.Query> listProcessQuery = NGLControllerHelper.generateQueriesForProperties(containersSearch.properties, Level.CODE.Process, "properties");
+			Query processQuery = DBQuery.and(listProcessQuery.toArray(new DBQuery.Query[queryElts.size()]));
+			
+			List<Process> processes = MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, processQuery).toList();
+			for(Process p : processes){
+				processCodes.add(p.code);
+			}
+		}
+		
+		if(CollectionUtils.isNotEmpty(processCodes)){
+			queryElts.add(DBQuery.in("inputProcessCodes", processCodes));
+		}
+		
 		if(CollectionUtils.isNotEmpty(containersSearch.projectCodes)){
 			queryElts.add(DBQuery.in("projectCodes", containersSearch.projectCodes));
 		}else if(StringUtils.isNotBlank(containersSearch.projectCode)){

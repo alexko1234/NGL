@@ -65,6 +65,9 @@ search.placeholder.user = Créé par
 search.placeholder.support = Regex pour code support
 search.placeholder.experiment = Regex pour experiment
 
+search.tab.addfilters = Filtres supplémentaires
+search.tab.filters = Filtres
+
 #processes
 processes.title = Processus
 processes.menu = Processus

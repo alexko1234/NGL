@@ -1,7 +1,9 @@
 package controllers.supports.api;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import controllers.ListForm;
 
@@ -21,6 +23,7 @@ public class SupportsSearchForm extends ListForm {
 	public Date fromDate;
 	public Date toDate;
 	public List<String> users;
+	public Map<String, List<String>> properties = new HashMap<String, List<String>>();
 	
 	@Override
 	public String toString() {
