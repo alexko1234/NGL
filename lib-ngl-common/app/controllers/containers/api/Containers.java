@@ -291,6 +291,10 @@ public class Containers extends CommonController {
 				Logger.info(e.code);
 				listePrevious.add(e.code);
 			}
+
+			if(CollectionUtils.isNotEmpty(listePrevious)){
+				queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", listePrevious),DBQuery.notExists("fromExperimentTypeCodes"),DBQuery.size("fromExperimentTypeCodes", 0)));
+			}
 		}
 
 		if(StringUtils.isNotBlank(containersSearch.nextExperimentTypeCode)){
@@ -298,10 +302,10 @@ public class Containers extends CommonController {
 			for(ExperimentType e:previous){
 				listePrevious.add(e.code);
 			}
-		}
 
-		if(CollectionUtils.isNotEmpty(listePrevious)){
-			queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", listePrevious)));
+			if(CollectionUtils.isNotEmpty(listePrevious)){
+				queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", listePrevious)));
+			}
 		}
 
 		if(CollectionUtils.isNotEmpty(containersSearch.fromExperimentTypeCodes)){

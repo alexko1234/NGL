@@ -5,11 +5,11 @@
 		
 	@columnSearchForm{
 		@formGroup{
-			<div bt-select placeholder="@Messages("processes.select.processCategory")" class="form-control" ng-model="searchService.form.processCategory" bt-options="processCategory.code as processCategory.name for processCategory in searchService.lists.getProcessCategories()" ng-change="searchService.changeProcessCategory()" auto-select>
+			<div bt-select placeholder="@Messages("processes.select.processCategory")" class="form-control" ng-model="searchService.form.categoryCode" bt-options="processCategory.code as processCategory.name for processCategory in searchService.lists.getProcessCategories()" ng-change="searchService.changeProcessCategory()" auto-select>
 			</div>
 		}
 		@formGroup{
-			<div bt-select placeholder="@Messages("processes.select.state")" multiple="true" filter="true" class="form-control" ng-model="searchService.form.states" bt-options="stateCode.code as stateCode.name for stateCode in searchService.lists.getStates()" auto-select>
+			<div bt-select placeholder="@Messages("processes.select.state")" multiple="true" filter="true" class="form-control" ng-model="searchService.form.stateCodes" bt-options="stateCode.code as stateCode.name for stateCode in searchService.lists.getStates()" auto-select>
 			</div>
 			
 			
@@ -22,7 +22,7 @@
 	@columnSearchForm{	
 	
 		@formGroup{
-			<div bt-select placeholder="@Messages("processes.select.processType")" ng-disabled="searchService.form.processCategory == undefined" class="form-control" ng-model="searchService.form.processType" bt-options="typeCode.code as typeCode.name for typeCode in searchService.lists.getProcessTypes()" ng-change="searchService.changeProcessTypeCode()" auto-select>
+			<div bt-select placeholder="@Messages("processes.select.processType")" ng-disabled="searchService.form.processCategory == undefined" class="form-control" ng-model="searchService.form.typeCode" bt-options="typeCode.code as typeCode.name for typeCode in searchService.lists.getProcessTypes()" ng-change="searchService.changeProcessTypeCode()" auto-select>
 			</div>
 		}
 		@formGroup{			
@@ -46,13 +46,13 @@
 			<input class="form-control" type="text" ng-model="searchService.form.toDate" placeholder='@Messages("processes.placeholder.toDate")' title='@Messages("processes.placeholder.toDate")' >			
 		}
 		@formGroup{
-			<input class="form-control" type="text" ng-model="searchService.form.processesSupportCode"  placeholder='@Messages("search.placeholder.support")' title='@Messages("search.placeholder.support")'>
+			<input class="form-control" type="text" ng-model="searchService.form.supportCode"  placeholder='@Messages("search.placeholder.support")' title='@Messages("search.placeholder.support")'>
 		}
 		
 	}
 	@columnSearchForm{		
 		@formGroup{	
-			<input class="form-control" type="text" ng-model="searchService.form.user" typeahead="user.name as user.name for user in searchService.lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("processes.placeholder.user")' title='@Messages("processes.placeholder.user")'>
+			<input class="form-control" type="text" ng-model="searchService.form.users" typeahead="user.name as user.name for user in searchService.lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("processes.placeholder.user")' title='@Messages("processes.placeholder.user")'>
 			
 		}
 		@formGroup{	
@@ -62,4 +62,64 @@
 	}
 }
 
-@searchForm(form)()("searchService.datatable")
+<!-- @searchForm(form)()("searchService.datatable") -->
+
+<div class="row"> 
+<div class="col-md-12 col-lg-12" datatable="searchService.datatable">
+	<div dt-form>
+		<ul class="nav nav-tabs margin-bottom-5">
+	   	<li class="active"><a href="#" data-target="#filters" data-toggle="tab">@Messages("search.tab.filters")</a></li>
+	   	<li ng-if="searchService.getAddFiltersToForm().length > 0"><a href="#" data-target="#addfilters" data-toggle="tab">@Messages("search.tab.addfilters")</a></li>    
+	   	</ul>
+			
+		<div class="tab-content">
+		<div class="tab-pane active" id="filters">
+			<form class="well well-small">
+			<div class="row">
+			@form
+			@columnSearchForm{
+				@formGroup{
+				<div class="btn-toolbar">
+					<button type="submit" title='@Messages("button.search")' data-toggle="tooltip" ng-click="search()" class="btn btn-primary" >
+						<i class="fa fa-search"></i>
+					</button>
+					<button title='@Messages("button.reset")' data-toggle="tooltip" ng-click="reset()"  class="btn btn-default">
+						<i class="fa fa-undo"></i>
+					</button>
+												 	
+				</div>	
+				}
+			}
+			</div>		
+		</form>	
+	</div>
+	<div class="tab-pane" id="addfilters">
+	<form class="well well-small">
+			<div class="row">
+				<div class="col-md-2 col-lg-2" ng-repeat="filters in searchService.getAddFiltersToForm()">
+					<div class="form-group" ng-repeat="filter in filters">
+						<div dt-compile="filter.html"></div> <!-- used directive from datatable to compile html -->
+					</div>
+				</div>
+				
+				@columnSearchForm{
+				@formGroup{
+				<div class="btn-toolbar">
+					<button type="submit" title='@Messages("button.search")' data-toggle="tooltip" ng-click="search()" class="btn btn-primary" >
+						<i class="fa fa-search"></i>
+					</button>
+					<button title='@Messages("button.reset")' data-toggle="tooltip" ng-click="reset()"  class="btn btn-default">
+						<i class="fa fa-undo"></i>
+					</button>
+												 	
+				</div>	
+				}	
+			}
+			</div>			
+		</form>	
+	</div>
+	
+	</div>
+	</div>
+</div>
+</div>

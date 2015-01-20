@@ -1,5 +1,9 @@
 package instruments.io.utils;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,9 +12,12 @@ import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.parameter.Index;
-import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
+
 import org.mongojack.DBQuery;
+
+import scala.io.Codec;
+
 import fr.cea.ig.MongoDBDAO;
 
 public abstract class AbstractSampleSheetsfactory {
@@ -37,8 +44,8 @@ public abstract class AbstractSampleSheetsfactory {
 		return containers;
 	}
 	
-	public static Index getIndex(String categoryCode, String code){
-		Index index  = MongoDBDAO.findOne(InstanceConstants.PARAMETER_COLL_NAME, Index.class, DBQuery.is("categoryCode", categoryCode).and(DBQuery.is("code", code)));
+	public static Index getIndex(String typeCode, String code){
+		Index index  = MongoDBDAO.findOne(InstanceConstants.PARAMETER_COLL_NAME, Index.class, DBQuery.is("typeCode", typeCode).and(DBQuery.is("code", code)));
 		return index;
 	}
 	
@@ -59,5 +66,19 @@ public abstract class AbstractSampleSheetsfactory {
 		}
 		
 		return (String) container.properties.get(propertyName).value;
+	}
+	
+	public static void writeFile(File file, String content){
+		Writer writer = null;
+		try {
+			FileOutputStream fos = new FileOutputStream(file);
+			writer = new OutputStreamWriter(fos, Codec.UTF8().name());
+			writer.write(content);
+			writer.close();
+			fos.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

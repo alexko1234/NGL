@@ -1,14 +1,20 @@
 package instruments.io.common.hiseq_miseq.api;
 
+import instruments.io.common.hiseq_miseq.tpl.txt.sampleSheet_1;
 import instruments.io.utils.AbstractSampleSheetsfactory;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.util.List;
+
+import scala.io.Codec;
 
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.Experiment;
-
-import instruments.io.miseq.tpl.txt.*;
 
 public class SampleSheetsFactory extends AbstractSampleSheetsfactory{
 
@@ -21,7 +27,9 @@ public class SampleSheetsFactory extends AbstractSampleSheetsfactory{
 		List<Container> containers = getContainersFromExperiment();
 		
 		String content = format(sampleSheet_1.render(experiment, containers).body());
-		play.api.libs.Files.writeFile(new File(containers.get(0).support.code+".csv"), content);
+		File file = new File(containers.get(0).support.code+".csv");
+		//play.api.libs.Files.writeFile(file, content);
+		AbstractSampleSheetsfactory.writeFile(file, content);
 		
 		return content;
 	}

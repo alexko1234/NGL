@@ -109,6 +109,16 @@ GET	   	   /loaddata/:homecode/home										controllers.dataload.SampleLoad.hom
 POST   	   /loaddata													controllers.dataload.SampleLoad.uploadDataFromCSVFile()
 POST	   /createtemplate												controllers.dataload.SampleLoad.createTemplateFile()
 
+#value of property definition
+GET		/api/values														controllers.commons.api.Values.list()
+
+#reporting
+GET    	/api/reporting/filters    	           			@controllers.reporting.api.FilteringConfigurations.list()
+GET	   	/api/reporting/filters/:code					@controllers.reporting.api.FilteringConfigurations.get(code)
+POST 	/api/reporting/filters							@controllers.reporting.api.FilteringConfigurations.save()
+PUT    	/api/reporting/filters/:code					@controllers.reporting.api.FilteringConfigurations.update(code)
+DELETE	/api/reporting/filters/:code					@controllers.reporting.api.FilteringConfigurations.delete(code: java.lang.String)
+
 ->  /authentication authentication.Routes
 
 

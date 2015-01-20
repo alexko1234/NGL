@@ -8,8 +8,6 @@ import java.util.List;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
 import models.laboratory.processes.description.ProcessType;
-import models.utils.ListObject;
-import models.utils.ListObjectInt;
 import models.utils.ListObjectValue;
 import models.utils.dao.DAOException;
 
@@ -178,11 +176,13 @@ public class Processes extends CommonController{
 						controllers.processes.api.routes.javascript.Processes.list(),
 						controllers.processes.api.routes.javascript.ProcessCategories.list(),
 						controllers.commons.api.routes.javascript.CommonInfoTypes.list(),
+						controllers.commons.api.routes.javascript.Values.list(),
 						controllers.projects.api.routes.javascript.Projects.list(),
 		  	    		controllers.samples.api.routes.javascript.Samples.list(),
 		  	    		controllers.supports.api.routes.javascript.Supports.list(),
 		  	    		controllers.commons.api.routes.javascript.States.list(),
 		  	    		controllers.commons.api.routes.javascript.Users.list(),
+		  	      		controllers.reporting.api.routes.javascript.FilteringConfigurations.list(),
 		  	    		controllers.containers.api.routes.javascript.ContainerSupportCategories.list(),
 		  	    		controllers.experiments.api.routes.javascript.ExperimentTypes.list()
 						)	  	      

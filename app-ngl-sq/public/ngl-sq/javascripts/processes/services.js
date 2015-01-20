@@ -4,8 +4,8 @@
 	factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable', function($http, mainService, lists, datatable){
 		var getColumns = function(){
 			var typeCode = "";
-			if(this.form.processType){
-				typeCode = this.form.processType;
+			if(this.form.typeCode){
+				typeCode = this.form.typeCode;
 			}
 			
 			$http.get(jsRoutes.controllers.processes.tpl.Processes.searchColumns().url,{params:{"typeCode":typeCode}})
@@ -56,59 +56,40 @@
 					
 				},
 				convertForm : function(){
-					var _form = angular.copy(this.form);
-						var jsonSearch = {};
-						if(_form.projectCodes){
-							jsonSearch.projectCodes = _form.projectCodes;
-						}			
-						
-						if(_form.sampleCodes){
-							jsonSearch.sampleCodes = _form.sampleCodes;
-						}				
-						
-						if(_form.experimentCode)
-						{
-							jsonSearch.experimentCode = _form.experimentCode;
-						}
-						
-						if(_form.processType){
-							jsonSearch.typeCode = _form.processType;
-						}
-						
-						if(_form.processCategory){
-							jsonSearch.categoryCode = _form.processCategory;
-						}
-						
-						if(_form.processesSupportCode){
-							jsonSearch.supportCode = _form.processesSupportCode;
-						}
-						
-						if(_form.state){
-							jsonSearch.stateCode = _form.state;
-						}
-						
-						if(_form.states){
-							jsonSearch.stateCodes = _form.states;
-						}
-						
-						if(_form.user){
-							jsonSearch.users = _form.user;
-						}
-						
-						if(_form.containerSupportCategory){
-							jsonSearch.containerSupportCategory = _form.containerSupportCategory;
-						}
-						
-						if(_form.fromDate)jsonSearch.fromDate = moment(_form.fromDate, Messages("date.format").toUpperCase()).valueOf();
-						if(_form.toDate)jsonSearch.toDate = moment(_form.toDate, Messages("date.format").toUpperCase()).valueOf();
-						
-						return jsonSearch;
+					var _form = angular.copy(this.form);	
+					if(_form.fromDate)jsonSearch.fromDate = moment(_form.fromDate, Messages("date.format").toUpperCase()).valueOf();
+					if(_form.toDate)jsonSearch.toDate = moment(_form.toDate, Messages("date.format").toUpperCase()).valueOf();
+					return _form;
 				},
 				
 				resetForm : function(){
 					this.form = {};									
 				},
 				
+				initAdditionalFilters:function(){
+					this.additionalFilters=[];
+					if(this.form.typeCode !== undefined && lists.get("process-"+this.form.typeCode) && lists.get("process-"+this.form.typeCode).length === 1){
+						var formFilters = [];
+						var allFilters = angular.copy(lists.get("process-"+this.form.typeCode)[0].filters);
+						var nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
+						for(var i = 0; i  < 5 && allFilters.length > 0 ; i++){
+							formFilters.push(allFilters.splice(0, nbElementByColumn));	    								
+						}
+						//complete to 5 five element to have a great design 
+						while(formFilters.length < 5){
+							formFilters.push([]);
+						}
+							
+						this.additionalFilters = formFilters;
+					}
+				},
+				
+				getAddFiltersToForm : function(){
+					if(this.additionalFilters !== undefined && this.additionalFilters.length === 0){
+						this.initAdditionalFilters();
+					}
+					return this.additionalFilters;									
+				},
 				
 				search : function(){
 					this.updateForm();
@@ -119,24 +100,30 @@
 						this.datatable.search(jsonSearch);
 					}
 				},
+				
 				refreshSamples : function(){
 					if(this.form.projectCodes && this.form.projectCodes.length > 0){
 						this.lists.refresh.samples({projectCodes:this.form.projectCodes});
 					}
 				},
+				
 				changeProcessCategory : function(){
-					this.form.processType = undefined;
+					this.additionalFilters=[];
+					this.form.typeCode = undefined;
 					this.lists.clear("processTypes");
 					
-					if(this.form.processCategory){
-						this.lists.refresh.processTypes({processCategoryCode:this.form.processCategory});
+					if(this.form.categoryCode){
+						this.lists.refresh.processTypes({processCategoryCode:this.form.categoryCode});
 					}
 				},
+				
 				changeProcessTypeCode : function(){
-					if(this.form.processCategory){
+					if(this.form.categoryCode){
 						//searchService.search();
+						lists.refresh.filterConfigs({pageCodes:["process-"+this.form.typeCode]}, "process-"+this.form.typeCode);
+						this.initAdditionalFilters();
 					}else{
-						this.form.processType = undefined;	
+						this.form.typeCode = undefined;	
 					}
 				},
 		/*		changeProcessesSupportCode : function(val){

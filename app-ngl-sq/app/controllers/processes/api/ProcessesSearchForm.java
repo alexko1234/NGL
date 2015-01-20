@@ -1,7 +1,9 @@
 package controllers.processes.api;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import controllers.ListForm;
 
@@ -19,15 +21,20 @@ public class ProcessesSearchForm extends ListForm{
 	public Date fromDate;
 	public Date toDate;
 	public List<String> users;
-	public String experimentCode;
+	public String experimentCode;	
+	public Map<String, List<String>> properties = new HashMap<String, List<String>>();
 	
 	@Override
 	public String toString() {
 		return "ProcessesSearchForm [typeCode=" + typeCode + ", categoryCode="
-				+ categoryCode + ", sampleCode=" + sampleCode + ", projectCodes=" + projectCodes
-				+ ", sampleCodes=" + sampleCodes
-				+ ", projectCode=" + projectCode + ",supportCode="+supportCode 
-				+ ", stateCode="+stateCode+", containerSupportCategory="+containerSupportCategory +", experimentCode="+experimentCode
-				+"]";
+				+ categoryCode + ", sampleCode=" + sampleCode
+				+ ", sampleCodes=" + sampleCodes + ", projectCode="
+				+ projectCode + ", projectCodes=" + projectCodes
+				+ ", supportCode=" + supportCode + ", stateCode=" + stateCode
+				+ ", stateCodes=" + stateCodes + ", containerSupportCategory="
+				+ containerSupportCategory + ", fromDate=" + fromDate
+				+ ", toDate=" + toDate + ", users=" + users
+				+ ", experimentCode=" + experimentCode + ", properties="
+				+ properties + "]";
 	}
 }

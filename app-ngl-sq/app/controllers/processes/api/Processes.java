@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
@@ -35,6 +36,7 @@ import com.mongodb.BasicDBObject;
 
 import controllers.CodeHelper;
 import controllers.CommonController;
+import controllers.NGLControllerHelper;
 import controllers.containers.api.Containers;
 import controllers.containers.api.ContainersSearchForm;
 import fr.cea.ig.MongoDBDAO;
@@ -209,8 +211,8 @@ public class Processes extends CommonController{
 	}
 	
 	public static Result list() throws DAOException{
-		Form<ProcessesSearchForm> processesFilledForm = filledFormQueryString(processesSearchForm,ProcessesSearchForm.class);
-		ProcessesSearchForm processesSearch = processesFilledForm.get();
+		//Form<ProcessesSearchForm> processesFilledForm = filledFormQueryString(processesSearchForm,ProcessesSearchForm.class);
+		ProcessesSearchForm processesSearch = filledFormQueryString(ProcessesSearchForm.class);
 
 		DBQuery.Query query = getQuery(processesSearch);
 		if(processesSearch.datatable){
@@ -324,6 +326,8 @@ public class Processes extends CommonController{
 		if(StringUtils.isNotBlank(processesSearch.experimentCode)){
 			queryElts.add(DBQuery.regex("experimentCodes",Pattern.compile(processesSearch.experimentCode)));
 		}
+		
+		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(processesSearch.properties, Level.CODE.Process, "properties"));
 		
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new Query[queryElts.size()]));
