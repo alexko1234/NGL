@@ -56,7 +56,7 @@ public class FileAcServicesTest  extends AbstractTestsSRA {
 		String fileName = "/env/cns/submit_traces/SRA/ngl-sub/mesTests/RESULT_AC";
 		//Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
 		
-		Submission submission = FileAcServices.traitementFileAC(submissionCode, new File(fileName)); 
+		Submission submission = FileAcServices.traitementFileAC(submissionCode, fileName); 
 		Assert.assertTrue(MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "accession", "ERA000000"));
 		
 	}
@@ -71,7 +71,7 @@ public class FileAcServicesTest  extends AbstractTestsSRA {
 		String fileName = "/env/cns/submit_traces/SRA/ngl-sub/mesTests/RESULT_AC_ERROR";
 		//Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
 		
-		FileAcServices.traitementFileAC(submissionCode, new File(fileName));
+		FileAcServices.traitementFileAC(submissionCode, fileName);
 		Assert.assertTrue(!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "accession", "ERA000000"));
 
 	}

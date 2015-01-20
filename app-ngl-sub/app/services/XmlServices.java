@@ -40,15 +40,23 @@ public class XmlServices {
 		System.out.println("creation des fichiers xml pour l'ensemble de la soumission "+ submissionCode);
 		// Recuperer l'objet submission:
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submission.instance.Submission.class, submissionCode);
-		File studyFile = new File(resultDirectory + File.separator + VariableSRA.xmlStudys);
-		File sampleFile = new File(resultDirectory + File.separator + VariableSRA.xmlSamples);
-		File experimentFile = new File(resultDirectory + File.separator + VariableSRA.xmlExperiments);
-		File runFile = new File(resultDirectory + File.separator + VariableSRA.xmlRuns);
+		if (submission.studyCode != null){
+			File studyFile = new File(resultDirectory + File.separator + VariableSRA.xmlStudys);
+			writeStudyXml(submission, studyFile);
+		}
+		if (submission.sampleCodes.size() != 0){
+			File sampleFile = new File(resultDirectory + File.separator + VariableSRA.xmlSamples);
+			writeSampleXml(submission, sampleFile); 
+		}
+		if (submission.sampleCodes.size() != 0){
+			File experimentFile = new File(resultDirectory + File.separator + VariableSRA.xmlExperiments);
+			writeExperimentXml(submission, experimentFile); 
+		}
+		if (submission.runCodes.size() != 0){
+			File runFile = new File(resultDirectory + File.separator + VariableSRA.xmlRuns);
+			writeRunXml(submission, runFile); 
+		}
 		File submissionFile = new File(resultDirectory + File.separator + VariableSRA.xmlSubmission);
-		writeStudyXml(submission, studyFile);
-		writeSampleXml(submission, sampleFile); 
-		writeExperimentXml(submission, experimentFile); 
-		writeRunXml(submission, runFile); 
 		writeSubmissionXml(submission, submissionFile);
 		// mettre à jour dans la base l'objet submission pour les champs xml...
 		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, 
@@ -68,43 +76,42 @@ public class XmlServices {
 			String chaine = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
 			chaine = chaine + "<STUDY_SET>\n";
 			String studyCode = submission.studyCode;
-				// Recuperer objet study dans la base :
-				Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.study.instance.Study.class, studyCode);
-				//output_buffer.write("//\n");
-				if (study == null){
-					throw new SraException("study impossible à recuperer dans base :"+ studyCode);
-				}
-				System.out.println("Ecriture du study " + studyCode);
+			// Recuperer objet study dans la base :
+			Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.study.instance.Study.class, studyCode);
+			//output_buffer.write("//\n");
+			if (study == null){
+				throw new SraException("study impossible à recuperer dans base :"+ studyCode);
+			}
+			System.out.println("Ecriture du study " + studyCode);
 
-				chaine = chaine + "  <STUDY alias=\""+ studyCode + "\"";
-				if (study.accession != null){
-					if (!study.accession.equals("")){
-						chaine = chaine + "accession=\"" + study.accession + "\"";
-					}
+			chaine = chaine + "  <STUDY alias=\""+ studyCode + "\"";
+			if (study.accession != null){
+				if (!study.accession.equals("")){
+					chaine = chaine + "accession=\"" + study.accession + "\"";
 				}
+			}
 				
-				chaine = chaine + ">\n";
-				chaine = chaine + "    <DESCRIPTOR>\n";
-				chaine = chaine + "      <STUDY_TITLE>" + study.title + "</STUDY_TITLE>\n";
-				chaine = chaine + "      <STUDY_TYPE existing_study_type="+ study.existingStudyType +" />\n";
-				chaine = chaine + "      <STUDY_ABSTRACT>" + study.studyAbstract + "</STUDY_ABSTRACT>\n";
-				chaine = chaine + "      <CENTER_PROJECT_NAME>" + study.centerProjectName+"</CENTER_PROJECT_NAME>\n"; 
-				//if (study.bioProjectId != 0) {
-					chaine = chaine + "      <RELATED_STUDIES>\n";
-					chaine = chaine + "        <RELATED_STUDY>\n";
-					chaine = chaine + "          <RELATED_LINK>\n";
-					chaine = chaine + "            <DB>ENA</DB>\n";
-					chaine = chaine + "            <ID>" + study.bioProjectId + "<ID>\n";
-					chaine = chaine + "          </RELATED_LINK>\n";
-					chaine = chaine + "          <IS_PRIMARY>false</IS_PRIMARY>\n";
-					chaine = chaine + "        </RELATED_STUDY>\n";
-					chaine = chaine + "      </RELATED_STUDIES>\n";
-				//}
+			chaine = chaine + ">\n";
+			chaine = chaine + "    <DESCRIPTOR>\n";
+			chaine = chaine + "      <STUDY_TITLE>" + study.title + "</STUDY_TITLE>\n";
+			chaine = chaine + "      <STUDY_TYPE existing_study_type="+ study.existingStudyType +" />\n";
+			chaine = chaine + "      <STUDY_ABSTRACT>" + study.studyAbstract + "</STUDY_ABSTRACT>\n";
+			chaine = chaine + "      <CENTER_PROJECT_NAME>" + study.centerProjectName+"</CENTER_PROJECT_NAME>\n"; 
+			//if (study.bioProjectId != 0) {
+				chaine = chaine + "      <RELATED_STUDIES>\n";
+				chaine = chaine + "        <RELATED_STUDY>\n";
+				chaine = chaine + "          <RELATED_LINK>\n";
+				chaine = chaine + "            <DB>ENA</DB>\n";
+				chaine = chaine + "            <ID>" + study.bioProjectId + "<ID>\n";
+				chaine = chaine + "          </RELATED_LINK>\n";
+				chaine = chaine + "          <IS_PRIMARY>false</IS_PRIMARY>\n";
+				chaine = chaine + "        </RELATED_STUDY>\n";
+				chaine = chaine + "      </RELATED_STUDIES>\n";
+			//}
 				
-				chaine = chaine + "      <STUDY_DESCRIPTION>"+study.description+"</STUDY_DESCRIPTION>\n";
-				chaine = chaine + "    </DESCRIPTOR>\n";
-				chaine = chaine + "  </STUDY>\n";
-			//} // end for
+			chaine = chaine + "      <STUDY_DESCRIPTION>"+study.description+"</STUDY_DESCRIPTION>\n";
+			chaine = chaine + "    </DESCRIPTOR>\n";
+			chaine = chaine + "  </STUDY>\n";
 			chaine = chaine + "</STUDY_SET>\n";
 			output_buffer.write(chaine);
 			output_buffer.close();
@@ -113,7 +120,7 @@ public class XmlServices {
 	} // end writeStudyXml
 	   
 	public static void writeSampleXml (Submission submission, File outputFile) throws IOException, SraException {
-		System.out.println("sample = "  + submission.sampleCodes.get(0));
+		//System.out.println("sample = "  + submission.sampleCodes.get(0));
 		if (submission == null) {
 			return;
 		}

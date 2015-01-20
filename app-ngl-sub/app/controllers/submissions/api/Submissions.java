@@ -82,7 +82,25 @@ public class Submissions extends SubmissionsController{
 		return ok(Json.toJson(submission));
 	}
 
-	
+
+	public static Result treatmentAc(String code, String pathEbiFileAc)
+	{
+		//Get Submission from DB 
+		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, code);
+		if (submission == null) {
+			return badRequest("Submission with code "+code+" not exist");
+		}
+		try {
+			submission = FileAcServices.traitementFileAC(code, pathEbiFileAc);
+		} catch (IOException e) {
+			return badRequest(e.getMessage());
+		} catch (SraException e) {
+			return badRequest(e.getMessage());
+		} catch (MailServiceException e) {
+			return badRequest(e.getMessage());
+		}
+		return ok(Json.toJson(submission));
+	}
 	public static Result updateState(String code, String stateCode)
 	{
 		Submission submission = getSubmission(code);

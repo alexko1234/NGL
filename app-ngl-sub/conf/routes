@@ -14,6 +14,9 @@ PUT		/submissions/:code/state/:stateCode			controllers.submissions.api.Submissio
 
 # Creation des fichiers xml pour l'objet submission :
 PUT		/submissions/:code/xml		controllers.submissions.api.Submissions.createXml(code: java.lang.String)
+
+# Traitement des AC et mise a jour du status de l'objet submission :
+PUT		/submissions/:code/ebiAc/:pathEbiFileAc		controllers.submissions.api.Submissions.treatmentAc(code: java.lang.String, pathEbiFileAc: java.lang.String) 
 		
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
