@@ -50,12 +50,12 @@ public class ProcessService {
 
 			l.add(DescriptionFactory.newProcessType("Librairie PE sans sizing", "Lib-PE-NoSizing", ProcessCategory.find.findByCode("library"), getPropertyDefinitionsLib300600(), getExperimentTypes("fragmentation","librairie-indexing","amplification"), 
 					getExperimentTypes("fragmentation").get(0), getExperimentTypes("amplification").get(0), getExperimentTypes("ext-to-library").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-			l.add(DescriptionFactory.newProcessType("qPCR et normalisation", "qPCR-normalisation", ProcessCategory.find.findByCode("pre-sequencing"), getPropertyDefinitionsIlluminaDepot(), getExperimentTypes("solution-stock"), 
+			l.add(DescriptionFactory.newProcessType("qPCR et normalisation", "qPCR-normalisation", ProcessCategory.find.findByCode("pre-sequencing"), null, getExperimentTypes("solution-stock"), 
 					getExperimentTypes("solution-stock").get(0), getExperimentTypes("solution-stock").get(0), getExperimentTypes("ext-to-qpcr").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-			l.add(DescriptionFactory.newProcessType("Run Illumina", "illumina-run", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsIlluminaDepot() , getExperimentTypes("prepa-flowcell","illumina-depot"), 
+			l.add(DescriptionFactory.newProcessType("Run Illumina", "illumina-run", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsIlluminaDepotCNS() , getExperimentTypes("prepa-flowcell","illumina-depot"), 
 					getExperimentTypes("prepa-flowcell").get(0), getExperimentTypes("illumina-depot").get(0),getExperimentTypes("ext-to-prepa-flowcell").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-			l.add(DescriptionFactory.newProcessType("Run Illumina", "illumina-run-CNG", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsIlluminaDepot() , getExperimentTypes("prepa-flowcell-CNG","illumina-depot-CNG"), 
-					getExperimentTypes("prepa-flowcell-CNG").get(0), getExperimentTypes("illumina-depot-CNG").get(0),getExperimentTypes("ext-to-prepa-flowcell").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+			l.add(DescriptionFactory.newProcessType("Run Illumina", "illumina-run-cng", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsIlluminaDepotCNG() , getExperimentTypes("prepa-flowcell-cng","illumina-depot-cng"), 
+					getExperimentTypes("prepa-flowcell-cng").get(0), getExperimentTypes("illumina-depot-cng").get(0),getExperimentTypes("ext-to-prepa-flowcell").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 				
 		}
 		
@@ -72,7 +72,7 @@ public class ProcessService {
 		return propertyDefinitions;
 	}*/
 
-	private static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepot() throws DAOException {
+	private static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepotCNS() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
 		//TO do multi value
@@ -85,13 +85,32 @@ public class ProcessService {
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Longueur de lecture", "readLength"
 						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("50","100","150","250","300","500","600"), "single"));
+		
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type séquenceur", "sequencerType"
 						, LevelService.getLevels(Level.CODE.Process),String.class, false, DescriptionFactory.newValues("GAIIx","HISEQ2000","HISEQ2500","MISEQ"), "single"));
+		return propertyDefinitions;
+	}
+
+	private static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepotCNG() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+
+		//TO do multi value
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Type séquencage","sequencingType"
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("GAIIx", "Hiseq 2000", "Hiseq 2500 normal" , "Hiseq 2500 rapide" ,"Miseq"), "single"));
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Type de lecture", "readType"
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("SR","PE"), "single"));		
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Longueur de lecture", "readLength"
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("50","100","150","250","300","500","600"), "single"));
+		
 
 		return propertyDefinitions;
 	}
 
+	
 	private static List<ExperimentType> getExperimentTypes(String...codes) throws DAOException {
 		return DAOHelpers.getModelByCodes(ExperimentType.class,ExperimentType.find, codes);
 	}
