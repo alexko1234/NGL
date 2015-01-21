@@ -60,7 +60,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','mainSer
 			otherButtons:{
 				active:true,
 				template:'<button class="btn btn-info btn-configure" ng-disabled="basket.length()==0" ng-click="newExperiment();" data-toggle="tooltip" title="">'
-						+'Configurer '+'{{form.nextExperimentType | codes:"type"}}</button>'/*+
+						+'Configurer '+'{{form.nextExperimentTypeCode | codes:"type"}}</button>'/*+
 						'<button ng-click="swithView()" ng-disabled="loadView"  class="btn-info btn-configure" ng-switch="supportView">'+Messages("baskets.switchView")+
 						'<br><b ng-switch-when="true">'+
 						Messages("backet.view.supports")+'</b>'+
@@ -70,7 +70,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','mainSer
 	
 	$scope.newExperiment = function(){
 		if(this.basket.length() > 0 && $scope.getTabs().length === 2){
-			tabService.addTabs({label:$filter('codes')(mainService.getForm().nextExperimentType,'type')+" config",href:"/experiments/create/"+mainService.getForm().nextExperimentType,remove:false});
+			tabService.addTabs({label:$filter('codes')(mainService.getForm().nextExperimentTypeCode,'type')+" config",href:"/experiments/create/"+mainService.getForm().nextExperimentTypeCode,remove:false});
 		}
 	};
 	
