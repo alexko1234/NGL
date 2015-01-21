@@ -324,6 +324,7 @@ public class Containers extends CommonController {
 			if(CollectionUtils.isNotEmpty(listePrevious)){
 				queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", listePrevious)));
 			}
+			queryElts.add(DBQuery.nor(DBQuery.notExists("inputProcessCodes"),DBQuery.size("inputProcessCodes", 0)));
 		}
 
 		if(CollectionUtils.isNotEmpty(containersSearch.fromExperimentTypeCodes)){
