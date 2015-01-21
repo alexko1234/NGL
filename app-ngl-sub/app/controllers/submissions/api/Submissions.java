@@ -17,6 +17,7 @@ import models.sra.utils.SraException;
 import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
 
 import play.Logger;
 import play.data.Form;
@@ -106,9 +107,9 @@ public class Submissions extends SubmissionsController{
 		Submission submission = getSubmission(code);
 		if(submission==null)
 			return badRequest("Submission with code "+code+" not exist");
-		Map<String, Object> mapKeyValue = new HashMap<String, Object>();
-		mapKeyValue.put("state.code", stateCode);
-		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, submission, mapKeyValue);
+		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, 
+				DBQuery.is("code", code), 
+				DBUpdate.set("state.code", stateCode));
 		return ok();
 	}
 	

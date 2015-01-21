@@ -42,6 +42,20 @@ public class SubmissionBuilder {
 		return this;
 	}
 	
+	public SubmissionBuilder addSampleCode(String code)
+	{
+		if(submission.sampleCodes==null)
+			submission.sampleCodes=new ArrayList<String>();
+		submission.sampleCodes.add(code);
+		return this;
+	}
+	
+	public SubmissionBuilder withStudyCode(String code)
+	{
+		submission.studyCode=code;
+		return this;
+	}
+	
 	public Submission build()
 	{
 		return submission;

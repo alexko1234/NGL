@@ -12,12 +12,12 @@ import java.io.IOException;
 import java.util.List;
 
 import models.sra.experiment.instance.Experiment;
-import models.sra.experiment.instance.RawData;
+import models.sra.sample.instance.Sample;
+import models.sra.study.instance.Study;
 import models.sra.submission.instance.Submission;
 import models.utils.InstanceConstants;
 
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -25,11 +25,12 @@ import play.Logger;
 import play.libs.Json;
 import play.mvc.Result;
 import utils.AbstractTestController;
-import utils.SubmissionMockHelper;
 import builder.data.ExperimentBuilder;
 import builder.data.RawDataBuilder;
 import builder.data.RunBuilder;
+import builder.data.SampleBuilder;
 import builder.data.StateBuilder;
+import builder.data.StudyBuilder;
 import builder.data.SubmissionBuilder;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -53,10 +54,13 @@ public class SubmissionsTest extends AbstractTestController{
 								.build();
 		MongoDBDAO.save(InstanceConstants.SRA_SUBMISSION_COLL_NAME, submission);
 		
-		//Create submission withRawData
+		//Create complete submission withRawData and with information for createXML
 		Submission submissionRD = new SubmissionBuilder()
 								.withCode("sub2")
+								.withSubmissionDirectory(System.getProperty("user.home")+"/NGL-SUB-Test")
+								.withStudyCode("study1")
 								.addExperimentCode("exp1")
+								.addSampleCode("samp1")
 								.build();
 		MongoDBDAO.save(InstanceConstants.SRA_SUBMISSION_COLL_NAME, submissionRD);
 		Experiment experiment = new ExperimentBuilder()
@@ -70,6 +74,16 @@ public class SubmissionsTest extends AbstractTestController{
 											.build())
 								.build();
 		MongoDBDAO.save(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, experiment);
+		Sample sample = new SampleBuilder()
+						.withCode("samp1")
+						.build();
+		MongoDBDAO.save(InstanceConstants.SRA_SAMPLE_COLL_NAME, sample);
+		Study study = new StudyBuilder()
+					.withCode("study1")
+					.build();
+		MongoDBDAO.save(InstanceConstants.SRA_STUDY_COLL_NAME, study);
+		
+		
 	}
 
 	@AfterClass
@@ -78,6 +92,8 @@ public class SubmissionsTest extends AbstractTestController{
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "code1");
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "sub2");
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, "exp1");
+		MongoDBDAO.deleteByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, "samp1");
+		MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, "study1");
 	}
 
 	@Test
@@ -131,5 +147,12 @@ public class SubmissionsTest extends AbstractTestController{
 			assertThat(jsonNode.findValue("relatifName")).isNotNull();
 		}
 		
+	}
+	
+	@Test
+	public void shouldCreateXML()
+	{
+		Result result = callAction(controllers.submissions.api.routes.ref.Submissions.createXml("sub2"));
+		Logger.info(contentAsString(result));
 	}
 }
