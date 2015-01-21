@@ -2060,7 +2060,7 @@ angular.module('datatableServices', []).
 	    				if(col.type === "boolean"){
 	    					editElement = '<input class="form-control"' +defaultValueDirective+' dt-html-filter="{{col.type}}" type="checkbox" class="input-small" ng-model="'+this.getEditProperty(col, header)+ngChange+'/>';
 	    				}else if(!col.choiceInList){
-	    					editElement = '<input class="form-control" '+defaultValueDirective+' '+this.getConvertDirective(col, header)+' dt-html-filter="{{col.type}}" type="'+this.getInputType(col)+'" class="input-small" ng-model="'+this.getEditProperty(col, header)+ngChange+this.getDateTimestamp(col.type)+'/>';
+	    					editElement = '<input class="form-control" '+defaultValueDirective+' '+this.getConvertDirective(col, header)+' dt-html-filter="{{col.type}}" type="'+this.getInputType(col)+'" class="input-small" ng-model="'+this.getEditProperty(col, header)+ngChange+this.getDateTimestamp(header, col.type)+'/>';
 	    				}else if(col.choiceInList){
 	    					switch (col.listStyle) { 
 	    						case "radio":
@@ -2140,9 +2140,9 @@ angular.module('datatableServices', []).
 	    					
 	    			};
 	    			
-	    			scope.dtTableFunctions.getDateTimestamp = function(colType){
-	    				if(colType==="date"){
-	    					return 'date-timestamp';
+	    			scope.dtTableFunctions.getDateTimestamp = function(header, colType){
+	    				if(colType==="date" && !header){
+	    					return 'dt-date-timestamp';
 	    				}
 	    				
 	    				return '';
@@ -2291,7 +2291,7 @@ angular.module('datatableServices', []).
 					    	   if(attrs.dtHtmlFilter == "datetime"){
 					    		   convertedData = $filter('date')(convertedData, Messages("datetime.format"));
 					    	   }else if(attrs.dtHtmlFilter == "date"){
-					    		   convertedData = $filter('date')(convertedData, Messages("date.format"));
+					    		   //convertedData = $filter('date')(convertedData, Messages("date.format")); //The direcive date-timestamp take care of that now
 					    	   }else if(attrs.dtHtmlFilter == "number"){
 					    		   convertedData = $filter('number')(convertedData);
 					    	   }
@@ -2315,4 +2315,53 @@ angular.module('datatableServices', []).
 					    });   
 					  }
 					};
-			}); 
+			}).directive('dtDateTimestamp', function() {
+	            return {
+	                require: 'ngModel',
+	                link: function(scope, ele, attr, ngModel) {
+						var typedDate = "01/01/1970";//Initialisation of the date
+						
+	                	var convertToDate = function(date){
+	                		if(date !== null && date !== undefined && date !== ""){
+		                		var format = Messages("date.format").toUpperCase();
+		                		date = moment.unix(date).format(format);
+		                		return date;
+	                		}
+	                		return "";
+	                	};
+	                	
+	                	var convertToTimestamp = function(date){
+	                		if(date !== null && date !== undefined && date !== ""){
+		                		var format = Messages("date.format").toUpperCase();
+		    					return moment(date, format).valueOf();
+	                		}
+	                		return "";
+	    				};
+						
+	                	//model to view
+	                	scope.$watch(
+							function(){
+								return ngModel.$modelValue;
+							}, function(newValue, oldValue){
+								//We check if the
+								if(newValue !== null && newValue !== undefined && newValue !== "" && typedDate.length === 10){
+									if(newValue > Math.pow(10,10))
+										newValue /= 1000;
+									var date = convertToDate(newValue);
+	    							ngModel.$setViewValue(date);
+									ngModel.$render();
+								}
+	                    });
+						
+	                	//view to model
+	                    ngModel.$parsers.push(function(value) {
+	                    	var date = value;
+							typedDate = date;//The date of the user
+	                    	if(value.length === 10){//When the date is complete
+	                    		date = convertToTimestamp(value);
+	                    	}
+							return date;
+	                    });
+	                }
+	            }
+	        }); 
