@@ -5,20 +5,18 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+import org.bson.BSONObject;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate.Builder;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.PropertyAccessorFactory;
-import org.apache.commons.lang3.StringUtils;
-
-import com.fasterxml.jackson.databind.JsonNode;
-
-import org.bson.BSONObject;
 
 import play.Logger;
 import play.data.DynamicForm;
@@ -30,6 +28,7 @@ import play.mvc.With;
 import validation.ContextValidation;
 import views.components.datatable.DatatableForm;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.mongodb.BasicDBObject;
 
 import controllers.history.UserHistory;
@@ -124,7 +123,16 @@ public abstract class CommonController extends Controller{
 				
 				try {
 					if(isNotEmpty(queryString.get(key))){	
-						wrapper.setPropertyValue(key, queryString.get(key));
+						Field field = clazz.getField(key);
+						Class type = field.getType();
+						Object value = null;
+						if(type.equals(Date.class)){
+							value = new Date(Long.valueOf(queryString.get(key)[0]));
+						}else{
+							value = queryString.get(key);
+						}
+						
+						wrapper.setPropertyValue(key, value);
 					}
 				} catch (Exception e) {
 					throw new RuntimeException(e);
