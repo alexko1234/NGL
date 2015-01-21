@@ -7,10 +7,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import play.Logger;
-
 import validation.ContextValidation;
-
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
@@ -30,8 +29,12 @@ import models.sra.utils.SraException;
 import models.sra.utils.VariableSRA;
 import models.utils.InstanceConstants;
 import fr.cea.ig.MongoDBDAO;
+
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.mongojack.DBQuery;
 
@@ -210,9 +213,15 @@ public class SubmissionServices {
 			dataRep.mkdirs();	
 			for (Experiment expElt: listExperiments) {
 				for (RawData rawData :expElt.run.listRawData){
-					String cmd = "ln -s -f " + rawData.directory + File.separator + rawData.relatifName
-					+ " " + submission.submissionDirectory + File.separator + rawData.relatifName;
-					System.out.println("cmd = " + cmd);
+					
+					File fileCible = new File(rawData.directory + File.separator + rawData.relatifName);
+					File fileLien = new File(submission.submissionDirectory + File.separator + rawData.relatifName);
+					Path lien = Paths.get(fileLien.getPath());
+					Path cible = Paths.get(fileCible.getPath());
+					Files.createSymbolicLink(lien, cible);
+					//String cmd = "ln -s -f " + rawData.directory + File.separator + rawData.relatifName
+					//+ " " + submission.submissionDirectory + File.separator + rawData.relatifName;
+					//System.out.println("cmd = " + cmd);
 				}
 			}
 			//XmlServices.writeAllXml(submission.code);
