@@ -2060,7 +2060,7 @@ angular.module('datatableServices', []).
 	    				if(col.type === "boolean"){
 	    					editElement = '<input class="form-control"' +defaultValueDirective+' dt-html-filter="{{col.type}}" type="checkbox" class="input-small" ng-model="'+this.getEditProperty(col, header)+ngChange+'/>';
 	    				}else if(!col.choiceInList){
-	    					editElement = '<input class="form-control" '+defaultValueDirective+' '+this.getConvertDirective(col, header)+' dt-html-filter="{{col.type}}" type="'+this.getInputType(col)+'" class="input-small" ng-model="'+this.getEditProperty(col, header)+ngChange+this.getDateTimestamp(header, col.type)+'/>';
+	    					editElement = '<input class="form-control" '+defaultValueDirective+' '+this.getConvertDirective(col, header)+' dt-html-filter="{{col.type}}" type="'+this.getInputType(col)+'" class="input-small" ng-model="'+this.getEditProperty(col, header)+ngChange+this.getDateTimestamp(col.type)+'/>';
 	    				}else if(col.choiceInList){
 	    					switch (col.listStyle) { 
 	    						case "radio":
@@ -2140,8 +2140,8 @@ angular.module('datatableServices', []).
 	    					
 	    			};
 	    			
-	    			scope.dtTableFunctions.getDateTimestamp = function(header, colType){
-	    				if(colType==="date" && !header){
+	    			scope.dtTableFunctions.getDateTimestamp = function(colType){
+	    				if(colType==="date"){
 	    					return 'dt-date-timestamp';
 	    				}
 	    				
@@ -2290,8 +2290,6 @@ angular.module('datatableServices', []).
 					    	
 					    	   if(attrs.dtHtmlFilter == "datetime"){
 					    		   convertedData = $filter('date')(convertedData, Messages("datetime.format"));
-					    	   }else if(attrs.dtHtmlFilter == "date"){
-					    		   //convertedData = $filter('date')(convertedData, Messages("date.format")); //The direcive date-timestamp take care of that now
 					    	   }else if(attrs.dtHtmlFilter == "number"){
 					    		   convertedData = $filter('number')(convertedData);
 					    	   }
