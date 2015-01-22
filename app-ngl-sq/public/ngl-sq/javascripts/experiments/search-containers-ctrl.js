@@ -68,6 +68,12 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"property":"traceInformation.createUser",
 			"order":true,
 			"type":"text"
+		},{
+			"header":Messages("containers.table.inputProcessCodes"),
+			"property":"inputProcessCodes",
+			"order":true,
+			"type":"text",
+			"render":"<div list-resize='value.data.inputProcessCodes | unique' list-resize-min-size='3'>",
 		}],	
 		search:{
 			url:jsRoutes.controllers.supports.api.Supports.list()
@@ -246,7 +252,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		$scope.loadExperimentTypesLists();
 		
 	} else {
-		$scope.searchService.form = mainService.getForm();
+		$scope.searchService.form = {};
+		$scope.searchService.form.nextExperimentTypeCode =  mainService.getForm().experimentType;
 		$scope.searchService.lists.refresh.containerSupportCategories({experimentTypeCode:$scope.searchService.form.nextExperimentTypeCode});
 		//$scope.search();
 	}
