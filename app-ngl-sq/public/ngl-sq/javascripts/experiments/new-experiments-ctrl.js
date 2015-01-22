@@ -51,7 +51,9 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','mainSer
 							$scope.loadView = false;
 						});
 					}*/
-					$scope.setBasket(datatable.allResults);
+					$scope.basket.basket = [];
+					$scope.basket.basket = $scope.basket.basket.concat(datatable.allResult);
+					$scope.setBasket($scope.basket);
 				}
 			},
 			messages:{
