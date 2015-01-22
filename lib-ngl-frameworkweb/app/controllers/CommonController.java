@@ -122,7 +122,15 @@ public abstract class CommonController extends Controller{
 
 				try {
 					if(isNotEmpty(queryString.get(key))){
-						wrapper.setPropertyValue(key, queryString.get(key));
+						Object value = queryString.get(key);
+						if(isFiledInClass(clazz, key)){
+							Field field = clazz.getField(key);
+							Class type = field.getType();
+							if(type.equals(Date.class)){
+								value = new Date(Long.valueOf(queryString.get(key)[0]));
+							}
+						}
+						wrapper.setPropertyValue(key, value);
 					}
 				} catch (Exception e) {
 					throw new RuntimeException(e);
@@ -134,6 +142,16 @@ public abstract class CommonController extends Controller{
 			throw new RuntimeException(e);
 		} 
 
+	}
+
+	private static <T> boolean isFiledInClass(Class<T> clazz, String fieldName){
+		List<Field> fields = Arrays.asList(clazz.getDeclaredFields());
+		for(Field f : fields){
+			if(f.getName().equals(fieldName)){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private static boolean isNotEmpty(String[] strings) {
