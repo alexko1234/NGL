@@ -18,7 +18,6 @@ import org.mongojack.DBUpdate.Builder;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.PropertyAccessorFactory;
 
-import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
@@ -56,19 +55,19 @@ public abstract class CommonController extends Controller{
 		Form<T> filledForm = form.fill(input); 
 		return filledForm;
 	}
-	
+
 	protected static <T> List<Form<T>> getFilledFormList(Form<T> form, Class<T> clazz) {		
 		JsonNode json = request().body().asJson();
 		List<Form<T>> results = new ArrayList<Form<T>>();
 		Iterator<JsonNode> iterator = json.elements();
-		
+
 		while(iterator.hasNext()){
 			JsonNode jsonChild = iterator.next();
 			T input = Json.fromJson(jsonChild, clazz);
 			Form<T> filledForm = form.fill(input);
 			results.add(filledForm);
 		}
-		
+
 		return results;
 	}
 
@@ -115,29 +114,20 @@ public abstract class CommonController extends Controller{
 	protected static <T> T filledFormQueryString(Class<T> clazz) {		
 		try{
 			Map<String, String[]> queryString = request().queryString();
-			
+
 			BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(clazz.newInstance());
 			wrapper.setAutoGrowNestedPaths(true);
-			
+
 			for(String key :queryString.keySet()){
-				
+
 				try {
-					if(isNotEmpty(queryString.get(key))){	
-						Field field = clazz.getField(key);
-						Class type = field.getType();
-						Object value = null;
-						if(type.equals(Date.class)){
-							value = new Date(Long.valueOf(queryString.get(key)[0]));
-						}else{
-							value = queryString.get(key);
-						}
-						
-						wrapper.setPropertyValue(key, value);
+					if(isNotEmpty(queryString.get(key))){
+						wrapper.setPropertyValue(key, queryString.get(key));
 					}
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				} 
-	
+
 			}
 			return (T)wrapper.getWrappedInstance();
 		} catch (Exception e) {
@@ -145,8 +135,7 @@ public abstract class CommonController extends Controller{
 		} 
 
 	}
-	
-	
+
 	private static boolean isNotEmpty(String[] strings) {
 		if(null == strings)return false;
 		if(strings.length == 0)return false;
@@ -157,7 +146,7 @@ public abstract class CommonController extends Controller{
 	protected static String getCurrentUser(){
 		return Context.current().request().username();
 	}
-	
+
 	/**
 	 * A finder for mongoDB
 	 * @param collection
@@ -174,13 +163,13 @@ public abstract class CommonController extends Controller{
 			if(form.isServerPagination()){
 				results.page(form.pageNumber,form.numberRecordsPerPage); 
 			}
-					
+
 		}else{
 			results = MongoDBDAO.find(collection, type, query) 
 					.sort(form.orderBy, Sort.valueOf(form.orderSense))
 					.limit(form.limit);
 		}
-		
+
 		return results;
 	}
 
@@ -197,11 +186,11 @@ public abstract class CommonController extends Controller{
 					.sort(form.orderBy, Sort.valueOf(form.orderSense))
 					.limit(form.limit);
 		}
-		
-		
+
+
 		return results;
 	}
-	
+
 	protected static BasicDBObject getKeys(DatatableForm form) {
 		BasicDBObject keys = new BasicDBObject();
 		if(null != form.includes && form.includes.size() > 0){
@@ -211,23 +200,23 @@ public abstract class CommonController extends Controller{
 		}
 		return keys;
 	}
-	
+
 	protected static BasicDBObject getIncludeKeys(String[] keys) {
 		BasicDBObject values = new BasicDBObject();
 		for(String key : keys){
-		    values.put(key, 1);
+			values.put(key, 1);
 		}
 		return values;
-    }
-	
+	}
+
 	protected static BasicDBObject getExcludeKeys(String[] keys) {
 		BasicDBObject values = new BasicDBObject();
 		for(String key : keys){
-		    values.put(key, 0);
+			values.put(key, 0);
 		}
 		return values;
-    }
-	
+	}
+
 	/**
 	 * Construct a builder from some fields
 	 * Use to update a mongodb document
@@ -239,7 +228,7 @@ public abstract class CommonController extends Controller{
 	protected static Builder getBuilder(Object value, List<String> fields, Class clazz) {
 		return getBuilder(value, fields, clazz, null);
 	}
-	
+
 	/**
 	 * Construct a builder from some fields
 	 * Use to update a mongodb document
@@ -258,7 +247,7 @@ public abstract class CommonController extends Controller{
 		}catch(Exception e){
 			throw new RuntimeException(e);
 		}
-		
+
 		return builder;
 	}
 	/**
@@ -275,7 +264,7 @@ public abstract class CommonController extends Controller{
 			}
 		}				
 	}
-	
+
 	/**
 	 * Validate ig the field is present in the form
 	 * @param ctxVal
@@ -289,8 +278,8 @@ public abstract class CommonController extends Controller{
 				ctxVal.addErrors(field, "error.notdefined");
 			}
 		}	
-		
+
 	}
-	
-	
+
+
 }
