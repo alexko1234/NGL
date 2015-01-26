@@ -97,7 +97,7 @@ public class ExperimentService {
 
 		l.add(newExperimentType("Void Opgen Illumina","ext-to-opgen-depot",
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), getPropertyDefinitionExtToOpgenDepot(), null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)));
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		/*
 		l.add(newExperimentType("Depot Opgen", "opgen-depot",1600
 				, ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),null, getProtocols("depot_opgen_ptr_1"), 
@@ -110,7 +110,7 @@ public class ExperimentService {
 		//Prepaflowcell : to finish
 		l.add(newExperimentType("Void Depot Illumina","ext-to-prepa-flowcell",
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)));
 		
 		l.add(newExperimentType("Preparation flowcell", "prepa-flowcell",1200, 
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcell(),
