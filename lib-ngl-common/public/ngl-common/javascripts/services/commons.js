@@ -130,7 +130,7 @@ angular.module('commonsServices', []).
     					load(jsRoutes.controllers.commons.api.States.list().url,params,(key)?key:'states');    				
     				},
     				protocols : function(params, key){
-    					load(jsRoutes.controllers.experiments.api.Protocols.list().url,params,(key)?key:'protocols');    				
+    					load(jsRoutes.controllers.protocols.api.Protocols.list().url,params,(key)?key:'protocols');    				
     				},
     				types : function(params, multi, key){
     					var name = "types";
@@ -217,6 +217,7 @@ angular.module('commonsServices', []).
     			getStates : function(){return results['states'];},
     			getRuns : function(){return results['runs'];},
     			getInstrumentCategories : function(){return results['instrumentCategories'];},
+    			getProtocols : function(){return results['protocols'];},
     			getTypes : function(params){
 	    						if(params != undefined){
 	    							return results[params+'Types'];
@@ -333,11 +334,10 @@ angular.module('commonsServices', []).
     		return {
     			require: 'ngModel',
     			link: function(scope, element, attrs, ngModel) {
-    				var valmodel = undefined;
     				var defaultValue = null;
-    				scope.$watch(attrs.defaultValue, function(col){
-    					if(col.defaultValues != undefined){
-    						defaultValue = col.defaultValues;
+    				scope.$watch(attrs.defaultValue, function(defaultValues){
+    					if(defaultValues != undefined){
+    						defaultValue = defaultValues;
     					}
     				});
     				

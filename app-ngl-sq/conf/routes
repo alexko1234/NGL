@@ -94,6 +94,9 @@ GET		/api/instruments/types  										controllers.instruments.api.InstrumentUse
 GET		/api/instruments/categories  									controllers.instruments.api.InstrumentCategories.list()
 GET		/api/instruments												controllers.instruments.api.Instruments.list()
 
+#protocols api
+GET		/api/protocols													controllers.protocols.api.Protocols.list()
+
 #Common
 GET		/api/commons/states												controllers.commons.api.States.list()
 GET		/api/commons/types												controllers.commons.api.CommonInfoTypes.list()

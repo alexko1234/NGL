@@ -1,4 +1,4 @@
-package controllers.processes.tpl;
+ package controllers.processes.tpl;
 
 import static play.data.Form.form;
 
@@ -26,6 +26,7 @@ import views.html.processes.newProcesses;
 import views.html.processes.search;
 import views.html.processes.searchContainers;
 import controllers.CommonController;
+import controllers.containers.api.Containers;
 import controllers.processes.api.ProcessesSearchForm;
 
 public class Processes extends CommonController{
@@ -48,22 +49,22 @@ public class Processes extends CommonController{
 		Form<ProcessesSearchForm> processesFilledForm = filledFormQueryString(processesSearchForm,ProcessesSearchForm.class);
 		ProcessesSearchForm processesSearch = processesFilledForm.get();
 		
-		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();		
-		columns.add(DatatableHelpers.getColumn("code", Messages.get("processes.table.code"), true, false, false));
+		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
+		columns.add(DatatableHelpers.getColumn("containerInputCode", Messages.get("processes.table.containerInputCode"), true, false, false));
+		columns.add(DatatableHelpers.getColumn("sampleCode", Messages.get("processes.table.sampleCode"), true, false, false));
+		//columns.add(DatatableHelpers.getColumn("tag", Messages.get("processes.table.tag"),true, false, false));
 		columns.add(DatatableHelpers.getColumn("typeCode", Messages.get("processes.table.typeCode"), true, false, false, "codes:'type'"));
 		if(processesSearch.typeCode != null){
 			columns.addAll(getPropertiesDefinitionsColumns(processesSearch.typeCode ,true));
-		}		
+		}
 		columns.add(DatatableHelpers.getColumn("state.code", Messages.get("processes.table.stateCode"), true, false, false, "codes:'state'"));
-		columns.add(DatatableHelpers.getColumn("currentExperimentTypeCode", Messages.get("processes.table.currentExperimentTypeCode"), true, false, false));
 		columns.add(DatatableHelpers.getColumn("state.resolutionCodes", Messages.get("processes.table.resolutionCode"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("sampleCode", Messages.get("processes.table.sampleCode"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("projectCode", Messages.get("processes.table.projectCode"), true, false, false));		
-		columns.add(DatatableHelpers.getColumn("containerInputCode", Messages.get("processes.table.containerInputCode"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("newContainerSupportCodes", Messages.get("processes.table.newContainerSupportCodes"), true, false, false,"","<div list-resize='value.data.newContainerSupportCodes | unique' below-only-deploy>"));//
-		columns.add(DatatableHelpers.getColumn("experimentCodes", Messages.get("processes.table.experimentCodes"), true, false, false,"","<div list-resize='value.data.experimentCodes | unique' below-only-deploy>"));
+		columns.add(DatatableHelpers.getColumn("currentExperimentTypeCode", Messages.get("processes.table.currentExperimentTypeCode"), true, false, false));
+		columns.add(DatatableHelpers.getColumn("code", Messages.get("processes.table.code"), true, false, false));		
 		columns.add( DatatableHelpers.getDateColumn("traceInformation.creationDate", Messages.get("processes.table.creationDate"), true, false, false));
-		
+		columns.add(DatatableHelpers.getColumn("newContainerSupportCodes", Messages.get("processes.table.newContainerSupportCodes"), true, false, false,"","<div list-resize='value.data.newContainerSupportCodes | unique' below-only-deploy>"));//
+		columns.add(DatatableHelpers.getColumn("experimentCodes", Messages.get("processes.table.experimentCodes"), true, false, false,"","<div list-resize='value.data.experimentCodes | unique' below-only-deploy>"));		
+		columns.add(DatatableHelpers.getColumn("projectCode", Messages.get("processes.table.projectCode"), true, false, false));
 		
 		
 		return ok(Json.toJson(columns));
@@ -103,7 +104,7 @@ public class Processes extends CommonController{
 		}
 		
 		return badRequest();
-	}
+	}	
 
 	private static List<DatatableColumn> getPropertiesDefinitionsColumns(String processTypeCode,Boolean edit){
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();		

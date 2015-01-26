@@ -1,4 +1,4 @@
-package controllers.instance;
+package controllers.instance.resolution;
 
 import models.Constants;
 import play.Logger;

@@ -21,8 +21,6 @@ import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.description.Protocol;
-import models.laboratory.experiment.description.ProtocolCategory;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
@@ -31,7 +29,6 @@ import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
-import models.laboratory.resolutions.instance.Resolution;
 import models.laboratory.resolutions.instance.ResolutionCategory;
 import models.laboratory.run.description.AnalysisType;
 import models.laboratory.run.description.ReadSetType;
@@ -307,6 +304,46 @@ public class DescriptionFactory {
 		return pd;
 	}
 	
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @param levels
+	 * @param type
+	 * @param required
+	 * @param values
+	 * @param defaultValue
+	 * @param measureCategory
+	 * @param displayMeasureUnit
+	 * @param saveMeasureUnit
+	 * @param propertyValueType TODO
+	 * @param displayOrder
+	 * @return
+	 * @throws DAOException
+	 */
+	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, 
+			List<Value> values, String defaultValue, MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit, String propertyValueType, int displayOrder) throws DAOException{
+		PropertyDefinition pd = new PropertyDefinition();		
+		pd.name = name;
+		pd.code = code;
+		pd.active = true;
+		pd.levels = levels;
+		pd.valueType = type.getName();
+		pd.required = required;
+		pd.choiceInList = false;
+		if(values!=null){ 
+			pd.choiceInList=true;
+			pd.possibleValues = values;
+		}
+		pd.defaultValue = defaultValue;
+		pd.measureCategory = measureCategory;
+		pd.displayMeasureValue = displayMeasureUnit;
+		pd.saveMeasureValue = saveMeasureUnit;	
+		pd.propertyValueType = propertyValueType;
+		pd.displayOrder=displayOrder;
+		return pd;
+	}
+	
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, 
 			List<Value> values, MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit, String propertyValueType, int displayOrder, Boolean editable) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
@@ -368,6 +405,27 @@ public class DescriptionFactory {
 			Value value = new Value();
 			value.value = v;
 			value.defaultValue = false;
+			l.add(value);
+		}
+		return l;
+	}
+	
+	/**
+	 * 
+	 * @param defaultValue
+	 * @param values
+	 * @return
+	 */
+	public static List<Value> newValuesWithDefault(String defaultValue, String...values) {
+		List<Value> l = new ArrayList<Value>(values.length);
+		for(String v : values){
+			Value value = new Value();
+			value.value = v;			
+			if(v.equals(defaultValue)){
+				value.defaultValue = true;
+			}else{
+				value.defaultValue = false;
+			}
 			l.add(value);
 		}
 		return l;
@@ -464,6 +522,7 @@ public class DescriptionFactory {
 	 * @param objTypes
 	 * @return
 	 */
+	@Deprecated
 	public static models.laboratory.common.description.Resolution newResolution(String name, String code,
 			models.laboratory.common.description.ResolutionCategory category, List<Institute> institutes, List<ObjectType> objTypes, Short displayOrder) {
 		models.laboratory.common.description.Resolution r = new models.laboratory.common.description.Resolution();
@@ -475,47 +534,6 @@ public class DescriptionFactory {
 		r.displayOrder = displayOrder;
 		return r;
 	}
-	
-	/**
-	 * define a resolution in MongoDB (with specific level) 
-	 * @param name
-	 * @param code
-	 * @param categoryName
-	 * @param displayOrder
-	 * @param level
-	 * @param categoryDisplayOrder
-	 * @return
-	 */
-	public static Resolution newResolution(String name, String code,
-			 ResolutionCategory rc, Short displayOrder, String level) {
-			Resolution ir = new Resolution();
-			ir.code = code;
-			ir.name = name;
-			ir.displayOrder = displayOrder;
-			ir.category = new ResolutionCategory(rc.name, rc.displayOrder); 
-			ir.level = level;
-			return ir;
-		}
-	
-	/**
-	 * define a resolution in MongoDB
-	 * @param name
-	 * @param code
-	 * @param categoryName
-	 * @param displayOrder
-	 * @param categoryDisplayOrder
-	 * @return
-	 */
-	public static Resolution newResolution(String name, String code, ResolutionCategory rc, Short displayOrder) {
-			Resolution ir = new Resolution();
-			ir.code = code;
-			ir.name = name;
-			ir.displayOrder = displayOrder;
-			ir.category = new ResolutionCategory(rc.name, rc.displayOrder); 
-			return ir;
-		}
-	
-
 	
 	/**
 	 * define institute
@@ -612,7 +630,7 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	public static ExperimentType newExperimentType(String name, String code, ExperimentCategory category, List<PropertyDefinition> propertiesDefinitions, List<Protocol> protocols, List<InstrumentUsedType> instrumentUsedTypes,String atomicTransfertMethod, List<Institute> institutes) throws DAOException {
+	public static ExperimentType newExperimentType(String name, String code, ExperimentCategory category, List<PropertyDefinition> propertiesDefinitions, List<InstrumentUsedType> instrumentUsedTypes,String atomicTransfertMethod, List<Institute> institutes) throws DAOException {
 		ExperimentType et = new ExperimentType();
 		et.code =code.toLowerCase();
 		et.name =name;
@@ -620,7 +638,7 @@ public class DescriptionFactory {
 		et.category = category;
 		et.objectType = ObjectType.find.findByCode(ObjectType.CODE.Experiment.name());
 		et.propertiesDefinitions = propertiesDefinitions;
-		et.protocols = protocols;
+		//et.protocols = protocols;
 		et.instrumentUsedTypes = instrumentUsedTypes;
 		et.states = State.find.findByObjectTypeCode(ObjectType.CODE.Experiment);
 		//et.resolutions = models.laboratory.common.description.Resolution.find.findByObjectTypeCode(ObjectType.CODE.Experiment);
@@ -642,7 +660,7 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	public static ExperimentType newExperimentType(String name, String code, Integer displayOrder, ExperimentCategory category, List<PropertyDefinition> propertiesDefinitions, List<Protocol> protocols, List<InstrumentUsedType> instrumentUsedTypes,String atomicTransfertMethod, List<Institute> institutes) throws DAOException {
+	public static ExperimentType newExperimentType(String name, String code, Integer displayOrder, ExperimentCategory category, List<PropertyDefinition> propertiesDefinitions, List<InstrumentUsedType> instrumentUsedTypes,String atomicTransfertMethod, List<Institute> institutes) throws DAOException {
 		ExperimentType et = new ExperimentType();
 		et.code =code.toLowerCase();
 		et.name =name;
@@ -650,7 +668,7 @@ public class DescriptionFactory {
 		et.category = category;
 		et.objectType = ObjectType.find.findByCode(ObjectType.CODE.Experiment.name());
 		et.propertiesDefinitions = propertiesDefinitions;
-		et.protocols = protocols;
+		//et.protocols = protocols;
 		et.instrumentUsedTypes = instrumentUsedTypes;
 		et.states = State.find.findByObjectTypeCode(ObjectType.CODE.Experiment);
 		//et.resolutions = models.laboratory.common.description.Resolution.find.findByObjectTypeCode(ObjectType.CODE.Experiment);
@@ -682,26 +700,6 @@ public class DescriptionFactory {
 		etn.possibleQualityControlTypes = qcTypes;
 		etn.previousExperimentType = previousExp;
 		return etn;
-	}
-
-	/**
-	 * 
-	 * @param name
-	 * @param code
-	 * @param path
-	 * @param version
-	 * @param cat
-	 * @return
-	 */
-	public static Protocol newProtocol(String name, String code,
-			String path, String version, ProtocolCategory cat) {
-		Protocol p = new Protocol();
-		p.code = code.toLowerCase().replace("\\s+", "-");
-		p.name = name;
-		p.filePath = path;
-		p.version = version;
-		p.category = cat;
-		return p;
 	}
 
 	/**

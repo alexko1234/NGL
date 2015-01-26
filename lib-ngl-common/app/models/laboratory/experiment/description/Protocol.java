@@ -11,6 +11,7 @@ import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
 import play.api.modules.spring.Spring;
 
+@Deprecated
 public class Protocol extends Model<Protocol>{
 
 

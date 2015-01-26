@@ -9,16 +9,13 @@ import java.util.List;
 import models.laboratory.resolutions.instance.Resolution;
 import models.laboratory.resolutions.instance.ResolutionConfiguration;
 import models.utils.InstanceConstants;
-import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
 import org.springframework.stereotype.Controller;
 
-import com.mongodb.BasicDBObject;
-
-import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;

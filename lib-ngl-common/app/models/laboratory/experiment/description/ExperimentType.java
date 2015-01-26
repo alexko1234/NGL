@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import models.laboratory.common.description.CommonInfoType;
-import models.laboratory.common.description.CommonInfoType.AbstractCommonInfoTypeFinder;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
 import models.laboratory.instrument.description.InstrumentUsedType;
-import models.utils.ListObject;
 import models.utils.dao.DAOException;
 
 /**

@@ -14,6 +14,7 @@ import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessType;

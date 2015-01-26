@@ -249,6 +249,26 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sql, new SqlParameter("code",Types.VARCHAR));
 		return commonInfoTypeMappingQuery.execute(objectTypeCode.name());
 	}
+	
+	
+	public List<CommonInfoType> findByProtocolCode(String code){
+		String sql = sqlCommon +
+				" JOIN experiment_type et ON et.fk_common_info_type = t.id "+
+				"JOIN experiment_type_protocol etp ON etp.fk_experiment_type = et.id "+
+				"JOIN protocol p ON p.id = etp.fk_protocol "+
+				"WHERE p.code=? ";
+		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sql, new SqlParameter("code",Types.VARCHAR));
+		return commonInfoTypeMappingQuery.execute(code);
+				
+	}
+	
+	public CommonInfoType findByExperimentTypeId(Long id){
+		String sql = sqlCommon +
+				" JOIN experiment_type et ON et.fk_common_info_type = t.id "+
+				"WHERE et.id=? ";
+		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sql, new SqlParameter("id",Types.BIGINT));
+		return commonInfoTypeMappingQuery.findObject(id);
+	}
 
 
 }

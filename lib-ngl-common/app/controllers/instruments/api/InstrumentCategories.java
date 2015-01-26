@@ -5,6 +5,8 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import models.laboratory.instrument.description.InstrumentCategory;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
@@ -25,7 +27,7 @@ public class InstrumentCategories extends CommonController{
 		List<InstrumentCategory> instrumentCategories;
 
 		try{		
-			if(instrumentCategoriesQueryParams.instrumentTypeCode != null){
+			if(StringUtils.isNotBlank(instrumentCategoriesQueryParams.instrumentTypeCode)){
 				instrumentCategories = InstrumentCategory.find.findByInstrumentUsedTypeCode(instrumentCategoriesQueryParams.instrumentTypeCode);
 			}else{
 				instrumentCategories = InstrumentCategory.find.findAll();

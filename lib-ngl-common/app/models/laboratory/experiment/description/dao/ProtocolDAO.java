@@ -21,6 +21,7 @@ import play.api.modules.spring.Spring;
 
 import com.avaje.ebean.enhance.asm.Type;
 
+@Deprecated
 @Repository
 public class ProtocolDAO extends AbstractDAOMapping<Protocol>{
 

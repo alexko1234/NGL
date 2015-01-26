@@ -24,7 +24,7 @@ containers.table.creationDate = Création container
 containers.table.concentration = Concentration
 containers.table.volume = Volume
 containers.table.createUser = Container créé par
-containers.table.valid = Container valide?
+containers.table.valid = Container valide ?
 containers.table.supportCode = Support container
 containers.table.support.categoryCode = Catégorie support
 containers.table.support.line = Y
@@ -111,6 +111,7 @@ processes.table.properties.sequencerType = Type séquenceur
 processes.table.supportCode = Code support container
 processes.table.line = X
 processes.table.columns = Y
+processes.table.tag = Tag
 
 processes.select.processType = Sélect. type processus
 processes.select.processCategory = Sélect. catégorie processus

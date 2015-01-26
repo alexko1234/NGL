@@ -50,6 +50,8 @@ public class Process extends DBObject implements IValidation{
 	
 	public List<String> newContainerSupportCodes;
 	public List<String> experimentCodes;
+	
+	public String tag;
 
 	@JsonIgnore
 	@Override

@@ -17,6 +17,7 @@ import org.springframework.jdbc.object.MappingSqlQuery;
 
 import play.api.modules.spring.Spring;
 
+@Deprecated
 public class ProtocolMappingQuery extends MappingSqlQuery<Protocol>{
 
 	public ProtocolMappingQuery()

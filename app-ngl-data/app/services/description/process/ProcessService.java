@@ -78,7 +78,7 @@ public class ProcessService {
 		//TO do multi value
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type séquencage","sequencingType"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("GAIIx", "Hiseq 2000", "Hiseq 2500 normal" , "Hiseq 2500 rapide" ,"Miseq"), "single"));
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("Hiseq 2000/2500N" , "Hiseq 2500 Rapide" ,"Miseq"), "single"));
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type de lecture", "readType"
 						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("SR","PE"), "single"));		
@@ -87,8 +87,8 @@ public class ProcessService {
 						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("50","100","150","250","300","500","600"), "single"));
 		
 		propertyDefinitions.add(
-				DescriptionFactory.newPropertiesDefinition("Type séquenceur", "sequencerType"
-						, LevelService.getLevels(Level.CODE.Process),String.class, false, DescriptionFactory.newValues("GAIIx","HISEQ2000","HISEQ2500","MISEQ"), "single"));
+				DescriptionFactory.newPropertiesDefinition("% à déposer prévisionnel", "estimatedPercentPerLane"
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, null,"single"));	
 		return propertyDefinitions;
 	}
 
@@ -104,8 +104,7 @@ public class ProcessService {
 						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("SR","PE"), "single"));		
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Longueur de lecture", "readLength"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("50","100","150","250","300","500","600"), "single"));
-		
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("50","100","150","250","300","500","600"), "single"));		
 
 		return propertyDefinitions;
 	}

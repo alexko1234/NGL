@@ -30,5 +30,6 @@ public interface InstanceConstants {
 	public static final String VALUATION_CRITERIA_COLL_NAME = "ngl_common.ValuationCriteria";
 	
 	public static final String RESOLUTION_COLL_NAME = "ngl_common.ResolutionConfiguration";
+	public static final String PROTOCOL_COLL_NAME = "ngl_sq.Protocol";
 
 }

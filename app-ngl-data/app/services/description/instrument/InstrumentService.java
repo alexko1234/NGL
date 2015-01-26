@@ -279,8 +279,8 @@ public class InstrumentService {
         propertyDefinitions.add(newPropertiesDefinition("Type flowcell","flowcellType"
         		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("Paired End FC Hiseq-v3","Single FC Hiseq-v3","Rapid FC PE HS 2500-v1","Rapid FC SR HS 2500-v1"),"single"));
         propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
-        propertyDefinitions.add(newPropertiesDefinition("Piste contrôle","control", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("Pas de piste contrôle (auto-calibrage)","1",
-        		"2","3","4","5","6","7","8"),"single"));
+        propertyDefinitions.add(newPropertiesDefinition("Piste contrôle","control", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValuesWithDefault("Pas de piste contrôle (auto-calibrage)","Pas de piste contrôle (auto-calibrage)","1",
+        		"2","3","4","5","6","7","8"),"Pas de piste contrôle (auto-calibrage)","single"));
         return propertyDefinitions;
 	}
 
@@ -293,7 +293,7 @@ public class InstrumentService {
         		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("Rapid FC PE HS 2500-v1","Rapid FC SR HS 2500-v1",
         				"FC Miseq-v2","FC Miseq-v3"),"single"));
         propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
-        propertyDefinitions.add(newPropertiesDefinition("Piste contrôle","control", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("Pas de piste contrôle (auto-calibrage)","1",
+        propertyDefinitions.add(newPropertiesDefinition("Piste contrôle","control", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValuesWithDefault("Pas de piste contrôle (auto-calibrage)","Pas de piste contrôle (auto-calibrage)","1",
         		"2"),"single"));
         return propertyDefinitions;
 	}
@@ -317,6 +317,7 @@ public class InstrumentService {
         propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index1", "nbCyclesReadIndex1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single"));
         propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read2", "nbCyclesRead2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single"));
         propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index2", "nbCyclesReadIndex2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single"));
+        propertyDefinitions.add(newPropertiesDefinition("Nom cassette Miseq", "miseqReagentCassette",LevelService.getLevels(Level.CODE.Instrument),String.class,true,"single"));
         return propertyDefinitions;
 	}
 	

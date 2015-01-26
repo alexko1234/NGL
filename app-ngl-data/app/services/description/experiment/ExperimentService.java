@@ -3,7 +3,6 @@ package services.description.experiment;
 import static services.description.DescriptionFactory.newExperimentType;
 import static services.description.DescriptionFactory.newExperimentTypeNode;
 import static services.description.DescriptionFactory.newPropertiesDefinition;
-import static services.description.DescriptionFactory.newProtocol;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,14 +13,9 @@ import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
-import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.common.description.State;
-import models.laboratory.common.description.Value;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.description.Protocol;
-import models.laboratory.experiment.description.ProtocolCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ExperimentTypeNode;
 import models.laboratory.processes.description.ProcessType;
@@ -42,16 +36,16 @@ public class ExperimentService {
 		DAOHelpers.removeAll(ExperimentType.class, ExperimentType.find);
 		DAOHelpers.removeAll(ExperimentCategory.class, ExperimentCategory.find);
 
-		DAOHelpers.removeAll(Protocol.class, Protocol.find);		
-		DAOHelpers.removeAll(ProtocolCategory.class, ProtocolCategory.find);
+		//DAOHelpers.removeAll(Protocol.class, Protocol.find);		
+		//DAOHelpers.removeAll(ProtocolCategory.class, ProtocolCategory.find);
 
-		saveProtocolCategories(errors);
-		saveProtocol(errors);
+		//saveProtocolCategories(errors);
+		//saveProtocol(errors);
 		saveExperimentCategories(errors);
 		saveExperimentTypes(errors);
 		saveExperimentTypeNodes(errors);
 	}
-
+	/*
 	@SuppressWarnings("unchecked")
 	public static void saveProtocolCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ProtocolCategory> l = new ArrayList<ProtocolCategory>();
@@ -79,7 +73,7 @@ public class ExperimentService {
 
 		DAOHelpers.saveModels(Protocol.class, l, errors);
 
-	}
+	} */
 
 	/**
 	 * Save all ExperimentCategory
@@ -108,17 +102,17 @@ public class ExperimentService {
 				getInstrumentUsedTypes("ARGUS"), "ManyToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS))); */
 		
 		l.add(newExperimentType("Depot Opgen", "opgen-depot",1600
-				, ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionOpgenDepot(), getProtocols("depot_opgen_ptr_1"), 
+				, ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionOpgenDepot(), 
 				getInstrumentUsedTypes("ARGUS"), "ManyToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		//Prepaflowcell : to finish
 		l.add(newExperimentType("Void Depot Illumina","ext-to-prepa-flowcell",
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", 
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		l.add(newExperimentType("Preparation flowcell", "prepa-flowcell",1200, 
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcell(),  
-				getProtocols("prepfc_cbot_ptr_sox139_1"), getInstrumentUsedTypes("cBot-interne","cBot"), "ManyToOne", 
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcell(),
+				getInstrumentUsedTypes("cBot-interne","cBot"), "ManyToOne", 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
@@ -127,35 +121,34 @@ public class ExperimentService {
 
 			//library
 			l.add(newExperimentType("Fragmentation","fragmentation",200,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, 
-					getProtocols("fragmentation_ptr_sox140_1"), getInstrumentUsedTypes("hand","covaris-s2","covaris-e210"),"OneToOne", 
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
+					getInstrumentUsedTypes("hand","covaris-s2","covaris-e210"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
 			
 			l.add(newExperimentType("Librairie indexée","librairie-indexing",400,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibIndexing(), 
-					getProtocols("bqspri_ptr_sox142_1"), getInstrumentUsedTypes("hand","spri"),"OneToOne", 
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibIndexing(),
+					getInstrumentUsedTypes("hand","spri"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
 			l.add(newExperimentType("Librairie dual indexing","librairie-dualindexing",600,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibDualIndexing(), 
-					getProtocols("bqspri_ptr_sox142_1"), getInstrumentUsedTypes("hand","spri"),"OneToOne", 
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibDualIndexing(),  
+					getInstrumentUsedTypes("hand","spri"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
 			l.add(newExperimentType("Amplification","amplification",800,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, 
-					getProtocols("amplif_ptr_sox144_1") , getInstrumentUsedTypes("hand","thermocycler"),"OneToOne", 
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
+					getInstrumentUsedTypes("hand","thermocycler"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 
 			//attention proto, attention robot voir avec julie
 			l.add(newExperimentType("Solution stock","solution-stock",1000,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, 
-					getProtocols("amplif_ptr_sox144_1") , getInstrumentUsedTypes("hand"),"OneToOne", 
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
+					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
 			//Depot solexa
 			l.add(newExperimentType("Depot Illumina", "illumina-depot", 1400,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(), 
-					getProtocols("depot_illumina_ptr_1","depot_illumina_ptr_2","depot_illumina_ptr_3","sop_depot_1"), 
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(),
 					getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500"), "OneToVoid", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 
@@ -163,29 +156,29 @@ public class ExperimentService {
 
 			//purif
 			l.add(newExperimentType("Ampure Non Ampli","ampure-na",
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null, 
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()),
 					null, getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
 			l.add(newExperimentType("Ampure Ampli","ampure-a",
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null, null, 
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null,
 					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 
 			//void
 			l.add(newExperimentType("Void Banque","ext-to-library",
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", 
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
 			/**********************************************************************************/
 			//transformation CNG & CNS
 			
 			l.add(newExperimentType("Void qPCR","ext-to-qpcr",
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", 
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)));
 			
 			l.add(newExperimentType("Void Depot Illumina","ext-to-prepa-flowcell",
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, null,"OneToOne", 
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)));
 			
 			/*
@@ -197,23 +190,23 @@ public class ExperimentService {
 			
 			l.add(newExperimentType("Migration sur puce (ampli)","chip-migration-post-pcr",650,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
-					getProtocols("proto_qc_v1"), getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchipGX"),"OneToVoid", 
+					getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchipGX"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)));
 			
 			l.add(newExperimentType("Migration sur puce (non ampli)","chip-migration-pre-pcr",250,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
-					getProtocols("proto_qc_v1"), getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchipGX"),"OneToVoid", 
+					getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchipGX"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)));
 			
 			
 			l.add(newExperimentType("Dosage fluorimétrique","fluo-quantification",450,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
-					getProtocols("proto_qc_v1"), getInstrumentUsedTypes("qubit"),"OneToVoid", 
+					getInstrumentUsedTypes("qubit"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)));
 			
 			l.add(newExperimentType("Quantification qPCR","qPCR-quantification",850,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
-					getProtocols("proto_qc_v1"), getInstrumentUsedTypes("rocheLightCycler-qPCR","stratagene-qPCR"),"OneToVoid", 
+					getInstrumentUsedTypes("rocheLightCycler-qPCR","stratagene-qPCR"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG))); 			
 			
 			/**********************************************************************************/
@@ -222,29 +215,29 @@ public class ExperimentService {
 
 			//library
 			l.add(newExperimentType("Fragmentation","fragmentation",200,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, 
-					getProtocols("SOP101v2","SOP102v1"), getInstrumentUsedTypes("hand","covaris-le220","covaris-e210"),"OneToOne", 
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
+					getInstrumentUsedTypes("hand","covaris-le220","covaris-e210"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG) ));
 			
 			l.add(newExperimentType("Librairie indexée","librairie-indexing",400,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibIndexing(), 
-					getProtocols("SOP"), getInstrumentUsedTypes("hand"),"OneToOne", 
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibIndexing(),
+					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 			
 			l.add(newExperimentType("Librairie dual indexing","librairie-dualindexing",600,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibDualIndexing(), 
-					getProtocols("SOP"), getInstrumentUsedTypes("hand"),"OneToOne", 
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibDualIndexing(),
+					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 			
 			l.add(newExperimentType("PCR","pcr",800,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, 
-					getProtocols("SOP") , getInstrumentUsedTypes("hand","thermocycler"),"OneToOne", 
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
+					getInstrumentUsedTypes("hand","thermocycler"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 
 			//pre-sequencing
 			l.add(newExperimentType("Solution X nM","solution-x-nm",1000,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null, 
-					getProtocols("SOP") , getInstrumentUsedTypes("hand"),"OneToOne", 
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
+					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 
 			// NO qc au CNG ??
@@ -254,13 +247,13 @@ public class ExperimentService {
 	
 			l.add(newExperimentType("Préparation flowcell","prepa-flowcell-cng",1100,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcell(),
-					getProtocols("SOP") , getInstrumentUsedTypes("cBot", "cBot-onboard"),"ManyToOne", 
+					getInstrumentUsedTypes("cBot", "cBot-onboard"),"ManyToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 
 			//Depot solexa
 			l.add(newExperimentType("Dépot sur sequenceur Illumina", "illumina-depot-cng", 1200,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(), 
-					getProtocols("sop_depot_1"), getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500"), "OneToVoid", 
+					getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500"), "OneToVoid", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 				
 		}
@@ -324,9 +317,9 @@ public class ExperimentService {
 
 	}
 
-	private static List<Protocol> getProtocols(String...codes) throws DAOException {
+/*	private static List<Protocol> getProtocols(String...codes) throws DAOException {
 		return DAOHelpers.getModelByCodes(Protocol.class,Protocol.find, codes);
-	}
+	}*/
 
 	private static List<InstrumentUsedType> getInstrumentUsedTypes(String...codes) throws DAOException {
 		return DAOHelpers.getModelByCodes(InstrumentUsedType.class,InstrumentUsedType.find, codes);
@@ -362,7 +355,7 @@ public class ExperimentService {
 		propertyDefinitions.add(newPropertiesDefinition("Concentration dénat. ", "finalConcentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "nM"),MeasureUnit.find.findByCode( "nM"),"single",5,true,"2"));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Volume dénat.", "finalVolume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null
+		propertyDefinitions.add(newPropertiesDefinition("Volume dénat.", "finalVolume1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "20"
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",6));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Volume dénat. à engager dans dilution", "requiredVolume2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null
@@ -377,7 +370,7 @@ public class ExperimentService {
 		propertyDefinitions.add(newPropertiesDefinition("Conc. sol. mère Phix", "phixConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "pM"),MeasureUnit.find.findByCode( "nM"),"single",10, true,"0.02"));
 
-		propertyDefinitions.add(newPropertiesDefinition("Conc. dilution", "finalConcentration2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null
+		propertyDefinitions.add(newPropertiesDefinition("Conc. dilution", "finalConcentration2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "1000"
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "pM"),MeasureUnit.find.findByCode( "nM"), "single",11));
 
 		propertyDefinitions.add(newPropertiesDefinition("Volume dilution", "finalVolume2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null
