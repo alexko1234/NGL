@@ -51,8 +51,7 @@ public class Processes extends CommonController{
 		
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
 		columns.add(DatatableHelpers.getColumn("containerInputCode", Messages.get("processes.table.containerInputCode"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("sampleCode", Messages.get("processes.table.sampleCode"), true, false, false));
-		//columns.add(DatatableHelpers.getColumn("tag", Messages.get("processes.table.tag"),true, false, false));
+		columns.add(DatatableHelpers.getColumn("sampleCode", Messages.get("processes.table.sampleCode"), true, false, false));		
 		columns.add(DatatableHelpers.getColumn("typeCode", Messages.get("processes.table.typeCode"), true, false, false, "codes:'type'"));
 		if(processesSearch.typeCode != null){
 			columns.addAll(getPropertiesDefinitionsColumns(processesSearch.typeCode ,true));

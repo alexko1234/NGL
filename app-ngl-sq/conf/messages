@@ -108,6 +108,7 @@ processes.table.properties.sequencingType = Type de séquencage
 processes.table.properties.readType =  Type de lecture
 processes.table.properties.readLength = Longueur de lecture
 processes.table.properties.sequencerType = Type séquenceur
+processes.table.properties.estimatedPercentPerLane =  % à déposer prévisonnel
 processes.table.supportCode = Code support container
 processes.table.line = X
 processes.table.columns = Y
