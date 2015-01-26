@@ -50,6 +50,14 @@ public class SubmissionBuilder {
 		return this;
 	}
 	
+	public SubmissionBuilder addRunCode(String code)
+	{
+		if(submission.runCodes==null)
+			submission.runCodes=new ArrayList<String>();
+		submission.runCodes.add(code);
+		return this;
+	}
+	
 	public SubmissionBuilder withStudyCode(String code)
 	{
 		submission.studyCode=code;

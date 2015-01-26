@@ -12,6 +12,12 @@ public class StateBuilder {
 		return this;
 	}
 	
+	public StateBuilder withUser(String user)
+	{
+		state.user=user;
+		return this;
+	}
+	
 	public State build(){
 		return state;
 	}

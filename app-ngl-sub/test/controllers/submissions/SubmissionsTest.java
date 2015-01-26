@@ -8,6 +8,7 @@ import static play.test.Helpers.contentType;
 import static play.test.Helpers.fakeRequest;
 import static play.test.Helpers.status;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import models.sra.study.instance.Study;
 import models.sra.submission.instance.Submission;
 import models.utils.InstanceConstants;
 
+import org.eclipse.jetty.util.log.Log;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -57,6 +59,7 @@ public class SubmissionsTest extends AbstractTestController{
 		//Create complete submission withRawData and with information for createXML
 		Submission submissionRD = new SubmissionBuilder()
 								.withCode("sub2")
+								.withState(new StateBuilder().withCode("state1").withUser("ejacoby@genoscope.cns.fr").build())
 								.withSubmissionDirectory(System.getProperty("user.home")+"/NGL-SUB-Test")
 								.withStudyCode("study1")
 								.addExperimentCode("exp1")
@@ -154,5 +157,17 @@ public class SubmissionsTest extends AbstractTestController{
 	{
 		Result result = callAction(controllers.submissions.api.routes.ref.Submissions.createXml("sub2"));
 		Logger.info(contentAsString(result));
+	}
+	
+	@Test
+	public void shouldTreatmentAC()
+	{
+		File fileAc = new File(System.getProperty("user.home")+"/NGL-SUB-Test/RESULT_AC");
+		Result result = callAction(controllers.submissions.api.routes.ref.Submissions.treatmentAc("sub2"),fakeRequest().withJsonBody(Json.toJson(fileAc)));
+		Logger.debug("Result "+result);
+		assertThat(status(result)).isEqualTo(OK);
+		Submission submissionSubmited = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "sub2");
+		Logger.info("submission submited "+submissionSubmited);
+		assertThat(submissionSubmited.state.code).isEqualTo("submitted");
 	}
 }

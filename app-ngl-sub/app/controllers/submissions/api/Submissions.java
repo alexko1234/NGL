@@ -32,7 +32,8 @@ import fr.cea.ig.MongoDBResult;
 public class Submissions extends SubmissionsController{
 
 	final static Form<Submission> submissionForm = form(Submission.class);
-
+	final static Form<File> fileForm = form(File.class);
+	
 	public static Result search(String state)
 	{
 		MongoDBResult<Submission> results = MongoDBDAO.find(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, DBQuery.is("state.code", state));
@@ -84,15 +85,17 @@ public class Submissions extends SubmissionsController{
 	}
 
 
-	public static Result treatmentAc(String code, String pathEbiFileAc)
+	public static Result treatmentAc(String code)
 	{
 		//Get Submission from DB 
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, code);
 		if (submission == null) {
 			return badRequest("Submission with code "+code+" not exist");
 		}
+		Form<File> filledForm = getFilledForm(fileForm, File.class);
+		File ebiFileAc = filledForm.get();
 		try {
-			submission = FileAcServices.traitementFileAC(code, pathEbiFileAc);
+			submission = FileAcServices.traitementFileAC(code, ebiFileAc);
 		} catch (IOException e) {
 			return badRequest(e.getMessage());
 		} catch (SraException e) {

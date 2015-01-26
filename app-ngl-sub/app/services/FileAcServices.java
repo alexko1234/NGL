@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -12,10 +13,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-import java.util.Date;
 
 import mail.MailServiceException;
 import mail.MailServices;
@@ -26,6 +23,11 @@ import models.sra.submission.instance.Submission;
 import models.sra.utils.SraException;
 import models.sra.utils.VariableSRA;
 import models.utils.InstanceConstants;
+
+import org.junit.Test;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+
 import fr.cea.ig.MongoDBDAO;
 
 public class FileAcServices {
@@ -56,17 +58,15 @@ public class FileAcServices {
 			}
 		}
 	}
-
 	
-	public static Submission traitementFileAC(String submissionCode, String pathEbiFileAc) throws IOException, SraException, MailServiceException {
-		if ((submissionCode == null)|| (pathEbiFileAc == null)) {
+	public static Submission traitementFileAC(String submissionCode, File ebiFileAc) throws IOException, SraException, MailServiceException {
+		if ((submissionCode == null)|| (ebiFileAc == null)) {
 			throw new SraException("traitementFileAC :: parametres d'entree à null" );
 		}
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
 
-		File ebiFileAc = new File(pathEbiFileAc);
 		if (! ebiFileAc.exists()){
-			throw new SraException("Fichier des AC de l'Ebi non present sur disque : "+ pathEbiFileAc);
+			throw new SraException("Fichier des AC de l'Ebi non present sur disque : "+ ebiFileAc.getAbsolutePath());
 		}
 
 		BufferedReader inputBuffer = null;
