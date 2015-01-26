@@ -241,7 +241,7 @@
 									ng-model="experiment.value.instrumentProperties[instp.code].value"
 									ng-disabled="!experiment.instrumentInformation.enabled"/>
 								
-								<select class="form-control" ng-options="opt.value as opt.value for opt in instp.possibleValues" default-value="instp.defaultValue"
+								<select class="form-control" ng-options="opt.value as opt.value for opt in instp.possibleValues" dt-default-value="instp.defaultValue"
 									ng-readonly="!experiment.instrumentInformation.enabled" ng-disabled="!experiment.instrumentInformation.enabled" 
 									ng-model="experiment.value.instrumentProperties[instp.code].value" ng-switch-when="true" 
 									auto-select>

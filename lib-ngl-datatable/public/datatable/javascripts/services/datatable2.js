@@ -2054,7 +2054,7 @@ angular.module('datatableServices', []).
     			    	if(header){
     			    		ngChange = '" ng-change="dtTable.updateColumn(col.property, col.id)"';	    			    		
     			    	}else{
-    			    		defaultValueDirective = 'default-value="col.defaultValues"';
+    			    		defaultValueDirective = 'dt-default-value="col.defaultValues"';
     			    	}
 	    						    				
 	    				if(col.type === "boolean"){
@@ -2362,4 +2362,25 @@ angular.module('datatableServices', []).
 	                    });
 	                }
 	            }
-	        }); 
+	          //Write in an input or select in a list element the value passed to the directive when the list or the input ngModel is undefined or empty
+	        	//EXAMPLE: <input type="text" default-value="test" ng-model="x">
+	        }).directive('dtDefaultValue',['$parse', function($parse) {
+	    		return {
+	    			require: 'ngModel',
+	    			link: function(scope, element, attrs, ngModel) {
+	    				var defaultValue = null;
+	    				scope.$watch(attrs.dtDefaultValue, function(defaultValues){
+	    					if(defaultValues != undefined){
+	    						defaultValue = defaultValues;
+	    					}
+	    				});
+	    				
+						scope.$watch(ngModel, function(value){
+				                if(defaultValue!= null && (ngModel.$modelValue == undefined || ngModel.$modelValue == "")){
+									ngModel.$setViewValue(defaultValue);
+									ngModel.$render();
+								}
+					    });
+	    			}
+	    		};	    	
+	    	}]); 

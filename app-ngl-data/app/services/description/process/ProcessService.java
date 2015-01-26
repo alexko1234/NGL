@@ -88,7 +88,7 @@ public class ProcessService {
 		
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("% à déposer prévisionnel", "estimatedPercentPerLane"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, null,"single"));	
+						, LevelService.getLevels(Level.CODE.Process),Double.class, true,"single"));	
 		return propertyDefinitions;
 	}
 
