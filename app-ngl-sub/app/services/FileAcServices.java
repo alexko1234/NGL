@@ -24,7 +24,6 @@ import models.sra.utils.SraException;
 import models.sra.utils.VariableSRA;
 import models.utils.InstanceConstants;
 
-import org.junit.Test;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
