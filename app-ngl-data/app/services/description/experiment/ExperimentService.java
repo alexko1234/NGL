@@ -16,6 +16,8 @@ import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.experiment.description.Protocol;
+import models.laboratory.experiment.description.ProtocolCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ExperimentTypeNode;
 import models.laboratory.processes.description.ProcessType;
@@ -36,16 +38,16 @@ public class ExperimentService {
 		DAOHelpers.removeAll(ExperimentType.class, ExperimentType.find);
 		DAOHelpers.removeAll(ExperimentCategory.class, ExperimentCategory.find);
 
-		//DAOHelpers.removeAll(Protocol.class, Protocol.find);		
-		//DAOHelpers.removeAll(ProtocolCategory.class, ProtocolCategory.find);
+		DAOHelpers.removeAll(Protocol.class, Protocol.find);		
+		DAOHelpers.removeAll(ProtocolCategory.class, ProtocolCategory.find);
 
-		//saveProtocolCategories(errors);
+		saveProtocolCategories(errors);
 		//saveProtocol(errors);
 		saveExperimentCategories(errors);
 		saveExperimentTypes(errors);
 		saveExperimentTypeNodes(errors);
 	}
-	/*
+	
 	@SuppressWarnings("unchecked")
 	public static void saveProtocolCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ProtocolCategory> l = new ArrayList<ProtocolCategory>();
@@ -54,7 +56,7 @@ public class ExperimentService {
 		DAOHelpers.saveModels(ProtocolCategory.class, l, errors);
 
 	}
-
+	/*
 	public static void saveProtocol(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<Protocol> l = new ArrayList<Protocol>();
 		l.add(newProtocol("Fragmentation_ptr_sox140_1","fragmentation_ptr_sox140_1","path1","1", ProtocolCategory.find.findByCode("production")));
@@ -370,10 +372,10 @@ public class ExperimentService {
 		propertyDefinitions.add(newPropertiesDefinition("Conc. sol. mère Phix", "phixConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "pM"),MeasureUnit.find.findByCode( "nM"),"single",10, true,"0.02"));
 
-		propertyDefinitions.add(newPropertiesDefinition("Conc. dilution", "finalConcentration2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "1000"
+		propertyDefinitions.add(newPropertiesDefinition("Conc. dilution", "finalConcentration2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null 
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "pM"),MeasureUnit.find.findByCode( "nM"), "single",11));
 
-		propertyDefinitions.add(newPropertiesDefinition("Volume dilution", "finalVolume2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null
+		propertyDefinitions.add(newPropertiesDefinition("Volume dilution", "finalVolume2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "1000"
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",12));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Volume dilution à engager sur la piste", "requiredVolume3", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null
