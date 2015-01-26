@@ -120,6 +120,7 @@ object ApplicationBuild extends Build {
 		)
 	val nglsubDependencies = Seq(
 	    javaCore, javaJdbc
+	    //"uk.co.panaxiom" %% "play-jongo" % "0.7.1-jongo1.0"
 	)
 
 	val nglprojectsDependencies = Seq(
@@ -272,7 +273,7 @@ object ApplicationBuild extends Build {
       publishArtifact in makePom := false,
       publishTo := Some(nexusigpublish)
     ).aggregate(
-     	nglcommon,nglframeworkweb,ngldatatable,nglsq,nglbi,nglauth,nglassets,nglplates,ngldata
+     	nglcommon,nglframeworkweb,ngldatatable,nglsq,nglbi,nglauth,nglassets,nglplates,ngldata,nglsub
     )
 
 }
