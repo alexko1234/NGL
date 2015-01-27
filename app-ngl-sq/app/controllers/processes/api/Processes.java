@@ -126,24 +126,30 @@ public class Processes extends CommonController{
 				for(Container container:containers){
 					List<String> processCodes=new ArrayList<String>();
 					value.containerInputCode = container.code;
+					ContextValidation contextError=new ContextValidation(contextValidation.getUser());
 					for(String s:container.sampleCodes){
 						//ContextValidation contextValidation=new ContextValidation(getCurrentUser(), filledForm.errors());
 						contextValidation.setCreationMode();
 						value.sampleCode = s;
 						//code and name generation
 						value.code = CodeHelper.generateProcessCode(value);
-						InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,value, contextValidation);
+						InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,value, contextError);
 						processes.add(value);
 						processCodes.add(value.code);
 					}
-					ProcessHelper.updateContainer(container,value.typeCode, processCodes,contextValidation);
-					ProcessHelper.updateContainerSupportFromContainer(container,contextValidation);
 					
+					if(!contextError.hasErrors()){
+						ProcessHelper.updateContainer(container,value.typeCode, processCodes,contextValidation);
+						ProcessHelper.updateContainerSupportFromContainer(container,contextValidation);
+					}
+					else {
+						contextValidation.errors.putAll(contextError.errors);
+					}
 				}
 				
 				Logger.info("New process code : "+value.code);
 			} else {
-				value.traceInformation.setTraceInformation(getCurrentUser());
+				value.traceInformation.setTraceInformation(contextValidation.getUser());
 			}
 
 			if (!filledForm.hasErrors()) {
