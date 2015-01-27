@@ -205,13 +205,12 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 										}else{
 											currentIndex[(allData[i].outputPositionX-1)]++;
 										}
-										allData[i].percentage = $scope.experiment.value.atomicTransfertMethods[(allData[i].outputPositionX-1)].inputContainerUseds[currentIndex[(allData[i].outputPositionX-1)]].percentage;
-										if($scope.experiment.value.atomicTransfertMethods[(allData[i].outputPositionX-1)].inputContainerUseds[(allData[i].outputPositionY-1)].instrumentProperties != undefined){
-											 var positions = this.searchContainer(allData[i].inputCode, allData[i].outputPositionX, allData[i].outputPositionY);
+										var positions = this.searchContainer(allData[i].inputCode, allData[i].outputPositionX, allData[i].outputPositionY);
+										allData[i].percentage = $scope.experiment.value.atomicTransfertMethods[positions.x].inputContainerUseds[positions.y].percentage;
+										if($scope.experiment.value.atomicTransfertMethods[positions.x].inputContainerUseds[positions.y].instrumentProperties != undefined){
 											 allData[i].inputInstrumentProperties = $scope.experiment.value.atomicTransfertMethods[positions.x].inputContainerUseds[positions.y].instrumentProperties;
 										}
-										if($scope.experiment.value.atomicTransfertMethods[(allData[i].outputPositionX-1)].inputContainerUseds[(allData[i].outputPositionY-1)].experimentProperties != undefined){
-											 var positions = this.searchContainer(allData[i].inputCode, allData[i].outputPositionX, allData[i].outputPositionY);
+										if($scope.experiment.value.atomicTransfertMethods[positions.x].inputContainerUseds[positions.y].experimentProperties != undefined){
 											 allData[i].inputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[positions.x].inputContainerUseds[positions.y].experimentProperties;
 										}
 									}
