@@ -18,7 +18,6 @@ import models.sra.study.instance.Study;
 import models.sra.submission.instance.Submission;
 import models.utils.InstanceConstants;
 
-import org.eclipse.jetty.util.log.Log;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -162,8 +161,10 @@ public class SubmissionsTest extends AbstractTestController{
 	@Test
 	public void shouldTreatmentAC()
 	{
-		File fileAc = new File(System.getProperty("user.home")+"/NGL-SUB-Test/RESULT_AC");
-		Result result = callAction(controllers.submissions.api.routes.ref.Submissions.treatmentAc("sub2"),fakeRequest().withJsonBody(Json.toJson(fileAc)));
+		
+		String pathEbiFileAc = System.getProperty("user.home")+"/NGL-SUB-Test/RESULT_AC";
+		Logger.debug("pathEbiFileAC : "+pathEbiFileAc);
+		Result result = callAction(controllers.submissions.api.routes.ref.Submissions.treatmentAc("sub2"),fakeRequest().withJsonBody(Json.toJson(pathEbiFileAc)));
 		Logger.debug("Result "+result);
 		assertThat(status(result)).isEqualTo(OK);
 		Submission submissionSubmited = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "sub2");

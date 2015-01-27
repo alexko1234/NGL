@@ -32,7 +32,7 @@ import fr.cea.ig.MongoDBResult;
 public class Submissions extends SubmissionsController{
 
 	final static Form<Submission> submissionForm = form(Submission.class);
-	final static Form<File> fileForm = form(File.class);
+	final static Form<String> pathForm = form(String.class);
 	
 	public static Result search(String state)
 	{
@@ -92,10 +92,12 @@ public class Submissions extends SubmissionsController{
 		if (submission == null) {
 			return badRequest("Submission with code "+code+" not exist");
 		}
-		Form<File> filledForm = getFilledForm(fileForm, File.class);
-		File ebiFileAc = filledForm.get();
+		Form<String> filledForm = getFilledForm(pathForm, String.class);
+		Logger.debug("filledForm "+filledForm);
+		String pathEbiFileAc = filledForm.get();
+		Logger.debug("File "+pathEbiFileAc);
 		try {
-			submission = FileAcServices.traitementFileAC(code, ebiFileAc);
+			submission = FileAcServices.traitementFileAC(code, pathEbiFileAc);
 		} catch (IOException e) {
 			return badRequest(e.getMessage());
 		} catch (SraException e) {

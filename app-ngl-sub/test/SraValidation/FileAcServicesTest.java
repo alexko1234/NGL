@@ -53,10 +53,10 @@ public class FileAcServicesTest  extends AbstractTestsSRA {
 		DataSetServices.deleteDataSetForFileAcServices();
 		DataSetServices.createDataSetForFileAcServices();
 		
-		File fileEbi = new File("/env/cns/submit_traces/SRA/ngl-sub/mesTests/RESULT_AC");
+		String pathFileEbi = "/env/cns/submit_traces/SRA/ngl-sub/mesTests/RESULT_AC";
 		//Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
 		
-		Submission submission = FileAcServices.traitementFileAC(submissionCode, fileEbi); 
+		Submission submission = FileAcServices.traitementFileAC(submissionCode, pathFileEbi); 
 		Assert.assertTrue(MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "accession", "ERA000000"));
 		
 	}
@@ -68,10 +68,10 @@ public class FileAcServicesTest  extends AbstractTestsSRA {
 		DataSetServices.deleteDataSetForFileAcServices();
 		DataSetServices.createDataSetForFileAcServices();
 		// Fichier des AC incomplet sans numeros pour le sample et le run :
-		File fileEbi = new File("/env/cns/submit_traces/SRA/ngl-sub/mesTests/RESULT_AC_ERROR");
+		String pathFileEbi = "/env/cns/submit_traces/SRA/ngl-sub/mesTests/RESULT_AC_ERROR";
 		//Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
 		
-		FileAcServices.traitementFileAC(submissionCode, fileEbi);
+		FileAcServices.traitementFileAC(submissionCode, pathFileEbi);
 		Assert.assertTrue(!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "accession", "ERA000000"));
 
 	}
