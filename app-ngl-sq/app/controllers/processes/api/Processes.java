@@ -108,6 +108,7 @@ public class Processes extends CommonController{
 	public static Result saveSupport(String supportCode){
 		Form<Process> filledForm = getFilledForm(processForm,Process.class);
 		Process value = null;
+		List<Process> processes = new ArrayList<Process>();
 		if (!filledForm.hasErrors()) {
 			value = filledForm.get();
 			//value = ps.process;
@@ -132,6 +133,7 @@ public class Processes extends CommonController{
 						//code and name generation
 						value.code = CodeHelper.generateProcessCode(value);
 						InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,value, contextValidation);
+						processes.add(value);
 						processCodes.add(value.code);
 					}
 					ProcessHelper.updateContainer(container,value.typeCode, processCodes,contextValidation);
@@ -154,8 +156,7 @@ public class Processes extends CommonController{
 			}
 		}
 		if (!filledForm.hasErrors()) {
-			filledForm = filledForm.fill(value);
-			return ok(Json.toJson(filledForm.get()));
+			return ok(Json.toJson(processes));
 		} else {
 			return badRequest(filledForm.errorsAsJson());
 		}			
