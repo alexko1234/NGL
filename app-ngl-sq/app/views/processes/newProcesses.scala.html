@@ -1,5 +1,16 @@
 @()
-
 <div class="row SelectContainerProcess"> 
+<div ng-class="message.clazz" ng-show="message.text !== undefined">
+	<strong>{{message.text}}</strong><button class="btn btn-link" ng-click="message.showDetails=!message.showDetails" ng-show="message.isDetails">@(Messages("experiments.msg.details"))</button>
+	<div ng-show="message.showDetails">
+	    <ul>
+    		<li ng-repeat="(key1, value1) in message.details">{{key1}}
+    		<ul>
+    			<li ng-repeat="(key2, value2) in value1"> {{value2}} </li>
+    		</ul>
+    		</li>
+    	</ul>	
+	</div>
+</div>
 <div class="col-md-12 col-lg-12" datatable="datatable"></div>		
 </div>

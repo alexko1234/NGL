@@ -260,24 +260,8 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 				active:true,
 				withoutEdit:true,
 				showButton : false,
-				url:function(value){ return jsRoutes.controllers.processes.api.Processes.saveSupport(value.support.code).url;
-					},
-				callback : function(datatable){
-					$scope.basket.reset();
-					$scope.getColumns();
-				},
-				value:function(line){
-						var val=line;
-						val.properties.limsCode = undefined;
-						val.properties.receptionDate = undefined;
-						var process = {
-								projectCode: val.projectCodes[0],
-								typeCode:$scope.form.nextProcessTypeCode,
-								categoryCode:$scope.form.processCategory,
-								properties:val.properties
-						};
-						return process;
-				}
+				mode:"local",
+				changeClass : false
 			},
 			remove:{
 				active:true,
@@ -288,7 +272,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 				}
 			},
 			messages:{
-				active:true
+				active:false
 			},
 			otherButtons :{
 				active:true,
@@ -315,18 +299,20 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 	};
 	
 	$scope.save = function (){
-		console.log($scope.datatable.displayResult);
-		var data = $scope.datatable.displayResult;
+		$scope.message.details = undefined;
+		$scope.message.isDetails = false;
+		$scope.datatable.save();
+		console.log($scope.datatable.getData());
+		var data = $scope.datatable.getData();
 		var url = "";
+		$scope.processes = [];
+		$scope.promises = [];
 		if(!$scope.supportView){
 			url =  jsRoutes.controllers.processes.api.Processes.save().url;
-			$scope.processes = [];
-			$scope.promises = [];
 			$scope.datatable.config.spinner.start = true;
 			for(var i=0;i<data.length;i++){
-				console.log(data[i]);
-				for(var j = 0; j < data[i].data.sampleCodes.length; j++){ //one process by sample
-					var processData = data[i].data;
+				for(var j = 0; j < data[i].sampleCodes.length; j++){ //one process by sample
+					var processData = data[i];
 					processData.properties.limsCode = undefined;
 					processData.properties.receptionDate = undefined;
 					var process = {
@@ -336,8 +322,8 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 							typeCode:$scope.form.nextProcessTypeCode,
 							categoryCode:$scope.form.processCategory,
 							properties:processData.properties
-					};		
-					console.log(process);
+					};
+					
 					var promise = $http.post(url, process)
 					.success(function(data, status, headers, config) {
 						if(data!=null){
@@ -348,25 +334,55 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 						}
 					})
 					.error(function(data, status, headers, config) {
-						$scope.message.clazz = "has-error";
+						$scope.datatable.config.spinner.start = false;
+						$scope.message.clazz = 'alert alert-danger';
 						$scope.message.text = Messages('experiments.msg.save.error');
 		
 						$scope.message.details = data;
 						$scope.message.isDetails = true;
-						alert("error");
 					});
 					$scope.promises.push(promise);
 				}
 			}
-			$q.all($scope.promises).then(function (res) {
-				$scope.basket.reset();
-				$scope.getColumns();
-				$scope.datatable.setData($scope.processes);
-				$scope.datatable.config.spinner.start = false;
-			});
 		}else{
-			$scope.datatable.save();
+			$scope.datatable.config.spinner.start = true;
+			for(var i=0;i<data.length;i++){
+				url =  jsRoutes.controllers.processes.api.Processes.saveSupport(data[i].support.code).url;
+				var processData = data[i];
+				processData.properties.limsCode = undefined;
+				processData.properties.receptionDate = undefined;
+				var process = {
+						projectCode: processData.projectCodes[0],
+						typeCode:$scope.form.nextProcessTypeCode,
+						categoryCode:$scope.form.processCategory,
+						properties:processData.properties
+				};
+				var promise = $http.post(url, process)
+				.success(function(data, status, headers, config) {
+					if(data!=null){
+						$scope.message.clazz="alert alert-success";
+						$scope.message.text=Messages('experiments.msg.save.sucess');
+						
+						$scope.processes = $scope.processes.concat(data);
+					}
+				})
+				.error(function(data, status, headers, config) {
+					$scope.datatable.config.spinner.start = false;
+					$scope.message.clazz = 'alert alert-danger';
+					$scope.message.text = Messages('experiments.msg.save.error');
+	
+					$scope.message.details = data;
+					$scope.message.isDetails = true;
+				});
+				$scope.promises.push(promise);
+			}
 		}
+		$q.all($scope.promises).then(function (res) {
+			$scope.basket.reset();
+			$scope.getColumns();
+			$scope.datatable.setData($scope.processes);
+			$scope.datatable.config.spinner.start = false;
+		});	
 	};
 	
 	$scope.swithToSupportView = function(){
