@@ -61,7 +61,7 @@ public class XmlServices {
 		// mettre à jour dans la base l'objet submission pour les champs xml...
 		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, 
 				DBQuery.is("code", submissionCode),
-				DBUpdate.set("xmlSubmission", submission.xmlSubmission).set("xmlStudys", submission.xmlStudys).set("xmlSamples", submission.xmlSamples).set("xmlExperiments", submission.xmlExperiments).set("xmlRun", submission.xmlRuns).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date()));
+				DBUpdate.set("xmlSubmission", submission.xmlSubmission).set("xmlStudys", submission.xmlStudys).set("xmlSamples", submission.xmlSamples).set("xmlExperiments", submission.xmlExperiments).set("xmlRuns", submission.xmlRuns).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date()));
 		return submission;
 	}
 

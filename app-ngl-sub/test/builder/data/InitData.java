@@ -45,6 +45,7 @@ public class InitData extends AbstractTestData{
 									.withSubmissionDate(dateSubmission)
 									.withState(new StateBuilder()
 												.withCode("IN_WAITING")
+												.withUser("ejacoby@genoscope.cns.fr")
 												.build())
 									.addExperimentCode(codeExp1)
 									.addExperimentCode(codeExp2)
