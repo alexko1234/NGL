@@ -58,13 +58,12 @@ public class FileAcServices {
 		}
 	}
 	
-	public static Submission traitementFileAC(String submissionCode, String pathEbiFileAc) throws IOException, SraException, MailServiceException {
-		if ((submissionCode == null)|| (pathEbiFileAc == null)) {
+	public static Submission traitementFileAC(String submissionCode, File ebiFileAc) throws IOException, SraException, MailServiceException {
+		if ((submissionCode == null)|| (ebiFileAc == null)) {
 			throw new SraException("traitementFileAC :: parametres d'entree à null" );
 		}
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
 		
-		File ebiFileAc = new File(pathEbiFileAc);
 		if (! ebiFileAc.exists()){
 			throw new SraException("Fichier des AC de l'Ebi non present sur disque : "+ ebiFileAc.getAbsolutePath());
 		}

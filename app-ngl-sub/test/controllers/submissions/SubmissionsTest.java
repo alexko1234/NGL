@@ -10,6 +10,7 @@ import static play.test.Helpers.status;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import models.sra.experiment.instance.Experiment;
@@ -18,6 +19,12 @@ import models.sra.study.instance.Study;
 import models.sra.submission.instance.Submission;
 import models.utils.InstanceConstants;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -49,6 +56,7 @@ public class SubmissionsTest extends AbstractTestController{
 	{
 		//Create simple submission with state
 		//Submission submission = SubmissionMockHelper.newSubmission("code1");
+		
 		Submission submission = new SubmissionBuilder()
 								.withCode("code1")
 								.withState(new StateBuilder().withCode("Scode1").build())
@@ -113,14 +121,15 @@ public class SubmissionsTest extends AbstractTestController{
 		//Change state of submission
 		//Get submission
 		Submission submissionToUpdate = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "code1");
-		submissionToUpdate.state.code="Scode1Update";
+		submissionToUpdate.state.code="IN_WAITING";
 		//TODO pas de méthode de validation a retester avec méthode de validation
 		Result result = callAction(controllers.submissions.api.routes.ref.Submissions.update("code1"),fakeRequest().withJsonBody(Json.toJson(submissionToUpdate)));
+		Logger.info(contentAsString(result));
 		assertThat(status(result)).isEqualTo(OK);
 		//Check in db submission status
 		Submission submissionUpdated = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "code1");
 		Logger.info("submission updated "+submissionUpdated.state.code);
-		assertThat(submissionUpdated.state.code).isEqualTo("Scode1Update");
+		assertThat(submissionUpdated.state.code).isEqualTo("IN_WAITING");
 	}
 	
 	@Test
@@ -159,12 +168,12 @@ public class SubmissionsTest extends AbstractTestController{
 	}
 	
 	@Test
-	public void shouldTreatmentAC()
+	public void shouldTreatmentAC() throws ClientProtocolException, IOException
 	{
 		
-		String pathEbiFileAc = System.getProperty("user.home")+"/NGL-SUB-Test/RESULT_AC";
-		Logger.debug("pathEbiFileAC : "+pathEbiFileAc);
-		Result result = callAction(controllers.submissions.api.routes.ref.Submissions.treatmentAc("sub2"),fakeRequest().withJsonBody(Json.toJson(pathEbiFileAc)));
+		File ebiFileAc = new File(System.getProperty("user.home")+"/NGL-SUB-Test/RESULT_AC");
+		
+		Result result = callAction(controllers.submissions.api.routes.ref.Submissions.treatmentAc("sub2"),fakeRequest().withJsonBody(Json.toJson(ebiFileAc)));
 		Logger.debug("Result "+result);
 		assertThat(status(result)).isEqualTo(OK);
 		Submission submissionSubmited = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "sub2");
