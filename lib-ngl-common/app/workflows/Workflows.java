@@ -302,7 +302,9 @@ public class Workflows {
 		container.state=StateHelper.updateHistoricalNextState(container.state,nextState);
 		container.traceInformation=StateHelper.updateTraceInformation(container.traceInformation, nextState);
 		//Validate state for Container
+		contextValidation.addKeyToRootKeyName("container");
 		ContainerValidationHelper.validateStateCode(container, contextValidation);
+		contextValidation.removeKeyFromRootKeyName("container");
 		if(!contextValidation.hasErrors() && !nextState.code.equals(lastStateCode)){
 			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,  Container.class, 
 					DBQuery.is("code", container.code),
@@ -348,7 +350,16 @@ public class Workflows {
 		}
 	}
 
-
+ 
+	public static void nextContainerState(List<Process> processes, Experiment exp,
+			ContextValidation contextValidation) {
+		
+		for(Process process:processes){
+			nextContainerState(process, exp, contextValidation);
+		}
+	}
+ 
+	
 
 	public static void nextContainerState(Process process, Experiment exp,
 			ContextValidation contextValidation) {
