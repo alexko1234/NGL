@@ -6,26 +6,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.CollectionUtils;
-
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.description.Protocol;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.ManytoOneContainer;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.instance.InstrumentUsed;
+import models.laboratory.protocol.instance.Protocol;
 import models.laboratory.reagent.instance.ReagentUsed;
-import models.utils.dao.DAOException;
+import models.utils.InstanceConstants;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.mongojack.DBQuery;
+
 import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
+import fr.cea.ig.MongoDBDAO;
 
 public class ExperimentValidationHelper  extends CommonValidationHelper {
 
@@ -33,14 +36,10 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			ContextValidation contextValidation)  {
 		String stateCode = getObjectFromContext(STATE_CODE, String.class, contextValidation);
 		if(!stateCode.equals("N")){
-			if(required(contextValidation, protocolCode, "protocol")){
-				try {
-					if(!Protocol.find.isCodeExistForTypeCode(protocolCode, typeCode) ){
+			if(required(contextValidation, protocolCode, "protocol")){				
+					if(!MongoDBDAO.checkObjectExist(InstanceConstants.PROTOCOL_COLL_NAME, Protocol.class, DBQuery.and(DBQuery.is("code",protocolCode), DBQuery.in("experimentTypeCodes", typeCode)))){
 						contextValidation.addErrors("code", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, protocolCode);
-					}
-				} catch (DAOException e) {
-					throw new RuntimeException(e);
-				}
+					}				
 			}
 		}
 	}
