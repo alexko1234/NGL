@@ -1,4 +1,4 @@
-package controllers;
+package models.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

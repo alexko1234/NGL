@@ -19,6 +19,7 @@ import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 import models.laboratory.processes.instance.Process;
+import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
@@ -47,7 +48,6 @@ import workflows.Workflows;
 
 import com.mongodb.BasicDBObject;
 
-import controllers.CodeHelper;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;

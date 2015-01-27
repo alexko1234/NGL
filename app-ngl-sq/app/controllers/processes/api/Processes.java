@@ -11,6 +11,7 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.processes.instance.Process;
+import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.ListObject;
@@ -34,7 +35,6 @@ import workflows.Workflows;
 
 import com.mongodb.BasicDBObject;
 
-import controllers.CodeHelper;
 import controllers.CommonController;
 import controllers.NGLControllerHelper;
 import controllers.containers.api.Containers;
