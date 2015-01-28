@@ -122,7 +122,6 @@ public class Containers extends CommonController {
 	public static Result list() throws DAOException{
 		//Form<ContainersSearchForm> containerFilledForm = filledFormQueryString(containerForm,ContainersSearchForm.class);
 		ContainersSearchForm containersSearch = filledFormQueryString(ContainersSearchForm.class);
-		containersSearch.orderBy="code";
 		DBQuery.Query query = getQuery(containersSearch);
 		if(query != null){
 			if(containersSearch.datatable){
