@@ -2,13 +2,13 @@ package SraValidation;
 
 import java.io.IOException;
 
-import models.sra.utils.SraException;
-import models.sra.utils.VariableSRA;
+import models.sra.submit.util.SraException;
+import models.sra.submit.util.VariableSRA;
 
 import org.junit.Assert;
 import org.junit.Test;
-import play.Logger;
 
+import play.Logger;
 import utils.AbstractTestsSRA;
 import validation.ContextValidation;
 import validation.sra.SraValidationHelper;

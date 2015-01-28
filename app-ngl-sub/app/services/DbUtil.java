@@ -2,15 +2,17 @@ package services;
 
 import java.util.List;
 
-import models.sra.experiment.instance.Experiment;
-import models.sra.experiment.instance.Run;
-import models.sra.sample.instance.Sample;
-import models.sra.study.instance.Study;
-import models.sra.submission.instance.Submission;
-import models.sra.utils.SraException;
+import models.sra.submit.common.instance.Sample;
+import models.sra.submit.common.instance.Study;
+import models.sra.submit.common.instance.Submission;
+import models.sra.submit.sra.instance.Experiment;
+import models.sra.submit.sra.instance.Run;
+import models.sra.submit.util.SraException;
 import models.utils.InstanceConstants;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
+
 import fr.cea.ig.MongoDBDAO;
 
 public class DbUtil {
@@ -107,7 +109,7 @@ public class DbUtil {
 		
 	
 	public void cleanDataBase(String submissionCode) {
-		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submission.instance.Submission.class, submissionCode);
+		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
 
 		if (submission==null){
 			return;
@@ -123,7 +125,7 @@ public class DbUtil {
 					}
 				} else {
 					System.out.println("deletion dans base pour " + submission.studyCode);
-					MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.study.instance.Study.class, submission.studyCode);
+					MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.Study.class, submission.studyCode);
 				}
 			}
 			if (! submission.sampleCodes.isEmpty()) {
@@ -136,7 +138,7 @@ public class DbUtil {
 						}
 					} else {
 						System.out.println("deletion dans base pour "+sampleCode);
-						MongoDBDAO.deleteByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, models.sra.sample.instance.Sample.class, sampleCode);		
+						MongoDBDAO.deleteByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, models.sra.submit.common.instance.Sample.class, sampleCode);		
 					}
 				}
 			}		
@@ -150,11 +152,11 @@ public class DbUtil {
 						}
 					} else {
 						System.out.println("deletion dans base pour "+experimentCode);
-						MongoDBDAO.deleteByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.experiment.instance.Experiment.class, experimentCode);
+						MongoDBDAO.deleteByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, experimentCode);
 					}
 				}
 			}			
-			MongoDBDAO.deleteByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submission.instance.Submission.class, submissionCode);
+			MongoDBDAO.deleteByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
 		}
 	}
 

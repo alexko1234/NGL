@@ -7,12 +7,12 @@ import java.util.List;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.run.instance.ReadSet;
-import models.sra.configuration.instance.Configuration;
-import models.sra.experiment.instance.Experiment;
-import models.sra.study.instance.Study;
-import models.sra.submission.instance.Submission;
-import models.sra.utils.SraException;
-import models.sra.utils.VariableSRA;
+import models.sra.submit.common.instance.Study;
+import models.sra.submit.common.instance.Submission;
+import models.sra.submit.sra.instance.Configuration;
+import models.sra.submit.sra.instance.Experiment;
+import models.sra.submit.util.SraException;
+import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 
 import org.junit.Assert;
@@ -91,7 +91,7 @@ public class XmlServicesTest extends AbstractTestsSRA {
 		//xmlServices.writeAllXml(submissionCode, directory);
 		
 
-		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submission.instance.Submission.class,  submissionCode);
+		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class,  submissionCode);
 		File studyFile = new File("/env/cns/submit_traces/SRA/ngl-sub/mesTests/study.xml");
 		File sampleFile = new File("/env/cns/submit_traces/SRA/ngl-sub/mesTests/sample.xml");
 		File experimentFile = new File("/env/cns/submit_traces/SRA/ngl-sub/mesTests/experiment.xml");
@@ -105,8 +105,8 @@ public class XmlServicesTest extends AbstractTestsSRA {
 		
 		String resultDirectory = "/env/cns/submit_traces/SRA/ngl-sub/mesTests2/";
 		XmlServices.writeAllXml(submissionCode, resultDirectory);
-		MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.study.instance.Study.class, study.code);
-		MongoDBDAO.deleteByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, models.sra.configuration.instance.Configuration.class, config.code);
+		MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.Study.class, study.code);
+		MongoDBDAO.deleteByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, models.sra.submit.sra.instance.Configuration.class, config.code);
 		SubmissionServices.cleanDataBase(submission.code);
 
 		//XmlServices xmlServices = new XmlServices();

@@ -7,10 +7,10 @@ import java.util.List;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.run.instance.ReadSet;
-import models.sra.configuration.instance.Configuration;
-import models.sra.study.instance.Study;
-import models.sra.utils.SraException;
-import models.sra.utils.VariableSRA;
+import models.sra.submit.common.instance.Study;
+import models.sra.submit.sra.instance.Configuration;
+import models.sra.submit.util.SraException;
+import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 
 import org.junit.Test;
@@ -95,8 +95,8 @@ public class SubmissionTest extends AbstractTests {
 		//String directory = "/env/cns/submit_traces/SRA/SNTS_output_xml/mesTEST/lastTest";
 		//xmlServices.writeAllXml(submissionCode, directory);
 		
-		MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.study.instance.Study.class, study.code);
-		MongoDBDAO.deleteByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, models.sra.configuration.instance.Configuration.class, config.code);
+		MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.Study.class, study.code);
+		MongoDBDAO.deleteByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, models.sra.submit.sra.instance.Configuration.class, config.code);
 		
 		DbUtil dbUtil = new DbUtil();
 		

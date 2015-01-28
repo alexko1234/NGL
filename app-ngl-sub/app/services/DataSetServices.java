@@ -1,21 +1,17 @@
 package services;
 
 import models.laboratory.common.instance.TraceInformation;
-import models.sra.configuration.instance.Configuration;
 import validation.ContextValidation;
-
-
-import models.sra.experiment.instance.Experiment;
-import models.sra.sample.instance.Sample;
-import models.sra.study.instance.Study;
-import models.sra.submission.instance.Submission;
-import models.sra.utils.SraException;
-import models.sra.utils.VariableSRA;
+import models.sra.submit.common.instance.Sample;
+import models.sra.submit.common.instance.Study;
+import models.sra.submit.common.instance.Submission;
+import models.sra.submit.sra.instance.Configuration;
+import models.sra.submit.sra.instance.Experiment;
+import models.sra.submit.util.SraException;
+import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import models.laboratory.common.instance.State;
 import models.laboratory.run.instance.ReadSet;
-
-
 import play.Logger;
 import services.SubmissionServices;
 import fr.cea.ig.MongoDBDAO;
@@ -124,10 +120,10 @@ public class DataSetServices {
 		String experimentCode = "test_exp_" + readSetCode;
 		String sampleCode = "test_sample_AWK_472";
 		String runCode = "test_run_" + readSetCode;
-		MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.study.instance.Study.class, studyCode);		
-		MongoDBDAO.deleteByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, models.sra.sample.instance.Sample.class, sampleCode);		
-		MongoDBDAO.deleteByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, models.sra.configuration.instance.Configuration.class, configCode);		
-		MongoDBDAO.deleteByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.experiment.instance.Experiment.class, experimentCode);		
-		MongoDBDAO.deleteByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submission.instance.Submission.class, submissionCode);		
+		MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.Study.class, studyCode);		
+		MongoDBDAO.deleteByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, models.sra.submit.common.instance.Sample.class, sampleCode);		
+		MongoDBDAO.deleteByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, models.sra.submit.sra.instance.Configuration.class, configCode);		
+		MongoDBDAO.deleteByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, experimentCode);		
+		MongoDBDAO.deleteByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);		
 	}
 }

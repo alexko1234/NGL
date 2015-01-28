@@ -5,15 +5,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
-import models.sra.experiment.instance.Experiment;
-import models.sra.experiment.instance.RawData;
-import models.sra.experiment.instance.ReadSpec;
-import models.sra.experiment.instance.Run;
-import models.sra.sample.instance.Sample;
-import models.sra.study.instance.Study;
-import models.sra.submission.instance.Submission;
-import models.sra.utils.SraException;
-import models.sra.utils.VariableSRA;
+import models.sra.submit.common.instance.Sample;
+import models.sra.submit.common.instance.Study;
+import models.sra.submit.common.instance.Submission;
+import models.sra.submit.sra.instance.Experiment;
+import models.sra.submit.sra.instance.RawData;
+import models.sra.submit.sra.instance.ReadSpec;
+import models.sra.submit.sra.instance.Run;
+import models.sra.submit.util.SraException;
+import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;
@@ -26,20 +26,20 @@ public class XmlServices {
 	
 
 	public static Submission writeAllXml(String submissionCode) throws IOException, SraException {
-		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submission.instance.Submission.class, submissionCode);
+		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
 		String resultDirectory = submission.submissionDirectory;
 		return writeAllXml(submissionCode, resultDirectory);
 	}
 	
 	public static void writeAllXml(String submissionCode, String resultDirectory, Boolean release) throws IOException, SraException {
-		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submission.instance.Submission.class, submissionCode);
+		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
 		writeAllXml(submissionCode, resultDirectory);
 	}
 		
 	public static Submission writeAllXml(String submissionCode, String resultDirectory) throws IOException, SraException {
 		System.out.println("creation des fichiers xml pour l'ensemble de la soumission "+ submissionCode);
 		// Recuperer l'objet submission:
-		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submission.instance.Submission.class, submissionCode);
+		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
 		if (submission.studyCode != null){
 			File studyFile = new File(resultDirectory + File.separator + VariableSRA.xmlStudys);
 			writeStudyXml(submission, studyFile);
@@ -77,7 +77,7 @@ public class XmlServices {
 			chaine = chaine + "<STUDY_SET>\n";
 			String studyCode = submission.studyCode;
 			// Recuperer objet study dans la base :
-			Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.study.instance.Study.class, studyCode);
+			Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.Study.class, studyCode);
 			//output_buffer.write("//\n");
 			if (study == null){
 				throw new SraException("study impossible à recuperer dans base :"+ studyCode);
@@ -134,7 +134,7 @@ public class XmlServices {
 			for (String sampleCode : submission.sampleCodes){
 				System.out.println("sampleCode = '" + sampleCode +"'");
 				// Recuperer objet sample dans la base :
-				Sample sample = MongoDBDAO.findByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, models.sra.sample.instance.Sample.class, sampleCode);
+				Sample sample = MongoDBDAO.findByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, models.sra.submit.common.instance.Sample.class, sampleCode);
 				if (sample == null){
 					throw new SraException("sample impossible à recuperer dans base :"+ sampleCode);
 				}
@@ -177,7 +177,7 @@ public class XmlServices {
 			chaine = chaine + "<EXPERIMENT_SET>\n";
 			for (String experimentCode : submission.experimentCodes){
 				// Recuperer objet experiment dans la base :
-				Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.experiment.instance.Experiment.class, experimentCode);
+				Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, experimentCode);
 				//output_buffer.write("//\n");
 				System.out.println("Ecriture du experiment " + experimentCode);
 				if (experiment == null){
@@ -247,7 +247,7 @@ public class XmlServices {
 			chaine = chaine + "<RUN_SET>\n";
 			for (String experimentCode : submission.experimentCodes){
 				// Recuperer objet experiment dans la base :
-				Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.experiment.instance.Experiment.class, experimentCode);
+				Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, experimentCode);
 				if (experiment == null) {
 					throw new SraException("experiment impossible à recuperer dans base :"+ experimentCode);
 				}

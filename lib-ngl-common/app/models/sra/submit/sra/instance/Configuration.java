@@ -1,4 +1,4 @@
-package models.sra.configuration.instance;
+package models.sra.submit.sra.instance;
 
 import java.io.File;
 
@@ -6,12 +6,10 @@ import validation.IValidation;
 import fr.cea.ig.DBObject;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
-import models.sra.utils.VariableSRA;
+import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
-
 import validation.sra.SraValidationHelper;
-
 import play.Logger;
 
 //Declaration d'une collection Configuration (herite de DBObject)

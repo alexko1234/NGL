@@ -1,7 +1,7 @@
 package builder.data;
 
-import models.sra.experiment.instance.Experiment;
-import models.sra.experiment.instance.Run;
+import models.sra.submit.sra.instance.Experiment;
+import models.sra.submit.sra.instance.Run;
 
 public class ExperimentBuilder {
 

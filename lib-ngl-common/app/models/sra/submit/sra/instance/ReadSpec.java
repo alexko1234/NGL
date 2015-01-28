@@ -1,4 +1,4 @@
-package models.sra.experiment.instance;
+package models.sra.submit.sra.instance;
 
 import java.util.List;
 

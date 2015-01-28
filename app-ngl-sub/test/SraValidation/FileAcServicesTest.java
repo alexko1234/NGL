@@ -7,13 +7,13 @@ import java.util.Date;
 import java.util.List;
 
 import mail.MailServiceException;
-import models.sra.configuration.instance.Configuration;
-import models.sra.experiment.instance.Experiment;
-import models.sra.sample.instance.Sample;
-import models.sra.study.instance.Study;
-import models.sra.submission.instance.Submission;
-import models.sra.utils.SraException;
-import models.sra.utils.VariableSRA;
+import models.sra.submit.common.instance.Sample;
+import models.sra.submit.common.instance.Study;
+import models.sra.submit.common.instance.Submission;
+import models.sra.submit.sra.instance.Configuration;
+import models.sra.submit.sra.instance.Experiment;
+import models.sra.submit.util.SraException;
+import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
@@ -28,7 +28,6 @@ import services.FileAcServices;
 import services.SubmissionServices;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
-
 import validation.ContextValidation;
 import utils.AbstractTestsSRA;
 

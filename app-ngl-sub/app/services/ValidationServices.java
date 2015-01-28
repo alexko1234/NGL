@@ -1,9 +1,9 @@
 package services;
 
 import validation.ContextValidation;
-import models.sra.experiment.instance.Experiment;
-import models.sra.submission.instance.Submission;
-import models.sra.utils.SraException;
+import models.sra.submit.common.instance.Submission;
+import models.sra.submit.sra.instance.Experiment;
+import models.sra.submit.util.SraException;
 
 public class ValidationServices {
 	

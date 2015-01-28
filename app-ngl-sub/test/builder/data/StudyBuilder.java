@@ -1,6 +1,6 @@
 package builder.data;
 
-import models.sra.study.instance.Study;
+import models.sra.submit.common.instance.Study;
 
 public class StudyBuilder {
 

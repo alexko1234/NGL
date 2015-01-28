@@ -3,15 +3,15 @@ package SraValidation;
 import java.io.IOException;
 
 import models.laboratory.run.instance.ReadSet;
-import models.sra.experiment.instance.Run;
-import models.sra.utils.SraException;
+import models.sra.submit.sra.instance.Run;
+import models.sra.submit.util.SraException;
 import models.utils.InstanceConstants;
+
 import org.junit.Assert;
 import org.junit.Test;
+
 import play.Logger;
-
 import fr.cea.ig.MongoDBDAO;
-
 import services.SubmissionServices;
 import utils.AbstractTestsSRA;
 import validation.ContextValidation;

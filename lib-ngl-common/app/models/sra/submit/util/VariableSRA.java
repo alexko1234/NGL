@@ -1,4 +1,4 @@
-package models.sra.utils;
+package models.sra.submit.util;
 
 
 
@@ -15,7 +15,7 @@ public interface VariableSRA {
 	static final String xmlSubmission = "submission.xml";
 	static final String xmlStudys = "study.xml";
 	static final String xmlSamples = "sample.xml";
-	static final String xmlExperiments = "experiement.xml";
+	static final String xmlExperiments = "experiment.xml";
 	static final String xmlRuns = "run.xml";
 	static final String resultSendXml = "resultEbi_codeSubmission.xml";
 	
@@ -167,6 +167,24 @@ public interface VariableSRA {
 			put("illumina hiseq 2500", "Illumina HiSeq 2500");
 		}
 	};  
+	
+	static final Map<String, String> mapAnalysisFileType =  new HashMap<String, String>() {
+		{
+			put("fasta", "fasta"); 
+			put("contig_fasta", "contig_fasta"); 
+			put("contig_flatfile", "contig_flatfile"); 
+			put("scaffold_fasta", "scaffold_fasta"); 
+			put("scaffold_flatfile", "scaffold_flatfile"); 
+			put("scaffold_agp", "scaffold_agp"); 
+			put("chromosome_fasta", "chromosome_fasta"); 
+			put("chromosome_flatfile", "chromosome_flatfile"); 
+			put("chromosome_agp", "chromosome_agp"); 
+			put("chromosome_list", "chromosome_list"); 
+			put("unlocalised_contig_list", "unlocalised_contig_list"); 
+			put("unlocalised_scaffold_list", "unlocalised_scaffold_list"); 
+			put("other", "other"); 			
+		}
+	};
 		
 }
 

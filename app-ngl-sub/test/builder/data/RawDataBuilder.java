@@ -1,6 +1,6 @@
 package builder.data;
 
-import models.sra.experiment.instance.RawData;
+import models.sra.submit.sra.instance.RawData;
 
 public class RawDataBuilder {
 

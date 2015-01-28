@@ -2,9 +2,9 @@ package SraValidation;
 
 import java.io.IOException;
 
-import models.sra.study.instance.Study;
-import models.sra.utils.SraException;
-import models.sra.utils.VariableSRA;
+import models.sra.submit.common.instance.Study;
+import models.sra.submit.util.SraException;
+import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 
 import org.junit.Assert;
@@ -33,11 +33,13 @@ public class StudyValidationTest extends AbstractTestsSRA {
 		study.existingStudyType="Metagenomics";
 		ContextValidation contextValidation = new ContextValidation(userContext);
 		contextValidation.setCreationMode();
+	
+		contextValidation.getContextObjects().put("type", "sra");
 		study.validate(contextValidation);
 		MongoDBDAO.save(InstanceConstants.SRA_STUDY_COLL_NAME, study);
 		contextValidation.setUpdateMode();
 		study.validate(contextValidation);
-		MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.study.instance.Study.class, study.code);
+		MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.Study.class, study.code);
 		System.out.println("contextValidation.errors pour validationStudySuccess :");
 		contextValidation.displayErrors(Logger.of("SRA"));
 		Assert.assertTrue(contextValidation.errors.size()==0); // si aucune erreur
@@ -59,7 +61,7 @@ public class StudyValidationTest extends AbstractTestsSRA {
 		contextValidation.setCreationMode();
 		study.validate(contextValidation);
 		MongoDBDAO.save(InstanceConstants.SRA_STUDY_COLL_NAME, study);
-		MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.study.instance.Study.class, study.code);
+		MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.Study.class, study.code);
 		System.out.println("contextValidation.errors pour validationStudyEchec :");
 		contextValidation.displayErrors(Logger.of("SRA"));
 		Assert.assertTrue(contextValidation.errors.size()==4); // On attend 5 erreurs

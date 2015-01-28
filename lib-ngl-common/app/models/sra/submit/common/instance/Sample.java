@@ -1,4 +1,4 @@
-package models.sra.sample.instance;
+package models.sra.submit.common.instance;
 
 import java.util.Date;
 
@@ -18,6 +18,7 @@ public class Sample extends DBObject implements IValidation {
 	public int taxonId;            // required 
 	public String classification;     
 	public String commonName;     
+	public String submitter_id;
 	public String scientificName;  // required next soon 
 	public String title;           // required next soon 
 	public String description;      
@@ -33,9 +34,19 @@ public class Sample extends DBObject implements IValidation {
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		contextValidation.addKeyToRootKeyName("sample::");
-		SraValidationHelper.validateCode(this, InstanceConstants.SRA_SAMPLE_COLL_NAME, contextValidation);
+		if (contextValidation.getContextObjects().get("type")==null) {
+			contextValidation.addErrors("sample non evaluable ", "sans type de contexte de validation");
+		}
 		SraValidationHelper.validateId(this, contextValidation);
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
+		if (contextValidation.getContextObjects().get("type").equals("sra")) {
+			SraValidationHelper.validateCode(this, InstanceConstants.SRA_SAMPLE_COLL_NAME, contextValidation);
+		} else if (contextValidation.getContextObjects().get("type").equals("wgs")) {
+			SraValidationHelper.validateCode(this, InstanceConstants.SRA_SAMPLE_WGS_COLL_NAME, contextValidation);
+			
+		} else {
+			contextValidation.addErrors("sample non evaluable ", "avec type de contexte de validation " + contextValidation.getContextObjects().get("type"));	
+		}
 		contextValidation.removeKeyFromRootKeyName("sample::");
 	}
 

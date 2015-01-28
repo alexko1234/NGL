@@ -6,16 +6,18 @@ import java.util.Date;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
-import models.sra.configuration.instance.Configuration;
-import models.sra.utils.SraException;
+import models.sra.submit.sra.instance.Configuration;
+import models.sra.submit.util.SraException;
+import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
+
 import org.junit.Assert;
 import org.junit.Test;
+
 import utils.AbstractTestsSRA;
 import validation.ContextValidation;
 import validation.sra.SraValidationHelper;
 import fr.cea.ig.MongoDBDAO;
-import models.sra.utils.VariableSRA;
 import play.Logger;
 
 // Pour les tests utilisant MongoDb mettre extents AbstractTests
@@ -51,7 +53,7 @@ public class ConfigurationValidationTest extends AbstractTestsSRA {
 		contextValidation.setUpdateMode();
 		config.traceInformation.setTraceInformation(user);
 		config.validate(contextValidation);
-		MongoDBDAO.deleteByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, models.sra.configuration.instance.Configuration.class, config.code);
+		MongoDBDAO.deleteByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, models.sra.submit.sra.instance.Configuration.class, config.code);
 
 		//System.out.println(contextValidation.errors.toString());
 		System.out.println("\ndisplayErrors pour validationConfigurationSuccess :");

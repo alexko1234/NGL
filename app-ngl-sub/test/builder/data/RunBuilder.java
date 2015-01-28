@@ -2,8 +2,8 @@ package builder.data;
 
 import java.util.ArrayList;
 
-import models.sra.experiment.instance.RawData;
-import models.sra.experiment.instance.Run;
+import models.sra.submit.sra.instance.RawData;
+import models.sra.submit.sra.instance.Run;
 
 public class RunBuilder {
 

@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 import mail.MailServiceException;
-import models.sra.experiment.instance.Experiment;
-import models.sra.experiment.instance.RawData;
-import models.sra.submission.instance.Submission;
-import models.sra.utils.SraException;
+import models.sra.submit.common.instance.Submission;
+import models.sra.submit.sra.instance.Experiment;
+import models.sra.submit.sra.instance.RawData;
+import models.sra.submit.util.SraException;
 import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;

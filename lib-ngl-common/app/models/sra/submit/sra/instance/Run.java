@@ -1,10 +1,10 @@
-package models.sra.experiment.instance;
+package models.sra.submit.sra.instance;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import models.sra.utils.VariableSRA;
+import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;

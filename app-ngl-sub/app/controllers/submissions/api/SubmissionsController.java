@@ -1,6 +1,6 @@
 package controllers.submissions.api;
 
-import models.sra.submission.instance.Submission;
+import models.sra.submit.common.instance.Submission;
 import models.utils.InstanceConstants;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;

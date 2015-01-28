@@ -1,4 +1,4 @@
-package models.sra.submission.instance;
+package models.sra.submit.common.instance;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -9,8 +9,8 @@ import java.util.List;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
-import models.sra.configuration.instance.Configuration;
-import models.sra.utils.VariableSRA;
+import models.sra.submit.sra.instance.Configuration;
+import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
@@ -27,6 +27,7 @@ public class Submission extends DBObject implements IValidation {
  	public String accession;       // numeros d'accession attribué par ebi */
 	public Date submissionDate;
 	public String studyCode;       // study à soumettre à l'ebi
+	public String analysisCode;       // study à soumettre à l'ebi
 	public List<String> sampleCodes = new ArrayList<String>(); // liste des codes des sample à soumettre à l'ebi
 	public List<String> experimentCodes = new ArrayList<String>(); // liste des codes des experiments à soumettre à l'ebi
 	public List<String> runCodes = new ArrayList<String>(); // liste des codes des runs à soumettre à l'ebi
@@ -40,6 +41,7 @@ public class Submission extends DBObject implements IValidation {
 	public String xmlExperiments = null;
 	public String xmlRuns = null;
 	public String xmlSubmission = null;
+	public String xmlAnalysis = null;
 	public String resultSendXml = null; // Fichier resultat de la commande curl qui doit contenir les AC attribués par l'EBI
 	//public String userSubmission; // login du bioinfo qui a creer ticket.
 	public State state;// = new State(); // Reference sur "models.laboratory.common.instance.state" 
@@ -87,20 +89,29 @@ public class Submission extends DBObject implements IValidation {
 		ValidationHelper.required(contextValidation, this.xmlSubmission , "xmlSubmission");
 		ValidationHelper.required(contextValidation, this.resultSendXml , "resultSendXml");
 		*/	
-		if (this.studyCode == null && this.sampleCodes.size() == 0 &&  this.experimentCodes.size() == 0) {
-			contextValidation.addErrors("studyCode, sampleCodes et experimentCodes ::", "Les 3 champs ne peuvent pas etre vides pour une soumission" + "taille des experiments = " +  this.experimentCodes.size() + ", taille des sample = "+ this.sampleCodes.size());
-		}
-		if (this.config == null) {
-			contextValidation.addErrors("config::", "objet qui doit etre renseigné");
-		} else {
-			// pas de validation, on considere que l'objet a ete recupere valide de la base
-			if (!config.state.code.equals("userValidate")){
-				contextValidation.addErrors("config::state.code", "'" + config.state.code + "' n'est pas à la valeur attendue 'userValidate'");
-			}
-		}
-		SraValidationHelper.validateCode(this, InstanceConstants.SRA_SUBMISSION_COLL_NAME, contextValidation);
 		SraValidationHelper.validateId(this, contextValidation);
-		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);		
+		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);			if (contextValidation.getContextObjects().get("type")==null) {
+			contextValidation.addErrors("study non evaluable ", "sans type de contexte de validation");
+		}
+		if (contextValidation.getContextObjects().get("type").equals("sra")) {
+			if (this.studyCode == null && this.sampleCodes.size() == 0 &&  this.experimentCodes.size() == 0) {
+				contextValidation.addErrors("studyCode, sampleCodes et experimentCodes ::", "Les 3 champs ne peuvent pas etre vides pour une soumission" + "taille des experiments = " +  this.experimentCodes.size() + ", taille des sample = "+ this.sampleCodes.size());
+			}
+			if (this.config == null) {
+				contextValidation.addErrors("config::", "objet qui doit etre renseigné");
+			} else {
+				// pas de validation, on considere que l'objet a ete recupere valide de la base
+				if (!config.state.code.equals("userValidate")){
+					contextValidation.addErrors("config::state.code", "'" + config.state.code + "' n'est pas à la valeur attendue 'userValidate'");
+				}
+			}
+			SraValidationHelper.validateCode(this, InstanceConstants.SRA_SUBMISSION_COLL_NAME, contextValidation);
+		} else if (contextValidation.getContextObjects().get("type").equals("wgs")) {
+			if (this.studyCode == null || this.analysisCode == null ||this.sampleCodes.size() == 0) {
+				contextValidation.addErrors("studyCode, analysisCode et sampleCodes ::", "Les 3 champs doivent etre renseignés pour une soumission WGS" );
+			}
+			SraValidationHelper.validateCode(this, InstanceConstants.SRA_SUBMISSION_WGS_COLL_NAME, contextValidation);
+		}
 		contextValidation.removeKeyFromRootKeyName("submission::");
 	}
 

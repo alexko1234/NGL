@@ -19,16 +19,18 @@ public interface InstanceConstants {
 	public static final String ALERT_COLL_NAME="ngl_bi.Alert";
 
 	public static final String SRA_STUDY_COLL_NAME="ngl_sub.Study";
+	public static final String SRA_STUDY_WGS_COLL_NAME="ngl_sub.StudyWgs";
 	public static final String SRA_SAMPLE_COLL_NAME="ngl_sub.Sample";
+	public static final String SRA_SAMPLE_WGS_COLL_NAME="ngl_sub.SampleWgs";
 	public static final String SRA_EXPERIMENT_COLL_NAME="ngl_sub.Experiment";
 	public static final String SRA_SUBMISSION_COLL_NAME="ngl_sub.Submission";
+	public static final String SRA_SUBMISSION_WGS_COLL_NAME="ngl_sub.SubmissionWgs";
+	public static final String SRA_ANALYSIS_WGS_COLL_NAME="ngl_sub.AnalysisWgs";
 	public static final String SRA_CONFIGURATION_COLL_NAME="ngl_sub.Configuration";
 	public static final String PARAMETER_COLL_NAME = "ngl_common.Parameter";
 	public static final String REPORTING_CONFIG_COLL_NAME = "ngl_common.ReportingConfiguration";
 	public static final String FILTERING_CONFIG_COLL_NAME = "ngl_common.FilteringConfiguration";
-	
 	public static final String VALUATION_CRITERIA_COLL_NAME = "ngl_common.ValuationCriteria";
-	
 	public static final String RESOLUTION_COLL_NAME = "ngl_common.ResolutionConfiguration";
 	public static final String PROTOCOL_COLL_NAME = "ngl_sq.Protocol";
 

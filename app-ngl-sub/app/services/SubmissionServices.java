@@ -17,16 +17,16 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.project.instance.Project;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
-import models.sra.configuration.instance.Configuration;
-import models.sra.experiment.instance.Experiment;
-import models.sra.experiment.instance.RawData;
-import models.sra.experiment.instance.ReadSpec;
-import models.sra.experiment.instance.Run;
-import models.sra.sample.instance.Sample;
-import models.sra.study.instance.Study;
-import models.sra.submission.instance.Submission;
-import models.sra.utils.SraException;
-import models.sra.utils.VariableSRA;
+import models.sra.submit.common.instance.Sample;
+import models.sra.submit.common.instance.Study;
+import models.sra.submit.common.instance.Submission;
+import models.sra.submit.sra.instance.Configuration;
+import models.sra.submit.sra.instance.Experiment;
+import models.sra.submit.sra.instance.RawData;
+import models.sra.submit.sra.instance.ReadSpec;
+import models.sra.submit.sra.instance.Run;
+import models.sra.submit.util.SraException;
+import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import fr.cea.ig.MongoDBDAO;
 
@@ -168,6 +168,7 @@ public class SubmissionServices {
 		//studyElt.existingStudyType = "toto"; // introduction erreur pour tester rallback
 		study.validate(contextValidation);
 		// le study est a sauver avec leur nouveau statut inWaiting
+		
 		if (!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, "code", study.code)){	
 			MongoDBDAO.save(InstanceConstants.SRA_STUDY_COLL_NAME, study);
 		}
@@ -240,7 +241,7 @@ public class SubmissionServices {
 		// Si study existe, prendre l'existant, sinon en creer un nouveau
 		//if (services.SraDbServices.checkCodeStudyExistInStudyCollection(codeStudy)) {
 		if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, "code", codeStudy)){
-			study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.study.instance.Study.class, codeStudy);			
+			study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.Study.class, codeStudy);			
 		} else {
 			study = new Study();
 			study.code = codeStudy;
@@ -322,7 +323,7 @@ public class SubmissionServices {
 		//if (services.SraDbServices.checkCodeSampleExistInSampleCollection(codeSample)) {
 		if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, "code", codeSample)){
 			System.out.println("Recuperation du sample "+ codeSample);
-			sample = MongoDBDAO.findByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, models.sra.sample.instance.Sample.class, codeSample);			
+			sample = MongoDBDAO.findByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, models.sra.submit.common.instance.Sample.class, codeSample);			
 			System.out.println(sample.clone);
 			System.out.println(sample.taxonId);
 			System.out.println(sample.title);
@@ -603,7 +604,7 @@ public class SubmissionServices {
 	public static void cleanDataBase(String submissionCode) {
 		System.out.println("Recherche objet submission dans la base pour "+ submissionCode);
 
-		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submission.instance.Submission.class, submissionCode);
+		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
 
 		if (submission==null){
 			System.out.println("Aucun objet submission dans la base pour "+ submissionCode);
@@ -622,7 +623,7 @@ public class SubmissionServices {
 						}
 					} else {
 						System.out.println("deletion dans base pour "+sampleCode);
-						MongoDBDAO.deleteByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, models.sra.sample.instance.Sample.class, sampleCode);		
+						MongoDBDAO.deleteByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, models.sra.submit.common.instance.Sample.class, sampleCode);		
 					}
 				}
 			}		
@@ -636,11 +637,11 @@ public class SubmissionServices {
 						}
 					} else {
 						System.out.println("deletion dans base pour "+experimentCode);
-						MongoDBDAO.deleteByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.experiment.instance.Experiment.class, experimentCode);
+						MongoDBDAO.deleteByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, experimentCode);
 					}
 				}
 			}			
-			MongoDBDAO.deleteByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submission.instance.Submission.class, submissionCode);
+			MongoDBDAO.deleteByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
 		}
 	}
 

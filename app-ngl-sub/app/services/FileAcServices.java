@@ -14,18 +14,21 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import mail.MailServiceException;
-import mail.MailServices;
-import models.sra.experiment.instance.Experiment;
-import models.sra.sample.instance.Sample;
-import models.sra.study.instance.Study;
-import models.sra.submission.instance.Submission;
-import models.sra.utils.SraException;
-import models.sra.utils.VariableSRA;
-import models.utils.InstanceConstants;
-
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+
+import java.util.Date;
+
+import mail.MailServiceException;
+import mail.MailServices;
+import models.sra.submit.common.instance.Sample;
+import models.sra.submit.common.instance.Study;
+import models.sra.submit.common.instance.Submission;
+import models.sra.submit.sra.instance.Experiment;
+import models.sra.submit.util.SraException;
+import models.sra.submit.util.VariableSRA;
+import models.utils.InstanceConstants;
+
 
 import fr.cea.ig.MongoDBDAO;
 

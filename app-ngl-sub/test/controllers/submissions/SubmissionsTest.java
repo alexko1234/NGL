@@ -13,10 +13,14 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-import models.sra.experiment.instance.Experiment;
-import models.sra.sample.instance.Sample;
-import models.sra.study.instance.Study;
-import models.sra.submission.instance.Submission;
+
+import models.sra.submit.common.instance.Submission;
+import models.sra.submit.sra.instance.Experiment;
+import models.sra.submit.sra.instance.RawData;
+import models.sra.submit.common.instance.Sample;
+import models.sra.submit.common.instance.Study;
+
+
 import models.utils.InstanceConstants;
 
 import org.apache.http.HttpResponse;

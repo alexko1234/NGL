@@ -1,4 +1,4 @@
-package models.sra.study.instance;
+package models.sra.submit.common.instance;
 
 import java.util.Date;
 
@@ -10,7 +10,7 @@ import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
-import models.sra.utils.VariableSRA;
+import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 public class Study extends DBObject implements IValidation {
 
@@ -42,12 +42,26 @@ public class Study extends DBObject implements IValidation {
 		SraValidationHelper.validateProjectCode(this.projectCode, contextValidation);
 		// Attention on peut vouloir regrouper dans un project_code virtuel ?? 
 		ValidationHelper.required(contextValidation, this.centerProjectName , "centerProjectName");
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.existingStudyType, VariableSRA.mapExistingStudyType, "existingStudyType");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.centerName, VariableSRA.mapCenterName, "centerName");
-		SraValidationHelper.validateCode(this, InstanceConstants.SRA_STUDY_COLL_NAME, contextValidation);
 		SraValidationHelper.validateId(this, contextValidation);
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
+		if (contextValidation.getContextObjects().get("type")==null) {
+			contextValidation.addErrors("study non evaluable ", "sans type de contexte de validation");
+			return;
+		}
+		if (contextValidation.getContextObjects().get("type").equals("sra")) {
+			SraValidationHelper.validateCode(this, InstanceConstants.SRA_STUDY_COLL_NAME, contextValidation);
+			SraValidationHelper.requiredAndConstraint(contextValidation, this.existingStudyType, VariableSRA.mapExistingStudyType, "existingStudyType");
+		} else if (contextValidation.getContextObjects().get("type").equals("wgs")) {
+			SraValidationHelper.validateCode(this, InstanceConstants.SRA_STUDY_WGS_COLL_NAME, contextValidation);
+			if (!this.existingStudyType.equals("Whole Genome Sequencing")) {
+				contextValidation.addErrors("existingStudyType" + " avec valeur '" + this.existingStudyType + "' qui n'appartient pas a la liste des valeurs autorisees :" , "Whole Genome Sequencing");
+			}
+		} else {
+			contextValidation.addErrors("study non evaluable ", "avec type de contexte de validation " + contextValidation.getContextObjects().get("type"));	
+		}
 		contextValidation.removeKeyFromRootKeyName("study::");
+
 	}
 
 }

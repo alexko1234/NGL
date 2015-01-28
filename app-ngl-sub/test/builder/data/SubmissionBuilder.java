@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import models.laboratory.common.instance.State;
-import models.sra.submission.instance.Submission;
+import models.sra.submit.common.instance.Submission;
 
 public class SubmissionBuilder {
 

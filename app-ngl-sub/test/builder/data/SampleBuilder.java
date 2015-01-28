@@ -1,6 +1,6 @@
 package builder.data;
 
-import models.sra.sample.instance.Sample;
+import models.sra.submit.common.instance.Sample;
 
 
 public class SampleBuilder {

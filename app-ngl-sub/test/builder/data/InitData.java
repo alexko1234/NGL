@@ -4,9 +4,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import models.sra.experiment.instance.Experiment;
-import models.sra.sample.instance.Sample;
-import models.sra.submission.instance.Submission;
+import models.sra.submit.common.instance.Submission;
+import models.sra.submit.sra.instance.Experiment;
+import models.sra.submit.common.instance.Sample;
+
 import models.utils.InstanceConstants;
 
 import org.junit.Test;

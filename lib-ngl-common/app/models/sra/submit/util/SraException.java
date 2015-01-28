@@ -1,4 +1,4 @@
-package models.sra.utils;
+package models.sra.submit.util;
 
 
 public class SraException extends Exception {

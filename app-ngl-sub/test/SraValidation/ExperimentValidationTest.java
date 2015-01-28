@@ -4,18 +4,19 @@ import java.io.IOException;
 
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.run.instance.ReadSet;
-import models.sra.experiment.instance.Experiment;
-import models.sra.utils.SraException;
+import models.sra.submit.sra.instance.Experiment;
+import models.sra.submit.util.SraException;
+import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
+
 import org.junit.Assert;
 import org.junit.Test;
+
 import services.SubmissionServices;
 import utils.AbstractTestsSRA;
 import validation.ContextValidation;
 import validation.sra.SraValidationHelper;
 import fr.cea.ig.MongoDBDAO;
-import models.sra.utils.VariableSRA;
-
 import play.Logger;
 
 
@@ -51,7 +52,7 @@ public class ExperimentValidationTest extends AbstractTestsSRA {
 		contextValidation.setCreationMode();
 		experiment.validate(contextValidation);
 		MongoDBDAO.save(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, experiment);
-		MongoDBDAO.deleteByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.experiment.instance.Experiment.class, experiment.code);
+		MongoDBDAO.deleteByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, experiment.code);
 		System.out.println("contextValidation.errors pour validationExperimentSuccess :");
 		contextValidation.displayErrors(Logger.of("SRA"));
 		Assert.assertTrue(contextValidation.errors.size()==0); // si aucune erreur

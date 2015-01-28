@@ -2,9 +2,9 @@ package validation.sra;
 
 import java.util.Map;
 
-import models.sra.experiment.instance.Experiment;
-import models.sra.experiment.instance.ReadSpec;
-import models.sra.utils.VariableSRA;
+import models.sra.submit.sra.instance.Experiment;
+import models.sra.submit.sra.instance.ReadSpec;
+import models.sra.submit.util.VariableSRA;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.ValidationHelper;
