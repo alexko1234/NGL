@@ -133,9 +133,10 @@ public class Processes extends CommonController{
 						value.sampleCode = s;
 						//code and name generation
 						value.code = CodeHelper.generateProcessCode(value);
-						InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,value, contextError);
-						processes.add(value);
-						processCodes.add(value.code);
+						Process p = (Process)InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,value, contextValidation);
+						processes.add(p);
+						processCodes.add(p.code);
+
 					}
 					
 					if(!contextError.hasErrors()){
