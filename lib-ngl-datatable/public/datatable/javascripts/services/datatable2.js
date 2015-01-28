@@ -1593,10 +1593,11 @@ angular.module('datatableServices', []).
 				    			    				if(column.convertValue !== undefined && column.convertValue.active === true){
 				    			    					property += "| convert:"+JSON.stringify(column.convertValue);
 				    			    				}
-				    			    				if(column.type !== "number"){ //to preserve number in excel file
-				    			    					property += that.getFormatter(column);
+				    			    				property += that.getFormatter(column);
+				    			    				colValue = $parse(property)(result.data);
+				    			    				if(column.type === "number"){
+				    			    					colValue = colValue.replace(/\u00a0/g,"");
 				    			    				}
-					    							colValue = $parse(property)(result.data);
 					    							lineValue = lineValue + ((colValue!==null)&&(colValue)?colValue:"") + delimiter;
 				    			    			} else if(result.line.group) {
 				    			    				
@@ -1614,6 +1615,11 @@ angular.module('datatableServices', []).
 				    			    				} else {
 				    			    					colValue =  undefined;
 				    			    				}
+				    			    				
+				    			    				if(colValue !==  undefined && column.type === "number"){
+				    			    					colValue = colValue.replace(/\u00a0/g,"");
+				    			    				}
+				    			    				
 				    			    				lineValue = lineValue + ((colValue!==null)&&(colValue)?colValue:"") + delimiter;
 				    			    			}else if(!result.line.group && angular.isDefined(column.url)) {
 				    			    				colValue =  undefined;
