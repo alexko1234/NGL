@@ -122,6 +122,10 @@ POST 	/api/reporting/filters							@controllers.reporting.api.FilteringConfigura
 PUT    	/api/reporting/filters/:code					@controllers.reporting.api.FilteringConfigurations.update(code)
 DELETE	/api/reporting/filters/:code					@controllers.reporting.api.FilteringConfigurations.delete(code: java.lang.String)
 
+#reagents (temporary)
+GET 	/api/reagent-catalogs/kits										controllers.reagents.api.KitCatalogs.list()
+POST 	/api/reagent-catalogs/kits										controllers.reagents.api.KitCatalogs.save()
+
 ->  /authentication authentication.Routes
 
 

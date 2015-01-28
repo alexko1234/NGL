@@ -7,8 +7,7 @@ import java.util.Map;
 
 import models.laboratory.experiment.description.Protocol;
 import models.laboratory.experiment.description.ProtocolCategory;
-import models.laboratory.reagent.description.ReagentType;
-import models.laboratory.reagent.description.dao.ReagentTypeDAO;
+import models.laboratory.reagent.description.ReagentCatalog;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;

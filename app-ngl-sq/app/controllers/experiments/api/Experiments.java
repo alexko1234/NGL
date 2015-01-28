@@ -74,6 +74,7 @@ public class Experiments extends CommonController{
 
 			Builder builder = new DBUpdate.Builder();
 			builder=builder.set("typeCode",exp.typeCode);
+			builder=builder.set("reagents",exp.reagents);
 			builder=builder.set("protocolCode",exp.protocolCode);
 			builder=builder.set("state.resolutionCodes",exp.state.resolutionCodes);
 			builder=builder.set("traceInformation", ExperimentHelper.getUpdateTraceInformation(exp.traceInformation, getCurrentUser()));

@@ -29,7 +29,7 @@ import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
-import models.laboratory.reagent.description.ReagentType;
+import models.laboratory.reagent.description.ReagentCatalog;
 import models.laboratory.sample.description.ImportCategory;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleCategory;
@@ -141,14 +141,14 @@ public class UpdateDescriptionTest extends AbstractTests{
 	}
 
 	//@Test
-	public void updateReagentType() throws DAOException
+	/*public void updateReagentType() throws DAOException
 	{
-		ReagentType reagentType = ReagentType.find.findByCode("reagent1");
+		ReagentCategory reagentType = ReagentCategory.find.findByCode("reagent1");
 		reagentType.name="updateReagent1";
 		reagentType.update();
-		reagentType = ReagentType.find.findByCode("reagent1");
+		reagentType = ReagentCategory.find.findByCode("reagent1");
 		Assert.assertTrue(reagentType.name.equals("updateReagent1"));
-	}
+	}*/
 
 	private void checkCommonInfoType(CommonInfoType commonInfoType)
 	{
@@ -406,10 +406,10 @@ public class UpdateDescriptionTest extends AbstractTests{
 		instruments.add(createInstrument("inst4", "inst4"));
 
 		qualityControlType.instrumentUsedTypes.add(createInstrumentUsedType(commonInfoType, instrumentCategory, instruments));
-		List<ReagentType> reagentTypes = new ArrayList<ReagentType>();
-		ReagentType reagentType = ReagentType.find.findByCode("reagent1");
-		reagentTypes.add(reagentType);
-		qualityControlType.protocols.add(createProtocol("proto4","proto4", "path4", "V2", ProtocolCategory.find.findByCode("protoCat2"), reagentTypes));
+		//List<ReagentCategory> reagentTypes = new ArrayList<ReagentCategory>();
+		//ReagentCategory reagentType = ReagentCategory.find.findByCode("reagent1");
+		//reagentTypes.add(reagentType);
+		//qualityControlType.protocols.add(createProtocol("proto4","proto4", "path4", "V2", ProtocolCategory.find.findByCode("protoCat2"), reagentTypes));
 
 		qualityControlType.update();
 		qualityControlType = ExperimentType.find.findById(qualityControlType.id);
@@ -507,9 +507,9 @@ public class UpdateDescriptionTest extends AbstractTests{
 
 
 		purificationMethodType.instrumentUsedTypes.add(createInstrumentUsedType(commonInfoType, instrumentCategory, instruments));
-		List<ReagentType> reagentTypes = new ArrayList<ReagentType>();
-		ReagentType reagentType = ReagentType.find.findByCode("reagent1");
-		reagentTypes.add(reagentType);
+		List<ReagentCatalog> reagentTypes = new ArrayList<ReagentCatalog>();
+		//ReagentCategory reagentType = ReagentCategory.find.findByCode("reagent1");
+		//reagentTypes.add(reagentType);
 
 		purificationMethodType.protocols.add(createProtocol("proto3","proto3", "path3", "V2", createProtocolCategory("protoCat4", "protoCat4"), reagentTypes));
 
@@ -759,7 +759,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 	}
 
 
-	private Protocol createProtocol(String code, String name, String filePath, String version, ProtocolCategory protocolCategory, List<ReagentType> reagentTypes)
+	private Protocol createProtocol(String code, String name, String filePath, String version, ProtocolCategory protocolCategory, List<ReagentCatalog> reagentTypes)
 	{
 		Protocol protocol = new Protocol();
 		protocol.name=name;

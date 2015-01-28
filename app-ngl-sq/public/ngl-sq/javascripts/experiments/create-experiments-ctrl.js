@@ -1,4 +1,4 @@
-angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$http','lists','$parse','$q','$position','$routeParams','$location','mainService','tabService','$filter', function($scope,$sce,$window, $http,lists,$parse,$q,$position,$routeParams,$location,mainService,tabService,$filter) {
+angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$http','lists','$parse','$q','$position','$routeParams','$location','mainService','tabService','$filter','datatable', function($scope,$sce,$window, $http,lists,$parse,$q,$position,$routeParams,$location,mainService,tabService,$filter,datatable) {
 	$scope.experiment = {
 		outputGenerated:false,
 		containerOutProperties:[],
@@ -13,6 +13,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				resolutionCodes:[],
 				code:"N"
 			},
+			reagents:[],
 			protocolCode:"",
 			instrument:{
 				code:"",
@@ -29,6 +30,99 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			}
 		}
 	};
+	
+	$scope.datatableConfigReagents = {
+			name:"reagents",
+			columns:[
+			         {
+			        	 "header":Messages("reagents.table.kitname"),
+			        	 "property":"kitCatalogCode",
+			        	 "order":true,
+			        	 "type":"text",
+			        	 "listStyle":"bt-select",
+			        	 "choiceInList":true,
+			        	 "possibleValues": 'lists.getKitCatalogs()',
+			        	 "render":'<div bt-select ng-model="value.data.kitCatalogCode" bt-options="kitCatalog.code as kitCatalog.name for kitCatalog in lists.getKitCatalogs()" ng-edit="false"></div>',
+			        	 "edit":true
+			         },
+			         {
+			        	 "header":Messages("reagents.table.boxcode"),
+			        	 "property":"boxCode",
+			        	 "order":true,
+			        	 "type":"text",
+			        	 "edit":true
+			         },
+			         {
+			        	 "header":Messages("reagents.table.reagentcode"),
+			        	 "property":"code",
+			        	 "order":true,
+			        	 "type":"text",
+			        	 "edit":true
+			         },
+			         {
+			        	 "header":Messages("reagents.table.description"),
+			        	 "property":"description",
+			        	 "order":true,
+			        	 "type":"text",
+			        	 "edit":true
+			         }
+			         ],
+			         compact:true,
+			         pagination:{
+			        	 mode:'local',
+			        	 active:false
+			         },		
+			         search:{
+			        	 active:false
+			         },
+			         order:{
+			        	 mode:'local',
+			        	 active:true,
+			        	 by:'outputPositionX'
+			         },
+			         remove:{
+			        	 mode:'local',
+			        	 active:true,
+			        	 withEdit:true,
+			        	 callback:function(datatable){
+			        		 var reagents = datatable.allResult;
+			        		 $scope.experiment.value.reagents = reagents;
+			        	 }
+			         },
+			         hide:{
+			        	 active:false
+			         },
+			         edit:{
+			        	 active:true,
+			        	 columnMode:false,
+			        	 withoutSelect:true,
+			        	 byDefault : false
+			         },
+			         save:{
+			        	 active:true,
+			        	 showButton:false,
+			        	 mode:'local',
+			        	 callback:function(datatable){
+			        		 var reagents = datatable.allResult;
+			        		 $scope.experiment.value.reagents = reagents;
+			        	 }
+			         },
+			         messages:{
+			        	 active:false,
+			        	 columnMode:true
+			         },
+			         exportCSV:{
+			        	 active:true,
+			        	 showButton:true,
+			        	 delimiter:";",
+			        	 start:false
+			         },
+			         otherButtons:{
+			        	 active:true,
+			        	 template:'<button class="btn btn btn-info" ng-click="addNewReagentLine()" title="'+Messages("experiments.addNewReagentLine")+'">'+Messages("experiments.addNewReagentLine")+'</button>'
+			         }
+	};
+	
 	$scope.message = {};
 	
 	$scope.getType = function(type){
@@ -36,6 +130,12 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			return "date";
 		}
 		return type;
+	};
+	
+	$scope.addNewReagentLine = function(){
+		$scope.datatableReagent.save();
+		$scope.datatableReagent.addData([{}]);
+		$scope.datatableReagent.setEdit();
 	};
 	
 	$scope.setImage = function(imageData, imageName, imageFullSizeWidth, imageFullSizeHeight) {
@@ -100,6 +200,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				});
 			},
 			delete:function(com){
+				if (confirm(Messages("comments.remove.confirm"))) {
 					$scope.clearMessages();
 					//$scope.experiment.value.comments.push({"comment":$scope.experiment.comment});
 					console.log(com);
@@ -123,6 +224,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 						$scope.message.details = data;
 						$scope.message.isDetails = true;
 					});
+				}
 			}
 	};
 	
@@ -471,7 +573,9 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		$scope.experiment.instrumentProperties.enabled = false;
 		$scope.experiment.instrumentInformation.enabled = false;
 		$scope.setEditConfig(false);
+		promises.push($scope.datatableReagent.save());
 		if($scope.experiment.value._id != undefined){
+			
 			promises.push($scope.experiment.instrumentProperties.save());
 	
 			promises.push($scope.experiment.instrumentInformation.save());
@@ -877,6 +981,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		return $sce.trustAsHtml(text.replace(/\n/g, "<br>"));
 	};
 	
+	//init
 	if($routeParams.experimentCode){
 	   promise = $http.get(jsRoutes.controllers.experiments.api.Experiments.get($routeParams.experimentCode).url)
 		.success(function(data, status, headers, config) {
@@ -891,6 +996,13 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		});
 	}
 		promise.then(function(result) {
+			$scope.datatableReagent = datatable($scope.datatableConfigReagents);
+			if(experiment.reagents === null || experiment.reagents === undefined || experiment.reagents.length === 0){
+				$scope.datatableReagent.setData([]);
+				$scope.datatableReagent.setEdit();
+			}else{
+				$scope.datatableReagent.setData(experiment.reagents);
+			}
 			if($routeParams.experimentTypeCode){
 				$scope.experimentType.code = $routeParams.experimentTypeCode;
 			}else{
@@ -927,6 +1039,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				$scope.lists.refresh.protocols({"experimentTypeCode":experiment.typeCode});
 				$scope.lists.refresh.resolutions({"typeCode":experiment.typeCode});
 				$scope.lists.refresh.states({"objectTypeCode":"Experiment"});
+				$scope.lists.refresh.kitCatalogs();
 				
 				if(!$routeParams.experimentCode){
 					$scope.form = mainService.getForm();

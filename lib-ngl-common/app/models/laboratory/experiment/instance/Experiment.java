@@ -52,7 +52,7 @@ public class Experiment extends DBObject implements IValidation {
 	
 	public Map<Integer,AtomicTransfertMethod> atomicTransfertMethods; 
 	
-	public List<ReagentUsed> reagentsUsed;
+	public List<ReagentUsed> reagents;
 	
 	public List<Comment> comments;
 	
@@ -116,7 +116,7 @@ public class Experiment extends DBObject implements IValidation {
 		ExperimentValidationHelper.validationProtocol(typeCode,protocolCode,contextValidation);
 		ExperimentValidationHelper.validateInstrumentUsed(instrument,instrumentProperties,contextValidation);
 		ExperimentValidationHelper.validateAtomicTransfertMethodes(atomicTransfertMethods,contextValidation);
-		ExperimentValidationHelper.validateReagents(reagentsUsed,contextValidation);
+		ExperimentValidationHelper.validateReagents(reagents,contextValidation);
 		ExperimentValidationHelper.validateTraceInformation(traceInformation, contextValidation);		
 		ExperimentValidationHelper.validateRules(this,contextValidation);
 		ExperimentValidationHelper.validateInputOutputContainerSupport(this,contextValidation);

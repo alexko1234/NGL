@@ -8,7 +8,7 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.description.ProjectType;
-import models.laboratory.reagent.description.ReagentType;
+import models.laboratory.reagent.description.ReagentCatalog;
 import models.laboratory.run.description.TreatmentType;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
@@ -147,16 +147,16 @@ public class AbstractTypeDAOTest extends AbstractTests{
 	}
 	
 	//@Test
-	public void reagentTypeFindTest() throws DAOException {		
-		ReagentType type=ReagentType.find.findAll().get(0);
+	/*public void reagentTypeFindTest() throws DAOException {		
+		ReagentCategory type=ReagentCategory.find.findAll().get(0);
 		Assert.assertNotNull(type);
-		ReagentType cType=ReagentType.find.findByCode(type.code);
+		ReagentCategory cType=ReagentCategory.find.findByCode(type.code);
 		Assert.assertNotNull(cType);
-		ReagentType cTypeId=ReagentType.find.findById(type.id);
+		ReagentCategory cTypeId=ReagentCategory.find.findById(type.id);
 		Assert.assertNotNull(cTypeId);
-		Assert.assertFalse(ReagentType.find.isCodeExist(""));
-		Assert.assertNotNull(ReagentType.find.findAllForList());
+		Assert.assertFalse(ReagentCategory.find.isCodeExist(""));
+		Assert.assertNotNull(ReagentCategory.find.findAllForList());
 		//Assert.assertNotNull(ReagentType.find.findByProtocol(0));
-	}
+	}*/
 
 }

@@ -27,7 +27,7 @@ import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
-import models.laboratory.reagent.description.ReagentType;
+import models.laboratory.reagent.description.ReagentCatalog;
 import models.laboratory.sample.description.ImportCategory;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleCategory;
@@ -203,8 +203,8 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	//@Test
-	public void saveReagentType() throws DAOException {
-		ReagentType reagentType = new ReagentType();
+	/*public void saveReagentType() throws DAOException {
+		ReagentCategory reagentType = new ReagentCategory();
 		StateCategory stateCategory = StateCategory.find.findByCode("catState1");
 		List<State> states = new ArrayList<State>();
 		states.add(State.find.findByCode("state1"));
@@ -226,9 +226,9 @@ public class SaveDescriptionTest extends AbstractTests{
 		CommonInfoType commonInfoType = createCommonInfoType("reagent1", "reagent1", "reagent1", states, resolutions, propertiesDefinitions, objectType);
 		reagentType.setCommonInfoType(commonInfoType);
 		reagentType.id = reagentType.save();
-		reagentType=ReagentType.find.findByCode(reagentType.code);
+		reagentType=ReagentCategory.find.findByCode(reagentType.code);
 		checkCommonInfoType(reagentType);
-	}
+	}*/
 
 	private void checkCommonInfoType(CommonInfoType commonInfoType) {
 		Assert.assertNotNull(commonInfoType);
@@ -355,15 +355,15 @@ public class SaveDescriptionTest extends AbstractTests{
 	 * @throws DAOException 
 	 */
 	//@Test
-	public void saveProtocol() throws DAOException {
-		List<ReagentType> reagentTypes = new ArrayList<ReagentType>();
-		ReagentType reagentType = ReagentType.find.findByCode("reagent1");
+	/*public void saveProtocol() throws DAOException {
+		List<ReagentCategory> reagentTypes = new ArrayList<ReagentCategory>();
+		ReagentCategory reagentType = ReagentCategory.find.findByCode("reagent1");
 		reagentTypes.add(reagentType);
 		Protocol protocol = createProtocol("proto1","proto1", "path1", "V1", createProtocolCategory("protoCat2", "protoCat2"), reagentTypes);
 		protocol.id = protocol.save();
 		protocol = Protocol.find.findById(protocol.id);
 		checkProtocol(protocol);
-	}
+	}*/
 
 	private void checkProtocol(Protocol protocol) {
 		Assert.assertNotNull(protocol);
@@ -377,7 +377,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		Assert.assertTrue(protocol.reagentTypes.size()>0);
 	}
 	
-	private Protocol createProtocol(String code, String name, String filePath, String version, ProtocolCategory protocolCategory, List<ReagentType> reagentTypes) {
+	private Protocol createProtocol(String code, String name, String filePath, String version, ProtocolCategory protocolCategory, List<ReagentCatalog> reagentTypes) {
 		Protocol protocol = new Protocol();
 		protocol.name=name;
 		protocol.code=code;
@@ -598,9 +598,9 @@ public class SaveDescriptionTest extends AbstractTests{
 		//Create liste protocol
 		List<Protocol> protocols = new ArrayList<Protocol>();
 		protocols.add(Protocol.find.findByCode("proto1"));
-		List<ReagentType> reagentTypes = new ArrayList<ReagentType>();
-		ReagentType reagentType = ReagentType.find.findByCode("reagent1");
-		reagentTypes.add(reagentType);
+		List<ReagentCatalog> reagentTypes = new ArrayList<ReagentCatalog>();
+		//ReagentCategory reagentType = ReagentCategory.find.findByCode("reagent1");
+		//reagentTypes.add(reagentType);
 		ExperimentCategory experimentCategory = ExperimentCategory.find.findByCode("expCat1");
 		
 		
@@ -680,10 +680,10 @@ public class SaveDescriptionTest extends AbstractTests{
 
 		//Create liste protocol
 		List<Protocol> protocols = new ArrayList<Protocol>();
-		List<ReagentType> reagentTypes = new ArrayList<ReagentType>();
-		ReagentType reagentType = ReagentType.find.findByCode("reagent1");
-		reagentTypes.add(reagentType);
-		protocols.add(createProtocol("proto2","proto2", "path2", "V2", createProtocolCategory("protoCat3", "protoCat3"), reagentTypes));
+		//List<ReagentCategory> reagentTypes = new ArrayList<ReagentCategory>();
+		//ReagentCategory reagentType = ReagentCategory.find.findByCode("reagent1");
+		//reagentTypes.add(reagentType);
+		//protocols.add(createProtocol("proto2","proto2", "path2", "V2", createProtocolCategory("protoCat3", "protoCat3"), reagentTypes));
 
 		ExperimentCategory experimentCategory = ExperimentCategory.find.findByCode("expCat1");
 		

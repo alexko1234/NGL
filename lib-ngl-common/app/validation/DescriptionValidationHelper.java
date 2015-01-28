@@ -10,7 +10,7 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
-import models.laboratory.reagent.description.ReagentType;
+import models.laboratory.reagent.description.ReagentCatalog;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationHelper;
 
@@ -45,7 +45,7 @@ public class DescriptionValidationHelper {
 
 	public static void validationReagentTypeCode(String reagentTypeCode,
 			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, reagentTypeCode, "typeCode", ReagentType.find);		
+		//BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, reagentTypeCode, "typeCode", ReagentCategory.find);		
 	}
 
 	public static void validationRunTypeCode(String typeCode,

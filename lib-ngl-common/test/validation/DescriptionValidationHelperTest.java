@@ -11,7 +11,7 @@ import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.description.ProjectCategory;
-import models.laboratory.reagent.description.ReagentType;
+import models.laboratory.reagent.description.ReagentCatalog;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.utils.dao.DAOException;
@@ -37,7 +37,7 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 	static InstrumentCategory instrumentCategory;
 	static ProcessType processType;
 	static ProjectCategory projectCategory;
-	static ReagentType reagentType;
+	static ReagentCatalog reagentType;
 	static SampleCategory sampleCategory;
 	static SampleType sampleType;
 	

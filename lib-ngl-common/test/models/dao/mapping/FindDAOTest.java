@@ -31,7 +31,7 @@ import models.laboratory.processes.description.ExperimentTypeNode;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
-import models.laboratory.reagent.description.ReagentType;
+import models.laboratory.reagent.description.ReagentCatalog;
 import models.laboratory.run.description.ReadSetType;
 import models.laboratory.run.description.RunType;
 import models.laboratory.run.description.TreatmentType;
@@ -102,26 +102,26 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertFalse(ProjectCategory.find.isCodeExist("")); 		
 	}
 	
-	@Test
+	/*@Test
 	public void ReagentTypeFindTest() throws DAOException {
-		if (! ReagentType.find.findAll().isEmpty()) {
-			ReagentType rt = ReagentType.find.findAll().get(0);
+		if (! ReagentCategory.find.findAll().isEmpty()) {
+			ReagentCategory rt = ReagentCategory.find.findAll().get(0);
 			Assert.assertNotNull(rt);
-			ReagentType rt2 = ReagentType.find.findByCode(rt.code); 
+			ReagentCategory rt2 = ReagentCategory.find.findByCode(rt.code); 
 			Assert.assertNotNull(rt2);
-			ReagentType rt3 = ReagentType.find.findById(rt.id);
+			ReagentCategory rt3 = ReagentCategory.find.findById(rt.id);
 			Assert.assertNotNull(rt3);
-			ListObject lo = ReagentType.find.findAllForList().get(0);
+			ListObject lo = ReagentCategory.find.findAllForList().get(0);
 			Assert.assertNotNull(lo);
 		}
 		else {
-			ReagentType rt2 = ReagentType.find.findByCode(""); 
+			ReagentCategory rt2 = ReagentCategory.find.findByCode(""); 
 			Assert.assertNull(rt2);
-			ReagentType rt3 = ReagentType.find.findById(Long.valueOf(0));
+			ReagentCategory rt3 = ReagentCategory.find.findById(Long.valueOf(0));
 			Assert.assertNull(rt3);			
 		}
-		Assert.assertFalse(ReagentType.find.isCodeExist(""));
-	}
+		Assert.assertFalse(ReagentCategory.find.isCodeExist(""));
+	}*/
 
 	@Test
 	public void RunTypeFindTest() throws DAOException {

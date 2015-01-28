@@ -5,7 +5,7 @@ import java.util.List;
 import models.laboratory.common.description.State;
 import models.laboratory.common.description.dao.StateDAO;
 import models.laboratory.experiment.description.dao.ProtocolDAO;
-import models.laboratory.reagent.description.ReagentType;
+import models.laboratory.reagent.description.ReagentCatalog;
 import models.utils.Model;
 import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
@@ -21,7 +21,7 @@ public class Protocol extends Model<Protocol>{
 	
 	public ProtocolCategory category;
 	
-	public List<ReagentType> reagentTypes;
+	public List<ReagentCatalog> reagentTypes;
 
 	public static ProtocolFinder find = new ProtocolFinder(); 
 	

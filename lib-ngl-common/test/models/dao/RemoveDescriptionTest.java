@@ -10,7 +10,7 @@ import models.laboratory.experiment.description.Protocol;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.description.ProjectType;
-import models.laboratory.reagent.description.ReagentType;
+import models.laboratory.reagent.description.ReagentCatalog;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
 import models.utils.dao.DAOException;
@@ -107,12 +107,12 @@ public class RemoveDescriptionTest extends AbstractTests{
 
 
 	//@Test
-	public void removeReagentType() throws DAOException
+	/*public void removeReagentType() throws DAOException
 	{
-		ReagentType reagentType = ReagentType.find.findByCode("reagent1");
+		ReagentCategory reagentType = ReagentCategory.find.findByCode("reagent1");
 		reagentType.remove();
-		Assert.assertNull(ReagentType.find.findByCode("reagent1"));
-	}
+		Assert.assertNull(ReagentCategory.find.findByCode("reagent1"));
+	}*/
 
 	//@Test
 	public void removeProtocol() throws DAOException

@@ -1,34 +1,21 @@
 package models.laboratory.reagent.instance;
 
 
-import models.laboratory.reagent.description.ReagentType;
-import models.utils.HelperObjects;
-import models.utils.InstanceConstants;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-
 import validation.ContextValidation;
-import validation.DescriptionValidationHelper;
 import validation.IValidation;
-import validation.InstanceValidationHelper;
-import validation.utils.BusinessValidationHelper;
 
 
 public class ReagentUsed implements IValidation {
+
+	public String kitCatalogCode;//The ref of the kit in the catalog (description)
 	
-	// Reagent ref
-	public String typeCode;
-	public String code;
-	// to complete with Map properties or attribut or Values class
-	//public Map<String,PropertyValue> properties;
+	public String code;//the code of the reagent (instance)
+	public String boxCode;//the code of the box (instance)
+	
+	public String description;
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		
-		DescriptionValidationHelper.validationReagentTypeCode(typeCode,contextValidation);
-
+		//DescriptionValidationHelper.validationReagentTypeCode(categoryCode,contextValidation);
 	}
-	 
-	
 }

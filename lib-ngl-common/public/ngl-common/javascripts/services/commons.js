@@ -99,6 +99,9 @@ angular.module('commonsServices', []).
     				processTypes : function(params, key){
     					load(jsRoutes.controllers.processes.api.ProcessTypes.list().url,params,(key)?key:'processTypes');
     				},
+    				kitCatalogs : function(params, key){
+    					load(jsRoutes.controllers.reagents.api.KitCatalogs.list().url,params,(key)?key:'kitCatalogs');
+    				},
        				projectCategories : function(params, key){
     					load(jsRoutes.controllers.projects.api.ProjectCategories.list().url,params,(key)?key:'projectCategories');
     				},
@@ -225,6 +228,12 @@ angular.module('commonsServices', []).
 	    							return results['types'];
 	    						}
     					   },
+			    getKitCatalogs : function(params){
+    				if(results['kitCatalogs'] === undefined){
+    					refresh.kitCatalogs(params);
+    				}
+    				return results['kitCatalogs'];
+    			},			
     			getInstruments : function(){return results['instruments'];},		   
     			getValuations : function(){return results['valuations'];},
     			getValues : function(params, key){
