@@ -26,7 +26,7 @@
 
 	<logger name="org.hibernate" level="ERROR" />
 	<logger name="org.hibernate.tool" level="ERROR" />
-
+	<logger name="org.apache.http" level="ERROR" />
 	<logger name="ngl.sub.rules" level="DEBUG" />
 	<logger name="fr.cea.ig.auto.submission" level="DEBUG" />
 	<root level="DEBUG">

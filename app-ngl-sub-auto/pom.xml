@@ -148,17 +148,17 @@
 			<dependency>
 				<groupId>fr.genoscope.lis.devsi.birds</groupId>
 				<artifactId>birds-api</artifactId>
-				<version>3.0.1-SNAPSHOT</version>
+				<version>3.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>fr.genoscope.lis.devsi.birds</groupId>
 				<artifactId>birds-rules</artifactId>
-				<version>3.0.1-SNAPSHOT</version>
+				<version>3.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>fr.genoscope.lis.devsi.birds</groupId>
 				<artifactId>birds-extension</artifactId>
-				<version>3.0.1-SNAPSHOT</version>
+				<version>3.1-SNAPSHOT</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

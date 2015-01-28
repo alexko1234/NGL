@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.Set;
 
 import junit.framework.Assert;
@@ -24,6 +25,7 @@ import fr.genoscope.lis.devsi.birds.api.persistence.EntityManagerHelper;
 import fr.genoscope.lis.devsi.birds.api.persistence.PersistenceServiceFactory;
 import fr.genoscope.lis.devsi.birds.api.test.GenericTest;
 import fr.genoscope.lis.devsi.birds.impl.factory.CoreJobServiceFactory;
+import fr.genoscope.lis.devsi.birds.impl.factory.CoreTreatmentSpecificationServiceFactory;
 import fr.genoscope.lis.devsi.birds.impl.factory.JobServiceFactory;
 import fr.genoscope.lis.devsi.birds.impl.properties.ProjectProperties;
 
@@ -42,24 +44,23 @@ public class CheckWorkflow extends GenericTest{
 		replaceProjectDirectory("SRA", workspace);
 	}
 
-	
+
 	@Test
 	public void shouldExecuteWorkflowWithNGLSUB() throws PersistenceException, BirdsException, FatalException, IOException
 	{
 		JSONDevice jsonDevice = new JSONDevice();
 
 		//Replace executable of createXML
-		//TODO replace with dev API REST
-		replaceExecutable("createXML", "SRA", scriptCreateXML);
-		
+		replaceExecutable("createXML", "SRA", CoreTreatmentSpecificationServiceFactory.getInstance().getTreatmentSpecification("createXML", "SRA").getExecutableSpecification().getExecutable().getExecutablePath().replace("appprod", "appdev"));
+
 		//Replace executable of transfertRawData 
 		//TODO voir si existe url de test au NCBI
 		replaceExecutable("transfertRawData", "SRA", scriptEcho);
-		
+
 		//Replace executable of sendXML 
 		//TODO voir si existe url de test au NCBI
 		replaceExecutable("sendXML", "SRA", scriptEcho);
-		
+
 		log.debug("FIRST ROUND");
 		executeBirdsCycle("SRA", "WF_Submission");
 
@@ -93,66 +94,79 @@ public class CheckWorkflow extends GenericTest{
 		//Check transfertRawData
 		em = PersistenceServiceFactory.getInstance().createEntityManagerHelper();
 		em.beginTransaction();
-		jobs = CoreJobServiceFactory.getInstance().getAllJobs(em.getEm());
-		for(Job job : jobs){
-			log.debug("Job "+job);
-			log.debug("Job command "+job.getUnixCommand());
-			if(job.getTreatmentSpecification().getName().equals("createXML")){
-				//Check output ressources
-				ResourceProperties rpOut = job.getOutputUniqueJobResource("outputSubXML").getResourceProperties();
-				Assert.assertNotNull(rpOut.get("sampleXML"));
-				Assert.assertNotNull(rpOut.get("runXML"));
-				Assert.assertNotNull(rpOut.get("submissionXML"));
-				Assert.assertNotNull(rpOut.get("studyXML"));
-			}else if(job.getTreatmentSpecification().getName().equals("transfertRawData")){
-				log.debug("Command transfert "+job.getUnixCommand());
-				Assert.assertTrue(job.getUnixCommand().contains("-T -k2 -Q -m 300M -v"));
-				Assert.assertTrue(job.getUnixCommand().endsWith(" --mode send --host fasp.ega.ebi.ac.uk --user era-drop-9 / | tee result"));
-				Assert.assertTrue(job.getUnixCommand().contains(job.getUniqueJobResource("rawDataDir").getProperty("submissionDirectory")+"/list_aspera_WGS"));
-				
-				//Check file WGS
-				File file = new File(job.getParameterValue("fileList").getValue());
-				Assert.assertTrue(file.exists());
-				BufferedReader br = new BufferedReader(new FileReader(file));
-				String line = null;
-				int nbLine=0;
-				while((line=br.readLine())!=null){
-					log.debug("Line "+line);
-					nbLine++;
-				}
-				br.close();
-				Assert.assertEquals(nbLine, 4);
-				Assert.assertTrue(file.delete());
-			}
+		Job jobCreateXML = CoreJobServiceFactory.getInstance().getJobBySpecification("createXML", em.getEm()).iterator().next();
+		Assert.assertNotNull(jobCreateXML);
+		//Check output ressources
+		ResourceProperties rpOut = jobCreateXML.getOutputUniqueJobResource("outputSubXML").getResourceProperties();
+		log.debug("Resource properties out createXML : "+rpOut);
+		Assert.assertNotNull(rpOut.get("xmlSamples"));
+		Assert.assertEquals(rpOut.get("xmlSamples"), "sample.xml");
+		Assert.assertNotNull(rpOut.get("xmlRuns"));
+		Assert.assertEquals(rpOut.get("xmlRuns"), "run.xml");
+		Assert.assertNotNull(rpOut.get("xmlSubmission"));
+		Assert.assertEquals(rpOut.get("xmlSubmission"), "submission.xml");
+		Assert.assertNotNull(rpOut.get("xmlStudys"));
+		Assert.assertEquals(rpOut.get("xmlStudys"),"null");
+		
+		Job jobTransfertRawData = CoreJobServiceFactory.getInstance().getJobBySpecification("transfertRawData",em.getEm()).iterator().next();
+		Assert.assertNotNull(jobTransfertRawData);
+		Assert.assertTrue(jobTransfertRawData.getUnixCommand().contains("-T -k2 -Q -m 300M -v"));
+		Assert.assertTrue(jobTransfertRawData.getUnixCommand().endsWith(" --mode send --host fasp.ega.ebi.ac.uk --user era-drop-9 / | tee result"));
+		Assert.assertTrue(jobTransfertRawData.getUnixCommand().contains(jobTransfertRawData.getUniqueJobResource("rawDataDir").getProperty("submissionDirectory")+"/list_aspera_WGS"));
+
+		//Check file WGS
+		File file = new File(jobTransfertRawData.getParameterValue("fileList").getValue());
+		Assert.assertTrue(file.exists());
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		String line = null;
+		int nbLine=0;
+		while((line=br.readLine())!=null){
+			log.debug("Line "+line);
+			nbLine++;
 		}
+		br.close();
+		Assert.assertEquals(nbLine, 4);
+		Assert.assertTrue(file.delete());
+		ResourceProperties rpOutRawData = jobTransfertRawData.getOutputUniqueJobResource("outputRawData").getResourceProperties();
+		Assert.assertNotNull(rpOutRawData.get("fileList"));
+
 		em.endTransaction();
 
-		
+
 		log.debug("THIRD ROUND");
 		executeBirdsCycle("SRA", "WF_Submission");
 		//Check send XML
 		em = PersistenceServiceFactory.getInstance().createEntityManagerHelper();
 		em.beginTransaction();
-		jobs = CoreJobServiceFactory.getInstance().getAllJobs(em.getEm());
-		for(Job job : jobs){
-			log.debug("Job "+job);
-			log.debug("Job command "+job.getUnixCommand());
-			if(job.getTreatmentSpecification().getName().equals("sendXML")){
-				Assert.assertTrue(job.getUnixCommand().contains("-F \"SUBMISSION=@"+job.getUniqueJobResource("subToSend").getProperty("submissionXML")+"\""));
-				Assert.assertTrue(job.getUnixCommand().contains("-F \"SAMPLE=@"+job.getUniqueJobResource("subToSend").getProperty("sampleXML")+"\""));
-				Assert.assertTrue(job.getUnixCommand().contains("-F \"RUN=@"+job.getUniqueJobResource("subToSend").getProperty("runXML")+"\""));
-				Assert.assertTrue(job.getUnixCommand().contains("-F \"STUDY=@"+job.getUniqueJobResource("subToSend").getProperty("studyXML")+"\""));
-				Assert.assertTrue(job.getUnixCommand().contains("-F \"EXPERIMENT=@"+job.getUniqueJobResource("subToSend").getProperty("experimentXML")+"\""));
-				
-				//End command line redirect to AC files
-				Assert.assertTrue(job.getUnixCommand().endsWith("> listAC_"+job.getUniqueJobResource("subToSend").getProperty("submissionDate")+".txt"));
-			}
-		}
+		Job jobSendXML = CoreJobServiceFactory.getInstance().getJobBySpecification("sendXML",em.getEm()).iterator().next();
+		log.debug("job send XML "+jobSendXML);
+		Assert.assertNotNull(jobSendXML);
+
+		Assert.assertTrue(jobSendXML.getUnixCommand().contains("-F \"SUBMISSION=@"+jobSendXML.getUniqueJobResource("subToSend").getProperty("xmlSubmission")+"\""));
+		Assert.assertTrue(jobSendXML.getUnixCommand().contains("-F \"SAMPLE=@"+jobSendXML.getUniqueJobResource("subToSend").getProperty("xmlSamples")+"\""));
+		Assert.assertTrue(jobSendXML.getUnixCommand().contains("-F \"RUN=@"+jobSendXML.getUniqueJobResource("subToSend").getProperty("xmlRuns")+"\""));
+		Assert.assertTrue(jobSendXML.getUnixCommand().contains("-F \"STUDY=@"+jobSendXML.getUniqueJobResource("subToSend").getProperty("xmlStudys")+"\""));
+		Assert.assertTrue(jobSendXML.getUnixCommand().contains("-F \"EXPERIMENT=@"+jobSendXML.getUniqueJobResource("subToSend").getProperty("xmlExperiments")+"\""));
+
+		//End command line redirect to AC files
+		Assert.assertTrue(jobSendXML.getUnixCommand().endsWith("> listAC_"+jobSendXML.getUniqueJobResource("subToSend").getProperty("submissionDate")+".txt"));
+
+		//Check input
+		Assert.assertEquals(jobSendXML.getInputValue("subToSend").getInputJobResourceValues().size(),1);
+		Assert.assertEquals(jobSendXML.getInputValue("rawDataSend").getInputJobResourceValues().size(),1);
 		em.endTransaction();
 
+		//Get Submission from database
+		Set<ResourceProperties> setRPSub = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/submissions/search/submitted");
+		log.debug("Set RPub "+setRPSub);
+		Assert.assertTrue(setRPSub.size()==1);
+		ResourceProperties RPSub = setRPSub.iterator().next();
+		Assert.assertTrue(RPSub.get("state.code").equals("submitted"));
+		Assert.assertNotNull(RPSub.get("accession"));
 		//Update state submission from IN_PROGRESS to IN_WAITING at the end of test
 		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/submissions/"+codeSubmission+"/state/IN_WAITING", null);
 
 	}
 
+	
 }

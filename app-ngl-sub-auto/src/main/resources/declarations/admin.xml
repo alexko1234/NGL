@@ -15,11 +15,15 @@
 		<RequiredProperty propertyName="code" keyProperty="true" />
 		<RequiredProperty propertyName="submissionDirectory" />
 		<RequiredProperty propertyName="submissionDate" />
-		<RequiredProperty propertyName="submissionXML" />
-		<RequiredProperty propertyName="studyXML" />
-		<RequiredProperty propertyName="sampleXML" />
-		<RequiredProperty propertyName="experimentXML" />
-		<RequiredProperty propertyName="runXML" />
+		<RequiredProperty propertyName="xmlSubmission" />
+		<RequiredProperty propertyName="xmlStudys" />
+		<RequiredProperty propertyName="xmlSamples" />
+		<RequiredProperty propertyName="xmlExperiments" />
+		<RequiredProperty propertyName="xmlRuns" />
+	</ResourceType>
+	
+	<ResourceType name="rawData">
+		<RequiredProperty propertyName="fileList"/>
 	</ResourceType>
 
 	<!-- Referential -->
@@ -34,6 +38,7 @@
 	
 	<Referential name="internalRefSubmissionXML" device="birdsDevice" readOnly="false">
 		<ResourceType name="submissionXML" />
+		<ResourceType name="rawData" />
 	</Referential>
 	
 	

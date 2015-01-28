@@ -12,11 +12,11 @@ rule "Define variable lineParmeter for sendXML specification"
     then
        Logger log = Logger.getLogger("ngl.sub.rules");
        log.debug("Set parameter for spec sendXML");
-       updateParameterXML("submissionXML",$job);
-       updateParameterXML("studyXML",$job);
-       updateParameterXML("sampleXML",$job);
-       updateParameterXML("experimentXML",$job);
-       updateParameterXML("runXML",$job);
+       updateParameterXML("xmlSubmission",$job);
+       updateParameterXML("xmlStudys",$job);
+       updateParameterXML("xmlSamples",$job);
+       updateParameterXML("xmlExperiments",$job);
+       updateParameterXML("xmlRuns",$job);
        $job.setParameterValue("listAC",$job.getParameterValue("listAC").getValue().replace("%submissionDate%",$job.getUniqueJobResource("subToSend").getProperty("submissionDate")));
 	
 end
@@ -48,11 +48,27 @@ rule "POST DONE EXECUTION of sendXML : File AC results operation"
 	salience 200
 	when
 		$executionService : ExecutionService( status == ExecutionService.POST_JOB_EXECUTION_STATUS)
-		$job : Job( treatmentSpecification!=null, treatmentSpecification.name == "sendXMLSyntax", treatmentSpecification.project.name == "SRA", executionState == Job.DONE_STATUS )
+		$job : Job( treatmentSpecification!=null, treatmentSpecification.name == "sendXML", treatmentSpecification.project.name == "SRA", executionState == Job.DONE_STATUS )
 	then
-		//TODO Check AC files results 
-		//TODO if errors set status JOB EXITED and send mail error
-		//TODO if no errors update field fileResultAC in submission
+		Logger log = Logger.getLogger("ngl.sub.rules");
+		//Call service treatment AC files results 
+		JobResource jobResource = $job.getUniqueJobResource("subToSend");
+		String codeSubmission = jobResource.getProperty("code");
+		String pathAC = jobResource.getProperty("submissionDirectory")+File.separator+$job.getParameterValue("listAC").getValue();
+		File fileAC = new File(pathAC);
+		log.debug("path AC="+pathAC);
+		JSONDevice jsonDevice = new JSONDevice();
+		String url = ProjectProperties.getProperty("server")+"/submissions/"+codeSubmission+"/ebiAc";
+		String jsonResult = jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/submissions/"+codeSubmission+"/ebiAc", fileAC);
+		log.debug("Result "+jsonResult);
+		Set<ResourceProperties> resourcePropertiesSet = jsonDevice.parseJSONFromString(jsonResult);
+		log.debug("Resource Properties "+resourcePropertiesSet);
+		//if submission.state=ERROR_SendXML set job status to JOB EXITED
+		//Get unique resource 
+		String state = resourcePropertiesSet.iterator().next().get("state.code");
+		log.debug("State from treatment AC "+state);
+		if(state.equals("errorResultSendXml"))
+			$job.setExecutionState(Job.ERROR_STATUS);
 end
 
 #create function to replace value in parameter with evaluate null value

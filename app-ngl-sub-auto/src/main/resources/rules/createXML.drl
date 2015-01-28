@@ -1,20 +1,6 @@
 #created on: Jul 7, 2014
 package birds
 
-rule "Define variable lineParmeter for createXML specification"
-	@BirdsRule(fsRule)
-	dialect 'java'
-	salience 300
-	no-loop
-    when
-       $treatSpec : TreatmentSpecification(name=="createXML", project.name=="SRA")
-       $job : Job()
-    then
-       Logger log = Logger.getLogger("ngl.sub.rules");
-       log.debug("Set parameter for spec createXML");
-       $job.setParameterValue("subCode",$job.getUniqueJobResource("subToXML").getProperty("code"));
-end
-
 rule "Syntax order command line for createXML specification"
 	@BirdsRule(unixSyntaxRule)
 	dialect 'java'
@@ -23,14 +9,28 @@ rule "Syntax order command line for createXML specification"
         $strategy : UnixCommandSyntaxStrategy ( name == "createXMLSyntax" , commandLine == null)
     then
         Logger log = Logger.getLogger("ngl.sub.rules");
-		log.debug("Syntax createXML : curl http://app.genoscope.cns.fr/api/submissions/codeSub");
-		String parameterLine = $strategy.getParameterValue().get("subCode");
-		$strategy.setCommandLine($strategy.getExecutableName()+parameterLine);
+		$strategy.setCommandLine($strategy.getExecutableName());
 		log.debug("command line : " + $strategy.getCommandLine());
 
 end
 
-rule "add resources in internalRefSubmission_xml to fire sendXML"
+rule "Define variable lineParmeter for createXML specification"
+	@BirdsRule(ExecutionService)
+	dialect 'java'
+	salience 300
+	no-loop
+    when
+       $executionService : ExecutionService( status == ExecutionService.PRE_JOB_EXECUTION_STATUS)
+       $job : Job( treatmentSpecification!=null, treatmentSpecification.name == "createXML", treatmentSpecification.project.name == "SRA" )
+    then
+       Logger log = Logger.getLogger("ngl.sub.rules");
+       log.debug("Set code in url for spec createXML");
+       $job.setUnixCommand($job.getUnixCommand().replace("%code%", $job.getUniqueJobResource("subToXML").getProperty("code")));
+       log.debug("Unix command "+$job.getUnixCommand());
+       log.debug("Code "+$job.getUniqueJobResource("subToXML").getProperty("code"));
+end
+
+rule "add submissionXML resources in internalRefSubmission_xml to fire sendXML"
 	@BirdsRule( addResources ) 
 	dialect 'java'
 	salience 200
@@ -42,7 +42,7 @@ rule "add resources in internalRefSubmission_xml to fire sendXML"
 		$job : Job(treatmentSpecification!=null, treatmentSpecification.name == "createXML")
 	then
 		Logger log = Logger.getLogger("ngl.sub.rules");
-		log.debug("Add resources rules for sendXML");
+		log.debug("Add resources rules for sendXML from file "+$job.getProperty(Job.STDOUT));
 		Set<ResourceProperties> setResources = new JSONDevice().parseJSONFromFileName($job.getProperty(Job.STDOUT));
 		for(ResourceProperties rp : setResources){
 			JobResource outputResource = $resourceSet.createJobResource($output.getResourceType(),$referential.getName());
