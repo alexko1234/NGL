@@ -238,7 +238,8 @@ button.readsets.show = Voir Readsets
 button.readsets.valuation = Evaluer Readsets
 button.edit = Editer
 
-date.format=dd/MM/yyyy
+date.format= dd/MM/yyyy
+date.format.french= jj/mm/aaaa
 
 valuation.value.TRUE = Oui
 valuation.value.FALSE = Non
