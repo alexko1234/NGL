@@ -35,6 +35,7 @@ import fr.cea.ig.MongoDBDAO;
 public class FileAcServices {
 
 	public static void updateStateSubmission(Submission submission, String status) {
+		submission.state.code=status;
 		// Mettre à jour objets submission et sous-objet study, sample et experiment pour status.
 		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, 
 				DBQuery.is("code", submission.code).notExists("accession"),
@@ -216,15 +217,17 @@ public class FileAcServices {
 		String retourChariot = "</br>";
 		
 		message += "submissionCode = " + submissionCode + ",   AC = "+ submissionAc + "</br>";  
+		submission.state.code=okStatus;
+		submission.accession=submissionAc;
 		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, 
 				DBQuery.is("code", submissionCode).notExists("accession"),
-				DBUpdate.set("accession", submissionAc).set("state.code", "submitted").set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date()));	
+				DBUpdate.set("accession", submissionAc).set("state.code", okStatus).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date()));	
 
 		if (ebiStudyCode != null) {
 			message += "studyCode = " + ebiStudyCode + ",   AC = "+ studyAc + "</br>";  
 			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
 					DBQuery.is("code", ebiStudyCode).notExists("accession"),
-					DBUpdate.set("accession", studyAc).set("state.code", "submitted").set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date()));
+					DBUpdate.set("accession", studyAc).set("state.code", okStatus).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date()));
 		}
 		for(Entry<String, String> entry : mapSamples.entrySet()) {
 			String code = entry.getKey();
@@ -232,7 +235,7 @@ public class FileAcServices {
 			message += "sampleCode = " + code + ",   AC = "+ ac + "</br>";  
 			MongoDBDAO.update(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class,
 					DBQuery.is("code", code).notExists("accession"),
-					DBUpdate.set("accession", ac).set("state.code", "submitted").set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 		
+					DBUpdate.set("accession", ac).set("state.code", okStatus).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 		
 		}
 		for(Entry<String, String> entry : mapExperiments.entrySet()) {
 			String code = entry.getKey();
@@ -240,7 +243,7 @@ public class FileAcServices {
 			message += "experimentCode = " + code + ",   AC = "+ ac + "</br>";  
 			MongoDBDAO.update(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class,
 					DBQuery.is("code", code).notExists("accession"),
-					DBUpdate.set("accession", ac).set("state.code", "submitted").set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 
+					DBUpdate.set("accession", ac).set("state.code", okStatus).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 
 		}
 		for(Entry<String, String> entry : mapRuns.entrySet()) {
 			String code = entry.getKey();

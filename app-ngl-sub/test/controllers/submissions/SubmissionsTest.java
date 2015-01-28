@@ -176,7 +176,7 @@ public class SubmissionsTest extends AbstractTestController{
 	{
 		
 		File ebiFileAc = new File(System.getProperty("user.home")+"/NGL-SUB-Test/RESULT_AC");
-		
+		Logger.debug("JSON FILE "+Json.toJson(ebiFileAc));
 		Result result = callAction(controllers.submissions.api.routes.ref.Submissions.treatmentAc("sub2"),fakeRequest().withJsonBody(Json.toJson(ebiFileAc)));
 		Logger.debug("Result "+result);
 		assertThat(status(result)).isEqualTo(OK);
