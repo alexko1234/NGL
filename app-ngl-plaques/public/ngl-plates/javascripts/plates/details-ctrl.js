@@ -77,13 +77,13 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 					    	edit:false,
 					    	hide:true
 						},
-						{  	property:"code",
-					    	header: Messages("plates.table.well.code"),					    	
+						{  	property:"name",
+					    	header: Messages("plates.table.well.name"),
 					    	type :"String",
 					    	hide:true
 						},
-						{  	property:"name",
-					    	header: Messages("plates.table.well.name"),
+						{  	property:"code",
+					    	header: Messages("plates.table.well.code"),					    	
 					    	type :"String",
 					    	hide:true
 						},
