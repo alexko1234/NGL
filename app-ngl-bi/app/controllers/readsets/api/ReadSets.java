@@ -175,6 +175,15 @@ public class ReadSets extends ReadSetsController{
 		if(null != form.productionValuationUser){
 			queries.add(DBQuery.is("productionValuation.user", form.productionValuationUser));
 		}
+		
+		if (CollectionUtils.isNotEmpty(form.sampleCategoryCodes)) { //all
+			queries.add(DBQuery.in("sampleOnContainer.sampleCategoryCode", form.sampleCategoryCodes));
+		}
+		
+		if (CollectionUtils.isNotEmpty(form.sampleTypeCodes)) { //all
+			queries.add(DBQuery.in("sampleOnContainer.sampleTypeCode", form.sampleTypeCodes));
+		}
+		
 		//TODO must be change to used a generic system (see below)
 		/*
 		if (StringUtils.isNotBlank(form.isSentCCRT)) {

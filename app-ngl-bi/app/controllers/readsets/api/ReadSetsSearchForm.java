@@ -33,6 +33,10 @@ public class ReadSetsSearchForm extends ListForm{
 	
 	public List<String> runTypeCodes;
 	
+	public List<String> sampleTypeCodes;
+	public List<String> sampleCategoryCodes;
+	
+	
 	public Date fromDate;
 	public Date toDate;
 	
