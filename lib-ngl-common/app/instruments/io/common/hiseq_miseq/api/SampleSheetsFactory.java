@@ -23,14 +23,14 @@ public class SampleSheetsFactory extends AbstractSampleSheetsfactory{
 	}
 
 	@Override
-	public String generate() {
+	public File generate() {
 		List<Container> containers = getContainersFromExperiment();
 		
 		String content = format(sampleSheet_1.render(experiment, containers).body());
 		File file = new File(containers.get(0).support.code+".csv");
 		//play.api.libs.Files.writeFile(file, content);
-		AbstractSampleSheetsfactory.writeFile(file, content);
+		//AbstractSampleSheetsfactory.writeFile(file, content);
 		
-		return content;
+		return file;
 	}
 }

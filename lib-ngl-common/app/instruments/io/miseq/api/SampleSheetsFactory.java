@@ -1,13 +1,13 @@
 package instruments.io.miseq.api;
 
+import instruments.io.miseq.tpl.txt.sampleSheet_1;
+import instruments.io.utils.AbstractSampleSheetsfactory;
+
 import java.io.File;
 import java.util.List;
 
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.Experiment;
-import instruments.io.utils.AbstractSampleSheetsfactory;
-
-import instruments.io.miseq.tpl.txt.*;
 
 public class SampleSheetsFactory extends AbstractSampleSheetsfactory{
 
@@ -16,15 +16,15 @@ public class SampleSheetsFactory extends AbstractSampleSheetsfactory{
 	}
 
 	@Override
-	public String generate() {
+	public File generate() {
 
 		List<Container> containers = getContainersFromExperiment();
 		String content = format(sampleSheet_1.render(this.experiment, containers).body());
 		//play.api.libs.Files.writeFile(new File(containers.get(0).support.code+".csv"), content);
-		File file = new File(containers.get(0).support.code+".csv");
-		AbstractSampleSheetsfactory.writeFile(file, content);
+		File file = new File(experiment.instrumentProperties.get("miseqReagentCassette")+".csv");
+		//AbstractSampleSheetsfactory.writeFile(file, content);
 		
-		return content;
+		return file;
 	}
 
 }

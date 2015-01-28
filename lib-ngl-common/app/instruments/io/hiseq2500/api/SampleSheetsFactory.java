@@ -1,6 +1,9 @@
 package instruments.io.hiseq2500.api;
 
 import instruments.io.utils.AbstractSampleSheetsfactory;
+
+import java.io.File;
+
 import models.laboratory.experiment.instance.Experiment;
 
 public class SampleSheetsFactory extends AbstractSampleSheetsfactory{
@@ -11,7 +14,7 @@ public class SampleSheetsFactory extends AbstractSampleSheetsfactory{
 	}
 
 	@Override
-	public String generate() {
+	public File generate() {
 		instruments.io.common.hiseq.api.SampleSheetsFactory sampleSheet = new instruments.io.common.hiseq.api.SampleSheetsFactory(this.experiment);
 	
 		return sampleSheet.generate();

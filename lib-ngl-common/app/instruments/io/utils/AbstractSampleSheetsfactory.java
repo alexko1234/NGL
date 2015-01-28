@@ -27,7 +27,7 @@ public abstract class AbstractSampleSheetsfactory {
 		this.experiment = varExperiment;
 	}
 	
-	public abstract String generate();
+	public abstract File generate();
 	
 	protected String format(String content){
 		return content.trim().replaceAll("(?m)^\\s{1,}", "").replaceAll("\n{2,}", "\n");
