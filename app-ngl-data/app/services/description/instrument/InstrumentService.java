@@ -294,7 +294,7 @@ public class InstrumentService {
         				"FC Miseq-v2","FC Miseq-v3"),"single"));
         propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
         propertyDefinitions.add(newPropertiesDefinition("Piste contrôle","control", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValuesWithDefault("Pas de piste contrôle (auto-calibrage)","Pas de piste contrôle (auto-calibrage)","1",
-        		"2"),"single"));
+        		"2"),"Pas de piste contrôle (auto-calibrage)","single"));
         return propertyDefinitions;
 	}
 

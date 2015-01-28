@@ -123,40 +123,43 @@ public class Containers extends CommonController {
 		//Form<ContainersSearchForm> containerFilledForm = filledFormQueryString(containerForm,ContainersSearchForm.class);
 		ContainersSearchForm containersSearch = filledFormQueryString(ContainersSearchForm.class);
 		containersSearch.orderBy="code";
-		DBQuery.Query query = getQuery(containersSearch);		
-		if(containersSearch.datatable){
-			MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query);
-			List<Container> containers = results.toList();
+		DBQuery.Query query = getQuery(containersSearch);
+		if(query != null){
+			if(containersSearch.datatable){
+				MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query);
+				List<Container> containers = results.toList();
 
-			return ok(Json.toJson(new DatatableResponse<Container>(containers, results.count())));
-		}else if(containersSearch.count){
-			BasicDBObject keys = new BasicDBObject();
-			keys.put("_id", 0);//Don't need the _id field
-			keys.put("code", 1);
-			MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);							
-			int count = results.count();
-			Map<String, Integer> m = new HashMap<String, Integer>(1);
-			m.put("result", count);
-			return ok(Json.toJson(m));
-		}else if(containersSearch.list){
-			BasicDBObject keys = new BasicDBObject();
-			keys.put("_id", 0);//Don't need the _id field
-			keys.put("code", 1);
+				return ok(Json.toJson(new DatatableResponse<Container>(containers, results.count())));
+			}else if(containersSearch.count){
+				BasicDBObject keys = new BasicDBObject();
+				keys.put("_id", 0);//Don't need the _id field
+				keys.put("code", 1);
+				MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);							
+				int count = results.count();
+				Map<String, Integer> m = new HashMap<String, Integer>(1);
+				m.put("result", count);
+				return ok(Json.toJson(m));
+			}else if(containersSearch.list){
+				BasicDBObject keys = new BasicDBObject();
+				keys.put("_id", 0);//Don't need the _id field
+				keys.put("code", 1);
 
-			MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
-			List<Container> containers = results.toList();
+				MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
+				List<Container> containers = results.toList();
 
-			List<ListObject> los = new ArrayList<ListObject>();
-			for(Container p: containers){
-				los.add(new ListObject(p.code, p.code));
+				List<ListObject> los = new ArrayList<ListObject>();
+				for(Container p: containers){
+					los.add(new ListObject(p.code, p.code));
+				}
+
+				return ok(Json.toJson(los));
+			}else{
+				List<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, query).toList();
+
+				return ok(Json.toJson(results));
 			}
-
-			return ok(Json.toJson(los));
-		}else{
-			List<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, query).toList();
-
-			return ok(Json.toJson(results));
 		}
+		return badRequest();
 	}
 
 	public static Result list_supports() throws DAOException{
@@ -164,65 +167,68 @@ public class Containers extends CommonController {
 		ContainersSearchForm containersSearch = filledFormQueryString(ContainersSearchForm.class);
 
 		DBQuery.Query query = getQuery(containersSearch);
-		if(containersSearch.datatable){
-			List<LocationOnContainerSupport> containerSupports = new ArrayList<LocationOnContainerSupport>();
+		if(query != null){
+			if(containersSearch.datatable){
+				List<LocationOnContainerSupport> containerSupports = new ArrayList<LocationOnContainerSupport>();
 
-			BasicDBObject keysSupport = new BasicDBObject();
-			BasicDBObject test = new BasicDBObject();
-			keysSupport.put("support.code",true);
-			keysSupport.put("support.categoryCode",true);
+				BasicDBObject keysSupport = new BasicDBObject();
+				BasicDBObject test = new BasicDBObject();
+				keysSupport.put("support.code",true);
+				keysSupport.put("support.categoryCode",true);
 
-			BasicDBList supportDBObject = (BasicDBList) MongoDB.getCollection(InstanceConstants.CONTAINER_COLL_NAME, Container.class, String.class).group(keysSupport, test, test,"function ( curr, result ) { }");
-			Iterator itr = supportDBObject.iterator();
+				BasicDBList supportDBObject = (BasicDBList) MongoDB.getCollection(InstanceConstants.CONTAINER_COLL_NAME, Container.class, String.class).group(keysSupport, test, test,"function ( curr, result ) { }");
+				Iterator itr = supportDBObject.iterator();
 
-			while(itr.hasNext()) {
-				BasicDBObject element = (BasicDBObject) itr.next();
-				String supportCode  = (String)element.get("support.code");
-				LocationOnContainerSupport cs = new LocationOnContainerSupport();
-				cs.code = (String)element.get("support.code");
-				cs.categoryCode = (String)element.get("support.categoryCode");
-				containerSupports.add(cs);
-			}
-
-			return ok(Json.toJson(new DatatableResponse<LocationOnContainerSupport>(containerSupports, containerSupports.size())));
-		}else if(containersSearch.list){
-			BasicDBObject keys = new BasicDBObject();
-			keys.put("_id", 0);//Don't need the _id field
-			keys.put("support", 1);
-
-
-			MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query);
-			List<Container> containers = results.toList();
-			List<LocationOnContainerSupport> containerSupports = new ArrayList<LocationOnContainerSupport>();
-			for(Container c: containers){
-				if(!containerSupports.contains(c.support)){
-					containerSupports.add(c.support);
+				while(itr.hasNext()) {
+					BasicDBObject element = (BasicDBObject) itr.next();
+					String supportCode  = (String)element.get("support.code");
+					LocationOnContainerSupport cs = new LocationOnContainerSupport();
+					cs.code = (String)element.get("support.code");
+					cs.categoryCode = (String)element.get("support.categoryCode");
+					containerSupports.add(cs);
 				}
-			}
 
-			List<String> ls = new ArrayList<String>();
-			for(LocationOnContainerSupport p: containerSupports){
-				if(!containerSupports.contains(p)){
-					ls.add(p.code);
+				return ok(Json.toJson(new DatatableResponse<LocationOnContainerSupport>(containerSupports, containerSupports.size())));
+			}else if(containersSearch.list){
+				BasicDBObject keys = new BasicDBObject();
+				keys.put("_id", 0);//Don't need the _id field
+				keys.put("support", 1);
+
+
+				MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query);
+				List<Container> containers = results.toList();
+				List<LocationOnContainerSupport> containerSupports = new ArrayList<LocationOnContainerSupport>();
+				for(Container c: containers){
+					if(!containerSupports.contains(c.support)){
+						containerSupports.add(c.support);
+					}
 				}
-			}
 
-			return ok(Json.toJson(ls));
-		}else{
-			BasicDBObject keys = new BasicDBObject();
-			keys.put("_id", 0);//Don't need the _id field
-			keys.put("support", 1);
-			MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query);
-			List<Container> containers = results.toList();
-			List<LocationOnContainerSupport> containerSupports = new ArrayList<LocationOnContainerSupport>();
-			for(Container c: containers){
-				if(!containerSupports.contains(c.support)){
-					containerSupports.add(c.support);
+				List<String> ls = new ArrayList<String>();
+				for(LocationOnContainerSupport p: containerSupports){
+					if(!containerSupports.contains(p)){
+						ls.add(p.code);
+					}
 				}
-			}
 
-			return ok(Json.toJson(containerSupports));
+				return ok(Json.toJson(ls));
+			}else{
+				BasicDBObject keys = new BasicDBObject();
+				keys.put("_id", 0);//Don't need the _id field
+				keys.put("support", 1);
+				MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query);
+				List<Container> containers = results.toList();
+				List<LocationOnContainerSupport> containerSupports = new ArrayList<LocationOnContainerSupport>();
+				for(Container c: containers){
+					if(!containerSupports.contains(c.support)){
+						containerSupports.add(c.support);
+					}
+				}
+
+				return ok(Json.toJson(containerSupports));
+			}
 		}
+		return ok();
 	}
 
 
@@ -232,25 +238,25 @@ public class Containers extends CommonController {
 	 * @return
 	 * @throws DAOException 
 	 */
-	public static DBQuery.Query getQuery(ContainersSearchForm containersSearch) throws DAOException {
+	public static DBQuery.Query getQuery(ContainersSearchForm containersSearch) throws DAOException{
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
-		Query query = null;
-		
+		Query query = DBQuery.empty();
+
 		List<String> processCodes = new ArrayList<String>();
 		if(containersSearch.properties.size() > 0){
 			List<DBQuery.Query> listProcessQuery = NGLControllerHelper.generateQueriesForProperties(containersSearch.properties, Level.CODE.Process, "properties");
 			Query processQuery = DBQuery.and(listProcessQuery.toArray(new DBQuery.Query[queryElts.size()]));
-			
+
 			List<Process> processes = MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, processQuery).toList();
 			for(Process p : processes){
 				processCodes.add(p.code);
 			}
 		}
-		
+
 		if(CollectionUtils.isNotEmpty(processCodes)){
 			queryElts.add(DBQuery.in("inputProcessCodes", processCodes));
 		}
-		
+
 		if(CollectionUtils.isNotEmpty(containersSearch.projectCodes)){
 			queryElts.add(DBQuery.in("projectCodes", containersSearch.projectCodes));
 		}else if(StringUtils.isNotBlank(containersSearch.projectCode)){
@@ -295,35 +301,42 @@ public class Containers extends CommonController {
 		}
 
 		List<String> listePrevious = new ArrayList<String>();
-		if(StringUtils.isNotBlank(containersSearch.nextProcessTypeCode)){
+		if(StringUtils.isNotBlank(containersSearch.nextProcessTypeCode)){					
 			listePrevious = ExperimentType.find.findVoidProcessExperimentTypeCode(containersSearch.nextProcessTypeCode);
-			ProcessType processType = ProcessType.find.findByCode(containersSearch.nextProcessTypeCode);
-			List<ExperimentType> experimentTypes = new ArrayList<ExperimentType>();
-			if(processType != null){
-				experimentTypes = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(processType.firstExperimentType.code);
-			}else{
-				Logger.error("NGL-SQ bad nextProcessTypeCode: "+containersSearch.nextProcessTypeCode);
-				return DBQuery.empty();
-			}
-
-			for(ExperimentType e:experimentTypes){
-				Logger.info(e.code);
-				listePrevious.add(e.code);
-			}
-
-			if(CollectionUtils.isNotEmpty(listePrevious)){
+			if(CollectionUtils.isNotEmpty(listePrevious)){			
+				ProcessType processType = ProcessType.find.findByCode(containersSearch.nextProcessTypeCode);
+				List<ExperimentType> experimentTypes = new ArrayList<ExperimentType>();
+				if(processType != null){
+					experimentTypes = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(processType.firstExperimentType.code);
+				}else{
+					Logger.error("NGL-SQ bad nextProcessTypeCode: "+containersSearch.nextProcessTypeCode);
+					return null;
+				}
+				for(ExperimentType e:experimentTypes){
+					Logger.info(e.code);
+					listePrevious.add(e.code);
+				}			
 				queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", listePrevious),DBQuery.notExists("fromExperimentTypeCodes"),DBQuery.size("fromExperimentTypeCodes", 0)));
+			}else{
+				throw new RuntimeException("nextProcessTypeCode = "+ containersSearch.nextProcessTypeCode +" does not exist!");
 			}
 		}
 
 		if(StringUtils.isNotBlank(containersSearch.nextExperimentTypeCode)){
 			List<ExperimentType> previous = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(containersSearch.nextExperimentTypeCode);
+			if(CollectionUtils.isNotEmpty(previous)){
 			for(ExperimentType e:previous){
 				listePrevious.add(e.code);
 			}
 
 			if(CollectionUtils.isNotEmpty(listePrevious)){
 				queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", listePrevious)));
+			}else{
+				Logger.error("NGL-SQ bad nextExperimentTypeCode: "+containersSearch.nextExperimentTypeCode);
+				return null;
+			}
+			}else{
+				throw new RuntimeException("nextExperimentTypeCode = "+ containersSearch.nextExperimentTypeCode +" does not exist!");
 			}
 			queryElts.add(DBQuery.nor(DBQuery.notExists("inputProcessCodes"),DBQuery.size("inputProcessCodes", 0)));
 		}

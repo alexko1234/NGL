@@ -136,8 +136,8 @@
 				},
 				convertForm : function(){
 					var _form = angular.copy(this.form);
-					if(_form.projectCodes || _form.sampleCodes || (_form.fromExperimentTypeCodes && _form.fromExperimentTypeCodes.length > 0) || _form.containerCategory 
-							|| _form.containerSupportCategory || _form.state || _form.states || _form.containerSupportCode  || _form.valuations || _form.fromDate || _form.toDate){	
+					if(_form.projectCodes || _form.sampleCodes || (_form.fromExperimentTypeCodes && _form.fromExperimentTypeCodes.length > 0) || _form.containerCategory || _form.processType
+							|| _form.processCategory || _form.containerSupportCategory || _form.state || _form.states || _form.containerSupportCode  || _form.valuations || _form.fromDate || _form.toDate){	
 							
 							var jsonSearch = {};
 							
@@ -159,6 +159,10 @@
 							if(_form.containerCategory){
 								jsonSearch.categoryCode = _form.containerCategory;
 							}
+							
+							if(_form.processType){
+								jsonSearch.processTypeCode = _form.processType;
+							}							
 							
 							if(_form.containerSupportCategory){
 								jsonSearch.containerSupportCategory = _form.containerSupportCategory;
@@ -232,7 +236,7 @@
 				changeProcessCategory : function(){
 					this.form.processType = undefined;
 					if(this.form.processCategory){
-						lists.refresh.processTypes({processCategoryCode:this.form.processCategory.code});
+						lists.refresh.processTypes({"processCategoryCode":this.form.processCategory});
 					}
 				},
 				/**
