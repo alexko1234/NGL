@@ -69,9 +69,15 @@ public class ContainerHelper {
 		
 		for(ContainerUsed inputContainerUsed:inputContainerUseds){
 
+			
+			
 			Container inputContainer=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, inputContainerUsed.code);
 
 			List<Content> contents = new ArrayList<Content>(inputContainer.contents);
+			
+			if(inputContainerUsed.percentage==null){
+				inputContainerUsed.percentage=100.0/inputContainerUseds.size();
+			}
 			calculPercentageContent(contents,inputContainerUsed.percentage);
 			outputContainer.contents.addAll(contents);
 
@@ -113,7 +119,6 @@ public class ContainerHelper {
 		
 	}
 	
-//TODO
 	public static void calculPercentageContent(List<Content> contents, Double percentage){
 		if(percentage!=null){
 			for(Content cc:contents){
@@ -127,8 +132,6 @@ public class ContainerHelper {
 			}
 		}
 	}
-
-
 
 
 	private static SimpleDateFormat getSimpleDateFormat(){

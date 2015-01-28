@@ -117,7 +117,7 @@ public class Workflows {
 				state.code="IW-V";
 			}else {
 				//Mettre à jour l'etat en fonction du volume restant
-				state.code= "UA";
+				state.code= "IS";
 			}
 		}
 

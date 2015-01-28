@@ -101,13 +101,19 @@ public class ProcessHelper {
 	public static void updateNewContainerSupportCodes(ContainerUsed outputContainerUsed,
 			ContainerUsed inputContainerUsed, Experiment experiment) {
 		List<Query> queryOr = new ArrayList<Query>();
-		queryOr.add(DBQuery.is("containerInputCode",inputContainerUsed.code));
+		Query query=null;
 		String containerSupportCode=null;
+		
+		queryOr.add(DBQuery.is("containerInputCode",inputContainerUsed.code));
+		
 		if(inputContainerUsed.locationOnContainerSupport==null){
 			containerSupportCode=inputContainerUsed.code;
-		}else { containerSupportCode=inputContainerUsed.locationOnContainerSupport.code;}
+		}else { 
+			containerSupportCode=inputContainerUsed.locationOnContainerSupport.code;
+		}
+		
 		queryOr.add(DBQuery.in("newContainerSupportCodes",containerSupportCode));
-		Query query=null;
+		
 		query=DBQuery.and(DBQuery.in("experimentCodes",experiment.code));
 		if(queryOr.size()!=0){
 			query=query.and(DBQuery.or(queryOr.toArray(new Query[queryOr.size()])));
@@ -115,6 +121,6 @@ public class ProcessHelper {
 
 		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,query,
 				DBUpdate.push("newContainerSupportCodes",outputContainerUsed.locationOnContainerSupport.code),true);
-	}
+		}
 
 }
