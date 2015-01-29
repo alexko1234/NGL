@@ -238,7 +238,7 @@ public class Workflows {
 
 				if(container.state.code.equals("IU") && checkProcessState("N",processCode)){
 					processState.code="IP";
-				}else if(container.state.code.equals("UA") && checkProcessState("IP",processCode) && endOfProcess(processCode, exp.typeCode)){
+				}else if((container.state.code.equals("UA") || container.state.code.equals("IS") ) && checkProcessState("IP",processCode) && endOfProcess(processCode, exp.typeCode)){
 					processState.code="F";
 				}
 
