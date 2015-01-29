@@ -5,8 +5,6 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.processes.instance.Process;
 import models.laboratory.reagent.description.KitCatalog;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
@@ -24,21 +22,23 @@ import views.components.datatable.DatatableResponse;
 
 import com.mongodb.BasicDBObject;
 
-import controllers.CommonController;
-import fr.cea.ig.MongoDBDAO;
+import controllers.DocumentController;
 import fr.cea.ig.MongoDBResult;
 
-public class KitCatalogs extends CommonController{
-	final static Form<KitCatalog> kitCatalogForm = form(KitCatalog.class);
+public class KitCatalogs extends DocumentController<KitCatalog>{
+	public KitCatalogs() {
+		super(InstanceConstants.REAGENT_CATALOG_COLL_NAME, KitCatalog.class);
+	}
+	
 	final static Form<KitCatalogSearchForm> kitCatalogSearchForm = form(KitCatalogSearchForm.class);
 	
-	public static Result save(){
-		Form<KitCatalog> kitCatalogFilledForm = getFilledForm(kitCatalogForm, KitCatalog.class);
-		if(!kitCatalogForm.hasErrors()){
+	public Result save(){
+		Form<KitCatalog> kitCatalogFilledForm = getMainFilledForm();
+		if(!mainForm.hasErrors()){
 			KitCatalog kitCatalog = kitCatalogFilledForm.get();
 			kitCatalog.code = kitCatalog.name.toLowerCase().replaceAll("\\s", "");
 			
-			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), kitCatalogForm.errors());
+			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
 			contextValidation.setCreationMode();
 			
 			InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, kitCatalog, contextValidation);
@@ -46,17 +46,17 @@ public class KitCatalogs extends CommonController{
 				return ok();
 			}
 		}
-		return badRequest(kitCatalogForm.errorsAsJson());
+		return badRequest(mainForm.errorsAsJson());
 	}
 	
-	public static Result list(){
+	public Result list(){
 		Form<KitCatalogSearchForm> kitCatalogFilledForm = filledFormQueryString(kitCatalogSearchForm,KitCatalogSearchForm.class);
 		KitCatalogSearchForm kitCatalogSearch = kitCatalogFilledForm.get();
 		BasicDBObject keys = getKeys(kitCatalogSearch);
 		DBQuery.Query query = getQuery(kitCatalogSearch);
 
 		if(kitCatalogSearch.datatable){
-			MongoDBResult<KitCatalog> results =  mongoDBFinder(InstanceConstants.REAGENT_CATALOG_COLL_NAME, kitCatalogSearch, KitCatalog.class, query);
+			MongoDBResult<KitCatalog> results =  mongoDBFinder(kitCatalogSearch, query);
 			List<KitCatalog> kitCatalogs = results.toList();
 			
 			return ok(Json.toJson(new DatatableResponse<KitCatalog>(kitCatalogs, results.count())));
@@ -70,7 +70,7 @@ public class KitCatalogs extends CommonController{
 			if(null == kitCatalogSearch.orderBy)kitCatalogSearch.orderBy = "code";
 			if(null == kitCatalogSearch.orderSense)kitCatalogSearch.orderSense = 0;				
 			
-			MongoDBResult<KitCatalog> results = mongoDBFinder(InstanceConstants.REAGENT_CATALOG_COLL_NAME, kitCatalogSearch, KitCatalog.class, query, keys);
+			MongoDBResult<KitCatalog> results = mongoDBFinder(kitCatalogSearch, query, keys);
 			List<KitCatalog> kitCatalogs = results.toList();
 			List<ListObject> los = new ArrayList<ListObject>();
 			for(KitCatalog p: kitCatalogs){					
@@ -82,7 +82,7 @@ public class KitCatalogs extends CommonController{
 			if(null == kitCatalogSearch.orderBy)kitCatalogSearch.orderBy = "code";
 			if(null == kitCatalogSearch.orderSense)kitCatalogSearch.orderSense = 0;
 			
-			MongoDBResult<KitCatalog> results = mongoDBFinder(InstanceConstants.REAGENT_CATALOG_COLL_NAME, kitCatalogSearch, KitCatalog.class, query);
+			MongoDBResult<KitCatalog> results = mongoDBFinder(kitCatalogSearch, query);
 			List<KitCatalog> kitCatalogs = results.toList();
 			
 			return ok(Json.toJson(kitCatalogs));
