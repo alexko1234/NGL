@@ -138,15 +138,16 @@
 						<label  class="col-md-6 col-lg-6 control-label">{{expp.name}}</label>
 						<div class="col-md-6 col-lg-6" ng-switch on="expp.choiceInList">
 							<input ng-if="expp.valueType != 'java.util.Date'" class="form-control" type="text" ng-switch-when="false" class="input-small"
-								ng-readonly="!experiment.experimentProperties.enabled"
+								ng-readonly="!experiment.experimentInformation.enabled" ng-disabled="!experiment.experimentInformation.enabled"
 								ng-model="experiment.value.experimentProperties[expp.code].value"/>
 								
 							<input ng-if="expp.valueType == 'java.util.Date'" class="form-control" type="text" ng-switch-when="false" class="input-small"
-								ng-readonly="!experiment.experimentProperties.enabled" placeholder="@Messages("date.format.french")" 
+								ng-readonly="!experiment.experimentInformation.enabled" ng-disabled="!experiment.experimentInformation.enabled"
+								placeholder="@Messages("date.format.french")" 
 								ng-model="experiment.value.experimentProperties[expp.code].value" date-timestamp/>
 								
 							<select class="form-control"  
-									ng-readonly="!experiment.experimentInformation.enabled" 
+									ng-readonly="!experiment.experimentInformation.enabled"
 									ng-disabled="!experiment.experimentInformation.enabled" 
 									ng-model="experiment.value.experimentProperties[expp.code].value" 
 									ng-switch-when="true" 
