@@ -381,7 +381,7 @@ angular.module('commonsServices', []).
                 	var convertToDate = function(date){
                 		if(date !== null && date !== undefined && date !== ""){
 	                		var format = Messages("date.format").toUpperCase();
-	                		date = moment.unix(date).format(format);
+	                		date = moment(date).format(format);
 	                		return date;
                 		}
                 		return "";
@@ -413,7 +413,7 @@ angular.module('commonsServices', []).
                     	var date = value;
 						typedDate = date;//The date of the user
                     	if(value.length === 10){//When the date is complete
-                    		date = convertToTimestamp(value)/1000;
+                    		date = convertToTimestamp(value);
                     	}
 						return date;
                     });

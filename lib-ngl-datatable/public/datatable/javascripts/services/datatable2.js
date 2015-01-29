@@ -2328,7 +2328,7 @@ angular.module('datatableServices', []).
 	                	var convertToDate = function(date){
 	                		if(date !== null && date !== undefined && date !== ""){
 		                		var format = Messages("date.format").toUpperCase();
-		                		date = moment.unix(date).format(format);
+		                		date = moment(date).format(format);
 		                		return date;
 	                		}
 	                		return "";
@@ -2349,8 +2349,6 @@ angular.module('datatableServices', []).
 							}, function(newValue, oldValue){
 								//We check if the
 								if(newValue !== null && newValue !== undefined && newValue !== "" && typedDate.length === 10){
-									if(newValue > Math.pow(10,10))
-										newValue /= 1000;
 									var date = convertToDate(newValue);
 	    							ngModel.$setViewValue(date);
 									ngModel.$render();
