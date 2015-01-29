@@ -215,8 +215,8 @@ experiments.table.creationDate = Date de création exp.
 experiments.table.createUser = Expérience Créée par
 
 reagents.table.kitname = Nom du kit
-reagents.table.boxcode = Code de la boite (REF-LOT-CB...)
-reagents.table.reagentcode = Code du réactif (REF-LOT-CB...)
+reagents.table.boxcode = Code de la boite (REF-LOT-CB... supplémentaire(s))
+reagents.table.reagentcode = Code du réactif (REF-LOT-CB... supplémentaire(s))
 reagents.table.description = Description
 
 button.newexperiment = Créer une expérience
