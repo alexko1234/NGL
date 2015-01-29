@@ -123,8 +123,8 @@ PUT    	/api/reporting/filters/:code					@controllers.reporting.api.FilteringCon
 DELETE	/api/reporting/filters/:code					@controllers.reporting.api.FilteringConfigurations.delete(code: java.lang.String)
 
 #reagents (temporary)
-GET 	/api/reagent-catalogs/kits										controllers.reagents.api.KitCatalogs.list()
-POST 	/api/reagent-catalogs/kits										controllers.reagents.api.KitCatalogs.save()
+GET 	/api/reagent-catalogs/kits										@controllers.reagents.api.KitCatalogs.list()
+POST 	/api/reagent-catalogs/kits										@controllers.reagents.api.KitCatalogs.save()
 
 ->  /authentication authentication.Routes
 
