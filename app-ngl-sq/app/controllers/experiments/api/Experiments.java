@@ -68,7 +68,6 @@ public class Experiments extends CommonController{
 		Experiment exp = experimentFilledForm.get();
 		ContextValidation ctx =new ContextValidation(getCurrentUser(),experimentFilledForm.errors());
 		ctx.putObject("stateCode", exp.state.code);
-		ExperimentValidationHelper.validationExperimentType(exp.typeCode, exp.experimentProperties, ctx);
 		
 		if (!ctx.hasErrors()) {
 
@@ -148,6 +147,13 @@ public class Experiments extends CommonController{
 
 		if (!experimentFilledForm.hasErrors()) {
 			if(exp.experimentProperties != null){
+				ContextValidation ctxValidation = new ContextValidation(getCurrentUser(), experimentFilledForm.errors());
+				ctxValidation.putObject("stateCode", exp.state.code);
+				ctxValidation.setUpdateMode();
+
+				Logger.debug("Experiment update properties :"+exp.code);
+				ExperimentValidationHelper.validationExperimentType(exp.typeCode, exp.experimentProperties, ctxValidation);
+				
 				Builder builder = new DBUpdate.Builder();
 				builder = builder.set("experimentProperties",exp.experimentProperties);
 				builder = builder.set("traceInformation", ExperimentHelper.getUpdateTraceInformation(exp.traceInformation, getCurrentUser()));
