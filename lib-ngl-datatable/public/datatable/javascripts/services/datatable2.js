@@ -2078,6 +2078,9 @@ angular.module('datatableServices', []).
 	    						case "bt-select":
 	    							editElement = '<div class="form-control" bt-select '+defaultValueDirective+' placeholder="" bt-dropdown-class="dropdown-menu-right" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+this.getFormatter(col)+'" ng-model="'+this.getEditProperty(col,header)+ngChange+'></div>';			        		  	    	
 	    							break;
+								case "bt-select-filter":
+	    							editElement = '<div class="form-control" filter="true" bt-select '+defaultValueDirective+' placeholder="" bt-dropdown-class="dropdown-menu-right" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+this.getFormatter(col)+'" ng-model="'+this.getEditProperty(col,header)+ngChange+'></div>';			        		  	    	
+	    							break;
 	    						case "bt-select-multiple":
 	    							editElement = '<div class="form-control" '+defaultValueDirective+' bt-select multiple="true" bt-dropdown-class="dropdown-menu-right" placeholder="" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+this.getFormatter(col)+'" ng-model="'+this.getEditProperty(col,header)+ngChange+'></div>';			        		  	    	
 	    							break;

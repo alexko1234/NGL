@@ -39,7 +39,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			        	 "property":"kitCatalogCode",
 			        	 "order":true,
 			        	 "type":"text",
-			        	 "listStyle":"bt-select",
+			        	 "listStyle":"bt-select-filter",
 			        	 "choiceInList":true,
 			        	 "possibleValues": 'lists.getKitCatalogs()',
 			        	 "render":'<div bt-select ng-model="value.data.kitCatalogCode" bt-options="kitCatalog.code as kitCatalog.name for kitCatalog in lists.getKitCatalogs()" ng-edit="false"></div>',
@@ -95,6 +95,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			         edit:{
 			        	 active:true,
 			        	 columnMode:false,
+			        	 showButton : false,
 			        	 withoutSelect:true,
 			        	 byDefault : false
 			         },
@@ -305,6 +306,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			//$scope.addTabs({label:$scope.plate.code,href:jsRoutes.controllers.plates.tpl.Plates.get($scope.plate.code).url,remove:false});
 			tabService.activeTab(2);
 			//reinit datatable and form
+			$scope.datatableReagent.setEdit();
 			mainService.setDatatable(undefined);	
 			//mainService.setForm(undefined);			
 		}
@@ -322,7 +324,6 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		$scope.clearMessages();
 		$scope.setEditConfig(false);
 		//$scope.datatable.cancel();
-		
 		if(mainService.isHomePage('search') && tabService.isBackupTabs()){
 			tabService.restoreBackupTabs();
 			tabService.activeTab(1);
