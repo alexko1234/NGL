@@ -1,5 +1,6 @@
 package processes;
 
+import controllers.processes.api.ProcessesSearchForm;
 import models.laboratory.processes.instance.Process;
 
 public class ProcessTestHelper {
@@ -9,5 +10,13 @@ public class ProcessTestHelper {
 		p.typeCode  = typeCode;
 		p.categoryCode = categoryCode;
 		return p;
+	}
+	
+	public static ProcessesSearchForm getFakeProcessesSearchForm(String categoryCode, String typeCode){
+		ProcessesSearchForm psf = new ProcessesSearchForm();
+		psf.categoryCode = categoryCode;
+		psf.typeCode = typeCode;
+		return psf;
+		
 	}
 }

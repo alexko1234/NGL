@@ -5,6 +5,8 @@ import static play.test.Helpers.callAction;
 import static play.test.Helpers.fakeRequest;
 import static play.test.Helpers.status;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -92,8 +94,9 @@ public class SupportTest extends AbstractTests {
 		assertThat(cs.state.code).isEqualTo("N");
 		assertThat(cs.state.user).isEqualTo("TEST_User");
 		Date d = new Date();
+		DateFormat df = new SimpleDateFormat("yyyyMMdd");		
 		
-		assertThat(d.getTime()).isEqualTo((cs.state.date).getTime());
+		assertThat(df.format(cs.state.date)).isEqualTo(df.format(d));
 		assertThat(cs.valuation.valid).isEqualTo(TBoolean.UNSET);		
 	}
 	
@@ -197,13 +200,16 @@ public class SupportTest extends AbstractTests {
 		ssf.stateCode="";
 		ssf.processTypeCode="";
 		ssf.valuations=null;
-		result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?datatable="+String.valueOf(ssf.datatable)+"&nextExperimentTypeCode="+ssf.nextExperimentTypeCode));
-		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		Boolean exceptionError = false;
+		result = null;
 		
-		dcs = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<ContainerSupport>>(){});
-		lcs = dcs.data;
-		Logger.info("");
-		assertThat(lcs.size()).isEqualTo(new Long(MongoDBDAO.getCollection(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class).count()).intValue());			
+		try {
+			result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?datatable="+String.valueOf(ssf.datatable)+"&nextExperimentTypeCode="+ssf.nextExperimentTypeCode));
+		} catch (RuntimeException e) {			
+			exceptionError = true;
+		}
+		assertThat(result).isNull();
+		assertThat(exceptionError).isEqualTo(true);		
 		
 	}
 	
@@ -262,13 +268,16 @@ public class SupportTest extends AbstractTests {
 		//Test with processTypeCode (bad processTypeCode)		
 		ssf.processTypeCode = "badProcessTypeCode";
 		ssf.nextExperimentTypeCode="badNextExperimentTypeCode";
+		Boolean exceptionError = false;
+		result = null;
 		
-		result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&nextExperimentTypeCode="+ssf.nextExperimentTypeCode+"&processTypeCode="+ssf.processTypeCode));
-		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
-		
-		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});
-		assertThat(lc).isNullOrEmpty();			
-			
+		try {
+			result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&nextExperimentTypeCode="+ssf.nextExperimentTypeCode+"&processTypeCode="+ssf.processTypeCode));
+		}  catch (RuntimeException e) {			
+			exceptionError = true;
+		}
+		assertThat(result).isNull();
+		assertThat(exceptionError).isEqualTo(true);		
 	
 	}
 	

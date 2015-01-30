@@ -8,10 +8,8 @@ import static play.test.Helpers.status;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.processes.instance.Process;
@@ -22,12 +20,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mongojack.DBQuery;
 
+import play.Logger;
+import play.Logger.ALogger;
 import play.libs.Json;
 import play.mvc.Result;
 import utils.AbstractTests;
 import utils.DatatableResponseForTest;
 import utils.InitDataHelper;
-import views.components.datatable.DatatableResponse;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -35,7 +34,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import controllers.processes.api.ProcessesSearchForm;
 import fr.cea.ig.MongoDBDAO;
 
 public class ProcessesTest extends AbstractTests{
@@ -50,19 +48,25 @@ public class ProcessesTest extends AbstractTests{
 		InitDataHelper.endTest();
 	}
 	
+	protected static ALogger logger=Logger.of("ProcessesTest");
+	
 	@Test
 	public void save() throws JsonParseException, JsonMappingException, IOException{
-		Process process = ProcessTestHelper.getFakeProcess("sequencing", "illumina-run");
-		String supportCode = InitDataHelper.getSupportCodesInContext("flowcell-8").get(0);
-		ContainerSupport cs = MongoDBDAO.findOne(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", supportCode));
+		Process process = ProcessTestHelper.getFakeProcess("mapping", "opgen-run");
+		String supportCode = InitDataHelper.getSupportCodesInContext("tube").get(0);
+		ContainerSupport cs = MongoDBDAO.findOne(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", supportCode));		
 		process.projectCode = cs.projectCodes.get(0);
 		process.sampleCode = cs.sampleCodes.get(0);
-		process.properties = new HashMap<String, PropertyValue>();
-		process.properties.put("sequencingType", new PropertySingleValue("Hiseq 2000"));
-		process.properties.put("readType", new PropertySingleValue("PE"));
-		process.properties.put("sequencerType", new PropertySingleValue("HISEQ2000"));
-		process.properties.put("readLength", new PropertySingleValue("100"));
-		Result result = callAction(controllers.processes.api.routes.ref.Processes.saveSupport(supportCode),fakeRequest().withJsonBody(Json.toJson(process)));
+		process.containerInputCode = cs.code;
+		process.comments = null;
+		process.currentExperimentTypeCode = null;
+		process.newContainerSupportCodes =null;
+		process.experimentCodes = null;		
+		cs.state.code="IW-P";
+		//MongoDBDAO.save(InstanceConstants.SUPPORT_COLL_NAME, cs);
+		Logger.info("Avant Result save()");
+		Result result = callAction(controllers.processes.api.routes.ref.Processes.save(),fakeRequest().withJsonBody(Json.toJson(process)));
+		Logger.info("Après Result save()");
 		
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
@@ -94,33 +98,41 @@ public class ProcessesTest extends AbstractTests{
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 
 		result = callAction(controllers.processes.api.routes.ref.Processes.delete(processResult.code),fakeRequest());
-		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);		
+		;
 	}
 	
 	@Test
 	public void saveOpgenRun() throws JsonParseException, JsonMappingException, IOException{
 		Process process = ProcessTestHelper.getFakeProcess("mapping", "opgen-run");
-		String supportCode = InitDataHelper.getSupportCodesInContext("tube").get(0);
+		String supportCode = InitDataHelper.getSupportCodesInContext("tube").get(3);  //jeu de donnée? Vérifier les projets
 		ContainerSupport cs = MongoDBDAO.findOne(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", supportCode));
+		cs.state.code="IW-P";
 		process.projectCode = cs.projectCodes.get(0);
 		process.sampleCode = cs.sampleCodes.get(0);
 		process.properties = new HashMap<String, PropertyValue>();
+		Logger.info("Avant Result saveOpgen()");
 		Result result = callAction(controllers.processes.api.routes.ref.Processes.saveSupport(supportCode),fakeRequest().withJsonBody(Json.toJson(process)));
-		ObjectMapper mapper = new ObjectMapper();
-		Process processResult = mapper.readValue(play.test.Helpers.contentAsString(result), Process.class);
+		Logger.info("Après Result saveOpgen()");
+		ObjectMapper mapper = new ObjectMapper();		
+		List<Process> processResult =mapper.readValue(play.test.Helpers.contentAsString(result),new TypeReference<List<Process>>(){});
 		//List<Process> processResult = MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("projectCode",  cs.projectCodes.get(0))).toList();
 		
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		assertThat(processResult).isNotNull();
 		
-		result = callAction(controllers.processes.api.routes.ref.Processes.head(processResult.code),fakeRequest());
+		result = callAction(controllers.processes.api.routes.ref.Processes.head(processResult.get(0).code),fakeRequest());
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
-		result = callAction(controllers.processes.api.routes.ref.Processes.get(processResult.code),fakeRequest());
+		result = callAction(controllers.processes.api.routes.ref.Processes.get(processResult.get(0).code),fakeRequest());
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 
-		result = callAction(controllers.processes.api.routes.ref.Processes.delete(processResult.code),fakeRequest());
+		for(int i=0; i<processResult.size();i++){
+		result = callAction(controllers.processes.api.routes.ref.Processes.delete(processResult.get(i).code),fakeRequest());
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		}
+		
+		
 	}
 
 	

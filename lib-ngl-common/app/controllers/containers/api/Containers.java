@@ -330,9 +330,6 @@ public class Containers extends CommonController {
 
 			if(CollectionUtils.isNotEmpty(listePrevious)){
 				queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", listePrevious)));
-			}else{
-				Logger.error("NGL-SQ bad nextExperimentTypeCode: "+containersSearch.nextExperimentTypeCode);
-				return null;
 			}
 			}else{
 				throw new RuntimeException("nextExperimentTypeCode = "+ containersSearch.nextExperimentTypeCode +" does not exist!");

@@ -310,12 +310,12 @@ public class Processes extends CommonController{
 			cs.containerSupportCategory=processesSearch.containerSupportCategory;
 
 			List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, Containers.getQuery(cs), keys).toList();
-			
+			//InputContainer
 			List<Query> queryContainer = new ArrayList<Query>();
 			for(Container c: containers){
 				queryContainer.add(DBQuery.is("containerInputCode", c.code));
 			}
-
+			//OutputContainers. We need to find all containers using the protocol.
 			Logger.debug("newContainerSupportCodes :"+processesSearch.supportCode);
 			queryContainer.add(DBQuery.regex("newContainerSupportCodes",Pattern.compile(processesSearch.supportCode)));
 
