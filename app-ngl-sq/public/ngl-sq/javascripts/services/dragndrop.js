@@ -20,7 +20,7 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
 		},
 		link: function(scope, element, attrs) {
 			var OPTIONS_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?(?:\s+group\s+by\s+(.*))?\s+for\s+(?:([\$\w][\$\w\d]*)|(?:\(\s*([\$\w][\$\w\d]*)\s*,\s*([\$\w][\$\w\d]*)\s*\)))\s+in\s+(.*)$/;
-			var REPEAT_REGEXP = /^\s*(.+)\s+in\s+(.*?)\s*(\s+track\s+by\s+(.+)\s*)?$/;
+			var REPEAT_REGEXP = /^\s*(.+)\s+in\s+(.*?)\s*\|(.*)\s*(\s+track\s+by\s+(.+)\s*)?$/;
 			var el = element[0];
 			//This function can extract the model from an ng-repeat or ng-options tag
 			var getModel = function(){

@@ -117,6 +117,30 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			         }
 	};
 
+	$scope.propertyChanged = [];//The list of property name changed by the user and not saved
+	
+	$scope.notifyChange = function(laneNumber, property){
+		var exist = false;
+		for(var i=0;i<$scope.propertyChanged.length;i++){
+			if($scope.propertyChanged[i].property.name === property.name &&$scope.propertyChanged[i].index === laneNumber){
+				exist = true;
+			}
+		}
+		if(!exist){
+			$scope.message.clazz = "alert alert-warning";
+			$scope.message.text = "Vous venez de modifier "+property.name+" de la lane "+(laneNumber+1);
+			//$scope.message.details = "Vous venez de modifier "+property.name+" de la lane "+laneNumber;
+			for(i=0;i<$scope.propertyChanged.length;i++){
+				$scope.message.text += ", "+$scope.propertyChanged[i].property.name+" de la lane "+($scope.propertyChanged[i].index+1);
+			}
+			$scope.message.text += ", vous devez impérativement cliquer sur sauvegarder pour que les calculs de la FDR se remettent à jour";
+			
+			$scope.propertyChanged.push({"index":laneNumber,"property":property});
+			console.log($scope.propertyChanged);
+			$scope.message.isDetails = false;
+		}
+	};
+	
 	$scope.$on('experimentToInput', function(e, atomicTransfertMethod) {
 		$scope.atomicTransfere.experimentToInput($scope.datatable);
 	});
@@ -293,6 +317,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	$scope.$on('save', function(e, promises, func) {
 		promises.push($scope.datatable.save());
 		$scope.$emit('viewSaved', promises, func);
+		$scope.propertyChanged = [];
 	});
 
 	$scope.refreshView = function(){
