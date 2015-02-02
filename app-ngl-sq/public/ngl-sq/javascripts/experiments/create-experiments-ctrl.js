@@ -527,9 +527,13 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 	$scope.generateSampleSheet = function(){
 		$http.post(jsRoutes.instruments.io.Outputs.sampleSheets().url, $scope.experiment.value)
 		.success(function(data, status, headers, config) {
+			var header = headers("Content-disposition");
+			var filename = header.split("filename=")[1];
 			if(data!=null){
 				$scope.message.clazz="alert alert-success";
 				$scope.message.text=Messages('experiments.msg.save.sucess')
+				var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
+				saveAs(blob, filename);
 			}
 		})
 		.error(function(data, status, headers, config) {

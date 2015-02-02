@@ -21,8 +21,8 @@ public class SampleSheetsFactory extends AbstractSampleSheetsfactory{
 		List<Container> containers = getContainersFromExperiment();
 		String content = format(sampleSheet_1.render(this.experiment, containers).body());
 		//play.api.libs.Files.writeFile(new File(containers.get(0).support.code+".csv"), content);
-		File file = new File(experiment.instrumentProperties.get("miseqReagentCassette")+".csv");
-		//AbstractSampleSheetsfactory.writeFile(file, content);
+		File file = new File(experiment.instrumentProperties.get("miseqReagentCassette").value+".csv");
+		AbstractSampleSheetsfactory.writeFile(file, content);
 		
 		return file;
 	}

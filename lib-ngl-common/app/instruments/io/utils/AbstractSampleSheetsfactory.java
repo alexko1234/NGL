@@ -57,6 +57,15 @@ public abstract class AbstractSampleSheetsfactory {
 		return (Double) content.properties.get(propertyName).value;
 	}
 	
+	public static String getIntrumentBooleanProperties(Experiment experiment,String propertyName){
+		if(Boolean.class.isInstance(experiment.instrumentProperties.get(propertyName).value)){
+			if((Boolean) experiment.instrumentProperties.get(propertyName).value){
+				return "O";
+			}
+		}
+		return "N";
+	}
+	
 	public static String getContainerProperty(Container container, String propertyName){
 		if(Boolean.class.isInstance(container.properties.get(propertyName).value)){
 			if((Boolean) container.properties.get(propertyName).value){
