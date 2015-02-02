@@ -129,12 +129,10 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 		if(!exist){
 			$scope.message.clazz = "alert alert-warning";
 			$scope.message.text = "Vous venez de modifier "+property.name+" de la lane "+(laneNumber+1);
-			//$scope.message.details = "Vous venez de modifier "+property.name+" de la lane "+laneNumber;
 			for(i=0;i<$scope.propertyChanged.length;i++){
 				$scope.message.text += ", "+$scope.propertyChanged[i].property.name+" de la lane "+($scope.propertyChanged[i].index+1);
 			}
 			$scope.message.text += ", vous devez impérativement cliquer sur sauvegarder pour que les calculs de la FDR se remettent à jour";
-			
 			$scope.propertyChanged.push({"index":laneNumber,"property":property});
 			console.log($scope.propertyChanged);
 			$scope.message.isDetails = false;
@@ -516,6 +514,9 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 		$scope.atomicTransfere.loadExperiment($scope.datatable);
 		if(!angular.isUndefined(mainService.getBasket())){
 			$scope.basket = mainService.getBasket().get();
+			if($scope.basket.length > 0){
+				$scope.edit();
+			}
 			angular.forEach($scope.basket, function(basket){
 				$http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{supportCode:basket.code}})
 				.success(function(data, status, headers, config) {
@@ -524,6 +525,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 						angular.forEach(data, function(container){
 							$scope.inputContainers.push(container);
 						});
+						$scope.inputContainers = $scope.atomicTransfere.containersToContainerUseds($scope.inputContainers);
 					}
 				})
 				.error(function(data, status, headers, config) {
