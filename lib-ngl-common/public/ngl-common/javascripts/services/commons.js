@@ -163,7 +163,13 @@ angular.module('commonsServices', []).
     				values : function(params, key){
     					load(jsRoutes.controllers.commons.api.Values.list().url,params,(key)?key:'values');    				
     				},
-    				
+    				sampleTypes : function(params, key){
+    					if(angular.isUndefined(params)){
+    	    				params = {};
+    	    			}
+    					params.objectTypeCode='Sample';
+    					load(jsRoutes.controllers.commons.api.CommonInfoTypes.list().url,params,(key)?key:'sampleTypes');
+    				},
     				all : function(params){
     					this.resolutions(params);
     					this.containerCategories(params);
@@ -241,7 +247,14 @@ angular.module('commonsServices', []).
     					refresh.values(params, key);
     				}
     				return results[key];
-    			}			
+    			},
+    			getSampleTypes : function(params, key){
+    				key = (key)?key:'sampleTypes';
+    				if(results[key] === undefined){
+    					refresh.sampleTypes(params, key);
+    				}
+    				return results[key];
+    			}
     		};
     		
     	}]).factory('convertValueServices', [function() {
