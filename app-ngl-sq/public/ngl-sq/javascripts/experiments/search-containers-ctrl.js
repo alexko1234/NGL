@@ -152,7 +152,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	};
 	
 	$scope.search = function(){
-		var _form = $scope.searchService.form;
+		var _form = angular.copy($scope.searchService.form);
 		$scope.errors.experimentType = {};
 		$scope.errors.containerSupportCategory = {};
 		
@@ -160,14 +160,14 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		if(_form.nextExperimentTypeCode && _form.categoryCode){
 			_form.stateCode = $scope.getContainerStateCode($scope.searchService.form.experimentCategory);	 
 		
-			if($scope.searchService.form.fromDate)_form.fromDate = moment($scope.searchService.form.fromDate, Messages("date.format").toUpperCase()).valueOf();
-			if($scope.searchService.form.toDate)_form.toDate = moment($scope.searchService.form.toDate, Messages("date.format").toUpperCase()).valueOf();
+			if(_form.fromDate)_form.fromDate = moment($scope.searchService.form.fromDate, Messages("date.format").toUpperCase()).valueOf();
+			if(_form.toDate)_form.toDate = moment($scope.searchService.form.toDate, Messages("date.format").toUpperCase()).valueOf();
 			
-			mainService.setForm($scope.searchService.form);
+			mainService.setForm(_form);
 			
 			$scope.datatable.search(_form);
 		}else{
-			if(!$scope.searchService.form.nextExperimentTypeCode){
+			if(!_form.nextExperimentTypeCode){
 				$scope.errors.experimentType = "has-error";
 			}else{
 				$scope.errors.containerSupportCategory = "has-error";
