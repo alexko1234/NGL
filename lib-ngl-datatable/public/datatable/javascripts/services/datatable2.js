@@ -2252,7 +2252,8 @@ angular.module('datatableServices', []).
 			    					//not filtered properties because used during the compute
 			    					return currentScope.$eval("group."+column.id+this.getFormatter(column), value.data);
 			    				}else if(angular.isDefined(v) && scope.dtTable.config.group.columns[column.id]){
-			    					return currentScope.$eval("group."+column.id+this.getFilter(column)+this.getFormatter(column), value.data);
+			    					//not filtered properties because used during the compute
+			    					return currentScope.$eval("group."+column.id+this.getFormatter(column), value.data);
 			    				}else{
 			    					return undefined;
 			    				}			    							    				
