@@ -626,8 +626,13 @@ angular.module('commonsServices', []).
 	      		     scope.getItems = function(){
 	      		    	 if(scope.isEdit() && scope.filter){
 	      		    		var filter = {};
-	      		    		var getter = $parse(optionsConfig.viewMapper.replace(optionsConfig.itemName+'.',''));
-	      		    		getter.assign(filter, filterValue);
+	      		    		//Angularjs 1.3.11 change, we don't want the filter to match an undefined
+	      		    		//filterValue, so we don't assign it
+	      		    		if(filterValue){
+	      		    			var getter = $parse(optionsConfig.viewMapper.replace(optionsConfig.itemName+'.',''));
+	      		    			getter.assign(filter, filterValue);
+	      		    		}
+	      		    		//Then here the filter will be empty if the filterValue is undefined
 	      		    		return $filter('limitTo')($filter('filter')(items, filter), 20);
 	      		    	 }else{
 	      		    		return items;

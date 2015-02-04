@@ -1561,7 +1561,7 @@ angular.module('datatableServices', []).
 			    						if(!that.config.hide.columns[column.id]){
 			    							
 			    							var header = column.header;
-			    							if(typeof header == 'function'){
+			    							if(angular.isFunction(header)){
 			    								header = header();
 			    							}else{
 			    								header = Messages(column.header);
@@ -1726,6 +1726,10 @@ angular.module('datatableServices', []).
   		    		
   		    		scope.dtTableFunctions.messagesDatatable = function(message,arg){
 			    		if(typeof Messages == 'function'){
+			    			if(angular.isFunction(message)){
+			    				message = message();
+			    			}
+			    				
 			    			if(arg==null || arg==undefined){
 			    				return Messages(message);
 			    			}else{
