@@ -128,16 +128,16 @@ public class Processes extends CommonController{
 								for(Value v: p.possibleValues){										
 									ListObjectValue l = null;
 									if(p.valueType.equals("java.lang.String")){
-										l = new ListObjectValue<String>(v.value,v.value);									
+										l = new ListObjectValue<String>(v.code,v.name);									
 									}
 									else if(p.valueType.equals("java.lang.Double")){
-										l = new ListObjectValue<Double>(Double.parseDouble(v.value),v.value);										
+										l = new ListObjectValue<Double>(Double.parseDouble(v.code),v.name);										
 									}
 									else if(p.valueType.equals("java.lang.Float")){
-										l = new ListObjectValue<Float>(Float.parseFloat(v.value),v.value);										
+										l = new ListObjectValue<Float>(Float.parseFloat(v.code),v.name);										
 									}
 									else if(p.valueType.equals("java.lang.Integer")){
-										l = new ListObjectValue<Integer>(Integer.parseInt(v.value),v.value);										
+										l = new ListObjectValue<Integer>(Integer.parseInt(v.code),v.name);										
 									}
 									else{										
 										Logger.debug("Not implemented :"+ p.valueType);									
