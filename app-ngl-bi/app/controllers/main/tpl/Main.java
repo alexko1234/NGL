@@ -77,7 +77,7 @@ public class Main extends CommonController {
 		sb.append("\"taraFilterCode.0.1-0.2\":\"BBCC\",");
 		sb.append("\"taraFilterCode.0.2-0.45\":\"CCEE\",");
 		sb.append("\"taraFilterCode.0.2-1.6\":\"CCII\",");
-		sb.append("\"taraFilterCode.0.2-3\":\"CCKK\",");
+		sb.append("\"taraFilterCode.0.22-3\":\"CCKK\",");
 		sb.append("\"taraFilterCode.0.45-0.8\":\"EEGG\",");
 		sb.append("\"taraFilterCode.0.45-8\":\"EEOO\",");
 		sb.append("\"taraFilterCode.0.8-3\":\"GGKK\",");
@@ -128,6 +128,7 @@ public class Main extends CommonController {
 		sb.append("\"taraDepthCode.Sub-MixedLayer@100m\":\"SXL\",");
 		sb.append("\"taraDepthCode.Other\":\"OTH\",");
 		sb.append("\"taraDepthCode.DiscreteDepth\":\"ZZZ\",");
+		sb.append("\"taraDepthCode.IntegratedDepth\":\"IZZ\",");
 		
 	}
 
