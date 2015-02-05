@@ -1,5 +1,8 @@
 package controllers.migration;
 
+import controllers.CommonController;
+
+/*
 import java.util.List;
 
 import org.mongojack.DBQuery;
@@ -14,7 +17,7 @@ import play.api.modules.spring.Spring;
 import play.mvc.Result;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
-
+*/
 public class MigrationMismatch extends CommonController{
 	/*
 	public static Result migration(){
