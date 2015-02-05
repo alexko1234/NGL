@@ -90,24 +90,24 @@ public class RunService {
 	
 	private static List<Value> getLibProcessTypeCodeValues(){
 		List<Value> values = new ArrayList<Value>();
-		values.add(DescriptionFactory.newValue("A", "Mate-pair"));
-		values.add(DescriptionFactory.newValue("B", "Multiplex-pairee"));
-		values.add(DescriptionFactory.newValue("C", "Multiplex-mate-pair"));
-		values.add(DescriptionFactory.newValue("D", "Digestion"));
-		values.add(DescriptionFactory.newValue("E", "Paire chevauchant"));
-		values.add(DescriptionFactory.newValue("F",	"Paire chevauchant multiplex"));
-		values.add(DescriptionFactory.newValue("G", "Capture simple"));
-		values.add(DescriptionFactory.newValue("H", "Capture multiplex"));
-		values.add(DescriptionFactory.newValue("K", "Mate-pair clip"));
-		values.add(DescriptionFactory.newValue("L", "Moleculo-like"));
-		values.add(DescriptionFactory.newValue("M", "Multiplex"));
-		values.add(DescriptionFactory.newValue("MI", "Moleculo Illumina"));
-		values.add(DescriptionFactory.newValue("N", "Mate-pair Nextera"));
-		values.add(DescriptionFactory.newValue("P", "Pairee"));
-		values.add(DescriptionFactory.newValue("S", "Simple"));
-		values.add(DescriptionFactory.newValue("U", "Simple ou Paire"));
-		values.add(DescriptionFactory.newValue("W", "Simple ou Paire multiplex"));
-		values.add(DescriptionFactory.newValue("Z", "BAC ENDs Illumina"));
+		values.add(DescriptionFactory.newValue("A", "A - Mate-pair"));
+		values.add(DescriptionFactory.newValue("B", "B - Multiplex-pairee"));
+		values.add(DescriptionFactory.newValue("C", "C - Multiplex-mate-pair"));
+		values.add(DescriptionFactory.newValue("D", "D - Digestion"));
+		values.add(DescriptionFactory.newValue("E", "E - Paire chevauchant"));
+		values.add(DescriptionFactory.newValue("F",	"F - Paire chevauchant multiplex"));
+		values.add(DescriptionFactory.newValue("G", "G - Capture simple"));
+		values.add(DescriptionFactory.newValue("H", "H - Capture multiplex"));
+		values.add(DescriptionFactory.newValue("K", "K - Mate-pair clip"));
+		values.add(DescriptionFactory.newValue("L", "L - Moleculo-like"));
+		values.add(DescriptionFactory.newValue("M", "M - Multiplex"));
+		values.add(DescriptionFactory.newValue("MI", "MI - Moleculo Illumina"));
+		values.add(DescriptionFactory.newValue("N", "N - Mate-pair Nextera"));
+		values.add(DescriptionFactory.newValue("P", "P - Pairee"));
+		values.add(DescriptionFactory.newValue("S", "S - Simple"));
+		values.add(DescriptionFactory.newValue("U", "U - Simple ou Paire"));
+		values.add(DescriptionFactory.newValue("W", "W - Simple ou Paire multiplex"));
+		values.add(DescriptionFactory.newValue("Z", "Z - BAC ENDs Illumina"));
 		return values;
 		
 	}
