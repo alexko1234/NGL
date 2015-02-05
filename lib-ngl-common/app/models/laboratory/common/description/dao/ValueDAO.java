@@ -27,7 +27,7 @@ public class ValueDAO extends AbstractDAODefault<Value>{
 
 	public List<Value> findByPropertyDefinition(long idPropertyDefinition)
 	{
-		String sql = "SELECT id, value, default_value FROM value WHERE fk_property_definition=?";
+		String sql = "SELECT id, value, code, name, default_value FROM value WHERE fk_property_definition=?";
 		BeanPropertyRowMapper<Value> mapper = new BeanPropertyRowMapper<Value>(Value.class);
 		return this.jdbcTemplate.query(sql, mapper, idPropertyDefinition);
 	}
@@ -35,7 +35,9 @@ public class ValueDAO extends AbstractDAODefault<Value>{
 	public Value save(Value value, long idPropertyDefinition)
 	{
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("value", value.value);
+		parameters.put("value", value.value); //TODO mus be remove
+		parameters.put("code", value.code);
+		parameters.put("name", value.name);
         parameters.put("default_value", value.defaultValue);
         parameters.put("fk_property_definition", idPropertyDefinition);
         Long newId = (Long) jdbcInsert.executeAndReturnKey(parameters);
@@ -45,8 +47,8 @@ public class ValueDAO extends AbstractDAODefault<Value>{
 
 	public void update(Value value, long idPropertyDefinition)
 	{
-		String sql = "UPDATE value SET value=?, default_value=? WHERE id=? AND fk_property_definition=?";
-		jdbcTemplate.update(sql,value.code, value.value, value.defaultValue, value.id, idPropertyDefinition);
+		String sql = "UPDATE value SET value=?, code=?, name=?, default_value=? WHERE id=? AND fk_property_definition=?";
+		jdbcTemplate.update(sql,value.code, value.value, value.code, value.name, value.defaultValue, value.id, idPropertyDefinition);
 	}
 
 	@Override
@@ -63,7 +65,7 @@ public class ValueDAO extends AbstractDAODefault<Value>{
 
 	public List<Value> findUnique(String propertyDefinitionCode){
 		String sql = 
-				"select distinct v.value "
+				"select distinct v.value, v.code, v.name "
 				+"from  NGL.value v "
 			    +"inner join NGL.property_definition pd on pd.id = v.fk_property_definition "
 				+"inner join NGL.common_info_type cit on cit.id = pd.fk_common_info_type "

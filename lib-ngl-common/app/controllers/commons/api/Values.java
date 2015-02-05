@@ -37,7 +37,7 @@ public class Values extends CommonController {
 		} else if (valuesSearch.list) {
 		    List<ListObject> valuesListObject = new ArrayList<ListObject>();
 		    for (Value s : values) {
-		    	valuesListObject.add(new ListObject(s.value, s.value));
+		    	valuesListObject.add(new ListObject(s.code, s.name));
 		    }
 		    return ok(Json.toJson(valuesListObject));
 		} else {

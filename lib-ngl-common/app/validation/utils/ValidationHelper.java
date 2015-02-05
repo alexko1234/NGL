@@ -751,7 +751,7 @@ public class ValidationHelper {
 	public static boolean checkIfExistInTheList(
 			PropertyDefinition propertyDefinition, String value) {
 		for(Value possibleValue : propertyDefinition.possibleValues){
-			if(value.equals(possibleValue.value)){
+			if(value.equals(possibleValue.code)){
 				return true;
 			}			
 		}

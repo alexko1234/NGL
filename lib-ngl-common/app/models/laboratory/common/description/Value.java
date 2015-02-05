@@ -17,7 +17,9 @@ import models.utils.dao.DAOException;
  */
 public class Value extends Model<Value>{
 
-	public String value;   
+	public String value;  //used as code but not rename because strong impact will be remove after
+	
+	public String name;
 	
 	public Boolean defaultValue = Boolean.FALSE;
 
