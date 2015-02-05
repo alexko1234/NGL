@@ -1600,18 +1600,13 @@ angular.module('datatableServices', []).
 				    			    				}
 					    							lineValue = lineValue + ((colValue!==null)&&(colValue)?colValue:"") + delimiter;
 				    			    			} else if(result.line.group) {
-				    			    				
 				    			    				var v = $parse("group."+column.id)(result.data);
 				    			    				//if error in group function
-				    			    				if (angular.isDefined(v) && angular.isString(v) &&v.charAt(0) === "#") {
+				    			    				if (angular.isDefined(v) && angular.isString(v) && v.charAt(0) === "#") {
 				    			    					colValue = v;
-				    			    				} else if(angular.isDefined(v) && !that.config.group.columns[column.id]) {
+				    			    				} else if(angular.isDefined(v)) {
 				    			    					//not filtered properties because used during the compute
 				    			    					colValue = $parse("group."+column.id+that.getFormatter(column))(result.data);
-				    			    				} else if(angular.isDefined(v) && that.config.group.columns[column.id]) {
-				    			    					var expression = column.id;
-				    			    					expression += (column.filter)?'|'+column.filter:'';
-				    			    					colValue = $parse("group."+expression+that.getFormatter(column))(result.data);
 				    			    				} else {
 				    			    					colValue =  undefined;
 				    			    				}
@@ -2248,10 +2243,7 @@ angular.module('datatableServices', []).
 			    				//if error in group function
 			    				if(angular.isDefined(v) && angular.isString(v) &&v.charAt(0) === "#"){
 			    					return v;
-			    				}else if(angular.isDefined(v) && !scope.dtTable.config.group.columns[column.id]){
-			    					//not filtered properties because used during the compute
-			    					return currentScope.$eval("group."+column.id+this.getFormatter(column), value.data);
-			    				}else if(angular.isDefined(v) && scope.dtTable.config.group.columns[column.id]){
+			    				}else if(angular.isDefined(v) ){
 			    					//not filtered properties because used during the compute
 			    					return currentScope.$eval("group."+column.id+this.getFormatter(column), value.data);
 			    				}else{
