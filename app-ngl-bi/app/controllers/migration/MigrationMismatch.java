@@ -18,7 +18,7 @@ import fr.cea.ig.MongoDBDAO;
 public class MigrationMismatch extends CommonController{
 	
 	public static Result migration(){
-		List<RunSolexa> runs = Spring.getBeanOfType(LimsAbandonDAO.class).findRunMismatch();
+		List<RunSolexa> runs = null;//Spring.getBeanOfType(LimsAbandonDAO.class).findRunMismatch();
 		int t = 0, f = 0;
 		for(RunSolexa rs : runs){
 			
