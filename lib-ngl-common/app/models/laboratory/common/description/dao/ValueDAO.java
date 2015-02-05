@@ -71,7 +71,7 @@ public class ValueDAO extends AbstractDAODefault<Value>{
 				+"inner join NGL.common_info_type cit on cit.id = pd.fk_common_info_type "
 				+DAOHelpers.getCommonInfoTypeSQLForInstitute("cit")
 			    +"where pd.code = ? "
-			    +"order by v.value";
+			    +"order by v.name";
 		
 		BeanPropertyRowMapper<Value> mapper = new BeanPropertyRowMapper<Value>(Value.class);
 		return this.jdbcTemplate.query(sql, mapper, propertyDefinitionCode);		
