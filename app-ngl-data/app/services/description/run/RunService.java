@@ -10,13 +10,13 @@ import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.ValuationCriteria;
+import models.laboratory.common.description.Value;
 import models.laboratory.run.description.AnalysisType;
 import models.laboratory.run.description.ReadSetType;
 import models.laboratory.run.description.RunCategory;
 import models.laboratory.run.description.RunType;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
-import play.Logger;
 import play.data.validation.ValidationError;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
@@ -81,10 +81,35 @@ public class RunService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("md5","md5",LevelService.getLevels(Level.CODE.File), String.class, false, "single"));
 		
 		//use only for dynamic filters
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("libProcessTypeCode","libProcessTypeCode",LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("libProcessTypeCode","libProcessTypeCode",LevelService.getLevels(Level.CODE.Content), String.class, false,
+				getLibProcessTypeCodeValues(), "single"));
 		
 		
 		return propertyDefinitions;
+	}
+	
+	private static List<Value> getLibProcessTypeCodeValues(){
+		List<Value> values = new ArrayList<Value>();
+		values.add(DescriptionFactory.newValue("A", "Mate-pair"));
+		values.add(DescriptionFactory.newValue("B", "Multiplex-pairee"));
+		values.add(DescriptionFactory.newValue("C", "Multiplex-mate-pair"));
+		values.add(DescriptionFactory.newValue("D", "Digestion"));
+		values.add(DescriptionFactory.newValue("E", "Paire chevauchant"));
+		values.add(DescriptionFactory.newValue("F",	"Paire chevauchant multiplex"));
+		values.add(DescriptionFactory.newValue("G", "Capture simple"));
+		values.add(DescriptionFactory.newValue("H", "Capture multiplex"));
+		values.add(DescriptionFactory.newValue("K", "Mate-pair clip"));
+		values.add(DescriptionFactory.newValue("L", "Moleculo-like"));
+		values.add(DescriptionFactory.newValue("M", "Multiplex"));
+		values.add(DescriptionFactory.newValue("MI", "Moleculo Illumina"));
+		values.add(DescriptionFactory.newValue("N", "Mate-pair Nextera"));
+		values.add(DescriptionFactory.newValue("P", "Pairee"));
+		values.add(DescriptionFactory.newValue("S", "Simple"));
+		values.add(DescriptionFactory.newValue("U", "Simple ou Paire"));
+		values.add(DescriptionFactory.newValue("W", "Simple ou Paire multiplex"));
+		values.add(DescriptionFactory.newValue("Z", "BAC ENDs Illumina"));
+		return values;
+		
 	}
 	
 	private static List<PropertyDefinition> getRunIlluminaPropertyDefinitions() throws DAOException {

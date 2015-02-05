@@ -449,14 +449,48 @@ public class DescriptionFactory {
 
 	/**
 	 * 
+	 * @param codes
+	 * @return
+	 */
+	public static List<Value> newValues(String...codes) {
+		List<Value> l = new ArrayList<Value>(codes.length);
+		for(String v : codes){
+			Value value = new Value();
+			value.value = v;
+			value.code = v;
+			value.name = v;
+			value.defaultValue = false;
+			l.add(value);
+		}
+		return l;
+	}
+	
+	
+	public static Value newValue(String code, String name){
+		return newValue(code, name, false);
+	}
+	
+	public static Value newValue(String code, String name, boolean isDefault){
+		Value value = new Value();
+		value.value = code;
+		value.code = code;
+		value.name = name;
+		value.defaultValue = isDefault;
+		return value;
+	}
+	
+	/**
+	 * 
 	 * @param values
 	 * @return
 	 */
-	public static List<Value> newValues(String...values) {
-		List<Value> l = new ArrayList<Value>(values.length);
-		for(String v : values){
+	public static List<Value> newValues(String[] codes, String[] names) {
+		List<Value> l = new ArrayList<Value>(codes.length);
+		for(String c : codes){
 			Value value = new Value();
-			value.value = v;
+			value.value = c;
+			value.code = c;
+			value.name = c;
 			value.defaultValue = false;
 			l.add(value);
 		}
@@ -466,14 +500,16 @@ public class DescriptionFactory {
 	/**
 	 * 
 	 * @param defaultValue
-	 * @param values
+	 * @param code
 	 * @return
 	 */
-	public static List<Value> newValuesWithDefault(String defaultValue, String...values) {
-		List<Value> l = new ArrayList<Value>(values.length);
-		for(String v : values){
+	public static List<Value> newValuesWithDefault(String defaultValue, String...code) {
+		List<Value> l = new ArrayList<Value>(code.length);
+		for(String v : code){
 			Value value = new Value();
-			value.value = v;			
+			value.value = v;
+			value.code = v;
+			value.name = v;
 			if(v.equals(defaultValue)){
 				value.defaultValue = true;
 			}else{
