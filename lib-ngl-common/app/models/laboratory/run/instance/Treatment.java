@@ -16,7 +16,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.run.instance.TreatmentValidationHelper;
-import validation.utils.RunPropertyDefinitionHelper;
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
 import fr.cea.ig.MongoDBDAO;

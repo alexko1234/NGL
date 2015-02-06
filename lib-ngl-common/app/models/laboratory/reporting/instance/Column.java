@@ -27,7 +27,7 @@ public class Column implements IValidation{
 	
 	
 	public String[] modes; //chart or table or the two
-	public Float position;
+	public Double position;
 	
 	public String[] queryIncludeKeys; //if void used property
 	

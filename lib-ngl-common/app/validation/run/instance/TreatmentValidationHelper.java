@@ -23,7 +23,6 @@ import org.mongojack.DBQuery;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
-import validation.utils.RunPropertyDefinitionHelper;
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
 import fr.cea.ig.MongoDBDAO;

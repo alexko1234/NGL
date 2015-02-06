@@ -4,6 +4,6 @@ public class Filter {
 	
 	public String property; //just used to known easily the property was match by the filter
 	public String html;
-	public Float position;
+	public Double position;
 
 }
