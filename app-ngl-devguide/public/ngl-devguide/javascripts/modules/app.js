@@ -25,5 +25,5 @@ angular.module('home', ['ngRoute','directives'], function($routeProvider, $locat
 	$routeProvider.otherwise({redirectTo: '/'});
 
 	// configure html5 to get links working with bookmarked
-	$locationProvider.html5Mode(true);
+	$locationProvider.html5Mode({enabled: true, requireBase: false});
 });

@@ -269,6 +269,12 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 					}
 					for(var j = 0; j < columns.length ; j++){
 						if(!angular.isUndefined(data["wells["+i+"]."+columns[j].property])){
+							$scope.edit();
+							var error = data["wells["+i+"]."+columns[j].property];
+							var property = columns[j].property;
+							var objError = {};
+							objError[property] = error;
+							$scope.datatable.addErrors(i, objError);
 							isError = true;
 							if(angular.isUndefined(msg["["+i+"] : "+$scope.plate.wells[i].name])){
 								msg["["+i+"] : "+$scope.plate.wells[i].name] = {};
@@ -277,9 +283,9 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 						}						
 					}		
 					if(isError){
-						$scope.plate.wells[i].line.trClass = "danger";						
+						//$scope.plate.wells[i].line.trClass = "danger";						
 					}else{
-						$scope.plate.wells[i].line.trClass = "success";
+						//$scope.plate.wells[i].line.trClass = "success";
 					}
 				} 
 				

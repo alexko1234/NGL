@@ -19,5 +19,5 @@ angular.module('home', ['ngRoute','datatableServices','basketServices','commonsS
 	$routeProvider.otherwise({redirectTo: '/plates/search/home'});
 
 	// configure html5 to get links working with bookmarked
-	$locationProvider.html5Mode(true);
+	$locationProvider.html5Mode({enabled: true, requireBase: false});
 });

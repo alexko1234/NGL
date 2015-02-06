@@ -20,6 +20,6 @@ angular.module('home', ['ngRoute', 'datatableServices','commonsServices','biComm
 	$routeProvider.otherwise({redirectTo: '/stats/readsets/home'});
 
 	// configure html5 to get links working with bookmarked
-	$locationProvider.html5Mode(true);
+	$locationProvider.html5Mode({enabled: true, requireBase: false});
 });
 
