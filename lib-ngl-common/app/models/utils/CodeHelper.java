@@ -14,6 +14,18 @@ public class CodeHelper {
 		return new SimpleDateFormat("yyyyMMdd_HHmmss");
 	}
 	
+	public static String generateKitCatalogCode(String kitCatalogName){
+		return kitCatalogName.toLowerCase().replaceAll("\\s", "");
+	}
+	
+	public static String generateBoxCatalogCode(String kitCatalogCode, String boxCatalogName){
+		return kitCatalogCode+"-"+boxCatalogName.toLowerCase().replaceAll("\\s", "");
+	}
+	
+	public static String generateReagentCatalogCode(String reagentCatalogName){
+		return reagentCatalogName.toLowerCase().replaceAll("\\s", "");
+	}
+	
 	//ProcessusTypeCode-ProjectCode-SampeCode-YYYYMMDDHHMMSSSS
 	public static String generateProcessCode(Process process) {		
 		 Random randomGenerator = new Random();

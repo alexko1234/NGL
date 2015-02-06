@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import models.laboratory.reagent.description.KitCatalog;
+import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.ListObject;
@@ -18,6 +19,7 @@ import play.libs.Json;
 import play.mvc.Result;
 import play.mvc.Results;
 import validation.ContextValidation;
+import validation.utils.ValidationHelper;
 import views.components.datatable.DatatableResponse;
 
 import com.mongodb.BasicDBObject;
@@ -32,18 +34,45 @@ public class KitCatalogs extends DocumentController<KitCatalog>{
 	
 	final static Form<KitCatalogSearchForm> kitCatalogSearchForm = form(KitCatalogSearchForm.class);
 	
+	public Result get(String code){
+		KitCatalog kitCatalog = getObject(code);
+		if(kitCatalog != null){
+			return ok(Json.toJson(kitCatalog));
+		}
+		
+		return badRequest();
+	}
+	
 	public Result save(){
 		Form<KitCatalog> kitCatalogFilledForm = getMainFilledForm();
 		if(!mainForm.hasErrors()){
 			KitCatalog kitCatalog = kitCatalogFilledForm.get();
-			kitCatalog.code = kitCatalog.name.toLowerCase().replaceAll("\\s", "");
 			
 			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
 			contextValidation.setCreationMode();
+			if(ValidationHelper.required(contextValidation, kitCatalog.name, "name")){
+				kitCatalog.code = CodeHelper.generateKitCatalogCode(kitCatalog.name);
 			
-			InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, kitCatalog, contextValidation);
+				kitCatalog = (KitCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, kitCatalog, contextValidation);
+			}
 			if(!contextValidation.hasErrors()){
-				return ok();
+				return ok(Json.toJson(kitCatalog));
+			}
+		}
+		return badRequest(mainForm.errorsAsJson());
+	}
+	
+	public Result update(){
+		Form<KitCatalog> kitCatalogFilledForm = getMainFilledForm();
+		if(!mainForm.hasErrors()){
+			KitCatalog kitCatalog = kitCatalogFilledForm.get();
+			
+			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
+			contextValidation.setUpdateMode();
+			
+			kitCatalog = (KitCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, kitCatalog, contextValidation);
+			if(!contextValidation.hasErrors()){
+				return ok(Json.toJson(kitCatalog));
 			}
 		}
 		return badRequest(mainForm.errorsAsJson());
@@ -62,7 +91,6 @@ public class KitCatalogs extends DocumentController<KitCatalog>{
 			return ok(Json.toJson(new DatatableResponse<KitCatalog>(kitCatalogs, results.count())));
 		}else if (kitCatalogSearch.list){
 			keys = new BasicDBObject();
-			keys.put("_id", 0);//Don't need the _id field
 			keys.put("code", 1);
 			keys.put("name", 1);
 			keys.put("category", 1);

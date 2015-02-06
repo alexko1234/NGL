@@ -1,5 +1,6 @@
 package models.laboratory.reagent.description;
 
+import play.data.validation.Constraints.Required;
 import validation.IValidation;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -21,6 +22,7 @@ public abstract class AbstractCatalog extends DBObject implements IValidation{
 		super();
 	}
 	
+	@Required
 	public String name;
-	public String providerCode;
+	public boolean active = true;
 }

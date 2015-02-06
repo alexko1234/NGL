@@ -13,9 +13,10 @@ object ApplicationBuild extends Build {
    val appName = "ngl"
    val appVersion = "1.0-SNAPSHOT"
      
-   val sqVersion = "1.3-SNAPSHOT"  
+   val sqVersion = "1.4-SNAPSHOT"  
    val biVersion = "1.8-SNAPSHOT"
    val projectsVersion = "1.0-SNAPSHOT"  
+   val reagentsVersion = "1.0-SNAPSHOT" 
    val subVersion = "1.0-SNAPSHOT"  
      
    val libDatatableVersion = "1.1-SNAPSHOT"
@@ -78,6 +79,9 @@ object ApplicationBuild extends Build {
 
     	)	
    	val ngldatatableDependencies = Seq(
+   	    javaCore
+   	    )
+	val nglreagentsDependencies = Seq(
    	    javaCore
    	    )
    	val nglframeworkwebDependencies = Seq(
@@ -260,6 +264,15 @@ object ApplicationBuild extends Build {
        // Add your own project settings here   
 		version := projectsVersion,
 		libraryDependencies ++= nglprojectsDependencies,   
+       resolvers := Seq(nexusig),
+       publishArtifact in makePom := false,
+       publishTo := Some(nexusigpublish)
+     ).dependsOn(nglcommon)
+	 
+	val nglreagents = Project(appName + "-reagents", file("app-ngl-reagents"),settings = buildSettings).enablePlugins(play.PlayJava).settings(
+       // Add your own project settings here   
+		version := reagentsVersion,
+		libraryDependencies ++= nglreagentsDependencies,   
        resolvers := Seq(nexusig),
        publishArtifact in makePom := false,
        publishTo := Some(nexusigpublish)

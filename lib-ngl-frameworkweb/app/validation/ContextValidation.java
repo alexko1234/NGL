@@ -26,7 +26,7 @@ public class ContextValidation {
 	private Mode mode = Mode.NOT_DEFINED;
 	
 	
-	private String rootKeyName;
+	private String rootKeyName = "";
 	public Map<String,List<ValidationError>> errors;
 	private Map<String,Object> contextObjects;
 
