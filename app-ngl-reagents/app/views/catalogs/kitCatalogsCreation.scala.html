@@ -1,0 +1,120 @@
+@() 
+@import views.html.helper._
+
+<div class="row">
+<div ng-class="message.clazz" ng-show="message.text !== undefined">
+	<strong>{{message.text}}</strong><button class="btn btn-link" ng-click="message.showDetails=!message.showDetails" ng-show="message.isDetails">@(Messages("reagents.msg.details"))</button>
+	<div ng-show="message.showDetails">
+	    <ul>
+    		<li ng-repeat="(key1, value1) in message.details">{{key1}}
+    		<ul>
+    			<li ng-repeat="(key2, value2) in value1"> {{value2}} </li>
+    		</ul>
+    		</li>
+    	</ul>	
+	</div>
+</div>
+	<div class="col-md-12 col-lg-12">
+		<div class="row">
+			<div class="btn-toolbar toolbar">
+				<h1 class="pull-left">
+					{{getName()}}
+				</h1>
+				<button class="btn btn-default saveAndEditButtons" ng-click="edit()" ng-show="editMode==false" data-toggle="tooltip" title="@Messages("catalogs.kit.creation.edit")"><i class="fa fa-edit"></i></button>
+				<button class="btn btn-default saveAndEditButtons" ng-click="unedit()" ng-show="editMode==true" data-toggle="tooltip" title="@Messages("catalogs.kit.creation.unedit")"><i class="fa fa-undo"></i></button>	
+				<button class="btn btn-primary saveAndEditButtons" ng-disabled="saveInProgress == true || !editMode" ng-click="saveAll();" data-toggle="tooltip"  title="@Messages("catalogs.kit.creation.save")">
+					<i class="fa fa-save"></i>
+				</button>
+			</div>
+		</div>
+		<form class="form-horizontal">
+			<div class="row">
+				<div class="form-group">
+					<label class="col-md-2 col-lg-2 control-label">@Messages("kits.name"):</label>
+					<div class="col-md-3 col-lg-3" ng-class="getClass('kit.name')">
+						<input type="text" class="form-control" ng-model="kit.name" ng-readonly="!editMode" ng-disabled="!editMode">
+						<span class="help-block">
+                            {{mainService.getError("kit.name")}} <br>
+                        </span>
+					</div>
+					<label class="col-md-1 col-lg-1 control-label">@Messages("kits.provider"):</label>
+					<div class="col-md-3 col-lg-3" ng-class="getClass('kit.providerCode')">
+						<input type="text" class="form-control" ng-model="kit.providerCode" ng-readonly="!editMode" ng-disabled="!editMode">
+						<span class="help-block">
+                            {{mainService.getError("kit.providerCode")}} <br>
+                        </span>
+					</div>
+				</div>			
+		    </div>
+		    <div class="row">
+		    	<div class="form-group">
+					<label class="col-md-2 col-lg-2 control-label">@Messages("kits.experimentTypes"):</label>
+					<div class="col-md-3 col-lg-3" ng-class="getClass('kit.experimentTypeCodes')" >
+						<div class="form-control" bt-select ng-model="kit.experimentTypeCodes"
+						multiple="true" placeholder="@Messages("catalogs.kit.creation.placeholder.experimentTypes")" 
+						bt-options="experimentType.code as experimentType.name for experimentType in lists.getExperimentTypes()"
+						ng-readonly="!editMode" ng-disabled="!editMode">
+						</div>
+						<span class="help-block">
+                            {{mainService.getError("kit.experimentTypeCodes")}} <br>
+                        </span>
+					</div>	
+					<label class="col-md-1 col-lg-1 control-label">@Messages("kits.providerRefName"):</label>
+					<div class="col-md-3 col-lg-3" ng-class="getClass('kit.providerRefName')">
+						<input type="text" class="form-control" ng-model="kit.providerRefName" ng-readonly="!editMode" ng-disabled="!editMode">
+						<span class="help-block">
+                            {{mainService.getError("kit.providerRefName")}} <br>
+                        </span>
+					</div>
+				</div>
+		    </div>
+		     <div class="row">
+		    	<div class="form-group">
+					<label class="col-md-2 col-lg-2 control-label">@Messages("kits.active"):</label>
+					<div class="col-md-3 col-lg-3">
+						<input type="checkbox" ng-model="kit.active" style="margin-top:8px;">
+					</div>	
+				</div>
+			 </div>
+	</form>
+	
+<div class="row">
+ 	<h3 class="pull-left">@Messages("catalogs.box.list"): </h3>
+ 	 <button title='@Messages("catalogs.box.add")' data-toggle="tooltip" ng-click="addBox()" class="btn btn-primary saveAndEditButtons" >
+		 <i class="fa fa-plus"></i>
+	 </button>
+	<br>
+ 	<ul class="nav nav-tabs" role="tablist" ng-if="boxes.length > 0">
+ 			<li ng-repeat="box in boxes"><a href="" role="tab"  data-target="#{{'box'+$index}}" data-toggle="tab">{{box.name || 'box'+$index}}</a></li>
+	</ul>
+	<span ng-if="boxes.length === 0">@Messages("catalogs.box.empty")</span>
+	<div class="tab-content">
+		<br>
+		<div ng-repeat="box in boxes" class="tab-pane" id="{{'box'+$index}}">
+		  	<div class="row">
+				<div class="form-group">
+					<label class="col-md-1 col-lg-1 control-label">@Messages("boxes.name"):</label>
+						<div class="col-md-3 col-lg-3" ng-class="getClass('boxes['+$index+'].name')">
+							<input class="form-control" type="text" ng-model="box.name" ng-readonly="!editMode" ng-disabled="!editMode">
+							<span class="help-block">
+                            {{mainService.getError("boxes["+$index+"].name")}} <br>
+                      		</span>
+						</div>
+					<label class="col-md-1 col-lg-1 control-label">@Messages("boxes.storageConditions"):</label>
+						<div class="col-md-3 col-lg-3" ng-class="getClass('boxes['+$index+'].storageConditions')">
+							<input class="form-control" type="text" ng-model="box.storageConditions" ng-readonly="!editMode" ng-disabled="!editMode">
+							<span class="help-block">
+                            {{mainService.getError("boxes["+$index+"].storageConditions")}} <br>
+                      		</span>
+						</div>
+				</div>
+			</div>
+			<br><br>
+			<div class="row">
+				<div class="col-md-12 col-lg-12" datatable="datatables[$index]"></div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+</div>

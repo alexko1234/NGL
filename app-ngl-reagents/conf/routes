@@ -1,0 +1,36 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           									controllers.main.tpl.Main.home()
+
+#Kit catalogs tpl
+GET 	/reagent-catalogs/kits/:code									@controllers.reagents.tpl.KitCatalogs.get(code: java.lang.String)
+GET	   	/reagent-catalogs/:homecode/home								@controllers.reagents.tpl.KitCatalogs.home(homecode: java.lang.String)
+GET		/tpl/reagent-catalogs/js-routes									@controllers.reagents.tpl.KitCatalogs.javascriptRoutes()
+GET		/tpl/reagent-catalogs/creation-kit								@controllers.reagents.tpl.KitCatalogs.createOrEdit()
+
+#Kit catalogs API
+GET 	/api/reagent-catalogs/kits/:code								@controllers.reagents.api.KitCatalogs.get(code: java.lang.String)
+GET 	/api/reagent-catalogs/kits										@controllers.reagents.api.KitCatalogs.list()
+POST 	/api/reagent-catalogs/kits										@controllers.reagents.api.KitCatalogs.save()
+PUT 	/api/reagent-catalogs/kits										@controllers.reagents.api.KitCatalogs.update()
+
+#Box catalogs API
+GET 	/api/reagent-catalogs/boxes										@controllers.reagents.api.BoxCatalogs.list()
+POST 	/api/reagent-catalogs/boxes										@controllers.reagents.api.BoxCatalogs.save()
+
+#Reagent catalogs API
+GET 	/api/reagent-catalogs/reagents										@controllers.reagents.api.ReagentCatalogs.list()
+POST 	/api/reagent-catalogs/reagents										@controllers.reagents.api.ReagentCatalogs.save()
+
+GET		/api/experiment/types											controllers.experiments.api.ExperimentTypes.list()
+
+->  /authentication authentication.Routes
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               									controllers.Assets.at(path="/public", file)
+GET     /messages.js                									controllers.main.tpl.Main.jsMessages()
+GET     /codes.js        	        									controllers.main.tpl.Main.jsCodes()

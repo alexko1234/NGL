@@ -1,0 +1,41 @@
+application.name = NGL-Reagents
+index.title = Welcome to NGL-Reagents
+catalogs.title = Catalogue
+
+catalogs.kit.creation = Création d'un nouveau kit dans le catalogue
+catalogs.kit.edit = Modification dans le catalogue du kit
+catalogs.kit.creation.edit = Editer le kit
+catalogs.kit.creation.save = Sauvegarder le kit
+catalogs.kit.creation.unedit = Annuler
+catalogs.kit.creation.placeholder.experimentTypes = Select. le ou les type(s) d'exp.
+
+catalogs.box.list = Boite(s) contenue(s) dans le kit
+catalogs.box.empty = Aucune boite dans ce kit
+catalogs.box.add = Ajouter une boite
+
+kits.name = Nom kit (usuel)
+kits.experimentTypes = Expérience(s)
+kits.provider = Fournisseur
+kits.providerRefName = Nom kit (fournisseur)
+kits.active = En cours d'utilisation
+
+boxes.name = Nom de la boite
+boxes.storageConditions = Conditions de stockage (°C)
+
+kitCatalogs.tabs.create = Création d'un kit dans le catalogue
+
+reagents.add = Ajouter un réactif
+
+reagents.msg.save.sucess = Sauvegarde réussie
+reagents.msg.save.error = Sauvegarde echouée
+reagents.msg.details = [détails]
+reagents.msg.empty.save.error = Incomplet - Sauvegarde echouée
+reagents.msg.load.error = Ce kit n''est pas dans le catalogue
+
+reagents.table.code = Code du réactif
+reagents.table.name = Nom du réactif
+reagents.table.storageConditions = Conditions de stockage (°C)
+
+reagentCatalogs.menu = Catalogue
+reagentCatalogs.menu.create = Créer
+reagentCatalogs.menu.search = Rechercher
