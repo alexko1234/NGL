@@ -120,7 +120,7 @@ public class SampleService {
 	public static List<PropertyDefinition> getPropertyDefinitionsADNGenomic() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.addAll(getPropertyDefinitionsADN());
-        propertyDefinitions.add(newPropertiesDefinition("%GC", "gcPercent", LevelService.getLevels(Level.CODE.Sample),Float.class, false, "single"));
+        propertyDefinitions.add(newPropertiesDefinition("%GC", "gcPercent", LevelService.getLevels(Level.CODE.Sample),Double.class, false, "single"));
 		return propertyDefinitions;
 	}
 	
