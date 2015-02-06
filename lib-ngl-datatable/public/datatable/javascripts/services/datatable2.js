@@ -180,6 +180,33 @@ angular.module('datatableServices', []).
 									active:false
 								}
     					},
+    					//errors functions
+    					/**
+		    			 * Reset all the errors for a line
+		    			 */
+    					resetErrors : function(index){
+    						this.displayResult[index].line.errors = {};
+    					 },
+    					 /**
+ 		    			 * Add error data in the line index for the field key
+ 		    			 */
+    					addErrorsForKey : function(index, data, key){
+    						 if(this.displayResult[index].line.errors === undefined){
+								 this.displayResult[index].line.errors  = {};
+							 }
+							 this.displayResult[index].line.errors[key] = "";
+						 	 for(var i=0;i<data[key].length;i++){
+						 		this.displayResult[index].line.errors[key] += data[key][i]+" ";
+						 	 }
+    					 },
+    					 /**
+  		    			 * Add errors data in the line index in the key of the data key error
+  		    			 */
+    				    addErrors : function(index, data){
+    						 for(var key in data){
+    							 this.addErrorsForKey(index, data, key);
+    						 }
+    					 },
     					/**
     					 * External search réinit pageNumber to 0
     					 */
@@ -832,7 +859,7 @@ angular.module('datatableServices', []).
 			    						this.config.save.number++;
 			    						this.displayResult[i].line.trClass = undefined;
 				    					this.displayResult[i].line.selected = undefined;
-				    					
+				    					this.resetErrors(i);
 			    						if(this.isRemoteMode(this.config.save.mode) && !this.config.save.batch){
 			    							//add the url in table to used $q
 			    							data.push(this.getSaveRemoteRequest(this.displayResult[i].data, i));			    							
@@ -844,7 +871,7 @@ angular.module('datatableServices', []).
 			    						}
 			    					}						
 			    				}
-		    					if(!this.isRemoteMode(this.config.save.mode)){
+		    					if(!this.isRemoteMode(this.config.save.mode) || data.length === 0){
 	    							this.saveFinish();
 	    						}else if(this.isRemoteMode(this.config.save.mode) && !this.config.save.batch){
 	    							this.saveRemote(data);
@@ -880,7 +907,7 @@ angular.module('datatableServices', []).
 		    				$q.all(queries).then(function(results){
 								angular.forEach(results, function(value, key){
 									value.config.datatable.saveRemoteOneElement(value.status, value.data, value.config.index);																
-								});	    								
+								});				
 							});				
 		    			},
 		    			
@@ -890,10 +917,12 @@ angular.module('datatableServices', []).
 									this.displayResult[index].line.trClass = "danger";
 		    					}
 								this.displayResult[index].line.edit = true;
+								this.addErrors(index,value);
 								this.config.save.error++;
 								this.config.save.number--;
 								this.saveFinish();
 							}else{
+								this.resetErrors(index);
 								this.saveLocal(value, index);
 								this.saveFinish();
 							}  				
@@ -906,7 +935,13 @@ angular.module('datatableServices', []).
 			    					return $http[this.config.save.method](urlFunction(value), value, {datatable:this});
 			    				}else{
 			    					var valueFunction = this.getValueFunction(this.config.save.value);
-			    					return $http[this.config.save.method](urlFunction(value), valueFunction(value), {datatable:this,index:i});				    				
+			    					return $http[this.config.save.method](urlFunction(value), valueFunction(value), {datatable:this,index:i}).
+			    					success(function(data, status, headers, config) {
+			    						  config.datatable.saveRemoteOneElement(status, data, config.index);
+			    					}).
+			    					error(function(data, status, headers, config) {
+			    						  config.datatable.saveRemoteOneElement(status, data, config.index);
+			    					});				    				
 			    				
 			    				}
 		    				}else{
@@ -2090,7 +2125,7 @@ angular.module('datatableServices', []).
 	    				}else{
 	    					editElement = "Edit Not Defined for col.type !";
 	    				}		    						    				
-	    				return '<div class="form-group">'+editElement+'</div>';
+	    				return '<div class="form-group" ng-class="{\'has-error\': value.line.errors[\''+col.property+'\'] !== undefined}">'+editElement+'<span class="help-block">{{value.line.errors["'+col.property+'"]}}<br></span></div>';
 	    			};
 	    			
 	    			

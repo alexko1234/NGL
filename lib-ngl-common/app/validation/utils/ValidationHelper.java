@@ -59,7 +59,7 @@ public class ValidationHelper {
 			
 			//if pv null and required
 			if( pv==null && propertyDefinition.required){	
-	        	contextValidation.addErrors(propertyDefinition.code, ERROR_REQUIRED_MSG,"");
+	        	contextValidation.addErrors(propertyDefinition.code+".value", ERROR_REQUIRED_MSG,"");
 			}else if (pv != null){
 				contextValidation.putObject("propertyDefinitions", pdefs);				
 				pv.validate(contextValidation);
@@ -349,7 +349,7 @@ public class ValidationHelper {
 			}
 		}catch(Throwable e){
 			Logger.error(e.getMessage(),e);
-			contextValidation.addErrors(propertyDefinition.code, ERROR_BADTYPE_MSG, propertyDefinition.valueType, propertyValue.value);
+			contextValidation.addErrors(propertyDefinition.code+".value", ERROR_BADTYPE_MSG, propertyDefinition.valueType, propertyValue.value);
 			return false;
 		}
 		return true;

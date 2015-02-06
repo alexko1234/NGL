@@ -69,9 +69,9 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			Logger.debug("State code "+stateCode);
 
 			if(!stateCode.equals("N")){
-				contextValidation.addKeyToRootKeyName("properties");
+				contextValidation.addKeyToRootKeyName("experimentProperties");
 				ValidationHelper.validateProperties(contextValidation, properties, exType.getPropertiesDefinitionDefaultLevel(), true);
-				contextValidation.removeKeyFromRootKeyName("properties");
+				contextValidation.removeKeyFromRootKeyName("experimentProperties");
 			}
 		}
 	}
@@ -116,9 +116,9 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			InstrumentUsedType instrumentUsedType =BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, instrumentUsed.typeCode, "typeCode", InstrumentUsedType.find,true);
 			if(instrumentUsedType!=null){
 				if(!stateCode.equals("N")){
-					contextValidation.addKeyToRootKeyName("properties");
+					contextValidation.addKeyToRootKeyName("instrumentProperties");
 					ValidationHelper.validateProperties(contextValidation, properties, instrumentUsedType.getPropertiesDefinitionDefaultLevel(), false);
-					contextValidation.removeKeyFromRootKeyName("properties");
+					contextValidation.removeKeyFromRootKeyName("instrumentProperties");
 				}
 			}
 

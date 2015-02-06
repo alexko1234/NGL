@@ -382,12 +382,33 @@ angular.module('home').factory('mainService', function(){
 	//contain each tab of on element of the datatable
 		var api = {
 			cache : {},
+			errors: {},
 			basketMaster : undefined,
 			datatableMaster : undefined,
 			form : undefined,
 			homePage : undefined, //the home page who called the ctrl
 			editMode : false, //active or not the edit mode for the details page
 			
+			/**
+			 * "public" function to reset all errors
+			 */
+			resetErrors : function(){
+				 this.errors = {};
+			},
+			/**
+			 * "public" function to add an error
+			 */
+			addErrors : function(objectName, data){
+				for(var key in data){
+				 	this.errors[objectName+"."+key] = "";
+				 	for(var i=0;i<data[key].length;i++){
+				 		this.errors[objectName+"."+key] += data[key][i]+" ";
+				 	}
+				}
+			},
+			getError : function(key){
+				return this.errors[key];
+			},
 			/**
 			 * "public" function to keep the basket when we switch views
 			 */
