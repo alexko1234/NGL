@@ -545,6 +545,10 @@ public class Experiments extends CommonController{
 		if(CollectionUtils.isNotEmpty(experimentSearch.users)){
 			queryElts.add(DBQuery.in("traceInformation.createUser", experimentSearch.users));
 		}
+		
+		if(StringUtils.isNotBlank(experimentSearch.reagentOrBoxCode)){
+			queryElts.add(DBQuery.or(DBQuery.is("reagents.boxCode", experimentSearch.reagentOrBoxCode),DBQuery.is("reagents.code", experimentSearch.reagentOrBoxCode)));
+		}
 
 		if(CollectionUtils.isNotEmpty(experimentSearch.stateCodes)){
 			queryElts.add(DBQuery.in("state.code", experimentSearch.stateCodes));

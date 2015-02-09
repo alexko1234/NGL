@@ -151,6 +151,10 @@
 					if(_form.states){
 						jsonSearch.stateCodes = _form.states;
 					}
+					
+					if(_form.reagentOrBoxCode){
+						jsonSearch.reagentOrBoxCode = _form.reagentOrBoxCode;
+					}
 
 					if(_form.user){
 						jsonSearch.users = _form.user;

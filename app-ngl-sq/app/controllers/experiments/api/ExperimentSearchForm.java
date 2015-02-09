@@ -22,6 +22,7 @@ public class ExperimentSearchForm extends ListForm{
 	public List<String> users;
 	public String containerSupportCode;	
 	public String atomicTransfertMethods;
+	public String reagentOrBoxCode;
 	
 	@Override
 	public String toString() {
