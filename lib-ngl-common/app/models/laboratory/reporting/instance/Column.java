@@ -25,6 +25,7 @@ public class Column implements IValidation{
 	public String possibleValues;
 	public String tdClass;
 	
+	public String url;
 	
 	public String[] modes; //chart or table or the two
 	public Double position;
