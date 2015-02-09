@@ -317,7 +317,7 @@ angular.module('datatableServices', []).
 				    					//compute for each number column the sum
 				    					groupMethodColumns.forEach(function(column){
 				    						var propertyGetter = column.property;
-				    						propertyGetter += (column.filter)?'|'+column.filter:'';
+				    						propertyGetter += this.getFilter(column);
 				    						var columnGetter = $parse(propertyGetter);
 				    						var columnSetter = $parse("group."+column.id);
 				    						
@@ -1625,10 +1625,7 @@ angular.module('datatableServices', []).
 			    							//algo to set colValue (value of the column)
 				    			    			if (!result.line.group && !angular.isDefined(column.url) && exportType !== 'groupsOnly') {
 				    			    				var property = column.property;
-				    			    				property += (column.filter)?'|'+column.filter:'';
-				    			    				if(column.convertValue !== undefined && column.convertValue.active === true){
-				    			    					property += "| convert:"+JSON.stringify(column.convertValue);
-				    			    				}
+				    			    				property += that.getFilter(column);
 				    			    				property += that.getFormatter(column);
 				    			    				colValue = $parse(property)(result.data);
 				    			    				if(colValue !==  undefined && column.type === "number"){
