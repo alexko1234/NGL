@@ -47,6 +47,7 @@ public class Workflows {
 	
 	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor.class));
 	private static final String ruleStatRG="rg_1";
+	private static final String ruleStatQC="F_QC_1";
 			
 	
 	public static void setRunState(ContextValidation contextValidation, Run run, State nextState) {
@@ -124,11 +125,12 @@ public class Workflows {
 				State nextReadSetState = cloneState(run.state, contextValidation.getUser());
 				setReadSetState(contextValidation, readSet, nextReadSetState);
 			}
-			
-			
-			ArrayList<Object> facts = new ArrayList<Object>();
-			facts.add(run);		
-			rulesActor.tell(new RulesMessage(facts,Play.application().configuration().getString("rules.key"),ruleStatRG),null);
+			//Synchro old lims
+			if(Play.application().configuration().getBoolean("old.lims.sync", false)){
+				Logger.debug("Old LIMS Run Synchronisation");
+				Spring.getBeanOfType(ILimsRunServices.class).insertRun(run, readSets, false);
+			}
+			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleStatRG, run),null);
 		}else if("F-V".equals(run.state.code)){
 			Spring.getBeanOfType(ILimsRunServices.class).valuationRun(run);
 			//For all lane with VALID = FALSE so we put VALID=FALSE on each read set
@@ -200,6 +202,15 @@ public class Workflows {
 				Logger.error("sampleOnContainer null for "+readSet.code);
 			}
 			
+		}else if("F-QC".equals(readSet.state.code)){
+			
+			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleStatQC, readSet),null);
+			
+			//Synchro old lims
+			if(Play.application().configuration().getBoolean("old.lims.sync", false)){
+				Logger.debug("Old LIMS ReadSet Synchronisation");
+				Spring.getBeanOfType(ILimsRunServices.class).updateReadSetAfterQC(readSet);	
+			}
 		}else if("F-VQC".equals(readSet.state.code)){
 			if(TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)){
 				readSet.bioinformaticValuation.valid = readSet.productionValuation.valid;
@@ -209,7 +220,7 @@ public class Workflows {
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
 						DBQuery.is("code", readSet.code), DBUpdate.set("bioinformaticValuation", readSet.bioinformaticValuation));
 			}
-			Spring.getBeanOfType(ILimsRunServices.class).valuationReadSet(readSet, true);	
+			Spring.getBeanOfType(ILimsRunServices.class).valuationReadSet(readSet, true);
 			
 		} else if("IW-BA".equals(readSet.state.code)){
 			readSet.bioinformaticValuation.valid = TBoolean.UNSET;

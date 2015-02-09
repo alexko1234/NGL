@@ -1,6 +1,7 @@
 package lims.cns.services;
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,9 +10,11 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.commons.collections.list.TreeList;
+import org.mongojack.DBQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import fr.cea.ig.MongoDBDAO;
 import play.Logger;
 import play.Logger.ALogger;
 import lims.cns.dao.LimsExperiment;
@@ -20,6 +23,8 @@ import lims.cns.dao.LimsAbandonDAO;
 import lims.models.LotSeqValuation;
 import lims.models.experiment.ContainerSupport;
 import lims.models.experiment.Experiment;
+import lims.models.experiment.illumina.BanqueSolexa;
+import lims.models.experiment.illumina.DepotSolexa;
 import lims.models.experiment.illumina.Flowcell;
 import lims.models.experiment.illumina.Library;
 import lims.models.instrument.Instrument;
@@ -31,6 +36,7 @@ import models.laboratory.run.instance.Lane;
 //import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
+import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 
 
@@ -238,4 +244,97 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 		}
 	}
 
+	@Override
+	public void insertRun(Run run, List<ReadSet> readSets, boolean deleteBeforeInsert) {
+		try{
+			
+			if(deleteBeforeInsert){
+				try{
+					dao.deleteRun(run.code);
+				} catch(Throwable t){
+					
+				}
+			}
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
+			DepotSolexa ds = dao.getDepotSolexa(run.containerSupportCode, sdf.format(run.sequencingStartDate));
+			if(null != ds){
+				Map<String, BanqueSolexa> mapBanques = new HashMap<String, BanqueSolexa>();
+				for(BanqueSolexa banque:  dao.getBanqueSolexa(run.containerSupportCode)){
+					String key = banque.prsco+"_"+banque.adnnom+"_"+banque.lanenum+"_"+banque.tagkeyseq;
+					//Logger.debug("key banque = "+key);
+					mapBanques.put(key, banque);
+				}
+				Map<String, ReadSet> mapReadSets = new HashMap<String, ReadSet>();
+				for(ReadSet readSet:  readSets){
+					String index = (readSet.code.contains("."))?readSet.code.split("\\.")[1]:"";
+					String key = readSet.sampleCode+"_"+readSet.laneNumber+"_"+index;
+					//Logger.debug("key readSet = "+key);
+					mapReadSets.put(key, readSet);
+					
+					if(!mapBanques.containsKey(key)){
+						throw new RuntimeException("ReadSet "+readSet.code+" not found in lims");
+					}
+				}
+				Logger.debug("banques.size() != readSets.size() "+mapBanques.size()+" / "+mapReadSets.size());
+				readSets = null;
+				if(mapBanques.size() != mapReadSets.size()){
+					throw new RuntimeException("banques.size() != readSets.size() "+mapBanques.size()+" / "+mapReadSets.size());
+				}
+				
+				Logger.debug("Load DepotSolexa = "+ds);
+				//Delete run if exist ???
+				
+				dao.insertRun(run, ds);
+				dao.insertLanes(run.lanes, ds);
+				for(Map.Entry<String, ReadSet> entry : mapReadSets.entrySet()){
+					dao.insertReadSet(entry.getValue(), mapBanques.get(entry.getKey()));
+					dao.insertFiles(entry.getValue(), false);
+				}
+				
+				dao.dispatchRun(run);
+				dao.updateRunInNGL(run);
+				//passe l'etat à traite
+				dao.updateRunEtat(run, 2);
+			}else{
+				throw new RuntimeException("DepotSolexa is null");
+			}
+	    	//TODO Etat
+	    	//TODO RunInNGL
+		
+		}catch(Throwable t){
+			logger.error("Synchro RUN : "+run.code+" : "+t.getMessage(),t);
+		}
+	}
+
+	@Override
+	public void updateReadSetAfterQC(ReadSet readset) {
+		try{
+			dao.updateReadSetEtat(readset, 2);
+			dao.updateReadSetBaseUtil(readset);
+			dao.insertFiles(readset, true);
+			
+		}catch(Throwable t){
+			logger.error("Synchro READSET AfterQC: "+readset.code+" : "+t.getMessage(),t);
+		}
+	}
+
+	@Override
+	public void updateReadSetArchive(ReadSet readset) {
+		try{
+			dao.updateReadSetArchive(readset);
+			
+		}catch(Throwable t){
+			logger.error("Synchro READSET Archive: "+readset.code+" : "+t.getMessage(),t);
+		}
+	}
+	
+	public void linkRunWithMaterielManip(){
+		try{
+			dao.linkRunWithMaterielManip();
+			
+		}catch(Throwable t){
+			logger.error("Synchro LINK RUN / MATERIEL_MANIP: "+t.getMessage(),t);
+		}
+	}
 }

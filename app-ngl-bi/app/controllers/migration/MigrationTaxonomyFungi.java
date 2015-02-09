@@ -35,7 +35,7 @@ public class MigrationTaxonomyFungi extends CommonController{
 				List<Object> facts = new ArrayList<Object>();
 				facts.add(rs);
 				
-				rulesServices.callRules(Play.application().configuration().getString("rules.key"), "QC_1", facts);
+				rulesServices.callRules(Play.application().configuration().getString("rules.key"), "F_QC_1", facts);
 			} catch (RulesException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -104,5 +104,26 @@ public class LimsRunServices implements ILimsRunServices {
 	public void valuationReadSet(ReadSet readSet, boolean firstTime) {
 		Logger.warn("Not Implemented");		
 	}
+
+	@Override
+	public void insertRun(Run run, List<ReadSet> readSets, boolean deleteBeforeInsert) {
+		Logger.warn("Not Implemented");
+	}
+
+	@Override
+	public void updateReadSetAfterQC(ReadSet readSet) {
+		Logger.warn("Not Implemented");
+		
+	}
+
+	@Override
+	public void updateReadSetArchive(ReadSet readset) {
+		Logger.warn("Not Implemented");		
+	}
+
+	@Override
+	public void linkRunWithMaterielManip() {
+		Logger.warn("Not Implemented");	
+	}
 	
 }

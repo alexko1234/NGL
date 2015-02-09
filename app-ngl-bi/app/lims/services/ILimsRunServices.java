@@ -26,4 +26,13 @@ public interface ILimsRunServices {
 	
 	void valuationReadSet(ReadSet readSet, boolean firstTime);
 	
+	
+	void insertRun(Run run, List<ReadSet> readSets, boolean deleteBeforeInsert);
+	
+	void updateReadSetAfterQC(ReadSet readSet);
+	
+	public void updateReadSetArchive(ReadSet readset);
+	
+	public void linkRunWithMaterielManip();
+	
 }

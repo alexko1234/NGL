@@ -2,6 +2,10 @@ package lims.cns.dao;
 
 
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -10,13 +14,25 @@ import lims.cns.dao.LimsExperiment;
 import lims.cns.dao.LimsLibrary;
 import lims.models.LotSeqValuation;
 import lims.models.experiment.Experiment;
+import lims.models.experiment.illumina.DepotSolexa;
+import lims.models.experiment.illumina.LaneSolexa;
+import lims.models.experiment.illumina.BanqueSolexa;
+import lims.models.experiment.illumina.RunSolexa;
 import lims.models.runs.EtatTacheHD;
 import lims.models.runs.TacheHD;
+import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TransientState;
+import models.laboratory.run.instance.File;
+import models.laboratory.run.instance.Lane;
+import models.laboratory.run.instance.ReadSet;
+import models.laboratory.run.instance.Run;
+import models.laboratory.run.instance.Treatment;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import play.Logger;
@@ -25,8 +41,8 @@ import play.Logger;
 @Repository
 public class LimsAbandonDAO {
         private JdbcTemplate jdbcTemplate;
-
-
+        
+   
     @Autowired
     @Qualifier("lims")
     public void setDataSource(DataSource dataSource) {
@@ -95,157 +111,319 @@ public class LimsAbandonDAO {
 		// TODO Auto-generated method stub
 		return null;
 	}
-    
-    
-    
-    /*
-    public List<Manip> findManips(Integer emnco, Integer ematerielco,String prsco){
-    	Logger.info("pl_MaterielmanipChoisi @prsco='"+prsco+"', @emnco="+emnco+", @ematerielco="+ematerielco+", @plaque=1 ");
-        List<Manip> results = this.jdbcTemplate.query("pl_MaterielmanipChoisi @prsco=?, @emnco=?, @ematerielco=?, @plaque=?",
-        		new Object[]{prsco, emnco, ematerielco, 1},new BeanPropertyRowMapper<Manip>(Manip.class));
-        return results;
-    }
 
-    public void createPlate(Plate plate, String user){
-    	Logger.info("pc_PlaqueSolexa @plaqueId="+plate.code+", @emnco="+plate.typeCode);
-    	this.jdbcTemplate.update("pc_PlaqueSolexa @plaqueId=?, @emnco=?, @valqc=?, @valrun=?, @plaquecom=?, @perlog=?", new Object[]{plate.code, plate.typeCode, getValValue(plate.validQC), getValValue(plate.validRun), plate.comment, user});
-    	this.jdbcTemplate.update("ps_MaterielmanipPlaque @plaqueId=?", new Object[]{plate.code});
-    	for(Well well: plate.wells){
-    		Logger.info("pm_MaterielmanipPlaque @matmaco="+well.code+", @plaqueId="+plate.code+", @plaqueX="+well.x+", @plaqueY="+well.y+"");
-    		this.jdbcTemplate.update("pm_MaterielmanipPlaque @matmaco=?, @plaqueId=?, @plaqueX=?, @plaqueY=?", well.code, plate.code, well.x, well.y);
-    	}
-    }
 
-    public void updatePlate(Plate plate, String user){
-	this.jdbcTemplate.update("pm_PlaqueSolexa @plaqueId=?, @valqc=?, @valrun=?, @plaquecom=?, @perlog=?", new Object[]{plate.code, getValValue(plate.validQC), getValValue(plate.validRun), plate.comment, user});    	
-    	Logger.info("ps_MaterielmanipPlaque @plaqueId="+plate.code);
-    	this.jdbcTemplate.update("ps_MaterielmanipPlaque @plaqueId=?", new Object[]{plate.code});
-    	for(Well well: plate.wells){
-    		Logger.info("pm_MaterielmanipPlaque @matmaco="+well.code+", @plaqueId="+plate.code+", @plaqueX="+well.x+", @plaqueY="+well.y+"");
-    		this.jdbcTemplate.update("pm_MaterielmanipPlaque @matmaco=?, @plaqueId=?, @plaqueX=?, @plaqueY=?", well.code, plate.code, well.x, well.y);
-    	}
-    }
-
-    public List<Plate> findPlates(Integer emnco, String projetValue) {
-    	Logger.info("pl_PlaqueSolexa @prsco="+projetValue+", @emnco="+emnco);
-		List<Plate> plates = this.jdbcTemplate.query("pl_PlaqueSolexa @prsco=?, @emnco=?", new Object[]{projetValue, emnco}, new RowMapper<Plate>() {
-	        public Plate mapRow(ResultSet rs, int rowNum) throws SQLException {
-	        	Plate plate = new Plate();
-	        	//well.plateCode = rs.getString("plaqueId");
-	        	plate.code = rs.getString("plaqueId");
-	        	plate.typeCode = rs.getInt("emnco");
-	        	plate.typeName = rs.getString("emnnom");
-	        	plate.nbWells = rs.getInt("nombrePuitUtilises");
-	        	plate.validQC = getTBoolean(rs.getInt("valqc"));
-	        	plate.validRun = getTBoolean(rs.getInt("valrun"));
-	        	plate.comment = rs.getString("plaquecom");
-	        	
-	            return plate;
-	        }
-
+	public DepotSolexa getDepotSolexa(String containerSupportCode,	String sequencingStartDate) {
+		Logger.info("pl_DepotsolexaUneFC @flowcellid='"+containerSupportCode+"', @daterun="+sequencingStartDate);
 		
-	    });
-		return plates;
-	}
+		//BeanPropertyRowMapper<DepotSolexa> mapper = new BeanPropertyRowMapper<DepotSolexa>(DepotSolexa.class);
+		
+		
+		RowMapper<DepotSolexa> mapper = new RowMapper<DepotSolexa>(){
 
-    private TBoolean getTBoolean(int value) {
-	TBoolean valid = TBoolean.UNSET;
-	if (value == 1) {
-	    valid = TBoolean.TRUE;
-	} else if (value == 0) {
-	    valid = TBoolean.FALSE;
+			@Override
+			public DepotSolexa mapRow(ResultSet rs, int rowNum)
+					throws SQLException {
+				DepotSolexa ds = new DepotSolexa();
+				ds.matmaco = rs.getInt("matmaco");
+				ds.placo =  rs.getInt("placo");
+				ds.num = rs.getInt("num");
+				return ds;
+			}
+			
+		};
+		
+		return this.jdbcTemplate.queryForObject("pl_DepotsolexaUneFC @flowcellid=?, @daterun=?", mapper, containerSupportCode, sequencingStartDate);		
 	}
-	return valid;
-    }
     
-    private int getValValue(TBoolean value) {
-	int valid = 2;
-	if (TBoolean.TRUE.equals(value)) {
-	    valid = 1;
-	} else if (TBoolean.FALSE.equals(value)) {
-	    valid = 0;
+	public List<BanqueSolexa> getBanqueSolexa(String containerSupportCode){
+		
+		RowMapper<BanqueSolexa> mapper = new RowMapper<BanqueSolexa>(){
+
+			@Override
+			public BanqueSolexa mapRow(ResultSet rs, int rowNum)
+					throws SQLException {
+				//b.banco,prsco=rtrim(b.prsco),b.bqanom,m.adnnom,s.tagkeyseq,mm.pairedend, r.lanenum , dps.placo, dps.num, r.laneco
+				BanqueSolexa bs = new BanqueSolexa();
+				bs.banco = rs.getInt("banco");
+				bs.prsco =  rs.getString("prsco").trim();
+				bs.adnnom = rs.getString("adnnom").trim();
+				bs.lanenum = rs.getInt("lanenum");
+				bs.laneco = rs.getInt("laneco");
+				bs.tagkeyseq = rs.getString("tagkeyseq");
+				return bs;
+			}
+			
+		};
+		return this.jdbcTemplate.query("pl_BanquesolexaUneFC @flowcellid=?", mapper, containerSupportCode);
 	}
-	return valid;
-    }
-    
 	
-	public Plate getPlate(String code) {
-		Logger.info("pl_PlaqueSolexa @plaqueId="+code);
-		List<Plate> plates = this.jdbcTemplate.query("pl_PlaqueSolexa @plaqueId=?", new Object[]{code}, new RowMapper<Plate>() {
-	        public Plate mapRow(ResultSet rs, int rowNum) throws SQLException {
-	            	Plate plate = new Plate();
-	        	//well.plateCode = rs.getString("plaqueId");
-	        	plate.code = rs.getString("plaqueId");
-	        	plate.typeCode = rs.getInt("emnco");
-	        	plate.typeName = rs.getString("emnnom");
-	        	plate.nbWells = rs.getInt("nombrePuitUtilises");
-	        	plate.validQC = getTBoolean(rs.getInt("valqc"));
-	        	plate.validRun = getTBoolean(rs.getInt("valrun"));
-	        	plate.comment = rs.getString("plaquecom");
-	            return plate;
-	        }
-	    });
+    /**
+    * pc_Runsolexa
+	*
+    * @placo	 int,			//Planning 
+    * @num		 smallint,		// Numero ligne 
+    * @runslnom varchar(255),       // Nom du un 
+	* @runsldc varchar(10), // Date de creation 
+	* @runslddt varchar(10), // Date de debut de transfert  
+	* @runsldft varchar(10),  // Date de fin de transfert 
+	* @runsldispatch bit ,// Run dispatch o/n 
+    * @runslnbcluster       numeric(12,0), // nb cluster 
+    * @runslnbseq           int,// nb sequences 
+    * @rnslnbbasetot        numeric(12,0), // nb bases total 
+    * @runslposition varchar(10) =null, // Position 
+    * @runslvrta varchar(50), // Version RTA 
+    * @runslvflowcell varchar(50)=null, // Version Flowcell 
+    * @runslctrlane smallint=null, // Controle lane 0 si toutes les lanes ont été utilisées 
+	* @mismatch int =null //donne la possibilité de modifier la valeur de mismatch par défaut
+	*
+    **/
+    public void insertRun(Run run, DepotSolexa ds){
+    	RunSolexa rs = convertRunToRunSolexa(run, ds); 		
+    	
+    	Logger.info("insertRun : "+rs);
+    	
+    	this.jdbcTemplate.update("pc_Runsolexa @placo=?, @num=?, @runslnom=?, @runsldc=?, @runslddt=?, @runsldft=?, @runsldispatch=?, @runslnbcluster=?, "
+    			+ "@runslnbseq=?, @rnslnbbasetot=?, @runslposition=?, @runslctrlane=?, @runslvrta=?, @runslvflowcell=?, @mismatch=?", 
+    			rs.placo, rs.num, rs.runslnom, rs.runsldc, rs.runslddt, rs.runsldft, rs.runsldispatch, rs.runslnbcluster,
+    			rs.runslnbseq, rs.rnslnbbasetot, rs.runslposition, rs.runslctrlane, rs.runslvrta, rs.runslvflowcell, rs.mismatch);
+    	
+    }
+
+    public void insertLanes(List<Lane> lanes, DepotSolexa ds){
+    	for(Lane lane : lanes){
+    		LaneSolexa ls = convertLaneToLaneSolexa(lane, ds);
+    		Logger.info("insertLanes : "+ls);
+    		this.jdbcTemplate.update("pc_Lanemetrics @lanenum=?, @matmaco=?, @lmnbseq=?, @lmnbclustfiltr=?, @lmperseqfiltr=?, @lmnbclust=?, "
+    				+ "@lmperclustfiltr=?, @lmnbbase=?, @lmnbcycle=?, @pistnbcycle=?, @lmphasing=?, @lmprephasing=?",
+    				ls.lanenum, ls.matmaco, ls.lmnbseq, ls.lmnbclustfiltr, ls.lmperseqfiltr, ls.lmnbclust,
+    				ls.lmperclustfiltr,ls.lmnbbase,ls.lmnbcycle,ls.pistnbcycle,ls.lmphasing,ls.lmprephasing);
+    	}
+    }
+    
+    public void deleteRun(String code){
+    	this.jdbcTemplate.update("ps_RunsolexaEtMetricsUnNom ?", code);
+    }
+    
+    private LaneSolexa convertLaneToLaneSolexa(Lane lane, DepotSolexa ds) {
+    	/*
+    	 * pc_Lanemetrics @lanenum=1, @matmaco=115893, @lmnbseq=21696101, @lmnbclustfiltr=21758161, @lmperseqfiltr=99.71, @lmnbclust=23222149, @lmperclustfiltr=93.70, @lmnbbase=13061052802, @lmnbcycle='301,301', @pistnbcycle=602, @lmphasing='NULL', @lmprephasing='NULL'
+    	 */
+    	LaneSolexa ls = new LaneSolexa();
+    	ls.lanenum = lane.number;
+    	ls.matmaco = ds.matmaco; 
+    	ls.lmnbseq = (Long)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbClusterInternalAndIlluminaFilter"); 
+    	ls.lmnbclustfiltr= (Long)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbClusterIlluminaFilter"); 
+    	ls.lmperseqfiltr= (Double)getNGSRGProperty(lane.treatments.get("ngsrg"),"percentClusterInternalAndIlluminaFilter"); 
+    	ls.lmnbclust= (Long)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCluster"); 
+    	ls.lmperclustfiltr= (Double)getNGSRGProperty(lane.treatments.get("ngsrg"),"percentClusterIlluminaFilter"); 
+    	ls.lmnbbase= (Long)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbBaseInternalAndIlluminaFilter");
+    	ls.lmnbcycle= (Integer)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCycleRead1")+","+(Integer)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCycleRead2"); 
+    	ls.pistnbcycle= (Integer)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCycleRead1")+(Integer)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCycleRead2");
+    	ls.lmphasing= (String)getNGSRGProperty(lane.treatments.get("ngsrg"),"phasing");
+    	ls.lmprephasing= (String)getNGSRGProperty(lane.treatments.get("ngsrg"),"prephasing");
+		return ls;
+	}
 
 
-		if(plates.size() == 1){
-			Plate plate = plates.get(0);
-			Logger.info("pl_MaterielmanipPlaque @plaqueId="+plate.code);
-			List<Well> wells = this.jdbcTemplate.query("pl_MaterielmanipPlaque @plaqueId=?", new Object[]{code}, new RowMapper<Well>() {
-		        public Well mapRow(ResultSet rs, int rowNum) throws SQLException {
-			    Well well = new Well();
-			    well.name = rs.getString("matmanom");
-			    well.code = rs.getInt("matmaco");
-			    well.x = rs.getString("plaqueX");
-			    well.y = rs.getString("plaqueY");
-			    well.typeCode = rs.getInt("emnco");
-			    well.typeName = rs.getString("emnnom");
-			    well.valid = getTBoolean(rs.getInt("val"));
-			    well.typeMaterial = rs.getString("tadnom");
-			    return well;
-		        }
-		    });
+	public RunSolexa convertRunToRunSolexa(Run run, DepotSolexa ds) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    	
+    	RunSolexa rs = new RunSolexa();
+    	rs.placo = ds.placo;
+    	rs.num = ds.num;
+    	rs.runslnom = run.code;
+    	rs.runsldc = sdf.format(run.sequencingStartDate);
+    	rs.runslddt = sdf.format(getStateDate("IP-RG", run.state)); 		
+    	rs.runsldft = sdf.format(getStateDate("F-RG", run.state));  		
+    	rs.runsldispatch = run.dispatch; 
+    	rs.runslnbcluster= (Long) getNGSRGProperty(run.treatments.get("ngsrg"),"nbClusterTotal");
+    	rs.runslnbseq= (Long) getNGSRGProperty(run.treatments.get("ngsrg"),"nbClusterIlluminaFilter");
+    	rs.rnslnbbasetot =(Long) getNGSRGProperty(run.treatments.get("ngsrg"),"nbBase");
+    	rs.runslposition= (((String) getNGSRGProperty(run.treatments.get("ngsrg"),"flowcellPosition")).equals("-"))?null:(String) getNGSRGProperty(run.treatments.get("ngsrg"),"flowcellPosition"); 
+    	rs.runslvrta = (String) getNGSRGProperty(run.treatments.get("ngsrg"),"rtaVersion"); 	
+    	rs.runslvflowcell= (String) getNGSRGProperty(run.treatments.get("ngsrg"),"flowcellVersion");
+    	rs.runslctrlane= (((Integer)getNGSRGProperty(run.treatments.get("ngsrg"),"controlLane")).equals(Integer.valueOf(0))?null:(Integer)getNGSRGProperty(run.treatments.get("ngsrg"),"controlLane")); 	
+    	rs.mismatch= ((Boolean) getNGSRGProperty(run.treatments.get("ngsrg"),"mismatch")?1:0);
+    	
+    	if(!rs.validate()){
+    		throw new RuntimeException("Validation RunSolexa Failed. "+rs);
+    	};
+    	
+		return rs;
+	}
 
-			plate.wells = wells.toArray(new Well[wells.size()]);
-			return plate;
-		}else{
-			return null;
+
+	private Object getNGSRGProperty(Treatment treatment, String propertyCode) {
+		return treatment.results().get("default").get(propertyCode).value;
+	}
+
+
+	private Date getStateDate(String stateCode, State state) {
+		for(TransientState ts : state.historical){
+			if(stateCode.equals(ts.code)){
+				return ts.date;
+			}
+		}
+		throw new RuntimeException("insertRun : missing state date : "+stateCode);
+	}
+
+
+	public void insertReadSet(ReadSet rs, BanqueSolexa bs) {
+		/*
+		  	@laneco int, 
+			@banco int =null,   
+			@tagkeyseq varchar(50), 
+			@lseqnbseqval numeric(15,0),
+			@lseqnbbase numeric(15,0), 
+			@lbscoreQ30 numeric(5,2), 
+			@lbscorequal numeric(5,2) 
+		 */
+		Long lseqnbseqval = (Long) getNGSRGProperty(rs.treatments.get("ngsrg"),"nbCluster");
+		Long lseqnbbase = (Long) getNGSRGProperty(rs.treatments.get("ngsrg"),"nbBases");
+		Double lbscoreQ30 = (Double) getNGSRGProperty(rs.treatments.get("ngsrg"),"Q30");
+		Double lbscorequal =(Double) getNGSRGProperty(rs.treatments.get("ngsrg"),"qualityScore");
+		
+		this.jdbcTemplate.update("pc_Lanebanquehautdebit @laneco=?, @banco=?, @tagkeyseq=?, "
+				+ "@lseqnbseqval=?, @lseqnbbase=?, @lbscoreQ30=?, @lbscorequal=?",
+				bs.laneco, bs.banco, bs.tagkeyseq, lseqnbseqval, lseqnbbase, lbscoreQ30, lbscorequal);
+		
+	}
+
+
+	public void insertFiles(ReadSet rs, boolean deleteAllBeforeInsert) {
+		/*
+		pc_Fichierlotseq
+
+		@lseqco int, 
+		@flotseqname varchar(90),
+		@flotseqext varchar(9),
+		@flotseqascii smallint =null, 
+		@tfileco tinyint,
+		@flabelco int,
+		@futil bit
+		*/
+		
+		if(deleteAllBeforeInsert){
+			this.jdbcTemplate.update("ps_FichierlotseqUnlotsequence @lseqco = ?",getLseqco(rs));
+		}
+		
+		for(File file:rs.files){
+			
+			//Logger.debug("select lseqco from Lotsequence l inner join Runhd r on r.runhco = l.runhco where lseqnom = '"+rs.code+"' and runhnom = '"+rs.runCode+"'");
+			
+			Integer lseqco = getLseqco(rs);
+			Integer tfileco = convertTypeCode(file.typeCode);  //=
+			Integer flabelco = convertLabel((String)file.properties.get("label").value);
+			String flotseqname = file.fullname.replace("."+file.extension, "");
+			
+			
+			this.jdbcTemplate.update("pc_Fichierlotseq @lseqco=?, @flotseqname=?, @flotseqext=?, "
+					+ "@flotseqascii=?, @tfileco=?, @flabelco=?, @futil=?",
+					lseqco, flotseqname, file.extension, Integer.valueOf((String)file.properties.get("asciiEncoding").value), tfileco, flabelco, file.usable);
+					
 		}
 	}
 
 
-	public boolean isPlateExist(String code) {
-		Logger.info("pl_PlaqueSolexa @plaqueId="+code);
-		List<Plate> plates = this.jdbcTemplate.query("pl_PlaqueSolexa @plaqueId=?", new Object[]{code}, new RowMapper<Plate>() {
-	        public Plate mapRow(ResultSet rs, int rowNum) throws SQLException {
-	        	Plate plate = new Plate();
-	        	plate.code = rs.getString("plaqueId");
-	            return plate;
-	        }
-	    });
-		return (plates.size() > 0);
-	}
-
-	public List<ListObject> getListObjectFromProcedureLims(String procedure) {
-		List<ListObject> listObjects = this.jdbcTemplate.query(procedure,
-				new RowMapper<ListObject>() {
-					public ListObject mapRow(ResultSet rs, int rowNum)
-							throws SQLException {
-						ListObject value = new ListObject();
-						value.name = rs.getString(1);
-						value.code = rs.getString(2);
-						return value;
-					}
-				});
-		return listObjects;
+	private Integer getLseqco(ReadSet rs) {
+		return this.jdbcTemplate.queryForObject("select lseqco from Lotsequence l inner join Runhd r on r.runhco = l.runhco "
+				+ "where lseqnom = ? and runhnom = ?",Integer.class, rs.code, rs.runCode);
 	}
 
 
-	public void deletePlate(String plateCode) {
-		Logger.info("ps_PlaqueSolexa @plaqueId="+plateCode);
-		this.jdbcTemplate.update("ps_PlaqueSolexa @plaqueId=?", new Object[]{plateCode});
+	private Integer convertLabel(String value) {
+		if("READ1".equalsIgnoreCase(value)){
+			return 1;
+		}else if("READ2".equalsIgnoreCase(value)){
+			return 2;
+		}else if("SINGLETON".equalsIgnoreCase(value)){
+			return 3;
+		}else{
+			Logger.error("No label !!!"+value);
+		}
+		return null;
 	}
-	*/
 
 
+	private Integer convertTypeCode(String typeCode) {
+		if("RAW".equalsIgnoreCase(typeCode)){
+			return 7;
+		}else if("TRIM".equalsIgnoreCase(typeCode)){
+			return 9;
+		}else if("CLEAN".equalsIgnoreCase(typeCode)){
+			return 10;
+		}else if("NO_RIBO_CLEAN".equalsIgnoreCase(typeCode)){
+			return 11;
+		}else if("RIBO_CLEAN".equalsIgnoreCase(typeCode)){
+			return 12;
+		}else{
+			Logger.error("No typeCode !!!"+typeCode);
+		}
+		return null;
+	}
+
+
+	public void dispatchRun(Run run) {
+		/*
+			pm_RunsolexaDispatch
+			@runslnom varchar(255),	
+	    	@runsldft	char(20) 
+	    */
+	    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
+	    this.jdbcTemplate.update("pm_RunsolexaDispatch @runslnom=?, @runsldft=?", run.code, sdf.format(getStateDate("F-RG", run.state)));
+	}
+
+
+	public void updateRunInNGL(Run run) {
+		this.jdbcTemplate.update("pm_RunhdInNGL  @runhnom=?", run.code);
+		
+	}
+
+
+	public void updateRunEtat(Run run, int etat) {
+		this.jdbcTemplate.update("pm_RunhdEtape @runhnom=?, @erunhco= ?", run.code, etat);
+		
+	}
+
+
+	public void updateReadSetEtat(ReadSet readset, int etat) {
+		this.jdbcTemplate.update("pm_LotsequenceEtape @lseqnom=?, @elseqco= ?", readset.code, etat);
+		
+	}
+
+
+	public void updateReadSetBaseUtil(ReadSet readset) {
+		
+		this.jdbcTemplate.update("pm_LotsequenceClean @lseqco=?, @lseqnbsequtil=?, @lseqnbbaseutil=?", getLseqco(readset), 
+				getNGSRGProperty(readset.treatments.get("global"), "usefulSequences"), getNGSRGProperty(readset.treatments.get("global"), "usefulBases"));
+	}
+
+	public void updateReadSetArchive(ReadSet readset){
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		if(null != readset.archiveId && null != readset.archiveDate){
+			this.jdbcTemplate.update("pm_LotsequenceArchiveUneListe @lseqlist=?,@lseqssid=?,@lseqdarch=?", getLseqco(readset)+"", Long.valueOf(readset.archiveId), sdf.format(readset.archiveDate));
+		}
+	}
+	
+	public void linkRunWithMaterielManip(){
+		this.jdbcTemplate.update("pc_Runmaterielmanip");
+	}
+	
+	public List<RunSolexa> findRunMismatch(){
+		RowMapper<RunSolexa> mapper = new RowMapper<RunSolexa>(){
+
+			@Override
+			public RunSolexa mapRow(ResultSet rs, int rowNum)
+					throws SQLException {
+				RunSolexa ds = new RunSolexa();
+				ds.runslnom = rs.getString("runslnom");
+				ds.mismatch =  rs.getInt("mismatch");
+				return ds;
+			}
+			
+		};
+		return this.jdbcTemplate.query("select runhnom as runslnom, mismatch from Runhd r inner join Runsolexa rs on rs.runhco = r.runhco", mapper);		
+	}
 }
 
