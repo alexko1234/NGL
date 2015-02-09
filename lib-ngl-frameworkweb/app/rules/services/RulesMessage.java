@@ -1,6 +1,9 @@
 package rules.services;
 
+import java.util.Arrays;
 import java.util.List;
+
+
 
 /**
  * Messages can be any kind of object but have to be immutable. Akka can’t enforce immutability (yet) so this has to be by convention.
@@ -17,6 +20,13 @@ public class RulesMessage {
 	public RulesMessage(List<Object> facts, String keyRules, String nameRule) {
 		super();
 		this.facts = facts;
+		this.keyRules = keyRules;
+		this.nameRule = nameRule;
+	}
+	
+	public RulesMessage(String keyRules, String nameRule, Object...facts) {
+		super();
+		this.facts = Arrays.asList(facts);
 		this.keyRules = keyRules;
 		this.nameRule = nameRule;
 	}
