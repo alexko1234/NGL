@@ -489,8 +489,9 @@ angular.module('datatableServices', []).
 		    			 * Load all data for url column type
 		    			 */
 		    			loadUrlColumnProperty :function(){
+		    				
 		    				var urlColumns = this.getColumnsConfig().filter(function(column){
-		    					return (column.url !== undefined);
+		    					return (column.url !== undefined && column.url !== null);
 		    				});
 		    				
 		    				var displayResult = this.allResult;
@@ -516,6 +517,7 @@ angular.module('datatableServices', []).
 									}																									
 								});
 							});	
+							
 		    			},
 		    			
 		    			//pagination functions
@@ -1623,7 +1625,7 @@ angular.module('datatableServices', []).
 			    						columnsToPrint.forEach(function(column) {	
 			    							if(!that.config.hide.columns[column.id]){
 			    							//algo to set colValue (value of the column)
-				    			    			if (!result.line.group && !angular.isDefined(column.url) && exportType !== 'groupsOnly') {
+				    			    			if (!result.line.group && (column.url === undefined || column.url === null) && exportType !== 'groupsOnly') {
 				    			    				var property = column.property;
 				    			    				property += that.getFilter(column);
 				    			    				property += that.getFormatter(column);
@@ -1648,7 +1650,7 @@ angular.module('datatableServices', []).
 				    			    					colValue = colValue.replace(/\u00a0/g,"");
 				    			    				}				    			    				
 				    			    				lineValue = lineValue + ((colValue!==null)&&(colValue)?colValue:"") + delimiter;
-				    			    			}else if(!result.line.group && angular.isDefined(column.url)  && exportType !== 'groupsOnly') {
+				    			    			}else if(!result.line.group && column.url !== undefined && column.url !== null  && exportType !== 'groupsOnly') {
 				    			    				var url = $parse(column.url)(result.data);
 				    			    				colValue = $parse(column.property+that.getFilter(column)+that.getFormatter(column))(that.urlCache[url]);
 				    			    				
@@ -2273,7 +2275,7 @@ angular.module('datatableServices', []).
 			    		if(onlyProperty){
 			    			return currentScope.$eval(column.property, value.data);
 			    		}else{
-			    			if(!value.line.group && !angular.isDefined(column.url)){
+			    			if(!value.line.group && (column.url === undefined || column.url === null)){
 			    				return currentScope.$eval(column.property+this.getFilter(column)+this.getFormatter(column), value.data);
 			    			}else if(value.line.group){
 			    				var v = currentScope.$eval("group."+column.id, value.data);
@@ -2286,7 +2288,7 @@ angular.module('datatableServices', []).
 			    				}else{
 			    					return undefined;
 			    				}			    							    				
-			    			}else if(!value.line.group && angular.isDefined(column.url)){
+			    			}else if(!value.line.group && column.url !== undefined && column.url !== null){
 			    				var url = currentScope.$eval(column.url, value.data);
 			    				return currentScope.$eval(column.property+this.getFilter(column)+this.getFormatter(column), scope.dtTable.urlCache[url]);			    				
 			    			}
