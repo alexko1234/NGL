@@ -242,8 +242,9 @@ GET     /codes.js        	        				controllers.main.tpl.Main.jsCodes()
 #migration
 GET		/migrationSampleOnContainer					controllers.migration.MigrationUpdateSampleOnContainer.migration()
 GET		/migrationRSFF								controllers.migration.RemoveStateFromFile.migration()
-#GET		/deleteTreatments							controllers.migration.DeleteReadSetTreatements.migration()
+#GET		/deleteTreatments						controllers.migration.DeleteReadSetTreatements.migration()
 GET		/migrationWheat								controllers.migration.UpdateBABle.migration()
+GET		/migrationFungi								controllers.migration.MigrationTaxonomyFungi.migration()
 
 #ngs-rg api
 GET		/api/ngsrs/instruments						controllers.ngsrg.lims.LimsInformations.instruments()
