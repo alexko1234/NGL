@@ -30,11 +30,11 @@ import org.mongojack.DBQuery;
 
 import play.Logger;
 import play.mvc.Result;
-import utils.AbstractTests;
+import utils.AbstractTestsCNG;
 import utils.RunMockHelper;
 import fr.cea.ig.MongoDBDAO;
 
-public class LaneTreatmentsTests extends AbstractTests {
+public class LaneTreatmentsTests extends AbstractTestsCNG {
 	
 	static Container c;
 	

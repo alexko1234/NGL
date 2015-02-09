@@ -29,11 +29,11 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
 import play.mvc.Result;
-import utils.AbstractTests;
+import utils.AbstractTestsCNG;
 import utils.RunMockHelper;
 import fr.cea.ig.MongoDBDAO;
 
-public class FilesTests extends AbstractTests{
+public class FilesTests extends AbstractTestsCNG{
 	
 	static Container c;
 	

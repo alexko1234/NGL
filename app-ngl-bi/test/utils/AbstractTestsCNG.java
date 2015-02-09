@@ -17,7 +17,7 @@ import play.test.Helpers;
 
 
 
-public abstract class AbstractTests {
+public abstract class AbstractTestsCNG {
 	
 	protected static FakeApplication app;
 	@BeforeClass
@@ -43,6 +43,9 @@ public abstract class AbstractTests {
 		config.put("ebean.default","models.*");
 		config.put("mongodb.database", "NGL-TESTU");
 		config.put("mongodb.credentials", "testu:testu");
+		//config.put("mongodb.database", "CNS-NGL");
+		//config.put("mongodb.credentials", "ngl:ngl");
+				
 		config.put("mongodb.servers", "mongodev.genoscope.cns.fr:27017");
 		config.put("mongodb.defaultWriteConcern", "SAFE"); 
 		
@@ -71,8 +74,14 @@ public abstract class AbstractTests {
 		
 		config.put("db.lims.driver", "net.sourceforge.jtds.jdbc.Driver");
 		config.put("db.lims.url", "jdbc:jtds:sybase://sybasedev.genoscope.cns.fr:3015/dblims");
+		//config.put("db.lims.url", "jdbc:jtds:sybase://sybaseuat.genoscope.cns.fr:4200/dblims");
+		
 		config.put("db.lims.user", "www");
 		config.put("db.lims.password", "wawiwo");
+		config.put("db.lims.partitionCount", "1");
+		config.put("db.lims.maxConnectionsPerPartition", "10");
+		config.put("db.lims.minConnectionsPerPartition", "1");
+		config.put("db.lims.logStatements", "true");
 		config.put("db.lims.jndiName", "lims");
 		
 		
@@ -92,7 +101,7 @@ public abstract class AbstractTests {
 	    config.put("mail.smtp.host", "smtp.genoscope.cns.fr");
 	    config.put("play.spring.context-path", "cns-application-context.xml");
 	    config.put("rules.key", "nglBI");
-	    config.put("rules.changesets", "rules/cng/changesets/changesets.xml");
+	    config.put("rules.changesets", "rules/ngl-bi/cng/changesets/changesets.xml");
 		return config;
 		
 	}

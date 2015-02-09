@@ -23,11 +23,11 @@ import play.Logger;
 import play.Play;
 import rules.services.RulesException;
 import rules.services.RulesServices;
-import utils.AbstractTests;
+import utils.AbstractTestsCNG;
 import alert.AlertSAVInfo;
 import fr.cea.ig.MongoDBDAO;
 
-public class AlertSAVTests extends AbstractTests{
+public class AlertSAVTests extends AbstractTestsCNG{
 
 	private static Run runData ;
 

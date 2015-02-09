@@ -20,10 +20,11 @@ import org.mongojack.DBQuery;
 import play.Play;
 import rules.services.RulesException;
 import rules.services.RulesServices;
-import utils.AbstractTests;
+import utils.AbstractTestsCNG;
+import utils.AbstractTestsCNS;
 import fr.cea.ig.MongoDBDAO;
 
-public class StatRGTest extends AbstractTests{
+public class StatRGTest extends AbstractTestsCNS{
 
 	private static Run runData ;
 
@@ -53,7 +54,7 @@ public class StatRGTest extends AbstractTests{
 
 	
 	@Test
-	public void testStatRG() throws RulesException, ParseException
+	public void testStatQC() throws RulesException, ParseException
 	{
 
 

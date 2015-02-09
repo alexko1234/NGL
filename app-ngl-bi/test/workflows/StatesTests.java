@@ -27,12 +27,12 @@ import org.junit.Test;
 import org.mongojack.DBQuery;
 
 import play.mvc.Result;
-import utils.AbstractTests;
+import utils.AbstractTestsCNG;
 import utils.RunMockHelper;
 import fr.cea.ig.MongoDBDAO;
 
 
-public class StatesTests extends  AbstractTests {	
+public class StatesTests extends  AbstractTestsCNG {	
 	
 	static Container c;
 	Run run;

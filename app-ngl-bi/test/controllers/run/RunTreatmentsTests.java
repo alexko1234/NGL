@@ -26,11 +26,11 @@ import org.junit.Test;
 import org.mongojack.DBQuery;
 
 import play.mvc.Result;
-import utils.AbstractTests;
+import utils.AbstractTestsCNG;
 import utils.RunMockHelper;
 import fr.cea.ig.MongoDBDAO;
 
-public class RunTreatmentsTests extends AbstractTests {	
+public class RunTreatmentsTests extends AbstractTestsCNG {	
 	
 	static Container c;
 	

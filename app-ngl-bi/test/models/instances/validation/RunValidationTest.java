@@ -41,7 +41,7 @@ import org.mongojack.DBQuery;
 
 import play.data.validation.ValidationError;
 import play.mvc.Result;
-import utils.AbstractTests;
+import utils.AbstractTestsCNG;
 import utils.Constants;
 import utils.RunMockHelper;
 import validation.ContextValidation;
@@ -49,7 +49,7 @@ import validation.run.instance.LaneValidationHelper;
 import validation.utils.ValidationConstants;
 import fr.cea.ig.MongoDBDAO;
 
-public class RunValidationTest extends AbstractTests {
+public class RunValidationTest extends AbstractTestsCNG {
 	
 	static Container c;
 	static ContainerSupport cs;

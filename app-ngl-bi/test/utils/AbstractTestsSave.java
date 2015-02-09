@@ -89,7 +89,7 @@ public abstract class AbstractTestsSave {
 	    config.put("institute", "CNS");
 	    config.put("mail.smtp.host", "smtp.genoscope.cns.fr");
 	    config.put("rules.key", "nglBI");
-	    config.put("rules.changesets", "rules/cng/changesets/changesets.xml");
+	    config.put("rules.changesets", "rules/ngl-bi/cng/changesets/changesets.xml");
 	    config.put("play.spring.context-path", "cns-application-context.xml");
 		return config;
 		

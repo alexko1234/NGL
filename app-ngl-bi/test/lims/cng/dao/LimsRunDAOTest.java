@@ -9,9 +9,9 @@ import lims.models.instrument.Instrument;
 import org.junit.Test;
 
 import play.api.modules.spring.Spring;
-import utils.AbstractTests;
+import utils.AbstractTestsCNG;
 
-public class LimsRunDAOTest extends AbstractTests {
+public class LimsRunDAOTest extends AbstractTestsCNG {
 
 	@Test
 	 public void getInstruments() {

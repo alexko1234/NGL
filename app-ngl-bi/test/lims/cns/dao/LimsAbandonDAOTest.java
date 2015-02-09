@@ -12,9 +12,9 @@ import org.junit.Test;
 
 import play.Logger;
 import play.api.modules.spring.Spring;
-import utils.AbstractTests;
+import utils.AbstractTestsCNG;
 
-public class LimsAbandonDAOTest extends AbstractTests {
+public class LimsAbandonDAOTest extends AbstractTestsCNG {
 
 	@Test
 	public void getTacheHD() {

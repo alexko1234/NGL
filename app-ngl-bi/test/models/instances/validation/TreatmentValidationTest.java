@@ -42,14 +42,14 @@ import org.mongojack.DBQuery;
 
 import play.Play;
 import play.mvc.Result;
-import utils.AbstractTests;
+import utils.AbstractTestsCNG;
 import utils.Constants;
 import utils.RunMockHelper;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
 
 
-public class TreatmentValidationTest extends AbstractTests {	
+public class TreatmentValidationTest extends AbstractTestsCNG {	
 	
 	static Container c;
 	
