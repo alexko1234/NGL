@@ -175,6 +175,7 @@ experiments.flowcell.design = Composition flowcell
 experiments.flowcell.roadMap = Feuille de route
 experiment.reagents = Reactifs
 experiments.addNewReagentLine = Ajouter un réactif
+experiment.placeholder.reagentOrBoxCode = Cb boite ou reactif
 
 experiment.placeholder.fromDate = Expérience depuis le (jj/mm/aaaa)
 experiment.placeholder.toDate = Expérience jusqu''au (jj/mm/aaaa)
