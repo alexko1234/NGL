@@ -518,7 +518,7 @@ public class ExperimentTests extends AbstractTests{
 		containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.in("support.code", expUpdate.inputContainerSupportCodes) ).toList();
 		assertThat(containers).isNotEmpty();
 		for(Container container:containers){
-			assertThat(container.state.code).isEqualTo("UA");
+			assertThat(container.state.code).isEqualTo("IS");
 			//assertThat(container.inputProcessCodes).isNull();
 		}
 		processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME,Process.class,DBQuery.in("code", processCodes) ).toList();
@@ -582,7 +582,7 @@ public class ExperimentTests extends AbstractTests{
 		containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.in("support.code", expUpdate.inputContainerSupportCodes) ).toList();
 		assertThat(containers).isNotEmpty();
 		for(Container container:containers){
-			assertThat(container.state.code).isEqualTo("UA");
+			assertThat(container.state.code).isEqualTo("IS");
 			//assertThat(container.inputProcessCodes).isNull();
 		}
 		
