@@ -1,0 +1,14 @@
+
+
+<change-set xmlns='http://drools.org/drools-5.0/change-set'
+	xmlns:xs='http://www.w3.org/2001/XMLSchema-instance'
+	xs:schemaLocation='classpath:rules/common/change-set-1.0.0.xsd'>
+
+	<add>
+		<resource source='classpath:rules/ngl-bi/cns/drl/import.drl' type='DRL' />
+		<resource source='classpath:rules/ngl-bi/common/drl/statRG_1.drl' type='DRL' />
+		<resource source='classpath:rules/ngl-bi/cns/drl/statBPA_1.drl' type='DRL' />
+		<resource source='classpath:rules/ngl-bi/cns/drl/statQC_1.drl' type='DRL' />
+	</add>
+
+</change-set>

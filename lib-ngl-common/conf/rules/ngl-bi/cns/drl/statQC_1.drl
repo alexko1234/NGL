@@ -1,0 +1,37 @@
+#created on: Nov 21, 2013
+package rules
+
+rule "Find Fungi for taxonomy treatment"
+	@nglBI( F_QC_1 )
+	dialect "java"
+	salience 600
+	no-loop
+	when
+		$readset : ReadSet ( $treatmentTaxo : treatments["taxonomy"], $treatmentTaxo != null)		
+	then
+		Logger.debug("Find Fungi in taxonomy krona "+$readset.code);
+		String krona = new String(((PropertyFileValue)$treatmentTaxo.results.get("read1").get("krona")).value);
+		Pattern p = Pattern.compile(".*<node name=\"Fungi\">\\s+<magnitude><val>(\\d+)</val></magnitude>.*", Pattern.DOTALL);
+		Matcher m = p.matcher(krona);
+		if(m.matches()){
+			Double fungiPercentValue = (Double.valueOf(m.group(1)) / 20000) * 100;
+			Logger.debug("Match Group Fungi = "+fungiPercentValue);
+			
+			List<Map<String, ?>> keywordBilan = ((PropertyObjectListValue)$treatmentTaxo.results.get("read1").get("keywordBilan")).value;
+			
+			Map<String, Object> fungiKeyword = new HashMap<String, Object>();
+			fungiKeyword.put("keyword","Fungi");
+			fungiKeyword.put("percent",fungiPercentValue);
+			fungiKeyword.put("nbSeq",Integer.valueOf(m.group(1)));
+			
+			keywordBilan.add(fungiKeyword);
+			
+			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+						DBQuery.is("code", $readset.code),
+						DBUpdate.set("treatments.taxonomy.read1.keywordBilan.value", keywordBilan));
+			
+		}
+		
+end
+
+
