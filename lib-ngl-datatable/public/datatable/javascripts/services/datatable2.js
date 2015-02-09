@@ -26,7 +26,7 @@ angular.module('datatableServices', []).
 													},
 													"hide":true, //can be hidden or not
 													"order":true, //can be ordered or not
-													"type":"text"/"number"/"month"/"week"/"time"/"datetime"/"range"/"color"/"mail"/"tel"/"url"/"date", //the column type
+													"type":"text"/"number"/"month"/"week"/"time"/"datetime"/"range"/"color"/"mail"/"tel"/"date", //the column type
 													"choiceInList":false, //when the column is in edit mode, the edition is a list of choices or not
 													"listStyle":"select"/"radio", //if choiceInList=true, listStyle="select" is a select input, listStyle="radio" is a radio input
 													"possibleValues":null, //The list of possible choices
@@ -37,6 +37,7 @@ angular.module('datatableServices', []).
 													"group": false //if column can be used to group data
 													"groupMethod": sum, average, distinct,
 													"defaultValues":"" //If the value of the column is undefined or "" when the user edit, this value show up
+													"url"://to lazy data
 													"
 												  }*/
 							columnsUrl:undefined, //Load columns config
@@ -258,6 +259,7 @@ angular.module('datatableServices', []).
 		    				
 		    				this.allResult = data;
 		    				this.totalNumberRecords = recordsNumber;
+		    				this.loadUrlColumnProperty();
 		    				this.computeGroup();
 		    				this.sortAllResult();
 		    				this.computeDisplayResult();
@@ -282,6 +284,7 @@ angular.module('datatableServices', []).
 			    					this.allResult.push(data[i]);				    				
 			    				}
 			    				this.totalNumberRecords = this.allResult.length;
+			    				this.loadUrlColumnProperty();
 			    				this.computeGroup();
 			    				this.sortAllResult();
 			    				this.computeDisplayResult();
@@ -477,31 +480,30 @@ angular.module('datatableServices', []).
 		    					this.displayResult = displayResultTmp;
 		    				}
 		    				
-		    				this.loadUrlColumnProperty();
-		    				
 		    				if(this.config.edit.byDefault){
 		    					this.config.edit.withoutSelect = true;
 		    					this.setEdit();
 		    				}		    						    				    				
 		    			},
-		    			
+		    			/**
+		    			 * Load all data for url column type
+		    			 */
 		    			loadUrlColumnProperty :function(){
 		    				var urlColumns = this.getColumnsConfig().filter(function(column){
 		    					return (column.url !== undefined);
 		    				});
 		    				
-		    				var displayResult = this.displayResult;
+		    				var displayResult = this.allResult;
 		    				var urlQueries = [];
-		    				var urlCache = this.urlCache;
+		    				var urlCache = this.urlCache = {};
 		    				
 		    				urlColumns.forEach(function(column){
 		    					displayResult.forEach(function(value){
-		    						var url = $parse(column.url)(value.data);
+	    							var url = $parse(column.url)(value);
 		    						if(!angular.isDefined(urlCache[url])){
-		    							urlCache[url] = "in waiting data";
+		    							urlCache[url] = "in waiting data ...";
 		    							urlQueries.push($http.get(url, {url:url}));
-		    						}
-		    					
+		    						}		    								    					
 		    					});
 		    				});
 		    				
@@ -510,9 +512,8 @@ angular.module('datatableServices', []).
 									if(result.status !== 200){
 										console.log("Error for load column property : "+result.config.url);
 									}else{
-										urlCache[result.config.url] = result.data;
-									}
-																									
+										urlCache[result.config.url] = result.data;										
+									}																									
 								});
 							});	
 		    			},
@@ -1622,7 +1623,7 @@ angular.module('datatableServices', []).
 			    						columnsToPrint.forEach(function(column) {	
 			    							if(!that.config.hide.columns[column.id]){
 			    							//algo to set colValue (value of the column)
-				    			    			if (!result.line.group && !angular.isDefined(column.url) && exportType!=='groupsOnly') {
+				    			    			if (!result.line.group && !angular.isDefined(column.url) && exportType !== 'groupsOnly') {
 				    			    				var property = column.property;
 				    			    				property += (column.filter)?'|'+column.filter:'';
 				    			    				if(column.convertValue !== undefined && column.convertValue.active === true){
@@ -1630,7 +1631,7 @@ angular.module('datatableServices', []).
 				    			    				}
 				    			    				property += that.getFormatter(column);
 				    			    				colValue = $parse(property)(result.data);
-				    			    				if(column.type === "number"){
+				    			    				if(colValue !==  undefined && column.type === "number"){
 				    			    					colValue = colValue.replace(/\u00a0/g,"");
 				    			    				}
 					    							lineValue = lineValue + ((colValue!==null)&&(colValue)?colValue:"") + delimiter;
@@ -1648,12 +1649,16 @@ angular.module('datatableServices', []).
 				    			    				
 				    			    				if(colValue !==  undefined && column.type === "number"){
 				    			    					colValue = colValue.replace(/\u00a0/g,"");
-				    			    				}
-				    			    				
+				    			    				}				    			    				
 				    			    				lineValue = lineValue + ((colValue!==null)&&(colValue)?colValue:"") + delimiter;
-				    			    			}else if(!result.line.group && angular.isDefined(column.url)) {
-				    			    				colValue =  undefined;
-				    			    				alert("Url column is not yet implemented !");
+				    			    			}else if(!result.line.group && angular.isDefined(column.url)  && exportType !== 'groupsOnly') {
+				    			    				var url = $parse(column.url)(result.data);
+				    			    				colValue = $parse(column.property+that.getFilter(column)+that.getFormatter(column))(that.urlCache[url]);
+				    			    				
+				    			    				if(colValue !==  undefined && column.type === "number"){
+				    			    					colValue = colValue.replace(/\u00a0/g,"");
+				    			    				}
+				    			    				lineValue = lineValue + ((colValue!==null)&&(colValue)?colValue:"") + delimiter;
 				    			    			}
 			    							}	
 			    						});
@@ -1695,7 +1700,16 @@ angular.module('datatableServices', []).
 		    				return format;
 		    			},
 		    			
-		    			
+		    			getFilter : function(col){
+		    				var filter = '';
+	    					if(col.convertValue != undefined && col.convertValue.active == true && col.convertValue.saveMeasureValue != col.convertValue.displayMeasureValue){
+	    						filter += '|convert:'+col.convertValue;
+	    					}
+		    				if(col.filter){
+		    					return filter+'|'+col.filter;
+		    				}
+		    				return filter;
+		    			},
 		    			
 		    			/**
 		    			 * Function to enable/disable the "CSV Export" button 
@@ -2155,16 +2169,7 @@ angular.module('datatableServices', []).
 	    			
 			    	scope.dtTableFunctions.getFormatter = scope.dtTable.getFormatter;
 	    			
-	    			scope.dtTableFunctions.getFilter = function(col){
-	    				var filter = '';
-    					if(col.convertValue != undefined && col.convertValue.active == true && col.convertValue.saveMeasureValue != col.convertValue.displayMeasureValue){
-    						filter += '|convert:col.convertValue';
-    					}
-	    				if(col.filter){
-	    					return filter+'|'+col.filter;
-	    				}
-	    				return filter;
-	    			};
+	    			scope.dtTableFunctions.getFilter = scope.dtTable.getFilter;
 	    			
 	    			scope.dtTableFunctions.getOptions = function(col){
 	    				if(angular.isString(col.possibleValues)){
@@ -2249,7 +2254,7 @@ angular.module('datatableServices', []).
     						}
 	    				}else{
 	    					if(col.type === "boolean"){
-	    						return '<div ng-switch on="'+this.getDisplayFunction(col)+'"><i ng-switch-when="true" class="fa fa-check-square-o"></i><i ng-switch-default class="fa fa-square-o"></i></div>';	    						
+	    						return '<div ng-switch on="'+this.getDisplayFunction(col, false)+'"><i ng-switch-when="true" class="fa fa-check-square-o"></i><i ng-switch-default class="fa fa-square-o"></i></div>';	    						
 	    					}else if(col.type === "img" || col.type === "image"){
 	    						if(!col.format)console.log("missing format for img !!");
 	    						return '<img ng-src="data:image/'+col.format+';base64,{{'+this.getDisplayFunction(col, true)+'}}" style="max-width:{{col.width}}"/>';		    					    
@@ -2286,10 +2291,9 @@ angular.module('datatableServices', []).
 			    				}			    							    				
 			    			}else if(!value.line.group && angular.isDefined(column.url)){
 			    				var url = currentScope.$eval(column.url, value.data);
-			    				return currentScope.$eval(column.property+this.getFilter(column)+this.getFormatter(column), scope.dtTable.urlCache[url]);
+			    				return currentScope.$eval(column.property+this.getFilter(column)+this.getFormatter(column), scope.dtTable.urlCache[url]);			    				
 			    			}
-			    		}
-	    				
+			    		}	    				
 	    			}
 			    	  		    		
   		    	}
