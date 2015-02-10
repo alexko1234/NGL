@@ -426,15 +426,34 @@ angular.module('home').factory('mainService', function(){
 			/**
 			 * function to keep the form when we switch views
 			 */
-			getForm : function(){
+			getForm : function(key){
+				if(key && this.form === undefined){
+					this.form = this.getLocalSessionStorage(key);
+				}
 				return this.form;
 			},
 			
 			/**
 			 * function to return the search form
 			 */
-			setForm : function(value){
+			setForm : function(value, key){
 				this.form = angular.copy(value);
+				if(key){
+					this.setLocalSessionStorage(key, this.form);
+				}				
+			},
+			
+			getLocalSessionStorage : function(key){
+				if(sessionStorage){
+					return (sessionStorage.getItem(key) !== null)?JSON.parse(sessionStorage.getItem(key)):undefined;
+				}
+				return undefined;
+			},
+			
+			setLocalSessionStorage : function(key, object){
+				if(sessionStorage){
+					return sessionStorage.setItem(key, JSON.stringify(object));
+				}				
 			},
 			
 			/**
