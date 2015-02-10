@@ -151,7 +151,7 @@
 				
 				search : function(){
 					this.updateForm();
-					mainService.setForm(this.form);
+					mainService.setForm(this.form, "analysis");
 					this.datatable.search(this.form);
 				},
 				
@@ -254,8 +254,8 @@
 					}	
 					
 					
-					if(angular.isDefined(mainService.getForm())){
-						searchService.form = mainService.getForm();
+					if(angular.isDefined(mainService.getForm("analysis"))){
+						searchService.form = mainService.getForm("analysis");
 					}else{
 						searchService.resetForm();						
 					}

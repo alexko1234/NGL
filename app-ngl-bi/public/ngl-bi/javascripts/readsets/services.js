@@ -294,7 +294,7 @@
 				
 				search : function(){
 					this.updateForm();
-					mainService.setForm(this.form);
+					mainService.setForm(this.form, "readsets");
 					this.datatable.search(this.convertForm());
 				},
 				
@@ -423,8 +423,8 @@
 					}	
 					
 					
-					if(angular.isDefined(mainService.getForm())){
-						searchService.form = mainService.getForm();
+					if(angular.isDefined(mainService.getForm("readsets"))){
+						searchService.form = mainService.getForm("readsets");
 					}else{
 						searchService.resetForm();						
 					}
