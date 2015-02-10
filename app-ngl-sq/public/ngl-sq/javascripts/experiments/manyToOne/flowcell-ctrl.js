@@ -352,30 +352,34 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 		$scope.init_atomicTransfert(containers, atomicTransfertMethod);
 	});
 
-	$scope.drop = function(e, data) {
+	$scope.drop = function(e, data, droppedItem, ngModel, alreadyInTheModel) {
 		//capture the number of the atomicTransfertMethod
-		var array_regexp = /^experiment.value.atomicTransfertMethods\[([0-9]+)\].+/;
-		var model = e.dataTransfer.getData('Model');
-
-		var match = model.match(array_regexp);
-		if(!match){
-			$scope[model].splice($scope[model].indexOf(data), 1);	   
-		}else{
-			$scope.experiment.value.atomicTransfertMethods[match[1]].inputContainerUseds.splice($scope.experiment.value.atomicTransfertMethods[match[1]].inputContainerUseds.indexOf(data), 1);
+		if(!alreadyInTheModel){
+			var array_regexp = /^experiment.value.atomicTransfertMethods\[([0-9]+)\].+/;
+			var model = e.dataTransfer.getData('Model');
+	
+			var match = model.match(array_regexp);
+			if(!match){
+				$scope[model].splice($scope[model].indexOf(data), 1);	   
+			}else{
+				$scope.experiment.value.atomicTransfertMethods[match[1]].inputContainerUseds.splice($scope.experiment.value.atomicTransfertMethods[match[1]].inputContainerUseds.indexOf(data), 1);
+			}
+	
+			$scope.atomicTransfere.reloadContainerDragNDrop(undefined, undefined, $scope.datatable);
+			$scope.scanOpenedAll();
 		}
-
-		$scope.atomicTransfere.reloadContainerDragNDrop(undefined, undefined, $scope.datatable);
-		$scope.scanOpenedAll();
 	};
 
-	$scope.beforeDropData = function(e, data, ngModel){
-		var array_regexp = /^experiment.value.atomicTransfertMethods\[([0-9]+)\].+/;
-		var match = ngModel.match(array_regexp);
-		if(match){
-			$scope.rows[match[1]]= true;
-			$scope.scanOpenedAll();
-		}	
-
+	$scope.beforeDropData = function(e, data, ngModel, alreadyInTheModel){
+		if(!alreadyInTheModel){
+			var array_regexp = /^experiment.value.atomicTransfertMethods\[([0-9]+)\].+/;
+			var match = ngModel.match(array_regexp);
+			if(match){
+				$scope.rows[match[1]]= true;
+				$scope.scanOpenedAll();
+			}
+		}
+		
 		return data;
 	};
 

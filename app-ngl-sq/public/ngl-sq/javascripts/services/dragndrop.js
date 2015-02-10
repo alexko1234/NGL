@@ -68,7 +68,10 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
 		return {
 			scope: {
 				drop: '&', // parent
-				model: '=ngModel'
+				model: '=ngModel',
+				dropFn: '=dropFn',
+				beforeDropFn: '=beforeDropFn',
+				dropItem: '=dropItem'
 			},
 			link: function(scope, element, attrs) {
 				var el = element[0];
@@ -111,24 +114,25 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
 							this.classList.remove('over');
 
 							var draggedData = dragndropService.getDraggedData(); 
-
+							//var test = e.dataTransfer.getData('Model');
 							//push the data to the model and call the drop callback function
 							scope.$apply(function(scope) {
-
+								//var test = scope.dropFn;
 								//We check that the data is not already in the model
-								if(scope.model.indexOf(draggedData) == -1){
-									var beforeDropDataFn = scope.$parent.beforeDropData;
+								var alreadyInTheModel = (angular.isArray(scope.model) && scope.model.indexOf(draggedData) !== -1);
+								var beforeDropDataFn = scope.$parent.beforeDropData || scope.beforeDropFn;
+									
+								if (!angular.isUndefined(beforeDropDataFn) && angular.isFunction(beforeDropDataFn)) {
+									draggedData = beforeDropDataFn(e, draggedData, attrs.ngModel, alreadyInTheModel);
+								}
 
-									if (!angular.isUndefined(beforeDropDataFn) && angular.isFunction(beforeDropDataFn)) {
-										draggedData = beforeDropDataFn(e, draggedData, attrs.ngModel);
-									}
-
+								if(angular.isArray(scope.model) && !alreadyInTheModel){
 									scope.model.push(draggedData);
-
-									var dropFn = scope.$parent.drop;
-									if (!angular.isUndefined(dropFn) && angular.isFunction(dropFn)) {
-										dropFn(e, draggedData);
-									}
+								}
+								
+								var dropFn = scope.$parent.drop || scope.dropFn;
+								if (!angular.isUndefined(dropFn) && angular.isFunction(dropFn)) {
+									dropFn(e, draggedData, scope.dropItem, scope.model, alreadyInTheModel);
 								}
 							});
 
