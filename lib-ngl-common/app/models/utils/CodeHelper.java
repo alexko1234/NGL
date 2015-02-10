@@ -8,6 +8,8 @@ import models.laboratory.common.instance.Comment;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.instance.Process;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class CodeHelper {
 
 	private static SimpleDateFormat getSimpleDateFormat(){
@@ -15,15 +17,15 @@ public class CodeHelper {
 	}
 	
 	public static String generateKitCatalogCode(String kitCatalogName){
-		return kitCatalogName.toLowerCase().replaceAll("\\s", "");
+		return StringUtils.stripAccents(kitCatalogName.toUpperCase().replaceAll("\\s", ""));
 	}
 	
 	public static String generateBoxCatalogCode(String kitCatalogCode, String boxCatalogName){
-		return kitCatalogCode+"-"+boxCatalogName.toLowerCase().replaceAll("\\s", "");
+		return StringUtils.stripAccents(kitCatalogCode+"-"+boxCatalogName.toUpperCase().replaceAll("\\s", ""));
 	}
 	
 	public static String generateReagentCatalogCode(String reagentCatalogName){
-		return reagentCatalogName.toLowerCase().replaceAll("\\s", "");
+		return StringUtils.stripAccents(reagentCatalogName.toUpperCase().replaceAll("\\s", ""));
 	}
 	
 	//ProcessusTypeCode-ProjectCode-SampeCode-YYYYMMDDHHMMSSSS
