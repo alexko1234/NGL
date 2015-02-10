@@ -3,7 +3,7 @@
  angular.module('ngl-bi.ReadSetsServices', []).
 	factory('readSetsSearchService', ['$http', 'mainService', 'lists', 'datatable', function($http, mainService, lists, datatable){
 		
-		var getColumns = function(){
+		var getDefaultColumns = function(){
 			var columns = [];
 			
 			columns.push({	property:"code",
@@ -227,7 +227,7 @@
 		};
 		
 		var searchService = {
-				getColumns:getColumns,
+				getDefaultColumns:getDefaultColumns,
 				datatable:undefined,
 				isRouteParam:false,
 				lists : lists,
@@ -325,7 +325,7 @@
 						});
 					}else{
 						this.reportingConfiguration = undefined;
-						this.datatable.setColumnsConfig(this.getColumns());
+						this.datatable.setColumnsConfig(this.getDefaultColumns());
 						this.search();
 					}
 					
@@ -355,8 +355,33 @@
 						this.initAdditionalColumns();
 					}
 					return this.additionalColumns;									
-				},	
+				},
 				
+				addColumnsToDatatable:function(){
+					//this.reportingConfiguration = undefined;
+					//this.reportingConfigurationCode = undefined;
+					
+					this.selectedAddColumns = [];
+					for(var i = 0 ; i < this.additionalColumns.length ; i++){
+						for(var j = 0; j < this.additionalColumns[i].length; j++){
+							if(this.additionalColumns[i][j].select){
+								this.selectedAddColumns.push(this.additionalColumns[i][j]);
+							}
+						}
+					}
+					if(this.reportingConfigurationCode){
+						this.datatable.setColumnsConfig(this.reportingConfiguration.columns.concat(this.selectedAddColumns));
+					}else{
+						this.datatable.setColumnsConfig(this.getDefaultColumns().concat(this.selectedAddColumns));						
+					}
+					this.search();
+				},	
+				resetDatatableColumns:function(){
+					this.initAdditionalColumns();
+					this.datatable.setColumnsConfig(this.getDefaultColumns());
+					this.search();
+				},
+
 				initAdditionalFilters:function(){
 					this.additionalFilters=[];
 					
@@ -382,27 +407,6 @@
 					}
 					return this.additionalFilters;									
 				},	
-				
-				addColumnsToDatatable:function(){
-					this.reportingConfiguration = undefined;
-					this.reportingConfigurationCode = undefined;
-					this.selectedAddColumns = [];
-					for(var i = 0 ; i < this.additionalColumns.length ; i++){
-						for(var j = 0; j < this.additionalColumns[i].length; j++){
-							if(this.additionalColumns[i][j].select){
-								this.selectedAddColumns.push(this.additionalColumns[i][j]);
-							}
-						}
-					}
-					this.datatable.setColumnsConfig(this.getColumns().concat(this.selectedAddColumns));
-					this.search();
-					
-				},	
-				resetDatatableColumns:function(){
-					this.initAdditionalColumns();
-					this.datatable.setColumnsConfig(this.getColumns());
-					this.search();
-				},
 				/**
 				 * initialise the service
 				 */
@@ -413,7 +417,7 @@
 					if(datatableConfig && angular.isUndefined(mainService.getDatatable())){
 						searchService.datatable = datatable(datatableConfig);
 						mainService.setDatatable(searchService.datatable);
-						searchService.datatable.setColumnsConfig(getColumns());		
+						searchService.datatable.setColumnsConfig(getDefaultColumns());		
 					}else if(angular.isDefined(mainService.getDatatable())){
 						searchService.datatable = mainService.getDatatable();			
 					}	
