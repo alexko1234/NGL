@@ -106,11 +106,11 @@
 			 return Messages("catalogs.kit.creation");
 		 }
 		 var name = $scope.kit.name;
-		 if(name.length > 10){
-			 name = name.substring(0,10)+"...";
+		 if(name.length > 30){
+			 name = name.substring(0,30)+"...";
 		 }
 		 
-		 return Messages("catalogs.kit.edit")+": "+name;
+		 return name;
 	 }
 	 
 	 $scope.newReagent = function(index, box){

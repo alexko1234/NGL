@@ -1,0 +1,17 @@
+@() 
+@import views.html.helper._
+
+@form() = {
+	@columnSearchForm{		
+	
+		@formGroup{
+			<input type="text" class="form-control" ng-model="searchService.form.experimentTypeCodes" placeholder='@Messages("kits.name")'>
+		}	
+		@formGroup{
+			<input type="text" class="form-control" ng-model="searchService.form.name" placeholder='@Messages("kits.name")'>
+		}
+		
+	}		
+}
+
+@searchForm(form)()("searchService.datatable")

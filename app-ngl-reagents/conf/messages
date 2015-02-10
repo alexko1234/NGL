@@ -16,6 +16,7 @@ catalogs.box.add = Ajouter une boite
 kits.name = Nom kit (usuel)
 kits.experimentTypes = Expérience(s)
 kits.provider = Fournisseur
+kits.code = Code
 kits.providerRefName = Nom kit (fournisseur)
 kits.active = En cours d'utilisation
 
@@ -23,6 +24,7 @@ boxes.name = Nom de la boite
 boxes.storageConditions = Conditions de stockage (°C)
 
 kitCatalogs.tabs.create = Création d'un kit dans le catalogue
+kitCatalogs.tabs.search = Rechercher un kit dans le catalogue
 
 reagents.add = Ajouter un réactif
 

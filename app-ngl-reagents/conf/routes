@@ -10,6 +10,7 @@ GET 	/reagent-catalogs/kits/:code									@controllers.reagents.tpl.KitCatalogs.
 GET	   	/reagent-catalogs/:homecode/home								@controllers.reagents.tpl.KitCatalogs.home(homecode: java.lang.String)
 GET		/tpl/reagent-catalogs/js-routes									@controllers.reagents.tpl.KitCatalogs.javascriptRoutes()
 GET		/tpl/reagent-catalogs/creation-kit								@controllers.reagents.tpl.KitCatalogs.createOrEdit()
+GET		/tpl/reagent-catalogs/search									@controllers.reagents.tpl.KitCatalogs.search()
 
 #Kit catalogs API
 GET 	/api/reagent-catalogs/kits/:code								@controllers.reagents.api.KitCatalogs.get(code: java.lang.String)

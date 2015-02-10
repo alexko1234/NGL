@@ -37,11 +37,11 @@
                             {{mainService.getError("kit.name")}} <br>
                         </span>
 					</div>
-					<label class="col-md-1 col-lg-1 control-label">@Messages("kits.provider"):</label>
-					<div class="col-md-3 col-lg-3" ng-class="getClass('kit.providerCode')">
-						<input type="text" class="form-control" ng-model="kit.providerCode" ng-readonly="!editMode" ng-disabled="!editMode">
+					<label class="col-md-1 col-lg-1 control-label">@Messages("kits.providerRefName"):</label>
+					<div class="col-md-3 col-lg-3" ng-class="getClass('kit.providerRefName')">
+						<input type="text" class="form-control" ng-model="kit.providerRefName" ng-readonly="!editMode" ng-disabled="!editMode">
 						<span class="help-block">
-                            {{mainService.getError("kit.providerCode")}} <br>
+                            {{mainService.getError("kit.providerRefName")}} <br>
                         </span>
 					</div>
 				</div>			
@@ -59,13 +59,14 @@
                             {{mainService.getError("kit.experimentTypeCodes")}} <br>
                         </span>
 					</div>	
-					<label class="col-md-1 col-lg-1 control-label">@Messages("kits.providerRefName"):</label>
-					<div class="col-md-3 col-lg-3" ng-class="getClass('kit.providerRefName')">
-						<input type="text" class="form-control" ng-model="kit.providerRefName" ng-readonly="!editMode" ng-disabled="!editMode">
+					<label class="col-md-1 col-lg-1 control-label">@Messages("kits.provider"):</label>
+					<div class="col-md-3 col-lg-3" ng-class="getClass('kit.providerCode')">
+						<input type="text" class="form-control" ng-model="kit.providerCode" ng-readonly="!editMode" ng-disabled="!editMode">
 						<span class="help-block">
-                            {{mainService.getError("kit.providerRefName")}} <br>
+                            {{mainService.getError("kit.providerCode")}} <br>
                         </span>
 					</div>
+					
 				</div>
 		    </div>
 		     <div class="row">

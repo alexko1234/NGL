@@ -11,6 +11,7 @@ import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.ListObject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
@@ -121,6 +122,27 @@ public class KitCatalogs extends DocumentController<KitCatalog>{
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
 		Query query = null;
 		queryElts.add(DBQuery.is("category", "Kit"));
+		if(StringUtils.isNotBlank(kitCatalogSearch.code)){
+			queryElts.add(DBQuery.is("code", kitCatalogSearch.code));
+		}
+		
+		if(StringUtils.isNotBlank(kitCatalogSearch.name)){
+			queryElts.add(DBQuery.is("name", kitCatalogSearch.name));
+		}
+		if(StringUtils.isNotBlank(kitCatalogSearch.providerRefName)){
+			queryElts.add(DBQuery.is("providerRefName", kitCatalogSearch.providerRefName));
+		}
+		
+		if(StringUtils.isNotBlank(kitCatalogSearch.providerCode)){
+			queryElts.add(DBQuery.is("providerCode", kitCatalogSearch.providerCode));
+		}
+		
+		if(kitCatalogSearch.experimentTypeCodes != null){
+			queryElts.add(DBQuery.is("providerCode", kitCatalogSearch.providerCode));
+		}
+		
+		
+		queryElts.add(DBQuery.is("active", kitCatalogSearch.isActive));
 		
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
