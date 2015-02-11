@@ -2138,7 +2138,7 @@ angular.module('datatableServices', []).
 	    				}else{
 	    					editElement = "Edit Not Defined for col.type !";
 	    				}		    						    				
-	    				return '<div class="form-group" ng-class="{\'has-error\': value.line.errors[\''+col.property+'\'] !== undefined}">'+editElement+'<span class="help-block">{{value.line.errors["'+col.property+'"]}}<br></span></div>';
+	    				return '<div class="form-group" ng-class="{\'has-error\': value.line.errors[\''+col.property+'\'] !== undefined}">'+editElement+'<span class="help-block" ng-if="value.line.errors[\''+col.property+'\'] !== undefined">{{value.line.errors["'+col.property+'"]}}<br></span></div>';
 	    			};
 	    			
 	    			
