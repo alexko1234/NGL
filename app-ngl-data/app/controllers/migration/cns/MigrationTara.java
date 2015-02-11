@@ -8,6 +8,8 @@ import models.Constants;
 import models.LimsCNSDAO;
 import models.TaraDAO;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.container.instance.Container;
+import models.laboratory.run.instance.ReadSet;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.instance.Sample;
 import models.util.DataMappingCNS;
@@ -23,7 +25,6 @@ import play.api.modules.spring.Spring;
 import play.mvc.Result;
 import services.instance.sample.UpdateSampleCNS;
 import validation.ContextValidation;
-import validation.sample.instance.SampleValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationHelper;
 
@@ -40,13 +41,14 @@ public class MigrationTara extends AbstractMigration {
 	
 	public static Result migration() {
 		
-		//backupOneCollection(InstanceConstants.SAMPLE_COLL_NAME,Sample.class);
-		//backupOneCollection(InstanceConstants.CONTAINER_COLL_NAME,Container.class);
+		backupOneCollection(InstanceConstants.SAMPLE_COLL_NAME,Sample.class);
+		backupOneCollection(InstanceConstants.CONTAINER_COLL_NAME,Container.class);
 		
-		/*BasicDBObject keys = new BasicDBObject();
-		keys.put("sampleOnContainer", 0);
-		backupOneCollection(InstanceConstants.READSET_ILLUMINA_COLL_NAME,Container.class,keys);
-		 */
+		BasicDBObject keys = new BasicDBObject();
+		keys.put("code", 1);
+		keys.put("sampleOnContainer", 1);
+		backupOneCollection(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,keys);
+
 		
 		ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
 		Boolean adaptater;
