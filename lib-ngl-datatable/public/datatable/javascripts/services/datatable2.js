@@ -1702,7 +1702,8 @@ angular.module('datatableServices', []).
 		    			getFilter : function(col){
 		    				var filter = '';
 	    					if(col.convertValue != undefined && col.convertValue.active == true && col.convertValue.saveMeasureValue != col.convertValue.displayMeasureValue){
-	    						filter += '|convert:'+col.convertValue;
+	    						filter += '|convert:'+JSON.stringify(col.convertValue);
+	    						
 	    					}
 		    				if(col.filter){
 		    					return filter+'|'+col.filter;

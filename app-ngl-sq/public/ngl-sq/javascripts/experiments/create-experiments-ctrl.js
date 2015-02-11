@@ -275,6 +275,10 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 	 * Configure edit and remote on datatable
 	 */
 	$scope.setEditConfig = function(value){
+		if($scope.experiment.value.state.code === "F"){
+			value = false;
+		}
+		
 		$scope.editMode = value;
 		//var config = $scope.datatable.getConfig();
 		//config.edit.active=value;		

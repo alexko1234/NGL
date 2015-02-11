@@ -30,26 +30,8 @@ public class SampleOnContainer {
 	//Percentage of content on the container
 	public Double percentage;
 	//Collaborator's reference
-	public String referenceCollab;
-	
-	
-	
-	public SampleOnContainer() {
-	}
+	public String referenceCollab;	
 
-
-
-	public SampleOnContainer(SampleOnContainer s) {
-		this.lastUpdateDate = new Date((s.lastUpdateDate).getTime());
-		this.sampleCode = s.sampleCode;
-		this.sampleTypeCode = s.sampleTypeCode;
-		this.sampleCategoryCode = s.sampleCategoryCode;
-		this.containerSupportCode = s.containerSupportCode;
-		this.containerCode = s.containerCode;
-		this.properties = new HashMap<String, PropertyValue>(s.properties);
-		this.percentage = (s.percentage).doubleValue();
-		this.referenceCollab = s.referenceCollab;
-	}
 
 
 
