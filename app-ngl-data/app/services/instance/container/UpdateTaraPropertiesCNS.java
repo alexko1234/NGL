@@ -78,10 +78,10 @@ public class UpdateTaraPropertiesCNS extends AbstractImportDataCNS{
 					ValidationHelper.validateProperties(contextError,taraProperties, ImportType.find.findByCode(importTypeCode).getPropertyDefinitionByLevel(Level.CODE.Content));
 					
 					if(!importTypeCode.equals(sample.importTypeCode)){
-						MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code",sample.code),DBUpdate.set("importTypeCode",sample.importTypeCode));
+						MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code",sample.code),DBUpdate.set("importTypeCode",importTypeCode));
 					}
 					
-					SampleHelper.updateSampleProperties(sample.code,taraProperties);
+					SampleHelper.updateSampleProperties(sample.code,taraProperties,contextError);
 					
 				}
 			}

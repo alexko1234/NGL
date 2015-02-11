@@ -28,11 +28,11 @@ public class TaraDAO {
 	protected final String  SELECT_MATERIEL_TARA= " SELECT"+
 			"  cast(AREA.AREA_CODE as SIGNED INT) as station ,"+
 			"  AREA.AREA_NAME,"+
-			"  FRACTION.FRACTION_CODE,"+
+			"  FRACTION.FRACTION_CODE as filtreCode,"+
 			"  FRACTION.FRACTION_NAME as filtre,"+
 			"  ITERATION.ITERATION_CODE as iteration,"+
 			"  ITERATION.ITERATION_NAME,"+
-			"  LOCUS.LOCUS_CODE ,"+
+			"  LOCUS.LOCUS_CODE as profondeurCode,"+
 			"  LOCUS.LOCUS_NAME as profondeur,"+
 			"  MATERIAL.MATERIAL_CODE,"+
 			"  MATERIAL.MATERIAL_NAME as materiel,"+
@@ -122,6 +122,9 @@ public class TaraDAO {
 		if(rs.getString("codebarre")!=null){
 			properMap.put("taraBarCode", new PropertySingleValue(rs.getString("codebarre")));
 		}
+		properMap.put("taraDepthCode", new PropertySingleValue(rs.getString("profondeurCode")));
+		properMap.put("taraFilterCode", new PropertySingleValue(rs.getString("filtreCode")));
+		
 		return properMap;
 	}
 	

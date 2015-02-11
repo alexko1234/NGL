@@ -26,12 +26,18 @@ GET		/api/description/treatments				controllers.description.runs.Treatments.save
 GET		/api/instance/resolutions				controllers.instance.resolution.Resolutions.save()
 GET		/api/instance/protocols					controllers.instance.protocol.Protocols.save()
 
+GET 	/api/import/updateTara					controllers.instance.ImportDatas.updateTara()
+
 GET		/migration-container-support			controllers.migration.MigrationDataCNS.updateFromExperimentTypeCodesContainerSupport()
 GET		/migration-sequencing-run				controllers.migration.AddSequencingProgramTypeToRun.migration()
 GET		/migration-vcc							controllers.migration.ValuationCriteriaCodes.migration()
 GET		/migration-percentage-content			controllers.migration.AddPercentageContent.migration()
 GET		/migration-runstartdate-opgen-depot		controllers.migration.AddRunStartDateToOpgenDepot.migration()
 GET		/migration-ngl-sq						controllers.migration.MigrationNGLSEQ.migration()
+
+GET		/migration-tara							controllers.migration.cns.MigrationTara.migration()
+GET 	/deleteSample							controllers.migration.cns.MigrationTara.deleteSampleNotInLims()
+
 GET		/migration-sampleOnInputContainer-process 		 controllers.migration.AddSampleOnInputContainerInProcess.migration()
 GET		/cns/migration						    controllers.migration.cns.MigrationReadSetFileCNS.migration()
 GET		/cns/libprocesstype-ext					controllers.migration.cns.MigrationLibProcessTypeRunExt.migration()

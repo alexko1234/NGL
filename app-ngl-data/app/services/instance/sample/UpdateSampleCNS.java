@@ -65,7 +65,7 @@ public class UpdateSampleCNS extends AbstractImportDataCNS{
 					InstanceHelpers.copyPropertyValueFromPropertiesDefinition(sampleType.getPropertyDefinitionByLevel(Level.CODE.Content), newSample.properties,properties);
 				}
 
-				SampleHelper.updateSampleProperties(sampleCode, properties);
+				SampleHelper.updateSampleProperties(sampleCode, properties,contextError);
 
 			}else {
 				contextError.errors.putAll(contextValidation.errors);
