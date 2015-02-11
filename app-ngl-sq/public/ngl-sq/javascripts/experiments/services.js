@@ -16,7 +16,8 @@
 							"property":"instrument.code",
 							"order":true,
 							"hide":true,
-							"type":"text"
+							"type":"text",
+							"filter":"codes:'instrument'"
 						},						
 						{
 							"header":Messages("experiments.table.categoryCode"),
