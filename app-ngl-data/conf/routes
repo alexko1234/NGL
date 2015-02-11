@@ -32,6 +32,7 @@ GET		/migration-vcc							controllers.migration.ValuationCriteriaCodes.migration
 GET		/migration-percentage-content			controllers.migration.AddPercentageContent.migration()
 GET		/migration-runstartdate-opgen-depot		controllers.migration.AddRunStartDateToOpgenDepot.migration()
 GET		/migration-ngl-sq						controllers.migration.MigrationNGLSEQ.migration()
+GET		/migration-sampleOnInputContainer-process 		 controllers.migration.AddSampleOnInputContainerInProcess.migration()
 GET		/cns/migration						    controllers.migration.cns.MigrationReadSetFileCNS.migration()
 GET		/cns/libprocesstype-ext					controllers.migration.cns.MigrationLibProcessTypeRunExt.migration()
 GET		/cns/update-content-sample			    controllers.migration.cns.UpdateSampleTypeCodeToContainer.migrationContainer()
@@ -44,6 +45,7 @@ GET		/cng/migration-tube-import				controllers.migration.cng.TubeImport.migratio
 GET		/cng/migration-concentration			controllers.migration.cng.UpdateConcentration.migration()
 GET		/cng/migration-comments					controllers.migration.cng.MigrationComments.migration()
 GET		/cng/migration-projectcodes-rds			controllers.migration.cng.MigrationProjectCodesFromReadSets.migration()
+
 
 
 

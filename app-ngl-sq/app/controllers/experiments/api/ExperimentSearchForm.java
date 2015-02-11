@@ -23,6 +23,7 @@ public class ExperimentSearchForm extends ListForm{
 	public String containerSupportCode;	
 	public String atomicTransfertMethods;
 	public String reagentOrBoxCode;
+	public String instrument;
 	
 	@Override
 	public String toString() {
@@ -32,6 +33,6 @@ public class ExperimentSearchForm extends ListForm{
 				+ ", sampleCodes=" + sampleCodes + ", fromDate=" + fromDate
 				+ ", toDate=" + toDate + ", stateCode=" + stateCode
 				+ ", users=" + users +", containerSupportCode=" + containerSupportCode 
-				+ ", atomicTransfertMethods="+ atomicTransfertMethods + "]";
+				+ ", atomicTransfertMethods="+ atomicTransfertMethods + ", instrument"+ instrument + "]";
 	}
 }

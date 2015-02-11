@@ -555,6 +555,10 @@ public class Experiments extends CommonController{
 		}else if(experimentSearch.stateCode != null){
 			queryElts.add(DBQuery.in("state.code", experimentSearch.stateCode));
 		}
+		
+		if(StringUtils.isNotBlank(experimentSearch.instrument)){
+			queryElts.add(DBQuery.in("instrument.code", experimentSearch.instrument));
+		}
 
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));

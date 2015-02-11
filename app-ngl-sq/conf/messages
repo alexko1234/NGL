@@ -115,6 +115,7 @@ processes.table.supportCode = Code support container
 processes.table.line = X
 processes.table.columns = Y
 processes.table.tag = Tag
+processes.table.sampleOnInputContainer.properties.tag = Tag
 
 processes.select.processType = Sélect. type processus
 processes.select.processCategory = Sélect. catégorie processus

@@ -7,6 +7,7 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.sample.instance.Sample;
+import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
@@ -31,6 +32,9 @@ public class SampleHelper {
 					DBQuery.is("sampleOnContainer.sampleCode", sampleCode),
 					DBUpdate.set("sampleOnContainer.properties."+entry.getKey(),entry.getValue()),true);
 			
+			MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,
+					DBQuery.is("sampleOnInputContainer.sampleCode", sampleCode),
+					DBUpdate.set("sampleOnInputContainer.properties."+ entry.getKey(),entry.getValue()),true);
 		}
 		
 	}

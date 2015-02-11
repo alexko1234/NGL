@@ -324,7 +324,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 							properties:processData.properties
 					};
 					
-					var promise = $http.post(url, process)
+					var promise = $http.post(url, {"process":process})
 					.success(function(data, status, headers, config) {
 						if(data!=null){
 							$scope.message.clazz="alert alert-success";
@@ -347,7 +347,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 		}else{
 			$scope.datatable.config.spinner.start = true;
 			for(var i=0;i<data.length;i++){
-				url =  jsRoutes.controllers.processes.api.Processes.saveSupport(data[i].support.code).url;
+				url =  jsRoutes.controllers.processes.api.Processes.save().url;
 				var processData = data[i];
 				processData.properties.limsCode = undefined;
 				processData.properties.receptionDate = undefined;
@@ -357,7 +357,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 						categoryCode:$scope.form.processCategory,
 						properties:processData.properties
 				};
-				var promise = $http.post(url, process)
+				var promise = $http.post(url,{"supportCode":data[i].support.code, "process":process})
 				.success(function(data, status, headers, config) {
 					if(data!=null){
 						$scope.message.clazz="alert alert-success";

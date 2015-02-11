@@ -213,7 +213,16 @@ public class ProtocolsTest extends AbstractTests {
 		assertThat(lp).isNullOrEmpty();
 
 	}
+	
+	/**********************************Tests of  rules (Drools)***************************************************/	
 
+	@Test
+	public void validateEstimatedPercentProcessRule() {
+		
+		
+
+	}
+	
 	/*
 	@Test
 	public void test() {

@@ -183,7 +183,8 @@ angular.module('commonsServices', []).
     					this.experiments(params);
     					this.experimentTypes(params);
     					this.runs(params);
-    					this.protocols(params);    					
+    					this.protocols(params);
+    					this.instruments(params);
     				}
     		};
     		

@@ -23,6 +23,7 @@ public class ProcessesSearchForm extends ListForm{
 	public List<String> users;
 	public String experimentCode;	
 	public Map<String, List<String>> properties = new HashMap<String, List<String>>();
+	public String fromSupportCode;
 	
 	@Override
 	public String toString() {
@@ -35,6 +36,6 @@ public class ProcessesSearchForm extends ListForm{
 				+ containerSupportCategory + ", fromDate=" + fromDate
 				+ ", toDate=" + toDate + ", users=" + users
 				+ ", experimentCode=" + experimentCode + ", properties="
-				+ properties + "]";
+				+ properties + ", fromSupportCode="+fromSupportCode +"]";
 	}
 }

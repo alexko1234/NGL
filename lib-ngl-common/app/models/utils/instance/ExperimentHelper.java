@@ -7,12 +7,10 @@ import java.util.Map;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.ManytoOneContainer;
-import models.laboratory.processes.instance.Process;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;

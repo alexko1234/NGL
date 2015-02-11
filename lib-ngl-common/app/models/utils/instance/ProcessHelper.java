@@ -1,8 +1,10 @@
 package models.utils.instance;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.experiment.instance.ContainerUsed;
@@ -17,6 +19,9 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
 
+import play.Play;
+import rules.services.RulesException;
+import rules.services.RulesServices;
 import validation.ContextValidation;
 import validation.container.instance.ContainerValidationHelper;
 import validation.container.instance.SupportValidationHelper;
@@ -31,7 +36,7 @@ public class ProcessHelper {
 			try {
 				processType = ProcessType.find.findByCode(typeCode);
 				container.fromExperimentTypeCodes.add(processType.voidExperimentType.code);
-	
+
 			} catch (DAOException e) {
 				throw new RuntimeException();
 			}
@@ -45,20 +50,20 @@ public class ProcessHelper {
 			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
 					DBQuery.is("code",container.code),
 					DBUpdate.set("inputProcessCodes", container.inputProcessCodes)
-							.set("processTypeCode", container.processTypeCode)
-							.set("fromExperimentTypeCodes",container.fromExperimentTypeCodes));
+					.set("processTypeCode", container.processTypeCode)
+					.set("fromExperimentTypeCodes",container.fromExperimentTypeCodes));
 		}
 	}
-	
-	
+
+
 	public static void updateContainerSupportFromContainer(Container container,ContextValidation contextValidation){
 		ContainerSupport containerSupport=MongoDBDAO.findByCode(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, container.support.code);		
 		containerSupport.fromExperimentTypeCodes=InstanceHelpers.addCodesList(container.fromExperimentTypeCodes, containerSupport.fromExperimentTypeCodes);
 		SupportValidationHelper.validateExperimentTypeCodes(containerSupport.fromExperimentTypeCodes, contextValidation);
 		if(!contextValidation.hasErrors()){
 			MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME,ContainerSupport.class,
-				DBQuery.is("code", container.support.code)
-				,DBUpdate.set("fromExperimentTypeCodes",container.fromExperimentTypeCodes));
+					DBQuery.is("code", container.support.code)
+					,DBUpdate.set("fromExperimentTypeCodes",container.fromExperimentTypeCodes));
 		}
 	}
 
@@ -77,10 +82,10 @@ public class ProcessHelper {
 		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,query,
 				DBUpdate.push("newContainerSupportCodes",outputContainerUsed.locationOnContainerSupport.code),true);
 
-		
+
 	}
-	
-	
+
+
 	public static void updateNewContainerSupportCodes(List<ContainerUsed> outputContainerUseds,
 			ContainerUsed inputContainerUsed,Experiment experiment) {
 		List<Query> queryOr = new ArrayList<Query>();
@@ -103,17 +108,17 @@ public class ProcessHelper {
 		List<Query> queryOr = new ArrayList<Query>();
 		Query query=null;
 		String containerSupportCode=null;
-		
+
 		queryOr.add(DBQuery.is("containerInputCode",inputContainerUsed.code));
-		
+
 		if(inputContainerUsed.locationOnContainerSupport==null){
 			containerSupportCode=inputContainerUsed.code;
 		}else { 
 			containerSupportCode=inputContainerUsed.locationOnContainerSupport.code;
 		}
-		
+
 		queryOr.add(DBQuery.in("newContainerSupportCodes",containerSupportCode));
-		
+
 		query=DBQuery.and(DBQuery.in("experimentCodes",experiment.code));
 		if(queryOr.size()!=0){
 			query=query.and(DBQuery.or(queryOr.toArray(new Query[queryOr.size()])));
@@ -121,6 +126,54 @@ public class ProcessHelper {
 
 		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,query,
 				DBUpdate.push("newContainerSupportCodes",outputContainerUsed.locationOnContainerSupport.code),true);
+	}
+
+	public static Process applyRules(Process proc, ContextValidation ctx ,String rulesName){
+		ArrayList<Object> facts = new ArrayList<Object>();
+		facts.add(proc);
+		facts.add(ctx);
+
+		RulesServices rulesServices = new RulesServices();
+		List<Object> factsAfterRules = null;		
+
+		try {
+			factsAfterRules = rulesServices.callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), rulesName, facts);
+		} catch (RulesException e) {
+			throw new RuntimeException();
+		}	
+
+		return proc;
+
+	}
+	
+	public static List<Process>  applyRules(List<Process> processes, ContextValidation ctx ,String rulesName){
+		ArrayList<Object> facts = new ArrayList<Object>();
+		facts.add(ctx);
+		for(Process proc:processes){
+		facts.add(proc);
 		}
+		
+
+		RulesServices rulesServices = new RulesServices();
+		List<Object> factsAfterRules = null;		
+
+		try {
+			factsAfterRules = rulesServices.callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), rulesName, facts);
+		} catch (RulesException e) {
+			throw new RuntimeException();
+		}	
+
+		return processes;
+
+	}	
+	
+	public static HashMap<String, PropertyValue> cloneProcessProperties(Process process){		
+		HashMap<String, PropertyValue> hmap = null;
+		if(process.properties!=null && !process.properties.isEmpty()){
+			hmap = new HashMap<String, PropertyValue>(process.properties);
+		}
+		return hmap;
+
+	}
 
 }

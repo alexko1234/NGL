@@ -12,6 +12,13 @@
 							"type":"text"
 						},
 						{
+							"header":Messages("experiments.intrument"),
+							"property":"instrument.code",
+							"order":true,
+							"hide":true,
+							"type":"text"
+						},						
+						{
 							"header":Messages("experiments.table.categoryCode"),
 							"property":"categoryCode",
 							"order":true,
@@ -98,6 +105,7 @@
 				lists.refresh.experimentTypes({categoryCode:"qualitycontrol"}, "qualitycontrols");
 				lists.refresh.experimentTypes({categoryCode:"transfert"}, "transferts");
 				lists.refresh.experimentTypes({categoryCode:"transformation"}, "transformations");
+				lists.refresh.instruments();
 				isInit=true;
 			}
 		};
@@ -168,6 +176,10 @@
 						jsonSearch.typeCode = _form.experimentType;
 					}
 					
+					if(_form.instrument){
+						json.Search.instrument = _form.instrument
+					}
+					
 					if(_form.fromDate)jsonSearch.fromDate = this.useMoment(_form.fromDate, Messages("date.format").toUpperCase());
 					if(_form.toDate)jsonSearch.toDate = this.useMoment(_form.toDate, Messages("date.format").toUpperCase());
 					
@@ -191,7 +203,7 @@
 					}
 				},
 				changeTypeCode : function(){
-					//this.search();
+					//this.search();					
 				},
 				useMoment: function(date, format){
 					//ex: 2014-10-02
@@ -206,6 +218,10 @@
 				},
 				changeExperimentType : function(){
 					//this.search();
+				//	if(this.form.experimentType){
+				//		lists.refresh.instruments({experimentType:this.form.experimentType});						
+				//	}
+					
 				},
 				
 				changeProcessCategory : function(){

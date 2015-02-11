@@ -250,7 +250,7 @@ public class DescriptionFactory {
 		pd.choiceInList = true;		
 		pd.possibleValues = values;
 		pd.propertyValueType = propertyValueType;
-		pd.displayOrder=displayOrder;
+		pd.displayOrder = displayOrder;
 		return pd;
 	}
 	

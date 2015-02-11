@@ -1,6 +1,7 @@
 package models.laboratory.run.instance;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import models.laboratory.common.instance.PropertyValue;
@@ -28,14 +29,37 @@ public class SampleOnContainer {
 	public Map<String,PropertyValue> properties;
 	//Percentage of content on the container
 	public Double percentage;
+	//Collaborator's reference
+	public String referenceCollab;
 	
+	
+	
+	public SampleOnContainer() {
+	}
+
+
+
+	public SampleOnContainer(SampleOnContainer s) {
+		this.lastUpdateDate = new Date((s.lastUpdateDate).getTime());
+		this.sampleCode = s.sampleCode;
+		this.sampleTypeCode = s.sampleTypeCode;
+		this.sampleCategoryCode = s.sampleCategoryCode;
+		this.containerSupportCode = s.containerSupportCode;
+		this.containerCode = s.containerCode;
+		this.properties = new HashMap<String, PropertyValue>(s.properties);
+		this.percentage = (s.percentage).doubleValue();
+		this.referenceCollab = s.referenceCollab;
+	}
+
+
+
 	@Override
 	public String toString() {
 		return "SampleOnContainer [lastUpdateDate=" + lastUpdateDate
 				+ ", sampleCode=" + sampleCode + ", sampleTypeCode="
 				+ sampleTypeCode + ", sampleCategoryCode=" + sampleCategoryCode
 				+ ", containerSupportCode=" + containerSupportCode
-				+ ", containerCode=" + containerCode + "]";
+				+ ", containerCode=" + containerCode + ", referenceCollab="+ referenceCollab + "]";
 	}
 
 }

@@ -1,4 +1,4 @@
- package controllers.processes.tpl;
+package controllers.processes.tpl;
 
 import static play.data.Form.form;
 
@@ -8,9 +8,11 @@ import java.util.List;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Value;
 import models.laboratory.processes.description.ProcessType;
+import models.laboratory.sample.description.SampleType;
 import models.utils.ListObjectValue;
 import models.utils.dao.DAOException;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import play.Logger;
@@ -32,7 +34,7 @@ import controllers.processes.api.ProcessesSearchForm;
 public class Processes extends CommonController{
 
 	final static Form<ProcessesSearchForm> processesSearchForm = form(ProcessesSearchForm.class);
-	
+
 	public static Result home(String code){
 		return ok(home.render(code));
 	}
@@ -44,14 +46,16 @@ public class Processes extends CommonController{
 	public static Result search(String processTypeCode){
 		return ok(search.render());
 	}
-	
+
 	public static Result searchColumns(){
+		//TODO: A mettre en javascript
 		Form<ProcessesSearchForm> processesFilledForm = filledFormQueryString(processesSearchForm,ProcessesSearchForm.class);
 		ProcessesSearchForm processesSearch = processesFilledForm.get();
-		
+
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
 		columns.add(DatatableHelpers.getColumn("containerInputCode", Messages.get("processes.table.containerInputCode"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("sampleCode", Messages.get("processes.table.sampleCode"), true, false, false));		
+		columns.add(DatatableHelpers.getColumn("sampleCode", Messages.get("processes.table.sampleCode"), true, false, false));
+		columns.add(DatatableHelpers.getColumn("sampleOnInputContainer.properties.tag.value", Messages.get("processes.table.sampleOnInputContainer.properties.tag"),true, false,false));
 		columns.add(DatatableHelpers.getColumn("typeCode", Messages.get("processes.table.typeCode"), true, false, false, "codes:'type'"));
 		if(processesSearch.typeCode != null){
 			columns.addAll(getPropertiesDefinitionsColumns(processesSearch.typeCode ,true));
@@ -60,11 +64,10 @@ public class Processes extends CommonController{
 		columns.add(DatatableHelpers.getColumn("state.resolutionCodes", Messages.get("processes.table.resolutionCode"), true, false, false));
 		columns.add(DatatableHelpers.getColumn("currentExperimentTypeCode", Messages.get("processes.table.currentExperimentTypeCode"), true, false, false));
 		columns.add(DatatableHelpers.getColumn("code", Messages.get("processes.table.code"), true, false, false));		
-		columns.add( DatatableHelpers.getDateColumn("traceInformation.creationDate", Messages.get("processes.table.creationDate"), true, false, false));
+		columns.add(DatatableHelpers.getDateColumn("traceInformation.creationDate", Messages.get("processes.table.creationDate"), true, false, false));
 		columns.add(DatatableHelpers.getColumn("newContainerSupportCodes", Messages.get("processes.table.newContainerSupportCodes"), true, false, false,"","<div list-resize='value.data.newContainerSupportCodes | unique' below-only-deploy>"));//
 		columns.add(DatatableHelpers.getColumn("experimentCodes", Messages.get("processes.table.experimentCodes"), true, false, false,"","<div list-resize='value.data.experimentCodes | unique' below-only-deploy>"));		
 		columns.add(DatatableHelpers.getColumn("projectCode", Messages.get("processes.table.projectCode"), true, false, false));
-		
 		
 		return ok(Json.toJson(columns));
 	}
@@ -72,7 +75,7 @@ public class Processes extends CommonController{
 	public static Result newProcesses(String processTypeCode){
 		return ok(newProcesses.render());
 	}
-	
+
 	public static Result newProcessesColumns(String processTypeCode){
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();		
 		columns.add(DatatableHelpers.getColumn("support.code", Messages.get("processes.table.supportCode")));
@@ -89,7 +92,7 @@ public class Processes extends CommonController{
 		return ok(Json.toJson(columns));
 	}
 
-	
+
 	public static Result getPropertiesDefinitions(String processTypeCode){
 		ProcessType processType;
 		try {
@@ -101,7 +104,7 @@ public class Processes extends CommonController{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return badRequest();
 	}	
 
@@ -119,7 +122,7 @@ public class Processes extends CommonController{
 							c = DatatableHelpers.getColumn("properties."+p.code+".value", Messages.get("processes.table.properties."+p.code), true, edit, false);
 						}else{
 							c = DatatableHelpers.getDateColumn("properties."+p.code+".value", Messages.get("processes.table.properties."+p.code), true, edit, false);
-							
+
 						}
 						if(p.choiceInList){
 							c.choiceInList = p.choiceInList;
@@ -143,7 +146,7 @@ public class Processes extends CommonController{
 										Logger.debug("Not implemented :"+ p.valueType);									
 									}
 									c.possibleValues.add(l);
-									
+
 								}
 							}
 						}
@@ -157,6 +160,7 @@ public class Processes extends CommonController{
 		return columns;
 	}
 
+
 	public static Result javascriptRoutes() {
 		response().setContentType("text/javascript");
 		return ok(  	    		
@@ -166,11 +170,11 @@ public class Processes extends CommonController{
 						controllers.processes.tpl.routes.javascript.Processes.search(),
 						controllers.processes.tpl.routes.javascript.Processes.searchContainers(),
 						controllers.processes.tpl.routes.javascript.Processes.home(),  
-		 	    		controllers.processes.api.routes.javascript.Processes.update(),
+						controllers.processes.api.routes.javascript.Processes.update(),
 						controllers.processes.tpl.routes.javascript.Processes.searchColumns(),  
 						controllers.processes.tpl.routes.javascript.Processes.newProcessesColumns(),  
 						controllers.processes.api.routes.javascript.Processes.save(),
-						controllers.processes.api.routes.javascript.Processes.saveSupport(),
+						//controllers.processes.api.routes.javascript.Processes.saveFromSupport(),
 						controllers.processes.api.routes.javascript.ProcessTypes.list(),
 						controllers.containers.api.routes.javascript.Containers.list(),
 						controllers.processes.api.routes.javascript.Processes.list(),
@@ -178,13 +182,13 @@ public class Processes extends CommonController{
 						controllers.commons.api.routes.javascript.CommonInfoTypes.list(),
 						controllers.commons.api.routes.javascript.Values.list(),
 						controllers.projects.api.routes.javascript.Projects.list(),
-		  	    		controllers.samples.api.routes.javascript.Samples.list(),
-		  	    		controllers.supports.api.routes.javascript.Supports.list(),
-		  	    		controllers.commons.api.routes.javascript.States.list(),
-		  	    		controllers.commons.api.routes.javascript.Users.list(),
-		  	      		controllers.reporting.api.routes.javascript.FilteringConfigurations.list(),
-		  	    		controllers.containers.api.routes.javascript.ContainerSupportCategories.list(),
-		  	    		controllers.experiments.api.routes.javascript.ExperimentTypes.list()
+						controllers.samples.api.routes.javascript.Samples.list(),
+						controllers.supports.api.routes.javascript.Supports.list(),
+						controllers.commons.api.routes.javascript.States.list(),
+						controllers.commons.api.routes.javascript.Users.list(),
+						controllers.reporting.api.routes.javascript.FilteringConfigurations.list(),
+						controllers.containers.api.routes.javascript.ContainerSupportCategories.list(),
+						controllers.experiments.api.routes.javascript.ExperimentTypes.list()
 						)	  	      
 				);
 	}

@@ -40,9 +40,9 @@ public abstract class AbstractTests {
 		config.put("evolutionplugin", "disabled");
 
 		config.put("db.default.driver", "com.mysql.jdbc.Driver");
-		config.put("db.default.url", "jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST");
-		config.put("db.default.user", "NGL_user");
-		config.put("db.default.password", "NGL_passwd");
+		config.put("db.default.url", "jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL");
+		config.put("db.default.user", "ngl");
+		config.put("db.default.password", "ngl");
 		config.put("db.default.partitionCount", "1");
 		config.put("db.default.maxConnectionsPerPartition", "10");
 		config.put("db.default.minConnectionsPerPartition", "1");

@@ -10,23 +10,19 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
-import models.laboratory.container.description.ContainerCategory;
-import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.processes.instance.Process;
-import models.laboratory.project.instance.Project;
-import models.laboratory.sample.instance.Sample;
-import models.utils.HelperObjects;
 import models.utils.InstanceConstants;
 
-import org.mongojack.MongoCollection;
 import org.mongojack.DBQuery;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.mongojack.MongoCollection;
 
 import validation.ContextValidation;
 import validation.IValidation;
-import validation.common.instance.CommonValidationHelper;
 import validation.container.instance.ContainerValidationHelper;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 
@@ -70,9 +66,9 @@ public class Container extends DBObject implements IValidation {
 	public List<QualityControlResult> qualityControlResults;
 
 	//Stock management 
-	public PropertyValue mesuredVolume;
-	public PropertyValue mesuredConcentration;
-	public PropertyValue mesuredQuantity;
+	public PropertySingleValue mesuredVolume;
+	public PropertySingleValue mesuredConcentration;
+	public PropertySingleValue mesuredQuantity;
 
 	public List<PropertyValue> calculedVolume;
 

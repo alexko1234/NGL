@@ -10,6 +10,7 @@ import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.Content;
 import models.laboratory.processes.instance.Process;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
@@ -44,6 +45,7 @@ import fr.cea.ig.MongoDBResult;
 
 public class Processes extends CommonController{
 
+	final static Form<ProcessesSaveForm> processSaveForm = form(ProcessesSaveForm.class);
 	final static Form<Process> processForm = form(Process.class);
 	final static Form<ProcessesSearchForm> processesSearchForm = form(ProcessesSearchForm.class);
 
@@ -54,7 +56,7 @@ public class Processes extends CommonController{
 			return notFound();
 		}	
 	}
-	
+
 	public static Result get(String code){
 		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
 		if(process == null){
@@ -62,112 +64,100 @@ public class Processes extends CommonController{
 		}
 		return ok(Json.toJson(process));
 	}
-	
+
 	public static Result save(){
-		Form<Process> filledForm = getFilledForm(processForm,Process.class);
-		Process value = null;
-		if (!filledForm.hasErrors()) {
-			value = filledForm.get();
-			if (null == value._id) {
-				//init state
-				//the trace
-				value.traceInformation = new TraceInformation();
 
-				value.traceInformation.setTraceInformation(getCurrentUser());
-				//the default status
-				value.state = new State("N", getCurrentUser());
-				//code and name generation
-				value.code = CodeHelper.generateProcessCode(value);
-				Logger.info("New process code : "+value.code);
-			} else {
-				value.traceInformation.setTraceInformation(getCurrentUser());
-			}
+		Form<ProcessesSaveForm> filledForm = getFilledForm(processSaveForm,ProcessesSaveForm.class);
+		ProcessesSaveForm processSaveForm = filledForm.get();
+		Process process = null;
 
-			if (!filledForm.hasErrors()) {
-				ContextValidation contextValidation=new ContextValidation(getCurrentUser(), filledForm.errors());
-				contextValidation.setCreationMode();
-				value = (Process) InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,value, contextValidation);
-				if(!contextValidation.hasErrors()){
-					Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, value.containerInputCode);
-					List<String> processCodes=new ArrayList<String>();
-					processCodes.add(value.code);
-					ProcessHelper.updateContainer(container,value.typeCode, processCodes,contextValidation);
-					ProcessHelper.updateContainerSupportFromContainer(container,contextValidation);
-					Workflows.nextContainerState(value,null,new ContextValidation(getCurrentUser(), filledForm.errors()));
-				}
-			}
+		if (null == processSaveForm.process._id) {			//init state
+			//the trace
+			processSaveForm.process.traceInformation = new TraceInformation();
+
+			processSaveForm.process.traceInformation.setTraceInformation(getCurrentUser());
+			//the default status
+			processSaveForm.process.state = new State("N", getCurrentUser());
+		}else {
+			return badRequest("use PUT method to update the process");
 		}
-		if (!filledForm.hasErrors()) {
-			filledForm = filledForm.fill(value);
-			return ok(Json.toJson(filledForm.get()));
-		} else {
-			return badRequest(filledForm.errorsAsJson());
-		}			
-	}
-	
-	public static Result saveSupport(String supportCode){
-		Form<Process> filledForm = getFilledForm(processForm,Process.class);
-		Process value = null;
-		List<Process> processes = new ArrayList<Process>();
-		if (!filledForm.hasErrors()) {
-			value = filledForm.get();
-			//value = ps.process;
-			ContextValidation contextValidation=new ContextValidation(getCurrentUser(), filledForm.errors());
-			if (null == value._id) {
-				//init state
-				//the trace
-				value.traceInformation = new TraceInformation();
 
-				value.traceInformation.setTraceInformation(getCurrentUser());
-				//the default status
-				value.state = new State("N", getCurrentUser());
+		if (!filledForm.hasErrors()) {
+			ContextValidation contextValidation=new ContextValidation(getCurrentUser(), filledForm.errors());
+			contextValidation.setCreationMode();
+			process = processSaveForm.process;
+
+			if(StringUtils.isNotBlank(processSaveForm.supportCode)){
+				return saveFromSupport(processSaveForm.supportCode, filledForm, contextValidation);
+			}else{
+				//code and name generation
+				process.code = CodeHelper.generateProcessCode(process);
+				Logger.info("New process code : "+process.code);
+
 				
-				List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("support.code", supportCode)).toList();
-				for(Container container:containers){
-					List<String> processCodes=new ArrayList<String>();
-					value.containerInputCode = container.code;
-					ContextValidation contextError=new ContextValidation(contextValidation.getUser());
-					for(String s:container.sampleCodes){
-						//ContextValidation contextValidation=new ContextValidation(getCurrentUser(), filledForm.errors());
-						contextValidation.setCreationMode();
-						value.sampleCode = s;
-						//code and name generation
-						value.code = CodeHelper.generateProcessCode(value);
-						Process p = (Process)InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,value, contextValidation);
-						if(p != null){
-							processes.add(p);
-							processCodes.add(p.code);
+				if(!contextValidation.hasErrors()){
+					Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, process.containerInputCode);
+					for(Content c: container.contents){
+						if((c.sampleCode).equals(process.sampleCode)){
+						process.sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(c, container);
 						}
 					}
 					
-					if(!contextError.hasErrors()){
-						ProcessHelper.updateContainer(container,value.typeCode, processCodes,contextValidation);
-						ProcessHelper.updateContainerSupportFromContainer(container,contextValidation);
-					}
-					else {
-						contextValidation.errors.putAll(contextError.errors);
-					}
+					process = (Process) InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,process, contextValidation);
+					process = ProcessHelper.applyRules(process, contextValidation, "processCreation");
+					List<String> processCodes=new ArrayList<String>();
+					processCodes.add(process.code);
+					ProcessHelper.updateContainer(container,process.typeCode, processCodes,contextValidation);
+					ProcessHelper.updateContainerSupportFromContainer(container,contextValidation);
+					Workflows.nextContainerState(process,null,new ContextValidation(getCurrentUser(), filledForm.errors()));
 				}
-				
-				Logger.info("New process code : "+value.code);
-			} else {
-				value.traceInformation.setTraceInformation(contextValidation.getUser());
+				return ok(Json.toJson(process));
 			}
 
-			if (!filledForm.hasErrors()) {
-				/*ContextValidation contextValidation=new ContextValidation(getCurrentUser(), filledForm.errors());
-				contextValidation.setCreationMode();
-				value = (Process) InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,value, contextValidation);*/
-				if(!contextValidation.hasErrors()){
-					Workflows.nextContainerState(value,null,new ContextValidation(getCurrentUser(), filledForm.errors()));
+		}else {
+			return badRequest(filledForm.errorsAsJson());
+		}
+	}
+
+	public static Result saveFromSupport(String supportCode, Form<ProcessesSaveForm> filledForm, ContextValidation contextValidation){		
+		Process process = filledForm.get().process;
+		List<Process> processes = new ArrayList<Process>();
+		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("support.code", supportCode)).toList();
+		for(Container container:containers){
+			List<String> processCodes=new ArrayList<String>();
+			process.containerInputCode = container.code;
+			ContextValidation contextError=new ContextValidation(contextValidation.getUser());
+			for(Content c:container.contents){					
+				process.sampleCode = c.sampleCode;
+				process.sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(c, container);
+				//code and name generation
+				process.code = CodeHelper.generateProcessCode(process);
+				Process p = (Process)InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,process, contextValidation);
+
+				if(p != null){
+					processes.add(p);
+					processes = ProcessHelper.applyRules(processes, contextValidation, "processCreation");
+					processCodes.add(p.code);
 				}
 			}
+
+			if(!contextError.hasErrors()){
+				ProcessHelper.updateContainer(container,process.typeCode, processCodes,contextValidation);
+				ProcessHelper.updateContainerSupportFromContainer(container,contextValidation);
+			}
+			else {
+				contextValidation.errors.putAll(contextError.errors);
+			}
 		}
-		if (!filledForm.hasErrors()) {
-			return ok(Json.toJson(processes));
-		} else {
-			return badRequest(filledForm.errorsAsJson());
-		}			
+
+		Logger.info("New process code : "+process.code);
+
+		if(!contextValidation.hasErrors()){
+			Workflows.nextContainerState(process,null,new ContextValidation(getCurrentUser(), filledForm.errors()));
+		}
+
+
+		return ok(Json.toJson(processes));		
 	}
 
 	public static Result update(String code){
@@ -175,18 +165,18 @@ public class Processes extends CommonController{
 		if(process == null){
 			return notFound("Process with code "+code+" does not exist");
 		}
-		
+
 		Form<Process> filledForm = getFilledForm(processForm, Process.class);
 		Process processInput = filledForm.get();
 		if (processInput.code.equals(code)) {
 			processInput.traceInformation.setTraceInformation(getCurrentUser());
-			
+
 			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 			ctxVal.setUpdateMode();
 			processInput.validate(ctxVal);
 			if (!ctxVal.hasErrors()) {
 				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, processInput);
-				
+
 				return ok(Json.toJson(processInput));
 			}else {
 				return badRequest(filledForm.errorsAsJson());			
@@ -195,14 +185,14 @@ public class Processes extends CommonController{
 			return badRequest("process code are not the same");
 		}
 	}
-	
+
 	public static Result delete(String code){
 		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
 		ContextValidation contextValidation=new ContextValidation(getCurrentUser());
 		if(process == null){
 			return notFound("Process with code "+code+" does not exist");
 		}
-		
+
 		List<String> processCode=new ArrayList<String>();
 		processCode.add(process.code);
 		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("inputProcessCodes", processCode)).toList();
@@ -218,7 +208,7 @@ public class Processes extends CommonController{
 			return badRequest();
 		}
 	}
-	
+
 	public static Result list() throws DAOException{
 		//Form<ProcessesSearchForm> processesFilledForm = filledFormQueryString(processesSearchForm,ProcessesSearchForm.class);
 		ProcessesSearchForm processesSearch = filledFormQueryString(ProcessesSearchForm.class);
@@ -265,7 +255,7 @@ public class Processes extends CommonController{
 		}else if(StringUtils.isNotBlank(processesSearch.projectCode)){
 			queryElts.add(DBQuery.is("projectCode", processesSearch.projectCode));
 		}
-		
+
 		if (CollectionUtils.isNotEmpty(processesSearch.sampleCodes)) { //all
 			queryElts.add(DBQuery.in("sampleCode", processesSearch.sampleCodes));
 		}else if(StringUtils.isNotBlank(processesSearch.sampleCode)){
@@ -275,15 +265,15 @@ public class Processes extends CommonController{
 		if(StringUtils.isNotBlank(processesSearch.experimentCode)){
 			queryElts.add(DBQuery.in("experimentCodes", processesSearch.experimentCode));
 		}
-		
+
 		if(StringUtils.isNotBlank(processesSearch.typeCode)){
 			queryElts.add(DBQuery.is("typeCode", processesSearch.typeCode));
 		}
-		
+
 		if(StringUtils.isNotBlank(processesSearch.categoryCode)){
 			queryElts.add(DBQuery.is("categoryCode", processesSearch.categoryCode));
 		}
-		
+
 		if(CollectionUtils.isNotEmpty(processesSearch.stateCodes)){
 			queryElts.add(DBQuery.in("state.code", processesSearch.stateCodes));
 		}else if(StringUtils.isNotBlank(processesSearch.stateCode)){
@@ -292,7 +282,7 @@ public class Processes extends CommonController{
 		if(CollectionUtils.isNotEmpty(processesSearch.users)){
 			queryElts.add(DBQuery.in("traceInformation.createUser", processesSearch.users));
 		}
-		
+
 		if(null != processesSearch.fromDate){
 			queryElts.add(DBQuery.greaterThanEquals("traceInformation.creationDate", processesSearch.fromDate));
 		}
@@ -300,12 +290,12 @@ public class Processes extends CommonController{
 		if(null != processesSearch.toDate){
 			queryElts.add(DBQuery.lessThanEquals("traceInformation.creationDate", (DateUtils.addDays(processesSearch.toDate, 1))));
 		}
-		
+
 		if(StringUtils.isNotBlank(processesSearch.supportCode) || StringUtils.isNotBlank(processesSearch.containerSupportCategory) ){
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("code", 1);
-			
+
 			ContainersSearchForm cs = new ContainersSearchForm();
 			cs.supportCode = processesSearch.supportCode;
 			cs.containerSupportCategory=processesSearch.containerSupportCategory;
@@ -320,28 +310,28 @@ public class Processes extends CommonController{
 			Logger.debug("newContainerSupportCodes :"+processesSearch.supportCode);
 			queryContainer.add(DBQuery.regex("newContainerSupportCodes",Pattern.compile(processesSearch.supportCode)));
 
-			
+
 			if(queryContainer.size()!=0){
 				queryElts.add(DBQuery.or(queryContainer.toArray(new Query[queryContainer.size()])));
 			}
 			else {
 				queryElts.add(DBQuery.exists("code"));
 			}
-			
+
 			Logger.debug("Nb containers find"+containers.size());
 		}
-		
-		
+
+
 		if(StringUtils.isNotBlank(processesSearch.experimentCode)){
 			queryElts.add(DBQuery.regex("experimentCodes",Pattern.compile(processesSearch.experimentCode)));
 		}
-		
+
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(processesSearch.properties, Level.CODE.Process, "properties"));
-		
+
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new Query[queryElts.size()]));
 		}
-		
+
 		return query;
 	}
 }

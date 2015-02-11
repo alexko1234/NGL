@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
@@ -34,8 +34,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-import org.mongojack.DBUpdate.Builder;
-import org.mvel2.ast.Instance;
 
 import play.Logger;
 import play.Logger.ALogger;

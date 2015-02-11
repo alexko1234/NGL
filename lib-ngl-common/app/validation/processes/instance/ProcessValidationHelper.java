@@ -3,13 +3,15 @@ package validation.processes.instance;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.CollectionUtils;
-
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
+import models.laboratory.processes.instance.SampleOnInputContainer;
+
+import org.apache.commons.collections.CollectionUtils;
+
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
@@ -52,6 +54,14 @@ public class ProcessValidationHelper extends CommonValidationHelper {
 		contextValidation.addKeyToRootKeyName("state");
 		CommonValidationHelper.validateStateCode(stateCode,ObjectType.CODE.Process, contextValidation);
 		contextValidation.removeKeyFromRootKeyName("state");
+	}
+	
+	public static void validateSampleOnInputContainer(SampleOnInputContainer soic, ContextValidation contextValidation ){				
+		if(ValidationHelper.required(contextValidation, soic, "sampleOnInputContainer")){		
+			contextValidation.addKeyToRootKeyName("sampleOnInputContainer");
+			soic.validate(contextValidation);
+			contextValidation.removeKeyFromRootKeyName("sampleOnInputContainer");
+		}
 	}
 
 }

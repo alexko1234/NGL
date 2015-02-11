@@ -1,5 +1,7 @@
 package models.laboratory.processes.instance;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +17,11 @@ import models.laboratory.project.instance.Project;
 import models.laboratory.sample.instance.Sample;
 import models.utils.HelperObjects;
 import models.utils.InstanceConstants;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.mongojack.MongoCollection;
+
+import play.Logger;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -29,17 +35,17 @@ import fr.cea.ig.DBObject;
 
 @MongoCollection(name="Process")
 public class Process extends DBObject implements IValidation{
-	
+
 	public String typeCode;
 	public String categoryCode;
-	
+
 	public State state;
-	
+
 	public TraceInformation traceInformation;
 	public List<Comment> comments;
 
 	public Map<String,PropertyValue> properties;
-	
+
 	// Projects ref
 	public String projectCode;
 	// Samples ref
@@ -47,14 +53,16 @@ public class Process extends DBObject implements IValidation{
 
 	public String currentExperimentTypeCode;
 	public String containerInputCode;
-	
+
 	public List<String> newContainerSupportCodes;
 	public List<String> experimentCodes;
+
+	public SampleOnInputContainer sampleOnInputContainer;
 
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		
+
 		ProcessValidationHelper.validateId(this, contextValidation);
 		ProcessValidationHelper.validateCode(this, InstanceConstants.PROCESS_COLL_NAME, contextValidation);
 		ProcessValidationHelper.validateProcessType(typeCode,properties,contextValidation);
@@ -64,8 +72,11 @@ public class Process extends DBObject implements IValidation{
 		ProcessValidationHelper.validateContainerCode(containerInputCode, contextValidation);
 		ProcessValidationHelper.validateProjectCode(projectCode, contextValidation);
 		ProcessValidationHelper.validateSampleCode(sampleCode, projectCode, contextValidation);
-		ProcessValidationHelper.validateCurrentExperimentTypeCode(currentExperimentTypeCode,contextValidation);
+		ProcessValidationHelper.validateCurrentExperimentTypeCode(currentExperimentTypeCode,contextValidation);		
+		ProcessValidationHelper.validateSampleOnInputContainer(sampleOnInputContainer, contextValidation);
+
+
 		//ProcessValidationHelper.validateExperimentCodes(experimentCodes, contextValidation);
 	}
-	
+
 }

@@ -2,6 +2,8 @@ package models;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,6 +29,7 @@ import models.laboratory.experiment.instance.OneToOneContainer;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.processes.instance.Process;
+import models.laboratory.processes.instance.SampleOnInputContainer;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
 import models.laboratory.project.instance.Project;
@@ -36,9 +39,9 @@ import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -287,6 +290,25 @@ public class InstanceTest extends AbstractTests{
 		assertThat(newExperiment.code).isEqualTo(experiment.code);
 		assertThat(newExperiment.state.code).isEqualTo(state.code);
 	}
+	
+	@Test
+	public void validateGetSampleOnInputContainer(){
+		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.exists("contents.properties.tag")).toList();
+		Container container = containers.get(0);
+		Content content = container.contents.get(0);
+		SampleOnInputContainer sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(content, container);
+		
+		assertThat(sampleOnInputContainer.containerCode).isNotEmpty().isNotNull();
+		assertThat(sampleOnInputContainer.containerSupportCode).isNotEmpty().isNotNull();
+		assertThat(sampleOnInputContainer.mesuredConcentration).isNotNull();
+		Date d = new Date();
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		assertThat(sdf.format(d)).isEqualTo(sdf.format(sampleOnInputContainer.lastUpdateDate));
+		assertThat(sampleOnInputContainer.properties).isNotEmpty().isNotNull();			
+		assertThat(sampleOnInputContainer.properties.get("tag")).isNotNull();;
+		
+	}
+	
 
 	////@Test
 	public void removeInstanceMongo(){
