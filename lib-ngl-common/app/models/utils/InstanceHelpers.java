@@ -266,7 +266,7 @@ public class InstanceHelpers {
 		sc.sampleCategoryCode = content.sampleCategoryCode;
 		sc.percentage = content.percentage;
 		sc.properties = content.properties;
-		sc.referenceCollab = getReferenceCollab(readSet.sampleCode);
+		//sc.referenceCollab = getReferenceCollab(readSet.sampleCode);
 		
 		return sc;
 	}
