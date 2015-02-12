@@ -34,7 +34,9 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 		return $scope.searchService.changeContainerSupportCode(val);		 
 	}
 
-	
+	$scope.changeExperimentType = function(){
+		$scope.searchService.changeExperimentType();
+	}
 	
 	//init
 	if(angular.isUndefined($scope.getHomePage())){

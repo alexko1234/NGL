@@ -118,7 +118,7 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument>{
 		
 		String sql = sqlCommon  + " inner join instrument_used_type iut on iut.id = t.fk_instrument_used_type"
 				+ " inner join instrument_category ic on ic.id = iut.fk_instrument_category"
-				+" inner join common_info_type cit on cit.id = iut.fk_common_info_type"
+				+" inner join common_info_type cit on cit.id = iut.fk_common_info_type"				
 				+" where 1=1 ";
 		
 		if(null != instumentQueryParams.active){
@@ -149,6 +149,26 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument>{
 			sqlParameters = ArrayUtils.add(sqlParameters, new SqlParameter("ic.code", Types.VARCHAR));
 			sql += " and ic.code = ? ";			
 		}
+		
+		if(instumentQueryParams.categoryCodes == null && instumentQueryParams.categoryCode == null
+				&& instumentQueryParams.typeCodes == null && instumentQueryParams.typeCode  == null 
+				&& (instumentQueryParams.experimentTypes != null ||instumentQueryParams.experimentType != null)){
+			sql = sqlCommon  + " inner join instrument_used_type iut on iut.id = t.fk_instrument_used_type"
+					+" inner join experiment_type_instrument_type etit on etit.fk_instrument_used_type = iut.id"
+					+" inner join experiment_type et on etit.fk_experiment_type = et.id"
+					+" inner join common_info_type cit on cit.id = et.fk_common_info_type"					
+					+" where 1=1 ";
+			if(instumentQueryParams.experimentTypes != null){
+			parameters = ArrayUtils.addAll(parameters, instumentQueryParams.experimentTypes.toArray());
+			sqlParameters = ArrayUtils.addAll(sqlParameters, listToSqlParameters(instumentQueryParams.experimentTypes,"cit.code", Types.VARCHAR));			
+			sql += " and cit.code in ("+listToParameters(instumentQueryParams.experimentTypes)+") ";
+		}else if(instumentQueryParams.experimentType != null){
+			Object[] args = new Object[]{instumentQueryParams.experimentType};
+			parameters = ArrayUtils.addAll(parameters,args);
+			sqlParameters = ArrayUtils.add(sqlParameters, new SqlParameter("cit.code", Types.VARCHAR));			
+			sql += " and cit.code = ? ";			
+		}
+	}
 		
 		sql += " ORDER BY t.code";
 		

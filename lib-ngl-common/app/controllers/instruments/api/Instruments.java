@@ -30,13 +30,16 @@ public class Instruments extends CommonController{
 		Form<InstrumentsSearchForm> instrumentTypeFilledForm = filledFormQueryString(instrumentSearchForm,InstrumentsSearchForm.class);
 		InstrumentsSearchForm instrumentsQueryParams = instrumentTypeFilledForm.get();
 
-		List<Instrument> instruments;
+		List<Instrument> instruments = new ArrayList<>();
 
 		try{		
 			if(instrumentsQueryParams.getInstrumentsQueryParams().isAtLeastOneParam()){
 				instruments = Instrument.find.findByQueryParams(instrumentsQueryParams.getInstrumentsQueryParams());
 			}else{
+				if(instrumentsQueryParams.experimentType!=null || instrumentsQueryParams.experimentTypes!=null){
 				instruments = Instrument.find.findAll();
+				}
+				return notFound();
 			}
 			if(instrumentsQueryParams.datatable){
 				return ok(Json.toJson(new DatatableResponse<Instrument>(instruments, instruments.size()))); 

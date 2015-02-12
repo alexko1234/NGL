@@ -118,7 +118,12 @@ public class Processes extends CommonController{
 			return badRequest(filledForm.errorsAsJson());
 		}
 	}
-
+/*
+	public static void saveAllContentsProcesses(){
+		
+	}
+	*/
+	
 	public static Result saveFromSupport(String supportCode, Form<ProcessesSaveForm> filledForm, ContextValidation contextValidation){		
 		Process process = filledForm.get().process;
 		List<Process> processes = new ArrayList<Process>();

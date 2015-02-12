@@ -3,7 +3,7 @@
 @form() = {
 		@columnSearchForm{
 			@formGroup{	
-				<div bt-select placeholder="@Messages("experiments.select.experimentType.transformations")" class="form-control" ng-model="searchService.form.experimentType" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in searchService.lists.get('transformations')" ng-change="searchService.changeExperimentType()" auto-select>
+				<div bt-select placeholder="@Messages("experiments.select.experimentType.transformations")" class="form-control" ng-model="searchService.form.experimentType" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in searchService.lists.get('transformations')" ng-change="changeExperimentType()" auto-select>
 				</div>
 			}
 			@formGroup{
@@ -62,7 +62,7 @@
 				<input class="form-control" type="text" ng-model="searchService.form.toDate" placeholder='@Messages("experiment.placeholder.toDate")' title='@Messages("experiment.placeholder.toDate")'>
 			}
 			@formGroup{	
-				<div bt-select placeholder="@Messages("experiments.intrument")" multiple="true" class="form-control" ng-model="searchService.form.instrument" ng-class="errors.experimentType" bt-options="instrument.code as instrument.name for instrument in searchService.lists.get('instruments')" ng-change="searchService.changeExperimentType()" auto-select>
+				<div bt-select placeholder="@Messages("experiments.intrument")" class="form-control" ng-model="searchService.form.instrument" ng-class="errors.experimentType" bt-options="instrument.code as instrument.name for instrument in searchService.lists.get('instruments')" >
 				</div>
 			}
 			@formGroup{	

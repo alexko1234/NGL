@@ -213,7 +213,8 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	});
 
 	$scope.addOutputColumns = function(){
-	};
+		
+	};	
 
 	$scope.$on('addOutputColumns', function(e) {
 		$scope.addOutputColumns();
@@ -322,6 +323,10 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 		$scope.atomicTransfere.experimentToInput($scope.datatable);
 		$scope.atomicTransfere.experimentToOutput($scope.datatable);
 	};
+	
+	$scope.$on('disableEditMode', function(){
+		$scope.datatable.edit.active = false;
+	});
 
 	$scope.$on('refresh', function(e) {
 		$scope.refreshView();

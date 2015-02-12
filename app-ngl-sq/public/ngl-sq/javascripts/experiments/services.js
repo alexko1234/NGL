@@ -106,7 +106,7 @@
 				lists.refresh.experimentTypes({categoryCode:"qualitycontrol"}, "qualitycontrols");
 				lists.refresh.experimentTypes({categoryCode:"transfert"}, "transferts");
 				lists.refresh.experimentTypes({categoryCode:"transformation"}, "transformations");
-				lists.refresh.instruments();
+				//lists.refresh.instruments();
 				isInit=true;
 			}
 		};
@@ -219,9 +219,11 @@
 				},
 				changeExperimentType : function(){
 					//this.search();
-				//	if(this.form.experimentType){
-				//		lists.refresh.instruments({experimentType:this.form.experimentType});						
-				//	}
+					if(this.form.experimentType){
+						lists.refresh.instruments({experimentType:this.form.experimentType});						
+					}else{
+						this.form.instrument = {};
+					}
 					
 				},
 				
