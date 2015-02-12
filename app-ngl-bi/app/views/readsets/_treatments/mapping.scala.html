@@ -3,7 +3,7 @@
 	<div class="col-md-11 col-lg-11">
 		<ul class="nav nav-tabs margin-bottom-5">
 			<li ng-show="isDataExistsForRead('read1')"><a href="#" data-target="#read1" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.read1")</a></li>
-			<li ng-show="isDataExistsForRead2('read2')"><a href="#" data-target="#read2" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.read2")</a></li>
+			<li ng-show="isDataExistsForRead('read2')"><a href="#" data-target="#read2" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.read2")</a></li>
 			<li class="active"><a href="#" data-target="#pairs" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.pairs")</a></li>
 			<li><a href="#" data-target="#ref" data-toggle="tab">@Messages("readsets.treatments.mapping.tabs.ref")</a></li>    	
 		</ul>
@@ -19,11 +19,11 @@
 		 </div> 
 		 
 		 
-		  <div class="tab-pane" id="read1" ng-show="isDataExistsForRead1()">
+		  <div class="tab-pane" id="read1" ng-show="isDataExistsForRead('read1')">
 			@partials.mapping("read1")
 		 </div> 
 		 
-		  <div class="tab-pane" id="read2" ng-show="isDataExistsForRead2()">
+		  <div class="tab-pane" id="read2" ng-show="isDataExistsForRead('read2')">
 			@partials.mapping("read2")
 		 </div> 
 		 
