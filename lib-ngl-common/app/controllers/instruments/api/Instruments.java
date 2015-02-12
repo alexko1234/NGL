@@ -30,7 +30,7 @@ public class Instruments extends CommonController{
 		Form<InstrumentsSearchForm> instrumentTypeFilledForm = filledFormQueryString(instrumentSearchForm,InstrumentsSearchForm.class);
 		InstrumentsSearchForm instrumentsQueryParams = instrumentTypeFilledForm.get();
 
-		List<Instrument> instruments = new ArrayList<>();
+		List<Instrument> instruments = new ArrayList<Instrument>();
 
 		try{		
 			if(instrumentsQueryParams.getInstrumentsQueryParams().isAtLeastOneParam()){
