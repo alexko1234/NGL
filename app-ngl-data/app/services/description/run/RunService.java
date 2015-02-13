@@ -80,9 +80,11 @@ public class RunService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("isSentCollaborator","isSentCollaborator",LevelService.getLevels(Level.CODE.ReadSet), Boolean.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("md5","md5",LevelService.getLevels(Level.CODE.File), String.class, false, "single"));
 		
-		//use only for dynamic filters
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("libProcessTypeCode","libProcessTypeCode",LevelService.getLevels(Level.CODE.Content), String.class, false,
+		//use only for dynamic filters and dynamic properties
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Type processus banque","libProcessTypeCode",LevelService.getLevels(Level.CODE.Content), String.class, false,
 				getLibProcessTypeCodeValues(), "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Category d'index","tagCategory",LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% par piste","percentPerLane",LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
 		
 		
 		return propertyDefinitions;
