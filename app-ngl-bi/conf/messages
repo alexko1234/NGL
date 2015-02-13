@@ -228,6 +228,7 @@ readsets.archiveDate = Date de l''archive
 
 readsets.tabs.general = Général
 readsets.tabs.advanced = Avancé
+readsets.tabs.addinfo = Infos échantillon
 
 #readset properties
 readsets.code = Code
@@ -463,6 +464,14 @@ readsets.files.isNotUsable = Non
 readsets.files.path = Chemin
 
 readsets.modal.header.text = ReadSet status flow
+
+readset.sampleOnContainer.sampleCode = Code d''échantillon
+readset.sampleOnContainer.sampleTypeCode = Type d''échantillon
+readset.sampleOnContainer.sampleCategoryCode = Catégorie d''échantillon
+readset.sampleOnContainer.containerSupportCode = Code support container
+readset.sampleOnContainer.containerCode = Code container
+readset.sampleOnContainer.percentage = Pourcentage
+readset.sampleOnContainer.referenceCollab = Ref. Collaborateur
 
 ############
 #
