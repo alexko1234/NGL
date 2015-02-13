@@ -1,0 +1,49 @@
+@()
+
+@column()(value: Html) = {
+	<div class="col-md-4 col-lg-4 col-xs-4">
+		@value
+	</div>
+}
+
+<form class="form-horizontal">
+	<div class="row">
+	@column(){
+		@views.html.helper.columnLabelValue(Messages("readset.sampleOnContainer.sampleCode")){
+			<p class="form-control-static">{{readset.sampleOnContainer.sampleCode}}</p>
+		}
+		
+		@views.html.helper.columnLabelValue(Messages("readset.sampleOnContainer.sampleTypeCode")){
+			<p class="form-control-static">{{readset.sampleOnContainer.sampleTypeCode}}</p>
+		}
+
+		@views.html.helper.columnLabelValue(Messages("readset.sampleOnContainer.sampleCategoryCode")){
+			<p class="form-control-static">{{readset.sampleOnContainer.sampleCategoryCode}}</p>
+		}
+       	
+       	@views.html.helper.columnLabelValue(Messages("readset.sampleOnContainer.containerSupportCode")){
+			<p class="form-control-static">{{readset.sampleOnContainer.containerSupportCode}}</p>
+		}
+       	
+		@views.html.helper.columnLabelValue(Messages("readset.sampleOnContainer.containerCode")){
+			<p class="form-control-static">{{readset.sampleOnContainer.containerCode}}</p>
+		}
+		
+		@views.html.helper.columnLabelValue(Messages("readset.sampleOnContainer.referenceCollab")){
+			<p class="form-control-static">{{readset.sampleOnContainer.referenceCollab}}</p>
+		}
+       	
+	}
+	@column(){
+		<div class="form-group" ng-repeat="(key, value) in readset.sampleOnContainer.properties">
+		    <label class="col-md-6 col-lg-6 control-label" ng-bind="key|codes:'property_definition'"></label>
+		    <div class="col-md-6 col-lg-6">
+		      <p class="form-control-static" ng-bind="value.value"></p>
+		    </div>
+		</div>		
+	}
+	
+	</div>
+	
+	
+</form>		
