@@ -1,6 +1,7 @@
 package lims.cng.services;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,10 +18,13 @@ import lims.models.instrument.Instrument;
 import lims.services.ILimsRunServices;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
+import models.utils.InstanceConstants;
 
+import org.mongojack.DBQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import fr.cea.ig.MongoDBDAO;
 import play.Logger;
 
 
@@ -42,20 +46,52 @@ public class LimsRunServices implements ILimsRunServices {
 
 	@Override
 	public Experiment getExperiments(Experiment experiment) {
-		List<LimsExperiment> limsExps = dao.getExperiments(experiment);
-		if(limsExps.size() == 1){
-			LimsExperiment limsExp = limsExps.get(0);
+		//NGL
+		List<models.laboratory.experiment.instance.Experiment> nglExps =  MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, models.laboratory.experiment.instance.Experiment.class, 
+				DBQuery.is("typeCode", "illumina-depot").in("inputContainerSupportCodes", experiment.containerSupportCode)).toList();
+		if(nglExps.size() == 1){
+			
+			models.laboratory.experiment.instance.Experiment nglExp = nglExps.get(0);
 			Experiment exp = new Experiment();
-			exp.date = limsExp.date;
 			exp.containerSupportCode = experiment.containerSupportCode;
 			exp.instrument = new Instrument();
-			exp.instrument.code = limsExp.code;
-			exp.instrument.categoryCode = limsExp.categoryCode;	
-			exp.nbCycles = limsExp.nbCycles;
-			Logger.debug(limsExp.toString());		
+			exp.instrument.code = nglExp.instrument.code;
+			exp.instrument.categoryCode = nglExp.instrument.typeCode;
+			
+			if(nglExp.experimentProperties.containsKey("runStartDate")){
+				exp.date = new Date((Long)nglExp.experimentProperties.get("runStartDate").value);
+				
+			}else{
+				exp.date = nglExp.traceInformation.creationDate;
+			}
+			
+			exp.nbCycles = (Integer)nglExp.instrumentProperties.get("nbCyclesRead1").value
+						+ (Integer)nglExp.instrumentProperties.get("nbCyclesRead2").value
+						+ (Integer)nglExp.instrumentProperties.get("nbCyclesReadIndex1").value
+						+ (Integer)nglExp.instrumentProperties.get("nbCyclesReadIndex2").value;
+					
+			//exp.date = limsExp.date; //runStartDate
+			//exp.nbCycles = limsExp.nbCycles; //instrument
+			
 			return exp;
-		}else{
+		}else if(nglExps.size() > 1){
 			return null;
+		}	else{
+			List<LimsExperiment> limsExps = dao.getExperiments(experiment);
+			if(limsExps.size() == 1){
+				LimsExperiment limsExp = limsExps.get(0);
+				Experiment exp = new Experiment();
+				exp.date = limsExp.date;
+				exp.containerSupportCode = experiment.containerSupportCode;
+				exp.instrument = new Instrument();
+				exp.instrument.code = limsExp.code;
+				exp.instrument.categoryCode = limsExp.categoryCode;	
+				exp.nbCycles = limsExp.nbCycles;
+				Logger.debug(limsExp.toString());		
+				return exp;
+			}else{
+				return null;
+			}
 		}
 	}
 
