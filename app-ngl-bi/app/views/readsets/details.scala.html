@@ -43,7 +43,8 @@
 	<div class="col-md-12 col-lg-12">
 		<ul class="nav nav-tabs margin-bottom-5">
 			<li class="active"><a href="#" data-target="#general" data-toggle="tab">@Messages("readsets.tabs.general")</a></li>
-			<li><a href="#" data-target="#advanced" data-toggle="tab">@Messages("readsets.tabs.advanced")</a></li>    
+			<li><a href="#" data-target="#advanced" data-toggle="tab">@Messages("readsets.tabs.advanced")</a></li>
+			<li><a href="#" data-target="#addinfo" data-toggle="tab">@Messages("readsets.tabs.addinfo")</a></li>    
 		</ul>
 		<div class="tab-content">
 			<div class="tab-pane active" id="general">		
@@ -52,6 +53,9 @@
 			<div class="tab-pane" id="advanced">
 				@partials.details_advanced()
 				@partials.details_file()	
+			</div>
+			<div class="tab-pane" id="addinfo">
+				@partials.details_addinfo()				
 			</div>
 		</div>
 	</div>
