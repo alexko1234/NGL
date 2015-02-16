@@ -1,0 +1,20 @@
+application.name = NGL-SUB
+index.title = Welcome to NGL-SUB
+#Study
+study.menu = Study menu
+study.menu.create = Create study
+study.page.title=Study page
+
+create.placeholder.studyTitle=Study title
+create.placeholder.projectCode=Select. project code
+create.placeholder.studyTypes=Select. study type
+create.placeholder.abstract=Def. abstract
+create.placeholder.description=Def. description
+
+button.save=Save
+button.reset=Reset
+#Containers
+#containers.title = Containers
+#containers.menu = Containers
+
+

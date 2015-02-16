@@ -19,6 +19,7 @@ import models.utils.InstanceConstants;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
+import controllers.DocumentController;
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
@@ -29,19 +30,23 @@ import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
-public class Submissions extends SubmissionsController{
+public class Submissions extends DocumentController<Submission>{
+
+	protected Submissions(String collectionName, Class<Submission> type) {
+		super(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class);
+	}
 
 	final static Form<Submission> submissionForm = form(Submission.class);
 	final static Form<File> pathForm = form(File.class);
 	
-	public static Result search(String state)
+	public Result search(String state)
 	{
 		MongoDBResult<Submission> results = MongoDBDAO.find(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, DBQuery.is("state.code", state));
 		List<Submission> submissions = results.toList();
 		return ok(Json.toJson(submissions));
 	}
 
-	public static Result update(String code)
+	public Result update(String code)
 	{
 		//Get Submission from DB 
 		Submission submission = getSubmission(code);
@@ -67,7 +72,7 @@ public class Submissions extends SubmissionsController{
 	}
 
 
-	public static Result createXml(String code)
+	public Result createXml(String code)
 	{
 		//Get Submission from DB 
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, code);
@@ -85,7 +90,7 @@ public class Submissions extends SubmissionsController{
 	}
 
 
-	public static Result treatmentAc(String code)
+	public Result treatmentAc(String code)
 	{
 		//Get Submission from DB 
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, code);
@@ -106,7 +111,7 @@ public class Submissions extends SubmissionsController{
 		}
 		return ok(Json.toJson(submission));
 	}
-	public static Result updateState(String code, String stateCode)
+	public Result updateState(String code, String stateCode)
 	{
 		Submission submission = getSubmission(code);
 		if(submission==null)
@@ -117,7 +122,7 @@ public class Submissions extends SubmissionsController{
 		return ok();
 	}
 	
-	public static Result getRawDatas(String code)
+	public Result getRawDatas(String code)
 	{
 		List<RawData> allRawDatas = new ArrayList<RawData>();
 		//Get all experiments from submission
@@ -129,6 +134,12 @@ public class Submissions extends SubmissionsController{
 		}
 		return ok(Json.toJson(allRawDatas));
 		
+	}
+	
+	private Submission getSubmission(String code)
+	{
+		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, code);
+		return submission;
 	}
 }
 
