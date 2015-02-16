@@ -12,6 +12,7 @@ import models.laboratory.run.description.TreatmentCategory;
 import models.laboratory.run.description.TreatmentContext;
 import models.laboratory.run.description.TreatmentType;
 import models.laboratory.run.description.TreatmentTypeContext;
+import models.laboratory.run.instance.Analysis;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
@@ -19,7 +20,9 @@ import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
+
 import org.mongojack.DBQuery;
+
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
@@ -60,9 +63,9 @@ public class TreatmentValidationHelper extends CommonValidationHelper {
 	public static void validateCode(TreatmentType treatmentType, String code, ContextValidation contextValidation) {
 	 if(ValidationHelper.required(contextValidation, code, "code")){
 		if (contextValidation.isCreationMode() && isTreatmentExist(code, contextValidation)) {
-	    	contextValidation.addErrors("code",ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG, code);		    	
+	    	contextValidation.addErrors("code",ValidationConstants.ERROR_CODE_NOTUNIQUE_MSG, code, treatmentType.code);		    	
 		}else if (contextValidation.isUpdateMode() && !isTreatmentExist(code, contextValidation)){
-			contextValidation.addErrors("code",ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code);
+			contextValidation.addErrors("code",ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, code, treatmentType.code);
 		}
 		
 		if(!treatmentType.names.contains(code)){
@@ -94,6 +97,10 @@ public class TreatmentValidationHelper extends CommonValidationHelper {
 			Run run = (Run) contextValidation.getObject("run");
 			return MongoDBDAO.checkObjectExist(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.and(DBQuery.is("code", run.code),DBQuery.exists("treatments."+code)));			
+		}else if(Level.CODE.Analysis.equals(levelCode)){
+			Analysis analysis = (Analysis) contextValidation.getObject("analysis");
+			return MongoDBDAO.checkObjectExist(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, 
+					DBQuery.and(DBQuery.is("code", analysis.code),DBQuery.exists("treatments."+code)));	
 		}
 		return false;
 	}
