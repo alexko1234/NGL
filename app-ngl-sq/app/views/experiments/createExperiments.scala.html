@@ -111,14 +111,13 @@
 						<p class="form-control-static">{{experiment.value.typeCode}}</p>
 					}			    
 					@columnLabelValue(Messages("experiments.protocol")){
-						<select class="form-control"
+						<div bt-select class="form-control"
 								ng-model="experiment.value.protocolCode"
 								ng-readonly="!experiment.experimentInformation.enabled"
-								ng-options="protocol.code as protocol.name for protocol in lists.get('protocols')"
+								bt-options="protocol.code as protocol.name for protocol in lists.get('protocols')"
 								ng-disabled="!experiment.experimentInformation.enabled"
 								auto-select>
-									<option value="">@Messages("experiments.select.protocols")</option>
-							</select>
+							</div>
 					}	
 			   	 	@columnLabelValue(Messages("experiments.state")){
 			   	 		<p class="form-control-static">{{experiment.value.state.code | codes:'state'}}</p>
@@ -146,14 +145,14 @@
 								placeholder="@Messages("date.format.french")" 
 								ng-model="experiment.value.experimentProperties[expp.code].value" date-timestamp/>
 								
-							<select class="form-control"  
+							<div bt-select class="form-control"  
 									ng-readonly="!experiment.experimentInformation.enabled"
 									ng-disabled="!experiment.experimentInformation.enabled" 
 									ng-model="experiment.value.experimentProperties[expp.code].value" 
 									ng-switch-when="true" 
-									auto-select>
-								<option ng-repeat="opt in expp.possibleValues" value="{{opt.value}}">{{opt.value}}</option>
-							   </select>
+									auto-select
+									bt-options="possibleValues.code as possibleValues.name for possibleValues in expp.possibleValues">
+							   </div>
 						</div>
 						
 					</div>							
@@ -176,44 +175,44 @@
 			    <form class="form-horizontal">
 			    
 			    @columnLabelValue(Messages("experiments.intrumentUsedType")){
-						<select class="form-control"
+						<div  bt-select  class="form-control"
 					ng-change="getInstrumentsTrigger()"
 					ng-model="experiment.value.instrument.typeCode"
 					auto-select
 					ng-readonly="!experiment.instrumentInformation.enabled"
-					ng-options="instrumentUsedType.code as instrumentUsedType.name for instrumentUsedType in lists.get('instrumentUsedTypes')"
+					bt-options="instrumentUsedType.code as instrumentUsedType.name for instrumentUsedType in lists.get('instrumentUsedTypes')"
 					ng-disabled="!experiment.instrumentInformation.enabled">
 						<option value="">@Messages("experiments.select.intrumentUsedType")</option>
-					</select>
+					</div>
 				}
 			     
 			     @columnLabelValue(Messages("experiments.intrument")){
-			     	<select class="form-control"
+			     	<div  bt-select class="form-control"
 											ng-model="experiment.value.instrument.code"
 											ng-readonly="!experiment.instrumentInformation.enabled"
-											ng-options="instrumentInformation.code as instrumentInformation.name for instrumentInformation in lists.get('instruments')"
+											bt-options="instrumentInformation.code as instrumentInformation.name for instrumentInformation in lists.get('instruments')"
 											ng-disabled="!experiment.instrumentInformation.enabled"
 											ng-hide="!experiment.value.instrument.typeCode"
 											ng-change="getInputTemplate()"
 											auto-select
+											placeholder='@Messages("experiments.select.instrument")'
 											>
-												<option value="">@Messages("experiments.select.instrument")</option>
-											</select>
+											</div>
 			     }			     
 
 				<div class="form-group" ng-hide="!experiment.value.instrument.typeCode || experiment.outputVoid">
 					<label class="col-md-6 col-lg-6 control-label">@Messages("experiments.intrumentCategory")</label>
 					<div class="col-md-6 col-lg-6">
-									<select  class="form-control"
+									<div bt-select  class="form-control"
 									auto-select
 									ng-model="experiment.value.instrument.outContainerSupportCategoryCode"
 									ng-readonly="!experiment.instrumentInformation.enabled"
 									ng-change="getTemplate()"
-									ng-options="instrumentCategory.code as instrumentCategory.name for instrumentCategory in lists.get('containerSupportCategories')"
+									bt-options="instrumentCategory.code as instrumentCategory.name for instrumentCategory in lists.get('containerSupportCategories')"
 									ng-disabled="!experiment.instrumentInformation.enabled"
-									ng-hide="!experiment.value.instrument.typeCode || experiment.outputVoid">
-										<option value="">@Messages("experiments.select.outContainerSupportCategoryCode")</option>
-									</select>
+									ng-hide="!experiment.value.instrument.typeCode || experiment.outputVoid"
+									placeholder='@Messages("experiments.select.outContainerSupportCategoryCode")'>
+									</div>
 					</div>
 				</div>	 	
 			    
@@ -242,12 +241,11 @@
 									ng-model="experiment.value.instrumentProperties[instp.code].value"
 									ng-disabled="!experiment.instrumentInformation.enabled"/>
 								
-								<select class="form-control" ng-options="opt.value as opt.value for opt in instp.possibleValues" dt-default-value="instp.defaultValue"
+								<div bt-select class="form-control" bt-options="opt.value as opt.value for opt in instp.possibleValues" dt-default-value="instp.defaultValue"
 									ng-readonly="!experiment.instrumentInformation.enabled" ng-disabled="!experiment.instrumentInformation.enabled" 
 									ng-model="experiment.value.instrumentProperties[instp.code].value" ng-switch-when="true" 
 									auto-select>
-							    <option value="">Sélect. {{instp.name}}</option>
-							    </select>
+							    </div>
 							</div>
 						</div>
 				</div>	
