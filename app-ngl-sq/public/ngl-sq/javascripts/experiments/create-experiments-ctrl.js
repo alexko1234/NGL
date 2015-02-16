@@ -305,6 +305,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			$scope.experiment.experimentInformation.enabled = true;
 			$scope.experiment.instrumentProperties.enabled = true;
 			$scope.experiment.instrumentInformation.enabled = true;
+			$scope.$broadcast('disableEditMode');
+			
 			if(mainService.isHomePage('search') && !tabService.isBackupTabs()){
 				tabService.backupTabs();
 				tabService.resetTabs();
@@ -326,7 +328,9 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			$scope.experiment.instrumentProperties.enabled = false;
 			$scope.experiment.instrumentInformation.enabled = false;
 			$scope.experiment.editMode=false;
-		}
+			$scope.$broadcast('disableEditMode');
+			
+		} 
 	};
 
 	/**

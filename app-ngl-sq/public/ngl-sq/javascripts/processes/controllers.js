@@ -283,7 +283,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			}
 	};
 	
-	$scope.swithView = function(){
+	$scope.swithView = function(){		
 		if($scope.supportView){
 			$scope.supportView = false;
 			$scope.swithToContainerView();
@@ -294,7 +294,13 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 	};
 	
 	$scope.swithToContainerView = function(){
-		$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);
+		if($scope.basket.length() != 0){
+			$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);
+		}else{
+			$scope.datatable.setData($scope.processes);
+		}
+		
+		
 		$scope.datatable.config.columns[0].header = "containers.table.code";
 	};
 	
@@ -324,13 +330,14 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 							properties:processData.properties
 					};
 					
-					var promise = $http.post(url, {"process":process})
+					var promise = $http.post(url, process, {params:{"fromContainerInputCode": processData.code}})
 					.success(function(data, status, headers, config) {
 						if(data!=null){
 							$scope.message.clazz="alert alert-success";
 							$scope.message.text=Messages('experiments.msg.save.sucess');
 							
-							$scope.processes.push(data);
+							//$scope.processes.push(data);
+							$scope.processes = $scope.processes.concat(data);
 						}
 					})
 					.error(function(data, status, headers, config) {
@@ -357,7 +364,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 						categoryCode:$scope.form.processCategory,
 						properties:processData.properties
 				};
-				var promise = $http.post(url,{"supportCode":data[i].support.code, "process":process})
+				var promise = $http.post(url,process, {params:{"fromSupportContainerCode": data[i].support.code}})
 				.success(function(data, status, headers, config) {
 					if(data!=null){
 						$scope.message.clazz="alert alert-success";
@@ -377,6 +384,8 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 				$scope.promises.push(promise);
 			}
 		}
+		
+		
 		$q.all($scope.promises).then(function (res) {
 			$scope.basket.reset();
 			$scope.getColumns();
@@ -386,20 +395,27 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 	};
 	
 	$scope.swithToSupportView = function(){
-		var processes =  mainService.getBasket().basket;
-		$scope.processesSupports = [];
-		angular.forEach(processes,function(process){
-			var alreadyExist = false;
-			angular.forEach($scope.processesSupports,function(processesSupport){
-				if(processesSupport.support.code == process.support.code){
-					alreadyExist = true;
+		
+		if($scope.basket.length() == 0){
+			$scope.datatable.setData($scope.processes);
+		}else{
+			var processes =  mainService.getBasket().basket;
+			$scope.processesSupports = [];
+			angular.forEach(processes,function(process){
+				var alreadyExist = false;
+				angular.forEach($scope.processesSupports,function(processesSupport){
+					if(processesSupport.support.code == process.support.code){
+						alreadyExist = true;
+					}
+				});
+				if(!alreadyExist){
+					$scope.processesSupports.push(process);
 				}
 			});
-			if(!alreadyExist){
-				$scope.processesSupports.push(process);
-			}
-		});
-		$scope.datatable.setData($scope.processesSupports,$scope.processesSupports.length);
+			$scope.datatable.setData($scope.processesSupports,$scope.processesSupports.length);
+		}
+		
+		
 		console.log($scope.datatable.config);
 		if($scope.datatable.config.columns.length>0)
 			$scope.datatable.config.columns[0].header = "containers.table.supportCode";

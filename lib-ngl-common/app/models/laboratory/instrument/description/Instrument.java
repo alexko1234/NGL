@@ -43,6 +43,10 @@ public class Instrument extends Model<Instrument>{
 		public List<Instrument> findByQueryParams(InstrumentQueryParams instrumentsQueryParams) throws DAOException{
 			return ((InstrumentDAO)getInstance()).findByQueryParams(instrumentsQueryParams);
 		}
+		
+		public List<Instrument> findByExperimentTypeQueryParams(InstrumentQueryParams instrumentsQueryParams) throws DAOException{
+			return ((InstrumentDAO)getInstance()).findByExperimentTypeQueryParams(instrumentsQueryParams);
+		}
 	}
 	
 }

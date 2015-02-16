@@ -33,13 +33,14 @@ public class Instruments extends CommonController{
 		List<Instrument> instruments = new ArrayList<Instrument>();
 
 		try{		
-			if(instrumentsQueryParams.getInstrumentsQueryParams().isAtLeastOneParam()){
+			if(instrumentsQueryParams.experimentType!=null || instrumentsQueryParams.experimentTypes!=null){
+				instruments = Instrument.find.findByExperimentTypeQueryParams(instrumentsQueryParams.getInstrumentsQueryParams());
+			}else if(instrumentsQueryParams.getInstrumentsQueryParams().isAtLeastOneParam()){
 				instruments = Instrument.find.findByQueryParams(instrumentsQueryParams.getInstrumentsQueryParams());
 			}else{
-				if(instrumentsQueryParams.experimentType!=null || instrumentsQueryParams.experimentTypes!=null){
-				instruments = Instrument.find.findAll();
-				}
-				return notFound();
+				
+				instruments = new ArrayList<Instrument>();
+				//instruments = Instrument.find.findAll();
 			}
 			if(instrumentsQueryParams.datatable){
 				return ok(Json.toJson(new DatatableResponse<Instrument>(instruments, instruments.size()))); 

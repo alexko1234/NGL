@@ -217,14 +217,8 @@
 					//fifox browser return the specified format
 					return moment(date, Messages("date.format").toUpperCase()).valueOf();
 				},
-				changeExperimentType : function(){
-					//this.search();
-					if(this.form.experimentType){
-						lists.refresh.instruments({experimentType:this.form.experimentType});						
-					}else{
-						this.form.instrument = {};
-					}
-					
+				changeExperimentType : function(){					
+						lists.refresh.instruments({"experimentTypes":this.form.experimentType});					
 				},
 				
 				changeProcessCategory : function(){

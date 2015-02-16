@@ -19,7 +19,6 @@ public class InstrumentQueryParams {
 	public boolean isAtLeastOneParam(){
 		return (this.typeCodes != null || this.typeCode != null 
 				|| this.categoryCode != null || this.categoryCodes != null
-				|| this.experimentType != null || this.experimentTypes != null
 				|| this.active != null);
 	}
 }

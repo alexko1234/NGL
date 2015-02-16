@@ -38,6 +38,7 @@ import com.mongodb.BasicDBObject;
 
 import controllers.CommonController;
 import controllers.NGLControllerHelper;
+import controllers.QueryFieldsForm;
 import controllers.containers.api.Containers;
 import controllers.containers.api.ContainersSearchForm;
 import fr.cea.ig.MongoDBDAO;
@@ -45,9 +46,10 @@ import fr.cea.ig.MongoDBResult;
 
 public class Processes extends CommonController{
 
-	final static Form<ProcessesSaveForm> processSaveForm = form(ProcessesSaveForm.class);
+	final static Form<ProcessesSaveQueryForm> processSaveQueryForm = form(ProcessesSaveQueryForm.class);
 	final static Form<Process> processForm = form(Process.class);
 	final static Form<ProcessesSearchForm> processesSearchForm = form(ProcessesSearchForm.class);
+	final static Form<QueryFieldsForm> saveForm = form(QueryFieldsForm.class);
 
 	public static Result head(String processCode) {
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, processCode)){			
@@ -65,104 +67,83 @@ public class Processes extends CommonController{
 		return ok(Json.toJson(process));
 	}
 
-	public static Result save(){
-
-		Form<ProcessesSaveForm> filledForm = getFilledForm(processSaveForm,ProcessesSaveForm.class);
-		ProcessesSaveForm processSaveForm = filledForm.get();
-		Process process = null;
-
-		if (null == processSaveForm.process._id) {			//init state
+	public static Result save(){	
+		Form<ProcessesSaveQueryForm>  filledQueryFieldsForm = filledFormQueryString(processSaveQueryForm, ProcessesSaveQueryForm.class);
+		ProcessesSaveQueryForm queryFieldsForm = filledQueryFieldsForm.get();		
+		Form<Process> filledForm = getFilledForm(processForm, Process.class);
+		Process process = filledForm.get();		
+		List<Process> processes = new ArrayList<Process>();	
+	
+		if (null == process._id) {			//init state
 			//the trace
-			processSaveForm.process.traceInformation = new TraceInformation();
-
-			processSaveForm.process.traceInformation.setTraceInformation(getCurrentUser());
+			process.traceInformation = new TraceInformation();
+			process.traceInformation.setTraceInformation(getCurrentUser());
 			//the default status
-			processSaveForm.process.state = new State("N", getCurrentUser());
+			process.state = new State("N", getCurrentUser());
 		}else {
 			return badRequest("use PUT method to update the process");
 		}
-
 		if (!filledForm.hasErrors()) {
 			ContextValidation contextValidation=new ContextValidation(getCurrentUser(), filledForm.errors());
 			contextValidation.setCreationMode();
-			process = processSaveForm.process;
 
-			if(StringUtils.isNotBlank(processSaveForm.supportCode)){
-				return saveFromSupport(processSaveForm.supportCode, filledForm, contextValidation);
-			}else{
-				//code and name generation
-				process.code = CodeHelper.generateProcessCode(process);
-				Logger.info("New process code : "+process.code);
-
-				
+			if(StringUtils.isNotBlank(queryFieldsForm.fromSupportContainerCode) && StringUtils.isBlank(queryFieldsForm.fromContainerInputCode)){			
+				processes = saveFromSupport(queryFieldsForm.fromSupportContainerCode, filledForm, contextValidation);
+			}else if(StringUtils.isNotBlank(queryFieldsForm.fromContainerInputCode) && StringUtils.isBlank(queryFieldsForm.fromSupportContainerCode)) {							
+							
 				if(!contextValidation.hasErrors()){
 					Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, process.containerInputCode);
-					for(Content c: container.contents){
-						if((c.sampleCode).equals(process.sampleCode)){
-						process.sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(c, container);
-						}
-					}
-					
-					process = (Process) InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,process, contextValidation);
-					process = ProcessHelper.applyRules(process, contextValidation, "processCreation");
-					List<String> processCodes=new ArrayList<String>();
-					processCodes.add(process.code);
-					ProcessHelper.updateContainer(container,process.typeCode, processCodes,contextValidation);
-					ProcessHelper.updateContainerSupportFromContainer(container,contextValidation);
-					Workflows.nextContainerState(process,null,new ContextValidation(getCurrentUser(), filledForm.errors()));
-				}
-				return ok(Json.toJson(process));
+					filledForm.get().containerInputCode = container.code;
+					processes.addAll(saveAllContentsProcesses(filledForm, container, contextValidation ));
+				}				
+			}else{
+				return badRequest("Params 'from object' required!");
 			}
-
 		}else {
 			return badRequest(filledForm.errorsAsJson());
 		}
+		return ok(Json.toJson(processes));
 	}
-/*
-	public static void saveAllContentsProcesses(){
-		
-	}
-	*/
-	
-	public static Result saveFromSupport(String supportCode, Form<ProcessesSaveForm> filledForm, ContextValidation contextValidation){		
-		Process process = filledForm.get().process;
+
+	public static List<Process> saveFromSupport(String supportCode, Form<Process> filledForm, ContextValidation contextValidation){			
 		List<Process> processes = new ArrayList<Process>();
 		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("support.code", supportCode)).toList();
-		for(Container container:containers){
-			List<String> processCodes=new ArrayList<String>();
-			process.containerInputCode = container.code;
-			ContextValidation contextError=new ContextValidation(contextValidation.getUser());
-			for(Content c:container.contents){					
-				process.sampleCode = c.sampleCode;
-				process.sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(c, container);
-				//code and name generation
-				process.code = CodeHelper.generateProcessCode(process);
-				Process p = (Process)InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,process, contextValidation);
+		for(Container container:containers){			
+			filledForm.get().containerInputCode = container.code;
+			processes.addAll(saveAllContentsProcesses(filledForm, container, contextValidation ));
+		}
+		return processes;	
+	}
 
-				if(p != null){
-					processes.add(p);
-					processes = ProcessHelper.applyRules(processes, contextValidation, "processCreation");
-					processCodes.add(p.code);
-				}
-			}
 
-			if(!contextError.hasErrors()){
-				ProcessHelper.updateContainer(container,process.typeCode, processCodes,contextValidation);
-				ProcessHelper.updateContainerSupportFromContainer(container,contextValidation);
-			}
-			else {
-				contextValidation.errors.putAll(contextError.errors);
+	public static List<Process> saveAllContentsProcesses(Form<Process> filledForm, Container container, ContextValidation contextValidation){	
+		Process process = filledForm.get();
+
+		List<Process> processes = new ArrayList<Process>();
+		List<String> processCodes=new ArrayList<String>();		
+		ContextValidation contextError=new ContextValidation(contextValidation.getUser());
+
+		for(Content c:container.contents){					
+			//code generation
+			process.code = CodeHelper.generateProcessCode(process);
+			process.sampleCode = c.sampleCode;
+			process.sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(c, container);				
+			Process p = (Process)InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,process, contextValidation);
+			Logger.info("New process code : "+process.code);
+			if(p != null){
+				processes.add(p);					
+				processCodes.add(p.code);
 			}
 		}
-
-		Logger.info("New process code : "+process.code);
-
-		if(!contextValidation.hasErrors()){
+		processes = ProcessHelper.applyRules(processes, contextValidation, "processCreation");
+		if(!contextError.hasErrors()){
+			ProcessHelper.updateContainer(container,process.typeCode, processCodes,contextValidation);
+			ProcessHelper.updateContainerSupportFromContainer(container,contextValidation);
 			Workflows.nextContainerState(process,null,new ContextValidation(getCurrentUser(), filledForm.errors()));
+		}else{
+			contextValidation.errors.putAll(contextError.errors);
 		}
-
-
-		return ok(Json.toJson(processes));		
+		return processes;
 	}
 
 	public static Result update(String code){

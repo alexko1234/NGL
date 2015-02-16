@@ -112,6 +112,33 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument>{
 		return initializeMapping(sql, new SqlParameter("t.fk_instrument_used_type", Types.INTEGER)).execute(idInstrumentUsedType);
 	}
 	
+	public List<Instrument> findByExperimentTypeQueryParams(InstrumentQueryParams instumentQueryParams) throws DAOException {
+		Object[] parameters = new Object[0];
+		Object[] sqlParameters = new SqlParameter[0];
+		
+		String	sql = sqlCommon  + " inner join instrument_used_type iut on iut.id = t.fk_instrument_used_type"
+				+" inner join experiment_type_instrument_type etit on etit.fk_instrument_used_type = iut.id"
+				+" inner join experiment_type et on etit.fk_experiment_type = et.id"
+				+" inner join common_info_type cit on cit.id = et.fk_common_info_type"					
+				+" where 1=1 ";		
+		
+			if(instumentQueryParams.experimentTypes != null){
+			parameters = ArrayUtils.addAll(parameters, instumentQueryParams.experimentTypes.toArray());
+			sqlParameters = ArrayUtils.addAll(sqlParameters, listToSqlParameters(instumentQueryParams.experimentTypes,"cit.code", Types.VARCHAR));			
+			sql += " and cit.code in ("+listToParameters(instumentQueryParams.experimentTypes)+") ";
+		}else if(instumentQueryParams.experimentType != null){
+			Object[] args = new Object[]{instumentQueryParams.experimentType};
+			parameters = ArrayUtils.addAll(parameters,args);
+			sqlParameters = ArrayUtils.add(sqlParameters, new SqlParameter("cit.code", Types.VARCHAR));			
+			sql += " and cit.code = ? ";			
+		}
+	
+		sql += " ORDER BY t.code";		
+		return initializeMapping(sql, (SqlParameter[])sqlParameters).execute(parameters);	
+		
+		
+	}
+	
 	public List<Instrument> findByQueryParams(InstrumentQueryParams instumentQueryParams) throws DAOException {
 		Object[] parameters = new Object[0];
 		Object[] sqlParameters = new SqlParameter[0];
@@ -148,27 +175,7 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument>{
 			parameters = ArrayUtils.addAll(parameters,args);
 			sqlParameters = ArrayUtils.add(sqlParameters, new SqlParameter("ic.code", Types.VARCHAR));
 			sql += " and ic.code = ? ";			
-		}
-		
-		if(instumentQueryParams.categoryCodes == null && instumentQueryParams.categoryCode == null
-				&& instumentQueryParams.typeCodes == null && instumentQueryParams.typeCode  == null 
-				&& (instumentQueryParams.experimentTypes != null ||instumentQueryParams.experimentType != null)){
-			sql = sqlCommon  + " inner join instrument_used_type iut on iut.id = t.fk_instrument_used_type"
-					+" inner join experiment_type_instrument_type etit on etit.fk_instrument_used_type = iut.id"
-					+" inner join experiment_type et on etit.fk_experiment_type = et.id"
-					+" inner join common_info_type cit on cit.id = et.fk_common_info_type"					
-					+" where 1=1 ";
-			if(instumentQueryParams.experimentTypes != null){
-			parameters = ArrayUtils.addAll(parameters, instumentQueryParams.experimentTypes.toArray());
-			sqlParameters = ArrayUtils.addAll(sqlParameters, listToSqlParameters(instumentQueryParams.experimentTypes,"cit.code", Types.VARCHAR));			
-			sql += " and cit.code in ("+listToParameters(instumentQueryParams.experimentTypes)+") ";
-		}else if(instumentQueryParams.experimentType != null){
-			Object[] args = new Object[]{instumentQueryParams.experimentType};
-			parameters = ArrayUtils.addAll(parameters,args);
-			sqlParameters = ArrayUtils.add(sqlParameters, new SqlParameter("cit.code", Types.VARCHAR));			
-			sql += " and cit.code = ? ";			
-		}
-	}
+		}		
 		
 		sql += " ORDER BY t.code";
 		

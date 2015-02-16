@@ -88,8 +88,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			         hide:{
 			        	 active:true
 			         },
-			         edit:{
-			        	 active:true,
+			         edit:{			        	 
 			        	 columnMode:true
 			         },
 			         save:{
@@ -325,8 +324,13 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	};
 	
 	$scope.$on('disableEditMode', function(){
-		$scope.datatable.edit.active = false;
+		$scope.datatableConfig.edit.active = false;
 	});
+	
+	$scope.$on('enableEditMode', function(){
+		$scope.datatableConfig.edit.active = true;
+	});
+
 
 	$scope.$on('refresh', function(e) {
 		$scope.refreshView();

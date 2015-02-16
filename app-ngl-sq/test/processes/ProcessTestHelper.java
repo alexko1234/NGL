@@ -1,6 +1,6 @@
 package processes;
 
-import controllers.processes.api.ProcessesSaveForm;
+import controllers.processes.api.ProcessesSaveQueryForm;
 import controllers.processes.api.ProcessesSearchForm;
 import models.laboratory.processes.instance.Process;
 
@@ -21,10 +21,9 @@ public class ProcessTestHelper {
 		
 	}
 	
-	public static ProcessesSaveForm getFakeProcessesSaveForm(String supportCode, Process process){
-		ProcessesSaveForm psf = new ProcessesSaveForm();
-		psf.process = process;
-		psf.supportCode = supportCode;
+	public static ProcessesSaveQueryForm getFakeProcessesSaveForm(String supportCode, Process process){
+		ProcessesSaveQueryForm psf = new ProcessesSaveQueryForm();		
+		psf.fromSupportContainerCode = supportCode;
 		return psf;
 		
 	}

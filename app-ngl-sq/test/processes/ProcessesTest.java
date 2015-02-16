@@ -8,6 +8,7 @@ import static play.test.Helpers.status;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -44,7 +45,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import controllers.processes.api.ProcessesSaveForm;
+import controllers.processes.api.ProcessesSaveQueryForm;
 import fr.cea.ig.MongoDBDAO;
 
 public class ProcessesTest extends AbstractTests{
@@ -60,7 +61,7 @@ public class ProcessesTest extends AbstractTests{
 	}
 	
 	protected static ALogger logger=Logger.of("ProcessesTest");
-	
+/*
 	@Test
 	public void validateSave() throws JsonParseException, JsonMappingException, IOException{
 		String supportCode = InitDataHelper.getSupportCodesInContext("tube").get(0);		
@@ -75,7 +76,7 @@ public class ProcessesTest extends AbstractTests{
 		process.currentExperimentTypeCode = null;
 		process.newContainerSupportCodes =null;
 		process.experimentCodes = null;				
-		ProcessesSaveForm psf = ProcessTestHelper.getFakeProcessesSaveForm(supportCode, process);		
+		ProcessesSaveQueryForm psf = ProcessTestHelper.getFakeProcessesSaveForm(supportCode, process);		
 		Logger.info("Avant Result save()");
 		Result result = callAction(controllers.processes.api.routes.ref.Processes.save(),fakeRequest().withJsonBody(Json.toJson(psf)));
 		Logger.info("Après Result save()");
@@ -113,8 +114,9 @@ public class ProcessesTest extends AbstractTests{
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);		
 		;
 	}
+	*/
 	
-	@Test
+/*	@Test
 	public void validatesaveFromSupportOpgenRun() throws JsonParseException, JsonMappingException, IOException{
 		String supportCode = InitDataHelper.getSupportCodesInContext("tube").get(0);		
 		ContainerSupport cs = MongoDBDAO.findOne(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", supportCode));		
@@ -123,7 +125,7 @@ public class ProcessesTest extends AbstractTests{
 		process.projectCode = cs.projectCodes.get(0);
 		process.sampleCode = cs.sampleCodes.get(0);
 		process.properties = new HashMap<String, PropertyValue>();	
-		ProcessesSaveForm psf = ProcessTestHelper.getFakeProcessesSaveForm(supportCode, process);
+		ProcessesSaveQueryForm psf = ProcessTestHelper.getFakeProcessesSaveForm(supportCode, process);
 		//Process process = ProcessTestHelper.getFakeProcess(psf.categoryCode, psf.typeCode);
 		
 			
@@ -149,16 +151,18 @@ public class ProcessesTest extends AbstractTests{
 		}
 		
 		
-	}
+	}*/
 	
 	@Test
 	public void validateApplyRules(){
-		Process process = ProcessTestHelper.getFakeProcess("sequencing", "illumina-run");
-		process.code = CodeHelper.generateProcessCode(process);
+		List<Process> processes = new ArrayList<Process>();
+		Process process = ProcessTestHelper.getFakeProcess("sequencing", "illumina-run");	
+		
 		process.properties = new HashMap<String, PropertyValue>();
-		process.properties.put("estimatedPercentPerLane", new PropertySingleValue(22.0));
+		Double estimatedPercentValue = 33.0;
+		process.properties.put("estimatedPercentPerLane", new PropertySingleValue(estimatedPercentValue));
 		process.sampleOnInputContainer = new SampleOnInputContainer();
-		process.sampleOnInputContainer.percentage = 20.0 ;
+		process.sampleOnInputContainer.percentage = 25.0 ;
 		process.properties.put("sequencingType", new PropertySingleValue("Miseq"));
 		process.properties.put("readType", new PropertySingleValue("PE"));
 		process.properties.put("readLength", new PropertySingleValue("300"));
@@ -166,22 +170,57 @@ public class ProcessesTest extends AbstractTests{
 		ContainerSupport cs = MongoDBDAO.findOne(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", supportCode));	
 		cs.state.code="IW-P";
 		process.projectCode = cs.projectCodes.get(0);
-		process.sampleCode = cs.sampleCodes.get(0);		
+		process.sampleCode = cs.sampleCodes.get(0);
+		
+		process.code = CodeHelper.generateProcessCode(process);
+		Process pro1 = MongoDBDAO.save(InstanceConstants.PROCESS_COLL_NAME, process);
+		processes.add(pro1);
+		
+		process.code = CodeHelper.generateProcessCode(process);
+		Process pro2 = MongoDBDAO.save(InstanceConstants.PROCESS_COLL_NAME, process);
+		processes.add(pro2);
+		
+		process.code = CodeHelper.generateProcessCode(process);
+		Process pro3 = MongoDBDAO.save(InstanceConstants.PROCESS_COLL_NAME, process);
+		processes.add(pro3);
+		
+		process.code = CodeHelper.generateProcessCode(process);
+		Process pro4 = MongoDBDAO.save(InstanceConstants.PROCESS_COLL_NAME, process);
+		processes.add(pro4);
+		
+		
+		
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		contextValidation.setCreationMode();
-		Process pro = MongoDBDAO.save(InstanceConstants.PROCESS_COLL_NAME, process);
-		Double newValue = roundValue(process.sampleOnInputContainer.percentage*22.0/100.0);		
-			
-		ProcessHelper.applyRules(pro, contextValidation,"processCreation");		
-		assertThat(pro.properties.get("estimatedPercentPerLane").value).isEqualTo(newValue);
 		
-		Process p = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, pro.code);
+		Double newValue = roundValue(process.sampleOnInputContainer.percentage*estimatedPercentValue/100.0);		
+			
+		Logger.info("Test validateApplyRules begin............");
+		ProcessHelper.applyRules(processes, contextValidation,"processCreation");
+		Logger.info(".............Test validateApplyRules end!");
+		
+		assertThat(pro1.properties.get("estimatedPercentPerLane").value).isEqualTo(newValue);
+		assertThat(pro2.properties.get("estimatedPercentPerLane").value).isEqualTo(newValue);
+		assertThat(pro3.properties.get("estimatedPercentPerLane").value).isEqualTo(newValue);
+		assertThat(pro4.properties.get("estimatedPercentPerLane").value).isEqualTo(newValue);
+		
+		Process p = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, pro1.code);
+		assertThat(p.properties.get("estimatedPercentPerLane").value).isEqualTo(newValue);	
+		
+		p = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, pro2.code);
 		assertThat(p.properties.get("estimatedPercentPerLane").value).isEqualTo(newValue);
 		
+		p = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, pro3.code);
+		assertThat(p.properties.get("estimatedPercentPerLane").value).isEqualTo(newValue);
+		
+		p = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, pro3.code);
+		assertThat(p.properties.get("estimatedPercentPerLane").value).isEqualTo(newValue);
 		
 		
 	}
 	
+	
+/*	
 	@Test
 	public void validatesaveFromSupportIlluminaRun() throws JsonParseException, JsonMappingException, IOException{		
 		String supportCode = InitDataHelper.getSupportCodesInContext("tube").get(0);
@@ -195,7 +234,7 @@ public class ProcessesTest extends AbstractTests{
 		process.properties.put("readType", new PropertySingleValue("PE"));
 		process.properties.put("readLength", new PropertySingleValue("300"));
 		process.properties.put("estimatedPercentPerLane", new PropertySingleValue(2.5));		
-		ProcessesSaveForm psf = ProcessTestHelper.getFakeProcessesSaveForm(supportCode, process);		
+		ProcessesSaveQueryForm psf = ProcessTestHelper.getFakeProcessesSaveForm(supportCode, process);		
 		
 		Logger.info("Avant Result  validatesaveFromSupportOpgenRun()");
 		Result result = callAction(controllers.processes.api.routes.ref.Processes.save(),fakeRequest().withJsonBody(Json.toJson(psf)));
@@ -213,7 +252,7 @@ public class ProcessesTest extends AbstractTests{
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		}
 		
-	}
+	}*/
 	
 	@Test
 	public void validateCloneProcessProperties(){
