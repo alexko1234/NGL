@@ -68,8 +68,12 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 									sampleCodeAndTags.push(content.sampleCode+" "+content.properties.tag.value);
 								}
 							});*/
+							var mesuredVolume = 0;
+							if(container.mesuredVolume !== undefined){
+								mesuredVolume = container.mesuredVolume;
+							}
 							containerUseds.push({"code":container.code,"state":container.state,"instrumentProperties":{},"experimentProperties":{},
-								"percentage":100,"categoryCode":container.categoryCode,"volume":container.mesuredVolume,
+								"percentage":100,"categoryCode":container.categoryCode,"volume":mesuredVolume,
 								"concentration":container.mesuredConcentration,"contents":container.contents/*,"contentsInput":{"tags":tags,"sampleTypes":sampleTypes,"libProcessTypeCodes":libProcessTypeCodes}*/,"locationOnContainerSupport":container.support});
 						});
 						
@@ -695,13 +699,15 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 											sampleCodeAndTags.push(content.sampleCode+"/"+content.properties.tag.value);
 										}
 									});
-									
-									
+									var mesuredVolume = 0;
+									if(containerIn.mesuredVolume !== undefined && containerIn.mesuredVolume !== null){
+										mesuredVolume = containerIn.mesuredVolume.value;
+									}
 									var container = {"inputCode":containerIn.code,"inputSupportCode":containerIn.support.code,
 											"inputX":containerIn.support.line, "inputTags":tags,"inputSampleTypes":sampleTypes, "inputLibProcessTypeCodes":libProcessTypeCodes, "inputState":containerIn.state,
 														"inputY":containerIn.support.column, "experimentProperties":containerIn.experimentProperties,
 														"instrumentProperties":containerIn.instrumentProperties, "outputPositionX":i+1,
-														"outputPositionY":1,"inputConcentration":containerIn.mesuredConcentration.value,"sampleCodeAndTags":sampleCodeAndTags,"inputVolume":containerIn.mesuredVolume.value};//Fake container
+														"outputPositionY":1,"inputConcentration":containerIn.mesuredConcentration.value,"sampleCodeAndTags":sampleCodeAndTags,"inputVolume":mesuredVolume};//Fake container
 									containers.push(container);
 								}
 								i++;
