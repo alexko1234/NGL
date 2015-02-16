@@ -55,7 +55,13 @@ public class Processes extends CommonController{
 		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
 		columns.add(DatatableHelpers.getColumn("containerInputCode", Messages.get("processes.table.containerInputCode"), true, false, false));
 		columns.add(DatatableHelpers.getColumn("sampleCode", Messages.get("processes.table.sampleCode"), true, false, false));
+		//TODO: Passer par des config de colonnes
 		columns.add(DatatableHelpers.getColumn("sampleOnInputContainer.properties.tag.value", Messages.get("processes.table.sampleOnInputContainer.properties.tag"),true, false,false));
+		columns.add(DatatableHelpers.getColumn("sampleOnInputContainer.mesuredVolume.value", Messages.get("processes.table.sampleOnInputContainer.mesuredVolume"),true, false,false));
+		columns.add(DatatableHelpers.getColumn("sampleOnInputContainer.mesuredVolume.unit", Messages.get("processes.table.sampleOnInputContainer.unit.volume"),true, false,false));		
+		columns.add(DatatableHelpers.getColumn("sampleOnInputContainer.mesuredConcentration.value", Messages.get("processes.table.sampleOnInputContainer.mesuredConcentration"),true, false,false));
+		columns.add(DatatableHelpers.getColumn("sampleOnInputContainer.mesuredConcentration.unit", Messages.get("processes.table.sampleOnInputContainer.unit.concentration"),true, false,false));
+
 		columns.add(DatatableHelpers.getColumn("typeCode", Messages.get("processes.table.typeCode"), true, false, false, "codes:'type'"));
 		if(processesSearch.typeCode != null){
 			columns.addAll(getPropertiesDefinitionsColumns(processesSearch.typeCode ,true));

@@ -116,6 +116,10 @@ processes.table.line = X
 processes.table.columns = Y
 processes.table.tag = Tag
 processes.table.sampleOnInputContainer.properties.tag = Tag
+processes.table.sampleOnInputContainer.mesuredVolume = Volume
+processes.table.sampleOnInputContainer.mesuredConcentration = Concentration
+processes.table.sampleOnInputContainer.unit.volume = Unité de volume
+processes.table.sampleOnInputContainer.unit.concentration = Unité de concentration
 
 processes.select.processType = Sélect. type processus
 processes.select.processCategory = Sélect. catégorie processus
