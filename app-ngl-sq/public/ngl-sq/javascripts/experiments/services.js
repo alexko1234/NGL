@@ -178,7 +178,7 @@
 					}
 					
 					if(_form.instrument){
-						json.Search.instrument = _form.instrument
+						jsonSearch.instrument = _form.instrument;
 					}
 					
 					if(_form.fromDate)jsonSearch.fromDate = this.useMoment(_form.fromDate, Messages("date.format").toUpperCase());

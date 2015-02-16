@@ -324,11 +324,11 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	};
 	
 	$scope.$on('disableEditMode', function(){
-		$scope.datatableConfig.edit.active = false;
+		$scope.datatable.config.edit.active = false;
 	});
 	
 	$scope.$on('enableEditMode', function(){
-		$scope.datatableConfig.edit.active = true;
+		$scope.datatable.config.edit.active = true;
 	});
 
 

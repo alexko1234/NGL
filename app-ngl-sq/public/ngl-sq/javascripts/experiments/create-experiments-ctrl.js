@@ -305,7 +305,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			$scope.experiment.experimentInformation.enabled = true;
 			$scope.experiment.instrumentProperties.enabled = true;
 			$scope.experiment.instrumentInformation.enabled = true;
-			$scope.$broadcast('disableEditMode');
+			$scope.$broadcast('enableEditMode');
 			
 			if(mainService.isHomePage('search') && !tabService.isBackupTabs()){
 				tabService.backupTabs();
@@ -328,7 +328,9 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			$scope.experiment.instrumentProperties.enabled = false;
 			$scope.experiment.instrumentInformation.enabled = false;
 			$scope.experiment.editMode=false;
-			$scope.$broadcast('disableEditMode');
+			if($scope.experiment.value.state.code === "F"){
+				$scope.$broadcast('disableEditMode');
+			}	
 			
 		} 
 	};
@@ -586,15 +588,19 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			$scope.saveInProgress = true;
 			var promises = [];
 			$scope.$broadcast('save', promises, $scope.saveAll);
+			if($scope.experiment.value.state.code === "F"){
+				$scope.$broadcast('disableEditMode');				
+			}			
 			if(promises.length<=0){
 				$scope.message.clazz = "alert alert-danger";
 				$scope.message.text = Messages('experiments.msg.empty.save.error');				
-
+				$scope.$broadcast('enableEditMode');
 				$scope.experiment.experimentProperties.enabled = true;
 				$scope.experiment.experimentInformation.enabled = true;
 				$scope.experiment.instrumentProperties.enabled = true;
 				$scope.experiment.instrumentInformation.enabled = true;
-				$scope.setEditConfig(true);				
+				$scope.setEditConfig(true);	
+				$scope.$broadcast('enableEditMode');
 				$scope.$broadcast('refresh');
 				$scope.saveInProgress = false;
 
@@ -643,7 +649,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			if($scope.message.text != Messages('experiments.msg.save.error')){
 				$scope.message.clazz="alert alert-success";
 				$scope.message.text=Messages('experiments.msg.save.sucess');
-			}
+			}				
 			$scope.experiment.experimentProperties.enabled = false;
 			$scope.experiment.experimentInformation.enabled = false;
 			$scope.experiment.instrumentProperties.enabled = false;
@@ -651,6 +657,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			$scope.setEditConfig(false);
 			$scope.$broadcast('refresh');
 			$scope.saveInProgress = false;
+			
+			
 		},function(reason) {
 			$scope.message.clazz = "alert alert-danger";
 			$scope.message.text = Messages('experiments.msg.save.error');
@@ -663,6 +671,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			$scope.message.details = reason.data;
 			$scope.message.isDetails = true;
 			$scope.$broadcast('refresh');
+			$scope.$broadcast('enableEditMode');
 			$scope.saveInProgress = false;
 		});
 	};
@@ -693,18 +702,18 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		});
 	};
 
-	$scope.saveAllAndChangeState = function(){
+	$scope.saveAllAndChangeState = function(){		
 		$scope.clearMessages();
 		if(!$scope.saveInProgress){
 			var promises = [];
-			$scope.$broadcast('save', promises, $scope.changeState);
+			$scope.$broadcast('save', promises, $scope.changeState);			
 			$scope.$broadcast('refresh');
-			$scope.saveInProgress = true;
+			$scope.saveInProgress = true;			
 		}
 	};
 
 	$scope.changeState = function(promises){
-		$q.all(promises).then(function (res) {
+		$q.all(promises).then(function (res) {			
 			$scope.experiment.experimentProperties.enabled = false;
 			$scope.experiment.experimentInformation.enabled = false;
 			$scope.experiment.instrumentProperties.enabled = false;
@@ -727,11 +736,15 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 					}
 					$scope.$broadcast('refresh');
 				}
+				if($scope.experiment.value.state.code === "F"){
+					$scope.$broadcast('disableEditMode');
+				}	
 			})
 			.error(function(data, status, headers, config) {
 				$scope.message.clazz = "alert alert-danger";
 				$scope.message.text = Messages('experiments.msg.save.error');
 
+				$scope.$broadcast('enableEditMode');
 				$scope.experiment.experimentProperties.enabled = true;
 				$scope.experiment.experimentInformation.enabled = true;
 				$scope.experiment.instrumentProperties.enabled = true;
@@ -748,11 +761,15 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 					$scope.message.clazz="alert alert-success";
 					$scope.message.text=Messages('experiments.msg.save.sucess');
 					$scope.saveInProgress = false;
+					if($scope.experiment.value.state.code === "F"){
+						$scope.$broadcast('disableEditMode');
+					}	
 				}
 			}, function(reason){			    
 				$scope.message.clazz = "alert alert-danger";
 				$scope.message.text = Messages('experiments.msg.save.error');
 
+				$scope.$broadcast('enableEditMode');
 				$scope.experiment.experimentProperties.enabled = true;
 				$scope.experiment.experimentInformation.enabled = true;
 				$scope.experiment.instrumentProperties.enabled = true;
@@ -769,6 +786,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			$scope.message.clazz = "alert alert-danger";
 			$scope.message.text = Messages('experiments.msg.save.error');
 
+			$scope.$broadcast('enableEditMode');
 			$scope.experiment.experimentProperties.enabled = true;
 			$scope.experiment.experimentInformation.enabled = true;
 			$scope.experiment.instrumentProperties.enabled = true;
@@ -954,6 +972,10 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				$scope.$broadcast('addExperimentPropertiesOutputToScope', data);
 			}
 		}
+		if($scope.experiment.value.state.code !== "F"){
+			$scope.$broadcast('enableEditMode');
+		}
+		
 	};
 
 	$scope.addInstrumentPropertiesOutputsColumns = function(){
