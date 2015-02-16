@@ -64,8 +64,8 @@
 		$scope.modalHeight = imageFullSizeHeight * zoom; //in order to conserve image ratio
 		$scope.modalLeft = (document.body.clientWidth - $scope.modalWidth)/2;
 	
-		$scope.modalTop = (window.innerHeight - $scope.modalHeight)/2;	
-		$scope.modalTop = $scope.modalTop - 50; //height of header and footer
+		//$scope.modalTop = (window.innerHeight - $scope.modalHeight)/2;	
+		//$scope.modalTop = $scope.modalTop - 50; //height of header and footer
 	}
 	
 	var updateData = function(){
