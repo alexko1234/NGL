@@ -19,11 +19,20 @@ rule "Find Fungi for taxonomy treatment"
 			
 			List<Map<String, ?>> keywordBilan = ((PropertyObjectListValue)$treatmentTaxo.results.get("read1").get("keywordBilan")).value;
 			
+			List<Map<String, ?>> keywordBRemove = new ArrayList<Map<String, ?>>(); 
+			for(Map<String, ?> keywordOne : keywordBilan){
+				String keywordValue = (String)keywordOne.get("keyword");
+				if(keywordValue.equals("Fungi")){
+					Logger.debug("keywordValue = "+keywordValue);
+					keywordBRemove.add(keywordOne);
+				}	
+			}
+			keywordBilan.removeAll(keywordBRemove);
+			
 			Map<String, Object> fungiKeyword = new HashMap<String, Object>();
 			fungiKeyword.put("keyword","Fungi");
 			fungiKeyword.put("percent",fungiPercentValue);
 			fungiKeyword.put("nbSeq",Integer.valueOf(m.group(1)));
-			
 			keywordBilan.add(fungiKeyword);
 			
 			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
