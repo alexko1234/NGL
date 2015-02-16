@@ -29,7 +29,6 @@ import validation.sample.instance.SampleValidationHelper;
 public class DescriptionValidationHelperTest extends AbstractTests{
 	
 	
-	static Protocol proto;
 	static InstrumentUsedType instrumentUsedType;
 	static ExperimentType experimentType;
 	static ExperimentCategory experimentCategory;
@@ -46,7 +45,6 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 	
 	@BeforeClass
 	public static void initData() throws DAOException{
-		proto=Protocol.find.findAll().get(0);
 		
 		instrumentUsedType=InstrumentUsedType.find.findAll().get(0);
 		
