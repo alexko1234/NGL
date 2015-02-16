@@ -314,10 +314,11 @@ angular.module('datatableServices', []).
 				    					var groupMethodColumns = this.getColumnsConfig().filter(function(column){
 					    					return (column.groupMethod !== undefined && column.groupMethod !== null);
 					    				});
+				    					var that = this;
 				    					//compute for each number column the sum
 				    					groupMethodColumns.forEach(function(column){
 				    						var propertyGetter = column.property;
-				    						propertyGetter += this.getFilter(column);
+				    						propertyGetter += that.getFilter(column);
 				    						var columnGetter = $parse(propertyGetter);
 				    						var columnSetter = $parse("group."+column.id);
 				    						
