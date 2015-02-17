@@ -2115,7 +2115,8 @@ angular.module('datatableServices', []).
 	    				if(col.type === "boolean"){
 	    					editElement = '<input class="form-control"' +defaultValueDirective+' dt-html-filter="{{col.type}}" type="checkbox" class="input-small" ng-model="'+this.getEditProperty(col, header)+ngChange+'/>';
 	    				}else if(!col.choiceInList){
-	    					editElement = '<input class="form-control" '+defaultValueDirective+' '+this.getConvertDirective(col, header)+' dt-html-filter="{{col.type}}" type="'+this.getInputType(col)+'" class="input-small" ng-model="'+this.getEditProperty(col, header)+ngChange+this.getDateTimestamp(col.type)+'/>';
+							//TODO: type='text' because html5 autoformat return a string before that we can format the number ourself
+	    					editElement = '<input class="form-control" '+defaultValueDirective+' '+this.getConvertDirective(col, header)+' dt-html-filter="{{col.type}}" type="text" class="input-small" ng-model="'+this.getEditProperty(col, header)+ngChange+this.getDateTimestamp(col.type)+'/>';
 	    				}else if(col.choiceInList){
 	    					switch (col.listStyle) { 
 	    						case "radio":
@@ -2330,7 +2331,7 @@ angular.module('datatableServices', []).
 					  require: 'ngModel',
 					  link: function(scope, element, attrs, ngModelController) {
 						  //console.log("htmlFilter");
-						  ngModelController.$parsers.push(function(data) {
+						/* ngModelController.$parsers.push(function(data) {
 					      //view to model / same algo than model to view ?????
 						   var convertedData = data;
 					    	
@@ -2341,7 +2342,7 @@ angular.module('datatableServices', []).
 					    	   }
 					    	
 					    	   return convertedData;
-					   	});
+					   	});*/
 
 					    ngModelController.$formatters.push(function(data) {
 					      //model to view / same algo than view to model ?????

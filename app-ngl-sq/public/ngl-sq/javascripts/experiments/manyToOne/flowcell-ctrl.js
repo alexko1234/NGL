@@ -38,7 +38,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			        	 },
 			        	 "property":"inputConcentration",
 			        	 "order":true,
-			        	 "type":"text",
+			        	 "type":"number",
 			        	 "edit":false,
 			        	 "extraHeaders":{0:"solution stock"}
 			         },
@@ -48,7 +48,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			        	 },
 			        	 "property":"inputVolume",
 			        	 "order":true,
-			        	 "type":"text",
+			        	 "type":"number",
 			        	 "edit":false,
 			        	 "extraHeaders":{0:"solution stock"}
 			         },
@@ -65,7 +65,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			        	 "header":Messages("containers.table.percentage"),
 			        	 "property":"percentage",
 			        	 "order":true,
-			        	 "type":"text",
+			        	 "type":"number",
 			        	 "edit":false,
 			        	 "extraHeaders":{0:"prep FC"}
 			         }

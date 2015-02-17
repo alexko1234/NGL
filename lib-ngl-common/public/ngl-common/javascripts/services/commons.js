@@ -270,14 +270,15 @@ angular.module('commonsServices', []).
 								var convert = this.getConversion(inputUnit,outputUnit);
 								if(convert != undefined && !angular.isFunction(convert)){
 									value = value * convert;
+									if(precision !== undefined){
+										value = value.toPrecision(precision);
+									}else{
+										value = value.toPrecision(convert.toString().length);
+									}
 								}else if(convert == undefined){
 									throw "Error: Unknown Conversion "+inputUnit+" to "+outputUnit;
 									return undefined;
 								}
-							}
-							
-							if(precision !== undefined){
-								value = value.toPrecision(precision);
 							}
 							
 							return value;
@@ -290,6 +291,17 @@ angular.module('commonsServices', []).
 							return 1000;
 						}
 						return undefined;
+					},
+					parse : function(value){
+						var valueToConvert = value;
+						if(!angular.isNumber(valueToConvert)){
+							var valueConverted = value.replace(/\s+/g,"").replace(',','.');
+							valueConverted = parseFloat(valueConverted);
+							
+							return valueConverted;
+						}
+						
+						return value;
 					}
 				};
 				return convertValueServices;
@@ -359,7 +371,7 @@ angular.module('commonsServices', []).
 					}
     			}
     		};    	
-    	}]).directive('convertValue',['convertValueServices', function(convertValueServices) {
+    	}]).directive('convertValue',['convertValueServices','$filter', function(convertValueServices, $filter) {
             return {
                 require: 'ngModel',
                 link: function(scope, element, attr, ngModel) {
@@ -375,7 +387,8 @@ angular.module('commonsServices', []).
                 	
                 	//model to view
                 	element.bind('blur', function () {
-                		ngModel.$setViewValue(convertValues.convertValue(ngModel.$modelValue, property.saveMeasureValue, property.displayMeasureValue, ngModel.$viewValue.length));
+                		var convertedValue = convertValues.convertValue(ngModel.$modelValue, property.saveMeasureValue, property.displayMeasureValue, ngModel.$viewValue.length);
+                		ngModel.$setViewValue($filter('number')(convertedValue));
 						ngModel.$render();
                 	});
                 	
@@ -385,7 +398,8 @@ angular.module('commonsServices', []).
 							return ngModel.$modelValue;
 						}, function(newValue, oldValue){
 							if(property != undefined){
-								ngModel.$setViewValue(convertValues.convertValue(newValue, property.saveMeasureValue, property.displayMeasureValue));
+								var convertedValue = convertValues.convertValue(newValue, property.saveMeasureValue, property.displayMeasureValue);
+								ngModel.$setViewValue($filter('number')(convertedValue));
 								ngModel.$render();
 							}
 							destroyer();//destroy the watcher
@@ -393,6 +407,7 @@ angular.module('commonsServices', []).
                 	
                     //view to model
                     ngModel.$parsers.push(function(value) {
+                    	value = convertValues.parse(value);
                     	if(property != undefined){
 	                    	value = convertValues.convertValue(value, property.displayMeasureValue, property.saveMeasureValue);
                     	}

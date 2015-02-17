@@ -128,9 +128,9 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 
 	$scope.getPropertyColumnType = function(type){
 		if(type === "java.lang.String"){
-			return "String";
+			return "text";
 		}else if(type === "java.lang.Double"){
-			return "Number";
+			return "number";
 		}else if(type === "java.util.Date"){
 			return "date";
 		}
