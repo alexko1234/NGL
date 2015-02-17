@@ -1,13 +1,13 @@
 application.name = NGL-SUB
 index.title = Welcome to NGL-SUB
 #Study
-study.menu = Study menu
-study.menu.create = Create study
-study.page.title=Study page
-
-create.placeholder.studyTitle=Study title
+studies.menu = Studies menu
+studies.menu.create = Create studies
+studies.page.title=Studies page
+study.create.success= Successful create study
+create.placeholder.studiesTitle=Study title
 create.placeholder.projectCode=Select. project code
-create.placeholder.studyTypes=Select. study type
+create.placeholder.studiesTypes=Select. study type
 create.placeholder.abstract=Def. abstract
 create.placeholder.description=Def. description
 

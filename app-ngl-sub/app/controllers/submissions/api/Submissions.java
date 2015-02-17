@@ -5,9 +5,7 @@ import static play.data.Form.form;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import mail.MailServiceException;
 import models.sra.submit.common.instance.Submission;
@@ -18,8 +16,8 @@ import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+import org.springframework.stereotype.Controller;
 
-import controllers.DocumentController;
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
@@ -27,12 +25,13 @@ import play.mvc.Result;
 import services.FileAcServices;
 import services.XmlServices;
 import validation.ContextValidation;
+import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
 public class Submissions extends DocumentController<Submission>{
 
-	protected Submissions(String collectionName, Class<Submission> type) {
+	protected Submissions() {
 		super(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class);
 	}
 

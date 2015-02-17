@@ -1,0 +1,16 @@
+@(code: String)
+
+@scripts() = {
+	<script src="@controllers.studies.tpl.routes.Studies.javascriptRoutes" type="text/javascript" charset="utf-8"></script>
+    <script src="@routes.Assets.at("datatable/javascripts/services/datatable2.js")" type="text/javascript" charset="utf-8"></script>
+     <script src="@routes.Assets.at("ngl-sub/javascripts/studies/app.js")" type="text/javascript" charset="utf-8"></script>
+       <script src="@routes.Assets.at("ngl-common/javascripts/controllers/mainctrl.js")" type="text/javascript" charset="utf-8"></script>
+       <script src="@routes.Assets.at("ngl-sub/javascripts/studies/create-ctrl.js")" type="text/javascript" charset="utf-8"></script>                             
+	 <script src="@routes.Assets.at("ngl-common/javascripts/services/commons.js")" type="text/javascript" charset="utf-8"></script> 
+	 <script src="@routes.Assets.at("ngl-sub/javascripts/studies/services.js")" type="text/javascript" charset="utf-8"></script>
+	 
+	
+}
+<!-- home code au niveau du controller : donc create -->
+@views.html.main("studies.page.title", menu("studies."+code), scripts)(views.html.contents.lefttabs())
+

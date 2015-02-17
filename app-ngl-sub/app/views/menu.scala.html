@@ -10,11 +10,11 @@
     	
     	<div class="collapse navbar-collapse">
     		<ul class="nav navbar-nav">
-    			<li class="dropdown @("active".when(nav.startsWith("study")))">
-					<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="readsets">@Messages("study.menu")<b class="caret"></b></a>
+    			<li class="dropdown @("active".when(nav.startsWith("studies")))">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="readsets">@Messages("studies.menu")<b class="caret"></b></a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="readsets">
 					<!-- sous menu create qui appelle controler tpl study.home -->
-						<li class="@("active".when(nav == "study.create"))"><a href="@controllers.study.tpl.routes.Study.home("create")">@Messages("study.menu.create")</a></li>																				
+						<li class="@("active".when(nav == "studies.create"))"><a href="@controllers.studies.tpl.routes.Studies.home("create")">@Messages("studies.menu.create")</a></li>																				
 						
 					</ul>
 				</li>

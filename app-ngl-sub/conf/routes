@@ -19,9 +19,17 @@ PUT		/submissions/:code/xml						@controllers.submissions.api.Submissions.create
 # Traitement des AC et mise a jour du status de l'objet submission :
 PUT		/submissions/:code/ebiAc					@controllers.submissions.api.Submissions.treatmentAc(code: java.lang.String) 
 		
-#Study
-GET		/study/:homeCode/home						controllers.study.tpl.Study.home(homeCode: java.lang.String)
-GET		/tpl/study/create							controllers.study.tpl.Study.create()
+#Studies
+POST	/api/studies								@controllers.studies.api.Studies.save()
+GET		/api/studies/type							@controllers.studies.api.Studies.listTypes()
+
+
+GET		/studies/:homeCode/home						controllers.studies.tpl.Studies.home(homeCode: java.lang.String)
+GET		/tpl/studies/create							controllers.studies.tpl.Studies.create()
+GET		/tpl/studies/js-routes						controllers.studies.tpl.Studies.javascriptRoutes()
+
+#projects from ngl-common
+GET		/api/projects								@controllers.projects.api.Projects.list()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               				controllers.Assets.at(path="/public", file)
