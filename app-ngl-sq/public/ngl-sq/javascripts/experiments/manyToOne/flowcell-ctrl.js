@@ -214,6 +214,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	});
 
 	$scope.addOutputColumns = function(){
+		$scope.datatable.addColumn(-1,$scope.datatable.newColumn(Messages("containers.table.code"),"outputContainerUsedCode",false, true,true,"text",false,undefined,{"0":"Outputs"}));
 		
 	};	
 

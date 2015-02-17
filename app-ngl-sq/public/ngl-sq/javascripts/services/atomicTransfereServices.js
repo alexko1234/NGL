@@ -317,6 +317,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 								if(allData != undefined){
 									for(var i=0;i<allData.length;i++){
 										if($scope.experiment.value.atomicTransfertMethods[(allData[i].outputPositionX-1)].outputContainerUsed != undefined){
+											allData[i].outputContainerUsedCode = $scope.experiment.value.atomicTransfertMethods[(allData[i].outputPositionX-1)].outputContainerUsed.code;
 											allData[i].outputInstrumentProperties = $scope.experiment.value.atomicTransfertMethods[(allData[i].outputPositionX-1)].outputContainerUsed.instrumentProperties;
 										}
 										if($scope.experiment.value.atomicTransfertMethods[(allData[i].outputPositionX-1)].outputContainerUsed != undefined){
