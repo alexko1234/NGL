@@ -160,6 +160,9 @@ angular.module('commonsServices', []).
     				filterConfigs : function(params, key){
     					load(jsRoutes.controllers.reporting.api.FilteringConfigurations.list().url,params,(key)?key:'filterConfigs');    				
     				},
+    				statsConfigs : function(params, key){
+    					load(jsRoutes.controllers.stats.api.StatsConfigurations.list().url, params, (key)?key:'statsConfigs');
+    				},
     				values : function(params, key){
     					load(jsRoutes.controllers.commons.api.Values.list().url,params,(key)?key:'values');    				
     				},
