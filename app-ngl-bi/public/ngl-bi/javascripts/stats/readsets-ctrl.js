@@ -4,6 +4,9 @@ angular.module('home').controller('StatsSearchReadSetsCtrl',['$scope', '$routePa
                                                               function($scope, $routeParams, mainService, tabService, readSetsSearchService, valuationService, queriesConfigReadSetsService) { 
 
 	var datatableConfig = {
+			group: {
+				active : true
+			},
 			pagination:{mode:'local'},
 			order :{mode:'local',by:'runSequencingStartDate', reverse : true},
 			search:{
@@ -20,9 +23,9 @@ angular.module('home').controller('StatsSearchReadSetsCtrl',['$scope', '$routePa
 
 	if(angular.isUndefined(mainService.getHomePage())){
 		mainService.setHomePage('search');
-		tabService.addTabs({label:Messages('stats.page.tab.readsets.select'),href:statsJsRoutes.controllers.stats.tpl.Stats.home("readsets").url});
-		tabService.addTabs({label:Messages('stats.page.tab.readsets.config'),href:statsJsRoutes.controllers.stats.tpl.Stats.home("readsets-config").url});		
-		tabService.addTabs({label:Messages('stats.page.tab.show'),href:statsJsRoutes.controllers.stats.tpl.Stats.home("readsets-show").url});		
+		tabService.addTabs({label:Messages('stats.page.tab.readsets.select'),href:jsRoutes.controllers.stats.tpl.Stats.home("readsets").url});
+		tabService.addTabs({label:Messages('stats.page.tab.readsets.config'),href:jsRoutes.controllers.stats.tpl.Stats.home("readsets-config").url});		
+		tabService.addTabs({label:Messages('stats.page.tab.show'),href:jsRoutes.controllers.stats.tpl.Stats.home("readsets-show").url});		
 		
 		tabService.activeTab(0); // desactive le lien !
 	}
@@ -61,9 +64,9 @@ angular.module('home').controller('StatsConfigReadSetsCtrl',['$scope', 'mainServ
 	
 	if(angular.isUndefined(mainService.getHomePage())){
 		mainService.setHomePage('search');
-		tabService.addTabs({label:Messages('stats.page.tab.readsets.select'),href:statsJsRoutes.controllers.stats.tpl.Stats.home("readsets").url});
-		tabService.addTabs({label:Messages('stats.page.tab.readsets.config'),href:statsJsRoutes.controllers.stats.tpl.Stats.home("readsets-config").url});		
-		tabService.addTabs({label:Messages('stats.page.tab.show'),href:statsJsRoutes.controllers.stats.tpl.Stats.home("readsets-show").url});		
+		tabService.addTabs({label:Messages('stats.page.tab.readsets.select'),href:jsRoutes.controllers.stats.tpl.Stats.home("readsets").url});
+		tabService.addTabs({label:Messages('stats.page.tab.readsets.config'),href:jsRoutes.controllers.stats.tpl.Stats.home("readsets-config").url});		
+		tabService.addTabs({label:Messages('stats.page.tab.show'),href:jsRoutes.controllers.stats.tpl.Stats.home("readsets-show").url});		
 		tabService.activeTab(1); // desactive le lien !
 	}
 	
@@ -90,9 +93,9 @@ angular.module('home').controller('StatsShowReadSetsCtrl',['$scope',  'mainServi
 	
 	if(angular.isUndefined(mainService.getHomePage())){
 		mainService.setHomePage('search');
-		tabService.addTabs({label:Messages('stats.page.tab.readsets.select'),href:statsJsRoutes.controllers.stats.tpl.Stats.home("readsets").url});
-		tabService.addTabs({label:Messages('stats.page.tab.readsets.config'),href:statsJsRoutes.controllers.stats.tpl.Stats.home("readsets-config").url});		
-		tabService.addTabs({label:Messages('stats.page.tab.show'),href:statsJsRoutes.controllers.stats.tpl.Stats.home("readsets-show").url});		
+		tabService.addTabs({label:Messages('stats.page.tab.readsets.select'),href:jsRoutes.controllers.stats.tpl.Stats.home("readsets").url});
+		tabService.addTabs({label:Messages('stats.page.tab.readsets.config'),href:jsRoutes.controllers.stats.tpl.Stats.home("readsets-config").url});		
+		tabService.addTabs({label:Messages('stats.page.tab.show'),href:jsRoutes.controllers.stats.tpl.Stats.home("readsets-show").url});		
 		
 		tabService.activeTab(2); // desactive le lien !
 	}
