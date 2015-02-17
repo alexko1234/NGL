@@ -114,8 +114,8 @@ public class ReportingConfigurations extends CommonController {
 			}
 			
 			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
-			ctxVal.setCreationMode();
-			reportingConfiguration.validate(ctxVal);
+			ctxVal.setUpdateMode();
+			reportingConfigurationInput.validate(ctxVal);
 			if (!ctxVal.hasErrors()) {
 				MongoDBDAO.update(InstanceConstants.REPORTING_CONFIG_COLL_NAME, reportingConfigurationInput);
 				return ok(Json.toJson(reportingConfigurationInput));
