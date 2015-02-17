@@ -169,8 +169,8 @@
 }
 	
 
-]).factory('chartsReadSetsService', ['$http', '$q','$parse', 'datatable', 'statsConfigReadSetsService','queriesConfigReadSetsService', 
-                                     function($http, $q, $parse, datatable, statsConfigReadSetsService, queriesConfigReadSetsService){
+]).factory('chartsReadSetsService', ['$http', '$q','$parse', 'datatable', 'statsConfigReadSetsService','queriesConfigReadSetsService', 'lists',
+                                     function($http, $q, $parse, datatable, statsConfigReadSetsService, queriesConfigReadSetsService, lists){
 	
 	var datatableConfig = {
 			search : {
@@ -201,6 +201,7 @@
 				header: "readsets.runCode",
 				type :"text",
 				order:true,
+				//group:true,
 			  	position:2
 			},
 			{	property:"laneNumber",
@@ -213,12 +214,14 @@
 				header: "readsets.projectCode",
 				type :"text",
 				order:true,
+				//group:true,
 			  	position:4
 			},
 			{	property:"sampleCode",
 				header: "readsets.sampleCode",
 				type :"text",
 				order:true,
+				//group:true,
 			  	position:5
 		  	},
 		  	{	property:"runSequencingStartDate",
@@ -265,21 +268,44 @@
 	var readsetDatatable;
 	var charts = [];
 	var statsConfigs, queriesConfigs = [];
-	var loadData = function(){
-		if(statsConfigReadSetsService.isData() && queriesConfigReadSetsService.queries.length > 0){
-			statsConfigs =  	statsConfigReadSetsService.getData();
-			queriesConfigs =  queriesConfigReadSetsService.queries;
-			var properties = ["default"];
-			for(var i = 0; i < statsConfigs.length; i++){
-				//remove .value if present to manage correctly properties (single, list, etc.)
-				if(statsConfigs[i].column.queryIncludeKeys && statsConfigs[i].column.queryIncludeKeys.length > 0){
-					properties = properties.concat(statsConfigs[i].column.queryIncludeKeys);
-				}else{
-					properties.push(statsConfigs[i].column.property.replace('.value',''));	
-				}				
-			}
+	var loadData = function() {
+		if (statsConfigReadSetsService.isData()	&& queriesConfigReadSetsService.queries.length > 0) {
+			statsConfigs = statsConfigReadSetsService.getData();
+			queriesConfigs = queriesConfigReadSetsService.queries;
+			generateCharts();
+		} else {
+			$http.get(jsRoutes.controllers.stats.api.StatsConfigurations.get(chartService.reportingConfigurationCode).url).success(function(data, status,	headers, config) {
+				statsConfigs = data.statsForm; 
+				statsConfigReadSetsService.init();
+				statsConfigReadSetsService.datatable.addData(statsConfigs);
+				queriesConfigs[0] = {
+					form : {
+						projectCodes : data.queryForm.projectCodes,
+						regexCode : data.queryForm.libProcessTypeCode
+					}
+				};
+				queriesConfigReadSetsService.addQuery(queriesConfigs[0]);
+				queriesConfigReadSetsService.loadDatatable();
+				generateCharts();
+			});
+		}
+	};
+
+	var generateCharts = function() {
+		readsetDatatable = datatable(datatableConfig);
+		readsetDatatable.configDefault.group.active = true;
+		readsetDatatable.config.spinner.start = true;
+		var properties = ["default"];
+		for(var i = 0; i < statsConfigs.length; i++){
+			//remove .value if present to manage correctly properties (single, list, etc.)
+			if(statsConfigs[i].column.queryIncludeKeys && statsConfigs[i].column.queryIncludeKeys.length > 0){
+				properties = properties.concat(statsConfigs[i].column.queryIncludeKeys);
+			}else{
+				properties.push(statsConfigs[i].column.property.replace('.value',''));	
+			}				
+		}
 			
-			var promises = [];
+		var promises = [];
 			for(var i = 0; i < queriesConfigs.length ; i++){
 				var form = angular.copy(queriesConfigs[i].form);
 				form.list = true;
@@ -313,153 +339,197 @@
 				})));
 				readsetDatatable.setData(data, data.length);
 				computeCharts();
-				
-			});			
-		}		
-	}
-	
-	var computeCharts = function(){
-		charts = [];
-		for(var i = 0; i < statsConfigs.length; i++){
-			var statsConfig = statsConfigs[i];
-			if("z-score" === statsConfig.typeCode){
-				charts.push(getZScoreChart(statsConfig));
-			}else if("simple-value" === statsConfig.typeCode){
-				charts.push(getSimpleValueChart(statsConfig));
-			}else{
-				throw 'not manage'+statsConfig.typeCode;
-			}
-		}		
+				readsetDatatable.config.spinner.start = false;
+			});
 	};
-	
-	var getProperty = function(column){
-		if(column.property){
-			var p = column.property
-			if(column.filter){
-				p += '|'+column.filter;
-			}
-			//TODO format
-			return p;
-		}else{
-			throw 'no property defined for column '+Messages(column.header);
-		}
-	};
-	
-	var getZScoreChart = function(statsConfig){
-		var property = getProperty(statsConfig.column);
-		var data = readsetDatatable.getData();
-		var getter = $parse(property);
-		var statData = data.map(function(value){return getter(value)});
-		var mean = ss.mean(statData);
-		var stdDev = ss.standard_deviation(statData);
-		var zscodeData = data.map(function(x){return {name:x.code,  y:ss.z_score(getter(x), mean, stdDev), _value:getter(x)};});
-		
-		var chart = {
-		        chart: {
-		        	zoomType : 'x',
-		        	height:770
-		        },
-		        title: {
-		        	text : 'z-score : ' + Messages(statsConfig.column.header)
-		        },
-		        tooltip: {
-		        	formatter: function() {
-		                var s = '<b>'+ this.point.name +'</b>';
-		                	s += '<br/>'+ this.point.series.name +': '+ this.point.y ;
-		                    s += '<br/>'+Messages(statsConfig.column.header)+': '+ this.point._value ;		                
-		                return s;
-		            }   
-		        },
-		        xAxis: {
-		        	title: {
-		        		text: 'Readsets',
-		        	}, 
-		        	labels : {
-						enabled : false,
-						rotation : -75
-					},
-					type: "category",
-					tickPixelInterval:1
-		        },
-		        yAxis: {
-		            title: {
-		                text: 'z-score'
-		            },
-		            tickInterval : 2,
-		            plotLines : [ {
-						value : -2,
-						color : 'green',
-						dashStyle : 'shortdash',
-						width : 2,
-						label : {
-							text : 'z-score = -2'
-						}
-					}, {
-						value : 2,
-						color : 'red',
-						dashStyle : 'shortdash',
-						width : 2,
-						label : {
-							text : 'z-score = 2'
-						}
-					} ]
-		        },
-		        series: [{type : 'column', name:'z-score', data:zscodeData, turboThreshold:0}]
-		    };
-		return chart;
-	};
-	
-	var getSimpleValueChart = function(statsConfig){
-		var property = getProperty(statsConfig.column);
-		var data = readsetDatatable.getData();
-		var getter = $parse(property);
-		var statData = data.map(function(x){return {name:x.code,  y:getter(x)};});
-		
-		var chart = {
-		        chart: {
-		        	zoomType : 'x',
-		        	height:770
-		        },
-		        title: {
-		        	text : Messages(statsConfig.column.header)
-		        },
-		        tooltip: {
-		        	formatter: function() {
-		                var s = '<b>'+ this.point.name +'</b>';
-		                	s += '<br/>'+ this.point.series.name +': '+ this.point.y ;		                    	                
-		                return s;
-		            }   
-		        },
-		        xAxis: {
-		        	title: {
-		        		text: 'Readsets',
-		        	}, 
-		        	labels : {
-						enabled : false,
-						rotation : -75
-					},
-					type: "category",
-					tickPixelInterval:1
-		        },
-		        yAxis: {
-		            title: {
-		                text: Messages(statsConfig.column.header)
-		            }
-		        },
-		        series: [{type : 'column', name:Messages(statsConfig.column.header), data:statData, turboThreshold:0}]
-		    };
-		return chart;
-	}
-	
-	var chartService = {
-			datatable:function(){return readsetDatatable},
-			charts:function(){return charts},
-			init:function(){
-				loadData();
-			}	
-	};
-	
-	return chartService;
-	
-}]);
- 
+
+							var computeCharts = function() {
+								charts = [];
+								for (var i = 0; i < statsConfigs.length; i++) {
+									var statsConfig = statsConfigs[i];
+									if ("z-score" === statsConfig.typeCode) {charts.push(getZScoreChart(statsConfig));
+									} else if ("simple-value" === statsConfig.typeCode) {charts.push(getSimpleValueChart(statsConfig));
+									} else {
+										throw 'not manage'+ statsConfig.typeCode;
+									}
+								}
+							};
+
+							var getProperty = function(column) {
+								if (column.property) {
+									var p = column.property
+									if (column.filter) {
+										p += '|' + column.filter;
+									}
+									// TODO format
+									return p;
+								} else {
+									throw 'no property defined for column '	+ Messages(column.header);
+								}
+							};
+
+							var getZScoreChart = function(statsConfig) {
+								var property = getProperty(statsConfig.column);
+								var data = readsetDatatable.getData();
+								var getter = $parse(property);
+								var statData = data.map(function(value) {
+									return getter(value)
+								});
+								var mean = ss.mean(statData);
+								var stdDev = ss.standard_deviation(statData);
+								var zscodeData = data.map(function(x) {
+									return {
+										name : x.code,
+										y : ss.z_score(getter(x), mean,stdDev),
+										_value : getter(x)
+									};
+								});
+
+								var chart = {
+									chart : {
+										zoomType : 'x',
+										height : 770
+									},
+									title : {
+										text : 'z-score : '	+ Messages(statsConfig.column.header)
+									},
+									tooltip : {
+										formatter : function() {
+											var s = '<b>' + this.point.name	+ '</b>';
+											s += '<br/>'+ this.point.series.name+ ': ' + this.point.y;
+											s += '<br/>'+ Messages(statsConfig.column.header)+ ': ' + this.point._value;
+											return s;
+										}
+									},
+									xAxis : {
+										title : {
+											text : 'Readsets',
+										},
+										labels : {
+											enabled : false,
+											rotation : -75
+										},
+										type : "category",
+										tickPixelInterval : 1
+									},
+
+									yAxis : {
+										title : {
+											text : 'z-score'
+										},
+										tickInterval : 2,
+										plotLines : [ {
+											value : -2,
+											color : 'green',
+											dashStyle : 'shortdash',
+											width : 2,
+											label : {
+												text : 'z-score = -2'
+											}
+										}, {
+											value : 2,
+											color : 'red',
+											dashStyle : 'shortdash',
+											width : 2,
+											label : {
+												text : 'z-score = 2'
+											}
+										} ]
+									},
+									series : [ {
+										/*point : {
+											events : {
+												// Redirects to valuation page of the clicked readset
+												click : function(e) {
+													location.href = '/readsets/' + this.name + '/valuation';
+												}
+											}
+										},
+										colorByPoint : true,*/
+										type : 'column',
+										name : 'z-score',
+										data :  zscodeData,
+										turboThreshold : 0,
+									} ]
+								};
+								return chart;
+							};
+
+							var getSimpleValueChart = function(statsConfig) {
+								var property = getProperty(statsConfig.column);
+								var data = readsetDatatable.getData();
+								var getter = $parse(property);
+								var statData = data.map(function(x) {
+									return {
+										name : x.code,
+										y : getter(x)
+									};
+								});
+
+								var chart = {
+									chart : {
+										zoomType : 'x',
+										height : 770
+									},
+									title : {
+										text : Messages(statsConfig.column.header)
+									},
+									tooltip : {
+										formatter : function() {
+											var s = '<b>' + this.point.name+ '</b>';
+											s += '<br/>'+ this.point.series.name+ ': ' + this.point.y;
+											return s;
+										}
+									},
+									xAxis : {
+										title : {
+											text : 'Readsets',
+										},
+										labels : {
+											enabled : false,
+											rotation : -75
+										},
+										type : "category",
+										tickPixelInterval : 1
+									},
+									yAxis : {
+										title : {
+											text : Messages(statsConfig.column.header)
+										}
+									},
+									series : [ {
+										point : {
+											/*events : {
+												// Redirects to valuation page of the clicked readset
+												click : function(e) {
+													var s = 'readsets/';
+													s += this.name;
+													s += '/valuation';
+													location.href = s;
+													e.preventDefault();
+												}
+											}
+										},*/
+										type : 'column',
+										name : Messages(statsConfig.column.header),
+										data : statData,
+										turboThreshold : 0
+									} ]
+								};
+								return chart;
+							}
+
+							var chartService = {
+								datatable : function() {return readsetDatatable},
+								charts : function() {return charts},
+								lists : lists,
+								reportingConfigurationCode : undefined,
+								init : function() {
+									this.lists.refresh.statsConfigs({pageCodes : [ "readsets-show" ]});
+									loadData();
+								}
+							};
+
+							return chartService;
+
+						} ]);
