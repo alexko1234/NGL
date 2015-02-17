@@ -611,6 +611,8 @@ query.nbResults = Nombre de Résultats
 
 error.query.empty = Attention! Pas de requête dans le panier
 
+info.query.config = Vous pouvez définir une configuration par défaut
+
 stat.typelabel.zscore = z-score
 stat.typelabel.simplevalue = valeur de la propriété
 
