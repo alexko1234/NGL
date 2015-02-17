@@ -215,12 +215,18 @@ GET		/api/supports/:code							controllers.supports.api.Supports.get(code:java.l
 HEAD	/api/supports/:code							controllers.supports.api.Supports.head(code:java.lang.String)
 
 
-#stats
+#stats tpl
 GET	   	/stats/:homecode/home						controllers.stats.tpl.Stats.home(homecode: java.lang.String)
 GET		/tpl/stats/config/:type						controllers.stats.tpl.Stats.config(type: java.lang.String)
 GET		/tpl/stats/show								controllers.stats.tpl.Stats.show()
 GET		/tpl/stats/js-routes						controllers.stats.tpl.Stats.javascriptRoutes()
 
+#stats api
+GET		/api/stats/configs							controllers.stats.api.StatsConfigurations.list()
+GET		/api/stats/configs/:code					controllers.stats.api.StatsConfigurations.get(code)
+POST	/api/stats/configs							controllers.stats.api.StatsConfigurations.save()
+PUT		/api/stats/configs/:code					controllers.stats.api.StatsConfigurations.update(code)
+DELETE	/api/stats/configs/:code					controllers.stats.api.StatsConfigurations.delete(code: java.lang.String)
 
 #parameters
 GET		/api/parameters/:typeCode					controllers.commons.api.Parameters.list(typeCode: java.lang.String)
