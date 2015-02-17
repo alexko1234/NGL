@@ -61,32 +61,32 @@ angular.module('home').controller('MapcardCtrl',['$scope', '$window','datatable'
 	});
 	
 	$scope.$on('addInstrumentPropertiesInput', function(e, data, possibleValues) {
-		var column = $scope.datatable.newColumn(data.name,"inputInstrumentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{"0":"Inputs","1":"Instruments"});
+		var column = $scope.datatable.newColumn(data.name,"inputInstrumentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Inputs","1":"Instruments"});
 		column.defaultValues = data.defaultValue;
 		$scope.datatable.addColumn(2,column);
 	});
 	
 	$scope.$on('addExperimentPropertiesInput', function(e, data, possibleValues) {
-		var column = $scope.datatable.newColumn(data.name,"inputExperimentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{"0":"Inputs","1":"Experiments"});
+		var column = $scope.datatable.newColumn(data.name,"inputExperimentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Inputs","1":"Experiments"});
 		column.defaultValues = data.defaultValue;
 		$scope.datatable.addColumn(2,column);
 	});
 	
 	$scope.$on('addExperimentPropertiesOutput', function(e, data, possibleValues) {
-		var column = $scope.datatable.newColumn(data.name,"outputExperimentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{"0":"Outputs","1":"Experiments"});
+		var column = $scope.datatable.newColumn(data.name,"outputExperimentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Outputs","1":"Experiments"});
 		column.defaultValues = data.defaultValue;
 		$scope.datatable.addColumn(-1,column);
 	});
 	
 	$scope.$on('addInstrumentPropertiesOutput', function(e, data, possibleValues) {
-		var column = $scope.datatable.newColumn(data.name,"outputInstrumentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{"0":"Outputs","1":"Instruments"});
+		var column = $scope.datatable.newColumn(data.name,"outputInstrumentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Outputs","1":"Instruments"});
 		column.defaultValues = data.defaultValue;
 		$scope.datatable.addColumn(-1,column);
 	});
 	
 	$scope.addOutputColumns = function(){
-		$scope.datatable.addColumn(-1,$scope.datatable.newColumn(Messages("containers.table.code"),"outputContainerUsed.code",false, true,true,"String",false,undefined,{"0":"Outputs"}));
-		$scope.datatable.addColumn(-1,$scope.datatable.newColumn(Messages("containers.table.stateCode"),"outputContainerUsed.state.code | codes:'state'",false, true,true,"String",false,undefined,{"0":"Outputs"}));
+		$scope.datatable.addColumn(-1,$scope.datatable.newColumn(Messages("containers.table.code"),"outputContainerUsed.code",false, true,true,$scope.getPropertyColumnType(data.valueType),false,undefined,{"0":"Outputs"}));
+		$scope.datatable.addColumn(-1,$scope.datatable.newColumn(Messages("containers.table.stateCode"),"outputContainerUsed.state.code | codes:'state'",false, true,true,$scope.getPropertyColumnType(data.valueType),false,undefined,{"0":"Outputs"}));
 	};
 	
 	$scope.$on('addOutputColumns', function(e) {

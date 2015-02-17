@@ -262,7 +262,7 @@ angular.module('commonsServices', []).
     		var constructor = function($scope){
 				var convertValueServices = {
 				    //Convert the value in inputUnit to outputUnit if the units are different
-					convertValue : function(value, inputUnit, outputUnit){
+					convertValue : function(value, inputUnit, outputUnit, precision){
 							if(inputUnit !== outputUnit && !isNaN(value)){
 								var convert = this.getConversion(inputUnit,outputUnit);
 								if(convert != undefined && !angular.isFunction(convert)){
@@ -272,6 +272,11 @@ angular.module('commonsServices', []).
 									return undefined;
 								}
 							}
+							
+							if(precision !== undefined){
+								value = value.toPrecision(precision);
+							}
+							
 							return value;
 					},
 					//Get the multiplier to convert the value
@@ -354,7 +359,7 @@ angular.module('commonsServices', []).
     	}]).directive('convertValue',['convertValueServices', function(convertValueServices) {
             return {
                 require: 'ngModel',
-                link: function(scope, ele, attr, ngModel) {
+                link: function(scope, element, attr, ngModel) {
                 	//init service
                 	var convertValues = convertValueServices();
                 	var property = undefined;
@@ -366,7 +371,13 @@ angular.module('commonsServices', []).
     				});
                 	
                 	//model to view
-                	scope.$watch(
+                	element.bind('blur', function () {
+                		ngModel.$setViewValue(convertValues.convertValue(ngModel.$modelValue, property.saveMeasureValue, property.displayMeasureValue, ngModel.$viewValue.length));
+						ngModel.$render();
+                	});
+                	
+                	//model to view just once at the init
+                	var destroyer = scope.$watch(
 						function(){
 							return ngModel.$modelValue;
 						}, function(newValue, oldValue){
@@ -374,6 +385,7 @@ angular.module('commonsServices', []).
 								ngModel.$setViewValue(convertValues.convertValue(newValue, property.saveMeasureValue, property.displayMeasureValue));
 								ngModel.$render();
 							}
+							destroyer();//destroy the watcher
                 	});
                 	
                     //view to model

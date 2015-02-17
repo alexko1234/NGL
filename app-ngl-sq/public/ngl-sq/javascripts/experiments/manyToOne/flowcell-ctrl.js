@@ -105,6 +105,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			        	 showButton:true,
 			        	 delimiter:";",
 			        	 start:false
+			        	 //label:function(){return $scope.experiment.value.instrumentProperties.containerSupportCode.value+"   "+$scope.experiment.value.code}
 			         },
 			         extraHeaders:{
 			        	 number:2,
@@ -158,7 +159,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	$scope.$on('addInstrumentPropertiesInput', function(e, data, possibleValues) {
 		var unit = "";
 		if(data.displayMeasureValue!=undefined) unit = "("+data.displayMeasureValue.value+")";
-		var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"inputInstrumentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{"0":"Inputs","1":"Instruments"});
+		var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"inputInstrumentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Inputs","1":"Instruments"});
 		column.defaultValues = data.defaultValue;
 		if(data.displayMeasureValue != undefined && data.displayMeasureValue != null){
 			column.convertValue = {"active":true, "displayMeasureValue":data.displayMeasureValue.value, "saveMeasureValue":data.saveMeasureValue.value};
@@ -170,7 +171,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 		console.log(data);		
 		var unit = "";
 		if(data.displayMeasureValue!=undefined) unit = "("+data.displayMeasureValue.value+")";
-		var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"inputExperimentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{});
+		var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"inputExperimentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{});
 		column.defaultValues = data.defaultValue;
 		if(data.code == "requiredVolume1" || data.code == "NaOHVolume" || data.code == "NaOHConcentration" || data.code == "EBVolume" || data.code == "finalConcentration1" || data.code == "finalVolume1"){
 			column.extraHeaders = {0:"denaturation"};
@@ -190,7 +191,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			var unit = "";
 			if(data.displayMeasureValue!=undefined) unit = "("+data.displayMeasureValue.value+")";
 			$scope.experiment.containerOutProperties.push(data);
-			var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"outputExperimentProperties."+data.code+".value",false, true,true,"String",data.choiceInList,possibleValues,{});
+			var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"outputExperimentProperties."+data.code+".value",false, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{});
 			column.defaultValues = data.defaultValue;
 			column.extraHeaders = {0:"prep FC"};
 			if(data.displayMeasureValue != undefined && data.displayMeasureValue != null){
@@ -200,10 +201,11 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 		}
 	});
 
+	
 	$scope.$on('addInstrumentPropertiesOutput', function(e, data, possibleValues) {
 		var unit = "";
 		if(data.displayMeasureValue!=undefined) unit = "("+data.displayMeasureValue.value+")";
-		var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"outputInstrumentProperties."+data.code+".value",data.editable, true,true,"String",data.choiceInList,possibleValues,{});
+		var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"outputInstrumentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{});
 		column.defaultValues = data.defaultValue;
 		if(data.displayMeasureValue != undefined && data.displayMeasureValue != null){
 			column.convertValue = {"active":true, "displayMeasureValue":data.displayMeasureValue.value, "saveMeasureValue":data.saveMeasureValue.value};
