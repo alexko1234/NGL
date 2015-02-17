@@ -498,8 +498,8 @@
 										}
 									},
 									series : [ {
-										point : {
-											/*events : {
+										/*point : {
+											events : {
 												// Redirects to valuation page of the clicked readset
 												click : function(e) {
 													var s = 'readsets/';
