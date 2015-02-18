@@ -6,7 +6,8 @@
 {{tab}}
 <div class="row tab-content tabPaneTable" ng-controller="FlowcellCtrl" ng-init="init_flowcell(@laneCount)">
 	<div class="col-md-12 col-lg-12 tab-pane active" style="margin-right:auto;margin-left:auto" id="flowcell">
-		<div ng-model="inputContainers" droppable class="col-md-4 col-lg-4 inputContainerGroup">
+	<!-- TODO: Supprimer droppable quand l'expérience  est terminée -->
+		<div ng-model="inputContainers" ng-if="doneAndRecorded==false" droppable class="col-md-4 col-lg-4 inputContainerGroup">		
 			<p  ng-show="inputContainers.length==0"><i class="fa fa-download"></i> Inputs</p>
 			<table ng-show="inputContainers.length>0" class="table" >
 			<thead>
@@ -91,9 +92,7 @@
 				</th>
 			
 			
-			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="!experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0" colspan="7">			
-	  @** <td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0 && !rows[@i]" colspan="3">  -->
-			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length == 0"> **@
+			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="!experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0" colspan="7">	 
 			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" ng-if="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0">
 				<div ng-hide="rows[@i]" class="LaneSummary">
 					<span  ng-repeat="flowcell in experiment.value.atomicTransfertMethods[@i].inputContainerUseds">
@@ -121,8 +120,8 @@
 					<th>
 						@Messages("containers.table.libProcessTypeCodes")
 					</th>
-				</tr>
-					<tr ng-repeat="flowcell in experiment.value.atomicTransfertMethods[@i].inputContainerUseds"  ng-model="flowcell"  draggable>
+				</tr>				
+					<tr ng-repeat="flowcell in experiment.value.atomicTransfertMethods[@i].inputContainerUseds"  ng-model="flowcell"  draggable>				
 						<td class="LaneData">							
 							{{flowcell.code}}
 						</td>
@@ -153,7 +152,8 @@
 						<!--<td>
 								<button ng-disabled="!experiment.experimentProperties.enabled" ng-click="deleteInputOnAtomic(@i,container)"><i class="fa fa-trash-o"></i></button>
 					    </td>  -->
-					</tr>
+					</tr>		
+					
 					<tr ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable><td colspan=6 id="dropZone"> </td></tr>
 				</table>
 			</div>

@@ -52,8 +52,8 @@
 <div class="col-md-10 col-lg-10 " style="position:fixed;background-color:white;z-index:100;top: 30px;">
 	<div class="page-header">
 	<div class="btn-toolbar" style="float:right;width:600px">
-			<button class="btn btn-default" ng-click="edit()" ng-show="editMode==false" data-toggle="tooltip" title="@Messages("experiments.edit")"><i class="fa fa-edit"></i></button>
-			<button class="btn btn-default" ng-click="unedit()" ng-show="editMode==true" data-toggle="tooltip" title="@Messages("experiments.unedit")"><i class="fa fa-undo"></i></button>	
+			<button class="btn btn-default" ng-if="doneAndRecorded==false" ng-click="edit()" ng-show="editMode==false" data-toggle="tooltip" title="@Messages("experiments.edit")"><i class="fa fa-edit"></i></button>
+			<button class="btn btn-default" ng-if="doneAndRecorded==false" ng-click="unedit()" ng-show="editMode==true" data-toggle="tooltip" title="@Messages("experiments.unedit")"><i class="fa fa-undo"></i></button>	
 				  			
 			<button class="btn btn-default" ng-show="experiment.value.state.code == 'N'" ng-disabled="experiment.value._id == null" ng-click="saveAllAndChangeState()" >@Messages("experiments.begin_progress")</button>
 			<button  class="btn btn-default"  ng-show="experiment.value.state.code == 'IP'" ng-disabled="experiment.value._id == null" ng-click="saveAllAndChangeState()" >@Messages("experiments.finish")</button>
@@ -99,7 +99,7 @@
 			<div class="col-md-5 col-lg-5">
 			  <div class="panel panel-default">
 			  <div class="panel-heading">
-			  	<div class="btn-group pull-right" ng-switch on="experiment.experimentInformation.enabled">
+			  	<div class="btn-group pull-right" ng-switch on="experiment.experimentInformation.enabled" ng-if="doneAndRecorded==false">
 						<button class="btn btn-default btn-xs" ng-click="experiment.experimentInformation.toggleEdit()" ng-switch-when="false" data-toggle="tooltip" title="@Messages("experiments.edit")"><i class="fa fa-edit"></i></button>
 						<button class="btn btn-default btn-xs" ng-click="experiment.experimentInformation.toggleEdit()" ng-switch-when="true" data-toggle="tooltip" title="@Messages("experiments.unedit")"><i class="fa fa-undo"></i></button>	
 				  </div>
@@ -165,7 +165,7 @@
 			<div class="col-md-5 col-lg-5">
 				<div class="panel panel-default">
 			  	<div class="panel-heading">
-			  	<div class="btn-group pull-right" ng-switch on="experiment.instrumentInformation.enabled">
+			  	<div class="btn-group pull-right" ng-switch on="experiment.instrumentInformation.enabled" ng-if="doneAndRecorded==false">
 						<button class="btn btn-default btn-xs" ng-click="experiment.instrumentInformation.toggleEdit();experiment.instrumentProperties.toggleEdit()" ng-switch-when="false" data-toggle="tooltip" title="@Messages("experiments.edit")"><i class="fa fa-edit"></i></button>
 						<button class="btn btn-default btn-xs" ng-click="experiment.instrumentInformation.toggleEdit();experiment.instrumentProperties.toggleEdit()" ng-switch-when="true" data-toggle="tooltip" title="@Messages("experiments.unedit")"><i class="fa fa-undo"></i></button>	
 				  </div>

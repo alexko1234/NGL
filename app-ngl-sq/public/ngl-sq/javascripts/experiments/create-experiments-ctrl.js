@@ -239,11 +239,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			resolutions:{},
 			enabled:true,
 			toggleEdit:function(){
-				if($scope.experiment.value.state.code !== "F"){
-					this.enabled = !this.enabled;
-					}else{
-						this.enabled = false;
-					}
+				this.enabled = !this.enabled;
 			},
 			save:function(){
 				if($scope.experiment.value._id){
@@ -297,7 +293,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				$scope.stopEditMode();
 			}
 		}else{
-			$scope.editMode = false;
+			$scope.editMode = false;			
 		}
 	};
 	/**
@@ -326,7 +322,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				mainService.setDatatable(undefined);	
 				//mainService.setForm(undefined);			
 			}
-		}else{
+		}else{			
 			$scope.setEditConfig(false);
 			$scope.experiment.experimentProperties.enabled = false;
 			$scope.experiment.experimentInformation.enabled = false;
@@ -427,11 +423,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			enabled:true,
 			
 			toggleEdit:function(){
-				if($scope.experiment.value.state.code !== "F"){
-					this.enabled = !this.enabled;
-					}else{
-						this.enabled = false;
-					}
+				this.enabled = !this.enabled;
 			},
 			save:function(){
 				$scope.clearMessages();
@@ -480,11 +472,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			instruments:{},			
 			enabled:true,
 			toggleEdit:function(){
-				if($scope.experiment.value.state.code !== "F"){
 				this.enabled = !this.enabled;
-				}else{
-					this.enabled = false;
-				}
 			},
 			save:function(){
 				$scope.clearMessages();
@@ -510,11 +498,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			inputs:[],
 			enabled:true,
 			toggleEdit:function(){
-				if($scope.experiment.value.state.code !== "F"){
-					this.enabled = !this.enabled;
-					}else{
-						this.enabled = false;
-					}
+				this.enabled = !this.enabled;
 			},
 			save:function(){
 				$scope.clearMessages();
@@ -743,6 +727,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				}
 				if($scope.experiment.value.state.code === "F"){
 					$scope.$broadcast('disableEditMode');
+					$scope.doneAndRecorded = true;
 				}	
 			})
 			.error(function(data, status, headers, config) {
@@ -1106,6 +1091,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			$scope.lists.refresh.resolutions({"typeCode":experiment.typeCode});
 			$scope.lists.refresh.states({"objectTypeCode":"Experiment"});
 			$scope.lists.refresh.kitCatalogs();
+			
+			$scope.doneAndRecorded = false;
 
 			if(!$routeParams.experimentCode){
 				$scope.form = mainService.getForm();
@@ -1117,6 +1104,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				}
 			}else{
 				$scope.experiment.editMode=true;
+				$scope.doneAndRecorded = false;
 				$scope.experiment.experimentProperties.enabled = false;
 				$scope.experiment.experimentInformation.enabled = false;
 				$scope.experiment.instrumentProperties.enabled = false;
@@ -1131,6 +1119,9 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 					$scope.experiment.experimentProperties.enabled = false;
 					$scope.experiment.instrumentInformation.enabled = false;
 					$scope.experiment.experimentInformation.enabled = false;
+					$scope.editMode = false;
+					$scope.setEditConfig(false);
+					$scope.doneAndRecorded = true;
 				}
 				$scope.getInstruments();
 				$scope.getTemplate();
