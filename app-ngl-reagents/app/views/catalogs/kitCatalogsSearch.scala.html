@@ -6,12 +6,18 @@
 	
 		@formGroup{
 			<input type="text" class="form-control" ng-model="searchService.form.experimentTypeCodes" placeholder='@Messages("kits.name")'>
-		}	
-		@formGroup{
-			<input type="text" class="form-control" ng-model="searchService.form.name" placeholder='@Messages("kits.name")'>
 		}
+		@formGroup{
+		<div bt-select placeholder="@Messages("experiments.select.experimentTypes")" class="form-control" ng-model="searchService.form.experimentTypes" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in searchService.lists.get('experimentTypes')" multiple="true" filter="true">
+		</div>	
+		}
+	}
+	@columnSearchForm{	
+		@formGroup{
+			<input type="text" class="form-control" ng-model="searchService.form.providerRefName" placeholder='@Messages("kits.providerRefName")'>
+		}
+	}	
 		
-	}		
 }
 
 @searchForm(form)()("searchService.datatable")

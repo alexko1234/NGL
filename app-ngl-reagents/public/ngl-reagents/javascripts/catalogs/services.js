@@ -43,7 +43,7 @@
 		
 		var initListService = function(){
 			if(!isInit){
-				lists.refresh.experimentTypes({categoryCode:"transformation", withoutOneToVoid:true});
+				lists.refresh.experimentTypes({withoutOneToVoid:true});
 				isInit=true;
 			}
 		};

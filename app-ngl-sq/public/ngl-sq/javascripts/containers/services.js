@@ -105,7 +105,7 @@
 			if(!isInit){
 				lists.refresh.containerSupportCategories();
 				lists.refresh.containerCategories();
-				lists.refresh.experimentTypes({categoryCode:"transformation", withoutOneToVoid:true});
+				lists.refresh.experimentTypes();
 				lists.refresh.supports();
 				lists.refresh.projects();
 				lists.refresh.processCategories();
