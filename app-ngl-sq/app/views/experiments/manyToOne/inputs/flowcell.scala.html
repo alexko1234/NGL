@@ -32,7 +32,7 @@
 					</th>
 				</tr>
 				</thead>				
-				<tr ng-model="container" ng-repeat="container in inputContainers | orderBy:code" draggable>
+				<tr ng-model="container" ng-repeat="container in inputContainers | orderBy:'code'" draggable>
 					<td>
 						<button ng-disabled="!experiment.experimentProperties.enabled" ng-click="deleteInput(container)" class="litte-icone"><i class="fa fa-trash-o"></i></button>
 					</td>
