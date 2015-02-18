@@ -87,10 +87,10 @@ public class Processes extends CommonController{
 		columns.add(DatatableHelpers.getColumn("support.code", Messages.get("processes.table.supportCode")));
 		columns.add(DatatableHelpers.getColumn("support.line", Messages.get("processes.table.line")));
 		columns.add(DatatableHelpers.getColumn("support.column", Messages.get("processes.table.columns")));
-		columns.add(DatatableHelpers.getColumn("code", Messages.get("processes.table.code")));
+		//columns.add(DatatableHelpers.getColumn("code", Messages.get("processes.table.code")));
 		columns.add(DatatableHelpers.getColumn("projectCode", Messages.get("processes.table.projectCode")));						
 		columns.add(DatatableHelpers.getColumn("sampleCode", Messages.get("processes.table.sampleCode")));
-		columns.add(DatatableHelpers.getColumn("containerInputCode", Messages.get("processes.table.containerInputCode")));
+		//columns.add(DatatableHelpers.getColumn("containerInputCode", Messages.get("processes.table.containerInputCode")));
 		columns.add(DatatableHelpers.getColumn("state.code", Messages.get("processes.table.stateCode"),"codes:'state'"));
 
 		columns.addAll(getPropertiesDefinitionsColumns(processTypeCode, true));

@@ -371,6 +371,7 @@ public class Experiments extends CommonController{
 				ctxValidation.setCreationMode();
 				exp.validate(ctxValidation);
 				ExperimentHelper.doCalculations(exp,calculationsRules);
+				
 				ExperimentHelper.updateData(exp);
 				
 				if(!ctxValidation.hasErrors()){

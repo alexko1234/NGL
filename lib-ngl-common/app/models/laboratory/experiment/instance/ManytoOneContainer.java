@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
@@ -151,10 +152,15 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		if(outputContainerUsed!=null)
+		if(outputContainerUsed!=null){
+			contextValidation.putObject("level", Level.CODE.ContainerOut);
 			outputContainerUsed.validate(contextValidation);
+			contextValidation.removeObject("level");
+		}
 		for(ContainerUsed containerUsed:inputContainerUseds){
+			contextValidation.putObject("level", Level.CODE.ContainerIn);
 			containerUsed.validate(contextValidation);
+			contextValidation.removeObject("level");
 		}
 	}
 

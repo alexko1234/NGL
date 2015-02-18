@@ -7,7 +7,10 @@
 <div class="row tab-content tabPaneTable" ng-controller="FlowcellCtrl" ng-init="init_flowcell(@laneCount)">
 	<div class="col-md-12 col-lg-12 tab-pane active" style="margin-right:auto;margin-left:auto" id="flowcell">
 	<!-- TODO: Supprimer droppable quand l'expérience  est terminée -->
-		<div ng-model="inputContainers" ng-if="doneAndRecorded==false" droppable class="col-md-4 col-lg-4 inputContainerGroup">		
+		<div ng-model="inputContainers" ng-hide="doneAndRecorded==false" class="col-md-4 col-lg-4 inputContainerGroup">
+		<p  ng-show="inputContainers.length==0"><i class="fa fa-download"></i> Inputs</p>
+		</div>
+		<div ng-model="inputContainers" ng-hide="doneAndRecorded==true" droppable class="col-md-4 col-lg-4 inputContainerGroup">		
 			<p  ng-show="inputContainers.length==0"><i class="fa fa-download"></i> Inputs</p>
 			<table ng-show="inputContainers.length>0" class="table" >
 			<thead>

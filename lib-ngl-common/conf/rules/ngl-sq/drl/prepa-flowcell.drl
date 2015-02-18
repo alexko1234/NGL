@@ -30,7 +30,7 @@ rule "volume stock engaged in denat"
 rule "volume PhiX"
 	@nglSQ( calculations )
 	dialect "java"
-	salience 900
+	salience 700
 	no-loop
 	lock-on-active true
 	when
@@ -58,7 +58,7 @@ rule "volume PhiX"
 rule "volume EB"
 	@nglSQ( calculations )
 	dialect "java"
-	salience 800
+	salience 900
 	no-loop
     when
     	 $experiment:Experiment($stateCode : state.code, $stateCode!="F")
@@ -81,7 +81,7 @@ rule "volume EB"
 rule "volume engaged in dilution"
 	@nglSQ( calculations )
 	dialect "java"
-	salience 850
+	salience 800
 	lock-on-active true
 	no-loop
     when
@@ -106,7 +106,7 @@ rule "volume engaged in dilution"
 rule "volume HT1"
 	@nglSQ( calculations )
 	dialect "java"
-	salience 800
+	salience 600
 	no-loop
 	when
 		 $experiment:Experiment($stateCode : state.code, $stateCode!="F")
@@ -129,7 +129,7 @@ rule "volume HT1"
 rule "Volume dilution on track"
 	@nglSQ( calculations )
 	dialect "java"
-	salience 800
+	salience 500
 	no-loop
 	when
 		 $experiment:Experiment($stateCode : state.code, $stateCode!="F")

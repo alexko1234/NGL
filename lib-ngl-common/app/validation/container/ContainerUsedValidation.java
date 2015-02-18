@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.Level;
+import models.laboratory.common.description.Level.CODE;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.experiment.description.ExperimentType;
@@ -20,14 +21,14 @@ public class ContainerUsedValidation extends CommonValidationHelper{
 		if(exType!=null){
 			contextValidation.addKeyToRootKeyName("experimentproperties");
 			
-			List<PropertyDefinition> propertyDefinitionsContainerIn=exType.getPropertyDefinitionByLevel(Level.CODE.ContainerIn);
-			List<PropertyDefinition> propertyDefinitionsContainerOut=exType.getPropertyDefinitionByLevel(Level.CODE.ContainerOut);
-			if(updateRequired){
+			//List<PropertyDefinition> propertyDefinitionsContainerIn=exType.getPropertyDefinitionByLevel(Level.CODE.ContainerIn);
+			List<PropertyDefinition> propertyDefinitions=exType.getPropertyDefinitionByLevel(Level.CODE.valueOf(contextValidation.getObject("level").toString()));
+			/*if(updateRequired){
 				getPropertyDefintionNotRequired(propertyDefinitionsContainerIn);
 				getPropertyDefintionNotRequired(propertyDefinitionsContainerOut);
-			}
-			ValidationHelper.validateProperties(contextValidation, properties, propertyDefinitionsContainerIn, false);
-			ValidationHelper.validateProperties(contextValidation, properties, propertyDefinitionsContainerOut, false);
+			}*/
+			//ValidationHelper.validateProperties(contextValidation, properties, propertyDefinitionsContainerIn, false);
+			ValidationHelper.validateProperties(contextValidation, properties, propertyDefinitions, false);
 			contextValidation.removeKeyFromRootKeyName("experimentproperties");
 		}
 	}

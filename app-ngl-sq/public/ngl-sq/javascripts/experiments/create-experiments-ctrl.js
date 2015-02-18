@@ -423,7 +423,11 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			enabled:true,
 			
 			toggleEdit:function(){
-				this.enabled = !this.enabled;
+				if($scope.experiment.value.state.code !== "F"){
+					this.enabled = !this.enabled;
+					}else{
+						this.enabled = false;
+					}
 			},
 			save:function(){
 				$scope.clearMessages();
