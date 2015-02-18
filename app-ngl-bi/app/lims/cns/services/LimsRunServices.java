@@ -207,7 +207,13 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 				}else if(taches.size() == 1){
 					tacheId = taches.get(0).tacco;
 				}else{
-					logger.error(readSet.code+" : O Tache");
+					LotSeqValuation lsv = dao.getLotsequenceValuation(readSet.code);
+					if(null != lsv && null != lsv.tacco){
+						tacheId = lsv.tacco;
+					}else{
+						logger.error(readSet.code+" : O Tache");
+					}
+					
 				}
 				
 				try{
