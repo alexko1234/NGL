@@ -279,7 +279,7 @@
 			statsConfigs = statsConfigReadSetsService.getData();
 			queriesConfigs = queriesConfigReadSetsService.queries;
 			generateCharts();
-		} else {
+		} else if(chartService.reportingConfigurationCode !== undefined){
 			$http.get(jsRoutes.controllers.stats.api.StatsConfigurations.get(chartService.reportingConfigurationCode).url).success(function(data, status,	headers, config) {
 				statsConfigs = data.statsForm; 
 				statsConfigReadSetsService.init();
