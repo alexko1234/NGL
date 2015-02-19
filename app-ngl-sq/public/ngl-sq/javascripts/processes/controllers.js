@@ -187,8 +187,16 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 		$scope.errors.processType = {};
 		$scope.errors.processCategory = {};
 		if($scope.form.nextProcessTypeCode){
-			for(var i=0;i<containers.length;i++){
-				this.basket.add(containers[i]);
+			for(var i = 0; i < containers.length; i++){
+				var alreadyOnBasket = false;
+				for(var j=0;j<this.basket.get().length;j++){
+					if(this.basket.get()[j].code === containers[i].code){
+						alreadyOnBasket = true;
+					}
+				}
+				if(!alreadyOnBasket){
+					this.basket.add(containers[i]);
+				}
 			}
 			tabService.addTabs({label:$filter('codes')($scope.form.nextProcessTypeCode,"type"),href:$scope.form.nextProcessTypeCode,remove:false});
 		}else{

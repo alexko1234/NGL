@@ -55,13 +55,21 @@ public class ExperimentType extends CommonInfoType{
 			return ((ExperimentTypeDAO)getInstance()).findByCategoryCode(categoryCode);
 		}
 		
+		public List<ExperimentType> findByCategoryCodes(List<String> categoryCode) throws DAOException{
+			return ((ExperimentTypeDAO)getInstance()).findByCategoryCodes(categoryCode);
+		}
+		
 		public List<ExperimentType> findByCategoryCodeAndProcessTypeCode(String categoryCode, String processTypeCode) throws DAOException{
 			return ((ExperimentTypeDAO)getInstance()).findByCategoryCodeAndProcessTypeCode(categoryCode, processTypeCode);
 		}
 		
 		public List<ExperimentType> findByCategoryCodeWithoutOneToVoid(String categoryCode) throws DAOException{
 			return ((ExperimentTypeDAO)getInstance()).findByCategoryCodeWithoutOneToVoid(categoryCode);
-		}		
+		}	
+		
+		public List<ExperimentType> findByCategoryCodesWithoutOneToVoid(List<String> categoryCodes) throws DAOException{
+			return ((ExperimentTypeDAO)getInstance()).findByCategoryCodesWithoutOneToVoid(categoryCodes);
+		}	
 
 
 	}

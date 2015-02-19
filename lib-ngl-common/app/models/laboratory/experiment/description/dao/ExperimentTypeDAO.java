@@ -3,6 +3,7 @@ package models.laboratory.experiment.description.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,10 +12,8 @@ import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
 import models.laboratory.instrument.description.InstrumentUsedType;
-import models.utils.ListObject;
 import models.utils.dao.AbstractDAOCommonInfoType;
 import models.utils.dao.DAOException;
-import models.utils.dao.DAOHelpers;
 
 import org.springframework.asm.Type;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -198,6 +197,26 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 				+"ORDER by t.display_order, t.name";
 		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<ExperimentType>(ExperimentType.class);
 		return this.jdbcTemplate.query(sql, mapper, categoryCode);
+	}
+	
+	public List<ExperimentType> findByCategoryCodes(List<String> categoryCodes){
+		String sql = "SELECT t.code AS code, t.name AS name , t.display_order AS displayOrder  "+
+				 sqlCommonFrom+
+				" JOIN experiment_category as ec  ON c.fk_experiment_category=ec.id "
+				+"where ec.code in (:list) "
+				+"ORDER by t.display_order, t.name";
+		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<ExperimentType>(ExperimentType.class);
+		return this.jdbcTemplate.query(sql, mapper, Collections.singletonMap("list", categoryCodes));
+	}
+	
+	public List<ExperimentType> findByCategoryCodesWithoutOneToVoid(List<String> categoryCodes){
+		String sql = "SELECT t.code AS code, t.name AS name, t.display_order AS displayOrder  "
+					+sqlCommonFrom
+					+" JOIN experiment_category as ec  ON c.fk_experiment_category=ec.id "
+					+"where ec.code in (:list) and c.atomic_transfert_method!='OneToVoid' "
+					+"ORDER by t.display_order, t.name";
+		BeanPropertyRowMapper<ExperimentType> mapper = new BeanPropertyRowMapper<ExperimentType>(ExperimentType.class);
+		return this.jdbcTemplate.query(sql, mapper,Collections.singletonMap("list", categoryCodes));
 	}
 	
 	public List<ExperimentType> findByCategoryCodeAndProcessTypeCode(String categoryCode, String processTypeCode){

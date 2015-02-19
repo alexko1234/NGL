@@ -204,8 +204,15 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	
 	$scope.addToBasket = function(containers){
 		for(var i = 0; i < containers.length; i++){
-			this.basket.add(containers[i]);
-			console.log(containers[i]);
+			var alreadyOnBasket = false;
+			for(var j=0;j<this.basket.get().length;j++){
+				if(this.basket.get()[j].code === containers[i].code){
+					alreadyOnBasket = true;
+				}
+			}
+			if(!alreadyOnBasket){
+				this.basket.add(containers[i]);
+			}
 		}
 		
 		if(($scope.searchService.form.nextExperimentTypeCode) && this.basket.length() > 0 && tabService.getTabs().length === 1){

@@ -120,7 +120,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 		if(!isInit){
 			lists.refresh.containerSupportCategories();
 			lists.refresh.containerCategories();
-			lists.refresh.experimentTypes();
+			lists.refresh.experimentTypes({categoryCodes:["transformation", "voidProcess"], withoutOneToVoid:false});
 			lists.refresh.supports();
 			lists.refresh.projects();
 			lists.refresh.processCategories();

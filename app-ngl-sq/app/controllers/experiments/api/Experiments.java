@@ -274,12 +274,13 @@ public class Experiments extends CommonController{
 		Experiment exp = experimentFilledForm.get();
 
 		exp= ExperimentHelper.updateData(exp);
-
 		ContextValidation contextValidation = new ContextValidation(getCurrentUser());
 		contextValidation.setUpdateMode();
 		contextValidation.putObject("stateCode", exp.state.code);
 		contextValidation.putObject("typeCode", exp.typeCode);
-
+		
+		ExperimentHelper.cleanContainers(exp, contextValidation);
+				
 		ExperimentValidationHelper.validateAtomicTransfertMethodes(exp.atomicTransfertMethods, contextValidation);
 		ContextValidation ctxValidation = new ContextValidation(getCurrentUser(), experimentFilledForm.errors());
 		ExperimentValidationHelper.validateRules(exp, ctxValidation);

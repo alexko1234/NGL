@@ -7,6 +7,7 @@ import java.util.Map;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
+import models.laboratory.processes.instance.Process;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
@@ -25,6 +26,7 @@ import play.Play;
 import rules.services.RulesException;
 import rules.services.RulesServices;
 import validation.ContextValidation;
+import workflows.Workflows;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -217,4 +219,46 @@ public class ExperimentHelper extends InstanceHelpers {
 
 	}
 
+	public static void cleanContainers(Experiment experiment, ContextValidation contextValidation){
+		//load experiment from mongoDB
+		Experiment exp = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, experiment.code);
+		//extract containerIn From DB
+		List<ContainerUsed> containersInFromDB = exp.getAllInPutContainer();
+		List<ContainerUsed> containersIn = experiment.getAllInPutContainer();
+		
+		List<ContainerUsed> addedContainers = getDiff(containersIn,containersInFromDB);
+		if(addedContainers.size() > 0){
+			Workflows.nextInputContainerState(experiment, addedContainers, contextValidation);
+			
+			for(ContainerUsed addedContainer:addedContainers){
+				//add the current experiment in the process and the experiment in the list of experiment
+				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("containerInputCode", addedContainer.code), DBUpdate.set("currentExperimentTypeCode", exp.typeCode).push("experimentCodes", exp.code));
+			}
+		}
+		
+		List<ContainerUsed> deletedContainers = getDiff(containersInFromDB,containersIn);
+		if(deletedContainers.size() > 0){
+			Workflows.previousContainerState(deletedContainers, exp, contextValidation);
+		}
+	}
+	
+	private static List<ContainerUsed> getDiff(List<ContainerUsed> containersFrom, List<ContainerUsed> containersTo){
+		List<ContainerUsed> containerDiff = new ArrayList<ContainerUsed>();
+		boolean found = false;
+		for(ContainerUsed cf:containersFrom){
+			String code = cf.code;
+			found = false;
+			for(ContainerUsed c:containersTo){
+				if(code.equals(c.code)){
+					found = true;
+					break;
+				}
+			}
+			if(!found){
+				containerDiff.add(cf);
+			}
+		}
+		
+		return containerDiff;
+	}
 }

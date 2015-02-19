@@ -702,7 +702,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 									});
 									var mesuredVolume = 0;
 									if(containerIn.mesuredVolume !== undefined && containerIn.mesuredVolume !== null){
-										mesuredVolume = containerIn.mesuredVolume.value;
+										mesuredVolume = containerIn.mesuredVolume;
 									}
 									var container = {"inputCode":containerIn.code,"inputSupportCode":containerIn.support.code,
 											"inputX":containerIn.support.line, "inputTags":tags,"inputSampleTypes":sampleTypes, "inputLibProcessTypeCodes":libProcessTypeCodes, "inputState":containerIn.state,
