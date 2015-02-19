@@ -173,6 +173,12 @@
                                      function($http, $q, $parse, datatable, statsConfigReadSetsService, queriesConfigReadSetsService, lists){
 	
 	var datatableConfig = {
+			group : {
+				active : true,
+				callback:function(datatable){
+					computeCharts();
+				}
+			},
 			search : {
 				active:false
 			},
@@ -201,7 +207,7 @@
 				header: "readsets.runCode",
 				type :"text",
 				order:true,
-				//group:true,
+				group:true,
 			  	position:2
 			},
 			{	property:"laneNumber",
@@ -214,14 +220,14 @@
 				header: "readsets.projectCode",
 				type :"text",
 				order:true,
-				//group:true,
+				group:true,
 			  	position:4
 			},
 			{	property:"sampleCode",
 				header: "readsets.sampleCode",
 				type :"text",
 				order:true,
-				//group:true,
+				group:true,
 			  	position:5
 		  	},
 		  	{	property:"runSequencingStartDate",
@@ -279,10 +285,7 @@
 				statsConfigReadSetsService.init();
 				statsConfigReadSetsService.datatable.addData(statsConfigs);
 				queriesConfigs[0] = {
-					form : {
-						projectCodes : data.queryForm.projectCodes,
-						regexCode : data.queryForm.libProcessTypeCode
-					}
+					form : data.queryForm
 				};
 				queriesConfigReadSetsService.addQuery(queriesConfigs[0]);
 				queriesConfigReadSetsService.loadDatatable();
@@ -341,8 +344,8 @@
 				computeCharts();
 				readsetDatatable.config.spinner.start = false;
 			});
-	};
-
+	};	
+							
 							var computeCharts = function() {
 								charts = [];
 								for (var i = 0; i < statsConfigs.length; i++) {
@@ -369,8 +372,35 @@
 							};
 
 							var getZScoreChart = function(statsConfig) {
+								
 								var property = getProperty(statsConfig.column);
 								var data = readsetDatatable.getData();
+								if(readsetDatatable.config.group.by != undefined){
+									var cat = [];
+									var series = [{
+										data : []
+									}];
+									var tmpData = [];
+									
+									cat.push(data[0][readsetDatatable.config.group.by.property]);
+									for (var i = 1; i < data.length; i++ ){
+										if(data[i][readsetDatatable.config.group.by.property] !== data[i-1][readsetDatatable.config.group.by.property]){
+											cat.push(data[i][readsetDatatable.config.group.by.property]);
+										}
+									}
+									for(i = 0; i < cat.length; i++){
+										for(var j = 0; j < data.length; j++){
+											if(data[j][readsetDatatable.config.group.by.property] === cat[i]) tmpData.push(data[j]);											
+										}
+										series.push(tmpData);
+										tmpData = [];
+									}
+									data = [];
+									for(i = 1; i < series.length; i++){
+										data.push(series[i]);
+									} 
+								}
+
 								var getter = $parse(property);
 								var statData = data.map(function(value) {
 									return getter(value)
@@ -384,7 +414,7 @@
 										_value : getter(x)
 									};
 								});
-
+								
 								var chart = {
 									chart : {
 										zoomType : 'x',
@@ -437,7 +467,7 @@
 										} ]
 									},
 									series : [ {
-										/*point : {
+										point : {
 											events : {
 												// Redirects to valuation page of the clicked readset
 												click : function(e) {
@@ -445,19 +475,23 @@
 												}
 											}
 										},
-										colorByPoint : true,*/
+										colorByPoint : true,
 										type : 'column',
 										name : 'z-score',
-										data :  zscodeData,
+										data : zscodeData,
 										turboThreshold : 0,
+										
 									} ]
+									
 								};
+								
 								return chart;
 							};
 
 							var getSimpleValueChart = function(statsConfig) {
 								var property = getProperty(statsConfig.column);
 								var data = readsetDatatable.getData();
+								
 								var getter = $parse(property);
 								var statData = data.map(function(x) {
 									return {
@@ -498,7 +532,7 @@
 										}
 									},
 									series : [ {
-										/*point : {
+										point : {
 											events : {
 												// Redirects to valuation page of the clicked readset
 												click : function(e) {
@@ -509,7 +543,8 @@
 													e.preventDefault();
 												}
 											}
-										},*/
+										},
+										colorByPoint : true,
 										type : 'column',
 										name : Messages(statsConfig.column.header),
 										data : statData,
@@ -529,7 +564,6 @@
 									loadData();
 								}
 							};
-
 							return chartService;
 
 						} ]);
