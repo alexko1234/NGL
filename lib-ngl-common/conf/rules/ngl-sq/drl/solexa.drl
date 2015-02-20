@@ -152,14 +152,14 @@ when
 	$experiment: Experiment($typeCode:typeCode,$typeCode=="illumina-depot", $state: state, $state.code=="N",$experimentProperties: experimentProperties, traceInformation!=null, $creationDate: traceInformation.creationDate)
 	$runStartDate: PropertyValue() from $experimentProperties.get("runStartDate")	
 	//$contextValidation:ContextValidation($errors : errors)
-	eval( ($experimentProperties == null || $runStartDate==null || $runStartDate.value==null || !Date.class.isInstance($runStartDate.value) ) && ($creationDate!=null && Date.class.isInstance($creationDate) ))
+	eval( ($experimentProperties == null || $runStartDate==null || $runStartDate.value==null || $runStartDate.value=="" ) && ($creationDate!=null && Date.class.isInstance($creationDate) ))
 then	
 	Logger.info("Règle RunStartDate propertie OK");
 	PropertySingleValue value = new PropertySingleValue($creationDate);
 	$experimentProperties.remove("runStartDate");
 	$experimentProperties.put("runStartDate", value);
 	//$contextValidation.addErrors("experiment", "error.validationexp.mandatoryrunstartdate", $typeCode, $runStartDate);
-	Logger.info("Date réel de dépot = " + $runStartDate.value);
+	Logger.info("Date réel de dépot = " + $experimentProperties.get("runStartDate"));
 	update ($experiment);
 
 end
