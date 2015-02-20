@@ -379,31 +379,42 @@ angular.module('commonsServices', []).
                 	var convertValues = convertValueServices();
                 	var property = undefined;
                 	
+					var watchModelValue = function(){
+						return scope.$watch(
+									function(){
+										return ngModel.$modelValue;
+									}, function(newValue, oldValue){
+										if(property != undefined){
+											var convertedValue = convertValues.convertValue(newValue, property.saveMeasureValue, property.displayMeasureValue);
+											ngModel.$setViewValue($filter('number')(convertedValue));
+											ngModel.$render();
+										}
+								});
+					};
+					
                 	scope.$watch(attr.convertValue, function(value){
     					if(value.saveMeasureValue != undefined && value.displayMeasureValue != undefined){
     						property = value;
     					}
     				});
                 	
-                	//model to view
+                	//model to view when the user go out of the input
                 	element.bind('blur', function () {
                 		var convertedValue = convertValues.convertValue(ngModel.$modelValue, property.saveMeasureValue, property.displayMeasureValue, ngModel.$viewValue.length);
                 		ngModel.$setViewValue($filter('number')(convertedValue));
 						ngModel.$render();
+						//We restart the watcher when the user is out of the inputs
+						scope.currentWatcher = watchModelValue();
                 	});
                 	
-                	//model to view just once at the init
-                	var destroyer = scope.$watch(
-						function(){
-							return ngModel.$modelValue;
-						}, function(newValue, oldValue){
-							if(property != undefined){
-								var convertedValue = convertValues.convertValue(newValue, property.saveMeasureValue, property.displayMeasureValue);
-								ngModel.$setViewValue($filter('number')(convertedValue));
-								ngModel.$render();
-							}
-							destroyer();//destroy the watcher
+					//when the user go into the input
+					element.bind('focus', function () {
+						//We need to disable the watcher when the user is typing
+						scope.currentWatcher();
                 	});
+					
+                	//model to view whatcher
+                	scope.currentWatcher = watchModelValue();
                 	
                     //view to model
                     ngModel.$parsers.push(function(value) {
