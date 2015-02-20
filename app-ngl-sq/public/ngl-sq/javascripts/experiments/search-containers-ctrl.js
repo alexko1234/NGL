@@ -139,11 +139,11 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		var stateCode = "A";
 		console.log(experimentCategory);
 		switch(experimentCategory){
-			case "qualitycontrols": stateCode = 'A-QC';
+			case "qualitycontrol": stateCode = 'A-QC';
 								   break;
-			case "transferts": 	   stateCode = 'A-TF';
+			case "transfert": 	   stateCode = 'A-TF';
 							       break;
-			case "purifications":   stateCode = 'A-PF';
+			case "purification":   stateCode = 'A-PF';
 								   break;
 			default:               stateCode = 'A';
 		}

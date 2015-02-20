@@ -238,7 +238,7 @@ public class ExperimentHelper extends InstanceHelpers {
 		
 		List<ContainerUsed> deletedContainers = getDiff(containersInFromDB,containersIn);
 		if(deletedContainers.size() > 0){
-			Workflows.previousContainerState(deletedContainers, exp.typeCode, contextValidation);
+			Workflows.previousContainerState(deletedContainers,exp.code, exp.typeCode, contextValidation);
 		}
 	}
 	

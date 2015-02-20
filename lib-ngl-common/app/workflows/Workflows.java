@@ -9,6 +9,7 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.TransientState;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
@@ -395,11 +396,11 @@ public class Workflows {
 			ContextValidation contextValidation) {
 		State nextState=new State();
 		if(process.state != null && process.state.code.equals("N")){
-			if(experimentCategoryCode.equals("qualitycontrols")){
+			if(experimentCategoryCode.equals(ExperimentCategory.CODE.qualitycontrol.name())){
 				nextState.code="A-QC";
-			}else if(experimentCategoryCode.equals("purifications")){
+			}else if(experimentCategoryCode.equals(ExperimentCategory.CODE.purification.name())){
 				nextState.code="A-PF";
-			}else if(experimentCategoryCode.equals("transferts")){
+			}else if(experimentCategoryCode.equals(ExperimentCategory.CODE.transfert.name())){
 				nextState.code="A-TF";
 			}else{
 				nextState.code="A";
