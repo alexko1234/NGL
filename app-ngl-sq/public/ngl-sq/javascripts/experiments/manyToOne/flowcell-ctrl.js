@@ -7,6 +7,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			        	 "property":"outputPositionX",
 			        	 "order":true,
 			        	 "type":"text",
+			        	 "position":0,
 			        	 "extraHeaders":{0:"solution stock"}
 			         },
 			         {
@@ -14,6 +15,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			        	 "property":"inputSupportCode",
 			        	 "order":true,
 			        	 "type":"text",
+			        	 "position":1,
 			        	 "extraHeaders":{0:"solution stock"}
 			         },
 			         {
@@ -22,6 +24,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			        	 "order":true,
 			        	 "type":"text",
 			        	 "edit":false,
+			        	 "position":2,
 			        	 "render":"<div list-resize='value.data.inputTags | unique' below-only-deploy>",
 			        	 "extraHeaders":{0:"solution stock"}
 			         },
@@ -40,6 +43,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			        	 "order":true,
 			        	 "type":"number",
 			        	 "edit":false,
+			        	 "position":3,
 			        	 "extraHeaders":{0:"solution stock"}
 			         },
 			         {
@@ -50,6 +54,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			        	 "order":true,
 			        	 "type":"number",
 			        	 "edit":false,
+			        	 "position":4,
 			        	 "extraHeaders":{0:"solution stock"}
 			         },
 			         {
@@ -58,6 +63,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			        	 "order":true,
 			        	 "type":"text",
 			        	 "edit":false,
+			        	 "position":5,
 			        	 "extraHeaders":{0:"solution stock"},
 			        	 "filter":"codes:'state'"
 			         },
@@ -67,6 +73,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			        	 "order":true,
 			        	 "type":"number",
 			        	 "edit":false,
+			        	 "position":41,
 			        	 "extraHeaders":{0:"prep FC"}
 			         }
 			         ],
@@ -88,7 +95,8 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			         hide:{
 			        	 active:true
 			         },
-			         edit:{			        	 
+			         edit:{
+			        	 active:true,
 			        	 columnMode:true
 			         },
 			         save:{
@@ -183,6 +191,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 		if(data.displayMeasureValue != undefined && data.displayMeasureValue != null){
 			column.convertValue = {"active":true, "displayMeasureValue":data.displayMeasureValue.value, "saveMeasureValue":data.saveMeasureValue.value};
 		}
+		console.log(data.displayOrder);
 		$scope.datatable.addColumn(data.displayOrder+5 ,column);
 	});
 
@@ -197,7 +206,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			if(data.displayMeasureValue != undefined && data.displayMeasureValue != null){
 				column.convertValue = {"active":true, "displayMeasureValue":data.displayMeasureValue.value, "saveMeasureValue":data.saveMeasureValue.value};
 			}
-			$scope.datatable.addColumn(-1,column);
+			$scope.datatable.addColumn(data.displayOrder+40,column);
 		}
 	});
 
@@ -210,12 +219,12 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 		if(data.displayMeasureValue != undefined && data.displayMeasureValue != null){
 			column.convertValue = {"active":true, "displayMeasureValue":data.displayMeasureValue.value, "saveMeasureValue":data.saveMeasureValue.value};
 		}
-		$scope.datatable.addColumn(-1,column);
+		$scope.datatable.addColumn(data.displayOrder+5,column);
 	});
 
 	$scope.addOutputColumns = function(){
-		$scope.datatable.addColumn(-1,$scope.datatable.newColumn(Messages("containers.table.code"),"outputContainerUsedCode",false, true,true,"text",false,undefined,{"0":"prep FC"}));
-		
+		var column = $scope.datatable.newColumn(Messages("containers.table.code"),"outputContainerUsedCode",false, true,true,"text",false,undefined,{"0":"prep FC"});
+		$scope.datatable.addColumn(1000,column);
 	};	
 
 	$scope.$on('addOutputColumns', function(e) {

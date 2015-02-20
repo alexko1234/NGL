@@ -1479,10 +1479,13 @@ angular.module('datatableServices', []).
 		    			 */
 		    			addColumn : function(position, column){
 		    				if(position>=0){
-		    					this.config.columns.splice(position,0,column);
+			    				column.position = position;
 		    				}else{
-		    					this.config.columns.push(column);
+		    					column.position = this.config.columns.size();
 		    				}
+		    				
+	    					this.config.columns.push(column);
+		    				this.setColumnsConfig(this.config.columns);
 		    				this.newExtraHeaderConfig();
 		    			},
 		    			/**
