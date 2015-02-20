@@ -102,7 +102,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		if($scope.searchService.form.nextExperimentTypeCode){
 			$scope.searchService.lists.refresh.containerSupportCategories({experimentTypeCode:$scope.searchService.form.nextExperimentTypeCode});
 		}
-		//$scope.searchService.form.experimentCategory = experimentCategory;
+		$scope.experimentCategory = experimentCategory;
 		//this.search();
 	};
 	
@@ -123,9 +123,9 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	};
 	
 	$scope.loadExperimentTypesLists = function(){
-		$scope.searchService.lists.refresh.experimentTypes({categoryCode:"purification"}, "purifications");
-		$scope.searchService.lists.refresh.experimentTypes({categoryCode:"qualitycontrol"}, "qualitycontrols");
-		$scope.searchService.lists.refresh.experimentTypes({categoryCode:"transfert"}, "transferts");
+		$scope.searchService.lists.refresh.experimentTypes({categoryCode:"purification"}, "purification");
+		$scope.searchService.lists.refresh.experimentTypes({categoryCode:"qualitycontrol"}, "qualitycontrol");
+		$scope.searchService.lists.refresh.experimentTypes({categoryCode:"transfert"}, "transfert");
 		$scope.searchService.lists.refresh.experimentTypes({categoryCode:"transformation", withoutOneToVoid:true});
 	};
 	
@@ -158,7 +158,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		
 		
 		if(_form.nextExperimentTypeCode && _form.categoryCode){
-			_form.stateCode = $scope.getContainerStateCode($scope.searchService.form.experimentCategory);	 
+			_form.stateCode = $scope.getContainerStateCode($scope.experimentCategory);	 
 		
 			if(_form.fromDate)_form.fromDate = moment($scope.searchService.form.fromDate, Messages("date.format").toUpperCase()).valueOf();
 			if(_form.toDate)_form.toDate = moment($scope.searchService.form.toDate, Messages("date.format").toUpperCase()).valueOf();
@@ -250,7 +250,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	
 	$scope.searchService.lists.refresh.projects();
 	$scope.searchService.lists.refresh.types({objectTypeCode:"Process"}, true);
-	$scope.searchService.lists.refresh.experimentTypes({categoryCode:"transformation"},"transformations");
+	$scope.searchService.lists.refresh.experimentTypes({categoryCode:"transformation"},"transformation");
 	$scope.searchService.lists.refresh.processCategories();
 	$scope.searchService.lists.refresh.experimentCategories();
 	$scope.searchService.lists.refresh.users();
