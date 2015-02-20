@@ -1341,6 +1341,7 @@ angular.module('datatableServices', []).
 			    					if(columns[i].edit && !this.config.edit.active){
 			    						columns[i].edit = false;
 			    					}
+			    					//TODO: else{Error here ?}
 			    					
 			    					if(columns[i].choiceInList && !angular.isDefined(columns[i].listStyle)){
 			    						columns[i].listStyle = "select";

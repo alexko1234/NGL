@@ -549,7 +549,7 @@ public class Experiments extends CommonController{
 		}
 		
 		if(StringUtils.isNotBlank(experimentSearch.reagentOrBoxCode)){
-			queryElts.add(DBQuery.or(DBQuery.is("reagents.boxCode", experimentSearch.reagentOrBoxCode),DBQuery.is("reagents.code", experimentSearch.reagentOrBoxCode)));
+			queryElts.add(DBQuery.or(DBQuery.regex("reagents.boxCode", Pattern.compile(experimentSearch.reagentOrBoxCode)),DBQuery.regex("reagents.code", Pattern.compile(experimentSearch.reagentOrBoxCode))));
 		}
 
 		if(CollectionUtils.isNotEmpty(experimentSearch.stateCodes)){

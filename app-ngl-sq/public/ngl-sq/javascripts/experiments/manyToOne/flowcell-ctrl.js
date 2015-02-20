@@ -223,7 +223,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 	});
 
 	$scope.addOutputColumns = function(){
-		var column = $scope.datatable.newColumn(Messages("containers.table.code"),"outputContainerUsedCode",false, true,true,"text",false,undefined,{"0":"prep FC"});
+		var column = $scope.datatable.newColumn(Messages("containers.table.code"),function(){return $scope.experiment.value.instrumentProperties.containerSupportCode.value;},false, true,true,"text",false,undefined,{"0":"prep FC"});
 		$scope.datatable.addColumn(1000,column);
 	};	
 
