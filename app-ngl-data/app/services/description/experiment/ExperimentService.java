@@ -95,7 +95,7 @@ public class ExperimentService {
 			Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 
-		l.add(newExperimentType("Ext to Opgen Illumina","ext-to-opgen-depot",
+		l.add(newExperimentType("Ext to dépôt opgen","ext-to-opgen-depot",
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), getPropertyDefinitionExtToOpgenDepot(), null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		/*
@@ -108,7 +108,7 @@ public class ExperimentService {
 				getInstrumentUsedTypes("ARGUS"), "ManyToOne", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		//Prepaflowcell : to finish
-		l.add(newExperimentType("Ext to Depot Illumina","ext-to-prepa-flowcell",
+		l.add(newExperimentType("Ext to prepa flowcell","ext-to-prepa-flowcell",
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)));
 		
@@ -179,7 +179,7 @@ public class ExperimentService {
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)));
 			
-			l.add(newExperimentType("Ext to Depot Illumina","ext-to-prepa-flowcell",
+			l.add(newExperimentType("Ext to prepa flowcell","ext-to-prepa-flowcell",
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)));
 			
