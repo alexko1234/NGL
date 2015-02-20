@@ -45,7 +45,7 @@ public class ValidationHelper {
 	 */
 	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, Boolean validateNotDefined) {
 		Map<String, PropertyValue> inputProperties = new HashMap<String, PropertyValue>(0);
-		if(!properties.isEmpty()){
+		if(properties!=null && !properties.isEmpty()){
 			inputProperties = new HashMap<String, PropertyValue>(properties);		
 		}
 		

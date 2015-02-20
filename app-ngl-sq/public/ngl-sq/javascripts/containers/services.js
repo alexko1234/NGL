@@ -77,7 +77,8 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 				return tags;
 			},
 			"order":true,
-			"type":"text"
+			"type":"text",
+			//"render":"<div list-resize='tags' list-resize-min-size='3'>",
 		});	
 				columns.push({
 					"header":Messages("containers.table.projectCodes"),

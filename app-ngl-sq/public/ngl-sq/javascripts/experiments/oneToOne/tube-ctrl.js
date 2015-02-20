@@ -97,6 +97,7 @@ angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$
 	});
 	
 	$scope.$on('addInstrumentPropertiesInputToScope', function(e, data) {
+		if($scope.datatable.getData() != undefined){
 		for(var i=0;i<$scope.datatable.getData().length;i++){
 			for(var j=0; j<data.length;j++){
 				if($scope.getLevel( data[j].levels, "ContainerIn")){
@@ -109,9 +110,11 @@ angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$
 				}
 			}
 		}
+	}
 	});
 	
 	$scope.$on('addExperimentPropertiesOutputToScope', function(e, data) {
+		if($scope.datatable.getData() != undefined){
 		for(var i=0;i<$scope.datatable.getData().length;i++){
 			for(var j=0; j<data.length;j++){
 				if($scope.getLevel( data[j].levels, "ContainerOut")){
@@ -124,9 +127,11 @@ angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$
 				}
 			}
 		}
+	}
 	});
 	
 	$scope.$on('addExperimentPropertiesInputToScope', function(e, data) {
+		if($scope.datatable.getData() != undefined){
 		for(var i=0;i<$scope.datatable.getData().length;i++){
 			for(var j=0; j<data.length;j++){
 				if($scope.getLevel( data[j].levels, "ContainerIn")){
@@ -139,9 +144,11 @@ angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$
 				}
 			}
 		}
+	}
 	});
 	
 	$scope.$on('addInstrumentPropertiesOutputToScope', function(e, data) {
+		if($scope.datatable.getData() != undefined){
 		for(var i=0;i<$scope.datatable.getData().length;i++){
 			for(var j=0; j<data.length;j++){
 				if($scope.getLevel( data[j].levels, "ContainerOut")){
@@ -154,6 +161,7 @@ angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$
 				}
 			}
 		}
+	}
 	});
 	
 	$scope.$on('save', function(e, promises, func) {

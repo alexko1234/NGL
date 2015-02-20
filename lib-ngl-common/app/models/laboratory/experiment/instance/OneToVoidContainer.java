@@ -3,6 +3,7 @@ package models.laboratory.experiment.instance;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.laboratory.common.description.Level;
 import validation.ContextValidation;
 
 public class OneToVoidContainer extends AtomicTransfertMethod {
@@ -11,7 +12,9 @@ public class OneToVoidContainer extends AtomicTransfertMethod {
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
+		contextValidation.putObject("level", Level.CODE.ContainerIn);
 		inputContainerUsed.validate(contextValidation);
+		contextValidation.removeObject("level");
 
 	}
 

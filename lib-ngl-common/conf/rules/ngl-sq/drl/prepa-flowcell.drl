@@ -22,8 +22,7 @@ rule "volume stock engaged in denat"
    			$experimentProperties.remove("requiredVolume1");
    		}
 
-   		$experimentProperties.put("requiredVolume1",value);
-   		
+   		$experimentProperties.put("requiredVolume1",value);   		
    		update($experiment);
    	end
    

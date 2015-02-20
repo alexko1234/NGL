@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import controllers.authorisation.PermissionHelper;
 import validation.ContextValidation;
+import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -121,9 +122,13 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
+		contextValidation.putObject("level", Level.CODE.ContainerIn);
 		inputContainerUsed.validate(contextValidation);
+		contextValidation.removeObject("level");
 		if(outputContainerUsed != null){
+			contextValidation.putObject("level", Level.CODE.ContainerOut);
 			outputContainerUsed.validate(contextValidation);
+			contextValidation.removeObject("level");
 		}
 	}
 	@JsonIgnore
