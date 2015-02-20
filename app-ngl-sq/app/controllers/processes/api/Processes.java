@@ -11,6 +11,9 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
+import models.laboratory.experiment.description.ExperimentCategory;
+import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
@@ -139,7 +142,13 @@ public class Processes extends CommonController{
 		if(!contextError.hasErrors()){
 			ProcessHelper.updateContainer(container,process.typeCode, processCodes,contextValidation);
 			ProcessHelper.updateContainerSupportFromContainer(container,contextValidation);
-			Workflows.nextContainerState(process,null,new ContextValidation(getCurrentUser(), filledForm.errors()));
+			try {
+				ProcessType pt = ProcessType.find.findByCode(process.typeCode);
+				Workflows.nextContainerState(process,pt.firstExperimentType.code, pt.firstExperimentType.category.code,new ContextValidation(getCurrentUser(), filledForm.errors()));
+			} catch (DAOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}else{
 			contextValidation.errors.putAll(contextError.errors);
 		}
