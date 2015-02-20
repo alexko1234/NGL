@@ -360,13 +360,13 @@ public class Workflows {
 	}
 
  
-	public static void previousContainerState(List<ContainerUsed> containersIn, String experimentTypeCode,
+	public static void previousContainerState(List<ContainerUsed> containersIn, String experimentCode, String experimentTypeCode,
 			ContextValidation contextValidation) {
 		
 		for(ContainerUsed container:containersIn){
 			previousContainerState(container, experimentTypeCode, contextValidation);
 			//remove the current experiment in the process and the experiment in the list of experiment
-			MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("currentExperimentTypeCode", experimentTypeCode).is("containerInputCode", container.code), DBUpdate.set("currentExperimentTypeCode", "").pull("experimentCodes", experimentTypeCode));
+			MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("currentExperimentTypeCode", experimentTypeCode).is("containerInputCode", container.code), DBUpdate.set("currentExperimentTypeCode", "").pull("experimentCodes", experimentCode));
 		}
 	}
 	
