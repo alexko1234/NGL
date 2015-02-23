@@ -13,7 +13,6 @@ import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
-import models.laboratory.common.description.ValuationCriteria;
 import models.laboratory.common.description.dao.InstituteDAO;
 import models.laboratory.common.description.dao.PropertyDefinitionDAO;
 import models.laboratory.common.description.dao.ResolutionDAO;
@@ -31,7 +30,6 @@ import models.laboratory.processes.description.ExperimentTypeNode;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
-import models.laboratory.reagent.description.ReagentCatalog;
 import models.laboratory.run.description.ReadSetType;
 import models.laboratory.run.description.RunType;
 import models.laboratory.run.description.TreatmentType;
@@ -302,7 +300,7 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertNotNull(pDAO.findByCommonInfoType(citTreatment.id));
 	}
 
-	@Test
+	//@Test
 	public void ProtocolFindTest() throws DAOException {
 		Protocol type = Protocol.find.findAll().get(0);
 		Assert.assertNotNull(type);

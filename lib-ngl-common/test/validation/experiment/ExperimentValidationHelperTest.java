@@ -6,11 +6,13 @@ import java.util.Map;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
+import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentQueryParams;
 import models.laboratory.instrument.description.InstrumentUsedType;
+import models.laboratory.processes.instance.Process;
 import models.laboratory.protocol.instance.Protocol;
 import models.laboratory.resolutions.instance.Resolution;
 import models.laboratory.resolutions.instance.ResolutionConfiguration;
@@ -32,6 +34,7 @@ import fr.cea.ig.MongoDBDAO;
 
 public class ExperimentValidationHelperTest extends AbstractTests {
 
+	private static final String INIT_MONGO_SUFFIX = "_init";
 	static ExperimentType experimentType;
 	static Protocol protocol;
 	static List<String> resolutionList;
@@ -40,10 +43,16 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 	
 	@BeforeClass
 	public static void initData() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
-		experimentType=ExperimentType.find.findByCategoryCode("transformation").get(0);
+		//experimentType=ExperimentType.find.findByCategoryCode("transformation").get(0);
 		
+		
+		List<Protocol> protocols = MongoDBDAO.find(InstanceConstants.PROTOCOL_COLL_NAME+INIT_MONGO_SUFFIX+"_CNS", Protocol.class).toList();
+			MongoDBDAO.save(InstanceConstants.PROTOCOL_COLL_NAME,protocols );
+			
 		protocol=new Protocol();
-		protocol=MongoDBDAO.find(InstanceConstants.PROTOCOL_COLL_NAME, Protocol.class,DBQuery.in("experimentTypeCodes", experimentType.code)).toList().get(0);
+		protocol=MongoDBDAO.find(InstanceConstants.PROTOCOL_COLL_NAME, Protocol.class,DBQuery.empty()).toList().get(0);
+		
+		experimentType=ExperimentType.find.findByCode(protocol.experimentTypeCodes.get(0));
 
 		List<String> experimentTypes = new ArrayList<String>();
 		experimentTypes.add(experimentType.code);		
@@ -62,6 +71,8 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 
 	@AfterClass
 	public static void deleteData() {
+		 MongoDBDAO.delete(InstanceConstants.PROCESS_COLL_NAME, Container.class, DBQuery.exists("code"));
+
 	}
 	
 	@Test
