@@ -291,7 +291,7 @@ public class InstanceTest extends AbstractTests{
 		assertThat(newExperiment.state.code).isEqualTo(state.code);
 	}
 	
-	@Test
+	//@Test
 	public void validateGetSampleOnInputContainer(){
 		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.exists("contents.properties.tag")).toList();
 		Container container = containers.get(0);
