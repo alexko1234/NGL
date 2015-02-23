@@ -138,7 +138,7 @@ public class KitCatalogs extends DocumentController<KitCatalog>{
 		}
 		
 		if(kitCatalogSearch.experimentTypeCodes != null){
-			queryElts.add(DBQuery.is("providerCode", kitCatalogSearch.providerCode));
+			queryElts.add(DBQuery.in("experimentTypeCodes", kitCatalogSearch.experimentTypeCodes));
 		}
 		
 		

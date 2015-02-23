@@ -1626,14 +1626,20 @@ angular.module('datatableServices', []).
 			    					//data
 			    					displayResultTmp.forEach(function(result) {
 			    						
-			    						columnsToPrint.forEach(function(column) {	
+			    						columnsToPrint.forEach(function(column) {
 			    							if(!that.config.hide.columns[column.id]){
 			    							//algo to set colValue (value of the column)
 				    			    			if (!result.line.group && (column.url === undefined || column.url === null) && exportType !== 'groupsOnly') {
 				    			    				var property = column.property;
+				    			    				if(angular.isFunction(property)){
+				    			    					property = property();
+				    			    				}
 				    			    				property += that.getFilter(column);
 				    			    				property += that.getFormatter(column);
 				    			    				colValue = $parse(property)(result.data);
+				    			    				if(colValue === undefined){
+				    			    					colValue = property;
+				    			    				}
 				    			    				if(colValue !==  undefined && column.type === "number"){
 				    			    					colValue = colValue.replace(/\u00a0/g,"");
 				    			    				}
@@ -1663,7 +1669,7 @@ angular.module('datatableServices', []).
 				    			    				}
 				    			    				lineValue = lineValue + ((colValue!==null)&&(colValue)?colValue:"") + delimiter;
 				    			    			}
-			    							}	
+			    							}
 			    						});
 			    						if ((exportType==='all') || ((exportType==='groupsOnly') && result.line.group)) {
 			    							lineValue = lineValue.substr(0, lineValue.length-1) + "\n";
