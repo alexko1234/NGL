@@ -83,7 +83,9 @@ public class Processes extends CommonController{
 	}
 
 	public static Result newProcessesColumns(String processTypeCode){
-		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();		
+		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
+		
+		/*
 		columns.add(DatatableHelpers.getColumn("support.code", Messages.get("processes.table.supportCode")));
 		columns.add(DatatableHelpers.getColumn("support.line", Messages.get("processes.table.line")));
 		columns.add(DatatableHelpers.getColumn("support.column", Messages.get("processes.table.columns")));
@@ -92,6 +94,7 @@ public class Processes extends CommonController{
 		columns.add(DatatableHelpers.getColumn("sampleCode", Messages.get("processes.table.sampleCode")));
 		//columns.add(DatatableHelpers.getColumn("containerInputCode", Messages.get("processes.table.containerInputCode")));
 		columns.add(DatatableHelpers.getColumn("state.code", Messages.get("processes.table.stateCode"),"codes:'state'"));
+		*/
 
 		columns.addAll(getPropertiesDefinitionsColumns(processTypeCode, true));
 
@@ -178,7 +181,8 @@ public class Processes extends CommonController{
 						controllers.processes.tpl.routes.javascript.Processes.home(),  
 						controllers.processes.api.routes.javascript.Processes.update(),
 						controllers.processes.tpl.routes.javascript.Processes.searchColumns(),  
-						controllers.processes.tpl.routes.javascript.Processes.newProcessesColumns(),  
+						controllers.processes.tpl.routes.javascript.Processes.newProcessesColumns(),
+						controllers.processes.tpl.routes.javascript.Processes.getPropertiesDefinitions(),
 						controllers.processes.api.routes.javascript.Processes.save(),
 						//controllers.processes.api.routes.javascript.Processes.saveFromSupport(),
 						controllers.processes.api.routes.javascript.ProcessTypes.list(),

@@ -143,13 +143,13 @@ then
     $contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.manytagCategory", $position);
 end
 
-rule "RunStartDate propertie is mandatory to create Illumina Depot"
+rule "RunStartDate propertie is mandatory to create Illumina Depot and Opgen Depot"
 @nglSQ (validations )
 	dialect "java"
 	salience 500
 	no-loop
 when
-	$experiment: Experiment($typeCode:typeCode,$typeCode=="illumina-depot", $state: state, $state.code=="N",$experimentProperties: experimentProperties, traceInformation!=null, $creationDate: traceInformation.creationDate)
+	$experiment: Experiment($typeCode:typeCode,$typeCode=="illumina-depot"|| $typeCode=="opgen-depot" , $state: state, $state.code=="N",$experimentProperties: experimentProperties, traceInformation!=null, $creationDate: traceInformation.creationDate)
 	$runStartDate: PropertyValue() from $experimentProperties.get("runStartDate")	
 	//$contextValidation:ContextValidation($errors : errors)
 	eval( ($experimentProperties == null || $runStartDate==null || $runStartDate.value==null || $runStartDate.value=="" ) && ($creationDate!=null && Date.class.isInstance($creationDate) ))
