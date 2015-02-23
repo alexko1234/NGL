@@ -15,6 +15,7 @@ import java.util.Random;
 
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.property.PropertyImgValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
@@ -400,7 +401,7 @@ public class ExperimentTests extends AbstractTests{
 		Experiment exp = ExperimentTestHelper.getFakePrepFlowcell();
 		MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
 		exp.protocolCode="Protocol";
-		
+		exp.traceInformation=new TraceInformation();
 		Result result = callAction(controllers.experiments.api.routes.ref.Experiments.updateExperimentInformations(exp.code),fakeRequest().withJsonBody(Json.toJson(exp)));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
