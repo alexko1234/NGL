@@ -150,6 +150,7 @@ angular.module('datatableServices', []).
 							},
 							group:{
 								active:false,
+								callback:undefined,
 								by:undefined,
 								showButton:true,
 								after:true,

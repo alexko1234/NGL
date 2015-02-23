@@ -46,6 +46,7 @@ angular.module('home').controller('SearchCtrl',[ '$scope', '$routeParams', 'main
 	if($scope.searchService.isRouteParam){
 		$scope.search();
 	}
+	console.log(datatableConfig);
 	
 }]);
 
@@ -82,6 +83,7 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParam
 			},
 			messages:{active:true}
 	};
+	
 	
 	$scope.search = function(){
 		$scope.searchService.search();
@@ -164,6 +166,12 @@ angular.module('home').controller('SearchBatchCtrl', ['$scope', '$routeParams', 
 			order :{mode:'local', by:'runSequencingStartDate', reverse : true},
 			search:{
 				url:jsRoutes.controllers.readsets.api.ReadSets.list()
+			},
+			exportCSV:{
+				active:true
+			},
+			group:{
+				active:true
 			},
 			edit : {
 				active:true,

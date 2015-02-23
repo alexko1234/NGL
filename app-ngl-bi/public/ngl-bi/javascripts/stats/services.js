@@ -246,6 +246,7 @@
 		 	{	property:"productionValuation.valid",
 				filter:"codes:'valuation'",
 				header: "readsets.productionValuation.valid",
+				
 				type :"text",
 		    	order:true,
 			  	position:70
@@ -370,24 +371,26 @@
 									throw 'no property defined for column '	+ Messages(column.header);
 								}
 							};
-
+							
 							var getZScoreChart = function(statsConfig) {
 								
 								var property = getProperty(statsConfig.column);
 								var data = readsetDatatable.getData();
+								
+								
+								
+								var cat = [{}]
+								var series = [{
+									data : []
+								}];
+								var tmpData = [];
 								if(readsetDatatable.config.group.by != undefined){
-									var cat = [];
-									var series = [{
-										data : []
-									}];
-									var tmpData = [];
-									
-									cat.push(data[0][readsetDatatable.config.group.by.property]);
-									for (var i = 1; i < data.length; i++ ){
-										if(data[i][readsetDatatable.config.group.by.property] !== data[i-1][readsetDatatable.config.group.by.property]){
+									for (var i = 0; i < data.length; i++ ){
+										if(cat.indexOf(data[i][readsetDatatable.config.group.by.property]) === -1){
 											cat.push(data[i][readsetDatatable.config.group.by.property]);
 										}
 									}
+									cat.splice(0,1);
 									for(i = 0; i < cat.length; i++){
 										for(var j = 0; j < data.length; j++){
 											if(data[j][readsetDatatable.config.group.by.property] === cat[i]) tmpData.push(data[j]);											
@@ -395,11 +398,9 @@
 										series.push(tmpData);
 										tmpData = [];
 									}
-									data = [];
-									for(i = 1; i < series.length; i++){
-										data.push(series[i]);
-									} 
+									series.splice(0,1);
 								}
+								
 
 								var getter = $parse(property);
 								var statData = data.map(function(value) {
@@ -414,6 +415,70 @@
 										_value : getter(x)
 									};
 								});
+								
+								
+								
+								if(readsetDatatable.config.group.by != undefined){
+									// Creating zscodeData for our groups
+									var dataForZscore = [{}];
+									var dataTemp = [];
+									var k = 0;
+									for(var i = 0; i < series.length; i++){
+										for(var j = 0; j < series[i].length; j++){
+											dataForZscore.push(zscodeData[k]);
+											k++;
+										}
+										dataForZscore.splice(0,1);
+										dataTemp.push(dataForZscore);
+										dataForZscore = [{}];
+									}
+									zscodeData = dataTemp;
+									
+								}
+								
+								
+								// Creating object allSeries that'll contain all our series, whether or not we're using group function on datatable
+								var allSeries = [{}];
+								var begin = 0;
+								if(readsetDatatable.config.group.by != undefined){
+									for(var i = 0; i < zscodeData.length; i++){
+										allSeries[i] = {
+											point : {
+												events : {
+													// Redirects to valuation page of the clicked readset
+													click : function(e) {
+														location.href = '/readsets/' + this.name + '/valuation';
+													}
+												}
+											},
+											pointStart: begin,
+											data : zscodeData[i],
+											name : cat[i],
+											turboThreshold : 0,
+											type : 'column',
+										}
+										begin+= zscodeData[i].length;
+									}
+								}else{
+									allSeries = [{}];
+									allSeries[0] = {
+											point : {
+												events : {
+													// Redirects to valuation page of the clicked readset
+													click : function(e) {
+														location.href = '/readsets/' + this.name + '/valuation';
+													}
+												}
+											},
+											
+											type : 'column',
+											name : 'z-score',
+											data : zscodeData,
+											turboThreshold : 0
+									}
+								}
+								
+								
 								
 								var chart = {
 									chart : {
@@ -466,25 +531,8 @@
 											}
 										} ]
 									},
-									series : [ {
-										point : {
-											events : {
-												// Redirects to valuation page of the clicked readset
-												click : function(e) {
-													location.href = '/readsets/' + this.name + '/valuation';
-												}
-											}
-										},
-										colorByPoint : true,
-										type : 'column',
-										name : 'z-score',
-										data : zscodeData,
-										turboThreshold : 0,
-										
-									} ]
-									
+									series : allSeries,
 								};
-								
 								return chart;
 							};
 

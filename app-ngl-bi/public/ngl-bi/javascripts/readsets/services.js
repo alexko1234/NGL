@@ -171,6 +171,17 @@
 					});
 					
 			}else if(mainService.getHomePage() == 'batch'){
+					columns.push({	property:"state.code",
+									filter:"codes:'state'",
+									header: "readsets.stateCode",
+									type :"text",
+									edit:true,
+									order:true,
+							    	choiceInList:true,
+							    	listStyle:'bt-select',
+							    	possibleValues:'searchService.lists.getStates()',
+							    	position:7
+							    	});
 					columns.push({	property:"productionValuation.valid",
 									filter:"codes:'valuation'",
 									header: "readsets.productionValuation.valid",
