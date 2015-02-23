@@ -45,7 +45,7 @@ public class AbstractTests {
 		config.put("db.default.user", "ngl");
 		config.put("db.default.password", "ngl");
 		config.put("db.default.partitionCount", "1");
-		config.put("db.default.maxConnectionsPerPartition", "5");
+		config.put("db.default.maxConnectionsPerPartition", "1");
 		config.put("db.default.minConnectionsPerPartition", "1");
 		config.put("db.default.logStatements", "true");
 		config.put("db.default.jndiName", "ngl");
@@ -56,7 +56,7 @@ public class AbstractTests {
 		config.put("db.tara.password","Lims_PassWrd");
 		config.put("db.tara.jndiName","tara");	
 		config.put("db.tara.partitionCount","1");
-		config.put("db.tara.maxConnectionsPerPartition","6");
+		config.put("db.tara.maxConnectionsPerPartition","1");
 		config.put("db.tara.minConnectionsPerPartition","1");
 		config.put("db.tara.logStatements","true");
 
@@ -65,7 +65,7 @@ public class AbstractTests {
 		config.put("db.lims.user", "www");
 		config.put("db.lims.password", "wawiwo");
 		config.put("db.lims.partitionCount", "1");
-		config.put("db.lims.maxConnectionsPerPartition", "6");
+		config.put("db.lims.maxConnectionsPerPartition", "1");
 		config.put("db.lims.minConnectionsPerPartition", "1");
 		config.put("db.lims.logStatements", "true");
 		config.put("db.lims.jndiName", "lims");	
@@ -81,7 +81,7 @@ public class AbstractTests {
 		config.put("import.data","false");
 	
 		config.put("rules.key","nglBI" );
-		config.put("rules.changesets","rules/cng/changesets/changesets.xml");
+		config.put("rules.changesets","rules/ngl-bi/cns/changesets/changesets.xml");
 		
 		config.put("auth.cas.urlvalidator", "https://cas.genoscope.cns.fr:8443/cas/serviceValidate");
 		config.put("auth.cas.urllogin", "https://cas.genoscope.cns.fr:8443/cas/login");
