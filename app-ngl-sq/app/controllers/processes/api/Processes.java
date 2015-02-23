@@ -86,8 +86,10 @@ public class Processes extends CommonController{
 		}else {
 			return badRequest("use PUT method to update the process");
 		}
+		
+		ContextValidation contextValidation=new ContextValidation(getCurrentUser(), filledForm.errors());
+
 		if (!filledForm.hasErrors()) {
-			ContextValidation contextValidation=new ContextValidation(getCurrentUser(), filledForm.errors());
 			contextValidation.setCreationMode();
 
 			if(StringUtils.isNotBlank(queryFieldsForm.fromSupportContainerCode) && StringUtils.isBlank(queryFieldsForm.fromContainerInputCode)){			
@@ -102,10 +104,14 @@ public class Processes extends CommonController{
 			}else{
 				return badRequest("Params 'from object' required!");
 			}
-		}else {
-			return badRequest(filledForm.errorsAsJson());
 		}
-		return ok(Json.toJson(processes));
+		
+		if(contextValidation.hasErrors())
+		{
+			return badRequest(filledForm.errorsAsJson());
+		}else {
+			return ok(Json.toJson(processes));
+		}
 	}
 
 	public static List<Process> saveFromSupport(String supportCode, Form<Process> filledForm, ContextValidation contextValidation){			
@@ -128,7 +134,7 @@ public class Processes extends CommonController{
 
 		for(Content c:container.contents){		
 			//code generation
-			process.code = CodeHelper.getInstance().generateProcessCode(process);
+			process.code = CodeHelper.generateProcessCode(process);
 			process.sampleCode = c.sampleCode;
 			process.sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(c, container);				
 			Process p = (Process)InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,process, contextValidation);
