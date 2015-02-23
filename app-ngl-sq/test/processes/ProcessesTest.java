@@ -139,13 +139,18 @@ public class ProcessesTest extends AbstractTests{
 		
 		assertThat(processResult).isNotNull();
 		
-		result = callAction(controllers.processes.api.routes.ref.Processes.head(processResult.get(0).code),fakeRequest());
+		for(int i=0; i<processResult.size();i++){
+		
+		Process newProcess=processResult.get(i);
+		
+			
+		result = callAction(controllers.processes.api.routes.ref.Processes.head(processResult.get(i).code),fakeRequest());
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
-		result = callAction(controllers.processes.api.routes.ref.Processes.get(processResult.get(0).code),fakeRequest());
+		result = callAction(controllers.processes.api.routes.ref.Processes.get(processResult.get(i).code),fakeRequest());
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 
-		for(int i=0; i<processResult.size();i++){
+		
 		result = callAction(controllers.processes.api.routes.ref.Processes.delete(processResult.get(i).code),fakeRequest());
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		}

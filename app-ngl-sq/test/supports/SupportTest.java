@@ -208,8 +208,8 @@ public class SupportTest extends AbstractTests {
 		} catch (RuntimeException e) {			
 			exceptionError = true;
 		}
-		assertThat(result).isNull();
-		assertThat(exceptionError).isEqualTo(true);		
+		assertThat(result).isNotNull();
+		assertThat(exceptionError).isEqualTo(false);		
 		
 	}
 	
@@ -276,8 +276,8 @@ public class SupportTest extends AbstractTests {
 		}  catch (RuntimeException e) {			
 			exceptionError = true;
 		}
-		assertThat(result).isNull();
-		assertThat(exceptionError).isEqualTo(true);		
+		assertThat(result).isNotNull();
+		assertThat(exceptionError).isEqualTo(false);		
 	
 	}
 	
