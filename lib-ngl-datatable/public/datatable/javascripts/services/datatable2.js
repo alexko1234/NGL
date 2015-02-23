@@ -1481,8 +1481,6 @@ angular.module('datatableServices', []).
 		    			addColumn : function(position, column){
 		    				if(position>=0){
 			    				column.position = position;
-		    				}else{
-		    					column.position = this.config.columns.size();
 		    				}
 		    				
 	    					this.config.columns.push(column);

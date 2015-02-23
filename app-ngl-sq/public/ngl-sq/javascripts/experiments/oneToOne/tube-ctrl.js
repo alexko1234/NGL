@@ -84,8 +84,8 @@ angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$
 	});
 	
 	$scope.addOutputColumns = function(){
-		$scope.datatable.addColumn(-1,$scope.datatable.newColumn(Messages("containers.table.code"),"outputContainerUsed.code",false, true,true,$scope.getPropertyColumnType(data.valueType),false,undefined,{"0":"Outputs"}));
-		$scope.datatable.addColumn(-1,$scope.datatable.newColumn(Messages("containers.table.stateCode"),"outputContainerUsed.state.code  | codes:'state'",false, true,true,$scope.getPropertyColumnType(data.valueType),false,undefined,{"0":"Outputs"}));
+		$scope.datatable.addColumn(1000050,$scope.datatable.newColumn(Messages("containers.table.code"),"outputContainerUsed.code",false, true,true,"text",false,undefined,{"0":"Outputs"}));
+		$scope.datatable.addColumn(1000051,$scope.datatable.newColumn(Messages("containers.table.stateCode"),"outputContainerUsed.state.code  | codes:'state'",false, true,true,"text",false,undefined,{"0":"Outputs"}));
 	};
 	
 	$scope.$on('addOutputColumns', function(e) {

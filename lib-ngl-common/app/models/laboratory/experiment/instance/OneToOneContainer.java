@@ -19,6 +19,7 @@ import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.LocationOnContainerSupport;
+import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
@@ -49,7 +50,7 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 			
 			if(this.inputContainerUsed!=null){
 				
-				String outPutContainerCode=ContainerHelper.generateContainerCode(experiment.instrument.outContainerSupportCategoryCode);
+				String outPutContainerCode=CodeHelper.getInstance().generateContainerSupportCode();
 				this.outputContainerUsed = new ContainerUsed(outPutContainerCode);
 
 				LocationOnContainerSupport support=new LocationOnContainerSupport();

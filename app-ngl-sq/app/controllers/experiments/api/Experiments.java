@@ -217,7 +217,7 @@ public class Experiments extends CommonController{
 		
 		com.createUser = getCurrentUser();
 		com.creationDate = new Date();
-		com.code = CodeHelper.generateExperimentCommentCode(com);
+		com.code = CodeHelper.getInstance().generateExperimentCommentCode(com);
 		
 		if (!commentFilledForm.hasErrors()) {
 			Builder builder = new DBUpdate.Builder();
@@ -363,7 +363,7 @@ public class Experiments extends CommonController{
 		if(exp._id == null || exp._id.equals("")){
 			ContextValidation ctxValidation = new ContextValidation(getCurrentUser(), experimentFilledForm.errors());
 
-			exp.code = CodeHelper.generateExperiementCode(exp);
+			exp.code = CodeHelper.getInstance().generateExperiementCode(exp);
 			exp.traceInformation = ExperimentHelper.getUpdateTraceInformation(null, getCurrentUser());
 			exp.state.user=getCurrentUser();
 			ExperimentValidationHelper.validateRules(exp, ctxValidation);

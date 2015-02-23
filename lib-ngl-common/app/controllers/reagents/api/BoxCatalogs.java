@@ -43,7 +43,7 @@ public class BoxCatalogs extends DocumentController<BoxCatalog>{
 			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
 			if(ValidationHelper.required(contextValidation, boxCatalog.name, "name")){
 				if(boxCatalog._id == null){
-					boxCatalog.code = CodeHelper.generateBoxCatalogCode(boxCatalog.kitCatalogCode, boxCatalog.name);
+					boxCatalog.code = CodeHelper.getInstance().generateBoxCatalogCode(boxCatalog.kitCatalogCode, boxCatalog.name);
 					contextValidation.setCreationMode();
 				}else{
 					contextValidation.setUpdateMode();

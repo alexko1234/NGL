@@ -126,9 +126,9 @@ public class Processes extends CommonController{
 		List<String> processCodes=new ArrayList<String>();		
 		ContextValidation contextError=new ContextValidation(contextValidation.getUser());
 
-		for(Content c:container.contents){					
+		for(Content c:container.contents){		
 			//code generation
-			process.code = CodeHelper.generateProcessCode(process);
+			process.code = CodeHelper.getInstance().generateProcessCode(process);
 			process.sampleCode = c.sampleCode;
 			process.sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(c, container);				
 			Process p = (Process)InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,process, contextValidation);

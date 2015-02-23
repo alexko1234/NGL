@@ -17,6 +17,7 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.processes.instance.Process;
 import models.laboratory.sample.instance.Sample;
+import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.instance.ContainerHelper;
@@ -140,35 +141,6 @@ public class ContainerTest extends AbstractTests {
 		assertThat(c5.percentage).isEqualTo(0.00);
 		assertThat(c6.percentage).isEqualTo(0.00);		
 	}
-	
-
-	@Test
-	public void validateGenerateContainerCode(){
-		String t = "tube";
-		String cod = ContainerHelper.generateContainerCode(t);		
-		//good value
-		assertThat(cod).containsIgnoringCase(t);
-		
-		//good value in uppercase
-		assertThat(cod).contains(t.toUpperCase());
-		
-		//good value with date
-		Date d = new Date();
-		DateFormat df = new SimpleDateFormat("yyyyMMdd");
-		assertThat(cod).contains(df.format(d));
-		
-		//bad value
-		assertThat(cod).doesNotContain("lane");
-		
-		//bad date value		
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(d);
-		cal.add(Calendar.MILLISECOND, 1);
-		d = cal.getTime();
-		df = new SimpleDateFormat("yyyyMMddHHmmssSS");
-		assertThat(cod).doesNotContain(df.format(d));
-	}
-	
 	
 /**********************************Tests of Container class methods (DBObject)***************************************************/		
 	

@@ -50,7 +50,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			        	 "header":function(){
 			        		 return Messages("containers.table.volume") +" (µl)";
 			        	 },
-			        	 "property":"inputVolume",
+			        	 "property":"inputVolume.value",
 			        	 "order":true,
 			        	 "type":"number",
 			        	 "edit":false,

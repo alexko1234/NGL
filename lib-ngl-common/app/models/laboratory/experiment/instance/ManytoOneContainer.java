@@ -14,6 +14,7 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.processes.instance.Process;
+import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
@@ -61,7 +62,7 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 			LocationOnContainerSupport support=new LocationOnContainerSupport();
 
 			if(experiment.instrumentProperties.get("containerSupportCode")==null){
-				outPutContainerCode=ContainerHelper.generateContainerCode(experiment.instrument.outContainerSupportCategoryCode);
+				outPutContainerCode=CodeHelper.getInstance().generateContainerSupportCode();
 				support.code=outPutContainerCode;
 			}else{
 				if(experiment.instrumentProperties.get("containerSupportCode").value!=null){

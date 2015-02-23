@@ -39,7 +39,7 @@ public class ReagentCatalogs extends DocumentController<ReagentCatalog>{
 		Form<ReagentCatalog> ReagentCatalogFilledForm = getMainFilledForm();
 		if(!mainForm.hasErrors()){
 			ReagentCatalog reagentCatalog = ReagentCatalogFilledForm.get();
-			reagentCatalog.code = CodeHelper.generateReagentCatalogCode(reagentCatalog.name);
+			reagentCatalog.code = CodeHelper.getInstance().generateReagentCatalogCode(reagentCatalog.name);
 			
 			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
 			contextValidation.setCreationMode();

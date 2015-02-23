@@ -52,7 +52,7 @@ public class KitCatalogs extends DocumentController<KitCatalog>{
 			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
 			contextValidation.setCreationMode();
 			if(ValidationHelper.required(contextValidation, kitCatalog.name, "name")){
-				kitCatalog.code = CodeHelper.generateKitCatalogCode(kitCatalog.name);
+				kitCatalog.code = CodeHelper.getInstance().generateKitCatalogCode(kitCatalog.name);
 			
 				kitCatalog = (KitCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, kitCatalog, contextValidation);
 			}
