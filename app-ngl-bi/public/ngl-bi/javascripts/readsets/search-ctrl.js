@@ -45,8 +45,7 @@ angular.module('home').controller('SearchCtrl',[ '$scope', '$routeParams', 'main
 	
 	if($scope.searchService.isRouteParam){
 		$scope.search();
-	}
-	console.log(datatableConfig);
+	}	
 	
 }]);
 
