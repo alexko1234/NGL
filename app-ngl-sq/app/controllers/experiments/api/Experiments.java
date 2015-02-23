@@ -35,6 +35,7 @@ import org.mongojack.DBUpdate;
 import org.mongojack.DBUpdate.Builder;
 
 import play.Logger;
+import play.Logger.ALogger;
 import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
@@ -60,6 +61,7 @@ public class Experiments extends CommonController{
 
 	public static final String calculationsRules ="calculations";
 
+	static ALogger logger=Logger.of("Experiments");
 
 	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public static Result updateExperimentInformations(String code){
@@ -69,13 +71,21 @@ public class Experiments extends CommonController{
 		ContextValidation ctx =new ContextValidation(getCurrentUser(),experimentFilledForm.errors());
 		ctx.putObject("stateCode", exp.state.code);
 		
+		ExperimentValidationHelper.validateReagents(exp.reagents, ctx);
+		ExperimentValidationHelper.validateResolutionCodes(exp.typeCode, exp.state.resolutionCodes, ctx);		
+		ExperimentValidationHelper.validationProtocol(exp.typeCode,exp.protocolCode,ctx);
+
 		if (!ctx.hasErrors()) {
 
 			Builder builder = new DBUpdate.Builder();
 			builder=builder.set("typeCode",exp.typeCode);
-			builder=builder.set("reagents",exp.reagents);
+			if(CollectionUtils.isNotEmpty(exp.reagents)){
+				builder=builder.set("reagents",exp.reagents);
+			}else { builder=builder.unset("reagents");}
 			builder=builder.set("protocolCode",exp.protocolCode);
-			builder=builder.set("state.resolutionCodes",exp.state.resolutionCodes);
+			if(CollectionUtils.isNotEmpty(exp.state.resolutionCodes)){
+				builder=builder.set("state.resolutionCodes",exp.state.resolutionCodes);
+			}else{ builder=builder.unset("state.resolutionCodes");}
 			builder=builder.set("traceInformation", ExperimentHelper.getUpdateTraceInformation(exp.traceInformation, getCurrentUser()));
 
 			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
@@ -127,7 +137,7 @@ public class Experiments extends CommonController{
 
 		exp.instrument.validate(ctxValidation);
 
-		if (!experimentFilledForm.hasErrors()) {
+		if (!ctxValidation.hasErrors()) {
 
 			Builder builder = new DBUpdate.Builder();
 			builder = builder.set("instrument",exp.instrument);
@@ -144,26 +154,30 @@ public class Experiments extends CommonController{
 	public static Result updateExperimentProperties(String code){
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
+		
+		if(exp.experimentProperties != null){
+		
+			ContextValidation ctxValidation = new ContextValidation(getCurrentUser(), experimentFilledForm.errors());
+			ctxValidation.putObject("stateCode", exp.state.code);
+			ctxValidation.setUpdateMode();
 
-		if (!experimentFilledForm.hasErrors()) {
-			if(exp.experimentProperties != null){
-				ContextValidation ctxValidation = new ContextValidation(getCurrentUser(), experimentFilledForm.errors());
-				ctxValidation.putObject("stateCode", exp.state.code);
-				ctxValidation.setUpdateMode();
-
-				Logger.debug("Experiment update properties :"+exp.code);
-				ExperimentValidationHelper.validationExperimentType(exp.typeCode, exp.experimentProperties, ctxValidation);
-				
+			Logger.debug("Experiment update properties :"+exp.code);
+			ExperimentValidationHelper.validationExperimentType(exp.typeCode, exp.experimentProperties, ctxValidation);
+		
+			if (!ctxValidation.hasErrors()) {
+		
 				Builder builder = new DBUpdate.Builder();
 				builder = builder.set("experimentProperties",exp.experimentProperties);
 				builder = builder.set("traceInformation", ExperimentHelper.getUpdateTraceInformation(exp.traceInformation, getCurrentUser()));
 
 				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", code),builder);
+				return ok(Json.toJson(exp));
+			}else {	
+				return badRequest(experimentFilledForm.errorsAsJson());
 			}
-			return ok(Json.toJson(exp));
 		}
-
-		return badRequest(experimentFilledForm.errorsAsJson());
+		
+		return ok(Json.toJson(exp));
 	}
 
 	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
@@ -184,7 +198,7 @@ public class Experiments extends CommonController{
 		} catch (DAOException e) {
 			Logger.error(e.getMessage());
 		}
-		if (!experimentFilledForm.hasErrors()) {
+		if (!ctxValidation.hasErrors()) {
 
 			if(exp.instrumentProperties != null){
 				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, 
@@ -346,7 +360,8 @@ public class Experiments extends CommonController{
 		if (!ctxValidation.hasErrors()) {
 			return ok(Json.toJson(exp));
 		}
-
+		
+		ctxValidation.displayErrors(logger);
 		return badRequest(experimentFilledForm.errorsAsJson());
 	}
 
@@ -392,6 +407,7 @@ public class Experiments extends CommonController{
 			if (!ctxValidation.hasErrors()) {
 				return ok(Json.toJson(exp));
 			}else {
+				ctxValidation.displayErrors(logger);
 				return badRequest(experimentFilledForm.errorsAsJson());
 			}
 		}
