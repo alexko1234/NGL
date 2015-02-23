@@ -35,7 +35,7 @@ public class ResolutionService {
 		
 		String inst=play.Play.application().configuration().getString("institute");
 		
-		if ( inst.equals("CNG") || inst.equals("CNG") ) {
+		if ( inst.equals("CNS") || inst.equals("CNG") ) {
 			Logger.info("Create and save "+inst+ " resolution categories ...");
 			
 			saveResolutions(ctx, inst);
@@ -513,11 +513,8 @@ public class ResolutionService {
 
 	// FDS pas de distingo CNS/CNG ??
 	public static void createExperimentResolution(ContextValidation ctx) {	
-		List<Resolution> l = new ArrayList<Resolution>();
-		
-		l.add(InstanceFactory.newResolution("déroulement correct",	"correct", resolutionCategories.get("Default"), (short) 1));
-		l.add(InstanceFactory.newResolution("échec expérience", "echec-experience", resolutionCategories.get("Default"), (short) 2));	
-		
+		List<Resolution> l = getDefaultResolutionCNS();
+				
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "experimentReso";
 		r.resolutions = l;
@@ -548,12 +545,11 @@ public class ResolutionService {
 	public static void createOpgenDepotResolutionCNS(ContextValidation ctx) {
 		List<Resolution> l = new ArrayList<Resolution>();
 		
-		l.add(InstanceFactory.newResolution("déroulement correct",	"correct", resolutionCategories.get("Default"), (short) 1));       // FDS deja declare plus haut !!!
-		l.add(InstanceFactory.newResolution("échec expérience", "echec-experience", resolutionCategories.get("Default"), (short) 2));  // FDS deja declare plus haut !!!
+		l.addAll(getDefaultResolutionCNS());
 		
-		l.add(InstanceFactory.newResolution("nombre molécules insuffisant pour assemblage correct", "echec-nbMoleculesInsuf", resolutionCategories.get("Default"), (short) 3));
-		l.add(InstanceFactory.newResolution("surface cassée", "echec-surface", resolutionCategories.get("Default"), (short) 4));	
-		l.add(InstanceFactory.newResolution("problème digestion", "echec-digestion", resolutionCategories.get("Default"), (short) 5));	
+		l.add(InstanceFactory.newResolution("nombre molécules insuffisant pour assemblage correct", "echec-nbMoleculesInsuf", resolutionCategories.get("Default"), (short) 4));
+		l.add(InstanceFactory.newResolution("surface cassée", "echec-surface", resolutionCategories.get("Default"), (short) 5));	
+		l.add(InstanceFactory.newResolution("problème digestion", "echec-digestion", resolutionCategories.get("Default"), (short) 6));	
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "expODReso";
@@ -566,5 +562,17 @@ public class ResolutionService {
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
+	}
+	
+	
+	
+	public static List<Resolution> getDefaultResolutionCNS(){
+		List<Resolution> l = new ArrayList<Resolution>();
+		
+		l.add(InstanceFactory.newResolution("déroulement correct",	"correct", resolutionCategories.get("Default"), (short) 1));
+		l.add(InstanceFactory.newResolution("problème signalé en commentaire", "pb-commentaire", resolutionCategories.get("Default"), (short) 2));
+		l.add(InstanceFactory.newResolution("échec expérience", "echec-experience", resolutionCategories.get("Default"), (short) 3));	
+
+		return l;
 	}
 }
