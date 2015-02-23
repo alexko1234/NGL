@@ -123,12 +123,9 @@
 			   	 		<p class="form-control-static">{{experiment.value.state.code | codes:'state'}}</p>
 					}
 			    	@columnLabelValue(Messages("experiments.resolution")){
-							<div class="form-control"  bt-select ng-model="experiment.value.state.resolutionCodes" multiple="true" placeholder="@Messages("experiments.select.resolutions")" 
-									bt-options="resolution.code as resolution.name for resolution in lists.get('resolutions')" 
-									ng-disabled="!experiment.experimentInformation.enabled"
-									ng-readonly="!experiment.experimentInformation.enabled" 
-									auto-select>
-							</div>	
+							
+							<div bt-select class="form-control"  bt-select ng-model="experiment.value.state.resolutionCodes" multiple="true" placeholder="@Messages("experiments.select.resolutions")" bt-options="valid.code as valid.name group by valid.category.name for valid in lists.getResolutions()"  ng-edit="isEditMode()" ></div>							
+							
 					}	
 					
 						
