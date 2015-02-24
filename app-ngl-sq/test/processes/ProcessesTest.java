@@ -177,19 +177,19 @@ public class ProcessesTest extends AbstractTests{
 		process.projectCode = cs.projectCodes.get(0);
 		process.sampleCode = cs.sampleCodes.get(0);
 		
-		process.code = CodeHelper.generateProcessCode(process);
+		process.code = CodeHelper.getInstance().generateProcessCode(process);
 		Process pro1 = MongoDBDAO.save(InstanceConstants.PROCESS_COLL_NAME, process);
 		processes.add(pro1);
 		
-		process.code = CodeHelper.generateProcessCode(process);
+		process.code = CodeHelper.getInstance().generateProcessCode(process);
 		Process pro2 = MongoDBDAO.save(InstanceConstants.PROCESS_COLL_NAME, process);
 		processes.add(pro2);
 		
-		process.code = CodeHelper.generateProcessCode(process);
+		process.code = CodeHelper.getInstance().generateProcessCode(process);
 		Process pro3 = MongoDBDAO.save(InstanceConstants.PROCESS_COLL_NAME, process);
 		processes.add(pro3);
 		
-		process.code = CodeHelper.generateProcessCode(process);
+		process.code = CodeHelper.getInstance().generateProcessCode(process);
 		Process pro4 = MongoDBDAO.save(InstanceConstants.PROCESS_COLL_NAME, process);
 		processes.add(pro4);
 		
