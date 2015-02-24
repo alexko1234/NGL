@@ -581,6 +581,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			$scope.saveInProgress = true;
 			var promises = [];
 			$scope.$broadcast('save', promises, $scope.saveAll);
+			$scope.inProgressNow = false;
+			$scope.inProgressMode();
 			if($scope.experiment.value.state.code === "F"){
 				$scope.$broadcast('disableEditMode');				
 			}			
@@ -650,6 +652,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			$scope.setEditConfig(false);
 			$scope.$broadcast('refresh');
 			$scope.saveInProgress = false;
+			
 			
 			
 		},function(reason) {
@@ -729,6 +732,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 					}
 					$scope.$broadcast('refresh');
 				}
+				$scope.inProgressNow = false;
+				$scope.inProgressMode();
 				if($scope.experiment.value.state.code === "F"){
 					$scope.$broadcast('disableEditMode');
 					$scope.doneAndRecorded = true;
@@ -755,6 +760,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 					$scope.message.clazz="alert alert-success";
 					$scope.message.text=Messages('experiments.msg.save.sucess');
 					$scope.saveInProgress = false;
+					$scope.inProgressNow = false;
+					$scope.inProgressMode();
 					if($scope.experiment.value.state.code === "F"){
 						$scope.$broadcast('disableEditMode');
 					}	
@@ -944,7 +951,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 
 	$scope.possibleValuesToSelect = function(possibleValues){
 		return possibleValues.map(function(possibleValue){
-			return {"code":possibleValue.value,"name":possibleValue.value};
+			return {"code":possibleValue.code,"name":possibleValue.name};
 		});
 	};
 
@@ -1037,10 +1044,20 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 	};
 
 	//init
+	
+	$scope.inProgressMode = function(){
+		if($scope.experiment.value.state.code === "IP"){
+			$scope.inProgressNow = true;
+		}
+		
+	};
+	
 	if($routeParams.experimentCode){
 		promise = $http.get(jsRoutes.controllers.experiments.api.Experiments.get($routeParams.experimentCode).url)
 		.success(function(data, status, headers, config) {
 			experiment = data;
+			$scope.inProgressNow = false;
+			$scope.inProgressMode();
 		})
 		.error(function(data, status, headers, config) {
 			$scope.message.clazz = "alert alert-danger";
@@ -1097,6 +1114,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			$scope.lists.refresh.kitCatalogs();
 			
 			$scope.doneAndRecorded = false;
+			$scope.inProgressNow = false;
+			$scope.inProgressMode();
 
 			if(!$routeParams.experimentCode){
 				$scope.form = mainService.getForm();
@@ -1118,6 +1137,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				$scope.addSearchTabs();
 				$scope.experiment.value.instrument.outContainerSupportCategoryCode = experiment.instrument.outContainerSupportCategoryCode;
 				$scope.experiment.value = experiment;
+				$scope.inProgressNow = false;
+				$scope.inProgressMode();				
 				if($scope.experiment.value.state.code === "F"){
 					$scope.experiment.instrumentProperties.enabled = false;
 					$scope.experiment.experimentProperties.enabled = false;

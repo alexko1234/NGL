@@ -2132,19 +2132,19 @@ angular.module('datatableServices', []).
 	    							editElement = '<label ng-repeat="opt in col.possibleValues" '+defaultValueDirective+'  for="radio{{col.id}}"><input id="radio{{col.id}}" dt-html-filter="{{col.type}}" type="radio" ng-model="'+this.getEditProperty(col,hearder)+ngChange+' value="{{opt.name}}">{{opt.name}}<br></label>';
 	    							break;		    						
 	    						case "multiselect":
-	    							editElement = '<select class="form-control" multiple="true" '+defaultValueDirective+' ng-options="opt.code as opt.name '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+this.getFormatter(col)+'" ng-model="'+this.getEditProperty(col,header)+ngChange+'></select>';
+	    							editElement = '<select class="form-control" multiple="true" '+defaultValueDirective+' ng-options="opt.code as opt.name '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" ng-model="'+this.getEditProperty(col,header)+ngChange+'></select>';
 		    						break;
 	    						case "bt-select":
-	    							editElement = '<div class="form-control" bt-select '+defaultValueDirective+' placeholder="" bt-dropdown-class="dropdown-menu-right" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+this.getFormatter(col)+'" ng-model="'+this.getEditProperty(col,header)+ngChange+'></div>';			        		  	    	
+	    							editElement = '<div class="form-control" bt-select '+defaultValueDirective+' placeholder="" bt-dropdown-class="dropdown-menu-right" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" ng-model="'+this.getEditProperty(col,header)+ngChange+'></div>';			        		  	    	
 	    							break;
 								case "bt-select-filter":
-	    							editElement = '<div class="form-control" filter="true" bt-select '+defaultValueDirective+' placeholder="" bt-dropdown-class="dropdown-menu-right" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+this.getFormatter(col)+'" ng-model="'+this.getEditProperty(col,header)+ngChange+'></div>';			        		  	    	
+	    							editElement = '<div class="form-control" filter="true" bt-select '+defaultValueDirective+' placeholder="" bt-dropdown-class="dropdown-menu-right" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" ng-model="'+this.getEditProperty(col,header)+ngChange+'></div>';			        		  	    	
 	    							break;
 	    						case "bt-select-multiple":
-	    							editElement = '<div class="form-control" '+defaultValueDirective+' bt-select multiple="true" bt-dropdown-class="dropdown-menu-right" placeholder="" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+this.getFormatter(col)+'" ng-model="'+this.getEditProperty(col,header)+ngChange+'></div>';			        		  	    	
+	    							editElement = '<div class="form-control" '+defaultValueDirective+' bt-select multiple="true" bt-dropdown-class="dropdown-menu-right" placeholder="" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" ng-model="'+this.getEditProperty(col,header)+ngChange+'></div>';			        		  	    	
 	    							break;
 	    						default:
-	    							editElement = '<select class="form-control" '+defaultValueDirective+' ng-options="opt.code as opt.name '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+this.getFormatter(col)+'" ng-model="'+this.getEditProperty(col,header)+ngChange+'></select>';
+	    							editElement = '<select class="form-control" '+defaultValueDirective+' ng-options="opt.code as opt.name '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" ng-model="'+this.getEditProperty(col,header)+ngChange+'></select>';
 		    						break;
 		  	    			}		    					
 	    				}else{

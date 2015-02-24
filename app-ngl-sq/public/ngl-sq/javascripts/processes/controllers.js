@@ -520,17 +520,20 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 		.success(function(data, status, headers, config) {
 			if(data!=null){				
 				console.log(data);
-				angular.forEach(data, function(property){
-
-					
+				angular.forEach(data, function(property){					
 
 					var unit = "";
 					if(angular.isDefined(property.displayMeasureValue)){
 						unit = "("+property.displayMeasureValue+")";
-					}
-
+					}				
+						
 					column = $scope.datatable.newColumn(property.name, "properties."+property.code+".value",property.editable,false,true, $scope.getPropertyColumnType(property.valueType),property.choiceInList, property.possibleValues,{});
+					
+					column.listStyle = "bt-select";
 					column.defaultValues = property.defaultValue;
+					if(property.displayMeasureValue != undefined && property.displayMeasureValue != null){
+						column.convertValue = {"active":true, "displayMeasureValue":property.displayMeasureValue.value, "saveMeasureValue":property.saveMeasureValue.value};
+					}
 
 					$scope.datatable.addColumn(7+property.displayOrder,column);	
 				});				
@@ -541,7 +544,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			console.log(data);
 		});		
 
-	};
+	};	
 	
 	$scope.recorded = function(){
 		 if($scope.doneAndRecorded==false){
