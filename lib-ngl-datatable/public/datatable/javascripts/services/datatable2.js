@@ -1637,7 +1637,8 @@ angular.module('datatableServices', []).
 				    			    				property += that.getFilter(column);
 				    			    				property += that.getFormatter(column);
 				    			    				colValue = $parse(property)(result.data);
-				    			    				if(colValue === undefined){
+				    			    				if(colValue === undefined && angular.isFunction(property)){//Because the property here is not $parsable
+				    			    					//The function have to return a $scope value
 				    			    					colValue = property;
 				    			    				}
 				    			    				if(colValue !==  undefined && column.type === "number"){
