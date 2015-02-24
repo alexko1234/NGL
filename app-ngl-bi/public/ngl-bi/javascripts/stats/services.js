@@ -169,8 +169,8 @@
 }
 	
 
-]).factory('chartsReadSetsService', ['$http', '$q','$parse', 'datatable', 'statsConfigReadSetsService','queriesConfigReadSetsService', 'lists',
-                                     function($http, $q, $parse, datatable, statsConfigReadSetsService, queriesConfigReadSetsService, lists){
+]).factory('chartsReadSetsService', ['$http', '$q','$parse', '$window', 'datatable', 'statsConfigReadSetsService','queriesConfigReadSetsService', 'lists',
+                                     function($http, $q, $parse, $window, datatable, statsConfigReadSetsService, queriesConfigReadSetsService, lists){
 	
 	var datatableConfig = {
 			group : {
@@ -376,29 +376,20 @@
 								
 								var property = getProperty(statsConfig.column);
 								var data = readsetDatatable.getData();
+								var groupValues;
 								
 								
-								
-								var cat = [{}]
-								var series = [{
-									data : []
-								}];
-								var tmpData = [];
 								if(readsetDatatable.config.group.by != undefined){
-									for (var i = 0; i < data.length; i++ ){
-										if(cat.indexOf(data[i][readsetDatatable.config.group.by.property]) === -1){
-											cat.push(data[i][readsetDatatable.config.group.by.property]);
-										}
-									}
-									cat.splice(0,1);
-									for(i = 0; i < cat.length; i++){
-										for(var j = 0; j < data.length; j++){
-											if(data[j][readsetDatatable.config.group.by.property] === cat[i]) tmpData.push(data[j]);											
-										}
-										series.push(tmpData);
-										tmpData = [];
-									}
-									series.splice(0,1);
+									var propertyGroupGetter = readsetDatatable.config.group.by.property;
+		    						var groupGetter = $parse(propertyGroupGetter);
+		    						groupValues = readsetDatatable.allResult.reduce(function(array, value){
+			    						var groupValue = groupGetter(value);
+				    					if(!array[groupValue]){
+				    						array[groupValue]=[];
+				    					}
+				    					array[groupValue].push(value);
+				    					return array;
+				    				}, {});
 								}
 								
 
@@ -423,8 +414,8 @@
 									var dataForZscore = [{}];
 									var dataTemp = [];
 									var k = 0;
-									for(var i = 0; i < series.length; i++){
-										for(var j = 0; j < series[i].length; j++){
+									for(var key in groupValues){
+										for(var i = 0; i < groupValues[key].length; i++){
 											dataForZscore.push(zscodeData[k]);
 											k++;
 										}
@@ -433,52 +424,49 @@
 										dataForZscore = [{}];
 									}
 									zscodeData = dataTemp;
-									
 								}
 								
 								
 								// Creating object allSeries that'll contain all our series, whether or not we're using group function on datatable
 								var allSeries = [{}];
-								var begin = 0;
 								if(readsetDatatable.config.group.by != undefined){
-									for(var i = 0; i < zscodeData.length; i++){
+									var begin = 0;
+									var i = 0;
+									for(var key in groupValues){
 										allSeries[i] = {
 											point : {
 												events : {
 													// Redirects to valuation page of the clicked readset
-													click : function(e) {
-														location.href = '/readsets/' + this.name + '/valuation';
+													click : function() {
+														$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.get(this.name).url);
 													}
 												}
 											},
 											pointStart: begin,
 											data : zscodeData[i],
-											name : cat[i],
+											name : key,
 											turboThreshold : 0,
 											type : 'column',
 										}
-										begin+= zscodeData[i].length;
+										begin+= groupValues[key].length;
+										i++;
 									}
 								}else{
-									allSeries = [{}];
 									allSeries[0] = {
 											point : {
 												events : {
 													// Redirects to valuation page of the clicked readset
-													click : function(e) {
-														location.href = '/readsets/' + this.name + '/valuation';
+													click : function() {
+														$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.get(this.name).url);
 													}
 												}
 											},
-											
 											type : 'column',
 											name : 'z-score',
 											data : zscodeData,
 											turboThreshold : 0
 									}
 								}
-								
-								
 								
 								var chart = {
 									chart : {
