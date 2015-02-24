@@ -36,22 +36,22 @@ public class CodeHelper {
 
 	public synchronized String generateKitCatalogCode(String kitCatalogName) {
 		return StringUtils.stripAccents(kitCatalogName.toUpperCase()
-				.replaceAll("\\s", ""));
+				.replaceAll("\\s", "").replaceAll("/", ""));
 	}
 
 	public synchronized String generateBoxCatalogCode(String kitCatalogCode,
 			String boxCatalogName) {
 		return StringUtils.stripAccents(kitCatalogCode + "-"
-				+ boxCatalogName.toUpperCase().replaceAll("\\s", ""));
+				+ boxCatalogName.toUpperCase().replaceAll("\\s", "").replaceAll("/", ""));
 	}
 
 	public synchronized String generateReagentCatalogCode(String reagentCatalogName) {
 		return StringUtils.stripAccents(reagentCatalogName.toUpperCase()
-				.replaceAll("\\s", ""));
+				.replaceAll("\\s", "").replaceAll("/", ""));
 	}
 
-	public synchronized String generateContainerSupportCode() {
-		 try {
+	private synchronized String generateBarCode(){
+		try {
 			Thread.sleep(1);
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
@@ -63,7 +63,7 @@ public class CodeHelper {
 		// Matcher m = p.matcher("151231235959999");//worst situation
 		Matcher m = p.matcher(date);
 		if (m.matches()) {
-			String code = Integer.toString(Integer.valueOf(m.group(1)),
+			String code = Integer.toString(Integer.valueOf(Integer.valueOf(m.group(1))-15),//Years 0 is 2015
 					36);// year
 			code += Integer.toString(Integer.valueOf(m.group(2)), 36);// month
 			code += Integer.toString(Integer.valueOf(m.group(3)), 36);// day
@@ -75,7 +75,7 @@ public class CodeHelper {
 
 			code += Integer.toString(Integer.valueOf(m.group(7)) + 36, 36);// millisecond
 			Logger.debug("Container code generated "+code);
-			return code;
+			return code.toUpperCase();
 		} else {
 			try {
 				Logger.error("Error matches of the date fail"+date);
@@ -87,13 +87,14 @@ public class CodeHelper {
 			}
 		}
 	}
+	
+	public synchronized String generateContainerSupportCode() {
+		 return generateBarCode();
+	}
 
 	// ProcessusTypeCode-ProjectCode-SampeCode-YYYYMMDDHHMMSSSS
 	public synchronized String generateProcessCode(Process process) {
-		Random randomGenerator = new Random();
-		return ("P-" + process.typeCode + "-" + process.sampleCode + "-"
-				+ new SimpleDateFormat("yyyyMMdd_HHmmssSS").format(new Date()) + randomGenerator
-				.nextInt(100)).toUpperCase();
+		return (process.sampleCode + "_" + process.typeCode + "_" + generateBarCode()).toUpperCase();
 	}
 
 	public synchronized String generateExperiementCode(Experiment exp) {
