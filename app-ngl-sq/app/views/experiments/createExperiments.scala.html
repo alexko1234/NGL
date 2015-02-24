@@ -124,7 +124,7 @@
 					}
 			    	@columnLabelValue(Messages("experiments.resolution")){
 							
-							<div bt-select class="form-control"  bt-select ng-model="experiment.value.state.resolutionCodes" multiple="true" placeholder="@Messages("experiments.select.resolutions")" bt-options="valid.code as valid.name group by valid.category.name for valid in lists.getResolutions()"  ng-edit="isEditMode()" ></div>							
+							<div bt-select class="form-control"  bt-select ng-model="experiment.value.state.resolutionCodes" multiple="true" placeholder="@Messages("experiments.select.resolutions")" bt-options="valid.code as valid.name group by valid.category.name for valid in lists.getResolutions()"  ng-edit="experiment.experimentInformation.enabled" ></div>							
 							
 					}	
 					
