@@ -5,7 +5,9 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.laboratory.reagent.description.AbstractCatalog;
 import models.laboratory.reagent.description.KitCatalog;
+import models.laboratory.reagent.instance.Kit;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
@@ -26,6 +28,7 @@ import views.components.datatable.DatatableResponse;
 import com.mongodb.BasicDBObject;
 
 import controllers.DocumentController;
+import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
 public class KitCatalogs extends DocumentController<KitCatalog>{
@@ -42,6 +45,11 @@ public class KitCatalogs extends DocumentController<KitCatalog>{
 		}
 		
 		return badRequest();
+	}
+	
+	public Result delete(String code){
+		MongoDBDAO.delete(InstanceConstants.REAGENT_CATALOG_COLL_NAME, AbstractCatalog.class, DBQuery.or(DBQuery.is("code", code),DBQuery.is("kitCatalogCode", code)));
+		return ok();
 	}
 	
 	public Result save(){
@@ -140,7 +148,6 @@ public class KitCatalogs extends DocumentController<KitCatalog>{
 		if(kitCatalogSearch.experimentTypeCodes != null){
 			queryElts.add(DBQuery.in("experimentTypeCodes", kitCatalogSearch.experimentTypeCodes));
 		}
-		
 		
 		queryElts.add(DBQuery.is("active", kitCatalogSearch.isActive));
 		

@@ -19,6 +19,7 @@ import views.components.datatable.DatatableResponse;
 
 import com.mongodb.BasicDBObject;
 
+import models.laboratory.reagent.description.AbstractCatalog;
 import models.laboratory.reagent.description.BoxCatalog;
 import models.laboratory.reagent.description.KitCatalog;
 import models.utils.CodeHelper;
@@ -26,6 +27,7 @@ import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.ListObject;
 import controllers.DocumentController;
+import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
 public class BoxCatalogs extends DocumentController<BoxCatalog>{
@@ -43,7 +45,7 @@ public class BoxCatalogs extends DocumentController<BoxCatalog>{
 			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
 			if(ValidationHelper.required(contextValidation, boxCatalog.name, "name")){
 				if(boxCatalog._id == null){
-					boxCatalog.code = CodeHelper.getInstance().generateBoxCatalogCode(boxCatalog.kitCatalogCode, boxCatalog.name);
+					boxCatalog.code = CodeHelper.getInstance().generateBoxCatalogCode(boxCatalog.kitCatalogCode);
 					contextValidation.setCreationMode();
 				}else{
 					contextValidation.setUpdateMode();
@@ -55,6 +57,11 @@ public class BoxCatalogs extends DocumentController<BoxCatalog>{
 			}
 		}
 		return badRequest(mainForm.errorsAsJson());
+	}
+	
+	public Result delete(String code){
+		MongoDBDAO.delete(InstanceConstants.REAGENT_CATALOG_COLL_NAME, AbstractCatalog.class, DBQuery.or(DBQuery.is("code", code),DBQuery.is("boxCatalogCode", code)));
+		return ok();
 	}
 	
 	public Result list(){

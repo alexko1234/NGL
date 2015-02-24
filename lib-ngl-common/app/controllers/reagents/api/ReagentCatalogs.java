@@ -5,6 +5,7 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.laboratory.reagent.description.AbstractCatalog;
 import models.laboratory.reagent.description.ReagentCatalog;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
@@ -25,6 +26,7 @@ import views.components.datatable.DatatableResponse;
 import com.mongodb.BasicDBObject;
 
 import controllers.DocumentController;
+import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
 public class ReagentCatalogs extends DocumentController<ReagentCatalog>{
@@ -50,6 +52,11 @@ public class ReagentCatalogs extends DocumentController<ReagentCatalog>{
 			}
 		}
 		return badRequest(mainForm.errorsAsJson());
+	}
+	
+	public Result delete(String code){
+		MongoDBDAO.delete(InstanceConstants.REAGENT_CATALOG_COLL_NAME, AbstractCatalog.class, DBQuery.or(DBQuery.is("code", code)));
+		return ok();
 	}
 	
 	public Result list(){

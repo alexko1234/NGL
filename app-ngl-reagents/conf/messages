@@ -6,12 +6,14 @@ catalogs.kit.creation = Création d'un nouveau kit dans le catalogue
 catalogs.kit.edit = Modification dans le catalogue du kit
 catalogs.kit.creation.edit = Editer le kit
 catalogs.kit.creation.save = Sauvegarder le kit
+catalogs.kit.creation.remove = Supprimer le kit
 catalogs.kit.creation.unedit = Annuler
 catalogs.kit.creation.placeholder.experimentTypes = Select. le ou les type(s) d'exp.
 
 catalogs.box.list = Boite(s) contenue(s) dans le kit
 catalogs.box.empty = Aucune boite dans ce kit
 catalogs.box.add = Ajouter une boite
+catalogs.box.creation.remove = Supprimer cette boite et ses réactifs ?
 
 kits.name = Nom kit (usuel)
 kits.experimentTypes = Expérience(s)
@@ -19,9 +21,11 @@ kits.provider = Fournisseur
 kits.code = Code
 kits.providerRefName = Nom kit (fournisseur)
 kits.active = En cours d'utilisation
+kits.select.experimentTypeCodes = Type experiences
 
 boxes.name = Nom de la boite
 boxes.storageConditions = Conditions de stockage (°C)
+
 
 kitCatalogs.tabs.create = Création d'un kit dans le catalogue
 kitCatalogs.tabs.search = Rechercher un kit dans le catalogue
@@ -33,6 +37,8 @@ reagents.msg.save.error = Sauvegarde echouée
 reagents.msg.details = [détails]
 reagents.msg.empty.save.error = Incomplet - Sauvegarde echouée
 reagents.msg.load.error = Ce kit n''est pas dans le catalogue
+reagents.msg.delete.sucess = Suppression réussie
+reagents.msg.delete.error = Suppression echouée
 
 reagents.table.code = Code du réactif
 reagents.table.name = Nom du réactif

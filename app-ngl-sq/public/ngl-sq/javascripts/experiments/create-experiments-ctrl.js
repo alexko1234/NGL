@@ -124,6 +124,14 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			         }
 	};
 
+	 $scope.onScan = function(e, propertyName){
+	        console.log(e);
+	        if(e.keyCode === 9){
+	            $scope[propertyName] += '-';
+	            e.preventDefault();
+	        }
+	};
+	 
 	$scope.message = {};
 
 	$scope.getPropertyColumnType = function(type){

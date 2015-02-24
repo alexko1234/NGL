@@ -34,14 +34,17 @@ public class KitCatalogs extends CommonController{
 						controllers.reagents.tpl.routes.javascript.KitCatalogs.createOrEdit(),
 						controllers.reagents.tpl.routes.javascript.KitCatalogs.get(),
 						controllers.reagents.api.routes.javascript.KitCatalogs.save(),
+						controllers.reagents.api.routes.javascript.KitCatalogs.delete(),
 						controllers.reagents.api.routes.javascript.KitCatalogs.list(),
 						controllers.reagents.api.routes.javascript.BoxCatalogs.list(),
 						controllers.reagents.api.routes.javascript.BoxCatalogs.save(),
+						controllers.reagents.api.routes.javascript.BoxCatalogs.delete(),
 						controllers.reagents.api.routes.javascript.KitCatalogs.update(),
 						controllers.reagents.api.routes.javascript.KitCatalogs.get(),
 						controllers.reagents.tpl.routes.javascript.KitCatalogs.home(),
 						controllers.reagents.tpl.routes.javascript.KitCatalogs.search(),
 						controllers.reagents.api.routes.javascript.ReagentCatalogs.save(),
+						controllers.reagents.api.routes.javascript.ReagentCatalogs.delete(),
 						controllers.reagents.api.routes.javascript.ReagentCatalogs.list(),
 		  	    		controllers.experiments.api.routes.javascript.ExperimentTypes.list()
 						)

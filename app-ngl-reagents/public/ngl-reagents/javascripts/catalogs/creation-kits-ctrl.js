@@ -41,6 +41,8 @@
 				},
 				remove:{
 					active:true,
+					mode:"remote",
+					url:function(reagent){ return jsRoutes.controllers.reagents.api.ReagentCatalogs.delete(reagent.code).url;}
 				},
 				save:{
 					active:true,
@@ -53,9 +55,9 @@
 								//All the datatables are now saved
 								$location.path(jsRoutes.controllers.reagents.tpl.KitCatalogs.get($scope.kit.code).url);
 							}
-						 }else{
+						 }else if(errors > 0){
 							 $scope.message.clazz = 'alert alert-danger';
-								$scope.message.text = Messages('reagents.msg.load.error');
+								$scope.message.text = Messages('reagents.msg.save.error');
 								$scope.message.isDetails = false;
 						 }
 					}
@@ -91,6 +93,52 @@
 	 $scope.datatables = [];
 	 $scope.datatableSaved = 0;
 	 
+	 $scope.removeKit = function(){
+		 if($scope.kit !== undefined && $scope.kit.code !== ""  && confirm("Etes vous sur de vouloir supprimer le kit "+$scope.kit.code+" ?")){
+			 $http.delete(jsRoutes.controllers.reagents.api.KitCatalogs.delete($scope.kit.code).url)
+				.success(function(data, status, headers, config) {
+					if(data!=null){
+						$scope.message.clazz="alert alert-success";
+						$scope.message.text=Messages('reagents.msg.delete.sucess');
+					}
+				})
+				.error(function(data, status, headers, config) {
+					$scope.message.clazz = 'alert alert-danger';
+					$scope.message.text = Messages('reagents.msg.delete.error');
+					$scope.mainService.addErrors("kit",data);
+					$scope.message.details = data;
+					$scope.message.isDetails = true;
+				});
+		 }
+	 };
+	 
+	 $scope.removeBox = function(index,code){
+		 if(code !== undefined  && code !== ""  && confirm("Etes vous sur de vouloir supprimer la boite "+code+" ?")){
+			 $http.delete(jsRoutes.controllers.reagents.api.BoxCatalogs.delete(code).url)
+				.success(function(data, status, headers, config) {
+					if(data!=null){
+						for(var i=0;i<$scope.boxes.length;i++){
+							if($scope.boxes[i].code === code){
+								$scope.datatables = $scope.datatables.slice(i+1,1);
+								$scope.boxes = $scope.boxes.slice(i+1,1);
+								break;
+							}
+						}
+					}
+				})
+				.error(function(data, status, headers, config) {
+					$scope.message.clazz = 'alert alert-danger';
+					$scope.message.text = Messages('reagents.msg.save.error');
+					$scope.saveInProgress = false;
+					$scope.message.details = data;
+					$scope.message.isDetails = true;
+				});
+		 }else if(confirm("Etes vous sur de vouloir supprimer la boite ?")){
+			 $scope.datatables = $scope.datatables.slice(index+1,1);
+			 $scope.boxes = $scope.boxes.slice(index+1,1);
+		 }
+	 }
+	 
 	 $scope.getClass = function(fieldName){
 		 if($scope.mainService.getError(fieldName) !== undefined && $scope.mainService.getError(fieldName) !== ""){
 			 return "has-error";
@@ -106,11 +154,14 @@
 			 return Messages("catalogs.kit.creation");
 		 }
 		 var name = $scope.kit.name;
-		 if(name.length > 30){
-			 name = name.substring(0,30)+"...";
+			 if(name !== undefined){
+			 if(name.length > 30){
+				 name = name.substring(0,30)+"...";
+			 }
+			 
+			 return name;
 		 }
-		 
-		 return name;
+	     return "";
 	 }
 	 
 	 $scope.newReagent = function(index, box){

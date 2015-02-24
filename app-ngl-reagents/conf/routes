@@ -16,15 +16,18 @@ GET		/tpl/reagent-catalogs/search									@controllers.reagents.tpl.KitCatalogs.
 GET 	/api/reagent-catalogs/kits/:code								@controllers.reagents.api.KitCatalogs.get(code: java.lang.String)
 GET 	/api/reagent-catalogs/kits										@controllers.reagents.api.KitCatalogs.list()
 POST 	/api/reagent-catalogs/kits										@controllers.reagents.api.KitCatalogs.save()
+DELETE 	/api/reagent-catalogs/kits/:code								@controllers.reagents.api.KitCatalogs.delete(code: java.lang.String)
 PUT 	/api/reagent-catalogs/kits										@controllers.reagents.api.KitCatalogs.update()
 
 #Box catalogs API
 GET 	/api/reagent-catalogs/boxes										@controllers.reagents.api.BoxCatalogs.list()
 POST 	/api/reagent-catalogs/boxes										@controllers.reagents.api.BoxCatalogs.save()
+DELETE 	/api/reagent-catalogs/boxes/:code								@controllers.reagents.api.BoxCatalogs.delete(code: java.lang.String)
 
 #Reagent catalogs API
 GET 	/api/reagent-catalogs/reagents										@controllers.reagents.api.ReagentCatalogs.list()
 POST 	/api/reagent-catalogs/reagents										@controllers.reagents.api.ReagentCatalogs.save()
+DELETE 	/api/reagent-catalogs/reagents/:code								@controllers.reagents.api.ReagentCatalogs.delete(code: java.lang.String)
 
 GET		/api/experiment/types											controllers.experiments.api.ExperimentTypes.list()
 

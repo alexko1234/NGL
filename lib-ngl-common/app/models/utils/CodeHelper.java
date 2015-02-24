@@ -35,19 +35,16 @@ public class CodeHelper {
 	}
 
 	public synchronized String generateKitCatalogCode(String kitCatalogName) {
-		return StringUtils.stripAccents(kitCatalogName.toUpperCase()
-				.replaceAll("\\s", "").replaceAll("/", ""));
+		return generateBarCode();
 	}
 
-	public synchronized String generateBoxCatalogCode(String kitCatalogCode,
-			String boxCatalogName) {
+	public synchronized String generateBoxCatalogCode(String kitCatalogCode) {
 		return StringUtils.stripAccents(kitCatalogCode + "-"
-				+ boxCatalogName.toUpperCase().replaceAll("\\s", "").replaceAll("/", ""));
+				+ generateBarCode());
 	}
 
-	public synchronized String generateReagentCatalogCode(String reagentCatalogName) {
-		return StringUtils.stripAccents(reagentCatalogName.toUpperCase()
-				.replaceAll("\\s", "").replaceAll("/", ""));
+	public synchronized String generateReagentCatalogCode(String boxCatalogCode) {
+		return boxCatalogCode + "-" + generateBarCode();
 	}
 
 	private synchronized String generateBarCode(){
