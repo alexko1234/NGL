@@ -134,8 +134,8 @@ public class Processes extends CommonController{
 
 		for(Content c:container.contents){		
 			//code generation
-			process.code = CodeHelper.getInstance().generateProcessCode(process);
 			process.sampleCode = c.sampleCode;
+			process.code = CodeHelper.getInstance().generateProcessCode(process);
 			process.sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(c, container);				
 			Process p = (Process)InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,process, contextValidation);
 			Logger.info("New process code : "+process.code);
