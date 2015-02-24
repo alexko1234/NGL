@@ -44,11 +44,12 @@ public class AddSampleOnInputContainerInProcess extends CommonController {
 	}
 
 	private static void AddSampleOnInputContainer(){
-		List<Process> processes = MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class).toList();
+		List<Process> processes = MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("typeCode", "opgen-run")).toList();
 		Logger.debug("Migre " + processes.size() + " PROCESSES");
 		for (Process process : processes) {
 			Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
 					process.containerInputCode);
+			Logger.debug("Container Code="+ container.code);
 			for (Content content : container.contents) {
 				if ((process.sampleCode).equals(content.sampleCode)){
 					process.sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(content,container);
