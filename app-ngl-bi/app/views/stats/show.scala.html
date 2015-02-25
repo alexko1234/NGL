@@ -7,7 +7,7 @@
 			<div class="form-control" 
 				 bt-select 
 				 ng-model="chartsReadSetsService.reportingConfigurationCode" 
-				 ng-change="chartsReadSetsService.init()" 
+				 ng-change="chartsReadSetsService.changeConfig()" 
 				 placeholder="@Messages("search.placeholder.reporting.configuration")" 
 				 bt-options="valid.code as valid.name for valid in chartsReadSetsService.lists.get('statsConfigs')">
 			</div>
