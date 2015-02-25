@@ -48,6 +48,7 @@ public class ContainerTests extends AbstractTests {
 		Assert.assertEquals(contextValidation.errors.size(),0);
 		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code", AllTests.prepaCodes)).toList();
 		for(Container container:containers){
+			assertThat(container.contents.get(0).properties.get("libLayoutNominalLength")).isNotNull();
 			assertThat(container.contents.get(0).properties.get("libProcessTypeCode")).isNotNull();
 			assertThat(container.contents.get(0).properties.get("sequencingProgramType")).isNull();
 		}
@@ -71,6 +72,7 @@ public class ContainerTests extends AbstractTests {
 		Assert.assertEquals(contextValidation.errors.size(),0);
 		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code", AllTests.prepaExtCodes)).toList();
 		for(Container container:containers){
+			assertThat(container.contents.get(0).properties.get("libLayoutNominalLength")).isNull();
 			assertThat(container.contents.get(0).properties.get("libProcessTypeCode")).isNotNull();
 			assertThat(container.contents.get(0).percentage).isNotNull();
 		}
@@ -100,6 +102,7 @@ public class ContainerTests extends AbstractTests {
 		Assert.assertEquals(containerSupports.size(),solutionStocks.size());
 
 		for(Container container:containers){
+			assertThat(container.contents.get(0).properties.get("libLayoutNominalLength")).isNotNull();
 			assertThat(container.contents.get(0).properties.get("libProcessTypeCode")).isNotNull();
 			assertThat(((PropertySingleValue) container.mesuredConcentration).unit).isEqualTo("nM");
 			assertThat(container.contents.get(0).percentage).isNotNull();
