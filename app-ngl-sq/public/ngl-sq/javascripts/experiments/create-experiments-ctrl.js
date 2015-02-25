@@ -50,14 +50,16 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			        	 "property":"boxCode",
 			        	 "order":true,
 			        	 "type":"text",
-			        	 "edit":true
+			        	 "edit":true,
+			        	 "editDirectives":'ng-keydown="scan($event,value.data,\'boxCode\')"'
 			         },
 			         {
 			        	 "header":Messages("reagents.table.reagentcode"),
 			        	 "property":"code",
 			        	 "order":true,
 			        	 "type":"text",
-			        	 "edit":true
+			        	 "edit":true,
+			        	 "editDirectives":'ng-keydown="scan($event,value.data,\'code\')"'
 			         },
 			         {
 			        	 "header":Messages("reagents.table.description"),
@@ -124,13 +126,15 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			         }
 	};
 
-	 $scope.onScan = function(e, propertyName){
+	 $scope.scan = function(e, property, propertyName){
+		 	console.log(property);
 	        console.log(e);
-	        if(e.keyCode === 9){
-	            $scope[propertyName] += '-';
+	        if(e.keyCode === 9 || e.keyCode === 13){
+	        	property[propertyName] += '-';
+	        	console.log(property);
 	            e.preventDefault();
 	        }
-	};
+	 };
 	 
 	$scope.message = {};
 

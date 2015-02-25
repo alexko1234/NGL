@@ -134,8 +134,8 @@
 					$scope.message.isDetails = true;
 				});
 		 }else if(confirm("Etes vous sur de vouloir supprimer la boite ?")){
-			 $scope.datatables = $scope.datatables.slice(index+1,1);
-			 $scope.boxes = $scope.boxes.slice(index+1,1);
+			 $scope.datatables = $scope.datatables.splice(index,1);
+			 $scope.boxes = $scope.boxes.splice(index,1);
 		 }
 	 }
 	 
