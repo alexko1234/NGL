@@ -25,6 +25,8 @@ datatable.export.sum =  (Somme)
 datatable.export.average =  (Moyenne)
 datatable.export.unique =  (Valeur uniq.)
 datatable.export.countDistinct =  (Nb. distinct d'occurence)
+datatable.export.yes = Oui
+datatable.export.no = Non
 
 datatable.remove.confirm = Pouvez-vous confirmer la suppression ?
 
