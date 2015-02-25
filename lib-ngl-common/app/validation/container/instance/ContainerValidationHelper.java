@@ -91,7 +91,9 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 
 	
 	public static void validateStateCode(Container container,ContextValidation contextValidation) {
-		if(( CollectionUtils.isEmpty(container.inputProcessCodes) || !container.state.historical.get(container.state.historical.size() - 2).code.equals("UA")) && container.state.code.equals("A") ){
+		
+//		if(( CollectionUtils.isEmpty(container.inputProcessCodes) || !container.state.historical.get(container.state.historical.size() - 2).code.equals("UA")) && container.state.code.equals("A") ){
+		if( CollectionUtils.isEmpty(container.inputProcessCodes) && container.state.code.equals("A") ){
 			contextValidation.addErrors("state.code",ValidationConstants.ERROR_BADSTATE_MSG,container.code );
 		}
 		if(CollectionUtils.isNotEmpty(container.inputProcessCodes) && container.state.code.equals("IW-P")){
