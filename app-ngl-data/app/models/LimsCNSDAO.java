@@ -370,9 +370,14 @@ public class LimsCNSDAO{
 				sampleUsed.percentage=rs.getDouble("percentPerLane");
 				sampleUsed.properties.put("libProcessTypeCode",new PropertySingleValue(rs.getString("libProcessTypeCode")));
 				if(rs.getString("tag")!=null){
-					sampleUsed.properties.put("tag",new PropertySingleValue(rs.getString("tag")));
+					sampleUsed.properties.put("tag", new PropertySingleValue(rs.getString("tag")));
 					sampleUsed.properties.put("tagCategory",new PropertySingleValue(DataMappingCNS.getTagCategory(rs.getString("tagCategory"))));
 				}
+				
+				if(rs.getString("libLayoutNominalLength") != null){
+					sampleUsed.properties.put("libLayoutNominalLength", new PropertySingleValue(rs.getInt("libLayoutNominalLength")));
+				}
+				
 				return sampleUsed;
 			}
 
