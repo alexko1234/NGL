@@ -1331,9 +1331,9 @@ angular.module('datatableServices', []).
 		    							if(!columns[i].width)columns[i].width='100%';
 		    						}
 		    						
-			    					if(columns[i].id == null){
-			    						columns[i].id = this.generateColumnId();
-			    					}
+			    					
+			    					columns[i].id = this.generateColumnId();
+			    					
 			    					if(columns[i].hide && !this.config.hide.active){
 			    						columns[i].hide = false;
 			    					}
@@ -1645,8 +1645,18 @@ angular.module('datatableServices', []).
 				    			    				if(colValue !==  undefined && column.type === "number"){
 				    			    					colValue = colValue.replace(/\u00a0/g,"");
 				    			    				}
+				    			    				if(colValue === undefined && column.type === "boolean"){
+				    			    					colValue = Messages('datatable.export.no');
+				    			    				}else if(colValue !== undefined && column.type === "boolean"){
+				    			    					if(colValue){
+				    			    						colValue = Messages('datatable.export.yes');
+				    			    					}else{
+				    			    						colValue = Messages('datatable.export.no')
+				    			    					}
+				    			    				}
 					    							lineValue = lineValue + ((colValue!==null)&&(colValue)?colValue:"") + delimiter;
 				    			    			} else if(result.line.group) {
+				    			    				
 				    			    				var v = $parse("group."+column.id)(result.data);
 				    			    				//if error in group function
 				    			    				if (angular.isDefined(v) && angular.isString(v) && v.charAt(0) === "#") {
