@@ -157,7 +157,7 @@
 					    </td>  -->
 					</tr>		
 					
-					<tr ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable><td colspan=6 id="dropZone"> </td></tr>
+					<tr ng-if="doneAndRecorded==false && inProgressNow==false" ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable><td colspan=6 id="dropZone"> </td></tr>
 				</table>
 			</div>
 			</td>			
