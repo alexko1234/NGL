@@ -6,8 +6,13 @@ import static org.junit.Assert.assertTrue;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,6 +23,7 @@ import lims.models.experiment.illumina.DepotSolexa;
 import lims.models.runs.EtatTacheHD;
 import lims.models.runs.TacheHD;
 import models.laboratory.common.instance.property.PropertyFileValue;
+import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
@@ -36,6 +42,7 @@ import fr.cea.ig.MongoDBDAO;
 import play.Logger;
 import play.api.libs.Files;
 import play.api.modules.spring.Spring;
+import play.data.format.Formats.DateFormatter;
 import play.libs.XML;
 import play.libs.XPath;
 import utils.AbstractTestsCNG;
@@ -142,7 +149,7 @@ public class LimsCreationRunTest extends AbstractTestsCNS {
 		
 	}
 	
-	@Test
+	
 	public void insertRunSolexaComplete() {
 		if (play.Play.application().configuration().getString("institute").equals("CNS")) {
 			
@@ -201,17 +208,21 @@ public class LimsCreationRunTest extends AbstractTestsCNS {
 		}
 		
 	}
-	@Test
+	
 	public void compareDatarun() throws Exception{
 		if (play.Play.application().configuration().getString("institute").equals("CNS")) {
-			java.io.File fBefore = new java.io.File("H:/Windows/Desktop/ngsrgtests/before.txt");
-			java.io.File fAfter = new java.io.File("H:/Windows/Desktop/ngsrgtests/after.txt");
+			java.io.File fBefore = new java.io.File("H:/Windows/Desktop/ngsrgtests/q1_before.txt");
+			java.io.File fAfter = new java.io.File("H:/Windows/Desktop/ngsrgtests/q1_after.txt");
 			
 			BufferedReader brB = new BufferedReader(new FileReader(fBefore));
 			BufferedReader brA = new BufferedReader(new FileReader(fAfter));
 			
-			String[] headerB = brB.readLine().trim().split("[\\t\\s]+");
-			String[] headerA = brA.readLine().trim().split("[\\t\\s]+");
+			//String[] headerB = brB.readLine().trim().split("[\\t\\s]+");
+			//String[] headerA = brA.readLine().trim().split("[\\t\\s]+");
+			
+			String[] headerB = brB.readLine().trim().split(";");
+			String[] headerA = brA.readLine().trim().split(";");
+			
 			
 			if(headerA.length != headerB.length)throw new RuntimeException("Pb Header Number");
 			
@@ -227,16 +238,18 @@ public class LimsCreationRunTest extends AbstractTestsCNS {
 			String lineB, lineA, runCode="";
 			while ((lineB = brB.readLine()) != null && (lineA = brA.readLine()) != null) {
 			    
-			   String[] arrayB = lineB.trim().split("[\\t\\s]+");
-			   
+			   //String[] arrayB = lineB.trim().split("[\\t\\s]+");
+				String[] arrayB = lineB.trim().split(";");
+				/*
 			   if(!runCode.equals(arrayB[0])){
 				   runCode = arrayB[0];
 				   Logger.debug("RunCode = "+runCode);
 			   }
-			   
+			   */
 			   
 			  // Logger.debug(Arrays.toString(arrayB));
-			   String[] arrayA = lineA.trim().split("[\\t\\s]+");
+			   //String[] arrayA = lineA.trim().split("[\\t\\s]+");
+			   String[] arrayA = lineA.trim().split(";");
 			   FileLine listB = new FileLine(headerB, arrayB);
 			   FileLine listA = new FileLine(headerA, arrayA);
 			   
@@ -296,5 +309,36 @@ public class LimsCreationRunTest extends AbstractTestsCNS {
 			*/
 		}
 		
+	}
+	
+	@Test
+	public void testMD5() throws Exception{
+		
+		MessageDigest digest = MessageDigest.getInstance("SHA-256");
+		 
+		
+		List<ContainerSupport> l = MongoDBDAO.find("ngl_sq.ContainerSupport_init", ContainerSupport.class).limit(100).toList();
+		for(ContainerSupport c : l){
+			Logger.debug("key ="+convert(digest.digest(c.code.getBytes("UTF-8"))));
+		}
+		//SimpleDateFormat sdf = new SimpleDateFormat("yyDDDHHmmssSSS");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+		
+		for(int i = 0; i < 100; i++){
+			Date d = sdf.parse(2015+i+"1231245959999");
+			//Date d = new Date("2015/12/31");
+			Logger.debug(d.getTime()+"");
+			Thread.sleep(100);
+		}
+	}
+
+
+	private String convert(byte[] digest) {
+		StringBuffer stringBuffer = new StringBuffer();
+	    for (int i = 0; i < digest.length; i++) {
+	        stringBuffer.append(Integer.toString((digest[i] & 0xff) + 0x100, 16)
+	                .substring(1));
+	    }
+	    return stringBuffer.toString();
 	}
 }
