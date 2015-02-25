@@ -320,7 +320,7 @@ public class Runs extends RunsController {
 		}		
 		MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, run);	
 		MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", code));
-
+		//TODO delete analysis
 		return ok();
 	}
 

@@ -418,6 +418,8 @@ public class ReadSets extends ReadSetsController{
 					DBUpdate.pull("sampleCodes", readSet.sampleCode));
 		}
 		
+		//TODO delete analysis
+		
 		return ok();
 	}
 	
