@@ -21,6 +21,7 @@ import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
+import workflows.Workflows;
 
 public class ContainerValidationHelper extends CommonValidationHelper{
 
@@ -90,7 +91,10 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 
 	
 	public static void validateStateCode(Container container,ContextValidation contextValidation) {
-		if(CollectionUtils.isEmpty(container.inputProcessCodes) && container.state.code.equals("A") ){
+		if(( CollectionUtils.isEmpty(container.inputProcessCodes) || !container.state.historical.get(container.state.historical.size() - 2).code.equals("UA")) && container.state.code.equals("A") ){
+			contextValidation.addErrors("state.code",ValidationConstants.ERROR_BADSTATE_MSG,container.code );
+		}
+		if(CollectionUtils.isNotEmpty(container.inputProcessCodes) && container.state.code.equals("IW-P")){
 			contextValidation.addErrors("state.code",ValidationConstants.ERROR_BADSTATE_MSG,container.code );
 		}
 		contextValidation.addKeyToRootKeyName("state");
