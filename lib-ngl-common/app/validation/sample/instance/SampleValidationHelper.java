@@ -22,7 +22,6 @@ public class SampleValidationHelper extends CommonValidationHelper {
 
 	public static void validateSampleCategoryCode(String categoryCode,
 			ContextValidation contextValidation) {
-		Logger.debug("CategoryCode "+categoryCode);
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "categoryCode", SampleCategory.find,false);
 
 	}
