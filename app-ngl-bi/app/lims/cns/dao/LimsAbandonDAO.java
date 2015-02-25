@@ -279,6 +279,8 @@ public class LimsAbandonDAO {
 			@lbscoreQ30 numeric(5,2), 
 			@lbscorequal numeric(5,2) 
 		 */
+		Logger.info("insertReadSet : "+rs.code);
+		
 		Long lseqnbseqval = (Long) getNGSRGProperty(rs.treatments.get("ngsrg"),"nbCluster");
 		Long lseqnbbase = (Long) getNGSRGProperty(rs.treatments.get("ngsrg"),"nbBases");
 		Double lbscoreQ30 = (Double) getNGSRGProperty(rs.treatments.get("ngsrg"),"Q30");
