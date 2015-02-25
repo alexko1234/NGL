@@ -175,7 +175,6 @@
 									filter:"codes:'state'",
 									header: "readsets.stateCode",
 									type :"text",
-									edit:true,
 									order:true,
 							    	choiceInList:true,
 							    	listStyle:'bt-select',
@@ -196,19 +195,6 @@
 									order:true,
 						    	  	position:80
 				    });
-					
-					columns.push({	property:"properties.isSentCCRT.value",
-									header: "readsets.properties.isSentCCRT",
-									type :"boolean",
-									edit:true,
-						    	  	position:90
-				    });
-					columns.push({	property:"properties.isSentCollaborator.value",
-									header: "readsets.properties.isSentCollaborator",
-									type :"boolean",
-									edit:true,
-						    	  	position:91
-					});
 			}
 			
 			return columns;
