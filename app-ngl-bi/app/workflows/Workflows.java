@@ -124,10 +124,11 @@ public class Workflows {
 			for(ReadSet readSet: readSets){
 				State nextReadSetState = cloneState(run.state, contextValidation.getUser());
 				setReadSetState(contextValidation, readSet, nextReadSetState);
-			}
+			}			
 			//Synchro old lims
 			if(Play.application().configuration().getBoolean("old.lims.sync", false)){
 				Logger.debug("Old LIMS Run Synchronisation");
+				readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", run.code)).toList();
 				Spring.getBeanOfType(ILimsRunServices.class).insertRun(run, readSets, false);
 			}
 			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleStatRG, run),null);
