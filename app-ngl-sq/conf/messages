@@ -69,6 +69,7 @@ search.placeholder.experiment = Regex pour experiment
 
 search.tab.addfilters = Filtres supplémentaires
 search.tab.filters = Filtres
+search.tab.addcolumns = Colonnes supplémentaires
 
 #processes
 processes.title = Processus

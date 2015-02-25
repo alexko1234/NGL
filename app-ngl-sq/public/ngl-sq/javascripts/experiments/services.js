@@ -9,6 +9,7 @@
 							"property":"code",
 							"order":true,
 							"hide":true,
+							"position":1,
 							"type":"text"
 						},
 						{
@@ -16,6 +17,7 @@
 							"property":"instrument.code",
 							"order":true,
 							"hide":true,
+							"position":2,
 							"type":"text",
 							"filter":"codes:'instrument'"
 						},						
@@ -24,6 +26,7 @@
 							"property":"categoryCode",
 							"order":true,
 							"hide":true,
+							"position":3,
 							"type":"text"
 						},
 						{
@@ -31,6 +34,7 @@
 							"property":"typeCode",
 							"order":true,
 							"hide":true,
+							"position":4,
 							"type":"text"
 						},
 						{
@@ -38,6 +42,7 @@
 							"property":"state.code",
 							"order":true,
 							"type":"text",
+							"position":5,
 							"hide":true,
 							"filter":"codes:'state'"
 						},
@@ -46,6 +51,7 @@
 							"property":"state.resolutionCodes",
 							"order":true,
 							"hide":true,
+							"position":6,
 							"type":"date"
 						},
 						{
@@ -53,6 +59,7 @@
 							"property":"sampleCodes.length",
 							"order":true,
 							"hide":true,
+							"position":7,
 							"type":"text"
 						},
 						{
@@ -60,6 +67,7 @@
 							"property":"sampleCodes",
 							"order":true,
 							"hide":true,
+							"position":8,
 							"type":"text",
 							"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
 						},
@@ -68,6 +76,7 @@
 							"property":"projectCodes",
 							"order":true,
 							"hide":true,
+							"position":9,
 							"type":"text"
 						},					
 						{
@@ -75,6 +84,7 @@
 							"property":"traceInformation.creationDate",
 							"order":true,
 							"hide":true,
+							"position":10,
 							"type":"date"
 						},
 						{
@@ -82,6 +92,7 @@
 							"property":"traceInformation.createUser",
 							"order":true,
 							"hide":true,
+							"position":11,
 							"type":"text"
 						}
 						];
@@ -106,6 +117,7 @@
 				lists.refresh.experimentTypes({categoryCode:"qualitycontrol"}, "qualitycontrols");
 				lists.refresh.experimentTypes({categoryCode:"transfert"}, "transferts");
 				lists.refresh.experimentTypes({categoryCode:"transformation"}, "transformations");
+				lists.refresh.reportConfigs({pageCodes:["experiments-addcolumns"]}, "experiments-addcolumns");
 				//lists.refresh.instruments();
 				isInit=true;
 			}
@@ -113,9 +125,12 @@
 		
 		var searchService = {
 				getColumns:getColumns,
+				getDefaultColumns:getColumns,
 				datatable:undefined,
 				isRouteParam:false,
 				lists : lists,
+				additionalColumns:[],
+				selectedAddColumns:[],
 				setRouteParams:function($routeParams){
 					var count = 0;
 					for(var p in $routeParams){
@@ -129,7 +144,17 @@
 				},
 				
 				updateForm : function(){
-					
+					//this.form.includes = [];
+					this.form.includes = ["default"];
+					for(var i = 0 ; i < this.selectedAddColumns.length ; i++){
+						//remove .value if present to manage correctly properties (single, list, etc.)
+						if(this.selectedAddColumns[i].queryIncludeKeys && this.selectedAddColumns[i].queryIncludeKeys.length > 0){
+							this.form.includes = this.form.includes.concat(this.selectedAddColumns[i].queryIncludeKeys);
+						}else{
+							this.form.includes.push(this.selectedAddColumns[i].property.replace('.value',''));	
+						}
+						
+					}
 				},
 				convertForm : function(){
 					var _form = angular.copy(this.form);
@@ -198,6 +223,24 @@
 						this.datatable.search(jsonSearch);
 					}
 				},
+				initAdditionalColumns : function(){
+					this.additionalColumns=[];
+					this.selectedAddColumns=[];
+					
+					if(lists.get("experiments-addcolumns") && lists.get("experiments-addcolumns").length === 1){
+						var formColumns = [];
+						var allColumns = angular.copy(lists.get("experiments-addcolumns")[0].columns);
+						var nbElementByColumn = Math.ceil(allColumns.length / 5); //5 columns
+						for(var i = 0; i  < 5 && allColumns.length > 0 ; i++){
+							formColumns.push(allColumns.splice(0, nbElementByColumn));	    								
+						}
+						//complete to 5 five element to have a great design 
+						while(formColumns.length < 5){
+							formColumns.push([]);
+						}
+						this.additionalColumns = formColumns;
+					}
+				},
 				refreshSamples : function(){
 					if(this.form.projectCodes && this.form.projectCodes.length > 0){
 						this.lists.refresh.samples({projectCodes:this.form.projectCodes});
@@ -251,6 +294,43 @@
 						
 						return [data];				
 	    			});
+					
+				},
+				getAddColumnsToForm : function(){
+					if(this.additionalColumns.length === 0){
+						this.initAdditionalColumns();
+					}
+					return this.additionalColumns;									
+				},
+				addColumnsToDatatable:function(){
+					//this.reportingConfiguration = undefined;
+					//this.reportingConfigurationCode = undefined;
+					
+					this.selectedAddColumns = [];
+					for(var i = 0 ; i < this.additionalColumns.length ; i++){
+						for(var j = 0; j < this.additionalColumns[i].length; j++){
+							if(this.additionalColumns[i][j].select){
+								this.selectedAddColumns.push(this.additionalColumns[i][j]);
+							}
+						}
+					}
+					if(this.reportingConfigurationCode){
+						this.datatable.setColumnsConfig(this.reportingConfiguration.columns.concat(this.selectedAddColumns));
+					}else{
+						this.datatable.setColumnsConfig(this.getDefaultColumns().concat(this.selectedAddColumns));						
+					}
+					this.search();
+				},	
+				resetDatatableColumns:function(){
+					this.initAdditionalColumns();
+					this.datatable.setColumnsConfig(this.getDefaultColumns());
+					this.search();
+				},
+				updateColumn : function(){
+					this.initAdditionalColumns();				
+					this.reportingConfiguration = undefined;
+					this.datatable.setColumnsConfig(this.getDefaultColumns());
+					this.search();		
 					
 				},
 				
