@@ -130,7 +130,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		 	console.log(property);
 	        console.log(e);
 	        if(e.keyCode === 9 || e.keyCode === 13){
-	        	property[propertyName] += '-';
+	        	property[propertyName] += '_';
 	        	console.log(property);
 	            e.preventDefault();
 	        }

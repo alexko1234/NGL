@@ -119,8 +119,8 @@
 					if(data!=null){
 						for(var i=0;i<$scope.boxes.length;i++){
 							if($scope.boxes[i].code === code){
-								$scope.datatables = $scope.datatables.slice(i+1,1);
-								$scope.boxes = $scope.boxes.slice(i+1,1);
+								$scope.datatables.splice(i,1);
+								$scope.boxes.splice(i,1);
 								break;
 							}
 						}
@@ -134,8 +134,8 @@
 					$scope.message.isDetails = true;
 				});
 		 }else if(confirm("Etes vous sur de vouloir supprimer la boite ?")){
-			 $scope.datatables = $scope.datatables.splice(index,1);
-			 $scope.boxes = $scope.boxes.splice(index,1);
+			 $scope.datatables.splice(index,1);
+			 $scope.boxes.splice(index,1);
 		 }
 	 }
 	 
