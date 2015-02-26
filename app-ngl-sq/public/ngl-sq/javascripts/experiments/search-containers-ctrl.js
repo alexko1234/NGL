@@ -6,7 +6,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	
 	$scope.datatableConfig = {
 		columns:[{
-			"header":Messages("supports.table.code"),
+			"header":Messages("containerSupports.table.code"),
 			"property":"code",
 			"order":true,
 			"type":"text"
@@ -79,7 +79,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		}*/
 		],	
 		search:{
-			url:jsRoutes.controllers.supports.api.Supports.list()
+			url:jsRoutes.controllers.containerSupports.api.ContainerSupports.list()
 		},
 		order:{
 			active:true,

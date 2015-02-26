@@ -236,7 +236,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 		mainService.setForm($scope.form);
 		$scope.lists.refresh.projects();
 		$scope.lists.refresh.processCategories();
-		$scope.lists.refresh.supports();
+		$scope.lists.refresh.containerSupports();
 		$scope.lists.refresh.containerSupportCategories();
 		lists.refresh.experimentTypes({categoryCode:"transformation", withoutOneToVoid:true});
 

@@ -289,7 +289,7 @@
 				changeContainerSupportCode: function(val){
 					
 					console.log(val);
-					return $http.get(jsRoutes.controllers.supports.api.Supports.list().url,{params:{"codeRegex":val}}).success(function(data, status, headers, config) {
+					return $http.get(jsRoutes.controllers.containerSupports.api.ContainerSupports.list().url,{params:{"codeRegex":val}}).success(function(data, status, headers, config) {
 						console.log(data);
 						
 						return [data];				

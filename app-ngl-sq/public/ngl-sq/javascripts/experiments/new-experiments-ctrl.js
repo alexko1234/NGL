@@ -6,19 +6,19 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','mainSer
 	
 	$scope.datatableConfig = {
 			columns:[{
-				"header":Messages("supports.table.code"),
+				"header":Messages("containerSupports.table.code"),
 				"property":"code",
 				"order":true,
 				"type":"text"
 			},
 			{
-				"header":Messages("supports.table.projectCodes"),
+				"header":Messages("containerSupports.table.projectCodes"),
 				"property":"projectCodes",
 				"order":true,
 				"type":"text"
 			},
 			{
-				"header":Messages("supports.table.sampleCodes"),
+				"header":Messages("containerSupports.table.sampleCodes"),
 				"property":"sampleCodes",
 				"order":true,
 				"type":"text",

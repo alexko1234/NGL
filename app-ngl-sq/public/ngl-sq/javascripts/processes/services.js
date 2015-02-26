@@ -27,7 +27,7 @@
 				lists.refresh.containerSupportCategories();
 				lists.refresh.projects();
 				lists.refresh.processCategories();
-				lists.refresh.supports();
+				lists.refresh.containerSupports();
 				lists.refresh.users();
 				lists.refresh.states({objectTypeCode:"Process"});
 				lists.refresh.processTypes();
@@ -129,7 +129,7 @@
 		/*		changeProcessesSupportCode : function(val){
 
 					console.log(val);
-					return $http.get(jsRoutes.controllers.supports.api.Supports.list().url,{params:{"codeRegex":val}}).success(function(data, status, headers, config) {
+					return $http.get(jsRoutes.controllers.containerSupports.api.ContainerSupports.list().url,{params:{"codeRegex":val}}).success(function(data, status, headers, config) {
 						console.log(data);
 
 						return [data];				
