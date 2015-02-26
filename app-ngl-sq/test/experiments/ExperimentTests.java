@@ -70,7 +70,7 @@ public class ExperimentTests extends AbstractTests{
 		InitDataHelper.endTest();
 	}
 
-	@Test
+	//@Test
 	public void validatePropertiesFileImgErr() {
 		Experiment exp = ExperimentTestHelper.getFakeExperiment();
 
@@ -125,7 +125,7 @@ public class ExperimentTests extends AbstractTests{
 
 	}
 
-	@Test
+	//@Test
 	public void validateFlowCellCalculations() {
 		Experiment exp = ExperimentTestHelper.getFakeExperiment();
 		exp.state.code = "IP";
@@ -185,7 +185,7 @@ public class ExperimentTests extends AbstractTests{
 
 	}
 
-	@Test
+	//@Test
 	public void validateExperimentPrepaflowcell() {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
@@ -195,7 +195,7 @@ public class ExperimentTests extends AbstractTests{
 
 	}
 
-	@Test
+	//@Test
 	public void validateExperimentSameTagInPosition() {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
@@ -218,7 +218,7 @@ public class ExperimentTests extends AbstractTests{
 	}
 
 
-	@Test
+	//@Test
 	public void validateExperimentManyTagCategory() {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
@@ -240,7 +240,7 @@ public class ExperimentTests extends AbstractTests{
 
 	}
 
-	@Test
+	//@Test
 	public void validateExperimentSumPercentInPutContainer() {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
@@ -262,7 +262,7 @@ public class ExperimentTests extends AbstractTests{
 
 	}
 
-	@Test
+	//@Test
 	public void validateExperimentPrepaflowcellLaneNotNull() {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
@@ -275,7 +275,7 @@ public class ExperimentTests extends AbstractTests{
 	}
 
 
-	@Test
+	//@Test
 	public void validateExperimentDuplicateContainerInLane() {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
@@ -300,7 +300,7 @@ public class ExperimentTests extends AbstractTests{
 
 	}
 
-	@Test
+	//@Test
 	public void validateExperimentPrepaflowcellInstrumentProperties() {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
@@ -319,7 +319,7 @@ public class ExperimentTests extends AbstractTests{
 	}
 	
 	
-	@Test
+	//@Test
 	public void updateDataMethodExperiment(){
 
 		Experiment exp=ExperimentTestHelper.getFakeExperiment();
@@ -348,7 +348,7 @@ public class ExperimentTests extends AbstractTests{
 		
 	}
 
-	@Test
+	//@Test
 	public void saveManyToOneExperiment() throws JsonParseException, JsonMappingException, IOException{
 		
 		List<Experiment> exps = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME+"_new", Experiment.class,DBQuery.is("typeCode", "prepa-flowcell")).toList();
@@ -382,7 +382,7 @@ public class ExperimentTests extends AbstractTests{
 	
 	
 	
-	@Test
+	//@Test
 	public void updateExperimentProperties(){
 		Experiment exp = ExperimentTestHelper.getFakePrepFlowcell();
 		MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
@@ -397,7 +397,7 @@ public class ExperimentTests extends AbstractTests{
 	}
 
 	
-	@Test
+	//@Test
 	public void updateExperimentInformations(){
 		Experiment exp = ExperimentTestHelper.getFakePrepFlowcell();
 		MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
@@ -413,7 +413,7 @@ public class ExperimentTests extends AbstractTests{
 	}
 	
 	
-	@Test
+	//@Test
 	public void updateInstrumentInformations(){
 		Experiment exp = new Experiment(); 
 		Random randomGenerator=new Random();
@@ -443,7 +443,7 @@ public class ExperimentTests extends AbstractTests{
 	}
 
 	
-	@Test
+	//@Test
 	public void updateInstrumentProperties(){
 		Experiment exp = ExperimentTestHelper.getFakePrepFlowcell();		
 		MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
@@ -460,7 +460,7 @@ public class ExperimentTests extends AbstractTests{
 	}
 
 	
-	@Test
+	//@Test
 	public void updateContainers(){
 		Experiment exp = ExperimentTestHelper.getFakePrepFlowcell();
 		MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
@@ -480,7 +480,7 @@ public class ExperimentTests extends AbstractTests{
 	}
 	
 	
-	@Test
+	//@Test
 	public void nextStateManyToOne() throws JsonParseException, JsonMappingException, IOException{
 		
 		String code="PREPA-FLOWCELL-20150107_105554";
@@ -603,7 +603,7 @@ public class ExperimentTests extends AbstractTests{
 		
 	}
 	
-	//@Test
+	@Test
 	public void stopProcess(){
 		//resetData();
 		try {

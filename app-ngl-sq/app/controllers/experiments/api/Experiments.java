@@ -146,7 +146,7 @@ public class Experiments extends CommonController{
 				State nextState = new State();
 				nextState.code = "UA";
 				if(nextState.code!=null && containerUsed!=null){
-					Workflows.setContainerState(containerUsed.code, exp.typeCode, nextState, contextValidation, true);
+					Workflows.setContainerState(containerUsed.code, exp.typeCode, nextState, contextValidation, true, false);
 				}
 			}
 			if (!contextValidation.hasErrors()) {

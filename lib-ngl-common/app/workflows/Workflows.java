@@ -131,7 +131,7 @@ public class Workflows {
 		}
 
 		if(state.code!=null && !retry){
-			setContainerState(containersIn, experiment.typeCode, state, contextValidation, stopProcess);
+			setContainerState(containersIn, experiment.typeCode, state, contextValidation, stopProcess, false);
 			//Il faut mettre à jour le state du container dans l'experiment.atomicTransfereMethod
 		}
 	}
@@ -171,7 +171,7 @@ public class Workflows {
 				}
 			}
 			if(nextState.code!=null && containerUsed!=null){
-				setContainerState(containerUsed.code, experiment.typeCode, nextState, contextValidation, stopProcess);
+				setContainerState(containerUsed.code, experiment.typeCode, nextState, contextValidation, stopProcess, retry);
 			}
 		}
 
@@ -240,7 +240,7 @@ public class Workflows {
 
 	}
 
-	public static void nextProcessState(Container container, String experimentTypeCode,ContextValidation contextValidation, boolean stopProcess){
+	public static void nextProcessState(Container container, String experimentTypeCode,ContextValidation contextValidation, boolean stopProcess, boolean retry){
 		if(container.inputProcessCodes!=null ){
 			for(String processCode: container.inputProcessCodes){
 
@@ -250,7 +250,7 @@ public class Workflows {
 
 				if(container.state.code.equals("IU") && checkProcessState("N",processCode)){
 					processState.code="IP";
-				}else if((container.state.code.equals("UA") || container.state.code.equals("IS") ) && checkProcessState("IP",processCode) && (stopProcess || endOfProcess(processCode, experimentTypeCode))){
+				}else if((container.state.code.equals("UA") || container.state.code.equals("IS") ) && !retry && checkProcessState("IP",processCode) && (stopProcess || endOfProcess(processCode, experimentTypeCode))){
 					processState.code="F";
 				}
 
@@ -310,24 +310,24 @@ public class Workflows {
 			State state = new State();
 			state.code = "IS";
 			contextValidation.setUpdateMode();
-			Workflows.setContainerState(process.containerInputCode, process.currentExperimentTypeCode, state, contextValidation, true);
+			Workflows.setContainerState(process.containerInputCode, process.currentExperimentTypeCode, state, contextValidation, true, false);
 		}
 	}
 	
 	public static void setContainerState(String containerCode,String experimentTypeCode, State nextState,ContextValidation contextValidation){
-		setContainerState(containerCode, experimentTypeCode, nextState, contextValidation, false);
+		setContainerState(containerCode, experimentTypeCode, nextState, contextValidation, false, false);
 	}
 	
-	public static void setContainerState(String containerCode,String experimentTypeCode, State nextState,ContextValidation contextValidation, boolean stopProcess){
+	public static void setContainerState(String containerCode,String experimentTypeCode, State nextState,ContextValidation contextValidation, boolean stopProcess, boolean retry){
 		Container container =MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", containerCode));
 		if(container!=null){
-			setContainerState(container, experimentTypeCode, nextState, contextValidation, stopProcess);
+			setContainerState(container, experimentTypeCode, nextState, contextValidation, stopProcess, retry);
 		}else{
 			Logger.error("Container "+containerCode+" not exists");
 		}
 	}
 
-	public static void setContainerState(Container container,String experimentTypeCode, State nextState,ContextValidation contextValidation, boolean stopProcess){
+	public static void setContainerState(Container container,String experimentTypeCode, State nextState,ContextValidation contextValidation, boolean stopProcess, boolean retry){
 		String lastStateCode=container.state.code;
 		container.state=StateHelper.updateHistoricalNextState(container.state,nextState);
 		container.traceInformation=StateHelper.updateTraceInformation(container.traceInformation, nextState);
@@ -342,7 +342,7 @@ public class Workflows {
 		}	
 		container.state=nextState;
 		nextContainerSupportState(container,contextValidation);
-		nextProcessState(container,experimentTypeCode,contextValidation, stopProcess);
+		nextProcessState(container,experimentTypeCode,contextValidation, stopProcess, retry);
 	}
 
 	private static void nextContainerSupportState(Container container,
@@ -373,10 +373,9 @@ public class Workflows {
 
 	}
 
-
-	public static void setContainerState(List<ContainerUsed> containersUsed, String experimentTypeCode,State state,ContextValidation contextValidation,boolean stopProcess){
+	public static void setContainerState(List<ContainerUsed> containersUsed, String experimentTypeCode,State state,ContextValidation contextValidation,boolean stopProcess, boolean retry){
 		for(ContainerUsed containerUsed:containersUsed){
-			setContainerState(containerUsed.code, experimentTypeCode, state, contextValidation, stopProcess);
+			setContainerState(containerUsed.code, experimentTypeCode, state, contextValidation, stopProcess, retry);
 		}
 	}
 
@@ -399,7 +398,7 @@ public class Workflows {
 		State previousState = new State();
 		previousState.code = previousTransientState.code;
 
-		setContainerState(container, experimentTypeCode,previousState, contextValidation, false);
+		setContainerState(container, experimentTypeCode,previousState, contextValidation, false, false);
 	}
 	
 	public static void previousContainerState(ContainerUsed containersIn,String experimentTypeCode,
@@ -410,7 +409,7 @@ public class Workflows {
 		State previousState = new State();
 		previousState.code = previousTransientState.code;
 
-		setContainerState(container, experimentTypeCode,previousState, contextValidation, false);
+		setContainerState(container, experimentTypeCode,previousState, contextValidation, false, true);
 	}
 
 	public static void nextContainerState(List<Process> processes,String experimentTypeCode,String experimentCategoryCode,
@@ -438,7 +437,7 @@ public class Workflows {
 			}
 		}
 
-		setContainerState(process.containerInputCode, experimentTypeCode,nextState, contextValidation, false);
+		setContainerState(process.containerInputCode, experimentTypeCode,nextState, contextValidation, false, false);
 
 	}
 
