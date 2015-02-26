@@ -1,4 +1,4 @@
-package controllers.supports.api;
+package controllers.containerSupports.api;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -7,12 +7,13 @@ import java.util.Map;
 
 import controllers.ListForm;
 
-public class SupportsSearchForm extends ListForm {
+public class ContainerSupportsSearchForm extends ListForm {
 	public String code;
 	public String codeRegex;
-	
+	public String containerSupportCategory;
 	public String categoryCode;
 	public String stateCode;
+	public List<String> stateCodes;
 	public String nextExperimentTypeCode;
 	public String processTypeCode;
 	public List<String> projectCodes;
@@ -32,6 +33,7 @@ public class SupportsSearchForm extends ListForm {
 				+ ", nextExperimentTypeCode=" + nextExperimentTypeCode
 				+ ", processTypeCode=" + processTypeCode + ", projectCodes="
 				+ projectCodes + ", sampleCodes=" + sampleCodes
+				+ ", containerSupportCategory=" + containerSupportCategory
 				+ ", fromExperimentTypeCodes=" + fromExperimentTypeCodes
 				+ ", fromDate=" + fromDate + ", toDate=" + toDate + ", users="
 				+ users + "]";

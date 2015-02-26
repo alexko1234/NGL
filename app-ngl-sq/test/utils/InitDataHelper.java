@@ -46,8 +46,8 @@ public class InitDataHelper {
 	}
 	
 	public static void initSupports(){
-		List<ContainerSupport> supports = MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME+INIT_MONGO_SUFFIX, ContainerSupport.class).toList();
-		MongoDBDAO.save(InstanceConstants.SUPPORT_COLL_NAME, supports);
+		List<ContainerSupport> supports = MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME+INIT_MONGO_SUFFIX, ContainerSupport.class).toList();
+		MongoDBDAO.save(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, supports);
 	}
 
 	public static void initExperiments(){
@@ -75,7 +75,7 @@ public class InitDataHelper {
 		 MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.exists("code"));
 		 MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.exists("code"));
 		 MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.exists("code"));
-		 MongoDBDAO.delete(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.exists("code"));
+		 MongoDBDAO.delete(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.exists("code"));
 		 MongoDBDAO.delete(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.exists("code"));
 		 MongoDBDAO.delete(InstanceConstants.EXPERIMENT_COLL_NAME, Process.class, DBQuery.exists("code"));
 		 MongoDBDAO.delete(InstanceConstants.PROTOCOL_COLL_NAME, Protocol.class, DBQuery.exists("code"));
@@ -92,7 +92,7 @@ public class InitDataHelper {
 	
 	public static List<String> getSupportCodesInContext(String categoryCode){
 		List<String> codes = new ArrayList<String>();
-		List<ContainerSupport> containerSupports = MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("categoryCode", categoryCode)).toList();
+		List<ContainerSupport> containerSupports = MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("categoryCode", categoryCode)).toList();
 		for(ContainerSupport cs: containerSupports){
 			codes.add(cs.code);
 		}
@@ -101,7 +101,7 @@ public class InitDataHelper {
 	
 	public static List<String> getSupportCodesInContext(String categoryCode, String experimentTypeCode){
 		List<String> codes = new ArrayList<String>();
-		List<ContainerSupport> containerSupports = MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.and(DBQuery.is("categoryCode", categoryCode), DBQuery.in("fromExperimentTypeCodes", experimentTypeCode))).toList();
+		List<ContainerSupport> containerSupports = MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.and(DBQuery.is("categoryCode", categoryCode), DBQuery.in("fromExperimentTypeCodes", experimentTypeCode))).toList();
 		for(ContainerSupport cs: containerSupports){
 			codes.add(cs.code);
 		}

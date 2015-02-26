@@ -27,7 +27,7 @@ public class SampleOnInputContainerValidationHelper extends CommonValidationHelp
 	
 	public static void validateContainerSupportCode(SampleOnInputContainer soic,ContextValidation contextValidation){
 		if (ValidationHelper.required(contextValidation, soic.containerSupportCode, "sampleOnInputContainer")) {
-			if (! MongoDBDAO.checkObjectExist(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class,  DBQuery.is("code", soic.containerSupportCode))) {
+			if (! MongoDBDAO.checkObjectExist(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,  DBQuery.is("code", soic.containerSupportCode))) {
 				contextValidation.addErrors("sampleOnInputContainer.containerSupportCode", ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, soic.containerSupportCode);
 			}
 		}		 

@@ -29,9 +29,9 @@ import validation.utils.BusinessValidationHelper;
 
 public class ContainerSupportHelper {
 
-	public static LocationOnContainerSupport getContainerSupportTube(String supportCode){
+	public static LocationOnContainerSupport getContainerSupportTube(String containerSupportCode){
 		LocationOnContainerSupport containerSupport=new LocationOnContainerSupport();
-		containerSupport.code=supportCode;	
+		containerSupport.code=containerSupportCode;	
 		containerSupport.categoryCode="tube";
 		containerSupport.column="1";
 		containerSupport.line="1";
@@ -39,7 +39,7 @@ public class ContainerSupportHelper {
 	}
 
 	public static LocationOnContainerSupport getContainerSupport(
-			String containerCategoryCode, int nbUsableContainer, String supportCode, String x, String y) throws DAOException {
+			String containerCategoryCode, int nbUsableContainer, String containerSupportCode, String x, String y) throws DAOException {
 
 		List<ContainerSupportCategory> containerSupportCategories=ContainerSupportCategory.find.findByContainerCategoryCode(containerCategoryCode);
 
@@ -55,16 +55,16 @@ public class ContainerSupportHelper {
 			containerSupport.categoryCode=containerSupportCategories.get(0).code;
 		}
 
-		containerSupport.code=supportCode;	
+		containerSupport.code=containerSupportCode;	
 		containerSupport.column=x;
 		containerSupport.line=y;
 		return containerSupport;
 	}
 
-	public static ContainerSupport createSupport(String supportCode, PropertyValue sequencingProgramType, String categoryCode, String user){
+	public static ContainerSupport createContainerSupport(String containerSupportCode, PropertyValue sequencingProgramType, String categoryCode, String user){
 		ContainerSupport s = new ContainerSupport(); 
 
-		s.code = supportCode;	
+		s.code = containerSupportCode;	
 		s.categoryCode = categoryCode;
 
 		s.state = new State(); 
@@ -87,48 +87,48 @@ public class ContainerSupportHelper {
 		return s;
 	}
 
-	public static void save(ContainerSupport support,
+	public static void save(ContainerSupport containerSupport,
 			ContextValidation contextValidation) {
 
-		contextValidation.addKeyToRootKeyName("support["+support.code+"]");
-		if(support._id!=null){contextValidation.setUpdateMode();}else {contextValidation.setCreationMode();}
-		InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME,support, contextValidation);			
-		contextValidation.removeKeyFromRootKeyName("support["+support.code+"]");	
+		contextValidation.addKeyToRootKeyName("containerSupport["+containerSupport.code+"]");
+		if(containerSupport._id!=null){contextValidation.setUpdateMode();}else {contextValidation.setCreationMode();}
+		InstanceHelpers.save(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME,containerSupport, contextValidation);			
+		contextValidation.removeKeyFromRootKeyName("containerSupport["+containerSupport.code+"]");	
 	}
 
 
-	public static void updateData(ContainerSupport support,List<ContainerUsed> inputContainerUseds, Experiment experiment, Map<String, PropertyValue> properties) {
+	public static void updateData(ContainerSupport containerSupport,List<ContainerUsed> inputContainerUseds, Experiment experiment, Map<String, PropertyValue> properties) {
 
 		for(ContainerUsed inputContainerUsed:inputContainerUseds){
 
 			Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, inputContainerUsed.code);
-			support.projectCodes=InstanceHelpers.addCodesList(container.projectCodes, support.projectCodes);
-			support.sampleCodes=InstanceHelpers.addCodesList(container.sampleCodes, support.sampleCodes);
-			support.fromExperimentTypeCodes=InstanceHelpers.addCode(experiment.typeCode, support.fromExperimentTypeCodes);
+			containerSupport.projectCodes=InstanceHelpers.addCodesList(container.projectCodes, containerSupport.projectCodes);
+			containerSupport.sampleCodes=InstanceHelpers.addCodesList(container.sampleCodes, containerSupport.sampleCodes);
+			containerSupport.fromExperimentTypeCodes=InstanceHelpers.addCode(experiment.typeCode, containerSupport.fromExperimentTypeCodes);
 
 		}
 		
-		if(support.properties==null){
-			support.properties=new HashMap<String, PropertyValue>();
+		if(containerSupport.properties==null){
+			containerSupport.properties=new HashMap<String, PropertyValue>();
 		}
 		
 		ExperimentType experimentType =BusinessValidationHelper.validateExistDescriptionCode(null, experiment.typeCode, "typeCode", ExperimentType.find,true);
 		if(experimentType !=null){
-			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(experimentType.getPropertyDefinitionByLevel(Level.CODE.ContainerSupport), properties,support.properties);
+			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(experimentType.getPropertyDefinitionByLevel(Level.CODE.ContainerSupport), properties,containerSupport.properties);
 		}
 
 		InstrumentUsedType instrumentUsedType=BusinessValidationHelper.validateExistDescriptionCode(null, experiment.instrument.typeCode, "typeCode", InstrumentUsedType.find,true);
 		if(instrumentUsedType !=null){
-			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(instrumentUsedType.getPropertyDefinitionByLevel(Level.CODE.ContainerSupport), properties,support.properties);
+			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(instrumentUsedType.getPropertyDefinitionByLevel(Level.CODE.ContainerSupport), properties,containerSupport.properties);
 		}
 	}
 
 
-	public static void updateData(List<Container> containers, Experiment experiment, ContainerSupport support) {
+	public static void updateData(List<Container> containers, Experiment experiment, ContainerSupport containerSupport) {
 		for(Container container : containers){
-			support.projectCodes=InstanceHelpers.addCodesList(container.projectCodes, support.projectCodes);
-			support.sampleCodes=InstanceHelpers.addCodesList(container.sampleCodes, support.sampleCodes);
-			support.fromExperimentTypeCodes=InstanceHelpers.addCodesList(container.fromExperimentTypeCodes, support.fromExperimentTypeCodes);
+			containerSupport.projectCodes=InstanceHelpers.addCodesList(container.projectCodes, containerSupport.projectCodes);
+			containerSupport.sampleCodes=InstanceHelpers.addCodesList(container.sampleCodes, containerSupport.sampleCodes);
+			containerSupport.fromExperimentTypeCodes=InstanceHelpers.addCodesList(container.fromExperimentTypeCodes, containerSupport.fromExperimentTypeCodes);
 		}
 
 

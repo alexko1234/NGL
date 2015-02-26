@@ -43,7 +43,7 @@ public class MigrationProjectCodes extends CommonController {
 	protected static LimsCNGDAO limsServices= Spring.getBeanOfType(LimsCNGDAO.class);	
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmm");
 	private static String backupName = InstanceConstants.CONTAINER_COLL_NAME+"_BCK_PC_"+sdf.format(new java.util.Date());		
-	private static String backupName2 = InstanceConstants.SUPPORT_COLL_NAME+"_BCK_PC_"+sdf.format(new java.util.Date());	
+	private static String backupName2 = InstanceConstants.CONTAINER_SUPPORT_COLL_NAME+"_BCK_PC_"+sdf.format(new java.util.Date());	
 
 	
 	
@@ -75,9 +75,9 @@ public class MigrationProjectCodes extends CommonController {
 		MongoDBDAO.save(backupName, MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList());
 		Logger.info("\tCopie "+InstanceConstants.CONTAINER_COLL_NAME+" to "+backupName+" end");	
 		
-		Logger.info("\tCopie "+InstanceConstants.SUPPORT_COLL_NAME+" to "+backupName2+" start");		
-		MongoDBDAO.save(backupName2, MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class).toList());
-		Logger.info("\tCopie "+InstanceConstants.SUPPORT_COLL_NAME+" to "+backupName2+" end");	
+		Logger.info("\tCopie "+InstanceConstants.CONTAINER_SUPPORT_COLL_NAME+" to "+backupName2+" start");		
+		MongoDBDAO.save(backupName2, MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class).toList());
+		Logger.info("\tCopie "+InstanceConstants.CONTAINER_SUPPORT_COLL_NAME+" to "+backupName2+" end");	
 	}
 	
 	
@@ -135,7 +135,7 @@ public class MigrationProjectCodes extends CommonController {
 			String supportCode = entry.getKey();
 			List<String> projectCodes = entry.getValue();
 			
-			WriteResult r2 = (WriteResult) MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", supportCode),   
+			WriteResult r2 = (WriteResult) MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", supportCode),   
 					DBUpdate.set("projectCodes", projectCodes));
 			
 			if(StringUtils.isNotEmpty(r2.getError())){

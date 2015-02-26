@@ -155,7 +155,7 @@ public class MigrationStateContainer   extends CommonController{
 			ContainerValidationHelper.validateStateCode(newStateCode, contextValidation);
 
 			if(!contextValidation.hasErrors()){
-				MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME,ContainerSupport.class
+				MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME,ContainerSupport.class
 						,DBQuery.is("code",stateContainerSupport.containerSupportCode),DBUpdate.set("state.code",newStateCode));
 				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,Container.class
 						,DBQuery.is("support.code",stateContainerSupport.containerSupportCode),DBUpdate.set("state.code",newStateCode),true);

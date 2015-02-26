@@ -334,7 +334,7 @@ public class Workflows {
 
 	public static void setContainerSupportState(String code,State nextState,ContextValidation contextValidation) {
 
-		ContainerSupport containerSupport = MongoDBDAO.findOne(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", code));
+		ContainerSupport containerSupport = MongoDBDAO.findOne(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", code));
 
 		if(containerSupport==null){
 			Logger.error("ContainerSupport "+containerSupport+" not exists");
@@ -345,7 +345,7 @@ public class Workflows {
 			containerSupport.state=StateHelper.updateHistoricalNextState(containerSupport.state,nextState);
 			containerSupport.traceInformation=StateHelper.updateTraceInformation(containerSupport.traceInformation, nextState);
 
-			MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME,  Container.class, 
+			MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME,  Container.class, 
 					DBQuery.is("code", containerSupport.code),
 					DBUpdate.set("state", containerSupport.state).set("traceInformation",containerSupport.traceInformation));
 		}	

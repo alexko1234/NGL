@@ -113,9 +113,9 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 
 			if(outputContainerUsed.code!=null && !MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, this.outputContainerUsed.code)){
 				// Output ContainerSupport
-				ContainerSupport support =MongoDBDAO.findByCode(InstanceConstants.SUPPORT_COLL_NAME,ContainerSupport.class, this.outputContainerUsed.locationOnContainerSupport.code);
+				ContainerSupport support =MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME,ContainerSupport.class, this.outputContainerUsed.locationOnContainerSupport.code);
 				if(support==null){
-					support=ContainerSupportHelper.createSupport(this.outputContainerUsed.locationOnContainerSupport.code, null,
+					support=ContainerSupportHelper.createContainerSupport(this.outputContainerUsed.locationOnContainerSupport.code, null,
 							this.outputContainerUsed.locationOnContainerSupport.categoryCode , experiment.traceInformation.modifyUser);
 				}
 

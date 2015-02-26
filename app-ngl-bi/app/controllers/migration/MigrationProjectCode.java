@@ -34,7 +34,7 @@ public class MigrationProjectCode extends CommonController {
 		
 		//sample
 		updateProjectCodes(InstanceConstants.SAMPLE_COLL_NAME);
-		updateProjectCodes(InstanceConstants.SUPPORT_COLL_NAME);
+		updateProjectCodes(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME);
 		updateProjectCodes(InstanceConstants.CONTAINER_COLL_NAME);
 		updateProjectCodes(InstanceConstants.SAMPLE_COLL_NAME);
 		

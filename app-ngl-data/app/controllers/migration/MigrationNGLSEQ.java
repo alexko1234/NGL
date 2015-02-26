@@ -72,7 +72,7 @@ public class MigrationNGLSEQ extends CommonController{
 
 	public static void updateContainerSupportState(String supportCode, String stateCode){
 		
-		MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.is("code", supportCode)
+		MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.is("code", supportCode)
 				,DBUpdate.set("state.code",stateCode));
 	}
 	

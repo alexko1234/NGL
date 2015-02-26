@@ -47,6 +47,7 @@ public class Samples extends CommonController{
 		SamplesSearchForm samplesSearch = sampleFilledForm.get();
 
 		DBQuery.Query query = getQuery(samplesSearch);
+		if(query!=null){
 		if(samplesSearch.datatable){
 			MongoDBResult<Sample> results = mongoDBFinder(InstanceConstants.SAMPLE_COLL_NAME, samplesSearch, Sample.class, query);
 			List<Sample> samples = results.toList();
@@ -71,6 +72,8 @@ public class Samples extends CommonController{
 			List<Sample> samples = results.toList();
 			return Results.ok(Json.toJson(samples));
 		}
+		}
+		return Results.ok("{}");
 	}
 
 	/**

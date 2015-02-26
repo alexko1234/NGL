@@ -41,14 +41,14 @@ public class MigrationDataCNS extends CommonController{
 				"from  Depotsolexa d, Prepaflowcell p, Relationmaterielmanip rm, Runhd r, Lotreactif re, Materielmanip m  where m.matmaco=d.matmaco and rm.matmacop=p.matmaco and rm.matmacof=d.matmaco and p.lotreaco=re.lotreaco and   d.matmaco=r.matmaco and r.runhInNGL!=null";
 
 		//unset sequencingProgramType in all ContainerSupport
-		MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.exists("code"), DBUpdate.unset("properties.sequencingProgramType"),true);
+		MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.exists("code"), DBUpdate.unset("properties.sequencingProgramType"),true);
 
 		List<ListObject> results= limsServices.getListObjectFromProcedureLims(sql);
 		
 		for(ListObject obj:results){
 			
-			if(MongoDBDAO.checkObjectExist(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class,"code", obj.code)){
-				MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", obj.code)
+			if(MongoDBDAO.checkObjectExist(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,"code", obj.code)){
+				MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", obj.code)
 						,DBUpdate.set("properties.sequencingProgramType",new PropertySingleValue(obj.name)));
 			}else {
 				contextValidation.addErrors("containerSupport.code", "error.codeNotExist", obj.code);
@@ -76,9 +76,9 @@ public static Result updateFromExperimentTypeCodesContainerSupport() throws DAOE
 		Logger.info(">>>>>>>>>>> Migration fromExperimentTypeCodes ContainerSupport starts");
 		ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
 		
-		//backupCollection(InstanceConstants.SUPPORT_COLL_NAME,InstanceConstants.SUPPORT_COLL_NAME+"_BCK_20150905" , ContainerSupport.class);
+		//backupCollection(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME,InstanceConstants.CONTAINER_SUPPORT_COLL_NAME+"_BCK_20150905" , ContainerSupport.class);
 		
-		List<ContainerSupport> containerSupports=MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class).toList();
+		List<ContainerSupport> containerSupports=MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class).toList();
 		for(ContainerSupport containerSupport:containerSupports){
 			List<Container> containers =MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code", containerSupport.code)).toList();
 			List<String> fromExperimentTypeCodes=new ArrayList<String>();
@@ -88,7 +88,7 @@ public static Result updateFromExperimentTypeCodesContainerSupport() throws DAOE
 			}
 			if(fromExperimentTypeCodes.size()!=0){
 				Logger.info("update support"+containerSupport.code);
-				MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code",containerSupport.code),DBUpdate.set("fromExperimentTypeCodes", fromExperimentTypeCodes));
+				MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code",containerSupport.code),DBUpdate.set("fromExperimentTypeCodes", fromExperimentTypeCodes));
 			}
 		}
 		

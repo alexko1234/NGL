@@ -5,6 +5,17 @@
 # Home page
 GET     /                           									controllers.main.tpl.Main.home()
 
+#containerSupports tpl
+GET 	/containerSupports/:homecode/home								controllers.containerSupports.tpl.ContainerSupports.home(homecode:java.lang.String)
+GET		/tpl/containerSupports/search									controllers.containerSupports.tpl.ContainerSupports.search()
+GET		/tpl/containerSupports/js-routes								controllers.containerSupports.tpl.ContainerSupports.javascriptRoutes()
+
+#supports api
+GET		/api/containerSupports											controllers.containerSupports.api.ContainerSupports.list()
+GET		/api/containerSupports/:code									controllers.containerSupports.api.ContainerSupports.get(code:java.lang.String)
+HEAD	/api/containerSupports/:code									controllers.containerSupports.api.ContainerSupports.head(code:java.lang.String)
+PUT		/api/containerSupports/batch									controllers.containerSupports.api.ContainerSupports.updateBatch()
+
 #containers tpl
 GET 	/containers/:homecode/home										controllers.containers.tpl.Containers.home(homecode:java.lang.String)
 GET		/tpl/containers/search											controllers.containers.tpl.Containers.search()
@@ -75,10 +86,6 @@ GET		/api/experiment/types/:code										controllers.experiments.api.Experiment
 GET		/api/experiments/protocols 										controllers.experiments.api.Protocols.list()
 GET		/api/experiments/:code											controllers.experiments.api.Experiments.get(code:java.lang.String)
 
-#supports api
-GET		/api/supports													controllers.supports.api.Supports.list()
-GET		/api/supports/:code												controllers.supports.api.Supports.get(code:java.lang.String)
-HEAD	/api/supports/:code												controllers.supports.api.Supports.head(code:java.lang.String)
 
 GET		/api/experiment/instrument-properties/:instrumentUsedTypeCode	controllers.experiments.api.Experiments.getInstrumentProperties(instrumentUsedTypeCode:java.lang.String)
 

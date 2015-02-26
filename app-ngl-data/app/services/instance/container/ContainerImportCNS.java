@@ -157,7 +157,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		for(Container container : containers){
 			//delete de tout les containers associés au support du container, alors les lanes supprimées dans le Lims seront supprimés dans NGL
 			MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code", container.support.code));
-			MongoDBDAO.deleteByCode(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, container.support.code);
+			MongoDBDAO.deleteByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, container.support.code);
 		}
 	}
 

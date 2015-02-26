@@ -56,7 +56,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Repository
 public class AddSequencingProgramType  extends CommonController {
 	
-	private static final String SUPPORT_COLL_NAME_BCK = InstanceConstants.SUPPORT_COLL_NAME+"_BCK";
+	private static final String SUPPORT_COLL_NAME_BCK = InstanceConstants.CONTAINER_SUPPORT_COLL_NAME+"_BCK";
 	private static JdbcTemplate jdbcTemplate;
 	
 	
@@ -132,7 +132,7 @@ public class AddSequencingProgramType  extends CommonController {
 			}
 			
 			//find current collection
-			List<ContainerSupport> oldContainerSupports = MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class).toList();
+			List<ContainerSupport> oldContainerSupports = MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class).toList();
 
 			//update container support in this collection
 			for (ContainerSupport oldContainerSupport : oldContainerSupports) {
@@ -145,14 +145,14 @@ public class AddSequencingProgramType  extends CommonController {
 								
 				//update properties
 				/*
-				WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", oldContainerSupport.code),   
+				WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", oldContainerSupport.code),   
 						DBUpdate.set("properties", properties)); 				
 				if(StringUtils.isNotEmpty(r.getError())){
 					Logger.error("Set property sequencingProgramType : "+oldContainerSupport.code+" / "+r.getError());
 				}
 				 */				
 				//global update of the object to have the _type (json subtype) like in the import 
-				MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME, oldContainerSupport);
+				MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, oldContainerSupport);
 				
 				
 			}
@@ -167,9 +167,9 @@ public class AddSequencingProgramType  extends CommonController {
 	}
 
 	private static void backupContainerSupport() {
-		Logger.info("\tCopie "+InstanceConstants.SUPPORT_COLL_NAME+" start");		
-		MongoDBDAO.save(SUPPORT_COLL_NAME_BCK, MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class).toList());
-		Logger.info("\tCopie "+InstanceConstants.SUPPORT_COLL_NAME+" end");	
+		Logger.info("\tCopie "+InstanceConstants.CONTAINER_SUPPORT_COLL_NAME+" start");		
+		MongoDBDAO.save(SUPPORT_COLL_NAME_BCK, MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class).toList());
+		Logger.info("\tCopie "+InstanceConstants.CONTAINER_SUPPORT_COLL_NAME+" end");	
 	}
 
 }

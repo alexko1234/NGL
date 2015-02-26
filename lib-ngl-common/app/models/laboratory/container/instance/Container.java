@@ -56,7 +56,7 @@ public class Container extends DBObject implements IValidation {
 	public Map<String, PropertyValue> properties;
 	public List<Comment> comments;
 
-	//Relation with support
+	//Relation with container support
 	public LocationOnContainerSupport support; 
 
 	//Embedded content with values;

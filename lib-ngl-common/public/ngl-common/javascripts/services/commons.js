@@ -114,8 +114,8 @@ angular.module('commonsServices', []).
     				valuationCriterias: function(params, key){
     					load(jsRoutes.controllers.valuation.api.ValuationCriterias.list().url,params,(key)?key:'valuationCriterias');    					
     				},
-    				supports : function(params, key){
-    					load(jsRoutes.controllers.supports.api.Supports.list().url,params,(key)?key:'supports'); 
+    				containerSupports : function(params, key){
+    					load(jsRoutes.controllers.containerSupports.api.ContainerSupports.list().url,params,(key)?key:'containerSupports'); 
     				},
     				projects : function(params, key){
     					load(jsRoutes.controllers.projects.api.Projects.list().url,params,(key)?key:'projects');    					
@@ -223,7 +223,7 @@ angular.module('commonsServices', []).
     			getSamples : function(){return results['samples'];},
     			getUsers : function(){return results['users'];},
     			getExperiments : function(){return results['experiments'];},
-    			getSupports : function(){return results['supports'];},
+    			getContainerSupports : function(){return results['containerSupports'];},
     			getContainerCategories : function(){return results['containerCategories'];},
     			getExperimentCategories : function(){return results['experimentCategories'];},
     			getExperimentTypes : function(){return results['experimentTypes'];},

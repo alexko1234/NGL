@@ -1,48 +1,24 @@
 "use strict";
 
-angular.module('ngl-sq.containersServices', []).
-factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable', function($http, mainService, lists, datatable){
+angular.module('ngl-sq.containerSupportsServices', []).
+factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'datatable', function($http, mainService, lists, datatable){
 	var tags = [];
 	var getColumns = function(){
 		var columns = [];
 		columns.push({
-			"header":Messages("containers.table.supportCode"),
-			"property":"support.code",
-			"order":true,
-			"type":"text"
-		});
-		columns.push({
-			"header":Messages("containers.table.supportCategoryCode"),
-			"property":"support.categoryCode",
-			"order":true,
-			"type":"text"
-		});
-		columns.push({
-			"header":Messages("containers.table.support.column"),
-			"property":"support.column",
-			"order":true,
-			"type":"text"
-		});
-		columns.push({
-			"header":Messages("containers.table.support.line"),
-			"property":"support.line",
-			"order":true,
-			"type":"text"
-		});
-		columns.push({
-			"header":Messages("containers.table.code"),
+			"header":Messages("containerSupports.table.code"),
 			"property":"code",
 			"order":true,
 			"type":"text"
 		});
 		columns.push({
-			"header":Messages("containers.table.fromExperimentTypeCodes"),
-			"property":"fromExperimentTypeCodes",
+			"header":Messages("containerSupports.table.categoryCode"),
+			"property":"categoryCode",
 			"order":true,
 			"type":"text"
 		});
 		columns.push({
-			"header":Messages("containers.table.state.code"),
+			"header":Messages("containerSupports.table.state.code"),
 			"property":"state.code",
 			"order":true,
 			"type":"text",
@@ -50,68 +26,52 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"choiceInList": true,
 			"possibleValues":"searchService.lists.getStates()", 
 			"filter":"codes:'state'"
-		});
+		});/*
 		columns.push({
-			"header":Messages("containers.table.sampleCodes.length"),
+			"header":Messages("containerSupports.table.fromExperimentTypeCodes"),
+			"property":"fromExperimentTypeCodes",
+			"order":true,
+			"type":"text"
+		});*/
+		columns.push({
+			"header":Messages("containerSupports.table.sampleCodes.length"),
 			"property":"sampleCodes.length",
 			"order":true,
 			"hide":true,
 			"type":"text"
 		});
 		columns.push({
-			"header":Messages("containers.table.sampleCodes"),
+			"header":Messages("containerSupports.table.sampleCodes"),
 			"property":"sampleCodes",
 			"order":true,
 			"type":"text",
 			"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
-		});	
+		});
 		columns.push({
-			"header":Messages("containers.table.tags"),
-			"property":  function(container){
-				angular.forEach(container.contents, function(content){
-					if(content.properties.tag != undefined){
-						tags.push(content.properties.tag.value);
-					}
-				});
-
-				return tags;
-			},
+			"header":Messages("containerSupports.table.projectCodes"),
+			"property":"projectCodes",
+			"order":true,
+			"type":"text"
+		});
+		columns.push({
+			"header":Messages("containerSupports.table.valid"),
+			"property":"valuation.valid",
 			"order":true,
 			"type":"text",
-			"render":"<div list-resize='tags' list-resize-min-size='3'>",
-		});	
-				columns.push({
-					"header":Messages("containers.table.projectCodes"),
-					"property":"projectCodes",
-					"order":true,
-					"type":"text"
-				});					
-				columns.push({
-					"header":Messages("containers.table.valid"),
-					"property":"valuation.valid",
-					"order":true,
-					"type":"text",
-					"edit":true,
-					"choiceInList": true,
-					"possibleValues":"searchService.lists.getValuations()", 
-					"filter":"codes:'valuation'",
-				});
-				columns.push({
-					"header":Messages("containers.table.creationDate"),
-					"property":"traceInformation.creationDate",
-					"order":true,
-					"type":"date"
-				});
-				columns.push({
-					"header":Messages("containers.table.inputProcessCodes"),
-					"property":"inputProcessCodes",
-					"order":true,
-					"type":"text",
-					"render":"<div list-resize='value.data.inputProcessCodes | unique' list-resize-min-size='3'>",
-				});
+			"edit":true,
+			"choiceInList": true,
+			"possibleValues":"searchService.lists.getValuations()", 
+			"filter":"codes:'valuation'",
+		});
+		columns.push({
+			"header":Messages("containerSupports.table.creationDate"),
+			"property":"traceInformation.creationDate",
+			"order":true,
+			"type":"date"
+		});
 
 
-				return columns;
+		return columns;
 	};
 
 
@@ -122,7 +82,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			lists.refresh.containerSupportCategories();
 			lists.refresh.containerCategories();
 			lists.refresh.experimentTypes({categoryCodes:["transformation", "voidProcess"], withoutOneToVoid:false});
-			lists.refresh.containerSupport();
+			lists.refresh.containerSupports();
 			lists.refresh.projects();
 			lists.refresh.processCategories();
 			lists.refresh.states({objectTypeCode:"Container"});
@@ -152,8 +112,8 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			},
 			convertForm : function(){
 				var _form = angular.copy(this.form);
-				if(_form.projectCodes || _form.sampleCodes || (_form.fromExperimentTypeCodes && _form.fromExperimentTypeCodes.length > 0) || _form.containerCategory || _form.processType
-						|| _form.processCategory || _form.containerSupportCategory || _form.state || _form.states || _form.containerSupportCode  || _form.valuations || _form.fromDate || _form.toDate){	
+				if(_form.projectCodes || _form.sampleCodes || _form.containerSupportCategory || _form.state || _form.states 
+						|| _form.containerSupportCode  || _form.valuations || _form.fromDate || _form.toDate){	
 
 					var jsonSearch = {};
 
@@ -166,24 +126,11 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 
 					if(_form.valuations){
 						jsonSearch.valuations = _form.valuations;
-					}
-
-					if(_form.fromExperimentTypeCodes){
-						jsonSearch.fromExperimentTypeCodes = _form.fromExperimentTypeCodes;
-					}
-
-					if(_form.containerCategory){
-						jsonSearch.categoryCode = _form.containerCategory;
-					}
-
-					if(_form.processType){
-						jsonSearch.processTypeCode = _form.processType;
-					}							
+					}					
 
 					if(_form.containerSupportCategory){
 						jsonSearch.containerSupportCategory = _form.containerSupportCategory;
-					}	
-
+					}
 
 					if(_form.state){
 						jsonSearch.stateCode = _form.state;
@@ -194,7 +141,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 					}
 
 					if(_form.containerSupportCode){
-						jsonSearch.supportCode = _form.containerSupportCode;
+						jsonSearch.codeRegex = _form.containerSupportCode;
 					}	
 
 					if(_form.fromDate)jsonSearch.fromDate = moment(_form.fromDate, Messages("date.format").toUpperCase()).valueOf();

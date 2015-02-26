@@ -23,8 +23,8 @@ import play.Play;
 import rules.services.RulesException;
 import rules.services.RulesServices;
 import validation.ContextValidation;
+import validation.container.instance.ContainerSupportValidationHelper;
 import validation.container.instance.ContainerValidationHelper;
-import validation.container.instance.SupportValidationHelper;
 import fr.cea.ig.MongoDBDAO;
 
 public class ProcessHelper {
@@ -57,11 +57,11 @@ public class ProcessHelper {
 
 
 	public static void updateContainerSupportFromContainer(Container container,ContextValidation contextValidation){
-		ContainerSupport containerSupport=MongoDBDAO.findByCode(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, container.support.code);		
+		ContainerSupport containerSupport=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, container.support.code);		
 		containerSupport.fromExperimentTypeCodes=InstanceHelpers.addCodesList(container.fromExperimentTypeCodes, containerSupport.fromExperimentTypeCodes);
-		SupportValidationHelper.validateExperimentTypeCodes(containerSupport.fromExperimentTypeCodes, contextValidation);
+		ContainerSupportValidationHelper.validateExperimentTypeCodes(containerSupport.fromExperimentTypeCodes, contextValidation);
 		if(!contextValidation.hasErrors()){
-			MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME,ContainerSupport.class,
+			MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME,ContainerSupport.class,
 					DBQuery.is("code", container.support.code)
 					,DBUpdate.set("fromExperimentTypeCodes",container.fromExperimentTypeCodes));
 		}

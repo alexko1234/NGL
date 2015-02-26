@@ -480,7 +480,7 @@ public class CommonValidationHelper {
 	
 	public static void validateContainerSupportCode (String containerSupportCode, ContextValidation contextValidation) {		
 		if (ValidationHelper.required(contextValidation, containerSupportCode, "containerSupportCode")) {
-			if (! MongoDBDAO.checkObjectExist(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class,  DBQuery.is("code", containerSupportCode))) {
+			if (! MongoDBDAO.checkObjectExist(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,  DBQuery.is("code", containerSupportCode))) {
 				contextValidation.addErrors("containerSupportCode", ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, containerSupportCode);
 			}
 		}		 

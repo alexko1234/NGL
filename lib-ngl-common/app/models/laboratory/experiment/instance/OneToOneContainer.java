@@ -85,7 +85,7 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 
 		if(outputContainerUsed!=null && !MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_COLL_NAME,Container.class, this.outputContainerUsed.code)){
 			// ContainerSupport
-			ContainerSupport support=ContainerSupportHelper.createSupport(this.outputContainerUsed.locationOnContainerSupport.code, null, 
+			ContainerSupport support=ContainerSupportHelper.createContainerSupport(this.outputContainerUsed.locationOnContainerSupport.code, null, 
 					this.outputContainerUsed.locationOnContainerSupport.categoryCode , experiment.traceInformation.modifyUser);
 
 			// Container

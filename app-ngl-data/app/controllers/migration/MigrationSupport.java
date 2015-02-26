@@ -87,7 +87,7 @@ public class MigrationSupport extends CommonController{
 	public static void createSupportCollection(Container container, Map<String,ContainerSupport> mapSupports) {
 		if (container.support != null) {
 			//ContainerSupport newSupport = ContainerSupportHelper.createSupport(container.support, container.projectCodes, container.sampleCodes);
-			ContainerSupport newSupport = ContainerSupportHelper.createSupport(container.support.code,null, container.support.categoryCode,"ngl");
+			ContainerSupport newSupport = ContainerSupportHelper.createContainerSupport(container.support.code,null, container.support.categoryCode,"ngl");
 			newSupport.projectCodes=new ArrayList<String>(container.projectCodes);
 			newSupport.sampleCodes=new ArrayList<String>(container.sampleCodes);
 
@@ -106,7 +106,7 @@ public class MigrationSupport extends CommonController{
 	public static Result updateBD(Map<String,ContainerSupport>  mapSupport) {
 		ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
 		contextValidation.setCreationMode();
-		InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME, new ArrayList<ContainerSupport>(mapSupport.values()),contextValidation);
+		InstanceHelpers.save(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, new ArrayList<ContainerSupport>(mapSupport.values()),contextValidation);
 		if(contextValidation.hasErrors()){
 			Logger.info("CreateSupportCollection ends with errors");
 			return badRequest("CreateSupportCollection ends with errors");

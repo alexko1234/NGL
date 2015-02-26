@@ -1,4 +1,4 @@
-package supports;
+package containerSupports;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static play.test.Helpers.callAction;
@@ -37,11 +37,11 @@ import utils.MapperHelper;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-import controllers.supports.api.Supports;
-import controllers.supports.api.SupportsSearchForm;
+import controllers.containerSupports.api.ContainerSupports;
+import controllers.containerSupports.api.ContainerSupportsSearchForm;
 import fr.cea.ig.MongoDBDAO;
 
-public class SupportTest extends AbstractTests {
+public class ContainerSupportTest extends AbstractTests {
 
 	@BeforeClass
 	public static void initData() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
@@ -53,7 +53,7 @@ public class SupportTest extends AbstractTests {
 		InitDataHelper.endTest();
 	}	
 	
-	protected static ALogger logger=Logger.of("SupportTest");
+	protected static ALogger logger=Logger.of("ContainerSupportTest");
 	
 	/**********************************Tests of ContainerSupportHelper (DAO Helper)***************************************************/	
 	
@@ -85,11 +85,11 @@ public class SupportTest extends AbstractTests {
 	}
 	
 	@Test
-	public void validateCreateSupport(){
+	public void validateCreateContainerSupport(){
 		PropertySingleValue  testProperty = new PropertySingleValue("testValue");
-		ContainerSupport cs = ContainerSupportHelper.createSupport("TEST_CreateSupport", testProperty, "flowcell-2", "TEST_User");
+		ContainerSupport cs = ContainerSupportHelper.createContainerSupport("TEST_CreateContainerSupport", testProperty, "flowcell-2", "TEST_User");
 		
-		assertThat(cs.code).isEqualTo("TEST_CreateSupport");
+		assertThat(cs.code).isEqualTo("TEST_CreateContainerSupport");
 		assertThat(cs.categoryCode).isEqualTo("flowcell-2");
 		assertThat(cs.state.code).isEqualTo("N");
 		assertThat(cs.state.user).isEqualTo("TEST_User");
@@ -102,35 +102,35 @@ public class SupportTest extends AbstractTests {
 	
 	/**********************************Tests of ContainerSupport class methods (DBObject)***************************************************/		
 	//None			
-	/**********************************Tests of Supports class methods (Controller)***************************************************/	
+	/**********************************Tests of ContainerSupports class methods (Controller)***************************************************/	
 	
 	@Test
 	public void validateGet() {
-		ContainerSupport cs = MongoDBDAO.save(InstanceConstants.SUPPORT_COLL_NAME, SupportTestHelper.getFakeSupportWithCode("validateGetTEST"));
-		assertThat(status(Supports.get("validateGetTEST"))).isEqualTo(play.mvc.Http.Status.OK);	
-		MongoDBDAO.delete(InstanceConstants.SUPPORT_COLL_NAME,cs);
+		ContainerSupport cs = MongoDBDAO.save(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupportTestHelper.getFakeContainerSupportWithCode("validateGetTEST"));
+		assertThat(status(ContainerSupports.get("validateGetTEST"))).isEqualTo(play.mvc.Http.Status.OK);	
+		MongoDBDAO.delete(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME,cs);
 	}
 	
 	@Test
 	public void valideGetNotFound() {		
-		assertThat(status(Supports.get("not found"))).isEqualTo(play.mvc.Http.Status.NOT_FOUND);		
+		assertThat(status(ContainerSupports.get("not found"))).isEqualTo(play.mvc.Http.Status.NOT_FOUND);		
 	}
 	
 	@Test
 	public void validateHead() {
-		ContainerSupport cs = MongoDBDAO.save(InstanceConstants.SUPPORT_COLL_NAME, SupportTestHelper.getFakeSupportWithCode("validateHeadTEST"));
-		assertThat(status(Supports.head("validateHeadTEST"))).isEqualTo(play.mvc.Http.Status.OK);	
-		MongoDBDAO.delete(InstanceConstants.SUPPORT_COLL_NAME,cs);
+		ContainerSupport cs = MongoDBDAO.save(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupportTestHelper.getFakeContainerSupportWithCode("validateHeadTEST"));
+		assertThat(status(ContainerSupports.head("validateHeadTEST"))).isEqualTo(play.mvc.Http.Status.OK);	
+		MongoDBDAO.delete(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME,cs);
 	}
 	
 	@Test
 	public void validateHeadNotFound() {		
-		assertThat(status(Supports.head("Not found"))).isEqualTo(play.mvc.Http.Status.NOT_FOUND);			
+		assertThat(status(ContainerSupports.head("Not found"))).isEqualTo(play.mvc.Http.Status.NOT_FOUND);			
 	}
 	
 	@Test
 	public void validateListWithDatatable() {
-		SupportsSearchForm ssf = SupportTestHelper.getFakeSupportsSearchForm();
+		ContainerSupportsSearchForm ssf = ContainerSupportTestHelper.getFakeContainerSupportsSearchForm();
 		DatatableResponseForTest<ContainerSupport> dcs = new DatatableResponseForTest<ContainerSupport>();
 		List<ContainerSupport> lcs = new ArrayList<ContainerSupport>();
 		MapperHelper mh = new MapperHelper();
@@ -138,7 +138,7 @@ public class SupportTest extends AbstractTests {
 		
 		//Test with categoryCode (good categoryCode)
 		ssf.categoryCode = "tube";
-		Result result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?datatable="+String.valueOf(ssf.datatable)+"&categoryCode="+ssf.categoryCode));
+		Result result = callAction(controllers.containerSupports.api.routes.ref.ContainerSupports.list(), fakeRequest(play.test.Helpers.GET, "?datatable="+String.valueOf(ssf.datatable)+"&categoryCode="+ssf.categoryCode));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		dcs = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<ContainerSupport>>(){});
@@ -149,7 +149,7 @@ public class SupportTest extends AbstractTests {
 		
 		//Test with categoryCode (bad categoryCode)
 		ssf.categoryCode = "badCategoryCode";
-		result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?datatable="+String.valueOf(ssf.datatable)+"&categoryCode="+ssf.categoryCode));
+		result = callAction(controllers.containerSupports.api.routes.ref.ContainerSupports.list(), fakeRequest(play.test.Helpers.GET, "?datatable="+String.valueOf(ssf.datatable)+"&categoryCode="+ssf.categoryCode));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		dcs = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<ContainerSupport>>(){});
@@ -159,7 +159,7 @@ public class SupportTest extends AbstractTests {
 		//Test with fromExperimentTypeCodes (good fromExperimentTypeCodes)		
 		ssf.fromExperimentTypeCodes = new ArrayList<String>();
 		ssf.fromExperimentTypeCodes.add("solution-stock");		
-		result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?datatable="+String.valueOf(ssf.datatable)+"&fromExperimentTypeCodes="+ssf.fromExperimentTypeCodes.get(0)));
+		result = callAction(controllers.containerSupports.api.routes.ref.ContainerSupports.list(), fakeRequest(play.test.Helpers.GET, "?datatable="+String.valueOf(ssf.datatable)+"&fromExperimentTypeCodes="+ssf.fromExperimentTypeCodes.get(0)));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);	
 		
 		dcs = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<ContainerSupport>>(){});
@@ -173,7 +173,7 @@ public class SupportTest extends AbstractTests {
 		//Test with fromExperimentTypeCodes (bad fromExperimentTypeCodes)
 		ssf.fromExperimentTypeCodes = new ArrayList<String>();
 		ssf.fromExperimentTypeCodes.add("badFromExperimentTypeCodes");		
-		result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?datatable="+String.valueOf(ssf.datatable)+"&fromExperimentTypeCodes="+ssf.fromExperimentTypeCodes.get(0)));
+		result = callAction(controllers.containerSupports.api.routes.ref.ContainerSupports.list(), fakeRequest(play.test.Helpers.GET, "?datatable="+String.valueOf(ssf.datatable)+"&fromExperimentTypeCodes="+ssf.fromExperimentTypeCodes.get(0)));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		dcs = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<ContainerSupport>>(){});
@@ -183,7 +183,7 @@ public class SupportTest extends AbstractTests {
 	
 		//Test with nextExperimentTypeCode (good nextExperimentTypeCode)		
 		ssf.nextExperimentTypeCode="prepa-flowcell";
-		result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?datatable="+String.valueOf(ssf.datatable)+"&nextExperimentTypeCode="+ssf.nextExperimentTypeCode));
+		result = callAction(controllers.containerSupports.api.routes.ref.ContainerSupports.list(), fakeRequest(play.test.Helpers.GET, "?datatable="+String.valueOf(ssf.datatable)+"&nextExperimentTypeCode="+ssf.nextExperimentTypeCode));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		dcs = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<ContainerSupport>>(){});
@@ -204,7 +204,7 @@ public class SupportTest extends AbstractTests {
 		result = null;
 		
 		try {
-			result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?datatable="+String.valueOf(ssf.datatable)+"&nextExperimentTypeCode="+ssf.nextExperimentTypeCode));
+			result = callAction(controllers.containerSupports.api.routes.ref.ContainerSupports.list(), fakeRequest(play.test.Helpers.GET, "?datatable="+String.valueOf(ssf.datatable)+"&nextExperimentTypeCode="+ssf.nextExperimentTypeCode));
 		} catch (RuntimeException e) {			
 			exceptionError = true;
 		}
@@ -215,7 +215,7 @@ public class SupportTest extends AbstractTests {
 	
 	@Test
 	public void validateListWithList() {
-		SupportsSearchForm ssf = SupportTestHelper.getFakeSupportsSearchForm();
+		ContainerSupportsSearchForm ssf = ContainerSupportTestHelper.getFakeContainerSupportsSearchForm();
 		ssf.list = true;	
 		MapperHelper mh = new MapperHelper();
 		ListObject lo = new ListObject();
@@ -224,20 +224,20 @@ public class SupportTest extends AbstractTests {
 		//Test with projectCodes (good projectCodes)
 		ssf.projectCodes = new ArrayList<String>();
 		ssf.projectCodes.add("BBA");
-		Result result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&projectCodes="+ssf.projectCodes.get(0)));
+		Result result = callAction(controllers.containerSupports.api.routes.ref.ContainerSupports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&projectCodes="+ssf.projectCodes.get(0)));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});
 		for (int i=0;i<lc.size();i++){
 			lo = lc.get(i);
-			assertThat(ssf.projectCodes.get(0)).isIn((MongoDBDAO.findByCode(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, lo.code)).projectCodes);					
+			assertThat(ssf.projectCodes.get(0)).isIn((MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, lo.code)).projectCodes);					
 			Logger.info("");
 		}
 		
 		//Test with projectCodes (bad projectCodes)	
 		ssf.projectCodes = new ArrayList<String>();
 		ssf.projectCodes.add("badProjectCodes");
-		result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&projectCodes="+ssf.projectCodes.get(0)));
+		result = callAction(controllers.containerSupports.api.routes.ref.ContainerSupports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&projectCodes="+ssf.projectCodes.get(0)));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});
@@ -247,7 +247,7 @@ public class SupportTest extends AbstractTests {
 		ssf.processTypeCode = "illumina-run";
 		ssf.nextExperimentTypeCode="prepa-flowcell";
 		
-		result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&nextExperimentTypeCode="+ssf.nextExperimentTypeCode+"&processTypeCode="+ssf.processTypeCode));
+		result = callAction(controllers.containerSupports.api.routes.ref.ContainerSupports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&nextExperimentTypeCode="+ssf.nextExperimentTypeCode+"&processTypeCode="+ssf.processTypeCode));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});
@@ -284,7 +284,7 @@ public class SupportTest extends AbstractTests {
 	@SuppressWarnings("deprecation")
 	@Test
 	public void validateList() {
-		SupportsSearchForm ssf = SupportTestHelper.getFakeSupportsSearchForm();
+		ContainerSupportsSearchForm ssf = ContainerSupportTestHelper.getFakeContainerSupportsSearchForm();
 		ssf.datatable = false;
 		ssf.list = false;
 		MapperHelper mh = new MapperHelper();

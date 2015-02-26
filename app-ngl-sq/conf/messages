@@ -1,5 +1,35 @@
 application.name = NGL-SQ
 index.title = Welcome to NGL-SQ
+
+#containerSupports
+containerSupports.title = Supports-Containers
+containerSupports.menu = Supports-Containers
+containerSupports.menu.creation = Création
+containerSupports.menu.search = Rechercher
+containerSupports.tabs.search = Recherche Supports-Containers
+
+#containerSupports table
+containerSupports.table.code= Supports-Containers
+containerSupports.table.projectCodes = Projet(s)
+containerSupports.table.sampleCodes = Echantillon(s)
+containerSupports.table.volume = Volume
+containerSupports.table.categoryCode = Catégorie Support-Container
+containerSupports.table.state.code = Etat Support-Container
+containerSupports.table.fromExperimentTypeCodes = Issu du type d''expérience
+containerSupports.table.sampleCodes.length = Nb d''échantillon(s)
+containerSupports.table.sampleCodes = Echantillon(s)
+containerSupports.table.valid = Support-Container valide ?
+containerSupports.table.creationDate = Création Support-Container
+
+containerSupports.select.state =  Sélect. états Support-Container
+containerSupports.select.categoryCode =  Sélect. catégorie Support-Container
+
+containerSupports.placeholder.fromDate = Container depuis le (jj/mm/aaaa)
+containerSupports.placeholder.toDate = Container jusqu''au (jj/mm/aaaa)
+containerSupports.placeholder.user = Container créé par
+
+
+
 #Containers
 containers.title = Containers
 containers.menu = Containers
@@ -44,11 +74,6 @@ containers.select.state =  Sélect. états container
 containers.select.categoryCode =  Sélect. catégorie container
 containers.select.categorySupportCode =  Sélect. catégorie support
 containers.select.fromExperimentTypeCodes= Container issu du type d''expérience
-#Supports table
-supports.table.code= Support Container
-supports.table.projectCodes = Projet(s)
-supports.table.sampleCodes = Echantillon(s)
-supports.table.volume = Volume
 
 
 comments.remove.confirm = Pouvez-vous confirmer la suppression ?
@@ -64,7 +89,7 @@ search.placeholder.states = Sélect. des états
 search.placeholder.instruments = Sélect. des instruments
 search.placeholder.types = Sélect. des types
 search.placeholder.user = Créé par
-search.placeholder.support = Regex pour code support
+search.placeholder.containerSupport = Regex pour code support-container
 search.placeholder.experiment = Regex pour experiment
 
 search.tab.addfilters = Filtres supplémentaires
@@ -234,8 +259,8 @@ baskets.new = Créer un panier
 baskets.add = Ajouter au panier
 baskets.switchView = Voir
 baskets.switchView.containers = les containers
-baskets.switchView.supports = les supports-containers
-backet.view.supports = Vue supports
+baskets.switchView.containerSupport = les supports-containers
+backet.view.containerSupport = Vue supports
 backet.view.containers = Vue containers
 
 error.codeNotExist=Le code {0} n''existe pas

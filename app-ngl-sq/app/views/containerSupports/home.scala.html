@@ -1,0 +1,23 @@
+@(code : String)
+
+@import models.laboratory.common.description.ObjectType
+
+@scripts() = {
+     <script src="@controllers.main.tpl.routes.Main.jsCodes" type="text/javascript" charset="utf-8"></script> 
+     	<script src="@routes.Assets.at("datatable/javascripts/services/datatable2.js")" type="text/javascript" charset="utf-8"></script>    
+			<script src="@routes.Assets.at("ngl-sq/javascripts/containerSupports/app.js")" type="text/javascript" charset="utf-8"></script>  	
+	<script src="@routes.Assets.at("ngl-common/javascripts/services/commons.js")" type="text/javascript" charset="utf-8"></script> 
+		<script src="@routes.Assets.at("ngl-common/javascripts/services/list-resize.js")" type="text/javascript" charset="utf-8"></script> 
+      <script src="@routes.Assets.at("ngl-common/javascripts/controllers/mainctrl.js")" type="text/javascript" charset="utf-8"></script>
+	<script src="@routes.Assets.at("ngl-common/javascripts/services/basket.js")" type="text/javascript" charset="utf-8"></script>  
+	<script src="@routes.Assets.at("ngl-sq/javascripts/containerSupports/services.js")" type="text/javascript" charset="utf-8"></script>
+	<script src="@routes.Assets.at("ngl-sq/javascripts/containerSupports/search-ctrl.js")" type="text/javascript" charset="utf-8"></script>
+	<script src="@controllers.containerSupports.tpl.routes.ContainerSupports.javascriptRoutes" type="text/javascript" charset="utf-8"></script>   
+}
+
+@css() = {
+<link rel="stylesheet" href="@routes.Assets.at("ngl-sq/css/commons/commons.css")">
+}
+
+
+@views.html.main("containerSupports.title", menu("containerSupports."+code), scripts,css)(views.html.contents.lefttabs())

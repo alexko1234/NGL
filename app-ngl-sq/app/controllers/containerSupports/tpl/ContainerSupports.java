@@ -1,20 +1,13 @@
-package controllers.containers.tpl;
-
-import java.util.ArrayList;
-import java.util.List;
+package controllers.containerSupports.tpl;
 
 import play.Routes;
-import play.i18n.Messages;
 import play.mvc.Result;
-import views.components.datatable.DatatableColumn;
-import views.components.datatable.DatatableConfig;
-import views.components.datatable.DatatableHelpers;
-import views.html.container.home;
-import views.html.container.search;
+import views.html.containerSupports.home;
+import views.html.containerSupports.search;
 import controllers.CommonController;
 
-public class Containers extends CommonController {
-
+public class ContainerSupports extends CommonController{
+	
 	public static Result home(String code){
 		return ok(home.render(code));
 	}	
@@ -28,20 +21,24 @@ public class Containers extends CommonController {
   	    return ok(  	    		
   	      Routes.javascriptRouter("jsRoutes",
   	        // Routes
+  	    		controllers.containerSupports.tpl.routes.javascript.ContainerSupports.search(),
+  	    		controllers.containerSupports.tpl.routes.javascript.ContainerSupports.home(),
+  	    		controllers.containerSupports.api.routes.javascript.ContainerSupports.list(),
+  	    		controllers.containerSupports.api.routes.javascript.ContainerSupports.updateBatch(),
+  	    		controllers.containers.api.routes.javascript.ContainerSupportCategories.list(),
   	    		controllers.projects.api.routes.javascript.Projects.list(),
   	    		controllers.samples.api.routes.javascript.Samples.list(),
   	    		controllers.containers.api.routes.javascript.Containers.list(),
-  	    		controllers.experiments.api.routes.javascript.ExperimentTypes.list(),
-  	    		controllers.containers.api.routes.javascript.ContainerSupportCategories.list(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentTypes.list(),  	    		
   	    		controllers.commons.api.routes.javascript.States.list(),
   	    		controllers.processes.api.routes.javascript.ProcessTypes.list(),
   	    		controllers.processes.api.routes.javascript.ProcessCategories.list(),
   	    		controllers.containers.api.routes.javascript.ContainerCategories.list(),
-  	    		controllers.containers.api.routes.javascript.Containers.updateBatch(),
-  	    		controllers.containers.tpl.routes.javascript.Containers.search(),
-  	    		controllers.containers.tpl.routes.javascript.Containers.home(),
-  	    		controllers.containerSupports.api.routes.javascript.ContainerSupports.list()
+  	    		controllers.containers.api.routes.javascript.Containers.updateBatch()
+  	    		
+  	    		
   	      )	  	      
   	    );
   	}
+
 }

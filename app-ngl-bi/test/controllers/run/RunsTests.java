@@ -42,7 +42,7 @@ public class RunsTests extends AbstractTestsCNG {
 		cs.code = "containerName";
 		cs.categoryCode = "lane";
 		   
-		MongoDBDAO.save(InstanceConstants.SUPPORT_COLL_NAME, cs);
+		MongoDBDAO.save(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, cs);
 		
 	   Container c = new Container();
 	   c.code ="containerTest1";
@@ -55,10 +55,10 @@ public class RunsTests extends AbstractTestsCNG {
 	
 	@AfterClass
 	public static void deleteData(){
-		List<ContainerSupport> containerSupports = MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class).toList();
+		List<ContainerSupport> containerSupports = MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class).toList();
 		for (ContainerSupport cs : containerSupports) {
 			if (cs.code.equals("containerName")) {
-				MongoDBDAO.delete(InstanceConstants.SUPPORT_COLL_NAME, cs);
+				MongoDBDAO.delete(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, cs);
 			}
 		}
 		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();

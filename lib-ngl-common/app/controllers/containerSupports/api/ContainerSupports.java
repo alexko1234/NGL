@@ -1,4 +1,4 @@
-package controllers.supports.api;
+package controllers.containerSupports.api;
 
 import static play.data.Form.form;
 
@@ -32,12 +32,12 @@ import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
 
-public class Supports extends CommonController {
+public class ContainerSupports extends CommonController {
 
-	final static Form<SupportsSearchForm> supportForm = form(SupportsSearchForm.class);
+	final static Form<ContainerSupportsSearchForm> supportForm = form(ContainerSupportsSearchForm.class);
 
 	public static Result get(String code){
-		ContainerSupport support = MongoDBDAO.findByCode(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, code);
+		ContainerSupport support = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, code);
 		if(support != null){
 			return ok(Json.toJson(support));
 		}
@@ -46,21 +46,20 @@ public class Supports extends CommonController {
 	}
 
 	public static Result head(String code) {
-		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, code)){			
+		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, code)){			
 			return ok();					
 		}else{
 			return notFound();
 		}	
 	}
 
-	public static Result list() throws DAOException{
-		//Form<SupportsSearchForm> supportFilledForm = filledFormQueryString(supportForm,SupportsSearchForm.class);
-		SupportsSearchForm supportsSearch = filledFormQueryString(SupportsSearchForm.class);
+	public static Result list() throws DAOException{		
+		ContainerSupportsSearchForm supportsSearch = filledFormQueryString(ContainerSupportsSearchForm.class);
 
 		DBQuery.Query query = getQuery(supportsSearch);
 		if(query != null){
 			if(supportsSearch.datatable){
-				MongoDBResult<ContainerSupport> results =  mongoDBFinder(InstanceConstants.SUPPORT_COLL_NAME, supportsSearch, ContainerSupport.class, query); 
+				MongoDBResult<ContainerSupport> results =  mongoDBFinder(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, supportsSearch, ContainerSupport.class, query); 
 				List<ContainerSupport> supports = results.toList();
 
 				return ok(Json.toJson(new DatatableResponse<ContainerSupport>(supports, results.count())));
@@ -69,7 +68,7 @@ public class Supports extends CommonController {
 				keys.put("_id", 0);//Don't need the _id field
 				keys.put("code", 1);
 
-				MongoDBResult<ContainerSupport> results =  mongoDBFinder(InstanceConstants.SUPPORT_COLL_NAME, supportsSearch, ContainerSupport.class, query, keys); 
+				MongoDBResult<ContainerSupport> results =  mongoDBFinder(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, supportsSearch, ContainerSupport.class, query, keys); 
 				List<ContainerSupport> supports = results.toList();
 
 				List<ListObject> los = new ArrayList<ListObject>();
@@ -79,7 +78,7 @@ public class Supports extends CommonController {
 
 				return ok(Json.toJson(los));
 			}else{
-				MongoDBResult<ContainerSupport> results =  mongoDBFinder(InstanceConstants.SUPPORT_COLL_NAME, supportsSearch, ContainerSupport.class, query); 
+				MongoDBResult<ContainerSupport> results =  mongoDBFinder(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, supportsSearch, ContainerSupport.class, query); 
 				List<ContainerSupport> supports = results.toList();
 
 				return ok(Json.toJson(supports));
@@ -98,12 +97,16 @@ public class Supports extends CommonController {
 	 * @return
 	 * @throws DAOException 
 	 */
-	private static DBQuery.Query getQuery(SupportsSearchForm supportsSearch) throws DAOException {
+	private static DBQuery.Query getQuery(ContainerSupportsSearchForm supportsSearch) throws DAOException {
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
 		queryElts.add(DBQuery.exists("_id"));
 
-		if(StringUtils.isNotEmpty(supportsSearch.categoryCode)){
+		if(StringUtils.isNotBlank(supportsSearch.categoryCode)){
 			queryElts.add(DBQuery.is("categoryCode", supportsSearch.categoryCode));
+		}
+		
+		if(StringUtils.isNotBlank(supportsSearch.containerSupportCategory)){
+			queryElts.add(DBQuery.is("categoryCode", supportsSearch.containerSupportCategory));
 		}
 
 		if(CollectionUtils.isNotEmpty(supportsSearch.fromExperimentTypeCodes)){
@@ -111,7 +114,7 @@ public class Supports extends CommonController {
 		}		
 
 		//These fields are not in the ContainerSupport collection then we use the Container collection
-		if(StringUtils.isNotEmpty(supportsSearch.nextExperimentTypeCode) || StringUtils.isNotEmpty(supportsSearch.processTypeCode)){
+		if(StringUtils.isNotBlank(supportsSearch.nextExperimentTypeCode) || StringUtils.isNotBlank(supportsSearch.processTypeCode)){
 
 
 			/*Don't need anymore 09/01/2015
@@ -145,7 +148,7 @@ public class Supports extends CommonController {
 					supports.add(c.support.code);
 				}
 
-				if(StringUtils.isNotEmpty(cs.nextExperimentTypeCode) || StringUtils.isNotEmpty(cs.processTypeCode)){
+				if(StringUtils.isNotBlank(cs.nextExperimentTypeCode) || StringUtils.isNotBlank(cs.processTypeCode)){
 					queryElts.add(DBQuery.in("code", supports));
 				}
 			}else{
@@ -158,8 +161,12 @@ public class Supports extends CommonController {
 			queryElts.add(DBQuery.or(DBQuery.in("valuation.valid", supportsSearch.valuations)));
 		}
 
-		if(StringUtils.isNotEmpty(supportsSearch.stateCode)){
+		if(StringUtils.isNotBlank(supportsSearch.stateCode)){
 			queryElts.add(DBQuery.in("state.code", supportsSearch.stateCode));
+		}
+		
+		if(CollectionUtils.isNotEmpty(supportsSearch.stateCodes)){
+			queryElts.add(DBQuery.in("state.code", supportsSearch.stateCodes));
 		}
 
 		if(StringUtils.isNotBlank(supportsSearch.code)){

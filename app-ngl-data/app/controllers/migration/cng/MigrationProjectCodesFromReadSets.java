@@ -38,7 +38,7 @@ public class MigrationProjectCodesFromReadSets  extends CommonController {
 	protected static LimsCNGDAO limsServices= Spring.getBeanOfType(LimsCNGDAO.class);	
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmm");
 	private static String backupName = InstanceConstants.CONTAINER_COLL_NAME+"_BCK_PC_"+sdf.format(new java.util.Date());		
-	private static String backupName2 = InstanceConstants.SUPPORT_COLL_NAME+"_BCK_PC_"+sdf.format(new java.util.Date());
+	private static String backupName2 = InstanceConstants.CONTAINER_SUPPORT_COLL_NAME+"_BCK_PC_"+sdf.format(new java.util.Date());
 	
 	
 	
@@ -64,9 +64,9 @@ public class MigrationProjectCodesFromReadSets  extends CommonController {
 		MongoDBDAO.save(backupName, MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList());
 		Logger.info("\tCopie "+InstanceConstants.CONTAINER_COLL_NAME+" to "+backupName+" end");	
 		
-		Logger.info("\tCopie "+InstanceConstants.SUPPORT_COLL_NAME+" to "+backupName2+" start");		
-		MongoDBDAO.save(backupName2, MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class).toList());
-		Logger.info("\tCopie "+InstanceConstants.SUPPORT_COLL_NAME+" to "+backupName2+" end");	
+		Logger.info("\tCopie "+InstanceConstants.CONTAINER_SUPPORT_COLL_NAME+" to "+backupName2+" start");		
+		MongoDBDAO.save(backupName2, MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class).toList());
+		Logger.info("\tCopie "+InstanceConstants.CONTAINER_SUPPORT_COLL_NAME+" to "+backupName2+" end");	
 	}
 	
 	
@@ -78,7 +78,7 @@ public class MigrationProjectCodesFromReadSets  extends CommonController {
 
 			
 		//find container supports
-		List<ContainerSupport> oldSupportContainers = MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, 
+		List<ContainerSupport> oldSupportContainers = MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, 
 				DBQuery.regex("categoryCode", Pattern.compile("flowcell"))).toList();
 
 	
@@ -157,13 +157,13 @@ public class MigrationProjectCodesFromReadSets  extends CommonController {
 				
 				WriteResult<ContainerSupport, String> r;
 				if (!bError4_4) {
-					r = (WriteResult<ContainerSupport, String>) MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, 
+					r = (WriteResult<ContainerSupport, String>) MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, 
 						DBQuery.is("code", oldSupportContainer.code),   
 						DBUpdate.set("sampleCodes", listSampleCodesInSupport).set("projectCodes", listProjectCodesInSupport));
 				}
 				else {
 					//bug identified, we update the categoryCode too
-					r = (WriteResult<ContainerSupport, String>) MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, 
+					r = (WriteResult<ContainerSupport, String>) MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, 
 							DBQuery.is("code", oldSupportContainer.code),   
 							DBUpdate.set("sampleCodes", listSampleCodesInSupport).set("projectCodes", listProjectCodesInSupport).set("categoryCode", "flowcell-2"));
 				}

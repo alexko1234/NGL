@@ -152,10 +152,10 @@ public class ContainerHelper {
 			if (container.support != null) {
 				ContainerSupport newSupport = null;
 				if (mapSupportsCodeSeq != null) {
-					newSupport = ContainerSupportHelper.createSupport(container.support.code, mapSupportsCodeSeq.get(container.support.code), container.support.categoryCode,"ngl");
+					newSupport = ContainerSupportHelper.createContainerSupport(container.support.code, mapSupportsCodeSeq.get(container.support.code), container.support.categoryCode,"ngl");
 				}
 				else {
-					newSupport = ContainerSupportHelper.createSupport(container.support.code, null, container.support.categoryCode,"ngl");
+					newSupport = ContainerSupportHelper.createContainerSupport(container.support.code, null, container.support.categoryCode,"ngl");
 				}
 				newSupport.projectCodes = new  ArrayList<String>(container.projectCodes);
 				newSupport.sampleCodes = new  ArrayList<String>(container.sampleCodes);
@@ -179,7 +179,7 @@ public class ContainerHelper {
 			}
 		}
 
-		InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME, new ArrayList<ContainerSupport>(mapSupports.values()), contextValidation, true);
+		InstanceHelpers.save(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, new ArrayList<ContainerSupport>(mapSupports.values()), contextValidation, true);
 
 	}
 
@@ -190,7 +190,7 @@ public class ContainerHelper {
 
 		for (Container container : updatedContainers) {
 			if (container.support != null) {
-				ContainerSupport newSupport = ContainerSupportHelper.createSupport(container.support.code, mapSupportsCodeSeq.get(container.support.code), container.support.categoryCode,"ngl");
+				ContainerSupport newSupport = ContainerSupportHelper.createContainerSupport(container.support.code, mapSupportsCodeSeq.get(container.support.code), container.support.categoryCode,"ngl");
 				newSupport.projectCodes = new  ArrayList<String>(container.projectCodes);
 				newSupport.sampleCodes = new  ArrayList<String>(container.sampleCodes);							
 				if (!mapSupports.containsKey(newSupport.code)) {
@@ -206,7 +206,7 @@ public class ContainerHelper {
 		}
 
 		for (Map.Entry<String,ContainerSupport> e : mapSupports.entrySet()) {
-			ContainerSupport dbCs = MongoDBDAO.findByCode(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, e.getKey());
+			ContainerSupport dbCs = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, e.getKey());
 
 			ContainerSupport updatedCs = e.getValue();
 
@@ -217,9 +217,9 @@ public class ContainerHelper {
 			if (!( dbCs.projectCodes.containsAll(updatedCs.projectCodes) && dbCs.sampleCodes.containsAll(updatedCs.sampleCodes) 
 					&& updatedCs.projectCodes.containsAll(dbCs.projectCodes) && updatedCs.sampleCodes.containsAll(dbCs.sampleCodes)) ) {
 
-				MongoDBDAO.deleteByCode(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, e.getKey());
+				MongoDBDAO.deleteByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, e.getKey());
 
-				InstanceHelpers.save(InstanceConstants.SUPPORT_COLL_NAME, updatedCs, contextValidation, true);
+				InstanceHelpers.save(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, updatedCs, contextValidation, true);
 			}
 		}
 

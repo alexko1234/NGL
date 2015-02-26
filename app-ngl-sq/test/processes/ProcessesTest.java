@@ -65,9 +65,9 @@ public class ProcessesTest extends AbstractTests{
 	@Test
 	public void validateSave() throws JsonParseException, JsonMappingException, IOException{
 		String supportCode = InitDataHelper.getSupportCodesInContext("tube").get(0);		
-		ContainerSupport cs = MongoDBDAO.findOne(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", supportCode));			
+		ContainerSupport cs = MongoDBDAO.findOne(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", supportCode));			
 		cs.state.code="IW-P";
-		MongoDBDAO.save(InstanceConstants.SUPPORT_COLL_NAME, cs);		
+		MongoDBDAO.save(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, cs);		
 		Process process = ProcessTestHelper.getFakeProcess("mapping", "opgen-run");
 		process.projectCode = cs.projectCodes.get(0);
 		process.sampleCode = cs.sampleCodes.get(0);
@@ -96,7 +96,7 @@ public class ProcessesTest extends AbstractTests{
 		assertThat(container.inputProcessCodes.get(0)).isEqualTo(processResult.code);
 		assertThat(container.state.code).isEqualTo("A");
 		assertThat(container.fromExperimentTypeCodes).isNotNull();
-		ContainerSupport containerSupport=MongoDBDAO.findByCode(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, container.support.code);
+		ContainerSupport containerSupport=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, container.support.code);
 		assertThat(containerSupport.state.code).isEqualTo("A");
 		assertThat(containerSupport.fromExperimentTypeCodes).isNotNull();
 		assertThat(container.inputProcessCodes.get(0)).isEqualTo(processResult.code);
@@ -119,7 +119,7 @@ public class ProcessesTest extends AbstractTests{
 /*	@Test
 	public void validatesaveFromSupportOpgenRun() throws JsonParseException, JsonMappingException, IOException{
 		String supportCode = InitDataHelper.getSupportCodesInContext("tube").get(0);		
-		ContainerSupport cs = MongoDBDAO.findOne(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", supportCode));		
+		ContainerSupport cs = MongoDBDAO.findOne(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", supportCode));		
 		cs.state.code="IW-P";
 		Process process = ProcessTestHelper.getFakeProcess("mapping", "opgen-run");
 		process.projectCode = cs.projectCodes.get(0);
@@ -172,7 +172,7 @@ public class ProcessesTest extends AbstractTests{
 		process.properties.put("readType", new PropertySingleValue("PE"));
 		process.properties.put("readLength", new PropertySingleValue("300"));
 		String supportCode = InitDataHelper.getSupportCodesInContext("flowcell-8").get(0);
-		ContainerSupport cs = MongoDBDAO.findOne(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", supportCode));	
+		ContainerSupport cs = MongoDBDAO.findOne(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", supportCode));	
 		cs.state.code="IW-P";
 		process.projectCode = cs.projectCodes.get(0);
 		process.sampleCode = cs.sampleCodes.get(0);
@@ -229,7 +229,7 @@ public class ProcessesTest extends AbstractTests{
 	@Test
 	public void validatesaveFromSupportIlluminaRun() throws JsonParseException, JsonMappingException, IOException{		
 		String supportCode = InitDataHelper.getSupportCodesInContext("tube").get(0);
-		ContainerSupport cs = MongoDBDAO.findOne(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", supportCode));		
+		ContainerSupport cs = MongoDBDAO.findOne(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", supportCode));		
 		cs.state.code="IW-P";
 		Process process = ProcessTestHelper.getFakeProcess("sequencing", "illumina-run");
 		process.projectCode = cs.projectCodes.get(0);

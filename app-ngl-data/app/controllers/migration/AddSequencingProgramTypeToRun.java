@@ -48,7 +48,7 @@ public class AddSequencingProgramTypeToRun  extends CommonController {
 		//set hashMap hm
 		HashMap<String, PropertyValue> hm = new HashMap<String, PropertyValue>();
 		
-		List<ContainerSupport> containerSupports = MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("categoryCode", Arrays.asList("flowcell-1", "flowcell-2", "flowcell-8"))).toList();
+		List<ContainerSupport> containerSupports = MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("categoryCode", Arrays.asList("flowcell-1", "flowcell-2", "flowcell-8"))).toList();
 		for (ContainerSupport containerSupport : containerSupports) {
 			//Logger.debug("ContainerSupport "+containerSupport.code);
 			if(containerSupport.properties!=null && containerSupport.properties.containsKey("sequencingProgramType")){

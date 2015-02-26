@@ -52,7 +52,7 @@ public class ContainerSupportValidationHelperTest extends AbstractTests {
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.setCreationMode();
 		//Container is not yet serialized
-		ContainerSupportValidationHelper.validateUniqueSupportCodePosition(container.support, contextValidation);
+		ContainerSupportValidationHelper.validateUniqueContainerSupportCodePosition(container.support, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 
@@ -62,7 +62,7 @@ public class ContainerSupportValidationHelperTest extends AbstractTests {
 		contextValidation.setCreationMode();
 		container=MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME,container);
 		//Container is in the database
-		ContainerSupportValidationHelper.validateUniqueSupportCodePosition(container.support, contextValidation);
+		ContainerSupportValidationHelper.validateUniqueContainerSupportCodePosition(container.support, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
 		//remove container for the others tests : (same context before and after)
 		MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME,container);
@@ -72,10 +72,10 @@ public class ContainerSupportValidationHelperTest extends AbstractTests {
 	public void validateUniqueSupportCodePositionCodeNotCreationMode() {
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.setUpdateMode();
-		ContainerSupportValidationHelper.validateUniqueSupportCodePosition(container.support, contextValidation);
+		ContainerSupportValidationHelper.validateUniqueContainerSupportCodePosition(container.support, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 		contextValidation.setDeleteMode();
-		ContainerSupportValidationHelper.validateUniqueSupportCodePosition(container.support, contextValidation);
+		ContainerSupportValidationHelper.validateUniqueContainerSupportCodePosition(container.support, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 

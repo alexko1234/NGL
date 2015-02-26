@@ -479,7 +479,7 @@ public class Experiments extends CommonController{
 					containerUsed.code=containerUsed.code.replace(containerSupportCodeOld, containerSupportCode);
 					containerUsed.locationOnContainerSupport.code=containerSupportCode;
 
-					MongoDBDAO.update(InstanceConstants.SUPPORT_COLL_NAME,ContainerSupport.class,DBQuery.is("code",containerSupportCodeOld),DBUpdate.set("code",containerSupportCode));
+					MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME,ContainerSupport.class,DBQuery.is("code",containerSupportCodeOld),DBUpdate.set("code",containerSupportCode));
 					MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code",containerSupportCodeOld),DBUpdate.set("support.code", containerSupportCode).set("code",containerUsed.code ));
 
 				}

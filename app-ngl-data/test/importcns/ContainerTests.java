@@ -53,7 +53,7 @@ public class ContainerTests extends AbstractTests {
 			assertThat(container.contents.get(0).properties.get("sequencingProgramType")).isNull();
 		}
 		Assert.assertTrue(containers.size()>0);
-		List<ContainerSupport> containerSupports=MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("code", AllTests.prepaCodes)).toList();
+		List<ContainerSupport> containerSupports=MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("code", AllTests.prepaCodes)).toList();
 		for(ContainerSupport containerSupport:containerSupports){
 			assertThat(containerSupport.properties.get("sequencingProgramType")).isNotNull();
 		}
@@ -77,7 +77,7 @@ public class ContainerTests extends AbstractTests {
 			assertThat(container.contents.get(0).percentage).isNotNull();
 		}
 		Assert.assertTrue(containers.size()>0);
-		List<ContainerSupport> containerSupports=MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("code", AllTests.prepaExtCodes)).toList();
+		List<ContainerSupport> containerSupports=MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("code", AllTests.prepaExtCodes)).toList();
 		Assert.assertEquals(containerSupports.size(), AllTests.prepaExtCodes.size());
 		
 	}
@@ -98,7 +98,7 @@ public class ContainerTests extends AbstractTests {
 		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code", solutionStocks)).toList();
 		Assert.assertTrue(containers.size()>0);
 		
-		List<ContainerSupport> containerSupports=MongoDBDAO.find(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("code", solutionStocks)).toList();
+		List<ContainerSupport> containerSupports=MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("code", solutionStocks)).toList();
 		Assert.assertEquals(containerSupports.size(),solutionStocks.size());
 
 		for(Container container:containers){

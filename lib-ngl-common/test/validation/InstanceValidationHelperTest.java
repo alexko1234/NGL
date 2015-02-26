@@ -84,7 +84,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		
 		container=saveDBOject(Container.class,InstanceConstants.CONTAINER_COLL_NAME,"container" + randomInt);
 				
-		containerSupport=saveDBOject(ContainerSupport.class, InstanceConstants.SUPPORT_COLL_NAME, "containerSupport" + randomInt);
+		containerSupport=saveDBOject(ContainerSupport.class, InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, "containerSupport" + randomInt);
 		
 		reagentInstance=saveDBOject(Reagent.class, InstanceConstants.REAGENT_INSTANCE_COLL_NAME, "reagent" + randomInt);
 
@@ -104,7 +104,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		
 		MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, container);
 		
-		MongoDBDAO.delete(InstanceConstants.SUPPORT_COLL_NAME, containerSupport);
+		MongoDBDAO.delete(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, containerSupport);
 		
 		MongoDBDAO.delete(InstanceConstants.REAGENT_INSTANCE_COLL_NAME,reagentInstance);
 	}

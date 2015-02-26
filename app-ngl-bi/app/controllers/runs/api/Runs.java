@@ -370,7 +370,7 @@ public class Runs extends RunsController {
 	}
 	
 	private static Map<String, PropertyValue> getProperties(String containerSupportCode) {
-		ContainerSupport cs = MongoDBDAO.findByCode(InstanceConstants.SUPPORT_COLL_NAME, ContainerSupport.class, containerSupportCode);
+		ContainerSupport cs = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, containerSupportCode);
 		if (cs != null && cs.properties != null) {
 			return cs.properties;
 		}
