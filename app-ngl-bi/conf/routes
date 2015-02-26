@@ -211,8 +211,8 @@ HEAD	/api/containers/:code						controllers.containers.api.Containers.head(code:
 
 #containerSupports api
 GET		/api/containerSupports								controllers.containerSupports.api.ContainerSupports.list()
-GET		/api/containerSupports/:code							controllers.containerSupports.api.ContainerSupports.get(code:java.lang.String)
-HEAD	/api/containerSupports/:code							controllers.containerSupports.api.ContainerSupports.head(code:java.lang.String)
+GET		/api/containerSupports/:code						controllers.containerSupports.api.ContainerSupports.get(code:java.lang.String)
+HEAD	/api/containerSupports/:code						controllers.containerSupports.api.ContainerSupports.head(code:java.lang.String)
 
 
 #stats tpl
