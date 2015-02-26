@@ -209,10 +209,10 @@ GET		/api/containers								controllers.containers.api.Containers.list()
 GET		/api/containers/:code						controllers.containers.api.Containers.get(code:java.lang.String)
 HEAD	/api/containers/:code						controllers.containers.api.Containers.head(code:java.lang.String)
 
-#containerSupports api
-GET		/api/containerSupports								controllers.containerSupports.api.ContainerSupports.list()
-GET		/api/containerSupports/:code						controllers.containerSupports.api.ContainerSupports.get(code:java.lang.String)
-HEAD	/api/containerSupports/:code						controllers.containerSupports.api.ContainerSupports.head(code:java.lang.String)
+#supports api
+GET		/api/supports								controllers.containerSupports.api.ContainerSupports.list()
+GET		/api/supports/:code							controllers.containerSupports.api.ContainerSupports.get(code:java.lang.String)
+HEAD	/api/supports/:code							controllers.containerSupports.api.ContainerSupports.head(code:java.lang.String)
 
 
 #stats tpl
