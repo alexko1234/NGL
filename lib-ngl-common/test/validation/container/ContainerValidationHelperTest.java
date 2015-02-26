@@ -13,6 +13,7 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
+import models.laboratory.project.instance.Project;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
@@ -64,6 +65,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	static String inputProcessCode2;
 	static String inputProcessCode3;
 
+	static Project project;
 	@BeforeClass
 	public static void initData() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
 
@@ -73,6 +75,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 
 		processType=ProcessType.find.findAll().get(0);		
 		
+		project=saveDBOject(Project.class,InstanceConstants.PROJECT_COLL_NAME,"project");
 
 		sampleType=SampleType.find.findAll().get(0);
 		Logger.debug("sampleType "+sampleType.category.name);
@@ -92,7 +95,9 @@ public class ContainerValidationHelperTest extends AbstractTests {
 				
 		sampleUsed=new Content(sample.code,sample.typeCode,sample.categoryCode);
 		sampleUsed.percentage=80.0;
+		sampleUsed.projectCode=project.code;
 		sampleUsed1=new Content(sample1.code,sample1.typeCode, sample1.categoryCode);
+		sampleUsed1.projectCode=project.code;
 		sampleUsed1.percentage=20.0;
 		sampleUsed3 = new Content();
 		
@@ -246,7 +251,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 		localContents.get(0).percentage= 100.00;
 		ContainerValidationHelper.validateContents(localContents, contextValidation);
 		contextValidation.displayErrors(logger);
-		assertThat(contextValidation.errors.size()).isEqualTo(3);
+		assertThat(contextValidation.errors.size()).isEqualTo(4);
 	}
 	
 	/**
