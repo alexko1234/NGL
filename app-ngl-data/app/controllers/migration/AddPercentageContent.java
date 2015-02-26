@@ -7,24 +7,21 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import org.antlr.analysis.DFA;
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-
-import com.mongodb.MongoException;
-
-import controllers.CommonController;
-import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.utils.InstanceConstants;
 import models.utils.instance.ContainerHelper;
+
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+
 import play.Logger;
 import play.mvc.Result;
-import validation.ContextValidation;
-import validation.container.instance.ContainerValidationHelper;
-import validation.container.instance.ContentValidationHelper;
+
+import com.mongodb.MongoException;
+
+import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 
 public class AddPercentageContent extends CommonController{
