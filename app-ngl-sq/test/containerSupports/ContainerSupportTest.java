@@ -272,7 +272,7 @@ public class ContainerSupportTest extends AbstractTests {
 		result = null;
 		
 		try {
-			result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&nextExperimentTypeCode="+ssf.nextExperimentTypeCode+"&processTypeCode="+ssf.processTypeCode));
+			result = callAction(controllers.containerSupports.api.routes.ref.ContainerSupports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&nextExperimentTypeCode="+ssf.nextExperimentTypeCode+"&processTypeCode="+ssf.processTypeCode));
 		}  catch (RuntimeException e) {			
 			exceptionError = true;
 		}
@@ -295,7 +295,7 @@ public class ContainerSupportTest extends AbstractTests {
 		ssf.fromDate = new Date(2014-1900, 11, 16);
 		ssf.toDate = new Date(2014-1900, 11, 18);
 		
-		Result result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&fromDate="+ssf.fromDate.getTime()+"&toDate="+ssf.toDate.getTime()));
+		Result result = callAction(controllers.containerSupports.api.routes.ref.ContainerSupports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&fromDate="+ssf.fromDate.getTime()+"&toDate="+ssf.toDate.getTime()));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		lcs = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ContainerSupport>>(){});
@@ -308,7 +308,7 @@ public class ContainerSupportTest extends AbstractTests {
 		//Test with dates (unmatched period)
 		ssf.fromDate = new Date(2014-1900, 11, 24);
 		ssf.toDate = new Date(2015-1900, 0, 4);
-		result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&fromDate="+ssf.fromDate.getTime()+"&toDate="+ssf.toDate.getTime()));
+		result = callAction(controllers.containerSupports.api.routes.ref.ContainerSupports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&fromDate="+ssf.fromDate.getTime()+"&toDate="+ssf.toDate.getTime()));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		lcs = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ContainerSupport>>(){});
@@ -316,7 +316,7 @@ public class ContainerSupportTest extends AbstractTests {
 		
 		//Test with regex (matched pattern)
 		ssf.codeRegex="^B.*1$";
-		result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&codeRegex="+ssf.codeRegex));
+		result = callAction(controllers.containerSupports.api.routes.ref.ContainerSupports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&codeRegex="+ssf.codeRegex));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		lcs = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ContainerSupport>>(){});
@@ -329,7 +329,7 @@ public class ContainerSupportTest extends AbstractTests {
 		
 		//Test with regex (unmatched pattern)
 		ssf.codeRegex="unmatched";
-		result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&codeRegex="+ssf.codeRegex));
+		result = callAction(controllers.containerSupports.api.routes.ref.ContainerSupports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&codeRegex="+ssf.codeRegex));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		lcs = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ContainerSupport>>(){});
@@ -337,7 +337,7 @@ public class ContainerSupportTest extends AbstractTests {
 		
 		//Test with stateCode (good stateCode)		
 		ssf.stateCode="IW-P";
-		result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&stateCode="+ssf.stateCode));
+		result = callAction(controllers.containerSupports.api.routes.ref.ContainerSupports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&stateCode="+ssf.stateCode));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		lcs = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ContainerSupport>>(){});	
@@ -349,7 +349,7 @@ public class ContainerSupportTest extends AbstractTests {
 		
 		//Test with stateCode (bad stateCode)
 		ssf.stateCode="BadStateCode";
-		result = callAction(controllers.supports.api.routes.ref.Supports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&stateCode="+ssf.stateCode));
+		result = callAction(controllers.containerSupports.api.routes.ref.ContainerSupports.list(), fakeRequest(play.test.Helpers.GET, "?list="+String.valueOf(ssf.list)+"&stateCode="+ssf.stateCode));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		lcs = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ContainerSupport>>(){});	
