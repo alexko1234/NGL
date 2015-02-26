@@ -6,15 +6,15 @@
 GET     /                           									controllers.main.tpl.Main.home()
 
 #containerSupports tpl
-GET 	/containerSupports/:homecode/home								controllers.containerSupports.tpl.ContainerSupports.home(homecode:java.lang.String)
-GET		/tpl/containerSupports/search									controllers.containerSupports.tpl.ContainerSupports.search()
-GET		/tpl/containerSupports/js-routes								controllers.containerSupports.tpl.ContainerSupports.javascriptRoutes()
+GET 	/supports/:homecode/home										controllers.containerSupports.tpl.ContainerSupports.home(homecode:java.lang.String)
+GET		/tpl/supports/search											controllers.containerSupports.tpl.ContainerSupports.search()
+GET		/tpl/supports/js-routes											controllers.containerSupports.tpl.ContainerSupports.javascriptRoutes()
 
-#supports api
-GET		/api/containerSupports											controllers.containerSupports.api.ContainerSupports.list()
-GET		/api/containerSupports/:code									controllers.containerSupports.api.ContainerSupports.get(code:java.lang.String)
-HEAD	/api/containerSupports/:code									controllers.containerSupports.api.ContainerSupports.head(code:java.lang.String)
-PUT		/api/containerSupports/batch									controllers.containerSupports.api.ContainerSupports.updateBatch()
+#supports api	
+GET		/api/supports													controllers.containerSupports.api.ContainerSupports.list()
+GET		/api/supports/:code												controllers.containerSupports.api.ContainerSupports.get(code:java.lang.String)
+HEAD	/api/supports/:code												controllers.containerSupports.api.ContainerSupports.head(code:java.lang.String)
+PUT		/api/supports/batch												controllers.containerSupports.api.ContainerSupports.updateBatch()
 
 #containers tpl
 GET 	/containers/:homecode/home										controllers.containers.tpl.Containers.home(homecode:java.lang.String)

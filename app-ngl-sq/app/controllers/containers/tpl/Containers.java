@@ -40,7 +40,12 @@ public class Containers extends CommonController {
   	    		controllers.containers.api.routes.javascript.Containers.updateBatch(),
   	    		controllers.containers.tpl.routes.javascript.Containers.search(),
   	    		controllers.containers.tpl.routes.javascript.Containers.home(),
-  	    		controllers.containerSupports.api.routes.javascript.ContainerSupports.list()
+  	    		controllers.containerSupports.api.routes.javascript.ContainerSupports.list(),
+  	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.list(),
+	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.get(),
+	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.save(),
+	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.update(),
+	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.delete()
   	      )	  	      
   	    );
   	}
