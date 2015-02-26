@@ -14,6 +14,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.run.instance.Analysis;
 import models.utils.InstanceConstants;
 
@@ -28,7 +29,6 @@ import play.mvc.Result;
 import rules.services.RulesException;
 import rules.services.RulesServices;
 import utils.AbstractTestsCNS;
-
 import fr.cea.ig.MongoDBDAO;
 
 
@@ -36,8 +36,8 @@ public class StatBPATest extends AbstractTestsCNS
 {
 	private static Analysis analysis;
 	private static final String codeAnalysis = "BA_BFY_AAKCOSF_1_A7VKN.IND13";
-	private static final long storedBases = 1097478;
-	private static final long assemblyContigSize = 1418258;
+	private static final Integer storedBases = 1097478;
+	private static final Integer assemblyContigSize = 1418258;
 	
 	
 	/**
@@ -57,6 +57,7 @@ public class StatBPATest extends AbstractTestsCNS
 		Analysis analysis_stat = MongoDBDAO.findOne("ngl_bi.Analysis_stat", Analysis.class, DBQuery.is("code", codeAnalysis));
 		Logger.info("Analysis "+analysis_stat);
 		
+		
 		//Copy analysis object to collection and remove older if stat already compute
 		analysis = MongoDBDAO.findOne(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, DBQuery.is("code", codeAnalysis));
 		
@@ -64,6 +65,7 @@ public class StatBPATest extends AbstractTestsCNS
 			MongoDBDAO.delete(InstanceConstants.ANALYSIS_COLL_NAME, analysis);
 		MongoDBDAO.save(InstanceConstants.ANALYSIS_COLL_NAME, analysis_stat);
 		analysis=analysis_stat;
+		
 	}
 	
 	/**
@@ -89,8 +91,8 @@ public class StatBPATest extends AbstractTestsCNS
 		//Check calculate
 		
 		//Get value storedBases and assemblyContigSize
-		long assemblyContigSizeDB = ((PropertyValue<Long>)analysis.treatments.get("assemblyBA").results.get("pairs").get("assemblyContigSize")).value;
-		long storedBasesDB = ((PropertyValue<Long>)analysis.treatments.get("contigFilterBA").results.get("pairs").get("storedBases")).value; 
+		Integer assemblyContigSizeDB = ((PropertyValue<Integer>)analysis.treatments.get("assemblyBA").results.get("pairs").get("assemblyContigSize")).value;
+		Integer storedBasesDB = ((PropertyValue<Integer>)analysis.treatments.get("contigFilterBA").results.get("pairs").get("storedBases")).value; 
 		Assert.assertEquals(assemblyContigSizeDB, assemblyContigSize);
 		Assert.assertEquals(storedBasesDB, storedBases);
 		
