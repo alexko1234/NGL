@@ -138,6 +138,22 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 	 
 	$scope.message = {};
 
+	$scope.isPopup = function(resolutionCodes){
+		if(resolutionCodes.length === 1 && resolutionCodes[0] === "correct"){
+			return false;
+		}
+		
+		return true;
+	};
+	
+	$scope.finishExperiment = function(){
+		if($scope.isPopup($scope.experiment.value.state.resolutionCodes) === true){
+			angular.element('#modalResolutionProcess').modal('show');
+		}else{
+			$scope.saveAllAndChangeState();
+		}
+	};
+	
 	$scope.getPropertyColumnType = function(type){
 		if(type === "java.lang.String"){
 			return "text";
@@ -729,7 +745,14 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			$scope.setEditConfig(false);
 
 			$scope.clearMessages();
-			var promise = $http.put(jsRoutes.controllers.experiments.api.Experiments.nextState($scope.experiment.value.code).url)
+			if($scope.experiment.value !== undefined){
+				if($scope.experiment.value.state.code === "N"){
+					$scope.nextStateCode = "IP";
+				}else if($scope.experiment.value.state.code === "IP"){
+					$scope.nextStateCode = "F";
+				}
+			}
+			var promise = $http.put(jsRoutes.controllers.experiments.api.Experiments.updateStateCode($scope.experiment.value.code).url,{"nextStateCode":$scope.nextStateCode, "stopProcess":$scope.experiment.stopProcess, "retry":$scope.experiment.retry})
 			.success(function(data, status, headers, config) {
 				if(data!=null){
 					/*$scope.message.clazz="alert alert-success";

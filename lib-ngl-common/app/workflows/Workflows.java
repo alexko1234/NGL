@@ -3,9 +3,7 @@ package workflows;
 import java.util.Date;
 import java.util.List;
 
-import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.TransientState;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
@@ -16,9 +14,7 @@ import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.description.ExperimentTypeNode;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
-import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ExperimentHelper;
 import models.utils.instance.StateHelper;
@@ -26,10 +22,8 @@ import models.utils.instance.StateHelper;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
-import controllers.CommonController;
 import play.Logger;
 import validation.ContextValidation;
-import validation.common.instance.CommonValidationHelper;
 import validation.container.instance.ContainerValidationHelper;
 import validation.experiment.instance.ExperimentValidationHelper;
 import validation.processes.instance.ProcessValidationHelper;
@@ -42,7 +36,7 @@ public class Workflows {
 	 * Set a state of an experiment 
 	 * @param experiment: the experiment, errors: the filledForm errors
 	 */
-	public static void setExperimentState(Experiment experiment, State nextState, ContextValidation ctxValidation){
+	public static void setExperimentState(Experiment experiment, State nextState, ContextValidation ctxValidation, boolean stopProcess, boolean retry){
 
 		ctxValidation.getContextObjects().put("stateCode", nextState.code);
 		ExperimentValidationHelper.validateState(experiment.typeCode, nextState, ctxValidation);
@@ -74,7 +68,7 @@ public class Workflows {
 				}
 				Logger.debug("Apres saveOutputContainerUsed");
 				if(!ctxValidation.hasErrors()){
-					nextOutputContainerState(experiment, ctxValidation);
+					nextOutputContainerState(experiment, ctxValidation, stopProcess, retry);
 				}
 
 			}
@@ -86,12 +80,12 @@ public class Workflows {
 			}
 
 			if(!ctxValidation.hasErrors()){
-				nextInputContainerState(experiment, ctxValidation);
+				nextInputContainerState(experiment, ctxValidation,stopProcess, retry);
 			}
 		}
 	}
 
-	public static void nextExperimentState(Experiment experiment,ContextValidation contextValidation){
+	public static void nextExperimentState(Experiment experiment,ContextValidation contextValidation,boolean stopProcess, boolean retry){
 		State state = StateHelper.cloneState(experiment.state);
 
 		if(experiment.state == null || experiment.state.code.equals("")){
@@ -102,14 +96,14 @@ public class Workflows {
 			state.code = "F";
 		}
 
-		setExperimentState(experiment, state, contextValidation);
+		setExperimentState(experiment, state, contextValidation, stopProcess, retry);
 	}
 
-	public static void nextInputContainerState(Experiment experiment,ContextValidation contextValidation){
-		nextInputContainerState(experiment,experiment.getAllInPutContainer(), contextValidation);
+	public static void nextInputContainerState(Experiment experiment,ContextValidation contextValidation, boolean stopProcess, boolean retry){
+		nextInputContainerState(experiment,experiment.getAllInPutContainer(), contextValidation, stopProcess, retry);
 	}
-	
-	public static void nextInputContainerState(Experiment experiment, List<ContainerUsed> containersIn,ContextValidation contextValidation){
+
+	public static void nextInputContainerState(Experiment experiment, List<ContainerUsed> containersIn,ContextValidation contextValidation, boolean stopProcess, boolean retry){
 		State state=new State();
 		state.date=new Date();
 		state.user=contextValidation.getUser();
@@ -119,59 +113,71 @@ public class Workflows {
 		}else if(experiment.state.code.equals("IP")){
 			state.code= "IU";
 		}else if(experiment.state.code.equals("F")){
-			if(experiment.categoryCode.equals("qualitycontrol")){
-				state.code="IW-V";
-			}else {
-				//Mettre à jour l'etat en fonction du volume restant
+			if(!stopProcess && !retry){
+				if(experiment.categoryCode.equals("qualitycontrol")){
+					state.code="IW-V";
+				}else {
+					//Mettre à jour l'etat en fonction du volume restant
+					state.code= "IS";
+				}
+			}else if(stopProcess){
+				Logger.info("STOP PROCESS");
 				state.code= "IS";
+			}else if(retry){
+				for(ContainerUsed c:containersIn){
+					Workflows.previousContainerState(c, experiment.typeCode, contextValidation, 2);
+				}
 			}
 		}
 
-		if(state.code!=null){
-			setContainerState(containersIn, experiment.typeCode, state, contextValidation);
+		if(state.code!=null && !retry){
+			setContainerState(containersIn, experiment.typeCode, state, contextValidation, stopProcess);
 			//Il faut mettre à jour le state du container dans l'experiment.atomicTransfereMethod
 		}
 	}
 
-	public static void nextOutputContainerState(Experiment experiment,ContextValidation contextValidation) {
+	public static void nextOutputContainerState(Experiment experiment,ContextValidation contextValidation, boolean stopProcess, boolean retry) {
 		for(ContainerUsed containerUsed:experiment.getAllOutPutContainerWhithInPutContainer()){
 
 			State nextState=new State();
 			nextState.user=experiment.traceInformation.modifyUser;
-
-			if(experiment.categoryCode.equals("transformation")){
-				if(experiment.state.code.equals("F") && doQC(experiment)){
-					nextState.code="A-QC";
-				}/*else if(experiment.state.code.equals("F") && doPurif()){
-				nextState.code="A-PURIF";
-			}else if(experiment.state.code.equals("F") && doTransfert()){
-				nextState.code="A-TRANSFERT";
-				}*/else if(experiment.state.code.equals("F") && endOfProcess(containerUsed,experiment.typeCode)){
-					if(experiment.typeCode.equals("opgen-depot")){
-						nextState.code="F";
+			if(!stopProcess && !retry){
+				if(experiment.categoryCode.equals("transformation")){
+					if(experiment.state.code.equals("F") && doQC(experiment)){
+						nextState.code="A-QC";
+					}/*else if(experiment.state.code.equals("F") && doPurif()){
+					nextState.code="A-PURIF";
+				}else if(experiment.state.code.equals("F") && doTransfert()){
+					nextState.code="A-TRANSFERT";
+					}*/else if(experiment.state.code.equals("F") && endOfProcess(containerUsed,experiment.typeCode)){
+						if(experiment.typeCode.equals("opgen-depot")){
+							nextState.code="F";
+						}else {
+							nextState.code="IW-P";
+						}
 					}else {
-						nextState.code="IW-P";
+						nextState.code="A";
 					}
-				}else {
-					nextState.code="A";
 				}
-			}
-
-			if(experiment.categoryCode.equals("purification") || experiment.categoryCode.equals("transfert")){
+	
+				if(experiment.categoryCode.equals("purification") || experiment.categoryCode.equals("transfert")){
+					if(experiment.state.code.equals("F")){
+						nextState.code="IW-V";
+					}
+				}
+			}else{
 				if(experiment.state.code.equals("F")){
-					nextState.code="IW-V";
+					nextState.code="UA";
 				}
 			}
-
 			if(nextState.code!=null && containerUsed!=null){
-				setContainerState(containerUsed.code, experiment.typeCode, nextState, contextValidation);
-				//Il faut mettre à jour le state du container dans l'experiment.atomicTransfereMethod
+				setContainerState(containerUsed.code, experiment.typeCode, nextState, contextValidation, stopProcess);
 			}
 		}
 
 	}
 
-
+	
 	private static boolean endOfProcess(ContainerUsed containerUsed, String experimentTypeCode) {
 		Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME,Container.class,containerUsed.code);
 		ProcessType processType;
@@ -234,7 +240,7 @@ public class Workflows {
 
 	}
 
-	public static void nextProcessState(Container container, String experimentTypeCode,ContextValidation contextValidation){
+	public static void nextProcessState(Container container, String experimentTypeCode,ContextValidation contextValidation, boolean stopProcess){
 		if(container.inputProcessCodes!=null ){
 			for(String processCode: container.inputProcessCodes){
 
@@ -244,7 +250,7 @@ public class Workflows {
 
 				if(container.state.code.equals("IU") && checkProcessState("N",processCode)){
 					processState.code="IP";
-				}else if((container.state.code.equals("UA") || container.state.code.equals("IS") ) && checkProcessState("IP",processCode) && endOfProcess(processCode, experimentTypeCode)){
+				}else if((container.state.code.equals("UA") || container.state.code.equals("IS") ) && checkProcessState("IP",processCode) && (stopProcess || endOfProcess(processCode, experimentTypeCode))){
 					processState.code="F";
 				}
 
@@ -265,7 +271,7 @@ public class Workflows {
 		return MongoDBDAO.checkObjectExist(InstanceConstants.PROCESS_COLL_NAME,Process.class, DBQuery.is("code", processCode).is("state.code", stateCode));
 	}
 
-	private static void setProcessState(String  processCode, State nextState,
+	public static void setProcessState(String  processCode, State nextState,
 			ContextValidation contextValidation) {
 		Process process =MongoDBDAO.findOne(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("code", processCode));
 
@@ -298,16 +304,30 @@ public class Workflows {
 
 	}
 
+	public static void stopProcess(String processCode, ContextValidation contextValidation){
+		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, processCode);
+		if(process != null){
+			State state = new State();
+			state.code = "IS";
+			contextValidation.setUpdateMode();
+			Workflows.setContainerState(process.containerInputCode, process.currentExperimentTypeCode, state, contextValidation, true);
+		}
+	}
+	
 	public static void setContainerState(String containerCode,String experimentTypeCode, State nextState,ContextValidation contextValidation){
+		setContainerState(containerCode, experimentTypeCode, nextState, contextValidation, false);
+	}
+	
+	public static void setContainerState(String containerCode,String experimentTypeCode, State nextState,ContextValidation contextValidation, boolean stopProcess){
 		Container container =MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", containerCode));
 		if(container!=null){
-			setContainerState(container, experimentTypeCode, nextState, contextValidation);
+			setContainerState(container, experimentTypeCode, nextState, contextValidation, stopProcess);
 		}else{
 			Logger.error("Container "+containerCode+" not exists");
 		}
 	}
-	
-	public static void setContainerState(Container container,String experimentTypeCode, State nextState,ContextValidation contextValidation){
+
+	public static void setContainerState(Container container,String experimentTypeCode, State nextState,ContextValidation contextValidation, boolean stopProcess){
 		String lastStateCode=container.state.code;
 		container.state=StateHelper.updateHistoricalNextState(container.state,nextState);
 		container.traceInformation=StateHelper.updateTraceInformation(container.traceInformation, nextState);
@@ -322,7 +342,7 @@ public class Workflows {
 		}	
 		container.state=nextState;
 		nextContainerSupportState(container,contextValidation);
-		nextProcessState(container,experimentTypeCode,contextValidation);
+		nextProcessState(container,experimentTypeCode,contextValidation, stopProcess);
 	}
 
 	private static void nextContainerSupportState(Container container,
@@ -354,43 +374,54 @@ public class Workflows {
 	}
 
 
-	public static void setContainerState(List<ContainerUsed> containersUsed, String experimentTypeCode,State state,ContextValidation contextValidation){
+	public static void setContainerState(List<ContainerUsed> containersUsed, String experimentTypeCode,State state,ContextValidation contextValidation,boolean stopProcess){
 		for(ContainerUsed containerUsed:containersUsed){
-			setContainerState(containerUsed.code, experimentTypeCode, state, contextValidation);
+			setContainerState(containerUsed.code, experimentTypeCode, state, contextValidation, stopProcess);
 		}
 	}
 
- 
+
 	public static void previousContainerState(List<ContainerUsed> containersIn, String experimentCode, String experimentTypeCode,
 			ContextValidation contextValidation) {
-		
+
 		for(ContainerUsed container:containersIn){
 			previousContainerState(container, experimentTypeCode, contextValidation);
 			//remove the current experiment in the process and the experiment in the list of experiment
 			MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("currentExperimentTypeCode", experimentTypeCode).is("containerInputCode", container.code), DBUpdate.set("currentExperimentTypeCode", "").pull("experimentCodes", experimentCode));
 		}
 	}
-	
+
 	public static void previousContainerState(ContainerUsed containersIn,String experimentTypeCode,
 			ContextValidation contextValidation) {
 		Container container = MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", containersIn.code));
-		
+
 		TransientState previousTransientState = container.state.historical.get(container.state.historical.size() - 2);
 		State previousState = new State();
 		previousState.code = previousTransientState.code;
-		
-		setContainerState(container, experimentTypeCode,previousState, contextValidation);
+
+		setContainerState(container, experimentTypeCode,previousState, contextValidation, false);
 	}
 	
+	public static void previousContainerState(ContainerUsed containersIn,String experimentTypeCode,
+			ContextValidation contextValidation, int previousNumber) {
+		Container container = MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", containersIn.code));
+
+		TransientState previousTransientState = container.state.historical.get(container.state.historical.size() - (previousNumber+1));
+		State previousState = new State();
+		previousState.code = previousTransientState.code;
+
+		setContainerState(container, experimentTypeCode,previousState, contextValidation, false);
+	}
+
 	public static void nextContainerState(List<Process> processes,String experimentTypeCode,String experimentCategoryCode,
 			ContextValidation contextValidation) {
-		
+
 		for(Process process:processes){
 			nextContainerState(process, experimentTypeCode, experimentCategoryCode, contextValidation);
 		}
 	}
- 
-	
+
+
 
 	public static void nextContainerState(Process process,String experimentTypeCode,String experimentCategoryCode,
 			ContextValidation contextValidation) {
@@ -407,7 +438,7 @@ public class Workflows {
 			}
 		}
 
-		setContainerState(process.containerInputCode, experimentTypeCode,nextState, contextValidation);
+		setContainerState(process.containerInputCode, experimentTypeCode,nextState, contextValidation, false);
 
 	}
 

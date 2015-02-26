@@ -68,12 +68,9 @@ object ApplicationBuild extends Build {
 		"net.sourceforge.jtds" % "jtds" % "1.2.2",
 	     "net.sf.opencsv" % "opencsv" % "2.0",
         "commons-collections" % "commons-collections" % "3.2.1",
-		"org.mongojack" % "mongojack" % "2.1.0-IG" ,
 		"org.springframework" % "spring-jdbc" % "4.0.3.RELEASE",		
 		"org.springframework" % "spring-test" % "4.0.3.RELEASE",
 		"org.julienrf" %% "play-jsmessages" % "1.6.2",
-
-		
 		"javax.mail" % "mail" % "1.4.2",
 	    "org.codehaus.janino" % "janino" % "2.5.15"
 
@@ -88,7 +85,7 @@ object ApplicationBuild extends Build {
    	    javaCore,
 		javaWs,
    	    "javax.mail" % "mail" % "1.4.2",
-   	    "fr.cea.ig" %% "mongodbplugin" % "1.2-SNAPSHOT",
+   	    "fr.cea.ig" %% "mongodbplugin" % "1.3-SNAPSHOT",
    	    "org.drools" % "drools-core" % "5.5.0.Final",
 	     "org.drools" % "drools-compiler" % "5.5.0.Final",
 		 "fr.cea.ig.modules" %% "authentication" % "1.2-SNAPSHOT"
