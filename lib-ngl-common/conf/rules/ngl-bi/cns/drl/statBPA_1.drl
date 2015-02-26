@@ -1,9 +1,9 @@
-#created on: Nov 21, 2013
+//created on: Nov 21, 2013
 package rules
 
-#analysis.treatments.contigFilterBA.pairs.lostBasesPercent=
-# ((analysis.treatments.assemblyBA.pairs.assemblyContigSize - analysis.treatments.contigFilterBA.pairs.storedBases) 
-# / analysis.treatments.assemblyBA.pairs.assemblyContigSize) * 100
+//analysis.treatments.contigFilterBA.pairs.lostBasesPercent=
+// ((analysis.treatments.assemblyBA.pairs.assemblyContigSize - analysis.treatments.contigFilterBA.pairs.storedBases) 
+// / analysis.treatments.assemblyBA.pairs.assemblyContigSize) * 100
 
 rule "Calculate lostBasesPercent for contigFilterBA treatment"
 	@nglBI( BPA_ContigFilter_1 )

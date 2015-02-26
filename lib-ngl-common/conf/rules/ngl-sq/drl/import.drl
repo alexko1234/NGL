@@ -1,4 +1,4 @@
-#created on: Aug 6, 2014
+//created on: Aug 6, 2014
 package rules
 
 import play.Logger;

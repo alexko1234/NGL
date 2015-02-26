@@ -1,7 +1,7 @@
-#created on: Nov 21, 2013
+//created on: Nov 21, 2013
 package rules
 
-#list any import classes here.
+//list any import classes here.
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.Analysis;

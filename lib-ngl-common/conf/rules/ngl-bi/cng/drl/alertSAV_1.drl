@@ -1,5 +1,5 @@
-#created on: Nov 8, 2013
-#Rules for SAV alerting
+//created on: Nov 8, 2013
+//Rules for SAV alerting
 package rules
 
 rule "Insert AlertSAVInfo for each run"

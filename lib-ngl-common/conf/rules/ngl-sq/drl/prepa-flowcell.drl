@@ -1,5 +1,5 @@
-#created on: Aug 6, 2014
-#Rules for calculations
+//created on: Aug 6, 2014
+//Rules for calculations
 package rules
 
 rule "volume stock engaged in denat"

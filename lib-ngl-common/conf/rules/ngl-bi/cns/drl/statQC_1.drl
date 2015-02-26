@@ -1,4 +1,4 @@
-#created on: Nov 21, 2013
+//created on: Nov 21, 2013
 package rules
 
 rule "Find Fungi for taxonomy treatment"
