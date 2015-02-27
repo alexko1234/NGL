@@ -277,25 +277,27 @@
 	var statsConfigs, queriesConfigs = [];
 	var loadData = function() {
 		if(chartService.reportingConfigurationCode === null){
-			statsConfigReadSetsService.init();
-			queriesConfigReadSetsService.datatable = undefined;
-			statsConfigs = statsConfigReadSetsService.getData();
-			queriesConfigs = queriesConfigReadSetsService;
-			generateCharts();
+			if(statsConfigReadSetsService.isData() && queriesConfigReadSetsService.queries.length > 0){
+				statsConfigs = statsConfigReadSetsService.getData();
+				queriesConfigs = queriesConfigReadSetsService.queries;
+				generateCharts();
+			}else{
+				queriesConfigReadSetsService.queries = [];
+				statsConfigReadSetsService.reset();
+				generateCharts();
+			}
+			
 		}
-		else if(chartService.reportingConfigurationCode !== undefined){
+		else if(chartService.reportingConfigurationCode !== undefined && chartService.reportingConfigurationCode !== null){
 			statsConfigReadSetsService.init();
 			queriesConfigReadSetsService.datatable = undefined;
 			queriesConfigs = [];
 			$http.get(jsRoutes.controllers.stats.api.StatsConfigurations.get(chartService.reportingConfigurationCode).url).success(function(data, status,	headers, config) {
 				statsConfigs = data.statsForm; 
-				statsConfigReadSetsService.init();
-				statsConfigReadSetsService.datatable.addData(statsConfigs);
 				queriesConfigs[0] = {
 					form : data.queryForm
 				};
 				queriesConfigReadSetsService.addQuery(queriesConfigs[0]);
-				queriesConfigReadSetsService.loadDatatable();
 				generateCharts();
 			});
 		}
@@ -386,24 +388,47 @@
 		}
 	};
 	
+	
+	var getGroupValues = function(){
+		var propertyGroupGetter = readsetDatatable.config.group.by.property;
+		var groupGetter = $parse(propertyGroupGetter);
+		var groupValues = readsetDatatable.allResult.reduce(function(array, value){
+			var groupValue = groupGetter(value);
+			if(!array[groupValue]){
+				array[groupValue]=[];
+			}
+			array[groupValue].push(value);
+			return array;
+		}, {});
+		return groupValues;
+	}
+	
+	var getScore = function(dataValue, groupValues){
+		// Creating zscodeData for our groups
+		var dataForScore = [{}];
+		var dataTemp = [];
+		var k = 0;
+		for(var key in groupValues){
+			for(var i = 0; i < groupValues[key].length; i++){
+				dataForScore.push(dataValue[k]);
+				k++;
+			}
+			dataForScore.splice(0,1);
+			dataTemp.push(dataForScore);
+			dataForScore = [{}];
+		}
+		dataForScore = dataTemp;
+		return dataForScore;
+	}
+	
+	
 	var getZScoreChart = function(statsConfig) {
-		
 		var property = getProperty(statsConfig.column);
 		var data = readsetDatatable.getData();
 		var groupValues;
 		
-		
 		if(readsetDatatable.config.group.by != undefined){
-			var propertyGroupGetter = readsetDatatable.config.group.by.property;
-			var groupGetter = $parse(propertyGroupGetter);
-			groupValues = readsetDatatable.allResult.reduce(function(array, value){
-				var groupValue = groupGetter(value);
-				if(!array[groupValue]){
-					array[groupValue]=[];
-				}
-				array[groupValue].push(value);
-				return array;
-			}, {});
+			groupValues = getGroupValues();
 		}
 		
 
@@ -420,25 +445,11 @@
 				_value : getter(x)
 			};
 		});
-		
-		
-		
+
 		if(readsetDatatable.config.group.by != undefined){
-			// Creating zscodeData for our groups
-			var dataForZscore = [{}];
-			var dataTemp = [];
-			var k = 0;
-			for(var key in groupValues){
-				for(var i = 0; i < groupValues[key].length; i++){
-					dataForZscore.push(zscodeData[k]);
-					k++;
-				}
-				dataForZscore.splice(0,1);
-				dataTemp.push(dataForZscore);
-				dataForZscore = [{}];
-			}
-			zscodeData = dataTemp;
+			zscodeData = getScore(zscodeData, groupValues);
 		}
+		
 		
 		
 		// Creating object allSeries that'll contain all our series, whether or not we're using group function on datatable
@@ -446,6 +457,8 @@
 		if(readsetDatatable.config.group.by != undefined){
 			var begin = 0;
 			var i = 0;
+			// Calculates the width of each bar in our histogram
+			var width = (585 / readsetDatatable.allResult.length);
 			for(var key in groupValues){
 				allSeries[i] = {
 					point : {
@@ -456,10 +469,11 @@
 							}
 						}
 					},
+					pointWidth : width,
 					pointStart: begin,
+					borderWidth : 0,
 					data : zscodeData[i],
 					name : key,
-					turboThreshold : 0,
 					type : 'column',
 				}
 				begin+= groupValues[key].length;
@@ -481,10 +495,9 @@
 					turboThreshold : 0
 			}
 		}
-		
 		var chart = {
 			chart : {
-				zoomType : 'x',
+                zoomType : 'x',
 				height : 770
 			},
 			title : {
@@ -537,7 +550,7 @@
 		};
 		return chart;
 	};
-
+	
 	var getSimpleValueChart = function(statsConfig) {
 		var property = getProperty(statsConfig.column);
 		var data = readsetDatatable.getData();
@@ -545,16 +558,7 @@
 		
 		
 		if(readsetDatatable.config.group.by != undefined){
-			var propertyGroupGetter = readsetDatatable.config.group.by.property;
-			var groupGetter = $parse(propertyGroupGetter);
-			groupValues = readsetDatatable.allResult.reduce(function(array, value){
-				var groupValue = groupGetter(value);
-				if(!array[groupValue]){
-					array[groupValue]=[];
-				}
-				array[groupValue].push(value);
-				return array;
-			}, {});
+			groupValues= getGroupValues();
 		}
 		
 		
@@ -568,25 +572,14 @@
 		
 		var dataForSimpleValue = [{}];
 		if(readsetDatatable.config.group.by != undefined){
-			// Creating simple value data for our groups
-			var dataTemp = [];
-			var k = 0;
-			for(var key in groupValues){
-				for(var i = 0; i < groupValues[key].length; i++){
-					dataForSimpleValue.push(statData[k]);
-					k++;
-				}
-				dataForSimpleValue.splice(0,1);
-				dataTemp.push(dataForSimpleValue);
-				dataForSimpleValue = [{}];
-			}
-			dataForSimpleValue = dataTemp;
+			statData = getScore(statData, groupValues);
 		}
 		
 		var allSeries = [{}];
 		if(readsetDatatable.config.group.by != undefined){
 			var begin = 0;
 			var i = 0;
+			var width = (585 / readsetDatatable.allResult.length);
 			for(var key in groupValues){
 				allSeries[i] = {
 					point : {
@@ -597,8 +590,9 @@
 							}
 						}
 					},
+					pointWidth : width,
 					pointStart: begin,
-					data : dataForSimpleValue[i],
+					data : statData[i],
 					name : key,
 					turboThreshold : 0,
 					type : 'column',
@@ -617,14 +611,11 @@
 						}
 					},
 					type : 'column',
-					name : 'z-score',
+					name : 'simple-value',
 					data : statData,
 					turboThreshold : 0
 			}
 		}
-		
-		
-		
 
 		var chart = {
 			chart : {
