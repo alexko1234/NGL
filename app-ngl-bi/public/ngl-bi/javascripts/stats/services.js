@@ -373,6 +373,22 @@
 				throw 'not manage'+ statsConfig.typeCode;
 			}
 		}
+		// Same color for all charts
+		var nbGroups = charts[0].series.length;
+		if(nbGroups > 10){
+			var colors = [];
+			
+			// Random colors with maths magic !
+			for(var k = 0; k < nbGroups; k++){
+				colors.push('#'+Math.floor(Math.random()*16777215).toString(16));
+			}
+			console.log(colors);
+			for(var i = 0; i < charts.length; i++){
+				for(var j = 0; j < charts[i].series.length; j++){
+					charts[i].series[j].color = colors[j];
+				}
+			}
+		}
 	};
 
 	var getProperty = function(column) {
@@ -600,6 +616,7 @@
 				begin+= groupValues[key].length;
 				i++;
 			}
+			
 		}else{
 			allSeries[0] = {
 					point : {
@@ -616,7 +633,8 @@
 					turboThreshold : 0
 			}
 		}
-
+		
+		
 		var chart = {
 			chart : {
 				zoomType : 'x',
