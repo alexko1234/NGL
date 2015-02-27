@@ -134,7 +134,6 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	$scope.search = function(){	
 		$scope.errors.processCategory = {};
 		$scope.errors.processType = {};
-		//if($scope.form.projectCodes || $scope.form.sampleCodes || $scope.form.processType || $scope.form.containerSupportCode || $scope.form.fromExperimentTypeCodes || $scope.form.containerSupportCategory  || $scope.form.valuations){
 		if($scope.form.processCategory && $scope.form.nextProcessTypeCode){
 			var jsonSearch = {};
 			jsonSearch.stateCode = 'IW-P';
@@ -293,7 +292,6 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			        	 "type":"text"
 			         }			         
 			         ],
-			         //columnsUrl:jsRoutes.controllers.processes.tpl.Processes.newProcessesColumns(mainService.getForm().nextProcessTypeCode).url,
 			         pagination:{
 			        	 active:false
 			         },		
@@ -336,6 +334,118 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			         }
 	};
 
+	$scope.getProcessesColumns = function(){
+		var columns = [
+		         {
+		        	 "header":Messages("processes.table.containerInputCode"),
+		        	 "property":"containerInputCode",
+		        	 "position":1,
+		        	 "type":"text"
+		         },
+		         {
+		        	 "header":Messages("processes.table.sampleCode"),
+		        	 "property":"sampleCode",
+		        	 "position":2,
+		        	 "type":"text"
+		         },
+		         {
+		        	 "header":Messages("processes.table.columns"),
+		        	 "property":"sampleOnInputContainer.properties.tag.value",
+		        	 "position":3,
+		        	 "type":"text"
+		         },
+		         {
+		        	 "header":Messages("processes.table.sampleOnInputContainer.properties.tag"),
+		        	 "property":"sampleOnInputContainer.properties.tag.value",
+		        	 "position":4,
+		        	 "type":"text"
+		         },
+		         {
+		        	 "header":Messages("processes.table.sampleOnInputContainer.mesuredVolume"),
+		        	 "property":"sampleOnInputContainer.mesuredVolume.value",
+		        	 "position":5,
+		        	 "type":"text"
+		         },  
+		         {
+		        	 "header":Messages("processes.table.sampleOnInputContainer.unit.volume"),
+		        	 "property":"sampleOnInputContainer.mesuredVolume.unit",
+		        	 "position":6,
+		        	 "type":"text"
+		         },	
+		         {
+		        	 "header":Messages("processes.table.sampleOnInputContainer.mesuredConcentration"),
+		        	 "property":"sampleOnInputContainer.mesuredConcentration.value",
+		        	 "position":7,
+		        	 "type":"text"
+		         },	 	
+		         {
+		        	 "header":Messages("processes.table.sampleOnInputContainer.unit.concentration"),
+		        	 "property":"sampleOnInputContainer.mesuredConcentration.unit",
+		        	 "position":8,
+		        	 "type":"text"
+		         },
+		         {
+		        	 "header":Messages("processes.table.typeCode"),
+		        	 "property":"typeCode",
+		        	 "position":9,
+		        	 "type":"text"
+		         },
+		         {
+		        	 "header":Messages("processes.table.stateCode"),
+		        	 "property":"state.code",
+		        	 "filter": "codes:'state'",
+		        	 "position":30,
+		        	 "type":"text"
+		         },
+		         {
+		        	 "header":Messages("processes.table.resolutionCode"),
+		        	 "property":"state.resolutionCodes",
+		        	 "position":31,
+		        	 "type":"text"
+		         },
+		         {
+		        	 "header":Messages("processes.table.currentExperimentTypeCode"),
+		        	 "property":"currentExperimentTypeCode",
+		        	 "position":32,
+		        	 "type":"text"
+		         },
+		         {
+		        	 "header":Messages("processes.table.code"),
+		        	 "property":"code",
+		        	 "position":33,
+		        	 "type":"text"
+		         },
+		         {
+		        	 "header":Messages("processes.table.creationDate"),
+		        	 "property":"traceInformation.creationDate",
+		        	 "position":34,
+		        	 "type":"text"
+		         },
+		         {
+		        	 "header":Messages("processes.table.newContainerSupportCodes"),
+		        	 "property":"newContainerSupportCodes",
+		        	 "position":35,
+		        	 "type":"text"
+		         },
+		         {
+		        	 "header":Messages("processes.table.experimentCodes"),
+		        	 "property":"experimentCodes",
+		        	 "position":36,
+		        	 "type":"text"
+		         },
+		         {
+		        	 "header":Messages("processes.table.projectCode"),
+		        	 "property":"projectCode",
+		        	 "position":37,
+		        	 "type":"text"
+		         }
+		 ];
+		
+		columns = columns.concat($scope.processPropertyColumns);
+	
+		return columns;
+	};
+	
 	$scope.swithView = function(){		
 		if($scope.supportView){
 			$scope.supportView = false;
@@ -447,7 +557,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 
 		$q.all($scope.promises).then(function (res) {
 			$scope.basket.reset();
-			$scope.getColumns();
+			$scope.datatable.setColumnsConfig($scope.getProcessesColumns());
 			$scope.datatable.setData($scope.processes);
 			$scope.datatable.config.spinner.start = false;
 		});	
@@ -480,23 +590,6 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			$scope.datatable.config.columns[0].header = "containers.table.supportCode";
 	};
 
-	$scope.getColumns = function(){
-		var typeCode = "";
-		if($scope.form.nextProcessTypeCode){
-			typeCode = $scope.form.nextProcessTypeCode;
-		}
-
-		$http.get(jsRoutes.controllers.processes.tpl.Processes.searchColumns().url,{params:{"typeCode":typeCode}})
-		.success(function(data, status, headers, config) {
-			if(data!=null){
-				$scope.datatable.setColumnsConfig(data);
-			}
-		})
-		.error(function(data, status, headers, config) {
-
-		});
-	};	
-
 	$scope.getPropertyColumnType = function(type){
 		if(type === "java.lang.String"){
 			return "text";
@@ -515,10 +608,10 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 		if($scope.form.nextProcessTypeCode){
 			typeCode = $scope.form.nextProcessTypeCode;
 		}
-
-		$http.get(jsRoutes.controllers.processes.tpl.Processes.getPropertiesDefinitions(typeCode).url)
+		$scope.processPropertyColumns = [];
+		return $http.get(jsRoutes.controllers.processes.tpl.Processes.getPropertiesDefinitions(typeCode).url)
 		.success(function(data, status, headers, config) {
-			if(data!=null){				
+			if(data!=null){
 				console.log(data);
 				angular.forEach(data, function(property){					
 
@@ -534,7 +627,8 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 					if(property.displayMeasureValue != undefined && property.displayMeasureValue != null){
 						column.convertValue = {"active":true, "displayMeasureValue":property.displayMeasureValue.value, "saveMeasureValue":property.saveMeasureValue.value};
 					}
-
+					column.position = (7+property.displayOrder);
+					$scope.processPropertyColumns.push(column);
 					$scope.datatable.addColumn(7+property.displayOrder,column);	
 				});				
 			}

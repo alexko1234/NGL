@@ -5,6 +5,10 @@ angular.module('home', ['commonsServices','ngRoute','datatableServices','basketS
 		templateUrl : jsRoutes.controllers.processes.tpl.Processes.searchContainers().url,
 		controller : 'SearchContainerCtrl'
 	});
+	$routeProvider.when('/processes/state/home', {
+		templateUrl : jsRoutes.controllers.processes.tpl.Processes.search("home").url,
+		controller : 'SearchStateCtrl'
+	});
 	$routeProvider.when('/processes/new/:processTypeCode', {
 		templateUrl : function(params){return jsRoutes.controllers.processes.tpl.Processes.newProcesses(params.processTypeCode).url},
 		controller : 'ListNewCtrl'

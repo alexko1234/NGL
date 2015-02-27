@@ -100,6 +100,7 @@ search.tab.addcolumns = Colonnes supplémentaires
 processes.title = Processus
 processes.menu = Processus
 processes.menu.creation = Création
+processes.menu.state = Changement d''Etat
 processes.menu.search = Rechercher
 processes.tabs.search = Recherche Processus
 processes.tabs.create = Création Processus

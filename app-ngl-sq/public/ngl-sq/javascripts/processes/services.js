@@ -2,7 +2,7 @@
  
  angular.module('ngl-sq.processesServices', []).
 	factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable', function($http, mainService, lists, datatable){
-		var getColumns = function(){
+		/*var getColumns = function(){
 			var typeCode = "";
 			if(this.form.typeCode){
 				typeCode = this.form.typeCode;
@@ -17,8 +17,7 @@
 			.error(function(data, status, headers, config) {
 			
 			});
-		};
-		
+		};*/
 		
 		var isInit = false;
 		
@@ -36,7 +35,222 @@
 		};
 		
 		var searchService = {
-				getColumns:getColumns,
+				columnsDefault:[
+						         {
+						        	 "header":Messages("processes.table.containerInputCode"),
+						        	 "property":"containerInputCode",
+						        	 "position":1,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.sampleCode"),
+						        	 "property":"sampleCode",
+						        	 "position":2,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.columns"),
+						        	 "property":"sampleOnInputContainer.properties.tag.value",
+						        	 "position":3,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.sampleOnInputContainer.properties.tag"),
+						        	 "property":"sampleOnInputContainer.properties.tag.value",
+						        	 "position":4,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.sampleOnInputContainer.mesuredVolume"),
+						        	 "property":"sampleOnInputContainer.mesuredVolume.value",
+						        	 "position":5,
+						        	 "type":"text"
+						         },  
+						         {
+						        	 "header":Messages("processes.table.sampleOnInputContainer.unit.volume"),
+						        	 "property":"sampleOnInputContainer.mesuredVolume.unit",
+						        	 "position":6,
+						        	 "type":"text"
+						         },	
+						         {
+						        	 "header":Messages("processes.table.sampleOnInputContainer.mesuredConcentration"),
+						        	 "property":"sampleOnInputContainer.mesuredConcentration.value",
+						        	 "position":7,
+						        	 "type":"text"
+						         },	 	
+						         {
+						        	 "header":Messages("processes.table.sampleOnInputContainer.unit.concentration"),
+						        	 "property":"sampleOnInputContainer.mesuredConcentration.unit",
+						        	 "position":8,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.typeCode"),
+						        	 "property":"typeCode",
+						        	 "position":9,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.stateCode"),
+						        	 "property":"state.code",
+						        	 "position":30,
+						        	 "type":"text",
+						        	 "filter": "codes:'state'",
+						        	 "edit":false,
+						        	 "choiceInList": true,
+						 			 "possibleValues":"searchService.lists.getStates()", 
+						         },
+						         {
+						        	 "header":Messages("processes.table.resolutionCode"),
+						        	 "property":"state.resolutionCodes",
+						        	 "position":31,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.currentExperimentTypeCode"),
+						        	 "property":"currentExperimentTypeCode",
+						        	 "position":32,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.code"),
+						        	 "property":"code",
+						        	 "position":33,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.creationDate"),
+						        	 "property":"traceInformation.creationDate",
+						        	 "position":34,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.newContainerSupportCodes"),
+						        	 "property":"newContainerSupportCodes",
+						        	 "position":35,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.experimentCodes"),
+						        	 "property":"experimentCodes",
+						        	 "position":36,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.projectCode"),
+						        	 "property":"projectCode",
+						        	 "position":37,
+						        	 "type":"text"
+						         }
+						 ],
+						 columnsDefaultState:[
+						         {
+						        	 "header":Messages("processes.table.containerInputCode"),
+						        	 "property":"containerInputCode",
+						        	 "position":1,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.sampleCode"),
+						        	 "property":"sampleCode",
+						        	 "position":2,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.columns"),
+						        	 "property":"sampleOnInputContainer.properties.tag.value",
+						        	 "position":3,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.sampleOnInputContainer.properties.tag"),
+						        	 "property":"sampleOnInputContainer.properties.tag.value",
+						        	 "position":4,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.sampleOnInputContainer.mesuredVolume"),
+						        	 "property":"sampleOnInputContainer.mesuredVolume.value",
+						        	 "position":5,
+						        	 "type":"text"
+						         },  
+						         {
+						        	 "header":Messages("processes.table.sampleOnInputContainer.unit.volume"),
+						        	 "property":"sampleOnInputContainer.mesuredVolume.unit",
+						        	 "position":6,
+						        	 "type":"text"
+						         },	
+						         {
+						        	 "header":Messages("processes.table.sampleOnInputContainer.mesuredConcentration"),
+						        	 "property":"sampleOnInputContainer.mesuredConcentration.value",
+						        	 "position":7,
+						        	 "type":"text"
+						         },	 	
+						         {
+						        	 "header":Messages("processes.table.sampleOnInputContainer.unit.concentration"),
+						        	 "property":"sampleOnInputContainer.mesuredConcentration.unit",
+						        	 "position":8,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.typeCode"),
+						        	 "property":"typeCode",
+						        	 "position":9,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.stateCode"),
+						        	 "property":"state.code",
+						        	 "position":30,
+						        	 "type":"text",
+						        	 "filter": "codes:'state'",
+						        	 "edit":true,
+						        	 "choiceInList": true,
+						 			 "possibleValues":"searchService.lists.getStates()", 
+						         },
+						         {
+						        	 "header":Messages("processes.table.resolutionCode"),
+						        	 "property":"state.resolutionCodes",
+						        	 "position":31,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.currentExperimentTypeCode"),
+						        	 "property":"currentExperimentTypeCode",
+						        	 "position":32,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.code"),
+						        	 "property":"code",
+						        	 "position":33,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.creationDate"),
+						        	 "property":"traceInformation.creationDate",
+						        	 "position":34,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.newContainerSupportCodes"),
+						        	 "property":"newContainerSupportCodes",
+						        	 "position":35,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.experimentCodes"),
+						        	 "property":"experimentCodes",
+						        	 "position":36,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.projectCode"),
+						        	 "property":"projectCode",
+						        	 "position":37,
+						        	 "type":"text"
+						         }
+						 ],
 				datatable:undefined,
 				isRouteParam:false,
 				lists : lists,
@@ -51,7 +265,65 @@
 						this.form = $routeParams;
 					}
 				},
-				
+				getPropertyColumnType : function(type){
+					if(type === "java.lang.String"){
+						return "text";
+					}else if(type === "java.lang.Double"){
+						return "number";
+					}else if(type === "java.util.Date"){
+						return "date";
+					}
+					
+					return type;
+				},
+				getColumns : function(){		
+					var typeCode = "";		
+					var columns = [];
+					if(this.form.typeCode){
+						typeCode = this.form.typeCode;
+					}
+					var getPropertyColumnType = this.getPropertyColumnType;
+					var datatable = this.datatable;
+					var columnsDefault = this.columnsDefault;
+					var columnsDefaultState = this.columnsDefaultState;
+					return $http.get(jsRoutes.controllers.processes.tpl.Processes.getPropertiesDefinitions(typeCode).url)
+					.success(function(data, status, headers, config) {
+						if(data!=null){
+							console.log(data);
+							angular.forEach(data, function(property){					
+								var column = {};
+								var unit = "";
+								if(angular.isDefined(property.displayMeasureValue)){
+									unit = "("+property.displayMeasureValue+")";
+								}				
+									
+								column = datatable.newColumn(property.name, "properties."+property.code+".value",property.editable,false,true, getPropertyColumnType(property.valueType),property.choiceInList, property.possibleValues,{});
+								
+								column.listStyle = "bt-select";
+								column.defaultValues = property.defaultValue;
+								if(property.displayMeasureValue != undefined && property.displayMeasureValue != null){
+									column.convertValue = {"active":true, "displayMeasureValue":property.displayMeasureValue.value, "saveMeasureValue":property.saveMeasureValue.value};
+								}
+								column.position = (7+property.displayOrder);
+								 if(mainService.getHomePage() === 'state'){
+									 column.edit = false;
+								 }
+								columns.push(column);
+							});	
+							 if(mainService.getHomePage() === 'state'){
+								 columns = columnsDefaultState.concat(columns);
+							 }else{
+								 columns = columnsDefault.concat(columns);
+							 }
+							datatable.setColumnsConfig(columns);
+						}
+
+					})
+					.error(function(data, status, headers, config) {
+						console.log(data);
+					});		
+
+				},	
 				updateForm : function(){
 					
 				},
@@ -126,16 +398,6 @@
 						this.form.typeCode = undefined;	
 					}
 				},
-		/*		changeProcessesSupportCode : function(val){
-
-					console.log(val);
-					return $http.get(jsRoutes.controllers.containerSupports.api.ContainerSupports.list().url,{params:{"codeRegex":val}}).success(function(data, status, headers, config) {
-						console.log(data);
-
-						return [data];				
-					});
-
-				}, */
 				/**
 				 * initialise the service
 				 */
@@ -145,12 +407,16 @@
 					//to avoid to lost the previous search
 					if(datatableConfig && angular.isUndefined(mainService.getDatatable())){
 						searchService.datatable = datatable(datatableConfig);
+						 if(mainService.getHomePage() === 'state'){
+							 searchService.datatable.setColumnsConfig(this.columnsDefaultState);
+						 }else{
+							 searchService.datatable.setColumnsConfig(this.columnsDefault);
+						 }
 						mainService.setDatatable(searchService.datatable);
 						//searchService.datatable.setColumnsConfig(getColumns());		
 					}else if(angular.isDefined(mainService.getDatatable())){
 						searchService.datatable = mainService.getDatatable();			
 					}	
-					
 					
 					if(angular.isDefined(mainService.getForm())){
 						searchService.form = mainService.getForm();

@@ -46,6 +46,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import controllers.processes.api.ProcessesSaveQueryForm;
+import controllers.processes.api.ProcessesUpdateForm;
 import fr.cea.ig.MongoDBDAO;
 
 public class ProcessesTest extends AbstractTests{
@@ -280,6 +281,21 @@ public class ProcessesTest extends AbstractTests{
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.NOT_FOUND);
 	}
 	
+	@Test
+	public void updateStateCode(){
+		//TODO
+	}
+	
+	@Test
+	public void delete(){
+		String processCode = "ILLUMINA-RUN-BFB-NULL-2014103112111983";
+		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, processCode);
+		Result result = callAction(controllers.processes.api.routes.ref.Processes.delete(process.code),fakeRequest());
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, process.containerInputCode);
+		assertThat(container.state.code).isEqualTo("IS");
+		assertThat(container.fromExperimentTypeCodes.contains(processCode)).isEqualTo(false);
+	}
 	
 	@Test
 	public void deleteNotFound(){

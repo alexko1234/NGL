@@ -26,6 +26,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
 import org.mongojack.DBQuery.Query;
 
 import play.Logger;
@@ -44,6 +45,8 @@ import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.containers.api.Containers;
 import controllers.containers.api.ContainersSearchForm;
+import controllers.experiments.api.ExperimentUpdateForm;
+import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
@@ -53,6 +56,7 @@ public class Processes extends CommonController{
 	final static Form<Process> processForm = form(Process.class);
 	final static Form<ProcessesSearchForm> processesSearchForm = form(ProcessesSearchForm.class);
 	final static Form<QueryFieldsForm> saveForm = form(QueryFieldsForm.class);
+	final static Form<ProcessesUpdateForm> processesUpdateForm = form(ProcessesUpdateForm.class);
 
 	public static Result head(String processCode) {
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, processCode)){			
@@ -187,26 +191,45 @@ public class Processes extends CommonController{
 		}
 	}
 	
+	public static Result updateStateCode(String code){
+		Form<ProcessesUpdateForm> processesUpdateFilledForm = getFilledForm(processesUpdateForm,ProcessesUpdateForm.class);
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), processesUpdateFilledForm.errors());
+		contextValidation.setUpdateMode();
+		if(!processesUpdateFilledForm.hasErrors()){
+			ProcessesUpdateForm processesUpdateForm = processesUpdateFilledForm.get();
+			State state = new State();
+			state.code = processesUpdateForm.stateCode;
+			state.user = getCurrentUser();
+			Workflows.setProcessState(code, state, contextValidation);
+			if(!contextValidation.hasErrors()){
+				return ok();
+			}
+		}
+		return badRequest(processesUpdateFilledForm.errorsAsJson());
+	}
+	
 	public static Result delete(String code){
 		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
 		ContextValidation contextValidation=new ContextValidation(getCurrentUser());
 		if(process == null){
 			return notFound("Process with code "+code+" does not exist");
 		}
-
-		List<String> processCode=new ArrayList<String>();
-		processCode.add(process.code);
-		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("inputProcessCodes", processCode)).toList();
-		for(Container container:containers){
-			if(!container.state.code.equals("A")){
-				contextValidation.addErrors("container", ValidationConstants.ERROR_BADSTATE_MSG, container.code);
-			}
+		
+		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,process.containerInputCode);
+		if(!process.state.code.equals("N") && !container.state.code.equals("A")){
+			contextValidation.addErrors("container", ValidationConstants.ERROR_BADSTATE_MSG, container.code);
+		}else if(process.state.code.equals("N")){
+			State state = new State();
+			state.code = "IS";
+			state.user = getCurrentUser();
+			Workflows.setContainerState(container.code, process.currentExperimentTypeCode, state, contextValidation);
+			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code",container.code),DBUpdate.pull("inputProcessCodes", process.code));
 		}
 		if(!contextValidation.hasErrors()){
-			MongoDBDAO.delete(InstanceConstants.PROCESS_COLL_NAME, process);
+			MongoDBDAO.deleteByCode(InstanceConstants.PROCESS_COLL_NAME,Process.class,  process.code);
 			return ok();
 		}else {
-			return badRequest();
+			return badRequest(Json.toJson(contextValidation.errors));
 		}
 	}
 
