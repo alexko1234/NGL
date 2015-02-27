@@ -77,7 +77,7 @@ public class InitDataHelper {
 		 MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.exists("code"));
 		 MongoDBDAO.delete(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.exists("code"));
 		 MongoDBDAO.delete(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.exists("code"));
-		 MongoDBDAO.delete(InstanceConstants.EXPERIMENT_COLL_NAME, Process.class, DBQuery.exists("code"));
+		 MongoDBDAO.delete(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.exists("code"));
 		 MongoDBDAO.delete(InstanceConstants.PROTOCOL_COLL_NAME, Protocol.class, DBQuery.exists("code"));
 	}
 	
