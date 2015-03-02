@@ -25,14 +25,14 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 
 	@Override
 	public void runImport() throws SQLException, DAOException {		
-		loadSamples();		
+		loadSamples();	 	
 		updateSamples();
 		
-		loadContainers("lane");
-		updateContainers("lane");
+		//loadContainers("lane","prepa-flowcell-cng");
+		//updateContainers("lane","prepa-flowcell-cng");
 		
-		loadContainers("tube");
-		updateContainers("tube");
+		loadContainers("tube","lib-normalization");
+		//updateContainers("tube","lib-normalization");
 	}
 	
 	
@@ -67,10 +67,10 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		Logger.debug("end updating samples");
 	}
 	
-	public void loadContainers(String containerCategoryCode) throws SQLException, DAOException {
+	public void loadContainers(String containerCategoryCode, String experimentTypeCode) throws SQLException, DAOException {
 		Logger.debug("start loading containers of type " + containerCategoryCode);		
 		
-		List<Container> containers = limsServices.findContainerToCreate(contextError, containerCategoryCode);
+		List<Container> containers = limsServices.findContainerToCreate(contextError, containerCategoryCode, experimentTypeCode );
 		
 		HashMap<String, PropertyValue<String>> mapCodeSupportSeq = null;
 		
@@ -93,10 +93,10 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 	}
 	
 	
-	public void updateContainers(String containerCategoryCode) throws SQLException, DAOException {
+	public void updateContainers(String containerCategoryCode,String experimentTypeCode) throws SQLException, DAOException {
 		Logger.debug("start updating containers of type " + containerCategoryCode);		
 		
-		List<Container> containers = limsServices.findContainerToModify(contextError, containerCategoryCode);
+		List<Container> containers = limsServices.findContainerToModify(contextError, containerCategoryCode,experimentTypeCode);
 		
 		HashMap<String, PropertyValue<String>> mapCodeSupportSeq = null;
 		

@@ -56,8 +56,8 @@ public class MigrationProjectCodes extends CommonController {
 		
 		Logger.info("Migration contents of containers starts : add projectCode attribute");
 		
-		intResultsArray = migrateContainer("lane");		
-		intResultsArray2 = migrateContainer("tube");
+		intResultsArray = migrateContainer("lane","prepa-flowcell-cng");		
+		intResultsArray2 = migrateContainer("tube","lib-normalization");
 		
 		nb = intResultsArray[0] + intResultsArray2[0];
 		Logger.info("Migration contents of containers Finish : " + nb + " contents and projectCodes of containers updated !");
@@ -82,14 +82,14 @@ public class MigrationProjectCodes extends CommonController {
 	
 	
 	
-	private static int[] migrateContainer(String type) {
+	private static int[] migrateContainer(String categoryCode,String experimentTypeCode) {
 		int[] intResultsArray = new int[] {0,0};
 		
 		//find collection up to date
 		ContextValidation contextError = new ContextValidation(Constants.NGL_DATA_USER);
 		List<Container> newContainers = null;
 		try {
-			newContainers = limsServices.findAllContainer(contextError, type);
+			newContainers = limsServices.findAllContainer(contextError, categoryCode,experimentTypeCode);
 		} catch (DAOException e) {
 			Logger.debug("ERROR in findAllContainer():" + e.getMessage());
 		}

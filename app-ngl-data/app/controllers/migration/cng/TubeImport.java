@@ -67,7 +67,7 @@ public class TubeImport extends CommonController {
 	
 	private static void migreContainer()  throws SQLException, DAOException {
 		ContextValidation contextError=new ContextValidation(Constants.NGL_DATA_USER);
-		List<Container> containers = limsServices.findAllContainer(contextError, "tube");
+		List<Container> containers = limsServices.findAllContainer(contextError, "tube","lib-normalization");
 		ContainerHelper.createSupportFromContainers(containers, null, contextError);
 		List<Container> ctrs=InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME, containers, contextError, true);
 		limsServices.updateLimsTubes(ctrs, contextError, "creation");

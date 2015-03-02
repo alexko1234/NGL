@@ -54,8 +54,8 @@ public class ProcessService {
 					getExperimentTypes("qPCR-quantification").get(0), getExperimentTypes("solution-stock").get(0), getExperimentTypes("ext-to-qpcr").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			l.add(DescriptionFactory.newProcessType("Run Illumina", "illumina-run", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsIlluminaDepotCNS() , getExperimentTypes("prepa-flowcell","illumina-depot"), 
 					getExperimentTypes("prepa-flowcell").get(0), getExperimentTypes("illumina-depot").get(0),getExperimentTypes("ext-to-prepa-flowcell").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-			l.add(DescriptionFactory.newProcessType("Run Illumina", "illumina-run-cng", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsIlluminaDepotCNG() , getExperimentTypes("prepa-flowcell-cng","illumina-depot-cng"), 
-					getExperimentTypes("prepa-flowcell-cng").get(0), getExperimentTypes("illumina-depot-cng").get(0),getExperimentTypes("ext-to-prepa-flowcell").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+			l.add(DescriptionFactory.newProcessType("Run Illumina", "illumina-run-cng", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsIlluminaDepotCNG() , getExperimentTypes("prepa-flowcell-cng","illumina-depot"), 
+					getExperimentTypes("prepa-flowcell-cng").get(0), getExperimentTypes("illumina-depot").get(0),getExperimentTypes("ext-to-prepa-flowcell").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 				
 		}
 		

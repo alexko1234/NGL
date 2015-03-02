@@ -148,11 +148,6 @@ public class ExperimentService {
 					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
-			//Depot solexa
-			l.add(newExperimentType("Depot Illumina", "illumina-depot", 1400,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(),
-					getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500"), "OneToVoid", 
-					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 
 			//quality control
 
@@ -209,7 +204,14 @@ public class ExperimentService {
 			l.add(newExperimentType("Quantification qPCR","qPCR-quantification",850,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
 					getInstrumentUsedTypes("rocheLightCycler-qPCR","stratagene-qPCR"),"OneToVoid", 
-					DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG))); 			
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG))); 	
+			
+			//Depot solexa -- FDS 27/02/2015 devient commun
+			l.add(newExperimentType("Depot Illumina", "illumina-depot", 1400,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(),
+					getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500"), "OneToVoid", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)));
+
 			
 			/**********************************************************************************/
 			
@@ -237,10 +239,18 @@ public class ExperimentService {
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 
 			//pre-sequencing
-			l.add(newExperimentType("Solution X nM","solution-x-nm",1000,
+			//    FDS remommage a la demande de Julie en solution-x-nM=> lib-normalization
+			l.add(newExperimentType("Librairie normalisée","lib-normalization",1000,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
 					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+			
+			// FDS new 02-02-2015, intrument Used =>robot oui mais lequel???
+			l.add(newExperimentType("Librairie dénaturée","denat-dil-lib",1100,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
+					getInstrumentUsedTypes("hand"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+
 
 			// NO qc au CNG ??
 			// NO purif au CNG ??
@@ -252,12 +262,6 @@ public class ExperimentService {
 					getInstrumentUsedTypes("cBot", "cBot-onboard"),"ManyToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 
-			//Depot solexa
-			l.add(newExperimentType("Dépot sur sequenceur Illumina", "illumina-depot-cng", 1200,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(), 
-					getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500"), "OneToVoid", 
-					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-				
 		}
 
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
@@ -295,21 +299,28 @@ public class ExperimentService {
 			newExperimentTypeNode("amplification", getExperimentTypes("amplification").get(0), false, false, getExperimentTypeNodes("librairie-indexing","librairie-dualindexing"), 
 					getExperimentTypes("ampure-a"), getExperimentTypes("fluo-quantification","chip-migration-post-pcr")).save();
 			
+
 			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false,false,getExperimentTypeNodes("ext-to-qpcr","amplification"),
 					null,null).save();
 			
 			newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","solution-stock"),
 					null,null).save();
 
-			newExperimentTypeNode("solution-x-nm",getExperimentTypes("solution-x-nm").get(0),false,false,getExperimentTypeNodes("ext-to-qpcr"),
-					null,null).save();
-
-			
-			newExperimentTypeNode("prepa-flowcell-cng",getExperimentTypes("prepa-flowcell-cng").get(0),false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","solution-X-nM"),
+			//FDS 02/02/2015 renommage demandé 
+			newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0),false,false,getExperimentTypeNodes("ext-to-qpcr"),
 					null,null).save();
 			
-			newExperimentTypeNode("illumina-depot-cng",getExperimentTypes("illumina-depot-cng").get(0),false,false,getExperimentTypeNodes("prepa-flowcell-cng"),
+			//FDS 02/02/2015  nouveau node necessaire pour denat-dil-lib , previousExp est lib-normalization ???
+			newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),false,false,getExperimentTypeNodes("lib-normalization"),
 					null,null).save();
+			
+			// FDS 02/02/2015  nouveau node necessaire pour lib-b ??? previousExp est ???
+			
+			// FDS "solution-X-nM" n'existe plus...  en principe c'est lib-b pour "prepa-flowcell-cng" mais pas encore specifie =>  mettre "denat-dil-lib" ???
+			newExperimentTypeNode("prepa-flowcell-cng",getExperimentTypes("prepa-flowcell-cng").get(0),false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","denat-dil-lib"),
+					null,null).save();
+			
+	        // FDS 27/02/2015 supression "illumina-depot-cng"
 			
 			newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false,false,getExperimentTypeNodes("prepa-flowcell"),
 					null,null).save();

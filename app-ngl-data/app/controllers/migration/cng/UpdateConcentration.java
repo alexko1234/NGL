@@ -55,7 +55,7 @@ public class UpdateConcentration extends CommonController {
 			ContextValidation contextError = new ContextValidation(Constants.NGL_DATA_USER);
 			List<Container> newContainers = null;
 			try {
-				newContainers = limsServices.findAllContainer(contextError, "tube");
+				newContainers = limsServices.findAllContainer(contextError, "tube","lib-normalization");
 			} catch (DAOException e) {
 				Logger.debug("ERROR in findAllContainer():" + e.getMessage());
 			}

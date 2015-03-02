@@ -45,7 +45,7 @@ import validation.ContextValidation;
 /**
  * @author dnoisett
  * Import data from CNG's LIMS to NGL 
- * Functions to get projects, samples & containers
+ * Functions to get projects, samples,  containers ( lanes, tubes), indexes
  * Sub-functions to map data (between Solexa and NGL)
  * Sub-functions to update dates (in order to know what data has been imported)
  */
@@ -54,7 +54,7 @@ public class LimsCNGDAO {
 
 	private JdbcTemplate jdbcTemplate;
 
-	private static final String CONTAINER_STATE_CODE="A";
+	private static final String CONTAINER_STATE_CODE="IW-P";
 	protected static final String PROJECT_TYPE_CODE_DEFAULT = "default-project";
 	protected static final String PROJECT_STATE_CODE_DEFAULT = "IP";
 	protected static final String IMPORT_CATEGORY_CODE="sample-import";
@@ -71,7 +71,7 @@ public class LimsCNGDAO {
 	
 	
 	/**
-	 * Common mapping for Project
+	 * 1 - Common mapping for Project
 	 * @param rs
 	 * @param rowNum
 	 * @param ctxErr
@@ -121,54 +121,8 @@ public class LimsCNGDAO {
 		return project;
 	}
 
-	
 	/**
-	 * To get new projects
-	 * @param contextError
-	 * @return
-	 * @throws SQLException
-	 * @throws DAOException
-	 */
-	public List<Project> findProjectToCreate(final ContextValidation contextError) throws SQLException, DAOException {		
-		List<Project> results = this.jdbcTemplate.query("select * from v_project_tongl", new Object[]{}, 
-			new RowMapper<Project>() {
-				public Project mapRow(ResultSet rs, int rowNum) throws SQLException {								
-					ResultSet rs0 = rs;
-					int rowNum0 = rowNum;
-					ContextValidation ctxErr = contextError; 
-					Project p =  commonProjectMapRow(rs0, rowNum0, ctxErr); 
-					return p;
-				}	
-		});
-		return results;
-	}
-	
-
-	/**
-	 * To get projects that have been updated in Soxela
-	 * @param contextError
-	 * @return
-	 * @throws SQLException
-	 * @throws DAOException
-	 */
-	public List<Project> findProjectToModify(final ContextValidation contextError) throws SQLException, DAOException {	
-		List<Project> results = this.jdbcTemplate.query("select * from v_project_updated_tongl", new Object[]{}, 
-			new RowMapper<Project>() {
-				public Project mapRow(ResultSet rs, int rowNum) throws SQLException {
-					ResultSet rs0 = rs;
-					int rowNum0 = rowNum;
-					ContextValidation ctxErr = contextError; 
-					Project p =  commonProjectMapRow(rs0, rowNum0, ctxErr); 
-					return p;
-				}	
-		});
-		return results;
-	}
-	
-	/*************************************************************************************************************************************************/
-	
-	/**
-	 * Common mapping for Sample
+	 * 2 - Common mapping for Sample
 	 * @param rs
 	 * @param rowNum
 	 * @param contextError
@@ -229,179 +183,15 @@ public class LimsCNGDAO {
 
 	
 	/**
-	 * To set projectCodes to samples
-	 * @param results
-	 * @return
-	 */
-	public List<Sample> demultiplexSample(List<Sample> results) {
-		//affect all the project codes to a same sample 
-		/// required to have an ordered list (see ORDER BY clause in the sql of the view)
-		int pos = 0;
-		int x = 1;
-		int listSize = results.size(); 
-		while (pos < listSize-1) {
-			while ( (pos < listSize-1) && (results.get(pos).code.equals( results.get(pos+x).code ))   ) {
-				// difference between the two project codes
-				if (! results.get(pos).projectCodes.get(0).equals(results.get(pos+x).projectCodes.get(0))) {
-					if (! results.get(pos).projectCodes.contains(results.get(pos+x).projectCodes.get(0))) {
-						results.get(pos).projectCodes.add( results.get(pos+x).projectCodes.get(0) ); 
-					}
-				}
-				// all the difference have been reported on the first sample found (at the position pos)
-				// so we can delete the sample at the position (posNext)
-				results.remove(pos+x);
-				listSize--;
-			}
-			pos++;
-		}
-		//for remove null comment or project
-		for (Sample s : results) {
-			for (int i=0; i<s.projectCodes.size(); i++) {
-				if (s.projectCodes.get(i).equals(" ")) {
-					s.projectCodes.remove(i);
-				}
-			}
-		}	
-		return results;
-	}
-
-
-	/**
-	 * To get samples updated in the CNG's LIMS (Solexa database)
-	 * @param contextError
-	 * @return
-	 * @throws SQLException
-	 * @throws DAOException
-	 */
-	public List<Sample> findSampleToModify(final ContextValidation contextError) throws SQLException, DAOException {
-		return findSampleToModify(contextError, null);
-	}
-	
-	
-	/**
-	 * To get a particular sample updated in the CNG's LIMS (Solexa database)
-	 * @param contextError
-	 * @param sampleCode
-	 * @return
-	 * @throws SQLException
-	 * @throws DAOException
-	 */
-	public List<Sample> findSampleToModify(final ContextValidation contextError, String sampleCode) throws SQLException, DAOException {		
-		List<Sample> results = null;
-		
-		if (sampleCode != null) { 
-			results = this.jdbcTemplate.query("select * from v_sample_updated_tongl where code=? order by code, project desc, comments", new Object[]{sampleCode}
-			,new RowMapper<Sample>() {
-				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
-					ResultSet rs0 = rs;
-					int rowNum0 = rowNum;
-					ContextValidation ctxErr = contextError; 
-					Sample s=  commonSampleMapRow(rs0, rowNum0, ctxErr); 
-					return s;
-				}
-			});
-		}
-		else { // mass loading
-			results = this.jdbcTemplate.query("select * from v_sample_updated_tongl order by code, project desc, comments",new Object[]{}
-			,new RowMapper<Sample>() {
-				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
-					ResultSet rs0 = rs;
-					int rowNum0 = rowNum;
-					ContextValidation ctxErr = contextError; 
-					Sample s=  commonSampleMapRow(rs0, rowNum0, ctxErr); 
-					return s;
-				}
-			});			
-		}		
-		return demultiplexSample(results);	
-	}
-	
-	
-
-	
-	/**
-	 * To get new samples
-	 * @param contextError
-	 * @return
-	 * @throws SQLException
-	 * @throws DAOException
-	 */
-	public List<Sample> findSampleToCreate(final ContextValidation contextError) throws SQLException, DAOException {
-		return findSampleToCreate(contextError, null);
-	}
-	
-	/**
-	 * To get a new particular sample
-	 * @param contextError
-	 * @param sampleCode
-	 * @return
-	 * @throws SQLException
-	 * @throws DAOException
-	 */
-	public List<Sample> findSampleToCreate(final ContextValidation contextError, String sampleCode) throws SQLException, DAOException {		
-		List<Sample> results = null;
-		
-		if (sampleCode != null) { 
-			results = this.jdbcTemplate.query("select * from v_sample_tongl where code=? order by code, project desc, comments", new Object[]{sampleCode}
-			,new RowMapper<Sample>() {
-				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
-					ResultSet rs0 = rs;
-					int rowNum0 = rowNum;
-					ContextValidation ctxErr = contextError; 
-					Sample s=  commonSampleMapRow(rs0, rowNum0, ctxErr); 
-					return s;
-				}
-			});
-		}
-		else { // mass loading
-			results = this.jdbcTemplate.query("select * from v_sample_tongl order by code, project desc, comments",new Object[]{}
-			,new RowMapper<Sample>() {
-				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
-					ResultSet rs0 = rs;
-					int rowNum0 = rowNum;
-					ContextValidation ctxErr = contextError; 
-					Sample s=  commonSampleMapRow(rs0, rowNum0, ctxErr); 
-					return s;
-				}
-			});			
-		}		
-		return demultiplexSample(results);	
-	}
-	
-	
-	/**
-	 * To get all the samples (first loading, migration) 
-	 * @param contextError
-	 * @return
-	 * @throws DAOException
-	 */
-	public List<Sample> findAllSample(final ContextValidation contextError) throws DAOException {
-		
-		List<Sample> results = this.jdbcTemplate.query("select * from v_sample_tongl_reprise order by code, project desc, comments", new Object[]{} 
-		,new RowMapper<Sample>() {
-			public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
-				ResultSet rs0 = rs;
-				int rowNum0 = rowNum;
-				ContextValidation ctxErr = contextError; 
-				Sample s=  commonSampleMapRow(rs0, rowNum0, ctxErr); 
-				return s;
-			}
-		});
-		
-		return demultiplexSample(results);			
-	}
-	
-	/****************************************************************************************************************************************/
-	
-	/**
-	 * Common mapping for container
+	 * 3 - Common mapping for container
 	 * @param rs
 	 * @param rowNum
 	 * @param ctxErr
+	 * @param experimentTypeCode 
 	 * @return
 	 * @throws SQLException
 	 */
-	private Container commonContainerMapRow(ResultSet rs, int rowNum, ContextValidation ctxErr, String containerCategoryCode) throws SQLException {
+	private Container commonContainerMapRow(ResultSet rs, int rowNum, ContextValidation ctxErr, String containerCategoryCode, String experimentTypeCode) throws SQLException {
 		Container container = new Container();
 		
 		container.traceInformation = new TraceInformation();
@@ -417,7 +207,8 @@ public class LimsCNGDAO {
 			//just one comment for one lane (container)
 			container.comments.add(new Comment(rs.getString("comment")));
 		}
-		
+		container.fromExperimentTypeCodes=new ArrayList<String>();
+		container.fromExperimentTypeCodes.add(experimentTypeCode);
 		container.state = new State(); 
 		container.state.code = CONTAINER_STATE_CODE; 
 		container.state.user = InstanceHelpers.getUser();
@@ -505,6 +296,316 @@ public class LimsCNGDAO {
 		return container;
 	}
 	
+	/**
+	 * 4- common mapping for containerSupport
+	 * @param rs
+	 * @param rowNum
+	 * @param ctxErr
+	 * @return
+	 * @throws SQLException
+	 *  FDS uniquement pour des containers de typer "lane" !!!!
+	 */
+	private ContainerSupport commonContainerSupportMapRow(ResultSet rs, int rowNum, ContextValidation ctxErr) throws SQLException {
+		ContainerSupport containerSupport = new ContainerSupport();		
+		containerSupport.code = rs.getString("code_support");
+		
+		if (rs.getString("seq_program_type").equals("PE") || rs.getString("seq_program_type").equals("SR")) {
+			containerSupport.properties= new HashMap<String, PropertyValue>();
+			containerSupport.properties.put("sequencingProgramType", new PropertySingleValue(rs.getString("seq_program_type")));
+		}
+		else {
+			Logger.error("Wrong value of seq_program_type : " + rs.getString("seq_program_type") + "! (expected SE ou PR) for code : " + rs.getString("code_support")); 
+		}
+		return containerSupport;
+	}	
+	
+	
+	/** FDS: no IndexMapRow
+	 *  mapping is done in findIndexToCreate
+	 */
+	
+	/*************************************************************************************************************************************/
+	
+	/**
+	 * 1a - To get new projects
+	 * @param contextError
+	 * @return
+	 * @throws SQLException
+	 * @throws DAOException
+	 */
+	public List<Project> findProjectToCreate(final ContextValidation contextError) throws SQLException, DAOException {		
+		List<Project> results = this.jdbcTemplate.query("select * from v_project_tongl", new Object[]{}, 
+			new RowMapper<Project>() {
+				public Project mapRow(ResultSet rs, int rowNum) throws SQLException {								
+					ResultSet rs0 = rs;
+					int rowNum0 = rowNum;
+					ContextValidation ctxErr = contextError; 
+					Project p =  commonProjectMapRow(rs0, rowNum0, ctxErr); 
+					return p;
+				}	
+		});
+		return results;
+	}
+	
+
+	/**
+	 * 1b - To get projects that have been updated in Soxela
+	 * @param contextError
+	 * @return
+	 * @throws SQLException
+	 * @throws DAOException
+	 */
+	public List<Project> findProjectToModify(final ContextValidation contextError) throws SQLException, DAOException {	
+		List<Project> results = this.jdbcTemplate.query("select * from v_project_updated_tongl", new Object[]{}, 
+			new RowMapper<Project>() {
+				public Project mapRow(ResultSet rs, int rowNum) throws SQLException {
+					ResultSet rs0 = rs;
+					int rowNum0 = rowNum;
+					ContextValidation ctxErr = contextError; 
+					Project p =  commonProjectMapRow(rs0, rowNum0, ctxErr); 
+					return p;
+				}	
+		});
+		return results;
+	}
+	
+	/** FDS: pour remplacer findProjectToModify + findProjectToModify ....EN COURS....
+	 * 
+	 * 1c - To get projects that have been added OR updated in Solexa LIMS
+	 * @param contextError
+	 * @return
+	 * @throws SQLException
+	 * @throws DAOException
+	 */
+	public List<Project> findProjectToSynchronize(final ContextValidation contextError) throws SQLException, DAOException {	
+		List<Project> results = this.jdbcTemplate.query("select * from v_project_tosynchronize", new Object[]{}, 
+			new RowMapper<Project>() {
+				public Project mapRow(ResultSet rs, int rowNum) throws SQLException {
+					ResultSet rs0 = rs;
+					int rowNum0 = rowNum;
+					ContextValidation ctxErr = contextError; 
+					Project p =  commonProjectMapRow(rs0, rowNum0, ctxErr); 
+					return p;
+				}	
+		});
+		return results;
+	}
+	
+	/** 
+	 * UPDATE Solexa t_project import/update dates
+	 * @param projects
+	 * @param contextError
+	 * @throws DAOException
+	 */
+	public void updateLimsProjectsOLD(List<Project> projects, ContextValidation contextError, String mode) throws DAOException {
+		String key, column;
+		if (mode.equals("creation")) {
+			key = "update_ImportDate";
+			column = "nglimport_date";
+		}
+		else {
+			key = "update_UpdateDate";
+			column = "ngl_update_date";			
+		}
+		contextError.addKeyToRootKeyName(key);
+		
+		String sql = "UPDATE t_project SET " + column + " = ? WHERE name = ?";
+		List<Object[]> parameters = new ArrayList<Object[]>();
+		for (Project project : projects) {
+	        parameters.add(new Object[] {new Date(), project.code}); 
+		}
+		this.jdbcTemplate.batchUpdate(sql, parameters);  
+		
+		contextError.removeKeyFromRootKeyName(key);
+	}
+	
+	/** FDS : nouvelle version 1 seul champ a mettre a jour
+	 * UPDATE Solexa t_project.synchro_date
+	 * @param projects
+	 * @param contextError
+	 * @throws DAOException
+	 */
+	public void updateLimsProjects(List<Project> projects, ContextValidation contextError, String mode) throws DAOException {
+		String key="update_SynchroDate";
+		contextError.addKeyToRootKeyName(key);
+		
+		String sql = "UPDATE t_project SET nglimport_date = ? WHERE name = ?";
+		
+		List<Object[]> parameters = new ArrayList<Object[]>();
+		
+		for (Project project : projects) {
+	        parameters.add(new Object[] {new Date(), project.code}); 
+		}
+		this.jdbcTemplate.batchUpdate(sql, parameters);  
+		
+		contextError.removeKeyFromRootKeyName(key);
+	}
+	
+	/*************************************************************************************************************************************************/
+	
+
+	/**
+	 * 2a -To set projectCodes to samples
+	 * @param results
+	 * @return
+	 */
+	public List<Sample> demultiplexSample(List<Sample> results) {
+		//affect all the project codes to a same sample 
+		/// required to have an ordered list (see ORDER BY clause in the sql of the view)
+		int pos = 0;
+		int x = 1;
+		int listSize = results.size(); 
+		while (pos < listSize-1) {
+			while ( (pos < listSize-1) && (results.get(pos).code.equals( results.get(pos+x).code ))   ) {
+				// difference between the two project codes
+				if (! results.get(pos).projectCodes.get(0).equals(results.get(pos+x).projectCodes.get(0))) {
+					if (! results.get(pos).projectCodes.contains(results.get(pos+x).projectCodes.get(0))) {
+						results.get(pos).projectCodes.add( results.get(pos+x).projectCodes.get(0) ); 
+					}
+				}
+				// all the difference have been reported on the first sample found (at the position pos)
+				// so we can delete the sample at the position (posNext)
+				results.remove(pos+x);
+				listSize--;
+			}
+			pos++;
+		}
+		//for remove null comment or project
+		for (Sample s : results) {
+			for (int i=0; i<s.projectCodes.size(); i++) {
+				if (s.projectCodes.get(i).equals(" ")) {
+					s.projectCodes.remove(i);
+				}
+			}
+		}	
+		return results;
+	}
+
+	/** FDS: SERT A RIEN... il suffit de les considerer tous comme nouveaux==> findAllSampleToCreate !!!
+	 * 2b - To get all the samples (first loading, migration) 
+	 * @param contextError
+	 * @return
+	 * @throws DAOException
+	 */
+	public List<Sample> findAllSample(final ContextValidation contextError) throws DAOException {
+		
+		List<Sample> results = this.jdbcTemplate.query("select * from v_sample_tongl_reprise order by code, project desc, comments", new Object[]{} 
+		,new RowMapper<Sample>() {
+			public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
+				ResultSet rs0 = rs;
+				int rowNum0 = rowNum;
+				ContextValidation ctxErr = contextError; 
+				Sample s=  commonSampleMapRow(rs0, rowNum0, ctxErr); 
+				return s;
+			}
+		});
+		
+		return demultiplexSample(results);			
+	}
+	
+	/**
+	 * 2c - To get samples updated in the CNG's LIMS (Solexa database)
+	 * @param contextError
+	 * @return
+	 * @throws SQLException
+	 * @throws DAOException
+	 */
+	public List<Sample> findSampleToModify(final ContextValidation contextError) throws SQLException, DAOException {
+		return findSampleToModify(contextError, null);
+	}
+	
+	
+	/**
+	 * 2d To get a particular sample updated in the CNG's LIMS (Solexa database)
+	 * @param contextError
+	 * @param sampleCode
+	 * @return
+	 * @throws SQLException
+	 * @throws DAOException
+	 */
+	public List<Sample> findSampleToModify(final ContextValidation contextError, String sampleCode) throws SQLException, DAOException {		
+		List<Sample> results = null;
+		
+		if (sampleCode != null) { 
+			results = this.jdbcTemplate.query("select * from v_sample_updated_tongl where code=? order by code, project desc, comments", new Object[]{sampleCode}
+			,new RowMapper<Sample>() {
+				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
+					ResultSet rs0 = rs;
+					int rowNum0 = rowNum;
+					ContextValidation ctxErr = contextError; 
+					Sample s=  commonSampleMapRow(rs0, rowNum0, ctxErr); 
+					return s;
+				}
+			});
+		}
+		else { // mass loading
+			results = this.jdbcTemplate.query("select * from v_sample_updated_tongl order by code, project desc, comments",new Object[]{}
+			,new RowMapper<Sample>() {
+				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
+					ResultSet rs0 = rs;
+					int rowNum0 = rowNum;
+					ContextValidation ctxErr = contextError; 
+					Sample s=  commonSampleMapRow(rs0, rowNum0, ctxErr); 
+					return s;
+				}
+			});			
+		}		
+		return demultiplexSample(results);	
+	}
+	
+	
+	/**
+	 * 2e To get new samples
+	 * @param contextError
+	 * @return
+	 * @throws SQLException
+	 * @throws DAOException
+	 */
+	public List<Sample> findSampleToCreate(final ContextValidation contextError) throws SQLException, DAOException {
+		return findSampleToCreate(contextError, null);
+	}
+	
+	/**
+	 * To get a new particular sample
+	 * @param contextError
+	 * @param sampleCode
+	 * @return
+	 * @throws SQLException
+	 * @throws DAOException
+	 */
+	public List<Sample> findSampleToCreate(final ContextValidation contextError, String sampleCode) throws SQLException, DAOException {		
+		List<Sample> results = null;
+		
+		if (sampleCode != null) { 
+			results = this.jdbcTemplate.query("select * from v_sample_tongl where code=? order by code, project desc, comments", new Object[]{sampleCode}
+			,new RowMapper<Sample>() {
+				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
+					ResultSet rs0 = rs;
+					int rowNum0 = rowNum;
+					ContextValidation ctxErr = contextError; 
+					Sample s=  commonSampleMapRow(rs0, rowNum0, ctxErr); 
+					return s;
+				}
+			});
+		}
+		else { // mass loading
+			results = this.jdbcTemplate.query("select * from v_sample_tongl order by code, project desc, comments",new Object[]{}
+			,new RowMapper<Sample>() {
+				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
+					ResultSet rs0 = rs;
+					int rowNum0 = rowNum;
+					ContextValidation ctxErr = contextError; 
+					Sample s=  commonSampleMapRow(rs0, rowNum0, ctxErr); 
+					return s;
+				}
+			});			
+		}		
+		return demultiplexSample(results);	
+	}
+	
+	
+
+
 	
 	/**
 	 * To set projectCodes & sampleCodes
@@ -631,27 +732,7 @@ public class LimsCNGDAO {
 		return results;
 	}
 	
-	/**
-	 * common mapping for containerSupport
-	 * @param rs
-	 * @param rowNum
-	 * @param ctxErr
-	 * @return
-	 * @throws SQLException
-	 */
-	private ContainerSupport commonContainerSupportMapRow(ResultSet rs, int rowNum, ContextValidation ctxErr) throws SQLException {
-		ContainerSupport containerSupport = new ContainerSupport();		
-		containerSupport.code = rs.getString("code_support");
-		
-		if (rs.getString("seq_program_type").equals("PE") || rs.getString("seq_program_type").equals("SR")) {
-			containerSupport.properties= new HashMap<String, PropertyValue>();
-			containerSupport.properties.put("sequencingProgramType", new PropertySingleValue(rs.getString("seq_program_type")));
-		}
-		else {
-			Logger.error("Wrong value of seq_program_type : " + rs.getString("seq_program_type") + "! (expected SE ou PR) for code : " + rs.getString("code_support")); 
-		}
-		return containerSupport;
-	}	
+
 
 	
 	
@@ -662,8 +743,8 @@ public class LimsCNGDAO {
 	 * @throws SQLException
 	 * @throws DAOException
 	 */
-	public List<Container> findContainerToCreate(final ContextValidation contextError, String containerCategoryCode) throws SQLException, DAOException {
-		return findContainerToCreate(contextError, null, containerCategoryCode);
+	public List<Container> findContainerToCreate(final ContextValidation contextError, String containerCategoryCode, String experimentTypeCode) throws SQLException, DAOException {
+		return findContainerToCreate(contextError, null, containerCategoryCode, experimentTypeCode);
 	}
 	
 	/**
@@ -673,7 +754,7 @@ public class LimsCNGDAO {
 	 * @return
 	 * @throws DAOException 
 	 */
-	public List<Container> findContainerToCreate(final ContextValidation contextError, String containerCode, String containerCategoryCode) throws DAOException {
+	public List<Container> findContainerToCreate(final ContextValidation contextError, String containerCode, String containerCategoryCode, final String experimentTypeCode) throws DAOException {
 		final String _containerCategoryCode = containerCategoryCode;
 		String sqlView;
 		
@@ -692,19 +773,23 @@ public class LimsCNGDAO {
 					ResultSet rs0 = rs;
 					int rowNum0 = rowNum;
 					ContextValidation ctxErr = contextError; 
-					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, _containerCategoryCode); 
+					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, _containerCategoryCode,experimentTypeCode); 
 					return c;
 				}
 			});
 		}
 		else {
-			results = this.jdbcTemplate.query("select * from " + sqlView + " where isavailable = true order by code, project desc, code_sample, tag, exp_short_name", new Object[]{} 
+			Logger.de
+			bug("Import containers");
+			/// results = this.jdbcTemplate.query("select * from " + sqlView + " where code in ('A006925','A004XSM','A004XSN','A004XSO','A004XSP','A004XSQ','A004XSR','A004XSS') order by code, project desc, code_sample, tag, exp_short_name", new Object[]{} 
+			results = this.jdbcTemplate.query("select * from " + sqlView + " where isavailable=true order by code, project desc, code_sample, tag, exp_short_name", new Object[]{} 
 			,new RowMapper<Container>() {
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
 					int rowNum0 = rowNum;
 					ContextValidation ctxErr = contextError; 
-					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, _containerCategoryCode); 
+					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, _containerCategoryCode,experimentTypeCode);
+					Logger.debug("Container "+c.code);
 					return c;
 				}
 			});
@@ -721,7 +806,7 @@ public class LimsCNGDAO {
 	 * @return
 	 * @throws DAOException
 	 */
-	public List<Container> findAllContainer(final ContextValidation contextError, String containerCategoryCode) throws DAOException {
+	public List<Container> findAllContainer(final ContextValidation contextError, String containerCategoryCode,final String experimentTypeCode) throws DAOException {
 		final String _containerCategoryCode = containerCategoryCode;
 		String sqlView;
 		
@@ -738,7 +823,7 @@ public class LimsCNGDAO {
 				ResultSet rs0 = rs;
 				int rowNum0 = rowNum;
 				ContextValidation ctxErr = contextError; 
-				Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, _containerCategoryCode); 
+				Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, _containerCategoryCode,experimentTypeCode); 
 				return c;
 			}
 		});
@@ -755,8 +840,8 @@ public class LimsCNGDAO {
 	 * @throws SQLException
 	 * @throws DAOException
 	 */
-	public List<Container> findContainerToModify(final ContextValidation contextError, String containerCategoryCode) throws SQLException, DAOException {
-		return findContainerToModify(contextError, null, containerCategoryCode);
+	public List<Container> findContainerToModify(final ContextValidation contextError, String containerCategoryCode,String experimentTypeCode) throws SQLException, DAOException {
+		return findContainerToModify(contextError, null, containerCategoryCode,experimentTypeCode);
 	}
 
 	
@@ -767,7 +852,7 @@ public class LimsCNGDAO {
 	 * @return
 	 * @throws DAOException 
 	 */
-	public List<Container> findContainerToModify(final ContextValidation contextError, String containerCode, String containerCategoryCode) throws DAOException {		
+	public List<Container> findContainerToModify(final ContextValidation contextError, String containerCode, String containerCategoryCode,final String experimentTypeCode) throws DAOException {		
 		final String _containerCategoryCode = containerCategoryCode;
 		String sqlView;
 		
@@ -786,7 +871,7 @@ public class LimsCNGDAO {
 					ResultSet rs0 = rs;
 					int rowNum0 = rowNum;
 					ContextValidation ctxErr = contextError;
-					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, _containerCategoryCode); 
+					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, _containerCategoryCode,experimentTypeCode); 
 					return c;
 				}
 			});
@@ -798,7 +883,7 @@ public class LimsCNGDAO {
 					ResultSet rs0 = rs;
 					int rowNum0 = rowNum;
 					ContextValidation ctxErr = contextError; 
-					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, _containerCategoryCode); 
+					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, _containerCategoryCode,experimentTypeCode); 
 					return c;
 				}
 			});
@@ -908,33 +993,7 @@ public class LimsCNGDAO {
 	
 	/*************************************************************************************************************************************/
 	
-	/**
-	 * UPDATE Solexa t_project import/update dates
-	 * @param projects
-	 * @param contextError
-	 * @throws DAOException
-	 */
-	public void updateLimsProjects(List<Project> projects, ContextValidation contextError, String mode) throws DAOException {
-		String key, column;
-		if (mode.equals("creation")) {
-			key = "update_ImportDate";
-			column = "nglimport_date";
-		}
-		else {
-			key = "update_UpdateDate";
-			column = "ngl_update_date";			
-		}
-		contextError.addKeyToRootKeyName(key);
-		
-		String sql = "UPDATE t_project SET " + column + " = ? WHERE name = ?";
-		List<Object[]> parameters = new ArrayList<Object[]>();
-		for (Project project : projects) {
-	        parameters.add(new Object[] {new Date(), project.code}); 
-		}
-		this.jdbcTemplate.batchUpdate(sql, parameters);  
-		
-		contextError.removeKeyFromRootKeyName(key);
-	}
+
 
 	
 	/**
