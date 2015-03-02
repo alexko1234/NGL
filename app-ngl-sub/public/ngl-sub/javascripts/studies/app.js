@@ -3,6 +3,7 @@ angular.module('home', ['ngRoute', 'commonsServices', 'datatableServices','ui.bo
 	function($routeProvider, $locationProvider) {
 	
 	$routeProvider.when('/studies/create/home', {
+		// url qui va appeler controler java de type tpl
 		templateUrl : '/tpl/studies/create',
 		controller : 'CreateCtrl'
 	});

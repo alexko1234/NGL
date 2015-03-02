@@ -7,9 +7,23 @@ studies.page.title=Studies page
 study.create.success= Successful create study
 create.placeholder.studiesTitle=Study title
 create.placeholder.projectCode=Select. project code
-create.placeholder.studiesTypes=Select. study type
 create.placeholder.abstract=Def. abstract
 create.placeholder.description=Def. description
+create.placeholder.existingStudyType=studyType
+
+#Configuration
+configurations.menu = Configurations menu
+configurations.menu.create = Create configurations
+configurations.page.title=Configurations page
+configuration.create.success= Successful create configuration
+create.placeholder.studiesTypes=Select. StudyType
+create.placeholder.librarySelection=librarySelection
+create.placeholder.librarySource=librarySource
+create.placeholder.libraryStrategy=libraryStrategy
+create.placeholder.strategySample=strategySample
+
+
+
 
 button.save=Save
 button.reset=Reset

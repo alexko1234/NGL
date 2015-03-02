@@ -25,6 +25,7 @@ import models.sra.submit.sra.instance.Experiment;
 import models.sra.submit.sra.instance.RawData;
 import models.sra.submit.sra.instance.ReadSpec;
 import models.sra.submit.sra.instance.Run;
+import models.sra.submit.util.SraCodeHelper;
 import models.sra.submit.util.SraException;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
@@ -256,6 +257,7 @@ public class SubmissionServices {
 		DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
 		Date courantDate = new java.util.Date();
 		String st_my_date = dateFormat.format(courantDate);	
+		/*
 		String headerSubmissionCode = "cns" + "_" + projectCode + "_" + st_my_date;
 		String submissionCode = headerSubmissionCode + "_" + "1";
 		// si submissionCode existe deja, alors en creer un nouveau :
@@ -263,11 +265,12 @@ public class SubmissionServices {
 		while (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "code", submissionCode)) {
 			i++;
 			submissionCode = headerSubmissionCode + "_" + i;
-		}
+		}*/
+		
+		submission.code = SraCodeHelper.getInstance().generateSubmissionCode(projectCode);
 		submission = new Submission(projectCode, user);
-		submission.code = submissionCode;
 		submission.submissionDate = courantDate;
-		System.out.println("submissionCode="+ submissionCode);
+		System.out.println("submissionCode="+ submission.code);
 		submission.state = new State("new", user);
 		if (configCode != null) {
 			submission.config = MongoDBDAO.findByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, configCode);
@@ -276,7 +279,7 @@ public class SubmissionServices {
 	}
 
 
-	public String getSampleCode(ReadSet readSet, String projectCode, String strategySample) {
+/*	public String getSampleCode(ReadSet readSet, String projectCode, String strategySample) {
 		String laboratorySampleCode = readSet.sampleCode;
 		models.laboratory.sample.instance.Sample laboratorySample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, models.laboratory.sample.instance.Sample.class, laboratorySampleCode);
 		String laboratorySampleName = laboratorySample.name;
@@ -299,7 +302,7 @@ public class SubmissionServices {
 		}	
 		return codeSample;
 	}
-
+*/
 
 
 	//todo: il reste scientificName, classification, comonName à renseigner sur la base de idTaxon, et description
@@ -317,7 +320,7 @@ public class SubmissionServices {
 		String laboratoryRunCode = readSet.runCode;
 		models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
 
-		String codeSample = getSampleCode(readSet, projectCode, strategySample);
+		String codeSample = SraCodeHelper.getInstance().generateSampleCode(readSet, projectCode, strategySample);
 		Sample sample = null;
 		// Si sample existe, prendre l'existant, sinon en creer un nouveau
 		//if (services.SraDbServices.checkCodeSampleExistInSampleCollection(codeSample)) {
@@ -356,7 +359,7 @@ public class SubmissionServices {
 
 		Experiment experiment = new Experiment(); 
 		
-		experiment.code = "exp_" + readSet.code;
+		experiment.code = SraCodeHelper.getInstance().generateExperimentCode(readSet.code);
 		experiment.readSetCode = readSet.code;
 		experiment.projectCode = projectCode;
 		experiment.traceInformation.setTraceInformation(user);
@@ -380,17 +383,46 @@ public class SubmissionServices {
 					if (pairs.containsKey("estimatedPEInsertSize")) {
 						PropertyValue estimatedInsertSize = pairs.get("estimatedPEInsertSize");
 						experiment.libraryLayoutNominalLength = (Integer) estimatedInsertSize.value;
+						//System.out.println("valeur calculee libraryLayoutNominalLength  => "  + experiment.libraryLayoutNominalLength);
 					} 
 					if (pairs.containsKey("estimatedMPInsertSize")) {
 						PropertyValue estimatedInsertSize = pairs.get("estimatedMPInsertSize");
 						experiment.libraryLayoutNominalLength = (Integer) estimatedInsertSize.value;
+						//System.out.println("valeur calculee libraryLayoutNominalLength  => "  + experiment.libraryLayoutNominalLength);
 					}	
 				}
 			}
 		}
-		
-		// if (experiment.libraryLayoutNominalLength == null) {
-		// mettre valeur theorique de libraryLayoutNominalLength a prendre dans le futur dans container
+
+		if (experiment.libraryLayoutNominalLength == null) {
+			// mettre valeur theorique de libraryLayoutNominalLength (valeur a prendre dans readSet.sampleOnContainer.properties.nominalLength) 
+			// voir recup un peu plus bas:
+			Map<String, PropertyValue> sampleOnContainerProperties = readSet.sampleOnContainer.properties;
+			if (sampleOnContainerProperties != null) {
+				Set <String> listKeysSampleOnContainerProperties = sampleOnContainerProperties.keySet();  // Obtenir la liste des clés
+			
+				/*for(String k: listKeysSampleOnContainerProperties){
+					System.out.print("cle = '" + k +"'");
+					PropertyValue propertyValue = sampleOnContainerProperties.get(k);
+					System.out.print(propertyValue.toString());
+					System.out.println(", value  => "+propertyValue.value);
+				} */
+				
+				if (sampleOnContainerProperties.containsKey("libLayoutNominalLength")) {	
+					//System.out.println("recherche valeur theorique possible");
+					PropertyValue nominalLengthTypeCode = sampleOnContainerProperties.get("libLayoutNominalLength");
+					Integer nominalLengthCodeValue = (Integer) nominalLengthTypeCode.value;
+					if ((nominalLengthCodeValue != null) && (nominalLengthCodeValue!= -1)){
+						experiment.libraryLayoutNominalLength = nominalLengthCodeValue;
+						System.out.println("valeur theorique libraryLayoutNominalLength  => "  + experiment.libraryLayoutNominalLength);
+					}
+				}
+			}
+		}
+		if (experiment.libraryLayoutNominalLength == null) {
+			throw new SraException("experiment sans libraryLayoutNominalLength : " + experiment.code);
+		}
+					
 		
 		experiment.state = new State("new", user); 
 		String laboratorySampleCode = readSet.sampleCode;
@@ -569,7 +601,7 @@ public class SubmissionServices {
 		// Pour chaque readSet, creer un objet run 
 		Date runDate = readSet.runSequencingStartDate;
 		Run run = new Run();
-		run.code = "run_" + readSet.code;
+		run.code = SraCodeHelper.getInstance().generateRunCode(readSet.code);
 		run.runDate = runDate;
 		
 		//run.projectCode = projectCode;

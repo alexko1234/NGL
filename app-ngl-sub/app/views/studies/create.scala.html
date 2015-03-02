@@ -9,21 +9,16 @@
 			
 		}
 		@formGroup{
-			@**
-			<input type="text" class="form-control" ng-model="createService.form.projectCode" typeahead="project.code as project.code for project in createService.lists.getProjects() | filter:$viewValue | limitTo:20"placeholder='@Messages("create.placeholder.projectCode")'>
-			**@
 			<div class="form-control" bt-select  ng-model="createService.form.projectCode" filter="true" placeholder='@Messages("create.placeholder.projectCode")' bt-options="project.code as project.code for project in createService.lists.getProjects()" required></div>			
-		
 		}
 		@formGroup{
-			<div class="form-control" bt-select ng-model="createService.form.existingStudyType" placeholder='@Messages("create.placeholder.studiesTypes")' bt-options="study.code as study.code for study in createService.studies" required></div>			
+			<div class="form-control" bt-select ng-model="createService.form.existingStudyType" placeholder='@Messages("create.placeholder.existingStudyType")' bt-options="study.code as study.code for study in createService.sraVariables.existingStudyType" required></div>			
 		}								
 						
 	}
 	@columnSearchForm{
 		@formGroup{
-			<textarea rows="3" ng-model="createService.form.studyAbstract" placeholder='@Messages("create.placeholder.abstract")' required></textarea>
-			
+			<textarea rows="3" ng-model="createService.form.studyAbstract" placeholder='@Messages("create.placeholder.abstract")' required></textarea>		
 		}
 		@formGroup{
 			<textarea rows="3" ng-model="createService.form.description" placeholder='@Messages("create.placeholder.description")' required></textarea>

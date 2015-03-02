@@ -19,14 +19,21 @@ PUT		/submissions/:code/xml						@controllers.submissions.api.Submissions.create
 # Traitement des AC et mise a jour du status de l'objet submission :
 PUT		/submissions/:code/ebiAc					@controllers.submissions.api.Submissions.treatmentAc(code: java.lang.String) 
 		
-#Studies
-POST	/api/studies								@controllers.studies.api.Studies.save()
-GET		/api/studies/type							@controllers.studies.api.Studies.listTypes()
-
-
+# Studies
 GET		/studies/:homeCode/home						controllers.studies.tpl.Studies.home(homeCode: java.lang.String)
+POST	/api/studies								@controllers.studies.api.Studies.save()
 GET		/tpl/studies/create							controllers.studies.tpl.Studies.create()
 GET		/tpl/studies/js-routes						controllers.studies.tpl.Studies.javascriptRoutes()
+
+
+# Configurations
+GET		/configurations/:homeCode/home				controllers.configurations.tpl.Configurations.home(homeCode: java.lang.String)
+POST	/api/configurations						    @controllers.configurations.api.Configurations.save()
+GET		/api/sra/variables/:name            		controllers.sra.api.Variables.get(name: java.lang.String)
+GET		/tpl/configurations/create					controllers.configurations.tpl.Configurations.create()
+GET		/tpl/configurations/js-routes				controllers.configurations.tpl.Configurations.javascriptRoutes()
+
+
 
 #projects from ngl-common
 GET		/api/projects								@controllers.projects.api.Projects.list()

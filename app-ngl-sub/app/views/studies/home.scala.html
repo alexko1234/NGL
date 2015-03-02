@@ -11,6 +11,7 @@
 	 
 	
 }
-<!-- home code au niveau du controller : donc create -->
-@views.html.main("studies.page.title", menu("studies."+code), scripts)(views.html.contents.lefttabs())
+<!-- home code au niveau du controller : donc create 
+appel de main.scala.html de views de ngl-common avec en parametre les javascripts dont studies/app.js-->
+@views.html.main("studies.page.title", views.html.menu("studies."+code), scripts)(views.html.contents.lefttabs())
 
