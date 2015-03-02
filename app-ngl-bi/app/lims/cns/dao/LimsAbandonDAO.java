@@ -7,35 +7,45 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.sql.DataSource;
 
-import lims.cns.dao.LimsExperiment;
-import lims.cns.dao.LimsLibrary;
 import lims.models.LotSeqValuation;
 import lims.models.experiment.Experiment;
+import lims.models.experiment.illumina.BanqueSolexa;
 import lims.models.experiment.illumina.DepotSolexa;
 import lims.models.experiment.illumina.LaneSolexa;
-import lims.models.experiment.illumina.BanqueSolexa;
 import lims.models.experiment.illumina.RunSolexa;
 import lims.models.runs.EtatTacheHD;
 import lims.models.runs.TacheHD;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TransientState;
+import models.laboratory.container.instance.Container;
+import models.laboratory.experiment.instance.AtomicTransfertMethod;
+import models.laboratory.experiment.instance.ContainerUsed;
+import models.laboratory.experiment.instance.ManytoOneContainer;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
+import models.utils.InstanceConstants;
+import models.utils.dao.DAOException;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.mongojack.DBQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import play.Logger;
+import fr.cea.ig.MongoDBDAO;
 
 
 @Repository
@@ -132,8 +142,11 @@ public class LimsAbandonDAO {
 			}
 			
 		};
-		
-		return this.jdbcTemplate.queryForObject("pl_DepotsolexaUneFC @flowcellid=?, @daterun=?", mapper, containerSupportCode, sequencingStartDate);		
+		try{
+			return this.jdbcTemplate.queryForObject("pl_DepotsolexaUneFC @flowcellid=?, @daterun=?", mapper, containerSupportCode, sequencingStartDate);
+		}catch(EmptyResultDataAccessException e){
+			return null;
+		}
 	}
     
 	public List<BanqueSolexa> getBanqueSolexa(String containerSupportCode){
@@ -156,6 +169,29 @@ public class LimsAbandonDAO {
 			
 		};
 		return this.jdbcTemplate.query("pl_BanquesolexaUneFC @flowcellid=?", mapper, containerSupportCode);
+	}
+	
+	
+	public List<BanqueSolexa> getBanqueSolexaFlowcellNGL(String containerSupportCode){
+		
+		RowMapper<BanqueSolexa> mapper = new RowMapper<BanqueSolexa>(){
+
+			@Override
+			public BanqueSolexa mapRow(ResultSet rs, int rowNum)
+					throws SQLException {
+				//b.banco,prsco=rtrim(b.prsco),b.bqanom,m.adnnom,s.tagkeyseq,mm.pairedend, r.lanenum , dps.placo, dps.num, r.laneco
+				BanqueSolexa bs = new BanqueSolexa();
+				bs.banco = rs.getInt("banco");
+				bs.prsco =  rs.getString("prsco").trim();
+				bs.adnnom = rs.getString("adnnom").trim();
+				bs.lanenum = rs.getInt("lanenum");
+				bs.laneco = rs.getInt("laneco");
+				bs.tagkeyseq = rs.getString("tagkeyseq");
+				return bs;
+			}
+			
+		};
+		return this.jdbcTemplate.query("pl_BanquesolexaUneFlowcellNGL @matmanom=?", mapper, containerSupportCode);
 	}
 	
     /**
@@ -184,9 +220,9 @@ public class LimsAbandonDAO {
     	Logger.info("insertRun : "+rs);
     	
     	this.jdbcTemplate.update("pc_Runsolexa @placo=?, @num=?, @runslnom=?, @runsldc=?, @runslddt=?, @runsldft=?, @runsldispatch=?, @runslnbcluster=?, "
-    			+ "@runslnbseq=?, @rnslnbbasetot=?, @runslposition=?, @runslctrlane=?, @runslvrta=?, @runslvflowcell=?, @mismatch=?", 
+    			+ "@runslnbseq=?, @rnslnbbasetot=?, @runslposition=?, @runslctrlane=?, @runslvrta=?, @runslvflowcell=?, @mismatch=?,@matmaco=?", 
     			rs.placo, rs.num, rs.runslnom, rs.runsldc, rs.runslddt, rs.runsldft, rs.runsldispatch, rs.runslnbcluster,
-    			rs.runslnbseq, rs.rnslnbbasetot, rs.runslposition, rs.runslctrlane, rs.runslvrta, rs.runslvflowcell, rs.mismatch);
+    			rs.runslnbseq, rs.rnslnbbasetot, rs.runslposition, rs.runslctrlane, rs.runslvrta, rs.runslvflowcell, rs.mismatch,ds.matmaco);
     	
     }
 
@@ -203,6 +239,11 @@ public class LimsAbandonDAO {
     
     public void deleteRun(String code){
     	this.jdbcTemplate.update("ps_RunsolexaEtMetricsUnNom ?", code);
+    }
+    
+    public void deleteFlowcellNGL(String code){
+    	Logger.debug("Delete flowcellNGL "+code);
+    	this.jdbcTemplate.update("ps_FlowcellNGL @matmanom= ?", code);
     }
     
     private LaneSolexa convertLaneToLaneSolexa(Lane lane, DepotSolexa ds) {
@@ -286,9 +327,11 @@ public class LimsAbandonDAO {
 		Double lbscoreQ30 = (Double) getNGSRGProperty(rs.treatments.get("ngsrg"),"Q30");
 		Double lbscorequal =(Double) getNGSRGProperty(rs.treatments.get("ngsrg"),"qualityScore");
 		
+		//Logger.debug("pc_Lanebanquehautdebit @laneco="+bs.laneco+", @banco="+bs.banco+", @tagkeyseq="+bs.tagkeyseq+", "
+			//	+ "@lseqnbseqval="+lseqnbseqval+", @lseqnbbase="+lseqnbbase+", @lbscoreQ30="+lbscoreQ30+", @lbscorequal="+lbscorequal+",@lseqnom="+rs.code);
 		this.jdbcTemplate.update("pc_Lanebanquehautdebit @laneco=?, @banco=?, @tagkeyseq=?, "
-				+ "@lseqnbseqval=?, @lseqnbbase=?, @lbscoreQ30=?, @lbscorequal=?",
-				bs.laneco, bs.banco, bs.tagkeyseq, lseqnbseqval, lseqnbbase, lbscoreQ30, lbscorequal);
+				+ "@lseqnbseqval=?, @lseqnbbase=?, @lbscoreQ30=?, @lbscorequal=?,@lseqnom=?",
+				bs.laneco, bs.banco, bs.tagkeyseq, lseqnbseqval, lseqnbbase, lbscoreQ30, lbscorequal,rs.code);
 		
 	}
 
@@ -394,6 +437,9 @@ public class LimsAbandonDAO {
 		
 	}
 
+	public void updateReferenceFlowcell(String currentReference,String newReference){
+		this.jdbcTemplate.update("pm_LotreactifReference @lotrearef=?, @lotrearefnew= ?", currentReference,newReference);
+	}
 
 	public void updateReadSetBaseUtil(ReadSet readset) {
 		
@@ -426,6 +472,52 @@ public class LimsAbandonDAO {
 			
 		};
 		return this.jdbcTemplate.query("select runhnom as runslnom, mismatch from Runhd r inner join Runsolexa rs on rs.runhco = r.runhco", mapper);		
+	}
+
+
+	public DepotSolexa insertFlowcellNGL(models.laboratory.experiment.instance.Experiment expPrepaflowcell,models.laboratory.experiment.instance.Experiment expDepotIllumina) {
+		
+		//Nb Cycle total
+		int nbCycles=Integer.valueOf(expDepotIllumina.instrumentProperties.get("nbCyclesRead1").value.toString())+
+				Integer.valueOf(expDepotIllumina.instrumentProperties.get("nbCyclesReadIndex1").value.toString())+
+				Integer.valueOf(expDepotIllumina.instrumentProperties.get("nbCyclesRead2").value.toString())+
+				Integer.valueOf(expDepotIllumina.instrumentProperties.get("nbCyclesReadIndex2").value.toString());
+				
+		DepotSolexa ds = this.jdbcTemplate.query("pc_FlowcellNGL @matmanom=?, @sequenceur=?,@nbcycle=?,@nbpiste=?,@instrumentType=?"
+												,new Object[]{expPrepaflowcell.outputContainerSupportCodes.get(0)
+																,expDepotIllumina.instrument.code
+																,nbCycles
+																,expPrepaflowcell.outputContainerSupportCodes.size()
+																,expDepotIllumina.instrument.typeCode},
+				new RowMapper<DepotSolexa>() {
+			public DepotSolexa mapRow(ResultSet rs, int rowNum)
+					throws SQLException {
+				DepotSolexa value = new DepotSolexa();
+				value.matmaco = rs.getInt("matmaco");
+				return value;
+			}
+		}).get(0);
+		
+		 Logger.debug("Matmaco for new flowcellNGL "+ds.matmaco);
+		 List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.in("support.code",expPrepaflowcell.inputContainerSupportCodes)).toList();
+		 if(CollectionUtils.isEmpty(containers)){
+			 throw new RuntimeException("Container vide for "+expPrepaflowcell.inputContainerSupportCodes.get(0));
+		 }
+		 
+		 for(Entry<Integer, AtomicTransfertMethod> atomicTransfertMethods: expPrepaflowcell.atomicTransfertMethods.entrySet())
+		 {
+			 int laneNum=Integer.valueOf(atomicTransfertMethods.getValue().position);
+			 for(ContainerUsed containerUsed : ((ManytoOneContainer)atomicTransfertMethods.getValue()).inputContainerUseds){
+				 Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.code);
+				 int matmacos=Double.valueOf(container.properties.get("limsCode").value.toString()).intValue();
+				 Logger.debug("Matmaco solution stock "+matmacos+" percentage "+containerUsed.percentage+", laneNum ="+laneNum);
+				 Logger.debug("pc_DepotsolutionstockNGL @matmaco="+ds.matmaco+",@matmacos = "+matmacos+",@lanenum="+laneNum+",@rmatperpiste="+containerUsed.percentage);
+				 this.jdbcTemplate.update("pc_DepotsolutionstockNGL @matmaco=?,@matmacos = ?,@lanenum=?,@rmatperpiste=?",ds.matmaco,matmacos,laneNum,containerUsed.percentage);
+
+			 }
+		 }
+		return ds;
+		
 	}
 }
 

@@ -33,12 +33,13 @@ public class RunSolexa {
 			if (mismatch == null) {
 				return false;
 			}
-			if (num == null) {
+			
+			/*if (num == null) {
 				return false;
 			}
 			if (placo == null) {
 				return false;
-			}
+			}*/
 			if (rnslnbbasetot == null) {
 				return false;
 			}

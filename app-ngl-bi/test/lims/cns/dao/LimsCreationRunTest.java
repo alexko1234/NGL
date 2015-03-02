@@ -23,17 +23,22 @@ import lims.models.experiment.illumina.DepotSolexa;
 import lims.models.runs.EtatTacheHD;
 import lims.models.runs.TacheHD;
 import models.laboratory.common.instance.property.PropertyFileValue;
+import models.laboratory.container.instance.Container;
+import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mongojack.DBQuery;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
+
+import play.Logger;
+import play.api.modules.spring.Spring;
+import utils.AbstractTestsCNS;
 
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
@@ -52,10 +57,17 @@ public class LimsCreationRunTest extends AbstractTestsCNS {
 	
 	
 	private static final String RUN_CODE = "UNIT_TEST";
-
+	private static final String FLOWCELL_CODE ="C3MGGACXX";
+	private static final String FLOWCELL_CODE_RENAME = "NGL";
 	@BeforeClass
-	public static void getRunData()
-	{
+	public static void initData(){
+		List<Experiment> experiments = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME+"_init", Experiment.class).toList();
+		Logger.debug("Experiments size "+experiments.size());
+		MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, experiments);
+		
+		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME+"_init", Container.class).toList();
+		MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, containers);
+		
 		try{
 			Spring.getBeanOfType(LimsAbandonDAO.class).deleteRun(RUN_CODE);
 		}catch(Throwable t){
@@ -65,6 +77,12 @@ public class LimsCreationRunTest extends AbstractTestsCNS {
 	}
 	
 	
+	@AfterClass
+	public static void resetData(){
+		MongoDBDAO.delete(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.exists("code"));
+		MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.exists("code"));
+	}
+		
 	public void getTacheHD() {
 		if (play.Play.application().configuration().getString("institute").equals("CNS")) {
 			LimsAbandonDAO  dao = Spring.getBeanOfType(LimsAbandonDAO.class);
@@ -126,12 +144,17 @@ public class LimsCreationRunTest extends AbstractTestsCNS {
 	}
 	
 	@Test
-	public void insertRunSolexa() {
+	public void insertRunSolexaFromDepotsolexaLims() {
 		if (play.Play.application().configuration().getString("institute").equals("CNS")) {
 			
 			LimsRunServices  lrs = Spring.getBeanOfType(LimsRunServices.class);
 			assertNotNull(lrs);
-			
+			try{
+				Spring.getBeanOfType(LimsAbandonDAO.class).deleteRun(RUN_CODE);
+			}catch(Exception e){
+				
+			}
+			Spring.getBeanOfType(LimsAbandonDAO.class).updateReferenceFlowcell(FLOWCELL_CODE_RENAME,FLOWCELL_CODE);
 			Run run = MongoDBDAO.findByCode("ngl_bi.RunIllumina_initData", Run.class, "140703_PHOSPHORE_C3MGGACXX");
 			List<ReadSet> readSets = MongoDBDAO.find("ngl_bi.ReadSetIllumina_initData", ReadSet.class, DBQuery.is("runCode", run.code)).toList();
 			
@@ -148,7 +171,38 @@ public class LimsCreationRunTest extends AbstractTestsCNS {
 		}
 		
 	}
-	
+
+	@Test
+	public void insertRunSolexaFromDepotIlluminaNGL() {
+		if (play.Play.application().configuration().getString("institute").equals("CNS")) {
+			
+			LimsRunServices  lrs = Spring.getBeanOfType(LimsRunServices.class);
+			assertNotNull(lrs);		
+			try{
+				Spring.getBeanOfType(LimsAbandonDAO.class).deleteRun(RUN_CODE);
+			}catch(Throwable t){
+				
+			}
+			Spring.getBeanOfType(LimsAbandonDAO.class).updateReferenceFlowcell(FLOWCELL_CODE,FLOWCELL_CODE_RENAME);
+			Spring.getBeanOfType(LimsAbandonDAO.class).deleteFlowcellNGL(FLOWCELL_CODE);
+
+			Run run = MongoDBDAO.findByCode("ngl_bi.RunIllumina_initData", Run.class, "140703_PHOSPHORE_C3MGGACXX");
+			List<ReadSet> readSets = MongoDBDAO.find("ngl_bi.ReadSetIllumina_initData", ReadSet.class, DBQuery.is("runCode", run.code)).toList();
+			
+			for(ReadSet readSet : readSets){
+				readSet.runCode = RUN_CODE;
+				for(File file: readSet.files){
+					file.extension += "x";
+				}
+			}
+			
+			assertNotNull(run);
+			run.code = RUN_CODE;
+			lrs.insertRun(run, readSets, false);			
+		}
+		
+	}
+
 	
 	public void insertRunSolexaComplete() {
 		if (play.Play.application().configuration().getString("institute").equals("CNS")) {
@@ -310,6 +364,25 @@ public class LimsCreationRunTest extends AbstractTestsCNS {
 		}
 		
 	}
+	
+	@Test
+	public void insertFlowcellNGLInLimsCNS() throws Exception{
+				
+		DepotSolexa ds=null;
+		if (play.Play.application().configuration().getString("institute").equals("CNS")) {
+			
+			LimsRunServices  lrs = Spring.getBeanOfType(LimsRunServices.class);
+			Spring.getBeanOfType(LimsAbandonDAO.class).deleteFlowcellNGL(FLOWCELL_CODE);
+
+			assertNotNull(lrs);
+			Run run = MongoDBDAO.findByCode("ngl_bi.RunIllumina_initData", Run.class, "140703_PHOSPHORE_C3MGGACXX");
+			ds=lrs.insertFlowcellNGL(run);
+		}
+		
+		assertNotNull(ds);
+		assertNotNull(ds.matmaco);
+	}
+		
 	
 	@Test
 	public void testMD5() throws Exception{

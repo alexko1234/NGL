@@ -7,20 +7,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
-import org.apache.commons.collections.list.TreeList;
-import org.mongojack.DBQuery;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import fr.cea.ig.MongoDBDAO;
-import play.Logger;
-import play.Logger.ALogger;
+import lims.cns.dao.LimsAbandonDAO;
 import lims.cns.dao.LimsExperiment;
 import lims.cns.dao.LimsLibrary;
-import lims.cns.dao.LimsAbandonDAO;
 import lims.models.LotSeqValuation;
 import lims.models.experiment.ContainerSupport;
 import lims.models.experiment.Experiment;
@@ -39,6 +29,15 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.mongojack.DBQuery;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import play.Logger;
+import play.Logger.ALogger;
+import fr.cea.ig.MongoDBDAO;
 
 
 @Service
@@ -297,13 +296,24 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 			}
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
-			DepotSolexa ds = dao.getDepotSolexa(run.containerSupportCode, sdf.format(run.sequencingStartDate));
+			DepotSolexa ds = null;
+			ds=dao.getDepotSolexa(run.containerSupportCode, sdf.format(run.sequencingStartDate));
+			if(ds==null){
+				ds=insertFlowcellNGL(run);
+			}
 			if(null != ds){
 				Map<String, BanqueSolexa> mapBanques = new HashMap<String, BanqueSolexa>();
 				for(BanqueSolexa banque:  dao.getBanqueSolexa(run.containerSupportCode)){
 					String key = banque.prsco+"_"+banque.adnnom+"_"+banque.lanenum+"_"+banque.tagkeyseq;
 					//Logger.debug("key banque = "+key);
 					mapBanques.put(key, banque);
+				}
+				if(mapBanques.size()==0){
+					for(BanqueSolexa banque:  dao.getBanqueSolexaFlowcellNGL(run.containerSupportCode)){
+						String key = banque.prsco+"_"+banque.adnnom+"_"+banque.lanenum+"_"+banque.tagkeyseq;
+						Logger.debug("key banque = "+key);
+						mapBanques.put(key, banque);
+					}
 				}
 				Map<String, ReadSet> mapReadSets = new HashMap<String, ReadSet>();
 				for(ReadSet readSet:  readSets){
@@ -376,5 +386,23 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 		}catch(Throwable t){
 			logger.error("Synchro LINK RUN / MATERIEL_MANIP: "+t.getMessage(),t);
 		}
+	}
+	
+	
+	public DepotSolexa insertFlowcellNGL(Run run){
+		List<models.laboratory.experiment.instance.Experiment> expPrepaflowcell=MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, models.laboratory.experiment.instance.Experiment.class,DBQuery.in("outputContainerSupportCodes", run.containerSupportCode).is("typeCode", "prepa-flowcell")).toList();
+		if(CollectionUtils.isEmpty(expPrepaflowcell)){
+			throw new RuntimeException("Prepaflowcell Experiment with containerOutPut "+run.containerSupportCode+" not found in NGL");
+		}
+		
+		List<models.laboratory.experiment.instance.Experiment> expDepotIllumina=MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, models.laboratory.experiment.instance.Experiment.class,DBQuery.in("inputContainerSupportCodes", run.containerSupportCode).is("typeCode", "illumina-depot")).toList();
+		if(CollectionUtils.isEmpty(expDepotIllumina)){
+			throw new RuntimeException("DepotIllumina Experiment with containerOutPut "+run.containerSupportCode+" not found in NGL");
+		}
+
+		//Create Manip FlowcellNGL
+			DepotSolexa ds=dao.insertFlowcellNGL(expPrepaflowcell.get(0),expDepotIllumina.get(0));
+			return ds;
+
 	}
 }
