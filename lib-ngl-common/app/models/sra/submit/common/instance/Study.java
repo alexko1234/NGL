@@ -35,6 +35,7 @@ public class Study extends DBObject implements IValidation {
 	public TraceInformation traceInformation = new TraceInformation();// .Reference sur "models.laboratory.common.instance.TraceInformation" 
 		// pour loguer les dernieres modifications utilisateurs	
 
+	
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		contextValidation.addKeyToRootKeyName("study::");
