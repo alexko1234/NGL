@@ -3,6 +3,7 @@ package controllers.samples.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JSpinner.ListEditor;
@@ -34,13 +35,32 @@ public class Samples extends CommonController{
 	final static Form<SamplesSearchForm> sampleForm = form(SamplesSearchForm.class);
 
 	public static Result get(String code){
-		Sample sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, code);
+		Sample sample = null;
+		// Pour récupérer une liste de referenceCollab de samples
+		if(code.contains(",")){
+			List<String> myList = new ArrayList<String>(Arrays.asList(code.split(",")));			
+			List<Sample> samples = new ArrayList<Sample>();
+			
+			for (String c : myList) {				
+				sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, c);
+				if(null!=sample){
+					samples.add(sample);					
+				}				
+			}			
+			if(null!=samples){
+				return ok(Json.toJson(samples));
+			}			
+		}
+		
+		sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, code);
+		
 		if(sample != null){
 			return ok(Json.toJson(sample));
 		}else{
 			return notFound();
 		}
 	}
+	
 
 	public static Result list(){
 		Form<SamplesSearchForm> sampleFilledForm = filledFormQueryString(sampleForm,SamplesSearchForm.class);

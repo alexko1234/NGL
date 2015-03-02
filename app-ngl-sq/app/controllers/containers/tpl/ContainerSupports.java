@@ -1,10 +1,11 @@
-package controllers.containerSupports.tpl;
+package controllers.containers.tpl;
 
 import play.Routes;
 import play.mvc.Result;
 import views.html.containerSupports.home;
 import views.html.containerSupports.search;
 import controllers.CommonController;
+import controllers.containers.tpl.routes.javascript;
 
 public class ContainerSupports extends CommonController{
 	
@@ -21,10 +22,10 @@ public class ContainerSupports extends CommonController{
   	    return ok(  	    		
   	      Routes.javascriptRouter("jsRoutes",
   	        // Routes
-  	    		controllers.containerSupports.tpl.routes.javascript.ContainerSupports.search(),
-  	    		controllers.containerSupports.tpl.routes.javascript.ContainerSupports.home(),
-  	    		controllers.containerSupports.api.routes.javascript.ContainerSupports.list(),
-  	    		controllers.containerSupports.api.routes.javascript.ContainerSupports.updateBatch(),
+  	    		controllers.containers.tpl.routes.javascript.ContainerSupports.search(),
+  	    		controllers.containers.tpl.routes.javascript.ContainerSupports.home(),
+  	    		controllers.containers.api.routes.javascript.ContainerSupports.list(),
+  	    		controllers.containers.api.routes.javascript.ContainerSupports.updateBatch(),
   	    		controllers.containers.api.routes.javascript.ContainerSupportCategories.list(),
   	    		controllers.projects.api.routes.javascript.Projects.list(),
   	    		controllers.samples.api.routes.javascript.Samples.list(),

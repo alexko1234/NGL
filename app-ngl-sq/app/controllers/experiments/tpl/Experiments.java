@@ -101,7 +101,7 @@ public class Experiments extends CommonController{
   	        // Routes
   	    		controllers.experiments.tpl.routes.javascript.Experiments.searchSupports(),
   	    		controllers.containers.api.routes.javascript.Containers.list(),
-  	    		controllers.containerSupports.api.routes.javascript.ContainerSupports.list(),
+  	    		controllers.containers.api.routes.javascript.ContainerSupports.list(),
   	    		controllers.containers.api.routes.javascript.Containers.get(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.search(),
   	    		controllers.processes.api.routes.javascript.ProcessTypes.list(),

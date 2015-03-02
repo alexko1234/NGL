@@ -115,7 +115,7 @@ angular.module('commonsServices', []).
     					load(jsRoutes.controllers.valuation.api.ValuationCriterias.list().url,params,(key)?key:'valuationCriterias');    					
     				},
     				containerSupports : function(params, key){
-    					load(jsRoutes.controllers.containerSupports.api.ContainerSupports.list().url,params,(key)?key:'containerSupports'); 
+    					load(jsRoutes.controllers.containers.api.ContainerSupports.list().url,params,(key)?key:'containerSupports'); 
     				},
     				projects : function(params, key){
     					load(jsRoutes.controllers.projects.api.Projects.list().url,params,(key)?key:'projects');    					
@@ -912,8 +912,31 @@ angular.module('commonsServices', []).
     	    		console.log("input contains several values take the first !");
     	    	}
     	    	if(!angular.isObject(object))return object;
-    	    	if(key && !angular.isString(key))throw "key is not valid, only string is authorized";
+    	    	if(key && !angular.isString(key))throw "key is not valid, only string is authorized";    	    	
     	    	return $parse(key)(object);
+    	    };
+    	}]).
+    	/**
+		* get an object and a key of this object and return array of values
+		* @param object
+		* @param key
+		* @returns [Array]
+		*/
+    	
+    	filter('getArray', ['$parse',function($parse) {
+    	    return function(objects, key) {
+    	    	if(key && !angular.isString(key))throw "key is not valid, only string is authorized"; 	
+    	    	if(!objects)return undefined;    	    	
+    	    	if(!angular.isObject(objects))  throw "input is not an object !";    	    
+    	    	var data=[];
+    	    	var get="";
+    	    	if(angular.isObject(objects)  && objects.length > 0){    	    		
+    	    		angular.forEach(objects, function(value, index){
+    	    			get=$parse(key)(value);    	    			
+    	    			data.push(get);    	    			
+    	    		});    	    		
+    	    	}     	    	
+    	    	return data;
     	    };
     	}]).filter('codes', function(){
     		return function(input, key){

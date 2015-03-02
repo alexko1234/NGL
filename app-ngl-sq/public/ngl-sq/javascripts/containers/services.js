@@ -74,23 +74,14 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"type":"text",
 			"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
 		});	
-		columns.push({
+	/*	columns.push({
 			"header":Messages("containers.table.tags"),
-			"property":  function(container){
-				var tags="";
-				angular.forEach(container.contents, function(content){
-					if(content.properties.tag != undefined){
-						tags+= content.properties.tag.value + ", ";
-					}
-				});
-
-				return tags;
-			},
+			"property": "contents",
 			"order":true,
 			"type":"text",
 			"position":9.4,
-			"render":"<div list-resize='tags | get' list-resize-min-size='3'>",
-		});
+			"render":"<div list-resize='value.data.contents | getArray:\"properties.tag.value\"' ' list-resize-min-size='3'>",
+		});*/
 		columns.push({
 					"header":Messages("containers.table.projectCodes"),
 					"property":"projectCodes",

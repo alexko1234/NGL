@@ -79,7 +79,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		}*/
 		],	
 		search:{
-			url:jsRoutes.controllers.containerSupports.api.ContainerSupports.list()
+			url:jsRoutes.controllers.containers.api.ContainerSupports.list()
 		},
 		order:{
 			active:true,

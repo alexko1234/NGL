@@ -1,6 +1,6 @@
 package containerSupports;
 
-import controllers.containerSupports.api.ContainerSupportsSearchForm;
+import controllers.containers.api.ContainerSupportsSearchForm;
 import models.laboratory.container.instance.ContainerSupport;
 
 public class ContainerSupportTestHelper {

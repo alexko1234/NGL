@@ -3,7 +3,7 @@
 angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','$filter','mainService','tabService','containerSupportsSearchService','$routeParams', function($scope, datatable, lists,$filter,mainService,tabService,containerSupportsSearchService,$routeParams) {
 	$scope.datatableConfig = {
 		search:{
-			url:jsRoutes.controllers.containerSupports.api.ContainerSupports.list()
+			url:jsRoutes.controllers.containers.api.ContainerSupports.list()
 		},
 		order:{
 			by:'traceInformation.creationDate',
@@ -15,7 +15,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 		},
 		save:{
 			active:true,
-			url:jsRoutes.controllers.containerSupports.api.ContainerSupports.updateBatch().url,
+			url:jsRoutes.controllers.containers.api.ContainerSupports.updateBatch().url,
 			batch:true,
 			method:'put',
 			callback: function(reason, error){
@@ -38,7 +38,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 	$scope.datatable = datatable($scope.datatableConfig);		
 	if(angular.isUndefined($scope.getHomePage())){
 		mainService.setHomePage('new');
-		tabService.addTabs({label:Messages('containerSupports.tabs.search'),href:jsRoutes.controllers.containerSupports.tpl.ContainerSupports.home("new").url,remove:false});
+		tabService.addTabs({label:Messages('containerSupports.tabs.search'),href:jsRoutes.controllers.containers.tpl.ContainerSupports.home("new").url,remove:false});
 		tabService.activeTab(0);
 	}
 	if(angular.isUndefined($scope.getForm())){
