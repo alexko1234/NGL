@@ -779,8 +779,7 @@ public class LimsCNGDAO {
 			});
 		}
 		else {
-			Logger.de
-			bug("Import containers");
+			Logger.debug("Import containers");
 			/// results = this.jdbcTemplate.query("select * from " + sqlView + " where code in ('A006925','A004XSM','A004XSN','A004XSO','A004XSP','A004XSQ','A004XSR','A004XSS') order by code, project desc, code_sample, tag, exp_short_name", new Object[]{} 
 			results = this.jdbcTemplate.query("select * from " + sqlView + " where isavailable=true order by code, project desc, code_sample, tag, exp_short_name", new Object[]{} 
 			,new RowMapper<Container>() {
