@@ -28,7 +28,7 @@ public class UpdateSolutionStockCNS extends AbstractImportDataCNS {
 
 	@Override
 	public void runImport() throws SQLException, DAOException, MongoException, RulesException {
-		updateSolutionStock("pl_SolutionStockToNGL @update=1",contextError,"tube","solution-stock");
+		updateSolutionStock("pl_SolutionStockToNGL @updated=1",contextError,"tube","solution-stock");
 
 	}
 
