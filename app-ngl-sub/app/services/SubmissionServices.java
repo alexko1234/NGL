@@ -15,6 +15,7 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.project.instance.Project;
+import models.laboratory.run.instance.InstrumentUsed;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.sra.submit.common.instance.Sample;
@@ -40,7 +41,6 @@ import java.nio.file.Paths;
 import org.mongojack.DBQuery;
 
 // todo : implementer recuperation instrumentModel et libraryName.
-// mettre valeur theorique de libraryLayoutNominalLength si valeur calculée inexistante 
 
 public class SubmissionServices {
 
@@ -279,30 +279,6 @@ public class SubmissionServices {
 	}
 
 
-/*	public String getSampleCode(ReadSet readSet, String projectCode, String strategySample) {
-		String laboratorySampleCode = readSet.sampleCode;
-		models.laboratory.sample.instance.Sample laboratorySample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, models.laboratory.sample.instance.Sample.class, laboratorySampleCode);
-		String laboratorySampleName = laboratorySample.name;
-
-		String clone = laboratorySample.referenceCollab;
-		String taxonId = laboratorySample.taxonCode;
-
-		String laboratoryRunCode = readSet.runCode;
-		models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
-
-		String codeSample = null;
-		if (strategySample.equalsIgnoreCase("STRATEGY_SAMPLE_CLONE")) {
-			codeSample = "sample_" + projectCode + "_" + taxonId + "_" + clone;
-		} else if (strategySample.equalsIgnoreCase("STRATEGY_SAMPLE_TAXON")) {
-			codeSample = "sample_" + projectCode + "_" + taxonId;
-		} else if (strategySample.equalsIgnoreCase("STRATEGY_NO_SAMPLE")) {
-			//envisager d'avoir des fichiers de correspondance 
-		} else {
-			// Declencher une erreur.
-		}	
-		return codeSample;
-	}
-*/
 
 
 	//todo: il reste scientificName, classification, comonName à renseigner sur la base de idTaxon, et description
@@ -330,7 +306,6 @@ public class SubmissionServices {
 			System.out.println(sample.clone);
 			System.out.println(sample.taxonId);
 			System.out.println(sample.title);
-
 		} else {
 			System.out.println("Creation du sample '"+ codeSample + "'");
 			// creation du sample :
@@ -364,7 +339,13 @@ public class SubmissionServices {
 		experiment.projectCode = projectCode;
 		experiment.traceInformation.setTraceInformation(user);
 		//System.out.println("readSetCode =" + readSet.code);
+		String laboratoryRunCode = readSet.runCode;
 		
+		models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
+		InstrumentUsed instrumentUsed = laboratoryRun.instrumentUsed;
+		//System.out.println("instrumentUsed.code = " + instrumentUsed.code);
+		//System.out.println("instrumentUsed.typeCode = " + instrumentUsed.typeCode);
+		experiment.instrumentModel = instrumentUsed.typeCode;
 		experiment.libraryLayoutNominalLength = null;
 		
 		// mettre la valeur calculée de libraryLayoutNominalLength
@@ -430,8 +411,8 @@ public class SubmissionServices {
 		String taxonId = laboratorySample.taxonCode;
 		String taxonName = getTaxonName(taxonId);
 
-		String laboratoryRunCode = readSet.runCode;
-		models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
+		//String laboratoryRunCode = readSet.runCode;
+		//models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
 		String technology = laboratoryRun.instrumentUsed.typeCode;
 		experiment.title = taxonName + technology + "typeBanqueAmplifiee?";
 		
@@ -592,9 +573,10 @@ public class SubmissionServices {
 
 		// Recuperer pour le readSet la liste des fichiers associés:
 
-		//String laboratoryRunCode = readSet.runCode;
-		//models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
-
+		String laboratoryRunCode = readSet.runCode;
+		models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
+		InstrumentUsed instrumentUsed = laboratoryRun.instrumentUsed;
+		
 		List <models.laboratory.run.instance.File> list_files =  readSet.files;
 		System.out.println("nbre de fichiers = " + list_files.size());
 		
@@ -606,7 +588,7 @@ public class SubmissionServices {
 		
 		//run.projectCode = projectCode;
 		run.runCenter = VariableSRA.centerName;
-	
+		
 		// Renseigner le run pour ces fichiers sur la base des fichiers associes au readSet :
 		// chemin des fichiers pour ce readset :
 		String dataDir = readSet.path;

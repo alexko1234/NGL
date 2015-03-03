@@ -54,6 +54,8 @@ public class ExperimentValidationTest extends AbstractTestsSRA {
 		MongoDBDAO.save(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, experiment);
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, experiment.code);
 		System.out.println("nominalLength :" + experiment.libraryLayoutNominalLength );
+		System.out.println("instrumentModel :" + experiment.instrumentModel );
+
 		System.out.println("contextValidation.errors pour validationExperimentSuccess :");
 		contextValidation.displayErrors(Logger.of("SRA"));
 		Assert.assertTrue(contextValidation.errors.size()==0); // si aucune erreur

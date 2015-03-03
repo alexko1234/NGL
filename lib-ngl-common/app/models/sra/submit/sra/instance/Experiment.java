@@ -14,7 +14,7 @@ import validation.utils.ValidationHelper;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 
-// todo : ajouter instrumentModel et libraryName dans la validation
+// todo : ajouter  libraryName dans la validation
 
 // Declaration d'une collection Experiment (herite de DBObject)
 public class Experiment extends DBObject implements IValidation {
@@ -31,7 +31,6 @@ public class Experiment extends DBObject implements IValidation {
 	public String libraryName = null;               // required 
 	public String libraryConstructionProtocol = null; // fixé à "none provided" par defaut, mais forme libre
 	public String typePlatform = "ILLUMINA";      // required et contrainte, L454 ou illumina en fonction de plateform_map de la proc
-	// InstrumentUsedType de run ou code= machine et typeCode la techno
 	public String instrumentModel = null;   // required et contrainte et depend de plateformType.
 	// Actuellement forcement Illumina puisque collection Illumina
     public Integer lastBaseCoord = null; // valeur renseignee ssi illumina paired */
@@ -59,7 +58,7 @@ public class Experiment extends DBObject implements IValidation {
 		// Verifer que projectCode est bien renseigné et qu'il existe bien dans lims :
 		SraValidationHelper.validateProjectCode(this.projectCode, contextValidation);
 		ValidationHelper.required(contextValidation, this.title , "title");
-		// Verifer que librarySelection est bien renseigné avec bonne valeur :		
+		// Verifer que librarySelection libraryStrategy librarySource et libraryLayout sont bien renseignés avec bonne valeur :		
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySelection, VariableSRA.mapLibrarySelection, "librarySelection");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryStrategy, VariableSRA.mapLibraryStrategy, "libraryStrategy");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySource, VariableSRA.mapLibrarySource, "librarySource");
@@ -75,13 +74,13 @@ public class Experiment extends DBObject implements IValidation {
 		//ValidationHelper.required(contextValidation, this.libraryName , "libraryName");
 		ValidationHelper.required(contextValidation, this.libraryConstructionProtocol , "libraryConstructionProtocol");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.typePlatform, VariableSRA.mapTypePlatform, "typePlatform");
-		//SraValidationHelper.requiredAndConstraint(contextValidation, this.instrumentModel, VariableSRA.mapInstrumentModel, "instrumentModel");
+		SraValidationHelper.requiredAndConstraint(contextValidation, this.instrumentModel, VariableSRA.mapInstrumentModel, "instrumentModel");
 		ValidationHelper.required(contextValidation, this.spotLength , "spotLength");
 		ValidationHelper.required(contextValidation, this.sampleCode , "sampleCode");
 		ValidationHelper.required(contextValidation, this.studyCode , "studyCode");
 		ValidationHelper.required(contextValidation, this.readSetCode , "readSetCode");
 		// Verifier les readSpec :
-		//SraValidationHelper.validateReadSpecs(contextValidation, this);
+		SraValidationHelper.validateReadSpecs(contextValidation, this);
 		// Verifier le run :
 		if (this.run == null) {
 			contextValidation.addErrors("run", " aucune valeur");

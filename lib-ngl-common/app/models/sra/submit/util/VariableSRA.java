@@ -159,15 +159,40 @@ public interface VariableSRA {
 			put("454 gs flx", "454 GS FLX");
 			put("454 gs flx titanium", "454 GS FLX Titanium");
 			put("454 gs flx+", "454 GS FLX+");		
-			put("illumina genome analyzer", "Illumina Genome Analyzer");
-			put("illumina genome analyzer II", "Illumina Genome Analyzer II");
-			put("illumina genome analyzer IIx", "Illumina Genome Analyzer IIx");
-			put("illumina hiseq 2000", "Illumina HiSeq 2000");
-			put("illumina miseq", "Illumina MiSeq");
-			put("illumina hiseq 2500", "Illumina HiSeq 2500");
+			
+			// type instrument model pour illumina dans sra version 1.5 : 
+			put("illumina genome analyzer","Illumina Genome Analyzer");
+			put("illumina genome analyzer II","Illumina Genome Analyzer II");
+			put("illumina genome analyzer IIx","Illumina Genome Analyzer IIx");
+			put("illumina hiseq 2500","Illumina HiSeq 2500");
+			put("illumina hiseq 2000","Illumina HiSeq 2000");
+			put("illumina hiseq 1500","Illumina HiSeq 1500");
+			put("illumina hiseq 1000","Illumina HiSeq 1000");
+			put("illumina miseq","Illumina MiSeq");
+			put("illumina hiscansq","Illumina HiScanSQ");
+			put("hiseq x ten","HiSeq X Ten");
+			put("nextseq","NextSeq 500");
+			
+			// correspondance nomCnsInstrumentModel et instrumentModel :
+			put("rgaiix","Illumina Genome Analyzer IIx");
+			put("rhs2000","Illumina HiSeq 2000");
+			put("rhs2500","Illumina HiSeq 2500");
+			put("rhs2500r","Illumina HiSeq 2500");
+			put("rmiseq","Illumina MiSeq");
 		}
 	};  
 	
+	/*static final Map<String, String> mapCnsToInstrumentModel = new HashMap<String, String>() {
+		{
+    put("RGAIIx","Illumina Genome Analyzer IIx");
+    put("RHS2000","Illumina HiSeq 2000");
+    put("RHS2500","Illumina HiSeq 2500");
+    put("RHS2500R","Illumina HiSeq 2500");
+   	put("RMISEQ","Illumina MiSeq");
+		}
+	};
+	*/
+
 	static final Map<String, String> mapAnalysisFileType =  new HashMap<String, String>() {
 		{
 			put("fasta", "fasta"); 
