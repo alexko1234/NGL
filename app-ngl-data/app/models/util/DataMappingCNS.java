@@ -469,7 +469,7 @@ public class DataMappingCNS {
 	public static String getStateFromStateSolutionStock(int etatPrepaLimsCode){
 		if(etatPrepaLimsCode==0 || etatPrepaLimsCode==1 ||  etatPrepaLimsCode==10   ){ return "IU"; } 
 		// Attention un container ne peut pas etre à l'etat "A" s'il n'a pas de processus associé
-		else if(etatPrepaLimsCode==2 || etatPrepaLimsCode==9 ) { return "IW-P"; }
+		else if(etatPrepaLimsCode==2 || etatPrepaLimsCode==14 || etatPrepaLimsCode==9 ) { return "IW-P"; }
 		else if(etatPrepaLimsCode==3 || etatPrepaLimsCode==4 ||  etatPrepaLimsCode==6 || etatPrepaLimsCode==7) { return "UA"; }
 		else if(etatPrepaLimsCode==5 ) { return "IS";}
 		return null;
