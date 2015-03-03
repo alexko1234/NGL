@@ -22,7 +22,10 @@ import org.junit.Test;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
+import play.Logger;
+import play.Logger.ALogger;
 import services.instance.container.ContainerImportCNS;
+import services.instance.container.UpdateSolutionStockCNS;
 import services.instance.sample.UpdateSampleCNS;
 import utils.AbstractTests;
 import validation.ContextValidation;
@@ -30,6 +33,7 @@ import fr.cea.ig.MongoDBDAO;
 
 public class ContainerTests extends AbstractTests {
 
+	ALogger logger=Logger.of("ContainerTests");
 
 	@BeforeClass
 	public static  void initData() throws DAOException, InstantiationException,
@@ -51,6 +55,7 @@ public class ContainerTests extends AbstractTests {
 			assertThat(container.contents.get(0).properties.get("libLayoutNominalLength")).isNotNull();
 			assertThat(container.contents.get(0).properties.get("libProcessTypeCode")).isNotNull();
 			assertThat(container.contents.get(0).properties.get("sequencingProgramType")).isNull();
+			assertThat(container.contents.get(0).properties.get("percentPerLane")).isNotNull();
 		}
 		Assert.assertTrue(containers.size()>0);
 		List<ContainerSupport> containerSupports=MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("code", AllTests.prepaCodes)).toList();
@@ -90,9 +95,12 @@ public class ContainerTests extends AbstractTests {
 		List<String> solutionStocks=new ArrayList<String>();
 		
 		solutionStocks.add("AXD_msCCH_d1");
+		//Creation 
 		String sql="pl_SolutionStockToNGL @noms=\'"+StringUtils.join(solutionStocks,",")+"\'";
 		
 		ContainerImportCNS.createContainers(contextValidation,sql,"tube","F","solution-stock","pl_ContentFromContainer @matmanom=?");
+		
+		contextValidation.displayErrors(logger);
 		Assert.assertEquals(contextValidation.errors.size(),0);
 		
 		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code", solutionStocks)).toList();
@@ -104,6 +112,7 @@ public class ContainerTests extends AbstractTests {
 		for(Container container:containers){
 			assertThat(container.contents.get(0).properties.get("libLayoutNominalLength")).isNotNull();
 			assertThat(container.contents.get(0).properties.get("libProcessTypeCode")).isNotNull();
+			assertThat(container.contents.get(0).properties.get("percentPerLane")).isNull();
 			assertThat(((PropertySingleValue) container.mesuredConcentration).unit).isEqualTo("nM");
 			assertThat(container.contents.get(0).percentage).isNotNull();
 			for(ContainerSupport support:containerSupports){
@@ -112,7 +121,22 @@ public class ContainerTests extends AbstractTests {
 				}
 			}
 		}
+		
+		MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.in("code",solutionStocks), DBUpdate.set("state.code","IW-P"));
+		
+		//En reserve update state container
+		UpdateSolutionStockCNS.updateSolutionStock(sql + ", @updated=1", contextValidation,"tube","solution-stock");
+		contextValidation.displayErrors(logger);
+		Assert.assertEquals(contextValidation.errors.size(),0);
+		
+		containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code", solutionStocks)).toList();
+		Assert.assertTrue(containers.size()>0);
+		
+		for(Container container:containers){
+			assertThat(container.state.code).isNotEqualTo("IW-P");
+			assertThat(container.state.code).isEqualTo("IS");
 
+		}
 	}
 	
 	

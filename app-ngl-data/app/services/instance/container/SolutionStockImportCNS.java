@@ -5,9 +5,9 @@ import java.sql.SQLException;
 import models.utils.dao.DAOException;
 import scala.concurrent.duration.FiniteDuration;
 
-public class SolutionStockImportCN extends ContainerImportCNS {
+public class SolutionStockImportCNS extends ContainerImportCNS {
 
-	public SolutionStockImportCN(FiniteDuration durationFromStart,
+	public SolutionStockImportCNS(FiniteDuration durationFromStart,
 			FiniteDuration durationFromNextIteration) {
 		super("Container Solution stock CNS", durationFromStart, durationFromNextIteration);
 	}

@@ -22,6 +22,8 @@ import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.parameter.Index;
+import models.laboratory.processes.description.ProcessType;
+import models.laboratory.processes.instance.Process;
 import models.laboratory.project.instance.BioinformaticParameters;
 import models.laboratory.project.instance.Project;
 import models.laboratory.run.description.ReadSetType;
@@ -36,11 +38,11 @@ import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.util.DataMappingCNS;
 import models.util.MappingHelper;
+import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
-import models.utils.instance.ContainerHelper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -53,6 +55,7 @@ import play.Logger;
 import play.api.modules.spring.Spring;
 import services.instance.container.ContainerImportCNS;
 import validation.ContextValidation;
+import validation.utils.ValidationConstants;
 import fr.cea.ig.MongoDBDAO;
 
 
@@ -250,7 +253,7 @@ public class LimsCNSDAO{
 				project.state.date = new Date();
 
 				project.bioinformaticParameters = new BioinformaticParameters();
-				
+
 				project.traceInformation=new TraceInformation();
 				InstanceHelpers.updateTraceInformation(project.traceInformation, "ngl-data");
 				return project;
@@ -365,9 +368,12 @@ public class LimsCNSDAO{
 				//TODO add projectCode
 				// Todo add properties from ExperimentType
 				sampleUsed.properties=new HashMap<String, PropertyValue>();
-				sampleUsed.properties.put("percentPerLane", new PropertySingleValue(rs.getDouble("percentPerLane")));
-				//Logger.debug("Percentage "+rs.getDouble("percentPerLane"));
-				sampleUsed.percentage=rs.getDouble("percentPerLane");
+				if(rs.getString("percentPerLane")!=null){
+					sampleUsed.properties.put("percentPerLane", new PropertySingleValue(rs.getDouble("percentPerLane")));
+					sampleUsed.percentage=rs.getDouble("percentPerLane");
+				}else {	
+					sampleUsed.percentage=rs.getDouble("percentage");
+				}
 				sampleUsed.properties.put("libProcessTypeCode",new PropertySingleValue(rs.getString("libProcessTypeCode")));
 				if(rs.getString("tag")!=null){
 					sampleUsed.properties.put("tag", new PropertySingleValue(rs.getString("tag")));
@@ -753,6 +759,51 @@ public class LimsCNSDAO{
 	}
 
 
+	public List<Process> findProcessToCreate(String sql, final Container container, String processTypeCode, final ContextValidation contextError) {
+		List<Process> results=null;
+
+		try {
+			final ProcessType processType = ProcessType.find.findByCode(processTypeCode);
+			if(processType!=null){
+				results = this.jdbcTemplate.query(sql ,new Object[]{container.code}
+			,new RowMapper<Process>() {
+				@SuppressWarnings("rawtypes")
+				public Process mapRow(ResultSet rs, int rowNum) throws SQLException {
+					Process process=new Process();
+					process.typeCode=processType.code;
+					process.categoryCode=processType.category.code;
+					process.containerInputCode=container.code;
+					process.projectCode=rs.getString("projectCode");
+					process.sampleCode=rs.getString("sampleCode");
+					process.traceInformation=new TraceInformation();
+					process.traceInformation.createUser=contextError.getUser();
+					process.traceInformation.creationDate=new Date();
+					process.state=new State("N",contextError.getUser());
+					process.properties=new HashMap<String, PropertyValue>();
+					MappingHelper.getPropertiesFromResultSet(rs,processType.getPropertyDefinitionByLevel(Level.CODE.Process),process.properties);
+					process.code=CodeHelper.getInstance().generateProcessCode(process);
+					Content c=null;
+					for(Content content:container.contents){
+						if(content.projectCode.equals(process.projectCode) && content.sampleCode.equals(process.sampleCode)){
+							c=content;
+						}
+					}
+					if(c!=null){
+						process.sampleOnInputContainer=InstanceHelpers.getSampleOnInputContainer(c, container);
+					}else { contextError.addErrors("content",ValidationConstants.ERROR_CODE_NOTEXISTS_MSG,container); }
+					return process;
+				}
+			});
+			}else { contextError.addErrors("processType", ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, processTypeCode); }
+			
+			
+		}	
+		catch (DAOException e) {
+			Logger.error("",e);
+		}
+		return results;
+
+	}
 
 
 }

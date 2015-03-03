@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import models.LimsCNSDAO;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -18,23 +17,23 @@ import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
-import models.laboratory.run.instance.ReadSet;
-import models.laboratory.run.instance.Run;
+import models.laboratory.processes.instance.Process;
 import models.laboratory.sample.instance.Sample;
 import models.util.DataMappingCNS;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
-
 import models.utils.instance.ContainerSupportHelper;
+import models.utils.instance.ProcessHelper;
+
 import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
 
 import play.Logger;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;
 import validation.ContextValidation;
+import workflows.Workflows;
 import fr.cea.ig.MongoDBDAO;
 
 public abstract class ContainerImportCNS extends AbstractImportDataCNS {
@@ -146,12 +145,39 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 			}
 			contextError.removeKeyFromRootKeyName(rootKeyName);
 		}
-	
+		/*
+		if(experimentTypeCode.equals("solution-stock")){
+			//SQL TODO
+			ContainerImportCNS.createProcessFromContainers(containers,"illumina-run","pl_ProcessToNGL @matmanom=?",contextError);
+		}
+		*/
 		limsServices.updateMaterielmanipLims(newContainers,contextError);
 	
 	}
 
 	
+	public static void createProcessFromContainers(List<Container> containers, String processTypeCode, String sql, ContextValidation contextError) {
+		for(Container container:containers){
+			List<Process> processes=limsServices.findProcessToCreate(sql, container,processTypeCode, contextError);
+			List<String> processCodes=new ArrayList<String>();
+			String rootKeyName=null;
+			for(Process process:processes){
+				Logger.debug("ContextError mode creation "+contextError.isCreationMode());
+				//Logger.debug("Container :"+container.code+ "nb sample code"+container.sampleCodes.size());
+				rootKeyName="process["+process.code+"]";
+				contextError.addKeyToRootKeyName(rootKeyName);
+				InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,process, contextError,true);
+				contextError.removeKeyFromRootKeyName(rootKeyName);
+				processCodes.add(process.code);
+			}
+		
+			ProcessHelper.updateContainer(container,processTypeCode, processCodes,contextError);
+			ProcessHelper.updateContainerSupportFromContainer(container,contextError);
+			Workflows.nextContainerState(processes, null, null, contextError);	
+		}
+	
+	}
+
 	private static void deleteContainerAndContainerSupport(
 			List<Container> containers) {
 		for(Container container : containers){
