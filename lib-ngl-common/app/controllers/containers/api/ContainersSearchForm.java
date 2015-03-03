@@ -28,6 +28,7 @@ public class ContainersSearchForm extends ListForm{
 	public Date toDate;
 	public String column;
 	public String line;
+	public String createUser;
 	public Map<String, List<String>> properties = new HashMap<String, List<String>>();
 	
 	@Override
@@ -40,7 +41,7 @@ public class ContainersSearchForm extends ListForm{
 				+ ", supportCode=" + supportCode
 				+ ", containerSupportCategory=" + containerSupportCategory
 				+ ", fromExperimentTypeCodes=" + fromExperimentTypeCodes
-				+ ", valuations=" + valuations + ", fromDate=" + fromDate
-				+ ", toDate=" + toDate + "]";
+				+ ", valuations=" + valuations + ", createUser=" + createUser 
+				+ ", fromDate=" + fromDate + ", toDate=" + toDate + "]";
 	}
 }

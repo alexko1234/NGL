@@ -364,6 +364,10 @@ public class Containers extends CommonController {
 		if(StringUtils.isNotBlank(containersSearch.processTypeCode)){   
 			queryElts.add(DBQuery.is("processTypeCode", containersSearch.processTypeCode));
 		}
+		
+		if(StringUtils.isNotBlank(containersSearch.createUser)){   
+			queryElts.add(DBQuery.is("traceInformation.createUser", containersSearch.createUser));
+		}
 
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));

@@ -10,6 +10,12 @@
 		@formGroup{
 			<div class="form-control" bt-select ng-model="form.projectCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.projects")' bt-options="project.code as project.code for project in lists.getProjects()" ></div>
 		}
+		@formGroup{
+			
+			<div class="form-control" bt-select ng-model="form.valuations" multiple="true" placeholder="@Messages("containers.table.valid")" 
+				bt-options="valuation.code as valuation.name for valuation in lists.getValuations()">
+			</div>	
+		}
 	}
 	@columnSearchForm{
 		@formGroup{
@@ -27,20 +33,27 @@
 			</div>
 		}
 		@formGroup{
-			<input class="form-control" type="text" ng-model="form.containerSupportCode" placeholder="@Messages("search.placeholder.support")" title='@Messages("search.placeholder.support")'>			
+			<input class="form-control" type="text" ng-model="form.containerSupportCode" placeholder='@Messages("search.placeholder.containerSupport")' title='@Messages("search.placeholder.containerSupport")'>			
 		}
 	}
 	@columnSearchForm{
 		@formGroup{
-			<div class="form-control" bt-select ng-model="form.fromExperimentTypeCodes" multiple="true" placeholder="@Messages("containers.select.fromExperimentTypeCodes")" 
-				bt-options="expType.code as expType.name for expType in lists.getExperimentTypes()" auto-select>
-			</div>
+			<input class="form-control" type="text" ng-model="form.fromDate" placeholder='@Messages("containers.placeholder.fromDate")' title='@Messages("containers.placeholder.fromDate")'>	
+						
 		}
 		@formGroup{
-			
-			<div class="form-control" bt-select ng-model="form.valuations" multiple="true" placeholder="@Messages("containers.table.valid")" 
-				bt-options="valuation.code as valuation.name for valuation in lists.getValuations()">
-			</div>	
+			<div class="form-control" bt-select ng-model="form.fromExperimentTypeCodes" multiple="true" placeholder="@Messages("containers.select.fromExperimentTypeCodes")" 
+				bt-options="expType.code as expType.name for expType in lists.getExperimentTypes()" auto-select>
+			</div>			
+		}
+	}
+	@columnSearchForm{
+		@formGroup{
+			<input class="form-control" type="text" ng-model="form.toDate" placeholder='@Messages("containers.placeholder.toDate")' title='@Messages("containers.placeholder.toDate")'>		
+		}
+		@formGroup{
+			<input class="form-control" type="text" ng-model="form.createUser" placeholder='@Messages("containers.table.createUser")' title='@Messages("containers.placeholder.user")'>			
+				
 		}
 	}
 }

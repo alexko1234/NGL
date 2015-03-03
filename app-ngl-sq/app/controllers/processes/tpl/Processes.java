@@ -200,7 +200,12 @@ public class Processes extends CommonController{
 						controllers.commons.api.routes.javascript.Users.list(),
 						controllers.reporting.api.routes.javascript.FilteringConfigurations.list(),
 						controllers.containers.api.routes.javascript.ContainerSupportCategories.list(),
-						controllers.experiments.api.routes.javascript.ExperimentTypes.list()
+						controllers.experiments.api.routes.javascript.ExperimentTypes.list(),
+						controllers.reporting.api.routes.javascript.ReportingConfigurations.list(),
+			      		controllers.reporting.api.routes.javascript.ReportingConfigurations.get(),
+			      		controllers.reporting.api.routes.javascript.ReportingConfigurations.save(),
+			      		controllers.reporting.api.routes.javascript.ReportingConfigurations.update(),
+			      		controllers.reporting.api.routes.javascript.ReportingConfigurations.delete()
 						)	  	      
 				);
 	}

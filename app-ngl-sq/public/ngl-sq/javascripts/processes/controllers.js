@@ -57,12 +57,28 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			        	 "filter":"codes:'state'"
 			         },
 			         {
-			        	 "header":Messages("containers.table.sampleCode"),
-			        	 "property":"sampleCodes",
-			        	 "order":true,
-			        	 "hide":true,
-			        	 "type":"text"
-			         },
+			 			"header":Messages("containers.table.sampleCodes.length"),
+			 			"property":"sampleCodes.length",
+			 			"order":true,
+			 			"hide":true,
+			 			"type":"text"
+			 		},
+			 		{
+						"header":Messages("containers.table.sampleCodes"),
+						"property":"sampleCodes",
+						"order":true,
+						"hide":true,
+						"type":"text",
+						"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>"
+					},
+					{
+						"header":Messages("containers.table.tags"),
+						"property": "contents",
+						"order":true,
+						"hide":true,
+						"type":"text",
+						"render":"<div list-resize='value.data.contents | getArray:\"properties.tag.value\"' ' list-resize-min-size='3'>",
+					},
 			         {
 			        	 "header":Messages("processes.table.projectCode"),
 			        	 "property":"projectCodes",
@@ -71,26 +87,26 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			        	 "type":"text"
 			         },
 			         {
-			        	 "header":Messages("processes.table.newContainerSupportCodes"),
-			        	 "property":"newContainerSupportCodes",
-			        	 "hide":true,
-			        	 "type":"text",
-			        	 "render":"<div list-resize='value.data.newContainerSupportCodes | unique' below-only-deploy>"
-			         },
-			         {
-			        	 "header":Messages("processes.table.experimentCodes"),
-			        	 "property":"experimentCodes",
-			        	 "hide":true,
-			        	 "type":"text",
-			        	 "render":"<div list-resize='value.data.experimentCodes | unique' below-only-deploy>"
-			         },
-			         {
 			        	 "header":Messages("containers.table.valid"),
 			        	 "property":"valuation.valid",
 			        	 "order":true,
 			        	 "type":"text",
 			        	 "filter":"codes:'valuation'"
-			         }
+			         },
+			         {
+						"header":Messages("containers.table.creationDate"),
+						"property":"traceInformation.creationDate",
+						"order":true,
+						"hide":true,
+						"type":"date"
+					 },
+					 {
+						"header":Messages("containers.table.createUser"),
+						"property":"traceInformation.createUser",
+						"order":true,
+						"hide":true,
+						"type":"text"
+					 }
 			         ],
 			         search:{
 			        	 url:jsRoutes.controllers.containers.api.Containers.list()
@@ -164,6 +180,13 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			if($scope.form.containerSupportCode){
 				jsonSearch.supportCode = $scope.form.containerSupportCode;
 			}
+			
+			if($scope.form.createUser){
+				jsonSearch.createUser = $scope.form.createUser;
+			}
+
+			if($scope.form.fromDate)jsonSearch.fromDate = moment($scope.form.fromDate, Messages("date.format").toUpperCase()).valueOf();
+			if($scope.form.toDate)jsonSearch.toDate = moment($scope.form.toDate, Messages("date.format").toUpperCase()).valueOf();
 
 			$scope.datatable.search(jsonSearch);
 			mainService.setForm($scope.form);

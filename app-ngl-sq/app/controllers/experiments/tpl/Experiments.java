@@ -19,7 +19,7 @@ import views.html.experiments.createExperiments;
 import views.html.experiments.home;
 import views.html.experiments.newExperiments;
 import views.html.experiments.search;
-import views.html.experiments.searchContainers;
+import views.html.experiments.searchContainersSupports;
 import controllers.CommonController;
 
 public class Experiments extends CommonController{
@@ -35,7 +35,7 @@ public class Experiments extends CommonController{
 	}
 	
 	public static Result searchSupports(){
-		return ok(searchContainers.render());
+		return ok(searchContainersSupports.render());
 	}
 	
 	public static Result newExperiments(String experimentTypeCode){

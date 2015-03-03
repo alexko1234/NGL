@@ -20,13 +20,14 @@ containerSupports.table.sampleCodes.length = Nb d''échantillon(s)
 containerSupports.table.sampleCodes = Echantillon(s)
 containerSupports.table.valid = Support-Container valide ?
 containerSupports.table.creationDate = Création Support-Container
+containerSupports.table.createUser = Support-Container créé par
 
 containerSupports.select.state =  Sélect. états Support-Container
 containerSupports.select.categoryCode =  Sélect. catégorie Support-Container
 
-containerSupports.placeholder.fromDate = Container depuis le (jj/mm/aaaa)
-containerSupports.placeholder.toDate = Container jusqu''au (jj/mm/aaaa)
-containerSupports.placeholder.user = Container créé par
+containerSupports.placeholder.fromDate = Support-Container depuis le (jj/mm/aaaa)
+containerSupports.placeholder.toDate = Support-Container jusqu''au (jj/mm/aaaa)
+containerSupports.placeholder.user = Support-Container créé par
 
 
 

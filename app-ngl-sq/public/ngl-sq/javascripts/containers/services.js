@@ -74,14 +74,14 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"type":"text",
 			"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
 		});	
-	/*	columns.push({
+		columns.push({
 			"header":Messages("containers.table.tags"),
 			"property": "contents",
 			"order":true,
 			"type":"text",
-			"position":9.4,
+			"position":9.1,
 			"render":"<div list-resize='value.data.contents | getArray:\"properties.tag.value\"' ' list-resize-min-size='3'>",
-		});*/
+		});
 		columns.push({
 					"header":Messages("containers.table.projectCodes"),
 					"property":"projectCodes",
@@ -108,11 +108,18 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 					"type":"date"
 				});
 		columns.push({
+			"header":Messages("containers.table.createUser"),
+			"property":"traceInformation.createUser",
+			"order":true,
+			"position":13,
+			"type":"text"
+		});
+		columns.push({
 					"header":Messages("containers.table.inputProcessCodes"),
 					"property":"inputProcessCodes",
 					"order":true,
 					"type":"text",
-					"position":13,
+					"position":14,
 					"render":"<div list-resize='value.data.inputProcessCodes | unique' list-resize-min-size='3'>",
 				});
 
@@ -172,7 +179,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			},
 			convertForm : function(){
 				var _form = angular.copy(this.form);
-				if(_form.projectCodes || _form.sampleCodes || (_form.fromExperimentTypeCodes && _form.fromExperimentTypeCodes.length > 0) || _form.containerCategory || _form.processType
+				if(_form.projectCodes || _form.sampleCodes || (_form.fromExperimentTypeCodes && _form.fromExperimentTypeCodes.length > 0) || _form.containerCategory || _form.processType || _form.createUser
 						|| _form.processCategory || _form.containerSupportCategory || _form.state || _form.states || _form.containerSupportCode  || _form.valuations || _form.fromDate || _form.toDate){	
 
 					var jsonSearch = {};
@@ -215,7 +222,11 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 
 					if(_form.containerSupportCode){
 						jsonSearch.supportCode = _form.containerSupportCode;
-					}	
+					}
+					
+					if(_form.createUser){
+						jsonSearch.createUser = _form.createUser;
+					}
 
 					if(_form.fromDate)jsonSearch.fromDate = moment(_form.fromDate, Messages("date.format").toUpperCase()).valueOf();
 					if(_form.toDate)jsonSearch.toDate = moment(_form.toDate, Messages("date.format").toUpperCase()).valueOf();

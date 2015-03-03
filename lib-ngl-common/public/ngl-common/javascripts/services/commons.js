@@ -927,7 +927,7 @@ angular.module('commonsServices', []).
     	    return function(objects, key) {
     	    	if(key && !angular.isString(key))throw "key is not valid, only string is authorized"; 	
     	    	if(!objects)return undefined;    	    	
-    	    	if(!angular.isObject(objects))  throw "input is not an object !";    	    
+    	    	if(!angular.isObject(objects))  return objects;    	    
     	    	var data=[];
     	    	var get="";
     	    	if(angular.isObject(objects)  && objects.length > 0){    	    		

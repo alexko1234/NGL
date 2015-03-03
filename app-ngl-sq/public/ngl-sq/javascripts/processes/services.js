@@ -30,6 +30,7 @@
 				lists.refresh.users();
 				lists.refresh.states({objectTypeCode:"Process"});
 				lists.refresh.processTypes();
+				lists.refresh.reportConfigs({pageCodes:["processes-addcolumns"]}, "processes-addcolumns");
 				isInit=true;
 			}
 		};
@@ -50,44 +51,15 @@
 						         },
 						         {
 						        	 "header":Messages("processes.table.columns"),
-						        	 "property":"sampleOnInputContainer.properties.tag.value",
+						        	 "property":"support.column",
+						        	 "url":"'/api/containers/'+containerInputCode",
 						        	 "position":3,
-						        	 "type":"text"
-						         },
-						         {
-						        	 "header":Messages("processes.table.sampleOnInputContainer.properties.tag"),
-						        	 "property":"sampleOnInputContainer.properties.tag.value",
-						        	 "position":4,
-						        	 "type":"text"
-						         },
-						         {
-						        	 "header":Messages("processes.table.sampleOnInputContainer.mesuredVolume"),
-						        	 "property":"sampleOnInputContainer.mesuredVolume.value",
-						        	 "position":5,
-						        	 "type":"text"
-						         },  
-						         {
-						        	 "header":Messages("processes.table.sampleOnInputContainer.unit.volume"),
-						        	 "property":"sampleOnInputContainer.mesuredVolume.unit",
-						        	 "position":6,
-						        	 "type":"text"
-						         },	
-						         {
-						        	 "header":Messages("processes.table.sampleOnInputContainer.mesuredConcentration"),
-						        	 "property":"sampleOnInputContainer.mesuredConcentration.value",
-						        	 "position":7,
-						        	 "type":"text"
-						         },	 	
-						         {
-						        	 "header":Messages("processes.table.sampleOnInputContainer.unit.concentration"),
-						        	 "property":"sampleOnInputContainer.mesuredConcentration.unit",
-						        	 "position":8,
 						        	 "type":"text"
 						         },
 						         {
 						        	 "header":Messages("processes.table.typeCode"),
 						        	 "property":"typeCode",
-						        	 "position":9,
+						        	 "position":4,
 						        	 "type":"text"
 						         },
 						         {
@@ -128,12 +100,14 @@
 						        	 "header":Messages("processes.table.newContainerSupportCodes"),
 						        	 "property":"newContainerSupportCodes",
 						        	 "position":35,
+						        	 "render":"<div list-resize='value.data.newContainerSupportCodes | unique' list-resize-min-size='2'>",
 						        	 "type":"text"
 						         },
 						         {
 						        	 "header":Messages("processes.table.experimentCodes"),
 						        	 "property":"experimentCodes",
 						        	 "position":36,
+						        	 "render":"<div list-resize='value.data.experimentCodes | unique' list-resize-min-size='2'>",
 						        	 "type":"text"
 						         },
 						         {
@@ -158,44 +132,15 @@
 						         },
 						         {
 						        	 "header":Messages("processes.table.columns"),
-						        	 "property":"sampleOnInputContainer.properties.tag.value",
+						        	 "property":"support.column",
+						        	 "url":"'/api/containers/'+containerInputCode",
 						        	 "position":3,
-						        	 "type":"text"
-						         },
-						         {
-						        	 "header":Messages("processes.table.sampleOnInputContainer.properties.tag"),
-						        	 "property":"sampleOnInputContainer.properties.tag.value",
-						        	 "position":4,
-						        	 "type":"text"
-						         },
-						         {
-						        	 "header":Messages("processes.table.sampleOnInputContainer.mesuredVolume"),
-						        	 "property":"sampleOnInputContainer.mesuredVolume.value",
-						        	 "position":5,
-						        	 "type":"text"
-						         },  
-						         {
-						        	 "header":Messages("processes.table.sampleOnInputContainer.unit.volume"),
-						        	 "property":"sampleOnInputContainer.mesuredVolume.unit",
-						        	 "position":6,
-						        	 "type":"text"
-						         },	
-						         {
-						        	 "header":Messages("processes.table.sampleOnInputContainer.mesuredConcentration"),
-						        	 "property":"sampleOnInputContainer.mesuredConcentration.value",
-						        	 "position":7,
-						        	 "type":"text"
-						         },	 	
-						         {
-						        	 "header":Messages("processes.table.sampleOnInputContainer.unit.concentration"),
-						        	 "property":"sampleOnInputContainer.mesuredConcentration.unit",
-						        	 "position":8,
 						        	 "type":"text"
 						         },
 						         {
 						        	 "header":Messages("processes.table.typeCode"),
 						        	 "property":"typeCode",
-						        	 "position":9,
+						        	 "position":4,
 						        	 "type":"text"
 						         },
 						         {
@@ -251,9 +196,12 @@
 						        	 "type":"text"
 						         }
 						 ],
-				datatable:undefined,
+				datatable:undefined,				
 				isRouteParam:false,
 				lists : lists,
+				getDefaultColumns : this.columnsDefault,
+				additionalColumns:[],
+				selectedAddColumns:[],
 				setRouteParams:function($routeParams){
 					var count = 0;
 					for(var p in $routeParams){
@@ -286,6 +234,11 @@
 					var datatable = this.datatable;
 					var columnsDefault = this.columnsDefault;
 					var columnsDefaultState = this.columnsDefaultState;
+					
+					if(this.selectedAddColumns!=undefined && this.selectedAddColumns!=null){
+						columnsDefault = this.columnsDefault.concat(this.selectedAddColumns)
+					}
+					
 					return $http.get(jsRoutes.controllers.processes.tpl.Processes.getPropertiesDefinitions(typeCode).url)
 					.success(function(data, status, headers, config) {
 						if(data!=null){
@@ -309,13 +262,15 @@
 									 column.edit = false;
 								 }
 								columns.push(column);
-							});	
+							});								
+							
 							 if(mainService.getHomePage() === 'state'){
 								 columns = columnsDefaultState.concat(columns);
 							 }else{
 								 columns = columnsDefault.concat(columns);
 							 }
-							datatable.setColumnsConfig(columns);
+							 
+							datatable.setColumnsConfig(columns);	
 						}
 
 					})
@@ -323,9 +278,20 @@
 						console.log(data);
 					});		
 
-				},	
+				},				
+				
 				updateForm : function(){
-					
+					//this.form.includes = [];
+					this.form.includes = ["default"];
+					for(var i = 0 ; i < this.selectedAddColumns.length ; i++){
+						//remove .value if present to manage correctly properties (single, list, etc.)
+						if(this.selectedAddColumns[i].queryIncludeKeys && this.selectedAddColumns[i].queryIncludeKeys.length > 0){
+							this.form.includes = this.form.includes.concat(this.selectedAddColumns[i].queryIncludeKeys);
+						}else{
+							this.form.includes.push(this.selectedAddColumns[i].property.replace('.value',''));	
+						}
+						
+					}
 				},
 				convertForm : function(){
 					var _form = angular.copy(this.form);	
@@ -368,7 +334,7 @@
 					mainService.setForm(this.form);
 					var jsonSearch = this.convertForm();
 					if(jsonSearch != undefined){
-						searchService.getColumns();
+						searchService.getColumns();					
 						this.datatable.search(jsonSearch);
 					}
 				},
@@ -397,6 +363,56 @@
 					}else{
 						this.form.typeCode = undefined;	
 					}
+				},
+				initAdditionalColumns : function(){
+					this.additionalColumns=[];
+					this.selectedAddColumns=[];
+					
+					if(lists.get("processes-addcolumns") && lists.get("processes-addcolumns").length === 1){
+						var formColumns = [];
+						var allColumns = angular.copy(lists.get("processes-addcolumns")[0].columns);
+						var nbElementByColumn = Math.ceil(allColumns.length / 5); //5 columns
+						for(var i = 0; i  < 5 && allColumns.length > 0 ; i++){
+							formColumns.push(allColumns.splice(0, nbElementByColumn));	    								
+						}
+						//complete to 5 five element to have a great design 
+						while(formColumns.length < 5){
+							formColumns.push([]);
+						}
+						this.additionalColumns = formColumns;
+					}
+				},
+				getAddColumnsToForm : function(){
+					if(this.additionalColumns.length === 0){
+						this.initAdditionalColumns();
+					}
+					return this.additionalColumns;									
+				},
+				addColumnsToDatatable:function(){
+					//this.reportingConfiguration = undefined;
+					//this.reportingConfigurationCode = undefined;
+					
+					this.selectedAddColumns = [];
+					for(var i = 0 ; i < this.additionalColumns.length ; i++){
+						for(var j = 0; j < this.additionalColumns[i].length; j++){
+							if(this.additionalColumns[i][j].select){
+								this.selectedAddColumns.push(this.additionalColumns[i][j]);
+							}
+						}
+					}					
+					this.search();
+				},	
+				resetDatatableColumns:function(){
+					this.initAdditionalColumns();
+					this.datatable.setColumnsConfig(this.getDefaultColumns);
+					this.search();
+				},
+				updateColumn : function(){
+					this.initAdditionalColumns();				
+					this.reportingConfiguration = undefined;
+					this.datatable.setColumnsConfig(this.getDefaultColumns);
+					this.search();		
+					
 				},
 				/**
 				 * initialise the service

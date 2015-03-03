@@ -37,10 +37,10 @@
 			}
 			<hr>
 			@formGroup{		
-				<input class="form-control" type="text" ng-model="searchService.form.fromDate" placeholder='@Messages("containers.placeholder.fromDate")' title='@Messages("containers.placeholder.fromDate")'>				
+				<input class="form-control" type="text" ng-model="searchService.form.fromDate" placeholder='@Messages("containerSupports.placeholder.fromDate")' title='@Messages("containerSupports.placeholder.fromDate")'>				
 			}
 			@formGroup{		
-				<input class="form-control" type="text" ng-model="searchService.form.code" placeholder='@Messages("search.placeholder.support")' title='@Messages("search.placeholder.support")'>
+				<input class="form-control" type="text" ng-model="searchService.form.code" placeholder='@Messages("search.placeholder.containerSupport")' title='@Messages("search.placeholder.containerSupport")'>
 			}
 		}
 		@columnSearchForm{
@@ -50,10 +50,12 @@
 			}
 			<hr>
 			@formGroup{
-				<input class="form-control" type="text" ng-model="searchService.form.toDate" placeholder='@Messages("containers.placeholder.toDate")' title='@Messages("containers.placeholder.toDate")'>
+				<input class="form-control" type="text" ng-model="searchService.form.toDate" placeholder='@Messages("containerSupports.placeholder.toDate")' title='@Messages("containerSupports.placeholder.toDate")'>
 			}
 			@formGroup{
-			<input class="form-control" type="text" ng-model="searchService.form.users" typeahead="user.name as user.name for user in searchService.lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("containers.placeholder.user")' title='@Messages("containers.placeholder.user")'>			
+				<div class="form-control" bt-select ng-model="searchService.form.fromExperimentTypeCodes" multiple="true" placeholder="@Messages("containerSupports.table.fromExperimentTypeCodes")" 
+				bt-options="expType.code as expType.name for expType in searchService.lists.getExperimentTypes()">
+				</div>	
 		}
 						
 		}
@@ -64,14 +66,11 @@
 			}
 			<hr>
 			@formGroup{	
-				<div class="form-control" bt-select ng-model="searchService.form.fromExperimentTypeCodes" multiple="true" placeholder="@Messages("containers.select.fromExperimentTypeCodes")" 
-				bt-options="expType.code as expType.name for expType in searchService.lists.getExperimentTypes()">
-				</div>						
+				<input class="form-control" type="text" ng-model="searchService.form.users" typeahead="user.name as user.name for user in searchService.lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("containerSupports.placeholder.user")' title='@Messages("containerSupports.placeholder.user")'>			
+									
 			}
 			@formGroup{
-			<div class="form-control" bt-select ng-model="searchService.form.valuations" multiple="true" placeholder="@Messages("containers.table.valid")" 
-				bt-options="valuation.code as valuation.name for valuation in searchService.lists.getValuations()">
-			</div>	
+				
 			
 		}
 		}

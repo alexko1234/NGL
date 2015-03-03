@@ -34,7 +34,6 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"header":Messages("containers.table.sampleCodes.length"),
 			"property":"sampleCodes.length",
 			"order":true,
-			"hide":true,
 			"type":"text"
 		},
 		{
@@ -49,22 +48,15 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"property":"projectCodes",
 			"order":true,
 			"type":"text"
-		},		
-		{
-			"header":Messages("containers.table.valid"),
-			"property":"valuation.valid",
-			"order":true,
-			"type":"text",
-			"filter":"codes:'valuation'",
 		},
 		{
-			"header":Messages("containers.table.creationDate"),
+			"header":Messages("containerSupports.table.creationDate"),
 			"property":"traceInformation.creationDate",
 			"order":true,
 			"type":"date"
 		},
 		{
-			"header":Messages("containers.table.createUser"),
+			"header":Messages("containerSupports.table.createUser"),
 			"property":"traceInformation.createUser",
 			"order":true,
 			"type":"text"
