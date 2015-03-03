@@ -3,15 +3,24 @@ package services.instance;
 import java.util.concurrent.TimeUnit;
 
 import scala.concurrent.duration.Duration;
+import services.instance.container.PrepaflowcellImportCNS;
 import services.instance.container.SolutionStockImportCNS;
+import services.instance.container.TubeImportCNS;
 import services.instance.container.UpdateSolutionStockCNS;
+import services.instance.container.UpdateTaraPropertiesCNS;
+import services.instance.parameter.IndexImportCNS;
+import services.instance.project.ProjectImportCNS;
+import services.instance.run.RunExtImportCNS;
+import services.instance.run.RunImportCNS;
+import services.instance.run.UpdateReadSetCNS;
+import services.instance.sample.UpdateSampleCNS;
 
 public class ImportDataCNS{
 
 	public ImportDataCNS(){
 
 
-		// Import Projects tous les jours à 16h00
+	// Import Projects tous les jours à 16h00
 		new ProjectImportCNS(Duration.create(ImportDataUtil.nextExecutionInSeconds(16,00),TimeUnit.SECONDS)
 				,Duration.create(4,TimeUnit.HOURS));
 		new IndexImportCNS(Duration.create(ImportDataUtil.nextExecutionInSeconds(3,00),TimeUnit.SECONDS)
@@ -31,8 +40,8 @@ public class ImportDataCNS{
 		
 		new RunExtImportCNS(Duration.create(10,TimeUnit.MINUTES),Duration.create(12,TimeUnit.HOURS));
 
-	//	new SolutionStockImportCNS(Duration.create(5,TimeUnit.SECONDS),Duration.create(5,TimeUnit.MINUTES));
-	//	new UpdateSolutionStockCNS(Duration.create(5,TimeUnit.SECONDS),Duration.create(15,TimeUnit.MINUTES));
+/*		new SolutionStockImportCNS(Duration.create(5,TimeUnit.SECONDS),Duration.create(5,TimeUnit.MINUTES));
+		new UpdateSolutionStockCNS(Duration.create(5,TimeUnit.SECONDS),Duration.create(15,TimeUnit.MINUTES));*/
 	}
 
 }
