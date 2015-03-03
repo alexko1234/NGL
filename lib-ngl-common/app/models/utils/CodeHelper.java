@@ -17,7 +17,7 @@ import play.Logger;
 //Singleton
 public class CodeHelper {
 
-	private CodeHelper()
+	protected CodeHelper()
 	{}
 
 	private static class SingletonHolder
@@ -47,7 +47,7 @@ public class CodeHelper {
 		return boxCatalogCode + "-" + generateBarCode();
 	}
 
-	private synchronized String generateBarCode(){
+	protected synchronized String generateBarCode(){
 		try {
 			Thread.sleep(1);
 		} catch (InterruptedException e1) {
