@@ -150,7 +150,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	$scope.search = function(){	
 		$scope.errors.processCategory = {};
 		$scope.errors.processType = {};
-		if($scope.form.processCategory && $scope.form.nextProcessTypeCode){
+		if(($scope.form.processCategory && $scope.form.nextProcessTypeCode) || $scope.form.createUser){
 			var jsonSearch = {};
 			jsonSearch.stateCode = 'IW-P';
 			if($scope.form.projectCodes){
@@ -260,6 +260,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 		$scope.lists.refresh.processCategories();
 		$scope.lists.refresh.containerSupports();
 		$scope.lists.refresh.containerSupportCategories();
+		$scope.lists.refresh.users();
 		lists.refresh.experimentTypes({categoryCode:"transformation", withoutOneToVoid:true});
 
 	}else{
@@ -274,30 +275,35 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			         {
 			        	 "header":Messages("processes.table.supportCode"),
 			        	 "property":"support.code",
+			        	 "order":true,
 			        	 "position":1,
 			        	 "type":"text"
 			         },
 			         {
 			        	 "header":Messages("processes.table.line"),
 			        	 "property":"support.line",
+			        	 "order":true,
 			        	 "position":2,
 			        	 "type":"text"
 			         },
 			         {
 			        	 "header":Messages("processes.table.columns"),
 			        	 "property":"support.column",
+			        	 "order":true,
 			        	 "position":3,
 			        	 "type":"text"
 			         },
 			         {
 			        	 "header":Messages("processes.table.projectCode"),
 			        	 "property":"projectCode",
+			        	 "order":true,
 			        	 "position":4,
 			        	 "type":"text"
 			         },
 			         {
 			        	 "header":Messages("processes.table.sampleCode"),
 			        	 "property":"sampleCode",
+			        	 "order":true,
 			        	 "position":5,
 			        	 "type":"text"
 			         },
@@ -310,6 +316,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			        		 }
 			        	 },
 			        	 "property":"state.code",
+			        	 "order":true,
 			        	 "position":6,
 			        	 "filter": "codes:'state'",
 			        	 "type":"text"
@@ -362,79 +369,101 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 		         {
 		        	 "header":Messages("processes.table.containerInputCode"),
 		        	 "property":"containerInputCode",
+		        	 "order":true,
 		        	 "position":1,
 		        	 "type":"text"
 		         },
 		         {
 		        	 "header":Messages("processes.table.sampleCode"),
 		        	 "property":"sampleCode",
+		        	 "order":true,
 		        	 "position":2,
 		        	 "type":"text"
 		         },
 		         {
 		        	 "header":Messages("processes.table.columns"),
-		        	 "property":"sampleOnInputContainer.properties.tag.value",
+		        	 "property":"support.column",
+		        	 "url":"'/api/containers/'+containerInputCode",
+		        	 "order":true,
+		        	 "position":3.5,
+		        	 "type":"text"
+		         },
+		         {
+		        	 "header":Messages("processes.table.line"),
+		        	 "property":"support.line",
+		        	 "url":"'/api/containers/'+containerInputCode",
+		        	 "order":true,
 		        	 "position":3,
 		        	 "type":"text"
 		         },
 		         {
 		        	 "header":Messages("processes.table.sampleOnInputContainer.properties.tag"),
 		        	 "property":"sampleOnInputContainer.properties.tag.value",
+		        	 "order":true,
 		        	 "position":4,
 		        	 "type":"text"
 		         },
 		         {
 		        	 "header":Messages("processes.table.sampleOnInputContainer.mesuredVolume"),
 		        	 "property":"sampleOnInputContainer.mesuredVolume.value",
+		        	 "order":true,
 		        	 "position":5,
 		        	 "type":"text"
 		         },  
 		         {
 		        	 "header":Messages("processes.table.sampleOnInputContainer.unit.volume"),
 		        	 "property":"sampleOnInputContainer.mesuredVolume.unit",
+		        	 "order":true,
 		        	 "position":6,
 		        	 "type":"text"
 		         },	
 		         {
 		        	 "header":Messages("processes.table.sampleOnInputContainer.mesuredConcentration"),
 		        	 "property":"sampleOnInputContainer.mesuredConcentration.value",
+		        	 "order":true,
 		        	 "position":7,
 		        	 "type":"text"
 		         },	 	
 		         {
 		        	 "header":Messages("processes.table.sampleOnInputContainer.unit.concentration"),
 		        	 "property":"sampleOnInputContainer.mesuredConcentration.unit",
+		        	 "order":true,
 		        	 "position":8,
 		        	 "type":"text"
 		         },
 		         {
 		        	 "header":Messages("processes.table.typeCode"),
 		        	 "property":"typeCode",
+		        	 "order":true,
 		        	 "position":9,
 		        	 "type":"text"
 		         },
 		         {
 		        	 "header":Messages("processes.table.stateCode"),
 		        	 "property":"state.code",
+		        	 "order":true,
 		        	 "filter": "codes:'state'",
 		        	 "position":30,
 		        	 "type":"text"
 		         },
-		         {
+		     /*    {
 		        	 "header":Messages("processes.table.resolutionCode"),
 		        	 "property":"state.resolutionCodes",
+		        	 "order":true,
 		        	 "position":31,
 		        	 "type":"text"
 		         },
 		         {
 		        	 "header":Messages("processes.table.currentExperimentTypeCode"),
 		        	 "property":"currentExperimentTypeCode",
+		        	 "order":true,
 		        	 "position":32,
 		        	 "type":"text"
-		         },
+		         }, */
 		         {
 		        	 "header":Messages("processes.table.code"),
 		        	 "property":"code",
+		        	 "order":true,
 		        	 "position":33,
 		        	 "type":"text"
 		         },
@@ -442,23 +471,26 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 		        	 "header":Messages("processes.table.creationDate"),
 		        	 "property":"traceInformation.creationDate",
 		        	 "position":34,
-		        	 "type":"text"
+		        	 "type":"date"
 		         },
 		         {
 		        	 "header":Messages("processes.table.newContainerSupportCodes"),
 		        	 "property":"newContainerSupportCodes",
+		        	 "order":true,
 		        	 "position":35,
 		        	 "type":"text"
 		         },
 		         {
 		        	 "header":Messages("processes.table.experimentCodes"),
 		        	 "property":"experimentCodes",
+		        	 "order":true,
 		        	 "position":36,
 		        	 "type":"text"
 		         },
 		         {
 		        	 "header":Messages("processes.table.projectCode"),
 		        	 "property":"projectCode",
+		        	 "order":true,
 		        	 "position":37,
 		        	 "type":"text"
 		         }

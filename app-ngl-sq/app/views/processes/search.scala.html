@@ -52,7 +52,7 @@
 	}
 	@columnSearchForm{		
 		@formGroup{	
-			<input class="form-control" type="text" ng-model="searchService.form.users" typeahead="user.name as user.name for user in searchService.lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("processes.placeholder.user")' title='@Messages("processes.placeholder.user")'>
+			<input class="form-control" type="text" ng-model="searchService.form.createUser" typeahead="user.name as user.name for user in searchService.lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("processes.placeholder.user")' title='@Messages("processes.placeholder.user")'>
 			
 		}
 		@formGroup{	

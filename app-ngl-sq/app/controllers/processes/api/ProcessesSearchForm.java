@@ -20,6 +20,7 @@ public class ProcessesSearchForm extends ListForm{
 	public String containerSupportCategory;
 	public Date fromDate;
 	public Date toDate;
+	public String createUser;
 	public List<String> users;
 	public String experimentCode;	
 	public Map<String, List<String>> properties = new HashMap<String, List<String>>();
@@ -34,7 +35,7 @@ public class ProcessesSearchForm extends ListForm{
 				+ ", supportCode=" + supportCode + ", stateCode=" + stateCode
 				+ ", stateCodes=" + stateCodes + ", containerSupportCategory="
 				+ containerSupportCategory + ", fromDate=" + fromDate
-				+ ", toDate=" + toDate + ", users=" + users
+				+ ", toDate=" + toDate + ", users=" + users + ", createUser=" + createUser 
 				+ ", experimentCode=" + experimentCode + ", properties="
 				+ properties + ", fromSupportCode="+fromSupportCode +"]";
 	}

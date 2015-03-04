@@ -69,6 +69,12 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			"order":true,
 			"type":"date"
 		});
+		columns.push({
+			"header":Messages("containers.table.createUser"),
+			"property":"traceInformation.createUser",
+			"order":true,
+			"type":"text"
+		});
 
 
 		return columns;
@@ -84,6 +90,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			lists.refresh.experimentTypes({categoryCodes:["transformation", "voidProcess"], withoutOneToVoid:false});
 			lists.refresh.containerSupports();
 			lists.refresh.projects();
+			lists.refresh.users();
 			lists.refresh.processCategories();
 			lists.refresh.states({objectTypeCode:"Container"});
 			isInit=true;
@@ -113,7 +120,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			convertForm : function(){
 				var _form = angular.copy(this.form);
 				if(_form.projectCodes || _form.sampleCodes || _form.containerSupportCategory || _form.state || _form.states 
-						|| _form.containerSupportCode  || _form.valuations || _form.fromDate || _form.toDate){	
+						|| _form.createUser || _form.containerSupportCode  || _form.valuations || _form.fromDate || _form.toDate){	
 
 					var jsonSearch = {};
 
@@ -142,7 +149,11 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 
 					if(_form.containerSupportCode){
 						jsonSearch.codeRegex = _form.containerSupportCode;
-					}	
+					}
+					
+					if(_form.createUser){
+						jsonSearch.createUser = _form.createUser;
+					}
 
 					if(_form.fromDate)jsonSearch.fromDate = moment(_form.fromDate, Messages("date.format").toUpperCase()).valueOf();
 					if(_form.toDate)jsonSearch.toDate = moment(_form.toDate, Messages("date.format").toUpperCase()).valueOf();

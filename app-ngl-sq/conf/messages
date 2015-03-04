@@ -122,6 +122,7 @@ processes.table.stateCode = Etat processus
 processes.table.resolutionCode = Résolution
 processes.table.resolutionCodes = Résolutions
 processes.table.creationDate = Date de création processus
+processes.table.createUser = Processus créé par
 processes.table.comments = Commentaires
 processes.table.currentExperimentTypeCode = Type expérience courante
 processes.table.properties.robotUsing = Robot à utiliser pour la prep. de lib.

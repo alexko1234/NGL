@@ -306,6 +306,10 @@ public class Processes extends CommonController{
 		if(CollectionUtils.isNotEmpty(processesSearch.users)){
 			queryElts.add(DBQuery.in("traceInformation.createUser", processesSearch.users));
 		}
+		
+		if(StringUtils.isNotBlank(processesSearch.createUser)){   
+			queryElts.add(DBQuery.is("traceInformation.createUser", processesSearch.createUser));
+		}
 
 		if(null != processesSearch.fromDate){
 			queryElts.add(DBQuery.greaterThanEquals("traceInformation.creationDate", processesSearch.fromDate));

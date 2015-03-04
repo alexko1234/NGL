@@ -186,6 +186,10 @@ public class ContainerSupports extends CommonController {
 		if(StringUtils.isNotBlank(supportsSearch.codeRegex)){
 			queryElts.add(DBQuery.regex("code", Pattern.compile(supportsSearch.codeRegex)));
 		}
+		
+		if(StringUtils.isNotBlank(supportsSearch.createUser)){   
+			queryElts.add(DBQuery.is("traceInformation.createUser", supportsSearch.createUser));
+		}
 
 		if(CollectionUtils.isNotEmpty(supportsSearch.users)){
 			queryElts.add(DBQuery.in("traceInformation.createUser", supportsSearch.users));

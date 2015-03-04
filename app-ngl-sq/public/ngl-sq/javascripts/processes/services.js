@@ -40,12 +40,14 @@
 						         {
 						        	 "header":Messages("processes.table.containerInputCode"),
 						        	 "property":"containerInputCode",
+						 			 "order":true,
 						        	 "position":1,
 						        	 "type":"text"
 						         },
 						         {
 						        	 "header":Messages("processes.table.sampleCode"),
 						        	 "property":"sampleCode",
+						        	 "order":true,
 						        	 "position":2,
 						        	 "type":"text"
 						         },
@@ -53,12 +55,14 @@
 						        	 "header":Messages("processes.table.columns"),
 						        	 "property":"support.column",
 						        	 "url":"'/api/containers/'+containerInputCode",
+						        	 "order":true,
 						        	 "position":3,
 						        	 "type":"text"
 						         },
 						         {
 						        	 "header":Messages("processes.table.typeCode"),
 						        	 "property":"typeCode",
+						        	 "order":true,
 						        	 "position":4,
 						        	 "type":"text"
 						         },
@@ -66,6 +70,7 @@
 						        	 "header":Messages("processes.table.stateCode"),
 						        	 "property":"state.code",
 						        	 "position":30,
+						        	 "order":true,
 						        	 "type":"text",
 						        	 "filter": "codes:'state'",
 						        	 "edit":false,
@@ -76,6 +81,7 @@
 						        	 "header":Messages("processes.table.resolutionCode"),
 						        	 "property":"state.resolutionCodes",
 						        	 "position":31,
+						        	 "order":true,
 						        	 "type":"text"
 						         },
 						         {
@@ -87,6 +93,7 @@
 						         {
 						        	 "header":Messages("processes.table.code"),
 						        	 "property":"code",
+						        	 "order":true,
 						        	 "position":33,
 						        	 "type":"text"
 						         },
@@ -94,11 +101,20 @@
 						        	 "header":Messages("processes.table.creationDate"),
 						        	 "property":"traceInformation.creationDate",
 						        	 "position":34,
+						        	 "order":true,
+						        	 "type":"date"
+						         },
+						         {
+						        	 "header":Messages("processes.table.createUser"),
+						        	 "property":"traceInformation.createUser",
+						        	 "position":34,
+						        	 "order":true,
 						        	 "type":"text"
 						         },
 						         {
 						        	 "header":Messages("processes.table.newContainerSupportCodes"),
 						        	 "property":"newContainerSupportCodes",
+						        	 "order":true,
 						        	 "position":35,
 						        	 "render":"<div list-resize='value.data.newContainerSupportCodes | unique' list-resize-min-size='2'>",
 						        	 "type":"text"
@@ -106,6 +122,7 @@
 						         {
 						        	 "header":Messages("processes.table.experimentCodes"),
 						        	 "property":"experimentCodes",
+						        	 "order":true,
 						        	 "position":36,
 						        	 "render":"<div list-resize='value.data.experimentCodes | unique' list-resize-min-size='2'>",
 						        	 "type":"text"
@@ -113,6 +130,7 @@
 						         {
 						        	 "header":Messages("processes.table.projectCode"),
 						        	 "property":"projectCode",
+						        	 "order":true,
 						        	 "position":37,
 						        	 "type":"text"
 						         }
@@ -121,12 +139,14 @@
 						         {
 						        	 "header":Messages("processes.table.containerInputCode"),
 						        	 "property":"containerInputCode",
+						        	 "order":true,
 						        	 "position":1,
 						        	 "type":"text"
 						         },
 						         {
 						        	 "header":Messages("processes.table.sampleCode"),
 						        	 "property":"sampleCode",
+						        	 "order":true,
 						        	 "position":2,
 						        	 "type":"text"
 						         },
@@ -134,18 +154,21 @@
 						        	 "header":Messages("processes.table.columns"),
 						        	 "property":"support.column",
 						        	 "url":"'/api/containers/'+containerInputCode",
+						        	 "order":true,
 						        	 "position":3,
 						        	 "type":"text"
 						         },
 						         {
 						        	 "header":Messages("processes.table.typeCode"),
 						        	 "property":"typeCode",
+						        	 "order":true,
 						        	 "position":4,
 						        	 "type":"text"
 						         },
 						         {
 						        	 "header":Messages("processes.table.stateCode"),
 						        	 "property":"state.code",
+						        	 "order":true,
 						        	 "position":30,
 						        	 "type":"text",
 						        	 "filter": "codes:'state'",
@@ -156,30 +179,35 @@
 						         {
 						        	 "header":Messages("processes.table.resolutionCode"),
 						        	 "property":"state.resolutionCodes",
+						        	 "order":true,
 						        	 "position":31,
 						        	 "type":"text"
 						         },
 						         {
 						        	 "header":Messages("processes.table.currentExperimentTypeCode"),
 						        	 "property":"currentExperimentTypeCode",
+						        	 "order":true,
 						        	 "position":32,
 						        	 "type":"text"
 						         },
 						         {
 						        	 "header":Messages("processes.table.code"),
 						        	 "property":"code",
+						        	 "order":true,
 						        	 "position":33,
 						        	 "type":"text"
 						         },
 						         {
 						        	 "header":Messages("processes.table.creationDate"),
 						        	 "property":"traceInformation.creationDate",
+						        	 "order":true,
 						        	 "position":34,
-						        	 "type":"text"
+						        	 "type":"date"
 						         },
 						         {
 						        	 "header":Messages("processes.table.newContainerSupportCodes"),
 						        	 "property":"newContainerSupportCodes",
+						        	 "order":true,
 						        	 "position":35,
 						        	 "render":"<div list-resize='value.data.newContainerSupportCodes | unique' list-resize-min-size='2'>",
 						        	 "type":"text"
@@ -187,6 +215,7 @@
 						         {
 						        	 "header":Messages("processes.table.experimentCodes"),
 						        	 "property":"experimentCodes",
+						        	 "order":true,
 						        	 "position":36,
 						        	 "render":"<div list-resize='value.data.experimentCodes | unique' list-resize-min-size='2'>",
 						        	 "type":"text"
@@ -194,6 +223,7 @@
 						         {
 						        	 "header":Messages("processes.table.projectCode"),
 						        	 "property":"projectCode",
+						        	 "order":true,
 						        	 "position":37,
 						        	 "type":"text"
 						         }
