@@ -139,10 +139,10 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 	$scope.message = {};
 
 	$scope.isPopup = function(resolutionCodes){
-		if(resolutionCodes.length === 1 && resolutionCodes[0] === "correct"){
-			return false;
-		}
 		
+		if(resolutionCodes==null || (resolutionCodes.length === 1 && resolutionCodes[0] === "correct")){
+			return false;
+		}		
 		return true;
 	};
 	

@@ -52,13 +52,13 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"property":"sampleCodes.length",
 			"order":true,
 			"position":8,
-			"hide":true,
-			"type":"text"
+			"type":"number"
 		});
 		columns.push({
 			"header":Messages("containers.table.sampleCodes"),
 			"property":"sampleCodes",
 			"order":true,
+			"hide":true,
 			"position":9,
 			"type":"text",
 			"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
@@ -67,6 +67,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"header":Messages("containers.table.tags"),
 			"property": "contents",
 			"order":true,
+			"hide":true,
 			"type":"text",
 			"position":9.1,
 			"render":"<div list-resize='value.data.contents | getArray:\"properties.tag.value\"' ' list-resize-min-size='3'>",
@@ -112,7 +113,6 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 					"render":"<div list-resize='value.data.inputProcessCodes | unique' list-resize-min-size='3'>",
 				});
 		
-		var stateColomn = "";
 		if(mainService.getHomePage() === 'state'){
 			columns.push({
 				"header":Messages("containers.table.state.code"),
