@@ -2,32 +2,32 @@ application.name = NGL-SQ
 index.title = Welcome to NGL-SQ
 
 #containerSupports
-containerSupports.title = Supports-Containers
-containerSupports.menu = Supports-Containers
+containerSupports.title = Supports
+containerSupports.menu = Supports
 containerSupports.menu.creation = Création
 containerSupports.menu.search = Rechercher
-containerSupports.tabs.search = Recherche Supports-Containers
+containerSupports.tabs.search = Recherche Supports
 
 #containerSupports table
-containerSupports.table.code= Supports-Containers
+containerSupports.table.code= Supports
 containerSupports.table.projectCodes = Projet(s)
 containerSupports.table.sampleCodes = Echantillon(s)
 containerSupports.table.volume = Volume
-containerSupports.table.categoryCode = Catégorie Support-Container
-containerSupports.table.state.code = Etat Support-Container
+containerSupports.table.categoryCode = Catégorie Support
+containerSupports.table.state.code = Etat Support
 containerSupports.table.fromExperimentTypeCodes = Issu du type d''expérience
 containerSupports.table.sampleCodes.length = Nb d''échantillon(s)
 containerSupports.table.sampleCodes = Echantillon(s)
-containerSupports.table.valid = Support-Container valide ?
-containerSupports.table.creationDate = Création Support-Container
-containerSupports.table.createUser = Support-Container créé par
+containerSupports.table.valid = Support valide ?
+containerSupports.table.creationDate = Création Support
+containerSupports.table.createUser = Support créé par
 
-containerSupports.select.state =  Sélect. états Support-Container
-containerSupports.select.categoryCode =  Sélect. catégorie Support-Container
+containerSupports.select.state =  Sélect. états Support
+containerSupports.select.categoryCode =  Sélect. catégorie Support
 
-containerSupports.placeholder.fromDate = Support-Container depuis le (jj/mm/aaaa)
-containerSupports.placeholder.toDate = Support-Container jusqu''au (jj/mm/aaaa)
-containerSupports.placeholder.user = Support-Container créé par
+containerSupports.placeholder.fromDate = Support depuis le (jj/mm/aaaa)
+containerSupports.placeholder.toDate = Support jusqu''au (jj/mm/aaaa)
+containerSupports.placeholder.user = Support créé par
 
 
 
@@ -35,6 +35,7 @@ containerSupports.placeholder.user = Support-Container créé par
 containers.title = Containers
 containers.menu = Containers
 containers.menu.creation = Création
+containers.menu.state = Changement d''Etat
 containers.menu.search = Rechercher
 containers.tabs.search = Recherche Container
 
@@ -74,7 +75,7 @@ containers.placeholder.user = Container créé par
 containers.select.state =  Sélect. états container
 containers.select.categoryCode =  Sélect. catégorie container
 containers.select.categorySupportCode =  Sélect. catégorie support
-containers.select.fromExperimentTypeCodes= Container issu du type d''expérience
+containers.select.fromExperimentTypeCodes= Container issu du type d''exp.
 
 
 comments.remove.confirm = Pouvez-vous confirmer la suppression ?
@@ -90,7 +91,7 @@ search.placeholder.states = Sélect. des états
 search.placeholder.instruments = Sélect. des instruments
 search.placeholder.types = Sélect. des types
 search.placeholder.user = Créé par
-search.placeholder.containerSupport = Regex pour code support-container
+search.placeholder.containerSupport = Regex pour code support
 search.placeholder.experiment = Regex pour experiment
 
 search.tab.addfilters = Filtres supplémentaires

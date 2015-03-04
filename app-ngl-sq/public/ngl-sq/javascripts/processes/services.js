@@ -181,12 +181,14 @@
 						        	 "header":Messages("processes.table.newContainerSupportCodes"),
 						        	 "property":"newContainerSupportCodes",
 						        	 "position":35,
+						        	 "render":"<div list-resize='value.data.newContainerSupportCodes | unique' list-resize-min-size='2'>",
 						        	 "type":"text"
 						         },
 						         {
 						        	 "header":Messages("processes.table.experimentCodes"),
 						        	 "property":"experimentCodes",
 						        	 "position":36,
+						        	 "render":"<div list-resize='value.data.experimentCodes | unique' list-resize-min-size='2'>",
 						        	 "type":"text"
 						         },
 						         {

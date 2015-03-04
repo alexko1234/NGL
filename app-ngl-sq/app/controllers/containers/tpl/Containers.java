@@ -45,6 +45,7 @@ public class Containers extends CommonController {
 	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.get(),
 	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.save(),
 	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.update(),
+	      		controllers.commons.api.routes.javascript.Users.list(),
 	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.delete()
   	      )	  	      
   	    );

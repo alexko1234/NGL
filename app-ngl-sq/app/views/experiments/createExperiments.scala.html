@@ -134,13 +134,19 @@
 						<p class="form-control-static">{{experiment.value.typeCode}}</p>
 					}			    
 					@columnLabelValue(Messages("experiments.protocol")){
-						<div bt-select class="form-control"
+					<div ng-switch on="doneAndRecorded">						
+						<p ng-switch-when="true" class="form-control-static" ng-model='experiment.value.protocolCode'>
+						 {{experiment.value.protocolCode}} </p>
+						<div ng-switch-when="false">
+							<div bt-select class="form-control"
 								ng-model="experiment.value.protocolCode"
 								ng-readonly="!experiment.experimentInformation.enabled"
 								bt-options="protocol.code as protocol.name for protocol in lists.get('protocols')"
 								ng-disabled="!experiment.experimentInformation.enabled"
 								auto-select>
 							</div>
+						</div>
+					</div>
 					}	
 			   	 	@columnLabelValue(Messages("experiments.state")){
 			   	 		<p class="form-control-static">{{experiment.value.state.code | codes:'state'}}</p>
@@ -195,7 +201,11 @@
 			    <form class="form-horizontal">
 			    
 			    @columnLabelValue(Messages("experiments.intrumentUsedType")){
-						<div  bt-select  class="form-control"
+					<div ng-switch on="doneAndRecorded">						
+						<p ng-switch-when="true" class="form-control-static" ng-model='experiment.value.instrument.typeCode'>
+						 {{experiment.value.instrument.typeCode}} </p>
+						<div ng-switch-when="false">					
+					<div  bt-select  class="form-control"
 					ng-change="getInstrumentsTrigger()"
 					ng-model="experiment.value.instrument.typeCode"
 					auto-select
@@ -204,9 +214,17 @@
 					ng-disabled="!experiment.instrumentInformation.enabled">
 						<option value="">@Messages("experiments.select.intrumentUsedType")</option>
 					</div>
+					</div>
+					</div>
+					
 				}
 			     
 			     @columnLabelValue(Messages("experiments.intrument")){
+			     	<div ng-switch on="doneAndRecorded">						
+						<p ng-switch-when="true" class="form-control-static" ng-model='experiment.value.instrument.code'>
+						 {{experiment.value.instrument.code}} </p>
+						<div ng-switch-when="false">
+			     	
 			     	<div  bt-select class="form-control"
 											ng-model="experiment.value.instrument.code"
 											ng-readonly="!experiment.instrumentInformation.enabled"
@@ -217,12 +235,18 @@
 											auto-select
 											placeholder='@Messages("experiments.select.instrument")'
 											>
-											</div>
+					</div>
+					</div>
+					</div>
 			     }			     
 
 				<div class="form-group" ng-hide="!experiment.value.instrument.typeCode || experiment.outputVoid">
 					<label class="col-md-6 col-lg-6 control-label">@Messages("experiments.intrumentCategory")</label>
 					<div class="col-md-6 col-lg-6">
+					<div ng-switch on="doneAndRecorded">						
+						<p ng-switch-when="true" class="form-control-static" ng-model='experiment.value.instrument.outContainerSupportCategoryCode'>
+						 {{experiment.value.instrument.outContainerSupportCategoryCode}} </p>
+						<div ng-switch-when="false">					
 									<div bt-select  class="form-control"
 									auto-select
 									ng-model="experiment.value.instrument.outContainerSupportCategoryCode"
@@ -232,6 +256,8 @@
 									ng-disabled="!experiment.instrumentInformation.enabled"
 									ng-hide="!experiment.value.instrument.typeCode || experiment.outputVoid"
 									placeholder='@Messages("experiments.select.outContainerSupportCategoryCode")'>
+									</div>
+									</div>
 									</div>
 					</div>
 				</div>	 	
@@ -255,6 +281,12 @@
 							<button class="btn pull-left"  ng-show="experiment.value.instrumentProperties[instp.code] != undefined && experiment.value.instrumentProperties[instp.code].value != ''" ng-click="experiment.value.instrumentProperties[instp.code] = undefined" ng-show="experiment.value.instrumentProperties[instp.code].value != ''"><i class="fa fa-trash-o"></i></button>	
 						</div>
 						<div ng-if="instp.valueType != 'java.awt.Image'">
+						<div ng-switch on="doneAndRecorded">						
+						<p ng-switch-when="true" class="form-control-static col-md-6 col-lg-6" ng-model='experiment.value.instrumentProperties[instp.code].value'>
+						 {{experiment.value.instrumentProperties[instp.code].value}} </p>
+						 
+						<div ng-switch-when="false">	
+						
 							<div class="col-md-6 col-lg-6" ng-switch on="instp.choiceInList">
 								<input class="form-control" type="text" title='{{instp.name}}' ng-switch-when="false" class="input-small"
 									ng-readonly="!experiment.instrumentInformation.enabled"
@@ -267,6 +299,9 @@
 									auto-select>
 							    </div>
 							</div>
+							</div>
+							</div>
+							
 						</div>
 				</div>	
 																												    

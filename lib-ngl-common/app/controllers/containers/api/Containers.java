@@ -52,6 +52,7 @@ public class Containers extends CommonController {
 	final static Form<Container> containersForm = form(Container.class);
 	final static Form<ContainersSearchForm> containerForm = form(ContainersSearchForm.class);
 	final static Form<ContainerBatchElement> batchElementForm = form(ContainerBatchElement.class);
+	final static Form<ContainersUpdateForm> containersUpdateForm = form(ContainersUpdateForm.class);
 
 	public static Result get(String code){
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, code);
@@ -229,6 +230,24 @@ public class Containers extends CommonController {
 		}
 		return ok();
 	}
+	
+	public static Result updateStateCode(String code){
+		Form<ContainersUpdateForm> containerUpdateFilledForm = getFilledForm(containersUpdateForm, ContainersUpdateForm.class);
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(),containerUpdateFilledForm.errors());
+		if(!containerUpdateFilledForm.hasErrors()){
+			ContainersUpdateForm containersUpdateForm = containerUpdateFilledForm.get();
+			State state = new State();
+			state.code = containersUpdateForm.stateCode;
+			state.user = getCurrentUser();
+			Workflows.setProcessState(code, state, contextValidation);
+			if(!contextValidation.hasErrors()){
+				return ok();
+			}
+		}
+		return badRequest(containerUpdateFilledForm.errorsAsJson());
+		}
+		
+
 
 
 	/**

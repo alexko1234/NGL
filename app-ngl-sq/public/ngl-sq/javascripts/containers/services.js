@@ -3,7 +3,7 @@
 angular.module('ngl-sq.containersServices', []).
 factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable', function($http, mainService, lists, datatable){
 	//var tags = [];
-	var getColumns = function(){
+	var getColumnsDefault = function(){
 		var columns = [];
 		columns.push({
 			"header":Messages("containers.table.supportCode"),
@@ -46,18 +46,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"order":true,
 			"position":6,
 			"type":"text"
-		});
-		columns.push({
-			"header":Messages("containers.table.state.code"),
-			"property":"state.code",
-			"order":true,
-			"type":"text",
-			"edit":true,
-			"position":7,
-			"choiceInList": true,
-			"possibleValues":"searchService.lists.getStates()", 
-			"filter":"codes:'state'"
-		});
+		});		
 		columns.push({
 			"header":Messages("containers.table.sampleCodes.length"),
 			"property":"sampleCodes.length",
@@ -122,10 +111,37 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 					"position":14,
 					"render":"<div list-resize='value.data.inputProcessCodes | unique' list-resize-min-size='3'>",
 				});
-
-
+		
+		var stateColomn = "";
+		if(mainService.getHomePage() === 'state'){
+			columns.push({
+				"header":Messages("containers.table.state.code"),
+				"property":"state.code",
+				"order":true,
+				"type":"text",
+				"edit":true,
+				"position":7,
+				"choiceInList": true,
+				"possibleValues":"searchService.lists.getStates()", 
+				"filter":"codes:'state'"
+			});
+		}else{
+			columns.push({
+				"header":Messages("containers.table.state.code"),
+				"property":"state.code",
+				"order":true,
+				"type":"text",
+				"edit":false,
+				"position":7,
+				"choiceInList": true,
+				"possibleValues":"searchService.lists.getStates()", 
+				"filter":"codes:'state'"
+			});
+		}
 				return columns;
 	};
+	
+
 
 
 	var isInit = false;
@@ -139,14 +155,15 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			lists.refresh.projects();
 			lists.refresh.processCategories();
 			lists.refresh.states({objectTypeCode:"Container"});
+			lists.refresh.users();
 			lists.refresh.reportConfigs({pageCodes:["containers-addcolumns"]}, "containers-addcolumns");
 			isInit=true;
 		}
 	};
 
 	var searchService = {
-			getColumns:getColumns,
-			getDefaultColumns:getColumns,
+			getColumns:getColumnsDefault,
+			getDefaultColumns:getColumnsDefault,
 			datatable:undefined,
 			isRouteParam:false,
 			lists : lists,
@@ -354,10 +371,12 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 				if(datatableConfig && angular.isUndefined(mainService.getDatatable())){
 					searchService.datatable = datatable(datatableConfig);
 					mainService.setDatatable(searchService.datatable);
-					searchService.datatable.setColumnsConfig(getColumns());		
+					searchService.datatable.setColumnsConfig(getColumnsDefault());		
 				}else if(angular.isDefined(mainService.getDatatable())){
 					searchService.datatable = mainService.getDatatable();			
-				}	
+				}
+				
+				
 
 
 				if(angular.isDefined(mainService.getForm())){

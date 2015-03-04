@@ -29,6 +29,7 @@ GET		/api/containers/categories										controllers.containers.api.ContainerCat
 GET		/api/containers/:code											controllers.containers.api.Containers.get(code:java.lang.String)
 PUT		/api/containers/batch											controllers.containers.api.Containers.updateBatch()
 PUT		/api/containers/:code											controllers.containers.api.Containers.update(code:java.lang.String)
+PUT		/api/containers/:code/state										controllers.containers.api.Containers.updateStateCode(code:java.lang.String)
 
 #processes tpl
 GET 	/processes/:homecode/home										controllers.processes.tpl.Processes.home(homecode:java.lang.String)

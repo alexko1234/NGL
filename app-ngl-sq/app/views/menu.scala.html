@@ -21,7 +21,8 @@
 					<li class="dropdown @("active".when(nav.startsWith("containers")))">
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="process">@Messages("containers.menu")<b class="caret"></b></a>
 							<ul class="dropdown-menu" role="menu" aria-labelledby="process">
-								<li class="@("active".when(nav == "containers.search"))"><a href="@controllers.containers.tpl.routes.Containers.home("search")">@Messages("containers.menu.search")</a></li>																				
+								<li class="@("active".when(nav == "containers.search"))"><a href="@controllers.containers.tpl.routes.Containers.home("search")">@Messages("containers.menu.search")</a></li>
+								<li class="@("active".when(nav == "containers.state"))"><a href="@controllers.containers.tpl.routes.Containers.home("state")">@Messages("containers.menu.state")</a></li>																				
 							</ul>
   						</li>
 						<li class="dropdown @("active".when(nav.startsWith("processes")))">

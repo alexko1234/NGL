@@ -61,7 +61,7 @@
 					
 		}
 		@formGroup{
-			<input class="form-control" type="text" ng-model="searchService.form.createUser" placeholder='@Messages("containers.table.createUser")' title='@Messages("containers.placeholder.user")'>	
+			<input class="form-control" type="text" ng-model="searchService.form.createUser" typeahead="user.name as user.name for user in searchService.lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("containers.table.createUser")' title='@Messages("containers.placeholder.user")'>	
 		}	
 	}
 			
