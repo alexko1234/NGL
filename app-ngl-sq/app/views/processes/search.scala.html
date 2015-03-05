@@ -10,13 +10,10 @@
 		}
 		@formGroup{
 			<div bt-select placeholder="@Messages("processes.select.state")" multiple="true" filter="true" class="form-control" ng-model="searchService.form.stateCodes" bt-options="stateCode.code as stateCode.name for stateCode in searchService.lists.getStates()" auto-select>
-			</div>
-			
+			</div>			
 			
 		}		
-		@formGroup{
-			<input class="form-control" type="text" ng-model="searchService.form.experimentCode"  placeholder='@Messages("search.placeholder.experiment")' title='@Messages("search.placeholder.experiment")'>
-		}	
+			
 	
 	}
 	@columnSearchForm{	
@@ -55,9 +52,8 @@
 			<input class="form-control" type="text" ng-model="searchService.form.createUser" typeahead="user.name as user.name for user in searchService.lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("processes.placeholder.user")' title='@Messages("processes.placeholder.user")'>
 			
 		}
-		@formGroup{	
-			<div bt-select placeholder="@Messages("containers.select.categorySupportCode")" class="form-control" ng-model="searchService.form.containerSupportCategory" bt-options="CategorySupport.code as CategorySupport.name for CategorySupport in searchService.lists.getContainerSupportCategories()" ng-change="search()" auto-select>
-			</div>		
+		@formGroup{
+			<input class="form-control" type="text" ng-model="searchService.form.experimentCode"  placeholder='@Messages("search.placeholder.experiment")' title='@Messages("search.placeholder.experiment")'>
 		}
 	}
 }

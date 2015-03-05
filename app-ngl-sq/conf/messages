@@ -93,7 +93,7 @@ search.placeholder.instruments = Sélect. des instruments
 search.placeholder.types = Sélect. des types
 search.placeholder.user = Créé par
 search.placeholder.containerSupport = Regex pour code support
-search.placeholder.experiment = Regex pour experiment
+search.placeholder.experiment = Regex pour expérience
 
 search.tab.addfilters = Filtres supplémentaires
 search.tab.filters = Filtres
