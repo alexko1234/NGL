@@ -3,6 +3,7 @@ package workflows;
 import java.util.Date;
 import java.util.List;
 
+import models.laboratory.common.description.Institute;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TransientState;
 import models.laboratory.container.instance.Container;
@@ -22,7 +23,13 @@ import models.utils.instance.StateHelper;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
+import akka.actor.ActorRef;
+import akka.actor.Props;
 import play.Logger;
+import play.Play;
+import play.libs.Akka;
+import rules.services.RulesActor;
+import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.container.instance.ContainerValidationHelper;
 import validation.experiment.instance.ExperimentValidationHelper;
@@ -31,6 +38,8 @@ import fr.cea.ig.MongoDBDAO;
 
 public class Workflows {
 
+	private static final String ruleWorkflowSQ = "workflow";
+	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor.class));
 
 	/**
 	 * Set a state of an experiment 
@@ -339,6 +348,7 @@ public class Workflows {
 			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,  Container.class, 
 					DBQuery.is("code", container.code),
 					DBUpdate.set("state", container.state).set("traceInformation",container.traceInformation));
+			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleWorkflowSQ, container),null);
 		}	
 		container.state=nextState;
 		nextContainerSupportState(container,contextValidation);
@@ -368,6 +378,7 @@ public class Workflows {
 			MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME,  Container.class, 
 					DBQuery.is("code", containerSupport.code),
 					DBUpdate.set("state", containerSupport.state).set("traceInformation",containerSupport.traceInformation));
+	
 		}	
 
 
