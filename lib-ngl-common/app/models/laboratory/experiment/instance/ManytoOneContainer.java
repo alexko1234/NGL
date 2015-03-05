@@ -155,14 +155,19 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 	public void validate(ContextValidation contextValidation) {
 		if(outputContainerUsed!=null){
 			contextValidation.putObject("level", Level.CODE.ContainerOut);
+			contextValidation.addKeyToRootKeyName("outputContainerUsed");
 			outputContainerUsed.validate(contextValidation);
+			contextValidation.removeKeyFromRootKeyName("outputContainerUsed");
 			contextValidation.removeObject("level");
 		}
+		
+		contextValidation.addKeyToRootKeyName("inputContainerUseds");
 		for(ContainerUsed containerUsed:inputContainerUseds){
 			contextValidation.putObject("level", Level.CODE.ContainerIn);
 			containerUsed.validate(contextValidation);
 			contextValidation.removeObject("level");
 		}
+		contextValidation.removeKeyFromRootKeyName("inputContainerUseds");
 	}
 
 	@JsonIgnore
