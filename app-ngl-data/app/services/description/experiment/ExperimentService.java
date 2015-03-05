@@ -246,10 +246,10 @@ public class ExperimentService {
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 			
 			// FDS new 02-02-2015, intrument Used =>robot oui mais lequel???
-			l.add(newExperimentType("Librairie dénaturée","denat-dil-lib",1100,
+			/*l.add(newExperimentType("Librairie dénaturée","denat-dil-lib",1100,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
 					getInstrumentUsedTypes("hand"),"OneToOne", 
-					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));*/
 
 
 			// NO qc au CNG ??
@@ -311,13 +311,13 @@ public class ExperimentService {
 					null,null).save();
 			
 			//FDS 02/02/2015  nouveau node necessaire pour denat-dil-lib , previousExp est lib-normalization ???
-			newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),false,false,getExperimentTypeNodes("lib-normalization"),
-					null,null).save();
+			/*newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),false,false,getExperimentTypeNodes("lib-normalization"),
+					null,null).save();*/
 			
 			// FDS 02/02/2015  nouveau node necessaire pour lib-b ??? previousExp est ???
 			
 			// FDS "solution-X-nM" n'existe plus...  en principe c'est lib-b pour "prepa-flowcell-cng" mais pas encore specifie =>  mettre "denat-dil-lib" ???
-			newExperimentTypeNode("prepa-flowcell-cng",getExperimentTypes("prepa-flowcell-cng").get(0),false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","denat-dil-lib"),
+			newExperimentTypeNode("prepa-flowcell-cng",getExperimentTypes("prepa-flowcell-cng").get(0),false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","lib-normalization"),
 					null,null).save();
 			
 	        // FDS 27/02/2015 supression "illumina-depot-cng"
