@@ -106,6 +106,10 @@ public class ContainerSupports extends CommonController {
 		if(StringUtils.isNotBlank(supportsSearch.containerSupportCategory)){
 			queryElts.add(DBQuery.is("categoryCode", supportsSearch.containerSupportCategory));
 		}
+		
+		if(CollectionUtils.isNotEmpty(supportsSearch.containerSupportCategories)){
+			queryElts.add(DBQuery.in("categoryCode", supportsSearch.containerSupportCategories));
+		}
 
 		if(CollectionUtils.isNotEmpty(supportsSearch.fromExperimentTypeCodes)){
 			queryElts.add(DBQuery.in("fromExperimentTypeCodes", supportsSearch.fromExperimentTypeCodes));

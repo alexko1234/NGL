@@ -11,6 +11,7 @@ public class ContainerSupportsSearchForm extends ListForm {
 	public String code;
 	public String codeRegex;
 	public String containerSupportCategory;
+	public List<String> containerSupportCategories;
 	public String categoryCode;
 	public String stateCode;
 	public List<String> stateCodes;
@@ -34,6 +35,7 @@ public class ContainerSupportsSearchForm extends ListForm {
 				+ ", processTypeCode=" + processTypeCode + ", projectCodes="
 				+ projectCodes + ", sampleCodes=" + sampleCodes
 				+ ", containerSupportCategory=" + containerSupportCategory
+				+ ", containerSupportCategories=" + containerSupportCategories
 				+ ", fromExperimentTypeCodes=" + fromExperimentTypeCodes
 				+ ", fromDate=" + fromDate + ", toDate=" + toDate + ", createUser=" + createUser + ", users="
 				+ users + "]";

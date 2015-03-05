@@ -62,7 +62,15 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"position":9,
 			"type":"text",
 			"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
-		});	
+		});
+		columns.push({
+			"header":Messages("containers.table.contents.length"),
+			"property":"contents.length",
+			"order":true,
+			"hide":true,
+			"position":9.01,
+			"type":"number"
+		});
 		columns.push({
 			"header":Messages("containers.table.tags"),
 			"property": "contents",
@@ -77,6 +85,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 					"property":"projectCodes",
 					"order":true,
 					"position":10,
+					"render":"<div list-resize='value.data.projectCodes | unique' ' list-resize-min-size='2'>",
 					"type":"text"
 				});
 		columns.push({
@@ -196,7 +205,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			},
 			convertForm : function(){
 				var _form = angular.copy(this.form);
-				if(_form.projectCodes || _form.sampleCodes || (_form.fromExperimentTypeCodes && _form.fromExperimentTypeCodes.length > 0) || _form.containerCategory || _form.processType || _form.createUser
+				if(_form.projectCodes || _form.sampleCodes || (_form.fromExperimentTypeCodes && _form.fromExperimentTypeCodes.length > 0) || _form.containerCategory || _form.containerSupportCategories || _form.processType || _form.createUser
 						|| _form.processCategory || _form.containerSupportCategory || _form.state || _form.states || _form.containerSupportCode  || _form.valuations || _form.fromDate || _form.toDate){	
 
 					var jsonSearch = {};
@@ -227,7 +236,10 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 					if(_form.containerSupportCategory){
 						jsonSearch.containerSupportCategory = _form.containerSupportCategory;
 					}	
-
+					
+					if(_form.containerSupportCategories){
+						jsonSearch.containerSupportCategories = _form.containerSupportCategories;
+					}
 
 					if(_form.state){
 						jsonSearch.stateCode = _form.state;

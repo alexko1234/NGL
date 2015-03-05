@@ -71,6 +71,13 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 						"type":"text",
 						"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>"
 					},
+			 		{
+						"header":Messages("containers.table.contents.length"),
+						"property":"contents.length",
+						"order":true,
+						"hide":true,
+						"type":"number"
+					},
 					{
 						"header":Messages("containers.table.tags"),
 						"property": "contents",
@@ -314,6 +321,14 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			        	 "type":"text"
 			         },
 			         {
+			 			"header":Messages("containers.table.contents.length"),
+			 			"property":"contents.length",
+			 			"order":true,
+			 			"hide":true,
+			 			"position":5.01,
+			 			"type":"number"
+			 		},
+			         {
 			        	 "header": function(){
 			        		 if($scope.supportView){
 			        			 return Messages("containers.table.stateCode");
@@ -389,6 +404,15 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 		        	 "position":2,
 		        	 "type":"text"
 		         },
+		         {
+		 			"header":Messages("containers.table.contents.length"),
+		 			"property":"contents.length",
+		 			"url":"'/api/containers/'+containerInputCode",
+		 			"order":true,
+		 			"hide":true,
+		 			"position":2.01,
+		 			"type":"number"
+		 		},
 		         {
 		        	 "header":Messages("processes.table.columns"),
 		        	 "property":"support.column",

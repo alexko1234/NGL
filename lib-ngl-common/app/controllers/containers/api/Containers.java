@@ -34,6 +34,7 @@ import play.data.Form;
 import play.libs.Json;
 import play.modules.mongojack.MongoDB;
 import play.mvc.Result;
+import play.mvc.Results;
 import validation.ContextValidation;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableResponse;
@@ -159,7 +160,7 @@ public class Containers extends CommonController {
 				return ok(Json.toJson(results));
 			}
 		}
-		return badRequest();
+		return Results.ok("{}");
 	}
 
 	public static Result list_supports() throws DAOException{
@@ -304,8 +305,10 @@ public class Containers extends CommonController {
 		if(StringUtils.isNotBlank(containersSearch.supportCode)){
 			queryElts.add(DBQuery.regex("support.code", Pattern.compile(containersSearch.supportCode)));
 		}
-
-		if(StringUtils.isNotBlank(containersSearch.containerSupportCategory)){
+		
+		if(CollectionUtils.isNotEmpty(containersSearch.containerSupportCategories)){
+			queryElts.add(DBQuery.in("support.categoryCode", containersSearch.containerSupportCategories));
+		}else if(StringUtils.isNotBlank(containersSearch.containerSupportCategory)){
 			queryElts.add(DBQuery.is("support.categoryCode", containersSearch.containerSupportCategory));
 		}else if(StringUtils.isNotBlank(containersSearch.nextExperimentTypeCode)){
 			List<ContainerSupportCategory> containerSupportCategories = ContainerSupportCategory.find.findByExperimentTypeCode(containersSearch.nextExperimentTypeCode);
@@ -317,6 +320,8 @@ public class Containers extends CommonController {
 				queryElts.add(DBQuery.in("support.categoryCode", cs));
 			}
 		}
+		
+		
 
 		List<String> listePrevious = new ArrayList<String>();
 		if(StringUtils.isNotBlank(containersSearch.nextProcessTypeCode)){					

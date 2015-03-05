@@ -119,7 +119,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			},
 			convertForm : function(){
 				var _form = angular.copy(this.form);
-				if(_form.projectCodes || _form.sampleCodes || _form.containerSupportCategory || _form.state || _form.states 
+				if(_form.projectCodes || _form.sampleCodes || _form.containerSupportCategory || _form.containerSupportCategories || _form.state || _form.states 
 						|| _form.createUser || _form.containerSupportCode  || _form.valuations || _form.fromDate || _form.toDate){	
 
 					var jsonSearch = {};
@@ -137,6 +137,10 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 
 					if(_form.containerSupportCategory){
 						jsonSearch.containerSupportCategory = _form.containerSupportCategory;
+					}
+					
+					if(_form.containerSupportCategories){
+						jsonSearch.containerSupportCategories = _form.containerSupportCategories;
 					}
 
 					if(_form.state){

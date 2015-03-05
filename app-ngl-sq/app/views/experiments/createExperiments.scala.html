@@ -151,10 +151,18 @@
 			   	 	@columnLabelValue(Messages("experiments.state")){
 			   	 		<p class="form-control-static">{{experiment.value.state.code | codes:'state'}}</p>
 					}
+					
+					
 			    	@columnLabelValue(Messages("experiments.resolution")){
-							
-							<div bt-select class="form-control"  bt-select ng-model="experiment.value.state.resolutionCodes" multiple="true" placeholder="@Messages("experiments.select.resolutions")" bt-options="valid.code as valid.name for valid in lists.getResolutions()"  ng-edit="experiment.experimentInformation.enabled" ></div>							
-							
+							<div ng-switch on="doneAndRecorded">						
+						<p ng-switch-when="true" class="form-control-static" ng-model='experiment.value.state.resolutionCodes'>
+						 {{experiment.value.state.resolutionCodes | codes:'resolution'}} </p>
+						<div ng-switch-when="false">
+							<div bt-select class="form-control" ng-model="experiment.value.state.resolutionCodes" multiple="true"
+							ng-readonly="!experiment.experimentInformation.enabled"  ng-disabled="!experiment.experimentInformation.enabled"
+							placeholder="@Messages("experiments.select.resolutions")" bt-options="valid.code as valid.name for valid in lists.getResolutions()"></div>							
+						</div>
+						</div>
 					}	
 					
 						

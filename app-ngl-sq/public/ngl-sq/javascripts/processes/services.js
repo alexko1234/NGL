@@ -54,6 +54,15 @@
 						        	 "type":"text"
 						         },
 						         {
+						        	 "header":Messages("processes.table.line"),
+						        	 "property":"support.line",
+						        	 "url":"'/api/containers/'+containerInputCode",
+						        	 "order":true,
+						        	 "hide":true,
+						        	 "position":3,
+						        	 "type":"text"
+						         },
+						         {
 						        	 "header":Messages("processes.table.columns"),
 						        	 "property":"support.column",
 						        	 "url":"'/api/containers/'+containerInputCode",
@@ -61,6 +70,15 @@
 						        	 "hide":true,
 						        	 "position":3,
 						        	 "type":"text"
+						         },
+						         {
+						             "header" : "Tag",
+						             "property" : "sampleOnInputContainer.properties.tag.value",
+						             "type" : "string",	  
+						             "order" : true,
+						             "hide" : true,
+						             "modes" : ["datatable"],
+						             "position" : 3.2
 						         },
 						         {
 						        	 "header":Messages("processes.table.typeCode"),
