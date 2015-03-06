@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.Constants;
 import models.laboratory.container.instance.Container;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
@@ -23,7 +24,7 @@ public class UpdateSolutionStockCNS extends AbstractImportDataCNS {
 	public UpdateSolutionStockCNS(FiniteDuration durationFromStart,
 			FiniteDuration durationFromNextIteration) {
 		super("UpdateSolutionStock", durationFromStart, durationFromNextIteration);
-		
+
 	}
 
 	@Override
@@ -42,11 +43,14 @@ public class UpdateSolutionStockCNS extends AbstractImportDataCNS {
 			}
 			else if(container.state.code!=containerUpdate.state.code){
 				//Update state container
-				Workflows.setContainerState(container.code, container.fromExperimentTypeCodes.get(0), containerUpdate.state, contextError, false, false);
-				containerUpdated.add(container);
+				ContextValidation contextValidation= new ContextValidation(Constants.NGL_DATA_USER);
+				Workflows.setContainerState(container.code, container.fromExperimentTypeCodes.get(0), containerUpdate.state, contextValidation, false, false);
+				if(!contextValidation.hasErrors()){
+					containerUpdated.add(container);
+				} else { contextError.errors.putAll(contextValidation.errors);
+				}
 			}
+			limsServices.updateMaterielmanipLims(containerUpdated, contextError);
 		}
-		limsServices.updateMaterielmanipLims(containerUpdated, contextError);
 	}
-
 }
