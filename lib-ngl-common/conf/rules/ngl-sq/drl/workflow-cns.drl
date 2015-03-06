@@ -30,7 +30,7 @@ rule "Create Object ContainerUpdateLims"
 		$experimentType :String() from $fromExperimentTypeCodes
 		$limsCode : PropertyValue() from $properties.get("limsCode")
     then
-    	ContainerUpdateLims containerUpdateLims=new ContainerUpdateLims($container.code,$container.state.code,$experimentType,Integer.valueOf($limsCode.value.toString()),null);
+    	ContainerUpdateLims containerUpdateLims=new ContainerUpdateLims($container.code,$container.state.code,$experimentType,((Double) $limsCode.value).intValue(),null);
     	insert(containerUpdateLims);
 		Logger.debug("Container to update in Lims "+$container.code+ " experiment Type "+$experimentType);    
 	end
