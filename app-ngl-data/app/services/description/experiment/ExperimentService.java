@@ -123,7 +123,7 @@ public class ExperimentService {
 
 			//library
 			l.add(newExperimentType("Fragmentation","fragmentation",200,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionFragmentation(),
 					getInstrumentUsedTypes("hand","covaris-s2","covaris-e210"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
 			
@@ -132,10 +132,10 @@ public class ExperimentService {
 					getInstrumentUsedTypes("hand","spri"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
-			l.add(newExperimentType("Librairie dual indexing","librairie-dualindexing",600,
+			/*l.add(newExperimentType("Librairie dual indexing","librairie-dualindexing",600,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibDualIndexing(),  
 					getInstrumentUsedTypes("hand","spri"),"OneToOne", 
-					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));*/
 			
 			l.add(newExperimentType("Amplification","amplification",800,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
@@ -228,10 +228,10 @@ public class ExperimentService {
 					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 			
-			l.add(newExperimentType("Librairie dual indexing","librairie-dualindexing",600,
+			/*l.add(newExperimentType("Librairie dual indexing","librairie-dualindexing",600,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibDualIndexing(),
 					getInstrumentUsedTypes("hand"),"OneToOne", 
-					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));*/
 			
 			l.add(newExperimentType("PCR","pcr",800,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
@@ -272,6 +272,13 @@ public class ExperimentService {
 
 	
 
+	private static List<PropertyDefinition> getPropertyDefinitionFragmentation() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, "single"));
+		return propertyDefinitions;
+	}
+
 	private static void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
 
 		newExperimentTypeNode("ext-to-opgen-depot", getExperimentTypes("ext-to-opgen-depot").get(0), false, false, null, null, null).save();
@@ -293,10 +300,10 @@ public class ExperimentService {
 			newExperimentTypeNode("librairie-indexing", getExperimentTypes("librairie-indexing").get(0), false, false, getExperimentTypeNodes("fragmentation"), 
 					getExperimentTypes("ampure-na"), getExperimentTypes("fluo-quantification","chip-migration-pre-pcr")).save();
 			
-			newExperimentTypeNode("librairie-dualindexing", getExperimentTypes("librairie-dualindexing").get(0), false, false, getExperimentTypeNodes("fragmentation"), 
-					getExperimentTypes("ampure-na"), getExperimentTypes("fluo-quantification","chip-migration-pre-pcr")).save();
+			/*newExperimentTypeNode("librairie-dualindexing", getExperimentTypes("librairie-dualindexing").get(0), false, false, getExperimentTypeNodes("fragmentation"), 
+					getExperimentTypes("ampure-na"), getExperimentTypes("fluo-quantification","chip-migration-pre-pcr")).save();*/
 			
-			newExperimentTypeNode("amplification", getExperimentTypes("amplification").get(0), false, false, getExperimentTypeNodes("librairie-indexing","librairie-dualindexing"), 
+			newExperimentTypeNode("amplification", getExperimentTypes("amplification").get(0), false, false, getExperimentTypeNodes("librairie-indexing"), 
 					getExperimentTypes("ampure-a"), getExperimentTypes("fluo-quantification","chip-migration-post-pcr")).save();
 			
 
@@ -398,7 +405,10 @@ public class ExperimentService {
 	private static List<PropertyDefinition> getPropertyDefinitionsLibIndexing() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		//Ajouter la liste des index illumina
-		propertyDefinitions.add(newPropertiesDefinition("Index","tag", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content),String.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Tag","tag", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content),String.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Catégorie tag","tagCategory", LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content),String.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, false, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, "single"));
 		return propertyDefinitions;
 	}
 
@@ -417,8 +427,8 @@ public class ExperimentService {
 	public static List<PropertyDefinition> getPropertyDefinitionsChipMigration() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		// A supprimer une fois le type de support category sera géré
-		propertyDefinitions.add(newPropertiesDefinition("Position","location", LevelService.getLevels(Level.CODE.ContainerIn),Integer.class, true, "single"));
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "committedVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, "single"));		
+		propertyDefinitions.add(newPropertiesDefinition("Position","position", LevelService.getLevels(Level.CODE.ContainerIn),Integer.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, "single"));		
 		propertyDefinitions.add(newPropertiesDefinition("Taille", "size", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, true,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("kb"), MeasureUnit.find.findByCode("kb"), "single"));
 		// Voir avec Guillaume comment gérer les fichiers
 		propertyDefinitions.add(newPropertiesDefinition("Profil DNA HS", "fileResult", LevelService.getLevels(Level.CODE.ContainerOut),String.class, true, "single"));
@@ -427,8 +437,9 @@ public class ExperimentService {
 	
 	private static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepot() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", LevelService.getLevels(Level.CODE.Experiment), Integer.class, false, "single"));	
-		propertyDefinitions.add(newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, false, "single"));
+		//Utiliser par import ngl-data CNG de creation des depot-illumina
+		//propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", LevelService.getLevels(Level.CODE.Experiment), Integer.class, false, "single"));	
+		propertyDefinitions.add(newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, true, "single"));
 		return propertyDefinitions;
 	}
 	
@@ -441,7 +452,7 @@ public class ExperimentService {
 	
 	private static List<PropertyDefinition> getPropertyDefinitionOpgenDepot() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, false, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, true, "single"));
 		return propertyDefinitions;
 	}
 
