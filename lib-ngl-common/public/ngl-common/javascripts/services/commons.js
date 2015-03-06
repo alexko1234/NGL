@@ -205,7 +205,18 @@ angular.module('commonsServices', []).
 	    				inProgress[key] = undefined;
 	    			});
     			}
-    		}
+    		};
+    		
+    		function putNoneInResult (result){
+    			var newObject = {};
+				var newArray = [];
+				if(angular.isDefined(result)){
+					newObject = result;    				
+    				newArray = Object.keys(newObject);    					
+    				newObject[newArray.length]={name: "None", code: "none"}; 
+				}
+    			 return result;
+    		};
     		
     		return {
     			refresh : refresh,
@@ -227,6 +238,8 @@ angular.module('commonsServices', []).
     			getContainerCategories : function(){return results['containerCategories'];},
     			getExperimentCategories : function(){return results['experimentCategories'];},
     			getExperimentTypes : function(){return results['experimentTypes'];},
+    			getExperimentTypesWithNone : function(){   								   				
+    				return putNoneInResult(results['experimentTypes']);},
     			getStates : function(){return results['states'];},
     			getRuns : function(){return results['runs'];},
     			getInstrumentCategories : function(){return results['instrumentCategories'];},

@@ -64,7 +64,7 @@ public class ExperimentTypes extends CommonController{
 				List<ListObject> lop = new ArrayList<ListObject>();
 				for(ExperimentType et:experimentTypes){
 					lop.add(new ListObject(et.code, et.name));
-				}
+				}				
 				return Results.ok(Json.toJson(lop));
 			}else{
 				return Results.ok(Json.toJson(experimentTypes));

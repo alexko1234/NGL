@@ -359,10 +359,22 @@ public class Containers extends CommonController {
 				//throw new RuntimeException("nextExperimentTypeCode = "+ containersSearch.nextExperimentTypeCode +" does not exist!");
 			}
 			queryElts.add(DBQuery.nor(DBQuery.notExists("inputProcessCodes"),DBQuery.size("inputProcessCodes", 0)));
-		}
-
+		}	
+					
 		if(CollectionUtils.isNotEmpty(containersSearch.fromExperimentTypeCodes)){
+			Boolean hasNoneValue = false;
+			for(int i=0; i< containersSearch.fromExperimentTypeCodes.size();i++){
+				if(containersSearch.fromExperimentTypeCodes.get(i).equalsIgnoreCase("none")){
+					hasNoneValue = true;
+					Logger.info("Trouvé un containersSearch.fromExperimentTypeCodes="+containersSearch.fromExperimentTypeCodes.get(i));
+					containersSearch.fromExperimentTypeCodes.remove(i);
+					queryElts.add(DBQuery.or(DBQuery.size("fromExperimentTypeCodes", 0),DBQuery.notExists("fromExperimentTypeCodes"),DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes)));	
+				}			
+			}
+			
+			if( hasNoneValue == false){
 			queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes)));
+			}
 		}
 
 		if(null != containersSearch.fromDate){
@@ -395,8 +407,7 @@ public class Containers extends CommonController {
 
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
-		}
-
+		}		
 
 		return query;
 	}
