@@ -137,7 +137,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 	 };
 	 
 	$scope.message = {};
-
+/*
 	$scope.isPopup = function(resolutionCodes){
 		
 		if(resolutionCodes==null || (resolutionCodes.length === 1 && resolutionCodes[0] === "correct")){
@@ -152,6 +152,10 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		}else{
 			$scope.saveAllAndChangeState();
 		}
+	};  */
+	
+	$scope.getRefresh = function(){
+		$scope.$broadcast('refresh');
 	};
 	
 	$scope.getPropertyColumnType = function(type){
@@ -772,6 +776,13 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				if($scope.experiment.value.state.code === "F"){
 					$scope.$broadcast('disableEditMode');
 					$scope.doneAndRecorded = true;
+					var resolutionCodes = $scope.experiment.value.state.resolutionCodes;
+					if(!(resolutionCodes.length === 1 && resolutionCodes[0] === "correct") 
+							&& ((angular.isUndefined($scope.experiment.stopProcess) || $scope.experiment.stopProcess==false)  
+									&& ( angular.isUndefined($scope.experiment.retry) || $scope.experiment.retry == false ))){
+						angular.element('#modalResolutionProcess').modal('show');						
+					}
+					
 				}	
 			})
 			.error(function(data, status, headers, config) {

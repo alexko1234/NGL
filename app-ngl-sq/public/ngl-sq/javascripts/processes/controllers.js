@@ -84,7 +84,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 						"order":true,
 						"hide":true,
 						"type":"text",
-						"render":"<div list-resize='value.data.contents | getArray:\"properties.tag.value\"' ' list-resize-min-size='3'>",
+						"render":"<div list-resize='value.data.contents | getArray:\"properties.tag.value\" | unique' ' list-resize-min-size='3'>",
 					},
 			         {
 			        	 "header":Messages("processes.table.projectCode"),
