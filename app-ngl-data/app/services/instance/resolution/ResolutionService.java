@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.processes.description.ProcessType;
 import models.laboratory.resolutions.instance.Resolution;
 import models.laboratory.resolutions.instance.ResolutionCategory;
 import models.laboratory.resolutions.instance.ResolutionConfiguration;
@@ -58,6 +59,7 @@ public class ResolutionService {
 			// FDS 15/01: no Analysis Resolutions ???
 			// FDS 15/01: No illumina Depot Resolutions ???
 			createExperimentResolution(ctx);
+			createProcessResolution(ctx);
 		}
 		else if ( inst.equals("CNS") ){			
 			resolutionCategories = createResolutionCategoriesCNS();
@@ -68,6 +70,7 @@ public class ResolutionService {
 			createOpgenDepotResolutionCNS(ctx);
 			// FDS 15/01: No illumina Depot Resolutions ???
 			createExperimentResolution(ctx); 
+			createProcessResolution(ctx);
 		}
 	}
 
@@ -564,7 +567,34 @@ public class ResolutionService {
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
 	}
 	
-	
+	public static void createProcessResolution(ContextValidation ctx) {
+		List<Resolution> l = new ArrayList<Resolution>();
+		
+		l.addAll(getDefaultResolutionCNS());
+		
+		l.add(InstanceFactory.newResolution("processus partiel","processus-partiel", resolutionCategories.get("Default"), (short) 1));
+		
+		ResolutionConfiguration r = new ResolutionConfiguration();
+		r.code = "processReso";
+		r.resolutions = l;
+		r.objectTypeCode = "Process";
+		ArrayList<String> al = new ArrayList<String>();
+		
+		try {
+			List<ProcessType> processTypes=ProcessType.find.findAll();
+			for(ProcessType processType:processTypes){
+					Logger.debug("Add processType default resolution "+ processType.code);
+					al.add(processType.code);
+			}
+		} catch (DAOException e) {
+			Logger.error("Creation Resolution for Process Type error "+e.getMessage());
+		}
+		
+		r.typeCodes = al;
+		
+		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
+		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
+	}
 	
 	public static List<Resolution> getDefaultResolutionCNS(){
 		List<Resolution> l = new ArrayList<Resolution>();
