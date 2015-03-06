@@ -304,6 +304,14 @@ public class Workflows {
 						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,Container.class
 								,DBQuery.is("code", process.containerInputCode).in("fromExperimentTypeCodes", processType.voidExperimentType.code)
 								,DBUpdate.unset("fromExperimentTypeCodes"));
+						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,Container.class
+								,DBQuery.is("code", process.containerInputCode)
+								,DBUpdate.unset("inputProcessCodes"),true);
+						Logger.debug("Update inputProcessCodes in newContainerSupportCodes "+process.newContainerSupportCodes.get(0));
+						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,Container.class
+								,DBQuery.in("support.code", process.newContainerSupportCodes)
+								,DBUpdate.unset("inputProcessCodes"),true);
+						
 					} catch (DAOException e) {
 					}
 				}
