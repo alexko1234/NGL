@@ -117,35 +117,11 @@
 						        	 "type":"text"
 						         },
 						         {
-						        	 "header":Messages("processes.table.code"),
-						        	 "property":"code",
-						        	 "order":true,
-						        	 "hide":true,
-						        	 "position":33,
-						        	 "type":"text"
-						         },
-						         {
-						        	 "header":Messages("processes.table.creationDate"),
-						        	 "property":"traceInformation.creationDate",
-						        	 "position":34,
-						        	 "order":true,
-						        	 "hide":true,
-						        	 "type":"date"
-						         },
-						         {
-						        	 "header":Messages("processes.table.createUser"),
-						        	 "property":"traceInformation.createUser",
-						        	 "position":34,
-						        	 "order":true,
-						        	 "hide":true,
-						        	 "type":"text"
-						         },
-						         {
 						        	 "header":Messages("processes.table.newContainerSupportCodes"),
 						        	 "property":"newContainerSupportCodes",
 						        	 "order":true,
 						        	 "hide":true,
-						        	 "position":35,
+						        	 "position":33,
 						        	 "render":"<div list-resize='value.data.newContainerSupportCodes | unique' list-resize-min-size='2'>",
 						        	 "type":"text"
 						         },
@@ -154,7 +130,7 @@
 						        	 "property":"experimentCodes",
 						        	 "order":true,
 						        	 "hide":true,
-						        	 "position":36,
+						        	 "position":34,
 						        	 "render":"<div list-resize='value.data.experimentCodes | unique' list-resize-min-size='2'>",
 						        	 "type":"text"
 						         },
@@ -163,7 +139,31 @@
 						        	 "property":"projectCode",
 						        	 "order":true,
 						        	 "hide":true,
+						        	 "position":35,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.code"),
+						        	 "property":"code",
+						        	 "order":true,
+						        	 "hide":true,
+						        	 "position":36,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.creationDate"),
+						        	 "property":"traceInformation.creationDate",
 						        	 "position":37,
+						        	 "order":true,
+						        	 "hide":true,
+						        	 "type":"date"
+						         },
+						         {
+						        	 "header":Messages("processes.table.createUser"),
+						        	 "property":"traceInformation.createUser",
+						        	 "position":38,
+						        	 "order":true,
+						        	 "hide":true,
 						        	 "type":"text"
 						         }
 						 ],
@@ -172,6 +172,7 @@
 						        	 "header":Messages("processes.table.containerInputCode"),
 						        	 "property":"containerInputCode",
 						        	 "order":true,
+						        	 "hide":true,
 						        	 "position":1,
 						        	 "type":"text"
 						         },
@@ -184,6 +185,15 @@
 						        	 "type":"text"
 						         },
 						         {
+						        	 "header":Messages("processes.table.line"),
+						        	 "property":"support.line",
+						        	 "url":"'/api/containers/'+containerInputCode",
+						        	 "order":true,
+						        	 "hide":true,
+						        	 "position":3,
+						        	 "type":"text"
+						         },
+						         {
 						        	 "header":Messages("processes.table.columns"),
 						        	 "property":"support.column",
 						        	 "url":"'/api/containers/'+containerInputCode",
@@ -191,6 +201,15 @@
 						        	 "hide":true,
 						        	 "position":3,
 						        	 "type":"text"
+						         },
+						         {
+						             "header" : "Tag",
+						             "property" : "sampleOnInputContainer.properties.tag.value",
+						             "type" : "string",	  
+						             "order" : true,
+						             "hide" : true,
+						             "modes" : ["datatable"],
+						             "position" : 3.2
 						         },
 						         {
 						        	 "header":Messages("processes.table.typeCode"),
@@ -215,9 +234,9 @@
 						         {
 						        	 "header":Messages("processes.table.resolutionCode"),
 						        	 "property":"state.resolutionCodes",
+						        	 "position":31,
 						        	 "order":true,
 						        	 "hide":true,
-						        	 "position":31,
 						        	 "type":"text"
 						         },
 						         {
@@ -229,27 +248,11 @@
 						        	 "type":"text"
 						         },
 						         {
-						        	 "header":Messages("processes.table.code"),
-						        	 "property":"code",
-						        	 "order":true,
-						        	 "hide":true,
-						        	 "position":33,
-						        	 "type":"text"
-						         },
-						         {
-						        	 "header":Messages("processes.table.creationDate"),
-						        	 "property":"traceInformation.creationDate",
-						        	 "order":true,
-						        	 "hide":true,
-						        	 "position":34,
-						        	 "type":"date"
-						         },
-						         {
 						        	 "header":Messages("processes.table.newContainerSupportCodes"),
 						        	 "property":"newContainerSupportCodes",
 						        	 "order":true,
 						        	 "hide":true,
-						        	 "position":35,
+						        	 "position":33,
 						        	 "render":"<div list-resize='value.data.newContainerSupportCodes | unique' list-resize-min-size='2'>",
 						        	 "type":"text"
 						         },
@@ -258,7 +261,7 @@
 						        	 "property":"experimentCodes",
 						        	 "order":true,
 						        	 "hide":true,
-						        	 "position":36,
+						        	 "position":34,
 						        	 "render":"<div list-resize='value.data.experimentCodes | unique' list-resize-min-size='2'>",
 						        	 "type":"text"
 						         },
@@ -267,7 +270,31 @@
 						        	 "property":"projectCode",
 						        	 "order":true,
 						        	 "hide":true,
+						        	 "position":35,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.code"),
+						        	 "property":"code",
+						        	 "order":true,
+						        	 "hide":true,
+						        	 "position":36,
+						        	 "type":"text"
+						         },
+						         {
+						        	 "header":Messages("processes.table.creationDate"),
+						        	 "property":"traceInformation.creationDate",
 						        	 "position":37,
+						        	 "order":true,
+						        	 "hide":true,
+						        	 "type":"date"
+						         },
+						         {
+						        	 "header":Messages("processes.table.createUser"),
+						        	 "property":"traceInformation.createUser",
+						        	 "position":38,
+						        	 "order":true,
+						        	 "hide":true,
 						        	 "type":"text"
 						         }
 						 ],
@@ -332,7 +359,7 @@
 								if(property.displayMeasureValue != undefined && property.displayMeasureValue != null){
 									column.convertValue = {"active":true, "displayMeasureValue":property.displayMeasureValue.value, "saveMeasureValue":property.saveMeasureValue.value};
 								}
-								column.position = (7+property.displayOrder);
+								column.position = (4+(property.displayOrder /1000));
 								 if(mainService.getHomePage() === 'state'){
 									 column.edit = false;
 								 }

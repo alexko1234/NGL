@@ -147,8 +147,16 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 	};
 	
 	$scope.finishExperiment = function(){
-		if($scope.isPopup($scope.experiment.value.state.resolutionCodes) === true){
-			angular.element('#modalResolutionProcess').modal('show');
+		
+		if($scope.isPopup($scope.experiment.value.state.resolutionCodes) === true){		
+			
+		/*	$scope.isEndOfProcess($scope.experiment.value.inputContainerSupportCodes,$scope.experiment.value.typeCode);
+			console.log("isLastExperiment="+$scope.isLastExperiment);
+			if(angular.isDefined($scope.isLastExperiment)){ */
+				angular.element('#modalResolutionProcess').modal('show');
+			/*}else{
+				alert("error");
+			}*/
 		}else{
 			$scope.saveAllAndChangeState();
 		}
@@ -835,6 +843,16 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 
 		});
 	};
+	
+	$scope.isEndOfProcess = function(inputContainerCodes, experimentTypeCode){
+		$http.get(jsRoutes.controllers.experiments.api.Experiments.isEndOfProcess().url,{params:{"containerSupportCodes":inputContainerCodes,"typeCode":experimentTypeCode}})
+		.success(function(data, status, headers, config) {
+			$scope.isLastExperiment = data;			
+		})
+		.error(function(data, status, headers, config) {
+			alert("error");
+		});
+	};
 
 	$scope.doPurifOrQc = function(code){
 		$http.get(jsRoutes.controllers.experiments.api.ExperimentTypeNodes.list().url,{params:{"code":code}})
@@ -877,8 +895,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		$scope.experiment.value.atomicTransfertMethods = {};
 		if($scope.experiment.value.code === ""){
 			$scope.create_experiment(containers,atomicTransfertMethod);
-		}
-
+		}		
+		
 	};
 
 	$scope.getInstrumentsTrigger = function(){
@@ -1092,7 +1110,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		.success(function(data, status, headers, config) {
 			experiment = data;
 			$scope.inProgressNow = false;
-			$scope.inProgressMode();
+			$scope.inProgressMode();			
 		})
 		.error(function(data, status, headers, config) {
 			$scope.message.clazz = "alert alert-danger";
@@ -1101,7 +1119,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			$scope.message.details = data;
 			$scope.message.isDetails = true;
 		});
-	}
+	}	
+	
 	promise.then(function(result) {
 		$scope.datatableReagent = datatable($scope.datatableConfigReagents);
 		if(experiment.reagents === null || experiment.reagents === undefined || experiment.reagents.length === 0){

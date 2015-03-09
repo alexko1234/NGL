@@ -60,10 +60,17 @@
 					
 				</div>
 				<div class="modal-footer">
-					<button class="btn btn-default" data-dismiss="modal" ng-click="saveAllAndChangeState()" aria-hidden="true">@Messages("experiment.continue")</button>
+			<!-- 	<div ng-switch on="isLastExperiment">
+					<div ng-switch-when=true>
+					<button class="btn btn-default" data-dismiss="modal" ng-click="getRefresh()" aria-hidden="true">@Messages("experiments.finish")</button>
+					<button data-dismiss="modal" class="btn btn-primary" ng-click="experiment.retry=true;saveAllAndChangeState()">@Messages("experiment.retryExperiment")</button>					
+					</div>				
+					<div ng-switch-when="false">  -->
+					<button class="btn btn-default" data-dismiss="modal" ng-click="saveAllAndChangeState()" aria-hidden="true">@Messages("experiment.continueProcess")</button>
+      				<button data-dismiss="modal" class="btn btn-primary" ng-click="experiment.retry=true;saveAllAndChangeState()">@Messages("experiment.retryExperiment")</button>
 					<button data-dismiss="modal" class="btn btn-primary" ng-click="experiment.stopProcess=true;saveAllAndChangeState()">@Messages("experiment.stopProcess")</button>
-      				<button data-dismiss="modal" class="btn btn-primary" ng-click="experiment.retry=true;saveAllAndChangeState()">@Messages("experiment.retry")</button>
-      
+      		<!-- 	</div>
+      			</div> -->
 				</div>
 			</div>
 		</div>
@@ -154,15 +161,10 @@
 					
 					
 			    	@columnLabelValue(Messages("experiments.resolution")){
-							<div ng-switch on="doneAndRecorded">						
-						<p ng-switch-when="true" class="form-control-static" ng-model='experiment.value.state.resolutionCodes'>
-						 {{experiment.value.state.resolutionCodes | codes:'resolution'}} </p>
-						<div ng-switch-when="false">
 							<div bt-select class="form-control" ng-model="experiment.value.state.resolutionCodes" multiple="true"
 							ng-readonly="!experiment.experimentInformation.enabled"  ng-disabled="!experiment.experimentInformation.enabled"
-							placeholder="@Messages("experiments.select.resolutions")" bt-options="valid.code as valid.name for valid in lists.getResolutions()"></div>							
-						</div>
-						</div>
+							placeholder="@Messages("experiments.select.resolutions")" bt-options="valid.code as valid.name for valid in lists.getResolutions()" ng-edit="!doneAndRecorded"></div>							
+						
 					}	
 					
 						

@@ -216,6 +216,24 @@ public class Workflows {
 			throw new RuntimeException();
 		}
 	}
+	
+	public static boolean endOfProcessByInputContainerCode(String inputContainerCode, String experimentTypeCode) {
+		Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME,Container.class,inputContainerCode);
+		ProcessType processType;
+		try {
+			Logger.debug("Container :"+inputContainerCode);
+			if(container.getCurrentProcesses()==null) return true;
+			processType = ProcessType.find.findByCode(container.getCurrentProcesses().get(0).typeCode);
+			if(processType.lastExperimentType.code.equals(experimentTypeCode)){
+				return true;
+			}else {
+				return false;
+			}
+
+		} catch (DAOException e) {
+			throw new RuntimeException();
+		}
+	}
 
 	private static boolean endOfProcess(String processCode, String experimentTypeCode) {
 		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, processCode);

@@ -86,6 +86,7 @@ GET		/api/experiment/type/nodes										controllers.experiments.api.ExperimentT
 GET		/api/experiment/types/:code										controllers.experiments.api.ExperimentTypes.get(code:java.lang.String)
 GET		/api/experiments/protocols 										controllers.experiments.api.Protocols.list()
 GET		/api/experiments/:code											controllers.experiments.api.Experiments.get(code:java.lang.String)
+GET		/api/experiements/is-end-of-process								controllers.experiments.api.Experiments.isEndOfProcess()
 
 
 GET		/api/experiment/instrument-properties/:instrumentUsedTypeCode	controllers.experiments.api.Experiments.getInstrumentProperties(instrumentUsedTypeCode:java.lang.String)

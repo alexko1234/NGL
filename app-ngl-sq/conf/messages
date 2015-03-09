@@ -209,7 +209,6 @@ experiments.modifyBy = Modifié par
 experiment.comments = Commentaires
 experiment.retryExperiment = Recommencer l''expérience
 experiment.continueProcess = Continuer
-experiment.doneProcess = Terminer
 experiment.finishExperiment = Que souhaitez-vous faire ?
 experiment.stopProcess = Arrêter le processus
 experiments.flowcell.design = Composition flowcell
