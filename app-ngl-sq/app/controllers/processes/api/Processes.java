@@ -11,8 +11,6 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
-import models.laboratory.experiment.description.ExperimentCategory;
-import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import models.utils.CodeHelper;
@@ -26,8 +24,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
 import org.mongojack.DBQuery.Query;
+import org.mongojack.DBUpdate;
 
 import play.Logger;
 import play.data.Form;
@@ -45,8 +43,6 @@ import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.containers.api.Containers;
 import controllers.containers.api.ContainersSearchForm;
-import controllers.experiments.api.ExperimentUpdateForm;
-import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
@@ -210,7 +206,8 @@ public class Processes extends CommonController{
 	
 	public static Result delete(String code){
 		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
-		ContextValidation contextValidation=new ContextValidation(getCurrentUser());
+		Form deleteForm = new Form(Process.class);
+		ContextValidation contextValidation=new ContextValidation(getCurrentUser(),deleteForm.errors());
 		if(process == null){
 			return notFound("Process with code "+code+" does not exist");
 		}
@@ -229,7 +226,7 @@ public class Processes extends CommonController{
 			MongoDBDAO.deleteByCode(InstanceConstants.PROCESS_COLL_NAME,Process.class,  process.code);
 			return ok();
 		}else {
-			return badRequest(Json.toJson(contextValidation.errors));
+			return badRequest(deleteForm.errorsAsJson());
 		}
 	}
 

@@ -60,9 +60,9 @@
 					
 				</div>
 				<div class="modal-footer">
-					<button class="btn btn-default" data-dismiss="modal" ng-click="getRefresh()" aria-hidden="true">@Messages("experiment.continueProcess")</button>
-					<button data-dismiss="modal" class="btn btn-primary" ng-click="experiment.retry=true;saveAllAndChangeState()">@Messages("experiment.retryExperiment")</button>
-					<button data-dismiss="modal" class="btn btn-primary" ng-click="experiment.stopProcess=true;saveAllAndChangeState()">@Messages("experiment.stopProcess")</button>   				
+					<button class="btn btn-default" data-dismiss="modal" ng-click="saveAllAndChangeState()" aria-hidden="true">@Messages("experiment.continue")</button>
+					<button data-dismiss="modal" class="btn btn-primary" ng-click="experiment.stopProcess=true;saveAllAndChangeState()">@Messages("experiment.stopProcess")</button>
+      				<button data-dismiss="modal" class="btn btn-primary" ng-click="experiment.retry=true;saveAllAndChangeState()">@Messages("experiment.retry")</button>
       
 				</div>
 			</div>
@@ -79,7 +79,7 @@
 			<button class="btn btn-default" ng-if="doneAndRecorded==false" ng-click="unedit()" ng-show="editMode==true" data-toggle="tooltip" title="@Messages("experiments.unedit")"><i class="fa fa-undo"></i></button>	
 				  			
 			<button class="btn btn-default" ng-show="experiment.value.state.code == 'N'" ng-disabled="experiment.value._id == null" ng-click="saveAllAndChangeState()" >@Messages("experiments.begin_progress")</button>
-			<button  class="btn btn-default"  ng-show="experiment.value.state.code == 'IP'" ng-disabled="experiment.value._id == null" ng-click="saveAllAndChangeState();experiment.retry=false;experiment.stopProcess=false" >@Messages("experiments.finish")</button>
+			<button  class="btn btn-default"  ng-show="experiment.value.state.code == 'IP'" ng-disabled="experiment.value._id == null" ng-click="finishExperiment()" >@Messages("experiments.finish")</button>
 		<div class="btn-group " id="experiment_action">
 			<a class="btn btn-default dropdown-toggle" data-toggle="dropdown"> Actions <span
 				class="caret"></span>
@@ -154,10 +154,15 @@
 					
 					
 			    	@columnLabelValue(Messages("experiments.resolution")){
+							<div ng-switch on="doneAndRecorded">						
+						<p ng-switch-when="true" class="form-control-static" ng-model='experiment.value.state.resolutionCodes'>
+						 {{experiment.value.state.resolutionCodes | codes:'resolution'}} </p>
+						<div ng-switch-when="false">
 							<div bt-select class="form-control" ng-model="experiment.value.state.resolutionCodes" multiple="true"
 							ng-readonly="!experiment.experimentInformation.enabled"  ng-disabled="!experiment.experimentInformation.enabled"
-							placeholder="@Messages("experiments.select.resolutions")" bt-options="valid.code as valid.name for valid in lists.getResolutions()" ng-edit="!doneAndRecorded"></div>							
-						
+							placeholder="@Messages("experiments.select.resolutions")" bt-options="valid.code as valid.name for valid in lists.getResolutions()"></div>							
+						</div>
+						</div>
 					}	
 					
 						
