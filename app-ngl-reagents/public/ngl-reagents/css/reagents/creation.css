@@ -10,3 +10,8 @@
 .active-checkbox{
 	margin-top:8px;
 }
+
+.nav-tabs > li .close {
+ 	margin: -2px 0 0 10px;
+	font-size: 15px;
+}

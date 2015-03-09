@@ -84,12 +84,12 @@
 	
 <div class="row">
  	<h3 class="pull-left">@Messages("catalogs.box.list"): </h3>
- 	 <button title='@Messages("catalogs.box.add")' data-toggle="tooltip" ng-click="addBox()" class="btn btn-primary saveAndEditButtons" >
+ 	 <button title='@Messages("catalogs.box.add")' data-toggle="tooltip" ng-disabled="!editMode" ng-click="addBox()" class="btn btn-default saveAndEditButtons" >
 		 <i class="fa fa-plus"></i>
 	 </button>
 	<br>
  	<ul class="nav nav-tabs" role="tablist" ng-if="boxes.length > 0">
- 			<li ng-repeat="box in boxes"><a href="" role="tab"  data-target="#{{'box'+$index}}" data-toggle="tab"><button type="button" class="close ng-scope" aria-hidden="true" ng-click="removeBox($index,box.code)" >x</button>{{box.name || 'box'+$index}}</a></li>
+ 			<li ng-repeat="box in boxes"><a href="" role="tab"  data-target="#{{'box'+$index}}" data-toggle="tab"><button type="button" class="close ng-scope" ng-disabled="!editMode" ng-click="removeBox($index,box.code)" >x</button>{{box.name || 'box'+$index}}</a></li>
 	</ul>
 	<span ng-if="boxes.length === 0">@Messages("catalogs.box.empty")</span>
 	<div class="tab-content">
