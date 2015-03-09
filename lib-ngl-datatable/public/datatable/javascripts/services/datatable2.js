@@ -1632,13 +1632,15 @@ angular.module('datatableServices', []).
 			    							//algo to set colValue (value of the column)
 				    			    			if (!result.line.group && (column.url === undefined || column.url === null) && exportType !== 'groupsOnly') {
 				    			    				var property = column.property;
+				    			    				var isFunction = false;
 				    			    				if(angular.isFunction(property)){
 				    			    					property = property();
+				    			    					isFunction = true;
 				    			    				}
 				    			    				property += that.getFilter(column);
 				    			    				property += that.getFormatter(column);
 				    			    				colValue = $parse(property)(result.data);
-				    			    				if(colValue === undefined && angular.isFunction(property)){//Because the property here is not $parsable
+				    			    				if(colValue === undefined && isFunction === true){//Because the property here is not $parsable
 				    			    					//The function have to return a $scope value
 				    			    					colValue = property;
 				    			    				}

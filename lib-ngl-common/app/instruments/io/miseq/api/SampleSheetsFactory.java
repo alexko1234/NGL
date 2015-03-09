@@ -2,6 +2,7 @@ package instruments.io.miseq.api;
 
 import instruments.io.miseq.tpl.txt.sampleSheet_1;
 import instruments.io.utils.AbstractSampleSheetsfactory;
+import instruments.io.utils.SampleSheetsFactoryHelper;
 
 import java.io.File;
 import java.util.List;
@@ -21,7 +22,7 @@ public class SampleSheetsFactory extends AbstractSampleSheetsfactory{
 		List<Container> containers = getContainersFromExperiment();
 		String content = format(sampleSheet_1.render(this.experiment, containers).body());
 		//play.api.libs.Files.writeFile(new File(containers.get(0).support.code+".csv"), content);
-		File file = new File(experiment.instrumentProperties.get("miseqReagentCassette").value+".csv");
+		File file = new File(SampleSheetsFactoryHelper.getSampleSheetFilePath(experiment.instrument.code)+experiment.instrumentProperties.get("miseqReagentCassette").value+".csv");
 		AbstractSampleSheetsfactory.writeFile(file, content);
 		
 		return file;

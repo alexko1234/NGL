@@ -2,6 +2,7 @@ package instruments.io.common.hiseq.api;
 
 import instruments.io.common.hiseq.tpl.txt.sampleSheet_1;
 import instruments.io.utils.AbstractSampleSheetsfactory;
+import instruments.io.utils.SampleSheetsFactoryHelper;
 
 import java.io.File;
 import java.util.List;
@@ -20,7 +21,7 @@ public class SampleSheetsFactory extends AbstractSampleSheetsfactory{
 		List<Container> containers = getContainersFromExperiment();
 		
 		String content = format(sampleSheet_1.render(experiment,containers).body());
-		File file = new File(containers.get(0).support.code+".csv");
+		File file = new File(SampleSheetsFactoryHelper.getSampleSheetFilePath(experiment.instrument.code)+containers.get(0).support.code+".csv");
 		//play.api.libs.Files.writeFile(file, content);
 		AbstractSampleSheetsfactory.writeFile(file, content);
 		

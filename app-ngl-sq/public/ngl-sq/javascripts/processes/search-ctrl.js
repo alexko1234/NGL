@@ -78,6 +78,11 @@ angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$rou
 				url:function(line){return jsRoutes.controllers.processes.api.Processes.updateStateCode(line.code).url;},
 				mode:'remote',
 				method:'put',
+				value:function(process){
+					var updateForm = {};
+					updateForm.stateCode = process.state.code;
+					return updateForm;
+				}
 			}
 	};
 
