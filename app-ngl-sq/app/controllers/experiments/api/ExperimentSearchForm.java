@@ -20,7 +20,8 @@ public class ExperimentSearchForm extends ListForm{
 	public String stateCode;
 	public List<String> stateCodes;
 	public List<String> users;
-	public String containerSupportCode;	
+	public String containerSupportCode;
+	public List<String> containerSupportCodes;	
 	public String atomicTransfertMethods;
 	public String reagentOrBoxCode;
 	public String instrument;

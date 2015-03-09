@@ -370,6 +370,22 @@ public class Experiments extends CommonController{
 		ctxValidation.displayErrors(logger);
 		return badRequest(experimentFilledForm.errorsAsJson());
 	}
+	
+	public static Result isEndOfProcess(){
+		Form<ExperimentSearchForm> experimentFilledForm = filledFormQueryString(experimentSearchForm,ExperimentSearchForm.class);
+		ExperimentSearchForm exp = experimentFilledForm.get();		
+		
+		if(CollectionUtils.isNotEmpty(exp.containerSupportCodes) && StringUtils.isNotBlank(exp.typeCode)){			
+			for(String inputContainerCode:exp.containerSupportCodes){
+				if(Workflows.endOfProcessByInputContainerCode(inputContainerCode,exp.typeCode)==false){
+					return ok(Json.toJson(false));
+				}				
+			}			
+			return ok(Json.toJson(true));
+		}		
+		return badRequest("Both inputContainerCodes and experimentTypeCode are expected!");
+	}
+	
 
 
 	public static Result nextState(String code){
