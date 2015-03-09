@@ -1061,7 +1061,7 @@ angular.module('datatableServices', []).
 								if(this.config.pagination.active && !this.isRemoteMode(this.config.pagination.mode)){
 									j = (i + (this.config.pagination.pageNumber*this.config.pagination.numberRecordsPerPage)) - this.config.remove.counter;
 								}else{
-									j = i - this.config.remove.counter
+									j = i - this.config.remove.counter;
 								}
 								var removeArray = this.allResult.splice(j,1);
 								this.displayResult.splice((i - this.config.remove.counter),1);
