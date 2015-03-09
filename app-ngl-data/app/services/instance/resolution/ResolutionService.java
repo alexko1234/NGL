@@ -418,8 +418,9 @@ public class ResolutionService {
 		l.add(InstanceFactory.newResolution("Q30","Qlte-Q30", QlterC,(short) 1));				
 		l.add(InstanceFactory.newResolution("répartition bases","Qlte-repartitionBases", QlterC, (short) 2));				
 		l.add(InstanceFactory.newResolution("adaptateurs/Kmers","Qlte-adapterKmer", QlterC,(short) 3));		
-		l.add(InstanceFactory.newResolution("duplicat > 30","Qlte-duplicat", QlterC,(short) 4));
-				
+		l.add(InstanceFactory.newResolution("duplicat pairs > 20","Qlte-duplicatPairs", QlterC,(short) 4));
+		l.add(InstanceFactory.newResolution("duplicat > 30","Qlte-duplicat", QlterC,(short) 5));
+		
 		// TAXO
 		ResolutionCategory TAXOrC= resolutionCategories.get("TAXO");
 			
