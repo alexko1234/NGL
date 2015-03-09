@@ -332,7 +332,7 @@ public class ImportService {
 	private static List<PropertyDefinition> getLibraryTaraPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.addAll(getTaraPropertyDefinitions());
-		propertyDefinitions.add(newPropertiesDefinition("Index", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true, "single"));
 		return propertyDefinitions;
 	}
 	
