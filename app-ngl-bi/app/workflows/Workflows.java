@@ -31,6 +31,7 @@ import play.Play;
 import play.api.modules.spring.Spring;
 import play.libs.Akka;
 import rules.services.RulesActor;
+import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.run.instance.AnalysisValidationHelper;
@@ -45,7 +46,7 @@ import fr.cea.ig.MongoDBDAO;
 
 public class Workflows {
 	
-	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor.class));
+	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 	private static final String ruleStatRG="rg_1";
 	private static final String ruleStatQC="F_QC_1";
 			

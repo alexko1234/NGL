@@ -14,6 +14,7 @@ import play.Play;
 import play.mvc.Result;
 import rules.services.RulesException;
 import rules.services.RulesServices;
+import rules.services.RulesServices6;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 
@@ -27,19 +28,13 @@ public class MigrationTaxonomyFungi extends CommonController{
 		
 		List<ReadSet> rsl = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.exists("treatments.taxonomy"), keys).toList();
 		
-		RulesServices rulesServices = new RulesServices();
+		RulesServices6 rulesServices = RulesServices6.getInstance();
 		Logger.info("Treat "+rsl.size()+" readset");
-		for(ReadSet rs : rsl){
+		for(ReadSet rs : rsl){			
+			List<Object> facts = new ArrayList<Object>();
+			facts.add(rs);				
+			rulesServices.callRules(Play.application().configuration().getString("rules.key"), "F_QC_1", facts);
 			
-			try {
-				List<Object> facts = new ArrayList<Object>();
-				facts.add(rs);
-				
-				rulesServices.callRules(Play.application().configuration().getString("rules.key"), "F_QC_1", facts);
-			} catch (RulesException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 		return ok();
 	}

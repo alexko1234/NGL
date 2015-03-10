@@ -33,6 +33,7 @@ import play.libs.Akka;
 import play.libs.Json;
 import play.mvc.Result;
 import rules.services.RulesActor;
+import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
@@ -59,7 +60,7 @@ public class Analyses extends DocumentController<Analysis>{
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("code","masterReadSetCodes","readSetCodes");
 	
-	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor.class));
+	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 	
 	public Analyses() {
 		super(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class);		

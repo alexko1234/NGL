@@ -33,6 +33,7 @@ import play.libs.Akka;
 import play.libs.Json;
 import play.mvc.Result;
 import rules.services.RulesActor;
+import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.run.instance.RunValidationHelper;
@@ -60,7 +61,7 @@ public class Runs extends RunsController {
 	final static Form<Valuation> valuationForm = form(Valuation.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("keep","deleted");
 	
-	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor.class));
+	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 
 	//@Permission(value={"reading"})
 	public static Result list(){
