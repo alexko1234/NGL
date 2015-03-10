@@ -5,12 +5,6 @@
 		var getColumns = function(){
 			var columns = [];
 			columns.push({
-				"header":Messages("kits.code"),
-				"property":"code",
-				"order":true,
-				"type":"text"
-			});
-			columns.push({
 				"header":Messages("kits.name"),
 				"property":"name",
 				"order":true,

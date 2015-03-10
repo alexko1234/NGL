@@ -94,7 +94,7 @@
 	 $scope.datatableSaved = 0;
 	 
 	 $scope.removeKit = function(){
-		 if($scope.kit !== undefined && $scope.kit.code !== ""  && confirm("Etes vous sur de vouloir supprimer le kit "+$scope.kit.code+" ?")){
+		 if($scope.kit !== undefined && $scope.kit.code !== ""  && confirm("Etes vous sur de vouloir supprimer le kit "+$scope.kit.name+" ?")){
 			 $http.delete(jsRoutes.controllers.reagents.api.KitCatalogs.delete($scope.kit.code).url)
 				.success(function(data, status, headers, config) {
 					if(data!=null){
@@ -112,8 +112,8 @@
 		 }
 	 };
 	 
-	 $scope.removeBox = function(index,code){
-		 if(code !== undefined  && code !== ""  && confirm("Etes vous sur de vouloir supprimer la boite "+code+" ?")){
+	 $scope.removeBox = function(index,code,name){
+		 if(code !== undefined  && code !== ""  && confirm("Etes vous sur de vouloir supprimer la boite "+name+" ?")){
 			 $http.delete(jsRoutes.controllers.reagents.api.BoxCatalogs.delete(code).url)
 				.success(function(data, status, headers, config) {
 					if(data!=null){
@@ -166,6 +166,11 @@
 	 
 	 $scope.newReagent = function(index, box){
 		 console.log(index);
+		 for(var i = 0; i < $scope.datatables[index].displayResult.length; i++){
+			if($scope.datatables[index].displayResult[i].line.edit){
+				$scope.datatables[index].saveLocal($scope.datatables[index].displayResult[i].data,i);
+			}
+		 }
 		 $scope.datatables[index].addData([{"category":"Reagent"}]);
 		 $scope.datatables[index].setEdit();
 		 console.log($scope.boxes);

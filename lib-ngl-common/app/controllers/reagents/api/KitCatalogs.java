@@ -4,6 +4,7 @@ import static play.data.Form.form;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import models.laboratory.reagent.description.AbstractCatalog;
 import models.laboratory.reagent.description.KitCatalog;
@@ -135,10 +136,10 @@ public class KitCatalogs extends DocumentController<KitCatalog>{
 		}
 		
 		if(StringUtils.isNotBlank(kitCatalogSearch.name)){
-			queryElts.add(DBQuery.is("name", kitCatalogSearch.name));
+			queryElts.add(DBQuery.regex("name", Pattern.compile(kitCatalogSearch.name)));
 		}
 		if(StringUtils.isNotBlank(kitCatalogSearch.providerRefName)){
-			queryElts.add(DBQuery.is("providerRefName", kitCatalogSearch.providerRefName));
+			queryElts.add(DBQuery.regex("providerRefName", Pattern.compile(kitCatalogSearch.providerRefName)));
 		}
 		
 		if(StringUtils.isNotBlank(kitCatalogSearch.providerCode)){

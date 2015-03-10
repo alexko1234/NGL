@@ -20,7 +20,7 @@ angular.module('home').controller('SearchKitsCtrl', ['$scope', 'datatable','list
 			showButton : true,
 			add:function(line){
 				console.log(jsRoutes.controllers.reagents.tpl.KitCatalogs.get(line.code));
-				tabService.addTabs({label:line.code,href:jsRoutes.controllers.reagents.tpl.KitCatalogs.get(line.code).url,remove:true});
+				tabService.addTabs({label:line.name,href:jsRoutes.controllers.reagents.tpl.KitCatalogs.get(line.code).url,remove:true});
 			}
 		}
 	};

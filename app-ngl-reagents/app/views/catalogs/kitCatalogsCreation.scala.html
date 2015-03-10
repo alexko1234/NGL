@@ -25,7 +25,7 @@
 				<button class="btn btn-primary saveAndEditButtons" ng-disabled="saveInProgress == true || !editMode" ng-click="saveAll();" data-toggle="tooltip"  title="@Messages("catalogs.kit.creation.save")">
 					<i class="fa fa-save"></i>
 				</button>
-				<button class="btn btn-danger saveAndEditButtons" ng-disabled="(saveInProgress == true || !editMode) || (kit.code == undefined ||  kit.code == '')" ng-click="removeKit()" data-toggle="tooltip"  title="@Messages("catalogs.kit.creation.remove")">
+				<button class="btn btn-danger saveAndEditButtons" ng-disabled="saveInProgress == true || (kit.code == undefined ||  kit.code == '')" ng-click="removeKit()" data-toggle="tooltip"  title="@Messages("catalogs.kit.creation.remove")">
 					<i class="fa fa-trash-o fa-lg"></i>
 				</button>
 			</div>
@@ -89,7 +89,7 @@
 	 </button>
 	<br>
  	<ul class="nav nav-tabs" role="tablist" ng-if="boxes.length > 0">
- 			<li ng-repeat="box in boxes"><a href="" role="tab"  data-target="#{{'box'+$index}}" data-toggle="tab"><button type="button" class="close ng-scope" ng-disabled="!editMode" ng-click="removeBox($index,box.code)" >x</button>{{box.name || 'box'+$index}}</a></li>
+ 			<li ng-repeat="box in boxes"><a href="" role="tab"  data-target="#{{'box'+$index}}" data-toggle="tab"><button type="button" class="close ng-scope" ng-click="removeBox($index,box.code,box.name)" >x</button>{{box.name || 'box'+$index}}</a></li>
 	</ul>
 	<span ng-if="boxes.length === 0">@Messages("catalogs.box.empty")</span>
 	<div class="tab-content">
