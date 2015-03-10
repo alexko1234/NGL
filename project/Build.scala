@@ -86,9 +86,12 @@ object ApplicationBuild extends Build {
 		javaWs,
    	    "javax.mail" % "mail" % "1.4.2",
    	    "fr.cea.ig" %% "mongodbplugin" % "1.3-SNAPSHOT",
-   	    "org.drools" % "drools-core" % "5.5.0.Final",
-	     "org.drools" % "drools-compiler" % "5.5.0.Final",
-		 "fr.cea.ig.modules" %% "authentication" % "1.2-SNAPSHOT"
+   	    "org.drools" % "drools-core" % "6.1.0.Final",
+   	    "org.drools" % "drools-compiler" % "6.1.0.Final",
+   	    "org.drools" % "knowledge-api" % "6.1.0.Final",
+   	    "org.kie" % "kie-api" % "6.1.0.Final",
+   	    "org.kie" % "kie-internal" % "6.1.0.Final",
+		"fr.cea.ig.modules" %% "authentication" % "1.2-SNAPSHOT"
    	    )
    	val nglbiDependencies = Seq(
 	        // Add your project dependencies here,
