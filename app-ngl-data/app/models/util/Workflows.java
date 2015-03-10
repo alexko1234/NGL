@@ -24,23 +24,24 @@ import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.mongojack.WriteResult;
+
 import play.Logger;
 import play.Play;
 import play.libs.Akka;
 import rules.services.RulesActor;
+import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.run.instance.AnalysisValidationHelper;
 import validation.run.instance.RunValidationHelper;
 import akka.actor.ActorRef;
 import akka.actor.Props;
-
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 
 public class Workflows {
 	
-	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor.class));
+	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 	private static final String ruleStatRG="rg_1";
 			
 	
