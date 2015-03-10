@@ -94,6 +94,7 @@ public abstract class AbstractTestsCNS {
 	    config.put("mail.smtp.host", "smtp.genoscope.cns.fr");
 	    config.put("play.spring.context-path", "cns-application-context.xml");
 	    config.put("rules.key", "nglBI");
+	    config.put("rules.kbasename", "ngl-bi-cns");
 	    config.put("rules.changesets", "rules/ngl-bi/cns/changesets/changesets.xml");
 		return config;
 		

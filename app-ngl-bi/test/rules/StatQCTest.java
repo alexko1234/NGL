@@ -23,6 +23,7 @@ import org.mongojack.DBQuery;
 import play.Play;
 import rules.services.RulesException;
 import rules.services.RulesServices;
+import rules.services.RulesServices6;
 import utils.AbstractTestsCNG;
 import utils.AbstractTestsCNS;
 import fr.cea.ig.MongoDBDAO;
@@ -47,7 +48,7 @@ public class StatQCTest extends AbstractTestsCNS{
 	{
 
 		ReadSet rs = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, "BCM_CFIOSW_4_C3MGGACXX.IND8");
-		RulesServices rulesServices = new RulesServices();
+		RulesServices6 rulesServices = RulesServices6.getInstance();
 		List<Object> facts = new ArrayList<Object>();
 		facts.add(rs);
 		

@@ -23,6 +23,7 @@ import play.Logger;
 import play.Play;
 import rules.services.RulesException;
 import rules.services.RulesServices;
+import rules.services.RulesServices6;
 import utils.AbstractTestsCNG;
 import alert.AlertSAVInfo;
 import fr.cea.ig.MongoDBDAO;
@@ -129,7 +130,7 @@ public class AlertSAVTests extends AbstractTestsCNG{
 		List<Object> facts = new ArrayList<Object>();
 		facts.add(runBad);
 
-		RulesServices rulesServices = new RulesServices();
+		RulesServices6 rulesServices = RulesServices6.getInstance();
 
 		List<Object> factsAfterRules = rulesServices.callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), "sav_1", facts);
 

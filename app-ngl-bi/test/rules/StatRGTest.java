@@ -20,6 +20,7 @@ import org.mongojack.DBQuery;
 import play.Play;
 import rules.services.RulesException;
 import rules.services.RulesServices;
+import rules.services.RulesServices6;
 import utils.AbstractTestsCNG;
 import utils.AbstractTestsCNS;
 import fr.cea.ig.MongoDBDAO;
@@ -58,7 +59,7 @@ public class StatRGTest extends AbstractTestsCNS{
 	{
 
 
-		RulesServices rulesServices = new RulesServices();
+		RulesServices6 rulesServices = RulesServices6.getInstance();
 		List<Object> facts = new ArrayList<Object>();
 		facts.add(runData);
 		
