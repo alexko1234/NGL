@@ -11,6 +11,7 @@ import play.mvc.Result;
 import play.mvc.Http.Request;
 import rules.services.RulesException;
 import rules.services.RulesServices;
+import rules.services.RulesServices6;
 
 public class Global extends GlobalSettings {
 
@@ -19,6 +20,17 @@ public class Global extends GlobalSettings {
 		Logger.info("NGL has started");
 		
 		Logger.info("Load knowledge base");
+		
+		try {
+			RulesServices6.getInstance();
+		} catch (Throwable e) {
+			Logger.error("Error Load knowledge base");
+			e.printStackTrace();
+			//Shutdown application
+			Play.stop();
+		}
+		
+		/*
 		RulesServices rulesServices = new RulesServices();
 		try {
 			rulesServices.buildKnowledgeBase();
@@ -29,6 +41,7 @@ public class Global extends GlobalSettings {
 			//Shutdown application
 			Play.stop();
 		}
+		*/
 	}
 	
 	public Action onRequest(Request request, Method actionMethod) {
