@@ -22,6 +22,7 @@ import org.mongojack.DBUpdate;
 import play.Play;
 import rules.services.RulesException;
 import rules.services.RulesServices;
+import rules.services.RulesServices6;
 import validation.ContextValidation;
 import validation.container.instance.ContainerSupportValidationHelper;
 import validation.container.instance.ContainerValidationHelper;
@@ -132,16 +133,7 @@ public class ProcessHelper {
 		ArrayList<Object> facts = new ArrayList<Object>();
 		facts.add(proc);
 		facts.add(ctx);
-
-		RulesServices rulesServices = new RulesServices();
-		List<Object> factsAfterRules = null;		
-
-		try {
-			factsAfterRules = rulesServices.callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), rulesName, facts);
-		} catch (RulesException e) {
-			throw new RuntimeException();
-		}	
-
+		List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), rulesName, facts);
 		return proc;
 
 	}
@@ -154,14 +146,8 @@ public class ProcessHelper {
 		}
 		
 
-		RulesServices rulesServices = new RulesServices();
-		List<Object> factsAfterRules = null;		
-
-		try {
-			factsAfterRules = rulesServices.callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), rulesName, facts);
-		} catch (RulesException e) {
-			throw new RuntimeException();
-		}	
+		List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), rulesName, facts);
+		
 
 		return processes;
 

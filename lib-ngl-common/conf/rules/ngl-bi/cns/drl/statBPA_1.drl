@@ -60,8 +60,3 @@ end
 
 
 
-function Double roundValue(double value)
-{
-	DecimalFormat df=new DecimalFormat("0.00");
-	return (Double)df.parse(df.format(value)).doubleValue();
-}

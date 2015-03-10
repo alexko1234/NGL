@@ -27,6 +27,7 @@ import org.mongojack.DBQuery.Query;
 import play.Play;
 import rules.services.RulesException;
 import rules.services.RulesServices;
+import rules.services.RulesServices6;
 import validation.ContextValidation;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationConstants;
@@ -508,14 +509,8 @@ public class CommonValidationHelper {
 		ContextValidation validationRules=new ContextValidation(contextValidation.getUser());
 		facts.add(validationRules);
 	
-		RulesServices rulesServices = new RulesServices();
-		List<Object> factsAfterRules;
-		try {
-			factsAfterRules = rulesServices.callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), nameRules, facts);
-		} catch (RulesException e) {
-			throw new RuntimeException();
-		}
-		
+		List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), nameRules, facts);
+				
 		for(Object obj:factsAfterRules){
 			if(ContextValidation.class.isInstance(obj)){
 				contextValidation.errors.putAll(((ContextValidation) obj).errors);

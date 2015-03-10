@@ -25,6 +25,7 @@ import play.Logger;
 import play.Play;
 import rules.services.RulesException;
 import rules.services.RulesServices;
+import rules.services.RulesServices6;
 import validation.ContextValidation;
 import workflows.Workflows;
 
@@ -202,14 +203,8 @@ public class ExperimentHelper extends InstanceHelpers {
 			}
 		}
 
-		RulesServices rulesServices = new RulesServices();
-		List<Object> factsAfterRules = null;
-		try {
-			factsAfterRules = rulesServices.callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), rulesName, facts);
-		} catch (RulesException e) {
-			throw new RuntimeException();
-		}
-
+		List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), rulesName, facts);
+		
 		for(Object obj:factsAfterRules){
 			if(ManytoOneContainer.class.isInstance(obj)){
 				exp.atomicTransfertMethods.remove(((ManytoOneContainer)obj).position-1);
