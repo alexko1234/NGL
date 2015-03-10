@@ -25,7 +25,7 @@
 				<button class="btn btn-primary saveAndEditButtons" ng-disabled="saveInProgress == true || !editMode" ng-click="saveAll();" data-toggle="tooltip"  title="@Messages("catalogs.kit.creation.save")">
 					<i class="fa fa-save"></i>
 				</button>
-				<button class="btn btn-danger saveAndEditButtons" ng-disabled="(saveInProgress == true || !editMode) && kit.code" ng-click="removeKit()" data-toggle="tooltip"  title="@Messages("catalogs.kit.creation.remove")">
+				<button class="btn btn-danger saveAndEditButtons" ng-disabled="(saveInProgress == true || !editMode) || (kit.code == undefined ||  kit.code == '')" ng-click="removeKit()" data-toggle="tooltip"  title="@Messages("catalogs.kit.creation.remove")">
 					<i class="fa fa-trash-o fa-lg"></i>
 				</button>
 			</div>
