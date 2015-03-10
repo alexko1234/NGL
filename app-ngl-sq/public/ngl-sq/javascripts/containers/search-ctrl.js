@@ -70,6 +70,11 @@ angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$rou
 				url:function(line){return jsRoutes.controllers.containers.api.Containers.updateStateCode(line.code).url;},
 				mode:'remote',
 				method:'put',
+				value:function(container){
+					var updateForm = {};
+					updateForm.stateCode = container.state.code;
+					return updateForm;
+				}
 			}
 	};
 
