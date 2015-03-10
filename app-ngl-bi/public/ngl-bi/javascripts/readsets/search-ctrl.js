@@ -186,7 +186,7 @@ angular.module('home').controller('SearchBatchCtrl', ['$scope', '$routeParams', 
 			show:{
 				active:true,
 				add :function(line){
-					$scope.addTabs({label:line.code,href:jsRoutes.controllers.readsets.tpl.ReadSets.valuation(line.code).url,remove:true});
+					$scope.addTabs({label:line.code,href:jsRoutes.controllers.readsets.tpl.ReadSets.get(line.code).url,remove:true});
 				}
 			},
 			messages : {active:true}
