@@ -21,7 +21,7 @@ public class ExperimentSearchForm extends ListForm{
 	public List<String> stateCodes;
 	public List<String> users;
 	public String containerSupportCode;
-	public List<String> containerSupportCodes;	
+	public List<String> containersCodes;	
 	public String atomicTransfertMethods;
 	public String reagentOrBoxCode;
 	public String instrument;
@@ -33,7 +33,7 @@ public class ExperimentSearchForm extends ListForm{
 				+ categoryCode + ", projectCodes=" + projectCodes
 				+ ", sampleCodes=" + sampleCodes + ", fromDate=" + fromDate
 				+ ", toDate=" + toDate + ", stateCode=" + stateCode
-				+ ", users=" + users +", containerSupportCode=" + containerSupportCode 
+				+ ", users=" + users +", containerSupportCode=" + containerSupportCode +", containersCodes=" + containersCodes
 				+ ", atomicTransfertMethods="+ atomicTransfertMethods + ", instrument"+ instrument + "]";
 	}
 }

@@ -375,8 +375,8 @@ public class Experiments extends CommonController{
 		Form<ExperimentSearchForm> experimentFilledForm = filledFormQueryString(experimentSearchForm,ExperimentSearchForm.class);
 		ExperimentSearchForm exp = experimentFilledForm.get();		
 		
-		if(CollectionUtils.isNotEmpty(exp.containerSupportCodes) && StringUtils.isNotBlank(exp.typeCode)){			
-			for(String inputContainerCode:exp.containerSupportCodes){
+		if(CollectionUtils.isNotEmpty(exp.containersCodes) && StringUtils.isNotBlank(exp.typeCode)){			
+			for(String inputContainerCode:exp.containersCodes){
 				if(Workflows.endOfProcessByInputContainerCode(inputContainerCode,exp.typeCode)==false){
 					return ok(Json.toJson(false));
 				}				

@@ -59,18 +59,11 @@
 				<div class="modal-body" style="padding:0px">
 					
 				</div>
-				<div class="modal-footer">
-			<!-- 	<div ng-switch on="isLastExperiment">
-					<div ng-switch-when=true>
-					<button class="btn btn-default" data-dismiss="modal" ng-click="getRefresh()" aria-hidden="true">@Messages("experiments.finish")</button>
-					<button data-dismiss="modal" class="btn btn-primary" ng-click="experiment.retry=true;saveAllAndChangeState()">@Messages("experiment.retryExperiment")</button>					
-					</div>				
-					<div ng-switch-when="false">  -->
-					<button class="btn btn-default" data-dismiss="modal" ng-click="saveAllAndChangeState()" aria-hidden="true">@Messages("experiment.continueProcess")</button>
+				<div class="modal-footer">			
+					<button ng-if="isLastExperiment==false" class="btn btn-default" data-dismiss="modal" ng-click="saveAllAndChangeState()" aria-hidden="true">@Messages("experiment.continueProcess")</button>
       				<button data-dismiss="modal" class="btn btn-primary" ng-click="experiment.retry=true;saveAllAndChangeState()">@Messages("experiment.retryExperiment")</button>
-					<button data-dismiss="modal" class="btn btn-primary" ng-click="experiment.stopProcess=true;saveAllAndChangeState()">@Messages("experiment.stopProcess")</button>
-      		<!-- 	</div>
-      			</div> -->
+					<button  ng-if="isLastExperiment==false" data-dismiss="modal" class="btn btn-primary" ng-click="experiment.stopProcess=true;saveAllAndChangeState()">@Messages("experiment.stopProcess")</button>
+      				<button  ng-if="isLastExperiment==true" data-dismiss="modal" class="btn btn-primary" ng-click="experiment.stopProcess=true;saveAllAndChangeState()">@Messages("experiments.finish")</button>
 				</div>
 			</div>
 		</div>
