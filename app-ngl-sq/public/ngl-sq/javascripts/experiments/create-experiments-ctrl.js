@@ -136,7 +136,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		}
 	};
 
-	$scope.message = {};
+	$scope.message = {};	
 
 	$scope.isPopup = function(resolutionCodes){
 		if(resolutionCodes != null && resolutionCodes.length === 1 && resolutionCodes[0] === "correct"){
@@ -146,32 +146,31 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		return true;
 	};
 
-	$scope.finishExperiment = function(){
-		var containersCodes=[];
-		if(angular.isDefined($scope.experiment.value.atomicTransfertMethods)){
-			angular.forEach($scope.experiment.value.atomicTransfertMethods,function(atomic,index){
-				console.log("atomic="+atomic);
-				if(angular.isDefined(atomic.inputContainerUseds)){
-					angular.forEach(atomic.inputContainerUseds, function(inputContainer, key){
-						console.log("inputContainer="+inputContainer);
-						containersCodes.push(inputContainer.code);
-					});
-				}else if(angular.isDefined(atomic.inputContainerUsed)){					
-						console.log("inputContainer="+atomic.inputContainerUsed);
-						containersCodes.push(atomic.inputContainerUsed.code);					
-				}			
-			});		
-		}
-		console.log("containersCodes="+containersCodes);
-		
-		$http.get(jsRoutes.controllers.experiments.api.Experiments.isEndOfProcess().url,{params:{"containersCodes": containersCodes ,"typeCode":$scope.experiment.value.typeCode}})
-		.success(function(data, status, headers, config) {
-			$scope.isLastExperiment = data;
-			if($scope.isPopup($scope.experiment.value.state.resolutionCodes) === true){	
-				angular.element('#modalResolutionProcess').modal('show');
-			}else{
-				$scope.saveAllAndChangeState();
-			}
+
+
+	$scope.finishExperiment = function(){		
+		$scope.lastExperimentType = "";
+		$scope.isLastExperiment = false;
+		var promises = [];	
+
+		$http.get(jsRoutes.controllers.processes.api.Processes.list().url,{params:{"experimentCode":$scope.experiment.value.code}})
+		.success(function(data, status, headers, config){			
+			console.log("data="+ data[0].typeCode);
+			var processTypeCode = data[0].typeCode;
+			
+			$http.get(jsRoutes.controllers.processes.api.ProcessTypes.get(processTypeCode).url)
+			.success(function(data, status,headers,config){
+				$scope.processTypeCode = data;
+				$scope.lastExperimentTypeCode = $scope.processTypeCode.lastExperimentType.code;
+				if($scope.lastExperimentTypeCode===$scope.experiment.value.typeCode){
+					$scope.isLastExperiment = true;
+				}
+				if($scope.isPopup($scope.experiment.value.state.resolutionCodes) === true){	
+					angular.element('#modalResolutionProcess').modal('show');
+				}else{
+					$scope.saveAllAndChangeState();
+				}	
+			});	
 		});
 	};
 

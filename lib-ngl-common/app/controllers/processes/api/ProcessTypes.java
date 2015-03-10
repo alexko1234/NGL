@@ -50,4 +50,12 @@ public class ProcessTypes extends CommonController{
 			return  Results.internalServerError(e.getMessage());
 		}	
 	}
+	
+	public static Result get(String code) throws DAOException{		 
+			ProcessType processType = ProcessType.find.findByCode(code);
+			if(processType!=null){
+				return ok(Json.toJson(processType));
+			}			
+			return notFound();		
+	}
 }

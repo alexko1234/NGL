@@ -50,6 +50,7 @@ DELETE	/api/processes/:code											controllers.processes.api.Processes.delete
 HEAD	/api/processes/:code               								controllers.processes.api.Processes.head(code: java.lang.String)
 GET		/api/processes													controllers.processes.api.Processes.list()
 GET		/api/processes/types											controllers.processes.api.ProcessTypes.list()
+GET		/api/processes/:code/types										controllers.processes.api.ProcessTypes.get(code: java.lang.String)
 GET		/api/processes/categories										controllers.processes.api.ProcessCategories.list()
 GET		/api/processes/:code											controllers.processes.api.Processes.get(code:java.lang.String)
 
@@ -86,8 +87,6 @@ GET		/api/experiment/type/nodes										controllers.experiments.api.ExperimentT
 GET		/api/experiment/types/:code										controllers.experiments.api.ExperimentTypes.get(code:java.lang.String)
 GET		/api/experiments/protocols 										controllers.experiments.api.Protocols.list()
 GET		/api/experiments/:code											controllers.experiments.api.Experiments.get(code:java.lang.String)
-GET		/api/experiements/is-end-of-process								controllers.experiments.api.Experiments.isEndOfProcess()
-
 
 GET		/api/experiment/instrument-properties/:instrumentUsedTypeCode	controllers.experiments.api.Experiments.getInstrumentProperties(instrumentUsedTypeCode:java.lang.String)
 
