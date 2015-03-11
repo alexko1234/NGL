@@ -5,13 +5,6 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 				url:jsRoutes.controllers.processes.api.Processes.list()
 				
 			},
-			remove:{
-				active:true,
-				mode:"remote",
-				url:function(line){
-					return jsRoutes.controllers.processes.api.Processes.delete(line.code).url;
-					}
-			},
 			order:{
 				by:'code'
 			},
@@ -59,7 +52,6 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 	
 }]);
 
-"use strict"
 angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$routeParams', 'datatable','lists','$filter','$http','mainService','tabService','processesSearchService', function($scope,$location,$routeParams, datatable, lists,$filter,$http,mainService,tabService,processesSearchService) {
 	$scope.datatableConfig = {
 			search:{
@@ -116,4 +108,60 @@ angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$rou
 	}
 	
 	
+}]);
+
+
+angular.module('home').controller('SearchRemoveCtrl', ['$scope','$location','$routeParams', 'datatable','lists','$filter','$http','mainService','tabService','processesSearchService', function($scope,$location,$routeParams, datatable, lists,$filter,$http,mainService,tabService,processesSearchService) {
+	$scope.datatableConfig = {
+			search:{
+				url:jsRoutes.controllers.processes.api.Processes.list()
+				
+			},
+			order:{
+				by:'code'
+			},
+			edit:{
+				active:false,
+				columnMode:false
+			},
+			save:{
+				active:false
+			},
+			remove:{
+				active:true,
+				mode:"remote",
+				url:function(line){
+					return jsRoutes.controllers.processes.api.Processes.delete(line.code).url;
+					}
+			}
+	};
+
+	$scope.reset = function(){
+		$scope.searchService.resetForm();
+	};
+	
+	$scope.search = function(){	
+		$scope.searchService.search();
+	};
+	
+	//init
+	if(angular.isUndefined($scope.getHomePage())){
+		mainService.setHomePage('state');
+		tabService.addTabs({label:Messages('processes.tabs.search'),href:jsRoutes.controllers.processes.tpl.Processes.home("new").url,remove:false});
+		tabService.activeTab(0);
+	}
+	
+	if(angular.isUndefined($scope.getForm())){
+		$scope.form = {};
+		mainService.setForm($scope.form);
+	}else{
+		$scope.form = mainService.getForm();			
+	}
+	
+	$scope.searchService = processesSearchService;
+	$scope.searchService.init($routeParams, $scope.datatableConfig)
+	
+	if($scope.form.project || $scope.form.type){
+		$scope.search();
+	}
 }]);

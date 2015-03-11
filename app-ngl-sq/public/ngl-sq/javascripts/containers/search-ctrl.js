@@ -7,7 +7,8 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 		},
 		order:{
 			by:'traceInformation.creationDate',
-			reverse:true
+			reverse:true,
+			mode:'local'
 		},
 		edit:{
 			active:true,

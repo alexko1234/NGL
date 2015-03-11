@@ -106,6 +106,7 @@ processes.menu = Processus
 processes.menu.creation = Création
 processes.menu.state = Changement d''Etat
 processes.menu.search = Rechercher
+processes.menu.remove = Suppression
 processes.tabs.search = Recherche Processus
 processes.tabs.create = Création Processus
 processes.create = Créé un processus
