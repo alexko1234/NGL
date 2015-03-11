@@ -87,18 +87,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 					"position":10,
 					"render":"<div list-resize='value.data.projectCodes | unique' ' list-resize-min-size='2'>",
 					"type":"text"
-				});
-		columns.push({
-					"header":Messages("containers.table.valid"),
-					"property":"valuation.valid",
-					"order":true,
-					"type":"text",
-					"edit":true,
-					"position":11,
-					"choiceInList": true,
-					"possibleValues":"searchService.lists.getValuations()", 
-					"filter":"codes:'valuation'",
-				});
+				});		
 		columns.push({
 					"header":Messages("containers.table.creationDate"),
 					"property":"traceInformation.creationDate",
@@ -134,6 +123,17 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 				"possibleValues":"searchService.lists.getStates()", 
 				"filter":"codes:'state'"
 			});
+			columns.push({
+				"header":Messages("containers.table.valid"),
+				"property":"valuation.valid",
+				"order":true,
+				"type":"text",
+				"edit":false,
+				"position":11,
+				"choiceInList": true,
+				"possibleValues":"searchService.lists.getValuations()", 
+				"filter":"codes:'valuation'",
+			});
 		}else{
 			columns.push({
 				"header":Messages("containers.table.state.code"),
@@ -145,6 +145,17 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 				"choiceInList": true,
 				"possibleValues":"searchService.lists.getStates()", 
 				"filter":"codes:'state'"
+			});
+			columns.push({
+				"header":Messages("containers.table.valid"),
+				"property":"valuation.valid",
+				"order":true,
+				"type":"text",
+				"edit":true,
+				"position":11,
+				"choiceInList": true,
+				"possibleValues":"searchService.lists.getValuations()", 
+				"filter":"codes:'valuation'",
 			});
 		}
 				return columns;
