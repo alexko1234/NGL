@@ -149,9 +149,13 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 
 
 	$scope.finishExperiment = function(){		
-		$scope.lastExperimentType = "";
+		
+		if($scope.experiment.value.state.resolutionCodes == null || $scope.experiment.value.state.resolutionCodes.length === 0){
+			return $scope.saveAllAndChangeState();
+		}
+		
 		$scope.isLastExperiment = false;
-		var promises = [];	
+		
 
 		$http.get(jsRoutes.controllers.processes.api.Processes.list().url,{params:{"experimentCode":$scope.experiment.value.code}})
 		.success(function(data, status, headers, config){			
