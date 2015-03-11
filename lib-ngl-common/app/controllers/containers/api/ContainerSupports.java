@@ -101,7 +101,7 @@ public class ContainerSupports extends CommonController {
 			State state = new State();
 			state.code = containerSupportUpdateForm.stateCode;
 			state.user = getCurrentUser();
-			Workflows.setProcessState(code, state, contextValidation);
+			Workflows.setContainerSupportState(code, state, contextValidation);
 			if(!contextValidation.hasErrors()){
 				return ok();
 			}

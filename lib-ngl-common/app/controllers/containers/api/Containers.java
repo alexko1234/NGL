@@ -240,7 +240,7 @@ public class Containers extends CommonController {
 			State state = new State();
 			state.code = containersUpdateForm.stateCode;
 			state.user = getCurrentUser();
-			Workflows.setProcessState(code, state, contextValidation);
+			Workflows.setContainerState(code, null, state, contextValidation);
 			if(!contextValidation.hasErrors()){
 				return ok();
 			}
