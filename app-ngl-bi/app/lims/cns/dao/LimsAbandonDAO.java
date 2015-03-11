@@ -150,6 +150,7 @@ public class LimsAbandonDAO {
 	}
     
 	public List<BanqueSolexa> getBanqueSolexa(String containerSupportCode){
+		Logger.info("pl_BanquesolexaUneFC @flowcellid='"+containerSupportCode);
 		
 		RowMapper<BanqueSolexa> mapper = new RowMapper<BanqueSolexa>(){
 
@@ -173,7 +174,7 @@ public class LimsAbandonDAO {
 	
 	
 	public List<BanqueSolexa> getBanqueSolexaFlowcellNGL(String containerSupportCode){
-		
+		Logger.info("pl_BanquesolexaUneFlowcellNGL @matmanom="+containerSupportCode);
 		RowMapper<BanqueSolexa> mapper = new RowMapper<BanqueSolexa>(){
 
 			@Override
