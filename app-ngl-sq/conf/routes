@@ -15,6 +15,7 @@ GET		/api/supports													controllers.containers.api.ContainerSupports.list
 GET		/api/supports/:code												controllers.containers.api.ContainerSupports.get(code:java.lang.String)
 HEAD	/api/supports/:code												controllers.containers.api.ContainerSupports.head(code:java.lang.String)
 PUT		/api/supports/batch												controllers.containers.api.ContainerSupports.updateBatch()
+PUT		/api/supports/:code/state										controllers.containers.api.ContainerSupports.updateStateCode(code:java.lang.String)
 
 #containers tpl
 GET 	/containers/:homecode/home										controllers.containers.tpl.Containers.home(homecode:java.lang.String)

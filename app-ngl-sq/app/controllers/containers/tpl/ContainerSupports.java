@@ -27,6 +27,7 @@ public class ContainerSupports extends CommonController{
   	    		controllers.containers.api.routes.javascript.ContainerSupports.list(),
   	    		controllers.containers.api.routes.javascript.ContainerSupports.updateBatch(),
   	    		controllers.containers.api.routes.javascript.ContainerSupportCategories.list(),
+  	    		controllers.containers.api.routes.javascript.ContainerSupports.updateStateCode(),
   	    		controllers.projects.api.routes.javascript.Projects.list(),
   	    		controllers.samples.api.routes.javascript.Samples.list(),
   	    		controllers.containers.api.routes.javascript.Containers.list(),

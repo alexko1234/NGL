@@ -8,34 +8,21 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 		columns.push({
 			"header":Messages("containerSupports.table.code"),
 			"property":"code",
+			"position":1,
 			"order":true,
 			"type":"text"
 		});
 		columns.push({
 			"header":Messages("containerSupports.table.categoryCode"),
 			"property":"categoryCode",
+			"position":2,
 			"order":true,
 			"type":"text"
 		});
 		columns.push({
-			"header":Messages("containerSupports.table.state.code"),
-			"property":"state.code",
-			"order":true,
-			"type":"text",
-			"edit":true,
-			"choiceInList": true,
-			"possibleValues":"searchService.lists.getStates()", 
-			"filter":"codes:'state'"
-		});/*
-		columns.push({
-			"header":Messages("containerSupports.table.fromExperimentTypeCodes"),
-			"property":"fromExperimentTypeCodes",
-			"order":true,
-			"type":"text"
-		});*/
-		columns.push({
 			"header":Messages("containerSupports.table.sampleCodes.length"),
 			"property":"sampleCodes.length",
+			"position":4,
 			"order":true,
 			"hide":true,
 			"type":"text"
@@ -43,6 +30,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 		columns.push({
 			"header":Messages("containerSupports.table.sampleCodes"),
 			"property":"sampleCodes",
+			"position":5,
 			"order":true,
 			"type":"text",
 			"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
@@ -50,31 +38,73 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 		columns.push({
 			"header":Messages("containerSupports.table.projectCodes"),
 			"property":"projectCodes",
+			"position":6,
 			"order":true,
 			"type":"text"
 		});
-		columns.push({
-			"header":Messages("containerSupports.table.valid"),
-			"property":"valuation.valid",
-			"order":true,
-			"type":"text",
-			"edit":true,
-			"choiceInList": true,
-			"possibleValues":"searchService.lists.getValuations()", 
-			"filter":"codes:'valuation'",
-		});
+		
 		columns.push({
 			"header":Messages("containerSupports.table.creationDate"),
 			"property":"traceInformation.creationDate",
+			"position":8,
 			"order":true,
 			"type":"date"
 		});
 		columns.push({
 			"header":Messages("containers.table.createUser"),
 			"property":"traceInformation.createUser",
+			"position":9,
 			"order":true,
 			"type":"text"
 		});
+		
+		if(mainService.getHomePage() === 'state'){
+			columns.push({
+				"header":Messages("containerSupports.table.state.code"),
+				"property":"state.code",
+				"position":3,
+				"order":true,
+				"type":"text",
+				"edit":true,
+				"choiceInList": true,
+				"possibleValues":"searchService.lists.getStates()", 
+				"filter":"codes:'state'"
+			});
+			columns.push({
+				"header":Messages("containerSupports.table.valid"),
+				"property":"valuation.valid",
+				"position":7,
+				"order":true,
+				"type":"text",
+				"edit":true,
+				"choiceInList": true,
+				"possibleValues":"searchService.lists.getValuations()", 
+				"filter":"codes:'valuation'",
+			});
+		}else{
+			columns.push({
+				"header":Messages("containerSupports.table.state.code"),
+				"property":"state.code",
+				"position":3,
+				"order":true,
+				"type":"text",
+				"edit":false,
+				"choiceInList": true,
+				"possibleValues":"searchService.lists.getStates()", 
+				"filter":"codes:'state'"
+			});
+			columns.push({
+				"header":Messages("containerSupports.table.valid"),
+				"property":"valuation.valid",
+				"position":7,
+				"order":true,
+				"type":"text",
+				"edit":false,
+				"choiceInList": true,
+				"possibleValues":"searchService.lists.getValuations()", 
+				"filter":"codes:'valuation'",
+			});
+		}
 
 
 		return columns;

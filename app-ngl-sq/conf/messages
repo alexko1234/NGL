@@ -6,6 +6,7 @@ containerSupports.title = Supports
 containerSupports.menu = Supports
 containerSupports.menu.creation = Création
 containerSupports.menu.search = Rechercher
+containerSupports.menu.state = Changement d''Etat
 containerSupports.tabs.search = Recherche Supports
 
 #containerSupports table

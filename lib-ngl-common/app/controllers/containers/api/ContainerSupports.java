@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.utils.InstanceConstants;
@@ -21,7 +22,9 @@ import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
+import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
+import workflows.Workflows;
 
 import com.mongodb.BasicDBObject;
 
@@ -33,6 +36,7 @@ import fr.cea.ig.MongoDBResult;
 public class ContainerSupports extends CommonController {
 
 	final static Form<ContainerSupportsSearchForm> supportForm = form(ContainerSupportsSearchForm.class);
+	final static Form<ContainerSupportsUpdateForm> containerSupportUpdateForm = form(ContainerSupportsUpdateForm.class);
 
 	public static Result get(String code){
 		ContainerSupport support = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, code);
@@ -88,6 +92,23 @@ public class ContainerSupports extends CommonController {
 	public static Result updateBatch(){
 		return ok();
 	}
+	
+	public static Result updateStateCode(String code){
+		Form<ContainerSupportsUpdateForm> containerSupportUpdateFilledForm = getFilledForm(containerSupportUpdateForm, ContainerSupportsUpdateForm.class);
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(),containerSupportUpdateFilledForm.errors());
+		if(!containerSupportUpdateFilledForm.hasErrors()){
+			ContainerSupportsUpdateForm containerSupportUpdateForm = containerSupportUpdateFilledForm.get();
+			State state = new State();
+			state.code = containerSupportUpdateForm.stateCode;
+			state.user = getCurrentUser();
+			Workflows.setProcessState(code, state, contextValidation);
+			if(!contextValidation.hasErrors()){
+				return ok();
+			}
+		}
+		return badRequest(containerSupportUpdateFilledForm.errorsAsJson());
+		}
+		
 
 	/**
 	 * Construct the support query
