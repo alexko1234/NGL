@@ -209,7 +209,7 @@ public class ExperimentService {
 			//Depot solexa -- FDS 27/02/2015 devient commun
 			l.add(newExperimentType("Depot Illumina", "illumina-depot", 1400,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(),
-					getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500"), "OneToVoid", 
+					getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500"), "OneToVoid", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)));
 
 			
@@ -233,13 +233,15 @@ public class ExperimentService {
 					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));*/
 			
+			/* FDS 11-03-2015=> NGL-356: PCR pas encore utilisable.. commenter pour l'instant
 			l.add(newExperimentType("PCR","pcr",800,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
 					getInstrumentUsedTypes("hand","thermocycler"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-
+            */
+			
 			//pre-sequencing
-			//    FDS remommage a la demande de Julie en solution-x-nM=> lib-normalization
+			//    FDS NGL-356: remommage solution-x-nM=> lib-normalization
 			l.add(newExperimentType("Librairie normalisée","lib-normalization",1000,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
 					getInstrumentUsedTypes("hand"),"OneToOne", 

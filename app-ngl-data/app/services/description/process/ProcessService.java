@@ -96,9 +96,10 @@ public class ProcessService {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
 		//TO do multi value
+		//FDS 11-03-2015 =>NGL-356: supression GAIIx, ajout Nextseq, fusion  "Hiseq 2000", "Hiseq 2500 normal"-> "Hiseq 2000/2500N"
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type séquencage","sequencingType"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("GAIIx", "Hiseq 2000", "Hiseq 2500 normal" , "Hiseq 2500 rapide" ,"Miseq"), "single",100));
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("Hiseq 2000/2500N" , "Hiseq 2500 rapide" ,"Miseq","Nextseq"), "single",100));
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type de lectures", "readType"
 						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("SR","PE"), "single",200));		

@@ -256,7 +256,7 @@ public class InstrumentService {
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG))); //ok
 		
 		
-		
+		// FDS 11-03-2015 =>NGL-356: manquait la flowcell-4 pour NextSeq...
 		l.add(newInstrumentUsedType("cBot-onboard", "cBot-onboard", InstrumentCategory.find.findByCode("cbot"), getCBotInterneProperties(), 
 				getInstruments(
 						createInstrument("cBot-Hi9", "cBot-interne-Hi9", null, true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG)),
@@ -264,7 +264,7 @@ public class InstrumentService {
 						createInstrument("cBot-Hi11", "cBot-interne-Hi11", null, true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG)),
 						createInstrument("cBot-Miseq1", "cBot-interne-Miseq1", null, true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG)),
 						createInstrument("cBot-NextSeq1", "cBot-interne-Nextseq1", null, true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG))), 
-				getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-2","flowcell-1"}), 
+				getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-2","flowcell-1","flowcell-4" }), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 
 
