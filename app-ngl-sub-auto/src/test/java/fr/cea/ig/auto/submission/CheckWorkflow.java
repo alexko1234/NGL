@@ -110,8 +110,9 @@ public class CheckWorkflow extends GenericTest{
 		
 		Job jobTransfertRawData = CoreJobServiceFactory.getInstance().getJobBySpecification("transfertRawData",em.getEm()).iterator().next();
 		Assert.assertNotNull(jobTransfertRawData);
-		Assert.assertTrue(jobTransfertRawData.getUnixCommand().contains("-T -k2 -Q -m 300M -v"));
-		Assert.assertTrue(jobTransfertRawData.getUnixCommand().endsWith(" --mode send --host fasp.ega.ebi.ac.uk --user era-drop-9 / | tee result"));
+		log.debug("Command aspera "+jobTransfertRawData.getUnixCommand());
+		Assert.assertTrue(jobTransfertRawData.getUnixCommand().contains("-i ~/.ssh/ebi.sra -T -l 300M"));
+		Assert.assertTrue(jobTransfertRawData.getUnixCommand().endsWith(" --mode=send --host=webin.ebi.ac.uk --user=Webin-9 ."));
 		Assert.assertTrue(jobTransfertRawData.getUnixCommand().contains(jobTransfertRawData.getUniqueJobResource("rawDataDir").getProperty("submissionDirectory")+"/list_aspera_WGS"));
 
 		//Check file WGS

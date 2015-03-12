@@ -28,9 +28,8 @@ rule "update localDirectoryPath parameter"
 end
 
 #Règle organisation syntaxe Aspera selon ticket NGL-334
-#/env/cns/opt/aspera/bin/ascp -T -k2 -Q -m 300M -v 
-#		--file-list=/env/cns/submit_traces/SRA/SNTS_output_xml/AHX/list_aspera_WGS 
-#		--mode send --host fasp.ega.ebi.ac.uk --user era-drop-9 / | tee result
+#//usr/local/aspera/connect/bin/ascp -i ~/.ssh/ebi.rsa -T -l300M --file-list=list_data_for_aspera.txt 
+#										--mode=send --host=webin.ebi.ac.uk --user=Webin-9 .
 rule "unix syntax ncftpput for EBI"
 	@BirdsRule(unixSyntaxRule)
 	dialect 'java'
@@ -41,17 +40,15 @@ rule "unix syntax ncftpput for EBI"
 		then
 			Logger log = Logger.getLogger("ngl.sub.rules");	    
 			//Organize order parameterLine
-			String parameterLine = $strategy.getParameterValue().get("encryption") + " " + 
-									$strategy.getParameterValue().get("partialTransfert") + " " +
-									$strategy.getParameterValue().get("optionQ") + " " +
-									$strategy.getParameterValue().get("optionM") + " " +
-									$strategy.getParameterValue().get("optionV") + " " +
-									$strategy.getParameterValue().get("fileList") + " " +	
-									$strategy.getParameterValue().get("mode") + " "+
-									$strategy.getParameterValue().get("hostName") + " "+
-									$strategy.getParameterValue().get("userEBI") + " "+
+			String parameterLine = $strategy.getParameterValue().get("cert") + " " + 
+									$strategy.getParameterValue().get("encryption") + " " +
+									$strategy.getParameterValue().get("optionl") + " " +
+									$strategy.getParameterValue().get("fileList").replace("--file-list ","--file-list=") + " " +
+									$strategy.getParameterValue().get("mode").replace("--mode ","--mode=") + " " +
+									$strategy.getParameterValue().get("hostName").replace("--host ","--host=") + " " +	
+									$strategy.getParameterValue().get("userEBI").replace("--user ","--user=") + " "+
 									$strategy.getParameterValue().get("localDirectory");
-			$strategy.setCommandLine($strategy.getExecutableName() + " " + parameterLine + " | tee result");
+			$strategy.setCommandLine($strategy.getExecutableName() + " " + parameterLine);
 			log.debug("command line : " + $strategy.getCommandLine());
 			modify($strategy) {}
 end
