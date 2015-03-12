@@ -255,7 +255,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		
 	} else {
 		$scope.searchService.form = {};
-		$scope.searchService.form.nextExperimentTypeCode =  mainService.getForm().experimentType;
+		$scope.searchService.form =  mainService.getForm();
 		$scope.searchService.lists.refresh.containerSupportCategories({experimentTypeCode:$scope.searchService.form.nextExperimentTypeCode});
 		//$scope.search();
 	}

@@ -131,31 +131,6 @@ public class Experiments extends CommonController{
 	}
 	 */
 
-	public static Result stopProcesses(String experimentCode){
-		Experiment exp = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
-		if(exp != null){
-			ContextValidation contextValidation = new ContextValidation(getCurrentUser());
-			contextValidation.setUpdateMode();
-			for(ContainerUsed containerUsed:exp.getAllInPutContainer()){
-				Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.code);
-				for(String processCode:container.inputProcessCodes){
-					Workflows.stopProcess(processCode, contextValidation);
-				}
-			}
-			for(ContainerUsed containerUsed:exp.getAllOutPutContainerWhithInPutContainer()){
-				State nextState = new State();
-				nextState.code = "UA";
-				if(nextState.code!=null && containerUsed!=null){
-					Workflows.setContainerState(containerUsed.code, exp.typeCode, nextState, contextValidation, true, false);
-				}
-			}
-			if (!contextValidation.hasErrors()) {
-				return ok();
-			}
-		}
-		return badRequest();
-	}
-
 	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public static Result updateInstrumentInformations(String code) throws DAOException{
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
@@ -362,7 +337,7 @@ public class Experiments extends CommonController{
 		nextState.user=getCurrentUser();
 		nextState.resolutionCodes = exp.state.resolutionCodes;
 		
-		Workflows.setExperimentState(exp,nextState, ctxValidation, expUpdateForm.stopProcess, expUpdateForm.retry);
+		Workflows.setExperimentState(exp,nextState, ctxValidation, expUpdateForm.stopProcess, expUpdateForm.retry, expUpdateForm.processResolutionCodes);
 		if (!ctxValidation.hasErrors()) {
 			return ok(Json.toJson(exp));
 		}
@@ -429,7 +404,7 @@ public class Experiments extends CommonController{
 					state.user=getCurrentUser();
 					exp.state.code = null;
 
-					Workflows.setExperimentState(exp, state, ctxValidation, false, false);
+					Workflows.setExperimentState(exp, state, ctxValidation, false, false, null);
 				}
 			}
 			if (!ctxValidation.hasErrors()) {

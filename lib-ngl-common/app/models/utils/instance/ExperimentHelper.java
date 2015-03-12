@@ -223,7 +223,7 @@ public class ExperimentHelper extends InstanceHelpers {
 		
 		List<ContainerUsed> addedContainers = getDiff(containersIn,containersInFromDB);
 		if(addedContainers.size() > 0){
-			Workflows.nextInputContainerState(experiment, addedContainers, contextValidation, false, false);
+			Workflows.nextInputContainerState(experiment, addedContainers, contextValidation, false, false, null);
 			
 			for(ContainerUsed addedContainer:addedContainers){
 				//add the current experiment in the process and the experiment in the list of experiment

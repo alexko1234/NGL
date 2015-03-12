@@ -46,7 +46,7 @@
 		
 	</div>
 <!-- -------------------------------------------------------------------------------- -->
-<!-- Modal to display choise when user click finish -->
+<!-- Modal to display choice when user click on finish -->
 	<div id="modalResolutionProcess" class="modal fade"  tabindex="-1" role="dialog"
 		aria-labelledby="modalResolutionProcessLabel" aria-hidden="true">
 		<div class="modal-dialog">
@@ -56,8 +56,8 @@
 					 <h4 class="modal-title">@Messages("experiment.finishExperiment")</h4>
 					<h3 class="modal-title">{{modalTitle}}</h3>	
 				</div>
-				<div class="modal-body" style="padding:0px">
-					
+				<div class="modal-body" style="padding:50px">
+					<div class="form-control" bt-select ng-model="experiment.processResolutions" multiple="true" filter="true" placeholder='@Messages("experiments.select.resolutions")' bt-options="resolution.code as resolution.name for resolution in lists.get('processResolution')"></div>			
 				</div>
 				<div class="modal-footer">			
 					<button ng-if="isLastExperiment==false" class="btn btn-default" data-dismiss="modal" ng-click="saveAllAndChangeState()" aria-hidden="true">@Messages("experiment.continueProcess")</button>

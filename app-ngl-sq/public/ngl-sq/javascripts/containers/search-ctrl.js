@@ -6,6 +6,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 			url:jsRoutes.controllers.containers.api.Containers.list()
 		},
 		order:{
+			//by:"['support.code','support.column']",
 			by:'traceInformation.creationDate',
 			reverse:true,
 			mode:'local'

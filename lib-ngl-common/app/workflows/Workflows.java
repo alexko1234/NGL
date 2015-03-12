@@ -49,7 +49,7 @@ public class Workflows {
 	 *            : the experiment, errors: the filledForm errors
 	 */
 	public static void setExperimentState(Experiment experiment, State nextState, ContextValidation ctxValidation,
-			boolean stopProcess, boolean retry) {
+			boolean stopProcess, boolean retry, List<String> processResolutionCodes) {
 
 		ctxValidation.getContextObjects().put("stateCode", nextState.code);
 		ExperimentValidationHelper.validateState(experiment.typeCode, nextState, ctxValidation);
@@ -93,7 +93,7 @@ public class Workflows {
 			}
 
 			if (!ctxValidation.hasErrors()) {
-				nextInputContainerState(experiment, ctxValidation, stopProcess, retry);
+				nextInputContainerState(experiment, ctxValidation, stopProcess, retry, processResolutionCodes);
 			}
 		}
 	}
@@ -110,16 +110,16 @@ public class Workflows {
 			state.code = "F";
 		}
 
-		setExperimentState(experiment, state, contextValidation, stopProcess, retry);
+		setExperimentState(experiment, state, contextValidation, stopProcess, retry, null);
 	}
 
 	public static void nextInputContainerState(Experiment experiment, ContextValidation contextValidation,
-			boolean stopProcess, boolean retry) {
-		nextInputContainerState(experiment, experiment.getAllInPutContainer(), contextValidation, stopProcess, retry);
+			boolean stopProcess, boolean retry, List<String> processResolutionCodes) {
+		nextInputContainerState(experiment, experiment.getAllInPutContainer(), contextValidation, stopProcess, retry, processResolutionCodes);
 	}
 
 	public static void nextInputContainerState(Experiment experiment, List<ContainerUsed> containersIn,
-			ContextValidation contextValidation, boolean stopProcess, boolean retry) {
+			ContextValidation contextValidation, boolean stopProcess, boolean retry,List<String> processResolutionCodes) {
 		State state = new State();
 		state.date = new Date();
 		state.user = contextValidation.getUser();
@@ -147,7 +147,7 @@ public class Workflows {
 		}
 
 		if (state.code != null && !retry) {
-			setContainerState(containersIn, experiment.typeCode, state, contextValidation, stopProcess, false);
+			setContainerState(containersIn, experiment.typeCode, state, contextValidation, stopProcess, false, processResolutionCodes);
 			// Il faut mettre à jour le state du container dans
 			// l'experiment.atomicTransfereMethod
 		}
@@ -191,7 +191,7 @@ public class Workflows {
 			}
 			if (nextState.code != null && containerUsed != null) {
 				setContainerState(containerUsed.code, experiment.typeCode, nextState, contextValidation, stopProcess,
-						retry);
+						retry, null);
 			}
 		}
 
@@ -260,7 +260,7 @@ public class Workflows {
 	}
 
 	public static void nextProcessState(Container container, String experimentTypeCode,
-			ContextValidation contextValidation, boolean stopProcess, boolean retry) {
+			ContextValidation contextValidation, boolean stopProcess, boolean retry, List<String> processResolutionCodes) {
 		if (container.inputProcessCodes != null) {
 			for (String processCode : container.inputProcessCodes) {
 
@@ -275,6 +275,7 @@ public class Workflows {
 						&& checkProcessState("IP", processCode)
 						&& (stopProcess || (experimentTypeCode != null && endOfProcess(processCode, experimentTypeCode)))) {
 					processState.code = "F";
+					processState.resolutionCodes = processResolutionCodes;
 				}
 
 				if (processState.code != null) {
@@ -335,35 +336,35 @@ public class Workflows {
 
 	}
 
-	public static void stopProcess(String processCode, ContextValidation contextValidation) {
+	public static void stopProcess(String processCode, ContextValidation contextValidation,List<String> processResolutionCodes) {
 		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, processCode);
 		if (process != null) {
 			State state = new State();
 			state.code = "IS";
 			contextValidation.setUpdateMode();
 			Workflows.setContainerState(process.containerInputCode, process.currentExperimentTypeCode, state,
-					contextValidation, true, false);
+					contextValidation, true, false,processResolutionCodes);
 		}
 	}
 
 	public static void setContainerState(String containerCode, String experimentTypeCode, State nextState,
 			ContextValidation contextValidation) {
-		setContainerState(containerCode, experimentTypeCode, nextState, contextValidation, false, false);
+		setContainerState(containerCode, experimentTypeCode, nextState, contextValidation, false, false, null);
 	}
 
 	public static void setContainerState(String containerCode, String experimentTypeCode, State nextState,
-			ContextValidation contextValidation, boolean stopProcess, boolean retry) {
+			ContextValidation contextValidation, boolean stopProcess, boolean retry, List<String> processResolutionCodes) {
 		Container container = MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
 				DBQuery.is("code", containerCode));
 		if (container != null) {
-			setContainerState(container, experimentTypeCode, nextState, contextValidation, stopProcess, retry);
+			setContainerState(container, experimentTypeCode, nextState, contextValidation, stopProcess, retry, processResolutionCodes);
 		} else {
 			Logger.error("Container " + containerCode + " not exists");
 		}
 	}
 
 	public static void setContainerState(Container container, String experimentTypeCode, State nextState,
-			ContextValidation contextValidation, boolean stopProcess, boolean retry) {
+			ContextValidation contextValidation, boolean stopProcess, boolean retry,List<String> processResolutionCodes) {
 		String lastStateCode = container.state.code;
 		container.state = StateHelper.updateHistoricalNextState(container.state, nextState);
 		container.traceInformation = StateHelper.updateTraceInformation(container.traceInformation, nextState);
@@ -381,7 +382,7 @@ public class Workflows {
 		}
 		container.state = nextState;
 		nextContainerSupportState(container, contextValidation);
-		nextProcessState(container, experimentTypeCode, contextValidation, stopProcess, retry);
+		nextProcessState(container, experimentTypeCode, contextValidation, stopProcess, retry, processResolutionCodes);
 	}
 
 	private static void nextContainerSupportState(Container container, ContextValidation contextValidation) {
@@ -418,9 +419,9 @@ public class Workflows {
 	}
 
 	public static void setContainerState(List<ContainerUsed> containersUsed, String experimentTypeCode, State state,
-			ContextValidation contextValidation, boolean stopProcess, boolean retry) {
+			ContextValidation contextValidation, boolean stopProcess, boolean retry, List<String> processResolutionCodes) {
 		for (ContainerUsed containerUsed : containersUsed) {
-			setContainerState(containerUsed.code, experimentTypeCode, state, contextValidation, stopProcess, retry);
+			setContainerState(containerUsed.code, experimentTypeCode, state, contextValidation, stopProcess, retry, processResolutionCodes);
 		}
 	}
 
@@ -447,7 +448,7 @@ public class Workflows {
 		State previousState = new State();
 		previousState.code = previousTransientState.code;
 
-		setContainerState(container, experimentTypeCode, previousState, contextValidation, false, false);
+		setContainerState(container, experimentTypeCode, previousState, contextValidation, false, false, null);
 	}
 
 	public static void previousContainerState(ContainerUsed containersIn, String experimentTypeCode,
@@ -460,7 +461,7 @@ public class Workflows {
 		State previousState = new State();
 		previousState.code = previousTransientState.code;
 
-		setContainerState(container, experimentTypeCode, previousState, contextValidation, false, true);
+		setContainerState(container, experimentTypeCode, previousState, contextValidation, false, true, null);
 	}
 
 	public static void nextContainerState(List<Process> processes, String experimentTypeCode,
@@ -486,7 +487,7 @@ public class Workflows {
 			}
 		}
 
-		setContainerState(process.containerInputCode, experimentTypeCode, nextState, contextValidation, false, false);
+		setContainerState(process.containerInputCode, experimentTypeCode, nextState, contextValidation, false, false, null);
 
 	}
 

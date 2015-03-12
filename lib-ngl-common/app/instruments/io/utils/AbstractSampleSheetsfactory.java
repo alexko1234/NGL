@@ -50,11 +50,17 @@ public abstract class AbstractSampleSheetsfactory {
 	}
 	
 	public static String getContentProperty(Content content, String propertyName){
-		return (String) content.properties.get(propertyName).value;
+		if(content.properties.get(propertyName) != null){
+			return (String) content.properties.get(propertyName).value;
+		}
+		return "";
 	}
 	
 	public static Double getContentDoubleProperty(Content content, String propertyName){
-		return (Double) content.properties.get(propertyName).value;
+		if(content.properties.get(propertyName) != null){
+			return  (Double) content.properties.get(propertyName).value;
+		}
+		return 0.0;
 	}
 	
 	public static String getIntrumentBooleanProperties(Experiment experiment,String propertyName){

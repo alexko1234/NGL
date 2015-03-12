@@ -1,5 +1,6 @@
 angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$http','lists','$parse','$q','$position','$routeParams','$location','mainService','tabService','$filter','datatable', function($scope,$sce,$window, $http,lists,$parse,$q,$position,$routeParams,$location,mainService,tabService,$filter,datatable) {
 	$scope.experiment = {
+			processResolutions:[],
 			outputGenerated:false,
 			containerOutProperties:[],
 			outputVoid:false,
@@ -165,6 +166,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			$http.get(jsRoutes.controllers.processes.api.ProcessTypes.get(processTypeCode).url)
 			.success(function(data, status,headers,config){
 				$scope.processTypeCode = data;
+				$scope.lists.refresh.resolutions({"typeCode":$scope.processTypeCode.code}, 'processResolution');
 				$scope.lastExperimentTypeCode = $scope.processTypeCode.lastExperimentType.code;
 				if($scope.lastExperimentTypeCode===$scope.experiment.value.typeCode){
 					$scope.isLastExperiment = true;
@@ -363,13 +365,11 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			if(mainService.isHomePage('search') && !tabService.isBackupTabs()){
 				tabService.backupTabs();
 				tabService.resetTabs();
-				//$scope.addTabs({label:Messages('plates.tabs.searchmanips'),href:jsRoutes.controllers.plates.tpl.Plates.home("new").url,remove:false});
 				tabService.addTabs({label:Messages('experiments.tabs.create'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("new").url,remove:false});
 				tabService.addTabs({label:$filter('codes')($scope.form.experimentType,'type'),href:"/experiments/new/"+$scope.form.experimentType,remove:false});
 				tabService.addTabs({label:$scope.experiment.value.code,href:"/experiments/edit/"+$scope.experiment.value.code,remove:true});
-				//$scope.addTabs({label:$scope.plate.code,href:jsRoutes.controllers.plates.tpl.Plates.get($scope.plate.code).url,remove:false});
 				tabService.activeTab(2);
-				//reinit datatable and form
+				//reinit datatable
 				$scope.datatableReagent.setEdit();
 				mainService.setDatatable(undefined);	
 				//mainService.setForm(undefined);			
@@ -399,7 +399,6 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 
 		$scope.clearMessages();
 		$scope.setEditConfig(false);
-		//$scope.datatable.cancel();
 		if(mainService.isHomePage('search') && tabService.isBackupTabs()){
 			tabService.restoreBackupTabs();
 			tabService.activeTab(1);
@@ -776,11 +775,9 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 					$scope.nextStateCode = "F";
 				}
 			}
-			var promise = $http.put(jsRoutes.controllers.experiments.api.Experiments.updateStateCode($scope.experiment.value.code).url,{"nextStateCode":$scope.nextStateCode, "stopProcess":$scope.experiment.stopProcess, "retry":$scope.experiment.retry})
+			var promise = $http.put(jsRoutes.controllers.experiments.api.Experiments.updateStateCode($scope.experiment.value.code).url,{"nextStateCode":$scope.nextStateCode, "stopProcess":$scope.experiment.stopProcess, "retry":$scope.experiment.retry, "processResolutionCodes":$scope.experiment.processResolutions})
 			.success(function(data, status, headers, config) {
 				if(data!=null){
-					/*$scope.message.clazz="alert alert-success";
-					$scope.message.text=Messages('experiments.msg.save.sucess')*/
 					$scope.experiment.value = data;
 					if(!$scope.experiment.outputGenerated && $scope.isOutputGenerated()){
 						$scope.$broadcast('addOutputColumns');
@@ -879,7 +876,6 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		//$scope.init_atomicTransfert(containers,atomicTransfertMethod);
 		$scope.$broadcast('initAtomicTransfert', containers, atomicTransfertMethod);
 
-
 		angular.element(document).ready(function() {
 			if($scope.experiment.experimentProperties.inputs != undefined){
 				angular.forEach($scope.experiment.experimentProperties.inputs, function(input){
@@ -895,7 +891,6 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 	$scope.init_experiment = function(containers,atomicTransfertMethod){
 		if($scope.form != undefined && $scope.form.experiment != undefined){
 			$scope.form.experiment = $scope.experiment;
-			mainService.setForm($scope.form);
 		}
 		$scope.experiment.value.categoryCode = $scope.experimentType.category.code;
 		$scope.experiment.value.atomicTransfertMethods = {};
@@ -980,7 +975,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 
 			$scope.experiment.instrumentProperties.inputs = data;
 			angular.forEach(data, function(property){
-				//Creation of the properties on the scope
+				//Creation of the properties in the scope
 				if(loaded == false){
 					var getter = $parse("experiment.value.instrumentProperties."+property.code+".value");
 					getter.assign($scope,"");
@@ -1193,7 +1188,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				$scope.experiment.instrumentProperties.enabled = false;
 				$scope.experiment.instrumentInformation.enabled = false;
 				$scope.form = {"experimentType":experiment.typeCode, "containerSupportCategory":experiment.instrument.inContainerSupportCategoryCode};
-				mainService.setForm($scope.form);
+				//mainService.setForm($scope.form);
 				$scope.addSearchTabs();
 				$scope.experiment.value.instrument.outContainerSupportCategoryCode = experiment.instrument.outContainerSupportCategoryCode;
 				$scope.experiment.value = experiment;
