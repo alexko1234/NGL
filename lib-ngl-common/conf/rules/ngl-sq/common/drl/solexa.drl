@@ -13,6 +13,7 @@ declare ContentInfo
 	tag : String 
 	tagCategory : String 
 	sampleCode : String
+	tagRealSize : Integer
 end
 
 
@@ -47,11 +48,16 @@ rule "Init objects ContentInfo in WM"
    
     String tag="VIDE";
     String tagCategory="VIDE";
-    if( $content.properties.containsKey("tag")) tag=$content.properties.get("tag").value.toString();
-    if( $content.properties.containsKey("tagCategory")) tagCategory=$content.properties.get("tagCategory").value.toString();
+    Integer tagRealSize = 0;
+    if($content.properties.containsKey("tag")){
+    	tag=$content.properties.get("tag").value.toString();
+    	Index index=MongoDBDAO.findOne(InstanceConstants.PARAMETER_COLL_NAME, Index.class, DBQuery.is("typeCode", "index-illumina-sequencing").is("code", tag));
+    	tagRealSize = index.sequence.length();
+    }
+    if($content.properties.containsKey("tagCategory")) tagCategory=$content.properties.get("tagCategory").value.toString();
 
-	ContentInfo contentInfo= new ContentInfo($atomicTransfert.position,$container.code,tag,tagCategory,$content.sampleCode);
-	Logger.debug("Content Info Position : "+$atomicTransfert.position+ ", Sample Code :"+$content.sampleCode + ", Container Code :"+$container.code+", Tag :"+tag+", tagCategory :"+tagCategory);
+	ContentInfo contentInfo= new ContentInfo($atomicTransfert.position,$container.code,tag,tagCategory,$content.sampleCode, tagRealSize);
+	Logger.debug("Content Info Position : "+$atomicTransfert.position+ ", Sample Code :"+$content.sampleCode + ", Container Code :"+$container.code+", Tag :"+tag+", tagCategory :"+tagCategory+", size :"+tagRealSize);
     $laneInfo.getContentInfos().add(contentInfo);
 	insert(contentInfo);
 	
@@ -112,8 +118,6 @@ rule "Sum % percentage per piste = 100 % "
    		$contextValidation.addErrors("lane["+$atomics.position+"]",	"error.validationexp.percentperoutputcontainer", $total,$atomics.position);
    	end
    	
-
-   	
 rule "Tag identique sur la meme position"
 	@nglSQ (validations )
 	dialect "java"
@@ -140,6 +144,21 @@ when
 	  $contextValidation:ContextValidation($errors : errors)
 then
 	Logger.debug("TagCategory error "+ $tagCategories.size()+" position "+$position);
+    $contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.manytagCategory", $position);
+end
+
+rule "Same tag size"
+	@nglSQ (validations )
+	dialect "java"
+	salience 301
+	no-loop
+when
+	 LaneInfo($position:position)
+     $tagRealSizes : Set(empty==false, size > 1) from accumulate( ContentInfo ( $tagRealSize : tagRealSize, $position==position),
+                        collectSet( $tagRealSize) )
+	  $contextValidation:ContextValidation($errors : errors)
+then
+	Logger.debug("Tag squence error "+ $tagRealSizes+" position "+$position);
     $contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.manytagCategory", $position);
 end
 
