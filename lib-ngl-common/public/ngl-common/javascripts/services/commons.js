@@ -212,8 +212,10 @@ angular.module('commonsServices', []).
 				var newArray = [];
 				if(angular.isDefined(result)){
 					newObject = result;    				
-    				newArray = Object.keys(newObject);    					
-    				newObject[newArray.length]={name: "None", code: "none"}; 
+    				newArray = Object.keys(newObject);
+    				if(newObject[newArray.length-1].code!=="none"){
+    					newObject[newArray.length]={name: "None", code: "none"};
+    				}    				 
 				}
     			 return result;
     		};

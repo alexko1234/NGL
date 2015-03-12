@@ -9,6 +9,7 @@ import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.processes.description.ProcessType;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import play.Logger;
@@ -75,5 +76,10 @@ public class ExperimentTypes extends CommonController{
 		}	
 	}
 	
+	public static Result getDefaultFirstExperiments(String processTypeCode) throws DAOException{		
+			ProcessType processType = ProcessType.find.findByCode(processTypeCode);
+			List<ExperimentType> expTypes = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(processType.firstExperimentType.code);
+			return ok(Json.toJson(expTypes));		
+	}
 	
 }

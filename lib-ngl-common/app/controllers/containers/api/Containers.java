@@ -372,9 +372,11 @@ public class Containers extends CommonController {
 				}			
 			}
 			
-			if( hasNoneValue == false){
-			queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes)));
+			if( hasNoneValue == false){			
+			queryElts.add(DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes));
 			}
+		}else{
+			queryElts.add(DBQuery.nor(DBQuery.size("fromExperimentTypeCodes", 0),DBQuery.notExists("fromExperimentTypeCodes")));
 		}
 
 		if(null != containersSearch.fromDate){

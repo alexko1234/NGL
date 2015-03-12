@@ -1,7 +1,7 @@
 "use strict";
 
 
-angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable','basket','lists','$filter','mainService','tabService', function($scope, datatable,basket, lists,$filter,mainService, tabService) {
+angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable','basket','lists','$filter','$http','mainService','tabService','$parse', function($scope, datatable,basket, lists,$filter,$http,mainService, tabService, $parse) {
 	$scope.lists = lists; 
 
 	$scope.datatableConfig = {
@@ -143,6 +143,37 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	$scope.changeProcessType = function(){
 		$scope.removeTab(1);
 		$scope.basket.reset();
+	};
+	
+	$scope.selectDefaultFromExperimentType = function(){
+		var selectionList = {};
+		if(angular.isUndefined($scope.form.fromExperimentTypeCodes)){
+			$scope.form.fromExperimentTypeCodes=[];
+		}		
+		if(angular.isDefined($scope.form.nextProcessTypeCode)){
+			selectionList = angular.copy($scope.lists.getExperimentTypesWithNone());
+			$http.get(jsRoutes.controllers.experiments.api.ExperimentTypes.getDefaultFirstExperiments($scope.form.nextProcessTypeCode).url)
+			.success(function(data, status, headers, config) {
+				var defaultFirstExperimentTypes = data;
+				console.log("defaultFirstExperimentTypes= "+defaultFirstExperimentTypes);
+				angular.forEach(defaultFirstExperimentTypes, function(experimentType, key){
+					angular.forEach(selectionList, function(item, index){
+						if(experimentType.code==item.code){
+							console.log("experimentType.code= "+experimentType.code);
+							console.log("item.code= "+item.code);
+							console.log("index= "+index);	
+							var getter = $parse('form.fromExperimentTypeCodes');
+							//$scope.form.fromExperimentTypeCodes.push(item.code);
+							getter.assign($scope,item.code);
+							console.log("form.fromExperimentTypeCodes= "+$scope.form.fromExperimentTypeCodes);
+
+						}
+					});
+				});
+				
+				$scope.search();
+			});
+		}		
 	};
 
 	$scope.reset = function(){
@@ -488,20 +519,6 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 		        	 "position":30,
 		        	 "type":"text"
 		         },
-		     /*    {
-		        	 "header":Messages("processes.table.resolutionCode"),
-		        	 "property":"state.resolutionCodes",
-		        	 "order":true,
-		        	 "position":31,
-		        	 "type":"text"
-		         },
-		         {
-		        	 "header":Messages("processes.table.currentExperimentTypeCode"),
-		        	 "property":"currentExperimentTypeCode",
-		        	 "order":true,
-		        	 "position":32,
-		        	 "type":"text"
-		         }, */
 		         {
 		        	 "header":Messages("processes.table.code"),
 		        	 "property":"code",
@@ -518,20 +535,6 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 		        	 "position":34,
 		        	 "type":"date"
 		         },
-		 /*        {
-		        	 "header":Messages("processes.table.newContainerSupportCodes"),
-		        	 "property":"newContainerSupportCodes",
-		        	 "order":true,
-		        	 "position":35,
-		        	 "type":"text"
-		         },
-		         {
-		        	 "header":Messages("processes.table.experimentCodes"),
-		        	 "property":"experimentCodes",
-		        	 "order":true,
-		        	 "position":36,
-		        	 "type":"text"
-		         }, */
 		         {
 		        	 "header":Messages("processes.table.projectCode"),
 		        	 "property":"projectCode",
@@ -598,9 +601,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 					.success(function(data, status, headers, config) {
 						if(data!=null){
 							$scope.message.clazz="alert alert-success";
-							$scope.message.text=Messages('experiments.msg.save.sucess');
-
-							//$scope.processes.push(data);
+							$scope.message.text=Messages('experiments.msg.save.sucess');							
 							$scope.processes = $scope.processes.concat(data);
 						}
 					})

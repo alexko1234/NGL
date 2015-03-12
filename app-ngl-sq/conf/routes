@@ -34,17 +34,14 @@ PUT		/api/containers/:code/state										controllers.containers.api.Containers.
 
 #processes tpl
 GET 	/processes/:homecode/home										controllers.processes.tpl.Processes.home(homecode:java.lang.String)
-GET		/tpl/processes/searchColmuns									controllers.processes.tpl.Processes.searchColumns()
 GET		/tpl/processes/get-properties-definitions/:processTypeCode		controllers.processes.tpl.Processes.getPropertiesDefinitions(processTypeCode:java.lang.String)
 GET		/tpl/processes/search/:processTypeCode							controllers.processes.tpl.Processes.search(processTypeCode:java.lang.String)
 GET		/tpl/processes/searchContainers									controllers.processes.tpl.Processes.searchContainers()
 GET		/tpl/processes/newProcesses/:processTypeCode					controllers.processes.tpl.Processes.newProcesses(processTypeCode:java.lang.String)
-GET		/tpl/processes/newProcessesColumns/:processTypeCode				controllers.processes.tpl.Processes.newProcessesColumns(processTypeCode:java.lang.String)
 GET		/tpl/processes/js-routes										controllers.processes.tpl.Processes.javascriptRoutes()
 
 #processes api
 POST	/api/processes													controllers.processes.api.Processes.save()
-#POST	/api/processes/:supportCode										controllers.processes.api.Processes.saveFromSupport(supportCode:java.lang.String)
 PUT		/api/processes/:code											controllers.processes.api.Processes.update(code:java.lang.String)
 PUT		/api/processes/:code/state										controllers.processes.api.Processes.updateStateCode(code:java.lang.String)
 DELETE	/api/processes/:code											controllers.processes.api.Processes.delete(code:java.lang.String)
@@ -63,7 +60,6 @@ GET		/tpl/experiments/newExperiments/:experimentTypeCode										controllers.ex
 GET		/tpl/experiments/js-routes																controllers.experiments.tpl.Experiments.javascriptRoutes()
 GET		/tpl/experiments/get-template/:atomicType/:inputCategory/:outputCategory				controllers.experiments.tpl.Experiments.getTemplate(atomicType:java.lang.String,inputCategory:java.lang.String,outputCategory:java.lang.String)
 GET		/tpl/experiments/create-or-edit-experiment												controllers.experiments.tpl.Experiments.createOrEditExperiment()
-GET		/tpl/experiments/getEditExperimentColumns												controllers.experiments.tpl.Experiments.getEditExperimentColumns()
 GET		/tpl/experiments/search/:experimentTypeCode												controllers.experiments.tpl.Experiments.search(experimentTypeCode:java.lang.String)
 
 
@@ -86,6 +82,7 @@ GET		/api/experiment/categories										controllers.experiments.api.ExperimentC
 GET		/api/experiment/types											controllers.experiments.api.ExperimentTypes.list()
 GET		/api/experiment/type/nodes										controllers.experiments.api.ExperimentTypeNodes.list()
 GET		/api/experiment/types/:code										controllers.experiments.api.ExperimentTypes.get(code:java.lang.String)
+GET		/api/experiment/types/defaultfirst/:code						controllers.experiments.api.ExperimentTypes.getDefaultFirstExperiments(code:java.lang.String)
 GET		/api/experiments/protocols 										controllers.experiments.api.Protocols.list()
 GET		/api/experiments/:code											controllers.experiments.api.Experiments.get(code:java.lang.String)
 

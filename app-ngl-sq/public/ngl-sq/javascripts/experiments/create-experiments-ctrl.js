@@ -178,6 +178,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				}	
 			});	
 		});
+		
+		
 	};
 
 	$scope.getPropertyColumnType = function(type){

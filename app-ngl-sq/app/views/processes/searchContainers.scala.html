@@ -19,7 +19,7 @@
 	}
 	@columnSearchForm{
 		@formGroup{
-		<div bt-select placeholder="@Messages("processes.select.processType")" class="form-control" ng-disabled="form.processCategory == undefined" ng-class="errors.processType" ng-model="form.nextProcessTypeCode" bt-options="processType.code as processType.name for processType in  lists.getProcessTypes()" ng-change="changeProcessType()" auto-select>
+		<div bt-select placeholder="@Messages("processes.select.processType")" class="form-control" ng-disabled="form.processCategory == undefined" ng-class="errors.processType" ng-model="form.nextProcessTypeCode" bt-options="processType.code as processType.name for processType in  lists.getProcessTypes()" ng-change="changeProcessType();selectDefaultFromExperimentType()" auto-select>
 		</div>		
 		}
 		@formGroup{
@@ -42,8 +42,8 @@
 						
 		}
 		@formGroup{
-			<div class="form-control" bt-select ng-model="form.fromExperimentTypeCodes" multiple="true" placeholder="@Messages("containers.select.fromExperimentTypeCodes")" 
-				bt-options="expType.code as expType.name for expType in lists.getExperimentTypes()" auto-select>
+			<div class="form-control" id="fromExperimentTypeCodes" bt-select ng-model="form.fromExperimentTypeCodes" multiple="true" placeholder="@Messages("containers.select.fromExperimentTypeCodes")" 
+				bt-options="expType.code as expType.name for expType in lists.getExperimentTypesWithNone()" auto-select>
 			</div>			
 		}
 	}

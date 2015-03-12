@@ -47,60 +47,10 @@ public class Processes extends CommonController{
 		return ok(search.render());
 	}
 
-	public static Result searchColumns(){
-		//TODO: A mettre en javascript
-		Form<ProcessesSearchForm> processesFilledForm = filledFormQueryString(processesSearchForm,ProcessesSearchForm.class);
-		ProcessesSearchForm processesSearch = processesFilledForm.get();
-
-		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
-		columns.add(DatatableHelpers.getColumn("containerInputCode", Messages.get("processes.table.containerInputCode"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("sampleCode", Messages.get("processes.table.sampleCode"), true, false, false));
-		//TODO: Passer par des config de colonnes
-		columns.add(DatatableHelpers.getColumn("sampleOnInputContainer.properties.tag.value", Messages.get("processes.table.sampleOnInputContainer.properties.tag"),true, false,false));
-		columns.add(DatatableHelpers.getColumn("sampleOnInputContainer.mesuredVolume.value", Messages.get("processes.table.sampleOnInputContainer.mesuredVolume"),true, false,false));
-		columns.add(DatatableHelpers.getColumn("sampleOnInputContainer.mesuredVolume.unit", Messages.get("processes.table.sampleOnInputContainer.unit.volume"),true, false,false));		
-		columns.add(DatatableHelpers.getColumn("sampleOnInputContainer.mesuredConcentration.value", Messages.get("processes.table.sampleOnInputContainer.mesuredConcentration"),true, false,false));
-		columns.add(DatatableHelpers.getColumn("sampleOnInputContainer.mesuredConcentration.unit", Messages.get("processes.table.sampleOnInputContainer.unit.concentration"),true, false,false));
-
-		columns.add(DatatableHelpers.getColumn("typeCode", Messages.get("processes.table.typeCode"), true, false, false, "codes:'type'"));
-		if(processesSearch.typeCode != null){
-			columns.addAll(getPropertiesDefinitionsColumns(processesSearch.typeCode ,true));
-		}
-		columns.add(DatatableHelpers.getColumn("state.code", Messages.get("processes.table.stateCode"), true, false, false, "codes:'state'"));
-		columns.add(DatatableHelpers.getColumn("state.resolutionCodes", Messages.get("processes.table.resolutionCode"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("currentExperimentTypeCode", Messages.get("processes.table.currentExperimentTypeCode"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("code", Messages.get("processes.table.code"), true, false, false));		
-		columns.add(DatatableHelpers.getDateColumn("traceInformation.creationDate", Messages.get("processes.table.creationDate"), true, false, false));
-		columns.add(DatatableHelpers.getColumn("newContainerSupportCodes", Messages.get("processes.table.newContainerSupportCodes"), true, false, false,"","<div list-resize='value.data.newContainerSupportCodes | unique' below-only-deploy>"));//
-		columns.add(DatatableHelpers.getColumn("experimentCodes", Messages.get("processes.table.experimentCodes"), true, false, false,"","<div list-resize='value.data.experimentCodes | unique' below-only-deploy>"));		
-		columns.add(DatatableHelpers.getColumn("projectCode", Messages.get("processes.table.projectCode"), true, false, false));
-		
-		return ok(Json.toJson(columns));
-	}
-
 	public static Result newProcesses(String processTypeCode){
 		return ok(newProcesses.render());
 	}
-
-	public static Result newProcessesColumns(String processTypeCode){
-		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
-		
-		/*
-		columns.add(DatatableHelpers.getColumn("support.code", Messages.get("processes.table.supportCode")));
-		columns.add(DatatableHelpers.getColumn("support.line", Messages.get("processes.table.line")));
-		columns.add(DatatableHelpers.getColumn("support.column", Messages.get("processes.table.columns")));
-		//columns.add(DatatableHelpers.getColumn("code", Messages.get("processes.table.code")));
-		columns.add(DatatableHelpers.getColumn("projectCode", Messages.get("processes.table.projectCode")));						
-		columns.add(DatatableHelpers.getColumn("sampleCode", Messages.get("processes.table.sampleCode")));
-		//columns.add(DatatableHelpers.getColumn("containerInputCode", Messages.get("processes.table.containerInputCode")));
-		columns.add(DatatableHelpers.getColumn("state.code", Messages.get("processes.table.stateCode"),"codes:'state'"));
-		*/
-
-		columns.addAll(getPropertiesDefinitionsColumns(processTypeCode, true));
-
-		return ok(Json.toJson(columns));
-	}
-
+	
 
 	public static Result getPropertiesDefinitions(String processTypeCode){
 		ProcessType processType;
@@ -117,59 +67,6 @@ public class Processes extends CommonController{
 		return badRequest();
 	}	
 
-	private static List<DatatableColumn> getPropertiesDefinitionsColumns(String processTypeCode,Boolean edit){
-		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();		
-		//Adding property definition columns
-		if(!StringUtils.isEmpty(processTypeCode) && !processTypeCode.equals("home")) {
-			try {
-				ProcessType processType = ProcessType.find.findByCode(processTypeCode);
-				if(processType != null && processType.propertiesDefinitions != null) {
-					List<PropertyDefinition> propertyDefinition = processType.propertiesDefinitions;
-					for(PropertyDefinition p : propertyDefinition) {
-						DatatableColumn c = null;
-						if(!p.valueType.equals("java.util.Date")){
-							c = DatatableHelpers.getColumn("properties."+p.code+".value", Messages.get("processes.table.properties."+p.code), true, edit, false);
-						}else{
-							c = DatatableHelpers.getDateColumn("properties."+p.code+".value", Messages.get("processes.table.properties."+p.code), true, edit, false);
-
-						}
-						if(p.choiceInList){
-							c.choiceInList = p.choiceInList;
-							if(p.possibleValues != null){
-								c.possibleValues = new ArrayList<Object>();
-								for(Value v: p.possibleValues){										
-									ListObjectValue l = null;
-									if(p.valueType.equals("java.lang.String")){
-										l = new ListObjectValue<String>(v.code,v.name);									
-									}
-									else if(p.valueType.equals("java.lang.Double")){
-										l = new ListObjectValue<Double>(Double.parseDouble(v.code),v.name);										
-									}
-									else if(p.valueType.equals("java.lang.Float")){
-										l = new ListObjectValue<Float>(Float.parseFloat(v.code),v.name);										
-									}
-									else if(p.valueType.equals("java.lang.Integer")){
-										l = new ListObjectValue<Integer>(Integer.parseInt(v.code),v.name);										
-									}
-									else{										
-										Logger.debug("Not implemented :"+ p.valueType);									
-									}
-									c.possibleValues.add(l);
-
-								}
-							}
-						}
-						columns.add(c);
-					}
-				}
-			} catch (DAOException e) {
-				e.printStackTrace();
-			}
-		}
-		return columns;
-	}
-
-
 	public static Result javascriptRoutes() {
 		response().setContentType("text/javascript");
 		return ok(  	    		
@@ -180,13 +77,10 @@ public class Processes extends CommonController{
 						controllers.processes.tpl.routes.javascript.Processes.searchContainers(),
 						controllers.processes.tpl.routes.javascript.Processes.home(),  
 						controllers.processes.api.routes.javascript.Processes.update(),
-						controllers.processes.tpl.routes.javascript.Processes.searchColumns(),  
-						controllers.processes.tpl.routes.javascript.Processes.newProcessesColumns(),
 						controllers.processes.tpl.routes.javascript.Processes.getPropertiesDefinitions(),
 						controllers.processes.api.routes.javascript.Processes.save(),
 						controllers.processes.api.routes.javascript.Processes.delete(),
 						controllers.processes.api.routes.javascript.Processes.updateStateCode(),
-						//controllers.processes.api.routes.javascript.Processes.saveFromSupport(),
 						controllers.processes.api.routes.javascript.ProcessTypes.list(),
 						controllers.containers.api.routes.javascript.Containers.list(),
 						controllers.processes.api.routes.javascript.Processes.list(),
@@ -201,6 +95,7 @@ public class Processes extends CommonController{
 						controllers.reporting.api.routes.javascript.FilteringConfigurations.list(),
 						controllers.containers.api.routes.javascript.ContainerSupportCategories.list(),
 						controllers.experiments.api.routes.javascript.ExperimentTypes.list(),
+						controllers.experiments.api.routes.javascript.ExperimentTypes.getDefaultFirstExperiments(),
 						controllers.reporting.api.routes.javascript.ReportingConfigurations.list(),
 			      		controllers.reporting.api.routes.javascript.ReportingConfigurations.get(),
 			      		controllers.reporting.api.routes.javascript.ReportingConfigurations.save(),

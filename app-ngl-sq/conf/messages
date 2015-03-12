@@ -270,7 +270,7 @@ baskets.new = Créer un panier
 baskets.add = Ajouter au panier
 baskets.switchView = Voir
 baskets.switchView.containers = les containers
-baskets.switchView.support = les supports-containers
+baskets.switchView.supports = les supports-containers
 backet.view.containerSupport = Vue supports
 backet.view.containers = Vue containers
 

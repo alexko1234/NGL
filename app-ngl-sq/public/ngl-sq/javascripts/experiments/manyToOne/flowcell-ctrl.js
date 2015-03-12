@@ -28,13 +28,6 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			        	 "render":"<div list-resize='value.data.inputTags | unique' below-only-deploy>",
 			        	 "extraHeaders":{0:"solution stock"}
 			         },
-			         /*	{
-						"header":Messages("containers.table.support.line"),
-						"property":"outputPositionY",
-						"order":true,
-						"type":"text",
-						"extraHeaders":{"0":"Outputs"}
-					},*/
 			         {
 			        	 "header":function(){
 			        		 return Messages("containers.table.concentration") +" (nM)";
@@ -112,8 +105,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 			        	 active:true,
 			        	 showButton:true,
 			        	 delimiter:";",
-			        	 start:false
-			        	 //label:function(){return $scope.experiment.value.instrumentProperties.containerSupportCode.value+"   "+$scope.experiment.value.code}
+			        	 start:false			        	 
 			         },
 			         extraHeaders:{
 			        	 number:2,
@@ -281,8 +273,7 @@ angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable
 					}
 
 					if(!$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code]){
-						$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code] = undefined;
-						//$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code].value = undefined;
+						$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code] = undefined;						
 					}
 				}
 			}

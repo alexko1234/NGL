@@ -1,6 +1,80 @@
 angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','oneToOne','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,oneToOne,mainService,tabService) {
 	$scope.datatableConfig = {
-			columnsUrl : jsRoutes.controllers.experiments.tpl.Experiments.getEditExperimentColumns().url,
+			name:"FDR_Tube",
+			columns:[
+			         {
+			        	 "header":Messages("containers.table.supportCode"),
+			        	 "property":"support.code",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":0,
+			        	 "extraHeaders":{0:"Inputs"}
+			         },
+			         {
+			        	 "header":Messages("containers.table.categoryCode"),
+			        	 "property":"support.categoryCode",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":1,
+			        	 "extraHeaders":{0:"Inputs"}
+			         },
+					 {
+			        	 "header":Messages("containers.table.code"),
+			        	 "property":"code",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":2,
+			        	 "extraHeaders":{0:"Inputs"}
+			         },
+					 {
+			        	 "header":Messages("containers.table.projectCodes"),
+			        	 "property":"projectCodes",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":3,
+			        	 "extraHeaders":{0:"Inputs"}
+			         },
+					 {
+			        	 "header":Messages("containers.table.sampleCodes"),
+			        	 "property":"sampleCodes",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":4,
+						 "render":"<div list-resize='value.data.sampleCodes | unique'>",
+			        	 "extraHeaders":{0:"Inputs"}
+			         },
+					 {
+			        	 "header":Messages("containers.table.stateCode"),
+			        	 "property":"state.code",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+						 "filter":"codes:'state'",
+			        	 "position":6,
+			        	 "extraHeaders":{0:"Inputs"}
+			         },
+					 {
+			        	 "header":Messages("containers.table.fromExperimentTypeCodes"),
+			        	 "property":"fromExperimentTypeCodes",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":7,
+			        	 "extraHeaders":{0:"Inputs"}
+			         }
+			         ],
 			compact:false,
 			pagination:{
 				active:false

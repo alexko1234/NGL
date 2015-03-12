@@ -1,24 +1,7 @@
  "use strict";
  
  angular.module('ngl-sq.processesServices', []).
-	factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable', function($http, mainService, lists, datatable){
-		/*var getColumns = function(){
-			var typeCode = "";
-			if(this.form.typeCode){
-				typeCode = this.form.typeCode;
-			}
-			
-			$http.get(jsRoutes.controllers.processes.tpl.Processes.searchColumns().url,{params:{"typeCode":typeCode}})
-			.success(function(data, status, headers, config) {
-				if(data!=null){
-					searchService.datatable.setColumnsConfig(data);
-				}
-			})
-			.error(function(data, status, headers, config) {
-			
-			});
-		};*/
-		
+	factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable', function($http, mainService, lists, datatable){		
 		var isInit = false;
 		
 		var initListService = function(){
@@ -422,8 +405,7 @@
 				},
 				
 				changeProcessTypeCode : function(){
-					if(this.form.categoryCode){
-						//searchService.search();
+					if(this.form.categoryCode){						
 						lists.refresh.filterConfigs({pageCodes:["process-"+this.form.typeCode]}, "process-"+this.form.typeCode);
 						this.initAdditionalFilters();
 					}else{
@@ -455,9 +437,7 @@
 					return this.additionalColumns;									
 				},
 				addColumnsToDatatable:function(){
-					//this.reportingConfiguration = undefined;
-					//this.reportingConfigurationCode = undefined;
-					
+										
 					this.selectedAddColumns = [];
 					for(var i = 0 ; i < this.additionalColumns.length ; i++){
 						for(var j = 0; j < this.additionalColumns[i].length; j++){
@@ -494,8 +474,7 @@
 						 }else{
 							 searchService.datatable.setColumnsConfig(this.columnsDefault);
 						 }
-						mainService.setDatatable(searchService.datatable);
-						//searchService.datatable.setColumnsConfig(getColumns());		
+						mainService.setDatatable(searchService.datatable);							
 					}else if(angular.isDefined(mainService.getDatatable())){
 						searchService.datatable = mainService.getDatatable();			
 					}	

@@ -68,27 +68,6 @@ public class Experiments extends CommonController{
 	
 		return ok(createExperiments.render(getCurrentUser()));
 	}
-
-	
-	public static Result getEditExperimentColumns(){
-		
-		List<DatatableColumn> columns = new ArrayList<DatatableColumn>();
-		Map<Integer,String> extraHeaders = new HashMap<Integer, String>();
-		extraHeaders.put(0, "Inputs");
-		columns.add(DatatableHelpers.getColumn("support.code", Messages.get("containers.table.supportCode"), true, false, true,false,extraHeaders));	
-		columns.add(DatatableHelpers.getColumn("support.categoryCode", Messages.get("containers.table.categoryCode"), true, false, true,false,extraHeaders));	
-		columns.add(DatatableHelpers.getColumn("code", Messages.get("containers.table.code"), true, false, true,false,extraHeaders));	
-		columns.add(DatatableHelpers.getColumn("projectCodes", Messages.get("containers.table.projectCodes"), true, false, true,false,extraHeaders));
-		columns.add(DatatableHelpers.getColumn("sampleCodes", Messages.get("containers.table.sampleCodes"), true, false, true,false,extraHeaders,"<div list-resize='value.data.sampleCodes | unique'>"));		
-		//columns.add(DatatableHelpers.getColumn("sampleCodes.length",  Messages.get("containers.table.sampleCodes.length"), true, false, true,false,extraHeaders));
-		DatatableColumn dc = DatatableHelpers.getColumn("state.code", Messages.get("containers.table.stateCode"), true, false, true,false,extraHeaders);
-		dc.filter = "codes:'state'";
-		columns.add(dc);
-		
-		columns.add(DatatableHelpers.getColumn("fromExperimentTypeCodes", Messages.get("containers.table.fromExperimentTypeCodes"), true, false, true,false,extraHeaders));
-		
-		return ok(Json.toJson(columns));
-	}
 	
 	public static Result search(String experimentType){
 		return ok(search.render());
@@ -110,7 +89,7 @@ public class Experiments extends CommonController{
   	    		controllers.processes.api.routes.javascript.ProcessCategories.list(),
   	    		controllers.containers.api.routes.javascript.ContainerSupportCategories.list(),
   	    		controllers.experiments.api.routes.javascript.ExperimentTypes.list(),
-  	    		controllers.experiments.api.routes.javascript.ExperimentTypes.get(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentTypes.get(),  	    		
   	    		controllers.experiments.api.routes.javascript.ExperimentCategories.list(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.newExperiments(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.getTemplate(),
@@ -146,7 +125,6 @@ public class Experiments extends CommonController{
 	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.delete(),
   	      		controllers.reagents.api.routes.javascript.KitCatalogs.list(),
   	      		controllers.commons.api.routes.javascript.Values.list(),
-  	    		controllers.experiments.tpl.routes.javascript.Experiments.getEditExperimentColumns(),
 				controllers.commons.api.routes.javascript.CommonInfoTypes.list(),
 				controllers.experiments.api.routes.javascript.ExperimentCategories.list(),
 				controllers.projects.api.routes.javascript.Projects.list(),
