@@ -373,8 +373,11 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				tabService.activeTab(2);
 				//reinit datatable
 				$scope.datatableReagent.setEdit();
-				mainService.setDatatable(undefined);	
-				//mainService.setForm(undefined);			
+				mainService.setDatatable(undefined);
+				$scope.form.experimentType = undefined;
+				$scope.form.nextExperimentTypeCode = experiment.typeCode;
+				$scope.form.containerSupportCategory = experiment.instrument.inContainerSupportCategoryCode;
+				mainService.setForm($scope.form);			
 			}
 		}else{			
 			$scope.setEditConfig(false);
@@ -404,8 +407,11 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		if(mainService.isHomePage('search') && tabService.isBackupTabs()){
 			tabService.restoreBackupTabs();
 			tabService.activeTab(1);
-			mainService.setDatatable(undefined);	
-			//mainService.setForm(undefined);			
+			mainService.setDatatable(undefined);
+			$scope.form.nextExperimentTypeCode = undefined;
+			$scope.form.experimentType = experiment.typeCode;
+			$scope.form.containerSupportCategory = experiment.instrument.inContainerSupportCategoryCode;
+			mainService.setForm($scope.form);		
 		}		
 	}
 
@@ -1189,8 +1195,12 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				$scope.experiment.experimentInformation.enabled = false;
 				$scope.experiment.instrumentProperties.enabled = false;
 				$scope.experiment.instrumentInformation.enabled = false;
-				$scope.form = {"experimentType":experiment.typeCode, "containerSupportCategory":experiment.instrument.inContainerSupportCategoryCode};
-				//mainService.setForm($scope.form);
+				if($scope.form === undefined){
+					$scope.form = {};
+				}
+				$scope.form.experimentType = experiment.typeCode;
+				$scope.form.containerSupportCategory = experiment.instrument.inContainerSupportCategoryCode;
+				mainService.setForm($scope.form);
 				$scope.addSearchTabs();
 				$scope.experiment.value.instrument.outContainerSupportCategoryCode = experiment.instrument.outContainerSupportCategoryCode;
 				$scope.experiment.value = experiment;
