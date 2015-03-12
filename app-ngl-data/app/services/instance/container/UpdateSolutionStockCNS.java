@@ -44,7 +44,7 @@ public class UpdateSolutionStockCNS extends AbstractImportDataCNS {
 			else if(container.state.code!=containerUpdate.state.code){
 				//Update state container
 				ContextValidation contextValidation= new ContextValidation(Constants.NGL_DATA_USER);
-				Workflows.setContainerState(container.code, container.fromExperimentTypeCodes.get(0), containerUpdate.state, contextValidation, false, false);
+				Workflows.setContainerState(container.code, container.fromExperimentTypeCodes.get(0), containerUpdate.state, contextValidation, false, false, null);
 				if(!contextValidation.hasErrors()){
 					containerUpdated.add(container);
 				} else { contextError.errors.putAll(contextValidation.errors);
