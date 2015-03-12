@@ -31,7 +31,7 @@ import fr.cea.ig.MongoDBResult;
 
 public class Submissions extends DocumentController<Submission>{
 
-	protected Submissions() {
+	public Submissions() {
 		super(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class);
 	}
 
