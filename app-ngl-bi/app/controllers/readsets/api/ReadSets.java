@@ -283,7 +283,8 @@ public class ReadSets extends ReadSetsController{
 		if (!ctxVal.hasErrors()) {
 			readSetInput = MongoDBDAO.save(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSetInput);
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-					DBQuery.and(DBQuery.is("code", readSetInput.runCode), DBQuery.is("lanes.number", readSetInput.laneNumber)), 
+					DBQuery.and(DBQuery.is("code", readSetInput.runCode), 
+							DBQuery.elemMatch("lanes", DBQuery.and(DBQuery.is("number", readSetInput.laneNumber), DBQuery.notIn("readSetCodes", readSetInput.code)))), 
 					DBUpdate.push("lanes.$.readSetCodes", readSetInput.code));	
 			
 			//To avoid "double" values
@@ -381,7 +382,8 @@ public class ReadSets extends ReadSetsController{
 							DBUpdate.pull("lanes.$.readSetCodes", readSetCode));
 					
 					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-							DBQuery.and(DBQuery.is("code", readSet.runCode), DBQuery.is("lanes.number", readSet.laneNumber)), 
+							DBQuery.and(DBQuery.is("code", readSet.runCode), 
+									DBQuery.elemMatch("lanes", DBQuery.and(DBQuery.is("number", readSet.laneNumber), DBQuery.notIn("readSetCodes", readSet.code)))), 
 							DBUpdate.push("lanes.$.readSetCodes", readSetInput.code));
 					readSetCode = readSetInput.code;											
 				}
