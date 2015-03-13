@@ -265,7 +265,7 @@
 					</div>
 				</div>	 	
 			    
-			   <div class="form-group" ng-repeat="instp in experiment.instrumentProperties.inputs"  ng-if="getLevel(instp.levels,'Instrument')">
+			   <div class="form-group" ng-repeat="instp in experiment.instrumentProperties.inputs | orderBy : 'displayOrder'"  ng-if="getLevel(instp.levels,'Instrument')">
 								
 						<label  class="col-md-6 col-lg-6 control-label">{{instp.name}}</label>
 					
