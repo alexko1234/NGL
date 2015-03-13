@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
+
 import models.Constants;
 import models.laboratory.container.instance.Container;
 import models.utils.InstanceConstants;
@@ -44,7 +46,12 @@ public class UpdateSolutionStockCNS extends AbstractImportDataCNS {
 			else if(container.state.code!=containerUpdate.state.code){
 				//Update state container
 				ContextValidation contextValidation= new ContextValidation(Constants.NGL_DATA_USER);
-				Workflows.setContainerState(container.code, container.fromExperimentTypeCodes.get(0), containerUpdate.state, contextValidation, false, false, null);
+				if(containerUpdate.state.code.equals("IS")&& CollectionUtils.isNotEmpty(container.inputProcessCodes)){
+					contextValidation.addErrors("code", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, container.state.code);
+				}else {
+					Workflows.setContainerState(container.code, container.fromExperimentTypeCodes.get(0), containerUpdate.state, contextValidation, false, false, null);
+				}
+				
 				if(!contextValidation.hasErrors()){
 					containerUpdated.add(container);
 				} else { contextError.errors.putAll(contextValidation.errors);
