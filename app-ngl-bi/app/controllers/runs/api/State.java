@@ -17,7 +17,7 @@ import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
 import views.components.datatable.DatatableBatchResponseElement;
-import workflows.Workflows;
+import workflows.run.Workflows;
 
 public class State extends RunsController {
     final static Form<models.laboratory.common.instance.State> stateForm = form(models.laboratory.common.instance.State.class);

@@ -39,7 +39,7 @@ import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableResponse;
-import workflows.Workflows;
+import workflows.run.Workflows;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 

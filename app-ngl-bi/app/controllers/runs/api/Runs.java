@@ -38,7 +38,7 @@ import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.run.instance.RunValidationHelper;
 import views.components.datatable.DatatableResponse;
-import workflows.Workflows;
+import workflows.run.Workflows;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 
