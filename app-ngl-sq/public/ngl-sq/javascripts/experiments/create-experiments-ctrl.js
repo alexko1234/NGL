@@ -374,10 +374,10 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				//reinit datatable
 				$scope.datatableReagent.setEdit();
 				mainService.setDatatable(undefined);
-				$scope.form.experimentType = undefined;
+				$scope.form = {};
 				$scope.form.nextExperimentTypeCode = experiment.typeCode;
 				$scope.form.containerSupportCategory = experiment.instrument.inContainerSupportCategoryCode;
-				mainService.setForm($scope.form);			
+				mainService.setForm($scope.form);
 			}
 		}else{			
 			$scope.setEditConfig(false);
@@ -408,7 +408,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			tabService.restoreBackupTabs();
 			tabService.activeTab(1);
 			mainService.setDatatable(undefined);
-			$scope.form.nextExperimentTypeCode = undefined;
+			$scope.form = {};
 			$scope.form.experimentType = experiment.typeCode;
 			$scope.form.containerSupportCategory = experiment.instrument.inContainerSupportCategoryCode;
 			mainService.setForm($scope.form);		
@@ -1195,6 +1195,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				$scope.experiment.experimentInformation.enabled = false;
 				$scope.experiment.instrumentProperties.enabled = false;
 				$scope.experiment.instrumentInformation.enabled = false;
+				$scope.form = mainService.getForm();
 				if($scope.form === undefined){
 					$scope.form = {};
 				}
