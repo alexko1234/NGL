@@ -193,7 +193,7 @@ public class ContainerSupports extends CommonController {
 		}
 
 		if(StringUtils.isNotBlank(supportsSearch.code)){
-			queryElts.add(DBQuery.is("code", supportsSearch.code));
+			queryElts.add(DBQuery.regex("code", Pattern.compile(supportsSearch.code)));
 		}
 
 		if(CollectionUtils.isNotEmpty(supportsSearch.projectCodes)){
