@@ -14,6 +14,7 @@ declare ContentInfo
 	tagCategory : String 
 	sampleCode : String
 	tagRealSize : Integer
+	sequence : String
 end
 
 
@@ -49,15 +50,17 @@ rule "Init objects ContentInfo in WM"
     String tag="VIDE";
     String tagCategory="VIDE";
     Integer tagRealSize = 0;
+    String sequence = "VIDE";
     if($content.properties.containsKey("tag")){
     	tag=$content.properties.get("tag").value.toString();
     	Index index=MongoDBDAO.findOne(InstanceConstants.PARAMETER_COLL_NAME, Index.class, DBQuery.is("typeCode", "index-illumina-sequencing").is("code", tag));
+    	sequence = index.sequence;
     	tagRealSize = index.sequence.length();
     }
     if($content.properties.containsKey("tagCategory")) tagCategory=$content.properties.get("tagCategory").value.toString();
 
-	ContentInfo contentInfo= new ContentInfo($atomicTransfert.position,$container.code,tag,tagCategory,$content.sampleCode, tagRealSize);
-	Logger.debug("Content Info Position : "+$atomicTransfert.position+ ", Sample Code :"+$content.sampleCode + ", Container Code :"+$container.code+", Tag :"+tag+", tagCategory :"+tagCategory+", size :"+tagRealSize);
+	ContentInfo contentInfo= new ContentInfo($atomicTransfert.position,$container.code,tag,tagCategory,$content.sampleCode, tagRealSize, sequence);
+	Logger.debug("Content Info Position : "+$atomicTransfert.position+ ", Sample Code :"+$content.sampleCode + ", Container Code :"+$container.code+", Tag :"+tag+", tagCategory :"+tagCategory+", size :"+tagRealSize+", sequence :"+sequence);
     $laneInfo.getContentInfos().add(contentInfo);
 	insert(contentInfo);
 	
@@ -159,6 +162,21 @@ when
 	  $contextValidation:ContextValidation($errors : errors)
 then
 	Logger.debug("Tag squence error "+ $tagRealSizes+" position "+$position);
+    $contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.manytagCategory", $position);
+end
+
+rule "Same sequence"
+	@nglSQ (validations )
+	dialect "java"
+	salience 302
+	no-loop
+when
+	 LaneInfo($position:position, $contentInfos:contentInfos)
+     $sequences : Set(empty==false, size != $contentInfos.size()) from accumulate( ContentInfo ( $sequence : sequence, $position==position),
+                        collectSet( $sequence) )
+	  $contextValidation:ContextValidation($errors : errors)
+then
+	Logger.debug("Tag squence error "+ $sequences+" and "+$contentInfos.size()+" position "+$position);
     $contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.manytagCategory", $position);
 end
 
