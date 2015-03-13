@@ -29,6 +29,7 @@ import org.mongojack.DBQuery;
 import play.mvc.Result;
 import utils.AbstractTestsCNG;
 import utils.RunMockHelper;
+import workflows.run.Workflows;
 import fr.cea.ig.MongoDBDAO;
 
 
