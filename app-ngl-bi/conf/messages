@@ -472,6 +472,7 @@ readset.sampleOnContainer.containerSupportCode = Code support container
 readset.sampleOnContainer.containerCode = Code container
 readset.sampleOnContainer.percentage = Pourcentage
 readset.sampleOnContainer.referenceCollab = Ref. Collaborateur
+readset.sampleOnContainer.percentage = % par piste
 
 ############
 #
