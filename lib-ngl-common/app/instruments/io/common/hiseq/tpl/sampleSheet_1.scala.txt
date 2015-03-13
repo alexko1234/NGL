@@ -8,4 +8,4 @@ FCID,Lane,SampleID,SampleRef,Index,Description,Control,Recipe,Operator,SamplePro
 		@(c.support.code),@(c.support.line),@(c.support.line)_@(co.sampleCode)_@(AbstractSampleSheetsfactory.getContentProperty(co,"tag")),,@AbstractSampleSheetsfactory.getIndex("index-illumina-sequencing",AbstractSampleSheetsfactory.getContentProperty(co,"tag")).sequence,,@(AbstractSampleSheetsfactory.getIntrumentBooleanProperties(e,"control")),,,@(AbstractSampleSheetsfactory.getContentProperty(co,"tag"))_@(BigDecimal(AbstractSampleSheetsfactory.getContentDoubleProperty(co,"percentPerLane")).setScale(2, BigDecimal.RoundingMode.DOWN))
 	}
 }
-#_IEMVERSION_3_TruSeqDNA/RNA
+#_IEMVERSION_3_Genoscope
