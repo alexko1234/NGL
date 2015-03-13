@@ -146,10 +146,9 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	};
 	
 	$scope.selectDefaultFromExperimentType = function(){
-		var selectionList = {};
-		if(angular.isUndefined($scope.form.fromExperimentTypeCodes)){
-			$scope.form.fromExperimentTypeCodes=[];
-		}		
+		var selectionList = {};	
+		$scope.form.fromExperimentTypeCodes=[];
+			
 		if(angular.isDefined($scope.form.nextProcessTypeCode)){
 			selectionList = angular.copy($scope.lists.getExperimentTypesWithNone());
 			$http.get(jsRoutes.controllers.experiments.api.ExperimentTypes.getDefaultFirstExperiments($scope.form.nextProcessTypeCode).url)
@@ -161,12 +160,9 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 						if(experimentType.code==item.code){
 							console.log("experimentType.code= "+experimentType.code);
 							console.log("item.code= "+item.code);
-							console.log("index= "+index);	
-							var getter = $parse('form.fromExperimentTypeCodes');
-							//$scope.form.fromExperimentTypeCodes.push(item.code);
-							getter.assign($scope,item.code);
+							console.log("index= "+index);								
+							$scope.form.fromExperimentTypeCodes.push(item.code);							
 							console.log("form.fromExperimentTypeCodes= "+$scope.form.fromExperimentTypeCodes);
-
 						}
 					});
 				});

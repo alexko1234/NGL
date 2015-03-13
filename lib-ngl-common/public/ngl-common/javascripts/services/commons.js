@@ -616,6 +616,7 @@ angular.module('commonsServices', []).
 	      		      var groupByLabels = {};
 	      		      var filterValue;
 	      		      var ngFocus = attr.ngFocus;
+	      		      var ngModelValue = attr.ngModel;
 	      		      function parseBtsOptions(input){
 	      		    	  var match = input.match(BT_OPTIONS_REGEXP);
 		      		      if (!match) {
@@ -726,7 +727,13 @@ angular.module('commonsServices', []).
       		    	 return item[optionsConfig.modelMapper.replace(optionsConfig.itemName+'.','')];  
       		      };
       		      
-      		      scope.selectItem = function(item, $event){
+      		      scope.$watch(ngModelValue, function(newValue, oldValue){
+      		    	     		    		
+      		    		  render();
+      		    	 
+      		      }, true);
+      		      
+      		      scope.selectItem = function(item, $event){      		    	  
       		    	  if(multiple){
       		    			var selectedValues = ngModelCtrl.$viewValue || [];
       		    		    var newSelectedValues = [];
@@ -766,7 +773,7 @@ angular.module('commonsServices', []).
       		      
       		      scope.$watch(optionsConfig.sourceKey, function(newValue, oldValue){
       		    	  if(newValue && newValue.length > 0){
-      		    		items = angular.copy(newValue);  
+      		    		items = angular.copy(newValue);      		    		
       		    		render();      		    		
       		    	  }
       		      });
