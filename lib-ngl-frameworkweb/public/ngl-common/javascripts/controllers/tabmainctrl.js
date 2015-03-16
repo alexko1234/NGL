@@ -175,6 +175,7 @@ angular.module('home').controller('TabMainCtrl', ['$scope', '$location', functio
 		return null;
 	}
 	
+	$scope.getActiveTabIndex = getActiveTabIndex;
 	
 	$scope.toggleTabs = function(){
 		$scope.hideTabs.hide = !$scope.hideTabs.hide;

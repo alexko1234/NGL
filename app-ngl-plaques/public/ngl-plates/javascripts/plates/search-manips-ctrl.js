@@ -106,6 +106,7 @@ angular.module('home').controller('SearchManipsCtrl', ['$scope', '$http','datata
 	};
 
 	$scope.addToBasket = function(manips){
+		var tmpBasket = [];
 		for(var i = 0; i < manips.length; i++){
 			var well = {
 					code:manips[i].matmaco,
@@ -113,8 +114,22 @@ angular.module('home').controller('SearchManipsCtrl', ['$scope', '$http','datata
 					typeCode:$scope.form.etmanips.selected.code,
 					typeName:$scope.form.etmanips.selected.name
 			};		
-			this.basket.add(well);
+			tmpBasket.push(well);
 		}
+		
+		for(var i = 0; i < tmpBasket.length; i++){
+			var basketData = $scope.basket.get();
+			var find = false;
+			for(var j = 0; j < basketData.length; j++){
+				if(tmpBasket[i].code === basketData[j].code){
+					find=true;
+				}
+			}
+			if(!find){
+				$scope.basket.add(tmpBasket[i]);
+			}
+		}
+		
 		if(this.basket.length() > 0 && $scope.getTabs().length === 1){
 			$scope.addTabs({label:Messages('plates.tabs.new'),href:jsRoutes.controllers.plates.tpl.Plates.get("new").url,remove:false});//$scope.getTab()[1]
 		}

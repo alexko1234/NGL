@@ -28,8 +28,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 			hide : {
 				active : true,
 				showButton:false,
-				showButtonColumn:true
-				
+				showButtonColumn:true				
 			},
 			remove:{
 				active:true,
@@ -39,10 +38,10 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 				callback : function(datatable){
 					var dataInitial = $scope.basket.get();
 					var dataFinal = []; 
-					var dateDatatable = $scope.datatable.displayResult;
+					var dataDatatable = $scope.datatable.getData();
 					for(var i = 0; i < dataInitial.length ; i++){
-						for(var j = 0; j < dateDatatable.length ; j++){
-							if(dataInitial[i].code === dateDatatable[j].code){
+						for(var j = 0; j < dataDatatable.length ; j++){
+							if(dataInitial[i].code === dataDatatable[j].code){
 								dataFinal.push(dataInitial[i]);
 								break;
 							}
@@ -155,7 +154,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 	$scope.edit = function(){
 		$scope.setEditConfig(true);		
 		$scope.datatable.setEdit();
-		
+		$scope.datatable.setShowButton('remove', true);
 		if($scope.isHomePage('search') && !$scope.isBackupTabs()){
 			$scope.backupTabs();
 			$scope.resetTabs();
@@ -175,7 +174,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		$scope.clearMessages();
 		$scope.setEditConfig(false);
 		$scope.datatable.cancel();
-		
+		$scope.datatable.setShowButton('remove', false);
 		if($scope.isHomePage('search') && $scope.isBackupTabs()){
 			$scope.restoreBackupTabs();
 			$scope.activeTab(1);

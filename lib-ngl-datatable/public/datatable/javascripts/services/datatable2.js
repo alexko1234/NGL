@@ -108,7 +108,7 @@ angular.module('datatableServices', []).
 							},
 							remove:{
 								active:false,
-								withEdit:false, //to remove a line in edition mode
+								withEdit:false, //to authorize to remove a line in edition mode
 								showButton : true,
 								mode:'remote', //or local
 								url:undefined, //function with object in parameter !!!
@@ -1253,6 +1253,13 @@ angular.module('datatableServices', []).
 		    					return (this.config[configParam].active && ((this.config[configParam].showButtonColumn !== undefined && this.config[configParam].showButtonColumn) || this.config[configParam].showButton) && column[configParam]);
 		    				}else{
 		    					return (this.config[configParam].active && this.config[configParam].showButton);
+		    				}
+		    			},
+		    			
+
+											    			setShowButton: function(configParam, value){
+		    				if(this.config[configParam].active){
+		    					this.config[configParam].showButton = value;
 		    				}
 		    			},
 		    			
