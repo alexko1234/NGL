@@ -41,6 +41,21 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
 			};
 			element.addClass('draggable'); 
 			el.draggable = true;
+			
+			//We want all the inputs to keep they default highlight method
+			var inputs = el.querySelectorAll("input");
+			for(var i=0;i<inputs.length;i++){
+				inputs[i].addEventListener('focus', function(e) {
+					el.draggable = false;
+		        });
+				
+		        inputs[i].addEventListener('blur', function(e) {
+		        	el.draggable = true;
+		        });
+			}
+			
+			inputs = undefined;//free the inputs array
+			
 			el.addEventListener(
 					'dragstart',
 					function(e) {
