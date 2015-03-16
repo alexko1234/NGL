@@ -588,22 +588,25 @@ public class ExperimentTests extends AbstractTests{
 		expUpdate=MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, exp.code);
 		assertThat(expUpdate.state.code).isEqualTo("F");
 		
-		containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.in("support.code", expUpdate.inputContainerSupportCodes) ).toList();
-		assertThat(containers).isNotEmpty();
-		for(Container container:containers){
-			assertThat(container.state.code).isEqualTo("IS");
-			//assertThat(container.inputProcessCodes).isNull();
-		}
-		
 		processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME,Process.class,DBQuery.in("code", processCodes) ).toList();
 		for(Process process:processes){
+			Logger.debug("Process Code to Test "+process.code +" with state "+process.state.code);
 			assertThat(process.state.code).isEqualTo("F");
 			assertThat(process.currentExperimentTypeCode).isEqualTo(exp.typeCode);
 		}
 		
+		containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.in("support.code", expUpdate.inputContainerSupportCodes) ).toList();
+		assertThat(containers).isNotEmpty();
+		for(Container container:containers){
+			assertThat(container.state.code).isEqualTo("IS");
+			assertThat(container.inputProcessCodes).isNull();
+		}
+		
+		
+		
 	}
 	
-	//@Test
+	@Test
 	public void stopProcess(){
 		//resetData();
 		try {
@@ -648,6 +651,9 @@ public class ExperimentTests extends AbstractTests{
 		experimentUpdateForm = new ExperimentUpdateForm();
 		experimentUpdateForm.nextStateCode = "F";
 		experimentUpdateForm.stopProcess = true;
+		experimentUpdateForm.processResolutionCodes=new ArrayList<String>();
+		experimentUpdateForm.processResolutionCodes.add("processus-partiel");
+
 		result = callAction(controllers.experiments.api.routes.ref.Experiments.updateStateCode(code),fakeRequest().withJsonBody(Json.toJson(experimentUpdateForm)));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		expUpdate=MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, code);
@@ -659,7 +665,7 @@ public class ExperimentTests extends AbstractTests{
 		assertThat(containers).isNotEmpty();
 		for(Container container:containers){
 			assertThat(container.state.code).isEqualTo("IS");
-			//assertThat(container.inputProcessCodes).isNull();
+			assertThat(container.inputProcessCodes).isNull();
 		}
 		processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME,Process.class,DBQuery.in("code", processCodes) ).toList();
 		for(Process process:processes){
@@ -667,6 +673,7 @@ public class ExperimentTests extends AbstractTests{
 			assertThat(process.currentExperimentTypeCode).isNotNull();
 			assertThat(code).isIn(process.experimentCodes);
 			assertThat(expUpdate.outputContainerSupportCodes.get(0)).isIn(process.newContainerSupportCodes);
+			assertThat(process.state.resolutionCodes).isNotNull();
 		}
 		
 		List<Container> outPutContainers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.in("support.code", expUpdate.outputContainerSupportCodes) ).toList();
@@ -678,10 +685,10 @@ public class ExperimentTests extends AbstractTests{
 			assertThat(outContainer.sampleCodes).isNotEmpty();
 			assertThat(outContainer.state.code).isEqualTo("UA");
 			assertThat(outContainer.processTypeCode).isNotEmpty();
-			assertThat(outContainer.inputProcessCodes).isNotEmpty();
-			for(String processCode:outContainer.inputProcessCodes){
+			assertThat(outContainer.inputProcessCodes).isNull();
+/*			for(String processCode:outContainer.inputProcessCodes){
 				assertThat(processCode).isIn(processCodes);
-			}
+			}*/
 		}
 	}
 	
@@ -730,6 +737,8 @@ public class ExperimentTests extends AbstractTests{
 		experimentUpdateForm = new ExperimentUpdateForm();
 		experimentUpdateForm.nextStateCode = "F";
 		experimentUpdateForm.retry = true;
+		experimentUpdateForm.processResolutionCodes=new ArrayList<String>();
+		experimentUpdateForm.processResolutionCodes.add("processus-partiel");
 		result = callAction(controllers.experiments.api.routes.ref.Experiments.updateStateCode(code),fakeRequest().withJsonBody(Json.toJson(experimentUpdateForm)));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		expUpdate=MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, code);
@@ -741,7 +750,7 @@ public class ExperimentTests extends AbstractTests{
 		assertThat(containers).isNotEmpty();
 		for(Container container:containers){
 			assertThat(container.state.code).isEqualTo("A");
-			//assertThat(container.inputProcessCodes).isNull();
+			assertThat(container.inputProcessCodes).isNotEmpty();
 		}
 		processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME,Process.class,DBQuery.in("code", processCodes) ).toList();
 		for(Process process:processes){
