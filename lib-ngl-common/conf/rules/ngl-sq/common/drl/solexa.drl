@@ -181,7 +181,7 @@ when
 	  $contextValidation:ContextValidation($errors : errors)
 then
 	Logger.debug("Tag squence error "+ $sequences+" and "+$contentInfos.size()+" position "+$position);
-    $contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.sameTagSequence", $position);
+    $contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.sameTagSequence", $position, $sequences);
 end
 
 rule "RunStartDate propertie is mandatory to create Illumina Depot and Opgen Depot"
