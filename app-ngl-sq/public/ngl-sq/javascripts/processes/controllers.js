@@ -119,10 +119,13 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			         search:{
 			        	 url:jsRoutes.controllers.containers.api.Containers.list()
 			         },
-			         order:{
-			        	 active:true,
-			        	 by:'code'
-			         },
+			         pagination:{
+			 			mode:'local'
+				 	 },
+				 	 order:{
+			 			by:'code',
+			 			mode:'local'
+			 		 },
 			         otherButtons :{
 			        	 active:true,
 			        	 template:'<button class="btn" ng-disabled="!datatable.isSelect()" ng-click="addToBasket(datatable.getSelection(true))" data-toggle="tooltip" title="'+Messages("button.addbasket")+'">'
