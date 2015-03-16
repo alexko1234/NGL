@@ -205,6 +205,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 
 			if($scope.form.fromExperimentTypeCodes){
 				jsonSearch.fromExperimentTypeCodes = $scope.form.fromExperimentTypeCodes;
+				jsonSearch.isEmptyFromExperimentTypeCodes = false;
 			}
 
 			if($scope.form.valuations){

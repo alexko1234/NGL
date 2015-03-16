@@ -26,6 +26,7 @@ import models.utils.dao.DAOException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
@@ -231,7 +232,7 @@ public class Containers extends CommonController {
 		}
 		return ok();
 	}
-	
+
 	public static Result updateStateCode(String code){
 		Form<ContainersUpdateForm> containerUpdateFilledForm = getFilledForm(containersUpdateForm, ContainersUpdateForm.class);
 		ContextValidation contextValidation = new ContextValidation(getCurrentUser(),containerUpdateFilledForm.errors());
@@ -246,8 +247,8 @@ public class Containers extends CommonController {
 			}
 		}
 		return badRequest(containerUpdateFilledForm.errorsAsJson());
-		}
-		
+	}
+
 
 
 
@@ -305,7 +306,7 @@ public class Containers extends CommonController {
 		if(StringUtils.isNotBlank(containersSearch.supportCode)){
 			queryElts.add(DBQuery.regex("support.code", Pattern.compile(containersSearch.supportCode)));
 		}
-		
+
 		if(CollectionUtils.isNotEmpty(containersSearch.containerSupportCategories)){
 			queryElts.add(DBQuery.in("support.categoryCode", containersSearch.containerSupportCategories));
 		}else if(StringUtils.isNotBlank(containersSearch.containerSupportCategory)){
@@ -320,8 +321,8 @@ public class Containers extends CommonController {
 				queryElts.add(DBQuery.in("support.categoryCode", cs));
 			}
 		}
-		
-		
+
+
 
 		List<String> listePrevious = new ArrayList<String>();
 		if(StringUtils.isNotBlank(containersSearch.nextProcessTypeCode)){					
@@ -348,36 +349,47 @@ public class Containers extends CommonController {
 		if(StringUtils.isNotBlank(containersSearch.nextExperimentTypeCode)){
 			List<ExperimentType> previous = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(containersSearch.nextExperimentTypeCode);
 			if(CollectionUtils.isNotEmpty(previous)){
-			for(ExperimentType e:previous){
-				listePrevious.add(e.code);
-			}
+				for(ExperimentType e:previous){
+					listePrevious.add(e.code);
+				}
 
-			if(CollectionUtils.isNotEmpty(listePrevious)){
-				queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", listePrevious)));
-			}
+				if(CollectionUtils.isNotEmpty(listePrevious)){
+					queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", listePrevious)));
+				}
 			}else{
 				//throw new RuntimeException("nextExperimentTypeCode = "+ containersSearch.nextExperimentTypeCode +" does not exist!");
 			}
 			queryElts.add(DBQuery.nor(DBQuery.notExists("inputProcessCodes"),DBQuery.size("inputProcessCodes", 0)));
 		}	
-					
+
+
 		if(CollectionUtils.isNotEmpty(containersSearch.fromExperimentTypeCodes)){
-			Boolean hasNoneValue = false;
-			for(int i=0; i< containersSearch.fromExperimentTypeCodes.size();i++){
-				if(containersSearch.fromExperimentTypeCodes.get(i).equalsIgnoreCase("none")){
-					hasNoneValue = true;
-					Logger.info("Trouvé un containersSearch.fromExperimentTypeCodes="+containersSearch.fromExperimentTypeCodes.get(i));
-					containersSearch.fromExperimentTypeCodes.remove(i);
-					queryElts.add(DBQuery.or(DBQuery.size("fromExperimentTypeCodes", 0),DBQuery.notExists("fromExperimentTypeCodes"),DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes)));	
-				}			
-			}
-			
-			if( hasNoneValue == false){			
-			queryElts.add(DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes));
-			}
-		}else{
-			queryElts.add(DBQuery.nor(DBQuery.size("fromExperimentTypeCodes", 0),DBQuery.notExists("fromExperimentTypeCodes")));
+			// Mode de recherche "avec les champs vides"			
+			if(BooleanUtils.isTrue(containersSearch.isEmptyFromExperimentTypeCodes)){				
+				Logger.info("containersSearch.isEmptyFromExperimentTypeCodes= "+containersSearch.isEmptyFromExperimentTypeCodes);
+				queryElts.add(DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes));
+				
+			}else{
+				// Mode de recherche "sans les champs vides"
+				Boolean hasNoneValue = false;
+				//Recherche des champs vides "None" et des autres cas si demandés
+				for(int i=0; i< containersSearch.fromExperimentTypeCodes.size();i++){
+					if(containersSearch.fromExperimentTypeCodes.get(i).equalsIgnoreCase("none")){
+						hasNoneValue = true;
+						Logger.info("Trouvé un containersSearch.fromExperimentTypeCodes="+containersSearch.fromExperimentTypeCodes.get(i));
+						containersSearch.fromExperimentTypeCodes.remove(i);
+						queryElts.add(DBQuery.or(DBQuery.size("fromExperimentTypeCodes", 0),DBQuery.notExists("fromExperimentTypeCodes"),DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes)));	
+					}			
+				}
+				//Recherche sans les "Nones" de recherche "sans les champs vides" 	
+				if( hasNoneValue == false){			
+					queryElts.add(DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes));
+				}
+				
+				//queryElts.add(DBQuery.nor(DBQuery.size("fromExperimentTypeCodes", 0),DBQuery.notExists("fromExperimentTypeCodes")));
+			}			
 		}
+
 
 		if(null != containersSearch.fromDate){
 			queryElts.add(DBQuery.greaterThanEquals("traceInformation.creationDate", containersSearch.fromDate));
@@ -402,7 +414,7 @@ public class Containers extends CommonController {
 		if(StringUtils.isNotBlank(containersSearch.processTypeCode)){   
 			queryElts.add(DBQuery.is("processTypeCode", containersSearch.processTypeCode));
 		}
-		
+
 		if(StringUtils.isNotBlank(containersSearch.createUser)){   
 			queryElts.add(DBQuery.is("traceInformation.createUser", containersSearch.createUser));
 		}

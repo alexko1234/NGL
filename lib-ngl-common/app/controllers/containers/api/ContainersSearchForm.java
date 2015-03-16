@@ -30,6 +30,7 @@ public class ContainersSearchForm extends ListForm{
 	public String column;
 	public String line;
 	public String createUser;
+	public boolean isEmptyFromExperimentTypeCodes=true;
 	public Map<String, List<String>> properties = new HashMap<String, List<String>>();
 	
 	@Override

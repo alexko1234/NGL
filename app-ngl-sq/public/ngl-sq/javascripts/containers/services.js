@@ -234,6 +234,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 
 					if(_form.fromExperimentTypeCodes){
 						jsonSearch.fromExperimentTypeCodes = _form.fromExperimentTypeCodes;
+						jsonSearch.isEmptyFromExperimentTypeCodes = false;
 					}
 
 					if(_form.containerCategory){
