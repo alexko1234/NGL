@@ -377,7 +377,7 @@ public class LimsCNSDAO{
 				sampleUsed.properties.put("libProcessTypeCode",new PropertySingleValue(rs.getString("libProcessTypeCode")));
 				if(rs.getString("tag")!=null){
 					sampleUsed.properties.put("tag", new PropertySingleValue(rs.getString("tag")));
-					sampleUsed.properties.put("tagCategory",new PropertySingleValue(DataMappingCNS.getTagCategory(rs.getString("tagCategory"))));
+					sampleUsed.properties.put("tagCategory",new PropertySingleValue(rs.getString("tagCategory")));
 				}
 				
 				if(rs.getString("libLayoutNominalLength") != null){
