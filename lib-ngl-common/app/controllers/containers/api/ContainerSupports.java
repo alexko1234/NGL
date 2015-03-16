@@ -12,10 +12,12 @@ import models.laboratory.container.instance.ContainerSupport;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
+import models.utils.instance.StateHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
 import org.mongojack.DBQuery.Query;
 
 import play.Logger;
@@ -23,6 +25,7 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
+import validation.container.instance.ContainerValidationHelper;
 import views.components.datatable.DatatableResponse;
 import workflows.Workflows;
 
@@ -101,7 +104,31 @@ public class ContainerSupports extends CommonController {
 			State state = new State();
 			state.code = containerSupportUpdateForm.stateCode;
 			state.user = getCurrentUser();
-			Workflows.setContainerSupportState(code, state, contextValidation);
+			
+			List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("support.code",code)).toList();
+			for(Container container:containers){
+				String lastStateCode = container.state.code;
+				container.state = StateHelper.updateHistoricalNextState(container.state, state);
+				container.traceInformation = StateHelper.updateTraceInformation(container.traceInformation, state);
+				// Validate state for Container
+				contextValidation.addKeyToRootKeyName("container");
+				ContainerValidationHelper.validateStateCode(container, contextValidation);
+				contextValidation.removeKeyFromRootKeyName("container");
+			}
+			
+			if(!contextValidation.hasErrors()){
+				
+				Workflows.setContainerSupportState(code, state, contextValidation);
+				if(!contextValidation.hasErrors()){
+					for(Container container :containers) {
+						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class
+								,DBQuery.is("code", container.code)
+								,DBUpdate.set("state", container.state)
+										.set("traceInformation", container.traceInformation));
+					}
+				}
+			}
+
 			if(!contextValidation.hasErrors()){
 				return ok();
 			}
