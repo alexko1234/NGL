@@ -759,11 +759,19 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 
 	$scope.saveAllAndChangeState = function(){		
 		$scope.clearMessages();
-		if(!$scope.saveInProgress){
-			var promises = [];
-			$scope.$broadcast('save', promises, $scope.changeState);			
-			$scope.$broadcast('refresh');
-			$scope.saveInProgress = true;			
+		if($scope.experiment.stopProcess === true && ($scope.experiment.processResolutions === undefined || $scope.experiment.processResolutions===null || $scope.experiment.processResolutions.length === 0)){
+			$scope.message.clazz = "alert alert-danger";
+			$scope.message.text = Messages('experiments.msg.save.error');
+
+			$scope.message.details = {"Processes resolution":["Propriété obligatoire"]};
+			$scope.message.isDetails = true;
+		}else{
+			if(!$scope.saveInProgress){
+				var promises = [];
+				$scope.$broadcast('save', promises, $scope.changeState);			
+				$scope.$broadcast('refresh');
+				$scope.saveInProgress = true;			
+			}
 		}
 	};
 

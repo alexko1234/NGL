@@ -166,7 +166,7 @@ when
 	  $contextValidation:ContextValidation($errors : errors)
 then
 	Logger.debug("Tag squence error "+ $tagRealSizes+" position "+$position);
-    $contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.manytagCategory", $position);
+    $contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.manytagSize", $position);
 end
 
 rule "Same sequence"
@@ -181,7 +181,7 @@ when
 	  $contextValidation:ContextValidation($errors : errors)
 then
 	Logger.debug("Tag squence error "+ $sequences+" and "+$contentInfos.size()+" position "+$position);
-    $contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.manytagCategory", $position);
+    $contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.sameTagSequence", $position);
 end
 
 rule "RunStartDate propertie is mandatory to create Illumina Depot and Opgen Depot"

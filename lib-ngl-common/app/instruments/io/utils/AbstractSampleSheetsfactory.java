@@ -49,6 +49,10 @@ public abstract class AbstractSampleSheetsfactory {
 		return index;
 	}
 	
+	public static String getSequence(Index index){
+		return index!=null?index.sequence:"";
+	}
+	
 	public static String getContentProperty(Content content, String propertyName){
 		if(content.properties.get(propertyName) != null){
 			return (String) content.properties.get(propertyName).value;
@@ -61,6 +65,14 @@ public abstract class AbstractSampleSheetsfactory {
 			return  (Double) content.properties.get(propertyName).value;
 		}
 		return 0.0;
+	}
+	
+	public static String getSupplierName(Index tag, String supplierName){
+		if(tag!= null && tag.supplierName != null){
+			return tag.supplierName.get("illumina");
+		}
+		
+		return "";
 	}
 	
 	public static String getIntrumentBooleanProperties(Experiment experiment,String propertyName){
