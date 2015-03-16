@@ -81,7 +81,7 @@ public class Workflows {
 				}
 				Logger.debug("Apres saveOutputContainerUsed");
 				if (!ctxValidation.hasErrors()) {
-					nextOutputContainerState(experiment, ctxValidation, stopProcess, retry);
+					nextOutputContainerState(experiment, ctxValidation, stopProcess, retry,processResolutionCodes);
 				}
 
 			}
@@ -154,7 +154,7 @@ public class Workflows {
 	}
 
 	public static void nextOutputContainerState(Experiment experiment, ContextValidation contextValidation,
-			boolean stopProcess, boolean retry) {
+			boolean stopProcess, boolean retry, List<String> processResolutionCodes) {
 		for (ContainerUsed containerUsed : experiment.getAllOutPutContainerWhithInPutContainer()) {
 
 			State nextState = new State();
@@ -191,7 +191,7 @@ public class Workflows {
 			}
 			if (nextState.code != null && containerUsed != null) {
 				setContainerState(containerUsed.code, experiment.typeCode, nextState, contextValidation, stopProcess,
-						retry, null);
+						retry, processResolutionCodes);
 			}
 		}
 
