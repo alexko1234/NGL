@@ -64,11 +64,15 @@ angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$rou
 				
 			},
 			order:{
-				by:'code'
+				by:'code',
+				mode:'local'
 			},
 			edit:{
 				active:true,
 				columnMode:true
+			},
+			pagination:{
+				mode:'local'
 			},
 			save:{
 				active:true,

@@ -54,8 +54,12 @@ rule "Init objects ContentInfo in WM"
     if($content.properties.containsKey("tag")){
     	tag=$content.properties.get("tag").value.toString();
     	Index index=MongoDBDAO.findOne(InstanceConstants.PARAMETER_COLL_NAME, Index.class, DBQuery.is("typeCode", "index-illumina-sequencing").is("code", tag));
-    	sequence = index.sequence;
-    	tagRealSize = index.sequence.length();
+    	if(index != null){
+    		sequence = index.sequence;
+    		tagRealSize = index.sequence.length();
+    	}else{
+    		Logger.debug("Can't find index "+tag+" in collection "+InstanceConstants.PARAMETER_COLL_NAME);
+    	}
     }
     if($content.properties.containsKey("tagCategory")) tagCategory=$content.properties.get("tagCategory").value.toString();
 
