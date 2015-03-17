@@ -728,9 +728,9 @@ angular.module('commonsServices', []).
       		      };
       		      
       		      scope.$watch(ngModelValue, function(newValue, oldValue){
-      		    	     		    		
-      		    		  render();
-      		    	 
+      		    	     if(newValue!= undefined && newValue !== null && oldValue !== newValue){		    		
+      		    	    	 render();
+      		    	     }
       		      }, true);
       		      
       		      scope.selectItem = function(item, $event){      		    	  
