@@ -329,8 +329,7 @@
 
 				},				
 				
-				updateForm : function(){
-					//this.form.includes = [];
+				updateForm : function(){					
 					this.form.includes = ["default"];
 					for(var i = 0 ; i < this.selectedAddColumns.length ; i++){
 						//remove .value if present to manage correctly properties (single, list, etc.)
@@ -378,13 +377,14 @@
 					return this.additionalFilters;									
 				},
 				
-				search : function(){
+				search : function(){					
 					this.updateForm();
 					mainService.setForm(this.form);
 					var jsonSearch = this.convertForm();
-					if(jsonSearch != undefined){
+					if(jsonSearch != undefined){						
+						searchService.datatable.setColumnsConfig(this.columnsDefault);
 						searchService.getColumns();					
-						this.datatable.search(jsonSearch);
+						this.datatable.search(jsonSearch);						
 					}
 				},
 				
