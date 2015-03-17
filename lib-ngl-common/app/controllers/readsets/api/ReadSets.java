@@ -71,7 +71,7 @@ public class ReadSets extends ReadSetsController{
 		//ReadSetsSearchForm form = filledForm.get();
 		
 		ReadSetsSearchForm form = filledFormQueryString(ReadSetsSearchForm.class);
-		Logger.debug("form = "+form);
+		//Logger.debug("form = "+form);
 		
 		Query q = getQuery(form);		
 		BasicDBObject keys = getKeys(updateForm(form));
