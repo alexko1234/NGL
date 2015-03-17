@@ -570,9 +570,7 @@ public class ResolutionService {
 	
 	public static void createProcessResolution(ContextValidation ctx) {
 		List<Resolution> l = new ArrayList<Resolution>();
-		
-		l.addAll(getDefaultResolutionCNS());
-		
+
 		l.add(InstanceFactory.newResolution("processus partiel","processus-partiel", resolutionCategories.get("Default"), (short) 1));
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
