@@ -299,6 +299,7 @@ public class Workflows {
 							List<String> stateCodes=new ArrayList<String>();
 							stateCodes.add("UA");
 							stateCodes.add("IS");
+							stateCodes.add("F");
 							MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
 									DBQuery.in("support.code", process.newContainerSupportCodes).in("state.code",stateCodes),
 									DBUpdate.unset("inputProcessCodes"), true);
