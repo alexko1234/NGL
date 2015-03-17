@@ -575,47 +575,46 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 		$scope.message.details = undefined;
 		$scope.message.isDetails = false;
 		$scope.datatable.save();
+		$scope.processesToSave = [];
 		console.log($scope.datatable.getData());
 		var data = $scope.datatable.getData();
 		var url = "";
-		$scope.processes = [];
+		var processes = [];
 		$scope.promises = [];
 		if(!$scope.supportView){
-			url =  jsRoutes.controllers.processes.api.Processes.save().url;
+			url =  jsRoutes.controllers.processes.api.Processes.saveBatch().url;
 			$scope.datatable.config.spinner.start = true;
 			for(var i=0;i<data.length;i++){
-				for(var j = 0; j < data[i].sampleCodes.length; j++){ //one process by sample
+				for(var j = 0; j < data[i].contents.length; j++){ //one process by sample
 					var processData = data[i];
 					processData.properties.limsCode = undefined;
 					processData.properties.receptionDate = undefined;
-					var process = {
+					var process = {data:{
 							projectCode: processData.projectCodes[0],
 							sampleCode: processData.sampleCodes[j],
 							containerInputCode: processData.code,
 							typeCode:$scope.form.nextProcessTypeCode,
 							categoryCode:$scope.form.processCategory,
-							properties:processData.properties
-					};
-
-					var promise = $http.post(url, process, {params:{"fromContainerInputCode": processData.code}})
-					.success(function(data, status, headers, config) {
-						if(data!=null){
-							$scope.message.clazz="alert alert-success";
-							$scope.message.text=Messages('experiments.msg.save.sucess');							
-							$scope.processes = $scope.processes.concat(data);
-						}
-					})
-					.error(function(data, status, headers, config) {
-						$scope.datatable.config.spinner.start = false;
-						$scope.message.clazz = 'alert alert-danger';
-						$scope.message.text = Messages('experiments.msg.save.error');
-
-						$scope.message.details = data;
-						$scope.message.isDetails = true;
-					});
-					$scope.promises.push(promise);
+							properties:processData.properties,
+							sampleOnInputContainer:{sampleCode:processData.contents[j].sampleCode,
+													sampleCategoryCode:processData.contents[j].sampleCategoryCode,
+													sampleTypeCode:processData.contents[j].sampleTypeCode,
+													percentage:processData.contents[j].percentage,
+													properties:processData.contents[j].properties,
+													containerCode:data[i].code,
+													containerSupportCode:data[i].support.code,
+													mesuredVolume:data[i].mesuredVolume,
+													mesuredQuantity:data[i].mesuredQuantity,
+													mesuredConcentration:data[i].mesuredConcentration}
+					}};
+					processes.push(process);
 				}
 			}
+			var nbElementByBatch = Math.ceil(processes.length / 6); //6 because 6 request max in parrallel with firefox and chrome
+			for(var i = 0; i  < 6 && processes.length > 0 ; i++){
+				$scope.promises.push($scope.getSaveRemoteRequest(url, processes.splice(0, nbElementByBatch))); 								
+			}
+			
 		}else{
 			$scope.datatable.config.spinner.start = true;
 			for(var i=0;i<data.length;i++){
@@ -656,7 +655,6 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			}
 		}
 
-
 		$q.all($scope.promises).then(function (res) {
 			$scope.basket.reset();
 			$scope.datatable.setColumnsConfig($scope.getProcessesColumns());
@@ -665,6 +663,26 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 		});	
 	};
 
+	
+	$scope.getSaveRemoteRequest = function(url, processes){
+		return $http.post(url, processes)
+		.success(function(data, status, headers, config) {
+			if(data!=null){
+				$scope.message.clazz="alert alert-success";
+				$scope.message.text=Messages('experiments.msg.save.sucess');							
+				//$scope.processes = $scope.processes.concat(data);
+			}
+		})
+		.error(function(data, status, headers, config) {
+			$scope.datatable.config.spinner.start = false;
+			$scope.message.clazz = 'alert alert-danger';
+			$scope.message.text = Messages('experiments.msg.save.error');
+
+			$scope.message.details = data;
+			$scope.message.isDetails = true;
+		});
+	}
+	
 	$scope.swithToSupportView = function(){
 
 		if($scope.basket.length() == 0){

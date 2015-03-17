@@ -294,7 +294,7 @@ public class InstanceHelpers {
 		return (codeParts.length == 2) ? codeParts[1] : null;
 	}
 	
-	private static String getReferenceCollab(String sampleCode){
+	public static String getReferenceCollab(String sampleCode){
 		Sample sample = MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,
 				DBQuery.is("code", sampleCode));
 		return sample.referenceCollab;

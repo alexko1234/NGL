@@ -5,9 +5,13 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 		search:{
 			url:jsRoutes.controllers.containers.api.ContainerSupports.list()
 		},
+		pagination:{
+			mode:'local'
+		},
 		order:{
 			by:'traceInformation.creationDate',
-			reverse:true
+			reverse:true,
+			mode:'local'
 		},
 		edit:{
 			active:true,

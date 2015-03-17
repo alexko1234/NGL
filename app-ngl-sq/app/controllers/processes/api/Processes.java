@@ -3,6 +3,7 @@ package controllers.processes.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -33,6 +34,7 @@ import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
 import validation.utils.ValidationConstants;
+import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableResponse;
 import workflows.Workflows;
 
@@ -53,6 +55,7 @@ public class Processes extends CommonController{
 	final static Form<ProcessesSearchForm> processesSearchForm = form(ProcessesSearchForm.class);
 	final static Form<QueryFieldsForm> saveForm = form(QueryFieldsForm.class);
 	final static Form<ProcessesUpdateForm> processesUpdateForm = form(ProcessesUpdateForm.class);
+	final static Form<ProcessesBatchElement> processSaveBatchForm = form(ProcessesBatchElement.class);
 
 	public static Result head(String processCode) {
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, processCode)){			
@@ -114,6 +117,66 @@ public class Processes extends CommonController{
 		}
 	}
 
+	public static Result saveBatch(){
+		List<Form<ProcessesBatchElement>> filledForms =  getFilledFormList(processSaveBatchForm, ProcessesBatchElement.class);
+
+		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
+		
+		Form batchForm = new Form(Process.class);
+		List<Process> processes = new ArrayList<Process>();
+		ContextValidation contextValidation =new ContextValidation(getCurrentUser(), batchForm.errors());
+		
+		for(Form<ProcessesBatchElement> filledForm: filledForms){
+			ContextValidation ctxVal=new ContextValidation(getCurrentUser(), filledForm.errors());
+			ProcessesBatchElement element = filledForm.get();
+			if (!filledForm.hasErrors()) {
+				ctxVal.setCreationMode();
+				Process process = element.data;
+				if (null == process._id) {			//init state
+					//the trace
+					process.traceInformation = new TraceInformation();
+					process.traceInformation.setTraceInformation(getCurrentUser());
+					//the default status
+					process.state = new State("N", getCurrentUser());
+				} else {
+					return badRequest("use PUT method to update the process");
+				}
+				process.code = CodeHelper.getInstance().generateProcessCode(process);
+				process.sampleOnInputContainer.lastUpdateDate = new Date();
+				process.sampleOnInputContainer.referenceCollab = InstanceHelpers.getReferenceCollab(process.sampleCode);
+				Process p = (Process)InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,process, ctxVal);
+				if (!ctxVal.hasErrors()) {
+					processes.add(p);
+					Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, p.containerInputCode);
+					List<String> newProcesses = new ArrayList<String>();
+					newProcesses.add(p.code);
+					ProcessHelper.updateContainer(container,process.typeCode, newProcesses,contextValidation);
+					ProcessHelper.updateContainerSupportFromContainer(container,contextValidation);
+					try {
+						ProcessType pt = ProcessType.find.findByCode(process.typeCode);
+						Workflows.nextContainerState(process,pt.firstExperimentType.code, pt.firstExperimentType.category.code,new ContextValidation(getCurrentUser(), filledForm.errors()));
+					} catch (DAOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					response.add(new DatatableBatchResponseElement(OK,  p, element.index));
+				}else{
+					contextValidation.errors.putAll(ctxVal.errors);
+				}
+				}else {
+					response.add(new DatatableBatchResponseElement(BAD_REQUEST, processForm.errorsAsJson(), element.index));
+				}
+			}
+		if(processes.size()>0){
+			processes = ProcessHelper.applyRules(processes, contextValidation, "processCreation");
+		}
+		if(!contextValidation.hasErrors()){
+			return ok(Json.toJson(response));
+		}
+		
+		return badRequest(batchForm.errorsAsJson());
+	}
+	
 	public static List<Process> saveFromSupport(String supportCode, Form<Process> filledForm, ContextValidation contextValidation){			
 		List<Process> processes = new ArrayList<Process>();
 		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("support.code", supportCode)).toList();

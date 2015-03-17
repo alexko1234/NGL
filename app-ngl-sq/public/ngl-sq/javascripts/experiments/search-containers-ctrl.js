@@ -73,9 +73,13 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		search:{
 			url:jsRoutes.controllers.containers.api.ContainerSupports.list()
 		},
+		pagination:{
+			mode:'local'
+		},
 		order:{
 			active:true,
-			by:'code'
+			by:'code',
+			mode:'local'
 		},
 		otherButtons :{
 			active:true,

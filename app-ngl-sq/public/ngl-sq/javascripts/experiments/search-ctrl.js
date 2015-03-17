@@ -11,9 +11,13 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 				url:jsRoutes.controllers.experiments.api.Experiments.list()
 				
 			},
+			pagination:{
+				mode:'local'
+			},
 			order:{
 				by:'traceInformation.creationDate',
-				reverse :true
+				reverse :true,
+				mode:'local'
 			},
 			edit:{
 				active:true
