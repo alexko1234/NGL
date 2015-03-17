@@ -281,9 +281,35 @@ public class Workflows {
 				if (processState.code != null) {
 					setProcessState(processCode, processState, contextValidation);
 				}
+				
+				if(checkProcessState("F", processCode)){
+						ProcessType processType;
+						try {
+							Process process=MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class,processCode);
+							processType = ProcessType.find.findByCode(process.typeCode);
+							MongoDBDAO
+									.update(InstanceConstants.CONTAINER_COLL_NAME,
+											Container.class,
+											DBQuery.is("code", process.containerInputCode).in("fromExperimentTypeCodes",
+													processType.voidExperimentType.code),
+											DBUpdate.unset("fromExperimentTypeCodes"));
+							MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
+									DBQuery.is("code", process.containerInputCode), DBUpdate.unset("inputProcessCodes"),
+									true);
+							List<String> stateCodes=new ArrayList<String>();
+							stateCodes.add("UA");
+							stateCodes.add("IS");
+							MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
+									DBQuery.in("support.code", process.newContainerSupportCodes).in("state.code",stateCodes),
+									DBUpdate.unset("inputProcessCodes"), true);
+
+						} catch (DAOException e) {
+						}
+					}	
+					
+				}
 
 			}
-		}
 	}
 
 	private static boolean checkProcessState(String stateCode, String processCode) {
@@ -307,30 +333,10 @@ public class Workflows {
 
 				// Process F, reset fromExperimentTypeCodes if Collab's
 				// container
-				if (process.state.code.equals("F")) {
-					ProcessType processType;
-					try {
-						processType = ProcessType.find.findByCode(process.typeCode);
-						MongoDBDAO
-								.update(InstanceConstants.CONTAINER_COLL_NAME,
-										Container.class,
-										DBQuery.is("code", process.containerInputCode).in("fromExperimentTypeCodes",
-												processType.voidExperimentType.code),
-										DBUpdate.unset("fromExperimentTypeCodes"));
-						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
-								DBQuery.is("code", process.containerInputCode), DBUpdate.unset("inputProcessCodes"),
-								true);
-						List<String> stateCodes=new ArrayList<String>();
-						stateCodes.add("UA");
-						stateCodes.add("IS");
-						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
-								DBQuery.in("support.code", process.newContainerSupportCodes).in("state.code",stateCodes),
-								DBUpdate.unset("inputProcessCodes"), true);
 
-					} catch (DAOException e) {
-					}
-				}
 			}
+			
+			
 
 		}
 
