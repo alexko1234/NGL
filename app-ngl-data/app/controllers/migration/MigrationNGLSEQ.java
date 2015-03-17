@@ -3,17 +3,21 @@ package controllers.migration;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
+import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.parameter.Index;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
+import models.utils.InstanceHelpers;
 import models.utils.instance.ExperimentHelper;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -34,13 +38,18 @@ public class MigrationNGLSEQ extends CommonController{
 		
 		Logger.info(">>>>>>>>>>> Migration NGL-SQ in Containers and Experiment starts");
 
-		backupOneCollection(InstanceConstants.CONTAINER_COLL_NAME,Container.class);
+	/*	backupOneCollection(InstanceConstants.CONTAINER_COLL_NAME,Container.class);
 		updateProjectAndTagCategoryAndMeasureValueContainer();
 		backupOneCollection(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class);
 		updateExperimentInputContainerSupportCodes();
 		backupOneCollection(InstanceConstants.PROCESS_COLL_NAME,Process.class);
 		udpdateProcessExperimentAndSupportCodes();
+		*/
 		
+		backupOneCollection(InstanceConstants.CONTAINER_COLL_NAME,Container.class);
+		migrationRemoveTagInContainerTube();
+		backupOneCollection(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class);
+		migrationInputContainerSupportCodesDepotOpgen();
 		Logger.info(" Migration NGL-SQ in Containers and Experiment ends <<<<<<<");
 		
 		int nbContentWithoutProjectCode=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.notExists("contents.0.projectCode")).count();
@@ -161,5 +170,47 @@ public class MigrationNGLSEQ extends CommonController{
 		Logger.info("\tCopie "+collectionName+" end");
 		
 		
+	}
+	
+	
+	public static void migrationRemoveTagInContainerTube(){
+		//Recupere tous les containes tube sans fromExperimentTypeCodes dont le nom ne se termine pas par b
+		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME,
+				Container.class,
+				DBQuery.exists("contents.properties.tag")
+						.is("categoryCode", "tube")
+						.size("fromExperimentTypeCodes",0).regex("code", Pattern.compile(".*[^b]$"))).toList();
+		Logger.debug("Nb containers "+containers.size());
+		for(Container container:containers){
+				Logger.debug("Container to update "+container.code);
+				container.contents.get(0).properties.remove("tag");
+				container.contents.get(0).properties.remove("tagCategory");
+				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code",container.code),DBUpdate.set("contents.0.properties",container.contents.get(0).properties));						
+		}
+		
+	}
+	
+	
+	public static void migrationInputContainerSupportCodesDepotOpgen(){
+		//Recupere les experiments qui n'ont pas d'inputContainerSupportCodes
+		List<Experiment> experiments=MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class,
+				DBQuery.or(DBQuery.notExists("inputContainerSupportCodes"),DBQuery.size("inputContainerSupportCodes", 0))).toList();
+		
+		for(Experiment experiment:experiments){
+			Logger.debug("Experiment to update"+experiment.code);
+			List<String> inputContainerSupportCodes=new ArrayList<String>();
+			for(ContainerUsed containerUsed:experiment.getAllInPutContainer()){
+				if(containerUsed.locationOnContainerSupport==null)
+				 {
+					InstanceHelpers.addCode(containerUsed.code, inputContainerSupportCodes);
+				}else
+				{
+					InstanceHelpers.addCode(containerUsed.locationOnContainerSupport.code, inputContainerSupportCodes);
+				}
+			}
+			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class
+					,DBQuery.is("code", experiment.code)
+					,DBUpdate.set("inputContainerSupportCodes",inputContainerSupportCodes));
+		}
 	}
 }
