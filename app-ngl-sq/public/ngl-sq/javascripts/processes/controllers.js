@@ -572,6 +572,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 	};
 
 	$scope.save = function (){
+		$scope.processes = [];
 		$scope.message.details = undefined;
 		$scope.message.isDetails = false;
 		$scope.datatable.save();
@@ -669,8 +670,10 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 		.success(function(data, status, headers, config) {
 			if(data!=null){
 				$scope.message.clazz="alert alert-success";
-				$scope.message.text=Messages('experiments.msg.save.sucess');							
-				//$scope.processes = $scope.processes.concat(data);
+				$scope.message.text=Messages('experiments.msg.save.sucess');
+				for(var i=0;i<data.length;i++){
+					$scope.processes = $scope.processes.concat(data[i].data);
+				}
 			}
 		})
 		.error(function(data, status, headers, config) {
