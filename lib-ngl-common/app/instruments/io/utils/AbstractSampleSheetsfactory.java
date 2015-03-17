@@ -30,7 +30,10 @@ public abstract class AbstractSampleSheetsfactory {
 	public abstract File generate();
 	
 	protected String format(String content){
-		return content.trim().replaceAll("(?m)^\\s{1,}", "").replaceAll("\n{2,}", "\n");
+		if(content != null){
+			return content.trim().replaceAll("(?m)^\\s{1,}", "").replaceAll("\n{2,}", "\n");
+		}
+		return "";
 	}
 	
 	protected List<Container> getContainersFromExperiment(){
@@ -76,7 +79,7 @@ public abstract class AbstractSampleSheetsfactory {
 	}
 	
 	public static String getIntrumentBooleanProperties(Experiment experiment,String propertyName){
-		if(Boolean.class.isInstance(experiment.instrumentProperties.get(propertyName).value)){
+		if(experiment.instrumentProperties.get(propertyName) != null && Boolean.class.isInstance(experiment.instrumentProperties.get(propertyName).value)){
 			if((Boolean) experiment.instrumentProperties.get(propertyName).value){
 				return "O";
 			}
@@ -85,7 +88,7 @@ public abstract class AbstractSampleSheetsfactory {
 	}
 	
 	public static String getContainerProperty(Container container, String propertyName){
-		if(Boolean.class.isInstance(container.properties.get(propertyName).value)){
+		if(container.properties.get(propertyName) != null && Boolean.class.isInstance(container.properties.get(propertyName).value)){
 			if((Boolean) container.properties.get(propertyName).value){
 				return "O";
 			}
