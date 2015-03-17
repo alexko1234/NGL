@@ -1,7 +1,6 @@
 @() 
 @import views.html.helper._
 
-<div class="row">
 <div ng-class="message.clazz" ng-show="message.text !== undefined">
 	<strong>{{message.text}}</strong><button class="btn btn-link" ng-click="message.showDetails=!message.showDetails" ng-show="message.isDetails">@(Messages("reagents.msg.details"))</button>
 	<div ng-show="message.showDetails">
@@ -119,6 +118,5 @@
 			</div>
 		</div>
 	</div>
-</div>
 </div>
 </div>
