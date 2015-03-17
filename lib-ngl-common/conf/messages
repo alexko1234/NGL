@@ -28,7 +28,7 @@ error.validationexp.duplicateinputcontainers="Le container {0} a été déposé 
 error.validationexp.badcontrolprepaflowcell="La piste contrôle {0} n’est pas cohérente avec le contenant sortie choisi {1}"
 error.validationexp.badoutputprepaflowcell="Le contenant sortie {0} n’est pas compatible avec l’instrument choisi {1}"
 error.validationexp.mandatoryrunstartdate="La date réelle de dépôt est obligatoire. Par défaut, elle sera équivalente à la date de création "
-error.validationexp.manytagSize="Plusieurs tailles sur la m�me piste {0}"
+error.validationexp.manytagSize="Plusieurs tailles d''index sur la même piste {0}"
 error.validationexp.sameTagSequence="Séquence identique ({1}) sur la piste {0}"
 
 #directive messages
