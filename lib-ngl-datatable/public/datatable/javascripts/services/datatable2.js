@@ -258,7 +258,7 @@ angular.module('datatableServices', []).
 		    				if(configPagination.active && !this.isRemoteMode(configPagination.mode)){
 		    					this.config.pagination.pageNumber=0;
 		    				}
-		    				
+		    				if(recordsNumber === undefined)recordsNumber=data.length;
 		    				this.allResult = data;
 		    				this.totalNumberRecords = recordsNumber;
 		    				this.loadUrlColumnProperty();
@@ -534,6 +534,11 @@ angular.module('datatableServices', []).
 			    				var currentPageNumber = configPagination.pageNumber;
 	    						var nbPages = Math.ceil(this.totalNumberRecords / configPagination.numberRecordsPerPage);
 		    					
+	    						if(currentPageNumber > nbPages-1){
+	    							configPagination.pageNumber=0;
+	    							currentPageNumber = 0;
+	    						}
+	    						
 	    						if(nbPages > 1 && nbPages <= configPagination.numberPageListMax){
 			    					for(var i = 0; i < nbPages; i++){
 			    						configPagination.pageList.push({number:i, label:i+1,  clazz:(i!=currentPageNumber)?'':'active'});
@@ -1117,7 +1122,9 @@ angular.module('datatableServices', []).
 			    					this.config.remove.callback(this,this.config.remove.error);
 			    				}	
 		    					
-		    					this.computePaginationList();		    					
+		    					this.computePaginationList();
+		    					this.computeDisplayResult();
+		    					this.config.select.isSelectAll = false;
 		    					this.config.remove.error = 0;
 		    					this.config.remove.start = false;
 		    					this.config.remove.counter = 0;
