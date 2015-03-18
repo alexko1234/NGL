@@ -1,6 +1,6 @@
 "use strict";
  
-angular.module('home', ['commonsServices','ngRoute','datatableServices','basketServices','ui.bootstrap','ngl-reagent.kitCatalogsService'], function($routeProvider, $locationProvider) {
+angular.module('home', ['commonsServices','ngRoute','datatableServices','ngl-reagent.kitCatalogsService'], function($routeProvider, $locationProvider) {
 	$routeProvider.when('/reagent-catalogs/new/home', {
 		templateUrl : jsRoutes.controllers.reagents.tpl.KitCatalogs.createOrEdit().url,
 		controller : 'CreationKitsCtrl'
