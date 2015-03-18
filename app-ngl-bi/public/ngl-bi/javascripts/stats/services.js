@@ -69,6 +69,9 @@
 					this.datatable.addData(data);
 					this.reset();
 				},
+				setData : function(values){
+					this.datatable.setData(values);
+				},
 				getData : function(){
 					return this.datatable.getData();
 				},
@@ -92,7 +95,9 @@
 					this.datatable.setData([], 0);
 				}
 		};
-		
+		if(!isInit){
+			statsService.init();
+		}
 		return statsService;				
 	}			
 ]).factory('queriesConfigReadSetsService', ['$http', '$q', 'datatable', function($http, $q, datatable){
@@ -162,6 +167,9 @@
 			},
 			addQuery : function(query){
 				this.queries = [query];
+			},
+			init : function(){
+				this.queries = [];
 			}
 	};
 	
@@ -169,8 +177,8 @@
 }
 	
 
-]).factory('chartsReadSetsService', ['$http', '$q','$parse', '$window', 'datatable', 'statsConfigReadSetsService','queriesConfigReadSetsService', 'lists',
-                                     function($http, $q, $parse, $window, datatable, statsConfigReadSetsService, queriesConfigReadSetsService, lists){
+]).factory('chartsReadSetsService', ['$http', '$q','$parse', '$window', 'datatable', 'statsConfigReadSetsService','queriesConfigReadSetsService', 'lists', 'mainService',
+                                     function($http, $q, $parse, $window, datatable, statsConfigReadSetsService, queriesConfigReadSetsService, lists, mainService){
 	
 	var datatableConfig = {
 			group : {
@@ -276,39 +284,31 @@
 	var charts = [];
 	var statsConfigs, queriesConfigs = [];
 	var loadData = function() {
-		if(chartService.reportingConfigurationCode === null){
+		if(chartService.reportingConfigurationCode !== undefined && chartService.reportingConfigurationCode !== null){
+			$http.get(jsRoutes.controllers.stats.api.StatsConfigurations.get(chartService.reportingConfigurationCode).url).success(function(data, status,	headers, config) {
+				statsConfigs = data.statsForm; 
+				queriesConfigs =[{form : data.queryForm}];
+				//synchronize other tab
+				statsConfigReadSetsService.init();
+				queriesConfigReadSetsService.init();
+				mainService.setForm(null);
+				if(angular.isDefined(mainService.getDatatable())){
+					mainService.getDatatable().setData([]);					
+				}
+				generateCharts();
+			});
+		}else{
 			if(statsConfigReadSetsService.isData() && queriesConfigReadSetsService.queries.length > 0){
 				statsConfigs = statsConfigReadSetsService.getData();
 				queriesConfigs = queriesConfigReadSetsService.queries;
 				generateCharts();
 			}else{
-				queriesConfigReadSetsService.queries = [];
-				statsConfigReadSetsService.reset();
-				generateCharts();
+				statsConfigs=[];
+				queriesConfigs=[];
+				charts=[];
+				readsetDatatable=undefined;
 			}
-			
 		}
-		else if(chartService.reportingConfigurationCode !== undefined && chartService.reportingConfigurationCode !== null){
-			statsConfigReadSetsService.init();
-			queriesConfigReadSetsService.datatable = undefined;
-			queriesConfigs = [];
-			$http.get(jsRoutes.controllers.stats.api.StatsConfigurations.get(chartService.reportingConfigurationCode).url).success(function(data, status,	headers, config) {
-				statsConfigs = data.statsForm; 
-				queriesConfigs[0] = {
-					form : data.queryForm
-				};
-				queriesConfigReadSetsService.addQuery(queriesConfigs[0]);
-				generateCharts();
-			});
-		}
-		else if(statsConfigReadSetsService.isData() && queriesConfigReadSetsService.queries.length > 0) {
-			statsConfigs=[];
-			queriesConfigs=[];
-			statsConfigs = statsConfigReadSetsService.getData();
-			queriesConfigs = queriesConfigReadSetsService.queries;
-			generateCharts();
-		}
-		
 	};
 
 	var generateCharts = function() {
@@ -327,7 +327,7 @@
 		var promises = [];
 			for(var i = 0; i < queriesConfigs.length ; i++){
 				var form = angular.copy(queriesConfigs[i].form);
-				form.list = true;
+				//form.list = true;
 				form.includes = properties;
 				//form.limit=3000;
 				promises.push($http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:form}));			
@@ -672,16 +672,21 @@
 	}
 
 	var chartService = {
-		datatable : function() {return readsetDatatable},
-		charts : function() {return charts},
+		datatable : function() {return readsetDatatable;},
+		charts : function() {
+			return charts;
+			},
 		lists : lists,
 		reportingConfigurationCode : undefined,
 		init : function() {
-			this.lists.refresh.statsConfigs({pageCodes : [ "readsets-show" ]});
+			this.lists.refresh.statsConfigs({pageCodes : ["readsets-show" ]});
 			loadData();
 		},
 		changeConfig : function(){
 			loadData();
+		},
+		queries:function() {
+			return queriesConfigs;
 		}
 	};
 	return chartService;
