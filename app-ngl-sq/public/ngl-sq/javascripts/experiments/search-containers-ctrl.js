@@ -252,10 +252,10 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	$scope.searchService.lists.refresh.users();
 	$scope.searchService.lists.refresh.states({objectTypeCode:"Container"});
 	$scope.form = {};
+	$scope.loadExperimentTypesLists();
 	if(angular.isUndefined(mainService.getForm())){
 		$scope.searchService.form = {};
 		mainService.setForm($scope.searchService.form);
-		$scope.loadExperimentTypesLists();
 		
 	} else {
 		$scope.searchService.form = {};
