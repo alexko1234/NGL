@@ -6,21 +6,27 @@
 GET		/											controllers.main.tpl.Main.home()
 
 #Submission
+GET		/submissions/:homeCode/home					controllers.submissions.tpl.Submissions.home(homeCode : java.lang.String)
+GET		/tpl/submissions/create						controllers.submissions.tpl.Submissions.create()
 # Recherche d'une soumission en fonction d'un etat :
 GET		/submissions/search/:state					@controllers.submissions.api.Submissions.search(state: java.lang.String)
 # Mise à jour d'un objet submission et de ses composants :
 PUT		/submissions/:code 							@controllers.submissions.api.Submissions.update(code: java.lang.String) 
 GET		/submissions/:code/experiments/rawDatas		@controllers.submissions.api.Submissions.getRawDatas(code: java.lang.String)
 PUT		/submissions/:code/state/:stateCode			@controllers.submissions.api.Submissions.updateState(code: java.lang.String, stateCode: java.lang.String)
+POST	/api/submissions                            @controllers.submissions.api.Submissions.save()
 
 # Creation des fichiers xml pour l'objet submission :
 PUT		/submissions/:code/xml						@controllers.submissions.api.Submissions.createXml(code: java.lang.String)
 
 # Traitement des AC et mise a jour du status de l'objet submission :
 PUT		/submissions/:code/ebiAc					@controllers.submissions.api.Submissions.treatmentAc(code: java.lang.String) 
-		
+
+GET		/tpl/submissions/js-routes					controllers.submissions.tpl.Submissions.javascriptRoutes()
+
 # Studies
 GET		/studies/:homeCode/home						controllers.studies.tpl.Studies.home(homeCode: java.lang.String)
+GET		/api/studies								@controllers.studies.api.Studies.list()
 POST	/api/studies								@controllers.studies.api.Studies.save()
 GET		/tpl/studies/create							controllers.studies.tpl.Studies.create()
 GET		/tpl/studies/js-routes						controllers.studies.tpl.Studies.javascriptRoutes()
@@ -28,12 +34,14 @@ GET		/tpl/studies/js-routes						controllers.studies.tpl.Studies.javascriptRoute
 
 # Configurations
 GET		/configurations/:homeCode/home				controllers.configurations.tpl.Configurations.home(homeCode: java.lang.String)
+GET 	/api/configurations						    @controllers.configurations.api.Configurations.list()
 POST	/api/configurations						    @controllers.configurations.api.Configurations.save()
-GET		/api/sra/variables/:name            		controllers.sra.api.Variables.get(name: java.lang.String)
 GET		/tpl/configurations/create					controllers.configurations.tpl.Configurations.create()
 GET		/tpl/configurations/js-routes				controllers.configurations.tpl.Configurations.javascriptRoutes()
+GET		/api/sra/variables/:name            		controllers.sra.api.Variables.get(name: java.lang.String)
 
-
+#readsets from ngl-common attention pas de '@' devant car controller ecrit il y a 3 ans et qui herite de 
+GET    	/api/readsets	                 			controllers.readsets.api.ReadSets.list()
 
 #projects from ngl-common
 GET		/api/projects								@controllers.projects.api.Projects.list()

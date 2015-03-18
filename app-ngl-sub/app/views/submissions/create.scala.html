@@ -1,0 +1,109 @@
+@()
+@import views.html.helper._
+
+@formStart() = {
+
+	@columnSearchForm{
+		@formGroup{
+			@** ceci est un commentaire
+			**@
+			<div class="form-control" bt-select  ng-model="createService.form.projCode" filter="true" placeholder='@Messages("create.placeholder.projectCode")' bt-options="project.code as project.code for project in createService.lists.getProjects()" required></div>	
+		}
+		@** 
+		bt-options = createService.lists.getSraStudies() defini dans ngl-common/common.js
+		ng-focus = appelle refreshSraStudies de createService
+		**@
+		@formGroup{
+			<div class="form-control" bt-select ng-model="createService.form.studyCode" placeholder='@Messages("create.placeholder.submissions.study")' bt-options="study.code as study.code for study in createService.lists.getSraStudies()" required ng-focus="createService.refreshSraStudies()"></div>			
+		}
+		@** 
+		bt-options = createService.lists.getSraConfigurations() defini dans ngl-common/common.js
+		ng-focus = appelle refreshSraConfigurations de createService
+		**@
+		@formGroup{
+			<div class="form-control" bt-select ng-model="createService.form.configurationCode" placeholder='@Messages("create.placeholder.submissions.configuration")' bt-options="configuration.code as configuration.code for configuration in createService.lists.getSraConfigurations()" required ng-focus="createService.refreshSraConfigurations()"></div>			
+		}
+		@** 
+		bt-options = createService.lists.getReadSets() defini dans ngl-common/common.js
+		ng-focus = appelle refreshReadSets de createService
+		**@
+		@formGroup{
+			<div class="form-control" bt-select ng-model="createService.form.readSetCodes" multiple="true" placeholder='@Messages("create.placeholder.submissions.readSet")' bt-options="readSet.code as readSet.code for readSet in createService.lists.getReadSets()" required ng-focus="createService.refreshReadSets()"></div>			
+		}													
+	}
+	
+}
+
+<div class="row">
+<div class="col-md-12 col-lg-12"  messages="messages"></div>
+</div>
+
+<div class="row"> 
+	<div class="col-md-12 col-lg-12">
+		<div dt-form>	
+			<div class="tab-content">
+				<div class="tab-pane active" id="filters">
+					<form name="submissionForm" class="well well-small">
+						<div class="row">
+						@formStart
+						@columnSearchForm{
+							@formGroup{
+							<div class="btn-toolbar">
+								<button type="submit" title='@Messages("button.save")' ng-disabled="submissionForm.$invalid" ng-click="save()" data-toggle="tooltip" class="btn btn-primary" >
+									<i class="fa fa-save"></i>
+								</button> 
+								<button title='@Messages("button.reset")' ng-click="reset()" data-toggle="tooltip"  class="btn btn-default">
+									<i class="fa fa-undo"></i>
+								</button>						 	
+							</div>	
+							}	
+						}
+						</div>		
+					</form>	
+				</div>
+			</div>
+		</div>
+	</div>
+</div> 
+
+<!--
+@formCreate() = {	
+	@columnSearchForm{
+		@formGroup{
+			<input type="text" class="form-control" ng-model="createService.form.experiment.title" placeholder='@Messages("create.placeholder.experimentTitle")' required>
+			
+		}				
+	}	
+}
+
+<div class="row">
+<div class="col-md-12 col-lg-12"  messages="messages"></div>
+</div>
+
+<div class="row"> 
+	<div class="col-md-12 col-lg-12">
+		<div dt-form>	
+			<div class="tab-content">
+				<div class="tab-pane active" id="filters">
+					<form name="submissionForm" class="well well-small">
+						<div class="row">
+						@formCreate
+						@columnSearchForm{
+							@formGroup{
+							<div class="btn-toolbar">
+								
+								<button title='@Messages("button.reset")' ng-click="reset()" data-toggle="tooltip"  class="btn btn-default">
+									<i class="fa fa-undo"></i>
+								</button>						 	
+							</div>	
+							}	
+						}
+						</div>		
+					</form>	
+				</div>
+			</div>
+		</div>
+	</div>
+</div> 
+
+-->

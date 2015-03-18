@@ -22,6 +22,7 @@ public class ToolsTest extends AbstractTestsSRA {
 		Path lien = Paths.get(fileLien.getPath());
 		Path cible = Paths.get(fileCible.getPath());
 		Files.createSymbolicLink(lien, cible);
+
 		
 	}
 }

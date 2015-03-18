@@ -173,6 +173,15 @@ angular.module('commonsServices', []).
     					params.objectTypeCode='Sample';
     					load(jsRoutes.controllers.commons.api.CommonInfoTypes.list().url,params,(key)?key:'sampleTypes');
     				},
+    				sraStudies : function(params, key){
+    					load(jsRoutes.controllers.studies.api.Studies.list().url,params,(key)?key:'sraStudies');    				
+    				},
+    				sraConfigurations : function(params, key){
+    					load(jsRoutes.controllers.configurations.api.Configurations.list().url,params,(key)?key:'sraConfigurations');    				
+    				},
+    				readSets : function(params, key){
+    					load(jsRoutes.controllers.readsets.api.ReadSets.list().url,params,(key)?key:'readSets');    				
+    				},
     				all : function(params){
     					this.resolutions(params);
     					this.containerCategories(params);
@@ -188,7 +197,10 @@ angular.module('commonsServices', []).
     					this.runs(params);
     					this.protocols(params);
     					this.instruments(params);
-    				}
+    					this.sraStudies(params);
+    					this.sraConfigurations(params);
+    					this.readSets(params);
+   				}
     		};
     		
     		
@@ -273,7 +285,12 @@ angular.module('commonsServices', []).
     					refresh.sampleTypes(params, key);
     				}
     				return results[key];
-    			}
+    			},
+    			getSraStudies : function(){return results['sraStudies'];},
+    			getSraConfigurations : function(){return results['sraConfigurations'];},
+    			getReadSets : function(){return results['readSets'];}
+
+
     		};
     		
     	}]).factory('convertValueServices', [function() {

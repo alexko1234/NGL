@@ -48,17 +48,22 @@ public class Study extends DBObject implements IValidation {
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
 		if (contextValidation.getContextObjects().get("type")==null) {
 			contextValidation.addErrors("study non evaluable ", "sans type de contexte de validation");
+			contextValidation.removeKeyFromRootKeyName("study::");
 			return;
 		}
 		if (contextValidation.getContextObjects().get("type").equals("sra")) {
+			System.out.println("contextValidationType  = sra");
 			SraValidationHelper.validateCode(this, InstanceConstants.SRA_STUDY_COLL_NAME, contextValidation);
 			SraValidationHelper.requiredAndConstraint(contextValidation, this.existingStudyType, VariableSRA.mapExistingStudyType, "existingStudyType");
 		} else if (contextValidation.getContextObjects().get("type").equals("wgs")) {
+			System.out.println("contextValidationType  = wgs");
 			SraValidationHelper.validateCode(this, InstanceConstants.SRA_STUDY_WGS_COLL_NAME, contextValidation);
 			if (!this.existingStudyType.equals("Whole Genome Sequencing")) {
 				contextValidation.addErrors("existingStudyType" + " avec valeur '" + this.existingStudyType + "' qui n'appartient pas a la liste des valeurs autorisees :" , "Whole Genome Sequencing");
 			}
 		} else {
+			System.out.println("contextValidationType = "+contextValidation.getContextObjects().get("type"));
+
 			contextValidation.addErrors("study non evaluable ", "avec type de contexte de validation " + contextValidation.getContextObjects().get("type"));	
 		}
 		contextValidation.removeKeyFromRootKeyName("study::");

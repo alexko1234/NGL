@@ -23,11 +23,11 @@ import fr.cea.ig.MongoDBDAO;
 public class Submission extends DBObject implements IValidation {
 
 	//public String alias;         // required mais remplacé par code herité de DBObject, et valeur = CNS_projectCode_date_num
-	public String projectCode;     // required pour nos stats //Reference code de la collection project NGL
- 	public String accession;       // numeros d'accession attribué par ebi */
-	public Date submissionDate;
-	public String studyCode;       // study à soumettre à l'ebi
-	public String analysisCode;       // study à soumettre à l'ebi
+	public String projectCode = null;     // required pour nos stats //Reference code de la collection project NGL
+ 	public String accession = null;       // numeros d'accession attribué par ebi */
+	public Date submissionDate = null;
+	public String studyCode = null;       // study à soumettre à l'ebi
+	public String analysisCode = null;       // study à soumettre à l'ebi
 	public List<String> sampleCodes = new ArrayList<String>(); // liste des codes des sample à soumettre à l'ebi
 	public List<String> experimentCodes = new ArrayList<String>(); // liste des codes des experiments à soumettre à l'ebi
 	public List<String> runCodes = new ArrayList<String>(); // liste des codes des runs à soumettre à l'ebi

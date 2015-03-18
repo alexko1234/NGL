@@ -108,9 +108,8 @@ public class DbUtil {
 	}		
 		
 	
-	public void cleanDataBase(String submissionCode) {
+/*	public void cleanDataBase(String submissionCode) {
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
-
 		if (submission==null){
 			return;
 		}
@@ -160,6 +159,6 @@ public class DbUtil {
 		}
 	}
 
-
+*/
 	
 }

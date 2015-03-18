@@ -30,9 +30,10 @@ public class XmlServicesTest extends AbstractTestsSRA {
 	public void validationXmlServicesSuccess() throws IOException, SraException {
 
 		SubmissionServices submissionServices = new SubmissionServices();
-		String user = "william";
+		String user = "william";	
 		ContextValidation contextValidation = new ContextValidation(user);
-		contextValidation.setCreationMode();		
+		contextValidation.setCreationMode();
+		contextValidation.getContextObjects().put("type", "sra");
 		Configuration config = new Configuration();
 		config.code = "conf_AWK_5";
 		config.projectCode = "AWK";
@@ -57,46 +58,37 @@ public class XmlServicesTest extends AbstractTestsSRA {
 		study.traceInformation.setTraceInformation(user);
 		study.code = "study_" + config.projectCode;
 		study.state = new State("userValidate", user);
+		contextValidation = new ContextValidation(user);
+		contextValidation.setCreationMode();
+		contextValidation.getContextObjects().put("type", "sra");
 		study.validate(contextValidation);
 		contextValidation.displayErrors(Logger.of("SRA"));
 		MongoDBDAO.save(InstanceConstants.SRA_STUDY_COLL_NAME, study);
-		////////sraDbServices.save(study);
-		
-		///////MongoDBDAO.save(InstanceConstants.SRA_STUDY_COLL_NAME, study);
 		
 		
 		String codeReadSet1 = "AUP_COSW_4_D09BTACXX.IND7";   // equivalent lotSeqName 
 		String codeReadSet2 = "AUP_NAOSW_5_C0UW4ACXX.IND10"; // equivalent lotSeqName 
 		String codeReadSet3 = "AKL_ABOSA_1_80MJ3ABXX"; // equivalent lotSeqName 
 		String codeReadSet4 = "AWK_EMOSW_1_H9YKWADXX.IND1"; // lotSeqName pairé et avec mapping
-		// ex de donnée illumina single : AUP_COSW_4_D09BTACXX.IND7
-		// ex de donnée illumina paired : AUP_NAOSW_5_C0UW4ACXX.IND10, AKL_ABOSA_1_80MJ3ABXX
-		ReadSet readSet1 = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, codeReadSet1);
-		ReadSet readSet2 = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, codeReadSet2);
-		ReadSet readSet3 = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, codeReadSet3);
-		//Ex de donnée pairee avec mapping :
-		ReadSet readSet4 = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, codeReadSet4);
 		
 	
-		System.out.println("READSET4="+readSet4.code);
-		List<ReadSet> readSets = new ArrayList<ReadSet>();
+		System.out.println("READSET4="+codeReadSet4);
+		List<String> readSetCodes = new ArrayList<String>();
 		
+		readSetCodes.add(codeReadSet4);
 
-		readSets.add(readSet4);
-
-		System.out.println("Create new submission for readSet " + readSet4.code);
-		String submissionCode = submissionServices.createNewSubmission(config.projectCode, readSets, study.code, config.code, "william");
-		//XmlServices xmlServices = new XmlServices();
-		//String directory = "/env/cns/submit_traces/SRA/SNTS_output_xml/mesTEST/lastTest";
-		//xmlServices.writeAllXml(submissionCode, directory);
+		System.out.println("Create new submission for readSet " + codeReadSet4);
+		contextValidation = new ContextValidation(userContext);
+		contextValidation.setCreationMode();
+		contextValidation.getContextObjects().put("type", "sra");
+		String submissionCode = submissionServices.createNewSubmission(config.projectCode, readSetCodes, study.code, config.code, "william", contextValidation);
 		
-
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class,  submissionCode);
-		File studyFile = new File("/env/cns/submit_traces/SRA/ngl-sub/mesTests/study.xml");
-		File sampleFile = new File("/env/cns/submit_traces/SRA/ngl-sub/mesTests/sample.xml");
-		File experimentFile = new File("/env/cns/submit_traces/SRA/ngl-sub/mesTests/experiment.xml");
-		File runFile = new File("/env/cns/submit_traces/SRA/ngl-sub/mesTests/run.xml");
-		File submissionFile = new File("/env/cns/submit_traces/SRA/ngl-sub/mesTests/submission.xml");
+		File studyFile = new File("/env/cns/submit_traces/SRA/ngl-sub/dataTests/study.xml");
+		File sampleFile = new File("/env/cns/submit_traces/SRA/ngl-sub/dataTests/sample.xml");
+		File experimentFile = new File("/env/cns/submit_traces/SRA/ngl-sub/dataTests/experiment.xml");
+		File runFile = new File("/env/cns/submit_traces/SRA/ngl-sub/dataTests/run.xml");
+		File submissionFile = new File("/env/cns/submit_traces/SRA/ngl-sub/dataTests/submission.xml");
 		XmlServices.writeStudyXml(submission, studyFile);
 		XmlServices.writeSampleXml(submission, sampleFile);
 		XmlServices.writeExperimentXml(submission, experimentFile);

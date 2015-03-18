@@ -4,13 +4,22 @@ import static play.data.Form.form;
 
 
 
+
+
+
+import java.util.List;
+
+import org.mongojack.DBQuery;
+
 import models.sra.submit.sra.instance.*;
 import models.sra.submit.util.SraCodeHelper;
 import models.utils.InstanceConstants;
 import play.data.Form;
+import play.libs.Json;
 import play.mvc.Result;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
 import validation.ContextValidation;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.State;
@@ -18,7 +27,8 @@ import models.laboratory.common.instance.State;
 public class Configurations extends DocumentController<Configuration>{
 
 	final static Form<Configuration> configurationForm = form(Configuration.class);
-	
+	final static Form<ConfigurationsSearchForm> configurationsSearchForm = form(ConfigurationsSearchForm.class);
+
 	public Configurations() {
 		super(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class);
 	}
@@ -48,5 +58,15 @@ public class Configurations extends DocumentController<Configuration>{
 		
 		return ok("Successful save configuration : " + userConfiguration.code);
 	}
+
 	
+	public Result list() {	
+		Form<ConfigurationsSearchForm> configurationsFilledForm = filledFormQueryString(configurationsSearchForm, ConfigurationsSearchForm.class);
+		ConfigurationsSearchForm configurationsSearchForm = configurationsFilledForm.get();
+		MongoDBResult<Configuration> results = MongoDBDAO.find(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, DBQuery.is("projectCode", configurationsSearchForm.projCode));
+		List<Configuration> configurations = results.toList();
+		return ok(Json.toJson(configurations));
+	}	
+	
+
 }
