@@ -217,8 +217,9 @@ HEAD	/api/supports/:code							controllers.containers.api.ContainerSupports.head
 
 #stats tpl
 GET	   	/stats/:homecode/home						controllers.stats.tpl.Stats.home(homecode: java.lang.String)
-GET		/tpl/stats/config/:type						controllers.stats.tpl.Stats.config(type: java.lang.String)
-GET		/tpl/stats/show								controllers.stats.tpl.Stats.show()
+GET		/tpl/stats/:type/choice						controllers.stats.tpl.Stats.choice(type: java.lang.String)
+GET		/tpl/stats/:type/config						controllers.stats.tpl.Stats.config(type: java.lang.String)
+GET		/tpl/stats/:type/show						controllers.stats.tpl.Stats.show(type: java.lang.String)
 GET		/tpl/stats/js-routes						controllers.stats.tpl.Stats.javascriptRoutes()
 
 #stats api

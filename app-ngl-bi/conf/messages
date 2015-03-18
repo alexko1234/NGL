@@ -96,6 +96,7 @@ search.placeholder.isSentCCRT = Envoyé CCRT ?
 search.placeholder.isSentCollaborator = Envoyé Collaborateur ?
 search.placeholder.sequencingProgramTypes = Type de lectures
 search.placeholder.analyseValuationUser = Analyse évaluée par : 
+search.placeholder.stats.configuration = Sélect. une configuration.
 
 button.search = Rechercher
 button.reset = Réinitialiser
@@ -604,13 +605,15 @@ stats.page.tab.show = Visualiser les Graphiques
 
 stats.typeCode = Type
 stats.property = Propriété
-
+stats.choice.question = Que souhaitez vous faire ?
+stats.choice.1 = Configuration manuelle
+stats.choice.2 = Utiliser une préconfiguration
 button.query.addbasket = Ajouter la requête dans le panier
 query.title = Titre
 query.form = Paramètres
 query.nbResults = Nombre de Résultats
 
-error.query.empty = Attention! Pas de requête dans le panier
+error.query.empty = Attention! Pas de requête ou de statistiques dans le panier
 
 info.query.config = Vous pouvez définir une configuration par défaut
 
