@@ -5,8 +5,12 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 				url:jsRoutes.controllers.processes.api.Processes.list()
 				
 			},
+			pagination:{
+				mode:'local'
+			},
 			order:{
-				by:'code'
+				by:'code',
+				mode:'local'
 			},
 			edit:{
 				active:true,
@@ -58,8 +62,12 @@ angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$rou
 				url:jsRoutes.controllers.processes.api.Processes.list()
 				
 			},
+			pagination:{
+				mode:'local'
+			},
 			order:{
-				by:'code'
+				by:'code',
+				mode:'local'
 			},
 			edit:{
 				active:true,
@@ -117,8 +125,12 @@ angular.module('home').controller('SearchRemoveCtrl', ['$scope','$location','$ro
 				url:jsRoutes.controllers.processes.api.Processes.list()
 				
 			},
+			pagination:{
+				mode:'local'
+			},
 			order:{
-				by:'code'
+				by:'code',
+				mode:'local'
 			},
 			edit:{
 				active:false,
