@@ -1,21 +1,20 @@
 @()
 
-<div class="row">
+<div class="row" ng-if="!isManual()">
 	<div class="col-md-3 col-lg-3">
 		<div class="alert alert-info" ng-if="chartsReadSetsService.lists.get('statsConfigs').length > 0">
-			<strong>@Messages("info.query.config")</strong>
 			<div class="form-control" 
 				 bt-select 
 				 ng-model="chartsReadSetsService.reportingConfigurationCode" 
 				 ng-change="chartsReadSetsService.changeConfig()" 
-				 placeholder="@Messages("search.placeholder.reporting.configuration")" 
+				 placeholder="@Messages("search.placeholder.stats.configuration")" 
 				 bt-options="valid.code as valid.name for valid in chartsReadSetsService.lists.get('statsConfigs')">
 			</div>
 		</div>
 	</div>	
 </div>
 
-<div ng-switch on="queriesConfigService.queries.length > 0 ">
+<div ng-switch on="chartsReadSetsService.queries().length > 0 ">
 	
 		<div ng-switch-when="true">
 			<div class="row">
@@ -27,7 +26,7 @@
 				</div>
 			</div>
 		</div>
-		<div ng-switch-when="false">
+		<div ng-switch-when="false" ng-if="isManual()">
 		<div class="row">
 			<div class="col-md-3 col-lg-3">
 				<div class="alert alert-danger">

@@ -6,7 +6,9 @@ import static play.data.Form.form;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.stats.StatsConfiguration;
@@ -44,6 +46,12 @@ public class StatsConfigurations extends CommonController {
 			MongoDBResult<StatsConfiguration> results = mongoDBFinder(InstanceConstants.STATS_CONFIG_COLL_NAME, form, StatsConfiguration.class, q, keys);				
 			List<StatsConfiguration> statsConfigurations = results.toList();
 			return ok(Json.toJson(new DatatableResponse<StatsConfiguration>(statsConfigurations, results.count())));
+		}else if(form.count){
+			MongoDBResult<StatsConfiguration> results = mongoDBFinder(InstanceConstants.STATS_CONFIG_COLL_NAME, form, StatsConfiguration.class, q, keys);
+			int count = results.count();
+			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			m.put("result", count);
+			return ok(Json.toJson(m));
 		}else{
 			MongoDBResult<StatsConfiguration> results = mongoDBFinder(InstanceConstants.STATS_CONFIG_COLL_NAME, form, StatsConfiguration.class, q, keys);							
 			List<StatsConfiguration> statsConfigurations = results.toList();

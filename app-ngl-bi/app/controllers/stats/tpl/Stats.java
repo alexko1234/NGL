@@ -2,9 +2,7 @@ package controllers.stats.tpl;
 
 import play.Routes;
 import play.mvc.Result;
-import views.html.stats.config;
-import views.html.stats.home;
-import views.html.stats.show;
+import views.html.stats.*;
 import controllers.CommonController;
 
 /**
@@ -22,8 +20,12 @@ public class Stats extends CommonController {
 		return ok(config.render());
 	}
 	
-	public static Result show() {
+	public static Result show(String type) {
 		return ok(show.render());
+	}
+	
+	public static Result choice(String type) {
+		return ok(choice.render());
 	}
 	
 	public static Result javascriptRoutes() {
