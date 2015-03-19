@@ -418,7 +418,6 @@
 	};
 	
 	var getZScoreChart = function(statsConfig) {
-		var property = getProperty(statsConfig.column);
 		var data = readsetDatatable.getData();
 		
 		if(readsetDatatable.config.group.by != undefined){
@@ -426,8 +425,9 @@
 			var groupGetter = $parse(propertyGroupGetter);
 		}
 		
-
+		var property = getProperty(statsConfig.column);
 		var getter = $parse(property);
+		
 		var statData = data.map(function(value) {
 			return getter(value)
 		});
@@ -521,21 +521,21 @@
 				} ]
 			},
 			series : allSeries,
+			plotOptions : {column:{grouping:false}}
 		};
 		return chart;
 	};
 	
 	var getSimpleValueChart = function(statsConfig) {
-		var property = getProperty(statsConfig.column);
 		var data = readsetDatatable.getData();
 		
 		if(readsetDatatable.config.group.by != undefined){
 			var propertyGroupGetter = readsetDatatable.config.group.by.property;
 			var groupGetter = $parse(propertyGroupGetter);
 		}
-		
+		var property = getProperty(statsConfig.column);
 		var getter = $parse(property);
-		var i=0;
+		var i = 0;
 		var statData = data.map(function(x) {
 			return {
 				name : x.code,
@@ -600,7 +600,8 @@
 					text : Messages(statsConfig.column.header)
 				}
 			},
-			series : allSeries
+			series : allSeries,
+			plotOptions : {column:{grouping:false}}
 		};
 		return chart;
 	}
