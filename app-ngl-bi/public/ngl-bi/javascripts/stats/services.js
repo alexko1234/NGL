@@ -367,8 +367,10 @@
 		charts = [];
 		for (var i = 0; i < statsConfigs.length; i++) {
 			var statsConfig = statsConfigs[i];
-			if ("z-score" === statsConfig.typeCode) {charts.push(getZScoreChart(statsConfig));
-			} else if ("simple-value" === statsConfig.typeCode) {charts.push(getSimpleValueChart(statsConfig));
+			if ("z-score" === statsConfig.typeCode) {
+				charts.push(getZScoreChart(statsConfig));
+			} else if ("simple-value" === statsConfig.typeCode) {
+				charts.push(getSimpleValueChart(statsConfig));
 			} else {
 				throw 'not manage'+ statsConfig.typeCode;
 			}
@@ -381,8 +383,7 @@
 			// Random colors with maths magic !
 			for(var k = 0; k < nbGroups; k++){
 				colors.push('#'+Math.floor(Math.random()*16777215).toString(16));
-			}
-			console.log(colors);
+			}			
 			for(var i = 0; i < charts.length; i++){
 				for(var j = 0; j < charts[i].series.length; j++){
 					charts[i].series[j].color = colors[j];
@@ -404,12 +405,9 @@
 		}
 	};
 	
-	
-	var getGroupValues = function(){
-		var propertyGroupGetter = readsetDatatable.config.group.by.property;
-		var groupGetter = $parse(propertyGroupGetter);
-		var groupValues = readsetDatatable.allResult.reduce(function(array, value){
-			var groupValue = groupGetter(value);
+	var getGroupValues = function(dataMustBeGroup){
+		var groupValues = dataMustBeGroup.reduce(function(array, value){
+			var groupValue = value._group;
 			if(!array[groupValue]){
 				array[groupValue]=[];
 			}
@@ -417,34 +415,15 @@
 			return array;
 		}, {});
 		return groupValues;
-	}
-	
-	var getScore = function(dataValue, groupValues){
-		// Creating zscodeData for our groups
-		var dataForScore = [{}];
-		var dataTemp = [];
-		var k = 0;
-		for(var key in groupValues){
-			for(var i = 0; i < groupValues[key].length; i++){
-				dataForScore.push(dataValue[k]);
-				k++;
-			}
-			dataForScore.splice(0,1);
-			dataTemp.push(dataForScore);
-			dataForScore = [{}];
-		}
-		dataForScore = dataTemp;
-		return dataForScore;
-	}
-	
+	};
 	
 	var getZScoreChart = function(statsConfig) {
 		var property = getProperty(statsConfig.column);
 		var data = readsetDatatable.getData();
-		var groupValues;
 		
 		if(readsetDatatable.config.group.by != undefined){
-			groupValues = getGroupValues();
+			var propertyGroupGetter = readsetDatatable.config.group.by.property;
+			var groupGetter = $parse(propertyGroupGetter);
 		}
 		
 
@@ -454,63 +433,42 @@
 		});
 		var mean = ss.mean(statData);
 		var stdDev = ss.standard_deviation(statData);
-		var zscodeData = data.map(function(x) {
+		var i = 0;
+		var zscoreData = data.map(function(x) {
 			return {
 				name : x.code,
 				y : ss.z_score(getter(x), mean,stdDev),
-				_value : getter(x)
+				x : i++,
+				_value : getter(x),
+				_group : (groupGetter)?groupGetter(x):undefined
 			};
 		});
 
 		if(readsetDatatable.config.group.by != undefined){
-			zscodeData = getScore(zscodeData, groupValues);
+			zscoreData = getGroupValues(zscoreData);
+		}else{
+			zscoreData = {"z-score":zscoreData};
 		}
-		
-		
 		
 		// Creating object allSeries that'll contain all our series, whether or not we're using group function on datatable
-		var allSeries = [{}];
-		if(readsetDatatable.config.group.by != undefined){
-			var begin = 0;
-			var i = 0;
-			// Calculates the width of each bar in our histogram
-			var width = (585 / readsetDatatable.allResult.length);
-			for(var key in groupValues){
-				allSeries[i] = {
-					point : {
-						events : {
-							// Redirects to valuation page of the clicked readset
-							click : function() {
-								$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.get(this.name).url);
-							}
+		var allSeries = [];
+		for(var key in zscoreData){
+			allSeries.push({
+				point : {
+					events : {
+						// Redirects to valuation page of the clicked readset
+						click : function() {
+							$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.get(this.name).url);
 						}
-					},
-					pointWidth : width,
-					pointStart: begin,
-					borderWidth : 0,
-					data : zscodeData[i],
-					name : key,
-					type : 'column',
-				}
-				begin+= groupValues[key].length;
-				i++;
-			}
-		}else{
-			allSeries[0] = {
-					point : {
-						events : {
-							// Redirects to valuation page of the clicked readset
-							click : function() {
-								$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.get(this.name).url);
-							}
-						}
-					},
-					type : 'column',
-					name : 'z-score',
-					data : zscodeData,
-					turboThreshold : 0
-			}
+					}
+				},
+				data : zscoreData[key],
+				name : key,
+				type : 'column',
+				turboThreshold : 0
+			});						
 		}
+		
 		var chart = {
 			chart : {
                 zoomType : 'x',
@@ -570,70 +528,46 @@
 	var getSimpleValueChart = function(statsConfig) {
 		var property = getProperty(statsConfig.column);
 		var data = readsetDatatable.getData();
-		var groupValues;
-		
 		
 		if(readsetDatatable.config.group.by != undefined){
-			groupValues= getGroupValues();
+			var propertyGroupGetter = readsetDatatable.config.group.by.property;
+			var groupGetter = $parse(propertyGroupGetter);
 		}
 		
-		
 		var getter = $parse(property);
+		var i=0;
 		var statData = data.map(function(x) {
 			return {
 				name : x.code,
-				y : getter(x)
+				y : getter(x),
+				x : i++,
+				_group : (groupGetter)?groupGetter(x):undefined
 			};
 		});
-		
-		var dataForSimpleValue = [{}];
+				
 		if(readsetDatatable.config.group.by != undefined){
-			statData = getScore(statData, groupValues);
-		}
-		
-		var allSeries = [{}];
-		if(readsetDatatable.config.group.by != undefined){
-			var begin = 0;
-			var i = 0;
-			var width = (585 / readsetDatatable.allResult.length);
-			for(var key in groupValues){
-				allSeries[i] = {
-					point : {
-						events : {
-							// Redirects to valuation page of the clicked readset
-							click : function() {
-								$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.get(this.name).url);
-							}
-						}
-					},
-					pointWidth : width,
-					pointStart: begin,
-					data : statData[i],
-					name : key,
-					turboThreshold : 0,
-					type : 'column',
-				}
-				begin+= groupValues[key].length;
-				i++;
-			}
-			
+			statData = getGroupValues(statData);
 		}else{
-			allSeries[0] = {
-					point : {
-						events : {
-							// Redirects to valuation page of the clicked readset
-							click : function() {
-								$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.get(this.name).url);
-							}
-						}
-					},
-					type : 'column',
-					name : 'simple-value',
-					data : statData,
-					turboThreshold : 0
-			}
+			statData = {"simple-value":statData};
 		}
 		
+		var allSeries = [];
+		for(var key in statData){
+			allSeries.push( {
+				point : {
+					events : {
+						// Redirects to valuation page of the clicked readset
+						click : function() {
+							$window.open(jsRoutes.controllers.readsets.tpl.ReadSets.get(this.name).url);
+						}
+					} 
+				},
+				data : statData[key],
+				name : key,
+				turboThreshold : 0,
+				type : 'column',
+			});						
+		}
 		
 		var chart = {
 			chart : {
