@@ -68,6 +68,7 @@ public class StateService {
 		l.add(newState("En stock", "IS", true, 1000, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Container.name()), true, null));
 		l.add(newState("Disponible controle qualité", "A-QC", true, 1000, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Container.name()), true, null));
 		l.add(newState("Disponible purif", "A-PF", true, 1000, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Container.name()), true, null));
+		l.add(newState("Disponible transfert", "A-TF", true, 1000, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Container.name()), true, null));
 		
 		l.add(newState("Séquençage en cours", "IP-S", true, 150, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Run.name()), true, "S"));		
 		l.add(newState("Séquençage en échec", "FE-S", true, 200, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Run.name()), true, "S"));
