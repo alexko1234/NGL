@@ -155,10 +155,12 @@ public class Submissions extends DocumentController<Submission>{
 		Logger.debug("filledForm "+filledForm);
 		SubmissionCreationForm submissionCreationForm = filledForm.get();
 		Logger.debug("readsets "+submissionCreationForm.readSetCodes);
-		String codeReadSet1 = "BCZ_BGOSW_2_H9M6KADXX.IND15"; 
-		ReadSet readSet1 = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, codeReadSet1);
+
 		List<String> readSetCodes = submissionCreationForm.readSetCodes;
-		readSetCodes.add(codeReadSet1);
+		
+		//String codeReadSet1 = "BCZ_BGOSW_2_H9M6KADXX.IND15"; 
+		//ReadSet readSet1 = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, codeReadSet1);
+		//readSetCodes.add(codeReadSet1);
 		
 		String user = getCurrentUser();
 		
@@ -168,7 +170,6 @@ public class Submissions extends DocumentController<Submission>{
 		contextValidation.setCreationMode();
 		contextValidation.getContextObjects().put("type", "sra");
 		try {
-			//submissionCode = submissionServices.createNewSubmission(submissionCreationForm.projCode, readSets, submissionCreationForm.studyCode, submissionCreationForm.configurationCode, user, contextValidation);
 			submissionCode = submissionServices.createNewSubmission(submissionCreationForm.projCode, readSetCodes, submissionCreationForm.studyCode, submissionCreationForm.configurationCode, user, contextValidation);
 			if (contextValidation.hasErrors()){
 				contextValidation.displayErrors(Logger.of("SRA"));

@@ -54,6 +54,7 @@ public class SubmissionServices {
 		// Creation d'un nouvel objet submission avec code qui n'existe pas encore dans db.
 		// liste des experiments :
 		
+		System.out.println("studyCode = " + studyCode);
 		if (!StringUtils.isNotBlank(studyCode)) {
 			throw new SraException("studyCode à null incompatible avec soumission");
 		}
@@ -72,6 +73,8 @@ public class SubmissionServices {
 		List <ReadSet> readSets = new ArrayList<ReadSet>();
 		for (String readSetCode : readSetCodes) {
 			if (!StringUtils.isNotBlank(readSetCode)) {
+				System.out.println("readSetCode = " + readSetCode);
+
 				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode);
 				if (readSet == null){
 					throw new SraException("readSet " + readSet.code + " n'existe pas dans database");
@@ -86,7 +89,7 @@ public class SubmissionServices {
 		List <Sample> listSamples = new ArrayList<Sample>();
 		
 		Submission submission = createSubmissionEntity(projectCode, config.code, user);
-		if (!StringUtils.isNotBlank(config.strategySample)) {
+		if (StringUtils.isNotBlank(config.strategySample)) {
 			throw new SraException("strategySample à null incompatible avec soumission");
 		}
 		Date date = new Date();
@@ -106,9 +109,7 @@ public class SubmissionServices {
 		// Si le study a ete validé par l'utilisateur, et qu'il n'a jamais été soumis, alors le charger
 		// dans l'objet submission pour envoie du xml à l'EBI
 		// Si le study a ete soumis à l'ebi alors son statut est different de UserValidate.
-		if (study == null) {
-			throw new SraException("Study null incompatible avec soumission");
-		}
+
 		if ((study.state == null) || (study.state.code.equals("new"))) {
 			// declencher exception, la soumission ne peut se faire sans un study validé par user ou
 			// study deja en cours de soumission voir soumis.
@@ -129,7 +130,6 @@ public class SubmissionServices {
 				// signaler erreur et passer au readSet suivant
 				System.out.println("?? soumission existante pour :"+readSet.code);
 				// Recuperer exp dans mongo
-
 				continue;
 			} 
 			// Verifier que ce readSet est bien valide avant soumission :
