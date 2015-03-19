@@ -72,7 +72,7 @@ public class LimsRunDAO {
      * 
      *
      * SELECT l.number as lane_number, et.name as exp_name, s.barcode as aliquot_barcode, s.stock_barcode, i.short_name as index_short,
-i.sequence as index_sequence , sl.size, fn_getsampleid_projects(s.id) as project_names
+i.sequence as index_sequence , sl.size, fn_getsampleid_project(s.id) as project_names
 ---,ind.name
 FROM t_flowcell f
 JOIN t_lane l ON l.flowcell_id=f.id
@@ -118,7 +118,7 @@ ORDER BY l.number
 		
 		
     	String sql = "SELECT distinct l.number as laneNumber, et.short_name as experimentTypeCode, s.stock_barcode as sampleBarCode," +
-    			" i.short_name as indexName, i.type as indexTypeCode, i.sequence as indexSequence ,ind.name as sampleCode, sl.size as insertLength, fn_getsampleid_projects(s.id) as projectCode"
+    			" i.short_name as indexName, i.type as indexTypeCode, i.sequence as indexSequence ,ind.name as sampleCode, sl.size as insertLength, fn_getsampleid_project(s.id) as projectCode"
     			+ " FROM t_flowcell f"
     			+ " JOIN t_lane l ON l.flowcell_id=f.id"
     			+ " JOIN t_sample_lane sl ON sl.lane_id=l.id"
