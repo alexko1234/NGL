@@ -4,7 +4,7 @@
   <li><a href="" role="tab"  data-target="#roadmap" data-toggle="tab">@Messages("experiments.flowcell.roadMap")</a></li>
 </ul>
 {{tab}}
-<div class="row tab-content tabPaneTable" ng-controller="FlowcellCtrl" ng-init="init_flowcell(@laneCount)">
+<div class="row tab-content tabPaneTable" ng-controller="ManyToOneFlowcellCtrl" ng-init="init_flowcell(@laneCount)">
 	<div class="col-md-12 col-lg-12 tab-pane active" style="margin-right:auto;margin-left:auto" id="flowcell">
 	<!-- TODO: Supprimer droppable quand l'expérience  est terminée -->
 		<div ng-model="inputContainers" ng-if="doneAndRecorded==true || inProgressNow==true" class="col-md-4 col-lg-4 inputContainerGroup">

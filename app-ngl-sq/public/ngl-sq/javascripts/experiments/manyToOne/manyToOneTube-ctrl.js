@@ -1,6 +1,6 @@
-angular.module('home').controller('MapcardCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','manyToOne','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,manyToOne,mainService,tabService) {
+angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','manyToOne','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,manyToOne,mainService,tabService) {
 	$scope.datatableConfig = {
-			name:"FDR_Mapcard",
+			name:"FDR_ManyToOne_Tube",
 			columns:[
 			         {
 			        	 "header":Messages("containers.table.supportCode"),
@@ -105,15 +105,15 @@ angular.module('home').controller('MapcardCtrl',['$scope', '$window','datatable'
 				active:false,
 				columnMode:true
 			},
-			extraHeaders:{
-				number:2,
-				dynamic:true,
-			},
 			exportCSV:{
 				active:true,
 				showButton:true,
 				delimiter:";",
 				start:false
+			},
+			extraHeaders:{
+				number:2,
+				dynamic:true,
 			},
 			otherButton:{
 				active:true,
@@ -277,5 +277,4 @@ angular.module('home').controller('MapcardCtrl',['$scope', '$window','datatable'
 	}else{
 		$scope.atomicTransfere.newExperiment($scope.datatable);
 	}
-	
 }]);

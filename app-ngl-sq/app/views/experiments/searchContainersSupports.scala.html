@@ -45,7 +45,7 @@
 		}
 		@columnSearchForm{
 			@formGroup{	
-			<div bt-select placeholder="@Messages("experiments.select.experimentType.transferts")" class="form-control" ng-model="searchService.form.nextExperimentTypeCode" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in searchService.lists.get('transfert')" ng-change="changeExperimentType('transfert')" auto-select>
+			<div bt-select placeholder="@Messages("experiments.select.experimentType.transferts")" class="form-control" ng-model="searchService.form.nextExperimentTypeCode" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in searchService.lists.get('transfert')" ng-change="changeExperimentType('transfert')" >
 			</div>
 			}
 			<hr>

@@ -156,13 +156,19 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		if(_form.nextExperimentTypeCode && _form.categoryCode){
 			_form.stateCode = $scope.getContainerStateCode($scope.experimentCategory);	 
 		
+			var formTemp = angular.copy(_form.nextExperimentTypeCode);
 			if($scope.experimentCategory!='transformation') _form.nextExperimentTypeCode=undefined;
 			if(_form.fromDate)_form.fromDate = moment($scope.searchService.form.fromDate, Messages("date.format").toUpperCase()).valueOf();
 			if(_form.toDate)_form.toDate = moment($scope.searchService.form.toDate, Messages("date.format").toUpperCase()).valueOf();
-			
-			mainService.setForm(_form);
+					
 			
 			$scope.datatable.search(_form);
+			
+			if(angular.isDefined(formTemp) && angular.isUndefined(_form.nextExperimentTypeCode)){
+				_form.nextExperimentTypeCode=angular.copy(formTemp);				
+			}
+			
+			mainService.setForm(_form);
 		}else{
 			if(!_form.nextExperimentTypeCode){
 				$scope.errors.experimentType = "has-error";

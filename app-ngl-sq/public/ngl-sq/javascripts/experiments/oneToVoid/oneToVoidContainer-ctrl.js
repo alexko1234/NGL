@@ -1,4 +1,4 @@
-angular.module('home').controller('VoidCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','oneToVoid','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,oneToVoid,mainService,tabService) {
+angular.module('home').controller('OneToVoidContainerCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','oneToVoid','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,oneToVoid,mainService,tabService) {
 	$scope.datatableConfig = {
 			name:"FDR_Void",
 			columns:[

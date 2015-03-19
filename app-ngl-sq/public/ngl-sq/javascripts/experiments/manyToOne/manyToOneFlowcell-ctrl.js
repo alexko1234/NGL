@@ -1,4 +1,4 @@
-angular.module('home').controller('FlowcellCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','manyToOne','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,manyToOne,mainService,tabService) {
+angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','manyToOne','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,manyToOne,mainService,tabService) {
 	$scope.datatableConfig = {
 			name:"FDR_prepaFC",
 			columns:[

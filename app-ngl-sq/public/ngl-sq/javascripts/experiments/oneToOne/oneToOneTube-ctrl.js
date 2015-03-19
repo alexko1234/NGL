@@ -1,4 +1,4 @@
-angular.module('home').controller('TubeCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','oneToOne','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,oneToOne,mainService,tabService) {
+angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','oneToOne','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,oneToOne,mainService,tabService) {
 	$scope.datatableConfig = {
 			name:"FDR_Tube",
 			columns:[
