@@ -112,11 +112,27 @@ public class ExperimentService {
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)));
 		
+		l.add(newExperimentType("Ext to qPCR","ext-to-qpcr",
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)));
+		
+		
 		l.add(newExperimentType("Preparation flowcell", "prepa-flowcell",1200, 
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcell(),
 				getInstrumentUsedTypes("cBot-interne","cBot"), "ManyToOne", 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 
+		l.add(newExperimentType("Solution stock","solution-stock",1000,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
+				getInstrumentUsedTypes("hand"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
+		//Depot solexa -- FDS 27/02/2015 devient commun
+		l.add(newExperimentType("Depot Illumina", "illumina-depot", 1400,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(),
+				getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500"), "OneToVoid", 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)));
+		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		
 			//transformation CNS
@@ -141,12 +157,6 @@ public class ExperimentService {
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
 					getInstrumentUsedTypes("hand","thermocycler"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-
-			//attention proto, attention robot voir avec julie
-			l.add(newExperimentType("Solution stock","solution-stock",1000,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
-					getInstrumentUsedTypes("hand"),"OneToOne", 
-					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
 
 			//quality control
@@ -170,10 +180,7 @@ public class ExperimentService {
 			/**********************************************************************************/
 			//transformation CNG & CNS
 			
-			l.add(newExperimentType("Ext to qPCR","ext-to-qpcr",
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
-					DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)));
-			
+		
 			l.add(newExperimentType("Ext to prepa flowcell","ext-to-prepa-flowcell",
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)));
@@ -206,11 +213,7 @@ public class ExperimentService {
 					getInstrumentUsedTypes("rocheLightCycler-qPCR","stratagene-qPCR"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG))); 	
 			
-			//Depot solexa -- FDS 27/02/2015 devient commun
-			l.add(newExperimentType("Depot Illumina", "illumina-depot", 1400,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(),
-					getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500"), "OneToVoid", 
-					DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)));
+
 
 			
 			/**********************************************************************************/
@@ -263,6 +266,11 @@ public class ExperimentService {
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcell(),
 					getInstrumentUsedTypes("cBot", "cBot-onboard"),"ManyToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+			
+			l.add(newExperimentType("Pool Tube","pool-tube",1200,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
+					getInstrumentUsedTypes("hand"),"ManyToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)));
 
 		}
 
@@ -285,15 +293,24 @@ public class ExperimentService {
 
 		newExperimentTypeNode("ext-to-opgen-depot", getExperimentTypes("ext-to-opgen-depot").get(0), false, false, null, null, null).save();
 		newExperimentTypeNode("ext-to-prepa-flowcell", getExperimentTypes("ext-to-prepa-flowcell").get(0), false, false, null, null, null).save();
+		newExperimentTypeNode("ext-to-qpcr", getExperimentTypes("ext-to-qpcr").get(0), false, false, null, null, null).save();	
+
 		if(ConfigFactory.load().getString("ngl.env").equals("PROD")){
-			newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false,false,getExperimentTypeNodes("ext-to-prepa-flowcell"),null,null).save();
+			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false,false,getExperimentTypeNodes("ext-to-qpcr"),
+				null,null).save();
+			newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","solution-stock"),
+					null,null).save();
+			newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false,false,getExperimentTypeNodes("prepa-flowcell"),
+					null,null).save();
 		}
+		
 		newExperimentTypeNode("opgen-depot",getExperimentTypes("opgen-depot").get(0),false,false,getExperimentTypeNodes("ext-to-opgen-depot"),null,null).save();
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 
 			newExperimentTypeNode("ext-to-library", getExperimentTypes("ext-to-library").get(0), false, false, null, null, null).save();
-			newExperimentTypeNode("ext-to-qpcr", getExperimentTypes("ext-to-qpcr").get(0), false, false, null, null, null).save();	
+			
+			
 			
 			//REM : experimentTypes list confirmées par Julie
 			newExperimentTypeNode("fragmentation", getExperimentTypes("fragmentation").get(0), false, false, getExperimentTypeNodes("ext-to-library"), 
@@ -330,6 +347,8 @@ public class ExperimentService {
 					null,null).save();
 			
 	        // FDS 27/02/2015 supression "illumina-depot-cng"
+			newExperimentTypeNode("pool-tube",getExperimentTypes("pool-tube").get(0),false,false,getExperimentTypeNodes("solution-stock","lib-normalization"),
+					null,null).save();
 			
 			newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false,false,getExperimentTypeNodes("prepa-flowcell"),
 					null,null).save();
