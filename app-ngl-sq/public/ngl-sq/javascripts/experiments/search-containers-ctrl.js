@@ -156,6 +156,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		if(_form.nextExperimentTypeCode && _form.categoryCode){
 			_form.stateCode = $scope.getContainerStateCode($scope.experimentCategory);	 
 		
+			if($scope.experimentCategory!='transformation') _form.nextExperimentTypeCode=undefined;
 			if(_form.fromDate)_form.fromDate = moment($scope.searchService.form.fromDate, Messages("date.format").toUpperCase()).valueOf();
 			if(_form.toDate)_form.toDate = moment($scope.searchService.form.toDate, Messages("date.format").toUpperCase()).valueOf();
 			
