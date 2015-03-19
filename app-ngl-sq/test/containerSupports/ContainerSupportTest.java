@@ -357,6 +357,16 @@ public class ContainerSupportTest extends AbstractTests {
 		
 	}
 	
+	@Test
+	public void validateUpdateBatch() {
+		
+	}
+	
+	@Test
+	public void validateUpdateStateCode() {
+		
+	}
+	
 	/*
 	@Test
 	public void test() {

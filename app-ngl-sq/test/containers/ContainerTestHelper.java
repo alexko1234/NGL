@@ -6,6 +6,7 @@ import java.util.List;
 
 import controllers.containers.api.ContainerBatchElement;
 import controllers.containers.api.ContainersSearchForm;
+import controllers.containers.api.ContainersUpdateForm;
 import models.laboratory.container.instance.Container;
 
 
@@ -44,7 +45,10 @@ public class ContainerTestHelper {
 		return csf;
 	}
 	
-	
+	public static ContainersUpdateForm getFakeContainersUpdateForm(){
+		ContainersUpdateForm cuf = new ContainersUpdateForm();		
+		return cuf;
+	}
 
 	
 

@@ -163,75 +163,7 @@ public class Containers extends CommonController {
 		}
 		return Results.ok("{}");
 	}
-
-	public static Result list_supports() throws DAOException{
-		//Form<ContainersSearchForm> containerFilledForm = filledFormQueryString(containerForm,ContainersSearchForm.class);
-		ContainersSearchForm containersSearch = filledFormQueryString(ContainersSearchForm.class);
-
-		DBQuery.Query query = getQuery(containersSearch);
-		if(query != null){
-			if(containersSearch.datatable){
-				List<LocationOnContainerSupport> containerSupports = new ArrayList<LocationOnContainerSupport>();
-
-				BasicDBObject keysSupport = new BasicDBObject();
-				BasicDBObject test = new BasicDBObject();
-				keysSupport.put("support.code",true);
-				keysSupport.put("support.categoryCode",true);
-
-				BasicDBList supportDBObject = (BasicDBList) MongoDB.getCollection(InstanceConstants.CONTAINER_COLL_NAME, Container.class, String.class).group(keysSupport, test, test,"function ( curr, result ) { }");
-				Iterator itr = supportDBObject.iterator();
-
-				while(itr.hasNext()) {
-					BasicDBObject element = (BasicDBObject) itr.next();
-					String supportCode  = (String)element.get("support.code");
-					LocationOnContainerSupport cs = new LocationOnContainerSupport();
-					cs.code = (String)element.get("support.code");
-					cs.categoryCode = (String)element.get("support.categoryCode");
-					containerSupports.add(cs);
-				}
-
-				return ok(Json.toJson(new DatatableResponse<LocationOnContainerSupport>(containerSupports, containerSupports.size())));
-			}else if(containersSearch.list){
-				BasicDBObject keys = new BasicDBObject();
-				keys.put("_id", 0);//Don't need the _id field
-				keys.put("support", 1);
-
-
-				MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query);
-				List<Container> containers = results.toList();
-				List<LocationOnContainerSupport> containerSupports = new ArrayList<LocationOnContainerSupport>();
-				for(Container c: containers){
-					if(!containerSupports.contains(c.support)){
-						containerSupports.add(c.support);
-					}
-				}
-
-				List<String> ls = new ArrayList<String>();
-				for(LocationOnContainerSupport p: containerSupports){
-					if(!containerSupports.contains(p)){
-						ls.add(p.code);
-					}
-				}
-
-				return ok(Json.toJson(ls));
-			}else{
-				BasicDBObject keys = new BasicDBObject();
-				keys.put("_id", 0);//Don't need the _id field
-				keys.put("support", 1);
-				MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query);
-				List<Container> containers = results.toList();
-				List<LocationOnContainerSupport> containerSupports = new ArrayList<LocationOnContainerSupport>();
-				for(Container c: containers){
-					if(!containerSupports.contains(c.support)){
-						containerSupports.add(c.support);
-					}
-				}
-
-				return ok(Json.toJson(containerSupports));
-			}
-		}
-		return ok();
-	}
+	
 
 	public static Result updateStateCode(String code){
 		Form<ContainersUpdateForm> containerUpdateFilledForm = getFilledForm(containersUpdateForm, ContainersUpdateForm.class);

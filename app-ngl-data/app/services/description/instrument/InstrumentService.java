@@ -308,7 +308,7 @@ public class InstrumentService {
         propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read2", "nbCyclesRead2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",700));
         propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index2", "nbCyclesReadIndex2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",600));
         propertyDefinitions.add(newPropertiesDefinition("Piste contrôle","controlLane", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValuesWithDefault("Pas de piste contrôle (auto-calibrage)","Pas de piste contrôle (auto-calibrage)","1",
-        		"2","3","4","5","6","7","8"),"Pas de piste contrôle (auto-calibrage)","single"));
+        		"2","3","4","5","6","7","8"),"Pas de piste contrôle (auto-calibrage)","single",100));
         return propertyDefinitions;
 	}
 
@@ -349,7 +349,7 @@ public class InstrumentService {
 	private static List<PropertyDefinition> getHiseq2500Properties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = getHiseq2000Properties();		
 	   propertyDefinitions.add(0, newPropertiesDefinition("Mode run","runMode"
-	        		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("normal","rapide"), "single",100));
+	        		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("normal","rapide"), "single",50));
         return propertyDefinitions;
 	}
 	

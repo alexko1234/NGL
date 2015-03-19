@@ -177,7 +177,7 @@ public class Processes extends CommonController{
 		return badRequest(batchForm.errorsAsJson());
 	}
 	
-	public static List<Process> saveFromSupport(String supportCode, Form<Process> filledForm, ContextValidation contextValidation){			
+	private static List<Process> saveFromSupport(String supportCode, Form<Process> filledForm, ContextValidation contextValidation){			
 		List<Process> processes = new ArrayList<Process>();
 		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("support.code", supportCode)).toList();
 		for(Container container:containers){			
@@ -188,7 +188,7 @@ public class Processes extends CommonController{
 	}
 
 
-	public static List<Process> saveAllContentsProcesses(Form<Process> filledForm, Container container, ContextValidation contextValidation){	
+	private static List<Process> saveAllContentsProcesses(Form<Process> filledForm, Container container, ContextValidation contextValidation){	
 		Process process = filledForm.get();
 
 		List<Process> processes = new ArrayList<Process>();

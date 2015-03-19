@@ -5,19 +5,16 @@ import static play.test.Helpers.callAction;
 import static play.test.Helpers.fakeRequest;
 import static play.test.Helpers.status;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import models.laboratory.common.instance.Comment;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.processes.instance.Process;
 import models.laboratory.sample.instance.Sample;
-import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.instance.ContainerHelper;
@@ -25,6 +22,7 @@ import models.utils.instance.ContainerHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mongojack.DBQuery;
 
 import play.Logger;
 import play.Logger.ALogger;
@@ -45,6 +43,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import controllers.containers.api.ContainerBatchElement;
 import controllers.containers.api.Containers;
 import controllers.containers.api.ContainersSearchForm;
+import controllers.containers.api.ContainersUpdateForm;
 import fr.cea.ig.MongoDBDAO;
 
 public class ContainerTest extends AbstractTests {
@@ -140,6 +139,11 @@ public class ContainerTest extends AbstractTests {
 		assertThat(c9.percentage).isEqualTo(0.00);
 		assertThat(c5.percentage).isEqualTo(0.00);
 		assertThat(c6.percentage).isEqualTo(0.00);		
+	}
+	
+	@Test
+	public void validateAddContent() {
+		
 	}
 	
 /**********************************Tests of Container class methods (DBObject)***************************************************/		
@@ -572,6 +576,46 @@ public class ContainerTest extends AbstractTests {
 
 		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<Container>>(){});		
 		assertThat(lc).isNullOrEmpty();		
+	}
+	
+		
+	@Test
+	public void validateUpdateStateCode() {
+		ContainersUpdateForm cuf = ContainerTestHelper.getFakeContainersUpdateForm();
+		Container container = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.and(DBQuery.is("state.code", "IS"),DBQuery.notExists("processTypeCode"),DBQuery.notExists("inputProcessCodes"))).toList().get(0);
+		cuf.stateCode = "IW-P";
+		Result result = callAction(controllers.containers.api.routes.ref.Containers.updateStateCode(container.code), fakeRequest().withJsonBody((Json.toJson(cuf))));		
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		
+		cuf.stateCode = "IS";
+		result = callAction(controllers.containers.api.routes.ref.Containers.updateStateCode(container.code), fakeRequest().withJsonBody((Json.toJson(cuf))));		
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+				
+		container = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.and(DBQuery.is("state.code", "IS"),DBQuery.exists("processTypeCode"),DBQuery.exists("inputProcessCodes"),DBQuery.regex("code", Pattern.compile("^BEG")))).toList().get(0);
+		cuf.stateCode = "A";
+		result = callAction(controllers.containers.api.routes.ref.Containers.updateStateCode(container.code), fakeRequest().withJsonBody((Json.toJson(cuf))));		
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		
+		container = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.and(DBQuery.is("state.code", "A"),DBQuery.exists("processTypeCode"),DBQuery.exists("inputProcessCodes"),DBQuery.regex("code", Pattern.compile("^BEG")))).toList().get(0);
+		cuf.stateCode = "IS";
+		result = callAction(controllers.containers.api.routes.ref.Containers.updateStateCode(container.code), fakeRequest().withJsonBody((Json.toJson(cuf))));		
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+		
+	}
+	
+	@Test
+	public void validateBadUpdateStateCode() {
+		ContainersUpdateForm cuf = ContainerTestHelper.getFakeContainersUpdateForm();
+		Container container = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.and(DBQuery.is("state.code", "IS"),DBQuery.notExists("processTypeCode"),DBQuery.notExists("inputProcessCodes"))).toList().get(0);
+		cuf.stateCode = "A";
+		Result result = callAction(controllers.containers.api.routes.ref.Containers.updateStateCode(container.code), fakeRequest().withJsonBody((Json.toJson(cuf))));		
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.BAD_REQUEST);
+		
+		container = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.and(DBQuery.is("state.code", "IS"),DBQuery.exists("processTypeCode"),DBQuery.exists("inputProcessCodes"),DBQuery.regex("code", Pattern.compile("^BEG")))).toList().get(0);
+		cuf.stateCode = "IW-P";
+		result = callAction(controllers.containers.api.routes.ref.Containers.updateStateCode(container.code), fakeRequest().withJsonBody((Json.toJson(cuf))));		
+		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.BAD_REQUEST);
+		
 	}
 	
 	/*

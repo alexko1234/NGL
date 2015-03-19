@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
@@ -30,6 +32,7 @@ import org.mongojack.DBQuery;
 
 import play.Logger;
 import play.Logger.ALogger;
+import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import utils.AbstractTests;
@@ -38,6 +41,7 @@ import utils.DatatableResponseForTest;
 import utils.InitDataHelper;
 import utils.MapperHelper;
 import validation.ContextValidation;
+import views.html.experiments.newExperiments;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -46,6 +50,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import controllers.processes.api.ProcessesSaveQueryForm;
+import controllers.processes.api.ProcessesSearchForm;
 import controllers.processes.api.ProcessesUpdateForm;
 import fr.cea.ig.MongoDBDAO;
 
@@ -62,60 +67,42 @@ public class ProcessesTest extends AbstractTests{
 	}
 	
 	protected static ALogger logger=Logger.of("ProcessesTest");
-/*
+	
+	//TODO: container avec plusieurs contents (impoter jeu de données)
 	@Test
-	public void validateSave() throws JsonParseException, JsonMappingException, IOException{
-		String supportCode = InitDataHelper.getSupportCodesInContext("tube").get(0);		
-		ContainerSupport cs = MongoDBDAO.findOne(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", supportCode));			
-		cs.state.code="IW-P";
-		MongoDBDAO.save(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, cs);		
-		Process process = ProcessTestHelper.getFakeProcess("mapping", "opgen-run");
+	public void validateSaveFromSupportIlluminaRunProcess() throws JsonParseException, JsonMappingException, IOException{
+		ContainerSupport cs =  MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.and(DBQuery.regex("code", Pattern.compile("^ASR")),DBQuery.is("state.code", "IW-P"))).toList().get(0);		
+		Process process = ProcessTestHelper.getFakeProcess("sequencing", "illumina-run");
 		process.projectCode = cs.projectCodes.get(0);
-		process.sampleCode = cs.sampleCodes.get(0);
-		process.containerInputCode = cs.code;
-		process.comments = null;
-		process.currentExperimentTypeCode = null;
-		process.newContainerSupportCodes =null;
-		process.experimentCodes = null;				
-		ProcessesSaveQueryForm psf = ProcessTestHelper.getFakeProcessesSaveForm(supportCode, process);		
-		Logger.info("Avant Result save()");
-		Result result = callAction(controllers.processes.api.routes.ref.Processes.save(),fakeRequest().withJsonBody(Json.toJson(psf)));
-		Logger.info("Après Result save()");
-		
+		process.properties = new HashMap<String, PropertyValue>();
+		process.properties.put("estimatedPercentPerLane", new PropertySingleValue("50"));
+		process.properties.put("readLength", new PropertySingleValue("100"));
+		process.properties.put("readType", new PropertySingleValue("PE"));
+		process.properties.put("sequencingType", new PropertySingleValue("Hiseq 2500 Rapide"));		
+	
+		Result result = callAction(controllers.processes.api.routes.ref.Processes.save(),fakeRequest("POST","?fromSupportContainerCode="+cs.code).withJsonBody(Json.toJson(process)));			
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
-		ObjectMapper mapper = new ObjectMapper();
-		Process processResult = mapper.readValue(play.test.Helpers.contentAsString(result), Process.class);
-		assertThat(processResult).isNotNull();
-		assertThat(processResult.state.code).isEqualTo("N");
+		MapperHelper mh = new MapperHelper();		
+		List<Process> processesResult = mh.convertValue(mh.resultToJsNode(result), new TypeReference<List<Process>>(){});		
 		
-		Process processFind =MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, processResult.code);
-		assertThat(processResult.code).isEqualTo(processFind.code);
+		assertThat(processesResult).isNotNull();
 		
-		Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, processResult.containerInputCode);
-		assertThat(container.processTypeCode).isEqualTo(processResult.typeCode);
-		assertThat(container.inputProcessCodes.get(0)).isEqualTo(processResult.code);
-		assertThat(container.state.code).isEqualTo("A");
-		assertThat(container.fromExperimentTypeCodes).isNotNull();
-		ContainerSupport containerSupport=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, container.support.code);
-		assertThat(containerSupport.state.code).isEqualTo("A");
-		assertThat(containerSupport.fromExperimentTypeCodes).isNotNull();
-		assertThat(container.inputProcessCodes.get(0)).isEqualTo(processResult.code);
-		
-		//result = callAction(controllers.processes.api.routes.ref.Processes.update(processResult.code),fakeRequest().withJsonBody(Json.toJson(processResult)));
-		//assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
-		
-		result = callAction(controllers.processes.api.routes.ref.Processes.head(processResult.code),fakeRequest());
-		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
-		
-		result = callAction(controllers.processes.api.routes.ref.Processes.get(processResult.code),fakeRequest());
-		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
-
-		result = callAction(controllers.processes.api.routes.ref.Processes.delete(processResult.code),fakeRequest());
-		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);		
-		;
+		for(int i=0; i<processesResult.size();i++){
+			Process newProcess=processesResult.get(i);
+			Logger.info("code Process: "+ newProcess.code);
+			result = callAction(controllers.processes.api.routes.ref.Processes.head(newProcess.code),fakeRequest());
+			assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+			
+			result = callAction(controllers.processes.api.routes.ref.Processes.get(newProcess.code),fakeRequest());
+			assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
+			
+			result = callAction(controllers.processes.api.routes.ref.Processes.delete(newProcess.code),fakeRequest());
+			assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);			
+		}		
 	}
-	*/
+	
+	
 	
 /*	@Test
 	public void validatesaveFromSupportOpgenRun() throws JsonParseException, JsonMappingException, IOException{
@@ -225,41 +212,6 @@ public class ProcessesTest extends AbstractTests{
 		
 	}
 	
-	
-/*	
-	@Test
-	public void validatesaveFromSupportIlluminaRun() throws JsonParseException, JsonMappingException, IOException{		
-		String supportCode = InitDataHelper.getSupportCodesInContext("tube").get(0);
-		ContainerSupport cs = MongoDBDAO.findOne(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", supportCode));		
-		cs.state.code="IW-P";
-		Process process = ProcessTestHelper.getFakeProcess("sequencing", "illumina-run");
-		process.projectCode = cs.projectCodes.get(0);
-		process.sampleCode = cs.sampleCodes.get(0);
-		process.properties = new HashMap<String, PropertyValue>();
-		process.properties.put("sequencingType", new PropertySingleValue("Miseq"));
-		process.properties.put("readType", new PropertySingleValue("PE"));
-		process.properties.put("readLength", new PropertySingleValue("300"));
-		process.properties.put("estimatedPercentPerLane", new PropertySingleValue(2.5));		
-		ProcessesSaveQueryForm psf = ProcessTestHelper.getFakeProcessesSaveForm(supportCode, process);		
-		
-		Logger.info("Avant Result  validatesaveFromSupportOpgenRun()");
-		Result result = callAction(controllers.processes.api.routes.ref.Processes.save(),fakeRequest().withJsonBody(Json.toJson(psf)));
-		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);		
-		Logger.info("Après Result  validatesaveFromSupportOpgenRun()");
-		
-		MapperHelper mh = new MapperHelper();		
-		List<Process> processResult = mh.convertValue(mh.resultToJsNode(result), new TypeReference<List<Process>>(){});		
-		assertThat(processResult).isNotNull();		
-		
-		for(Process p:processResult){		
-		assertThat(p.properties.get("estimatedPercentPerLane").value).isEqualTo(roundValue(p.sampleOnInputContainer.percentage*2.5/100.0));	
-			
-		result = callAction(controllers.processes.api.routes.ref.Processes.delete(p.code),fakeRequest());
-		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
-		}
-		
-	}*/
-	
 	@Test
 	public void validateCloneProcessProperties(){
 		Process process = MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("typeCode","illumina-run")).toList().get(0);
@@ -274,6 +226,11 @@ public class ProcessesTest extends AbstractTests{
 		}
 	}
 	
+	@Test
+	public void validateUpdateCode(){
+		//TODO
+	}
+	
 	
 	@Test
 	public void updateNotFound(){
@@ -282,7 +239,7 @@ public class ProcessesTest extends AbstractTests{
 	}
 	
 	@Test
-	public void updateStateCode(){
+	public void validateUpdateStateCode(){
 		//TODO
 	}
 	
@@ -298,13 +255,13 @@ public class ProcessesTest extends AbstractTests{
 	}
 	
 	@Test
-	public void deleteNotFound(){
+	public void validateDeleteNotFound(){
 		Result result = callAction(controllers.processes.api.routes.ref.Processes.delete("not_found"),fakeRequest());
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.NOT_FOUND);
 	}
 	
 	@Test
-	public void query() throws JsonParseException, JsonMappingException, IOException{
+	public void validateQuery() throws JsonParseException, JsonMappingException, IOException{
 		Result result = null;
 		
 		result = callAction(controllers.processes.api.routes.ref.Processes.list(),fakeRequest());
