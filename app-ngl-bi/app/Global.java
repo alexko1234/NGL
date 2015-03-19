@@ -50,7 +50,7 @@ public class Global extends GlobalSettings {
 			Play.stop();
 		}
 		*/
-		
+		Logger.error("Start NGL-BI done");
 	}  
 
 	
