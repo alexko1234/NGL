@@ -1599,13 +1599,11 @@ angular.module('datatableServices', []).
 			    				var cas, delimiter = this.config.exportCSV.delimiter, lineValue = "", colValue, that = this; 		    				
 			    				
 			    				//calcule results ( code extracted from method computeDisplayResult() )
-			    				var displayResultTmp = [], _displayResult = [];
-			    				_displayResult = angular.copy(this.allResult);		    					
-			    				angular.forEach(_displayResult, function(value, key){
+			    				var displayResultTmp = [];
+			    				angular.forEach(this.allResult, function(value, key){
 			    					 var line = {edit:undefined, selected:undefined, trClass:undefined, group:false};
 		    						 this.push({data:value, line:line});
-		    					}, displayResultTmp);
-			    				_displayResult = undefined;
+		    					}, displayResultTmp);			    				
 			    				if(this.isGroupActive()){
 			    					displayResultTmp = this.addGroup(displayResultTmp);					
 			    				}
@@ -1696,7 +1694,7 @@ angular.module('datatableServices', []).
 				    			    					colValue = colValue.replace(/\u00a0/g,"");
 				    			    				}
 				    			    				lineValue = lineValue + ((colValue!==null)&&(colValue)?colValue:"") + delimiter;
-				    			    			}
+				    			    			}				    			    			
 			    							}
 			    						});
 			    						if ((exportType==='all') || ((exportType==='groupsOnly') && result.line.group)) {
