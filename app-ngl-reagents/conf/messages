@@ -22,6 +22,7 @@ kits.code = Code
 kits.providerRefName = Nom kit (fournisseur)
 kits.active = En cours d'utilisation
 kits.select.experimentTypeCodes = Type experiences
+kits.possibleUseNumber = Nombre d''utilisation
 
 boxes.name = Nom de la boite
 boxes.storageConditions = Conditions de stockage (°C)
@@ -47,3 +48,46 @@ reagents.table.storageConditions = Conditions de stockage (°C)
 reagentCatalogs.menu = Catalogue
 reagentCatalogs.menu.create = Créer
 reagentCatalogs.menu.search = Rechercher
+
+reagentDeclarations.menu = Déclaration
+
+declarations.title = Déclaration
+
+declarations.kit.creation = Déclaration d''un kit
+declarations.kit.creation.placeholder.kitCatalogCode = Kit catalogue
+declarations.kit.creation.placeholder.state = Etat du kit
+declarations.box.empty = Aucune boite dans ce kit
+declarations.box.list =  Boite(s) contenue(s) dans le kit
+declarations.kit.edit = Modification du kit
+declarations.kit.creation.edit = Editer le kit
+declarations.kit.creation.save = Sauvegarder le kit
+declarations.kit.creation.remove = Supprimer le kit
+declarations.kit.creation.unedit = Annuler
+
+kit.catalogCode =  Kit catalogue
+kits.barCode = Code bar
+kits.expirationDate = Dade péremption
+kits.receptionDate = Date de reception
+kits.orderCode = Ref. commande
+kits.startToUseDate = Date debut utilisation
+kits.stopToUseDate = Date fin utilisation
+kits.state.code = Etat
+
+boxes.barCode = Code bar
+boxes.expirationDate = Dade péremption
+boxes.receptionDate = Date de reception
+boxes.orderCode = Ref. commande
+boxes.possibleUseNumber = Nombre d'utilisation
+boxes.startToUseDate = Date debut utilisation
+boxes.stopToUseDate = Date fin utilisation
+boxes.state.code = Etat
+boxes.insert.warning = Voulez-vous supprimer les boites existantes ?
+
+reagents.table.barCode = Code bar
+reagents.table.expirationDate = Dade péremption
+reagents.table.receptionDate = Date de reception
+reagents.table.orderCode = Ref. commande
+reagents.table.possibleUseNumber = Nombre d'utilisation
+reagents.table.startToUseDate = Date debut utilisation
+reagents.table.stopToUseDate = Date fin utilisation
+reagents.table.state.code = Etat

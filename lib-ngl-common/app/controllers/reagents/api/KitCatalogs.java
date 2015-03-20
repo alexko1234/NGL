@@ -8,8 +8,7 @@ import java.util.regex.Pattern;
 
 import models.laboratory.reagent.description.AbstractCatalog;
 import models.laboratory.reagent.description.KitCatalog;
-import models.laboratory.reagent.instance.Kit;
-import models.utils.CodeHelper;
+import models.laboratory.reagent.utils.ReagentCodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.ListObject;
@@ -61,7 +60,7 @@ public class KitCatalogs extends DocumentController<KitCatalog>{
 			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
 			contextValidation.setCreationMode();
 			if(ValidationHelper.required(contextValidation, kitCatalog.name, "name")){
-				kitCatalog.code = CodeHelper.getInstance().generateKitCatalogCode(kitCatalog.name);
+				kitCatalog.code = ReagentCodeHelper.getInstance().generateKitCatalogCode();
 			
 				kitCatalog = (KitCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, kitCatalog, contextValidation);
 			}
@@ -72,7 +71,7 @@ public class KitCatalogs extends DocumentController<KitCatalog>{
 		return badRequest(mainForm.errorsAsJson());
 	}
 	
-	public Result update(){
+	public Result update(String code){
 		Form<KitCatalog> kitCatalogFilledForm = getMainFilledForm();
 		if(!mainForm.hasErrors()){
 			KitCatalog kitCatalog = kitCatalogFilledForm.get();

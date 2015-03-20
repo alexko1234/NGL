@@ -1,0 +1,215 @@
+@() 
+@import views.html.helper._
+
+<div ng-class="message.clazz" ng-show="message.text !== undefined">
+	<strong>{{message.text}}</strong><button class="btn btn-link" ng-click="message.showDetails=!message.showDetails" ng-show="message.isDetails">@(Messages("reagents.msg.details"))</button>
+	<div ng-show="message.showDetails">
+	    <ul>
+    		<li ng-repeat="(key1, value1) in message.details">{{key1}}
+    		<ul>
+    			<li ng-repeat="(key2, value2) in value1"> {{value2}} </li>
+    		</ul>
+    		</li>
+    	</ul>	
+	</div>
+</div>
+	<div class="col-md-12 col-lg-12">
+		<div class="row">
+			<div class="btn-toolbar toolbar">
+				<h1 class="col-md-8 col-lg-8 pull-left">
+					{{getName()}}
+				</h1>
+				<div class="col-md-4 col-lg-4 pull-right">
+					<button class="btn btn-default saveAndEditButtons" ng-click="edit()" ng-show="editMode==false" data-toggle="tooltip" title="@Messages("declarations.kit.creation.edit")"><i class="fa fa-edit"></i></button>
+					<button class="btn btn-default saveAndEditButtons" ng-click="unedit()" ng-show="editMode==true" data-toggle="tooltip" title="@Messages("declarations.kit.creation.unedit")"><i class="fa fa-undo"></i></button>	
+					<button class="btn btn-primary saveAndEditButtons" ng-disabled="saveInProgress == true || !editMode" ng-click="saveAll();" data-toggle="tooltip"  title="@Messages("declarations.kit.creation.save")">
+						<i class="fa fa-save"></i>
+					</button>
+					<button class="btn btn-danger saveAndEditButtons" ng-disabled="saveInProgress == true || (kit.code == undefined ||  kit.code == '')" ng-click="removeKit()" data-toggle="tooltip"  title="@Messages("declarations.kit.creation.remove")">
+						<i class="fa fa-trash-o fa-lg"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+		<form class="form-horizontal">
+			<div class="row">
+				<div class="form-group">
+					<label class="col-md-2 col-lg-2 control-label">@Messages("kit.catalogCode"):</label>
+					<div class="col-md-3 col-lg-3" ng-class="getClass('kit.catalogCode')">
+						<div class="form-control" bt-select ng-model="kit.catalogCode"
+						placeholder="@Messages("declarations.kit.creation.placeholder.kitCatalogCode")" 
+						bt-options="kitCatalog.code as kitCatalog.name for kitCatalog in lists.getKitCatalogs()"
+						ng-readonly="!editMode" ng-disabled="!editMode" ng-change="insertBoxes()">
+						</div>
+						<span class="help-block">
+                            {{mainService.getError("kit.catalogCode")}} <br>
+                        </span>
+					</div>
+					<label class="col-md-1 col-lg-1 control-label">@Messages("kits.barCode"):</label>
+					<div class="col-md-3 col-lg-3" ng-class="getClass('kit.barCode')">
+						<input type="text" class="form-control" ng-keydown="scan($event,kit,'barCode')" ng-model="kit.barCode" ng-readonly="!editMode" ng-disabled="!editMode">
+						<span class="help-block">
+                            {{mainService.getError("kit.barCode")}} <br>
+                        </span>
+					</div>
+				</div>			
+		    </div>
+		    <div class="row">
+		    	<div class="form-group">
+					<label class="col-md-2 col-lg-2 control-label">@Messages("kits.receptionDate"):</label>
+					<div class="col-md-1 col-lg-1" ng-class="getClass('kit.receptionDate')">
+						<input type="text" class="form-control" ng-model="kit.receptionDate" ng-readonly="!editMode" ng-disabled="!editMode" date-timestamp>
+						<span class="help-block">
+                            {{mainService.getError("kit.receptionDate")}} <br>
+                        </span>
+					</div>
+					<label class="col-md-1 col-lg-1 control-label">@Messages("kits.orderCode"):</label>
+					<div class="col-md-1 col-lg-1" ng-class="getClass('kit.orderCode')">
+						<input type="text" class="form-control" ng-model="kit.orderCode" ng-readonly="!editMode" ng-disabled="!editMode">
+						<span class="help-block">
+                            {{mainService.getError("kit.orderCode")}} <br>
+                        </span>
+					</div>
+					<label class="col-md-1 col-lg-1 control-label">@Messages("kits.expirationDate"):</label>
+					<div class="col-md-1 col-lg-1" ng-class="getClass('kit.expirationDate')">
+						<input type="text" class="form-control" ng-model="kit.expirationDate" ng-readonly="!editMode" ng-disabled="!editMode" date-timestamp>
+						<span class="help-block">
+                            {{mainService.getError("kit.stopToUseDate")}} <br>
+                        </span>
+					</div>
+					<label class="col-md-1 col-lg-1 control-label">@Messages("kits.possibleUseNumber"):</label>
+					<div class="col-md-1 col-lg-1" ng-class="getClass('kit.possibleUseNumber')">
+						<input type="text" class="form-control" ng-model="kit.possibleUseNumber" ng-readonly="!editMode" ng-disabled="!editMode">
+						<span class="help-block">
+                            {{mainService.getError("kit.possibleUseNumber")}} <br>
+                        </span>
+					</div>
+				</div>
+		    </div>
+		     <div class="row">
+		    	<div class="form-group">
+		    	<label class="col-md-2 col-lg-2 control-label">@Messages("kits.startToUseDate"):</label>
+					<div class="col-md-1 col-lg-1" ng-class="getClass('kit.startToUseDate')">
+						<input type="text" class="form-control" ng-model="kit.startToUseDate" ng-readonly="!editMode" ng-disabled="!editMode" date-timestamp>
+						<span class="help-block">
+                            {{mainService.getError("kit.startToUseDate")}} <br>
+                        </span>
+					</div>
+					<label class="col-md-1 col-lg-1 control-label">@Messages("kits.stopToUseDate"):</label>
+					<div class="col-md-1 col-lg-1" ng-class="getClass('kit.stopToUseDate')">
+						<input type="text" class="form-control" ng-model="kit.stopToUseDate" ng-readonly="!editMode" ng-disabled="!editMode" date-timestamp>
+						<span class="help-block">
+                            {{mainService.getError("kit.stopToUseDate")}} <br>
+                        </span>
+					</div>
+					<label class="col-md-1 col-lg-1 control-label">@Messages("kits.state.code"):</label>
+					<div class="col-md-1 col-lg-1" ng-class="getClass('kits.state.code')">
+						<div class="form-control" bt-select ng-model="kits.state.code"
+						placeholder="@Messages("declarations.kit.creation.placeholder.state")" 
+						bt-options="state.code as state.name for state in lists.getStates()"
+						ng-readonly="!editMode" ng-disabled="!editMode">
+						</div>
+						<span class="help-block">
+                            {{mainService.getError("kits.state.code")}} <br>
+                        </span>
+					</div>
+				</div>
+			 </div>
+	</form>
+	
+<div class="row">
+ 	<h3 class="pull-left">@Messages("declarations.box.list"): </h3>
+ 	 <button title='@Messages("declarations.box.add")' data-toggle="tooltip" ng-disabled="!editMode" ng-click="addBox()" class="btn btn-default saveAndEditButtons" >
+		 <i class="fa fa-plus"></i>
+	 </button>
+	<br>
+ 	<ul class="nav nav-tabs" role="tablist" ng-if="boxes.length > 0">
+ 			<li ng-repeat="box in boxes"><a href="" role="tab"  data-target="#{{'box'+$index}}" data-toggle="tab"><button type="button" class="close ng-scope" ng-click="removeBox($index,box.code)" >x</button>{{box.barCode || 'box'+$index}}</a></li>
+	</ul>
+	<span ng-if="boxes.length === 0">@Messages("declarations.box.empty")</span>
+	<div class="tab-content">
+		<br>
+		<div ng-repeat="box in boxes" class="tab-pane" id="{{'box'+$index}}">
+		<form class="form-horizontal">
+		  	<div class="row">
+				<div class="form-group">
+					<label class="col-md-2 col-lg-2 control-label">@Messages("boxes.barCode"):</label>
+					<div class="col-md-3 col-lg-3" ng-class="getClass('boxes['+$index+'].barCode')">
+						<input class="form-control" type="text" ng-model="box.barCode" ng-keydown="scan($event,box,'barCode')" ng-readonly="!editMode" ng-disabled="!editMode">
+						<span class="help-block">
+                           {{mainService.getError("boxes["+$index+"].barCode")}} <br>
+                     		</span>
+					</div>
+					<label class="col-md-1 col-lg-1 control-label">@Messages("boxes.orderCode"):</label>
+					<div class="col-md-3 col-lg-3" ng-class="getClass('boxes['+$index+'].orderCode')">
+						<input type="text" class="form-control" ng-model="box.orderCode" ng-readonly="!editMode" ng-disabled="!editMode">
+						<span class="help-block">
+                            {{mainService.getError("boxes['+$index+'].orderCode")}} <br>
+                        </span>
+					</div>
+					
+				</div>
+			</div>
+			  <div class="row">
+		    	<div class="form-group">
+					<label class="col-md-2 col-lg-2 control-label">@Messages("boxes.receptionDate"):</label>
+					<div class="col-md-1 col-lg-1" ng-class="getClass('boxes['+$index+'].receptionDate')">
+						<input type="text" class="form-control" ng-model="box.receptionDate" ng-readonly="!editMode" ng-disabled="!editMode" date-timestamp>
+						<span class="help-block">
+                            {{mainService.getError("boxes['+$index+'].receptionDate")}} <br>
+                        </span>
+					</div>
+					<label class="col-md-2 col-lg-2 control-label">@Messages("boxes.expirationDate"):</label>
+					<div class="col-md-1 col-lg-1" ng-class="getClass('boxes['+$index+'].expirationDate')">
+						<input type="text" class="form-control" ng-model="box.expirationDate" ng-readonly="!editMode" ng-disabled="!editMode" date-timestamp>
+						<span class="help-block">
+                            {{mainService.getError("boxes['+$index+'].stopToUseDate")}} <br>
+                        </span>
+					</div>
+					<label class="col-md-2 col-lg-2 control-label">@Messages("boxes.possibleUseNumber"):</label>
+					<div class="col-md-1 col-lg-1" ng-class="getClass('boxes['+$index+'].possibleUseNumber')">
+						<input type="text" class="form-control" ng-model="box.possibleUseNumber" ng-readonly="!editMode" ng-disabled="!editMode">
+						<span class="help-block">
+                            {{mainService.getError("boxes["+$index+"].possibleUseNumber")}} <br>
+                        </span>
+					</div>
+				</div>
+		    </div>
+		    <div class="row">
+		    	<div class="form-group">
+		    	<label class="col-md-2 col-lg-2 control-label">@Messages("boxes.startToUseDate"):</label>
+					<div class="col-md-1 col-lg-1" ng-class="getClass('boxes['+$index+'].startToUseDate')">
+						<input type="text" class="form-control" ng-model="box.startToUseDate" ng-readonly="!editMode" ng-disabled="!editMode" date-timestamp>
+						<span class="help-block">
+                            {{mainService.getError("boxes['+$index+'].startToUseDate")}} <br>
+                        </span>
+					</div>
+					<label class="col-md-2 col-lg-2 control-label">@Messages("boxes.stopToUseDate"):</label>
+					<div class="col-md-1 col-lg-1" ng-class="getClass('boxes['+$index+'].stopToUseDate')">
+						<input type="text" class="form-control" ng-model="box.stopToUseDate" ng-readonly="!editMode" ng-disabled="!editMode" date-timestamp>
+						<span class="help-block">
+                            {{mainService.getError("boxes['+$index+'].stopToUseDate")}} <br>
+                        </span>
+					</div>
+					<label class="col-md-2 col-lg-2 control-label">@Messages("boxes.state.code"):</label>
+					<div class="col-md-1 col-lg-1" ng-class="getClass('boxes['+$index+'].state.code')">
+						<div class="form-control" bt-select ng-model="box.state.code"
+						placeholder="@Messages("declarations.kit.creation.placeholder.state")" 
+						bt-options="state.code as state.name for state in lists.getStates()"
+						ng-readonly="!editMode" ng-disabled="!editMode">
+						</div>
+						<span class="help-block">
+                            {{mainService.getError("boxes['+$index+'].state.code")}} <br>
+                        </span>
+					</div>
+		    	</div>
+		    	</div>
+			<br><br>
+			</form>
+			<div class="row">
+				<div class="col-md-12 col-lg-12" datatable="datatables[$index]"></div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>

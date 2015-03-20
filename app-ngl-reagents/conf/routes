@@ -5,7 +5,7 @@
 # Home page
 GET     /                           									controllers.main.tpl.Main.home()
 
-#Kit catalogs tpl
+#Kit catalogs TPL
 GET 	/reagent-catalogs/kits/:code									@controllers.reagents.tpl.KitCatalogs.get(code: java.lang.String)
 GET	   	/reagent-catalogs/:homecode/home								@controllers.reagents.tpl.KitCatalogs.home(homecode: java.lang.String)
 GET		/tpl/reagent-catalogs/js-routes									@controllers.reagents.tpl.KitCatalogs.javascriptRoutes()
@@ -17,19 +17,49 @@ GET 	/api/reagent-catalogs/kits/:code								@controllers.reagents.api.KitCatalo
 GET 	/api/reagent-catalogs/kits										@controllers.reagents.api.KitCatalogs.list()
 POST 	/api/reagent-catalogs/kits										@controllers.reagents.api.KitCatalogs.save()
 DELETE 	/api/reagent-catalogs/kits/:code								@controllers.reagents.api.KitCatalogs.delete(code: java.lang.String)
-PUT 	/api/reagent-catalogs/kits										@controllers.reagents.api.KitCatalogs.update()
+PUT 	/api/reagent-catalogs/kits/:code								@controllers.reagents.api.KitCatalogs.update(code: java.lang.String)
 
 #Box catalogs API
 GET 	/api/reagent-catalogs/boxes										@controllers.reagents.api.BoxCatalogs.list()
 POST 	/api/reagent-catalogs/boxes										@controllers.reagents.api.BoxCatalogs.save()
+PUT 	/api/reagent-catalogs/boxes/:code								@controllers.reagents.api.BoxCatalogs.update(code: java.lang.String)
 DELETE 	/api/reagent-catalogs/boxes/:code								@controllers.reagents.api.BoxCatalogs.delete(code: java.lang.String)
 
 #Reagent catalogs API
 GET 	/api/reagent-catalogs/reagents										@controllers.reagents.api.ReagentCatalogs.list()
 POST 	/api/reagent-catalogs/reagents										@controllers.reagents.api.ReagentCatalogs.save()
+PUT 	/api/reagent-catalogs/reagents/:code								@controllers.reagents.api.ReagentCatalogs.update(code: java.lang.String)
 DELETE 	/api/reagent-catalogs/reagents/:code								@controllers.reagents.api.ReagentCatalogs.delete(code: java.lang.String)
 
+#Kits TPL
+GET 	/reagent-declarations/kits/:code									@controllers.reagents.tpl.Kits.get(code: java.lang.String)
+GET	   	/reagent-declarations/:homecode/home								@controllers.reagents.tpl.Kits.home(homecode: java.lang.String)
+GET		/tpl/reagent-declarations/js-routes									@controllers.reagents.tpl.Kits.javascriptRoutes()
+GET		/tpl/reagent-declarations/creation-kit								@controllers.reagents.tpl.Kits.createOrEdit()
+GET		/tpl/reagent-declarations/search									@controllers.reagents.tpl.Kits.search()
+
+#Kits API
+GET 	/api/reagent-declarations/kits/:code								@controllers.reagents.api.Kits.get(code: java.lang.String)
+GET 	/api/reagent-declarations/kits										@controllers.reagents.api.Kits.list()
+POST 	/api/reagent-declarations/kits										@controllers.reagents.api.Kits.save()
+DELETE 	/api/reagent-declarations/kits/:code								@controllers.reagents.api.Kits.delete(code: java.lang.String)
+PUT 	/api/reagent-declarations/kits/:code								@controllers.reagents.api.Kits.update(code: java.lang.String)
+
+#Boxes API
+GET 	/api/reagent-declarations/boxes										@controllers.reagents.api.Boxes.list()
+POST 	/api/reagent-declarations/boxes										@controllers.reagents.api.Boxes.save()
+PUT 	/api/reagent-declarations/boxes/:code								@controllers.reagents.api.Boxes.update(code: java.lang.String)
+DELETE 	/api/reagent-declarations/boxes/:code								@controllers.reagents.api.Boxes.delete(code: java.lang.String)
+
+#Reagents API
+GET 	/api/reagent-declarations/reagents									@controllers.reagents.api.Reagents.list()
+POST 	/api/reagent-declarations/reagents									@controllers.reagents.api.Reagents.save()
+PUT 	/api/reagent-declarations/reagents/:code							@controllers.reagents.api.Reagents.update(code: java.lang.String)
+DELETE 	/api/reagent-declarations/reagents/:code							@controllers.reagents.api.Reagents.delete(code: java.lang.String)
+
 GET		/api/experiment/types											controllers.experiments.api.ExperimentTypes.list()
+
+GET		/api/commons/states												controllers.commons.api.States.list()
 
 ->  /authentication authentication.Routes
 

@@ -22,6 +22,7 @@ import com.mongodb.BasicDBObject;
 import models.laboratory.reagent.description.AbstractCatalog;
 import models.laboratory.reagent.description.BoxCatalog;
 import models.laboratory.reagent.description.KitCatalog;
+import models.laboratory.reagent.utils.ReagentCodeHelper;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
@@ -45,13 +46,29 @@ public class BoxCatalogs extends DocumentController<BoxCatalog>{
 			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
 			if(ValidationHelper.required(contextValidation, boxCatalog.name, "name")){
 				if(boxCatalog._id == null){
-					boxCatalog.code = CodeHelper.getInstance().generateBoxCatalogCode(boxCatalog.kitCatalogCode);
+					boxCatalog.code = ReagentCodeHelper.getInstance().generateBoxCatalogCode(boxCatalog.kitCatalogCode);
 					contextValidation.setCreationMode();
 				}else{
 					contextValidation.setUpdateMode();
 				}
 				boxCatalog = (BoxCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, boxCatalog, contextValidation);
 			}
+			if(!contextValidation.hasErrors()){
+				return ok(Json.toJson(boxCatalog));
+			}
+		}
+		return badRequest(mainForm.errorsAsJson());
+	}
+	
+	public Result update(String code){
+		Form<BoxCatalog> boxCatalogFilledForm = getMainFilledForm();
+		if(!mainForm.hasErrors()){
+			BoxCatalog boxCatalog = boxCatalogFilledForm.get();
+			
+			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
+			contextValidation.setUpdateMode();
+			
+			boxCatalog = (BoxCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, boxCatalog, contextValidation);
 			if(!contextValidation.hasErrors()){
 				return ok(Json.toJson(boxCatalog));
 			}

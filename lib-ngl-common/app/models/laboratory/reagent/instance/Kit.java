@@ -1,7 +1,14 @@
 package models.laboratory.reagent.instance;
 
-import fr.cea.ig.DBObject;
+import validation.ContextValidation;
 
-public class Kit extends DBObject{
+public class Kit extends AbstractDeclaration{
 	public String catalogCode;
+
+	@Override
+	public void validate(ContextValidation contextValidation) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

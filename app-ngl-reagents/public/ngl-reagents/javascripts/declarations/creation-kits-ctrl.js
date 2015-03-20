@@ -5,24 +5,63 @@
 	 $scope.datatableConfig = {
 				columns : [
 					{
-			        	 "header":Messages("reagents.table.code"),
-			        	 "property":"code",
+			        	 "header":Messages("reagents.table.barCode"),
+			        	 "property":"barCode",
 			        	 "order":true,
 			        	 "type":"text",
-			        	 "edit":false
+			        	 "edit":true,
+			        	 "editDirectives":'ng-keydown="scan($event,value.data,\'barCode\')"'
 			         },
 			         {
-			        	 "header":Messages("reagents.table.name"),
-			        	 "property":"name",
+			        	 "header":Messages("reagents.table.receptionDate"),
+			        	 "property":"receptionDate",
 			        	 "order":true,
-			        	 "type":"text",
+			        	 "type":"date",
 			        	 "edit":true
 			         },
 			         {
-			        	 "header":Messages("reagents.table.storageConditions"),
-			        	 "property":"storageConditions",
+			        	 "header":Messages("reagents.table.stockNumber"),
+			        	 "property":"stockNumber",
 			        	 "order":true,
-			        	 "type":"text",
+			        	 "type":"date",
+			        	 "edit":true
+			         },
+			         {
+			        	 "header":Messages("reagents.table.possibleUseNumber"),
+			        	 "property":"possibleUseNumber",
+			        	 "order":true,
+			        	 "type":"number",
+			        	 "edit":true
+			         },
+			         {
+			        	 "header":Messages("reagents.table.startToUseDate"),
+			        	 "property":"startToUseDate",
+			        	 "order":true,
+			        	 "type":"date",
+			        	 "edit":true
+			         },
+			         {
+			        	 "header":Messages("reagents.table.stopToUseDate"),
+			        	 "property":"stopToUseDate",
+			        	 "order":true,
+			        	 "type":"date",
+			        	 "edit":true
+			         },
+			         {
+			        	 "header":Messages("reagents.table.stateCode"),
+			        	 "property":"state.code",
+			        	 "order":true,
+			        	 "listStyle":"bt-select",
+			        	 "choiceInList":true,
+			        	 "possibleValues": 'lists.getStates()',
+			        	 "render":'<div bt-select ng-model="value.data.kitCatalogCode" bt-options="state.code as state.name for state in lists.getStates()" ng-edit="false"></div>',			        	 
+			        	 "edit":true
+			         },
+			         {
+			        	 "header":Messages("reagents.table.expirationDate"),
+			        	 "property":"expirationDate",
+			        	 "order":true,
+			        	 "type":"date",
 			        	 "edit":true
 			         }
 				],
@@ -32,7 +71,7 @@
 				},		
 				search:{
 					active:true,
-					url:jsRoutes.controllers.reagents.api.ReagentCatalogs.list().url
+					url:jsRoutes.controllers.reagents.api.Reagents.list().url
 				},
 				order:{
 					mode:'local',
@@ -42,37 +81,37 @@
 				remove:{
 					active:true,
 					mode:"remote",
-					url:function(reagent){ return jsRoutes.controllers.reagents.api.ReagentCatalogs.delete(reagent.code).url;}
+					url:function(reagent){ return jsRoutes.controllers.reagents.api.Reagents.delete(reagent.code).url;}
 				},
 				save:{
 					active:true,
-					url: function(reagent){
-						if(reagent.code === undefined || reagent.code === ""){
-							return jsRoutes.controllers.reagents.api.ReagentCatalogs.save().url;
-						}
-						return jsRoutes.controllers.reagents.api.ReagentCatalogs.update(reagent.code).url;
-						
-					},
-					showButton : false,
-					callback : function(datatable, errors){
-						 if(errors === 0 && $routeParams.kitCatalogCode === undefined){
-							$scope.datatableSaved++;
-							if($scope.datatableSaved === $scope.datatables.length){
-								//All the datatables are now saved
-								$location.path(jsRoutes.controllers.reagents.tpl.KitCatalogs.get($scope.kit.code).url);
-							}
-						 }else if(errors > 0){
-							 $scope.message.clazz = 'alert alert-danger';
-								$scope.message.text = Messages('reagents.msg.save.error');
-								$scope.message.isDetails = false;
-						 }
-					},
 					method:function(reagent){
 						if(reagent.code === undefined || reagent.code === ""){
 							return 'post';
 						}
 						
 						return 'put';
+					},
+					url: function(reagent){
+							var test = this;
+							if(reagent.code === undefined || reagent.code === ""){
+								return jsRoutes.controllers.reagents.api.Reagents.save().url;;
+							}
+							return jsRoutes.controllers.reagents.api.Reagents.update(reagent.code).url;
+						},
+					showButton : false,
+					callback : function(datatable, errors){
+						 if(errors === 0 && $routeParams.kitCode === undefined){
+							$scope.datatableSaved++;
+							if($scope.datatableSaved === $scope.datatables.length){
+								//All the datatables are now saved
+								$location.path(jsRoutes.controllers.reagents.tpl.Kits.get($scope.kit.code).url);
+							}
+						 }else if(errors > 0){
+							 $scope.message.clazz = 'alert alert-danger';
+								$scope.message.text = Messages('reagents.msg.save.error');
+								$scope.message.isDetails = false;
+						 }
 					}
 				},
 				hide:{
@@ -101,14 +140,25 @@
 				}
 	 };
 	 $scope.message = {};
-	 $scope.kit = {"category":"Kit", "active":true};
+	 $scope.kit = {"category":"Kit"};
 	 $scope.boxes = [];
 	 $scope.datatables = [];
 	 $scope.datatableSaved = 0;
 	 
+	 $scope.scan = function(e, property, propertyName){
+			console.log(property);
+			console.log(e);
+			if(e.keyCode === 9 || e.keyCode === 13){
+				property[propertyName] += '_';
+				console.log(property);
+				e.preventDefault();
+			}
+		};
+
+	 
 	 $scope.removeKit = function(){
 		 if($scope.kit !== undefined && $scope.kit.code !== ""  && confirm("Etes vous sur de vouloir supprimer le kit "+$scope.kit.name+" ?")){
-			 $http.delete(jsRoutes.controllers.reagents.api.KitCatalogs.delete($scope.kit.code).url)
+			 $http.delete(jsRoutes.controllers.reagents.api.Kits.delete($scope.kit.code).url)
 				.success(function(data, status, headers, config) {
 					if(data!=null){
 						$scope.message.clazz="alert alert-success";
@@ -125,9 +175,9 @@
 		 }
 	 };
 	 
-	 $scope.removeBox = function(index,code,name){
-		 if(code !== undefined  && code !== ""  && confirm("Etes vous sur de vouloir supprimer la boite "+name+" ?")){
-			 $http.delete(jsRoutes.controllers.reagents.api.BoxCatalogs.delete(code).url)
+	 $scope.removeBox = function(index,code){
+		 if(code !== undefined  && code !== ""  && confirm("Etes vous sur de vouloir supprimer la boite "+code+" ?")){
+			 $http.delete(jsRoutes.controllers.reagents.api.Boxes.delete(code).url)
 				.success(function(data, status, headers, config) {
 					if(data!=null){
 						for(var i=0;i<$scope.boxes.length;i++){
@@ -164,15 +214,15 @@
 	 
 	 $scope.getName = function(){
 		 if($scope.kit.code === undefined){
-			 return Messages("catalogs.kit.creation");
+			 return Messages("declarations.kit.creation");
 		 }
-		 var name = $scope.kit.name;
-			 if(name !== undefined){
-			 if(name.length > 60){
-				 name = name.substring(0,60)+"...";
+		 var code = $scope.kit.code;
+			 if(code !== undefined){
+			 if(code.length > 30){
+				 code = code.substring(0,30)+"...";
 			 }
 			 
-			 return name;
+			 return code;
 		 }
 	     return "";
 	 }
@@ -199,7 +249,7 @@
 	 
 	 $scope.loadKit = function(){
 		 if($scope.kit.code !== undefined && $scope.kit.code !== ""){
-			 return $http.get(jsRoutes.controllers.reagents.api.KitCatalogs.get($scope.kit.code).url)
+			 return $http.get(jsRoutes.controllers.reagents.api.Kits.get($scope.kit.code).url)
 				.success(function(data, status, headers, config) {
 					if(data!=null){
 						$scope.kit = data;
@@ -223,7 +273,7 @@
 	 
 	 $scope.loadBoxes = function(){
 		 if($scope.kit.code !== undefined && $scope.kit.code !== ""){
-			 $http.get(jsRoutes.controllers.reagents.api.BoxCatalogs.list().url, {"params":{"kitCatalogCode":$scope.kit.code}})
+			 $http.get(jsRoutes.controllers.reagents.api.Boxes.list().url, {"params":{"kitCode":$scope.kit.code}})
 				.success(function(data, status, headers, config) {
 					if(data!=null){
 						$scope.boxes = data;
@@ -231,7 +281,7 @@
 							$scope.boxes[i].category = "Box";
 							$scope.datatables[i] = datatable($scope.datatableConfig);
 							$scope.datatables[i].setData([]);
-							var jsonSearch = {"boxCatalogCode":$scope.boxes[i].code,"kitCatalogCode":$scope.kit.code};
+							var jsonSearch = {"boxCode":$scope.boxes[i].code,"kitCode":$scope.kit.code};
 							$scope.datatables[i].search(jsonSearch);
 						}
 					}
@@ -250,7 +300,7 @@
 		for(var i = 0; i < $scope.datatables[index].displayResult.length; i++){
 			$scope.datatables[index].displayResult[i].data.category = "Reagent";
 			$scope.datatables[index].displayResult[i].data.boxCatalogCode = box.code;
-			$scope.datatables[index].displayResult[i].data.kitCatalogCode = $scope.kit.code;
+			$scope.datatables[index].displayResult[i].data.kitCode = $scope.kit.code;
 		 }
 	 };
 	 
@@ -258,7 +308,7 @@
 		var promises = [];
 		if($scope.kit.code !== undefined && $scope.kit.code !== ""){
 			for(var i=0;i<$scope.boxes.length;i++){
-				$scope.boxes[i].kitCatalogCode = $scope.kit.code;
+				$scope.boxes[i].kitCode = $scope.kit.code;
 				if($scope.boxes[i].code === undefined || $scope.boxes[i].code === ""){
 					promises.push($scope.saveBox(i,$scope.boxes[i]));
 				}else{
@@ -271,8 +321,8 @@
 		return promises;
 	 };
 	 
-	 $scope.updateBox = function(i,box){
-		 return $http.put(jsRoutes.controllers.reagents.api.BoxCatalogs.update(box.code).url, box)
+	 $scope.saveBox = function(i,box){
+		 return $http.post(jsRoutes.controllers.reagents.api.Boxes.save().url, box)
 			.success(function(data, status, headers, config) {
 				if(data!=null){
 					$scope.message.clazz="alert alert-success";
@@ -290,8 +340,8 @@
 			});
 	 };
 	 
-	 $scope.saveBox = function(i,box){
-		 return $http.post(jsRoutes.controllers.reagents.api.BoxCatalogs.save().url, box)
+	 $scope.updateBox = function(i,box){
+		 return $http.put(jsRoutes.controllers.reagents.api.Boxes.update(box.code).url, box)
 			.success(function(data, status, headers, config) {
 				if(data!=null){
 					$scope.message.clazz="alert alert-success";
@@ -314,16 +364,16 @@
 		$scope.mainService.resetErrors();
 		$scope.saveInProgress = true;
 		var promises = [];
-		if($scope.kit.code === undefined){
+		if($scope.kit.code === undefined || $scope.kit.code === ""){
 			promises.push($scope.saveKit());
 		}else{
-			promises.push($scope.updateKit());
+			promises.push($scope.updateKit($scope.kit.code));
 		}
 		 $q.all(promises).then(function (res) {
 				if($scope.message.text != Messages('reagents.msg.save.error')){
 					$scope.message.clazz="alert alert-success";
 					$scope.message.text=Messages('reagents.msg.save.sucess');
-					//$location.path(jsRoutes.controllers.reagents.tpl.KitCatalogs.get($scope.kit.code).url);
+					//$location.path(jsRoutes.controllers.reagents.tpl.Kits.get($scope.kit.code).url);
 				}
 				promises = $scope.saveBoxes();
 				$q.all(promises).then(function (res) {
@@ -358,7 +408,7 @@
 	 }
 	 
 	 $scope.saveKit = function(){
-		 return $http.post(jsRoutes.controllers.reagents.api.KitCatalogs.save().url, $scope.kit)
+		 return $http.post(jsRoutes.controllers.reagents.api.Kits.save().url, $scope.kit)
 			.success(function(data, status, headers, config) {
 				if(data!=null){
 					$scope.message.clazz="alert alert-success";
@@ -375,8 +425,8 @@
 			});
 	 }
 	 
-	 $scope.updateKit = function(){
-		 return $http.put(jsRoutes.controllers.reagents.api.KitCatalogs.update($scope.kit.code).url, $scope.kit)
+	 $scope.updateKit = function(kitCode){
+		 return $http.put(jsRoutes.controllers.reagents.api.Kits.update(kitCode).url, $scope.kit)
 			.success(function(data, status, headers, config) {
 				if(data!=null){
 					$scope.message.clazz="alert alert-success";
@@ -393,20 +443,44 @@
 			});
 	 }
 	 
+	 $scope.insertBoxes = function(){
+		 if($scope.boxes.length === 0 || confirm(Messages("boxes.insert.warning"))){
+			 $scope.boxes = [];
+			 return $http.get(jsRoutes.controllers.reagents.api.BoxCatalogs.list().url, {params:{"kitCatalogCode":$scope.kit.catalogCode}})
+				.success(function(data, status, headers, config) {
+					if(data!=null){
+						if(data !== undefined && data !== null){
+							for(var i=0;i<data.length;i++){
+								 $scope.addBox();
+							}
+						}
+					}
+				})
+				.error(function(data, status, headers, config) {
+					
+				});
+			 }
+	 }
+	 
 	 //init
 	 var promises = [];
 	 $scope.editMode = true;
-	 if($routeParams.kitCatalogCode !== undefined){
-		 $scope.kit.code = $routeParams.kitCatalogCode;
+	 if($routeParams.kitCode !== undefined){
+		 $scope.kit.code = $routeParams.kitCode;
 		 promises.push($scope.loadKit());
 		 $scope.editMode = false;
+	 }else{
+		 $scope.kit.receptionDate = moment(new Date()).valueOf();
+		 $scope.kit.state = {code:"N"};
 	 }
 	 $q.all(promises).then(function (res) {
 		 $scope.loadBoxes()
 		 $scope.lists.refresh.experimentTypes();
+		 $scope.lists.refresh.kitCatalogs();
+		 $scope.lists.refresh.states({"objectTypeCode":"Reagent"});
 		 if(angular.isUndefined($scope.getHomePage())){
 				$scope.mainService.setHomePage('new');
-				tabService.addTabs({label:Messages('kitCatalogs.tabs.create'),href:jsRoutes.controllers.reagents.tpl.KitCatalogs.home("new").url,remove:false});
+				tabService.addTabs({label:Messages('kitCatalogs.tabs.create'),href:jsRoutes.controllers.reagents.tpl.Kits.home("new").url,remove:false});
 				tabService.activeTab(0);
 		 }
 	 });

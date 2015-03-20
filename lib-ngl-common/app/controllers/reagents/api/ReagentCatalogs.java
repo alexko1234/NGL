@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import models.laboratory.reagent.description.AbstractCatalog;
+import models.laboratory.reagent.description.BoxCatalog;
 import models.laboratory.reagent.description.ReagentCatalog;
+import models.laboratory.reagent.utils.ReagentCodeHelper;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
@@ -41,10 +43,26 @@ public class ReagentCatalogs extends DocumentController<ReagentCatalog>{
 		Form<ReagentCatalog> ReagentCatalogFilledForm = getMainFilledForm();
 		if(!mainForm.hasErrors()){
 			ReagentCatalog reagentCatalog = ReagentCatalogFilledForm.get();
-			reagentCatalog.code = CodeHelper.getInstance().generateReagentCatalogCode(reagentCatalog.name);
+			reagentCatalog.code = ReagentCodeHelper.getInstance().generateReagentCatalogCode(reagentCatalog.name);
 			
 			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
 			contextValidation.setCreationMode();
+			
+			reagentCatalog = (ReagentCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, reagentCatalog, contextValidation);
+			if(!contextValidation.hasErrors()){
+				return ok(Json.toJson(reagentCatalog));
+			}
+		}
+		return badRequest(mainForm.errorsAsJson());
+	}
+	
+	public Result update(String code){
+		Form<ReagentCatalog> reagentCatalogFilledForm = getMainFilledForm();
+		if(!mainForm.hasErrors()){
+			ReagentCatalog reagentCatalog = reagentCatalogFilledForm.get();
+			
+			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
+			contextValidation.setUpdateMode();
 			
 			reagentCatalog = (ReagentCatalog)InstanceHelpers.save(InstanceConstants.REAGENT_CATALOG_COLL_NAME, reagentCatalog, contextValidation);
 			if(!contextValidation.hasErrors()){

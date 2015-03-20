@@ -16,9 +16,10 @@
 	<div class="col-md-12 col-lg-12">
 		<div class="row">
 			<div class="btn-toolbar toolbar">
-				<h1 class="pull-left">
+				<h1 class="col-md-8 col-lg-8 pull-left">
 					{{getName()}}
 				</h1>
+				<div class="col-md-4 col-lg-4 pull-right">
 				<button class="btn btn-default saveAndEditButtons" ng-click="edit()" ng-show="editMode==false" data-toggle="tooltip" title="@Messages("catalogs.kit.creation.edit")"><i class="fa fa-edit"></i></button>
 				<button class="btn btn-default saveAndEditButtons" ng-click="unedit()" ng-show="editMode==true" data-toggle="tooltip" title="@Messages("catalogs.kit.creation.unedit")"><i class="fa fa-undo"></i></button>	
 				<button class="btn btn-primary saveAndEditButtons" ng-disabled="saveInProgress == true || !editMode" ng-click="saveAll();" data-toggle="tooltip"  title="@Messages("catalogs.kit.creation.save")">
@@ -27,6 +28,7 @@
 				<button class="btn btn-danger saveAndEditButtons" ng-disabled="saveInProgress == true || (kit.code == undefined ||  kit.code == '')" ng-click="removeKit()" data-toggle="tooltip"  title="@Messages("catalogs.kit.creation.remove")">
 					<i class="fa fa-trash-o fa-lg"></i>
 				</button>
+				</div>
 			</div>
 		</div>
 		<form class="form-horizontal">
@@ -94,24 +96,26 @@
 	<div class="tab-content">
 		<br>
 		<div ng-repeat="box in boxes" class="tab-pane" id="{{'box'+$index}}">
-		  	<div class="row">
-				<div class="form-group">
-					<label class="col-md-1 col-lg-1 control-label">@Messages("boxes.name"):</label>
-						<div class="col-md-3 col-lg-3" ng-class="getClass('boxes['+$index+'].name')">
-							<input class="form-control" type="text" ng-model="box.name" ng-readonly="!editMode" ng-disabled="!editMode">
-							<span class="help-block">
-                            {{mainService.getError("boxes["+$index+"].name")}} <br>
-                      		</span>
-						</div>
-					<label class="col-md-1 col-lg-1 control-label">@Messages("boxes.storageConditions"):</label>
-						<div class="col-md-3 col-lg-3" ng-class="getClass('boxes['+$index+'].storageConditions')">
-							<input class="form-control" type="text" ng-model="box.storageConditions" ng-readonly="!editMode" ng-disabled="!editMode">
-							<span class="help-block">
-                            {{mainService.getError("boxes["+$index+"].storageConditions")}} <br>
-                      		</span>
-						</div>
+			<form class="form-horizontal">
+			  	<div class="row">
+					<div class="form-group">
+						<label class="col-md-1 col-lg-1 control-label">@Messages("boxes.name"):</label>
+							<div class="col-md-3 col-lg-3" ng-class="getClass('boxes['+$index+'].name')">
+								<input class="form-control" type="text" ng-model="box.name" ng-readonly="!editMode" ng-disabled="!editMode">
+								<span class="help-block">
+	                            {{mainService.getError("boxes["+$index+"].name")}} <br>
+	                      		</span>
+							</div>
+						<label class="col-md-2 col-lg-2 control-label">@Messages("boxes.storageConditions"):</label>
+							<div class="col-md-1 col-lg-1" ng-class="getClass('boxes['+$index+'].storageConditions')">
+								<input class="form-control" type="text" ng-model="box.storageConditions" ng-readonly="!editMode" ng-disabled="!editMode">
+								<span class="help-block">
+	                            {{mainService.getError("boxes["+$index+"].storageConditions")}} <br>
+	                      		</span>
+							</div>
+					</div>
 				</div>
-			</div>
+			</form>
 			<br><br>
 			<div class="row">
 				<div class="col-md-12 col-lg-12" datatable="datatables[$index]"></div>

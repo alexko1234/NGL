@@ -34,19 +34,6 @@ public class CodeHelper {
 		return new SimpleDateFormat("yyyyMMdd_HHmmss");
 	}
 
-	public synchronized String generateKitCatalogCode(String kitCatalogName) {
-		return generateBarCode();
-	}
-
-	public synchronized String generateBoxCatalogCode(String kitCatalogCode) {
-		return StringUtils.stripAccents(kitCatalogCode + "-"
-				+ generateBarCode());
-	}
-
-	public synchronized String generateReagentCatalogCode(String boxCatalogCode) {
-		return boxCatalogCode + "-" + generateBarCode();
-	}
-
 	protected synchronized String generateBarCode(){
 		try {
 			Thread.sleep(1);
