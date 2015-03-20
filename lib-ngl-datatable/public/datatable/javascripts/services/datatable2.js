@@ -464,10 +464,10 @@ angular.module('datatableServices', []).
 		    				var _displayResult = [];
 		    				
 		    				if(configPagination.active && !this.isRemoteMode(configPagination.mode)){
-		    					_displayResult = this.allResult.slice((configPagination.pageNumber*configPagination.numberRecordsPerPage), 
-		    							(configPagination.pageNumber*configPagination.numberRecordsPerPage+configPagination.numberRecordsPerPage));
+		    					_displayResult = angular.copy(this.allResult.slice((configPagination.pageNumber*configPagination.numberRecordsPerPage), 
+		    							(configPagination.pageNumber*configPagination.numberRecordsPerPage+configPagination.numberRecordsPerPage)));
 		    				}else{ //to manage all records or server pagination
-		    					_displayResult = this.allResult;		    					
+		    					_displayResult = angular.copy(this.allResult);		    					
 		    				}
 		    				
 		    				var displayResultTmp = [];
