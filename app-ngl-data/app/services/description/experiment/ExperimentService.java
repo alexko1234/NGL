@@ -270,7 +270,7 @@ public class ExperimentService {
 			l.add(newExperimentType("Pool Tube","pool-tube",1200,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
 					getInstrumentUsedTypes("hand"),"ManyToOne", 
-					DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)));
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 
 		}
 
