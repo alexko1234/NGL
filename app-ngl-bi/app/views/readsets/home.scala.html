@@ -15,5 +15,10 @@
      <script src="@routes.Assets.at("ngl-bi/javascripts/commons/workflowChart.js")" type="text/javascript" charset="utf-8"></script>
 }
 
-@views.html.main("readsets.page.title", menu("readsets."+code), scripts)(views.html.contents.lefttabs())
+
+@css() = {
+	<link rel="stylesheet" href="@routes.Assets.at("ngl-bi/css/readsets/print.css")" media="print">
+
+}
+@views.html.main("readsets.page.title", menu("readsets."+code), scripts, css)(views.html.contents.lefttabs())
 
