@@ -141,7 +141,10 @@ public class Workflows {
 				state.code = "IS";
 			} else if (retry) {
 				for (ContainerUsed c : containersIn) {
-					Workflows.previousContainerState(c, experiment.typeCode, contextValidation, 2);
+					//Duplicate container in experiment
+					if(c.state.code.equals("IU")){
+						Workflows.previousContainerState(c, experiment.typeCode, contextValidation, 2);
+					}
 				}
 			}
 		}
