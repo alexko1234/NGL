@@ -8,6 +8,12 @@ angular.module('home', ['ngRoute', 'commonsServices', 'datatableServices','ui.bo
 		controller : 'CreateCtrl'
 	});
 	
+	$routeProvider.when('/submissions/:code', {
+		// url qui va appeler controler java de type tpl
+		templateUrl : '/tpl/submissions/details',
+		controller : 'DetailsCtrl'
+	});
+	
 	$routeProvider.otherwise({redirectTo: '/submissions/start/home'});
 
 	// configure html5 to get links working with bookmarked

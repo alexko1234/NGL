@@ -28,6 +28,7 @@ import services.FileAcServices;
 import services.SubmissionServices;
 import services.XmlServices;
 import validation.ContextValidation;
+import views.components.datatable.DatatableResponse;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
@@ -35,7 +36,6 @@ import fr.cea.ig.MongoDBResult;
 public class Submissions extends DocumentController<Submission>{
 	// declaration d'une instance submissionCreationForm qui permet de recuperer les
 	// données du formulaire startSubmission pour realiser la creation de la soumission.
-	final static Form<SubmissionCreationForm> submissionCreationForm = form(SubmissionCreationForm.class);
 
 	public Submissions() {
 		super(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class);
@@ -43,13 +43,30 @@ public class Submissions extends DocumentController<Submission>{
 
 	final static Form<Submission> submissionForm = form(Submission.class);
 	final static Form<File> pathForm = form(File.class);
-	
+	final static Form<SubmissionsCreationForm> submissionsCreationForm = form(SubmissionsCreationForm.class);
+
+
 	public Result search(String state)
 	{
 		MongoDBResult<Submission> results = MongoDBDAO.find(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, DBQuery.is("state.code", state));
 		List<Submission> submissions = results.toList();
 		return ok(Json.toJson(submissions));
 	}
+
+	// Renvoie le Json correspondant à la liste des submissions ayant le projectCode indique dans la variable du formulaire projectCode et stockee dans
+	// l'instance submissionCreationForm
+	public Result list() {	
+		Form<SubmissionsCreationForm> submissionsFilledForm = filledFormQueryString(submissionsCreationForm, SubmissionsCreationForm.class);
+		SubmissionsCreationForm submissionsCreationForm = submissionsFilledForm.get();
+		MongoDBResult<Submission> results = MongoDBDAO.find(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, DBQuery.is("projectCode", submissionsCreationForm.projCode));
+		List<Submission> submissions = results.toList();
+		if(submissionsCreationForm.datatable){
+			return ok(Json.toJson(new DatatableResponse<Submission>(submissions, submissions.size())));
+		}else{
+			return ok(Json.toJson(submissions));
+		}
+	}	
+
 
 	public Result update(String code)
 	{
@@ -126,7 +143,7 @@ public class Submissions extends DocumentController<Submission>{
 				DBUpdate.set("state.code", stateCode));
 		return ok();
 	}
-	
+
 	public Result getRawDatas(String code)
 	{
 		List<RawData> allRawDatas = new ArrayList<RawData>();
@@ -138,39 +155,39 @@ public class Submissions extends DocumentController<Submission>{
 			allRawDatas.addAll(experiment.run.listRawData);
 		}
 		return ok(Json.toJson(allRawDatas));
-		
+
 	}
-	
+
 	private Submission getSubmission(String code)
 	{
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, code);
 		return submission;
 	}
-	
-	
+
+
+
 	//public Result save(String projectCode, List<ReadSet> readSets, String studyCode, String configCode, String user) throws SraException, IOException
 	public Result save() throws SraException, IOException
 	{
-		Form<SubmissionCreationForm> filledForm = getFilledForm(submissionCreationForm, SubmissionCreationForm.class);
+		Form<SubmissionsCreationForm> filledForm = getFilledForm(submissionsCreationForm, SubmissionsCreationForm.class);
 		Logger.debug("filledForm "+filledForm);
-		SubmissionCreationForm submissionCreationForm = filledForm.get();
-		Logger.debug("readsets "+submissionCreationForm.readSetCodes);
+		SubmissionsCreationForm submissionsCreationForm = filledForm.get();
+		Logger.debug("readsets "+submissionsCreationForm.readSetCodes);
 
-		List<String> readSetCodes = submissionCreationForm.readSetCodes;
-		
+		List<String> readSetCodes = submissionsCreationForm.readSetCodes;
+
 		//String codeReadSet1 = "BCZ_BGOSW_2_H9M6KADXX.IND15"; 
-		//ReadSet readSet1 = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, codeReadSet1);
-		//readSetCodes.add(codeReadSet1);
-		
+		//String codeReadSet2 = "BCZ_BIOSW_2_H9M6KADXX.IND19"; 
+
 		String user = getCurrentUser();
-		
+
 		SubmissionServices submissionServices = new SubmissionServices();
 		String submissionCode;
 		ContextValidation contextValidation = new ContextValidation(user);
 		contextValidation.setCreationMode();
 		contextValidation.getContextObjects().put("type", "sra");
 		try {
-			submissionCode = submissionServices.createNewSubmission(submissionCreationForm.projCode, readSetCodes, submissionCreationForm.studyCode, submissionCreationForm.configurationCode, user, contextValidation);
+			submissionCode = submissionServices.createNewSubmission(submissionsCreationForm.projCode, readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, user, contextValidation);
 			if (contextValidation.hasErrors()){
 				contextValidation.displayErrors(Logger.of("SRA"));
 				return badRequest("Voir Display Error");
@@ -180,7 +197,7 @@ public class Submissions extends DocumentController<Submission>{
 		}
 		return ok(Json.toJson(submissionCode));
 	}
-	
-	
+
+
 }
 

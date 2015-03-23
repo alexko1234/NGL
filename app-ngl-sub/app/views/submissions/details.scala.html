@@ -1,0 +1,55 @@
+@()
+@column()(value: Html) = {
+	<div class="col-md-4 col-lg-4">
+		@value
+	</div>
+}
+<div class="row">
+	<div class="col-md-12 col-lg-12" messages="messages"></div>
+</div>
+
+<div class="row margin-bottom-7">
+	<div class="col-md-12 col-lg-12">
+		<ul class="nav nav-tabs margin-bottom-5">
+			<li class="active"><a data-target="#sample" data-toggle="tab">@Messages("submissions.tabs.sample")</a></li>
+			<li><a data-target="#experiment" data-toggle="tab">@Messages("submissions.tabs.experiment")</a></li>
+			<li><a data-target="#run" data-toggle="tab">@Messages("submissions.tabs.run")</a></li>
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane active" id="sample">
+				<accordion close-others="oneAtATime"> 
+				<accordion-group heading="{{sample.code}}" ng-repeat="sample in samples">
+					<form class="form-horizontal">
+					<div class="row">
+						@column(){
+						@views.html.helper.columnLabelValue(Messages("sample.code")){
+						<p class="form-control-static">{{sample.code}}</p>
+						}
+						@views.html.helper.columnLabelValue(Messages("sample.description")){
+						<p class="form-control-static">{{sample.description}}</p>
+						}
+						@views.html.helper.columnLabelValue(Messages("sample.title")){
+						<p class="form-control-static">{{sample.title}}</p>
+						}
+						
+						}
+					</div>
+					</form>
+					
+				</accordion-group> 
+				</accordion>
+			</div>
+
+			<div class="tab-pane" id="experiment">
+				<accordion close-others="oneAtATime"> 
+				<accordion-group heading="{{experiment}}" ng-repeat="experiment in submission.experimentCodes">
+					{{experiment}} 
+				</accordion-group> 
+				</accordion>
+
+			</div>
+			<div class="tab-pane" id="run"></div>
+
+		</div>
+	</div>
+</div>

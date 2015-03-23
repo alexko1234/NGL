@@ -7,7 +7,11 @@ GET		/											controllers.main.tpl.Main.home()
 
 #Submission
 GET		/submissions/:homeCode/home					controllers.submissions.tpl.Submissions.home(homeCode : java.lang.String)
+GET		/submissions/:code							controllers.submissions.tpl.Submissions.get(code : java.lang.String)
 GET		/tpl/submissions/create						controllers.submissions.tpl.Submissions.create()
+
+GET		/tpl/submissions/details					controllers.submissions.tpl.Submissions.details()
+
 # Recherche d'une soumission en fonction d'un etat :
 GET		/submissions/search/:state					@controllers.submissions.api.Submissions.search(state: java.lang.String)
 # Mise à jour d'un objet submission et de ses composants :
@@ -15,6 +19,8 @@ PUT		/submissions/:code 							@controllers.submissions.api.Submissions.update(c
 GET		/submissions/:code/experiments/rawDatas		@controllers.submissions.api.Submissions.getRawDatas(code: java.lang.String)
 PUT		/submissions/:code/state/:stateCode			@controllers.submissions.api.Submissions.updateState(code: java.lang.String, stateCode: java.lang.String)
 POST	/api/submissions                            @controllers.submissions.api.Submissions.save()
+GET		/api/submissions							@controllers.submissions.api.Submissions.list()
+GET		/api/submissions/:code						@controllers.submissions.api.Submissions.get(code: java.lang.String)
 
 # Creation des fichiers xml pour l'objet submission :
 PUT		/submissions/:code/xml						@controllers.submissions.api.Submissions.createXml(code: java.lang.String)
@@ -39,6 +45,10 @@ POST	/api/configurations						    @controllers.configurations.api.Configurations
 GET		/tpl/configurations/create					controllers.configurations.tpl.Configurations.create()
 GET		/tpl/configurations/js-routes				controllers.configurations.tpl.Configurations.javascriptRoutes()
 GET		/api/sra/variables/:name            		controllers.sra.api.Variables.get(name: java.lang.String)
+
+#Samples
+GET		/api/samples								@controllers.samples.api.Samples.list()
+
 
 #readsets from ngl-common attention pas de '@' devant car controller ecrit il y a 3 ans et qui herite de 
 GET    	/api/readsets	                 			controllers.readsets.api.ReadSets.list()

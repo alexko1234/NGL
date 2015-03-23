@@ -85,6 +85,7 @@ public class SubmissionTest extends AbstractTestsSRA {
 		String codeReadSet2 = "AUP_NAOSW_5_C0UW4ACXX.IND10"; // equivalent lotSeqName 
 		String codeReadSet3 = "AKL_ABOSA_1_80MJ3ABXX"; // equivalent lotSeqName 
 		String codeReadSet4 = "AWK_EMOSW_1_H9YKWADXX.IND1"; // lotSeqName pairé et avec mapping
+
 		String codeReadSet5 = "BCZ_BGOSW_2_H9M6KADXX.IND15"; 
 		String codeReadSet6 = "BCZ_BIOSW_2_H9M6KADXX.IND19"; 
 		// ex de donnée illumina single : AUP_COSW_4_D09BTACXX.IND7
@@ -95,6 +96,8 @@ public class SubmissionTest extends AbstractTestsSRA {
 		
 		
 		readSetCodes.add(codeReadSet5);
+		readSetCodes.add(codeReadSet6);
+
 		
 		System.out.println("Create new submission for readSet " + readSetCodes.get(0));
 		String submissionCode = null;
@@ -102,6 +105,9 @@ public class SubmissionTest extends AbstractTestsSRA {
 			contextValidation = new ContextValidation(userContext);
 			contextValidation.setCreationMode();
 			contextValidation.getContextObjects().put("type", "sra");
+			for (String readSetCode : readSetCodes) {
+				System.out.println("dans submissionTest        readSetCode = " + readSetCode);
+			}
 			submissionCode = submissionServices.createNewSubmission(config.projectCode, readSetCodes, study.code, config.code, "william", contextValidation);
 			System.out.println("Enregistrement du submissionCode : " + submissionCode); 
 			System.out.println("contextValidation.errors pour submissionTest :" + submissionCode);

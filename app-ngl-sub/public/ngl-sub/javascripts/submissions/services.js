@@ -3,6 +3,19 @@
  angular.module('ngl-sub.SubmissionsServices', []).
 	factory('submissionsCreateService', ['$http', 'mainService', 'lists', 'datatable', function($http, mainService, lists, datatable){
 		
+		var getColumns = function(){
+			var columns = [];
+			columns.push({	property:"code",
+				    	  	header: "submissions.code",
+				    	  	type :"text",		    	  	
+				    	  	order:true});
+			columns.push({	property:"state.code",
+							header: "submissions.state",
+							type :"text",
+							order:true});	
+			return columns;
+		};
+		
 		var isInit = false;
 		
 		var initListService = function(){
@@ -17,6 +30,7 @@
 				isRouteParam : false,
 				lists : lists,
 				form : undefined,
+				datatable : undefined,
 				setRouteParams:function($routeParams){
 					var count = 0;
 					for(var p in $routeParams){
@@ -53,11 +67,23 @@
 						this.lists.refresh.readSets({projectCode:this.form.projCode});
 					}
 				},
+				search : function(){
+					this.datatable.search(this.form);
+				},
 				/**
 				 * initialization of the service
 				 */
-				init : function($routeParams){
+				init : function($routeParams, datatableConfig){
 					initListService();
+					
+					//to avoid to lost the previous search
+					if(datatableConfig && angular.isUndefined(mainService.getDatatable())){
+						createService.datatable = datatable(datatableConfig);
+						mainService.setDatatable(createService.datatable);
+						createService.datatable.setColumnsConfig(getColumns());		
+					}else if(angular.isDefined(mainService.getDatatable())){
+						createService.datatable = mainService.getDatatable();			
+					}	
 					
 					//to avoid to lost the previous search
 					if(angular.isDefined(mainService.getForm())){

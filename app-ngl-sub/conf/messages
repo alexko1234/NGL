@@ -31,6 +31,17 @@ create.placeholder.submissions.configuration=select a configuration
 #create.placeholder.experiment.title=experiment title
 create.placeholder.submissions.readSet=select a readSet
 
+submissions.tabs.sample=Sample
+submissions.tabs.experiment=Experiment
+submissions.tabs.run=Run
+sample.code=Code
+sample.projectCode=Project Code
+sample.taxonId=taxon Id
+sample.classification=Classification
+sample.title=Title
+sample.description=Description
+
+
 button.save=Save
 button.reset=Reset
 #Containers

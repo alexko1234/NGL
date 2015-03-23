@@ -72,8 +72,9 @@ public class SubmissionServices {
 		// Recuperer la liste des objets ReadSet
 		List <ReadSet> readSets = new ArrayList<ReadSet>();
 		for (String readSetCode : readSetCodes) {
-			if (!StringUtils.isNotBlank(readSetCode)) {
-				System.out.println("readSetCode = " + readSetCode);
+
+			if (StringUtils.isNotBlank(readSetCode)) {
+				System.out.println("!!!!!!!!!!!!!         readSetCode = " + readSetCode);
 
 				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode);
 				if (readSet == null){
@@ -89,7 +90,7 @@ public class SubmissionServices {
 		List <Sample> listSamples = new ArrayList<Sample>();
 		
 		Submission submission = createSubmissionEntity(projectCode, config.code, user);
-		if (StringUtils.isNotBlank(config.strategySample)) {
+		if (!StringUtils.isNotBlank(config.strategySample)) {
 			throw new SraException("strategySample à null incompatible avec soumission");
 		}
 		Date date = new Date();
@@ -266,6 +267,10 @@ public class SubmissionServices {
 					File fileLien = new File(submission.submissionDirectory + File.separator + rawData.relatifName);
 					if(fileLien.exists()){
 						fileLien.delete();
+					}
+					if (!fileCible.exists()){
+						System.out.println("Le fichier cible n'existe pas  : " + fileCible);
+						throw new SraException("Le fichier cible n'existe pas  : " + fileCible);
 					}
 					System.out.println("fileCible = " + fileCible);
 					System.out.println("fileLien = " + fileLien);

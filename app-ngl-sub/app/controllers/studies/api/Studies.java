@@ -46,7 +46,6 @@ public class Studies extends DocumentController<Study>{
 				userStudy.state = new State("userValidate", getCurrentUser());
 				userStudy.centerName=VariableSRA.centerName;
 				userStudy.centerProjectName = userStudy.projectCode;
-
 				userStudy.code = SraCodeHelper.getInstance().generateStudyCode(userStudy.projectCode);	
 				contextValidation.getContextObjects().put("type", "sra");
 				userStudy.validate(contextValidation);
