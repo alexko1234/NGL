@@ -14,10 +14,6 @@
 	      height: auto;
 	}
 	
-	@page {
-	  size: A4 landscape;
-	}
-	
 	body {
 		padding-top:0px;
 	}
