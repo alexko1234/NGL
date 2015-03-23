@@ -39,7 +39,7 @@
 						<div class="form-control" bt-select ng-model="kit.catalogCode"
 						placeholder="@Messages("declarations.kit.creation.placeholder.kitCatalogCode")" 
 						bt-options="kitCatalog.code as kitCatalog.name for kitCatalog in lists.getKitCatalogs()"
-						ng-readonly="!editMode" ng-disabled="!editMode" ng-change="insertBoxes()">
+						ng-readonly="!editMode" ng-disabled="!editMode" ng-change="insertBoxes(true)">
 						</div>
 						<span class="help-block">
                             {{mainService.getError("kit.catalogCode")}} <br>
@@ -104,7 +104,7 @@
 					</div>
 					<label class="col-md-1 col-lg-1 control-label">@Messages("kits.state.code"):</label>
 					<div class="col-md-1 col-lg-1" ng-class="getClass('kits.state.code')">
-						<div class="form-control" bt-select ng-model="kits.state.code"
+						<div class="form-control" bt-select ng-model="kit.state.code"
 						placeholder="@Messages("declarations.kit.creation.placeholder.state")" 
 						bt-options="state.code as state.name for state in lists.getStates()"
 						ng-readonly="!editMode" ng-disabled="!editMode">
@@ -124,7 +124,7 @@
 	 </button>
 	<br>
  	<ul class="nav nav-tabs" role="tablist" ng-if="boxes.length > 0">
- 			<li ng-repeat="box in boxes"><a href="" role="tab"  data-target="#{{'box'+$index}}" data-toggle="tab"><button type="button" class="close ng-scope" ng-click="removeBox($index,box.code)" >x</button>{{box.barCode || 'box'+$index}}</a></li>
+ 			<li ng-repeat="box in boxes"><a href="" role="tab"  data-target="#{{'box'+$index}}" data-toggle="tab"><button type="button" class="close ng-scope" ng-click="removeBox($index,box.code)" >x</button>{{getBoxCatalogName(box.catalogCode) || 'box'+$index}}</a></li>
 	</ul>
 	<span ng-if="boxes.length === 0">@Messages("declarations.box.empty")</span>
 	<div class="tab-content">

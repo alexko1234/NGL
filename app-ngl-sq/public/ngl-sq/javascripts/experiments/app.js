@@ -24,7 +24,7 @@ angular.module('home', ['ngRoute','datatableServices','basketServices', 'commons
 		controller : 'CreateNewCtrl'
 	});
 	
-	$routeProvider.when('/experiments/edit/:experimentCode', {
+	$routeProvider.when('/experiments/:experimentCode', {
 		templateUrl : function(params){return jsRoutes.controllers.experiments.tpl.Experiments.createOrEditExperiment().url},
 		controller : 'CreateNewCtrl'
 	});

@@ -55,7 +55,7 @@ GET		/api/processes/:code											controllers.processes.api.Processes.get(code
 
 #experiments tpl
 GET 	/experiments/:homecode/home																controllers.experiments.tpl.Experiments.home(homecode:java.lang.String)
-GET 	/experiments/edit/:experimentCode														controllers.experiments.tpl.Experiments.edit(experimentCode:java.lang.String)
+GET 	/experiments/:experimentCode															controllers.experiments.tpl.Experiments.edit(experimentCode:java.lang.String)
 GET		/tpl/experiments/search-supports														controllers.experiments.tpl.Experiments.searchSupports()
 GET		/tpl/experiments/newExperiments/:experimentTypeCode										controllers.experiments.tpl.Experiments.newExperiments(experimentTypeCode:java.lang.String)
 GET		/tpl/experiments/js-routes																controllers.experiments.tpl.Experiments.javascriptRoutes()

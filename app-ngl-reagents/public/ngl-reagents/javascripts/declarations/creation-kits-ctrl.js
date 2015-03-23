@@ -234,7 +234,7 @@
 				$scope.datatables[index].saveLocal($scope.datatables[index].displayResult[i].data,i);
 			}
 		 }
-		 $scope.datatables[index].addData([{"category":"Reagent"}]);
+		 $scope.datatables[index].addData([{"category":"Reagent", "state":{code:"N"}}]);
 		 $scope.datatables[index].setEdit();
 		 console.log($scope.boxes);
 	 };
@@ -253,6 +253,7 @@
 				.success(function(data, status, headers, config) {
 					if(data!=null){
 						$scope.kit = data;
+						$scope.insertBoxes(false);
 					}
 				})
 				.error(function(data, status, headers, config) {
@@ -265,8 +266,12 @@
 		 }
 	 };
 	 
-	 $scope.addBox = function(){
-		 $scope.boxes.push({"category":"Box"});
+	 $scope.addBox = function(boxCatalog){
+		 var boxCatalogCode = undefined;
+		 if(boxCatalog !== undefined){
+			 boxCatalogCode = boxCatalog.code;
+		 }
+		 $scope.boxes.push({"category":"Box", "state":{"code":"N"}, "catalogCode":boxCatalogCode});
 		 $scope.datatables[$scope.boxes.length-1] = datatable($scope.datatableConfig);
 		 $scope.datatables[$scope.boxes.length-1].setData([]);
 	 };
@@ -443,7 +448,7 @@
 			});
 	 }
 	 
-	 $scope.insertBoxes = function(){
+	 $scope.insertBoxes = function(addBoxes){
 		 if($scope.boxes.length === 0 || confirm(Messages("boxes.insert.warning"))){
 			 $scope.boxes = [];
 			 return $http.get(jsRoutes.controllers.reagents.api.BoxCatalogs.list().url, {params:{"kitCatalogCode":$scope.kit.catalogCode}})
@@ -451,7 +456,10 @@
 					if(data!=null){
 						if(data !== undefined && data !== null){
 							for(var i=0;i<data.length;i++){
-								 $scope.addBox();
+								if(addBoxes){
+									$scope.boxCatalogs.push(data[i]);
+									$scope.addBox(data[i]);
+								}
 							}
 						}
 					}
@@ -460,11 +468,21 @@
 					
 				});
 			 }
-	 }
+	 };
+	 
+	 $scope.getBoxCatalogName = function(code){
+		 for(var i=0;i<$scope.boxCatalogs.length;i++){
+			 if($scope.boxCatalogs[i].code === code){
+				 return $scope.boxCatalogs[i].name;
+			 }
+		 }
+	 };
 	 
 	 //init
 	 var promises = [];
 	 $scope.editMode = true;
+	 $scope.boxCatalogs = [];
+	 
 	 if($routeParams.kitCode !== undefined){
 		 $scope.kit.code = $routeParams.kitCode;
 		 promises.push($scope.loadKit());
