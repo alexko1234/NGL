@@ -94,6 +94,7 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 			         },
 			         save:{
 			        	 active:true,
+			        	 withoutEdit: true,
 			        	 showButton:false,
 			        	 mode:'local'
 			         },
@@ -315,7 +316,7 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 		}
 	});
 
-	$scope.$on('save', function(e, promises, func) {
+	$scope.$on('save', function(e, promises, func) {		
 		promises.push($scope.datatable.save());
 		$scope.$emit('viewSaved', promises, func);
 		$scope.propertyChanged = [];
@@ -510,7 +511,8 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 	$scope.changeView = function(view){
 		console.log(view);
 		$scope.view = view;
-	};
+	};	
+	
 
 	//Init
 	$scope.datatable = datatable($scope.datatableConfig);

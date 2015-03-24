@@ -118,7 +118,8 @@
 </div>
 
 <div class="row" style="margin-top: 100px;">
-		<div class="col-md-12 col-lg-12">	
+		<div class="col-md-12 col-lg-12">
+		<div class="inProgressSpinner" ng-if="spinnerStart==true"><button class="spinnerBtn btn btn-primary btn-lg"><i class="fa fa-spinner fa-spin fa-5x"></i></button></div>	
 		<div class="row">
 			<div class="col-md-5 col-lg-5">
 			  <div class="panel panel-default">
@@ -132,7 +133,7 @@
 			  <div class="panel-body">
 			    <form class="form-horizontal">
 					@columnLabelValue(Messages("experiments.type")){
-						<p class="form-control-static">{{experiment.value.typeCode}}</p>
+						<p class="form-control-static">{{experiment.value.typeCode | codes:'type'}}</p>
 					}			    
 					@columnLabelValue(Messages("experiments.protocol")){
 					<div ng-switch on="doneAndRecorded">						
@@ -157,7 +158,7 @@
 			    	@columnLabelValue(Messages("experiments.resolution")){
 							<div bt-select class="form-control" ng-model="experiment.value.state.resolutionCodes" multiple="true"
 							ng-readonly="!experiment.experimentInformation.enabled"  ng-disabled="!experiment.experimentInformation.enabled"
-							placeholder="@Messages("experiments.select.resolutions")" bt-options="valid.code as valid.name for valid in lists.getResolutions()" ng-edit="!doneAndRecorded"></div>							
+							placeholder="@Messages("experiments.select.resolutions")" bt-options="valid.code as valid.name for valid in lists.getResolutions()"></div>							
 						
 					}	
 					
@@ -207,7 +208,7 @@
 			    @columnLabelValue(Messages("experiments.intrumentUsedType")){
 					<div ng-switch on="doneAndRecorded">						
 						<p ng-switch-when="true" class="form-control-static" ng-model='experiment.value.instrument.typeCode'>
-						 {{experiment.value.instrument.typeCode}} </p>
+						 {{experiment.value.instrument.typeCode | codes:'type'}} </p>
 						<div ng-switch-when="false">					
 					<div  bt-select  class="form-control"
 					ng-change="getInstrumentsTrigger()"
@@ -226,7 +227,7 @@
 			     @columnLabelValue(Messages("experiments.intrument")){
 			     	<div ng-switch on="doneAndRecorded">						
 						<p ng-switch-when="true" class="form-control-static" ng-model='experiment.value.instrument.code'>
-						 {{experiment.value.instrument.code}} </p>
+						 {{experiment.value.instrument.code| codes:'instrument'}} </p>
 						<div ng-switch-when="false">
 			     	
 			     	<div  bt-select class="form-control"

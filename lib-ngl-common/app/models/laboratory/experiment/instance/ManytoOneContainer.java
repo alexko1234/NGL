@@ -64,6 +64,8 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 			if(experiment.instrumentProperties.get("containerSupportCode")==null){
 				outPutContainerCode=CodeHelper.getInstance().generateContainerSupportCode();
 				support.code=outPutContainerCode;
+				if(this.line==null){ support.line="1";} else { support.line=this.line;}
+				if(this.column==null){ support.column="1";} else { support.column=this.column;}
 			}else{
 				if(experiment.instrumentProperties.get("containerSupportCode").value!=null){
 

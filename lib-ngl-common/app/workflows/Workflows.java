@@ -184,7 +184,7 @@ public class Workflows {
 
 				if (experiment.categoryCode.equals("purification") || experiment.categoryCode.equals("transfert")) {
 					if (experiment.state.code.equals("F")) {
-						nextState.code = "IW-V";
+						nextState.code = "IS";
 					}
 				}
 			} else {

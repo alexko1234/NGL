@@ -1,4 +1,4 @@
-angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','oneToOne','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,oneToOne,mainService,tabService) {
+angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','manyToOne','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,manyToOne,mainService,tabService) {
 	$scope.datatableConfig = {
 			name:"FDR_Tube",
 			columns:[
@@ -125,8 +125,9 @@ angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datat
 		$scope.atomicTransfere.experimentToInput($scope.datatable);
 	});
 	
+	$
 	$scope.$on('deleteInstrumentPropertiesInputs', function(e, header) {
-		angular.forEach($scope.datatable.config.columns, function(column, index){
+			angular.forEach($scope.datatable.config.columns, function(column, index){
 				if(column.extraHeaders != undefined && column.extraHeaders[1] == header){
 					$scope.datatable.deleteColumn(index);
 				}
@@ -158,8 +159,10 @@ angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datat
 	});
 	
 	$scope.addOutputColumns = function(){
-		$scope.datatable.addColumn(1000050,$scope.datatable.newColumn(Messages("containers.table.code"),"outputContainerUsed.code",false, true,true,"text",false,undefined,{"0":"Outputs"}));
-		$scope.datatable.addColumn(1000051,$scope.datatable.newColumn(Messages("containers.table.stateCode"),"outputContainerUsed.state.code  | codes:'state'",false, true,true,"text",false,undefined,{"0":"Outputs"}));
+		$scope.datatable.addColumn(-1,$scope.datatable.newColumn(Messages("containers.table.code"),"outputContainerUsed.code",false, true,true,"text",false,undefined,{"0":"Outputs"}));
+//		$scope.datatable.addColumn(-1,$scope.datatable.newColumn(Messages("containers.table.support.column"),"outputContainerUsed.locationOnContainerSupport.column",false, true,true,"text",false,undefined,{"0":"Outputs"}));
+//		$scope.datatable.addColumn(-1,$scope.datatable.newColumn(Messages("containers.table.support.line"),"outputContainerUsed.locationOnContainerSupport.line",false, true,true,"text",false,undefined,{"0":"Outputs"}));
+		$scope.datatable.addColumn(-1,$scope.datatable.newColumn(Messages("containers.table.stateCode"),"outputContainerUsed.state.code | codes:'state'",false, true,true,"text",false,undefined,{"0":"Outputs"}));
 	};
 	
 	$scope.$on('addOutputColumns', function(e) {
@@ -170,84 +173,133 @@ angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datat
 		$scope.atomicTransfere.inputToExperiment($scope.datatable);
 	});
 	
+	$scope.init_atomicTransfert = function(containers, atomicTransfertMethod){
+			$scope.experiment.value.atomicTransfertMethods[0] = {class:atomicTransfertMethod, inputContainerUseds:[], position:1};
+			angular.forEach(containers, function(container){
+				$scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds.push({code:container.code,instrumentProperties:{},experimentProperties:{},state:container.state,locationOnContainerSupport:container.support});
+			});
+	};
+	
+	$scope.$on('initAtomicTransfert', function(e, containers, atomicTransfertMethod) {
+		$scope.init_atomicTransfert(containers, atomicTransfertMethod);
+	});
+	
+	$scope.addExperimentOutputDatatableToScope = function(){
+		var data = $scope.experiment.experimentProperties.inputs;
+		if($scope.datatable.getData() != undefined){
+			for(var i=0;i<$scope.datatable.getData().length;i++){
+				for(var j=0; j<data.length;j++){
+					if($scope.getLevel( data[j].levels, "ContainerOut")){
+						var getter = $parse("datatable.displayResult["+i+"].outputExperimentProperties."+data[j].code+".value");
+						var k = $scope.datatable.displayResult[i].data.inputX;
+						if($scope.experiment.value.atomicTransfertMethods[k-1].outputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[k-1].outputContainerUsed.experimentProperties[data[j].code]){
+							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[k-1].outputContainerUsed.experimentProperties[data[j].code]);
+						}else{
+							getter.assign($scope,undefined);
+						}
+					}
+				}
+			}
+		}
+	};
 	$scope.$on('addInstrumentPropertiesInputToScope', function(e, data) {
 		if($scope.datatable.getData() != undefined){
-		for(var i=0;i<$scope.datatable.getData().length;i++){
-			for(var j=0; j<data.length;j++){
-				if($scope.getLevel( data[j].levels, "ContainerIn")){
-					var getter = $parse("datatable.displayResult["+i+"].inputInstrumentProperties."+data[j].code+".value");
-					if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties[data[j].code]){
-						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties[data[j].code].value);
-					}else{
-						getter.assign($scope,"");
+			for(var i=0;i<$scope.datatable.getData().length;i++){
+				for(var j=0; j<data.length;j++){
+					if($scope.getLevel( data[j].levels, "ContainerIn")){
+						var getter = $parse("datatable.displayResult["+i+"].inputInstrumentProperties."+data[j].code+".value");
+						if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties[data[j].code]){
+							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties[data[j].code]);
+						}else{
+							getter.assign($scope,undefined);
+						}
 					}
 				}
 			}
 		}
-	}
 	});
-	
-	$scope.$on('addExperimentPropertiesOutputToScope', function(e, data) {
+
+	$scope.addExperimentOutputDatatableToScope = function(){
+		var data = $scope.experiment.experimentProperties.inputs;
 		if($scope.datatable.getData() != undefined){
-		for(var i=0;i<$scope.datatable.getData().length;i++){
+			for(var i=0;i<$scope.datatable.getData().length;i++){
+				for(var j=0; j<data.length;j++){
+					if($scope.getLevel( data[j].levels, "ContainerOut")){
+						var getter = $parse("datatable.displayResult["+i+"].outputExperimentProperties."+data[j].code+".value");
+						var k = $scope.datatable.displayResult[i].data.inputX;
+						if($scope.experiment.value.atomicTransfertMethods[k-1].outputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[k-1].outputContainerUsed.experimentProperties[data[j].code]){
+							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[k-1].outputContainerUsed.experimentProperties[data[j].code]);
+						}else{
+							getter.assign($scope,undefined);
+						}
+					}
+				}
+			}
+		}
+	};
+
+	$scope.$on('addExperimentPropertiesOutputToScope', function(e, data) {
+		var i = 0;
+		while($scope.experiment.value.atomicTransfertMethods[i] != undefined){
 			for(var j=0; j<data.length;j++){
 				if($scope.getLevel( data[j].levels, "ContainerOut")){
-					var getter = $parse("datatable.displayResult["+i+"].outputExperimentProperties."+data[j].code+".value");
-					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code]){
-						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code].value);
-					}else{
-						getter.assign($scope,"");
+					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties == null){
+						$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties = {};
+					}
+
+					if(!$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code]){
+						$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code] = undefined;						
 					}
 				}
 			}
+			i++;
 		}
-	}
 	});
-	
+
 	$scope.$on('addExperimentPropertiesInputToScope', function(e, data) {
 		if($scope.datatable.getData() != undefined){
-		for(var i=0;i<$scope.datatable.getData().length;i++){
-			for(var j=0; j<data.length;j++){
-				if($scope.getLevel( data[j].levels, "ContainerIn")){
-					var getter = $parse("datatable.displayResult["+i+"].inputExperimentProperties."+data[j].code+".value");
-					if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code]){
-						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code].value);
-					}else{
-						getter.assign($scope,"");
+			for(var i=0;i<$scope.datatable.getData().length;i++){
+				for(var j=0; j<data.length;j++){
+					if($scope.getLevel( data[j].levels, "ContainerIn")){
+						var getter = $parse("datatable.displayResult["+i+"].inputExperimentProperties."+data[j].code+".value");
+						if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code]){
+							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code]);
+						}else{
+							getter.assign($scope,undefined);
+						}
 					}
 				}
 			}
 		}
-	}
 	});
-	
+
 	$scope.$on('addInstrumentPropertiesOutputToScope', function(e, data) {
 		if($scope.datatable.getData() != undefined){
-		for(var i=0;i<$scope.datatable.getData().length;i++){
-			for(var j=0; j<data.length;j++){
-				if($scope.getLevel( data[j].levels, "ContainerOut")){
-					var getter = $parse("datatable.displayResult["+i+"].outputInstrumentProperties."+data[j].code+".value");
-					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties[data[j].code]){
-						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties[data[j].code].value);
-					}else{
-						getter.assign($scope,"");
+			for(var i=0;i<$scope.datatable.getData().length;i++){
+				for(var j=0; j<data.length;j++){
+					if($scope.getLevel( data[j].levels, "ContainerOut")){
+						var getter = $parse("datatable.displayResult["+i+"].outputInstrumentProperties."+data[j].code+".value");
+						if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties[data[j].code]){
+							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties[data[j].code]);
+						}else{
+							getter.assign($scope,undefined);
+						}
 					}
 				}
 			}
 		}
-	}
 	});
-	
+
 	$scope.$on('save', function(e, promises, func) {
-		$scope.datatable.save();
+		promises.push($scope.datatable.save());
 		$scope.$emit('viewSaved', promises, func);
 	});
 	
 	$scope.refreshView = function(){
-		$scope.atomicTransfere.reloadContainersDatatable($scope.datatable);
+		$scope.atomicTransfere.reloadContainersDatatable($scope.datatable);			
 	};
 	
-	$scope.$on('refreshView', function(e) {
+	$scope.$on('refresh', function(e) {		
 		$scope.refreshView();
 		$scope.$emit('viewRefeshed');
 	});
@@ -258,24 +310,13 @@ angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datat
 	
 	$scope.$on('experimentToOutput', function(e, atomicTransfertMethod) {
 		$scope.atomicTransfere.experimentToOutput($scope.datatable);
-	});
+	});	
 	
-	$scope.init_atomicTransfert = function(containers, atomicTransfertMethod){
-			angular.forEach(containers, function(container,index){
-				$scope.experiment.value.atomicTransfertMethods[index] = {class:atomicTransfertMethod, inputContainerUsed:[]};
-				$scope.experiment.value.atomicTransfertMethods[index].inputContainerUsed = {code:container.code,instrumentProperties:{},experimentProperties:{},state:container.state,locationOnContainerSupport:container.support};
-			});
-	};
-	
-	$scope.$on('initAtomicTransfert', function(e, containers, atomicTransfertMethod) {
-		$scope.init_atomicTransfert(containers, atomicTransfertMethod);
-	});
 	
 	//Init
 	$scope.datatable = datatable($scope.datatableConfig);
-	
-	$scope.atomicTransfere = oneToOne($scope,"datatable", "none");
-	
+	$scope.atomicTransfere = manyToOne($scope, "datatable", "none");
+
 	$scope.experiment.outputGenerated = $scope.isOutputGenerated();
 	
 	if($scope.experiment.editMode){

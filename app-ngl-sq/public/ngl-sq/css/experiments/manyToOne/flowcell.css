@@ -136,10 +136,24 @@ margin: 8px 0 8px;
 	
 }
 
-#dropZone{
+.dropZone{
 	border: 0;
 	height: 18px;
+	background-color: #f1f1f1;
 }
+
+/*
+.dropZone:hover{
+	border: 0;
+	height: 18px;	
+	-webkit-animation: 	animatingZoneHover 320ms infinite;
+}
+
+@-webkit-keyframes animatingZoneHover {
+	from {background: repeating-linear-gradient(45deg,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white);}
+	to {background: repeating-linear-gradient(45deg,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1);}
+}
+*/
 
 .flowCellLane .table>tbody>tr>th:last-child:not([ng-repeat="property in experiment.containerOutProperties"]),
 .flowCellLane .table>tbody>tr>td:last-child:not([ng-repeat="property in experiment.containerOutProperties"]):not(.dropZone){

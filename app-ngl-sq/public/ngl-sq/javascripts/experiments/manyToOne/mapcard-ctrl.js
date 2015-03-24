@@ -1,6 +1,6 @@
-angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','manyToOne','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,manyToOne,mainService,tabService) {
+angular.module('home').controller('ManyToOneMapcardCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','manyToOne','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,manyToOne,mainService,tabService) {
 	$scope.datatableConfig = {
-			name:"FDR_ManyToOne_Tube",
+			name:"FDR_Mapcard",
 			columns:[
 			         {
 			        	 "header":Messages("containers.table.supportCode"),
@@ -105,15 +105,15 @@ angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$window','data
 				active:false,
 				columnMode:true
 			},
+			extraHeaders:{
+				number:2,
+				dynamic:true,
+			},
 			exportCSV:{
 				active:true,
 				showButton:true,
 				delimiter:";",
 				start:false
-			},
-			extraHeaders:{
-				number:2,
-				dynamic:true,
 			},
 			otherButton:{
 				active:true,
@@ -250,10 +250,10 @@ angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$window','data
 	});
 	
 	$scope.refreshView = function(){
-		$scope.atomicTransfere.reloadContainersDatatable();
+		$scope.atomicTransfere.reloadContainersDatatable($scope.datatable);		
 	};
 	
-	$scope.$on('refreshView', function(e) {
+	$scope.$on('refresh', function(e) {
 		$scope.refreshView();
 		$scope.$emit('viewRefeshed');
 	});
@@ -263,8 +263,8 @@ angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$window','data
 	});
 	
 	$scope.$on('experimentToOutput', function(e, atomicTransfertMethod) {
-		$scope.atomicTransfere.experimentToOutput();
-	});
+		$scope.atomicTransfere.experimentToOutput($scope.datatable);
+	});	
 	
 	//Init
 	$scope.datatable = datatable($scope.datatableConfig);
@@ -277,4 +277,5 @@ angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$window','data
 	}else{
 		$scope.atomicTransfere.newExperiment($scope.datatable);
 	}
+	
 }]);

@@ -155,8 +155,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			return $scope.saveAllAndChangeState();
 		}
 		
-		$scope.isLastExperiment = false;
-		
+		if($scope.experiment.value.categoryCode==='transformation'){		
+		$scope.isLastExperiment = false;	
 
 		$http.get(jsRoutes.controllers.processes.api.Processes.list().url,{params:{"experimentCode":$scope.experiment.value.code}})
 		.success(function(data, status, headers, config){			
@@ -177,9 +177,10 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 					$scope.saveAllAndChangeState();
 				}	
 			});	
-		});
-		
-		
+		});		
+		}else{
+			$scope.saveAllAndChangeState();
+		}	
 	};
 
 	$scope.getPropertyColumnType = function(type){
@@ -501,7 +502,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 					if(data!=null){
 						$scope.experiment.value = data;
 						$scope.$broadcast('experimentToInput', $scope.experimentType.atomicTransfertMethod);
-					}
+					}					
+					
 				})
 				.error(function(data, status, headers, config) {
 					$scope.message.clazz = "alert alert-danger";
@@ -545,7 +547,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 					.success(function(data, status, headers, config) {
 						if(data!=null){
 							$scope.experiment.value = data;
-						}
+						}						
 					})
 					.error(function(data, status, headers, config) {
 						$scope.message.clazz = "alert alert-danger";
@@ -575,7 +577,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 					if(data!=null){
 						$scope.experiment.value = data;
 						$scope.$broadcast('experimentToInput', $scope.experimentType.atomicTransfertMethod);
-					}
+					}					
 				})
 				.error(function(data, status, headers, config) {
 					$scope.message.clazz = "alert alert-danger";
@@ -596,7 +598,9 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		.success(function(data, status, headers, config) {
 			if(data!=null){
 				$scope.experiment.value = data;
-			}
+				$scope.$broadcast('refresh');
+			}	
+			
 		})
 		.error(function(data, status, headers, config) {
 			$scope.message.clazz = "alert alert-danger";
@@ -638,6 +642,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		$scope.clearMessages();
 		if(!$scope.saveInProgress){
 			$scope.saveInProgress = true;
+			$scope.spinnerStart=true;
 			var promises = [];
 			$scope.$broadcast('save', promises, $scope.saveAll);
 			$scope.inProgressNow = false;
@@ -654,9 +659,10 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				$scope.experiment.instrumentProperties.enabled = true;
 				$scope.experiment.instrumentInformation.enabled = true;
 				$scope.setEditConfig(true);	
-				$scope.$broadcast('enableEditMode');
-				$scope.$broadcast('refresh');
+				$scope.$broadcast('enableEditMode');				
 				$scope.saveInProgress = false;
+				$scope.spinnerStart=false;
+				$scope.$broadcast('refresh');
 
 			}
 
@@ -695,7 +701,9 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		if(func){
 			func(promises);
 		}
-	});
+		
+		$scope.$broadcast('refresh');
+	});	
 
 	$scope.saveAll = function(promises){    
 
@@ -709,8 +717,9 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			$scope.experiment.instrumentProperties.enabled = false;
 			$scope.experiment.instrumentInformation.enabled = false;
 			$scope.setEditConfig(false);
-			$scope.$broadcast('refresh');
 			$scope.saveInProgress = false;
+			$scope.spinnerStart=false;
+			$scope.$broadcast('refresh');
 
 
 
@@ -725,9 +734,10 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			$scope.setEditConfig(true);
 			$scope.message.details = reason.data;
 			$scope.message.isDetails = true;
-			$scope.$broadcast('refresh');
 			$scope.$broadcast('enableEditMode');
 			$scope.saveInProgress = false;
+			$scope.spinnerStart=false;
+			$scope.$broadcast('refresh');
 		});
 	};
 
@@ -740,6 +750,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				$scope.experiment.value = data;
 				$scope.saveInProgress = false;
 				/*   */				$location.path(jsRoutes.controllers.experiments.tpl.Experiments.edit(data.code).url);
+				$scope.$broadcast('refresh');
 			}
 		})
 		.error(function(data, status, headers, config) {
@@ -758,20 +769,22 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 	};
 
 	$scope.saveAllAndChangeState = function(){		
-		$scope.clearMessages();
+		$scope.clearMessages();		
 		if($scope.experiment.stopProcess === true && ($scope.experiment.processResolutions === undefined || $scope.experiment.processResolutions===null || $scope.experiment.processResolutions.length === 0)){
 			$scope.message.clazz = "alert alert-danger";
 			$scope.message.text = Messages('experiments.msg.save.error');
 
 			$scope.message.details = {"Processes resolution":["Propriété obligatoire"]};
 			$scope.message.isDetails = true;
-		}else{
+		}else{			
 			if(!$scope.saveInProgress){
 				var promises = [];
-				$scope.$broadcast('save', promises, $scope.changeState);			
-				$scope.$broadcast('refresh');
-				$scope.saveInProgress = true;			
+				//$scope.$broadcast('spinnerStart');
+				$scope.spinnerStart=true;
+				$scope.$broadcast('save', promises, $scope.changeState);				
+				$scope.saveInProgress = true;				
 			}
+			$scope.$broadcast('refresh');
 		}
 	};
 
@@ -800,18 +813,23 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 						$scope.addExperimentPropertiesOutputsColumns();
 						$scope.addInstrumentPropertiesOutputsColumns();
 						$scope.$broadcast('experimentToOutput', $scope.experimentType.atomicTransfertMethod);
-						$scope.saveInProgress = false;
+						$scope.saveInProgress = false;						
+						$scope.spinnerStart=false;
+
 					}
-					$scope.$broadcast('refresh');
+					
 				}
 				$scope.inProgressNow = false;
 				$scope.inProgressMode();
 				if($scope.experiment.value.state.code === "F"){
 					$scope.$broadcast('disableEditMode');
 					$scope.doneAndRecorded = true;
-				}	
+				}
+				
+				$scope.$broadcast('refresh');
 			})
 			.error(function(data, status, headers, config) {
+				$scope.spinnerStart=false;
 				$scope.message.clazz = "alert alert-danger";
 				$scope.message.text = Messages('experiments.msg.save.error');
 
@@ -832,6 +850,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 					$scope.message.clazz="alert alert-success";
 					$scope.message.text=Messages('experiments.msg.save.sucess');
 					$scope.saveInProgress = false;
+					$scope.spinnerStart=false;
 					$scope.inProgressNow = false;
 					$scope.inProgressMode();
 					if($scope.experiment.value.state.code === "F"){
@@ -851,7 +870,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 
 				$scope.message.details = reason.data;
 				$scope.message.isDetails = true;
-				$scope.saveInProgress = false;				
+				$scope.saveInProgress = false;
+				$scope.spinnerStart=false;
 
 
 			});
@@ -869,6 +889,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			$scope.message.details = reason.data;
 			$scope.message.isDetails = true;
 			$scope.saveInProgress = false;
+			$scope.spinnerStart=false;
 
 		});
 	};	
@@ -886,7 +907,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			alert("error");
 		});
 	};
-
+	
+	
 
 	$scope.create_experiment = function(containers, atomicTransfertMethod){
 		//$scope.init_atomicTransfert(containers,atomicTransfertMethod);
@@ -1177,7 +1199,9 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			$scope.lists.clear("protocols");
 			$scope.lists.clear("resolutions");
 			$scope.lists.clear("states");
+			$scope.lists.clear("experimentTypeCodes");
 
+			$scope.lists.refresh.experimentTypes({categoryCode:$scope.experimentType.category.code},$scope.experimentType.category.code);
 			$scope.lists.refresh.instrumentUsedTypes({"experimentTypeCode":experiment.typeCode});
 			$scope.lists.refresh.protocols({"experimentTypeCode":experiment.typeCode});
 			$scope.lists.refresh.resolutions({"typeCode":experiment.typeCode});

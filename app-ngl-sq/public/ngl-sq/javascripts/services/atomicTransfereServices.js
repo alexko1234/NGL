@@ -306,6 +306,7 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 									if($scope.experiment.value.atomicTransfertMethods[position].outputContainerUsed!=undefined){
 										allData[i].outputContainerUsed = {};
 										allData[i].outputContainerUsed.code = $scope.experiment.value.atomicTransfertMethods[position].outputContainerUsed.code;
+										allData[i].outputContainerUsed.state = $scope.experiment.value.atomicTransfertMethods[position].outputContainerUsed.state;
 										allData[i].outputInstrumentProperties = $scope.experiment.value.atomicTransfertMethods[position].outputContainerUsed.instrumentProperties;
 										allData[i].outputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[position].outputContainerUsed.experimentProperties;
 									}
@@ -331,9 +332,14 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 					searchContainer : function(code){
 						var i = 0;
 						while($scope.experiment.value.atomicTransfertMethods[i] != undefined){
-							if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.code === code){
-								return i;
+							var j=0;
+							while($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[j] != undefined){
+								if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[j].code === code){
+									return i;
+								}
+								j++;
 							}
+							
 							i++;
 						}
 						return {};
@@ -704,11 +710,15 @@ angular.module('atomicTransfereServices', []).factory('experimentCommonFunctions
 									if(containerIn.mesuredVolume !== undefined && containerIn.mesuredVolume !== null){
 										mesuredVolume = containerIn.mesuredVolume;
 									}
+									var mesuredConcentrationValue = 100;									
+									if(angular.isDefined(containerIn.mesuredConcentration) && containerIn.mesuredConcentration!=null && containerIn.mesuredConcentration.value!=null){
+										mesuredConcentrationValue = containerIn.mesuredConcentration.value;
+									}
 									var container = {"inputCode":containerIn.code,"inputSupportCode":containerIn.support.code,
 											"inputX":containerIn.support.line, "inputTags":tags,"inputSampleTypes":sampleTypes, "inputLibProcessTypeCodes":libProcessTypeCodes, "inputState":containerIn.state,
 														"inputY":containerIn.support.column, "experimentProperties":containerIn.experimentProperties,
 														"instrumentProperties":containerIn.instrumentProperties, "outputPositionX":i+1,
-														"outputPositionY":1,"inputConcentration":containerIn.mesuredConcentration.value,"sampleCodeAndTags":sampleCodeAndTags,"inputVolume":mesuredVolume};//Fake container
+														"outputPositionY":1,"inputConcentration":mesuredConcentrationValue,"sampleCodeAndTags":sampleCodeAndTags,"inputVolume":mesuredVolume};//Fake container
 									containers.push(container);
 								}
 								i++;

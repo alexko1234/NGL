@@ -229,7 +229,7 @@ angular.module('home').controller('OneToVoidContainerCtrl',['$scope', '$window',
 
 		$scope.$emit('viewRefeshed');
 	});
-
+	
 	//Init
 	$scope.datatable = datatable($scope.datatableConfig);
 

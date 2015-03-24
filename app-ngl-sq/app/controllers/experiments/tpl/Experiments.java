@@ -46,20 +46,20 @@ public class Experiments extends CommonController{
 	public static Result getTemplate(String atomicType, String inputCategory, String outputCategory){
 		if(atomicType.equals("OneToOne")){
 			if(outputCategory.equals("tube")){
-				return ok(views.html.experiments.oneToOne.inputs.oneToOneTube.render());
+				return ok(views.html.experiments.oneToOne.inputs.tube.render());
 			}
 		}else if(atomicType.equals("ManyToOne")){
 			if(outputCategory.equals("mapcard")){
-				return ok(views.html.experiments.manyToOne.inputs.manyToOneMapcard.render());
+				return ok(views.html.experiments.manyToOne.inputs.mapcard.render());
 			}else if(outputCategory.startsWith("flowcell-")){
 				String[] flowcellNumber = outputCategory.split("-");
-				return ok(views.html.experiments.manyToOne.inputs.manyToOneFlowcell.render(Integer.parseInt(flowcellNumber[1])));
+				return ok(views.html.experiments.manyToOne.inputs.flowcell.render(Integer.parseInt(flowcellNumber[1])));
 			}else if(outputCategory.equals("tube")){
-				return ok(views.html.experiments.manyToOne.inputs.manyToOneTube.render());
+				return ok(views.html.experiments.manyToOne.inputs.tube.render());
 			}
 		}else if(atomicType.equals("OneToVoid")){
 			if(outputCategory.equals("void")){
-				return ok(views.html.experiments.oneToVoid.inputs.oneToVoidContainer.render());
+				return ok(views.html.experiments.oneToVoid.inputs.voidContainer.render());
 			}
 		}
 		
