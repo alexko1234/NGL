@@ -195,16 +195,28 @@ public class Processes extends CommonController{
 
 		List<Process> processes = new ArrayList<Process>();
 		List<String> processCodes=new ArrayList<String>();		
-		for(Content c:container.contents){		
+		for(Content c:container.contents){
+			Process newProcess = new Process();
 			//code generation
-			process.sampleCode = c.sampleCode;
-			process.code = CodeHelper.getInstance().generateProcessCode(process);
-			process.sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(c, container);				
+			newProcess.categoryCode = process.categoryCode;
+			newProcess.comments = process.comments;
+			newProcess.containerInputCode = process.containerInputCode;
+			newProcess.currentExperimentTypeCode = newProcess.currentExperimentTypeCode;
+			newProcess.experimentCodes = process.experimentCodes;
+			newProcess.newContainerSupportCodes = process.newContainerSupportCodes;
+			newProcess.properties = process.properties;
+			newProcess.state = process.state;
+			newProcess.traceInformation = process.traceInformation;
+			newProcess.typeCode = process.typeCode;
+			newProcess.sampleCode = c.sampleCode;
+			newProcess.projectCode = c.projectCode;
+			newProcess.code = CodeHelper.getInstance().generateProcessCode(newProcess);
+			newProcess.sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(c, container);				
 			//Process p = (Process)InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,process, contextValidation);
-			Logger.info("New process code : "+process.code);
-			processes.add(process);					
-			processCodes.add(process.code);
-			process.validate(contextValidation);
+			Logger.info("New process code : "+newProcess.code);
+			processes.add(newProcess);					
+			processCodes.add(newProcess.code);
+			newProcess.validate(contextValidation);
 		}
 		
 		if(!contextValidation.hasErrors()){
@@ -216,11 +228,11 @@ public class Processes extends CommonController{
 				}
 			}
 			processes = ProcessHelper.applyRules(savedProcesses, contextValidation, "processCreation");
-			ProcessHelper.updateContainer(container,process.typeCode, processCodes,contextValidation);
-			ProcessHelper.updateContainerSupportFromContainer(container,contextValidation);
 			try {
 				ProcessType pt = ProcessType.find.findByCode(process.typeCode);
 				Workflows.nextContainerState(process,pt.firstExperimentType.code, pt.firstExperimentType.category.code,contextValidation);
+				ProcessHelper.updateContainer(container,process.typeCode, processCodes,contextValidation);
+				ProcessHelper.updateContainerSupportFromContainer(container,contextValidation);
 			} catch (DAOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

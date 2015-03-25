@@ -559,8 +559,8 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 						processData.properties.limsCode = undefined;
 						processData.properties.receptionDate = undefined;
 						var process = {index:i, data:{
-								projectCode: processData.projectCodes[0],
-								sampleCode: processData.sampleCodes[j],
+								projectCode: data[i].contents[j].projectCode,
+								sampleCode: data[i].contents[j].sampleCode,
 								containerInputCode: processData.code,
 								typeCode:$scope.form.nextProcessTypeCode,
 								categoryCode:$scope.form.processCategory,
@@ -652,11 +652,11 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			}
 		})
 		.error(function(data, status, headers, config) {
-			$scope.message.details = data;
-			$scope.message.isDetails = true;
 			for(var i=0;i<data.length;i++){
 				$scope.lineClasses[data[i].index] = "danger";
 				$scope.datatable.addErrors(data[i].index,data[i].data);
+				$scope.message.details = data[i].data;
+				$scope.message.isDetails = true;
 			}
 			var displayResult = $scope.datatable.displayResult;
 			for(var i=0;i<displayResult.length;i++){
