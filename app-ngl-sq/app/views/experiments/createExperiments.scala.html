@@ -170,7 +170,7 @@
 						<div class="col-md-6 col-lg-6" ng-switch on="expp.choiceInList">
 						
 						<p ng-if="doneAndRecorded==true && expp.valueType == 'java.util.Date' && !experiment.experimentInformation.enabled" ng-switch-when="false" class="form-control-static" ng-model="experiment.value.experimentProperties[expp.code].value" date-timestamp>
-						{{experiment.value.experimentProperties[expp.code].value | date:'yyyy-MM-dd'}}
+						{{experiment.value.experimentProperties[expp.code].value | date:'dd-MM-yyyy'}}
 						</p>
 						
 						<p ng-if="doneAndRecorded==true && expp.valueType != 'java.util.Date' && !experiment.experimentInformation.enabled" ng-switch-when="false" class="form-control-static" ng-model="experiment.value.experimentProperties[expp.code].value">
@@ -334,13 +334,13 @@
 				  
 				    <form class="form-horizontal">
 				    @columnLabelValue(Messages("experiments.creationDate")){
-						<p class="form-control-static">{{experiment.value.traceInformation.creationDate | date:'yyyy-MM-dd HH:mm:ss'}}</p>
+						<p class="form-control-static">{{experiment.value.traceInformation.creationDate | date:'dd-MM-yyyy HH:mm:ss'}}</p>
 					}
 				    @columnLabelValue(Messages("experiments.createUser")){
 						<p class="form-control-static">{{experiment.value.traceInformation.createUser}}</p>
 					}
 				   	@columnLabelValue(Messages("experiments.modifyDate")){
-						<p class="form-control-static">{{experiment.value.traceInformation.modifyDate | date:'yyyy-MM-dd HH:mm:ss'}}</p>
+						<p class="form-control-static">{{experiment.value.traceInformation.modifyDate | date:'dd-MM-yyyy HH:mm:ss'}}</p>
 					}	
 				    @columnLabelValue(Messages("experiments.modifyBy")){
 						<p class="form-control-static">{{experiment.value.traceInformation.modifyUser}}</p>
