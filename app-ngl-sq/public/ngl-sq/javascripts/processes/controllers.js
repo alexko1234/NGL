@@ -630,7 +630,6 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			}*/
 			
 			$scope.doneAndRecorded = false;
-			$scope.datatable.config.edit.active = true;
 			$scope.datatable.config.remove.active = true;
 		});	
 	};
@@ -662,7 +661,6 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			for(var i=0;i<displayResult.length;i++){
 				$scope.datatable.displayResult[i].line.trClass = $scope.lineClasses[i];
 			}
-			$scope.datatable.config.edit.active = true;
 		});
 	};
 	
@@ -672,7 +670,6 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			if(data!=null){
 				$scope.lineClasses[index] = "success";
 				$scope.processes = $scope.processes.concat(data);
-				$scope.datatable.config.edit.active = false;
 				$scope.datatable.config.remove.active = false;
 				var displayResult = $scope.datatable.displayResult;
 				for(var j=0;j<displayResult.length;j++){
@@ -687,7 +684,6 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			for(var j=0;j<displayResult.length;j++){
 				$scope.datatable.displayResult[j].line.trClass = $scope.lineClasses[j];
 			}
-			$scope.datatable.config.edit.active = true;
 		});
 	};
 	
@@ -792,11 +788,9 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 	$scope.datatable.selectAll(false);
 	if($scope.basket.length() != 0){
 		$scope.doneAndRecorded = false;
-		$scope.datatable.config.edit.active = true;
 		$scope.datatable.config.remove.active = true;
 	}else{
 		$scope.doneAndRecorded = true;
-		$scope.datatable.config.edit.active = false;
 		$scope.datatable.config.remove.active = false;
 	}
 	$scope.swithView();
