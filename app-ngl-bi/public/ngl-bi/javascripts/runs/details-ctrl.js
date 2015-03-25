@@ -414,7 +414,8 @@ angular.module('home').controller('LanesNGSRGCtrl', [ '$scope', 'datatable', fun
 				{  	property:"treatments.ngsrg.default.nbClusterIlluminaFilter.value",
 			    	header: Messages("runs.lane.ngsrg_illumina.nbClusterIlluminaFilter"),
 			    	type :"Number",
-			    	order:false
+			    	order:false,
+			    	tdClass : "valuationService.valuationCriteriaClass({lanes:value.data}, run.valuation.criteriaCode, 'lanes.' + col.property)"
 				},
 				{  	property:"treatments.ngsrg.default.percentClusterInternalAndIlluminaFilter.value",
 			    	header: Messages("runs.lane.ngsrg_illumina.percentClusterInternalAndIlluminaFilter"),
