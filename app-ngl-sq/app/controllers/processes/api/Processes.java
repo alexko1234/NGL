@@ -127,7 +127,7 @@ public class Processes extends CommonController{
 		ContextValidation contextValidation =new ContextValidation(getCurrentUser(), batchForm.errors());
 		
 		for(Form<ProcessesBatchElement> filledForm: filledForms){
-			ContextValidation ctxVal=new ContextValidation(getCurrentUser(), filledForm.errors());
+			ContextValidation ctxVal=new ContextValidation(getCurrentUser(), batchForm.errors());
 			ProcessesBatchElement element = filledForm.get();
 			if (!filledForm.hasErrors()) {
 				ctxVal.setCreationMode();
@@ -163,7 +163,7 @@ public class Processes extends CommonController{
 					response.add(new DatatableBatchResponseElement(OK,  p, element.index));
 				}else{
 					contextValidation.errors.putAll(ctxVal.errors);
-					response.add(new DatatableBatchResponseElement(BAD_REQUEST, processForm.errorsAsJson(), element.index));
+					response.add(new DatatableBatchResponseElement(BAD_REQUEST, batchForm.errorsAsJson(), element.index));
 				}
 				}else {
 					response.add(new DatatableBatchResponseElement(BAD_REQUEST, processForm.errorsAsJson(), element.index));
