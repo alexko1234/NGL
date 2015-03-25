@@ -124,7 +124,7 @@
 			<div class="col-md-5 col-lg-5">
 			  <div class="panel panel-default">
 			  <div class="panel-heading">
-			  	<div class="btn-group pull-right" ng-switch on="experiment.experimentInformation.enabled" ng-if="doneAndRecorded==false">
+			  	<div class="btn-group pull-right" ng-switch on="experiment.experimentInformation.enabled" >
 						<button class="btn btn-default btn-xs" ng-click="experiment.experimentInformation.toggleEdit()" ng-switch-when="false" data-toggle="tooltip" title="@Messages("experiments.edit")"><i class="fa fa-edit"></i></button>
 						<button class="btn btn-default btn-xs" ng-click="experiment.experimentInformation.toggleEdit()" ng-switch-when="true" data-toggle="tooltip" title="@Messages("experiments.unedit")"><i class="fa fa-undo"></i></button>	
 				  </div>
@@ -158,7 +158,7 @@
 			    	@columnLabelValue(Messages("experiments.resolution")){
 							<div bt-select class="form-control" ng-model="experiment.value.state.resolutionCodes" multiple="true"
 							ng-readonly="!experiment.experimentInformation.enabled"  ng-disabled="!experiment.experimentInformation.enabled"
-							placeholder="@Messages("experiments.select.resolutions")" bt-options="valid.code as valid.name for valid in lists.getResolutions()"></div>							
+							placeholder="@Messages("experiments.select.resolutions")" bt-options="valid.code as valid.name for valid in lists.getResolutions()" ng-edit="!doneAndRecorded || experiment.experimentInformation.enabled "></div>							
 						
 					}	
 					
@@ -166,26 +166,36 @@
 					<!--  -->
 					<div class="form-group" ng-repeat="expp in experiment.experimentProperties.inputs" ng-if="getLevel(expp.levels,'Experiment')">									
 						<label  class="col-md-6 col-lg-6 control-label">{{expp.name}}</label>
+						
 						<div class="col-md-6 col-lg-6" ng-switch on="expp.choiceInList">
-							<input ng-if="expp.valueType != 'java.util.Date'" class="form-control" type="text" ng-switch-when="false" class="input-small"
+						
+						<p ng-if="doneAndRecorded==true && expp.valueType == 'java.util.Date' && !experiment.experimentInformation.enabled" ng-switch-when="false" class="form-control-static" ng-model="experiment.value.experimentProperties[expp.code].value" date-timestamp>
+						{{experiment.value.experimentProperties[expp.code].value | date:'yyyy-MM-dd'}}
+						</p>
+						
+						<p ng-if="doneAndRecorded==true && expp.valueType != 'java.util.Date' && !experiment.experimentInformation.enabled" ng-switch-when="false" class="form-control-static" ng-model="experiment.value.experimentProperties[expp.code].value">
+						{{experiment.value.experimentProperties[expp.code].value}}
+						</p>
+						
+							<input ng-if="expp.valueType != 'java.util.Date' && experiment.experimentInformation.enabled" class="form-control" type="text" ng-switch-when="false" class="input-small"
 								ng-readonly="!experiment.experimentInformation.enabled" ng-disabled="!experiment.experimentInformation.enabled"
-								ng-model="experiment.value.experimentProperties[expp.code].value"/>
+								ng-model="experiment.value.experimentProperties[expp.code].value" ng-edit="!doneAndRecorded"/>
 								
-							<input ng-if="expp.valueType == 'java.util.Date'" class="form-control" type="text" ng-switch-when="false" class="input-small"
+							<input ng-if="expp.valueType == 'java.util.Date' && experiment.experimentInformation.enabled" class="form-control" type="text" ng-switch-when="false" class="input-small"
 								ng-readonly="!experiment.experimentInformation.enabled" ng-disabled="!experiment.experimentInformation.enabled"
 								placeholder="@Messages("date.format.french")" 
-								ng-model="experiment.value.experimentProperties[expp.code].value" date-timestamp/>
+								ng-model="experiment.value.experimentProperties[expp.code].value" date-timestamp />
 								
-							<div bt-select class="form-control"  
+							<div bt-select class="form-control"
 									ng-readonly="!experiment.experimentInformation.enabled"
 									ng-disabled="!experiment.experimentInformation.enabled" 
 									ng-model="experiment.value.experimentProperties[expp.code].value" 
 									ng-switch-when="true" 
 									auto-select
-									bt-options="possibleValues.code as possibleValues.name for possibleValues in expp.possibleValues">
+									bt-options="possibleValues.code as possibleValues.name for possibleValues in expp.possibleValues" ng-edit="!doneAndRecorded">
 							   </div>
+												
 						</div>
-						
 					</div>							
 					<!--  -->													
 			    </form>
