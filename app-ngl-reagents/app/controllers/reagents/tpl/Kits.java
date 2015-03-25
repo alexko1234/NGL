@@ -35,6 +35,7 @@ public class Kits extends CommonController {
 						controllers.reagents.api.routes.javascript.Kits.save(),
 						controllers.reagents.api.routes.javascript.KitCatalogs.list(),
 						controllers.reagents.api.routes.javascript.BoxCatalogs.list(),
+						controllers.reagents.api.routes.javascript.ReagentCatalogs.list(),
 						controllers.reagents.api.routes.javascript.Kits.delete(),
 						controllers.reagents.api.routes.javascript.Kits.list(),
 						controllers.reagents.api.routes.javascript.Boxes.list(),

@@ -5,6 +5,13 @@
 	 $scope.datatableConfig = {
 				columns : [
 					{
+						 "header":Messages("reagents.table.catalogCode"),
+						 "property":"catalogCode",
+						 "order":true,
+						 "type":"text",
+						 "filter":"codes:'reagentCatalogs'"
+					},
+					{
 			        	 "header":Messages("reagents.table.barCode"),
 			        	 "property":"barCode",
 			        	 "order":true,
@@ -27,10 +34,17 @@
 			        	 "edit":true
 			         },
 			         {
+			        	 "header":Messages("reagents.table.orderCode"),
+			        	 "property":"orderCode",
+			        	 "order":true,
+			        	 "type":"number",
+			        	 "edit":true
+			         },
+			         {
 			        	 "header":Messages("reagents.table.possibleUseNumber"),
 			        	 "property":"possibleUseNumber",
 			        	 "order":true,
-			        	 "type":"number",
+			        	 "type":"text",
 			        	 "edit":true
 			         },
 			         {
@@ -54,7 +68,7 @@
 			        	 "listStyle":"bt-select",
 			        	 "choiceInList":true,
 			        	 "possibleValues": 'lists.getStates()',
-			        	 "render":'<div bt-select ng-model="value.data.kitCatalogCode" bt-options="state.code as state.name for state in lists.getStates()" ng-edit="false"></div>',			        	 
+			        	 "render":'<div bt-select ng-model="value.data.state.code" bt-options="state.code as state.name for state in lists.getStates()" ng-edit="false"></div>',			        	 
 			        	 "edit":true
 			         },
 			         {
@@ -227,14 +241,14 @@
 	     return "";
 	 }
 	 
-	 $scope.newReagent = function(index, box){
+	 $scope.newReagent = function(index, box, catalogCode){
 		 console.log(index);
 		 for(var i = 0; i < $scope.datatables[index].displayResult.length; i++){
 			if($scope.datatables[index].displayResult[i].line.edit){
 				$scope.datatables[index].saveLocal($scope.datatables[index].displayResult[i].data,i);
 			}
 		 }
-		 $scope.datatables[index].addData([{"category":"Reagent", "state":{code:"N"}}]);
+		 $scope.datatables[index].addData([{"category":"Reagent", "boxCode":box.code, "catalogCode":catalogCode, "state":{code:"N"}}]);
 		 $scope.datatables[index].setEdit();
 		 console.log($scope.boxes);
 	 };
@@ -253,7 +267,6 @@
 				.success(function(data, status, headers, config) {
 					if(data!=null){
 						$scope.kit = data;
-						$scope.insertBoxes(false);
 					}
 				})
 				.error(function(data, status, headers, config) {
@@ -304,7 +317,7 @@
 	 $scope.saveReagents = function(index, box){
 		for(var i = 0; i < $scope.datatables[index].displayResult.length; i++){
 			$scope.datatables[index].displayResult[i].data.category = "Reagent";
-			$scope.datatables[index].displayResult[i].data.boxCatalogCode = box.code;
+			$scope.datatables[index].displayResult[i].data.boxCode = box.code;
 			$scope.datatables[index].displayResult[i].data.kitCode = $scope.kit.code;
 		 }
 	 };
@@ -459,6 +472,28 @@
 								if(addBoxes){
 									$scope.boxCatalogs.push(data[i]);
 									$scope.addBox(data[i]);
+									$scope.insertReagents(i,addBoxes);
+								}
+							}
+						}
+					}
+				})
+				.error(function(data, status, headers, config) {
+					
+				});
+			 }
+	 };
+	 
+	 $scope.insertReagents = function(boxIndex, addReagents){
+		 if($scope.datatables[boxIndex].length === 0 || confirm(Messages("reagents.insert.warning"))){
+			 return $http.get(jsRoutes.controllers.reagents.api.ReagentCatalogs.list().url, {params:{"boxCatalogCode":$scope.boxes[boxIndex].catalogCode}})
+				.success(function(data, status, headers, config) {
+					if(data!=null){
+						if(data !== undefined && data !== null){
+							for(var i=0;i<data.length;i++){
+								if(addReagents){
+									//$scope.addBox(data[i]);
+									$scope.newReagent(boxIndex, $scope.boxes[boxIndex], data[i].code);
 								}
 							}
 						}
@@ -492,7 +527,7 @@
 		 $scope.kit.state = {code:"N"};
 	 }
 	 $q.all(promises).then(function (res) {
-		 $scope.loadBoxes()
+		 $scope.loadBoxes();
 		 $scope.lists.refresh.experimentTypes();
 		 $scope.lists.refresh.kitCatalogs();
 		 $scope.lists.refresh.states({"objectTypeCode":"Reagent"});
