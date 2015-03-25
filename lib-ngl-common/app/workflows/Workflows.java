@@ -160,6 +160,7 @@ public class Workflows {
 
 	public static void nextOutputContainerState(Experiment experiment, ContextValidation contextValidation,
 			boolean stopProcess, boolean retry, List<String> processResolutionCodes) {
+		contextValidation.putObject("workflow", true);
 		for (ContainerUsed containerUsed : experiment.getAllOutPutContainerWhithInPutContainer()) {
 
 			State nextState = new State();
@@ -199,7 +200,7 @@ public class Workflows {
 						retry, processResolutionCodes);
 			}
 		}
-
+		contextValidation.removeObject("workflow");
 	}
 
 	private static boolean endOfProcess(ContainerUsed containerUsed, String experimentTypeCode) {
