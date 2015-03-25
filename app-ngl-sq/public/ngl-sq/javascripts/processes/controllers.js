@@ -20,7 +20,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			        	 "hide":true,
 			        	 "type":"text"
 			         },
-			         {
+			     /*    {
 			        	 "header":Messages("containers.table.support.column"),
 			        	 "property":"support.column",
 			        	 "order":true,
@@ -33,7 +33,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			        	 "order":true,
 			        	 "hide":true,
 			        	 "type":"text"
-			         },
+			         }, */
 			         {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"code",
@@ -319,7 +319,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			        	 "position":1,
 			        	 "type":"text"
 			         },
-			         {
+			 /*        {
 			        	 "header":Messages("processes.table.line"),
 			        	 "property":"support.line",
 			        	 "order":true,
@@ -334,7 +334,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			        	 "hide":true,
 			        	 "position":3,
 			        	 "type":"text"
-			         },
+			         },  */
 			         {
 			        	 "header":Messages("processes.table.projectCode"),
 			        	 "property":"projectCode",
@@ -445,7 +445,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 		 			"position":2.01,
 		 			"type":"number"
 		 		},
-		         {
+	/*	         {
 		        	 "header":Messages("processes.table.columns"),
 		        	 "property":"support.column",
 		        	 "url":"'/api/containers/'+containerInputCode",
@@ -462,7 +462,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 		        	 "hide":true,
 		        	 "position":3,
 		        	 "type":"text"
-		         },
+		         },   */
 		         {
 		        	 "header":Messages("processes.table.sampleOnInputContainer.properties.tag"),
 		        	 "property":"sampleOnInputContainer.properties.tag.value",
