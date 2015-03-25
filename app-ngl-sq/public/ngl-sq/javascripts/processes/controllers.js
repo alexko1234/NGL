@@ -470,39 +470,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 		        	 "hide":true,
 		        	 "position":4,
 		        	 "type":"text"
-		         },
-		         {
-		        	 "header":Messages("processes.table.sampleOnInputContainer.mesuredVolume"),
-		        	 "property":"sampleOnInputContainer.mesuredVolume.value",
-		        	 "order":true,
-		        	 "hide":true,
-		        	 "position":5,
-		        	 "type":"text"
-		         },  
-		         {
-		        	 "header":Messages("processes.table.sampleOnInputContainer.unit.volume"),
-		        	 "property":"sampleOnInputContainer.mesuredVolume.unit",
-		        	 "order":true,
-		        	 "hide":true,
-		        	 "position":6,
-		        	 "type":"text"
-		         },	
-		         {
-		        	 "header":Messages("processes.table.sampleOnInputContainer.mesuredConcentration"),
-		        	 "property":"sampleOnInputContainer.mesuredConcentration.value",
-		        	 "order":true,
-		        	 "hide":true,
-		        	 "position":7,
-		        	 "type":"text"
-		         },	 	
-		         {
-		        	 "header":Messages("processes.table.sampleOnInputContainer.unit.concentration"),
-		        	 "property":"sampleOnInputContainer.mesuredConcentration.unit",
-		        	 "order":true,
-		        	 "hide":true,
-		        	 "position":8,
-		        	 "type":"text"
-		         },
+		         },		         
 		         {
 		        	 "header":Messages("processes.table.typeCode"),
 		        	 "property":"typeCode",
@@ -787,9 +755,9 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 					if(property.displayMeasureValue != undefined && property.displayMeasureValue != null){
 						column.convertValue = {"active":true, "displayMeasureValue":property.displayMeasureValue.value, "saveMeasureValue":property.saveMeasureValue.value};
 					}
-					column.position = (7+property.displayOrder);
+					column.position = (9+(property.displayOrder/1000));
 					$scope.processPropertyColumns.push(column);
-					$scope.datatable.addColumn(7+property.displayOrder,column);	
+					$scope.datatable.addColumn(9+(property.displayOrder/1000),column);	
 				});				
 			}
 
