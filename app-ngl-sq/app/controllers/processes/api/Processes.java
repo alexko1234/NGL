@@ -144,8 +144,9 @@ public class Processes extends CommonController{
 				process.code = CodeHelper.getInstance().generateProcessCode(process);
 				process.sampleOnInputContainer.lastUpdateDate = new Date();
 				process.sampleOnInputContainer.referenceCollab = InstanceHelpers.getReferenceCollab(process.sampleCode);
-				Process p = (Process)InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,process, ctxVal);
+				process.validate(ctxVal);
 				if (!ctxVal.hasErrors()) {
+					Process p = (Process)InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,process, ctxVal);
 					processes.add(p);
 					Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, p.containerInputCode);
 					List<String> newProcesses = new ArrayList<String>();
@@ -162,6 +163,7 @@ public class Processes extends CommonController{
 					response.add(new DatatableBatchResponseElement(OK,  p, element.index));
 				}else{
 					contextValidation.errors.putAll(ctxVal.errors);
+					response.add(new DatatableBatchResponseElement(BAD_REQUEST, processForm.errorsAsJson(), element.index));
 				}
 				}else {
 					response.add(new DatatableBatchResponseElement(BAD_REQUEST, processForm.errorsAsJson(), element.index));
@@ -174,7 +176,7 @@ public class Processes extends CommonController{
 			return ok(Json.toJson(response));
 		}
 		
-		return badRequest(batchForm.errorsAsJson());
+		return badRequest(Json.toJson(response));
 	}
 	
 	private static List<Process> saveFromSupport(String supportCode, Form<Process> filledForm, ContextValidation contextValidation){			
@@ -193,33 +195,36 @@ public class Processes extends CommonController{
 
 		List<Process> processes = new ArrayList<Process>();
 		List<String> processCodes=new ArrayList<String>();		
-		ContextValidation contextError=new ContextValidation(contextValidation.getUser());
-
 		for(Content c:container.contents){		
 			//code generation
 			process.sampleCode = c.sampleCode;
 			process.code = CodeHelper.getInstance().generateProcessCode(process);
 			process.sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(c, container);				
-			Process p = (Process)InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,process, contextValidation);
+			//Process p = (Process)InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,process, contextValidation);
 			Logger.info("New process code : "+process.code);
-			if(p != null){
-				processes.add(p);					
-				processCodes.add(p.code);
-			}
+			processes.add(process);					
+			processCodes.add(process.code);
+			process.validate(contextValidation);
 		}
-		processes = ProcessHelper.applyRules(processes, contextValidation, "processCreation");
-		if(!contextError.hasErrors()){
+		
+		if(!contextValidation.hasErrors()){
+			List<Process> savedProcesses = new ArrayList<Process>();
+			for(Process p:processes){
+				Process savedProcess = (Process)InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME, p, contextValidation);
+				if(savedProcess != null){
+					savedProcesses.add(savedProcess);
+				}
+			}
+			processes = ProcessHelper.applyRules(savedProcesses, contextValidation, "processCreation");
 			ProcessHelper.updateContainer(container,process.typeCode, processCodes,contextValidation);
 			ProcessHelper.updateContainerSupportFromContainer(container,contextValidation);
 			try {
 				ProcessType pt = ProcessType.find.findByCode(process.typeCode);
-				Workflows.nextContainerState(process,pt.firstExperimentType.code, pt.firstExperimentType.category.code,new ContextValidation(getCurrentUser(), filledForm.errors()));
+				Workflows.nextContainerState(process,pt.firstExperimentType.code, pt.firstExperimentType.category.code,contextValidation);
 			} catch (DAOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}else{
-			contextValidation.errors.putAll(contextError.errors);
 		}
 		return processes;
 	}

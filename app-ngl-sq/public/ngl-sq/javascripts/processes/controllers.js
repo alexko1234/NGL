@@ -386,7 +386,8 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			        	 active:true,
 			        	 by:'containerInputCode'
 			         },
-			         edit:{			        	 
+			         edit:{
+			        	 active:true,
 			        	 columnMode:true
 			         },
 			         save:{
@@ -572,12 +573,10 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 	};
 
 	$scope.save = function (){
-		$scope.processes = [];
-		$scope.message.details = undefined;
+		$scope.message.details = {};
 		$scope.message.isDetails = false;
 		$scope.datatable.save();
 		$scope.processesToSave = [];
-		console.log($scope.datatable.getData());
 		var data = $scope.datatable.getData();
 		var url = "";
 		var processes = [];
@@ -586,29 +585,31 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			url =  jsRoutes.controllers.processes.api.Processes.saveBatch().url;
 			$scope.datatable.config.spinner.start = true;
 			for(var i=0;i<data.length;i++){
-				for(var j = 0; j < data[i].contents.length; j++){ //one process by sample
-					var processData = data[i];
-					processData.properties.limsCode = undefined;
-					processData.properties.receptionDate = undefined;
-					var process = {data:{
-							projectCode: processData.projectCodes[0],
-							sampleCode: processData.sampleCodes[j],
-							containerInputCode: processData.code,
-							typeCode:$scope.form.nextProcessTypeCode,
-							categoryCode:$scope.form.processCategory,
-							properties:processData.properties,
-							sampleOnInputContainer:{sampleCode:processData.contents[j].sampleCode,
-													sampleCategoryCode:processData.contents[j].sampleCategoryCode,
-													sampleTypeCode:processData.contents[j].sampleTypeCode,
-													percentage:processData.contents[j].percentage,
-													properties:processData.contents[j].properties,
-													containerCode:data[i].code,
-													containerSupportCode:data[i].support.code,
-													mesuredVolume:data[i].mesuredVolume,
-													mesuredQuantity:data[i].mesuredQuantity,
-													mesuredConcentration:data[i].mesuredConcentration}
-					}};
-					processes.push(process);
+				if($scope.lineClasses[i] != "success"){
+					for(var j = 0; j < data[i].contents.length; j++){ //one process by sample
+						var processData = data[i];
+						processData.properties.limsCode = undefined;
+						processData.properties.receptionDate = undefined;
+						var process = {index:i, data:{
+								projectCode: processData.projectCodes[0],
+								sampleCode: processData.sampleCodes[j],
+								containerInputCode: processData.code,
+								typeCode:$scope.form.nextProcessTypeCode,
+								categoryCode:$scope.form.processCategory,
+								properties:processData.properties,
+								sampleOnInputContainer:{sampleCode:processData.contents[j].sampleCode,
+														sampleCategoryCode:processData.contents[j].sampleCategoryCode,
+														sampleTypeCode:processData.contents[j].sampleTypeCode,
+														percentage:processData.contents[j].percentage,
+														properties:processData.contents[j].properties,
+														containerCode:data[i].code,
+														containerSupportCode:data[i].support.code,
+														mesuredVolume:data[i].mesuredVolume,
+														mesuredQuantity:data[i].mesuredQuantity,
+														mesuredConcentration:data[i].mesuredConcentration}
+						}};
+						processes.push(process);
+					}
 				}
 			}
 			var nbElementByBatch = Math.ceil(processes.length / 6); //6 because 6 request max in parrallel with firefox and chrome
@@ -618,7 +619,8 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			
 		}else{
 			$scope.datatable.config.spinner.start = true;
-			for(var i=0;i<data.length;i++){
+			var i=0;
+			for(i=0;i<data.length;i++){
 				url =  jsRoutes.controllers.processes.api.Processes.save().url;
 				var processData = data[i];
 				processData.properties.limsCode = undefined;
@@ -629,38 +631,39 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 						categoryCode:$scope.form.processCategory,
 						properties:processData.properties
 				};
-				var promise = $http.post(url,process, {params:{"fromSupportContainerCode": data[i].support.code}})
-				.success(function(data, status, headers, config) {
-					if(data!=null){
-						$scope.message.clazz="alert alert-success";
-						$scope.message.text=Messages('experiments.msg.save.sucess');
-
-						$scope.processes = $scope.processes.concat(data);
-						$scope.doneAndRecorded = true;
-						$scope.datatable.config.edit.active = false;
-						$scope.datatable.config.remove.active = false;
-					}
-				})
-				.error(function(data, status, headers, config) {
-					$scope.datatable.config.spinner.start = false;
-					$scope.message.clazz = 'alert alert-danger';
-					$scope.message.text = Messages('experiments.msg.save.error');
-
-					$scope.message.details = data;
-					$scope.message.isDetails = true;
-					$scope.doneAndRecorded = false;
-					$scope.datatable.config.edit.active = true;
-					$scope.datatable.config.remove.active = true;
-				});
-				$scope.promises.push(promise);
+				
+				if($scope.lineClasses[i] != "success"){
+					$scope.promises.push($scope.saveSupport(url,i,process,data[i].support.code));
+				}
 			}
 		}
 
 		$q.all($scope.promises).then(function (res) {
+			$scope.message.clazz="alert alert-success";
+			$scope.message.text=Messages('experiments.msg.save.sucess');
+			$scope.doneAndRecorded = true;
+
 			$scope.basket.reset();
 			$scope.datatable.setColumnsConfig($scope.getProcessesColumns());
 			$scope.datatable.setData($scope.processes);
+			var displayResult = $scope.datatable.displayResult;
+			for(var i=0;i<displayResult.length;i++){
+				$scope.datatable.displayResult[i].line.trClass = $scope.lineClasses[i];
+			}
 			$scope.datatable.config.spinner.start = false;
+		}, function(res){
+			$scope.datatable.config.spinner.start = false;
+			$scope.message.clazz = 'alert alert-danger';
+			$scope.message.text = Messages('experiments.msg.save.error');
+			
+			/*var displayResult = $scope.datatable.displayResult;
+			for(var i=0;i<displayResult.length;i++){
+				$scope.datatable.displayResult[i].line.trClass = $scope.lineClasses[i];
+			}*/
+			
+			$scope.doneAndRecorded = false;
+			$scope.datatable.config.edit.active = true;
+			$scope.datatable.config.remove.active = true;
 		});	
 	};
 
@@ -669,22 +672,56 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 		return $http.post(url, processes)
 		.success(function(data, status, headers, config) {
 			if(data!=null){
-				$scope.message.clazz="alert alert-success";
-				$scope.message.text=Messages('experiments.msg.save.sucess');
 				for(var i=0;i<data.length;i++){
+					//$scope.datatable.displayResult[data[i].index].line.trClass = "success";
+					$scope.lineClasses[data[i].index] = "success";
 					$scope.processes = $scope.processes.concat(data[i].data);
+				}
+				var displayResult = $scope.datatable.displayResult;
+				for(var i=0;i<displayResult.length;i++){
+					$scope.datatable.displayResult[i].line.trClass = $scope.lineClasses[i];
 				}
 			}
 		})
 		.error(function(data, status, headers, config) {
-			$scope.datatable.config.spinner.start = false;
-			$scope.message.clazz = 'alert alert-danger';
-			$scope.message.text = Messages('experiments.msg.save.error');
-
 			$scope.message.details = data;
 			$scope.message.isDetails = true;
+			for(var i=0;i<data.length;i++){
+				$scope.lineClasses[data[i].index] = "danger";
+				$scope.datatable.addErrors(data[i].index,data[i].data);
+			}
+			var displayResult = $scope.datatable.displayResult;
+			for(var i=0;i<displayResult.length;i++){
+				$scope.datatable.displayResult[i].line.trClass = $scope.lineClasses[i];
+			}
+			$scope.datatable.config.edit.active = true;
 		});
-	}
+	};
+	
+	$scope.saveSupport = function(url, index, process, supportCode){
+		return $http.post(url,process, {params:{"fromSupportContainerCode": supportCode}})
+		.success(function(data, status, headers, config) {
+			if(data!=null){
+				$scope.lineClasses[index] = "success";
+				$scope.processes = $scope.processes.concat(data);
+				$scope.datatable.config.edit.active = false;
+				$scope.datatable.config.remove.active = false;
+				var displayResult = $scope.datatable.displayResult;
+				for(var j=0;j<displayResult.length;j++){
+					$scope.datatable.displayResult[j].line.trClass = $scope.lineClasses[j];
+				}
+			}
+		}).error(function(data, status, headers, config) {
+			$scope.lineClasses[index] = "danger";
+			$scope.message.details = data;
+			$scope.message.isDetails = true;
+			var displayResult = $scope.datatable.displayResult;
+			for(var j=0;j<displayResult.length;j++){
+				$scope.datatable.displayResult[j].line.trClass = $scope.lineClasses[j];
+			}
+			$scope.datatable.config.edit.active = true;
+		});
+	};
 	
 	$scope.swithToSupportView = function(){
 
@@ -778,6 +815,8 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 	$scope.message = {};
 	$scope.supportView = false;
 	$scope.containers = [];
+	$scope.lineClasses = [];
+	$scope.processes = [];
 	$scope.datatable = datatable($scope.datatableConfig);
 	$scope.basket = mainService.getBasket();
 	$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);

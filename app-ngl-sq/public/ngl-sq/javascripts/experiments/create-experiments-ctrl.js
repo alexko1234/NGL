@@ -105,6 +105,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			         save:{
 			        	 active:true,
 			        	 showButton:false,
+			        	 withoutEdit:true,
 			        	 mode:'local',
 			        	 callback:function(datatable){
 			        		 var reagents = datatable.allResult;

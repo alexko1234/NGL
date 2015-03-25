@@ -141,9 +141,11 @@ public class Workflows {
 				state.code = "IS";
 			} else if (retry) {
 				for (ContainerUsed c : containersIn) {
+					Container container = MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
+							DBQuery.is("code", c.code));
 					//Duplicate container in experiment
-					if(c.state.code.equals("IU")){
-						Workflows.previousContainerState(c, experiment.typeCode, contextValidation, 2);
+					if(container.state.code.equals("IU")){
+						Workflows.previousContainerState(c,container, experiment.typeCode, contextValidation, 2);
 					}
 				}
 			}
@@ -376,13 +378,13 @@ public class Workflows {
 	public static void setContainerState(Container container, String experimentTypeCode, State nextState,
 			ContextValidation contextValidation, boolean stopProcess, boolean retry,List<String> processResolutionCodes) {
 		String lastStateCode = container.state.code;
-		container.state = StateHelper.updateHistoricalNextState(container.state, nextState);
 		container.traceInformation = StateHelper.updateTraceInformation(container.traceInformation, nextState);
 		// Validate state for Container
 		contextValidation.addKeyToRootKeyName("container");
 		ContainerValidationHelper.validateStateCode(container, contextValidation);
 		contextValidation.removeKeyFromRootKeyName("container");
 		if (!contextValidation.hasErrors() && !nextState.code.equals(lastStateCode)) {
+			container.state = StateHelper.updateHistoricalNextState(container.state, nextState);
 			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
 					DBQuery.is("code", container.code),
 					DBUpdate.set("state", container.state).set("traceInformation", container.traceInformation));
@@ -461,10 +463,8 @@ public class Workflows {
 		setContainerState(container, experimentTypeCode, previousState, contextValidation, false, false, null);
 	}
 
-	public static void previousContainerState(ContainerUsed containersIn, String experimentTypeCode,
+	public static void previousContainerState(ContainerUsed containersIn, Container container, String experimentTypeCode,
 			ContextValidation contextValidation, int previousNumber) {
-		Container container = MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
-				DBQuery.is("code", containersIn.code));
 
 		TransientState previousTransientState = container.state.historical.get(container.state.historical.size()
 				- (previousNumber + 1));
