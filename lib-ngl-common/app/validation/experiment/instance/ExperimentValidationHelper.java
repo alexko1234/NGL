@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.experiment.description.ExperimentCategory;
@@ -18,13 +19,13 @@ import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.protocol.instance.Protocol;
 import models.laboratory.reagent.instance.ReagentUsed;
 import models.utils.InstanceConstants;
-
+import models.laboratory.container.instance.ContainerSupport;
 import org.apache.commons.collections.CollectionUtils;
 import org.mongojack.DBQuery;
 
-import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
+import validation.container.instance.ContainerSupportValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
@@ -65,15 +66,12 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			String typeCode, Map<String,PropertyValue> properties, ContextValidation contextValidation) {
 		ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ExperimentType.find,true);
 		if(exType!=null){
-			String stateCode=getObjectFromContext(STATE_CODE, String.class, contextValidation);
-			Logger.debug("State code "+stateCode);
-
-			if(!stateCode.equals("N")){
 				contextValidation.addKeyToRootKeyName("experimentProperties");
 				ValidationHelper.validateProperties(contextValidation, properties, exType.getPropertiesDefinitionDefaultLevel(), true);
 				contextValidation.removeKeyFromRootKeyName("experimentProperties");
-			}
 		}
+		
+		
 	}
 
 	public static void validationExperimentCategoryCode(String categoryCode,
@@ -111,20 +109,28 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 	}
 
 	public static void validateInstrumentUsed(InstrumentUsed instrumentUsed,Map<String,PropertyValue> properties, ContextValidation contextValidation) {
-		String stateCode = getObjectFromContext(STATE_CODE, String.class, contextValidation);
 		if(ValidationHelper.required(contextValidation, instrumentUsed, "instrumentUsed")){
 			InstrumentUsedType instrumentUsedType =BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, instrumentUsed.typeCode, "typeCode", InstrumentUsedType.find,true);
+			List<PropertyDefinition> listPropertyDefinitions=instrumentUsedType.getPropertiesDefinitionDefaultLevel();
+			String stateCode= getObjectFromContext(STATE_CODE, String.class, contextValidation);
+
 			if(instrumentUsedType!=null){
-				if(!stateCode.equals("N")){
 					contextValidation.addKeyToRootKeyName("instrumentProperties");
-					ValidationHelper.validateProperties(contextValidation, properties, instrumentUsedType.getPropertiesDefinitionDefaultLevel(), false);
+					ValidationHelper.validateProperties(contextValidation, properties, listPropertyDefinitions, false);
 					contextValidation.removeKeyFromRootKeyName("instrumentProperties");
-				}
 			}
 
 			contextValidation.addKeyToRootKeyName("instrumentUsed");
 			instrumentUsed.validate(contextValidation); 
 			contextValidation.removeKeyFromRootKeyName("instrumentUsed");
+			
+			for(PropertyDefinition propertyDefinition:listPropertyDefinitions){			
+				if(propertyDefinition.code.equals("containerSupportCode")){
+					if(!stateCode.equals("F")){
+						ContainerSupportValidationHelper.validateUniqueInstanceCode(contextValidation,properties.get("containerSupportCode").value.toString() , ContainerSupport.class, InstanceConstants.CONTAINER_SUPPORT_COLL_NAME);
+					}
+				}
+			}
 		}
 	}
 
