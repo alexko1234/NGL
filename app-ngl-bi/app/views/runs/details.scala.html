@@ -87,7 +87,7 @@
 				
 			}
 			
-			
+			treatments.ngsrg["default"].nbClusterIlluminaFilter.value
 		@column(){
 			@views.html.helper.columnLabelValue(Messages("runs.type")){
 				<p class="form-control-static">{{run.typeCode}}</p>
@@ -101,7 +101,10 @@
 				</p>
 			}
 			@views.html.helper.columnLabelValue(Messages("runs.nbClusterIlluminaFilter")){
-				<p class="form-control-static">{{run.treatments.ngsrg["default"].nbClusterIlluminaFilter.value	| number}}}</p>
+				<p class="form-control-static" ng-class="highLight('treatments.ngsrg.default.nbClusterIlluminaFilter.value')">
+					{{run.treatments.ngsrg["default"].nbClusterIlluminaFilter.value	| number}}
+				</p>
+			}
 				
 			@views.html.helper.columnLabelValue(Messages("runs.nbBase")){
 				<p class="form-control-static" ng-class="highLight('treatments.ngsrg.default.nbBase.value')">
