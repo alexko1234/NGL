@@ -21,7 +21,7 @@ angular.module('home').controller('CreateCtrl',[ '$http', '$scope', '$routeParam
 			exportCSV:{
 				active:true
 			},
-			name:"Analyses"
+			name:"Submissions"
 	};
 	
 	$scope.messages = messages();

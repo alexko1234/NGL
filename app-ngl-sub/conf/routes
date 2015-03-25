@@ -48,7 +48,7 @@ GET		/api/sra/variables/:name            		controllers.sra.api.Variables.get(nam
 
 #Samples
 GET		/api/samples								@controllers.samples.api.Samples.list()
-
+PUT		/api/samples								@controllers.samples.api.Samples.update(code: java.lang.String)
 
 #readsets from ngl-common attention pas de '@' devant car controller ecrit il y a 3 ans et qui herite de 
 GET    	/api/readsets	                 			controllers.readsets.api.ReadSets.list()

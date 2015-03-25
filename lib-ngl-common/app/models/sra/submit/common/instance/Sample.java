@@ -18,7 +18,6 @@ public class Sample extends DBObject implements IValidation {
 	public int taxonId;            // required 
 	public String classification;     
 	public String commonName;     
-	public String submitter_id;
 	public String scientificName;  // required next soon 
 	public String title;           // required next soon 
 	public String description;      

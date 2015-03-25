@@ -44,6 +44,8 @@ sample.description=Description
 
 button.save=Save
 button.reset=Reset
+button.cancel=Cancel
+button.edit=Edit
 #Containers
 #containers.title = Containers
 #containers.menu = Containers

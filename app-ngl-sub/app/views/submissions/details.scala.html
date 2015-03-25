@@ -5,6 +5,20 @@
 	</div>
 }
 <div class="row">
+	<div class="col-md-12 col-lg-12">
+	<div class="page-header">	
+		<div class="btn-toolbar pull-right" >
+			 	<button class="btn btn-default" ng-if="isEditMode()" ng-click="save()" data-toggle="tooltip" title="@Messages("button.save")" ><i class="fa fa-save"></i> @Messages("button.save")</button>
+			 	<button class="btn btn-default" ng-if="isEditMode()" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
+		 		<button class="btn btn-default" ng-if="!isEditMode()" ng-click="activeEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>
+			</div>
+		  
+	</div>
+	</div>
+</div>
+
+
+<div class="row">
 	<div class="col-md-12 col-lg-12" messages="messages"></div>
 </div>
 
@@ -26,7 +40,10 @@
 						<p class="form-control-static">{{sample.code}}</p>
 						}
 						@views.html.helper.columnLabelValue(Messages("sample.description")){
-						<p class="form-control-static">{{sample.description}}</p>
+						<div ng-switch on="isEditMode()">
+							<p class="form-control-static" ng-switch-when="false">{{sample.description}}</p>
+							<input type="text" class="form-control" ng-model="sample.description" ng-switch-when="true">
+						</div>
 						}
 						@views.html.helper.columnLabelValue(Messages("sample.title")){
 						<p class="form-control-static">{{sample.title}}</p>

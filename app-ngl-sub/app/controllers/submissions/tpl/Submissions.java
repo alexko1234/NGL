@@ -48,7 +48,8 @@ public class Submissions extends CommonController
   	    		controllers.submissions.api.routes.javascript.Submissions.save(),
   	    		controllers.submissions.api.routes.javascript.Submissions.get(),
   	    		controllers.submissions.tpl.routes.javascript.Submissions.get(),
-  	    		controllers.samples.api.routes.javascript.Samples.list()
+  	    		controllers.samples.api.routes.javascript.Samples.list(),
+  	    		controllers.samples.api.routes.javascript.Samples.update()
   	      )	  	      
   	    );
   	  }
