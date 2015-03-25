@@ -92,11 +92,15 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 	
 	public static void validateStateCode(Container container,ContextValidation contextValidation) {
 		
+		boolean workflow=false;
+		if(contextValidation.getObject("workflow")!=null){
+			workflow=true;
+		}
 //		if(( CollectionUtils.isEmpty(container.inputProcessCodes) || !container.state.historical.get(container.state.historical.size() - 2).code.equals("UA")) && container.state.code.equals("A") ){
-		if( CollectionUtils.isEmpty(container.inputProcessCodes) && container.state.code.equals("A") ){
+		if( CollectionUtils.isEmpty(container.inputProcessCodes) && container.state.code.equals("A") && !workflow ){
 			contextValidation.addErrors("state.code",ValidationConstants.ERROR_BADSTATE_MSG,container.code );
 		}
-		if(CollectionUtils.isNotEmpty(container.inputProcessCodes) && container.state.code.equals("IW-P")){
+		if(CollectionUtils.isNotEmpty(container.inputProcessCodes) && container.state.code.equals("IW-P") && !workflow){
 			contextValidation.addErrors("state.code",ValidationConstants.ERROR_BADSTATE_MSG,container.code );
 		}
 		contextValidation.addKeyToRootKeyName("state");
