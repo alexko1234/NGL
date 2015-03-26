@@ -47,7 +47,8 @@
 		<ul class="nav nav-tabs margin-bottom-5">
 			<li class="active"><a href="#" data-target="#general" data-toggle="tab">@Messages("readsets.tabs.general")</a></li>
 			<li><a href="#" data-target="#advanced" data-toggle="tab">@Messages("readsets.tabs.advanced")</a></li>
-			<li><a href="#" data-target="#addinfo" data-toggle="tab">@Messages("readsets.tabs.addinfo")</a></li>    
+			<li><a href="#" data-target="#addinfo" data-toggle="tab">@Messages("readsets.tabs.addinfo")</a></li>
+			<li><a href="#" data-target="#workflow" data-toggle="tab">@Messages("readsets.tabs.workflow")</a></li>    
 		</ul>
 		<div class="tab-content">
 			<div class="tab-pane active" id="general">		
@@ -59,6 +60,29 @@
 			</div>
 			<div class="tab-pane" id="addinfo">
 				@partials.details_addinfo()				
+			</div>
+			<div class="tab-pane" id="workflow">
+				<div class="row">
+					<div class="col-md-4 col-lg-4">
+						<table class="table table-condensed table-hover table-bordered">
+						<thead>
+							<tr>
+								<th>@Messages("readsets.workflow.state")</th>
+								<th>@Messages("readsets.workflow.date")</th>
+								<th>@Messages("readsets.workflow.who")</th>								
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="state in readset.state.historical|orderBy:'date'">
+								<td>{{state.code|codes:'state'}}</td>
+								<td>{{state.date|date:'@Messages("datetime.format")'}}</td>
+								<td>{{state.user}}</td>
+							</tr>
+						</tbody>
+					</table>
+					
+					</div>
+				</div>			
 			</div>
 		</div>
 	</div>
