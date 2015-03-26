@@ -941,12 +941,16 @@ angular.module('datatableServices', []).
 		    			
 		    			getSaveRemoteRequest : function(value, i){
 		    				var urlFunction = this.getUrlFunction(this.config.save.url);
+		    				var method = this.config.save.method;
+		    				if(angular.isFunction(method)){
+		    					method = method(value);
+		    				}
 		    				if(urlFunction){
 			    				if(this.config.save.batch){
-			    					return $http[this.config.save.method](urlFunction(value), value, {datatable:this});
+			    					return $http[method](urlFunction(value), value, {datatable:this});
 			    				}else{
 			    					var valueFunction = this.getValueFunction(this.config.save.value);
-			    					return $http[this.config.save.method](urlFunction(value), valueFunction(value), {datatable:this,index:i}).
+			    					return $http[method](urlFunction(value), valueFunction(value), {datatable:this,index:i}).
 			    					success(function(data, status, headers, config) {
 			    						  config.datatable.saveRemoteOneElement(status, data, config.index);
 			    					}).
@@ -1760,6 +1764,28 @@ angular.module('datatableServices', []).
 		    				} else {
 		    					return false;
 		    				}
+		    			},
+		    			onDrop : function(e, draggedCol, droppedCol, datatable, alReadyInTheModel){
+		    				var posDrop = droppedCol.position;
+		    				var posDrag = draggedCol.position;
+		    				for(var i=0;i<datatable.config.columns.length;i++){
+		    					if(posDrag < posDrop &&  datatable.config.columns[i].position > posDrag 
+		    							&& datatable.config.columns[i].position < posDrop
+		    							&& datatable.config.columns[i].id !== draggedCol.id){
+		    						datatable.config.columns[i].position--;
+		    					}
+		    					
+		    					if(posDrag > posDrop &&  datatable.config.columns[i].position > posDrop 
+		    							&& datatable.config.columns[i].position < posDrag
+		    							&& datatable.config.columns[i].id !== draggedCol.id){
+		    						datatable.config.columns[i].position++;
+		    					}
+		    					
+		    					if(datatable.config.columns[i].id === draggedCol.id){
+		    						datatable.config.columns[i].position = posDrop-1;
+		    					}
+		    				}
+		    				datatable.setColumnsConfig(datatable.config.columns);
 		    			}
 		    					    			
     			};
@@ -2048,8 +2074,8 @@ angular.module('datatableServices', []).
   		    		+	'<th colspan="{{header.colspan}}" ng-repeat="header in headers"><span ng-bind="dtTableFunctions.messagesDatatable(header.label)"/></th>'
   		    		+'</tr>'
   		    		+'<tr>'
-  		    		+	'<th id="{{column.id}}" ng-repeat="column in dtTable.getColumnsConfig()" ng-if="!dtTable.isHide(column.id)">'
-  		    		+	'<span ng-bind="dtTableFunctions.messagesDatatable(column.header)"/>'
+  		    		+	'<th id="{{column.id}}" ng-repeat="column in dtTable.getColumnsConfig()" ng-model="column" draggable ng-if="!dtTable.isHide(column.id)">'
+  		    		+	'<span ng-model="dtTable" droppable drop-fn="dtTable.onDrop" drop-item="column" ng-bind="dtTableFunctions.messagesDatatable(column.header)"/>'
   		    		+	'<div class="btn-group pull-right">'
   		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setEdit(column)"        ng-if="dtTable.isShowButton(\'edit\', column)"  ng-disabled="!dtTable.canEdit()" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.edit\')}}"><i class="fa fa-edit"></i></button>'
   		    		+	'<button class="btn btn-xs" ng-click="dtTableFunctions.setOrderColumn(column)" ng-if="dtTable.isShowButton(\'order\', column)" ng-disabled="!dtTable.canOrder()" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.sort\')}}"><i ng-class="dtTable.getOrderColumnClass(column.id)"></i></button>'
