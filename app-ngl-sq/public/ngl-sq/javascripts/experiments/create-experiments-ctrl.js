@@ -1225,6 +1225,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				if($scope.experiment.outputVoid === true){
 					$scope.getTemplate();
 				}
+				$scope.edit();
 			}else{
 				$scope.experiment.editMode=true;
 				$scope.doneAndRecorded = false;
