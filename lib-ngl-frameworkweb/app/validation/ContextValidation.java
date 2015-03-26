@@ -103,6 +103,10 @@ public class ContextValidation {
 		errors.get(key).add(new ValidationError(key, message,  java.util.Arrays.asList(arguments)));		
 	}
 
+	public void addErrors(Map<String,List<ValidationError>> errors){
+		this.errors.putAll(errors);
+	}
+	
 	/**
 	 *
 	 * @param rootKeyName
