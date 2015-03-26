@@ -190,10 +190,16 @@
 	 };
 	 
 	 $scope.edit = function(){
+		 for(var i=0;i<$scope.datatables.length;i++){
+			 $scope.datatables[i].config.edit.active = true;
+		 }
 		 $scope.editMode = true;
 	 }
 	 
 	 $scope.unedit = function(){
+		 for(var i=0;i<$scope.datatables.length;i++){
+			 $scope.datatables[i].config.edit.active = false;
+		 }
 		 $scope.editMode = false;
 	 }
 	 

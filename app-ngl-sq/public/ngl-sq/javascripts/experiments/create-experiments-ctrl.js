@@ -621,17 +621,18 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		$http.post(jsRoutes.instruments.io.Outputs.sampleSheets().url, $scope.experiment.value)
 		.success(function(data, status, headers, config) {
 			var header = headers("Content-disposition");
-			var filename = header.split("filename=")[1];
+			var filepath = header.split("filename=")[1];
+			var filename = filepath.split("/")[filename.length-1];
 			if(data!=null){
 				$scope.message.clazz="alert alert-success";
-				$scope.message.text=Messages('experiments.msg.save.sucess')
+				$scope.message.text=Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath;
 				var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
 				saveAs(blob, filename);
 			}
 		})
 		.error(function(data, status, headers, config) {
 			$scope.message.clazz = "alert alert-danger";
-			$scope.message.text = Messages('experiments.msg.save.error');
+			$scope.message.text = Messages('experiments.msg.generateSampleSheet.error');
 
 			$scope.message.details = data;
 			$scope.message.isDetails = true;

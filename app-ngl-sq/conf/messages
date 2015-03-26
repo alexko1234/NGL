@@ -229,6 +229,8 @@ experiments.msg.save.sucess = Sauvegarde réussie
 experiments.msg.save.error = Sauvegarde echouée
 experiments.msg.details = [détails]
 experiments.msg.empty.save.error = Incomplet - Sauvegarde echouée
+experiments.msg.generateSampleSheet.success = Feuille de route envoyé
+experiments.msg.generateSampleSheet.error = Echec de l'envoi de la feuille de route
 
 experiments.select.experimentType = Sélect. un type d''expérience
 experiments.select.experimentType.purifications = Sélect. une purification

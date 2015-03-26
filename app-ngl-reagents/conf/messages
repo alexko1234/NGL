@@ -90,4 +90,6 @@ reagents.table.orderCode = Ref. commande
 reagents.table.possibleUseNumber = Nombre d'utilisation
 reagents.table.startToUseDate = Date debut utilisation
 reagents.table.stopToUseDate = Date fin utilisation
-reagents.table.state.code = Etat
+reagents.table.catalogCode = Code catalogue
+reagents.table.stockNumber = Numéro de stockage
+reagents.table.stateCode = Etat

@@ -119,9 +119,11 @@
 	
 <div class="row">
  	<h3 class="pull-left">@Messages("declarations.box.list"): </h3>
- 	 <button title='@Messages("declarations.box.add")' data-toggle="tooltip" ng-disabled="!editMode" ng-click="addBox()" class="btn btn-default saveAndEditButtons" >
+ 	 <!--<button title='@Messages("declarations.box.add")' data-toggle="tooltip" ng-disabled="!editMode" ng-click="addBox()" class="btn btn-default saveAndEditButtons" >
 		 <i class="fa fa-plus"></i>
-	 </button>
+	 </button>-->
+	<br>
+	<br>
 	<br>
  	<ul class="nav nav-tabs" role="tablist" ng-if="boxes.length > 0">
  			<li ng-repeat="box in boxes"><a href="" role="tab"  data-target="#{{'box'+$index}}" data-toggle="tab"><button type="button" class="close ng-scope" ng-click="removeBox($index,box.code)" >x</button>{{box.catalogCode|codes:'boxCatalogs' || 'box'+$index}}</a></li>

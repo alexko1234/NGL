@@ -27,7 +27,7 @@ public class Outputs extends CommonController{
 		if(sampleSheetFactory != null){
 			File file = sampleSheetFactory.generate();
 			response().setContentType("application/x-download");  
-			response().setHeader("Content-disposition","attachment; filename="+file.getName());
+			response().setHeader("Content-disposition","attachment; filename="+file.getAbsolutePath());
 			return ok(file);
 		}
 		

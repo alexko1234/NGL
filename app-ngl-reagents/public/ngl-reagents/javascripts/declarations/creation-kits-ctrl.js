@@ -485,8 +485,7 @@
 	 };
 	 
 	 $scope.insertReagents = function(boxIndex, addReagents){
-		 if($scope.datatables[boxIndex].length === 0 || confirm(Messages("reagents.insert.warning"))){
-			 return $http.get(jsRoutes.controllers.reagents.api.ReagentCatalogs.list().url, {params:{"boxCatalogCode":$scope.boxes[boxIndex].catalogCode}})
+		return $http.get(jsRoutes.controllers.reagents.api.ReagentCatalogs.list().url, {params:{"boxCatalogCode":$scope.boxes[boxIndex].catalogCode}})
 				.success(function(data, status, headers, config) {
 					if(data!=null){
 						if(data !== undefined && data !== null){
@@ -502,7 +501,6 @@
 				.error(function(data, status, headers, config) {
 					
 				});
-			 }
 	 };
 	 
 	 $scope.getBoxCatalogName = function(code){
