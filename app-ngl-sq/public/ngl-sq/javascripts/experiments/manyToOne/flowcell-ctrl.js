@@ -395,11 +395,6 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 		
 		return data;
 	};
-	
-	$scope.dragging = function(state){
-		$scope.dragIt = state;
-		return $scope.dragIt;
-	};
 
 	$scope.setFlowcellProperty = function(lineNumber, value, property){
 		for(var i=0;i<$scope.experiment.value.atomicTransfertMethods[lineNumber].inputContainerUseds.length;i++){
@@ -530,7 +525,6 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 	$scope.view = 1;
 	$scope.isAllOpen = true;
 	$scope.allOutputContainersUsed = [];
-	$scope.dragIt = false;
 
 
 	if($scope.experiment.editMode){

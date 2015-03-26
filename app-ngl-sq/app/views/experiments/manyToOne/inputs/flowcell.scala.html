@@ -13,7 +13,7 @@
 		
 		</table>
 		</div>
-		<div ng-model="inputContainers" ng-if="editMode==true && (doneAndRecorded==false || inProgressNow==false)" droppable class="col-md-4 col-lg-4 inputContainerGroup">		
+		<div ng-model="inputContainers" ng-if=" editMode==true && inProgressNow==false" droppable class="col-md-4 col-lg-4 inputContainerGroup">		
 			<p  ng-show="inputContainers.length==0"><i class="fa fa-download"></i> Inputs</p>
 			<table ng-show="inputContainers.length>0" class="table" >
 			<thead>
@@ -160,10 +160,7 @@
 					    </td>  -->
 					</tr>		
 					
-					<tr ng-if="inputContainers.length>0 && doneAndRecorded==false && inProgressNow==false && editMode==true " ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable>					
-					<td ng-if="dragIt==false" colspan=6 class="dropZone"></td> 
-					<td ng-if="dragIt==true" colspan=6 class="dropZoneHover"></td>					
-					</tr>
+					<tr ng-if="doneAndRecorded==false && inProgressNow==false  && editMode==true" ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable><td colspan=6 class="dropZone"> </td></tr>
 				</table>
 			</div>
 			</td>			
