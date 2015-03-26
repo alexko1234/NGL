@@ -230,6 +230,7 @@ readsets.archiveDate = Date de l''archive
 readsets.tabs.general = Général
 readsets.tabs.advanced = Avancé
 readsets.tabs.addinfo = Infos échantillon
+readsets.tabs.workflow = Infos workflow
 
 #readset properties
 readsets.code = Code
@@ -475,6 +476,10 @@ readset.sampleOnContainer.percentage = Pourcentage
 readset.sampleOnContainer.referenceCollab = Ref. Collaborateur
 readset.sampleOnContainer.percentage = % par piste
 
+readsets.workflow.state = Etat
+readsets.workflow.user = User
+readsets.workflow.date = Date
+
 ############
 #
 # analyses
@@ -602,6 +607,10 @@ stats.menu.readsets = Readsets
 stats.page.tab.readsets.select = Selectionner des Readsets
 stats.page.tab.readsets.config = Configuration Statistiques
 stats.page.tab.show = Visualiser les Graphiques
+
+stats.tabs.charts = Graphiques
+stats.tabs.exclude = Valeurs exclues
+stats.tabs.query = Requête
 
 stats.typeCode = Type
 stats.property = Propriété

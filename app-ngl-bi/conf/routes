@@ -252,6 +252,7 @@ GET		/migrationRSFF								controllers.migration.RemoveStateFromFile.migration()
 #GET		/deleteTreatments						controllers.migration.DeleteReadSetTreatements.migration()
 GET		/migrationWheat								controllers.migration.UpdateBABle.migration()
 GET		/migrationFungi								controllers.migration.MigrationTaxonomyFungi.migration()
+GET		/compare-lims-run							controllers.migration.CompareLimsVsRun.migration(run:Boolean ?=true, support:Boolean ?=true, update:Boolean ?=false)
 
 #ngs-rg api
 GET		/api/ngsrs/instruments						controllers.ngsrg.lims.LimsInformations.instruments()
