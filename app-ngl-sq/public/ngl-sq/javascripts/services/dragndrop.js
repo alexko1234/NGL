@@ -55,15 +55,16 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
 			}
 			
 			inputs = undefined;//free the inputs array
+			var dragging = scope.$parent.dragging;
 			
 			el.addEventListener(
 					'dragstart',
 					function(e) {
+						dragging(true);
 						e.dataTransfer.effectAllowed = 'move';
 						e.dataTransfer.setData('Text', this.id);// Angular internal system
-						e.dataTransfer.setData('Model', getModel());
-						
-						dragndropService.setDraggedData(scope.ngModel);
+						e.dataTransfer.setData('Model', getModel());						
+						dragndropService.setDraggedData(scope.ngModel);						
 						this.classList.add('drag');
 						return false;
 					},
@@ -73,7 +74,8 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
 			el.addEventListener(
 					'dragend',
 					function(e) {
-						this.classList.remove('drag');
+						dragging(false);
+						this.classList.remove('drag');						
 						return false;
 					},
 					false
@@ -89,15 +91,17 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
 				dropItem: '=dropItem'
 			},
 			link: function(scope, element, attrs) {
-				var el = element[0];
+				var el = element[0];	
+				var dragging = scope.$parent.dragging;
 
 				el.addEventListener(
 						'dragover',
 						function(e) {
+							dragging(true);
 							e.dataTransfer.dropEffect = 'move';
 							//Allows us to drop
 							if (e.preventDefault) e.preventDefault();
-							this.classList.add('over');
+							this.classList.add('over');							
 							return false;
 						},
 						false
@@ -106,7 +110,8 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
 				el.addEventListener(
 						'dragenter',
 						function(e) {
-							this.classList.add('over');
+							dragging(true);
+							this.classList.add('over');							
 							return false;
 						},
 						false
@@ -115,7 +120,8 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
 				el.addEventListener(
 						'dragleave',
 						function(e) {
-							this.classList.remove('over');
+							dragging(true);
+							this.classList.remove('over');							
 							return false;
 						},
 						false
@@ -124,11 +130,11 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
 				el.addEventListener(
 						'drop',
 						function(e) {
+							dragging(false);
 							// Stops some browsers from redirecting.
 							if (e.stopPropagation) e.stopPropagation();
-							this.classList.remove('over');
-
-							var draggedData = dragndropService.getDraggedData(); 
+							this.classList.remove('over');							
+							var draggedData = dragndropService.getDraggedData();							
 							//var test = e.dataTransfer.getData('Model');
 							//push the data to the model and call the drop callback function
 							scope.$apply(function(scope) {
@@ -150,6 +156,7 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
 									dropFn(e, draggedData, scope.dropItem, scope.model, alreadyInTheModel);
 								}
 							});
+							
 
 							return false;
 						},
