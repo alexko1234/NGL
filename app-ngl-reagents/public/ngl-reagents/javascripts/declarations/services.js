@@ -1,32 +1,58 @@
  "use strict";
  
  angular.module('ngl-reagent.kitDeclarationsService', []).
-	factory('kitCatalogsSearchService', ['$http', 'mainService', 'lists', 'datatable', function($http, mainService, lists, datatable){
+	factory('kitsSearchService', ['$http', 'mainService', 'lists', 'datatable', function($http, mainService, lists, datatable){
 		var getColumns = function(){
 			var columns = [];
 			columns.push({
-				"header":Messages("kits.name"),
-				"property":"name",
+				"header":Messages("reagents.table.catalogName"),
+				"property":"catalogCode",
+				"order":true,
+				"type":"text",
+				"filter":"codes:'kitCatalogs'"
+			});
+			columns.push({
+				"header":Messages("reagents.table.barCode"),
+				"property":"barCode",
 				"order":true,
 				"type":"text"
 			});
 			columns.push({
-				"header":Messages("kits.providerRefName"),
-				"property":"providerRefName",
+				"header":Messages("reagents.table.expirationDate"),
+				"property":"expirationDate",
+				"order":true,
+				"type":"date"
+			});
+			columns.push({
+				"header":Messages("reagents.table.startToUseDate"),
+				"property":"startToUseDate",
+				"order":true,
+				"type":"date"
+			});
+			columns.push({
+				"header":Messages("reagents.table.stopToUseDate"),
+				"property":"stopToUseDate",
+				"order":true,
+				"type":"date"
+			});
+			columns.push({
+				"header":Messages("reagents.table.orderCode"),
+				"property":"orderCode",
 				"order":true,
 				"type":"text"
 			});
 			columns.push({
-				"header":Messages("kits.experimentTypes"),
-				"property":"experimentTypeCodes",
+				"header":Messages("reagents.table.possibleUseNumber"),
+				"property":"possibleUseNumber",
 				"order":true,
 				"type":"text"
 			});
 			columns.push({
-				"header":Messages("kits.provider"),
-				"property":"providerCode",
+				"header":Messages("reagents.table.stateCode"),
+				"property":"state.code",
 				"order":true,
-				"type":"text"
+				"type":"text",
+				"filter":"codes:'state'"
 			});
 			
 			return columns;

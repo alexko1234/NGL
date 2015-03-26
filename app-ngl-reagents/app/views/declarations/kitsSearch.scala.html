@@ -1,0 +1,24 @@
+@() 
+@import views.html.helper._
+
+@form() = {
+	@columnSearchForm{
+		@formGroup{
+			<input type="text" class="form-control" ng-model="searchService.form.name" placeholder='@Messages("kits.name")'>
+		}
+	}
+	@columnSearchForm{	
+		@formGroup{
+			<input type="text" class="form-control" ng-model="searchService.form.providerRefName" placeholder='@Messages("kits.providerRefName")'>
+		}
+	}	
+	@columnSearchForm{	
+		@formGroup{
+			<div bt-select placeholder="@Messages("kits.select.experimentTypeCodes")" class="form-control" ng-model="searchService.form.experimentTypeCodes" ng-class="errors.experimentTypeCodes" bt-options="experimentType.code as experimentType.name for experimentType in searchService.lists.get('experimentTypes')" multiple="true" filter="true">
+			</div>
+		}
+	}	
+		
+}
+
+@searchForm(form)()("searchService.datatable")
