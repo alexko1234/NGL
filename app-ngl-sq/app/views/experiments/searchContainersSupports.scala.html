@@ -8,7 +8,7 @@
 			}
 			<hr>
 			@formGroup{		
-				<div bt-select placeholder="@Messages("processes.select.processCategory")" class="form-control" ng-model="form.processCategoryCode"  bt-options="processCategory.code as processCategory.name for processCategory in searchService.lists.getProcessCategories()" ng-change="changeProcessCategory()" auto-select>
+				<div bt-select placeholder="@Messages("processes.select.processCategory")" class="form-control" ng-model="searchService.form.processCategory"  bt-options="processCategory.code as processCategory.name for processCategory in searchService.lists.getProcessCategories()" ng-change="changeProcessCategory()" auto-select>
 				</div>				
 			}
 			@formGroup{

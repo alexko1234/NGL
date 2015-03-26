@@ -265,8 +265,8 @@
 				},
 				
 				changeProcessCategory : function(){
-					this.form.experimentType = undefined;
-					this.form.experimentCategory = undefined;
+					//this.form.experimentType = undefined;
+					//this.form.experimentCategory = undefined;
 					if(this.form.processCategory){
 						lists.refresh.processTypes({processCategoryCode:this.form.processCategory});
 					}

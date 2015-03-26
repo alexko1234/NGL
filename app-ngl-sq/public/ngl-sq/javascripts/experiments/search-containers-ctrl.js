@@ -105,8 +105,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	$scope.changeProcessCategory = function(){
 		$scope.additionalFilters=[];
 		$scope.searchService.form.processTypeCode = undefined;
-		if($scope.form.processCategoryCode !== undefined)
-			$scope.searchService.lists.refresh.processTypes({"processCategoryCode":$scope.form.processCategoryCode});
+		if($scope.searchService.form.processCategory !== undefined)
+			$scope.searchService.lists.refresh.processTypes({"processCategoryCode":$scope.searchService.form.processCategory});
 	};
 	
 	$scope.changeProcessType = function(){
@@ -160,7 +160,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			if($scope.experimentCategory!='transformation') _form.nextExperimentTypeCode=undefined;
 			if(_form.fromDate)_form.fromDate = moment($scope.searchService.form.fromDate, Messages("date.format").toUpperCase()).valueOf();
 			if(_form.toDate)_form.toDate = moment($scope.searchService.form.toDate, Messages("date.format").toUpperCase()).valueOf();
-					
+			_form.processCategory = undefined;
 			
 			$scope.datatable.search(_form);
 			
@@ -168,7 +168,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 				_form.nextExperimentTypeCode=angular.copy(formTemp);				
 			}
 			
-			mainService.setForm(_form);
+			mainService.setForm($scope.searchService.form);
 		}else{
 			if(!_form.nextExperimentTypeCode){
 				$scope.errors.experimentType = "has-error";
@@ -251,6 +251,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		$scope.basket = mainService.getBasket();
 	}
 	
+	$scope.searchService.lists.clear("processTypes");
 	$scope.searchService.lists.refresh.projects();
 	$scope.searchService.lists.refresh.types({objectTypeCode:"Process"}, true);
 	$scope.searchService.lists.refresh.experimentTypes({categoryCode:"transformation"},"transformation");

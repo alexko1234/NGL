@@ -371,7 +371,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				tabService.resetTabs();
 				tabService.addTabs({label:Messages('experiments.tabs.create'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("new").url,remove:false});
 				tabService.addTabs({label:$filter('codes')($scope.form.experimentType,'type'),href:"/experiments/new/"+$scope.form.experimentType,remove:false});
-				tabService.addTabs({label:$scope.experiment.value.code,href:"/experiments/edit/"+$scope.experiment.value.code,remove:true});
+				tabService.addTabs({label:$scope.experiment.value.code,href:jsRoutes.controllers.experiments.tpl.Experiments.edit($scope.experiment.value.code).url,remove:true});
 				tabService.activeTab(2);
 				//reinit datatable
 				$scope.datatableReagent.setEdit();
@@ -379,6 +379,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				$scope.form = {};
 				$scope.form.nextExperimentTypeCode = experiment.typeCode;
 				$scope.form.containerSupportCategory = experiment.instrument.inContainerSupportCategoryCode;
+				var test = mainService.getForm();
+				
 				mainService.setForm($scope.form);
 			}
 		}else{			
@@ -421,7 +423,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		if(tabService.getTabs().length < 1){
 			mainService.setHomePage('search');
 			tabService.addTabs({label:Messages('experiments.tabs.search'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("search").url,remove:false});
-			tabService.addTabs({label:experiment.code,href:"/experiments/edit/"+experiment.code,remove:true});
+			tabService.addTabs({label:experiment.code,href:jsRoutes.controllers.experiments.tpl.Experiments.edit(experiment.code).url,remove:true});
 			tabService.activeTab(1);
 		}
 	}
@@ -987,7 +989,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 
 		if($scope.experiment.value.instrument.typeCode != null ){
 			$scope.getInstrumentCategory($scope.experiment.value.instrument.typeCode);
-			$scope.lists.refresh.instruments({"typeCode":$scope.experiment.value.instrument.typeCode});
+			$scope.lists.refresh.instruments({"typeCode":$scope.experiment.value.instrument.typeCode, "active":true});
 			$scope.lists.refresh.containerSupportCategories({"instrumentUsedTypeCode":$scope.experiment.value.instrument.typeCode});
 		}
 	};
