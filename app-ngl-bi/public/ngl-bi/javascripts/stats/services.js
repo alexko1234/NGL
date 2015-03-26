@@ -282,8 +282,11 @@
 			}];
 	var readsetDatatable;
 	var charts = [];
+	var excludeValues = [];
 	var statsConfigs, queriesConfigs = [];
 	var loadData = function() {
+		charts = [];
+		excludeValues = [];
 		if(chartService.reportingConfigurationCode !== undefined && chartService.reportingConfigurationCode !== null){
 			$http.get(jsRoutes.controllers.stats.api.StatsConfigurations.get(chartService.reportingConfigurationCode).url).success(function(data, status,	headers, config) {
 				statsConfigs = data.statsForm; 
@@ -363,8 +366,7 @@
 			});
 	};	
 							
-	var computeCharts = function() {
-		charts = [];
+	var computeCharts = function() {		
 		for (var i = 0; i < statsConfigs.length; i++) {
 			var statsConfig = statsConfigs[i];
 			if ("z-score" === statsConfig.typeCode) {
@@ -427,6 +429,8 @@
 		
 		var property = getProperty(statsConfig.column);
 		var getter = $parse(property);
+		
+		data = excludeData(data, getter, 'z-score : '	+ Messages(statsConfig.column.header));
 		
 		var statData = data.map(function(value) {
 			return getter(value)
@@ -526,6 +530,26 @@
 		return chart;
 	};
 	
+	var excludeData = function(data, getter, title){
+		var excludeData = {
+				title:title,
+				data:[]
+		};
+		
+		data = data.filter(function(elt){
+			if(getter(elt) != undefined){
+				return elt;
+			}else{
+				excludeData.data.push(elt);
+			}
+				
+		});
+		if(excludeData.data.length > 0){
+			excludeValues.push(excludeData);
+		}
+		return data;
+	};
+	
 	var getSimpleValueChart = function(statsConfig) {
 		var data = readsetDatatable.getData();
 		
@@ -535,6 +559,9 @@
 		}
 		var property = getProperty(statsConfig.column);
 		var getter = $parse(property);
+		
+		data = excludeData(data, getter, Messages(statsConfig.column.header));
+		
 		var i = 0;
 		var statData = data.map(function(x) {
 			return {
@@ -611,6 +638,9 @@
 		charts : function() {
 			return charts;
 			},
+		excludeValues : function(){
+			return excludeValues;
+		},
 		lists : lists,
 		reportingConfigurationCode : undefined,
 		init : function() {

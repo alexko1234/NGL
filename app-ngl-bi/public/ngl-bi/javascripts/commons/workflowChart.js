@@ -2,18 +2,24 @@
 
 angular.module('biWorkflowChartServices', []).
 	directive('workflowChart', ['$compile', '$http', '$q', '$filter', 'lists', function ($compile, $http, $q, $filter, lists) {
-    		
-	    var modalTemplate = "<div id='{{modalId}}' class='modal'  tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true' style='left:100px; top:100px;overflow:hidden'>"+
-	    										"<div class='modal-content' style='width:{{modalContentWidth}}px; height:{{modalContentHeight}}px; border:0px'>"+
-	    											"<div class='modal-header'>"+
-	    												"<h3 id='myModalChartLabel'>{{modalHeaderText}}</h3>" +
-	    												"<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>"+
-	    											"</div>"+
-	    											"<div class='modal-body' style='padding:0px'>"+
-	    												"<div id='container0'></div>"+
-	    											"</div>"+
-	    										"</div>"+
-	    									"</div>";
+    	
+		
+		var modalTemplate = 	"<div id='{{modalId}}' class='modal fade'  tabindex='-1' role='dialog'"
+								+"	aria-labelledby='myModalLabel' aria-hidden='true'>"
+								+"	<div class='modal-dialog'>"
+							    +"		<div class='modal-content' style='width:{{modalContentWidth+2}}px'>"
+								+"			<div class='modal-header'>"
+								+"				<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>"
+								+"				<h3 class='modal-title'>{{modalHeaderText}}</h3>"													
+								+"			</div>"
+								+"			<div class='modal-body' style='padding:0px'>"
+								+"				<div id='container0'></div>"
+								+"			</div>"
+								+"			<div class='modal-footer'>"
+								+"			</div>"
+								+"		</div>"
+								+"	</div>"
+								+"</div>";
 	    
 	    var linkTemplate = "<p class='form-control-static'><a href='#{{modalId}}' id='linkTo{{modalId}}' role='button' data-toggle='modal'>{{modalCurrentCode | codes:'state'}}</a></p>";
 	    
@@ -60,7 +66,7 @@ angular.module('biWorkflowChartServices', []).
                     'stroke-width': 2,
                     padding: 5,
                     width: globalParam.boxWidth,
-                    //height:globalParam.boxHeight, bug?
+                    height:globalParam.boxHeight,
                     r: 5
                 })
                 .css({
