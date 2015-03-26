@@ -622,7 +622,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		.success(function(data, status, headers, config) {
 			var header = headers("Content-disposition");
 			var filepath = header.split("filename=")[1];
-			var filename = filepath.split("/")[filename.length-1];
+			var filename = filepath.split("/");
+			filename = filename[filename.length-1];
 			if(data!=null){
 				$scope.message.clazz="alert alert-success";
 				$scope.message.text=Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath;
