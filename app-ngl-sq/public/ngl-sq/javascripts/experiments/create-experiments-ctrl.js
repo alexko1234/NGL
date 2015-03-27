@@ -378,8 +378,10 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				mainService.setDatatable(undefined);
 				$scope.form = {};
 				$scope.form.nextExperimentTypeCode = experiment.typeCode;
-				$scope.form.containerSupportCategory = experiment.instrument.inContainerSupportCategoryCode;
-				var test = mainService.getForm();
+				$scope.form.experimentCategoryCode = $scope.experimentType.category.code;
+				if(experiment.instrument.inContainerSupportCategoryCode != undefined){
+					$scope.form.containerSupportCategory = experiment.instrument.inContainerSupportCategoryCode;
+				}
 				
 				mainService.setForm($scope.form);
 			}
@@ -414,7 +416,10 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			mainService.setDatatable(undefined);
 			$scope.form = {};
 			$scope.form.experimentType = experiment.typeCode;
-			$scope.form.containerSupportCategory = experiment.instrument.inContainerSupportCategoryCode;
+			$scope.form.experimentCategoryCode = $scope.experimentType.category.code;
+			if(experiment.instrument.inContainerSupportCategoryCode != undefined){
+				$scope.form.containerSupportCategory = experiment.instrument.inContainerSupportCategoryCode;
+			}
 			mainService.setForm($scope.form);		
 		}		
 	}
@@ -1182,6 +1187,12 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		promise = $http.get(jsRoutes.controllers.experiments.api.ExperimentTypes.get($scope.experimentType.code).url)
 		.success(function(data, status, headers, config) {
 			$scope.experimentType.category = data.category;
+			$scope.form = mainService.getForm();
+			if($scope.form === undefined){
+				$scope.form = {};
+			}
+			$scope.form.experimentCategoryCode = $scope.experimentType.category.code;
+			mainService.setForm($scope.form);
 			$scope.experimentType.atomicTransfertMethod = data.atomicTransfertMethod;
 			if($scope.experimentType.atomicTransfertMethod == "OneToVoid"){
 				$scope.experiment.outputVoid = true;

@@ -268,7 +268,12 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	} else {
 		$scope.searchService.form = {};
 		$scope.searchService.form =  mainService.getForm();
+		if($scope.experimentCategory === undefined){
+			$scope.experimentCategory = $scope.searchService.form.experimentCategoryCode;
+		}
+		$scope.searchService.form.experimentCategoryCode = undefined;
 		$scope.searchService.lists.refresh.containerSupportCategories({experimentTypeCode:$scope.searchService.form.nextExperimentTypeCode});
+		
 		//$scope.search();
 	}
 }]);
