@@ -111,26 +111,28 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 	public static void validateInstrumentUsed(InstrumentUsed instrumentUsed,Map<String,PropertyValue> properties, ContextValidation contextValidation) {
 		if(ValidationHelper.required(contextValidation, instrumentUsed, "instrumentUsed")){
 			InstrumentUsedType instrumentUsedType =BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, instrumentUsed.typeCode, "typeCode", InstrumentUsedType.find,true);
-			List<PropertyDefinition> listPropertyDefinitions=instrumentUsedType.getPropertiesDefinitionDefaultLevel();
+
 			String stateCode= getObjectFromContext(STATE_CODE, String.class, contextValidation);
 
 			if(instrumentUsedType!=null){
+					List<PropertyDefinition> listPropertyDefinitions=instrumentUsedType.getPropertiesDefinitionDefaultLevel();
 					contextValidation.addKeyToRootKeyName("instrumentProperties");
 					ValidationHelper.validateProperties(contextValidation, properties, listPropertyDefinitions, false);
 					contextValidation.removeKeyFromRootKeyName("instrumentProperties");
+					
+					for(PropertyDefinition propertyDefinition:listPropertyDefinitions){			
+						if(propertyDefinition.code.equals("containerSupportCode")){
+							if(!stateCode.equals("F")){
+								ContainerSupportValidationHelper.validateUniqueInstanceCode(contextValidation,properties.get("containerSupportCode").value.toString() , ContainerSupport.class, InstanceConstants.CONTAINER_SUPPORT_COLL_NAME);
+							}
+						}
+					}
 			}
 
 			contextValidation.addKeyToRootKeyName("instrumentUsed");
 			instrumentUsed.validate(contextValidation); 
 			contextValidation.removeKeyFromRootKeyName("instrumentUsed");
 			
-			for(PropertyDefinition propertyDefinition:listPropertyDefinitions){			
-				if(propertyDefinition.code.equals("containerSupportCode")){
-					if(!stateCode.equals("F")){
-						ContainerSupportValidationHelper.validateUniqueInstanceCode(contextValidation,properties.get("containerSupportCode").value.toString() , ContainerSupport.class, InstanceConstants.CONTAINER_SUPPORT_COLL_NAME);
-					}
-				}
-			}
 		}
 	}
 
