@@ -3,6 +3,7 @@ package models.laboratory.experiment.instance;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
@@ -58,7 +59,7 @@ public class ContainerUsed implements IValidation{
 	@Override
 	public void validate(ContextValidation contextValidation) {
 
-		if(contextValidation.getObject("stateCode").equals("IP")){
+		if(contextValidation.getObject("stateCode").equals("IP") && contextValidation.getObject("level").equals(Level.CODE.ContainerOut) ){
 			CommonValidationHelper.validateUniqueInstanceCode(contextValidation, code, Container.class, InstanceConstants.CONTAINER_COLL_NAME);
 		}
 		else if(contextValidation.getObject("stateCode").equals("F")) {
