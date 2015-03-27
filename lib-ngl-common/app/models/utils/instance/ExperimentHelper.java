@@ -215,13 +215,16 @@ public class ExperimentHelper extends InstanceHelpers {
 	private static List<ContainerUsed> deleteDuplicateConctainerUseds(List<ContainerUsed> containerUseds){
 		for(int i=0;i<containerUseds.size();i++){
 			String containerCode = containerUseds.get(i).code;
+			boolean find = false;
 			for(int j=0;j<containerUseds.size();j++){
 				if(containerUseds.get(j).code.equals(containerCode) && j!=i){
-					containerUseds.remove(i);
-					containerUseds.remove(j-1);
-					i=0;
-					break;
+					find = true;
+					containerUseds.remove(j);
+					j=0;
 				}
+			}
+			if(find){
+				containerUseds.remove(i);
 			}
 		}
 		
