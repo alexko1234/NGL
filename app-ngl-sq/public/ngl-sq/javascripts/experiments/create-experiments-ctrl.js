@@ -379,6 +379,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				$scope.form = {};
 				$scope.form.nextExperimentTypeCode = experiment.typeCode;
 				$scope.form.experimentCategoryCode = $scope.experimentType.category.code;
+				$scope.form.processCategory = mainService.getForm().processCategory;
+				$scope.form.processTypeCode= mainService.getForm().processTypeCode;
 				if(experiment.instrument.inContainerSupportCategoryCode != undefined){
 					$scope.form.containerSupportCategory = experiment.instrument.inContainerSupportCategoryCode;
 				}
@@ -417,6 +419,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			$scope.form = {};
 			$scope.form.experimentType = experiment.typeCode;
 			$scope.form.experimentCategoryCode = $scope.experimentType.category.code;
+			$scope.form.processCategory = mainService.getForm().processCategory;
+			$scope.form.processTypeCode= mainService.getForm().processTypeCode;
 			if(experiment.instrument.inContainerSupportCategoryCode != undefined){
 				$scope.form.containerSupportCategory = experiment.instrument.inContainerSupportCategoryCode;
 			}

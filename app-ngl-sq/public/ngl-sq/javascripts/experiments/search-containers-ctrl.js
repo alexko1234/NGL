@@ -251,7 +251,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		$scope.basket = mainService.getBasket();
 	}
 	
-	$scope.searchService.lists.clear("processTypes");
+	//$scope.searchService.lists.clear("processTypes");
 	$scope.searchService.lists.refresh.projects();
 	$scope.searchService.lists.refresh.types({objectTypeCode:"Process"}, true);
 	$scope.searchService.lists.refresh.experimentTypes({categoryCode:"transformation"},"transformation");
@@ -273,7 +273,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		}
 		$scope.searchService.form.experimentCategoryCode = undefined;
 		$scope.searchService.lists.refresh.containerSupportCategories({experimentTypeCode:$scope.searchService.form.nextExperimentTypeCode});
-		
+		$scope.changeProcessCategory();
 		//$scope.search();
 	}
 }]);
