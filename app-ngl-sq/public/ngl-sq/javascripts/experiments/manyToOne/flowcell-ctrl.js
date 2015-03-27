@@ -364,6 +364,10 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 	$scope.$on('initAtomicTransfert', function(e, containers, atomicTransfertMethod) {
 		$scope.init_atomicTransfert(containers, atomicTransfertMethod);
 	});
+	
+	$scope.dragInProgress=function(value){
+		$scope.dragIt=value;
+	};
 
 	$scope.drop = function(e, data, droppedItem, ngModel, alreadyInTheModel) {
 		//capture the number of the atomicTransfertMethod
@@ -525,6 +529,7 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 	$scope.view = 1;
 	$scope.isAllOpen = true;
 	$scope.allOutputContainersUsed = [];
+	$scope.dragIt=false;
 
 
 	if($scope.experiment.editMode){

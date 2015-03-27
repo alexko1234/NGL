@@ -16,6 +16,7 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
 }).directive('draggable',['dragndropService', function(dragndropService) {
 	return{ 
 		scope:{
+			drag:'&',
 			ngModel:'='
 		},
 		link: function(scope, element, attrs) {
@@ -65,6 +66,15 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
 						
 						dragndropService.setDraggedData(scope.ngModel);
 						this.classList.add('drag');
+						
+						
+						scope.$apply(function(scope) {
+							var dragFn = scope.drag();
+							if (!angular.isUndefined(dragFn) && angular.isFunction(dragFn)) {
+								dragFn(true);
+							}
+						});
+						
 						return false;
 					},
 					false
@@ -74,6 +84,12 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
 					'dragend',
 					function(e) {
 						this.classList.remove('drag');
+						scope.$apply(function(scope) {
+							var dragFn = scope.drag();
+							if (!angular.isUndefined(dragFn) && angular.isFunction(dragFn)) {
+								dragFn(false);
+							}
+						});
 						return false;
 					},
 					false

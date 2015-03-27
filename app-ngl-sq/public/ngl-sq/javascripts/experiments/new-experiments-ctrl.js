@@ -72,7 +72,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','mainSer
 	
 	$scope.newExperiment = function(){
 		if(this.basket.length() > 0 && $scope.getTabs().length === 2){
-			tabService.addTabs({label:$filter('codes')(mainService.getForm().nextExperimentTypeCode,'type')+" config",href:"/experiments/create/"+mainService.getForm().nextExperimentTypeCode,remove:false});
+			tabService.addTabs({label:"Configuration "+$filter('codes')(mainService.getForm().nextExperimentTypeCode,'type'),href:"/experiments/create/"+mainService.getForm().nextExperimentTypeCode,remove:false});
 		}
 	};
 	

@@ -39,7 +39,7 @@
 					</th>
 				</tr>
 				</thead>				
-				<tr ng-model="container" ng-repeat="container in inputContainers | orderBy:'code'" draggable>
+				<tr ng-model="container" ng-repeat="container in inputContainers | orderBy:'code'" draggable drag="dragInProgress">
 					<td>
 						<button ng-disabled="!experiment.experimentProperties.enabled" ng-click="deleteInput(container)" class="litte-icone"><i class="fa fa-trash-o"></i></button>
 					</td>
@@ -98,7 +98,8 @@
 				</th>
 			
 			
-			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="!experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0" colspan="7">	 
+			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="dragIt==false && !experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0" colspan="7">
+			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="dragIt==true && !experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0" class="dropZoneHover" colspan="7"> <!--  <i class="fa fa-hand-o-down" id="dropLeftFinger" ng-if="dragIt==true && !experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0"></i>	 --> 
 			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" ng-if="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0">
 				<div ng-hide="rows[@i]" class="LaneSummary">
 					<span  ng-repeat="flowcell in experiment.value.atomicTransfertMethods[@i].inputContainerUseds">
@@ -127,7 +128,7 @@
 						@Messages("containers.table.libProcessTypeCodes")
 					</th>
 				</tr>				
-					<tr ng-repeat="flowcell in experiment.value.atomicTransfertMethods[@i].inputContainerUseds"  ng-model="flowcell"  draggable>				
+					<tr ng-repeat="flowcell in experiment.value.atomicTransfertMethods[@i].inputContainerUseds"  ng-model="flowcell"  draggable drag="dragInProgress">				
 						<td class="LaneData">							
 							{{flowcell.code}}
 						</td>
@@ -160,7 +161,9 @@
 					    </td>  -->
 					</tr>		
 					
-					<tr ng-if="doneAndRecorded==false && inProgressNow==false  && editMode==true" ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable><td colspan=6 class="dropZone"> </td></tr>
+					<tr ng-if="dragIt==true && doneAndRecorded==false && inProgressNow==false  && editMode==true" ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable >
+						<td  colspan=6 class="dropZoneHover"> <!-- <i class="fa fa-hand-o-right" id="dropLittleRightFinger"></i>  --></td>					
+					</tr>
 				</table>
 			</div>
 			</td>			

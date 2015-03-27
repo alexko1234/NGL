@@ -138,22 +138,49 @@ margin: 8px 0 8px;
 
 .dropZone{
 	border: 0;
-	height: 18px;
-	background-color: #f1f1f1;
+	height: 18px;	
 }
 
+#dropZoneFCOutput{
+	border: 0;
+}
 
 .dropZoneHover{
 	border: 0;
-	height: 18px;	
-	-webkit-animation: 	animatingZoneHover 320ms infinite;
+	height: 18px;
+	background-color: #f1f1f1;	
+	
 }
 
-@-webkit-keyframes animatingZoneHover {
-	from {background: repeating-linear-gradient(45deg,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white);}
-	to {background: repeating-linear-gradient(45deg,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1,white,#f1f1f1);}
+#dropLittleRightFinger{
+	position: absolute;
+ /*	-webkit-animation: animatingZoneHoverLittleRightFinger 400ms infinite alternate-reverse; */
 }
 
+/*
+@-webkit-keyframes animatingZoneHoverLittleRightFinger {
+	0%   {left:52px;}
+    25%  {left:54px;}
+    50%  {left:58px;}
+    75%  {left:60px;}
+    100% {left:62px;}
+}
+*/
+#dropLeftFinger{
+	position: relative;
+	left: 50%;
+ /*	-webkit-animation: animatingZoneHoverLeftFinger 400ms infinite alternate-reverse; */
+}
+
+/*
+@-webkit-keyframes animatingZoneHoverLeftFinger {
+	0%   {top:4px;}
+    25%  {top:6px;}
+    50%  {top:8px;}
+    75%  {top:10px;}
+    100% {top:12px;}
+}
+*/
 
 .flowCellLane .table>tbody>tr>th:last-child:not([ng-repeat="property in experiment.containerOutProperties"]),
 .flowCellLane .table>tbody>tr>td:last-child:not([ng-repeat="property in experiment.containerOutProperties"]):not(.dropZone){
