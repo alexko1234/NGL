@@ -59,7 +59,7 @@ public class ContainerUsed implements IValidation{
 	@Override
 	public void validate(ContextValidation contextValidation) {
 
-		if(contextValidation.getObject("stateCode").equals("IP") && contextValidation.getObject("level").equals(Level.CODE.ContainerOut) ){
+		if(contextValidation.getObject("stateCode").equals("IP") && contextValidation.getObject("level") != null && contextValidation.getObject("level").equals(Level.CODE.ContainerOut) ){
 			CommonValidationHelper.validateUniqueInstanceCode(contextValidation, code, Container.class, InstanceConstants.CONTAINER_COLL_NAME);
 		}
 		else if(contextValidation.getObject("stateCode").equals("F")) {
