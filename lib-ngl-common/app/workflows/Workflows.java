@@ -460,6 +460,7 @@ public class Workflows {
 		TransientState previousTransientState = container.state.historical.get(container.state.historical.size() - 2);
 		State previousState = new State();
 		previousState.code = previousTransientState.code;
+		previousState.user = contextValidation.getUser();
 
 		setContainerState(container, experimentTypeCode, previousState, contextValidation, false, false, null);
 	}
