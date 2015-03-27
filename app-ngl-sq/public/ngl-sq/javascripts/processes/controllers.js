@@ -616,7 +616,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			$scope.datatable.setData($scope.processes);
 			var displayResult = $scope.datatable.displayResult;
 			for(var i=0;i<displayResult.length;i++){
-				$scope.datatable.displayResult[i].line.trClass = $scope.lineClasses[i];
+				$scope.datatable.displayResult[i].line.trClass = "success";
 			}
 			$scope.datatable.config.spinner.start = false;
 		}, function(res){
