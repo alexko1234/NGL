@@ -295,7 +295,7 @@ public class Processes extends CommonController{
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,process.containerInputCode);
 		if(!process.state.code.equals("N") && !container.state.code.equals("A")){
 			contextValidation.addErrors("container", ValidationConstants.ERROR_BADSTATE_MSG, container.code);
-		}else if(process.state.code.equals("N") && process.experimentCodes.isEmpty() && !container.state.code.equals("A")){
+		}else if(!process.state.code.equals("N") || !process.experimentCodes.isEmpty() || !container.state.code.equals("A")){
 			contextValidation.addErrors("process", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, process.experimentCodes);
 		}
 		
