@@ -7,12 +7,12 @@ import java.util.Map;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
-import models.laboratory.processes.instance.Process;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.ManytoOneContainer;
 import models.laboratory.instrument.description.InstrumentUsedType;
+import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
@@ -23,8 +23,6 @@ import org.mongojack.DBUpdate;
 
 import play.Logger;
 import play.Play;
-import rules.services.RulesException;
-import rules.services.RulesServices;
 import rules.services.RulesServices6;
 import validation.ContextValidation;
 import workflows.Workflows;
@@ -214,12 +212,31 @@ public class ExperimentHelper extends InstanceHelpers {
 
 	}
 
+	private static List<ContainerUsed> deleteDuplicateConctainerUseds(List<ContainerUsed> containerUseds){
+		for(int i=0;i<containerUseds.size();i++){
+			String containerCode = containerUseds.get(i).code;
+			for(int j=0;j<containerUseds.size();j++){
+				if(containerUseds.get(j).code.equals(containerCode) && j!=i){
+					containerUseds.remove(i);
+					containerUseds.remove(j-1);
+					i=0;
+					break;
+				}
+			}
+		}
+		
+		return containerUseds;
+	}
+	
 	public static void cleanContainers(Experiment experiment, ContextValidation contextValidation){
 		//load experiment from mongoDB
 		Experiment exp = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, experiment.code);
 		//extract containerIn From DB
 		List<ContainerUsed> containersInFromDB = exp.getAllInPutContainer();
 		List<ContainerUsed> containersIn = experiment.getAllInPutContainer();
+		
+		containersInFromDB = deleteDuplicateConctainerUseds(containersInFromDB);
+		containersIn = deleteDuplicateConctainerUseds(containersIn);
 		
 		List<ContainerUsed> addedContainers = getDiff(containersIn,containersInFromDB);
 		if(addedContainers.size() > 0){
