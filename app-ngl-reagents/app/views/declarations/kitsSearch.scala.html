@@ -4,17 +4,17 @@
 @form() = {
 	@columnSearchForm{
 		@formGroup{
-			<input type="text" class="form-control" ng-model="searchService.form.name" placeholder='@Messages("kits.name")'>
+			<input type="text" class="form-control" ng-model="searchService.form.barCode" placeholder='@Messages("kits.barCode")'>
 		}
 	}
 	@columnSearchForm{	
 		@formGroup{
-			<input type="text" class="form-control" ng-model="searchService.form.providerRefName" placeholder='@Messages("kits.providerRefName")'>
+			<input type="text" class="form-control" ng-model="searchService.form.orderCode" placeholder='@Messages("kits.orderCode")'>
 		}
 	}	
 	@columnSearchForm{	
 		@formGroup{
-			<div bt-select placeholder="@Messages("kits.select.experimentTypeCodes")" class="form-control" ng-model="searchService.form.experimentTypeCodes" ng-class="errors.experimentTypeCodes" bt-options="experimentType.code as experimentType.name for experimentType in searchService.lists.get('experimentTypes')" multiple="true" filter="true">
+			<div bt-select placeholder="@Messages("kits.select.catalogCodes")" class="form-control" ng-model="searchService.form.catalogCodes" ng-class="errors.catalogCodes" bt-options="catalogCode.code as catalogCode.name for catalogCode in searchService.lists.getKitCatalogs()" multiple="true" filter="true">
 			</div>
 		}
 	}	

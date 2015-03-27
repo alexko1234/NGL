@@ -63,7 +63,7 @@
 		
 		var initListService = function(){
 			if(!isInit){
-				lists.refresh.experimentTypes({withoutOneToVoid:true});
+				lists.refresh.kitCatalogs();
 				isInit=true;
 			}
 		};
