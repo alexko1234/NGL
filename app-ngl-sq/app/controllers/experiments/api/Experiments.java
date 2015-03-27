@@ -290,19 +290,18 @@ public class Experiments extends CommonController{
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
 
-		exp= ExperimentHelper.updateData(exp);
-		ContextValidation contextValidation = new ContextValidation(getCurrentUser());
+		exp = ExperimentHelper.updateData(exp);
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(),  experimentFilledForm.errors());
 		contextValidation.setUpdateMode();
 		contextValidation.putObject("stateCode", exp.state.code);
 		contextValidation.putObject("typeCode", exp.typeCode);
-
-		ExperimentHelper.cleanContainers(exp, contextValidation);
-
+		
 		ExperimentValidationHelper.validateAtomicTransfertMethodes(exp.atomicTransfertMethods, contextValidation);
-		ContextValidation ctxValidation = new ContextValidation(getCurrentUser(), experimentFilledForm.errors());
-		ExperimentValidationHelper.validateRules(exp, ctxValidation);
+		ExperimentValidationHelper.validateRules(exp, contextValidation);
+		
+		if(!contextValidation.hasErrors()){
+			ExperimentHelper.cleanContainers(exp, contextValidation);
 
-		if(!ctxValidation.hasErrors()){
 			ExperimentHelper.doCalculations(exp,calculationsRules);
 
 			Builder builder = new DBUpdate.Builder();
