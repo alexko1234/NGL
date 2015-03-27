@@ -296,13 +296,11 @@ public class Processes extends CommonController{
 		if(!process.state.code.equals("N") && !container.state.code.equals("A")){
 			contextValidation.addErrors("container", ValidationConstants.ERROR_BADSTATE_MSG, container.code);
 		}else if(process.state.code.equals("N") && process.experimentCodes.isEmpty() && !container.state.code.equals("A")){
-			/*State state = new State();
-			state.code = "IS";
-			state.user = getCurrentUser();
-			Workflows.setContainerState(container.code, process.currentExperimentTypeCode, state, contextValidation);*/
-			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code",container.code),DBUpdate.pull("inputProcessCodes", process.code));
+			contextValidation.addErrors("process", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, process.experimentCodes);
 		}
+		
 		if(!contextValidation.hasErrors()){
+			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code",container.code),DBUpdate.pull("inputProcessCodes", process.code));
 			MongoDBDAO.deleteByCode(InstanceConstants.PROCESS_COLL_NAME,Process.class,  process.code);
 			return ok();
 		}else {
