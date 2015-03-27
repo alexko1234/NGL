@@ -285,8 +285,7 @@
 	var excludeValues = [];
 	var statsConfigs, queriesConfigs = [];
 	var loadData = function() {
-		charts = [];
-		excludeValues = [];
+		
 		if(chartService.reportingConfigurationCode !== undefined && chartService.reportingConfigurationCode !== null){
 			$http.get(jsRoutes.controllers.stats.api.StatsConfigurations.get(chartService.reportingConfigurationCode).url).success(function(data, status,	headers, config) {
 				statsConfigs = data.statsForm; 
@@ -366,7 +365,9 @@
 			});
 	};	
 							
-	var computeCharts = function() {		
+	var computeCharts = function() {	
+		charts = [];
+		excludeValues = [];
 		for (var i = 0; i < statsConfigs.length; i++) {
 			var statsConfig = statsConfigs[i];
 			if ("z-score" === statsConfig.typeCode) {
