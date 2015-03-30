@@ -142,7 +142,7 @@
 			searchService.lists.refresh.types({objectTypeCode:"Run"});
 			searchService.lists.refresh.resolutions({objectTypeCode:"Run"});
 			searchService.lists.refresh.runs();
-			searchService.lists.refresh.instruments({categoryCode:"illumina-sequencer"});
+			searchService.lists.refresh.instruments({categoryCodes:["illumina-sequencer","extseq"]});
 			searchService.lists.refresh.users();
 			searchService.lists.refresh.filterConfigs({pageCodes:["runs-addfilters"]}, "runs-addfilters");
 			
