@@ -385,6 +385,7 @@ angular.module('datatableServices', []).
 		    							this.config.group.columns['all'] = true;
 		    						}else{
 		    							this.config.group.by = column;
+		    							this.config.order.groupReverse = false;
 		    							this.config.group.columns[columnId] = true;
 		    							if(this.config.group.columns["all"]) this.config.group.columns["all"] = false;
 		    						}
@@ -396,7 +397,7 @@ angular.module('datatableServices', []).
 			    							this.config.group.columns[this.config.columns[i].id] = false;
 			    						}		    							    						
 			    					}
-		    					}else{
+		    					}else{ //degroupe
 		    						this.config.group.columns[columnId] = !this.config.group.columns[columnId];
 		    						if(!this.config.group.columns[columnId] || this.config.group.columns["all"]){
 		    							this.config.group.by = undefined;
@@ -643,7 +644,8 @@ angular.module('datatableServices', []).
 		    					
 		    					if(this.config.group.active && this.config.group.by && this.config.group.by !== "all"){
 		    						var orderSense = (this.config.order.reverse)?'-':'+';
-		    						this.allResult = $filter('orderBy')(this.allResult,[this.config.group.by.property, orderSense+orderProperty]);		    						
+		    						var orderGroupSense = (this.config.order.groupReverse)?'-':'+';
+		    						this.allResult = $filter('orderBy')(this.allResult,[orderGroupSense+this.config.group.by.property, orderSense+orderProperty]);		    						
 		    					}else{
 		    						this.allResult = $filter('orderBy')(this.allResult,orderProperty,this.config.order.reverse);	
 		    					}		    					    					
@@ -658,25 +660,30 @@ angular.module('datatableServices', []).
 		    					var columnPropertyName = column.property;
 		    					var columnId  = column.id;
 		    					
-		    					if(!angular.isDefined(this.config.order.by) || this.config.order.by.property != columnPropertyName){
-		    						this.config.order.by = column;
-		    						this.config.order.reverse = false;
+		    					if(angular.isDefined(this.config.group.by) &&  this.config.group.by.property === columnPropertyName){
+		    						this.config.order.groupReverse = !this.config.order.groupReverse; 		    						
 		    					}else{
-		    						this.config.order.reverse = !this.config.order.reverse;
+		    						if(!angular.isDefined(this.config.order.by) || this.config.order.by.property !== columnPropertyName){
+			    						this.config.order.by = column;
+			    						this.config.order.reverse = false;
+			    					}else{
+			    						this.config.order.reverse = !this.config.order.reverse;		    						
+			    					}
+			    					
+			    					for(var i = 0; i < this.config.columns.length; i++){
+			    						if(this.config.columns[i].id === columnId){
+			    							this.config.order.columns[this.config.columns[i].id] = true;
+			    						}else{
+			    							this.config.order.columns[this.config.columns[i].id] = false;
+			    						}		    							    						
+			    					}
+			    					if(this.config.edit.active && this.config.edit.start){
+	    								//TODO add a warning popup
+	    								console.log("edit is active, you lost all modification !!");
+	    								this.config.edit = angular.copy(this.configMaster.edit); //reinit edit
+	    							}
 		    					}
 		    					
-		    					for(var i = 0; i < this.config.columns.length; i++){
-		    						if(this.config.columns[i].id === columnId){
-		    							this.config.order.columns[this.config.columns[i].id] = true;
-		    						}else{
-		    							this.config.order.columns[this.config.columns[i].id] = false;
-		    						}		    							    						
-		    					}
-		    					if(this.config.edit.active && this.config.edit.start){
-    								//TODO add a warning popup
-    								console.log("edit is active, you lost all modification !!");
-    								this.config.edit = angular.copy(this.configMaster.edit); //reinit edit
-    							}
 		    					if(!this.isRemoteMode(this.config.order.mode)){
 		    						this.sortAllResult(); //sort all the result
 				    				this.computeDisplayResult(); //redefined the result must be displayed				    				
@@ -693,9 +700,15 @@ angular.module('datatableServices', []).
 		    			},
 		    			getOrderColumnClass : function(columnId){
 		    				if(this.config.order.active){
-		    					if(!this.config.order.columns[columnId]) {return 'fa fa-sort';}
-	    						else if(this.config.order.columns[columnId] && !this.config.order.reverse) {return 'fa fa-sort-up';}		    						
-	    						else if(this.config.order.columns[columnId] && this.config.order.reverse) {return 'fa fa-sort-down';}		    							    						    					    					
+		    					if(angular.isDefined(this.config.group.by) && this.config.group.by.id === columnId){
+		    						if(!this.config.order.groupReverse) {return 'fa fa-sort-up';}
+		    						else {return 'fa fa-sort-down';}	
+		    					}else{
+		    						if(!this.config.order.columns[columnId]) {return 'fa fa-sort';}
+		    						else if(this.config.order.columns[columnId] && !this.config.order.reverse) {return 'fa fa-sort-up';}		    						
+		    						else if(this.config.order.columns[columnId] && this.config.order.reverse) {return 'fa fa-sort-down';}	
+		    					}
+		    						    							    						    					    					
 		    				} else{
 		    					//console.log("order is not active !!!");
 		    				}
@@ -1989,7 +2002,7 @@ angular.module('datatableServices', []).
   		    		+'</div>'
   		    		
   		    		+'<div class="btn-group" ng-if="dtTable.isShowButton(\'group\')">'
-  		    		+	'<button data-togle="dropdown" ng-disabled="dtTable.isEmpty()" class="btn btn-default dropdown-toggle" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.group\')}}">'
+  		    		+	'<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" ng-disabled="dtTable.isEmpty()" data-toggle="tooltip" title="{{dtTableFunctions.messagesDatatable(\'datatable.button.group\')}}">'
   		    		+		'<i class="fa fa-bars"></i> '
   		    		+		'<span ng-if="!dtTable.isCompactMode()"> {{dtTableFunctions.messagesDatatable(\'datatable.button.group\')}} </span>'
   		    		+		'<span class="caret" />'
