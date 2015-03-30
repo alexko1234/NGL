@@ -5,8 +5,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
-import play.Logger;
-import scala.io.Codec;
+
 
 public class TestFSWrite {
 
@@ -18,12 +17,12 @@ public class TestFSWrite {
 				
 				if(file.canWrite()){
 					FileOutputStream fos = new FileOutputStream(file);
-					writer = new OutputStreamWriter(fos, Codec.UTF8().name());
+					writer = new OutputStreamWriter(fos, "UTF-8");
 					writer.write("I'm happy :-)))");
 					writer.close();
 					fos.close();
 				}else{
-					Logger.error("Can wrint file : "+file.getAbsolutePath());
+					System.out.println("Can wrint file : "+file.getAbsolutePath());
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
