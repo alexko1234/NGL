@@ -16,8 +16,8 @@ import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;
 
+import play.Logger;
 import scala.io.Codec;
-
 import fr.cea.ig.MongoDBDAO;
 
 public abstract class AbstractSampleSheetsfactory {
@@ -101,13 +101,15 @@ public abstract class AbstractSampleSheetsfactory {
 	public static void writeFile(File file, String content){
 		Writer writer = null;
 		try {
+			
 			FileOutputStream fos = new FileOutputStream(file);
 			writer = new OutputStreamWriter(fos, Codec.UTF8().name());
 			writer.write(content);
 			writer.close();
 			fos.close();
+			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			Logger.error("Problem to create sample sheet",e);
 			e.printStackTrace();
 		}
 	}

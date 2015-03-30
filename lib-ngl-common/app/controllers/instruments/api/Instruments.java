@@ -45,11 +45,8 @@ public class Instruments extends CommonController{
 			if(instrumentsQueryParams.datatable){
 				return ok(Json.toJson(new DatatableResponse<Instrument>(instruments, instruments.size()))); 
 			}else if(instrumentsQueryParams.list){
-				List<ListObject> lop = new ArrayList<ListObject>();
-				for(Instrument et:instruments){
-					lop.add(new ListObject(et.code, et.name));
-				}
-				return ok(Json.toJson(lop));
+				//not used ListObject because need other information to create list (ex: group by active in bt-select)
+				return ok(Json.toJson(instruments));
 			}else{
 				return ok(Json.toJson(instruments));
 			}
