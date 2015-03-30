@@ -2,8 +2,12 @@ package controllers.main.tpl;
 
 import java.util.List;
 
+import org.mongojack.DBQuery;
+
 import models.laboratory.common.description.CodeLabel;
 import models.laboratory.common.description.dao.CodeLabelDAO;
+import models.laboratory.protocol.instance.Protocol;
+import models.utils.InstanceConstants;
 import jsmessages.JsMessages;
 import play.Routes;
 import play.api.modules.spring.Spring;
@@ -12,6 +16,7 @@ import views.html.home;
 import controllers.CommonController;
 import controllers.authorisation.Authenticate;
 import controllers.authorisation.Permission;
+import fr.cea.ig.MongoDBDAO;
 
 
 public class Main extends CommonController{
@@ -38,7 +43,12 @@ public class Main extends CommonController{
 		}
 		sb.append("\"valuation.TRUE\":\"Oui\",");
 		sb.append("\"valuation.FALSE\":\"Non\",");
-		sb.append("\"valuation.UNSET\":\"---\"");
+		sb.append("\"valuation.UNSET\":\"---\",");
+		List<Protocol> protocols = MongoDBDAO.find(InstanceConstants.PROTOCOL_COLL_NAME,Protocol.class).toList();
+		for(Protocol protocol:protocols){
+			sb.append("\"").append("protocol").append(".").append(protocol.code).append("\":\"").append(protocol.name).append("\",");
+		}
+		
 		sb.append("};return function(k){if(typeof k == 'object'){for(var i=0;i<k.length&&!ms[k[i]];i++);var m=ms[k[i]]||k[0]}else{m=ms[k]||k}for(i=1;i<arguments.length;i++){m=m.replace('{'+(i-1)+'}',arguments[i])}return m}})();");
 		return sb.toString();
 	}

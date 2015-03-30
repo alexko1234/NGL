@@ -139,7 +139,7 @@
 					@columnLabelValue(Messages("experiments.protocol")){
 					<div ng-switch on="doneAndRecorded">						
 						<p ng-switch-when="true" class="form-control-static" ng-model='experiment.value.protocolCode'>
-						 {{experiment.value.protocolCode}} </p>
+						 {{experiment.value.protocolCode | codes:'protocol'}} </p>
 						<div ng-switch-when="false">
 							<div bt-select class="form-control"
 								ng-model="experiment.value.protocolCode"
@@ -261,7 +261,7 @@
 					<div class="col-md-6 col-lg-6">
 					<div ng-switch on="doneAndRecorded">						
 						<p ng-switch-when="true" class="form-control-static" ng-model='experiment.value.instrument.outContainerSupportCategoryCode'>
-						 {{experiment.value.instrument.outContainerSupportCategoryCode}} </p>
+						 {{experiment.value.instrument.outContainerSupportCategoryCode | codes:'container_support_cat'}} </p>
 						<div ng-switch-when="false">					
 									<div bt-select  class="form-control"
 									auto-select

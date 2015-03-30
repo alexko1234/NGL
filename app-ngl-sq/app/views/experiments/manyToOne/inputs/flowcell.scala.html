@@ -97,9 +97,9 @@
 					<button ng-click="hideRow(@i)"  ng-show="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0" class="litte-eye"><i ng-show="rows[@i]" class="fa fa-eye-slash"></i><i  ng-show="!rows[@i]" class="fa fa-eye"></i></button>
 				</th>
 			
-			
-			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="dragIt==false && !experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0" colspan="7">
-			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="dragIt==true && !experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0" class="dropZoneHover" colspan="7"> <!--  <i class="fa fa-hand-o-down" id="dropLeftFinger" ng-if="dragIt==true && !experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0"></i>	 --> 
+			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" ng-if="!experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0 && editMode==false" colspan="7">
+			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="!experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0  && editMode==true && dragIt==false" colspan="7">
+			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="!experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0  && editMode==true && dragIt==true " class="dropZoneHover" colspan="7">
 			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" ng-if="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0">
 				<div ng-hide="rows[@i]" class="LaneSummary">
 					<span  ng-repeat="flowcell in experiment.value.atomicTransfertMethods[@i].inputContainerUseds">
@@ -161,8 +161,9 @@
 					    </td>  -->
 					</tr>		
 					
-					<tr ng-if="dragIt==true && doneAndRecorded==false && inProgressNow==false  && editMode==true" ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable >
-						<td  colspan=6 class="dropZoneHover"> <!-- <i class="fa fa-hand-o-right" id="dropLittleRightFinger"></i>  --></td>					
+					<tr ng-if="doneAndRecorded==false && inProgressNow==false  && editMode==true" ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable >
+						<td ng-if="editMode==false" colspan=6></td>
+						<td ng-if="editMode==true" colspan=6 class="dropZoneHover"></td>				
 					</tr>
 				</table>
 			</div>
