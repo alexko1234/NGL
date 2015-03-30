@@ -73,7 +73,7 @@ angular.module('commonsServices', []).
     		var results = {
     				valuations : [{code:"TRUE", name:Messages("valuation.value.TRUE")},
     				                 {code:"FALSE", name:Messages("valuation.value.FALSE")},
-    				                 {code:"UNSET", name:Messages("valuation.value.UNSET")}],
+    				                 {code:"UNSET", name:Messages("valuation.value.UNSET")}],    				
     				booleans : [{code:"true", name:Messages("boolean.value.TRUE")}, {code:"false", name:Messages("boolean.value.FALSE")}]
     			};    		
     		
@@ -788,7 +788,7 @@ angular.module('commonsServices', []).
       		      };
 	      		      
       		      
-      		      scope.$watch(optionsConfig.sourceKey, function(newValue, oldValue){
+      		      scope.$watchCollection(optionsConfig.sourceKey, function(newValue, oldValue){
       		    	  if(newValue && newValue.length > 0){
       		    		items = angular.copy(newValue);      		    		
       		    		render();      		    		
