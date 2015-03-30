@@ -195,7 +195,7 @@ public class CompareLimsVsRun extends CommonController {
 						 									 
 					 }else if(rss.size() == librairies.size()){
 						 
-						List<String> badReadSets = rss.stream().filter((ReadSet r)-> r.code.split("\\.").length == 0).map((ReadSet r)-> r.code).collect(Collectors.toList());
+						 List<String> badReadSets = rss.stream().filter((ReadSet r)-> r.code.split("\\.").length == 0).map((ReadSet r)-> r.code).collect(Collectors.toList());
 						 
 						 if(badReadSets.size() == 0){
 							 Map<String, String> iReadSets = rss.stream().collect(Collectors.toMap((ReadSet r)-> r.code.split("\\.")[1], (ReadSet r)-> r.projectCode));									 
