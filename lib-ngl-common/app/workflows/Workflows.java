@@ -389,9 +389,7 @@ public class Workflows {
 			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
 					DBQuery.is("code", container.code),
 					DBUpdate.set("state", container.state).set("traceInformation", container.traceInformation));
-			// rulesActor.tell(new
-			// RulesMessage(Play.application().configuration().getString("rules.key"),ruleWorkflowSQ,
-			// container),null);
+			 rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleWorkflowSQ, container),null);
 		}
 		container.state = nextState;
 		nextContainerSupportState(container, contextValidation);
