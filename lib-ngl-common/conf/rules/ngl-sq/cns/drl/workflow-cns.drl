@@ -4,7 +4,7 @@ declare ContainerUpdateLims
 	code : String
 	stateCode : String
 	experimentType : String
-	limsCode : Integer
+	limsCode : String
 	limsStateCode : Integer 
 end
 
@@ -30,9 +30,14 @@ rule "Create Object ContainerUpdateLims"
 		$experimentType :String() from $fromExperimentTypeCodes
 		$limsCode : PropertyValue() from $properties.get("limsCode")
     then
-    	ContainerUpdateLims containerUpdateLims=new ContainerUpdateLims($container.code,$container.state.code,$experimentType,((Double) $limsCode.value).intValue(),null);
+    	ContainerUpdateLims containerUpdateLims=new ContainerUpdateLims();
+    	containerUpdateLims.setCode($container.code);
+    	containerUpdateLims.setStateCode($container.state.code);
+    	containerUpdateLims.setExperimentType($experimentType);
+    	containerUpdateLims.setLimsCode($limsCode.value.toString());
+    	containerUpdateLims.setLimsStateCode(null);
     	insert(containerUpdateLims);
-		Logger.debug("Container to update in Lims "+$container.code+ " experiment Type "+$experimentType);    
+		//Logger.debug("Container to update in Lims "+$container.code+ " experiment Type "+$experimentType);    
 	end
     	    
 rule "Solution stock IS"
@@ -43,7 +48,7 @@ rule "Solution stock IS"
     when
     	$containerUpdateLims:ContainerUpdateLims(experimentType=="solution-stock",stateCode=="IS",limsStateCode==null)
     then
-    	Logger.debug("Container "+$containerUpdateLims.getCode()+"( code lims :"+$containerUpdateLims.getLimsCode()+")  update lims state");
+    	//Logger.debug("Container "+$containerUpdateLims.getCode()+"( code lims :"+$containerUpdateLims.getLimsCode()+")  update lims state");
     	//Etat Lims = En reserve
     	$containerUpdateLims.setLimsStateCode(5);
     	update($containerUpdateLims);
@@ -58,7 +63,7 @@ rule "Solution stock UA"
     when
     	$containerUpdateLims:ContainerUpdateLims(experimentType=="solution-stock",stateCode=="UA",limsStateCode==null)
     then
-    	Logger.debug("Container "+$containerUpdateLims.getCode()+"( code lims :"+$containerUpdateLims.getLimsCode()+")  update lims state");
+    	//Logger.debug("Container "+$containerUpdateLims.getCode()+"( code lims :"+$containerUpdateLims.getLimsCode()+")  update lims state");
     	//Etat Lims = Epuise
     	$containerUpdateLims.setLimsStateCode(3);
     	update($containerUpdateLims);
@@ -72,8 +77,8 @@ rule "Update State Container in Lims"
     when
 	    $containerUpdateLims:ContainerUpdateLims(limsStateCode!=null)
     then
-    	Logger.debug("Update State Container in Lims"); 
-	    Spring.getBeanOfType(ILimsServices.class).updateContainerState($containerUpdateLims.getLimsCode().toString(),$containerUpdateLims.getLimsStateCode().toString());
+    	Logger.debug("Update State Container in Lims "+$containerUpdateLims.getLimsCode()); 
+	    Spring.getBeanOfType(ILimsServices.class).updateContainerState($containerUpdateLims.getLimsCode(),$containerUpdateLims.getLimsStateCode().toString());
     	retract($containerUpdateLims);
     end
 

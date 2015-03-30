@@ -30,6 +30,7 @@ import play.Logger;
 import play.Play;
 import play.libs.Akka;
 import rules.services.RulesActor;
+import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.container.instance.ContainerValidationHelper;
@@ -40,7 +41,7 @@ import fr.cea.ig.MongoDBDAO;
 public class Workflows {
 
 	private static final String ruleWorkflowSQ = "workflow";
-	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor.class));
+	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 
 	/**
 	 * Set a state of an experiment
