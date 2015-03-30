@@ -444,7 +444,8 @@ public class ResolutionService {
 		// MERG
 		l.add(InstanceFactory.newResolution("% lec mergées","MERG-PercLecMerg", resolutionCategories.get("MERG"),(short) 1));
 		l.add(InstanceFactory.newResolution("médiane lect mergées","MERG-MedLecMerg", resolutionCategories.get("MERG"),(short) 2));
-		
+		l.add(InstanceFactory.newResolution("distribution lect mergées","MERG-Distribution", resolutionCategories.get("MERG"),(short) 3));
+	
 		// Info
 		l.add(InstanceFactory.newResolution("test Dev","Info-testDev", resolutionCategories.get("Info"),(short) 1));
 		
