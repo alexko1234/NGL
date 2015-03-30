@@ -329,9 +329,7 @@
 		var promises = [];
 			for(var i = 0; i < queriesConfigs.length ; i++){
 				var form = angular.copy(queriesConfigs[i].form);
-				//form.list = true;
 				form.includes = properties;
-				//form.limit=3000;
 				promises.push($http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:form}));			
 			}
 			
