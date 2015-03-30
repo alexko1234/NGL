@@ -17,7 +17,8 @@ home.runs.iprg = Runs en cours de read generation
 home.runs.iwpv = Runs en attente d''évaluation
 home.runs.keep = Runs à conserver
 
-
+active.true = Actif
+active.false = Inactif
 
 
 #page title
