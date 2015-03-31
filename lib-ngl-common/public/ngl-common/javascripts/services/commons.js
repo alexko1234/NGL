@@ -346,7 +346,7 @@ angular.module('commonsServices', []).
     				  messages: '=messages'
     				},
     			template: '<div ng-class="messages.clazz" ng-show="messages.isOpen()">'+
-    				'<button class="close" ng-click="messages.close()" type="button">Ã—</button>'+
+    				'<button class="close" ng-click="messages.close()" type="button">&times;</button>'+
     				'<strong>{{messages.text}}</strong><button class="btn btn-link" ng-click="messages.showDetails=!messages.showDetails" ng-show="messages.isDetails">{{messages.transformKey("msg.details")}}</button>'+
     				'<div ng-show="messages.showDetails">'+
     				'    <ul>'+
