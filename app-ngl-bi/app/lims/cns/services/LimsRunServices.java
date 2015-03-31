@@ -101,7 +101,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 			exp.instrument.categoryCode = nglExp.instrument.typeCode;
 			
 			if(nglExp.experimentProperties.containsKey("runStartDate")){
-				exp.date = new Date((Long)nglExp.experimentProperties.get("runStartDate").value);
+				exp.date = (Date)nglExp.experimentProperties.get("runStartDate").value;
 				
 			}else{
 				exp.date = nglExp.traceInformation.creationDate;
