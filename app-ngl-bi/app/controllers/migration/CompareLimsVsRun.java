@@ -61,7 +61,7 @@ public class CompareLimsVsRun extends CommonController {
 			 
 			 Flowcell containerSupportLims = (Flowcell)limsRunServices.getContainerSupport(run.containerSupportCode);
 			 
-			 if(checkSupport){
+			 if(containerSupportLims != null && checkSupport){
 				 ContextValidation cvSupport = new ContextValidation("ngl");
 				 cvSupport.addKeyToRootKeyName(runId);
 				 ContainerSupport updateContainerSupport = compareLimsVsSupport(containerSupportLims, cvSupport);
@@ -84,7 +84,7 @@ public class CompareLimsVsRun extends CommonController {
 			 }
 			 
 			 //Logger.info("treat run : "+run.code+" / "+run.containerSupportCode);
-			 if(run.lanes != null &&  checkRun && !run.state.code.equals("IP-S") && !run.state.code.equals("FE-S") && !run.state.code.equals("IP-RG")){
+			 if(containerSupportLims != null && run.lanes != null &&  checkRun && !run.state.code.equals("IP-S") && !run.state.code.equals("FE-S") && !run.state.code.equals("IP-RG")){
 				 cv.addKeyToRootKeyName(runId);
 				compareLimsVsRun(containerSupportLims, run, cv);
 				compareLimsVsReadSet(containerSupportLims, run, cv);					
