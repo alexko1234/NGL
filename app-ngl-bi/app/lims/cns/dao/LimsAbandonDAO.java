@@ -328,8 +328,9 @@ public class LimsAbandonDAO {
 		Double lbscoreQ30 = (Double) getNGSRGProperty(rs.treatments.get("ngsrg"),"Q30");
 		Double lbscorequal =(Double) getNGSRGProperty(rs.treatments.get("ngsrg"),"qualityScore");
 		
-		//Logger.debug("pc_Lanebanquehautdebit @laneco="+bs.laneco+", @banco="+bs.banco+", @tagkeyseq="+bs.tagkeyseq+", "
-			//	+ "@lseqnbseqval="+lseqnbseqval+", @lseqnbbase="+lseqnbbase+", @lbscoreQ30="+lbscoreQ30+", @lbscorequal="+lbscorequal+",@lseqnom="+rs.code);
+		Logger.debug("pc_Lanebanquehautdebit @laneco="+bs.laneco+", @banco="+bs.banco+", @tagkeyseq="+bs.tagkeyseq+", "
+				+ "@lseqnbseqval="+lseqnbseqval+", @lseqnbbase="+lseqnbbase+", @lbscoreQ30="+lbscoreQ30+", @lbscorequal="+lbscorequal+",@lseqnom="+rs.code);
+		
 		this.jdbcTemplate.update("pc_Lanebanquehautdebit @laneco=?, @banco=?, @tagkeyseq=?, "
 				+ "@lseqnbseqval=?, @lseqnbbase=?, @lbscoreQ30=?, @lbscorequal=?,@lseqnom=?",
 				bs.laneco, bs.banco, bs.tagkeyseq, lseqnbseqval, lseqnbbase, lbscoreQ30, lbscorequal,rs.code);
