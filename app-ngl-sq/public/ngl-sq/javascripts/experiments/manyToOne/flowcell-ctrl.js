@@ -367,8 +367,8 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 	
 	$scope.dragInProgress=function(value){
 		$scope.dragIt=value;
-	};
-
+	};		
+	
 	$scope.drop = function(e, data, droppedItem, ngModel, alreadyInTheModel) {
 		//capture the number of the atomicTransfertMethod
 		if(!alreadyInTheModel){

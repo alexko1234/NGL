@@ -40,6 +40,16 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
 
 				return "";
 			};
+			
+			var doOnDrag = function(bool){
+				scope.$apply(function(scope) {
+					var dragFn = scope.drag();
+					if (angular.isDefined(dragFn) && angular.isFunction(dragFn)) {
+						dragFn(bool);
+					}
+				});				
+			};
+			
 			element.addClass('draggable'); 
 			el.draggable = true;
 			
@@ -60,21 +70,12 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
 			el.addEventListener(
 					'dragstart',
 					function(e) {
+						doOnDrag(true);
 						e.dataTransfer.effectAllowed = 'move';
 						e.dataTransfer.setData('Text', this.id);// Angular internal system
-						e.dataTransfer.setData('Model', getModel());
-						
+						e.dataTransfer.setData('Model', getModel());						
 						dragndropService.setDraggedData(scope.ngModel);
-						this.classList.add('drag');
-						
-						
-						scope.$apply(function(scope) {
-							var dragFn = scope.drag();
-							if (!angular.isUndefined(dragFn) && angular.isFunction(dragFn)) {
-								dragFn(true);
-							}
-						});
-						
+						this.classList.add('drag');							
 						return false;
 					},
 					false
@@ -83,13 +84,9 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
 			el.addEventListener(
 					'dragend',
 					function(e) {
+						console.log("drag end !!!");
+						doOnDrag(false);
 						this.classList.remove('drag');
-						scope.$apply(function(scope) {
-							var dragFn = scope.drag();
-							if (!angular.isUndefined(dragFn) && angular.isFunction(dragFn)) {
-								dragFn(false);
-							}
-						});
 						return false;
 					},
 					false

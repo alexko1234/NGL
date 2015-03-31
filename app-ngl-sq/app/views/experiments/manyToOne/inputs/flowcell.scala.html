@@ -7,13 +7,13 @@
 <div class="row tab-content tabPaneTable" ng-controller="ManyToOneFlowcellCtrl" ng-init="init_flowcell(@laneCount)">
 	<div class="col-md-12 col-lg-12 tab-pane active" style="margin-right:auto;margin-left:auto" id="flowcell">
 	<!-- TODO: Supprimer droppable quand l'expérience  est terminée -->
-		<div ng-model="inputContainers" ng-if="editMode==false || doneAndRecorded==true || inProgressNow==true" class="col-md-4 col-lg-4 inputContainerGroup">
+		<div ng-model="inputContainers" ng-if="!editMode || doneAndRecorded || inProgressNow" class="col-md-4 col-lg-4 inputContainerGroup">
 		<p><i class="fa fa-download"></i> Inputs</p>
 		<table class="table" >
 		
 		</table>
 		</div>
-		<div ng-model="inputContainers" ng-if=" editMode==true && inProgressNow==false" droppable class="col-md-4 col-lg-4 inputContainerGroup">		
+		<div ng-model="inputContainers" ng-if=" editMode && !inProgressNow" droppable class="col-md-4 col-lg-4 inputContainerGroup">		
 			<p  ng-show="inputContainers.length==0"><i class="fa fa-download"></i> Inputs</p>
 			<table ng-show="inputContainers.length>0" class="table" >
 			<thead>
@@ -97,9 +97,9 @@
 					<button ng-click="hideRow(@i)"  ng-show="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0" class="litte-eye"><i ng-show="rows[@i]" class="fa fa-eye-slash"></i><i  ng-show="!rows[@i]" class="fa fa-eye"></i></button>
 				</th>
 			
-			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" ng-if="!experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0 && editMode==false" colspan="7">
-			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="!experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0  && editMode==true && dragIt==false" colspan="7">
-			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="!experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0  && editMode==true && dragIt==true " class="dropZoneHover" colspan="7">
+			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" ng-if="!experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0 && !editMode" colspan="7">
+			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="!experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0  && editMode && !dragIt" colspan="7">
+			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="!experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0  && editMode && dragIt " class="dropZoneHover" colspan="7">
 			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" ng-if="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0">
 				<div ng-hide="rows[@i]" class="LaneSummary">
 					<span  ng-repeat="flowcell in experiment.value.atomicTransfertMethods[@i].inputContainerUseds">
@@ -159,11 +159,12 @@
 						<!--<td>
 								<button ng-disabled="!experiment.experimentProperties.enabled" ng-click="deleteInputOnAtomic(@i,container)"><i class="fa fa-trash-o"></i></button>
 					    </td>  -->
-					</tr>		
+					</tr>
 					
-					<tr ng-if="doneAndRecorded==false && inProgressNow==false  && editMode==true" ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable >
-						<td ng-if="editMode==false" colspan=6></td>
-						<td ng-if="editMode==true" colspan=6 class="dropZoneHover"></td>				
+					<tr ng-if="!editMode && (doneAndRecorded || inProgressNow)" ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" >
+					<tr ng-if="editMode &&  !doneAndRecorded && !inProgressNow" ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable >
+						<td ng-if="!dragIt"  colspan=6 class="dropZone" id="dropZoneFCOutput"></td>
+						<td ng-if="dragIt" colspan=6 class="dropZoneHover"></td>				
 					</tr>
 				</table>
 			</div>

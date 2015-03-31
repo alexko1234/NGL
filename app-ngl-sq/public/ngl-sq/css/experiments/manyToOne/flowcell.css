@@ -137,16 +137,16 @@ margin: 8px 0 8px;
 }
 
 .dropZone{
-	border: 0;
+	border: none;
 	height: 18px;	
 }
 
 #dropZoneFCOutput{
-	border: 0;
+	border: none;
 }
 
 .dropZoneHover{
-	border: 0;
+	border: none;
 	height: 18px;
 	background-color: #f1f1f1;	
 	
