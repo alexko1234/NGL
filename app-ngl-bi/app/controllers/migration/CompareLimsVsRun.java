@@ -38,7 +38,44 @@ public class CompareLimsVsRun extends CommonController {
 	
 	
 	protected static ALogger logger=Logger.of("Migration");
-	public static Result migration(Boolean checkRun, Boolean checkSupport, Boolean update){
+	public static Result compareSupport(Boolean update){
+		ILimsRunServices  limsRunServices = Spring.getBeanOfType(ILimsRunServices.class);
+		MongoDBResult<ContainerSupport> supports = MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.in("categoryCode", "flowcell-8","flowcell-4","flowcell-2","flowcell-1"));
+		
+		ContextValidation cv = new ContextValidation("ngl");
+		cv.addKeyToRootKeyName("supports");
+		while(supports.cursor.hasNext()){
+			ContainerSupport cs = supports.cursor.next();
+			Flowcell containerSupportLims = (Flowcell)limsRunServices.getContainerSupport(cs.code);
+			if(null != containerSupportLims){
+				ContextValidation cvSupport = new ContextValidation("ngl");
+				cvSupport.addKeyToRootKeyName(cs.code);
+				ContainerSupport updateContainerSupport = compareLimsVsSupport(containerSupportLims, cs, cvSupport);
+				if(cvSupport.hasErrors() && update){
+					 Logger.info("update support : "+updateContainerSupport.code);
+					 MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, updateContainerSupport);
+				}
+				cv.addErrors(cvSupport.errors);
+				
+				ContextValidation cvContainer = new ContextValidation("ngl");
+				cvContainer.addKeyToRootKeyName(cs.code);
+				List<Container> updateContainers = compareLimsVsContainer(containerSupportLims, cvContainer);
+				if(cvContainer.hasErrors() && update){
+					 Logger.info("update containers : "+updateContainers.stream().map(c -> c.code).collect(Collectors.toSet()));
+					 for(Container uCont : updateContainers){
+						 MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, uCont);
+					 }
+				}
+				cv.addErrors(cvContainer.errors);
+			}
+		}
+		cv.displayErrors(logger);
+		return ok();
+	}
+	
+	
+	
+	public static Result compareRun(Boolean checkRun, Boolean checkSupport, Boolean update){
 		ILimsRunServices  limsRunServices = Spring.getBeanOfType(ILimsRunServices.class);  		
 		if(checkSupport){
 			 Logger.info("check support / containers");
@@ -64,7 +101,7 @@ public class CompareLimsVsRun extends CommonController {
 			 if(containerSupportLims != null && checkSupport){
 				 ContextValidation cvSupport = new ContextValidation("ngl");
 				 cvSupport.addKeyToRootKeyName(runId);
-				 ContainerSupport updateContainerSupport = compareLimsVsSupport(containerSupportLims, cvSupport);
+				 ContainerSupport updateContainerSupport = compareLimsVsSupport(containerSupportLims, null, cvSupport);
 				 if(cvSupport.hasErrors() && update){
 					 Logger.info("update support : "+updateContainerSupport.code);
 					 MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, updateContainerSupport);
@@ -231,11 +268,13 @@ public class CompareLimsVsRun extends CommonController {
 		cv.removeKeyFromRootKeyName("readsets");
 	}
 	
-	private static ContainerSupport compareLimsVsSupport(Flowcell containerSupportSolexa, ContextValidation cv) {		
+	private static ContainerSupport compareLimsVsSupport(Flowcell containerSupportSolexa, ContainerSupport support, ContextValidation cv) {		
 		 cv.addKeyToRootKeyName("support");
 		 String supportCode = containerSupportSolexa.containerSupportCode;
 		 cv.addKeyToRootKeyName(supportCode);
-		 ContainerSupport support = MongoDBDAO.findOne(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", supportCode));
+		 if(null == support)
+			 support = MongoDBDAO.findOne(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", supportCode));
+		 
 		 if(null != support){
 			 //compare flowcell category
 			 String flowcellCat = "flowcell-"+containerSupportSolexa.lanes.size();
