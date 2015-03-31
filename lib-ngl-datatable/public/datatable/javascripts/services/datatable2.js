@@ -643,9 +643,15 @@ angular.module('datatableServices', []).
 		    					orderProperty += (this.config.order.by.filter)?'|'+this.config.order.by.filter:'';
 		    					
 		    					if(this.config.group.active && this.config.group.by && this.config.group.by !== "all"){
-		    						var orderSense = (this.config.order.reverse)?'-':'+';
 		    						var orderGroupSense = (this.config.order.groupReverse)?'-':'+';
-		    						this.allResult = $filter('orderBy')(this.allResult,[orderGroupSense+this.config.group.by.property, orderSense+orderProperty]);		    						
+		    						var orderBy = [];
+		    						orderBy.push(orderGroupSense+this.config.group.by.property);
+		    						if(orderProperty){
+		    							var orderSense = (this.config.order.reverse)?'-':'+';
+			    						orderBy.push(orderSense+orderProperty)
+		    						}
+		    						
+		    						this.allResult = $filter('orderBy')(this.allResult, orderBy);		    						
 		    					}else{
 		    						this.allResult = $filter('orderBy')(this.allResult,orderProperty,this.config.order.reverse);	
 		    					}		    					    					
