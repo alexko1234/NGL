@@ -212,24 +212,6 @@ public class ExperimentHelper extends InstanceHelpers {
 
 	}
 
-	private static List<ContainerUsed> deleteDuplicateConctainerUseds(List<ContainerUsed> containerUseds){
-		for(int i=0;i<containerUseds.size();i++){
-			String containerCode = containerUseds.get(i).code;
-			boolean find = false;
-			for(int j=0;j<containerUseds.size();j++){
-				if(containerUseds.get(j).code.equals(containerCode) && j!=i){
-					find = true;
-					containerUseds.remove(j);
-					j=0;
-				}
-			}
-			if(find){
-				containerUseds.remove(i);
-			}
-		}
-		
-		return containerUseds;
-	}
 	
 	public static void cleanContainers(Experiment experiment, ContextValidation contextValidation){
 		//load experiment from mongoDB
@@ -237,9 +219,6 @@ public class ExperimentHelper extends InstanceHelpers {
 		//extract containerIn From DB
 		List<ContainerUsed> containersInFromDB = exp.getAllInPutContainer();
 		List<ContainerUsed> containersIn = experiment.getAllInPutContainer();
-		
-		containersInFromDB = deleteDuplicateConctainerUseds(containersInFromDB);
-		containersIn = deleteDuplicateConctainerUseds(containersIn);
 		
 		List<ContainerUsed> addedContainers = getDiff(containersIn,containersInFromDB);
 		if(addedContainers.size() > 0){
@@ -257,7 +236,10 @@ public class ExperimentHelper extends InstanceHelpers {
 		}
 	}
 	
-	private static List<ContainerUsed> getDiff(List<ContainerUsed> containersFrom, List<ContainerUsed> containersTo){
+	public static List<ContainerUsed> getDiff(List<ContainerUsed> containersFrom, List<ContainerUsed> containersTo){
+		
+		containersFrom=flattenContainerUsed(containersFrom);
+		containersTo=flattenContainerUsed(containersTo);
 		List<ContainerUsed> containerDiff = new ArrayList<ContainerUsed>();
 		boolean found = false;
 		for(ContainerUsed cf:containersFrom){
@@ -275,5 +257,23 @@ public class ExperimentHelper extends InstanceHelpers {
 		}
 		
 		return containerDiff;
+	}
+	
+	
+	public static List<ContainerUsed> flattenContainerUsed(List<ContainerUsed> containerUseds){
+		List<ContainerUsed> results=new ArrayList<ContainerUsed>(containerUseds);
+		for(int i=0;i<containerUseds.size();i++){
+			String code=containerUseds.get(i).code;
+			boolean delete=false;
+			for(ContainerUsed containerUsed:containerUseds){
+				if(code.equals(containerUsed.code)){
+					if(!delete){
+						delete=true;
+					}
+					else {results.remove(containerUsed);}
+				}
+			}
+		}
+		return results;
 	}
 }
