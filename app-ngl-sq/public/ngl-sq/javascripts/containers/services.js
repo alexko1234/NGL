@@ -15,6 +15,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 		columns.push({
 			"header":Messages("containers.table.supportCategoryCode"),
 			"property":"support.categoryCode",
+			"filter":"codes:'container_support_cat'",
 			"order":true,
 			"position":2,
 			"type":"text"
@@ -43,6 +44,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 		columns.push({
 			"header":Messages("containers.table.fromExperimentTypeCodes"),
 			"property":"fromExperimentTypeCodes",
+			"filter":"codes:'type'",
 			"order":true,
 			"position":6,
 			"type":"text"

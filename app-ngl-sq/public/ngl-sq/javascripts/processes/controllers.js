@@ -16,6 +16,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			         {
 			        	 "header":Messages("containers.table.support.categoryCode"),
 			        	 "property":"support.categoryCode",
+			        	 "filter":"codes:'container_support_cat'",
 			        	 "order":true,
 			        	 "hide":true,
 			        	 "type":"text"
@@ -44,6 +45,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			         {
 			        	 "header":Messages("containers.table.fromExperimentTypeCodes"),
 			        	 "property":"fromExperimentTypeCodes",
+			        	 "filter":"codes:'type'",
 			        	 "order":true,
 			        	 "hide":true,
 			        	 "type":"text"

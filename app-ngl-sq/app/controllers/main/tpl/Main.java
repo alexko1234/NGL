@@ -2,20 +2,21 @@ package controllers.main.tpl;
 
 import java.util.List;
 
-import org.mongojack.DBQuery;
-
+import jsmessages.JsMessages;
 import models.laboratory.common.description.CodeLabel;
 import models.laboratory.common.description.dao.CodeLabelDAO;
 import models.laboratory.protocol.instance.Protocol;
+import models.laboratory.resolutions.instance.Resolution;
+import models.laboratory.resolutions.instance.ResolutionConfiguration;
 import models.utils.InstanceConstants;
-import jsmessages.JsMessages;
+
+import org.mongojack.DBQuery;
+
 import play.Routes;
 import play.api.modules.spring.Spring;
 import play.mvc.Result;
 import views.html.home;
 import controllers.CommonController;
-import controllers.authorisation.Authenticate;
-import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 
 
@@ -44,6 +45,26 @@ public class Main extends CommonController{
 		sb.append("\"valuation.TRUE\":\"Oui\",");
 		sb.append("\"valuation.FALSE\":\"Non\",");
 		sb.append("\"valuation.UNSET\":\"---\",");
+		
+		/*
+		List<ResolutionConfiguration> resolutionExperimentConfigurations = MongoDBDAO.find(InstanceConstants.RESOLUTION_COLL_NAME,ResolutionConfiguration.class, DBQuery.is("objectTypeCode","Experiment")).toList();
+		for(ResolutionConfiguration resoConfig:resolutionExperimentConfigurations){
+			for(Resolution resolution: resoConfig.resolutions){
+				sb.append("\"").append(resoConfig.code).append(".").append("resolution").append(".").append(resolution.code).append("\":\"").append(resolution.name).append("\",");
+			}			
+			
+		}
+		
+		List<ResolutionConfiguration> resolutionProcessConfigurations = MongoDBDAO.find(InstanceConstants.RESOLUTION_COLL_NAME,ResolutionConfiguration.class, DBQuery.is("objectTypeCode","Process")).toList();
+		for(ResolutionConfiguration resoConfig:resolutionProcessConfigurations){
+			for(Resolution resolution: resoConfig.resolutions){
+				sb.append("\"").append(resoConfig.code).append(".").append("resolution").append(".").append(resolution.code).append("\":\"").append(resolution.name).append("\",");
+			}			
+			
+		}
+		*/
+		
+		
 		List<Protocol> protocols = MongoDBDAO.find(InstanceConstants.PROTOCOL_COLL_NAME,Protocol.class).toList();
 		for(Protocol protocol:protocols){
 			sb.append("\"").append("protocol").append(".").append(protocol.code).append("\":\"").append(protocol.name).append("\",");

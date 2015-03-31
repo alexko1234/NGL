@@ -15,6 +15,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 		columns.push({
 			"header":Messages("containerSupports.table.categoryCode"),
 			"property":"categoryCode",
+			"filter":"codes:'container_support_cat'",
 			"position":2,
 			"order":true,
 			"type":"text"

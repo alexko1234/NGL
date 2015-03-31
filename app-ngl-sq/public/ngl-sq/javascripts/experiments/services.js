@@ -32,6 +32,7 @@
 						{
 							"header":Messages("experiments.table.typeCode"),
 							"property":"typeCode",
+							"filter":"codes:'type'",
 							"order":true,
 							"hide":true,
 							"position":4,
@@ -49,6 +50,7 @@
 						{
 							"header":Messages("experiments.table.resolutionCodes"),
 							"property":"state.resolutionCodes",
+							"fliter":"",
 							"order":true,
 							"hide":true,
 							"position":6,
