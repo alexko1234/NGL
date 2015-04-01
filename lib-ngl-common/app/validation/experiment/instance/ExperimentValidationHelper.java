@@ -122,7 +122,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 					
 					for(PropertyDefinition propertyDefinition:listPropertyDefinitions){			
 						if(propertyDefinition.code.equals("containerSupportCode")){
-							if(!stateCode.equals("F")){
+							if(!stateCode.equals("F") && properties.get("containerSupportCode")!=null){
 								ContainerSupportValidationHelper.validateUniqueInstanceCode(contextValidation,properties.get("containerSupportCode").value.toString() , ContainerSupport.class, InstanceConstants.CONTAINER_SUPPORT_COLL_NAME);
 							}
 						}

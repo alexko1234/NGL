@@ -152,8 +152,8 @@ public class ExperimentTestHelper {
 		Content content1_1=new Content("ADI_RD","MeTa-DNA","DNA");
 		container1_1.contents=new ArrayList<Content>();
 		content1_1.properties=new HashMap<String, PropertyValue>();
-		content1_1.properties.put("tag", new PropertySingleValue("IND1"));
-		content1_1.properties.put("tagCategory", new PropertySingleValue("TAGCATEGORIE"));
+/*		content1_1.properties.put("tag", new PropertySingleValue("IND1"));
+		content1_1.properties.put("tagCategory", new PropertySingleValue("TAGCATEGORIE"));*/
 		content1_1.properties.put("tag", new PropertySingleValue("IND2"));
 		content1_1.properties.put("tagCategory", new PropertySingleValue("TAGCATEGORIE"));
 		container1_1.contents.add(content1_1);
