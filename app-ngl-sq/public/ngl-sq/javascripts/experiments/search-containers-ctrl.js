@@ -14,12 +14,14 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		{
 			"header":Messages("containers.table.categoryCode"),
 			"property":"categoryCode",
+			"filter":"codes:'container_support_cat'",
 			"order":true,
 			"type":"text"
 		},
 		{
 			"header":Messages("containers.table.fromExperimentTypeCodes"),
 			"property":"fromExperimentTypeCodes",
+			"filter":"codes:'type'",
 			"order":true,
 			"type":"text"
 		},
