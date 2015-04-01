@@ -48,7 +48,6 @@ public class Resolutions extends DocumentController<ResolutionConfiguration> {
 		
 		if(form.distinct){
 			Map<String, String> map = new HashMap<String, String>();			
-			int[] indexes = null;
 			for(ResolutionConfiguration rc: resolutionConfigurations){
 				for(int i=0; i<rc.resolutions.size();i++){
 					if(!map.containsKey(rc.resolutions.get(i).code)){
