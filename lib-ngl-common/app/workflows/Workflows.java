@@ -446,7 +446,7 @@ public class Workflows {
 			// in the list of experiment
 			MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,
 					DBQuery.is("currentExperimentTypeCode", experimentTypeCode)
-							.is("containerInputCode", container.code), DBUpdate.set("currentExperimentTypeCode", "")
+							.is("containerInputCode", container.code), DBUpdate.unset("currentExperimentTypeCode")
 							.pull("experimentCodes", experimentCode));
 		}
 	}
