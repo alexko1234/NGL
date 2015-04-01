@@ -14,4 +14,7 @@ public class ResolutionConfigurationsSearchForm extends ListForm{
 	public String objectTypeCode;
 	public List<String> objectTypeCodes;
 	
+	public Boolean distinct=false;
+	
+	
 }

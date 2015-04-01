@@ -50,7 +50,8 @@
 						{
 							"header":Messages("experiments.table.resolutionCodes"),
 							"property":"state.resolutionCodes",
-							"fliter":"",
+							//"filter":"codes:'Experiment.resolution'",
+							"render":"<div bt-select ng-model='value.data.state.resolutionCodes' bt-options='valid.code as valid.name for valid in searchService.lists.getResolutions()'  ng-edit=\"false\"></div>",
 							"order":true,
 							"hide":true,
 							"position":6,
@@ -121,6 +122,7 @@
 				lists.refresh.experimentTypes({categoryCode:"transformation"}, "transformations");
 				lists.refresh.reportConfigs({pageCodes:["experiments-addcolumns"]}, "experiments-addcolumns");
 				//lists.refresh.instruments();
+				lists.refresh.resolutions({objectTypeCode:"Experiment",distinct:true});
 				isInit=true;
 			}
 		};

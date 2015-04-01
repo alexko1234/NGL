@@ -1,6 +1,9 @@
 package controllers.main.tpl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jsmessages.JsMessages;
 import models.laboratory.common.description.CodeLabel;
@@ -16,6 +19,7 @@ import play.Routes;
 import play.api.modules.spring.Spring;
 import play.mvc.Result;
 import views.html.home;
+import views.html.experiments.newExperiments;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 
@@ -46,23 +50,32 @@ public class Main extends CommonController{
 		sb.append("\"valuation.FALSE\":\"Non\",");
 		sb.append("\"valuation.UNSET\":\"---\",");
 		
-		/*
+		
 		List<ResolutionConfiguration> resolutionExperimentConfigurations = MongoDBDAO.find(InstanceConstants.RESOLUTION_COLL_NAME,ResolutionConfiguration.class, DBQuery.is("objectTypeCode","Experiment")).toList();
 		for(ResolutionConfiguration resoConfig:resolutionExperimentConfigurations){
-			for(Resolution resolution: resoConfig.resolutions){
-				sb.append("\"").append(resoConfig.code).append(".").append("resolution").append(".").append(resolution.code).append("\":\"").append(resolution.name).append("\",");
-			}			
+			for(String typeCode:resoConfig.typeCodes){
+				Map<String,String> codes = new HashMap<>() ;
+				for(Resolution resolution: resoConfig.resolutions){				
+					if(!codes.containsKey(resolution.code)){
+						codes.put(resolution.code, resolution.code);
+						sb.append("\"").append(resoConfig.objectTypeCode).append(".").append("resolution").append(".").append(resolution.code).append("\":\"").append(resolution.name).append("\",");
+					}
+					
+					
+				}	
+			}
+					
 			
 		}
 		
 		List<ResolutionConfiguration> resolutionProcessConfigurations = MongoDBDAO.find(InstanceConstants.RESOLUTION_COLL_NAME,ResolutionConfiguration.class, DBQuery.is("objectTypeCode","Process")).toList();
 		for(ResolutionConfiguration resoConfig:resolutionProcessConfigurations){
 			for(Resolution resolution: resoConfig.resolutions){
-				sb.append("\"").append(resoConfig.code).append(".").append("resolution").append(".").append(resolution.code).append("\":\"").append(resolution.name).append("\",");
+				sb.append("\"").append(resoConfig.objectTypeCode).append(".").append("resolution").append(".").append(resolution.code).append("\":\"").append(resolution.name).append("\",");
 			}			
 			
 		}
-		*/
+		
 		
 		
 		List<Protocol> protocols = MongoDBDAO.find(InstanceConstants.PROTOCOL_COLL_NAME,Protocol.class).toList();
