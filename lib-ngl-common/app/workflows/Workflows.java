@@ -381,12 +381,12 @@ public class Workflows {
 			ContextValidation contextValidation, boolean stopProcess, boolean retry,List<String> processResolutionCodes) {
 		String lastStateCode = container.state.code;
 		container.traceInformation = StateHelper.updateTraceInformation(container.traceInformation, nextState);
+		container.state = StateHelper.updateHistoricalNextState(container.state, nextState);
 		// Validate state for Container
 		contextValidation.addKeyToRootKeyName("container");
 		ContainerValidationHelper.validateStateCode(container, contextValidation);
 		contextValidation.removeKeyFromRootKeyName("container");
 		if (!contextValidation.hasErrors() && !nextState.code.equals(lastStateCode)) {
-			container.state = StateHelper.updateHistoricalNextState(container.state, nextState);
 			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
 					DBQuery.is("code", container.code),
 					DBUpdate.set("state", container.state).set("traceInformation", container.traceInformation));

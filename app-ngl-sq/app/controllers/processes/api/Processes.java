@@ -94,7 +94,7 @@ public class Processes extends CommonController{
 
 		if (!filledForm.hasErrors()) {
 			contextValidation.setCreationMode();
-
+			contextValidation.putObject("workflow", true);
 			if(StringUtils.isNotBlank(queryFieldsForm.fromSupportContainerCode) && StringUtils.isBlank(queryFieldsForm.fromContainerInputCode)){			
 				processes = saveFromSupport(queryFieldsForm.fromSupportContainerCode, filledForm, contextValidation);
 			}else if(StringUtils.isNotBlank(queryFieldsForm.fromContainerInputCode) && StringUtils.isBlank(queryFieldsForm.fromSupportContainerCode)) {							
@@ -293,9 +293,12 @@ public class Processes extends CommonController{
 		}
 		
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,process.containerInputCode);
+		if(container==null){
+			return notFound("Container process "+code+"with code "+process.containerInputCode+" does not exist");
+		}
 		if(!process.state.code.equals("N") && !container.state.code.equals("A")){
 			contextValidation.addErrors("container", ValidationConstants.ERROR_BADSTATE_MSG, container.code);
-		}else if(!process.state.code.equals("N") || !process.experimentCodes.isEmpty() || !container.state.code.equals("A")){
+		}else if(!process.state.code.equals("N") || CollectionUtils.isNotEmpty(process.experimentCodes) || !container.state.code.equals("A")){
 			contextValidation.addErrors("process", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, process.experimentCodes);
 		}
 		

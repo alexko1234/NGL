@@ -36,7 +36,7 @@ import utils.AbstractTests;
 import utils.InitDataHelper;
 import fr.cea.ig.MongoDBDAO;
 
-public class ExperimentControlerTests extends AbstractTests {
+public class ExperimentControllerTests extends AbstractTests {
 	
 	@BeforeClass
 	public static void initData() throws InstantiationException, IllegalAccessException, ClassNotFoundException {

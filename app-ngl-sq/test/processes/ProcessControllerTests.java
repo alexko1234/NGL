@@ -12,42 +12,41 @@ import java.util.regex.Pattern;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
-import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+
+import play.Logger;
+import play.libs.Json;
+import play.mvc.Result;
+import utils.AbstractTests;
+import utils.DatatableResponseForTest;
+import utils.InitDataHelper;
+import utils.MapperHelper;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongodb.Mongo;
 
-import play.Logger;
-import play.libs.Json;
-import play.mvc.Result;
 import fr.cea.ig.MongoDBDAO;
-import utils.AbstractTests;
-import utils.DatatableResponseForTest;
-import utils.InitDataHelper;
-import utils.MapperHelper;
 
-public class ProcessControlerTests extends AbstractTests {
+public class ProcessControllerTests extends AbstractTests {
 	
-	@BeforeClass
-	public static void initData() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	@Before
+	public  void initData() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		InitDataHelper.initForProcessesTest();
 	}
 	
-	@AfterClass
-	public static void resetData(){
+	@After
+	public  void resetData(){
 		InitDataHelper.endTest();
 	}
 	
