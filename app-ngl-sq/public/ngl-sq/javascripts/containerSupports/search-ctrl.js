@@ -93,7 +93,7 @@ angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$rou
 	//init
 	if(angular.isUndefined($scope.getHomePage())){
 		mainService.setHomePage('state');
-		tabService.addTabs({label:Messages('containerSupports.tabs.search'),href:jsRoutes.controllers.containers.tpl.ContainerSupports.home("new").url,remove:false});
+		tabService.addTabs({label:Messages('containerSupports.tabs.state'),href:jsRoutes.controllers.containers.tpl.ContainerSupports.home("new").url,remove:false});
 		tabService.activeTab(0);
 	}
 	

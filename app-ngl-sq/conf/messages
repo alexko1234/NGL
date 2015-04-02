@@ -8,6 +8,7 @@ containerSupports.menu.creation = Création
 containerSupports.menu.search = Rechercher
 containerSupports.menu.state = Changement d''Etat
 containerSupports.tabs.search = Recherche Supports
+containerSupports.tabs.state = Changement d''Etat Supports
 
 #containerSupports table
 containerSupports.table.code= Supports
@@ -39,6 +40,7 @@ containers.menu.creation = Création
 containers.menu.state = Changement d''Etat
 containers.menu.search = Rechercher
 containers.tabs.search = Recherche Container
+containers.tabs.state = Changement d''Etat Container
 
 #Containers table
 containers.table.code = Code Container
@@ -108,7 +110,9 @@ processes.menu.state = Changement d''Etat
 processes.menu.search = Rechercher
 processes.menu.remove = Suppression
 processes.tabs.search = Recherche Processus
+processes.tabs.state = Changement d''Etat Processus
 processes.tabs.create = Création Processus
+processes.tabs.remove = Suppression Processus
 processes.create = Créé un processus
 processes.save = Sauvegarder
 

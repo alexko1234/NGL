@@ -97,7 +97,7 @@ angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$rou
 	//init
 	if(angular.isUndefined($scope.getHomePage())){
 		mainService.setHomePage('state');
-		tabService.addTabs({label:Messages('processes.tabs.search'),href:jsRoutes.controllers.processes.tpl.Processes.home("new").url,remove:false});
+		tabService.addTabs({label:Messages('processes.tabs.state'),href:jsRoutes.controllers.processes.tpl.Processes.home("new").url,remove:false});
 		tabService.activeTab(0);
 	}
 	
@@ -159,7 +159,7 @@ angular.module('home').controller('SearchRemoveCtrl', ['$scope','$location','$ro
 	//init
 	if(angular.isUndefined($scope.getHomePage())){
 		mainService.setHomePage('state');
-		tabService.addTabs({label:Messages('processes.tabs.search'),href:jsRoutes.controllers.processes.tpl.Processes.home("new").url,remove:false});
+		tabService.addTabs({label:Messages('processes.tabs.remove'),href:jsRoutes.controllers.processes.tpl.Processes.home("new").url,remove:false});
 		tabService.activeTab(0);
 	}
 	
