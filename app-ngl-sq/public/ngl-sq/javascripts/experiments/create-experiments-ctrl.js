@@ -955,7 +955,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 	$scope.getInstrumentsTrigger = function(){
 		if($scope.experiment.value.instrument != undefined && $scope.experiment.value.instrument.typeCode != null){
 			$scope.experiment.value.instrument.outContainerSupportCategoryCode = undefined;
-			if($scope.outputVoid == false){
+			if(angular.isUndefined($scope.outputVoid) || $scope.outputVoid == false){
 				$scope.experiment.inputTemplate = undefined; //reset the template
 			}
 			$scope.getInstruments(false);

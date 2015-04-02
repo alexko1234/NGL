@@ -393,7 +393,11 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 			var match = ngModel.match(array_regexp);
 			if(match){
 				$scope.rows[match[1]]= true;
-				$scope.scanOpenedAll();
+				
+				if(angular.isDefined($scope.experiment.value.atomicTransfertMethods)){
+					$scope.scanOpenedAll();
+				}
+				
 			}
 		}
 		
