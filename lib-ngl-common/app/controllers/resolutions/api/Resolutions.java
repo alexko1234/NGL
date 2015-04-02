@@ -45,23 +45,18 @@ public class Resolutions extends DocumentController<ResolutionConfiguration> {
 		Query q = getQuery(form);
 		MongoDBResult<ResolutionConfiguration> results = mongoDBFinder(form, q);			
 		List<ResolutionConfiguration> resolutionConfigurations = results.toList();
-		
 		if(form.distinct){
-			Map<String, String> map = new HashMap<String, String>();			
+			Map<String, Resolution> map = new HashMap<String, Resolution>();			
 			for(ResolutionConfiguration rc: resolutionConfigurations){
-				for(int i=0; i<rc.resolutions.size();i++){
-					if(!map.containsKey(rc.resolutions.get(i).code)){
-						map.put(rc.resolutions.get(i).code, rc.resolutions.get(i).code);					
-					}else{						
-						rc.resolutions.remove(i);
-						i--;
+				for(Resolution reso:rc.resolutions){
+					if(!map.containsKey(reso.code)){
+						map.put(reso.code, reso);					
 					}
 				}	
-			}	
+			}
+			return ok(Json.toJson(map.values()));
 		}
-
 		return ok(Json.toJson(toListResolutions(resolutionConfigurations)));
-
 	}
 
 
