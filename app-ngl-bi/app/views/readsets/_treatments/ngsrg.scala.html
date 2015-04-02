@@ -15,7 +15,7 @@
 	 		</thead>
 	 		<tbody>
 	 			<tr>
-	 				<td ng-bind="readset.sampleOnContainer.properties.percentPerLane.value|number:2"></td>
+	 				<td ng-bind="readset.sampleOnContainer.percentage.value|number:2"></td>
 					<td ng-class="highLight('treatments.' + treatments.getTreatment().code + '.default.validSeqPercent.value')" 
 						ng-bind="readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.validSeqPercent.value|number:2"></td>
 					<td ng-bind="readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.nbCluster.value|number"></td>
