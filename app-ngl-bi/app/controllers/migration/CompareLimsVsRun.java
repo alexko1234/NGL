@@ -415,7 +415,7 @@ public class CompareLimsVsRun extends CommonController {
 								 cv.addErrors("contents","without tag : "+badContents);
 							 }							 
 						 }else{
-							 cv.addErrors("sampleCode","not same readsets number and lims library number : "+sampleCode);
+							 cv.addErrors("sampleCode","not same content number and lims library number : "+sampleCode);
 							 
 						 }							 
 					 }else{
@@ -431,7 +431,7 @@ public class CompareLimsVsRun extends CommonController {
 					 currentContainer.contents = modifyContents;
 					 modifyContainers.add(currentContainer);
 				 }else{
-					 Logger.error("not same content number for container : "+currentContainer.code);
+					 Logger.error("not same content number for container : "+currentContainer.code+" - "+currentContainer.contents.size()+" / "+modifyContents.size());
 				 }
 				 
 				 
