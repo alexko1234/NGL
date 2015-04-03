@@ -127,7 +127,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 					type :"String"
 				},
 				{  	
-					property:"sampleOnContainer.properties.percentPerLane.value",
+					property:"sampleOnContainer.percentage",
 					header: "readsets.sampleOnContainer.percentPerLane",
 					type :"Number",
 					format:2,
