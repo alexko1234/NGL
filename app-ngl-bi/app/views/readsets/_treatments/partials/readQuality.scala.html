@@ -108,7 +108,7 @@
 			</div>
     		<div class="panel-body">
 				{{@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".maxSizeReads.value") | number}} 
-					({{@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".maxSizeReadsPercent.value") | number:2}} @Messages("unit.percent"))	
+			({{@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".maxSizeReadsPercent.value") | number:2}} @Messages("unit.percent"))	
 			 </div>
 		</div>											
 	</div>
