@@ -27,8 +27,6 @@ public class CodeLabelDAO {
 	public List<CodeLabel> findAll(){
 		String sql = "select 'state' as table_name, code, name as label from state "+
 						"union all "+
-						"select 'resolution' as table_name, code, name as label from resolution "+
-						"union all "+
 						"select 'type' as table_name, code, name as label from common_info_type "+
 						"union all "+
 						"select 'instrument' as table_name, code, name as label from instrument "+

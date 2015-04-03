@@ -979,7 +979,7 @@ angular.module('commonsServices', []).
     	    };
     	}]).filter('codes', function(){
     		return function(input, key){
-    			if(input !== undefined && null != input && input != "") return Messages(Codes(key+"."+input));
+    			if(input !== undefined && null != input && input != "" && input !=[] && input !={}) return Messages(Codes(key+"."+input));
     			return undefined;
     		}
     	}).filter('convert', ['convertValueServices', function(convertValueServices){
