@@ -97,8 +97,7 @@
 		if (angular.isDefined($scope.readset) && angular.isDefined($scope.readset.treatments) && angular.isDefined($scope.readset.treatments[treatmentCode])) {
 			var currentTreatment = $scope.readset.treatments[treatmentCode];
 			return (angular.isDefined($parse(read + "." + property)(currentTreatment)) 
-					&& ($parse(read + "." + property)(currentTreatment) !== null)  
-					&& ($parse(read + "." + property + ".value.length")(currentTreatment) > 0));
+					&& ($parse(read + "." + property)(currentTreatment) !== null));
 		}
 		return false;
 	}
