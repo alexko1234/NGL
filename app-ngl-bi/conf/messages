@@ -478,7 +478,7 @@ readset.sampleOnContainer.referenceCollab = Ref. Collaborateur
 readset.sampleOnContainer.percentage = % par piste
 
 readsets.workflow.state = Etat
-readsets.workflow.who = Qui
+readsets.workflow.who = Par
 readsets.workflow.date = Date
 ############
 #
