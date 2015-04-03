@@ -5,7 +5,7 @@
 FCID,Lane,SampleID,SampleRef,Index,Description,Control,Recipe,Operator,SampleProject
 @for(c <- containers.sortWith(_.support.line < _.support.line)){
 	@for(co <- c.contents.sortWith(_.sampleCode < _.sampleCode).sortWith(AbstractSampleSheetsfactory.getContentProperty(_,"tag") < AbstractSampleSheetsfactory.getContentProperty(_,"tag")).sortWith(AbstractSampleSheetsfactory.getContentProperty(_,"tag").length < AbstractSampleSheetsfactory.getContentProperty(_,"tag").length)){
-		@(c.support.code),@(c.support.line),@(c.support.line)_@(co.sampleCode)_@(AbstractSampleSheetsfactory.getContentProperty(co,"tag")),,@AbstractSampleSheetsfactory.getSequence(AbstractSampleSheetsfactory.getIndex("index-illumina-sequencing",AbstractSampleSheetsfactory.getContentProperty(co,"tag"))),,@(AbstractSampleSheetsfactory.getIntrumentBooleanProperties(e,"control")),,,@(AbstractSampleSheetsfactory.getContentProperty(co,"tag"))_@(BigDecimal(AbstractSampleSheetsfactory.getContentDoubleProperty(co,"percentPerLane")).setScale(2, BigDecimal.RoundingMode.DOWN))
+		@(c.support.code),@(c.support.line),@(c.support.line)_@(co.sampleCode)_@(AbstractSampleSheetsfactory.getContentProperty(co,"tag")),,@AbstractSampleSheetsfactory.getSequence(AbstractSampleSheetsfactory.getIndex("index-illumina-sequencing",AbstractSampleSheetsfactory.getContentProperty(co,"tag"))),,@(AbstractSampleSheetsfactory.getIntrumentBooleanProperties(e,"control")),,,@(AbstractSampleSheetsfactory.getContentProperty(co,"tag"))_@(co.percentage))
 	}
 }
 #_IEMVERSION_3_Genoscope

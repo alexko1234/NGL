@@ -68,7 +68,7 @@ public abstract class AbstractSampleSheetsfactory {
 			return  (Double) content.properties.get(propertyName).value;
 		}
 		return 0.0;
-	}
+	}	
 	
 	public static String getSupplierName(Index tag, String supplierName){
 		if(tag!= null && tag.supplierName != null){
@@ -97,14 +97,16 @@ public abstract class AbstractSampleSheetsfactory {
 		
 		return (String) container.properties.get(propertyName).value;
 	}
+		
 	
 	public static void writeFile(File file, String content){
 		Writer writer = null;
 		try {
 			
 			FileOutputStream fos = new FileOutputStream(file);
-			writer = new OutputStreamWriter(fos, Codec.UTF8().name());
+			writer = new OutputStreamWriter(fos, Codec.UTF8().name());			
 			writer.write(content);
+			writer.append("\n");
 			writer.close();
 			fos.close();
 			
