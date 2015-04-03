@@ -638,22 +638,28 @@ angular.module('datatableServices', []).
 		    			 * Sort all result
 		    			 */
 		    			sortAllResult : function(){
-		    				if(this.config.order.active && !this.isRemoteMode(this.config.order.mode) && angular.isDefined(this.config.order.by)){
-		    					var orderProperty = this.config.order.by.property;
-		    					orderProperty += (this.config.order.by.filter)?'|'+this.config.order.by.filter:'';
+		    				if(this.config.order.active && !this.isRemoteMode(this.config.order.mode)){
+		    					var orderBy = [];
 		    					
 		    					if(this.config.group.active && this.config.group.by && this.config.group.by !== "all"){
 		    						var orderGroupSense = (this.config.order.groupReverse)?'-':'+';
-		    						var orderBy = [];
 		    						orderBy.push(orderGroupSense+this.config.group.by.property);
-		    						if(orderProperty){
+		    						if(angular.isDefined(this.config.order.by)){
+		    							var orderProperty = this.config.order.by.property;
+				    					orderProperty += (this.config.order.by.filter)?'|'+this.config.order.by.filter:'';
 		    							var orderSense = (this.config.order.reverse)?'-':'+';
 			    						orderBy.push(orderSense+orderProperty)
 		    						}
-		    						
 		    						this.allResult = $filter('orderBy')(this.allResult, orderBy);		    						
-		    					}else{
-		    						this.allResult = $filter('orderBy')(this.allResult,orderProperty,this.config.order.reverse);	
+		    					}else if(angular.isDefined(this.config.order.by)){
+		    						
+		    						if(angular.isDefined(this.config.order.by)){
+		    							var orderProperty = this.config.order.by.property;
+				    					orderProperty += (this.config.order.by.filter)?'|'+this.config.order.by.filter:'';
+		    							var orderSense = (this.config.order.reverse)?'-':'+';
+			    						orderBy.push(orderSense+orderProperty)
+		    						}
+		    						this.allResult = $filter('orderBy')(this.allResult,orderBy);	
 		    					}		    					    					
 		    				}
 		    			},	
