@@ -4,6 +4,17 @@
      function($scope, $http, $parse, $q, $routeParams, $sce, $location, mainService, tabService, datatable, messages, lists, treatments, $window, valuationService) {
 
 	 
+	 $scope.getTabClass = function(value){
+		 if(value === mainService.get('readSetActiveTab')){
+			 return 'active';
+		 }
+	 };
+	 
+	 $scope.setActiveTab = function(value){
+		 mainService.put('readSetActiveTab', value);
+	 };
+	 
+	 
 	 $scope.goToRun=function(){
 		$window.open(jsRoutes.controllers.runs.tpl.Runs.get($scope.readset.runCode).url, 'runs');
 	}
