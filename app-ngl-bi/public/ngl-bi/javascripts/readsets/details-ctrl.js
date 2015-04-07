@@ -176,7 +176,10 @@
 			$http.get(jsRoutes.controllers.commons.api.StatesHierarchy.list().url,  {params: {objectTypeCode:"ReadSet"}}).success(function(data) {
 				$scope.statesHierarchy = data;	
 			});	
-						
+					
+			if(undefined == mainService.get('readSetActiveTab')){
+				 mainService.put('readSetActiveTab', 'general');
+			 }
 		});
 		
 		$scope.ncbiUrl = Messages("readsets.treatments.taxonomy.beginNcbiUrl");
