@@ -106,7 +106,7 @@ public abstract class AbstractSampleSheetsfactory {
 			FileOutputStream fos = new FileOutputStream(file);
 			writer = new OutputStreamWriter(fos, Codec.UTF8().name());			
 			writer.write(content);
-			writer.append("\n");
+			writer.append("\r\n");
 			writer.close();
 			fos.close();
 			
