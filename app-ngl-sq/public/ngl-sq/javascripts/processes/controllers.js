@@ -339,18 +339,20 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			         },  */
 			         {
 			        	 "header":Messages("processes.table.projectCode"),
-			        	 "property":"projectCode",
+			        	 "property":"projectCodes",
 			        	 "order":true,
 			        	 "hide":true,
 			        	 "position":4,
+			        	 "render":"<div list-resize='value.data.projectCodes | unique' list-resize-min-size='3'>",
 			        	 "type":"text"
 			         },
 			         {
 			        	 "header":Messages("processes.table.sampleCode"),
-			        	 "property":"sampleCode",
+			        	 "property":"sampleCodes",
 			        	 "order":true,
 			        	 "hide":true,
 			        	 "position":5,
+			        	 "render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
 			        	 "type":"text"
 			         },
 			         {
@@ -431,22 +433,22 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 		        	 "type":"text"
 		         },
 		         {
+			 			"header":Messages("containers.table.contents.length"),
+			 			"property":"contents.length",
+			 			"url":"'/api/containers/'+containerInputCode",
+			 			"order":true,
+			 			"hide":true,
+			 			"position":2,
+			 			"type":"number"
+			 	},
+		         {
 		        	 "header":Messages("processes.table.sampleCode"),
 		        	 "property":"sampleCode",
 		        	 "order":true,
 		        	 "hide":true,
-		        	 "position":2,
+		        	 "position":2.01,
 		        	 "type":"text"
 		         },
-		         {
-		 			"header":Messages("containers.table.contents.length"),
-		 			"property":"contents.length",
-		 			"url":"'/api/containers/'+containerInputCode",
-		 			"order":true,
-		 			"hide":true,
-		 			"position":2.01,
-		 			"type":"number"
-		 		},
 	/*	         {
 		        	 "header":Messages("processes.table.columns"),
 		        	 "property":"support.column",
