@@ -63,7 +63,7 @@
 				<td>
 					 {{obj.nbSeq | number}}													
 				</td>
-				<td>
+				<td ng-class="highLight('treatments.' + treatments.getTreatment().code + '.read1.taxonBilan.value|filter:\''+obj.taxon+'\'|sum:\'percent\'')">
 					{{ obj.percent | number:2}} @Messages("unit.percent")												
 				</td>
 			</tr>
@@ -130,7 +130,7 @@
 				<td>
 					 {{obj.nbSeq | number}}												
 				</td>
-				<td>
+				<td ng-class="highLight('treatments.' + treatments.getTreatment().code + '.read1.keywordBilan.value|filter:\''+obj.keyword+'\'|sum:\'percent\'')">
 					 {{ obj.percent | number:2}} @Messages("unit.percent")			
 				</td>
 			</tr>
