@@ -34,6 +34,7 @@ create.placeholder.submissions.readSet=select a readSet
 submissions.tabs.sample=Sample
 submissions.tabs.experiment=Experiment
 submissions.tabs.run=Run
+submissions.tabs.rawData=RawData
 sample.code=Code
 sample.projectCode=Project Code
 sample.taxonId=taxon Id

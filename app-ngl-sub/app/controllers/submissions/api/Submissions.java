@@ -8,22 +8,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mail.MailServiceException;
-import models.laboratory.run.instance.ReadSet;
 import models.sra.submit.common.instance.Submission;
 import models.sra.submit.sra.instance.Experiment;
 import models.sra.submit.sra.instance.RawData;
 import models.sra.submit.util.SraException;
 import models.utils.InstanceConstants;
 
+import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
-import org.springframework.stereotype.Controller;
 
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
-import play.twirl.api.Content;
 import services.FileAcServices;
 import services.SubmissionServices;
 import services.XmlServices;
@@ -34,8 +33,6 @@ import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
 public class Submissions extends DocumentController<Submission>{
-	// declaration d'une instance submissionCreationForm qui permet de recuperer les
-	// données du formulaire startSubmission pour realiser la creation de la soumission.
 
 	public Submissions() {
 		super(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class);
@@ -43,7 +40,11 @@ public class Submissions extends DocumentController<Submission>{
 
 	final static Form<Submission> submissionForm = form(Submission.class);
 	final static Form<File> pathForm = form(File.class);
+	// declaration d'une instance submissionCreationForm qui permet de recuperer les
+	// données du formulaire startSubmission pour realiser la creation de la soumission => utilisee dans save()
 	final static Form<SubmissionsCreationForm> submissionsCreationForm = form(SubmissionsCreationForm.class);
+	// declaration d'une instance submissionSearchForm qui permet de recuperer la liste des soumissions => utilisee dans list()
+	final static Form<SubmissionsSearchForm> submissionsSearchForm = form(SubmissionsSearchForm.class);
 
 
 	public Result search(String state)
@@ -53,20 +54,40 @@ public class Submissions extends DocumentController<Submission>{
 		return ok(Json.toJson(submissions));
 	}
 
-	// Renvoie le Json correspondant à la liste des submissions ayant le projectCode indique dans la variable du formulaire projectCode et stockee dans
-	// l'instance submissionCreationForm
-	public Result list() {	
-		Form<SubmissionsCreationForm> submissionsFilledForm = filledFormQueryString(submissionsCreationForm, SubmissionsCreationForm.class);
-		SubmissionsCreationForm submissionsCreationForm = submissionsFilledForm.get();
-		MongoDBResult<Submission> results = MongoDBDAO.find(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, DBQuery.is("projectCode", submissionsCreationForm.projCode));
-		List<Submission> submissions = results.toList();
-		if(submissionsCreationForm.datatable){
-			return ok(Json.toJson(new DatatableResponse<Submission>(submissions, submissions.size())));
+	// methode appelee avec url suivante :
+	// http://localhost:9000/api/submissions?datatable=true&paginationMode=local&projCode=BCZ&state=new
+	// url construite dans services.js 
+	//search : function(){
+	//	this.datatable.search({projCode:this.form.projCode, state:'new'});
+	//},
+	public Result list(){	
+		SubmissionsSearchForm submissionsSearchFilledForm = filledFormQueryString(SubmissionsSearchForm.class);
+		Logger.debug(submissionsSearchFilledForm.state);
+		Query query = getQuery(submissionsSearchFilledForm);
+		MongoDBResult<Submission> results = mongoDBFinder(submissionsSearchFilledForm, query);				
+		List<Submission> submissionsList = results.toList();
+		if(submissionsSearchFilledForm.datatable){
+			return ok(Json.toJson(new DatatableResponse<Submission>(submissionsList, submissionsList.size())));
 		}else{
-			return ok(Json.toJson(submissions));
+			return ok(Json.toJson(submissionsList));
 		}
-	}	
+	}
 
+	
+	private Query getQuery(SubmissionsSearchForm form) {
+		List<Query> queries = new ArrayList<Query>();
+		Query query = null;
+		if (StringUtils.isNotBlank(form.projCode)) { //all
+			queries.add(DBQuery.in("projectCode", form.projCode));
+		}
+		if (StringUtils.isNotBlank(form.state)) { //all
+			queries.add(DBQuery.in("state.code", form.state));
+		}	
+		if(queries.size() > 0){
+			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
+		}
+		return query;
+	}
 
 	public Result update(String code)
 	{
@@ -80,7 +101,9 @@ public class Submissions extends DocumentController<Submission>{
 		if (code.equals(submissionInput.code)) {
 			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 			ctxVal.setUpdateMode();
-			submission.validate(ctxVal);
+			ctxVal.getContextObjects().put("type","sra");
+			submissionInput.traceInformation.setTraceInformation(getCurrentUser());
+			submissionInput.validate(ctxVal);
 			if (!ctxVal.hasErrors()) {
 				Logger.info("Update submission state "+submissionInput.state.code);
 				MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, submissionInput);
@@ -164,8 +187,6 @@ public class Submissions extends DocumentController<Submission>{
 		return submission;
 	}
 
-
-
 	//public Result save(String projectCode, List<ReadSet> readSets, String studyCode, String configCode, String user) throws SraException, IOException
 	public Result save() throws SraException, IOException
 	{
@@ -187,7 +208,7 @@ public class Submissions extends DocumentController<Submission>{
 		contextValidation.setCreationMode();
 		contextValidation.getContextObjects().put("type", "sra");
 		try {
-			submissionCode = submissionServices.createNewSubmission(submissionsCreationForm.projCode, readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, user, contextValidation);
+			submissionCode = submissionServices.initNewSubmission(submissionsCreationForm.projCode, readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, user, contextValidation);
 			if (contextValidation.hasErrors()){
 				contextValidation.displayErrors(Logger.of("SRA"));
 				return badRequest("Voir Display Error");

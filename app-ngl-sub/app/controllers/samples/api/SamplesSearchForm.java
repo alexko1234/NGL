@@ -5,7 +5,5 @@ import java.util.List;
 import controllers.ListForm;
 
 public class SamplesSearchForm extends ListForm{
-
-	public List<String> listSampleCodes;
-	
+	public List<String> listSampleCodes;	
 }

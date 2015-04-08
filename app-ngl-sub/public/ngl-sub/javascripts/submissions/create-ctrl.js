@@ -3,7 +3,7 @@
 angular.module('home').controller('CreateCtrl',[ '$http', '$scope', '$routeParams' , 'mainService', 'lists', 'tabService','submissionsCreateService','messages',
                                                  function($http, $scope, $routeParams, mainService, lists, tabService, submissionsCreateService, messages) { 
   
-	var datatableConfig = {
+	var submissionDTConfig = {
 			pagination:{mode:'local'},			
 			order :{mode:'local', by:'code', reverse : true},
 			search:{
@@ -33,7 +33,7 @@ angular.module('home').controller('CreateCtrl',[ '$http', '$scope', '$routeParam
 	}
 	
 	$scope.createService = submissionsCreateService;	
-	$scope.createService.init($routeParams, datatableConfig);
+	$scope.createService.init($routeParams, submissionDTConfig);
 	
 	$scope.save = function(){
 		mainService.setForm($scope.createService.form);

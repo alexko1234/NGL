@@ -47,21 +47,27 @@ import org.apache.commons.lang3.StringUtils;
 public class SubmissionServices {
 
 	
-	public String createNewSubmission(String projectCode, List<String> readSetCodes, String studyCode, String configCode, String user, ContextValidation contextValidation) throws SraException, IOException {
-	//	public String doNewSubmission(String configurationCode, List<ReadSet> readSets) throws SraException {
+	public String initNewSubmission(String projectCode, List<String> readSetCodes, String studyCode, String configCode, String user, ContextValidation contextValidation) throws SraException, IOException {
 		// Pour une premiere soumission d'un readSet, on peut devoir utiliser un study ou un sample existant, deja soumis à l'EBI, ou non
 		// en revanche on ne doit pas utiliser un experiment ou un run existant
-		// Creation d'un nouvel objet submission avec code qui n'existe pas encore dans db.
-		// liste des experiments :
 		
-		System.out.println("studyCode = " + studyCode);
+		//System.out.println("studyCode = " + studyCode);
 		if (!StringUtils.isNotBlank(studyCode)) {
 			throw new SraException("studyCode à null incompatible avec soumission");
 		}
 		Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, studyCode);
 		if (study==null){
 			throw new SraException("study " + study.code + " n'existe pas dans database");
+		} 
+		if (study.state == null) {
+			throw new SraException("study.state== null incompatible avec soumission. =>  study.state.code in ('userValidate', 'inWaiting', 'submitted')");
 		}
+		if (study.state.code.equalsIgnoreCase("new")){
+		// declencher exception, la soumission ne peut se faire sans un study validé par user ou
+		// study deja en cours de soumission voir soumis.
+			throw new SraException("study.state.code='new' incompatible avec soumission. =>  study.state.code in ('userValidate', 'inWaiting', 'submitted')");
+		}
+		
 		if (!StringUtils.isNotBlank(configCode)) {
 			throw new SraException("configCode à null incompatible avec soumission");
 		}
@@ -69,13 +75,14 @@ public class SubmissionServices {
 		if (config==null){
 			throw new SraException("config " + config.code + " n'existe pas dans database");
 		}
+		if (!config.state.code.equalsIgnoreCase("userValidate")){
+			throw new SraException("config.state.code != 'userValidate' incompatible avec soumission");
+		}		
 		// Recuperer la liste des objets ReadSet
 		List <ReadSet> readSets = new ArrayList<ReadSet>();
 		for (String readSetCode : readSetCodes) {
-
 			if (StringUtils.isNotBlank(readSetCode)) {
-				System.out.println("!!!!!!!!!!!!!         readSetCode = " + readSetCode);
-
+				//System.out.println("!!!!!!!!!!!!!         readSetCode = " + readSetCode);
 				ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode);
 				if (readSet == null){
 					throw new SraException("readSet " + readSet.code + " n'existe pas dans database");
@@ -85,10 +92,9 @@ public class SubmissionServices {
 			}
 		}
 		
-		//List <Study> listStudys = new ArrayList<Study>();
 		List <Experiment> listExperiments = new ArrayList<Experiment>();
 		List <Sample> listSamples = new ArrayList<Sample>();
-		
+
 		Submission submission = createSubmissionEntity(projectCode, config.code, user);
 		if (!StringUtils.isNotBlank(config.strategySample)) {
 			throw new SraException("strategySample à null incompatible avec soumission");
@@ -111,16 +117,12 @@ public class SubmissionServices {
 		// dans l'objet submission pour envoie du xml à l'EBI
 		// Si le study a ete soumis à l'ebi alors son statut est different de UserValidate.
 
-		if ((study.state == null) || (study.state.code.equals("new"))) {
-			// declencher exception, la soumission ne peut se faire sans un study validé par user ou
-			// study deja en cours de soumission voir soumis.
-			throw new SraException("Pour le study " + study.code + "status du study à null ou new incompatible avec soumission");
-		}
-
-		if (study.state.code.equals("userValidate")) {
+		
+		submission.refStudyCode = study.code;
+		/*if (!study.state.code.equals("userValidate")) { // study.state.code in ('new', 'userValidate', 'inWaiting', 'submitted').
 			submission.studyCode = study.code;
-		} // else rien c'est peut-etre un study deja soumis ou en attente de soumission
-		  // auquel cas pas de changement d'etat ni de sauvegarde et soumission à l'EBI
+		}*/
+		
 		for(ReadSet readSet : readSets) {
 			System.out.println("readSet :" + readSet.code);
 			// Verifier que c'est une premiere soumission pour ce readSet
@@ -147,16 +149,22 @@ public class SubmissionServices {
 			// Renseigner l'objet submission :
 			// Verifier que l'objet sample n'a jamais ete soumis et n'est pas en cours de soumission
 			System.out.println("sample = " + sample + " et state="+ sample.state.code);
+			if(!submission.refSampleCodes.contains(sample.code)){
+				submission.refSampleCodes.add(sample.code);
+			}
+			
 			if (sample.state.code.equals("new")) {
-				System.out.println ("ok mon sample est bien à new");
-				if(!submission.sampleCodes.contains(sample.code)){
+				//System.out.println ("ok mon sample est bien à new ou userValidate");
+				/*if(!submission.sampleCodes.contains(sample.code)){
 					System.out.println ("Ajout dans submission du sampleCode : " + sample.code);
-
-					submission.sampleCodes.add(sample.code);
+					//submission.sampleCodes.add(sample.code);
+					
+				}*/
+				if(!listSamples.contains(sample.code)){
 					listSamples.add(sample);
 				}
-			}
-				
+			}	
+			
 			//VariableSRA.submissionDirectory + File.separator + projectCode + File.separator + st_my_date;
 			Experiment experiment = createExperimentEntity(readSet, projectCode, user);
 
@@ -167,13 +175,12 @@ public class SubmissionServices {
 			experiment.librarySource = config.librarySource;
 			experiment.libraryStrategy = config.libraryStrategy;
 
-			// Ajouter l'experiment à l'objet submission :
-			if (experiment.state.code.equals("new")) {
+			// Ajouter l'experiment avec le statut forcement à 'new' à l'objet submission :
+			if (experiment.state.code.equalsIgnoreCase("new")) { 
 				if(!submission.experimentCodes.contains(experiment.code)){
 					listExperiments.add(experiment);
 					submission.experimentCodes.add(experiment.code);
 					System.out.println ("Ajout dans submission du expCode : " + experiment.code);
-
 					if(experiment.run != null) {
 						System.out.println ("Ajout dans submission du runCode : " + experiment.run.code);
 						submission.runCodes.add(experiment.run.code);
@@ -182,13 +189,14 @@ public class SubmissionServices {
 			}
 		}
 		
-		// valider  le study et l'updater dans la base pour le statut :
-		contextValidation = new ContextValidation(user);
+		// le study avec un state in ('userValidate', 'inWaiting', 'submitted') a deja ete validé :
+		// inutile :valider  le study et l'updater dans la base pour le statut :
+		/*contextValidation = new ContextValidation(user);
 		contextValidation.setUpdateMode();
 		contextValidation.getContextObjects().put("type", "sra");
-
-			
-		study.state = new State("inWaiting", user);
+      
+		//study.state = new State("inWaiting", user);
+		
 		study.traceInformation.modifyUser = VariableSRA.admin;
 		study.traceInformation.modifyDate =  new Date();
 		study.validate(contextValidation);
@@ -198,22 +206,21 @@ public class SubmissionServices {
 		// le study est a sauver avec leur nouveau statut inWaiting
 		MongoDBDAO.save(InstanceConstants.SRA_STUDY_COLL_NAME, study);
 		System.out.println ("sauvegarde dans la base avec status 'inWainting' du study " + study.code);
-		
+		*/
 		
 		// valider tous les sample et experiments et les sauver dans la base avec statut
 		contextValidation.setCreationMode();
 		
 		for (Sample sampleElt: listSamples) {
-			sampleElt.state = new State("inWaiting", user);
-			sampleElt.validate(contextValidation);
+			//sampleElt.state = new State("inWaiting", user);
 			if (!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, "code", sampleElt.code)){	
+				sampleElt.validate(contextValidation);
 				MongoDBDAO.save(InstanceConstants.SRA_SAMPLE_COLL_NAME, sampleElt);
 				System.out.println ("ok pour sauvegarde dans la base du sample " + sampleElt.code);
-
 			}
 		}		
 		for (Experiment expElt: listExperiments) {
-			expElt.state = new State("inWaiting", user);
+			//expElt.state = new State("inWaiting", user);
 			expElt.validate(contextValidation);
 			if (!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, "code", expElt.code)){	
 				MongoDBDAO.save(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, expElt);
@@ -222,7 +229,7 @@ public class SubmissionServices {
 		}		
 		
 		// valider submission une fois les experiment et sample sauves, et sauver submission
-		submission.state = new State("inWaiting", user);
+		//submission.state = new State("inWaiting", user);
 		contextValidation.setCreationMode();
 		contextValidation.getContextObjects().put("type", "sra");
 		submission.validate(contextValidation);
@@ -231,63 +238,23 @@ public class SubmissionServices {
 			MongoDBDAO.save(InstanceConstants.SRA_SUBMISSION_COLL_NAME, submission);
 			System.out.println ("sauvegarde dans la base du submission " + submission.code);
 		}
-		
-
-		
+	
 		if (contextValidation.hasErrors()){
 			System.out.println("submission.validate produit des erreurs");
-
 			// rallBack avec clean sur exp et sample et mise à jour study
 			System.out.println("\ndisplayErrors dans SubmissionServices::createNewSubmission :");
 			contextValidation.displayErrors(Logger.of("SRA"));
 			System.out.println("\n end displayErrors dans SubmissionServices::createNewSubmission :");
-			// resauver les study avec leur statut initial 'userValidate'
-			contextValidation.setUpdateMode();
-			contextValidation.getContextObjects().put("type", "sra");
-
-			study.state = new State("userValidate", user);
-			study.traceInformation.modifyUser = VariableSRA.admin;
-			study.traceInformation.modifyDate =  new Date();
-			study.validate(contextValidation);
-			MongoDBDAO.save(InstanceConstants.SRA_STUDY_COLL_NAME, study);
+			
 			// enlever les samples, experiments et submission qui ont ete crées par le service :
 			cleanDataBase(submission.code);
-
+			
 			throw new SraException("SubmissionServices::createNewSubmission::probleme validation  voir log: ");
+			
 		} else {
-			// creer repertoire de soumission sur disque et faire liens sur données brutes
-			File dataRep = new File(submission.submissionDirectory);
-			System.out.println("Creation du repertoire de soumission et liens vers donnees brutes " + submission.submissionDirectory);
-			dataRep.mkdirs();	
-			for (Experiment expElt: listExperiments) {
-				System.out.println("exp = "+ expElt.code);
-				for (RawData rawData :expElt.run.listRawData){
-					System.out.println("run = "+ expElt.run.code);
-					File fileCible = new File(rawData.directory + File.separator + rawData.relatifName);
-					File fileLien = new File(submission.submissionDirectory + File.separator + rawData.relatifName);
-					if(fileLien.exists()){
-						fileLien.delete();
-					}
-					if (!fileCible.exists()){
-						System.out.println("Le fichier cible n'existe pas  : " + fileCible);
-						throw new SraException("Le fichier cible n'existe pas  : " + fileCible);
-					}
-					System.out.println("fileCible = " + fileCible);
-					System.out.println("fileLien = " + fileLien);
-
-					Path lien = Paths.get(fileLien.getPath());
-					Path cible = Paths.get(fileCible.getPath());
-					Files.createSymbolicLink(lien, cible);
-					System.out.println("Lien symbolique avec :  lien= "+lien+" et  cible="+cible);
-					//String cmd = "ln -s -f " + rawData.directory + File.separator + rawData.relatifName
-					//+ " " + submission.submissionDirectory + File.separator + rawData.relatifName;
-					//System.out.println("cmd = " + cmd);
-				}
-			}
-		
+			System.out.println("Creation de la soumission " + submission.code);
+			return submission.code;
 		}
-		System.out.println("Creation de la soumission " + submission.code);
-		return submission.code;
 	}
 
 	
@@ -306,23 +273,51 @@ public class SubmissionServices {
 		return study;
 	}
 
+	public void startSubmission(String submissionCode) throws SraException, IOException {
+		// creer repertoire de soumission sur disque et faire liens sur données brutes
+		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
+		if (submission == null){
+			throw new SraException("aucun objet submission dans la base pour  : " + submissionCode);
+		}
+		File dataRep = new File(submission.submissionDirectory);
+		System.out.println("Creation du repertoire de soumission et liens vers donnees brutes " + submission.submissionDirectory);
+		dataRep.mkdirs();	
+		
+		for (String experimentCode: submission.experimentCodes) {
+			Experiment expElt =  MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
+			
+			System.out.println("exp = "+ expElt.code);
+			for (RawData rawData :expElt.run.listRawData){
+				System.out.println("run = "+ expElt.run.code);
+				File fileCible = new File(rawData.directory + File.separator + rawData.relatifName);
+				File fileLien = new File(submission.submissionDirectory + File.separator + rawData.relatifName);
+				if(fileLien.exists()){
+					fileLien.delete();
+				}
+				if (!fileCible.exists()){
+					System.out.println("Le fichier cible n'existe pas  : " + fileCible);
+					throw new SraException("Le fichier cible n'existe pas  : " + fileCible);
+				}
+				System.out.println("fileCible = " + fileCible);
+				System.out.println("fileLien = " + fileLien);
 
+				Path lien = Paths.get(fileLien.getPath());
+				Path cible = Paths.get(fileCible.getPath());
+				Files.createSymbolicLink(lien, cible);
+				System.out.println("Lien symbolique avec :  lien= "+lien+" et  cible="+cible);
+				//String cmd = "ln -s -f " + rawData.directory + File.separator + rawData.relatifName
+				//+ " " + submission.submissionDirectory + File.separator + rawData.relatifName;
+				//System.out.println("cmd = " + cmd);
+			}
+		}
+	}
+		
 	public Submission createSubmissionEntity(String projectCode, String configCode, String user){
 		System.out.println ("config.code = " + configCode);
 		Submission submission = null;
 		DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
 		Date courantDate = new java.util.Date();
 		String st_my_date = dateFormat.format(courantDate);	
-		/*
-		String headerSubmissionCode = "cns" + "_" + projectCode + "_" + st_my_date;
-		String submissionCode = headerSubmissionCode + "_" + "1";
-		// si submissionCode existe deja, alors en creer un nouveau :
-		int i = 1;
-		while (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "code", submissionCode)) {
-			i++;
-			submissionCode = headerSubmissionCode + "_" + i;
-		}*/
-		
 		submission = new Submission(projectCode, user);
 		submission.code = SraCodeHelper.getInstance().generateSubmissionCode(projectCode);
 		submission.submissionDate = courantDate;
@@ -359,9 +354,9 @@ public class SubmissionServices {
 		if (MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, "code", codeSample)){
 			System.out.println("Recuperation du sample "+ codeSample);
 			sample = MongoDBDAO.findByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, models.sra.submit.common.instance.Sample.class, codeSample);			
-			System.out.println(sample.clone);
-			System.out.println(sample.taxonId);
-			System.out.println(sample.title);
+			//System.out.println(sample.clone);
+			//System.out.println(sample.taxonId);
+			//System.out.println(sample.title);
 		} else {
 			System.out.println("Creation du sample '"+ codeSample + "'");
 			// creation du sample :
@@ -717,6 +712,7 @@ public class SubmissionServices {
 							System.out.println(sampleCode + " utilise par objet Submission " + sub.code);
 						}
 					} else {
+						// todo : verifier qu'on ne detruit que des samples en new ou userValidate
 						System.out.println("deletion dans base pour sample "+sampleCode);
 						MongoDBDAO.deleteByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, models.sra.submit.common.instance.Sample.class, sampleCode);		
 					}
@@ -731,6 +727,7 @@ public class SubmissionServices {
 							System.out.println(experimentCode + " utilise par objet Submission " + sub.code);
 						}
 					} else {
+						// todo : verifier qu'on ne detruit que des experiments en new ou userValidate
 						System.out.println("deletion dans base pour experiment "+experimentCode);
 						MongoDBDAO.deleteByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, experimentCode);
 					}

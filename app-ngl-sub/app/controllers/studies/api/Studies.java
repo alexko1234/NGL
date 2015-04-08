@@ -2,6 +2,7 @@ package controllers.studies.api;
 
 import static play.data.Form.form;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import models.laboratory.common.instance.State;
@@ -11,7 +12,9 @@ import models.sra.submit.util.SraCodeHelper;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 
+import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
 
 import play.Logger;
 import play.data.Form;
@@ -63,11 +66,30 @@ public class Studies extends DocumentController<Study>{
 	}
 	// Renvoie le Json correspondant à la liste des study ayant le projectCode indique dans la variable du formulaire projectCode et stockee dans
 	// l'instance studiesSearchForm
-	public Result list() {	
+	/*public Result list() {	
 		Form<StudiesSearchForm> studiesFilledForm = filledFormQueryString(studiesSearchForm, StudiesSearchForm.class);
 		StudiesSearchForm studiesSearchForm = studiesFilledForm.get();
 		MongoDBResult<Study> results = MongoDBDAO.find(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, DBQuery.is("projectCode", studiesSearchForm.projCode));
 		List<Study> studys = results.toList();
 		return ok(Json.toJson(studys));
-	}	
+	}*/
+	public Result list() {	
+		StudiesSearchForm studiesFilledForm = filledFormQueryString(StudiesSearchForm.class);
+		Query query = getQuery(studiesFilledForm);
+		MongoDBResult<Study> results = mongoDBFinder(studiesFilledForm, query);		
+		List<Study> studysList = results.toList();
+		return ok(Json.toJson(studysList));
+	}
+	
+	private Query getQuery(StudiesSearchForm form) {
+		List<Query> queries = new ArrayList<Query>();
+		Query query = null;
+		if (StringUtils.isNotBlank(form.projCode)) { //all
+			queries.add(DBQuery.in("projectCode", form.projCode));
+		}	
+		if(queries.size() > 0){
+			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
+		}
+		return query;
+	}
 }

@@ -4,18 +4,19 @@
 		@value
 	</div>
 }
+
 <div class="row">
 	<div class="col-md-12 col-lg-12">
 	<div class="page-header">	
 		<div class="btn-toolbar pull-right" >
-			 	<button class="btn btn-default" ng-if="isEditMode()" ng-click="save()" data-toggle="tooltip" title="@Messages("button.save")" ><i class="fa fa-save"></i> @Messages("button.save")</button>
-			 	<button class="btn btn-default" ng-if="isEditMode()" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
-		 		<button class="btn btn-default" ng-if="!isEditMode()" ng-click="activeEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>
-			</div>
-		  
+			 <button class="btn btn-default" ng-disabled="!(sampleCheck && experimentCheck && runCheck && rawDataCheck)" ng-click="userValidate()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
+			 <button class="btn btn-default" ng-if="mainService.isEditMode()" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
+			 <button class="btn btn-default" ng-if="!mainService.isEditMode()" ng-click="activeEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>		 					
+		</div>	 
 	</div>
 	</div>
 </div>
+
 
 
 <div class="row">
@@ -25,48 +26,24 @@
 <div class="row margin-bottom-7">
 	<div class="col-md-12 col-lg-12">
 		<ul class="nav nav-tabs margin-bottom-5">
-			<li class="active"><a data-target="#sample" data-toggle="tab">@Messages("submissions.tabs.sample")</a></li>
-			<li><a data-target="#experiment" data-toggle="tab">@Messages("submissions.tabs.experiment")</a></li>
-			<li><a data-target="#run" data-toggle="tab">@Messages("submissions.tabs.run")</a></li>
+			<li class="active"> <input type="checkbox" ng-model="sampleCheck"/> <a data-target="#sample" data-toggle="tab">  @Messages("submissions.tabs.sample") </a></li>
+			<li><input type="checkbox" ng-model="experimentCheck"/> <a data-target="#experiment" data-toggle="tab"> @Messages("submissions.tabs.experiment")   </a></li>
+			<li><input type="checkbox" ng-model="runCheck"/> <a data-target="#run" data-toggle="tab"> @Messages("submissions.tabs.run")   </a></li>
+			<li><input type="checkbox" ng-model="rawDataCheck"/> <a data-target="#rawData" data-toggle="tab"> @Messages("submissions.tabs.rawData")    </a></li>
 		</ul>
 		<div class="tab-content">
 			<div class="tab-pane active" id="sample">
-				<accordion close-others="oneAtATime"> 
-				<accordion-group heading="{{sample.code}}" ng-repeat="sample in samples">
-					<form class="form-horizontal">
-					<div class="row">
-						@column(){
-						@views.html.helper.columnLabelValue(Messages("sample.code")){
-						<p class="form-control-static">{{sample.code}}</p>
-						}
-						@views.html.helper.columnLabelValue(Messages("sample.description")){
-						<div ng-switch on="isEditMode()">
-							<p class="form-control-static" ng-switch-when="false">{{sample.description}}</p>
-							<input type="text" class="form-control" ng-model="sample.description" ng-switch-when="true">
-						</div>
-						}
-						@views.html.helper.columnLabelValue(Messages("sample.title")){
-						<p class="form-control-static">{{sample.title}}</p>
-						}
-						
-						}
-					</div>
-					</form>
-					
-				</accordion-group> 
-				</accordion>
+				<div datatable="sampleDT"></div>
 			</div>
-
 			<div class="tab-pane" id="experiment">
-				<accordion close-others="oneAtATime"> 
-				<accordion-group heading="{{experiment}}" ng-repeat="experiment in submission.experimentCodes">
-					{{experiment}} 
-				</accordion-group> 
-				</accordion>
-
+				<div datatable="experimentDT"></div>
 			</div>
-			<div class="tab-pane" id="run"></div>
-
+			<div class="tab-pane" id="run">
+				<div datatable="runDT"></div>
+			</div>
+			<div class="tab-pane" id="rawData">
+				<div datatable="rawDataDT"></div>
+			</div>
 		</div>
 	</div>
 </div>

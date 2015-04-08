@@ -48,7 +48,7 @@ public class XmlServices {
 			File sampleFile = new File(resultDirectory + File.separator + VariableSRA.xmlSamples);
 			writeSampleXml(submission, sampleFile); 
 		}
-		if (submission.sampleCodes.size() != 0){
+		if (submission.experimentCodes.size() != 0){
 			File experimentFile = new File(resultDirectory + File.separator + VariableSRA.xmlExperiments);
 			writeExperimentXml(submission, experimentFile); 
 		}

@@ -88,6 +88,7 @@ public class SubmissionTest extends AbstractTestsSRA {
 
 		String codeReadSet5 = "BCZ_BGOSW_2_H9M6KADXX.IND15"; 
 		String codeReadSet6 = "BCZ_BIOSW_2_H9M6KADXX.IND19"; 
+		String codeReadSet7 = "BCZ_BAAOSW_1_A7PE4.IND8"; 
 		// ex de donnée illumina single : AUP_COSW_4_D09BTACXX.IND7
 		// ex de donnée illumina paired : AUP_NAOSW_5_C0UW4ACXX.IND10, AKL_ABOSA_1_80MJ3ABXX
 
@@ -95,10 +96,9 @@ public class SubmissionTest extends AbstractTestsSRA {
 		List<String> readSetCodes = new ArrayList<String>();
 		
 		
-		readSetCodes.add(codeReadSet5);
-		readSetCodes.add(codeReadSet6);
-
-		
+		//readSetCodes.add(codeReadSet5);
+		//readSetCodes.add(codeReadSet6);
+		readSetCodes.add(codeReadSet7);
 		System.out.println("Create new submission for readSet " + readSetCodes.get(0));
 		String submissionCode = null;
 		try {
@@ -108,7 +108,7 @@ public class SubmissionTest extends AbstractTestsSRA {
 			for (String readSetCode : readSetCodes) {
 				System.out.println("dans submissionTest        readSetCode = " + readSetCode);
 			}
-			submissionCode = submissionServices.createNewSubmission(config.projectCode, readSetCodes, study.code, config.code, "william", contextValidation);
+			submissionCode = submissionServices.initNewSubmission(config.projectCode, readSetCodes, study.code, config.code, "william", contextValidation);
 			System.out.println("Enregistrement du submissionCode : " + submissionCode); 
 			System.out.println("contextValidation.errors pour submissionTest :" + submissionCode);
 			contextValidation.displayErrors(Logger.of("SRA"));

@@ -21,6 +21,7 @@ import validation.ContextValidation;
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import models.laboratory.common.instance.State;
 
 public class Samples extends DocumentController<Sample>{
 
@@ -47,16 +48,18 @@ public class Samples extends DocumentController<Sample>{
 		if (sample == null) {
 			return badRequest("Sample with code "+code+" not exist");
 		}
+
 		Form<Sample> filledForm = getFilledForm(sampleForm, Sample.class);
 		Sample sampleInput = filledForm.get();
+		//Sample userSample = filledForm.get();
+
 		if (code.equals(sampleInput.code)) {
 			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 			ctxVal.setUpdateMode();
 			ctxVal.getContextObjects().put("type", "sra");
-
-
-			//revoir conditions pour validate update
-			//sample.validate(ctxVal);
+			sampleInput.traceInformation.setTraceInformation(getCurrentUser());
+			sampleInput.state = new State("userValidate", getCurrentUser());
+			sampleInput.validate(ctxVal);	
 			if (!ctxVal.hasErrors()) {
 				Logger.info("Update sample "+sample.code);
 				MongoDBDAO.update(InstanceConstants.SRA_SAMPLE_COLL_NAME, sampleInput);
@@ -82,6 +85,9 @@ public class Samples extends DocumentController<Sample>{
 		
 		if (CollectionUtils.isNotEmpty(form.listSampleCodes)) { //all
 			queries.add(DBQuery.in("code", form.listSampleCodes));
+		}
+		if(queries.size() > 0){
+			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}
 		return query;
 	}

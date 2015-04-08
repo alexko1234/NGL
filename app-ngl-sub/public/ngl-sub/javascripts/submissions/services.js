@@ -67,18 +67,19 @@
 						this.lists.refresh.readSets({projectCode:this.form.projCode});
 					}
 				},
+				// methode appelee pour remplir le tableau des soumissions 
 				search : function(){
-					this.datatable.search(this.form);
+					this.datatable.search({projCode:this.form.projCode, state:'new'});
 				},
 				/**
 				 * initialization of the service
 				 */
-				init : function($routeParams, datatableConfig){
+				init : function($routeParams, submissionDTConfig){
 					initListService();
 					
 					//to avoid to lost the previous search
-					if(datatableConfig && angular.isUndefined(mainService.getDatatable())){
-						createService.datatable = datatable(datatableConfig);
+					if(submissionDTConfig && angular.isUndefined(mainService.getDatatable())){
+						createService.datatable = datatable(submissionDTConfig);
 						mainService.setDatatable(createService.datatable);
 						createService.datatable.setColumnsConfig(getColumns());		
 					}else if(angular.isDefined(mainService.getDatatable())){

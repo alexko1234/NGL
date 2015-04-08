@@ -81,7 +81,7 @@ public class XmlServicesTest extends AbstractTestsSRA {
 		contextValidation = new ContextValidation(userContext);
 		contextValidation.setCreationMode();
 		contextValidation.getContextObjects().put("type", "sra");
-		String submissionCode = submissionServices.createNewSubmission(config.projectCode, readSetCodes, study.code, config.code, "william", contextValidation);
+		String submissionCode = submissionServices.initNewSubmission(config.projectCode, readSetCodes, study.code, config.code, "william", contextValidation);
 		
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class,  submissionCode);
 		File studyFile = new File("/env/cns/submit_traces/SRA/ngl-sub/dataTests/study.xml");

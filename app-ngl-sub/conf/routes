@@ -32,10 +32,10 @@ GET		/tpl/submissions/js-routes					controllers.submissions.tpl.Submissions.java
 
 # Studies
 GET		/studies/:homeCode/home						controllers.studies.tpl.Studies.home(homeCode: java.lang.String)
-GET		/api/studies								@controllers.studies.api.Studies.list()
-POST	/api/studies								@controllers.studies.api.Studies.save()
-GET		/tpl/studies/create							controllers.studies.tpl.Studies.create()
-GET		/tpl/studies/js-routes						controllers.studies.tpl.Studies.javascriptRoutes()
+GET		/api/sra/studies							@controllers.studies.api.Studies.list()
+POST	/api/sra/studies							@controllers.studies.api.Studies.save()
+GET		/tpl/sra/studies/create						controllers.studies.tpl.Studies.create()
+GET		/tpl/sra/studies/js-routes					controllers.studies.tpl.Studies.javascriptRoutes()
 
 
 # Configurations
@@ -47,8 +47,13 @@ GET		/tpl/configurations/js-routes				controllers.configurations.tpl.Configurati
 GET		/api/sra/variables/:name            		controllers.sra.api.Variables.get(name: java.lang.String)
 
 #Samples
-GET		/api/samples								@controllers.samples.api.Samples.list()
-PUT		/api/samples								@controllers.samples.api.Samples.update(code: java.lang.String)
+GET		/api/sra/samples							@controllers.samples.api.Samples.list()
+PUT		/api/sra/samples/:code						@controllers.samples.api.Samples.update(code: java.lang.String)
+
+# Experiments
+GET		/api/sra/experiments						@controllers.experiments.api.Experiments.list()
+PUT		/api/sra/experiments						@controllers.experiments.api.Experiments.update(code: java.lang.String)
+
 
 #readsets from ngl-common attention pas de '@' devant car controller ecrit il y a 3 ans et qui herite de 
 GET    	/api/readsets	                 			controllers.readsets.api.ReadSets.list()
