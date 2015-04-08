@@ -22,14 +22,15 @@
 <div class="row">
 	<div class="col-md-12 col-lg-12" messages="messages"></div>
 </div>
+<!-- stopPropagation on checkbox prevent parents default behavior (stop <a> call) -->
 
 <div class="row margin-bottom-7">
 	<div class="col-md-12 col-lg-12">
 		<ul class="nav nav-tabs margin-bottom-5">
-			<li class="active"> <input type="checkbox" ng-model="sampleCheck"/> <a data-target="#sample" data-toggle="tab">  @Messages("submissions.tabs.sample") </a></li>
-			<li><input type="checkbox" ng-model="experimentCheck"/> <a data-target="#experiment" data-toggle="tab"> @Messages("submissions.tabs.experiment")   </a></li>
-			<li><input type="checkbox" ng-model="runCheck"/> <a data-target="#run" data-toggle="tab"> @Messages("submissions.tabs.run")   </a></li>
-			<li><input type="checkbox" ng-model="rawDataCheck"/> <a data-target="#rawData" data-toggle="tab"> @Messages("submissions.tabs.rawData")    </a></li>
+			<li class="active"> <a data-target="#sample" data-toggle="tab"><input type="checkbox" ng-model="sampleCheck" ng-click="$event.stopPropagation();"/> @Messages("submissions.tabs.sample")</a></li>
+			<li><a data-target="#experiment" data-toggle="tab"> <input type="checkbox" ng-model="experimentCheck" ng-click="$event.stopPropagation();"/> @Messages("submissions.tabs.experiment")</a></li>
+			<li><a data-target="#run" data-toggle="tab"> <input type="checkbox" ng-model="runCheck" ng-click="$event.stopPropagation();"/> @Messages("submissions.tabs.run")</a></li>
+			<li><a data-target="#rawData" data-toggle="tab"> <input type="checkbox" ng-model="rawDataCheck" ng-click="$event.stopPropagation();"/>  @Messages("submissions.tabs.rawData")</a></li>
 		</ul>
 		<div class="tab-content">
 			<div class="tab-pane active" id="sample">
