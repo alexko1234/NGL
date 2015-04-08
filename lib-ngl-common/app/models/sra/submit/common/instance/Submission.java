@@ -26,6 +26,8 @@ public class Submission extends DBObject implements IValidation {
 	public String projectCode = null;     // required pour nos stats //Reference code de la collection project NGL
  	public String accession = null;       // numeros d'accession attribué par ebi */
 	public Date submissionDate = null;
+	public String refStudyCode = null;    // study referencé par cette soumission, pas forcement à soumettre
+	public List<String> refSampleCodes = new ArrayList<String>(); // liste des codes des samples references par cette soumission, pas forcement a soumettre à l'EBI.
 	public String studyCode = null;       // study à soumettre à l'ebi
 	public String analysisCode = null;       // study à soumettre à l'ebi
 	public List<String> sampleCodes = new ArrayList<String>(); // liste des codes des sample à soumettre à l'ebi
@@ -36,7 +38,7 @@ public class Submission extends DBObject implements IValidation {
 	public String submissionDirectory = null;
 	public Boolean release = false;
 	public String type = null; // SRA ou WGS
-	public String xmlStudys = null; // nom relatif du fichier xml des studys 
+	public String xmlStudys = null; // nom relatif du fichier xml des studys rempli uniquement si le fichier existe.
 	public String xmlSamples = null;
 	public String xmlExperiments = null;
 	public String xmlRuns = null;

@@ -35,13 +35,13 @@ public class Run implements IValidation {
 		} else {
 			// Verifier si on est dans un contexte de creation d'objet, que run.code n'existe pas dans la database (dans collection Experiment)
 			if(contextValidation.isCreationMode()){
-				if(MongoDBDAO.checkObjectExist(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, "runCode", this.code)) {
+				if(MongoDBDAO.checkObjectExist(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, "run.code", this.code)) {
 					contextValidation.addErrors("run.code ", this.code + " existe deja dans la base de données et MODE CREATION");
 				}	
 			}
 			// Verifier si on est dans un contexte d'UPDATE d'objet, que run.code existe bien dans la database
 			if(contextValidation.isUpdateMode() ) {
-				if(! MongoDBDAO.checkObjectExist(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, "runCode", this.code)) {
+				if(! MongoDBDAO.checkObjectExist(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, "run.code", this.code)) {
 					contextValidation.addErrors("run.code",this.code + " n'existe pas dans la base de données et MODE UPDATE");
 				}
 			}
