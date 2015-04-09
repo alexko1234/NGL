@@ -26,7 +26,7 @@ Chemistry,Default
 Lane,Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,I5_Index_ID,index2,Sample_Project,Description
 @for(c <- containers){
 	@for(co <- c.contents){
-		@(c.support.line),@(co.sampleCode)_@(AbstractSampleSheetsfactory.getContentProperty(co,"tag")),@(c.support.code),,,@AbstractSampleSheetsfactory.getIndex("index-illumina-sequencing",AbstractSampleSheetsfactory.getContentProperty(co,"tag")).supplierName.get("illumina"),@AbstractSampleSheetsfactory.getIndex("index-illumina-sequencing",AbstractSampleSheetsfactory.getContentProperty(co,"tag")).sequence,,,,@(AbstractSampleSheetsfactory.getContentProperty(co,"tag"))_@(co.percentage))
+		@(c.support.line),@(co.sampleCode)_@(AbstractSampleSheetsfactory.getContentProperty(co,"tag")),@(c.support.code),,,@AbstractSampleSheetsfactory.getIndex("index-illumina-sequencing",AbstractSampleSheetsfactory.getContentProperty(co,"tag")).supplierName.get("illumina"),@AbstractSampleSheetsfactory.getIndex("index-illumina-sequencing",AbstractSampleSheetsfactory.getContentProperty(co,"tag")).sequence,,,,@(AbstractSampleSheetsfactory.getContentProperty(co,"tag"))_@(co.percentage)
 	}
 } 
 
