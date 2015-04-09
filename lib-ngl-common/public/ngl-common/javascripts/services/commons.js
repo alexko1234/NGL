@@ -583,7 +583,7 @@ angular.module('commonsServices', []).
   		    			+'<span class="caret"></span>'
   		    			+'</button>'
   		    			+'<ul class="dropdown-menu dropdown-menu-right"  role="menu">'
-  				        +'<li ng-if="filter"><input ng-class="inputClass" type="text" ng-click="inputClick($event)" ng-model="filterValue" ng-change="setFilterValue(filterValue)"/></li>'
+  				        +'<li ng-if="filter"><input ng-class="inputClass" type="text" ng-click="inputClick($event)" ng-model="filterValue" ng-change="setFilterValue(filterValue)" placeholder="{{getMessage(\'bt-select.here\')}}"/></li>'
 
 
   				        // Liste des items déja cochés
@@ -732,6 +732,10 @@ angular.module('commonsServices', []).
 	      		    	return false;	      		    	
 	      		    }; 
 	      		  
+	      		  scope.getMessage = function(value){
+	      			  return Messages(value);
+	      		  };
+	      		    
       		      scope.itemGroupByLabel = function(item){
       		    	 return optionsConfig.groupByGetter(item);
       		      }

@@ -51,3 +51,5 @@ boolean.unset = ---
 valuation.TRUE = Oui
 valuation.FALSE = Non
 valuation.UNSET = ---
+
+bt-select.here = Taper ici !
