@@ -335,9 +335,9 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		         if (wells[i].data.x === (x+'') && wells[i].data.y===(y+'')) {
 		        	 var well = wells[i];
 		        	 if(well.data.valid === "FALSE"){
-		        		 return "alert alert-danger";
+		        		 return "alert alert-danger hidden-print";
 		        	 }else if(well.data.valid === "TRUE"){
-		        		 return "alert alert-success";
+		        		 return "alert alert-success hidden-print";
 		        	 }		        	
 		         }
 	        }
