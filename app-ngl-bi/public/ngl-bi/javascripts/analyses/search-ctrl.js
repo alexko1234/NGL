@@ -34,7 +34,7 @@ angular.module('home').controller('SearchCtrl',['$scope', '$routeParams', 'datat
 		
 	if(angular.isUndefined(mainService.getHomePage())){
 		mainService.setHomePage('search');
-		tabService.addTabs({label:Messages('analyses.menu.search'),href:jsRoutes.controllers.analyses.tpl.Analyses.home("search").url,remove:true});
+		tabService.addTabs({label:Messages('analyses.page.tab.search'),href:jsRoutes.controllers.analyses.tpl.Analyses.home("search").url,remove:true});
 		tabService.activeTab(0); // desactive le lien !
 	}
 	
@@ -149,7 +149,7 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 
 	
 	if(angular.isUndefined(mainService.getHomePage())){
 		mainService.setHomePage('state');
-		tabService.addTabs({label:Messages('analyses.menu.search'),href:jsRoutes.controllers.analyses.tpl.Analyses.home("state").url,remove:true});
+		tabService.addTabs({label:Messages('analyses.page.tab.search'),href:jsRoutes.controllers.analyses.tpl.Analyses.home("state").url,remove:true});
 		tabService.activeTab(0); // desactive le lien !
 	}
 

@@ -123,6 +123,9 @@ runs.menu.search = Recherche
 runs.menu.state = Changement d''Etat
 runs.menu.valuation = Evaluation
 runs.page.tab.validate = Runs à Evaluer
+runs.page.tab.search = Recherche de Runs
+runs.page.tab.state = Changement d''état de Runs
+
 
 runs.code = Code
 runs.type = Type
@@ -218,6 +221,11 @@ sequencingProgramType.value.SR = Single Read
 ############
 readsets.page.title=Readsets
 readsets.page.tab.validate = Readsets à Evaluer
+readsets.page.tab.search = Recherche de Readsets 
+readsets.page.tab.state = Changement d''état de Readsets
+readsets.page.tab.batch = Modification en masse de Readsets
+
+
 readsets.menu = Readsets
 readsets.menu.search = Recherche
 readsets.menu.state = Changement d''Etat
@@ -492,6 +500,8 @@ analyses.menu.state = Changement d''Etat
 analyses.menu.valuation = Evaluation
 
 analyses.page.tab.validate = Analyses à Evaluer
+analyses.page.tab.search = Recherche d'' Analyses 
+analyses.page.tab.state = Changement d''état d''Analyses
 
 
 analyses.code = Code

@@ -35,7 +35,7 @@ angular.module('home').controller('SearchCtrl',[ '$scope', '$routeParams', 'main
 	
 	if(angular.isUndefined(mainService.getHomePage())){
 		mainService.setHomePage('search');
-		tabService.addTabs({label:Messages('readsets.menu.search'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("search").url,remove:true});
+		tabService.addTabs({label:Messages('readsets.page.tab.search'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("search").url,remove:true});
 		tabService.activeTab(0); // desactive le lien !
 	}
 	
@@ -147,7 +147,7 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 
 	
 	if(angular.isUndefined(mainService.getHomePage())){
 		mainService.setHomePage('state');
-		tabService.addTabs({label:Messages('readsets.menu.search'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("state").url,remove:true});
+		tabService.addTabs({label:Messages('readsets.page.tab.state'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("state").url,remove:true});
 		tabService.activeTab(0); // desactive le lien !
 	}
 	
@@ -202,7 +202,7 @@ angular.module('home').controller('SearchBatchCtrl', ['$scope', '$routeParams', 
 		
 	if(angular.isUndefined(mainService.getHomePage())){
 		mainService.setHomePage('batch');
-		tabService.addTabs({label:Messages('readsets.menu.search'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("batch").url,remove:true});
+		tabService.addTabs({label:Messages('readsets.page.tab.batch'),href:jsRoutes.controllers.readsets.tpl.ReadSets.home("batch").url,remove:true});
 		tabService.activeTab(0); // desactive le lien !
 	}
 	
