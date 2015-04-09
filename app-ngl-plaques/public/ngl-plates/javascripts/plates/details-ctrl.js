@@ -321,7 +321,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		if(!angular.isUndefined(wells)){
 	        for (var i = 0; i <wells.length; i++) {
 		         if (wells[i].data.x === (x+'') && wells[i].data.y===(y+'')) {
-		        	 return wells[i].data.name;
+		        	 return wells[i].data.name.replace(/_/g,' ');
 		         }
 	        }
 		}

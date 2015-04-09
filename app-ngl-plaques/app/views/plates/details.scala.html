@@ -13,7 +13,7 @@
 </div>
 <div class="row  margin-bottom-5">
 <div class="col-md-12 col-lg-12 ">
-<div class="btn-toolbar">
+<div class="btn-toolbar hidden-print">
 <div class="btn-group">
 <button class="btn btn-default"  data-target="#tab1" data-toggle="tab" data-toggle="tooltip" title="@Messages("plates.button.table")">@Messages("plates.button.table")</button>
 <button class="btn btn-default"  data-target="#tab2" data-toggle="tab" data-toggle="tooltip" title="@Messages("plates.button.plate")">@Messages("plates.button.plate")</button>
@@ -54,7 +54,7 @@
 </div>
 </div>
 </div>
-<div class="row">
+<div class="row hidden-print">
 <div class="col-md-12 col-lg-12 ">
 <div ng-class="message.clazz" ng-show="message.text !== undefined">
 	<button class="close" data-dismiss="alert" type="button">×</button>
