@@ -102,6 +102,13 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			        	  order:false,
 			        	  edit:true,
 			        	  choiceInList:false
+			        },
+			        {property:"state.code",
+			        	  header: "state",
+			        	  type :"text",		    	  	
+			        	  order:false,
+			        	  edit:true,
+			        	  choiceInList:false
 			        }
 			]				
 	};
@@ -266,7 +273,14 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			        	hide:true,
 						edit:false,
 			        	order:true
-					}
+					},
+					 {property:"state.code",
+			        	  header: "state",
+			        	  type :"text",		    	  	
+			        	  order:false,
+			        	  edit:true,
+			        	  choiceInList:false
+			        }
 			 ]	        
 	};
 	
@@ -452,11 +466,30 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 
 	/* buttons section */
 	$scope.userValidate = function(){
+		// Recuperation des samples et mise à jour du statut
+		$scope.sampleDT.getData();
+		var tab_samples = $scope.sampleDT.getData();
+		for(var i = 0; i < tab_samples.length ; i++){
+			console.log("sampleCode = " + tab_samples[i].code + " state = "+ tab_samples[i].state.code);
+			tab_samples[i].state.code = "userValidate";
+			console.log("sampleCode = " + tab_samples[i].code + " state = "+ tab_samples[i].state.code);
+		}
+		$scope.samplesDT = datatable(samplesDTConfig);
+		$scope.sampleDT.setData(tab_samples, tab_samples.length);
+		// sauvegarde dans base des samples avec bon statut
 		$scope.sampleDT.save();		
-		//mettre a jour etat sample à userValidate
 		
-		//experiment
-		$scope.experimentDT.save();			
+		// Recuperation des experiments et mise à jour du statut
+		var tab_experiments = $scope.experimentDT.getData();
+		for(var i = 0; i < tab_experiments.length ; i++){
+			console.log("experimentCode = " + tab_experiments[i].code + " state = "+ tab_experiments[i].state.code);
+			tab_experiments[i].state.code = "userValidate";
+			console.log("experimentCode = " + tab_experiments[i].code + " state = "+ tab_experiments[i].state.code);
+		}	
+		$scope.experimentDT = datatable(experimentsDTConfig);
+		$scope.experimentDT.setData(tab_experiments, tab_experiments.length);
+		// sauvegarde dans base des experiments avec bon statut :
+		$scope.experimentDT.save();
 		
 		//met a jour l'etat de submission a userValidate
 		$scope.submission.state.code="userValidate";
