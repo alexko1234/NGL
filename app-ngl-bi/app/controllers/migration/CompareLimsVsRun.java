@@ -14,13 +14,16 @@ import java.util.stream.Stream;
 
 import org.mongojack.DBQuery;
 
+import lims.cns.dao.LimsAbandonDAO;
 import lims.models.experiment.illumina.Flowcell;
 import lims.models.experiment.illumina.Lane;
 import lims.models.experiment.illumina.Library;
+import lims.models.runs.LimsFile;
 import lims.services.ILimsRunServices;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
+import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
@@ -440,6 +443,57 @@ public class CompareLimsVsRun extends CommonController {
 		 }
 		cv.removeKeyFromRootKeyName("containers");
 		return modifyContainers;
+	}
+	
+	public static Result compareFile(Boolean update) {
+		
+		LimsAbandonDAO  limsAbandonDAO = Spring.getBeanOfType(LimsAbandonDAO.class);
+		MongoDBResult<ReadSet> readsets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class);
+		
+		ContextValidation cv = new ContextValidation("ngl");
+		cv.addKeyToRootKeyName("readsets");
+		while(readsets.cursor.hasNext()){
+			ReadSet rs = readsets.cursor.next();
+			ContextValidation cvrs = new ContextValidation("ngl");
+			cvrs.addKeyToRootKeyName(rs.code+" ("+rs.state.code+")");
+			List<LimsFile> limsFiles = limsAbandonDAO.getFiles(rs.code);
+			List<File> nglFiles = rs.files;
+			
+			if(limsFiles.size() != nglFiles.size()){
+				cvrs.addErrors("nbFiles","nbFiles is different between readset and lims : "+ nglFiles.size() +" != "+limsFiles.size());
+			}
+			
+			for(File nglF: nglFiles){
+				boolean find = false;
+				for(LimsFile limsFile: limsFiles){
+					if(nglF.fullname.equals(limsFile.fullname)){
+						find=true;
+						break;
+					}
+				}
+				if(!find){
+					cvrs.addErrors("fullname","not found file : "+nglF.fullname);
+				}
+			}
+			
+			cvrs.removeKeyFromRootKeyName(rs.code+" ("+rs.state.code+")");
+			if(cvrs.hasErrors() && update && (rs.state.code.equals("A") || rs.state.code.equals("UA")) && limsAbandonDAO.isLseqco(rs)){
+				 Logger.info("update support : "+rs.code);
+				 try{
+					 limsAbandonDAO.insertFiles(rs,true);
+				 }catch(Throwable t){
+					 Logger.error("probleme to synchonize files in dblims for "+rs.code,t);
+				 }
+			}
+			
+			if(cvrs.hasErrors() && (rs.state.code.equals("A") || rs.state.code.equals("UA"))  && limsAbandonDAO.isLseqco(rs)){
+				cv.addErrors(cvrs.errors); 
+			}else if(!limsAbandonDAO.isLseqco(rs)){
+				Logger.error("ReadSet not exist in dblims "+rs.code);
+			}
+		}
+		cv.displayErrors(logger);
+		return ok();
 	}
 	
 }
