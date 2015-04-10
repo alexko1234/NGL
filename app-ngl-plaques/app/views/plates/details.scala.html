@@ -11,9 +11,9 @@
 </div>
 </div>
 </div>
-<div class="row  margin-bottom-5">
+<div class="row margin-bottom-5 hidden-print">
 <div class="col-md-12 col-lg-12 ">
-<div class="btn-toolbar hidden-print">
+<div class="btn-toolbar">
 <div class="btn-group">
 <button class="btn btn-default"  data-target="#tab1" data-toggle="tab" data-toggle="tooltip" title="@Messages("plates.button.table")">@Messages("plates.button.table")</button>
 <button class="btn btn-default"  data-target="#tab2" data-toggle="tab" data-toggle="tooltip" title="@Messages("plates.button.plate")">@Messages("plates.button.plate")</button>
@@ -74,18 +74,13 @@
 
 
 <div class="row">
-<div class="col-md-12 col-lg-12 ">
+<div class="col-md-12 col-lg-12 col-xs-12">
 
 <form class="form-horizontal">
 <div class="row">
-<div class="col-md-4 col-lg-4">
-	@views.html.helper.columnLabelValue(Messages("plates.code")){
-		<p class="form-control-static">{{plate.code}}</p>
-	}
-	@views.html.helper.columnLabelValue(Messages("plates.typeName")){
-		<p class="form-control-static">{{plate.typeName}}</p>
-	}
-	@views.html.helper.columnLabelValue(Messages("plates.validQC")){
+
+<div class="col-md-4 col-lg-4 col-xs-4">
+@views.html.helper.columnLabelValue(Messages("plates.validQC")){
 		<div ng-switch on="isEditMode()">
 			<p ng-switch-when="false" class="form-control-static" ng-model='plate.validQC' codes="valuation"/>
 			<div ng-switch-when="true">
@@ -93,7 +88,10 @@
 			</div>
 		</div>	
 	}
-	@views.html.helper.columnLabelValue(Messages("plates.validRun")){
+
+</div>
+<div class="col-md-4 col-lg-4 col-xs-4">
+@views.html.helper.columnLabelValue(Messages("plates.validRun")){
 		<div ng-switch on="isEditMode()">
 			<p ng-switch-when="false" class="form-control-static" ng-model='plate.validRun' codes="valuation"/>
 			<div ng-switch-when="true">
@@ -101,9 +99,10 @@
 			</div>
 		</div>		
 	}
-	
+
 </div>
-<div class="col-md-4 col-lg-4">
+
+<div class="col-md-4 col-lg-4 col-xs-4">
 	@views.html.helper.columnLabelValue(Messages("plates.comment")){
 		<div ng-switch on="isEditMode()">
 			<p class="form-control-static" ng-switch-when="false" ng-bind="plate.comment"></p>
@@ -111,11 +110,15 @@
 		</div>	
 	}		
 </div>
+
 </div>
+
+
 </form>
 </div>
 </div>
-
+<div class="row">
+<div class="col-md-12 col-lg-12 col-xs-12">
 <div class="tab-content">
 <div class="tab-pane active" id="tab1">
 	<div class="datatable" datatable="datatable"></div>
@@ -144,6 +147,8 @@
         </table>
 </div>
 
+</div>
+</div>
 </div>
 
 
