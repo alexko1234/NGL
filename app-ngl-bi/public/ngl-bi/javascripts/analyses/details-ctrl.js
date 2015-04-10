@@ -92,7 +92,7 @@
 						tabService.addTabs({label:Messages('analyses.page.tab.validate'),href:jsRoutes.controllers.analyses.tpl.Analyses.home("valuation").url,remove:true});
 						tabService.addTabs({label:$scope.analysis.code,href:jsRoutes.controllers.analyses.tpl.Analyses.valuation( $scope.analysis.code).url,remove:true})
 					}else{ //detail mode
-						tabService.addTabs({label:Messages('analyses.menu.search'),href:jsRoutes.controllers.analyses.tpl.Analyses.home("search").url,remove:true});
+						tabService.addTabs({label:Messages('analyses.page.tab.search'),href:jsRoutes.controllers.analyses.tpl.Analyses.home("search").url,remove:true});
 						tabService.addTabs({label:$scope.analysis.code,href:jsRoutes.controllers.analyses.tpl.Analyses.get($scope.analysis.code).url,remove:true})									
 					}
 					tabService.activeTab($scope.getTabs(1));
