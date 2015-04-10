@@ -253,6 +253,7 @@ GET		/migrationRSFF								controllers.migration.RemoveStateFromFile.migration()
 GET		/migrationWheat								controllers.migration.UpdateBABle.migration()
 GET		/migrationFungi								controllers.migration.MigrationTaxonomyFungi.migration()
 GET		/compare-lims-support						controllers.migration.CompareLimsVsRun.compareSupport(update:Boolean ?=false)
+GET		/compare-lims-files							controllers.migration.CompareLimsVsRun.compareFile(update:Boolean ?=false)
 #GET		/compare-run-support						controllers.migration.CompareRunVsSupport.migration(readset:Boolean ?=true, support:Boolean ?=true, update:Boolean ?=false)
 
 #ngs-rg api
