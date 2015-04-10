@@ -228,6 +228,7 @@ experiment.placeholder.fromDate = Expérience depuis le (jj/mm/aaaa)
 experiment.placeholder.toDate = Expérience jusqu''au (jj/mm/aaaa)
 experiment.placeholder.user = Expérience créée par
 experiment.placeholder.code = Sélect. une expérience
+experiment.placeholder.reagents.kit = Taper ici
 
 experiments.msg.save.sucess = Sauvegarde réussie
 experiments.msg.save.error = Sauvegarde echouée

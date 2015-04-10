@@ -43,7 +43,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			        	 "listStyle":"bt-select-filter",
 			        	 "choiceInList":true,
 			        	 "possibleValues": 'lists.getKitCatalogs()',
-			        	 "render":'<div bt-select ng-model="value.data.kitCatalogCode" bt-options="kitCatalog.code as kitCatalog.name for kitCatalog in lists.getKitCatalogs()" ng-edit="false"></div>',
+			        	 "render":'<div bt-select ng-model="value.data.kitCatalogCode" bt-options="kitCatalog.code as kitCatalog.name for kitCatalog in lists.getKitCatalogs()" ng-edit="false" placeholder="Messages("experiment.placeholder.reagents.kit")"></div>',
 			        	 "edit":true
 			         },
 			         {
