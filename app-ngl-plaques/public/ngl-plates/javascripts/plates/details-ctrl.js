@@ -338,11 +338,11 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		        		 return "alert alert-danger hidden-print";
 		        	 }else if(well.data.valid === "TRUE"){
 		        		 return "alert alert-success hidden-print";
-		        	 }		        	
+		        	 }	        	
 		         }
 	        }
 		}
-        return "";
+        return "hidden-print";
      }
 	
 	init();
