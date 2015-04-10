@@ -19,6 +19,7 @@ import lims.models.experiment.illumina.DepotSolexa;
 import lims.models.experiment.illumina.LaneSolexa;
 import lims.models.experiment.illumina.RunSolexa;
 import lims.models.runs.EtatTacheHD;
+import lims.models.runs.LimsFile;
 import lims.models.runs.TacheHD;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TransientState;
@@ -352,7 +353,7 @@ public class LimsAbandonDAO {
 		*/
 		
 		if(deleteAllBeforeInsert){
-			this.jdbcTemplate.update("ps_FichierlotseqUnlotsequence @lseqco = ?",getLseqco(rs));
+			this.jdbcTemplate.update("ps_FichierlotseqUnlotsequence @lseqco = ?", getLseqco(rs));
 		}
 		
 		for(File file:rs.files){
@@ -378,7 +379,11 @@ public class LimsAbandonDAO {
 				+ "where lseqnom = ? and runhnom = ?",Integer.class, rs.code, rs.runCode);
 	}
 
-
+	public Boolean isLseqco(ReadSet rs){
+		return (this.jdbcTemplate.queryForObject("select count(lseqco) from Lotsequence l inner join Runhd r on r.runhco = l.runhco "
+				+ "where lseqnom = ? and runhnom = ?",Integer.class, rs.code, rs.runCode) > 0);
+	}
+	
 	private Integer convertLabel(String value) {
 		if("READ1".equalsIgnoreCase(value)){
 			return 1;
@@ -520,6 +525,27 @@ public class LimsAbandonDAO {
 		 }
 		return ds;
 		
+	}
+	
+	public List<LimsFile> getFiles(String readSetCode){
+		RowMapper<LimsFile> mapper = new RowMapper<LimsFile>(){
+
+			@Override
+			public LimsFile mapRow(ResultSet rs, int rowNum)
+					throws SQLException {
+					LimsFile ds = new LimsFile();
+					ds.fullname = rs.getString("fullname");
+					ds.extension = rs.getString("extension");
+					ds.asciiEncoding = rs.getString("asciiEncoding");
+					ds.typeCode = rs.getString("typeCode");
+					ds.label = rs.getString("label");
+					ds.usable = rs.getBoolean("usable");
+					return ds;					
+			}
+			
+		};
+		return this.jdbcTemplate.query("pl_FileUnReadSetToNGL @readSetCode = ?", mapper, readSetCode);		
+	
 	}
 }
 
