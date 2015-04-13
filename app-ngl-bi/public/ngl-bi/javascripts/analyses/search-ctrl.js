@@ -149,7 +149,7 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 
 	
 	if(angular.isUndefined(mainService.getHomePage())){
 		mainService.setHomePage('state');
-		tabService.addTabs({label:Messages('analyses.page.tab.search'),href:jsRoutes.controllers.analyses.tpl.Analyses.home("state").url,remove:true});
+		tabService.addTabs({label:Messages('analyses.page.tab.state'),href:jsRoutes.controllers.analyses.tpl.Analyses.home("state").url,remove:true});
 		tabService.activeTab(0); // desactive le lien !
 	}
 
