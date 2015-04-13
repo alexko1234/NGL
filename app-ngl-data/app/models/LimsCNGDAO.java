@@ -977,6 +977,8 @@ public class LimsCNGDAO {
 					public Index mapRow(ResultSet rs, int rowNum) throws SQLException {
 						Index index=new Index();
 						index.code=rs.getString("code");
+						index.name=rs.getString("code");
+						index.shortName=rs.getString("code");
 						index.categoryCode=rs.getString("code_category");
 						index.sequence=rs.getString("sequence");
 						index.traceInformation=new TraceInformation();

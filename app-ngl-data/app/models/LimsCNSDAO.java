@@ -718,6 +718,8 @@ public class LimsCNSDAO{
 					public Index mapRow(ResultSet rs, int rowNum) throws SQLException {
 						Index index=new Index();
 						index.code=rs.getString("tagkeyseq");
+						index.name=rs.getString("tagkeyseq");
+						index.shortName=rs.getString("tagkeyseq");
 						index.categoryCode=rs.getString("categoryCode");
 						index.sequence=rs.getString("tagseq");
 						index.supplierName=new HashMap<String, String>();
