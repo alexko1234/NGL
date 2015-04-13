@@ -18,6 +18,10 @@ public class Index extends DBObject implements IValidation{
 	public final String typeCode="index-illumina-sequencing"; 
 	public String categoryCode;
 	public String sequence;
+	
+	public String name;
+	public String shortName; //used by NGS-RG
+	
 	public Map<String,String> supplierName;
 	public TraceInformation traceInformation;
 	
@@ -27,7 +31,8 @@ public class Index extends DBObject implements IValidation{
 		CommonValidationHelper.validateCode(this, InstanceConstants.PARAMETER_COLL_NAME, contextValidation);
 		ValidationHelper.required(contextValidation, categoryCode, "categoryCode");
 		ValidationHelper.required(contextValidation, sequence, "sequence");
-
+		ValidationHelper.required(contextValidation, name, "name");
+		ValidationHelper.required(contextValidation, shortName, "shortName");
 	}
 }
 
