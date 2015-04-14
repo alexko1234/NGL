@@ -983,7 +983,7 @@ angular.module('commonsServices', []).
     	    };
     	}]).filter('codes', function(){
     		return function(input, key){
-    			if(angular.isDefined(input) && null !== input && input !== "" && angular.isString(input)) return Messages(Codes(key+"."+input));
+    			if(angular.isDefined(input) && null !== input && input !== "" && !angular.isObject(input)) return Messages(Codes(key+"."+input));
     			return undefined;
     		}
     	}).filter('convert', ['convertValueServices', function(convertValueServices){
