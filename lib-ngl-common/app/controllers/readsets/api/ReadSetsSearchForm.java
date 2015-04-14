@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import play.data.format.Formats.DateTime;
 import controllers.ListForm;
@@ -12,29 +13,29 @@ import controllers.ListForm;
 
 public class ReadSetsSearchForm extends ListForm{
 	
-	public List<String> stateCodes;
+	public Set<String> stateCodes;
 	public String stateCode;
 	
-	public List<String> projectCodes;
+	public Set<String> projectCodes;
 	public String projectCode;
 	
-	public List<String> sampleCodes;
+	public Set<String> sampleCodes;
 	public String sampleCode;
 	
-	public List<String> runCodes;
+	public Set<String> runCodes;
 	public String runCode;
 	
-	public List<Integer> laneNumbers;
+	public Set<Integer> laneNumbers;
 	public Integer laneNumber;
 	
 	
 	public String bioinformaticValidCode;
 	public String productionValidCode;
 	
-	public List<String> runTypeCodes;
+	public Set<String> runTypeCodes;
 	
-	public List<String> sampleTypeCodes;
-	public List<String> sampleCategoryCodes;
+	public Set<String> sampleTypeCodes;
+	public Set<String> sampleCategoryCodes;
 	
 	
 	public Date fromDate;
@@ -43,13 +44,13 @@ public class ReadSetsSearchForm extends ListForm{
 	public String regexCode;
 	public String regexSampleCode;
     
-    public List<String> instrumentCodes;	
-    public List<String> productionResolutionCodes;
-    public List<String> bioinformaticResolutionCodes;
+    public Set<String> instrumentCodes;	
+    public Set<String> productionResolutionCodes;
+    public Set<String> bioinformaticResolutionCodes;
     
     public String productionValuationUser;
     
-    public List<String> existingFields, notExistingFields;
+    public Set<String> existingFields, notExistingFields;
     
     //public String isSentCCRT, isSentCollaborator;
 

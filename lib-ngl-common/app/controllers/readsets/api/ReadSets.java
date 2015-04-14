@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import models.laboratory.common.description.Level;
@@ -636,7 +637,7 @@ public class ReadSets extends ReadSetsController{
 
 	
 	
-	private static String findRegExpFromStringList(List<String> searchList) {
+	private static String findRegExpFromStringList(Set<String> searchList) {
 		String regex = ".*("; 
 		for (String itemList : searchList) {
 			regex += itemList + "|"; 
