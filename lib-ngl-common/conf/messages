@@ -5,6 +5,8 @@ date.format=dd/MM/yyyy
 #page field label
 page.search.label.search = Recherche
 
+docs.menu = Aide
+
 #panier
 button.addbasket = Ajouter au panier
 
