@@ -179,6 +179,17 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			]
 	};
 	
+	$scope.getTabClass = function(value){
+		 if(value === mainService.get('runActiveTab')){
+			 return 'active';
+		 }
+	 };
+	 
+	 $scope.setActiveTab = function(value){
+		 mainService.put('runActiveTab', value);
+	 };
+	 
+	
 	/* buttons section */
 	$scope.save = function(){
 		$scope.lanesDT.save();		
@@ -346,6 +357,10 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 					}
 					$scope.statesHierarchy = data;	
 				});	
+				
+				if(undefined == mainService.get('runActiveTab')){
+					 mainService.put('runActiveTab', 'general');
+				 }
 			}
 		});
 		
