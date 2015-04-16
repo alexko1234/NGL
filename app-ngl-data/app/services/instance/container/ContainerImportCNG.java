@@ -28,10 +28,10 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		loadSamples();	 	
 		updateSamples();
 		
-		//loadContainers("lane","prepa-flowcell-cng");
-		//updateContainers("lane","prepa-flowcell-cng");
+		loadContainers("lane","prepa-flowcell-cng");
+		updateContainers("lane","prepa-flowcell-cng");
 		
-		loadContainers("tube","lib-normalization");
+		//loadContainers("tube","lib-normalization");
 		//updateContainers("tube","lib-normalization");
 	}
 	
