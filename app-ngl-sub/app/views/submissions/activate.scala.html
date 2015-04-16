@@ -1,0 +1,37 @@
+@()
+@import views.html.helper._
+
+@formActivate() = {
+
+	@columnSearchForm{
+		@formGroup{
+			@** ceci est un commentaire
+			**@
+			<div class="form-control" bt-select  ng-model="activateService.form.projCode" filter="true" placeholder='@Messages("activate.placeholder.projectCode")' bt-options="project.code as project.code for project in activateService.lists.getProjects()" required ng-change=search()></div>	
+		}
+														
+	}
+	
+}
+
+<div class="row">
+<div class="col-md-12 col-lg-12"  messages="messages"></div>
+</div>
+
+<div class="row"> 
+	<div class="col-md-12 col-lg-12" datatable="activateService.datatable">
+		<div dt-form>	
+			<div class="tab-content">
+				<div class="tab-pane active" id="filters">
+					<form name="submissionForm" class="well well-small">
+						<div class="row">
+						@formActivate
+						
+						</div>		
+					</form>	
+				</div>
+			</div>
+		</div>
+	</div>
+</div> 
+

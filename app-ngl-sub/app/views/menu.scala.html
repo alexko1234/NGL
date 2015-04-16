@@ -29,8 +29,9 @@
 				<li class="dropdown @("active".when(nav.startsWith("submissions")))">
 					<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="submissions">@Messages("submissions.menu")<b class="caret"></b></a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="submissions">
-					<!-- sous menu create qui appelle controler tpl configuration.home -->
-						<li class="@("active".when(nav == "submissions.start"))"><a href="@controllers.submissions.tpl.routes.Submissions.home("start")">@Messages("submissions.menu.start")</a></li>																				
+					<!-- sous menu create qui appelle controler tpl submission.home -->
+						<li class="@("active".when(nav == "submissions.create"))"><a href="@controllers.submissions.tpl.routes.Submissions.home("create")">@Messages("submissions.menu.create")</a></li>																				
+						<li class="@("active".when(nav == "submissions.activate"))"><a href="@controllers.submissions.tpl.routes.Submissions.home("activate")">@Messages("submissions.menu.activate")</a></li>																				
 					</ul>
 				</li>				
 			</ul>

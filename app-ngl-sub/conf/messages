@@ -24,13 +24,14 @@ create.placeholder.strategySample=strategySample
 
 #Submission
 submissions.menu=Submission menu
-submissions.menu.start=Start submission
+submissions.menu.create=Create submission
+submissions.menu.activate=Activate submission
 submissions.page.title=Submission page
 create.placeholder.submissions.study=select a study
 create.placeholder.submissions.configuration=select a configuration
 #create.placeholder.experiment.title=experiment title
 create.placeholder.submissions.readSet=select a readSet
-
+activate.placeholder.projectCode=select a project
 submissions.tabs.sample=Sample
 submissions.tabs.experiment=Experiment
 submissions.tabs.run=Run

@@ -6,6 +6,7 @@ import play.mvc.Result;
 import views.html.submissions.home;
 import views.html.submissions.create;
 import views.html.submissions.details;
+import views.html.submissions.activate;
 import controllers.readsets.api.ReadSetsController;
 
 public class Submissions extends CommonController
@@ -32,7 +33,11 @@ public class Submissions extends CommonController
 		return ok(details.render());
 
 	}
-	
+	public static Result activate()
+	{
+		return ok(activate.render());
+
+	}	
 	public static Result javascriptRoutes() {
   	    response().setContentType("text/javascript");
   	    return ok(  	    		
@@ -48,7 +53,8 @@ public class Submissions extends CommonController
   	    		controllers.submissions.api.routes.javascript.Submissions.save(),
   	    		controllers.submissions.api.routes.javascript.Submissions.get(),
   	    		controllers.submissions.api.routes.javascript.Submissions.update(),
-  	    		controllers.submissions.tpl.routes.javascript.Submissions.get(),
+  	    		controllers.submissions.api.routes.javascript.Submissions.activate(),
+ 	    		controllers.submissions.tpl.routes.javascript.Submissions.get(),
   	    		controllers.samples.api.routes.javascript.Samples.list(),
   	    		controllers.samples.api.routes.javascript.Samples.update(),
   	  	    	controllers.experiments.api.routes.javascript.Experiments.list(),

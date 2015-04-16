@@ -9,6 +9,8 @@ GET		/											controllers.main.tpl.Main.home()
 GET		/submissions/:homeCode/home					controllers.submissions.tpl.Submissions.home(homeCode : java.lang.String)
 GET		/submissions/:code							controllers.submissions.tpl.Submissions.get(code : java.lang.String)
 GET		/tpl/submissions/create						controllers.submissions.tpl.Submissions.create()
+GET		/tpl/submissions/activate					controllers.submissions.tpl.Submissions.activate()
+PUT		/api/submissions/:submissionCode/activate	@controllers.submissions.api.Submissions.activate(submissionCode : java.lang.String)
 
 GET		/tpl/submissions/details					controllers.submissions.tpl.Submissions.details()
 
@@ -34,8 +36,8 @@ GET		/tpl/submissions/js-routes					controllers.submissions.tpl.Submissions.java
 GET		/studies/:homeCode/home						controllers.studies.tpl.Studies.home(homeCode: java.lang.String)
 GET		/api/sra/studies							@controllers.studies.api.Studies.list()
 POST	/api/sra/studies							@controllers.studies.api.Studies.save()
-GET		/tpl/sra/studies/create						controllers.studies.tpl.Studies.create()
-GET		/tpl/sra/studies/js-routes					controllers.studies.tpl.Studies.javascriptRoutes()
+GET		/tpl/studies/create					    	controllers.studies.tpl.Studies.create()
+GET		/tpl/studies/js-routes				    	controllers.studies.tpl.Studies.javascriptRoutes()
 
 
 # Configurations

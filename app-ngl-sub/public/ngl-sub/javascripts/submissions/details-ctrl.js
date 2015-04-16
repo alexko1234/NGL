@@ -22,6 +22,8 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				active:true,
 				showButton : false,
 				changeClass : false,
+				// important de mettre en mode local:
+				mode:'local',
 				url:function(line){
 					return jsRoutes.controllers.samples.api.Samples.update(line.code).url;
 				},
@@ -107,7 +109,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			        	  header: "state",
 			        	  type :"text",		    	  	
 			        	  order:false,
-			        	  edit:true,
+			        	  edit:false,
 			        	  choiceInList:false
 			        }
 			]				
@@ -128,6 +130,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			},
 			save : {
 				active:true,
+				mode:'local',
 				showButton : false,
 				changeClass : false,
 				url:function(lineValue){
@@ -278,7 +281,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			        	  header: "state",
 			        	  type :"text",		    	  	
 			        	  order:false,
-			        	  edit:true,
+			        	  edit:false,
 			        	  choiceInList:false
 			        }
 			 ]	        
@@ -467,26 +470,32 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 	/* buttons section */
 	$scope.userValidate = function(){
 		// Recuperation des samples et mise à jour du statut
-		$scope.sampleDT.getData();
+		// sauvegarde dans base des samples avec valeurs editees (valeurs utilisateurs) 
+		$scope.sampleDT.save();		
+		// Recuperation des samples et mise à jour du statut
 		var tab_samples = $scope.sampleDT.getData();
 		for(var i = 0; i < tab_samples.length ; i++){
 			console.log("sampleCode = " + tab_samples[i].code + " state = "+ tab_samples[i].state.code);
 			tab_samples[i].state.code = "userValidate";
 			console.log("sampleCode = " + tab_samples[i].code + " state = "+ tab_samples[i].state.code);
+			//$http.put(jsRoutes.controllers.samples.api.Samples.update(tab_samples[i].code).url, tab_samples[i]);
+			console.log("sampleTitle = " + tab_samples[i].title + " state = "+ tab_samples[i].state.code);
+
 		}
-		$scope.samplesDT = datatable(samplesDTConfig);
 		$scope.sampleDT.setData(tab_samples, tab_samples.length);
 		// sauvegarde dans base des samples avec bon statut
 		$scope.sampleDT.save();		
 		
 		// Recuperation des experiments et mise à jour du statut
+		$scope.experimentDT.save();		
 		var tab_experiments = $scope.experimentDT.getData();
 		for(var i = 0; i < tab_experiments.length ; i++){
 			console.log("experimentCode = " + tab_experiments[i].code + " state = "+ tab_experiments[i].state.code);
 			tab_experiments[i].state.code = "userValidate";
 			console.log("experimentCode = " + tab_experiments[i].code + " state = "+ tab_experiments[i].state.code);
+			//$http.put(jsRoutes.controllers.experiments.api.Experiments.update(tab_experiments[i].code).url, tab_experiments[i]);
 		}	
-		$scope.experimentDT = datatable(experimentsDTConfig);
+		// initialisation inutile $scope.experimentDT = datatable(experimentsDTConfig);
 		$scope.experimentDT.setData(tab_experiments, tab_experiments.length);
 		// sauvegarde dans base des experiments avec bon statut :
 		$scope.experimentDT.save();

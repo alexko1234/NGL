@@ -39,6 +39,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -273,11 +274,54 @@ public class SubmissionServices {
 		return study;
 	}
 
-	public void startSubmission(String submissionCode) throws SraException, IOException {
+	public void activateSubmission(String submissionCode) throws SraException, IOException {
 		// creer repertoire de soumission sur disque et faire liens sur données brutes
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
 		if (submission == null){
 			throw new SraException("aucun objet submission dans la base pour  : " + submissionCode);
+		}
+		// mettre à jour objet soumission et experiment et sample avec state ="inWaiting" :
+		if (submission.state.code.equalsIgnoreCase("userValidate")) {
+			// mettre à jour le champs submission.studyCode si besoin, si study à soumettre, si study avec state userValidate
+			Study study =  MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, submission.refStudyCode);
+			if (study.state.code.equalsIgnoreCase("userValidate")){
+				submission.studyCode = submission.refStudyCode;
+				study.state.code = "inWaiting";
+				MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class,
+						DBQuery.is("code", study.code).notExists("accession"),
+						DBUpdate.set("state.code", "inWaiting").set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 
+			}
+
+			// mettre à jour les samples pour le state :
+			for (String sampleCode: submission.refSampleCodes) {
+				Sample sample = MongoDBDAO.findByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, sampleCode);
+				if ( sample.state.code.equalsIgnoreCase("userValidate") ) {
+					sample.state.code = "inWaiting";
+					// mettre a jour la liste des samples a soumettre dans objet submission :
+					if (! submission.sampleCodes.contains(sampleCode)){
+						submission.sampleCodes.add(sampleCode);
+					}
+					MongoDBDAO.update(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class,
+							DBQuery.is("code", sampleCode).notExists("accession"),
+							DBUpdate.set("state.code", "inWaiting").set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 			
+					
+				}
+			}
+			// mettre à jour les experiment pour le state :
+			for (String experimentCode: submission.experimentCodes) {
+				Experiment expElt =  MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
+				if ( expElt.state.code.equalsIgnoreCase("userValidate") ) {
+					expElt.state.code = "inWaiting";
+					MongoDBDAO.update(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class,
+							DBQuery.is("code", experimentCode).notExists("accession"),
+							DBUpdate.set("state.code", "inWaiting").set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 
+				}
+			}
+			// mettre à jour la soumission pour le state et pour  pour le state :
+			MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class,
+					DBQuery.is("code", submission.code).notExists("accession"),
+					DBUpdate.set("state.code", "inWaiting").set("studyCode", submission.studyCode).set("sampleCodes", submission.sampleCodes).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 
+
 		}
 		File dataRep = new File(submission.submissionDirectory);
 		System.out.println("Creation du repertoire de soumission et liens vers donnees brutes " + submission.submissionDirectory);

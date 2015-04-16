@@ -28,7 +28,7 @@ angular.module('home').controller('CreateCtrl',[ '$http', '$scope', '$routeParam
 	
 	if(angular.isUndefined(mainService.getHomePage())){
 		mainService.setHomePage('create');
-		tabService.addTabs({label:Messages('submissionss.menu.create'),href:jsRoutes.controllers.submissions.tpl.Submissions.home("create").url,remove:true});
+		tabService.addTabs({label:Messages('submissions.menu.create'),href:jsRoutes.controllers.submissions.tpl.Submissions.home("create").url,remove:true});
 		tabService.activeTab(0); // desactive le lien !
 	}
 	

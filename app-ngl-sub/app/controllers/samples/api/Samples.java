@@ -58,7 +58,6 @@ public class Samples extends DocumentController<Sample>{
 			ctxVal.setUpdateMode();
 			ctxVal.getContextObjects().put("type", "sra");
 			sampleInput.traceInformation.setTraceInformation(getCurrentUser());
-			sampleInput.state = new State("userValidate", getCurrentUser());
 			sampleInput.validate(ctxVal);	
 			if (!ctxVal.hasErrors()) {
 				Logger.info("Update sample "+sample.code);

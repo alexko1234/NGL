@@ -41,7 +41,7 @@ public class Submissions extends DocumentController<Submission>{
 	final static Form<Submission> submissionForm = form(Submission.class);
 	final static Form<File> pathForm = form(File.class);
 	// declaration d'une instance submissionCreationForm qui permet de recuperer les
-	// données du formulaire startSubmission pour realiser la creation de la soumission => utilisee dans save()
+	// données du formulaire initSubmission pour realiser la creation de la soumission => utilisee dans save()
 	final static Form<SubmissionsCreationForm> submissionsCreationForm = form(SubmissionsCreationForm.class);
 	// declaration d'une instance submissionSearchForm qui permet de recuperer la liste des soumissions => utilisee dans list()
 	final static Form<SubmissionsSearchForm> submissionsSearchForm = form(SubmissionsSearchForm.class);
@@ -60,6 +60,7 @@ public class Submissions extends DocumentController<Submission>{
 	//search : function(){
 	//	this.datatable.search({projCode:this.form.projCode, state:'new'});
 	//},
+	
 	public Result list(){	
 		SubmissionsSearchForm submissionsSearchFilledForm = filledFormQueryString(SubmissionsSearchForm.class);
 		Logger.debug(submissionsSearchFilledForm.state);
@@ -156,6 +157,7 @@ public class Submissions extends DocumentController<Submission>{
 		}
 		return ok(Json.toJson(submission));
 	}
+	
 	public Result updateState(String code, String stateCode)
 	{
 		Submission submission = getSubmission(code);
@@ -187,7 +189,7 @@ public class Submissions extends DocumentController<Submission>{
 		return submission;
 	}
 
-	//public Result save(String projectCode, List<ReadSet> readSets, String studyCode, String configCode, String user) throws SraException, IOException
+
 	public Result save() throws SraException, IOException
 	{
 		Form<SubmissionsCreationForm> filledForm = getFilledForm(submissionsCreationForm, SubmissionsCreationForm.class);
@@ -219,6 +221,20 @@ public class Submissions extends DocumentController<Submission>{
 		return ok(Json.toJson(submissionCode));
 	}
 
+	
+	public Result activate(String submissionCode) throws SraException, IOException
+	{
+		SubmissionServices submissionServices = new SubmissionServices();
+		Submission submission = null;
+		try {
+			submissionServices.activateSubmission(submissionCode);			
+			submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
+		} catch (SraException e) {
+			return badRequest(e.getMessage());
+		}
+		//return ok();	
+		return ok(Json.toJson(submission));
+	}
 
 }
 

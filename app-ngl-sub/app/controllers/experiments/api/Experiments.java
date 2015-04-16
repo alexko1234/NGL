@@ -52,10 +52,12 @@ public class Experiments extends DocumentController<Experiment> {
 			ctxVal.setUpdateMode();
 			ctxVal.getContextObjects().put("type", "sra");
 			userExperiment.traceInformation.setTraceInformation(getCurrentUser());
-			userExperiment.state = new State("userValidate", getCurrentUser());
+			
+			//userExperiment.state = new State("userValidate", getCurrentUser());
 			userExperiment.validate(ctxVal);
-			System.out.println("updateExperiment: " +userExperiment.code);
-			System.out.println(Json.toJson(userExperiment));
+			System.out.println("updateExperiment: " +userExperiment.code );
+			System.out.println("experiment.state: " +userExperiment.state.code );
+			//System.out.println(Json.toJson(userExperiment));
 			if (!ctxVal.hasErrors()) {
 				MongoDBDAO.update(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, userExperiment);
 				return ok(Json.toJson(userExperiment));
