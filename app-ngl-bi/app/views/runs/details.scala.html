@@ -1,13 +1,5 @@
 @()
 
-
-@column()(value: Html) = {
-	<div class="col-md-3 col-lg-3">
-		@value
-	</div>
-}
-
-
 <div class="row">
 	<div class="col-md-12 col-lg-12 ">
 	<div class="page-header" ng-init="init()">
@@ -37,159 +29,44 @@
 
 <div class="row margin-bottom-7">
 <div class="col-md-12 col-lg-12">
-	<form class="form-horizontal">
-		<div class="row">
-			@column(){
-				@views.html.helper.columnLabelValue(Messages("runs.code")){
-					<p class="form-control-static">{{run.code}}</p>
-				}
+	<ul class="nav nav-tabs margin-bottom-5">
+		<li ng-class="getTabClass('general')"><a href="#" data-target="#general" data-toggle="tab" ng-click="setActiveTab('general')">@Messages("readsets.tabs.general")</a></li>
+		<li ng-class="getTabClass('workflow')"><a href="#" data-target="#workflow" data-toggle="tab" ng-click="setActiveTab('workflow')">@Messages("readsets.tabs.workflow")</a></li>    
+	</ul>
 
-				@views.html.helper.columnLabelValue(Messages("runs.state.code")){
-				<div ng-switch on="run.state.code=='F'">
-					<div ng-switch-when="true">
-						<p class="form-control-static" ng-model='run.state.code' codes="state"></p>
+
+<div class="tab-content">
+			<div class="tab-pane {{getTabClass('general')}}" id="general">
+			@partials.details_general()
+			</div>
+			<div class="tab-pane {{getTabClass('workflow')}}" id="workflow">
+				<div class="row">
+					<div class="col-md-4 col-lg-4">
+						<table class="table table-condensed table-hover table-bordered">
+						<thead>
+							<tr>
+								<th>@Messages("readsets.workflow.state")</th>
+								<th>@Messages("readsets.workflow.date")</th>
+								<th>@Messages("readsets.workflow.who")</th>								
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="state in run.state.historical|orderBy:'date'">
+								<td>{{state.code|codes:'state'}}</td>
+								<td>{{state.date|date:'@Messages("datetime.format")'}}</td>
+								<td>{{state.user}}</td>
+							</tr>
+						</tbody>
+					</table>
+					
 					</div>
-					<div ng-switch-when="false">
-				        <workflow-chart ng-attr-modal-bg-color="white" ng-attr-modal-width="700" ng-attr-modal-height="700" ng-attr-modal-header-text='@Messages("runs.modal.header.text")' ng-attr-modal-body-text=""  
-				        	ng-attr-modal-data="statesHierarchy" ng-attr-modal-historical-data="run.state.historical" ng-attr-modal-current-code="run.state.code">
-				        </workflow-chart>
-				    </div>
-				</div>
-				}
-				  
-				 
-				  @views.html.helper.columnLabelValue(Messages("runs.valuation.valid")){
-			     	<div ng-switch on="mainService.isEditMode()">
-						<p ng-switch-when="false" class="form-control-static" ng-model='run.valuation.valid' codes="valuation"/>
-						<div ng-switch-when="true">
-							<div bt-select class="form-control" ng-model="run.valuation.valid" bt-options="valid.code as valid.name for valid in lists.getValuations()"></div>
-						</div>
-					</div>
-				   }
-				  
-			    @views.html.helper.columnLabelValue(Messages("runs.valuation.resolutions")){
-			    	<div bt-select class="form-control" ng-model="run.valuation.resolutionCodes" multiple="true" bt-options="valid.code as valid.name group by valid.category.name for valid in lists.getResolutions()" ng-edit="mainService.isEditMode()"></div>					
-			   }
-				
-				@views.html.helper.columnLabelValue(Messages("runs.valuation.criteria")){
-						<div ng-switch on="mainService.isEditMode()">
-							<p class="form-control-static" ng-switch-when="false" ng-model="run.valuation.criteriaCode" codes="valuation_criteria"/>
-							<div ng-switch-when="true">
-								<div bt-select class="form-control" ng-model="run.valuation.criteriaCode" bt-options="valid.code as valid.name for valid in lists.getValuationCriterias()"></div>
-							</div>
-						</div>
-				}
-				
-				@views.html.helper.columnLabelValue(Messages("runs.valuation.user")){
-					<p class="form-control-static" >{{run.valuation.user}} ({{run.valuation.date | date:'@Messages("date.format")'}})</p>
-				}
-							
-				
-			}
-						
-		@column(){
-			@views.html.helper.columnLabelValue(Messages("runs.type")){
-				<p class="form-control-static">{{run.typeCode}}</p>
-			}
-			@views.html.helper.columnLabelValue(Messages("runs.nbClusterTotal")){
-				<p class="form-control-static">{{run.treatments.ngsrg["default"].nbClusterTotal.value | number}}</p>
-			}
-			@views.html.helper.columnLabelValue(Messages("runs.percentClusterIlluminaFilter")){
-				<p class="form-control-static" ng-class="highLight('treatments.ngsrg.default.percentClusterIlluminaFilter.value')">
-					{{run.treatments.ngsrg["default"].percentClusterIlluminaFilter.value | number}}
-				</p>
-			}
-			@views.html.helper.columnLabelValue(Messages("runs.nbClusterIlluminaFilter")){
-				<p class="form-control-static" ng-class="highLight('treatments.ngsrg.default.nbClusterIlluminaFilter.value')">
-					{{run.treatments.ngsrg["default"].nbClusterIlluminaFilter.value	| number}}
-				</p>
-			}
-				
-			@views.html.helper.columnLabelValue(Messages("runs.nbBase")){
-				<p class="form-control-static" ng-class="highLight('treatments.ngsrg.default.nbBase.value')">
-					{{run.treatments.ngsrg["default"].nbBase.value | number}}
-				</p>
-			}
-			@views.html.helper.columnLabelValue(Messages("runs.keep")){
-				<div class="checkbox" ng-if="mainService.isEditMode()">
- 					<label>
-						<input type="checkbox"  ng-model="run.keep" ng-disabled="run.deleted">&nbsp;	
-					</label>
-				</div>								
-				<p class="form-control-static" ng-switch on="run.keep" ng-if="!mainService.isEditMode()">
-					<i ng-switch-when="true" class="fa fa-check-square-o fa-lf"></i>
-					<i ng-switch-default class="fa fa-square-o fa-lg"></i>
-				</p>																				
-			}
-			
-			@views.html.helper.columnLabelValue(Messages("runs.deleted")){
-				<p class="form-control-static" ng-bind="run.deleted | codes:'boolean'"/>																				
-			}
-		}
-		
-		@column(){
-			@views.html.helper.columnLabelValue(Messages("runs.nbCycle")){
-				<p class="form-control-static">{{run.treatments.ngsrg["default"].nbCycle.value}}</p>
-			}
-			@views.html.helper.columnLabelValue(Messages("runs.controlLane")){
-				<p class="form-control-static" ng-class="highLightCtrlLane()">{{run.treatments.ngsrg["default"].controlLane.value}}</p>
-			}
-			@views.html.helper.columnLabelValue(Messages("runs.containerSupportCode")){
-				<p class="form-control-static">{{run.containerSupportCode}}</p>
-			}
-			@views.html.helper.columnLabelValue(Messages("runs.flowcellPosition")){
-				<p class="form-control-static">{{run.treatments.ngsrg["default"].flowcellPosition.value}}</p>
-			}
-			@views.html.helper.columnLabelValue(Messages("runs.rtaVersion")){
-				<p class="form-control-static">{{run.treatments.ngsrg["default"].rtaVersion.value}}</p>
-			}
-			@views.html.helper.columnLabelValue(Messages("runs.flowcellVersion")){
-				<p class="form-control-static">{{run.treatments.ngsrg["default"].flowcellVersion.value}}</p>
-			}
-		}
-		@column(){
-			
-			@views.html.helper.columnLabelValue(Messages("runs.intrumentCode")){
-				<p class="form-control-static">{{run.instrumentUsed.code}}</p>
-			}
-			@views.html.helper.columnLabelValue(Messages("runs.intrumentTypeCode")){
-				<p class="form-control-static">{{run.instrumentUsed.typeCode}}</p>
-			}
-			@views.html.helper.columnLabelValue(Messages("runs.sequencingStartDate")){
-				<p class="form-control-static">{{run.sequencingStartDate|date:'@Messages("date.format")'}}</p>
-			}
-			@views.html.helper.columnLabelValue(Messages("runs.endOfRG")){
-				<p class="form-control-static">{{run.state.historical|filter:'F-RG'|get:'date'|date:'@Messages("datetime.format")'}}</p>
-			}
-		}
-		</div>	
-		
-		
-		
-		<div class="row">
-			<div ng-switch on="mainService.isEditMode()">
-				<div class="col-md-9 col-lg-9" ng-switch-when="false">
-					<div class="form-group">
-						<label class="col-md-2 col-lg-2 control-label">@Messages("runs.valuation.comment")</label>
-						<div class="col-md-10 col-lg-10">
-			   				<p class="form-control-static" ng-bind-html="deliberatelyTrustHTMLComment()"></p>
-		   				</div>
-		   			</div>
-	   			</div>
-	   			<div class="col-md-9 col-lg-9" ng-switch-when="true">
-	   				<div class="form-group">
-						<label class="col-md-2 col-lg-2 control-label">@Messages("runs.valuation.comment")</label>
-						<div class="col-md-10 col-lg-10">
-							<textarea class="form-control" ng-model="run.valuation.comment" rows="3"></textarea>
-						</div>
-					</div>
-				</div>
-	  		</div>
-  		</div>
-  		
-	</form>		
+				</div>			
+			</div>
+		</div>
 </div>
 </div>
+
+
 
 <div class="row">
 	<div class="col-md-9 col-lg-9">
