@@ -17,7 +17,7 @@ public class Global extends GlobalSettings {
 
 	@Override
 	public void onStart(Application app) {
-		Logger.info("NGL has started");
+		Logger.error("NGL-SQ has started");
 		
 		Logger.info("Load knowledge base");
 		
