@@ -133,6 +133,13 @@ public class ExperimentService {
 				getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500"), "OneToVoid", 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)));
 		
+		
+		l.add(newExperimentType("Préparation flowcell","prepa-flowcell-cng",1100,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcell(),
+				getInstrumentUsedTypes("cBot", "cBot-onboard"),"ManyToOne", 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		
+		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		
 			//transformation CNS
@@ -261,12 +268,12 @@ public class ExperimentService {
 			// NO purif au CNG ??
 			// NO void au CNG ??
 			
-	
+			/*
 			l.add(newExperimentType("Préparation flowcell","prepa-flowcell-cng",1100,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcell(),
 					getInstrumentUsedTypes("cBot", "cBot-onboard"),"ManyToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-			
+			*/
 			l.add(newExperimentType("Pool Tube","pool-tube",1200,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
 					getInstrumentUsedTypes("hand"),"ManyToOne", 
