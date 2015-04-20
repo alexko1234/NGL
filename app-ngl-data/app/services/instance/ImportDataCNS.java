@@ -30,7 +30,7 @@ public class ImportDataCNS{
 		new TubeImportCNS(Duration.create(1,TimeUnit.MINUTES),Duration.create(60,TimeUnit.MINUTES));
 		new PrepaflowcellImportCNS(Duration.create(2,TimeUnit.MINUTES),Duration.create(15,TimeUnit.MINUTES));
 	    //new RunImportCNS(Duration.create(5,TimeUnit.MINUTES),Duration.create(60,TimeUnit.MINUTES));
-	    new UpdateReadSetCNS(Duration.create(10,TimeUnit.MINUTES),Duration.create(60,TimeUnit.MINUTES));
+	    //new UpdateReadSetCNS(Duration.create(10,TimeUnit.MINUTES),Duration.create(60,TimeUnit.MINUTES));
 	    //Update State and Tara Properties
 	    new UpdateTaraPropertiesCNS(Duration.create(ImportDataUtil.nextExecutionInSeconds(2,00),TimeUnit.SECONDS)
 				,Duration.create(1,TimeUnit.DAYS));
