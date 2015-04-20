@@ -200,6 +200,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 			if(firstTime){
 				List<TacheHD> taches = dao.listTacheHD(readSet.code);
 				Integer tacheId = null;
+				Integer cptreco = null;
 				if(taches.size() > 1){
 					logger.error(readSet.code+" : Plusieurs Taches");					
 				}else if(taches.size() == 1){
@@ -208,20 +209,24 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 					LotSeqValuation lsv = dao.getLotsequenceValuation(readSet.code);
 					if(null != lsv && null != lsv.tacco){
 						tacheId = lsv.tacco;
+						cptreco = lsv.cptreco;
 					}else{
 						logger.error(readSet.code+" : O Tache");
-					}
-					
+					}					
+				}
+				
+				if(null == cptreco || cptreco == 47){ //used to manage history recovery
+					cptreco = getCR(readSet.productionValuation);
 				}
 				
 				try{
-					dao.updateLotsequenceAbandon(readSet.code, getSeqVal(readSet.productionValuation, readSet.code), getCR(readSet.productionValuation), tacheId, 55);
+					dao.updateLotsequenceAbandon(readSet.code, getSeqVal(readSet.productionValuation, readSet.code), cptreco, tacheId, 55);
 					if(!TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)){
 						dao.updateLotsequenceAbandonBI(readSet.code, getAbandon(readSet.bioinformaticValuation, readSet.code));
 					}
 				}catch(Throwable t){  //in case of deadlock situation or other error we retry
 					logger.warn(readSet.code+" : first : "+t.getMessage());
-					dao.updateLotsequenceAbandon(readSet.code, getSeqVal(readSet.productionValuation, readSet.code), getCR(readSet.productionValuation), tacheId, 55);
+					dao.updateLotsequenceAbandon(readSet.code, getSeqVal(readSet.productionValuation, readSet.code), cptreco, tacheId, 55);
 					if(!TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)){
 						dao.updateLotsequenceAbandonBI(readSet.code, getAbandon(readSet.bioinformaticValuation, readSet.code));
 					}
