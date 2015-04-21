@@ -283,7 +283,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 					 .collect(Collectors.groupingBy((ReadSet r) -> r.projectCode));
 			
 			StringBuffer message = new StringBuffer();
-			message.append("<html>");
+			message.append("<html><meta http-equiv='content-type' content='text/html; charset=ISO-8859-1'>");
 			message.append("<div>Bonjour,<br/>"
 					+ "<br/>Le run <a href='"+biurl+"/runs/"+readSet.runCode+"'>"+readSet.runCode+"</a> a enti\u00e8rement \u00e9t\u00e9 \u00e9valu\u00e9.<br/>"
 					+"<br/>Vous trouverez ci-dessous les readsets qui le composent class\u00e9s par projet.<br/>"
