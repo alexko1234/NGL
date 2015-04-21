@@ -48,6 +48,12 @@
 					this.form = {};	
 				},
 				
+				refreshSubmissions : function(){
+					if(this.form.projCode!==null && this.form.projCode !== undefined){
+						this.datatable.search({projCode:this.form.projCode, state:'new'});
+					}
+				},
+				
 				refreshSraStudies : function(){
 					if(this.form.projCode!==null && this.form.projCode !== undefined){
 						// appel de refresh.sraStudies dans lists de common.js
@@ -83,7 +89,10 @@
 						mainService.setDatatable(createService.datatable);
 						createService.datatable.setColumnsConfig(getColumns());		
 					}else if(angular.isDefined(mainService.getDatatable())){
-						createService.datatable = mainService.getDatatable();			
+						createService.datatable = mainService.getDatatable();		
+						if(this.form.projCode!==null && this.form.projCode !== undefined){
+							this.datatable.search({projCode:this.form.projCode, state:'new'});
+						}
 					}	
 					
 					//to avoid to lost the previous search
@@ -96,6 +105,8 @@
 					if(angular.isDefined($routeParams)){
 						this.setRouteParams($routeParams);
 					}
+					
+					
 				}
 		};
 		

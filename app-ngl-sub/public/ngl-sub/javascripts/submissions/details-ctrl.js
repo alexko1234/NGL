@@ -502,7 +502,12 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 		
 		//met a jour l'etat de submission a userValidate
 		$scope.submission.state.code="userValidate";
-		$http.put(jsRoutes.controllers.submissions.api.Submissions.update($scope.submission.code).url, $scope.submission)
+		$http.put(jsRoutes.controllers.submissions.api.Submissions.update($scope.submission.code).url, $scope.submission).success(function(data) {
+			//Set success message
+			$scope.messages.setSuccess("save");
+		}).error(function(data){
+			$scope.messages.setError("save");
+		});
 		
 	};
 	

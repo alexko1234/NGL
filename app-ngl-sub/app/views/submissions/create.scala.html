@@ -7,7 +7,7 @@
 		@formGroup{
 			@** ceci est un commentaire
 			**@
-			<div class="form-control" bt-select  ng-model="createService.form.projCode" filter="true" placeholder='@Messages("create.placeholder.projectCode")' bt-options="project.code as project.code for project in createService.lists.getProjects()" required></div>	
+			<div class="form-control" bt-select  ng-model="createService.form.projCode" filter="true" placeholder='@Messages("create.placeholder.projectCode")' bt-options="project.code as project.code for project in createService.lists.getProjects()" required ng-change="createService.refreshSubmissions()"></div>	
 		}
 		@** 
 		bt-options = createService.lists.getSraStudies() defini dans ngl-common/common.js

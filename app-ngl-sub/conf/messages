@@ -48,6 +48,7 @@ button.save=Save
 button.reset=Reset
 button.cancel=Cancel
 button.edit=Edit
+button.validate=Validate
 #Containers
 #containers.title = Containers
 #containers.menu = Containers
