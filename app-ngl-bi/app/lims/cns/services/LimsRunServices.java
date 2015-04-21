@@ -302,7 +302,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 			MailServices mailService = new MailServices();
 			Set<String> destinataires = new HashSet<String>();
 			destinataires.addAll(Arrays.asList(alertMailDest.split(",")));
-			mailService.sendMail(alertMailExp, destinataires, "RUN Validation Terminée : "+readSet.runCode, message.toString());
+			mailService.sendMail(alertMailExp, destinataires, "[NGL-BI] Run Validation Terminée : "+readSet.runCode, message.toString());
 		}				
 	}
 
