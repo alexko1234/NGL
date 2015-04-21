@@ -20,6 +20,7 @@ import lims.models.experiment.illumina.LaneSolexa;
 import lims.models.experiment.illumina.RunSolexa;
 import lims.models.runs.EtatTacheHD;
 import lims.models.runs.LimsFile;
+import lims.models.runs.ResponProjet;
 import lims.models.runs.TacheHD;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TransientState;
@@ -547,5 +548,27 @@ public class LimsAbandonDAO {
 		return this.jdbcTemplate.query("pl_FileUnReadSetToNGL @readSetCode = ?", mapper, readSetCode);		
 	
 	}
+	
+	
+	public ResponProjet getResponProjet(String projectCode){
+		RowMapper<ResponProjet> mapper = new RowMapper<ResponProjet>(){
+
+			@Override
+			public ResponProjet mapRow(ResultSet rs, int rowNum)
+					throws SQLException {
+					ResponProjet rp = new ResponProjet();
+					rp.code = rs.getString("code_projet");
+					rp.name = rs.getString("nom_projet");
+					rp.biomanager = rs.getString("nom_bio").toUpperCase()+" "+rs.getString("pren_bio");
+					rp.infomanager = rs.getString("nom_info").toUpperCase()+" "+rs.getString("pren_info");;
+					
+					return rp;					
+			}
+			
+		};
+		return this.jdbcTemplate.queryForObject("pl_ResponDuProjet @prsco = ?", mapper, projectCode);	
+		
+	}
+	
 }
 

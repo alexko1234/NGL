@@ -3,10 +3,14 @@ package lims.cns.services;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import lims.cns.dao.LimsAbandonDAO;
 import lims.cns.dao.LimsExperiment;
@@ -19,8 +23,11 @@ import lims.models.experiment.illumina.DepotSolexa;
 import lims.models.experiment.illumina.Flowcell;
 import lims.models.experiment.illumina.Library;
 import lims.models.instrument.Instrument;
+import lims.models.runs.ResponProjet;
 import lims.models.runs.TacheHD;
 import lims.services.ILimsRunServices;
+import mail.MailServiceException;
+import mail.MailServices;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.run.instance.Lane;
@@ -35,8 +42,11 @@ import org.mongojack.DBQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mongodb.BasicDBObject;
+
 import play.Logger;
 import play.Logger.ALogger;
+import play.Play;
 import fr.cea.ig.MongoDBDAO;
 
 
@@ -196,6 +206,10 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 	@Override
 	public void valuationReadSet(ReadSet readSet, boolean firstTime) {
 		try{
+			
+			//TODO send mail
+			sendMailAgirs(readSet);
+			
 			Logger.info("valuationReadSet : "+readSet.code+" / "+firstTime);
 			if(firstTime){
 				List<TacheHD> taches = dao.listTacheHD(readSet.code);
@@ -255,6 +269,50 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 	}
 
 
+	private void sendMailAgirs(ReadSet readSet) throws MailServiceException {
+		
+		if(!MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+				DBQuery.is("runCode", readSet.runCode).notIn("state.code", "A", "UA"))){
+			
+			
+			List<ReadSet> readsets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+					DBQuery.is("runCode", readSet.runCode), getReadSetKeys()).toList();
+			
+			Map<String, List<ReadSet>> mReadSets = readsets.stream()
+					 .collect(Collectors.groupingBy((ReadSet r) -> r.projectCode));
+			
+			StringBuffer message = new StringBuffer();
+			message.append("<html>");
+			
+			message.append("<h3 style='text-decoration: underline;'>").append(readSet.runCode).append("</h3>");
+			
+			for(String key : mReadSets.keySet()){				
+				ResponProjet rp = dao.getResponProjet(key);				
+				message.append("<h4 style='text-decoration: underline;'>").append(key).append("</h4>");
+				message.append("<div style='color:green;'>").append(rp.name).append("</div>");
+				message.append("<div style='color:blue;'>").append(rp.biomanager).append("</div>");
+				message.append("<div style='color:blue;'>").append(rp.infomanager).append("</div>").append("</br>");				
+				mReadSets.get(key).forEach((ReadSet r) -> message.append(r.code).append("</br>"));
+				message.append("</br>");
+			}
+			message.append("</html>");
+			
+			String alertMailExp = Play.application().configuration().getString("validation.mail.from"); 
+			String alertMailDest = Play.application().configuration().getString("validation.mail.to");    	
+			MailServices mailService = new MailServices();
+			Set<String> destinataires = new HashSet<String>();
+			destinataires.addAll(Arrays.asList(alertMailDest.split(",")));
+			mailService.sendMail(alertMailExp, destinataires, "RUN Validation Terminée : "+readSet.runCode, message.toString());
+		}				
+	}
+
+	private static BasicDBObject getReadSetKeys() {
+		BasicDBObject keys = new BasicDBObject();
+		keys.put("treatments", 0);
+		return keys;
+	}
+
+	
 	private Integer getCR(Valuation valuation) {
 		int score = 0;
 		if(valuation.resolutionCodes !=null){
