@@ -274,6 +274,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 		if(!MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.is("runCode", readSet.runCode).notIn("state.code", "A", "UA"))){
 			
+			String biurl = "http://ngl-bi.genoscope.cns.fr";
 			
 			List<ReadSet> readsets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 					DBQuery.is("runCode", readSet.runCode), getReadSetKeys()).toList();
@@ -283,18 +284,23 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 			
 			StringBuffer message = new StringBuffer();
 			message.append("<html>");
-			
+			message.append("<div>Bonjour,</br>"
+					+ "</br>Le run <a href='"+biurl+"/runs/"+readSet.runCode+"'>"+readSet.runCode+"</a> a entièrement été évalué.</br>"
+					+"</br>Vous trouverez ci-dessous les readsets qui le composent classés par projet.</br>"
+					+"N'hésitez pas à cliquer sur le nom d'un readset pour voir le détails de ses traitements."
+					+ "</div>");
 			message.append("<h3 style='text-decoration: underline;'>").append(readSet.runCode).append("</h3>");
 			
 			for(String key : mReadSets.keySet()){				
 				ResponProjet rp = dao.getResponProjet(key);				
-				message.append("<h4 style='text-decoration: underline;'>").append(key).append("</h4>");
+				message.append("<h4 style='text-decoration: underline;'>Projet : ").append(key).append("</h4>");
 				message.append("<div style='color:green;'>").append(rp.name).append("</div>");
-				message.append("<div style='color:blue;'>").append(rp.biomanager).append("</div>");
-				message.append("<div style='color:blue;'>").append(rp.infomanager).append("</div>").append("</br>");				
-				mReadSets.get(key).forEach((ReadSet r) -> message.append(r.code).append("</br>"));
+				message.append("<div style='color:black;'>").append(rp.biomanager).append("</div>");
+				message.append("<div style='color:black;'>").append(rp.infomanager).append("</div>").append("</br>");				
+				mReadSets.get(key).forEach((ReadSet r) -> message.append("<a href='"+biurl+"/readsets/"+r.code+"'>").append(r.code).append("</a></br>"));
 				message.append("</br>");
 			}
+			message.append("</br>Merci et à bientôt sur <a href='"+biurl+"'>NGL-BI</a> !");
 			message.append("</html>");
 			
 			String alertMailExp = Play.application().configuration().getString("validation.mail.from"); 
@@ -302,7 +308,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 			MailServices mailService = new MailServices();
 			Set<String> destinataires = new HashSet<String>();
 			destinataires.addAll(Arrays.asList(alertMailDest.split(",")));
-			mailService.sendMail(alertMailExp, destinataires, "[NGL-BI] Run Validation Terminée : "+readSet.runCode, message.toString());
+			mailService.sendMail(alertMailExp, destinataires, "[NGL-BI] Run Evaluation Terminée : "+readSet.runCode, message.toString());
 		}				
 	}
 
