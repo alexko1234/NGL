@@ -56,13 +56,13 @@ public class Studies extends DocumentController<Study>{
 				if(contextValidation.errors.size()==0) {
 					MongoDBDAO.save(InstanceConstants.SRA_STUDY_COLL_NAME, userStudy);
 				} else {
-					return badRequest("study no valid : " + contextValidation.errors);
+					return badRequest(filledForm.errorsAsJson());
 				}
 			} else {
 				return badRequest("study with id " + userStudy._id + " already exist");
 			}
 		
-		return ok("Successful save study " + userStudy.code);
+		return ok(Json.toJson(userStudy.code));
 	}
 	// Renvoie le Json correspondant à la liste des study ayant le projectCode indique dans la variable du formulaire projectCode et stockee dans
 	// l'instance studiesSearchForm

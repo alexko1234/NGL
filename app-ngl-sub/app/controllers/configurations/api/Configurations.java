@@ -50,13 +50,13 @@ public class Configurations extends DocumentController<Configuration>{
 				if(contextValidation.errors.size()==0) {
 					MongoDBDAO.save(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, userConfiguration);
 				} else {
-					return badRequest("configuration no valid : " + contextValidation.errors);
+					return badRequest(filledForm.errorsAsJson());
 				}
 			} else {
 				return badRequest("configuration with id "+userConfiguration._id +" already exist");
 			}
 		
-		return ok("Successful save configuration : " + userConfiguration.code);
+		return ok(Json.toJson(userConfiguration.code));
 	}
 
 	

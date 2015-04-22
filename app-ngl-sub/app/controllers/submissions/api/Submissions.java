@@ -206,17 +206,22 @@ public class Submissions extends DocumentController<Submission>{
 
 		SubmissionServices submissionServices = new SubmissionServices();
 		String submissionCode;
-		ContextValidation contextValidation = new ContextValidation(user);
+		ContextValidation contextValidation = new ContextValidation(user, filledForm.errors());
 		contextValidation.setCreationMode();
 		contextValidation.getContextObjects().put("type", "sra");
 		try {
 			submissionCode = submissionServices.initNewSubmission(submissionsCreationForm.projCode, readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, user, contextValidation);
 			if (contextValidation.hasErrors()){
 				contextValidation.displayErrors(Logger.of("SRA"));
-				return badRequest("Voir Display Error");
+				return badRequest(filledForm.errorsAsJson());
+				
 			}
 		} catch (SraException e) {
-			return badRequest(e.getMessage());
+			if (contextValidation.hasErrors()){
+				return badRequest(filledForm.errorsAsJson());
+			}else{
+				return badRequest("{Error : {\"exception\" : \""+e.getMessage()+"\"}}");
+			}
 		}
 		return ok(Json.toJson(submissionCode));
 	}

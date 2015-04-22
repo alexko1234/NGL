@@ -18,8 +18,11 @@ angular.module('home').controller('CreateCtrl',[ '$http', '$scope', '$routeParam
 	$scope.save = function(){
 		mainService.setForm($scope.createService.form);
 			$http.post(jsRoutes.controllers.configurations.api.Configurations.save().url, mainService.getForm()).success(function(data) {
-				$scope.messages.setSuccess("save");
+				$scope.messages.clazz="alert alert-success";
+				$scope.messages.text=Messages('configurations.msg.save.success')+" : "+data;
+				$scope.messages.open();
 			}).error(function(data){
+				$scope.messages.setDetails(data);
 				$scope.messages.setError("save");
 			});
 	};

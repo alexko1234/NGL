@@ -504,8 +504,11 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 		$scope.submission.state.code="userValidate";
 		$http.put(jsRoutes.controllers.submissions.api.Submissions.update($scope.submission.code).url, $scope.submission).success(function(data) {
 			//Set success message
-			$scope.messages.setSuccess("save");
+			$scope.messages.clazz="alert alert-success";
+			$scope.messages.text=Messages('submissions.msg.validate.success');
+			$scope.messages.open();
 		}).error(function(data){
+			$scope.messages.setDetails(data);
 			$scope.messages.setError("save");
 		});
 		
