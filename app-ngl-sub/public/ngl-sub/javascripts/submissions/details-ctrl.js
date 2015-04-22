@@ -17,7 +17,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				showButton : false,
 				withoutSelect : true,
 				columnMode : true,
-				enabled : function(line){
+				lineMode : function(line){
 					if(line.state.code != "inWaiting")
 						return true;
 					else 
