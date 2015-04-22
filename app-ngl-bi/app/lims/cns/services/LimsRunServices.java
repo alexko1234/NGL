@@ -207,8 +207,10 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 	public void valuationReadSet(ReadSet readSet, boolean firstTime) {
 		try{
 			
+			sendMailAgirs(readSet);
 						
 			Logger.info("valuationReadSet : "+readSet.code+" / "+firstTime);
+			
 			Integer cptreco = null;
 			Integer tacheId = null;
 			if(firstTime){
@@ -295,7 +297,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 	private void sendMailAgirs(ReadSet readSet) throws MailServiceException {
 		Logger.debug("send mail agirs");
 		if(!MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-				DBQuery.is("runCode", readSet.runCode).notIn("state.historical.code", "F-QC"))){
+				DBQuery.is("runCode", readSet.runCode).notIn("state.historical.code", "F-VQC"))){
 			Logger.debug("send mail agirs");
 			String biurl = "http://ngl-bi.genoscope.cns.fr";
 			
@@ -308,7 +310,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 			StringBuffer message = new StringBuffer();
 			message.append("<html><meta http-equiv='content-type' content='text/html; charset=ISO-8859-1'>");
 			message.append("<div>Bonjour,<br/>"
-					+ "<br/>Tous les readsets du run <a href='"+biurl+"/runs/"+readSet.runCode+"'>"+readSet.runCode+"</a> ont passes NGS_QC.<br/>"
+					+ "<br/>Tous les readsets du run <a href='"+biurl+"/runs/"+readSet.runCode+"'>"+readSet.runCode+"</a> ont ete evalues.<br/>"
 					+"<br/>Vous trouverez ci-dessous les readsets classes par projet.<br/>"
 					+"N'hesitez pas a cliquer sur le nom d'un readset pour voir le details de ses traitements."
 					+ "</div>");
@@ -331,7 +333,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 			MailServices mailService = new MailServices();
 			Set<String> destinataires = new HashSet<String>();
 			destinataires.addAll(Arrays.asList(alertMailDest.split(",")));
-			mailService.sendMail(alertMailExp, destinataires, "[NGL-BI] Tous les readsets du run "+readSet.runCode+" sont prets a etre evalues.", message.toString());
+			mailService.sendMail(alertMailExp, destinataires, "[NGL-BI] Tous les readsets du run "+readSet.runCode+" ont ete evalues.", message.toString());
 		}				
 	}
 
@@ -451,7 +453,6 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 	@Override
 	public void updateReadSetAfterQC(ReadSet readset) {
 		try{
-			sendMailAgirs(readset);
 			dao.updateReadSetEtat(readset, 2);
 			dao.updateReadSetBaseUtil(readset);
 			dao.insertFiles(readset, true);
