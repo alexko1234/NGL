@@ -16,7 +16,13 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				active:true,
 				showButton : false,
 				withoutSelect : true,
-				columnMode : true
+				columnMode : true,
+				enabled : function(line){
+					if(line.state.code != "inWaiting")
+						return true;
+					else 
+						return false;
+				}
 			},
 			save : {
 				active:true,

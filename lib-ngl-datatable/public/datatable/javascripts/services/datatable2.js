@@ -89,6 +89,7 @@ angular.module('datatableServices', []).
 								start : false,
 								all : false,
 								columns : {}, //columnIndex : {edit : true/false, value:undefined}
+								enabled:undefined //function used to define if line is editable. 
 							},
 							save :{
 								active:false,
@@ -805,8 +806,12 @@ angular.module('datatableServices', []).
 			    				for(var i = 0; i < this.displayResult.length; i++){
 			    					
 			    					if(this.displayResult[i].line.selected || this.config.edit.withoutSelect){
-			    						this.displayResult[i].line.edit=true;			    						
-			    						find = true;			    					
+			    						if(angular.isUndefined(this.config.edit.enabled) || (angular.isFunction(this.config.edit.enabled) && this.config.edit.enabled(this.displayResult[i].data))){
+			    							this.displayResult[i].line.edit=true;			    						
+			    							find = true;			    					
+			    						}else
+			    							this.displayResult[i].line.edit=false;
+			    						
 			    					}else{
 			    						this.displayResult[i].line.edit=false;
 			    					}			    					   					
