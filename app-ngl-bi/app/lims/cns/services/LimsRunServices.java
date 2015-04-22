@@ -207,9 +207,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 	public void valuationReadSet(ReadSet readSet, boolean firstTime) {
 		try{
 			
-			//TODO send mail
-			sendMailAgirs(readSet);
-			
+						
 			Logger.info("valuationReadSet : "+readSet.code+" / "+firstTime);
 			if(firstTime){
 				List<TacheHD> taches = dao.listTacheHD(readSet.code);
@@ -270,10 +268,10 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 
 
 	private void sendMailAgirs(ReadSet readSet) throws MailServiceException {
-		
+		Logger.debug("send mail agirs");
 		if(!MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-				DBQuery.is("runCode", readSet.runCode).notIn("state.code", "A", "UA"))){
-			
+				DBQuery.is("runCode", readSet.runCode).notIn("state.historical.code", "F-QC"))){
+			Logger.debug("send mail agirs");
 			String biurl = "http://ngl-bi.genoscope.cns.fr";
 			
 			List<ReadSet> readsets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
@@ -285,9 +283,9 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 			StringBuffer message = new StringBuffer();
 			message.append("<html><meta http-equiv='content-type' content='text/html; charset=ISO-8859-1'>");
 			message.append("<div>Bonjour,<br/>"
-					+ "<br/>Le run <a href='"+biurl+"/runs/"+readSet.runCode+"'>"+readSet.runCode+"</a> a enti\u00e8rement \u00e9t\u00e9 \u00e9valu\u00e9.<br/>"
-					+"<br/>Vous trouverez ci-dessous les readsets qui le composent class\u00e9s par projet.<br/>"
-					+"N'h\u00e9sitez pas à cliquer sur le nom d'un readset pour voir le d\u00e9tails de ses traitements."
+					+ "<br/>Tous les readsets du run <a href='"+biurl+"/runs/"+readSet.runCode+"'>"+readSet.runCode+"</a> ont passes NGS_QC.<br/>"
+					+"<br/>Vous trouverez ci-dessous les readsets classes par projet.<br/>"
+					+"N'hesitez pas a cliquer sur le nom d'un readset pour voir le details de ses traitements."
 					+ "</div>");
 			message.append("<h3 style='text-decoration: underline;'>").append(readSet.runCode).append("</h3>");
 			
@@ -300,7 +298,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 				mReadSets.get(key).forEach((ReadSet r) -> message.append("<a href='"+biurl+"/readsets/"+r.code+"'>").append(r.code).append("</a><br/>"));
 				message.append("<br/>");
 			}
-			message.append("<br/>Merci et \u00e0 bient\u00f4t sur <a href='"+biurl+"'>NGL-BI</a> !");
+			message.append("<br/>Merci et a bientot sur <a href='"+biurl+"'>NGL-BI</a> !");
 			message.append("</html>");
 			
 			String alertMailExp = Play.application().configuration().getString("validation.mail.from"); 
@@ -308,7 +306,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 			MailServices mailService = new MailServices();
 			Set<String> destinataires = new HashSet<String>();
 			destinataires.addAll(Arrays.asList(alertMailDest.split(",")));
-			mailService.sendMail(alertMailExp, destinataires, "[NGL-BI] Run Evaluation Terminée : "+readSet.runCode, message.toString());
+			mailService.sendMail(alertMailExp, destinataires, "[NGL-BI] Tous les readsets du run "+readSet.runCode+" sont prets a etre evalues.", message.toString());
 		}				
 	}
 
@@ -428,6 +426,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 	@Override
 	public void updateReadSetAfterQC(ReadSet readset) {
 		try{
+			sendMailAgirs(readset);
 			dao.updateReadSetEtat(readset, 2);
 			dao.updateReadSetBaseUtil(readset);
 			dao.insertFiles(readset, true);
