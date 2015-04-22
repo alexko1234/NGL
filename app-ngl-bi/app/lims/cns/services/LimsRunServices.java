@@ -209,10 +209,12 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 			
 						
 			Logger.info("valuationReadSet : "+readSet.code+" / "+firstTime);
+			Integer cptreco = null;
+			Integer tacheId = null;
 			if(firstTime){
 				List<TacheHD> taches = dao.listTacheHD(readSet.code);
-				Integer tacheId = null;
-				Integer cptreco = null;
+				
+				
 				if(taches.size() > 1){
 					logger.error(readSet.code+" : Plusieurs Taches");					
 				}else if(taches.size() == 1){
@@ -223,6 +225,8 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 				
 				LotSeqValuation lsv = dao.getLotsequenceValuation(readSet.code);
 				if(null != lsv){
+					Logger.debug(lsv.toString());
+					
 					if(null != lsv.tacco){
 						tacheId = lsv.tacco;
 					}
@@ -251,14 +255,31 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 			}else{
 				try{
 					LotSeqValuation lsv = dao.getLotsequenceValuation(readSet.code);
-					dao.updateLotsequenceAbandon(readSet.code, getSeqVal(readSet.productionValuation, readSet.code), getCR(readSet.productionValuation), lsv.tacco, 55);
+					if(null != lsv){
+						Logger.debug(lsv.toString());
+						
+						if(null != lsv.tacco){
+							tacheId = lsv.tacco;
+						}
+						if(null != lsv.cptreco){
+							cptreco = lsv.cptreco;
+						}										
+					}else{
+						Logger.error("LotSeqValuation is null for "+readSet.code);
+					}
+					
+					if(null == cptreco || cptreco == 47){ //used to manage history recovery
+						cptreco = getCR(readSet.productionValuation);
+					}
+					
+					dao.updateLotsequenceAbandon(readSet.code, getSeqVal(readSet.productionValuation, readSet.code), cptreco, tacheId, 55);
 					if(!TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)){
 						dao.updateLotsequenceAbandonBI(readSet.code, getAbandon(readSet.bioinformaticValuation, readSet.code));
 					}
 				}catch(Throwable t){ //in case of deadlock situation or other error we retry
 					logger.warn(readSet.code+" : second : "+t.getMessage());
 					LotSeqValuation lsv = dao.getLotsequenceValuation(readSet.code);
-					dao.updateLotsequenceAbandon(readSet.code, getSeqVal(readSet.productionValuation, readSet.code), getCR(readSet.productionValuation), lsv.tacco, 55);
+					dao.updateLotsequenceAbandon(readSet.code, getSeqVal(readSet.productionValuation, readSet.code), cptreco, tacheId, 55);
 					if(!TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)){
 						dao.updateLotsequenceAbandonBI(readSet.code, getAbandon(readSet.bioinformaticValuation, readSet.code));
 					}
