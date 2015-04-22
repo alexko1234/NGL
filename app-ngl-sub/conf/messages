@@ -1,52 +1,51 @@
 application.name = NGL-SUB
-index.title = Welcome to NGL-SUB
+index.title = Bienvenue dans l'application NGL-SUB
 #Study
-studies.menu = Studies menu
-studies.menu.create = Create studies
-studies.page.title=Studies page
-study.create.success= Successful create study
-studies.msg.save.success=Study created
-create.placeholder.studiesTitle=Study title
-create.placeholder.projectCode=Select. project code
+studies.menu = Study
+studies.menu.create = Creation
+studies.page.title=Study
+study.create.success= Sauvegarde réussie du study
+studies.msg.save.success=Study crée
+create.placeholder.studiesTitle=Titre study
+create.placeholder.projectCode=Select. code projet
 create.placeholder.abstract=Def. abstract
 create.placeholder.description=Def. description
-create.placeholder.existingStudyType=studyType
+create.placeholder.existingStudyType=Type de study
 
 #Configuration
-configurations.menu = Configurations menu
-configurations.menu.create = Create configurations
-configurations.page.title=Configurations page
-configuration.create.success= Successful create configuration
-configurations.msg.save.success=Configuration created
-create.placeholder.studiesTypes=Select. StudyType
+configurations.menu = Configurations
+configurations.menu.create = Creation
+configurations.page.title=Configurations
+configuration.create.success= Sauvegarde réussie de la configuration
+configurations.msg.save.success=Configuration crée
+create.placeholder.studiesTypes=Select. type de study
 create.placeholder.librarySelection=librarySelection
 create.placeholder.librarySource=librarySource
 create.placeholder.libraryStrategy=libraryStrategy
 create.placeholder.strategySample=strategySample
 
 #Submission
-submissions.menu=Submission menu
-submissions.menu.create=Create submission
-submissions.menu.activate=Activate submission
-submissions.page.title=Submission page
-create.placeholder.submissions.study=select a study
-create.placeholder.submissions.configuration=select a configuration
-#create.placeholder.experiment.title=experiment title
-create.placeholder.submissions.readSet=select a readSet
-activate.placeholder.projectCode=select a project
+submissions.menu=Soumission
+submissions.menu.create=Creation
+submissions.menu.activate=Démarrer
+submissions.page.title=Soumission
+create.placeholder.submissions.study=Select. study
+create.placeholder.submissions.configuration=Select.  configuration
+create.placeholder.submissions.readSet=Select. lotSeq
+activate.placeholder.projectCode=Select. code projet
 submissions.tabs.sample=Sample
 submissions.tabs.experiment=Experiment
 submissions.tabs.run=Run
 submissions.tabs.rawData=RawData
 
-submissions.msg.save.success=Submission created
-submissions.msg.validate.success=Submission validated
-submissions.msg.details=Submission detail
+submissions.msg.save.success=Sauvegarde réussie de la soumission
+submissions.msg.validate.success=Soumission validée
+submissions.msg.details=Détail de la soumission
 sample.code=Code
-sample.projectCode=Project Code
+sample.projectCode=Code projet
 sample.taxonId=taxon Id
 sample.classification=Classification
-sample.title=Title
+sample.title=Titre
 sample.description=Description
 
 
