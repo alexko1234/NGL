@@ -207,13 +207,15 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 	public void valuationReadSet(ReadSet readSet, boolean firstTime) {
 		try{
 			
-			sendMailAgirs(readSet);
+			
 						
 			Logger.info("valuationReadSet : "+readSet.code+" / "+firstTime);
 			
 			Integer cptreco = null;
 			Integer tacheId = null;
 			if(firstTime){
+				sendMailAgirs(readSet);
+				
 				List<TacheHD> taches = dao.listTacheHD(readSet.code);
 				
 				
