@@ -2,12 +2,16 @@ package mail;
 
 import java.util.Properties;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+
+
 
 import play.Logger;
 import play.Play;
@@ -26,18 +30,26 @@ public class MailServices {
 		try {
 			Message msg = new MimeMessage(session);
 			
-			msg.setFrom(new InternetAddress(from));
-			for(String mail : to){
-				msg.addRecipient(Message.RecipientType.TO, new InternetAddress(mail));
-			}
+			msg.setFrom(getInternetAddress(from));
+			msg.setRecipients(Message.RecipientType.TO, to.stream().map(mail -> getInternetAddress(mail)).collect(Collectors.toSet()).toArray(new InternetAddress[0]));
+			
 			msg.setSubject(subject);
 			msg.setContent(message, "text/html");
 			Transport.send(msg);
 			Logger.debug("Mail sent to : " + to);
 
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			Logger.debug("Mail NOT sent => " + e.getMessage());
 			throw new MailServiceException(e);
+		}
+	}
+
+	private InternetAddress getInternetAddress(String mail)
+			 {
+		try {
+			return new InternetAddress(mail);
+		} catch (AddressException e) {
+			throw new RuntimeException(e);
 		}
 	}
 }
