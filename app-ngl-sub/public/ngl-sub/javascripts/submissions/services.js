@@ -197,7 +197,7 @@
 	};
 	return activateService;
 }
-]);/*.factory('submissionsValidateService', ['$http', 'mainService', 'lists', 'datatable', function($http, mainService, lists, datatable){
+])/*.factory('submissionsValidateService', ['$http', 'mainService', 'lists', 'datatable', function($http, mainService, lists, datatable){
 
 	var validateService = {
 			isRouteParam : false,
@@ -253,6 +253,6 @@
 			}
 	};
 	return validateService;
-])*/
+])*/;
 
  

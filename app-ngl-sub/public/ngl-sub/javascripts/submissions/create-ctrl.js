@@ -40,15 +40,18 @@ angular.module('home').controller('CreateCtrl',[ '$http', '$scope', '$routeParam
 		mainService.setForm($scope.createService.form);
 		//$scope.createService.search();
 			$http.post(jsRoutes.controllers.submissions.api.Submissions.save().url, mainService.getForm()).success(function(data) {
+				$scope.messages.clear();
 				$scope.messages.clazz="alert alert-success";
 				$scope.messages.text=Messages('submissions.msg.save.success')+" : "+data;
 				$scope.messages.open();
+				
 				$scope.codeSubmission=data;
 				$scope.createService.search();
 			}).error(function(data){
 				//$scope.messages.setDetails({"error":{"code":"value","code2":"value2"}});
 				$scope.messages.setDetails(data);
 				$scope.messages.setError("save");
+				//$scope.messages.clear();
 			});
 	};
 	
