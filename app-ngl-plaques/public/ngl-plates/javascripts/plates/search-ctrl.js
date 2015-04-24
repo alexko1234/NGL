@@ -98,6 +98,14 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$http','datatable', 
 		if($scope.form.etmanips.selected){
 			jsonSearch.etmanip = $scope.form.etmanips.selected.code;
 		}
+		
+		if($scope.form.plaqueId){
+			jsonSearch.plaqueId = $scope.form.plaqueId;
+		}
+		
+		if($scope.form.matmanom){
+			jsonSearch.matmanom = $scope.form.matmanom;
+		}
 		$scope.datatable.search(jsonSearch);
 	};
 }]);
