@@ -37,6 +37,7 @@ import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.run.instance.RunValidationHelper;
+import views.components.datatable.DatatableForm;
 import views.components.datatable.DatatableResponse;
 import workflows.run.Workflows;
 import akka.actor.ActorRef;
@@ -198,7 +199,10 @@ public class Runs extends RunsController {
 	
 	//@Permission(value={"reading"})
 	public static Result get(String code) {
-		Run runValue = getRun(code);
+		
+		DatatableForm form = filledFormQueryString(DatatableForm.class);
+		
+		Run runValue = getRun(code, form.includes.toArray(new String[0]));
 		if (runValue != null) {		
 			return ok(Json.toJson(runValue));					
 		} else {

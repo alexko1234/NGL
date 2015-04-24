@@ -15,16 +15,13 @@ import fr.cea.ig.MongoDBResult;
 public class RunsController extends CommonController {
 
     protected static Run getRun(String code) {
-	Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
-	return run;
+    	Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
+		return run;
     }
 
     protected static Run getRun(String code, String...keys) {
-	MongoDBResult<Run> runs = MongoDBDAO.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code", code), getIncludeKeys(keys));
-	if(runs.size() == 1)
-	    return runs.toList().get(0);
-	else
-	    return null;
+		Run run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code", code), getIncludeKeys(keys));
+		return run;
     }
     
     protected static TraceInformation getUpdateTraceInformation(Run run) {
