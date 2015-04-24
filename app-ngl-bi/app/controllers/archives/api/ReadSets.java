@@ -8,21 +8,23 @@ import java.util.Map;
 
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
-
 import play.Logger;
-import play.data.DynamicForm;
 import play.libs.Json;
 import play.mvc.Result;
 import views.components.datatable.DatatableResponse;
-import fr.cea.ig.MongoDBDAO;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.mongodb.BasicDBObject;
 
 import controllers.CommonController;
-import controllers.authorisation.Permission;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBDatatableResponseChunks;
+import fr.cea.ig.MongoDBResponseChunks;
+import fr.cea.ig.MongoDBResult;
 /**
  * Controller that manage the readset archive
  * @author galbini
@@ -38,23 +40,30 @@ public class ReadSets extends CommonController{
 	//@Permission(value={"reading"})
 	public static Result list(){
 
+		BasicDBObject keys = new BasicDBObject();
+		keys.put("treatments", 0);
+		
 		Integer archive = getArchiveValue();
 		List<Archive> archives = new ArrayList<Archive>();
 
-		List<ReadSet> readSets =  MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, getQuery(archive)).toList();
-		if (readSets == null) {
+		MongoDBResult<ReadSet> results =  MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, getQuery(archive), keys);
+		if (results.count() == 0) {
 			return notFound();
 		}
-		for (ReadSet readSet : readSets) {
-			if (readSet != null) {
-				if ( (archive.intValue() == 0) ||
-						(archive.intValue() == 1 && readSet.archiveId != null) ||
-						(archive.intValue() == 2 && readSet.archiveId == null) ) {
-					archives.add(createArchive(readSet));
-				}
+		return ok(new MongoDBDatatableResponseChunks<ReadSet>(results, r -> convertToArchive(archive, r))).as("application/json");		
+	}
+
+
+
+	private static Archive convertToArchive(Integer archive, ReadSet readSet) {
+		if (readSet != null) {
+			if ( (archive.intValue() == 0) ||
+					(archive.intValue() == 1 && readSet.archiveId != null) ||
+					(archive.intValue() == 2 && readSet.archiveId == null) ) {
+				return createArchive(readSet);
 			}
 		}
-		return ok(Json.toJson(new DatatableResponse<Archive>(archives)));
+		return null;
 	}
 
 
@@ -121,5 +130,14 @@ public class ReadSets extends CommonController{
 		}
 	}
 
+	
+	public static Result delete(Integer i){
+		
+		if(i % 2 == 0){
+			return notFound();
+		}
+		
+		return ok();
+	}
 
 }
