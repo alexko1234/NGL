@@ -4,6 +4,9 @@ public class MaterielManipSearch {
 	public String project;
 	public Integer etmanip;
 	public Integer emateriel;
+	public String plaqueId;
+	public String matmanom;
+	
 	@Override
 	public String toString() {
 		return "MaterielManipSearch [project=" + project + ", etmanip="
