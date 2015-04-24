@@ -247,7 +247,8 @@ public class ReadSets extends ReadSetsController{
 	
 	//@Permission(value={"reading"})
 	public static Result get(String readSetCode) {
-		ReadSet readSet =  getReadSet(readSetCode);		
+		DatatableForm form = filledFormQueryString(DatatableForm.class);
+		ReadSet readSet =  getReadSet(readSetCode, form.includes.toArray(new String[0]));		
 		if(readSet != null) {
 			return ok(Json.toJson(readSet));	
 		} 		
