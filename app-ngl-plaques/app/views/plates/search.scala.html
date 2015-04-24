@@ -15,5 +15,19 @@
 				</select>
 		}
 	}
+	
+	@columnSearchForm{
+		@formGroup{		
+			<input type="text" class="form-control" ng-model="form.plaqueId" placeholder='@Messages("search.placeholder.regexPlaqueId")' title='@Messages("search.placeholder.regexPlaqueId")'>
+		
+		}
+	}
+	
+	@columnSearchForm{
+		@formGroup{		
+			<input type="text" class="form-control" ng-model="form.matmanom" placeholder='@Messages("search.placeholder.matmanom")' title='@Messages("search.placeholder.matmanom")'>
+		
+		}
+	}
 }
 @searchForm(form)()()
