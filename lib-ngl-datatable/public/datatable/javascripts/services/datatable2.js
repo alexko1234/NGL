@@ -82,7 +82,7 @@ angular.module('datatableServices', []).
 							},
 							edit : {
 								active:false,
-								withoutSelect:false, //edit all line without selected it
+								withoutSelect:false, //edit all line without selected it								
 								showButton : true,
 								columnMode : false,
 								byDefault : false, //put in edit mode when the datatable is build 
@@ -117,7 +117,8 @@ angular.module('datatableServices', []).
 								start:false,
 								counter:0,
 								number:0, //number of element in progress
-								error:0								
+								error:0,
+								ids:{errors:[],success:[]}
 							},
 							select:{
 								active:true,
@@ -232,10 +233,10 @@ angular.module('datatableServices', []).
 			    				this.lastSearchParams = params;
 			    				var url = this.getUrlFunction(this.config.search.url);
 			    				if(url){
-			    					this.config.spinner.start = true;
+			    					this.setSpinner(true);
 			    					$http.get(url(),{params:this.getParams(params), datatable:this}).success(function(data, status, headers, config) {
 			    						config.datatable.setData(data.data, data.recordsNumber);
-			    						config.datatable.config.spinner.start = false;
+			    						config.datatable.setSpinner(false);
 			    					});
 			    				}else{
 			    					throw 'no url define for search ! ';
@@ -631,7 +632,7 @@ angular.module('datatableServices', []).
 	    						}
     						}else{
 		    					//console.log("pagination is not active !!!");
-		    				}
+		    				}    						
     					},
     						
     					//order functions
@@ -889,7 +890,7 @@ angular.module('datatableServices', []).
 		    					this.config.save.number = 0;
 		    					this.config.save.error = 0;
 		    					this.config.save.start = true;
-		    					this.config.spinner.start = true;
+		    					this.setSpinner(true);
 		    					this.config.messages.text = undefined;
 		    					this.config.messages.clazz = undefined;
 		    					var data = [];
@@ -1045,7 +1046,7 @@ angular.module('datatableServices', []).
 		    					}
 		    					this.config.save.error = 0;
 		    					this.config.save.start = false;
-		    					this.config.spinner.start = false;
+		    					this.setSpinner(false);
 		    					
 		    				}
 	    					
@@ -1069,21 +1070,30 @@ angular.module('datatableServices', []).
 		    			remove : function(){
 		    				if(this.config.remove.active && !this.config.remove.start){
 		    					var r= $window.confirm(Messages("datatable.remove.confirm"));
-		    					if(r){		    					
-			    					var localDisplayResult = angular.copy(this.displayResult);
+		    					if(r){		  
+		    						this.setSpinner(true);
+			    					this.config.messages.text = undefined;
+			    					this.config.messages.clazz = undefined;
+			    					
 			    					this.config.remove.counter = 0;
 			    					this.config.remove.start = true;
 			    					this.config.remove.number = 0;
 			    					this.config.remove.error = 0;
-			    					for(var i = 0; i < localDisplayResult.length; i++){
-				    					if(localDisplayResult[i].line.selected && (!localDisplayResult[i].line.edit || this.config.remove.withEdit)){
-				    						this.config.remove.number++;
-				    						this.removeLocal(i);			    										    						
+			    					this.config.remove.ids = {errors:[],success:[]};
+			    					
+			    					for(var i = 0; i < this.displayResult.length; i++){
+			    						if(this.displayResult[i].line.selected && (!this.displayResult[i].line.edit || this.config.remove.withEdit)){
+				    						if(this.isRemoteMode(this.config.remove.mode)){
+				    							this.config.remove.number++;
+				    							this.removeRemote(this.displayResult[i].data, i);				    							
+				    						}else{
+				    							this.config.remove.ids.success.push(i);				    							
+				    						}
 				    					}						
 				    				}
 			    					if(!this.isRemoteMode(this.config.remove.mode)){
 			    						this.removeFinish();
-			    					}
+			    					}			    					
 		    					}
 		    				}else{
 		    					//console.log("remove is not active !");		    				
@@ -1102,48 +1112,48 @@ angular.module('datatableServices', []).
 								}else{
 									j = i - this.config.remove.counter;
 								}
-								var removeArray = this.allResult.splice(j,1);
-								this.displayResult.splice((i - this.config.remove.counter),1);
+								this.allResult.splice(j,1);
 								this.config.remove.counter++;
-								this.totalNumberRecords--;
-								
-								if(this.isRemoteMode(this.config.remove.mode)){
-	    							this.removeRemote(removeArray[0]);
-	    						}else{
-	    							this.config.remove.number--;	    		    				
-	    						}
-								
+								this.totalNumberRecords--;																						
 		    				} else{
 		    					//console.log("remove is not active !");		    				
 		    				}
 		    			},
 		    			
-		    			removeRemote : function(value){
-		    				if(this.config.remove.active && this.config.remove.start){
-			    				var url = this.getUrlFunction(this.config.remove.url);
-				    			if(url){
-				    				$http['delete'](url(value), {datatable:this})
-					    				.success(function(data, status, headers, config) {
-					    					config.datatable.config.remove.number--;						    				
-					    					config.datatable.removeFinish();
-					    				})
-					    				.error(function(data, status, headers, config) {
-					    					config.datatable.config.remove.error++;
-					    					config.datatable.config.remove.number--;						    				
-					    					config.datatable.removeFinish();
-					    				});
-			    				}else{
-			    					throw  'no url define for remove ! ';
-			    				}
-		    				} else{
-		    					//console.log("remove is not active !");		    				
-		    				}		    				
+		    			removeRemote : function(value, i){
+		    				var url = this.getUrlFunction(this.config.remove.url);
+			    			if(url){
+			    				return $http['delete'](url(value), {datatable:this, index:i, value:value})
+			    				.success(function(data, status, headers, config) {
+			    					config.datatable.config.remove.ids.success.push(config.index);
+			    					config.datatable.config.remove.number--;						    				
+			    					config.datatable.removeFinish();
+			    				})
+			    				.error(function(data, status, headers, config) {
+			    					config.datatable.config.remove.ids.errors.push(config.value);
+			    					config.datatable.config.remove.error++;
+			    					config.datatable.config.remove.number--;						    				
+			    					config.datatable.removeFinish();
+			    				});			    				
+		    				}else{
+		    					throw 'no url define for save !';
+		    				}
 		    			},
+		    			
+		    				    					    			
 		    			/**
 		    			 * Call when a remove is done
 		    			 */
 		    			removeFinish : function(){
 		    				if(this.config.remove.number === 0){
+		    					
+		    					this.config.remove.ids.success.sort(function(a, b) {
+		    						return a - b;
+		    					}).forEach(function(i){
+		    						this.removeLocal(i);
+		    					}, this);
+		    					
+		    					
 		    					if(this.config.remove.error > 0){
 		    						this.config.messages.clazz = this.config.messages.errorClass;
 		    						this.config.messages.text = this.config.messages.transformKey(this.config.messages.errorKey.remove, this.config.remove.error);
@@ -1158,10 +1168,32 @@ angular.module('datatableServices', []).
 		    					
 		    					this.computePaginationList();
 		    					this.computeDisplayResult();
+		    					
+		    					if(this.config.remove.ids.errors.length > 0){
+			    					this.displayResult.every(function(value,index){			    						
+			    						var errors = this.config.remove.ids.errors;
+			    						for(var i = 0 ; i < errors.length ; i++){
+			    							if(angular.equals(value.data,  errors[i])){
+			    								value.line.trClass = "danger";
+			    								errors.splice(i,1);
+			    								break;
+			    							}
+			    						}
+			    						if(errors.length === 0){
+			    							return false;
+			    						}else{
+			    							return true;
+			    						}
+			    					},this);
+		    					}
+		    					
+		    					
 		    					this.config.select.isSelectAll = false;
 		    					this.config.remove.error = 0;
 		    					this.config.remove.start = false;
 		    					this.config.remove.counter = 0;
+		    					this.config.remove.ids = {error:[],success:[]};
+		    					this.setSpinner(false);
 		    				}
 		    			},
 		    			
@@ -1876,8 +1908,7 @@ angular.module('datatableServices', []).
 			    		return message;
 			    	};
 			    	
-		    		
-			    	scope.dtTableFunctions.cancel = function(elt){
+			    	scope.dtTableFunctions.cancel = function(){
 		    			scope.dtTable.setSpinner(true);
 		    			$timeout(function(){scope.dtTable.cancel()}).then(function(){
 		    				scope.dtTable.setSpinner(false);  		    				
@@ -1903,7 +1934,7 @@ angular.module('datatableServices', []).
 		    				if(!scope.dtTable.isRemoteMode(scope.dtTable.config.pagination.mode)){
 		    					scope.dtTable.setSpinner(false);  		    				
 		    				}	    				
-		    			});  		    				    			    		
+		    			});		    			
 		    		};
 		    		
 		    		scope.dtTableFunctions.setEdit = function(column){
@@ -2011,9 +2042,9 @@ angular.module('datatableServices', []).
   		    		+'</button>'
   		    		+'<ul class="dropdown-menu">'
   		    		/* Basic Export */
-  		    		+	'<li><a href="#" ng-click="dtTableFunctions.exportCSV(\'all\')"><i class="fa fa-file-text-o"></i> {{dtTableFunctions.messagesDatatable(\'datatable.button.basicExportCSV\')}}</a></li>'
+  		    		+	'<li><a href="" ng-click="dtTableFunctions.exportCSV(\'all\')"><i class="fa fa-file-text-o"></i> {{dtTableFunctions.messagesDatatable(\'datatable.button.basicExportCSV\')}}</a></li>'
   		    		/* Grouped Export */
-  		    		+	'<li><a href="#" ng-click="dtTableFunctions.exportCSV(\'groupsOnly\')"><i class="fa fa-file-text-o"></i> {{dtTableFunctions.messagesDatatable(\'datatable.button.groupedExportCSV\')}}</a></li>'
+  		    		+	'<li><a href="" ng-click="dtTableFunctions.exportCSV(\'groupsOnly\')"><i class="fa fa-file-text-o"></i> {{dtTableFunctions.messagesDatatable(\'datatable.button.groupedExportCSV\')}}</a></li>'
   		    		+'</ul>'
   		    		
   		    		+'</div>'
@@ -2026,11 +2057,11 @@ angular.module('datatableServices', []).
   		    		+	'</button>'
   		    		+	'<ul class="dropdown-menu">'
   		    		+		'<li ng-repeat="column in dtTable.getGroupColumns()">'
-  		    		+			'<a href="#" ng-click="dtTableFunctions.setGroupColumn(column)" ng-switch on="!dtTable.isGroup(column.id)"><i class="fa fa-bars" ng-switch-when="true"></i><i class="fa fa-outdent" ng-switch-when="false"></i> <span ng-bind="dtTableFunctions.messagesDatatable(column.header)"/></a>' 
+  		    		+			'<a href="" ng-click="dtTableFunctions.setGroupColumn(column)" ng-switch on="!dtTable.isGroup(column.id)"><i class="fa fa-bars" ng-switch-when="true"></i><i class="fa fa-outdent" ng-switch-when="false"></i> <span ng-bind="dtTableFunctions.messagesDatatable(column.header)"/></a>' 
   		    		+		'</li>'	
   		    		+		'<li class="divider"></li>'
   		    		+		'<li>'
-  		    		+			'<a href="#" ng-click="dtTable.setGroupColumn(\'all\')" ng-switch on="!dtTable.isGroup(\'all\')"><i class="fa fa-bars" ng-switch-when="true"></i><i class="fa fa-outdent" ng-switch-when="false"></i> <span ng-bind="dtTableFunctions.messagesDatatable(\'datatable.button.generalGroup\')"/></a>'
+  		    		+			'<a href="" ng-click="dtTable.setGroupColumn(\'all\')" ng-switch on="!dtTable.isGroup(\'all\')"><i class="fa fa-bars" ng-switch-when="true"></i><i class="fa fa-outdent" ng-switch-when="false"></i> <span ng-bind="dtTableFunctions.messagesDatatable(\'datatable.button.generalGroup\')"/></a>'
   		    		+		'</li>'
   		    		+	'</ul>'
   		    		+'</div>'
@@ -2043,7 +2074,7 @@ angular.module('datatableServices', []).
   		    		+	'</button>'
   		    		+	'<ul class="dropdown-menu">'
   		    		+		'<li ng-repeat="column in dtTable.getHideColumns()">'
-  		    		+		'<a href="#" ng-click="dtTableFunctions.setHideColumn(column)" ng-switch on="dtTable.isHide(column.id)"><i class="fa fa-eye" ng-switch-when="true"></i><i class="fa fa-eye-slash" ng-switch-when="false"></i> <span ng-bind="dtTableFunctions.messagesDatatable(column.header)"/></a>'
+  		    		+		'<a href="" ng-click="dtTableFunctions.setHideColumn(column)" ng-switch on="dtTable.isHide(column.id)"><i class="fa fa-eye" ng-switch-when="true"></i><i class="fa fa-eye-slash" ng-switch-when="false"></i> <span ng-bind="dtTableFunctions.messagesDatatable(column.header)"/></a>'
   		    		+		'</li>'
   		    		+	'</ul>'
   		    		+'</div>'
@@ -2055,7 +2086,7 @@ angular.module('datatableServices', []).
   		    		+'</div>'
   		    		+'<div class="btn-toolbar pull-right" name="dt-toolbar-pagination"  ng-if="dtTable.isShowToolbarPagination()">'
   		    		+	'<div class="btn-group" ng-if="dtTable.isShowPagination()">'
-  		    		+		'<ul class="pagination"><li ng-repeat="page in dtTable.config.pagination.pageList" ng-class="page.clazz"><a href="#" ng-click="dtTableFunctions.setPageNumber(page)" ng-bind="page.label"></a></li></ul>'
+  		    		+		'<ul class="pagination"><li ng-repeat="page in dtTable.config.pagination.pageList" ng-class="page.clazz"><a href="" ng-click="dtTableFunctions.setPageNumber(page);" ng-bind="page.label"></a></li></ul>'
   		    		+	'</div>'
   		    		+	'<div class="btn-group">'
   		    		+		'<button data-toggle="dropdown" class="btn btn-default dropdown-toggle">'
@@ -2063,7 +2094,7 @@ angular.module('datatableServices', []).
   		    		+		'</button>'
   		    		+		'<ul class="dropdown-menu">'
   		    		+			'<li ng-repeat="elt in dtTable.config.pagination.numberRecordsPerPageList" class={{elt.clazz}}>'
-  		    		+				'<a href="#" ng-click="dtTableFunctions.setNumberRecordsPerPage(elt)">{{elt.number}}</a>' 
+  		    		+				'<a href="" ng-click="dtTableFunctions.setNumberRecordsPerPage(elt)">{{elt.number}}</a>' 
   		    		+			'</li>'
   		    		+		'</ul>'
   		    		+	'</div>'
