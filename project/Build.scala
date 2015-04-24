@@ -66,7 +66,7 @@ object ApplicationBuild extends Build {
 		"fr.cea.ig" %% "play-spring-module" % "1.3-SNAPSHOT",
 		"mysql" % "mysql-connector-java" % "5.1.18",
 		"net.sourceforge.jtds" % "jtds" % "1.2.2",
-	     "net.sf.opencsv" % "opencsv" % "2.0",
+	    "net.sf.opencsv" % "opencsv" % "2.0",
         "commons-collections" % "commons-collections" % "3.2.1",
 		"org.springframework" % "spring-jdbc" % "4.0.3.RELEASE",		
 		"org.springframework" % "spring-test" % "4.0.3.RELEASE",
@@ -85,14 +85,14 @@ object ApplicationBuild extends Build {
    	    javaCore,
 		javaWs,
    	    "javax.mail" % "mail" % "1.4.2",
-   	    "fr.cea.ig" %% "mongodbplugin" % "1.3-SNAPSHOT",
    	    "org.drools" % "drools-core" % "6.1.0.Final",
    	    "org.drools" % "drools-compiler" % "6.1.0.Final",
    	    "org.drools" % "knowledge-api" % "6.1.0.Final",
    	    "org.kie" % "kie-api" % "6.1.0.Final",
    	    "org.kie" % "kie-internal" % "6.1.0.Final",
-		"fr.cea.ig.modules" %% "authentication" % "1.2-SNAPSHOT"
-   	    )
+		"fr.cea.ig.modules" %% "authentication" % "1.2-SNAPSHOT",
+		"fr.cea.ig" %% "mongodbplugin" % "1.3.1-SNAPSHOT"
+   	)
    	val nglbiDependencies = Seq(
 	        // Add your project dependencies here,
 	      javaCore, javaJdbc,
