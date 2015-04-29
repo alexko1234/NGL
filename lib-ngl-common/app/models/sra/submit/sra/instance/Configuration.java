@@ -56,6 +56,7 @@ public class Configuration  extends DBObject implements IValidation {
 			SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryStrategy, VariableSRA.mapLibraryStrategy, "libraryStrategy");
 			SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySource, VariableSRA.mapLibrarySource, "librarySource");
 			SraValidationHelper.requiredAndConstraint(contextValidation, this.strategySample, VariableSRA.mapStrategySample, "strategySample");
+			SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapStatus, "state.code");
 
 			// Verifier que si User_Experiments est renseigné, la valeur correspond bien à un fichier present sur disque
 			if (userFileExperiments != null) {

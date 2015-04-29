@@ -84,6 +84,8 @@ public class Submission extends DBObject implements IValidation {
 		// verifier que champs contraints presents avec valeurs autorisees:
 		ValidationHelper.required(contextValidation, this.submissionDate , "submissionDate");
 		ValidationHelper.required(contextValidation, this.submissionDirectory , "submissionDirectory");
+		// Verifier que status est bien renseigné avec valeurs autorisees.
+		SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapStatus, "state.code");
 		/*ValidationHelper.required(contextValidation, this.xmlStudys , "xmlStudys");
 		ValidationHelper.required(contextValidation, this.xmlSamples , "xmlSamples");
 		ValidationHelper.required(contextValidation, this.xmlExperiments , "xmlExperiments");
@@ -92,7 +94,8 @@ public class Submission extends DBObject implements IValidation {
 		ValidationHelper.required(contextValidation, this.resultSendXml , "resultSendXml");
 		*/	
 		SraValidationHelper.validateId(this, contextValidation);
-		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);			if (contextValidation.getContextObjects().get("type")==null) {
+		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);			
+		if (contextValidation.getContextObjects().get("type")==null) {
 			contextValidation.addErrors("study non evaluable ", "sans type de contexte de validation");
 		}
 		if (contextValidation.getContextObjects().get("type").equals("sra")) {
@@ -107,6 +110,7 @@ public class Submission extends DBObject implements IValidation {
 					contextValidation.addErrors("config::state.code", "'" + config.state.code + "' n'est pas à la valeur attendue 'userValidate'");
 				}
 			}
+			
 			SraValidationHelper.validateCode(this, InstanceConstants.SRA_SUBMISSION_COLL_NAME, contextValidation);
 		} else if (contextValidation.getContextObjects().get("type").equals("wgs")) {
 			if (this.studyCode == null || this.analysisCode == null ||this.sampleCodes.size() == 0) {

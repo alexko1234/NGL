@@ -55,10 +55,19 @@ public class Experiment extends DBObject implements IValidation {
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		contextValidation.addKeyToRootKeyName("experiment::");
+		// Verifier que status est bien rensigne, et si != new alors libraryName renseigné :
+		System.out.println("Dans exp.validate, stateCode =" +state.code);
+
+		if(SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapStatus, "state.code")){
+			if(! this.state.code.equalsIgnoreCase("new")) {
+				System.out.println("stateCode =" +state.code);
+				ValidationHelper.required(contextValidation, this.libraryName , "libraryName");
+			}
+		}
 		// Verifer que projectCode est bien renseigné et qu'il existe bien dans lims :
 		SraValidationHelper.validateProjectCode(this.projectCode, contextValidation);
 		ValidationHelper.required(contextValidation, this.title , "title");
-		// Verifer que librarySelection libraryStrategy librarySource et libraryLayout sont bien renseignés avec bonne valeur :		
+        // Verifer que librarySelection libraryStrategy librarySource et libraryLayout sont bien renseignés avec bonne valeur :		
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySelection, VariableSRA.mapLibrarySelection, "librarySelection");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryStrategy, VariableSRA.mapLibraryStrategy, "libraryStrategy");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySource, VariableSRA.mapLibrarySource, "librarySource");
@@ -69,6 +78,7 @@ public class Experiment extends DBObject implements IValidation {
 				contextValidation.addErrors("lastBaseCoord", " aucune valeur et donnée pairée");
 			}	
 		}
+		
 		ValidationHelper.required(contextValidation, this.libraryLayoutNominalLength , "libraryLayoutNominalLength");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayoutOrientation, VariableSRA.mapLibraryLayoutOrientation, "libraryLayoutOrientation");
 		//ValidationHelper.required(contextValidation, this.libraryName , "libraryName");

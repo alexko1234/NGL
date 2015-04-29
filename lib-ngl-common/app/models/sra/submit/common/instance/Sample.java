@@ -4,6 +4,7 @@ import java.util.Date;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
+import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
@@ -36,6 +37,7 @@ public class Sample extends DBObject implements IValidation {
 		if (contextValidation.getContextObjects().get("type")==null) {
 			contextValidation.addErrors("sample non evaluable ", "sans type de contexte de validation");
 		}
+		SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapStatus, "state.code");
 		SraValidationHelper.validateId(this, contextValidation);
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
 		if (contextValidation.getContextObjects().get("type").equals("sra")) {

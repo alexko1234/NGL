@@ -37,6 +37,15 @@ public interface VariableSRA {
 		}
 	};
 	
+	static final Map<String, String> mapStatus = new HashMap<String, String>() {
+		{
+			put("new", "new"); 
+			put("uservalidate", "userValidate");
+			put("inwaiting", "inWaiting"); 
+			put("submitted", "submitted");
+		}
+	};  
+	
 	static final Map<String, String> mapExistingStudyType = new HashMap<String, String>() {
 		{
 			put("whole genome sequencing", "Whole Genome Sequencing"); 

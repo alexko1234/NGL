@@ -46,6 +46,7 @@ public class Study extends DBObject implements IValidation {
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.centerName, VariableSRA.mapCenterName, "centerName");
 		SraValidationHelper.validateId(this, contextValidation);
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
+		SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapStatus, "state.code");
 		if (contextValidation.getContextObjects().get("type")==null) {
 			contextValidation.addErrors("study non evaluable ", "sans type de contexte de validation");
 			contextValidation.removeKeyFromRootKeyName("study::");
