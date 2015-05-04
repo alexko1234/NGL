@@ -128,6 +128,58 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			         }
 	};
 
+
+	$scope.datatableConfigOutPutContainers = {
+			name:"outPutContainers",
+			columns:[
+			         {
+			        	 "header":Messages("containers.table.code"),
+			        	 "property":"code",
+			        	 "order":true,
+			        	 "position":1,
+			        	 "type":"text"
+			         },
+			         {
+			        	 "header":Messages("containers.table.state.code"),
+			        	 "property":"state.code",
+			        	 "order":true,
+			        	 "type":"text",
+			        	 "edit":true,
+			        	 "position":2,
+			        	 "choiceInList": true,
+			        	 "possibleValues":"lists.getStates()", 
+			        	 "filter":"codes:'state'"
+			         }],
+			         pagination:{
+			        	 mode:'local'
+			         },
+			         order:{
+			        	 by:'container.code',
+			        	 reverse:true,
+			        	 mode:'local'
+			         },
+			         edit:{
+			        	 active:true,
+			        	 columnMode:true
+			         },
+			         save:{
+			        	 active:true,
+			        	 url:jsRoutes.controllers.containers.api.Containers.updateBatch().url,
+			        	 batch:true,
+			        	 method:'put',
+			        	 showButton: false,
+			        	 callback: function(reason, error){
+
+			        		 console.log("callback reason=" + reason);
+			        		 console.log("callback error=" + error);
+			        	 }
+			         },
+			         otherButtons:{
+			        	 active:true,
+			        	 template:'<a class="btn btn-default" data-dismiss="modal" href="#" ng-click="updateContainerStateDatatable()" ><i class="fa fa-save"></i></a>'
+			         }
+	};
+
 	$scope.scan = function(e, property, propertyName){
 		console.log(property);
 		console.log(e);
@@ -138,50 +190,188 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		}
 	};
 
+	$scope.searchReagentsEvent = function(e){
+		if(e.keyCode === 9 || e.keyCode === 13){
+			$scope.searchReagents();
+			e.preventDefault();
+		}
+	};
+
+
+	$scope.searchReagents = function(){
+		$http.get(jsRoutes.controllers.reagents.api.Reagents.list().url, {params:{"barCode":$scope.searchBarCode, "boxBarCode":$scope.searchBarCode}})
+		.success(function(data, status,headers,config){
+			console.log(data);
+		});
+	};
+
 	$scope.message = {};	
 
-	$scope.isPopup = function(resolutionCodes){
+	/*$scope.isResolution = function(resolutionCodes){
 		if(resolutionCodes != null && resolutionCodes.length === 1 && resolutionCodes[0] === "correct"){
 			return false;
 		}
 
 		return true;
+	};*/
+
+	$scope.updateContainerStateDatatable = function(){
+		var promiseFunction = function(){$scope.datatableContainer.save();};
+		$scope.saveAllAndChangeState([promiseFunction]);
 	};
 
 
-
 	$scope.finishExperiment = function(){		
-		
-		if($scope.experiment.value.state.resolutionCodes == null || $scope.experiment.value.state.resolutionCodes.length === 0){
-			return $scope.saveAllAndChangeState();
-		}
-		
-		if($scope.experiment.value.categoryCode==='transformation'){		
-		$scope.isLastExperiment = false;	
+		if($scope.experiment.value.state.resolutionCodes !== null && $scope.experiment.value.state.resolutionCodes !== undefined && $scope.experiment.value.state.resolutionCodes.length >= 1){
+			if($scope.experiment.value.state.resolutionCodes != null && $scope.experiment.value.state.resolutionCodes.length === 1 && $scope.experiment.value.state.resolutionCodes[0] === "correct"){
+				$scope.correctResolution=true;
+			}
+			else { $scope.correctResolution=false;}
 
-		$http.get(jsRoutes.controllers.processes.api.Processes.list().url,{params:{"experimentCode":$scope.experiment.value.code}})
-		.success(function(data, status, headers, config){			
-			console.log("data="+ data[0].typeCode);
-			var processTypeCode = data[0].typeCode;
-			
-			$http.get(jsRoutes.controllers.processes.api.ProcessTypes.get(processTypeCode).url)
-			.success(function(data, status,headers,config){
-				$scope.processTypeCode = data;
-				$scope.lists.refresh.resolutions({"typeCode":$scope.processTypeCode.code}, 'processResolution');
-				$scope.lastExperimentTypeCode = $scope.processTypeCode.lastExperimentType.code;
-				if($scope.lastExperimentTypeCode===$scope.experiment.value.typeCode){
-					$scope.isLastExperiment = true;
-				}
-				if($scope.isPopup($scope.experiment.value.state.resolutionCodes) === true){	
-					angular.element('#modalResolutionProcess').modal('show');
-				}else{
-					$scope.saveAllAndChangeState();
-				}	
-			});	
-		});		
+			//A revoir
+			if($scope.experiment.value.categoryCode==='transformation'){		
+
+				$scope.isLastExperiment = false;	
+				$scope.continueProcess=false;
+
+				$http.get(jsRoutes.controllers.processes.api.Processes.list().url,{params:{"experimentCode":$scope.experiment.value.code}})
+				.success(function(data, status, headers, config){			
+					console.log("data="+ data[0].typeCode);
+					var processTypeCode = data[0].typeCode;
+
+					$http.get(jsRoutes.controllers.processes.api.ProcessTypes.get(processTypeCode).url)
+					.success(function(data, status,headers,config){
+						$scope.processTypeCode = data;
+						$http.get(jsRoutes.controllers.experiments.api.ExperimentTypes.list().url, {params:{"previousExperimentTypeCode":$scope.experimentType.code}})
+						.success(function(data, status, headers, config) {
+							$scope.nextExperimentTypeCodes = data;
+							$scope.lists.refresh.resolutions({"typeCode":$scope.processTypeCode.code}, 'processResolution');
+							$scope.lastExperimentTypeCode = $scope.processTypeCode.lastExperimentType.code;
+							if($scope.lastExperimentTypeCode===$scope.experiment.value.typeCode){
+								$scope.isLastExperiment = true;
+							}
+
+							if($scope.nextExperimentTypeCodes !== null && $scope.nextExperimentTypeCodes !== undefined && $scope.nextExperimentTypeCodes.length==0 && $scope.correctResolution === true){
+								return $scope.finishProcess();
+							}
+
+							if($scope.correctResolution==true && $scope.isLastExperiment==true && $scope.experimentType.atomicTransfertMethod=="OneToVoid"){
+								return $scope.finishProcess();
+							}
+							else if($scope.correctResolution==true && $scope.isLastExperiment==false || ($scope.correctResolution==true && $scope.nextExperimentTypeCodes.length>0)){
+								$scope.continueProcess=true;
+							}
+							$scope.continueExperiment();
+							angular.element('#modalResolutionProcess').modal('show');
+						});
+					});	
+				});		
+			}	
 		}else{
-			$scope.saveAllAndChangeState();
-		}	
+			$scope.message.clazz = "alert alert-danger";
+			$scope.message.text = Messages('experiments.msg.save.error');
+			$scope.message.details = {"resolution":["propriété obligatoire"]};
+			$scope.message.isDetails = true;
+			$scope.experiment.experimentInformation.enabled = true;
+		}
+	};
+
+	$scope.retryExperiment=function(){
+		var promiseFn = function(){ return $http.put(jsRoutes.controllers.experiments.api.Experiments.retry($scope.experiment.value.code).url); };
+
+		$scope.saveAllAndChangeState([promiseFn]);
+	};
+
+	$scope.stopProcess=function(){
+		if($scope.experiment.processResolutions !== undefined && $scope.experiment.processResolutions !== null && $scope.experiment.processResolutions.length > 0){
+			var promiseFn =  function(){ return $http.put(jsRoutes.controllers.experiments.api.Experiments.stopProcess($scope.experiment.value.code).url,{"processResolutionCodes":$scope.experiment.processResolutions})
+				.success(function(data, status, headers, config) {
+					if(data!=null){
+						$scope.message.clazz="alert alert-success";
+						$scope.message.text=Messages('experiments.msg.save.sucess');
+					}
+				})
+				.error(function(data, status, headers, config) {
+					$scope.message.clazz = "alert alert-danger";
+					$scope.message.text = Messages('experiments.msg.save.error');
+					$scope.message.details = data;
+					$scope.meExperimssage.isDetails = true;
+				});};
+				$scope.saveAllAndChangeState([promiseFn]);
+		}else{
+			$scope.message.clazz = "alert alert-danger";
+			$scope.message.text = Messages('experiments.msg.save.error');
+			$scope.message.details = {"resolution processus":["propriété obligatoire"]};
+			$scope.message.isDetails = true;
+		}
+	}
+
+	$scope.finishProcess=function(){
+		if($scope.experiment.value.state.resolutionCodes !== undefined && $scope.experiment.value.state.resolutionCodes.length >= 1){
+			var promiseFn =  function(){ return $http.put(jsRoutes.controllers.experiments.api.Experiments.endOfProcess($scope.experiment.value.code).url)
+				.success(function(data, status, headers, config) {
+					if(data!=null){
+						$scope.message.clazz="alert alert-success";
+						$scope.message.text=Messages('experiments.msg.save.sucess');
+					}
+				})
+				.error(function(data, status, headers, config) {
+					$scope.message.clazz = "alert alert-danger";
+					$scope.message.text = Messages('experiments.msg.save.error');
+					$scope.message.details = data;
+					$scope.message.isDetails = true;
+				});};
+				$scope.saveAllAndChangeState([promiseFn]);
+		}
+	}
+
+	$scope.continueExperiment=function(){	
+		$scope.datatableContainer = datatable($scope.datatableConfigOutPutContainers);
+		$scope.outputContainers =[];
+		var containers=[];
+		angular.forEach($scope.experiment.value.atomicTransfertMethods, function(atomicTransfertMethod){
+			if(atomicTransfertMethod.outputContainerUsed != undefined && atomicTransfertMethod.outputContainerUsed.code != null){
+				var container = {"code":atomicTransfertMethod.outputContainerUsed.code,"state":{"code":"A"}};
+				containers.push(container);
+				$scope.outputContainers.push(atomicTransfertMethod.outputContainerUsed.code);
+			}
+		});
+		$scope.lists.refresh.states({objectTypeCode:"Container"});
+		$scope.datatableContainer.setData(containers);
+	}
+
+	$scope.updateContainerState=function(experimentCategory){
+		var stateCode = "A";
+		console.log(experimentCategory);
+		switch(experimentCategory){
+		case "qualitycontrol": stateCode = 'A-QC';
+		break;
+		case "transfert": 	   stateCode = 'A-TF';
+		break;
+		case "purification":   stateCode = 'A-PF';
+		break;
+		case "transformation":   stateCode = 'A-TM';
+		break;								   
+		default:               stateCode = 'A';
+		}
+
+		var containerUpdate={"stateCode":stateCode};
+
+		var promiseFn =  function(){ $http.put(jsRoutes.controllers.containers.api.Containers.updateStateBatch().url,containerUpdate,{"params":{"codes":$scope.outputContainers}})
+			.success(function(data, status, headers, config) {
+				if(data!=null){
+					$scope.message.clazz="alert alert-success";
+					$scope.message.text=Messages('experiments.msg.save.sucess');
+				}
+			})
+			.error(function(data, status, headers, config) {
+				$scope.message.clazz = "alert alert-danger";
+				$scope.message.text = Messages('experiments.msg.save.error');
+				$scope.message.details = data;
+				$scope.message.isDetails = true;
+			});};
+
+			$scope.saveAllAndChangeState([promiseFn]);
 	};
 
 	$scope.getPropertyColumnType = function(type){
@@ -384,7 +574,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				if(experiment.instrument.inContainerSupportCategoryCode != undefined){
 					$scope.form.containerSupportCategory = experiment.instrument.inContainerSupportCategoryCode;
 				}
-				
+
 				mainService.setForm($scope.form);
 			}
 		}else{			
@@ -429,7 +619,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 	}
 
 	$scope.addSearchTabs = function(){
-		if(tabService.getTabs().length < 1){
+		if(tabService.getTabs().length < 1){ 	
 			mainService.setHomePage('search');
 			tabService.addTabs({label:Messages('experiments.tabs.search'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("search").url,remove:false});
 			tabService.addTabs({label:experiment.code,href:jsRoutes.controllers.experiments.tpl.Experiments.edit(experiment.code).url,remove:true});
@@ -515,7 +705,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 						$scope.experiment.value = data;
 						$scope.$broadcast('experimentToInput', $scope.experimentType.atomicTransfertMethod);
 					}					
-					
+
 				})
 				.error(function(data, status, headers, config) {
 					$scope.message.clazz = "alert alert-danger";
@@ -612,7 +802,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				$scope.experiment.value = data;
 				$scope.$broadcast('refresh');
 			}	
-			
+
 		})
 		.error(function(data, status, headers, config) {
 			$scope.message.clazz = "alert alert-danger";
@@ -675,15 +865,15 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				$scope.setEditConfig(true);	
 				$scope.$broadcast('enableEditMode');				
 				$scope.saveInProgress = false;
-				$scope.spinnerStart=false;
-				$scope.$broadcast('refresh');
+				$scope.spinnerStart=false;				
 
 			}
 
 		}
+		$scope.$broadcast('refresh');
 	};
 
-	$scope.$on('viewSaved', function(e, promises, func) {
+	$scope.$on('viewSaved', function(e, promises, func, endPromises) {
 		$scope.message.details = {};
 		$scope.message.isDetails = false;
 
@@ -713,9 +903,9 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		}
 
 		if(func){
-			func(promises);
+			func(promises, endPromises);
 		}
-		
+
 		$scope.$broadcast('refresh');
 	});	
 
@@ -782,7 +972,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		});
 	};
 
-	$scope.saveAllAndChangeState = function(){		
+	$scope.saveAllAndChangeState = function(endPromises){		
 		$scope.clearMessages();		
 		if($scope.experiment.stopProcess === true && ($scope.experiment.processResolutions === undefined || $scope.experiment.processResolutions===null || $scope.experiment.processResolutions.length === 0)){
 			$scope.message.clazz = "alert alert-danger";
@@ -795,15 +985,15 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				var promises = [];
 				//$scope.$broadcast('spinnerStart');
 				$scope.spinnerStart=true;
-				$scope.$broadcast('save', promises, $scope.changeState);				
+				$scope.$broadcast('save', promises, $scope.changeState, endPromises);				
 				$scope.saveInProgress = true;				
 			}
 			$scope.$broadcast('refresh');
 		}
 	};
 
-	$scope.changeState = function(promises){
-		$q.all(promises).then(function (res) {			
+	$scope.changeState = function(promisesBefore, promisesAfter){
+		$q.all(promisesBefore).then(function (res) {			
 			$scope.experiment.experimentProperties.enabled = false;
 			$scope.experiment.experimentInformation.enabled = false;
 			$scope.experiment.instrumentProperties.enabled = false;
@@ -831,16 +1021,17 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 						$scope.spinnerStart=false;
 
 					}
-					
+
 				}
+				$scope.$broadcast('refresh');
 				$scope.inProgressNow = false;
 				$scope.inProgressMode();
 				if($scope.experiment.value.state.code === "F"){
 					$scope.$broadcast('disableEditMode');
 					$scope.doneAndRecorded = true;
+					//$scope.finishExperiment();
 				}
-				
-				$scope.$broadcast('refresh');
+
 			})
 			.error(function(data, status, headers, config) {
 				$scope.spinnerStart=false;
@@ -860,17 +1051,27 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			});
 
 			promise.then(function(res) {
-				if(	$scope.message.text != Messages('experiments.msg.save.error')){
-					$scope.message.clazz="alert alert-success";
-					$scope.message.text=Messages('experiments.msg.save.sucess');
-					$scope.saveInProgress = false;
-					$scope.spinnerStart=false;
-					$scope.inProgressNow = false;
-					$scope.inProgressMode();
-					if($scope.experiment.value.state.code === "F"){
-						$scope.$broadcast('disableEditMode');
-					}	
+				for(var i=0;promisesAfter!==undefined && i<promisesAfter.length;i++) {
+					promisesAfter[i] = promisesAfter[i]();
 				}
+
+				$q.all(promisesAfter).then(function (res) {
+					if($scope.message.text != Messages('experiments.msg.save.error')){
+						$scope.message.clazz="alert alert-success";
+						$scope.message.text=Messages('experiments.msg.save.sucess');
+						$scope.saveInProgress = false;
+						$scope.spinnerStart=false;
+						$scope.inProgressNow = false;
+						$scope.inProgressMode();
+						/*if(fn !== undefined){
+							fn();
+						}*/
+						if($scope.experiment.value.state.code === "F"){
+							$scope.$broadcast('disableEditMode');
+						}	
+						$scope.$broadcast('refresh');
+					}
+				});
 			}, function(reason){			    
 				$scope.message.clazz = "alert alert-danger";
 				$scope.message.text = Messages('experiments.msg.save.error');
@@ -921,8 +1122,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			alert("error");
 		});
 	};
-	
-	
+
+
 
 	$scope.create_experiment = function(containers, atomicTransfertMethod){
 		//$scope.init_atomicTransfert(containers,atomicTransfertMethod);
@@ -938,7 +1139,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				});
 			}
 		});
-	}
+	};
 
 	$scope.init_experiment = function(containers,atomicTransfertMethod){
 		if($scope.form != undefined && $scope.form.experiment != undefined){
@@ -1220,6 +1421,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			$scope.lists.clear("resolutions");
 			$scope.lists.clear("states");
 			$scope.lists.clear("experimentTypeCodes");
+			$scope.lists.clear("experimentCategories");
 
 			$scope.lists.refresh.experimentTypes({categoryCode:$scope.experimentType.category.code},$scope.experimentType.category.code);
 			$scope.lists.refresh.instrumentUsedTypes({"experimentTypeCode":experiment.typeCode});
@@ -1227,6 +1429,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			$scope.lists.refresh.resolutions({"typeCode":experiment.typeCode});
 			$scope.lists.refresh.states({"objectTypeCode":"Experiment"});
 			$scope.lists.refresh.kitCatalogs();
+			$scope.lists.refresh.experimentCategories();
 
 			$scope.doneAndRecorded = false;
 			$scope.inProgressNow = false;

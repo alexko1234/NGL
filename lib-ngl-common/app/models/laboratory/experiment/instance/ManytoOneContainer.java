@@ -72,7 +72,7 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 					support.code=experiment.instrumentProperties.get("containerSupportCode").value.toString();
 					if(containerSupportCategory.nbColumn==1 && containerSupportCategory.nbLine==1)
 					{
-						outPutContainerCode=experiment.instrumentProperties.get("containerSupportCode").value.toString();
+						outPutContainerCode=experiment.instrumentProperties.get("containerSupportCode").value.toString();//TODO: voir Maud pour la flowcell 1
 						support.line="1";
 						support.column="1";
 					} else {

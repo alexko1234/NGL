@@ -62,7 +62,7 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 			         },
 			         {
 			        	 "header":Messages("containers.table.percentage"),
-			        	 "property":"percentage",
+			        	 "property":"inputContainerUsed.percentage",
 			        	 "order":true,
 			        	 "type":"number",
 			        	 "edit":false,
@@ -316,9 +316,9 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 		}
 	});
 
-	$scope.$on('save', function(e, promises, func) {		
+	$scope.$on('save', function(e, promises, func, endPromises) {		
 		promises.push($scope.datatable.save());
-		$scope.$emit('viewSaved', promises, func);
+		$scope.$emit('viewSaved', promises, func,endPromises);
 		$scope.propertyChanged = [];
 	});
 

@@ -27,7 +27,7 @@ import play.mvc.Result;
 import validation.ContextValidation;
 import validation.container.instance.ContainerValidationHelper;
 import views.components.datatable.DatatableResponse;
-import workflows.Workflows;
+import workflows.container.ContainerWorkflows;
 
 import com.mongodb.BasicDBObject;
 
@@ -118,7 +118,7 @@ public class ContainerSupports extends CommonController {
 			
 			if(!contextValidation.hasErrors()){
 				
-				Workflows.setContainerSupportState(code, state, contextValidation);
+				ContainerWorkflows.setContainerSupportState(code, state, contextValidation);
 				if(!contextValidation.hasErrors()){
 					for(Container container :containers) {
 						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class

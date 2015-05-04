@@ -99,7 +99,7 @@ public class KitCatalogs extends DocumentController<KitCatalog>{
 			
 			return ok(Json.toJson(new DatatableResponse<KitCatalog>(kitCatalogs, results.count())));
 		}else if (kitCatalogSearch.list){
-			keys = new BasicDBObject();
+			keys = getKeys(kitCatalogSearch);
 			keys.put("code", 1);
 			keys.put("name", 1);
 			keys.put("category", 1);

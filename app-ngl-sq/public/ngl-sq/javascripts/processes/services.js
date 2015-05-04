@@ -282,7 +282,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 var columns = [];
 			                                    	 if(this.form.typeCode){
 			                                    		 typeCode = this.form.typeCode;
-			                                    	 
+			                                    	 }
 			                                    	 var getPropertyColumnType = this.getPropertyColumnType;
 			                                    	 var datatable = this.datatable;
 			                                    	 var columnsDefault = this.columnsDefault;
@@ -339,7 +339,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 
 			                                    	 });		
 
-			                                     }
+			                                     
 			                                     },				
 
 			                                     updateForm : function(){					

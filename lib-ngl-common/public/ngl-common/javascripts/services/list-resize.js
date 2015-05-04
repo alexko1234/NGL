@@ -23,7 +23,7 @@ angular.module('commonsServices').directive('listResize',['$parse', function($pa
 			scope.vertical = false;//true: display values vertically
 			scope.below = false;//true: display the button below the value list
 			scope.belowOnlyDeployed = false;//true: display the undeploy-button only below the value list
-			
+
 
 			//The user can add list-resize-min-size attribute with the directive to set a custom min size
 			//for the collapse list
@@ -40,22 +40,22 @@ angular.module('commonsServices').directive('listResize',['$parse', function($pa
 				if(match !== null && match !== undefined && match.length>1){
 					model = $parse(match[2]);
 				}
-				
-			//The user can add  the below attribute for place the deploy/undeploy-button below the list of values.	
-			if(attrs.below !== undefined){
-				scope.below = true;
-			}			
-			
-			//The user can add  the below-only-deploy attribute for place the undeploy-button only below the list of values.
-			if(attrs.belowOnlyDeploy !== undefined){
-				scope.belowOnlyDeployed = true;
-			}
-			
-			
-			//The user can add  the vertical attribute to set the list of values vertically, with a carriage return behind each item.
-			if(attrs.vertical !== undefined){
-				scope.vertical = true;
-			}
+
+				//The user can add  the below attribute for place the deploy/undeploy-button below the list of values.	
+				if(attrs.below !== undefined){
+					scope.below = true;
+				}			
+
+				//The user can add  the below-only-deploy attribute for place the undeploy-button only below the list of values.
+				if(attrs.belowOnlyDeploy !== undefined){
+					scope.belowOnlyDeployed = true;
+				}
+
+
+				//The user can add  the vertical attribute to set the list of values vertically, with a carriage return behind each item.
+				if(attrs.vertical !== undefined){
+					scope.vertical = true;
+				}
 
 				//We watch the model in order to extract the list/value
 				scope.$watch(model, function(newValue, oldValue){

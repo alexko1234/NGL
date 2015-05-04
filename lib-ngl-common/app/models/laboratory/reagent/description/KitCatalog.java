@@ -18,6 +18,7 @@ public class KitCatalog extends AbstractCatalog{
 		ValidationHelper.required(contextValidation, name, "name");
 		ValidationHelper.required(contextValidation, providerRefName, "providerRefName");
 		ValidationHelper.required(contextValidation, providerCode, "providerCode");
+		ValidationHelper.required(contextValidation, catalogRefCode, "catalogRefCode");
 		ValidationHelper.required(contextValidation, experimentTypeCodes, "experimentTypeCodes");
 		if(!contextValidation.hasErrors()){
 			KitCatalogValidationHelper.validateCode(this, InstanceConstants.REAGENT_CATALOG_COLL_NAME, contextValidation);

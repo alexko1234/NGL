@@ -44,10 +44,11 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 		columns.push({
 			"header":Messages("containers.table.fromExperimentTypeCodes"),
 			"property":"fromExperimentTypeCodes",
-			"filter":"codes:'type'",
+			//"filter":"codes:'type'",
 			"order":true,
 			"position":6,
-			"type":"text"
+			"type":"text",
+			"render":"<span ng-model='value.data.fromExperimentTypeCodes' codes='type'></span>"
 		});		
 		columns.push({
 			"header":Messages("containers.table.sampleCodes.length"),
@@ -264,7 +265,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 					}
 
 					if(_form.containerSupportCode){
-						jsonSearch.supportCode = _form.containerSupportCode;
+						jsonSearch.supportCodeRegex = _form.containerSupportCode;
 					}
 					
 					if(_form.createUser){

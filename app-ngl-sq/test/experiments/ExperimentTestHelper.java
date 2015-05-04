@@ -27,6 +27,7 @@ public class ExperimentTestHelper {
 		exp.state = new State("N","ngsrg");
 		exp.atomicTransfertMethods = new HashMap<Integer, AtomicTransfertMethod>();
 		exp.instrument = new InstrumentUsed();
+		exp.instrument.outContainerSupportCategoryCode="tube";
 		exp.experimentProperties = new HashMap<String, PropertyValue>();
 		exp.instrumentProperties = new HashMap<String, PropertyValue>();
 		

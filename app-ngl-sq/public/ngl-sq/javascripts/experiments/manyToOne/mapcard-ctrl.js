@@ -244,9 +244,10 @@ angular.module('home').controller('ManyToOneMapcardCtrl',['$scope', '$window','d
 		}
 	});
 	
-	$scope.$on('save', function(e, promises, func) {
+	$scope.$on('save', function(e, promises, func, endPromises) {
+		$scope.setValidePercentage($scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds);
 		promises.push($scope.datatable.save());
-		$scope.$emit('viewSaved', promises, func);
+		$scope.$emit('viewSaved', promises, func, endPromises);
 	});
 	
 	$scope.refreshView = function(){
@@ -265,6 +266,16 @@ angular.module('home').controller('ManyToOneMapcardCtrl',['$scope', '$window','d
 	$scope.$on('experimentToOutput', function(e, atomicTransfertMethod) {
 		$scope.atomicTransfere.experimentToOutput($scope.datatable);
 	});	
+	
+	$scope.setValidePercentage = function(containerUseds){
+		var l = containerUseds.length;
+		angular.forEach(containerUseds, function(container){			
+				if(container.percentage != 100/l){
+					container.percentage = 100/l;
+				}			
+		});
+		
+	};
 	
 	//Init
 	$scope.datatable = datatable($scope.datatableConfig);

@@ -23,7 +23,7 @@ Chemistry,Default
 Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,Sample_Project,Description
 @for(c <- containers){
 	@for(co <- c.contents){
-		@(c.support.line)_@(co.sampleCode)_@(AbstractSampleSheetsfactory.getContentProperty(co,"tag")),@(c.support.code),,,@AbstractSampleSheetsfactory.getSupplierName(AbstractSampleSheetsfactory.getIndex("index-illumina-sequencing",AbstractSampleSheetsfactory.getContentProperty(co,"tag")),"illumina"),@AbstractSampleSheetsfactory.getSequence(AbstractSampleSheetsfactory.getIndex("index-illumina-sequencing",AbstractSampleSheetsfactory.getContentProperty(co,"tag"))),,@(AbstractSampleSheetsfactory.getContentProperty(co,"tag"))_@(co.percentage)
+		@(c.support.line)_@(co.sampleCode)_@(AbstractSampleSheetsfactory.getContentProperty(co,"libProcessTypeCode"))_@(AbstractSampleSheetsfactory.getContentProperty(co,"tag")),@(c.support.code),,,@AbstractSampleSheetsfactory.getSupplierName(AbstractSampleSheetsfactory.getIndex("index-illumina-sequencing",AbstractSampleSheetsfactory.getContentProperty(co,"tag")),"illumina"),@AbstractSampleSheetsfactory.getSequence(AbstractSampleSheetsfactory.getIndex("index-illumina-sequencing",AbstractSampleSheetsfactory.getContentProperty(co,"tag"))),,@(AbstractSampleSheetsfactory.getContentProperty(co,"tag"))_@(co.percentage)
 	}
 } 
 

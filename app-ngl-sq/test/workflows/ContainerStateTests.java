@@ -5,15 +5,15 @@ import java.util.Date;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
 import models.utils.InstanceConstants;
-import org.mongojack.DBQuery;
 
+import org.mongojack.DBQuery;
 import org.junit.Assert;
 import org.junit.Test;
 
 import utils.AbstractTests;
 import utils.Constants;
 import validation.ContextValidation;
-import workflows.Workflows;
+import workflows.container.ContainerWorkflows;
 import fr.cea.ig.MongoDBDAO;
 
 public class ContainerStateTests extends AbstractTests {
@@ -31,7 +31,7 @@ public class ContainerStateTests extends AbstractTests {
 		state.user="test";
 		state.date=new Date();
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		Workflows.setContainerState(container.code,null,state,contextValidation);
+		ContainerWorkflows.setContainerState(container,state,contextValidation);
 		
 		Container containerUpdate=MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code", container.code));
 		Assert.assertTrue(containerUpdate.state.code.equals(state.code));
@@ -49,7 +49,7 @@ public class ContainerStateTests extends AbstractTests {
 		state.user="test";
 		state.date=new Date();
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		Workflows.setContainerState(container.code,null,state,contextValidation);
+		ContainerWorkflows.setContainerState(container,state,contextValidation);
 		Assert.assertTrue(contextValidation.errors.size()==1);
 	
 	}

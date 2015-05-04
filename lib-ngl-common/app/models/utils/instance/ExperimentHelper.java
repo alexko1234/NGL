@@ -7,6 +7,7 @@ import java.util.Map;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
+import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
@@ -25,7 +26,8 @@ import play.Logger;
 import play.Play;
 import rules.services.RulesServices6;
 import validation.ContextValidation;
-import workflows.Workflows;
+import workflows.container.ContainerWorkflows;
+import workflows.experiment.ExperimentWorkflows;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -55,9 +57,9 @@ public class ExperimentHelper extends InstanceHelpers {
 				contextValidation.errors.putAll(exp.atomicTransfertMethods.get(i).saveOutputContainers(exp, contextValidation).errors);
 			}
 
-			List<String> containerSupportCodes=ExperimentHelper.getOutputContainerSupportCodes(exp);
+			exp.outputContainerSupportCodes=ExperimentHelper.getOutputContainerSupportCodes(exp);
 			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class,DBQuery.is("code", exp.code)
-					,DBUpdate.set("outputContainerSupportCodes", containerSupportCodes));
+					,DBUpdate.set("outputContainerSupportCodes", exp.outputContainerSupportCodes));
 
 		}
 
@@ -148,7 +150,7 @@ public class ExperimentHelper extends InstanceHelpers {
 		List<ContainerUsed> containersUSed=new ArrayList<ContainerUsed>();
 		if(exp.atomicTransfertMethods!=null){
 			for(int i = 0; i < exp.atomicTransfertMethods.size() ; i++){
-				if(exp.atomicTransfertMethods.get(i).getInputContainers().size()!=0){
+				if(exp.atomicTransfertMethods.get(i).getOutputContainers().size()!=0){
 					containersUSed.addAll(exp.atomicTransfertMethods.get(i).getOutputContainers());
 				}
 			}
@@ -220,27 +222,32 @@ public class ExperimentHelper extends InstanceHelpers {
 		List<ContainerUsed> containersInFromDB = exp.getAllInPutContainer();
 		List<ContainerUsed> containersIn = experiment.getAllInPutContainer();
 		
-		List<ContainerUsed> addedContainers = getDiff(containersIn,containersInFromDB);
+		List<Container> addedContainers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
+				DBQuery.in("code",getDiff(containersIn,containersInFromDB))).toList();
 		if(addedContainers.size() > 0){
-			Workflows.nextInputContainerState(experiment, addedContainers, contextValidation, false, false, null);
+			ContainerWorkflows.setContainerState(addedContainers, "IW-E", contextValidation);
 			
-			for(ContainerUsed addedContainer:addedContainers){
+			for(Container addedContainer:addedContainers){
 				//add the current experiment in the process and the experiment in the list of experiment
-				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("containerInputCode", addedContainer.code), DBUpdate.set("currentExperimentTypeCode", exp.typeCode).push("experimentCodes", exp.code));
+				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("containerInputCode", addedContainer.code), DBUpdate.set("currentExperimentTypeCode", exp.typeCode).push("experimentCodes", exp.code));
 			}
 		}
 		
-		List<ContainerUsed> deletedContainers = getDiff(containersInFromDB,containersIn);
+		List<Container> deletedContainers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class
+				,DBQuery.in("code", getDiff(containersInFromDB,containersIn))).toList();
 		if(deletedContainers.size() > 0){
-			Workflows.previousContainerState(deletedContainers,exp.code, exp.typeCode, contextValidation);
+			
+			String nextContainerState=ContainerWorkflows.getNextContainerStateFromExperimentCategory(exp.categoryCode);			
+			ContainerWorkflows.setContainerState(deletedContainers, nextContainerState, contextValidation);
+
 		}
 	}
 	
-	public static List<ContainerUsed> getDiff(List<ContainerUsed> containersFrom, List<ContainerUsed> containersTo){
+	public static List<String> getDiff(List<ContainerUsed> containersFrom, List<ContainerUsed> containersTo){
 		
 		containersFrom=flattenContainerUsed(containersFrom);
 		containersTo=flattenContainerUsed(containersTo);
-		List<ContainerUsed> containerDiff = new ArrayList<ContainerUsed>();
+		List<String> containerDiff = new ArrayList<String>();
 		boolean found = false;
 		for(ContainerUsed cf:containersFrom){
 			String code = cf.code;
@@ -252,7 +259,7 @@ public class ExperimentHelper extends InstanceHelpers {
 				}
 			}
 			if(!found){
-				containerDiff.add(cf);
+				containerDiff.add(cf.code);
 			}
 		}
 		

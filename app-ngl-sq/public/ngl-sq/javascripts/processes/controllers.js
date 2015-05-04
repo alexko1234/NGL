@@ -219,7 +219,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			}
 
 			if($scope.form.containerSupportCode){
-				jsonSearch.supportCode = $scope.form.containerSupportCode;
+				jsonSearch.supportCodeRegex = $scope.form.containerSupportCode;
 			}
 			
 			if($scope.form.createUser){
@@ -586,7 +586,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			}
 			var nbElementByBatch = Math.ceil(processes.length / 6); //6 because 6 request max in parrallel with firefox and chrome
 			for(var i = 0; i  < 6 && processes.length > 0 ; i++){
-				$scope.promises.push($scope.getSaveRemoteRequest(url, processes.splice(0, nbElementByBatch))); 								
+				$scope.promises.push($scope.getSaveRemoteRequest(url, processes.splice(0, nbElementByBatch),$scope.form.nextProcessTypeCode)); 								
 			}
 			
 		}else{
@@ -639,8 +639,8 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 	};
 
 	
-	$scope.getSaveRemoteRequest = function(url, processes){
-		return $http.post(url, processes)
+	$scope.getSaveRemoteRequest = function(url, processes,processTypeCode){
+		return $http.post(url, processes, {params:{"processTypeCode": processTypeCode}})
 		.success(function(data, status, headers, config) {
 			if(data!=null){
 				for(var i=0;i<data.length;i++){

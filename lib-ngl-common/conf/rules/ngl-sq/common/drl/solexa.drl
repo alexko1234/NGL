@@ -17,6 +17,16 @@ declare ContentInfo
 	sequence : String
 end
 
+rule "Debug validations"
+	@nglSQ( validations )
+	dialect "java"
+	salience 1000
+	no-loop
+    when
+	eval(true)
+    then
+		Logger.debug("Rules annotation @nglSQ(validations)");    
+	end
 
 rule "Init object LaneInfo in WM"
 	@nglSQ( validations )
@@ -108,8 +118,7 @@ rule "Container duplicate in Lane"
     	//Logger.debug("Erreur containers "+$containerDuplicate);
  		$contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.duplicateinputcontainers",$containerDuplicate, $position);
     end
-
-
+   	
 rule "Sum % percentage per piste = 100 % "
 	@nglSQ( validations )
 	dialect "java"
@@ -117,12 +126,30 @@ rule "Sum % percentage per piste = 100 % "
 	no-loop
     when
     $atomics:AtomicTransfertMethod($inputContainers : getInputContainers())
-    $total : Double() from accumulate( ContainerUsed($n:percentage, percentage!=null) from $inputContainers, sum( $n ) )
-    eval($total!=100 && $total!=0)
+    Experiment($instrument: instrument)   
+    $total : Double() from accumulate(ContainerUsed( $n:percentage, percentage!=null) from $inputContainers, sum( $n ) )
+    $container: ContainerUsed($cat : categoryCode) from $inputContainers
+    eval(!($total>=99.9 && $total<=100) )
     $contextValidation:ContextValidation()
-   	then
-   		//Logger.debug("Regles de validation solexa "+$total +' '+$atomics.position);
-   		$contextValidation.addErrors("lane["+$atomics.position+"]",	"error.validationexp.percentperoutputcontainer", $total,$atomics.position);
+   	 then
+   		Logger.debug("Regles de validation des pourcentages solexa "+ $total +' '+$atomics.position);   		
+   		
+   		if(("tube").equals($instrument.outContainerSupportCategoryCode)){   			 
+   			if(!$contextValidation.errors.containsKey("tube["+$atomics.position+"]")){  		
+   			$contextValidation.addErrors("tube["+$atomics.position+"]",	"error.validationexp.percentperoutputcontainertube", $total,$atomics.position);
+   			}
+   		}else if(Pattern.matches("^flowcell.*",$instrument.outContainerSupportCategoryCode)){
+   			$contextValidation.addErrors("lane["+$atomics.position+"]",	"error.validationexp.percentperoutputcontainerlane", $total,$atomics.position);
+   		}else if(("mapcard").equals($instrument.outContainerSupportCategoryCode)){
+   			if(!$contextValidation.errors.containsKey("mapcard["+$atomics.position+"]")){
+   			$contextValidation.addErrors("mapcard["+$atomics.position+"]",	"error.validationexp.percentperoutputcontainermapcard", $total,$atomics.position);
+   			}
+   		}else{
+   			if(!$contextValidation.errors.containsKey("output container["+$atomics.position+"]")){
+   			$contextValidation.addErrors("output container["+$atomics.position+"]",	"error.validationexp.percentperoutputcontainerdefault", $total);
+   			}
+   		}   	
+   		
    	end
    	
 rule "Tag identique sur la meme position"
@@ -238,4 +265,4 @@ rule "Prepaflowcell validate piste controle"
     then
     	Logger.debug("outputcontainersupport "+$outputContainerSupport + ", piste controle ");
     	$contextValidation.addErrors("instrument",	"error.validationexp.badcontrolprepaflowcell", $value,$outputContainerSupport);
-    end
+    end    

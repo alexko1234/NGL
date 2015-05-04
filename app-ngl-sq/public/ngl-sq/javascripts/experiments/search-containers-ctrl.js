@@ -143,6 +143,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 							       break;
 			case "purification":   stateCode = 'A-PF';
 								   break;
+			case "transformation":   stateCode = 'A-TM';
+			   						break;								   
 			default:               stateCode = 'A';
 		}
 		

@@ -1,9 +1,7 @@
 package models.laboratory.reagent.instance;
 
 import java.util.Date;
-import java.util.List;
 
-import models.laboratory.common.description.State;
 import models.laboratory.common.instance.TraceInformation;
 import validation.IValidation;
 
@@ -22,21 +20,16 @@ import fr.cea.ig.DBObject;
 })
 public abstract class AbstractDeclaration  extends DBObject implements IValidation{
 
-	public int possibleUseNumber;
 	public Date receptionDate;
 	
-	public String barCode;
-
-	public Date startToUseDate;
-	public Date stopToUseDate;
-	
-	public State state;
-	
 	public String orderCode;
+	public String providerOrderCode;
+	
+	public String catalogRefCode;
 	
 	public TraceInformation traceInformation;
 	
-	public Date expirationDate;
+	public String declarationType;
 	
-	public List<String> comments;
+	public String comment;
 }

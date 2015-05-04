@@ -1,13 +1,15 @@
 package controllers.reagents.api;
 
-import static play.data.Form.form;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
+
+import static play.data.Form.form;
 
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.reagent.description.AbstractCatalog;
+import models.laboratory.reagent.instance.Box;
 import models.laboratory.reagent.instance.Reagent;
 import models.laboratory.reagent.utils.ReagentCodeHelper;
 import models.utils.InstanceConstants;
@@ -23,13 +25,14 @@ import play.libs.Json;
 import play.mvc.Result;
 import play.mvc.Results;
 import validation.ContextValidation;
-import views.components.datatable.DatatableResponse;
 
 import com.mongodb.BasicDBObject;
 
 import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+
+import views.components.datatable.DatatableResponse;
 
 public class Reagents extends DocumentController<Reagent>{
 	public Reagents() {
@@ -145,6 +148,22 @@ public class Reagents extends DocumentController<Reagent>{
 		
 		if(StringUtils.isNotBlank(reagentSearch.kitCode)){
 			queryElts.add(DBQuery.is("kitCode", reagentSearch.kitCode));
+		}
+		
+		if(StringUtils.isNotEmpty(reagentSearch.boxBarCode)){
+			BoxSearchForm boxSearch = new BoxSearchForm();
+			boxSearch.barCode = reagentSearch.boxBarCode;
+			BasicDBObject keys = new BasicDBObject();
+			keys.put("code", 1);
+			keys.put("category", 1);
+			List<Box> boxes = MongoDBDAO.find(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, Box.class, Boxes.getQuery(boxSearch), keys).toList();
+			for(Box b:boxes){
+				queryElts.add(DBQuery.or(DBQuery.is("boxCode", b.code),DBQuery.regex("barCode", Pattern.compile(reagentSearch.barCode+"_|_"+reagentSearch.barCode)),DBQuery.regex("reagents.code", Pattern.compile(reagentSearch.barCode+"_|_"+reagentSearch.barCode))));
+			}
+		}
+		
+		if(StringUtils.isNotEmpty(reagentSearch.barCode) && StringUtils.isEmpty(reagentSearch.boxBarCode)){
+			queryElts.add(DBQuery.or(DBQuery.regex("barCode", Pattern.compile(reagentSearch.barCode+"_|_"+reagentSearch.barCode)),DBQuery.regex("reagents.code", Pattern.compile(reagentSearch.barCode+"_|_"+reagentSearch.barCode))));
 		}
 		
 		if(queryElts.size() > 0){

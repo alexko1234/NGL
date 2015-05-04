@@ -10,6 +10,7 @@ import controllers.ListForm;
 public class ContainersSearchForm extends ListForm{
 	
 	public String code;
+	public List<String> codes;
 	public String projectCode;
 	public List<String> projectCodes;
 	public String stateCode;
@@ -21,6 +22,7 @@ public class ContainersSearchForm extends ListForm{
 	public String processTypeCode;
 	public String nextProcessTypeCode;
 	public String supportCode;
+	public String supportCodeRegex;
 	public String containerSupportCategory;
 	public List<String> containerSupportCategories;
 	public List<String> fromExperimentTypeCodes;

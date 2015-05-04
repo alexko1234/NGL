@@ -2,11 +2,7 @@ package validation.container.instance;
 
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import models.laboratory.common.description.ObjectType;
-import models.laboratory.common.description.ObjectType.CODE;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
@@ -15,13 +11,15 @@ import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
+
+import org.apache.commons.collections.CollectionUtils;
+
 import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
-import workflows.Workflows;
 
 public class ContainerValidationHelper extends CommonValidationHelper{
 
@@ -55,6 +53,12 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 
 			validateContentPercentageSum(contents, contextValidation);
 		}
+	}
+	
+	public static void validateStateCode(String stateCode,ContextValidation contextValidation){
+		contextValidation.addKeyToRootKeyName("state");
+		CommonValidationHelper.validateStateCode(stateCode,ObjectType.CODE.Container, contextValidation);
+		contextValidation.removeKeyFromRootKeyName("state");
 	}
 	
 	//Check the sum of percentage of contents is 100

@@ -4,7 +4,9 @@ import static play.data.Form.form;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import models.laboratory.common.description.Level;
@@ -29,6 +31,7 @@ import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
 
 import play.Logger;
+import play.Logger.ALogger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -36,7 +39,7 @@ import validation.ContextValidation;
 import validation.utils.ValidationConstants;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableResponse;
-import workflows.Workflows;
+import workflows.process.ProcessWorkflows;
 
 import com.mongodb.BasicDBObject;
 
@@ -56,6 +59,7 @@ public class Processes extends CommonController{
 	final static Form<QueryFieldsForm> saveForm = form(QueryFieldsForm.class);
 	final static Form<ProcessesUpdateForm> processesUpdateForm = form(ProcessesUpdateForm.class);
 	final static Form<ProcessesBatchElement> processSaveBatchForm = form(ProcessesBatchElement.class);
+	private static final ALogger logger = Logger.of("Processes");
 
 	public static Result head(String processCode) {
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, processCode)){			
@@ -79,7 +83,7 @@ public class Processes extends CommonController{
 		Form<Process> filledForm = getFilledForm(processForm, Process.class);
 		Process process = filledForm.get();		
 		List<Process> processes = new ArrayList<Process>();	
-	
+
 		if (null == process._id) {			//init state
 			//the trace
 			process.traceInformation = new TraceInformation();
@@ -89,7 +93,7 @@ public class Processes extends CommonController{
 		}else {
 			return badRequest("use PUT method to update the process");
 		}
-		
+
 		ContextValidation contextValidation=new ContextValidation(getCurrentUser(), filledForm.errors());
 
 		if (!filledForm.hasErrors()) {
@@ -98,7 +102,7 @@ public class Processes extends CommonController{
 			if(StringUtils.isNotBlank(queryFieldsForm.fromSupportContainerCode) && StringUtils.isBlank(queryFieldsForm.fromContainerInputCode)){			
 				processes = saveFromSupport(queryFieldsForm.fromSupportContainerCode, filledForm, contextValidation);
 			}else if(StringUtils.isNotBlank(queryFieldsForm.fromContainerInputCode) && StringUtils.isBlank(queryFieldsForm.fromSupportContainerCode)) {							
-							
+
 				if(!contextValidation.hasErrors()){
 					Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, process.containerInputCode);
 					filledForm.get().containerInputCode = container.code;
@@ -108,7 +112,7 @@ public class Processes extends CommonController{
 				return badRequest("Params 'from object' required!");
 			}
 		}
-		
+
 		if(contextValidation.hasErrors())
 		{
 			return badRequest(filledForm.errorsAsJson());
@@ -118,14 +122,16 @@ public class Processes extends CommonController{
 	}
 
 	public static Result saveBatch(){
+		Form<ProcessesSaveQueryForm>  filledQueryFieldsForm = filledFormQueryString(processSaveQueryForm, ProcessesSaveQueryForm.class);
 		List<Form<ProcessesBatchElement>> filledForms =  getFilledFormList(processSaveBatchForm, ProcessesBatchElement.class);
 
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
-		
+		ProcessesSaveQueryForm processesSaveQueryForm=filledQueryFieldsForm.get();
+
 		Form batchForm = new Form(Process.class);
 		List<Process> processes = new ArrayList<Process>();
 		ContextValidation contextValidation =new ContextValidation(getCurrentUser(), batchForm.errors());
-		
+
 		for(Form<ProcessesBatchElement> filledForm: filledForms){
 			ContextValidation ctxVal=new ContextValidation(getCurrentUser(), batchForm.errors());
 			ProcessesBatchElement element = filledForm.get();
@@ -148,37 +154,29 @@ public class Processes extends CommonController{
 				if (!ctxVal.hasErrors()) {
 					Process p = (Process)InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,process, ctxVal);
 					processes.add(p);
-					Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, p.containerInputCode);
-					List<String> newProcesses = new ArrayList<String>();
-					newProcesses.add(p.code);
-					ProcessHelper.updateContainer(container,process.typeCode, newProcesses,contextValidation);
-					ProcessHelper.updateContainerSupportFromContainer(container,contextValidation);
-					try {
-						ProcessType pt = ProcessType.find.findByCode(process.typeCode);
-						Workflows.nextContainerState(process,pt.firstExperimentType.code, pt.firstExperimentType.category.code,new ContextValidation(getCurrentUser(), filledForm.errors()));
-					} catch (DAOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
 					response.add(new DatatableBatchResponseElement(OK,  p, element.index));
 				}else{
 					contextValidation.errors.putAll(ctxVal.errors);
 					response.add(new DatatableBatchResponseElement(BAD_REQUEST, batchForm.errorsAsJson(), element.index));
 				}
-				}else {
-					response.add(new DatatableBatchResponseElement(BAD_REQUEST, processForm.errorsAsJson(), element.index));
-				}
+			}else {
+				response.add(new DatatableBatchResponseElement(BAD_REQUEST, processForm.errorsAsJson(), element.index));
 			}
+		}
+
+		ProcessWorkflows.nextContainerStateFromNewProcesses(processes,processesSaveQueryForm.processTypeCode,new ContextValidation(getCurrentUser(), batchForm.errors()));
+		//ProcessWorkflows.nextContainerStateFromNewProcess(process,pt.firstExperimentType.code, pt.firstExperimentType.category.code,new ContextValidation(getCurrentUser(), filledForm.errors()));
+
 		if(processes.size()>0){
 			processes = ProcessHelper.applyRules(processes, contextValidation, "processCreation");
 		}
 		if(!contextValidation.hasErrors()){
 			return ok(Json.toJson(response));
 		}
-		
+
 		return badRequest(Json.toJson(response));
 	}
-	
+
 	private static List<Process> saveFromSupport(String supportCode, Form<Process> filledForm, ContextValidation contextValidation){			
 		List<Process> processes = new ArrayList<Process>();
 		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("support.code", supportCode)).toList();
@@ -194,7 +192,6 @@ public class Processes extends CommonController{
 		Process process = filledForm.get();
 
 		List<Process> processes = new ArrayList<Process>();
-		List<String> processCodes=new ArrayList<String>();		
 		for(Content c:container.contents){
 			Process newProcess = new Process();
 			//code generation
@@ -212,13 +209,11 @@ public class Processes extends CommonController{
 			newProcess.projectCode = c.projectCode;
 			newProcess.code = CodeHelper.getInstance().generateProcessCode(newProcess);
 			newProcess.sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(c, container);				
-			//Process p = (Process)InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,process, contextValidation);
-			Logger.info("New process code : "+newProcess.code);
+			//Logger.info("New process code : "+newProcess.code);
 			processes.add(newProcess);					
-			processCodes.add(newProcess.code);
 			newProcess.validate(contextValidation);
 		}
-		
+
 		if(!contextValidation.hasErrors()){
 			List<Process> savedProcesses = new ArrayList<Process>();
 			for(Process p:processes){
@@ -228,15 +223,7 @@ public class Processes extends CommonController{
 				}
 			}
 			processes = ProcessHelper.applyRules(savedProcesses, contextValidation, "processCreation");
-			try {
-				ProcessType pt = ProcessType.find.findByCode(process.typeCode);
-				Workflows.nextContainerState(process,pt.firstExperimentType.code, pt.firstExperimentType.category.code,contextValidation);
-				ProcessHelper.updateContainer(container,process.typeCode, processCodes,contextValidation);
-				ProcessHelper.updateContainerSupportFromContainer(container,contextValidation);
-			} catch (DAOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			ProcessWorkflows.nextContainerStateFromNewProcesses(processes, process.typeCode, contextValidation);
 		}
 		return processes;
 	}
@@ -266,7 +253,7 @@ public class Processes extends CommonController{
 			return badRequest("process code are not the same");
 		}
 	}
-	
+
 	public static Result updateStateCode(String code){
 		Form<ProcessesUpdateForm> processesUpdateFilledForm = getFilledForm(processesUpdateForm,ProcessesUpdateForm.class);
 		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), processesUpdateFilledForm.errors());
@@ -276,14 +263,14 @@ public class Processes extends CommonController{
 			State state = new State();
 			state.code = processesUpdateForm.stateCode;
 			state.user = getCurrentUser();
-			Workflows.setProcessState(code, state, contextValidation);
+			ProcessWorkflows.setProcessState(code, state, contextValidation);
 			if(!contextValidation.hasErrors()){
 				return ok();
 			}
 		}
 		return badRequest(processesUpdateFilledForm.errorsAsJson());
 	}
-	
+
 	public static Result delete(String code){
 		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
 		Form deleteForm = new Form(Process.class);
@@ -291,22 +278,25 @@ public class Processes extends CommonController{
 		if(process == null){
 			return notFound("Process with code "+code+" does not exist");
 		}
-		
+
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,process.containerInputCode);
 		if(container==null){
 			return notFound("Container process "+code+"with code "+process.containerInputCode+" does not exist");
 		}
-		if(!process.state.code.equals("N") && !container.state.code.equals("A")){
-			contextValidation.addErrors("container", ValidationConstants.ERROR_BADSTATE_MSG, container.code);
-		}else if(!process.state.code.equals("N") || CollectionUtils.isNotEmpty(process.experimentCodes) || !container.state.code.equals("A")){
+		if(!process.state.code.equals("N")){
+			contextValidation.addErrors("process", ValidationConstants.ERROR_BADSTATE_MSG, container.code);
+		}else if(CollectionUtils.isNotEmpty(process.experimentCodes)){
 			contextValidation.addErrors("process", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, process.experimentCodes);
+		}else if(container.state.code.startsWith("A")){
+			contextValidation.addErrors("container", ValidationConstants.ERROR_BADSTATE_MSG, container.code);
 		}
-		
+
 		if(!contextValidation.hasErrors()){
 			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code",container.code),DBUpdate.pull("inputProcessCodes", process.code));
 			MongoDBDAO.deleteByCode(InstanceConstants.PROCESS_COLL_NAME,Process.class,  process.code);
 			return ok();
 		}else {
+			contextValidation.displayErrors(logger);
 			return badRequest(deleteForm.errorsAsJson());
 		}
 	}
@@ -384,7 +374,7 @@ public class Processes extends CommonController{
 		if(CollectionUtils.isNotEmpty(processesSearch.users)){
 			queryElts.add(DBQuery.in("traceInformation.createUser", processesSearch.users));
 		}
-		
+
 		if(StringUtils.isNotBlank(processesSearch.createUser)){   
 			queryElts.add(DBQuery.is("traceInformation.createUser", processesSearch.createUser));
 		}
@@ -403,7 +393,7 @@ public class Processes extends CommonController{
 			keys.put("code", 1);
 
 			ContainersSearchForm cs = new ContainersSearchForm();
-			cs.supportCode = processesSearch.supportCode;
+			cs.supportCodeRegex = processesSearch.supportCode;
 			cs.containerSupportCategory=processesSearch.containerSupportCategory;
 
 			List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, Containers.getQuery(cs), keys).toList();

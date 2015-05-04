@@ -106,7 +106,7 @@ public class ProcessControllerTests extends AbstractTests {
 				assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 				
 				result = callAction(controllers.processes.api.routes.ref.Processes.delete(newProcess.code),fakeRequest());
-				assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);			
+				assertThat(status(result)).isEqualTo(play.mvc.Http.Status.BAD_REQUEST);			
 			}		
 		}
 		

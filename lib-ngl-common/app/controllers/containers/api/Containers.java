@@ -39,7 +39,7 @@ import play.mvc.Results;
 import validation.ContextValidation;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableResponse;
-import workflows.Workflows;
+import workflows.container.ContainerWorkflows;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -89,7 +89,7 @@ public class Containers extends CommonController {
 				state.date = new Date();
 				state.user = getCurrentUser();
 				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
-				Workflows.setContainerState(container.code,null, state, ctxVal);
+				ContainerWorkflows.setContainerState(container, state, ctxVal);
 				if (!ctxVal.hasErrors()) {
 					response.add(new DatatableBatchResponseElement(OK,  findContainer(element.data.code), element.index));
 				}else {
@@ -163,7 +163,7 @@ public class Containers extends CommonController {
 		}
 		return Results.ok("{}");
 	}
-	
+
 
 	public static Result updateStateCode(String code){
 		Form<ContainersUpdateForm> containerUpdateFilledForm = getFilledForm(containersUpdateForm, ContainersUpdateForm.class);
@@ -173,7 +173,7 @@ public class Containers extends CommonController {
 			State state = new State();
 			state.code = containersUpdateForm.stateCode;
 			state.user = getCurrentUser();
-			Workflows.setContainerState(code, null, state, contextValidation);
+			ContainerWorkflows.setContainerState(findContainer(code), state, contextValidation);
 			if(!contextValidation.hasErrors()){
 				return ok();
 			}
@@ -181,6 +181,40 @@ public class Containers extends CommonController {
 		return badRequest(containerUpdateFilledForm.errorsAsJson());
 	}
 
+
+	public static Result updateStateBatch(){
+		Form<ContainersUpdateForm> containerUpdateFilledForm = getFilledForm(containersUpdateForm, ContainersUpdateForm.class);
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(),containerUpdateFilledForm.errors());
+		ContainersSearchForm containersSearch = filledFormQueryString(ContainersSearchForm.class);
+		
+		ContainersUpdateForm containersUpdateForm = containerUpdateFilledForm.get();
+		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(containersSearch.codes.size());
+
+		if(!containerUpdateFilledForm.hasErrors()){
+			Integer indexElement=0;
+			State state = new State();
+			state.code = containersUpdateForm.stateCode;
+			state.user = getCurrentUser();
+			for(String containerCode:containersSearch.codes){
+				indexElement++;
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), containerUpdateFilledForm.errors());
+				Container container=findContainer(containerCode);
+				if(container!=null){
+					ContainerWorkflows.setContainerState(container, state, contextValidation);
+					if (!ctxVal.hasErrors()) {
+						response.add(new DatatableBatchResponseElement(OK,  container, indexElement));
+					}else {
+						response.add(new DatatableBatchResponseElement(BAD_REQUEST, containerUpdateFilledForm.errorsAsJson(), indexElement));
+					}
+				}else {
+					response.add(new DatatableBatchResponseElement(NOT_FOUND, indexElement));
+				}
+
+
+			}
+		}
+		return ok(Json.toJson(response));
+	}
 
 
 
@@ -190,8 +224,7 @@ public class Containers extends CommonController {
 	 * @return
 	 * @throws DAOException 
 	 */
-	public static DBQuery.Query getQuery(ContainersSearchForm containersSearch) throws DAOException{
-		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
+	public static DBQuery.Query getQuery(ContainersSearchForm containersSearch) throws DAOException{		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
 		Query query = DBQuery.empty();
 
 		List<String> processCodes = new ArrayList<String>();
@@ -203,9 +236,6 @@ public class Containers extends CommonController {
 			for(Process p : processes){
 				processCodes.add(p.code);
 			}
-		}
-
-		if(CollectionUtils.isNotEmpty(processCodes)){
 			queryElts.add(DBQuery.in("inputProcessCodes", processCodes));
 		}
 
@@ -236,7 +266,11 @@ public class Containers extends CommonController {
 		}
 
 		if(StringUtils.isNotBlank(containersSearch.supportCode)){
-			queryElts.add(DBQuery.regex("support.code", Pattern.compile(containersSearch.supportCode)));
+			queryElts.add(DBQuery.is("support.code", containersSearch.supportCode));
+		}
+		
+		if(StringUtils.isNotBlank(containersSearch.supportCodeRegex)){
+			queryElts.add(DBQuery.regex("support.code", Pattern.compile(containersSearch.supportCodeRegex)));
 		}
 
 		if(CollectionUtils.isNotEmpty(containersSearch.containerSupportCategories)){

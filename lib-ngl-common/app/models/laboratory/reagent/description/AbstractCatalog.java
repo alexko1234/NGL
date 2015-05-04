@@ -24,5 +24,6 @@ public abstract class AbstractCatalog extends DBObject implements IValidation{
 	
 	@Required
 	public String name;
+	public String catalogRefCode;
 	public boolean active = true;
 }

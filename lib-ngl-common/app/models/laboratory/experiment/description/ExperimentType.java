@@ -71,6 +71,9 @@ public class ExperimentType extends CommonInfoType{
 			return ((ExperimentTypeDAO)getInstance()).findByCategoryCodesWithoutOneToVoid(categoryCodes);
 		}	
 
+		public List<ExperimentType> findByPreviousExperimentTypeCode(String previousExperimentTypeCode) throws DAOException{
+			return ((ExperimentTypeDAO)getInstance()).findByPreviousExperimentTypeCode(previousExperimentTypeCode);
+		}
 
 	}
 	

@@ -196,9 +196,9 @@ angular.module('home').controller('OneToVoidContainerCtrl',['$scope', '$window',
 	});
 
 
-	$scope.$on('save', function(e, promises, func) {
+	$scope.$on('save', function(e, promises, func, endPromises) {
 		$scope.datatable.save();
-		$scope.$emit('viewSaved', promises, func);
+		$scope.$emit('viewSaved', promises, func, endPromises);
 	});
 
 	$scope.refreshView = function(){

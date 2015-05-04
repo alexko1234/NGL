@@ -13,19 +13,19 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.ExperimentUpdateState;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 import models.laboratory.processes.instance.Process;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import models.utils.instance.ExperimentHelper;
-import models.utils.instance.ProcessHelper;
 import models.utils.instance.StateHelper;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -37,6 +37,7 @@ import org.mongojack.DBUpdate;
 import org.mongojack.DBUpdate.Builder;
 
 import play.Logger;
+import play.Play;
 import play.Logger.ALogger;
 import play.api.modules.spring.Spring;
 import play.data.Form;
@@ -44,10 +45,15 @@ import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Result;
 import play.mvc.Results;
+import rules.services.RulesMessage;
 import validation.ContextValidation;
+import validation.container.instance.ContainerValidationHelper;
 import validation.experiment.instance.ExperimentValidationHelper;
+import validation.processes.instance.ProcessValidationHelper;
 import views.components.datatable.DatatableResponse;
-import workflows.Workflows;
+import workflows.container.ContainerWorkflows;
+import workflows.experiment.ExperimentWorkflows;
+import workflows.process.ProcessWorkflows;
 
 import com.mongodb.BasicDBObject;
 
@@ -106,30 +112,6 @@ public class Experiments extends CommonController{
 		return ok(Json.toJson(experiment));
 	}
 
-	/*@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
-	public static Result generateOutput(String code){
-		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
-		Experiment exp = experimentFilledForm.get();
-
-		exp = ExperimentHelper.traceInformation(exp,getCurrentUser());
-		ContextValidation contextValidation=new ContextValidation(getCurrentUser(), experimentFilledForm.errors());
-		try {
-			ExperimentHelper.generateOutputContainerUsed(exp, contextValidation);
-		} catch (DAOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		ExperimentHelper.saveOutputContainerUsed(exp, contextValidation);
-
-		if(!contextValidation.hasErrors()){
-			return ok(Json.toJson(exp));
-		}
-		else{
-
-			return badRequest(experimentFilledForm.errorsAsJson());
-		}
-	}
-	 */
 
 	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public static Result updateInstrumentInformations(String code) throws DAOException{
@@ -295,10 +277,10 @@ public class Experiments extends CommonController{
 		contextValidation.setUpdateMode();
 		contextValidation.putObject("stateCode", exp.state.code);
 		contextValidation.putObject("typeCode", exp.typeCode);
-		
+
 		ExperimentValidationHelper.validateAtomicTransfertMethodes(exp.atomicTransfertMethods, contextValidation);
 		ExperimentValidationHelper.validateRules(exp, contextValidation);
-		
+
 		if(!contextValidation.hasErrors()){
 			ExperimentHelper.cleanContainers(exp, contextValidation);
 
@@ -335,8 +317,29 @@ public class Experiments extends CommonController{
 		nextState.code = expUpdateForm.nextStateCode;
 		nextState.user=getCurrentUser();
 		nextState.resolutionCodes = exp.state.resolutionCodes;
-		
-		Workflows.setExperimentState(exp,nextState, ctxValidation, expUpdateForm.stopProcess, expUpdateForm.retry, expUpdateForm.processResolutionCodes);
+
+		//Validation Experiment State
+		ctxValidation.getContextObjects().put("stateCode", nextState.code);
+		ExperimentValidationHelper.validateState(exp.typeCode, nextState, ctxValidation);
+		ExperimentValidationHelper.validateNewState(exp, ctxValidation);
+
+		ExperimentUpdateState experimentUpdateState=new ExperimentUpdateState();
+
+		if(nextState.code.equals("IP")){
+			experimentUpdateState.nextStateProcesses="IP";
+			experimentUpdateState.nextStateInputContainers="IU";
+		}else if (nextState.code.equals("F")){
+			experimentUpdateState.nextStateProcesses="IP";
+			experimentUpdateState.nextStateInputContainers="IS";
+			experimentUpdateState.nextStateOutputContainers="A";
+		}
+
+		if (!ctxValidation.hasErrors()) {
+			ExperimentWorkflows.setExperimentState(exp,nextState,ctxValidation);
+		}
+
+		ExperimentWorkflows.setExperimentUpdateState(exp,experimentUpdateState,ctxValidation);
+
 		if (!ctxValidation.hasErrors()) {
 			return ok(Json.toJson(exp));
 		}
@@ -345,34 +348,94 @@ public class Experiments extends CommonController{
 		return badRequest(experimentFilledForm.errorsAsJson());
 	}
 
-	public static Result nextState(String code){
+
+	public static Result retry(String code){
+		Form form = new Form(Experiment.class);
+		Experiment exp = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, code);
+		ContextValidation contextValidation=new ContextValidation(getCurrentUser(), form.errors());
+		//verifie que l'experience est terminee
+		if(!exp.state.code.equals("F")){
+			contextValidation.addErrors("experiment.state","",code);
+			return badRequest(form.errorsAsJson());
+		}
+
+		ExperimentUpdateState experimentUpdateState=new ExperimentUpdateState();
+		experimentUpdateState.nextStateInputContainers=ContainerWorkflows.getNextContainerStateFromExperimentCategory(exp.categoryCode);
+		experimentUpdateState.nextStateOutputContainers="UA";
+
+		ExperimentWorkflows.setExperimentUpdateState(exp,experimentUpdateState,contextValidation);
+
+		if (!contextValidation.hasErrors()) {
+			return ok();
+		}
+		return badRequest(form.errorsAsJson());
+	}
+
+
+	public static Result stopProcess(String code){
 		Form<ExperimentUpdateForm> experimentUpdateFilledForm = getFilledForm(experimentUpdateForm,ExperimentUpdateForm.class);
 		ExperimentUpdateForm expUpdateForm = experimentUpdateFilledForm.get();
+		
 		Experiment exp = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, code);
-
-		Logger.info(Json.toJson(exp).toString());
-
-		ExperimentHelper.doCalculations(exp,calculationsRules);
-
-		Form<Experiment> experimentFilledForm = experimentForm.fill(exp);
-
-		ContextValidation ctxValidation = new ContextValidation(getCurrentUser(), experimentFilledForm.errors());
-
-		Workflows.nextExperimentState(exp, ctxValidation, expUpdateForm.stopProcess, expUpdateForm.retry);
-		if (!ctxValidation.hasErrors()) {
-			return ok(Json.toJson(exp));
+		ContextValidation contextValidation=new ContextValidation(getCurrentUser(), experimentUpdateFilledForm.errors());
+		//verifie que l'experience est terminee
+		if(!exp.state.code.equals("F")){
+			contextValidation.addErrors("experiment.state","",code);
+			return badRequest(experimentUpdateFilledForm.errorsAsJson());
 		}
 
-		ctxValidation.displayErrors(logger);
-		return badRequest(experimentFilledForm.errorsAsJson());
+		ExperimentUpdateState experimentUpdateState=new ExperimentUpdateState();
+		experimentUpdateState.nextStateProcesses="F";
+		experimentUpdateState.processResolutionCodes=expUpdateForm.processResolutionCodes;
+		experimentUpdateState.nextStateInputContainers="IS";
+		experimentUpdateState.nextStateOutputContainers="UA";
+
+		ExperimentWorkflows.setExperimentUpdateState(exp,experimentUpdateState,contextValidation);
+		if (!contextValidation.hasErrors()) {
+			return ok();
+		}
+		return badRequest(experimentUpdateFilledForm.errorsAsJson());
 	}
 
-	/**
-	 * First save for an Experiment object	
-	 * @param experimentType
-	 * @return the created experiment
-	 * @throws DAOException 
-	 */
+	public static Result endOfProcess(String code){
+		Form form = new Form(Experiment.class);
+		Experiment exp = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, code);
+		ContextValidation contextValidation=new ContextValidation(getCurrentUser(), form.errors());
+		//verifie que l'experience est terminee
+		if(!exp.state.code.equals("F")){
+			contextValidation.addErrors("experiment.state","",code);
+			return badRequest(form.errorsAsJson());
+		}
+
+		ExperimentUpdateState experimentUpdateState=new ExperimentUpdateState();
+		experimentUpdateState.nextStateProcesses="F";
+		//Calcul volume preleve alors UA
+		try {
+			/*if(ExperimentType.find.findByCode(exp.typeCode).atomicTransfertMethod.endsWith("ToVoid")){
+				experimentUpdateState.nextStateInputContainers="UA";
+			} else*/
+			if(ExperimentType.find.findNextExperimentTypeForAnExperimentTypeCode(exp.typeCode).size()==0){
+				logger.debug("Not next Experiment Type");
+				experimentUpdateState.nextStateInputContainers="IS";
+				experimentUpdateState.nextStateOutputContainers="UA";
+			} else {					
+				experimentUpdateState.nextStateInputContainers="IS";
+				experimentUpdateState.nextStateOutputContainers="IW-P";
+			}
+
+		} catch (DAOException e) {
+			Logger.error(e.getMessage());
+		}
+
+		ExperimentWorkflows.setExperimentUpdateState(exp,experimentUpdateState,contextValidation);
+
+		if (!contextValidation.hasErrors()) {
+			return ok();
+		}
+		return badRequest(form.errorsAsJson());
+	}
+
+
 	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public static Result save() throws DAOException{
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
@@ -393,17 +456,14 @@ public class Experiments extends CommonController{
 				ExperimentHelper.updateData(exp);
 
 				if(!ctxValidation.hasErrors()){
-					Experiment newExp=MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME,exp);
+					MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME,exp);
 
 					MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME,Process.class,
 							DBQuery.in("code", ExperimentHelper.getAllProcessCodesFromExperiment(exp))
 							,DBUpdate.set("currentExperimentTypeCode", exp.typeCode).push("experimentCodes", exp.code),true);
 
-					State state = StateHelper.cloneState(exp.state);
-					state.user=getCurrentUser();
-					exp.state.code = null;
-
-					Workflows.setExperimentState(exp, state, ctxValidation, false, false, null);
+					List<Container> inputContainers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code",exp.inputContainerSupportCodes)).toList();
+					ContainerWorkflows.setContainerState(inputContainers,"IW-E",ctxValidation);
 				}
 			}
 			if (!ctxValidation.hasErrors()) {
@@ -417,6 +477,7 @@ public class Experiments extends CommonController{
 		return badRequest();
 	}
 
+
 	public static Result list(){
 		Form<ExperimentSearchForm> experimentFilledForm = filledFormQueryString(experimentSearchForm,ExperimentSearchForm.class);
 		ExperimentSearchForm experimentsSearch = experimentFilledForm.get();
@@ -424,7 +485,7 @@ public class Experiments extends CommonController{
 		DBQuery.Query query = getQuery(experimentsSearch);
 
 		if(experimentsSearch.datatable){
-			MongoDBResult<Experiment> results =  mongoDBFinder(InstanceConstants.EXPERIMENT_COLL_NAME, experimentsSearch, Experiment.class, query);
+			MongoDBResult<Experiment> results =  mongoDBFinder(InstanceConstants.EXPERIMENT_COLL_NAME, experimentsSearch, Experiment.class, query, keys);
 			List<Experiment> experiments = results.toList();
 			return ok(Json.toJson(new DatatableResponse<Experiment>(experiments, results.count())));
 		}else if (experimentsSearch.list){

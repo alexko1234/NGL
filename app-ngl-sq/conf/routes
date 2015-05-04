@@ -29,6 +29,7 @@ GET		/api/containers/container-support-categories  					controllers.containers.a
 GET		/api/containers/categories										controllers.containers.api.ContainerCategories.list()
 GET		/api/containers/:code											controllers.containers.api.Containers.get(code:java.lang.String)
 PUT		/api/containers/batch											controllers.containers.api.Containers.updateBatch()
+PUT		/api/containers/state-batch										controllers.containers.api.Containers.updateStateBatch()
 PUT		/api/containers/:code											controllers.containers.api.Containers.update(code:java.lang.String)
 PUT		/api/containers/:code/state										controllers.containers.api.Containers.updateStateCode(code:java.lang.String)
 
@@ -73,6 +74,9 @@ PUT		/api/experiments/:code/experiment-properties					controllers.experiments.ap
 PUT		/api/experiments/:code/instrument-information					controllers.experiments.api.Experiments.updateInstrumentInformations(code:java.lang.String)
 PUT		/api/experiments/:code/instrument-properties					controllers.experiments.api.Experiments.updateInstrumentProperties(code:java.lang.String)
 PUT		/api/experiments/:code/data										controllers.experiments.api.Experiments.updateData(code:java.lang.String)
+PUT		/api/experiments/:code/retry									controllers.experiments.api.Experiments.retry(code:java.lang.String)
+PUT		/api/experiments/:code/stop-process								controllers.experiments.api.Experiments.stopProcess(code:java.lang.String)
+PUT		/api/experiments/:code/end-of-process							controllers.experiments.api.Experiments.endOfProcess(code:java.lang.String)
 POST	/api/experiments/:code/comment									controllers.experiments.api.Experiments.addComment(code:java.lang.String)
 PUT		/api/experiments/:code/comment									controllers.experiments.api.Experiments.updateComment(code:java.lang.String)
 DELETE	/api/experiments/:code/comment/:commentCode									controllers.experiments.api.Experiments.deleteComment(code:java.lang.String, commentCode:java.lang.String)
@@ -138,8 +142,11 @@ POST 	/api/reporting/configs							controllers.reporting.api.ReportingConfigurat
 PUT    	/api/reporting/configs/:code					controllers.reporting.api.ReportingConfigurations.update(code)
 DELETE	/api/reporting/configs/:code					controllers.reporting.api.ReportingConfigurations.delete(code: java.lang.String)
 
-#reagents (temporary)
+#reagents
 GET 	/api/reagent-catalogs/kits										@controllers.reagents.api.KitCatalogs.list()
+GET 	/api/reagent-declarations/kits									@controllers.reagents.api.Kits.list()
+GET 	/api/reagent-declarations/boxes									@controllers.reagents.api.Boxes.list()
+GET 	/api/reagent-declarations/reagents								@controllers.reagents.api.Reagents.list()
 POST 	/api/reagent-catalogs/kits										@controllers.reagents.api.KitCatalogs.save()
 
 ->  /authentication authentication.Routes

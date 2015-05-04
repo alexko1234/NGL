@@ -129,6 +129,10 @@ public class BoxCatalogs extends DocumentController<BoxCatalog>{
 			queryElts.add(DBQuery.is("kitCatalogCode", boxCatalogSearch.kitCatalogCode));
 		}
 		
+		if(StringUtils.isNotEmpty(boxCatalogSearch.catalogRefCode)){
+			queryElts.add(DBQuery.is("catalogRefCode", boxCatalogSearch.catalogRefCode));
+		}
+		
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 		}

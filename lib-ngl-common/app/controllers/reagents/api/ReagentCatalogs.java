@@ -4,6 +4,7 @@ import static play.data.Form.form;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import models.laboratory.reagent.description.AbstractCatalog;
 import models.laboratory.reagent.description.BoxCatalog;
@@ -123,6 +124,10 @@ public class ReagentCatalogs extends DocumentController<ReagentCatalog>{
 		
 		if(StringUtils.isNotEmpty(ReagentCatalogSearch.kitCatalogCode)){
 			queryElts.add(DBQuery.is("kitCatalogCode", ReagentCatalogSearch.kitCatalogCode));
+		}
+		
+		if(StringUtils.isNotEmpty(ReagentCatalogSearch.catalogRefCode)){
+			queryElts.add(DBQuery.is("catalogRefCode", ReagentCatalogSearch.catalogRefCode));
 		}
 		
 		if(StringUtils.isNotEmpty(ReagentCatalogSearch.boxCatalogCode)){

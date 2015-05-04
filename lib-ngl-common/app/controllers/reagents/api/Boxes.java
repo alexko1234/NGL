@@ -5,6 +5,7 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.reagent.description.AbstractCatalog;
@@ -14,6 +15,7 @@ import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.ListObject;
 
+import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -134,13 +136,38 @@ public class Boxes extends DocumentController<Box>{
 		}
 	}
 
-	private static Query getQuery(BoxSearchForm boxSearch){
+	public static Query getQuery(BoxSearchForm boxSearch){
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
 		Query query = null;
 		queryElts.add(DBQuery.is("category", "Box"));
 
 		if(StringUtils.isNotBlank(boxSearch.kitCode)){
 			queryElts.add(DBQuery.is("kitCode", boxSearch.kitCode));
+		}
+		
+		if(StringUtils.isNotBlank(boxSearch.orderCode)){
+			queryElts.add(DBQuery.is("orderCode", boxSearch.orderCode));
+		}
+		
+		
+		if(StringUtils.isNotBlank(boxSearch.bundleBarCode)){
+			queryElts.add(DBQuery.is("bundleBarCode", boxSearch.bundleBarCode));
+		}
+		
+		if(StringUtils.isNotBlank(boxSearch.catalogRefCode)){
+			queryElts.add(DBQuery.is("catalogRefCode", boxSearch.catalogRefCode));
+		}
+		
+		if(StringUtils.isNotBlank(boxSearch.bundleBarCode)){
+			queryElts.add(DBQuery.is("bundleBarCode", boxSearch.bundleBarCode));
+		}
+		
+		if(boxSearch.catalogCodes != null){
+			queryElts.add(DBQuery.in("catalogCodes", boxSearch.catalogCodes));
+		}
+		
+		if(StringUtils.isNotEmpty(boxSearch.barCode)){
+			queryElts.add(DBQuery.or(DBQuery.regex("barCode", Pattern.compile(boxSearch.barCode+"_|_"+boxSearch.barCode)),DBQuery.regex("reagents.code", Pattern.compile(boxSearch.barCode+"_|_"+boxSearch.barCode))));
 		}
 		
 		if(queryElts.size() > 0){

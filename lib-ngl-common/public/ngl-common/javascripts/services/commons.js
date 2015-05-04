@@ -368,7 +368,14 @@ angular.module('commonsServices', []).
     				 var type = attrs.codes;
     				 ngModel.$render = function() {
     					 if(ngModel.$viewValue){
-    						 element.html(Messages(Codes(type+"."+ngModel.$viewValue)));
+    						 if(angular.isArray(ngModel.$viewValue)){
+    							 for(var i=0;i<ngModel.$viewValue.length;i++){
+    								 ngModel.$viewValue[i] = Codes(type+"."+ngModel.$viewValue[i]);
+    							 }
+    							 element.html(ngModel.$viewValue);
+    						 }else{
+    							 element.html(Messages(Codes(type+"."+ngModel.$viewValue)));
+    						 }
     					 }
     				 };
     			}    					
@@ -583,7 +590,7 @@ angular.module('commonsServices', []).
   		    			+'<span class="caret"></span>'
   		    			+'</button>'
   		    			+'<ul class="dropdown-menu dropdown-menu-right"  role="menu">'
-  				        +'<li ng-if="filter"><input ng-class="inputClass" type="text" ng-click="inputClick($event)" ng-model="filterValue" ng-change="setFilterValue(filterValue)" placeholder="{{getMessage(\'bt-select.here\')}}"/></li>'
+  				        +'<li ng-if="filter"><input ng-class="inputClass" type="text" ng-click="inputClick($event)" ng-model="filterValue" ng-change="setFilterValue(filterValue)"/></li>'
 
 
   				        // Liste des items déja cochés
@@ -732,10 +739,6 @@ angular.module('commonsServices', []).
 	      		    	return false;	      		    	
 	      		    }; 
 	      		  
-	      		  scope.getMessage = function(value){
-	      			  return Messages(value);
-	      		  };
-	      		    
       		      scope.itemGroupByLabel = function(item){
       		    	 return optionsConfig.groupByGetter(item);
       		      }
@@ -983,9 +986,22 @@ angular.module('commonsServices', []).
     	    };
     	}]).filter('codes', function(){
     		return function(input, key){
-    			if(angular.isDefined(input) && null !== input && input !== "" && !angular.isObject(input)) return Messages(Codes(key+"."+input));
+    			//Warning: do not use the filter for an array in the datatable
+    			//Use the directive like that in the column:
+    			//"render":"<span ng-model='value.data.theProperty' codes='theType'></span>"
+    			if(angular.isArray(input) && input.length > 0){
+    				for(var i=0;i<input.length;i++){
+    					input[i] = Messages(Codes(key+"."+input[i].replace(key+".", "")).replace(key+".", ""));
+    				}
+    			
+    				return input;
+    			}else if(angular.isDefined(input) && null !== input && input !== "" && !angular.isObject(input)){ 
+    				return Messages(Codes(key+"."+input));    				
+    			}
     			return undefined;
     		}
+
+    		
     	}).filter('convert', ['convertValueServices', function(convertValueServices){
     		return function(input, property){
 				var convertValues = convertValueServices();

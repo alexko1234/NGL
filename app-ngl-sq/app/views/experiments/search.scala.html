@@ -62,7 +62,7 @@
 				<input class="form-control" type="text" ng-model="searchService.form.toDate" placeholder='@Messages("experiment.placeholder.toDate")' title='@Messages("experiment.placeholder.toDate")'>
 			}
 			@formGroup{	
-				<div bt-select placeholder="@Messages("experiments.intrument")" class="form-control" ng-model="searchService.form.instrument" ng-class="errors.experimentType" bt-options="instrument.code as instrument.name for instrument in searchService.lists.get('instruments')" ng-disabled="!searchService.form.experimentType" >
+				<div bt-select placeholder="@Messages("experiments.intrument")" class="form-control" ng-model="searchService.form.instrument" ng-class="errors.experimentType" bt-options="instrument.code as instrument.name group by instrument.active|codes:'active' for instrument in searchService.lists.getInstruments()|orderBy:['-active','+name']" ng-disabled="!searchService.form.experimentType" >
 				</div>
 			}
 			@formGroup{	

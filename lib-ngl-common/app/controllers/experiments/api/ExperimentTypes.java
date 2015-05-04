@@ -55,6 +55,8 @@ public class ExperimentTypes extends CommonController{
 					experimentTypes = ExperimentType.find.findByCategoryCodes(experimentTypesSearch.categoryCodes);
 			}else if(StringUtils.isNotBlank(experimentTypesSearch.categoryCode) && StringUtils.isNotBlank(experimentTypesSearch.processTypeCode)){
 				experimentTypes = ExperimentType.find.findByCategoryCodeAndProcessTypeCode(experimentTypesSearch.categoryCode, experimentTypesSearch.processTypeCode);
+			}else if(StringUtils.isNotBlank(experimentTypesSearch.previousExperimentTypeCode)){
+				experimentTypes = ExperimentType.find.findByPreviousExperimentTypeCode(experimentTypesSearch.previousExperimentTypeCode);
 			}else{
 				experimentTypes = ExperimentType.find.findAll();
 			}

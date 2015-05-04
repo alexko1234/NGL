@@ -126,13 +126,20 @@ public class Experiments extends CommonController{
 	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.update(),
 	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.delete(),
   	      		controllers.reagents.api.routes.javascript.KitCatalogs.list(),
+  	      		controllers.reagents.api.routes.javascript.Kits.list(),
+  	      		controllers.reagents.api.routes.javascript.Boxes.list(),
+  	      		controllers.reagents.api.routes.javascript.Reagents.list(),
   	      		controllers.commons.api.routes.javascript.Values.list(),
 				controllers.commons.api.routes.javascript.CommonInfoTypes.list(),
 				controllers.experiments.api.routes.javascript.ExperimentCategories.list(),
 				controllers.projects.api.routes.javascript.Projects.list(),
   	    		controllers.samples.api.routes.javascript.Samples.list(),
-  	    		controllers.commons.api.routes.javascript.Users.list()
-  	    		
+  	    		controllers.commons.api.routes.javascript.Users.list(),
+  	    		controllers.containers.api.routes.javascript.Containers.updateBatch(),
+  	    		controllers.experiments.api.routes.javascript.Experiments.retry(),
+  	    		controllers.experiments.api.routes.javascript.Experiments.endOfProcess(),
+  	    		controllers.experiments.api.routes.javascript.Experiments.stopProcess(),
+  	    		controllers.containers.api.routes.javascript.Containers.updateStateBatch()
   	      )	  	      
   	    );
   	}

@@ -148,8 +148,7 @@
 				},
 				
 				updateForm : function(){
-					//this.form.includes = [];
-					this.form.includes = ["default"];
+					this.form.includes = ["default","categoryCode","code","inputContaierSupportCodes","instrument","outputContainerSupportCodes","projectCodes","protocolCode","reagents","sampleCodes","state","traceInformation","typeCode"];
 					for(var i = 0 ; i < this.selectedAddColumns.length ; i++){
 						//remove .value if present to manage correctly properties (single, list, etc.)
 						if(this.selectedAddColumns[i].queryIncludeKeys && this.selectedAddColumns[i].queryIncludeKeys.length > 0){
@@ -159,10 +158,11 @@
 						}
 						
 					}
+					
 				},
 				convertForm : function(){
 					var _form = angular.copy(this.form);
-					var jsonSearch = {};			
+					var jsonSearch = {"includes":_form.includes};			
 
 					if(_form.projectCodes){
 						jsonSearch.projectCodes = _form.projectCodes;

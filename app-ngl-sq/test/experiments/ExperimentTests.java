@@ -5,6 +5,7 @@ import static org.fest.assertions.Assertions.assertThat;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
@@ -96,14 +97,14 @@ public class ExperimentTests extends AbstractTests{
 		containersFrom.add(containerC1);
 		List<ContainerUsed> containersTo=new ArrayList<ContainerUsed>(containersFrom);
 		
-		List<ContainerUsed> containersDiff=null;
+		List<String> containersDiff=null;
 		containersDiff=ExperimentHelper.getDiff(containersFrom,containersTo);
 		assertThat(containersDiff).isEmpty();
 		
 		//Remove C 
 		containersTo.remove(containerC1);
 		containersDiff=ExperimentHelper.getDiff(containersFrom,containersTo);
-		assertThat(containersDiff).containsOnly(containerC1);
+		assertThat(containersDiff).containsOnly(containerC1.code);
 		containersTo.add(containerC1);
 
 		//incomplete remove B
@@ -117,7 +118,7 @@ public class ExperimentTests extends AbstractTests{
 		containersTo.remove(containerB1);
 		containersDiff=ExperimentHelper.getDiff(containersFrom,containersTo);
 		assertThat(containersDiff.size()).isEqualTo(1);
-		assertThat(containersDiff.get(0).code).isEqualTo("B");
+		assertThat(containersDiff.get(0)).isEqualTo("B");
 		containersTo.add(containerB2);
 		containersTo.add(containerB1);
 		
@@ -134,10 +135,10 @@ public class ExperimentTests extends AbstractTests{
 		containersTo.add(containerD2);
 		containersDiff=ExperimentHelper.getDiff(containersFrom,containersTo);
 		assertThat(containersDiff.size()).isEqualTo(1);
-		assertThat(containersDiff.get(0).code).isEqualTo("A");
+		assertThat(containersDiff.get(0)).isEqualTo("A");
 		containersDiff=ExperimentHelper.getDiff(containersTo,containersFrom);
 		assertThat(containersDiff.size()).isEqualTo(1);
-		assertThat(containersDiff.get(0).code).isEqualTo("D");
+		assertThat(containersDiff.get(0)).isEqualTo("D");
 		containersTo.add(containerA1);
 		containersTo.add(containerA2);
 		containersTo.add(containerA3);
