@@ -10,27 +10,20 @@ GET		/submissions/:homeCode/home					controllers.submissions.tpl.Submissions.hom
 GET		/submissions/:code							controllers.submissions.tpl.Submissions.get(code : java.lang.String)
 GET		/tpl/submissions/create						controllers.submissions.tpl.Submissions.create()
 GET		/tpl/submissions/activate					controllers.submissions.tpl.Submissions.activate()
-PUT		/api/submissions/:submissionCode/activate	@controllers.submissions.api.Submissions.activate(submissionCode : java.lang.String)
-
 GET		/tpl/submissions/details					controllers.submissions.tpl.Submissions.details()
+GET		/tpl/submissions/js-routes					controllers.submissions.tpl.Submissions.javascriptRoutes()
 
-# Recherche d'une soumission en fonction d'un etat :
-GET		/submissions/search/:state					@controllers.submissions.api.Submissions.search(state: java.lang.String)
+PUT		/api/submissions/:submissionCode/activate	@controllers.submissions.api.Submissions.activate(submissionCode : java.lang.String)
 # Mise à jour d'un objet submission et de ses composants :
 PUT		/submissions/:code 							@controllers.submissions.api.Submissions.update(code: java.lang.String) 
-GET		/submissions/:code/experiments/rawDatas		@controllers.submissions.api.Submissions.getRawDatas(code: java.lang.String)
-PUT		/submissions/:code/state/:stateCode			@controllers.submissions.api.Submissions.updateState(code: java.lang.String, stateCode: java.lang.String)
 POST	/api/submissions                            @controllers.submissions.api.Submissions.save()
 GET		/api/submissions							@controllers.submissions.api.Submissions.list()
 GET		/api/submissions/:code						@controllers.submissions.api.Submissions.get(code: java.lang.String)
-
 # Creation des fichiers xml pour l'objet submission :
 PUT		/submissions/:code/xml						@controllers.submissions.api.Submissions.createXml(code: java.lang.String)
-
 # Traitement des AC et mise a jour du status de l'objet submission :
 PUT		/submissions/:code/ebiAc					@controllers.submissions.api.Submissions.treatmentAc(code: java.lang.String) 
 
-GET		/tpl/submissions/js-routes					controllers.submissions.tpl.Submissions.javascriptRoutes()
 
 # Studies
 GET		/studies/:homeCode/home						controllers.studies.tpl.Studies.home(homeCode: java.lang.String)
@@ -42,10 +35,10 @@ GET		/tpl/studies/js-routes				    	controllers.studies.tpl.Studies.javascriptRo
 
 # Configurations
 GET		/configurations/:homeCode/home				controllers.configurations.tpl.Configurations.home(homeCode: java.lang.String)
-GET 	/api/configurations						    @controllers.configurations.api.Configurations.list()
-POST	/api/configurations						    @controllers.configurations.api.Configurations.save()
 GET		/tpl/configurations/create					controllers.configurations.tpl.Configurations.create()
 GET		/tpl/configurations/js-routes				controllers.configurations.tpl.Configurations.javascriptRoutes()
+GET 	/api/configurations						    @controllers.configurations.api.Configurations.list()
+POST	/api/configurations						    @controllers.configurations.api.Configurations.save()
 GET		/api/sra/variables/:name            		controllers.sra.api.Variables.get(name: java.lang.String)
 
 #Samples
@@ -56,6 +49,8 @@ PUT		/api/sra/samples/:code						@controllers.samples.api.Samples.update(code: j
 GET		/api/sra/experiments						@controllers.experiments.api.Experiments.list()
 PUT		/api/sra/experiments						@controllers.experiments.api.Experiments.update(code: java.lang.String)
 
+#ExperimentsRawData
+GET		/api/sra/experiments/rawDatas				@controllers.experiments.api.ExperimentsRawDatas.list()
 
 #readsets from ngl-common attention pas de '@' devant car controller ecrit il y a 3 ans et qui herite de 
 GET    	/api/readsets	                 			controllers.readsets.api.ReadSets.list()

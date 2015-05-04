@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TraceInformation;
 import models.sra.submit.common.instance.Submission;
+import models.sra.submit.sra.instance.Configuration;
 
 public class SubmissionBuilder {
 
@@ -15,6 +17,13 @@ public class SubmissionBuilder {
 		submission.code=code;
 		return this;
 	}
+	
+	public SubmissionBuilder withProjectCode(String projectCode)
+	{
+		submission.projectCode=projectCode;
+		return this;
+	}
+	
 	
 	public SubmissionBuilder withSubmissionDirectory(String submissionDirectory)
 	{
@@ -31,6 +40,18 @@ public class SubmissionBuilder {
 	public SubmissionBuilder withState(State state)
 	{
 		submission.state=state;
+		return this;
+	}
+	
+	public SubmissionBuilder withConfig(Configuration config)
+	{
+		submission.config=config;
+		return this;
+	}
+	
+	public SubmissionBuilder withTraceInformation(TraceInformation traceInformation)
+	{
+		submission.traceInformation=traceInformation;
 		return this;
 	}
 	

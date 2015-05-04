@@ -10,25 +10,19 @@ import static play.test.Helpers.status;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-
-import models.sra.submit.common.instance.Submission;
-import models.sra.submit.sra.instance.Experiment;
-import models.sra.submit.sra.instance.RawData;
+import models.laboratory.project.instance.Project;
 import models.sra.submit.common.instance.Sample;
 import models.sra.submit.common.instance.Study;
-
-
+import models.sra.submit.common.instance.Submission;
+import models.sra.submit.sra.instance.Experiment;
 import models.utils.InstanceConstants;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -37,13 +31,16 @@ import play.Logger;
 import play.libs.Json;
 import play.mvc.Result;
 import utils.AbstractTestController;
+import builder.data.ConfigurationBuilder;
 import builder.data.ExperimentBuilder;
+import builder.data.ProjectBuilder;
 import builder.data.RawDataBuilder;
 import builder.data.RunBuilder;
 import builder.data.SampleBuilder;
 import builder.data.StateBuilder;
 import builder.data.StudyBuilder;
 import builder.data.SubmissionBuilder;
+import builder.data.TraceInformationBuilder;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -58,12 +55,21 @@ public class SubmissionsTest extends AbstractTestController{
 	@BeforeClass
 	public static void initData()
 	{
-		//Create simple submission with state
-		//Submission submission = SubmissionMockHelper.newSubmission("code1");
+		//Create project
+		Project project = new ProjectBuilder()
+							.withCode("codeProject1")
+							.build();
+		MongoDBDAO.save(InstanceConstants.PROJECT_COLL_NAME, project);
 		
+		//Create simple submission with state
 		Submission submission = new SubmissionBuilder()
 								.withCode("code1")
+								.withProjectCode("codeProject1")
+								.withSubmissionDirectory("testDir")
+								.withStudyCode("study")
+								.withConfig(new ConfigurationBuilder().withCode("config1").withState(new StateBuilder().withCode("userValidate").build()).build())
 								.withState(new StateBuilder().withCode("Scode1").build())
+								.withTraceInformation(new TraceInformationBuilder().withCreateUser("user1").withCreationDate(new Date()).build())
 								.build();
 		MongoDBDAO.save(InstanceConstants.SRA_SUBMISSION_COLL_NAME, submission);
 		
@@ -108,12 +114,13 @@ public class SubmissionsTest extends AbstractTestController{
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, "exp1");
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, "samp1");
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, "study1");
+		MongoDBDAO.deleteByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, "codeProject1");
 	}
 
 	@Test
 	public void shouldSearchSubmissionByState() throws JsonParseException, JsonMappingException, IOException
 	{
-		Result result = callAction(controllers.submissions.api.routes.ref.Submissions.search("Scode1"));
+		Result result = callAction(controllers.submissions.api.routes.ref.Submissions.list(),fakeRequest("GET","?state=Scode1"));
 		Logger.info(contentAsString(result));
 		assertThat(status(result)).isEqualTo(OK);
 		assertThat(contentType(result)).isEqualTo("application/json");
@@ -125,7 +132,7 @@ public class SubmissionsTest extends AbstractTestController{
 		//Change state of submission
 		//Get submission
 		Submission submissionToUpdate = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "code1");
-		submissionToUpdate.state.code="IN_WAITING";
+		submissionToUpdate.state.code="inwaiting";
 		//TODO pas de méthode de validation a retester avec méthode de validation
 		Result result = callAction(controllers.submissions.api.routes.ref.Submissions.update("code1"),fakeRequest().withJsonBody(Json.toJson(submissionToUpdate)));
 		Logger.info(contentAsString(result));
@@ -133,23 +140,16 @@ public class SubmissionsTest extends AbstractTestController{
 		//Check in db submission status
 		Submission submissionUpdated = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "code1");
 		Logger.info("submission updated "+submissionUpdated.state.code);
-		assertThat(submissionUpdated.state.code).isEqualTo("IN_WAITING");
+		assertThat(submissionUpdated.state.code).isEqualTo("inwaiting");
 	}
 	
-	@Test
-	public void shouldUpdateSubmissionState()
-	{
-		Result result = callAction(controllers.submissions.api.routes.ref.Submissions.updateState("code1","Scode1Update"));
-		assertThat(status(result)).isEqualTo(OK);
-		Submission submissionUpdateted = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "code1");
-		Logger.info("submission updated "+submissionUpdateted.state.code);
-		assertThat(submissionUpdateted.state.code).isEqualTo("Scode1Update");
-	}
 	
 	@Test
 	public void shouldGetRawDatas() throws JsonParseException, JsonMappingException, IOException
 	{
-		Result result = callAction(controllers.submissions.api.routes.ref.Submissions.getRawDatas("sub2"));
+		Map<String, String> mapRequets = new HashMap<String, String>();
+		mapRequets.put("submissionCode", "sub2");
+		Result result = callAction(controllers.experiments.api.routes.ref.ExperimentsRawDatas.list(), fakeRequest("GET","?submissionCode=sub2"));
 		Logger.info(contentAsString(result));
 		assertThat(status(result)).isEqualTo(OK);
 		assertThat(contentType(result)).isEqualTo("application/json");

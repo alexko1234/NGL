@@ -47,13 +47,6 @@ public class Submissions extends DocumentController<Submission>{
 	final static Form<SubmissionsSearchForm> submissionsSearchForm = form(SubmissionsSearchForm.class);
 
 
-	public Result search(String state)
-	{
-		MongoDBResult<Submission> results = MongoDBDAO.find(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, DBQuery.is("state.code", state));
-		List<Submission> submissions = results.toList();
-		return ok(Json.toJson(submissions));
-	}
-
 	// methode appelee avec url suivante :
 	// http://localhost:9000/api/submissions?datatable=true&paginationMode=local&projCode=BCZ&state=new
 	// url construite dans services.js 
@@ -62,12 +55,13 @@ public class Submissions extends DocumentController<Submission>{
 	//},
 	
 	public Result list(){	
-		SubmissionsSearchForm submissionsSearchFilledForm = filledFormQueryString(SubmissionsSearchForm.class);
-		Logger.debug(submissionsSearchFilledForm.state);
-		Query query = getQuery(submissionsSearchFilledForm);
-		MongoDBResult<Submission> results = mongoDBFinder(submissionsSearchFilledForm, query);				
+		Form<SubmissionsSearchForm> submissionsSearchFilledForm = filledFormQueryString(submissionsSearchForm, SubmissionsSearchForm.class);
+		SubmissionsSearchForm submissionsSearchForm = submissionsSearchFilledForm.get();
+		Logger.debug(submissionsSearchForm.state);
+		Query query = getQuery(submissionsSearchForm);
+		MongoDBResult<Submission> results = mongoDBFinder(submissionsSearchForm, query);				
 		List<Submission> submissionsList = results.toList();
-		if(submissionsSearchFilledForm.datatable){
+		if(submissionsSearchForm.datatable){
 			return ok(Json.toJson(new DatatableResponse<Submission>(submissionsList, submissionsList.size())));
 		}else{
 			return ok(Json.toJson(submissionsList));
@@ -158,31 +152,6 @@ public class Submissions extends DocumentController<Submission>{
 		return ok(Json.toJson(submission));
 	}
 	
-	public Result updateState(String code, String stateCode)
-	{
-		Submission submission = getSubmission(code);
-		if(submission==null)
-			return badRequest("Submission with code "+code+" not exist");
-		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, 
-				DBQuery.is("code", code), 
-				DBUpdate.set("state.code", stateCode));
-		return ok();
-	}
-
-	public Result getRawDatas(String code)
-	{
-		List<RawData> allRawDatas = new ArrayList<RawData>();
-		//Get all experiments from submission
-		Submission submission = getSubmission(code);
-		for(String codeExperiment : submission.experimentCodes){
-			//Get List RawData from each experiment
-			Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, codeExperiment);
-			allRawDatas.addAll(experiment.run.listRawData);
-		}
-		return ok(Json.toJson(allRawDatas));
-
-	}
-
 	private Submission getSubmission(String code)
 	{
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, code);
