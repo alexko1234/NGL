@@ -26,13 +26,19 @@ import fr.cea.ig.MongoDBDAO;
 public class MigrationUpdateSampleOnContainer extends CommonController {
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmm");
 	
-	public static Result migration(){
+	public static Result migration(String code){
 		BasicDBObject keys = new BasicDBObject();
 		keys.put("treatments", 0);
 		
 		Logger.info("Migration sample on container start");
-		backupReadSet();
-		List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.exists("code"), keys).toList();
+		backupReadSet(code);
+		List<ReadSet> readSets = null;
+		if(!"all".equals(code)){
+			readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code",code), keys).toList();						
+		}else{
+			readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.exists("code"), keys).toList();						
+		}
+		
 		Logger.debug("migre "+readSets.size()+" readSets");
 		for(ReadSet readSet : readSets){
 			migreReadSet(readSet);				
@@ -54,12 +60,19 @@ public class MigrationUpdateSampleOnContainer extends CommonController {
 		}
 	}
 	
-	private static void backupReadSet() {
+	private static void backupReadSet(String code) {
 		BasicDBObject keys = new BasicDBObject();
 		keys.put("treatments", 0);
 		String backupName = InstanceConstants.READSET_ILLUMINA_COLL_NAME+"_BCK_SOC_"+sdf.format(new java.util.Date());
-		Logger.info("\tCopie "+InstanceConstants.READSET_ILLUMINA_COLL_NAME+" to "+backupName+" start");		
-		MongoDBDAO.save(backupName, MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.exists("code"), keys).toList());
+		Logger.info("\tCopie "+InstanceConstants.READSET_ILLUMINA_COLL_NAME+" to "+backupName+" start");
+		List<ReadSet> readSets = null;
+		if(!"all".equals(code)){
+			readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code",code), keys).toList();						
+		}else{
+			readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.exists("code"), keys).toList();						
+		}
+		
+		MongoDBDAO.save(backupName, readSets);
 		Logger.info("\tCopie "+InstanceConstants.READSET_ILLUMINA_COLL_NAME+" to "+backupName+" end");
 		
 	}
