@@ -247,14 +247,12 @@ GET     /codes.js        	        				controllers.main.tpl.Main.jsCodes()
 
 
 #migration
-GET		/migrationSampleOnContainer					controllers.migration.MigrationUpdateSampleOnContainer.migration()
+GET		/migrationSampleOnContainer					controllers.migration.MigrationUpdateSampleOnContainer.migration(code: java.lang.String ?= "all")
 GET		/migrationRSFF								controllers.migration.RemoveStateFromFile.migration()
 #GET		/deleteTreatments						controllers.migration.DeleteReadSetTreatements.migration()
-GET		/migrationWheat								controllers.migration.UpdateBABle.migration()
-GET		/migrationFungi								controllers.migration.MigrationTaxonomyFungi.migration()
-GET		/compare-lims-support						controllers.migration.CompareLimsVsRun.compareSupport(update:Boolean ?=false)
-GET		/compare-lims-files							controllers.migration.CompareLimsVsRun.compareFile(update:Boolean ?=false)
-#GET		/compare-run-support						controllers.migration.CompareRunVsSupport.migration(readset:Boolean ?=true, support:Boolean ?=true, update:Boolean ?=false)
+GET		/compare-lims-support						controllers.migration.CompareLimsVsNGL.compareSupport(update:Boolean ?=false)
+GET		/compare-lims-files							controllers.migration.CompareLimsVsNGL.compareFile(update:Boolean ?=false)
+GET		/migration-fraction							controllers.migration.MigrationFractionRun.migration()
 
 #ngs-rg api
 GET		/api/ngsrs/instruments						controllers.ngsrg.lims.LimsInformations.instruments()
