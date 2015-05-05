@@ -42,7 +42,9 @@ public interface VariableSRA {
 			put("new", "new"); 
 			put("uservalidate", "userValidate");
 			put("inwaiting", "inWaiting"); 
+			put("inProgress", "inProgress");
 			put("submitted", "submitted");
+			
 		}
 	};  
 	
