@@ -442,7 +442,7 @@ public class DescriptionFactory {
 		pd.displayOrder=displayOrder;
 		pd.editable=editable;
 		pd.defaultValue=defaultValue;
-		pd.displayOrder=displayOrder;
+		
 		return pd;
 	}
 	

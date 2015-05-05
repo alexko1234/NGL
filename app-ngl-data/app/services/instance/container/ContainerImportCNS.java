@@ -33,7 +33,7 @@ import play.Logger;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;
 import validation.ContextValidation;
-import workflows.Workflows;
+import workflows.process.ProcessWorkflows;
 import fr.cea.ig.MongoDBDAO;
 
 public abstract class ContainerImportCNS extends AbstractImportDataCNS {
@@ -173,7 +173,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		
 			ProcessHelper.updateContainer(container,processTypeCode, processCodes,contextError);
 			ProcessHelper.updateContainerSupportFromContainer(container,contextError);
-			Workflows.nextContainerState(processes, null, null, contextError);	
+			ProcessWorkflows.nextContainerStateFromNewProcesses(processes, processTypeCode, contextError);	
 		}
 	
 	}

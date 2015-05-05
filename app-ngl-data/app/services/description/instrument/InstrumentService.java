@@ -137,8 +137,9 @@ public class InstrumentService {
 
 		l.add(newInstrumentUsedType("TECAN evo 100", "tecan-evo-100", InstrumentCategory.find.findByCode("liquid-handling-robot"), null, 
 				getInstruments(
-						createInstrument("Tecan1", "Tecan1", null, true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS))),
-						getContainerSupportCategories(new String[]{"sheet-96"}),null, 
+						createInstrument("wolverine", "Wolverine", null, true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)),
+						createInstrument("arrow", "Arrow", null, true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS))),
+						/*getContainerSupportCategories(new String[]{"sheet-96"})*/null,getContainerSupportCategories(new String[]{"tube"/*,"sheet-96"*/}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 
 		//TODO : verify getContainerSupportCategories parameters

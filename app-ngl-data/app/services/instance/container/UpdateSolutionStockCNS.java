@@ -15,7 +15,7 @@ import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;
 import validation.ContextValidation;
 import validation.utils.ValidationConstants;
-import workflows.Workflows;
+import workflows.container.ContainerWorkflows;
 
 import com.mongodb.MongoException;
 
@@ -49,7 +49,8 @@ public class UpdateSolutionStockCNS extends AbstractImportDataCNS {
 				if(containerUpdate.state.code.equals("IS")&& CollectionUtils.isNotEmpty(container.inputProcessCodes)){
 					contextValidation.addErrors("code", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, container.code);
 				}else {
-					Workflows.setContainerState(container.code, container.fromExperimentTypeCodes.get(0), containerUpdate.state, contextValidation, false, false, null);
+					ContainerWorkflows.setContainerState(container, containerUpdate.state, contextValidation);
+//					ContainerWorkflows.setContainerState(container.code, container.fromExperimentTypeCodes.get(0), containerUpdate.state, contextValidation, false, false, null);
 				}
 				
 				if(!contextValidation.hasErrors()){

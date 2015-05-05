@@ -5,6 +5,8 @@ import org.joda.time.Seconds;
 import play.Application;
 import play.GlobalSettings;
 import play.Logger;
+import play.api.Play;
+import rules.services.RulesServices6;
 import services.instance.ImportDataCNG;
 import services.instance.ImportDataCNS;
 import services.reporting.RunReportingCNS;
@@ -15,6 +17,15 @@ public class Global extends GlobalSettings {
 	@Override
 	public void onStart(Application app) {
 		Logger.info("NGL has started");
+		
+		try {
+			RulesServices6.getInstance();
+		} catch (Throwable e) {
+			Logger.error("Error Load knowledge base");
+			e.printStackTrace();
+			//Shutdown application
+			Play.stop();
+		}
 		
 		importData();
 		
