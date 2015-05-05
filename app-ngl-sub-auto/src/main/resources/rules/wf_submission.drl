@@ -5,7 +5,6 @@ import  fr.genoscope.lis.devsi.birds.impl.factory.ResourcesReferentialServiceFac
 import fr.cea.ig.auto.submission.SubmissionServicesFactory;
 import fr.genoscope.lis.devsi.birds.impl.properties.ProjectProperties;
 
-#TODO
 #Select resource for workflow submission
 rule "select resources from nglsub"
 	@BirdsRule ( selectionRule )
@@ -20,7 +19,7 @@ rule "select resources from nglsub"
 	then
 		Logger log = Logger.getLogger("ngl.sub.rules");
 		$rps.initialize();
-		Set<ResourceProperties> resourcePropertiesSet = $device.httpGetJSON(ProjectProperties.getProperty("server")+"/submissions/search/IN_WAITING");
+		Set<ResourceProperties> resourcePropertiesSet = $device.httpGetJSON(ProjectProperties.getProperty("server")+"/api/submissions?state=inWaiting");
 		log.debug("size resources "+resourcePropertiesSet.size());
 		$rps.addResourcePropertiesSet(resourcePropertiesSet);
 		modify($rps){};
@@ -43,7 +42,13 @@ rule "add resources submission to internal referential internalRefSubmission for
 	  	//Get submission code
 	  	String codeSubmission = $j.getUniqueJobResource("subData").getProperty("code");
 	  	JSONDevice jsonDevice = new JSONDevice();
-	  	log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/submissions/"+codeSubmission+"/state/IN_PROGRESS");
-	  	jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/submissions/"+codeSubmission+"/state/IN_PROGRESS", null);
+	  	//Get submission
+	  	String JSONSubmission = jsonDevice.httpGet(ProjectProperties.getProperty("server")+"/api/submissions/"+codeSubmission);
+	  	//Modify submission
+	  	String newJSONSubmission = jsonDevice.modifyJSON(JSONSubmission, "state.code", "inProgress");
+	  	//Call PUT update with submission modified
+	  	log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/submissions/"+codeSubmission);
+	  	log.debug("With JSON "+newJSONSubmission);
+	  	jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/submissions/"+codeSubmission, newJSONSubmission);
 	  	
 end

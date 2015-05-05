@@ -17,7 +17,7 @@ rule "update localDirectoryPath parameter"
 			log.debug("Get rawData");
 			//Get rawData
 			JSONDevice jsonDevice = new JSONDevice();
-			Set<ResourceProperties> rps = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/submissions/"+$job.getUniqueJobResource("rawDataDir").getProperty("code")+"/experiments/rawDatas");
+			Set<ResourceProperties> rps = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/rawDatas?submissionCode="+$job.getUniqueJobResource("rawDataDir").getProperty("code"));
 			log.debug("Size of rawData : "+rps.size());
 			String directoryPath = $job.getUniqueJobResource("rawDataDir").getProperty("submissionDirectory");
 			String filePath = $job.getParameterValue("fileList").getValue().replace("%directoryPath%",directoryPath);

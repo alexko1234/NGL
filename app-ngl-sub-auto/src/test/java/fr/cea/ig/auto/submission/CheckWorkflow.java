@@ -36,6 +36,12 @@ public class CheckWorkflow extends GenericTest{
 	private final String scriptCreateXML = "/env/cns/home/ejacoby/testU/app-NGL-sub-auto/bin/scriptCreateXML";
 	private final String workspace = "/env/cns/home/ejacoby/testU/app-NGL-sub-auto/log";
 
+	/**
+	 * Call initData of NGL-SUB unit test (builder.data)
+	 * @throws PersistenceException
+	 * @throws BirdsException
+	 * @throws FatalException
+	 */
 	@Before
 	public void addDeclaration() throws PersistenceException, BirdsException, FatalException
 	{
@@ -73,7 +79,7 @@ public class CheckWorkflow extends GenericTest{
 		ResourceProperties rp = groupJob.getUniqueJobResource("subData").getResourceProperties();
 		String codeSubmission = rp.get("code");
 		Assert.assertNotNull(codeSubmission);
-		Assert.assertEquals(rp.get("state.code"),"IN_WAITING");
+		Assert.assertEquals(rp.get("state.code"),"inWaiting");
 		Assert.assertNotNull(rp.get("submissionDirectory"));
 		Assert.assertNotNull(rp.get("submissionDate"));
 		for(String key : rp.keysSet()){
@@ -86,7 +92,7 @@ public class CheckWorkflow extends GenericTest{
 
 		//Check group update state in transfert ressource
 		//Get submission in waiting ==0
-		Set<ResourceProperties> setRP = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/submissions/search/IN_WAITING");
+		Set<ResourceProperties> setRP = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/submissions?state=inWaiting");
 		Assert.assertEquals(setRP.size(),0);
 
 
@@ -158,14 +164,19 @@ public class CheckWorkflow extends GenericTest{
 		em.endTransaction();
 
 		//Get Submission from database
-		Set<ResourceProperties> setRPSub = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/submissions/search/submitted");
+		
+		Set<ResourceProperties> setRPSub = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/submissions?state=submitted");
 		log.debug("Set RPub "+setRPSub);
 		Assert.assertTrue(setRPSub.size()==1);
 		ResourceProperties RPSub = setRPSub.iterator().next();
 		Assert.assertTrue(RPSub.get("state.code").equals("submitted"));
 		Assert.assertNotNull(RPSub.get("accession"));
 		//Update state submission from IN_PROGRESS to IN_WAITING at the end of test
-		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/submissions/"+codeSubmission+"/state/IN_WAITING", null);
+	  	//Get submission
+	  	String JSONSubmission = jsonDevice.httpGet(ProjectProperties.getProperty("server")+"/api/submissions/"+codeSubmission);
+	  	//Modify submission
+	  	String newJSONSubmission = jsonDevice.modifyJSON(JSONSubmission, "state.code", "inWaiting");
+	  	jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/submissions/"+codeSubmission, newJSONSubmission);
 
 	}
 
