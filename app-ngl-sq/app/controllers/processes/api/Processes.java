@@ -36,6 +36,7 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
+import validation.processes.instance.ProcessValidationHelper;
 import validation.utils.ValidationConstants;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableResponse;
@@ -190,7 +191,13 @@ public class Processes extends CommonController{
 
 	private static List<Process> saveAllContentsProcesses(Form<Process> filledForm, Container container, ContextValidation contextValidation){	
 		Process process = filledForm.get();
-
+		
+		ProcessValidationHelper.validateProcessType(process.typeCode,process.properties,contextValidation);
+		ProcessValidationHelper.validateProcessCategory(process.categoryCode,contextValidation);
+		ProcessValidationHelper.validateState(process.typeCode,process.state, contextValidation);
+		ProcessValidationHelper.validateTraceInformation(process.traceInformation, contextValidation);
+		ProcessValidationHelper.validateContainerCode(process.containerInputCode, contextValidation);
+		
 		List<Process> processes = new ArrayList<Process>();
 		for(Content c:container.contents){
 			Process newProcess = new Process();
@@ -211,13 +218,16 @@ public class Processes extends CommonController{
 			newProcess.sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(c, container);				
 			//Logger.info("New process code : "+newProcess.code);
 			processes.add(newProcess);					
-			newProcess.validate(contextValidation);
+			//newProcess.validate(contextValidation);
+			ProcessValidationHelper.validateCode(newProcess, InstanceConstants.PROCESS_COLL_NAME, contextValidation);
+			ProcessValidationHelper.validateProjectCode(newProcess.projectCode, contextValidation);
+			ProcessValidationHelper.validateSampleCode(newProcess.sampleCode, newProcess.projectCode, contextValidation);
 		}
 
 		if(!contextValidation.hasErrors()){
 			List<Process> savedProcesses = new ArrayList<Process>();
 			for(Process p:processes){
-				Process savedProcess = (Process)InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME, p, contextValidation);
+				Process savedProcess = MongoDBDAO.save(InstanceConstants.PROCESS_COLL_NAME, p);
 				if(savedProcess != null){
 					savedProcesses.add(savedProcess);
 				}

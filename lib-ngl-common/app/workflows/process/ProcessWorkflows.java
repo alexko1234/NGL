@@ -194,7 +194,7 @@ public class ProcessWorkflows {
 
 	}*/
 
-	public static void setProcessState(List<Process> processes, String nextStateProcesses, List<String> resolutions,
+	public static boolean setProcessState(List<Process> processes, String nextStateProcesses, List<String> resolutions,
 			ContextValidation ctxValidation) {
 
 		Map<String,Set<String>> containersToUpdate=new HashMap<String,Set<String>>();
@@ -256,7 +256,7 @@ public class ProcessWorkflows {
 					DBUpdate.unset("inputProcessCodes"), true);
 		}
 
-
+		return true;
 	}
 
 	/*public static void stopProcess(String processCode, ContextValidation contextValidation,List<String> processResolutionCodes) {
@@ -269,5 +269,4 @@ public class ProcessWorkflows {
 					contextValidation, true, false,processResolutionCodes);
 		}
 	}*/
-
 }

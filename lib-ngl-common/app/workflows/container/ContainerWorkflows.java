@@ -264,7 +264,7 @@ public class ContainerWorkflows {
 */
 	/**********************************************************/
 
-	public static void setContainerState(List<Container> containers,String nextState,ContextValidation contextValidation){
+	public static boolean setContainerState(List<Container> containers,String nextState,ContextValidation contextValidation){
 
 		Set<String> supporContainerSet=new HashSet<String>();
 
@@ -285,10 +285,11 @@ public class ContainerWorkflows {
 						DBQuery.is("code", container.code),
 						DBUpdate.set("state", container.state).set("traceInformation", container.traceInformation));
 
-				ContainerWorkflows.rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ContainerWorkflows.ruleWorkflowSQ, container),null);
 				supporContainerSet.add(container.support.code);
 			}
 
+			ContainerWorkflows.rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ContainerWorkflows.ruleWorkflowSQ, containers),null);
+			
 			List<ContainerSupport> containerSupports=MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("code",supporContainerSet).notEquals("state.code",nextState)).toList();
 			for(ContainerSupport containerSupport:containerSupports){
 				containerSupport.state = StateHelper.updateHistoricalNextState(containerSupport.state, nextStateContainer);
@@ -305,6 +306,7 @@ public class ContainerWorkflows {
 
 
 		}
+		return true;
 	}
 	public static String getNextContainerStateFromExperimentCategory(String categoryCode) {
 		String nextContainerState=null;
