@@ -191,7 +191,7 @@ public class Processes extends CommonController{
 
 	private static List<Process> saveAllContentsProcesses(Form<Process> filledForm, Container container, ContextValidation contextValidation){	
 		Process process = filledForm.get();
-		
+		//The process is replicated in each content, so we can validate once
 		ProcessValidationHelper.validateProcessType(process.typeCode,process.properties,contextValidation);
 		ProcessValidationHelper.validateProcessCategory(process.categoryCode,contextValidation);
 		ProcessValidationHelper.validateState(process.typeCode,process.state, contextValidation);
@@ -217,8 +217,12 @@ public class Processes extends CommonController{
 			newProcess.code = CodeHelper.getInstance().generateProcessCode(newProcess);
 			newProcess.sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(c, container);				
 			//Logger.info("New process code : "+newProcess.code);
-			processes.add(newProcess);					
+			processes.add(newProcess);	
+			//We don't need to validate all the properties for each creation
+			//because the new process is just a copy of the one in the form
 			//newProcess.validate(contextValidation);
+			//These are the properties that change for each process so we have to validate them each time we create
+			//the copy
 			ProcessValidationHelper.validateCode(newProcess, InstanceConstants.PROCESS_COLL_NAME, contextValidation);
 			ProcessValidationHelper.validateProjectCode(newProcess.projectCode, contextValidation);
 			ProcessValidationHelper.validateSampleCode(newProcess.sampleCode, newProcess.projectCode, contextValidation);
