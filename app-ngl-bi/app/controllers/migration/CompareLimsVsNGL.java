@@ -36,7 +36,7 @@ import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
-public class CompareLimsVsRun extends CommonController {
+public class CompareLimsVsNGL extends CommonController {
 	
 	
 	
