@@ -1,15 +1,14 @@
 package workflows.process;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
-import models.laboratory.experiment.description.ExperimentCategory;
-import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
@@ -20,7 +19,6 @@ import models.utils.instance.StateHelper;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
-import de.flapdoodle.embed.mongo.config.processlistener.ProcessListener;
 import play.Logger;
 import validation.ContextValidation;
 import validation.processes.instance.ProcessValidationHelper;
@@ -124,7 +122,7 @@ public class ProcessWorkflows {
 		return MongoDBDAO.checkObjectExist(InstanceConstants.PROCESS_COLL_NAME, Process.class,
 				DBQuery.is("code", processCode).is("state.code", stateCode));
 	}
-*/
+	 */
 	public static void setProcessState(String processCode, State nextState, ContextValidation contextValidation) {
 		Process process = MongoDBDAO.findOne(InstanceConstants.PROCESS_COLL_NAME, Process.class,
 				DBQuery.is("code", processCode));
@@ -150,23 +148,23 @@ public class ProcessWorkflows {
 		String experimentCategoryCode=null;
 		try {
 			ProcessType pt = ProcessType.find.findByCode(processTypeCode);
-			 experimentCategoryCode=pt.firstExperimentType.category.code;
-			
+			experimentCategoryCode=pt.firstExperimentType.category.code;
+
 		} catch (DAOException e) {
 			Logger.error(e.getMessage());
 		}
-		
+
 		State nextState = new State();
 		List<String> processList=new ArrayList<String>();
 
 		nextState.code=ContainerWorkflows.getNextContainerStateFromExperimentCategory(experimentCategoryCode);
-		
+
 		Set<String> inputContainers=new HashSet<String>();
 		for (Process process : processes) {
 			inputContainers.add(process.containerInputCode);
 			processList.add(process.code);
 		}
-		
+
 		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("code",inputContainers)).toList();
 		for(Container container : containers){
 			ProcessHelper.updateContainer(container,processTypeCode, processList,contextValidation);
@@ -198,11 +196,14 @@ public class ProcessWorkflows {
 
 	public static void setProcessState(List<Process> processes, String nextStateProcesses, List<String> resolutions,
 			ContextValidation ctxValidation) {
+
+		Map<String,Set<String>> containersToUpdate=new HashMap<String,Set<String>>();
+		Set<String> newContainerSupports=new HashSet<String>();
 		State nextState=new State();
 		nextState.user=ctxValidation.getUser();
 		nextState.code=nextStateProcesses;
 		nextState.resolutionCodes=resolutions;
-		
+
 		for(Process process:processes){
 
 			process.state = StateHelper.updateHistoricalNextState(process.state, nextState);
@@ -210,32 +211,51 @@ public class ProcessWorkflows {
 
 			MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("code", process.code),
 					DBUpdate.set("state", process.state).set("traceInformation", process.traceInformation));
-			
-			if(nextStateProcesses.equals("F")){
-				ProcessType processType;
-				try {
-					processType = ProcessType.find.findByCode(process.typeCode);
-					MongoDBDAO
-					.update(InstanceConstants.CONTAINER_COLL_NAME,
-							Container.class,
-							DBQuery.is("code", process.containerInputCode).in("fromExperimentTypeCodes",
-									processType.voidExperimentType.code),
-									DBUpdate.unset("fromExperimentTypeCodes"));
-					MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
-							DBQuery.is("code", process.containerInputCode), DBUpdate.unset("inputProcessCodes"),
-							true);
-					List<String> stateCodes=new ArrayList<String>();
-					stateCodes.add("UA");
-					stateCodes.add("IS");
-					stateCodes.add("F");
-					MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
-							DBQuery.in("support.code", process.newContainerSupportCodes).in("state.code",stateCodes),
-							DBUpdate.unset("inputProcessCodes"), true);
 
-				} catch (DAOException e) {
+			if(nextStateProcesses.equals("F")){
+				Set<String> containerInputCodes=containersToUpdate.get(process.typeCode);
+				if(containerInputCodes==null){
+					containerInputCodes=new HashSet<String>();
+				}
+				containerInputCodes.add(process.containerInputCode);
+				containersToUpdate.put(process.typeCode,containerInputCodes);
+				newContainerSupports.addAll(process.newContainerSupportCodes);
+			}
+
+		}
+
+		if(containersToUpdate.size()!=0){
+			for(String processTypeCode :containersToUpdate.keySet()){
+				for(String containerInPutCode:containersToUpdate.get(processTypeCode)){
+					ProcessType processType;
+					try {
+						processType = ProcessType.find.findByCode(processTypeCode);
+						MongoDBDAO
+						.update(InstanceConstants.CONTAINER_COLL_NAME,
+								Container.class,
+								DBQuery.is("code", containerInPutCode).in("fromExperimentTypeCodes",
+										processType.voidExperimentType.code),
+										DBUpdate.unset("fromExperimentTypeCodes"));
+						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
+								DBQuery.is("code",containerInPutCode), DBUpdate.unset("inputProcessCodes"),
+								true);
+
+					} catch (DAOException e) {
+					}
 				}
 			}
 		}
+		
+		if(newContainerSupports.size()!=0){
+			List<String> stateCodes=new ArrayList<String>();
+			stateCodes.add("UA");
+			stateCodes.add("IS");
+			stateCodes.add("F");
+			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
+					DBQuery.in("support.code", newContainerSupports).in("state.code",stateCodes),
+					DBUpdate.unset("inputProcessCodes"), true);
+		}
+
 
 	}
 
