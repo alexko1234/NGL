@@ -154,7 +154,10 @@ public class Workflows {
 								
 							MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
 									DBQuery.is("code", readSet.code), DBUpdate.set("productionValuation", readSet.productionValuation).set("traceInformation", readSet.traceInformation));
-							nextReadSetState(contextValidation, readSet);					
+							//nextReadSetState(contextValidation, readSet);
+							State nextState = cloneState(readSet.state, contextValidation.getUser());
+							nextState.code = "F-VQC";
+							setReadSetState(contextValidation, readSet, nextState);
 						}
 					}					
 				}
@@ -239,11 +242,12 @@ public class Workflows {
 							DBQuery.and(DBQuery.is("code", readSet.code), DBQuery.is("files.fullname", f.fullname)),
 							DBUpdate.set("files.$.state", state));					
 				}
-			}
-			else {
+			} else {
 				Logger.error("No files for "+readSet.code);
 			}
 			
+			//if change valuation when final step
+			Spring.getBeanOfType(ILimsRunServices.class).valuationReadSet(readSet, false);	
 		}
 	}
 
@@ -291,9 +295,7 @@ public class Workflows {
 				nextStep.code = "A";
 			}else { //FALSE or UNSET
 				nextStep.code = "UA";
-			}
-			//if change valuation when final step
-			Spring.getBeanOfType(ILimsRunServices.class).valuationReadSet(readSet, false);	
+			}			
 		}
 		setReadSetState(contextValidation, readSet, nextStep);
 	}

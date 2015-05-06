@@ -283,7 +283,7 @@ public class ReadSets extends ReadSetsController{
 			readSetInput.state.user = getCurrentUser();
 			readSetInput.state.date = new Date();	
 						
-			//hack to simplify ngsrg
+			//hack to simplify ngsrg => move to workflow but workflow not call here !!!
 			if(null != readSetInput.runCode && (null == readSetInput.runSequencingStartDate || null == readSetInput.runTypeCode)){
 				updateReadSet(readSetInput);
 				
