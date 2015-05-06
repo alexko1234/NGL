@@ -229,7 +229,7 @@ public class ExperimentHelper extends InstanceHelpers {
 			
 			for(Container addedContainer:addedContainers){
 				//add the current experiment in the process and the experiment in the list of experiment
-				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("containerInputCode", addedContainer.code), DBUpdate.set("currentExperimentTypeCode", exp.typeCode).push("experimentCodes", exp.code));
+				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.or(DBQuery.in("containerInputCode", addedContainer.code),DBQuery.in("newContainerSupportCodes", addedContainer.code)), DBUpdate.set("currentExperimentTypeCode", exp.typeCode).push("experimentCodes", exp.code));
 			}
 		}
 		
@@ -239,7 +239,9 @@ public class ExperimentHelper extends InstanceHelpers {
 			
 			String nextContainerState=ContainerWorkflows.getNextContainerStateFromExperimentCategory(exp.categoryCode);			
 			ContainerWorkflows.setContainerState(deletedContainers, nextContainerState, contextValidation);
-
+			for(Container deletedContainer:deletedContainers){
+				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.or(DBQuery.in("containerInputCode", deletedContainer.code),DBQuery.in("newContainerSupportCodes", deletedContainer.code)), DBUpdate.set("currentExperimentTypeCode", exp.typeCode).pull("experimentCodes", exp.code));
+			}
 		}
 	}
 	
