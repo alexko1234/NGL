@@ -240,7 +240,7 @@ public class ExperimentHelper extends InstanceHelpers {
 			String nextContainerState=ContainerWorkflows.getNextContainerStateFromExperimentCategory(exp.categoryCode);			
 			ContainerWorkflows.setContainerState(deletedContainers, nextContainerState, contextValidation);
 			for(Container deletedContainer:deletedContainers){
-				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.or(DBQuery.in("containerInputCode", deletedContainer.code),DBQuery.in("newContainerSupportCodes", deletedContainer.code)), DBUpdate.unset("currentExperimentTypeCode").pull("experimentCodes", exp.code));
+				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.and(DBQuery.or(DBQuery.in("containerInputCode", deletedContainer.code),DBQuery.in("newContainerSupportCodes", deletedContainer.code)),DBQuery.notEquals("state.code", "F")), DBUpdate.unset("currentExperimentTypeCode").pull("experimentCodes", exp.code));
 			}
 		}
 	}
