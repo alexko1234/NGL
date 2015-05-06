@@ -1455,9 +1455,11 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				if($scope.form === undefined){
 					$scope.form = {};
 				}
-				$scope.form.experimentType = experiment.typeCode;
-				$scope.form.containerSupportCategory = experiment.instrument.inContainerSupportCategoryCode;
-				mainService.setForm($scope.form);
+				if($scope.editMode === false){
+					$scope.form.experimentType = experiment.typeCode;
+					$scope.form.containerSupportCategory = experiment.instrument.inContainerSupportCategoryCode;
+					mainService.setForm($scope.form);
+				}
 				$scope.addSearchTabs();
 				$scope.experiment.value.instrument.outContainerSupportCategoryCode = experiment.instrument.outContainerSupportCategoryCode;
 				$scope.experiment.value = experiment;
