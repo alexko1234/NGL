@@ -349,7 +349,6 @@ public class Runs extends RunsController {
 					DBQuery.and(DBQuery.is("code", code)),
 					DBUpdate.set("valuation", valuation).set("traceInformation", getUpdateTraceInformation(run)));			
 			run = getRun(code);
-			//TODO Update old lims !
 			Workflows.nextRunState(ctxVal, run);
 			
 		} 
@@ -375,6 +374,8 @@ public class Runs extends RunsController {
 	}
 	
 	private static Map<String, PropertyValue> getProperties(String containerSupportCode) {
+		//Include sequencingProgramType in run properties
+		
 		ContainerSupport cs = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, containerSupportCode);
 		if (cs != null && cs.properties != null) {
 			return cs.properties;
