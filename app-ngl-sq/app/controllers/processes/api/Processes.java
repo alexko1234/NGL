@@ -153,7 +153,7 @@ public class Processes extends CommonController{
 				process.sampleOnInputContainer.referenceCollab = InstanceHelpers.getReferenceCollab(process.sampleCode);
 				process.validate(ctxVal);
 				if (!ctxVal.hasErrors()) {
-					Process p = (Process)InstanceHelpers.save(InstanceConstants.PROCESS_COLL_NAME,process, ctxVal);
+					Process p = MongoDBDAO.save(InstanceConstants.PROCESS_COLL_NAME, process);
 					processes.add(p);
 					response.add(new DatatableBatchResponseElement(OK,  p, element.index));
 				}else{
