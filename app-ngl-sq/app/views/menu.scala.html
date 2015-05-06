@@ -44,8 +44,12 @@
 							
 							</ul>
   						</li>
-  						<li class="@("active".when(nav.startsWith("help")))">
-							<a href="@routes.Assets.at("ngl-sq/documentation/DOC_UTILISATEUR_SQ.pdf")" target="doc">@Messages("docs.menu")</a>
+  						<li class="dropdown @("active".when(nav.startsWith("help")))">
+  							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="help">@Messages("docs.menu")<b class="caret"></b></a>
+							<ul class="dropdown-menu" role="menu" aria-labelledby="help">
+								<li><a href="@routes.Assets.at("ngl-sq/documentation/NGL_SQ_Illumina.pdf")" target="doc">@Messages("docs.illumina")</a></li>
+								<li><a href="@routes.Assets.at("ngl-sq/documentation/NGL-SQ_Optical_Mapping.pdf")" target="doc">@Messages("docs.opticalmapping")</a></li>
+							</ul>
 						</li>						
 			</ul>
 

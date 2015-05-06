@@ -304,6 +304,9 @@ limsdao.error.emptymapping =Pas de correspondance avec les paramètres suivants 
 #initialdata
 initialdata.error.sampleNotExist=Le container {0} 
 
+docs.illumina=Séquençage Illumina
+docs.opticalmapping=Optical mapping Opgen
+
 #button
 button.search = Rechercher
 button.reset = Réinitialiser
