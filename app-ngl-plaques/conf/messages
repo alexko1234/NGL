@@ -42,8 +42,12 @@ plates.table.creationDate = Date création
 plates.select.etapemanips = -- sélectionner une étape --
 plates.select.etatmanips = -- sélectionner un état --
 plates.select.project = -- sélectionner un projet --
+plates.select.create.user =  -- sélectionner un créateur --
+
 search.placeholder.regexPlaqueId = Regex pour plaqueId
 search.placeholder.regexMatmanom = Regex pour nom de manip.
+search.placeholder.fromDate = Plaque depuis le (jj/mm/aaaa)
+search.placeholder.toDate = Plaque jusqu''au (jj/mm/aaaa)
 
 plates.msg.save.sucess = Sauvegarde réussie
 plates.msg.save.error = Sauvegarde echouée
@@ -61,6 +65,8 @@ plates.typeName = Type
 plates.validQC = Valid QC ?
 plates.validRun = Valid Run ?
 plates.comment = Commentaires
+plates.create.user = Créé par
+plates.modify.user = Modifié par
 
 valuation.value.TRUE = Oui
 valuation.value.FALSE = Non

@@ -49,7 +49,8 @@ public class Plates extends CommonController {
 	  	    		controllers.manips.api.routes.javascript.Manips.list(),
 	  	    		controllers.combo.api.routes.javascript.Lists.projects(),
 	  	    		controllers.combo.api.routes.javascript.Lists.etmateriels(),
-	  	    		controllers.combo.api.routes.javascript.Lists.etmanips()
+	  	    		controllers.combo.api.routes.javascript.Lists.etmanips(),
+	  	    		controllers.combo.api.routes.javascript.Lists.users()
 	  	      )	  	      
 	  	    );
 	  	  }

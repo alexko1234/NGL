@@ -6,6 +6,9 @@ public class MaterielManipSearch {
 	public Integer emateriel;
 	public String plaqueId;
 	public String matmanom;
+	public Integer percodc;
+	public String fromDate;
+	public String toDate;
 	
 	@Override
 	public String toString() {

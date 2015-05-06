@@ -58,7 +58,8 @@ public class Plates extends CommonController {
 		Form<MaterielManipSearch> filledForm =  manipForm.bindFromRequest();
 		LimsManipDAO  limsManipDAO = Spring.getBeanOfType(LimsManipDAO.class);
 		Logger.info("Manip Form :"+filledForm.toString());		
-		List<Plate> plates = limsManipDAO.findPlates(filledForm.get().etmanip,filledForm.get().project, filledForm.get().plaqueId, filledForm.get().matmanom);		
+		List<Plate> plates = limsManipDAO.findPlates(filledForm.get().etmanip,filledForm.get().project, filledForm.get().plaqueId, 
+				filledForm.get().matmanom, filledForm.get().percodc, filledForm.get().fromDate, filledForm.get().toDate);		
 		return ok(Json.toJson(new DatatableResponse(plates, plates.size())));
 	}
 	

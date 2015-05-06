@@ -7,12 +7,20 @@
 				<option value="">@Messages("plates.select.etapemanips")</option>
 				</select>
 		}
+		@formGroup{
+			<input type="text" class="form-control" ng-model="form.fromDate" placeholder='@Messages("search.placeholder.fromDate")'>
+		}	
+		
+		
 	}
 	@columnSearchForm{
 		@formGroup{		
 			<select class="form-control" ng-model="form.projects.selected" id="project" ng-options="project.name for project in form.projects.options" ng-change="search()">
 				<option value="">@Messages("plates.select.project")</option>
 				</select>
+		}
+		@formGroup{
+			<input type="text" class="form-control" ng-model="form.toDate" placeholder='@Messages("search.placeholder.toDate")'>
 		}
 	}
 	
@@ -27,6 +35,14 @@
 		@formGroup{		
 			<input type="text" class="form-control" ng-model="form.matmanom" placeholder='@Messages("search.placeholder.regexMatmanom")' title='@Messages("search.placeholder.regexMatmanom")'>
 		
+		}
+	}
+	
+	@columnSearchForm{
+		@formGroup{		
+			<select class="form-control" ng-model="form.users.selected" id="user" ng-options="user.name for user in form.users.options" ng-change="search()">
+				<option value="">@Messages("plates.select.create.user")</option>
+			</select>
 		}
 	}
 }

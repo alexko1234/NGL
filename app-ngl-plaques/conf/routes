@@ -28,6 +28,7 @@ GET /api/combo/projects								controllers.combo.api.Lists.projects()
 GET /api/combo/samples								controllers.combo.api.Lists.samples()
 GET /api/combo/etmanips								controllers.combo.api.Lists.etmanips()
 GET /api/combo/etmateriels							controllers.combo.api.Lists.etmateriels()
+GET /api/combo/users								controllers.combo.api.Lists.users()
 
 ->  /authentication authentication.Routes
 

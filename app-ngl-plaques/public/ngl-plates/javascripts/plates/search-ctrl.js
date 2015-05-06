@@ -70,7 +70,8 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$http','datatable', 
 		if(angular.isUndefined($scope.getForm())){
 			$scope.form = {
 					projects:{},
-					etmanips:{}
+					etmanips:{},
+					users:{}
 			};
 			
 			$scope.setForm($scope.form);
@@ -83,6 +84,11 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$http','datatable', 
 				success(function(data, status, headers, config){
 					$scope.form.etmanips.options = data;
 				});
+			
+			$http.get(jsRoutes.controllers.combo.api.Lists.users().url).
+			success(function(data, status, headers, config){
+				$scope.form.users.options = data;
+			});
 						
 		}else{
 			$scope.form = $scope.getForm();			
@@ -99,8 +105,24 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$http','datatable', 
 			jsonSearch.etmanip = $scope.form.etmanips.selected.code;
 		}
 		
+		if($scope.form.users.selected){
+			jsonSearch.percodc = $scope.form.users.selected.code;
+		}
+		
 		if($scope.form.plaqueId){
 			jsonSearch.plaqueId = $scope.form.plaqueId;
+		}
+		
+		if($scope.form.matmanom){
+			jsonSearch.matmanom = $scope.form.matmanom;
+		}
+		
+		if($scope.form.fromDate){
+			jsonSearch.fromDate = $scope.form.fromDate;
+		}
+		
+		if($scope.form.toDate){
+			jsonSearch.toDate = $scope.form.toDate;
 		}
 		
 		if($scope.form.matmanom){

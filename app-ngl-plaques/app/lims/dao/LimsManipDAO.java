@@ -4,14 +4,15 @@ package lims.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
-
 import lims.models.Manip;
 import lims.models.Plate;
+import lims.models.User;
 import lims.models.Well;
 import models.laboratory.common.instance.TBoolean;
 import models.utils.ListObject;
@@ -69,9 +70,9 @@ public class LimsManipDAO {
     	}
     }
 
-    public List<Plate> findPlates(Integer emnco, String projetValue, String plaqueId, String matmanom) {
+    public List<Plate> findPlates(Integer emnco, String projetValue, String plaqueId, String matmanom, Integer percodc, String fromDate, String toDate) {
     	Logger.info("pl_PlaqueSolexa @prsco="+projetValue+", @emnco="+emnco);
-		List<Plate> plates = this.jdbcTemplate.query("pl_PlaqueSolexa @prsco=?, @emnco=?, @plaqueId=?, @matmanom=?", new Object[]{projetValue, emnco, plaqueId, matmanom}, new RowMapper<Plate>() {
+		List<Plate> plates = this.jdbcTemplate.query("pl_PlaqueSolexa @prsco=?, @emnco=?, @plaqueId=?, @matmanom=?, @percodc=?, @fromDate=?, @toDate=?", new Object[]{projetValue, emnco, plaqueId, matmanom,percodc,fromDate,toDate}, new RowMapper<Plate>() {
 	        public Plate mapRow(ResultSet rs, int rowNum) throws SQLException {
 	        	Plate plate = new Plate();
 	        	//well.plateCode = rs.getString("plaqueId");
@@ -82,7 +83,12 @@ public class LimsManipDAO {
 	        	plate.validQC = getTBoolean(rs.getInt("valqc"));
 	        	plate.validRun = getTBoolean(rs.getInt("valrun"));
 	        	plate.comment = rs.getString("plaquecom");
-	        	plate.creationDate=rs.getDate("plaquedc");
+	        	plate.creationDate = rs.getDate("plaquedc");
+	        	plate.modificationDate = rs.getDate("plaquedm");
+	        	plate.creationUserId = rs.getInt("percodc");
+	        	plate.modificationUserId = rs.getInt("percodm");
+	        	
+	        	
 	            return plate;
 	        }
 
@@ -129,8 +135,18 @@ public class LimsManipDAO {
 	        	plate.validQC = getTBoolean(rs.getInt("valqc"));
 	        	plate.validRun = getTBoolean(rs.getInt("valrun"));
 	        	plate.comment = rs.getString("plaquecom");
+	        	plate.creationDate = rs.getDate("plaquedc");
+	        	plate.modificationDate = rs.getDate("plaquedm");
+	        	plate.creationUserId = rs.getInt("percodc");
+	        	plate.modificationUserId = rs.getInt("percodm");
+	        	plate.creationUser = getUser(plate.creationUserId);
+	        	plate.modificationUser = getUser(plate.modificationUserId);
+	        	
+	        	
 	            return plate;
 	        }
+
+			
 	    });
 
 
@@ -159,7 +175,31 @@ public class LimsManipDAO {
 		}
 	}
 
-
+	public User getUser(Integer id) {
+		Logger.info("pl_PerintUn @perco="+id);
+		User user = this.jdbcTemplate.queryForObject("pl_PerintUn @perco=?", new Object[]{id}, new RowMapper<User>() {
+	        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+	        	User user = new User();
+	        	user.perco = rs.getString("perco");
+	        	user.perlog = rs.getString("perlog");
+	            return user;
+	        }
+	    });
+		return user;
+	}
+	
+	public List<User> getUsers() {
+		List<User> users = this.jdbcTemplate.query("pl_Perint", new RowMapper<User>() {
+	        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+	        	User user = new User();
+	        	user.perco = rs.getString("perco");
+	        	user.perlog = rs.getString("perlog");
+	            return user;
+	        }
+	    });
+		return users;
+	}
+	
 	public boolean isPlateExist(String code) {
 		Logger.info("pl_PlaqueSolexa @plaqueId="+code);
 		List<Plate> plates = this.jdbcTemplate.query("pl_PlaqueSolexa @plaqueId=?", new Object[]{code}, new RowMapper<Plate>() {

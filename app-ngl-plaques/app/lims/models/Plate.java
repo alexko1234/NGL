@@ -18,6 +18,12 @@ public class Plate {
 	public TBoolean validRun = TBoolean.UNSET;
 	public String comment;
 	public Date creationDate;
+	public Date modificationDate;
+	public Integer creationUserId;
+	public Integer modificationUserId;
+	public User creationUser;
+	public User modificationUser;
+	
 	
 	@Override
 	public String toString() {

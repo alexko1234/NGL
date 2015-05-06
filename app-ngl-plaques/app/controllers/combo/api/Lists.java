@@ -1,7 +1,10 @@
 package controllers.combo.api;
 
+import java.util.List;
+
 import controllers.CommonController;
 import lims.dao.LimsManipDAO;
+import lims.models.User;
 import play.api.modules.spring.Spring;
 import play.libs.Json;
 import play.mvc.Controller;
@@ -25,5 +28,9 @@ public class Lists extends CommonController {
 	public static Result etmateriels(){
 		return Results.ok(Json.toJson(Spring.getBeanOfType(LimsManipDAO.class).getListObjectFromProcedureLims("pl_Etmateriel")));	
 	}
-
+	
+	public static Result users(){
+		return Results.ok(Json.toJson(Spring.getBeanOfType(LimsManipDAO.class).getListObjectFromProcedureLims("pl_Perint")));	
+				
+	}	
 }
