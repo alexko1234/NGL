@@ -43,7 +43,10 @@
 								<li class="@("active".when(nav ==  "experiments.new"))"><a href="@controllers.experiments.tpl.routes.Experiments.home("new")">@Messages("experiments.menu.creation")</a></li>
 							
 							</ul>
-  						</li>						
+  						</li>
+  						<li class="@("active".when(nav.startsWith("help")))">
+							<a href="@routes.Assets.at("ngl-sq/documentation/DOC_UTILISATEUR_SQ.pdf")" target="doc">@Messages("docs.menu")</a>
+						</li>						
 			</ul>
 
 			<ul class="nav navbar-nav navbar-right">
