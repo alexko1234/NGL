@@ -229,7 +229,7 @@ public class ExperimentHelper extends InstanceHelpers {
 			
 			for(Container addedContainer:addedContainers){
 				//add the current experiment in the process and the experiment in the list of experiment
-				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.or(DBQuery.in("containerInputCode", addedContainer.code),DBQuery.in("newContainerSupportCodes", addedContainer.code)), DBUpdate.set("currentExperimentTypeCode", exp.typeCode).push("experimentCodes", exp.code));
+				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.and(DBQuery.or(DBQuery.in("containerInputCode", addedContainer.code),DBQuery.in("newContainerSupportCodes", addedContainer.code)),DBQuery.notEquals("state.code", "F")), DBUpdate.set("currentExperimentTypeCode", exp.typeCode).push("experimentCodes", exp.code));
 			}
 		}
 		
