@@ -1433,8 +1433,6 @@ angular.module('datatableServices', []).
 			    						columns[i].possibleValues = [];
 			    					}
 			    					
-			    					columns[i].cells = [];//Init
-			    					
 			    					if(this.config.group.active && angular.isDefined(this.config.group.by) && (columns[i].property === this.config.group.by || columns[i].property === this.config.group.by.property)){
 			    						this.config.group.by = columns[i];
 			    						this.config.group.columns[columns[i].id] = true;
@@ -2153,7 +2151,7 @@ angular.module('datatableServices', []).
   		    		+		'</td>'
   		    		+	'</tr>'
   		    		+	'<tr ng-repeat="value in dtTable.displayResult" ng-click="dtTableFunctions.select(value.line)" ng-class="dtTableFunctions.getTrClass(value.data, value.line, this)">'
-  		    		+		'<td ng-repeat="col in dtTable.config.columns" rowspan="{{col.cells[$parent.$index].rowSpan}}" ng-if="!dtTable.isHide(col.id)" ng-class="dtTableFunctions.getTdClass(value.data, col, this)">'
+  		    		+		'<td ng-repeat="col in dtTable.config.columns" ng-if="!dtTable.isHide(col.id)" ng-class="dtTableFunctions.getTdClass(value.data, col, this)">'
   		    		+		'<div dt-cell/>'
   		    		+		'</td>'
   		    		+	'</tr>'
