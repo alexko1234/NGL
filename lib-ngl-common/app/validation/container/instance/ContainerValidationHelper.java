@@ -101,7 +101,7 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 			workflow=true;
 		}
 //		if(( CollectionUtils.isEmpty(container.inputProcessCodes) || !container.state.historical.get(container.state.historical.size() - 2).code.equals("UA")) && container.state.code.equals("A") ){
-		if( CollectionUtils.isEmpty(container.inputProcessCodes) && container.state.code.equals("A") && !workflow ){
+		if( CollectionUtils.isEmpty(container.inputProcessCodes) && container.state.code.startsWith("A") && !workflow ){
 			contextValidation.addErrors("state.code",ValidationConstants.ERROR_BADSTATE_MSG,container.code );
 		}
 		if(CollectionUtils.isNotEmpty(container.inputProcessCodes) && container.state.code.equals("IW-P") && !workflow){
