@@ -253,7 +253,7 @@ public class ProcessWorkflows {
 			stateCodes.add("F");
 			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
 					DBQuery.in("support.code", newContainerSupports).in("state.code",stateCodes),
-					DBUpdate.unset("inputProcessCodes"), true);
+					DBUpdate.unset("inputProcessCodes").unset("processTypeCode"), true);
 		}
 
 		return true;

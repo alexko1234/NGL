@@ -206,6 +206,7 @@ public class ExperimentWorkflowTests extends AbstractTests {
 		List<String> processCodes=new ArrayList<String>();
 		for(Container container:containers){
 			assertThat(container.state.code).isEqualTo("IU");
+			assertThat(container.processTypeCode).isNotNull();
 			InstanceHelpers.addCodesList(container.inputProcessCodes,processCodes);
 		}
 		List<Process> processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME,Process.class,DBQuery.in("code", processCodes) ).toList();
@@ -233,6 +234,7 @@ public class ExperimentWorkflowTests extends AbstractTests {
 		assertThat(containers).isNotEmpty();
 		for(Container container:containers){
 			assertThat(container.state.code).isEqualTo("IS");
+			assertThat(container.processTypeCode).isNull();
 			assertThat(container.inputProcessCodes).isNull();
 		}
 		processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME,Process.class,DBQuery.in("code", processCodes) ).toList();
