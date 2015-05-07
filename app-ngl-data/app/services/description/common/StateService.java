@@ -72,8 +72,8 @@ public class StateService {
 		l.add(newState("Disponible transfert", "A-TF", true, 1000, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Container.name()), true, null));
 		
 		l.add(newState("Séquençage en cours", "IP-S", true, 150, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Run.name()), true, "S"));		
-		l.add(newState("Séquençage en échec", "FE-S", true, 200, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Run.name()), true, "S"));
-		l.add(newState("Séquençage terminé", "F-S", true, 199, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Run.name()), false, "S"));	
+		l.add(newState("Séquençage terminé", "F-S", true, 195, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Run.name()), false, "S"));	
+		l.add(newState("Séquençage en échec", "FE-S", true, 199, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Run.name()), true, "S"));
 		
 		l.add(newState("Read generation en attente", "IW-RG", true, 200, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.Run.name()), true, "RG"));
 		l.add(newState("Read generation en cours", "IP-RG", true, 250, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name()), true, "RG"));
