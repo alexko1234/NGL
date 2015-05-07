@@ -45,7 +45,7 @@ public class MigrationNGLSEQ extends CommonController{
 		backupOneCollection(InstanceConstants.PROCESS_COLL_NAME,Process.class);
 		udpdateProcessExperimentAndSupportCodes();
 		*/
-		
+	/*	
 		backupOneCollection(InstanceConstants.CONTAINER_COLL_NAME,Container.class);
 		migrationRemoveTagInContainerTube();
 		backupOneCollection(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class);
@@ -53,9 +53,28 @@ public class MigrationNGLSEQ extends CommonController{
 		Logger.info(" Migration NGL-SQ in Containers and Experiment ends <<<<<<<");
 		
 		int nbContentWithoutProjectCode=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.notExists("contents.0.projectCode")).count();
+	*/
+		
+		/* NGL-1.6.1*/
+		backupOneCollection(InstanceConstants.CONTAINER_COLL_NAME,Container.class);
+		migrationProcessTypeCodeInContainer();
 		return ok("Migration Finish");
 	}
 	
+	
+	
+	private static void migrationProcessTypeCodeInContainer() {
+		List<Process> processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class,DBQuery.is("state.code", "F")).toList();
+		for(Process process:processes){
+			if(process.newContainerSupportCodes!=null){
+				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code",process.newContainerSupportCodes),DBUpdate.unset("processTypeCode"));
+			}
+			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code",process.containerInputCode),DBUpdate.unset("processTypeCode"));
+		}
+
+	}
+
+
 	private static void udpdateProcessExperimentAndSupportCodes() {
 		List<Experiment> experiments=MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class).toList();
 		
