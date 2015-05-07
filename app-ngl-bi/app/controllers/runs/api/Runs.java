@@ -7,6 +7,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
@@ -14,7 +17,10 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
+import models.laboratory.common.instance.property.PropertyListValue;
+import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.container.instance.Content;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
@@ -47,6 +53,7 @@ import com.mongodb.BasicDBObject;
 
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
+import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 /**
@@ -235,7 +242,6 @@ public class Runs extends RunsController {
 			runInput.state.user = getCurrentUser();
 			runInput.state.date = new Date();
 			
-			runInput.properties = getProperties(runInput.containerSupportCode);
 			
 		} else {
 			return badRequest("use PUT method to update the readset");
@@ -373,16 +379,4 @@ public class Runs extends RunsController {
 		return ok();
 	}
 	
-	private static Map<String, PropertyValue> getProperties(String containerSupportCode) {
-		//Include sequencingProgramType in run properties
-		
-		ContainerSupport cs = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, containerSupportCode);
-		if (cs != null && cs.properties != null) {
-			return cs.properties;
-		}
-		else {
-			return null;
-		}
-	}
-
 }
