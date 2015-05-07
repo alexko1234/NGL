@@ -253,6 +253,7 @@ GET		/migrationRSFF								controllers.migration.RemoveStateFromFile.migration()
 GET		/compare-lims-support						controllers.migration.CompareLimsVsNGL.compareSupport(update:Boolean ?=false)
 GET		/compare-lims-files							controllers.migration.CompareLimsVsNGL.compareFile(update:Boolean ?=false)
 GET		/migration-fraction							controllers.migration.MigrationFractionRun.migration()
+GET		/migration-process-type-codes				controllers.migration.MigrationLibProcessTypeCodesRun.migration()
 
 #ngs-rg api
 GET		/api/ngsrs/instruments						controllers.ngsrg.lims.LimsInformations.instruments()
