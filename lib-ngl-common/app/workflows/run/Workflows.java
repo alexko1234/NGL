@@ -116,7 +116,11 @@ public class Workflows {
 	}
 	
 	private static void applyRunRules(ContextValidation contextValidation, Run run) {
-		if("F-RG".equals(run.state.code)){
+		if("IP-S".equals(run.state.code)){
+			
+			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),"IP_S_1", run),null);
+			
+		}else if("F-RG".equals(run.state.code)){
 			//update dispatch
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, 
 					DBQuery.is("code", run.code), DBUpdate.set("dispatch", Boolean.TRUE));
