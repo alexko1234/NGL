@@ -45,7 +45,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"header":Messages("containers.table.fromExperimentTypeCodes"),
 			"property":"fromExperimentTypeCodes",
 			//"filter":"codes:'type'",
-			"order":true,
+			"order":false,
 			"position":6,
 			"type":"text",
 			"render":"<span ng-model='value.data.fromExperimentTypeCodes' codes='type'></span>"
@@ -60,7 +60,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 		columns.push({
 			"header":Messages("containers.table.sampleCodes"),
 			"property":"sampleCodes",
-			"order":true,
+			"order":false,
 			"hide":true,
 			"position":9,
 			"type":"text",
@@ -77,7 +77,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 		columns.push({
 			"header":Messages("containers.table.tags"),
 			"property": "contents",
-			"order":true,
+			"order":false,
 			"hide":true,
 			"type":"text",
 			"position":9.1,
@@ -86,7 +86,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 		columns.push({
 					"header":Messages("containers.table.projectCodes"),
 					"property":"projectCodes",
-					"order":true,
+					"order":false,
 					"position":10,
 					"render":"<div list-resize='value.data.projectCodes | unique' ' list-resize-min-size='2'>",
 					"type":"text"
@@ -108,7 +108,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 		columns.push({
 					"header":Messages("containers.table.inputProcessCodes"),
 					"property":"inputProcessCodes",
-					"order":true,
+					"order":false,
 					"type":"text",
 					"position":14,
 					"render":"<div list-resize='value.data.inputProcessCodes | unique' list-resize-min-size='3'>",

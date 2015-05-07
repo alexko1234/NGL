@@ -32,7 +32,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			"header":Messages("containerSupports.table.sampleCodes"),
 			"property":"sampleCodes",
 			"position":5,
-			"order":true,
+			"order":false,
 			"type":"text",
 			"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
 		});
@@ -40,7 +40,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			"header":Messages("containerSupports.table.projectCodes"),
 			"property":"projectCodes",
 			"position":6,
-			"order":true,
+			"order":false,
 			"type":"text"
 		});		
 		columns.push({

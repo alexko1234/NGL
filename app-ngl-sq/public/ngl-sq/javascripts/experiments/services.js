@@ -52,7 +52,7 @@
 							"property":"state.resolutionCodes",
 							//"filter":"codes:'Experiment.resolution'",
 							"render":"<div bt-select ng-model='value.data.state.resolutionCodes' bt-options='valid.code as valid.name for valid in searchService.lists.getResolutions()'  ng-edit=\"false\"></div>",
-							"order":true,
+							"order":false,
 							"hide":true,
 							"position":6,
 							"type":"date"
@@ -68,7 +68,7 @@
 						{
 							"header":Messages("containers.table.sampleCodes"),
 							"property":"sampleCodes",
-							"order":true,
+							"order":false,
 							"hide":true,
 							"position":8,
 							"type":"text",
@@ -77,7 +77,7 @@
 						{
 							"header":Messages("experiments.table.projectCodes"),
 							"property":"projectCodes",
-							"order":true,
+							"order":false,
 							"hide":true,
 							"position":9,
 							"type":"text"

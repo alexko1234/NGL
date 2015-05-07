@@ -22,7 +22,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"header":Messages("containers.table.fromExperimentTypeCodes"),
 			"property":"fromExperimentTypeCodes",
 			"filter":"codes:'type'",
-			"order":true,
+			"order":false,
 			"type":"text"
 		},
 		{
@@ -41,14 +41,14 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		{
 			"header":Messages("containers.table.sampleCodes"),
 			"property":"sampleCodes",
-			"order":true,
+			"order":false,
 			"type":"text",
 			"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
 		},
 		{
 			"header":Messages("containers.table.projectCodes"),
 			"property":"projectCodes",
-			"order":true,
+			"order":false,
 			"type":"text"
 		},
 		{
