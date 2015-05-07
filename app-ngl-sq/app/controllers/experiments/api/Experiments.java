@@ -505,7 +505,7 @@ public class Experiments extends CommonController{
 		}else{
 			if(null == experimentsSearch.orderBy)experimentsSearch.orderBy = "code";
 			if(null == experimentsSearch.orderSense)experimentsSearch.orderSense = 0;
-			MongoDBResult<Experiment> results = mongoDBFinder(InstanceConstants.EXPERIMENT_COLL_NAME, experimentsSearch, Experiment.class, query);
+			MongoDBResult<Experiment> results = mongoDBFinder(InstanceConstants.EXPERIMENT_COLL_NAME, experimentsSearch, Experiment.class, query, keys);
 			List<Experiment> experiments = results.toList();
 			return ok(Json.toJson(experiments));
 		}

@@ -320,12 +320,13 @@ public class Processes extends CommonController{
 		ProcessesSearchForm processesSearch = filledFormQueryString(ProcessesSearchForm.class);
 
 		DBQuery.Query query = getQuery(processesSearch);
+		BasicDBObject keys = getKeys(processesSearch);
+		
 		if(processesSearch.datatable){
-			MongoDBResult<Process> results =  mongoDBFinder(InstanceConstants.PROCESS_COLL_NAME, processesSearch, Process.class, query); 
+			MongoDBResult<Process> results =  mongoDBFinder(InstanceConstants.PROCESS_COLL_NAME, processesSearch, Process.class, query, keys); 
 			List<Process> processes = results.toList();
 			return ok(Json.toJson(new DatatableResponse<Process>(processes, results.count())));
 		}else if(processesSearch.list){
-			BasicDBObject keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("code", 1);
 
@@ -339,7 +340,7 @@ public class Processes extends CommonController{
 
 			return ok(Json.toJson(los));
 		}else{
-			MongoDBResult<Process> results = mongoDBFinder(InstanceConstants.PROCESS_COLL_NAME, processesSearch, Process.class, query); 
+			MongoDBResult<Process> results = mongoDBFinder(InstanceConstants.PROCESS_COLL_NAME, processesSearch, Process.class, query, keys); 
 			List<Process> processes = results.toList();
 			return ok(Json.toJson(processes));
 		}

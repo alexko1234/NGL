@@ -62,14 +62,15 @@ public class ContainerSupports extends CommonController {
 		ContainerSupportsSearchForm supportsSearch = filledFormQueryString(ContainerSupportsSearchForm.class);
 
 		DBQuery.Query query = getQuery(supportsSearch);
+		BasicDBObject keys = getKeys(supportsSearch);
+		
 		if(query != null){
 			if(supportsSearch.datatable){
-				MongoDBResult<ContainerSupport> results =  mongoDBFinder(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, supportsSearch, ContainerSupport.class, query); 
+				MongoDBResult<ContainerSupport> results =  mongoDBFinder(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, supportsSearch, ContainerSupport.class, query, keys); 
 				List<ContainerSupport> supports = results.toList();
 
 				return ok(Json.toJson(new DatatableResponse<ContainerSupport>(supports, results.count())));
 			}else if(supportsSearch.list){
-				BasicDBObject keys = new BasicDBObject();
 				keys.put("_id", 0);//Don't need the _id field
 				keys.put("code", 1);
 
@@ -83,7 +84,7 @@ public class ContainerSupports extends CommonController {
 
 				return ok(Json.toJson(los));
 			}else{
-				MongoDBResult<ContainerSupport> results =  mongoDBFinder(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, supportsSearch, ContainerSupport.class, query); 
+				MongoDBResult<ContainerSupport> results =  mongoDBFinder(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, supportsSearch, ContainerSupport.class, query, keys); 
 				List<ContainerSupport> supports = results.toList();
 
 				return ok(Json.toJson(supports));

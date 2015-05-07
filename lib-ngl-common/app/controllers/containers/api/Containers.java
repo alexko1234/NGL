@@ -126,14 +126,15 @@ public class Containers extends CommonController {
 		//Form<ContainersSearchForm> containerFilledForm = filledFormQueryString(containerForm,ContainersSearchForm.class);
 		ContainersSearchForm containersSearch = filledFormQueryString(ContainersSearchForm.class);
 		DBQuery.Query query = getQuery(containersSearch);
+		BasicDBObject keys = getKeys(containersSearch);
+		
 		if(query != null){
 			if(containersSearch.datatable){
-				MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query);
+				MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
 				List<Container> containers = results.toList();
 
 				return ok(Json.toJson(new DatatableResponse<Container>(containers, results.count())));
 			}else if(containersSearch.count){
-				BasicDBObject keys = new BasicDBObject();
 				keys.put("_id", 0);//Don't need the _id field
 				keys.put("code", 1);
 				MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);							
@@ -142,10 +143,6 @@ public class Containers extends CommonController {
 				m.put("result", count);
 				return ok(Json.toJson(m));
 			}else if(containersSearch.list){
-				BasicDBObject keys = new BasicDBObject();
-				keys.put("_id", 0);//Don't need the _id field
-				keys.put("code", 1);
-
 				MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
 				List<Container> containers = results.toList();
 

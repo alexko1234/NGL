@@ -206,7 +206,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 
 			updateForm : function(){
 				//this.form.includes = [];
-				this.form.includes = ["default"];
+				this.form.includes = ["default","support.code","code","support.categoryCode","support.column","support.line","fromExperimentTypeCodes","sampleCodes.length","sampleCodes","contents.length","contents","traceInformation","projectCodes", "inputProcessCodes", "valuation.valid", "state.code"];
 				for(var i = 0 ; i < this.selectedAddColumns.length ; i++){
 					//remove .value if present to manage correctly properties (single, list, etc.)
 					if(this.selectedAddColumns[i].queryIncludeKeys && this.selectedAddColumns[i].queryIncludeKeys.length > 0){
@@ -274,7 +274,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 
 					if(_form.fromDate)jsonSearch.fromDate = moment(_form.fromDate, Messages("date.format").toUpperCase()).valueOf();
 					if(_form.toDate)jsonSearch.toDate = moment(_form.toDate, Messages("date.format").toUpperCase()).valueOf();
-
+					jsonSearch.includes = _form.includes;
 					mainService.setForm(_form);
 
 					return jsonSearch;

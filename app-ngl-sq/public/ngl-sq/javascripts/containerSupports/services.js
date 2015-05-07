@@ -132,6 +132,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			datatable:undefined,
 			isRouteParam:false,
 			lists : lists,
+			selectedAddColumns:[],
 			setRouteParams:function($routeParams){
 				var count = 0;
 				for(var p in $routeParams){
@@ -145,7 +146,17 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			},
 
 			updateForm : function(){
-
+				//this.form.includes = [];
+				this.form.includes = ["default","code","categoryCode","column","line","sampleCodes.length","sampleCodes","traceInformation","projectCodes", "valuation.valid", "state.code"];
+				for(var i = 0 ; i < this.selectedAddColumns.length ; i++){
+					//remove .value if present to manage correctly properties (single, list, etc.)
+					if(this.selectedAddColumns[i].queryIncludeKeys && this.selectedAddColumns[i].queryIncludeKeys.length > 0){
+						this.form.includes = this.form.includes.concat(this.selectedAddColumns[i].queryIncludeKeys);
+					}else{
+						this.form.includes.push(this.selectedAddColumns[i].property.replace('.value',''));	
+					}
+					
+				}
 			},
 			convertForm : function(){
 				var _form = angular.copy(this.form);
@@ -192,8 +203,10 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 					if(_form.fromDate)jsonSearch.fromDate = moment(_form.fromDate, Messages("date.format").toUpperCase()).valueOf();
 					if(_form.toDate)jsonSearch.toDate = moment(_form.toDate, Messages("date.format").toUpperCase()).valueOf();
 
+					jsonSearch.includes = _form.includes;
+					
 					mainService.setForm(_form);
-
+					
 					return jsonSearch;
 				}else{
 					this.datatable.setData({},0);
