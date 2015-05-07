@@ -60,3 +60,16 @@ input[type="checkbox"] {
 	  background-color: #f1f1f1;
 }
 
+/*list-resize directive*/
+.small-litte-icone-transparent {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	padding-right: 0px;
+	border-top-width: 0px;
+	border-bottom-width: 0px;
+	border-left-width: 0px;
+	border-right-width: 0px;
+	height: 14px;
+	background: transparent
+}
