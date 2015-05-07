@@ -219,7 +219,6 @@
 				lists.refresh.projects();
 				lists.refresh.states({objectTypeCode:"ReadSet", display:true},'statetrue');
 				lists.refresh.states({objectTypeCode:"ReadSet"});			
-				lists.refresh.resolutions({objectTypeCode:"ReadSet"});
 				lists.refresh.valuationCriterias({objectTypeCode:"ReadSet"});
 				lists.refresh.types({objectTypeCode:"Run"});
 				lists.refresh.runs();
@@ -230,6 +229,7 @@
 				lists.refresh.filterConfigs({pageCodes:["readsets-addfilters"]}, "readsets-addfilters");
 				
 				lists.refresh.resolutions({objectTypeCode:"ReadSet"});
+				
 				lists.refresh.users();
 				isInit=true;
 			}
@@ -385,6 +385,7 @@
 					}
 					this.search();
 				},	
+				
 				resetDatatableColumns:function(){
 					this.initAdditionalColumns();
 					this.datatable.setColumnsConfig(this.getDefaultColumns());

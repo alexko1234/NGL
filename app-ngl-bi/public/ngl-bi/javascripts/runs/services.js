@@ -1,60 +1,97 @@
  "use strict";
  
  angular.module('ngl-bi.RunsServices', []).
-	factory('searchService', ['$http', 'mainService', 'lists', function($http, mainService, lists){
+	factory('runSearchService', ['$http', 'mainService', 'lists','datatable', function($http, mainService, lists, datatable){
+		
+		var getDefaultColumns = function(){
+				var columns = [
+							    {  	property:"code",
+							    	header: "runs.code",
+							    	type :"String",
+							    	order:true,
+							    	position:1
+								},
+								{	property:"typeCode",
+									header: "runs.typeCode",
+									type :"String",
+							    	order:true,
+							    	position:2
+								},
+								{	property:"sequencingStartDate",
+									header: "runs.sequencingStartDate",
+									type :"Date",
+							    	order:true,
+							    	position:3
+								},
+								{	property:"state.historical|filter:'F-RG'|get:'date'",
+									header: "runs.endOfRG",
+									type :"date",
+							    	order:true,
+							    	position:4
+								},
+								{	property:"state.code",
+									filter:"codes:'state'",					
+									header: "runs.stateCode",
+									type :"String",
+									edit:true,
+									order:true,
+									choiceInList:true,
+							    	listStyle:'bt-select',
+							    	possibleValues:'searchService.lists.getStates()',
+							    	position:5	
+								},
+								{	property:"valuation.valid",
+									filter:"codes:'valuation'",					
+									header: "runs.valuation.valid",
+									type :"String",
+							    	order:true,
+							    	position:100
+								},
+								{	property:"valuation.resolutionCodes",
+									header: "runs.valuation.resolutions",
+									render:'<div bt-select ng-model="value.data.valuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
+									type :"text",
+									hide:true,
+							    	position:101
+								} 
+							];						
+				return columns;
+			
+		}
+		
+		
+		var isInit = false;
+		
+		var initListService = function(){
+			if(!isInit){
+				lists.refresh.projects();
+				lists.refresh.states({objectTypeCode:"Run", display:true},'statetrue');				
+				lists.refresh.states({objectTypeCode:"Run"});							
+				lists.refresh.types({objectTypeCode:"Run"});
+				lists.refresh.resolutions({objectTypeCode:"Run"});
+				lists.refresh.runs();
+				lists.refresh.instruments({categoryCodes:["illumina-sequencer","extseq"]});
+				lists.refresh.users();
+				lists.refresh.filterConfigs({pageCodes:["runs-addfilters"]}, "runs-addfilters");
+				lists.refresh.reportConfigs({pageCodes:["runs-addcolumns"]}, "runs-addcolumns");
+				
+				searchService.lists.refresh.valuationCriterias({objectTypeCode:"Run",orderBy:'name'});
+				
+				
+				isInit=true;
+			}
+		};
+		
 		
 		var searchService = {
-				additionalFilters:[],
-				getColumns:function(){
-					var columns = [
-								    {  	property:"code",
-								    	header: "runs.code",
-								    	type :"String",
-								    	order:true
-									},
-									{	property:"typeCode",
-										header: "runs.typeCode",
-										type :"String",
-								    	order:true
-									},
-									{	property:"sequencingStartDate",
-										header: "runs.sequencingStartDate",
-										type :"Date",
-								    	order:true
-									},
-									{	property:"state.historical|filter:'F-RG'|get:'date'",
-										header: "runs.endOfRG",
-										type :"date",
-								    	order:true
-									},
-									{	property:"state.code",
-										filter:"codes:'state'",					
-										header: "runs.stateCode",
-										type :"String",
-										edit:true,
-										order:true,
-										choiceInList:true,
-								    	listStyle:'bt-select',
-								    	possibleValues:'searchService.lists.getStates()'	
-									},
-									{	property:"valuation.valid",
-										filter:"codes:'valuation'",					
-										header: "runs.valuation.valid",
-										type :"String",
-								    	order:true
-									},
-									{	property:"valuation.resolutionCodes",
-										header: "runs.valuation.resolutions",
-										render:'<div bt-select ng-model="value.data.valuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
-										type :"text",
-										hide:true
-									} 
-								];						
-					return columns;
-				},
+				getColumns:getDefaultColumns,
+				datatable:undefined,
 				isRouteParam:false,
 				lists : lists,
 				form : undefined,
+				additionalColumns:[],
+				additionalFilters:[],
+				selectedAddColumns:[],
 				
 				setRouteParams:function($routeParams){
 					var count = 0;
@@ -83,20 +120,23 @@
 					if(_form.toDate)_form.toDate = moment(_form.toDate, Messages("date.format").toUpperCase()).valueOf();		
 					return _form
 				},
+				
+				resetForm : function(){
+					this.form = {};
+				},
+				
+				
+				
+				search : function(){
+					this.updateForm();
+					mainService.setForm(this.form);
+					this.datatable.search(this.convertForm());
+				},
+				
 				refreshSamples : function(){
 					if(this.form.projectCodes && this.form.projectCodes.length > 0){
 						this.lists.refresh.samples({projectCodes:this.form.projectCodes});
 					}
-				},
-				
-				search : function(datatable){
-					this.updateForm();
-					mainService.setForm(this.form);
-					datatable.search(this.convertForm());
-				},
-				
-				reset : function(){
-					this.form = {};
 				},
 				
 				valuationStates : [{code:"IW-V",name:Codes("state.IW-V")}],
@@ -107,7 +147,56 @@
 						return this.lists.get('statetrue');
 					}
 				},
+				initAdditionalColumns:function(){
+					this.additionalColumns=[];
+					this.selectedAddColumns=[];
+					
+					if(lists.get("runs-addcolumns") && lists.get("runs-addcolumns").length === 1){
+						var formColumns = [];
+						var allColumns = angular.copy(lists.get("runs-addcolumns")[0].columns);
+						var nbElementByColumn = Math.ceil(allColumns.length / 5); //5 columns
+						for(var i = 0; i  < 5 && allColumns.length > 0 ; i++){
+							formColumns.push(allColumns.splice(0, nbElementByColumn));	    								
+						}
+						//complete to 5 five element to have a great design 
+						while(formColumns.length < 5){
+							formColumns.push([]);
+						}
+						this.additionalColumns = formColumns;
+					}
+				},
 				
+				getAddColumnsToForm : function(){
+					if(this.additionalColumns.length === 0){
+						this.initAdditionalColumns();
+					}
+					return this.additionalColumns;									
+				},
+				
+				addColumnsToDatatable:function(){
+					//this.reportingConfiguration = undefined;
+					//this.reportingConfigurationCode = undefined;
+					
+					this.selectedAddColumns = [];
+					for(var i = 0 ; i < this.additionalColumns.length ; i++){
+						for(var j = 0; j < this.additionalColumns[i].length; j++){
+							if(this.additionalColumns[i][j].select){
+								this.selectedAddColumns.push(this.additionalColumns[i][j]);
+							}
+						}
+					}
+					if(this.reportingConfigurationCode){
+						this.datatable.setColumnsConfig(this.reportingConfiguration.columns.concat(this.selectedAddColumns));
+					}else{
+						this.datatable.setColumnsConfig(this.getColumns().concat(this.selectedAddColumns));						
+					}
+					this.search();
+				},
+				resetDatatableColumns:function(){
+					this.initAdditionalColumns();
+					this.datatable.setColumnsConfig(this.getColumns());
+					this.search();
+				},
 				initAdditionalFilters:function(){
 					this.additionalFilters=[];
 					if(lists.get("runs-addfilters") && lists.get("runs-addfilters").length === 1){
@@ -126,38 +215,41 @@
 					}
 				},
 				
+
 				getAddFiltersToForm : function(){
 					if(this.additionalFilters.length === 0){
 						this.initAdditionalFilters();
 					}
 					return this.additionalFilters;									
 				},
+				/**
+				 * initialise the service
+				 */
+				init : function($routeParams, datatableConfig){
+					initListService();
+					
+					//to avoid to lost the previous search
+					if(datatableConfig && angular.isUndefined(mainService.getDatatable())){
+						searchService.datatable = datatable(datatableConfig);			
+						mainService.setDatatable(searchService.datatable);
+						searchService.datatable.setColumnsConfig(getDefaultColumns());
+					}else if(angular.isDefined(mainService.getDatatable())){
+						searchService.datatable = mainService.getDatatable();
+					}
+					
+					if(angular.isDefined(mainService.getForm())){
+						searchService.form = mainService.getForm();
+					}else{
+						searchService.resetForm();
+					}
+					
+					if(angular.isDefined($routeParams)){
+						this.setRouteParams($routeParams);
+					}
+				}
+				
 		};
-		
-		return function(){
-			
-			searchService.lists.refresh.projects();
-			searchService.lists.refresh.states({objectTypeCode:"Run", display:true},'statetrue');				
-			searchService.lists.refresh.states({objectTypeCode:"Run"});							
-			searchService.lists.refresh.types({objectTypeCode:"Run"});
-			searchService.lists.refresh.resolutions({objectTypeCode:"Run"});
-			searchService.lists.refresh.runs();
-			searchService.lists.refresh.instruments({categoryCodes:["illumina-sequencer","extseq"]});
-			searchService.lists.refresh.users();
-			searchService.lists.refresh.filterConfigs({pageCodes:["runs-addfilters"]}, "runs-addfilters");
-			
-			searchService.lists.refresh.valuationCriterias({objectTypeCode:"Run",orderBy:'name'});
-			
-			
-			
-			if(angular.isDefined(mainService.getForm())){
-				searchService.form = mainService.getForm();
-			}else{
-				searchService.reset();
-			}
-			
-			return searchService;		
-		}
+		return searchService;		
 	}
 ]);
  

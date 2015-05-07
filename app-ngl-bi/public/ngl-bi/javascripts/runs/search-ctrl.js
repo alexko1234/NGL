@@ -1,7 +1,7 @@
 "use strict";
 
-angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'datatable', 'mainService', 'tabService', 'searchService', 
-                                                 function($scope, $routeParams, datatable, mainService, tabService, searchService) {
+angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'mainService', 'tabService', 'runSearchService', 
+                                                 function($scope, $routeParams, mainService, tabService, runSearchService) {
 	var datatableConfig = {
 			order :{mode:'local', by:'sequencingStartDate', reverse:true},
 			search:{
@@ -24,11 +24,11 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 	};
 	
 	$scope.search = function(){
-		$scope.searchService.search($scope.datatable);
+		$scope.searchService.search();
 	};
 	
 	$scope.reset = function(){
-		$scope.searchService.reset();
+		$scope.searchService.resetForm();
 	};
 	
 	if(angular.isUndefined(mainService.getHomePage())){
@@ -37,17 +37,9 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 		tabService.activeTab(0); // desactive le lien !
 	}
 	
-	$scope.searchService = searchService();	
-	$scope.searchService.setRouteParams($routeParams);
+	$scope.searchService = runSearchService;	
+	$scope.searchService.init($routeParams, datatableConfig)
 	
-	//to avoid to lost the previous search
-	if(angular.isUndefined(mainService.getDatatable())){
-		$scope.datatable = datatable(datatableConfig);			
-		mainService.setDatatable($scope.datatable);
-		$scope.datatable.setColumnsConfig($scope.searchService.getColumns());
-	}else{
-		$scope.datatable = mainService.getDatatable();
-	}
 	
 	if($scope.searchService.isRouteParam){
 		$scope.search();
@@ -55,8 +47,8 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 }]);
 
 
-angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParams', 'datatable', 'mainService', 'tabService', 'searchService',
-                                                          function($scope, $routeParams, datatable, mainService, tabService, searchService) {
+angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParams', 'mainService', 'tabService', 'runSearchService',
+                                                          function($scope, $routeParams, mainService, tabService, runSearchService) {
 	var datatableConfig = {
 			order :{mode:'local', by:'sequencingStartDate', reverse:true},
 			search:{
@@ -75,11 +67,11 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParam
 	};
 	
 	$scope.search = function(){
-		$scope.searchService.search($scope.datatable);
+		$scope.searchService.search();
 	};
 	
 	$scope.reset = function(){
-		$scope.searchService.reset();
+		$scope.searchService.resetForm();
 	};
 	
 	
@@ -89,24 +81,15 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParam
 		tabService.activeTab(0); // desactive le lien !
 	}
 	
-	$scope.searchService = searchService();	
-	$scope.searchService.setRouteParams($routeParams);
+	$scope.searchService = runSearchService;	
+	$scope.searchService.init($routeParams, datatableConfig)
 	
-	
-	//to avoid to lost the previous search
-	if(angular.isUndefined(mainService.getDatatable())){
-		$scope.datatable = datatable(datatableConfig);			
-		mainService.setDatatable($scope.datatable);
-		$scope.datatable.setColumnsConfig($scope.searchService.getColumns());
-	}else{
-		$scope.datatable = mainService.getDatatable();
-	}
 	$scope.search();
 	
 }]);
 
-angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 'datatable', 'mainService', 'tabService', 'searchService',
-                                                      function($scope, $routeParams, datatable, mainService, tabService, searchService) {
+angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 'mainService', 'tabService', 'runSearchService',
+                                                      function($scope, $routeParams, mainService, tabService, runSearchService) {
 
 	var datatableConfig = {
 			order :{mode:'local', by:'sequencingStartDate', reverse:true},
@@ -139,11 +122,11 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 
 	};
 	
 	$scope.search = function(){
-		$scope.searchService.search($scope.datatable);
+		$scope.searchService.search();
 	};
 	
 	$scope.reset = function(){
-		$scope.searchService.reset();
+		$scope.searchService.resetForm();
 	};
 	
 	if(angular.isUndefined(mainService.getHomePage())){
@@ -152,17 +135,9 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 
 		tabService.activeTab(0); // desactive le lien !
 	}
 	
-	$scope.searchService = searchService();	
-	$scope.searchService.setRouteParams($routeParams);
+	$scope.searchService = runSearchService;	
+	$scope.searchService.init($routeParams, datatableConfig)
 	
-	//to avoid to lost the previous search
-	if(angular.isUndefined(mainService.getDatatable())){
-		$scope.datatable = datatable(datatableConfig);			
-		mainService.setDatatable($scope.datatable);
-		$scope.datatable.setColumnsConfig($scope.searchService.getColumns());
-	}else{
-		$scope.datatable = mainService.getDatatable();
-	}
 		
 }]);
 
