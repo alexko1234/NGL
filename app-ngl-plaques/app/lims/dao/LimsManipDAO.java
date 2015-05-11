@@ -177,7 +177,7 @@ public class LimsManipDAO {
 
 	public User getUser(Integer id) {
 		Logger.info("pl_PerintUn @perco="+id);
-		User user = this.jdbcTemplate.queryForObject("pl_PerintUn @perco=?", new Object[]{id}, new RowMapper<User>() {
+		List<User> users = this.jdbcTemplate.query("pl_PerintUn @perco=?", new Object[]{id}, new RowMapper<User>() {
 	        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
 	        	User user = new User();
 	        	user.perco = rs.getString("perco");
@@ -185,7 +185,14 @@ public class LimsManipDAO {
 	            return user;
 	        }
 	    });
-		return user;
+		
+		if(users.size() == 1){
+			return users.get(0);
+		}else{
+			return null;
+		}
+		
+		
 	}
 	
 	public List<User> getUsers() {
