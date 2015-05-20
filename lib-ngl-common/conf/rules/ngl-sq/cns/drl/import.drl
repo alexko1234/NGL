@@ -23,7 +23,7 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import java.util.Date;
 import lims.services.ILimsServices;
-import lims.cns.service.LimsServiceCNS;
+import lims.cns.services.LimsServiceCNS;
 import play.api.modules.spring.Spring;
 import models.laboratory.parameter.Index;
 import java.util.regex.Pattern;
