@@ -7,23 +7,19 @@ package controllers.authorisation;
  * 
  */
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
 
 import models.administration.authorisation.Application;
 import models.administration.authorisation.Permission;
 import models.administration.authorisation.Role;
 import models.administration.authorisation.Team;
 import models.administration.authorisation.User;
+import play.Logger;
 import play.mvc.Http.Session;
 
 import com.avaje.ebean.Query;
-
-import controllers.CommonController;
 
 public class PermissionHelper {
 	private static final String COOKIE_SESSION = "NGL_FILTER_USER";
@@ -57,10 +53,13 @@ public class PermissionHelper {
 	 */
 	public static boolean checkPermission(Session ses,  List<String> codePermission, boolean allPermission) {
 		User user = User.find.where().eq("login", ses.get(COOKIE_SESSION)).findUnique();  
+		//Logger.debug("check perm "+codePermission+" / "+user);
 		if(user!=null) {
 			if(!allPermission){
 				for(Role role:user.roles) {
+					//Logger.debug("compare with role "+role.label);
 					for(models.administration.authorisation.Permission perm:role.permissions) {
+						//Logger.debug("compare with perm "+perm.label);
 						for(String permissionAsk:codePermission){
 							if(perm.code.equals(permissionAsk))
 								return true;

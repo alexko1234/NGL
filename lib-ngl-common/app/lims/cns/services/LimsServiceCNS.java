@@ -1,4 +1,4 @@
-package lims.cns;
+package lims.cns.services;
 import javax.sql.DataSource;
 
 import lims.services.ILimsServices;

@@ -2,10 +2,13 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
+->  / common.Routes
+->  / apinglbi.Routes
+->  / apinglsq.Routes
+->  /authentication authentication.Routes
+
 # Home page
 GET     /                           				controllers.main.tpl.Main.home()
-
-
 
 #run tpl
 GET	   	/runs/:homecode/home						controllers.runs.tpl.Runs.home(homecode: java.lang.String)
@@ -15,45 +18,6 @@ GET		/tpl/runs/search/:type						controllers.runs.tpl.Runs.search(type: java.lan
 GET		/tpl/runs/details							controllers.runs.tpl.Runs.details()
 GET		/tpl/runs/lanes/treatments/:code			controllers.runs.tpl.Runs.laneTreatments(code: java.lang.String)
 GET		/tpl/runs/js-routes							controllers.runs.tpl.Runs.javascriptRoutes()
-#run api
-GET    	/api/runs               					controllers.runs.api.Runs.list()
-GET    	/api/runs/:code               				controllers.runs.api.Runs.get(code: java.lang.String)
-HEAD	/api/runs/:code               				controllers.runs.api.Runs.head(code: java.lang.String)
-POST   	/api/runs									controllers.runs.api.Runs.save()
-PUT   	/api/runs/:code 							controllers.runs.api.Runs.update(code: java.lang.String)
-DELETE	/api/runs/:code								controllers.runs.api.Runs.delete(code:java.lang.String)
-
-PUT		/api/runs/batch/state						controllers.runs.api.State.updateBatch()
-PUT		/api/runs/:code/state						controllers.runs.api.State.update(code:java.lang.String)
-GET		/api/runs/:code/state						controllers.runs.api.State.get(code:java.lang.String)
-GET		/api/runs/:code/state/historical			controllers.runs.api.State.historical(code:java.lang.String)
-
-PUT		/api/runs/:code/valuation		 			controllers.runs.api.Runs.valuation(code:java.lang.String)
-PUT		/api/runs/:code/apply-rules/:codeRules		controllers.runs.api.Runs.applyRules(code:java.lang.String, codeRules:java.lang.String)
-
-GET    	/api/runs/:code/treatments					controllers.runs.api.RunTreatments.list(code: java.lang.String)
-GET    	/api/runs/:code/treatments/:trCode			controllers.runs.api.RunTreatments.get(code: java.lang.String, trCode: java.lang.String)
-HEAD   	/api/runs/:code/treatments/:trCode			controllers.runs.api.RunTreatments.head(code: java.lang.String, trCode: java.lang.String)
-POST   	/api/runs/:code/treatments					controllers.runs.api.RunTreatments.save(code: java.lang.String)
-PUT   	/api/runs/:code/treatments/:trCode			controllers.runs.api.RunTreatments.update(code: java.lang.String, trCode: java.lang.String)
-DELETE 	/api/runs/:code/treatments/:trCode			controllers.runs.api.RunTreatments.delete(code: java.lang.String, trCode: java.lang.String)
-
-#run lane
-GET	   	/api/runs/:code/lanes								controllers.runs.api.Lanes.list(code: java.lang.String)
-GET	   	/api/runs/:code/lanes/:number						controllers.runs.api.Lanes.get(code: java.lang.String, number:java.lang.Integer)
-HEAD   	/api/runs/:code/lanes/:number						controllers.runs.api.Lanes.head(code: java.lang.String, number:java.lang.Integer)
-POST  	/api/runs/:code/lanes								controllers.runs.api.Lanes.save(code: java.lang.String)
-PUT  	/api/runs/:code/lanes/:number						controllers.runs.api.Lanes.update(code: java.lang.String, number:java.lang.Integer)
-DELETE 	/api/runs/:code/lanes/:number						controllers.runs.api.Lanes.delete(code: java.lang.String, number:java.lang.Integer)
-DELETE	/api/runs/:code/lanes								controllers.runs.api.Lanes.deleteByRunCode(code: java.lang.String)
-PUT		/api/runs/:code/lanes/:number/valuation				controllers.runs.api.Lanes.valuation(code:java.lang.String, number:java.lang.Integer)
-
-GET		/api/runs/:code/lanes/:laneNumber/treatments				controllers.runs.api.LaneTreatments.list(code: java.lang.String, laneNumber:java.lang.Integer)
-GET		/api/runs/:code/lanes/:laneNumber/treatments/:trCode		controllers.runs.api.LaneTreatments.get(code: java.lang.String, laneNumber:java.lang.Integer, trCode: java.lang.String)
-HEAD	/api/runs/:code/lanes/:laneNumber/treatments/:trCode		controllers.runs.api.LaneTreatments.head(code: java.lang.String, laneNumber:java.lang.Integer, trCode: java.lang.String)
-POST	/api/runs/:code/lanes/:laneNumber/treatments				controllers.runs.api.LaneTreatments.save(code: java.lang.String, laneNumber:java.lang.Integer)
-PUT		/api/runs/:code/lanes/:laneNumber/treatments/:trCode		controllers.runs.api.LaneTreatments.update(code: java.lang.String, laneNumber:java.lang.Integer, trCode: java.lang.String)
-DELETE	/api/runs/:code/lanes/:laneNumber/treatments/:trCode		controllers.runs.api.LaneTreatments.delete(code: java.lang.String, laneNumber:java.lang.Integer, trCode: java.lang.String)
 
 #readset
 GET	   	/readsets/:homecode/home				controllers.readsets.tpl.ReadSets.home(homecode: java.lang.String)
@@ -63,41 +27,9 @@ GET	   	/readsets/:code/*other					controllers.readsets.tpl.ReadSets.other(code:
 GET		/tpl/readsets/search					controllers.readsets.tpl.ReadSets.search()
 GET		/tpl/readsets/details					controllers.readsets.tpl.ReadSets.details()
 GET		/tpl/readsets/details-print-view		controllers.readsets.tpl.ReadSets.detailsPrintView()
-
 GET		/tpl/readsets/treatments/:code			controllers.readsets.tpl.ReadSets.treatments(code: java.lang.String, media: java.lang.String ?= "screen")
-
 GET		/tpl/readsets/js-routes					controllers.readsets.tpl.ReadSets.javascriptRoutes()
 
-GET    	/api/readsets	                 			controllers.readsets.api.ReadSets.list()
-GET	   	/api/readsets/:code							controllers.readsets.api.ReadSets.get(code)
-HEAD   	/api/readsets/:code							controllers.readsets.api.ReadSets.head(code)
-POST 	/api/readsets								controllers.readsets.api.ReadSets.save()
-PUT    	/api/readsets/:code							controllers.readsets.api.ReadSets.update(code)
-DELETE	/api/readsets/:code							controllers.readsets.api.ReadSets.delete(code: java.lang.String)
-DELETE	/api/runs/:code/readsets					controllers.readsets.api.ReadSets.deleteByRunCode(code: java.lang.String)
-
-PUT		/api/readsets/batch/state					controllers.readsets.api.ReadSets.stateBatch()
-PUT		/api/readsets/:code/state					controllers.readsets.api.ReadSets.state(code:java.lang.String)
-PUT		/api/readsets/batch/valuation		 		controllers.readsets.api.ReadSets.valuationBatch()
-PUT		/api/readsets/:code/valuation		 		controllers.readsets.api.ReadSets.valuation(code:java.lang.String)
-PUT     /api/readsets/batch/properties				controllers.readsets.api.ReadSets.propertiesBatch()
-PUT     /api/readsets/:code/properties				controllers.readsets.api.ReadSets.properties(code: java.lang.String)
-
-GET		/api/readsets/:code/treatments				controllers.readsets.api.ReadSetTreatments.list(code: java.lang.String)
-GET		/api/readsets/:code/treatments/:trCode		controllers.readsets.api.ReadSetTreatments.get(code: java.lang.String, trCode: java.lang.String)
-HEAD	/api/readsets/:code/treatments/:trCode		controllers.readsets.api.ReadSetTreatments.head(code: java.lang.String, trCode: java.lang.String)
-POST	/api/readsets/:code/treatments				controllers.readsets.api.ReadSetTreatments.save(code: java.lang.String)
-PUT		/api/readsets/:code/treatments/:trCode		controllers.readsets.api.ReadSetTreatments.update(code: java.lang.String, trCode: java.lang.String)
-DELETE	/api/readsets/:code/treatments/:trCode		controllers.readsets.api.ReadSetTreatments.delete(code: java.lang.String, trCode: java.lang.String)
-
-#readset file
-GET     /api/readsets/:code/files									controllers.readsets.api.Files.list(code: java.lang.String)
-GET     /api/readsets/:code/files/:fullname							controllers.readsets.api.Files.get(code: java.lang.String, fullname: java.lang.String)
-HEAD    /api/readsets/:code/files/:fullname							controllers.readsets.api.Files.head(code: java.lang.String, fullname: java.lang.String)
-POST  	/api/readsets/:code/files									controllers.readsets.api.Files.save(code: java.lang.String)
-PUT     /api/readsets/:code/files/:fullname							controllers.readsets.api.Files.update(code: java.lang.String, fullname: java.lang.String)
-DELETE  /api/readsets/:code/files/:fullname							controllers.readsets.api.Files.delete(code: java.lang.String, fullname: java.lang.String)
-DELETE	/api/runs/:code/files										controllers.readsets.api.Files.deleteByRunCode(code: java.lang.String)
 
 #analyses
 GET	   	/analyses/:homecode/home					controllers.analyses.tpl.Analyses.home(homecode: java.lang.String)
@@ -108,112 +40,11 @@ GET		/tpl/analyses/details						controllers.analyses.tpl.Analyses.details()
 GET		/tpl/analyses/treatments/:code				controllers.analyses.tpl.Analyses.treatments(code: java.lang.String)
 GET		/tpl/analyses/js-routes						controllers.analyses.tpl.Analyses.javascriptRoutes()
 
-GET    	/api/analyses	                 			@controllers.analyses.api.Analyses.list()
-GET	   	/api/analyses/:code							@controllers.analyses.api.Analyses.get(code)
-HEAD   	/api/analyses/:code							@controllers.analyses.api.Analyses.head(code)
-POST 	/api/analyses								@controllers.analyses.api.Analyses.save()
-PUT    	/api/analyses/:code							@controllers.analyses.api.Analyses.update(code)
-DELETE	/api/analyses/:code							@controllers.analyses.api.Analyses.delete(code: java.lang.String)
-
-PUT		/api/analyses/batch/state					@controllers.analyses.api.Analyses.stateBatch()
-PUT		/api/analyses/:code/state					@controllers.analyses.api.Analyses.state(code:java.lang.String)
-PUT		/api/analyses/batch/valuation		 		@controllers.analyses.api.Analyses.valuationBatch()
-PUT		/api/analyses/:code/valuation		 		@controllers.analyses.api.Analyses.valuation(code:java.lang.String)
-PUT     /api/analyses/batch/properties				@controllers.analyses.api.Analyses.propertiesBatch()
-PUT     /api/analyses/:code/properties				@controllers.analyses.api.Analyses.properties(code: java.lang.String)
-PUT		/api/analyses/:code/apply-rules/:codeRules	@controllers.analyses.api.Analyses.applyRules(code: java.lang.String, codeRules: java.lang.String)
-
-GET		/api/analyses/:code/treatments				@controllers.analyses.api.AnalysisTreatments.list(code: java.lang.String)
-GET		/api/analyses/:code/treatments/:trCode		@controllers.analyses.api.AnalysisTreatments.get(code: java.lang.String, trCode: java.lang.String)
-HEAD	/api/analyses/:code/treatments/:trCode		@controllers.analyses.api.AnalysisTreatments.head(code: java.lang.String, trCode: java.lang.String)
-POST	/api/analyses/:code/treatments				@controllers.analyses.api.AnalysisTreatments.save(code: java.lang.String)
-PUT		/api/analyses/:code/treatments/:trCode		@controllers.analyses.api.AnalysisTreatments.update(code: java.lang.String, trCode: java.lang.String)
-DELETE	/api/analyses/:code/treatments/:trCode		@controllers.analyses.api.AnalysisTreatments.delete(code: java.lang.String, trCode: java.lang.String)
-
-#analyses file
-GET     /api/analyses/:code/files					@controllers.analyses.api.Files.list(code: java.lang.String)
-GET     /api/analyses/:code/files/*fullname			@controllers.analyses.api.Files.get(code: java.lang.String, fullname: java.lang.String)
-HEAD    /api/analyses/:code/files/*fullname			@controllers.analyses.api.Files.head(code: java.lang.String, fullname: java.lang.String)
-POST  	/api/analyses/:code/files					@controllers.analyses.api.Files.save(code: java.lang.String)
-PUT     /api/analyses/:code/files/*fullname			@controllers.analyses.api.Files.update(code: java.lang.String, fullname: java.lang.String)
-DELETE  /api/analyses/:code/files/*fullname			@controllers.analyses.api.Files.delete(code: java.lang.String, fullname: java.lang.String)
-
-#reporting configuration
-GET    	/api/reporting/configs    	           			controllers.reporting.api.ReportingConfigurations.list()
-GET	   	/api/reporting/configs/:code					controllers.reporting.api.ReportingConfigurations.get(code)
-POST 	/api/reporting/configs							controllers.reporting.api.ReportingConfigurations.save()
-PUT    	/api/reporting/configs/:code					controllers.reporting.api.ReportingConfigurations.update(code)
-DELETE	/api/reporting/configs/:code					controllers.reporting.api.ReportingConfigurations.delete(code: java.lang.String)
-
-GET    	/api/reporting/filters    	           			@controllers.reporting.api.FilteringConfigurations.list()
-GET	   	/api/reporting/filters/:code					@controllers.reporting.api.FilteringConfigurations.get(code)
-POST 	/api/reporting/filters							@controllers.reporting.api.FilteringConfigurations.save()
-PUT    	/api/reporting/filters/:code					@controllers.reporting.api.FilteringConfigurations.update(code)
-DELETE	/api/reporting/filters/:code					@controllers.reporting.api.FilteringConfigurations.delete(code: java.lang.String)
-
-
-#valuation configuration
-GET    	/api/valuation/criterias    	        		controllers.valuation.api.ValuationCriterias.list()
-GET	   	/api/valuation/criterias/:code					controllers.valuation.api.ValuationCriterias.get(code)
-POST 	/api/valuation/criterias						controllers.valuation.api.ValuationCriterias.save()
-PUT    	/api/valuation/criterias/:code					controllers.valuation.api.ValuationCriterias.update(code)
-DELETE	/api/valuation/criterias/:code					controllers.valuation.api.ValuationCriterias.delete(code: java.lang.String)
-
 #archive tpl
 GET	   	/archives/:homecode/home					controllers.archives.tpl.ReadSets.home(homecode: java.lang.String)
 GET	   	/archives/:code								controllers.archives.tpl.ReadSets.get(code: java.lang.String)
 GET		/tpl/archives/search						controllers.archives.tpl.ReadSets.search()
 GET		/tpl/archives/js-routes						controllers.archives.tpl.ReadSets.javascriptRoutes()
-#archive api
-PUT	   	/api/archives/readsets/:readSetCode			controllers.archives.api.ReadSets.save(readSetCode: java.lang.String)
-GET	   	/api/archives/readsets						controllers.archives.api.ReadSets.list() 
-
-
-#treatmenttype
-GET		/api/treatment-types						controllers.treatmenttypes.api.TreatmentTypes.list()
-GET		/api/treatment-types/:code					controllers.treatmenttypes.api.TreatmentTypes.get(code: java.lang.String)
-
-#alerts
-GET    	/api/alerts			               			controllers.alerts.api.Alerts.list()
-GET    	/api/alerts/:code               			controllers.alerts.api.Alerts.get(code: java.lang.String)
-HEAD	/api/alerts/:code               			controllers.alerts.api.Alerts.head(code: java.lang.String)
-
-#Common
-GET		/api/commons/states							controllers.commons.api.States.list()
-GET		/api/commons/states-hierarchy				controllers.commons.api.StatesHierarchy.list()
-GET		/api/commons/states/:code					controllers.commons.api.States.get(code: java.lang.String)
-GET		/api/commons/users							controllers.commons.api.Users.list()
-
-GET		/api/commons/types							controllers.commons.api.CommonInfoTypes.list()
-
-#list
-GET		/api/resolutions  							@controllers.resolutions.api.Resolutions.list()
-
-#projects
-GET		/api/projects								@controllers.projects.api.Projects.list()
-GET		/api/projects/:code							@controllers.projects.api.Projects.get(code: java.lang.String)
-
-#instruments
-GET		/api/instruments							controllers.instruments.api.Instruments.list()
-GET		/api/instruments/:code						controllers.instruments.api.Instruments.get(code: java.lang.String)
-PUT		/api/instruments/:code						controllers.instruments.api.Instruments.update(code: java.lang.String)
-
-
-#samples
-GET		/api/samples								controllers.samples.api.Samples.list()
-GET		/api/samples/:code							controllers.samples.api.Samples.get(code: java.lang.String)
-
-
-#containers api
-GET		/api/containers								controllers.containers.api.Containers.list()
-GET		/api/containers/:code						controllers.containers.api.Containers.get(code:java.lang.String)
-HEAD	/api/containers/:code						controllers.containers.api.Containers.head(code:java.lang.String)
-
-#supports api
-GET		/api/supports								controllers.containers.api.ContainerSupports.list()
-GET		/api/supports/:code							controllers.containers.api.ContainerSupports.get(code:java.lang.String)
-HEAD	/api/supports/:code							controllers.containers.api.ContainerSupports.head(code:java.lang.String)
-
 
 #stats tpl
 GET	   	/stats/:homecode/home						controllers.stats.tpl.Stats.home(homecode: java.lang.String)
@@ -222,29 +53,10 @@ GET		/tpl/stats/:type/config						controllers.stats.tpl.Stats.config(type: java.
 GET		/tpl/stats/:type/show						controllers.stats.tpl.Stats.show(type: java.lang.String)
 GET		/tpl/stats/js-routes						controllers.stats.tpl.Stats.javascriptRoutes()
 
-#stats api
-GET		/api/stats/configs							controllers.stats.api.StatsConfigurations.list()
-GET		/api/stats/configs/:code					controllers.stats.api.StatsConfigurations.get(code)
-POST	/api/stats/configs							controllers.stats.api.StatsConfigurations.save()
-PUT		/api/stats/configs/:code					controllers.stats.api.StatsConfigurations.update(code)
-DELETE	/api/stats/configs/:code					controllers.stats.api.StatsConfigurations.delete(code: java.lang.String)
-
-#parameters
-GET		/api/parameters/:typeCode					controllers.commons.api.Parameters.list(typeCode: java.lang.String)
-GET		/api/parameters/:typeCode/:code				controllers.commons.api.Parameters.get(typeCode: java.lang.String, code: java.lang.String)
-
-
-#value of property definition
-GET		/api/values									controllers.commons.api.Values.list()
-
-
-->  /authentication authentication.Routes
-
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               				controllers.Assets.at(path="/public", file)
 GET     /messages.js                				controllers.main.tpl.Main.jsMessages()
 GET     /codes.js        	        				controllers.main.tpl.Main.jsCodes()
-
+#GET     /api/js-routes.js        	        		controllers.main.tpl.Main.apiJavascriptRoutes()
 
 #migration
 GET		/migrationSampleOnContainer					controllers.migration.MigrationUpdateSampleOnContainer.migration(code: java.lang.String ?= "all")
@@ -254,10 +66,4 @@ GET		/compare-lims-support						controllers.migration.CompareLimsVsNGL.compareSu
 GET		/compare-lims-files							controllers.migration.CompareLimsVsNGL.compareFile(update:Boolean ?=false)
 GET		/migration-fraction							controllers.migration.MigrationFractionRun.migration()
 GET		/migration-process-type-codes				controllers.migration.MigrationLibProcessTypeCodesRun.migration()
-
-#ngs-rg api
-GET		/api/ngsrs/instruments						controllers.ngsrg.lims.LimsInformations.instruments()
-GET		/api/ngsrs/experiments						controllers.ngsrg.lims.LimsInformations.experiments()
-GET		/api/ngsrs/container/:barCode				controllers.ngsrg.lims.LimsInformations.containerSupport(barCode: java.lang.String)
-HEAD	/api/ngsrs/container/:barCode				controllers.ngsrg.lims.LimsInformations.isContainerSupport(barCode: java.lang.String)
 

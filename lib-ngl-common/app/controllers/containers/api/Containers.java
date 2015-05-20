@@ -128,37 +128,35 @@ public class Containers extends CommonController {
 		DBQuery.Query query = getQuery(containersSearch);
 		BasicDBObject keys = getKeys(containersSearch);
 		
-		if(query != null){
-			if(containersSearch.datatable){
-				MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
-				List<Container> containers = results.toList();
+		if(containersSearch.datatable){
+			MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
+			List<Container> containers = results.toList();
 
-				return ok(Json.toJson(new DatatableResponse<Container>(containers, results.count())));
-			}else if(containersSearch.count){
-				keys.put("_id", 0);//Don't need the _id field
-				keys.put("code", 1);
-				MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);							
-				int count = results.count();
-				Map<String, Integer> m = new HashMap<String, Integer>(1);
-				m.put("result", count);
-				return ok(Json.toJson(m));
-			}else if(containersSearch.list){
-				MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
-				List<Container> containers = results.toList();
+			return ok(Json.toJson(new DatatableResponse<Container>(containers, results.count())));
+		}else if(containersSearch.count){
+			keys.put("_id", 0);//Don't need the _id field
+			keys.put("code", 1);
+			MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);							
+			int count = results.count();
+			Map<String, Integer> m = new HashMap<String, Integer>(1);
+			m.put("result", count);
+			return ok(Json.toJson(m));
+		}else if(containersSearch.list){
+			MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
+			List<Container> containers = results.toList();
 
-				List<ListObject> los = new ArrayList<ListObject>();
-				for(Container p: containers){
-					los.add(new ListObject(p.code, p.code));
-				}
-
-				return ok(Json.toJson(los));
-			}else{
-				List<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, query).toList();
-
-				return ok(Json.toJson(results));
+			List<ListObject> los = new ArrayList<ListObject>();
+			for(Container p: containers){
+				los.add(new ListObject(p.code, p.code));
 			}
+
+			return ok(Json.toJson(los));
+		}else{
+			List<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, query).toList();
+
+			return ok(Json.toJson(results));
 		}
-		return Results.ok("{}");
+				
 	}
 
 

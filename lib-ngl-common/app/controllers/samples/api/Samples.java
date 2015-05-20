@@ -14,6 +14,7 @@ import models.utils.InstanceConstants;
 import models.utils.ListObject;
 
 import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -67,7 +68,6 @@ public class Samples extends CommonController{
 		SamplesSearchForm samplesSearch = sampleFilledForm.get();
 
 		DBQuery.Query query = getQuery(samplesSearch);
-		if(query!=null){
 		if(samplesSearch.datatable){
 			MongoDBResult<Sample> results = mongoDBFinder(InstanceConstants.SAMPLE_COLL_NAME, samplesSearch, Sample.class, query);
 			List<Sample> samples = results.toList();
@@ -91,9 +91,7 @@ public class Samples extends CommonController{
 			MongoDBResult<Sample> results = mongoDBFinder(InstanceConstants.SAMPLE_COLL_NAME, samplesSearch, Sample.class, query);
 			List<Sample> samples = results.toList();
 			return Results.ok(Json.toJson(samples));
-		}
-		}
-		return Results.ok("{}");
+		}		
 	}
 
 	/**
@@ -102,6 +100,8 @@ public class Samples extends CommonController{
 	 * @return
 	 */
 	private static DBQuery.Query getQuery(SamplesSearchForm samplesSearch) {
+		Query query = DBQuery.empty();
+		
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
 		if(StringUtils.isNotBlank(samplesSearch.projectCode)){
 			queryElts.add(DBQuery.in("projectCodes", samplesSearch.projectCode));
@@ -111,6 +111,10 @@ public class Samples extends CommonController{
 			queryElts.add(DBQuery.in("projectCodes", samplesSearch.projectCodes));
 		}
 
-		return DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
+		if(queryElts.size() > 0){
+			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
+		}
+		
+		return query;
 	}
 }

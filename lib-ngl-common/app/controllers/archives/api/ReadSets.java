@@ -45,8 +45,7 @@ public class ReadSets extends CommonController{
 		
 		Integer archive = getArchiveValue();
 		List<Archive> archives = new ArrayList<Archive>();
-
-		MongoDBResult<ReadSet> results =  MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, getQuery(archive), keys);
+		MongoDBResult<ReadSet> results =  MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, getQuery(archive), keys);		
 		return ok(new MongoDBDatatableResponseChunks<ReadSet>(results, r -> convertToArchive(archive, r))).as("application/json");		
 	}
 
@@ -103,7 +102,7 @@ public class ReadSets extends CommonController{
 	public static Result save(String readSetCode) {
 		JsonNode json = request().body().asJson();
 		String archiveId = json.get("archiveId").asText();
-
+		controllers.archives.api.routes.javascript.ReadSets.list();
 		if (archiveId != null) {
 			ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode);
 
@@ -121,6 +120,7 @@ public class ReadSets extends CommonController{
 			else {
 				return notFound();
 			}
+			
 		}
 		else{
 			return badRequest();
