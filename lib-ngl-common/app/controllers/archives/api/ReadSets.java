@@ -101,8 +101,7 @@ public class ReadSets extends CommonController{
 	//@Permission(value={"archiving"})
 	public static Result save(String readSetCode) {
 		JsonNode json = request().body().asJson();
-		String archiveId = json.get("archiveId").asText();
-		controllers.archives.api.routes.javascript.ReadSets.list();
+		String archiveId = json.get("archiveId").asText();		
 		if (archiveId != null) {
 			ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode);
 
