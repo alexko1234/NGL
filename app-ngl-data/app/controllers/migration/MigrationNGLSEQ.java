@@ -56,22 +56,60 @@ public class MigrationNGLSEQ extends CommonController{
 	*/
 		
 		/* NGL-1.6.1*/
-		backupOneCollection(InstanceConstants.CONTAINER_COLL_NAME,Container.class);
+	//	backupOneCollection(InstanceConstants.CONTAINER_COLL_NAME,Container.class);
+	//	backupOneCollection(InstanceConstants.PROCESS_COLL_NAME, Process.class);
 		migrationProcessTypeCodeInContainer();
+		migrationProcessCurrentExperimentTypeCode();
+		
 		return ok("Migration Finish");
 	}
 	
 	
 	
 	private static void migrationProcessTypeCodeInContainer() {
+		
 		List<Process> processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class,DBQuery.is("state.code", "F")).toList();
 		for(Process process:processes){
 			if(process.newContainerSupportCodes!=null){
-				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code",process.newContainerSupportCodes),DBUpdate.unset("processTypeCode"));
+				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code",process.newContainerSupportCodes).notExists("inputProcessCodes"),DBUpdate.unset("processTypeCode"));
 			}
-			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code",process.containerInputCode),DBUpdate.unset("processTypeCode"));
-		}
+			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code",process.containerInputCode).notExists("inputProcessCodes"),DBUpdate.unset("processTypeCode"));
+			
+			if(process.typeCode.equals("opgen-run")){
+				
+				Logger.debug("Processus "+process.code);
+				
+				List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.in("inputProcessCodes", process.code).in("fromExperimentTypeCodes", "opgen-depot")).toList();
 
+				List<String> newContainers=new ArrayList<String>();
+				List<String> experimentCodes=new ArrayList<String>();
+				
+				for(Container container :containers){
+					Logger.debug(" => New Container "+container.support.code);
+					newContainers.add(container.support.code);
+				}
+
+				if(CollectionUtils.isEmpty(newContainers)){
+					Logger.debug(" => Processus sans Container");
+				}
+				else {
+					List<Experiment> exps=MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class,DBQuery.in("outputContainerSupportCodes",newContainers)).toList();
+					if(CollectionUtils.isEmpty(newContainers)){
+						Logger.debug(" => Container sans Experiment");
+					}else {
+						experimentCodes.add(exps.get(0).code);
+					}
+				}
+				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.is("code",process.code), DBUpdate.set("newContainerSupportCodes",newContainers).set("experimentCodes", experimentCodes).set("currentExperimentTypeCode", "opgen-depot"));
+				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.in("support.code", newContainers),DBUpdate.unset("inputProcessCodes").unset("processTypeCode"));
+				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.in("code", process.containerInputCode),DBUpdate.unset("inputProcessCodes").unset("processTypeCode"));
+				
+			}
+		}		
+	}
+	
+	private static void migrationProcessCurrentExperimentTypeCode(){
+		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,DBQuery.is("typeCode","opgen-run").notExists("currentExperimentTypeCode"),DBUpdate.set("currentExperimentTypeCode", "opgen-depot"));
 	}
 
 
