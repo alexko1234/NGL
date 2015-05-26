@@ -368,11 +368,9 @@ public class Runs extends RunsController {
 	public static Result applyRules(String code, String rulesCode){
 		Run run = getRun(code);
 		if(run!=null){
-			//Send run fact
-			ArrayList<Object> facts = new ArrayList<Object>();
-			facts.add(run);
+			//Send run fact			
 			// Outside of an actor and if no reply is needed the second argument can be null
-			rulesActor.tell(new RulesMessage(facts,Play.application().configuration().getString("rules.key"),rulesCode),null);
+			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),rulesCode, run),null);
 		}else
 			return badRequest();
 		
