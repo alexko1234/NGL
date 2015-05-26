@@ -413,12 +413,9 @@ public class Analyses extends DocumentController<Analysis>{
 		Analysis objectInDB = getObject(code);
 		if(objectInDB == null) {
 			return notFound();
-		}
-		//Send analysis fact
-		ArrayList<Object> facts = new ArrayList<Object>();
-		facts.add(objectInDB);
+		}		
 		// Outside of an actor and if no reply is needed the second argument can be null
-		rulesActor.tell(new RulesMessage(facts,Play.application().configuration().getString("rules.key"),rulesCode),null);
+		rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),rulesCode,objectInDB),null);
 		return ok();
 	}
 }

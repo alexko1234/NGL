@@ -196,7 +196,7 @@ public class Migration extends CommonController {
 		ArrayList<Object> facts = new ArrayList<Object>();
 		facts.add(run);
 		// Outside of an actor and if no reply is needed the second argument can be null
-		rulesActor.tell(new RulesMessage(facts,Play.application().configuration().getString("rules.key"),ruleStatRG),null);
+		rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleStatRG,facts),null);
 	}
 
 	
