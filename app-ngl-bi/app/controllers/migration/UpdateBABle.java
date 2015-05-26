@@ -57,7 +57,7 @@ public class UpdateBABle extends CommonController {
 		ArrayList<Object> facts = new ArrayList<Object>();
 		facts.add(analysis);
 		// Outside of an actor and if no reply is needed the second argument can be null
-		rulesActor.tell(new RulesMessage(facts,Play.application().configuration().getString("rules.key"),ruleCode),null);
+		rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleCode, facts),null);
 	}
 	
 	
