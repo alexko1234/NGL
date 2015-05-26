@@ -343,7 +343,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                     },				
 
 			                                     updateForm : function(){					
-			                                    	 this.form.includes = ["default","containerInputCode","sampleCode", "sampleOnInputContainer.properties.tag.value", "typeCode", "state.code", "state.resolutionCodes", "currentExperimentTypeCode", "newContainerSupportCodes", "experimentCodes", "projectCode", "code", "traceInformation.creationDate", "traceInformation.createUser", "properties"];
+			                                    	 this.form.includes = ["default","categoryCode","containerInputCode","sampleCode", "sampleOnInputContainer", "typeCode", "state", "currentExperimentTypeCode", "newContainerSupportCodes", "experimentCodes", "projectCode", "code", "traceInformation.creationDate", "traceInformation.createUser", "properties"];
 			                                    	 for(var i = 0 ; i < this.selectedAddColumns.length ; i++){
 			                                    		 //remove .value if present to manage correctly properties (single, list, etc.)
 			                                    		 if(this.selectedAddColumns[i].queryIncludeKeys && this.selectedAddColumns[i].queryIncludeKeys.length > 0){
