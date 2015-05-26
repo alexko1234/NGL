@@ -120,11 +120,8 @@ public class Workflows {
 				State nextReadSetState = cloneState(run.state);
 				setReadSetState(contextValidation, readSet, nextReadSetState);
 			}
-			
-			
-			ArrayList<Object> facts = new ArrayList<Object>();
-			facts.add(run);		
-			rulesActor.tell(new RulesMessage(facts,Play.application().configuration().getString("rules.key"),ruleStatRG),null);
+						
+			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleStatRG,run),null);
 		}else if("F-V".equals(run.state.code)){
 			//Spring.getBeanOfType(ILimsRunServices.class).valuationRun(run);
 		}
