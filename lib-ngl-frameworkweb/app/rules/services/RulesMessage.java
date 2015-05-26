@@ -17,7 +17,7 @@ public class RulesMessage {
 	private final String keyRules;
 	private final String nameRule;
 	
-	public RulesMessage(List<Object> facts, String keyRules, String nameRule) {
+	public RulesMessage(String keyRules, String nameRule, List facts) {
 		super();
 		this.facts = facts;
 		this.keyRules = keyRules;
