@@ -2,9 +2,7 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-->  / common.Routes
-->  / apinglbi.Routes
-->  / apinglsq.Routes
+
 ->  /authentication authentication.Routes
 
 # Home page
