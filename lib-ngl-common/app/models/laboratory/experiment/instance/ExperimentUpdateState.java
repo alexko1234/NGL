@@ -14,4 +14,16 @@ public class ExperimentUpdateState {
 	public List<Process> processes ;
 	public List<Container> inputContainers;
 	public List<Container> outputContainers;
+	@Override
+	public String toString() {
+		return "ExperimentUpdateState [nextStateProcesses="
+				+ nextStateProcesses + ", processResolutionCodes="
+				+ processResolutionCodes + ", nextStateInputContainers="
+				+ nextStateInputContainers + ", nextStateOutputContainers="
+				+ nextStateOutputContainers + ", processes=" + processes
+				+ ", inputContainers=" + inputContainers
+				+ ", outputContainers=" + outputContainers + "]";
+	}
+	
+	
 }
