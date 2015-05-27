@@ -179,7 +179,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			}else{
 				$scope.errors.containerSupportCategory = "has-error";
 			}
-			$scope.datatable.setData({},0);
+			$scope.datatable.setData([],0);
 			$scope.basket.reset();
 		}						
 	};
