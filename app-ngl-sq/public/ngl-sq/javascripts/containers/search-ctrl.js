@@ -1,7 +1,7 @@
 "use strict"
 
 angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','$filter','mainService','tabService','containersSearchService','$routeParams', function($scope, datatable, lists,$filter,mainService,tabService,containersSearchService,$routeParams) {
-	$scope.datatableConfig = {
+	var datatableConfig = {
 		search:{
 			url:jsRoutes.controllers.containers.api.Containers.list()
 		},
@@ -28,9 +28,11 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 				console.log("callback reason=" + reason);
 				console.log("callback error=" + error);
 			}
-		}
+		
 	};
 
+	
+	
 	$scope.search = function(){		
 		$scope.searchService.search();
 	};
@@ -40,7 +42,6 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 	};
 	
 	//init
-	$scope.datatable = datatable($scope.datatableConfig);		
 	if(angular.isUndefined($scope.getHomePage())){
 		mainService.setHomePage('new');
 		tabService.addTabs({label:Messages('containers.tabs.search'),href:jsRoutes.controllers.containers.tpl.Containers.home("new").url,remove:false});
@@ -52,13 +53,13 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 	}
 	
 	$scope.searchService = containersSearchService;
-	$scope.searchService.init($routeParams, $scope.datatableConfig)
+	$scope.searchService.init($routeParams, datatableConfig)
 }]);
 
 
 "use strict"
 angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$routeParams', 'datatable','lists','$filter','$http','mainService','tabService','containersSearchService', function($scope,$location,$routeParams, datatable, lists,$filter,$http,mainService,tabService,containersSearchService) {
-	$scope.datatableConfig = {
+	var datatableConfig = {
 			search:{
 				url:jsRoutes.controllers.containers.api.Containers.list()
 				
@@ -110,7 +111,7 @@ angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$rou
 	}
 	
 	$scope.searchService = containersSearchService;
-	$scope.searchService.init($routeParams, $scope.datatableConfig)
+	$scope.searchService.init($routeParams, datatableConfig)
 	
 	if($scope.form.project || $scope.form.type){
 		$scope.search();
