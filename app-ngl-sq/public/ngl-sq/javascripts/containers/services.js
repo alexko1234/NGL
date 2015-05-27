@@ -10,7 +10,8 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"property":"support.code",
 			"order":true,
 			"position":1,
-			"type":"text"
+			"type":"text",
+			"group":true
 		});
 		columns.push({
 			"header":Messages("containers.table.supportCategoryCode"),
@@ -18,7 +19,8 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"filter":"codes:'container_support_cat'",
 			"order":true,
 			"position":2,
-			"type":"text"
+			"type":"text",
+			"groupMethod":"unique"
 		});
 		columns.push({
 			"header":Messages("containers.table.support.column"),
@@ -55,7 +57,8 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"property":"sampleCodes.length",
 			"order":true,
 			"position":8,
-			"type":"number"
+			"type":"number",
+			"groupMethod":"sum"
 		});
 		columns.push({
 			"header":Messages("containers.table.sampleCodes"),
@@ -64,7 +67,9 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"hide":true,
 			"position":9,
 			"type":"text",
-			"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
+			"render":"<div list-resize='cellValue | unique' list-resize-min-size='3'>",
+			"groupMethod":"collect"
+			
 		});
 		columns.push({
 			"header":Messages("containers.table.contents.length"),
@@ -72,7 +77,9 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"order":true,
 			"hide":true,
 			"position":9.01,
-			"type":"number"
+			"type":"number",
+			"groupMethod":"sum"
+				
 		});
 		columns.push({
 			"header":Messages("containers.table.tags"),
@@ -82,14 +89,17 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"type":"text",
 			"position":9.1,
 			"render":"<div list-resize='value.data.contents | getArray:\"properties.tag.value\" | unique' ' list-resize-min-size='3'>",
+			"groupMethod":"collect"
+			
 		});
 		columns.push({
 					"header":Messages("containers.table.projectCodes"),
 					"property":"projectCodes",
 					"order":false,
-					"position":10,
-					"render":"<div list-resize='value.data.projectCodes | unique' ' list-resize-min-size='2'>",
-					"type":"text"
+					"position":10,					
+					"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='2'>",
+					"type":"text",
+					"groupMethod":"collect"
 				});		
 		columns.push({
 					"header":Messages("containers.table.creationDate"),
@@ -147,7 +157,9 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 				"position":7,
 				"choiceInList": true,
 				"possibleValues":"searchService.lists.getStates()", 
-				"filter":"codes:'state'"
+				"filter":"codes:'state'",
+				"groupMethod":"unique"
+					
 			});
 			columns.push({
 				"header":Messages("containers.table.valid"),
@@ -279,7 +291,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 
 					return jsonSearch;
 				}else{
-					this.datatable.setData({},0);
+					this.datatable.setData([],0);
 					return undefined;
 
 				}
