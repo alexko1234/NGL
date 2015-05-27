@@ -2,6 +2,7 @@
 
 angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','$filter','mainService','tabService','containersSearchService','$routeParams', function($scope, datatable, lists,$filter,mainService,tabService,containersSearchService,$routeParams) {
 	var datatableConfig = {
+		group:{active:true},
 		search:{
 			url:jsRoutes.controllers.containers.api.Containers.list()
 		},
