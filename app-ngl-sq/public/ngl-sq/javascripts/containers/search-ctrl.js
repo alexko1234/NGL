@@ -30,6 +30,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 				console.log("callback error=" + error);
 			}
 		
+		}
 	};
 
 	
