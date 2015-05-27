@@ -162,6 +162,7 @@ public class Workflows {
 							State nextState = cloneState(readSet.state, contextValidation.getUser());
 							nextState.code = "F-VQC";
 							setReadSetState(contextValidation, readSet, nextState);
+							Spring.getBeanOfType(ILimsRunServices.class).updateReadSetEtat(readSet, 4);	
 						}
 					}					
 				}

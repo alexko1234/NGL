@@ -141,6 +141,14 @@ public class LimsRunServices implements ILimsRunServices {
 		Logger.warn("Not Implemented");		
 	}
 
+	
+	
+	@Override
+	public void updateReadSetEtat(ReadSet readset, int etat) {
+		Logger.warn("Not Implemented");		
+		
+	}
+
 	@Override
 	public void insertRun(Run run, List<ReadSet> readSets, boolean deleteBeforeInsert) {
 		Logger.warn("Not Implemented");

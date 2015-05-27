@@ -464,6 +464,10 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 		}
 	}
 
+	public void updateReadSetEtat(ReadSet readset, int etat){
+		dao.updateReadSetEtat(readset, etat);
+	}
+	
 	@Override
 	public void updateReadSetArchive(ReadSet readset) {
 		try{

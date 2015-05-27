@@ -31,6 +31,8 @@ public interface ILimsRunServices {
 	
 	void updateReadSetAfterQC(ReadSet readSet);
 	
+	public void updateReadSetEtat(ReadSet readset, int etat);
+	
 	public void updateReadSetArchive(ReadSet readset);
 	
 	public void linkRunWithMaterielManip();
