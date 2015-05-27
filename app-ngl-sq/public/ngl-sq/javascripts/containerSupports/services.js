@@ -209,7 +209,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 					
 					return jsonSearch;
 				}else{
-					this.datatable.setData({},0);
+					this.datatable.setData([],0);
 					return undefined;
 
 				}
