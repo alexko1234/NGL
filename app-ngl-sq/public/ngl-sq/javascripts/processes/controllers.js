@@ -240,7 +240,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			if($scope.form.nextProcessTypeCode === null || $scope.form.nextProcessTypeCode === undefined || $scope.form.nextProcessTypeCode === "" ){
 				$scope.errors.processType = "has-error";
 			}
-			$scope.datatable.setData({},0);
+			$scope.datatable.setData([],0);
 			$scope.basket.reset();
 
 		}
