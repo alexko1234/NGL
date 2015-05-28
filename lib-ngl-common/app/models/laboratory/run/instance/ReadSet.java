@@ -41,7 +41,7 @@ public class ReadSet extends DBObject implements IValidation{
 	public Valuation productionValuation = new Valuation();    //TODO rename to QCValuation
 	public Valuation bioinformaticValuation = new Valuation(); //TODO rename to bioinformaticUsable
 	
-    
+    public String location; //CCRT or CNS or CNG
 	public String path;
 	public String archiveId;
 	public Date archiveDate;
