@@ -472,7 +472,8 @@ readsets.files.state.date = Date
 readsets.files.state.user = Utilisateur
 readsets.files.isUsable = Oui
 readsets.files.isNotUsable = Non
-readsets.files.path = Chemin
+readsets.files.path = Chemin Utile
+readsets.files.location = Localisation
 
 readsets.modal.header.text = ReadSet status flow
 
