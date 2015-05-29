@@ -4,23 +4,29 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+import models.Constants;
 import models.LimsCNSDAO;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+
 import play.Logger;
 import rules.services.RulesException;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;
 import validation.ContextValidation;
+import validation.utils.ValidationHelper;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.MongoException;
 
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
 
 public class UpdateReadSetCNS extends AbstractImportDataCNS{
 
@@ -28,13 +34,92 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 			FiniteDuration durationFromNextIteration) {
 		super("UpdateReadSetCNS", durationFromStart, durationFromNextIteration);
 	}
-
+				
 	@Override
 	public void runImport() throws SQLException, DAOException, MongoException,
 	RulesException {
-		updateReadSetArchive(contextError);
+		//updateReadSetArchive(contextError);
+		
+		updateLSRunProjMissingData(contextError);
+		updateLSRunProjUpdateData(contextError);
 	}
 
+	private BasicDBObject getReadSetKeys() {
+		BasicDBObject keys = new BasicDBObject();
+		keys.put("treatments", 0);
+		return keys;
+	}
+	
+	private void updateLSRunProjMissingData(ContextValidation contextError) {
+		MongoDBResult<ReadSet> results = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,  
+				DBQuery.or(DBQuery.is("location",null), DBQuery.is("sampleOnContainer.properties.insertSizeGoal",null),DBQuery.is("sampleOnContainer.properties.strandOrientation",null)),getReadSetKeys());
+		
+		Logger.info("Start synchro LSRunProjMissingData  : nb ReadSet ="+results.count());
+		logger.info("Start synchro LSRunProjMissingData  : nb ReadSet ="+results.count());
+		
+		while(results.cursor.hasNext()){
+			ReadSet readset = results.cursor.next();
+			contextError.addKeyToRootKeyName(readset.code);
+			ReadSet newReadset = limsServices.findLSRunProjData(readset);
+			if(null != newReadset){
+				updateReadSet(contextError, newReadset);
+			}else{
+				if("A".equals(readset.state.code)){
+					contextError.addErrors("readset", "not found in db lims");
+				}
+			}
+			contextError.removeKeyFromRootKeyName(readset.code);
+		}
+	}
+
+	private void updateReadSet(ContextValidation contextError,
+			ReadSet readset) {
+		ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
+		validateReadSet(readset, contextValidation);
+		if(!contextValidation.hasErrors()){
+			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class
+					, DBQuery.is("code", readset.code)
+					, DBUpdate.set("path", readset.path)
+								.set("location", readset.location)
+								.set("sampleOnContainer.properties.insertSizeGoal", readset.properties.get("insertSizeGoal"))
+								.set("sampleOnContainer.properties.strandOrientation", readset.properties.get("strandOrientation"))
+								.set("traceInformation.modifyDate", new Date())
+								.set("traceInformation.modifyUser", Constants.NGL_DATA_USER));
+		}else{
+			contextError.addErrors(contextValidation.errors);
+		}
+	}
+
+	private void validateReadSet(ReadSet readset, ContextValidation contextValidation) {
+		
+		ValidationHelper.required(contextValidation, readset.path, "path");
+		ValidationHelper.required(contextValidation, readset.location, "path");
+		ValidationHelper.required(contextValidation, readset.properties.get("insertSizeGoal"), "properties.insertSizeGoal");
+		ValidationHelper.required(contextValidation, readset.properties.get("strandOrientation"), "properties.strandOrientation");
+		
+	}
+
+	
+	
+	private void updateLSRunProjUpdateData(ContextValidation contextError) {
+		List<ReadSet> readsets = limsServices.findLSRunProjData();
+		Logger.info("Start synchro updateLSRunProjUpdateData  : nb ReadSet ="+readsets.size());
+		logger.info("Start synchro updateLSRunProjUpdateData  : nb ReadSet ="+readsets.size());
+		
+		for(ReadSet readset : readsets){
+			contextError.addKeyToRootKeyName(readset.code);
+			updateReadSet(contextError, readset);
+			contextError.removeKeyFromRootKeyName(readset.code);
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 	public void updateReadSetArchive(ContextValidation contextError) {
 		List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,  
