@@ -55,7 +55,7 @@
 	<logger name="play" level="INFO" />
 	<logger name="application" level="DEBUG" />
 	<logger name="services.instance" level="ERROR" />
-	<logger name="MigrationContentPropertiesContainer" level="INFO" />
+	<logger name="migration" level="INFO" />
 	
 	<root level="ERROR">
 		<appender-ref ref="SIFT_SMTP" />
