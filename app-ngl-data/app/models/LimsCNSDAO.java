@@ -835,6 +835,30 @@ public class LimsCNSDAO{
 		}
 		
 	}
+	
+	public List<ReadSet> findLSRunProjData(){
+		
+		List<ReadSet> results = this.jdbcTemplate.query("pl_LSRunProjUnReadSettoNGL" 
+				,new RowMapper<ReadSet>() {
+					@SuppressWarnings("rawtypes")
+					public ReadSet mapRow(ResultSet rs, int rowNum) throws SQLException {
+						ReadSet readset = new ReadSet();
+						readset.code = rs.getString("code");
+						readset.location = rs.getString("location");
+						readset.path = rs.getString("path");
+						if(null != rs.getString("strandOrientation")){
+							readset.properties.put("strandOrientation", new PropertySingleValue(rs.getString("strandOrientation")));
+						}
+						if(null != rs.getString("insertSizeGoal")){
+							readset.properties.put("insertSizeGoal", new PropertySingleValue(rs.getString("insertSizeGoal")));
+						}	
+						return readset;						
+					}
+				});
+		
+		return results;
+		
+	}
 
 }
 
