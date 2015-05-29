@@ -4,6 +4,7 @@ package rules.services;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.kie.api.KieBase;
 import org.kie.api.KieBaseConfiguration;
@@ -46,12 +47,14 @@ public class RulesServices6 {
 	
 	
 	private void buildKnowledgeBase() {
-		if(null == kbase){
+		if(null == kbase && StringUtils.isNotBlank(kbasename)){
 			Logger.info("Load Drools Rules for KBaseName = "+kbasename);
 			KieServices kieServices = KieServices.Factory.get();
 			KieContainer kContainer = kieServices.newKieClasspathContainer(play.Play.application().classloader());
 		    KieBaseConfiguration kbaseConf = kieServices.newKieBaseConfiguration();
 		    kbase = kContainer.newKieBase(kbasename, kbaseConf); 		    
+		}else if(StringUtils.isBlank(kbasename)){
+			Logger.warn("Load Drools Rules : rules.kbasename is empty");
 		}
 	}
 
