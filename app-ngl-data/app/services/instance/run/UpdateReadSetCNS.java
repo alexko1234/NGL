@@ -52,7 +52,8 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 	
 	private void updateLSRunProjMissingData(ContextValidation contextError) {
 		MongoDBResult<ReadSet> results = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,  
-				DBQuery.or(DBQuery.is("location",null), DBQuery.is("sampleOnContainer.properties.insertSizeGoal",null),DBQuery.is("sampleOnContainer.properties.strandOrientation",null)),getReadSetKeys());
+				DBQuery.or(DBQuery.is("location",null), DBQuery.is("sampleOnContainer.properties.insertSizeGoal",null),
+						DBQuery.and(DBQuery.is("sampleOnContainer.sampleCategoryCode", "RNA"), DBQuery.is("sampleOnContainer.properties.strandOrientation",null))),getReadSetKeys());
 		
 		Logger.info("Start synchro LSRunProjMissingData  : nb ReadSet ="+results.count());
 		logger.info("Start synchro LSRunProjMissingData  : nb ReadSet ="+results.count());
@@ -62,7 +63,7 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 			contextError.addKeyToRootKeyName(readset.code);
 			ReadSet newReadset = limsServices.findLSRunProjData(readset);
 			if(null != newReadset){
-				updateReadSet(contextError, newReadset);
+				updateReadSet(contextError, newReadset, readset.sampleOnContainer.sampleCategoryCode);
 			}else{
 				if("A".equals(readset.state.code)){
 					contextError.addErrors("readset", "not found in db lims");
@@ -73,18 +74,28 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 	}
 
 	private void updateReadSet(ContextValidation contextError,
-			ReadSet readset) {
+			ReadSet readset, String sampleCategoryCode) {
 		ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
 		validateReadSet(readset, contextValidation);
 		if(!contextValidation.hasErrors()){
-			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class
-					, DBQuery.is("code", readset.code)
-					, DBUpdate.set("path", readset.path)
-								.set("location", readset.location)
-								.set("sampleOnContainer.properties.insertSizeGoal", readset.properties.get("insertSizeGoal"))
-								.set("sampleOnContainer.properties.strandOrientation", readset.properties.get("strandOrientation"))
-								.set("traceInformation.modifyDate", new Date())
-								.set("traceInformation.modifyUser", Constants.NGL_DATA_USER));
+			if("RNA".equals(sampleCategoryCode)){
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class
+						, DBQuery.is("code", readset.code)
+						, DBUpdate.set("path", readset.path)
+									.set("location", readset.location)
+									.set("sampleOnContainer.properties.insertSizeGoal", readset.properties.get("insertSizeGoal"))
+									.set("sampleOnContainer.properties.strandOrientation", readset.properties.get("strandOrientation"))
+									.set("traceInformation.modifyDate", new Date())
+									.set("traceInformation.modifyUser", Constants.NGL_DATA_USER));
+			}else{
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class
+						, DBQuery.is("code", readset.code)
+						, DBUpdate.set("path", readset.path)
+									.set("location", readset.location)
+									.set("sampleOnContainer.properties.insertSizeGoal", readset.properties.get("insertSizeGoal"))
+									.set("traceInformation.modifyDate", new Date())
+									.set("traceInformation.modifyUser", Constants.NGL_DATA_USER));
+			}
 		}else{
 			contextError.addErrors(contextValidation.errors);
 		}
@@ -107,8 +118,9 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 		logger.info("Start synchro updateLSRunProjUpdateData  : nb ReadSet ="+readsets.size());
 		
 		for(ReadSet readset : readsets){
+			ReadSet currentRS =  MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readset.code, getReadSetKeys());
 			contextError.addKeyToRootKeyName(readset.code);
-			updateReadSet(contextError, readset);
+			updateReadSet(contextError, readset, currentRS.sampleOnContainer.sampleCategoryCode);
 			contextError.removeKeyFromRootKeyName(readset.code);
 		}
 		
