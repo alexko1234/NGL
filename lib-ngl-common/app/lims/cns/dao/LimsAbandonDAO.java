@@ -495,7 +495,7 @@ public class LimsAbandonDAO {
 												,new Object[]{expPrepaflowcell.outputContainerSupportCodes.get(0)
 																,expDepotIllumina.instrument.code
 																,nbCycles
-																,expPrepaflowcell.outputContainerSupportCodes.size()
+																,expPrepaflowcell.atomicTransfertMethods.size()
 																,expDepotIllumina.instrument.typeCode},
 				new RowMapper<DepotSolexa>() {
 			public DepotSolexa mapRow(ResultSet rs, int rowNum)
