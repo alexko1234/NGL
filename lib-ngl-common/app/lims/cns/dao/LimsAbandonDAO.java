@@ -483,7 +483,7 @@ public class LimsAbandonDAO {
 	}
 
 
-	public DepotSolexa insertFlowcellNGL(models.laboratory.experiment.instance.Experiment expPrepaflowcell,models.laboratory.experiment.instance.Experiment expDepotIllumina) {
+	public DepotSolexa insertFlowcellNGL(models.laboratory.experiment.instance.Experiment expPrepaflowcell,models.laboratory.experiment.instance.Experiment expDepotIllumina, Run run) {
 		
 		//Nb Cycle total
 		int nbCycles=Integer.valueOf(expDepotIllumina.instrumentProperties.get("nbCyclesRead1").value.toString())+
@@ -496,7 +496,7 @@ public class LimsAbandonDAO {
 																,expDepotIllumina.instrument.code
 																,nbCycles
 																,expPrepaflowcell.atomicTransfertMethods.size()
-																,expDepotIllumina.instrument.typeCode},
+																,run.typeCode},
 				new RowMapper<DepotSolexa>() {
 			public DepotSolexa mapRow(ResultSet rs, int rowNum)
 					throws SQLException {
