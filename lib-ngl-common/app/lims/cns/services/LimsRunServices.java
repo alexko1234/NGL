@@ -500,8 +500,8 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 		}
 
 		//Create Manip FlowcellNGL
-			DepotSolexa ds=dao.insertFlowcellNGL(expPrepaflowcell.get(0),expDepotIllumina.get(0));
-			return ds;
+		DepotSolexa ds=dao.insertFlowcellNGL(expPrepaflowcell.get(0),expDepotIllumina.get(0), run);
+		return ds;
 
 	}
 }
