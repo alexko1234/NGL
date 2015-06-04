@@ -158,6 +158,22 @@ public class Runs extends RunsController {
 			queries.add(DBQuery.lessThanEquals("sequencingStartDate", form.toDate));
 		}
 		
+		if(null != form.fromEndRGDate){
+			DBQuery.Query fromEndRG = DBQuery.elemMatch("state.historical", 
+					DBQuery.is("code", "F-RG").greaterThanEquals("date", form.fromEndRGDate));
+			
+			queries.add(fromEndRG);
+		}
+		
+		if(null != form.toEndRGDate){
+			
+			DBQuery.Query toEndRG = DBQuery.elemMatch("state.historical", 
+					DBQuery.is("code", "F-RG").lessThanEquals("date", form.toEndRGDate));
+			
+			queries.add(toEndRG);
+		}
+		
+		
 		if (CollectionUtils.isNotEmpty(form.instrumentCodes)) { //all
 			queries.add(DBQuery.in("instrumentUsed.code", form.instrumentCodes));
 		}

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import play.data.format.Formats.DateTime;
+
 import controllers.ListForm;
 
 public class RunsSearchForm extends ListForm {
@@ -28,6 +28,10 @@ public class RunsSearchForm extends ListForm {
 
     public Date fromDate;
     public Date toDate;
+    
+    public Date fromEndRGDate;
+    public Date toEndRGDate;
+    
     
     public String valuationUser;
     

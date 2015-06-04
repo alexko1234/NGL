@@ -99,6 +99,9 @@ search.placeholder.sequencingProgramTypes = Type de lectures
 search.placeholder.analyseValuationUser = Analyse évaluée par : 
 search.placeholder.stats.configuration = Sélect. une configuration.
 
+search.placeholder.fromEndRGDate = Fin RG depuis le (jj/mm/aaaa)
+search.placeholder.toEndRGDate = Fin RG jusqu''au (jj/mm/aaaa)
+
 button.search = Rechercher
 button.reset = Réinitialiser
 button.validate = Sauvegarder

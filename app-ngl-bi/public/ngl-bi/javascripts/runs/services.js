@@ -118,6 +118,10 @@
 					var _form = angular.copy(this.form);
 					if(_form.fromDate)_form.fromDate = moment(_form.fromDate, Messages("date.format").toUpperCase()).valueOf();
 					if(_form.toDate)_form.toDate = moment(_form.toDate, Messages("date.format").toUpperCase()).valueOf();		
+					if(_form.fromEndRGDate)_form.fromEndRGDate = moment(_form.fromEndRGDate, Messages("date.format").toUpperCase()).valueOf();
+					if(_form.toEndRGDate)_form.toEndRGDate = moment(_form.toEndRGDate, Messages("date.format").toUpperCase()).valueOf();		
+					
+					
 					return _form
 				},
 				
@@ -202,6 +206,10 @@
 					if(lists.get("runs-addfilters") && lists.get("runs-addfilters").length === 1){
 						var formFilters = [];
 						var allFilters = angular.copy(lists.get("runs-addfilters")[0].filters);
+						/* add static filters*/
+						allFilters.push({property:"fromEndRGDate",html:"<input type='text' class='form-control' ng-model='searchService.form.fromEndRGDate' placeholder='"+Messages("search.placeholder.fromEndRGDate")+"' title='"+Messages("search.placeholder.fromEndRGDate")+"'>",position:allFilters.length+1});
+						allFilters.push({property:"toEndRGDate",html:'<input type="text" class="form-control" ng-model="searchService.form.toEndRGDate" placeholder="'+Messages("search.placeholder.toEndRGDate")+'" title="'+Messages("search.placeholder.toEndRGDate")+'">',position:allFilters.length+1});
+						
 						var nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
 						for(var i = 0; i  < 5 && allFilters.length > 0 ; i++){
 							formFilters.push(allFilters.splice(0, nbElementByColumn));	    								
