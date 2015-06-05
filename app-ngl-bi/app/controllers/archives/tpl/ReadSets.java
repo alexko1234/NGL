@@ -1,17 +1,10 @@
 package controllers.archives.tpl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import controllers.CommonController;
 import play.Routes;
-import play.i18n.Messages;
-import play.mvc.Controller;
 import play.mvc.Result;
-import views.components.datatable.DatatableColumn;
-import views.components.datatable.DatatableConfig;
-import views.components.datatable.DatatableHelpers;
-import views.html.archives.*;
+import views.html.archives.home;
+import views.html.archives.search;
+import controllers.CommonController;
 /**
  * Controller around archive readset object
  * @author galbini
