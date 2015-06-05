@@ -3,6 +3,7 @@ package controllers.experiments.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
@@ -50,6 +51,7 @@ import validation.ContextValidation;
 import validation.container.instance.ContainerValidationHelper;
 import validation.experiment.instance.ExperimentValidationHelper;
 import validation.processes.instance.ProcessValidationHelper;
+import views.components.datatable.DatatableForm;
 import views.components.datatable.DatatableResponse;
 import workflows.container.ContainerWorkflows;
 import workflows.experiment.ExperimentWorkflows;
@@ -58,6 +60,7 @@ import workflows.process.ProcessWorkflows;
 import com.mongodb.BasicDBObject;
 
 import controllers.CommonController;
+import controllers.processes.api.ProcessesSearchForm;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
@@ -67,6 +70,7 @@ public class Experiments extends CommonController{
 	final static Form<Comment> commentForm = form(Comment.class);
 	final static Form<ExperimentSearchForm> experimentSearchForm = form(ExperimentSearchForm.class);
 	final static Form<ExperimentUpdateForm> experimentUpdateForm = form(ExperimentUpdateForm.class);
+	final static List<String> defaultKeys =  Arrays.asList("categoryCode","code","inputContaierSupportCodes","instrument","outputContainerSupportCodes","projectCodes","protocolCode","reagents","sampleCodes","state","traceInformation","typeCode");
 
 	public static final String calculationsRules ="calculations";
 
@@ -203,8 +207,7 @@ public class Experiments extends CommonController{
 		try {
 			instrumentUsedType = instrumentUsedTypesDAO.findByCode(instrumentUsedTypeCode);
 		} catch (DAOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.error("DAO error",e);
 		}
 
 		return ok(Json.toJson(instrumentUsedType.propertiesDefinitions));
@@ -414,7 +417,7 @@ public class Experiments extends CommonController{
 			/*if(ExperimentType.find.findByCode(exp.typeCode).atomicTransfertMethod.endsWith("ToVoid")){
 				experimentUpdateState.nextStateInputContainers="UA";
 			} else*/
-			if(ExperimentType.find.findNextExperimentTypeForAnExperimentTypeCode(exp.typeCode).size()==0){
+			if(ExperimentType.find.findNextExperimentTypeForAnExperimentTypeCode(exp.typeCode).size()==0 && exp.categoryCode.equals("transformation")){
 				logger.debug("Not next Experiment Type");
 				experimentUpdateState.nextStateInputContainers="IS";
 				experimentUpdateState.nextStateOutputContainers="UA";
@@ -481,7 +484,7 @@ public class Experiments extends CommonController{
 	public static Result list(){
 		Form<ExperimentSearchForm> experimentFilledForm = filledFormQueryString(experimentSearchForm,ExperimentSearchForm.class);
 		ExperimentSearchForm experimentsSearch = experimentFilledForm.get();
-		BasicDBObject keys = getKeys(experimentsSearch);
+		BasicDBObject keys = getKeys(updateForm(experimentsSearch));
 		DBQuery.Query query = getQuery(experimentsSearch);
 
 		if(experimentsSearch.datatable){
@@ -571,10 +574,7 @@ public class Experiments extends CommonController{
 
 		Logger.info("Experiment Query : "+experimentSearch);
 
-		if(StringUtils.isNotBlank(experimentSearch.code)){
-			queryElts.add(DBQuery.regex("code", Pattern.compile(experimentSearch.code)));
-		}
-
+		
 		if(CollectionUtils.isNotEmpty(experimentSearch.codes)){
 			queryElts.add(DBQuery.in("code", experimentSearch.codes));
 		}else if(StringUtils.isNotBlank(experimentSearch.code)){
@@ -647,6 +647,14 @@ public class Experiments extends CommonController{
 
 		return query;
 
+	}
+	
+	private static DatatableForm updateForm(ExperimentSearchForm form) {
+		if(form.includes.contains("default")){
+			form.includes.remove("default");
+			form.includes.addAll(defaultKeys);
+		}
+		return form;
 	}
 
 	/*private static String findRegExpFromStringList(List<String> searchList) {

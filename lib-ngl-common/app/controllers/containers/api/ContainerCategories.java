@@ -8,6 +8,7 @@ import java.util.List;
 import models.laboratory.container.description.ContainerCategory;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
+import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -37,7 +38,7 @@ public class ContainerCategories extends CommonController{
 				return Results.ok(Json.toJson(containerCategories));
 			}
 		}catch (DAOException e) {
-			e.printStackTrace();
+			Logger.error("DAO error: "+e.getMessage(),e);
 			return  Results.internalServerError(e.getMessage());
 		}	
 	}

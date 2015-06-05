@@ -151,7 +151,7 @@ public class ProcessWorkflows {
 			experimentCategoryCode=pt.firstExperimentType.category.code;
 
 		} catch (DAOException e) {
-			Logger.error(e.getMessage());
+			Logger.error("DAO error :"+e.getMessage(),e);
 		}
 
 		State nextState = new State();
@@ -241,7 +241,9 @@ public class ProcessWorkflows {
 								true);
 
 					} catch (DAOException e) {
+						Logger.error("DAO error :"+e.getMessage(),e);
 					}
+					
 				}
 			}
 		}
@@ -251,6 +253,7 @@ public class ProcessWorkflows {
 			stateCodes.add("UA");
 			stateCodes.add("IS");
 			stateCodes.add("F");
+			stateCodes.add("IW-P");
 			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
 					DBQuery.in("support.code", newContainerSupports).in("state.code",stateCodes),
 					DBUpdate.unset("inputProcessCodes").unset("processTypeCode"), true);

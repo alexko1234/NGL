@@ -102,6 +102,7 @@ search.placeholder.types = Sélect. des types
 search.placeholder.user = Créé par
 search.placeholder.containerSupport = Regex pour code support
 search.placeholder.experiment = Regex pour expérience
+search.placeholder.process = Regex pour processus
 
 search.tab.addfilters = Filtres supplémentaires
 search.tab.filters = Filtres
@@ -219,6 +220,7 @@ experiments.modifyDate = Date de modification
 experiments.modifyBy = Modifié par
 experiment.comments = Commentaires
 
+experiments.calculation.sheet = Feuille de calcul
 experiments.flowcell.design = Composition flowcell
 experiments.tube.design = Transfert Tube
 experiments.flowcell.roadMap = Feuille de route
@@ -227,20 +229,22 @@ experiments.addNewReagentLine = Ajouter un réactif
 experiment.placeholder.reagentOrBoxCode = CB boîte ou reactif
 experiments.select.processResolutions = Dans le cas d''un arrêt de processus : sélect. une résolution
 
+experiments.tubetransfert.design = Tube en sortie
+
 experiment.finishExperiment = Que souhaitez-vous faire ?
 experiment.continueProcess=Comment souhaitez-vous continuer ?
 
 experiments.button.continueProcess=Continuer
 experiment.button.retryExperiment = Recommencer l''expérience
 experiment.button.stopProcess = Arrêter le processus
-experiments.button.finishProcess  = Terminer
+experiments.button.finishProcess  = Terminer les processus
 experiments.button.purif=Purification
 experiments.button.transfert=Transfert
 experiments.button.transformation=Transformation
 experiments.button.qualitycontrol=Controle qualité
 
-experiments.chooseNextExperimentCategory=Tous les containers out poursuivent vers la même expérience
-experiments.chooseOputContainerState=L''expérience suivante est différente selon les containers out
+experiments.chooseNextExperimentCategory=Tous les containers de sortie poursuivent vers la même expérience
+experiments.chooseOputContainerState=L''expérience suivante est différente selon les containers de sortie
 
 experiment.placeholder.fromDate = Expérience depuis le (jj/mm/aaaa)
 experiment.placeholder.toDate = Expérience jusqu''au (jj/mm/aaaa)

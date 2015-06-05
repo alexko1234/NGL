@@ -147,7 +147,10 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			if(ManytoOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
 				ManytoOneContainer atomic = (ManytoOneContainer) exp.atomicTransfertMethods.get(i);
 				validationfacts.add(atomic);
-			}			
+			}else if(OneToOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
+				OneToOneContainer atomic = (OneToOneContainer) exp.atomicTransfertMethods.get(i);
+				validationfacts.add(atomic);
+			}
 		}
 		ExperimentValidationHelper.validateRules(validationfacts, contextValidation);
 	}

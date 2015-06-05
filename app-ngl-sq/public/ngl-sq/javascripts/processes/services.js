@@ -6,6 +6,8 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 
 	var initListService = function(){
 		if(!isInit){
+			lists.refresh.processes();
+			lists.refresh.experiments();
 			lists.refresh.containerSupportCategories();
 			lists.refresh.projects();
 			lists.refresh.processCategories();
@@ -14,6 +16,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			lists.refresh.states({objectTypeCode:"Process"});
 			lists.refresh.processTypes();
 			lists.refresh.reportConfigs({pageCodes:["processes-addcolumns"]}, "processes-addcolumns");
+			lists.refresh.filterConfigs({pageCodes:["processes-search-addfilters"]}, "processes-search-addfilters");
 			isInit=true;
 		}
 	};
@@ -253,6 +256,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                     isRouteParam:false,
 			                                     lists : lists,
 			                                     getDefaultColumns : this.columnsDefault,
+			                                     additionalFilters:[],
 			                                     additionalColumns:[],
 			                                     selectedAddColumns:[],
 			                                     setRouteParams:function($routeParams){
@@ -329,7 +333,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 
 			                                    	 })
 			                                    	 .error(function(data, status, headers, config) {
-			                                    		 console.log(data);
+			                                    		 //console.log(data);
 
 			                                    		 if(mainService.getHomePage() === 'state'){
 			                                    			 datatable.setColumnsConfig(columnsDefaultState);
@@ -342,18 +346,32 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                     
 			                                     },				
 
-			                                     updateForm : function(){					
-			                                    	 this.form.includes = ["default","categoryCode","containerInputCode","sampleCode", "sampleOnInputContainer", "typeCode", "state", "currentExperimentTypeCode", "newContainerSupportCodes", "experimentCodes", "projectCode", "code", "traceInformation.creationDate", "traceInformation.createUser", "properties"];
-			                                    	 for(var i = 0 ; i < this.selectedAddColumns.length ; i++){
-			                                    		 //remove .value if present to manage correctly properties (single, list, etc.)
-			                                    		 if(this.selectedAddColumns[i].queryIncludeKeys && this.selectedAddColumns[i].queryIncludeKeys.length > 0){
-			                                    			 this.form.includes = this.form.includes.concat(this.selectedAddColumns[i].queryIncludeKeys);
-			                                    		 }else{
-			                                    			 this.form.includes.push(this.selectedAddColumns[i].property.replace('.value',''));	
-			                                    		 }
-
-			                                    	 }
-			                                     },
+			                                     updateForm : function(){
+			                         				this.form.includes = [];
+			                         				if(this.reportingConfiguration){
+			                         					for(var i = 0 ; i < this.reportingConfiguration.columns.length ; i++){
+			                         						if(this.reportingConfiguration.columns[i].queryIncludeKeys && this.reportingConfiguration.columns[i].queryIncludeKeys.length > 0){
+			                         							this.form.includes = this.form.includes.concat(this.reportingConfiguration.columns[i].queryIncludeKeys);
+			                         						}else{
+			                         							this.form.includes.push(this.reportingConfiguration.columns[i].property.replace('.value','').replace(".unit", ''));
+			                         						}
+			                         					}
+			                         				}else{
+			                         					this.form.includes = ["default"];
+			                         				}
+			                         				
+			                         				
+			                         				//this.form.includes = ["default"];
+			                         				for(var i = 0 ; i < this.selectedAddColumns.length ; i++){
+			                         					//remove .value if present to manage correctly properties (single, list, etc.)
+			                         					if(this.selectedAddColumns[i].queryIncludeKeys && this.selectedAddColumns[i].queryIncludeKeys.length > 0){
+			                         						this.form.includes = this.form.includes.concat(this.selectedAddColumns[i].queryIncludeKeys);
+			                         					}else{
+			                         						this.form.includes.push(this.selectedAddColumns[i].property.replace('.value','').replace(".unit", ''));
+			                         					}
+			                         					
+			                         				}
+			                         			},
 			                                     convertForm : function(){
 			                                    	 var _form = angular.copy(this.form);	
 			                                    	 if(_form.fromDate)_form.fromDate = moment(_form.fromDate, Messages("date.format").toUpperCase()).valueOf();
@@ -367,20 +385,23 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 
 			                                     initAdditionalFilters:function(){
 			                                    	 this.additionalFilters=[];
-			                                    	 if(this.form.typeCode !== undefined && lists.get("process-"+this.form.typeCode) && lists.get("process-"+this.form.typeCode).length === 1){
-			                                    		 var formFilters = [];
-			                                    		 var allFilters = angular.copy(lists.get("process-"+this.form.typeCode)[0].filters);
-			                                    		 var nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
-			                                    		 for(var i = 0; i  < 5 && allFilters.length > 0 ; i++){
-			                                    			 formFilters.push(allFilters.splice(0, nbElementByColumn));	    								
-			                                    		 }
-			                                    		 //complete to 5 five element to have a great design 
-			                                    		 while(formFilters.length < 5){
-			                                    			 formFilters.push([]);
-			                                    		 }
-
-			                                    		 this.additionalFilters = formFilters;
+			                                    	 var formFilters = [];
+			                                    	 var allFilters = undefined;
+			                                    	 if(this.form.typeCode !== undefined && lists.get("process-"+this.form.typeCode) && lists.get("process-"+this.form.typeCode).length === 1){			                                    		 
+			                                    		allFilters = angular.copy(lists.get("process-"+this.form.typeCode)[0].filters);			                                    		
+			                                    	 }else if(lists.get("processes-search-addfilters") && lists.get("processes-search-addfilters").length === 1){			                             					
+			                             				allFilters = angular.copy(lists.get("processes-search-addfilters")[0].filters);			                             								                             				
 			                                    	 }
+			                                    	 
+			                                    	 var nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
+		                                    		 for(var i = 0; i  < 5 && allFilters.length > 0 ; i++){
+		                                    			 formFilters.push(allFilters.splice(0, nbElementByColumn));	    								
+		                                    		 }
+		                                    		 //complete to 5 five element to have a great design 
+		                                    		 while(formFilters.length < 5){
+		                                    			 formFilters.push([]);
+		                                    		 }
+		                                    		 this.additionalFilters = formFilters;			                                    	 
 			                                     },
 
 			                                     getAddFiltersToForm : function(){
@@ -389,17 +410,15 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 }
 			                                    	 return this.additionalFilters;									
 			                                     },
-
-			                                     search : function(){					
-			                                    	 this.updateForm();
-			                                    	 mainService.setForm(this.form);
-			                                    	 var jsonSearch = this.convertForm();
-			                                    	 if(jsonSearch != undefined){						
-			                                    		 searchService.datatable.setColumnsConfig(this.columnsDefault);
-			                                    		 searchService.getColumns();					
-			                                    		 this.datatable.search(jsonSearch);						
-			                                    	 }
-			                                     },
+			                                     
+			                                     search : function(){
+			                         				this.updateForm();
+			                         				mainService.setForm(this.form);	
+			                         				searchService.datatable.setColumnsConfig(this.columnsDefault);
+		                                    		searchService.getColumns();
+			                         				this.datatable.search(this.convertForm());
+			                         				
+			                         			},
 
 			                                     refreshSamples : function(){
 			                                    	 if(this.form.projectCodes && this.form.projectCodes.length > 0){
@@ -466,13 +485,25 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 this.datatable.setColumnsConfig(this.getDefaultColumns);
 			                                    	 this.search();
 			                                     },
-			                                     updateColumn : function(){
-			                                    	 this.initAdditionalColumns();				
-			                                    	 this.reportingConfiguration = undefined;
-			                                    	 this.datatable.setColumnsConfig(this.getDefaultColumns);
-			                                    	 this.search();		
-
-			                                     },
+			                                     /**
+			                         			 * Update column when change reportingConfiguration
+			                         			 */
+			                         			updateColumn : function(){
+			                         				this.initAdditionalColumns();
+			                         				if(this.reportingConfigurationCode){
+			                         					$http.get(jsRoutes.controllers.reporting.api.ReportingConfigurations.get(this.reportingConfigurationCode).url,{searchService:this, datatable:this.datatable})
+			                         							.success(function(data, status, headers, config) {
+			                         								config.searchService.reportingConfiguration = data;
+			                         								config.searchService.search();
+			                         								config.datatable.setColumnsConfig(data.columns);																								
+			                         					});
+			                         				}else{
+			                         					this.reportingConfiguration = undefined;
+			                         					this.datatable.setColumnsConfig(this.getDefaultColumns());
+			                         					this.search();
+			                         				}
+			                         				
+			                         			},
 			                                     /**
 			                                      * initialise the service
 			                                      */

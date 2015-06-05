@@ -6,74 +6,159 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	
 	$scope.datatableConfig = {
 		columns:[{
-			"header":Messages("containerSupports.table.code"),
-			"property":"code",
+			"header":Messages("containers.table.supportCode"),
+			"property":"support.code",
 			"order":true,
+			"position":1,
+			"type":"text",
+			"group":true
+		},
+		{
+			"header":Messages("containers.table.supportCategoryCode"),
+			"property":"support.categoryCode",
+			"filter":"codes:'container_support_cat'",
+			"order":true,
+			"position":2,
+			"type":"text",
+			"groupMethod":"unique"
+		},
+		{
+			"header":Messages("containers.table.support.column"),
+			"property":"support.column",
+			"order":false,
+			"position":3,
 			"type":"text"
 		},
 		{
-			"header":Messages("containers.table.categoryCode"),
-			"property":"categoryCode",
-			"filter":"codes:'container_support_cat'",
-			"order":true,
+			"header":Messages("containers.table.support.line"),
+			"property":"support.line",
+			"order":false,
+			"position":4,
 			"type":"text"
+		},
+		{
+			"header":Messages("containers.table.code"),
+			"property":"code",
+			"order":true,
+			"position":5,
+			"type":"text",
+			"groupMethod":"collect"
 		},
 		{
 			"header":Messages("containers.table.fromExperimentTypeCodes"),
 			"property":"fromExperimentTypeCodes",
-			"filter":"codes:'type'",
+			//"filter":"codes:'type'",
 			"order":false,
-			"type":"text"
-		},
-		{
-			"header":Messages("containers.table.stateCode"), 
-			"property":"state.code", 
-			"order":true,
+			"position":6,
 			"type":"text",
-			"filter":"codes:'state'"
+			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
+			"groupMethod":"collect"
 		},
 		{
 			"header":Messages("containers.table.sampleCodes.length"),
 			"property":"sampleCodes.length",
 			"order":true,
-			"type":"text"
+			"position":8,
+			"type":"number",
+			"groupMethod":"sum"
 		},
 		{
 			"header":Messages("containers.table.sampleCodes"),
 			"property":"sampleCodes",
 			"order":false,
+			"hide":true,
+			"position":9,
 			"type":"text",
-			"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
+			"render":"<div list-resize='cellValue | unique' list-resize-min-size='3'>",
+			"groupMethod":"collect"
+			
+		},
+		{
+			"header":Messages("containers.table.contents.length"),
+			"property":"contents.length",
+			"order":true,
+			"hide":true,
+			"position":9.01,
+			"type":"number",
+			"groupMethod":"sum"
+				
+		},
+		{
+			"header":Messages("containers.table.tags"),
+			"property": "contents",
+			"order":false,
+			"hide":true,
+			"type":"text",
+			"position":9.1,
+			"render":"<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' ' list-resize-min-size='3'>",
+			"groupMethod":"collect"
+			
 		},
 		{
 			"header":Messages("containers.table.projectCodes"),
 			"property":"projectCodes",
 			"order":false,
-			"type":"text"
+			"position":10,					
+			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='2'>",
+			"type":"text",
+			"groupMethod":"collect"
 		},
 		{
-			"header":Messages("containerSupports.table.creationDate"),
+			"header":Messages("containers.table.creationDate"),
 			"property":"traceInformation.creationDate",
 			"order":true,
+			"position":12,
 			"type":"date"
 		},
 		{
-			"header":Messages("containerSupports.table.createUser"),
+			"header":Messages("containers.table.createUser"),
 			"property":"traceInformation.createUser",
 			"order":true,
+			"position":13,
 			"type":"text"
-		}
-		
-	/*	,{
+		},
+		{
 			"header":Messages("containers.table.inputProcessCodes"),
 			"property":"inputProcessCodes",
+			"order":false,
+			"type":"text",
+			"position":14,
+			"render":"<div list-resize='value.data.inputProcessCodes | unique' list-resize-min-size='3'>",
+			"groupMethod":"collect"
+		},
+		{
+			"header":Messages("containers.table.state.code"),
+			"property":"state.code",
 			"order":true,
 			"type":"text",
-			"render":"<div list-resize='value.data.inputProcessCodes | unique' list-resize-min-size='3'>",
-		}*/
+			"edit":false,
+			"position":7,
+			"choiceInList": true,
+			"possibleValues":"searchService.lists.getStates()", 
+			"filter":"codes:'state'",
+			"groupMethod":"unique"
+				
+		},
+		{
+			"header":Messages("containers.table.valid"),
+			"property":"valuation.valid",
+			"order":true,
+			"type":"text",
+			"edit":true,
+			"position":11,
+			"choiceInList": true,
+			"possibleValues":"searchService.lists.getValuations()", 
+			"filter":"codes:'valuation'"	
+		}
 		],	
 		search:{
-			url:jsRoutes.controllers.containers.api.ContainerSupports.list()
+			url:jsRoutes.controllers.containers.api.Containers.list()
+		},
+		group:{
+			active:true,
+			showOnlyGroups:true,
+			enableLineSelection:true,
+			showButton:true
 		},
 		pagination:{
 			mode:'local'
@@ -85,7 +170,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		},
 		otherButtons :{
 			active:true,
-			template:'<button class="btn" ng-disabled="!datatable.isSelect()" ng-click="addToBasket(datatable.getSelection(true))" data-toggle="tooltip" title="'+Messages("button.addbasket")+'">'
+			template:'<button class="btn" ng-disabled="!datatable.isSelect() && !datatable.isSelectGroup()" ng-click="addToBasket(datatable.getSelection(true))" data-toggle="tooltip" title="'+Messages("button.addbasket")+'">'
 					+'<i class="fa fa-shopping-cart fa-lg"></i> ({{basket.length()}})</button>'
 		}
 	};
@@ -95,7 +180,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		tabService.removeTab(1);
 
 		$scope.basket.reset();
-		$scope.searchService.form.categoryCode = undefined;
+		$scope.searchService.form.containerSupportCategory = undefined;
 		$scope.searchService.lists.clear("containerSupportCategories");
 		if($scope.searchService.form.nextExperimentTypeCode){
 			$scope.searchService.lists.refresh.containerSupportCategories({experimentTypeCode:$scope.searchService.form.nextExperimentTypeCode});
@@ -157,7 +242,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		$scope.errors.containerSupportCategory = {};
 		
 		
-		if(_form.nextExperimentTypeCode && _form.categoryCode){
+		if(_form.nextExperimentTypeCode){
 			_form.stateCode = $scope.getContainerStateCode($scope.experimentCategory);	 
 		
 			var formTemp = angular.copy(_form.nextExperimentTypeCode);
@@ -176,8 +261,6 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		}else{
 			if(!_form.nextExperimentTypeCode){
 				$scope.errors.experimentType = "has-error";
-			}else{
-				$scope.errors.containerSupportCategory = "has-error";
 			}
 			$scope.datatable.setData([],0);
 			$scope.basket.reset();
@@ -213,17 +296,43 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		for(var i = 0; i < containers.length; i++){
 			var alreadyOnBasket = false;
 			for(var j=0;j<this.basket.get().length;j++){
-				if(this.basket.get()[j].code === containers[i].code){
-					alreadyOnBasket = true;
+				if(containers[i].group === undefined){
+					if(this.basket.get()[j].code === containers[i].code){
+						alreadyOnBasket = true;
+					}
+				}else{
+					var test = $scope.datatable.getGroupColumnValue(containers[i], "code");
+					if($scope.datatable.getGroupColumnValue(containers[i], "code") === this.basket.get()[j].code){
+						alreadyOnBasket = true;
+					}
 				}
 			}
 			if(!alreadyOnBasket){
-				this.basket.add(containers[i]);
+				if(containers[i].group === undefined){
+					this.basket.add(containers[i]);
+					if(($scope.searchService.form.nextExperimentTypeCode) && this.basket.length() > 0 && tabService.getTabs().length === 1){
+						tabService.addTabs({label:$filter('codes')($scope.searchService.form.nextExperimentTypeCode,'type'),href:"/experiments/new/"+$scope.searchService.form.nextExperimentTypeCode,remove:false});
+					}
+				}else{
+					var basket = this.basket;
+					var supportCode = $scope.datatable.getGroupColumnValue(containers[i], "support.code");
+					$http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{"supportCode":supportCode}})
+					.success(function(data, status, headers, config) {
+						if(data!=null){
+							angular.forEach(data, function(container){
+								basket.add(container);
+							});
+							if(($scope.searchService.form.nextExperimentTypeCode) && basket.length() > 0 && tabService.getTabs().length === 1){
+								tabService.addTabs({label:$filter('codes')($scope.searchService.form.nextExperimentTypeCode,'type'),href:"/experiments/new/"+$scope.searchService.form.nextExperimentTypeCode,remove:false});
+							}
+						}
+					})
+					.error(function(data, status, headers, config) {
+						alert("error");
+					});
+					//var container = {"code": $scope.datatable.getGroupColumnValue(containers[i], "support.code"), "projectCodes": $scope.datatable.getGroupColumnValue(containers[i], "projectCodes"), "sampleCodes": $scope.datatable.getGroupColumnValue(containers[i], "sampleCodes")}
+				}
 			}
-		}
-		
-		if(($scope.searchService.form.nextExperimentTypeCode) && this.basket.length() > 0 && tabService.getTabs().length === 1){
-			tabService.addTabs({label:$filter('codes')($scope.searchService.form.nextExperimentTypeCode,'type'),href:"/experiments/new/"+$scope.searchService.form.nextExperimentTypeCode,remove:false});
 		}
 	};
 	

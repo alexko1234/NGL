@@ -3,6 +3,7 @@ package controllers.containers.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -38,6 +39,7 @@ import play.mvc.Result;
 import play.mvc.Results;
 import validation.ContextValidation;
 import views.components.datatable.DatatableBatchResponseElement;
+import views.components.datatable.DatatableForm;
 import views.components.datatable.DatatableResponse;
 import workflows.container.ContainerWorkflows;
 
@@ -46,6 +48,7 @@ import com.mongodb.BasicDBObject;
 
 import controllers.CommonController;
 import controllers.NGLControllerHelper;
+import controllers.readsets.api.ReadSetsSearchForm;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
@@ -55,6 +58,7 @@ public class Containers extends CommonController {
 	final static Form<ContainersSearchForm> containerForm = form(ContainersSearchForm.class);
 	final static Form<ContainerBatchElement> batchElementForm = form(ContainerBatchElement.class);
 	final static Form<ContainersUpdateForm> containersUpdateForm = form(ContainersUpdateForm.class);
+	final static List<String> defaultKeys =  Arrays.asList("support.code","code","support.categoryCode","support.column","support.line","fromExperimentTypeCodes","sampleCodes.length","sampleCodes","contents.length","contents","traceInformation","projectCodes", "inputProcessCodes", "valuation.valid", "state.code");
 
 	public static Result get(String code){
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, code);
@@ -126,7 +130,7 @@ public class Containers extends CommonController {
 		//Form<ContainersSearchForm> containerFilledForm = filledFormQueryString(containerForm,ContainersSearchForm.class);
 		ContainersSearchForm containersSearch = filledFormQueryString(ContainersSearchForm.class);
 		DBQuery.Query query = getQuery(containersSearch);
-		BasicDBObject keys = getKeys(containersSearch);
+		BasicDBObject keys = getKeys(updateForm(containersSearch));
 		
 		if(containersSearch.datatable){
 			MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
@@ -219,11 +223,12 @@ public class Containers extends CommonController {
 	 * @return
 	 * @throws DAOException 
 	 */
-	public static DBQuery.Query getQuery(ContainersSearchForm containersSearch) throws DAOException{		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
+	public static DBQuery.Query getQuery(ContainersSearchForm containersSearch) throws DAOException{		
+		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
 		Query query = DBQuery.empty();
 
 		List<String> processCodes = new ArrayList<String>();
-		if(containersSearch.properties.size() > 0){
+		if(containersSearch.properties.size() > 0){	
 			List<DBQuery.Query> listProcessQuery = NGLControllerHelper.generateQueriesForProperties(containersSearch.properties, Level.CODE.Process, "properties");
 			Query processQuery = DBQuery.and(listProcessQuery.toArray(new DBQuery.Query[queryElts.size()]));
 
@@ -232,6 +237,10 @@ public class Containers extends CommonController {
 				processCodes.add(p.code);
 			}
 			queryElts.add(DBQuery.in("inputProcessCodes", processCodes));
+		}
+		
+		if (CollectionUtils.isNotEmpty(containersSearch.sampleTypeCodes)) { //all
+			queryElts.add(DBQuery.in("contents.sampleTypeCode", containersSearch.sampleTypeCodes));
 		}
 
 		if(CollectionUtils.isNotEmpty(containersSearch.projectCodes)){
@@ -317,6 +326,20 @@ public class Containers extends CommonController {
 				if(CollectionUtils.isNotEmpty(listePrevious)){
 					queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", listePrevious)));
 				}
+			
+			//NextExperimentTypeCode appartient au processType des containers
+				List<String> listProcessType=new ArrayList<String>();
+				List<ProcessType> processTypes=ProcessType.find.findByExperimentTypeCode(containersSearch.nextExperimentTypeCode);
+				if(CollectionUtils.isNotEmpty(processTypes)){
+					for(ProcessType processType:processTypes){
+						listProcessType.add(processType.code);
+					}
+				}
+				
+				if(CollectionUtils.isNotEmpty(listProcessType)){
+					queryElts.add(DBQuery.in("processTypeCode", listProcessType));
+				}
+				
 			}else{
 				//throw new RuntimeException("nextExperimentTypeCode = "+ containersSearch.nextExperimentTypeCode +" does not exist!");
 			}
@@ -336,14 +359,18 @@ public class Containers extends CommonController {
 			if(CollectionUtils.isNotEmpty(containersSearch.fromExperimentTypeCodes)){
 				Boolean hasNoneValue = false;
 				//Recherche des champs vides "None" et des autres cas si demandés
-				for(int i=0; i< containersSearch.fromExperimentTypeCodes.size();i++){
-					if(containersSearch.fromExperimentTypeCodes.get(i).equalsIgnoreCase("none")){
-						hasNoneValue = true;
-						Logger.info("Trouvé un containersSearch.fromExperimentTypeCodes="+containersSearch.fromExperimentTypeCodes.get(i));
-						containersSearch.fromExperimentTypeCodes.remove(i);
-						queryElts.add(DBQuery.or(DBQuery.size("fromExperimentTypeCodes", 0),DBQuery.notExists("fromExperimentTypeCodes"),DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes)));	
-					}			
+				Iterator<String> iterator = containersSearch.fromExperimentTypeCodes.iterator();
+				while(iterator.hasNext()){
+					String fromExperimentTypeCode = iterator.next();
+					if(("none").equalsIgnoreCase(fromExperimentTypeCode)){
+						hasNoneValue = true;						
+						Logger.info("Trouvé un containersSearch.fromExperimentTypeCodes="+fromExperimentTypeCode);
+						containersSearch.fromExperimentTypeCodes.remove(fromExperimentTypeCode);
+						queryElts.add(DBQuery.or(DBQuery.size("fromExperimentTypeCodes", 0),DBQuery.notExists("fromExperimentTypeCodes"),DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes)));		
+					}
+					
 				}
+			
 				//Recherche sans les "Nones" de recherche "sans les champs vides" 	
 				if( hasNoneValue == false){			
 					queryElts.add(DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes));
@@ -410,11 +437,21 @@ public class Containers extends CommonController {
 		if(StringUtils.isNotBlank(containersSearch.createUser)){   
 			queryElts.add(DBQuery.is("traceInformation.createUser", containersSearch.createUser));
 		}
+		
+		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(containersSearch.contentsProperties,Level.CODE.Content, "contents.properties"));
 
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 		}		
 
 		return query;
+	}
+	
+	private static DatatableForm updateForm(ContainersSearchForm form) {
+		if(form.includes.contains("default")){
+			form.includes.remove("default");
+			form.includes.addAll(defaultKeys);
+		}
+		return form;
 	}
 }

@@ -266,3 +266,85 @@ rule "Prepaflowcell validate piste controle"
     	Logger.debug("outputcontainersupport "+$outputContainerSupport + ", piste controle ");
     	$contextValidation.addErrors("instrument",	"error.validationexp.badcontrolprepaflowcell", $value,$outputContainerSupport);
     end    
+
+rule "Code Flowcell without bad chars"
+    @nglSQ( validations )
+	dialect "java"
+	salience 900
+	no-loop
+    when
+    $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-flowcell",$instrumentProperties:instrumentProperties)
+    $containerSupportCode: PropertyValue($code:value, $code matches ".*[^a-zA-Z0-9].*") from $instrumentProperties.get("containerSupportCode")
+    $contextValidation:ContextValidation()
+    then
+    Logger.debug("Code Flowcell without bad chars");
+    $contextValidation.addErrors("instrument",	"error.validationexp.codewithbadchar", "Code Flowcell");
+end
+
+rule "Same concentrations in  Pool-tube"
+    @nglSQ( validations )
+	dialect "java"
+	salience 950
+	no-loop
+    when
+		$experiment:Experiment($typeCode:typeCode,$typeCode=="pool-tube")
+		$atomicTransfert: ManytoOneContainer($inputContainerUseds : inputContainerUseds, $inputContainerUseds!=null)
+		$total : Double() from accumulate(ContainerUsed($c: concentration, $c!=null) from $inputContainerUseds, sum( Double.parseDouble($c.getValue().toString()) ) )
+		$containerUsed: ContainerUsed($code: code,$concentration: concentration, $concentration!=null) from $inputContainerUseds				
+		$contextValidation:ContextValidation()
+		eval( Double.parseDouble($concentration.getValue().toString())!= (Double) $total/$inputContainerUseds.size())
+    then
+    	Double value = Double.parseDouble($concentration.getValue().toString());
+    	Logger.debug("value = " + value);
+    	Logger.debug("Same concentrations in  Pool-tube");
+    	$contextValidation.addErrors("pool-tube","error.validationexp.sameconcentration",$code);
+end
+
+rule "Volume not null in SolutionStock outputContainer"
+    @nglSQ( validations )
+	dialect "java"
+	salience 940
+	no-loop
+    when
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="solution-stock")
+		$atomicTransfert: OneToOneContainer($inputContainerUsed:inputContainerUsed ,$outputContainerUsed: outputContainerUsed)
+	   	ContainerUsed($finalVolume: volume) from $outputContainerUsed
+    	$contextValidation:ContextValidation()
+    	eval($finalVolume == null || $finalVolume.value == null || $finalVolume.value == "")
+    then
+    Logger.debug("Volume not null in SolutionStock outputContainer");
+    Integer i = null;
+    for(Map.Entry<Integer,AtomicTransfertMethod> entry : $experiment.atomicTransfertMethods.entrySet()){
+    	Integer index = entry.getKey();
+    	OneToOneContainer atomic = (OneToOneContainer) entry.getValue();
+    	if(($inputContainerUsed.code).equals(atomic.inputContainerUsed.code)){
+    	 $contextValidation.addErrors("solution-stock","error.validationexp.outputvolumenotnull", index);
+    	}
+    }
+   
+end
+
+rule "Concentration not null in SolutionStock outputContainer"
+    @nglSQ( validations )
+	dialect "java"
+	salience 930
+	no-loop
+    when
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="solution-stock")
+		$atomicTransfert: OneToOneContainer($inputContainerUsed:inputContainerUsed, $outputContainerUsed: outputContainerUsed)
+		ContainerUsed($finalConcentration: concentration) from $outputContainerUsed
+		$contextValidation:ContextValidation()
+		eval($finalConcentration == null || $finalConcentration.value == null || $finalConcentration.value == "") 
+    then
+    Logger.debug("Concentration not null in SolutionStock outputContainer");
+    Integer i = null;
+    for(Map.Entry<Integer,AtomicTransfertMethod> entry : $experiment.atomicTransfertMethods.entrySet()){
+    	Integer index = entry.getKey();
+    	OneToOneContainer atomic = (OneToOneContainer) entry.getValue();
+    	if(($inputContainerUsed.code).equals(atomic.inputContainerUsed.code)){
+    	 $contextValidation.addErrors("solution-stock","error.validationexp.outputconcentrationnotnull", index);
+    	}
+    }    
+end
+
+    

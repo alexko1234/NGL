@@ -124,8 +124,8 @@ public class RunService {
 		propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType"
 	        		, LevelService.getLevels(Level.CODE.Run),String.class, false, DescriptionFactory.newValues("SR","PE"),"single"));
 		
-		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Types processus banque","libProcessTypeCodes",LevelService.getLevels(Level.CODE.Run), String.class, false,
-		//		getLibProcessTypeCodeValues(), "list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Types processus banque","libProcessTypeCodes",LevelService.getLevels(Level.CODE.Run), String.class, false,
+				getLibProcessTypeCodeValues(), "list"));
 		
 	    return propertyDefinitions;
 	}

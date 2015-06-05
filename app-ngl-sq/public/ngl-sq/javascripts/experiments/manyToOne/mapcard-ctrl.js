@@ -92,13 +92,15 @@ angular.module('home').controller('ManyToOneMapcardCtrl',['$scope', '$window','d
 			},
 			save:{
 				active:true,
+				showButton: false,
 				mode:'local',
 			},
 			hide:{
 				active:true
 			},
 			edit:{
-				active:true,
+				active: !$scope.doneAndRecorded,
+				showButton: false,
 				columnMode:true
 			},
 			messages:{
@@ -276,6 +278,14 @@ angular.module('home').controller('ManyToOneMapcardCtrl',['$scope', '$window','d
 		});
 		
 	};
+	
+	$scope.$on('disableEditMode', function(){
+		$scope.datatable.config.edit.active = false;
+	});
+	
+	$scope.$on('enableEditMode', function(){
+		$scope.datatable.config.edit.active = true;
+	});
 	
 	//Init
 	$scope.datatable = datatable($scope.datatableConfig);

@@ -3,6 +3,7 @@ package services.instance;
 import java.util.concurrent.TimeUnit;
 
 import scala.concurrent.duration.Duration;
+import services.instance.container.BanqueAmpliImportCNS;
 import services.instance.container.PrepaflowcellImportCNS;
 import services.instance.container.SolutionStockImportCNS;
 import services.instance.container.TubeImportCNS;
@@ -42,6 +43,9 @@ public class ImportDataCNS{
 
 		new SolutionStockImportCNS(Duration.create(5,TimeUnit.SECONDS),Duration.create(5,TimeUnit.MINUTES));
 		new UpdateSolutionStockCNS(Duration.create(20,TimeUnit.SECONDS),Duration.create(5,TimeUnit.MINUTES));
+		
+		//new BanqueAmpliImportCNS(Duration.create(5,TimeUnit.SECONDS),Duration.create(10,TimeUnit.MINUTES));
+		
 	}
 
 }

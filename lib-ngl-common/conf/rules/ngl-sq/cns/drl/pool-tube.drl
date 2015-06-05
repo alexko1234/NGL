@@ -1,0 +1,42 @@
+//created on: May 5, 2015
+package rules
+
+
+rule "Debug pool-tube"
+	@nglSQ( calculations )
+	dialect "java"
+	salience 1000
+	no-loop
+    when
+		$experiment:Experiment($typeCode:typeCode,$typeCode=="pool-tube")
+    eval(true)
+    then
+		Logger.debug("Rules annotation @nglSQ(calculations) pool-tube");    
+end
+
+rule "InputVolume"
+    @nglSQ( calculations )
+	dialect "java"
+	salience 900
+	no-loop
+    when
+		$experiment:Experiment($typeCode:typeCode,$typeCode=="pool-tube")
+		$atomicTransfert: ManytoOneContainer($inputContainerUseds : inputContainerUseds, $inputContainerUseds!=null , $outputContainerUsed: outputContainerUsed, $outputContainerUsed!=null )
+		$containerUsed: ContainerUsed($percentage: percentage, $percentage!=null) from $inputContainerUseds
+		
+		ContainerUsed($finalVolume: volume, $finalVolume!=null) from $outputContainerUsed
+		eval( Double.class.isInstance($percentage) && $finalVolume.getValue()!=null)
+    then
+        Logger.debug("InputVolume calculation");
+        Double inputVolume = roundValue( ((Double)$percentage/100.0) * Double.parseDouble($finalVolume.getValue().toString()));
+        PropertySingleValue propertySingle = new PropertySingleValue(inputVolume, "\u00B5L");
+        if($containerUsed.experimentProperties==null){
+			$containerUsed.experimentProperties = new HashMap<String, PropertyValue>();		
+		}else if($containerUsed.experimentProperties.containsKey("inputVolume")){
+			$containerUsed.experimentProperties.remove("inputVolume");
+		}		
+		$containerUsed.experimentProperties.put("inputVolume", propertySingle);
+		Logger.debug("inputVolume=",propertySingle.getValue());
+		update($experiment);
+
+end

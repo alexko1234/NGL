@@ -18,6 +18,7 @@ import models.laboratory.experiment.instance.OneToOneContainer;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import models.utils.dao.DAOException;
+import play.Logger;
 
 public class ExperimentTestHelper {
 	public final static String EXP_CODE = "TESTYANNEXP";
@@ -44,6 +45,7 @@ public class ExperimentTestHelper {
 	public static OneToOneContainer getOnetoOneContainer(){
 		OneToOneContainer atomicTransfertMethod = new OneToOneContainer();
 		atomicTransfertMethod.inputContainerUsed = new ContainerUsed();
+		atomicTransfertMethod.outputContainerUsed = new ContainerUsed();
 		
 		return atomicTransfertMethod;
 	}
@@ -76,7 +78,7 @@ public class ExperimentTestHelper {
 			instrumentUsed.typeCode = instrument.typeCode;
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.error("DAO error: "+e.getMessage(),e);;
 		}
 		
 		return instrumentUsed;
@@ -179,5 +181,47 @@ public class ExperimentTestHelper {
 		container2_2.contents.add(content2_2);
 		atomicTransfert2.inputContainerUseds.add(container2_2);
 		return exp;
+	}
+	
+	public static InstrumentUsed getInstrumentSolutionStock(){
+		Instrument instrument = new Instrument();
+		InstrumentUsed instrumentUsed = new InstrumentUsed();
+		try {
+			instrument = instrument.find.findByCode("hand");
+			instrumentUsed.code = instrument.code;
+			instrumentUsed.categoryCode = instrument.categoryCode;
+			instrumentUsed.typeCode = instrument.typeCode;
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			Logger.error("DAO error: "+e.getMessage(),e);;
+		}
+		
+		return instrumentUsed;
+	}
+	
+	public static Experiment getFakeSolutionStock(){
+		Random randomGenerator=new Random();
+		String code = "TEST-SOLUTIONSTOCK"+randomGenerator.nextInt(1000);
+		Experiment exp = getFakeExperimentWithAtomicExperimentManyToOne("solution-stock");
+		exp.code=code;
+		exp.categoryCode = "transformation";
+		exp.instrument = getInstrumentSolutionStock();
+		
+		return exp;
+	}
+	
+	public static Experiment getFakeExperimentWithAtomicExperimentOneToOne(String typeCode){
+		Experiment exp = getFakeExperiment();
+		exp.typeCode=typeCode;
+		OneToOneContainer atomicTransfert1 = ExperimentTestHelper.getOnetoOneContainer();
+		OneToOneContainer atomicTransfert2 = ExperimentTestHelper.getOnetoOneContainer();
+		
+		exp.atomicTransfertMethods.put(0,atomicTransfert1);
+		exp.atomicTransfertMethods.put(0,atomicTransfert2);
+		
+		
+		
+		return exp;
+		
 	}
 }

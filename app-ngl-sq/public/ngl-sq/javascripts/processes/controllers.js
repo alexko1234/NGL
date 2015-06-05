@@ -269,7 +269,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 
 			$scope.errors.processType = "has-error";
 		}
-	};
+	};	
+	
 
 	//init
 	$scope.errors = {};
@@ -307,6 +308,9 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	}else{
 		$scope.form = mainService.getForm();			
 	}
+	
+	
+	
 }]);
 
 angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http','mainService','$q', function($scope, datatable,$http,mainService,$q) {
@@ -390,8 +394,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			        	 active:true,
 			        	 by:'containerInputCode'
 			         },
-			         edit:{
-			        	 active:true,
+			         edit:{			        	 
 			        	 columnMode:true
 			         },
 			         save:{
@@ -740,9 +743,13 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 		return $http.get(jsRoutes.controllers.processes.tpl.Processes.getPropertiesDefinitions(typeCode).url)
 		.success(function(data, status, headers, config) {
 			if(data!=null){
-				console.log(data);
-				angular.forEach(data, function(property){					
-
+				if(data.length>0){
+					$scope.datatable.config.edit.active = true;
+				}else{
+					$scope.datatable.config.edit.active = false;
+				}
+				console.log(data);				
+				angular.forEach(data, function(property){
 					var unit = "";
 					if(angular.isDefined(property.displayMeasureValue)){
 						unit = "("+property.displayMeasureValue+")";
@@ -775,9 +782,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			 return false;
 		 }
 	 };
-
-
-
+	 
 	//init
 	$scope.form = mainService.getForm();
 	$scope.message = {};

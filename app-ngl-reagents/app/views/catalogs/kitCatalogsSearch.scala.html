@@ -19,6 +19,11 @@
 		}
 	}	
 		
+	@columnSearchForm{
+		@formGroup{
+			<input type="text" class="form-control" ng-model="searchService.form.catalogRefCode" placeholder='@Messages("kits.catalogRefCode")'>
+		}
+	}	
 }
 
 @searchForm(form)()("searchService.datatable")

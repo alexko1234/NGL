@@ -41,7 +41,7 @@ public class ProcessCategories extends CommonController{
 				return Results.ok(Json.toJson(processCategories));
 			}
 		}catch (DAOException e) {
-			e.printStackTrace();
+			Logger.error("DAO error: "+e.getMessage(),e);
 			return  Results.internalServerError(e.getMessage());
 		}	
 	}

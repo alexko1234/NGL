@@ -22,7 +22,7 @@ public class Global extends GlobalSettings {
 			RulesServices6.getInstance();
 		} catch (Throwable e) {
 			Logger.error("Error Load knowledge base");
-			e.printStackTrace();
+			Logger.error("Drools Singleton error: "+e.getMessage(),e);;
 			//Shutdown application
 			Play.stop();
 		}

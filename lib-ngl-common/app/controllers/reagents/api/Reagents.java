@@ -150,21 +150,32 @@ public class Reagents extends DocumentController<Reagent>{
 			queryElts.add(DBQuery.is("kitCode", reagentSearch.kitCode));
 		}
 		
-		if(StringUtils.isNotEmpty(reagentSearch.boxBarCode)){
+		if(StringUtils.isNotEmpty(reagentSearch.barCode) && StringUtils.isNotEmpty(reagentSearch.boxBarCode)){
+			BoxSearchForm boxSearch = new BoxSearchForm();
+			boxSearch.barCode = reagentSearch.boxBarCode;
+			boxSearch.bundleBarCode = reagentSearch.boxBarCode;
+			BasicDBObject keys = new BasicDBObject();
+			keys.put("code", 1);
+			keys.put("category", 1);
+			List<Box> boxes = MongoDBDAO.find(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, Box.class, Boxes.getQuery(boxSearch), keys).toList();
+			List<String> boxCodes = new ArrayList<String>();
+			for(Box b:boxes){
+				boxCodes.add(b.code);
+			}
+			queryElts.add(DBQuery.or(DBQuery.regex("barCode", Pattern.compile(reagentSearch.barCode)),DBQuery.in("boxCode", boxCodes)));
+		}else if(StringUtils.isNotEmpty(reagentSearch.boxBarCode)){
 			BoxSearchForm boxSearch = new BoxSearchForm();
 			boxSearch.barCode = reagentSearch.boxBarCode;
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("code", 1);
 			keys.put("category", 1);
 			List<Box> boxes = MongoDBDAO.find(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, Box.class, Boxes.getQuery(boxSearch), keys).toList();
+			List<String> boxCodes = new ArrayList<String>();
 			for(Box b:boxes){
-				queryElts.add(DBQuery.or(DBQuery.is("boxCode", b.code),DBQuery.regex("barCode", Pattern.compile(reagentSearch.barCode+"_|_"+reagentSearch.barCode)),DBQuery.regex("reagents.code", Pattern.compile(reagentSearch.barCode+"_|_"+reagentSearch.barCode))));
+				boxCodes.add(b.code);
 			}
-		}
-		
-		if(StringUtils.isNotEmpty(reagentSearch.barCode) && StringUtils.isEmpty(reagentSearch.boxBarCode)){
-			queryElts.add(DBQuery.or(DBQuery.regex("barCode", Pattern.compile(reagentSearch.barCode+"_|_"+reagentSearch.barCode)),DBQuery.regex("reagents.code", Pattern.compile(reagentSearch.barCode+"_|_"+reagentSearch.barCode))));
-		}
+			queryElts.add(DBQuery.in("boxCode", boxCodes));
+		} 
 		
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));

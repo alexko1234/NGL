@@ -9,6 +9,7 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
@@ -89,8 +90,18 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 				}
 			}
 
+			PropertyValue volume = new PropertySingleValue();
+			PropertyValue concentration = new PropertySingleValue();
+			
 			if(this.outputContainerUsed!=null){
-				this.outputContainerUsed.code=outPutContainerCode;
+				this.outputContainerUsed.code=outPutContainerCode;				
+				if(this.outputContainerUsed.volume!=null){
+					volume = this.outputContainerUsed.volume;
+				}				
+				if(this.outputContainerUsed.concentration!=null){
+					concentration = this.outputContainerUsed.concentration;
+				}				
+				
 			}else {
 				this.outputContainerUsed = new ContainerUsed(outPutContainerCode);
 			}
@@ -98,6 +109,8 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 			support.categoryCode=experiment.instrument.outContainerSupportCategoryCode;
 
 			this.outputContainerUsed.locationOnContainerSupport=support;
+			this.outputContainerUsed.volume = volume;
+			this.outputContainerUsed.concentration = concentration;
 
 			this.outputContainerUsed.validate(contextValidation);
 
@@ -133,6 +146,8 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 				outputContainer.state=new State("N",experiment.traceInformation.modifyUser);
 				outputContainer.valuation=new Valuation();
 				//TODO volume, proportion
+				outputContainer.mesuredVolume=(PropertySingleValue) this.outputContainerUsed.volume;
+				outputContainer.mesuredConcentration= (PropertySingleValue) this.outputContainerUsed.concentration;
 
 
 				//Add contents to container and data projets, sample ... in containersupport

@@ -39,7 +39,7 @@ public class CodeHelper {
 			Thread.sleep(1);
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			Logger.error("Interruption error: "+e1.getMessage(),e1);
 		}
 		String date = new SimpleDateFormat("yyMMddHHmmssSS").format(new Date());
 		Pattern p = Pattern
@@ -66,7 +66,7 @@ public class CodeHelper {
 				throw new Exception("matches fail " + date);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Logger.error("Matches error: "+e.getMessage(),e);;
 				return null;
 			}
 		}

@@ -165,7 +165,7 @@
 				},
 				 edit:{
 		        	 active:true,
-		        	 columnMode:false,
+		        	 columnMode:true,
 		        	 showButton : true,
 		        	 byDefault : false
 		         },
@@ -184,6 +184,7 @@
 	 $scope.scan = function(e){
 			console.log(e);
 			if(e.keyCode === 9 || e.keyCode === 13){
+				$scope.boxesDatatable.setData($scope.boxes);
 				$scope.newBox();
 			}
 	};
@@ -201,22 +202,21 @@
 						.success(function(data, status, headers, config) {
 							if(data!=null && data.length === 1){
 								object.category = "Reagent";
-								object.code = data[0].code;
-								object.boxCatalogCode = $scope.currentBox.catalogCode;
+								object.catalogCode = data[0].code;
+								object.boxCatalogRefCode = $scope.currentBox.catalogRefCode;
+								//object.boxBarCode =  $scope.currentBox.barCode;
 							}else{
 								$scope.message.clazz = 'alert alert-danger';
-								$scope.message.text = Messages('reagents.msg.save.error');
+								$scope.message.text = Messages('reagents.msg.catalogCode.error');
 								$scope.saveInProgress = false;
-								$scope.message.details = data;
-								$scope.message.isDetails = true;
+								$scope.message.isDetails = false;
 							}
 						})
 						.error(function(data, status, headers, config) {
 							$scope.message.clazz = 'alert alert-danger';
-							$scope.message.text = Messages('reagents.msg.save.error');
+							$scope.message.text = Messages('reagents.msg.catalogCode.error');
 							$scope.saveInProgress = false;
-							$scope.message.details = data;
-							$scope.message.isDetails = true;
+							$scope.message.isDetails = false;
 						});
 					}
 				})
@@ -227,17 +227,7 @@
 	 
 	 
 	 $scope.newBox = function(){
-		/*if($scope.boxesDatatable.displayResult !== undefined){
-			 for(var i = 0; i < $scope.boxesDatatable.displayResult.length; i++){
-				if($scope.boxesDatatable.displayResult[i].line.edit){
-					$scope.boxesDatatable.saveLocal($scope.boxesDatatable.displayResult[i].data,i);
-				}
-			 }
-		 }
-		 $scope.boxesDatatable.addData([{"category":"Box", "receptionDate":moment(new Date()).valueOf(), "state":{code:"N"}}]);
-		 $scope.boxesDatatable.setEdit();*/
 		 $scope.boxes.push({"category":"Box", "receptionDate":moment(new Date()).valueOf(), "state":{code:"N"}});
-		 $scope.boxesDatatable.setData($scope.boxes);
 	 };
 	 
 	 $scope.getRefCatalogs = function(){

@@ -11,6 +11,7 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.Protocol;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
+import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -48,7 +49,7 @@ final static Form<ProtocolsSearchForm> protocolForm = form(ProtocolsSearchForm.c
 				return Results.ok(Json.toJson(protocols));
 			}
 		}catch (DAOException e) {
-			e.printStackTrace();
+			Logger.error("DAO error: "+e.getMessage(),e);
 			return  Results.internalServerError(e.getMessage());
 		}	
 	}

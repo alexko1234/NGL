@@ -6,7 +6,8 @@ package rules
 
 
 //declare any global variables here
-declare ContainerInfo	
+declare ContainerInfo
+	containerCode : String	
 	mesuredConcentration : Double
 	finalVolume : Double
 	finalConcentration : Double
@@ -22,33 +23,30 @@ rule "Debug solution-stock"
     eval(true)
     then
 		Logger.debug("Rules annotation @nglSQ(calculations) solution-stock");    
-	end
+end
 
 rule "Init objectContainerInfo in WM"
 	@nglSQ( calculations )
 	dialect "java"
-	salience 950
+	salience 900
 	no-loop
 	lock-on-active true
     when
     $experiment:Experiment($typeCode:typeCode,$typeCode=="solution-stock")
 	$atomicTransfert: OneToOneContainer($inputContainerUsed : inputContainerUsed , $outputContainerUsed: outputContainerUsed)
 	ContainerUsed($mesuredConcentration: concentration, $mesuredConcentration!=null) from $inputContainerUsed
-	ContainerUsed($experimentPropertiesOut : experimentProperties,$experimentPropertiesOut!=null) from $outputContainerUsed
-	$finalVolume: PropertyValue() from $experimentPropertiesOut.get("finalVolume")
-	$finalConcentration: PropertyValue() from $experimentPropertiesOut.get("finalConcentration")
-	eval($finalVolume != null && $finalConcentration !=null)
+	ContainerUsed($finalVolume: volume, $finalConcentration: concentration ) from $outputContainerUsed	
+	eval($finalVolume != null && $finalConcentration !=null && $finalVolume.getValue() != null && $finalConcentration.getValue() !=null)
     then
     Logger.debug("Init objectContainerInfo in WM");
+    String containerCode = $inputContainerUsed.code;
     Double mesuredConcentration = Double.parseDouble($mesuredConcentration.getValue().toString());
 	Double finalVolume = Double.parseDouble($finalVolume.getValue().toString());
 	Double finalConcentration = Double.parseDouble($finalConcentration.getValue().toString());
-	ContainerInfo containerInfo = new ContainerInfo(mesuredConcentration,finalVolume,finalConcentration);    
-	Logger.debug("Object ContainerInfo: mesuredConcentration="+ mesuredConcentration +"; finalVolume="+ finalVolume +"; finalConcentration="+ finalConcentration);
+	ContainerInfo containerInfo = new ContainerInfo(containerCode, mesuredConcentration,finalVolume,finalConcentration);    
+	Logger.debug("Object ContainerInfo: containerCode="+ containerCode +" mesuredConcentration="+ mesuredConcentration +"; finalVolume="+ finalVolume +"; finalConcentration="+ finalConcentration);
 	insert(containerInfo);    
-	end
-	
-
+end	
 
 rule "RequiredVolume"
     @nglSQ( calculations )
@@ -59,7 +57,7 @@ rule "RequiredVolume"
      	$experiment: Experiment($typeCode:typeCode,$typeCode=="solution-stock")    					
 		$atomicTransfert: OneToOneContainer($inputContainerUsed : inputContainerUsed, $inputContainerUsed!=null)
 		ContainerUsed( $experimentProperties : experimentProperties) from $inputContainerUsed
-		ContainerInfo($mesuredConcentration:mesuredConcentration, $finalConcentration:finalConcentration, $finalVolume:finalVolume)		
+		ContainerInfo($containerCode: containerCode, $containerCode==$inputContainerUsed.code, $mesuredConcentration:mesuredConcentration, $finalConcentration:finalConcentration, $finalVolume:finalVolume)		
 		eval(Double.class.isInstance($finalVolume) && $mesuredConcentration!=0  && Double.class.isInstance($mesuredConcentration) && Double.class.isInstance($finalConcentration))
     then
 		Logger.debug("RequiredVolume calculation");
@@ -67,7 +65,7 @@ rule "RequiredVolume"
 			
 		Logger.debug("RequiredVolume= "+requiredVolume);
 		PropertySingleValue propertySingle = new PropertySingleValue(requiredVolume, "\u00B5L");
-		Logger.debug("property:", propertySingle.getValue().toString());
+		Logger.debug("property:"+ propertySingle.getValue().toString());
 		if($experimentProperties==null){
 			$experimentProperties = new HashMap<String, PropertyValue>();
 			$inputContainerUsed.setExperimentProperties($experimentProperties);
@@ -76,7 +74,7 @@ rule "RequiredVolume"
 		}
 		
 		$experimentProperties.put("requiredVolume", propertySingle);
-		Logger.debug("requiredVolume=", propertySingle.getValue());
+		Logger.debug("requiredVolume="+ propertySingle.getValue());
 		update($experiment);
 end
 
@@ -86,9 +84,9 @@ rule "BufferVolume"
 	salience 700
 	no-loop
     when
-        $experiment:Experiment($typeCode:typeCode,$typeCode=="solution-stock")
-       	ContainerInfo($finalVolume:finalVolume,$finalVolume!=null)
+        $experiment:Experiment($typeCode:typeCode,$typeCode=="solution-stock")       	
 		$atomicTransfert: OneToOneContainer($inputContainerUsed : inputContainerUsed)
+		ContainerInfo($containerCode: containerCode, $containerCode==$inputContainerUsed.code, $finalVolume:finalVolume,$finalVolume!=null)
 	 	ContainerUsed( $experimentProperties : experimentProperties, $experimentProperties!=null) from $inputContainerUsed
 		$requiredVolume: PropertyValue() from $experimentProperties.get("requiredVolume")
 		eval($requiredVolume!=null )	
@@ -100,6 +98,6 @@ rule "BufferVolume"
 			$experimentProperties.remove("bufferVolume");
 		}		
 		$experimentProperties.put("bufferVolume", value);
-		Logger.debug("bufferVolume=",value.getValue());     	
+		Logger.debug("bufferVolume="+value.getValue());		   	
 end
 

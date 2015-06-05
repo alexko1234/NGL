@@ -89,7 +89,7 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 			        	 active:true
 			         },
 			         edit:{
-			        	 active:true,
+			        	 active: !$scope.doneAndRecorded,
 			        	 columnMode:true
 			         },
 			         save:{

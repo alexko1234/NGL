@@ -29,7 +29,7 @@ public class SampleSheetsFactoryHelper {
 			instrument = Instrument.find.findByCode(instrumentCode);
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.error("DAO error: "+e.getMessage(),e);
 		}
 		if(instrument != null){
 			if(Play.application().configuration().getString("ngl.path.instrument") != null){

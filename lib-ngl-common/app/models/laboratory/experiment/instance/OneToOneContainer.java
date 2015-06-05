@@ -18,6 +18,7 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
@@ -56,9 +57,19 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 				if(this.outputContainerUsed.experimentProperties!=null){
 					experimentProperties=this.outputContainerUsed.experimentProperties;
 				}
+				PropertyValue volume = new PropertySingleValue();
+				if(this.outputContainerUsed.volume!=null){
+					volume = this.outputContainerUsed.volume;
+				}
+				PropertyValue concentration = new PropertySingleValue();
+				if(this.outputContainerUsed.concentration!=null){
+					concentration = this.outputContainerUsed.concentration;
+				}				
 				String outPutContainerCode=CodeHelper.getInstance().generateContainerSupportCode();
 				this.outputContainerUsed = new ContainerUsed(outPutContainerCode);
 				this.outputContainerUsed.experimentProperties= experimentProperties;
+				this.outputContainerUsed.volume = volume;
+				this.outputContainerUsed.concentration = concentration;
 				LocationOnContainerSupport support=new LocationOnContainerSupport();
 				support.categoryCode=experiment.instrument.outContainerSupportCategoryCode;
 				// Same position 
@@ -106,6 +117,9 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 			outputContainer.valuation=new Valuation();
 
 			//TODO volume, proportion
+			outputContainer.mesuredVolume=(PropertySingleValue) this.outputContainerUsed.volume;
+			outputContainer.mesuredConcentration= (PropertySingleValue) this.outputContainerUsed.concentration;
+			
 			
 			Map<String,PropertyValue> properties=ExperimentHelper.getAllPropertiesFromAtomicTransfertMethod(this,experiment);
 			ContainerHelper.addContent(outputContainer, this.getInputContainers(), experiment, properties);

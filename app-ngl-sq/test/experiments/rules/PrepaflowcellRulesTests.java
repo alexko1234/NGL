@@ -160,5 +160,22 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		assertThat(contextValidation.errors.get("instrument").size()).isEqualTo(2);
 
 	}
+	
+	@Test
+	public void validateCodeFlowcellWithoutBadChars(){
+		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
+		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
+
+		exp.instrument=new InstrumentUsed();
+		exp.instrument.code="cBot Melisse";
+		exp.instrument.outContainerSupportCategoryCode="flowcell-1";
+		exp.instrumentProperties=new HashMap<String, PropertyValue>();
+		exp.instrumentProperties.put("containerSupportCode", new PropertySingleValue("dhb 9846/VBDDJV*65454@ahdkjh"));
+
+		ExperimentValidationHelper.validateRules(exp, contextValidation);
+		contextValidation.displayErrors(logger);
+		assertThat(contextValidation.hasErrors()).isTrue();
+		assertThat(contextValidation.errors.get("instrument").size()).isEqualTo(1);
+	}
 
 }

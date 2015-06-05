@@ -30,7 +30,7 @@ public class ExperimentTypes extends CommonController{
 			experimentType = ExperimentType.find.findByCode(code);
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.error("DAO error: "+e.getMessage(),e);
 		}
 		if(experimentType == null){
 			return notFound();
@@ -73,7 +73,7 @@ public class ExperimentTypes extends CommonController{
 				return Results.ok(Json.toJson(experimentTypes));
 			}
 		}catch (DAOException e) {
-			e.printStackTrace();
+			Logger.error("DAO error: "+e.getMessage(),e);
 			return  Results.internalServerError(e.getMessage());
 		}	
 	}

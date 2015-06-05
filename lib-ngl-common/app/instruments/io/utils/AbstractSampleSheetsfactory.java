@@ -112,7 +112,7 @@ public abstract class AbstractSampleSheetsfactory {
 			
 		} catch (Exception e) {
 			Logger.error("Problem to create sample sheet",e);
-			e.printStackTrace();
+			Logger.error("DAO error: "+e.getMessage(),e);
 		}
 	}
 }

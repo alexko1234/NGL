@@ -93,6 +93,9 @@ angular.module('commonsServices', []).
     				containerSupportCategories : function(params, key){
     					load(jsRoutes.controllers.containers.api.ContainerSupportCategories.list().url,params,(key)?key:'containerSupportCategories');
     				},
+    				processes : function(params, key){
+    					load(jsRoutes.controllers.processes.api.Processes.list().url,params,(key)?key:'processes');
+    				},
     				processCategories : function(params, key){
     					load(jsRoutes.controllers.processes.api.ProcessCategories.list().url,params,(key)?key:'processCategories');
     				},
@@ -165,6 +168,20 @@ angular.module('commonsServices', []).
     				},
     				values : function(params, key){
     					load(jsRoutes.controllers.commons.api.Values.list().url,params,(key)?key:'values');    				
+    				},
+    				tags : function(params, key){
+    					if(angular.isUndefined(params)){
+    	    				params = {};
+    	    			}
+    					params.objectTypeCode='tag';
+    					load(jsRoutes.controllers.containers.api.Contents.list().url,params,(key)?key:'tags');
+    				},
+    				tagCategories : function(params, key){
+    					if(angular.isUndefined(params)){
+    	    				params = {};
+    	    			}
+    					params.objectTypeCode='tagCategory';
+    					load(jsRoutes.controllers.containers.api.Contents.list().url,params,(key)?key:'tagCategories');
     				},
     				sampleTypes : function(params, key){
     					if(angular.isUndefined(params)){
@@ -240,6 +257,7 @@ angular.module('commonsServices', []).
     			getValuationCriterias : function(){return results['valuationCriterias'];},
     			getProjects : function(){return results['projects'];},
     			getContainerSupportCategories : function(){return results['containerSupportCategories'];},
+    			getProcesses : function(){return results['processes'];},
     			getProcessCategories : function(){return results['processCategories'];},
     			getProcessTypes : function(){return results['processTypes'];},
     			getProjectCategories : function(){return results['projectCategories'];},
@@ -288,7 +306,21 @@ angular.module('commonsServices', []).
     			},
     			getSraStudies : function(){return results['sraStudies'];},
     			getSraConfigurations : function(){return results['sraConfigurations'];},
-    			getReadSets : function(){return results['readSets'];}
+    			getReadSets : function(){return results['readSets'];},
+    			getTags : function(params,key){
+    				key = (key)?key:'tags';
+    				if(results[key] === undefined){
+    					refresh.tags(params, key);
+    				}
+    				return results[key];
+    			},
+    			getTagCategories: function(params,key){
+    				key = (key)?key:'tagCategories';
+    				if(results[key] === undefined){
+    					refresh.tagCategories(params, key);
+    				}
+    				return results[key];
+    			}
 
 
     		};
@@ -989,12 +1021,9 @@ angular.module('commonsServices', []).
     	    };
     	}]).filter('codes', function(){
     		return function(input, key){
-    			//Warning: do not use the filter for an array in the datatable
-    			//Use the directive like that in the column:
-    			//"render":"<span ng-model='value.data.theProperty' codes='theType'></span>"
     			if(angular.isArray(input) && input.length > 0){
     				for(var i=0;i<input.length;i++){
-    					input[i] = Messages(Codes(key+"."+input[i].replace(key+".", "")).replace(key+".", ""));
+    					input[i] = Messages(Codes(key+"."+input[i]));
     				}
     			
     				return input;

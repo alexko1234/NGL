@@ -12,6 +12,9 @@
 			<div bt-select placeholder="@Messages("processes.select.state")" multiple="true" filter="true" class="form-control" ng-model="searchService.form.stateCodes" bt-options="stateCode.code as stateCode.name for stateCode in searchService.lists.getStates()" auto-select>
 			</div>			
 			
+		}
+		@formGroup{
+			<input class="form-control" type="text" ng-model="searchService.form.processCode" typeahead="process.code as process.name for process in searchService.lists.getProcesses() | filter:$viewValue | limitTo:20" typeahead-min-length='3' placeholder='@Messages("search.placeholder.process")' title='@Messages("search.placeholder.process")'>
 		}		
 			
 	
@@ -43,17 +46,17 @@
 			<input class="form-control" type="text" ng-model="searchService.form.toDate" placeholder='@Messages("processes.placeholder.toDate")' title='@Messages("processes.placeholder.toDate")' >			
 		}
 		@formGroup{
-			<input class="form-control" type="text" ng-model="searchService.form.supportCode"  placeholder='@Messages("search.placeholder.containerSupport")' title='@Messages("search.placeholder.containerSupport")'>
+			<input class="form-control" type="text" ng-model="searchService.form.supportCode" typeahead="support.code as support.name for support in searchService.lists.getContainerSupports() | filter:$viewValue | limitTo:20" typeahead-min-length='3' placeholder='@Messages("search.placeholder.containerSupport")' title='@Messages("search.placeholder.containerSupport")'>
 		}
 		
 	}
 	@columnSearchForm{		
 		@formGroup{	
-			<input class="form-control" type="text" ng-model="searchService.form.createUser" typeahead="user.name as user.name for user in searchService.lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("processes.placeholder.user")' title='@Messages("processes.placeholder.user")'>
+			<input class="form-control" type="text" ng-model="searchService.form.createUser" typeahead="user.name as user.name for user in searchService.lists.getUsers() | filter:$viewValue | limitTo:20" typeahead-min-length='3' placeholder='@Messages("processes.placeholder.user")' title='@Messages("processes.placeholder.user")'>
 			
 		}
 		@formGroup{
-			<input class="form-control" type="text" ng-model="searchService.form.experimentCode"  placeholder='@Messages("search.placeholder.experiment")' title='@Messages("search.placeholder.experiment")'>
+			<input class="form-control" type="text" ng-model="searchService.form.experimentCode" typeahead="experiment.code as experiment.name for experiment in searchService.lists.getExperiments() | filter:$viewValue | limitTo:20" typeahead-min-length='3' placeholder='@Messages("search.placeholder.experiment")' title='@Messages("search.placeholder.experiment")'>
 		}
 	}
 }
@@ -90,6 +93,7 @@
 			</div>		
 		</form>	
 	</div>
+	
 	<div class="tab-pane" id="addfilters">
 	<form class="well well-small">
 			<div class="row">
@@ -110,11 +114,13 @@
 					</button>
 												 	
 				</div>	
-				}	
+				}
+				
 			}
 			</div>			
 		</form>	
 	</div>
+	
 	<div class="tab-pane" id="addcolumns">
 	<form class="well well-small">
 			<div class="row">

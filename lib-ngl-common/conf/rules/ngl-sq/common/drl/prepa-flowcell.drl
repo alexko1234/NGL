@@ -9,7 +9,7 @@ rule "volume stock engaged in denat"
 	no-loop
 	lock-on-active true
     when
-    	 $experiment:Experiment($stateCode : state.code, $stateCode!="F")
+    	 $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-flowcell", $stateCode : state.code, $stateCode!="F")
     	 $atomicTransfert: ManytoOneContainer( )
     	 ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null, $concentrationIN:concentration) from $atomicTransfert.inputContainers
     	 $finalConcentration1 : PropertyValue() from $experimentProperties.get("finalConcentration1")
@@ -33,7 +33,7 @@ rule "volume PhiX"
 	no-loop
 	lock-on-active true
 	when
-		 $experiment:Experiment($stateCode : state.code, $stateCode!="F")
+		 $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-flowcell", $stateCode : state.code, $stateCode!="F")
 		 $atomicTransfert: ManytoOneContainer( )
 		 ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null) from $atomicTransfert.inputContainers
 		 ContainerUsed( $experimentPropertiesOut : experimentProperties,$experimentPropertiesOut!=null) from $atomicTransfert.outputContainerUsed
@@ -60,7 +60,7 @@ rule "volume EB"
 	salience 900
 	no-loop
     when
-    	 $experiment:Experiment($stateCode : state.code, $stateCode!="F")
+    	 $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-flowcell", $stateCode : state.code, $stateCode!="F")
     	 $atomicTransfert: ManytoOneContainer( )
     	 ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null, $concentrationIN:concentration) from $atomicTransfert.inputContainers
     	 $naohVolume : PropertyValue() from $experimentProperties.get("NaOHVolume")
@@ -84,7 +84,7 @@ rule "volume engaged in dilution"
 	lock-on-active true
 	no-loop
     when
-    	 $experiment:Experiment($stateCode : state.code, $stateCode!="F")
+    	 $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-flowcell", $stateCode : state.code, $stateCode!="F")
     	 $atomicTransfert: ManytoOneContainer( )
     	 ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null) from $atomicTransfert.inputContainers
     	 $finalConcentration2 : PropertyValue() from $experimentProperties.get("finalConcentration2")
@@ -108,7 +108,7 @@ rule "volume HT1"
 	salience 600
 	no-loop
 	when
-		 $experiment:Experiment($stateCode : state.code, $stateCode!="F")
+		 $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-flowcell", $stateCode : state.code, $stateCode!="F")
 		 $atomicTransfert: ManytoOneContainer( )
 		 ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null) from $atomicTransfert.inputContainers
 		 $phixVolume : PropertyValue() from $experimentProperties.get("phixVolume")
@@ -131,7 +131,7 @@ rule "Volume dilution on track"
 	salience 500
 	no-loop
 	when
-		 $experiment:Experiment($stateCode : state.code, $stateCode!="F")
+		 $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-flowcell", $stateCode : state.code, $stateCode!="F")
 		 $atomicTransfert: ManytoOneContainer( )
 		 ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null, $percentPerLane:percentage) from $atomicTransfert.inputContainers
 		 ContainerUsed( $experimentPropertiesOut : experimentProperties,$experimentPropertiesOut!=null) from $atomicTransfert.outputContainerUsed

@@ -20,8 +20,7 @@ import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
 
 import play.Play;
-import rules.services.RulesException;
-import rules.services.RulesServices;
+import play.Logger;
 import rules.services.RulesServices6;
 import validation.ContextValidation;
 import validation.container.instance.ContainerSupportValidationHelper;
@@ -125,6 +124,9 @@ public class ProcessHelper {
 			query=query.and(DBQuery.or(queryOr.toArray(new Query[queryOr.size()])));
 		}
 
+		Logger.debug("Push newContainerSupportCodes "+ outputContainerUsed.locationOnContainerSupport.code +" in Process with experiment "+experiment.code 
+				+ ", containers input "+inputContainerUsed.code 
+				+", containers new "+inputContainerUsed.code);
 		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,query,
 				DBUpdate.push("newContainerSupportCodes",outputContainerUsed.locationOnContainerSupport.code),true);
 	}

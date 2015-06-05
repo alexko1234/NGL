@@ -181,13 +181,13 @@ public class ExperimentWorkflowTests extends AbstractTests {
 			initData();
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.error("Instantiation error: "+e.getMessage(),e);;
 		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.error("Access error: "+e.getMessage(),e);
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.error("Class error: "+e.getMessage(),e);
 		}
 		String code="PREPA-FLOWCELL-20150107_105554";
 		
@@ -269,13 +269,13 @@ public class ExperimentWorkflowTests extends AbstractTests {
 			initData();
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.error("Instantiation error: "+e.getMessage(),e);
 		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.error("Access error: "+e.getMessage(),e);
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.error("Class error: "+e.getMessage(),e);
 		}
 		String code="PREPA-FLOWCELL-20150107_105554";
 		

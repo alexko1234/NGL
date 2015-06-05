@@ -60,8 +60,7 @@ public class Processes extends CommonController{
 				return ok(Json.toJson(processType.propertiesDefinitions));
 			}
 		} catch (DAOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.error("DAO error: "+e.getMessage(),e);
 		}
 
 		return badRequest();
@@ -90,6 +89,7 @@ public class Processes extends CommonController{
 						controllers.commons.api.routes.javascript.Values.list(),
 						controllers.projects.api.routes.javascript.Projects.list(),
 						controllers.samples.api.routes.javascript.Samples.list(),
+						controllers.experiments.api.routes.javascript.Experiments.list(),
 						controllers.containers.api.routes.javascript.ContainerSupports.list(),
 						controllers.commons.api.routes.javascript.States.list(),
 						controllers.commons.api.routes.javascript.Users.list(),
@@ -101,7 +101,9 @@ public class Processes extends CommonController{
 			      		controllers.reporting.api.routes.javascript.ReportingConfigurations.get(),
 			      		controllers.reporting.api.routes.javascript.ReportingConfigurations.save(),
 			      		controllers.reporting.api.routes.javascript.ReportingConfigurations.update(),
-			      		controllers.reporting.api.routes.javascript.ReportingConfigurations.delete()
+			      		controllers.reporting.api.routes.javascript.ReportingConfigurations.delete(),
+			      		controllers.commons.api.routes.javascript.Values.list(),
+			      		controllers.containers.api.routes.javascript.Contents.list()
 						)	  	      
 				);
 	}

@@ -141,7 +141,7 @@ public class DescriptionHelper {
 				state.position=0;
 			}
 		} catch (DAOException e) {
-			e.printStackTrace();
+			Logger.error("DAO error: "+e.getMessage(),e);
 		}
 		return state;
 	}
@@ -157,7 +157,7 @@ public class DescriptionHelper {
 				//resolution.save();
 			}
 		} catch (DAOException e) {
-			e.printStackTrace();
+			Logger.error("DAO error: "+e.getMessage(),e);
 		}
 		return resolution;
 	}
@@ -239,7 +239,7 @@ public class DescriptionHelper {
 				measureCategory.name=name;
 			}
 		} catch (DAOException e) {
-			e.printStackTrace();
+			Logger.error("DAO error: "+e.getMessage(),e);
 		}
 		return measureCategory;
 	}
@@ -262,7 +262,7 @@ public class DescriptionHelper {
 			connection.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			Logger.error("SQL error: "+e.getMessage(),e);
 		}
 		return listIndex;
 	}

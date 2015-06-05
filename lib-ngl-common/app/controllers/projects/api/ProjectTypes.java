@@ -8,6 +8,7 @@ import java.util.List;
 import models.laboratory.project.description.ProjectType;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
+import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -40,7 +41,7 @@ public class ProjectTypes extends CommonController{
 				return Results.ok(Json.toJson(projectTypes));
 			}
 		}catch (DAOException e) {
-			e.printStackTrace();
+			Logger.error("DAO error: "+e.getMessage(),e);
 			return  Results.internalServerError(e.getMessage());
 		}	
 	}

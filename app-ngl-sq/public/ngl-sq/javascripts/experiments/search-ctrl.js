@@ -20,7 +20,7 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 				mode:'local'
 			},
 			edit:{
-				active:true
+				active:false
 			}
 	};
 	

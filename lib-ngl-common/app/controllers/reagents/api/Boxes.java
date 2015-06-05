@@ -141,6 +141,10 @@ public class Boxes extends DocumentController<Box>{
 		Query query = null;
 		queryElts.add(DBQuery.is("category", "Box"));
 
+		if(StringUtils.isNotBlank(boxSearch.code)){
+			queryElts.add(DBQuery.is("code", boxSearch.code));
+		}
+		
 		if(StringUtils.isNotBlank(boxSearch.kitCode)){
 			queryElts.add(DBQuery.is("kitCode", boxSearch.kitCode));
 		}
@@ -149,27 +153,24 @@ public class Boxes extends DocumentController<Box>{
 			queryElts.add(DBQuery.is("orderCode", boxSearch.orderCode));
 		}
 		
-		
-		if(StringUtils.isNotBlank(boxSearch.bundleBarCode)){
-			queryElts.add(DBQuery.is("bundleBarCode", boxSearch.bundleBarCode));
-		}
-		
 		if(StringUtils.isNotBlank(boxSearch.catalogRefCode)){
 			queryElts.add(DBQuery.is("catalogRefCode", boxSearch.catalogRefCode));
-		}
-		
-		if(StringUtils.isNotBlank(boxSearch.bundleBarCode)){
-			queryElts.add(DBQuery.is("bundleBarCode", boxSearch.bundleBarCode));
 		}
 		
 		if(boxSearch.catalogCodes != null){
 			queryElts.add(DBQuery.in("catalogCodes", boxSearch.catalogCodes));
 		}
-		
-		if(StringUtils.isNotEmpty(boxSearch.barCode)){
-			queryElts.add(DBQuery.or(DBQuery.regex("barCode", Pattern.compile(boxSearch.barCode+"_|_"+boxSearch.barCode)),DBQuery.regex("reagents.code", Pattern.compile(boxSearch.barCode+"_|_"+boxSearch.barCode))));
+		if(StringUtils.isNotEmpty(boxSearch.barCode) && StringUtils.isNotEmpty(boxSearch.bundleBarCode)){
+			queryElts.add(DBQuery.or(DBQuery.is("barCode", boxSearch.barCode), DBQuery.is("bundleBarCode", boxSearch.bundleBarCode)));
+		}else{
+			if(StringUtils.isNotEmpty(boxSearch.barCode)){
+				queryElts.add(DBQuery.regex("barCode", Pattern.compile(boxSearch.barCode)));
+			}
+			
+			if(StringUtils.isNotBlank(boxSearch.bundleBarCode)){
+				queryElts.add(DBQuery.is("bundleBarCode", boxSearch.bundleBarCode));
+			}
 		}
-		
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 		}

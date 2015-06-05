@@ -3,6 +3,7 @@ package controllers.processes.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -39,6 +40,7 @@ import validation.ContextValidation;
 import validation.processes.instance.ProcessValidationHelper;
 import validation.utils.ValidationConstants;
 import views.components.datatable.DatatableBatchResponseElement;
+import views.components.datatable.DatatableForm;
 import views.components.datatable.DatatableResponse;
 import workflows.process.ProcessWorkflows;
 
@@ -60,6 +62,7 @@ public class Processes extends CommonController{
 	final static Form<QueryFieldsForm> saveForm = form(QueryFieldsForm.class);
 	final static Form<ProcessesUpdateForm> processesUpdateForm = form(ProcessesUpdateForm.class);
 	final static Form<ProcessesBatchElement> processSaveBatchForm = form(ProcessesBatchElement.class);
+	final static List<String> defaultKeys =  Arrays.asList("categoryCode","containerInputCode","sampleCode", "sampleOnInputContainer", "typeCode", "state", "currentExperimentTypeCode", "newContainerSupportCodes", "experimentCodes","projectCode", "code", "traceInformation.creationDate", "traceInformation.createUser", "properties");
 	private static final ALogger logger = Logger.of("Processes");
 
 	public static Result head(String processCode) {
@@ -320,7 +323,7 @@ public class Processes extends CommonController{
 		ProcessesSearchForm processesSearch = filledFormQueryString(ProcessesSearchForm.class);
 
 		DBQuery.Query query = getQuery(processesSearch);
-		BasicDBObject keys = getKeys(processesSearch);
+		BasicDBObject keys = getKeys(updateForm(processesSearch));
 		
 		if(processesSearch.datatable){
 			MongoDBResult<Process> results =  mongoDBFinder(InstanceConstants.PROCESS_COLL_NAME, processesSearch, Process.class, query, keys); 
@@ -368,9 +371,17 @@ public class Processes extends CommonController{
 		}else if(StringUtils.isNotBlank(processesSearch.sampleCode)){
 			queryElts.add(DBQuery.is("sampleCode", processesSearch.sampleCode));
 		}
+		
+		if (CollectionUtils.isNotEmpty(processesSearch.sampleTypeCodes)) { //all
+			queryElts.add(DBQuery.in("sampleOnInputContainer.sampleTypeCode", processesSearch.sampleTypeCodes));
+		}
+
+		if(StringUtils.isNotBlank(processesSearch.processCode)){
+			queryElts.add(DBQuery.regex("code", Pattern.compile(processesSearch.processCode)));
+		}		
 
 		if(StringUtils.isNotBlank(processesSearch.experimentCode)){
-			queryElts.add(DBQuery.in("experimentCodes", processesSearch.experimentCode));
+			queryElts.add(DBQuery.regex("experimentCodes",Pattern.compile(processesSearch.experimentCode)));
 		}
 
 		if(StringUtils.isNotBlank(processesSearch.typeCode)){
@@ -432,17 +443,21 @@ public class Processes extends CommonController{
 			Logger.debug("Nb containers find"+containers.size());
 		}
 
-
-		if(StringUtils.isNotBlank(processesSearch.experimentCode)){
-			queryElts.add(DBQuery.regex("experimentCodes",Pattern.compile(processesSearch.experimentCode)));
-		}
-
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(processesSearch.properties, Level.CODE.Process, "properties"));
+		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(processesSearch.sampleOnInputContainerProperties, Level.CODE.Content, "sampleOnInputContainer.properties"));
 
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new Query[queryElts.size()]));
 		}
 
 		return query;
+	}
+	
+	private static DatatableForm updateForm(ProcessesSearchForm form) {
+		if(form.includes.contains("default")){
+			form.includes.remove("default");
+			form.includes.addAll(defaultKeys);
+		}
+		return form;
 	}
 }

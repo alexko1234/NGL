@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import models.utils.dao.AbstractDAO;
 import models.utils.dao.DAOException;
+import play.Logger;
 import play.api.modules.spring.Spring;
 
 public class Model<T> {
@@ -54,10 +55,10 @@ public class Model<T> {
     	try {
 			return (AbstractDAO<T>) Spring.getBeanOfType(Class.forName(classNameDAO));
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			Logger.error("Class error: "+e.getMessage(),e);;
 			throw new DAOException(e);
 		}catch(Exception e){
-			e.printStackTrace();
+			Logger.error("DAO error: "+e.getMessage(),e);
 			throw new DAOException(e);
 		}
     }

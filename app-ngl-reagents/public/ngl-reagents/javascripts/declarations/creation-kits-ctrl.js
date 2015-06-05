@@ -76,34 +76,6 @@
 			        	 "order":true,
 			        	 "type":"text",
 			        	 "edit":true
-			         },
-			         {
-			        	 "header":Messages("reagents.table.createUser"),
-			        	 "property":"traceInformation.createUser",
-			        	 "order":true,
-			        	 "type":"text",
-			        	 "edit":false
-			         },
-			         {
-			        	 "header":Messages("reagents.table.creationDate"),
-			        	 "property":"traceInformation.creationDate",
-			        	 "order":true,
-			        	 "type":"date",
-			        	 "edit":false
-			         },
-			         {
-			        	 "header":Messages("reagents.table.modifyUser"),
-			        	 "property":"traceInformation.modifyUser",
-			        	 "order":true,
-			        	 "type":"text",
-			        	 "edit":false
-			         },
-			         {
-			        	 "header":Messages("reagents.table.modifyDate"),
-			        	 "property":"traceInformation.modifyDate",
-			        	 "order":true,
-			        	 "type":"date",
-			        	 "edit":false
 			         }
 				],
 				compact:true,
@@ -161,7 +133,7 @@
 				},
 				 edit:{
 		        	 active:true,
-		        	 columnMode:false,
+		        	 columnMode:true,
 		        	 showButton : true,
 		        	 withoutSelect:true,
 		        	 byDefault : false
@@ -184,6 +156,17 @@
 	 $scope.datatableSaved = 0;
 	 //$scope.declaration = {"type":"kit"};
 	 $scope.objectTypes = [{code:"kit", name:Messages("declarations.kit")},{code:"box", name:Messages("declarations.box")},{code:"reagent", name:Messages("declarations.reagent")}];
+	 
+	 $scope.checkCatalogRefCode = function(i){
+	 	if($scope.catalogRefCodeVerifications[i].code === $scope.boxes[i].catalogRefCode){
+	 		console.log("ok");
+	 		$scope.mainService.resetErrors();
+	 	}else{
+	 		var data = [];
+	 		data["catalogRefCode"] = ["Bad value"];
+	 		$scope.mainService.addErrors("boxes["+i+"]",data);
+	 	}
+	 };
 	 
 	 $scope.scan = function(e, property, propertyName){
 			console.log(property);
@@ -239,7 +222,7 @@
 	 };
 	 
 	 $scope.removeBox = function(index,code){
-		 if(code !== undefined  && code !== ""  && confirm("Etes vous sur de vouloir supprimer la boite "+code+" ?")){
+		 if(code !== undefined  && code !== "" ){
 			 $http.delete(jsRoutes.controllers.reagents.api.Boxes.delete(code).url)
 				.success(function(data, status, headers, config) {
 					if(data!=null){
@@ -259,7 +242,7 @@
 					$scope.message.details = data;
 					$scope.message.isDetails = true;
 				});
-		 }else if(confirm("Etes vous sur de vouloir supprimer la boite ?")){
+		 }else{
 			 $scope.datatables.splice(index,1);
 			 $scope.boxes.splice(index,1);
 		 }
@@ -523,7 +506,7 @@
 	 };
 	 
 	 $scope.insertBoxes = function(addBoxes){
-		 if($scope.boxes.length === 0 || confirm(Messages("boxes.insert.warning"))){
+		 if($scope.kit.catalogCode !== null && $scope.kit.catalogCode !== undefined && $scope.kit.catalogCode !== ""){
 			 $scope.boxes = [];
 			 return $http.get(jsRoutes.controllers.reagents.api.BoxCatalogs.list().url, {params:{"kitCatalogCode":$scope.kit.catalogCode}})
 				.success(function(data, status, headers, config) {
@@ -542,25 +525,29 @@
 				.error(function(data, status, headers, config) {
 					
 				});
-			 }
+		 }else{
+			 $scope.boxes = [];
+		 }
 	 };
 	 
 	 $scope.insertReagents = function(boxIndex, addReagents){
-		return $http.get(jsRoutes.controllers.reagents.api.ReagentCatalogs.list().url, {params:{"boxCatalogCode":$scope.boxes[boxIndex].catalogCode}})
-				.success(function(data, status, headers, config) {
-					if(data!=null){
-						if(data !== undefined && data !== null){
-							for(var i=0;i<data.length;i++){
-								if(addReagents){
-									$scope.newReagent(boxIndex, $scope.boxes[boxIndex], data[i]);
+		 if($scope.boxes[boxIndex].catalogCode !== null && $scope.boxes[boxIndex].catalogCode !== undefined && $scope.boxes[boxIndex].catalogCode !== ""){
+			return $http.get(jsRoutes.controllers.reagents.api.ReagentCatalogs.list().url, {params:{"boxCatalogCode":$scope.boxes[boxIndex].catalogCode}})
+					.success(function(data, status, headers, config) {
+						if(data!=null){
+							if(data !== undefined && data !== null){
+								for(var i=0;i<data.length;i++){
+									if(addReagents){
+										$scope.newReagent(boxIndex, $scope.boxes[boxIndex], data[i]);
+									}
 								}
 							}
 						}
-					}
-				})
-				.error(function(data, status, headers, config) {
-					
-				});
+					})
+					.error(function(data, status, headers, config) {
+						
+					});
+		 }
 	 };
 	 
 	 $scope.getBoxCatalogName = function(code){
@@ -577,6 +564,7 @@
 	 $scope.boxCatalogs = [];
 	 $scope.orderInformations = {};
 	 $scope.info = {};
+	 $scope.catalogRefCodeVerifications = [];
 	 
 	 $scope.kit.declarationType = "kit";
 	 

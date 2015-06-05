@@ -61,7 +61,7 @@ GET 	/experiments/:experimentCode															controllers.experiments.tpl.Expe
 GET		/tpl/experiments/search-supports														controllers.experiments.tpl.Experiments.searchSupports()
 GET		/tpl/experiments/newExperiments/:experimentTypeCode										controllers.experiments.tpl.Experiments.newExperiments(experimentTypeCode:java.lang.String)
 GET		/tpl/experiments/js-routes																controllers.experiments.tpl.Experiments.javascriptRoutes()
-GET		/tpl/experiments/get-template/:atomicType/:inputCategory/:outputCategory				controllers.experiments.tpl.Experiments.getTemplate(atomicType:java.lang.String,inputCategory:java.lang.String,outputCategory:java.lang.String)
+GET		/tpl/experiments/get-template/:atomicType/:outputCategoryCode/:experimentType			controllers.experiments.tpl.Experiments.getTemplate(atomicType:java.lang.String,outputCategoryCode:java.lang.String, experimentType:java.lang.String)
 GET		/tpl/experiments/create-or-edit-experiment												controllers.experiments.tpl.Experiments.createOrEditExperiment()
 GET		/tpl/experiments/search/:experimentTypeCode												controllers.experiments.tpl.Experiments.search(experimentTypeCode:java.lang.String)
 
@@ -94,6 +94,9 @@ GET		/api/experiments/:code											controllers.experiments.api.Experiments.ge
 
 GET		/api/experiment/instrument-properties/:instrumentUsedTypeCode	controllers.experiments.api.Experiments.getInstrumentProperties(instrumentUsedTypeCode:java.lang.String)
 
+#contents
+
+GET		/api/contents/list												controllers.containers.api.Contents.list()
 
 #samples
 GET		/api/samples/list												controllers.samples.api.Samples.list()

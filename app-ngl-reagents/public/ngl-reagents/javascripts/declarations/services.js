@@ -166,7 +166,7 @@ factory('boxesSearchService', ['$http', 'mainService', 'lists', 'datatable', fun
 			"property":"catalogCode",
 			"order":true,
 			"type":"text",
-			"filter":"codes:'kitCatalogs'"
+			"filter":"codes:'boxCatalogs'"
 		});
 		columns.push({
 			"header":Messages("reagents.table.barCode"),

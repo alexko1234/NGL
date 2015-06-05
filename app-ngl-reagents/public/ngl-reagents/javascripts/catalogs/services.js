@@ -28,6 +28,12 @@
 				"order":true,
 				"type":"text"
 			});
+			columns.push({
+				"header":Messages("kits.catalogRefCode"),
+				"property":"catalogRefCode",
+				"order":true,
+				"type":"text"
+			});
 			
 			return columns;
 		};

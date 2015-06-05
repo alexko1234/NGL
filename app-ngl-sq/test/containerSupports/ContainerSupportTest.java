@@ -75,7 +75,7 @@ public class ContainerSupportTest extends AbstractTests {
 					.getContainerSupport("lane", 5, "TEST_GetContainerSupport","1","8");
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.error("DAO error: "+e.getMessage(),e);
 		}
 		
 		assertThat(locs.categoryCode).isEqualTo("flowcell-8");

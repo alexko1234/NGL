@@ -19,6 +19,7 @@ import mail.MailServiceException;
 import mail.MailServices;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
+import play.Logger;
 import scala.concurrent.duration.FiniteDuration;
 
 import services.reporting.txt.*;
@@ -68,7 +69,7 @@ public class ReportingCNS extends AbstractReporting {
 		    mailService.sendMail(expediteur, destinataires, subject, new String(content.getBytes(), "iso-8859-1"));
 		    
 		} catch (MailServiceException e) {
-			e.printStackTrace();
+			Logger.error("MailService error: "+e.getMessage(),e);
 		}
 		
 	}

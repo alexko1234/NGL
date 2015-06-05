@@ -128,7 +128,7 @@ public class AddSequencingProgramType  extends CommonController {
 				mapCodeSupportSeq = setSequencingProgramTypeToContainerSupport(contextError);
 			}
 			catch(Exception e) {
-				e.printStackTrace();
+				Logger.error("DAO or SQL error: "+e.getMessage(),e);;
 			}
 			
 			//find current collection

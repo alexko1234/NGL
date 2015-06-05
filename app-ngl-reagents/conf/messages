@@ -11,7 +11,7 @@ catalogs.kit.creation.remove = Supprimer le kit
 catalogs.kit.creation.unedit = Annuler
 catalogs.kit.creation.placeholder.experimentTypes = Select. le ou les type(s) d'exp.
 
-catalogs.box.list = boîte(s) contenue(s) dans le kit
+catalogs.box.list = Boîte(s) contenue(s) dans le kit
 catalogs.box.empty = Aucune boîte dans ce kit
 catalogs.box.add = Ajouter une boîte
 catalogs.box.creation.remove = Supprimer cette boîte et ses réactifs ?
@@ -27,13 +27,13 @@ kits.code = Code
 kits.providerRefName = Nom kit (fournisseur)
 kits.active = En cours d'utilisation
 kits.select.experimentTypeCodes = Type expériences
-kits.select.catalogCodes = Type expériences
+kits.select.catalogCodes = Nom de kits
 kits.possibleUseNumber = Nombre d''utilisation
 kits.catalogRefCode = Ref. catalogue (fournisseur)
 kits.comment = Commentaire
 
 kits.creationDate = Date de création
-kits.createUser = Expérience Créée par
+kits.createUser = Créée par
 kits.modifyDate = Date de modification
 kits.modifyBy = Modifié par
 
@@ -42,13 +42,12 @@ boxes.tabs.search = Recherche Boîtes
 
 boxes.name = Nom boîte
 boxes.storageConditions = Conditions de stockage (°C)
-boxes.catalogRefCode = Ref. catalogue
+boxes.catalogRefCode = REF. catalogue
 boxes.comment = Commentaire
 
-
-catalogRefCode = Ref. catalogue
-bundleBarCode = Code bar lot
-barCode = Code bar
+catalogRefCode = REF. catalogue
+bundleBarCode = Lot
+barCode = ID unique
 
 kitCatalogs.tabs.create = Création d'un kit dans le catalogue
 kitCatalogs.tabs.search = Rechercher un kit dans le catalogue
@@ -64,6 +63,7 @@ reagents.msg.empty.save.error = Incomplet - Sauvegarde echouée
 reagents.msg.load.error = Ce kit n''est pas dans le catalogue
 reagents.msg.delete.sucess = Suppression réussie
 reagents.msg.delete.error = Suppression echouée
+reagents.msg.catalogCode.error = Mauvais code catalogue
 
 reagents.table.code = Code du réactif
 reagents.table.name = Nom du réactif
@@ -71,20 +71,20 @@ reagents.table.storageConditions = Conditions de stockage (°C)
 reagents.table.catalogRefCode = Ref. catalogue (fournisseur)
 reagents.table.comment = Commentaire
 reagents.table.stockInformation = Informations de stockage
-reagents.table.bundleBarCode = Code bar lot
+reagents.table.bundleBarCode = Lot
 reagents.table.category = Type
 reagents.table.creationDate = Date de création
 reagents.table.createUser = Expérience Créée par
 reagents.table.modifyDate = Date de modification
 reagents.table.modifyUser = Modifié par
 
-reagentCatalogs.menu = Catalogue
-reagentCatalogs.menu.create = Créer
-reagentCatalogs.menu.search = Rechercher
+reagentCatalogs.menu = Catalogue réactifs
+reagentCatalogs.menu.create = Créer une ref. catalogue
+reagentCatalogs.menu.search = Rechercher une ref. catalogue
 
-reagentDeclarations.menu = Déclaration à réception
+reagentDeclarations.menu = Réactifs receptionnés
 
-declarations.title = Déclaration à réception
+declarations.title = Réactifs receptionnés
 
 declarations.kit = Kit
 declarations.reagent = Réactif
@@ -93,7 +93,8 @@ declarations.kit.creation = Déclaration
 declarations.kit.creation.placeholder.kitCatalogCode = Kit catalogue
 declarations.kit.creation.placeholder.state = Etat du kit
 declarations.box.empty = Aucune boîte dans ce kit
-declarations.box.list =  boîte(s) contenue(s) dans le kit
+declarations.box.list =  Boîte(s) contenue(s) dans le kit
+declarations.reagent.list = Réactifs
 declarations.kit.edit = Modification du kit
 declarations.kit.creation.edit = Editer le kit
 declarations.kit.creation.save = Sauvegarder le kit
@@ -103,33 +104,33 @@ declarations.kit.creation.placeholder.catalogRefCode = Ref. catalogue (fournisse
 
 kit.catalogCode =  Kit catalogue
 reagents.table.catalogName = Nom kit catalogue
-kits.barCode = Code bar
-kits.expirationDate = Dade péremption
+kits.barCode = ID unique
+kits.expirationDate = Date de péremption
 kits.receptionDate = Date de reception	
 order.code = Ref. commande (fournisseur)
 order.providerCode = N° commande (interne)
 kit.refCommand = Information commande
-kits.startToUseDate = Date début utilisation
-kits.stopToUseDate = Date fin utilisation
+kits.startToUseDate = Date de début d''utilisation
+kits.stopToUseDate = Date de fin d''utilisation
 kits.state.code = Etat
 
 
-boxes.barCode = Code bar
-boxes.expirationDate = Dade péremption
-boxes.receptionDate = Date de reception
-boxes.possibleUseNumber = Nombre d'utilisations
+boxes.barCode = ID unique
+boxes.expirationDate = Date de péremption
+boxes.receptionDate = Date de réception
+boxes.possibleUseNumber = Nombre d''utilisations
 boxes.startToUseDate = Date début utilisation
 boxes.stopToUseDate = Date fin utilisation
 boxes.state.code = Etat
 boxes.insert.warning = Voulez-vous supprimer les boîtes existantes ?
 boxes.stockInformation = Informations de stockage
-boxes.bundleBarCode = Code bar lot
+boxes.bundleBarCode = Lot
 
-reagents.table.barCode = Code bar
-reagents.table.expirationDate = Dade péremption
+reagents.table.barCode = ID unique
+reagents.table.expirationDate = Date péremption
 reagents.table.receptionDate = Date de reception
-reagents.table.orderCode = Ref. commande
-reagents.table.possibleUseNumber = Nombre d'utilisations
+reagents.table.orderCode = Ref. commande (fournisseur)
+reagents.table.possibleUseNumber = Nombre d''utilisations
 reagents.table.startToUseDate = Date début utilisation
 reagents.table.stopToUseDate = Date fin utilisation
 reagents.table.catalogCode = Code catalogue

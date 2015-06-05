@@ -20,6 +20,7 @@ import org.junit.Test;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
+import play.Logger;
 import play.data.validation.ValidationError;
 import utils.AbstractTests;
 import utils.Constants;
@@ -90,6 +91,7 @@ public class ExperimentValidationTests extends AbstractTests {
 	public void validateFlowCellCalculations() {
 		Experiment exp = ExperimentTestHelper.getFakeExperiment();
 		exp.state.code = "IP";
+		exp.typeCode="prepa-flowcell";
 		ManytoOneContainer atomicTransfert = ExperimentTestHelper.getManytoOneContainer();
 
 		ContainerUsed containerIn1 = ExperimentTestHelper.getContainerUsed("containerUsedIn1");
@@ -121,7 +123,7 @@ public class ExperimentValidationTests extends AbstractTests {
 
 		ExperimentHelper.doCalculations(exp,Experiments.calculationsRules);
 
-		ManytoOneContainer atomicTransfertResult = (ManytoOneContainer)exp.atomicTransfertMethods.get(0);		
+		ManytoOneContainer atomicTransfertResult = (ManytoOneContainer)exp.atomicTransfertMethods.get(0);
 		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("requiredVolume1")).isNotNull();
 		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("requiredVolume1").value).isInstanceOf(Double.class);
 		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("requiredVolume1").value).isEqualTo(new Double(4));

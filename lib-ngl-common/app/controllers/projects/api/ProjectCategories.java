@@ -42,7 +42,7 @@ public class ProjectCategories extends CommonController{
 				return Results.ok(Json.toJson(projectCategories));
 			}
 		}catch (DAOException e) {
-			e.printStackTrace();
+			Logger.error("DAO error: "+e.getMessage(),e);
 			return  Results.internalServerError(e.getMessage());
 		}	
 	}

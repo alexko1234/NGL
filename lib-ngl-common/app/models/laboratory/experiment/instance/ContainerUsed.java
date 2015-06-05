@@ -38,6 +38,8 @@ public class ContainerUsed implements IValidation{
 	
 	public State state;
 	
+	public List<String> fromExperimentTypeCodes;
+	
 	public ContainerUsed() {
 		
 	}
@@ -67,7 +69,8 @@ public class ContainerUsed implements IValidation{
 		} 
 		if(contextValidation.getObject("typeCode")!=null){
 			ContainerUsedValidation.validateExperimentProperties(contextValidation.getObject("typeCode").toString(),experimentProperties,contextValidation/*,false*/);//TODO: voir avec Maud
-		}
+		}		
+		
 	}
 
 }

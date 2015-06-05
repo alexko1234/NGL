@@ -25,9 +25,9 @@ public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType>{
 	protected ProcessTypeDAO() {
 		super("process_type", ProcessType.class, ProcessTypeMappingQuery.class, 
 				"SELECT distinct c.id, c.fk_common_info_type, c.fk_process_category, c.fk_void_experiment_type, c.fk_first_experiment_type, c.fk_last_experiment_type ",
-						"FROM process_type as c  "+sqlCommonInfoType, false);
+				"FROM process_type as c  "+sqlCommonInfoType, false);
 	}
-	
+
 	public List<ProcessType> findByProcessCategoryCode(String processCategoryCode){	
 		try {
 			String sql = sqlCommonSelect + ",t.name, t.code " + sqlCommonFrom + ", process_category as pc WHERE c.fk_process_category=pc.id AND pc.code=?";
@@ -38,11 +38,11 @@ public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType>{
 			return null;
 		}
 	}
-	
+
 	@Override
 	public long save(ProcessType processType) throws DAOException
 	{
-		
+
 		if(null == processType){
 			throw new DAOException("ProcessType is mandatory");
 		}
@@ -58,32 +58,32 @@ public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType>{
 		parameters.put("id", processType.id);
 		parameters.put("fk_common_info_type", processType.id);
 		parameters.put("fk_process_category", processType.category.id);
-		
-		
+
+
 		if(processType.voidExperimentType == null || processType.voidExperimentType.id == null ){
 			throw new DAOException("VoidExperimentType is not present !!");
 		}
-				
+
 		parameters.put("fk_void_experiment_type", processType.voidExperimentType.id);
-		
+
 		if(processType.firstExperimentType == null || processType.firstExperimentType.id == null ){
 			throw new DAOException("FirstExperimentType is not present !!");
 		}
-		
+
 		parameters.put("fk_first_experiment_type", processType.firstExperimentType.id);
-		
+
 		if(processType.lastExperimentType == null || processType.lastExperimentType.id == null ){
 			throw new DAOException("LastExperimentType is not present !!");
 		}
-		
+
 		parameters.put("fk_last_experiment_type", processType.lastExperimentType.id);
-		
+
 		jdbcInsert.execute(parameters);
 
 		if(processType.experimentTypes == null || processType.experimentTypes.size() == 0 ){
 			throw new DAOException("ExperimentTypes is not present !!");
 		}
-		
+
 		//Add list experimentType
 		insertExperimentTypes(processType.experimentTypes, processType.id, false);
 		return processType.id;
@@ -97,20 +97,20 @@ public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType>{
 		if(processType.voidExperimentType == null || processType.voidExperimentType.id == null ){
 			throw new DAOException("VoidExperimentType is not present !!");
 		}
-		
+
 		if(processType.firstExperimentType == null || processType.firstExperimentType.id == null ){
 			throw new DAOException("FirstExperimentType is not present !!");
 		}
-		
+
 		if(processType.lastExperimentType == null || processType.lastExperimentType.id == null ){
 			throw new DAOException("LastExperimentType is not present !!");
 		}
-		
-		
+
+
 		if(processType.experimentTypes == null || processType.experimentTypes.size() == 0 ){
 			throw new DAOException("ExperimentTypes is not present !!");
 		}
-		
+
 		String sql = "update process_experiment_type set fk_first_experiment_type = ?, fk_last_experiment_type = ?, fk_void_experiment_type = ? where id = ?";
 		jdbcTemplate.update(sql, processType.firstExperimentType.id, processType.lastExperimentType.id, processType.voidExperimentType.id, processType.id);
 		insertExperimentTypes(processType.experimentTypes, processType.id, true);
@@ -132,13 +132,13 @@ public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType>{
 			}
 		}		
 	}
-	
+
 	private void removeExperimentTypes(Long id) {
 		String sql = "DELETE FROM process_experiment_type WHERE fk_process_type=?";
 		jdbcTemplate.update(sql, id);
-		
+
 	}
-	
+
 	@Override
 	public void remove(ProcessType processType) throws DAOException {
 		//Remove process_experiment_type
@@ -149,5 +149,16 @@ public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType>{
 		//Remove CommonInfoType
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		commonInfoTypeDAO.remove(processType);
+	}
+
+	public List<ProcessType> findByExperimentCode(String experimentTypeCode) {
+		try {
+			String sql = sqlCommonSelect + ",t.name, t.code " + sqlCommonFrom + ", process_experiment_type as pe, common_info_type ce WHERE pe.fk_process_type=t.id and pe.fk_experiment_type=ce.id AND ce.code=?";
+			BeanPropertyRowMapper<ProcessType> mapper = new BeanPropertyRowMapper<ProcessType>(entityClass);
+			return this.jdbcTemplate.query(sql, mapper, experimentTypeCode);
+		} catch (DataAccessException e) {
+			Logger.warn(e.getMessage());
+			return null;
+		}
 	}
 }

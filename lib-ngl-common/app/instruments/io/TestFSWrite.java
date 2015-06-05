@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
+import play.Logger;
+
 
 
 public class TestFSWrite {
@@ -26,7 +28,7 @@ public class TestFSWrite {
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Logger.error("IO error: "+e.getMessage(),e);
 			}
 			
 		}

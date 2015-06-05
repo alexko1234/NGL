@@ -61,7 +61,7 @@
 		}
 		@columnSearchForm{
 			@formGroup{
-				<div bt-select placeholder="@Messages("containers.select.categorySupportCode")" class="form-control" ng-class="errors.containerSupportCategory" ng-model="searchService.form.categoryCode" bt-options="CategorySupport.code as CategorySupport.name for CategorySupport in searchService.lists.getContainerSupportCategories()" auto-select>
+				<div bt-select placeholder="@Messages("containers.select.categorySupportCode")" class="form-control" ng-class="errors.containerSupportCategory" ng-model="searchService.form.containerSupportCategory" bt-options="CategorySupport.code as CategorySupport.name for CategorySupport in searchService.lists.getContainerSupportCategories()" auto-select>
 				</div>
 			}
 			<hr>

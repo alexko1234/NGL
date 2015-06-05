@@ -9,7 +9,6 @@ public class ExperimentSearchForm extends ListForm{
 	public String code;
 	public List<String> codes;
 	public String typeCode;
-	public String processTypeCode;
 	public String categoryCode;
 	public String projectCode;
 	public List<String> projectCodes;
@@ -29,8 +28,7 @@ public class ExperimentSearchForm extends ListForm{
 	@Override
 	public String toString() {
 		return "ExperimentSearchForm [code="+code+", codes="+ codes +", typeCode=" + typeCode
-				+ ", processTypeCode=" + processTypeCode + ", categoryCode="
-				+ categoryCode + ", projectCodes=" + projectCodes
+				+ ", categoryCode="	+ categoryCode + ", projectCodes=" + projectCodes
 				+ ", sampleCodes=" + sampleCodes + ", fromDate=" + fromDate
 				+ ", toDate=" + toDate + ", stateCode=" + stateCode
 				+ ", users=" + users +", containerSupportCode=" + containerSupportCode +", containersCodes=" + containersCodes

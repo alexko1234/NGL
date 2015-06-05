@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import models.laboratory.processes.description.ExperimentTypeNode;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
+import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -45,7 +46,7 @@ public class ExperimentTypeNodes extends CommonController{
 				return Results.ok(Json.toJson(experimentTypeNodes));
 			}
 		}catch (DAOException e) {
-			e.printStackTrace();
+			Logger.error("DAO error: "+e.getMessage(),e);
 			return  Results.internalServerError(e.getMessage());
 		}	
 	}
