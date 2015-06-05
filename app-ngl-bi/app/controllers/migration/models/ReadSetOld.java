@@ -3,13 +3,6 @@ package controllers.migration.models;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-
-import models.laboratory.common.instance.State;
-
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.run.instance.ReadSet;
 
