@@ -2,8 +2,11 @@ package models.laboratory.experiment.instance;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.collections.map.HashedMap;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -46,13 +49,16 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 	@Override
 	public ContextValidation createOutputContainerUsed(Experiment experiment,ContextValidation contextValidation) throws DAOException {
 
-		if(this.outputContainerUsed==null){
+		//if(this.outputContainerUsed==null){
 			
 			if(this.inputContainerUsed!=null){
-				
+				Map<String,PropertyValue> experimentProperties = new HashMap<>();
+				if(this.outputContainerUsed.experimentProperties!=null){
+					experimentProperties=this.outputContainerUsed.experimentProperties;
+				}
 				String outPutContainerCode=CodeHelper.getInstance().generateContainerSupportCode();
 				this.outputContainerUsed = new ContainerUsed(outPutContainerCode);
-
+				this.outputContainerUsed.experimentProperties= experimentProperties;
 				LocationOnContainerSupport support=new LocationOnContainerSupport();
 				support.categoryCode=experiment.instrument.outContainerSupportCategoryCode;
 				// Same position 
@@ -73,9 +79,9 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 				contextValidation.addErrors("inputContainerUsed", ValidationConstants.ERROR_NOTEXISTS_MSG);
 			}
 			
-		}else {
-			contextValidation.addErrors("outputContainerUsed", ValidationConstants.ERROR_ID_NOTNULL_MSG);
-		}
+		//}else {
+			//contextValidation.addErrors("outputContainerUsed", ValidationConstants.ERROR_ID_NOTNULL_MSG);
+		//}
 		return contextValidation;
 	}
 

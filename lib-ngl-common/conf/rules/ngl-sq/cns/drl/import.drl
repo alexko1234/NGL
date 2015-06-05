@@ -10,6 +10,7 @@ import models.laboratory.container.instance.Container;
 import validation.ContextValidation;
 import play.data.validation.ValidationError;
 import models.laboratory.experiment.instance.ManytoOneContainer;
+import models.laboratory.experiment.instance.OneToOneContainer;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;

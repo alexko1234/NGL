@@ -19,7 +19,7 @@ angular.module('home').controller('SearchKitsCtrl', ['$scope', 'datatable','list
 			active:true,
 			showButton : true,
 			add:function(line){
-				tabService.addTabs({label:line.barCode,href:jsRoutes.controllers.reagents.tpl.Kits.get(line.code).url,remove:true});
+				tabService.addTabs({label:line.code,href:jsRoutes.controllers.reagents.tpl.Kits.get(line.code).url,remove:true});
 			}
 		}
 	};
@@ -35,8 +35,8 @@ angular.module('home').controller('SearchKitsCtrl', ['$scope', 'datatable','list
 	//init
 	$scope.datatable = datatable($scope.datatableConfig);		
 	if(angular.isUndefined($scope.getHomePage())){
-		mainService.setHomePage('new');
-		tabService.addTabs({label:Messages('kitCatalogs.tabs.search'),href:jsRoutes.controllers.reagents.tpl.Kits.home("search").url,remove:false});
+		mainService.setHomePage('kits.new');
+		tabService.addTabs({label:Messages('kitDeclarations.tabs.search'),href:jsRoutes.controllers.reagents.tpl.Kits.home("search").url,remove:false});
 		tabService.activeTab(0);
 	}
 	if(angular.isUndefined($scope.getForm())){

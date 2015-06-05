@@ -217,17 +217,16 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			},
 
 			updateForm : function(){
-				//this.form.includes = [];
-				this.form.includes = ["default","support.code","code","support.categoryCode","support.column","support.line","fromExperimentTypeCodes","sampleCodes.length","sampleCodes","contents.length","contents","traceInformation","projectCodes", "inputProcessCodes", "valuation.valid", "state.code"];
-				for(var i = 0 ; i < this.selectedAddColumns.length ; i++){
-					//remove .value if present to manage correctly properties (single, list, etc.)
-					if(this.selectedAddColumns[i].queryIncludeKeys && this.selectedAddColumns[i].queryIncludeKeys.length > 0){
-						this.form.includes = this.form.includes.concat(this.selectedAddColumns[i].queryIncludeKeys);
-					}else{
-						this.form.includes.push(this.selectedAddColumns[i].property.replace('.value',''));	
+					this.form.includes = ["default","support.code","code","support.categoryCode","support.column","support.line","fromExperimentTypeCodes","sampleCodes.length","sampleCodes","contents.length","contents","traceInformation","projectCodes", "inputProcessCodes", "valuation.valid"];
+					for(var i = 0 ; i < this.selectedAddColumns.length ; i++){
+						//remove .value if present to manage correctly properties (single, list, etc.)
+						if(this.selectedAddColumns[i].queryIncludeKeys && this.selectedAddColumns[i].queryIncludeKeys.length > 0){
+							this.form.includes = this.form.includes.concat(this.selectedAddColumns[i].queryIncludeKeys);
+						}else{
+							this.form.includes.push(this.selectedAddColumns[i].property.replace('.value',''));	
+						}
+						
 					}
-					
-				}
 			},
 			convertForm : function(){
 				var _form = angular.copy(this.form);

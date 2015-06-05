@@ -847,7 +847,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		if(!$scope.saveInProgress){
 			$scope.saveInProgress = true;
 			$scope.spinnerStart=true;
-			var promises = [];
+			var promises = [];			
 			$scope.$broadcast('save', promises, $scope.saveAll);
 			$scope.inProgressNow = false;
 			$scope.inProgressMode();
@@ -883,8 +883,9 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		$scope.experiment.instrumentInformation.enabled = false;
 		$scope.setEditConfig(false);
 		promises.push($scope.datatableReagent.save());
+		
 		if($scope.experiment.value._id != undefined){
-
+			
 			promises.push($scope.experiment.instrumentProperties.save());
 
 			promises.push($scope.experiment.instrumentInformation.save());
@@ -1015,8 +1016,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 					if(!$scope.experiment.outputGenerated && $scope.isOutputGenerated()){
 						$scope.$broadcast('addOutputColumns');
 						$scope.addExperimentPropertiesOutputsColumns();
-						$scope.addInstrumentPropertiesOutputsColumns();
-						$scope.$broadcast('experimentToOutput', $scope.experimentType.atomicTransfertMethod);
+						$scope.addInstrumentPropertiesOutputsColumns();						
 						$scope.saveInProgress = false;						
 						$scope.spinnerStart=false;
 

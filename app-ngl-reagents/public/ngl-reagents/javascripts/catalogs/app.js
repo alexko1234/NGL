@@ -1,17 +1,17 @@
 "use strict";
  
 angular.module('home', ['commonsServices','ngRoute','datatableServices','ngl-reagent.kitCatalogsService'], function($routeProvider, $locationProvider) {
-	$routeProvider.when('/reagent-catalogs/create/home', {
+	$routeProvider.when('/kit-catalogs/create/home', {
 		templateUrl : jsRoutes.controllers.reagents.tpl.KitCatalogs.createOrEdit().url,
 		controller : 'CreationKitsCtrl'
 	});
 	
-	$routeProvider.when('/reagent-catalogs/search/home', {
+	$routeProvider.when('/kit-catalogs/search/home', {
 		templateUrl : jsRoutes.controllers.reagents.tpl.KitCatalogs.search().url,
 		controller : 'SearchKitsCtrl'
 	});
 	
-	$routeProvider.when('/reagent-catalogs/kits/:kitCatalogCode', {
+	$routeProvider.when('/kit-catalogs/:kitCatalogCode', {
 		templateUrl : jsRoutes.controllers.reagents.tpl.KitCatalogs.createOrEdit().url,
 		controller : 'CreationKitsCtrl'
 	});

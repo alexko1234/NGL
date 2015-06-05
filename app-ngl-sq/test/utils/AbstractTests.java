@@ -70,6 +70,9 @@ public abstract class AbstractTests {
 		config.put("ehcacheplugin", "disabled");
 		config.put("mongodbJacksonMapperCloseOnStop", "disabled");
 		
+		config.put("rules.key","nglSQ");
+		config.put("rules.kbasename","ngl-sq-cns");
+		
 		config.put("auth.cas.urlvalidator", "https://cas.genoscope.cns.fr:8443/cas/serviceValidate");
 		config.put("auth.cas.urllogin", "https://cas.genoscope.cns.fr:8443/cas/login");
 		config.put("auth.cas.renew", "false");

@@ -55,11 +55,12 @@ public class ValidationHelper {
 			Collection<PropertyDefinition> pdefs = multimap.get(key); 
 			PropertyValue pv = inputProperties.get(key);
 			
-			PropertyDefinition propertyDefinition=(PropertyDefinition) pdefs.toArray()[0];
+			PropertyDefinition propertyDefinition=(PropertyDefinition) pdefs.toArray()[0];			
 			
 			//if pv null and required
-			if( pv==null && propertyDefinition.required){	
-	        	contextValidation.addErrors(propertyDefinition.code+".value", ERROR_REQUIRED_MSG,"");
+			if( pv==null && propertyDefinition.required){				
+				contextValidation.addErrors(propertyDefinition.code+".value", ERROR_REQUIRED_MSG,"");					
+	        	
 			}else if (pv != null){
 				contextValidation.putObject("propertyDefinitions", pdefs);				
 				pv.validate(contextValidation);

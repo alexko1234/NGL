@@ -14,6 +14,7 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.ManytoOneContainer;
+import models.laboratory.experiment.instance.OneToOneContainer;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.protocol.instance.Protocol;
@@ -103,7 +104,10 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 		for(int i=0;i<atomicTransfertMethods.size();i++){
 			rootKeyName="atomictransfertmethod"+"["+i+"]";
 			contextValidation.addKeyToRootKeyName(rootKeyName);
-			atomicTransfertMethods.get(i).validate(contextValidation);
+			if(atomicTransfertMethods.get(i)!=null){
+				atomicTransfertMethods.get(i).validate(contextValidation);
+			}
+			
 			contextValidation.removeKeyFromRootKeyName(rootKeyName);
 		}
 	}
@@ -143,7 +147,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			if(ManytoOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
 				ManytoOneContainer atomic = (ManytoOneContainer) exp.atomicTransfertMethods.get(i);
 				validationfacts.add(atomic);
-			}
+			}			
 		}
 		ExperimentValidationHelper.validateRules(validationfacts, contextValidation);
 	}

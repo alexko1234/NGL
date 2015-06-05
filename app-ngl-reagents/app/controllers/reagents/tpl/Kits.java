@@ -5,11 +5,12 @@ import play.Routes;
 import play.mvc.Result;
 import views.html.declarations.home;
 import views.html.declarations.kitsCreation;
+import views.html.declarations.ordersCreation;
 import views.html.declarations.kitsSearch;
 
 public class Kits extends CommonController {
 	public Result home(String code){
-		return ok(home.render(code));
+		return ok(home.render(code+".kits"));
 	}
 	
 	public Result search(){
@@ -24,12 +25,14 @@ public class Kits extends CommonController {
 	public Result createOrEdit(){
 		return ok(kitsCreation.render());
 	}
+
 	
 	public Result javascriptRoutes() {
 		response().setContentType("text/javascript");
 		return ok(	  	      
 				Routes.javascriptRouter("jsRoutes",  	       
 						// Routes	
+						controllers.reagents.tpl.routes.javascript.Orders.createOrEdit(),
 						controllers.reagents.tpl.routes.javascript.Kits.createOrEdit(),
 						controllers.reagents.tpl.routes.javascript.Kits.get(),
 						controllers.reagents.api.routes.javascript.Kits.save(),
@@ -45,6 +48,8 @@ public class Kits extends CommonController {
 						controllers.reagents.api.routes.javascript.Kits.update(),
 						controllers.reagents.api.routes.javascript.Kits.get(),
 						controllers.reagents.tpl.routes.javascript.Kits.home(),
+						controllers.reagents.tpl.routes.javascript.Boxes.home(),
+						controllers.reagents.tpl.routes.javascript.Boxes.search(),
 						controllers.reagents.tpl.routes.javascript.Kits.search(),
 						controllers.reagents.api.routes.javascript.Reagents.save(),
 						controllers.reagents.api.routes.javascript.Reagents.update(),

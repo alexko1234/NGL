@@ -12,6 +12,7 @@ import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.ManytoOneContainer;
+import models.laboratory.experiment.instance.OneToOneContainer;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
@@ -19,6 +20,7 @@ import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
@@ -81,12 +83,23 @@ public class ExperimentHelper extends InstanceHelpers {
 		exp.projectCodes  = new ArrayList<String>();
 
 		for(int i=0;i<exp.atomicTransfertMethods.size();i++)
-			for(ContainerUsed c:exp.atomicTransfertMethods.get(i).getInputContainers()){
-				Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, c.code);
-				exp.sampleCodes = InstanceHelpers.addCodesList(container.sampleCodes,exp.sampleCodes);
-				exp.projectCodes = InstanceHelpers.addCodesList(container.projectCodes,exp.projectCodes);
-				exp.inputContainerSupportCodes=ExperimentHelper.getInputContainerSupportCodes(exp);
-			}	
+			if(exp.atomicTransfertMethods.get(i)!=null && exp.atomicTransfertMethods.get(i).getInputContainers().size()>0){
+				for(ContainerUsed c:exp.atomicTransfertMethods.get(i).getInputContainers()){
+					Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, c.code);
+					
+					if(container!=null){
+						if(CollectionUtils.isNotEmpty(container.sampleCodes)){
+							exp.sampleCodes = InstanceHelpers.addCodesList(container.sampleCodes,exp.sampleCodes);
+						}
+						if(CollectionUtils.isNotEmpty(container.projectCodes)){
+							exp.projectCodes = InstanceHelpers.addCodesList(container.projectCodes,exp.projectCodes);
+						}						
+					}
+									
+					exp.inputContainerSupportCodes=ExperimentHelper.getInputContainerSupportCodes(exp);
+				}	
+			}
+			
 		return exp;
 	}
 
@@ -175,7 +188,7 @@ public class ExperimentHelper extends InstanceHelpers {
 		List<ContainerUsed> containersUSed=new ArrayList<ContainerUsed>();
 		if(exp.atomicTransfertMethods!=null){
 			for(int i = 0; i < exp.atomicTransfertMethods.size() ; i++){
-				if(exp.atomicTransfertMethods.get(i).getInputContainers().size()!=0){
+				if(exp.atomicTransfertMethods.get(i)!=null && exp.atomicTransfertMethods.get(i).getInputContainers().size()!=0){
 					containersUSed.addAll(exp.atomicTransfertMethods.get(i).getInputContainers());
 				}
 			}
@@ -201,8 +214,12 @@ public class ExperimentHelper extends InstanceHelpers {
 				ManytoOneContainer atomic = (ManytoOneContainer) exp.atomicTransfertMethods.get(i);
 				facts.add(atomic);
 			}
+			if(OneToOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
+				OneToOneContainer atomic = (OneToOneContainer) exp.atomicTransfertMethods.get(i);
+				facts.add(atomic);
+			}
 		}
-
+		
 		List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), rulesName, facts);
 		
 		for(Object obj:factsAfterRules){
@@ -211,7 +228,7 @@ public class ExperimentHelper extends InstanceHelpers {
 				exp.atomicTransfertMethods.put(((ManytoOneContainer)obj).position-1,(ManytoOneContainer) obj);
 			}
 		}
-
+		
 	}
 
 	
@@ -255,7 +272,7 @@ public class ExperimentHelper extends InstanceHelpers {
 			String code = cf.code;
 			found = false;
 			for(ContainerUsed c:containersTo){
-				if(code.equals(c.code)){
+				if(StringUtils.isNotBlank(code) && code.equals(c.code)){
 					found = true;
 					break;
 				}
@@ -275,7 +292,7 @@ public class ExperimentHelper extends InstanceHelpers {
 			String code=containerUseds.get(i).code;
 			boolean delete=false;
 			for(ContainerUsed containerUsed:containerUseds){
-				if(code.equals(containerUsed.code)){
+				if(StringUtils.isNotBlank(code) && code.equals(containerUsed.code)){
 					if(!delete){
 						delete=true;
 					}

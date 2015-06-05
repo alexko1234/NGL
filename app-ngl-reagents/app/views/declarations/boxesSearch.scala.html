@@ -1,0 +1,32 @@
+@() 
+@import views.html.helper._
+
+@form() = {
+	@columnSearchForm{
+		@formGroup{
+			<input type="text" class="form-control" ng-model="searchService.form.barCode" placeholder='@Messages("boxes.barCode")'>
+		}
+		@formGroup{
+			<input type="text" class="form-control" ng-model="searchService.form.orderCode" placeholder='@Messages("order.code")'>
+		}
+	}
+	@columnSearchForm{
+	@formGroup{
+			<input type="text" class="form-control" ng-model="searchService.form.bundleBarCode" placeholder='@Messages("boxes.bundleBarCode")'>
+		}
+		@formGroup{
+			<div bt-select placeholder="@Messages("kits.select.catalogCodes")" class="form-control" ng-model="searchService.form.catalogCodes" ng-class="errors.catalogCodes" bt-options="catalogCode.code as catalogCode.name for catalogCode in searchService.lists.getKitCatalogs()" multiple="true" filter="true">
+			</div>
+		}
+		
+	}	
+	@columnSearchForm{	
+	@formGroup{
+			<input type="text" class="form-control" ng-model="searchService.form.catalogRefCode " placeholder='@Messages("boxes.catalogRefCode")'>
+		}
+		
+	}	
+		
+}
+
+@searchForm(form)()("searchService.datatable")

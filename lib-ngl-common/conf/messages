@@ -33,6 +33,7 @@ error.validationexp.sametag="L''index {0} n’est pas unique (containers concern
 error.validationexp.duplicateinputcontainers="Le container {0} a été déposé plusieurs fois sur la piste {1}"
 error.validationexp.badcontrolprepaflowcell="La piste contrôle {0} n’est pas cohérente avec le contenant sortie choisi {1}"
 error.validationexp.badoutputprepaflowcell="Le contenant sortie {0} n’est pas compatible avec l’instrument choisi {1}"
+error.validationexp.badmesuredconcentrationsolutionstock="La concentration initiale du contenant d'entrée {0} n'a pas une valeur correcte(elle vaut {1} au lieu de {2})"
 error.validationexp.mandatoryrunstartdate="La date réelle de dépôt est obligatoire. Par défaut, elle sera équivalente à la date de création "
 error.validationexp.manytagSize="Plusieurs tailles d''index sont présentes sur la piste {0}"
 error.validationexp.sameTagSequence="Séquence identique ({1}) sur la piste {0}"

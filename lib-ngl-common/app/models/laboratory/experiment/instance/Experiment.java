@@ -80,7 +80,10 @@ public class Experiment extends DBObject implements IValidation {
 		List<ContainerUsed> containersUSed=new ArrayList<ContainerUsed>();
 		if(this.atomicTransfertMethods!=null){
 			for(int i=0;i<this.atomicTransfertMethods.size();i++){
-				containersUSed.addAll(this.atomicTransfertMethods.get(i).getInputContainers());
+				if(this.atomicTransfertMethods.get(i)!=null && this.atomicTransfertMethods.get(i).getInputContainers().size()>0){
+					containersUSed.addAll(this.atomicTransfertMethods.get(i).getInputContainers());
+				}
+				
 			}
 
 		}

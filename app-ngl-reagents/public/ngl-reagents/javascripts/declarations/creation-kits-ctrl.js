@@ -16,35 +16,20 @@
 			        	 "property":"barCode",
 			        	 "order":true,
 			        	 "type":"text",
-			        	 "edit":true,
-			        	 "editDirectives":'ng-keydown="scan($event,value.data,\'barCode\')"'
+			        	 "edit":true
+			         },
+			         {
+			        	 "header":Messages("reagents.table.bundleBarCode"),
+			        	 "property":"bundleBarCode",
+			        	 "order":true,
+			        	 "type":"text",
+			        	 "edit":true
 			         },
 			         {
 			        	 "header":Messages("reagents.table.receptionDate"),
 			        	 "property":"receptionDate",
 			        	 "order":true,
 			        	 "type":"date",
-			        	 "edit":true
-			         },
-			         {
-			        	 "header":Messages("reagents.table.stockNumber"),
-			        	 "property":"stockNumber",
-			        	 "order":true,
-			        	 "type":"date",
-			        	 "edit":true
-			         },
-			         {
-			        	 "header":Messages("reagents.table.orderCode"),
-			        	 "property":"orderCode",
-			        	 "order":true,
-			        	 "type":"number",
-			        	 "edit":true
-			         },
-			         {
-			        	 "header":Messages("reagents.table.possibleUseNumber"),
-			        	 "property":"possibleUseNumber",
-			        	 "order":true,
-			        	 "type":"text",
 			        	 "edit":true
 			         },
 			         {
@@ -77,6 +62,48 @@
 			        	 "order":true,
 			        	 "type":"date",
 			        	 "edit":true
+			         },
+			         {
+			        	 "header":Messages("reagents.table.stockInformation"),
+			        	 "property":"stockInformation",
+			        	 "order":true,
+			        	 "type":"text",
+			        	 "edit":true
+			         },
+			         {
+			        	 "header":Messages("reagents.table.comment"),
+			        	 "property":"comment",
+			        	 "order":true,
+			        	 "type":"text",
+			        	 "edit":true
+			         },
+			         {
+			        	 "header":Messages("reagents.table.createUser"),
+			        	 "property":"traceInformation.createUser",
+			        	 "order":true,
+			        	 "type":"text",
+			        	 "edit":false
+			         },
+			         {
+			        	 "header":Messages("reagents.table.creationDate"),
+			        	 "property":"traceInformation.creationDate",
+			        	 "order":true,
+			        	 "type":"date",
+			        	 "edit":false
+			         },
+			         {
+			        	 "header":Messages("reagents.table.modifyUser"),
+			        	 "property":"traceInformation.modifyUser",
+			        	 "order":true,
+			        	 "type":"text",
+			        	 "edit":false
+			         },
+			         {
+			        	 "header":Messages("reagents.table.modifyDate"),
+			        	 "property":"traceInformation.modifyDate",
+			        	 "order":true,
+			        	 "type":"date",
+			        	 "edit":false
 			         }
 				],
 				compact:true,
@@ -99,6 +126,7 @@
 				},
 				save:{
 					active:true,
+					mode:'remote',
 					method:function(reagent){
 						if(reagent.code === undefined || reagent.code === ""){
 							return 'post';
@@ -107,13 +135,13 @@
 						return 'put';
 					},
 					url: function(reagent){
-							var test = this;
 							if(reagent.code === undefined || reagent.code === ""){
-								return jsRoutes.controllers.reagents.api.Reagents.save().url;;
+								return jsRoutes.controllers.reagents.api.Reagents.save().url;
 							}
 							return jsRoutes.controllers.reagents.api.Reagents.update(reagent.code).url;
 						},
 					showButton : false,
+					withoutEdit:true,
 					callback : function(datatable, errors){
 						 if(errors === 0 && $routeParams.kitCode === undefined){
 							$scope.datatableSaved++;
@@ -147,10 +175,6 @@
 					showButton:true,
 					delimiter:";",
 					start:false
-				},
-				otherButtons:{
-					active:true,
-					template:'<button class="btn btn btn-info" ng-click="newReagent($index, box)" ng-disabled="!editMode" title="'+Messages("reagents.add")+'">'+Messages("reagents.add")+'</button>'
 				}
 	 };
 	 $scope.message = {};
@@ -158,6 +182,8 @@
 	 $scope.boxes = [];
 	 $scope.datatables = [];
 	 $scope.datatableSaved = 0;
+	 //$scope.declaration = {"type":"kit"};
+	 $scope.objectTypes = [{code:"kit", name:Messages("declarations.kit")},{code:"box", name:Messages("declarations.box")},{code:"reagent", name:Messages("declarations.reagent")}];
 	 
 	 $scope.scan = function(e, property, propertyName){
 			console.log(property);
@@ -167,10 +193,33 @@
 				console.log(property);
 				e.preventDefault();
 			}
-		};
+	};
 
-	 
-	 $scope.removeKit = function(){
+	$scope.copyOrderInformations = function(obj){
+		obj.orderCode = $scope.orderInformations.orderCode;
+		obj.providerOrderCode = $scope.orderInformations.providerOrderCode;
+		obj.shippedOrderCode = $scope.orderInformations.shippedOrderCode;
+		
+		return obj;
+	};
+	
+	$scope.getRefCatalogs = function(){
+		$http.get(jsRoutes.controllers.reagents.api.KitCatalogs.list().url, {"params":{"includes":"catalogRefCode"}})
+		.success(function(data, status, headers, config) {
+			if(data!=null){
+				$scope.catalogRefCodes = data;
+			}
+		})
+		.error(function(data, status, headers, config) {
+			$scope.message.clazz = 'alert alert-danger';
+			$scope.message.text = Messages('reagents.msg.save.error');
+			$scope.saveInProgress = false;
+			$scope.message.details = data;
+			$scope.message.isDetails = true;
+		});
+	};
+		
+	$scope.removeKit = function(){
 		 if($scope.kit !== undefined && $scope.kit.code !== ""  && confirm("Etes vous sur de vouloir supprimer le kit "+$scope.kit.name+" ?")){
 			 $http.delete(jsRoutes.controllers.reagents.api.Kits.delete($scope.kit.code).url)
 				.success(function(data, status, headers, config) {
@@ -241,14 +290,14 @@
 	     return "";
 	 }
 	 
-	 $scope.newReagent = function(index, box, catalogCode){
+	 $scope.newReagent = function(index, box, reagentCatalog){
 		 console.log(index);
 		 for(var i = 0; i < $scope.datatables[index].displayResult.length; i++){
 			if($scope.datatables[index].displayResult[i].line.edit){
 				$scope.datatables[index].saveLocal($scope.datatables[index].displayResult[i].data,i);
 			}
 		 }
-		 $scope.datatables[index].addData([{"category":"Reagent", "boxCode":box.code, "catalogCode":catalogCode, "state":{code:"N"}}]);
+		 $scope.datatables[index].addData([{"category":"Reagent", "catalogCode":reagentCatalog.code, "receptionDate":moment(new Date()).valueOf(), "catalogRefCode":reagentCatalog.catalogRefCode, "boxCatalogRefCode":box.catalogRefCode, "state":{code:"N"}}]);
 		 $scope.datatables[index].setEdit();
 		 console.log($scope.boxes);
 	 };
@@ -267,6 +316,9 @@
 				.success(function(data, status, headers, config) {
 					if(data!=null){
 						$scope.kit = data;
+						$scope.orderInformations.orderCode = $scope.kit.orderCode;
+						$scope.orderInformations.providerOrderCode = $scope.kit.providerOrderCode;
+						$scope.orderInformations.shippedOrderCode =  $scope.kit.shippedOrderCode;
 					}
 				})
 				.error(function(data, status, headers, config) {
@@ -284,14 +336,13 @@
 		 if(boxCatalog !== undefined){
 			 boxCatalogCode = boxCatalog.code;
 		 }
-		 $scope.boxes.push({"category":"Box", "state":{"code":"N"}, "catalogCode":boxCatalogCode});
+		 $scope.boxes.push({"category":"Box", "state":{"code":"N"},"catalogRefCode":boxCatalog.catalogRefCode, "receptionDate":moment(new Date()).valueOf(), "catalogCode":boxCatalogCode});
 		 $scope.datatables[$scope.boxes.length-1] = datatable($scope.datatableConfig);
 		 $scope.datatables[$scope.boxes.length-1].setData([]);
 	 };
 	 
 	 $scope.loadBoxes = function(){
-		 if($scope.kit.code !== undefined && $scope.kit.code !== ""){
-			 $http.get(jsRoutes.controllers.reagents.api.Boxes.list().url, {"params":{"kitCode":$scope.kit.code}})
+		 $http.get(jsRoutes.controllers.reagents.api.Boxes.list().url, {"params":{"kitCode":$scope.kit.code}})
 				.success(function(data, status, headers, config) {
 					if(data!=null){
 						$scope.boxes = data;
@@ -301,6 +352,9 @@
 							$scope.datatables[i].setData([]);
 							var jsonSearch = {"boxCode":$scope.boxes[i].code,"kitCode":$scope.kit.code};
 							$scope.datatables[i].search(jsonSearch);
+							$scope.orderInformations.orderCode = $scope.boxes[i].orderCode;
+							$scope.orderInformations.providerOrderCode = $scope.boxes[i].providerOrderCode;
+							$scope.orderInformations.shippedOrderCode =  $scope.boxes[i].shippedOrderCode;
 						}
 					}
 				})
@@ -311,7 +365,6 @@
 					$scope.message.details = data;
 					$scope.message.isDetails = true;
 				});
-		 }
 	 };
 	 
 	 $scope.saveReagents = function(index, box){
@@ -319,25 +372,25 @@
 			$scope.datatables[index].displayResult[i].data.category = "Reagent";
 			$scope.datatables[index].displayResult[i].data.boxCode = box.code;
 			$scope.datatables[index].displayResult[i].data.kitCode = $scope.kit.code;
+			$scope.copyOrderInformations($scope.datatables[index].displayResult[i].data);
 		 }
 	 };
 	 
 	 $scope.saveBoxes = function(){
 		var promises = [];
-		if($scope.kit.code !== undefined && $scope.kit.code !== ""){
-			for(var i=0;i<$scope.boxes.length;i++){
-				$scope.boxes[i].kitCode = $scope.kit.code;
-				if($scope.boxes[i].code === undefined || $scope.boxes[i].code === ""){
-					promises.push($scope.saveBox(i,$scope.boxes[i]));
-				}else{
-					promises.push($scope.updateBox(i,$scope.boxes[i]));
-				}
+		for(var i=0;i<$scope.boxes.length;i++){
+			$scope.boxes[i].kitCode = $scope.kit.code;
+			
+			$scope.copyOrderInformations($scope.boxes[i]);
+			
+			if($scope.boxes[i].code === undefined || $scope.boxes[i].code === ""){
+				promises.push($scope.saveBox(i,$scope.boxes[i]));
+			}else{
+				promises.push($scope.updateBox(i,$scope.boxes[i]));
 			}
-		}else{
-			//TODO:error on the field
-		}
 		return promises;
-	 };
+	 }
+	};
 	 
 	 $scope.saveBox = function(i,box){
 		 return $http.post(jsRoutes.controllers.reagents.api.Boxes.save().url, box)
@@ -345,7 +398,14 @@
 				if(data!=null){
 					$scope.message.clazz="alert alert-success";
 					$scope.message.text=Messages('reagents.msg.save.sucess');
-							$scope.boxes[i] = data;
+					$scope.boxes[i] = data;
+					var reagents = $scope.datatables[i].displayResult.data;
+					if(reagents !== undefined){
+						for(var j=0;j<reagents.length;j++){
+							reagents[j].boxCode = $scope.boxes[i].code;
+							reagents[j].kitCode = $scope.boxes[i].kitCode;
+						}
+					}
 				}
 			})
 			.error(function(data, status, headers, config) {
@@ -391,7 +451,6 @@
 				if($scope.message.text != Messages('reagents.msg.save.error')){
 					$scope.message.clazz="alert alert-success";
 					$scope.message.text=Messages('reagents.msg.save.sucess');
-					//$location.path(jsRoutes.controllers.reagents.tpl.Kits.get($scope.kit.code).url);
 				}
 				promises = $scope.saveBoxes();
 				$q.all(promises).then(function (res) {
@@ -423,9 +482,10 @@
 				$scope.message.isDetails = true;
 				$scope.saveInProgress = false;
 			 });
-	 }
+	 };
 	 
 	 $scope.saveKit = function(){
+		 $scope.copyOrderInformations($scope.kit);
 		 return $http.post(jsRoutes.controllers.reagents.api.Kits.save().url, $scope.kit)
 			.success(function(data, status, headers, config) {
 				if(data!=null){
@@ -441,9 +501,10 @@
 				$scope.message.details = data;
 				$scope.message.isDetails = true;
 			});
-	 }
+	 };
 	 
 	 $scope.updateKit = function(kitCode){
+		 $scope.copyOrderInformations($scope.kit);
 		 return $http.put(jsRoutes.controllers.reagents.api.Kits.update(kitCode).url, $scope.kit)
 			.success(function(data, status, headers, config) {
 				if(data!=null){
@@ -459,7 +520,7 @@
 				$scope.message.details = data;
 				$scope.message.isDetails = true;
 			});
-	 }
+	 };
 	 
 	 $scope.insertBoxes = function(addBoxes){
 		 if($scope.boxes.length === 0 || confirm(Messages("boxes.insert.warning"))){
@@ -491,8 +552,7 @@
 						if(data !== undefined && data !== null){
 							for(var i=0;i<data.length;i++){
 								if(addReagents){
-									//$scope.addBox(data[i]);
-									$scope.newReagent(boxIndex, $scope.boxes[boxIndex], data[i].code);
+									$scope.newReagent(boxIndex, $scope.boxes[boxIndex], data[i]);
 								}
 							}
 						}
@@ -515,6 +575,10 @@
 	 var promises = [];
 	 $scope.editMode = true;
 	 $scope.boxCatalogs = [];
+	 $scope.orderInformations = {};
+	 $scope.info = {};
+	 
+	 $scope.kit.declarationType = "kit";
 	 
 	 if($routeParams.kitCode !== undefined){
 		 $scope.kit.code = $routeParams.kitCode;
@@ -522,17 +586,25 @@
 		 $scope.editMode = false;
 	 }else{
 		 $scope.kit.receptionDate = moment(new Date()).valueOf();
-		 $scope.kit.state = {code:"N"};
 	 }
 	 $q.all(promises).then(function (res) {
-		 $scope.loadBoxes();
+		 if($routeParams.kitCode !== undefined){
+			 $scope.loadBoxes();
+		 }
+		 $scope.getRefCatalogs();
 		 $scope.lists.refresh.experimentTypes();
 		 $scope.lists.refresh.kitCatalogs();
 		 $scope.lists.refresh.states({"objectTypeCode":"Reagent"});
 		 if(angular.isUndefined($scope.getHomePage())){
+			 if($routeParams.kitCode !== undefined){
+				tabService.addTabs({label:Messages('kitDeclarations.tabs.search'),href:jsRoutes.controllers.reagents.tpl.Kits.home("search").url,remove:false});
+				tabService.addTabs({label:$routeParams.kitCode,href:jsRoutes.controllers.reagents.tpl.Kits.get($routeParams.kitCode).url,remove:true});
+				tabService.activeTab(1);
+			 }else{
 				$scope.mainService.setHomePage('new');
-				tabService.addTabs({label:Messages('kitCatalogs.tabs.create'),href:jsRoutes.controllers.reagents.tpl.Kits.home("new").url,remove:false});
+				tabService.addTabs({label:Messages('kitDeclarations.tabs.create'),href:jsRoutes.controllers.reagents.tpl.Kits.home("new").url,remove:false});
 				tabService.activeTab(0);
+			 }
 		 }
 	 });
 }]);

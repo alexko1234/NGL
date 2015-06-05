@@ -2,7 +2,7 @@ angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datat
 	$scope.datatableConfig = {
 			name:"FDR_Tube",
 			columns:[
-			         {
+			  /*       {
 			        	 "header":Messages("containers.table.supportCode"),
 			        	 "property":"support.code",
 			        	 "order":true,
@@ -21,7 +21,7 @@ angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datat
 			        	 "type":"text",
 			        	 "position":1,
 			        	 "extraHeaders":{0:"Inputs"}
-			         },
+			         },  */
 					 {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"code",
@@ -29,10 +29,51 @@ angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datat
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			        	 "position":2,
+			        	 "position":1,
+			        	 "extraHeaders":{0:"Inputs"}
+			         },
+			         {
+			        	"header":Messages("containers.table.tags"),
+			 			"property": "contents",
+			 			"order":true,
+			 			"hide":true,
+			 			"type":"text",
+			 			"position":2,
+			 			"render":"<div list-resize='value.data.contents | getArray:\"properties.tag.value\" | unique' ' list-resize-min-size='3'>",
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
 					 {
+			        	 "header":Messages("containers.table.state.code"),
+			        	 "property":"state.code",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+						 "filter":"codes:'state'",
+			        	 "position":3,
+			        	 "extraHeaders":{0:"Inputs"}
+			         },
+					 {
+			        	 "header":function(){return Messages("containers.table.volume") + "(µl)"},
+			        	 "property":"mesuredVolume.value",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":4,
+			        	 "extraHeaders":{0:"Inputs"}
+			         },
+					 {
+			        	 "header":function(){return Messages("containers.table.concentration") + "(nM)"},
+			        	 "property":"mesuredConcentration.value",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":5,
+			        	 "extraHeaders":{0:"Inputs"}
+			         },
+				/*	 {
 			        	 "header":Messages("containers.table.projectCodes"),
 			        	 "property":"projectCodes",
 			        	 "order":true,
@@ -41,7 +82,7 @@ angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datat
 			        	 "type":"text",
 			        	 "position":3,
 			        	 "extraHeaders":{0:"Inputs"}
-			         },
+			         }, 
 					 {
 			        	 "header":Messages("containers.table.sampleCodes"),
 			        	 "property":"sampleCodes",
@@ -52,18 +93,7 @@ angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datat
 			        	 "position":4,
 						 "render":"<div list-resize='value.data.sampleCodes | unique'>",
 			        	 "extraHeaders":{0:"Inputs"}
-			         },
-					 {
-			        	 "header":Messages("containers.table.stateCode"),
-			        	 "property":"state.code",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-						 "filter":"codes:'state'",
-			        	 "position":6,
-			        	 "extraHeaders":{0:"Inputs"}
-			         },
+			         },  
 					 {
 			        	 "header":Messages("containers.table.fromExperimentTypeCodes"),
 			        	 "property":"fromExperimentTypeCodes",
@@ -73,7 +103,7 @@ angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datat
 			        	 "type":"text",
 			        	 "position":7,
 			        	 "extraHeaders":{0:"Inputs"}
-			         }
+			         }*/
 			         ],
 			compact:false,
 			pagination:{
@@ -139,14 +169,18 @@ angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datat
 		$scope.datatable.addColumn(2,column);
 	});
 	
-	$scope.$on('addExperimentPropertiesInput', function(e, data, possibleValues) {
-		var column = $scope.datatable.newColumn(data.name,"inputExperimentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Inputs","1":"Experiments"});
+	$scope.$on('addExperimentPropertiesInput', function(e, data, possibleValues) {				
+		var unit = "";
+		if(data.displayMeasureValue!=undefined) unit = "("+data.displayMeasureValue.value+")";
+		var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"inputExperimentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Inputs"});
 		column.defaultValues = data.defaultValue;
-		$scope.datatable.addColumn(2,column);
+		$scope.datatable.addColumn(6,column);
 	});
 	
 	$scope.$on('addExperimentPropertiesOutput', function(e, data, possibleValues) {
-		var column = $scope.datatable.newColumn(data.name,"outputExperimentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Outputs","1":"Experiments"});
+		var unit = "";
+		if(data.displayMeasureValue!=undefined) unit = "("+data.displayMeasureValue.value+")";
+		var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"outputExperimentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Outputs"});
 		column.defaultValues = data.defaultValue;
 		$scope.datatable.addColumn(-1,column);
 	});
@@ -167,7 +201,7 @@ angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datat
 	});
 	
 	$scope.$on('inputToExperiment', function(e, atomicTransfertMethod) {
-		$scope.atomicTransfere.inputToExperiment($scope.datatable);
+		$scope.atomicTransfere.inputToExperiment($scope.datatable);		
 	});
 	
 	$scope.$on('addInstrumentPropertiesInputToScope', function(e, data) {
@@ -179,7 +213,7 @@ angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datat
 					if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties[data[j].code]){
 						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties[data[j].code].value);
 					}else{
-						getter.assign($scope,"");
+						getter.assign($scope,undefined);
 					}
 				}
 			}
@@ -196,7 +230,7 @@ angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datat
 					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code]){
 						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code].value);
 					}else{
-						getter.assign($scope,"");
+						getter.assign($scope,undefined);
 					}
 				}
 			}
@@ -213,7 +247,7 @@ angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datat
 					if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code]){
 						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.experimentProperties[data[j].code].value);
 					}else{
-						getter.assign($scope,"");
+						getter.assign($scope,undefined);
 					}
 				}
 			}
@@ -230,7 +264,7 @@ angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datat
 					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties[data[j].code]){
 						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties[data[j].code].value);
 					}else{
-						getter.assign($scope,"");
+						getter.assign($scope,undefined);
 					}
 				}
 			}
@@ -262,7 +296,7 @@ angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datat
 	
 	$scope.init_atomicTransfert = function(containers, atomicTransfertMethod){
 			angular.forEach(containers, function(container,index){
-				$scope.experiment.value.atomicTransfertMethods[index] = {class:atomicTransfertMethod, inputContainerUsed:[]};
+				$scope.experiment.value.atomicTransfertMethods[index] = {class:atomicTransfertMethod, inputContainerUsed:{}, outputContainerUsed:{experimentProperties:{}}};
 				$scope.experiment.value.atomicTransfertMethods[index].inputContainerUsed = {code:container.code,instrumentProperties:{},experimentProperties:{},state:container.state,locationOnContainerSupport:container.support};
 			});
 	};
@@ -270,6 +304,15 @@ angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datat
 	$scope.$on('initAtomicTransfert', function(e, containers, atomicTransfertMethod) {
 		$scope.init_atomicTransfert(containers, atomicTransfertMethod);
 	});	
+	
+/*	$scope.setValidePercentage = function(atomics){		
+		angular.forEach(atomics, function(atomic){			
+			if(atomic.inputContainerUsed.percentage != 100.0){
+				atomic.inputContainerUsed.percentage = 100.0;
+				}			
+		});
+		
+	};*/
 	
 	//Init
 	$scope.datatable = datatable($scope.datatableConfig);
@@ -280,7 +323,7 @@ angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datat
 	
 	if($scope.experiment.editMode){
 		$scope.atomicTransfere.loadExperiment($scope.datatable);
-	}else{
-		$scope.atomicTransfere.newExperiment($scope.datatable);
+	}else{		
+		$scope.atomicTransfere.newExperiment($scope.datatable);	
 	}
 }]);

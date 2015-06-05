@@ -1,0 +1,105 @@
+//created on: Apr 21, 2015
+package rules
+
+//list any import classes here.
+
+
+
+//declare any global variables here
+declare ContainerInfo	
+	mesuredConcentration : Double
+	finalVolume : Double
+	finalConcentration : Double
+end
+
+rule "Debug solution-stock"
+	@nglSQ( calculations )
+	dialect "java"
+	salience 1000
+	no-loop
+    when
+    $experiment:Experiment($typeCode:typeCode,$typeCode=="solution-stock")
+    eval(true)
+    then
+		Logger.debug("Rules annotation @nglSQ(calculations) solution-stock");    
+	end
+
+rule "Init objectContainerInfo in WM"
+	@nglSQ( calculations )
+	dialect "java"
+	salience 950
+	no-loop
+	lock-on-active true
+    when
+    $experiment:Experiment($typeCode:typeCode,$typeCode=="solution-stock")
+	$atomicTransfert: OneToOneContainer($inputContainerUsed : inputContainerUsed , $outputContainerUsed: outputContainerUsed)
+	ContainerUsed($mesuredConcentration: concentration, $mesuredConcentration!=null) from $inputContainerUsed
+	ContainerUsed($experimentPropertiesOut : experimentProperties,$experimentPropertiesOut!=null) from $outputContainerUsed
+	$finalVolume: PropertyValue() from $experimentPropertiesOut.get("finalVolume")
+	$finalConcentration: PropertyValue() from $experimentPropertiesOut.get("finalConcentration")
+	eval($finalVolume != null && $finalConcentration !=null)
+    then
+    Logger.debug("Init objectContainerInfo in WM");
+    Double mesuredConcentration = Double.parseDouble($mesuredConcentration.getValue().toString());
+	Double finalVolume = Double.parseDouble($finalVolume.getValue().toString());
+	Double finalConcentration = Double.parseDouble($finalConcentration.getValue().toString());
+	ContainerInfo containerInfo = new ContainerInfo(mesuredConcentration,finalVolume,finalConcentration);    
+	Logger.debug("Object ContainerInfo: mesuredConcentration="+ mesuredConcentration +"; finalVolume="+ finalVolume +"; finalConcentration="+ finalConcentration);
+	insert(containerInfo);    
+	end
+	
+
+
+rule "RequiredVolume"
+    @nglSQ( calculations )
+	dialect "java"
+	salience 800
+	no-loop
+    when
+     	$experiment: Experiment($typeCode:typeCode,$typeCode=="solution-stock")    					
+		$atomicTransfert: OneToOneContainer($inputContainerUsed : inputContainerUsed, $inputContainerUsed!=null)
+		ContainerUsed( $experimentProperties : experimentProperties) from $inputContainerUsed
+		ContainerInfo($mesuredConcentration:mesuredConcentration, $finalConcentration:finalConcentration, $finalVolume:finalVolume)		
+		eval(Double.class.isInstance($finalVolume) && $mesuredConcentration!=0  && Double.class.isInstance($mesuredConcentration) && Double.class.isInstance($finalConcentration))
+    then
+		Logger.debug("RequiredVolume calculation");
+		Double requiredVolume  = roundValue( $finalVolume * $finalConcentration /  $mesuredConcentration);
+			
+		Logger.debug("RequiredVolume= "+requiredVolume);
+		PropertySingleValue propertySingle = new PropertySingleValue(requiredVolume, "\u00B5L");
+		Logger.debug("property:", propertySingle.getValue().toString());
+		if($experimentProperties==null){
+			$experimentProperties = new HashMap<String, PropertyValue>();
+			$inputContainerUsed.setExperimentProperties($experimentProperties);
+		}else if($experimentProperties.containsKey("requiredVolume")){
+			$experimentProperties.remove("requiredVolume");
+		}
+		
+		$experimentProperties.put("requiredVolume", propertySingle);
+		Logger.debug("requiredVolume=", propertySingle.getValue());
+		update($experiment);
+end
+
+rule "BufferVolume"
+    @nglSQ( calculations )
+	dialect "java"
+	salience 700
+	no-loop
+    when
+        $experiment:Experiment($typeCode:typeCode,$typeCode=="solution-stock")
+       	ContainerInfo($finalVolume:finalVolume,$finalVolume!=null)
+		$atomicTransfert: OneToOneContainer($inputContainerUsed : inputContainerUsed)
+	 	ContainerUsed( $experimentProperties : experimentProperties, $experimentProperties!=null) from $inputContainerUsed
+		$requiredVolume: PropertyValue() from $experimentProperties.get("requiredVolume")
+		eval($requiredVolume!=null )	
+    then
+		Logger.debug("BufferVolume calculation");
+       	Double bufferVolume = roundValue($finalVolume - Double.parseDouble($requiredVolume.getValue().toString()));
+      	PropertySingleValue value = new PropertySingleValue(bufferVolume,"\u00B5L");
+      	if($experimentProperties.containsKey("bufferVolume")){
+			$experimentProperties.remove("bufferVolume");
+		}		
+		$experimentProperties.put("bufferVolume", value);
+		Logger.debug("bufferVolume=",value.getValue());     	
+end
+

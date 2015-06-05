@@ -24,7 +24,21 @@
 			        	 "order":true,
 			        	 "type":"text",
 			        	 "edit":true
-			         }
+			         },
+			         {
+			        	 "header":Messages("reagents.table.catalogRefCode"),
+			        	 "property":"catalogRefCode",
+			        	 "order":true,
+			        	 "type":"text",
+			        	 "edit":true
+			         },
+			         {
+			        	 "header":Messages("reagents.table.possibleUseNumber"),
+			        	 "property":"possibleUseNumber",
+			        	 "order":true,
+			        	 "type":"text",
+			        	 "edit":true
+			         },
 				],
 				compact:true,
 				pagination:{
@@ -155,6 +169,13 @@
 	 $scope.getClass = function(fieldName){
 		 if($scope.mainService.getError(fieldName) !== undefined && $scope.mainService.getError(fieldName) !== ""){
 			 return "has-error";
+		 }
+		 return "";
+	 };
+	 
+	 $scope.getBoxClass = function(fieldName){
+		 if($scope.mainService.getError(fieldName) !== undefined && $scope.mainService.getError(fieldName) !== ""){
+			 return "box-error";
 		 }
 		 return "";
 	 };
