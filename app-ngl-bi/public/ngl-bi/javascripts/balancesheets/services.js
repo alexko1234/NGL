@@ -924,6 +924,7 @@
 				 colorBlue(dtYearlyBalanceSheets, posSum);
 			}
 			
+			
 			var computeChartYearlyBalanceSheets = function(data){
 				 var years = [];
 				 for(var i = 0; i < data.length; i++){

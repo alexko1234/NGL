@@ -53,6 +53,13 @@ GET		/tpl/stats/:type/config						controllers.stats.tpl.Stats.config(type: java.
 GET		/tpl/stats/:type/show						controllers.stats.tpl.Stats.show(type: java.lang.String)
 GET		/tpl/stats/js-routes						controllers.stats.tpl.Stats.javascriptRoutes()
 
+#balance sheets tpl
+GET 	/balance-sheets/:year/home					    controllers.balancesheets.tpl.BalanceSheets.home(year : java.lang.String)	
+GET		/tpl/balance-sheets/year						controllers.balancesheets.tpl.BalanceSheets.year()			
+GET		/tpl/balance-sheets/general						controllers.balancesheets.tpl.BalanceSheets.general()
+GET		/tpl/balance-sheets/js-routes					controllers.balancesheets.tpl.BalanceSheets.javascriptRoutes()
+
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /messages.js                				controllers.main.tpl.Main.jsMessages()
 GET     /codes.js        	        				controllers.main.tpl.Main.jsCodes()
