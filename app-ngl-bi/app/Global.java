@@ -12,8 +12,6 @@ import play.api.modules.spring.Spring;
 import play.data.format.Formatters;
 import play.mvc.Action;
 import play.mvc.Http.Request;
-import rules.services.RulesException;
-import rules.services.RulesServices;
 import rules.services.RulesServices6;
 
 

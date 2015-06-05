@@ -7,8 +7,6 @@ import views.html.analyses.home;
 import views.html.analyses.search;
 import views.html.analyses.treatments;
 import controllers.CommonController;
-import controllers.APICommonController;
-import controllers.analyses.tpl.routes.javascript;
 
 /**
  * Controller around Run object
