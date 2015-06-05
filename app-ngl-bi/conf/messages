@@ -610,6 +610,57 @@ analyses.treatments.gapClosing_ba.GCpercent = % GC
 analyses.treatments.gapClosing_ba.numberOfN = Nombre de N
 analyses.treatments.gapClosing_ba.percentOfN = % N
 
+
+############
+#
+# Balance Sheets
+#
+############
+balanceSheets.page.title = Bilan de production
+balanceSheets.info.loading = Chargement du bilan en cours
+
+balanceSheets.menu = Bilans
+balanceSheets.actualYear = 2015
+balanceSheets.year = Année run
+balanceSheets.nbBases = Nombre de bases Illumina
+balanceSheets.runTypeCode = Type séquençage
+balanceSheets.percentage = Pourcentage
+balanceSheets.projectCode = Code sous-projet
+balanceSheets.projectName = Nom sous-projet
+balanceSheets.projectType = Type Sous-projet
+balanceSheets.quarters = Trimestre
+balanceSheets.monthRun = Mois run
+balanceSheets.sum = Somme : 
+balanceSheets.totalTen = Total des 10 premiers projets
+balanceSheets.percentageTotalSum = Pourcentage de la somme totale de l'année
+balanceSheets.quarterBases = Nombre de bases Illumina par trimestre
+balanceSheets.yearlyBases = Nombre de bases Illumina par année
+balanceSheets.nbBases = Nombre de bases
+balanceSheets.nbSequencingType = Nombre de bases Illumina par type séquençage
+balanceSheets.sequencingType = Type séquençage
+
+balanceSheets.tab.year = Année 
+balanceSheets.tab.generalBalanceSheets = Bilan général
+balanceSheets.tab.yearlyBalanceSheets = Nombre de bases par an et par technologie
+balanceSheets.tab.sequencingType = Nombre de bases par type séquençage
+balanceSheets.tab.firstTen = 10 premiers projets de cette année
+balanceSheets.tab.quarters = Nombre de bases par trimestre
+balanceSheets.tab.projectType = Nombre de bases par type de projet
+
+balanceSheets.january = Janvier
+balanceSheets.february = Février
+balanceSheets.march = Mars
+balanceSheets.april = Avril
+balanceSheets.may = Mai
+balanceSheets.june = Juin
+balanceSheets.july = Juillet
+balanceSheets.august = Août
+balanceSheets.september = Septembre
+balanceSheets.october = Octobre
+balanceSheets.november = Novembre
+balanceSheets.december = Decembre
+
+
 ############
 #
 # Stats

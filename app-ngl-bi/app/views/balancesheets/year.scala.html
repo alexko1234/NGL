@@ -1,0 +1,65 @@
+@()
+<!-- Test tabs AngularJS via ui.bootstrap -->
+<div class="row">
+	<div class="col-md-12 col-lg-12">
+		<div ng-if="balanceSheetsService.isLoading()">
+			<div class="col-md-12 col-lg-12">
+				<div class="alert alert-info" role="alert">
+					<strong>@Messages("balanceSheets.info.loading")</strong>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12 col-lg-12">
+		<tabset justified="true">
+			<tab heading='@Messages("balanceSheets.tab.quarters")' active="tabs[0]" ng-click='setActiveTab("0")'>
+				<div ng-if="!balanceSheetsService.isLoading()">
+						<div class="row">
+							<div class="col-md-12 col-lg-12" datatable="balanceSheetsService.dtQuarters()"></div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 col-lg-12">
+								<chart value="balanceSheetsService.chartQuarters()"></chart>
+							</div>
+						</div>
+				</div>
+			</tab>
+			<tab heading='@Messages("balanceSheets.tab.sequencingType")' active="tabs[1]" ng-click='setActiveTab("1")'>
+				<div ng-if="!balanceSheetsService.isLoading()">	
+					<div class="row">
+						<div class="col-md-12 col-lg-12" datatable="balanceSheetsService.dtSequencingProduction()"></div>
+					</div>
+					<div class="row">
+						<div class="col-md-12 col-lg-12">
+							<chart value="balanceSheetsService.chartSequencingProduction()"></chart>
+						</div>
+					</div>
+				</div>
+			</tab>
+			<tab heading='@Messages("balanceSheets.tab.firstTen")' active="tabs[2]" ng-click='setActiveTab("2")'>
+				<div ng-if="!balanceSheetsService.isLoading()">
+					<div class="row">
+						<div class="col-md-12 col-lg-12" datatable="balanceSheetsService.dtFirstTen()"></div>
+					</div>
+					<div class="row">
+						<div class="col-md-12 col-lg-12">
+							<chart value="balanceSheetsService.chartFirstTen()"></chart>
+						</div>
+					</div>
+				</div>
+			</tab>
+			<tab heading='@Messages("balanceSheets.tab.projectType")' active="tabs[3]" ng-click='setActiveTab("3")'>
+				<div ng-if="!balanceSheetsService.isLoading()">
+					<div class="row">
+						<div class="col-md-12 col-lg-12" datatable="balanceSheetsService.dtProjectType()"></div>
+					</div>
+					<div class="row">
+						<div class="col-md-12 col-lg-12">
+							<chart value="balanceSheetsService.chartProjectType()"></chart>
+						</div>
+					</div>
+				</div>
+			</tab>
+		</tabset>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,17 @@
+@(code: String)
+
+@scripts() = {
+		<script src="@controllers.balancesheets.tpl.routes.BalanceSheets.javascriptRoutes" type="text/javascript" charset="utf-8"></script>  
+		<script src="@controllers.main.tpl.routes.Main.jsCodes" type="text/javascript" charset="utf-8"></script> 
+		<script src="@routes.Assets.at("ngl-bi/javascripts/balancesheets/app.js")" type="text/javascript" charset="utf-8"></script> 
+		<script src="@routes.Assets.at("ngl-bi/javascripts/balancesheets/controllers.js")" type="text/javascript" charset="utf-8"></script>
+		<script src="@routes.Assets.at("ngl-bi/javascripts/balancesheets/services.js")" type="text/javascript" charset="utf-8"></script>
+		<script src="@routes.Assets.at("datatable/javascripts/services/datatable2.js")" type="text/javascript" charset="utf-8"></script>
+		<script src="@routes.Assets.at("ngl-common/javascripts/controllers/mainctrl.js")" type="text/javascript" charset="utf-8"></script> 
+		<script src="@routes.Assets.at("ngl-common/javascripts/services/commons.js")" type="text/javascript" charset="utf-8"></script> 
+		<script src="@helper.getAsset("javascripts","simple-statistics","140513","simple_statistics.js")" type="text/javascript" charset="utf-8"></script>
+	 	<script src="@helper.getAsset("javascripts","highcharts","4.1.4","highcharts_4.1.4.js")" type="text/javascript" charset="utf-8"></script>
+
+}
+
+@views.html.main("balanceSheets.page.title", menu("balanceSheets." + code), scripts)(views.html.contents.lefttabs())
