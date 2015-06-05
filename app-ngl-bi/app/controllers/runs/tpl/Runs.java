@@ -1,9 +1,12 @@
 package controllers.runs.tpl;
 
-import controllers.CommonController;
 import play.Routes;
 import play.mvc.Result;
-import views.html.runs.*;
+import views.html.runs.details;
+import views.html.runs.home;
+import views.html.runs.laneTreatments;
+import views.html.runs.search;
+import controllers.CommonController;
 
 /**
  * Controller around Run object

@@ -2,7 +2,10 @@ package controllers.stats.tpl;
 
 import play.Routes;
 import play.mvc.Result;
-import views.html.stats.*;
+import views.html.stats.choice;
+import views.html.stats.config;
+import views.html.stats.home;
+import views.html.stats.show;
 import controllers.CommonController;
 
 /**
