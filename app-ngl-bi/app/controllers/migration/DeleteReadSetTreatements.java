@@ -15,7 +15,6 @@ import org.mongojack.DBUpdate;
 import play.Logger;
 import play.mvc.Result;
 
-
 import com.mongodb.BasicDBObject;
 
 import controllers.CommonController;

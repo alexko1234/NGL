@@ -4,27 +4,22 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
-
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-import org.mongojack.DBUpdate.Builder;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.MongoException;
 
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
+
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+
 import play.Logger;
-import play.Play;
 import play.mvc.Result;
-import rules.services.RulesException;
-import rules.services.RulesServices;
-import rules.services.RulesServices6;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.MongoException;
+
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult.Sort;

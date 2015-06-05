@@ -3,18 +3,18 @@ package controllers.migration;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mongojack.DBQuery;
-
-import com.mongodb.BasicDBObject;
-
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
+
+import org.mongojack.DBQuery;
+
 import play.Logger;
 import play.Play;
 import play.mvc.Result;
-import rules.services.RulesException;
-import rules.services.RulesServices;
 import rules.services.RulesServices6;
+
+import com.mongodb.BasicDBObject;
+
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 

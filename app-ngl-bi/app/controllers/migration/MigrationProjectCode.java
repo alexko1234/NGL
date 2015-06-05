@@ -1,16 +1,12 @@
 package controllers.migration;		
 
-import java.util.List;
-
 import models.laboratory.project.instance.Project;
-import models.laboratory.run.instance.File;
-import models.laboratory.run.instance.ReadSet;
-import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-import org.mongojack.JacksonDBCollection;
 import org.mongojack.WriteResult;
+
 import play.Logger;
 import play.mvc.Result;
 import controllers.CommonController;

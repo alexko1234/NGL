@@ -1,22 +1,12 @@
 package controllers.migration;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import org.mongojack.DBQuery;
-
-import lims.models.experiment.illumina.Flowcell;
-import lims.models.experiment.illumina.Library;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
@@ -24,9 +14,11 @@ import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
+
+import org.mongojack.DBQuery;
+
 import play.Logger;
 import play.Logger.ALogger;
-import play.api.modules.spring.Spring;
 import play.mvc.Result;
 import validation.ContextValidation;
 import controllers.CommonController;

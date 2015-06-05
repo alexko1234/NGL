@@ -3,21 +3,10 @@ package controllers.migration;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.run.instance.Analysis;
-import models.laboratory.run.instance.ReadSet;
-import models.laboratory.run.instance.SampleOnContainer;
 import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
 
 import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-import org.mongojack.JacksonDBCollection;
-
-import akka.actor.ActorRef;
-import akka.actor.Props;
-
-import com.mongodb.BasicDBObject;
 
 import play.Logger;
 import play.Play;
@@ -25,6 +14,8 @@ import play.libs.Akka;
 import play.mvc.Result;
 import rules.services.RulesActor;
 import rules.services.RulesMessage;
+import akka.actor.ActorRef;
+import akka.actor.Props;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 

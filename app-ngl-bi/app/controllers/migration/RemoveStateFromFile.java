@@ -1,19 +1,17 @@
 package controllers.migration;
 
-import controllers.CommonController;
-import controllers.migration.models.FileOld2;
-import controllers.migration.models.ReadSetOld2;
+import models.laboratory.run.instance.ReadSet;
+import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.mongojack.JacksonDBCollection;
 
-import fr.cea.ig.MongoDBDAO;
-
 import play.Logger;
 import play.mvc.Result;
-import models.laboratory.run.instance.ReadSet;
-import models.utils.InstanceConstants;
+import controllers.CommonController;
+import controllers.migration.models.ReadSetOld2;
+import fr.cea.ig.MongoDBDAO;
 
 public class RemoveStateFromFile  extends CommonController {
 

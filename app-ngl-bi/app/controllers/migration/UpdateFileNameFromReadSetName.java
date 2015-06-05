@@ -5,22 +5,18 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import models.laboratory.common.instance.property.PropertySingleValue;
-import models.laboratory.run.instance.Analysis;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.ReadSet;
-import models.laboratory.run.instance.SampleOnContainer;
 import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-import org.mongojack.JacksonDBCollection;
-
-import com.mongodb.BasicDBObject;
 
 import play.Logger;
 import play.mvc.Result;
+
+import com.mongodb.BasicDBObject;
+
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 
