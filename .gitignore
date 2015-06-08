@@ -9,5 +9,3 @@
 **/project/project
 **/.tern*
 **/.gitignore
-
-!/.gitignore
