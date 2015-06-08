@@ -5,4 +5,9 @@
 **/.project
 **/.settings
 **/bin
+**/logs
+**/project/project
 **/.tern*
+**/.gitignore
+
+!/.gitignore
