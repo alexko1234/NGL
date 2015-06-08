@@ -57,7 +57,7 @@ public class MigrationNGLSEQ extends CommonController{
 		
 		/* NGL-1.6.1*/
 	//	backupOneCollection(InstanceConstants.CONTAINER_COLL_NAME,Container.class);
-	//	backupOneCollection(InstanceConstants.PROCESS_COLL_NAME, Process.class);
+		backupOneCollection(InstanceConstants.PROCESS_COLL_NAME, Process.class);
 		migrationProcessTypeCodeInContainer();
 		migrationProcessCurrentExperimentTypeCode();
 		
@@ -221,7 +221,7 @@ public class MigrationNGLSEQ extends CommonController{
 
 	}
 	
-	private static <T extends DBObject> void backupOneCollection(String collectionName,Class<T> classType) {
+	static <T extends DBObject> void backupOneCollection(String collectionName,Class<T> classType) {
 		Logger.info("\tCopie "+collectionName+" start");
 		MongoDBDAO.save(collectionName+"_BCK_"+today,MongoDBDAO.find(collectionName, classType).toList());
 		Logger.info("\tCopie "+collectionName+" end");
