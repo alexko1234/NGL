@@ -29,6 +29,9 @@ import validation.IValidation;
 })
 public abstract class AtomicTransfertMethod implements IValidation {
 
+	public List<ContainerUsed> inputContainerUseds;
+	public List<ContainerUsed> outputContainerUseds;
+	
 	public AtomicTransfertMethod() {
 		super();
 	}

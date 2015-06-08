@@ -40,9 +40,6 @@ import fr.cea.ig.MongoDBDAO;
 
 public class OneToOneContainer extends AtomicTransfertMethod{
 
-	public ContainerUsed inputContainerUsed;
-	public ContainerUsed outputContainerUsed;
-
 	public OneToOneContainer(){
 		super();
 	}
@@ -52,24 +49,25 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 
 		//if(this.outputContainerUsed==null){
 			
-			if(this.inputContainerUsed!=null){
+			if(this.inputContainerUseds!=null){
 				Map<String,PropertyValue> experimentProperties = new HashMap<>();
-				if(this.outputContainerUsed.experimentProperties!=null){
-					experimentProperties=this.outputContainerUsed.experimentProperties;
+				if(this.outputContainerUseds.get(0).experimentProperties!=null){
+					experimentProperties=this.outputContainerUseds.get(0).experimentProperties;
 				}
 				PropertyValue volume = new PropertySingleValue();
-				if(this.outputContainerUsed.volume!=null){
-					volume = this.outputContainerUsed.volume;
+				if(this.outputContainerUseds.get(0).volume!=null){
+					volume = this.outputContainerUseds.get(0).volume;
 				}
 				PropertyValue concentration = new PropertySingleValue();
-				if(this.outputContainerUsed.concentration!=null){
-					concentration = this.outputContainerUsed.concentration;
+				if(this.outputContainerUseds.get(0).concentration!=null){
+					concentration = this.outputContainerUseds.get(0).concentration;
 				}				
 				String outPutContainerCode=CodeHelper.getInstance().generateContainerSupportCode();
-				this.outputContainerUsed = new ContainerUsed(outPutContainerCode);
-				this.outputContainerUsed.experimentProperties= experimentProperties;
-				this.outputContainerUsed.volume = volume;
-				this.outputContainerUsed.concentration = concentration;
+				this.outputContainerUseds = new ArrayList<ContainerUsed>();
+				this.outputContainerUseds.add(new ContainerUsed(outPutContainerCode));
+				this.outputContainerUseds.get(0).experimentProperties= experimentProperties;
+				this.outputContainerUseds.get(0).volume = volume;
+				this.outputContainerUseds.get(0).concentration = concentration;
 				LocationOnContainerSupport support=new LocationOnContainerSupport();
 				support.categoryCode=experiment.instrument.outContainerSupportCategoryCode;
 				// Same position 
@@ -77,14 +75,14 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 
 				if(containerSupportCategory.nbColumn==1 && containerSupportCategory.nbLine==1){
 					support.line="1";
-					support.code = outputContainerUsed.code;
+					support.code = outputContainerUseds.get(0).code;
 					support.column="1";
 				}else {
 					contextValidation.addErrors("locationOnContainerSupport",ValidationConstants.ERROR_NOTDEFINED_MSG);
 					Logger.error("Location in support not implemented");
 				}
 
-				this.outputContainerUsed.locationOnContainerSupport=support;
+				this.outputContainerUseds.get(0).locationOnContainerSupport=support;
 
 			}else{
 				contextValidation.addErrors("inputContainerUsed", ValidationConstants.ERROR_NOTEXISTS_MSG);
@@ -100,25 +98,25 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 	@Override
 	public ContextValidation saveOutputContainers(Experiment experiment, ContextValidation contextValidation) throws DAOException {
 
-		if(outputContainerUsed!=null && !MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_COLL_NAME,Container.class, this.outputContainerUsed.code)){
+		if(outputContainerUseds!=null && !MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_COLL_NAME,Container.class, this.outputContainerUseds.get(0).code)){
 			// ContainerSupport
-			ContainerSupport support=ContainerSupportHelper.createContainerSupport(this.outputContainerUsed.locationOnContainerSupport.code, null, 
-					this.outputContainerUsed.locationOnContainerSupport.categoryCode , experiment.traceInformation.modifyUser);
+			ContainerSupport support=ContainerSupportHelper.createContainerSupport(this.outputContainerUseds.get(0).locationOnContainerSupport.code, null, 
+					this.outputContainerUseds.get(0).locationOnContainerSupport.categoryCode , experiment.traceInformation.modifyUser);
 
 			// Container
 			Container outputContainer = new Container();
-			outputContainer.code=this.outputContainerUsed.code;
+			outputContainer.code=this.outputContainerUseds.get(0).code;
 			outputContainer.traceInformation = new TraceInformation();
 			outputContainer.traceInformation.setTraceInformation(experiment.traceInformation.modifyUser);
-			outputContainer.categoryCode=this.outputContainerUsed.categoryCode;
+			outputContainer.categoryCode=this.outputContainerUseds.get(0).categoryCode;
 			//Add localisation
-			outputContainer.support=outputContainerUsed.locationOnContainerSupport;
+			outputContainer.support=outputContainerUseds.get(0).locationOnContainerSupport;
 			outputContainer.state=new State("N",experiment.traceInformation.modifyUser);
 			outputContainer.valuation=new Valuation();
 
 			//TODO volume, proportion
-			outputContainer.mesuredVolume=(PropertySingleValue) this.outputContainerUsed.volume;
-			outputContainer.mesuredConcentration= (PropertySingleValue) this.outputContainerUsed.concentration;
+			outputContainer.mesuredVolume=(PropertySingleValue) this.outputContainerUseds.get(0).volume;
+			outputContainer.mesuredConcentration= (PropertySingleValue) this.outputContainerUseds.get(0).concentration;
 			
 			
 			Map<String,PropertyValue> properties=ExperimentHelper.getAllPropertiesFromAtomicTransfertMethod(this,experiment);
@@ -129,7 +127,7 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 
 			if(!contextValidation.hasErrors()){
 				ContainerHelper.save(outputContainer, contextValidation);
-				ProcessHelper.updateNewContainerSupportCodes(outputContainerUsed, inputContainerUsed, experiment);
+				ProcessHelper.updateNewContainerSupportCodes(outputContainerUseds.get(0), inputContainerUseds, experiment);
 			}
 
 
@@ -143,26 +141,28 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		contextValidation.putObject("level", Level.CODE.ContainerIn);
-		inputContainerUsed.validate(contextValidation);
+
+		contextValidation.putObject("level", Level.CODE.ContainerIn);		
+		inputContainerUseds.get(0).validate(contextValidation);	
 		contextValidation.removeObject("level");
-		if(outputContainerUsed != null){
+		if(outputContainerUseds != null){
 			contextValidation.putObject("level", Level.CODE.ContainerOut);
-			outputContainerUsed.validate(contextValidation);
+			outputContainerUseds.get(0).validate(contextValidation);
 			contextValidation.removeObject("level");
 		}
 	}
 	@JsonIgnore
 	public List<ContainerUsed> getInputContainers(){
-		List<ContainerUsed> cu = new ArrayList<ContainerUsed>();
-		cu.add(inputContainerUsed);
+
+		List<ContainerUsed> cu = new ArrayList<ContainerUsed>();		
+		cu.add(inputContainerUseds.get(0));
 		return cu;
 	}
 
 	@JsonIgnore
 	public List<ContainerUsed> getOutputContainers(){
 		List<ContainerUsed> cu = new ArrayList<ContainerUsed>();
-		cu.add(outputContainerUsed);
+		cu.add(outputContainerUseds.get(0));
 		return cu;
 	}
 

@@ -538,8 +538,8 @@ public class Experiments extends CommonController{
 			String containerSupportCodeOld;
 
 			//Experiment
-			for(Entry<Integer, AtomicTransfertMethod> atomicTransfertMethods:experiment.atomicTransfertMethods.entrySet()){
-				for(ContainerUsed containerUsed:atomicTransfertMethods.getValue().getOutputContainers()){
+			for(AtomicTransfertMethod atomicTransfertMethods:experiment.atomicTransfertMethods){
+				for(ContainerUsed containerUsed:atomicTransfertMethods.getOutputContainers()){
 					containerSupportCodeOld=containerUsed.locationOnContainerSupport.code;
 					//Remplace ancien code par le nouveau dans le nom du container
 					containerUsed.code=containerUsed.code.replace(containerSupportCodeOld, containerSupportCode);

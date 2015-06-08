@@ -67,9 +67,9 @@ public class PoolTubeRulesTest extends AbstractTests {
 		atomicTransfert.inputContainerUseds.add(containerIn3);
 		atomicTransfert.inputContainerUseds.add(containerIn4);
 		atomicTransfert.inputContainerUseds.add(containerIn5);
-		atomicTransfert.outputContainerUsed = containerOut1;
+		atomicTransfert.outputContainerUseds.add(containerOut1);
 		
-		exp.atomicTransfertMethods.put(0, atomicTransfert);
+		exp.atomicTransfertMethods.add(0, atomicTransfert);
 		
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		contextValidation.setUpdateMode();
@@ -94,9 +94,9 @@ public class PoolTubeRulesTest extends AbstractTests {
 		assertThat(atomicTransfertResult.inputContainerUseds.get(2).experimentProperties.get("inputVolume").value).isEqualTo(new Double(8.0));
 		
 		
-		assertThat(atomicTransfertResult.outputContainerUsed.volume).isNotNull();
-		assertThat(atomicTransfertResult.outputContainerUsed.volume.value).isInstanceOf(Double.class);
-		assertThat(atomicTransfertResult.outputContainerUsed.volume.value).isEqualTo(new Double(40.0));
+		assertThat(atomicTransfertResult.outputContainerUseds.get(0).volume).isNotNull();
+		assertThat(atomicTransfertResult.outputContainerUseds.get(0).volume.value).isInstanceOf(Double.class);
+		assertThat(atomicTransfertResult.outputContainerUseds.get(0).volume.value).isEqualTo(new Double(40.0));
 		
 		
 	}

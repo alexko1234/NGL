@@ -110,9 +110,9 @@ public class ExperimentValidationTests extends AbstractTests {
 		containerOut1.experimentProperties.put("finalVolume", new PropertySingleValue(new Double(120)));
 
 		atomicTransfert.inputContainerUseds.add(containerIn1);
-		atomicTransfert.outputContainerUsed = containerOut1;
+		atomicTransfert.outputContainerUseds.add(containerOut1);
 
-		exp.atomicTransfertMethods.put(0, atomicTransfert);
+		exp.atomicTransfertMethods.add(0, atomicTransfert);
 
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		contextValidation.setUpdateMode();

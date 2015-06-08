@@ -50,7 +50,7 @@ public class Experiment extends DBObject implements IValidation {
 
 	public State state;
 	
-	public Map<Integer,AtomicTransfertMethod> atomicTransfertMethods; 
+	public List<AtomicTransfertMethod> atomicTransfertMethods; 
 	
 	public List<ReagentUsed> reagents;
 	

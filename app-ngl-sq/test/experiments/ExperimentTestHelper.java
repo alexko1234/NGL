@@ -26,7 +26,7 @@ public class ExperimentTestHelper {
 	public static Experiment getFakeExperiment(){
 		Experiment exp = new Experiment(EXP_CODE);
 		exp.state = new State("N","ngsrg");
-		exp.atomicTransfertMethods = new HashMap<Integer, AtomicTransfertMethod>();
+		exp.atomicTransfertMethods = new ArrayList<AtomicTransfertMethod>();
 		exp.instrument = new InstrumentUsed();
 		exp.instrument.outContainerSupportCategoryCode="tube";
 		exp.experimentProperties = new HashMap<String, PropertyValue>();
@@ -44,15 +44,15 @@ public class ExperimentTestHelper {
 	
 	public static OneToOneContainer getOnetoOneContainer(){
 		OneToOneContainer atomicTransfertMethod = new OneToOneContainer();
-		atomicTransfertMethod.inputContainerUsed = new ContainerUsed();
-		atomicTransfertMethod.outputContainerUsed = new ContainerUsed();
+		atomicTransfertMethod.inputContainerUseds = new ArrayList<ContainerUsed>();
+		atomicTransfertMethod.outputContainerUseds = new ArrayList<ContainerUsed>();
 		
 		return atomicTransfertMethod;
 	}
 	
 	public static OneToManyContainer getOnetoManyContainer(){
 		OneToManyContainer atomicTransfertMethod = new OneToManyContainer();
-		atomicTransfertMethod.inputContainerUsed = new ContainerUsed();
+		atomicTransfertMethod.inputContainerUseds = new ArrayList<ContainerUsed>();
 		
 		return atomicTransfertMethod;
 	}
@@ -103,8 +103,8 @@ public class ExperimentTestHelper {
 		ManytoOneContainer atomicTransfert2 = ExperimentTestHelper.getManytoOneContainer();
 		atomicTransfert2.position=2;
 		
-		exp.atomicTransfertMethods.put(0,atomicTransfert1);
-		exp.atomicTransfertMethods.put(1, atomicTransfert2);
+		exp.atomicTransfertMethods.add(0,atomicTransfert1);
+		exp.atomicTransfertMethods.add(1, atomicTransfert2);
 		
 		ContainerUsed container1_1=ExperimentTestHelper.getContainerUsed("CONTAINER1_1");
 		container1_1.percentage=20.0;
@@ -147,8 +147,8 @@ public class ExperimentTestHelper {
 		ManytoOneContainer atomicTransfert2 = ExperimentTestHelper.getManytoOneContainer();
 		atomicTransfert2.position=2;
 		
-		exp.atomicTransfertMethods.put(0,atomicTransfert1);
-		exp.atomicTransfertMethods.put(1, atomicTransfert2);
+		exp.atomicTransfertMethods.add(0,atomicTransfert1);
+		exp.atomicTransfertMethods.add(1, atomicTransfert2);
 		
 		ContainerUsed container1_1=ExperimentTestHelper.getContainerUsed("ADI_RD1");
 		container1_1.percentage=20.0;
@@ -216,8 +216,8 @@ public class ExperimentTestHelper {
 		OneToOneContainer atomicTransfert1 = ExperimentTestHelper.getOnetoOneContainer();
 		OneToOneContainer atomicTransfert2 = ExperimentTestHelper.getOnetoOneContainer();
 		
-		exp.atomicTransfertMethods.put(0,atomicTransfert1);
-		exp.atomicTransfertMethods.put(0,atomicTransfert2);
+		exp.atomicTransfertMethods.add(0,atomicTransfert1);
+		exp.atomicTransfertMethods.add(0,atomicTransfert2);
 		
 		
 		

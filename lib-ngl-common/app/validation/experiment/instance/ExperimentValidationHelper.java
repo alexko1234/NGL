@@ -98,7 +98,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 	}
 
 	public static void validateAtomicTransfertMethodes(
-			Map<Integer, AtomicTransfertMethod> atomicTransfertMethods,
+			List <AtomicTransfertMethod> atomicTransfertMethods,
 			ContextValidation contextValidation) {
 		String rootKeyName;
 		for(int i=0;i<atomicTransfertMethods.size();i++){

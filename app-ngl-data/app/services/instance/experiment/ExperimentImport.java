@@ -126,7 +126,7 @@ public class ExperimentImport {
 		
 		
 		//define atomicTransfertMethods
-		HashMap<Integer, AtomicTransfertMethod> hm = new HashMap<Integer, AtomicTransfertMethod>(); 
+		List<AtomicTransfertMethod> hm = new ArrayList<AtomicTransfertMethod>(); 
 
 		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code",rs.getString("code_flowcell"))).toList();
 		ArrayList<String> projectCodes = new ArrayList<String>();
@@ -141,21 +141,23 @@ public class ExperimentImport {
 				//define one atomicTransfertMethod for each container
 				OneToVoidContainer atomicTransfertMethod = new OneToVoidContainer();		
 				atomicTransfertMethod.position = 0;
-				atomicTransfertMethod.inputContainerUsed = new ContainerUsed();				
-				atomicTransfertMethod.inputContainerUsed.code = c.code;
-				atomicTransfertMethod.inputContainerUsed.state = new State(); 		
-				atomicTransfertMethod.inputContainerUsed.state.code = c.state.code;
+				atomicTransfertMethod.inputContainerUseds = new ArrayList<ContainerUsed>();
+				ContainerUsed cnt = new ContainerUsed();
+				cnt.code = c.code;
+				cnt.state = new State(); 		
+				cnt.state.code = c.state.code;
+				atomicTransfertMethod.inputContainerUseds.add(cnt);
 				
 				LocationOnContainerSupport locationOnContainerSupport = new LocationOnContainerSupport(); 
 				locationOnContainerSupport.code = rs.getString("code_flowcell"); 
 				locationOnContainerSupport.line = c.support.line; 
 				locationOnContainerSupport.column = "1"; 
-				atomicTransfertMethod.inputContainerUsed.locationOnContainerSupport = locationOnContainerSupport;
+				atomicTransfertMethod.inputContainerUseds.get(atomicTransfertMethod.inputContainerUseds.indexOf(cnt)).locationOnContainerSupport = locationOnContainerSupport;
 				
 				
 				
 								
-				hm.put(i, atomicTransfertMethod);
+				hm.add(i, atomicTransfertMethod);
 				i++;
 				
 				for (String pc : c.projectCodes) {

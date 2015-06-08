@@ -12,8 +12,6 @@ import validation.utils.ValidationConstants;
 public class OneToManyContainer extends AtomicTransfertMethod {
 
 	public int outputNumber;
-	public ContainerUsed inputContainerUsed;
-	public List<ContainerUsed> outputContainerUseds;
 	
 	public OneToManyContainer(){
 		super();
@@ -38,7 +36,10 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		inputContainerUsed.validate(contextValidation);
+		for(ContainerUsed inputContainerUsed:inputContainerUseds){
+			inputContainerUsed.validate(contextValidation);
+		}
+		
 		for(ContainerUsed containerUsed:outputContainerUseds){
 			containerUsed.validate(contextValidation);
 		}
@@ -46,7 +47,9 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 	@JsonIgnore
 	public List<ContainerUsed> getInputContainers(){
 		List<ContainerUsed> cu = new ArrayList<ContainerUsed>();
-		cu.add(inputContainerUsed);
+		for(ContainerUsed inputContainerUsed:inputContainerUseds){
+			cu.add(inputContainerUsed);
+		}		
 		return cu;
 	}
 	@JsonIgnore

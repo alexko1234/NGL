@@ -270,12 +270,14 @@ public class InstanceTest extends AbstractTests{
 		experiment.comments.add(new Comment("comment"));
 		experiment.traceInformation.setTraceInformation("test"); 
 
-		experiment.atomicTransfertMethods= new HashMap<Integer,AtomicTransfertMethod>();
+		experiment.atomicTransfertMethods= new ArrayList<AtomicTransfertMethod>();
 		for(int i=0; i<10; i++){
 			OneToOneContainer oneToOneContainer =new OneToOneContainer();
-			oneToOneContainer.inputContainerUsed=new ContainerUsed("containerInput"+i);
-			oneToOneContainer.outputContainerUsed=new ContainerUsed("containerOutput"+i);
-			experiment.atomicTransfertMethods.put(i,oneToOneContainer);
+			oneToOneContainer.inputContainerUseds=new ArrayList<ContainerUsed>();
+			oneToOneContainer.inputContainerUseds.add( new ContainerUsed("containerInput"+i));
+			oneToOneContainer.outputContainerUseds = new ArrayList<ContainerUsed>();
+			oneToOneContainer.outputContainerUseds.add(new ContainerUsed("containerOutput"+i));
+			experiment.atomicTransfertMethods.add(i,oneToOneContainer);
 		}
 		
 		Experiment newExperiment=MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, experiment);

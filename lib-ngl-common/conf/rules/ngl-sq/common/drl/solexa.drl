@@ -307,7 +307,7 @@ rule "Volume not null in SolutionStock outputContainer"
 	no-loop
     when
     	$experiment:Experiment($typeCode:typeCode,$typeCode=="solution-stock")
-		$atomicTransfert: OneToOneContainer($inputContainerUsed:inputContainerUsed ,$outputContainerUsed: outputContainerUsed)
+		$atomicTransfert: OneToOneContainer($inputContainerUsed:inpinputContainerUsedsoutputContainerUsed: outputContainerUsed)
 	   	ContainerUsed($finalVolume: volume) from $outputContainerUsed
     	$contextValidation:ContextValidation()
     	eval($finalVolume == null || $finalVolume.value == null || $finalVolume.value == "")
@@ -331,7 +331,7 @@ rule "Concentration not null in SolutionStock outputContainer"
 	no-loop
     when
     	$experiment:Experiment($typeCode:typeCode,$typeCode=="solution-stock")
-		$atomicTransfert: OneToOneContainer($inputContainerUsed:inputContainerUsed, $outputContainerUsed: outputContainerUsed)
+		$atomicTransfert: OneToOneContainer($inputContainerUsed:inpinputContainerUsedsoutputContainerUsed: outputContainerUsed)
 		ContainerUsed($finalConcentration: concentration) from $outputContainerUsed
 		$contextValidation:ContextValidation()
 		eval($finalConcentration == null || $finalConcentration.value == null || $finalConcentration.value == "") 

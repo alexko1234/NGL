@@ -512,10 +512,10 @@ public class LimsAbandonDAO {
 			 throw new RuntimeException("Container vide for "+expPrepaflowcell.inputContainerSupportCodes.get(0));
 		 }
 		 
-		 for(Entry<Integer, AtomicTransfertMethod> atomicTransfertMethods: expPrepaflowcell.atomicTransfertMethods.entrySet())
+		 for(AtomicTransfertMethod atomicTransfertMethods: expPrepaflowcell.atomicTransfertMethods)
 		 {
-			 int laneNum=Integer.valueOf(atomicTransfertMethods.getValue().position);
-			 for(ContainerUsed containerUsed : ((ManytoOneContainer)atomicTransfertMethods.getValue()).inputContainerUseds){
+			 int laneNum=Integer.valueOf(atomicTransfertMethods.position);
+			 for(ContainerUsed containerUsed : atomicTransfertMethods.getInputContainers()){
 				 Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.code);
 				 int matmacos=Double.valueOf(container.properties.get("limsCode").value.toString()).intValue();
 				 Logger.debug("Matmaco solution stock "+matmacos+" percentage "+containerUsed.percentage+", laneNum ="+laneNum);

@@ -46,8 +46,8 @@ public class ExperimentTests extends AbstractTests{
 		ManytoOneContainer atomicTransfert2 = ExperimentTestHelper.getManytoOneContainer();
 		atomicTransfert2.position=2;
 		
-		exp.atomicTransfertMethods.put(0,atomicTransfert1);
-		exp.atomicTransfertMethods.put(1, atomicTransfert2);
+		exp.atomicTransfertMethods.add(0,atomicTransfert1);
+		exp.atomicTransfertMethods.add(1, atomicTransfert2);
 		
 		atomicTransfert1.inputContainerUseds=new ArrayList<ContainerUsed>();
 		ContainerUsed containerUsed = new ContainerUsed(CONTAINER_CODE);
