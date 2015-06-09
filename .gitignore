@@ -6,3 +6,11 @@
 **/.settings
 **/bin
 **/logs
+**/project/project
+
+
+/target/
+/project/project
+/.settings
+.classpath
+.project

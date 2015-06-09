@@ -842,7 +842,7 @@
 				var form = {includes : []};
 				form.includes.push("treatments.ngsrg.default.nbBases");
 				form.includes.push("runSequencingStartDate");
-				form.limit = 20000;
+				form.limit = 100000;
 				$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url, {params : form}).success(function(data, status, headers, config) {
 					readsets = data;
 					for(var i = 0; i < readsets.length; i++){

@@ -1,5 +1,23 @@
 "use strict";
 
+angular.module('home').controller('BalanceSheetsGeneralCtrl', ['$scope', 'mainService', 'tabService', 'balanceSheetsGeneralSrv', '$routeParams',
+                                                               function($scope, mainService, tabService, balanceSheetsGeneralSrv, $routeParams){
+	// Year managing
+	var actualYear = new Date().getFullYear();
+	
+	// Tabs
+	tabService.addTabs({label:Messages("balanceSheets.tab.generalBalanceSheets"), href:jsRoutes.controllers.balancesheets.tpl.BalanceSheets.home("general").url});
+	for(var i = actualYear; i >= 2008 ; i--){
+		tabService.addTabs({label:Messages("balanceSheets.tab.year") +" "+ i,href:jsRoutes.controllers.balancesheets.tpl.BalanceSheets.home(i).url});
+	}
+	
+	tabService.activeTab(0);
+	
+	$scope.balanceSheetsGeneralService = balanceSheetsGeneralSrv;
+	$scope.balanceSheetsGeneralService.init();
+	
+}]);
+
 angular.module('home').controller('BalanceSheetsYearCtrl', ['$scope', 'mainService', 'tabService', 'balanceSheetsSrv', '$routeParams', 
                                                     function($scope, mainService, tabService, balanceSheetsSrv, $routeParams){
 	
@@ -10,7 +28,7 @@ angular.module('home').controller('BalanceSheetsYearCtrl', ['$scope', 'mainServi
 	var actualYear = new Date().getFullYear();
 	
 	// Tabs
-	tabService.addTabs({label:Messages("balanceSheets.tab.generalBalanceSheets"), href:jsRoutes.controllers.balancesheets.tpl.BalanceSheets.general().url});
+	tabService.addTabs({label:Messages("balanceSheets.tab.generalBalanceSheets"), href:jsRoutes.controllers.balancesheets.tpl.BalanceSheets.home("general").url});
 	for(var i = actualYear; i >= 2008 ; i--){
 		tabService.addTabs({label:Messages("balanceSheets.tab.year") +" "+ i,href:jsRoutes.controllers.balancesheets.tpl.BalanceSheets.home(i).url});
 	}
@@ -56,20 +74,4 @@ angular.module('home').controller('BalanceSheetsYearCtrl', ['$scope', 'mainServi
 	
 }]);
 
-angular.module('home').controller('BalanceSheetsGeneralCtrl', ['$scope', 'mainService', 'tabService', 'balanceSheetsGeneralSrv', '$routeParams',
-                                                               function($scope, mainService, tabService, balanceSheetsGeneralSrv, $routeParams){
-	// Year managing
-	var actualYear = new Date().getFullYear();
-	
-	// Tabs
-	tabService.addTabs({label:"Bilan général", href:jsRoutes.controllers.balancesheets.tpl.BalanceSheets.general().url});
-	for(var i = actualYear; i >= 2008 ; i--){
-		tabService.addTabs({label:"Année " + i,href:jsRoutes.controllers.balancesheets.tpl.BalanceSheets.home(i).url});
-	}
-	
-	tabService.activeTab(0);
-	
-	$scope.balanceSheetsGeneralService = balanceSheetsGeneralSrv;
-	$scope.balanceSheetsGeneralService.init();
-	
-}]);
+
