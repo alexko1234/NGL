@@ -20,10 +20,10 @@ import controllers.migration.models.ExperimentOld;
 
 @JsonTypeInfo(use=Id.NAME, include=As.PROPERTY, property="class", defaultImpl= models.laboratory.experiment.instance.OneToOneContainer.class)
 @JsonSubTypes({
-	@JsonSubTypes.Type(value =  models.laboratory.experiment.instance.ManytoOneContainer.class, name = "ManyToOne"),
-	@JsonSubTypes.Type(value =  models.laboratory.experiment.instance.OneToManyContainer.class, name = "OneToMany"),
-	@JsonSubTypes.Type(value =  models.laboratory.experiment.instance.OneToOneContainer.class, name = "OneToOne"),
-	@JsonSubTypes.Type(value =  models.laboratory.experiment.instance.OneToVoidContainer.class, name = "OneToVoid")
+	@JsonSubTypes.Type(value =  controllers.migration.models.experiment.ManytoOneContainerOld.class, name = "ManyToOne"),
+	@JsonSubTypes.Type(value =  controllers.migration.models.experiment.OneToManyContainerOld.class, name = "OneToMany"),
+	@JsonSubTypes.Type(value =  controllers.migration.models.experiment.OneToOneContainerOld.class, name = "OneToOne"),
+	@JsonSubTypes.Type(value =  controllers.migration.models.experiment.OneToVoidContainerOld.class, name = "OneToVoid")
 })
 public abstract class AtomicTransfertMethodOld implements IValidation {
 

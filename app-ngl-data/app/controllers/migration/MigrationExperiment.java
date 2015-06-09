@@ -23,14 +23,14 @@ import fr.cea.ig.MongoDBDAO;
 
 public class MigrationExperiment extends CommonController{
 
-	public Result migrationExperiment(){
+	public static Result migrationExperiment(){
 		
-		MigrationNGLSEQ.backupOneCollection(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class);
+		MigrationNGLSEQ.backupOneCollection(InstanceConstants.EXPERIMENT_COLL_NAME, ExperimentOld.class);
 		updateExperiment();
-		return ok();
+		return ok("End migration experiment");
 	}
 
-	private void updateExperiment() {
+	public static void updateExperiment() {
 		List<ExperimentOld> experimentOlds = MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, ExperimentOld.class).toList();
 		for(ExperimentOld experimentOld:experimentOlds){
 			MongoDBDAO.delete(InstanceConstants.EXPERIMENT_COLL_NAME, experimentOld);

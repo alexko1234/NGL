@@ -29,6 +29,7 @@ GET		/api/instance/protocols					controllers.instance.protocol.Protocols.save()
 GET 	/api/import/updateTara					controllers.instance.ImportDatas.updateTara()
 
 GET		/migration-container-support			controllers.migration.MigrationDataCNS.updateFromExperimentTypeCodesContainerSupport()
+GET		/migration-experiment					controllers.migration.MigrationExperiment.migrationExperiment()
 GET		/migration-sequencing-run				controllers.migration.AddSequencingProgramTypeToRun.migration()
 GET		/migration-vcc							controllers.migration.ValuationCriteriaCodes.migration()
 GET		/migration-percentage-content			controllers.migration.AddPercentageContent.migration()
