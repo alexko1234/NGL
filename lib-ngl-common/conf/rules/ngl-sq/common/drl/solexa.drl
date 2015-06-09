@@ -3,12 +3,12 @@
 package rules
 
 declare LaneInfo
-	position : Integer
+	position : String
 	contentInfos : List 
 end
 
 declare ContentInfo
-	position : Integer
+	position : String
 	containerCode : String 
 	tag : String 
 	tagCategory : String 
@@ -34,7 +34,7 @@ rule "Init object LaneInfo in WM"
 	salience 700
 	no-loop
     when
-    $atomicTransfert: AtomicTransfertMethod($position : position)
+    $atomicTransfert: AtomicTransfertMethod($position : line)
     not LaneInfo($position==position)
     then
     
@@ -45,13 +45,14 @@ rule "Init object LaneInfo in WM"
 	end
 
 
+
 rule "Init objects ContentInfo in WM"
 		@nglSQ( validations )
 	dialect "java"
 	salience 600
 	no-loop
     when
-    $atomicTransfert: AtomicTransfertMethod($position:position,$inputContainers : inputContainerUseds, $inputContainers.size()!=0)
+    $atomicTransfert: AtomicTransfertMethod($position:line,$inputContainers : inputContainerUseds, $inputContainers.size()!=0)
 	$container : ContainerUsed( $contents : contents,$contents!=null) from $inputContainers
 	$content : Content() from $contents	 
 	$laneInfo : LaneInfo($position==position)
@@ -73,8 +74,8 @@ rule "Init objects ContentInfo in WM"
     }
     if($content.properties.containsKey("tagCategory")) tagCategory=$content.properties.get("tagCategory").value.toString();
 
-	ContentInfo contentInfo= new ContentInfo($atomicTransfert.position,$container.code,tag,tagCategory,$content.sampleCode, tagRealSize, sequence);
-	Logger.debug("Content Info Position : "+$atomicTransfert.position+ ", Sample Code :"+$content.sampleCode + ", Container Code :"+$container.code+", Tag :"+tag+", tagCategory :"+tagCategory+", size :"+tagRealSize+", sequence :"+sequence);
+	ContentInfo contentInfo= new ContentInfo($atomicTransfert.line,$container.code,tag,tagCategory,$content.sampleCode, tagRealSize, sequence);
+	Logger.debug("Content Info Position : "+$atomicTransfert.line+ ", Sample Code :"+$content.sampleCode + ", Container Code :"+$container.code+", Tag :"+tag+", tagCategory :"+tagCategory+", size :"+tagRealSize+", sequence :"+sequence);
     $laneInfo.getContentInfos().add(contentInfo);
 	insert(contentInfo);
 	
@@ -94,7 +95,7 @@ rule "Input not null for Experiment Type Prepa-flowcell"
     	eval($inputContainers.size()==0)
     then
     	//Logger.debug("Erreur position "+$atomics.position);
-    	$contextValidation.addErrors("lane["+$atomics.position+"]",	"error.validationexp.emptyoutputcontainer",$atomics.position);
+    	$contextValidation.addErrors("lane["+$atomics.line+"]",	"error.validationexp.emptyoutputcontainer",$atomics.line);
     end
     
     
@@ -105,7 +106,7 @@ rule "Container duplicate in Lane"
 	no-loop
     when
     	  LaneInfo($position:position)
-    	  AtomicTransfertMethod($position==position,$inputContainers : inputContainerUseds)
+    	  AtomicTransfertMethod($position==line,$inputContainers : inputContainerUseds)
     	  $containerCodes : Set(empty==false, size >= 1) from accumulate( ContainerUsed($containerCode:code) from $inputContainers,
 	                         init( HashSet result = new HashSet(); HashSet containers=new HashSet(); ),
                               action( if(!containers.contains($containerCode)){ containers.add($containerCode); } 
@@ -132,21 +133,21 @@ rule "Sum % percentage per piste = 100 % "
     eval(!($total>=99.9 && $total<=100) )
     $contextValidation:ContextValidation()
    	 then
-   		Logger.debug("Regles de validation des pourcentages solexa "+ $total +' '+$atomics.position);   		
+   		Logger.debug("Regles de validation des pourcentages solexa "+ $total +' '+$atomics.line);   		
    		
    		if(("tube").equals($instrument.outContainerSupportCategoryCode)){   			 
-   			if(!$contextValidation.errors.containsKey("tube["+$atomics.position+"]")){  		
-   			$contextValidation.addErrors("tube["+$atomics.position+"]",	"error.validationexp.percentperoutputcontainertube", $total,$atomics.position);
+   			if(!$contextValidation.errors.containsKey("tube["+$atomics.line+"]")){  		
+   			$contextValidation.addErrors("tube["+$atomics.line+"]",	"error.validationexp.percentperoutputcontainertube", $total,$atomics.line);
    			}
    		}else if(Pattern.matches("^flowcell.*",$instrument.outContainerSupportCategoryCode)){
-   			$contextValidation.addErrors("lane["+$atomics.position+"]",	"error.validationexp.percentperoutputcontainerlane", $total,$atomics.position);
+   			$contextValidation.addErrors("lane["+$atomics.line+"]",	"error.validationexp.percentperoutputcontainerlane", $total,$atomics.line);
    		}else if(("mapcard").equals($instrument.outContainerSupportCategoryCode)){
-   			if(!$contextValidation.errors.containsKey("mapcard["+$atomics.position+"]")){
-   			$contextValidation.addErrors("mapcard["+$atomics.position+"]",	"error.validationexp.percentperoutputcontainermapcard", $total,$atomics.position);
+   			if(!$contextValidation.errors.containsKey("mapcard["+$atomics.line+"]")){
+   			$contextValidation.addErrors("mapcard["+$atomics.line+"]",	"error.validationexp.percentperoutputcontainermapcard", $total,$atomics.line);
    			}
    		}else{
-   			if(!$contextValidation.errors.containsKey("output container["+$atomics.position+"]")){
-   			$contextValidation.addErrors("output container["+$atomics.position+"]",	"error.validationexp.percentperoutputcontainerdefault", $total);
+   			if(!$contextValidation.errors.containsKey("output container["+$atomics.line+"]")){
+   			$contextValidation.addErrors("output container["+$atomics.line+"]",	"error.validationexp.percentperoutputcontainerdefault", $total);
    			}
    		}   	
    		
