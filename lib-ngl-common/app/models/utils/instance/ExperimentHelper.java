@@ -224,8 +224,8 @@ public class ExperimentHelper extends InstanceHelpers {
 		
 		for(Object obj:factsAfterRules){
 			if(ManytoOneContainer.class.isInstance(obj)){
-				exp.atomicTransfertMethods.remove(((ManytoOneContainer)obj).position-1);
-				exp.atomicTransfertMethods.add(((ManytoOneContainer)obj).position-1,(ManytoOneContainer) obj);
+				exp.atomicTransfertMethods.remove((ManytoOneContainer)obj);
+				exp.atomicTransfertMethods.add((ManytoOneContainer) obj);
 			}
 		}
 		
