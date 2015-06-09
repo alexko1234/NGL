@@ -223,6 +223,41 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			$scope.message.details = data;
 			$scope.message.isDetails = true;
 		});
+		$scope.reagentCodeErrorClass = ""
+		$scope.reagentCodeError = "";
+		if($scope.searchBarCode !== undefined && $scope.searchBarCode !== ""){
+			$http.get(jsRoutes.controllers.reagents.api.Reagents.list().url, {params:{"barCode":$scope.searchBarCode, "boxBarCode":$scope.searchBarCode}})
+			.success(function(data, status,headers,config){
+				console.log(data);
+				var datatableData = $scope.datatableReagent.getData();
+				if(data.length > 0){
+				for(var i=0;i<data.length;i++){
+					var closureData = data[i];
+					$http.get(jsRoutes.controllers.reagents.api.Boxes.list().url, {params:{"code":data[i].boxCode}})
+					.success(function(dataBox, status,headers,config){
+						if(data.length>0){
+							var r = {"boxCode":dataBox[0].catalogRefCode+"_"+dataBox[0].bundleBarCode+"_"+dataBox[0].barCode,
+									"code":closureData.catalogRefCode+"_"+closureData.bundleBarCode+"_"+closureData.barCode,
+									"kitCatalogCode":closureData.catalogCode};
+							if($scope.isReagentAdded(r.code) === false){
+								datatableData.push(r);
+								console.log(dataBox);
+								$scope.datatableReagent.setData(datatableData);
+							}
+						}
+					});
+				}
+				}else{
+					$scope.reagentCodeErrorClass = "has-error"
+					$scope.reagentCodeError = "Code non reconnu";
+				}
+			}).error(function(data, status, headers, config) {
+				$scope.message.clazz = "alert alert-danger";
+				$scope.message.text = Messages('experiments.msg.save.error');
+				$scope.message.details = data;
+				$scope.message.isDetails = true;
+			});
+		}
 	};
 
 	$scope.isReagentAdded = function(code){

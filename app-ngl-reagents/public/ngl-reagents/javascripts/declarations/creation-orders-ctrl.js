@@ -203,6 +203,7 @@
 							if(data!=null && data.length === 1){
 								object.category = "Reagent";
 								object.catalogCode = data[0].code;
+								object.declarationType = "reagent";
 								object.boxCatalogRefCode = $scope.currentBox.catalogRefCode;
 								//object.boxBarCode =  $scope.currentBox.barCode;
 							}else{

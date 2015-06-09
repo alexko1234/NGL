@@ -60,6 +60,7 @@ public class Reagents extends DocumentController<Reagent>{
 		if(!mainForm.hasErrors()){
 			Reagent reagent = reagentFilledForm.get();
 			reagent.code = ReagentCodeHelper.getInstance().generateReagentCode(reagent.boxCode);
+			reagent.code = ReagentCodeHelper.getInstance().generateReagentCode();
 			
 			reagent.traceInformation = new TraceInformation();
 			reagent.traceInformation.createUser =  getCurrentUser();

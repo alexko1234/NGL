@@ -296,20 +296,21 @@
 	 $scope.loadKit = function(){
 		 if($scope.kit.code !== undefined && $scope.kit.code !== ""){
 			 return $http.get(jsRoutes.controllers.reagents.api.Kits.get($scope.kit.code).url)
+			 return $http.get(jsRoutes.controllers.reagents.api.Kits.list().url, {"params":{"code":$scope.kit.code}})
 				.success(function(data, status, headers, config) {
 					if(data!=null){
-						$scope.kit = data;
+						$scope.kit = data[0];
 						$scope.orderInformations.orderCode = $scope.kit.orderCode;
 						$scope.orderInformations.providerOrderCode = $scope.kit.providerOrderCode;
 						$scope.orderInformations.shippedOrderCode =  $scope.kit.shippedOrderCode;
 					}
 				})
 				.error(function(data, status, headers, config) {
-					$scope.message.clazz = 'alert alert-danger';
+					/*$scope.message.clazz = 'alert alert-danger';
 					$scope.message.text = Messages('reagents.msg.load.error');
 					
 					$scope.message.details = data;
-					$scope.message.isDetails = true;
+					$scope.message.isDetails = true;*/
 				});
 		 }
 	 };
@@ -575,7 +576,6 @@
 	 }else{
 		 $scope.kit.receptionDate = moment(new Date()).valueOf();
 	 }
-	 $q.all(promises).then(function (res) {
 		 if($routeParams.kitCode !== undefined){
 			 $scope.loadBoxes();
 		 }
@@ -594,5 +594,4 @@
 				tabService.activeTab(0);
 			 }
 		 }
-	 });
 }]);

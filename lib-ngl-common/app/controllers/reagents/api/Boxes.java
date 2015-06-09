@@ -59,6 +59,7 @@ public class Boxes extends DocumentController<Box>{
 		if(!mainForm.hasErrors()){
 			Box box = boxFilledForm.get();
 			box.code = ReagentCodeHelper.getInstance().generateBoxCode(box.kitCode);
+			box.code = ReagentCodeHelper.getInstance().generateBoxCode();
 			
 			
 			box.traceInformation = new TraceInformation();
@@ -67,10 +68,13 @@ public class Boxes extends DocumentController<Box>{
 			
 			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), mainForm.errors());
 			contextValidation.setCreationMode();
-			/*if(ValidationHelper.required(contextValidation, box.name, "name")){
-				boxCatalog.code = CodeHelper.getInstance().generateBoxCatalogCode(boxCatalog.name);
-			}*/
 
+			//When the user want to declare the box only, the kitCode = the boxCode
+			//in order to search it in the interface
+			if(box.declarationType.equals("box")){
+				box.kitCode = box.code;
+			}
+			
 			box = (Box)InstanceHelpers.save(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, box, contextValidation);
 			if(!contextValidation.hasErrors()){
 				return ok(Json.toJson(box));
