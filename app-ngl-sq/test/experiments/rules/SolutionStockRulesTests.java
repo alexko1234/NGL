@@ -96,7 +96,8 @@ public class SolutionStockRulesTests extends AbstractTests{
 		atomicTransfert.inputContainerUseds = new ArrayList<ContainerUsed>();
 		atomicTransfert.inputContainerUseds.add(containerIn1);
 		atomicTransfert.outputContainerUseds.add(containerOut1);
-		atomicTransfert.position = 1;
+		atomicTransfert.line = "1";
+		atomicTransfert.column = "0";
 		exp.atomicTransfertMethods.add(0, atomicTransfert);
 		
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
