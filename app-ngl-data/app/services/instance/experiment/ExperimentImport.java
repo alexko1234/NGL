@@ -141,7 +141,7 @@ public class ExperimentImport {
 				//define one atomicTransfertMethod for each container
 				OneToVoidContainer atomicTransfertMethod = new OneToVoidContainer();
 				atomicTransfertMethod.line = "1";
-				atomicTransfertMethod.column = "0";
+				atomicTransfertMethod.column = "1";
 				atomicTransfertMethod.inputContainerUseds = new ArrayList<ContainerUsed>();
 				ContainerUsed cnt = new ContainerUsed();
 				cnt.code = c.code;
