@@ -51,8 +51,8 @@ rule "Init objects ContentInfo in WM"
 	salience 600
 	no-loop
     when
-    $atomicTransfert: AtomicTransfertMethod($position:position,$inputContainers : getInputContainers(), $inputContainers.size()!=0)
-	$container : ContainerUsed( $contents : contents,$contents!=null) from $atomicTransfert.inputContainers
+    $atomicTransfert: AtomicTransfertMethod($position:position,$inputContainers : inputContainerUseds, $inputContainers.size()!=0)
+	$container : ContainerUsed( $contents : contents,$contents!=null) from $inputContainers
 	$content : Content() from $contents	 
 	$laneInfo : LaneInfo($position==position)
     then
@@ -89,7 +89,7 @@ rule "Input not null for Experiment Type Prepa-flowcell"
 	no-loop
     when
     	$experiment:Experiment($typeCode : typeCode, $typeCode=="prepa-flowcell")
-    	$atomics:AtomicTransfertMethod($inputContainers : getInputContainers())
+    	$atomics:AtomicTransfertMethod($inputContainers : inputContainerUseds)
     	$contextValidation:ContextValidation()
     	eval($inputContainers.size()==0)
     then
@@ -105,7 +105,7 @@ rule "Container duplicate in Lane"
 	no-loop
     when
     	  LaneInfo($position:position)
-    	  AtomicTransfertMethod($position==position,$inputContainers : getInputContainers())
+    	  AtomicTransfertMethod($position==position,$inputContainers : inputContainerUseds)
     	  $containerCodes : Set(empty==false, size >= 1) from accumulate( ContainerUsed($containerCode:code) from $inputContainers,
 	                         init( HashSet result = new HashSet(); HashSet containers=new HashSet(); ),
                               action( if(!containers.contains($containerCode)){ containers.add($containerCode); } 
@@ -125,7 +125,7 @@ rule "Sum % percentage per piste = 100 % "
 	salience 580
 	no-loop
     when
-    $atomics:AtomicTransfertMethod($inputContainers : getInputContainers())
+    $atomics:AtomicTransfertMethod($inputContainers : inputContainerUseds)
     Experiment($instrument: instrument)   
     $total : Double() from accumulate(ContainerUsed( $n:percentage, percentage!=null) from $inputContainers, sum( $n ) )
     $container: ContainerUsed($cat : categoryCode) from $inputContainers
@@ -307,18 +307,16 @@ rule "Volume not null in SolutionStock outputContainer"
 	no-loop
     when
     	$experiment:Experiment($typeCode:typeCode,$typeCode=="solution-stock")
-		$atomicTransfert: OneToOneContainer($inputContainerUsed:inpinputContainerUsedsoutputContainerUsed: outputContainerUsed)
+		$atomicTransfert: OneToOneContainer($inputContainerUsed:inputContainerUseds.get(0), $outputContainerUsed: outputContainerUseds.get(0))
 	   	ContainerUsed($finalVolume: volume) from $outputContainerUsed
     	$contextValidation:ContextValidation()
     	eval($finalVolume == null || $finalVolume.value == null || $finalVolume.value == "")
     then
     Logger.debug("Volume not null in SolutionStock outputContainer");
     Integer i = null;
-    for(Map.Entry<Integer,AtomicTransfertMethod> entry : $experiment.atomicTransfertMethods.entrySet()){
-    	Integer index = entry.getKey();
-    	OneToOneContainer atomic = (OneToOneContainer) entry.getValue();
-    	if(($inputContainerUsed.code).equals(atomic.inputContainerUsed.code)){
-    	 $contextValidation.addErrors("solution-stock","error.validationexp.outputvolumenotnull", index);
+    for(AtomicTransfertMethod atomic : $experiment.atomicTransfertMethods){    	
+    	if(($inputContainerUsed.code).equals(atomic.inputContainerUseds.get(0).code)){
+    	 $contextValidation.addErrors("solution-stock","error.validationexp.outputvolumenotnull",$experiment.atomicTransfertMethods.indexOf(atomic));
     	}
     }
    
@@ -331,18 +329,16 @@ rule "Concentration not null in SolutionStock outputContainer"
 	no-loop
     when
     	$experiment:Experiment($typeCode:typeCode,$typeCode=="solution-stock")
-		$atomicTransfert: OneToOneContainer($inputContainerUsed:inpinputContainerUsedsoutputContainerUsed: outputContainerUsed)
+		$atomicTransfert: OneToOneContainer($inputContainerUsed:inputContainerUseds.get(0), $outputContainerUsed: outputContainerUseds.get(0))
 		ContainerUsed($finalConcentration: concentration) from $outputContainerUsed
 		$contextValidation:ContextValidation()
 		eval($finalConcentration == null || $finalConcentration.value == null || $finalConcentration.value == "") 
     then
     Logger.debug("Concentration not null in SolutionStock outputContainer");
     Integer i = null;
-    for(Map.Entry<Integer,AtomicTransfertMethod> entry : $experiment.atomicTransfertMethods.entrySet()){
-    	Integer index = entry.getKey();
-    	OneToOneContainer atomic = (OneToOneContainer) entry.getValue();
-    	if(($inputContainerUsed.code).equals(atomic.inputContainerUsed.code)){
-    	 $contextValidation.addErrors("solution-stock","error.validationexp.outputconcentrationnotnull", index);
+    for(AtomicTransfertMethod atomic : $experiment.atomicTransfertMethods){    	
+    	if(($inputContainerUsed.code).equals(atomic.inputContainerUseds.get(0).code)){
+    	 $contextValidation.addErrors("solution-stock","error.validationexp.outputconcentrationnotnull", $experiment.atomicTransfertMethods.indexOf(atomic));
     	}
     }    
 end

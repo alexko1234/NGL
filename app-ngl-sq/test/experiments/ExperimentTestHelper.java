@@ -39,6 +39,7 @@ public class ExperimentTestHelper {
 	public static ManytoOneContainer getManytoOneContainer(){
 		ManytoOneContainer atomicTransfertMethod = new ManytoOneContainer();
 		atomicTransfertMethod.inputContainerUseds = new ArrayList<ContainerUsed>();
+		atomicTransfertMethod.outputContainerUseds = new ArrayList<ContainerUsed>();
 		return atomicTransfertMethod;
 	}
 	
@@ -53,7 +54,7 @@ public class ExperimentTestHelper {
 	public static OneToManyContainer getOnetoManyContainer(){
 		OneToManyContainer atomicTransfertMethod = new OneToManyContainer();
 		atomicTransfertMethod.inputContainerUseds = new ArrayList<ContainerUsed>();
-		
+		atomicTransfertMethod.outputContainerUseds = new ArrayList<ContainerUsed>();
 		return atomicTransfertMethod;
 	}
 	

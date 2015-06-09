@@ -51,7 +51,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 
 		ContainerUsed containerUsed=new ContainerUsed(container);
 		containerUsed.percentage= 0.0;
-		exp.atomicTransfertMethods.get(0).getInputContainers().add(containerUsed);
+		exp.atomicTransfertMethods.get(0).inputContainerUseds.add(containerUsed);
 
 		ExperimentValidationHelper.validateRules(exp, contextValidation);
 		contextValidation.displayErrors(logger);
@@ -74,7 +74,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 
 		ContainerUsed containerUsed=new ContainerUsed(container);
 		containerUsed.percentage= 0.0;
-		exp.atomicTransfertMethods.get(0).getInputContainers().add(containerUsed);
+		exp.atomicTransfertMethods.get(0).inputContainerUseds.add(containerUsed);
 
 		ExperimentValidationHelper.validateRules(exp, contextValidation);
 		contextValidation.displayErrors(logger);
@@ -96,7 +96,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 
 		ContainerUsed containerUsed=new ContainerUsed(container);
 		containerUsed.percentage= 10.0;
-		exp.atomicTransfertMethods.get(0).getInputContainers().add(containerUsed);
+		exp.atomicTransfertMethods.get(0).inputContainerUseds.add(containerUsed);
 
 		ExperimentValidationHelper.validateRules(exp, contextValidation);
 		contextValidation.displayErrors(logger);
@@ -109,7 +109,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 	public void validateExperimentPrepaflowcellLaneNotNull() {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
-		exp.atomicTransfertMethods.get(0).getInputContainers().clear();
+		exp.atomicTransfertMethods.get(0).inputContainerUseds.clear();
 		ExperimentValidationHelper.validateRules(exp, contextValidation);
 		contextValidation.displayErrors(logger);
 		assertThat(contextValidation.hasErrors()).isTrue();
@@ -134,7 +134,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		content1_1.properties.put("tagCategory", new PropertySingleValue("TAGCATEGORIE"));
 		container1_1.contents.add(content1_1);
 
-		exp.atomicTransfertMethods.get(0).getInputContainers().add(container1_1);
+		exp.atomicTransfertMethods.get(0).inputContainerUseds.add(container1_1);
 
 		ExperimentValidationHelper.validateRules(exp, contextValidation);
 		contextValidation.displayErrors(logger);

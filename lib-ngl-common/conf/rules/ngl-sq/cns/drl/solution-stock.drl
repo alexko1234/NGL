@@ -33,13 +33,13 @@ rule "Init objectContainerInfo in WM"
 	lock-on-active true
     when
     $experiment:Experiment($typeCode:typeCode,$typeCode=="solution-stock")
-	$atomicTransfert: OneToOneContainer($inputContainerUsed : inputContainerUseds , $outputContainerUsed: outputContainerUsed)
+	$atomicTransfert: OneToOneContainer($inputContainerUsed : inputContainerUseds.get(0), $inputContainerUsed !=null , $outputContainerUsed: outputContainerUseds.get(0), $outputContainerUsed!=null)
 	ContainerUsed($mesuredConcentration: concentration, $mesuredConcentration!=null) from $inputContainerUsed
-	ContainerUsed($finalVolume: volume, $finalConcentration: concentration ) from $outputContainerUsed	
+	ContainerUsed($finalVolume: volume, $finalConcentration: concentration ) from $outputContainerUsed
 	eval($finalVolume != null && $finalConcentration !=null && $finalVolume.getValue() != null && $finalConcentration.getValue() !=null)
     then
     Logger.debug("Init objectContainerInfo in WM");
-    String containerCode = $inputContainerUsed.code;
+   String containerCode = $inputContainerUsed.code;
     Double mesuredConcentration = Double.parseDouble($mesuredConcentration.getValue().toString());
 	Double finalVolume = Double.parseDouble($finalVolume.getValue().toString());
 	Double finalConcentration = Double.parseDouble($finalConcentration.getValue().toString());
@@ -55,7 +55,7 @@ rule "RequiredVolume"
 	no-loop
     when
      	$experiment: Experiment($typeCode:typeCode,$typeCode=="solution-stock")    					
-		$atomicTransfert: OneToOneContainer($inputContainerUsed : inputContainerUseds, $inputContainerUsed!=null)
+		$atomicTransfert: OneToOneContainer($inputContainerUsed : inputContainerUseds.get(0), $inputContainerUsed!=null)
 		ContainerUsed( $experimentProperties : experimentProperties) from $inputContainerUsed
 		ContainerInfo($containerCode: containerCode, $containerCode==$inputContainerUsed.code, $mesuredConcentration:mesuredConcentration, $finalConcentration:finalConcentration, $finalVolume:finalVolume)		
 		eval(Double.class.isInstance($finalVolume) && $mesuredConcentration!=0  && Double.class.isInstance($mesuredConcentration) && Double.class.isInstance($finalConcentration))

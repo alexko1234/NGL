@@ -21,7 +21,7 @@ rule "InputVolume"
 	no-loop
     when
 		$experiment:Experiment($typeCode:typeCode,$typeCode=="pool-tube")
-		$atomicTransfert: ManytoOneContainer($inputContainerUseds : inputContainerUseds, $inputContainerUseds!=null , $outputContainerUsed: outputContainerUsed, $outputContainerUsed!=null )
+		$atomicTransfert: ManytoOneContainer($inputContainerUseds : inputContainerUseds, $inputContainerUseds!=null , $outputContainerUsed: outputContainerUseds, $outputContainerUsed!=null )
 		$containerUsed: ContainerUsed($percentage: percentage, $percentage!=null) from $inputContainerUseds
 		
 		ContainerUsed($finalVolume: volume, $finalVolume!=null) from $outputContainerUsed
