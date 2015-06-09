@@ -72,7 +72,6 @@ public class MigrationExperiment extends CommonController{
 
 			atomicTransfertMethod.inputContainerUseds=atomics.getValue().getInputContainers();
 			atomicTransfertMethod.outputContainerUseds=atomics.getValue().getOutputContainers();
-			
 			exp.atomicTransfertMethods.add(atomicTransfertMethod);
 		}
 		//Validation des atomicstransfertmethod

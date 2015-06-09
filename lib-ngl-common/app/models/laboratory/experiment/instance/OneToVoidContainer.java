@@ -23,18 +23,7 @@ public class OneToVoidContainer extends AtomicTransfertMethod {
 	public ContextValidation createOutputContainerUsed(Experiment experiment,ContextValidation contextValidation) {
 		return contextValidation;
 	}
-
-	@Override
-	public List<ContainerUsed> getInputContainers() {
-		List<ContainerUsed> cu = new ArrayList<ContainerUsed>();		
-		cu.add(inputContainerUseds.get(0));
-		return cu;
-	}
-
-	@Override
-	public List<ContainerUsed> getOutputContainers() {
-		return new ArrayList<ContainerUsed>();
-	}
+	
 
 	@Override
 	public ContextValidation saveOutputContainers(Experiment experiment, ContextValidation contextValidation) {

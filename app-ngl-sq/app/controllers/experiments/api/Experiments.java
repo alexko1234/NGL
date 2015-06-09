@@ -539,7 +539,7 @@ public class Experiments extends CommonController{
 
 			//Experiment
 			for(AtomicTransfertMethod atomicTransfertMethods:experiment.atomicTransfertMethods){
-				for(ContainerUsed containerUsed:atomicTransfertMethods.getOutputContainers()){
+				for(ContainerUsed containerUsed:atomicTransfertMethods.outputContainerUseds){
 					containerSupportCodeOld=containerUsed.locationOnContainerSupport.code;
 					//Remplace ancien code par le nouveau dans le nom du container
 					containerUsed.code=containerUsed.code.replace(containerSupportCodeOld, containerSupportCode);

@@ -36,7 +36,7 @@ rule "volume PhiX"
 		 $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-flowcell", $stateCode : state.code, $stateCode!="F")
 		 $atomicTransfert: ManytoOneContainer( )
 		 ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null) from $atomicTransfert.inputContainers
-		 ContainerUsed( $experimentPropertiesOut : experimentProperties,$experimentPropertiesOut!=null) from $atomicTransfert.outputContainerUsed
+		 ContainerUsed( $experimentPropertiesOut : experimentProperties,$experimentPropertiesOut!=null) from $atomicTransfert.outputContainerUseds
 		 $phixPercent : PropertyValue() from $experimentPropertiesOut.get("phixPercent")
 		 $finalConcentration2 : PropertyValue() from $experimentProperties.get("finalConcentration2")
 		 $finalVolume2 : PropertyValue() from $experimentProperties.get("finalVolume2")
@@ -134,7 +134,7 @@ rule "Volume dilution on track"
 		 $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-flowcell", $stateCode : state.code, $stateCode!="F")
 		 $atomicTransfert: ManytoOneContainer( )
 		 ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null, $percentPerLane:percentage) from $atomicTransfert.inputContainers
-		 ContainerUsed( $experimentPropertiesOut : experimentProperties,$experimentPropertiesOut!=null) from $atomicTransfert.outputContainerUsed
+		 ContainerUsed( $experimentPropertiesOut : experimentProperties,$experimentPropertiesOut!=null) from $atomicTransfert.outputContainerUseds
 		 $finalVolume : PropertyValue() from $experimentPropertiesOut.get("finalVolume")
 		 eval($finalVolume.value != null && Double.class.isInstance($finalVolume.value) && $percentPerLane != null && Double.class.isInstance($percentPerLane))
 	then

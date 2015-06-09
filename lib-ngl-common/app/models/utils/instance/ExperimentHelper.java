@@ -83,8 +83,8 @@ public class ExperimentHelper extends InstanceHelpers {
 		exp.projectCodes  = new ArrayList<String>();
 
 		for(int i=0;i<exp.atomicTransfertMethods.size();i++)
-			if(exp.atomicTransfertMethods.get(i)!=null && exp.atomicTransfertMethods.get(i).getInputContainers().size()>0){
-				for(ContainerUsed c:exp.atomicTransfertMethods.get(i).getInputContainers()){
+			if(exp.atomicTransfertMethods.get(i)!=null && exp.atomicTransfertMethods.get(i).inputContainerUseds.size()>0){
+				for(ContainerUsed c:exp.atomicTransfertMethods.get(i).inputContainerUseds){
 					Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, c.code);
 					
 					if(container!=null){
@@ -105,7 +105,7 @@ public class ExperimentHelper extends InstanceHelpers {
 
 
 	public static Map<String,PropertyValue> getAllPropertiesFromAtomicTransfertMethod(AtomicTransfertMethod atomicTransfertMethod,Experiment experiment){
-		List<ContainerUsed> inputContainerUseds=atomicTransfertMethod.getInputContainers();
+		List<ContainerUsed> inputContainerUseds=atomicTransfertMethod.inputContainerUseds;
 
 		Map<String,PropertyValue> properties=new HashMap<String, PropertyValue>();
 		if(experiment.experimentProperties!=null){
@@ -122,7 +122,7 @@ public class ExperimentHelper extends InstanceHelpers {
 				properties.putAll(inputContainerUsed.instrumentProperties);
 		}		
 
-		List<ContainerUsed> outputContainerUseds=atomicTransfertMethod.getOutputContainers();
+		List<ContainerUsed> outputContainerUseds=atomicTransfertMethod.outputContainerUseds;
 		for(ContainerUsed outputContainerUsed:outputContainerUseds){
 			if(outputContainerUsed.experimentProperties!=null)
 				properties.putAll(outputContainerUsed.experimentProperties);
@@ -163,8 +163,8 @@ public class ExperimentHelper extends InstanceHelpers {
 		List<ContainerUsed> containersUSed=new ArrayList<ContainerUsed>();
 		if(exp.atomicTransfertMethods!=null){
 			for(int i = 0; i < exp.atomicTransfertMethods.size() ; i++){
-				if(exp.atomicTransfertMethods.get(i).getOutputContainers().size()!=0){
-					containersUSed.addAll(exp.atomicTransfertMethods.get(i).getOutputContainers());
+				if(exp.atomicTransfertMethods.get(i).outputContainerUseds.size()!=0){
+					containersUSed.addAll(exp.atomicTransfertMethods.get(i).outputContainerUseds);
 				}
 			}
 			for(int i = 0; i < containersUSed.size(); i++)
@@ -188,8 +188,8 @@ public class ExperimentHelper extends InstanceHelpers {
 		List<ContainerUsed> containersUSed=new ArrayList<ContainerUsed>();
 		if(exp.atomicTransfertMethods!=null){
 			for(int i = 0; i < exp.atomicTransfertMethods.size() ; i++){
-				if(exp.atomicTransfertMethods.get(i)!=null && exp.atomicTransfertMethods.get(i).getInputContainers().size()!=0){
-					containersUSed.addAll(exp.atomicTransfertMethods.get(i).getInputContainers());
+				if(exp.atomicTransfertMethods.get(i)!=null && exp.atomicTransfertMethods.get(i).inputContainerUseds.size()!=0){
+					containersUSed.addAll(exp.atomicTransfertMethods.get(i).inputContainerUseds);
 				}
 			}
 			for(int i = 0; i < containersUSed.size(); i++)
@@ -224,8 +224,8 @@ public class ExperimentHelper extends InstanceHelpers {
 		
 		for(Object obj:factsAfterRules){
 			if(ManytoOneContainer.class.isInstance(obj)){
-				exp.atomicTransfertMethods.remove((ManytoOneContainer)obj);
-				exp.atomicTransfertMethods.add((ManytoOneContainer) obj);
+				exp.atomicTransfertMethods.remove(((ManytoOneContainer)obj).position-1);
+				exp.atomicTransfertMethods.add(((ManytoOneContainer)obj).position-1,(ManytoOneContainer) obj);
 			}
 		}
 		

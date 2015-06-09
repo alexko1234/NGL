@@ -191,10 +191,8 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 	}
 
 	@JsonIgnore
-	public List<ContainerUsed> getOutputContainers(){
-		List<ContainerUsed> cu = new ArrayList<ContainerUsed>();
-		cu.add(outputContainerUseds.get(0));
-		return cu;
+	public List<ContainerUsed> getOutputContainers(){		
+		return outputContainerUseds;
 	}
 
 
