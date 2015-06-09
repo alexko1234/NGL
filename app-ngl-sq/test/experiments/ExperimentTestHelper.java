@@ -100,9 +100,11 @@ public class ExperimentTestHelper {
 		Experiment exp = ExperimentTestHelper.getFakeExperiment();
 		exp.typeCode=typeCode;		
 		ManytoOneContainer atomicTransfert1 = ExperimentTestHelper.getManytoOneContainer();
-		atomicTransfert1.position=1;
+		atomicTransfert1.line="1";
+		atomicTransfert1.column="0";
 		ManytoOneContainer atomicTransfert2 = ExperimentTestHelper.getManytoOneContainer();
-		atomicTransfert2.position=2;
+		atomicTransfert2.line="2";
+		atomicTransfert2.column="0";
 		
 		exp.atomicTransfertMethods.add(0,atomicTransfert1);
 		exp.atomicTransfertMethods.add(1, atomicTransfert2);
@@ -144,9 +146,11 @@ public class ExperimentTestHelper {
 		Experiment exp = getFakeExperiment();
 		exp.typeCode=typeCode;		
  		ManytoOneContainer atomicTransfert1 = ExperimentTestHelper.getManytoOneContainer();
-		atomicTransfert1.position=1;
+ 		atomicTransfert1.line="1";
+		atomicTransfert1.column="0";
 		ManytoOneContainer atomicTransfert2 = ExperimentTestHelper.getManytoOneContainer();
-		atomicTransfert2.position=2;
+		atomicTransfert2.line="2";
+		atomicTransfert2.column="0";
 		
 		exp.atomicTransfertMethods.add(0,atomicTransfert1);
 		exp.atomicTransfertMethods.add(1, atomicTransfert2);
