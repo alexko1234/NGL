@@ -38,14 +38,14 @@ rule "Init objectContainerInfo in WM"
 	ContainerUsed($finalVolume: volume, $finalConcentration: concentration ) from $outputContainerUsed
 	eval($finalVolume != null && $finalConcentration !=null && $finalVolume.getValue() != null && $finalConcentration.getValue() !=null)
     then
-    Logger.debug("Init objectContainerInfo in WM");
-   String containerCode = $inputContainerUsed.code;
-    Double mesuredConcentration = Double.parseDouble($mesuredConcentration.getValue().toString());
+   Logger.debug("Init objectContainerInfo in WM");
+   	String containerCode = $inputContainerUsed.code;
+     Double mesuredConcentration = Double.parseDouble($mesuredConcentration.getValue().toString());
 	Double finalVolume = Double.parseDouble($finalVolume.getValue().toString());
 	Double finalConcentration = Double.parseDouble($finalConcentration.getValue().toString());
 	ContainerInfo containerInfo = new ContainerInfo(containerCode, mesuredConcentration,finalVolume,finalConcentration);    
 	Logger.debug("Object ContainerInfo: containerCode="+ containerCode +" mesuredConcentration="+ mesuredConcentration +"; finalVolume="+ finalVolume +"; finalConcentration="+ finalConcentration);
-	insert(containerInfo);    
+	insert(containerInfo);  
 end	
 
 rule "RequiredVolume"
@@ -85,7 +85,7 @@ rule "BufferVolume"
 	no-loop
     when
         $experiment:Experiment($typeCode:typeCode,$typeCode=="solution-stock")       	
-		$atomicTransfert: OneToOneContainer($inputContainerUsed : inputContainerUseds)
+		$atomicTransfert: OneToOneContainer($inputContainerUsed : inputContainerUseds.get(0))
 		ContainerInfo($containerCode: containerCode, $containerCode==$inputContainerUsed.code, $finalVolume:finalVolume,$finalVolume!=null)
 	 	ContainerUsed( $experimentProperties : experimentProperties, $experimentProperties!=null) from $inputContainerUsed
 		$requiredVolume: PropertyValue() from $experimentProperties.get("requiredVolume")

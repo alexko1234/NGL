@@ -39,8 +39,6 @@ import fr.cea.ig.MongoDBDAO;
 
 public class ManytoOneContainer extends AtomicTransfertMethod{
 
-	public String line;
-	public String column;	
 
 	public ManytoOneContainer(){
 		super();

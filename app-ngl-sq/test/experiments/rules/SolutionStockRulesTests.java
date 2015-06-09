@@ -117,7 +117,7 @@ public class SolutionStockRulesTests extends AbstractTests{
 		assertThat(atomicTransfertResult.outputContainerUseds.get(0).volume.value).isEqualTo(new Double(30.0));
 		assertThat(atomicTransfertResult.outputContainerUseds.get(0).concentration).isNull();
 		
-	}
+	} 
 	
 	@Test
 	public void validateSolutionStockCalculations() {
@@ -152,7 +152,7 @@ public class SolutionStockRulesTests extends AbstractTests{
 
 		ExperimentHelper.doCalculations(exp,Experiments.calculationsRules);
 
-		OneToOneContainer atomicTransfertResult = (OneToOneContainer)exp.atomicTransfertMethods.get(0);		
+		OneToOneContainer atomicTransfertResult = (OneToOneContainer)exp.atomicTransfertMethods.get(0);	
 		assertThat(atomicTransfertResult.inputContainerUseds.get(atomicTransfertResult.inputContainerUseds.indexOf(containerIn1)).experimentProperties.get("requiredVolume")).isNotNull();		
 		assertThat(atomicTransfertResult.inputContainerUseds.get(atomicTransfertResult.inputContainerUseds.indexOf(containerIn1)).experimentProperties.get("requiredVolume").value).isInstanceOf(Double.class);
 		assertThat(atomicTransfertResult.inputContainerUseds.get(atomicTransfertResult.inputContainerUseds.indexOf(containerIn1)).experimentProperties.get("requiredVolume").value).isEqualTo(new Double(15.60));
