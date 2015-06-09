@@ -451,7 +451,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 					var j = -1;
 					var i =0;
 					while(containers[i]){
-						if(code !== null && angular.isDefined(containers[i].outputContainerUseds[0]) && (code === containers[i].outputContainerUseds[0].code)){
+						if(code !== null && angular.isDefined(containers[i].outputContainerUseds) && (code === containers[i].outputContainerUseds[0].code)){
 							j++;
 						}
 						i++;
@@ -507,7 +507,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 
 									}										
 								}else{
-									$scope.experiment.value.atomicTransfertMethods[j].outputContainerUseds[0] = {volume:{unit:"µL"},concentration:{unit:"nM"},experimentProperties:{}};	
+									//$scope.experiment.value.atomicTransfertMethods[j].outputContainerUseds[0] = {volume:{unit:"µL"},concentration:{unit:"nM"},experimentProperties:{}};	
 									$scope.experiment.value.atomicTransfertMethods[j].outputContainerUseds[0].instrumentProperties = allData[j].outputInstrumentProperties;					
 									$scope.experiment.value.atomicTransfertMethods[j].outputContainerUseds[0].experimentProperties = allData[j].outputExperimentProperties;										
 									varExperimentCommonFunctions.removeNullProperties($scope.experiment.value.atomicTransfertMethods[j].outputContainerUseds[0].experimentProperties);

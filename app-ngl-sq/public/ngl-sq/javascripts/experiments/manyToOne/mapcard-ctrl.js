@@ -174,7 +174,7 @@ angular.module('home').controller('ManyToOneMapcardCtrl',['$scope', '$window','d
 	});
 	
 	$scope.init_atomicTransfert = function(containers, atomicTransfertMethod){
-			$scope.experiment.value.atomicTransfertMethods[0] = {class:atomicTransfertMethod, inputContainerUseds:[], position:1};
+			$scope.experiment.value.atomicTransfertMethods[0] = {class:atomicTransfertMethod, inputContainerUseds:[], line:"1", column:"1"};
 			angular.forEach(containers, function(container){
 				$scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds.push({code:container.code,instrumentProperties:{},experimentProperties:{},state:container.state,locationOnContainerSupport:container.support});
 			});

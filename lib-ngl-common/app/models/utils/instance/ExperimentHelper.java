@@ -60,6 +60,7 @@ public class ExperimentHelper extends InstanceHelpers {
 			}
 
 			exp.outputContainerSupportCodes=ExperimentHelper.getOutputContainerSupportCodes(exp);
+			
 			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class,DBQuery.is("code", exp.code)
 					,DBUpdate.set("outputContainerSupportCodes", exp.outputContainerSupportCodes));
 
@@ -163,7 +164,7 @@ public class ExperimentHelper extends InstanceHelpers {
 		List<ContainerUsed> containersUSed=new ArrayList<ContainerUsed>();
 		if(exp.atomicTransfertMethods!=null){
 			for(int i = 0; i < exp.atomicTransfertMethods.size() ; i++){
-				if(exp.atomicTransfertMethods.get(i).outputContainerUseds.size()!=0){
+				if(exp.atomicTransfertMethods.get(i).outputContainerUseds != null && exp.atomicTransfertMethods.get(i).outputContainerUseds.size()!=0){
 					containersUSed.addAll(exp.atomicTransfertMethods.get(i).outputContainerUseds);
 				}
 			}

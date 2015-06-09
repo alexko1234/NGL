@@ -368,10 +368,10 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		$scope.outputContainers =[];
 		var containers=[];
 		angular.forEach($scope.experiment.value.atomicTransfertMethods, function(atomicTransfertMethod){
-			if(atomicTransfertMethod.outputContainerUsed != undefined && atomicTransfertMethod.outputContainerUsed.code != null){
-				var container = {"code":atomicTransfertMethod.outputContainerUsed.code,"state":{"code":"A"}};
+			if(atomicTransfertMethod.outputContainerUseds[0] != undefined && atomicTransfertMethod.outputContainerUseds[0].code != null){
+				var container = {"code":atomicTransfertMethod.outputContainerUseds[0].code,"state":{"code":"A"}};
 				containers.push(container);
-				$scope.outputContainers.push(atomicTransfertMethod.outputContainerUsed.code);
+				$scope.outputContainers.push(atomicTransfertMethod.outputContainerUseds[0].code);
 			}
 		});
 		$scope.lists.refresh.states({objectTypeCode:"Container"});
@@ -552,7 +552,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 	$scope.isOutputGenerated = function(){
 		var j = 1;
 		while($scope.experiment.value.atomicTransfertMethods[(j-1)] != null){
-			if($scope.experiment.value.atomicTransfertMethods[(j-1)].outputContainerUsed != null || $scope.experiment.value.atomicTransfertMethods[(j-1)].outputContainerUseds != null){
+			if($scope.experiment.value.atomicTransfertMethods[(j-1)].outputContainerUseds != null){
 				$scope.experiment.outputGenerated = true;
 				return true
 			}
@@ -1260,7 +1260,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				}
 			}else{
 				for(var i=0;i< $scope.experiment.value.atomicTransfertMethods.length;i++){
-					$scope.experiment.value.atomicTransfertMethods[i].inputContainerUsed.instrumentProperties = {};
+					$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].instrumentProperties = {};
 				}
 
 				//Bug with the map ?
