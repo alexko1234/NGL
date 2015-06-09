@@ -182,7 +182,7 @@
 								<div ng-switch on="property.choiceInList">
 								<input class="form-control valueInput" type="text" ng-switch-when="false" title="{{property.name}}"
 									ng-readonly="!experiment.experimentProperties.enabled"
-									ng-model="experiment.value.atomicTransfertMethods[@i].outputContainerUsed.experimentProperties[property.code].value"
+									ng-model="experiment.value.atomicTransfertMethods[@i].outputContainerUseds[0].experimentProperties[property.code].value"
 								    ng-blur="changeValueInFlowcellCompo()"
 								    ng-change="notifyChange(@i,property)"
 								    />
@@ -190,7 +190,7 @@
 								<select class="form-control"  
 										ng-readonly="!experiment.experimentInformation.enabled" 
 										ng-disabled="!experiment.experimentInformation.enabled" 
-										ng-model="experiment.value.atomicTransfertMethods[@i].outputContainerUsed.experimentProperties[property.code].value"
+										ng-model="experiment.value.atomicTransfertMethods[@i].outputContainerUseds[0].experimentProperties[property.code].value"
 										ng-switch-when="true" 
 										ng-blur="changeValueInFlowcellCompo()"
 										ng-change="notifyChange(@i,property)"

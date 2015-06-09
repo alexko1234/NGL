@@ -253,8 +253,8 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 					if($scope.getLevel( data[j].levels, "ContainerOut")){
 						var getter = $parse("datatable.displayResult["+i+"].outputExperimentProperties."+data[j].code+".value");
 						var k = $scope.datatable.displayResult[i].data.inputX;
-						if($scope.experiment.value.atomicTransfertMethods[k-1].outputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[k-1].outputContainerUsed.experimentProperties[data[j].code]){
-							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[k-1].outputContainerUsed.experimentProperties[data[j].code]);
+						if($scope.experiment.value.atomicTransfertMethods[k-1].outputContainerUseds[0].experimentProperties && $scope.experiment.value.atomicTransfertMethods[k-1].outputContainerUseds[0].experimentProperties[data[j].code]){
+							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[k-1].outputContainerUseds[0].experimentProperties[data[j].code]);
 						}else{
 							getter.assign($scope,undefined);
 						}
@@ -269,12 +269,12 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 		while($scope.experiment.value.atomicTransfertMethods[i] != undefined){
 			for(var j=0; j<data.length;j++){
 				if($scope.getLevel( data[j].levels, "ContainerOut")){
-					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties == null){
-						$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties = {};
+					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].experimentProperties == null){
+						$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].experimentProperties = {};
 					}
 
-					if(!$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code]){
-						$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code] = undefined;						
+					if(!$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].experimentProperties[data[j].code]){
+						$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].experimentProperties[data[j].code] = undefined;						
 					}
 				}
 			}
@@ -305,8 +305,8 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 				for(var j=0; j<data.length;j++){
 					if($scope.getLevel( data[j].levels, "ContainerOut")){
 						var getter = $parse("datatable.displayResult["+i+"].outputInstrumentProperties."+data[j].code+".value");
-						if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties[data[j].code]){
-							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties[data[j].code]);
+						if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].instrumentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].instrumentProperties[data[j].code]){
+							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].instrumentProperties[data[j].code]);
 						}else{
 							getter.assign($scope,undefined);
 						}
@@ -356,8 +356,9 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 
 	$scope.init_atomicTransfert = function(containers, atomicTransfertMethod){
 		console.log("atomic: "+$scope.laneCount);
+		$scope.experiment.value.atomicTransfertMethods = [];
 		for(var i=0;i<$scope.laneCount;i++){
-			$scope.experiment.value.atomicTransfertMethods[i] = {class:atomicTransfertMethod, line:(i+1), column:1, position:(i+1),inputContainerUseds:[],outputContainerUsed:{experimentProperties:{}}};
+			$scope.experiment.value.atomicTransfertMethods[i] = {class:atomicTransfertMethod, line:(i+1), column:1, inputContainerUseds:[],outputContainerUseds:[{experimentProperties:{}}]};
 		}
 	};
 
@@ -478,10 +479,10 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 		for(var i=0;i<$scope.laneCount;i++){
 			for(var j=0; j<data.length;j++ ){
 				if(codeValue == data[j].code){		      
-					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code] === undefined){
-						$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code] = {};
+					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].experimentProperties[data[j].code] === undefined){
+						$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].experimentProperties[data[j].code] = {};
 					}
-					$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code].value = $scope.allOutputContainersUsed[data[j].code].value;			 
+					$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].experimentProperties[data[j].code].value = $scope.allOutputContainersUsed[data[j].code].value;			 
 				}
 			}
 		}

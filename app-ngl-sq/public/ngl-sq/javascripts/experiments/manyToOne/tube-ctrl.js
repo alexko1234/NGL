@@ -231,7 +231,7 @@ angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$window','data
 	});
 	
 	$scope.init_atomicTransfert = function(containers, atomicTransfertMethod){
-			$scope.experiment.value.atomicTransfertMethods[0] = {class:atomicTransfertMethod, inputContainerUseds:[],position:1,outputContainerUsed:{volume:{unit:"µL"},concentration:{unit:"nM"},experimentProperties:{}}};
+			$scope.experiment.value.atomicTransfertMethods[0] = {class:atomicTransfertMethod, line:"1", column:"1", inputContainerUseds:[],outputContainerUseds:[{volume:{unit:"µL"},concentration:{unit:"nM"},experimentProperties:{}}]};
 		/*	angular.forEach(containers, function(container){
 				$scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds.push({code:container.code,instrumentProperties:{},experimentProperties:{},state:container.state,
 					locationOnContainerSupport:container.support});				
@@ -303,8 +303,8 @@ angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$window','data
 					if($scope.getLevel( data[j].levels, "ContainerOut")){
 						var getter = $parse("datatable.displayResult["+i+"].outputExperimentProperties."+data[j].code+".value");
 						var k = $scope.datatable.displayResult[i].data.inputX;
-						if($scope.experiment.value.atomicTransfertMethods[k-1].outputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[k-1].outputContainerUsed.experimentProperties[data[j].code]){
-							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[k-1].outputContainerUsed.experimentProperties[data[j].code]);
+						if($scope.experiment.value.atomicTransfertMethods[k-1].outputContainerUseds[0].experimentProperties && $scope.experiment.value.atomicTransfertMethods[k-1].outputContainerUseds[0].experimentProperties[data[j].code]){
+							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[k-1].outputContainerUseds[0].experimentProperties[data[j].code]);
 						}else{
 							getter.assign($scope,undefined);
 						}
@@ -319,12 +319,12 @@ angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$window','data
 		while($scope.experiment.value.atomicTransfertMethods[i] != undefined){
 			for(var j=0; j<data.length;j++){
 				if($scope.getLevel( data[j].levels, "ContainerOut")){
-					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties == null){
-						$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties = {};
+					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].experimentProperties == null){
+						$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].experimentProperties = {};
 					}
 
-					if(!$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code]){
-						$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code] = undefined;						
+					if(!$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].experimentProperties[data[j].code]){
+						$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].experimentProperties[data[j].code] = undefined;						
 					}
 				}
 			}
@@ -355,8 +355,8 @@ angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$window','data
 				for(var j=0; j<data.length;j++){
 					if($scope.getLevel( data[j].levels, "ContainerOut")){
 						var getter = $parse("datatable.displayResult["+i+"].outputInstrumentProperties."+data[j].code+".value");
-						if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties[data[j].code]){
-							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties[data[j].code]);
+						if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].instrumentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].instrumentProperties[data[j].code]){
+							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].instrumentProperties[data[j].code]);
 						}else{
 							getter.assign($scope,undefined);
 						}
@@ -387,8 +387,8 @@ angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$window','data
 	});
 	
 	$scope.$on('outputToExperiment', function(e, atomicTransfertMethod) {
-		$scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed.concentration = $scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[0].concentration;
-		$scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed.volume.unit ="µL" ;
+		$scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].concentration = $scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[0].concentration;
+		$scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].volume.unit ="µL" ;
 		$scope.atomicTransfere.outputToExperiment($scope.datatable);
 	});
 	

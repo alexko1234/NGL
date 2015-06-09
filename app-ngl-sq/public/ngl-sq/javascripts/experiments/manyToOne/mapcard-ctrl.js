@@ -204,8 +204,8 @@ angular.module('home').controller('ManyToOneMapcardCtrl',['$scope', '$window','d
 			for(var j=0; j<data.length;j++){
 				if($scope.getLevel( data[j].levels, "ContainerOut")){
 					var getter = $parse("datatable.displayResult["+i+"].outputExperimentProperties."+data[j].code+".value");
-					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code]){
-						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code].value);
+					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed[0].experimentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed[0].experimentProperties[data[j].code]){
+						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed[0].experimentProperties[data[j].code].value);
 					}else{
 						getter.assign($scope,"");
 					}
@@ -236,8 +236,8 @@ angular.module('home').controller('ManyToOneMapcardCtrl',['$scope', '$window','d
 			for(var j=0; j<data.length;j++){
 				if($scope.getLevel( data[j].levels, "ContainerOut")){
 					var getter = $parse("datatable.displayResult["+i+"].outputInstrumentProperties."+data[j].code+".value");
-					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties[data[j].code]){
-						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties[data[j].code].value);
+					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed[0].instrumentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed[0].instrumentProperties[data[j].code]){
+						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed[0].instrumentProperties[data[j].code].value);
 					}else{
 						getter.assign($scope,"");
 					}
