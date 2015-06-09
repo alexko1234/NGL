@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 
+import play.Logger;
 import models.Constants;
 import models.laboratory.container.instance.Container;
 import models.utils.InstanceConstants;
@@ -47,10 +48,10 @@ public class UpdateSolutionStockCNS extends AbstractImportDataCNS {
 				//Update state container
 				ContextValidation contextValidation= new ContextValidation(Constants.NGL_DATA_USER);
 				if(containerUpdate.state.code.equals("IS")&& CollectionUtils.isNotEmpty(container.inputProcessCodes)){
-					contextValidation.addErrors("code", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, container.code);
+				//	contextValidation.addErrors("code", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, container.code);
+					Logger.warn("La solution stock "+container.code +" ne peut pas etre mise a l etat IS car elle a des processus");
 				}else {
 					ContainerWorkflows.setContainerState(container, containerUpdate.state, contextValidation);
-//					ContainerWorkflows.setContainerState(container.code, container.fromExperimentTypeCodes.get(0), containerUpdate.state, contextValidation, false, false, null);
 				}
 				
 				if(!contextValidation.hasErrors()){
