@@ -25,6 +25,8 @@ public class ExperimentSearchForm extends ListForm{
 	public String reagentOrBoxCode;
 	public String instrument;
 	
+	public List<String> tags;
+	
 	@Override
 	public String toString() {
 		return "ExperimentSearchForm [code="+code+", codes="+ codes +", typeCode=" + typeCode

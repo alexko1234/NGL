@@ -623,6 +623,10 @@ public class Experiments extends CommonController{
 			queryElts.add(DBQuery.in("sampleCodes", experimentSearch.sampleCode));
 		}
 
+		if(CollectionUtils.isNotEmpty(experimentSearch.tags)){
+			queryElts.add(DBQuery.in("atomicTransfertMethods.inputContainerUseds.contents.properties.tag.value", experimentSearch.tags));
+		}
+		
 		if(CollectionUtils.isNotEmpty(experimentSearch.users)){
 			queryElts.add(DBQuery.in("traceInformation.createUser", experimentSearch.users));
 		}
