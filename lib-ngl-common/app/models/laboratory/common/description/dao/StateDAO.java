@@ -22,8 +22,6 @@ import org.springframework.stereotype.Repository;
 
 import play.Logger;
 
-import com.avaje.ebean.enhance.asm.Type;
-
 @Repository
 public class StateDAO extends AbstractDAOMapping<State>{
 
@@ -119,7 +117,7 @@ public class StateDAO extends AbstractDAOMapping<State>{
 				"JOIN common_info_type c on c.id =cs.fk_common_info_type "+
 				  DAOHelpers.getCommonInfoTypeSQLForInstitute("c")+
 				"WHERE cs.fk_common_info_type=?";		
-		return initializeMapping(sql, new SqlParameter("fk_common_info_type", Type.LONG)).execute(idCommonInfoType);		
+		return initializeMapping(sql, new SqlParameter("fk_common_info_type", Types.BIGINT)).execute(idCommonInfoType);		
 	}
 	
 	public List<State> findByObjectTypeCode(ObjectType.CODE objectTypeCode) throws DAOException {
@@ -141,7 +139,7 @@ public class StateDAO extends AbstractDAOMapping<State>{
 		String sql = sqlCommon+
 				"JOIN state_object_type s ON s.fk_state=t.id "+
 				"WHERE s.fk_object_type=?";		
-		return initializeMapping(sql, new SqlParameter("fk_object_type", Type.LONG)).execute(id);		
+		return initializeMapping(sql, new SqlParameter("fk_object_type", Types.BIGINT)).execute(id);		
 	}
 
 

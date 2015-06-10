@@ -81,7 +81,6 @@ public abstract class AbstractTests {
 	    config.put("auth.application", "ngl-bi");
 	    
 		config.put("asset.url","http://192.168.243.231:9001");
-		config.put("ebean.default", "models.*");
 		return config;
 
 	}
