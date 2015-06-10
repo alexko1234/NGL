@@ -119,7 +119,11 @@
 							$scope.datatableSaved++;
 							if($scope.datatableSaved === $scope.datatables.length){
 								//All the datatables are now saved
-								$location.path(jsRoutes.controllers.reagents.tpl.Kits.get($scope.kit.code).url);
+								if($scope.kit.declarationType === "kit"){
+									$location.path(jsRoutes.controllers.reagents.tpl.Kits.get($scope.kit.code).url);
+								}else{
+									$location.path(jsRoutes.controllers.reagents.tpl.Kits.get($scope.boxes[0].code).url);
+								}
 							}
 						 }else if(errors > 0){
 							 $scope.message.clazz = 'alert alert-danger';
@@ -280,7 +284,7 @@
 				$scope.datatables[index].saveLocal($scope.datatables[index].displayResult[i].data,i);
 			}
 		 }
-		 $scope.datatables[index].addData([{"category":"Reagent", "catalogCode":reagentCatalog.code, "receptionDate":moment(new Date()).valueOf(), "catalogRefCode":reagentCatalog.catalogRefCode, "boxCatalogRefCode":box.catalogRefCode, "state":{code:"N"}}]);
+		 $scope.datatables[index].addData([{"category":"Reagent", "catalogCode":reagentCatalog.code, "receptionDate":moment(new Date()).valueOf(), "catalogRefCode":reagentCatalog.catalogRefCode, "declarationType":$scope.kit.declarationType,"boxCatalogRefCode":box.catalogRefCode, "state":{code:"N"}}]);
 		 $scope.datatables[index].setEdit();
 		 console.log($scope.boxes);
 	 };
@@ -320,7 +324,7 @@
 		 if(boxCatalog !== undefined){
 			 boxCatalogCode = boxCatalog.code;
 		 }
-		 $scope.boxes.push({"category":"Box", "state":{"code":"N"},"catalogRefCode":boxCatalog.catalogRefCode, "receptionDate":moment(new Date()).valueOf(), "catalogCode":boxCatalogCode});
+		 $scope.boxes.push({"category":"Box", "state":{"code":"N"}, "declarationType":$scope.kit.declarationType, "catalogRefCode":boxCatalog.catalogRefCode, "receptionDate":moment(new Date()).valueOf(), "catalogCode":boxCatalogCode});
 		 $scope.datatables[$scope.boxes.length-1] = datatable($scope.datatableConfig);
 		 $scope.datatables[$scope.boxes.length-1].setData([]);
 	 };
@@ -356,6 +360,7 @@
 			$scope.datatables[index].displayResult[i].data.category = "Reagent";
 			$scope.datatables[index].displayResult[i].data.boxCode = box.code;
 			$scope.datatables[index].displayResult[i].data.kitCode = $scope.kit.code;
+			$scope.datatables[index].displayResult[i].data.declarationType = $scope.kit.declarationType;
 			$scope.copyOrderInformations($scope.datatables[index].displayResult[i].data);
 		 }
 	 };
@@ -364,7 +369,7 @@
 		var promises = [];
 		for(var i=0;i<$scope.boxes.length;i++){
 			$scope.boxes[i].kitCode = $scope.kit.code;
-			
+			$scope.boxes[i].declarationType = $scope.kit.declarationType;
 			$scope.copyOrderInformations($scope.boxes[i]);
 			
 			if($scope.boxes[i].code === undefined || $scope.boxes[i].code === ""){
