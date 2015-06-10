@@ -1,33 +1,23 @@
 package models.laboratory.processes.instance;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.container.instance.Container;
-import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.processes.description.ProcessCategory;
-import models.laboratory.processes.description.ProcessType;
-import models.laboratory.project.instance.Project;
-import models.laboratory.sample.instance.Sample;
-import models.utils.HelperObjects;
 import models.utils.InstanceConstants;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.mongojack.MongoCollection;
-
-import play.Logger;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.processes.instance.ProcessValidationHelper;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import fr.cea.ig.DBObject;
 
 
@@ -54,8 +44,8 @@ public class Process extends DBObject implements IValidation{
 	public String currentExperimentTypeCode;
 	public String containerInputCode;
 
-	public List<String> newContainerSupportCodes;
-	public List<String> experimentCodes;
+	public Set<String> newContainerSupportCodes;
+	public Set<String> experimentCodes;
 
 	public SampleOnInputContainer sampleOnInputContainer;
 
