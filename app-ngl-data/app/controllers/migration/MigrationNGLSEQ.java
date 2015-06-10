@@ -6,7 +6,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import models.laboratory.container.instance.Container;
@@ -255,14 +257,14 @@ public class MigrationNGLSEQ extends CommonController{
 		
 		for(Experiment experiment:experiments){
 			Logger.debug("Experiment to update"+experiment.code);
-			List<String> inputContainerSupportCodes=new ArrayList<String>();
+			Set<String> inputContainerSupportCodes=new HashSet<String>();
 			for(ContainerUsed containerUsed:experiment.getAllInPutContainer()){
 				if(containerUsed.locationOnContainerSupport==null)
 				 {
-					InstanceHelpers.addCode(containerUsed.code, inputContainerSupportCodes);
+					inputContainerSupportCodes.add(containerUsed.code);
 				}else
 				{
-					InstanceHelpers.addCode(containerUsed.locationOnContainerSupport.code, inputContainerSupportCodes);
+					inputContainerSupportCodes.add(containerUsed.locationOnContainerSupport.code);
 				}
 			}
 			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class
