@@ -1,6 +1,7 @@
 package validation.container.instance;
 
 import java.util.List;
+import java.util.Set;
 
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.container.description.ContainerCategory;
@@ -85,10 +86,10 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 		}		
 	}
 
-	public static void validateProcessCodes(List<String> inputProcessCodes, ContextValidation contextValidation) {
+	public static void validateProcessCodes(Set<String> inputProcessCodes, ContextValidation contextValidation) {
 		if(inputProcessCodes!=null && inputProcessCodes.size() > 0){
-			for(int i = 0; i < inputProcessCodes.size(); i++){
-				BusinessValidationHelper.validateExistInstanceCode(contextValidation, inputProcessCodes.get(i), "inputProcessCodes."+i, Process.class, InstanceConstants.PROCESS_COLL_NAME); 
+			for(String processCode: inputProcessCodes){
+				BusinessValidationHelper.validateExistInstanceCode(contextValidation, processCode, "inputProcessCodes", Process.class, InstanceConstants.PROCESS_COLL_NAME); 
 			}
 		}
 	}

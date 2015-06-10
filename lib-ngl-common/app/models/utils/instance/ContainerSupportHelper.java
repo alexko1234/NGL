@@ -102,9 +102,9 @@ public class ContainerSupportHelper {
 		for(ContainerUsed inputContainerUsed:inputContainerUseds){
 
 			Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, inputContainerUsed.code);
-			containerSupport.projectCodes=InstanceHelpers.addCodesList(container.projectCodes, containerSupport.projectCodes);
-			containerSupport.sampleCodes=InstanceHelpers.addCodesList(container.sampleCodes, containerSupport.sampleCodes);
-			containerSupport.fromExperimentTypeCodes=InstanceHelpers.addCode(experiment.typeCode, containerSupport.fromExperimentTypeCodes);
+			containerSupport.projectCodes.addAll(container.projectCodes);
+			containerSupport.sampleCodes.addAll(container.sampleCodes);
+			containerSupport.fromExperimentTypeCodes.add(experiment.typeCode);
 
 		}
 		
@@ -126,9 +126,9 @@ public class ContainerSupportHelper {
 
 	public static void updateData(List<Container> containers, Experiment experiment, ContainerSupport containerSupport) {
 		for(Container container : containers){
-			containerSupport.projectCodes=InstanceHelpers.addCodesList(container.projectCodes, containerSupport.projectCodes);
-			containerSupport.sampleCodes=InstanceHelpers.addCodesList(container.sampleCodes, containerSupport.sampleCodes);
-			containerSupport.fromExperimentTypeCodes=InstanceHelpers.addCodesList(container.fromExperimentTypeCodes, containerSupport.fromExperimentTypeCodes);
+			containerSupport.projectCodes.addAll(container.projectCodes);
+			containerSupport.sampleCodes.addAll(container.sampleCodes);
+			containerSupport.fromExperimentTypeCodes.addAll(container.fromExperimentTypeCodes);
 		}
 
 

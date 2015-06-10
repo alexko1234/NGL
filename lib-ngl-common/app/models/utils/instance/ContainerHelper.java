@@ -6,11 +6,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
-import org.apache.commons.collections.CollectionUtils;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
@@ -28,6 +27,9 @@ import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
+
+import org.apache.commons.collections.CollectionUtils;
+
 import validation.ContextValidation;
 import validation.utils.BusinessValidationHelper;
 import fr.cea.ig.MongoDBDAO;
@@ -61,9 +63,9 @@ public class ContainerHelper {
 
 		container.contents.add(finalContent);
 
-		container.projectCodes=InstanceHelpers.addCodesList(sample.projectCodes,container.projectCodes);
+		container.projectCodes.addAll(sample.projectCodes);
 
-		container.sampleCodes=InstanceHelpers.addCode(sample.code,container.sampleCodes);
+		container.sampleCodes.add(sample.code);
 
 	}
 
@@ -83,18 +85,18 @@ public class ContainerHelper {
 			calculPercentageContent(contents,inputContainerUsed.percentage);
 			outputContainer.contents.addAll(contents);
 
-			outputContainer.projectCodes=InstanceHelpers.addCodesList(inputContainer.projectCodes,outputContainer.projectCodes);
-			outputContainer.sampleCodes=InstanceHelpers.addCodesList(inputContainer.sampleCodes,outputContainer.sampleCodes);
+			outputContainer.projectCodes.addAll(inputContainer.projectCodes);
+			outputContainer.sampleCodes.addAll(inputContainer.sampleCodes);
 			outputContainer.categoryCode = ContainerSupportCategory.find.findByCode(experiment.instrument.outContainerSupportCategoryCode).containerCategory.code;
 			if(CollectionUtils.isNotEmpty(inputContainer.inputProcessCodes)){
-				outputContainer.inputProcessCodes=InstanceHelpers.addCodesList(inputContainer.inputProcessCodes,outputContainer.inputProcessCodes); }
+				outputContainer.inputProcessCodes.addAll(inputContainer.inputProcessCodes); }
 			outputContainer.processTypeCode=inputContainer.processTypeCode;
 
 			if(experiment.categoryCode.equals("transformation")){
-				outputContainer.fromExperimentTypeCodes=InstanceHelpers.addCode(experiment.typeCode ,outputContainer.fromExperimentTypeCodes);
+				outputContainer.fromExperimentTypeCodes.add(experiment.typeCode);
 			}else{
 				if(CollectionUtils.isNotEmpty(inputContainer.fromExperimentTypeCodes)){				
-				outputContainer.fromExperimentTypeCodes=InstanceHelpers.addCodesList(inputContainer.fromExperimentTypeCodes,outputContainer.fromExperimentTypeCodes);
+				outputContainer.fromExperimentTypeCodes.addAll(inputContainer.fromExperimentTypeCodes);
 				}
 			}
 
@@ -162,22 +164,22 @@ public class ContainerHelper {
 				else {
 					newSupport = ContainerSupportHelper.createContainerSupport(container.support.code, null, container.support.categoryCode,"ngl");
 				}
-				newSupport.projectCodes = new  ArrayList<String>(container.projectCodes);
-				newSupport.sampleCodes = new  ArrayList<String>(container.sampleCodes);
+				newSupport.projectCodes = new  HashSet<String>(container.projectCodes);
+				newSupport.sampleCodes = new  HashSet<String>(container.sampleCodes);
 				newSupport.state=container.state;
 				
 				if(null != container.fromExperimentTypeCodes){//TODO Must be manage for CNG
-					newSupport.fromExperimentTypeCodes = new  ArrayList<String>(container.fromExperimentTypeCodes);
+					newSupport.fromExperimentTypeCodes = new  HashSet<String>(container.fromExperimentTypeCodes);
 				}
 				if (!mapSupports.containsKey(newSupport.code)) {
 					mapSupports.put(newSupport.code, newSupport);
 				}
 				else {
 					ContainerSupport oldSupport = (ContainerSupport) mapSupports.get(newSupport.code);
-					InstanceHelpers.addCodesList(newSupport.projectCodes, oldSupport.projectCodes); 
-					InstanceHelpers.addCodesList(newSupport.sampleCodes, oldSupport.sampleCodes);
+					oldSupport.projectCodes.addAll(newSupport.projectCodes); 
+					oldSupport.sampleCodes.addAll(newSupport.sampleCodes);
 					if(null != newSupport.fromExperimentTypeCodes && null != oldSupport.fromExperimentTypeCodes){//TODO Must be manage for CNG
-						InstanceHelpers.addCodesList(newSupport.fromExperimentTypeCodes, oldSupport.fromExperimentTypeCodes);
+						oldSupport.fromExperimentTypeCodes.addAll(newSupport.fromExperimentTypeCodes);
 					}
 				}
 
@@ -196,15 +198,15 @@ public class ContainerHelper {
 		for (Container container : updatedContainers) {
 			if (container.support != null) {
 				ContainerSupport newSupport = ContainerSupportHelper.createContainerSupport(container.support.code, mapSupportsCodeSeq.get(container.support.code), container.support.categoryCode,"ngl");
-				newSupport.projectCodes = new  ArrayList<String>(container.projectCodes);
-				newSupport.sampleCodes = new  ArrayList<String>(container.sampleCodes);							
+				newSupport.projectCodes = new  HashSet<String>(container.projectCodes);
+				newSupport.sampleCodes = new  HashSet<String>(container.sampleCodes);							
 				if (!mapSupports.containsKey(newSupport.code)) {
 					mapSupports.put(newSupport.code, newSupport);
 				}
 				else {
 					ContainerSupport oldSupport = (ContainerSupport) mapSupports.get(newSupport.code);
-					InstanceHelpers.addCodesList(newSupport.projectCodes, oldSupport.projectCodes); 
-					InstanceHelpers.addCodesList(newSupport.sampleCodes, oldSupport.sampleCodes);
+					oldSupport.projectCodes.addAll(newSupport.projectCodes); 
+					oldSupport.sampleCodes.addAll(newSupport.sampleCodes);
 				}
 
 			}

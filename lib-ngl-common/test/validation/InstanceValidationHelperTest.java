@@ -5,9 +5,11 @@ import static org.fest.assertions.Assertions.assertThat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -290,7 +292,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		
 		c.categoryCode = "lane";
 		
-		List<String> lp = new ArrayList<String>(); 
+		Set<String> lp = new HashSet<String>(); 
 		lp.add(project.code);
 		c.projectCodes = lp;
 		
@@ -298,7 +300,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		m.put("limsCode", new PropertySingleValue(3805));
 		c.properties = m;
 		
-		List<String> ls = new ArrayList<String>(); 
+		Set<String> ls = new HashSet<String>(); 
 		ls.add(sample.code);
 		c.sampleCodes = ls;
 		
@@ -362,7 +364,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		c.code = "container" + randomInt; 
 		c.categoryCode = "lane";
 		
-		List<String> lp = new ArrayList<String>(); 
+		Set<String> lp = new HashSet<String>(); 
 		lp.add(project.code);
 		c.projectCodes = lp;
 		
@@ -370,7 +372,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		m.put("limsCode", new PropertySingleValue(3805));
 		c.properties = m;
 		
-		List<String> ls = new ArrayList<String>(); 
+		Set<String> ls = new HashSet<String>(); 
 		ls.add(sample.code);
 		c.sampleCodes = ls;
 		

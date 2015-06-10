@@ -6,7 +6,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.sql.DataSource;
 
@@ -207,7 +209,7 @@ public class LimsCNGDAO {
 			//just one comment for one lane (container)
 			container.comments.add(new Comment(rs.getString("comment")));
 		}
-		container.fromExperimentTypeCodes=new ArrayList<String>();
+		container.fromExperimentTypeCodes=new HashSet<String>();
 		container.fromExperimentTypeCodes.add(experimentTypeCode);
 		container.state = new State(); 
 		container.state.code = CONTAINER_STATE_CODE; 
@@ -241,7 +243,7 @@ public class LimsCNGDAO {
 		}
 		
 		if (rs.getString("project")!=null) {
-			container.projectCodes = new ArrayList<String>();
+			container.projectCodes = new HashSet<String>();
 			container.projectCodes.add(rs.getString("project"));
 		}		
 		
@@ -287,7 +289,7 @@ public class LimsCNGDAO {
 			}
 			container.contents.add(content);			
 			
-			container.sampleCodes=new ArrayList<String>();
+			container.sampleCodes=new HashSet<String>();
 			container.sampleCodes.add(rs.getString("code_sample"));
 		}
 
@@ -626,10 +628,10 @@ public class LimsCNGDAO {
 			while ( (pos < listSize-1) && (results.get(pos).code.equals(results.get(pos+x).code)) ) {
 				
 				// difference between two consecutive sampleCodes
-				if (! results.get(pos).sampleCodes.get(0).equals(results.get(pos+x).sampleCodes.get(0))) {
-					if (! results.get(pos).sampleCodes.contains(results.get(pos+x).sampleCodes.get(0))) {
+				if (! results.get(pos).sampleCodes.toArray(new String[0])[0].equals(results.get(pos+x).sampleCodes.toArray(new String[0])[0])) {
+					if (! results.get(pos).sampleCodes.contains(results.get(pos+x).sampleCodes.toArray(new String[0])[0])) {
 							
-						results.get(pos).sampleCodes.add( results.get(pos+x).sampleCodes.get(0) );
+						results.get(pos).sampleCodes.add( results.get(pos+x).sampleCodes.toArray(new String[0])[0] );
 					}
 				}
 								
@@ -686,7 +688,7 @@ public class LimsCNGDAO {
 	
 	public static List<Container> defineContainerProjectCodes(List<Container> results) throws DAOException {
 		for (Container r : results) {
-			ArrayList<String> projectCodes = new ArrayList<String>();
+			Set<String> projectCodes = new HashSet<String>();
 			for (Content c : r.contents) {
 				if (!projectCodes.contains(c.projectCode)) {
 					projectCodes.add(c.projectCode);
@@ -708,8 +710,8 @@ public class LimsCNGDAO {
 	 */
 	public static List<Container>  createContent(List<Container> results, int posCurrent, int posNext) throws DAOException{
 		Content content = new Content();
-		content.sampleCode = results.get(posNext).sampleCodes.get(0);
-		content.projectCode = results.get(posNext).projectCodes.get(0);
+		content.sampleCode = results.get(posNext).sampleCodes.toArray(new String[0])[0];
+		content.projectCode = results.get(posNext).projectCodes.toArray(new String[0])[0];
 		
 		SampleType sampleType=null;
 		sampleType = SampleType.find.findByCode(SAMPLE_USED_TYPE_CODE);	

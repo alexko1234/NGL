@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
@@ -73,11 +74,11 @@ public class Container extends DBObject implements IValidation {
 	public List<PropertyValue> calculedVolume;
 
 	// For search optimisation
-	public List<String> projectCodes; // getProjets //TODO SET instead of LIST
-	public List<String> sampleCodes; // getSamples //TODO SET instead of LIST
+	public Set<String> projectCodes; // getProjets //TODO SET instead of LIST
+	public Set<String> sampleCodes; // getSamples //TODO SET instead of LIST
 	// ExperimentType must be an internal or external experiment ( origine )
 	// List for pool experimentType
-	public List<String> fromExperimentTypeCodes; // getExperimentType
+	public Set<String> fromExperimentTypeCodes; // getExperimentType
 
 	// Propager au container de purif ??
 	//public String fromExperimentCode; ??
@@ -86,7 +87,7 @@ public class Container extends DBObject implements IValidation {
 	//process
 	public String processTypeCode; //TODO GA : est ce bien utile comme info ?
 
-	public List<String> inputProcessCodes;
+	public Set<String> inputProcessCodes;
 
 	public Container(){
 		properties=new HashMap<String, PropertyValue>();

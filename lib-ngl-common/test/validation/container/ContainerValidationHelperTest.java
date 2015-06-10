@@ -3,7 +3,9 @@ package validation.container;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
@@ -170,8 +172,8 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public void validateExperimentTypeCodesNotRequired() {
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		CommonValidationHelper.validateExperimentTypeCodes(null, contextValidation);
-		CommonValidationHelper.validateExperimentTypeCodes(new ArrayList<String>(), contextValidation);
+		CommonValidationHelper.validateExperimentTypeCodes((Set) null, contextValidation);
+		CommonValidationHelper.validateExperimentTypeCodes(new HashSet<String>(), contextValidation);
 		contextValidation.displayErrors(logger);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
@@ -422,7 +424,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public void validationProcessCodes(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		List<String> inputProcessCodes = new ArrayList<String>();
+		Set<String> inputProcessCodes = new HashSet<String>();
 		inputProcessCodes.add(process1.code);
 		inputProcessCodes.add(process2.code);
 		inputProcessCodes.add(process3.code);
@@ -434,7 +436,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public void validationProcessCodesNull(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		List<String> inputProcessCodes = new ArrayList<String>();
+		Set<String> inputProcessCodes = new HashSet<String>();
 		inputProcessCodes.add("");
 		inputProcessCodes.add("");
 		inputProcessCodes.add("");

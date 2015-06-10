@@ -1,49 +1,23 @@
 package containers;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static play.test.Helpers.callAction;
-import static play.test.Helpers.fakeRequest;
-import static play.test.Helpers.status;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
-import java.util.regex.Pattern;
 
-import models.laboratory.common.instance.Comment;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.processes.instance.Process;
-import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
-import models.utils.ListObject;
 import models.utils.instance.ContainerHelper;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.mongojack.DBQuery;
 
 import play.Logger;
 import play.Logger.ALogger;
-import play.libs.Json;
-import play.mvc.Result;
 import utils.AbstractTests;
 import utils.Constants;
-import utils.ContainerBatchElementHelper;
-import utils.DatatableBatchResponseElementForTest;
-import utils.DatatableResponseForTest;
-import utils.InitDataHelper;
-import utils.MapperHelper;
 import validation.ContextValidation;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-
-import controllers.containers.api.ContainerBatchElement;
-import controllers.containers.api.Containers;
-import controllers.containers.api.ContainersSearchForm;
-import controllers.containers.api.ContainersUpdateForm;
 import fr.cea.ig.MongoDBDAO;
 
 public class ContainerTests extends AbstractTests {
@@ -142,7 +116,7 @@ public class ContainerTests extends AbstractTests {
 	@Test
 	public void validateGetCurrentProcesses() {		
 		Container cnt =  ContainerTestHelper.getFakeContainer("tube");
-		cnt.inputProcessCodes=new ArrayList<String>();
+		cnt.inputProcessCodes=new HashSet<String>();
 		Process process=new Process();
 		process.code="validateGetCurrentProcesses";
 		Process p=MongoDBDAO.save(InstanceConstants.PROCESS_COLL_NAME,process);

@@ -84,7 +84,8 @@ public static Result updateFromExperimentTypeCodesContainerSupport() throws DAOE
 			List<String> fromExperimentTypeCodes=new ArrayList<String>();
 			for(Container container:containers){
 				if(container.fromExperimentTypeCodes!=null)
-					InstanceHelpers.addCodesList(container.fromExperimentTypeCodes,fromExperimentTypeCodes);
+					fromExperimentTypeCodes.addAll(container.fromExperimentTypeCodes);
+					//InstanceHelpers.addCodesList(container.fromExperimentTypeCodes,fromExperimentTypeCodes);
 			}
 			if(fromExperimentTypeCodes.size()!=0){
 				Logger.info("update support"+containerSupport.code);

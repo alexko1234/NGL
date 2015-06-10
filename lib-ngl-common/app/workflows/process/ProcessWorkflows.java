@@ -155,7 +155,7 @@ public class ProcessWorkflows {
 		}
 
 		State nextState = new State();
-		List<String> processList=new ArrayList<String>();
+		Set<String> processList=new HashSet<String>();
 
 		nextState.code=ContainerWorkflows.getNextContainerStateFromExperimentCategory(experimentCategoryCode);
 

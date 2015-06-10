@@ -190,8 +190,8 @@ public class ContainerControllerTests extends AbstractTests{
 		lc = dr.data;
 		for(int i=0;i<lc.size();i++){
 			c = (Container) lc.get(i);
-			for(int j=0;j<c.sampleCodes.size();j++){
-				assertThat(c.sampleCodes.get(j)).matches(projectCode+"_.*");
+			for(String code:c.sampleCodes){
+				assertThat(code).matches(projectCode+"_.*");
 			}
 			
 		}
@@ -208,8 +208,8 @@ public class ContainerControllerTests extends AbstractTests{
 		lc = dr.data;
 		for(int i=0;i<lc.size();i++){
 			c = (Container) lc.get(i);
-			for(int j=0;j<c.sampleCodes.size();j++){
-				assertThat(c.sampleCodes.get(j)).doesNotMatch("validateListWithDatatable.*");
+			for(String code:c.sampleCodes){
+				assertThat(code).doesNotMatch("validateListWithDatatable.*");
 			}
 
 		}		
