@@ -172,7 +172,6 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public void validateExperimentTypeCodesNotRequired() {
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		CommonValidationHelper.validateExperimentTypeCodes((Set) null, contextValidation);
 		CommonValidationHelper.validateExperimentTypeCodes(new HashSet<String>(), contextValidation);
 		contextValidation.displayErrors(logger);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
