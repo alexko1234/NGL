@@ -2,6 +2,7 @@ package controllers.migration.models;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
@@ -34,13 +35,13 @@ public class ExperimentOld extends DBObject{
 		
 		public List<Comment> comments;
 		
-		public List<String> projectCodes;
+		public Set<String> projectCodes;
 		
-		public List<String> sampleCodes;
+		public Set<String> sampleCodes;
 		
-		public List<String> inputContainerSupportCodes;
+		public Set<String> inputContainerSupportCodes;
 		
-		public List<String> outputContainerSupportCodes;
+		public Set<String> outputContainerSupportCodes;
 
 	
 }

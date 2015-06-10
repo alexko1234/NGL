@@ -492,7 +492,7 @@ public class LimsAbandonDAO {
 				Integer.valueOf(expDepotIllumina.instrumentProperties.get("nbCyclesReadIndex2").value.toString());
 				
 		DepotSolexa ds = this.jdbcTemplate.query("pc_FlowcellNGL @matmanom=?, @sequenceur=?,@nbcycle=?,@nbpiste=?,@instrumentType=?"
-												,new Object[]{expPrepaflowcell.outputContainerSupportCodes.get(0)
+												,new Object[]{expPrepaflowcell.outputContainerSupportCodes.toArray(new String[0])[0]
 																,expDepotIllumina.instrument.code
 																,nbCycles
 																,expPrepaflowcell.atomicTransfertMethods.size()
@@ -509,7 +509,7 @@ public class LimsAbandonDAO {
 		 Logger.debug("Matmaco for new flowcellNGL "+ds.matmaco);
 		 List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.in("support.code",expPrepaflowcell.inputContainerSupportCodes)).toList();
 		 if(CollectionUtils.isEmpty(containers)){
-			 throw new RuntimeException("Container vide for "+expPrepaflowcell.inputContainerSupportCodes.get(0));
+			 throw new RuntimeException("Container vide for "+expPrepaflowcell.inputContainerSupportCodes.toArray(new String[0])[0]);
 		 }
 		 
 		 for(AtomicTransfertMethod atomicTransfertMethods: expPrepaflowcell.atomicTransfertMethods)

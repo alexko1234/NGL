@@ -2,12 +2,13 @@ package models.utils.instance;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
-import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
@@ -29,7 +30,6 @@ import play.Play;
 import rules.services.RulesServices6;
 import validation.ContextValidation;
 import workflows.container.ContainerWorkflows;
-import workflows.experiment.ExperimentWorkflows;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -80,8 +80,8 @@ public class ExperimentHelper extends InstanceHelpers {
 	}
 
 	public static Experiment updateData(Experiment exp) {
-		exp.sampleCodes = new ArrayList<String>();
-		exp.projectCodes  = new ArrayList<String>();
+		exp.sampleCodes = new HashSet<String>();
+		exp.projectCodes  = new HashSet<String>();
 
 		for(int i=0;i<exp.atomicTransfertMethods.size();i++)
 			if(exp.atomicTransfertMethods.get(i)!=null && exp.atomicTransfertMethods.get(i).inputContainerUseds.size()>0){
@@ -90,10 +90,12 @@ public class ExperimentHelper extends InstanceHelpers {
 					
 					if(container!=null){
 						if(CollectionUtils.isNotEmpty(container.sampleCodes)){
-							exp.sampleCodes = InstanceHelpers.addCodesList(container.sampleCodes,exp.sampleCodes);
+							exp.sampleCodes.addAll(container.sampleCodes);
+						//	exp.sampleCodes = InstanceHelpers.addCodesList(container.sampleCodes,exp.sampleCodes);
 						}
 						if(CollectionUtils.isNotEmpty(container.projectCodes)){
-							exp.projectCodes = InstanceHelpers.addCodesList(container.projectCodes,exp.projectCodes);
+							exp.projectCodes.addAll(container.projectCodes);
+						//	exp.projectCodes = InstanceHelpers.addCodesList(container.projectCodes,exp.projectCodes);
 						}						
 					}
 									
@@ -159,8 +161,8 @@ public class ExperimentHelper extends InstanceHelpers {
 
 
 	@JsonIgnore
-	public static List<String> getOutputContainerSupportCodes(Experiment exp){
-		List<String> codes = new ArrayList<String>();
+	public static Set<String> getOutputContainerSupportCodes(Experiment exp){
+		Set<String> codes = new HashSet<String>();
 		List<ContainerUsed> containersUSed=new ArrayList<ContainerUsed>();
 		if(exp.atomicTransfertMethods!=null){
 			for(int i = 0; i < exp.atomicTransfertMethods.size() ; i++){
@@ -171,9 +173,11 @@ public class ExperimentHelper extends InstanceHelpers {
 			for(int i = 0; i < containersUSed.size(); i++)
 			{
 				if(containersUSed.get(i).locationOnContainerSupport==null){
-					InstanceHelpers.addCode(containersUSed.get(i).code, codes);
+					codes.add(containersUSed.get(i).code);
+				//	InstanceHelpers.addCode(containersUSed.get(i).code, codes);
 				}else {
-					InstanceHelpers.addCode(containersUSed.get(i).locationOnContainerSupport.code, codes);
+					codes.add(containersUSed.get(i).locationOnContainerSupport.code);
+				//	InstanceHelpers.addCode(containersUSed.get(i).locationOnContainerSupport.code, codes);
 				}
 			}
 		}
@@ -184,8 +188,8 @@ public class ExperimentHelper extends InstanceHelpers {
 
 
 	@JsonIgnore
-	public static List<String> getInputContainerSupportCodes(Experiment exp){
-		List<String> codes = new ArrayList<String>();
+	public static Set<String> getInputContainerSupportCodes(Experiment exp){
+		Set<String> codes = new HashSet<String>();
 		List<ContainerUsed> containersUSed=new ArrayList<ContainerUsed>();
 		if(exp.atomicTransfertMethods!=null){
 			for(int i = 0; i < exp.atomicTransfertMethods.size() ; i++){
@@ -197,8 +201,9 @@ public class ExperimentHelper extends InstanceHelpers {
 			{
 				String code;
 				if(containersUSed.get(i).locationOnContainerSupport!=null){
-					code=containersUSed.get(i).locationOnContainerSupport.code; 
-					InstanceHelpers.addCode(code, codes);
+					code=containersUSed.get(i).locationOnContainerSupport.code;
+					codes.add(code);
+					//InstanceHelpers.addCode(code, codes);
 				}
 				else { Logger.error("No locationOnContainerSupport in ContainerUSed "+ containersUSed.get(i).code);}	
 			}

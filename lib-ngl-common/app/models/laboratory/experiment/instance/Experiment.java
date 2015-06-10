@@ -3,6 +3,7 @@ package models.laboratory.experiment.instance;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
@@ -14,12 +15,13 @@ import models.utils.InstanceConstants;
 
 import org.mongojack.MongoCollection;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.experiment.instance.ExperimentValidationHelper;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import fr.cea.ig.DBObject;
 
 
@@ -56,13 +58,13 @@ public class Experiment extends DBObject implements IValidation {
 	
 	public List<Comment> comments;
 	
-	public List<String> projectCodes;
+	public Set<String> projectCodes;
 	
-	public List<String> sampleCodes;
+	public Set<String> sampleCodes;
 	
-	public List<String> inputContainerSupportCodes;
+	public Set<String> inputContainerSupportCodes;
 	
-	public List<String> outputContainerSupportCodes;
+	public Set<String> outputContainerSupportCodes;
 	
 	public Experiment(){
 		traceInformation=new TraceInformation();

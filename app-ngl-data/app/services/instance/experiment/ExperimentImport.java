@@ -4,7 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -129,8 +131,8 @@ public class ExperimentImport {
 		List<AtomicTransfertMethod> hm = new ArrayList<AtomicTransfertMethod>(); 
 
 		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code",rs.getString("code_flowcell"))).toList();
-		ArrayList<String> projectCodes = new ArrayList<String>();
-		ArrayList<String> sampleCodes = new ArrayList<String>();
+		Set<String> projectCodes = new HashSet<String>();
+		Set<String> sampleCodes = new HashSet<String>();
 		
 		if (containers == null || containers.size() == 0) {
 			Logger.error("Containers with support.code =" + rs.getString("code_flowcell") + " non trouvés dans la base !");
@@ -139,9 +141,8 @@ public class ExperimentImport {
 			int i = 0;
 			for (Container c : containers) {			
 				//define one atomicTransfertMethod for each container
-				OneToVoidContainer atomicTransfertMethod = new OneToVoidContainer();
-				atomicTransfertMethod.line = "1";
-				atomicTransfertMethod.column = "1";
+				OneToVoidContainer atomicTransfertMethod = new OneToVoidContainer();		
+				atomicTransfertMethod.line = "0";
 				atomicTransfertMethod.inputContainerUseds = new ArrayList<ContainerUsed>();
 				ContainerUsed cnt = new ContainerUsed();
 				cnt.code = c.code;
