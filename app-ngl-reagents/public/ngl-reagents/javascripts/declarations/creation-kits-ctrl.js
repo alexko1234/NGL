@@ -426,17 +426,21 @@
 		$scope.mainService.resetErrors();
 		$scope.saveInProgress = true;
 		var promises = [];
-		if($scope.kit.code === undefined || $scope.kit.code === ""){
-			promises.push($scope.saveKit());
-		}else{
-			promises.push($scope.updateKit($scope.kit.code));
+		if($scope.kit.declarationType === "kit"){
+			if($scope.kit.code === undefined || $scope.kit.code === ""){
+				promises.push($scope.saveKit());
+			}else{
+				promises.push($scope.updateKit($scope.kit.code));
+			}
 		}
 		 $q.all(promises).then(function (res) {
 				if($scope.message.text != Messages('reagents.msg.save.error')){
 					$scope.message.clazz="alert alert-success";
 					$scope.message.text=Messages('reagents.msg.save.sucess');
 				}
-				promises = $scope.saveBoxes();
+				if($scope.kit.declarationType === "kit" || $scope.kit.declarationType === "box"){
+					promises = $scope.saveBoxes();
+				}
 				$q.all(promises).then(function (res) {
 					if($scope.message.text != Messages('reagents.msg.save.error')){
 						$scope.message.clazz="alert alert-success";
