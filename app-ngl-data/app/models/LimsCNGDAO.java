@@ -163,7 +163,7 @@ public class LimsCNGDAO {
 
 			sample.importTypeCode=IMPORT_TYPE_CODE_DEFAULT;
 		
-			sample.projectCodes=new ArrayList<String>();
+			sample.projectCodes=new HashSet<String>();
 			if (rs.getString("project") != null) {
 				sample.projectCodes.add(rs.getString("project"));
 			}
@@ -460,9 +460,9 @@ public class LimsCNGDAO {
 		while (pos < listSize-1) {
 			while ( (pos < listSize-1) && (results.get(pos).code.equals( results.get(pos+x).code ))   ) {
 				// difference between the two project codes
-				if (! results.get(pos).projectCodes.get(0).equals(results.get(pos+x).projectCodes.get(0))) {
-					if (! results.get(pos).projectCodes.contains(results.get(pos+x).projectCodes.get(0))) {
-						results.get(pos).projectCodes.add( results.get(pos+x).projectCodes.get(0) ); 
+				if (! results.get(pos).projectCodes.toArray(new String[0])[0].equals(results.get(pos+x).projectCodes.toArray(new String[0])[0])) {
+					if (! results.get(pos).projectCodes.contains(results.get(pos+x).projectCodes.toArray(new String[0])[0])) {
+						results.get(pos).projectCodes.add( results.get(pos+x).projectCodes.toArray(new String[0])[0] ); 
 					}
 				}
 				// all the difference have been reported on the first sample found (at the position pos)
@@ -474,9 +474,9 @@ public class LimsCNGDAO {
 		}
 		//for remove null comment or project
 		for (Sample s : results) {
-			for (int i=0; i<s.projectCodes.size(); i++) {
-				if (s.projectCodes.get(i).equals(" ")) {
-					s.projectCodes.remove(i);
+			for (String projectCode :s.projectCodes) {
+				if (projectCode.equals(" ")) {
+					s.projectCodes.remove(projectCode);
 				}
 			}
 		}	

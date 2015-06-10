@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -160,7 +161,7 @@ public class LimsCNSDAO{
 				sample.typeCode=sampleTypeCode;
 
 
-				sample.projectCodes=new ArrayList<String>();
+				sample.projectCodes=new HashSet<String>();
 				sample.projectCodes.add(rs.getString("project"));
 
 				sample.name=rs.getString("name");

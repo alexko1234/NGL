@@ -175,7 +175,7 @@ public class LoadDataHelper {
 					sample.comments=InstanceHelpers.addComment(nextLine[i],sample.comments, user);
 				}
 				else if(firstLine[i].endsWith(".projectCodes")){					
-					sample.projectCodes=InstanceHelpers.addCode(nextLine[i],sample.projectCodes);
+					sample.projectCodes.add(nextLine[i]);
 				}
 				else	{
 

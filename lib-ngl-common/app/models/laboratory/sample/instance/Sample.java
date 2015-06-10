@@ -2,25 +2,22 @@ package models.laboratory.sample.instance;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
-import models.laboratory.project.instance.Project;
-import models.laboratory.sample.description.SampleCategory;
-import models.laboratory.sample.description.SampleType;
-import models.utils.HelperObjects;
 import models.utils.InstanceConstants;
-import org.mongojack.MongoCollection;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.mongojack.MongoCollection;
 
 import validation.ContextValidation;
 import validation.IValidation;
-import validation.container.instance.ContainerValidationHelper;
 import validation.sample.instance.SampleValidationHelper;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import fr.cea.ig.DBObject;
 
 /**
@@ -46,7 +43,7 @@ public class Sample extends DBObject implements IValidation{
 	//Sample Category Ref
 	public String categoryCode;
 
-	public List<String> projectCodes;
+	public Set<String> projectCodes;
 
 	// ?? Wath is difference with code / referenceCollbab => code s'est interne au genoscope
 	public String name;
