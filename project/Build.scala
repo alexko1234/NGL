@@ -62,7 +62,7 @@ object ApplicationBuild extends Build {
  
    object Dependencies {
    	val nglcommonDependencies = Seq(
-		javaCore, javaJdbc,javaEbean,javaWs,
+		javaCore, javaJdbc, javaWs,
 		"fr.cea.ig" %% "play-spring-module" % "1.3-SNAPSHOT",
 		"mysql" % "mysql-connector-java" % "5.1.18",
 		"net.sourceforge.jtds" % "jtds" % "1.2.2",
@@ -105,11 +105,13 @@ object ApplicationBuild extends Build {
 		  // Add your project dependencies here,
 		"org.assertj" % "assertj-core" % "1.7.1"
 		)
+/*
 	val nglauthDependencies = Seq(
 	javaCore, javaJdbc,javaEbean,
 	"fr.cea.ig" %% "bootstrap" % "1.2-SNAPSHOT"
-
 		)
+*/		
+		
    val nglplaquesDependencies = Seq(
 		  javaCore, javaJdbc
 		)
@@ -222,7 +224,7 @@ object ApplicationBuild extends Build {
           publishArtifact in makePom := false,
           publishTo := Some(nexusigpublish)
     ).dependsOn(nglcommon)
-    
+/*    
     val nglauth = Project(appName + "-authorization", file("app-ngl-authorization"),settings = buildSettings).enablePlugins(play.PlayJava).settings(
              // Add your own project settings here   
 		version := appVersion,
@@ -231,7 +233,7 @@ object ApplicationBuild extends Build {
              publishArtifact in makePom := false,
              publishTo := Some(nexusigpublish)
    ).dependsOn(nglcommon)
-   
+*/   
    val nglassets = Project(appName + "-assets", file("app-ngl-asset"),settings = buildSettings).enablePlugins(play.PlayJava).settings(
 		// Add your own project settings here  
 		version := appVersion,				
@@ -286,7 +288,7 @@ object ApplicationBuild extends Build {
       publishArtifact in makePom := false,
       publishTo := Some(nexusigpublish)
     ).aggregate(
-     	nglcommon,nglframeworkweb,ngldatatable,nglsq,nglbi,nglauth,nglassets,nglplates,ngldata,nglsub
+     	nglcommon,nglframeworkweb,ngldatatable,nglsq,nglbi,nglassets,nglplates,ngldata,nglsub
     )
 
 }
