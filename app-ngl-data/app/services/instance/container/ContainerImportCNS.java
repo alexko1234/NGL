@@ -245,7 +245,8 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		container.mesuredConcentration=new PropertySingleValue(Math.round(rs.getFloat("mesuredConcentration")*100.0)/100.0, mesuredConcentrationUnit);
 		container.mesuredVolume=new PropertySingleValue(Math.round(rs.getFloat("mesuredVolume")*100.0)/100.0, "µl");
 		container.mesuredQuantity=new PropertySingleValue(Math.round(rs.getFloat("mesuredQuantity")*100.0)/100.0, "ng");
-
+		
+		container.fromExperimentTypeCodes=new HashSet<String>();
 		container.fromExperimentTypeCodes.add(experimentTypeCode);
 
 		container.projectCodes=new HashSet<String>();					
