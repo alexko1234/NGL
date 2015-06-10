@@ -152,7 +152,7 @@ public class SampleLoadTest extends AbstractTests {
 		assertThat(MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, "AAA_A1")).isNotNull();
 		Sample sample =MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, "A");
 		assertThat(sample).isNotNull();
-		assertThat(sample.projectCodes.get(0)).isEqualTo("AAA");
+		assertThat(sample.projectCodes.toArray(new String[0])[0]).isEqualTo("AAA");
 
 	}
 	

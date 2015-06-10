@@ -182,7 +182,7 @@ public class ContainerControllerTests extends AbstractTests{
 		Sample s1 = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,"AHX_AAV");
 		Sample s2 = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,"AHX_AAQ");
 		Sample s3 = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,"AHX_AAS");		
-		String projectCode = s1.projectCodes.get(0);		
+		String projectCode = s1.projectCodes.toArray(new String[0])[0];		
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest( play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&projectCodes="+projectCode+"&sampleCodes="+s1.code+"&sampleCodes="+s2.code+"&sampleCodes="+s3.code));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		

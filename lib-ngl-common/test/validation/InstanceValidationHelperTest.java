@@ -75,7 +75,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		
 		sample2 = new Sample(); 
 		sample2.code = "SampleCode" + randomInt;
-		List<String> l =new ArrayList<String>();
+		Set<String> l =new HashSet<String>();
 		l.add("ProjectCode"); 
 		sample2.projectCodes = l;
 		
@@ -193,7 +193,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	@Test
 	public  void validationSampleCodeTest(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		CommonValidationHelper.validateSampleCode(sample2.code, sample2.projectCodes.get(0), contextValidation );
+		CommonValidationHelper.validateSampleCode(sample2.code, sample2.projectCodes.toArray(new String[0])[0], contextValidation );
 		Logger.debug(contextValidation.errors.toString());
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}

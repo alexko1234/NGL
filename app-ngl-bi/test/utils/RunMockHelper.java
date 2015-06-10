@@ -2,7 +2,9 @@ package utils;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
@@ -110,7 +112,7 @@ public class RunMockHelper {
 		s.valuation = new Valuation();
 		s.valuation.valid = TBoolean.UNSET;
 		
-		List<String> lp = new ArrayList<String>();
+		Set<String> lp = new HashSet<String>();
 		lp.add("ProjectCode");
 		s.projectCodes = lp;
 		

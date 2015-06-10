@@ -10,6 +10,7 @@ import static utils.RunMockHelper.getState;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -116,7 +117,7 @@ public class RunValidationTest extends AbstractTestsCNG {
 		   s.typeCode = "default-sample-cng";
 		   s.categoryCode="default";
 
-		   List<String> lp =new ArrayList<String>();
+		   Set<String> lp =new HashSet<String>();
 		   lp.add("ProjectCode"); 
 		   s.projectCodes = lp;
 		   s.traceInformation = new TraceInformation();

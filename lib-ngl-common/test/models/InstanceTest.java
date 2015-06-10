@@ -138,7 +138,8 @@ public class InstanceTest extends AbstractTests{
 
 		sample.categoryCode="sampleCategory";
 		sample.typeCode="sampleType";
-		sample.projectCodes=	InstanceHelpers.addCode("ProjectCode", sample.projectCodes);
+		
+		sample.projectCodes.add("ProjectCode");
 
 		/*sample.comments=InstanceHelpers.addComment("comment", sample.comments);
 		InstanceHelpers.updateTraceInformation(sample.traceInformation); */
