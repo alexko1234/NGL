@@ -14,7 +14,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
-import com.avaje.ebean.enhance.asm.Type;
 
 import play.Logger;
 
@@ -176,7 +175,7 @@ public class ResolutionDAO extends AbstractDAOMapping<Resolution>{
 		String sql = sqlCommon+
 				" inner join resolution_object_type ro ON ro.fk_resolution= t.id"+
 				" WHERE ro.fk_object_type=?";		
-		return initializeMapping(sql, new SqlParameter("fk_object_type", Type.LONG)).execute(id);		
+		return initializeMapping(sql, new SqlParameter("fk_object_type", Types.BIGINT)).execute(id);		
 	}
 
 }

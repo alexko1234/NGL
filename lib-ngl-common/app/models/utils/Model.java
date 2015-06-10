@@ -97,6 +97,7 @@ public class Model<T> {
 		@SuppressWarnings("unchecked")
 		public AbstractDAO<T> getInstance() throws DAOException {
 			try {
+				Logger.debug("className = "+className);
 				return (AbstractDAO<T>) Spring.getBeanOfType(Class
 						.forName(className));
 			} catch (ClassNotFoundException e) {
