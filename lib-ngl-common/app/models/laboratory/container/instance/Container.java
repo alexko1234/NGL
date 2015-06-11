@@ -98,7 +98,7 @@ public class Container extends DBObject implements IValidation {
 		qualityControlResults = new HashSet<>();
 		calculedVolume = new ArrayList<>();
 		fromExperimentTypeCodes = new HashSet<>();
-		inputProcessCodes = new HashSet<>();
+	
 	}
 
 	@JsonIgnore

@@ -290,7 +290,7 @@ public class ContainerControllerTests extends AbstractTests{
 		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<Container>>(){});
 		lc = dr.data;
 		assertThat(lc).isNullOrEmpty();
-	}
+	} 
 	
 	/*
 	 * Use in a outer project
@@ -490,7 +490,7 @@ public class ContainerControllerTests extends AbstractTests{
 	@Test
 	public void validateBadUpdateStateCode() {
 		ContainersUpdateForm cuf = ContainerTestHelper.getFakeContainersUpdateForm();
-		Container container = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.and(DBQuery.is("state.code", "IS"),DBQuery.notExists("processTypeCode"),DBQuery.notExists("inputProcessCodes"))).toList().get(0);
+		Container container = (MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.and(DBQuery.is("state.code", "IS"),DBQuery.notExists("processTypeCode"),DBQuery.notExists("inputProcessCodes")))).toList().get(0);
 		cuf.stateCode = "A";
 		Result result = callAction(controllers.containers.api.routes.ref.Containers.updateStateCode(container.code), fakeRequest().withJsonBody((Json.toJson(cuf))));		
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.BAD_REQUEST);
