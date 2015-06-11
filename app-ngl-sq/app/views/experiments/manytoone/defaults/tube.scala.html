@@ -179,14 +179,14 @@
 										{{property.name}}<span ng-if="property.displayMeasureValue"> ({{property.displayMeasureValue.value}})</span>
 									</th> -->	
 								</tr>
-			   					 <tr ng-model="experiment.value.atomicTransfertMethods[0].outputContainerUsed">
+			   					 <tr ng-model="experiment.value.atomicTransfertMethods[0].outputContainerUseds[0]">
 									<td >
-										{{experiment.value.atomicTransfertMethods[0].outputContainerUsed.code}}
+										{{experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].code}}
 									</td>
 									<td>
 									<input class="form-control valueInput" type="text" title="Messages("containers.table.volume")"
 											ng-readonly="!experiment.experimentProperties.enabled"
-											ng-model="experiment.value.atomicTransfertMethods[0].outputContainerUsed.volume.value"
+											ng-model="experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].volume.value"
 								   			ng-blur="changeValueInTransfertTube()"								   			
 								   			/>										
 									</td>
