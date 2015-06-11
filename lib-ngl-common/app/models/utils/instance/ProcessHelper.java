@@ -44,6 +44,9 @@ public class ProcessHelper {
 			}
 		}
 		container.processTypeCode = typeCode;
+		if(container.inputProcessCodes==null){
+			container.inputProcessCodes=new HashSet<String>();
+		}
 		container.inputProcessCodes.addAll(codes);
 //		container.inputProcessCodes=InstanceHelpers.addCodesList(codes, container.inputProcessCodes);
 		ContainerValidationHelper.validateProcessCodes(container.inputProcessCodes,contextValidation);
@@ -61,6 +64,9 @@ public class ProcessHelper {
 
 	public static void updateContainerSupportFromContainer(Container container,ContextValidation contextValidation){
 		ContainerSupport containerSupport=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, container.support.code);
+		if(containerSupport.fromExperimentTypeCodes==null){
+			containerSupport.fromExperimentTypeCodes=new HashSet<String>();
+		}
 		containerSupport.fromExperimentTypeCodes.addAll(container.fromExperimentTypeCodes);
 		//containerSupport.fromExperimentTypeCodes=InstanceHelpers.addCodesList(container.fromExperimentTypeCodes, containerSupport.fromExperimentTypeCodes);
 		ContainerSupportValidationHelper.validateExperimentTypeCodes(containerSupport.fromExperimentTypeCodes, contextValidation);

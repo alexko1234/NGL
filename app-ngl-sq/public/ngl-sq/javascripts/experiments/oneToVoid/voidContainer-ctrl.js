@@ -212,7 +212,7 @@ angular.module('home').controller('OneToVoidContainerCtrl',['$scope', '$window',
 
 	$scope.init_atomicTransfert = function(containers, atomicTransfertMethod){
 		angular.forEach(containers, function(container,index){
-			$scope.experiment.value.atomicTransfertMethods[index] = {class:atomicTransfertMethod,line:"1", column:"1", inputContainerUseds:[]};
+			$scope.experiment.value.atomicTransfertMethods[index] = {class:atomicTransfertMethod,line:(index+1), column:"1", inputContainerUseds:[]};
 			$scope.experiment.value.atomicTransfertMethods[index].inputContainerUseds[0] = {code:container.code,instrumentProperties:{},experimentProperties:{},state:container.state, locationOnContainerSupport:container.support};
 			$scope.experiment.outputVoid = true;
 

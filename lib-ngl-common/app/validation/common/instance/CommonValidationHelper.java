@@ -22,6 +22,7 @@ import models.utils.InstanceConstants;
 import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
@@ -450,7 +451,12 @@ public class CommonValidationHelper {
 	}
 	
 	public static void validateProjectCodes(Set<String> projectCodes,ContextValidation contextValidation){
-		validateProjectCodes(new ArrayList<String>(projectCodes),contextValidation);
+		List<String> listProject=null;
+		if(CollectionUtils.isNotEmpty(projectCodes)){
+			listProject=new ArrayList<String>();
+			listProject.addAll(projectCodes);
+		}
+		validateProjectCodes(listProject,contextValidation);
 	}
 	
 	public static void validateProjectCode(String projectCode,
@@ -464,7 +470,12 @@ public class CommonValidationHelper {
 	}
 	
 	public static void validateSampleCodes(Set<String> sampleCodes,ContextValidation contextValidation){
-		validateSampleCodes(new ArrayList<String>(sampleCodes),contextValidation);
+		List<String> listSample=null;
+		if(CollectionUtils.isNotEmpty(sampleCodes)){
+			listSample=new ArrayList<String>();
+			listSample.addAll(sampleCodes);
+		}
+		validateSampleCodes(listSample,contextValidation);
 	}
 	
 	public static void validateSampleCode(String sampleCode, String projectCode, ContextValidation contextValidation) {
@@ -543,7 +554,12 @@ public class CommonValidationHelper {
 	}
 
 	public static void validateExperimentTypeCodes(Set<String> experimentTypeCodes, ContextValidation contextValidation) {
-		validateExperimentTypeCodes( new ArrayList<String>(experimentTypeCodes),contextValidation); 
+		List<String> arrayExperiments=null;
+		if(CollectionUtils.isNotEmpty(experimentTypeCodes)){
+			arrayExperiments=new ArrayList<String>();
+			arrayExperiments.addAll(experimentTypeCodes);
+		}
+		validateExperimentTypeCodes( arrayExperiments,contextValidation); 
 	}
 
 	public static void validateExperimenCode(String expCode, ContextValidation contextValidation) {

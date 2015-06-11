@@ -84,19 +84,34 @@ public class ContainerHelper {
 			}
 			calculPercentageContent(contents,inputContainerUsed.percentage);
 			outputContainer.contents.addAll(contents);
-
+			if(outputContainer.projectCodes == null){
+				outputContainer.projectCodes = new HashSet<String>();
+			}
 			outputContainer.projectCodes.addAll(inputContainer.projectCodes);
+			if(outputContainer.sampleCodes == null){
+				outputContainer.sampleCodes = new HashSet<String>();
+			}
 			outputContainer.sampleCodes.addAll(inputContainer.sampleCodes);
 			outputContainer.categoryCode = ContainerSupportCategory.find.findByCode(experiment.instrument.outContainerSupportCategoryCode).containerCategory.code;
+			
 			if(CollectionUtils.isNotEmpty(inputContainer.inputProcessCodes)){
+				if(outputContainer.inputProcessCodes == null){
+					outputContainer.inputProcessCodes = new HashSet<String>();
+				}
 				outputContainer.inputProcessCodes.addAll(inputContainer.inputProcessCodes); }
 			outputContainer.processTypeCode=inputContainer.processTypeCode;
 
 			if(experiment.categoryCode.equals("transformation")){
+				if(outputContainer.fromExperimentTypeCodes == null){
+					outputContainer.fromExperimentTypeCodes = new HashSet<String>();
+				}
 				outputContainer.fromExperimentTypeCodes.add(experiment.typeCode);
 			}else{
 				if(CollectionUtils.isNotEmpty(inputContainer.fromExperimentTypeCodes)){				
-				outputContainer.fromExperimentTypeCodes.addAll(inputContainer.fromExperimentTypeCodes);
+					if(outputContainer.fromExperimentTypeCodes == null){
+						outputContainer.fromExperimentTypeCodes = new HashSet<String>();
+					}
+					outputContainer.fromExperimentTypeCodes.addAll(inputContainer.fromExperimentTypeCodes);
 				}
 			}
 

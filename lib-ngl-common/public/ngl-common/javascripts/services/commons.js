@@ -1087,7 +1087,19 @@ angular.module('commonsServices', []).
     	    		if (angular.isObject(element)) {
     	    			var currentValue = $parse(key)(element);
     	    			if(undefined !== currentValue && null !== currentValue){
-       	    				Array.prototype.push.apply(possibleValues, currentValue);
+    	    				//Array.prototype.push.apply take only arrays
+    	    				if(angular.isArray(currentValue)){
+    	    					Array.prototype.push.apply(possibleValues, currentValue);
+    	    				   /*var bl = possibleValues.length;
+    	    				   var al = currentValue.length;
+    	    				   var i = 0;
+    	    				  
+	    	    			   while (i < bl) {
+	    	    				   currentValue[al++] = possibleValues[i++];
+	    	    			   }*/
+    	    				}else{
+    	    					possibleValues.push(currentValue);
+    	    				}
     	    			}
     	    			
     	    			

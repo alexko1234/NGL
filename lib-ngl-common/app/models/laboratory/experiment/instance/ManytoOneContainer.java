@@ -24,6 +24,7 @@ import models.utils.instance.ContainerUsedHelper;
 import models.utils.instance.ExperimentHelper;
 import models.utils.instance.ProcessHelper;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -46,8 +47,6 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 
 	@Override
 	public ContextValidation createOutputContainerUsed(Experiment experiment,ContextValidation contextValidation) throws DAOException {
-
-		//	if(this.outputContainerUsed!=null){
 
 		if(this.inputContainerUseds!=null){
 
@@ -85,6 +84,7 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 				}
 			}
 
+						
 			PropertyValue volume = new PropertySingleValue();
 			PropertyValue concentration = new PropertySingleValue();
 			
@@ -166,7 +166,7 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		if(outputContainerUseds!=null){
+		if(CollectionUtils.isNotEmpty(outputContainerUseds)){
 			contextValidation.putObject("level", Level.CODE.ContainerOut);
 			contextValidation.addKeyToRootKeyName("outputContainerUsed");
 			outputContainerUseds.get(0).validate(contextValidation);
