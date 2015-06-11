@@ -163,7 +163,7 @@ rule "Tag identique sur la meme position"
            $contentInfo2 : ContentInfo(this != $contentInfo1, tag == $tag, position==$position, sampleCode!=$sampleCode,$containerCode2:containerCode)
            $contextValidation:ContextValidation()
     then
-    	//Logger.debug("Tag error "+$contentInfo1 + " position "+$position);
+    	Logger.debug("Tag error "+$contentInfo1 + " position "+$position);
     	$contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.sametag", $tag,$containerCode1,$containerCode2);    	
     end
 
@@ -233,115 +233,12 @@ then
 
 end
 
-rule "Prepaflowcell validate contenant sortie avec instrument"
-	@nglSQ (validations )
-	dialect "java"
-	salience 400
-	no-loop
-    when
-    	Experiment($typeCode:typeCode,$typeCode=="prepa-flowcell",$instrumentCode:instrument.code
-    			,$outputContainerSupport:instrument.outContainerSupportCategoryCode, 
-    		( $instrumentCode in("cBot Fluor A","cBot Fluor B","cBot Platine A","cBot Platine B") && $outputContainerSupport=="flowcell-1")
-    		 || 
-    		 ($instrumentCode in("cBot Melisse","cBot Mimosa") && $outputContainerSupport=="flowcell-2") )
-    	$contextValidation:ContextValidation($errors : errors)
-    then
-    	Logger.debug("outputcontainersupport "+$outputContainerSupport + ", instrument code "+$instrumentCode);
-    	$contextValidation.addErrors("instrument",	"error.validationexp.badoutputprepaflowcell", $outputContainerSupport,$instrumentCode);
-    end
 
-rule "Prepaflowcell validate piste controle"
-	@nglSQ (validations )
-	dialect "java"
-	salience 400
-	no-loop
-    when
-    	Experiment($typeCode:typeCode,$typeCode=="prepa-flowcell",$instrumentProperties:instrumentProperties,$outputContainerSupport:instrument.outContainerSupportCategoryCode)
-    	$control :PropertyValue($value:value, 
-    		($value in ("3","4","5","6","7","8")  && $outputContainerSupport=="flowcell-2" )
-			||
-			( $value in ("2","3","4","5","6","7","8") && $outputContainerSupport=="flowcell-1")    	
-    	) from $instrumentProperties.get("control")
-    	$contextValidation:ContextValidation($errors : errors)
-    then
-    	Logger.debug("outputcontainersupport "+$outputContainerSupport + ", piste controle ");
-    	$contextValidation.addErrors("instrument",	"error.validationexp.badcontrolprepaflowcell", $value,$outputContainerSupport);
-    end    
 
-rule "Code Flowcell without bad chars"
-    @nglSQ( validations )
-	dialect "java"
-	salience 900
-	no-loop
-    when
-    $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-flowcell",$instrumentProperties:instrumentProperties)
-    $containerSupportCode: PropertyValue($code:value, $code matches ".*[^a-zA-Z0-9].*") from $instrumentProperties.get("containerSupportCode")
-    $contextValidation:ContextValidation()
-    then
-    Logger.debug("Code Flowcell without bad chars");
-    $contextValidation.addErrors("instrument",	"error.validationexp.codewithbadchar", "Code Flowcell");
-end
 
-rule "Same concentrations in  Pool-tube"
-    @nglSQ( validations )
-	dialect "java"
-	salience 950
-	no-loop
-    when
-		$experiment:Experiment($typeCode:typeCode,$typeCode=="pool-tube")
-		$atomicTransfert: ManytoOneContainer($inputContainerUseds : inputContainerUseds, $inputContainerUseds!=null)
-		$total : Double() from accumulate(ContainerUsed($c: concentration, $c!=null) from $inputContainerUseds, sum( Double.parseDouble($c.getValue().toString()) ) )
-		$containerUsed: ContainerUsed($code: code,$concentration: concentration, $concentration!=null) from $inputContainerUseds				
-		$contextValidation:ContextValidation()
-		eval( Double.parseDouble($concentration.getValue().toString())!= (Double) $total/$inputContainerUseds.size())
-    then
-    	Double value = Double.parseDouble($concentration.getValue().toString());
-    	Logger.debug("value = " + value);
-    	Logger.debug("Same concentrations in  Pool-tube");
-    	$contextValidation.addErrors("pool-tube","error.validationexp.sameconcentration",$code);
-end
 
-rule "Volume not null in SolutionStock outputContainer"
-    @nglSQ( validations )
-	dialect "java"
-	salience 940
-	no-loop
-    when
-    	$experiment:Experiment($typeCode:typeCode,$typeCode=="solution-stock")
-		$atomicTransfert: OneToOneContainer($inputContainerUsed:inputContainerUseds.get(0), $outputContainerUsed: outputContainerUseds.get(0))
-	   	ContainerUsed($finalVolume: volume) from $outputContainerUsed
-    	$contextValidation:ContextValidation()
-    	eval($finalVolume == null || $finalVolume.value == null || $finalVolume.value == "")
-    then
-    Logger.debug("Volume not null in SolutionStock outputContainer");
-    Integer i = null;
-    for(AtomicTransfertMethod atomic : $experiment.atomicTransfertMethods){    	
-    	if(($inputContainerUsed.code).equals(atomic.inputContainerUseds.get(0).code)){
-    	 $contextValidation.addErrors("solution-stock","error.validationexp.outputvolumenotnull",$experiment.atomicTransfertMethods.indexOf(atomic));
-    	}
-    }
-   
-end
 
-rule "Concentration not null in SolutionStock outputContainer"
-    @nglSQ( validations )
-	dialect "java"
-	salience 930
-	no-loop
-    when
-    	$experiment:Experiment($typeCode:typeCode,$typeCode=="solution-stock")
-		$atomicTransfert: OneToOneContainer($inputContainerUsed:inputContainerUseds.get(0), $outputContainerUsed: outputContainerUseds.get(0))
-		ContainerUsed($finalConcentration: concentration) from $outputContainerUsed
-		$contextValidation:ContextValidation()
-		eval($finalConcentration == null || $finalConcentration.value == null || $finalConcentration.value == "") 
-    then
-    Logger.debug("Concentration not null in SolutionStock outputContainer");
-    Integer i = null;
-    for(AtomicTransfertMethod atomic : $experiment.atomicTransfertMethods){    	
-    	if(($inputContainerUsed.code).equals(atomic.inputContainerUseds.get(0).code)){
-    	 $contextValidation.addErrors("solution-stock","error.validationexp.outputconcentrationnotnull", $experiment.atomicTransfertMethods.indexOf(atomic));
-    	}
-    }    
-end
+
+
 
     
