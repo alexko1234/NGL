@@ -324,7 +324,7 @@ angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datat
 	
 	$scope.init_atomicTransfert = function(containers, atomicTransfertMethod){
 			angular.forEach(containers, function(container,index){
-				$scope.experiment.value.atomicTransfertMethods[index] = {class:atomicTransfertMethod,line:"1", column:"1", inputContainerUseds:[], outputContainerUseds:[{volume:{unit:"µL"},concentration:{unit:"nM"},experimentProperties:{}}]};
+				$scope.experiment.value.atomicTransfertMethods[index] = {class:atomicTransfertMethod,line:(index+1), column:"1", inputContainerUseds:[], outputContainerUseds:[{volume:{unit:"µL"},concentration:{unit:"nM"},experimentProperties:{}}]};
 				$scope.experiment.value.atomicTransfertMethods[index].inputContainerUseds = [{code:container.code,instrumentProperties:{},experimentProperties:{},state:container.state,locationOnContainerSupport:container.support}];
 			});
 	};
