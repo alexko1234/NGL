@@ -4,6 +4,7 @@ package controllers.migration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
@@ -241,7 +242,7 @@ public class Migration extends CommonController {
 	
 	private static State addHistorical(State state) {
 			if (state.code.equals("F")) {				
-				List<TransientState> lts = new ArrayList<TransientState>();
+				Set<TransientState> lts = new HashSet<TransientState>();
 				
 				TransientState ts1 = new TransientState();
 				ts1.code = "F-RG";

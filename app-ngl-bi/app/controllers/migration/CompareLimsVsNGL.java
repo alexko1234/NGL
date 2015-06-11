@@ -426,7 +426,7 @@ public class CompareLimsVsNGL extends CommonController {
 				 cv.removeKeyFromRootKeyName(laneNumber);
 				 
 				 if(modifyContents.size() == currentContainer.contents.size()){
-					 currentContainer.contents = modifyContents;
+					 currentContainer.contents = new HashSet<>(modifyContents);
 					 modifyContainers.add(currentContainer);
 				 }else{
 					 Logger.error("not same content number for container : "+currentContainer.code+" - "+currentContainer.contents.size()+" / "+modifyContents.size());

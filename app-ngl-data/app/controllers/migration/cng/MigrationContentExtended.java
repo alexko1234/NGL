@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -148,14 +149,26 @@ public class MigrationContentExtended extends CommonController {
 		
 		//for remove null tags
 		for (Container r : results) {
-			for (int i=0; i<r.contents.size(); i++) {
+			Iterator<Content> iterator = r.contents.iterator();
+			while(iterator.hasNext()){
+				Content cnt = iterator.next();
+				if (cnt.properties.get("tag").value.equals("-1")) {
+					cnt.properties.remove("tag");
+				}
+				if (cnt.properties.get("tagCategory").value.equals("-1")) {
+					cnt.properties.remove("tagCategory");
+				}
+				
+			}	
+			
+		/*	for (int i=0; i<r.contents.size(); i++) {
 				if (r.contents.get(i).properties.get("tag").value.equals("-1")) {
 					r.contents.get(i).properties.remove("tag");
 				}
 				if (r.contents.get(i).properties.get("tagCategory").value.equals("-1")) {
 					r.contents.get(i).properties.remove("tagCategory");
 				}
-			}
+			}*/
 		}
 		
 		return results;
@@ -170,8 +183,13 @@ public class MigrationContentExtended extends CommonController {
 		content.sampleCategoryCode = "default";
 		
 		content.properties = new HashMap<String, PropertyValue>();
-		content.properties.put("tag",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tag").value  ));
-		content.properties.put("tagCategory",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tagCategory").value  ));
+		Iterator<Content> itr =  results.get(posNext).contents.iterator();
+		Content contt = itr.next(); 
+		content.properties.put("tag",new PropertySingleValue( contt.properties.get("tag").value  ));
+		content.properties.put("tagCategory",new PropertySingleValue( contt.properties.get("tagCategory").value  ));
+		
+		//content.properties.put("tag",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tag").value  ));
+		//content.properties.put("tagCategory",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tagCategory").value  ));
 		
 		results.get(posCurrent).contents.add(content); 
 		

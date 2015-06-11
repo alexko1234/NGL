@@ -7,6 +7,7 @@ import static play.test.Helpers.status;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import models.laboratory.container.instance.Container;
@@ -220,7 +221,7 @@ public class ExperimentWorkflowTests extends AbstractTests {
 		experimentUpdateForm = new ExperimentUpdateForm();
 		experimentUpdateForm.nextStateCode = "F";
 		experimentUpdateForm.stopProcess = true;
-		experimentUpdateForm.processResolutionCodes=new ArrayList<String>();
+		experimentUpdateForm.processResolutionCodes=new HashSet<String>();
 		experimentUpdateForm.processResolutionCodes.add("processus-partiel");
 
 		result = callAction(controllers.experiments.api.routes.ref.Experiments.updateStateCode(code),fakeRequest().withJsonBody(Json.toJson(experimentUpdateForm)));
@@ -307,7 +308,7 @@ public class ExperimentWorkflowTests extends AbstractTests {
 		experimentUpdateForm = new ExperimentUpdateForm();
 		experimentUpdateForm.nextStateCode = "F";
 		experimentUpdateForm.retry = true;
-		experimentUpdateForm.processResolutionCodes=new ArrayList<String>();
+		experimentUpdateForm.processResolutionCodes=new HashSet<String>();
 		experimentUpdateForm.processResolutionCodes.add("processus-partiel");
 		result = callAction(controllers.experiments.api.routes.ref.Experiments.updateStateCode(code),fakeRequest().withJsonBody(Json.toJson(experimentUpdateForm)));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);

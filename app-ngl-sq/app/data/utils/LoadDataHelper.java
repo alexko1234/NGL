@@ -109,7 +109,7 @@ public class LoadDataHelper {
 
 		Container container = new Container();
 		ContainerHelper.addContent(container, sample);
-		Content sampleUsed =container.contents.get(0);
+		Content sampleUsed =container.contents.iterator().next();
 		Class<Container> aClass=Container.class;
 		Field field =null;
 		String rootPrefix=aClass.getSimpleName()+".";

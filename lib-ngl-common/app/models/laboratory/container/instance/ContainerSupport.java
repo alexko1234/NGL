@@ -1,5 +1,7 @@
 package models.laboratory.container.instance;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -28,6 +30,17 @@ public class ContainerSupport extends DBObject implements IValidation{
 	public Set<String> fromExperimentTypeCodes;
 	public Map<String, PropertyValue> properties;
 	
+	
+	
+	public ContainerSupport() {
+		projectCodes= new HashSet<>();
+		sampleCodes= new HashSet<>();
+		fromExperimentTypeCodes= new HashSet<>();
+		properties = new HashMap<>();
+	}
+
+
+
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {

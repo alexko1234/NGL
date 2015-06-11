@@ -264,7 +264,7 @@ public class ContainerWorkflows {
 */
 	/**********************************************************/
 
-	public static boolean setContainerState(List<Container> containers,String nextState,ContextValidation contextValidation){
+	public static boolean setContainerState(Set<Container> containers,String nextState,ContextValidation contextValidation){
 
 		Set<String> supporContainerSet=new HashSet<String>();
 

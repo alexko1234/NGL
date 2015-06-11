@@ -3,6 +3,7 @@ package workflows.run;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import lims.services.ILimsRunServices;
@@ -150,7 +151,7 @@ public class Workflows {
 							readSet.productionValuation.valid = TBoolean.FALSE;
 							readSet.productionValuation.date = new Date();
 							readSet.productionValuation.user = contextValidation.getUser();
-							if(null == readSet.productionValuation.resolutionCodes)readSet.productionValuation.resolutionCodes = new ArrayList<String>(1);
+							if(null == readSet.productionValuation.resolutionCodes)readSet.productionValuation.resolutionCodes = new HashSet<String>(1);
 							readSet.productionValuation.resolutionCodes.add("Run-abandonLane");
 							
 							readSet.traceInformation.modifyDate = new Date();
@@ -316,7 +317,7 @@ public class Workflows {
 	
 	private static State updateHistoricalNextState(State previousState, State nextState) {
 		if (null == previousState.historical) {
-			nextState.historical = new ArrayList<TransientState>(0);
+			nextState.historical = new HashSet<TransientState>(0);
 			nextState.historical.add(new TransientState(previousState, nextState.historical.size()));
 		} else {
 			nextState.historical = previousState.historical;

@@ -237,6 +237,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	};
 	
 	$scope.search = function(){
+		$scope.searchService.updateForm();
 		var _form = angular.copy($scope.searchService.form);
 		$scope.errors.experimentType = {};
 		$scope.errors.containerSupportCategory = {};
@@ -267,11 +268,109 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		}						
 	};
 	
-	$scope.initAdditionalFilters = function(){
-		$scope.additionalFilters=[];
-		if($scope.searchService.form.processTypeCode !== undefined && lists.get("process-"+$scope.searchService.form.processTypeCode) && lists.get("process-"+$scope.searchService.form.processTypeCode).length === 1){
+	$scope.searchService.initAdditionalColumns = function(){
+		$scope.searchService.additionalColumns=[];
+		$scope.searchService.selectedAddColumns=[];
+		
+		if($scope.searchService.lists.get("containers-addcolumns") && $scope.searchService.lists.get("containers-addcolumns").length === 1){
+			var formColumns = [];
+			var allColumns = angular.copy($scope.searchService.lists.get("containers-addcolumns")[0].columns);
+			var nbElementByColumn = Math.ceil(allColumns.length / 5); //5 columns
+			for(var i = 0; i  < 5 && allColumns.length > 0 ; i++){
+				formColumns.push(allColumns.splice(0, nbElementByColumn));	    								
+			}
+			//complete to 5 five element to have a great design 
+			while(formColumns.length < 5){
+				formColumns.push([]);
+			}
+			$scope.searchService.additionalColumns = formColumns;
+		}
+	};
+	
+	$scope.searchService.updateForm = function(){
+		$scope.searchService.form.includes = [];
+		if($scope.searchService.reportingConfiguration){
+			for(var i = 0 ; i < $scope.searchService.reportingConfiguration.columns.length ; i++){
+				if($scope.searchService.reportingConfiguration.columns[i].queryIncludeKeys && $scope.searchService.reportingConfiguration.columns[i].queryIncludeKeys.length > 0){
+					$scope.searchService.form.includes = $scope.searchService.form.includes.concat($scope.searchService.reportingConfiguration.columns[i].queryIncludeKeys);
+				}else{
+					$scope.searchService.form.includes.push($scope.searchService.reportingConfiguration.columns[i].property.replace('.value','').replace(".unit", ''));
+				}
+			}
+		}else{
+			$scope.searchService.form.includes = ["default"];
+		}
+		
+		
+		//this.form.includes = ["default"];
+		for(var i = 0 ; i < $scope.searchService.selectedAddColumns.length ; i++){
+			//remove .value if present to manage correctly properties (single, list, etc.)
+			if($scope.searchService.selectedAddColumns[i].queryIncludeKeys && $scope.searchService.selectedAddColumns[i].queryIncludeKeys.length > 0){
+				$scope.searchService.form.includes = $scope.searchService.form.includes.concat($scope.searchService.selectedAddColumns[i].queryIncludeKeys);
+			}else{
+				$scope.searchService.form.includes.push($scope.searchService.selectedAddColumns[i].property.replace('.value','').replace(".unit", ''));
+			}
+			
+		}
+	};
+	
+	$scope.searchService.getAddColumnsToForm = function(){
+		if($scope.searchService.additionalColumns.length === 0){
+			$scope.searchService.initAdditionalColumns();
+		}
+		return $scope.searchService.additionalColumns;									
+	};
+	
+	$scope.searchService.addColumnsToDatatable=function(){
+		//this.reportingConfiguration = undefined;
+		//this.reportingConfigurationCode = undefined;
+		
+		$scope.searchService.selectedAddColumns = [];
+		for(var i = 0 ; i < $scope.searchService.additionalColumns.length ; i++){
+			for(var j = 0; j < $scope.searchService.additionalColumns[i].length; j++){
+				if($scope.searchService.additionalColumns[i][j].select){
+					$scope.searchService.selectedAddColumns.push($scope.searchService.additionalColumns[i][j]);
+				}
+			}
+		}
+		if($scope.searchService.reportingConfigurationCode){
+			$scope.datatable.setColumnsConfig($scope.searchService.reportingConfiguration.columns.concat($scope.searchService.selectedAddColumns));
+		}else{
+			$scope.datatable.setColumnsConfig($scope.searchService.getDefaultColumns().concat($scope.searchService.selectedAddColumns));						
+		}
+		$scope.searchService.search();
+	};	
+	$scope.searchService.resetDatatableColumns = function(){
+		$scope.searchService.initAdditionalColumns();
+		$scope.datatable.setColumnsConfig($scope.searchService.getDefaultColumns());
+		$scope.search();
+	};
+	/**
+	 * Update column when change reportingConfiguration
+	 */
+	$scope.searchService.updateColumn = function(){
+		$scope.searchService.initAdditionalColumns();
+		if($scope.searchService.reportingConfigurationCode){
+			$http.get(jsRoutes.controllers.reporting.api.ReportingConfigurations.get($scope.searchService.reportingConfigurationCode).url,{searchService:$scope.searchService, datatable:$scope.datatable})
+					.success(function(data, status, headers, config) {
+						config.searchService.reportingConfiguration = data;
+						config.searchService.search();
+						config.datatable.setColumnsConfig(data.columns);																								
+			});
+		}else{
+			$scope.searchService.reportingConfiguration = undefined;
+			$scope.datatable.setColumnsConfig($scope.searchService.getDefaultColumns());
+			$scope.search();
+		}
+		
+	};
+	
+	$scope.searchService.initAdditionalFilters = function(){
+		var additionalFilters = $scope.searchService.additionalFilters = [];
+		
+		if($scope.searchService.lists.get("containers-search-addfilters") && $scope.searchService.lists.get("containers-search-addfilters").length === 1){
 			var formFilters = [];
-			var allFilters = angular.copy(lists.get("process-"+$scope.searchService.form.processTypeCode)[0].filters);
+			var allFilters = angular.copy($scope.searchService.lists.get("containers-search-addfilters")[0].filters);
 			var nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
 			for(var i = 0; i  < 5 && allFilters.length > 0 ; i++){
 				formFilters.push(allFilters.splice(0, nbElementByColumn));	    								
@@ -281,16 +380,16 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 				formFilters.push([]);
 			}
 				
-			this.additionalFilters = formFilters;
+			$scope.searchService.additionalFilters = additionalFilters = formFilters;
 		}
-	},
+	};
 	
-	$scope.getAddFiltersToForm = function(){
-		if($scope.additionalFilters !== undefined && $scope.additionalFilters.length === 0){
-			$scope.initAdditionalFilters();
+	$scope.searchService.getAddFiltersToForm = function(){
+		if($scope.searchService.additionalFilters.length === 0){
+			$scope.searchService.initAdditionalFilters();
 		}
-		return $scope.additionalFilters;									
-	},
+		return $scope.searchService.additionalFilters;									
+	};	
 	
 	$scope.addToBasket = function(containers){
 		for(var i = 0; i < containers.length; i++){
@@ -336,6 +435,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		}
 	};
 	
+	$scope.searchService.getDefaultColumns = function(){ return $scope.datatableConfig.columns;};
+	
 	//init
 	$scope.errors = {};
 	$http.get(jsRoutes.controllers.experiments.api.ExperimentTypes.list().url).success(function(data, status, headers, config) {
@@ -372,8 +473,16 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	$scope.searchService.lists.refresh.experimentCategories();
 	$scope.searchService.lists.refresh.users();
 	$scope.searchService.lists.refresh.states({objectTypeCode:"Container"});
+	$scope.searchService.lists.refresh.reportConfigs({pageCodes:["containers-addcolumns"]}, "containers-addcolumns");
+	$scope.searchService.lists.refresh.filterConfigs({pageCodes:["containers-search-addfilters"]}, "containers-search-addfilters");
 	$scope.form = {};
 	$scope.loadExperimentTypesLists();
+	$scope.searchService.additionalFilters=[];
+	$scope.searchService.additionalColumns=[];
+	$scope.searchService.selectedAddColumns=[];
+	$scope.searchService.getColumns=$scope.datatableConfig.columns;
+	
+	
 	if(angular.isUndefined(mainService.getForm())){
 		$scope.searchService.form = {};
 		mainService.setForm($scope.searchService.form);

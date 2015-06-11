@@ -390,12 +390,12 @@ public class CommonValidationHelper {
 	}
 
 	
-	public static void validateResolutionCodes(List<String> resoCodes,ContextValidation contextValidation){
+	public static void validateResolutionCodes(Set<String> resoCodes,ContextValidation contextValidation){
 		String typeCode = getObjectFromContext(FIELD_TYPE_CODE, String.class, contextValidation);
 		validateResolutionCodes(typeCode, resoCodes, contextValidation);
 	}
 	
-	public static void validateResolutionCodes(String typeCode, List<String> resoCodes, ContextValidation contextValidation){
+	public static void validateResolutionCodes(String typeCode, Set<String> resoCodes, ContextValidation contextValidation){
 		if(null != resoCodes){
 			int i = 0;
 			for(String resoCode: resoCodes){

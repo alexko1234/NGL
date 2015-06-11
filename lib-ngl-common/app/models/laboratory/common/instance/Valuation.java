@@ -1,7 +1,7 @@
 package models.laboratory.common.instance;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import validation.ContextValidation;
 import validation.IValidation;
@@ -13,7 +13,7 @@ public class Valuation implements IValidation {
 	public TBoolean valid = TBoolean.UNSET;
     public Date date;
     public String user;
-    public List<String> resolutionCodes;
+    public Set<String> resolutionCodes;
     public String criteriaCode;
     public String comment;
     

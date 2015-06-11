@@ -435,7 +435,7 @@ public class LimsCNSDAO{
 				run.state.user = NGSRG_CODE;
 				run.state.date = new Date();
 
-				run.state.historical=new ArrayList<TransientState>();		
+				run.state.historical=new HashSet<TransientState>();		
 				run.state.historical.add(getTransientState(rs.getDate("beginNGSRG"),"IP-RG",0));
 				run.state.historical.add(getTransientState(rs.getDate("endNGSRG"),"F-RG",1));				
 
@@ -569,7 +569,7 @@ public class LimsCNSDAO{
 				readSet.state.date= new Date();
 				readSet.state.user="lims";
 
-				readSet.state.historical=new ArrayList<TransientState>();		
+				readSet.state.historical=new HashSet<TransientState>();		
 				readSet.state.historical.add(getTransientState(rs.getDate("beginNGSRG"),"IP-RG",0));
 				readSet.state.historical.add(getTransientState(rs.getDate("endNGSRG"),"F-RG",1));
 				readSet.state.historical.add(getTransientState(rs.getDate("endNGSRG"),"IW-QC",2));
@@ -620,7 +620,7 @@ public class LimsCNSDAO{
 				readSet.state.date= new Date();
 				readSet.state.user="lims";
 
-				readSet.state.historical=new ArrayList<TransientState>();		
+				readSet.state.historical=new HashSet<TransientState>();		
 				readSet.state.historical.add(getTransientState(rs.getDate("beginNGSRG"),"IP-RG",0));
 				readSet.state.historical.add(getTransientState(rs.getDate("endNGSRG"),"F-RG",1));
 				readSet.state.historical.add(getTransientState(rs.getDate("endNGSRG"),"IW-QC",2));

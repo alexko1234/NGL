@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -222,9 +223,15 @@ public class InstanceTest extends AbstractTests{
 		assertThat(container.sampleCodes.toArray(new String[0])[0]).isEqualTo("SampleCode");
 
 		assertThat(container.contents).isNotEmpty();
-		assertThat(container.contents.get(0).sampleCode).isEqualTo("SampleCode");
-		assertThat(container.contents.get(0).sampleCategoryCode).isEqualTo("sampleCategory");
-		assertThat(container.contents.get(0).sampleTypeCode).isEqualTo("sampleType");
+		Iterator<Content> iterator = container.contents.iterator();
+		Content content =  iterator.next();
+		assertThat(content.sampleCode).isEqualTo("SampleCode");
+		assertThat(content.sampleCategoryCode).isEqualTo("sampleCategory");
+		assertThat(content.sampleTypeCode).isEqualTo("sampleType");
+		
+		//assertThat(container.contents.get(0).sampleCode).isEqualTo("SampleCode");
+		//assertThat(container.contents.get(0).sampleCategoryCode).isEqualTo("sampleCategory");
+		//assertThat(container.contents.get(0).sampleTypeCode).isEqualTo("sampleType");
 
 		assertThat(container.fromExperimentTypeCodes).isNotEmpty();
 		assertThat(container.fromExperimentTypeCodes.size()).isEqualTo(1);
@@ -255,7 +262,7 @@ public class InstanceTest extends AbstractTests{
 
 		State state=new State("N","test");
 		experiment.state=state;
-		experiment.state.resolutionCodes=new ArrayList<String>();
+		experiment.state.resolutionCodes=new HashSet<String>();
 		experiment.state.resolutionCodes.add("ResolutionCode");
 
 		//TODO
@@ -282,7 +289,7 @@ public class InstanceTest extends AbstractTests{
 		
 		assertThat(newExperiment.code).isEqualTo(experiment.code);
 		//assertThat(newExperiment.state.code).isEqualTo(state.code);
-		assertThat(experiment.state.resolutionCodes.get(0)).isEqualTo(experiment.state.resolutionCodes.get(0));
+		assertThat(experiment.state.resolutionCodes.iterator()).isEqualTo(experiment.state.resolutionCodes.iterator());
 		
 		MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code",experiment.code),DBUpdate.set("state",state));
 		newExperiment=MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class,experiment.code);
@@ -295,7 +302,9 @@ public class InstanceTest extends AbstractTests{
 	public void validateGetSampleOnInputContainer(){
 		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.exists("contents.properties.tag")).toList();
 		Container container = containers.get(0);
-		Content content = container.contents.get(0);
+		Iterator<Content> iter = container.contents.iterator();
+		Content content = iter.next();
+		//Content content = container.contents.get(0);
 		SampleOnInputContainer sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(content, container);
 		
 		assertThat(sampleOnInputContainer.containerCode).isNotEmpty().isNotNull();

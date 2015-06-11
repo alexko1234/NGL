@@ -58,6 +58,15 @@
 							"type":"date"
 						},
 						{
+							"header":Messages("containers.table.tags"),
+							"property":"atomicTransfertMethods",
+							"order":true,
+							"hide":true,
+							"render":"<div list-resize='value.data.atomicTransfertMethods | flatArray:\"inputContainerUseds\" | flatArray:\"contents\" | getArray:\"properties.tag.value\" | unique' list-resize-min-size='3'>",
+							"position":6.5,
+							"type":"text"
+						},
+						{
 							"header":Messages("containers.table.sampleCodes.length"),
 							"property":"sampleCodes.length",
 							"order":true,

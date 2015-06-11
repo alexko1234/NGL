@@ -1,7 +1,15 @@
 package controllers.migration.cns;
 
 import java.util.List;
+import java.util.Set;
 
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+import org.mongojack.JacksonDBCollection;
+
+import controllers.CommonController;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.run.instance.ReadSet;
@@ -9,16 +17,8 @@ import models.laboratory.run.instance.SampleOnContainer;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
-
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-import org.mongojack.JacksonDBCollection;
-
 import play.Logger;
 import play.mvc.Result;
-import controllers.CommonController;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
 
 public class UpdateSampleTypeCodeToContainer  extends CommonController {
 
@@ -39,7 +39,7 @@ public class UpdateSampleTypeCodeToContainer  extends CommonController {
 			int i = 0;
 			for(Container c : containers){
 				i++;
-				List<Content> contents = c.contents;
+				Set<Content> contents = c.contents;
 				
 				for(Content content:contents){
 					if(content.sampleCode != null && (content.sampleTypeCode == null || content.sampleCategoryCode == null)){
