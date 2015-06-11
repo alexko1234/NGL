@@ -40,3 +40,22 @@ rule "InputVolume"
 		update($experiment);
 
 end
+
+rule "Same concentrations in  Pool-tube"
+    @nglSQ( validations )
+	dialect "java"
+	salience 950
+	no-loop
+    when
+		$experiment:Experiment($typeCode:typeCode,$typeCode=="pool-tube")
+		$atomicTransfert: ManytoOneContainer($inputContainerUseds : inputContainerUseds, $inputContainerUseds!=null)
+		$total : Double() from accumulate(ContainerUsed($c: concentration, $c!=null) from $inputContainerUseds, sum( Double.parseDouble($c.getValue().toString()) ) )
+		$containerUsed: ContainerUsed($code: code,$concentration: concentration, $concentration!=null) from $inputContainerUseds				
+		$contextValidation:ContextValidation()
+		eval( Double.parseDouble($concentration.getValue().toString())!= (Double) $total/$inputContainerUseds.size())
+    then
+    	Double value = Double.parseDouble($concentration.getValue().toString());
+    	Logger.debug("value = " + value);
+    	Logger.debug("Same concentrations in  Pool-tube");
+    	$contextValidation.addErrors("pool-tube","error.validationexp.sameconcentration",$code);
+end
