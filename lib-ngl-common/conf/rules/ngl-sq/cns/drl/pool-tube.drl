@@ -47,11 +47,12 @@ rule "outputConcentration"
 	no-loop
  	when
  	$experiment:Experiment($typeCode:typeCode,$typeCode=="pool-tube")
-	$atomicTransfert: ManytoOneContainer(inputContainerUseds!=null , $outputContainerUsed: outputContainerUseds, $outputContainerUsed!=null )
- 	ContainerUsed($concentration: concentration) from $outputContainerUsed
+	$atomicTransfert: ManytoOneContainer(inputContainerUseds!=null , $outputContainerUseds: outputContainerUseds, $outputContainerUseds!=null )
+ 	$outputContainerUsed : ContainerUsed($concentration: concentration) from $outputContainerUseds
+ 	eval($atomicTransfert.getInputContainerUseds().get(0).getConcentration()!=null && ($concentration==null || $concentration.value==null))
  	then
  		Logger.debug("input concentration to outputconcentration");
-	 	$concentration=$atomicTransfert.getInputContainerUseds().get(0).getConcentration();
+	 	$outputContainerUsed.concentration=$atomicTransfert.getInputContainerUseds().get(0).getConcentration();
  		update($experiment);
 end
 
