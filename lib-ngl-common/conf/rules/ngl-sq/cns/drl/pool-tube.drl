@@ -1,7 +1,6 @@
 //created on: May 5, 2015
 package rules
 
-
 rule "Debug pool-tube"
 	@nglSQ( calculations )
 	dialect "java"
@@ -23,7 +22,6 @@ rule "InputVolume"
 		$experiment:Experiment($typeCode:typeCode,$typeCode=="pool-tube")
 		$atomicTransfert: ManytoOneContainer($inputContainerUseds : inputContainerUseds, $inputContainerUseds!=null , $outputContainerUsed: outputContainerUseds, $outputContainerUsed!=null )
 		$containerUsed: ContainerUsed($percentage: percentage, $percentage!=null) from $inputContainerUseds
-		
 		ContainerUsed($finalVolume: volume, $finalVolume!=null) from $outputContainerUsed
 		eval( Double.class.isInstance($percentage) && $finalVolume.getValue()!=null)
     then
@@ -39,6 +37,22 @@ rule "InputVolume"
 		Logger.debug("inputVolume=",propertySingle.getValue());
 		update($experiment);
 
+end
+
+
+rule "outputConcentration"
+    @nglSQ( calculations )
+	dialect "java"
+	salience 900
+	no-loop
+ 	when
+ 	$experiment:Experiment($typeCode:typeCode,$typeCode=="pool-tube")
+	$atomicTransfert: ManytoOneContainer(inputContainerUseds!=null , $outputContainerUsed: outputContainerUseds, $outputContainerUsed!=null )
+ 	ContainerUsed($concentration: concentration) from $outputContainerUsed
+ 	then
+ 		Logger.debug("input concentration to outputconcentration");
+	 	$concentration=$atomicTransfert.getInputContainerUseds().get(0).getConcentration();
+ 		update($experiment);
 end
 
 rule "Same concentrations in  Pool-tube"
