@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -242,9 +243,11 @@ public class MigrationNGLSEQ extends CommonController{
 		Logger.debug("Nb containers "+containers.size());
 		for(Container container:containers){
 				Logger.debug("Container to update "+container.code);
-				container.contents.get(0).properties.remove("tag");
-				container.contents.get(0).properties.remove("tagCategory");
-				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code",container.code),DBUpdate.set("contents.0.properties",container.contents.get(0).properties));						
+				Iterator<Content> iterator = container.contents.iterator();
+				Content cnt = iterator.next();
+				cnt.properties.remove("tag");
+				cnt.properties.remove("tagCategory");
+				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code",container.code),DBUpdate.set("contents.0.properties",cnt.properties));						
 		}
 		
 	}

@@ -10,7 +10,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
+
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.description.ContainerSupportCategory;
@@ -27,12 +31,8 @@ import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
-
-import org.apache.commons.collections.CollectionUtils;
-
 import validation.ContextValidation;
 import validation.utils.BusinessValidationHelper;
-import fr.cea.ig.MongoDBDAO;
 
 public class ContainerHelper {
 
@@ -77,7 +77,7 @@ public class ContainerHelper {
 			
 			Container inputContainer=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, inputContainerUsed.code);
 
-			List<Content> contents = new ArrayList<Content>(inputContainer.contents);
+			Set<Content> contents = new HashSet<Content>(inputContainer.contents);
 			
 			if(inputContainerUsed.percentage==null){
 				inputContainerUsed.percentage=100.0/inputContainerUseds.size();
@@ -141,7 +141,7 @@ public class ContainerHelper {
 		
 	}
 	
-	public static void calculPercentageContent(List<Content> contents, Double percentage){
+	public static void calculPercentageContent(Set<Content> contents, Double percentage){
 		if(percentage!=null){
 			for(Content cc:contents){
 				BigDecimal bd=null;				
@@ -248,9 +248,9 @@ public class ContainerHelper {
 
 	}
 
-	public static List<Content> contentFromSampleCode(List<Content> contents,
+	public static Set<Content> contentFromSampleCode(Set<Content> contents,
 			String sampleCode) {
-		List<Content> contentsFind=new ArrayList<Content>();
+		Set<Content> contentsFind=new HashSet<Content>();
 		for(Content content:contents){
 			if(content.sampleCode.equals(sampleCode)){
 				contentsFind.add(content);

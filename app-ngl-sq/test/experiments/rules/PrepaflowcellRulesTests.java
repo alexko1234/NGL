@@ -2,9 +2,12 @@ package experiments.rules;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
+import org.junit.Test;
+
+import experiments.ExperimentTestHelper;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
@@ -12,16 +15,12 @@ import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.instrument.instance.InstrumentUsed;
-
-import org.junit.Test;
-
 import play.Logger;
 import play.Logger.ALogger;
 import utils.AbstractTests;
 import utils.Constants;
 import validation.ContextValidation;
 import validation.experiment.instance.ExperimentValidationHelper;
-import experiments.ExperimentTestHelper;
 
 public class PrepaflowcellRulesTests extends AbstractTests {
 	
@@ -126,7 +125,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		ContainerUsed container1_1=ExperimentTestHelper.getContainerUsed("CONTAINER1_1");
 		container1_1.percentage=0.0;
 		Content content1_1=new Content("CONTENT1_1","TYPE","CATEGORIE");
-		container1_1.contents=new ArrayList<Content>();
+		container1_1.contents=new HashSet<Content>();
 		content1_1.properties=new HashMap<String, PropertyValue>();
 		content1_1.properties.put("tag", new PropertySingleValue("IND1"));
 		content1_1.properties.put("tagCategory", new PropertySingleValue("TAGCATEGORIE"));

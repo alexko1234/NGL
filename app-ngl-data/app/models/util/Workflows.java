@@ -3,6 +3,7 @@ package models.util;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import models.laboratory.common.instance.State;
@@ -245,7 +246,7 @@ public class Workflows {
 	
 	private static State updateHistoricalNextState(State previousState, State nextState) {
 		if (null == previousState.historical) {
-			nextState.historical = new ArrayList<TransientState>(0);
+			nextState.historical = new HashSet<TransientState>(0);
 			nextState.historical.add(new TransientState(previousState, nextState.historical.size()));
 		} else {
 			nextState.historical = previousState.historical;

@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import models.laboratory.common.instance.property.PropertySingleValue;
@@ -65,9 +66,11 @@ public class AddPercentageContent extends CommonController{
 
 			Double equiPercent = ContainerHelper.getEquiPercentValue(contentsArraySize);
 
+			Iterator<Content> itr =  container.contents.iterator();
 			for(int i=0;i<contentsArraySize;i++){ 
 
-				Content content = container.contents.get(i);
+				Content content = itr.next();
+				//Content content = container.contents.get(i);
 
 				if(content.properties.containsKey("percentPerLane")){						
 					PropertySingleValue field =(PropertySingleValue) content.properties.get("percentPerLane");

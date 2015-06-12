@@ -387,20 +387,32 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 this.additionalFilters=[];
 			                                    	 var formFilters = [];
 			                                    	 var allFilters = undefined;
-			                                    	 if(this.form.typeCode !== undefined && lists.get("process-"+this.form.typeCode) && lists.get("process-"+this.form.typeCode).length === 1){			                                    		 
-			                                    		allFilters = angular.copy(lists.get("process-"+this.form.typeCode)[0].filters);			                                    		
-			                                    	 }else if(lists.get("processes-search-addfilters") && lists.get("processes-search-addfilters").length === 1){			                             					
-			                             				allFilters = angular.copy(lists.get("processes-search-addfilters")[0].filters);			                             								                             				
-			                                    	 }
+			                                    	 var nbElementByColumn = undefined;
 			                                    	 
-			                                    	 var nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
-		                                    		 for(var i = 0; i  < 5 && allFilters.length > 0 ; i++){
-		                                    			 formFilters.push(allFilters.splice(0, nbElementByColumn));	    								
-		                                    		 }
-		                                    		 //complete to 5 five element to have a great design 
-		                                    		 while(formFilters.length < 5){
+			                                    	 if(lists.get("processes-search-addfilters") && lists.get("processes-search-addfilters").length === 1){			                             					
+				                             				allFilters = angular.copy(lists.get("processes-search-addfilters")[0].filters);	
+				                             				nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
+				                                    		for(var i = 0; i  < 5 && allFilters.length > 0 ; i++){
+				                                    			 formFilters.push(allFilters.splice(0, nbElementByColumn));	    								
+				                                    		 }
+				                                    		//complete to 5 five element to have a great design 
+				                                    		 while(formFilters.length < 5){
+				                                    			 formFilters.push([]);
+				                                    		 }
+				                                    	 }			                                    	 
+			                                    	 
+			                                    	 if(this.form.typeCode !== undefined && lists.get("process-"+this.form.typeCode) && lists.get("process-"+this.form.typeCode).length === 1){			                                    		 
+			                                    		allFilters = angular.copy(lists.get("process-"+this.form.typeCode)[0].filters);	
+			                                    		nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
+			                                    		for(var i = 0; i  < 5 && allFilters.length > 0 ; i++){
+			                                    			 formFilters.push(allFilters.splice(0, nbElementByColumn));	    								
+			                                    		 }
+			                                    		 //complete to 5 five element to have a great design 
+			                                    		while(formFilters.length < 5){
 		                                    			 formFilters.push([]);
 		                                    		 }
+			                                    	 }   
+		                                    		 
 		                                    		 this.additionalFilters = formFilters;			                                    	 
 			                                     },
 

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -637,10 +638,13 @@ public class LimsCNGDAO {
 								
 				findContent = false;
 				//just to be sure that we don't create content in double
+				Iterator<Content> iterator = results.get(pos+x).contents.iterator();
+				Content cnt = iterator.next();
 				for (Content content : results.get(pos).contents) {
-					if ( (content.sampleCode.equals(results.get(pos+x).contents.get(0).sampleCode))  
-								&& (content.properties.get("tag").value.equals(results.get(pos+x).contents.get(0).properties.get("tag").value)) 
-								&& (content.properties.get("libProcessTypeCode").value.equals(results.get(pos+x).contents.get(0).properties.get("libProcessTypeCode").value))  ) {
+					
+					if ( (content.sampleCode.equals(cnt.sampleCode))  
+								&& (content.properties.get("tag").value.equals(cnt.properties.get("tag").value)) 
+								&& (content.properties.get("libProcessTypeCode").value.equals(cnt.properties.get("libProcessTypeCode").value))  ) {
 						findContent = true;
 						//Logger.debug("content already created !");
 						break;
@@ -659,7 +663,26 @@ public class LimsCNGDAO {
 		
 
 		for (Container r : results) {
-			for (int i=0; i<r.contents.size(); i++) {
+			Iterator<Content> itr = r.contents.iterator();
+			while (itr.hasNext()){
+				Content cnt = itr.next();
+				if (cnt.properties.get("tag").value.equals("-1")) {
+					cnt.properties.remove("tag");
+				}
+				if (cnt.properties.get("tagCategory").value.equals("-1")) {
+					cnt.properties.remove("tagCategory");
+				}
+				if ((cnt.properties.get("libProcessTypeCode") != null) && (cnt.properties.get("libProcessTypeCode").value.equals("-1"))) {
+					cnt.properties.remove("libProcessTypeCode");
+				}
+				//set percentage
+				//TODO : to change when we have the real values of percentage
+				Double equiPercent = ContainerHelper.getEquiPercentValue(r.contents.size());
+				cnt.percentage = equiPercent; 
+			}
+			
+			
+			/*	for (int i=0; i<r.contents.size(); i++) {
 				//remove bad properties
 				if (r.contents.get(i).properties.get("tag").value.equals("-1")) {
 					r.contents.get(i).properties.remove("tag");
@@ -675,7 +698,7 @@ public class LimsCNGDAO {
 				//TODO : to change when we have the real values of percentage
 				Double equiPercent = ContainerHelper.getEquiPercentValue(r.contents.size());
 				r.contents.get(i).percentage = equiPercent; 
-			}
+			}*/
 		}	
 		
 		//NEW : define container projects from projects contents
@@ -719,14 +742,16 @@ public class LimsCNGDAO {
 		content.sampleCategoryCode = sampleType.category.code;
 		
 		content.properties = new HashMap<String, PropertyValue>();
-		content.properties.put("tag", new PropertySingleValue(results.get(posNext).contents.get(0).properties.get("tag").value));
-		content.properties.put("tagCategory", new PropertySingleValue(results.get(posNext).contents.get(0).properties.get("tagCategory").value));
+		Iterator<Content> iterator = results.get(posNext).contents.iterator();
+		Content cnt = iterator.next();
+		content.properties.put("tag", new PropertySingleValue(cnt.properties.get("tag").value));
+		content.properties.put("tagCategory", new PropertySingleValue(cnt.properties.get("tagCategory").value));
 		
-		if (results.get(posNext).contents.get(0).properties.get("libProcessTypeCode") == null) {
+		if (cnt.properties.get("libProcessTypeCode") == null) {
 			Logger.debug("content.sampleCode =" + content.sampleCode + " : libProcessTypeCode == null");
 		}
 		else {
-			content.properties.put("libProcessTypeCode", new PropertySingleValue(results.get(posNext).contents.get(0).properties.get("libProcessTypeCode").value));
+			content.properties.put("libProcessTypeCode", new PropertySingleValue(cnt.properties.get("libProcessTypeCode").value));
 		}
 		
 		results.get(posCurrent).contents.add(content); 

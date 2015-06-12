@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.Content;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
@@ -131,8 +132,9 @@ public class SampleLoad extends CommonController{
 
 				ValidationHelper.validateProperties(new ContextValidation(getCurrentUser(), filledForm.errors()), sample.properties, sampleType.propertiesDefinitions,null );
 
-				if(container.contents.get(0).properties!=null)
-					ValidationHelper.validateProperties(new ContextValidation(getCurrentUser(), filledForm.errors()), container.contents.get(0).properties, importType.propertiesDefinitions,null );
+				Content cnt = container.contents.iterator().next();
+				if(cnt.properties!=null)
+					ValidationHelper.validateProperties(new ContextValidation(getCurrentUser(), filledForm.errors()), cnt.properties, importType.propertiesDefinitions,null );
 
 				samples.add(sample);
 				containers.add(container);

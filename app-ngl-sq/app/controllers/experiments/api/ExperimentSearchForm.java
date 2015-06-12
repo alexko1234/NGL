@@ -1,31 +1,38 @@
 package controllers.experiments.api;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import controllers.ListForm;
 
 public class ExperimentSearchForm extends ListForm{
 	public String code;
-	public List<String> codes;
+	public Set<String> codes;
 	public String typeCode;
 	public String categoryCode;
 	public String projectCode;
-	public List<String> projectCodes;
-	public List<String> sampleCodes;
+	public Set<String> projectCodes;
+	public Set<String> sampleCodes;
 	public String sampleCode;
 	public Date fromDate;
 	public Date toDate;
 	public String stateCode;
-	public List<String> stateCodes;
-	public List<String> users;
+	public Set<String> stateCodes;
+	public Set<String> users;
 	public String containerSupportCode;
-	public List<String> containersCodes;	
+	public Set<String> containersCodes;	
 	public String atomicTransfertMethods;
 	public String reagentOrBoxCode;
 	public String instrument;
 	
-	public List<String> tags;
+	public Set<String> tags;
+	public Set<String> sampleTypeCodes;
+	public Map<String, List<String>> atomicTransfertMethodsInputContainerUsedsContentsProperties = new HashMap<String, List<String>>();
+	
+
 	
 	@Override
 	public String toString() {

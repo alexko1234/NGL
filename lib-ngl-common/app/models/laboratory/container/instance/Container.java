@@ -2,10 +2,18 @@ package models.laboratory.container.instance;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.mongojack.DBQuery;
+import org.mongojack.MongoCollection;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import fr.cea.ig.DBObject;
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -14,18 +22,9 @@ import models.laboratory.common.instance.Valuation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
-
-import org.mongojack.DBQuery;
-import org.mongojack.MongoCollection;
-
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.container.instance.ContainerValidationHelper;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import fr.cea.ig.DBObject;
-import fr.cea.ig.MongoDBDAO;
 
 
 
@@ -62,9 +61,9 @@ public class Container extends DBObject implements IValidation {
 
 	//Embedded content with values;
 	//public List<Content> contents;
-	public List<Content> contents;
+	public Set<Content> contents;
 	// Embedded QC result, this data are copying from collection QC
-	public List<QualityControlResult> qualityControlResults;
+	public Set<QualityControlResult> qualityControlResults;
 
 	//Stock management 
 	public PropertySingleValue mesuredVolume;
@@ -91,8 +90,15 @@ public class Container extends DBObject implements IValidation {
 
 	public Container(){
 		properties=new HashMap<String, PropertyValue>();
-		contents=new ArrayList<Content>();
+		contents=new HashSet<Content>();
 		traceInformation=new TraceInformation();
+		projectCodes = new HashSet<String>();
+		sampleCodes = new HashSet<String>();
+		comments = new ArrayList<>();
+		qualityControlResults = new HashSet<>();
+		calculedVolume = new ArrayList<>();
+		fromExperimentTypeCodes = new HashSet<>();
+	
 	}
 
 	@JsonIgnore

@@ -1,7 +1,7 @@
 package models.laboratory.common.instance;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -15,9 +15,9 @@ public class State implements IValidation {
 	public String code;
 	public Date date;
 	public String user;
-	public List<String> resolutionCodes;
+	public Set<String> resolutionCodes;
 
-	public List<TransientState> historical;
+	public Set<TransientState> historical;
 
 	public State(String code,String user){
 		this.code=code;

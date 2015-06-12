@@ -5,13 +5,15 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
-
-import models.laboratory.common.instance.TransientState;
-import models.laboratory.run.instance.Run;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
+import models.laboratory.common.instance.TransientState;
+import models.laboratory.run.instance.Run;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -83,7 +85,7 @@ public class State extends RunsController {
 		Run runValue = getRun(code, "state");
 		if (runValue != null) {
 		    Form<HistoricalStateSearchForm> inputForm = filledFormQueryString(historicalForm, HistoricalStateSearchForm.class);
-		    List<TransientState> historical = getHistorical(runValue.state.historical, inputForm.get());
+		    Set<TransientState> historical = getHistorical(runValue.state.historical, inputForm.get());
 		    return ok(Json.toJson(historical));
 		} else {
 		    return notFound();
@@ -91,19 +93,30 @@ public class State extends RunsController {
 		
     }
 
-    private static List<TransientState> getHistorical(
-	    List<TransientState> historical, HistoricalStateSearchForm form) {
+    private static Set<TransientState> getHistorical(
+	    Set<TransientState> historical, HistoricalStateSearchForm form) {
 		List<TransientState> values = new ArrayList<TransientState>();
 		if (StringUtils.isNotBlank(form.stateCode)) {
+			Iterator<TransientState> iterator = historical.iterator();
+			while(iterator.hasNext()){
+				TransientState ts = iterator.next();
+				if(form.stateCode.equals(ts.code)){
+				    values.add(ts);
+				    if(form.last)break;
+				}				
+			}
+			/*
 		    for (int i = historical.size() - 1; i >= 0; i--) {
 			TransientState ts = historical.get(i);
 			if(form.stateCode.equals(ts.code)){
 			    values.add(ts);
 			    if(form.last)break;
 			}
-		    }
+		    } 
+		    */
 		    Collections.reverse(values);
-		    return values;
+		    
+		    return new HashSet<>(values);
 		} else {
 		    return historical;
 		}

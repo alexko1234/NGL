@@ -5,10 +5,16 @@ import static validation.utils.ValidationHelper.required;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.mongojack.DBQuery;
+
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
+import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
@@ -20,17 +26,12 @@ import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.protocol.instance.Protocol;
 import models.laboratory.reagent.instance.ReagentUsed;
 import models.utils.InstanceConstants;
-import models.laboratory.container.instance.ContainerSupport;
-import org.apache.commons.collections.CollectionUtils;
-import org.mongojack.DBQuery;
-
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.container.instance.ContainerSupportValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
-import fr.cea.ig.MongoDBDAO;
 
 public class ExperimentValidationHelper  extends CommonValidationHelper {
 
@@ -46,7 +47,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 		}
 	}
 
-	public static void validateResolutionCodes(String typeCode,List<String> resoCodes,ContextValidation contextValidation){
+	public static void validateResolutionCodes(String typeCode,Set<String> resoCodes,ContextValidation contextValidation){
 		String stateCode= getObjectFromContext(STATE_CODE, String.class, contextValidation);
 		if(stateCode.equals("F")){
 			if(required(contextValidation, resoCodes, "resolution")){

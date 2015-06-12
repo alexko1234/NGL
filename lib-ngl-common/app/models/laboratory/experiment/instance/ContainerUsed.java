@@ -29,7 +29,7 @@ public class ContainerUsed implements IValidation{
 	public PropertyValue volume;
 	public PropertyValue concentration;
 	
-	public List<Content> contents;
+	public Set<Content> contents;
 	
 	public Double percentage;
 	// Proprietes a renseigner en fonction du type d'experiment ou d'instrument

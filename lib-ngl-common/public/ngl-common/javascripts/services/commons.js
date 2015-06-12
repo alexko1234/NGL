@@ -1110,4 +1110,12 @@ angular.module('commonsServices', []).
     	    	});
     	    	return possibleValues;    	    	
     	    };
-    	}]);
+    	}]).filter('flatArray', function(){
+    		return function(array, property){
+    			var flatArray = [];
+    			for(var i=0;i<array.length;i++){
+    				flatArray = flatArray.concat(array[i][property]);
+    			}
+    			return flatArray;
+    		}
+    	});

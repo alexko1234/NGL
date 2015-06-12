@@ -245,8 +245,8 @@ public class ExperimentHelper extends InstanceHelpers {
 		List<ContainerUsed> containersInFromDB = exp.getAllInPutContainer();
 		List<ContainerUsed> containersIn = experiment.getAllInPutContainer();
 		
-		List<Container> addedContainers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
-				DBQuery.in("code",getDiff(containersIn,containersInFromDB))).toList();
+		Set<Container> addedContainers = new HashSet<>( MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
+				DBQuery.in("code",getDiff(containersIn,containersInFromDB))).toList());
 		if(addedContainers.size() > 0){
 			ContainerWorkflows.setContainerState(addedContainers, "IW-E", contextValidation);
 			
@@ -256,8 +256,8 @@ public class ExperimentHelper extends InstanceHelpers {
 			}
 		}
 		
-		List<Container> deletedContainers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class
-				,DBQuery.in("code", getDiff(containersInFromDB,containersIn))).toList();
+		Set<Container> deletedContainers = new HashSet<>( MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class
+				,DBQuery.in("code", getDiff(containersInFromDB,containersIn))).toList());
 		if(deletedContainers.size() > 0){
 			
 			String nextContainerState=ContainerWorkflows.getNextContainerStateFromExperimentCategory(exp.categoryCode);			

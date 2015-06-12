@@ -1,5 +1,6 @@
 package validation.container.instance;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -41,16 +42,25 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 		BusinessValidationHelper.validateExistInstanceCode(contextValidation, experimentCode, "fromPurifingCode", Experiment.class, InstanceConstants.EXPERIMENT_COLL_NAME, false);
 	}
 	
-	public static void validateContents(List<Content> contents, ContextValidation contextValidation) {
+	public static void validateContents(Set<Content> contents, ContextValidation contextValidation) {
 		
 		if(ValidationHelper.required(contextValidation, contents, "contents")){
-
-			for(int i=0;i<contents.size();i++){
+			Iterator<Content> iterator = contents.iterator();
+			int i = 0;
+			while (iterator.hasNext()){
+				contextValidation.addKeyToRootKeyName("contents."+i);
+				iterator.next().validate(contextValidation);
+				contextValidation.removeKeyFromRootKeyName("contents."+i);
+				Logger.debug("==> content." + i);
+				i++;
+			}
+			
+		/*	for(int i=0;i<contents.size();i++){
 				    contextValidation.addKeyToRootKeyName("contents."+i);
 					contents.get(i).validate(contextValidation);
 					contextValidation.removeKeyFromRootKeyName("contents."+i);
 					Logger.debug("==> content." + i);
-			}		
+			} */		
 
 			validateContentPercentageSum(contents, contextValidation);
 		}
@@ -63,7 +73,7 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 	}
 	
 	//Check the sum of percentage of contents is 100
-	public static void validateContentPercentageSum(List<Content> contents, ContextValidation contextValidation){
+	public static void validateContentPercentageSum(Set<Content> contents, ContextValidation contextValidation){
 		Double percentageSum = 0.00;
 		for(Content t:contents){			
 			if(t.percentage!=null){
