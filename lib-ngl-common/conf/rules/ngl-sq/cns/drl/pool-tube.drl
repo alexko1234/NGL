@@ -43,7 +43,7 @@ end
 rule "outputConcentration"
     @nglSQ( calculations )
 	dialect "java"
-	salience 900
+	salience 800
 	no-loop
  	when
  	$experiment:Experiment($typeCode:typeCode,$typeCode=="pool-tube")
@@ -53,7 +53,7 @@ rule "outputConcentration"
  	then
  		Logger.debug("input concentration to outputconcentration");
 	 	$outputContainerUsed.concentration=$atomicTransfert.getInputContainerUseds().get(0).getConcentration();
- 		update($experiment);
+ 		
 end
 
 rule "Same concentrations in  Pool-tube"

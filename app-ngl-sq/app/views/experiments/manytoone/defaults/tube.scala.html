@@ -161,7 +161,7 @@
 										{{inputContainerUsed.experimentProperties.inputVolume.value}}
 									</td> -->
 									<td class="col-sm-1">
-										<input class="form-control input-small valueInput" type="number" placeholder="" ng-readonly="!experiment.experimentProperties.enabled" ng-model="inputContainerUsed.percentage" title='@Messages("containers.table.percentage")' ng-blur="changeValueInTransfertTube()"/>										
+										<input class="form-control input-small valueInput" type="text" placeholder="" ng-readonly="!experiment.experimentProperties.enabled" ng-model="inputContainerUsed.percentage" title='@Messages("containers.table.percentage")' ng-blur="changeValueInTransfertTube()"/>										
 									</td>
 								</tr>									
 							</table>
@@ -184,7 +184,7 @@
 										{{experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].code}}
 									</td>
 									<td>
-									<input class="form-control valueInput" type="number" title="Messages("containers.table.volume")"
+									<input class="form-control valueInput" type="text" title="Messages("containers.table.volume")"
 											ng-readonly="!experiment.experimentProperties.enabled"
 											ng-model="experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].volume.value"
 								   			ng-blur="changeValueInTransfertTube()"								   			

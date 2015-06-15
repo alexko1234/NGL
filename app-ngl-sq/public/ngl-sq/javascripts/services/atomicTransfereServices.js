@@ -345,15 +345,18 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 				experimentToOutput : function(output){
 					if(outputType === "none" || outputType === "datatable"){							
 						var allData = output.getData();
-						for(var i=0; i<allData.length;i++){
-							var position = this.searchOutputPositionByInputContainerCode(allData[i].code || allData[i].inputCode);
-							if(angular.isDefined($scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds[0])){
-								allData[i].outputContainerUsed  = $scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds[0];
-								allData[i].outputInstrumentProperties = $scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds[0].instrumentProperties;
-								allData[i].outputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds[0].experimentProperties;
-							}										
+						if(angular.isDefined(allData) && allData.length>0){
+							for(var i=0; i<allData.length;i++){
+								var position = this.searchOutputPositionByInputContainerCode(allData[i].code || allData[i].inputCode);
+								if(angular.isDefined($scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds[0])){
+									allData[i].outputContainerUsed  = $scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds[0];
+									allData[i].outputInstrumentProperties = $scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds[0].instrumentProperties;
+									allData[i].outputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds[0].experimentProperties;
+								}										
+							}
+							output.setData(allData,allData.length)
 						}
-						output.setData(allData,allData.length)
+						
 					}
 				},
 				searchOutputContainerUsedPosition : function(outputContainercode){
@@ -754,9 +757,22 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 								if(containersOut != undefined){
 									angular.forEach(containersOut.containers, function(container) {
 										if(angular.isArray(container) && container[0].code == $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].code){
-											containerOut = container[0];
+											containerOut.code = container[0].code;
+											containerOut.volume = container[0].mesuredVolume;
+											containerOut.concentration = container[0].mesuredConcentration;
+											containerOut.state = container[0].state;
+											containerOut.experimentProperties = container[0].experimentProperties;
+											containerOut.instrumentProperties = container[0].instrumentProperties;
+											containerOut.locationOnContainerSupport = container[0].locationOnContainerSupport;
+											
 										}else if(container.code == $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].code){
-											containerOut = container;
+											containerOut.code = container.code;
+											containerOut.volume = container.mesuredVolume;
+											containerOut.concentration = container.mesuredConcentration;
+											containerOut.state = container.state;
+											containerOut.experimentProperties = container.experimentProperties;
+											containerOut.instrumentProperties = container.instrumentProperties;
+											containerOut.locationOnContainerSupport = container.locationOnContainerSupport;
 										}
 										
 										
@@ -804,7 +820,9 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 						datatable.setData(containers,containers.length);
 						that.experimentToInput(datatable);
 						$scope.addExperimentOutputDatatableToScope();
+					//	that.outputToExperiment(datatable);
 						that.experimentToOutput(datatable);
+						
 					});
 				},
 				loadExperimentCommon : function(fn){
@@ -876,7 +894,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 							var containersOutput = undefined;
 							if(resultOutput != undefined){
 								containersOutput = resultOutput;
-							}
+							}						
 							that.reloadContainerDragNDrop(resultInput, resultOutput, input);
 							$scope.addExperimentPropertiesInputsColumns();
 						});

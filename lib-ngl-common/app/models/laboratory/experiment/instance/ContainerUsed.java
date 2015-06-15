@@ -67,6 +67,8 @@ public class ContainerUsed implements IValidation{
 		else if(contextValidation.getObject("stateCode").equals("F")) {
 			CommonValidationHelper.validateContainerCode(code, contextValidation);
 		} 
+		ContainerUsedValidation.validateVolume(contextValidation, volume);
+		ContainerUsedValidation.validateConcentration(contextValidation, concentration);
 		if(contextValidation.getObject("typeCode")!=null){
 			ContainerUsedValidation.validateExperimentProperties(contextValidation.getObject("typeCode").toString(),experimentProperties,contextValidation/*,false*/);//TODO: voir avec Maud
 		}		
