@@ -85,30 +85,18 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 				}
 			}
 
-						
 			PropertyValue volume = new PropertySingleValue();
 			PropertyValue concentration = new PropertySingleValue();
 			
 			if(this.outputContainerUseds!=null){
 				this.outputContainerUseds.get(0).code=outPutContainerCode;				
-				if(this.outputContainerUseds.get(0).volume!=null){
-					volume = this.outputContainerUseds.get(0).volume;
-				}				
-				if(this.outputContainerUseds.get(0).concentration!=null){
-					concentration = this.outputContainerUseds.get(0).concentration;
-				}				
-				
 			}else {
 				this.outputContainerUseds = new ArrayList<ContainerUsed>();
 				this.outputContainerUseds.add(new ContainerUsed(outPutContainerCode));
 			}
-
+			
 			support.categoryCode=experiment.instrument.outContainerSupportCategoryCode;
-
 			this.outputContainerUseds.get(0).locationOnContainerSupport=support;
-			this.outputContainerUseds.get(0).volume = volume;
-			this.outputContainerUseds.get(0).concentration = concentration;
-
 			this.outputContainerUseds.get(0).validate(contextValidation);
 
 		}else{

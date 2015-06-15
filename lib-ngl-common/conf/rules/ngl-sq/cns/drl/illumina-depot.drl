@@ -1,0 +1,16 @@
+
+package rules
+
+rule "only one inputssupport"
+	@nglSQ (validations )
+	dialect "java"
+	salience 400
+	no-loop
+    when
+    Experiment($typeCode:typeCode,$typeCode=="illumina-depot",$inputContainerSupportCodes:atomicTransfertMethods)
+    $contextValidation:ContextValidation($errors : errors)
+    eval($inputContainerSupportCodes.size()!=1)
+    then 
+       	//Logger.debug("Nb inputContainerSupportCodes "+$inputContainerSupportCodes.size());
+    	$contextValidation.addErrors("inputContainerSupportCodes","error.validationexp.inputSupportSize", $typeCode);
+    end
