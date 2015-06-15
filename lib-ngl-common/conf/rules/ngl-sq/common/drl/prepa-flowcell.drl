@@ -11,7 +11,7 @@ rule "volume stock engaged in denat"
     when
     	 $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-flowcell", $stateCode : state.code, $stateCode!="F")
     	 $atomicTransfert: ManytoOneContainer( )
-    	 ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null, $concentrationIN:concentration) from $atomicTransfert.inputContainers
+    	 ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null, $concentrationIN:concentration) from $atomicTransfert.inputContainerUseds
     	 $finalConcentration1 : PropertyValue() from $experimentProperties.get("finalConcentration1")
     	 $finalVolume1 : PropertyValue() from $experimentProperties.get("finalVolume1")
     	 eval($finalVolume1.value != null && Double.class.isInstance($finalVolume1.value) && $finalConcentration1.value != null && Double.class.isInstance($finalConcentration1.value) && Double.parseDouble($concentrationIN.value.toString()) != 0)
@@ -35,7 +35,7 @@ rule "volume PhiX"
 	when
 		 $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-flowcell", $stateCode : state.code, $stateCode!="F")
 		 $atomicTransfert: ManytoOneContainer( )
-		 ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null) from $atomicTransfert.inputContainers
+		 ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null) from $atomicTransfert.inputContainerUseds
 		 ContainerUsed( $experimentPropertiesOut : experimentProperties,$experimentPropertiesOut!=null) from $atomicTransfert.outputContainerUseds
 		 $phixPercent : PropertyValue() from $experimentPropertiesOut.get("phixPercent")
 		 $finalConcentration2 : PropertyValue() from $experimentProperties.get("finalConcentration2")

@@ -338,7 +338,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		}else{
 			$scope.datatable.setColumnsConfig($scope.searchService.getDefaultColumns().concat($scope.searchService.selectedAddColumns));						
 		}
-		$scope.searchService.search();
+		$scope.search();
 	};	
 	$scope.searchService.resetDatatableColumns = function(){
 		$scope.searchService.initAdditionalColumns();

@@ -47,7 +47,7 @@
 						{{container.code}}
 					</td>
 					<td class="col-sm-1">
-						<input class="form-control input-small valueInput" type="text" placeholder="" ng-readonly="!experiment.experimentProperties.enabled" ng-model="container.percentage" title='@Messages("containers.table.percentage")'/>
+						<input class="form-control input-small valueInput" type="number" placeholder="" ng-readonly="!experiment.experimentProperties.enabled" ng-model="container.percentage" title='@Messages("containers.table.percentage")'/>
 					</td>					
 					<td>
 						<div list-resize="properties.tag.value in getTags(container.contents) | unique" list-resize-min-size='5' below vertical></div>						
@@ -180,7 +180,7 @@
 			    <tr>
 					<td style="min-width:70px" ng-repeat="property in experiment.containerOutProperties">
 								<div ng-switch on="property.choiceInList">
-								<input class="form-control valueInput" type="text" ng-switch-when="false" title="{{property.name}}"
+								<input class="form-control valueInput" type="number" ng-switch-when="false" title="{{property.name}}"
 									ng-readonly="!experiment.experimentProperties.enabled"
 									ng-model="experiment.value.atomicTransfertMethods[@i].outputContainerUseds[0].experimentProperties[property.code].value"
 								    ng-blur="changeValueInFlowcellCompo()"

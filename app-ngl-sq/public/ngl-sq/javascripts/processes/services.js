@@ -17,6 +17,16 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			lists.refresh.processTypes();
 			lists.refresh.reportConfigs({pageCodes:["processes-addcolumns"]}, "processes-addcolumns");
 			lists.refresh.filterConfigs({pageCodes:["processes-search-addfilters"]}, "processes-search-addfilters");
+			
+			$http.get(jsRoutes.controllers.processes.api.ProcessTypes.list().url,{params:{"list":true}})
+       	 		.success(function(data, status, headers, config) {
+       	 			var processesTypes = data;
+       	 			angular.forEach(processesTypes, function(processType) {
+       	 			lists.refresh.filterConfigs({pageCodes:["process-"+processType.code]}, "process-"+processType.code);
+       	 			})       	 			
+       		 
+       	 		});
+			
 			isInit=true;
 		}
 	};
@@ -387,33 +397,25 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 this.additionalFilters=[];
 			                                    	 var formFilters = [];
 			                                    	 var allFilters = undefined;
-			                                    	 var nbElementByColumn = undefined;
+			                                    	 var nbElementByColumn = undefined;			                                    	
 			                                    	 
-			                                    	 if(lists.get("processes-search-addfilters") && lists.get("processes-search-addfilters").length === 1){			                             					
-				                             				allFilters = angular.copy(lists.get("processes-search-addfilters")[0].filters);	
-				                             				nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
-				                                    		for(var i = 0; i  < 5 && allFilters.length > 0 ; i++){
-				                                    			 formFilters.push(allFilters.splice(0, nbElementByColumn));	    								
-				                                    		 }
-				                                    		//complete to 5 five element to have a great design 
-				                                    		 while(formFilters.length < 5){
-				                                    			 formFilters.push([]);
-				                                    		 }
-				                                    	 }			                                    	 
+			                                    	 if(lists.get("processes-search-addfilters") && lists.get("processes-search-addfilters").length === 1){
+			                                    		 allFilters = angular.copy(lists.get("processes-search-addfilters")[0].filters);			                                    		 
+			                                    	 } 
 			                                    	 
-			                                    	 if(this.form.typeCode !== undefined && lists.get("process-"+this.form.typeCode) && lists.get("process-"+this.form.typeCode).length === 1){			                                    		 
-			                                    		allFilters = angular.copy(lists.get("process-"+this.form.typeCode)[0].filters);	
-			                                    		nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
-			                                    		for(var i = 0; i  < 5 && allFilters.length > 0 ; i++){
-			                                    			 formFilters.push(allFilters.splice(0, nbElementByColumn));	    								
-			                                    		 }
-			                                    		 //complete to 5 five element to have a great design 
-			                                    		while(formFilters.length < 5){
-		                                    			 formFilters.push([]);
-		                                    		 }
-			                                    	 }   
-		                                    		 
-		                                    		 this.additionalFilters = formFilters;			                                    	 
+			                                    	 if(angular.isDefined(this.form.typeCode) && lists.get("process-"+this.form.typeCode) && lists.get("process-"+this.form.typeCode).length === 1){			                                    		 
+			                                    		 allFilters = allFilters.concat(angular.copy(lists.get("process-"+this.form.typeCode)[0].filters));
+			                                    	 }
+			                                    	 nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
+			                                    	 for(var i = 0; i  < 5 && allFilters.length > 0 ; i++){
+			                                    		 formFilters.push(allFilters.splice(0, nbElementByColumn));	    								
+			                                    	 }
+			                                    	 //complete to 5 five element to have a great design 
+			                                    	 while(formFilters.length < 5){
+			                                    		 formFilters.push([]);
+			                                    	 }
+
+			                                    	 this.additionalFilters = formFilters;			                                    	 
 			                                     },
 
 			                                     getAddFiltersToForm : function(){
@@ -449,12 +451,12 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                     },
 
 			                                     changeProcessTypeCode : function(){
-			                                    	 if(this.form.categoryCode){						
-			                                    		 lists.refresh.filterConfigs({pageCodes:["process-"+this.form.typeCode]}, "process-"+this.form.typeCode);
-			                                    		 this.initAdditionalFilters();
+			                                    	 if(angular.isDefined(this.form.categoryCode)){						
+			                                    		 lists.refresh.filterConfigs({pageCodes:["process-"+this.form.typeCode]}, "process-"+this.form.typeCode);			                                    		 
 			                                    	 }else{
-			                                    		 this.form.typeCode = undefined;	
+			                                    		 this.form.typeCode = undefined;			                                    		
 			                                    	 }
+			                                    	 this.initAdditionalFilters();			                                    	 
 			                                     },
 			                                     initAdditionalColumns : function(){
 			                                    	 this.additionalColumns=[];
@@ -521,7 +523,6 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                      */
 			                                     init : function($routeParams, datatableConfig){
 			                                    	 initListService();
-
 			                                    	 //to avoid to lost the previous search
 			                                    	 if(datatableConfig && angular.isUndefined(mainService.getDatatable())){
 			                                    		 searchService.datatable = datatable(datatableConfig);

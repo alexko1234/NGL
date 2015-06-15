@@ -32,6 +32,7 @@ import org.mongojack.DBUpdate;
 
 import play.Logger;
 import validation.ContextValidation;
+import validation.experiment.instance.AtomicTransfertMethodValidationHelper;
 import validation.utils.ValidationConstants;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -174,6 +175,8 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 			contextValidation.removeObject("level");
 		}
 		
+		AtomicTransfertMethodValidationHelper.validateOneOutputContainer(outputContainerUseds, contextValidation);
+		
 		contextValidation.addKeyToRootKeyName("inputContainerUseds");
 		for(ContainerUsed containerUsed:inputContainerUseds){
 			contextValidation.putObject("level", Level.CODE.ContainerIn);
@@ -181,6 +184,8 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 			contextValidation.removeObject("level");
 		}
 		contextValidation.removeKeyFromRootKeyName("inputContainerUseds");
+		
+		AtomicTransfertMethodValidationHelper.validateOneOutputContainer(outputContainerUseds, contextValidation);
 	}
 
 	@JsonIgnore

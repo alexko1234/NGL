@@ -87,7 +87,7 @@ angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$window','data
 			        	 "header":Messages("containers.table.percentageInsidePool"),
 			        	 "property":"percentage",
 			        	 "order":true,
-						 "edit":true,
+						 "edit":false,
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":8,
@@ -219,7 +219,6 @@ angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$window','data
 		$scope.datatable.addColumn(-1,$scope.datatable.newColumn(function(){return Messages("containers.table.volume") + " (µL)"},"outputContainerUsed.volume.value",false, true,true,"number",false,undefined,{"0":"Outputs"}));
 		$scope.datatable.addColumn(-1,$scope.datatable.newColumn(Messages("containers.table.code"),"outputContainerUsed.code",false, true,true,"text",false,undefined,{"0":"Outputs"}));		
 		$scope.datatable.addColumn(-1,$scope.datatable.newColumn(Messages("containers.table.stateCode"),"outputContainerUsed.state.code | codes:'state'",false, true,true,"text",false,undefined,{"0":"Outputs"}));
-		
 	};	
 
 	$scope.$on('addOutputColumns', function(e) {
@@ -236,7 +235,7 @@ angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$window','data
 				$scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds.push({code:container.code,instrumentProperties:{},experimentProperties:{},state:container.state,
 					locationOnContainerSupport:container.support});				
 			}); */
-			
+			$scope.atomicTransfere.experimentToOutput($scope.datatable);
 	};
 	
 	$scope.$on('initAtomicTransfert', function(e, containers, atomicTransfertMethod) {
@@ -370,7 +369,8 @@ angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$window','data
 		promises.push($scope.datatable.save());
 		if(angular.isDefined($scope.datatable.getData()) && $scope.datatable.getData().length>0){			
 			promises.push($scope.datatable.save());
-		}		
+		}
+		$scope.atomicTransfere.outputToExperiment($scope.datatable);
 		$scope.$emit('viewSaved', promises, func, endPromises);
 	});
 	
