@@ -4,7 +4,7 @@ import static play.data.Form.form;
 
 import java.util.List;
 
-import lims.dao.LimsManipDAO;
+import lims.cns.dao.LimsManipDAO;
 import lims.models.Manip;
 import play.Logger;
 import play.api.modules.spring.Spring;
