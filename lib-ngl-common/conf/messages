@@ -42,8 +42,8 @@ error.validationexp.sameconcentration="La concentration du container {0} n''est 
 error.validationexp.outputvolumenotnull="La saisie du volume du tube de sortie {0} est obligatoire"
 error.validationexp.outputconcentrationnotnull="La saisie de la concentration du tube de sortie {0} est obligatoire"
 error.validationexp.codewithbadchar= "Le champ {0} contient de mauvais caractères"
-error.validationexp.inputSupportSize="L''expérience type {0} accepte un seul support en entrée"
-
+error.validationexp.oneInputSupport="L''expérience type {0} accepte un seul support en entrée"
+error.validationexp.manyInputSupport="L''expérience type {0} accepte plus d''un support en entrée"
 
 
 #directive messages
