@@ -53,7 +53,7 @@ public class ContainerUsedValidation extends CommonValidationHelper{
 
 
 	public static void validateVolume(ContextValidation contextValidation, PropertyValue volume) {
-		if(volume!=null){
+		if(volume!=null && volume.value!=null){
 			Collection<PropertyDefinition> pdefs = new ArrayList<>();		
 			PropertyDefinition pd = new PropertyDefinition();			
 			pd.code = "volume";
@@ -67,7 +67,7 @@ public class ContainerUsedValidation extends CommonValidationHelper{
 
 
 	public static void validateConcentration(ContextValidation contextValidation, PropertyValue concentration) {
-		if(concentration!=null){
+		if(concentration!=null && concentration.value!=null){
 			Collection<PropertyDefinition> pdefs = new ArrayList<>();
 			PropertyDefinition pd = new PropertyDefinition();
 			pd.code = "concentration";
