@@ -139,7 +139,9 @@ angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datat
 				by:'code'
 			},
 			remove:{
-				active:false,
+				active: (!$scope.doneAndRecorded && !$scope.inProgressNow),
+				showButton: (!$scope.doneAndRecorded && !$scope.inProgressNow),
+				mode:'local'
 			},
 			save:{
 				active:true,
@@ -151,7 +153,7 @@ angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datat
 				active:true
 			},
 			edit:{
-				active: !$scope.doneAndRecorded,
+				active: (!$scope.doneAndRecorded && !$scope.inProgressNow),
 				columnMode:true
 			},
 			messages:{

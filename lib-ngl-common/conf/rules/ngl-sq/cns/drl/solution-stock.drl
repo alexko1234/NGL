@@ -117,7 +117,7 @@ rule "Concentration not null in SolutionStock outputContainer"
     Integer i = null;
     for(AtomicTransfertMethod atomic : $experiment.atomicTransfertMethods){    	
     	if(($inputContainerUsed.code).equals(atomic.inputContainerUseds.get(0).code)){
-    	 $contextValidation.addErrors("solution-stock","error.validationexp.outputconcentrationnotnull", $experiment.atomicTransfertMethods.indexOf(atomic));
+    	 $contextValidation.addErrors("solution-stock","error.validationexp.outputconcentrationnotnull", $inputContainerUsed.code);
     	}
     }    
 end
@@ -138,7 +138,7 @@ rule "Volume not null in SolutionStock outputContainer"
     Integer i = null;
     for(AtomicTransfertMethod atomic : $experiment.atomicTransfertMethods){    	
     	if(($inputContainerUsed.code).equals(atomic.inputContainerUseds.get(0).code)){
-    	 $contextValidation.addErrors("solution-stock","error.validationexp.outputvolumenotnull",$experiment.atomicTransfertMethods.indexOf(atomic));
+    	 $contextValidation.addErrors("solution-stock","error.validationexp.outputvolumenotnull", $inputContainerUsed.code);
     	}
     }
    
