@@ -72,5 +72,5 @@ rule "Same concentrations in  Pool-tube"
     	Double value = Double.parseDouble($concentration.getValue().toString());
     	Logger.debug("value = " + value);
     	Logger.debug("Same concentrations in  Pool-tube");
-    	$contextValidation.addErrors("pool-tube","error.validationexp.sameconcentration",$code);
+    	$contextValidation.addErrors("pool-tube","error.validationexp.sameconcentration",$code, value);
 end

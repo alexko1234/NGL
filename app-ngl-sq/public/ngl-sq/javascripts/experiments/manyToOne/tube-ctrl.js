@@ -39,6 +39,7 @@ angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$window','data
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
+			        	 "filter":"codes:'type'",
 			        	 "position":1,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
