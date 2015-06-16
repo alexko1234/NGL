@@ -74,3 +74,18 @@ rule "Same concentrations in  Pool-tube"
     	Logger.debug("Same concentrations in  Pool-tube");
     	$contextValidation.addErrors("pool-tube","error.validationexp.sameconcentration",$code);
 end
+
+
+rule "more than one inputContainer"
+	@nglSQ (validations )
+	dialect "java"
+	salience 400
+	no-loop
+    when
+    Experiment($typeCode:typeCode,$typeCode=="pool-tube",$inputContainerSupportCodes:atomicTransfertMethods)
+    $contextValidation:ContextValidation($errors : errors)
+    eval($inputContainerSupportCodes.size()<=1)
+    then 
+       	//Logger.debug("Nb inputContainerSupportCodes "+$inputContainerSupportCodes.size());
+    	$contextValidation.addErrors("inputContainerSupportCodes","error.validationexp.manyInputSupport", $typeCode);
+    end

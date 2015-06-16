@@ -12,5 +12,5 @@ rule "only one inputssupport"
     eval($inputContainerSupportCodes.size()!=1)
     then 
        	//Logger.debug("Nb inputContainerSupportCodes "+$inputContainerSupportCodes.size());
-    	$contextValidation.addErrors("inputContainerSupportCodes","error.validationexp.inputSupportSize", $typeCode);
+    	$contextValidation.addErrors("inputContainerSupportCodes","error.validationexp.oneInputSupport", $typeCode);
     end
