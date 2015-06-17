@@ -9,8 +9,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import lims.dao.LimsManipDAO;
+import lims.cns.dao.LimsManipDAO;
 import lims.models.Plate;
+import models.utils.CodeHelper;
 import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.Form;
@@ -43,9 +44,9 @@ public class Plates extends CommonController {
         	if (!filledForm.hasErrors()) {
         	    Logger.debug(plate.toString());
         	    if (!isUpdate) {
-        		Spring.getBeanOfType(LimsManipDAO.class).createPlate(plate,getCurrentUser());
+        	    	Spring.getBeanOfType(LimsManipDAO.class).createPlate(plate,getCurrentUser());
         	    } else {
-        		Spring.getBeanOfType(LimsManipDAO.class).updatePlate(plate,getCurrentUser());
+        	    	Spring.getBeanOfType(LimsManipDAO.class).updatePlate(plate,getCurrentUser());
         	    }
         	    plate = Spring.getBeanOfType(LimsManipDAO.class).getPlate(plate.code);  
         	    return ok(Json.toJson(plate));
@@ -125,16 +126,15 @@ public class Plates extends CommonController {
 	}
 
 	private static String newCode(Integer typeCode) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
-		String code;
+		String code = CodeHelper.getInstance().generateContainerSupportCode();
 		if(Integer.valueOf(12).equals(typeCode)){
-		    code = "FRG_"+sdf.format(new Date());
+		    code = "FRG_"+code;
 		}else if(Integer.valueOf(13).equals(typeCode)){
-		    code = "LIB_"+sdf.format(new Date());
+		    code = "LIB_"+code;
 		}else if(Integer.valueOf(18).equals(typeCode)){
-		    code = "PCR_"+sdf.format(new Date());
+		    code = "PCR_"+code;
 		}else{
-		    code = "PL"+sdf.format(new Date());
+		    code = "PL_"+code;
 		}
 		
 		return code;
