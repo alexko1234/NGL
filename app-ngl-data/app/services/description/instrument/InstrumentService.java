@@ -137,8 +137,8 @@ public class InstrumentService {
 
 		l.add(newInstrumentUsedType("TECAN evo 100", "tecan-evo-100", InstrumentCategory.find.findByCode("liquid-handling-robot"), null, 
 				getInstruments(
-						createInstrument("wolverine", "Wolverine", null, true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)),
-						createInstrument("arrow", "Arrow", null, true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS))),
+						createInstrument("wolverine", "Wolverine", null, true, "/bureautique/atelier/SOLEXA/Solstock_TECAN/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)),
+						createInstrument("arrow", "Arrow", null, true, "/bureautique/atelier/SOLEXA/Solstock_TECAN/", DescriptionFactory.getInstitutes(Institute.CODE.CNS))),
 						/*getContainerSupportCategories(new String[]{"sheet-96"})*/null,getContainerSupportCategories(new String[]{"tube"/*,"sheet-96"*/}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 
