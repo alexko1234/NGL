@@ -33,11 +33,12 @@ public class Sample extends DBObject implements IValidation {
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		contextValidation.addKeyToRootKeyName("sample::");
+		contextValidation.addKeyToRootKeyName("sample");
 		if (contextValidation.getContextObjects().get("type")==null) {
 			contextValidation.addErrors("sample non evaluable ", "sans type de contexte de validation");
 		}
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapStatus, "state.code");
+		SraValidationHelper.validateProjectCode(this.projectCode, contextValidation);
 		SraValidationHelper.validateId(this, contextValidation);
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
 		if (contextValidation.getContextObjects().get("type").equals("sra")) {
@@ -48,7 +49,7 @@ public class Sample extends DBObject implements IValidation {
 		} else {
 			contextValidation.addErrors("sample non evaluable ", "avec type de contexte de validation " + contextValidation.getContextObjects().get("type"));	
 		}
-		contextValidation.removeKeyFromRootKeyName("sample::");
+		contextValidation.removeKeyFromRootKeyName("sample");
 	}
 
 }

@@ -33,12 +33,24 @@ angular.module('commonsServices', []).
 							this.text = undefined; 
 							this.showDetails = false; 
 							this.isDetails = false;
-							this.details = [];
+							this.details = {};
 							this.opening = false;
 						},
 						setDetails : function(details){
 							this.isDetails = true;
 							this.details = details;
+						},
+						addDetails : function(details){
+							for(var pName in details){
+								if(this.details[pName] === undefined || this.details[pName] === null){
+									this.details[pName] = details[pName];
+								}else{
+									this.details[pName].push(details[pName]);
+								}
+							}
+							this.isDetails = true;
+							
+							
 						},
 						setSuccess : function(type){
 							this.clazz=this.config.successClass;
@@ -48,9 +60,17 @@ angular.module('commonsServices', []).
 						setError : function(type){
 							this.clazz=this.config.errorClass;
 							this.text=this.transformKey(this.config.errorKey[type]);
-							
 							this.open();
 						},
+						/*addError : function(type){
+							this.clazz=this.config.errorClass;
+							if (this.text != null){
+								this.text+=this.transformKey(this.config.errorKey[type]);
+							} else {
+								this.text=this.transformKey(this.config.errorKey[type]);
+							}
+							this.open();
+						},*/
 						open : function(){
 							this.opening = true;
 						},

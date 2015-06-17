@@ -22,7 +22,7 @@ public class Run implements IValidation {
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		contextValidation.addKeyToRootKeyName("run::");
+		contextValidation.addKeyToRootKeyName("run");
 		// Verifier que runDate est bien renseigné :
 		ValidationHelper.required(contextValidation, this.runDate , "runDate");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.runCenter, VariableSRA.mapCenterName, "runCenter");
@@ -46,6 +46,6 @@ public class Run implements IValidation {
 				}
 			}
 		}
-		contextValidation.removeKeyFromRootKeyName("run::");
+		contextValidation.removeKeyFromRootKeyName("run");
 	}
 }
