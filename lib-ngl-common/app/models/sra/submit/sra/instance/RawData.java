@@ -14,9 +14,9 @@ public class RawData  implements IValidation {
 	public void validate(ContextValidation contextValidation) {
 		// Verifer que les champs sont bien renseignés :
 		if (ValidationHelper.required(contextValidation, this.relatifName,"relatifName")) {
-			contextValidation.addKeyToRootKeyName("rawData::relatifName::" + this.relatifName + "::");
+			contextValidation.addKeyToRootKeyName("rawData.relatifName." + this.relatifName + "");
 		} else {
-			contextValidation.addKeyToRootKeyName("relatifName::");
+			contextValidation.addKeyToRootKeyName("relatifName");
 		}
 		
 		ValidationHelper.required(contextValidation, this.relatifName , "relatifName");
@@ -25,9 +25,9 @@ public class RawData  implements IValidation {
 		//ValidationHelper.required(contextValidation, this.md5 , "md5");
 
 		if (ValidationHelper.required(contextValidation, this.relatifName,"relatifName")) {
-			contextValidation.removeKeyFromRootKeyName("rawData::relatifName::" + this.relatifName + "::");
+			contextValidation.removeKeyFromRootKeyName("rawData.relatifName" + this.relatifName + "");
 		} else {
-			contextValidation.removeKeyFromRootKeyName("rawData::");
+			contextValidation.removeKeyFromRootKeyName("rawData");
 		}
 	}
 

@@ -19,12 +19,12 @@ public class ReadSpec implements IValidation {
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		contextValidation.addKeyToRootKeyName("readSpec::");
+		contextValidation.addKeyToRootKeyName("readSpec");
 		ValidationHelper.required(contextValidation, this.readIndex, "readIndex");
 		ValidationHelper.required(contextValidation, this.readClass, "readClass");
 		ValidationHelper.required(contextValidation, this.readType, "readType");
 		ValidationHelper.required(contextValidation, this.lastBaseCoord, "lastBaseCoord");
-		contextValidation.removeKeyFromRootKeyName("readSpec::");
+		contextValidation.removeKeyFromRootKeyName("readSpec");
 	}
 
 
