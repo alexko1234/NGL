@@ -1,0 +1,10 @@
+@(experiment: models.laboratory.experiment.instance.Experiment)
+
+@import _root_.instruments.io.utils._;
+
+Numero tube, nom banque (manip prec), vol adn a prelever, vol tampon, nom sol stock
+@for(a <- experiment.atomicTransfertMethods){
+		@for(c <- a.inputContainerUseds){
+			@(a.line),@(c.code),@(AbstractSampleSheetsfactory.getInputContainerUsedExperimentProperty(c,"requiredVolume")).toString().replace(".",","),@(AbstractSampleSheetsfactory.getInputContainerUsedExperimentProperty(c,"bufferVolume")).toString().replace(".",","),@(AbstractSampleSheetsfactory.getOutputContainerUsedCode(a))
+		}	
+} 
