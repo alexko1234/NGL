@@ -62,7 +62,7 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 			ReadSet readset = results.cursor.next();
 			contextError.addKeyToRootKeyName(readset.code);
 			ReadSet newReadset = limsServices.findLSRunProjData(readset);
-			if(null != newReadset){
+			if(null != newReadset && null != readset.sampleOnContainer){
 				updateReadSet(contextError, newReadset, readset.sampleOnContainer.sampleCategoryCode);
 			}else{
 				if("A".equals(readset.state.code)){
