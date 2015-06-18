@@ -838,7 +838,7 @@ public class LimsCNSDAO{
 	
 	public List<ReadSet> findLSRunProjData(){
 		
-		List<ReadSet> results = this.jdbcTemplate.query("pl_LSRunProjUnReadSettoNGL" 
+		List<ReadSet> results = this.jdbcTemplate.query("pl_LSRunProjUnReadSetToNGL" 
 				,new RowMapper<ReadSet>() {
 					@SuppressWarnings("rawtypes")
 					public ReadSet mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -859,6 +859,5 @@ public class LimsCNSDAO{
 		return results;
 		
 	}
-
 }
 

@@ -120,7 +120,9 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 		for(ReadSet readset : readsets){
 			ReadSet currentRS =  MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readset.code, getReadSetKeys());
 			contextError.addKeyToRootKeyName(readset.code);
-			updateReadSet(contextError, readset, currentRS.sampleOnContainer.sampleCategoryCode);
+			if(null != currentRS.sampleOnContainer){
+				updateReadSet(contextError, readset, currentRS.sampleOnContainer.sampleCategoryCode);
+			}
 			contextError.removeKeyFromRootKeyName(readset.code);
 		}
 		
