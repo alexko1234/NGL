@@ -64,7 +64,7 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 			ReadSet newReadset = limsServices.findLSRunProjData(readset);
 			if(null != newReadset && null != readset.sampleOnContainer){
 				updateReadSet(contextError, newReadset, readset.sampleOnContainer.sampleCategoryCode);
-			}else{
+			}else if(null == newReadset){
 				if("A".equals(readset.state.code)){
 					contextError.addErrors("readset", "not found in db lims");
 				}
@@ -120,8 +120,10 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 		for(ReadSet readset : readsets){
 			ReadSet currentRS =  MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readset.code, getReadSetKeys());
 			contextError.addKeyToRootKeyName(readset.code);
-			if(null != currentRS.sampleOnContainer){
+			if(null != currentRS && null != currentRS.sampleOnContainer){
 				updateReadSet(contextError, readset, currentRS.sampleOnContainer.sampleCategoryCode);
+			}else{
+				contextError.addErrors("readset", "not found in ngl");
 			}
 			contextError.removeKeyFromRootKeyName(readset.code);
 		}
