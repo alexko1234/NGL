@@ -600,7 +600,7 @@ public class LimsCNGDAO {
 			});			
 		}	
 		
-		//demultiplexSample plus necessaire ???
+		//demultiplexSample plus necessaire ????
 		return demultiplexSample(results);	
 	}
 	
