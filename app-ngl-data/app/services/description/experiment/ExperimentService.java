@@ -155,7 +155,7 @@ public class ExperimentService {
 			
 			l.add(newExperimentType("Depot Nanopore","nanopore-depot",200,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDepotNanopore(),
-					getInstrumentUsedTypes("minion"),"OneToOne", 
+					getInstrumentUsedTypes("minion"),"ManyToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
 
 			//library
@@ -272,10 +272,10 @@ public class ExperimentService {
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 			
 			// FDS new 02-02-2015, intrument Used =>robot oui mais lequel???
-			/*l.add(newExperimentType("Librairie dénaturée","denat-dil-lib",1100,
+			l.add(newExperimentType("Librairie dénaturée","denat-dil-lib",1100,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
 					getInstrumentUsedTypes("hand"),"OneToOne", 
-					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));*/
+					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 
 
 			// NO qc au CNG ??
