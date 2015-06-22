@@ -431,7 +431,9 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 							var result = varExperimentCommonFunctions.loadContainer(atomicTransfertMethod.outputContainerUseds[0]);
 							results.promises.push(result.promise);
 							result.promise.then(function(container){
-								results.containers.push(container.data);
+								if(container.data.length > 0){
+									results.containers.concat(container.data);
+								}
 							});
 						}
 					});
