@@ -32,11 +32,11 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		// FDS a quoi correspond le 2 eme param "experiment-type-code"?   l'experience d'ou est est sensé venir le container  ????
 		// TODO lister les "experiment-type-code possibles...
 		
-		loadContainers("tube","lib-normalization");
+		//loadContainers("tube","lib-normalization");
 		//updateContainers("tube","lib-normalization");
 		
 		// TODO autres categories de libraries en tube => denat-dil-lib [ lib XnM < 1nM ( 2pM....) ]
-		//loadContainers("tube","denat-dil-lib");
+		loadContainers("tube","denat-dil-lib");
 		///updateContainers("tube","denat-dil-lib");
 		
 		// TODO ???? autres categories de libraries en tube
@@ -53,7 +53,7 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 	
 	
 	public void loadSamples() throws SQLException, DAOException {
-		Logger.debug("start loading samples");
+		Logger.debug("Start loading samples");
 		
 		//-1- chargement depuis la base source Postgresql
 		List<Sample> samples = limsServices.findSampleToCreate(contextError, null) ;
@@ -64,7 +64,7 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		//-3- tagger dans la base source Postgresql ce qui a été traité
 		limsServices.updateLimsSamples(samps, contextError, "creation");
 		
-		Logger.debug("end loading samples");
+		Logger.debug("End loading samples");
 	}
 	
 	public void updateSamples() throws SQLException, DAOException {
@@ -88,11 +88,11 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		//-3- tagger dans la base source Postgresql ce qui a été traité
 		limsServices.updateLimsSamples(samps, contextError, "update");	
 		
-		Logger.debug("end updating samples");
+		Logger.debug("End updating samples");
 	}
 	
 	public void loadContainers(String containerCategoryCode, String experimentTypeCode) throws SQLException, DAOException {
-		Logger.debug("start loading containers of type " + containerCategoryCode);		
+		Logger.debug("Start loading containers of type :" + containerCategoryCode + "from experimenf type :"+ experimentTypeCode);		
 		
 		//-1- chargement depuis la base source Postgresql
 		List<Container> containers = limsServices.findContainerToCreate(contextError, containerCategoryCode, experimentTypeCode );
@@ -119,11 +119,11 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		}
 		//prévoir des well (plaques96) !!!!
 			
-		Logger.debug("end loading containers of type " + containerCategoryCode);		
+		Logger.debug("End loading containers of type " + containerCategoryCode);		
 	}
 	
 	
-	public void updateContainers(String containerCategoryCode,String experimentTypeCode) throws SQLException, DAOException {
+	public void updateContainers(String containerCategoryCode, String experimentTypeCode) throws SQLException, DAOException {
 		Logger.debug("start updating containers of type " + containerCategoryCode);		
 		
 		//-1- chargement depuis la base source Postgresql

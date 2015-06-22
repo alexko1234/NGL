@@ -213,8 +213,8 @@ public class LimsCNGDAO {
 		
 		container.traceInformation = new TraceInformation();
 		container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
-		
-		container.code = rs.getString("code");
+		// 19/06/2015 renommage code => container_code
+		container.code = rs.getString("container_code");
 		Logger.debug("[commonContainerMapRow] Container code :"+container.code);
 		
 		container.categoryCode = containerCategoryCode; //lane or tube
@@ -241,7 +241,10 @@ public class LimsCNGDAO {
 		        =>et pour les lanes ???????
 		*/
 		try {
-			container.support = ContainerSupportHelper.getContainerSupport(containerCategoryCode, rs.getInt("nb_container"),rs.getString("code_support"),"1",rs.getString("column")); 
+			/* 19/06/2015 modifier nb_container=> nb_usable_container; code_support=> support_code
+			 * soit row/column sont fixés dans le sql soit dans le java mais pas a cheval sur les 2 !!!
+			 */
+			container.support = ContainerSupportHelper.getContainerSupport(containerCategoryCode, rs.getInt("nb_usable_container"),rs.getString("support_code"),rs.getString("row"),rs.getString("column")); 
 		}
 		catch(DAOException e) {
 			Logger.error("[commonContainerMapRow] Can't get container support !"); 
@@ -262,18 +265,19 @@ public class LimsCNGDAO {
 			container.mesuredConcentration = new PropertySingleValue(concentration, "nM");
 			
 		}
-		// prevoir les well (plaques96) les puits ont des concentration !!!!
+		// prevoir les well (plaques96) les puits ont des concentrations !!!!
 		
-		//plus nécessaire, une library n'est plus attribuée qu'a un seul projet
+		//Array List plus nécessaire, une library n'est plus attribuée qu'a un seul projet
 		if (rs.getString("project")!=null) {
 			container.projectCodes = new ArrayList<String>();
 			container.projectCodes.add(rs.getString("project"));
 		}		
 		
 		// creation du content d'un container
-		if (rs.getString("code_sample")!=null) {
+		// 19/06/2015 renommage code_sample => sample_code
+		if (rs.getString("sample_code")!=null) {
 			Content content=new Content();
-			content.sampleCode = rs.getString("code_sample");
+			content.sampleCode = rs.getString("sample_code");
 			content.projectCode = rs.getString("project");
 						
 			/* FDS 05/06/2015 JIRA NGL-672  remplacer default-sample-cng par le véritable sampleType
@@ -290,7 +294,7 @@ public class LimsCNGDAO {
 				return null;
 			}
 			if ( sampleType==null ) {
-				ctxErr.addErrors("code", "error.codeNotExist", sampleTypeCode, content.sampleCode);
+				ctxErr.addErrors("sample code", "error.codeNotExist", sampleTypeCode, content.sampleCode);
 				return null;
 			}	
 			
@@ -315,18 +319,20 @@ public class LimsCNGDAO {
 				content.properties.put("libProcessTypeCode", new PropertySingleValue("-1"));
 			}
 			
-			// FDS 15/06/2015 JIRA NGL-674 Ajout du barcode aliquot initial=> nouvelle propriete content 
+			// FDS 15/06/2015 JIRA NGL-674 Ajout du barcode aliquot initial=> nouvelle propriété de content 
 			if (rs.getString("aliquot_code")!=null) { 
+				//Logger.debug("[commonContainerMapRow] content.aliquot code :"+ rs.getString("aliquot_code"));
 				content.properties.put("aliquotCode", new PropertySingleValue(rs.getString("aliquot_code")));
 			}
 			else {
+				Logger.debug("[commonContainerMapRow] content.aliquot code : null !!!!!!");
 				content.properties.put("aliquotCode", new PropertySingleValue("-1"));
 			}
 			
 			container.contents.add(content);			
 			
 			container.sampleCodes=new ArrayList<String>();
-			container.sampleCodes.add(rs.getString("code_sample"));
+			container.sampleCodes.add(rs.getString("sample_code")); // 19/06/2015 renomme sample_code
 			
 			//TODO : manage fromExperimentTypeCodes for import lib_b* & lane/flowcell --> mapping Julie	
 		}
@@ -346,15 +352,16 @@ public class LimsCNGDAO {
 	 *  FDS uniquement  appellé dans setSequencingProgramTypeToContainerSupport ?????????????????
 	 */
 	private ContainerSupport commonContainerSupportMapRow(ResultSet rs, int rowNum, ContextValidation ctxErr) throws SQLException {
-		ContainerSupport containerSupport = new ContainerSupport();		
-		containerSupport.code = rs.getString("code_support");
+		ContainerSupport containerSupport = new ContainerSupport();	
+		//19/06/2015 renommage code_support => support_code
+		containerSupport.code = rs.getString("support_code");
 		
 		if (rs.getString("seq_program_type").equals("PE") || rs.getString("seq_program_type").equals("SR")) {
 			containerSupport.properties= new HashMap<String, PropertyValue>();
 			containerSupport.properties.put("sequencingProgramType", new PropertySingleValue(rs.getString("seq_program_type")));
 		}
 		else {
-			Logger.error("Wrong value of seq_program_type : " + rs.getString("seq_program_type") + "! (expected SE ou PR) for code : " + rs.getString("code_support")); 
+			Logger.error("Wrong value of seq_program_type : " + rs.getString("seq_program_type") + "! (expected SE ou PR) for code : " + rs.getString("support_code")); 
 		}
 		return containerSupport;
 	}	
@@ -547,7 +554,7 @@ public class LimsCNGDAO {
 			});			
 		}	
 		
-		//demultiplexSample plus necessaire ???
+		//demultiplexSample toujours necessaire car le code est le SOLEXA stock_barcode=> plusieurs samples peuvent avoir le meme code
 		return demultiplexSample(results);	
 	}
 	
@@ -575,7 +582,6 @@ public class LimsCNGDAO {
 		List<Sample> results = null;
 		
 		if (sampleCode != null) { 
-			// si on connait le barcode a modifier plus besoin de order by !!!
 			results = this.jdbcTemplate.query("select * from v_sample_tongl where code=? order by code, project desc, comments", new Object[]{sampleCode}
 			,new RowMapper<Sample>() {
 				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -600,7 +606,7 @@ public class LimsCNGDAO {
 			});			
 		}	
 		
-		//demultiplexSample plus necessaire ????
+		//demultiplexSample toujours necessaire car le code est le SOLEXA stock_barcode=> plusieurs samples peuvent avoir le meme code
 		return demultiplexSample(results);	
 	}
 	
@@ -613,6 +619,8 @@ public class LimsCNGDAO {
 	public static List<Container> demultiplexContainer(List<Container> results) throws DAOException {
 		//affect all the project codes /samples /tags to the same container (for having unique codes of containers) 
 		/// required to have an ordered list (see ORDER BY clause in the sql of the view)
+		Logger.debug("Start demultiplexing containers...");
+		
 		int pos = 0;
 		int x = 1;
 		int listSize = results.size();
@@ -637,7 +645,7 @@ public class LimsCNGDAO {
 					if ( (content.sampleCode.equals(results.get(pos+x).contents.get(0).sampleCode))  
 								&& (content.properties.get("tag").value.equals(results.get(pos+x).contents.get(0).properties.get("tag").value)) 
 								&& (content.properties.get("libProcessTypeCode").value.equals(results.get(pos+x).contents.get(0).properties.get("libProcessTypeCode").value)) 
-								&& (content.properties.get("aliquotCode").value.equals(results.get(pos+x).contents.get(0).properties.get("aliquot").value)) ){
+								&& (content.properties.get("aliquotCode").value.equals(results.get(pos+x).contents.get(0).properties.get("aliquotCode").value)) ){
 						findContent = true;
 						//Logger.debug("content already created !");
 						break;
@@ -658,7 +666,7 @@ public class LimsCNGDAO {
 			for (int i=0; i<r.contents.size(); i++) {
 				
 				//remove bad properties
-				// FDS 04/05/2015  valeurs -1 positionnées dans commonContainerMapRow 
+				// FDS comments 04/05/2015 : valeurs -1 positionnées dans commonContainerMapRow 
 
 				// FDS 04/05/2015 ajout test if =!null car il y a des cas => null pointer exception!!
 				if ((r.contents.get(i).properties.get("tag")!= null) && (r.contents.get(i).properties.get("tag").value.equals("-1"))) {
@@ -673,7 +681,7 @@ public class LimsCNGDAO {
 					r.contents.get(i).properties.remove("libProcessTypeCode");
 				}
 				
-				//FDS 17/06/2015 JIRA NGL-674
+				//FDS 17/06/2015 ajout pour JIRA NGL-674
 				if ((r.contents.get(i).properties.get("aliquotCode") != null) && (r.contents.get(i).properties.get("aliquotCode").value.equals("-1"))) {
 					r.contents.get(i).properties.remove("aliquotCode");
 				}
@@ -685,9 +693,10 @@ public class LimsCNGDAO {
 			}
 		}	
 		
-		//NEW : define container projects from projects contents
+		//define container projects from projects contents
 		defineContainerProjectCodes(results); 
 		
+		Logger.debug("End demultiplexing containers...");
 		return results;
 	}
 	
@@ -731,21 +740,27 @@ public class LimsCNGDAO {
 		content.sampleTypeCode =results.get(posNext).contents.get(0).sampleTypeCode;
 		content.sampleCategoryCode =results.get(posNext).contents.get(0).sampleCategoryCode;
 		
+		// peut ne pas y avoir d'index et pourtant pas de pb de null pointer exception ici ???
 		content.properties = new HashMap<String, PropertyValue>();
 		content.properties.put("tag", new PropertySingleValue(results.get(posNext).contents.get(0).properties.get("tag").value));
 		content.properties.put("tagCategory", new PropertySingleValue(results.get(posNext).contents.get(0).properties.get("tagCategory").value));
 	
-		if (results.get(posNext).contents.get(0).properties.get("libProcessTypeCode") == null) {		
+		if (results.get(posNext).contents.get(0).properties.get("libProcessTypeCode") == null) {	
+			Logger.debug("[createContent] content.sampleCode =" + content.sampleCode + " pas de lib process type code ( exp_type_code) !!!!!");
 		}
 		else {
 			content.properties.put("libProcessTypeCode", new PropertySingleValue(results.get(posNext).contents.get(0).properties.get("libProcessTypeCode").value));
 			Logger.debug("[createContent] content.sampleCode =" + content.sampleCode + "; content.libProcessTypeCode ="+ content.properties.get("libProcessTypeCode").value);
 		}
 		
-		//FDS 16/06/2015 JIRA NGL-674: ajouter aliquot code (peut pas etre null)
-		content.properties.put("aliquotCode", new PropertySingleValue(results.get(posNext).contents.get(0).properties.get("aliquotCode").value));
-		Logger.debug("[createContent] content.sampleCode =" + content.sampleCode + "; content.aliquotCode ="+ content.properties.get("aliquotCode").value);
-				
+		//FDS 16/06/2015 JIRA NGL-674: ajouter aliquot code (peut pas etre null)???
+		if (results.get(posNext).contents.get(0).properties.get("aliquotCode") == null) {
+		}
+		else {
+			content.properties.put("aliquotCode", new PropertySingleValue(results.get(posNext).contents.get(0).properties.get("aliquotCode").value));
+			Logger.debug("[createContent] content.sampleCode =" + content.sampleCode + "; content.aliquotCode ="+ content.properties.get("aliquotCode").value);
+		}
+		
 		results.get(posCurrent).contents.add(content); 
 		
 		return results;
@@ -796,37 +811,38 @@ public class LimsCNGDAO {
 		
 		List<Container> results = null;
 		if (containerCode != null) {
-			//04/05/2015 - la contrainte "isavailable = true" est forcee dans la vue
-			//           - "order by" n'a pas de sens quand on a choisi un objet particulier...
-			results = this.jdbcTemplate.query("select * from " + sqlView + " where code = ? ", new Object[]{containerCode} 
+			//04/05/2015 contrainte "isavailable = true" est forcee dans la vue
+			//19/06/2015 renommage code=>container_code; code_sample => sample_code
+			results = this.jdbcTemplate.query("select * from " + sqlView + " where container_code = ? order by container_code, project desc, sample_code, tag, exp_short_name", new Object[]{containerCode} 
 			,new RowMapper<Container>() {
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
 					int rowNum0 = rowNum;
 					ContextValidation ctxErr = contextError; 
-					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, _containerCategoryCode,experimentTypeCode); 
+					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, _containerCategoryCode, experimentTypeCode); 
 					return c;
 				}
 			});
 		}
 		else {
-			Logger.debug("Import containers "+containerCategoryCode+ " with SOLEXA sql: "+sqlView );
+			Logger.debug("Import containers " + containerCategoryCode + " with SOLEXA sql: "+ sqlView );
 			//13/03/2015 le order by est TRES IMPORTANT: demultiplexContainer en depend !! 
-			//04/05/2015 - contrainte "isavailable=true" est forcee dans la vue
-			results = this.jdbcTemplate.query("select * from " + sqlView + " order by code, project desc, code_sample, tag, exp_short_name", new Object[]{} 
+			//04/05/2015 contrainte "isavailable=true" est forcee dans la vue
+			//19/06/2015 renommage code=>container_code; code_sample => sample_code
+			results = this.jdbcTemplate.query("select * from " + sqlView + " order by container_code, project desc, sample_code, tag, exp_short_name", new Object[]{} 
 			,new RowMapper<Container>() {
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
 					int rowNum0 = rowNum;
 					ContextValidation ctxErr = contextError; 
-					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, _containerCategoryCode,experimentTypeCode);
-					// debug identique danscommonContainerMapRow..... Logger.debug("Container "+c.code);
+					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, _containerCategoryCode, experimentTypeCode);
+					// debug identique dans commonContainerMapRow..... Logger.debug("Container "+c.code);
 					return c;
 				}
 			});
 		}
 		
-		Logger.debug("Now demultiplexing...");
+		
 		return demultiplexContainer(results);			
 	}
 	
@@ -838,7 +854,7 @@ public class LimsCNGDAO {
 	 * @return
 	 * @throws DAOException
 	 */
-	public List<Container> findAllContainer(final ContextValidation contextError, String containerCategoryCode,final String experimentTypeCode) throws DAOException {
+	public List<Container> findAllContainer(final ContextValidation contextError, String containerCategoryCode, final String experimentTypeCode) throws DAOException {
 		final String _containerCategoryCode = containerCategoryCode;
 		String sqlView;
 		
@@ -865,7 +881,10 @@ public class LimsCNGDAO {
 		// prevoir well (plate96)
 		
 		//04/05/2015 contrainte "isavailable=true" est forcee dans la vue
-		List<Container> results = this.jdbcTemplate.query("select * from " + sqlView + " order by code, project desc, code_sample, tag, exp_short_name", new Object[]{} 
+		/* 19/06 renommage  code =>container_code;  code_sample=> sample_code
+		 * List<Container> results = this.jdbcTemplate.query("select * from " + sqlView + " order by code, project desc, code_sample, tag, exp_short_name", new Object[]{} 
+		 */
+		List<Container> results = this.jdbcTemplate.query("select * from " + sqlView + " order by container_code, project desc, sample_code, tag, exp_short_name", new Object[]{} 
 		,new RowMapper<Container>() {
 			public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 				ResultSet rs0 = rs;
@@ -928,9 +947,9 @@ public class LimsCNGDAO {
 	
 		List<Container> results = null;		
 		if (containerCode != null) {
-			//04/05/2015 - la contrainte "and isavailable = true" est forcee dans la vue
-			//           - 'order by' n'a pas de sens quand on a choisi un object
-			results = this.jdbcTemplate.query("select * from " + sqlView + " where code = ? ", new Object[]{containerCode} 
+			//04/05/2015 la contrainte "and isavailable = true" est forcee dans la vue
+			//19/06/2015 renommage code=> container_code; code_sample=>sample-code
+			results = this.jdbcTemplate.query("select * from " + sqlView + " where container_code = ? order by container_code, project desc, sample_code, tag, exp_short_name", new Object[]{containerCode} 
 			,new RowMapper<Container>() {
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
@@ -943,7 +962,8 @@ public class LimsCNGDAO {
 		}
 		else {
 			//04/05/2015 la contrainte "and isavailable = true" est forcee dans la vue
-			results = this.jdbcTemplate.query("select * from " + sqlView + " order by code, project desc, code_sample, tag, exp_short_name", new Object[]{} 
+			//19/06/2015 renommage code=> container_code; code_sample=>sample-code
+			results = this.jdbcTemplate.query("select * from " + sqlView + " order by container_code, project desc, sample_code, tag, exp_short_name", new Object[]{} 
 			,new RowMapper<Container>() {
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
@@ -976,7 +996,9 @@ public class LimsCNGDAO {
 		
 		List<ContainerSupport> results = null;
 		//04/05/2015 la contrainte "isavailable = true" est forcee dans la vue
-		results = this.jdbcTemplate.query("select code_support, seq_program_type from " + sqlView + " order by code, project desc, code_sample, tag, exp_short_name", new Object[]{} 
+		//19/06/2015 renommage code =>container_code; code_support => support_code; code_sample => sample_code
+
+		results = this.jdbcTemplate.query("select support_code, seq_program_type from " + sqlView + " order by container_code, project desc, sample_code, tag, exp_short_name", new Object[]{} 
 		,new RowMapper<ContainerSupport>() {
 			public ContainerSupport mapRow(ResultSet rs, int rowNum) throws SQLException {
 				ResultSet rs0 = rs;
