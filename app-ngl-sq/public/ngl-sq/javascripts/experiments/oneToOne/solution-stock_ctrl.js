@@ -1,4 +1,4 @@
-angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','oneToOne','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,oneToOne,mainService,tabService) {
+angular.module('home').controller('SolutionStockCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','oneToOne','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,oneToOne,mainService,tabService) {
 	$scope.datatableConfig = {
 			name:"FDR_Tube",
 			columns:[
@@ -53,7 +53,7 @@ angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datat
 			        	 "position":3,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },					 
-					 /*{
+					 {
 			        	 "header":function(){return Messages("containers.table.concentration") + " (nM)"},
 			        	 "property":"mesuredConcentration.value",
 			        	 "order":true,
@@ -94,7 +94,7 @@ angular.module('home').controller('OneToOneTubeCtrl',['$scope', '$window','datat
 			        	 "position":9,
 			        	 "extraHeaders":{0:"Outputs"}
 			         },
-			          {
+			         /* {
 			        	 "header":Messages("containers.table.projectCodes"),
 			        	 "property":"projectCodes",
 			        	 "order":true,
