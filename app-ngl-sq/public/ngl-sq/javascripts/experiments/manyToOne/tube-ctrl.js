@@ -376,9 +376,9 @@ angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$window','data
 	});
 	
 	$scope.refreshView = function(){
-		//$scope.atomicTransfere.reloadContainersDatatable($scope.datatable);
-		$scope.atomicTransfere.experimentToInput($scope.datatable);
-		$scope.atomicTransfere.experimentToOutput($scope.datatable);
+		$scope.atomicTransfere.reloadContainersDatatable($scope.datatable);
+		/*$scope.atomicTransfere.experimentToInput($scope.datatable);
+		$scope.atomicTransfere.experimentToOutput($scope.datatable);*/
 		
 	};
 	
@@ -389,6 +389,9 @@ angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$window','data
 	
 	$scope.$on('outputToExperiment', function(e, atomicTransfertMethod) {
 		$scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].concentration = $scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[0].concentration;
+		if($scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].volume === undefined){
+			$scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].volume = {};
+		}
 		$scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].volume.unit ="µL" ;
 		$scope.atomicTransfere.outputToExperiment($scope.datatable);
 	});

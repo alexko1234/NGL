@@ -432,7 +432,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 							results.promises.push(result.promise);
 							result.promise.then(function(container){
 								if(container.data.length > 0){
-									results.containers.concat(container.data);
+									results.containers = results.containers.concat(container.data);
 								}
 							});
 						}
@@ -539,8 +539,8 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 								if(angular.isUndefined(allData[j].outputContainerUsed)){
 									allData[j].outputContainerUsed = oldDatatableValues[j].outputContainerUsed;
 								}
-								if(angular.isDefined(resultOutput.containers[j]) && resultOutput.containers[j].length>0){
-									var containerTmp = resultOutput.containers[j][0];
+								if(angular.isDefined(resultOutput.containers[j])){
+									var containerTmp = resultOutput.containers[j];
 									var containerUsed = {code:containerTmp.code, concentration: containerTmp.mesuredConcentration, volume: containerTmp.mesuredVolume, state: containerTmp.state}
 									allData[j].outputContainerUsed = containerUsed;
 								}
@@ -572,7 +572,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 							var i = 0;
 							if(resultOutput.containers.length > 0){
 								angular.forEach(allData, function(data){
-									var containerTmp = resultOutput.containers[i][0];
+									var containerTmp = resultOutput.containers[i];
 									var containerUsed = {code:containerTmp.code, concentration: containerTmp.mesuredConcentration, volume: containerTmp.mesuredVolume, state: containerTmp.state}
 									data.outputContainerUsed = containerUsed;
 									i++;
@@ -716,12 +716,13 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 							var allData = datatable.getData();
 							if(resultOutput.containers.length > 0){
 								angular.forEach(allData, function(data){
-									data.outputContainerUsed = resultOutput.containers[0][0];
+									data.outputContainerUsed = resultOutput.containers[0];
 								});
 							}
 							datatable.setData(allData,allData.length);
 						}
 						that.experimentToInput(datatable);
+						that.outputToExperiment(datatable);
 						that.experimentToOutput(datatable);
 					});					
 
@@ -822,7 +823,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 						datatable.setData(containers,containers.length);
 						that.experimentToInput(datatable);
 						$scope.addExperimentOutputDatatableToScope();
-					//	that.outputToExperiment(datatable);
+						that.outputToExperiment(datatable);
 						that.experimentToOutput(datatable);
 						
 					});

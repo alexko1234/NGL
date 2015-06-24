@@ -395,7 +395,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 
 		var containerUpdate={"stateCode":stateCode};
 
-		var promiseFn =  function(){ $http.put(jsRoutes.controllers.containers.api.Containers.updateStateBatch().url,containerUpdate,{"params":{"codes":$scope.outputContainers}})
+		var promiseFn =  function(){ return $http.put(jsRoutes.controllers.containers.api.Containers.updateStateBatch().url,containerUpdate,{"params":{"codes":$scope.outputContainers}})
 			.success(function(data, status, headers, config) {
 				if(data!=null){
 					$scope.message.clazz="alert alert-success";
@@ -1084,7 +1084,6 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 					
 
 				}
-				$scope.$broadcast('refresh');
 				$scope.inProgressNow = false;
 				$scope.inProgressMode();
 				if($scope.experiment.value.state.code === "F"){
