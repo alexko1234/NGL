@@ -1,6 +1,6 @@
 angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','manyToOne','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,manyToOne,mainService,tabService) {
 	$scope.datatableConfig = {
-			name:"FDR_Mapcard",
+			name:"NanoportInputOutput",
 			columns:[
 			         {
 			        	 "header":Messages("containers.table.supportCode"),
@@ -123,6 +123,55 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 			}
 	};
 	
+	
+	$scope.datatableConfigList = {
+			name:"NanoportInputOutput",
+			columns:[
+					 {
+			        	 "header":Messages("containers.table.code"),
+			        	 "property":"code",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":2,
+			        	 "extraHeaders":{0:"Inputs"}
+			         }
+			         ],
+			compact:false,
+			pagination:{
+				active:false
+			},		
+			search:{
+				active:false
+			},
+			order:{
+				mode:'local', //or 
+				active:true,
+				by:'code'
+			},
+			remove:{
+				active:false,
+			},
+			save:{
+				active:true,
+				showButton: false,
+				mode:'local',
+			},
+			hide:{
+				active:true
+			},
+			edit:{
+				active: !$scope.doneAndRecorded,
+				showButton: false,
+				columnMode:true
+			},
+			messages:{
+				active:false,
+				columnMode:true
+			}
+	};
+	
 	$scope.$on('experimentToInput', function(e, atomicTransfertMethod) {
 		$scope.atomicTransfere.experimentToInput($scope.datatable);
 	});
@@ -143,9 +192,15 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 	});
 	
 	$scope.$on('addExperimentPropertiesInput', function(e, data, possibleValues) {
-		var column = $scope.datatable.newColumn(data.name,"inputExperimentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Inputs","1":"Experiments"});
-		column.defaultValues = data.defaultValue;
-		$scope.datatable.addColumn(2,column);
+		if(data.propertyValueType!="object_list"){
+			var column = $scope.datatable.newColumn(data.name,"inputExperimentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Inputs","1":"Experiments"});
+			column.defaultValues = data.defaultValue;
+			$scope.datatable.addColumn(2,column);
+		}else {
+			var column = $scope.datatable.newColumn(data.name,data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Inputs","1":"Experiments"});
+			column.defaultValues = data.defaultValue;
+			$scope.datatablePropertyList.addColumn(2,column);
+		}
 	});
 	
 	$scope.$on('addExperimentPropertiesOutput', function(e, data, possibleValues) {
@@ -289,6 +344,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 	
 	//Init
 	$scope.datatable = datatable($scope.datatableConfig);
+	$scope.datatablePropertyList = datatable($scope.datatableConfigList);
 	$scope.atomicTransfere = manyToOne($scope, "datatable", "none");
 
 	$scope.experiment.outputGenerated = $scope.isOutputGenerated();
