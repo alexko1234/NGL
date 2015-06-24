@@ -377,9 +377,6 @@ angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$window','data
 	
 	$scope.refreshView = function(){
 		$scope.atomicTransfere.reloadContainersDatatable($scope.datatable);
-		/*$scope.atomicTransfere.experimentToInput($scope.datatable);
-		$scope.atomicTransfere.experimentToOutput($scope.datatable);*/
-		
 	};
 	
 	$scope.$on('refresh', function(e) {		

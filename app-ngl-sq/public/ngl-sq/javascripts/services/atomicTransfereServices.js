@@ -407,7 +407,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 						if(allData != undefined){
 							for(var i=0;i<allData.length;i++){
 								var index = this.searchOutputPositionByInputContainerCode(allData[i].code || allData[i].inputCode);
-								if(angular.isDefined(allData[i].outputContainerUsed)){
+								if(angular.isDefined(allData[i].outputContainerUsed) && allData[i].outputContainerUsed.code !== undefined){
 									$scope.experiment.value.atomicTransfertMethods[index].outputContainerUseds[0] = allData[i].outputContainerUsed;
 								}										
 								if(allData[i].outputInstrumentProperties != undefined){
@@ -859,9 +859,9 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 						this.loadExperimentCommon(function(resultInput, resultOutput){
 							input.setData(resultInput.containers,resultInput.containers.length);
 							var allData = input.getData();
-							if($scope.experiment.outputGenerated == true && resultOutput.containers[0].length>0){
+							if($scope.experiment.outputGenerated == true){
 								angular.forEach(allData, function(data){										
-									data.outputContainerUsed = resultOutput.containers[0][0];
+									data.outputContainerUsed = resultOutput.containers[0];
 								});
 							}
 							if(!angular.isUndefined(mainService.getBasket())){
