@@ -40,7 +40,7 @@
 				<input class="form-control" type="text" ng-model="searchService.form.fromDate" placeholder='@Messages("containerSupports.placeholder.fromDate")' title='@Messages("containerSupports.placeholder.fromDate")'>				
 			}
 			@formGroup{		
-				<input class="form-control" type="text" ng-model="searchService.form.code" placeholder='@Messages("search.placeholder.containerSupport")' title='@Messages("search.placeholder.containerSupport")'>
+				<input class="form-control" type="text" ng-model="searchService.form.code" typeahead="support.code as support.name for support in searchService.lists.getContainerSupports() | filter:$viewValue | limitTo:20" typeahead-min-length='3' placeholder='@Messages("search.placeholder.containerSupport")' title='@Messages("search.placeholder.containerSupport")'>
 			}
 		}
 		@columnSearchForm{

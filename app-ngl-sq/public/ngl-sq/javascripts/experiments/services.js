@@ -124,7 +124,6 @@
 				lists.refresh.projects();
 				lists.refresh.users();
 				lists.refresh.containerSupports();
-				lists.refresh.experiments();
 				lists.refresh.states({objectTypeCode:"Experiment"});
 				lists.refresh.experimentTypes({categoryCode:"purification"}, "purifications");
 				lists.refresh.experimentTypes({categoryCode:"qualitycontrol"}, "qualitycontrols");
