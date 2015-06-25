@@ -54,6 +54,8 @@ PUT		/api/readsets/batch/valuation		 		controllers.readsets.api.ReadSets.valuati
 PUT		/api/readsets/:code/valuation		 		controllers.readsets.api.ReadSets.valuation(code:java.lang.String)
 PUT     /api/readsets/batch/properties				controllers.readsets.api.ReadSets.propertiesBatch()
 PUT     /api/readsets/:code/properties				controllers.readsets.api.ReadSets.properties(code: java.lang.String)
+PUT		/api/readsets/:code/apply-rules/:codeRules	controllers.readsets.api.ReadSets.applyRules(code: java.lang.String, codeRules: java.lang.String)
+
 
 GET		/api/readsets/:code/treatments				controllers.readsets.api.ReadSetTreatments.list(code: java.lang.String)
 GET		/api/readsets/:code/treatments/:trCode		controllers.readsets.api.ReadSetTreatments.get(code: java.lang.String, trCode: java.lang.String)
@@ -61,6 +63,7 @@ HEAD	/api/readsets/:code/treatments/:trCode		controllers.readsets.api.ReadSetTre
 POST	/api/readsets/:code/treatments				controllers.readsets.api.ReadSetTreatments.save(code: java.lang.String)
 PUT		/api/readsets/:code/treatments/:trCode		controllers.readsets.api.ReadSetTreatments.update(code: java.lang.String, trCode: java.lang.String)
 DELETE	/api/readsets/:code/treatments/:trCode		controllers.readsets.api.ReadSetTreatments.delete(code: java.lang.String, trCode: java.lang.String)
+
 
 #readset file
 GET     /api/readsets/:code/files					controllers.readsets.api.Files.list(code: java.lang.String)

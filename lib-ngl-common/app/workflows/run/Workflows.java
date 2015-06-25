@@ -47,8 +47,8 @@ import fr.cea.ig.MongoDBDAO;
 public class Workflows {
 	
 	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-	private static final String ruleStatRG="rg_1";
-	private static final String ruleStatQC="F_QC_1";
+	private static final String ruleFQC="F_QC_1";
+	private static final String ruleFRG="F_RG_1";
 			
 	
 	public static void setRunState(ContextValidation contextValidation, Run run, State nextState) {
@@ -136,7 +136,7 @@ public class Workflows {
 				readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", run.code)).toList();
 				Spring.getBeanOfType(ILimsRunServices.class).insertRun(run, readSets, false);
 			}
-			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleStatRG, run),null);
+			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleFRG, run),null);
 		}else if("F-V".equals(run.state.code)){
 			Spring.getBeanOfType(ILimsRunServices.class).valuationRun(run);
 			//For all lane with VALID = FALSE so we put VALID=FALSE on each read set
@@ -212,9 +212,11 @@ public class Workflows {
 				Logger.error("sampleOnContainer null for "+readSet.code);
 			}
 			
+			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleFRG, readSet),null);
+			
 		}else if("F-QC".equals(readSet.state.code)){
 			
-			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleStatQC, readSet),null);
+			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleFQC, readSet),null);
 			
 			//Synchro old lims
 			if(Play.application().configuration().getBoolean("old.lims.sync", false)){
