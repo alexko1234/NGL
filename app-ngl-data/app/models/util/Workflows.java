@@ -42,7 +42,7 @@ import fr.cea.ig.MongoDBDAO;
 public class Workflows {
 	
 	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
-	private static final String ruleStatRG="rg_1";
+	private static final String ruleStatRG="F_RG_1";
 			
 	
 	public static void setRunState(ContextValidation contextValidation, Run run, State nextState) {
