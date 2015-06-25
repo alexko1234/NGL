@@ -34,15 +34,21 @@ import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
 
 import play.Logger;
+import play.Play;
 import play.data.Form;
+import play.libs.Akka;
 import play.libs.Json;
 import play.mvc.Result;
+import rules.services.RulesActor6;
+import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.run.instance.ReadSetValidationHelper;
 import validation.utils.ValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableForm;
 import workflows.run.Workflows;
+import akka.actor.ActorRef;
+import akka.actor.Props;
 
 import com.mongodb.BasicDBObject;
 
@@ -56,6 +62,7 @@ import fr.cea.ig.MongoDBResult;
 
 
 public class ReadSets extends ReadSetsController{
+	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 
 	final static Form<ReadSet> readSetForm = form(ReadSet.class);
 	//final static Form<ReadSetsSearchForm> searchForm = form(ReadSetsSearchForm.class);
@@ -648,4 +655,16 @@ public class ReadSets extends ReadSetsController{
 		return regex;
 	}
 
+	public static Result applyRules(String code, String rulesCode){
+		ReadSet readSet = getReadSet(code);
+		if(readSet != null){
+			//Send run fact			
+			// Outside of an actor and if no reply is needed the second argument can be null
+			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),rulesCode, readSet),null);
+		}else
+			return badRequest();
+		
+		return ok();
+	}
+	
 }

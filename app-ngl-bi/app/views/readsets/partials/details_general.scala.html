@@ -75,7 +75,7 @@
 						<p class="form-control-static" >{{readset.runTypeCode}}</p>
 					}
 					@views.html.helper.columnLabelValue(Messages("readsets.nbCycles")){
-						<p class="form-control-static" >{{runNGSRG["default"].nbCycle.value}}</p>
+						<p class="form-control-static" ng-bind="getNbCycles()"></p>
 					}
 					@views.html.helper.columnLabelValue(Messages("runs.sequencingStartDate")){
 						<p class="form-control-static">{{readset.runSequencingStartDate|date:'@Messages("date.format")'}}</p>

@@ -297,8 +297,19 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
     		return "";
     	}
     };
-	
-	
+    $scope.getNbCycles = function(){
+    	if($scope.run.treatments){
+    		var ngsrg = $scope.run.treatments.ngsrg["default"];
+    		if(ngsrg.nbCycleRead1){
+    			return ngsrg.nbCycleRead1.value+', '+ngsrg.nbCycleReadIndex1.value+', '+ngsrg.nbCycleReadIndex2.value+', '+ngsrg.nbCycleRead2.value;
+    		}else{
+    			return ngsrg.nbCycle.value;
+    		}
+    		
+    	}
+    	return '';
+    }
+   
 	var init = function(){
 		$scope.messages = messages();
 		$scope.lists = lists;
@@ -404,8 +415,13 @@ angular.module('home').controller('LanesNGSRGCtrl', [ '$scope', 'datatable', fun
 			    	}
 				},
 				{  	property:function(value){
-						if(angular.isDefined(value.treatments.ngsrg["default"].nbCycleRead2)){
-							return value.treatments.ngsrg["default"].nbCycleRead1.value +','+value.treatments.ngsrg["default"].nbCycleRead2.value;
+						if(angular.isDefined(value.treatments.ngsrg["default"].nbUsefulCycleRead2)){
+							return value.treatments.ngsrg["default"].nbUsefulCycleRead1.value+', '
+								+value.treatments.ngsrg["default"].nbUsefulCycleReadIndex1.value+', '
+								+value.treatments.ngsrg["default"].nbUsefulCycleReadIndex2.value +', '
+								+value.treatments.ngsrg["default"].nbUsefulCycleRead2.value;
+						}else if(angular.isDefined(value.treatments.ngsrg["default"].nbCycleRead2)){
+							return value.treatments.ngsrg["default"].nbCycleRead1.value +', '+value.treatments.ngsrg["default"].nbCycleRead2.value;
 						}else{
 							return value.treatments.ngsrg["default"].nbCycleRead1.value
 						}
@@ -797,8 +813,10 @@ angular.module('home').controller('LanesSAVCtrl', [ '$scope', '$filter', '$http'
 			    	extraHeaders:{"0":Messages("runs.lane.sav.read2")}
 				},											
 				{  	property:function(value){
-					return $filter('number')(value.treatments.sav.read2.intensityCycle20Perc.value,2) +' +/- '+$filter('number')(value.treatments.sav.read2.intensityCycle20PercStd.value,2);						
-					},
+					if(value.treatments.sav.read2.intensityCycle20Perc){
+						return $filter('number')(value.treatments.sav.read2.intensityCycle20Perc.value,2) +' +/- '+$filter('number')(value.treatments.sav.read2.intensityCycle20PercStd.value,2);
+					}
+				},
 			    	header: "runs.lane.sav.intensityCycle20Perc",
 			    	type :"String",
 			    	order:false,
