@@ -72,6 +72,7 @@ HEAD    /api/readsets/:code/files/:fullname			controllers.readsets.api.Files.hea
 POST  	/api/readsets/:code/files					controllers.readsets.api.Files.save(code: java.lang.String)
 PUT     /api/readsets/:code/files/:fullname			controllers.readsets.api.Files.update(code: java.lang.String, fullname: java.lang.String)
 DELETE  /api/readsets/:code/files/:fullname			controllers.readsets.api.Files.delete(code: java.lang.String, fullname: java.lang.String)
+DELETE  /api/readsets/:code/files					controllers.readsets.api.Files.deleteByReadSetCode(code: java.lang.String)
 DELETE	/api/runs/:code/files						controllers.readsets.api.Files.deleteByRunCode(code: java.lang.String)
 
 #analyses api
@@ -104,6 +105,7 @@ HEAD    /api/analyses/:code/files/*fullname			@controllers.analyses.api.Files.he
 POST  	/api/analyses/:code/files					@controllers.analyses.api.Files.save(code: java.lang.String)
 PUT     /api/analyses/:code/files/*fullname			@controllers.analyses.api.Files.update(code: java.lang.String, fullname: java.lang.String)
 DELETE  /api/analyses/:code/files/*fullname			@controllers.analyses.api.Files.delete(code: java.lang.String, fullname: java.lang.String)
+DELETE  /api/analyses/:code/files					@controllers.analyses.api.Files.deleteByParentCode(code: java.lang.String)
 
 
 #archive api

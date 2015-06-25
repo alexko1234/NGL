@@ -163,6 +163,16 @@ public class Files extends ReadSetsController {
 		return ok();
 	}
 
+	public static Result deleteByReadSetCode(String readsetCode) { 
+		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", readsetCode));
+		if (null == readSet) {
+			return badRequest();
+		}
+		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+				DBQuery.is("code", readsetCode), DBUpdate.unset("files"));
+		return ok();
+	}
+	
 	//@Permission(value={"delete_files"})
 	public static Result deleteByRunCode(String runCode) { 
 		Run run  = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runCode);
