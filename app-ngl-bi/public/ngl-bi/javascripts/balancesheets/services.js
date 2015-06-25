@@ -205,6 +205,9 @@
 				 j = 0;
 			 }
 		 }
+		 
+		 // Adding total of nbBases for this year
+		 
 		 // We add our sum lines to our main component
 		 var countLine = 0;
 		 var linesToColor = [];
@@ -218,6 +221,14 @@
 			 }
 			 countLine++;
 		 }
+		 var yearLine = {
+				quarter : '',
+				month : Messages("balanceSheets.totalSum"),
+		 		nbBases : total
+		 };
+		 balanceSheetsQuarters.push(yearLine);
+		 countLine++;
+		 linesToColor.push(balanceSheetsQuarters.length -1);
 		 
 		 // Initialize datatable
 		 dtQuarters = datatable(datatableConfig);
@@ -245,17 +256,24 @@
 					hide:{
 						active:false
 					},
-					order : {
-						active : true
-					}, 
 					select : {
 						active : false
+					},
+					order : {
+						mode : 'local',
+						active : true,
+						by : 'nbBases',
+						reverse : true,
+						callback:function(datatable){
+							computeChartSequencingProduction();
+						}
 					}
 				 }; 
 		 var defaultDatatableColumns = [
 				{	property:"name",
 				  	header: "balanceSheets.runTypeCode",
 				  	type :"String",
+				  	order : true,
 				  	position:1
 				},
 				{	property:"nbBases",
@@ -434,6 +452,13 @@
 				 nbBases : sumBases
 		 };
 		 var posSum = balanceSheetsFirstTen.push(sum) - 1;
+		 var totalSum = {
+				 code : Messages("balanceSheets.totalSum"),
+				 name : '',
+				 nbBases : total
+		 };
+		 var posTotalSum = balanceSheetsFirstTen.push(totalSum) -1;
+		
 		 
 		 var percentage = {
 				 code : Messages("balanceSheets.percentageTotalSum"),
@@ -441,13 +466,14 @@
 				 nbBases : null
 		 }
 		 var posPercentage = balanceSheetsFirstTen.push(percentage) - 1;
+		 
 		 // Initializing datatable
 		 dtFirstTen = datatable(datatableConfig);
 		 dtFirstTen.setColumnsConfig(defaultDatatableColumns);
 		 dtFirstTen.setData(balanceSheetsFirstTen, balanceSheetsFirstTen.length);
 		 colorBlue(dtFirstTen, posSum);
-		 colorBlue(dtFirstTen, posPercentage);
-		 
+		 colorBlue(dtFirstTen, posTotalSum);
+		 colorBlue(dtFirstTen, posPercentage);		 
 	 }
 	 
 	 var loadProjectType = function(){
@@ -523,10 +549,14 @@
 			 balanceSheetsProjectType[i].percentage = (balanceSheetsProjectType[i].nbBases * 100 / total).toFixed(2) + "%";
 		 }
 		 
+		 balanceSheetsProjectType.sort(function(a, b){return parseInt(b.nbBases) - parseInt(a.nbBases)});
+
+		 
 		 dataProjectType = balanceSheetsProjectType;
 		 
 		 // Creating chart
 		 computeChartProjectType(balanceSheetsProjectType);
+		 
 		 
 		 // Adding sum of our bases to our main component
 		 var sum = {
@@ -541,12 +571,14 @@
 				 nbBases : null,
 				 percentage : "100%"
 		 };
+		 
 		 var posPercentage = balanceSheetsProjectType.push(percentage) -1;
 		 
 		 // Initializing datatable
 		 dtProjectType = datatable(datatableConfig);
 		 dtProjectType.setColumnsConfig(defaultDatatableColumns);
-		 dtProjectType.setData(balanceSheetsProjectType, balanceSheetsProjectType.length);
+		 dtProjectType.setData(dataProjectType, dataProjectType.length);
+		 
 		 colorBlue(dtProjectType, posSum);
 		 colorBlue(dtProjectType, posPercentage);	 	 
 	 }
@@ -661,7 +693,7 @@
 					},
 					labels: {
 		                formatter: function () {
-		                    return (this.value/Math.pow(10,9)).toFixed(2) + ' Gb';
+		                    return (this.value/Math.pow(10,12)).toFixed(2) + ' Tb';
 		                }
 		            },
 					tickInterval : 2,
@@ -678,12 +710,12 @@
 		 var codes = [];
 		 var sum = 0;
 		 var percentages = [];
-		 for(var i = 0; i < readsets.length; i++){
-			 sum += readsets[i].treatments.ngsrg.default.nbBases.value;
+		 for(var i = 0; i < dataFirstTen.length; i++){
+			 sum += dataFirstTen[i].nbBases;
 		 }
 		 for(var i = 0; i < data.length; i++){
 			 codes[i] = data[i].code;
-			 percentages[i] = data[i].nbBases * 100 / sum;
+			 percentages[i] = parseFloat((data[i].nbBases * 100 / sum).toFixed(2));
 		 }
 		 var allData = [];
 		 for(var i = 0; i < codes.length; i++){
@@ -692,18 +724,25 @@
 			 temp.push(percentages[i]);
 			 allData[i] = temp;
 		 }
-				 		 
+		 
 		 chartFirstTen = {
 				 chart : {
-					 type : 'pie'
+					 type : 'pie',
+					 options3d: {
+			                enabled: true,
+			                alpha: 45,
+			                beta: 0
+			         }
 				 },
 				 title : {
 					 text : Messages("balanceSheets.tab.firstTen")
 				 },
 				 plotOptions : {
 					 pie : {
+						 size : 430,
 						 allowPointSelect : true,
 						 cursor : 'pointer',
+						 depth: 35,
 						 dataLabels : {
 							 enabled : true,
 							 format : "<b>{point.name}</b>	: {point.percentage:.2f} %"
@@ -723,7 +762,7 @@
 		 var percentages = [];
 		 for(var i = 0; i < data.length; i++){
 			 types.push(data[i].type);
-			 percentages.push(data[i].nbBases * 100 / total);
+			 percentages.push(parseFloat((data[i].nbBases * 100 / total).toFixed(2)));
 		 }
 		 var allData = [];
 		 
@@ -736,19 +775,27 @@
 		 
 		 chartProjectType = {
 				 chart : {
-					 type : 'pie'
+					 type : 'pie',
+					 options3d: {
+			                enabled: true,
+			                alpha: 45,
+			                beta: 0
+			         }
 				 },
 				 title : {
 					 text : Messages("balanceSheets.tab.projectType")
 				 },
 				 plotOptions : {
 					 pie : {
+						 size : 350,
 						 allowPointSelect : true,
 						 cursor : 'pointer',
+						 depth: 35,
 						 dataLabels : {
-							 enabled : true,
+							 enabled : false,
 							 format : "<b>{point.name}</b>	: {point.percentage:.2f} %"
-						 }
+						 },
+				 		 showInLegend : true
 					 }
 				 },
 				 series : [{
@@ -793,11 +840,12 @@
 	 var flushData = function(){
 		 readsets = [];
 		 runs = [];
-		 projects = [];
+		 projects = [];	
+		 total = 0;
 	 }
 	 
 	 var colorBlue = function(datatable, pos){
-		 datatable.displayResult[pos].line.trClass="info";
+		 datatable.displayResult[pos].line.trClass="text-primary";
 	 }
 	
 	 
@@ -982,7 +1030,7 @@
 			}
 			
 			var colorBlue = function(datatable, pos){
-				 datatable.displayResult[pos].line.trClass="info";
+				 datatable.displayResult[pos].line.trClass="text-primary";
 			}
 			
 			// TODO : Conserver l'onglet actif lors du changement d'année

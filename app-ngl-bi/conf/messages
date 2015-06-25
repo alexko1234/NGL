@@ -631,6 +631,7 @@ balanceSheets.projectType = Type Sous-projet
 balanceSheets.quarters = Trimestre
 balanceSheets.monthRun = Mois run
 balanceSheets.sum = Somme : 
+balanceSheets.totalSum = Somme totale de cette annee : 
 balanceSheets.totalTen = Total des 10 premiers projets
 balanceSheets.percentageTotalSum = Pourcentage de la somme totale de l'année
 balanceSheets.quarterBases = Nombre de bases Illumina par trimestre
