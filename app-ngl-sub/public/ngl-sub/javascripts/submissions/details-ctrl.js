@@ -474,6 +474,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 	init();
 
 	function closeSubmission(){
+	   	$scope.submission.state.code = "userValidate";		
 		$http.put(jsRoutes.controllers.submissions.api.Submissions.update($scope.submission.code).url, $scope.submission)
  				.success(function(data) {
 					//Set success message
