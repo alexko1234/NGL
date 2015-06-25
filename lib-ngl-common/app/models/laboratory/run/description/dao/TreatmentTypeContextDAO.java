@@ -15,8 +15,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
-import com.avaje.ebean.enhance.asm.Type;
-
 @Repository
 public class TreatmentTypeContextDAO extends AbstractDAODefault<TreatmentTypeContext>{
 
