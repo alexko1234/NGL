@@ -7,10 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.mongojack.DBQuery;
-
-import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -21,17 +17,24 @@ import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.ManytoOneContainer;
 import models.laboratory.experiment.instance.OneToOneContainer;
+import models.laboratory.experiment.instance.OneToVoidContainer;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.protocol.instance.Protocol;
 import models.laboratory.reagent.instance.ReagentUsed;
 import models.utils.InstanceConstants;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.mongojack.DBQuery;
+
+import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.container.instance.ContainerSupportValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
+import fr.cea.ig.MongoDBDAO;
 
 public class ExperimentValidationHelper  extends CommonValidationHelper {
 
@@ -143,6 +146,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 
 	public static void validateRules(Experiment exp,ContextValidation contextValidation){
 		ArrayList<Object> validationfacts = new ArrayList<Object>();
+		Logger.debug("Validate rules");
 		validationfacts.add(exp);
 		for(int i=0;i<exp.atomicTransfertMethods.size();i++){
 			if(ManytoOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
@@ -151,7 +155,11 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			}else if(OneToOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
 				OneToOneContainer atomic = (OneToOneContainer) exp.atomicTransfertMethods.get(i);
 				validationfacts.add(atomic);
-			}
+			}/*else if(OneToVoidContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
+				OneToVoidContainer atomic = (OneToVoidContainer) exp.atomicTransfertMethods.get(i);
+				Logger.debug("Add oneToVoid ");
+				validationfacts.add(atomic);
+			}*/
 		}
 		ExperimentValidationHelper.validateRules(validationfacts, contextValidation);
 	}
