@@ -18,9 +18,12 @@
 	 
 	 // Datatables
 	 var dtSequencingProduction;
+	 var dtSumSequencingProduction;
 	 var dtFirstTen;
+	 var dtSumFirstTen;
 	 var dtQuarters;
 	 var dtProjectType;
+	 var dtSumProjectType;
 	 
 	 // Data
 	 var dataSequencing;
@@ -67,12 +70,14 @@
 		 
 		 $http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url, {params : form}).success(function(data, status, headers, config) {
 			 stillLoading = true;
-			 readsets = data;
+			 for(var i = 0; i < data.length; i++){
+				 if(data[i].sampleOnContainer != null || data[i].sampleOnContainer != undefined){
+					 data[i].runSequencingStartDate = convertToDate(data[i].runSequencingStartDate);
+					 total += data[i].treatments.ngsrg.default.nbBases.value;	 
+					 readsets.push(data[i]);
+				 }
+			 }
 			 data = [];
-			 for(var i = 0; i < readsets.length; i++){
-				 readsets[i].runSequencingStartDate = convertToDate(readsets[i].runSequencingStartDate);
-				 total += readsets[i].treatments.ngsrg.default.nbBases.value;
-			 }	
 			 $http.get(jsRoutes.controllers.runs.api.Runs.list().url, {params : runForm}).success(function(runData, status, headers, config) {
 				 runs = runData;
 				 runData = [];
@@ -108,15 +113,11 @@
 		 var balanceSheetsQuarters = [];	
 		 var months = [];
 		 var datatableConfig = {
-				group : {
-					active : false,
-				},
 				search : {
 					active:false
 				},
 				pagination:{
-					mode:'local',
-					numberRecordsPerPage:25
+					active : false
 				},
 				hide:{
 					active:false
@@ -243,15 +244,11 @@
 	 var loadSequencingProduction = function(){
 		// Initializing our components
 		 var datatableConfig = {
-					group : {
-						active : true
-					},
 					search : {
 						active:false
 					},
 					pagination:{
-						mode:'local',
-						numberRecordsPerPage:25
+						active : false
 					},
 					hide:{
 						active:false
@@ -352,8 +349,52 @@
 		 dtSequencingProduction.setColumnsConfig(defaultDatatableColumns);
 		 dtSequencingProduction.setData(balanceSheetsSequencingProduction, balanceSheetsSequencingProduction.length);
 		 
+		 // Initialize other datatable
+		 loadDtSumSequencingProduction();
+		 
+		 
 		 // Creating chart
 		 computeChartSequencingProduction();
+		 
+	 }
+	 
+	 var loadDtSumSequencingProduction = function(){
+		 var datatableConfig = {
+					search : {
+						active:false
+					},
+					pagination:{
+						active : false
+					},
+					hide:{
+						active:false
+					},
+					select : {
+						active : false
+					}
+				 }; 
+		 var defaultDatatableColumns = [
+				{	property:"property",
+				  	header: "balanceSheets.property",
+				  	type :"String",
+				  	position:1
+				},
+				{	property:"value",
+					header: "balanceSheets.value",
+					type :"Number",
+				  	position:2
+				}
+			 ];
+		 var sum = [{
+				 property : Messages('balanceSheets.sum'),
+				 value : total
+		 }];
+		 
+		 
+		 dtSumSequencingProduction = datatable(datatableConfig);
+		 dtSumSequencingProduction.setColumnsConfig(defaultDatatableColumns);
+		 dtSumSequencingProduction.setData(sum, 1);
+		 colorBlue(dtSumSequencingProduction, 0);
 	 }
 	 
 	 
@@ -367,31 +408,37 @@
 					active:false
 				},
 				pagination:{
-					mode:'local',
-					numberRecordsPerPage:25
+					active : false
 				},
 				hide:{
 					active:false
 				},
 				select : {
 					active : false
+				},
+				order : {
+					active : true,
+					mode : 'local'
 				}
 			 }; 
 		 var defaultDatatableColumns = [
 				{	property:"code",
 				  	header: "balanceSheets.projectCode",
 				  	type :"String",
+				  	order : true,
 				  	position:1
 				},
 				{	property:"name",
 					header: "balanceSheets.projectName",
 					type :"String",
+					order : true,
 				  	position:2
 				},
 				{
 					property:"nbBases",
 					header: "balanceSheets.nbBases",
 					type:"Number",
+					order : true,
 					position:3
 				}
 			 ];
@@ -436,58 +483,93 @@
 		 balanceSheetsFirstTen = balanceSheetsFirstTen.slice(0,10);
 		 
 		 dataFirstTen = balanceSheetsFirstTen;
+		 
+		 // Initialize other datatable
+		 loadDtSumFirstTen();
 		
 		 // Creating chart
 		 computeChartFirstTen(balanceSheetsFirstTen);
-		 
-		 // TODO : virer calcul
-		 // Adding sum of our bases to our main component
-		 var sumBases = 0;
-		 for(var i = 0; i < balanceSheetsFirstTen.length; i++){
-			 sumBases += balanceSheetsFirstTen[i].nbBases;
-		 }
-		 var sum = {
-				 code : Messages("balanceSheets.totalTen"),
-				 name : "",
-				 nbBases : sumBases
-		 };
-		 var posSum = balanceSheetsFirstTen.push(sum) - 1;
-		 var totalSum = {
-				 code : Messages("balanceSheets.totalSum"),
-				 name : '',
-				 nbBases : total
-		 };
-		 var posTotalSum = balanceSheetsFirstTen.push(totalSum) -1;
-		
-		 
-		 var percentage = {
-				 code : Messages("balanceSheets.percentageTotalSum"),
-				 name : (sumBases * 100 / total).toFixed(2) + "%",
-				 nbBases : null
-		 }
-		 var posPercentage = balanceSheetsFirstTen.push(percentage) - 1;
-		 
+		 		 
 		 // Initializing datatable
 		 dtFirstTen = datatable(datatableConfig);
 		 dtFirstTen.setColumnsConfig(defaultDatatableColumns);
 		 dtFirstTen.setData(balanceSheetsFirstTen, balanceSheetsFirstTen.length);
-		 colorBlue(dtFirstTen, posSum);
-		 colorBlue(dtFirstTen, posTotalSum);
-		 colorBlue(dtFirstTen, posPercentage);		 
+	 }
+	 
+	 var loadDtSumFirstTen = function(){
+		 var datatableConfig = {
+					search : {
+						active:false
+					},
+					pagination:{
+						active : false
+					},
+					hide:{
+						active:false
+					},
+					select : {
+						active : false
+					}
+				 }; 
+		 var defaultDatatableColumns = [
+				{	property:"property",
+				  	header: "balanceSheets.property",
+				  	type :"String",
+				  	position:1
+				},
+				{	property:"value",
+					header: "balanceSheets.value",
+					type :"Number",
+				  	position:2
+				}
+			 ];
+		 
+		 var dataToInsert = [];
+		 var linesToColor = [];
+		 
+		 var sumBases = 0;
+		 for(var i = 0; i < dataFirstTen.length; i++){
+			 sumBases += dataFirstTen[i].nbBases;
+		 }
+		 var sum = {
+				 property : Messages("balanceSheets.totalTen"),
+				 value : sumBases
+		 };
+		 linesToColor.push(dataToInsert.push(sum) - 1);
+		 
+		 var totalSum = {
+				 property : Messages("balanceSheets.totalSum"),
+				 value : total
+		 };
+		 linesToColor.push(dataToInsert.push(totalSum) -1);
+		 
+		 var percentage = {
+				 property : Messages("balanceSheets.percentageTotalSum"),
+				 value : (sumBases * 100 / total).toFixed(2)
+		 }
+		 linesToColor.push(dataToInsert.push(percentage) - 1);
+		 
+		 dtSumFirstTen = datatable(datatableConfig);
+		 dtSumFirstTen.setColumnsConfig(defaultDatatableColumns);
+		 dtSumFirstTen.setData(dataToInsert, dataToInsert.length);
+		 for(var i = 0; i < linesToColor.length; i++) colorBlue(dtSumFirstTen, linesToColor[i]);
+		 
 	 }
 	 
 	 var loadProjectType = function(){
 		 // Initializing our components
 		 var datatableConfig = {
-				group : {
-					active : false,
+				order : {
+					active : true,
+					by : 'nbBases',
+					reverse : true,
+					mode: 'local'
 				},
 				search : {
 					active:false
 				},
 				pagination:{
-					mode:'local',
-					numberRecordsPerPage:25
+					active : false
 				},
 				hide:{
 					active:false
@@ -500,17 +582,20 @@
 				{	property:"type",
 				  	header: "balanceSheets.projectType",
 				  	type :"String",
+				  	order : true,
 				  	position:1
 				},
 				{	property:"nbBases",
 					header: "balanceSheets.nbBases",
 					type :"Number",
+					order : true,
 				  	position:2
 				},
 				{
 					property:"percentage",
 					header: "balanceSheets.percentage",
 					type:"String",
+					order : true,
 					position:3
 				}
 			 ];
@@ -554,33 +639,57 @@
 		 
 		 dataProjectType = balanceSheetsProjectType;
 		 
+		 // Initialize other datatable
+		 loadDtSumProjectType();
+		 
 		 // Creating chart
 		 computeChartProjectType(balanceSheetsProjectType);
-		 
-		 
-		 // Adding sum of our bases to our main component
-		 var sum = {
-				 type : Messages("balanceSheets.sum"),
-				 nbBases : total,
-				 percentages : ""
-		 };
-		 var posSum = balanceSheetsProjectType.push(sum) -1;
-		 
-		 var percentage = {
-				 type : Messages("balanceSheets.percentage"),
-				 nbBases : null,
-				 percentage : "100%"
-		 };
-		 
-		 var posPercentage = balanceSheetsProjectType.push(percentage) -1;
-		 
+		 		 
 		 // Initializing datatable
 		 dtProjectType = datatable(datatableConfig);
 		 dtProjectType.setColumnsConfig(defaultDatatableColumns);
 		 dtProjectType.setData(dataProjectType, dataProjectType.length);
+	 }
+	 
+	 var loadDtSumProjectType = function(){
+		 var datatableConfig = {
+					search : {
+						active:false
+					},
+					pagination:{
+						active : false
+					},
+					hide:{
+						active:false
+					},
+					select : {
+						active : false
+					}
+				 }; 
+		 var defaultDatatableColumns = [
+				{	property:"property",
+				  	header: "balanceSheets.property",
+				  	type :"String",
+				  	position:1
+				},
+				{	property:"value",
+					header: "balanceSheets.value",
+					type :"Number",
+				  	position:2
+				}
+			 ];
 		 
-		 colorBlue(dtProjectType, posSum);
-		 colorBlue(dtProjectType, posPercentage);	 	 
+		 var sum = [{
+			 property : Messages('balanceSheets.sum'),
+			 value : total
+		 }];
+		 
+		 
+		 dtSumProjectType = datatable(datatableConfig);
+		 dtSumProjectType.setColumnsConfig(defaultDatatableColumns);
+		 dtSumProjectType.setData(sum, 1);
+		 colorBlue(dtSumProjectType, 0); 
+		 
 	 }
 	 
 	 
@@ -739,14 +848,15 @@
 				 },
 				 plotOptions : {
 					 pie : {
-						 size : 430,
+						 size : 350,
 						 allowPointSelect : true,
 						 cursor : 'pointer',
 						 depth: 35,
 						 dataLabels : {
 							 enabled : true,
 							 format : "<b>{point.name}</b>	: {point.percentage:.2f} %"
-						 }
+						 },
+				 showInLegend : true
 					 }
 				 },
 				 series : [{
@@ -792,7 +902,7 @@
 						 cursor : 'pointer',
 						 depth: 35,
 						 dataLabels : {
-							 enabled : false,
+							 enabled : true,
 							 format : "<b>{point.name}</b>	: {point.percentage:.2f} %"
 						 },
 				 		 showInLegend : true
@@ -863,6 +973,9 @@
 			dtFirstTen : function(){return dtFirstTen;},
 			dtQuarters : function(){return dtQuarters;},
 			dtProjectType : function(){return dtProjectType},
+			dtSumSequencingProduction : function(){return dtSumSequencingProduction},
+			dtSumFirstTen : function(){return dtSumFirstTen},
+			dtSumProjectType : function(){return dtSumProjectType},
 		// others
 			init : function(year){loadData(year);},
 			isLoading : function(){return stillLoading;},
@@ -881,6 +994,7 @@
                                         function($http, mainService, datatable, $parse){
 			var readsets = [];
 			var dtYearlyBalanceSheets;
+			var dtSumYearly;
 			var chartYearlyBalanceSheets;
 			var isLoading = true;
 			var actualYear = new Date().getFullYear();
@@ -951,25 +1065,65 @@
 				 for(var i = 0; i < readsets.length; i++){
 					balanceSheetsByYearAndTechnology[readsets[i].runSequencingStartDate.getFullYear() - 2008].nbBases += readsets[i].treatments.ngsrg.default.nbBases.value;
 				 }
-				 
+
 				 // Creating chart
 				 computeChartYearlyBalanceSheets(balanceSheetsByYearAndTechnology);
-				 
-				 // Adding sum of our bases to our datatable
-				 var sum = {
-						 year : Messages("balanceSheets.sum"),
-						 nbBases : 0
-				 };
-				 for(var i = 0; i < balanceSheetsByYearAndTechnology.length; i++){
-					 sum.nbBases += balanceSheetsByYearAndTechnology[i].nbBases;
-				 }
-				 var posSum = balanceSheetsByYearAndTechnology.push(sum) -1;
 				 
 				 // Initialize datatable
 				 dtYearlyBalanceSheets = datatable(datatableConfig);
 				 dtYearlyBalanceSheets.setColumnsConfig(defaultDatatableColumns);	 
 				 dtYearlyBalanceSheets.setData(balanceSheetsByYearAndTechnology, balanceSheetsByYearAndTechnology.length);
-				 colorBlue(dtYearlyBalanceSheets, posSum);
+				
+				 
+				 // Initialize other datatable
+				 loadDtSumYearly();
+			}
+			
+			var loadDtSumYearly = function(){
+				// Initializing our components
+				var datatableConfig = {
+					search : {
+						active:false
+					},
+					pagination:{
+						active : false
+					},
+					hide:{
+						active:false
+					},
+					select : {
+						active : false
+					}
+				 };
+				 var defaultDatatableColumns = [
+					{	property:"property",
+					  	header: "balanceSheets.property",
+					  	type :"String",
+					  	position:1
+					},
+					{	property:"value",
+						header: "balanceSheets.value",
+						type :"Number",
+					  	position:2,
+					}
+				 ];	
+				 
+				 // Calculing sum
+				 var data = dtYearlyBalanceSheets.getData();
+				 var sum = [{
+						property : Messages('balanceSheets.sum'),
+						value : 0
+				 }];
+				 for(var i = 0; i < data.length; i++){
+					 sum[0].value += data[i].nbBases;
+				 }
+				 
+				 // Creating datatable
+				 dtSumYearly = datatable(datatableConfig);
+				 dtSumYearly.setColumnsConfig(defaultDatatableColumns);
+				 dtSumYearly.setData(sum, 1);
+				 colorBlue(dtSumYearly, 0);		 
+			 
 			}
 			
 			
@@ -1040,6 +1194,7 @@
 					isLoading : function(){return isLoading;},
 					chartYearlyBalanceSheets : function(){return chartYearlyBalanceSheets},
 					dtYearlyBalanceSheets : function(){return dtYearlyBalanceSheets;},
+					dtSumYearly : function(){return dtSumYearly},
 					init : function(){loadData();}	
 			};
 			
