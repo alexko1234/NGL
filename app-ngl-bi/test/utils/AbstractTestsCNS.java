@@ -43,7 +43,7 @@ public abstract class AbstractTestsCNS {
 		config.put("application.secret", "ezfzzefzefz");
 		config.put("evolutionplugin","disabled");
 		config.put("ebean.default","models.*");
-		config.put("mongodb.database", "NGL-TESTU-DEV");
+		config.put("mongodb.database", "NGL-TESTU");
 		config.put("mongodb.credentials", "testu:testu");
 		config.put("mongodb.servers", "mongodev.genoscope.cns.fr:27017");
 		config.put("mongodb.defaultWriteConcern", "SAFE"); 
