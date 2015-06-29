@@ -2,8 +2,14 @@ application.name=NGL Plaques
 index.title = Welcome to NGL Plaques
 
 #Menu
+plates.menu = Plaques
 plates.menu.new=Création
 plates.menu.search=Recherche
+
+#Menu
+barcodes.menu = Codes Barres
+barcodes.menu.new=Création
+barcodes.menu.search=Recherche inutilisés
 
 #Manips
 manips.table.code = Code Manip
@@ -48,6 +54,7 @@ search.placeholder.regexPlaqueId = Regex pour plaqueId
 search.placeholder.regexMatmanom = Regex pour nom de manip.
 search.placeholder.fromDate = Plaque depuis le (jj/mm/aaaa)
 search.placeholder.toDate = Plaque jusqu''au (jj/mm/aaaa)
+search.placeholder.number = Nombre de codes barres à générer
 
 plates.msg.save.sucess = Sauvegarde réussie
 plates.msg.save.error = Sauvegarde echouée
@@ -68,6 +75,16 @@ plates.comment = Commentaires
 plates.create.user = Créé par
 plates.modify.user = Modifié par
 
+
+barcodes.tabs.create = Génération de codes barres pour plaques externe
+barcodes.tabs.search = Recherche des codes barres inutilisés
+plates.table.barcode = Codes Barres
+
 valuation.value.TRUE = Oui
 valuation.value.FALSE = Non
 valuation.value.UNSET = -
+
+
+button.search = Rechercher
+button.reset =  Réinitialiser
+button.magic = Générer

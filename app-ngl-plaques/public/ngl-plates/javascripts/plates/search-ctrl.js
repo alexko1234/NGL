@@ -60,7 +60,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$http','datatable', 
 			$scope.activeTab($scope.getTabs(0));
 		}
 		if(angular.isUndefined($scope.getDatatable())){
-			$scope.datatable = datatable($scope, datatableConfig);
+			$scope.datatable = datatable(datatableConfig);
 			$scope.datatable.search();
 			$scope.setDatatable($scope.datatable);
 		}else{

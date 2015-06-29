@@ -3,7 +3,7 @@ package controllers.combo.api;
 import java.util.List;
 
 import controllers.CommonController;
-import lims.dao.LimsManipDAO;
+import lims.cns.dao.LimsManipDAO;
 import lims.models.User;
 import play.api.modules.spring.Spring;
 import play.libs.Json;

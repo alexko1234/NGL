@@ -1,4 +1,4 @@
-package lims.dao;
+package lims.cns.dao;
 
 
 import java.sql.ResultSet;
@@ -50,6 +50,12 @@ public class LimsManipDAO {
         return results;
     }
 
+    public void createBarcode(String barcode, Integer typeCode, String user){
+    	Logger.info("pc_PlaqueSolexa @plaqueId="+barcode+", @emnco="+typeCode);
+    	this.jdbcTemplate.update("pc_PlaqueSolexa @plaqueId=?, @emnco=?, @perlog=?", new Object[]{barcode, typeCode, user});
+    	
+    }
+    
     public void createPlate(Plate plate, String user){
     	Logger.info("pc_PlaqueSolexa @plaqueId="+plate.code+", @emnco="+plate.typeCode);
     	this.jdbcTemplate.update("pc_PlaqueSolexa @plaqueId=?, @emnco=?, @valqc=?, @valrun=?, @plaquecom=?, @perlog=?", new Object[]{plate.code, plate.typeCode, getValValue(plate.validQC), getValValue(plate.validRun), plate.comment, user});
@@ -97,6 +103,15 @@ public class LimsManipDAO {
 		return plates;
 	}
 
+    
+    public List<String> findUnusedBarCodes(){
+    	String query = "pl_PlaqueSolexaUnused";
+    	
+    	List<String> unusedBarcodes = this.jdbcTemplate.queryForList(query, String.class);
+    	return unusedBarcodes;
+    	
+    }
+    
     private TBoolean getTBoolean(int value) {
 	TBoolean valid = TBoolean.UNSET;
 	if (value == 1) {
