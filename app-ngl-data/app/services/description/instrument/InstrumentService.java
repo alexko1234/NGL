@@ -270,9 +270,8 @@ public class InstrumentService {
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 
 		
-		l.add(newInstrumentUsedType("MinION", "minion", InstrumentCategory.find.findByCode("nanopore"), getNanoporeProperties(), getInstrumentMinIon() 
+		l.add(newInstrumentUsedType("MinION", "minION", InstrumentCategory.find.findByCode("nanopore"), getNanoporeProperties(), getInstrumentMinIon() 
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
 
@@ -286,7 +285,7 @@ public class InstrumentService {
         propertyDefinitions.add(newPropertiesDefinition("Version MinKNOW", "minKnowVersion",LevelService.getLevels(Level.CODE.Instrument),String.class,true,"single",200));
 		propertyDefinitions.add(newPropertiesDefinition("Version Metrichor", "metrichorVersion",LevelService.getLevels(Level.CODE.Instrument),String.class,true,"single",300));
         propertyDefinitions.add(newPropertiesDefinition("QC avant chargement FC", "qcBeforeFC", LevelService.getLevels(Level.CODE.Instrument),Double.class, true, "single",400));
-        propertyDefinitions.add(newPropertiesDefinition("QC avant démarrage run", "qcBeforeRun", LevelService.getLevels(Level.CODE.Instrument),Double.class, true, "single",500));
+        propertyDefinitions.add(newPropertiesDefinition("QC avant demarrage run", "qcBeforeRun", LevelService.getLevels(Level.CODE.Instrument),Double.class, true, "single",500));
         propertyDefinitions.add(newPropertiesDefinition("Nb reads", "nbReads", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",600));
         propertyDefinitions.add(newPropertiesDefinition("Nb pores actifs", "nbAtcivePores", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",700));
         propertyDefinitions.add(newPropertiesDefinition("Nb events", "nbEvents", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",800));
