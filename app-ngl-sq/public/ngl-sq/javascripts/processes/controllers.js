@@ -6,7 +6,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	$scope.searchService = {};
 	$scope.searchService.lists = lists;
 
-	$scope.datatableConfig = {
+	var datatableConfig = {
 			columns:[
 			         {
 			        	 "header":Messages("containers.table.supportCode"),
@@ -376,12 +376,12 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 		}
 	};	
 	
-	$scope.searchService.getDefaultColumns = function(){ return $scope.datatableConfig.columns;};
+	$scope.searchService.getDefaultColumns = function(){ return datatableConfig.columns;};
 
 	//init
 	$scope.errors = {};
 	if(angular.isUndefined($scope.getDatatable())){
-		$scope.datatable = datatable($scope.datatableConfig);			
+		$scope.datatable = datatable(datatableConfig);			
 		mainService.setDatatable($scope.datatable);	
 	}else{
 		$scope.datatable = mainService.getDatatable();
@@ -416,7 +416,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 		$scope.searchService.additionalFilters=[];
 		$scope.searchService.additionalColumns=[];
 		$scope.searchService.selectedAddColumns=[];
-		$scope.searchService.getColumns=$scope.datatableConfig.columns;
+		$scope.searchService.getColumns=datatableConfig.columns;
 		$scope.searchService.lists = lists;
 
 
@@ -430,7 +430,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 
 angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http','mainService','$q', function($scope, datatable,$http,mainService,$q) {
 
-	$scope.datatableConfig = {
+var	datatableConfig = {
 			columns:[
 			         {
 			        	 "header":Messages("processes.table.supportCode"),
@@ -509,19 +509,17 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			        	 active:true,
 			        	 by:'containerInputCode'
 			         },
-			         edit:{			        	 
+			         edit:{  			        	
 			        	 columnMode:true
 			         },
 			         save:{
-			        	 active:function(){
-			        		 $scope.recorded();
-			        	 },
+			        	 active: !$scope.doneAndRecorded,
 			        	 withoutEdit:true,
 			        	 showButton : false,
 			        	 mode:"local",
 			        	 changeClass : false
 			         },
-			         remove:{			        	
+			         remove:{			        	 
 			        	 mode:'local',
 			        	 callback : function(datatable){
 			        		 $scope.basket.reset();
@@ -540,7 +538,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			         }
 	};
 
-	$scope.getProcessesColumns = function(){
+	var getProcessesColumns = function(){
 		var columns = [
 		         {
 		        	 "header":Messages("processes.table.containerInputCode"),
@@ -731,15 +729,20 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 		$q.all($scope.promises).then(function (res) {
 			$scope.message.clazz="alert alert-success";
 			$scope.message.text=Messages('experiments.msg.save.sucess');
-			$scope.doneAndRecorded = true;
+			$scope.doneAndRecorded = true;			
 
 			$scope.basket.reset();
-			$scope.datatable.setColumnsConfig($scope.getProcessesColumns());
+			$scope.datatable.config.edit.active = false;
+			$scope.datatable.config.remove.active = false;
+			$scope.datatable.config.select.active = false;
+			$scope.datatable.config.cancel.active = false;
+			$scope.datatable.setColumnsConfig(getProcessesColumns());
 			$scope.datatable.setData($scope.processes);
 			var displayResult = $scope.datatable.displayResult;
 			for(var i=0;i<displayResult.length;i++){
 				$scope.datatable.displayResult[i].line.trClass = "success";
 			}
+			$scope.changeConfigFunc(false);
 			$scope.datatable.config.spinner.start = false;
 		}, function(res){
 			$scope.datatable.config.spinner.start = false;
@@ -752,7 +755,7 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 			}*/
 			
 			$scope.doneAndRecorded = false;
-			$scope.datatable.config.remove.active = true;
+			$scope.changeConfigFunc(true);
 		});	
 	};
 
@@ -858,11 +861,12 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 		return $http.get(jsRoutes.controllers.processes.tpl.Processes.getPropertiesDefinitions(typeCode).url)
 		.success(function(data, status, headers, config) {
 			if(data!=null){
-				if(data.length>0){
-					$scope.datatable.config.edit.active = true;
+				if(data.length>0 && !$scope.doneAndRecorded){
+					 $scope.editableFunc(true);					
 				}else{
-					$scope.datatable.config.edit.active = false;
-				}
+					 $scope.editableFunc(false);				
+				} 
+				
 				console.log(data);				
 				angular.forEach(data, function(property){
 					var unit = "";
@@ -890,12 +894,31 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 
 	};	
 	
-	$scope.recorded = function(){
+/*	$scope.recorded = function(){
 		 if($scope.doneAndRecorded==false){
 			 return true;
-		 }else{
-			 return false;
 		 }
+		 return false;
+		 
+	 };*/
+	 
+	 $scope.editableFunc= function(bool){
+		 var conf = $scope.datatable.getConfig();
+		 conf.edit.active = bool;		 
+		 $scope.datatable.setConfig(conf);		 
+	 };	 
+	 
+	 $scope.removableFunc= function(bool){
+		 var conf = $scope.datatable.getConfig();
+		 conf.remove.active = bool;		 
+		 $scope.datatable.setConfig(conf);		 
+	 };
+	 
+	 $scope.changeConfigFunc = function(bool){
+		 var conf = $scope.datatable.getConfig();
+		 conf.edit.active = bool;
+		 conf.remove.active = bool;
+		 $scope.datatable.setConfig(conf);
 	 };
 	 
 	//init
@@ -905,17 +928,18 @@ angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http',
 	$scope.containers = [];
 	$scope.lineClasses = [];
 	$scope.processes = [];
-	$scope.datatable = datatable($scope.datatableConfig);
+	
+	$scope.datatable = datatable(datatableConfig);	
 	$scope.basket = mainService.getBasket();
 	$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);
 	$scope.addNewProcessColumns();
 	$scope.datatable.selectAll(false);
 	if($scope.basket.length() != 0){
 		$scope.doneAndRecorded = false;
-		$scope.datatable.config.remove.active = true;
+		$scope.changeConfigFunc(true);
 	}else{
 		$scope.doneAndRecorded = true;
-		$scope.datatable.config.remove.active = false;
+		$scope.changeConfigFunc(false);
 	}
 	$scope.swithView();
 }]);

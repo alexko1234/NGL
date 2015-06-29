@@ -165,6 +165,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 					return undefined;
 				},
 
+				
 				loadInputContainers : function(ContainerUseds){
 					var results = {containers:[],promises:[]};
 					angular.forEach($scope.experiment.value.atomicTransfertMethods, function(atomicTransfertMethod){
@@ -568,14 +569,21 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 						datatable.setData(resultInput.containers,resultInput.containers.length);
 						$scope.atomicTransfere.experimentToInput(datatable);
 						if($scope.experiment.outputGenerated == true){
-							var allData = datatable.getData();
-							var i = 0;
+							var allData = datatable.getData();							
 							if(resultOutput.containers.length > 0){
 								angular.forEach(allData, function(data){
-									var containerTmp = resultOutput.containers[i];
-									var containerUsed = {code:containerTmp.code, concentration: containerTmp.mesuredConcentration, volume: containerTmp.mesuredVolume, state: containerTmp.state}
-									data.outputContainerUsed = containerUsed;
-									i++;
+									var containerTmp = undefined;
+									for(var j=0; j<$scope.experiment.value.atomicTransfertMethods.length;j++){
+										if(data.inputContainerUsed.code===$scope.experiment.value.atomicTransfertMethods[j].inputContainerUseds[0].code){
+											for(var i=0; i<resultOutput.containers.length;i++){
+												if($scope.experiment.value.atomicTransfertMethods[j].outputContainerUseds[0].code===resultOutput.containers[i].code){
+													containerTmp = resultOutput.containers[i];
+												}
+											}
+										}
+									}
+									var containerUsed = {code:containerTmp.code, concentration: containerTmp.mesuredConcentration, volume: containerTmp.mesuredVolume, state: containerTmp.state};									
+									data.outputContainerUsed = containerUsed;									
 								});
 							}
 							datatable.setData(allData,allData.length);

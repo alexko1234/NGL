@@ -16,6 +16,7 @@ import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.ManytoOneContainer;
 import models.laboratory.experiment.instance.OneToManyContainer;
 import models.laboratory.experiment.instance.OneToOneContainer;
+import models.laboratory.experiment.instance.OneToVoidContainer;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import models.utils.dao.DAOException;
@@ -67,6 +68,13 @@ public class ExperimentTestHelper {
 		containerUsed.instrumentProperties =  new HashMap<String, PropertyValue>();
 		containerUsed.locationOnContainerSupport=new LocationOnContainerSupport();
 		containerUsed.locationOnContainerSupport.code=code;
+		return containerUsed;
+	}
+	
+	
+	public static ContainerUsed getContainerUsed(String code, Double percentage){
+		ContainerUsed containerUsed=getContainerUsed(code);
+		containerUsed.percentage=percentage;
 		return containerUsed;
 	}
 	
@@ -224,10 +232,27 @@ public class ExperimentTestHelper {
 		
 		exp.atomicTransfertMethods.add(0,atomicTransfert1);
 		exp.atomicTransfertMethods.add(0,atomicTransfert2);
-		
-		
-		
+
 		return exp;
 		
+	}
+	
+	
+	public static Experiment getFakeExperimentWithAtomicExperimentOneToVoid(String typeCode){
+		Experiment exp = getFakeExperiment();
+		exp.typeCode=typeCode;
+		OneToVoidContainer atomicTransfert1 = ExperimentTestHelper.getOnetoVoidContainer("oneToVoid",100.0);
+		OneToVoidContainer atomicTransfert2 = ExperimentTestHelper.getOnetoVoidContainer("oneToVoid",100.0);		
+		exp.atomicTransfertMethods.add(atomicTransfert1);
+		exp.atomicTransfertMethods.add(atomicTransfert2);
+		return exp;
+		
+	}
+
+	public static OneToVoidContainer getOnetoVoidContainer(String code,Double percentage) {
+		OneToVoidContainer atomicTransfertMethod = new OneToVoidContainer();
+		atomicTransfertMethod.inputContainerUseds = new ArrayList<ContainerUsed>();
+		atomicTransfertMethod.inputContainerUseds.add(ExperimentTestHelper.getContainerUsed(code,percentage));
+		return atomicTransfertMethod;
 	}
 }

@@ -1,16 +1,78 @@
 
 package rules
 
+
+declare InputSupport
+	code : String
+	categoryCode : String
+end
+
+declare InputContainer
+	code : String
+	supportCode : String 
+	line : String
+	column : String
+end
+
+rule "init inputsupport"
+	@nglSQ( validations )
+	dialect "java"
+	salience 1000
+	no-loop
+    when
+	Experiment($typeCode:typeCode,$typeCode=="illumina-depot",$atomics:atomicTransfertMethods,$atomics!=null)
+	AtomicTransfertMethod($inputContainerUseds:inputContainerUseds) from $atomics
+    ContainerUsed($support:locationOnContainerSupport.code,$categoryCode:locationOnContainerSupport.categoryCode) from $inputContainerUseds
+	not InputSupport($support==code)
+    then
+		Logger.debug("Support"+$support +" de category "+$categoryCode);
+		InputSupport inputSupport=new InputSupport($support,$categoryCode);
+		insert(inputSupport);
+	end
+
+rule "init InputContainer"
+	@nglSQ( validations )
+	dialect "java"
+	salience 1000
+	no-loop
+    when
+	Experiment($typeCode:typeCode,$typeCode=="illumina-depot",$atomics:atomicTransfertMethods,$atomics!=null)
+    AtomicTransfertMethod($inputContainerUseds:inputContainerUseds) from $atomics
+    $containerUsed:ContainerUsed($code:code) from $inputContainerUseds
+    not InputContainer(code==$code)
+    then
+    InputContainer inputContainer=new InputContainer($code,$containerUsed.getLocationOnContainerSupport().getCode(),$containerUsed.getLocationOnContainerSupport().getLine(),
+    															$containerUsed.getLocationOnContainerSupport().getColumn());
+    Logger.debug("Container "+$code+" in support "+$containerUsed.getLocationOnContainerSupport().getCode());
+    insert(inputContainer);
+    end
+
+
 rule "only one inputssupport"
 	@nglSQ (validations )
 	dialect "java"
 	salience 400
 	no-loop
     when
-    Experiment($typeCode:typeCode,$typeCode=="illumina-depot",$inputContainerSupportCodes:atomicTransfertMethods)
+    Experiment($typeCode:typeCode,$typeCode=="illumina-depot")
+    Set(empty==false,size!=1) from collect(InputSupport())
     $contextValidation:ContextValidation($errors : errors)
-    eval($inputContainerSupportCodes.size()!=1)
     then 
-       	//Logger.debug("Nb inputContainerSupportCodes "+$inputContainerSupportCodes.size());
     	$contextValidation.addErrors("inputContainerSupportCodes","error.validationexp.oneInputSupport", $typeCode);
     end
+    
+rule "input all container from support"
+	@nglSQ (validations )
+	dialect "java"
+	salience 400
+	no-loop
+    when
+ 	Experiment($typeCode:typeCode,$typeCode=="illumina-depot")
+ 	InputSupport($support:code,$categoryCode:categoryCode,$categoryCode!=null)
+ 	$inputContainers:Set(empty==false) from collect(InputContainer($support==supportCode))
+ 	$contextValidation:ContextValidation($errors : errors)
+ 	eval(!$categoryCode.endsWith(Integer.toString($inputContainers.size())))	
+ 	then
+	 		Logger.debug("Ca marche ");
+	 		$contextValidation.addErrors("inputContainerSupportCodes","error.validationexp.oneInputSupport", $support);
+	end

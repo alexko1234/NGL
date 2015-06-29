@@ -472,6 +472,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	$scope.searchService.lists.refresh.processCategories();
 	$scope.searchService.lists.refresh.experimentCategories();
 	$scope.searchService.lists.refresh.users();
+	$scope.searchService.lists.refresh.containerSupports();
+	$scope.searchService.lists.refresh.experiments();
 	$scope.searchService.lists.refresh.states({objectTypeCode:"Container"});
 	$scope.searchService.lists.refresh.reportConfigs({pageCodes:["containers-addcolumns"]}, "containers-addcolumns");
 	$scope.searchService.lists.refresh.filterConfigs({pageCodes:["containers-search-addfilters"]}, "containers-search-addfilters");
