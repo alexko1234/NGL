@@ -19,8 +19,10 @@ import java.util.TreeSet;
 
 
 
+
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertyListValue;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
@@ -80,14 +82,22 @@ public class MigrationNbUsefulCyclesRun extends CommonController{
 						}
 						
 						if(properties.containsKey("nbCycleReadIndex1")){
-							newProperties.put("nbUsefulCycleReadIndex1", properties.get("nbCycleReadIndex1"));
+							if(((Integer)properties.get("nbCycleReadIndex1").value).intValue() == 7){
+								newProperties.put("nbUsefulCycleReadIndex1", new PropertySingleValue((Integer)properties.get("nbCycleReadIndex1").value - 1));
+							}else{
+								newProperties.put("nbUsefulCycleReadIndex1", properties.get("nbCycleReadIndex1"));
+							}
 						}else{
 							yes = false;							
 							Logger.warn("missing nbCycleReadIndex1 for "+run.code+" / "+lane.number);
 						}
 						
-						if(properties.containsKey("nbCycleReadIndex2")){							
-							newProperties.put("nbUsefulCycleReadIndex2", properties.get("nbCycleReadIndex2"));
+						if(properties.containsKey("nbCycleReadIndex2")){	
+							if(((Integer)properties.get("nbCycleReadIndex2").value).intValue() == 7){
+								newProperties.put("nbUsefulCycleReadIndex2", new PropertySingleValue((Integer)properties.get("nbCycleReadIndex2").value - 1));
+							}else{
+								newProperties.put("nbUsefulCycleReadIndex2", properties.get("nbCycleReadIndex2"));
+							}
 						}else{
 							yes = false;							
 							Logger.warn("missing nbCycleReadIndex2 for "+run.code+" / "+lane.number);
