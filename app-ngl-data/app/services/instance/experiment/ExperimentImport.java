@@ -142,12 +142,8 @@ public class ExperimentImport {
 			for (Container c : containers) {			
 				//define one atomicTransfertMethod for each container
 				OneToVoidContainer atomicTransfertMethod = new OneToVoidContainer();		
-<<<<<<< HEAD
-				atomicTransfertMethod.line = "0";
-=======
 				atomicTransfertMethod.line = "1";
 				atomicTransfertMethod.column = "1";
->>>>>>> 0f5f564... NGL-681: Modification de l'AtomicTransfertMethods des Experiments
 				atomicTransfertMethod.inputContainerUseds = new ArrayList<ContainerUsed>();
 				ContainerUsed cnt = new ContainerUsed();
 				cnt.code = c.code;
