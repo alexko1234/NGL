@@ -402,13 +402,13 @@ public class ExperimentService {
 	private static List<PropertyDefinition> getPropertyDepotNanopore() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, true, "single",300));
-		propertyDefinitions.add(newPropertiesDefinition("QC avant chargement FC", "qcBeforeFC", LevelService.getLevels(Level.CODE.Instrument),Double.class, false, "single",400));
-        propertyDefinitions.add(newPropertiesDefinition("QC avant demarrage run", "qcBeforeRun", LevelService.getLevels(Level.CODE.Instrument),Double.class, false, "single",500));
-        propertyDefinitions.add(newPropertiesDefinition("Nb reads", "nbReads", LevelService.getLevels(Level.CODE.Instrument),Integer.class, false, "single",600));
-        propertyDefinitions.add(newPropertiesDefinition("Nb pores actifs", "nbAtcivePores", LevelService.getLevels(Level.CODE.Instrument),Integer.class, false, "single",700));
-        propertyDefinitions.add(newPropertiesDefinition("Nb events", "nbEvents", LevelService.getLevels(Level.CODE.Instrument),Integer.class, false, "single",800));
-        propertyDefinitions.add(newPropertiesDefinition("Taille max", "maxSize", LevelService.getLevels(Level.CODE.Instrument),Integer.class, false, "single",900));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Report","report",LevelService.getLevels(Level.CODE.Instrument), File.class, false, "file"));
+		propertyDefinitions.add(newPropertiesDefinition("QC avant chargement FC", "qcBeforeFC", LevelService.getLevels(Level.CODE.Experiment),Double.class, false, "single",400));
+        propertyDefinitions.add(newPropertiesDefinition("QC avant demarrage run", "qcBeforeRun", LevelService.getLevels(Level.CODE.Experiment),Double.class, false, "single",500));
+        propertyDefinitions.add(newPropertiesDefinition("Nb reads", "nbReads", LevelService.getLevels(Level.CODE.Experiment),Integer.class, false, "single",600));
+        propertyDefinitions.add(newPropertiesDefinition("Nb pores actifs", "nbAtcivePores", LevelService.getLevels(Level.CODE.Experiment),Integer.class, false, "single",700));
+        propertyDefinitions.add(newPropertiesDefinition("Nb events", "nbEvents", LevelService.getLevels(Level.CODE.Experiment),Integer.class, false, "single",800));
+        propertyDefinitions.add(newPropertiesDefinition("Taille max", "maxSize", LevelService.getLevels(Level.CODE.Experiment),Integer.class, false, "single",900));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Report","report",LevelService.getLevels(Level.CODE.Experiment), File.class, false, "file"));
 
 		//Manque unite
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Volume chargement","loading.volume",LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, "object_list"));
