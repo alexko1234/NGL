@@ -545,7 +545,52 @@ angular.module('commonsServices', []).
                     });
                 }
             }
-        }).directive('base64Img', [function () {
+        }).directive('base64File', [function () {
+        	return {
+        		 restrict: 'A',
+        		 scope: {
+        			 base64File: "="
+        	        },
+        		 link: function (scope, elem, attrs, ngModel) {
+	        		  var reader = new FileReader();
+	        		  var file;
+	        		  if(scope.base64File != undefined && scope.base64File.value == ""){
+	        			  scope.base64File = undefined;
+	        		  }
+	        		  
+	        		  reader.onload = function (e) {
+	        			  scope.$apply(function () {
+	        				  if(e.target.result!= undefined && e.target.result != ""){
+		        				  scope.base64File = {};
+		        				  scope.base64File.fullname = file.name;
+		        				  
+		        				  //Get the extension
+		        				  var matchExtension = file.type.match(/^application\/(.*)/);
+			        				  if(matchExtension && matchExtension.length > 1){
+			        				  scope.base64File.extension = matchExtension[1];
+			        				  scope.base64File._type = matchExtension[1];
+			        				  
+			        				  //Get the base64 without the extension feature
+			        				  var matchBase64 = e.target.result.match(/^.*,(.*)/);
+			        				  scope.base64File.value = matchBase64[1];
+			        				
+		        				  }else{
+		        					 alert("This is not an file...");
+		        					 scope.base64File = undefined;
+		        				  }
+	        				  }else{
+	        					  scope.base64File = undefined;
+	        				  }
+	        			  });
+	        		  }
+	
+				      elem.on('change', function() {
+				    	  	file = elem[0].files[0];
+				    	  	reader.readAsDataURL(elem[0].files[0]);
+				      });
+        		 }
+        		};
+        		}]).directive('base64Img', [function () {
         	return {
         		 restrict: 'A',
         		 scope: {
@@ -597,7 +642,8 @@ angular.module('commonsServices', []).
 				      });
         		 }
         		};
-        		}]).directive('btSelect',  ['$parse', '$document', '$window', '$filter', function($parse,$document, $window, $filter)  {
+        		}])
+        		.directive('btSelect',  ['$parse', '$document', '$window', '$filter', function($parse,$document, $window, $filter)  {
 			//0000111110000000000022220000000000000000000000333300000000000000444444444444444000000000555555555555555000000066666666666666600000000000000007777000000000000000000088888
     		var BT_OPTIONS_REGEXP = /^\s*([\s\S]+?)(?:\s+as\s+([\s\S]+?))?(?:\s+group\s+by\s+([\s\S]+?))?\s+for\s+(?:([\$\w][\$\w]*))\s+in\s+([\s\S]+?)$/;                        
     		//var BT_OPTIONS_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?\s+for\s+(?:([\$\w][\$\w\d]*))\s+in\s+(.*)$/;
