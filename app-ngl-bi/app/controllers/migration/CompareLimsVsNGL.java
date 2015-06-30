@@ -456,6 +456,7 @@ public class CompareLimsVsNGL extends CommonController {
 			if(null == nglFiles)nglFiles=new ArrayList<File>(0);
 			if(null == limsFiles)limsFiles=new ArrayList<LimsFile>(0);
 			
+			
 			if(limsFiles.size() != nglFiles.size()){
 				cvrs.addErrors("nbFiles","nbFiles is different between readset and lims : "+ nglFiles.size() +" != "+limsFiles.size());
 			}
