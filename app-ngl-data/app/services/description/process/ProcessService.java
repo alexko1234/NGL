@@ -50,7 +50,7 @@ public class ProcessService {
 
 			
 
-			l.add(DescriptionFactory.newProcessType("Librairie Nanopore", "nanopore-process-library", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsNanopore() , getExperimentTypes("nanopore-library"), 
+			l.add(DescriptionFactory.newProcessType("Librairie Nanopore", "nanopore-process-library", ProcessCategory.find.findByCode("library"),getPropertyDefinitionsNanopore() , getExperimentTypes("nanopore-library"), 
 					getExperimentTypes("nanopore-library").get(0), getExperimentTypes("nanopore-library").get(0),getExperimentTypes("ext-to-nanopore").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
 			l.add(DescriptionFactory.newProcessType("Run Nanopore", "nanopore-run", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsNanopore() , getExperimentTypes("nanopore-depot"), 

@@ -55,7 +55,8 @@ public class MeasureService {
 		l.add(newMeasureUnit("nmol","nmol", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_QUANTITY)));
 		l.add(newMeasureUnit("pmol","pmol", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_QUANTITY)));
 		l.add(newMeasureUnit("ng","ng", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_QUANTITY)));
-		
+		l.add(newMeasureUnit("µg","µg", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_QUANTITY)));
+
 		l.add(newMeasureUnit("ng/µl","ng/µl", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_CONCENTRATION)));
 		l.add(newMeasureUnit("nM","nM", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_CONCENTRATION)));
 		l.add(newMeasureUnit("pM","pM", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_CONCENTRATION)));

@@ -6,6 +6,7 @@ import static services.description.DescriptionFactory.newPropertiesDefinition;
 import static services.description.DescriptionFactory.newValues;
 
 import java.awt.Image;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -281,17 +282,10 @@ public class InstrumentService {
         propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
         propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
         //Liste a definir
-        propertyDefinitions.add(newPropertiesDefinition("Numero PC", "pcNumber", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
-        propertyDefinitions.add(newPropertiesDefinition("Version MinKNOW", "minKnowVersion",LevelService.getLevels(Level.CODE.Instrument),String.class,true,"single",200));
-		propertyDefinitions.add(newPropertiesDefinition("Version Metrichor", "metrichorVersion",LevelService.getLevels(Level.CODE.Instrument),String.class,true,"single",300));
-        propertyDefinitions.add(newPropertiesDefinition("QC avant chargement FC", "qcBeforeFC", LevelService.getLevels(Level.CODE.Instrument),Double.class, true, "single",400));
-        propertyDefinitions.add(newPropertiesDefinition("QC avant demarrage run", "qcBeforeRun", LevelService.getLevels(Level.CODE.Instrument),Double.class, true, "single",500));
-        propertyDefinitions.add(newPropertiesDefinition("Nb reads", "nbReads", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",600));
-        propertyDefinitions.add(newPropertiesDefinition("Nb pores actifs", "nbAtcivePores", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",700));
-        propertyDefinitions.add(newPropertiesDefinition("Nb events", "nbEvents", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",800));
-        propertyDefinitions.add(newPropertiesDefinition("Taille max", "maxSize", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",900));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Report","report",LevelService.getLevels(Level.CODE.Instrument), Image.class, false, "img"));
-
+        propertyDefinitions.add(newPropertiesDefinition("Numero PC", "pcNumber", LevelService.getLevels(Level.CODE.Instrument),String.class, false, "single",100));
+        propertyDefinitions.add(newPropertiesDefinition("Version MinKNOW", "minKnowVersion",LevelService.getLevels(Level.CODE.Instrument),String.class,false,"single",200));
+		propertyDefinitions.add(newPropertiesDefinition("Version Metrichor", "metrichorVersion",LevelService.getLevels(Level.CODE.Instrument),String.class,false,"single",300));
+        
 		return propertyDefinitions;
 	}
 

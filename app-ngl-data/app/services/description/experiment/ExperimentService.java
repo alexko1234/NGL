@@ -4,6 +4,7 @@ import static services.description.DescriptionFactory.newExperimentType;
 import static services.description.DescriptionFactory.newExperimentTypeNode;
 import static services.description.DescriptionFactory.newPropertiesDefinition;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -400,7 +401,15 @@ public class ExperimentService {
 	
 	private static List<PropertyDefinition> getPropertyDepotNanopore() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, true, "single",300));
+		propertyDefinitions.add(newPropertiesDefinition("QC avant chargement FC", "qcBeforeFC", LevelService.getLevels(Level.CODE.Instrument),Double.class, false, "single",400));
+        propertyDefinitions.add(newPropertiesDefinition("QC avant demarrage run", "qcBeforeRun", LevelService.getLevels(Level.CODE.Instrument),Double.class, false, "single",500));
+        propertyDefinitions.add(newPropertiesDefinition("Nb reads", "nbReads", LevelService.getLevels(Level.CODE.Instrument),Integer.class, false, "single",600));
+        propertyDefinitions.add(newPropertiesDefinition("Nb pores actifs", "nbAtcivePores", LevelService.getLevels(Level.CODE.Instrument),Integer.class, false, "single",700));
+        propertyDefinitions.add(newPropertiesDefinition("Nb events", "nbEvents", LevelService.getLevels(Level.CODE.Instrument),Integer.class, false, "single",800));
+        propertyDefinitions.add(newPropertiesDefinition("Taille max", "maxSize", LevelService.getLevels(Level.CODE.Instrument),Integer.class, false, "single",900));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Report","report",LevelService.getLevels(Level.CODE.Instrument), File.class, false, "file"));
+
 		//Manque unite
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Volume chargement","loading.volume",LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, "object_list"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Temps de chargement","loading.time",LevelService.getLevels(Level.CODE.ContainerIn), Long.class, false, "object_list"));		
@@ -410,8 +419,10 @@ public class ExperimentService {
 
 	private static List<PropertyDefinition> getPropertyLibrairieNanopore() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, false, "single",6));
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, "single",7));
+		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µg"),MeasureUnit.find.findByCode( "ng"), "single",6));
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µl"),MeasureUnit.find.findByCode( "µl"), "single",7));
 		propertyDefinitions.add(newPropertiesDefinition("Taille", "librarySize", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, true, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "kb"),MeasureUnit.find.findByCode( "kb"), "single",8));
 		return propertyDefinitions;
