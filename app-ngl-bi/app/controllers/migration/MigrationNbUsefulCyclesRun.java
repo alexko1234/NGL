@@ -9,17 +9,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 
-
-
-
-
-
-
-
-
-
-
-
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertyListValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
@@ -140,8 +129,29 @@ public class MigrationNbUsefulCyclesRun extends CommonController{
 			
 		}
 		
+		updateBouletteFred();
 		
 		return ok();
+	}
+
+	private static void updateBouletteFred() {
+		MongoDBResult<ReadSet> rss = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.in("runCode","150611_SOUFRE_C772BACXX","150611_SOUFRE_C7BFEACXX"));
+		DBCursor<ReadSet> cursor = rss.cursor;
+		while(cursor.hasNext()){
+			ReadSet rs = cursor.next();
+			Treatment ngsrg = rs.treatments.get("ngsrg");
+			Map<String, PropertyValue> properties = ngsrg.results.get("default");
+			Long nbCluster = (Long)properties.get("nbCluster").value;
+			
+			if(((Long)properties.get("nbBases").value).longValue() == 0){
+				properties.get("nbBases").value = Long.valueOf(nbCluster * 202);
+				Logger.debug("Update readset boulette fred : "+rs.code);
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+						DBQuery.is("code", rs.code),
+						DBUpdate.set("treatments.ngsrg", ngsrg));
+			}
+			
+		}
 	}
 	
 
