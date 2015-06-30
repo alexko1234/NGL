@@ -86,7 +86,7 @@
 		<div class="row">
 			<div class="col-xs-12">	
 				<div class="panel panel-default" ng-if='showPropertyData("@read",treament.code!=undefined?treament.code:treatments.getTreatment().code,"maxSizeReads")'>		
-				  	<div class="panel-heading"><strong>@(Messages("readsets.treatments.read_quality.maxSizeReads")+" ")<span ng-bind='@("lane.treatments.ngsrg['default'].nbCycle" + camelCase(read) + ".value")'></span> :</strong></div>
+				  	<div class="panel-heading"><strong>@(Messages("readsets.treatments.read_quality.maxSizeReads")+" ")<span ng-bind='@("lane.treatments.ngsrg['default'].nbUsefulCycle" + camelCase(read) + ".value")'></span> :</strong></div>
 				  	<div class="panel-body">
 						{{@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".maxSizeReads.value") | number}} 
 							({{@("readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code]."+read+".maxSizeReadsPercent.value") | number:2}} @Messages("unit.percent"))	

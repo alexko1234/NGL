@@ -40,7 +40,6 @@ public abstract class AbstractTestsCNG {
 		Map<String,String> config = new HashMap<String,String>();
 		config.put("application.secret", "ezfzzefzefz");
 		config.put("evolutionplugin","disabled");
-		config.put("ebean.default","models.*");
 		config.put("mongodb.database", "NGL-TESTU");
 		config.put("mongodb.credentials", "testu:testu");
 		//config.put("mongodb.database", "CNS-NGL");

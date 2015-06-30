@@ -2,14 +2,15 @@ package models.laboratory.run.instance;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import play.Logger;
 
+import play.Logger;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -49,7 +50,21 @@ public class Run extends DBObject implements IValidation {
     public Map<String, PropertyValue> properties = new HashMap<String, PropertyValue>();
     public List<Lane> lanes;
     
-   
+    @JsonIgnore
+    public Lane getLane(Integer laneNumber){
+    	if(lanes != null){
+    		Iterator<Lane> iti = lanes.iterator();
+	    	while(iti.hasNext()){
+	    		Lane next = iti.next();
+	    		if(next.number.equals(laneNumber)){
+	    			return next;
+	    		}
+	    	}
+    	}
+    	return null;
+    	//return lanes.stream().filter((Lane l) -> l.number.equals(laneNumber)).findFirst().get();
+    }
+    
     @Override
     public void validate(ContextValidation contextValidation) {
     	contextValidation.putObject("run", this);

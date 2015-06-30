@@ -18,7 +18,6 @@ import org.springframework.stereotype.Repository;
 
 import play.api.modules.spring.Spring;
 
-import com.avaje.ebean.enhance.asm.Type;
 
 @Deprecated
 @Repository
@@ -35,7 +34,7 @@ public class ProtocolDAO extends AbstractDAOMapping<Protocol>{
 		String sql = sqlCommon+
 				" JOIN experiment_type_protocol as cit ON fk_protocol=id "+
 				"WHERE fk_experiment_type = ? ";
-		ProtocolMappingQuery protocolMappingQuery=new ProtocolMappingQuery(dataSource, sql,new SqlParameter("id", Type.LONG));
+		ProtocolMappingQuery protocolMappingQuery=new ProtocolMappingQuery(dataSource, sql,new SqlParameter("id", Types.BIGINT));
 		return protocolMappingQuery.execute(id);
 	}
 	

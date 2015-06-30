@@ -145,4 +145,15 @@ public class Files extends SubDocumentController<Analysis, File> {
 		updateObject(getSubObjectQuery(parentCode, fullname),DBUpdate.pull("files", null)); 
 		return ok();
 	}
+	
+	public Result deleteByParentCode(String parentCode) {
+		Analysis objectInDB = getObject(parentCode);
+		if (objectInDB == null) {
+			return notFound();
+		}
+		
+		updateObject(DBQuery.is("code", parentCode), 
+				DBUpdate.unset("files").set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));		
+		return ok();
+	}
 }

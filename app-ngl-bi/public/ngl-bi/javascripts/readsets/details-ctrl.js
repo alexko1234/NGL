@@ -132,7 +132,19 @@
 		}
 	}
 	
-
+	$scope.getNbCycles = function(){
+		
+		if($scope.readset){
+    		var ngsrg = $scope.readset.treatments.ngsrg["default"];
+    		if(ngsrg.nbUsefulCycleRead2){
+    			return ngsrg.nbUsefulCycleRead1.value+', '+ngsrg.nbUsefulCycleReadIndex1.value+', '+ngsrg.nbUsefulCycleReadIndex2.value+', '+ngsrg.nbUsefulCycleRead2.value;
+    		}else if($scope.runNGSRG){
+    			return $scope.runNGSRG["default"].nbCycle.value
+    		}    		
+    	}
+    	return '';				
+	};
+	
 	var init = function(){
 		$scope.messages = messages();
 		$scope.lists = lists;

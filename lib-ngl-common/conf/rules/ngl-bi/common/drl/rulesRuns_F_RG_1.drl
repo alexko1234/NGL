@@ -20,7 +20,7 @@ end
 //run.treatments.ngsrg.default.percentClusterIlluminaFilter=
 //(run.treatments.ngsrg.default.nbClusterIlluminaFilter/run.treatments.ngsrg.default.nbClusterTotal)*100
 rule "Calculate average percentClusterFilter for run"
-	@nglBI( rg_1 )
+	@nglBI( F_RG_1 )
 	dialect "java"
 	salience 600
 	no-loop
@@ -50,7 +50,7 @@ end
 //readSets : list of ReadSetInfo
 //nbClusterLane : run.lanes.treatments.ngsrg.default.nbClusterInternalAndIlluminaFilter
 rule "Initialize LaneInfo"
-	@nglBI( rg_1 )
+	@nglBI( F_RG_1 )
 	dialect "java"
 	salience 500
 	no-loop
@@ -72,7 +72,7 @@ end
 //readSet : ReadSet
 //validSeqpercent : null
 rule "Get all readSet"
-	@nglBI( rg_1 )
+	@nglBI( F_RG_1 )
 	dialect "java"
 	salience 400
 	no-loop
@@ -94,7 +94,7 @@ end
 //readSet.treatments.ngsrg.default.validSeqPercent=
 //(readSet.treatments.ngsrg.default.nbCluster/lane.treatments.ngsrg.default.nbClusterInternalAndIlluminaFilter)*100
 rule "Calculate seqPercent readSet"
-	@nglBI( rg_1 )
+	@nglBI( F_RG_1 )
 	dialect "java"
 	salience 300
 	no-loop
@@ -119,7 +119,7 @@ end
 //run.lane.treatments.ngsrg.default.seqLossPercent=
 //(100-SOMME(readset.treatments.ngsrg.default.validSeqPercent))
 rule "Calculate seqLossPercent Lane"
-	@nglBI( rg_1 )
+	@nglBI( F_RG_1 )
 	dialect "java"
 	salience 200
 	no-loop

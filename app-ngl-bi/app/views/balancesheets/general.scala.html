@@ -2,13 +2,18 @@
 	<div class="col-md-12 col-lg-12">
 		<div ng-switch on="balanceSheetsGeneralService.isLoading()">
 			<div ng-switch-when="true">
-				<div class="alert alert-info">
-					<strong>@Messages("balanceSheets.info.loading")</strong>
+				<div class="row">
+					<div class="col-md-12 col-lg-12 text-center">
+						<div><button class="btn btn-primary btn-lg"><i class="fa fa-spinner fa-spin fa-5x"></i></button></div>
+					</div>
 				</div>
 			</div>
 			<div ng-switch-when="false">
 				<div class="row">
 					<div class="col-md-12 col-lg-12" datatable="balanceSheetsGeneralService.dtYearlyBalanceSheets()"></div>
+				</div>
+				<div class="row">
+					<div class="col-md-12 col-lg-12" datatable="balanceSheetsGeneralService.dtSumYearly()"></div>
 				</div>
 				<div class="row">
 					<div class="col-ld-12 col-md-12">
