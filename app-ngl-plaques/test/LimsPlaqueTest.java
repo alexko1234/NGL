@@ -2,8 +2,9 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import java.util.List;
 
-import lims.dao.LimsManipDAO;
+import lims.cns.dao.LimsManipDAO;
 import lims.models.Manip;
+import models.utils.CodeHelper;
 
 import org.junit.Test;
 
@@ -22,5 +23,13 @@ public class LimsPlaqueTest extends AbstractTests {
 
 	}
 	
-
+	@Test
+	public void generateBarCode(){
+		
+		for(int i = 0; i < 15; i++){
+		
+			System.out.println("PLE_BGN_"+CodeHelper.getInstance().generateContainerSupportCode());
+		
+		}
+	}
 }

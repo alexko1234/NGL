@@ -71,13 +71,11 @@ public class MigrationExperiment extends CommonController{
 			}else if (atomics.getValue() instanceof OneToVoidContainerOld){
 				atomicTransfertMethod=new OneToVoidContainer();
 			}
-
 			atomicTransfertMethod.line=String.valueOf(Integer.sum(atomics.getKey(),1));
 			if(atomicTransfertMethod.line.equals("0")){
 				throw new RuntimeException("Erreur line = 0");
 			}
 			atomicTransfertMethod.column="1";
-			
 			atomicTransfertMethod.inputContainerUseds=atomics.getValue().getInputContainers();
 			atomicTransfertMethod.outputContainerUseds=atomics.getValue().getOutputContainers();
 			exp.atomicTransfertMethods.add(atomicTransfertMethod);

@@ -23,6 +23,18 @@ DELETE	/api/plates/:code               			controllers.plates.api.Plates.remove(c
 GET    	/api/manip                					controllers.manips.api.Manips.list()
 
 
+#bar code
+GET		/barcodes/:homecode/home					controllers.barcodes.tpl.Barcodes.home(homecode:java.lang.String)
+GET		/tpl/barcodes/create						controllers.barcodes.tpl.Barcodes.create()
+GET		/tpl/barcodes/search						controllers.barcodes.tpl.Barcodes.search()
+GET		/tpl/barcodes/js-routes						controllers.barcodes.tpl.Barcodes.javascriptRoutes()
+
+
+GET		/api/barcodes								controllers.barcodes.api.Barcodes.list()
+POST	/api/barcodes								controllers.barcodes.api.Barcodes.save()
+DELETE	/api/barcodes/:code							controllers.barcodes.api.Barcodes.delete(code:java.lang.String)
+
+
 # list api
 GET /api/combo/projects								controllers.combo.api.Lists.projects()
 GET /api/combo/samples								controllers.combo.api.Lists.samples()

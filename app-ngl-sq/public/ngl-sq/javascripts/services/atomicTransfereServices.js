@@ -125,7 +125,8 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 								if($scope.experiment.value.atomicTransfertMethods[position] != null && angular.isDefined($scope.experiment.value.atomicTransfertMethods[position].inputContainerUseds[0])){
 									allData[i].inputInstrumentProperties = $scope.experiment.value.atomicTransfertMethods[position].inputContainerUseds[0].instrumentProperties;
 									allData[i].inputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[position].inputContainerUseds[0].experimentProperties;
-									allData[i].inputContainerUsed =  $scope.experiment.value.atomicTransfertMethods[position].inputContainerUseds[0];											
+									allData[i].inputContainerUsed =  $scope.experiment.value.atomicTransfertMethods[position].inputContainerUseds[0];
+									allData[i].contents = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].contents;											
 								}										
 							}
 							input.setData(allData, allData.length);
@@ -143,6 +144,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 								//$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].percentage = allData[i].inputContainerUseds[0].percentage;	
 								$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].instrumentProperties = allData[i].inputInstrumentProperties;
 								$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].experimentProperties = allData[i].inputExperimentProperties;
+								$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].contents = allData[i].contents;
 								$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].concentration = allData[i].mesuredConcentration;
 								$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].volume = allData[i].mesuredVolume;
 
@@ -203,6 +205,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 									allData[i].inputInstrumentProperties = $scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[j].instrumentProperties;
 									allData[i].inputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[j].experimentProperties;
 									allData[i].inputContainerUsed =  $scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[j];
+									allData[i].contents = $scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[j].contents;
 									i++;
 								}
 							}
@@ -279,6 +282,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 									if(angular.isDefined(allData[i].inputContainerUsed) && angular.isDefined(allData[i].inputContainerUsed.percentage)){
 										$scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[j].percentage = allData[i].inputContainerUsed.percentage;
 									}											
+									$scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[j].contents = allData[i].contents;
 									$scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[j].instrumentProperties = allData[i].inputInstrumentProperties;
 									$scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[j].experimentProperties = allData[i].inputExperimentProperties;											
 

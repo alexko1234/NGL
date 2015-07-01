@@ -63,6 +63,7 @@ public class InstrumentService {
 		
 		l.add(newInstrumentCategory("Séquenceur Illumina","illumina-sequencer"));
 		l.add(newInstrumentCategory("Cartographie Optique Opgen","opt-map-opgen"));
+		l.add(newInstrumentCategory("Nanopore","nanopore"));
 		l.add(newInstrumentCategory("Extérieur","extseq"));
 		
 		l.add(newInstrumentCategory("Robot pipetage","liquid-handling-robot"));
@@ -268,11 +269,33 @@ public class InstrumentService {
 				getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-2","flowcell-1","flowcell-4" }), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 
-
+		
+		l.add(newInstrumentUsedType("MinION", "minION", InstrumentCategory.find.findByCode("nanopore"), getNanoporeProperties(), getInstrumentMinIon() 
+				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
 
 	
+	private static List<PropertyDefinition> getNanoporeProperties() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
+        propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
+        //Liste a definir
+        propertyDefinitions.add(newPropertiesDefinition("Numero PC", "pcNumber", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
+        propertyDefinitions.add(newPropertiesDefinition("Version MinKNOW", "minKnowVersion",LevelService.getLevels(Level.CODE.Instrument),String.class,true,"single",200));
+		propertyDefinitions.add(newPropertiesDefinition("Version Metrichor", "metrichorVersion",LevelService.getLevels(Level.CODE.Instrument),String.class,true,"single",300));
+        propertyDefinitions.add(newPropertiesDefinition("QC avant chargement FC", "qcBeforeFC", LevelService.getLevels(Level.CODE.Instrument),Double.class, true, "single",400));
+        propertyDefinitions.add(newPropertiesDefinition("QC avant demarrage run", "qcBeforeRun", LevelService.getLevels(Level.CODE.Instrument),Double.class, true, "single",500));
+        propertyDefinitions.add(newPropertiesDefinition("Nb reads", "nbReads", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",600));
+        propertyDefinitions.add(newPropertiesDefinition("Nb pores actifs", "nbAtcivePores", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",700));
+        propertyDefinitions.add(newPropertiesDefinition("Nb events", "nbEvents", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",800));
+        propertyDefinitions.add(newPropertiesDefinition("Taille max", "maxSize", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",900));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Report","report",LevelService.getLevels(Level.CODE.Instrument), Image.class, false, "img"));
+
+		return propertyDefinitions;
+	}
+
+
 	private static List<PropertyDefinition> getCBotProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Type lectures","sequencingProgramType"
@@ -354,6 +377,12 @@ public class InstrumentService {
         return propertyDefinitions;
 	}
 	
+	
+	private static List<Instrument> getInstrumentMinIon() throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("MN02670", "MN02670", null, true, "path", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		return instruments;
+	}
 	
 
 	private static List<Instrument> getInstrumentMiSeq() throws DAOException {

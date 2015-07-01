@@ -9,9 +9,3 @@
 **/project/project
 **/.tern*
 **/.gitignore
-
-/target/
-/project/project
-/.settings
-.classpath
-.project

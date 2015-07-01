@@ -117,6 +117,10 @@ public class ExperimentService {
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)));
 		
+		l.add(newExperimentType("Ext to Solution-stock","ext-to-solution-stock",
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG)));
+		
 		
 		l.add(newExperimentType("Preparation flowcell", "prepa-flowcell",1200, 
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcell(),
@@ -143,7 +147,20 @@ public class ExperimentService {
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		
-			//transformation CNS
+			//Nanopore
+			l.add(newExperimentType("Ext to Nanopore","ext-to-nanopore",
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+			
+			l.add(newExperimentType("Librairie Nanopore","nanopore-library",
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+					getPropertyLibrairieNanopore(), getInstrumentUsedTypes("hand"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+			
+			l.add(newExperimentType("Depot Nanopore","nanopore-depot",200,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDepotNanopore(),
+					getInstrumentUsedTypes("minion"),"ManyToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
 
 			//library
 			l.add(newExperimentType("Fragmentation","fragmentation",200,
@@ -259,10 +276,10 @@ public class ExperimentService {
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 			
 			// FDS new 02-02-2015, intrument Used =>robot oui mais lequel???
-			/*l.add(newExperimentType("Librairie dénaturée","denat-dil-lib",1100,
+			l.add(newExperimentType("Librairie dénaturée","denat-dil-lib",1100,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
 					getInstrumentUsedTypes("hand"),"OneToOne", 
-					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));*/
+					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 
 
 			// NO qc au CNG ??
@@ -288,20 +305,12 @@ public class ExperimentService {
 
 
 
-	
-
-	private static List<PropertyDefinition> getPropertyDefinitionFragmentation() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, "single"));
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, "single"));
-		return propertyDefinitions;
-	}
-
 	private static void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
 
 		newExperimentTypeNode("ext-to-opgen-depot", getExperimentTypes("ext-to-opgen-depot").get(0), false, false, null, null, null).save();
 		newExperimentTypeNode("ext-to-prepa-flowcell", getExperimentTypes("ext-to-prepa-flowcell").get(0), false, false, null, null, null).save();
 		newExperimentTypeNode("ext-to-qpcr", getExperimentTypes("ext-to-qpcr").get(0), false, false, null, null, null).save();	
+		newExperimentTypeNode("ext-to-solution-stock", getExperimentTypes("ext-to-solution-stock").get(0), false, false, null, null, null).save();	
 
 		if(ConfigFactory.load().getString("ngl.env").equals("PROD")){
 			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false,false,getExperimentTypeNodes("ext-to-qpcr"),
@@ -315,7 +324,14 @@ public class ExperimentService {
 		newExperimentTypeNode("opgen-depot",getExperimentTypes("opgen-depot").get(0),false,false,getExperimentTypeNodes("ext-to-opgen-depot"),null,null).save();
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-
+			
+			//Nanopore
+			newExperimentTypeNode("ext-to-nanopore", getExperimentTypes("ext-to-nanopore").get(0), false, false, null, null, null).save();
+			newExperimentTypeNode("nanopore-library",getExperimentTypes("nanopore-library").get(0),false,false,getExperimentTypeNodes("ext-to-nanopore"),
+					null,null).save();
+			newExperimentTypeNode("nanopore-depot",getExperimentTypes("nanopore-depot").get(0),false,false,getExperimentTypeNodes("nanopore-library","ext-to-nanopore"),
+					null,null).save();
+			
 			newExperimentTypeNode("ext-to-library", getExperimentTypes("ext-to-library").get(0), false, false, null, null, null).save();
 			
 			//REM : experimentTypes list confirmées par Julie
@@ -381,6 +397,33 @@ public class ExperimentService {
 		return DAOHelpers.getModelByCodes(ExperimentTypeNode.class,ExperimentTypeNode.find, codes);
 	}
 
+	
+	private static List<PropertyDefinition> getPropertyDepotNanopore() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, true, "single"));
+		//Manque unite
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Volume chargement","loading.volume",LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Temps de chargement","loading.time",LevelService.getLevels(Level.CODE.ContainerIn), Long.class, false, "object_list"));		
+
+		return propertyDefinitions;
+	}
+
+	private static List<PropertyDefinition> getPropertyLibrairieNanopore() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, false, "single",6));
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, "single",7));
+		propertyDefinitions.add(newPropertiesDefinition("Taille", "librarySize", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, true, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "kb"),MeasureUnit.find.findByCode( "kb"), "single",8));
+		return propertyDefinitions;
+	}
+
+	private static List<PropertyDefinition> getPropertyDefinitionFragmentation() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, "single"));
+		return propertyDefinitions;
+	}
+	
 	private static List<PropertyDefinition> getPropertyDefinitionsPrepaflowcell() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		//Outputcontainer

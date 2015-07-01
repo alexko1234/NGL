@@ -406,9 +406,11 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 if(angular.isDefined(this.form.typeCode) && lists.get("process-"+this.form.typeCode) && lists.get("process-"+this.form.typeCode).length === 1){			                                    		 
 			                                    		 allFilters = allFilters.concat(angular.copy(lists.get("process-"+this.form.typeCode)[0].filters));
 			                                    	 }
+			                                    	 if(angular.isDefined(allFilters)){   
 			                                    	 nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
 			                                    	 for(var i = 0; i  < 5 && allFilters.length > 0 ; i++){
 			                                    		 formFilters.push(allFilters.splice(0, nbElementByColumn));	    								
+			                                    	 }
 			                                    	 }
 			                                    	 //complete to 5 five element to have a great design 
 			                                    	 while(formFilters.length < 5){
