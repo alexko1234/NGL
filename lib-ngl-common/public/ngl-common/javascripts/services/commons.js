@@ -568,7 +568,7 @@ angular.module('commonsServices', []).
 		        				  var matchExtension = file.type.match(/^application\/(.*)/);
 			        				  if(matchExtension && matchExtension.length > 1){
 			        				  scope.base64File.extension = matchExtension[1];
-			        				  scope.base64File._type = matchExtension[1];
+			        				  scope.base64File._type = "file";
 			        				  
 			        				  //Get the base64 without the extension feature
 			        				  var matchBase64 = e.target.result.match(/^.*,(.*)/);
