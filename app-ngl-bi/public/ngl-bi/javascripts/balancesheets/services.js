@@ -1148,7 +1148,7 @@
 							categories: years,
 							crosshair: true,
 							title : {
-								text : 'Année',
+								text : 'Ann  e',
 							},
 							labels : {
 								enabled : true,
@@ -1187,7 +1187,7 @@
 				 datatable.displayResult[pos].line.trClass="text-primary";
 			}
 			
-			// TODO : Conserver l'onglet actif lors du changement d'année
+			// TODO : Conserver l'onglet actif lors du changement d'ann  e
 			// Mettre le texte dans Messages
 			
 			var balanceSheetsGeneral = {
