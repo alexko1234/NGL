@@ -219,12 +219,11 @@ rule "RunStartDate propertie is mandatory to create Illumina Depot and Opgen Dep
 	no-loop
 when
 	$experiment: Experiment($typeCode:typeCode,$typeCode=="illumina-depot"|| $typeCode=="opgen-depot" || $typeCode=="nanopore-depot" , $state: state, $state.code=="N",$experimentProperties: experimentProperties, traceInformation!=null, $creationDate: traceInformation.creationDate)
-	$runStartDate: PropertyValue() from $experimentProperties.get("runStartDate")	
-	//$contextValidation:ContextValidation($errors : errors)
-	eval( ($experimentProperties == null || $runStartDate==null || $runStartDate.value==null || $runStartDate.value=="" ) && ($creationDate!=null && Date.class.isInstance($creationDate) ))
+	not (Entry(key == "runStartDate") from $experimentProperties.entrySet())
 then	
 	Logger.info("Règle RunStartDate propertie OK");
 	PropertySingleValue value = new PropertySingleValue($creationDate);
+	if($experimentProperties==null){$experimentProperties = new HashMap<String,PropertyValue>();}
 	$experimentProperties.remove("runStartDate");
 	$experimentProperties.put("runStartDate", value);
 	//$contextValidation.addErrors("experiment", "error.validationexp.mandatoryrunstartdate", $typeCode, $runStartDate);
