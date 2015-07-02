@@ -142,7 +142,7 @@ public class Files extends SubDocumentController<Analysis, File> {
 		}
 		updateObject(getSubObjectQuery(parentCode, fullname), 
 				DBUpdate.unset("files.$").set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
-		updateObject(getSubObjectQuery(parentCode, fullname),DBUpdate.pull("files", null)); 
+		updateObject(DBQuery.is("code", parentCode),DBUpdate.pull("files", null)); 
 		return ok();
 	}
 	
