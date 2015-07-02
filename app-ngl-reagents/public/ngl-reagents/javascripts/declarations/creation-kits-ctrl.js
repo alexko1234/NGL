@@ -159,7 +159,7 @@
 	 $scope.datatables = [];
 	 $scope.datatableSaved = 0;
 	 //$scope.declaration = {"type":"kit"};
-	 $scope.objectTypes = [{code:"kit", name:Messages("declarations.kit")},{code:"box", name:Messages("declarations.box")},{code:"reagent", name:Messages("declarations.reagent")}];
+	 $scope.objectTypes = [{code:"kit", name:Messages("declarations.kit")},{code:"box", name:Messages("declarations.box")}];
 	 
 	 $scope.checkCatalogRefCode = function(i){
 	 	if($scope.catalogRefCodeVerifications[i].code === $scope.boxes[i].catalogRefCode){
@@ -275,7 +275,16 @@
 			 return code;
 		 }
 	     return "";
-	 }
+	 };
+	 
+	 $scope.boxBarCodeUpdate = function(index, box){
+		 var data = $scope.datatables[index].getData();
+		 for(var i=0;i<data.length;i++){
+			 data[i].boxBarCode = box.barCode;
+		 }
+		 
+		 $scope.datatables[index].setData(data);
+	 };
 	 
 	 $scope.newReagent = function(index, box, reagentCatalog){
 		 console.log(index);
@@ -284,7 +293,7 @@
 				$scope.datatables[index].saveLocal($scope.datatables[index].displayResult[i].data,i);
 			}
 		 }
-		 $scope.datatables[index].addData([{"category":"Reagent", "catalogCode":reagentCatalog.code, "receptionDate":moment(new Date()).valueOf(), "catalogRefCode":reagentCatalog.catalogRefCode, "declarationType":$scope.kit.declarationType,"boxCatalogRefCode":box.catalogRefCode, "state":{code:"N"}}]);
+		 $scope.datatables[index].addData([{"category":"Reagent", "catalogCode":reagentCatalog.code, "receptionDate":moment(new Date()).valueOf(), "catalogRefCode":reagentCatalog.catalogRefCode, "declarationType":$scope.kit.declarationType,"boxCatalogRefCode":box.catalogRefCode,"boxBarCode":box.barCode, "state":{code:"N"}}]);
 		 $scope.datatables[index].setEdit();
 		 console.log($scope.boxes);
 	 };
@@ -302,11 +311,15 @@
 			 return $http.get(jsRoutes.controllers.reagents.api.Kits.get($scope.kit.code).url)
 			 return $http.get(jsRoutes.controllers.reagents.api.Kits.list().url, {"params":{"code":$scope.kit.code}})
 				.success(function(data, status, headers, config) {
-					if(data!=null){
+					if(data!=null && data.length > 0){
 						$scope.kit = data[0];
 						$scope.orderInformations.orderCode = $scope.kit.orderCode;
 						$scope.orderInformations.providerOrderCode = $scope.kit.providerOrderCode;
 						$scope.orderInformations.shippedOrderCode =  $scope.kit.shippedOrderCode;
+						$scope.loadKitSuccess = true;
+					}
+					else{
+						$scope.loadKitSuccess = false;
 					}
 				})
 				.error(function(data, status, headers, config) {
@@ -330,20 +343,27 @@
 	 };
 	 
 	 $scope.loadBoxes = function(){
-		 $http.get(jsRoutes.controllers.reagents.api.Boxes.list().url, {"params":{"kitCode":$scope.kit.code}})
+		 var searchForm = {"code":$scope.kit.code};
+		 if($scope.loadKitSuccess === true){
+			 searchForm = {"kitCode":$scope.kit.code};
+		 }
+		 $http.get(jsRoutes.controllers.reagents.api.Boxes.list().url, {"params":searchForm})
 				.success(function(data, status, headers, config) {
-					if(data!=null){
+					if(data!=null && data.length > 0){
 						$scope.boxes = data;
 						for(var i=0;i<$scope.boxes.length;i++){
 							$scope.boxes[i].category = "Box";
 							$scope.datatables[i] = datatable($scope.datatableConfig);
 							$scope.datatables[i].setData([]);
-							var jsonSearch = {"boxCode":$scope.boxes[i].code,"kitCode":$scope.kit.code};
+							var jsonSearch = {"boxBarCode":$scope.boxes[i].barCode};
 							$scope.datatables[i].search(jsonSearch);
 							$scope.orderInformations.orderCode = $scope.boxes[i].orderCode;
 							$scope.orderInformations.providerOrderCode = $scope.boxes[i].providerOrderCode;
 							$scope.orderInformations.shippedOrderCode =  $scope.boxes[i].shippedOrderCode;
 						}
+						$scope.loadBoxSuccess = true;
+					}else{
+						$scope.loadBoxSuccess = false;
 					}
 				})
 				.error(function(data, status, headers, config) {
@@ -358,7 +378,7 @@
 	 $scope.saveReagents = function(index, box){
 		for(var i = 0; i < $scope.datatables[index].displayResult.length; i++){
 			$scope.datatables[index].displayResult[i].data.category = "Reagent";
-			$scope.datatables[index].displayResult[i].data.boxCode = box.code;
+			$scope.datatables[index].displayResult[i].data.boxBarCode = box.barCode;
 			$scope.datatables[index].displayResult[i].data.kitCode = $scope.kit.code;
 			$scope.datatables[index].displayResult[i].data.declarationType = $scope.kit.declarationType;
 			$scope.copyOrderInformations($scope.datatables[index].displayResult[i].data);
@@ -391,7 +411,7 @@
 					var reagents = $scope.datatables[i].displayResult.data;
 					if(reagents !== undefined){
 						for(var j=0;j<reagents.length;j++){
-							reagents[j].boxCode = $scope.boxes[i].code;
+							reagents[j].boxBarCode = $scope.boxes[i].barCode;
 							reagents[j].kitCode = $scope.boxes[i].kitCode;
 						}
 					}
@@ -585,6 +605,7 @@
 	 }else{
 		 $scope.kit.receptionDate = moment(new Date()).valueOf();
 	 }
+	 $q.all(promises).then(function (res) {
 		 if($routeParams.kitCode !== undefined){
 			 $scope.loadBoxes();
 		 }
@@ -603,4 +624,5 @@
 				tabService.activeTab(0);
 			 }
 		 }
+	 });
 }]);

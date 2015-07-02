@@ -205,7 +205,7 @@
 								object.catalogCode = data[0].code;
 								object.declarationType = "box";
 								object.boxCatalogRefCode = $scope.currentBox.catalogRefCode;
-								//object.boxBarCode =  $scope.currentBox.barCode;
+								object.boxBarCode =  $scope.currentBox.barCode;
 							}else{
 								$scope.message.clazz = 'alert alert-danger';
 								$scope.message.text = Messages('reagents.msg.catalogCode.error');
