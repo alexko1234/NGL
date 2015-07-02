@@ -34,14 +34,44 @@
 	 // Others
 	 var selectedYear = 0;
 	 var actualYear = new Date().getFullYear();
-	 var stillLoading = true;
+	 var stillLoading = false;
 	 var total = 0;
+	 	 
+	 var manageCache = function(changeYear, year){
+		 selectedYear = year;
+		 if(mainService.get('yearsInCache') != undefined){
+				var map = mainService.get('yearsInCache');
+				if(!map.has(selectedYear)){
+					loadData(selectedYear);
+				}else{
+					if(changeYear){
+						balanceSheets.setData(map.get(selectedYear), selectedYear);
+						balanceSheets.loadFromCache();
+					}else{
+						if(mainService.get('balanceSheetsActiveTab') == 0) {
+							balanceSheets.showQuarters();
+						}
+						else if(mainService.get('balanceSheetsActiveTab') == 1){
+							balanceSheets.showSequencingProduction();
+						}
+						else if(mainService.get('balanceSheetsActiveTab') == 2){
+							balanceSheets.showFirstTen();						
+						}
+						else if(mainService.get('balanceSheetsActiveTab') == 3){
+							balanceSheets.showProjectType();
+						}
+					}
+				}
+			}else{
+				loadData(selectedYear);
+			}
+	 }
 	 
-			 
+	 
+	 
 	 var loadData = function(year){
 		 stillLoading = true;
 		 flushData();
-		 selectedYear = year;
 
 		 // We initialize our form
 		 var form = {includes : []};
@@ -68,15 +98,16 @@
 		 
 		 // We retrieve everything we need
 		 
-		 $http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url, {params : form}).success(function(data, status, headers, config) {
-			 stillLoading = true;
-			 for(var i = 0; i < data.length; i++){
-				 if(data[i].sampleOnContainer != null || data[i].sampleOnContainer != undefined){
-					 data[i].runSequencingStartDate = convertToDate(data[i].runSequencingStartDate);
-					 total += data[i].treatments.ngsrg.default.nbBases.value;	 
-					 readsets.push(data[i]);
+		 $http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url, {params : form})
+		 	.success(function(data, status, headers, config) {
+				 stillLoading = true;
+				 for(var i = 0; i < data.length; i++){
+					 if(data[i].sampleOnContainer != null || data[i].sampleOnContainer != undefined){
+						 data[i].runSequencingStartDate = convertToDate(data[i].runSequencingStartDate);
+						 total += data[i].treatments.ngsrg.default.nbBases.value;	 
+						 readsets.push(data[i]);
+					 }
 				 }
-			 }
 			 data = [];
 			 $http.get(jsRoutes.controllers.runs.api.Runs.list().url, {params : runForm}).success(function(runData, status, headers, config) {
 				 runs = runData;
@@ -92,19 +123,47 @@
 				 $http.get(jsRoutes.controllers.projects.api.Projects.list().url, {params : projectForm}).success(function(projectData, status, headers, config) {
 					 projects = projectData;
 					 projectData = [];
-					 // Then we load our first BalanceSheets
-					 loadQuarters();
-					 loadSequencingProduction();
-					 loadFirstTen();
-					 loadProjectType();
-					
+					 
+					 // Then we load our balance sheets
+					 loadFunctions();
+					 
+					 
+					 
+					 // Caching
+					 var yearMap = new Map();
+					 var years = new Map();
+					 if(mainService.get('yearsInCache') != undefined){
+						 if(!mainService.get('yearsInCache').has(String(selectedYear))){
+							 years = mainService.get('yearsInCache');
+							 years.set(selectedYear, balanceSheets.returnData());
+							 mainService.put('yearsInCache', years);
+						 }
+					 }else{
+						 yearMap.set(selectedYear, balanceSheets.returnData());
+						 mainService.put('yearsInCache', yearMap);
+					 }
+					 
 					 // End of loading
 					 stillLoading = false;
+
 				 });
 			 });
 			 
 		 });
 	 }		 
+	 
+	 var loadFunctions = function(){
+		loadQuarters();
+		loadSequencingProduction();
+		loadFirstTen();
+		loadProjectType();
+		stillLoading = false;
+	 }
+	 
+	 var loadFunctionsFromCache = function(){
+		 stillLoading = true;
+		 setTimeout(loadFunctions, 0);
+	 }
 
 	 /** Generating datatables **/ 
 	 
@@ -147,6 +206,7 @@
 		 
 		 // Treatment
 		 // Getting our months
+		 
 		 if(selectedYear == actualYear){
 			 for(var i = 0; i < readsets.length; i++){
 				 // We get our months
@@ -643,7 +703,10 @@
 		 loadDtSumProjectType();
 		 
 		 // Creating chart
-		 computeChartProjectType(balanceSheetsProjectType);
+		 $(function(){
+			 computeChartProjectType(balanceSheetsProjectType);
+		 });
+		 
 		 		 
 		 // Initializing datatable
 		 dtProjectType = datatable(datatableConfig);
@@ -841,7 +904,7 @@
 			                enabled: true,
 			                alpha: 45,
 			                beta: 0
-			         }
+					 }
 				 },
 				 title : {
 					 text : Messages("balanceSheets.tab.firstTen")
@@ -918,7 +981,6 @@
 	 
 	 /** Other functions **/
 	 
-	 
 	 var convertToDate = function(dateInMilliSeconds){
 		 return new Date(dateInMilliSeconds);
 	 }
@@ -957,6 +1019,14 @@
 	 var colorBlue = function(datatable, pos){
 		 datatable.displayResult[pos].line.trClass="text-primary";
 	 }
+	 
+	 var cleanData = function(){
+		 total = 0;
+		 for(var i = 0; i < readsets.length; i++){
+			 total += readsets[i].treatments.ngsrg.default.nbBases.value;
+		 }
+	 }
+	 
 	
 	 
 		
@@ -977,8 +1047,11 @@
 			dtSumFirstTen : function(){return dtSumFirstTen},
 			dtSumProjectType : function(){return dtSumProjectType},
 		// others
-			init : function(year){loadData(year);},
+			init : function(changeYear, year){manageCache(changeYear, year);},
 			isLoading : function(){return stillLoading;},
+			loadFromCache : function(){loadFunctionsFromCache();},
+			returnData : function(){return new Array(readsets, runs, projects);},
+			setData : function(array, year){readsets = array[0]; runs = array[1]; projects = array[2]; selectedYear = year; cleanData()},
 			showQuarters : function(){loadQuarters();},
 			showFirstTen : function(){loadFirstTen();},
 			showSequencingProduction : function(){loadSequencingProduction();},
@@ -1011,6 +1084,8 @@
 						readsets[i].runSequencingStartDate = convertToDate(readsets[i].runSequencingStartDate);
 					}	
 					loadYearlyBalanceSheets();
+					
+					mainService.put('generalBalanceSheets', readsets);
 					
 					isLoading = false;
 				});
@@ -1119,6 +1194,7 @@
 				 }
 				 
 				 // Creating datatable
+				 
 				 dtSumYearly = datatable(datatableConfig);
 				 dtSumYearly.setColumnsConfig(defaultDatatableColumns);
 				 dtSumYearly.setData(sum, 1);
@@ -1148,7 +1224,7 @@
 							categories: years,
 							crosshair: true,
 							title : {
-								text : 'Ann  e',
+								text : 'Année',
 							},
 							labels : {
 								enabled : true,
@@ -1187,14 +1263,12 @@
 				 datatable.displayResult[pos].line.trClass="text-primary";
 			}
 			
-			// TODO : Conserver l'onglet actif lors du changement d'ann  e
-			// Mettre le texte dans Messages
-			
 			var balanceSheetsGeneral = {
 					isLoading : function(){return isLoading;},
 					chartYearlyBalanceSheets : function(){return chartYearlyBalanceSheets},
 					dtYearlyBalanceSheets : function(){return dtYearlyBalanceSheets;},
 					dtSumYearly : function(){return dtSumYearly},
+					loadFromCache : function(){loadYearlyBalanceSheets()},
 					init : function(){loadData();}	
 			};
 			

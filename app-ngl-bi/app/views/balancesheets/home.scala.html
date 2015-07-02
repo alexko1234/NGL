@@ -15,4 +15,8 @@
 
 }
 
-@views.html.main("balanceSheets.page.title", menu("balanceSheets." + code), scripts)(views.html.contents.lefttabs())
+@css() = {
+	<link rel="stylesheet" href="@routes.Assets.at("ngl-bi/css/balancesheets/balancesheets.css")">
+}
+
+@views.html.main("balanceSheets.page.title", menu("balanceSheets." + code), scripts, css)(views.html.contents.lefttabs())

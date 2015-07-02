@@ -1,5 +1,5 @@
 @()
-<!-- Test tabs AngularJS via ui.bootstrap -->
+
 <div class="row">
 	<div class="col-md-12 col-lg-12">
 		
@@ -7,7 +7,7 @@
 		<tabset justified="true">
 			<tab heading='@Messages("balanceSheets.tab.quarters")' active="tabs[0]" ng-click='setActiveTab("0")'>
 				<div ng-if="balanceSheetsService.isLoading()" class="text-center">
-					<div><br /><button class="btn btn-primary btn-lg"><i class="fa fa-spinner fa-spin fa-5x"></i></button></div>
+					<div class="inProgressSpinner"><button class="spinnerBtn btn btn-primary btn-lg"><i class="fa fa-spinner fa-spin fa-5x"></i></button></div>
 				</div>
 				<div ng-if="!balanceSheetsService.isLoading()">
 					<div class="row">
@@ -15,7 +15,7 @@
 					</div>
 					<div class="row">
 						<div class="col-md-12 col-lg-12">
-							<chart value="balanceSheetsService.chartQuarters()"></chart>
+							<chart ng-if="!balanceSheetsService.isLoading()" value="balanceSheetsService.chartQuarters()"></chart>
 						</div>
 					</div>
 				</div>
@@ -23,7 +23,7 @@
 			
 			<tab heading='@Messages("balanceSheets.tab.sequencingType")' active="tabs[1]" ng-click='setActiveTab("1")'>
 				<div ng-if="balanceSheetsService.isLoading()" class="text-center">
-					<div><br /><button class="btn btn-primary btn-lg"><i class="fa fa-spinner fa-spin fa-5x"></i></button></div>
+					<div class="inProgressSpinner"><button class="spinnerBtn btn btn-primary btn-lg"><i class="fa fa-spinner fa-spin fa-5x"></i></button></div>
 				</div>
 				<div ng-if="!balanceSheetsService.isLoading()">	
 					<div class="row">
@@ -42,7 +42,7 @@
 			
 			<tab heading='@Messages("balanceSheets.tab.firstTen")' active="tabs[2]" ng-click='setActiveTab("2")'>
 				<div ng-if="balanceSheetsService.isLoading()" class="text-center">
-					<div><br /><button class="btn btn-primary btn-lg"><i class="fa fa-spinner fa-spin fa-5x"></i></button></div>
+					<div class="inProgressSpinner"><button class="spinnerBtn btn btn-primary btn-lg"><i class="fa fa-spinner fa-spin fa-5x"></i></button></div>
 				</div>
 				<div ng-if="!balanceSheetsService.isLoading()">
 					<div class="row">
@@ -61,7 +61,7 @@
 			
 			<tab heading='@Messages("balanceSheets.tab.projectType")' active="tabs[3]" ng-click='setActiveTab("3")'>
 				<div ng-if="balanceSheetsService.isLoading()" class="text-center">
-					<div><br /><button class="btn btn-primary btn-lg"><i class="fa fa-spinner fa-spin fa-5x"></i></button></div>
+					<div class="inProgressSpinner"><button class="spinnerBtn btn btn-primary btn-lg"><i class="fa fa-spinner fa-spin fa-5x"></i></button></div>
 				</div>
 				<div ng-if="!balanceSheetsService.isLoading()">
 					<div class="row">
