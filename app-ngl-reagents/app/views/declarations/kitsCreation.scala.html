@@ -197,6 +197,7 @@
 				<label class="col-md-2 col-lg-2 control-label">@Messages("boxes.catalogRefCode") :</label>
 					<div ng-switch on="editMode">
 							<p class="form-control-static col-md-2 col-lg-2" ng-switch-when="false">{{box.catalogRefCode}}</p>
+							<p class="form-control-static col-md-1 col-lg-1" ng-switch-when="false">{{box.catalogRefCode}}</p>
 					<div ng-switch-when="true">
 					<div class="col-md-1 col-lg-1" ng-class="getClass('boxes['+$index+'].catalogRefCode')">
 						<input class="form-control" type="text" ng-change="checkCatalogRefCode($index)" ng-model="catalogRefCodeVerifications[$index].code" ng-readonly="!editMode || (kit.declarationType!='kit' && kit.declarationType!='box')" ng-disabled="!editMode || (kit.declarationType!='kit' && kit.declarationType!='box')">
@@ -209,7 +210,7 @@
 					</div>	
 					<label class="col-md-1 col-lg-1 col-md-offset-1 control-label">@Messages("boxes.bundleBarCode") :</label>
 					<div ng-switch on="editMode">
-							<p class="form-control-static col-md-2 col-lg-2" ng-switch-when="false">{{box.bundleBarCode}}</p>
+							<p class="form-control-static col-md-1 col-lg-1" ng-switch-when="false">{{box.bundleBarCode}}</p>
 					<div ng-switch-when="true">
 					<div class="col-md-1 col-lg-1" ng-class="getClass('boxes['+$index+'].bundleBarCode')">
 						<input class="form-control" type="text" ng-model="box.bundleBarCode" ng-readonly="!editMode || (kit.declarationType!='kit' && kit.declarationType!='box')" ng-disabled="!editMode || (kit.declarationType!='kit' && kit.declarationType!='box')">
