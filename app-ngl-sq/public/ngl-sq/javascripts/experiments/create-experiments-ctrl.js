@@ -1006,6 +1006,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 	};
 
 	$scope.save = function(){
+		$scope.removeNullProperties($scope.experiment.value.experimentProperties);
+		$scope.removeNullProperties($scope.experiment.value.instrumentProperties);
 		return $http.post(jsRoutes.controllers.experiments.api.Experiments.save().url, $scope.experiment.value)
 		.success(function(data, status, headers, config) {
 			if(data!=null){

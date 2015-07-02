@@ -11,7 +11,7 @@ public class AtomicTransfertMethodValidationHelper extends CommonValidationHelpe
 
 	
 	public static void validateOneOutputContainer(List<ContainerUsed> outputContainers,ContextValidation contextValidation){					
-			if(outputContainers.size()>1){						
+			if(outputContainers!=null && outputContainers.size()>1){						
 				contextValidation.addErrors("outputContainerUseds", ValidationConstants.ERROR_BADSIZEARRAY, outputContainers.size(), "1");
 			}
 	}
