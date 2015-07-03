@@ -198,7 +198,7 @@
 							<div class="col-md-6 col-lg-6" ng-if="doneAndRecorded==false">
 								
 								<!-- Date -->
-								<input ng-if="expp.valueType == 'java.util.Date' " class="form-control" type="text" class="input-small"
+								<input ng-if="expp.valueType == 'java.util.Date'" class="form-control" type="text" class="input-small"
 									ng-readonly="!experiment.experimentInformation.enabled"
 									ng-disabled="!experiment.experimentInformation.enabled"
 									placeholder="@Messages("date.format.french")" 
@@ -216,7 +216,7 @@
 							<div class="col-md-6 col-lg-6" ng-if="doneAndRecorded==true">
 							
 								<!-- Date -->
-								<p ng-if="expp.valueType == 'java.util.Date' class="form-control-static" ng-model="experiment.value.experimentProperties[expp.code].value" date-timestamp>
+								<p ng-if="expp.valueType == 'java.util.Date'" class="form-control-static" ng-model="experiment.value.experimentProperties[expp.code].value" date-timestamp>
 									{{experiment.value.experimentProperties[expp.code].value | date:'dd-MM-yyyy'}}
 								</p>
 								

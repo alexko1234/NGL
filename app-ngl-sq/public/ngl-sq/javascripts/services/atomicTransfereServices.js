@@ -412,7 +412,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 						if(allData != undefined){
 							for(var i=0;i<allData.length;i++){
 								var index = this.searchOutputPositionByInputContainerCode(allData[i].code || allData[i].inputCode);
-								if(angular.isDefined(allData[i].outputContainerUsed)){
+								if(angular.isDefined(allData[i].outputContainerUsed)/* && allData[i].outputContainerUsed.code !== undefined*/){
 									$scope.experiment.value.atomicTransfertMethods[index].outputContainerUseds[0] = allData[i].outputContainerUsed;
 								}										
 								if(allData[i].outputInstrumentProperties != undefined){
