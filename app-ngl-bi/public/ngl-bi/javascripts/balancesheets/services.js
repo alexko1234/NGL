@@ -18,9 +18,12 @@
 	 
 	 // Datatables
 	 var dtSequencingProduction;
+	 var dtSumSequencingProduction;
 	 var dtFirstTen;
+	 var dtSumFirstTen;
 	 var dtQuarters;
 	 var dtProjectType;
+	 var dtSumProjectType;
 	 
 	 // Data
 	 var dataSequencing;
@@ -31,14 +34,44 @@
 	 // Others
 	 var selectedYear = 0;
 	 var actualYear = new Date().getFullYear();
-	 var stillLoading = true;
+	 var stillLoading = false;
 	 var total = 0;
+	 	 
+	 var manageCache = function(changeYear, year){
+		 selectedYear = year;
+		 if(mainService.get('yearsInCache') != undefined){
+				var map = mainService.get('yearsInCache');
+				if(!map.has(selectedYear)){
+					loadData(selectedYear);
+				}else{
+					if(changeYear){
+						balanceSheets.setData(map.get(selectedYear), selectedYear);
+						balanceSheets.loadFromCache();
+					}else{
+						if(mainService.get('balanceSheetsActiveTab') == 0) {
+							balanceSheets.showQuarters();
+						}
+						else if(mainService.get('balanceSheetsActiveTab') == 1){
+							balanceSheets.showSequencingProduction();
+						}
+						else if(mainService.get('balanceSheetsActiveTab') == 2){
+							balanceSheets.showFirstTen();						
+						}
+						else if(mainService.get('balanceSheetsActiveTab') == 3){
+							balanceSheets.showProjectType();
+						}
+					}
+				}
+			}else{
+				loadData(selectedYear);
+			}
+	 }
 	 
-			 
+	 
+	 
 	 var loadData = function(year){
 		 stillLoading = true;
 		 flushData();
-		 selectedYear = year;
 
 		 // We initialize our form
 		 var form = {includes : []};
@@ -65,14 +98,17 @@
 		 
 		 // We retrieve everything we need
 		 
-		 $http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url, {params : form}).success(function(data, status, headers, config) {
-			 stillLoading = true;
-			 readsets = data;
+		 $http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url, {params : form})
+		 	.success(function(data, status, headers, config) {
+				 stillLoading = true;
+				 for(var i = 0; i < data.length; i++){
+					 if(data[i].sampleOnContainer != null || data[i].sampleOnContainer != undefined){
+						 data[i].runSequencingStartDate = convertToDate(data[i].runSequencingStartDate);
+						 total += data[i].treatments.ngsrg.default.nbBases.value;	 
+						 readsets.push(data[i]);
+					 }
+				 }
 			 data = [];
-			 for(var i = 0; i < readsets.length; i++){
-				 readsets[i].runSequencingStartDate = convertToDate(readsets[i].runSequencingStartDate);
-				 total += readsets[i].treatments.ngsrg.default.nbBases.value;
-			 }	
 			 $http.get(jsRoutes.controllers.runs.api.Runs.list().url, {params : runForm}).success(function(runData, status, headers, config) {
 				 runs = runData;
 				 runData = [];
@@ -87,19 +123,47 @@
 				 $http.get(jsRoutes.controllers.projects.api.Projects.list().url, {params : projectForm}).success(function(projectData, status, headers, config) {
 					 projects = projectData;
 					 projectData = [];
-					 // Then we load our first BalanceSheets
-					 loadQuarters();
-					 loadSequencingProduction();
-					 loadFirstTen();
-					 loadProjectType();
-					
+					 
+					 // Then we load our balance sheets
+					 loadFunctions();
+					 
+					 
+					 
+					 // Caching
+					 var yearMap = new Map();
+					 var years = new Map();
+					 if(mainService.get('yearsInCache') != undefined){
+						 if(!mainService.get('yearsInCache').has(String(selectedYear))){
+							 years = mainService.get('yearsInCache');
+							 years.set(selectedYear, balanceSheets.returnData());
+							 mainService.put('yearsInCache', years);
+						 }
+					 }else{
+						 yearMap.set(selectedYear, balanceSheets.returnData());
+						 mainService.put('yearsInCache', yearMap);
+					 }
+					 
 					 // End of loading
 					 stillLoading = false;
+
 				 });
 			 });
 			 
 		 });
 	 }		 
+	 
+	 var loadFunctions = function(){
+		loadQuarters();
+		loadSequencingProduction();
+		loadFirstTen();
+		loadProjectType();
+		stillLoading = false;
+	 }
+	 
+	 var loadFunctionsFromCache = function(){
+		 stillLoading = true;
+		 setTimeout(loadFunctions, 0);
+	 }
 
 	 /** Generating datatables **/ 
 	 
@@ -108,15 +172,11 @@
 		 var balanceSheetsQuarters = [];	
 		 var months = [];
 		 var datatableConfig = {
-				group : {
-					active : false,
-				},
 				search : {
 					active:false
 				},
 				pagination:{
-					mode:'local',
-					numberRecordsPerPage:25
+					active : false
 				},
 				hide:{
 					active:false
@@ -146,6 +206,7 @@
 		 
 		 // Treatment
 		 // Getting our months
+		 
 		 if(selectedYear == actualYear){
 			 for(var i = 0; i < readsets.length; i++){
 				 // We get our months
@@ -205,6 +266,9 @@
 				 j = 0;
 			 }
 		 }
+		 
+		 // Adding total of nbBases for this year
+		 
 		 // We add our sum lines to our main component
 		 var countLine = 0;
 		 var linesToColor = [];
@@ -218,6 +282,14 @@
 			 }
 			 countLine++;
 		 }
+		 var yearLine = {
+				quarter : '',
+				month : Messages("balanceSheets.totalSum"),
+		 		nbBases : total
+		 };
+		 balanceSheetsQuarters.push(yearLine);
+		 countLine++;
+		 linesToColor.push(balanceSheetsQuarters.length -1);
 		 
 		 // Initialize datatable
 		 dtQuarters = datatable(datatableConfig);
@@ -232,30 +304,33 @@
 	 var loadSequencingProduction = function(){
 		// Initializing our components
 		 var datatableConfig = {
-					group : {
-						active : true
-					},
 					search : {
 						active:false
 					},
 					pagination:{
-						mode:'local',
-						numberRecordsPerPage:25
+						active : false
 					},
 					hide:{
 						active:false
 					},
-					order : {
-						active : true
-					}, 
 					select : {
 						active : false
+					},
+					order : {
+						mode : 'local',
+						active : true,
+						by : 'nbBases',
+						reverse : true,
+						callback:function(datatable){
+							computeChartSequencingProduction();
+						}
 					}
 				 }; 
 		 var defaultDatatableColumns = [
 				{	property:"name",
 				  	header: "balanceSheets.runTypeCode",
 				  	type :"String",
+				  	order : true,
 				  	position:1
 				},
 				{	property:"nbBases",
@@ -334,8 +409,52 @@
 		 dtSequencingProduction.setColumnsConfig(defaultDatatableColumns);
 		 dtSequencingProduction.setData(balanceSheetsSequencingProduction, balanceSheetsSequencingProduction.length);
 		 
+		 // Initialize other datatable
+		 loadDtSumSequencingProduction();
+		 
+		 
 		 // Creating chart
 		 computeChartSequencingProduction();
+		 
+	 }
+	 
+	 var loadDtSumSequencingProduction = function(){
+		 var datatableConfig = {
+					search : {
+						active:false
+					},
+					pagination:{
+						active : false
+					},
+					hide:{
+						active:false
+					},
+					select : {
+						active : false
+					}
+				 }; 
+		 var defaultDatatableColumns = [
+				{	property:"property",
+				  	header: "balanceSheets.property",
+				  	type :"String",
+				  	position:1
+				},
+				{	property:"value",
+					header: "balanceSheets.value",
+					type :"Number",
+				  	position:2
+				}
+			 ];
+		 var sum = [{
+				 property : Messages('balanceSheets.sum'),
+				 value : total
+		 }];
+		 
+		 
+		 dtSumSequencingProduction = datatable(datatableConfig);
+		 dtSumSequencingProduction.setColumnsConfig(defaultDatatableColumns);
+		 dtSumSequencingProduction.setData(sum, 1);
+		 colorBlue(dtSumSequencingProduction, 0);
 	 }
 	 
 	 
@@ -349,31 +468,37 @@
 					active:false
 				},
 				pagination:{
-					mode:'local',
-					numberRecordsPerPage:25
+					active : false
 				},
 				hide:{
 					active:false
 				},
 				select : {
 					active : false
+				},
+				order : {
+					active : true,
+					mode : 'local'
 				}
 			 }; 
 		 var defaultDatatableColumns = [
 				{	property:"code",
 				  	header: "balanceSheets.projectCode",
 				  	type :"String",
+				  	order : true,
 				  	position:1
 				},
 				{	property:"name",
 					header: "balanceSheets.projectName",
 					type :"String",
+					order : true,
 				  	position:2
 				},
 				{
 					property:"nbBases",
 					header: "balanceSheets.nbBases",
 					type:"Number",
+					order : true,
 					position:3
 				}
 			 ];
@@ -418,50 +543,93 @@
 		 balanceSheetsFirstTen = balanceSheetsFirstTen.slice(0,10);
 		 
 		 dataFirstTen = balanceSheetsFirstTen;
+		 
+		 // Initialize other datatable
+		 loadDtSumFirstTen();
 		
 		 // Creating chart
 		 computeChartFirstTen(balanceSheetsFirstTen);
-		 
-		 // TODO : virer calcul
-		 // Adding sum of our bases to our main component
-		 var sumBases = 0;
-		 for(var i = 0; i < balanceSheetsFirstTen.length; i++){
-			 sumBases += balanceSheetsFirstTen[i].nbBases;
-		 }
-		 var sum = {
-				 code : Messages("balanceSheets.totalTen"),
-				 name : "",
-				 nbBases : sumBases
-		 };
-		 var posSum = balanceSheetsFirstTen.push(sum) - 1;
-		 
-		 var percentage = {
-				 code : Messages("balanceSheets.percentageTotalSum"),
-				 name : (sumBases * 100 / total).toFixed(2) + "%",
-				 nbBases : null
-		 }
-		 var posPercentage = balanceSheetsFirstTen.push(percentage) - 1;
+		 		 
 		 // Initializing datatable
 		 dtFirstTen = datatable(datatableConfig);
 		 dtFirstTen.setColumnsConfig(defaultDatatableColumns);
 		 dtFirstTen.setData(balanceSheetsFirstTen, balanceSheetsFirstTen.length);
-		 colorBlue(dtFirstTen, posSum);
-		 colorBlue(dtFirstTen, posPercentage);
+	 }
+	 
+	 var loadDtSumFirstTen = function(){
+		 var datatableConfig = {
+					search : {
+						active:false
+					},
+					pagination:{
+						active : false
+					},
+					hide:{
+						active:false
+					},
+					select : {
+						active : false
+					}
+				 }; 
+		 var defaultDatatableColumns = [
+				{	property:"property",
+				  	header: "balanceSheets.property",
+				  	type :"String",
+				  	position:1
+				},
+				{	property:"value",
+					header: "balanceSheets.value",
+					type :"Number",
+				  	position:2
+				}
+			 ];
+		 
+		 var dataToInsert = [];
+		 var linesToColor = [];
+		 
+		 var sumBases = 0;
+		 for(var i = 0; i < dataFirstTen.length; i++){
+			 sumBases += dataFirstTen[i].nbBases;
+		 }
+		 var sum = {
+				 property : Messages("balanceSheets.totalTen"),
+				 value : sumBases
+		 };
+		 linesToColor.push(dataToInsert.push(sum) - 1);
+		 
+		 var totalSum = {
+				 property : Messages("balanceSheets.totalSum"),
+				 value : total
+		 };
+		 linesToColor.push(dataToInsert.push(totalSum) -1);
+		 
+		 var percentage = {
+				 property : Messages("balanceSheets.percentageTotalSum"),
+				 value : (sumBases * 100 / total).toFixed(2)
+		 }
+		 linesToColor.push(dataToInsert.push(percentage) - 1);
+		 
+		 dtSumFirstTen = datatable(datatableConfig);
+		 dtSumFirstTen.setColumnsConfig(defaultDatatableColumns);
+		 dtSumFirstTen.setData(dataToInsert, dataToInsert.length);
+		 for(var i = 0; i < linesToColor.length; i++) colorBlue(dtSumFirstTen, linesToColor[i]);
 		 
 	 }
 	 
 	 var loadProjectType = function(){
 		 // Initializing our components
 		 var datatableConfig = {
-				group : {
-					active : false,
+				order : {
+					active : true,
+					by : 'nbBases',
+					reverse : true,
+					mode: 'local'
 				},
 				search : {
 					active:false
 				},
 				pagination:{
-					mode:'local',
-					numberRecordsPerPage:25
+					active : false
 				},
 				hide:{
 					active:false
@@ -474,17 +642,20 @@
 				{	property:"type",
 				  	header: "balanceSheets.projectType",
 				  	type :"String",
+				  	order : true,
 				  	position:1
 				},
 				{	property:"nbBases",
 					header: "balanceSheets.nbBases",
 					type :"Number",
+					order : true,
 				  	position:2
 				},
 				{
 					property:"percentage",
 					header: "balanceSheets.percentage",
 					type:"String",
+					order : true,
 					position:3
 				}
 			 ];
@@ -523,32 +694,65 @@
 			 balanceSheetsProjectType[i].percentage = (balanceSheetsProjectType[i].nbBases * 100 / total).toFixed(2) + "%";
 		 }
 		 
+		 balanceSheetsProjectType.sort(function(a, b){return parseInt(b.nbBases) - parseInt(a.nbBases)});
+
+		 
 		 dataProjectType = balanceSheetsProjectType;
 		 
+		 // Initialize other datatable
+		 loadDtSumProjectType();
+		 
 		 // Creating chart
-		 computeChartProjectType(balanceSheetsProjectType);
+		 $(function(){
+			 computeChartProjectType(balanceSheetsProjectType);
+		 });
 		 
-		 // Adding sum of our bases to our main component
-		 var sum = {
-				 type : Messages("balanceSheets.sum"),
-				 nbBases : total,
-				 percentages : ""
-		 };
-		 var posSum = balanceSheetsProjectType.push(sum) -1;
-		 
-		 var percentage = {
-				 type : Messages("balanceSheets.percentage"),
-				 nbBases : null,
-				 percentage : "100%"
-		 };
-		 var posPercentage = balanceSheetsProjectType.push(percentage) -1;
-		 
+		 		 
 		 // Initializing datatable
 		 dtProjectType = datatable(datatableConfig);
 		 dtProjectType.setColumnsConfig(defaultDatatableColumns);
-		 dtProjectType.setData(balanceSheetsProjectType, balanceSheetsProjectType.length);
-		 colorBlue(dtProjectType, posSum);
-		 colorBlue(dtProjectType, posPercentage);	 	 
+		 dtProjectType.setData(dataProjectType, dataProjectType.length);
+	 }
+	 
+	 var loadDtSumProjectType = function(){
+		 var datatableConfig = {
+					search : {
+						active:false
+					},
+					pagination:{
+						active : false
+					},
+					hide:{
+						active:false
+					},
+					select : {
+						active : false
+					}
+				 }; 
+		 var defaultDatatableColumns = [
+				{	property:"property",
+				  	header: "balanceSheets.property",
+				  	type :"String",
+				  	position:1
+				},
+				{	property:"value",
+					header: "balanceSheets.value",
+					type :"Number",
+				  	position:2
+				}
+			 ];
+		 
+		 var sum = [{
+			 property : Messages('balanceSheets.sum'),
+			 value : total
+		 }];
+		 
+		 
+		 dtSumProjectType = datatable(datatableConfig);
+		 dtSumProjectType.setColumnsConfig(defaultDatatableColumns);
+		 dtSumProjectType.setData(sum, 1);
+		 colorBlue(dtSumProjectType, 0); 
+		 
 	 }
 	 
 	 
@@ -661,7 +865,7 @@
 					},
 					labels: {
 		                formatter: function () {
-		                    return (this.value/Math.pow(10,9)).toFixed(2) + ' Gb';
+		                    return (this.value/Math.pow(10,12)).toFixed(2) + ' Tb';
 		                }
 		            },
 					tickInterval : 2,
@@ -678,12 +882,12 @@
 		 var codes = [];
 		 var sum = 0;
 		 var percentages = [];
-		 for(var i = 0; i < readsets.length; i++){
-			 sum += readsets[i].treatments.ngsrg.default.nbBases.value;
+		 for(var i = 0; i < dataFirstTen.length; i++){
+			 sum += dataFirstTen[i].nbBases;
 		 }
 		 for(var i = 0; i < data.length; i++){
 			 codes[i] = data[i].code;
-			 percentages[i] = data[i].nbBases * 100 / sum;
+			 percentages[i] = parseFloat((data[i].nbBases * 100 / sum).toFixed(2));
 		 }
 		 var allData = [];
 		 for(var i = 0; i < codes.length; i++){
@@ -692,22 +896,30 @@
 			 temp.push(percentages[i]);
 			 allData[i] = temp;
 		 }
-				 		 
+		 
 		 chartFirstTen = {
 				 chart : {
-					 type : 'pie'
+					 type : 'pie',
+					 options3d: {
+			                enabled: true,
+			                alpha: 45,
+			                beta: 0
+					 }
 				 },
 				 title : {
 					 text : Messages("balanceSheets.tab.firstTen")
 				 },
 				 plotOptions : {
 					 pie : {
+						 size : 350,
 						 allowPointSelect : true,
 						 cursor : 'pointer',
+						 depth: 35,
 						 dataLabels : {
 							 enabled : true,
 							 format : "<b>{point.name}</b>	: {point.percentage:.2f} %"
-						 }
+						 },
+				 showInLegend : true
 					 }
 				 },
 				 series : [{
@@ -723,7 +935,7 @@
 		 var percentages = [];
 		 for(var i = 0; i < data.length; i++){
 			 types.push(data[i].type);
-			 percentages.push(data[i].nbBases * 100 / total);
+			 percentages.push(parseFloat((data[i].nbBases * 100 / total).toFixed(2)));
 		 }
 		 var allData = [];
 		 
@@ -736,19 +948,27 @@
 		 
 		 chartProjectType = {
 				 chart : {
-					 type : 'pie'
+					 type : 'pie',
+					 options3d: {
+			                enabled: true,
+			                alpha: 45,
+			                beta: 0
+			         }
 				 },
 				 title : {
 					 text : Messages("balanceSheets.tab.projectType")
 				 },
 				 plotOptions : {
 					 pie : {
+						 size : 350,
 						 allowPointSelect : true,
 						 cursor : 'pointer',
+						 depth: 35,
 						 dataLabels : {
 							 enabled : true,
 							 format : "<b>{point.name}</b>	: {point.percentage:.2f} %"
-						 }
+						 },
+				 		 showInLegend : true
 					 }
 				 },
 				 series : [{
@@ -760,7 +980,6 @@
 	 }
 	 
 	 /** Other functions **/
-	 
 	 
 	 var convertToDate = function(dateInMilliSeconds){
 		 return new Date(dateInMilliSeconds);
@@ -793,12 +1012,21 @@
 	 var flushData = function(){
 		 readsets = [];
 		 runs = [];
-		 projects = [];
+		 projects = [];	
+		 total = 0;
 	 }
 	 
 	 var colorBlue = function(datatable, pos){
-		 datatable.displayResult[pos].line.trClass="info";
+		 datatable.displayResult[pos].line.trClass="text-primary";
 	 }
+	 
+	 var cleanData = function(){
+		 total = 0;
+		 for(var i = 0; i < readsets.length; i++){
+			 total += readsets[i].treatments.ngsrg.default.nbBases.value;
+		 }
+	 }
+	 
 	
 	 
 		
@@ -815,9 +1043,15 @@
 			dtFirstTen : function(){return dtFirstTen;},
 			dtQuarters : function(){return dtQuarters;},
 			dtProjectType : function(){return dtProjectType},
+			dtSumSequencingProduction : function(){return dtSumSequencingProduction},
+			dtSumFirstTen : function(){return dtSumFirstTen},
+			dtSumProjectType : function(){return dtSumProjectType},
 		// others
-			init : function(year){loadData(year);},
+			init : function(changeYear, year){manageCache(changeYear, year);},
 			isLoading : function(){return stillLoading;},
+			loadFromCache : function(){loadFunctionsFromCache();},
+			returnData : function(){return new Array(readsets, runs, projects);},
+			setData : function(array, year){readsets = array[0]; runs = array[1]; projects = array[2]; selectedYear = year; cleanData()},
 			showQuarters : function(){loadQuarters();},
 			showFirstTen : function(){loadFirstTen();},
 			showSequencingProduction : function(){loadSequencingProduction();},
@@ -833,6 +1067,7 @@
                                         function($http, mainService, datatable, $parse){
 			var readsets = [];
 			var dtYearlyBalanceSheets;
+			var dtSumYearly;
 			var chartYearlyBalanceSheets;
 			var isLoading = true;
 			var actualYear = new Date().getFullYear();
@@ -849,6 +1084,8 @@
 						readsets[i].runSequencingStartDate = convertToDate(readsets[i].runSequencingStartDate);
 					}	
 					loadYearlyBalanceSheets();
+					
+					mainService.put('generalBalanceSheets', readsets);
 					
 					isLoading = false;
 				});
@@ -903,25 +1140,66 @@
 				 for(var i = 0; i < readsets.length; i++){
 					balanceSheetsByYearAndTechnology[readsets[i].runSequencingStartDate.getFullYear() - 2008].nbBases += readsets[i].treatments.ngsrg.default.nbBases.value;
 				 }
-				 
+
 				 // Creating chart
 				 computeChartYearlyBalanceSheets(balanceSheetsByYearAndTechnology);
-				 
-				 // Adding sum of our bases to our datatable
-				 var sum = {
-						 year : Messages("balanceSheets.sum"),
-						 nbBases : 0
-				 };
-				 for(var i = 0; i < balanceSheetsByYearAndTechnology.length; i++){
-					 sum.nbBases += balanceSheetsByYearAndTechnology[i].nbBases;
-				 }
-				 var posSum = balanceSheetsByYearAndTechnology.push(sum) -1;
 				 
 				 // Initialize datatable
 				 dtYearlyBalanceSheets = datatable(datatableConfig);
 				 dtYearlyBalanceSheets.setColumnsConfig(defaultDatatableColumns);	 
 				 dtYearlyBalanceSheets.setData(balanceSheetsByYearAndTechnology, balanceSheetsByYearAndTechnology.length);
-				 colorBlue(dtYearlyBalanceSheets, posSum);
+				
+				 
+				 // Initialize other datatable
+				 loadDtSumYearly();
+			}
+			
+			var loadDtSumYearly = function(){
+				// Initializing our components
+				var datatableConfig = {
+					search : {
+						active:false
+					},
+					pagination:{
+						active : false
+					},
+					hide:{
+						active:false
+					},
+					select : {
+						active : false
+					}
+				 };
+				 var defaultDatatableColumns = [
+					{	property:"property",
+					  	header: "balanceSheets.property",
+					  	type :"String",
+					  	position:1
+					},
+					{	property:"value",
+						header: "balanceSheets.value",
+						type :"Number",
+					  	position:2,
+					}
+				 ];	
+				 
+				 // Calculing sum
+				 var data = dtYearlyBalanceSheets.getData();
+				 var sum = [{
+						property : Messages('balanceSheets.sum'),
+						value : 0
+				 }];
+				 for(var i = 0; i < data.length; i++){
+					 sum[0].value += data[i].nbBases;
+				 }
+				 
+				 // Creating datatable
+				 
+				 dtSumYearly = datatable(datatableConfig);
+				 dtSumYearly.setColumnsConfig(defaultDatatableColumns);
+				 dtSumYearly.setData(sum, 1);
+				 colorBlue(dtSumYearly, 0);		 
+			 
 			}
 			
 			
@@ -982,16 +1260,15 @@
 			}
 			
 			var colorBlue = function(datatable, pos){
-				 datatable.displayResult[pos].line.trClass="info";
+				 datatable.displayResult[pos].line.trClass="text-primary";
 			}
-			
-			// TODO : Conserver l'onglet actif lors du changement d'année
-			// Mettre le texte dans Messages
 			
 			var balanceSheetsGeneral = {
 					isLoading : function(){return isLoading;},
 					chartYearlyBalanceSheets : function(){return chartYearlyBalanceSheets},
 					dtYearlyBalanceSheets : function(){return dtYearlyBalanceSheets;},
+					dtSumYearly : function(){return dtSumYearly},
+					loadFromCache : function(){loadYearlyBalanceSheets()},
 					init : function(){loadData();}	
 			};
 			

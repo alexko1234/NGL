@@ -11,7 +11,12 @@
 		<script src="@routes.Assets.at("ngl-common/javascripts/services/commons.js")" type="text/javascript" charset="utf-8"></script> 
 		<script src="@helper.getAsset("javascripts","simple-statistics","140513","simple_statistics.js")" type="text/javascript" charset="utf-8"></script>
 	 	<script src="@helper.getAsset("javascripts","highcharts","4.1.4","highcharts_4.1.4.js")" type="text/javascript" charset="utf-8"></script>
+	 	<script src="http://code.highcharts.com/highcharts-3d.js"></script>
 
 }
 
-@views.html.main("balanceSheets.page.title", menu("balanceSheets." + code), scripts)(views.html.contents.lefttabs())
+@css() = {
+	<link rel="stylesheet" href="@routes.Assets.at("ngl-bi/css/balancesheets/balancesheets.css")">
+}
+
+@views.html.main("balanceSheets.page.title", menu("balanceSheets." + code), scripts, css)(views.html.contents.lefttabs())

@@ -43,7 +43,7 @@ public class Migration extends CommonController {
 	private static final String RUN_ILLUMINA_BEFORE_RECALCUL = InstanceConstants.RUN_ILLUMINA_COLL_NAME+"_BEFORE_RECALCUL";
 	
 	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor.class));
-	private static final String ruleStatRG="rg_1";
+	private static final String ruleStatRG="F_RG_1";
 	
 	
 	public static Result migration(){
