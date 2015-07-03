@@ -27,7 +27,7 @@ create.placeholder.strategySample=strategySample
 #Submission
 submissions.menu=Soumission
 submissions.menu.create=Creation-Validation
-submissions.menu.activate=Démarrer
+submissions.menu.activate=Activer
 submissions.page.title=Soumission
 create.placeholder.submissions.study=Select. study
 create.placeholder.submissions.configuration=Select.  configuration

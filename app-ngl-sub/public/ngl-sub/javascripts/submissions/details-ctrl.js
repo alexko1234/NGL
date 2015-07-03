@@ -568,8 +568,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			decompte = processInSubmission(decompte, error);
 			//$scope.messages.setError("save");
 		});			
-		
-		}	
+		}
 		// initialisation inutile $scope.experimentDT = datatable(experimentsDTConfig);
 		$scope.experimentDT.setData(tab_experiments, tab_experiments.length);
 		// sauvegarde cote client des experiments avec bon statut :
@@ -592,7 +591,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 		$scope.mainService.startEditMode();
 		$scope.sampleDT.setEdit();
 		$scope.experimentDT.setEdit();
-	}
+	};
 	
 }]);
 

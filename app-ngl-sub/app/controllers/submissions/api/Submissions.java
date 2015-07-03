@@ -204,7 +204,7 @@ public class Submissions extends DocumentController<Submission>{
 			submissionServices.activateSubmission(submissionCode);			
 			submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
 		} catch (SraException e) {
-			return badRequest(e.getMessage());
+			return badRequest(Json.toJson(e.getMessage()));
 		}
 		//return ok();	
 		return ok(Json.toJson(submission));
