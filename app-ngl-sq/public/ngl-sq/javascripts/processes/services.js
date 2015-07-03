@@ -399,13 +399,13 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 var allFilters = undefined;
 			                                    	 var nbElementByColumn = undefined;			                                    	
 			                                    	 
-			                                    	 if(lists.get("processes-search-addfilters") && lists.get("processes-search-addfilters").length === 1){
+			                                    	 
+			                                    	 
+			                                    	 if(angular.isDefined(this.form.typeCode) && lists.get("process-"+this.form.typeCode) && lists.get("process-"+this.form.typeCode).length === 1){ 
+			                                    		 allFilters = angular.copy(lists.get("process-"+this.form.typeCode)[0].filters);
+			                                    	 }else if(lists.get("processes-search-addfilters") && lists.get("processes-search-addfilters").length === 1){
 			                                    		 allFilters = angular.copy(lists.get("processes-search-addfilters")[0].filters);			                                    		 
 			                                    	 } 
-			                                    	 
-			                                    	 if(angular.isDefined(this.form.typeCode) && lists.get("process-"+this.form.typeCode) && lists.get("process-"+this.form.typeCode).length === 1){			                                    		 
-			                                    		 allFilters = allFilters.concat(angular.copy(lists.get("process-"+this.form.typeCode)[0].filters));
-			                                    	 }
 			                                    	 if(angular.isDefined(allFilters)){   
 			                                    	 nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
 			                                    	 for(var i = 0; i  < 5 && allFilters.length > 0 ; i++){

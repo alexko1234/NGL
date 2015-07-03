@@ -46,7 +46,7 @@
 			<input class="form-control" type="text" ng-model="searchService.form.toDate" placeholder='@Messages("processes.placeholder.toDate")' title='@Messages("processes.placeholder.toDate")' >			
 		}
 		@formGroup{
-			<input class="form-control" type="text" ng-model="searchService.form.supportCode" typeahead="support.code as support.name for support in searchService.lists.getContainerSupports() | filter:$viewValue | limitTo:20" typeahead-min-length='3' placeholder='@Messages("search.placeholder.containerSupport")' title='@Messages("search.placeholder.containerSupport")'>
+			<input class="form-control" type="text" ng-model="searchService.form.supportCode" placeholder='@Messages("search.placeholder.containerSupport")' title='@Messages("search.placeholder.containerSupport")'>
 		}
 		
 	}
