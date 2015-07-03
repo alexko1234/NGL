@@ -303,7 +303,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope', '$window','data
 	$scope.$on('save', function(e, promises, func, endPromises) {	
 		$scope.setValidePercentage($scope.experiment.value.atomicTransfertMethods);
 		promises.push($scope.datatable.save());
-		$scope.atomicTransfere.outputToExperiment($scope.datatable);
+		$scope.atomicTransfere.outputToExperiment($scope.datatable);   // use outputToExperimentHelper ?
 		$scope.$emit('viewSaved', promises, func, endPromises);
 	});
 	
