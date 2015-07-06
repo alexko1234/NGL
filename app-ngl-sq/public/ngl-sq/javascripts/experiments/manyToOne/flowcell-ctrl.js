@@ -324,7 +324,8 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 
 	$scope.refreshView = function(){
 		$scope.atomicTransfere.experimentToInput($scope.datatable);
-		$scope.atomicTransfere.experimentToOutput($scope.datatable);
+		//$scope.atomicTransfere.experimentToOutput($scope.datatable);
+		experimentToOutputHelper();
 	};
 	
 	$scope.$on('disableEditMode', function(){
@@ -343,12 +344,50 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 	});
 
 	$scope.$on('outputToExperiment', function(e, atomicTransfertMethod) {
-		$scope.atomicTransfere.outputToExperiment($scope.datatable);
+		//$scope.atomicTransfere.outputToExperiment($scope.datatable);
+		outputToExperimentHelper($scope.datatable);
 	});
-
+	
+	var outputToExperimentHelper = function(output) {
+		var allData = output.getData();
+		if(allData != undefined){
+			for(var i=0;i<allData.length;i++){
+				var index = $scope.atomicTransfere.searchOutputPositionByInputContainerCode(allData[i].code || allData[i].inputCode);
+				if(angular.isDefined(allData[i].outputContainerUsed)/* && allData[i].outputContainerUsed.code !== undefined*/){
+					$scope.experiment.value.atomicTransfertMethods[index].outputContainerUseds[0] = allData[i].outputContainerUsed;
+				}										
+				if(allData[i].outputInstrumentProperties != undefined){
+					$scope.experiment.value.atomicTransfertMethods[index].outputContainerUseds[0].instrumentProperties = allData[i].outputInstrumentProperties;
+					$scope.atomicTransfere.getVarExperimentCommonFunctions.removeNullProperties($scope.experiment.value.atomicTransfertMethods[index].outputContainerUseds[0].instrumentProperties);
+				}
+				if(allData[i].outputExperimentProperties!= undefined){
+					$scope.experiment.value.atomicTransfertMethods[index].outputContainerUseds[0].experimentProperties = allData[i].outputExperimentProperties;	
+					$scope.atomicTransfere.getVarExperimentCommonFunctions($scope.experiment.value.atomicTransfertMethods[index].outputContainerUseds[0].experimentProperties);
+				}
+			}
+			output.setData(allData,allData.lenght);
+		}
+	};
+	
 	$scope.$on('experimentToOutput', function(e, atomicTransfertMethod) {
-		$scope.atomicTransfere.experimentToOutput($scope.datatable);
+		//$scope.atomicTransfere.experimentToOutput($scope.datatable);
+		experimentToOutputHelper($scope.datatable);
 	});
+	
+	var experimentToOutputHelper = function(output) {
+		var allData = output.getData();
+		if(angular.isDefined(allData) && allData.length>0){
+			for(var i=0; i<allData.length;i++){
+				var position = $scope.atomicTransfere.searchOutputPositionByInputContainerCode(allData[i].code || allData[i].inputCode);
+				if($scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds!=null && angular.isDefined($scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds[0])){
+					allData[i].outputContainerUsed  = $scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds[0];
+					allData[i].outputInstrumentProperties = $scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds[0].instrumentProperties;
+					allData[i].outputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds[0].experimentProperties;
+				}										
+			}
+			output.setData(allData,allData.length)
+		}
+	};
 
 	$scope.duplicateContainer = function(container,position){
 		$scope.inputContainers.splice(position+1,0,angular.copy(container));
@@ -383,7 +422,7 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 				$scope.experiment.value.atomicTransfertMethods[match[1]].inputContainerUseds.splice($scope.experiment.value.atomicTransfertMethods[match[1]].inputContainerUseds.indexOf(data), 1);
 			}
 	
-			$scope.atomicTransfere.reloadContainerDragNDrop(undefined, undefined, $scope.datatable);
+			$scope.atomicTransfere.reloadContainerDragNDrop(undefined, undefined, $scope.datatable, experimentToOutputHelper, outputToExperimentHelper);
 			$scope.scanOpenedAll();
 		}
 	};
@@ -539,7 +578,7 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 
 	if($scope.experiment.editMode){
 		$scope.isAllOpen = false;
-		$scope.atomicTransfere.loadExperiment($scope.datatable);
+		$scope.atomicTransfere.loadExperiment($scope.datatable, experimentToOutputHelper, outputToExperimentHelper);
 		if(!angular.isUndefined(mainService.getBasket())){
 			$scope.basket = mainService.getBasket().get();
 			if($scope.basket.length > 0){
@@ -563,6 +602,7 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 		}
 	}else{
 		$scope.atomicTransfere.newExperiment($scope.datatable);
+		console.log($scope.experiment.value);
 	}
 
 }]);

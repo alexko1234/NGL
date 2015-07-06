@@ -978,7 +978,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 							if(resultOutput != undefined){
 								containersOutput = resultOutput;
 							}						
-							that.reloadContainerDragNDrop(resultInput, resultOutput, input);
+							that.reloadContainerDragNDrop(resultInput, resultOutput, input,outputToExperimentFunc,experimentToOutputFunc);
 							$scope.addExperimentPropertiesInputsColumns();
 						});
 					}
