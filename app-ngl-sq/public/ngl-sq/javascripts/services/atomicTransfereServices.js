@@ -609,7 +609,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 								});
 							}
 							datatable.setData(allData,allData.length);
-							datatable.setData(allData,allData.length);
+							
 							if(angular.isDefined(outputToExperimentFunc) && angular.isFunction(outputToExperimentFunc)){
 								outputToExperimentFunc(datatable);
 							}else{
@@ -926,9 +926,15 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 							input.setData(resultInput.containers,resultInput.containers.length);
 							var allData = input.getData();
 							if($scope.experiment.outputGenerated == true){
-								angular.forEach(allData, function(data){										
-									data.outputContainerUsed = resultOutput.containers[0];
-								});
+								if(resultOutput.containers.length > 0){
+									angular.forEach(allData, function(data){										
+										data.outputContainerUsed = resultOutput.containers[0];
+									});
+								} else {
+									for(var i=0;i<$scope.experiment.value.atomicTransfertMethods.length;i++){
+										allData[i].outputContainerUsed = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0];
+									}
+								}
 							}
 							if(!angular.isUndefined(mainService.getBasket())){
 								$scope.basket = mainService.getBasket().get();

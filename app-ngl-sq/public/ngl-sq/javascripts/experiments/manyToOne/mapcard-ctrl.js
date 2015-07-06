@@ -332,7 +332,7 @@ angular.module('home').controller('ManyToOneMapcardCtrl',['$scope', '$window','d
 	$scope.experiment.outputGenerated = $scope.isOutputGenerated();
 	
 	if($scope.experiment.editMode){
-		$scope.atomicTransfere.loadExperiment($scope.datatable, outputToExperimentHelper, experimentToOutputHelper);
+		$scope.atomicTransfere.loadExperiment($scope.datatable, experimentToOutputHelper,outputToExperimentHelper);
 	}else{
 		$scope.atomicTransfere.newExperiment($scope.datatable);
 	}
