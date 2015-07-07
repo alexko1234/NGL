@@ -60,6 +60,7 @@ angular.module('home').controller('ActivateCtrl',[ '$http', '$scope', '$routePar
 	
 	
 	$scope.activate = function(){
+		$scope.messages.clear();
 		console.log("activate ");
 		var queries = [];
 		var error = false;

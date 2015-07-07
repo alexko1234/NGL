@@ -9,15 +9,12 @@ import java.util.List;
 
 import mail.MailServiceException;
 import models.sra.submit.common.instance.Submission;
-import models.sra.submit.sra.instance.Experiment;
-import models.sra.submit.sra.instance.RawData;
 import models.sra.submit.util.SraException;
 import models.utils.InstanceConstants;
 
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
-import org.mongojack.DBUpdate;
 
 import play.Logger;
 import play.data.Form;
@@ -93,8 +90,9 @@ public class Submissions extends DocumentController<Submission>{
 		}
 		Form<Submission> filledForm = getFilledForm(submissionForm, Submission.class);
 		Submission submissionInput = filledForm.get();
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 		if (code.equals(submissionInput.code)) {
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+			
 			ctxVal.setUpdateMode();
 			ctxVal.getContextObjects().put("type","sra");
 			submissionInput.traceInformation.setTraceInformation(getCurrentUser());
@@ -200,13 +198,19 @@ public class Submissions extends DocumentController<Submission>{
 	{
 		SubmissionServices submissionServices = new SubmissionServices();
 		Submission submission = null;
+		Form<Submission> filledForm = getFilledForm(submissionForm, Submission.class);
+		//Solution avec contexte validation
+		//ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 		try {
 			submissionServices.activateSubmission(submissionCode);			
 			submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
 		} catch (SraException e) {
-			return badRequest(Json.toJson(e.getMessage()));
+			filledForm.reject("Submission "+submissionCode, e.getMessage());
+			//ctxVal.addErrors("Submission "+submissionCode, e.getMessage());
+			Logger.debug("filled form "+filledForm.errorsAsJson());
+			//return badRequest(Json.toJson(e.getMessage()));
+			return badRequest(filledForm.errorsAsJson());
 		}
-		//return ok();	
 		return ok(Json.toJson(submission));
 	}
 
