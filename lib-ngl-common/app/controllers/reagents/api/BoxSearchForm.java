@@ -13,5 +13,6 @@ public class BoxSearchForm extends ListForm{
 	public String catalogRefCode;
 	
 	public String orderCode;
+	public Date toExpirationDate;
 	public List<String> catalogCodes;
 }

@@ -26,6 +26,7 @@ kits.provider = Fournisseur
 kits.code = Code
 kits.providerRefName = Nom kit (fournisseur)
 kits.active = En cours d'utilisation
+kits.active = En cours d''utilisation
 kits.select.experimentTypeCodes = Type expériences
 kits.select.catalogCodes = Nom de kits
 kits.possibleUseNumber = Nombre d''utilisation
@@ -42,8 +43,9 @@ boxes.tabs.search = Recherche Boîtes
 
 boxes.name = Nom boîte
 boxes.storageConditions = Conditions de stockage (°C)
-boxes.catalogRefCode = REF. catalogue
+boxes.catalogRefCode = Ref. catalogue (fournisseur)
 boxes.comment = Commentaire
+boxes.toExpirationDate = Date péremption jusqu''au
 
 catalogRefCode = REF. catalogue
 bundleBarCode = Lot
@@ -70,7 +72,7 @@ reagents.table.name = Nom du réactif
 reagents.table.storageConditions = Conditions de stockage (°C)
 reagents.table.catalogRefCode = Ref. catalogue (fournisseur)
 reagents.table.comment = Commentaire
-reagents.table.stockInformation = Informations de stockage
+reagents.table.stockInformation = Stockage
 reagents.table.bundleBarCode = Lot
 reagents.table.category = Type
 reagents.table.creationDate = Date de création
@@ -79,8 +81,8 @@ reagents.table.modifyDate = Date de modification
 reagents.table.modifyUser = Modifié par
 
 reagentCatalogs.menu = Catalogue réactifs
-reagentCatalogs.menu.create = Créer une ref. catalogue
-reagentCatalogs.menu.search = Rechercher une ref. catalogue
+reagentCatalogs.menu.create = Création ref. catalogue
+reagentCatalogs.menu.search = Recherche ref. catalogue
 
 reagentDeclarations.menu = Réactifs receptionnés
 
@@ -88,7 +90,7 @@ declarations.title = Réactifs receptionnés
 
 declarations.kit = Kit
 declarations.reagent = Réactif
-declarations.box = boîte
+declarations.box = Boîte
 declarations.kit.creation = Déclaration
 declarations.kit.creation.placeholder.kitCatalogCode = Kit catalogue
 declarations.kit.creation.placeholder.state = Etat du kit
@@ -102,11 +104,11 @@ declarations.kit.creation.remove = Supprimer le kit
 declarations.kit.creation.unedit = Annuler
 declarations.kit.creation.placeholder.catalogRefCode = Ref. catalogue (fournisseur)
 
-kit.catalogCode =  Kit catalogue
+kit.catalogCode =  Nom kit (usuel)
 reagents.table.catalogName = Nom kit catalogue
 kits.barCode = ID unique
 kits.expirationDate = Date de péremption
-kits.receptionDate = Date de reception	
+kits.receptionDate = Date de réception	
 order.code = Ref. commande (fournisseur)
 order.providerCode = N° commande (interne)
 kit.refCommand = Information commande

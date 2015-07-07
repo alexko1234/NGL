@@ -18,5 +18,5 @@ public class KitSearchForm extends ListForm{
 	
 	public String orderCode;
 	
-	public Date expirationDate;
+	public Date toExpirationDate;
 }

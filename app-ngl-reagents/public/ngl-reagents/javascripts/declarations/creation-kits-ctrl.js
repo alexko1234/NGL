@@ -226,29 +226,31 @@
 	 };
 	 
 	 $scope.removeBox = function(index,code){
-		 if(code !== undefined  && code !== "" ){
-			 $http.delete(jsRoutes.controllers.reagents.api.Boxes.delete(code).url)
-				.success(function(data, status, headers, config) {
-					if(data!=null){
-						for(var i=0;i<$scope.boxes.length;i++){
-							if($scope.boxes[i].code === code){
-								$scope.datatables.splice(i,1);
-								$scope.boxes.splice(i,1);
-								break;
+		 if(confirm("Etes vous sur de vouloir supprimer cette boîte ?")){
+			 if(code !== undefined  && code !== ""){
+				 $http.delete(jsRoutes.controllers.reagents.api.Boxes.delete(code).url)
+					.success(function(data, status, headers, config) {
+						if(data!=null){
+							for(var i=0;i<$scope.boxes.length;i++){
+								if($scope.boxes[i].code === code){
+									$scope.datatables.splice(i,1);
+									$scope.boxes.splice(i,1);
+									break;
+								}
 							}
 						}
-					}
-				})
-				.error(function(data, status, headers, config) {
-					$scope.message.clazz = 'alert alert-danger';
-					$scope.message.text = Messages('reagents.msg.save.error');
-					$scope.saveInProgress = false;
-					$scope.message.details = data;
-					$scope.message.isDetails = true;
-				});
-		 }else{
-			 $scope.datatables.splice(index,1);
-			 $scope.boxes.splice(index,1);
+					})
+					.error(function(data, status, headers, config) {
+						$scope.message.clazz = 'alert alert-danger';
+						$scope.message.text = Messages('reagents.msg.save.error');
+						$scope.saveInProgress = false;
+						$scope.message.details = data;
+						$scope.message.isDetails = true;
+					});
+			 }else{
+				 $scope.datatables.splice(index,1);
+				 $scope.boxes.splice(index,1);
+			 }
 		 }
 	 }
 	 
