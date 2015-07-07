@@ -38,8 +38,8 @@
 				<div class="form-control" bt-select ng-model="searchService.form.sampleCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.samples")' bt-options="sample.code as sample.code for sample in searchService.lists.getSamples()" ng-focus="searchService.refreshSamples()" auto-select></div>			
 			}
 			@formGroup{	
-				<input class="form-control" type="text" ng-model="searchService.form.reagentOrBoxCode" placeholder='@Messages("experiment.placeholder.reagentOrBoxCode")' title='@Messages("experiment.placeholder.reagentOrBoxCode")'>
-		
+				<input class="form-control" type="text" ng-model="searchService.form.containerSupportCode" placeholder='@Messages("search.placeholder.containerSupport")' title='@Messages("search.placeholder.containerSupport")'>			
+				
 			}		
 		}
 		@columnSearchForm{
@@ -51,7 +51,7 @@
 				<input class="form-control" type="text" ng-model="searchService.form.fromDate" placeholder='@Messages("experiment.placeholder.fromDate")' title='@Messages("experiment.placeholder.fromDate")'>
 			}
 			@formGroup{	
-			<input class="form-control" type="text" ng-model="searchService.form.containerSupportCode" placeholder='@Messages("search.placeholder.containerSupport")' title='@Messages("search.placeholder.containerSupport")'>			
+				<input class="form-control" type="text" ng-model="searchService.form.reagentOrBoxCode" placeholder='@Messages("experiment.placeholder.reagentOrBoxCode")' title='@Messages("experiment.placeholder.reagentOrBoxCode")'>		
 			}
 			
 		}
