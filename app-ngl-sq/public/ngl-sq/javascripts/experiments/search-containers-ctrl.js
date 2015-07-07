@@ -197,8 +197,14 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	};
 	
 	$scope.changeProcessType = function(){
-		lists.refresh.filterConfigs({pageCodes:["process-"+$scope.searchService.form.processTypeCode]}, "process-"+$scope.searchService.form.processTypeCode);
-		$scope.initAdditionalFilters();
+		//lists.refresh.filterConfigs({pageCodes:["process-"+$scope.searchService.form.processTypeCode]}, "process-"+$scope.searchService.form.processTypeCode);
+		if(angular.isDefined($scope.searchService.form.processCategory)){						
+			$scope.searchService.lists.refresh.filterConfigs({pageCodes:["process-"+$scope.searchService.form.processTypeCode]}, "process-"+$scope.searchService.form.processTypeCode);			                                    		 
+		}else{
+			$scope.searchService.form.processTypeCode = undefined;			                                    		
+		}		
+
+		$scope.searchService.initAdditionalFilters();
 	};
 	
 	$scope.reset = function(){
@@ -367,10 +373,13 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	
 	$scope.searchService.initAdditionalFilters = function(){
 		var additionalFilters = $scope.searchService.additionalFilters = [];
-		
-		if($scope.searchService.lists.get("containers-search-addfilters") && $scope.searchService.lists.get("containers-search-addfilters").length === 1){
-			var formFilters = [];
-			var allFilters = angular.copy($scope.searchService.lists.get("containers-search-addfilters")[0].filters);
+		var allFilters = undefined;
+		var formFilters = [];
+		if(angular.isDefined($scope.searchService.form.processTypeCode) && $scope.searchService.lists.get("process-"+$scope.searchService.form.processTypeCode) && $scope.searchService.lists.get("process-"+$scope.searchService.form.processTypeCode).length === 1){ 
+			allFilters = angular.copy($scope.searchService.lists.get("process-"+$scope.searchService.form.processTypeCode)[0].filters);
+		}else if($scope.searchService.lists.get("containers-search-addfilters") && $scope.searchService.lists.get("containers-search-addfilters").length === 1){
+			allFilters = angular.copy($scope.searchService.lists.get("containers-search-addfilters")[0].filters);
+		}
 			var nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
 			for(var i = 0; i  < 5 && allFilters.length > 0 ; i++){
 				formFilters.push(allFilters.splice(0, nbElementByColumn));	    								
@@ -379,9 +388,9 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			while(formFilters.length < 5){
 				formFilters.push([]);
 			}
-				
+
 			$scope.searchService.additionalFilters = additionalFilters = formFilters;
-		}
+		
 	};
 	
 	$scope.searchService.getAddFiltersToForm = function(){
@@ -483,6 +492,14 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	$scope.searchService.additionalColumns=[];
 	$scope.searchService.selectedAddColumns=[];
 	$scope.searchService.getColumns=$scope.datatableConfig.columns;
+	$http.get(jsRoutes.controllers.processes.api.ProcessTypes.list().url,{params:{"list":true}})
+		.success(function(data, status, headers, config) {
+			var processesTypes = data;
+			angular.forEach(processesTypes, function(processType) {
+				$scope.searchService.lists.refresh.filterConfigs({pageCodes:["process-"+processType.code]}, "process-"+processType.code);
+			})       	 			
+	 
+		});
 	
 	
 	if(angular.isUndefined(mainService.getForm())){
