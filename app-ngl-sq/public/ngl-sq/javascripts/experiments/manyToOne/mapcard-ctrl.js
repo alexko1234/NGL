@@ -261,8 +261,7 @@ angular.module('home').controller('ManyToOneMapcardCtrl',['$scope', '$window','d
 		$scope.$emit('viewRefeshed');
 	});
 	
-	$scope.$on('outputToExperiment', function(e, atomicTransfertMethod) {
-		//$scope.atomicTransfere.outputToExperiment($scope.datatable);
+	$scope.$on('outputToExperiment', function(e, atomicTransfertMethod) {		
 		outputToExperimentHelper($scope.datatable);
 	});
 	
@@ -287,8 +286,7 @@ angular.module('home').controller('ManyToOneMapcardCtrl',['$scope', '$window','d
 		}
 	};
 	
-	$scope.$on('experimentToOutput', function(e, atomicTransfertMethod) {
-		//$scope.atomicTransfere.experimentToOutput($scope.datatable);
+	$scope.$on('experimentToOutput', function(e, atomicTransfertMethod) {		
 		experimentToOutputHelper($scope.datatable);
 	});
 	

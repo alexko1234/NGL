@@ -303,7 +303,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope', '$window','data
 	$scope.$on('save', function(e, promises, func, endPromises) {	
 		$scope.setValidePercentage($scope.experiment.value.atomicTransfertMethods);
 		promises.push($scope.datatable.save());
-		$scope.atomicTransfere.outputToExperiment($scope.datatable);   // use outputToExperimentHelper ?
+		outputToExperimentHelper($scope.datatable); 
 		$scope.$emit('viewSaved', promises, func, endPromises);
 	});
 	
@@ -316,8 +316,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope', '$window','data
 		$scope.$emit('viewRefeshed');
 	});
 	
-	$scope.$on('outputToExperiment', function(e, atomicTransfertMethod) {
-		//$scope.atomicTransfere.outputToExperiment($scope.datatable);
+	$scope.$on('outputToExperiment', function(e, atomicTransfertMethod) {		
 		outputToExperimentHelper($scope.datatable);
 	});
 	
@@ -342,8 +341,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope', '$window','data
 		}
 	};
 	
-	$scope.$on('experimentToOutput', function(e, atomicTransfertMethod) {
-		//$scope.atomicTransfere.experimentToOutput($scope.datatable);
+	$scope.$on('experimentToOutput', function(e, atomicTransfertMethod) {		
 		experimentToOutputHelper($scope.datatable);
 	});
 	
@@ -366,8 +364,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope', '$window','data
 			angular.forEach(containers, function(container,index){
 				$scope.experiment.value.atomicTransfertMethods[index] = {class:atomicTransfertMethod,line:(index+1), column:"1", inputContainerUseds:[], outputContainerUseds:[{volume:{unit:"µL"},concentration:{unit:"nM"},experimentProperties:{}}]};
 				$scope.experiment.value.atomicTransfertMethods[index].inputContainerUseds = [{code:container.code,instrumentProperties:{},experimentProperties:{},state:container.state,locationOnContainerSupport:container.support}];
-			});
-			//$scope.atomicTransfere.experimentToOutput($scope.datatable);
+			});			
 			experimentToOutputHelper($scope.datatable);
 	};
 	
