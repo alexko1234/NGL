@@ -53,37 +53,37 @@ public class TreatmentTypeContextDAO extends AbstractDAODefault<TreatmentTypeCon
 	
 	@Override
 	public void remove(TreatmentTypeContext treatmentContext) throws DAOException {
-		throw new RuntimeException("Pas impl
+		throw new RuntimeException("Pas impl");
 	}
 
 	@Override
 	public long save(TreatmentTypeContext value) throws DAOException {
-		throw new RuntimeException("Pas impl
+		throw new RuntimeException("Pas impl");
 	}
 
 	@Override
 	public void update(TreatmentTypeContext value) throws DAOException {
-		throw new RuntimeException("Pas impl
+		throw new RuntimeException("Pas impl");
 	}
 
 	@Override
 	public List<TreatmentTypeContext> findAll() throws DAOException {
-		throw new RuntimeException("Pas impl
+		throw new RuntimeException("Pas impl");
 	}
 
 	@Override
 	public TreatmentTypeContext findById(Long id) throws DAOException {
-		throw new RuntimeException("Pas impl
+		throw new RuntimeException("Pas impl");
 	}
 
 	@Override
 	public TreatmentTypeContext findByCode(String code) throws DAOException {
-		throw new RuntimeException("Pas impl
+		throw new RuntimeException("Pas impl");
 	}
 	
 	@Override
 	public List<ListObject> findAllForList(){
-		throw new RuntimeException("Pas impl
+		throw new RuntimeException("Pas impl");
 	}
 	
 }

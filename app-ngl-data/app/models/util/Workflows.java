@@ -1,8 +1,8 @@
 package models.util;
 
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import models.laboratory.common.instance.State;
@@ -28,7 +28,6 @@ import org.mongojack.WriteResult;
 import play.Logger;
 import play.Play;
 import play.libs.Akka;
-import rules.services.RulesActor;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
@@ -36,7 +35,9 @@ import validation.run.instance.AnalysisValidationHelper;
 import validation.run.instance.RunValidationHelper;
 import akka.actor.ActorRef;
 import akka.actor.Props;
-import controllers.CommonController;
+
+import com.mongodb.util.Hash;
+
 import fr.cea.ig.MongoDBDAO;
 
 public class Workflows {
@@ -47,7 +48,7 @@ public class Workflows {
 	
 	public static void setRunState(ContextValidation contextValidation, Run run, State nextState) {
 		
-		//on valide l'etat			
+		//on valide l'état			
 		contextValidation.setUpdateMode();
 		RunValidationHelper.validateState(run.typeCode, nextState, contextValidation);
 		if(!contextValidation.hasErrors() && !nextState.code.equals(run.state.code)){
@@ -129,7 +130,7 @@ public class Workflows {
 
 	public static void setReadSetState(ContextValidation contextValidation, ReadSet readSet, State nextState) {
 		
-		//on valide l'etat			
+		//on valide l'état			
 		contextValidation.setUpdateMode();
 		RunValidationHelper.validateState(readSet.typeCode, nextState, contextValidation);
 		if(!contextValidation.hasErrors() && !nextState.code.equals(readSet.state.code)){
@@ -174,7 +175,7 @@ public class Workflows {
 			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
 					DBQuery.is("code", readSet.code), DBUpdate.set("bioinformaticValuation.valid", readSet.bioinformaticValuation.valid));
 		} else if("A".equals(readSet.state.code) || "UA".equals(readSet.state.code))	{
-			//met les fichier dipo ou non ds que le read set est valider
+			//met les fichier dipo ou non dès que le read set est valider
 			State state = cloneState(readSet.state);
 			if (null != readSet.files) {
 				for(File f : readSet.files){
@@ -245,7 +246,7 @@ public class Workflows {
 	
 	private static State updateHistoricalNextState(State previousState, State nextState) {
 		if (null == previousState.historical) {
-			nextState.historical = new ArrayList<TransientState>(0);
+			nextState.historical = new HashSet<TransientState>(0);
 			nextState.historical.add(new TransientState(previousState, nextState.historical.size()));
 		} else {
 			nextState.historical = previousState.historical;
@@ -296,7 +297,7 @@ public class Workflows {
 
 
 	public static void setAnalysisState(ContextValidation contextValidation, Analysis analysis, State nextState) {
-		//on valide l'etat			
+		//on valide l'état			
 		contextValidation.setUpdateMode();
 		AnalysisValidationHelper.validateState(analysis.typeCode, nextState, contextValidation);
 		if(!contextValidation.hasErrors() && !nextState.code.equals(analysis.state.code)){
