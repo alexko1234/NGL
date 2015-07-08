@@ -55,12 +55,16 @@ public class LimsCNGDAO {
 	private JdbcTemplate jdbcTemplate;
 
 	private static final String CONTAINER_STATE_CODE="IW-P";
+	
 	protected static final String PROJECT_TYPE_CODE_DEFAULT = "default-project";
 	protected static final String PROJECT_STATE_CODE_DEFAULT = "IP";
-	protected static final String IMPORT_CATEGORY_CODE="sample-import";
-	protected static final String SAMPLE_TYPE_CODE_DEFAULT = "default-sample-cng";
-	protected static final String SAMPLE_USED_TYPE_CODE = "default-sample-cng";	
+	
+	protected static final String IMPORT_CATEGORY_CODE="sample-import";  // inutilisé...
 	protected static final String IMPORT_TYPE_CODE_DEFAULT = "default-import";
+	
+	protected static final String SAMPLE_TYPE_CODE_DEFAULT = "default-sample-cng"; // inutilisé...
+	protected static final String SAMPLE_USED_TYPE_CODE = "default-sample-cng";	
+	
 	
 	
 	@Autowired
@@ -83,10 +87,9 @@ public class LimsCNGDAO {
 		
 		project.code = rs.getString("code");
 		project.name = rs.getString("name").trim();
+		Logger.debug("project.code=" + project.code);		
+		
 		project.typeCode=PROJECT_TYPE_CODE_DEFAULT;
-		
-		Logger.debug("project.code=" + project.code);
-		
 		ProjectType projectType=null;
 		try {
 			projectType = ProjectType.find.findByCode(project.typeCode);
@@ -138,13 +141,12 @@ public class LimsCNGDAO {
 			sample.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 
 			sample.code=rs.getString("code");
-			Logger.debug("Sample code :"+sample.code);
 			
-			/* FDS 05/06/2015  JIRA NGL-672  
-			String sampleTypeCode=SAMPLE_TYPE_CODE_DEFAULT;
+			/* FDS 05/06/2015 JIRA NGL-672  remplacer default-sample-cng par le veritable sampleType
+			  "sample_type" dans le result set  de la base de donnees        
 			*/
 			String sampleTypeCode=rs.getString("sample_type");
-			Logger.debug("Sample type code :"+sampleTypeCode);
+			Logger.debug("Sample code :"+sample.code+ " Sample type code :"+sampleTypeCode);
 			
 			SampleType sampleType=null;
 			try {
@@ -158,7 +160,7 @@ public class LimsCNGDAO {
 				return null;
 			}
 			
-			sample.typeCode=sampleTypeCode;	 // ou =sampleType.code
+			sample.typeCode=sampleType.code;
 			sample.categoryCode=sampleType.category.code;
 			sample.name=rs.getString("name");
 			sample.referenceCollab= rs.getString("ref_collab");
@@ -166,6 +168,7 @@ public class LimsCNGDAO {
 
 			sample.importTypeCode=IMPORT_TYPE_CODE_DEFAULT;
 		
+			//FDS: plus necessaire car un sample n'appartient plus qu'a un seul projet !!
 			sample.projectCodes=new ArrayList<String>();
 			if (rs.getString("project") != null) {
 				sample.projectCodes.add(rs.getString("project"));
@@ -179,10 +182,21 @@ public class LimsCNGDAO {
 			if (rs.getString("comments") != null) {
 				sample.comments.add(new Comment(rs.getString("comments")));
 			}
-					
+			
+
 			sample.properties=new HashMap<String, PropertyValue>();
 			sample.properties.put("limsCode", new PropertySingleValue(rs.getInt("lims_code")));
 	
+			/* FDS et GA 16/06/2015: le sampleType gDNA est commun CNG/CNG. les 3 propriétés  isAdapters, isFragmented, taxonSize 
+			    sont obligatoires au CNS. Comme elles n'existent pas au CNG, il faut leur fournir une valeur par defaut pour que
+			    la validation fonctionne
+			*/
+			if (sample.typeCode.equals("gDNA")) {	
+				sample.properties.put("isAdapters", new PropertySingleValue(false)); 
+				sample.properties.put("isFragmented", new PropertySingleValue(false)); 
+				sample.properties.put("taxonSize", new PropertySingleValue(0)); 		   
+			}			
+			
 			return sample;
 	}
 
@@ -203,17 +217,18 @@ public class LimsCNGDAO {
 		container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 		
 		container.code = rs.getString("code");
-		Logger.debug("Container code :"+container.code);
+		Logger.debug("[commonContainerMapRow] Container code :"+container.code);
 		
 		container.categoryCode = containerCategoryCode; //lane or tube
 		
 		if (rs.getString("comment") != null) {
 			container.comments = new ArrayList<Comment>();	
-			//just one comment for one lane (container)
 			container.comments.add(new Comment(rs.getString("comment")));
 		}
+		
 		container.fromExperimentTypeCodes=new ArrayList<String>();
 		container.fromExperimentTypeCodes.add(experimentTypeCode);
+		
 		container.state = new State(); 
 		container.state.code = CONTAINER_STATE_CODE; 
 		container.state.user = InstanceHelpers.getUser();
@@ -223,17 +238,15 @@ public class LimsCNGDAO {
 		container.valuation.valid = TBoolean.UNSET;
 		
 		// define container support attributes
-		
-		/*FDS : HARCODED by D. Noisette==> ligne="1" alors que column est variable ????
-		        non dans le sql, column est aussi hardcoder==1 ?????
-		        		         nb_container lui aussi est harcode==1 !!!
-		        => systeme prevu pour les lanes de flowcell???????
+		/*FDS : HARCODED by D. Noisette ==> ligne="1" alors que column est variable ????  non dans le sql pour tubes , column est aussi hardcodeé==1
+		        		                    dans le sql pour tubes nb_container  est harcode==1 !!!
+		        =>et pour les lanes ???????
 		*/
 		try {
 			container.support = ContainerSupportHelper.getContainerSupport(containerCategoryCode, rs.getInt("nb_container"),rs.getString("code_support"),"1",rs.getString("column")); 
 		}
 		catch(DAOException e) {
-			Logger.error("Can't get container support !"); 
+			Logger.error("[commonContainerMapRow] Can't get container support !"); 
 		}
 		
 		container.properties = new HashMap<String, PropertyValue>();
@@ -250,26 +263,26 @@ public class LimsCNGDAO {
 			}
 			container.mesuredConcentration = new PropertySingleValue(concentration, "nM");
 			
-			//TEST FDS JIRA NGL-674 Ajout du barcode aliquot initial=> propriete du container ??? ou du content ??
-			 // est-ce qu'il faut declarer cette propriete dans le modele d'abord ???
-			container.properties.put("AliquotCode",new PropertySingleValue(rs.getString("aliquot_code")));
 		}
+		// prevoir les well (plaques96) les puits ont des concentration !!!!
 		
+		//plus nécessaire, une library n'est plus attribuée qu'a un seul projet
 		if (rs.getString("project")!=null) {
 			container.projectCodes = new ArrayList<String>();
 			container.projectCodes.add(rs.getString("project"));
 		}		
 		
+		// creation du content d'un container
 		if (rs.getString("code_sample")!=null) {
 			Content content=new Content();
 			content.sampleCode = rs.getString("code_sample");
 			content.projectCode = rs.getString("project");
 						
-			/* FDS 05/06/2015  JIRA NGL-672  
-			   String sampleTypeCode = SAMPLE_USED_TYPE_CODE;  //TODO : to manage with Julie !
+			/* FDS 05/06/2015 JIRA NGL-672  remplacer default-sample-cng par le véritable sampleType
+			   "sample_type" dans le result set  de la base de données               
 			*/
 			String sampleTypeCode=rs.getString("sample_type");
-			Logger.debug("Sample type code :"+sampleTypeCode);
+			Logger.debug("[commonContainerMapRow] content.Sample type code :"+sampleTypeCode);
 			
 			SampleType sampleType=null;
 			try {
@@ -278,14 +291,12 @@ public class LimsCNGDAO {
 				Logger.error("",e);
 				return null;
 			}
-			if ( sampleType==null ){
+			if ( sampleType==null ) {
 				ctxErr.addErrors("code", "error.codeNotExist", sampleTypeCode, content.sampleCode);
 				return null;
-			}		
+			}	
 			
-			//TODO : manage fromExperimentTypeCodes for import lib_b* & lane/flowcell --> mapping Julie
-			
-			content.sampleTypeCode = sampleType.code; // ou =sampleTypeCode c'est pareil 
+			content.sampleTypeCode = sampleType.code;
 			content.sampleCategoryCode = sampleType.category.code;
 			
 			content.properties = new HashMap<String, PropertyValue>();
@@ -299,16 +310,27 @@ public class LimsCNGDAO {
 				content.properties.put("tagCategory",new PropertySingleValue("-1"));
 			}				
 
-			if(rs.getString("exp_short_name")!=null) {
+			if (rs.getString("exp_short_name")!=null) {
 				content.properties.put("libProcessTypeCode", new PropertySingleValue(rs.getString("exp_short_name")));
 			}
 			else {
 				content.properties.put("libProcessTypeCode", new PropertySingleValue("-1"));
 			}
+			
+			// FDS 15/06/2015 JIRA NGL-674 Ajout du barcode aliquot initial=> nouvelle propriete content 
+			if (rs.getString("aliquot_code")!=null) { 
+				content.properties.put("aliquotCode", new PropertySingleValue(rs.getString("aliquot_code")));
+			}
+			else {
+				content.properties.put("aliquotCode", new PropertySingleValue("-1"));
+			}
+			
 			container.contents.add(content);			
 			
 			container.sampleCodes=new ArrayList<String>();
 			container.sampleCodes.add(rs.getString("code_sample"));
+			
+			//TODO : manage fromExperimentTypeCodes for import lib_b* & lane/flowcell --> mapping Julie	
 		}
 
 		container.fromPurifingCode = null;				
@@ -477,6 +499,7 @@ public class LimsCNGDAO {
 			}
 		});
 		
+		//demultiplexSample plus necessaire ???
 		return demultiplexSample(results);			
 	}
 	
@@ -526,7 +549,9 @@ public class LimsCNGDAO {
 					return s;
 				}
 			});			
-		}		
+		}	
+		
+		//demultiplexSample plus necessaire ???
 		return demultiplexSample(results);	
 	}
 	
@@ -554,6 +579,7 @@ public class LimsCNGDAO {
 		List<Sample> results = null;
 		
 		if (sampleCode != null) { 
+			// si on connait le barcode a modifier plus besoin de order by !!!
 			results = this.jdbcTemplate.query("select * from v_sample_tongl where code=? order by code, project desc, comments", new Object[]{sampleCode}
 			,new RowMapper<Sample>() {
 				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -576,7 +602,9 @@ public class LimsCNGDAO {
 					return s;
 				}
 			});			
-		}		
+		}	
+		
+		//demultiplexSample plus necessaire ???
 		return demultiplexSample(results);	
 	}
 	
@@ -612,7 +640,8 @@ public class LimsCNGDAO {
 				for (Content content : results.get(pos).contents) {
 					if ( (content.sampleCode.equals(results.get(pos+x).contents.get(0).sampleCode))  
 								&& (content.properties.get("tag").value.equals(results.get(pos+x).contents.get(0).properties.get("tag").value)) 
-								&& (content.properties.get("libProcessTypeCode").value.equals(results.get(pos+x).contents.get(0).properties.get("libProcessTypeCode").value))  ) {
+								&& (content.properties.get("libProcessTypeCode").value.equals(results.get(pos+x).contents.get(0).properties.get("libProcessTypeCode").value)) 
+								&& (content.properties.get("aliquotCode").value.equals(results.get(pos+x).contents.get(0).properties.get("aliquot").value)) ){
 						findContent = true;
 						//Logger.debug("content already created !");
 						break;
@@ -646,6 +675,11 @@ public class LimsCNGDAO {
 				
 				if ((r.contents.get(i).properties.get("libProcessTypeCode") != null) && (r.contents.get(i).properties.get("libProcessTypeCode").value.equals("-1"))) {
 					r.contents.get(i).properties.remove("libProcessTypeCode");
+				}
+				
+				//FDS 17/06/2015 JIRA NGL-674
+				if ((r.contents.get(i).properties.get("aliquotCode") != null) && (r.contents.get(i).properties.get("aliquotCode").value.equals("-1"))) {
+					r.contents.get(i).properties.remove("aliquotCode");
 				}
 				
 				//set percentage
@@ -688,24 +722,30 @@ public class LimsCNGDAO {
 		content.sampleCode = results.get(posNext).sampleCodes.get(0);
 		content.projectCode = results.get(posNext).projectCodes.get(0);
 		
-		/*FDS a changer aussi ??????????????? */
+		/* FDS 16/06/2015 JIRA NGL-672  
 		SampleType sampleType=null;
 		sampleType = SampleType.find.findByCode(SAMPLE_USED_TYPE_CODE);	
 		content.sampleTypeCode = sampleType.code;
 		content.sampleCategoryCode = sampleType.category.code;
-		
+		*/
+		content.sampleTypeCode =results.get(posNext).contents.get(0).sampleTypeCode;
+		content.sampleCategoryCode =results.get(posNext).contents.get(0).sampleCategoryCode;
 		
 		content.properties = new HashMap<String, PropertyValue>();
 		content.properties.put("tag", new PropertySingleValue(results.get(posNext).contents.get(0).properties.get("tag").value));
 		content.properties.put("tagCategory", new PropertySingleValue(results.get(posNext).contents.get(0).properties.get("tagCategory").value));
-		
-		if (results.get(posNext).contents.get(0).properties.get("libProcessTypeCode") == null) {
-			Logger.debug("content.sampleCode =" + content.sampleCode + " : libProcessTypeCode == null");
+	
+		if (results.get(posNext).contents.get(0).properties.get("libProcessTypeCode") == null) {		
 		}
 		else {
 			content.properties.put("libProcessTypeCode", new PropertySingleValue(results.get(posNext).contents.get(0).properties.get("libProcessTypeCode").value));
+			Logger.debug("[createContent] content.sampleCode =" + content.sampleCode + "; content.libProcessTypeCode ="+ content.properties.get("libProcessTypeCode").value);
 		}
 		
+		//FDS 16/06/2015 JIRA NGL-674: ajouter aliquot code (peut pas etre null)
+		content.properties.put("aliquotCode", new PropertySingleValue(results.get(posNext).contents.get(0).properties.get("aliquotCode").value));
+		Logger.debug("[createContent] content.sampleCode =" + content.sampleCode + "; content.aliquotCode ="+ content.properties.get("aliquotCode").value);
+				
 		results.get(posCurrent).contents.add(content); 
 		
 		return results;
@@ -739,9 +779,9 @@ public class LimsCNGDAO {
 			sqlView = "v_flowcell_tongl";
 		}
 		else {
+			//"tube"
 			//sqlView = "v_tube_tongl";
 			//FDS il faut pour les tests des vues specialisees: v_libnorm_tongl, etc...
-			// ==> permettrait aussi de pouvoir definir le "from experiment" pour chaque type de library...
 			sqlView = "v_libnorm_tongl";
 		}
 		
@@ -749,7 +789,6 @@ public class LimsCNGDAO {
 		if (containerCode != null) {
 			//04/05/2015 - la contrainte "isavailable = true" est forcee dans la vue
 			//           - "order by" n'a pas de sens quand on a choisi un objet particulier...
-			//results = this.jdbcTemplate.query("select * from " + sqlView + " where code = ? and isavailable = true order by code, project desc, code_sample, tag, exp_short_name", new Object[]{containerCode}
 			results = this.jdbcTemplate.query("select * from " + sqlView + " where code = ? ", new Object[]{containerCode} 
 			,new RowMapper<Container>() {
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -762,11 +801,9 @@ public class LimsCNGDAO {
 			});
 		}
 		else {
-			Logger.debug("Import containers");
+			Logger.debug("Import containers "+containerCategoryCode+ " with SOLEXA sql: "+sqlView );
 			//13/03/2015 le order by est TRES IMPORTANT: demultiplexContainer en depend !! 
 			//04/05/2015 - contrainte "isavailable=true" est forcee dans la vue
-			//           - le probleme avec RNA est resolu...
-			//results = this.jdbcTemplate.query("select * from " + sqlView + " where isavailable=true  and exp_type !~ 'RNASeq' order by code, project desc, code_sample, tag, exp_short_name", new Object[]{}
 			results = this.jdbcTemplate.query("select * from " + sqlView + " order by code, project desc, code_sample, tag, exp_short_name", new Object[]{} 
 			,new RowMapper<Container>() {
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -774,11 +811,13 @@ public class LimsCNGDAO {
 					int rowNum0 = rowNum;
 					ContextValidation ctxErr = contextError; 
 					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, _containerCategoryCode,experimentTypeCode);
-					Logger.debug("Container "+c.code);
+					// debug identique danscommonContainerMapRow..... Logger.debug("Container "+c.code);
 					return c;
 				}
 			});
 		}
+		
+		Logger.debug("Now demultiplexing...");
 		return demultiplexContainer(results);			
 	}
 	

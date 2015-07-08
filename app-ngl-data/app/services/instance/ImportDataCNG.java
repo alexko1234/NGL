@@ -15,7 +15,7 @@ public class ImportDataCNG {
 		//new IndexImportCNG(Duration.create(4,TimeUnit.SECONDS),Duration.create(60,TimeUnit.MINUTES));		
 		//new ExperimentImportCNG(Duration.create(4,TimeUnit.SECONDS),Duration.create(60,TimeUnit.MINUTES));
 		
-		new ContainerImportCNG(Duration.create(4,TimeUnit.SECONDS),Duration.create(60,TimeUnit.MINUTES));
+		new ContainerImportCNG(Duration.create(4,TimeUnit.SECONDS),Duration.create(10,TimeUnit.MINUTES));
 	}
 
 }
