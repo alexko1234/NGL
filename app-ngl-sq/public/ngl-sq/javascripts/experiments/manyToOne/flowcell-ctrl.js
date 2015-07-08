@@ -144,8 +144,21 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 		$scope.atomicTransfere.experimentToInput($scope.datatable);
 	});
 
-	$scope.changeValueInFlowcellCompo = function(){
-		$scope.atomicTransfere.experimentToInput($scope.datatable);
+	$scope.changeValueInFlowcellCompo = function(k){
+		if(k){
+			var allData = $scope.datatable.getData();
+			var i = 0;
+			for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[k].inputContainerUseds.length;j++){
+				allData[i].inputInstrumentProperties = $scope.experiment.value.atomicTransfertMethods[k].inputContainerUseds[j].instrumentProperties;
+				allData[i].inputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[k].inputContainerUseds[j].experimentProperties;
+				allData[i].inputContainerUsed =  $scope.experiment.value.atomicTransfertMethods[k].inputContainerUseds[j];
+				allData[i].contents = $scope.experiment.value.atomicTransfertMethods[k].inputContainerUseds[j].contents;
+				i++;
+			}
+			$scope.datatable.setData(allData);
+		}else{
+			$scope.atomicTransfere.experimentToInput($scope.datatable);
+		}
 	};
 
 	$scope.$on('deleteInstrumentPropertiesInputs', function(e, header) {

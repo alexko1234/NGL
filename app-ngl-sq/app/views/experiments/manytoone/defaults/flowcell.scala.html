@@ -1,7 +1,7 @@
 @(laneCount:java.lang.Integer)
 <ul class="nav nav-tabs" role="tablist">
   <li class="active"><a href="" role="tab" data-target="#flowcell" data-toggle="tab">@Messages("experiments.flowcell.design")</a></li>
-  <li><a href="" role="tab"  data-target="#roadmap" data-toggle="tab">@Messages("experiments.calculation.sheet")</a></li>
+  <li><a href="" role="tab" data-target="#roadmap" data-toggle="tab">@Messages("experiments.calculation.sheet")</a></li>
 </ul>
 {{tab}}
 <div class="row tab-content tabPaneTable" ng-controller="ManyToOneFlowcellCtrl" ng-init="init_flowcell(@laneCount)">
@@ -133,7 +133,7 @@
 							{{flowcell.code}}
 						</td>
 						<td>
-							<input class="form-control valueInput" type="text" title='@Messages("containers.table.percentage")' ng-readonly="!experiment.experimentProperties.enabled" class="input-small" ng-blur="changeValueInFlowcellCompo()" ng-model="flowcell.percentage" />
+							<input class="form-control valueInput" type="text" title='@Messages("containers.table.percentage")' ng-readonly="!experiment.experimentProperties.enabled" class="input-small" ng-blur="changeValueInFlowcellCompo(@i)" ng-model="flowcell.percentage" />
 						</td>
 						<td>							
 							<div list-resize="sampleAndTag in getSampleAndTags(flowcell) | unique" id="SampleTagCell" below vertical></div>
@@ -183,7 +183,7 @@
 								<input class="form-control valueInput" type="text" ng-switch-when="false" title="{{property.name}}"
 									ng-readonly="!experiment.experimentProperties.enabled"
 									ng-model="experiment.value.atomicTransfertMethods[@i].outputContainerUseds[0].experimentProperties[property.code].value"
-								    ng-blur="changeValueInFlowcellCompo()"
+								    ng-blur="changeValueInFlowcellCompo(@i)"
 								    ng-change="notifyChange(@i,property)"
 								    />
 									
@@ -192,7 +192,7 @@
 										ng-disabled="!experiment.experimentInformation.enabled" 
 										ng-model="experiment.value.atomicTransfertMethods[@i].outputContainerUseds[0].experimentProperties[property.code].value"
 										ng-switch-when="true" 
-										ng-blur="changeValueInFlowcellCompo()"
+										ng-blur="changeValueInFlowcellCompo(@i)"
 										ng-change="notifyChange(@i,property)"
 										auto-select>
 									<option ng-repeat="opt in property.possibleValues" value="{{opt.value}}">{{opt.value}}</option>

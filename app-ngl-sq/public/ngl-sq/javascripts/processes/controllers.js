@@ -287,7 +287,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	};
 	
 	$scope.searchService.getAddColumnsToForm = function(){
-		if($scope.searchService.additionalColumns.length === 0){
+		if($scope.searchService.additionalColumns !== undefined && $scope.searchService.additionalColumns.length === 0){
 			$scope.searchService.initAdditionalColumns();
 		}
 		return $scope.searchService.additionalColumns;									

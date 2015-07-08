@@ -368,7 +368,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		$scope.outputContainers =[];
 		var containers=[];
 		angular.forEach($scope.experiment.value.atomicTransfertMethods, function(atomicTransfertMethod){
-			if(atomicTransfertMethod.outputContainerUseds[0] != undefined && atomicTransfertMethod.outputContainerUseds[0].code != null){
+			if(atomicTransfertMethod.outputContainerUseds != null && atomicTransfertMethod.outputContainerUseds[0] != undefined && atomicTransfertMethod.outputContainerUseds[0].code != null){
 				var container = {"code":atomicTransfertMethod.outputContainerUseds[0].code,"state":{"code":"A"}};
 				containers.push(container);
 				$scope.outputContainers.push(atomicTransfertMethod.outputContainerUseds[0].code);

@@ -410,7 +410,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 					}
 				}else{
 					var test = $scope.datatable.getGroupColumnValue(containers[i], "code");
-					if($scope.datatable.getGroupColumnValue(containers[i], "code") === this.basket.get()[j].code){
+					if($scope.datatable.getGroupColumnValue(containers[i], "code")[0] === this.basket.get()[j].code){
 						alreadyOnBasket = true;
 					}
 				}
