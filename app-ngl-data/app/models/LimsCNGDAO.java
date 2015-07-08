@@ -312,10 +312,10 @@ public class LimsCNGDAO {
 				content.properties.put("libProcessTypeCode", new PropertySingleValue("-1"));
 			}
 			
-			// FDS 15/06/2015 JIRA NGL-673 Ajout du barcode aliquot initial=> nouvelle propriété de content 
-			if (rs.getString("aliquot_code")!=null) { 
-				//Logger.debug("[commonContainerMapRow] content aliquot code :"+ rs.getString("aliquot_code"));
-				content.properties.put("sampleAliquoteCode", new PropertySingleValue(rs.getString("aliquot_code")));
+			// FDS 15/06/2015 JIRA NGL-673 Ajout du barcode du sample solexa initial=> nouvelle propriété de content 
+			if (rs.getString("aliquote_code")!=null) { 
+				//Logger.debug("[commonContainerMapRow] content aliquote code :"+ rs.getString("aliquote_code"));
+				content.properties.put("sampleAliquoteCode", new PropertySingleValue(rs.getString("aliquote_code")));
 			}
 			else {
 				Logger.debug("[commonContainerMapRow] content aliquot code : null !!!!!!");
