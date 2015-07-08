@@ -86,6 +86,7 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T>{
 	{
 		try {
 			String sql = getSqlCommon()+" ORDER by t.code";
+			Logger.debug(sql);
 			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
 			return this.jdbcTemplate.query(sql, mapper);
 		} catch (DataAccessException e) {
@@ -94,7 +95,7 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T>{
 	}
 
 	public List<ListObject> findAllForList(){
-		String sql = "SELECT code, name from "+tableName;
+		String sql = "SELECT code, name from "+tableName +" ORDER by t.code";
 		BeanPropertyRowMapper<ListObject> mapper = new BeanPropertyRowMapper<ListObject>(ListObject.class);
 		return this.jdbcTemplate.query(sql, mapper);
 	}

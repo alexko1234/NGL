@@ -18,7 +18,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
-import com.avaje.ebean.enhance.asm.Type;
 
 import play.api.modules.spring.Spring;
 
@@ -108,7 +107,7 @@ public class TreatmentTypeDAO extends AbstractDAOCommonInfoType<TreatmentType>{
 		String sql = sqlCommon+
 				" inner join treatment_type_context as ttc ON ttc.fk_treatment_type=c.id "+
 				"WHERE fk_treatment_context = ? ";
-		TreatmentTypeMappingQuery treatmentTypeMappingQuery=new TreatmentTypeMappingQuery(dataSource, sql,new SqlParameter("id", Type.LONG));
+		TreatmentTypeMappingQuery treatmentTypeMappingQuery=new TreatmentTypeMappingQuery(dataSource, sql,new SqlParameter("id", Types.BIGINT));
 		return treatmentTypeMappingQuery.execute(id);
 	}
 	

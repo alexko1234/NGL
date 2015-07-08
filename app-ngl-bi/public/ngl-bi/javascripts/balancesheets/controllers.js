@@ -2,6 +2,10 @@
 
 angular.module('home').controller('BalanceSheetsGeneralCtrl', ['$scope', 'mainService', 'tabService', 'balanceSheetsGeneralSrv', '$routeParams',
                                                                function($scope, mainService, tabService, balanceSheetsGeneralSrv, $routeParams){
+	$scope.balanceSheetsGeneralService = balanceSheetsGeneralSrv;
+	
+	mainService.put('activeYear', 'general');
+	
 	// Year managing
 	var actualYear = new Date().getFullYear();
 	
@@ -13,8 +17,13 @@ angular.module('home').controller('BalanceSheetsGeneralCtrl', ['$scope', 'mainSe
 	
 	tabService.activeTab(0);
 	
-	$scope.balanceSheetsGeneralService = balanceSheetsGeneralSrv;
-	$scope.balanceSheetsGeneralService.init();
+	
+	if(!angular.isUndefined(mainService.get('generalBalanceSheets'))){
+		$scope.balanceSheetsGeneralService.loadFromCache();
+	}else{
+		$scope.balanceSheetsGeneralService.init();
+	}
+
 	
 }]);
 
@@ -24,23 +33,30 @@ angular.module('home').controller('BalanceSheetsYearCtrl', ['$scope', 'mainServi
 	
 	
 	
+	// Service
+	$scope.balanceSheetsService = balanceSheetsSrv;
+	
+	
 	// Year managing
 	var actualYear = new Date().getFullYear();
+	var activeYear = $routeParams.year;
+	var changeYear = true;
+
+	if(mainService.get('activeYear') == undefined){
+		mainService.put('activeYear', activeYear);
+	}
 	
 	// Tabs
 	tabService.addTabs({label:Messages("balanceSheets.tab.generalBalanceSheets"), href:jsRoutes.controllers.balancesheets.tpl.BalanceSheets.home("general").url});
 	for(var i = actualYear; i >= 2008 ; i--){
 		tabService.addTabs({label:Messages("balanceSheets.tab.year") +" "+ i,href:jsRoutes.controllers.balancesheets.tpl.BalanceSheets.home(i).url});
 	}
-	
-	var activeYear = $routeParams.year;
+	// Activate the tab corresponding to the selected year
 	tabService.activeTab(actualYear - activeYear + 1);
 	
-	$scope.balanceSheetsService = balanceSheetsSrv;
-	$scope.balanceSheetsService.init(activeYear);
 	
+	// Keeping the active balance sheet opened after we change year
 	$scope.tabs = [true, false, false, false];
-	
 	$scope.setActiveTab = function(value){
 		mainService.put('balanceSheetsActiveTab', value);
 		for(var i = 0; i < $scope.tabs.length; i++){
@@ -50,26 +66,26 @@ angular.module('home').controller('BalanceSheetsYearCtrl', ['$scope', 'mainServi
 				$scope.tabs[i] = false;
 			}
 		}
-		if(mainService.get('balanceSheetsActiveTab') == 0) $scope.balanceSheetsService.showQuarters();
-		else if(mainService.get('balanceSheetsActiveTab') == 1) $scope.balanceSheetsService.showSequencingProduction();
-		else if(mainService.get('balanceSheetsActiveTab') == 2) $scope.balanceSheetsService.showFirstTen();
-		else if(mainService.get('balanceSheetsActiveTab') == 3) $scope.balanceSheetsService.showProjectType();
+		
+		// Detect if the active year has changed
+		if(mainService.get('activeYear') == activeYear){
+			changeYear = false;
+		}else{
+			mainService.put('activeYear', activeYear);
+		}
+		
+		
+		// Init the balance sheet
+		$scope.balanceSheetsService.init(changeYear, activeYear);
 	};
 	
-	$scope.getTabClass = function(value){
-		 if(value === mainService.get('balanceSheetsActiveTab')){
-			 return true;
-		 }
-	};
 	
-	if(mainService.get('balanceSheetsActiveTab') != undefined){
-		$scope.setActiveTab(mainService.get('balanceSheetsActiveTab'));
-	}
-	
+	// The first tab will always be the active one when consulting the balance sheet for the first time
+
 	if(mainService.get('balanceSheetsActiveTab') == undefined){
-		$scope.setActiveTab(mainService.get('balanceSheetsActiveTab'));
+		mainService.put('balanceSheetsActiveTab', "0");
 	}
-	
+	$scope.setActiveTab(mainService.get('balanceSheetsActiveTab'));
 	
 	
 }]);

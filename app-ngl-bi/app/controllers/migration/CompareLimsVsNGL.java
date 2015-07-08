@@ -454,6 +454,10 @@ public class CompareLimsVsNGL extends CommonController {
 			List<LimsFile> limsFiles = limsAbandonDAO.getFiles(rs.code);
 			List<File> nglFiles = rs.files;
 			
+			if(null == nglFiles)nglFiles=new ArrayList<File>(0);
+			if(null == limsFiles)limsFiles=new ArrayList<LimsFile>(0);
+			
+			
 			if(limsFiles.size() != nglFiles.size()){
 				cvrs.addErrors("nbFiles","nbFiles is different between readset and lims : "+ nglFiles.size() +" != "+limsFiles.size());
 			}

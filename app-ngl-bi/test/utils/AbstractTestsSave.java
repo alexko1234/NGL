@@ -38,10 +38,8 @@ public abstract class AbstractTestsSave {
 		Map<String,String> config = new HashMap<String,String>();
 		config.put("application.secret", "ezfzzefzefz");
 		config.put("evolutionplugin","disabled");
-		config.put("ebean.default","models.*");
 		config.put("mongodb.database", "NGL-TESTU");
-		config.put("mongodb.credentials", "testu:testu");
-		config.put("mongodb.servers", "mongodev.genoscope.cns.fr:27017");
+		config.put("mongodb.credentials", "testu:tengodev.genoscope.cns.fr:27017");
 		config.put("mongodb.defaultWriteConcern", "SAFE"); 
 		
 		config.put("db.default.driver", "com.mysql.jdbc.Driver");

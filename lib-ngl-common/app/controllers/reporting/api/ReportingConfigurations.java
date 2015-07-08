@@ -84,7 +84,7 @@ public class ReportingConfigurations extends CommonController {
 					.setTraceInformation(getCurrentUser());
 			reportingConfiguration.code = generateReportingConfigurationCode();
 		} else {
-			return badRequest("use PUT method to update the run");
+			return badRequest("use PUT method to update the ReportingConfiguration");
 		}
 
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
@@ -123,7 +123,7 @@ public class ReportingConfigurations extends CommonController {
 				return badRequest(filledForm.errorsAsJson());			
 			}
 		}else{
-			return badRequest("readset code are not the same");
+			return badRequest("ReportingConfiguration code are not the same");
 		}				
 	}
 	

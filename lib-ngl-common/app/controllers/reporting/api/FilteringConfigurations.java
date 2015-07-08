@@ -80,7 +80,7 @@ public class FilteringConfigurations extends DocumentController<FilteringConfigu
 					.setTraceInformation(getCurrentUser());
 			configuration.code = generateConfigurationCode();
 		} else {
-			return badRequest("use PUT method to update the run");
+			return badRequest("use PUT method to update the filtering config");
 		}
 
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
@@ -119,7 +119,7 @@ public class FilteringConfigurations extends DocumentController<FilteringConfigu
 				return badRequest(filledForm.errorsAsJson());			
 			}
 		}else{
-			return badRequest("readset code are not the same");
+			return badRequest("FilteringConfiguration code are not the same");
 		}				
 	}
 	
