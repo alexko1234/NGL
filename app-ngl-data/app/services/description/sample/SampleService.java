@@ -34,52 +34,62 @@ public class SampleService {
 		List<SampleCategory> l = new ArrayList<SampleCategory>();
 		
 		l.add(newSampleCategory("ADN Clone", "cloned-DNA"));
-		l.add(newSampleCategory("Materiel Immunoprecipite","IP-sample"));
+		l.add(newSampleCategory("Matériel Immunoprécipité","IP-sample"));
 		l.add(newSampleCategory("Amplicon", "amplicon"));
 		l.add(newSampleCategory("Inconnu", "default"));
 		l.add(newSampleCategory("ADN", "DNA"));
 		l.add(newSampleCategory("ARN", "RNA"));
 		l.add(newSampleCategory("cDNA", "cDNA"));
+		
+		//FDS 05/06/205 JIRA NGL-672: ajout des categories CNG qui n'existaient pas au CNS 
+		l.add(newSampleCategory("FAIRE", "FAIRE"));  // manquant dans sample_parametrage_CNG.xls ( voir Julie)
+		l.add(newSampleCategory("Methylated Base DNA (MBD)","methylated-base-DNA")); // manquant dans sample_parametrage_CNG.xls ( voir Julie)
+		l.add(newSampleCategory("Bisulfite DNA","bisulfite-DNA")); // dans la spec mais inexistant a l'heure actuelle
+		
 		DAOHelpers.saveModels(SampleCategory.class, l, errors);
 	}
 	
-	
+	/* FDS 05/06/205 JIRA NGL-672: ajout Institute.CODE.CNG pour les sampleType communs CNS/CNG 
+	 * NOTE: pour le CNG certains SampleCategory n'ont pas de SampleType definis=> utiliser le meme code (idee G.albini)
+	 */
 	public static void saveSampleTypes(Map<String, List<ValidationError>> errors) throws DAOException{
 		List<SampleType> l = new ArrayList<SampleType>();
 		
-		l.add(newSampleType("BAC", "BAC", SampleCategory.find.findByCode("cloned-DNA"), getPropertyDefinitionsADNClone(), getInstitutes(Institute.CODE.CNS)));
-		
-		l.add(newSampleType("Plasmide", "plasmid", SampleCategory.find.findByCode("cloned-DNA"), getPropertyDefinitionsADNClone(), getInstitutes(Institute.CODE.CNS)));
-		
+		l.add(newSampleType("BAC", "BAC", SampleCategory.find.findByCode("cloned-DNA"), getPropertyDefinitionsADNClone(), getInstitutes(Institute.CODE.CNS)));	
+		l.add(newSampleType("Plasmide", "plasmid", SampleCategory.find.findByCode("cloned-DNA"), getPropertyDefinitionsADNClone(), getInstitutes(Institute.CODE.CNS)));	
 		l.add(newSampleType("Fosmide", "fosmid", SampleCategory.find.findByCode("cloned-DNA"), getPropertyDefinitionsADNClone(), getInstitutes(Institute.CODE.CNS)));	
 		
-		l.add(newSampleType("ADN Génomique", "gDNA", SampleCategory.find.findByCode("DNA"), getPropertyDefinitionsADNGenomic(), getInstitutes(Institute.CODE.CNS)));
-		
+		l.add(newSampleType("ADN Génomique", "gDNA", SampleCategory.find.findByCode("DNA"), getPropertyDefinitionsADNGenomic(), getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG))); // ajout CNG
 		l.add(newSampleType("ADN Métagénomique", "MeTa-DNA", SampleCategory.find.findByCode("DNA"), getPropertyDefinitionsADN(), getInstitutes(Institute.CODE.CNS)));	
 		
 		l.add(newSampleType("Amplicon", "amplicon", SampleCategory.find.findByCode("amplicon"), getPropertyDefinitionsAmplicon(), getInstitutes(Institute.CODE.CNS)));
 		
-		l.add(newSampleType("ARN total", "total-RNA", SampleCategory.find.findByCode("RNA"), getPropertyDefinitionsARN(), getInstitutes(Institute.CODE.CNS)));
-		
-		l.add(newSampleType("ARNm", "mRNA", SampleCategory.find.findByCode("RNA"), getPropertyDefinitionsARN(), getInstitutes(Institute.CODE.CNS)));
-		
-		l.add(newSampleType("Small RNA", "sRNA", SampleCategory.find.findByCode("RNA"), getPropertyDefinitionsARN(), getInstitutes(Institute.CODE.CNS)));
-		
+		l.add(newSampleType("ARN total", "total-RNA", SampleCategory.find.findByCode("RNA"), getPropertyDefinitionsARN(), getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG))); // add CNG
+		l.add(newSampleType("ARNm", "mRNA", SampleCategory.find.findByCode("RNA"), getPropertyDefinitionsARN(), getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG))); // add CNG
+		l.add(newSampleType("Small RNA", "sRNA", SampleCategory.find.findByCode("RNA"), getPropertyDefinitionsARN(), getInstitutes(Institute.CODE.CNS,Institute.CODE.CNG))); // add CNG
 		l.add(newSampleType("ARN déplété", "depletedRNA", SampleCategory.find.findByCode("RNA"), getPropertyDefinitionsARN(), getInstitutes(Institute.CODE.CNS)));
+		l.add(newSampleType("aARN", "aRNA", SampleCategory.find.findByCode("RNA"), getPropertyDefinitionsARN(), getInstitutes(Institute.CODE.CNS)));		
+		// pas de subdivision des ARN dans la base solexa...=> SampleType=SampleCategory
+		// FDS ????? faut il utiliser  getPropertyDefinitionsARN ou plutot getSampleCommonPropertyDefinitions pour les ARN CNG ???
+		l.add(newSampleType("ARN", "RNA", SampleCategory.find.findByCode("RNA"), getPropertyDefinitionsARN(), getInstitutes(Institute.CODE.CNG)));
 		
-		l.add(newSampleType("cDNA", "cDNA", SampleCategory.find.findByCode("cDNA"), getPropertyDefinitionscDNA(), getInstitutes(Institute.CODE.CNS)));
-		
-		l.add(newSampleType("cDNA", "cDNA", SampleCategory.find.findByCode("cDNA"), getPropertyDefinitionscDNA(), getInstitutes(Institute.CODE.CNS)));
-		
-		l.add(newSampleType("aARN", "aRNA", SampleCategory.find.findByCode("RNA"), getPropertyDefinitionsARN(), getInstitutes(Institute.CODE.CNS)));
+		l.add(newSampleType("cDNA", "cDNA", SampleCategory.find.findByCode("cDNA"), getPropertyDefinitionscDNA(), getInstitutes(Institute.CODE.CNS)));	
 
 		l.add(newSampleType("ChIP", "chIP", SampleCategory.find.findByCode("IP-sample"), getSampleCommonPropertyDefinitions(), getInstitutes(Institute.CODE.CNS)));
-		
 		l.add(newSampleType("ClIP", "clIP", SampleCategory.find.findByCode("IP-sample"), getSampleCommonPropertyDefinitions(), getInstitutes(Institute.CODE.CNS)));
+		// il y a du ChIP et du MedIP au CNG mais ce n'est pas detaillé au niveau sample dans la base Solexa...=> SampleType=SampleCategory
+		l.add(newSampleType("Materiel Immunoprecipite", "IP-sample", SampleCategory.find.findByCode("IP-sample"), getSampleCommonPropertyDefinitions(), getInstitutes(Institute.CODE.CNG)));
+		
+		/* SampleTypes specifique CNG
+		 * utiliser  getSampleCNGPropertyDefinitions()
+		 * pas de subdivisions dans la base solexa...=> SampleType=SampleCategory
+		 */
+		l.add(newSampleType("FAIRE", "FAIRE", SampleCategory.find.findByCode("FAIRE"), getSampleCNGPropertyDefinitions(), getInstitutes(Institute.CODE.CNG)));
+		l.add(newSampleType("methylated base DNA (mbd)", "methylated-base-DNA", SampleCategory.find.findByCode("methylated-base-DNA"), getSampleCNGPropertyDefinitions(), getInstitutes(Institute.CODE.CNG)));
+		l.add(newSampleType("bisulfite DNA", "bisulfite-DNA", SampleCategory.find.findByCode("bisulfite-DNA"), getSampleCNGPropertyDefinitions(), getInstitutes(Institute.CODE.CNG)));
 		
 		//default values
-		l.add(newSampleType("Indéterminé", "default-sample-cns", SampleCategory.find.findByCode("default"), getSampleCommonPropertyDefinitions(), getInstitutes(Institute.CODE.CNS)));
-		
+		l.add(newSampleType("Indéterminé", "default-sample-cns", SampleCategory.find.findByCode("default"), getSampleCommonPropertyDefinitions(), getInstitutes(Institute.CODE.CNS)));		
 		l.add(newSampleType("Indéterminé", "default-sample-cng", SampleCategory.find.findByCode("default"), getSampleCNGPropertyDefinitions(), getInstitutes(Institute.CODE.CNG)));
 		
 		DAOHelpers.saveModels(SampleType.class, l, errors);

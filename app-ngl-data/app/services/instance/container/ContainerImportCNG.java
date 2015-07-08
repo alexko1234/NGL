@@ -25,14 +25,18 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 
 	@Override
 	public void runImport() throws SQLException, DAOException {		
-		loadSamples();	 	
+		//loadSamples();	 	
 		updateSamples();
 		
-		loadContainers("lane","prepa-flowcell-cng");
+		//loadContainers("lane","prepa-flowcell-cng");
 		updateContainers("lane","prepa-flowcell-cng");
 		
 		//loadContainers("tube","lib-normalization");
-		//updateContainers("tube","lib-normalization");
+		updateContainers("tube","lib-normalization");
+		
+		// TODO ???? autres categories de libraries
+		//loadContainers("tube","lib-XXX");
+		///updateContainers("tube","lib-XXX");
 	}
 	
 	
