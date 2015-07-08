@@ -25,7 +25,7 @@ rule "init inputsupport"
     ContainerUsed($support:locationOnContainerSupport.code,$categoryCode:locationOnContainerSupport.categoryCode) from $inputContainerUseds
 	not InputSupport($support==code)
     then
-		Logger.debug("Support"+$support +" de category "+$categoryCode);
+		//Logger.debug("Support"+$support +" de category "+$categoryCode);
 		InputSupport inputSupport=new InputSupport($support,$categoryCode);
 		insert(inputSupport);
 	end
@@ -43,7 +43,7 @@ rule "init InputContainer"
     then
     InputContainer inputContainer=new InputContainer($code,$containerUsed.getLocationOnContainerSupport().getCode(),$containerUsed.getLocationOnContainerSupport().getLine(),
     															$containerUsed.getLocationOnContainerSupport().getColumn());
-    Logger.debug("Container "+$code+" in support "+$containerUsed.getLocationOnContainerSupport().getCode());
+   // Logger.debug("Container "+$code+" in support "+$containerUsed.getLocationOnContainerSupport().getCode());
     insert(inputContainer);
     end
 
@@ -73,6 +73,5 @@ rule "input all container from support"
  	$contextValidation:ContextValidation($errors : errors)
  	eval(!$categoryCode.endsWith(Integer.toString($inputContainers.size())))	
  	then
-	 		Logger.debug("Ca marche ");
-	 		$contextValidation.addErrors("inputContainerSupportCodes","error.validationexp.oneInputSupport", $support);
+	 		$contextValidation.addErrors("inputContainerSupportCodes","error.validationexp.notAllInputContainer", $support);
 	end
