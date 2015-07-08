@@ -212,7 +212,18 @@ public class ContainerHelper {
 
 		for (Container container : updatedContainers) {
 			if (container.support != null) {
-				ContainerSupport newSupport = ContainerSupportHelper.createContainerSupport(container.support.code, mapSupportsCodeSeq.get(container.support.code), container.support.categoryCode,"ngl");
+				//FDS note 22/06/2015: mapSupportsCodeSeq n'est defini que pour les container de type lane!!
+				//FDS bug 22/06/2015: il manquait le test sur mapSupportsCodeSeq
+				//ContainerSupport newSupport = ContainerSupportHelper.createContainerSupport(container.support.code, mapSupportsCodeSeq.get(container.support.code), container.support.categoryCode,"ngl");
+				
+				ContainerSupport newSupport = null;
+				if (mapSupportsCodeSeq != null) {
+					newSupport = ContainerSupportHelper.createContainerSupport(container.support.code, mapSupportsCodeSeq.get(container.support.code), container.support.categoryCode,"ngl");
+				}
+				else {
+					newSupport = ContainerSupportHelper.createContainerSupport(container.support.code, null, container.support.categoryCode,"ngl");
+				}
+					
 				newSupport.projectCodes = new  HashSet<String>(container.projectCodes);
 				newSupport.sampleCodes = new  HashSet<String>(container.sampleCodes);							
 				if (!mapSupports.containsKey(newSupport.code)) {

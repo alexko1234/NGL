@@ -141,9 +141,7 @@ public class LimsCNGDAO {
 
 			sample.code=rs.getString("code");
 			
-			/* FDS 05/06/2015 JIRA NGL-672  remplacer default-sample-cng par le veritable sampleType
-			  "sample_type" dans le result set  de la base de donnees        
-			*/
+			// FDS 05/06/2015 JIRA NGL-672  remplacer default-sample-cng par le veritable sampleType
 			String sampleTypeCode=rs.getString("sample_type");
 			Logger.debug("Sample code :"+sample.code+ " Sample type code :"+sampleTypeCode);
 			
@@ -215,7 +213,7 @@ public class LimsCNGDAO {
 		container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 		// 19/06/2015 renommage code => container_code
 		container.code = rs.getString("container_code");
-		Logger.debug("[commonContainerMapRow] Container code :"+container.code);
+		//Logger.debug("[commonContainerMapRow] Container code :"+container.code);
 		
 		container.categoryCode = containerCategoryCode; //lane or tube
 		
@@ -236,15 +234,12 @@ public class LimsCNGDAO {
 		container.valuation.valid = TBoolean.UNSET;
 		
 		// define container support attributes
-		/*FDS : HARCODED by D. Noisette ==> ligne="1" alors que column est variable ????  non dans le sql pour tubes , column est aussi hardcodeé==1
-		        		                    dans le sql pour tubes nb_container  est harcode==1 !!!
-		        =>et pour les lanes ???????
-		*/
 		try {
-			/* 19/06/2015 modifier nb_container=> nb_usable_container; code_support=> support_code
-			 * soit row/column sont fixés dans le sql soit dans le java mais pas a cheval sur les 2 !!!
-			 */
+			// 19/06/2015 modifier nb_container=> nb_usable_container; code_support=> support_code
+			/* 23/06/2015 bug!!! inversion entre x/y  x==> column; y==>line
 			container.support = ContainerSupportHelper.getContainerSupport(containerCategoryCode, rs.getInt("nb_usable_container"),rs.getString("support_code"),rs.getString("row"),rs.getString("column")); 
+			*/
+			container.support = ContainerSupportHelper.getContainerSupport(containerCategoryCode, rs.getInt("nb_usable_container"),rs.getString("support_code"),rs.getString("column"),rs.getString("row"));  
 		}
 		catch(DAOException e) {
 			Logger.error("[commonContainerMapRow] Can't get container support !"); 
@@ -280,11 +275,9 @@ public class LimsCNGDAO {
 			content.sampleCode = rs.getString("sample_code");
 			content.projectCode = rs.getString("project");
 						
-			/* FDS 05/06/2015 JIRA NGL-672  remplacer default-sample-cng par le véritable sampleType
-			   "sample_type" dans le result set  de la base de données               
-			*/
+			// FDS 05/06/2015 JIRA NGL-672  remplacer default-sample-cng par le véritable sampleType
 			String sampleTypeCode=rs.getString("sample_type");
-			Logger.debug("[commonContainerMapRow] content.Sample type code :"+sampleTypeCode);
+			//Logger.debug("[commonContainerMapRow] content.Sample type code :"+sampleTypeCode);
 			
 			SampleType sampleType=null;
 			try {
@@ -319,7 +312,7 @@ public class LimsCNGDAO {
 				content.properties.put("libProcessTypeCode", new PropertySingleValue("-1"));
 			}
 			
-			// FDS 15/06/2015 JIRA NGL-674 Ajout du barcode aliquot initial=> nouvelle propriété de content 
+			// FDS 15/06/2015 JIRA NGL-673 Ajout du barcode aliquot initial=> nouvelle propriété de content 
 			if (rs.getString("aliquot_code")!=null) { 
 				//Logger.debug("[commonContainerMapRow] content.aliquot code :"+ rs.getString("aliquot_code"));
 				content.properties.put("aliquotCode", new PropertySingleValue(rs.getString("aliquot_code")));
@@ -333,8 +326,7 @@ public class LimsCNGDAO {
 			
 			container.sampleCodes=new ArrayList<String>();
 			container.sampleCodes.add(rs.getString("sample_code")); // 19/06/2015 renomme sample_code
-			
-			//TODO : manage fromExperimentTypeCodes for import lib_b* & lane/flowcell --> mapping Julie	
+				
 		}
 
 		container.fromPurifingCode = null;				
@@ -502,7 +494,7 @@ public class LimsCNGDAO {
 			}
 		});
 		
-		//demultiplexSample plus necessaire ???
+		//demultiplexSample toujours necessaire car le code est le SOLEXA stock_barcode=> plusieurs samples peuvent avoir le meme code
 		return demultiplexSample(results);			
 	}
 	
@@ -619,7 +611,7 @@ public class LimsCNGDAO {
 	public static List<Container> demultiplexContainer(List<Container> results) throws DAOException {
 		//affect all the project codes /samples /tags to the same container (for having unique codes of containers) 
 		/// required to have an ordered list (see ORDER BY clause in the sql of the view)
-		Logger.debug("Start demultiplexing containers...");
+		Logger.debug("start demultiplexing containers");
 		
 		int pos = 0;
 		int x = 1;
@@ -629,7 +621,7 @@ public class LimsCNGDAO {
 		while (pos < listSize-1) {
 			
 			while ( (pos < listSize-1) && (results.get(pos).code.equals(results.get(pos+x).code)) ) {
-				Logger.debug("demultiplex "+ results.get(pos).code);
+				//Logger.debug("demultiplex "+ results.get(pos).code);
 				
 				// difference between two consecutive sampleCodes
 				if (! results.get(pos).sampleCodes.get(0).equals(results.get(pos+x).sampleCodes.get(0))) {
@@ -641,6 +633,7 @@ public class LimsCNGDAO {
 								
 				findContent = false;
 				//just to be sure that we don't create content in double
+				// FDS 16/06/2015 get("aliquotCode") ajouté pour JIRA NGL-273
 				for (Content content : results.get(pos).contents) {
 					if ( (content.sampleCode.equals(results.get(pos+x).contents.get(0).sampleCode))  
 								&& (content.properties.get("tag").value.equals(results.get(pos+x).contents.get(0).properties.get("tag").value)) 
@@ -681,7 +674,7 @@ public class LimsCNGDAO {
 					r.contents.get(i).properties.remove("libProcessTypeCode");
 				}
 				
-				//FDS 17/06/2015 ajout pour JIRA NGL-674
+				//FDS 17/06/2015 ajout pour JIRA NGL-673
 				if ((r.contents.get(i).properties.get("aliquotCode") != null) && (r.contents.get(i).properties.get("aliquotCode").value.equals("-1"))) {
 					r.contents.get(i).properties.remove("aliquotCode");
 				}
@@ -696,7 +689,7 @@ public class LimsCNGDAO {
 		//define container projects from projects contents
 		defineContainerProjectCodes(results); 
 		
-		Logger.debug("End demultiplexing containers...");
+		Logger.debug("end demultiplexing containers");
 		return results;
 	}
 	
@@ -731,12 +724,7 @@ public class LimsCNGDAO {
 		content.sampleCode = results.get(posNext).sampleCodes.get(0);
 		content.projectCode = results.get(posNext).projectCodes.get(0);
 		
-		/* FDS 16/06/2015 JIRA NGL-672  
-		SampleType sampleType=null;
-		sampleType = SampleType.find.findByCode(SAMPLE_USED_TYPE_CODE);	
-		content.sampleTypeCode = sampleType.code;
-		content.sampleCategoryCode = sampleType.category.code;
-		*/
+		// FDS 16/06/2015 JIRA NGL-672  
 		content.sampleTypeCode =results.get(posNext).contents.get(0).sampleTypeCode;
 		content.sampleCategoryCode =results.get(posNext).contents.get(0).sampleCategoryCode;
 		
@@ -746,19 +734,20 @@ public class LimsCNGDAO {
 		content.properties.put("tagCategory", new PropertySingleValue(results.get(posNext).contents.get(0).properties.get("tagCategory").value));
 	
 		if (results.get(posNext).contents.get(0).properties.get("libProcessTypeCode") == null) {	
-			Logger.debug("[createContent] content.sampleCode =" + content.sampleCode + " pas de lib process type code ( exp_type_code) !!!!!");
+			Logger.debug("[createContent] content.sampleCode =" + content.sampleCode + " pas de lib process type code (exp_type_code) !!!!!");
 		}
 		else {
 			content.properties.put("libProcessTypeCode", new PropertySingleValue(results.get(posNext).contents.get(0).properties.get("libProcessTypeCode").value));
-			Logger.debug("[createContent] content.sampleCode =" + content.sampleCode + "; content.libProcessTypeCode ="+ content.properties.get("libProcessTypeCode").value);
+			//Logger.debug("[createContent] content.sampleCode =" + content.sampleCode + "; content.libProcessTypeCode ="+ content.properties.get("libProcessTypeCode").value);
 		}
 		
-		//FDS 16/06/2015 JIRA NGL-674: ajouter aliquot code (peut pas etre null)???
+		//FDS 16/06/2015 JIRA NGL-673: ajouter aliquot code (peut pas etre null)???
 		if (results.get(posNext).contents.get(0).properties.get("aliquotCode") == null) {
+			Logger.debug("[createContent] content.sampleCode =" + content.sampleCode + " pas de aliquot code !!!!!");
 		}
 		else {
 			content.properties.put("aliquotCode", new PropertySingleValue(results.get(posNext).contents.get(0).properties.get("aliquotCode").value));
-			Logger.debug("[createContent] content.sampleCode =" + content.sampleCode + "; content.aliquotCode ="+ content.properties.get("aliquotCode").value);
+			//Logger.debug("[createContent] content.sampleCode =" + content.sampleCode + "; content.aliquotCode ="+ content.properties.get("aliquotCode").value);
 		}
 		
 		results.get(posCurrent).contents.add(content); 
