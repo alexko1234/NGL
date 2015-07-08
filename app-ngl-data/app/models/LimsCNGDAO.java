@@ -73,8 +73,7 @@ public class LimsCNGDAO {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);              
 	}
 	
-	
-	/**
+	/*************************************************************************************************************************************************
 	 * 1 - Common mapping for Project
 	 * @param rs
 	 * @param rowNum
@@ -124,8 +123,8 @@ public class LimsCNGDAO {
 		
 		return project;
 	}
-
-	/**
+	
+	/*************************************************************************************************************************************************
 	 * 2 - Common mapping for Sample
 	 * @param rs
 	 * @param rowNum
@@ -200,8 +199,7 @@ public class LimsCNGDAO {
 			return sample;
 	}
 
-	
-	/**
+	/*************************************************************************************************************************************************
 	 * 3 - Common mapping for container
 	 * @param rs
 	 * @param rowNum
@@ -338,7 +336,7 @@ public class LimsCNGDAO {
 		return container;
 	}
 	
-	/**
+	/*************************************************************************************************************************************************
 	 * 4- common mapping for containerSupport
 	 * @param rs
 	 * @param rowNum
@@ -366,9 +364,9 @@ public class LimsCNGDAO {
 	 *  mapping is done in findIndexToCreate
 	 */
 	
-	/*************************************************************************************************************************************/
-	/** FDS 29/04/2015 remise dans l'etat initial.. garder findProjectToCreate et findProjectToModify....*/
-	/**
+	/*************************************************************************************************************************************************
+	 ** FDS 29/04/2015 remise dans l'etat initial.. garder findProjectToCreate et findProjectToModify....
+	 **
 	 * 1a - To get new projects
 	 * @param contextError
 	 * @return
@@ -390,7 +388,7 @@ public class LimsCNGDAO {
 	}
 	
 
-	/**
+	/*************************************************************************************************************************************************
 	 * 1b - To get projects that have been updated in Soxela
 	 * @param contextError
 	 * @return
@@ -411,7 +409,7 @@ public class LimsCNGDAO {
 		return results;
 	}
 	
-	/** 
+	/************************************************************************************************************************************************* 
 	 * UPDATE Solexa t_project import/update dates
 	 * @param projects
 	 * @param contextError
@@ -440,10 +438,8 @@ public class LimsCNGDAO {
 		contextError.removeKeyFromRootKeyName(key);
 	}
 	
-	/*************************************************************************************************************************************************/
-	
-
-	/**
+	/*************************************************************************************************************************************************
+	 ** FDS 17/06/2015 inutile puisqu'il n'y a plus qu'un seul projet pour un sample ???
 	 * 2a -To set projectCodes to samples
 	 * @param results
 	 * @return
@@ -480,7 +476,7 @@ public class LimsCNGDAO {
 		return results;
 	}
 
-	/** FDS: SERT A RIEN... il suffit de les considerer tous comme nouveaux==> findAllSampleToCreate !!!
+	/************************************************************************************************************************************************* 
 	 * 2b - To get all the samples (first loading, migration) 
 	 * @param contextError
 	 * @return
@@ -503,7 +499,7 @@ public class LimsCNGDAO {
 		return demultiplexSample(results);			
 	}
 	
-	/**
+	/*************************************************************************************************************************************************
 	 * 2c - To get samples updated in the CNG's LIMS (Solexa database)
 	 * @param contextError
 	 * @return
@@ -515,7 +511,7 @@ public class LimsCNGDAO {
 	}
 	
 	
-	/**
+	/*************************************************************************************************************************************************
 	 * 2d To get a particular sample updated in the CNG's LIMS (Solexa database)
 	 * @param contextError
 	 * @param sampleCode
@@ -556,7 +552,7 @@ public class LimsCNGDAO {
 	}
 	
 	
-	/**
+	/*************************************************************************************************************************************************
 	 * 2e To get new samples
 	 * @param contextError
 	 * @return
@@ -608,8 +604,7 @@ public class LimsCNGDAO {
 		return demultiplexSample(results);	
 	}
 	
-	
-	/**
+	/*************************************************************************************************************************************************
 	 * To set projectCodes & sampleCodes
 	 * @param results
 	 * @return
@@ -627,6 +622,7 @@ public class LimsCNGDAO {
 			
 			while ( (pos < listSize-1) && (results.get(pos).code.equals(results.get(pos+x).code)) ) {
 				Logger.debug("demultiplex "+ results.get(pos).code);
+				
 				// difference between two consecutive sampleCodes
 				if (! results.get(pos).sampleCodes.get(0).equals(results.get(pos+x).sampleCodes.get(0))) {
 					if (! results.get(pos).sampleCodes.contains(results.get(pos+x).sampleCodes.get(0))) {
@@ -695,8 +691,11 @@ public class LimsCNGDAO {
 		return results;
 	}
 	
-	
-	
+	/*************************************************************************************************************************************************
+	 * @param results
+	 * @return
+	 * @throws DAOException
+	 */
 	public static List<Container> defineContainerProjectCodes(List<Container> results) throws DAOException {
 		for (Container r : results) {
 			ArrayList<String> projectCodes = new ArrayList<String>();
@@ -709,8 +708,9 @@ public class LimsCNGDAO {
 	}
 	
 	
-	/**
-	 * Create a content and attach it to the contents of a container  
+	/*************************************************************************************************************************************************
+	 * Create a content and attach it to the contents of a container 
+	 * FDS comment : only if the container is multiplexed... othrerwise the container Content no1 has been created in common ContainerMapRow
 	 * @param results
 	 * @param posCurrent
 	 * @param posNext
@@ -752,8 +752,7 @@ public class LimsCNGDAO {
 	}
 	
 
-	
-	/**
+	/*************************************************************************************************************************************************
 	 * To get new containers
 	 * @param contextError
 	 * @return
@@ -780,9 +779,19 @@ public class LimsCNGDAO {
 		}
 		else {
 			//"tube"
+			
 			//sqlView = "v_tube_tongl";
 			//FDS il faut pour les tests des vues specialisees: v_libnorm_tongl, etc...
-			sqlView = "v_libnorm_tongl";
+			if (experimentTypeCode.equals("lib-normalization")) {
+				sqlView = "v_libnorm_tongl";
+			}
+			else if (experimentTypeCode.equals("denat-dil-lib")) {
+				sqlView = "v_libdenatdil_tongl";
+			}
+			else {
+				//autres experimentTypeCode a venir ??
+				sqlView = "TODO";
+			}
 		}
 		
 		List<Container> results = null;
@@ -822,9 +831,8 @@ public class LimsCNGDAO {
 	}
 	
 	
-	
-	/**
-	 * To get all containers (for mass loading the first time or for migration) !! 2 categories: lane / tube
+	/*************************************************************************************************************************************************
+	 * To get all containers (for mass loading the first time or for migration)
 	 * @param contextError
 	 * @param containerCategoryCode
 	 * @return
@@ -838,14 +846,25 @@ public class LimsCNGDAO {
 			sqlView = "v_flowcell_tongl_reprise";
 		}
 		else {
+			//tube
+			
 			//sqlView = "v_tube_tongl_reprise";
 			//FDS il faut pour les tests des vues specialisees: v_libnorm_tongl, etc...
 			// ==> permettrait aussi de pouvoir definir le "from experiment" pourchaque type de library...
-			sqlView = "v_libnorm_tongl_reprise";
+			if (experimentTypeCode.equals("lib-normalization")) {
+				sqlView = "v_libnorm_tongl_reprise";
+			}
+			else if (experimentTypeCode.equals("denat-dil-lib")) {
+				sqlView = "v_libdenatdil_tongl_reprise";
+			}
+			else {
+				//autres experimentTypeCode a venir ??
+				sqlView = "TODO";
+			}
 		}
+		// prevoir well (plate96)
 		
 		//04/05/2015 contrainte "isavailable=true" est forcee dans la vue
-		//List<Container> results = this.jdbcTemplate.query("select * from " + sqlView + " where isavailable=true order by code, project desc, code_sample, tag, exp_short_name", new Object[]{} 
 		List<Container> results = this.jdbcTemplate.query("select * from " + sqlView + " order by code, project desc, code_sample, tag, exp_short_name", new Object[]{} 
 		,new RowMapper<Container>() {
 			public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -860,9 +879,8 @@ public class LimsCNGDAO {
 		return demultiplexContainer(results);			
 	}
 	
-	
 
-	/**
+	/*************************************************************************************************************************************************
 	 * To get containers updated in CNG database (Solexa database)
 	 * @param contextError
 	 * @return
@@ -889,19 +907,29 @@ public class LimsCNGDAO {
 			sqlView = "v_flowcell_updated_tongl";
 		}
 		else {
+			//tube
 			//sqlView = "v_tube_updated_tongl";
-			//FDS temporaire...il faut pour les tests des vues specialisees: v_libnorm_tongl, etc...
+			//FDS temporaire ??? ...il faut pour les tests des vues specialisees: v_libnorm_tongl, etc...
 			// ==> permettrait aussi de pouvoir definir le "from experiment" pour chaque type de library...
-			sqlView = "v_libnorm_updated_tongl";
 			
+			if (experimentTypeCode.equals("lib-normalization")) {
+				sqlView = "v_libnorm_updated_tongl";
+			}
+			else if (experimentTypeCode.equals("denat-dil-lib")) {
+				sqlView = "v_libdenatdil_updated_tongl";
+			}
+			else {
+				//autres experimentTypeCode a venir ??
+				sqlView = "TODO";
+			}
 		}
+		// prevoir well (plate96)
 		
-		
+	
 		List<Container> results = null;		
 		if (containerCode != null) {
 			//04/05/2015 - la contrainte "and isavailable = true" est forcee dans la vue
 			//           - 'order by' n'a pas de sens quand on a choisi un object
-			//results = this.jdbcTemplate.query("select * from " + sqlView + " where code = ? and isavailable = true order by code, project desc, code_sample, tag, exp_short_name", new Object[]{containerCode} 
 			results = this.jdbcTemplate.query("select * from " + sqlView + " where code = ? ", new Object[]{containerCode} 
 			,new RowMapper<Container>() {
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -915,7 +943,6 @@ public class LimsCNGDAO {
 		}
 		else {
 			//04/05/2015 la contrainte "and isavailable = true" est forcee dans la vue
-			//results = this.jdbcTemplate.query("select * from " + sqlView + " where isavailable = true order by code, project desc, code_sample, tag, exp_short_name", new Object[]{} 
 			results = this.jdbcTemplate.query("select * from " + sqlView + " order by code, project desc, code_sample, tag, exp_short_name", new Object[]{} 
 			,new RowMapper<Container>() {
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -930,7 +957,7 @@ public class LimsCNGDAO {
 		return demultiplexContainer(results);			
 	}
 	
-	/**
+	/*************************************************************************************************************************************************
 	 * Sub-method to set the sequencingProgramType of a flowcell
 	 * @param contextError
 	 * @param mode
@@ -949,7 +976,6 @@ public class LimsCNGDAO {
 		
 		List<ContainerSupport> results = null;
 		//04/05/2015 la contrainte "isavailable = true" est forcee dans la vue
-		//results = this.jdbcTemplate.query("select code_support, seq_program_type from " + sqlView + " where isavailable = true order by code, project desc, code_sample, tag, exp_short_name", new Object[]{} 
 		results = this.jdbcTemplate.query("select code_support, seq_program_type from " + sqlView + " order by code, project desc, code_sample, tag, exp_short_name", new Object[]{} 
 		,new RowMapper<ContainerSupport>() {
 			public ContainerSupport mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -960,6 +986,7 @@ public class LimsCNGDAO {
 				return c;
 			}
 		});
+		
 		//map data
 		HashMap<String,PropertyValue<String>> mapCodeSupportSequencing = new HashMap<String,PropertyValue<String>>();
 		for (ContainerSupport result : results) {
@@ -971,9 +998,9 @@ public class LimsCNGDAO {
 	}
 	
 	
-	/*************************************************************************************************************************************/
-	/*
+	/*************************************************************************************************************************************************
 	 * for eventually find all the "depot" (in case of a migration) 
+	 * FDS comment :??????????????????????
 	 */
 	public List<Experiment> findAllIlluminaDepotExperimentToCreate(final ContextValidation contextError, final String protocoleCode) throws DAOException {
 		List<Experiment> results = this.jdbcTemplate.query("SELECT * FROM v_depotfc_tongl_reprise ORDER BY 1", new Object[]{} 
@@ -989,8 +1016,7 @@ public class LimsCNGDAO {
 		return results;
 	}
 	
-	/*************************************************************************************************************************************/
-	/*
+	/*************************************************************************************************************************************************
 	 * for normal use
 	 */
 	public List<Experiment> findIlluminaDepotExperiment(final ContextValidation contextError, final String protocoleCode) throws DAOException {
@@ -1008,14 +1034,11 @@ public class LimsCNGDAO {
 	}
 	
 	
-	/***********************************************************************************************************************************/
-	/*
-	 * to get the indexes and update the "Parameter" collection
+	/*************************************************************************************************************************************************
+	 * To get the indexes and update the "Parameter" collection
 	 * FDS 30/04/2015: nglbi_code=>code, short_name=>shortName (et non plus code), cng_name=>name
-	 * 
 	 */
 	public List<Index> findIndexIlluminaToCreate(final ContextValidation contextError)throws SQLException {
-		//List<Index> results = this.jdbcTemplate.query("select distinct short_name as code,(CASE WHEN type = 1 THEN 'SINGLE-INDEX'::text WHEN type = 2 THEN 'DUAL-INDEX'::text WHEN type = 3 THEN 'MID'::text ELSE NULL::text END) AS code_category,sequence from t_index order by 1" 
 		List<Index> results = this.jdbcTemplate.query("select nglbi_code, short_name, cng_name,(CASE WHEN type = 1 THEN 'SINGLE-INDEX'::text WHEN type = 2 THEN 'DUAL-INDEX'::text WHEN type = 3 THEN 'MID'::text ELSE NULL::text END) AS code_category,sequence from t_index order by 1" 
 				,new RowMapper<Index>() {
 					@SuppressWarnings("rawtypes")
@@ -1035,10 +1058,7 @@ public class LimsCNGDAO {
 	}
 
 	
-	/*************************************************************************************************************************************/
-	
-	
-	/**
+	/*************************************************************************************************************************************************
 	 * UPDATE Solexa tables t_sample & t_individual tables (import/update dates) 
 	 * @param samples
 	 * @param contextError
@@ -1075,7 +1095,7 @@ public class LimsCNGDAO {
 	}
 
 	
-	/**
+	/*************************************************************************************************************************************************
 	 * UPDATE Solexa table t_lane (import/update dates) 
 	 * @param containers
 	 * @param contextError
@@ -1111,7 +1131,7 @@ public class LimsCNGDAO {
 		contextError.removeKeyFromRootKeyName(key);
 	}
 	
-	/**
+	/*************************************************************************************************************************************************
 	 * UPDATE tube containers import/update dates 
 	 * @param containers
 	 * @param contextError
@@ -1146,7 +1166,7 @@ public class LimsCNGDAO {
 	}
 	
 	
-	/**
+	/*************************************************************************************************************************************************
 	 * UPDATE main table witch contains experiments of type "depots" in Solexa to keep trace of the imports
 	 * 
 	 * @param experiments
