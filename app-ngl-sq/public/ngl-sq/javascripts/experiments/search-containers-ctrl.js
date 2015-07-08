@@ -380,10 +380,13 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		}else if($scope.searchService.lists.get("containers-search-addfilters") && $scope.searchService.lists.get("containers-search-addfilters").length === 1){
 			allFilters = angular.copy($scope.searchService.lists.get("containers-search-addfilters")[0].filters);
 		}
+
+		if(angular.isDefined(allFilters)){ 
 			var nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
 			for(var i = 0; i  < 5 && allFilters.length > 0 ; i++){
 				formFilters.push(allFilters.splice(0, nbElementByColumn));	    								
 			}
+		}
 			//complete to 5 five element to have a great design 
 			while(formFilters.length < 5){
 				formFilters.push([]);

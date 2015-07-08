@@ -25,20 +25,6 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			        	 "type":"text",
 			        	 "position":2
 			         },
-			     /*    {
-			        	 "header":Messages("containers.table.support.column"),
-			        	 "property":"support.column",
-			        	 "order":true,
-			        	 "hide":true,
-			        	 "type":"text"
-			         },
-			         {
-			        	 "header":Messages("containers.table.support.line"),
-			        	 "property":"support.line",
-			        	 "order":true,
-			        	 "hide":true,
-			        	 "type":"text"
-			         }, */
 			         {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"code",
@@ -48,31 +34,21 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			        	 "position":3
 			         },
 			         {
-			        	 "header":Messages("containers.table.fromExperimentTypeCodes"),
-			        	 "property":"fromExperimentTypeCodes",
-			        	 "filter":"codes:'type'",
-			        	 "order":false,
+			        	 "header":Messages("processes.table.projectCode"),
+			        	 "property":"projectCodes",
+			        	 "order":true,
 			        	 "hide":true,
 			        	 "type":"text",
 			        	 "position":4
 			         },
 			         {
-			        	 "header":Messages("containers.table.state.code"),
-			        	 "property":"state.code",
-			        	 "order":true,
-			        	 "hide":true,
-			        	 "type":"text",
-			        	 "filter":"codes:'state'",
-			        	 "position":5
-			         },
-			         {
-			 			"header":Messages("containers.table.sampleCodes.length"),
-			 			"property":"sampleCodes.length",
-			 			"order":true,
-			 			"hide":true,
-			 			"type":"text",
-			        	 "position":6
-			 		},
+				 			"header":Messages("containers.table.sampleCodes.length"),
+				 			"property":"sampleCodes.length",
+				 			"order":true,
+				 			"hide":true,
+				 			"type":"text",
+				        	 "position":5
+				 	},
 			 		{
 						"header":Messages("containers.table.sampleCodes"),
 						"property":"sampleCodes",
@@ -80,7 +56,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 						"hide":true,
 						"type":"text",
 						"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
-			        	"position":7
+			        	"position":6
 					},
 			 		{
 						"header":Messages("containers.table.contents.length"),
@@ -88,7 +64,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 						"order":true,
 						"hide":true,
 						"type":"number",
-			        	 "position":8
+			        	 "position":7
 					},
 					{
 						"header":Messages("containers.table.tags"),
@@ -97,17 +73,27 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 						"hide":true,
 						"type":"text",
 						"render":"<div list-resize='value.data.contents | getArray:\"properties.tag.value\" | unique' ' list-resize-min-size='3'>",
-			        	 "position":9
+			        	 "position":8
 					},
+			        {
+			        	 "header":Messages("containers.table.fromExperimentTypeCodes"),
+			        	 "property":"fromExperimentTypeCodes",
+			        	 "filter":"codes:'type'",
+			        	 "order":false,
+			        	 "hide":true,
+			        	 "type":"text",
+			        	 "position":9
+			        },
 			         {
-			        	 "header":Messages("processes.table.projectCode"),
-			        	 "property":"projectCodes",
+			        	 "header":Messages("containers.table.state.code"),
+			        	 "property":"state.code",
 			        	 "order":true,
 			        	 "hide":true,
 			        	 "type":"text",
+			        	 "filter":"codes:'state'",
 			        	 "position":10
 			         },
-			         {
+			        {
 			        	 "header":Messages("containers.table.valid"),
 			        	 "property":"valuation.valid",
 			        	 "order":true,
