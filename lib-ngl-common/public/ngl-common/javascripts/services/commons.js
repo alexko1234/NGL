@@ -176,13 +176,13 @@ angular.module('commonsServices', []).
     					params.objectTypeCode='tag';
     					load(jsRoutes.controllers.containers.api.Contents.list().url,params,(key)?key:'tags');
     				},
-    				// FDS 24/06/2015 JIRA NGL-272 ajout pour filtrage par Aliquot
-    				aliquotCodes : function(params, key){
+    				// FDS 24/06/2015 JIRA NGL-672 ajout pour filtrage par Aliquot barcode
+    				sampleAliquotCodes : function(params, key){
     					if(angular.isUndefined(params)){
     	    				params = {};
     	    			}
-    					params.objectTypeCode='aliquotCode';
-    					load(jsRoutes.controllers.containers.api.Contents.list().url,params,(key)?key:'aliquotCodes');
+    					params.objectTypeCode='sampleAliquoteCode';
+    					load(jsRoutes.controllers.containers.api.Contents.list().url,params,(key)?key:'sampleAliquotCodes');
     				},
     				tagCategories : function(params, key){
     					if(angular.isUndefined(params)){
@@ -329,11 +329,11 @@ angular.module('commonsServices', []).
     				}
     				return results[key];
     			},
-    			// FDS 24/06/2015 JIRA NGL-272 ajout pour filtrage par Aliquot 
-    			getAliquotCodes : function(params,key){
-    				key = (key)?key:'aliquotCodes';
+    			// FDS 24/06/2015 JIRA NGL-672 ajout pour filtrage par Aliquot barcode
+    			getSampleAliquoteCodes : function(params,key){
+    				key = (key)?key:'sampleAliquotCodes';
     				if(results[key] === undefined){
-    					refresh.aliquotCodes(params, key);
+    					refresh.sampleAliquotCodes(params, key);
     				}
     				return results[key];
     			}
