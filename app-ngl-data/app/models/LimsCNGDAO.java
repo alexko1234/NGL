@@ -314,18 +314,18 @@ public class LimsCNGDAO {
 			
 			// FDS 15/06/2015 JIRA NGL-673 Ajout du barcode aliquot initial=> nouvelle propriété de content 
 			if (rs.getString("aliquot_code")!=null) { 
-				//Logger.debug("[commonContainerMapRow] content.aliquot code :"+ rs.getString("aliquot_code"));
-				content.properties.put("aliquotCode", new PropertySingleValue(rs.getString("aliquot_code")));
+				//Logger.debug("[commonContainerMapRow] content aliquot code :"+ rs.getString("aliquot_code"));
+				content.properties.put("aliquoteCode", new PropertySingleValue(rs.getString("aliquot_code")));
 			}
 			else {
-				Logger.debug("[commonContainerMapRow] content.aliquot code : null !!!!!!");
-				content.properties.put("aliquotCode", new PropertySingleValue("-1"));
+				Logger.debug("[commonContainerMapRow] content aliquot code : null !!!!!!");
+				content.properties.put("aliquoteCode", new PropertySingleValue("-1"));
 			}
 			
 			container.contents.add(content);			
 			
 			container.sampleCodes=new ArrayList<String>();
-			container.sampleCodes.add(rs.getString("sample_code")); // 19/06/2015 renomme sample_code
+			container.sampleCodes.add(rs.getString("sample_code")); // 19/06/2015 renommé sample_code
 				
 		}
 
@@ -633,12 +633,12 @@ public class LimsCNGDAO {
 								
 				findContent = false;
 				//just to be sure that we don't create content in double
-				// FDS 16/06/2015 get("aliquotCode") ajouté pour JIRA NGL-273
+				// FDS 16/06/2015 get("aliquoteCode") ajouté pour JIRA NGL-273
 				for (Content content : results.get(pos).contents) {
 					if ( (content.sampleCode.equals(results.get(pos+x).contents.get(0).sampleCode))  
 								&& (content.properties.get("tag").value.equals(results.get(pos+x).contents.get(0).properties.get("tag").value)) 
 								&& (content.properties.get("libProcessTypeCode").value.equals(results.get(pos+x).contents.get(0).properties.get("libProcessTypeCode").value)) 
-								&& (content.properties.get("aliquotCode").value.equals(results.get(pos+x).contents.get(0).properties.get("aliquotCode").value)) ){
+								&& (content.properties.get("aliquoteCode").value.equals(results.get(pos+x).contents.get(0).properties.get("aliquoteCode").value)) ){
 						findContent = true;
 						//Logger.debug("content already created !");
 						break;
@@ -675,8 +675,8 @@ public class LimsCNGDAO {
 				}
 				
 				//FDS 17/06/2015 ajout pour JIRA NGL-673
-				if ((r.contents.get(i).properties.get("aliquotCode") != null) && (r.contents.get(i).properties.get("aliquotCode").value.equals("-1"))) {
-					r.contents.get(i).properties.remove("aliquotCode");
+				if ((r.contents.get(i).properties.get("aliquoteCode") != null) && (r.contents.get(i).properties.get("aliquoteCode").value.equals("-1"))) {
+					r.contents.get(i).properties.remove("aliquoteCode");
 				}
 				
 				//set percentage
@@ -741,13 +741,13 @@ public class LimsCNGDAO {
 			//Logger.debug("[createContent] content.sampleCode =" + content.sampleCode + "; content.libProcessTypeCode ="+ content.properties.get("libProcessTypeCode").value);
 		}
 		
-		//FDS 16/06/2015 JIRA NGL-673: ajouter aliquot code (peut pas etre null)???
-		if (results.get(posNext).contents.get(0).properties.get("aliquotCode") == null) {
+		//FDS 16/06/2015 JIRA NGL-673: ajouter aliquote code (peut pas etre null)???
+		if (results.get(posNext).contents.get(0).properties.get("aliquoteCode") == null) {
 			Logger.debug("[createContent] content.sampleCode =" + content.sampleCode + " pas de aliquot code !!!!!");
 		}
 		else {
-			content.properties.put("aliquotCode", new PropertySingleValue(results.get(posNext).contents.get(0).properties.get("aliquotCode").value));
-			//Logger.debug("[createContent] content.sampleCode =" + content.sampleCode + "; content.aliquotCode ="+ content.properties.get("aliquotCode").value);
+			content.properties.put("aliquoteCode", new PropertySingleValue(results.get(posNext).contents.get(0).properties.get("aliquoteCode").value));
+			//Logger.debug("[createContent] content.sampleCode =" + content.sampleCode + "; content.aliquoteCode ="+ content.properties.get("aliquoteCode").value);
 		}
 		
 		results.get(posCurrent).contents.add(content); 

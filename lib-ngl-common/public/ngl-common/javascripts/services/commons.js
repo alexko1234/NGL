@@ -176,6 +176,14 @@ angular.module('commonsServices', []).
     					params.objectTypeCode='tag';
     					load(jsRoutes.controllers.containers.api.Contents.list().url,params,(key)?key:'tags');
     				},
+    				// FDS 24/06/2015 JIRA NGL-272 ajout pour filtrage par Aliquot
+    				aliquotCodes : function(params, key){
+    					if(angular.isUndefined(params)){
+    	    				params = {};
+    	    			}
+    					params.objectTypeCode='aliquotCode';
+    					load(jsRoutes.controllers.containers.api.Contents.list().url,params,(key)?key:'aliquotCodes');
+    				},
     				tagCategories : function(params, key){
     					if(angular.isUndefined(params)){
     	    				params = {};
@@ -318,6 +326,14 @@ angular.module('commonsServices', []).
     				key = (key)?key:'tagCategories';
     				if(results[key] === undefined){
     					refresh.tagCategories(params, key);
+    				}
+    				return results[key];
+    			},
+    			// FDS 24/06/2015 JIRA NGL-272 ajout pour filtrage par Aliquot 
+    			getAliquotCodes : function(params,key){
+    				key = (key)?key:'aliquotCodes';
+    				if(results[key] === undefined){
+    					refresh.aliquotCodes(params, key);
     				}
     				return results[key];
     			}

@@ -40,11 +40,11 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		// TODO lister les "experiment-type-code possibles pour des tubes venant de solexa...
 		
 		// lib-normalization= solexa[ lib10nM + libXnM >= 1nM ]
-		//loadContainers("tube","lib-normalization");
+		loadContainers("tube","lib-normalization");
 		//updateContainers("tube","lib-normalization");
 		
 		// denat-dil-lib = solexa[ libXnM < 1nM  ]
-		//loadContainers("tube","denat-dil-lib");
+		loadContainers("tube","denat-dil-lib");
 		//updateContainers("tube","denat-dil-lib");
 		
 		// TODO ???? autres categories de libraries en tube
