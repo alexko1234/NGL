@@ -34,6 +34,7 @@ rule "Init object LaneInfo in WM"
 	salience 700
 	no-loop
     when
+    Experiment($typeCode : typeCode, $typeCode!="opgen-depot")
     $atomicTransfert: AtomicTransfertMethod($position : line)
     not LaneInfo($position==position)
     then

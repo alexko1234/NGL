@@ -195,7 +195,7 @@
 						<div class="col-md-6 col-lg-6" ng-if="!expp.choiceInList">	
 							
 							
-							<div class="col-md-6 col-lg-6" ng-if="doneAndRecorded==false">
+							<div  ng-if="doneAndRecorded==false">
 								
 								<!-- Date -->
 								<input ng-if="expp.valueType == 'java.util.Date'" class="form-control" type="text" class="input-small"
@@ -213,7 +213,7 @@
 						
 							</div>
 							
-							<div class="col-md-6 col-lg-6" ng-if="doneAndRecorded==true">
+							<div  ng-if="doneAndRecorded==true">
 							
 								<!-- Date -->
 								<p ng-if="expp.valueType == 'java.util.Date'" class="form-control-static" ng-model="experiment.value.experimentProperties[expp.code].value" date-timestamp>
@@ -230,9 +230,9 @@
 						</div>
 						
 						<!--  File -->
-						<div class="col-md-6 col-lg-6" ng-if="expp.valueType == 'java.io.File'">
+						<div  ng-if="expp.valueType == 'java.io.File'">
 							<input type="file" ng-disabled="!experiment.experimentInformation.enabled" base64-file="experiment.value.experimentProperties[expp.code]" />
-							<div class="col-md-6 col-lg-6"  ng-show="experiment.value.experimentProperties[expp.code] != undefined && experiment.value.experimentProperties[expp.code].value != ''" >
+							<div   ng-show="experiment.value.experimentProperties[expp.code] != undefined && experiment.value.experimentProperties[expp.code].value != ''" >
 							    <a target="_blank" ng-href="data:application/pdf;base64,{{experiment.value.experimentProperties[expp.code].value}}">
 							    {{experiment.value.experimentProperties[expp.code].fullname}}
 								</a>
