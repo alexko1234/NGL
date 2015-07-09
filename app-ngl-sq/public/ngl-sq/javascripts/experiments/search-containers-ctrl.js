@@ -45,20 +45,19 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"groupMethod":"collect"
 		},
 		{
-			"header":Messages("containers.table.fromExperimentTypeCodes"),
-			"property":"fromExperimentTypeCodes",
-			//"filter":"codes:'type'",
+			"header":Messages("containers.table.projectCodes"),
+			"property":"projectCodes",
 			"order":false,
-			"position":6,
+			"position":6,					
+			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='2'>",
 			"type":"text",
-			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
 			"groupMethod":"collect"
 		},
 		{
 			"header":Messages("containers.table.sampleCodes.length"),
 			"property":"sampleCodes.length",
 			"order":true,
-			"position":8,
+			"position":7,
 			"type":"number",
 			"groupMethod":"sum"
 		},
@@ -67,7 +66,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"property":"sampleCodes",
 			"order":false,
 			"hide":true,
-			"position":9,
+			"position":8,
 			"type":"text",
 			"render":"<div list-resize='cellValue | unique' list-resize-min-size='3'>",
 			"groupMethod":"collect"
@@ -78,7 +77,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"property":"contents.length",
 			"order":true,
 			"hide":true,
-			"position":9.01,
+			"position":9,
 			"type":"number",
 			"groupMethod":"sum"
 				
@@ -89,32 +88,33 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"order":false,
 			"hide":true,
 			"type":"text",
-			"position":9.1,
+			"position":10,
 			"render":"<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' ' list-resize-min-size='3'>",
 			"groupMethod":"collect"
 			
 		},
 		{
-			"header":Messages("containers.table.projectCodes"),
-			"property":"projectCodes",
+			"header":Messages("containers.table.fromExperimentTypeCodes"),
+			"property":"fromExperimentTypeCodes",
+			//"filter":"codes:'type'",
 			"order":false,
-			"position":10,					
-			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='2'>",
+			"position":11,
 			"type":"text",
+			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
 			"groupMethod":"collect"
 		},
 		{
 			"header":Messages("containers.table.creationDate"),
 			"property":"traceInformation.creationDate",
 			"order":true,
-			"position":12,
+			"position":14,
 			"type":"date"
 		},
 		{
 			"header":Messages("containers.table.createUser"),
 			"property":"traceInformation.createUser",
 			"order":true,
-			"position":13,
+			"position":15,
 			"type":"text"
 		},
 		{
@@ -122,7 +122,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"property":"inputProcessCodes",
 			"order":false,
 			"type":"text",
-			"position":14,
+			"position":16,
 			"render":"<div list-resize='value.data.inputProcessCodes | unique' list-resize-min-size='3'>",
 			"groupMethod":"collect"
 		},
@@ -132,7 +132,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"order":true,
 			"type":"text",
 			"edit":false,
-			"position":7,
+			"position":12,
 			"choiceInList": true,
 			"possibleValues":"searchService.lists.getStates()", 
 			"filter":"codes:'state'",
@@ -145,7 +145,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"order":true,
 			"type":"text",
 			"edit":true,
-			"position":11,
+			"position":13,
 			"choiceInList": true,
 			"possibleValues":"searchService.lists.getValuations()", 
 			"filter":"codes:'valuation'"	
@@ -380,10 +380,13 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		}else if($scope.searchService.lists.get("containers-search-addfilters") && $scope.searchService.lists.get("containers-search-addfilters").length === 1){
 			allFilters = angular.copy($scope.searchService.lists.get("containers-search-addfilters")[0].filters);
 		}
+
+		if(angular.isDefined(allFilters)){ 
 			var nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
 			for(var i = 0; i  < 5 && allFilters.length > 0 ; i++){
 				formFilters.push(allFilters.splice(0, nbElementByColumn));	    								
 			}
+		}
 			//complete to 5 five element to have a great design 
 			while(formFilters.length < 5){
 				formFilters.push([]);
@@ -410,7 +413,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 					}
 				}else{
 					var test = $scope.datatable.getGroupColumnValue(containers[i], "code");
-					if($scope.datatable.getGroupColumnValue(containers[i], "code") === this.basket.get()[j].code){
+					if($scope.datatable.getGroupColumnValue(containers[i], "code")[0] === this.basket.get()[j].code){
 						alreadyOnBasket = true;
 					}
 				}
