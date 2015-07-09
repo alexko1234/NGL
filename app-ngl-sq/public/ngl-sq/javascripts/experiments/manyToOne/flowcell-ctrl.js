@@ -357,7 +357,7 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 
 	$scope.$on('outputToExperiment', function(e, atomicTransfertMethod) {
 		//$scope.atomicTransfere.outputToExperiment($scope.datatable);
-		//outputToExperimentHelper($scope.datatable);
+		outputToExperimentHelper($scope.datatable);
 	});
 	
 	var outputToExperimentHelper = function(output) {
@@ -401,7 +401,7 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 	
 	$scope.$on('experimentToOutput', function(e, atomicTransfertMethod) {
 		//$scope.atomicTransfere.experimentToOutput($scope.datatable);
-		//experimentToOutputHelper($scope.datatable);
+		experimentToOutputHelper($scope.datatable);
 	});
 	
 	var experimentToOutputHelper = function(output) {
@@ -424,10 +424,12 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 			for(var k=0;k<$scope.experiment.value.atomicTransfertMethods.length;k++){
 				//for(var j =0;j<$scope.experiment.value.atomicTransfertMethods[k].inputContainerUseds.length;j++){
 				if(allData[i] !== undefined && $scope.experiment.value.atomicTransfertMethods[k].outputContainerUseds!=null && angular.isDefined($scope.experiment.value.atomicTransfertMethods[k].outputContainerUseds[0])){
-					allData[i].outputInstrumentProperties = $scope.experiment.value.atomicTransfertMethods[k].outputContainerUseds[0].instrumentProperties;
-					allData[i].outputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[k].outputContainerUseds[0].experimentProperties;
-					allData[i].outputContainerUsed =  $scope.experiment.value.atomicTransfertMethods[k].outputContainerUseds[0];
-					i += $scope.experiment.value.atomicTransfertMethods[k].inputContainerUseds.length;
+					for(var j=0;j< $scope.experiment.value.atomicTransfertMethods[k].inputContainerUseds.length;j++){
+						allData[i].outputInstrumentProperties = $scope.experiment.value.atomicTransfertMethods[k].outputContainerUseds[0].instrumentProperties;
+						allData[i].outputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[k].outputContainerUseds[0].experimentProperties;
+						allData[i].outputContainerUsed =  $scope.experiment.value.atomicTransfertMethods[k].outputContainerUseds[0];
+						i++;
+					}
 				}
 				//}
 			}
