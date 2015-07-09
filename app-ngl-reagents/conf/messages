@@ -18,6 +18,7 @@ catalogs.box.creation.remove = Supprimer cette boîte et ses réactifs ?
 
 kits.search = Recherche kits
 kits.create = Creation kits
+kits.create = Création individuelle
 kits.create-batch = Création en masse
 
 kits.name = Nom kit (usuel)
