@@ -58,12 +58,11 @@
 							"type":"date"
 						},
 						{
-							"header":Messages("containers.table.tags"),
-							"property":"atomicTransfertMethods",
-							"order":true,
+							"header":Messages("experiments.table.projectCodes"),
+							"property":"projectCodes",
+							"order":false,
 							"hide":true,
-							"render":"<div list-resize='value.data.atomicTransfertMethods | flatArray:\"inputContainerUseds\" | flatArray:\"contents\" | getArray:\"properties.tag.value\" | unique' list-resize-min-size='3'>",
-							"position":6.5,
+							"position":7,
 							"type":"text"
 						},
 						{
@@ -71,7 +70,7 @@
 							"property":"sampleCodes.length",
 							"order":true,
 							"hide":true,
-							"position":7,
+							"position":8,
 							"type":"text"
 						},
 						{
@@ -79,16 +78,17 @@
 							"property":"sampleCodes",
 							"order":false,
 							"hide":true,
-							"position":8,
+							"position":9,
 							"type":"text",
 							"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
 						},
 						{
-							"header":Messages("experiments.table.projectCodes"),
-							"property":"projectCodes",
-							"order":false,
+							"header":Messages("containers.table.tags"),
+							"property":"atomicTransfertMethods",
+							"order":true,
 							"hide":true,
-							"position":9,
+							"render":"<div list-resize='value.data.atomicTransfertMethods | flatArray:\"inputContainerUseds\" | flatArray:\"contents\" | getArray:\"properties.tag.value\" | unique' list-resize-min-size='3'>",
+							"position":10,
 							"type":"text"
 						},					
 						{
@@ -96,7 +96,7 @@
 							"property":"traceInformation.creationDate",
 							"order":true,
 							"hide":true,
-							"position":10,
+							"position":11,
 							"type":"date"
 						},
 						{
@@ -104,7 +104,7 @@
 							"property":"traceInformation.createUser",
 							"order":true,
 							"hide":true,
-							"position":11,
+							"position":12,
 							"type":"text"
 						}
 						];

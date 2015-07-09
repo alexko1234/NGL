@@ -44,19 +44,19 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"type":"text"
 		});
 		columns.push({
-			"header":Messages("containers.table.fromExperimentTypeCodes"),
-			"property":"fromExperimentTypeCodes",
-			//"filter":"codes:'type'",
+			"header":Messages("containers.table.projectCodes"),
+			"property":"projectCodes",
 			"order":false,
-			"position":6,
+			"position":6,					
+			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='2'>",
 			"type":"text",
-			"render":"<span ng-model='value.data.fromExperimentTypeCodes' codes='type'></span>"
-		});		
+			"groupMethod":"collect"
+		});			
 		columns.push({
 			"header":Messages("containers.table.sampleCodes.length"),
 			"property":"sampleCodes.length",
 			"order":true,
-			"position":8,
+			"position":7,
 			"type":"number",
 			"groupMethod":"sum"
 		});
@@ -65,7 +65,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"property":"sampleCodes",
 			"order":false,
 			"hide":true,
-			"position":9,
+			"position":8,
 			"type":"text",
 			"render":"<div list-resize='cellValue | unique' list-resize-min-size='3'>",
 			"groupMethod":"collect"
@@ -76,7 +76,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"property":"contents.length",
 			"order":true,
 			"hide":true,
-			"position":9.01,
+			"position":9,
 			"type":"number",
 			"groupMethod":"sum"
 				
@@ -87,32 +87,32 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"order":false,
 			"hide":true,
 			"type":"text",
-			"position":9.1,
+			"position":10,
 			"render":"<div list-resize='value.data.contents | getArray:\"properties.tag.value\" | unique' ' list-resize-min-size='3'>",
 			"groupMethod":"collect"
 			
 		});
 		columns.push({
-					"header":Messages("containers.table.projectCodes"),
-					"property":"projectCodes",
-					"order":false,
-					"position":10,					
-					"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='2'>",
-					"type":"text",
-					"groupMethod":"collect"
-				});		
+			"header":Messages("containers.table.fromExperimentTypeCodes"),
+			"property":"fromExperimentTypeCodes",
+			//"filter":"codes:'type'",
+			"order":false,
+			"position":11,
+			"type":"text",
+			"render":"<span ng-model='value.data.fromExperimentTypeCodes' codes='type'></span>"
+		});		
 		columns.push({
 					"header":Messages("containers.table.creationDate"),
 					"property":"traceInformation.creationDate",
 					"order":true,
-					"position":12,
+					"position":14,
 					"type":"date"
 				});
 		columns.push({
 			"header":Messages("containers.table.createUser"),
 			"property":"traceInformation.createUser",
 			"order":true,
-			"position":13,
+			"position":15,
 			"type":"text"
 		});
 		columns.push({
@@ -120,7 +120,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 					"property":"inputProcessCodes",
 					"order":false,
 					"type":"text",
-					"position":14,
+					"position":16,
 					"render":"<div list-resize='value.data.inputProcessCodes | unique' list-resize-min-size='3'>",
 				});
 		
@@ -131,7 +131,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 				"order":true,
 				"type":"text",
 				"edit":true,
-				"position":7,
+				"position":12,
 				"choiceInList": true,
 				"possibleValues":"searchService.lists.getStates()", 
 				"filter":"codes:'state'"
@@ -142,7 +142,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 				"order":true,
 				"type":"text",
 				"edit":false,
-				"position":11,
+				"position":13,
 				"choiceInList": true,
 				"possibleValues":"searchService.lists.getValuations()", 
 				"filter":"codes:'valuation'",
@@ -154,7 +154,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 				"order":true,
 				"type":"text",
 				"edit":false,
-				"position":7,
+				"position":12,
 				"choiceInList": true,
 				"possibleValues":"searchService.lists.getStates()", 
 				"filter":"codes:'state'",
@@ -167,7 +167,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 				"order":true,
 				"type":"text",
 				"edit":true,
-				"position":11,
+				"position":13,
 				"choiceInList": true,
 				"possibleValues":"searchService.lists.getValuations()", 
 				"filter":"codes:'valuation'",

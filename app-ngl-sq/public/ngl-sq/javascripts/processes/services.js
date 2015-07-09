@@ -42,11 +42,19 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                	"type":"text"
 			                },
 			                {
+			                	"header":Messages("processes.table.projectCode"),
+			                	"property":"projectCode",
+			                	"order":true,
+			                	"hide":true,
+			                	"position":2,
+			                	"type":"text"
+			                },
+			                {
 			                	"header":Messages("processes.table.sampleCode"),
 			                	"property":"sampleCode",
 			                	"order":true,
 			                	"hide":true,
-			                	"position":2,
+			                	"position":3,
 			                	"type":"text"
 			                },						         
 			                {
@@ -56,7 +64,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                	"order" : true,
 			                	"hide" : true,
 			                	"modes" : ["datatable"],
-			                	"position" : 3
+			                	"position" : 4
 			                },
 			                {
 			                	"header":Messages("processes.table.typeCode"),
@@ -64,13 +72,13 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                	"filter":"codes:'type'",
 			                	"order":true,
 			                	"hide":true,
-			                	"position":4,
+			                	"position":5,
 			                	"type":"text"
 			                },
 			                {
 			                	"header":Messages("processes.table.stateCode"),
 			                	"property":"state.code",
-			                	"position":30,
+			                	"position":6,
 			                	"order":true,
 			                	"hide":true,
 			                	"type":"text",
@@ -82,7 +90,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                {
 			                	"header":Messages("processes.table.resolutionCode"),
 			                	"property":"state.resolutionCodes",
-			                	"position":31,
+			                	"position":7,
 			                	"order":true,
 			                	"hide":true,
 			                	"type":"text"
@@ -93,7 +101,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                	"filter":"codes:'type'",
 			                	"order":true,
 			                	"hide":true,
-			                	"position":32,
+			                	"position":8,
 			                	"type":"text"
 			                },
 			                {
@@ -101,7 +109,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                	"property":"newContainerSupportCodes",
 			                	"order":false,
 			                	"hide":true,
-			                	"position":33,
+			                	"position":9,
 			                	"render":"<div list-resize='value.data.newContainerSupportCodes | unique' list-resize-min-size='2'>",
 			                	"type":"text"
 			                },
@@ -110,16 +118,8 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                	"property":"experimentCodes",
 			                	"order":false,
 			                	"hide":true,
-			                	"position":34,
+			                	"position":10,
 			                	"render":"<div list-resize='value.data.experimentCodes | unique' list-resize-min-size='2'>",
-			                	"type":"text"
-			                },
-			                {
-			                	"header":Messages("processes.table.projectCode"),
-			                	"property":"projectCode",
-			                	"order":true,
-			                	"hide":true,
-			                	"position":35,
 			                	"type":"text"
 			                },
 			                {
@@ -127,13 +127,13 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                	"property":"code",
 			                	"order":true,
 			                	"hide":true,
-			                	"position":36,
+			                	"position":11,
 			                	"type":"text"
 			                },
 			                {
 			                	"header":Messages("processes.table.creationDate"),
 			                	"property":"traceInformation.creationDate",
-			                	"position":37,
+			                	"position":12,
 			                	"order":true,
 			                	"hide":true,
 			                	"type":"date"
@@ -141,7 +141,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                {
 			                	"header":Messages("processes.table.createUser"),
 			                	"property":"traceInformation.createUser",
-			                	"position":38,
+			                	"position":13,
 			                	"order":true,
 			                	"hide":true,
 			                	"type":"text"
@@ -157,11 +157,19 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 "type":"text"
 			                                     },
 			                                     {
+			                                    	 "header":Messages("processes.table.projectCode"),
+			                                    	 "property":"projectCode",
+			                                    	 "order":true,
+			                                    	 "hide":true,
+			                                    	 "position":2,
+			                                    	 "type":"text"
+			                                     },
+			                                     {
 			                                    	 "header":Messages("processes.table.sampleCode"),
 			                                    	 "property":"sampleCode",
 			                                    	 "order":true,
 			                                    	 "hide":true,
-			                                    	 "position":2,
+			                                    	 "position":3,
 			                                    	 "type":"text"
 			                                     },
 			                                     {
@@ -171,7 +179,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 "order" : true,
 			                                    	 "hide" : true,
 			                                    	 "modes" : ["datatable"],
-			                                    	 "position" : 3
+			                                    	 "position" : 4
 			                                     },
 			                                     {
 			                                    	 "header":Messages("processes.table.typeCode"),
@@ -179,7 +187,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 "filter":"codes:'type'",
 			                                    	 "order":true,
 			                                    	 "hide":true,
-			                                    	 "position":4,
+			                                    	 "position":5,
 			                                    	 "type":"text"
 			                                     },
 			                                     {
@@ -187,7 +195,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 "property":"state.code",
 			                                    	 "order":true,
 			                                    	 "hide":true,
-			                                    	 "position":30,
+			                                    	 "position":6,
 			                                    	 "type":"text",
 			                                    	 "filter": "codes:'state'",
 			                                    	 "edit":true,
@@ -197,7 +205,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                     {
 			                                    	 "header":Messages("processes.table.resolutionCode"),
 			                                    	 "property":"state.resolutionCodes",
-			                                    	 "position":31,
+			                                    	 "position":7,
 			                                    	 "order":true,
 			                                    	 "hide":true,
 			                                    	 "type":"text"
@@ -208,7 +216,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 "filter":"codes:'type'",
 			                                    	 "order":true,
 			                                    	 "hide":true,
-			                                    	 "position":32,
+			                                    	 "position":8,
 			                                    	 "type":"text"
 			                                     },
 			                                     {
@@ -216,7 +224,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 "property":"newContainerSupportCodes",
 			                                    	 "order":false,
 			                                    	 "hide":true,
-			                                    	 "position":33,
+			                                    	 "position":9,
 			                                    	 "render":"<div list-resize='value.data.newContainerSupportCodes | unique' list-resize-min-size='2'>",
 			                                    	 "type":"text"
 			                                     },
@@ -225,16 +233,8 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 "property":"experimentCodes",
 			                                    	 "order":false,
 			                                    	 "hide":true,
-			                                    	 "position":34,
+			                                    	 "position":10,
 			                                    	 "render":"<div list-resize='value.data.experimentCodes | unique' list-resize-min-size='2'>",
-			                                    	 "type":"text"
-			                                     },
-			                                     {
-			                                    	 "header":Messages("processes.table.projectCode"),
-			                                    	 "property":"projectCode",
-			                                    	 "order":true,
-			                                    	 "hide":true,
-			                                    	 "position":35,
 			                                    	 "type":"text"
 			                                     },
 			                                     {
@@ -242,13 +242,13 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 "property":"code",
 			                                    	 "order":true,
 			                                    	 "hide":true,
-			                                    	 "position":36,
+			                                    	 "position":11,
 			                                    	 "type":"text"
 			                                     },
 			                                     {
 			                                    	 "header":Messages("processes.table.creationDate"),
 			                                    	 "property":"traceInformation.creationDate",
-			                                    	 "position":37,
+			                                    	 "position":12,
 			                                    	 "order":true,
 			                                    	 "hide":true,
 			                                    	 "type":"date"
@@ -256,7 +256,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                     {
 			                                    	 "header":Messages("processes.table.createUser"),
 			                                    	 "property":"traceInformation.createUser",
-			                                    	 "position":38,
+			                                    	 "position":13,
 			                                    	 "order":true,
 			                                    	 "hide":true,
 			                                    	 "type":"text"
@@ -325,7 +325,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    				 if(property.displayMeasureValue != undefined && property.displayMeasureValue != null){
 			                                    					 column.convertValue = {"active":true, "displayMeasureValue":property.displayMeasureValue.value, "saveMeasureValue":property.saveMeasureValue.value};
 			                                    				 }
-			                                    				 column.position = (4+(property.displayOrder /1000));
+			                                    				 column.position = (5+(property.displayOrder /1000));
 			                                    				 if(mainService.getHomePage() === 'state'){
 			                                    					 column.edit = false;
 			                                    				 }
