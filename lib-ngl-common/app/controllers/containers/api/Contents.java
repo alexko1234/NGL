@@ -23,6 +23,7 @@ import fr.cea.ig.MongoDBDAO;
 
 public class Contents extends CommonController {
 
+	// XN 30/06/2015 Modified to be generic with any content properties
 	@SuppressWarnings("unchecked")
 	public static Result list() throws DAOException{
 		
@@ -30,10 +31,10 @@ public class Contents extends CommonController {
 		List<ListObject> los = new ArrayList<ListObject>();
 		
 		if(StringUtils.isNotBlank(filledForm.get("objectTypeCode"))){
-			List<String> tags = MongoDBDAO.getCollection(InstanceConstants.CONTAINER_COLL_NAME, Container.class).distinct("contents.properties."+filledForm.get("objectTypeCode")+".value");
+			List<String> results = MongoDBDAO.getCollection(InstanceConstants.CONTAINER_COLL_NAME, Container.class).distinct("contents.properties."+filledForm.get("objectTypeCode")+".value");
 			
-			for(String tag:tags){
-				los.add(new ListObject(tag,tag));
+			for(String result:results){
+				los.add(new ListObject(result,result));
 			}
 			
 		}			
