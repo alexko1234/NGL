@@ -24,6 +24,7 @@ import models.utils.instance.ContainerUsedHelper;
 import models.utils.instance.ExperimentHelper;
 import models.utils.instance.ProcessHelper;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -31,6 +32,7 @@ import org.mongojack.DBUpdate;
 
 import play.Logger;
 import validation.ContextValidation;
+import validation.experiment.instance.AtomicTransfertMethodValidationHelper;
 import validation.utils.ValidationConstants;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -39,11 +41,6 @@ import fr.cea.ig.MongoDBDAO;
 
 public class ManytoOneContainer extends AtomicTransfertMethod{
 
-	public String line;
-	public String column;
-
-	public List<ContainerUsed> inputContainerUseds;
-	public ContainerUsed outputContainerUsed;
 
 	public ManytoOneContainer(){
 		super();
@@ -51,8 +48,6 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 
 	@Override
 	public ContextValidation createOutputContainerUsed(Experiment experiment,ContextValidation contextValidation) throws DAOException {
-
-		//	if(this.outputContainerUsed!=null){
 
 		if(this.inputContainerUseds!=null){
 
@@ -93,26 +88,16 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 			PropertyValue volume = new PropertySingleValue();
 			PropertyValue concentration = new PropertySingleValue();
 			
-			if(this.outputContainerUsed!=null){
-				this.outputContainerUsed.code=outPutContainerCode;				
-				if(this.outputContainerUsed.volume!=null){
-					volume = this.outputContainerUsed.volume;
-				}				
-				if(this.outputContainerUsed.concentration!=null){
-					concentration = this.outputContainerUsed.concentration;
-				}				
-				
+			if(this.outputContainerUseds!=null){
+				this.outputContainerUseds.get(0).code=outPutContainerCode;				
 			}else {
-				this.outputContainerUsed = new ContainerUsed(outPutContainerCode);
+				this.outputContainerUseds = new ArrayList<ContainerUsed>();
+				this.outputContainerUseds.add(new ContainerUsed(outPutContainerCode));
 			}
-
+			
 			support.categoryCode=experiment.instrument.outContainerSupportCategoryCode;
-
-			this.outputContainerUsed.locationOnContainerSupport=support;
-			this.outputContainerUsed.volume = volume;
-			this.outputContainerUsed.concentration = concentration;
-
-			this.outputContainerUsed.validate(contextValidation);
+			this.outputContainerUseds.get(0).locationOnContainerSupport=support;
+			this.outputContainerUseds.get(0).validate(contextValidation);
 
 		}else{
 			contextValidation.addErrors("inputContainerUsed", ValidationConstants.ERROR_NOTEXISTS_MSG);
@@ -126,28 +111,28 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 		
 		if(this.inputContainerUseds.size()!=0){
 
-			if(outputContainerUsed.code!=null && !MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, this.outputContainerUsed.code)){
+			if(outputContainerUseds.get(0).code!=null && !MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, this.outputContainerUseds.get(0).code)){
 				// Output ContainerSupport
-				ContainerSupport support =MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME,ContainerSupport.class, this.outputContainerUsed.locationOnContainerSupport.code);
+				ContainerSupport support =MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME,ContainerSupport.class, this.outputContainerUseds.get(0).locationOnContainerSupport.code);
 				if(support==null){
-					support=ContainerSupportHelper.createContainerSupport(this.outputContainerUsed.locationOnContainerSupport.code, null,
-							this.outputContainerUsed.locationOnContainerSupport.categoryCode , experiment.traceInformation.modifyUser);
+					support=ContainerSupportHelper.createContainerSupport(this.outputContainerUseds.get(0).locationOnContainerSupport.code, null,
+							this.outputContainerUseds.get(0).locationOnContainerSupport.categoryCode , experiment.traceInformation.modifyUser);
 				}
 
 
 				// Output Container
 				Container outputContainer = new Container();
-				outputContainer.code=this.outputContainerUsed.code;
+				outputContainer.code=this.outputContainerUseds.get(0).code;
 				outputContainer.traceInformation = new TraceInformation();
 				outputContainer.traceInformation.setTraceInformation(experiment.traceInformation.modifyUser);
-				outputContainer.categoryCode=this.outputContainerUsed.categoryCode;
+				outputContainer.categoryCode=this.outputContainerUseds.get(0).categoryCode;
 				//Add localisation
-				outputContainer.support=outputContainerUsed.locationOnContainerSupport;
+				outputContainer.support=outputContainerUseds.get(0).locationOnContainerSupport;
 				outputContainer.state=new State("N",experiment.traceInformation.modifyUser);
 				outputContainer.valuation=new Valuation();
 				//TODO volume, proportion
-				outputContainer.mesuredVolume=(PropertySingleValue) this.outputContainerUsed.volume;
-				outputContainer.mesuredConcentration= (PropertySingleValue) this.outputContainerUsed.concentration;
+				outputContainer.mesuredVolume=(PropertySingleValue) this.outputContainerUseds.get(0).volume;
+				outputContainer.mesuredConcentration= (PropertySingleValue) this.outputContainerUseds.get(0).concentration;
 
 
 				//Add contents to container and data projets, sample ... in containersupport
@@ -158,7 +143,7 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 				
 				if(!contextValidation.hasErrors()){
 					ContainerHelper.save(outputContainer,contextValidation);
-					ProcessHelper.updateNewContainerSupportCodes(outputContainerUsed,inputContainerUseds,experiment);
+					ProcessHelper.updateNewContainerSupportCodes(outputContainerUseds.get(0),inputContainerUseds,experiment);
 				}
 
 			} else {
@@ -170,13 +155,15 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		if(outputContainerUsed!=null){
+		if(CollectionUtils.isNotEmpty(outputContainerUseds)){
 			contextValidation.putObject("level", Level.CODE.ContainerOut);
 			contextValidation.addKeyToRootKeyName("outputContainerUsed");
-			outputContainerUsed.validate(contextValidation);
+			outputContainerUseds.get(0).validate(contextValidation);
 			contextValidation.removeKeyFromRootKeyName("outputContainerUsed");
 			contextValidation.removeObject("level");
 		}
+		
+		AtomicTransfertMethodValidationHelper.validateOneOutputContainer(outputContainerUseds, contextValidation);
 		
 		contextValidation.addKeyToRootKeyName("inputContainerUseds");
 		for(ContainerUsed containerUsed:inputContainerUseds){
@@ -185,6 +172,8 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 			contextValidation.removeObject("level");
 		}
 		contextValidation.removeKeyFromRootKeyName("inputContainerUseds");
+		
+		AtomicTransfertMethodValidationHelper.validateOneOutputContainer(outputContainerUseds, contextValidation);
 	}
 
 	@JsonIgnore
@@ -193,10 +182,8 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 	}
 
 	@JsonIgnore
-	public List<ContainerUsed> getOutputContainers(){
-		List<ContainerUsed> cu = new ArrayList<ContainerUsed>();
-		cu.add(outputContainerUsed);
-		return cu;
+	public List<ContainerUsed> getOutputContainers(){		
+		return outputContainerUseds;
 	}
 
 

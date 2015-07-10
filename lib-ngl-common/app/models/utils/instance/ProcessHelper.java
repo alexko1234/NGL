@@ -2,7 +2,9 @@ package models.utils.instance;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
@@ -19,8 +21,8 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
 
-import play.Play;
 import play.Logger;
+import play.Play;
 import rules.services.RulesServices6;
 import validation.ContextValidation;
 import validation.container.instance.ContainerSupportValidationHelper;
@@ -29,9 +31,9 @@ import fr.cea.ig.MongoDBDAO;
 
 public class ProcessHelper {
 
-	public static void updateContainer(Container container, String typeCode, List<String> codes,ContextValidation contextValidation){
+	public static void updateContainer(Container container, String typeCode, Set<String> codes,ContextValidation contextValidation){
 		if(container.fromExperimentTypeCodes == null || container.fromExperimentTypeCodes.size() == 0){
-			container.fromExperimentTypeCodes = new ArrayList<String>();
+			container.fromExperimentTypeCodes = new HashSet<String>();
 			ProcessType processType;
 			try {
 				processType = ProcessType.find.findByCode(typeCode);
@@ -42,7 +44,11 @@ public class ProcessHelper {
 			}
 		}
 		container.processTypeCode = typeCode;
-		container.inputProcessCodes=InstanceHelpers.addCodesList(codes, container.inputProcessCodes);
+		if(container.inputProcessCodes==null){
+			container.inputProcessCodes=new HashSet<String>();
+		}
+		container.inputProcessCodes.addAll(codes);
+//		container.inputProcessCodes=InstanceHelpers.addCodesList(codes, container.inputProcessCodes);
 		ContainerValidationHelper.validateProcessCodes(container.inputProcessCodes,contextValidation);
 		ContainerValidationHelper.validateExperimentTypeCodes(container.fromExperimentTypeCodes, contextValidation);
 		ContainerValidationHelper.validateProcessTypeCode(container.processTypeCode, contextValidation);
@@ -57,8 +63,12 @@ public class ProcessHelper {
 
 
 	public static void updateContainerSupportFromContainer(Container container,ContextValidation contextValidation){
-		ContainerSupport containerSupport=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, container.support.code);		
-		containerSupport.fromExperimentTypeCodes=InstanceHelpers.addCodesList(container.fromExperimentTypeCodes, containerSupport.fromExperimentTypeCodes);
+		ContainerSupport containerSupport=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, container.support.code);
+		if(containerSupport.fromExperimentTypeCodes==null){
+			containerSupport.fromExperimentTypeCodes=new HashSet<String>();
+		}
+		containerSupport.fromExperimentTypeCodes.addAll(container.fromExperimentTypeCodes);
+		//containerSupport.fromExperimentTypeCodes=InstanceHelpers.addCodesList(container.fromExperimentTypeCodes, containerSupport.fromExperimentTypeCodes);
 		ContainerSupportValidationHelper.validateExperimentTypeCodes(containerSupport.fromExperimentTypeCodes, contextValidation);
 		if(!contextValidation.hasErrors()){
 			MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME,ContainerSupport.class,

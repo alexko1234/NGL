@@ -5,10 +5,26 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
+import org.mongojack.DBUpdate;
+import org.mongojack.DBUpdate.Builder;
+
+import com.mongodb.BasicDBObject;
+
+import controllers.CommonController;
+import controllers.NGLControllerHelper;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
+import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.property.PropertySingleValue;
@@ -27,18 +43,7 @@ import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import models.utils.instance.ExperimentHelper;
-import models.utils.instance.StateHelper;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.time.DateUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
-import org.mongojack.DBUpdate;
-import org.mongojack.DBUpdate.Builder;
-
 import play.Logger;
-import play.Play;
 import play.Logger.ALogger;
 import play.api.modules.spring.Spring;
 import play.data.Form;
@@ -46,23 +51,12 @@ import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Result;
 import play.mvc.Results;
-import rules.services.RulesMessage;
 import validation.ContextValidation;
-import validation.container.instance.ContainerValidationHelper;
 import validation.experiment.instance.ExperimentValidationHelper;
-import validation.processes.instance.ProcessValidationHelper;
 import views.components.datatable.DatatableForm;
 import views.components.datatable.DatatableResponse;
 import workflows.container.ContainerWorkflows;
 import workflows.experiment.ExperimentWorkflows;
-import workflows.process.ProcessWorkflows;
-
-import com.mongodb.BasicDBObject;
-
-import controllers.CommonController;
-import controllers.processes.api.ProcessesSearchForm;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
 
 public class Experiments extends CommonController{
 
@@ -70,7 +64,7 @@ public class Experiments extends CommonController{
 	final static Form<Comment> commentForm = form(Comment.class);
 	final static Form<ExperimentSearchForm> experimentSearchForm = form(ExperimentSearchForm.class);
 	final static Form<ExperimentUpdateForm> experimentUpdateForm = form(ExperimentUpdateForm.class);
-	final static List<String> defaultKeys =  Arrays.asList("categoryCode","code","inputContaierSupportCodes","instrument","outputContainerSupportCodes","projectCodes","protocolCode","reagents","sampleCodes","state","traceInformation","typeCode");
+	final static List<String> defaultKeys =  Arrays.asList("categoryCode","code","inputContaierSupportCodes","instrument","outputContainerSupportCodes","projectCodes","protocolCode","reagents","sampleCodes","state","traceInformation","typeCode","atomicTransfertMethods.inputContainerUseds.contents");
 
 	public static final String calculationsRules ="calculations";
 
@@ -465,7 +459,7 @@ public class Experiments extends CommonController{
 							DBQuery.in("code", ExperimentHelper.getAllProcessCodesFromExperiment(exp))
 							,DBUpdate.set("currentExperimentTypeCode", exp.typeCode).push("experimentCodes", exp.code),true);
 
-					List<Container> inputContainers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code",exp.inputContainerSupportCodes)).toList();
+					Set<Container> inputContainers=new HashSet<>(MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code",exp.inputContainerSupportCodes)).toList());
 					ContainerWorkflows.setContainerState(inputContainers,"IW-E",ctxValidation);
 				}
 			}
@@ -482,8 +476,9 @@ public class Experiments extends CommonController{
 
 
 	public static Result list(){
-		Form<ExperimentSearchForm> experimentFilledForm = filledFormQueryString(experimentSearchForm,ExperimentSearchForm.class);
-		ExperimentSearchForm experimentsSearch = experimentFilledForm.get();
+		//Form<ExperimentSearchForm> experimentFilledForm = filledFormQueryString(experimentSearchForm,ExperimentSearchForm.class);
+		//ExperimentSearchForm experimentsSearch = experimentFilledForm.get();
+		ExperimentSearchForm experimentsSearch = filledFormQueryString(ExperimentSearchForm.class);
 		BasicDBObject keys = getKeys(updateForm(experimentsSearch));
 		DBQuery.Query query = getQuery(experimentsSearch);
 
@@ -538,8 +533,8 @@ public class Experiments extends CommonController{
 			String containerSupportCodeOld;
 
 			//Experiment
-			for(Entry<Integer, AtomicTransfertMethod> atomicTransfertMethods:experiment.atomicTransfertMethods.entrySet()){
-				for(ContainerUsed containerUsed:atomicTransfertMethods.getValue().getOutputContainers()){
+			for(AtomicTransfertMethod atomicTransfertMethods:experiment.atomicTransfertMethods){
+				for(ContainerUsed containerUsed:atomicTransfertMethods.outputContainerUseds){
 					containerSupportCodeOld=containerUsed.locationOnContainerSupport.code;
 					//Remplace ancien code par le nouveau dans le nom du container
 					containerUsed.code=containerUsed.code.replace(containerSupportCodeOld, containerSupportCode);
@@ -623,6 +618,10 @@ public class Experiments extends CommonController{
 			queryElts.add(DBQuery.in("sampleCodes", experimentSearch.sampleCode));
 		}
 
+		if(CollectionUtils.isNotEmpty(experimentSearch.tags)){
+			queryElts.add(DBQuery.in("atomicTransfertMethods.inputContainerUseds.contents.properties.tag.value", experimentSearch.tags));
+		}
+		
 		if(CollectionUtils.isNotEmpty(experimentSearch.users)){
 			queryElts.add(DBQuery.in("traceInformation.createUser", experimentSearch.users));
 		}
@@ -640,6 +639,8 @@ public class Experiments extends CommonController{
 		if(StringUtils.isNotBlank(experimentSearch.instrument)){
 			queryElts.add(DBQuery.in("instrument.code", experimentSearch.instrument));
 		}
+		
+		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(experimentSearch.atomicTransfertMethodsInputContainerUsedsContentsProperties, Level.CODE.Content, "atomicTransfertMethods.inputContainerUseds.contents.properties"));
 
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));

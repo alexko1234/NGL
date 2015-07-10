@@ -3,7 +3,10 @@ package validation.container;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
@@ -170,8 +173,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public void validateExperimentTypeCodesNotRequired() {
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		CommonValidationHelper.validateExperimentTypeCodes(null, contextValidation);
-		CommonValidationHelper.validateExperimentTypeCodes(new ArrayList<String>(), contextValidation);
+		CommonValidationHelper.validateExperimentTypeCodes(new HashSet<String>(), contextValidation);
 		contextValidation.displayErrors(logger);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
@@ -225,7 +227,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public  void validationContentTest(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		List<Content> localContents=new ArrayList<Content>(); 
+		Set<Content> localContents=new HashSet<Content>(); 
 		localContents.add(sampleUsed);
 		localContents.add(sampleUsed1);
 		ContainerValidationHelper.validateContents(localContents, contextValidation);
@@ -246,9 +248,11 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public void validationContentSampleUsedTest(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		List<Content> localContents=new ArrayList<Content>();
+		Set<Content> localContents=new HashSet<Content>();
 		localContents.add(new Content("","",""));
-		localContents.get(0).percentage= 100.00;
+		Iterator<Content> iterator = localContents.iterator();
+		iterator.next().percentage = 100.00;
+		//localContents.get(0).percentage= 100.00;
 		ContainerValidationHelper.validateContents(localContents, contextValidation);
 		contextValidation.displayErrors(logger);
 		assertThat(contextValidation.errors.size()).isEqualTo(4);
@@ -263,7 +267,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public void validationPercentageContentsWithGoodValues(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		List<Content> localContents=new ArrayList<Content>();		
+		Set<Content> localContents=new HashSet<Content>();		
 		//Test with good values
 		sampleUsed.percentage=75.00;
 		sampleUsed1.percentage=25.00;		
@@ -277,7 +281,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public void validationPercentageContentsWithEquiMolarValues(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		List<Content> localContents=new ArrayList<Content>();		
+		Set<Content> localContents=new HashSet<Content>();		
 		//Test with equimolar values
 		sampleUsed.percentage=33.33;
 		sampleUsed1.percentage=33.33;
@@ -293,7 +297,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public void validationPercentageContentsWithNegativeValue(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		List<Content> localContents=new ArrayList<Content>();						
+		Set<Content> localContents=new HashSet<Content>();						
 		//Test with a value less than 0				
 		sampleUsed.percentage=-50.00;
 		sampleUsed1.percentage= 100.00;		
@@ -307,7 +311,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public void validationPercentageContentsWithHundred(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		List<Content> localContents=new ArrayList<Content>();
+		Set<Content> localContents=new HashSet<Content>();
 		//Test with a sum of values different than 100			
 		sampleUsed.percentage=20.00;
 		sampleUsed1.percentage= 20.00;		
@@ -321,7 +325,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public void validationPercentageContentsWithBigValue(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		List<Content> localContents=new ArrayList<Content>();		
+		Set<Content> localContents=new HashSet<Content>();		
 		//Test with a value greater than 100
 		sampleUsed.percentage=10.00;
 		sampleUsed1.percentage= 250.00;		
@@ -422,7 +426,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public void validationProcessCodes(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		List<String> inputProcessCodes = new ArrayList<String>();
+		Set<String> inputProcessCodes = new HashSet<String>();
 		inputProcessCodes.add(process1.code);
 		inputProcessCodes.add(process2.code);
 		inputProcessCodes.add(process3.code);
@@ -434,7 +438,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public void validationProcessCodesNull(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		List<String> inputProcessCodes = new ArrayList<String>();
+		Set<String> inputProcessCodes = new HashSet<String>();
 		inputProcessCodes.add("");
 		inputProcessCodes.add("");
 		inputProcessCodes.add("");

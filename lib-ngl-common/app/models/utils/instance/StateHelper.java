@@ -1,6 +1,7 @@
 package models.utils.instance;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TransientState;
@@ -11,7 +12,7 @@ public class StateHelper extends InstanceHelpers {
 	
 	public static State updateHistoricalNextState(State previousState, State nextState) {
 		if (null == previousState.historical) {
-			nextState.historical = new ArrayList<TransientState>(0);
+			nextState.historical = new HashSet<TransientState>(0);
 			nextState.historical.add(new TransientState(previousState, nextState.historical.size()));
 		} else {
 			nextState.historical = previousState.historical;

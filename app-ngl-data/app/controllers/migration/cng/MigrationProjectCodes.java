@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import models.Constants;
 import models.LimsCNGDAO;
@@ -12,13 +13,13 @@ import models.laboratory.container.instance.ContainerSupport;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
+
+import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.mongojack.WriteResult;
-
 import org.springframework.stereotype.Repository;
 
-import org.apache.commons.lang3.StringUtils;
 import play.Logger;
 import play.api.modules.spring.Spring;
 import play.mvc.Result;
@@ -97,7 +98,7 @@ public class MigrationProjectCodes extends CommonController {
 		//find current collection
 		List<Container> oldContainers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
 		
-		HashMap<String, List<String>> hm = new HashMap<String, List<String>>();
+		HashMap<String, Set<String>> hm = new HashMap<String, Set<String>>();
 
 		for (Container oldContainer : oldContainers) {
 
@@ -124,16 +125,17 @@ public class MigrationProjectCodes extends CommonController {
 				hm.put(oldContainer.support.code, oldContainer.projectCodes);
 			}
 			else {
-				List<String> updatedProjectCodes = InstanceHelpers.addCodesList(oldContainer.projectCodes, hm.get(oldContainer.support.code));
+				Set<String> updatedProjectCodes = hm.get(oldContainer.support.code);
+				updatedProjectCodes.addAll(oldContainer.projectCodes);
 				hm.put(oldContainer.support.code, updatedProjectCodes); 				
 			}
 			
 		}
 		
 		//iteration over the hashMap
-		for (Map.Entry<String, List<String>> entry : hm.entrySet()) {
+		for (Map.Entry<String, Set<String>> entry : hm.entrySet()) {
 			String supportCode = entry.getKey();
-			List<String> projectCodes = entry.getValue();
+			Set<String> projectCodes = entry.getValue();
 			
 			WriteResult r2 = (WriteResult) MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", supportCode),   
 					DBUpdate.set("projectCodes", projectCodes));

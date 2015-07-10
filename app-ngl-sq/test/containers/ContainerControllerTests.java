@@ -182,7 +182,7 @@ public class ContainerControllerTests extends AbstractTests{
 		Sample s1 = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,"AHX_AAV");
 		Sample s2 = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,"AHX_AAQ");
 		Sample s3 = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,"AHX_AAS");		
-		String projectCode = s1.projectCodes.get(0);		
+		String projectCode = s1.projectCodes.toArray(new String[0])[0];		
 		result = callAction(controllers.containers.api.routes.ref.Containers.list(), fakeRequest( play.test.Helpers.GET, "?datatable="+String.valueOf(csf.datatable)+"&projectCodes="+projectCode+"&sampleCodes="+s1.code+"&sampleCodes="+s2.code+"&sampleCodes="+s3.code));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
@@ -190,8 +190,8 @@ public class ContainerControllerTests extends AbstractTests{
 		lc = dr.data;
 		for(int i=0;i<lc.size();i++){
 			c = (Container) lc.get(i);
-			for(int j=0;j<c.sampleCodes.size();j++){
-				assertThat(c.sampleCodes.get(j)).matches(projectCode+"_.*");
+			for(String code:c.sampleCodes){
+				assertThat(code).matches(projectCode+"_.*");
 			}
 			
 		}
@@ -208,8 +208,8 @@ public class ContainerControllerTests extends AbstractTests{
 		lc = dr.data;
 		for(int i=0;i<lc.size();i++){
 			c = (Container) lc.get(i);
-			for(int j=0;j<c.sampleCodes.size();j++){
-				assertThat(c.sampleCodes.get(j)).doesNotMatch("validateListWithDatatable.*");
+			for(String code:c.sampleCodes){
+				assertThat(code).doesNotMatch("validateListWithDatatable.*");
 			}
 
 		}		
@@ -290,7 +290,7 @@ public class ContainerControllerTests extends AbstractTests{
 		dr = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<Container>>(){});
 		lc = dr.data;
 		assertThat(lc).isNullOrEmpty();
-	}
+	} 
 	
 	/*
 	 * Use in a outer project
@@ -490,7 +490,7 @@ public class ContainerControllerTests extends AbstractTests{
 	@Test
 	public void validateBadUpdateStateCode() {
 		ContainersUpdateForm cuf = ContainerTestHelper.getFakeContainersUpdateForm();
-		Container container = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.and(DBQuery.is("state.code", "IS"),DBQuery.notExists("processTypeCode"),DBQuery.notExists("inputProcessCodes"))).toList().get(0);
+		Container container = (MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.and(DBQuery.is("state.code", "IS"),DBQuery.notExists("processTypeCode"),DBQuery.notExists("inputProcessCodes")))).toList().get(0);
 		cuf.stateCode = "A";
 		Result result = callAction(controllers.containers.api.routes.ref.Containers.updateStateCode(container.code), fakeRequest().withJsonBody((Json.toJson(cuf))));		
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.BAD_REQUEST);

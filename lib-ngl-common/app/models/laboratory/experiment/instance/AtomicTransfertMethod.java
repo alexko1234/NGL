@@ -29,16 +29,19 @@ import validation.IValidation;
 })
 public abstract class AtomicTransfertMethod implements IValidation {
 
+	public List<ContainerUsed> inputContainerUseds;
+	public List<ContainerUsed> outputContainerUseds;
+	
 	public AtomicTransfertMethod() {
 		super();
 	}
 	
-	public int position;
+	public String line;
+	public String column;
+	
 	public Comment comment;
 	public abstract ContextValidation createOutputContainerUsed(Experiment experiment, ContextValidation contextValidation) throws DAOException;
-	@JsonIgnore
-	public abstract List<ContainerUsed> getInputContainers();
-	public abstract List<ContainerUsed> getOutputContainers();
+	
 	
 	public abstract ContextValidation saveOutputContainers(Experiment experiment, ContextValidation contextValidation) throws DAOException;
 }

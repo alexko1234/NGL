@@ -174,7 +174,7 @@ angular.module('home').controller('ManyToOneMapcardCtrl',['$scope', '$window','d
 	});
 	
 	$scope.init_atomicTransfert = function(containers, atomicTransfertMethod){
-			$scope.experiment.value.atomicTransfertMethods[0] = {class:atomicTransfertMethod, inputContainerUseds:[], position:1};
+			$scope.experiment.value.atomicTransfertMethods[0] = {class:atomicTransfertMethod, inputContainerUseds:[], line:"1", column:"1"};
 			angular.forEach(containers, function(container){
 				$scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds.push({code:container.code,instrumentProperties:{},experimentProperties:{},state:container.state,locationOnContainerSupport:container.support});
 			});
@@ -204,8 +204,8 @@ angular.module('home').controller('ManyToOneMapcardCtrl',['$scope', '$window','d
 			for(var j=0; j<data.length;j++){
 				if($scope.getLevel( data[j].levels, "ContainerOut")){
 					var getter = $parse("datatable.displayResult["+i+"].outputExperimentProperties."+data[j].code+".value");
-					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code]){
-						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code].value);
+					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed[0].experimentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed[0].experimentProperties[data[j].code]){
+						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed[0].experimentProperties[data[j].code].value);
 					}else{
 						getter.assign($scope,"");
 					}
@@ -236,8 +236,8 @@ angular.module('home').controller('ManyToOneMapcardCtrl',['$scope', '$window','d
 			for(var j=0; j<data.length;j++){
 				if($scope.getLevel( data[j].levels, "ContainerOut")){
 					var getter = $parse("datatable.displayResult["+i+"].outputInstrumentProperties."+data[j].code+".value");
-					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties[data[j].code]){
-						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties[data[j].code].value);
+					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed[0].instrumentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed[0].instrumentProperties[data[j].code]){
+						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed[0].instrumentProperties[data[j].code].value);
 					}else{
 						getter.assign($scope,"");
 					}
@@ -253,7 +253,7 @@ angular.module('home').controller('ManyToOneMapcardCtrl',['$scope', '$window','d
 	});
 	
 	$scope.refreshView = function(){
-		$scope.atomicTransfere.reloadContainersDatatable($scope.datatable);		
+		$scope.atomicTransfere.reloadContainersDatatable($scope.datatable, outputToExperimentHelper, experimentToOutputHelper);
 	};
 	
 	$scope.$on('refresh', function(e) {
@@ -261,13 +261,49 @@ angular.module('home').controller('ManyToOneMapcardCtrl',['$scope', '$window','d
 		$scope.$emit('viewRefeshed');
 	});
 	
-	$scope.$on('outputToExperiment', function(e, atomicTransfertMethod) {
-		$scope.atomicTransfere.outputToExperiment($scope.datatable);
+	$scope.$on('outputToExperiment', function(e, atomicTransfertMethod) {		
+		outputToExperimentHelper($scope.datatable);
 	});
 	
-	$scope.$on('experimentToOutput', function(e, atomicTransfertMethod) {
-		$scope.atomicTransfere.experimentToOutput($scope.datatable);
-	});	
+	var outputToExperimentHelper = function(output) {
+		var allData = output.getData();
+		if(allData != undefined){
+			for(var i=0;i<allData.length;i++){
+				var index = $scope.atomicTransfere.searchOutputPositionByInputContainerCode(allData[i].code || allData[i].inputCode);
+				if(angular.isDefined(allData[i].outputContainerUsed)/* && allData[i].outputContainerUsed.code !== undefined*/){
+					$scope.experiment.value.atomicTransfertMethods[index].outputContainerUseds[0] = allData[i].outputContainerUsed;
+				}										
+				if(allData[i].outputInstrumentProperties != undefined){
+					$scope.experiment.value.atomicTransfertMethods[index].outputContainerUseds[0].instrumentProperties = allData[i].outputInstrumentProperties;
+					$scope.atomicTransfere.getVarExperimentCommonFunctions.removeNullProperties($scope.experiment.value.atomicTransfertMethods[index].outputContainerUseds[0].instrumentProperties);
+				}
+				if(allData[i].outputExperimentProperties!= undefined){
+					$scope.experiment.value.atomicTransfertMethods[index].outputContainerUseds[0].experimentProperties = allData[i].outputExperimentProperties;	
+					$scope.atomicTransfere.getVarExperimentCommonFunctions($scope.experiment.value.atomicTransfertMethods[index].outputContainerUseds[0].experimentProperties);
+				}
+			}
+			output.setData(allData,allData.lenght);
+		}
+	};
+	
+	$scope.$on('experimentToOutput', function(e, atomicTransfertMethod) {		
+		experimentToOutputHelper($scope.datatable);
+	});
+	
+	var experimentToOutputHelper = function(output) {
+		var allData = output.getData();
+		if(angular.isDefined(allData) && allData.length>0){
+			for(var i=0; i<allData.length;i++){
+				var position = $scope.atomicTransfere.searchOutputPositionByInputContainerCode(allData[i].code || allData[i].inputCode);
+				if($scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds!=null && angular.isDefined($scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds[0])){
+					allData[i].outputContainerUsed  = $scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds[0];
+					allData[i].outputInstrumentProperties = $scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds[0].instrumentProperties;
+					allData[i].outputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds[0].experimentProperties;
+				}										
+			}
+			output.setData(allData,allData.length)
+		}
+	};
 	
 	$scope.setValidePercentage = function(containerUseds){
 		var l = containerUseds.length;
@@ -294,7 +330,7 @@ angular.module('home').controller('ManyToOneMapcardCtrl',['$scope', '$window','d
 	$scope.experiment.outputGenerated = $scope.isOutputGenerated();
 	
 	if($scope.experiment.editMode){
-		$scope.atomicTransfere.loadExperiment($scope.datatable);
+		$scope.atomicTransfere.loadExperiment($scope.datatable, experimentToOutputHelper,outputToExperimentHelper);
 	}else{
 		$scope.atomicTransfere.newExperiment($scope.datatable);
 	}

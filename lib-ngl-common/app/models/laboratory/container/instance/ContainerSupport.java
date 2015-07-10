@@ -1,7 +1,10 @@
 package models.laboratory.container.instance;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -22,11 +25,22 @@ public class ContainerSupport extends DBObject implements IValidation{
 	public String stockCode;
 	public Valuation valuation;
 	public TraceInformation traceInformation;
-	public List<String> projectCodes;
-	public List<String> sampleCodes;
-	public List<String> fromExperimentTypeCodes;
+	public Set<String> projectCodes;
+	public Set<String> sampleCodes;
+	public Set<String> fromExperimentTypeCodes;
 	public Map<String, PropertyValue> properties;
 	
+	
+	
+	public ContainerSupport() {
+		projectCodes= new HashSet<>();
+		sampleCodes= new HashSet<>();
+		fromExperimentTypeCodes= new HashSet<>();
+		properties = new HashMap<>();
+	}
+
+
+
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {

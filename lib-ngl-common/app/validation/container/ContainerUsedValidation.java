@@ -1,5 +1,7 @@
 package validation.container;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +42,6 @@ public class ContainerUsedValidation extends CommonValidationHelper{
 	}
 	
 	
-	
 	public static  List<PropertyDefinition> getPropertyDefintionNotRequired(List<PropertyDefinition> propertyDefinitions){
 		
 		for(PropertyDefinition propertyDefinition:propertyDefinitions){
@@ -48,6 +49,35 @@ public class ContainerUsedValidation extends CommonValidationHelper{
 		}
 		
 		return propertyDefinitions;
+	}
+
+
+	public static void validateVolume(ContextValidation contextValidation, PropertyValue volume) {
+		if(volume!=null && volume.value!=null){
+			Collection<PropertyDefinition> pdefs = new ArrayList<>();		
+			PropertyDefinition pd = new PropertyDefinition();			
+			pd.code = "volume";
+			pd.valueType = Double.class.getName();
+			pdefs.add(pd);
+			contextValidation.putObject("propertyDefinitions", pdefs);
+			volume.validate(contextValidation);
+			contextValidation.removeObject("propertyDefinitions");
+		}
+	}
+
+
+	public static void validateConcentration(ContextValidation contextValidation, PropertyValue concentration) {
+		if(concentration!=null && concentration.value!=null){
+			Collection<PropertyDefinition> pdefs = new ArrayList<>();
+			PropertyDefinition pd = new PropertyDefinition();
+			pd.code = "concentration";
+			pd.valueType = Double.class.getName();
+			pdefs.add(pd);
+			contextValidation.putObject("propertyDefinitions", pdefs);
+			concentration.validate(contextValidation);
+			contextValidation.removeObject("propertyDefinitions");
+		}
+		
 	}
 
 

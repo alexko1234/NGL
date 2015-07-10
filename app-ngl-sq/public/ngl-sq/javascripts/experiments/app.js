@@ -42,4 +42,8 @@ angular.module('home', ['ngRoute','datatableServices','basketServices', 'commons
 		  enabled: true,
 		  requireBase: false
 		});
+}).config(function ( $compileProvider) {
+
+    $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|mailto|data):/);
+
 });

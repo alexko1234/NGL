@@ -1,6 +1,7 @@
 package controllers.migration;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -296,12 +297,12 @@ public class CompareLimsVsNGL extends CommonController {
 			 //lims vs support
 			 if(!solexaProjectCodes.equals(supportProjectCodes)){
 				 cv.addErrors("projectCodes", "support projectCodes not match lims : "+solexaProjectCodes+" / "+ supportProjectCodes);
-				 support.projectCodes = new ArrayList<String>(solexaProjectCodes);
+				 support.projectCodes = new HashSet<String>(solexaProjectCodes);
 			 }
 			 
 			 if(!solexaSamplesCodes.equals(supportSampleCodes)){
 				 cv.addErrors("sampleCodes", "support sampleCodes not match lims : "+solexaSamplesCodes+" / "+supportSampleCodes);
-				 support.sampleCodes = new ArrayList<String>(solexaSamplesCodes);
+				 support.sampleCodes = new HashSet<String>(solexaSamplesCodes);
 			 }
 			 
 			 
@@ -345,12 +346,12 @@ public class CompareLimsVsNGL extends CommonController {
 				
 				if (!solProjectCodes.equals(cProjectCodes)) {
 					cv.addErrors("projectCodes","containers projectCodes not match lims : "+ solProjectCodes + " != " + cProjectCodes);
-					currentContainer.projectCodes = new ArrayList<String>(solProjectCodes);
+					currentContainer.projectCodes = new HashSet<String>(solProjectCodes);
 				}
 				
 				if (!solSampleCodes.equals(cSampleCodes)) {
 					cv.addErrors("sampleCodes",	"containers sampleCodes not match lims : "+ solSampleCodes + " != " + cSampleCodes);
-					currentContainer.sampleCodes = new ArrayList<String>(solSampleCodes);
+					currentContainer.sampleCodes = new HashSet<String>(solSampleCodes);
 				}
 				cv.addKeyToRootKeyName("contents");
 				Map<String, List<Content>> scContents = currentContainer.contents.stream().collect(Collectors.groupingBy((Content c ) -> c.sampleCode));
@@ -425,7 +426,7 @@ public class CompareLimsVsNGL extends CommonController {
 				 cv.removeKeyFromRootKeyName(laneNumber);
 				 
 				 if(modifyContents.size() == currentContainer.contents.size()){
-					 currentContainer.contents = modifyContents;
+					 currentContainer.contents = new HashSet<>(modifyContents);
 					 modifyContainers.add(currentContainer);
 				 }else{
 					 Logger.error("not same content number for container : "+currentContainer.code+" - "+currentContainer.contents.size()+" / "+modifyContents.size());
@@ -489,7 +490,6 @@ public class CompareLimsVsNGL extends CommonController {
 			}else if(!limsAbandonDAO.isLseqco(rs)){
 				Logger.error("ReadSet not exist in dblims "+rs.code);
 			}
-			
 		}
 		cv.displayErrors(logger);
 		return ok();

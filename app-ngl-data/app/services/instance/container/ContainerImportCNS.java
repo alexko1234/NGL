@@ -5,8 +5,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
@@ -159,7 +161,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 	public static void createProcessFromContainers(List<Container> containers, String processTypeCode, String sql, ContextValidation contextError) {
 		for(Container container:containers){
 			List<Process> processes=limsServices.findProcessToCreate(sql, container,processTypeCode, contextError);
-			List<String> processCodes=new ArrayList<String>();
+			Set<String> processCodes=new HashSet<String>();
 			String rootKeyName=null;
 			for(Process process:processes){
 				Logger.debug("ContextError mode creation "+contextError.isCreationMode());
@@ -243,10 +245,11 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		container.mesuredConcentration=new PropertySingleValue(Math.round(rs.getFloat("mesuredConcentration")*100.0)/100.0, mesuredConcentrationUnit);
 		container.mesuredVolume=new PropertySingleValue(Math.round(rs.getFloat("mesuredVolume")*100.0)/100.0, "µl");
 		container.mesuredQuantity=new PropertySingleValue(Math.round(rs.getFloat("mesuredQuantity")*100.0)/100.0, "ng");
+		
+		container.fromExperimentTypeCodes=new HashSet<String>();
+		container.fromExperimentTypeCodes.add(experimentTypeCode);
 
-		container.fromExperimentTypeCodes=InstanceHelpers.addCode(experimentTypeCode, container.fromExperimentTypeCodes);
-
-		container.projectCodes=new ArrayList<String>();					
+		container.projectCodes=new HashSet<String>();					
 
 		if(rs.getString("project")!=null)
 		{					
@@ -258,7 +261,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		}
 			
 
-		container.sampleCodes=new ArrayList<String>();
+		container.sampleCodes=new HashSet<String>();
 
 		if(rs.getString("sampleCode")!=null){
 			

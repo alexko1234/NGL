@@ -17,8 +17,8 @@
 					
 		}
 		@columnSearchForm{
-			@formGroup{	
-				<div bt-select placeholder="@Messages("experiments.select.experimentType.purifications")" class="form-control" ng-model="searchService.form.nextExperimentTypeCode" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in searchService.lists.get('purification')" ng-change="changeExperimentType('purification')" auto-select>
+			@formGroup{
+				<div bt-select placeholder="@Messages("experiments.select.experimentType.transferts")" class="form-control" ng-model="searchService.form.nextExperimentTypeCode" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in searchService.lists.get('transfert')" ng-change="changeExperimentType('transfert')" >
 				</div>
 			}
 			<hr>
@@ -45,8 +45,8 @@
 		}
 		@columnSearchForm{
 			@formGroup{	
-			<div bt-select placeholder="@Messages("experiments.select.experimentType.transferts")" class="form-control" ng-model="searchService.form.nextExperimentTypeCode" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in searchService.lists.get('transfert')" ng-change="changeExperimentType('transfert')" >
-			</div>
+				<div bt-select placeholder="@Messages("experiments.select.experimentType.purifications")" class="form-control" ng-model="searchService.form.nextExperimentTypeCode" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in searchService.lists.get('purification')" ng-change="changeExperimentType('purification')" auto-select>
+				</div>
 			}
 			<hr>
 			@formGroup{
@@ -76,15 +76,16 @@
 		}
 }
 
-<!-- @searchForm(form)()() -->
 
+<!-- @searchForm(form)()("searchService.datatable") -->
 
 <div class="row"> 
 <div class="col-md-12 col-lg-12" datatable="datatable">
 	<div dt-form>
 		<ul class="nav nav-tabs margin-bottom-5">
 	   	<li class="active"><a href="#" data-target="#filters" data-toggle="tab">@Messages("search.tab.filters")</a></li>
-	   	<li ng-if="getAddFiltersToForm().length > 0"><a href="#" data-target="#addfilters" data-toggle="tab">@Messages("search.tab.addfilters")</a></li>    
+	   	<li ng-if="searchService.getAddFiltersToForm().length > 0"><a href="#" data-target="#addfilters" data-toggle="tab">@Messages("search.tab.addfilters")</a></li>
+	   	<li ng-if="searchService.getAddColumnsToForm().length > 0"><a href="#" data-target="#addcolumns" data-toggle="tab">@Messages("search.tab.addcolumns")</a></li>       
 	   	</ul>
 			
 		<div class="tab-content">
@@ -108,10 +109,11 @@
 			</div>		
 		</form>	
 	</div>
+	
 	<div class="tab-pane" id="addfilters">
 	<form class="well well-small">
 			<div class="row">
-				<div class="col-md-2 col-lg-2" ng-repeat="filters in getAddFiltersToForm()">
+				<div class="col-md-2 col-lg-2" ng-repeat="filters in searchService.getAddFiltersToForm()">
 					<div class="form-group" ng-repeat="filter in filters">
 						<div dt-compile="filter.html"></div> <!-- used directive from datatable to compile html -->
 					</div>
@@ -128,7 +130,34 @@
 					</button>
 												 	
 				</div>	
-				}	
+				}
+				
+			}
+			</div>			
+		</form>	
+	</div>
+	
+	<div class="tab-pane" id="addcolumns">
+	<form class="well well-small">
+			<div class="row">
+			<div class="col-md-2 col-lg-2" ng-repeat="columns in searchService.getAddColumnsToForm()">
+			  		<div class="checkbox" ng-repeat="column in columns">
+				    <label>
+				      <input type="checkbox" ng-model="column.select"> {{column.header}}
+				    </label>
+				  </div>			
+			 </div>
+			 @columnSearchForm{
+				@formGroup{
+				<div class="btn-toolbar">
+					<button type="submit" title='@Messages("button.search")' data-toggle="tooltip" ng-click="searchService.addColumnsToDatatable()" class="btn btn-primary" >
+						<i class="fa fa-plus"></i>
+					</button>
+					<button title='@Messages("button.reset")' data-toggle="tooltip" ng-click="searchService.resetDatatableColumns()"  class="btn btn-default">
+						<i class="fa fa-undo"></i>
+					</button>												 	
+				</div>	
+				}					
 			}
 			</div>			
 		</form>	

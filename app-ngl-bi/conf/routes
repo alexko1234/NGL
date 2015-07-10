@@ -73,5 +73,4 @@ GET		/compare-lims-support						controllers.migration.CompareLimsVsNGL.compareSu
 GET		/compare-lims-files							controllers.migration.CompareLimsVsNGL.compareFile(update:Boolean ?=false)
 GET		/migration-fraction							controllers.migration.MigrationFractionRun.migration()
 GET		/migration-process-type-codes				controllers.migration.MigrationLibProcessTypeCodesRun.migration()
-GET		/migration-cycles							controllers.migration.MigrationNbUsefulCyclesRun.migration()
 

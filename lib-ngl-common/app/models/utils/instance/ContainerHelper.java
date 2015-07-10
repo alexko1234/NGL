@@ -6,12 +6,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.description.ContainerSupportCategory;
@@ -30,7 +33,6 @@ import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import validation.ContextValidation;
 import validation.utils.BusinessValidationHelper;
-import fr.cea.ig.MongoDBDAO;
 
 public class ContainerHelper {
 
@@ -61,9 +63,9 @@ public class ContainerHelper {
 
 		container.contents.add(finalContent);
 
-		container.projectCodes=InstanceHelpers.addCodesList(sample.projectCodes,container.projectCodes);
+		container.projectCodes.addAll(sample.projectCodes);
 
-		container.sampleCodes=InstanceHelpers.addCode(sample.code,container.sampleCodes);
+		container.sampleCodes.add(sample.code);
 
 	}
 
@@ -75,26 +77,41 @@ public class ContainerHelper {
 			
 			Container inputContainer=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, inputContainerUsed.code);
 
-			List<Content> contents = new ArrayList<Content>(inputContainer.contents);
+			Set<Content> contents = new HashSet<Content>(inputContainer.contents);
 			
 			if(inputContainerUsed.percentage==null){
 				inputContainerUsed.percentage=100.0/inputContainerUseds.size();
 			}
 			calculPercentageContent(contents,inputContainerUsed.percentage);
 			outputContainer.contents.addAll(contents);
-
-			outputContainer.projectCodes=InstanceHelpers.addCodesList(inputContainer.projectCodes,outputContainer.projectCodes);
-			outputContainer.sampleCodes=InstanceHelpers.addCodesList(inputContainer.sampleCodes,outputContainer.sampleCodes);
+			if(outputContainer.projectCodes == null){
+				outputContainer.projectCodes = new HashSet<String>();
+			}
+			outputContainer.projectCodes.addAll(inputContainer.projectCodes);
+			if(outputContainer.sampleCodes == null){
+				outputContainer.sampleCodes = new HashSet<String>();
+			}
+			outputContainer.sampleCodes.addAll(inputContainer.sampleCodes);
 			outputContainer.categoryCode = ContainerSupportCategory.find.findByCode(experiment.instrument.outContainerSupportCategoryCode).containerCategory.code;
+			
 			if(CollectionUtils.isNotEmpty(inputContainer.inputProcessCodes)){
-				outputContainer.inputProcessCodes=InstanceHelpers.addCodesList(inputContainer.inputProcessCodes,outputContainer.inputProcessCodes); }
+				if(outputContainer.inputProcessCodes == null){
+					outputContainer.inputProcessCodes = new HashSet<String>();
+				}
+				outputContainer.inputProcessCodes.addAll(inputContainer.inputProcessCodes); }
 			outputContainer.processTypeCode=inputContainer.processTypeCode;
 
 			if(experiment.categoryCode.equals("transformation")){
-				outputContainer.fromExperimentTypeCodes=InstanceHelpers.addCode(experiment.typeCode ,outputContainer.fromExperimentTypeCodes);
+				if(outputContainer.fromExperimentTypeCodes == null){
+					outputContainer.fromExperimentTypeCodes = new HashSet<String>();
+				}
+				outputContainer.fromExperimentTypeCodes.add(experiment.typeCode);
 			}else{
 				if(CollectionUtils.isNotEmpty(inputContainer.fromExperimentTypeCodes)){				
-				outputContainer.fromExperimentTypeCodes=InstanceHelpers.addCodesList(inputContainer.fromExperimentTypeCodes,outputContainer.fromExperimentTypeCodes);
+					if(outputContainer.fromExperimentTypeCodes == null){
+						outputContainer.fromExperimentTypeCodes = new HashSet<String>();
+					}
+					outputContainer.fromExperimentTypeCodes.addAll(inputContainer.fromExperimentTypeCodes);
 				}
 			}
 
@@ -124,7 +141,7 @@ public class ContainerHelper {
 		
 	}
 	
-	public static void calculPercentageContent(List<Content> contents, Double percentage){
+	public static void calculPercentageContent(Set<Content> contents, Double percentage){
 		if(percentage!=null){
 			for(Content cc:contents){
 				BigDecimal bd=null;				
@@ -162,22 +179,22 @@ public class ContainerHelper {
 				else {
 					newSupport = ContainerSupportHelper.createContainerSupport(container.support.code, null, container.support.categoryCode,"ngl");
 				}
-				newSupport.projectCodes = new  ArrayList<String>(container.projectCodes);
-				newSupport.sampleCodes = new  ArrayList<String>(container.sampleCodes);
+				newSupport.projectCodes = new  HashSet<String>(container.projectCodes);
+				newSupport.sampleCodes = new  HashSet<String>(container.sampleCodes);
 				newSupport.state=container.state;
 				
 				if(null != container.fromExperimentTypeCodes){//TODO Must be manage for CNG
-					newSupport.fromExperimentTypeCodes = new  ArrayList<String>(container.fromExperimentTypeCodes);
+					newSupport.fromExperimentTypeCodes = new  HashSet<String>(container.fromExperimentTypeCodes);
 				}
 				if (!mapSupports.containsKey(newSupport.code)) {
 					mapSupports.put(newSupport.code, newSupport);
 				}
 				else {
 					ContainerSupport oldSupport = (ContainerSupport) mapSupports.get(newSupport.code);
-					InstanceHelpers.addCodesList(newSupport.projectCodes, oldSupport.projectCodes); 
-					InstanceHelpers.addCodesList(newSupport.sampleCodes, oldSupport.sampleCodes);
+					oldSupport.projectCodes.addAll(newSupport.projectCodes); 
+					oldSupport.sampleCodes.addAll(newSupport.sampleCodes);
 					if(null != newSupport.fromExperimentTypeCodes && null != oldSupport.fromExperimentTypeCodes){//TODO Must be manage for CNG
-						InstanceHelpers.addCodesList(newSupport.fromExperimentTypeCodes, oldSupport.fromExperimentTypeCodes);
+						oldSupport.fromExperimentTypeCodes.addAll(newSupport.fromExperimentTypeCodes);
 					}
 				}
 
@@ -195,16 +212,27 @@ public class ContainerHelper {
 
 		for (Container container : updatedContainers) {
 			if (container.support != null) {
-				ContainerSupport newSupport = ContainerSupportHelper.createContainerSupport(container.support.code, mapSupportsCodeSeq.get(container.support.code), container.support.categoryCode,"ngl");
-				newSupport.projectCodes = new  ArrayList<String>(container.projectCodes);
-				newSupport.sampleCodes = new  ArrayList<String>(container.sampleCodes);							
+				//FDS note 22/06/2015: mapSupportsCodeSeq n'est defini que pour les container de type lane!!
+				//FDS bug 22/06/2015: il manquait le test sur mapSupportsCodeSeq
+				//ContainerSupport newSupport = ContainerSupportHelper.createContainerSupport(container.support.code, mapSupportsCodeSeq.get(container.support.code), container.support.categoryCode,"ngl");
+				
+				ContainerSupport newSupport = null;
+				if (mapSupportsCodeSeq != null) {
+					newSupport = ContainerSupportHelper.createContainerSupport(container.support.code, mapSupportsCodeSeq.get(container.support.code), container.support.categoryCode,"ngl");
+				}
+				else {
+					newSupport = ContainerSupportHelper.createContainerSupport(container.support.code, null, container.support.categoryCode,"ngl");
+				}
+					
+				newSupport.projectCodes = new  HashSet<String>(container.projectCodes);
+				newSupport.sampleCodes = new  HashSet<String>(container.sampleCodes);							
 				if (!mapSupports.containsKey(newSupport.code)) {
 					mapSupports.put(newSupport.code, newSupport);
 				}
 				else {
 					ContainerSupport oldSupport = (ContainerSupport) mapSupports.get(newSupport.code);
-					InstanceHelpers.addCodesList(newSupport.projectCodes, oldSupport.projectCodes); 
-					InstanceHelpers.addCodesList(newSupport.sampleCodes, oldSupport.sampleCodes);
+					oldSupport.projectCodes.addAll(newSupport.projectCodes); 
+					oldSupport.sampleCodes.addAll(newSupport.sampleCodes);
 				}
 
 			}
@@ -231,9 +259,9 @@ public class ContainerHelper {
 
 	}
 
-	public static List<Content> contentFromSampleCode(List<Content> contents,
+	public static Set<Content> contentFromSampleCode(Set<Content> contents,
 			String sampleCode) {
-		List<Content> contentsFind=new ArrayList<Content>();
+		Set<Content> contentsFind=new HashSet<Content>();
 		for(Content content:contents){
 			if(content.sampleCode.equals(sampleCode)){
 				contentsFind.add(content);

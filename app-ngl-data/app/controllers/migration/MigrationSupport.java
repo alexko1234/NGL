@@ -2,19 +2,22 @@ package controllers.migration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+
+import models.Constants;
+import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.container.instance.LocationOnContainerSupport;
+import models.utils.InstanceConstants;
+import models.utils.InstanceHelpers;
+import models.utils.instance.ContainerSupportHelper;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.mongojack.JacksonDBCollection;
 
-import models.Constants;
-import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.LocationOnContainerSupport;
-import models.laboratory.container.instance.ContainerSupport;
-import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
-import models.utils.instance.ContainerSupportHelper;
 import play.Logger;
 import play.mvc.Result;
 import validation.ContextValidation;
@@ -88,16 +91,16 @@ public class MigrationSupport extends CommonController{
 		if (container.support != null) {
 			//ContainerSupport newSupport = ContainerSupportHelper.createSupport(container.support, container.projectCodes, container.sampleCodes);
 			ContainerSupport newSupport = ContainerSupportHelper.createContainerSupport(container.support.code,null, container.support.categoryCode,"ngl");
-			newSupport.projectCodes=new ArrayList<String>(container.projectCodes);
-			newSupport.sampleCodes=new ArrayList<String>(container.sampleCodes);
+			newSupport.projectCodes=new HashSet<String>(container.projectCodes);
+			newSupport.sampleCodes=new HashSet<String>(container.sampleCodes);
 
 			if (!mapSupports.containsKey(newSupport.code)) {
 				mapSupports.put(newSupport.code, newSupport);
 			}
 			else {
 				ContainerSupport oldSupport = (ContainerSupport) mapSupports.get(newSupport.code);
-				InstanceHelpers.addCodesList(newSupport.projectCodes, oldSupport.projectCodes); 
-				InstanceHelpers.addCodesList(newSupport.sampleCodes, oldSupport.sampleCodes);
+				oldSupport.projectCodes.addAll(newSupport.projectCodes); 
+				oldSupport.sampleCodes.addAll(newSupport.sampleCodes);
 			}
 		}
 	}

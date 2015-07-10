@@ -45,20 +45,19 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"groupMethod":"collect"
 		},
 		{
-			"header":Messages("containers.table.fromExperimentTypeCodes"),
-			"property":"fromExperimentTypeCodes",
-			//"filter":"codes:'type'",
+			"header":Messages("containers.table.projectCodes"),
+			"property":"projectCodes",
 			"order":false,
-			"position":6,
+			"position":6,					
+			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='2'>",
 			"type":"text",
-			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
 			"groupMethod":"collect"
 		},
 		{
 			"header":Messages("containers.table.sampleCodes.length"),
 			"property":"sampleCodes.length",
 			"order":true,
-			"position":8,
+			"position":7,
 			"type":"number",
 			"groupMethod":"sum"
 		},
@@ -67,7 +66,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"property":"sampleCodes",
 			"order":false,
 			"hide":true,
-			"position":9,
+			"position":8,
 			"type":"text",
 			"render":"<div list-resize='cellValue | unique' list-resize-min-size='3'>",
 			"groupMethod":"collect"
@@ -78,7 +77,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"property":"contents.length",
 			"order":true,
 			"hide":true,
-			"position":9.01,
+			"position":9,
 			"type":"number",
 			"groupMethod":"sum"
 				
@@ -89,32 +88,33 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"order":false,
 			"hide":true,
 			"type":"text",
-			"position":9.1,
+			"position":10,
 			"render":"<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' ' list-resize-min-size='3'>",
 			"groupMethod":"collect"
 			
 		},
 		{
-			"header":Messages("containers.table.projectCodes"),
-			"property":"projectCodes",
+			"header":Messages("containers.table.fromExperimentTypeCodes"),
+			"property":"fromExperimentTypeCodes",
+			//"filter":"codes:'type'",
 			"order":false,
-			"position":10,					
-			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='2'>",
+			"position":11,
 			"type":"text",
+			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
 			"groupMethod":"collect"
 		},
 		{
 			"header":Messages("containers.table.creationDate"),
 			"property":"traceInformation.creationDate",
 			"order":true,
-			"position":12,
+			"position":14,
 			"type":"date"
 		},
 		{
 			"header":Messages("containers.table.createUser"),
 			"property":"traceInformation.createUser",
 			"order":true,
-			"position":13,
+			"position":15,
 			"type":"text"
 		},
 		{
@@ -122,7 +122,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"property":"inputProcessCodes",
 			"order":false,
 			"type":"text",
-			"position":14,
+			"position":16,
 			"render":"<div list-resize='value.data.inputProcessCodes | unique' list-resize-min-size='3'>",
 			"groupMethod":"collect"
 		},
@@ -132,7 +132,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"order":true,
 			"type":"text",
 			"edit":false,
-			"position":7,
+			"position":12,
 			"choiceInList": true,
 			"possibleValues":"searchService.lists.getStates()", 
 			"filter":"codes:'state'",
@@ -145,7 +145,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"order":true,
 			"type":"text",
 			"edit":true,
-			"position":11,
+			"position":13,
 			"choiceInList": true,
 			"possibleValues":"searchService.lists.getValuations()", 
 			"filter":"codes:'valuation'"	
@@ -197,8 +197,14 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	};
 	
 	$scope.changeProcessType = function(){
-		lists.refresh.filterConfigs({pageCodes:["process-"+$scope.searchService.form.processTypeCode]}, "process-"+$scope.searchService.form.processTypeCode);
-		$scope.initAdditionalFilters();
+		//lists.refresh.filterConfigs({pageCodes:["process-"+$scope.searchService.form.processTypeCode]}, "process-"+$scope.searchService.form.processTypeCode);
+		if(angular.isDefined($scope.searchService.form.processCategory)){						
+			$scope.searchService.lists.refresh.filterConfigs({pageCodes:["process-"+$scope.searchService.form.processTypeCode]}, "process-"+$scope.searchService.form.processTypeCode);			                                    		 
+		}else{
+			$scope.searchService.form.processTypeCode = undefined;			                                    		
+		}		
+
+		$scope.searchService.initAdditionalFilters();
 	};
 	
 	$scope.reset = function(){
@@ -237,6 +243,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	};
 	
 	$scope.search = function(){
+		$scope.searchService.updateForm();
 		var _form = angular.copy($scope.searchService.form);
 		$scope.errors.experimentType = {};
 		$scope.errors.containerSupportCategory = {};
@@ -267,30 +274,134 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		}						
 	};
 	
-	$scope.initAdditionalFilters = function(){
-		$scope.additionalFilters=[];
-		if($scope.searchService.form.processTypeCode !== undefined && lists.get("process-"+$scope.searchService.form.processTypeCode) && lists.get("process-"+$scope.searchService.form.processTypeCode).length === 1){
-			var formFilters = [];
-			var allFilters = angular.copy(lists.get("process-"+$scope.searchService.form.processTypeCode)[0].filters);
+	$scope.searchService.initAdditionalColumns = function(){
+		$scope.searchService.additionalColumns=[];
+		$scope.searchService.selectedAddColumns=[];
+		
+		if($scope.searchService.lists.get("containers-addcolumns") && $scope.searchService.lists.get("containers-addcolumns").length === 1){
+			var formColumns = [];
+			var allColumns = angular.copy($scope.searchService.lists.get("containers-addcolumns")[0].columns);
+			var nbElementByColumn = Math.ceil(allColumns.length / 5); //5 columns
+			for(var i = 0; i  < 5 && allColumns.length > 0 ; i++){
+				formColumns.push(allColumns.splice(0, nbElementByColumn));	    								
+			}
+			//complete to 5 five element to have a great design 
+			while(formColumns.length < 5){
+				formColumns.push([]);
+			}
+			$scope.searchService.additionalColumns = formColumns;
+		}
+	};
+	
+	$scope.searchService.updateForm = function(){
+		$scope.searchService.form.includes = [];
+		if($scope.searchService.reportingConfiguration){
+			for(var i = 0 ; i < $scope.searchService.reportingConfiguration.columns.length ; i++){
+				if($scope.searchService.reportingConfiguration.columns[i].queryIncludeKeys && $scope.searchService.reportingConfiguration.columns[i].queryIncludeKeys.length > 0){
+					$scope.searchService.form.includes = $scope.searchService.form.includes.concat($scope.searchService.reportingConfiguration.columns[i].queryIncludeKeys);
+				}else{
+					$scope.searchService.form.includes.push($scope.searchService.reportingConfiguration.columns[i].property.replace('.value','').replace(".unit", ''));
+				}
+			}
+		}else{
+			$scope.searchService.form.includes = ["default"];
+		}
+		
+		
+		//this.form.includes = ["default"];
+		for(var i = 0 ; i < $scope.searchService.selectedAddColumns.length ; i++){
+			//remove .value if present to manage correctly properties (single, list, etc.)
+			if($scope.searchService.selectedAddColumns[i].queryIncludeKeys && $scope.searchService.selectedAddColumns[i].queryIncludeKeys.length > 0){
+				$scope.searchService.form.includes = $scope.searchService.form.includes.concat($scope.searchService.selectedAddColumns[i].queryIncludeKeys);
+			}else{
+				$scope.searchService.form.includes.push($scope.searchService.selectedAddColumns[i].property.replace('.value','').replace(".unit", ''));
+			}
+			
+		}
+	};
+	
+	$scope.searchService.getAddColumnsToForm = function(){
+		if($scope.searchService.additionalColumns.length === 0){
+			$scope.searchService.initAdditionalColumns();
+		}
+		return $scope.searchService.additionalColumns;									
+	};
+	
+	$scope.searchService.addColumnsToDatatable=function(){
+		//this.reportingConfiguration = undefined;
+		//this.reportingConfigurationCode = undefined;
+		
+		$scope.searchService.selectedAddColumns = [];
+		for(var i = 0 ; i < $scope.searchService.additionalColumns.length ; i++){
+			for(var j = 0; j < $scope.searchService.additionalColumns[i].length; j++){
+				if($scope.searchService.additionalColumns[i][j].select){
+					$scope.searchService.selectedAddColumns.push($scope.searchService.additionalColumns[i][j]);
+				}
+			}
+		}
+		if($scope.searchService.reportingConfigurationCode){
+			$scope.datatable.setColumnsConfig($scope.searchService.reportingConfiguration.columns.concat($scope.searchService.selectedAddColumns));
+		}else{
+			$scope.datatable.setColumnsConfig($scope.searchService.getDefaultColumns().concat($scope.searchService.selectedAddColumns));						
+		}
+		$scope.search();
+	};	
+	$scope.searchService.resetDatatableColumns = function(){
+		$scope.searchService.initAdditionalColumns();
+		$scope.datatable.setColumnsConfig($scope.searchService.getDefaultColumns());
+		$scope.search();
+	};
+	/**
+	 * Update column when change reportingConfiguration
+	 */
+	$scope.searchService.updateColumn = function(){
+		$scope.searchService.initAdditionalColumns();
+		if($scope.searchService.reportingConfigurationCode){
+			$http.get(jsRoutes.controllers.reporting.api.ReportingConfigurations.get($scope.searchService.reportingConfigurationCode).url,{searchService:$scope.searchService, datatable:$scope.datatable})
+					.success(function(data, status, headers, config) {
+						config.searchService.reportingConfiguration = data;
+						config.searchService.search();
+						config.datatable.setColumnsConfig(data.columns);																								
+			});
+		}else{
+			$scope.searchService.reportingConfiguration = undefined;
+			$scope.datatable.setColumnsConfig($scope.searchService.getDefaultColumns());
+			$scope.search();
+		}
+		
+	};
+	
+	$scope.searchService.initAdditionalFilters = function(){
+		var additionalFilters = $scope.searchService.additionalFilters = [];
+		var allFilters = undefined;
+		var formFilters = [];
+		if(angular.isDefined($scope.searchService.form.processTypeCode) && $scope.searchService.lists.get("process-"+$scope.searchService.form.processTypeCode) && $scope.searchService.lists.get("process-"+$scope.searchService.form.processTypeCode).length === 1){ 
+			allFilters = angular.copy($scope.searchService.lists.get("process-"+$scope.searchService.form.processTypeCode)[0].filters);
+		}else if($scope.searchService.lists.get("containers-search-addfilters") && $scope.searchService.lists.get("containers-search-addfilters").length === 1){
+			allFilters = angular.copy($scope.searchService.lists.get("containers-search-addfilters")[0].filters);
+		}
+
+		if(angular.isDefined(allFilters)){ 
 			var nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
 			for(var i = 0; i  < 5 && allFilters.length > 0 ; i++){
 				formFilters.push(allFilters.splice(0, nbElementByColumn));	    								
 			}
+		}
 			//complete to 5 five element to have a great design 
 			while(formFilters.length < 5){
 				formFilters.push([]);
 			}
-				
-			this.additionalFilters = formFilters;
-		}
-	},
+
+			$scope.searchService.additionalFilters = additionalFilters = formFilters;
+		
+	};
 	
-	$scope.getAddFiltersToForm = function(){
-		if($scope.additionalFilters !== undefined && $scope.additionalFilters.length === 0){
-			$scope.initAdditionalFilters();
+	$scope.searchService.getAddFiltersToForm = function(){
+		if($scope.searchService.additionalFilters.length === 0){
+			$scope.searchService.initAdditionalFilters();
 		}
-		return $scope.additionalFilters;									
-	},
+		return $scope.searchService.additionalFilters;									
+	};	
 	
 	$scope.addToBasket = function(containers){
 		for(var i = 0; i < containers.length; i++){
@@ -302,7 +413,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 					}
 				}else{
 					var test = $scope.datatable.getGroupColumnValue(containers[i], "code");
-					if($scope.datatable.getGroupColumnValue(containers[i], "code") === this.basket.get()[j].code){
+					if($scope.datatable.getGroupColumnValue(containers[i], "code")[0] === this.basket.get()[j].code){
 						alreadyOnBasket = true;
 					}
 				}
@@ -335,6 +446,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			}
 		}
 	};
+	
+	$scope.searchService.getDefaultColumns = function(){ return $scope.datatableConfig.columns;};
 	
 	//init
 	$scope.errors = {};
@@ -371,9 +484,27 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	$scope.searchService.lists.refresh.processCategories();
 	$scope.searchService.lists.refresh.experimentCategories();
 	$scope.searchService.lists.refresh.users();
+	$scope.searchService.lists.refresh.containerSupports();
+	$scope.searchService.lists.refresh.experiments();
 	$scope.searchService.lists.refresh.states({objectTypeCode:"Container"});
+	$scope.searchService.lists.refresh.reportConfigs({pageCodes:["containers-addcolumns"]}, "containers-addcolumns");
+	$scope.searchService.lists.refresh.filterConfigs({pageCodes:["containers-search-addfilters"]}, "containers-search-addfilters");
 	$scope.form = {};
 	$scope.loadExperimentTypesLists();
+	$scope.searchService.additionalFilters=[];
+	$scope.searchService.additionalColumns=[];
+	$scope.searchService.selectedAddColumns=[];
+	$scope.searchService.getColumns=$scope.datatableConfig.columns;
+	$http.get(jsRoutes.controllers.processes.api.ProcessTypes.list().url,{params:{"list":true}})
+		.success(function(data, status, headers, config) {
+			var processesTypes = data;
+			angular.forEach(processesTypes, function(processType) {
+				$scope.searchService.lists.refresh.filterConfigs({pageCodes:["process-"+processType.code]}, "process-"+processType.code);
+			})       	 			
+	 
+		});
+	
+	
 	if(angular.isUndefined(mainService.getForm())){
 		$scope.searchService.form = {};
 		mainService.setForm($scope.searchService.form);

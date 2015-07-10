@@ -2,11 +2,11 @@ package models.utils.instance;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
 import fr.cea.ig.MongoDBDAO;
-
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -102,9 +102,18 @@ public class ContainerSupportHelper {
 		for(ContainerUsed inputContainerUsed:inputContainerUseds){
 
 			Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, inputContainerUsed.code);
-			containerSupport.projectCodes=InstanceHelpers.addCodesList(container.projectCodes, containerSupport.projectCodes);
-			containerSupport.sampleCodes=InstanceHelpers.addCodesList(container.sampleCodes, containerSupport.sampleCodes);
-			containerSupport.fromExperimentTypeCodes=InstanceHelpers.addCode(experiment.typeCode, containerSupport.fromExperimentTypeCodes);
+			if(containerSupport.projectCodes == null){
+				containerSupport.projectCodes = new HashSet<String>();
+			}
+			if(containerSupport.sampleCodes == null){
+				containerSupport.sampleCodes = new HashSet<String>();
+			}
+			if(containerSupport.fromExperimentTypeCodes == null){
+				containerSupport.fromExperimentTypeCodes = new HashSet<String>();
+			}
+			containerSupport.projectCodes.addAll(container.projectCodes);
+			containerSupport.sampleCodes.addAll(container.sampleCodes);
+			containerSupport.fromExperimentTypeCodes.add(experiment.typeCode);
 
 		}
 		
@@ -126,9 +135,9 @@ public class ContainerSupportHelper {
 
 	public static void updateData(List<Container> containers, Experiment experiment, ContainerSupport containerSupport) {
 		for(Container container : containers){
-			containerSupport.projectCodes=InstanceHelpers.addCodesList(container.projectCodes, containerSupport.projectCodes);
-			containerSupport.sampleCodes=InstanceHelpers.addCodesList(container.sampleCodes, containerSupport.sampleCodes);
-			containerSupport.fromExperimentTypeCodes=InstanceHelpers.addCodesList(container.fromExperimentTypeCodes, containerSupport.fromExperimentTypeCodes);
+			containerSupport.projectCodes.addAll(container.projectCodes);
+			containerSupport.sampleCodes.addAll(container.sampleCodes);
+			containerSupport.fromExperimentTypeCodes.addAll(container.fromExperimentTypeCodes);
 		}
 
 

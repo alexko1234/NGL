@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 application.name = NGL-SUB
 index.title = Bienvenue dans l'application NGL-SUB
 #Study
@@ -59,3 +60,66 @@ button.validate=Validate
 #containers.menu = Containers
 
 
+=======
+application.name = NGL-SUB
+index.title = Bienvenue dans l'application NGL-SUB
+#Study
+studies.menu = Study
+studies.menu.create = Creation
+studies.page.title=Study
+study.create.success= Sauvegarde réussie du study
+studies.msg.save.success=Study crée
+create.placeholder.studiesTitle=Titre study
+create.placeholder.projectCode=Select. code projet
+create.placeholder.abstract=Def. abstract
+create.placeholder.description=Def. description
+create.placeholder.existingStudyType=Type de study
+
+#Configuration
+configurations.menu = Configurations
+configurations.menu.create = Creation
+configurations.page.title=Configurations
+configuration.create.success= Sauvegarde réussie de la configuration
+configurations.msg.save.success=Configuration crée
+create.placeholder.studiesTypes=Select. type de study
+create.placeholder.librarySelection=librarySelection
+create.placeholder.librarySource=librarySource
+create.placeholder.libraryStrategy=libraryStrategy
+create.placeholder.strategySample=strategySample
+
+#Submission
+submissions.menu=Soumission
+submissions.menu.create=Creation-Validation
+submissions.menu.activate=Démarrer
+submissions.page.title=Soumission
+create.placeholder.submissions.study=Select. study
+create.placeholder.submissions.configuration=Select.  configuration
+create.placeholder.submissions.readSet=Select. lotSeq
+activate.placeholder.projectCode=Select. code projet
+submissions.tabs.sample=Sample
+submissions.tabs.experiment=Experiment
+submissions.tabs.run=Run
+submissions.tabs.rawData=RawData
+
+submissions.msg.save.success=Sauvegarde réussie de la soumission
+submissions.msg.validate.success=Soumission validée
+submissions.msg.details=Détail de la soumission
+sample.code=Code
+sample.projectCode=Code projet
+sample.taxonId=taxon Id
+sample.classification=Classification
+sample.title=Titre
+sample.description=Description
+
+
+button.save=Save
+button.reset=Reset
+button.cancel=Cancel
+button.edit=Edit
+button.validate=Validate
+#Containers
+#containers.title = Containers
+#containers.menu = Containers
+
+
+>>>>>>> master

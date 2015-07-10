@@ -14,8 +14,10 @@ import validation.utils.ValidationHelper;
 
 public class Reagent extends AbstractDeclaration {
 	
+	public String boxCode;//To delete
+	
 	public String catalogCode;
-	public String boxCode;
+	public String boxBarCode;
 	public String kitCode;
 	
 	public Date startToUseDate;
@@ -44,9 +46,6 @@ public class Reagent extends AbstractDeclaration {
 				
 				if(!contextValidation.hasErrors()){
 					ReagentValidationHelper.validateCode(this, InstanceConstants.REAGENT_INSTANCE_COLL_NAME, contextValidation);
-					if(StringUtils.isNotEmpty(boxCode)){
-						ReagentValidationHelper.validateBoxCode(boxCode, contextValidation);
-					}
 					ReagentValidationHelper.validateReagentCatalogCode(catalogCode, contextValidation);
 				}
 	}

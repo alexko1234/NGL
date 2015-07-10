@@ -1,9 +1,18 @@
 package validation.experiment;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.mongojack.DBQuery;
+
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
@@ -12,24 +21,15 @@ import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentQueryParams;
 import models.laboratory.instrument.description.InstrumentUsedType;
-import models.laboratory.processes.instance.Process;
 import models.laboratory.protocol.instance.Protocol;
 import models.laboratory.resolutions.instance.Resolution;
 import models.laboratory.resolutions.instance.ResolutionConfiguration;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
-
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.mongojack.DBQuery;
-
 import utils.AbstractTests;
 import utils.Constants;
 import validation.ContextValidation;
 import validation.experiment.instance.ExperimentValidationHelper;
-import fr.cea.ig.MongoDBDAO;
 
 
 public class ExperimentValidationHelperTest extends AbstractTests {
@@ -37,7 +37,7 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 	private static final String INIT_MONGO_SUFFIX = "_init";
 	static ExperimentType experimentType;
 	static Protocol protocol;
-	static List<String> resolutionList;
+	static Set<String> resolutionList;
 	static Instrument instrument;
 	static InstrumentUsedType instrumentUsedType;
 	
@@ -57,7 +57,7 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 		List<String> experimentTypes = new ArrayList<String>();
 		experimentTypes.add(experimentType.code);		
 		List<ResolutionConfiguration> resolutionConfigurations = MongoDBDAO.find(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, DBQuery.in("typeCodes", experimentTypes)).toList();
-		resolutionList=new ArrayList<String>();
+		resolutionList=new HashSet<String>();
 		for (ResolutionConfiguration rc : resolutionConfigurations) {
 			for(Resolution reso: rc.resolutions) {
 				resolutionList.add(reso.code);

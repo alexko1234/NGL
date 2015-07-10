@@ -2,6 +2,7 @@ package models.laboratory.experiment.instance;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
@@ -9,7 +10,6 @@ import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.LocationOnContainerSupport;
-import models.utils.HelperObjects;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
@@ -29,7 +29,7 @@ public class ContainerUsed implements IValidation{
 	public PropertyValue volume;
 	public PropertyValue concentration;
 	
-	public List<Content> contents;
+	public Set<Content> contents;
 	
 	public Double percentage;
 	// Proprietes a renseigner en fonction du type d'experiment ou d'instrument
@@ -38,7 +38,7 @@ public class ContainerUsed implements IValidation{
 	
 	public State state;
 	
-	public List<String> fromExperimentTypeCodes;
+	public Set<String> fromExperimentTypeCodes;
 	
 	public ContainerUsed() {
 		
@@ -67,6 +67,8 @@ public class ContainerUsed implements IValidation{
 		else if(contextValidation.getObject("stateCode").equals("F")) {
 			CommonValidationHelper.validateContainerCode(code, contextValidation);
 		} 
+		ContainerUsedValidation.validateVolume(contextValidation, volume);
+		ContainerUsedValidation.validateConcentration(contextValidation, concentration);
 		if(contextValidation.getObject("typeCode")!=null){
 			ContainerUsedValidation.validateExperimentProperties(contextValidation.getObject("typeCode").toString(),experimentProperties,contextValidation/*,false*/);//TODO: voir avec Maud
 		}		

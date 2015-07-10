@@ -6,7 +6,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import models.laboratory.container.instance.Container;
@@ -57,7 +60,7 @@ public class MigrationNGLSEQ extends CommonController{
 		
 		/* NGL-1.6.1*/
 	//	backupOneCollection(InstanceConstants.CONTAINER_COLL_NAME,Container.class);
-	//	backupOneCollection(InstanceConstants.PROCESS_COLL_NAME, Process.class);
+		backupOneCollection(InstanceConstants.PROCESS_COLL_NAME, Process.class);
 		migrationProcessTypeCodeInContainer();
 		migrationProcessCurrentExperimentTypeCode();
 		
@@ -221,7 +224,7 @@ public class MigrationNGLSEQ extends CommonController{
 
 	}
 	
-	private static <T extends DBObject> void backupOneCollection(String collectionName,Class<T> classType) {
+	static <T extends DBObject> void backupOneCollection(String collectionName,Class<T> classType) {
 		Logger.info("\tCopie "+collectionName+" start");
 		MongoDBDAO.save(collectionName+"_BCK_"+today,MongoDBDAO.find(collectionName, classType).toList());
 		Logger.info("\tCopie "+collectionName+" end");
@@ -240,9 +243,11 @@ public class MigrationNGLSEQ extends CommonController{
 		Logger.debug("Nb containers "+containers.size());
 		for(Container container:containers){
 				Logger.debug("Container to update "+container.code);
-				container.contents.get(0).properties.remove("tag");
-				container.contents.get(0).properties.remove("tagCategory");
-				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code",container.code),DBUpdate.set("contents.0.properties",container.contents.get(0).properties));						
+				Iterator<Content> iterator = container.contents.iterator();
+				Content cnt = iterator.next();
+				cnt.properties.remove("tag");
+				cnt.properties.remove("tagCategory");
+				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code",container.code),DBUpdate.set("contents.0.properties",cnt.properties));						
 		}
 		
 	}
@@ -255,14 +260,14 @@ public class MigrationNGLSEQ extends CommonController{
 		
 		for(Experiment experiment:experiments){
 			Logger.debug("Experiment to update"+experiment.code);
-			List<String> inputContainerSupportCodes=new ArrayList<String>();
+			Set<String> inputContainerSupportCodes=new HashSet<String>();
 			for(ContainerUsed containerUsed:experiment.getAllInPutContainer()){
 				if(containerUsed.locationOnContainerSupport==null)
 				 {
-					InstanceHelpers.addCode(containerUsed.code, inputContainerSupportCodes);
+					inputContainerSupportCodes.add(containerUsed.code);
 				}else
 				{
-					InstanceHelpers.addCode(containerUsed.locationOnContainerSupport.code, inputContainerSupportCodes);
+					inputContainerSupportCodes.add(containerUsed.locationOnContainerSupport.code);
 				}
 			}
 			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class

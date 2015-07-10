@@ -1,7 +1,6 @@
 //created on: May 5, 2015
 package rules
 
-
 rule "Debug pool-tube"
 	@nglSQ( calculations )
 	dialect "java"
@@ -21,9 +20,8 @@ rule "InputVolume"
 	no-loop
     when
 		$experiment:Experiment($typeCode:typeCode,$typeCode=="pool-tube")
-		$atomicTransfert: ManytoOneContainer($inputContainerUseds : inputContainerUseds, $inputContainerUseds!=null , $outputContainerUsed: outputContainerUsed, $outputContainerUsed!=null )
+		$atomicTransfert: ManytoOneContainer($inputContainerUseds : inputContainerUseds, $inputContainerUseds!=null , $outputContainerUsed: outputContainerUseds, $outputContainerUsed!=null )
 		$containerUsed: ContainerUsed($percentage: percentage, $percentage!=null) from $inputContainerUseds
-		
 		ContainerUsed($finalVolume: volume, $finalVolume!=null) from $outputContainerUsed
 		eval( Double.class.isInstance($percentage) && $finalVolume.getValue()!=null)
     then
@@ -40,3 +38,59 @@ rule "InputVolume"
 		update($experiment);
 
 end
+
+
+rule "outputConcentration"
+    @nglSQ( calculations )
+	dialect "java"
+	salience 800
+	no-loop
+ 	when
+ 	$experiment:Experiment($typeCode:typeCode,$typeCode=="pool-tube")
+	$atomicTransfert: ManytoOneContainer(inputContainerUseds!=null , $outputContainerUseds: outputContainerUseds, $outputContainerUseds!=null, $inputContainerUseds:inputContainerUseds )
+	 $inputConcentrations : Set(empty==false, size==1) from accumulate( ContainerUsed( $inputConcentration : concentration) from $inputContainerUseds,
+                        collectSet( $inputConcentration) )
+ 	$outputContainerUsed : ContainerUsed($concentration: concentration) from $outputContainerUseds
+ 	eval($atomicTransfert.getInputContainerUseds().get(0).getConcentration()!=null && ($concentration==null || $concentration.value==null))
+ 	then
+ 		Logger.debug("input concentration to outputconcentration");
+	 	$outputContainerUsed.concentration=$atomicTransfert.getInputContainerUseds().get(0).getConcentration();
+ 		
+end
+
+/*rule "Same concentrations in  Pool-tube"
+    @nglSQ( validations )
+	dialect "java"
+	salience 950
+	no-loop
+    when
+		$experiment:Experiment($typeCode:typeCode,$typeCode=="pool-tube")
+		$atomicTransfert: ManytoOneContainer($inputContainerUseds : inputContainerUseds, $inputContainerUseds!=null)
+		$total : Double() from accumulate(ContainerUsed($c: concentration, $c!=null) from $inputContainerUseds, sum( Double.parseDouble($c.getValue().toString()) ) )
+		$containerUsed: ContainerUsed($code: code,$concentration: concentration, $concentration!=null) from $inputContainerUseds				
+		$contextValidation:ContextValidation()
+		eval( Double.parseDouble($concentration.getValue().toString())!= (Double) $total/$inputContainerUseds.size())
+    then
+    	Double value = Double.parseDouble($concentration.getValue().toString());
+    	Logger.debug("value = " + value);
+    	Logger.debug("Same concentrations in  Pool-tube");
+    	$contextValidation.addErrors("pool-tube","error.validationexp.sameconcentration",$code, value);
+end
+*/
+
+
+rule "more than one inputContainer"
+	@nglSQ (validations )
+	dialect "java"
+	salience 400
+	no-loop
+    when
+    Experiment($typeCode:typeCode,$typeCode=="pool-tube")
+    $atomicTransfert: ManytoOneContainer(inputContainerUseds!=null, $inputContainerUseds:inputContainerUseds )
+    $contextValidation:ContextValidation($errors : errors)
+    eval($inputContainerUseds.size()<=1)
+    then 
+       	//Logger.debug("Nb inputContainerSupportCodes "+$inputContainerSupportCodes.size());
+    	$contextValidation.addErrors("inputContainerSupportCodes","error.validationexp.manyInputSupport", $typeCode);
+    end
+

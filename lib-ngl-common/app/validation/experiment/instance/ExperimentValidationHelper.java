@@ -5,25 +5,29 @@ import static validation.utils.ValidationHelper.required;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
+import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.ManytoOneContainer;
 import models.laboratory.experiment.instance.OneToOneContainer;
+import models.laboratory.experiment.instance.OneToVoidContainer;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.protocol.instance.Protocol;
 import models.laboratory.reagent.instance.ReagentUsed;
 import models.utils.InstanceConstants;
-import models.laboratory.container.instance.ContainerSupport;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.mongojack.DBQuery;
 
+import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.container.instance.ContainerSupportValidationHelper;
@@ -46,7 +50,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 		}
 	}
 
-	public static void validateResolutionCodes(String typeCode,List<String> resoCodes,ContextValidation contextValidation){
+	public static void validateResolutionCodes(String typeCode,Set<String> resoCodes,ContextValidation contextValidation){
 		String stateCode= getObjectFromContext(STATE_CODE, String.class, contextValidation);
 		if(stateCode.equals("F")){
 			if(required(contextValidation, resoCodes, "resolution")){
@@ -98,7 +102,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 	}
 
 	public static void validateAtomicTransfertMethodes(
-			Map<Integer, AtomicTransfertMethod> atomicTransfertMethods,
+			List <AtomicTransfertMethod> atomicTransfertMethods,
 			ContextValidation contextValidation) {
 		String rootKeyName;
 		for(int i=0;i<atomicTransfertMethods.size();i++){
@@ -142,6 +146,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 
 	public static void validateRules(Experiment exp,ContextValidation contextValidation){
 		ArrayList<Object> validationfacts = new ArrayList<Object>();
+		Logger.debug("Validate rules");
 		validationfacts.add(exp);
 		for(int i=0;i<exp.atomicTransfertMethods.size();i++){
 			if(ManytoOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
@@ -150,7 +155,11 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			}else if(OneToOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
 				OneToOneContainer atomic = (OneToOneContainer) exp.atomicTransfertMethods.get(i);
 				validationfacts.add(atomic);
-			}
+			}/*else if(OneToVoidContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
+				OneToVoidContainer atomic = (OneToVoidContainer) exp.atomicTransfertMethods.get(i);
+				Logger.debug("Add oneToVoid ");
+				validationfacts.add(atomic);
+			}*/
 		}
 		ExperimentValidationHelper.validateRules(validationfacts, contextValidation);
 	}

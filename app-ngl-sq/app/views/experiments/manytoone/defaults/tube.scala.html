@@ -14,7 +14,7 @@
 		</table>
 		</div>
 		<!-- InputContainers table -->
-		<div ng-model="inputContainers"  class="col-md-4 col-lg-4 inputContainerGroupOfTubeTransfert" droppable ng-if=" editMode && !inProgressNow">		
+		<div ng-model="inputContainers"  class="col-md-4 col-lg-4 inputContainerGroupOfTubeTransfert" droppable ng-if=" editMode && !inProgressNow && !doneAndRecorded">		
 		<p  ng-show="inputContainers.length==0"><i class="fa fa-download"></i> Inputs</p> 
 			<table class="table" ng-show="inputContainers.length>0">
 			<thead>
@@ -81,6 +81,7 @@
 		</div>	
 		
 		<!-- Drop buttons -->
+		<div ng-if="editMode && !inProgressNow && !doneAndRecorded">
 		<div ng-if="(experiment.value.atomicTransfertMethods[0].inputContainerUseds.length==0 || inputContainers.length>0 ) && experiment.value.state.code =='N'">
 		<button class="dropButtonOfTubeTransfert" ng-click="dropAllInputContainer()" >
 		<i class="fa fa-sign-in fa-2x"></i>
@@ -91,7 +92,7 @@
 		<i class="fa fa-sign-in fa-2x fa-rotate-180"></i>
 		</button>
 		</div>
-		
+		</div>
 		
 		<!-- OutputContainers table -->
 		<div class="col-md-5 col-lg-5 outputContainersOfTubeTransfert">
@@ -179,14 +180,14 @@
 										{{property.name}}<span ng-if="property.displayMeasureValue"> ({{property.displayMeasureValue.value}})</span>
 									</th> -->	
 								</tr>
-			   					 <tr ng-model="experiment.value.atomicTransfertMethods[0].outputContainerUsed">
+			   					 <tr ng-model="experiment.value.atomicTransfertMethods[0].outputContainerUseds[0]">
 									<td >
-										{{experiment.value.atomicTransfertMethods[0].outputContainerUsed.code}}
+										{{experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].code}}
 									</td>
 									<td>
 									<input class="form-control valueInput" type="text" title="Messages("containers.table.volume")"
 											ng-readonly="!experiment.experimentProperties.enabled"
-											ng-model="experiment.value.atomicTransfertMethods[0].outputContainerUsed.volume.value"
+											ng-model="experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].volume.value"
 								   			ng-blur="changeValueInTransfertTube()"								   			
 								   			/>										
 									</td>

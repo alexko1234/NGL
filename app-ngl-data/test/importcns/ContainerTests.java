@@ -10,6 +10,7 @@ import models.Constants;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.container.instance.Content;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
@@ -52,10 +53,11 @@ public class ContainerTests extends AbstractTests {
 		Assert.assertEquals(contextValidation.errors.size(),0);
 		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code", AllTests.prepaCodes)).toList();
 		for(Container container:containers){
-			assertThat(container.contents.get(0).properties.get("libLayoutNominalLength")).isNotNull();
-			assertThat(container.contents.get(0).properties.get("libProcessTypeCode")).isNotNull();
-			assertThat(container.contents.get(0).properties.get("sequencingProgramType")).isNull();
-			assertThat(container.contents.get(0).properties.get("percentPerLane")).isNotNull();
+			Content cnt = container.contents.iterator().next();
+			assertThat(cnt.properties.get("libLayoutNominalLength")).isNotNull();
+			assertThat(cnt.properties.get("libProcessTypeCode")).isNotNull();
+			assertThat(cnt.properties.get("sequencingProgramType")).isNull();
+			assertThat(cnt.properties.get("percentPerLane")).isNotNull();
 		}
 		Assert.assertTrue(containers.size()>0);
 		List<ContainerSupport> containerSupports=MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("code", AllTests.prepaCodes)).toList();
@@ -77,9 +79,10 @@ public class ContainerTests extends AbstractTests {
 		Assert.assertEquals(contextValidation.errors.size(),0);
 		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code", AllTests.prepaExtCodes)).toList();
 		for(Container container:containers){
-			assertThat(container.contents.get(0).properties.get("libLayoutNominalLength")).isNull();
-			assertThat(container.contents.get(0).properties.get("libProcessTypeCode")).isNotNull();
-			assertThat(container.contents.get(0).percentage).isNotNull();
+			Content cnt = container.contents.iterator().next();
+			assertThat(cnt.properties.get("libLayoutNominalLength")).isNull();
+			assertThat(cnt.properties.get("libProcessTypeCode")).isNotNull();
+			assertThat(cnt.percentage).isNotNull();
 		}
 		Assert.assertTrue(containers.size()>0);
 		List<ContainerSupport> containerSupports=MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("code", AllTests.prepaExtCodes)).toList();
@@ -110,11 +113,12 @@ public class ContainerTests extends AbstractTests {
 		Assert.assertEquals(containerSupports.size(),solutionStocks.size());
 
 		for(Container container:containers){
-			assertThat(container.contents.get(0).properties.get("libLayoutNominalLength")).isNotNull();
-			assertThat(container.contents.get(0).properties.get("libProcessTypeCode")).isNotNull();
-			assertThat(container.contents.get(0).properties.get("percentPerLane")).isNull();
+			Content cnt = container.contents.iterator().next();
+			assertThat(cnt.properties.get("libLayoutNominalLength")).isNotNull();
+			assertThat(cnt.properties.get("libProcessTypeCode")).isNotNull();
+			assertThat(cnt.properties.get("percentPerLane")).isNull();
 			assertThat(((PropertySingleValue) container.mesuredConcentration).unit).isEqualTo("nM");
-			assertThat(container.contents.get(0).percentage).isNotNull();
+			assertThat(cnt.percentage).isNotNull();
 			for(ContainerSupport support:containerSupports){
 				if(support.code.equals(container.support.code)){
 					assertThat(container.state.code).isEqualTo(support.state.code);

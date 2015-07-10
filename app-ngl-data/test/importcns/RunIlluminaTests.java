@@ -6,10 +6,22 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+
+import fr.cea.ig.MongoDBDAO;
 import models.Constants;
 import models.LimsCNSDAO;
 import models.laboratory.common.instance.PropertyValue;
@@ -20,7 +32,6 @@ import models.laboratory.common.instance.TransientState;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
@@ -30,25 +41,12 @@ import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
-
-import org.apache.commons.lang3.StringUtils;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-
 import play.Logger;
 import play.api.modules.spring.Spring;
-import services.instance.container.ContainerImportCNS;
 import services.instance.container.UpdateTaraPropertiesCNS;
-import services.instance.project.ProjectImportCNS;
 import services.instance.run.RunImportCNS;
-import services.instance.sample.UpdateSampleCNS;
 import utils.AbstractTests;
 import validation.ContextValidation;
-import fr.cea.ig.MongoDBDAO;
 
 public class RunIlluminaTests extends AbstractTests{
 
@@ -155,7 +153,7 @@ public class RunIlluminaTests extends AbstractTests{
 			lane.valuation.valid=TBoolean.TRUE;
 			lane.valuation.date=new Date();
 			lane.valuation.user="bordelai";
-			lane.valuation.resolutionCodes=new ArrayList<String>();
+			lane.valuation.resolutionCodes=new HashSet<String>();
 			lane.valuation.resolutionCodes.add( "SAV-IndDemultiplex");
 			lanes.add(lane);
 		}
@@ -174,7 +172,7 @@ public class RunIlluminaTests extends AbstractTests{
 	@Test
 	public void fusionStateTest(){
 		State s1 = new State();
-		s1.historical = new ArrayList<TransientState>();
+		s1.historical = new HashSet<TransientState>();
 		
 		TransientState ts1 = new TransientState();
 		ts1.code = "IP-RG";
@@ -191,7 +189,7 @@ public class RunIlluminaTests extends AbstractTests{
 		s1.historical.add(ts2);
 		
 		State s2 = new State();
-		s2.historical = new ArrayList<TransientState>();
+		s2.historical = new HashSet<TransientState>();
 		
 		TransientState ts3 = new TransientState();
 		ts3.code = "N";
@@ -212,17 +210,26 @@ public class RunIlluminaTests extends AbstractTests{
 		
 		assertThat(s1.historical.size()).isEqualTo(4);
 		
-		assertThat(s1.historical.get(0).index).isEqualTo(0);
-		assertThat(s1.historical.get(0).code).isEqualTo("N");
+		Iterator<TransientState> iterator = s1.historical.iterator();
+		TransientState ts5 = iterator.next();
 		
-		assertThat(s1.historical.get(1).index).isEqualTo(1);
-		assertThat(s1.historical.get(1).code).isEqualTo("IP-S");
+		assertThat(ts5.index).isEqualTo(0);
+		assertThat(ts5.code).isEqualTo("N");
 		
-		assertThat(s1.historical.get(2).index).isEqualTo(2);
-		assertThat(s1.historical.get(2).code).isEqualTo("IP-RG");
+		ts5 = iterator.next();
 		
-		assertThat(s1.historical.get(3).index).isEqualTo(3);
-		assertThat(s1.historical.get(3).code).isEqualTo("F-RG");
+		assertThat(ts5.index).isEqualTo(1);
+		assertThat(ts5.code).isEqualTo("IP-S");
+		
+		ts5 = iterator.next();
+		
+		assertThat(ts5.index).isEqualTo(2);
+		assertThat(ts5.code).isEqualTo("IP-RG");
+		
+		ts5 = iterator.next();
+		
+		assertThat(ts5.index).isEqualTo(3);
+		assertThat(ts5.code).isEqualTo("F-RG");
 		
 		
 	}
@@ -278,8 +285,8 @@ public class RunIlluminaTests extends AbstractTests{
 			assertThat(containersBefore.get(i).code).isEqualTo(containersAfter.get(i).code);
 			for(Entry<String,String> entry : taraSampleCodes.entrySet()){
 
-				List<Content> contentsBefore = ContainerHelper.contentFromSampleCode(containersBefore.get(i).contents,entry.getKey());
-				List<Content> contentsAfter = ContainerHelper.contentFromSampleCode(containersBefore.get(i).contents,entry.getKey());
+				Set<Content> contentsBefore = ContainerHelper.contentFromSampleCode(containersBefore.get(i).contents,entry.getKey());
+				Set<Content> contentsAfter = ContainerHelper.contentFromSampleCode(containersBefore.get(i).contents,entry.getKey());
 
 				for(Content contentB : contentsBefore){
 					for(Content contentA:contentsAfter){

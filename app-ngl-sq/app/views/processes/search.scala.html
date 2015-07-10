@@ -9,12 +9,11 @@
 			</div>
 		}
 		@formGroup{
-			<div bt-select placeholder="@Messages("processes.select.state")" multiple="true" filter="true" class="form-control" ng-model="searchService.form.stateCodes" bt-options="stateCode.code as stateCode.name for stateCode in searchService.lists.getStates()" auto-select>
-			</div>			
-			
+			<div class="form-control" bt-select ng-model="searchService.form.projectCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.projects")' bt-options="project.code as project.code for project in searchService.lists.getProjects()"></div>			
 		}
 		@formGroup{
-			<input class="form-control" type="text" ng-model="searchService.form.processCode" typeahead="process.code as process.name for process in searchService.lists.getProcesses() | filter:$viewValue | limitTo:20" typeahead-min-length='3' placeholder='@Messages("search.placeholder.process")' title='@Messages("search.placeholder.process")'>
+			<div bt-select placeholder="@Messages("processes.select.state")" multiple="true" filter="true" class="form-control" ng-model="searchService.form.stateCodes" bt-options="stateCode.code as stateCode.name for stateCode in searchService.lists.getStates()" auto-select>
+			</div>
 		}		
 			
 	
@@ -22,11 +21,11 @@
 	@columnSearchForm{	
 	
 		@formGroup{
-			<div bt-select placeholder="@Messages("processes.select.processType")" ng-disabled="searchService.form.processCategory == undefined" class="form-control" ng-model="searchService.form.typeCode" bt-options="typeCode.code as typeCode.name for typeCode in searchService.lists.getProcessTypes()" ng-change="searchService.changeProcessTypeCode()" auto-select>
+			<div bt-select placeholder="@Messages("processes.select.processType")" ng-disabled="searchService.form.categoryCode === undefined" class="form-control" ng-model="searchService.form.typeCode" bt-options="typeCode.code as typeCode.name for typeCode in searchService.lists.getProcessTypes()" ng-change="searchService.changeProcessTypeCode()" auto-select>
 			</div>
 		}
-		@formGroup{			
-			<div class="form-control" bt-select ng-model="searchService.form.projectCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.projects")' bt-options="project.code as project.code for project in searchService.lists.getProjects()"></div>				
+		@formGroup{
+			<div class="form-control" bt-select ng-model="searchService.form.sampleCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.samples")' bt-options="sample.code as sample.code for sample in searchService.lists.getSamples()" ng-focus="searchService.refreshSamples()"></div>				
 		}
 		
 	}
@@ -36,8 +35,8 @@
 		@formGroup{
 			<input class="form-control" type="text" ng-model="searchService.form.fromDate" placeholder='@Messages("processes.placeholder.fromDate")' title='@Messages("processes.placeholder.fromDate")' >
 		}
-		@formGroup{	
-			<div class="form-control" bt-select ng-model="searchService.form.sampleCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.samples")' bt-options="sample.code as sample.code for sample in searchService.lists.getSamples()" ng-focus="searchService.refreshSamples()"></div>
+		@formGroup{
+			<input class="form-control" type="text" ng-model="searchService.form.supportCode" placeholder='@Messages("search.placeholder.containerSupport")' title='@Messages("search.placeholder.containerSupport")'>			
 		}	
 			
 	}
@@ -46,7 +45,7 @@
 			<input class="form-control" type="text" ng-model="searchService.form.toDate" placeholder='@Messages("processes.placeholder.toDate")' title='@Messages("processes.placeholder.toDate")' >			
 		}
 		@formGroup{
-			<input class="form-control" type="text" ng-model="searchService.form.supportCode" typeahead="support.code as support.name for support in searchService.lists.getContainerSupports() | filter:$viewValue | limitTo:20" typeahead-min-length='3' placeholder='@Messages("search.placeholder.containerSupport")' title='@Messages("search.placeholder.containerSupport")'>
+			<input class="form-control" type="text" ng-model="searchService.form.experimentCode" typeahead="experiment.code as experiment.name for experiment in searchService.lists.getExperiments() | filter:$viewValue | limitTo:20" typeahead-min-length='3' placeholder='@Messages("search.placeholder.experiment")' title='@Messages("search.placeholder.experiment")'>		
 		}
 		
 	}
@@ -56,7 +55,7 @@
 			
 		}
 		@formGroup{
-			<input class="form-control" type="text" ng-model="searchService.form.experimentCode" typeahead="experiment.code as experiment.name for experiment in searchService.lists.getExperiments() | filter:$viewValue | limitTo:20" typeahead-min-length='3' placeholder='@Messages("search.placeholder.experiment")' title='@Messages("search.placeholder.experiment")'>
+			<input class="form-control" type="text" ng-model="searchService.form.processCode" typeahead="process.code as process.name for process in searchService.lists.getProcesses() | filter:$viewValue | limitTo:20" typeahead-min-length='3' placeholder='@Messages("search.placeholder.process")' title='@Messages("search.placeholder.process")'>		
 		}
 	}
 }

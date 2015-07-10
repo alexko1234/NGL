@@ -11,46 +11,38 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
+
+import com.mongodb.BasicDBObject;
+
+import controllers.CommonController;
+import controllers.NGLControllerHelper;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.Content;
-import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.time.DateUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.BooleanUtils;
-import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
-
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
-import play.modules.mongojack.MongoDB;
 import play.mvc.Result;
-import play.mvc.Results;
 import validation.ContextValidation;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableForm;
 import views.components.datatable.DatatableResponse;
 import workflows.container.ContainerWorkflows;
-
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-
-import controllers.CommonController;
-import controllers.NGLControllerHelper;
-import controllers.readsets.api.ReadSetsSearchForm;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
 
 public class Containers extends CommonController {
 
@@ -250,7 +242,7 @@ public class Containers extends CommonController {
 		}
 
 		if(StringUtils.isNotBlank(containersSearch.code)){
-			queryElts.add(DBQuery.is("code", containersSearch.code));
+			queryElts.add(DBQuery.regex("code", Pattern.compile(containersSearch.code)));
 		}
 
 		if(CollectionUtils.isNotEmpty(containersSearch.stateCodes)){

@@ -33,19 +33,19 @@ rule "Init objectContainerInfo in WM"
 	lock-on-active true
     when
     $experiment:Experiment($typeCode:typeCode,$typeCode=="solution-stock")
-	$atomicTransfert: OneToOneContainer($inputContainerUsed : inputContainerUsed , $outputContainerUsed: outputContainerUsed)
+	$atomicTransfert: OneToOneContainer($inputContainerUsed : inputContainerUseds.get(0), $inputContainerUsed !=null , $outputContainerUsed: outputContainerUseds.get(0), $outputContainerUsed!=null)
 	ContainerUsed($mesuredConcentration: concentration, $mesuredConcentration!=null) from $inputContainerUsed
-	ContainerUsed($finalVolume: volume, $finalConcentration: concentration ) from $outputContainerUsed	
+	ContainerUsed($finalVolume: volume, $finalConcentration: concentration ) from $outputContainerUsed
 	eval($finalVolume != null && $finalConcentration !=null && $finalVolume.getValue() != null && $finalConcentration.getValue() !=null)
     then
-    Logger.debug("Init objectContainerInfo in WM");
-    String containerCode = $inputContainerUsed.code;
-    Double mesuredConcentration = Double.parseDouble($mesuredConcentration.getValue().toString());
+   Logger.debug("Init objectContainerInfo in WM");
+   	String containerCode = $inputContainerUsed.code;
+     Double mesuredConcentration = Double.parseDouble($mesuredConcentration.getValue().toString());
 	Double finalVolume = Double.parseDouble($finalVolume.getValue().toString());
 	Double finalConcentration = Double.parseDouble($finalConcentration.getValue().toString());
 	ContainerInfo containerInfo = new ContainerInfo(containerCode, mesuredConcentration,finalVolume,finalConcentration);    
 	Logger.debug("Object ContainerInfo: containerCode="+ containerCode +" mesuredConcentration="+ mesuredConcentration +"; finalVolume="+ finalVolume +"; finalConcentration="+ finalConcentration);
-	insert(containerInfo);    
+	insert(containerInfo);  
 end	
 
 rule "RequiredVolume"
@@ -55,7 +55,7 @@ rule "RequiredVolume"
 	no-loop
     when
      	$experiment: Experiment($typeCode:typeCode,$typeCode=="solution-stock")    					
-		$atomicTransfert: OneToOneContainer($inputContainerUsed : inputContainerUsed, $inputContainerUsed!=null)
+		$atomicTransfert: OneToOneContainer($inputContainerUsed : inputContainerUseds.get(0), $inputContainerUsed!=null)
 		ContainerUsed( $experimentProperties : experimentProperties) from $inputContainerUsed
 		ContainerInfo($containerCode: containerCode, $containerCode==$inputContainerUsed.code, $mesuredConcentration:mesuredConcentration, $finalConcentration:finalConcentration, $finalVolume:finalVolume)		
 		eval(Double.class.isInstance($finalVolume) && $mesuredConcentration!=0  && Double.class.isInstance($mesuredConcentration) && Double.class.isInstance($finalConcentration))
@@ -85,7 +85,7 @@ rule "BufferVolume"
 	no-loop
     when
         $experiment:Experiment($typeCode:typeCode,$typeCode=="solution-stock")       	
-		$atomicTransfert: OneToOneContainer($inputContainerUsed : inputContainerUsed)
+		$atomicTransfert: OneToOneContainer($inputContainerUsed : inputContainerUseds.get(0))
 		ContainerInfo($containerCode: containerCode, $containerCode==$inputContainerUsed.code, $finalVolume:finalVolume,$finalVolume!=null)
 	 	ContainerUsed( $experimentProperties : experimentProperties, $experimentProperties!=null) from $inputContainerUsed
 		$requiredVolume: PropertyValue() from $experimentProperties.get("requiredVolume")
@@ -101,3 +101,45 @@ rule "BufferVolume"
 		Logger.debug("bufferVolume="+value.getValue());		   	
 end
 
+rule "Concentration not null in SolutionStock outputContainer"
+    @nglSQ( validations )
+	dialect "java"
+	salience 930
+	no-loop
+    when
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="solution-stock")
+		$atomicTransfert: OneToOneContainer($inputContainerUsed:inputContainerUseds.get(0), $outputContainerUsed: outputContainerUseds.get(0))
+		ContainerUsed($finalConcentration: concentration) from $outputContainerUsed
+		$contextValidation:ContextValidation()
+		eval($finalConcentration == null || $finalConcentration.value == null || $finalConcentration.value == "") 
+    then
+    Logger.debug("Concentration not null in SolutionStock outputContainer");
+    Integer i = null;
+    for(AtomicTransfertMethod atomic : $experiment.atomicTransfertMethods){    	
+    	if(($inputContainerUsed.code).equals(atomic.inputContainerUseds.get(0).code)){
+    	 $contextValidation.addErrors("solution-stock","error.validationexp.outputconcentrationnotnull", $inputContainerUsed.code);
+    	}
+    }    
+end
+
+rule "Volume not null in SolutionStock outputContainer"
+    @nglSQ( validations )
+	dialect "java"
+	salience 940
+	no-loop
+    when
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="solution-stock")
+		$atomicTransfert: OneToOneContainer($inputContainerUsed:inputContainerUseds.get(0), $outputContainerUsed: outputContainerUseds.get(0))
+	   	ContainerUsed($finalVolume: volume) from $outputContainerUsed
+    	$contextValidation:ContextValidation()
+    	eval($finalVolume == null || $finalVolume.value == null || $finalVolume.value == "")
+    then
+    Logger.debug("Volume not null in SolutionStock outputContainer");
+    Integer i = null;
+    for(AtomicTransfertMethod atomic : $experiment.atomicTransfertMethods){    	
+    	if(($inputContainerUsed.code).equals(atomic.inputContainerUseds.get(0).code)){
+    	 $contextValidation.addErrors("solution-stock","error.validationexp.outputvolumenotnull", $inputContainerUsed.code);
+    	}
+    }
+   
+end

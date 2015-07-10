@@ -147,7 +147,8 @@ public class RunImportCNS extends AbstractImportDataCNS{
 		if(null != newState && null != oldState && null != newState.historical && null != oldState.historical){
 			newState.historical.addAll(oldState.historical);
 			//sort by date
-			Collections.sort(newState.historical, new Comparator<TransientState>(){
+			
+			Collections.sort(new ArrayList<>(newState.historical), new Comparator<TransientState>(){
 				@Override
 				public int compare(TransientState state1, TransientState state2) {
 					return state1.date.compareTo(state2.date);

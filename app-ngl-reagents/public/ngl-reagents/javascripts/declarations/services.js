@@ -223,6 +223,18 @@ factory('boxesSearchService', ['$http', 'mainService', 'lists', 'datatable', fun
 			"type":"text",
 			"filter":"codes:'state'"
 		});
+		columns.push({
+			"header":Messages("reagents.table.createUser"),
+			"property":"traceInformation.createUser",
+			"order":true,
+			"type":"text"
+		});
+		columns.push({
+			"header":Messages("reagents.table.creationDate"),
+			"property":"traceInformation.creationDate",
+			"order":true,
+			"type":"Date"
+		});
 		
 		return columns;
 	};

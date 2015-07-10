@@ -3,39 +3,33 @@ package controllers.migration.cng;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.sql.DataSource;
 
-import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.TBoolean;
-import models.laboratory.common.instance.Valuation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.SampleOnContainer;
-import models.laboratory.sample.description.SampleType;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
-import models.utils.instance.ContainerSupportHelper;
+
+import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.mongojack.JacksonDBCollection;
 import org.mongojack.WriteResult;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
-import org.apache.commons.lang3.StringUtils;
 
 import play.Logger;
 import play.mvc.Result;
@@ -87,7 +81,7 @@ public class MigrationContentExtended extends CommonController {
 
 								
 				if (rs.getString("project")!=null) {
-					container.projectCodes=new ArrayList<String>();
+					container.projectCodes=new HashSet<String>();
 					container.projectCodes.add(rs.getString("project"));
 				}
 				
@@ -110,7 +104,7 @@ public class MigrationContentExtended extends CommonController {
 
 					container.contents.add(content);			
 					
-					container.sampleCodes=new ArrayList<String>();
+					container.sampleCodes=new HashSet<String>();
 					container.sampleCodes.add(rs.getString("code_sample"));
 				}	
 				return container;
@@ -128,17 +122,17 @@ public class MigrationContentExtended extends CommonController {
 			while ( (pos < listSize-1) && (results.get(pos).code.equals( results.get(pos+x).code))   ) {
 				
 				// difference between the two projectCode
-				if (! results.get(pos).projectCodes.get(0).equals(results.get(pos+x).projectCodes.get(0))) {
-					if (! results.get(pos).projectCodes.contains(results.get(pos+x).projectCodes.get(0))) {
+				if (! results.get(pos).projectCodes.toArray(new String[0])[0].equals(results.get(pos+x).projectCodes.toArray(new String[0])[0])) {
+					if (! results.get(pos).projectCodes.contains(results.get(pos+x).projectCodes.toArray(new String[0])[0])) {
 						
-						results.get(pos).projectCodes.add( results.get(pos+x).projectCodes.get(0) ); 
+						results.get(pos).projectCodes.add( results.get(pos+x).projectCodes.toArray(new String[0])[0] ); 
 					}
 				}
 				// difference between the two sampleCode
-				if (! results.get(pos).sampleCodes.get(0).equals(results.get(pos+x).sampleCodes.get(0))) {
-					if (! results.get(pos).sampleCodes.contains(results.get(pos+x).sampleCodes.get(0))) {
+				if (! results.get(pos).sampleCodes.toArray(new String[0])[0].equals(results.get(pos+x).sampleCodes.toArray(new String[0])[0])) {
+					if (! results.get(pos).sampleCodes.contains(results.get(pos+x).sampleCodes.toArray(new String[0])[0])) {
 							
-						results.get(pos).sampleCodes.add( results.get(pos+x).sampleCodes.get(0) );
+						results.get(pos).sampleCodes.add( results.get(pos+x).sampleCodes.toArray(new String[0])[0] );
 					}
 				}
 								
@@ -155,14 +149,26 @@ public class MigrationContentExtended extends CommonController {
 		
 		//for remove null tags
 		for (Container r : results) {
-			for (int i=0; i<r.contents.size(); i++) {
+			Iterator<Content> iterator = r.contents.iterator();
+			while(iterator.hasNext()){
+				Content cnt = iterator.next();
+				if (cnt.properties.get("tag").value.equals("-1")) {
+					cnt.properties.remove("tag");
+				}
+				if (cnt.properties.get("tagCategory").value.equals("-1")) {
+					cnt.properties.remove("tagCategory");
+				}
+				
+			}	
+			
+		/*	for (int i=0; i<r.contents.size(); i++) {
 				if (r.contents.get(i).properties.get("tag").value.equals("-1")) {
 					r.contents.get(i).properties.remove("tag");
 				}
 				if (r.contents.get(i).properties.get("tagCategory").value.equals("-1")) {
 					r.contents.get(i).properties.remove("tagCategory");
 				}
-			}
+			}*/
 		}
 		
 		return results;
@@ -171,14 +177,19 @@ public class MigrationContentExtended extends CommonController {
 
 	private static List<Container>  createContent(List<Container> results, int posCurrent, int posNext) throws DAOException{
 		Content content=new Content();
-		content.sampleCode= results.get(posNext).sampleCodes.get(0);
+		content.sampleCode= results.get(posNext).sampleCodes.toArray(new String[0])[0];
 		
 		content.sampleTypeCode = SAMPLE_USED_TYPE_CODE;
 		content.sampleCategoryCode = "default";
 		
 		content.properties = new HashMap<String, PropertyValue>();
-		content.properties.put("tag",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tag").value  ));
-		content.properties.put("tagCategory",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tagCategory").value  ));
+		Iterator<Content> itr =  results.get(posNext).contents.iterator();
+		Content contt = itr.next(); 
+		content.properties.put("tag",new PropertySingleValue( contt.properties.get("tag").value  ));
+		content.properties.put("tagCategory",new PropertySingleValue( contt.properties.get("tagCategory").value  ));
+		
+		//content.properties.put("tag",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tag").value  ));
+		//content.properties.put("tagCategory",new PropertySingleValue( results.get(posNext).contents.get(0).properties.get("tagCategory").value  ));
 		
 		results.get(posCurrent).contents.add(content); 
 		

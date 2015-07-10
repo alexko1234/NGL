@@ -33,7 +33,7 @@ angular.module('commonsServices', []).
 							this.text = undefined; 
 							this.showDetails = false; 
 							this.isDetails = false;
-							this.details = {};
+							this.details = [];
 							this.opening = false;
 						},
 						setDetails : function(details){
@@ -60,17 +60,9 @@ angular.module('commonsServices', []).
 						setError : function(type){
 							this.clazz=this.config.errorClass;
 							this.text=this.transformKey(this.config.errorKey[type]);
+							
 							this.open();
 						},
-						/*addError : function(type){
-							this.clazz=this.config.errorClass;
-							if (this.text != null){
-								this.text+=this.transformKey(this.config.errorKey[type]);
-							} else {
-								this.text=this.transformKey(this.config.errorKey[type]);
-							}
-							this.open();
-						},*/
 						open : function(){
 							this.opening = true;
 						},
@@ -195,6 +187,14 @@ angular.module('commonsServices', []).
     	    			}
     					params.objectTypeCode='tag';
     					load(jsRoutes.controllers.containers.api.Contents.list().url,params,(key)?key:'tags');
+    				},
+    				// FDS 24/06/2015 JIRA NGL-672 ajout pour filtrage par Aliquot barcode
+    				sampleAliquotCodes : function(params, key){
+    					if(angular.isUndefined(params)){
+    	    				params = {};
+    	    			}
+    					params.objectTypeCode='sampleAliquoteCode';
+    					load(jsRoutes.controllers.containers.api.Contents.list().url,params,(key)?key:'sampleAliquotCodes');
     				},
     				tagCategories : function(params, key){
     					if(angular.isUndefined(params)){
@@ -338,6 +338,14 @@ angular.module('commonsServices', []).
     				key = (key)?key:'tagCategories';
     				if(results[key] === undefined){
     					refresh.tagCategories(params, key);
+    				}
+    				return results[key];
+    			},
+    			// FDS 24/06/2015 JIRA NGL-672 ajout pour filtrage par Aliquot barcode
+    			getSampleAliquoteCodes : function(params,key){
+    				key = (key)?key:'sampleAliquotCodes';
+    				if(results[key] === undefined){
+    					refresh.sampleAliquotCodes(params, key);
     				}
     				return results[key];
     			}
@@ -565,7 +573,52 @@ angular.module('commonsServices', []).
                     });
                 }
             }
-        }).directive('base64Img', [function () {
+        }).directive('base64File', [function () {
+        	return {
+        		 restrict: 'A',
+        		 scope: {
+        			 base64File: "="
+        	        },
+        		 link: function (scope, elem, attrs, ngModel) {
+	        		  var reader = new FileReader();
+	        		  var file;
+	        		  if(scope.base64File != undefined && scope.base64File.value == ""){
+	        			  scope.base64File = undefined;
+	        		  }
+	        		  
+	        		  reader.onload = function (e) {
+	        			  scope.$apply(function () {
+	        				  if(e.target.result!= undefined && e.target.result != ""){
+		        				  scope.base64File = {};
+		        				  scope.base64File.fullname = file.name;
+		        				  
+		        				  //Get the extension
+		        				  var matchExtension = file.type.match(/^application\/(.*)/);
+			        				  if(matchExtension && matchExtension.length > 1){
+			        				  scope.base64File.extension = matchExtension[1];
+			        				  scope.base64File._type = "file";
+			        				  
+			        				  //Get the base64 without the extension feature
+			        				  var matchBase64 = e.target.result.match(/^.*,(.*)/);
+			        				  scope.base64File.value = matchBase64[1];
+			        				
+		        				  }else{
+		        					 alert("This is not an file...");
+		        					 scope.base64File = undefined;
+		        				  }
+	        				  }else{
+	        					  scope.base64File = undefined;
+	        				  }
+	        			  });
+	        		  }
+	
+				      elem.on('change', function() {
+				    	  	file = elem[0].files[0];
+				    	  	reader.readAsDataURL(elem[0].files[0]);
+				      });
+        		 }
+        		};
+        		}]).directive('base64Img', [function () {
         	return {
         		 restrict: 'A',
         		 scope: {
@@ -617,7 +670,8 @@ angular.module('commonsServices', []).
 				      });
         		 }
         		};
-        		}]).directive('btSelect',  ['$parse', '$document', '$window', '$filter', function($parse,$document, $window, $filter)  {
+        		}])
+        		.directive('btSelect',  ['$parse', '$document', '$window', '$filter', function($parse,$document, $window, $filter)  {
 			//0000111110000000000022220000000000000000000000333300000000000000444444444444444000000000555555555555555000000066666666666666600000000000000007777000000000000000000088888
     		var BT_OPTIONS_REGEXP = /^\s*([\s\S]+?)(?:\s+as\s+([\s\S]+?))?(?:\s+group\s+by\s+([\s\S]+?))?\s+for\s+(?:([\$\w][\$\w]*))\s+in\s+([\s\S]+?)$/;                        
     		//var BT_OPTIONS_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?\s+for\s+(?:([\$\w][\$\w\d]*))\s+in\s+(.*)$/;
@@ -1107,7 +1161,19 @@ angular.module('commonsServices', []).
     	    		if (angular.isObject(element)) {
     	    			var currentValue = $parse(key)(element);
     	    			if(undefined !== currentValue && null !== currentValue){
-       	    				Array.prototype.push.apply(possibleValues, currentValue);
+    	    				//Array.prototype.push.apply take only arrays
+    	    				if(angular.isArray(currentValue)){
+    	    					Array.prototype.push.apply(possibleValues, currentValue);
+    	    				   /*var bl = possibleValues.length;
+    	    				   var al = currentValue.length;
+    	    				   var i = 0;
+    	    				  
+	    	    			   while (i < bl) {
+	    	    				   currentValue[al++] = possibleValues[i++];
+	    	    			   }*/
+    	    				}else{
+    	    					possibleValues.push(currentValue);
+    	    				}
     	    			}
     	    			
     	    			
@@ -1118,4 +1184,13 @@ angular.module('commonsServices', []).
     	    	});
     	    	return possibleValues;    	    	
     	    };
-    	}]);
+    	}]).filter('flatArray', function(){
+    		return function(array, property){
+    			var flatArray = [];
+    			for(var i=0;i<array.length;i++){
+    				flatArray = flatArray.concat(array[i][property]);
+    			}
+    			return flatArray;
+    		}
+    	});
+    	

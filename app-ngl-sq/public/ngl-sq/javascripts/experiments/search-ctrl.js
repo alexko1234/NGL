@@ -36,11 +36,19 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 	$scope.changeContainerSupportCode = function(val){
 		console.log(val);
 		return $scope.searchService.changeContainerSupportCode(val);		 
-	}
+	};
 
 	$scope.changeExperimentType = function(){
 		$scope.searchService.changeExperimentType();
-	}
+	};
+	
+	$scope.changeProcessType = function(){
+		$scope.searchService.changeProcessType();
+	};
+	
+	$scope.changeProcessCategory = function(){
+		$scope.searchService.changeProcessCategory();
+	};
 	
 	//init
 	if(angular.isUndefined($scope.getHomePage())){

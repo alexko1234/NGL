@@ -185,11 +185,73 @@
 						
 					}	
 					
-						
-					<!--  -->
+					<!-- Properties Experiment  -->
 					<div class="form-group" ng-repeat="expp in experiment.experimentProperties.inputs" ng-if="getLevel(expp.levels,'Experiment')">									
 						<label  class="col-md-6 col-lg-6 control-label">{{expp.name}}</label>
 						
+						
+						
+						<!-- Not List --> 
+						<div class="col-md-6 col-lg-6" ng-if="!expp.choiceInList">	
+							
+							
+							<div  ng-if="doneAndRecorded==false">
+								
+								<!-- Date -->
+								<input ng-if="expp.valueType == 'java.util.Date'" class="form-control" type="text" class="input-small"
+									ng-readonly="!experiment.experimentInformation.enabled"
+									ng-disabled="!experiment.experimentInformation.enabled"
+									placeholder="@Messages("date.format.french")" 
+									ng-model="experiment.value.experimentProperties[expp.code].value" date-timestamp />
+								
+								
+								<!-- Others -->	
+								<input ng-if="expp.valueType != 'java.util.Date' && expp.valueType != 'java.io.File'" class="form-control" type="text" class="input-small"
+									ng-readonly="!experiment.experimentInformation.enabled" ng-disabled="!experiment.experimentInformation.enabled"
+									ng-model="experiment.value.experimentProperties[expp.code].value"/>
+								
+						
+							</div>
+							
+							<div  ng-if="doneAndRecorded==true">
+							
+								<!-- Date -->
+								<p ng-if="expp.valueType == 'java.util.Date'" class="form-control-static" ng-model="experiment.value.experimentProperties[expp.code].value" date-timestamp>
+									{{experiment.value.experimentProperties[expp.code].value | date:'dd-MM-yyyy'}}
+								</p>
+								
+								<!-- Others -->
+								<p ng-if="expp.valueType != 'java.util.Date' && expp.valueType != 'java.io.File'" class="form-control-static" ng-model="experiment.value.experimentProperties[expp.code].value">
+									{{experiment.value.experimentProperties[expp.code].value}}
+								</p>
+								
+							</div>
+							
+						</div>
+						
+						<!--  File -->
+						<div  ng-if="expp.valueType == 'java.io.File'">
+							<input type="file" ng-disabled="!experiment.experimentInformation.enabled" base64-file="experiment.value.experimentProperties[expp.code]" />
+							<div   ng-show="experiment.value.experimentProperties[expp.code] != undefined && experiment.value.experimentProperties[expp.code].value != ''" >
+							    <a target="_blank" ng-href="data:application/pdf;base64,{{experiment.value.experimentProperties[expp.code].value}}">
+							    {{experiment.value.experimentProperties[expp.code].fullname}}
+								</a>
+							</div>
+							<button class="btn pull-left"  ng-show="experiment.value.experimentProperties[expp.code] != undefined && experiment.value.experimentProperties[expp.code].value != ''" ng-click="experiment.value.experimentProperties[expp.code] = undefined" ng-show="experiment.value.experimentProperties[expp.code].value != ''"><i class="fa fa-trash-o"></i></button>	
+						</div>
+						
+						<!-- List  -->
+						
+						<div bt-select class="form-control"
+									ng-readonly="!experiment.experimentInformation.enabled"
+									ng-disabled="!experiment.experimentInformation.enabled" 
+									ng-model="experiment.value.experimentProperties[expp.code].value" 
+									ng-if="expp.choiceInList" 
+									auto-select
+									bt-options="possibleValues.code as possibleValues.name for possibleValues in expp.possibleValues" ng-edit="!doneAndRecorded">
+						</div>
+							   
+					<!-- 	
 						<div class="col-md-6 col-lg-6" ng-switch on="expp.choiceInList">
 						
 						<p ng-if="doneAndRecorded==true && expp.valueType == 'java.util.Date' && !experiment.experimentInformation.enabled" ng-switch-when="false" class="form-control-static" ng-model="experiment.value.experimentProperties[expp.code].value" date-timestamp>
@@ -217,8 +279,8 @@
 									auto-select
 									bt-options="possibleValues.code as possibleValues.name for possibleValues in expp.possibleValues" ng-edit="!doneAndRecorded">
 							   </div>
-												
-						</div>
+					 							
+						</div>-->
 					</div>							
 					<!--  -->													
 			    </form>
@@ -391,11 +453,14 @@
   <div class="panel-heading">@Messages("experiment.reagents")</div>
   <div class="panel-body">
   <div class="row">
-	  	<!--<div class="form-group col-md-5 col-lg-5">
-	  		<div class="col-md-5 col-lg-5">
+  	<form class="form-horizontal">
+	  	<div class="form-group col-md-5 col-lg-5">
+	  		<div ng-class="reagentCodeErrorClass" class="col-md-5 col-lg-5">
 	  			<input class="form-control" ng-model="searchBarCode" type="text" placeholder="@Messages("experiment.placeholder.reagentOrBoxCode")"  ng-keydown="searchReagentsEvent($event)" />
+	  			<span class="help-block" ng-bind="reagentCodeError">test</span>
 	  		</div>
-	 	</div>-->
+	 	</div>
+	 	</form>
 	 	<div class="col-md-12 col-lg-12" datatable="datatableReagent"></div>
  	</div>
   </div>
@@ -428,6 +493,3 @@
 		</div>
 	</div>
 </div>	
-
-			
-		

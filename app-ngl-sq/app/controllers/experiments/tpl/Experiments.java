@@ -59,6 +59,7 @@ public class Experiments extends CommonController{
 	 * if all classes doesn't exist, a badRequest result is returned with the message "not implemented"
 	 * */
 	public static Result getTemplate(String atomicType, String outputCategoryCode, String experimentType){
+		Logger.info("experimentType " + experimentType);
 		String institute = DescriptionHelper.getInstitute().get(0);	
 		Html result = getTemplateClass(atomicType, outputCategoryCode, experimentType, institute);
 		if(result == null){
@@ -97,11 +98,13 @@ public class Experiments extends CommonController{
 		
 		String keyWord = null;
 		//We use the experimentType in priority
-		if(experimentType != null && experimentType.equals("")){
+		if(experimentType != null && !experimentType.equals("")){
 			keyWord = experimentType.replaceAll("-", "");//Scala template can't have a '-' in their name;
 		} else {
 			keyWord = outputCategoryCode.replaceAll("-", "");//Scala template can't have a '-' in their name
 		}
+		
+		Logger.info("views.html.experiments."+atomicType.toLowerCase()+"."+institute.toLowerCase()+"."+keyWord.toLowerCase());
 		
 		try{
 			Class<?> clazz = Class.forName("views.html.experiments."+atomicType.toLowerCase()+"."+institute.toLowerCase()+"."+keyWord.toLowerCase());//package in java are always in lower case

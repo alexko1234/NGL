@@ -63,11 +63,11 @@
 				<li class="@("active".when(nav == "archives.search"))">
 					<a href="@controllers.archives.tpl.routes.ReadSets.home("search")">@Messages("archives.menu")</a>
 				</li>	
-				 <!-- 
+				
 				<li class="@("active".when(nav.startsWith("balance")))">
 					<a href="@controllers.balancesheets.tpl.routes.BalanceSheets.home("general")">@Messages("balanceSheets.menu")</a>
 				</li>
-				-->
+				
 				<li class="@("active".when(nav.startsWith("help")))">
 					<a href="@routes.Assets.at("ngl-bi/documentation/DOC_UTILISATEUR.pdf")" target="doc">@Messages("docs.menu")</a>
 				</li>				

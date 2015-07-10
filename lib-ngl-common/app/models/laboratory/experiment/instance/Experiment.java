@@ -3,6 +3,7 @@ package models.laboratory.experiment.instance;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
@@ -14,12 +15,13 @@ import models.utils.InstanceConstants;
 
 import org.mongojack.MongoCollection;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.experiment.instance.ExperimentValidationHelper;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import fr.cea.ig.DBObject;
 
 
@@ -50,19 +52,19 @@ public class Experiment extends DBObject implements IValidation {
 
 	public State state;
 	
-	public Map<Integer,AtomicTransfertMethod> atomicTransfertMethods; 
+	public List<AtomicTransfertMethod> atomicTransfertMethods; 
 	
 	public List<ReagentUsed> reagents;
 	
 	public List<Comment> comments;
 	
-	public List<String> projectCodes;
+	public Set<String> projectCodes;
 	
-	public List<String> sampleCodes;
+	public Set<String> sampleCodes;
 	
-	public List<String> inputContainerSupportCodes;
+	public Set<String> inputContainerSupportCodes;
 	
-	public List<String> outputContainerSupportCodes;
+	public Set<String> outputContainerSupportCodes;
 	
 	public Experiment(){
 		traceInformation=new TraceInformation();
@@ -80,8 +82,8 @@ public class Experiment extends DBObject implements IValidation {
 		List<ContainerUsed> containersUSed=new ArrayList<ContainerUsed>();
 		if(this.atomicTransfertMethods!=null){
 			for(int i=0;i<this.atomicTransfertMethods.size();i++){
-				if(this.atomicTransfertMethods.get(i)!=null && this.atomicTransfertMethods.get(i).getInputContainers().size()>0){
-					containersUSed.addAll(this.atomicTransfertMethods.get(i).getInputContainers());
+				if(this.atomicTransfertMethods.get(i)!=null && this.atomicTransfertMethods.get(i).inputContainerUseds.size()>0){
+					containersUSed.addAll(this.atomicTransfertMethods.get(i).inputContainerUseds);
 				}
 				
 			}
@@ -95,8 +97,8 @@ public class Experiment extends DBObject implements IValidation {
 		List<ContainerUsed> containersUSed=new ArrayList<ContainerUsed>();
 		if(this.atomicTransfertMethods!=null){
 			for(int i=0;i<this.atomicTransfertMethods.size();i++){
-				if(this.atomicTransfertMethods.get(i).getInputContainers().size()!=0){
-					containersUSed.addAll(this.atomicTransfertMethods.get(i).getOutputContainers());
+				if(this.atomicTransfertMethods.get(i).outputContainerUseds.size()!=0){
+					containersUSed.addAll(this.atomicTransfertMethods.get(i).outputContainerUseds);
 				}
 			}
 

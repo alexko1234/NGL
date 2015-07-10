@@ -1,6 +1,7 @@
 package controllers.migration;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -160,12 +161,12 @@ public class CompareRunVsSupport extends CommonController {
 			 //lims vs support
 			 if(!runProjectCodes.equals(supportProjectCodes)){
 				 cv.addErrors("projectCodes", "support projectCodes not match run : "+runProjectCodes+" / "+ supportProjectCodes);
-				 support.projectCodes = new ArrayList<String>(runProjectCodes);
+				 support.projectCodes = new HashSet<String>(runProjectCodes);
 			 }
 			 
 			 if(!runSampleCodes.equals(supportSampleCodes)){
 				 cv.addErrors("sampleCodes", "support sampleCodes not match run : "+runSampleCodes+" / "+supportSampleCodes);
-				 support.sampleCodes = new ArrayList<String>(runSampleCodes);
+				 support.sampleCodes = new HashSet<String>(runSampleCodes);
 			 }
 			 
 			 
@@ -207,12 +208,12 @@ public class CompareRunVsSupport extends CommonController {
 				
 				if (!rsProjectCodes.equals(cProjectCodes)) {
 					cv.addErrors("projectCodes","containers projectCodes not match readsets : "+ rsProjectCodes + " != " + cProjectCodes);
-					currentContainer.projectCodes = new ArrayList<String>(rsProjectCodes);
+					currentContainer.projectCodes = new HashSet<String>(rsProjectCodes);
 				}
 				
 				if (!rsSampleCodes.equals(cSampleCodes)) {
 					cv.addErrors("sampleCodes",	"containers sampleCodes not match readsets : "+ rsSampleCodes + " != " + cSampleCodes);
-					currentContainer.sampleCodes = new ArrayList<String>(rsSampleCodes);
+					currentContainer.sampleCodes = new HashSet<String>(rsSampleCodes);
 				}
 				cv.addKeyToRootKeyName("contents");
 				Map<String, List<Content>> scContents = currentContainer.contents.stream().collect(Collectors.groupingBy((Content c ) -> c.sampleCode));
@@ -282,7 +283,7 @@ public class CompareRunVsSupport extends CommonController {
 				 cv.removeKeyFromRootKeyName(laneNumber);
 				 
 				 if(modifyContents.size() == currentContainer.contents.size()){
-					 currentContainer.contents = modifyContents;
+					 currentContainer.contents = new HashSet<>(modifyContents);
 					 modifyContainers.add(currentContainer);
 				 }else{
 					 Logger.error("not same content number for container : "+currentContainer.code);

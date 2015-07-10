@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -16,18 +17,17 @@ import models.laboratory.container.instance.Content;
 import models.laboratory.sample.description.SampleType;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
+
+import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.mongojack.JacksonDBCollection;
 import org.mongojack.WriteResult;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
-import org.apache.commons.lang3.StringUtils;
 
 import play.Logger;
 import play.mvc.Result;
@@ -140,7 +140,7 @@ public class AddLibProcessTypeCode extends CommonController {
 				container.code=rs.getString("code");
 				
 				if (rs.getString("project")!=null) {
-					container.projectCodes=new ArrayList<String>();
+					container.projectCodes=new HashSet<String>();
 					container.projectCodes.add(rs.getString("project"));
 				}
 				
@@ -180,7 +180,7 @@ public class AddLibProcessTypeCode extends CommonController {
 					}
 					container.contents.add(content);	
 					
-					container.sampleCodes=new ArrayList<String>();
+					container.sampleCodes=new HashSet<String>();
 					container.sampleCodes.add(rs.getString("code_sample"));
 				}	
 				return container;

@@ -119,7 +119,11 @@
 							$scope.datatableSaved++;
 							if($scope.datatableSaved === $scope.datatables.length){
 								//All the datatables are now saved
-								$location.path(jsRoutes.controllers.reagents.tpl.Kits.get($scope.kit.code).url);
+								if($scope.kit.declarationType === "kit"){
+									$location.path(jsRoutes.controllers.reagents.tpl.Kits.get($scope.kit.code).url);
+								}else{
+									$location.path(jsRoutes.controllers.reagents.tpl.Kits.get($scope.boxes[0].code).url);
+								}
 							}
 						 }else if(errors > 0){
 							 $scope.message.clazz = 'alert alert-danger';
@@ -155,7 +159,7 @@
 	 $scope.datatables = [];
 	 $scope.datatableSaved = 0;
 	 //$scope.declaration = {"type":"kit"};
-	 $scope.objectTypes = [{code:"kit", name:Messages("declarations.kit")},{code:"box", name:Messages("declarations.box")},{code:"reagent", name:Messages("declarations.reagent")}];
+	 $scope.objectTypes = [{code:"kit", name:Messages("declarations.kit")},{code:"box", name:Messages("declarations.box")}];
 	 
 	 $scope.checkCatalogRefCode = function(i){
 	 	if($scope.catalogRefCodeVerifications[i].code === $scope.boxes[i].catalogRefCode){
@@ -222,29 +226,31 @@
 	 };
 	 
 	 $scope.removeBox = function(index,code){
-		 if(code !== undefined  && code !== "" ){
-			 $http.delete(jsRoutes.controllers.reagents.api.Boxes.delete(code).url)
-				.success(function(data, status, headers, config) {
-					if(data!=null){
-						for(var i=0;i<$scope.boxes.length;i++){
-							if($scope.boxes[i].code === code){
-								$scope.datatables.splice(i,1);
-								$scope.boxes.splice(i,1);
-								break;
+		 if(confirm("Etes vous sur de vouloir supprimer cette boîte ?")){
+			 if(code !== undefined  && code !== ""){
+				 $http.delete(jsRoutes.controllers.reagents.api.Boxes.delete(code).url)
+					.success(function(data, status, headers, config) {
+						if(data!=null){
+							for(var i=0;i<$scope.boxes.length;i++){
+								if($scope.boxes[i].code === code){
+									$scope.datatables.splice(i,1);
+									$scope.boxes.splice(i,1);
+									break;
+								}
 							}
 						}
-					}
-				})
-				.error(function(data, status, headers, config) {
-					$scope.message.clazz = 'alert alert-danger';
-					$scope.message.text = Messages('reagents.msg.save.error');
-					$scope.saveInProgress = false;
-					$scope.message.details = data;
-					$scope.message.isDetails = true;
-				});
-		 }else{
-			 $scope.datatables.splice(index,1);
-			 $scope.boxes.splice(index,1);
+					})
+					.error(function(data, status, headers, config) {
+						$scope.message.clazz = 'alert alert-danger';
+						$scope.message.text = Messages('reagents.msg.save.error');
+						$scope.saveInProgress = false;
+						$scope.message.details = data;
+						$scope.message.isDetails = true;
+					});
+			 }else{
+				 $scope.datatables.splice(index,1);
+				 $scope.boxes.splice(index,1);
+			 }
 		 }
 	 }
 	 
@@ -271,7 +277,16 @@
 			 return code;
 		 }
 	     return "";
-	 }
+	 };
+	 
+	 $scope.boxBarCodeUpdate = function(index, box){
+		 var data = $scope.datatables[index].getData();
+		 for(var i=0;i<data.length;i++){
+			 data[i].boxBarCode = box.barCode;
+		 }
+		 
+		 $scope.datatables[index].setData(data);
+	 };
 	 
 	 $scope.newReagent = function(index, box, reagentCatalog){
 		 console.log(index);
@@ -280,7 +295,7 @@
 				$scope.datatables[index].saveLocal($scope.datatables[index].displayResult[i].data,i);
 			}
 		 }
-		 $scope.datatables[index].addData([{"category":"Reagent", "catalogCode":reagentCatalog.code, "receptionDate":moment(new Date()).valueOf(), "catalogRefCode":reagentCatalog.catalogRefCode, "boxCatalogRefCode":box.catalogRefCode, "state":{code:"N"}}]);
+		 $scope.datatables[index].addData([{"category":"Reagent", "catalogCode":reagentCatalog.code, "receptionDate":moment(new Date()).valueOf(), "catalogRefCode":reagentCatalog.catalogRefCode, "declarationType":$scope.kit.declarationType,"boxCatalogRefCode":box.catalogRefCode,"boxBarCode":box.barCode, "state":{code:"N"}}]);
 		 $scope.datatables[index].setEdit();
 		 console.log($scope.boxes);
 	 };
@@ -296,20 +311,25 @@
 	 $scope.loadKit = function(){
 		 if($scope.kit.code !== undefined && $scope.kit.code !== ""){
 			 return $http.get(jsRoutes.controllers.reagents.api.Kits.get($scope.kit.code).url)
+			 return $http.get(jsRoutes.controllers.reagents.api.Kits.list().url, {"params":{"code":$scope.kit.code}})
 				.success(function(data, status, headers, config) {
-					if(data!=null){
-						$scope.kit = data;
+					if(data!=null && data.length > 0){
+						$scope.kit = data[0];
 						$scope.orderInformations.orderCode = $scope.kit.orderCode;
 						$scope.orderInformations.providerOrderCode = $scope.kit.providerOrderCode;
 						$scope.orderInformations.shippedOrderCode =  $scope.kit.shippedOrderCode;
+						$scope.loadKitSuccess = true;
+					}
+					else{
+						$scope.loadKitSuccess = false;
 					}
 				})
 				.error(function(data, status, headers, config) {
-					$scope.message.clazz = 'alert alert-danger';
+					/*$scope.message.clazz = 'alert alert-danger';
 					$scope.message.text = Messages('reagents.msg.load.error');
 					
 					$scope.message.details = data;
-					$scope.message.isDetails = true;
+					$scope.message.isDetails = true;*/
 				});
 		 }
 	 };
@@ -319,26 +339,33 @@
 		 if(boxCatalog !== undefined){
 			 boxCatalogCode = boxCatalog.code;
 		 }
-		 $scope.boxes.push({"category":"Box", "state":{"code":"N"},"catalogRefCode":boxCatalog.catalogRefCode, "receptionDate":moment(new Date()).valueOf(), "catalogCode":boxCatalogCode});
+		 $scope.boxes.push({"category":"Box", "state":{"code":"N"}, "declarationType":$scope.kit.declarationType, "catalogRefCode":boxCatalog.catalogRefCode, "receptionDate":moment(new Date()).valueOf(), "catalogCode":boxCatalogCode});
 		 $scope.datatables[$scope.boxes.length-1] = datatable($scope.datatableConfig);
 		 $scope.datatables[$scope.boxes.length-1].setData([]);
 	 };
 	 
 	 $scope.loadBoxes = function(){
-		 $http.get(jsRoutes.controllers.reagents.api.Boxes.list().url, {"params":{"kitCode":$scope.kit.code}})
+		 var searchForm = {"code":$scope.kit.code};
+		 if($scope.loadKitSuccess === true){
+			 searchForm = {"kitCode":$scope.kit.code};
+		 }
+		 $http.get(jsRoutes.controllers.reagents.api.Boxes.list().url, {"params":searchForm})
 				.success(function(data, status, headers, config) {
-					if(data!=null){
+					if(data!=null && data.length > 0){
 						$scope.boxes = data;
 						for(var i=0;i<$scope.boxes.length;i++){
 							$scope.boxes[i].category = "Box";
 							$scope.datatables[i] = datatable($scope.datatableConfig);
 							$scope.datatables[i].setData([]);
-							var jsonSearch = {"boxCode":$scope.boxes[i].code,"kitCode":$scope.kit.code};
+							var jsonSearch = {"boxBarCode":$scope.boxes[i].barCode};
 							$scope.datatables[i].search(jsonSearch);
 							$scope.orderInformations.orderCode = $scope.boxes[i].orderCode;
 							$scope.orderInformations.providerOrderCode = $scope.boxes[i].providerOrderCode;
 							$scope.orderInformations.shippedOrderCode =  $scope.boxes[i].shippedOrderCode;
 						}
+						$scope.loadBoxSuccess = true;
+					}else{
+						$scope.loadBoxSuccess = false;
 					}
 				})
 				.error(function(data, status, headers, config) {
@@ -353,8 +380,9 @@
 	 $scope.saveReagents = function(index, box){
 		for(var i = 0; i < $scope.datatables[index].displayResult.length; i++){
 			$scope.datatables[index].displayResult[i].data.category = "Reagent";
-			$scope.datatables[index].displayResult[i].data.boxCode = box.code;
+			$scope.datatables[index].displayResult[i].data.boxBarCode = box.barCode;
 			$scope.datatables[index].displayResult[i].data.kitCode = $scope.kit.code;
+			$scope.datatables[index].displayResult[i].data.declarationType = $scope.kit.declarationType;
 			$scope.copyOrderInformations($scope.datatables[index].displayResult[i].data);
 		 }
 	 };
@@ -363,7 +391,7 @@
 		var promises = [];
 		for(var i=0;i<$scope.boxes.length;i++){
 			$scope.boxes[i].kitCode = $scope.kit.code;
-			
+			$scope.boxes[i].declarationType = $scope.kit.declarationType;
 			$scope.copyOrderInformations($scope.boxes[i]);
 			
 			if($scope.boxes[i].code === undefined || $scope.boxes[i].code === ""){
@@ -385,7 +413,7 @@
 					var reagents = $scope.datatables[i].displayResult.data;
 					if(reagents !== undefined){
 						for(var j=0;j<reagents.length;j++){
-							reagents[j].boxCode = $scope.boxes[i].code;
+							reagents[j].boxBarCode = $scope.boxes[i].barCode;
 							reagents[j].kitCode = $scope.boxes[i].kitCode;
 						}
 					}
@@ -425,17 +453,21 @@
 		$scope.mainService.resetErrors();
 		$scope.saveInProgress = true;
 		var promises = [];
-		if($scope.kit.code === undefined || $scope.kit.code === ""){
-			promises.push($scope.saveKit());
-		}else{
-			promises.push($scope.updateKit($scope.kit.code));
+		if($scope.kit.declarationType === "kit"){
+			if($scope.kit.code === undefined || $scope.kit.code === ""){
+				promises.push($scope.saveKit());
+			}else{
+				promises.push($scope.updateKit($scope.kit.code));
+			}
 		}
 		 $q.all(promises).then(function (res) {
 				if($scope.message.text != Messages('reagents.msg.save.error')){
 					$scope.message.clazz="alert alert-success";
 					$scope.message.text=Messages('reagents.msg.save.sucess');
 				}
-				promises = $scope.saveBoxes();
+				if($scope.kit.declarationType === "kit" || $scope.kit.declarationType === "box"){
+					promises = $scope.saveBoxes();
+				}
 				$q.all(promises).then(function (res) {
 					if($scope.message.text != Messages('reagents.msg.save.error')){
 						$scope.message.clazz="alert alert-success";

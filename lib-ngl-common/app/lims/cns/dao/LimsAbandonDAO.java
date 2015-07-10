@@ -492,7 +492,7 @@ public class LimsAbandonDAO {
 				Integer.valueOf(expDepotIllumina.instrumentProperties.get("nbCyclesReadIndex2").value.toString());
 				
 		DepotSolexa ds = this.jdbcTemplate.query("pc_FlowcellNGL @matmanom=?, @sequenceur=?,@nbcycle=?,@nbpiste=?,@instrumentType=?"
-												,new Object[]{expPrepaflowcell.outputContainerSupportCodes.get(0)
+												,new Object[]{expPrepaflowcell.outputContainerSupportCodes.toArray(new String[0])[0]
 																,expDepotIllumina.instrument.code
 																,nbCycles
 																,expPrepaflowcell.atomicTransfertMethods.size()
@@ -509,13 +509,13 @@ public class LimsAbandonDAO {
 		 Logger.debug("Matmaco for new flowcellNGL "+ds.matmaco);
 		 List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.in("support.code",expPrepaflowcell.inputContainerSupportCodes)).toList();
 		 if(CollectionUtils.isEmpty(containers)){
-			 throw new RuntimeException("Container vide for "+expPrepaflowcell.inputContainerSupportCodes.get(0));
+			 throw new RuntimeException("Container vide for "+expPrepaflowcell.inputContainerSupportCodes.toArray(new String[0])[0]);
 		 }
 		 
-		 for(Entry<Integer, AtomicTransfertMethod> atomicTransfertMethods: expPrepaflowcell.atomicTransfertMethods.entrySet())
+		 for(AtomicTransfertMethod atomicTransfertMethods: expPrepaflowcell.atomicTransfertMethods)
 		 {
-			 int laneNum=Integer.valueOf(atomicTransfertMethods.getValue().position);
-			 for(ContainerUsed containerUsed : ((ManytoOneContainer)atomicTransfertMethods.getValue()).inputContainerUseds){
+			 int laneNum=Integer.valueOf(atomicTransfertMethods.line);
+			 for(ContainerUsed containerUsed : atomicTransfertMethods.inputContainerUseds){
 				 Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.code);
 				 int matmacos=Double.valueOf(container.properties.get("limsCode").value.toString()).intValue();
 				 Logger.debug("Matmaco solution stock "+matmacos+" percentage "+containerUsed.percentage+", laneNum ="+laneNum);

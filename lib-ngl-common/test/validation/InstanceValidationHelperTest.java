@@ -5,9 +5,11 @@ import static org.fest.assertions.Assertions.assertThat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -73,7 +75,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		
 		sample2 = new Sample(); 
 		sample2.code = "SampleCode" + randomInt;
-		List<String> l =new ArrayList<String>();
+		Set<String> l =new HashSet<String>();
 		l.add("ProjectCode"); 
 		sample2.projectCodes = l;
 		
@@ -191,7 +193,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	@Test
 	public  void validationSampleCodeTest(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		CommonValidationHelper.validateSampleCode(sample2.code, sample2.projectCodes.get(0), contextValidation );
+		CommonValidationHelper.validateSampleCode(sample2.code, sample2.projectCodes.toArray(new String[0])[0], contextValidation );
 		Logger.debug(contextValidation.errors.toString());
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
@@ -290,7 +292,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		
 		c.categoryCode = "lane";
 		
-		List<String> lp = new ArrayList<String>(); 
+		Set<String> lp = new HashSet<String>(); 
 		lp.add(project.code);
 		c.projectCodes = lp;
 		
@@ -298,7 +300,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		m.put("limsCode", new PropertySingleValue(3805));
 		c.properties = m;
 		
-		List<String> ls = new ArrayList<String>(); 
+		Set<String> ls = new HashSet<String>(); 
 		ls.add(sample.code);
 		c.sampleCodes = ls;
 		
@@ -325,7 +327,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		v.valid = TBoolean.UNSET;
 		c.valuation = v;
 		
-		ArrayList<Content> alc = new ArrayList<Content>();
+		Set<Content> alc = new HashSet<Content>();
 		c.contents = alc;
 				
 		c.validate(contextValidation);
@@ -362,7 +364,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		c.code = "container" + randomInt; 
 		c.categoryCode = "lane";
 		
-		List<String> lp = new ArrayList<String>(); 
+		Set<String> lp = new HashSet<String>(); 
 		lp.add(project.code);
 		c.projectCodes = lp;
 		
@@ -370,7 +372,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		m.put("limsCode", new PropertySingleValue(3805));
 		c.properties = m;
 		
-		List<String> ls = new ArrayList<String>(); 
+		Set<String> ls = new HashSet<String>(); 
 		ls.add(sample.code);
 		c.sampleCodes = ls;
 		
@@ -396,7 +398,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		v.valid = TBoolean.UNSET;
 		c.valuation = v;
 		
-		ArrayList<Content> alc = new ArrayList<Content>();
+		Set<Content> alc = new HashSet<Content>();
 		c.contents = alc;
 				
 		c.validate(contextValidation);
