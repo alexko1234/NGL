@@ -1,18 +1,14 @@
 package workflows.container;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.TransientState;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.experiment.description.ExperimentCategory;
-import models.laboratory.experiment.instance.ContainerUsed;
-import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 import models.utils.instance.StateHelper;
 
@@ -26,8 +22,6 @@ import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.container.instance.ContainerValidationHelper;
-import workflows.experiment.ExperimentWorkflows;
-import workflows.process.ProcessWorkflows;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import fr.cea.ig.MongoDBDAO;
@@ -272,6 +266,7 @@ public class ContainerWorkflows {
 		nextStateContainer.code=nextState;
 		nextStateContainer.user=contextValidation.getUser();
 
+		List<Container> rulesContainers=new ArrayList<Container>();
 		if (!contextValidation.hasErrors()) {
 			
 			for(Container container:containers){
@@ -286,9 +281,10 @@ public class ContainerWorkflows {
 						DBUpdate.set("state", container.state).set("traceInformation", container.traceInformation));
 
 				supporContainerSet.add(container.support.code);
+				rulesContainers.add(container);
 			}
 
-			ContainerWorkflows.rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ContainerWorkflows.ruleWorkflowSQ, containers),null);
+			ContainerWorkflows.rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ContainerWorkflows.ruleWorkflowSQ, rulesContainers),null);
 			
 			List<ContainerSupport> containerSupports=MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("code",supporContainerSet).notEquals("state.code",nextState)).toList();
 			for(ContainerSupport containerSupport:containerSupports){
