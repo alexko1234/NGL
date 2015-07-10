@@ -59,7 +59,7 @@ public class Reagents extends DocumentController<Reagent>{
 		Form<Reagent> reagentFilledForm = getMainFilledForm();
 		if(!mainForm.hasErrors()){
 			Reagent reagent = reagentFilledForm.get();
-			reagent.code = ReagentCodeHelper.getInstance().generateReagentCode(reagent.boxCode);
+			reagent.code = ReagentCodeHelper.getInstance().generateReagentCode();
 			
 			reagent.traceInformation = new TraceInformation();
 			reagent.traceInformation.createUser =  getCurrentUser();
@@ -164,17 +164,7 @@ public class Reagents extends DocumentController<Reagent>{
 			}
 			queryElts.add(DBQuery.or(DBQuery.regex("barCode", Pattern.compile(reagentSearch.barCode)),DBQuery.in("boxCode", boxCodes)));
 		}else if(StringUtils.isNotEmpty(reagentSearch.boxBarCode)){
-			BoxSearchForm boxSearch = new BoxSearchForm();
-			boxSearch.barCode = reagentSearch.boxBarCode;
-			BasicDBObject keys = new BasicDBObject();
-			keys.put("code", 1);
-			keys.put("category", 1);
-			List<Box> boxes = MongoDBDAO.find(InstanceConstants.REAGENT_INSTANCE_COLL_NAME, Box.class, Boxes.getQuery(boxSearch), keys).toList();
-			List<String> boxCodes = new ArrayList<String>();
-			for(Box b:boxes){
-				boxCodes.add(b.code);
-			}
-			queryElts.add(DBQuery.in("boxCode", boxCodes));
+			queryElts.add(DBQuery.is("boxBarCode", reagentSearch.boxBarCode));
 		} 
 		
 		if(queryElts.size() > 0){

@@ -12,8 +12,8 @@
     			<li class="dropdown @("active".when(nav.startsWith("catalogs")))">
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="reagentCatalog">@Messages("reagentCatalogs.menu")<b class="caret"></b></a>
 							<ul class="dropdown-menu" role="menu" aria-labelledby="reagentCatalogs">
-								<li class="@("active".when(nav == "reagentCatalogs.create"))"><a href="@controllers.reagents.tpl.routes.KitCatalogs.home("create")">@Messages("reagentCatalogs.menu.create")</a></li>
-								<li class="@("active".when(nav == "reagentCatalogs.search"))"><a href="@controllers.reagents.tpl.routes.KitCatalogs.home("search")">@Messages("reagentCatalogs.menu.search")</a></li>																			
+								<li class="@("active".when(nav == "reagentCatalogs.search"))"><a href="@controllers.reagents.tpl.routes.KitCatalogs.home("search")">@Messages("reagentCatalogs.menu.search")</a></li>
+								<li class="@("active".when(nav == "reagentCatalogs.create"))"><a href="@controllers.reagents.tpl.routes.KitCatalogs.home("create")">@Messages("reagentCatalogs.menu.create")</a></li>																			
 							</ul>
   						</li>
     			<li class="dropdown @("active".when(nav.startsWith("reagents")))">

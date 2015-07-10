@@ -170,9 +170,6 @@ public class Kits extends DocumentController<Kit>{
 			queryElts.add(DBQuery.is("orderCode", kitSearch.orderCode));
 		}
 		
-		if(kitSearch.expirationDate != null){
-			queryElts.add(DBQuery.is("expirationDate", kitSearch.expirationDate));
-		}
 		
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));

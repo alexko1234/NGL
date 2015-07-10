@@ -453,11 +453,14 @@
   <div class="panel-heading">@Messages("experiment.reagents")</div>
   <div class="panel-body">
   <div class="row">
-	  	<!--<div class="form-group col-md-5 col-lg-5">
-	  		<div class="col-md-5 col-lg-5">
+  	<form class="form-horizontal">
+	  	<div class="form-group col-md-5 col-lg-5">
+	  		<div ng-class="reagentCodeErrorClass" class="col-md-5 col-lg-5">
 	  			<input class="form-control" ng-model="searchBarCode" type="text" placeholder="@Messages("experiment.placeholder.reagentOrBoxCode")"  ng-keydown="searchReagentsEvent($event)" />
+	  			<span class="help-block" ng-bind="reagentCodeError">test</span>
 	  		</div>
-	 	</div>-->
+	 	</div>
+	 	</form>
 	 	<div class="col-md-12 col-lg-12" datatable="datatableReagent"></div>
  	</div>
   </div>
@@ -490,6 +493,3 @@
 		</div>
 	</div>
 </div>	
-
-			
-		
