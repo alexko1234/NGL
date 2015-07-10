@@ -3,6 +3,9 @@ package models.laboratory.reagent.description;
 import java.util.List;
 
 import models.utils.InstanceConstants;
+
+import org.mongojack.DBQuery;
+
 import validation.ContextValidation;
 import validation.reagentCatalogs.instance.KitCatalogValidationHelper;
 import validation.utils.ValidationConstants;

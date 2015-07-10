@@ -48,10 +48,11 @@ public class Box extends AbstractDeclaration{
 		if(!contextValidation.hasErrors()){
 			BoxValidationHelper.validateCode(this, InstanceConstants.REAGENT_INSTANCE_COLL_NAME, contextValidation);
 			if(StringUtils.isNotEmpty(kitCode)){
-			if(declarationType.equals("kit")){
-				BoxValidationHelper.validateKitCode(kitCode, contextValidation);
+				if(declarationType.equals("kit")){
+					BoxValidationHelper.validateKitCode(kitCode, contextValidation);
+				}
+				BoxValidationHelper.validateBoxCatalogCode(catalogCode, contextValidation);
 			}
-			BoxValidationHelper.validateBoxCatalogCode(catalogCode, contextValidation);
 		}
 	}
 }

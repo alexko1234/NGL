@@ -40,6 +40,8 @@ public class ReagentCodeHelper extends CodeHelper{
 	public synchronized String generateBoxCode(String kitCode) {
 		return StringUtils.stripAccents(kitCode + "-"
 				+ generateBarCode());
+	}
+	
 	public synchronized String generateBoxCode() {
 		return StringUtils.stripAccents(generateBarCode());
 	}

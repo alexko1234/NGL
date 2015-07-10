@@ -13,7 +13,5 @@ public class ReagentValidationHelper extends CommonValidationHelper{
 	
 	public static void validateBoxCode(String code, ContextValidation contextValidation){
 		validateExistInstanceCode(contextValidation, code, Box.class, InstanceConstants.REAGENT_INSTANCE_COLL_NAME);
-	public static void validateBoxCode(String barCode, ContextValidation contextValidation){
-		validateExistInstanceCode(contextValidation, barCode, Box.class, InstanceConstants.REAGENT_INSTANCE_COLL_NAME);
 	}
 }
