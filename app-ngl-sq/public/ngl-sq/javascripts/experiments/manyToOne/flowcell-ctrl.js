@@ -336,8 +336,7 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 
 	$scope.refreshView = function(){
 		$scope.atomicTransfere.experimentToInput($scope.datatable);
-		//$scope.atomicTransfere.experimentToOutput($scope.datatable);
-		experimentToOutputHelper($scope.datatable);
+		$scope.atomicTransfere.reloadContainerDragNDrop(undefined, undefined, $scope.datatable, outputToExperimentHelper, experimentToOutputHelper);
 	};
 	
 	$scope.$on('disableEditMode', function(){

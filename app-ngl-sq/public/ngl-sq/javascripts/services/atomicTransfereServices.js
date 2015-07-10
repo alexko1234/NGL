@@ -746,10 +746,11 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 						containersIn = varManyToX.loadInputContainers($scope.experiment.value.atomicTransfertMethods);
 					}
 					promises = promises.concat(containersIn.promises);
-					if(containersOut == undefined && $scope.outputGenerated === true){
+					if(containersOut == undefined && $scope.experiment.outputGenerated === true){
 						containersOut = varXToOne.loadOutputContainers($scope.experiment.value.atomicTransfertMethods);
 						promises = promises.concat(containersOut.promises);
 					}
+					
 					var that = this;
 					$q.all(promises).then(function (res) {
 						containersIn = containersIn;
@@ -768,15 +769,15 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 										containerIn.percentage = percentage;
 									}
 								});
-								if(containersOut != undefined){
+								if(containersOut != undefined && containersOut.containers.length>0){
 									angular.forEach(containersOut.containers, function(container) {
 										if(angular.isArray(container) && container[0].code == $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].code){
 											containerOut.code = container[0].code;
 											containerOut.volume = container[0].mesuredVolume;
 											containerOut.concentration = container[0].mesuredConcentration;
 											containerOut.state = container[0].state;
-											containerOut.experimentProperties = container[0].experimentProperties;
-											containerOut.instrumentProperties = container[0].instrumentProperties;
+											containerOut.experimentProperties = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].experimentProperties;
+											containerOut.instrumentProperties =$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].instrumentProperties;
 											containerOut.locationOnContainerSupport = container[0].locationOnContainerSupport;
 											
 										}else if(container.code == $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].code){
@@ -784,14 +785,17 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 											containerOut.volume = container.mesuredVolume;
 											containerOut.concentration = container.mesuredConcentration;
 											containerOut.state = container.state;
-											containerOut.experimentProperties = container.experimentProperties;
-											containerOut.instrumentProperties = container.instrumentProperties;
+											containerOut.experimentProperties = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].experimentProperties;
+											containerOut.instrumentProperties = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].instrumentProperties;
 											containerOut.locationOnContainerSupport = container.locationOnContainerSupport;
 										}
 										
 										
 									});
+								}else{
+									containerOut = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0];
 								}
+								
 								var tags  = [];
 								var sampleTypes = [];
 								var libProcessTypeCodes = [];
@@ -815,15 +819,20 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 									concentration = containerIn.mesuredConcentration.value;
 								}
 
-
-
 								var mesuredVolume = 0;
 								if(containerIn.mesuredVolume !== undefined && containerIn.mesuredVolume !== null){
 									mesuredVolume = containerIn.mesuredVolume;
 								}
-								var container = {"inputCode":containerIn.code,"inputSupportCode":containerIn.support.code, "projectCodes":containerIn.projectCodes,"sampleCodes":containerIn.sampleCodes,
-										"inputX":containerIn.support.line, "inputTags":tags,"inputSampleTypes":sampleTypes, "inputLibProcessTypeCodes":libProcessTypeCodes, "inputState":containerIn.state,
-										"inputY":containerIn.support.column, "experimentProperties":containerIn.experimentProperties,"fromExperimentTypeCodes":containerIn.fromExperimentTypeCodes,
+								
+								var support = {};
+								if(containerIn.locationOnContainerSupport !== undefined){
+									support = containerIn.locationOnContainerSupport;
+								}else{
+									support = containerIn.support;
+								}
+								var container = {"inputCode":containerIn.code,"inputSupportCode":support.code, "projectCodes":containerIn.projectCodes,"sampleCodes":containerIn.sampleCodes,
+										"inputX":support.line, "inputTags":tags,"inputSampleTypes":sampleTypes, "inputLibProcessTypeCodes":libProcessTypeCodes, "inputState":containerIn.state,
+										"inputY":support.column, "experimentProperties":containerIn.experimentProperties,"fromExperimentTypeCodes":containerIn.fromExperimentTypeCodes,
 										"instrumentProperties":containerIn.instrumentProperties, "outputPositionX":$scope.experiment.value.atomicTransfertMethods[i].line, "percentage": containerIn.percentage, "outputContainerUsed":containerOut,
 										"outputPositionY":$scope.experiment.value.atomicTransfertMethods[i].column,"inputConcentration":concentration,"sampleCodeAndTags":sampleCodeAndTags,"inputVolume":mesuredVolume};//Fake container
 								containers.push(container);
