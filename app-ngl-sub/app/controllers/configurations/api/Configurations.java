@@ -38,24 +38,24 @@ public class Configurations extends DocumentController<Configuration>{
 		Form<Configuration> filledForm = getFilledForm(configurationForm, Configuration.class);
 		Configuration userConfiguration = filledForm.get();
 		
-			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
-			contextValidation.setCreationMode();	
-			if (userConfiguration._id == null) {
-				userConfiguration.traceInformation = new TraceInformation(); 
-				userConfiguration.traceInformation.setTraceInformation(getCurrentUser());
-				userConfiguration.state = new State("userValidate", getCurrentUser());
-				userConfiguration.code = SraCodeHelper.getInstance().generateConfigurationCode(userConfiguration.projectCode);
-				userConfiguration.validate(contextValidation);
-				
-				if(contextValidation.errors.size()==0) {
-					MongoDBDAO.save(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, userConfiguration);
-				} else {
-					return badRequest(filledForm.errorsAsJson());
-				}
+		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
+		contextValidation.setCreationMode();	
+		if (userConfiguration._id == null) {
+			userConfiguration.traceInformation = new TraceInformation(); 
+			userConfiguration.traceInformation.setTraceInformation(getCurrentUser());
+			userConfiguration.state = new State("userValidate", getCurrentUser());
+			userConfiguration.code = SraCodeHelper.getInstance().generateConfigurationCode(userConfiguration.projectCode);
+			userConfiguration.validate(contextValidation);
+			
+			if(contextValidation.errors.size()==0) {
+				MongoDBDAO.save(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, userConfiguration);
 			} else {
-				return badRequest("configuration with id "+userConfiguration._id +" already exist");
+				return badRequest(filledForm.errorsAsJson());
 			}
-		
+		} else {
+			filledForm.reject("configuration with id "+userConfiguration._id ," already exist");
+			return badRequest(filledForm.errorsAsJson());
+		}
 		return ok(Json.toJson(userConfiguration.code));
 	}
 

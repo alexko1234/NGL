@@ -68,7 +68,8 @@ public class Experiments extends DocumentController<Experiment> {
 				return badRequest(filledForm.errorsAsJson());
 			}
 		}else{
-			return badRequest("experiment codes are not the same");
+			filledForm.reject("experiment code " + code + " and userExperiment.code " + userExperiment.code , " are not the same");
+			return badRequest(filledForm.errorsAsJson());
 		}	
 	}
 	

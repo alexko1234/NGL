@@ -59,7 +59,9 @@ public class Studies extends DocumentController<Study>{
 					return badRequest(filledForm.errorsAsJson());
 				}
 			} else {
-				return badRequest("study with id " + userStudy._id + " already exist");
+				//return badRequest("study with id " + userStudy._id + " already exist");
+				filledForm.reject("Study_id "+userStudy._id, "study with id " + userStudy._id + " already exist");  // si solution filledForm.reject
+				return badRequest(filledForm.errorsAsJson());
 			}
 		
 		return ok(Json.toJson(userStudy.code));
