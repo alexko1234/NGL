@@ -41,6 +41,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"property":"code",
 			"order":true,
 			"position":5,
+			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='2'>",
 			"type":"text",
 			"groupMethod":"collect"
 		},
