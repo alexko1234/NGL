@@ -13,7 +13,10 @@ import java.util.Map;
 
 import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
+import models.laboratory.common.description.MeasureCategory;
+import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.common.description.Value;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
@@ -24,6 +27,7 @@ import play.Logger;
 import play.data.validation.ValidationError;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
+import services.description.common.MeasureService;
 
 public class InstrumentService {
 	
@@ -54,6 +58,8 @@ public class InstrumentService {
 		l.add(newInstrumentCategory("Covaris","covaris"));
 		l.add(newInstrumentCategory("Spri","spri"));
 		l.add(newInstrumentCategory("Thermocycleur","thermocycler"));
+		l.add(newInstrumentCategory("Centrifugeuse","centrifuge"));
+
 		
 		l.add(newInstrumentCategory("Quantification par fluorométrie","fluorometer"));
 		l.add(newInstrumentCategory("Appareil de qPCR","qPCR-system"));
@@ -271,13 +277,31 @@ public class InstrumentService {
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 
 		
-		l.add(newInstrumentUsedType("MinION", "minION", InstrumentCategory.find.findByCode("nanopore"), getNanoporeProperties(), getInstrumentMinIon() 
+		l.add(newInstrumentUsedType("Eppendorf MiniSpin plus", "eppendorf-mini-spin-plus", InstrumentCategory.find.findByCode("centrifuge"), getNanoporeFragmentationProperties(), getInstrumentMinIon() 
+				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
+		
+		
+		l.add(newInstrumentUsedType("MinION", "minION", InstrumentCategory.find.findByCode("nanopore"), getNanoporeDepotProperties(), getInstrumentEppendorfMiniSpinPlus() 
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
 
 	
-	private static List<PropertyDefinition> getNanoporeProperties() throws DAOException {
+	private static List<PropertyDefinition> getNanoporeFragmentationProperties() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        propertyDefinitions.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument),String.class, true,
+        		null, "G-TUBE", null, null, null, "single", 1));
+        propertyDefinitions.add(newPropertiesDefinition("Vitesse", "speed", LevelService.getLevels(Level.CODE.Instrument),String.class, false,
+        		null, "8000", null, null, null, "single", 2));
+        // unite s
+        propertyDefinitions.add(newPropertiesDefinition("Durée", "duration", LevelService.getLevels(Level.CODE.Instrument),String.class, false, 
+        		null, "30",MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_TIME),MeasureUnit.find.findByCode( "s"),MeasureUnit.find.findByCode( "s"), "single", 3));
+		return propertyDefinitions;
+	}
+
+
+	private static List<PropertyDefinition> getNanoporeDepotProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
         propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single"));
@@ -379,6 +403,13 @@ public class InstrumentService {
 	}
 	
 
+	private static List<Instrument> getInstrumentEppendorfMiniSpinPlus() throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("MiniSpin plus 1", "miniSpinPlus1", null, true, "path", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		return instruments;
+	}
+	
+	
 	private static List<Instrument> getInstrumentMiSeq() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		instruments.add(createInstrument("MELISSE", "MELISSE", "M2", true, "/env/atelier/solexa_MELISSE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
