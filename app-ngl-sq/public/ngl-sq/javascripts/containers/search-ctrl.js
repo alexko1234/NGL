@@ -15,6 +15,9 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 			enableLineSelection:true,
 			showButton:true
 		},
+		hide:{
+			active:true
+		},
 		order:{
 			//by:"['support.code','support.column']",
 			by:'traceInformation.creationDate',

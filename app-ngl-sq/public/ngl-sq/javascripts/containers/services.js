@@ -9,6 +9,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"header":Messages("containers.table.supportCode"),
 			"property":"support.code",
 			"order":true,
+			"hide":true,
 			"position":1,
 			"type":"text",
 			"group":true
@@ -19,6 +20,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"filter":"codes:'container_support_cat'",
 			"order":true,
 			"position":2,
+			"hide":true,
 			"type":"text",
 			"groupMethod":"unique"
 		});
@@ -26,6 +28,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"header":Messages("containers.table.support.column"),
 			"property":"support.column",
 			"order":true,
+			"hide":true,
 			"position":3,
 			"type":"text"
 		});
@@ -33,6 +36,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"header":Messages("containers.table.support.line"),
 			"property":"support.line",
 			"order":true,
+			"hide":true,
 			"position":4,
 			"type":"text"
 		});
@@ -49,6 +53,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"header":Messages("containers.table.projectCodes"),
 			"property":"projectCodes",
 			"order":false,
+			"hide":true,
 			"position":6,					
 			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='2'>",
 			"type":"text",
