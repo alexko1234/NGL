@@ -12,6 +12,9 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 				by:'code',
 				mode:'local'
 			},
+			hide:{
+				active:true
+			},
 			edit:{
 				active:true,
 				columnMode:true

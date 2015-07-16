@@ -40,6 +40,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			"header":Messages("containerSupports.table.projectCodes"),
 			"property":"projectCodes",
 			"position":6,
+			"render":"<div list-resize='value.data.projectCodes | unique' list-resize-min-size='3'>",
 			"order":false,
 			"type":"text"
 		});		

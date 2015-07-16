@@ -9,6 +9,15 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 		pagination:{
 			mode:'local'
 		},
+		group:{
+			active:true,
+			showOnlyGroups:true,
+			enableLineSelection:true,
+			showButton:true
+		},
+		hide:{
+			active:true
+		},
 		order:{
 			//by:"['support.code','support.column']",
 			by:'traceInformation.creationDate',

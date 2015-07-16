@@ -25,14 +25,14 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		{
 			"header":Messages("containers.table.support.column"),
 			"property":"support.column",
-			"order":false,
+			"order":true,
 			"position":3,
 			"type":"text"
 		},
 		{
 			"header":Messages("containers.table.support.line"),
 			"property":"support.line",
-			"order":false,
+			"order":true,
 			"position":4,
 			"type":"text"
 		},
@@ -41,7 +41,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"property":"code",
 			"order":true,
 			"position":5,
-			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='2'>",
+			"render":"<div list-resize='cellValue | stringToArray | unique' ' list-resize-min-size='2'>",
 			"type":"text",
 			"groupMethod":"collect"
 		},

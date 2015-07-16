@@ -1112,6 +1112,12 @@ angular.module('commonsServices', []).
     		return function(input){
     			return String(input);    			
     		}
+    	}).filter('stringToArray', function(){
+    		return function(input){
+    			var array = [];
+    			array = array.concat(input);
+    			return array;    			
+    		}
     	}).filter('countDistinct', ['$parse',function($parse) {
     	    return function(array, key) {
     	    	if (!array || array.length === 0)return undefined;
