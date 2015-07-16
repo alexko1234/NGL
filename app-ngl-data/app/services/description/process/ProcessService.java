@@ -9,6 +9,8 @@ import com.typesafe.config.ConfigFactory;
 
 import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
+import models.laboratory.common.description.MeasureCategory;
+import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessCategory;
@@ -18,6 +20,7 @@ import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
+import services.description.common.MeasureService;
 
 
 public class ProcessService {
@@ -48,9 +51,11 @@ public class ProcessService {
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 
+			l.add(DescriptionFactory.newProcessType("Librairie ONT", "nanopore-process-library", ProcessCategory.find.findByCode("library"),getPropertyDefinitionsNanoporeFragmentation() , getExperimentTypes("nanopore-fragmentation","nanopore-library"), 
+					getExperimentTypes("nanopore-library").get(0), getExperimentTypes("nanopore-library").get(0),getExperimentTypes("ext-to-nanopore").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
 
-			l.add(DescriptionFactory.newProcessType("Librairie Nanopore", "nanopore-process-library", ProcessCategory.find.findByCode("library"),getPropertyDefinitionsNanopore() , getExperimentTypes("nanopore-library"), 
+			l.add(DescriptionFactory.newProcessType("Librairie ONT sans frg", "nanopore-process-library-no-frg", ProcessCategory.find.findByCode("library"),getPropertyDefinitionsNanopore() , getExperimentTypes("nanopore-library"), 
 					getExperimentTypes("nanopore-library").get(0), getExperimentTypes("nanopore-library").get(0),getExperimentTypes("ext-to-nanopore").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
 			l.add(DescriptionFactory.newProcessType("Run Nanopore", "nanopore-run", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsNanopore() , getExperimentTypes("nanopore-depot"), 
@@ -151,10 +156,20 @@ public class ProcessService {
 	}
 	
 	
-	public static List<PropertyDefinition> getPropertyDefinitionsNanopore() throws DAOException {
+	public static List<PropertyDefinition> getPropertyDefinitionsNanoporeFragmentation() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();		
 		
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Commentaire","comment",LevelService.getLevels(Level.CODE.Process),String.class,false,"single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille banque souhaitée","librarySize",LevelService.getLevels(Level.CODE.Process),Integer.class,true, DescriptionFactory.newValues("8","20")
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "kb"),MeasureUnit.find.findByCode( "kb"), "single",1));
+
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Commentaire","comment",LevelService.getLevels(Level.CODE.Process),String.class,false,"single",2));
+		
+		return propertyDefinitions;
+	}
+	
+	public static List<PropertyDefinition> getPropertyDefinitionsNanopore() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Commentaire","comment",LevelService.getLevels(Level.CODE.Process),String.class,false,"single",2));
 		
 		return propertyDefinitions;
 	}
