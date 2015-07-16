@@ -29,7 +29,7 @@ public class MigrationContainerMeasure extends CommonController{
 
 	private static void updateContainerMeasure() {
 
-		List<Container> containers = MongoDBDAO.find(collection, Container.class,DBQuery.is("categoryCode","tube")).toList();
+		List<Container> containers = MongoDBDAO.find(collection, Container.class,DBQuery.is("categoryCode","tube").size("fromExperimentTypeCodes",0)).toList();
 		for(Container container:containers){
 
 			if(container.mesuredVolume !=null){
