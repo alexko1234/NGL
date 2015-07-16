@@ -90,7 +90,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"hide":true,
 			"type":"text",
 			"position":10,
-			"render":"<div list-resize='value.data.contents | getArray:\"properties.tag.value\" | unique' ' list-resize-min-size='3'>",
+			"render":"<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' ' list-resize-min-size='3'>",
 			"groupMethod":"collect"
 			
 		});
@@ -101,7 +101,8 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"order":false,
 			"position":11,
 			"type":"text",
-			"render":"<span ng-model='value.data.fromExperimentTypeCodes' codes='type'></span>"
+			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
+			"groupMethod":"collect"
 		});		
 		columns.push({
 					"header":Messages("containers.table.creationDate"),
@@ -180,7 +181,22 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 	};
 	
 
-
+	var configDatatable = {
+			group:{
+				active:true,
+				showOnlyGroups:true,
+				enableLineSelection:true,
+				showButton:true
+			},
+			pagination:{
+				mode:'local'
+			},
+			order:{
+				active:true,
+				by:'code',
+				mode:'local'
+			}
+	};
 
 	var isInit = false;
 
@@ -406,9 +422,6 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 					searchService.datatable = mainService.getDatatable();			
 				}
 				
-				
-
-
 				if(angular.isDefined(mainService.getForm())){
 					searchService.form = mainService.getForm();
 				}else{
