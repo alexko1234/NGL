@@ -976,7 +976,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 
 		};
 
-		var manyToOne = {
+		var oneToVoid = {
 				experimentToInput : function(input){
 					varOneToX.experimentToInput(input);
 				},
@@ -1012,6 +1012,16 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 						this.loadExperimentDatatable(input);
 					}
 				},
+				reloadContainersDatatable : function(datatable){
+					var promises = [];
+					var resultInput = varOneToX.loadInputContainers($scope.experiment.value.atomicTransfertMethods);
+					promises = promises.concat(resultInput.promises);					
+					var that = this;
+					$q.all(promises).then(function (res) {						
+						datatable.setData(resultInput.containers,resultInput.containers.length);						
+						that.experimentToInput(datatable);						
+					});
+				},
 				newExperiment : function(input){
 					if(inputType === "datatable"){
 						varexperimentCommonFunctions.newExperimentDatatable(input);
@@ -1021,7 +1031,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 		};
 
 		init();
-		return manyToOne;
+		return oneToVoid;
 	};
 	return constructor;
 }]).factory('manyToVoid',['$rootScope','manyToX','$http', '$parse', '$q', 'experimentCommonFunctions',  function($rootScope, manyToX, $http, $parse, $q, experimentCommonFunctions){
@@ -1038,7 +1048,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 
 		};
 
-		var manyToOne = {
+		var manyToVoid = {
 				experimentToInput : function(input){
 					varManyToX.experimentToInput(input);
 				},
@@ -1081,7 +1091,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 		};
 
 		init();
-		return manyToOne;
+		return manyToVoid;
 	};
 	return constructor;
 }]);
