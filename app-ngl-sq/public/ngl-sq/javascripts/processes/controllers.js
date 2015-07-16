@@ -14,7 +14,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			        	 "order":true,
 			        	 "hide":true,
 			        	 "type":"text",
-			        	 "position":1
+			        	 "position":1,
+			 			 "group":true
 			         },
 			         {
 			        	 "header":Messages("containers.table.support.categoryCode"),
@@ -23,7 +24,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			        	 "order":true,
 			        	 "hide":true,
 			        	 "type":"text",
-			        	 "position":2
+			        	 "position":2,
+			 			 "groupMethod":"unique"
 			         },
 			         {
 			        	 "header":Messages("containers.table.code"),
@@ -31,7 +33,9 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			        	 "order":true,
 			        	 "hide":true,
 			        	 "type":"text",
-			        	 "position":3
+			        	 "position":3,
+			 			 "render":"<div list-resize='cellValue | stringToArray | unique' ' list-resize-min-size='2'>",
+			 			 "groupMethod":"collect"
 			         },
 			         {
 			        	 "header":Messages("processes.table.projectCode"),
@@ -39,7 +43,9 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			        	 "order":true,
 			        	 "hide":true,
 			        	 "type":"text",
-			        	 "position":4
+			        	 "position":4,					
+			 			 "render":"<div list-resize='cellValue | unique' ' list-resize-min-size='2'>",
+			 			 "groupMethod":"collect"
 			         },
 			         {
 				 			"header":Messages("containers.table.sampleCodes.length"),
@@ -47,7 +53,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 				 			"order":true,
 				 			"hide":true,
 				 			"type":"text",
-				        	 "position":5
+				        	"position":5,
+				 			"groupMethod":"sum"
 				 	},
 			 		{
 						"header":Messages("containers.table.sampleCodes"),
@@ -55,7 +62,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 						"order":false,
 						"hide":true,
 						"type":"text",
-						"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
+						"render":"<div list-resize='cellValue | unique' list-resize-min-size='3'>",
+						"groupMethod":"collect",
 			        	"position":6
 					},
 			 		{
@@ -64,7 +72,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 						"order":true,
 						"hide":true,
 						"type":"number",
-			        	 "position":7
+			        	 "position":7,
+			 			"groupMethod":"sum"
 					},
 					{
 						"header":Messages("containers.table.tags"),
@@ -72,17 +81,19 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 						"order":false,
 						"hide":true,
 						"type":"text",
-						"render":"<div list-resize='value.data.contents | getArray:\"properties.tag.value\" | unique' ' list-resize-min-size='3'>",
-			        	 "position":8
+						"render":"<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' ' list-resize-min-size='3'>",
+						"groupMethod":"collect",
+			        	"position":8
 					},
 			        {
 			        	 "header":Messages("containers.table.fromExperimentTypeCodes"),
-			        	 "property":"fromExperimentTypeCodes",
-			        	 "filter":"codes:'type'",
+			        	 "property":"fromExperimentTypeCodes",			        	 
 			        	 "order":false,
 			        	 "hide":true,
 			        	 "type":"text",
-			        	 "position":9
+			        	 "position":9,
+			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
+						"groupMethod":"collect"
 			        },
 			         {
 			        	 "header":Messages("containers.table.state.code"),
@@ -91,7 +102,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			        	 "hide":true,
 			        	 "type":"text",
 			        	 "filter":"codes:'state'",
-			        	 "position":10
+			        	 "position":10,
+			 			"groupMethod":"unique"
 			         },
 			        {
 			        	 "header":Messages("containers.table.valid"),
@@ -122,11 +134,18 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			         search:{
 			        	 url:jsRoutes.controllers.containers.api.Containers.list()
 			         },
+			 		group:{
+						active:true,
+						showOnlyGroups:true,
+						enableLineSelection:true,
+						showButton:true
+					},
 			         pagination:{
 			 			mode:'local'
 				 	 },
 				 	 order:{
-			 			by:'code',
+				 		active:true,
+				 		by:'code',
 			 			mode:'local'
 			 		 },
 			         otherButtons :{

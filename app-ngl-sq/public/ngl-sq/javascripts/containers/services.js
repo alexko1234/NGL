@@ -41,7 +41,9 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"property":"code",
 			"order":true,
 			"position":5,
-			"type":"text"
+			"type":"text",
+			"render":"<div list-resize='cellValue | stringToArray | unique' ' list-resize-min-size='2'>",
+			"groupMethod":"collect"
 		});
 		columns.push({
 			"header":Messages("containers.table.projectCodes"),
@@ -122,6 +124,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 					"type":"text",
 					"position":16,
 					"render":"<div list-resize='value.data.inputProcessCodes | unique' list-resize-min-size='3'>",
+					"groupMethod":"collect"
 				});
 		
 		if(mainService.getHomePage() === 'state'){
