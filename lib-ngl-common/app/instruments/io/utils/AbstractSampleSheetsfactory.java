@@ -103,8 +103,8 @@ public abstract class AbstractSampleSheetsfactory {
 		return (String) container.properties.get(propertyName).value;
 	}
 	
-	public static Double getInputContainerUsedExperimentProperty(ContainerUsed container, String propertyName){		
-		return (Double) container.experimentProperties.get(propertyName).value;
+	public static String getInputContainerUsedExperimentProperty(ContainerUsed container, String propertyName){		
+		return container.experimentProperties.get(propertyName).value.toString().replace(".",",") ;
 	}
 		
 	
