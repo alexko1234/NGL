@@ -224,7 +224,7 @@ public class MigrationNGLSEQ extends CommonController{
 
 	}
 	
-	static <T extends DBObject> void backupOneCollection(String collectionName,Class<T> classType) {
+	public static <T extends DBObject> void backupOneCollection(String collectionName,Class<T> classType) {
 		Logger.info("\tCopie "+collectionName+" start");
 		MongoDBDAO.save(collectionName+"_BCK_"+today,MongoDBDAO.find(collectionName, classType).toList());
 		Logger.info("\tCopie "+collectionName+" end");
