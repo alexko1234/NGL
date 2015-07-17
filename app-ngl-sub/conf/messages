@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 application.name = NGL-SUB
 index.title = Bienvenue dans l'application NGL-SUB
 #Study
@@ -120,6 +119,3 @@ button.validate=Validate
 #Containers
 #containers.title = Containers
 #containers.menu = Containers
-
-
->>>>>>> master
