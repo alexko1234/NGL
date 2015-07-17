@@ -33,7 +33,7 @@ angular.module('commonsServices', []).
 							this.text = undefined; 
 							this.showDetails = false; 
 							this.isDetails = false;
-							this.details = [];
+							this.details = {};
 							this.opening = false;
 						},
 						setDetails : function(details){
