@@ -6,6 +6,7 @@ import java.util.List;
 import controllers.ListForm;
 
 public class KitSearchForm extends ListForm{
+	public String code;
 	public String catalogCode;
 	public List<String> catalogCodes;
 	

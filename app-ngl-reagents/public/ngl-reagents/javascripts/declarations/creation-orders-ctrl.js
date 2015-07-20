@@ -8,7 +8,8 @@
 						 "header":Messages("reagents.table.catalogCode"),
 						 "property":"catalogCode",
 						 "order":true,
-						 "type":"text"
+						 "type":"text",
+						 "filter":"codes:'boxCatalogs'"
 					},
 					{
 						 "header":Messages("reagents.table.category"),
@@ -145,20 +146,7 @@
 						}
 					},
 					showButton : true,
-					withoutEdit:true,
-					callback : function(datatable, errors){
-						 if(errors === 0 && $routeParams.kitCode === undefined){
-							$scope.datatableSaved++;
-							if($scope.datatableSaved === $scope.datatables.length){
-								//All the datatables are now saved
-								$location.path(jsRoutes.controllers.reagents.tpl.Kits.get($scope.kit.code).url);
-							}
-						 }else if(errors > 0){
-							 $scope.message.clazz = 'alert alert-danger';
-								$scope.message.text = Messages('reagents.msg.save.error');
-								$scope.message.isDetails = false;
-						 }
-					}
+					withoutEdit:true
 				},
 				hide:{
 					active:true
@@ -196,6 +184,7 @@
 				.success(function(data, status, headers, config) {
 					if(data!=null && data.length === 1){
 						object.catalogCode = data[0].code;
+						object.declarationType = "box";
 						$scope.currentBox = object;
 					}else{
 						$http.get(jsRoutes.controllers.reagents.api.ReagentCatalogs.list().url, {"params":{"includes":"catalogCode", "catalogRefCode":object.catalogRefCode}})

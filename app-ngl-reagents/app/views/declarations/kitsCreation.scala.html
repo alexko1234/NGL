@@ -198,7 +198,6 @@
 				<label class="col-md-2 col-lg-2 control-label">@Messages("boxes.catalogRefCode") :</label>
 					<div ng-switch on="editMode">
 							<p class="form-control-static col-md-2 col-lg-2" ng-switch-when="false">{{box.catalogRefCode}}</p>
-							<p class="form-control-static col-md-1 col-lg-1" ng-switch-when="false">{{box.catalogRefCode}}</p>
 					<div ng-switch-when="true">
 					<div class="col-md-1 col-lg-1" ng-class="getClass('boxes['+$index+'].catalogRefCode')">
 						<input class="form-control" type="text" ng-change="checkCatalogRefCode($index)" ng-model="catalogRefCodeVerifications[$index].code" ng-readonly="!editMode || (kit.declarationType!='kit' && kit.declarationType!='box')" ng-disabled="!editMode || (kit.declarationType!='kit' && kit.declarationType!='box')">
@@ -208,7 +207,19 @@
 					</div>
 					</div>
 					</div>	
-					<label class="col-md-1 col-lg-1 col-md-offset-1 control-label">@Messages("boxes.bundleBarCode") :</label>
+					<label class="col-md-1 col-lg-1 control-label">@Messages("boxes.barCode") :</label>
+					<div ng-switch on="editMode">
+							<p class="form-control-static col-md-1 col-lg-1" ng-switch-when="false">{{box.barCode}}</p>
+					<div ng-switch-when="true">
+					<div class="col-md-2 col-lg-2" ng-class="getClass('boxes['+$index+'].barCode')">
+						<input class="form-control" ng-change="boxBarCodeUpdate($index, box)" type="text" ng-model="box.barCode" ng-readonly="!editMode || (kit.declarationType!='kit' && kit.declarationType!='box')" ng-disabled="!editMode || (kit.declarationType!='kit' && kit.declarationType!='box')">
+						<span class="help-block">
+                           {{mainService.getError("boxes["+$index+"].barCode")}}
+                     		</span>
+					</div>
+					</div>
+					</div>
+					<label class="col-md-1 col-lg-1  control-label">@Messages("boxes.bundleBarCode") :</label>
 					<div ng-switch on="editMode">
 							<p class="form-control-static col-md-1 col-lg-1" ng-switch-when="false">{{box.bundleBarCode}}</p>
 					<div ng-switch-when="true">
@@ -220,19 +231,7 @@
 					</div>
 					</div>
 					</div>	
-					<label class="col-md-1 col-lg-1 control-label">@Messages("boxes.barCode") :</label>
-					<div ng-switch on="editMode">
-							<p class="form-control-static col-md-2 col-lg-2" ng-switch-when="false">{{box.barCode}}</p>
-					<div ng-switch-when="true">
-					<div class="col-md-2 col-lg-2" ng-class="getClass('boxes['+$index+'].barCode')">
-						<input class="form-control" type="text" ng-model="box.barCode" ng-readonly="!editMode || (kit.declarationType!='kit' && kit.declarationType!='box')" ng-disabled="!editMode || (kit.declarationType!='kit' && kit.declarationType!='box')">
-						<input class="form-control" ng-change="boxBarCodeUpdate($index, box)" type="text" ng-model="box.barCode" ng-readonly="!editMode || (kit.declarationType!='kit' && kit.declarationType!='box')" ng-disabled="!editMode || (kit.declarationType!='kit' && kit.declarationType!='box')">
-						<span class="help-block">
-                           {{mainService.getError("boxes["+$index+"].barCode")}}
-                     		</span>
-					</div>
-					</div>
-					</div>
+					
 					
 				</div>
 			</div>

@@ -142,6 +142,10 @@ public class Kits extends DocumentController<Kit>{
 		Query query = null;
 		queryElts.add(DBQuery.is("category", "Kit"));
 
+		if(StringUtils.isNotBlank(kitSearch.code)){
+			queryElts.add(DBQuery.is("code", kitSearch.code));
+		}
+		
 		if(CollectionUtils.isNotEmpty(kitSearch.catalogCodes)){
 			queryElts.add(DBQuery.in("catalogCode", kitSearch.catalogCodes));
 		}
