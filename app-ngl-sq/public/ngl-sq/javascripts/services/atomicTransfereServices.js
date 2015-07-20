@@ -499,12 +499,12 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 					}
 					var that = this;
 					$q.all(promises).then(function (res) {
-						var oldDatatableValues = datatable.getData();
+						//var oldDatatableValues = datatable.getData();
 						datatable.setData(resultInput.containers,resultInput.containers.length);
 						if($scope.experiment.outputGenerated == true){									
 							var allData = datatable.getData();
-							var j =0;
-							while(allData[j]){
+							//var j =0;
+							/*while(allData[j]){
 								if(angular.isUndefined(allData[j].outputContainerUsed)){
 									allData[j].outputContainerUsed = oldDatatableValues[j].outputContainerUsed;
 								}
@@ -514,7 +514,25 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 									allData[j].outputContainerUsed = containerUsed;
 								}
 								j++;
-							}								
+							}*/
+							
+							angular.forEach(allData, function(data){
+								var containerTmp = undefined;
+								for(var j=0; j<$scope.experiment.value.atomicTransfertMethods.length;j++){
+									if(data.code===$scope.experiment.value.atomicTransfertMethods[j].inputContainerUseds[0].code){
+										for(var i=0; i<resultOutput.containers.length;i++){
+											if($scope.experiment.value.atomicTransfertMethods[j].outputContainerUseds[0].code===resultOutput.containers[i].code){
+												containerTmp = resultOutput.containers[i];
+												break;
+											}
+										}
+									}
+								}
+								if(!angular.isUndefined(containerTmp)){
+									var containerUsed = {code:containerTmp.code, concentration: containerTmp.mesuredConcentration, volume: containerTmp.mesuredVolume, state: containerTmp.state};									
+									data.outputContainerUsed = containerUsed;		
+								}
+							});
 
 							datatable.setData(allData,allData.length);
 							if(angular.isDefined(outputToExperimentFunc) && angular.isFunction(outputToExperimentFunc)){								
