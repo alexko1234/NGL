@@ -7,7 +7,6 @@ angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$window','data
 			        	 "property":"inputCode",
 			        	 "order":true,
 						 "edit":false,
-						 "hide":true,
 			        	 "type":"text",
 			        	 "position":0,
 			        	 "extraHeaders":{0:"Inputs"}
@@ -17,7 +16,6 @@ angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$window','data
 			        	 "property":"fromExperimentTypeCodes",
 			        	 "order":true,
 						 "edit":false,
-						 "hide":true,
 			        	 "type":"text",
 			        	// "filter":"codes:'type'",
 			        	 "render":"<span ng-model='value.data.fromExperimentTypeCodes' codes='type'></span>",
@@ -80,6 +78,7 @@ angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$window','data
 			        		 return Messages("containers.table.volume") +" (µl)";},
 			        	 "property":"inputVolume.value",
 			        	 "order":true,
+			        	 "hide":true,
 			        	 "type":"number",
 			        	 "edit":false,
 			        	 "position":6,
@@ -186,6 +185,10 @@ angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$window','data
 		if(data.displayMeasureValue != undefined && data.displayMeasureValue != null){
 			column.convertValue = {"active":true, "displayMeasureValue":data.displayMeasureValue.value, "saveMeasureValue":data.saveMeasureValue.value};
 		}		
+		
+		if(data.code === "inputVolume"){
+			column.hide = false;
+		}
 		$scope.datatable.addColumn(6 ,column);
 	});
 	
@@ -386,8 +389,24 @@ angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$window','data
 		$scope.$emit('viewRefeshed');
 	});
 	
+	var sameConcentration = function(){
+		var concentration = undefined;
+		for(var i=0;i<$scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds.length;i++){
+			if(concentration === undefined){
+				concentration = $scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[i].concentration.value;
+			}else{
+				if(concentration !== $scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[i].concentration.value){
+					return false;
+				}
+			}
+		}
+		return true;
+	};
+	
 	$scope.$on('outputToExperiment', function(e, atomicTransfertMethod) {
-		$scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].concentration = $scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[0].concentration;
+		if(sameConcentration() === true){
+			$scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].concentration = $scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[0].concentration;
+		}
 		if($scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].volume === undefined){
 			$scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].volume = {};
 		}
