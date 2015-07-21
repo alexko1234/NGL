@@ -150,18 +150,26 @@ public class ExperimentService {
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		
 			//Nanopore
+			l.add(newExperimentType("Ext to Nanopore Fragmentation preCR","ext-to-nanopore-fragmentation",
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+			
+			l.add(newExperimentType("Ext to Nanopore Librairie ONT","ext-to-nanopore-library",
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+			
 			l.add(newExperimentType("Ext to Nanopore","ext-to-nanopore",
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
 			l.add(newExperimentType("Fragmentation preCR","nanopore-fragmentation",
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
-					getPropertyFragmentationNanopore(), getInstrumentUsedTypes("hand"),"OneToOne", 
+					getPropertyFragmentationNanopore(), getInstrumentUsedTypes("eppendorf-mini-spin-plus"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
 			l.add(newExperimentType("Aliquotage","aliquoting",
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()),
-					null, getInstrumentUsedTypes("hand"),"OneToMany", 
+					getPropertyAliquoting(), getInstrumentUsedTypes("hand"),"OneToMany", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 
 			l.add(newExperimentType("Librairie ONT","nanopore-library",
@@ -316,6 +324,8 @@ public class ExperimentService {
 	}
 
 
+	
+
 	private static void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
 
 		newExperimentTypeNode("ext-to-opgen-depot", getExperimentTypes("ext-to-opgen-depot").get(0), false, false, null, null, null).save();
@@ -338,9 +348,11 @@ public class ExperimentService {
 			
 			//Nanopore
 			newExperimentTypeNode("ext-to-nanopore", getExperimentTypes("ext-to-nanopore").get(0), false, false, null, null, null).save();
-			newExperimentTypeNode("nanopore-fragmentation",getExperimentTypes("nanopore-fragmentation").get(0),false,false,getExperimentTypeNodes("ext-to-nanopore"),
+			newExperimentTypeNode("ext-to-nanopore-fragmentation", getExperimentTypes("ext-to-nanopore").get(0), false, false, null, null, null).save();
+			newExperimentTypeNode("ext-to-nanopore-library", getExperimentTypes("ext-to-nanopore").get(0), false, false, null, null, null).save();
+			newExperimentTypeNode("nanopore-fragmentation",getExperimentTypes("nanopore-fragmentation").get(0),false,false,getExperimentTypeNodes("ext-to-nanopore-fragmentation"),
 					null,null).save();
-			newExperimentTypeNode("nanopore-library",getExperimentTypes("nanopore-library").get(0),false,false,getExperimentTypeNodes("ext-to-nanopore","nanopore-fragmentation"),
+			newExperimentTypeNode("nanopore-library",getExperimentTypes("nanopore-library").get(0),false,false,getExperimentTypeNodes("ext-to-nanopore-library","nanopore-fragmentation"),
 					null,null).save();
 			newExperimentTypeNode("nanopore-depot",getExperimentTypes("nanopore-depot").get(0),false,false,getExperimentTypeNodes("nanopore-library","ext-to-nanopore"),
 					null,null).save();
@@ -414,6 +426,15 @@ public class ExperimentService {
 	}
 
 	
+	private static List<PropertyDefinition> getPropertyAliquoting() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","pickedUpVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µl"),MeasureUnit.find.findByCode( "µl"), "single",10));
+		propertyDefinitions.add(newPropertiesDefinition("Quantité mesurée","mesuredQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"), "single",20));
+		return propertyDefinitions;
+	}
+	
 	private static List<PropertyDefinition> getPropertyFragmentationNanopore() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb. de fragmentations","fragmentionNumber",LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, true, null
@@ -441,7 +462,7 @@ public class ExperimentService {
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"), "single",9));
 		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Volume final","measuredVolume",LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null
-				, null ,null,null, "single",10));
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µl"),MeasureUnit.find.findByCode( "µl"), "single",10));
 
 		return propertyDefinitions;
 
@@ -451,17 +472,35 @@ public class ExperimentService {
 	private static List<PropertyDefinition> getPropertyDepotNanopore() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, true, "single",300));
-		propertyDefinitions.add(newPropertiesDefinition("QC avant chargement FC", "qcBeforeFC", LevelService.getLevels(Level.CODE.Experiment),Double.class, false, "single",400));
-        propertyDefinitions.add(newPropertiesDefinition("QC avant demarrage run", "qcBeforeRun", LevelService.getLevels(Level.CODE.Experiment),Double.class, false, "single",500));
-        propertyDefinitions.add(newPropertiesDefinition("Nb reads", "nbReads", LevelService.getLevels(Level.CODE.Experiment),Integer.class, false, "single",600));
-        propertyDefinitions.add(newPropertiesDefinition("Nb pores actifs", "nbAtcivePores", LevelService.getLevels(Level.CODE.Experiment),Integer.class, false, "single",700));
-        propertyDefinitions.add(newPropertiesDefinition("Nb events", "nbEvents", LevelService.getLevels(Level.CODE.Experiment),Integer.class, false, "single",800));
-        propertyDefinitions.add(newPropertiesDefinition("Taille max", "maxSize", LevelService.getLevels(Level.CODE.Experiment),Integer.class, false, "single",900));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Report","report",LevelService.getLevels(Level.CODE.Experiment), File.class, false, "file"));
 
-		//Manque unite
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Volume chargement","loading.volume",LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, "object_list"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Temps de chargement","loading.time",LevelService.getLevels(Level.CODE.ContainerIn), Long.class, false, "object_list"));		
+        // Unite a verifier
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Heure de chargement","loadingReport.hour",LevelService.getLevels(Level.CODE.ContainerIn), Long.class, false,null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_TIME),MeasureUnit.find.findByCode( "s"),MeasureUnit.find.findByCode( "s"), "object_list",100));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Temps de chargement","loadingReport.time",LevelService.getLevels(Level.CODE.ContainerIn), Long.class, false,null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_TIME),MeasureUnit.find.findByCode( "s"),MeasureUnit.find.findByCode( "s"), "object_list",200));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Volume chargement","loadingReport.volume",LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "object_list",300));
+
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Groupe","qcFlowcellPreLoading.group",LevelService.getLevels(Level.CODE.ContainerOut), String.class, false,null
+				, null,null,null, "object_list",100));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb pores actifs","qcFlowcellPreLoading.nbActivePores",LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false,null
+				, null, null, null, "object_list",200));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Groupe","qcFlowcellPostLoading.group",LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null
+				, null,null,null, "object_list",100));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb pores actifs","qcFlowcellPostLoading.nbActivePores",LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null
+				, null,null,null, "object_list",100));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Channels with Reads", "minknowChannelsWithReads", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, false, "single",400));
+        propertyDefinitions.add(newPropertiesDefinition("Events in Reads", "minknowEvents", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, false, "single",500));
+        propertyDefinitions.add(newPropertiesDefinition("Complete reads", "minknowCompleteReads", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, false, "single",600));
+        propertyDefinitions.add(newPropertiesDefinition("Read count", "metrichorReadCount", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, false, "single",700));
+        propertyDefinitions.add(newPropertiesDefinition("Total 2D yield (bases)", "metrichor2DReadsYield", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, false, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"), "single",800));
+        propertyDefinitions.add(newPropertiesDefinition("Longest 2D read (bases)", "metrichorMax2DRead", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, false, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"),"single",900));
+        propertyDefinitions.add(newPropertiesDefinition("Peak 2D quality score", "metrichorMax2DQualityScore", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, false, "single",1000));
 
 		return propertyDefinitions;
 	}
