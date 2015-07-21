@@ -1,4 +1,4 @@
-package controllers.samples.api;
+package controllers.sra.samples.api;
 
 import java.util.List;
 

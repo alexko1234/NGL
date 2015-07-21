@@ -7,8 +7,8 @@ angular.module('home').controller('ActivateCtrl',[ '$http', '$scope', '$routePar
 			pagination:{mode:'local'},			
 			order :{mode:'local', by:'code', reverse : true},
 			search:{
-				//url:jsRoutes.controllers.submissions.api.Submissions.list().url+'?state=userValidate'
-				url:jsRoutes.controllers.submissions.api.Submissions.list()
+				//url:jsRoutes.controllers.sra.submissions.api.Submissions.list().url+'?state=userValidate'
+				url:jsRoutes.controllers.sra.submissions.api.Submissions.list()
 			},
 			otherButtons:{
 				active:true,
@@ -40,7 +40,7 @@ angular.module('home').controller('ActivateCtrl',[ '$http', '$scope', '$routePar
 	
 	if(angular.isUndefined(mainService.getHomePage())){
 		mainService.setHomePage('activate');
-		tabService.addTabs({label:Messages('submissions.menu.activate'),href:jsRoutes.controllers.submissions.tpl.Submissions.home("activate").url,remove:true});
+		tabService.addTabs({label:Messages('submissions.menu.activate'),href:jsRoutes.controllers.sra.submissions.tpl.Submissions.home("activate").url,remove:true});
 		tabService.activeTab(0); // desactive le lien !
 	}
 	// si on declare dans services => var sraVariables = {};
@@ -76,7 +76,7 @@ angular.module('home').controller('ActivateCtrl',[ '$http', '$scope', '$routePar
 		for(var i = 0; i < tab_submissions.length ; i++){
 			console.log("submissionCode = " + tab_submissions[i].code + " state = "+ tab_submissions[i].state.code);
 			// met à jour dans la base les objets qui doivent etres soumis à l'EBI avec status "inWaiting".
-			$http.put(jsRoutes.controllers.submissions.api.Submissions.activate(tab_submissions[i].code).url, tab_submissions[i])
+			$http.put(jsRoutes.controllers.sra.submissions.api.Submissions.activate(tab_submissions[i].code).url, tab_submissions[i])
 			.success(function(data){
 		   		decompte = processInSubmission(decompte, error);
 			})

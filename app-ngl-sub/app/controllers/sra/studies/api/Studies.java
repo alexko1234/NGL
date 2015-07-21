@@ -1,4 +1,4 @@
-package controllers.studies.api;
+package controllers.sra.studies.api;
 
 import static play.data.Form.form;
 

@@ -31,7 +31,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				// important de mettre en mode local pour rafraichissement de la page, mais sauvegarde globale via bouton
 				mode:'local',
 				url:function(line){
-					return jsRoutes.controllers.samples.api.Samples.update(line.code).url; // jamais utilisé en mode local
+					return jsRoutes.controllers.sra.samples.api.Samples.update(line.code).url; // jamais utilisé en mode local
 				},
 				method:'put',
 				value:function(line){
@@ -140,7 +140,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				showButton : false,
 				changeClass : false,
 				url:function(lineValue){
-					return jsRoutes.controllers.experiments.api.Experiments.update(lineValue.code).url; // jamais utilisé en mode local
+					return jsRoutes.controllers.sra.experiments.api.Experiments.update(lineValue.code).url; // jamais utilisé en mode local
 				},
 				method:'put',
 				value:function(line){
@@ -311,7 +311,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				showButton : true,
 				changeClass : false,
 				url:function(value){
-					return jsRoutes.controllers.experiments.api.Experiments.update(value.code).url;
+					return jsRoutes.controllers.sra.experiments.api.Experiments.update(value.code).url;
 				},
 				method:'put'
 			},
@@ -377,7 +377,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 	
 	if(angular.isUndefined(mainService.getHomePage())){
 		mainService.setHomePage('create');
-		tabService.addTabs({label:Messages('submissionss.menu.create'),href:jsRoutes.controllers.submissions.tpl.Submissions.home("create").url,remove:true});
+		tabService.addTabs({label:Messages('submissionss.menu.create'),href:jsRoutes.controllers.sra.submissions.tpl.Submissions.home("create").url,remove:true});
 		tabService.activeTab(0); // desactive le lien !
 	}
 	// si on declare dans services => var sraVariables = {};
@@ -395,8 +395,8 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 		$scope.experimentCheck=false;
 		$scope.runCheck=false;
 		$scope.rawDataCheck=false;
-		// Attention appel de get du controller api.submissions qui est herite
-		$http.get(jsRoutes.controllers.submissions.api.Submissions.get($routeParams.code).url).success(function(data) {
+		// Attention appel de get du controller api.sra.submissions qui est herite
+		$http.get(jsRoutes.controllers.sra.submissions.api.Submissions.get($routeParams.code).url).success(function(data) {
 			$scope.submission = data;	
 			console.log("Submission.code :"+$scope.submission.code);
 			console.log("Submission.refSampleCodes :"+$scope.submission.refSampleCodes);
@@ -429,7 +429,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				$scope.sraVariables.libraryLayoutOrientation = data;
 			});	
 			//Get samples
-			$http.get(jsRoutes.controllers.samples.api.Samples.list().url, {params: {listSampleCodes:$scope.submission.refSampleCodes}}).success(function(data)
+			$http.get(jsRoutes.controllers.sra.samples.api.Samples.list().url, {params: {listSampleCodes:$scope.submission.refSampleCodes}}).success(function(data)
 					{
 					$scope.samples = data;
 			
@@ -441,7 +441,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 					$scope.sampleDT.setData($scope.samples, $scope.samples.length);
 					});
 			//Get experiments (and runs)
-			$http.get(jsRoutes.controllers.experiments.api.Experiments.list().url, {params: {listExperimentCodes:$scope.submission.experimentCodes}}).success(function(data)
+			$http.get(jsRoutes.controllers.sra.experiments.api.Experiments.list().url, {params: {listExperimentCodes:$scope.submission.experimentCodes}}).success(function(data)
 					{
 					$scope.experiments = data;
 					//Init datatable
@@ -475,7 +475,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 
 	function closeSubmission(){
 	   	$scope.submission.state.code = "userValidate";		
-		$http.put(jsRoutes.controllers.submissions.api.Submissions.update($scope.submission.code).url, $scope.submission)
+		$http.put(jsRoutes.controllers.sra.submissions.api.Submissions.update($scope.submission.code).url, $scope.submission)
  				.success(function(data) {
 					//Set success message
 					$scope.messages.clazz="alert alert-success";
@@ -530,7 +530,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			tab_samples[i].state.code = "userValidate";
 			console.log("sampleCode = " + tab_samples[i].code + " state = "+ tab_samples[i].state.code);
 			// sauvegarde dans database asynchrone
-			$http.put(jsRoutes.controllers.samples.api.Samples.update(tab_samples[i].code).url, tab_samples[i])
+			$http.put(jsRoutes.controllers.sra.samples.api.Samples.update(tab_samples[i].code).url, tab_samples[i])
 			.success(function(data){
 			//Set success message
 			//$scope.messages.clazz="alert alert-success";
@@ -556,7 +556,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			tab_experiments[i].state.code = "userValidate";
 			console.log("experimentCode = " + tab_experiments[i].code + " state = "+ tab_experiments[i].state.code);
 			// sauvegarde dans database :
-			$http.put(jsRoutes.controllers.experiments.api.Experiments.update(tab_experiments[i].code).url, tab_experiments[i]).success(function(data){
+			$http.put(jsRoutes.controllers.sra.experiments.api.Experiments.update(tab_experiments[i].code).url, tab_experiments[i]).success(function(data){
 			//Set success message
 			//$scope.messages.clazz="alert alert-success";
 			//$scope.messages.text=Messages('submissions.msg.validate.success');

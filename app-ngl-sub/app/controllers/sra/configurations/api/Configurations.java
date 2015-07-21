@@ -1,4 +1,4 @@
-package controllers.configurations.api;
+package controllers.sra.configurations.api;
 
 import static play.data.Form.form;
 

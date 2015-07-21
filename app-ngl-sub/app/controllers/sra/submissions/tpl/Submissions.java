@@ -1,4 +1,4 @@
-package controllers.submissions.tpl;
+package controllers.sra.submissions.tpl;
 
 import controllers.CommonController;
 import play.Routes;
@@ -43,22 +43,22 @@ public class Submissions extends CommonController
   	    return ok(  	    		
   	      Routes.javascriptRouter("jsRoutes",
   	    		  // Routes
-  	    		controllers.submissions.tpl.routes.javascript.Submissions.home(),
+  	    		controllers.sra.submissions.tpl.routes.javascript.Submissions.home(),
   	    		controllers.projects.api.routes.javascript.Projects.list(),
   	    		controllers.sra.api.routes.javascript.Variables.get(),
-  	    		controllers.studies.api.routes.javascript.Studies.list(),
-  	    		controllers.configurations.api.routes.javascript.Configurations.list(),
+  	    		controllers.sra.studies.api.routes.javascript.Studies.list(),
+  	    		controllers.sra.configurations.api.routes.javascript.Configurations.list(),
   	    		controllers.readsets.api.routes.javascript.ReadSets.list(),
-  	    		controllers.submissions.api.routes.javascript.Submissions.list(),
-  	    		controllers.submissions.api.routes.javascript.Submissions.save(),
-  	    		controllers.submissions.api.routes.javascript.Submissions.get(),
-  	    		controllers.submissions.api.routes.javascript.Submissions.update(),
-  	    		controllers.submissions.api.routes.javascript.Submissions.activate(),
- 	    		controllers.submissions.tpl.routes.javascript.Submissions.get(),
-  	    		controllers.samples.api.routes.javascript.Samples.list(),
-  	    		controllers.samples.api.routes.javascript.Samples.update(),
-  	  	    	controllers.experiments.api.routes.javascript.Experiments.list(),
-  	    		controllers.experiments.api.routes.javascript.Experiments.update()    		
+  	    		controllers.sra.submissions.api.routes.javascript.Submissions.list(),
+  	    		controllers.sra.submissions.api.routes.javascript.Submissions.save(),
+  	    		controllers.sra.submissions.api.routes.javascript.Submissions.get(),
+  	    		controllers.sra.submissions.api.routes.javascript.Submissions.update(),
+  	    		controllers.sra.submissions.api.routes.javascript.Submissions.activate(),
+ 	    		controllers.sra.submissions.tpl.routes.javascript.Submissions.get(),
+  	    		controllers.sra.samples.api.routes.javascript.Samples.list(),
+  	    		controllers.sra.samples.api.routes.javascript.Samples.update(),
+  	  	    	controllers.sra.experiments.api.routes.javascript.Experiments.list(),
+  	    		controllers.sra.experiments.api.routes.javascript.Experiments.update()    		
   	      )	  	      
   	    );
   	  }

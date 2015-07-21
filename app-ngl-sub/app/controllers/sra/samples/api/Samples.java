@@ -1,4 +1,4 @@
-package controllers.samples.api;
+package controllers.sra.samples.api;
 
 import static play.data.Form.form;
 
@@ -25,6 +25,7 @@ import models.laboratory.common.instance.State;
 
 public class Samples extends DocumentController<Sample>{
 
+	
 	final static Form<SamplesSearchForm> samplesSearchForm = form(SamplesSearchForm.class);
 	final static Form<Sample> sampleForm = form(Sample.class);
 
