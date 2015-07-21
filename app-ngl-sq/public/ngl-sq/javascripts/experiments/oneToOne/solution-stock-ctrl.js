@@ -138,11 +138,11 @@ angular.module('home').controller('SolutionStockCtrl',['$scope', '$window','data
 				active:true,
 				by:'code'
 			},
-			remove:{
+			/*remove:{
 				active: (!$scope.doneAndRecorded && !$scope.inProgressNow),
 				showButton: (!$scope.doneAndRecorded && !$scope.inProgressNow),
 				mode:'local'
-			},
+			},*/
 			save:{
 				active:true,
 	        	withoutEdit: true,

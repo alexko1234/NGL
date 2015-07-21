@@ -3,7 +3,7 @@
 angular.module('home').controller('SearchCtrl', ['$scope', 'datatable' , function($scope, datatable) {
 
 	var datatableConfig = {
-			order :{by:'traceInformation.creationDate', reverse:true, mode:'remote'},
+			order :{by:'traceInformation.creationDate', reverse:false, mode:'remote'},
 			search:{
 				url:jsRoutes.controllers.experiments.api.Experiments.list()
 			},
