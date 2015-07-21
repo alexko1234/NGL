@@ -7,5 +7,6 @@ Numero tube; nom banque (manip prec); vol adn a prelever; vol tampon; nom sol st
 @for(a <- experiment.atomicTransfertMethods){
 		@for(c <- a.inputContainerUseds){
 			@(a.line);@(c.code);@(AbstractSampleSheetsfactory.getInputContainerUsedExperimentProperty(c,"requiredVolume"));@(AbstractSampleSheetsfactory.getInputContainerUsedExperimentProperty(c,"bufferVolume"));@(AbstractSampleSheetsfactory.getOutputContainerUsedCode(a))
+			
 		}	
 } 
