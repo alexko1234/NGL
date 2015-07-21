@@ -38,12 +38,12 @@ public class Box extends AbstractDeclaration{
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		ValidationHelper.required(contextValidation, code, "code");
-			ValidationHelper.required(contextValidation, catalogCode, "catalogCode");
-			ValidationHelper.required(contextValidation, barCode, "barCode");
-			ValidationHelper.required(contextValidation, receptionDate, "receptionDate");
-			ValidationHelper.required(contextValidation, expirationDate, "expirationDate");
-			ValidationHelper.required(contextValidation, state, "state");
-			ValidationHelper.required(contextValidation, orderCode, "orderCode");
+		ValidationHelper.required(contextValidation, catalogCode, "catalogCode");
+		ValidationHelper.required(contextValidation, barCode, "barCode");
+		ValidationHelper.required(contextValidation, receptionDate, "receptionDate");
+		ValidationHelper.required(contextValidation, expirationDate, "expirationDate");
+		ValidationHelper.required(contextValidation, state, "state");
+		ValidationHelper.required(contextValidation, orderCode, "orderCode");
 		
 		if(!contextValidation.hasErrors()){
 			BoxValidationHelper.validateCode(this, InstanceConstants.REAGENT_INSTANCE_COLL_NAME, contextValidation);

@@ -19,15 +19,15 @@
 			        	 "edit":true
 			         },
 			         {
-			        	 "header":Messages("reagents.table.storageConditions"),
-			        	 "property":"storageConditions",
+			        	 "header":Messages("reagents.table.catalogRefCode"),
+			        	 "property":"catalogRefCode",
 			        	 "order":true,
 			        	 "type":"text",
 			        	 "edit":true
 			         },
 			         {
-			        	 "header":Messages("reagents.table.catalogRefCode"),
-			        	 "property":"catalogRefCode",
+			        	 "header":Messages("reagents.table.storageConditions"),
+			        	 "property":"storageConditions",
 			        	 "order":true,
 			        	 "type":"text",
 			        	 "edit":true

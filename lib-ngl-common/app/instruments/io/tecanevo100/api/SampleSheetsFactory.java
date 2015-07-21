@@ -18,9 +18,6 @@ public class SampleSheetsFactory extends AbstractSampleSheetsfactory {
 
 	@Override
 	public File generate() {
-		List<Container> containers = getContainersFromExperiment();
-		Date date = new Date();
-		
 		String content = format(sampleSheet_1.render(experiment).body());
 		File file = new File(SampleSheetsFactoryHelper.getSampleSheetFilePath(experiment.instrument.code)+experiment.code+"_Tecan.csv");
 		//play.api.libs.Files.writeFile(file, content);

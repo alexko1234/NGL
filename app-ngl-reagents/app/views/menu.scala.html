@@ -19,9 +19,9 @@
     			<li class="dropdown @("active".when(nav.startsWith("reagents")))">
   							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="reagent">@Messages("reagentDeclarations.menu")<b class="caret"></b></a>
 							<ul class="dropdown-menu" role="menu" aria-labelledby="reagents">
-								<li class="@("active".when(nav == "reagents.create"))"><a href="@controllers.reagents.tpl.routes.Kits.home("create")">@Messages("kits.create")</a></li>
 								<li class="@("active".when(nav == "reagents.search.kits"))"><a href="@controllers.reagents.tpl.routes.Kits.home("search")">@Messages("kits.search")</a></li>		
 								<li class="@("active".when(nav == "reagents.search.boxes"))"><a href="@controllers.reagents.tpl.routes.Boxes.home("search")">@Messages("boxes.search")</a></li>		
+								<li class="@("active".when(nav == "reagents.create"))"><a href="@controllers.reagents.tpl.routes.Kits.home("create")">@Messages("kits.create")</a></li>
 								<li class="@("active".when(nav == "reagents.create.order"))"><a href="@controllers.reagents.tpl.routes.Orders.home("create")">@Messages("kits.create-batch")</a></li>																	
 							</ul>
 				</li>

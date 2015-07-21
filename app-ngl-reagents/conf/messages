@@ -39,7 +39,7 @@ kits.createUser = Créée par
 kits.modifyDate = Date de modification
 kits.modifyBy = Modifié par
 
-boxes.search = Recherche Boîtes
+boxes.search = Recherche boîtes
 boxes.tabs.search = Recherche Boîtes
 
 boxes.name = Nom boîte
@@ -85,9 +85,9 @@ reagentCatalogs.menu = Catalogue réactifs
 reagentCatalogs.menu.create = Création ref. catalogue
 reagentCatalogs.menu.search = Recherche ref. catalogue
 
-reagentDeclarations.menu = Réactifs receptionnés
+reagentDeclarations.menu = Réception réactifs
 
-declarations.title = Réactifs receptionnés
+declarations.title = Réception réactifs
 
 declarations.kit = Kit
 declarations.reagent = Réactif
