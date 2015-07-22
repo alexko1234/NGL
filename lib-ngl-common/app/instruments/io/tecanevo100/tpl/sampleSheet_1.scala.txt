@@ -3,7 +3,7 @@
 @import _root_.instruments.io.utils._;
 @import java.lang._
 
-Numero tube; nom banque (manip prec); vol adn a prelever; vol tampon; nom sol stock
+Numero tube; nom banque (manip prec); vol adn a prelever; vol tampon; nom sol stock@(print("\r\n"))	
 @for(a <- experiment.atomicTransfertMethods){
 		@for(c <- a.inputContainerUseds){
 			@(a.line);@(c.code);@(AbstractSampleSheetsfactory.getInputContainerUsedExperimentProperty(c,"requiredVolume"));@(AbstractSampleSheetsfactory.getInputContainerUsedExperimentProperty(c,"bufferVolume"));@(AbstractSampleSheetsfactory.getOutputContainerUsedCode(a))
