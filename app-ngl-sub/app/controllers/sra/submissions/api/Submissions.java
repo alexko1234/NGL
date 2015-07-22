@@ -120,7 +120,10 @@ public class Submissions extends DocumentController<Submission>{
 		
 		// declaration d'un filledForm uniquement pour utiliser messages.addDetails au niveau des javascript et 
 		// pouvoir afficher l'ensemble des erreurs.
-		Form<Submission> filledForm = getFilledForm(submissionForm, Submission.class);
+		//Form initialise avec l'objet submission car pas d'objet submission dans le body
+		//Form<Submission> filledForm = getFilledForm(submissionForm, Submission.class);
+		Form<Submission> filledForm = Form.form(Submission.class);
+		filledForm.fill(submission);
 		
 		if (submission == null) {
 			//return badRequest("Submission with code "+code+" not exist");

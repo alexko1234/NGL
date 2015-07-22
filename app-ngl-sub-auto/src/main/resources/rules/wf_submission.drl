@@ -19,7 +19,7 @@ rule "select resources from nglsub"
 	then
 		Logger log = Logger.getLogger("ngl.sub.rules");
 		$rps.initialize();
-		Set<ResourceProperties> resourcePropertiesSet = $device.httpGetJSON(ProjectProperties.getProperty("server")+"/api/submissions?state=inWaiting");
+		Set<ResourceProperties> resourcePropertiesSet = $device.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/submissions?state=inWaiting");
 		log.debug("size resources "+resourcePropertiesSet.size());
 		$rps.addResourcePropertiesSet(resourcePropertiesSet);
 		modify($rps){};
@@ -43,12 +43,12 @@ rule "add resources submission to internal referential internalRefSubmission for
 	  	String codeSubmission = $j.getUniqueJobResource("subData").getProperty("code");
 	  	JSONDevice jsonDevice = new JSONDevice();
 	  	//Get submission
-	  	String JSONSubmission = jsonDevice.httpGet(ProjectProperties.getProperty("server")+"/api/submissions/"+codeSubmission);
+	  	String JSONSubmission = jsonDevice.httpGet(ProjectProperties.getProperty("server")+"/api/sra/submissions/"+codeSubmission);
 	  	//Modify submission
 	  	String newJSONSubmission = jsonDevice.modifyJSON(JSONSubmission, "state.code", "inProgress");
 	  	//Call PUT update with submission modified
-	  	log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/submissions/"+codeSubmission);
+	  	log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission);
 	  	log.debug("With JSON "+newJSONSubmission);
-	  	jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/submissions/"+codeSubmission, newJSONSubmission);
+	  	jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission, newJSONSubmission);
 	  	
 end

@@ -92,7 +92,7 @@ public class CheckWorkflow extends GenericTest{
 
 		//Check group update state in transfert ressource
 		//Get submission in waiting ==0
-		Set<ResourceProperties> setRP = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/submissions?state=inWaiting");
+		Set<ResourceProperties> setRP = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/submissions?state=inWaiting");
 		Assert.assertEquals(setRP.size(),0);
 
 
@@ -165,7 +165,7 @@ public class CheckWorkflow extends GenericTest{
 
 		//Get Submission from database
 		
-		Set<ResourceProperties> setRPSub = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/submissions?state=submitted");
+		Set<ResourceProperties> setRPSub = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/submissions?state=submitted");
 		log.debug("Set RPub "+setRPSub);
 		Assert.assertTrue(setRPSub.size()==1);
 		ResourceProperties RPSub = setRPSub.iterator().next();
@@ -173,10 +173,10 @@ public class CheckWorkflow extends GenericTest{
 		Assert.assertNotNull(RPSub.get("accession"));
 		//Update state submission from IN_PROGRESS to IN_WAITING at the end of test
 	  	//Get submission
-	  	String JSONSubmission = jsonDevice.httpGet(ProjectProperties.getProperty("server")+"/api/submissions/"+codeSubmission);
+	  	String JSONSubmission = jsonDevice.httpGet(ProjectProperties.getProperty("server")+"/api/sra/submissions/"+codeSubmission);
 	  	//Modify submission
 	  	String newJSONSubmission = jsonDevice.modifyJSON(JSONSubmission, "state.code", "inWaiting");
-	  	jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/submissions/"+codeSubmission, newJSONSubmission);
+	  	jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission, newJSONSubmission);
 
 	}
 

@@ -120,7 +120,7 @@ public class SubmissionsTest extends AbstractTestController{
 	@Test
 	public void shouldSearchSubmissionByState() throws JsonParseException, JsonMappingException, IOException
 	{
-		Result result = callAction(controllers.sra.submissions.routes.ref.Submissions.list(),fakeRequest("GET","?state=Scode1"));
+		Result result = callAction(controllers.sra.submissions.api.routes.ref.Submissions.list(),fakeRequest("GET","?state=Scode1"));
 		Logger.info(contentAsString(result));
 		assertThat(status(result)).isEqualTo(OK);
 		assertThat(contentType(result)).isEqualTo("application/json");
@@ -134,7 +134,7 @@ public class SubmissionsTest extends AbstractTestController{
 		Submission submissionToUpdate = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "code1");
 		submissionToUpdate.state.code="inwaiting";
 		//TODO pas de méthode de validation a retester avec méthode de validation
-		Result result = callAction(controllers.sra.submissions.routes.ref.Submissions.update("code1"),fakeRequest().withJsonBody(Json.toJson(submissionToUpdate)));
+		Result result = callAction(controllers.sra.submissions.api.routes.ref.Submissions.update("code1"),fakeRequest().withJsonBody(Json.toJson(submissionToUpdate)));
 		Logger.info(contentAsString(result));
 		assertThat(status(result)).isEqualTo(OK);
 		//Check in db submission status
@@ -167,7 +167,7 @@ public class SubmissionsTest extends AbstractTestController{
 	@Test
 	public void shouldCreateXML()
 	{
-		Result result = callAction(controllers.sra.submissions.routes.ref.Submissions.createXml("sub2"));
+		Result result = callAction(controllers.sra.submissions.api.routes.ref.Submissions.createXml("sub2"));
 		Logger.info(contentAsString(result));
 	}
 	
@@ -177,7 +177,7 @@ public class SubmissionsTest extends AbstractTestController{
 		
 		File ebiFileAc = new File(System.getProperty("user.home")+"/NGL-SUB-Test/RESULT_AC");
 		Logger.debug("JSON FILE "+Json.toJson(ebiFileAc));
-		Result result = callAction(controllers.sra.submissions.routes.ref.Submissions.treatmentAc("sub2"),fakeRequest().withJsonBody(Json.toJson(ebiFileAc)));
+		Result result = callAction(controllers.sra.submissions.api.routes.ref.Submissions.treatmentAc("sub2"),fakeRequest().withJsonBody(Json.toJson(ebiFileAc)));
 		Logger.debug("Result "+result);
 		assertThat(status(result)).isEqualTo(OK);
 		Submission submissionSubmited = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "sub2");

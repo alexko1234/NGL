@@ -55,7 +55,7 @@ H:\birdsSpec.xsd">
 	<Treatment name="createXML" useJobScheduler="false" checkIfNewTreatmentAlreadyPerformed="true">
 		<ExecutableSpecification commandSyntaxStrategyName="createXMLSyntax">
 			<!-- TODO call REST API NGL-SUB -->
-			<Executable path="curl -X PUT http://appprod.genoscope.cns.fr:9005/submissions/%code%/xml"/>
+			<Executable path="curl -X PUT http://appprod.genoscope.cns.fr:9005/sra/submissions/%code%/xml"/>
 		</ExecutableSpecification>
 		
 		<InputsSpecification>
