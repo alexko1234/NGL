@@ -166,6 +166,9 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 				showButton: false,
 				columnMode:true
 			},
+			add:{
+				active:true
+			},
 			messages:{
 				active:false,
 				columnMode:true
@@ -345,6 +348,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 	//Init
 	$scope.datatable = datatable($scope.datatableConfig);
 	$scope.datatablePropertyList = datatable($scope.datatableConfigList);
+	$scope.datatablePropertyList.setData([]);
 	$scope.atomicTransfere = manyToOne($scope, "datatable", "none");
 
 	$scope.experiment.outputGenerated = $scope.isOutputGenerated();
