@@ -18,6 +18,7 @@ public class MeasureService {
 	public static final String MEASURE_CAT_CODE_VOLUME = "volume";
 	public static final String MEASURE_CAT_CODE_SIZE = "size";
 	public static final String MEASURE_CAT_CODE_TIME = "time";
+	public static final String MEASURE_CAT_CODE_SPEED = "speed";
 
 	public static void main(Map<String, List<ValidationError>> errors) throws DAOException{		
 		saveMesureCategories(errors);	
@@ -37,6 +38,8 @@ public class MeasureService {
 		l.add(DescriptionFactory.newSimpleCategory(MeasureCategory.class,"Volume", MEASURE_CAT_CODE_VOLUME));
 		l.add(DescriptionFactory.newSimpleCategory(MeasureCategory.class,"Taille", MEASURE_CAT_CODE_SIZE));
 		l.add(DescriptionFactory.newSimpleCategory(MeasureCategory.class,"Temps", MEASURE_CAT_CODE_TIME));
+		l.add(DescriptionFactory.newSimpleCategory(MeasureCategory.class,"Vitesse", MEASURE_CAT_CODE_SPEED));
+
 		DAOHelpers.saveModels(MeasureCategory.class, l, errors);
 	}
 	
@@ -68,7 +71,9 @@ public class MeasureService {
 		l.add(newMeasureUnit("kb","kb", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_SIZE)));
 		
 		l.add(newMeasureUnit("s","s", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_TIME)));
+		l.add(newMeasureUnit("h","h", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_TIME)));
 
+		l.add(newMeasureUnit("rpm","rpm", false, MeasureCategory.find.findByCode(MEASURE_CAT_CODE_SPEED)));
 		
 		DAOHelpers.saveModels(MeasureUnit.class, l, errors);
 	}

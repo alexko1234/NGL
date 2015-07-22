@@ -51,15 +51,15 @@ public class ProcessService {
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 
-			l.add(DescriptionFactory.newProcessType("Librairie ONT", "nanopore-process-library", ProcessCategory.find.findByCode("library"),getPropertyDefinitionsNanoporeFragmentation() , getExperimentTypes("nanopore-fragmentation","nanopore-library"), 
-					getExperimentTypes("nanopore-library").get(0), getExperimentTypes("nanopore-library").get(0),getExperimentTypes("ext-to-nanopore").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+			l.add(DescriptionFactory.newProcessType("Librairie Oxford Nanopore", "nanopore-process-library", ProcessCategory.find.findByCode("library"),getPropertyDefinitionsNanoporeFragmentation() , getExperimentTypes("nanopore-fragmentation","nanopore-library"), 
+					getExperimentTypes("nanopore-fragmentation").get(0), getExperimentTypes("nanopore-library").get(0),getExperimentTypes("ext-to-nanopore-frg-preCR").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
 
-			l.add(DescriptionFactory.newProcessType("Librairie ONT sans frg", "nanopore-process-library-no-frg", ProcessCategory.find.findByCode("library"),getPropertyDefinitionsNanopore() , getExperimentTypes("nanopore-library"), 
-					getExperimentTypes("nanopore-library").get(0), getExperimentTypes("nanopore-library").get(0),getExperimentTypes("ext-to-nanopore").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+			l.add(DescriptionFactory.newProcessType("Librairie Nanopore sans frg", "nanopore-process-library-no-frg", ProcessCategory.find.findByCode("library"),getPropertyDefinitionsNanopore() , getExperimentTypes("nanopore-library"), 
+					getExperimentTypes("nanopore-library").get(0), getExperimentTypes("nanopore-library").get(0),getExperimentTypes("ext-to-lib-ONT").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
 			l.add(DescriptionFactory.newProcessType("Run Nanopore", "nanopore-run", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsNanopore() , getExperimentTypes("nanopore-depot"), 
-					getExperimentTypes("nanopore-depot").get(0), getExperimentTypes("nanopore-depot").get(0),getExperimentTypes("ext-to-nanopore").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+					getExperimentTypes("nanopore-depot").get(0), getExperimentTypes("nanopore-depot").get(0),getExperimentTypes("ext-to-nanopore-depot").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
 			
 			l.add(DescriptionFactory.newProcessType("Librairie PE sans sizing", "Lib-PE-NoSizing", ProcessCategory.find.findByCode("library"), getPropertyDefinitionsLib300600(), getExperimentTypes("fragmentation","librairie-indexing","amplification"), 

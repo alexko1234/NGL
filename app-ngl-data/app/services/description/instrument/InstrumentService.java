@@ -277,12 +277,12 @@ public class InstrumentService {
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 
 		
-		l.add(newInstrumentUsedType("Eppendorf MiniSpin plus", "eppendorf-mini-spin-plus", InstrumentCategory.find.findByCode("centrifuge"), getNanoporeFragmentationProperties(), getInstrumentMinIon() 
+		l.add(newInstrumentUsedType("Eppendorf MiniSpin plus", "eppendorf-mini-spin-plus", InstrumentCategory.find.findByCode("centrifuge"), getNanoporeFragmentationProperties(),  getInstrumentEppendorfMiniSpinPlus()
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 		
 		
-		l.add(newInstrumentUsedType("MinION", "minION", InstrumentCategory.find.findByCode("nanopore"), getNanoporeDepotProperties(), getInstrumentEppendorfMiniSpinPlus() 
+		l.add(newInstrumentUsedType("MinION", "minION", InstrumentCategory.find.findByCode("nanopore"), getNanoporeDepotProperties(),getInstrumentMinIon() 
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
@@ -291,9 +291,9 @@ public class InstrumentService {
 	private static List<PropertyDefinition> getNanoporeFragmentationProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument),String.class, true,
-        		null, "G-TUBE", null, null, null, "single", 1));
+        		DescriptionFactory.newValues("G-TUBE"), "G-TUBE", null, null, null, "single", 1));
         propertyDefinitions.add(newPropertiesDefinition("Vitesse", "speed", LevelService.getLevels(Level.CODE.Instrument),String.class, false,
-        		null, "8000", null, null, null, "single", 2));
+        		null, "8000", MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SPEED),MeasureUnit.find.findByCode( "rpm"),MeasureUnit.find.findByCode( "rpm"), "single", 2));
         // unite s
         propertyDefinitions.add(newPropertiesDefinition("Durée", "duration", LevelService.getLevels(Level.CODE.Instrument),String.class, false, 
         		null, "30",MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_TIME),MeasureUnit.find.findByCode( "s"),MeasureUnit.find.findByCode( "s"), "single", 3));
@@ -309,7 +309,7 @@ public class InstrumentService {
         propertyDefinitions.add(newPropertiesDefinition("Numero PC", "pcNumber", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",300));
         propertyDefinitions.add(newPropertiesDefinition("Version MinKNOW", "minKnowVersion",LevelService.getLevels(Level.CODE.Instrument),String.class,true,"single",400));
 		propertyDefinitions.add(newPropertiesDefinition("Version Metrichor", "metrichorVersion",LevelService.getLevels(Level.CODE.Instrument),String.class,true,"single",500));
-		propertyDefinitions.add(newPropertiesDefinition("ID", "metrichorRunId",LevelService.getLevels(Level.CODE.Instrument),String.class,false,"single",600));
+		propertyDefinitions.add(newPropertiesDefinition("Metrichor run ID", "metrichorRunId",LevelService.getLevels(Level.CODE.Instrument),String.class,false,"single",600));
 
 		return propertyDefinitions;
 	}
@@ -399,7 +399,8 @@ public class InstrumentService {
 	
 	private static List<Instrument> getInstrumentMinIon() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("MN02670", "MN02670", null, true, "path", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("MN02670", "MN02670", null, true, "/env/atelier/nanopore_MN02670", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("MN02280", "MN02280", null, true, "/env/atelier/nanopore_MN02280", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		return instruments;
 	}
 	
