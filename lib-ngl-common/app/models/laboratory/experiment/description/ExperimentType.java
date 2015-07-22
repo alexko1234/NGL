@@ -23,6 +23,8 @@ public class ExperimentType extends CommonInfoType{
 	public List<Protocol> protocols = new ArrayList<Protocol>();
 	public String atomicTransfertMethod;
 	
+	public String shortCode;
+	
 	public ExperimentType() {
 		super(ExperimentTypeDAO.class.getName());		
 	}
