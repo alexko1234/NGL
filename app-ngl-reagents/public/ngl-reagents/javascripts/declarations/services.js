@@ -38,23 +38,16 @@
 				});
 			}
 			columns.push({
+				"header":Messages("reagents.table.receptionDate"),
+				"property":"receptionDate",
+				"order":true,
+				"type":"date"
+			});
+			columns.push({
 				"header":Messages("reagents.table.orderCode"),
 				"property":"orderCode",
 				"order":true,
 				"type":"text"
-			});
-			columns.push({
-				"header":Messages("reagents.table.possibleUseNumber"),
-				"property":"possibleUseNumber",
-				"order":true,
-				"type":"text"
-			});
-			columns.push({
-				"header":Messages("reagents.table.stateCode"),
-				"property":"state.code",
-				"order":true,
-				"type":"text",
-				"filter":"codes:'state'"
 			});
 			
 			return columns;
