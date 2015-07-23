@@ -391,7 +391,8 @@
 								<input class="form-control" type="text" title='{{instp.name}}' ng-switch-when="false" class="input-small"
 									ng-readonly="!experiment.instrumentInformation.enabled"
 									ng-model="experiment.value.instrumentProperties[instp.code].value"
-									ng-disabled="!experiment.instrumentInformation.enabled"/>
+									ng-disabled="!experiment.instrumentInformation.enabled"
+									dt-default-value="instp.defaultValue"/>
 								
 								<div bt-select class="form-control" bt-options="opt.value as opt.value for opt in instp.possibleValues" dt-default-value="instp.defaultValue"
 									ng-readonly="!experiment.instrumentInformation.enabled" ng-disabled="!experiment.instrumentInformation.enabled" 
