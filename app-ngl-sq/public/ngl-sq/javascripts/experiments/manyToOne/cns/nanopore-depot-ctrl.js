@@ -75,7 +75,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 			        	 "extraHeaders":{0:"Inputs"}
 			         }
 			         ],
-			compact:false,
+			compact:true,
 			pagination:{
 				active:false
 			},		
@@ -100,7 +100,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 			},
 			edit:{
 				active: !$scope.doneAndRecorded,
-				showButton: false,
+				showButton: true,
 				columnMode:true
 			},
 			messages:{
@@ -120,25 +120,43 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 			otherButton:{
 				active:true,
 				template:'<button class="btn btn btn-info" ng-click="newPurif()" data-toggle="tooltip" ng-disabled="experiment.value.state.code != \'F\'" ng-hide="!experiment.doPurif" title="'+Messages("experiments.addpurif")+'">Messages("experiments.addpurif")</button><button class="btn btn btn-info" ng-click="newQc()" data-toggle="tooltip" ng-disabled="experiment.value.state.code != \'F\'" ng-hide="!experiment.doQc" title="Messages("experiments.addqc")">Messages("experiments.addqc")</button>'
-			}
+			},
+			showTotalNumberRecords:false
 	};
 	
 	
-	$scope.datatableConfigList = {
+	$scope.datatableConfigLoadingReport = {
 			name:"NanoportInputOutput",
 			columns:[
-					 {
-			        	 "header":Messages("containers.table.code"),
-			        	 "property":"code",
+			         {
+			        	 "header":Messages("loadingReport.hour"),
+			        	 "property":"hour",
 			        	 "order":true,
-						 "edit":false,
+						 "edit":true,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":1
+			         },
+			         {
+			        	 "header":Messages("loadingReport.time"),
+			        	 "property":"time",
+			        	 "order":true,
+						 "edit":true,
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":2,
-			        	 "extraHeaders":{0:"Inputs"}
-			         }
+			         },
+			         {
+			        	 "header":Messages("loadingReport.volume"),
+			        	 "property":"volume",
+			        	 "order":true,
+						 "edit":true,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":3
+			         }			         
 			         ],
-			compact:false,
+			compact:true,
 			pagination:{
 				active:false
 			},		
@@ -151,7 +169,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 				by:'code'
 			},
 			remove:{
-				active:false,
+				active:true,
 			},
 			save:{
 				active:true,
@@ -172,7 +190,80 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 			messages:{
 				active:false,
 				columnMode:true
-			}
+			},
+			showTotalNumberRecords:false
+	};
+	
+	
+	
+	$scope.datatableConfigQcFlowcell = {
+			name:"NanoportQcFlowcell",
+			columns:[
+						
+			         {
+			        	 "header":Messages("qcFlowcell.group"),
+			        	 "property":"group",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":1,
+			        	 "extraHeaders":{0:"Inputs"}
+			         },
+			         {
+			        	 "header":Messages("qcFlowcell.postLoadingNbActivePores"),
+			        	 "property":"postLoadingNbActivePores",
+			        	 "order":true,
+						 "edit":true,
+						 "hide":true,
+			        	 "type":"integer",
+			        	 "position":2,
+			        	 "extraHeaders":{0:"Inputs"}
+			         },
+			         {
+			        	 "header":Messages("loadingReport.preLoadingNbActivePores"),
+			        	 "property":"preLoadingNbActivePores",
+			        	 "order":true,
+						 "edit":true,
+						 "hide":true,
+			        	 "type":"integer",
+			        	 "position":3,
+			        	 "extraHeaders":{0:"Inputs"}
+			         }			         
+			         ],
+			compact:true,
+			pagination:{
+				active:false
+			},		
+			search:{
+				active:false
+			},
+			order:{
+				mode:'local', //or 
+				active:true,
+				by:'code'
+			},
+			remove:{
+				active:true,
+			},
+			save:{
+				active:true,
+				showButton: false,
+				mode:'local',
+			},
+			hide:{
+				active:true
+			},
+			edit:{
+				active: !$scope.doneAndRecorded,
+				showButton: true,
+				columnMode:true
+			},
+			messages:{
+				active:false,
+				columnMode:true
+			},
+			showTotalNumberRecords:false
 	};
 	
 	$scope.$on('experimentToInput', function(e, atomicTransfertMethod) {
@@ -199,17 +290,24 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 			var column = $scope.datatable.newColumn(data.name,"inputExperimentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Inputs","1":"Experiments"});
 			column.defaultValues = data.defaultValue;
 			$scope.datatable.addColumn(2,column);
-		}else {
+		}/*else {
 			var column = $scope.datatable.newColumn(data.name,data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Inputs","1":"Experiments"});
 			column.defaultValues = data.defaultValue;
-			$scope.datatablePropertyList.addColumn(2,column);
-		}
+			$scope.datatableLoadingReport.addColumn(2,column);
+		}*/
 	});
 	
 	$scope.$on('addExperimentPropertiesOutput', function(e, data, possibleValues) {
-		var column = $scope.datatable.newColumn(data.name,"outputExperimentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Outputs","1":"Experiments"});
-		column.defaultValues = data.defaultValue;
-		$scope.datatable.addColumn(-1,column);
+		if(data.propertyValueType!="object_list"){
+			var column = $scope.datatable.newColumn(data.name,"outputExperimentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Outputs","1":"Experiments"});
+			column.defaultValues = data.defaultValue;
+			$scope.datatable.addColumn(-1,column);
+		}/*else {
+			console.log("property"+data.code);
+			var column = $scope.datatable.newColumn(data.name,data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Inputs","1":"Experiments"});
+			column.defaultValues = data.defaultValue;
+			$scope.datatableQcFlowcell.addColumn(2,column);
+		}*/
 	});
 	
 	$scope.$on('addInstrumentPropertiesOutput', function(e, data, possibleValues) {
@@ -305,7 +403,6 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 	});
 	
 	$scope.$on('save', function(e, promises, func, endPromises) {
-		$scope.setValidePercentage($scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds);
 		promises.push($scope.datatable.save());
 		$scope.$emit('viewSaved', promises, func, endPromises);
 	});
@@ -327,15 +424,6 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 		$scope.atomicTransfere.experimentToOutput($scope.datatable);
 	});	
 	
-	$scope.setValidePercentage = function(containerUseds){
-		var l = containerUseds.length;
-		angular.forEach(containerUseds, function(container){			
-				if(container.percentage != 100/l){
-					container.percentage = 100/l;
-				}			
-		});
-		
-	};
 	
 	$scope.$on('disableEditMode', function(){
 		$scope.datatable.config.edit.active = false;
@@ -345,18 +433,37 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 		$scope.datatable.config.edit.active = true;
 	});
 	
+	$scope.$on('experimentLoaded',function(e){
+		console.log("experimentLoaded");
+		$scope.datatableQcFlowcell.setData($scope.experiment.value.atomicTransfertMethods[0].intputContainerUsed[0].properties.loadingReport.value);
+		//$scope.datatableQcFlowcell.setData($scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed[0].properties.qcFlowcell);
+	});
+	
 	//Init
 	$scope.datatable = datatable($scope.datatableConfig);
-	$scope.datatablePropertyList = datatable($scope.datatableConfigList);
-	$scope.datatablePropertyList.setData([]);
+	$scope.datatableLoadingReport = datatable($scope.datatableConfigLoadingReport);	
+	$scope.datatableQcFlowcell = datatable($scope.datatableConfigQcFlowcell);
+	
 	$scope.atomicTransfere = manyToOne($scope, "datatable", "none");
 
 	$scope.experiment.outputGenerated = $scope.isOutputGenerated();
 	
+	
 	if($scope.experiment.editMode){
 		$scope.atomicTransfere.loadExperiment($scope.datatable);
+		
 	}else{
+		var qcFlowcell=[{group: "total", preLoadingNbActivePores: null, postLoadingNbActivePores: null}, 
+		                {group: "grp1", preLoadingNbActivePores: null, postLoadingNbActivePores:null},
+		                {group: "grp2", preLoadingNbActivePores: null, postLoadingNbActivePores:null},
+		                {group: "grp3", preLoadingNbActivePores: null, postLoadingNbActivePores:null},
+		                {group: "grp4", preLoadingNbActivePores: null, postLoadingNbActivePores:null}];
+		
 		$scope.atomicTransfere.newExperiment($scope.datatable);
+		$scope.datatableLoadingReport.setData([]);
+		$scope.datatableQcFlowcell.setData(qcFlowcell);
 	}
+	
+	
 	
 }]);
