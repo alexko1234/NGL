@@ -1,10 +1,10 @@
-/*! ultimate-datatable version 3.1.0 2015-07-22 
+/*! ultimate-datatable version 3.2.0-SNAPSHOT 2015-07-23 
  Ultimate DataTable is distributed open-source under CeCILL FREE SOFTWARE LICENSE. Check out http://www.cecill.info/ for more information about the contents of this license.
 */
 "use strict";
 
 angular.module('ultimateDataTableServices', []).
-    	factory('datatable', ['$http', '$filter', '$parse', '$window', '$q','udtI18n', function($http, $filter, $parse, $window, $q, udtI18n){ //service to manage datatable
+    	factory('datatable', ['$http', '$filter', '$parse', '$window', '$q','udtI18n','$timeout', function($http, $filter, $parse, $window, $q, udtI18n, $timeout){ //service to manage datatable
     		var constructor = function(iConfig){
 				var datatable = {
 						configDefault:{
@@ -55,7 +55,9 @@ angular.module('ultimateDataTableServices', []).
 							},
 							filter : {
 								active:false,
-								highlight:false
+								highlight:false,
+								columnMode:false,
+								showButton:false
 							},
 							pagination:{
 								active:true,
@@ -187,6 +189,7 @@ angular.module('ultimateDataTableServices', []).
     					allGroupResult:undefined,
     					displayResult:undefined,
     					totalNumberRecords:0,
+						computeDisplayResultTimeOut:undefined,
     					urlCache:{}, //used to cache data load from column with url attribut
     					lastSearchParams : undefined, //used with pagination when length or page change
     					inc:0, //used for unique column ids
@@ -245,7 +248,9 @@ angular.module('ultimateDataTableServices', []).
     					 */
     					searchLocal : function(searchTerms){
 							if(this.config.filter.active === true){
+								var deferred = $q.defer();
 								//Set the properties "" or null to undefined because we don't want to filter this
+								this.setSpinner(true);
 								for(var p in searchTerms) {
 									if(searchTerms[p] != undefined && (searchTerms[p] === undefined || searchTerms[p] === null || searchTerms[p] === "")){
 										searchTerms[p] = undefined;
@@ -261,6 +266,12 @@ angular.module('ultimateDataTableServices', []).
 								this.sortAllResult();
 								this.computePaginationList();
 								this.computeDisplayResult();
+								var that = this;
+								this.computeDisplayResultTimeOut.then(function(){
+									that.setSpinner(false);
+									deferred.resolve();
+								});
+								return deferred.promise;
 							}
 						},
 						_getAllResult : function(){
@@ -350,27 +361,29 @@ angular.module('ultimateDataTableServices', []).
 								}
 								
 								this.setPageNumber({number:0, clazz:''});
+								var that = this;
+								this.computeDisplayResultTimeOut.then(function(){
+									//Deselect all lines
+									that.selectAll(false);
+									//Create new line already selected
+									var line = {edit:false, selected:true, trClass:undefined, group:false};
+									that.displayResult.unshift({data:{}, line:line});
+									if(that.config.pagination.numberRecordsPerPage < that.displayResult.length){
+										that.displayResult.splice(that.config.pagination.numberRecordsPerPage,(that.displayResult.length+1)-that.config.pagination.numberRecordsPerPage);
+									}
+									that.allResult.unshift({});
+									that.totalNumberRecords++;
+									
+									 //group function
+									if(that.isGroupActive()){
+										that.displayResult = that.addGroup(that.displayResult);					
+									}
+									
+									that.computePaginationList();
 
-								//Deselect all lines
-								this.selectAll(false);
-								//Create new line already selected
-								var line = {edit:false, selected:true, trClass:undefined, group:false};
-								this.displayResult.unshift({data:{}, line:line});
-								if(this.config.pagination.numberRecordsPerPage < this.displayResult.length){
-									this.displayResult.splice(this.config.pagination.numberRecordsPerPage,(this.displayResult.length+1)-this.config.pagination.numberRecordsPerPage);
-								}
-								this.allResult.unshift({});
-								this.totalNumberRecords++;
-								
-								 //group function
-								if(this.isGroupActive()){
-									this.displayResult = this.addGroup(this.displayResult);					
-								}
-								
-								this.computePaginationList();
-
-								//setEdit
-								this.setEdit();
+									//setEdit
+									that.setEdit();
+								});
 							}
 		    			},
 		    			/**
@@ -514,11 +527,13 @@ angular.module('ultimateDataTableServices', []).
 		    					this.computeGroup();
 		    					this.sortAllResult(); //sort all the result
 		    					this.computePaginationList(); //redefined pagination
-				    			this.computeDisplayResult(); //redefined the result must be displayed				    				
-				    			
-		    					if(angular.isFunction(this.config.group.callback)){
-			    					this.config.group.callback(this);
-			    				}
+				    			this.computeDisplayResult(); //redefined the result must be displayed
+								var that = this;
+				    			this.computeDisplayResultTimeOut.then(function(){
+									if(angular.isFunction(that.config.group.callback)){
+										that.config.group.callback(this);
+									}
+								});
 		    				} else{
 		    					//console.log("order is not active !!!");
 		    				}
@@ -564,45 +579,55 @@ angular.module('ultimateDataTableServices', []).
 		    			 * Based on pagination configuration
 		    			 */
 		    			computeDisplayResult: function(){
-		    				//to manage local pagination
-		    				var configPagination = this.config.pagination;
-		    				
-		    				var _displayResult = [];
-		    				if(this.config.group.start && this.config.group.showOnlyGroups){
-		    					_displayResult = this.allGroupResult.slice((configPagination.pageNumber*configPagination.numberRecordsPerPage), 
-		    							(configPagination.pageNumber*configPagination.numberRecordsPerPage+configPagination.numberRecordsPerPage));
-		    					var displayResultTmp = [];
-			    				angular.forEach(_displayResult, function(value, key){
-			    					 var line = {edit:undefined, selected:undefined, trClass:undefined, group:true};
-		    						 this.push({data:value, line:line});
-		    					}, displayResultTmp);			    				
-			    				this.displayResult = displayResultTmp;		
-		    				} else{
-			    				if(configPagination.active && !this.isRemoteMode(configPagination.mode)){
-			    					_displayResult = angular.copy(this._getAllResult().slice((configPagination.pageNumber*configPagination.numberRecordsPerPage), 
-			    							(configPagination.pageNumber*configPagination.numberRecordsPerPage+configPagination.numberRecordsPerPage)));
-			    				}else{ //to manage all records or server pagination
-			    					_displayResult = angular.copy(this._getAllResult());		    					
-			    				}
-			    				
-			    				var displayResultTmp = [];
-			    				angular.forEach(_displayResult, function(value, key){
-			    					 var line = {edit:undefined, selected:undefined, trClass:undefined, group:false};
-		    						 this.push({data:value, line:line});
-		    					}, displayResultTmp);
-			    				
-			    				//group function
-			    				if(this.isGroupActive()){
-			    					this.displayResult = this.addGroup(displayResultTmp);					
-			    				}else{
-			    					this.displayResult = displayResultTmp;
-			    				}
-			    				
-			    				if(this.config.edit.byDefault){
-			    					this.config.edit.withoutSelect = true;
-			    					this.setEdit();
-			    				}	
-		    				}
+							var time = 100;
+							if(this.computeDisplayResultTimeOut !== undefined){
+								$timeout.cancel(this.computeDisplayResultTimeOut);
+							}else{
+								time = 0;
+							}
+							
+							var that = this;
+							this.computeDisplayResultTimeOut = $timeout(function(){
+								//to manage local pagination
+								var configPagination = that.config.pagination;
+								
+								var _displayResult = [];
+								if(that.config.group.start && that.config.group.showOnlyGroups){
+									_displayResult = that.allGroupResult.slice((configPagination.pageNumber*configPagination.numberRecordsPerPage), 
+											(configPagination.pageNumber*configPagination.numberRecordsPerPage+configPagination.numberRecordsPerPage));
+									var displayResultTmp = [];
+									angular.forEach(_displayResult, function(value, key){
+										 var line = {edit:undefined, selected:undefined, trClass:undefined, group:true};
+										 that.push({data:value, line:line});
+									}, displayResultTmp);			    				
+									that.displayResult = displayResultTmp;		
+								} else{
+									if(configPagination.active && !that.isRemoteMode(configPagination.mode)){
+										_displayResult = angular.copy(that._getAllResult().slice((configPagination.pageNumber*configPagination.numberRecordsPerPage), 
+												(configPagination.pageNumber*configPagination.numberRecordsPerPage+configPagination.numberRecordsPerPage)));
+									}else{ //to manage all records or server pagination
+										_displayResult = angular.copy(that._getAllResult());		    					
+									}
+									
+									var displayResultTmp = [];
+									angular.forEach(_displayResult, function(value, key){
+										 var line = {edit:undefined, selected:undefined, trClass:undefined, group:false};
+										 this.push({data:value, line:line});
+									}, displayResultTmp);
+									
+									//group function
+									if(that.isGroupActive()){
+										that.displayResult = that.addGroup(displayResultTmp);					
+									}else{
+										that.displayResult = displayResultTmp;
+									}
+									
+									if(that.config.edit.byDefault){
+										that.config.edit.withoutSelect = true;
+										that.setEdit();
+									}								
+								}
+							}, time);
 		    			},
 		    			/**
 		    			 * Load all data for url column type
@@ -787,7 +812,8 @@ angular.module('ultimateDataTableServices', []).
 		    							var orderSense = (this.config.order.reverse)?'-':'+';
 			    						orderBy.push(orderSense+orderProperty)
 		    						}
-		    						this.allResult = $filter('orderBy')(this.allResult,orderBy);	
+		    						this.allResult = $filter('orderBy')(this._getAllResult(),orderBy);	
+									this._getAllResult = function(){return this.allResult;};
 		    					}		    					    					
 		    				}
 		    			},	
@@ -830,10 +856,12 @@ angular.module('ultimateDataTableServices', []).
 			    				} else if(this.config.order.active){
 			    					this.searchWithLastParams();
 			    				}	
-		    					
-		    					if(angular.isFunction(this.config.order.callback)){
-			    					this.config.order.callback(this);
-			    				}
+		    					var that = this;
+				    			this.computeDisplayResultTimeOut.then(function(){
+									if(angular.isFunction(that.config.order.callback)){
+										that.config.order.callback(this);
+									}
+								});
 		    				} else{
 		    					//console.log("order is not active !!!");
 		    				}
@@ -928,37 +956,42 @@ angular.module('ultimateDataTableServices', []).
 		    			 */
 		    			setEdit : function(column){	
 		    				if(this.config.edit.active){
-								this._getAllResult = function(){return this.allResult;};
-		    					this.config.edit.columns = {};
-			    				var find = false;
-			    				for(var i = 0; i < this.displayResult.length; i++){
-			    					
-			    					if(this.displayResult[i].line.selected || this.config.edit.withoutSelect){
-			    						if(angular.isUndefined(this.config.edit.lineMode) || (angular.isFunction(this.config.edit.lineMode) && this.config.edit.lineMode(this.displayResult[i].data))){
-			    							this.displayResult[i].line.edit=true;			    						
-			    							find = true;			    					
-			    						}else
-			    							this.displayResult[i].line.edit=false;
-			    						
-			    					}else{
-			    						this.displayResult[i].line.edit=false;
-			    					}			    					   					
-			    				}
-			    				this.selectAll(false);
-			    				if(find){
-			    					this.config.edit.start = true;
-			    					if(column){
-			    						var columnId = column.id
-			    						if(angular.isUndefined(this.config.edit.columns[columnId])){
-			    							this.config.edit.columns[columnId] = {};
-			    						}
-			    						this.config.edit.columns[columnId].edit=true;			    						
-			    					}
-			    					else this.config.edit.all = true;
-			    				}
-		    				}else{
+								var that = this;
+								//If a compute displayResult is on his way, let it finish and then edit
+								this.computeDisplayResultTimeOut.then(function(){
+									that._getAllResult = function(){return that.allResult;};
+									that.config.edit.columns = {};
+									var find = false;
+									for(var i = 0; i < that.displayResult.length; i++){
+										
+										if(that.displayResult[i].line.selected || that.config.edit.withoutSelect){
+											if(angular.isUndefined(that.config.edit.lineMode) || (angular.isFunction(that.config.edit.lineMode) && that.config.edit.lineMode(that.displayResult[i].data))){
+												that.displayResult[i].line.edit=true;			    						
+												find = true;			    					
+											}else
+												that.displayResult[i].line.edit=false;
+											
+										}else{
+											that.displayResult[i].line.edit=false;
+										}			    					   					
+									}
+									that.selectAll(false);
+									if(find){
+										that.config.edit.start = true;
+										if(column){
+											var columnId = column.id
+											if(angular.isUndefined(that.config.edit.columns[columnId])){
+												that.config.edit.columns[columnId] = {};
+											}
+											that.config.edit.columns[columnId].edit=true;			    						
+										}
+										else that.config.edit.all = true;
+									}
+								});
+							}else{
 		    					//console.log("edit is not active !");
 		    				}
+							
 		    			},		    			
 		    			/**
 		    			 * Test if a column must be in edition mode
@@ -1295,32 +1328,34 @@ angular.module('ultimateDataTableServices', []).
 		    					
 		    					this.computePaginationList();
 		    					this.computeDisplayResult();
-		    					
-		    					if(this.config.remove.ids.errors.length > 0){
-			    					this.displayResult.every(function(value,index){			    						
-			    						var errors = this.config.remove.ids.errors;
-			    						for(var i = 0 ; i < errors.length ; i++){
-			    							if(angular.equals(value.data,  errors[i])){
-			    								value.line.trClass = "danger";
-			    								errors.splice(i,1);
-			    								break;
-			    							}
-			    						}
-			    						if(errors.length === 0){
-			    							return false;
-			    						}else{
-			    							return true;
-			    						}
-			    					},this);
-		    					}
-		    					
-		    					
-		    					this.config.select.isSelectAll = false;
-		    					this.config.remove.error = 0;
-		    					this.config.remove.start = false;
-		    					this.config.remove.counter = 0;
-		    					this.config.remove.ids = {error:[],success:[]};
-		    					this.setSpinner(false);
+								var that = this;
+		    					this.computeDisplayResultTimeOut.then(function(){
+									if(that.config.remove.ids.errors.length > 0){
+										that.displayResult.every(function(value,index){			    						
+											var errors = that.config.remove.ids.errors;
+											for(var i = 0 ; i < errors.length ; i++){
+												if(angular.equals(value.data,  errors[i])){
+													value.line.trClass = "danger";
+													errors.splice(i,1);
+													break;
+												}
+											}
+											if(errors.length === 0){
+												return false;
+											}else{
+												return true;
+											}
+										},that);
+									}
+									
+									
+									that.config.select.isSelectAll = false;
+									that.config.remove.error = 0;
+									that.config.remove.start = false;
+									that.config.remove.counter = 0;
+									that.config.remove.ids = {error:[],success:[]};
+									that.setSpinner(false);
+								});
 		    				}
 		    			},
 		    			
@@ -1836,9 +1871,8 @@ angular.module('ultimateDataTableServices', []).
 			    							var header = column.header;
 			    							if(angular.isFunction(header)){
 			    								header = header();
-			    							}else{
-			    								header = this.messages.Messages(column.header);
 			    							}
+											
 			    							if(that.isGroupActive()){
 				    							if(column.groupMethod === "sum"){
 				    								header = header + this.messages.Messages('datatable.export.sum'); 
@@ -2268,12 +2302,14 @@ directive("udtCell", function(){
 	    		link: function(scope, element, attr) {
 	    			if(!scope.udtTableFunctions){scope.udtTableFunctions = {};}
 	    			
-	    			scope.udtTableFunctions.getEditElement = function(col, header){
+	    			scope.udtTableFunctions.getEditElement = function(col, header, filter){
 	    				var editElement = '';
 	    				var ngChange = '"';
 	    				var defaultValueDirective = "";
     			    	if(header){
-    			    		ngChange = '" ng-change="udtTable.updateColumn(col.property, col.id)"';	    			    		
+    			    		ngChange = '" ng-change="udtTable.updateColumn(col.property, col.id)"';
+						}else if(filter){
+							ngChange = '" udt-change="udtTable.searchLocal(udtTable.searchTerms)"';
     			    	}else{
     			    		defaultValueDirective = 'udt-default-value="col.defaultValues"';
     			    	}
@@ -2283,29 +2319,29 @@ directive("udtCell", function(){
 						}
 	    						    				
 	    				if(col.type === "boolean"){
-	    					editElement = '<input class="form-control"' +defaultValueDirective+' udt-html-filter="{{col.type}}" '+userDirectives+' type="checkbox" class="input-small" ng-model="'+this.getEditProperty(col, header)+ngChange+'/>';
+	    					editElement = '<input class="form-control"' +defaultValueDirective+' udt-html-filter="{{col.type}}" '+userDirectives+' type="checkbox" class="input-small" ng-model="'+this.getEditProperty(col, header, filter)+ngChange+'/>';
 	    				}else if(!col.choiceInList){
 							//TODO: type='text' because html5 autoformat return a string before that we can format the number ourself
-	    					editElement = '<input class="form-control" '+defaultValueDirective+' '+this.getConvertDirective(col, header)+' udt-html-filter="{{col.type}}" '+userDirectives+' type="text" class="input-small" ng-model="'+this.getEditProperty(col,header)+ngChange+this.getDateTimestamp(col.type)+'/>';
+	    					editElement = '<input class="form-control" '+defaultValueDirective+' '+this.getConvertDirective(col, header)+' udt-html-filter="{{col.type}}" '+userDirectives+' type="text" class="input-small" ng-model="'+this.getEditProperty(col,header,filter)+ngChange+this.getDateTimestamp(col.type)+'/>';
 	    				}else if(col.choiceInList){
 	    					switch (col.listStyle) { 
 	    						case "radio":
-	    							editElement = '<label ng-repeat="opt in col.possibleValues" '+defaultValueDirective+'  for="radio{{col.id}}"><input id="radio{{col.id}}" udt-html-filter="{{col.type}}" '+userDirectives+' type="radio" ng-model="'+this.getEditProperty(col,hearder)+ngChange+' value="{{opt.name}}">{{opt.name}}<br></label>';
+	    							editElement = '<label ng-repeat="opt in col.possibleValues" '+defaultValueDirective+'  for="radio{{col.id}}"><input id="radio{{col.id}}" udt-html-filter="{{col.type}}" '+userDirectives+' type="radio" ng-model="'+this.getEditProperty(col,hearder,filter)+ngChange+' value="{{opt.name}}">{{opt.name}}<br></label>';
 	    							break;		    						
 	    						case "multiselect":
-	    							editElement = '<select class="form-control" multiple="true" '+defaultValueDirective+' ng-options="opt.code as opt.name '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+userDirectives+' ng-model="'+this.getEditProperty(col,header)+ngChange+'></select>';
+	    							editElement = '<select class="form-control" multiple="true" '+defaultValueDirective+' ng-options="opt.code as opt.name '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+userDirectives+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+'></select>';
 		    						break;
 	    						case "bt-select":
-	    							editElement = '<div class="form-control" udt-btselect '+defaultValueDirective+' placeholder="" bt-dropdown-class="dropdown-menu-right" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+userDirectives+' ng-model="'+this.getEditProperty(col,header)+ngChange+'></div>';			        		  	    	
+	    							editElement = '<div class="form-control" udt-btselect '+defaultValueDirective+' placeholder="" bt-dropdown-class="dropdown-menu-right" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+userDirectives+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+'></div>';			        		  	    	
 	    							break;
 								case "bt-select-filter":
-	    							editElement = '<div class="form-control" filter="true" udt-btselect '+defaultValueDirective+' placeholder="" bt-dropdown-class="dropdown-menu-right" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+userDirectives+' ng-model="'+this.getEditProperty(col,header)+ngChange+'></div>';			        		  	    	
+	    							editElement = '<div class="form-control" filter="true" udt-btselect '+defaultValueDirective+' placeholder="" bt-dropdown-class="dropdown-menu-right" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+userDirectives+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+'></div>';			        		  	    	
 	    							break;
 	    						case "bt-select-multiple":
-	    							editElement = '<div class="form-control" '+defaultValueDirective+' udt-btselect multiple="true" bt-dropdown-class="dropdown-menu-right" placeholder="" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+userDirectives+' ng-model="'+this.getEditProperty(col,header)+ngChange+'></div>';			        		  	    	
+	    							editElement = '<div class="form-control" '+defaultValueDirective+' udt-btselect multiple="true" bt-dropdown-class="dropdown-menu-right" placeholder="" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+userDirectives+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+'></div>';			        		  	    	
 	    							break;
 	    						default:
-	    							editElement = '<select class="form-control" '+defaultValueDirective+' ng-options="opt.code as opt.name '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+userDirectives+' ng-model="'+this.getEditProperty(col,header)+ngChange+'></select>';
+	    							editElement = '<select class="form-control" '+defaultValueDirective+' ng-options="opt.code as opt.name '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+userDirectives+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+'></select>';
 		    						break;
 		  	    			}		    					
 	    				}else{
@@ -2315,10 +2351,12 @@ directive("udtCell", function(){
 	    			};
 	    			
 	    			
-	    			scope.udtTableFunctions.getEditProperty = function(col, header){
+	    			scope.udtTableFunctions.getEditProperty = function(col, header, filter){
 	    				if(header){
     			    		return  "udtTable.config.edit.columns."+col.id+".value";
-    			    	} else if(angular.isString(col.property)){
+    			    	} else if(filter){
+							return "udtTable.searchTerms."+col.property;
+						} else if(angular.isString(col.property)){
     			    		return "value.data."+col.property;        			    		
     			    	} else {
     			    		throw "Error property is not editable !";
@@ -2385,7 +2423,17 @@ directive("udtCell", function(){
   		    	link: function(scope, element, attr) {
   	  		    }
     		};
-    	}).directive("udtCellEdit", function(){
+    	})
+		.directive("udtCellFilter", function(){
+    		return {
+    			restrict: 'A',
+  		    	replace:true,
+  		    	templateUrl:'udt-cellFilter.html',
+  		    	link: function(scope, element, attr) {
+  	  		    }
+    		};
+    	})
+		.directive("udtCellEdit", function(){
     		return {
     			restrict: 'A',
   		    	replace:true,
@@ -2417,6 +2465,7 @@ directive("udtCell", function(){
 	    						return '<img ng-src="data:image/'+col.format+';base64,{{cellValue}}" style="max-width:{{col.width}}"/>';		    					    
 	    					} else{
 	    						return '<span udt-highlight="cellValue" keywords="udtTable.searchTerms.$" active="udtTable.config.filter.highlight"></span>';
+								//return '<span ng-bind="cellValue"></span>'
 	    					}
 	    				}	  
 	    			};
@@ -2461,6 +2510,31 @@ directive("udtCell", function(){
   		    	}
     		};
     	});;angular.module('ultimateDataTableServices').
+directive('udtChange', ['$interval', function($interval) {
+	return {
+		require: 'ngModel',
+		link: function(scope, element, attrs, ngModel) {
+			
+			scope.needRefresh = false;
+			scope.runFunction = function(){
+				var unbindWatcher  = scope.$watch(attrs.udtChange, function(newValue){
+					unbindWatcher();
+				});
+			};
+			
+			scope.$watch(attrs.ngModel, function(value){
+				scope.needRefresh = true;
+			});
+			
+			$interval(function(){ 
+				if(scope.needRefresh){
+					scope.runFunction();
+					scope.needRefresh = false;
+				}
+			}, 10);
+		}
+	};	    	
+}]);;angular.module('ultimateDataTableServices').
 directive('udtCompile', function($compile) {
 			// directive factory creates a link function
 			return {
@@ -3167,6 +3241,11 @@ run(function($templateCache) {
   		    		+'</tr>'
   		    		+'</thead>'
   		    		+'<tbody>'
+					+	'<tr ng-if="udtTable.config.filter.columnMode">'
+  		    		+		'<td ng-repeat="col in udtTable.config.columns" ng-if="!udtTable.isHide(col.id)">'
+  		    		+			'<div udt-cell-filter/>'
+  		    		+		'</td>'
+  		    		+	'</tr>'
   		    		+	'<tr ng-if="udtTable.isEdit()">'
   		    		+		'<td ng-repeat="col in udtTable.config.columns" ng-if="!udtTable.isHide(col.id)">'
   		    		+			'<div udt-cell-header/>'
@@ -3201,6 +3280,9 @@ run(function($templateCache) {
 })
 .run(function($templateCache) {
   $templateCache.put('udt-cellEdit.html', '<div udt-compile="udtTableFunctions.getEditElement(col)"></div>');
+})
+.run(function($templateCache) {
+  $templateCache.put('udt-cellFilter.html', '<div udt-compile="udtTableFunctions.getEditElement(col, false, true)"></div>');
 })
 .run(function($templateCache) {
   $templateCache.put('udt-cellHeader.html', '<div ng-if="col.edit" ng-switch on="udtTable.isEdit(col.id)">'  		    			
@@ -3311,26 +3393,26 @@ run(function($templateCache) {
   		    		+'</div>'
   		    		+'<div class="btn-group" ng-if="udtTable.isShowOtherButtons()" udt-compile="udtTable.config.otherButtons.template"></div>'
   		    		+'</div>'
-					+ '<div class="col-xs-2 .col-sm-3 col-md-3 col-lg-3" ng-if="udtTable.config.filter.active === true">'
+					+ '<div class="col-xs-2 .col-sm-3 col-md-3 col-lg-3" name="udt-toolbar-filter" ng-if="udtTable.config.filter.active === true">'
 					+  '<div class="col-xs-12 .col-sm-6 col-md-7 col-lg-8 input-group" ng-if="udtTable.isCompactMode()">'
-					+   '<input class="form-control input-compact" type="text" ng-model="udtTable.searchTerms.$" ng-keydown="$event.keyCode==13 ? udtTable.searchLocal(udtTable.searchTerms) : \'\'">'
+					+   '<input class="form-control input-compact" udt-change="udtTable.searchLocal(udtTable.searchTerms)" type="text" ng-model="udtTable.searchTerms.$" ng-keydown="$event.keyCode==13 ? udtTable.searchLocal(udtTable.searchTerms) : \'\'">'
 					+	'<span class="input-group-btn">'
-					+		'<button ng-if="udtTable.config.filter.active === true" class="btn btn-default search-button" ng-click="udtTable.searchLocal(udtTable.searchTerms)" title="{{udtTableFunctions.messagesDatatable(\'datatable.button.searchLocal\')}}">'
+					+		'<button ng-if="udtTable.config.filter.active === true && udtTable.config.filter.showButton" class="btn btn-default search-button" ng-click="udtTable.searchLocal(udtTable.searchTerms)" title="{{udtTableFunctions.messagesDatatable(\'datatable.button.searchLocal\')}}">'
   		    		+			'<i class="fa fa-search"></i>'
   		    		+		'</button>'	
-					+		'<button ng-if="udtTable.config.filter.active === true" class="btn btn-default search-button" ng-click="udtTable.searchTerms={};udtTable.searchLocal()" title="{{udtTableFunctions.messagesDatatable(\'datatable.button.resetSearchLocal\')}}">'
+					+		'<button ng-if="udtTable.config.filter.active === true 	&& udtTable.config.filter.showButton" class="btn btn-default search-button" ng-click="udtTable.searchTerms={};udtTable.searchLocal()" title="{{udtTableFunctions.messagesDatatable(\'datatable.button.resetSearchLocal\')}}">'
   		    		+			'<i class="fa fa-times"></i>'
   		    		+		'</button>'
 					+ '</span>'
 					+ '</div>'
 					+  '<div class="col-xs-12 .col-sm-12 col-md-12 col-lg-12 input-group" ng-if="!udtTable.isCompactMode()">'
-					+   '<input class="form-control" type="text" ng-model="udtTable.searchTerms.$">'
-					+	'<span class="input-group-btn">'
-					+		'<button ng-if="udtTable.config.filter.active === true" class="btn btn-default search-button" ng-click="udtTable.searchLocal(udtTable.searchTerms)" title="{{udtTableFunctions.messagesDatatable(\'datatable.button.searchLocal\')}}">'
+					+   '<input class="form-control" utd-change="udtTable.searchLocal(udtTable.searchTerms)" type="text" ng-model="udtTable.searchTerms.$">'
+					+	'<span class="input-group-btn" ng-if="udtTable.config.filter.showButton">'
+					+		'<button ng-if="udtTable.config.filter.active === true  && udtTable.config.filter.showButton" class="btn btn-default search-button" ng-click="udtTable.searchLocal(udtTable.searchTerms)" title="{{udtTableFunctions.messagesDatatable(\'datatable.button.searchLocal\')}}">'
   		    		+			'<i class="fa fa-search"></i>'
 					+			'<span> {{udtTableFunctions.messagesDatatable(\'datatable.button.searchLocal\')}} </span>'
   		    		+		'</button>'	
-					+		'<button ng-if="udtTable.config.filter.active === true" class="btn btn-default search-button" ng-click="udtTable.searchTerms={};udtTable.searchLocal()" title="{{udtTableFunctions.messagesDatatable(\'datatable.button.resetSearchLocal\')}}">'
+					+		'<button ng-if="udtTable.config.filter.active === true  && udtTable.config.filter.showButton" class="btn btn-default search-button" ng-click="udtTable.searchTerms={};udtTable.searchLocal()" title="{{udtTableFunctions.messagesDatatable(\'datatable.button.resetSearchLocal\')}}">'
   		    		+			'<i class="fa fa-times"></i>'
 					+			'<span> {{udtTableFunctions.messagesDatatable(\'datatable.button.resetSearchLocal\')}} </span>'
   		    		+		'</button>'
