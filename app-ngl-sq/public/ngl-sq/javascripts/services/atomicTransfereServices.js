@@ -712,10 +712,12 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 		var outputType = outputType;
 		var varOneToX = undefined;
 		var varXToMany = undefined;
+		var varExperimentCommonFunctions = undefined;
 
 		var init = function(){
 			varOneToX = oneToX($scope, inputType);
 			varXToMany = xToMany($scope, outputType);
+			varExperimentCommonFunctions = experimentCommonFunctions($scope);
 		};
 
 		var oneToMany = {
@@ -730,6 +732,11 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 				},
 				outputToExperiment : function(output){
 					varXToMany.outputToExperiment(output);
+				},
+				newExperiment : function(input){
+					if(inputType === "datatable"){
+						varexperimentCommonFunctions.newExperimentDatatable(input);
+					}
 				}
 		};
 

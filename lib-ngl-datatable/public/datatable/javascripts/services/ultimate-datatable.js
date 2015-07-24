@@ -698,6 +698,7 @@ angular.module('ultimateDataTableServices', []).
 		    			 * Based on pagination configuration
 		    			 */
 		    			computeDisplayResult: function(){
+							console.log("computeDisplayResult");
 							var time = 100;
 							if(this.computeDisplayResultTimeOut !== undefined){
 								$timeout.cancel(this.computeDisplayResultTimeOut);
@@ -1203,6 +1204,7 @@ angular.module('ultimateDataTableServices', []).
 		    				}else{
 		    					//console.log("save is not active !");		    				
 		    				}
+							console.log("finishSave");
 		    			},
 		    			
 		    			saveBatchRemote : function(values){
