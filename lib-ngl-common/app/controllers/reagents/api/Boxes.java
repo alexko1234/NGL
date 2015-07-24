@@ -163,23 +163,40 @@ public class Boxes extends DocumentController<Box>{
 			queryElts.add(DBQuery.is("catalogRefCode", boxSearch.catalogRefCode));
 		}
 		
+		if(StringUtils.isNotBlank(boxSearch.createUser)){
+			queryElts.add(DBQuery.is("traceInformation.createUser", boxSearch.createUser));
+		}
+		
+		
+		if(StringUtils.isNotBlank(boxSearch.providerOrderCode)){
+			queryElts.add(DBQuery.is("orderInformations.providerOrderCode", boxSearch.providerOrderCode));
+		}
+		
 		if(boxSearch.toExpirationDate != null){
 			Logger.info((DateUtils.addDays(boxSearch.toExpirationDate, 1)).toString());
 			queryElts.add(DBQuery.lessThanEquals("expirationDate", (DateUtils.addDays(boxSearch.toExpirationDate, 1))));
 		}
 		
+		if(boxSearch.fromReceptionDate != null){
+			queryElts.add(DBQuery.greaterThanEquals("receptionDate", boxSearch.fromReceptionDate));
+		}
+		
+		if(boxSearch.toReceptionDate != null){
+			queryElts.add(DBQuery.lessThanEquals("receptionDate", (DateUtils.addDays(boxSearch.toReceptionDate, 1))));
+		}
+		
 		if(boxSearch.catalogCodes != null){
-			queryElts.add(DBQuery.in("catalogCodes", boxSearch.catalogCodes));
+			queryElts.add(DBQuery.in("catalogCode", boxSearch.catalogCodes));
 		}
 		if(StringUtils.isNotEmpty(boxSearch.barCode) && StringUtils.isNotEmpty(boxSearch.bundleBarCode)){
-			queryElts.add(DBQuery.or(DBQuery.is("barCode", boxSearch.barCode), DBQuery.is("bundleBarCode", boxSearch.bundleBarCode)));
+			queryElts.add(DBQuery.or(DBQuery.regex("barCode", Pattern.compile(boxSearch.barCode, Pattern.CASE_INSENSITIVE)),DBQuery.regex("bundleBarCode", Pattern.compile(boxSearch.bundleBarCode, Pattern.CASE_INSENSITIVE))));
 		}else{
 			if(StringUtils.isNotEmpty(boxSearch.barCode)){
 				queryElts.add(DBQuery.regex("barCode", Pattern.compile(boxSearch.barCode, Pattern.CASE_INSENSITIVE)));
 			} 
 			
 			if(StringUtils.isNotBlank(boxSearch.bundleBarCode)){
-				queryElts.add(DBQuery.is("bundleBarCode", boxSearch.bundleBarCode));
+				queryElts.add(DBQuery.regex("bundleBarCode", Pattern.compile(boxSearch.bundleBarCode, Pattern.CASE_INSENSITIVE)));
 			}
 		}
 		if(queryElts.size() > 0){
