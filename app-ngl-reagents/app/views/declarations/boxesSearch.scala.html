@@ -14,9 +14,9 @@
 	@formGroup{
 			<input type="text" class="form-control" ng-model="searchService.form.bundleBarCode" placeholder='@Messages("boxes.bundleBarCode")'>
 		}
-		@formGroup{
-			<div bt-select placeholder="@Messages("kits.select.catalogCodes")" class="form-control" ng-model="searchService.form.catalogCodes" ng-class="errors.catalogCodes" bt-options="catalogCode.code as catalogCode.name for catalogCode in searchService.lists.getKitCatalogs()" multiple="true" filter="true">
-			</div>
+	@formGroup{
+			<input class="form-control" type="text" ng-model="searchService.form.fromReceptionDate" date-timestamp placeholder='@Messages("kits.placeholder.fromReceptionDate")' title='@Messages("kits.placeholder.fromReceptionDate")'>	
+						
 		}
 		
 	}	
@@ -24,14 +24,17 @@
 	@formGroup{
 			<input type="text" class="form-control" ng-model="searchService.form.catalogRefCode " placeholder='@Messages("boxes.catalogRefCode")'>
 		}
+	@formGroup{
+			<input class="form-control" type="text" ng-model="searchService.form.toReceptionDate" date-timestamp placeholder='@Messages("kits.placeholder.toReceptionDate")' title='@Messages("kits.placeholder.toReceptionDate")'>	
+						
+		}
 		
 	}	
 	@columnSearchForm{	
 		@formGroup{
 			<input placeholder="@Messages("boxes.toExpirationDate")" date-timestamp class="form-control" ng-model="searchService.form.toExpirationDate" />
 		}
-	}		
-		
+	}
 }
 
 @searchForm(form)()("searchService.datatable")

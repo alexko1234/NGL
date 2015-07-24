@@ -162,8 +162,8 @@ factory('boxesSearchService', ['$http', 'mainService', 'lists', 'datatable', fun
 			"filter":"codes:'boxCatalogs'"
 		});
 		columns.push({
-			"header":Messages("reagents.table.barCode"),
-			"property":"barCode",
+			"header":Messages("reagents.table.catalogRefCode"),
+			"property":"catalogRefCode",
 			"order":true,
 			"type":"text"
 		});
@@ -171,41 +171,11 @@ factory('boxesSearchService', ['$http', 'mainService', 'lists', 'datatable', fun
 			"header":Messages("reagents.table.bundleBarCode"),
 			"property":"bundleBarCode",
 			"order":true,
-			"type":"date"
-		});
-		columns.push({
-			"header":Messages("reagents.table.catalogRefCode"),
-			"property":"catalogRefCode",
-			"order":true,
-			"type":"date"
-		});
-		columns.push({
-			"header":Messages("reagents.table.expirationDate"),
-			"property":"expirationDate",
-			"order":true,
-			"type":"date"
-		});
-		columns.push({
-			"header":Messages("reagents.table.startToUseDate"),
-			"property":"startToUseDate",
-			"order":true,
-			"type":"date"
-		});
-		columns.push({
-			"header":Messages("reagents.table.stopToUseDate"),
-			"property":"stopToUseDate",
-			"order":true,
-			"type":"date"
-		});
-		columns.push({
-			"header":Messages("reagents.table.orderCode"),
-			"property":"orderCode",
-			"order":true,
 			"type":"text"
 		});
 		columns.push({
-			"header":Messages("reagents.table.possibleUseNumber"),
-			"property":"possibleUseNumber",
+			"header":Messages("reagents.table.barCode"),
+			"property":"barCode",
 			"order":true,
 			"type":"text"
 		});
@@ -217,16 +187,16 @@ factory('boxesSearchService', ['$http', 'mainService', 'lists', 'datatable', fun
 			"filter":"codes:'state'"
 		});
 		columns.push({
+			"header":Messages("reagents.table.receptionDate"),
+			"property":"receptionDate",
+			"order":true,
+			"type":"date"
+		});
+		columns.push({
 			"header":Messages("reagents.table.createUser"),
 			"property":"traceInformation.createUser",
 			"order":true,
 			"type":"text"
-		});
-		columns.push({
-			"header":Messages("reagents.table.creationDate"),
-			"property":"traceInformation.creationDate",
-			"order":true,
-			"type":"Date"
 		});
 		
 		return columns;

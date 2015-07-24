@@ -36,7 +36,7 @@ angular.module('home').controller('SearchBoxesCtrl', ['$scope', 'datatable','lis
 	$scope.datatable = datatable($scope.datatableConfig);		
 	if(angular.isUndefined($scope.getHomePage())){
 		mainService.setHomePage('boxes.new');
-		tabService.addTabs({label:Messages('boxes.tabs.search'),href:jsRoutes.controllers.reagents.tpl.Boxes.home("search").url,remove:false});
+		tabService.addTabs({label:Messages('boxes.tabs.search'),href:jsRoutes.controllers.reagents.tpl.Boxes.home("search").url,remove:true});
 		tabService.activeTab(0);
 	}
 	
