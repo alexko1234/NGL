@@ -719,9 +719,10 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	public static ExperimentType newExperimentType(String name, String code, ExperimentCategory category, List<PropertyDefinition> propertiesDefinitions, List<InstrumentUsedType> instrumentUsedTypes,String atomicTransfertMethod, List<Institute> institutes) throws DAOException {
+	public static ExperimentType newExperimentType(String name, String code, String shortCode, ExperimentCategory category, List<PropertyDefinition> propertiesDefinitions, List<InstrumentUsedType> instrumentUsedTypes,String atomicTransfertMethod, List<Institute> institutes) throws DAOException {
 		ExperimentType et = new ExperimentType();
 		et.code =code.toLowerCase();
+		if(null != shortCode)et.shortCode = shortCode.toUpperCase();
 		et.name =name;
 		et.displayOrder = null;
 		et.category = category;
@@ -749,9 +750,10 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	public static ExperimentType newExperimentType(String name, String code, Integer displayOrder, ExperimentCategory category, List<PropertyDefinition> propertiesDefinitions, List<InstrumentUsedType> instrumentUsedTypes,String atomicTransfertMethod, List<Institute> institutes) throws DAOException {
+	public static ExperimentType newExperimentType(String name, String code, String shortCode, Integer displayOrder, ExperimentCategory category, List<PropertyDefinition> propertiesDefinitions, List<InstrumentUsedType> instrumentUsedTypes,String atomicTransfertMethod, List<Institute> institutes) throws DAOException {
 		ExperimentType et = new ExperimentType();
 		et.code =code.toLowerCase();
+		if(null != shortCode)et.shortCode = shortCode.toUpperCase();
 		et.name =name;
 		et.displayOrder = displayOrder;
 		et.category = category;

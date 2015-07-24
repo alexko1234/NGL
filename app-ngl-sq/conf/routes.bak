@@ -113,16 +113,6 @@ GET		/api/instruments												controllers.instruments.api.Instruments.list()
 #protocols api
 GET		/api/protocols													controllers.protocols.api.Protocols.list()
 
-#tags api
-
-GET 	/printing/:homecode/home										controllers.printing.tpl.Printing.home(homecode:java.lang.String)
-GET		/tpl/printing/js-routes											controllers.printing.tpl.Printing.javascriptRoutes()
-GET		/tpl/printing/tags/display										controllers.printing.tpl.Tags.display()
-
-GET		/api/printing/tags												@controllers.printing.api.Tags.list()
-
-
-
 #Common
 GET		/api/commons/states												controllers.commons.api.States.list()
 GET		/api/commons/types												controllers.commons.api.CommonInfoTypes.list()

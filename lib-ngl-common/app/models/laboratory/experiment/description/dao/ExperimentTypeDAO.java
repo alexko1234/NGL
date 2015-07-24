@@ -29,7 +29,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 
 	public ExperimentTypeDAO() {
 		super("experiment_type", ExperimentType.class,ExperimentTypeMappingQuery.class,
-				"SELECT distinct c.id, c.fk_experiment_category, c.fk_common_info_type, c.atomic_transfert_method ",
+				"SELECT distinct c.id, c.fk_experiment_category, c.fk_common_info_type, c.atomic_transfert_method, c.short_code ",
 				"FROM experiment_type as c "+ sqlCommonInfoType, false);
 	}
 	@Override
@@ -54,6 +54,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		parameters.put("fk_common_info_type", experimentType.id);
 		parameters.put("fk_experiment_category", experimentType.category.id);
 		parameters.put("atomic_transfert_method", experimentType.atomicTransfertMethod);
+		parameters.put("short_code", experimentType.shortCode);
 		jdbcInsert.execute(parameters);
 
 		//Add list protocols
