@@ -2,10 +2,10 @@
 
 @import _root_.instruments.io.utils._;
 
-FCID,Lane,SampleID,SampleRef,Index,Description,Control,Recipe,Operator,SampleProject
+FCID,Lane,SampleID,SampleRef,Index,Description,Control,Recipe,Operator,SampleProject\u000D\u000A
 @for(c <- containers.sortWith(_.support.line < _.support.line)){
 	@for(co <- c.contents.toList.sortWith(_.sampleCode < _.sampleCode).sortWith(AbstractSampleSheetsfactory.getContentProperty(_,"tag") < AbstractSampleSheetsfactory.getContentProperty(_,"tag")).sortWith(AbstractSampleSheetsfactory.getContentProperty(_,"tag").length < AbstractSampleSheetsfactory.getContentProperty(_,"tag").length)){
-		@(c.support.code),@(c.support.line),@(c.support.line)_@(co.sampleCode)_@(AbstractSampleSheetsfactory.getContentProperty(co,"libProcessTypeCode"))_@(AbstractSampleSheetsfactory.getContentProperty(co,"tag")),,@AbstractSampleSheetsfactory.getSequence(AbstractSampleSheetsfactory.getIndex("index-illumina-sequencing",AbstractSampleSheetsfactory.getContentProperty(co,"tag"))),,@(AbstractSampleSheetsfactory.getIntrumentBooleanProperties(e,"control")),,,@(AbstractSampleSheetsfactory.getContentProperty(co,"tag"))_@(co.percentage)
+		@(c.support.code),@(c.support.line),@(c.support.line)_@(co.sampleCode)_@(AbstractSampleSheetsfactory.getContentProperty(co,"libProcessTypeCode"))_@(AbstractSampleSheetsfactory.getContentProperty(co,"tag")),,@AbstractSampleSheetsfactory.getSequence(AbstractSampleSheetsfactory.getIndex("index-illumina-sequencing",AbstractSampleSheetsfactory.getContentProperty(co,"tag"))),,@(AbstractSampleSheetsfactory.getIntrumentBooleanProperties(e,"control")),,,@(AbstractSampleSheetsfactory.getContentProperty(co,"tag"))_@(co.percentage)\u000D\u000A
 	}
 }
-#_IEMVERSION_3_Genoscope
+#_IEMVERSION_3_Genoscope\u000D\u000A

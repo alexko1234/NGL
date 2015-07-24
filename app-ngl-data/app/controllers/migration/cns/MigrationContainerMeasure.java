@@ -9,6 +9,7 @@ import models.utils.InstanceConstants;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
+import play.Logger;
 import play.mvc.Result;
 import controllers.CommonController;
 import controllers.migration.MigrationNGLSEQ;
@@ -23,6 +24,7 @@ public class MigrationContainerMeasure extends CommonController{
 
 		MigrationNGLSEQ.backupOneCollection(collection, Container.class);
 		updateContainerMeasure();
+		updateLibraryTubeWithIND();
 		return ok("End migration container");
 	}
 
@@ -30,8 +32,10 @@ public class MigrationContainerMeasure extends CommonController{
 	private static void updateContainerMeasure() {
 
 		List<Container> containers = MongoDBDAO.find(collection, Container.class,DBQuery.is("categoryCode","tube").size("fromExperimentTypeCodes",0)).toList();
+		Logger.debug("Nb Containers to update "+containers.size());
+		
 		for(Container container:containers){
-
+			Logger.debug("Update Container "+container.code);
 			if(container.mesuredVolume !=null){
 				
 				PropertySingleValue mesuredQuantity=new PropertySingleValue(container.mesuredVolume.value,"ng");
@@ -61,6 +65,16 @@ public class MigrationContainerMeasure extends CommonController{
 			
 		}
 
+	}
+	
+	private static void updateLibraryTubeWithIND(){
+		
+		int taille =MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("contents.properties.tagCategory.value","IND")).size();
+		Logger.debug("Before size "+taille);
+		MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("contents.properties.tagCategory.value","IND")
+				,DBUpdate.set("contents.$.properties.tagCategory.value", "SINGLE-INDEX"),true); 
+		taille =MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("contents.properties.tagCategory.value","IND")).size();
+		Logger.debug("After size "+taille);
 	}
 
 }

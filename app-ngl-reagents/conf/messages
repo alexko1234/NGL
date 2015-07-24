@@ -33,6 +33,10 @@ kits.select.catalogCodes = Nom de kits
 kits.possibleUseNumber = Nombre d''utilisation
 kits.catalogRefCode = Ref. catalogue (fournisseur)
 kits.comment = Commentaire
+kits.placeholder.fromReceptionDate = Réception depuis le (jj/mm/aaaa)
+kits.placeholder.toReceptionDate = Réception jusqu'au (jj/mm/aaaa)
+
+kits.createUser = Créé par
 
 kits.creationDate = Date de création
 kits.createUser = Créée par
