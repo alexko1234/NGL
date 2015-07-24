@@ -4,6 +4,7 @@ import static play.data.Form.form;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -159,16 +160,30 @@ public class Runs extends RunsController {
 		}
 		
 		if(null != form.fromEndRGDate){
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(form.fromEndRGDate);
+			cal.set(Calendar.HOUR_OF_DAY, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			
+			
 			DBQuery.Query fromEndRG = DBQuery.elemMatch("state.historical", 
-					DBQuery.is("code", "F-RG").greaterThanEquals("date", form.fromEndRGDate));
+					DBQuery.is("code", "F-RG").greaterThanEquals("date", cal.getTime()));
 			
 			queries.add(fromEndRG);
 		}
 		
 		if(null != form.toEndRGDate){
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(form.toEndRGDate);
+			cal.set(Calendar.HOUR_OF_DAY, 23);
+			cal.set(Calendar.MINUTE, 59);
+			cal.set(Calendar.SECOND, 59);
+			
+			
 			
 			DBQuery.Query toEndRG = DBQuery.elemMatch("state.historical", 
-					DBQuery.is("code", "F-RG").lessThanEquals("date", form.toEndRGDate));
+					DBQuery.is("code", "F-RG").lessThanEquals("date", cal.getTime()));
 			
 			queries.add(toEndRG);
 		}
