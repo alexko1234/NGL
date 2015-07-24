@@ -395,6 +395,10 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 this.form = {};									
 			                                     },
 
+			                     				resetSampleCodes : function(){
+			                    					this.form.sampleCodes = [];									
+			                    				},
+			                                     
 			                                     initAdditionalFilters:function(){
 			                                    	 this.additionalFilters=[];
 			                                    	 var formFilters = [];

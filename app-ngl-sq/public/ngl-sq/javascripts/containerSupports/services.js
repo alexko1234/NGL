@@ -221,7 +221,10 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 				this.form = {};									
 			},
 
-
+			resetSampleCodes : function(){
+				this.form.sampleCodes = [];									
+			},
+			
 			search : function(){
 				this.updateForm();
 				mainService.setForm(this.form);
