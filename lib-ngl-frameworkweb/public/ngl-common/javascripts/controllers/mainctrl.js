@@ -296,8 +296,8 @@ angular.module('home').factory('tabService', ['$location', function($location){
 			 */
 			removeOrKeepOnlyActiveTab : function(index, $event, keepLastActiveTab) {		 
 				if (index != 0) {
-					this.removeTab(index);
 					var activeTabIndex = this.getActiveTabIndex(); 
+					this.removeTab(index);
 					if (index == activeTabIndex || null == activeTabIndex) {
 						this.activeTab(0, true);	
 					}
