@@ -129,7 +129,9 @@
 					this.form = {};
 				},
 				
-				
+				resetSampleCodes : function(){
+					this.form.sampleCodes = [];									
+				},
 				
 				search : function(){
 					this.updateForm();

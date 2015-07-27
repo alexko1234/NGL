@@ -180,6 +180,12 @@ factory('boxesSearchService', ['$http', 'mainService', 'lists', 'datatable', fun
 			"type":"text"
 		});
 		columns.push({
+			"header":Messages("reagents.table.expirationDate"),
+			"property":"expirationDate",
+			"order":true,
+			"type":"date"
+		});
+		columns.push({
 			"header":Messages("reagents.table.stateCode"),
 			"property":"state.code",
 			"order":true,
@@ -195,6 +201,18 @@ factory('boxesSearchService', ['$http', 'mainService', 'lists', 'datatable', fun
 		columns.push({
 			"header":Messages("reagents.table.createUser"),
 			"property":"traceInformation.createUser",
+			"order":true,
+			"type":"text"
+		});
+		columns.push({
+			"header":Messages("reagents.table.providerOrderCode"),
+			"property":"providerOrderCode",
+			"order":true,
+			"type":"text"
+		});
+		columns.push({
+			"header":Messages("reagents.table.orderCode"),
+			"property":"orderCode",
 			"order":true,
 			"type":"text"
 		});

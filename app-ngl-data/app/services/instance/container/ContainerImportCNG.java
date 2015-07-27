@@ -19,6 +19,7 @@ import play.Logger;
 /**
  * @author dnoisett
  * Import samples and container from CNG's LIMS to NGL 
+ * FDS remplacement de l'appel a Logger par logger
  */
 
 public class ContainerImportCNG extends AbstractImportDataCNG{
@@ -32,20 +33,19 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 	public void runImport() throws SQLException, DAOException {	
 		
 		// -1-  !!! les samples ne sont pas au sens NGL des containers bien qu'ils soient importés ici !!!
-		//loadSamples();	 	
-		//updateSamples();
+		loadSamples();	 	
+		updateSamples();
 		
 		// -2- tubes
-		// FDS a quoi correspond le 2 eme param "experiment-type-code"?   l'experience d'ou est est sensé venir le container ????
-		// TODO lister les "experiment-type-code possibles pour des tubes venant de solexa...
-		
+		// FDS le 2 eme param "experiment-type-code" est l'experience d'ou est est sensé venir le container 
+	
 		// lib-normalization= solexa[ lib10nM + libXnM >= 1nM ]
 		loadContainers("tube","lib-normalization");
-		//updateContainers("tube","lib-normalization");
+		updateContainers("tube","lib-normalization");
 		
 		// denat-dil-lib = solexa[ libXnM < 1nM  ]
 		loadContainers("tube","denat-dil-lib");
-		//updateContainers("tube","denat-dil-lib");
+		updateContainers("tube","denat-dil-lib");
 		
 		// TODO ???? autres categories de libraries en tube
 		
@@ -53,32 +53,37 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		
 		// si on importe des lanes c'est qu'elle ont ete cree par prepa-flowcell-cng...
 		loadContainers("lane","prepa-flowcell-cng");
-		//updateContainers("lane","prepa-flowcell-cng");
+		updateContainers("lane","prepa-flowcell-cng");
 		
 	}
 	
 	public void loadSamples() throws SQLException, DAOException {
-		Logger.debug("Start loading samples");
-		
+		logger.debug("Start loading samples");
+			
 		//-1- chargement depuis la base source Postgresql
+		logger.debug("1/3 loading from source database...");
 		List<Sample> samples = limsServices.findSampleToCreate(contextError, null) ;
 		
 		//-2- sauvegarde dans la base cible MongoDb
+		logger.debug("2/3 saving to dest database...");
 		List<Sample> samps=InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME, samples, contextError, true);
 		
 		//-3- timestamp-er dans la base source Postgresql ce qui a été traité
+		logger.debug("3/3 updating source database...");
 		limsServices.updateLimsSamples(samps, contextError, "creation");
 		
-		Logger.debug("End loading samples");
+		logger.debug("End loading samples");
 	}
 	
 	public void updateSamples() throws SQLException, DAOException {
-		Logger.debug("start updating samples");
+		logger.debug("start updating samples");
 		
 		//-1- chargement depuis la base source Postgresql
+		logger.debug("1/3 loading from source database...");
 		List<Sample>  samples = limsServices.findSampleToModify(contextError, null);
 		
-		//-2- trouver les samples concernés dans la base mongoDB et les supprimer
+		//-2a- trouver les samples concernés dans la base mongoDB et les supprimer
+		logger.debug("2a/3 delete from dest database...");
 		for (Sample sample : samples) {
 			Sample oldSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sample.code);
 			
@@ -87,17 +92,19 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 			MongoDBDAO.deleteByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sample.code);
 		}
 		
-		//-3- sauvegarde dans la base cible MongoDb
+		//-2b- sauvegarde dans la base cible MongoDb
+		logger.debug("2b/3 saving to dest database...");
 		List<Sample> samps=InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME, samples, contextError, true);
 		
-		//-4- timestamp-er dans la base source Postgresql ce qui a été traité
+		//-3- timestamp-er dans la base source Postgresql ce qui a été traité
+		logger.debug("3/3 updating source database...");
 		limsServices.updateLimsSamples(samps, contextError, "update");	
 		
-		Logger.debug("End updating samples");
+		logger.debug("End updating samples");
 	}
 	
 	public void loadContainers(String containerCategoryCode, String experimentTypeCode) throws SQLException, DAOException {
-		Logger.debug("start loading containers of type:" + containerCategoryCode + " from experimenf type: "+ experimentTypeCode);		
+		logger.debug("start loading containers of type:" + containerCategoryCode + " from experimenf type: "+ experimentTypeCode);		
 		
 		//-1- chargement depuis la base source Postgresql
 		List<Container> containers = limsServices.findContainerToCreate(contextError, containerCategoryCode, experimentTypeCode );
@@ -125,12 +132,12 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		}
 		//prévoir des well (plaques96) !!!!
 			
-		Logger.debug("end loading containers of type " + containerCategoryCode+ " from experimenf type: "+ experimentTypeCode);		
+		logger.debug("end loading containers of type " + containerCategoryCode+ " from experimenf type: "+ experimentTypeCode);		
 	}
 	
 	
 	public void updateContainers(String containerCategoryCode, String experimentTypeCode) throws SQLException, DAOException {
-		Logger.debug("start updating containers of type: " + containerCategoryCode+ " from experimenf type: "+ experimentTypeCode);		
+		logger.debug("start updating containers of type: " + containerCategoryCode+ " from experimenf type: "+ experimentTypeCode);		
 		
 		//-1- chargement depuis la base source Postgresql
 		List<Container> containers = limsServices.findContainerToModify(contextError, containerCategoryCode,experimentTypeCode);
@@ -167,7 +174,6 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		}
 		//prévoir les well (plaques96) !!!!
 		
-		Logger.debug("end updating containers of type: " + containerCategoryCode+ " from experimenf type: "+ experimentTypeCode);	
+		logger.debug("end updating containers of type: " + containerCategoryCode+ " from experimenf type: "+ experimentTypeCode);	
 	}
-
 }

@@ -8,7 +8,7 @@
 		</div>
 		}
 		@formGroup{
-			<div class="form-control" bt-select ng-model="searchService.form.projectCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.projects")' bt-options="project.code as project.code for project in lists.getProjects()" ></div>
+			<div class="form-control" bt-select ng-model="searchService.form.projectCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.projects")' bt-options="project.code as project.code for project in lists.getProjects()" ng-change="resetSampleCodes()"></div>
 		}
 		@formGroup{
 			

@@ -201,6 +201,10 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 		$scope.searchService.form = {};
 	};
 
+	$scope.resetSampleCodes = function(){
+		$scope.searchService.form.sampleCodes = [];									
+	};
+	
 	$scope.refreshSamples = function(){
 		if($scope.searchService.form.projectCodes && $scope.searchService.form.projectCodes.length>0){
 			lists.refresh.samples({projectCodes:$scope.searchService.form.projectCodes});

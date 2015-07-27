@@ -279,7 +279,10 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			resetForm : function(){
 				this.form = {};									
 			},
-
+			
+			resetSampleCodes : function(){
+				this.form.sampleCodes = [];									
+			},
 
 			search : function(){
 				this.updateForm();
