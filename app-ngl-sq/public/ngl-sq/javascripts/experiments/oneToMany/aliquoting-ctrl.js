@@ -8,11 +8,12 @@ angular.module('home').controller('AliquotingCtrl',['$scope', '$window','datatab
 			name:"FDR_prepaFC",
 			columns:[
 			         {
-			        	 "header":Messages("containers.table.support.column"),
-			        	 "property":"outputPositionX",
+			        	 "header":Messages("containers.table.code"),
+			        	 "property":"inputContainerUsed.code",
 			        	 "order":true,
 			        	 "type":"text",
 			        	 "position":0,
+			        	 "mergeCells" : true,
 			        	 "extraHeaders":{0:"solution stock"}
 			         },
 			         {
@@ -82,6 +83,9 @@ angular.module('home').controller('AliquotingCtrl',['$scope', '$window','datatab
 			         search:{
 			        	 active:false
 			         },
+			         mergeCells:{
+			        	active:true 
+			         },
 			         order:{
 			        	 mode:'local', //or 
 			        	 active:true,
@@ -140,25 +144,28 @@ angular.module('home').controller('AliquotingCtrl',['$scope', '$window','datatab
 	
 	});
 
-	//Call when the view need to add the instrument propeties for the input
 	$scope.$on('addInstrumentPropertiesInput', function(e, data, possibleValues) {
-	
+		var column = $scope.datatable.newColumn(data.name,"inputInstrumentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Inputs","1":"Instruments"});
+		column.defaultValues = data.defaultValue;
+		$scope.datatable.addColumn(2,column);
 	});
-
 	
-	//Call when the view need to add the experiment properties for the input
 	$scope.$on('addExperimentPropertiesInput', function(e, data, possibleValues) {
-	
+		var column = $scope.datatable.newColumn(data.name,"inputExperimentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Inputs","1":"Experiments"});
+		column.defaultValues = data.defaultValue;
+		$scope.datatable.addColumn(2,column);
 	});
-
-	//Call when the view need to add the experiment properties for the output
+	
 	$scope.$on('addExperimentPropertiesOutput', function(e, data, possibleValues) {
-	
+		var column = $scope.datatable.newColumn(data.name,"outputExperimentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Outputs","1":"Experiments"});
+		column.defaultValues = data.defaultValue;
+		$scope.datatable.addColumn(-1,column);
 	});
-
-	//Call when the view need to add the instrument properties for the output
-	$scope.$on('addInstrumentPropertiesOutput', function(e, data, possibleValues) {
 	
+	$scope.$on('addInstrumentPropertiesOutput', function(e, data, possibleValues) {
+		var column = $scope.datatable.newColumn(data.name,"outputInstrumentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Outputs","1":"Instruments"});
+		column.defaultValues = data.defaultValue;
+		$scope.datatable.addColumn(-1,column);
 	});
 
 	//Add the output informations to the view
@@ -262,8 +269,8 @@ angular.module('home').controller('AliquotingCtrl',['$scope', '$window','datatab
 
 	//Call when the view need to save
 	$scope.$on('save', function(e, promises, func, endPromises) {	
-		//push in the promises the promise of the save you need to do
-		//promises.push($scope.datatable.save());
+		//push in the promises of the save you need to do
+		promises.push($scope.datatable.save());
 		
 		//Don't change that:
 		$scope.$emit('viewSaved', promises, func,endPromises);
@@ -301,48 +308,15 @@ angular.module('home').controller('AliquotingCtrl',['$scope', '$window','datatab
 
 	//Call when we need to init the atomicTransfertMethod
 	$scope.$on('initAtomicTransfert', function(e, containers, atomicTransfertMethod) {
+		$scope.experiment.value.atomicTransfertMethods = [];
+		var i = 0;
+		angular.forEach(containers, function(container){
+			$scope.experiment.value.atomicTransfertMethods[i] = {class:atomicTransfertMethod, line:(i+1), column:1, inputContainerUseds:[],outputContainerUseds:[{experimentProperties:{}}]};
+			$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.push(container);
+			i++;
+		});
 	});
-	
-	
-	//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	/*When the drag and drop is needed*/
-	$scope.drop = function(e, data, droppedItem, ngModel, alreadyInTheModel) {
-		//capture the number of the atomicTransfertMethod
-		if(!alreadyInTheModel){
-			var array_regexp = /^experiment.value.atomicTransfertMethods\[([0-9]+)\].+/;
-			var model = e.dataTransfer.getData('Model');
-	
-			var match = model.match(array_regexp);
-			if(!match){
-				$scope[model].splice($scope[model].indexOf(data), 1);	   
-			}else{
-				$scope.experiment.value.atomicTransfertMethods[match[1]].inputContainerUseds.splice($scope.experiment.value.atomicTransfertMethods[match[1]].inputContainerUseds.indexOf(data), 1);
-			}
-	
-			$scope.atomicTransfere.reloadContainerDragNDrop(undefined, undefined, $scope.datatable);
-			$scope.scanOpenedAll();
-		}
-	};
 
-	$scope.beforeDropData = function(e, data, ngModel, alreadyInTheModel){
-		if(!alreadyInTheModel){
-			var array_regexp = /^experiment.value.atomicTransfertMethods\[([0-9]+)\].+/;
-			var match = ngModel.match(array_regexp);
-			if(match){
-				$scope.rows[match[1]]= true;
-				
-				if(angular.isDefined($scope.experiment.value.atomicTransfertMethods)){
-					$scope.scanOpenedAll();
-				}
-				
-			}
-		}
-		
-		return data;
-	};
-
-	//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	
 
 	//Init
 	//init the input/output you want
@@ -357,7 +331,7 @@ angular.module('home').controller('AliquotingCtrl',['$scope', '$window','datatab
 
 	if($scope.experiment.editMode){
 		//When the experiment already exist
-		$scope.atomicTransfere.loadExperiment(/*the input*/);
+		$scope.atomicTransfere.loadExperiment($scope.datatable);
 		if(!angular.isUndefined(mainService.getBasket())){
 			$scope.basket = mainService.getBasket().get();
 			if($scope.basket.length > 0){

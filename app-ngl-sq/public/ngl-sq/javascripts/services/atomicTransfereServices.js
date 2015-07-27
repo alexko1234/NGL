@@ -448,6 +448,32 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 							}
 						}
 					}
+				},
+				loadOutputContainers : function(containerUseds){
+					var results = {containers:[],promises:[]};
+					var that = this;
+					angular.forEach($scope.experiment.value.atomicTransfertMethods, function(atomicTransfertMethod){
+						/*if(atomicTransfertMethod.outputContainerUseds[0] != undefined && atomicTransfertMethod.outputContainerUseds[0].code != null){
+							var result = varExperimentCommonFunctions.loadContainer(atomicTransfertMethod.outputContainerUseds[0]);
+							results.promises.push(result.promise);
+							result.promise.then(function(container){
+								if(container.data.length > 0){
+									results.containers = results.containers.concat(container.data);
+								}
+							});
+						}*/
+						var i = 0;
+						for(i=0;i<containerUseds.length;i++){
+							var result = varExperimentCommonFunctions.loadContainer(atomicTransfertMethod.outputContainerUseds[i]);
+							results.promises.push(result.promise);
+							result.promise.then(function(container){
+								if(container.data.length > 0){
+									results.containers = results.containers.concat(container.data);
+								}
+							});
+						}
+					});
+					return results;
 				}
 		};
 
@@ -735,8 +761,18 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 				},
 				newExperiment : function(input){
 					if(inputType === "datatable"){
-						varExperimentCommonFunctions.newExperimentDatatable(input);
+						//varExperimentCommonFunctions.newExperimentDatatable(input);
+						varExperimentCommonFunctions.newExperiment(function(containers){
+							var contaiersOutputBased = [];
+							var i=0;
+							for(i=0;i<containers.length;i++){
+								var container = {"inputContainerUsed":containers[i]};
+								contaiersOutputBased.push(container);
+							}
+							input.setData(contaiersOutputBased,contaiersOutputBased.length);
+						});
 					}
+					$scope.addExperimentPropertiesInputsColumns();
 				}
 		};
 
