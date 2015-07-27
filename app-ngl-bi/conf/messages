@@ -620,7 +620,6 @@ balanceSheets.page.title = Bilan de production
 balanceSheets.info.loading = Chargement du bilan en cours
 
 balanceSheets.menu = Bilans
-balanceSheets.actualYear = 2015
 balanceSheets.year = Année run
 balanceSheets.nbBases = Nombre de bases Illumina
 balanceSheets.runTypeCode = Type séquençage
@@ -642,6 +641,12 @@ balanceSheets.sequencingType = Type séquençage
 balanceSheets.property = Propriété
 balanceSheets.value = Valeur
 balanceSheets.otherSampleTypeCode = autre
+
+balanceSheets.export.firstTen = 10Projets
+balanceSheets.export.sequencingType = TypeSeq
+balanceSheets.export.quarters = Trimestre
+balanceSheets.export.projectType = TypeProjet
+balanceSheets.export.general = General 
 
 balanceSheets.tab.year = Année 
 balanceSheets.tab.generalBalanceSheets = Bilan général

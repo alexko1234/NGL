@@ -823,6 +823,10 @@
 					 text : Messages("balanceSheets.nbBases")
 				 }
 			 },
+			 exporting : {
+				 enabled : true,
+				 filename : Messages('balanceSheets.export.quarters')+actualYear
+			 },
 			 series : allSeries,
 			 plotOptions : {column:{grouping:false}}
 		 };
@@ -872,6 +876,10 @@
 		                }
 		            },
 					tickInterval : 2,
+				},
+				exporting : {
+					enabled : true,
+					filename : Messages('balanceSheets.export.sequencingType') + actualYear
 				},
 				series : [{
 					name : Messages("balanceSheets.nbBases"), 
@@ -925,6 +933,10 @@
 				 showInLegend : true
 					 }
 				 },
+				 exporting : {
+					 enabled : true,
+					 filename : Messages('balanceSheets.export.firstTen') + actualYear
+				 },
 				 series : [{
 					 name : Messages("balanceSheets.percentage"),
 					 data : allData,
@@ -973,6 +985,10 @@
 						 },
 				 		 showInLegend : true
 					 }
+				 },
+				 exporting : {
+					 enabled : true,
+					 filename : Messages('balanceSheets.export.projectType') + actualYear
 				 },
 				 series : [{
 					 name : Messages("balanceSheets.percentage"),
@@ -1247,6 +1263,10 @@
 				                }
 				            },
 							tickInterval : 2,
+						},
+						exporting : {
+							enabled : true,
+							filename : Messages('balanceSheets.export.general') + actualYear
 						},
 						series : [{
 							type : 'column',

@@ -290,6 +290,7 @@
 			$http.get(jsRoutes.controllers.stats.api.StatsConfigurations.get(chartService.reportingConfigurationCode).url).success(function(data, status,	headers, config) {
 				statsConfigs = data.statsForm; 
 				queriesConfigs =[{form : data.queryForm}];
+				console.log(data);
 				//synchronize other tab
 				statsConfigReadSetsService.init();
 				queriesConfigReadSetsService.init();
@@ -523,6 +524,10 @@
 					}
 				} ]
 			},
+			exporting : {
+				enabled : true, 
+				filename : queriesConfigs[0].form.projectCodes[0] + '_Zscore_' + Messages(statsConfig.column.header)
+			},
 			series : allSeries,
 			plotOptions : {column:{grouping:false}}
 		};
@@ -625,6 +630,10 @@
 				title : {
 					text : Messages(statsConfig.column.header)
 				}
+			},
+			exporting : {
+				enabled : true, 
+				filename : queriesConfigs[0].form.projectCodes[0] + '_' + Messages(statsConfig.column.header)
 			},
 			series : allSeries,
 			plotOptions : {column:{grouping:false}}
