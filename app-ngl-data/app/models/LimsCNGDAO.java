@@ -88,7 +88,7 @@ public class LimsCNGDAO {
 		
 		project.code = rs.getString("code");
 		project.name = rs.getString("name").trim();
-		Logger.debug("project.code=" + project.code);		
+		//Logger.debug("project code=" + project.code);		
 		
 		project.typeCode=PROJECT_TYPE_CODE_DEFAULT;
 		ProjectType projectType=null;
@@ -145,7 +145,7 @@ public class LimsCNGDAO {
 			
 			// FDS 05/06/2015 JIRA NGL-672  remplacer default-sample-cng par le veritable sampleType
 			String sampleTypeCode=rs.getString("sample_type");
-			Logger.debug("Sample code :"+sample.code+ " Sample type code :"+sampleTypeCode);
+			//Logger.debug("Sample code :"+sample.code+ " Sample type code :"+sampleTypeCode);
 			
 			SampleType sampleType=null;
 			try {
@@ -167,7 +167,7 @@ public class LimsCNGDAO {
 
 			sample.importTypeCode=IMPORT_TYPE_CODE_DEFAULT;
 		
-			//FDS: plus necessaire car un sample n'appartient plus qu'a un seul projet !!
+			//FDS: plus necessaire car un sample n'appartient plus qu'a un seul projet ?? A VERIFIER
 			sample.projectCodes=new HashSet<String>();
 			if (rs.getString("project") != null) {
 				sample.projectCodes.add(rs.getString("project"));
@@ -213,7 +213,6 @@ public class LimsCNGDAO {
 		
 		container.traceInformation = new TraceInformation();
 		container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
-		// 19/06/2015 renommage code => container_code
 		container.code = rs.getString("container_code");
 		//Logger.debug("[commonContainerMapRow] Container code :"+container.code);
 		
@@ -264,14 +263,13 @@ public class LimsCNGDAO {
 		}
 		// prevoir les well (plaques96) les puits ont des concentrations !!!!
 		
-		//Array List plus nécessaire, une library n'est plus attribuée qu'a un seul projet
+		// List plus nécessaire, une library n'est plus attribuée qu'a un seul projet ??
 		if (rs.getString("project")!=null) {
 			container.projectCodes = new HashSet<String>();
 			container.projectCodes.add(rs.getString("project"));
 		}		
 		
 		// creation du content d'un container
-		// 19/06/2015 renommage code_sample => sample_code
 		if (rs.getString("sample_code")!=null) {
 			Content content=new Content();
 			content.sampleCode = rs.getString("sample_code");
@@ -347,7 +345,6 @@ public class LimsCNGDAO {
 	 */
 	private ContainerSupport commonContainerSupportMapRow(ResultSet rs, int rowNum, ContextValidation ctxErr) throws SQLException {
 		ContainerSupport containerSupport = new ContainerSupport();	
-		//19/06/2015 renommage code_support => support_code
 		containerSupport.code = rs.getString("support_code");
 		
 		if (rs.getString("seq_program_type").equals("PE") || rs.getString("seq_program_type").equals("SR")) {
@@ -452,6 +449,7 @@ public class LimsCNGDAO {
 		int x = 1;
 		int listSize = results.size(); 
 		 while (pos < listSize-1) {
+			 // meme recodage a faire que pour les containers...TODO
              while ( (pos < listSize-1) && (results.get(pos).code.equals( results.get(pos+x).code ))   ) {
                      // difference between the two project codes
                      if (! results.get(pos).projectCodes.toArray(new String[0])[0].equals(results.get(pos+x).projectCodes.toArray(new String[0])[0])) {
@@ -620,28 +618,34 @@ public class LimsCNGDAO {
 		int x = 1;
 		int listSize = results.size();
 		Boolean findContent;
+		Content[] tmpArray = new Content[1];
 		
 		while (pos < listSize-1) {
 			
 			while ( (pos < listSize-1) && (results.get(pos).code.equals(results.get(pos+x).code)) ) {
+				// 10-07-15 refactored by NW
 				//Logger.debug("demultiplex "+ results.get(pos).code);
+				assert results.get(pos+x).sampleCodes.size() <= 1;
 				
 				// difference between two consecutive sampleCodes
-				if (! results.get(pos).sampleCodes.toArray(new String[0])[0].equals(results.get(pos+x).sampleCodes.toArray(new String[0])[0])) {
-					if (! results.get(pos).sampleCodes.contains(results.get(pos+x).sampleCodes.toArray(new String[0])[0])) {
-							
-						results.get(pos).sampleCodes.add( results.get(pos+x).sampleCodes.toArray(new String[0])[0] );
+				java.util.Iterator<String> iter = results.get(pos+x).sampleCodes.iterator();
+				if (iter.hasNext()) {
+					String oneSampleCode = iter.next();
+					if (! results.get(pos).sampleCodes.contains(oneSampleCode)) {
+						results.get(pos).sampleCodes.add(oneSampleCode);
 					}
 				}
-								
+
 				findContent = false;
 				//just to be sure that we don't create content in double
 				// FDS 16/06/2015 get("sampleAliquoteCode") ajouté pour JIRA NGL-273
 				for (Content content : results.get(pos).contents) {
-					if ( (content.sampleCode.equals(results.get(pos+x).contents.toArray(new Content[0])[0].sampleCode))  
-								&& (content.properties.get("tag").value.equals(results.get(pos+x).contents.toArray(new Content[0])[0].properties.get("tag").value)) 
-								&& (content.properties.get("libProcessTypeCode").value.equals(results.get(pos+x).contents.toArray(new Content[0])[0].properties.get("libProcessTypeCode").value)) 
-								&& (content.properties.get("sampleAliquoteCode").value.equals(results.get(pos+x).contents.toArray(new Content[0])[0].properties.get("sampleAliquoteCode").value)) ){
+					// Content nextContent = results.get(pos+x).contents.iterator().next();
+					Content nextContent = results.get(pos+x).contents.toArray(tmpArray)[0];
+					if ( (content.sampleCode.equals(nextContent.sampleCode))  
+								&& (content.properties.get("tag").value.equals(nextContent.properties.get("tag").value)) 
+								&& (content.properties.get("libProcessTypeCode").value.equals(nextContent.properties.get("libProcessTypeCode").value)) 
+								&& (content.properties.get("sampleAliquoteCode").value.equals(nextContent.properties.get("sampleAliquoteCode").value)) ) {
 						findContent = true;
 						//Logger.debug("content already created !");
 						break;
@@ -659,33 +663,27 @@ public class LimsCNGDAO {
 		}	
 		
 		for (Container r : results) {
-			for (int i=0; i<r.contents.size(); i++) {
-				
-				//remove bad properties
-				// FDS comments 04/05/2015 : valeurs -1 positionnées dans commonContainerMapRow 
+			// 10-07-15 refactored by NW
+			
+			//For now we have not the % of each content=> assume equimolarity !
+			//Logger.debug("Nb contents in container=" + r.contents.size());
+			//calcul identique pour les contents d'un meme container=>ne pas mettre dans le for!!
+			Double equiPercent = ContainerHelper.getEquiPercentValue(r.contents.size());
+			//Logger.debug("equiPercent="+equiPercent);
+			
+			for (Content content : r.contents) {		
+				//remove bad properties;  FDS comments 04/05/2015 : valeurs -1 positionnées dans commonContainerMapRow 
 
-				// FDS 04/05/2015 ajout test if =!null car il y a des cas => null pointer exception!!
-				if ((r.contents.toArray(new Content[0])[0].properties.get("tag")!= null) && (r.contents.toArray(new Content[0])[0].properties.get("tag").value.equals("-1"))) {
-					r.contents.toArray(new Content[0])[0].properties.remove("tag");
-				}
-				// FDS 04/05/2015 ajout test if =!null car il y a des cas => null pointer exception!!
-				if ((r.contents.toArray(new Content[0])[0].properties.get("tagCategory")!= null) && (r.contents.toArray(new Content[0])[0].properties.get("tagCategory").value.equals("-1"))) {
-					r.contents.toArray(new Content[0])[0].properties.remove("tagCategory");
-				}
-				
-				if ((r.contents.toArray(new Content[0])[0].properties.get("libProcessTypeCode") != null) && (r.contents.toArray(new Content[0])[0].properties.get("libProcessTypeCode").value.equals("-1"))) {
-					r.contents.toArray(new Content[0])[0].properties.remove("libProcessTypeCode");
-				}
-				
-				//FDS 17/06/2015 ajout pour JIRA NGL-673
-				if ((r.contents.toArray(new Content[0])[0].properties.get("sampleAliquoteCode") != null) && (r.contents.toArray(new Content[0])[0].properties.get("sampleAliquoteCode").value.equals("-1"))) {
-					r.contents.toArray(new Content[0])[0].properties.remove("sampleAliquoteCode");
+				// FDS 17/06/2015 ajout sampleAliquoteCode pour JIRA NGL-673
+				for (String propName : new String[]{"tag", "tagCategory", "libProcessTypeCode", "sampleAliquoteCode"}) {
+					PropertyValue<?> propVal = content.properties.get(propName);
+					if (propVal != null && (propVal.value == null || propVal.value.equals("-1"))) {
+						content.properties.remove(propName);
+					}
 				}
 				
 				//set percentage
-				//TODO : to change when we have the real values of percentage
-				Double equiPercent = ContainerHelper.getEquiPercentValue(r.contents.size());
-				r.contents.toArray(new Content[0])[0].percentage = equiPercent; 
+				content.percentage = equiPercent; 
 			}
 		}	
 		
@@ -724,6 +722,9 @@ public class LimsCNGDAO {
 	 */
 	public static List<Container>  createContent(List<Container> results, int posCurrent, int posNext) throws DAOException{
 		Content content = new Content();
+		
+		//FDS refactor todo ???    toArray(new String[0])[0]; !!!!
+		
 		content.sampleCode = results.get(posNext).sampleCodes.toArray(new String[0])[0];
 		content.projectCode = results.get(posNext).projectCodes.toArray(new String[0])[0];
 		
@@ -1065,6 +1066,8 @@ public class LimsCNGDAO {
 						index.sequence=rs.getString("sequence");
 						index.traceInformation=new TraceInformation();
 						InstanceHelpers.updateTraceInformation(index.traceInformation, "ngl-data");
+						
+						//Logger.debug("index code:"+index.code);
 						return index;
 					}
 				});
