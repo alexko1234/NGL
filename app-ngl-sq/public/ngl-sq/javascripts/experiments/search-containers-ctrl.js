@@ -216,6 +216,10 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		
 	};
 	
+	$scope.resetSampleCodes = function(){
+		$scope.searchService.form.sampleCodes = [];									
+	};
+	
 	$scope.loadExperimentTypesLists = function(){
 		$scope.searchService.lists.refresh.experimentTypes({categoryCode:"purification"}, "purification");
 		$scope.searchService.lists.refresh.experimentTypes({categoryCode:"qualitycontrol"}, "qualitycontrol");
