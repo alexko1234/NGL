@@ -221,7 +221,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
 			         {
-			        	 "header":Messages("loadingReport.preLoadingNbActivePores"),
+			        	 "header":Messages("qcFlowcell.preLoadingNbActivePores"),
 			        	 "property":"preLoadingNbActivePores",
 			        	 "order":true,
 						 "edit":true,
@@ -330,9 +330,10 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 	});
 	
 	$scope.init_atomicTransfert = function(containers, atomicTransfertMethod){
-			$scope.experiment.value.atomicTransfertMethods[0] = {class:atomicTransfertMethod, inputContainerUseds:[], line:"1", column:"1"};
+			$scope.experiment.value.atomicTransfertMethods[0] = {class:atomicTransfertMethod, inputContainerUseds:[], line:"1", column:"1", outputContainerUseds:[]};
 			angular.forEach(containers, function(container){
 				$scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds.push({code:container.code,instrumentProperties:{},experimentProperties:{},state:container.state,locationOnContainerSupport:container.support});
+				$scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds.push({instrumentProperties:{},experimentProperties:{}});
 			});
 	};
 	
@@ -341,6 +342,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 	});
 	
 	$scope.$on('addInstrumentPropertiesInputToScope', function(e, data) {
+		if($scope.datatable.getData() != undefined){
 		for(var i=0;i<$scope.datatable.getData().length;i++){
 			for(var j=0; j<data.length;j++){
 				if($scope.getLevel( data[j].levels, "ContainerIn")){
@@ -353,6 +355,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 				}
 			}
 		}
+	  }
 	});
 	
 	$scope.$on('addExperimentPropertiesOutputToScope', function(e, data) {
@@ -403,6 +406,12 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 	});
 	
 	$scope.$on('save', function(e, promises, func, endPromises) {
+		promises.push($scope.datatableLoadingReport.save());
+		promises.push($scope.datatableQcFlowcell.save());
+
+		$scope.setValidePercentage($scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds);
+		outputLoadingReportToExperiment($scope.datatableLoadingReport);
+		outputQcFlowcellToExperiment($scope.datatableQcFlowcell);
 		promises.push($scope.datatable.save());
 		$scope.$emit('viewSaved', promises, func, endPromises);
 	});
@@ -418,6 +427,8 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 	
 	$scope.$on('outputToExperiment', function(e, atomicTransfertMethod) {
 		$scope.atomicTransfere.outputToExperiment($scope.datatable);
+		outputLoadingReportToExperiment($scope.datatableLoadingReport);
+		outputQcFlowcellToExperiment($scope.datatableQcFlowcell);
 	});
 	
 	$scope.$on('experimentToOutput', function(e, atomicTransfertMethod) {
@@ -435,9 +446,43 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 	
 	$scope.$on('experimentLoaded',function(e){
 		console.log("experimentLoaded");
-		$scope.datatableQcFlowcell.setData($scope.experiment.value.atomicTransfertMethods[0].intputContainerUsed[0].properties.loadingReport.value);
-		//$scope.datatableQcFlowcell.setData($scope.experiment.value.atomicTransfertMethods[0].outputContainerUsed[0].properties.qcFlowcell);
+		$scope.datatableQcFlowcell.setData($scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].experimentProperties.qcFlowcell.value);
+		$scope.datatableLoadingReport.setData($scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].experimentProperties.loadingReport.value);
 	});
+	
+	var outputLoadingReportToExperiment =function(output){
+		var allData = output.getData();
+		if(allData != undefined){
+			if($scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].experimentProperties==undefined){
+				$scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].experimentProperties={};
+			}
+			$scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].experimentProperties.loadingReport={value:[],_type:"object_list"};
+			$scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].experimentProperties.loadingReport.value=$scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].experimentProperties.loadingReport.value.concat(allData);
+		}
+	};
+	
+	
+	var outputQcFlowcellToExperiment =function(output){
+		var allData = output.getData();
+		if(allData != undefined){
+			if($scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].experimentProperties==undefined){
+				$scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].experimentProperties={};
+			}
+			$scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].experimentProperties.qcFlowcell={value:[],_type:"object_list"};
+			$scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].experimentProperties.qcFlowcell.value = $scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].experimentProperties.qcFlowcell.value.concat(allData);
+		}
+	};
+	
+	
+	$scope.setValidePercentage = function(containerUseds){
+		var l = containerUseds.length;
+		angular.forEach(containerUseds, function(container){			
+				if(container.percentage != 100/l){
+					container.percentage = 100/l;
+				}			
+		});
+		
+	};
 	
 	//Init
 	$scope.datatable = datatable($scope.datatableConfig);
