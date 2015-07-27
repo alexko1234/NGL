@@ -641,6 +641,7 @@ balanceSheets.nbSequencingType = Nombre de bases Illumina par type séquençage
 balanceSheets.sequencingType = Type séquençage
 balanceSheets.property = Propriété
 balanceSheets.value = Valeur
+balanceSheets.otherSampleTypeCode = autre
 
 balanceSheets.tab.year = Année 
 balanceSheets.tab.generalBalanceSheets = Bilan général

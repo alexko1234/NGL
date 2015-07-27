@@ -102,11 +102,14 @@
 		 	.success(function(data, status, headers, config) {
 				 stillLoading = true;
 				 for(var i = 0; i < data.length; i++){
-					 if(data[i].sampleOnContainer != null || data[i].sampleOnContainer != undefined){
-						 data[i].runSequencingStartDate = convertToDate(data[i].runSequencingStartDate);
-						 total += data[i].treatments.ngsrg.default.nbBases.value;	 
-						 readsets.push(data[i]);
+					 if(data[i].sampleOnContainer == null || data[i].sampleOnContainer == undefined){
+						 data[i].sampleOnContainer = {
+								 sampleTypeCode : Messages("balanceSheets.otherSampleTypeCode")
+						 };
 					 }
+					 data[i].runSequencingStartDate = convertToDate(data[i].runSequencingStartDate);
+					 total += data[i].treatments.ngsrg.default.nbBases.value;	 
+					 readsets.push(data[i]);
 				 }
 			 data = [];
 			 $http.get(jsRoutes.controllers.runs.api.Runs.list().url, {params : runForm}).success(function(runData, status, headers, config) {
