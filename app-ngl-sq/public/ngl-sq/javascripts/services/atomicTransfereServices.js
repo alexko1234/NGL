@@ -735,7 +735,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 				},
 				newExperiment : function(input){
 					if(inputType === "datatable"){
-						varexperimentCommonFunctions.newExperimentDatatable(input);
+						varExperimentCommonFunctions.newExperimentDatatable(input);
 					}
 				}
 		};

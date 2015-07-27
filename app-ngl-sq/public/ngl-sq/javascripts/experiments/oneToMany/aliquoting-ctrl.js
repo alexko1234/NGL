@@ -4,8 +4,123 @@
 */
 
 angular.module('home').controller('AliquotingCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','mainService','tabService','oneToMany', function($scope,$window, datatable, $http,lists,$parse,$q,$position,mainService,tabService,oneToMany) {
-	var datatableConfig = {
-			//The configuration of the datatable
+	$scope.datatableConfig = {
+			name:"FDR_prepaFC",
+			columns:[
+			         {
+			        	 "header":Messages("containers.table.support.column"),
+			        	 "property":"outputPositionX",
+			        	 "order":true,
+			        	 "type":"text",
+			        	 "position":0,
+			        	 "extraHeaders":{0:"solution stock"}
+			         },
+			         {
+			        	 "header":Messages("containers.table.supportCode"),
+			        	 "property":"inputSupportCode",
+			        	 "order":true,
+			        	 "type":"text",
+			        	 "position":1,
+			        	 "extraHeaders":{0:"solution stock"}
+			         },
+			         {
+			        	 "header":Messages("containers.table.tags"),
+			        	 "property":"inputTags",
+			        	 "order":true,
+			        	 "type":"text",
+			        	 "edit":false,
+			        	 "position":2,
+			        	 "render":"<div list-resize='value.data.inputTags | unique' below-only-deploy>",
+			        	 "extraHeaders":{0:"solution stock"}
+			         },
+			         {
+			        	 "header":function(){
+			        		 return Messages("containers.table.concentration") +" (nM)";
+			        	 },
+			        	 "property":"inputConcentration",
+			        	 "order":true,
+			        	 "type":"number",
+			        	 "edit":false,
+			        	 "position":3,
+			        	 "extraHeaders":{0:"solution stock"}
+			         },
+			         {
+			        	 "header":function(){
+			        		 return Messages("containers.table.volume") +" (µl)";
+			        	 },
+			        	 "property":"inputVolume.value",
+			        	 "order":true,
+			        	 "type":"number",
+			        	 "edit":false,
+			        	 "position":4,
+			        	 "extraHeaders":{0:"solution stock"}
+			         },
+			         {
+			        	 "header":Messages("containers.table.state.code"),
+			        	 "property":"inputState.code",
+			        	 "order":true,
+			        	 "type":"text",
+			        	 "edit":false,
+			        	 "position":5,
+			        	 "extraHeaders":{0:"solution stock"},
+			        	 "filter":"codes:'state'"
+			         },
+			         {
+			        	 "header":Messages("containers.table.percentage"),
+			        	 "property":"inputContainerUsed.percentage",
+			        	 "order":true,
+			        	 "type":"number",
+			        	 "edit":false,
+			        	 "position":41,
+			        	 "extraHeaders":{0:"prep FC"}
+			         }
+			         ],
+			         compact:true,
+			         pagination:{
+			        	 active:false
+			         },		
+			         search:{
+			        	 active:false
+			         },
+			         order:{
+			        	 mode:'local', //or 
+			        	 active:true,
+			        	 by:'outputPositionX'
+			         },
+			         remove:{
+			        	 active:false,
+			         },
+			         hide:{
+			        	 active:true
+			         },
+			         edit:{
+			        	 active: !$scope.doneAndRecorded,
+			        	 columnMode:true
+			         },
+			         save:{
+			        	 active:true,
+			        	 withoutEdit: true,
+			        	 showButton:false,
+			        	 mode:'local'
+			         },
+			         messages:{
+			        	 active:false,
+			        	 columnMode:true
+			         },
+			         exportCSV:{
+			        	 active:true,
+			        	 showButton:true,
+			        	 delimiter:";",
+			        	 start:false			        	 
+			         },
+			         extraHeaders:{
+			        	 number:2,
+			        	 dynamic:true,
+			         },
+			         otherButton:{
+			        	 active:true,
+			        	 template:'<button class="btn btn btn-info" ng-click="newPurif()" data-toggle="tooltip" ng-disabled="experiment.value.state.code != \'F\'" ng-hide="!experiment.doPurif" title="'+Messages("experiments.addpurif")+'">Messages("experiments.addpurif")</button><button class="btn btn btn-info" ng-click="newQc()" data-toggle="tooltip" ng-disabled="experiment.value.state.code != \'F\'" ng-hide="!experiment.doQc" title="Messages("experiments.addqc")">Messages("experiments.addqc")</button>'
+			         }
 	};
 	
 	//This function copy the experiment informations in the input
@@ -231,6 +346,7 @@ angular.module('home').controller('AliquotingCtrl',['$scope', '$window','datatab
 
 	//Init
 	//init the input/output you want
+	$scope.datatable = datatable($scope.datatableConfig);
 	$scope.experiment.outputGenerated = false;
 	$scope.atomicTransfere = oneToMany($scope, "datatable", "none");
 	$scope.inputContainers = [];
