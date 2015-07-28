@@ -52,7 +52,7 @@ public class Containers extends CommonController {
 	      		controllers.commons.api.routes.javascript.CommonInfoTypes.list(),
 	      		controllers.commons.api.routes.javascript.Values.list(),
 	      		controllers.containers.api.routes.javascript.Contents.list(),
-	      		controllers.commons.api.routes.javascript.Parameters.list() // GA ajout 24/07/2015
+	      		controllers.commons.api.routes.javascript.Parameters.list()
   	      )	  	      
   	    );
   	}

@@ -190,7 +190,8 @@ public class Experiments extends CommonController{
   	    		controllers.experiments.api.routes.javascript.Experiments.endOfProcess(),
   	    		controllers.experiments.api.routes.javascript.Experiments.stopProcess(),
   	    		controllers.containers.api.routes.javascript.Containers.updateStateBatch(),
-	      		controllers.containers.api.routes.javascript.Contents.list()
+	      		controllers.containers.api.routes.javascript.Contents.list(),
+	      		controllers.commons.api.routes.javascript.Parameters.list()
   	      )	  	      
   	    );
   	}
