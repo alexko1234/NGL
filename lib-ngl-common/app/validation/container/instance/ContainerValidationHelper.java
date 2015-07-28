@@ -51,16 +51,9 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 				contextValidation.addKeyToRootKeyName("contents."+i);
 				iterator.next().validate(contextValidation);
 				contextValidation.removeKeyFromRootKeyName("contents."+i);
-				Logger.debug("==> content." + i);
+				//Logger.debug("==> content." + i);  FDS debug supprimé
 				i++;
 			}
-			
-		/*	for(int i=0;i<contents.size();i++){
-				    contextValidation.addKeyToRootKeyName("contents."+i);
-					contents.get(i).validate(contextValidation);
-					contextValidation.removeKeyFromRootKeyName("contents."+i);
-					Logger.debug("==> content." + i);
-			} */		
 
 			validateContentPercentageSum(contents, contextValidation);
 		}
@@ -80,6 +73,7 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 				percentageSum = percentageSum + t.percentage;
 			}							
 		}
+		// NOTE do not test exactilty 100 because of floating values...
 		if(!(Math.abs(100.00-percentageSum)<=0.40)){
 			contextValidation.addKeyToRootKeyName("contents");
 			contextValidation.addErrors("percentageSum", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, percentageSum);
@@ -104,7 +98,6 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 		}
 	}
 
-	
 	public static void validateStateCode(Container container,ContextValidation contextValidation) {
 		
 		boolean workflow=false;
@@ -121,8 +114,5 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 		contextValidation.addKeyToRootKeyName("state");
 		CommonValidationHelper.validateStateCode(container.state.code,ObjectType.CODE.Container, contextValidation);
 		contextValidation.removeKeyFromRootKeyName("state");
-
 	}
-
-
 }

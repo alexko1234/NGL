@@ -1,4 +1,4 @@
-package controllers.umbrellaprojects.api;
+package controllers.projects.api;
 
 import java.util.List;
 

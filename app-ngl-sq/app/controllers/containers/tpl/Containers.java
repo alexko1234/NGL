@@ -51,7 +51,8 @@ public class Containers extends CommonController {
 	      		controllers.reporting.api.routes.javascript.FilteringConfigurations.list(),
 	      		controllers.commons.api.routes.javascript.CommonInfoTypes.list(),
 	      		controllers.commons.api.routes.javascript.Values.list(),
-	      		controllers.containers.api.routes.javascript.Contents.list()
+	      		controllers.containers.api.routes.javascript.Contents.list(),
+	      		controllers.commons.api.routes.javascript.Parameters.list()
   	      )	  	      
   	    );
   	}
