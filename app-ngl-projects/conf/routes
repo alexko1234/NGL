@@ -53,9 +53,6 @@ PUT   	/api/umbrellaprojects/:code 					@controllers.projects.api.UmbrellaProjec
 #DELETE	/api/umbrellaprojects/:code						@controllers.projects.api.UmbrellaProjects.delete(code:java.lang.String)
 
 
-#migration
-GET		/addBioinformaticParameters						controllers.migration.AddBioinformaticParameters.migration()
-
 ->  /authentication authentication.Routes
 
 

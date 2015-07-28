@@ -10,7 +10,7 @@ import org.mongojack.JacksonDBCollection;
 import play.Logger;
 import play.mvc.Result;
 import controllers.CommonController;
-import controllers.migration.models.ReadSetOld2;
+
 import fr.cea.ig.MongoDBDAO;
 
 public class RemoveStateFromFile  extends CommonController {
@@ -22,7 +22,6 @@ public class RemoveStateFromFile  extends CommonController {
 		JacksonDBCollection<ReadSet, String> readSetsCollBck = MongoDBDAO.getCollection(READSET_ILLUMINA_BCK, ReadSet.class);
 		if(readSetsCollBck.count() == 0){
 			Logger.info("Migration readset start");
-			backupReadSet();
 			
 			// joker "$" don't work, so replace it with 1 to 8 !
 			 MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.exists("files"), 
@@ -37,9 +36,5 @@ public class RemoveStateFromFile  extends CommonController {
 		return ok("Migration Finish");
 	}
 
-	private static void backupReadSet() {
-		Logger.info("\tCopie "+InstanceConstants.READSET_ILLUMINA_COLL_NAME+" start");		
-		MongoDBDAO.save(READSET_ILLUMINA_BCK, MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSetOld2.class).toList());
-		Logger.info("\tCopie "+InstanceConstants.READSET_ILLUMINA_COLL_NAME+" end");	
-	}
+	
 }
