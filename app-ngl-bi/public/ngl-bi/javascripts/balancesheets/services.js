@@ -33,7 +33,9 @@
 	 
 	 // Others
 	 var selectedYear = 0;
-	 var actualYear = new Date().getFullYear();
+	 var actualDay = new Date();
+	 console.log(actualDay.getMonth());
+	 var actualYear = actualDay.getFullYear();
 	 var stillLoading = false;
 	 var total = 0;
 	 	 
@@ -825,7 +827,7 @@
 			 },
 			 exporting : {
 				 enabled : true,
-				 filename : Messages('balanceSheets.export.quarters')+actualYear
+				 filename : actualYear + '-' + (actualDay.getMonth()+1) + '-' + actualDay.getUTCDate() + '-' + Messages('balanceSheets.export.quarters')
 			 },
 			 series : allSeries,
 			 plotOptions : {column:{grouping:false}}
@@ -879,8 +881,8 @@
 				},
 				exporting : {
 					enabled : true,
-					filename : Messages('balanceSheets.export.sequencingType') + actualYear
-				},
+					filename : actualYear + '-' + (actualDay.getMonth()+1) + '-' + actualDay.getUTCDate() + '-' + Messages('balanceSheets.export.sequencingType')
+					},
 				series : [{
 					name : Messages("balanceSheets.nbBases"), 
 					data : statData,
@@ -935,8 +937,8 @@
 				 },
 				 exporting : {
 					 enabled : true,
-					 filename : Messages('balanceSheets.export.firstTen') + actualYear
-				 },
+					 filename : actualYear + '-' + (actualDay.getMonth()+1) + '-' + actualDay.getUTCDate() + '-' + Messages('balanceSheets.export.firstTen')
+					 },
 				 series : [{
 					 name : Messages("balanceSheets.percentage"),
 					 data : allData,
@@ -988,8 +990,8 @@
 				 },
 				 exporting : {
 					 enabled : true,
-					 filename : Messages('balanceSheets.export.projectType') + actualYear
-				 },
+					 filename : actualYear + '-' + (actualDay.getMonth()+1) + '-' + actualDay.getUTCDate() + '-' + Messages('balanceSheets.export.projectType')
+					 },
 				 series : [{
 					 name : Messages("balanceSheets.percentage"),
 					 data : allData,
@@ -1089,7 +1091,8 @@
 			var dtSumYearly;
 			var chartYearlyBalanceSheets;
 			var isLoading = true;
-			var actualYear = new Date().getFullYear();
+			var actualDay = new Date();
+			var actualYear = actualDay.getFullYear();
 			
 			var loadData = function(){
 				isLoading = true;
@@ -1266,8 +1269,8 @@
 						},
 						exporting : {
 							enabled : true,
-							filename : Messages('balanceSheets.export.general') + actualYear
-						},
+							filename : actualYear + '-' + (actualDay.getMonth()+1) + '-' + actualDay.getUTCDate() + '-' + Messages('balanceSheets.export.general')
+							},
 						series : [{
 							type : 'column',
 							name : Messages("balanceSheets.nbBases"), 
