@@ -12,10 +12,6 @@ GET		/api/commons/types							controllers.commons.api.CommonInfoTypes.list()
 #list
 GET		/api/resolutions  							@controllers.resolutions.api.Resolutions.list()
 
-#projects
-GET		/api/projects								@controllers.projects.api.Projects.list()
-GET		/api/projects/:code							@controllers.projects.api.Projects.get(code: java.lang.String)
-
 #instruments
 GET		/api/instruments							controllers.instruments.api.Instruments.list()
 GET		/api/instruments/:code						controllers.instruments.api.Instruments.get(code: java.lang.String)
