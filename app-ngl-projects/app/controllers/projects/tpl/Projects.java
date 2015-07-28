@@ -46,7 +46,7 @@ public class Projects extends CommonController {
   	    		controllers.commons.api.routes.javascript.States.list(),
   	    		controllers.projects.api.routes.javascript.ProjectTypes.list(),
   	    		controllers.projects.api.routes.javascript.ProjectCategories.list(),
-  	    		controllers.umbrellaprojects.api.routes.javascript.UmbrellaProjects.list()
+  	    		controllers.projects.api.routes.javascript.UmbrellaProjects.list()
   	    	)	  	      
   	    );
   	  }
