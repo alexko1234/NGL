@@ -686,6 +686,30 @@ stats.tabs.charts = Graphiques
 stats.tabs.exclude = Valeurs exclues
 stats.tabs.query = Requête
 
+stats.removedReadsEcoli = % Removed Reads (E. coli)
+stats.bacteria = % Bacteria
+stats.eukaryota = % Eukaryota
+stats.chloroplast = % Chloroplast
+stats.mitochondri = % Mitochondri
+stats.triticum = % Triticum aestivum + triticeae + triticum
+stats.unknownNoHits = % Unknown::No hits
+stats.mergedReads = % Merged reads
+
+stats.export.validSequences = sequences_valides
+stats.export.usefulSequences = sequences_utiles
+stats.export.validSeqPercent = sequences_valides_par_piste
+stats.export.duplicatsPairs = duplicats_pairs
+stats.export.removedReadsEcoli = removed_reads_Ecoli
+stats.export.bacteria = bacteria
+stats.export.eukaryota = eukaryota
+stats.export.chloroplast = chloroplast
+stats.export.mitochondri = mitochondri
+stats.export.triticumTriticeae = triticum_triticeae
+stats.export.unknownNoHits = unknown_no_hits
+stats.export.rRNAR1 = rRNA_R1
+stats.export.estimatedMPInsertSize = estimated_MP_insert_size
+stats.export.mergedReads = merged_reads
+
 stats.typeCode = Type
 stats.property = Propriété
 stats.choice.question = Que souhaitez vous faire ?

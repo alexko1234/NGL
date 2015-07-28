@@ -284,13 +284,16 @@
 	var charts = [];
 	var excludeValues = [];
 	var statsConfigs, queriesConfigs = [];
+	var mapExportFileName = new Map();
+	var actualDay = new Date();
+
+	
 	var loadData = function() {
 		
 		if(chartService.reportingConfigurationCode !== undefined && chartService.reportingConfigurationCode !== null){
 			$http.get(jsRoutes.controllers.stats.api.StatsConfigurations.get(chartService.reportingConfigurationCode).url).success(function(data, status,	headers, config) {
 				statsConfigs = data.statsForm; 
 				queriesConfigs =[{form : data.queryForm}];
-				console.log(data);
 				//synchronize other tab
 				statsConfigReadSetsService.init();
 				queriesConfigReadSetsService.init();
@@ -359,10 +362,28 @@
 				})));
 				readsetDatatable.setData(data, data.length);
 				readsetDatatable.config.spinner.start = false;
+				fillMapForExport();
 				computeCharts();
 				
 			});
 	};	
+	
+	var fillMapForExport = function(){
+		mapExportFileName.set(Messages('readsets.treatments.ngsrg_illumina.nbCluster'), Messages('stats.export.validSequences'));
+		mapExportFileName.set(Messages('readsets.treatments.global.usefulSequences'), Messages('stats.export.usefulSequences'));
+		mapExportFileName.set(Messages('readsets.treatments.ngsrg_illumina.validSeqPercent'), Messages('stats.export.validSeqPercent'));
+		mapExportFileName.set(Messages('readsets.treatments.duplicatesRaw.pairs.estimateDuplicatedReadsPercent'), Messages('stats.export.duplicatsPairs'));
+		mapExportFileName.set(Messages('stats.removedReadsEcoli'), Messages('stats.export.removedReadsEcoli'));
+		mapExportFileName.set(Messages('stats.bacteria'), Messages('stats.export.bacteria'));
+		mapExportFileName.set(Messages('stats.eukaryota'), Messages('stats.export.eukaryota'));
+		mapExportFileName.set(Messages('stats.chloroplast'), Messages('stats.export.chloroplast'));
+		mapExportFileName.set(Messages('stats.mitochondri'), Messages('stats.export.mitochondri'));
+		mapExportFileName.set(Messages('stats.triticum'), Messages('stats.export.triticumTriticeae'));
+		mapExportFileName.set(Messages('stats.unknownNoHits'), Messages('stats.export.unknownNoHits'));
+		mapExportFileName.set(Messages('readsets.treatments.sortingRibo.read1.rRNAPercent'), Messages('stats.export.rRNAR1'));
+		mapExportFileName.set(Messages('readsets.treatments.mapping.estimatedMPInsertSize'), Messages('stats.export.estimatedMPInsertSize'));
+		mapExportFileName.set(Messages('stats.mergedReads'), Messages('stats.export.mergedReads'));
+	}
 							
 	var computeCharts = function() {	
 		charts = [];
@@ -430,7 +451,7 @@
 		var property = getProperty(statsConfig.column);
 		var getter = $parse(property);
 		
-		data = excludeData(data, getter, 'z-score : '	+ Messages(statsConfig.column.header));
+		data = excludeData(data, getter, 'z-score : '	+  Messages(statsConfig.column.header));
 		
 		var statData = data.map(function(value) {
 			return getter(value)
@@ -526,7 +547,7 @@
 			},
 			exporting : {
 				enabled : true, 
-				filename : queriesConfigs[0].form.projectCodes[0] + '_Zscore_' + Messages(statsConfig.column.header)
+				filename : 'z-score_' + mapExportFileName.get(Messages(statsConfig.column.header)) + '_' + actualDay.getFullYear().toString().substr(2,2) + (actualDay.getMonth()+1) + actualDay.getUTCDate().toString()
 			},
 			series : allSeries,
 			plotOptions : {column:{grouping:false}}
@@ -633,7 +654,7 @@
 			},
 			exporting : {
 				enabled : true, 
-				filename : queriesConfigs[0].form.projectCodes[0] + '_' + Messages(statsConfig.column.header)
+				filename : mapExportFileName.get(Messages(statsConfig.column.header)) + '_' + actualDay.getFullYear().toString().substr(2,2) + (actualDay.getMonth()+1) + actualDay.getUTCDate().toString()
 			},
 			series : allSeries,
 			plotOptions : {column:{grouping:false}}

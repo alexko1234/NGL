@@ -34,7 +34,6 @@
 	 // Others
 	 var selectedYear = 0;
 	 var actualDay = new Date();
-	 console.log(actualDay.getMonth());
 	 var actualYear = actualDay.getFullYear();
 	 var stillLoading = false;
 	 var total = 0;
@@ -827,7 +826,7 @@
 			 },
 			 exporting : {
 				 enabled : true,
-				 filename : actualYear + '-' + (actualDay.getMonth()+1) + '-' + actualDay.getUTCDate() + '-' + Messages('balanceSheets.export.quarters')
+				 filename : Messages('balanceSheets.export.quarters') + actualYear.toString().substr(2,2) + (actualDay.getMonth()+1) + actualDay.getUTCDate()
 			 },
 			 series : allSeries,
 			 plotOptions : {column:{grouping:false}}
@@ -881,7 +880,7 @@
 				},
 				exporting : {
 					enabled : true,
-					filename : actualYear + '-' + (actualDay.getMonth()+1) + '-' + actualDay.getUTCDate() + '-' + Messages('balanceSheets.export.sequencingType')
+					filename : Messages('balanceSheets.export.sequencingType') + actualYear.toString().substr(2,2) + (actualDay.getMonth()+1) + actualDay.getUTCDate()
 					},
 				series : [{
 					name : Messages("balanceSheets.nbBases"), 
@@ -937,7 +936,7 @@
 				 },
 				 exporting : {
 					 enabled : true,
-					 filename : actualYear + '-' + (actualDay.getMonth()+1) + '-' + actualDay.getUTCDate() + '-' + Messages('balanceSheets.export.firstTen')
+					 filename : Messages('balanceSheets.export.firstTen') + actualYear.toString().substr(2,2) + (actualDay.getMonth()+1) + actualDay.getUTCDate()
 					 },
 				 series : [{
 					 name : Messages("balanceSheets.percentage"),
@@ -990,7 +989,7 @@
 				 },
 				 exporting : {
 					 enabled : true,
-					 filename : actualYear + '-' + (actualDay.getMonth()+1) + '-' + actualDay.getUTCDate() + '-' + Messages('balanceSheets.export.projectType')
+					 filename : Messages('balanceSheets.export.projectType') + actualYear.toString().substr(2,2) + (actualDay.getMonth()+1) + actualDay.getUTCDate()
 					 },
 				 series : [{
 					 name : Messages("balanceSheets.percentage"),
@@ -1269,7 +1268,7 @@
 						},
 						exporting : {
 							enabled : true,
-							filename : actualYear + '-' + (actualDay.getMonth()+1) + '-' + actualDay.getUTCDate() + '-' + Messages('balanceSheets.export.general')
+							filename : Messages('balanceSheets.export.general') + actualYear.toString().substr(2,2) + (actualDay.getMonth()+1) + actualDay.getUTCDate() 
 							},
 						series : [{
 							type : 'column',
