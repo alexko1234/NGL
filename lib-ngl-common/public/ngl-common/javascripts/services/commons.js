@@ -112,7 +112,7 @@ angular.module('commonsServices', []).
     					load(jsRoutes.controllers.projects.api.ProjectTypes.list().url,params,(key)?key:'projectTypes');
     				},
     				umbrellaProjects : function(params, key){
-    					load(jsRoutes.controllers.umbrellaprojects.api.UmbrellaProjects.list().url,params,(key)?key:'umbrellaProjects');
+    					load(jsRoutes.controllers.projects.api.UmbrellaProjects.list().url,params,(key)?key:'umbrellaProjects');
     				},
     				valuationCriterias: function(params, key){
     					load(jsRoutes.controllers.valuation.api.ValuationCriterias.list().url,params,(key)?key:'valuationCriterias');    					

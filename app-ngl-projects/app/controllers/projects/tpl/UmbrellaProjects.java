@@ -1,6 +1,7 @@
-package controllers.umbrellaprojects.tpl;
+package controllers.projects.tpl;
 
 import controllers.CommonController;
+import controllers.projects.tpl.routes.javascript;
 import play.Routes;
 import play.mvc.Result;
 import views.html.umbrellaprojects.*;
@@ -39,14 +40,14 @@ public class UmbrellaProjects extends CommonController {
   	    return ok(  	    		
   	      Routes.javascriptRouter("jsRoutes",
   	        // Routes
-  	    		controllers.umbrellaprojects.tpl.routes.javascript.UmbrellaProjects.home(),  
-  	    		controllers.umbrellaprojects.tpl.routes.javascript.UmbrellaProjects.get(), 
-  	    		controllers.umbrellaprojects.tpl.routes.javascript.UmbrellaProjects.search(),
-  	    		controllers.umbrellaprojects.tpl.routes.javascript.UmbrellaProjects.details(),
-  	    		controllers.umbrellaprojects.api.routes.javascript.UmbrellaProjects.get(),
-  	    		controllers.umbrellaprojects.api.routes.javascript.UmbrellaProjects.update(),
-  	    		controllers.umbrellaprojects.api.routes.javascript.UmbrellaProjects.list(),
-  	    		controllers.umbrellaprojects.api.routes.javascript.UmbrellaProjects.save()
+  	    		controllers.projects.tpl.routes.javascript.UmbrellaProjects.home(),  
+  	    		controllers.projects.tpl.routes.javascript.UmbrellaProjects.get(), 
+  	    		controllers.projects.tpl.routes.javascript.UmbrellaProjects.search(),
+  	    		controllers.projects.tpl.routes.javascript.UmbrellaProjects.details(),
+  	    		controllers.projects.api.routes.javascript.UmbrellaProjects.get(),
+  	    		controllers.projects.api.routes.javascript.UmbrellaProjects.update(),
+  	    		controllers.projects.api.routes.javascript.UmbrellaProjects.list(),
+  	    		controllers.projects.api.routes.javascript.UmbrellaProjects.save()
   	    		//,controllers.umbrellaprojects.api.routes.javascript.UmbrellaProjects.delete()
   	    	)	  	      
   	    );
