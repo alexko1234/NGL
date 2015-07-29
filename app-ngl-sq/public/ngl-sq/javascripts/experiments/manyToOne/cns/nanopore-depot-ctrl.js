@@ -159,7 +159,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 			        	 "type":"text",
 			        	 "position":3,
 			        	 "extraHeaders":{0:"Bilan chargement"}
-			         },
+			         }/*,
 			         {
 			        	 "header":"Date creation",
 			        	 "property":"creationDate",
@@ -168,7 +168,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 						 "hide":true,
 			        	 "type":"date",
 			        	 "position":4
-			         }
+			         }*/
 			         ],
 			compact:true,
 			pagination:{
@@ -181,7 +181,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 				mode:'local', //or 
 				active:true,
 				by:'creationDate',
-				reverse : true
+				reverse : false
 			},
 			remove:{
 				active:true,
