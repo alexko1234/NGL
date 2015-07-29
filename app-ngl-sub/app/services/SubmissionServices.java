@@ -770,7 +770,7 @@ public class SubmissionServices {
 		if (!StringUtils.isNotBlank(submission.accession)) {
 			System.out.println("objet submission sans AC : submissionCode = "+ submissionCode);
 			if (! submission.sampleCodes.isEmpty()) {
-				for (String sampleCode : submission.sampleCodes){
+				for (String sampleCode : submission.refSampleCodes){
 					// verifier que sample n'est pas utilisé par autre objet submission avant destruction
 					List <Submission> submissionList = MongoDBDAO.find(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, DBQuery.in("sampleCodes", sampleCode)).toList();
 					if (submissionList.size() > 1) {
