@@ -240,7 +240,7 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 		$scope.atomicTransfere.inputToExperiment($scope.datatable);
 	});
 
-	$scope.$on('addInstrumentPropertiesInputToScope', function(e, data) {
+	/*$scope.$on('addInstrumentPropertiesInputToScope', function(e, data) {
 		if($scope.datatable.getData() != undefined){
 			for(var i=0;i<$scope.datatable.getData().length;i++){
 				for(var j=0; j<data.length;j++){
@@ -260,11 +260,12 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 	$scope.addExperimentOutputDatatableToScope = function(){
 		var data = $scope.experiment.experimentProperties.inputs;
 		if($scope.datatable.getData() != undefined){
-			for(var i=0;i<$scope.datatable.getData().length;i++){
+			var allData = $scope.datatable.getData();
+			for(var i=0;i<allData.length;i++){
 				for(var j=0; j<data.length;j++){
 					if($scope.getLevel( data[j].levels, "ContainerOut")){
 						var getter = $parse("datatable.displayResult["+i+"].outputExperimentProperties."+data[j].code+".value");
-						var k = $scope.datatable.displayResult[i].data.inputX;
+						var k = allData[i].inputX;
 						if($scope.experiment.value.atomicTransfertMethods[k-1].outputContainerUseds[0].experimentProperties && $scope.experiment.value.atomicTransfertMethods[k-1].outputContainerUseds[0].experimentProperties[data[j].code]){
 							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[k-1].outputContainerUseds[0].experimentProperties[data[j].code]);
 						}else{
@@ -326,7 +327,7 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 				}
 			}
 		}
-	});
+	});*/
 
 	$scope.$on('save', function(e, promises, func, endPromises) {		
 		promises.push($scope.datatable.save());

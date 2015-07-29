@@ -164,6 +164,11 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		pagination:{
 			mode:'local'
 		},
+		filter:{
+			"active":true,
+			"highlight":true,
+			"columnMode":false
+		},
 		order:{
 			active:true,
 			by:'code',

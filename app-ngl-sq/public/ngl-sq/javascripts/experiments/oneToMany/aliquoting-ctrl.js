@@ -130,13 +130,13 @@ angular.module('home').controller('AliquotingCtrl',['$scope', '$window','datatab
 	//This function copy the experiment informations in the input
 	$scope.$on('experimentToInput', function(e, atomicTransfertMethod) {
 		//The default function is:
-		//$scope.atomicTransfere.experimentToInput($scope.datatable);
+		$scope.atomicTransfere.experimentToInput($scope.datatable);
 	});
 	
 	//This function copy the input information to the experiment object
 	$scope.$on('inputToExperiment', function(e, atomicTransfertMethod) {
 		//The default function is:
-		//$scope.atomicTransfere.inputToExperiment($scope.datatable);
+		$scope.atomicTransfere.inputToExperiment($scope.datatable);
 	});
 	
 	//Call when the view need to delete the instrument propeties for the input
@@ -267,8 +267,20 @@ angular.module('home').controller('AliquotingCtrl',['$scope', '$window','datatab
 		}
 	});
 
+	$scope.inputToExperiment = function(){
+		var allData = $scope.datatable.getData();
+		for(var i=0;i<allData.length;i++){
+			$scope.experiment.value.atomicTransfertMethods[allData[i].inputContainerUsed.support.line].inputContainerUseds[0].state = allData[i].inputContainerUsed.state;
+			$scope.experiment.value.atomicTransfertMethods[allData[i].inputContainerUsed.support.line].inputContainerUseds[0].experimentProperties = allData[i].inputExperimentProperties;
+			$scope.experiment.value.atomicTransfertMethods[allData[i].inputContainerUsed.support.line].inputContainerUseds[0].instrumentProperties = allData[i].inputInstrumentProperties;
+		}
+		
+	};
+	
 	//Call when the view need to save
 	$scope.$on('save', function(e, promises, func, endPromises) {	
+		$scope.inputToExperiment($scope.datatable);
+		
 		//push in the promises of the save you need to do
 		promises.push($scope.datatable.save());
 		
@@ -315,6 +327,7 @@ angular.module('home').controller('AliquotingCtrl',['$scope', '$window','datatab
 			$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.push(container);
 			i++;
 		});
+		console.log($scope.experiment.value.atomicTransfertMethods);
 	});
 
 
