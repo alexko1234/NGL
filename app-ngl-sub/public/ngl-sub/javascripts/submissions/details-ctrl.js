@@ -28,10 +28,10 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				active:true,
 				showButton : false,
 				changeClass : false,
-				// important de mettre en mode local:
+				// important de mettre en mode local pour rafraichissement de la page, mais sauvegarde globale via bouton
 				mode:'local',
 				url:function(line){
-					return jsRoutes.controllers.samples.api.Samples.update(line.code).url;
+					return jsRoutes.controllers.sra.samples.api.Samples.update(line.code).url; // jamais utilisé en mode local
 				},
 				method:'put',
 				value:function(line){
@@ -54,7 +54,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			        	  header: "projectCode",
 			        	  type :"text",		    	  	
 			        	  order:false,
-			        	  edit:false,
+			        	  edit:true,            // false
 			        	  choiceInList:false  
 			        },
 			        {property:"title",
@@ -140,7 +140,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				showButton : false,
 				changeClass : false,
 				url:function(lineValue){
-					return jsRoutes.controllers.experiments.api.Experiments.update(lineValue.code).url;
+					return jsRoutes.controllers.sra.experiments.api.Experiments.update(lineValue.code).url; // jamais utilisé en mode local
 				},
 				method:'put',
 				value:function(line){
@@ -311,7 +311,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				showButton : true,
 				changeClass : false,
 				url:function(value){
-					return jsRoutes.controllers.experiments.api.Experiments.update(value.code).url;
+					return jsRoutes.controllers.sra.experiments.api.Experiments.update(value.code).url;
 				},
 				method:'put'
 			},
@@ -377,7 +377,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 	
 	if(angular.isUndefined(mainService.getHomePage())){
 		mainService.setHomePage('create');
-		tabService.addTabs({label:Messages('submissionss.menu.create'),href:jsRoutes.controllers.submissions.tpl.Submissions.home("create").url,remove:true});
+		tabService.addTabs({label:Messages('submissionss.menu.create'),href:jsRoutes.controllers.sra.submissions.tpl.Submissions.home("create").url,remove:true});
 		tabService.activeTab(0); // desactive le lien !
 	}
 	// si on declare dans services => var sraVariables = {};
@@ -395,8 +395,8 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 		$scope.experimentCheck=false;
 		$scope.runCheck=false;
 		$scope.rawDataCheck=false;
-		// Attention appel de get du controller api.submissions qui est herite
-		$http.get(jsRoutes.controllers.submissions.api.Submissions.get($routeParams.code).url).success(function(data) {
+		// Attention appel de get du controller api.sra.submissions qui est herite
+		$http.get(jsRoutes.controllers.sra.submissions.api.Submissions.get($routeParams.code).url).success(function(data) {
 			$scope.submission = data;	
 			console.log("Submission.code :"+$scope.submission.code);
 			console.log("Submission.refSampleCodes :"+$scope.submission.refSampleCodes);
@@ -429,7 +429,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				$scope.sraVariables.libraryLayoutOrientation = data;
 			});	
 			//Get samples
-			$http.get(jsRoutes.controllers.samples.api.Samples.list().url, {params: {listSampleCodes:$scope.submission.refSampleCodes}}).success(function(data)
+			$http.get(jsRoutes.controllers.sra.samples.api.Samples.list().url, {params: {listSampleCodes:$scope.submission.refSampleCodes}}).success(function(data)
 					{
 					$scope.samples = data;
 			
@@ -441,7 +441,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 					$scope.sampleDT.setData($scope.samples, $scope.samples.length);
 					});
 			//Get experiments (and runs)
-			$http.get(jsRoutes.controllers.experiments.api.Experiments.list().url, {params: {listExperimentCodes:$scope.submission.experimentCodes}}).success(function(data)
+			$http.get(jsRoutes.controllers.sra.experiments.api.Experiments.list().url, {params: {listExperimentCodes:$scope.submission.experimentCodes}}).success(function(data)
 					{
 					$scope.experiments = data;
 					//Init datatable
@@ -473,51 +473,109 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 
 	init();
 
+	function closeSubmission(){
+	   	$scope.submission.state.code = "userValidate";		
+		$http.put(jsRoutes.controllers.sra.submissions.api.Submissions.update($scope.submission.code).url, $scope.submission)
+ 				.success(function(data) {
+					//Set success message
+					$scope.messages.clazz="alert alert-success";
+					$scope.messages.text=Messages('submissions.msg.validate.success');
+					$scope.messages.open();
+				}).error(function(data){
+					$scope.messages.addDetails(data);
+					$scope.messages.setError("save");
+				});
+	}
+	
+	//en Javascript, ce n'est pas vous qui choisissez le mode de passage ; 
+    //ça fonctionne un peu comme en Java[1] : 
+    //si c'est un type natif (Number, String, etc.) c'est passé par valeur, 
+    //tandis que si c'est un objet d'une classe à vous, c'est passé par référence.
+    // => d'ou l'importance du return ici
+	function processInSubmission(decompte, error) { // pas d'indication de retour dans la signature.
+		decompte = decompte - 1;
+ 		if (decompte === 0) {
+ 			if (error){
+ 				// afficher message d'erreur sans sauver la soumission.
+ 				$scope.messages.setError("save");
+ 			} else {
+ 				// sauver la soumission dans base et afficher resultat de la requete 
+ 				closeSubmission();
+ 			}
+ 		}
+ 		return decompte;
+	}
+
+		
 	/* buttons section */
 	$scope.userValidate = function(){
-		// Recuperation des samples et mise à jour du statut
-		// sauvegarde dans base des samples avec valeurs editees (valeurs utilisateurs) 
-		$scope.sampleDT.save();		
-		// Recuperation des samples et mise à jour du statut
+		$scope.messages.clear();
+		
+		
+		var error = false;
+		// Recuperation des samples :
+		$scope.sampleDT.save();	// sauvegarde dans client des samples avec valeurs editees (valeurs utilisateurs)	
 		var tab_samples = $scope.sampleDT.getData();
+
+		// Recuperation des experiments :	
+		$scope.experimentDT.save();		// recuperation saisie utilisateur et sauvegarde dans client.
+		var tab_experiments = $scope.experimentDT.getData();
+
+		var decompte = tab_samples.length +  tab_experiments.length;
+		
+		
+		// Mise à jour du status  des samples :
 		for(var i = 0; i < tab_samples.length ; i++){
 			console.log("sampleCode = " + tab_samples[i].code + " state = "+ tab_samples[i].state.code);
 			tab_samples[i].state.code = "userValidate";
 			console.log("sampleCode = " + tab_samples[i].code + " state = "+ tab_samples[i].state.code);
-			//$http.put(jsRoutes.controllers.samples.api.Samples.update(tab_samples[i].code).url, tab_samples[i]);
+			// sauvegarde dans database asynchrone
+			$http.put(jsRoutes.controllers.sra.samples.api.Samples.update(tab_samples[i].code).url, tab_samples[i])
+			.success(function(data){
+			//Set success message
+			//$scope.messages.clazz="alert alert-success";
+			//$scope.messages.text=Messages('submissions.msg.validate.success');
+			//$scope.messages.open();
+			decompte = processInSubmission(decompte, error);
+			}).error(function(data){
+			$scope.messages.addDetails(data);
+			//$scope.messages.setError("save");
+			error = true;
+			decompte = processInSubmission(decompte, error);
+			});			
 			console.log("sampleTitle = " + tab_samples[i].title + " state = "+ tab_samples[i].state.code);
-
 		}
 		$scope.sampleDT.setData(tab_samples, tab_samples.length);
-		// sauvegarde dans base des samples avec bon statut
-		$scope.sampleDT.save();		
+		// sauvegarde cote client des samples avec bon statut
+		$scope.sampleDT.save(); // fait le save cote client mais n'utilise pas url et ne fait pas save dans database.
+	
 		
-		// Recuperation des experiments et mise à jour du statut
-		$scope.experimentDT.save();		
-		var tab_experiments = $scope.experimentDT.getData();
+		// Mise à jour du statut des experiments :
 		for(var i = 0; i < tab_experiments.length ; i++){
 			console.log("experimentCode = " + tab_experiments[i].code + " state = "+ tab_experiments[i].state.code);
 			tab_experiments[i].state.code = "userValidate";
 			console.log("experimentCode = " + tab_experiments[i].code + " state = "+ tab_experiments[i].state.code);
-			//$http.put(jsRoutes.controllers.experiments.api.Experiments.update(tab_experiments[i].code).url, tab_experiments[i]);
-		}	
+			// sauvegarde dans database :
+			$http.put(jsRoutes.controllers.sra.experiments.api.Experiments.update(tab_experiments[i].code).url, tab_experiments[i]).success(function(data){
+			//Set success message
+			//$scope.messages.clazz="alert alert-success";
+			//$scope.messages.text=Messages('submissions.msg.validate.success');
+			//$scope.messages.open();
+			decompte = processInSubmission(decompte, error);
+		}).error(function(data){
+			$scope.messages.addDetails(data);
+			error = true;
+			decompte = processInSubmission(decompte, error);
+			//$scope.messages.setError("save");
+		});			
+		}
 		// initialisation inutile $scope.experimentDT = datatable(experimentsDTConfig);
 		$scope.experimentDT.setData(tab_experiments, tab_experiments.length);
-		// sauvegarde dans base des experiments avec bon statut :
-		$scope.experimentDT.save();
+		// sauvegarde cote client des experiments avec bon statut :
+		$scope.experimentDT.save(); // fait le save cote client mais n'utilise pas url et ne fait pas save dans database.
 		
-		//met a jour l'etat de submission a userValidate
-		$scope.submission.state.code="userValidate";
-		$http.put(jsRoutes.controllers.submissions.api.Submissions.update($scope.submission.code).url, $scope.submission).success(function(data) {
-			//Set success message
-			$scope.messages.clazz="alert alert-success";
-			$scope.messages.text=Messages('submissions.msg.validate.success');
-			$scope.messages.open();
-		}).error(function(data){
-			$scope.messages.setDetails(data);
-			$scope.messages.setError("save");
-		});
-		
+		//mise a jour l'etat de submission a userValidate realise dans closeSubmission appelé par processInSubmission
+	
 	};
 	
 	$scope.cancel = function(){
@@ -533,8 +591,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 		$scope.mainService.startEditMode();
 		$scope.sampleDT.setEdit();
 		$scope.experimentDT.setEdit();
-	}
+	};
 	
 }]);
-
 

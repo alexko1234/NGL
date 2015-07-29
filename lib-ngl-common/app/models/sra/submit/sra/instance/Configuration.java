@@ -48,7 +48,7 @@ public class Configuration  extends DBObject implements IValidation {
 			// pour ex pour validation de submission qui va avoir besoin d'ajouter des objets 
 						
 	    	//contextValidation.putObject("configuration", this);	   
-			contextValidation.addKeyToRootKeyName("configuration::");
+			contextValidation.addKeyToRootKeyName("configuration");
 			// verifier que projectCode est bien renseigné et existe dans lims :
 			SraValidationHelper.validateProjectCode(this.projectCode, contextValidation);
 			// verifier que champs contraints presents avec valeurs autorisees:
@@ -61,17 +61,17 @@ public class Configuration  extends DBObject implements IValidation {
 			// Verifier que si User_Experiments est renseigné, la valeur correspond bien à un fichier present sur disque
 			if (userFileExperiments != null) {
 				if (! new File(userFileExperiments).isFile()){
-					contextValidation.addErrors("userFileExperiments::", this.userFileExperiments + " n'est pas un fichier");
+					contextValidation.addErrors("userFileExperiments", this.userFileExperiments + " n'est pas un fichier");
 				}
 				if (! new File(userFileExperiments).canRead()){
-					contextValidation.addErrors("userFileExperiments::", this.userFileExperiments + " n'est pas un fichier lisible");
+					contextValidation.addErrors("userFileExperiments", this.userFileExperiments + " n'est pas un fichier lisible");
 				}
 			}		
 			// verifier que code est bien renseigné
 			SraValidationHelper.validateCode(this, InstanceConstants.SRA_CONFIGURATION_COLL_NAME, contextValidation);
 			SraValidationHelper.validateId(this, contextValidation);
 			SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
-			contextValidation.removeKeyFromRootKeyName("configuration::");
+			contextValidation.removeKeyFromRootKeyName("configuration");
 		}
 
 }

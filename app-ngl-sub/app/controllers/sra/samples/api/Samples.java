@@ -1,4 +1,4 @@
-package controllers.samples.api;
+package controllers.sra.samples.api;
 
 import static play.data.Form.form;
 
@@ -25,6 +25,7 @@ import models.laboratory.common.instance.State;
 
 public class Samples extends DocumentController<Sample>{
 
+	
 	final static Form<SamplesSearchForm> samplesSearchForm = form(SamplesSearchForm.class);
 	final static Form<Sample> sampleForm = form(Sample.class);
 
@@ -45,13 +46,13 @@ public class Samples extends DocumentController<Sample>{
 	{
 		//Get Submission from DB 
 		Sample sample = getSample(code);
+		Form<Sample> filledForm = getFilledForm(sampleForm, Sample.class);
 		if (sample == null) {
-			return badRequest("Sample with code "+code+" not exist");
+			filledForm.reject("Sample " +  code, "not exist in database");  // si solution filledForm.reject
+			return badRequest(filledForm.errorsAsJson());
 		}
 
-		Form<Sample> filledForm = getFilledForm(sampleForm, Sample.class);
 		Sample sampleInput = filledForm.get();
-		//Sample userSample = filledForm.get();
 
 		if (code.equals(sampleInput.code)) {
 			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
@@ -67,7 +68,8 @@ public class Samples extends DocumentController<Sample>{
 				return badRequest(filledForm.errorsAsJson());
 			}
 		}else{
-			return badRequest("sample code are not the same");
+			filledForm.reject("sample code " + code + " and sampleInput.code " + sampleInput.code , " are not the same");
+			return badRequest(filledForm.errorsAsJson());
 		}	
 	}
 	

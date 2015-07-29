@@ -20,6 +20,7 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
 import fr.cea.ig.MongoDBDAO;
+import org.apache.commons.lang3.StringUtils;
 
 public class XmlServices {
 
@@ -40,7 +41,7 @@ public class XmlServices {
 		System.out.println("creation des fichiers xml pour l'ensemble de la soumission "+ submissionCode);
 		// Recuperer l'objet submission:
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
-		if (submission.studyCode != null){
+		if (StringUtils.isNotBlank(submission.studyCode)) {	
 			File studyFile = new File(resultDirectory + File.separator + VariableSRA.xmlStudys);
 			writeStudyXml(submission, studyFile);
 		}
@@ -69,7 +70,8 @@ public class XmlServices {
 		if (submission == null) {
 			return;
 		}
-		if ( submission.studyCode != null) {
+
+		if (StringUtils.isNotBlank(submission.studyCode)) {	
 			System.out.println("Creation du fichier " + outputFile);
 			// ouvrir fichier en ecriture
 			BufferedWriter output_buffer = new BufferedWriter(new java.io.FileWriter(outputFile));
@@ -85,10 +87,8 @@ public class XmlServices {
 			System.out.println("Ecriture du study " + studyCode);
 
 			chaine = chaine + "  <STUDY alias=\""+ studyCode + "\"";
-			if (study.accession != null){
-				if (!study.accession.equals("")){
-					chaine = chaine + "accession=\"" + study.accession + "\"";
-				}
+			if (StringUtils.isNotBlank(study.accession)) {	
+				chaine = chaine + "accession=\"" + study.accession + "\"";
 			}
 				
 			chaine = chaine + ">\n";
@@ -120,10 +120,11 @@ public class XmlServices {
 	} // end writeStudyXml
 	   
 	public static void writeSampleXml (Submission submission, File outputFile) throws IOException, SraException {
-		//System.out.println("sample = "  + submission.sampleCodes.get(0));
+		System.out.println("sample = "  + submission.sampleCodes.get(0));
 		if (submission == null) {
 			return;
 		}
+
 		if (! submission.sampleCodes.isEmpty()) {	
 			// ouvrir fichier en ecriture
 			System.out.println("Creation du fichier " + outputFile);
@@ -143,20 +144,25 @@ public class XmlServices {
 
 				chaine = chaine + "  <SAMPLE alias=\""+ sampleCode + "\"";
 				
-				if (sample.accession != null) {
-					if (! sample.accession.equals("") ) {
-						chaine = chaine + "accession=\"" + sample.accession + "\"";
-					}
+				if (StringUtils.isNotBlank(sample.accession)) {
+					chaine = chaine + "accession=\"" + sample.accession + "\"";
 				}
-			
 				chaine = chaine + ">\n";
-				chaine = chaine + "    <TITLE>" + sample.title + "</TITLE>\n";
+				if (StringUtils.isNotBlank(sample.title)) {
+					chaine = chaine + "    <TITLE>" + sample.title + "</TITLE>\n";
+				}
 				chaine = chaine + "    <SAMPLE_NAME>\n";
 				chaine = chaine + "      <TAXON_ID>" + sample.taxonId + "</TAXON_ID>\n";
-				chaine = chaine + "      <SCIENTIFIC_NAME>" + sample.scientificName + "</SCIENTIFIC_NAME>\n";
-				chaine = chaine + "      <COMMON_NAME>" + sample.commonName + "</COMMON_NAME>\n";
+				if (StringUtils.isNotBlank(sample.scientificName)) {
+					chaine = chaine + "      <SCIENTIFIC_NAME>" + sample.scientificName + "</SCIENTIFIC_NAME>\n";
+				}
+				if (StringUtils.isNotBlank(sample.commonName)) {
+					chaine = chaine + "      <COMMON_NAME>" + sample.commonName + "</COMMON_NAME>\n";
+				}
 				chaine = chaine + "    </SAMPLE_NAME>\n";
-				chaine = chaine + "      <DESCRIPTION>" + sample.commonName + "</DESCRIPTION>\n";
+				if (StringUtils.isNotBlank(sample.description)) {
+					chaine = chaine + "      <DESCRIPTION>" + sample.description + "</DESCRIPTION>\n";
+				}
 				chaine = chaine + "  </SAMPLE>\n";
 			}
 			chaine = chaine + "</SAMPLE_SET>\n";
@@ -181,16 +187,14 @@ public class XmlServices {
 				//output_buffer.write("//\n");
 				System.out.println("Ecriture du experiment " + experimentCode);
 				if (experiment == null){
-					throw new SraException("study impossible à recuperer dans base :"+ experimentCode);
+					throw new SraException("experiment impossible à recuperer dans base :"+ experimentCode);
 				}
 				chaine = chaine + "  <EXPERIMENT alias=\""+ experimentCode + "\"";
-				
-				if (experiment.accession != null) {
-					if (! experiment.accession.equals(""))  {
-						chaine = chaine + "accession=\"" + experiment.accession + "\"";
-					}
+				if (StringUtils.isNotBlank(experiment.accession)) {
+					chaine = chaine + "accession=\"" + experiment.accession + "\"";	
 				}
 				chaine = chaine + ">\n";
+				// Le champs title est consideré comme obligatoire
 				chaine = chaine + "    <TITLE>" + experiment.title + "</TITLE>\n";
 				chaine = chaine + "    <STUDY_REF refname=\"" + experiment.studyCode +"\">" +"</STUDY_REF>\n";
 				chaine = chaine + "      <DESIGN>\n";
@@ -258,9 +262,9 @@ public class XmlServices {
 				//output_buffer.write("//\n");
 				String runCode = run.code;
 				System.out.println("Ecriture du run " + runCode);
-				chaine = chaine + "  <Run alias=\""+ experimentCode + "\"";
-				if ( (experiment.accession != null) && (! experiment.accession.equals("")) ) {
-					chaine = chaine + "accession=\"" + experiment.accession + "\" ";
+				chaine = chaine + "  <Run alias=\""+ runCode + "\"";
+				if (StringUtils.isNotBlank(run.accession)) {
+					chaine = chaine + "accession=\"" + run.accession + "\" ";
 				}
 				chaine =  chaine + "run_date=\""+ run.runDate+"\"  run_center=\""+run.runCenter+ "\" ";
 				chaine = chaine + ">\n";
@@ -301,12 +305,10 @@ public class XmlServices {
 		
 		System.out.println("Ecriture du submission " + submission.code);
 		chaine = chaine + "  <SUBMISSION alias=\""+ submission.code + "\"";
-		
-		if (submission.accession != null) {
-			if (! submission.accession.equals("")) {
-				chaine = chaine + "accession=\"" + submission.accession + "\"";
-			}
+		if (StringUtils.isNotBlank(submission.accession)) {
+			chaine = chaine + "accession=\"" + submission.accession + "\"";
 		}
+		
 		chaine = chaine + ">\n";	
 		chaine = chaine + "    <CONTACTS>\n";
 		chaine = chaine + "      <CONTACT>  name=\"william\" inform_on_status=\"william@genoscope.cns.fr\" inform_on_error=\"william@genoscope.cns.fr\"/>\n";
@@ -314,9 +316,9 @@ public class XmlServices {
 			
 		chaine = chaine + "    <ACTIONS>\n";
 		if (!submission.release)  {
-			chaine = chaine + "      <ACTION>\n        <HOLD/> Verifier ou placer la contrainte dans objet ????\n      </ACTION>\n";
+			chaine = chaine + "      <ACTION>\n        <HOLD/>\n      </ACTION>\n";
 		}
-		if (submission.studyCode != null){
+		if (StringUtils.isNotBlank(submission.studyCode)) {
 			chaine = chaine + "      <ACTION>\n        <ADD source=\"study.xml\" schema=\"study\"/>\n      </ACTION>\n";
 		}
 		if (!submission.sampleCodes.isEmpty()){

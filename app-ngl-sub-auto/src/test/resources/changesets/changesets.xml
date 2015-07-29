@@ -34,13 +34,7 @@
 		<resource type="DRF" source="classpath:rules/wf_submission.rf" />
 		<resource type="DRL" source="classpath:rules/wf_submission.drl" />
 		
-		<!-- Contain all rules for test environment -->
-		<resource type="DRL" source="classpath:testRules/wf_submission_test.drl" />
 		
-		<resource source='classpath:rules/gzipRules.drl'
-			type='DRL' />
-		<resource source='classpath:rules/md5.drl'
-			type='DRL' />
 		<resource source='classpath:rules/transfertRawData.drl'
 			type='DRL' />
 		<resource source='classpath:rules/createXML.drl'

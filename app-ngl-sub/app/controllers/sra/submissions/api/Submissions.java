@@ -1,4 +1,4 @@
-package controllers.submissions.api;
+package controllers.sra.submissions.api;
 
 import static play.data.Form.form;
 
@@ -9,15 +9,12 @@ import java.util.List;
 
 import mail.MailServiceException;
 import models.sra.submit.common.instance.Submission;
-import models.sra.submit.sra.instance.Experiment;
-import models.sra.submit.sra.instance.RawData;
 import models.sra.submit.util.SraException;
 import models.utils.InstanceConstants;
 
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
-import org.mongojack.DBUpdate;
 
 import play.Logger;
 import play.data.Form;
@@ -84,17 +81,19 @@ public class Submissions extends DocumentController<Submission>{
 		return query;
 	}
 
-	public Result update(String code)
-	{
+	public Result update(String code) {
 		//Get Submission from DB 
 		Submission submission = getSubmission(code);
-		if (submission == null) {
-			return badRequest("Submission with code "+code+" not exist");
-		}
 		Form<Submission> filledForm = getFilledForm(submissionForm, Submission.class);
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+
+		if (submission == null) {
+			//return badRequest("Submission with code "+code+" not exist");
+			ctxVal.addErrors("submission ", " not exist");
+			return badRequest(filledForm.errorsAsJson());
+		}
 		Submission submissionInput = filledForm.get();
-		if (code.equals(submissionInput.code)) {
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+		if (code.equals(submissionInput.code)) {	
 			ctxVal.setUpdateMode();
 			ctxVal.getContextObjects().put("type","sra");
 			submissionInput.traceInformation.setTraceInformation(getCurrentUser());
@@ -107,7 +106,9 @@ public class Submissions extends DocumentController<Submission>{
 				return badRequest(filledForm.errorsAsJson());
 			}
 		}else{
-			return badRequest("submission code are not the same");
+			//return badRequest("submission code are not the same");
+			ctxVal.addErrors("submission "+code, "submission code  " +code + " and submissionInput.code "+ submissionInput.code + "are not the same");
+			return badRequest(filledForm.errorsAsJson());
 		}	
 	}
 
@@ -116,15 +117,29 @@ public class Submissions extends DocumentController<Submission>{
 	{
 		//Get Submission from DB 
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, code);
+		
+		// declaration d'un filledForm uniquement pour utiliser messages.addDetails au niveau des javascript et 
+		// pouvoir afficher l'ensemble des erreurs.
+		//Form initialise avec l'objet submission car pas d'objet submission dans le body
+		//Form<Submission> filledForm = getFilledForm(submissionForm, Submission.class);
+		Form<Submission> filledForm = Form.form(Submission.class);
+		filledForm.fill(submission);
+		
 		if (submission == null) {
-			return badRequest("Submission with code "+code+" not exist");
+			//return badRequest("Submission with code "+code+" not exist");
+			filledForm.reject("Submission " + code," not exist");  // si solution filledForm.reject
+			return badRequest(filledForm.errorsAsJson());
 		}
 		try {
 			submission = XmlServices.writeAllXml(code);
 		} catch (IOException e) {
-			return badRequest(e.getMessage());
+			//return badRequest(e.getMessage());
+			filledForm.reject("Submission " + code, e.getMessage());  // si solution filledForm.reject
+			return badRequest(filledForm.errorsAsJson());
 		} catch (SraException e) {
-			return badRequest(e.getMessage());
+			//return badRequest(e.getMessage());
+			filledForm.reject("Submission " + code, e.getMessage());  // si solution filledForm.reject
+			return badRequest(filledForm.errorsAsJson());
 		}
 		return ok(Json.toJson(submission));
 	}
@@ -134,20 +149,28 @@ public class Submissions extends DocumentController<Submission>{
 	{
 		//Get Submission from DB 
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, code);
-		if (submission == null) {
-			return badRequest("Submission with code "+code+" not exist");
-		}
 		Form<File> filledForm = getFilledForm(pathForm, File.class);
+		if (submission == null) {
+			filledForm.reject("Submission with code "+code, " not exist");
+			return badRequest(filledForm.errorsAsJson());
+		}
 		Logger.debug("filledForm "+filledForm);
 		File ebiFileAc = filledForm.get();
 		try {
 			submission = FileAcServices.traitementFileAC(code, ebiFileAc);
 		} catch (IOException e) {
-			return badRequest(e.getMessage());
+			//return badRequest(e.getMessage());
+			filledForm.reject("Submission " + code + " et ebiFileAc " +ebiFileAc, e.getMessage());  // si solution filledForm.reject
+			return badRequest(filledForm.errorsAsJson());
+
 		} catch (SraException e) {
-			return badRequest(e.getMessage());
+			//return badRequest(e.getMessage());
+			filledForm.reject("Submission " + code + " et ebiFileAc " +ebiFileAc, e.getMessage());  // si solution filledForm.reject
+			return badRequest(filledForm.errorsAsJson());
 		} catch (MailServiceException e) {
-			return badRequest(e.getMessage());
+			//return badRequest(e.getMessage());
+			filledForm.reject("Submission " + code + " et ebiFileAc " +ebiFileAc, e.getMessage());  // si solution filledForm.reject
+			return badRequest(filledForm.errorsAsJson());
 		}
 		return ok(Json.toJson(submission));
 	}
@@ -186,11 +209,14 @@ public class Submissions extends DocumentController<Submission>{
 				
 			}
 		} catch (SraException e) {
-			if (contextValidation.hasErrors()){
+		/*	if (contextValidation.hasErrors()){
 				return badRequest(filledForm.errorsAsJson());
 			}else{
 				return badRequest("{Error : {\"exception\" : \""+e.getMessage()+"\"}}");
 			}
+			*/
+			contextValidation.addErrors("save submission ", e.getMessage()); // si solution avec ctxVal
+			return badRequest(filledForm.errorsAsJson());
 		}
 		return ok(Json.toJson(submissionCode));
 	}
@@ -200,13 +226,23 @@ public class Submissions extends DocumentController<Submission>{
 	{
 		SubmissionServices submissionServices = new SubmissionServices();
 		Submission submission = null;
+
+		// affichage des erreurs via messages.addDetails qui passe par 
+		// solution filledForm et reject 
+		// ou bien solution ctxVal.addErrors
+		
+		Form<Submission> filledForm = getFilledForm(submissionForm, Submission.class); 
+		//ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); // si solution avec ctxVal
 		try {
 			submissionServices.activateSubmission(submissionCode);			
 			submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
 		} catch (SraException e) {
-			return badRequest(e.getMessage());
+			//return badRequest(Json.toJson(e.getMessage()));
+			filledForm.reject("Submission "+submissionCode, e.getMessage());  // si solution filledForm.reject
+			//ctxVal.addErrors("Submission "+submissionCode, e.getMessage()); // si solution avec ctxVal
+			Logger.debug("filled form "+filledForm.errorsAsJson());
+			return badRequest(filledForm.errorsAsJson());
 		}
-		//return ok();	
 		return ok(Json.toJson(submission));
 	}
 

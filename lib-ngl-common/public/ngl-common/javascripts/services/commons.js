@@ -33,12 +33,24 @@ angular.module('commonsServices', []).
 							this.text = undefined; 
 							this.showDetails = false; 
 							this.isDetails = false;
-							this.details = [];
+							this.details = {};
 							this.opening = false;
 						},
 						setDetails : function(details){
 							this.isDetails = true;
 							this.details = details;
+						},
+						addDetails : function(details){
+							for(var pName in details){
+								if(this.details[pName] === undefined || this.details[pName] === null){
+									this.details[pName] = details[pName];
+								}else{
+									this.details[pName].push(details[pName]);
+								}
+							}
+							this.isDetails = true;
+							
+							
 						},
 						setSuccess : function(type){
 							this.clazz=this.config.successClass;
@@ -173,7 +185,7 @@ angular.module('commonsServices', []).
     					if(angular.isUndefined(params)){
     	    				params = {};
     	    			}
-    					//GA 24/07/2015 un peu spécial pour tags car fait partie de la collection parameters...
+    				//GA 24/07/2015 un peu spécial pour tags car fait partie de la collection parameters...
     					load(jsRoutes.controllers.commons.api.Parameters.list('index-illumina-sequencing').url,params,(key)?key:'tags');
     				},
     				tagCategories : function(params, key){
@@ -191,10 +203,10 @@ angular.module('commonsServices', []).
     					load(jsRoutes.controllers.commons.api.CommonInfoTypes.list().url,params,(key)?key:'sampleTypes');
     				},
     				sraStudies : function(params, key){
-    					load(jsRoutes.controllers.studies.api.Studies.list().url,params,(key)?key:'sraStudies');    				
+    					load(jsRoutes.controllers.sra.studies.api.Studies.list().url,params,(key)?key:'sraStudies');    				
     				},
     				sraConfigurations : function(params, key){
-    					load(jsRoutes.controllers.configurations.api.Configurations.list().url,params,(key)?key:'sraConfigurations');    				
+    					load(jsRoutes.controllers.sra.configurations.api.Configurations.list().url,params,(key)?key:'sraConfigurations');    				
     				},
     				readSets : function(params, key){
     					load(jsRoutes.controllers.readsets.api.ReadSets.list().url,params,(key)?key:'readSets');    				
@@ -1169,3 +1181,4 @@ angular.module('commonsServices', []).
     			return flatArray;
     		}
     	});
+    	

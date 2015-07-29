@@ -21,9 +21,10 @@ H:\birdsSpec.xsd">
 	<!-- Treatment for file transfert  -->
 	<Treatment name="transfertRawData" useJobScheduler="true" checkIfNewTreatmentAlreadyPerformed="true">
 	
-		<!-- TODO voir si on veut nommer les jobs spécifiquement -->
+		<!-- Script test -->
 		<ExecutableSpecification commandSyntaxStrategyName="ncftpputSyntax">
-			<Executable path="/usr/local/aspera/connect/bin/ascp" user="william" host="etna15.genoscope.cns.fr"/>
+			<!--  <Executable path="/usr/local/aspera/connect/bin/ascp" user="william" host="etna15.genoscope.cns.fr"/>-->
+			<Executable path="/env/cns/opt/BIRDS/AUTO_NGL_SUB/scriptTest/scriptTest.sh" user="william" host="etna15.genoscope.cns.fr"/>
 			<Lsf job="ascpJob" queue="big" />
 		</ExecutableSpecification>
 		
@@ -52,10 +53,11 @@ H:\birdsSpec.xsd">
 	</Treatment>
 	
 	<!-- Treatment : call NGL SUB services to create xml files to send to EBI -->
+	<!-- Call on dev server -->
 	<Treatment name="createXML" useJobScheduler="false" checkIfNewTreatmentAlreadyPerformed="true">
 		<ExecutableSpecification commandSyntaxStrategyName="createXMLSyntax">
-			<!-- TODO call REST API NGL-SUB -->
-			<Executable path="curl -X PUT http://appprod.genoscope.cns.fr:9005/sra/submissions/%code%/xml"/>
+			
+			<Executable path="curl -X PUT http://appdev.genoscope.cns.fr:9005/sra/submissions/%code%/xml"/>
 		</ExecutableSpecification>
 		
 		<InputsSpecification>
@@ -71,9 +73,11 @@ H:\birdsSpec.xsd">
 	</Treatment>
 	
 	<!-- Treatment : call EBI services to send xml files -->
+	<!-- Script test -->
 	<Treatment name="sendXML" useJobScheduler="false" checkIfNewTreatmentAlreadyPerformed="true">
 		<ExecutableSpecification commandSyntaxStrategyName="sendXMLSyntax">
-			<Executable path="curl https://www.ebi.ac.uk/ena/submit/drop-box/submit/?auth=ERA%20era-drop-9%20N7mo%2B8F4aHH%2BrCjLTuMo59xwfFo%3D" />
+			<!-- <Executable path="curl https://www.ebi.ac.uk/ena/submit/drop-box/submit/?auth=ERA%20era-drop-9%20N7mo%2B8F4aHH%2BrCjLTuMo59xwfFo%3D" /> -->
+			<Executable path="/env/cns/opt/BIRDS/AUTO_NGL_SUB/scriptTest/scriptTest.sh" user="william" host="etna15.genoscope.cns.fr"/>
 		</ExecutableSpecification>
 		<ParametersSpecification>
 			<KeyValueElement key="-F" value="&quot;SUBMISSION=@%xmlSubmission%&quot;" parameterName="xmlSubmission"/>

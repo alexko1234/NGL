@@ -1,4 +1,4 @@
-package controllers.submissions.api;
+package controllers.sra.submissions.api;
 
 import controllers.ListForm;
 

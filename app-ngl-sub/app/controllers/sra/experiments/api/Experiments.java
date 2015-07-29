@@ -1,4 +1,4 @@
-package controllers.experiments.api;
+package controllers.sra.experiments.api;
 
 import static play.data.Form.form;
 
@@ -46,6 +46,7 @@ public class Experiments extends DocumentController<Experiment> {
 	{
 		Form<Experiment> filledForm = getFilledForm(experimentForm, Experiment.class);
 		Experiment userExperiment = filledForm.get();
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!updateExperiment: " +userExperiment.code );
 		
 		if (code.equals(userExperiment.code)) {
 			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
@@ -55,7 +56,7 @@ public class Experiments extends DocumentController<Experiment> {
 			
 			//userExperiment.state = new State("userValidate", getCurrentUser());
 			userExperiment.validate(ctxVal);
-			System.out.println("updateExperiment: " +userExperiment.code );
+			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!updateExperiment: " +userExperiment.code );
 			System.out.println("experiment.state: " +userExperiment.state.code );
 			//System.out.println(Json.toJson(userExperiment));
 			if (!ctxVal.hasErrors()) {
@@ -67,7 +68,8 @@ public class Experiments extends DocumentController<Experiment> {
 				return badRequest(filledForm.errorsAsJson());
 			}
 		}else{
-			return badRequest("experiment codes are not the same");
+			filledForm.reject("experiment code " + code + " and userExperiment.code " + userExperiment.code , " are not the same");
+			return badRequest(filledForm.errorsAsJson());
 		}	
 	}
 	

@@ -58,8 +58,8 @@ rule "POST DONE EXECUTION of sendXML : File AC results operation"
 		File fileAC = new File(pathAC);
 		log.debug("path AC="+pathAC);
 		JSONDevice jsonDevice = new JSONDevice();
-		String url = ProjectProperties.getProperty("server")+"/submissions/"+codeSubmission+"/ebiAc";
-		String jsonResult = jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/submissions/"+codeSubmission+"/ebiAc", fileAC);
+		String url = ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/ebiAc";
+		String jsonResult = jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/ebiAc", fileAC);
 		log.debug("Result "+jsonResult);
 		Set<ResourceProperties> resourcePropertiesSet = jsonDevice.parseJSONFromString(jsonResult);
 		log.debug("Resource Properties "+resourcePropertiesSet);

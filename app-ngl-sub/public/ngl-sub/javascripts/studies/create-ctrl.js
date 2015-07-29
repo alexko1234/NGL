@@ -8,7 +8,7 @@ angular.module('home').controller('CreateCtrl',[ '$http', '$scope', '$routeParam
 	
 	if(angular.isUndefined(mainService.getHomePage())){
 		mainService.setHomePage('create');
-		tabService.addTabs({label:Messages('studies.menu.create'),href:jsRoutes.controllers.studies.tpl.Studies.home("create").url,remove:true});
+		tabService.addTabs({label:Messages('studies.menu.create'),href:jsRoutes.controllers.sra.studies.tpl.Studies.home("create").url,remove:true});
 		tabService.activeTab(0); // desactive le lien !
 	}
 	
@@ -17,7 +17,7 @@ angular.module('home').controller('CreateCtrl',[ '$http', '$scope', '$routeParam
 	
 	$scope.save = function(){
 		mainService.setForm($scope.createService.form);
-			$http.post(jsRoutes.controllers.studies.api.Studies.save().url, mainService.getForm()).success(function(data) {
+			$http.post(jsRoutes.controllers.sra.studies.api.Studies.save().url, mainService.getForm()).success(function(data) {
 				$scope.messages.clazz="alert alert-success";
 				$scope.messages.text=Messages('studies.msg.save.success')+" : "+data;
 				$scope.messages.open();

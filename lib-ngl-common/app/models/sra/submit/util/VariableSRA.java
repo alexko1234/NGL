@@ -5,11 +5,13 @@ package models.sra.submit.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import play.Play;
+
 public interface VariableSRA {
 	
 	static final String centerName = "GSC";
 	static final String laboratoryName = "Genoscope - CEA";
-	static final String submissionRootDirectory = "/env/cns/submit_traces/SRA/SNTS_output_xml";
+	static final String submissionRootDirectory = Play.application().configuration().getString("submissionRootDirectory");
 	static final String libraryConstructionProtocol = "none provided";
 	static final String admin = "william";
 	static final String xmlSubmission = "submission.xml";

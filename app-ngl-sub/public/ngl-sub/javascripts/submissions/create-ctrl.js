@@ -7,12 +7,12 @@ angular.module('home').controller('CreateCtrl',[ '$http', '$scope', '$routeParam
 			pagination:{mode:'local'},			
 			order :{mode:'local', by:'code', reverse : true},
 			search:{
-				url:jsRoutes.controllers.submissions.api.Submissions.list()
+				url:jsRoutes.controllers.sra.submissions.api.Submissions.list()
 			},
 			show:{
 				active:true,
 				add :function(line){
-					tabService.addTabs({label:line.code,href:jsRoutes.controllers.submissions.tpl.Submissions.get(line.code).url,remove:true});
+					tabService.addTabs({label:line.code,href:jsRoutes.controllers.sra.submissions.tpl.Submissions.get(line.code).url,remove:true});
 				}
 			},
 			hide:{
@@ -29,7 +29,7 @@ angular.module('home').controller('CreateCtrl',[ '$http', '$scope', '$routeParam
 	
 	if(angular.isUndefined(mainService.getHomePage())){
 		mainService.setHomePage('create');
-		tabService.addTabs({label:Messages('submissions.menu.create'),href:jsRoutes.controllers.submissions.tpl.Submissions.home("create").url,remove:true});
+		tabService.addTabs({label:Messages('submissions.menu.create'),href:jsRoutes.controllers.sra.submissions.tpl.Submissions.home("create").url,remove:true});
 		tabService.activeTab(0); // desactive le lien !
 	}
 	
@@ -39,7 +39,7 @@ angular.module('home').controller('CreateCtrl',[ '$http', '$scope', '$routeParam
 	$scope.save = function(){
 		mainService.setForm($scope.createService.form);
 		//$scope.createService.search();
-			$http.post(jsRoutes.controllers.submissions.api.Submissions.save().url, mainService.getForm()).success(function(data) {
+			$http.post(jsRoutes.controllers.sra.submissions.api.Submissions.save().url, mainService.getForm()).success(function(data) {
 				$scope.messages.clear();
 				$scope.messages.clazz="alert alert-success";
 				$scope.messages.text=Messages('submissions.msg.save.success')+" : "+data;

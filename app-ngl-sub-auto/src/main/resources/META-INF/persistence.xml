@@ -23,6 +23,8 @@
 		
 		<mapping-file>META-INF/ormBirds.xml</mapping-file>
 		
+		<class>fr.genoscope.lis.devsi.birds.api.entity.BagJob</class>
+		<class>fr.genoscope.lis.devsi.birds.api.entity.BagJobProperties</class>
 		<class>fr.genoscope.lis.devsi.birds.api.entity.DatabaseProperties</class>
 		<class>fr.genoscope.lis.devsi.birds.api.entity.EnvironmentVariables</class>
 		<class>fr.genoscope.lis.devsi.birds.api.entity.Executable</class>
