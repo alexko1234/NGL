@@ -296,7 +296,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 	$scope.$on('addInstrumentPropertiesInput', function(e, data, possibleValues) {
 		var column = $scope.datatable.newColumn(data.name,"inputInstrumentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Inputs","1":"Instruments"});
 		column.defaultValues = data.defaultValue;
-		$scope.datatable.addColumn(2,column);
+		$scope.datatable.addColumn(data.displayOrder+5,column);
 	});
 	
 	$scope.$on('addExperimentPropertiesInput', function(e, data, possibleValues) {
@@ -305,7 +305,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 			if(data.displayMeasureValue!=undefined) unit = "("+data.displayMeasureValue.value+")";
 			var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"inputExperimentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Inputs"});
 			column.defaultValues = data.defaultValue;
-			$scope.datatable.addColumn(2,column);
+			$scope.datatable.addColumn(data.displayOrder+5,column);
 		}
 	});
 	
@@ -315,14 +315,14 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 			if(data.displayMeasureValue!=undefined) unit = "("+data.displayMeasureValue.value+")";
 			var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"outputExperimentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Outputs"});
 			column.defaultValues = data.defaultValue;
-			$scope.datatable.addColumn(-1,column);
+			$scope.datatable.addColumn(data.displayOrder+5,column);
 		}
 	});
 	
 	$scope.$on('addInstrumentPropertiesOutput', function(e, data, possibleValues) {
 		var column = $scope.datatable.newColumn(data.name,"outputInstrumentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Outputs","1":"Instruments"});
 		column.defaultValues = data.defaultValue;
-		$scope.datatable.addColumn(-1,column);
+		$scope.datatable.addColumn(data.displayOrder+5,column);
 	});
 	
 	$scope.addOutputColumns = function(){
