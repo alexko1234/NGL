@@ -103,7 +103,8 @@ public class Processes extends CommonController{
 			      		controllers.reporting.api.routes.javascript.ReportingConfigurations.update(),
 			      		controllers.reporting.api.routes.javascript.ReportingConfigurations.delete(),
 			      		controllers.commons.api.routes.javascript.Values.list(),
-			      		controllers.containers.api.routes.javascript.Contents.list()
+			      		controllers.containers.api.routes.javascript.Contents.list(),
+			      		controllers.commons.api.routes.javascript.Parameters.list()
 						)	  	      
 				);
 	}

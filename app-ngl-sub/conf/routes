@@ -6,51 +6,52 @@
 GET		/											controllers.main.tpl.Main.home()
 
 #Submission
-GET		/submissions/:homeCode/home					controllers.submissions.tpl.Submissions.home(homeCode : java.lang.String)
-GET		/submissions/:code							controllers.submissions.tpl.Submissions.get(code : java.lang.String)
-GET		/tpl/submissions/create						controllers.submissions.tpl.Submissions.create()
-GET		/tpl/submissions/activate					controllers.submissions.tpl.Submissions.activate()
-GET		/tpl/submissions/details					controllers.submissions.tpl.Submissions.details()
-GET		/tpl/submissions/js-routes					controllers.submissions.tpl.Submissions.javascriptRoutes()
+GET		/sra/submissions/:homeCode/home					controllers.sra.submissions.tpl.Submissions.home(homeCode : java.lang.String)
+GET		/sra/submissions/:code							controllers.sra.submissions.tpl.Submissions.get(code : java.lang.String)
+GET		/tpl/sra/submissions/create						controllers.sra.submissions.tpl.Submissions.create()
+GET		/tpl/sra/submissions/activate					controllers.sra.submissions.tpl.Submissions.activate()
+GET		/tpl/sra/submissions/details					controllers.sra.submissions.tpl.Submissions.details()
+GET		/tpl/sra/submissions/js-routes					controllers.sra.submissions.tpl.Submissions.javascriptRoutes()
 
-PUT		/api/submissions/:submissionCode/activate	@controllers.submissions.api.Submissions.activate(submissionCode : java.lang.String)
+PUT		/api/sra/submissions/:submissionCode/activate	@controllers.sra.submissions.api.Submissions.activate(submissionCode : java.lang.String)
 # Mise à jour d'un objet submission et de ses composants :
-PUT		/submissions/:code 							@controllers.submissions.api.Submissions.update(code: java.lang.String) 
-POST	/api/submissions                            @controllers.submissions.api.Submissions.save()
-GET		/api/submissions							@controllers.submissions.api.Submissions.list()
-GET		/api/submissions/:code						@controllers.submissions.api.Submissions.get(code: java.lang.String)
+PUT		/sra/submissions/:code 							@controllers.sra.submissions.api.Submissions.update(code: java.lang.String) 
+POST	/api/sra/submissions                            @controllers.sra.submissions.api.Submissions.save()
+GET		/api/sra/submissions							@controllers.sra.submissions.api.Submissions.list()
+GET		/api/sra/submissions/:code						@controllers.sra.submissions.api.Submissions.get(code: java.lang.String)
 # Creation des fichiers xml pour l'objet submission :
-PUT		/submissions/:code/xml						@controllers.submissions.api.Submissions.createXml(code: java.lang.String)
+PUT		/sra/submissions/:code/xml						@controllers.sra.submissions.api.Submissions.createXml(code: java.lang.String)
 # Traitement des AC et mise a jour du status de l'objet submission :
-PUT		/submissions/:code/ebiAc					@controllers.submissions.api.Submissions.treatmentAc(code: java.lang.String) 
+PUT		/sra/submissions/:code/ebiAc					@controllers.sra.submissions.api.Submissions.treatmentAc(code: java.lang.String) 
 
 
 # Studies
-GET		/studies/:homeCode/home						controllers.studies.tpl.Studies.home(homeCode: java.lang.String)
-GET		/api/sra/studies							@controllers.studies.api.Studies.list()
-POST	/api/sra/studies							@controllers.studies.api.Studies.save()
-GET		/tpl/studies/create					    	controllers.studies.tpl.Studies.create()
-GET		/tpl/studies/js-routes				    	controllers.studies.tpl.Studies.javascriptRoutes()
+GET		/sra/studies/:homeCode/home					controllers.sra.studies.tpl.Studies.home(homeCode: java.lang.String)
+GET		/api/sra/studies							@controllers.sra.studies.api.Studies.list()
+POST	/api/sra/studies							@controllers.sra.studies.api.Studies.save()
+GET		/tpl/sra/studies/create					    controllers.sra.studies.tpl.Studies.create()
+GET		/tpl/sra/studies/js-routes				   	controllers.sra.studies.tpl.Studies.javascriptRoutes()
 
 
 # Configurations
-GET		/configurations/:homeCode/home				controllers.configurations.tpl.Configurations.home(homeCode: java.lang.String)
-GET		/tpl/configurations/create					controllers.configurations.tpl.Configurations.create()
-GET		/tpl/configurations/js-routes				controllers.configurations.tpl.Configurations.javascriptRoutes()
-GET 	/api/configurations						    @controllers.configurations.api.Configurations.list()
-POST	/api/configurations						    @controllers.configurations.api.Configurations.save()
+GET		/sra/configurations/:homeCode/home			controllers.sra.configurations.tpl.Configurations.home(homeCode: java.lang.String)
+GET		/tpl/sra/configurations/create				controllers.sra.configurations.tpl.Configurations.create()
+GET		/tpl/sra/configurations/js-routes			controllers.sra.configurations.tpl.Configurations.javascriptRoutes()
+GET 	/api/sra/configurations					    @controllers.sra.configurations.api.Configurations.list()
+POST	/api/sra/configurations					    @controllers.sra.configurations.api.Configurations.save()
+
 GET		/api/sra/variables/:name            		controllers.sra.api.Variables.get(name: java.lang.String)
 
 #Samples
-GET		/api/sra/samples							@controllers.samples.api.Samples.list()
-PUT		/api/sra/samples/:code						@controllers.samples.api.Samples.update(code: java.lang.String)
+GET		/api/sra/samples							@controllers.sra.samples.api.Samples.list()
+PUT		/api/sra/samples/:code						@controllers.sra.samples.api.Samples.update(code: java.lang.String)
 
 # Experiments
-GET		/api/sra/experiments						@controllers.experiments.api.Experiments.list()
-PUT		/api/sra/experiments						@controllers.experiments.api.Experiments.update(code: java.lang.String)
+GET		/api/sra/experiments						@controllers.sra.experiments.api.Experiments.list()
+PUT		/api/sra/experiments						@controllers.sra.experiments.api.Experiments.update(code: java.lang.String)
 
 #ExperimentsRawData
-GET		/api/sra/experiments/rawDatas				@controllers.experiments.api.ExperimentsRawDatas.list()
+GET		/api/sra/experiments/rawDatas				@controllers.sra.experiments.api.ExperimentsRawDatas.list()
 
 #readsets from ngl-common attention pas de '@' devant car controller ecrit il y a 3 ans et qui herite de 
 GET    	/api/readsets	                 			controllers.readsets.api.ReadSets.list()

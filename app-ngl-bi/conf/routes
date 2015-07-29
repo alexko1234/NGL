@@ -5,6 +5,7 @@
 ->  / common.Routes
 ->  / apinglbi.Routes
 ->  / apinglsq.Routes
+->	/ migration.Routes
 ->  /authentication authentication.Routes
 
 # Home page
@@ -65,12 +66,4 @@ GET     /messages.js                				controllers.main.tpl.Main.jsMessages()
 GET     /codes.js        	        				controllers.main.tpl.Main.jsCodes()
 #GET     /api/js-routes.js        	        		controllers.main.tpl.Main.apiJavascriptRoutes()
 
-#migration
-GET		/migrationSampleOnContainer					controllers.migration.MigrationUpdateSampleOnContainer.migration(code: java.lang.String ?= "all")
-GET		/migrationRSFF								controllers.migration.RemoveStateFromFile.migration()
-#GET		/deleteTreatments						controllers.migration.DeleteReadSetTreatements.migration()
-GET		/compare-lims-support						controllers.migration.CompareLimsVsNGL.compareSupport(update:Boolean ?=false)
-GET		/compare-lims-files							controllers.migration.CompareLimsVsNGL.compareFile(update:Boolean ?=false)
-GET		/migration-fraction							controllers.migration.MigrationFractionRun.migration()
-GET		/migration-process-type-codes				controllers.migration.MigrationLibProcessTypeCodesRun.migration()
 

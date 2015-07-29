@@ -38,7 +38,7 @@ public class Study extends DBObject implements IValidation {
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		contextValidation.addKeyToRootKeyName("study::");
+		contextValidation.addKeyToRootKeyName("study");
 		// verifier que projectCode est bien renseigné et existe dans lims:
 		SraValidationHelper.validateProjectCode(this.projectCode, contextValidation);
 		// Attention on peut vouloir regrouper dans un project_code virtuel ?? 
@@ -49,7 +49,7 @@ public class Study extends DBObject implements IValidation {
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapStatus, "state.code");
 		if (contextValidation.getContextObjects().get("type")==null) {
 			contextValidation.addErrors("study non evaluable ", "sans type de contexte de validation");
-			contextValidation.removeKeyFromRootKeyName("study::");
+			contextValidation.removeKeyFromRootKeyName("study");
 			return;
 		}
 		if (contextValidation.getContextObjects().get("type").equals("sra")) {
@@ -67,7 +67,7 @@ public class Study extends DBObject implements IValidation {
 
 			contextValidation.addErrors("study non evaluable ", "avec type de contexte de validation " + contextValidation.getContextObjects().get("type"));	
 		}
-		contextValidation.removeKeyFromRootKeyName("study::");
+		contextValidation.removeKeyFromRootKeyName("study");
 
 	}
 

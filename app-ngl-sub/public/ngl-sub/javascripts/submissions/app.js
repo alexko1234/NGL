@@ -2,33 +2,33 @@
 angular.module('home', ['ngRoute', 'commonsServices', 'datatableServices','ui.bootstrap', 'ngl-sub.SubmissionsServices'], 
 	function($routeProvider, $locationProvider) {
 	
-	$routeProvider.when('/submissions/create/home', {
+	$routeProvider.when('/sra/submissions/create/home', {
 		// url qui va appeler controler java de type tpl
-		templateUrl : '/tpl/submissions/create',
+		templateUrl : '/tpl/sra/submissions/create',
 		controller : 'CreateCtrl'
 	});
 	
-	$routeProvider.when('/submissions/:code', {
+	$routeProvider.when('/sra/submissions/:code', {
 		// url qui va appeler controler java de type tpl
-		templateUrl : '/tpl/submissions/details',
+		templateUrl : '/tpl/sra/submissions/details',
 		controller : 'DetailsCtrl'
 	});
 	
-	$routeProvider.when('/submissions/activate/home', {
+	$routeProvider.when('/sra/submissions/activate/home', {
 		// url qui va appeler controler java de type tpl
-		templateUrl : '/tpl/submissions/activate',
+		templateUrl : '/tpl/sra/submissions/activate',
 		controller : 'ActivateCtrl'
 	});
 	
 	/*
-	$routeProvider.when('/submissions/validate/home', {
+	$routeProvider.when('/sra/submissions/validate/home', {
 		// url qui va appeler controler java de type tpl
-		templateUrl : '/tpl/submissions/validate',
+		templateUrl : '/tpl/sra/submissions/validate',
 		controller : 'ValidateCtrl'
 	});		
 	
 	*/
-	$routeProvider.otherwise({redirectTo: '/submissions/create/home'});
+	$routeProvider.otherwise({redirectTo: '/sra/submissions/create/home'});
 
 	// configure html5 to get links working with bookmarked
 	$locationProvider.html5Mode({enabled: true, requireBase: false});

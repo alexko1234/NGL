@@ -34,6 +34,7 @@ import fr.cea.ig.MongoDBDAO;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -274,15 +275,66 @@ public class SubmissionServices {
 		return study;
 	}
 
-	public void activateSubmission(String submissionCode) throws SraException, IOException {
+	
+	
+	public void activateSubmission(String submissionCode) throws SraException {
 		// creer repertoire de soumission sur disque et faire liens sur données brutes
+
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
 		if (submission == null){
 			throw new SraException("aucun objet submission dans la base pour  : " + submissionCode);
 		}
-		// mettre à jour objet soumission et experiment et sample avec state ="inWaiting" :
+		
+		try {
+			File dataRep = new File(submission.submissionDirectory);
+			System.out.println("Creation du repertoire de soumission et liens vers donnees brutes " + submission.submissionDirectory);
+			if (dataRep.exists()){
+				throw new SraException("Le repertoire " + dataRep + " existe deja !!! (soumission concurrente ?)");
+			} else {
+				if(!dataRep.mkdirs()){	
+					throw new SraException("Impossible de creer le repertoire " + dataRep);
+				}
+			}
+			for (String experimentCode: submission.experimentCodes) {
+				Experiment expElt =  MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
+			
+				System.out.println("exp = "+ expElt.code);
+				for (RawData rawData :expElt.run.listRawData){
+					System.out.println("run = "+ expElt.run.code);
+					File fileCible = new File(rawData.directory + File.separator + rawData.relatifName);
+					File fileLien = new File(submission.submissionDirectory + File.separator + rawData.relatifName);
+					if(fileLien.exists()){
+						fileLien.delete();
+					}
+					if (!fileCible.exists()){
+						System.out.println("Le fichier cible n'existe pas  : " + fileCible);
+						throw new SraException("Le fichier cible n'existe pas  : " + fileCible);
+					}
+					System.out.println("fileCible = " + fileCible);
+					System.out.println("fileLien = " + fileLien);
+
+					Path lien = Paths.get(fileLien.getPath());
+					Path cible = Paths.get(fileCible.getPath());
+					Files.createSymbolicLink(lien, cible);
+					System.out.println("Lien symbolique avec :  lien= "+lien+" et  cible="+cible);
+					//String cmd = "ln -s -f " + rawData.directory + File.separator + rawData.relatifName
+					//+ " " + submission.submissionDirectory + File.separator + rawData.relatifName;
+					//System.out.println("cmd = " + cmd);
+				}
+			}		
+		} catch (SecurityException e) {
+			throw new SraException(" Dans activateSubmission pb SecurityException: " + e);
+		} catch (UnsupportedOperationException e) {
+			throw new SraException(" Dans activateSubmission pb UnsupportedOperationException: " + e);
+		} catch (FileAlreadyExistsException e) {
+			throw new SraException(" Dans activateSubmission pb FileAlreadyExistsException: " + e);
+		} catch (IOException e) {
+			throw new SraException(" Dans activateSubmission pb IOException: " + e);		
+		}
+		
+		// mettre à jour objet soumission et experiment et sample avec state ="inWaiting" :		
 		if (submission.state.code.equalsIgnoreCase("userValidate")) {
-			// mettre à jour le champs submission.studyCode si besoin, si study à soumettre, si study avec state userValidate
+			// mettre à jour le champs submission.studyCode si besoin, si study à soumettre, si study avec stateuserValidate
 			Study study =  MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, submission.refStudyCode);
 			if (study.state.code.equalsIgnoreCase("userValidate")){
 				submission.studyCode = submission.refStudyCode;
@@ -317,45 +369,15 @@ public class SubmissionServices {
 							DBUpdate.set("state.code", "inWaiting").set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 
 				}
 			}
-			// mettre à jour la soumission pour le state et pour  pour le state :
+			// mettre à jour la soumission pour le state :
 			MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class,
 					DBQuery.is("code", submission.code).notExists("accession"),
 					DBUpdate.set("state.code", "inWaiting").set("studyCode", submission.studyCode).set("sampleCodes", submission.sampleCodes).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 
 
 		}
-		File dataRep = new File(submission.submissionDirectory);
-		System.out.println("Creation du repertoire de soumission et liens vers donnees brutes " + submission.submissionDirectory);
-		dataRep.mkdirs();	
-		
-		for (String experimentCode: submission.experimentCodes) {
-			Experiment expElt =  MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
-			
-			System.out.println("exp = "+ expElt.code);
-			for (RawData rawData :expElt.run.listRawData){
-				System.out.println("run = "+ expElt.run.code);
-				File fileCible = new File(rawData.directory + File.separator + rawData.relatifName);
-				File fileLien = new File(submission.submissionDirectory + File.separator + rawData.relatifName);
-				if(fileLien.exists()){
-					fileLien.delete();
-				}
-				if (!fileCible.exists()){
-					System.out.println("Le fichier cible n'existe pas  : " + fileCible);
-					throw new SraException("Le fichier cible n'existe pas  : " + fileCible);
-				}
-				System.out.println("fileCible = " + fileCible);
-				System.out.println("fileLien = " + fileLien);
-
-				Path lien = Paths.get(fileLien.getPath());
-				Path cible = Paths.get(fileCible.getPath());
-				Files.createSymbolicLink(lien, cible);
-				System.out.println("Lien symbolique avec :  lien= "+lien+" et  cible="+cible);
-				//String cmd = "ln -s -f " + rawData.directory + File.separator + rawData.relatifName
-				//+ " " + submission.submissionDirectory + File.separator + rawData.relatifName;
-				//System.out.println("cmd = " + cmd);
-			}
-		}
 	}
 		
+	
 	public Submission createSubmissionEntity(String projectCode, String configCode, String user){
 		System.out.println ("config.code = " + configCode);
 		Submission submission = null;
@@ -748,7 +770,7 @@ public class SubmissionServices {
 		if (!StringUtils.isNotBlank(submission.accession)) {
 			System.out.println("objet submission sans AC : submissionCode = "+ submissionCode);
 			if (! submission.sampleCodes.isEmpty()) {
-				for (String sampleCode : submission.sampleCodes){
+				for (String sampleCode : submission.refSampleCodes){
 					// verifier que sample n'est pas utilisé par autre objet submission avant destruction
 					List <Submission> submissionList = MongoDBDAO.find(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, DBQuery.in("sampleCodes", sampleCode)).toList();
 					if (submissionList.size() > 1) {

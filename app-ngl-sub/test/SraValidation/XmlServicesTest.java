@@ -35,7 +35,7 @@ public class XmlServicesTest extends AbstractTestsSRA {
 		contextValidation.setCreationMode();
 		contextValidation.getContextObjects().put("type", "sra");
 		Configuration config = new Configuration();
-		config.code = "conf_AWK_5";
+		config.code = "conf_AWK_5_2";
 		config.projectCode = "AWK";
 		config.strategySample = "strategy_sample_taxon";
 		config.librarySelection = "random";
@@ -53,7 +53,7 @@ public class XmlServicesTest extends AbstractTestsSRA {
 		study.centerName=VariableSRA.centerName;
 		study.projectCode = "AWK";
 		study.centerProjectName = "AWK";
-		study.code = "study_AWK_5";
+		study.code = "study_AWK_5_2";
 		study.existingStudyType="Metagenomics";
 		study.traceInformation.setTraceInformation(user);
 		study.code = "study_" + config.projectCode;
@@ -82,20 +82,42 @@ public class XmlServicesTest extends AbstractTestsSRA {
 		contextValidation.setCreationMode();
 		contextValidation.getContextObjects().put("type", "sra");
 		String submissionCode = submissionServices.initNewSubmission(config.projectCode, readSetCodes, study.code, config.code, "william", contextValidation);
-		
+	
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class,  submissionCode);
-		File studyFile = new File("/env/cns/submit_traces/SRA/ngl-sub/dataTests/study.xml");
-		File sampleFile = new File("/env/cns/submit_traces/SRA/ngl-sub/dataTests/sample.xml");
-		File experimentFile = new File("/env/cns/submit_traces/SRA/ngl-sub/dataTests/experiment.xml");
-		File runFile = new File("/env/cns/submit_traces/SRA/ngl-sub/dataTests/run.xml");
-		File submissionFile = new File("/env/cns/submit_traces/SRA/ngl-sub/dataTests/submission.xml");
-		XmlServices.writeStudyXml(submission, studyFile);
+		System.out.println("Submission " + submission.code);
+
+		// Simuler la fonction activate e, ajoutant les refSampleCodes dans submission.sampleCodes
+		for (String sampleCode: submission.refSampleCodes) {
+			submission.sampleCodes.add(sampleCode);
+		}        
+		// Sauver la soumission avec son bon sampleCodes :
+		MongoDBDAO.save(InstanceConstants.SRA_SUBMISSION_COLL_NAME, submission);
+
+		
+		String resultDirectory_1 = "/env/cns/submit_traces/SRA/ngl-sub/mesTests/";
+		File dataRep_1 = new File(resultDirectory_1);
+		if (!dataRep_1.exists()){
+			dataRep_1.mkdirs();	
+		}		
+		
+		String resultDirectory = "/env/cns/submit_traces/SRA/ngl-sub/mesTests2/";
+		File dataRep = new File(resultDirectory);
+		if (!dataRep.exists()){
+			dataRep.mkdirs();	
+		}
+		File studyFile = new File(resultDirectory+"study.xml");
+		File sampleFile = new File(resultDirectory+"sample.xml");
+		File experimentFile = new File(resultDirectory+"experiment.xml");
+		File runFile = new File(resultDirectory+"run.xml");
+		File submissionFile = new File(resultDirectory+"submission.xml");
+
+		/*XmlServices.writeStudyXml(submission, studyFile);
 		XmlServices.writeSampleXml(submission, sampleFile);
 		XmlServices.writeExperimentXml(submission, experimentFile);
 		XmlServices.writeRunXml(submission, runFile);
 		XmlServices.writeSubmissionXml(submission, submissionFile);
+		*/
 		
-		String resultDirectory = "/env/cns/submit_traces/SRA/ngl-sub/mesTests2/";
 		XmlServices.writeAllXml(submissionCode, resultDirectory);
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.Study.class, study.code);
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, models.sra.submit.sra.instance.Configuration.class, config.code);
@@ -103,6 +125,8 @@ public class XmlServicesTest extends AbstractTestsSRA {
 
 		//XmlServices xmlServices = new XmlServices();
 		//XmlServices.writeAllXml(submissionCode);
+		MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.Study.class, study.code);
+		MongoDBDAO.deleteByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, models.sra.submit.sra.instance.Configuration.class, config.code);
 		
 		System.out.println("\ndisplayErrors pour validationXmlServicesSuccess :");
 		contextValidation.displayErrors(Logger.of("SRA"));		

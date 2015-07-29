@@ -1,0 +1,31 @@
+//created on: Apr 21, 2015
+package rules
+
+
+rule "Validation nanopore-depot"
+	@nglSQ( validations )
+	dialect "java"
+	salience 1000
+	no-loop
+    when
+    $experiment:Experiment($typeCode:typeCode,$typeCode=="nanopore-depot")
+    eval(true)
+    then
+		Logger.debug("Rules annotation @nglSQ(validations) nanopore-depot");    
+end
+
+
+rule "Validation outputcode nanopore-depot"
+	@nglSQ( validations )
+	dialect "java"
+	salience 1000
+	no-loop
+	when 
+	$experiment:Experiment($instrumentProperties: instrumentProperties,$typeCode:typeCode,$typeCode=="nanopore-depot")
+	$containerSupportCode : PropertyValue() from $instrumentProperties.get("containerSupportCode")
+	eval(!$containerSupportCode.value.toString().contains("_"))
+	$contextValidation:ContextValidation($errors : errors)
+	then
+		 Logger.debug("Error code nanopore-depot "+$containerSupportCode.value);
+		 $contextValidation.addErrors("instrumentproperties[containerSupportCode]",	"error.validationexp.containerSupportCodeContainString", $containerSupportCode.value, "_"); 
+end

@@ -54,13 +54,14 @@ public class Experiment extends DBObject implements IValidation {
 	// ajouter instrumentModel et libraryName.
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		contextValidation.addKeyToRootKeyName("experiment::");
+		contextValidation.addKeyToRootKeyName("experiment");
 		// Verifier que status est bien rensigne, et si != new alors libraryName renseigné :
 		System.out.println("Dans exp.validate, stateCode =" +state.code);
 
 		if(SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapStatus, "state.code")){
+			System.out.println("Dans exp.validate, stateCode =" +state.code);
 			if(! this.state.code.equalsIgnoreCase("new")) {
-				System.out.println("stateCode =" +state.code);
+				System.out.println("stateCode =" +state.code +" et libraryName = " + libraryName);
 				ValidationHelper.required(contextValidation, this.libraryName , "libraryName");
 			}
 		}
@@ -108,7 +109,7 @@ public class Experiment extends DBObject implements IValidation {
 			//mess += "le readSetcode "+ this.run.code + " existe deja dans la collection Experiment de la base";
 		//}
 		
-		contextValidation.removeKeyFromRootKeyName("experiment::");
+		contextValidation.removeKeyFromRootKeyName("experiment");
 
 	}
 

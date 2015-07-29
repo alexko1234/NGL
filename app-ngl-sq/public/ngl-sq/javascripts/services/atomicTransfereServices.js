@@ -898,6 +898,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 							$scope.addExperimentPropertiesOutputsColumns();
 							$scope.addInstrumentPropertiesOutputsColumns();
 						}
+						$scope.$broadcast('experimentLoaded');
 					});
 				},					
 				loadExperiment : function(input,outputToExperimentFunc,experimentToOutputFunc){

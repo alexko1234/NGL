@@ -78,7 +78,7 @@ public class Submission extends DBObject implements IValidation {
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		contextValidation.addKeyToRootKeyName("submission::");
+		contextValidation.addKeyToRootKeyName("submission");
 		// verifier que projectCode est bien renseigné et existe dans lims :
 		SraValidationHelper.validateProjectCode(this.projectCode, contextValidation);
 		// verifier que champs contraints presents avec valeurs autorisees:
@@ -103,14 +103,13 @@ public class Submission extends DBObject implements IValidation {
 				contextValidation.addErrors("studyCode, sampleCodes et experimentCodes ::", "Les 3 champs ne peuvent pas etre vides pour une soumission" + "taille des experiments = " +  this.experimentCodes.size() + ", taille des sample = "+ this.sampleCodes.size());
 			}
 			if (this.config == null) {
-				contextValidation.addErrors("config::", "objet qui doit etre renseigné");
+				contextValidation.addErrors("config", "objet qui doit etre renseigné");
 			} else {
 				// pas de validation, on considere que l'objet a ete recupere valide de la base
 				if (!config.state.code.equals("userValidate")){
-					contextValidation.addErrors("config::state.code", "'" + config.state.code + "' n'est pas à la valeur attendue 'userValidate'");
+					contextValidation.addErrors("config.state.code", "'" + config.state.code + "' n'est pas à la valeur attendue 'userValidate'");
 				}
 			}
-			
 			SraValidationHelper.validateCode(this, InstanceConstants.SRA_SUBMISSION_COLL_NAME, contextValidation);
 		} else if (contextValidation.getContextObjects().get("type").equals("wgs")) {
 			if (this.studyCode == null || this.analysisCode == null ||this.sampleCodes.size() == 0) {
@@ -118,7 +117,7 @@ public class Submission extends DBObject implements IValidation {
 			}
 			SraValidationHelper.validateCode(this, InstanceConstants.SRA_SUBMISSION_WGS_COLL_NAME, contextValidation);
 		}
-		contextValidation.removeKeyFromRootKeyName("submission::");
+		contextValidation.removeKeyFromRootKeyName("submission");
 	}
 
 }
