@@ -159,7 +159,16 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 			        	 "type":"text",
 			        	 "position":3,
 			        	 "extraHeaders":{0:"Bilan chargement"}
-			         }			         
+			         },
+			         {
+			        	 "header":"Date creation",
+			        	 "property":"creationDate",
+			        	 "order":true,
+						 "edit":true,
+						 "hide":true,
+			        	 "type":"date",
+			        	 "position":4
+			         }
 			         ],
 			compact:true,
 			pagination:{
@@ -171,7 +180,8 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 			order:{
 				mode:'local', //or 
 				active:true,
-				by:'code'
+				by:'creationDate',
+				reverse : true
 			},
 			remove:{
 				active:true,
@@ -179,7 +189,11 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 			save:{
 				active:true,
 				showButton: false,
-				mode:'local',
+				mode:'local'
+				//value: function(value){ 
+					//if(value.creationDate===undefined )  
+					//value.creationDate=new Date(); 
+					//return value;}
 			},
 			hide:{
 				active:true
@@ -462,6 +476,11 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 	var outputLoadingReportToExperiment =function(output){
 		var allData = output.getData();
 		if(allData != undefined){
+			for(var i=0 in allData) {
+				  if(allData[i].creationDate==undefined){
+					  allData[i].creationDate=new Date().getTime();
+				  };
+			}
 			if($scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].experimentProperties==undefined){
 				$scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].experimentProperties={};
 			}
