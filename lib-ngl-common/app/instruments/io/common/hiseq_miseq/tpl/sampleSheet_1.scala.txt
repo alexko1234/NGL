@@ -2,7 +2,7 @@
 
 @import _root_.instruments.io.utils._;
 @import java.text.SimpleDateFormat
-@import java.util.Locale
+@import java.lang._
 
 [Header]
 IEMFileVersion,4

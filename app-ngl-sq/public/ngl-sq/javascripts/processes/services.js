@@ -37,7 +37,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                	"header":Messages("processes.table.containerInputCode"),
 			                	"property":"containerInputCode",
 			                	"order":true,
-			                	"hide":true,
+			                	"hide":false,
 			                	"position":1,
 			                	"type":"text"
 			                },
@@ -53,7 +53,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                	"header":Messages("processes.table.sampleCode"),
 			                	"property":"sampleCode",
 			                	"order":true,
-			                	"hide":true,
+			                	"hide":false,
 			                	"position":3,
 			                	"type":"text"
 			                },						         
@@ -62,7 +62,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                	"property" : "sampleOnInputContainer.properties.tag.value",
 			                	"type" : "string",	  
 			                	"order" : true,
-			                	"hide" : true,
+			                	"hide" : false,
 			                	"modes" : ["datatable"],
 			                	"position" : 4
 			                },
@@ -71,7 +71,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                	"property":"typeCode",
 			                	"filter":"codes:'type'",
 			                	"order":true,
-			                	"hide":true,
+			                	"hide":false,
 			                	"position":5,
 			                	"type":"text"
 			                },
@@ -80,7 +80,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                	"property":"state.code",
 			                	"position":6,
 			                	"order":true,
-			                	"hide":true,
+			                	"hide":false,
 			                	"type":"text",
 			                	"filter": "codes:'state'",
 			                	"edit":false,
@@ -92,7 +92,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                	"property":"state.resolutionCodes",
 			                	"position":7,
 			                	"order":true,
-			                	"hide":true,
+			                	"hide":false,
 			                	"type":"text"
 			                },
 			                {
@@ -100,7 +100,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                	"property":"currentExperimentTypeCode",
 			                	"filter":"codes:'type'",
 			                	"order":true,
-			                	"hide":true,
+			                	"hide":false,
 			                	"position":8,
 			                	"type":"text"
 			                },
@@ -108,7 +108,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                	"header":Messages("processes.table.newContainerSupportCodes"),
 			                	"property":"newContainerSupportCodes",
 			                	"order":false,
-			                	"hide":true,
+			                	"hide":false,
 			                	"position":9,
 			                	"render":"<div list-resize='value.data.newContainerSupportCodes | unique' list-resize-min-size='2'>",
 			                	"type":"text"
@@ -117,7 +117,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                	"header":Messages("processes.table.experimentCodes"),
 			                	"property":"experimentCodes",
 			                	"order":false,
-			                	"hide":true,
+			                	"hide":false,
 			                	"position":10,
 			                	"render":"<div list-resize='value.data.experimentCodes | unique' list-resize-min-size='2'>",
 			                	"type":"text"
@@ -126,7 +126,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                	"header":Messages("processes.table.code"),
 			                	"property":"code",
 			                	"order":true,
-			                	"hide":true,
+			                	"hide":false,
 			                	"position":11,
 			                	"type":"text"
 			                },
@@ -135,7 +135,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                	"property":"traceInformation.creationDate",
 			                	"position":12,
 			                	"order":true,
-			                	"hide":true,
+			                	"hide":false,
 			                	"type":"date"
 			                },
 			                {
@@ -143,7 +143,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                	"property":"traceInformation.createUser",
 			                	"position":13,
 			                	"order":true,
-			                	"hide":true,
+			                	"hide":false,
 			                	"type":"text"
 			                }
 			                ],
@@ -152,7 +152,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 "header":Messages("processes.table.containerInputCode"),
 			                                    	 "property":"containerInputCode",
 			                                    	 "order":true,
-			                                    	 "hide":true,
+			                                    	 "hide":false,
 			                                    	 "position":1,
 			                                    	 "type":"text"
 			                                     },
@@ -168,7 +168,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 "header":Messages("processes.table.sampleCode"),
 			                                    	 "property":"sampleCode",
 			                                    	 "order":true,
-			                                    	 "hide":true,
+			                                    	 "hide":false,
 			                                    	 "position":3,
 			                                    	 "type":"text"
 			                                     },
@@ -177,7 +177,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 "property" : "sampleOnInputContainer.properties.tag.value",
 			                                    	 "type" : "string",	  
 			                                    	 "order" : true,
-			                                    	 "hide" : true,
+			                                    	 "hide" : false,
 			                                    	 "modes" : ["datatable"],
 			                                    	 "position" : 4
 			                                     },
@@ -186,7 +186,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 "property":"typeCode",
 			                                    	 "filter":"codes:'type'",
 			                                    	 "order":true,
-			                                    	 "hide":true,
+			                                    	 "hide":false,
 			                                    	 "position":5,
 			                                    	 "type":"text"
 			                                     },
@@ -194,7 +194,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 "header":Messages("processes.table.stateCode"),
 			                                    	 "property":"state.code",
 			                                    	 "order":true,
-			                                    	 "hide":true,
+			                                    	 "hide":false,
 			                                    	 "position":6,
 			                                    	 "type":"text",
 			                                    	 "filter": "codes:'state'",
@@ -207,7 +207,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 "property":"state.resolutionCodes",
 			                                    	 "position":7,
 			                                    	 "order":true,
-			                                    	 "hide":true,
+			                                    	 "hide":false,
 			                                    	 "type":"text"
 			                                     },
 			                                     {
@@ -215,7 +215,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 "property":"currentExperimentTypeCode",
 			                                    	 "filter":"codes:'type'",
 			                                    	 "order":true,
-			                                    	 "hide":true,
+			                                    	 "hide":false,
 			                                    	 "position":8,
 			                                    	 "type":"text"
 			                                     },
@@ -223,7 +223,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 "header":Messages("processes.table.newContainerSupportCodes"),
 			                                    	 "property":"newContainerSupportCodes",
 			                                    	 "order":false,
-			                                    	 "hide":true,
+			                                    	 "hide":false,
 			                                    	 "position":9,
 			                                    	 "render":"<div list-resize='value.data.newContainerSupportCodes | unique' list-resize-min-size='2'>",
 			                                    	 "type":"text"
@@ -232,7 +232,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 "header":Messages("processes.table.experimentCodes"),
 			                                    	 "property":"experimentCodes",
 			                                    	 "order":false,
-			                                    	 "hide":true,
+			                                    	 "hide":false,
 			                                    	 "position":10,
 			                                    	 "render":"<div list-resize='value.data.experimentCodes | unique' list-resize-min-size='2'>",
 			                                    	 "type":"text"
@@ -241,7 +241,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 "header":Messages("processes.table.code"),
 			                                    	 "property":"code",
 			                                    	 "order":true,
-			                                    	 "hide":true,
+			                                    	 "hide":false,
 			                                    	 "position":11,
 			                                    	 "type":"text"
 			                                     },
@@ -250,7 +250,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 "property":"traceInformation.creationDate",
 			                                    	 "position":12,
 			                                    	 "order":true,
-			                                    	 "hide":true,
+			                                    	 "hide":false,
 			                                    	 "type":"date"
 			                                     },
 			                                     {
@@ -258,7 +258,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 "property":"traceInformation.createUser",
 			                                    	 "position":13,
 			                                    	 "order":true,
-			                                    	 "hide":true,
+			                                    	 "hide":false,
 			                                    	 "type":"text"
 			                                     }
 			                                     ],
@@ -267,6 +267,8 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                     lists : lists,
 			                                     getDefaultColumns : this.columnsDefault,
 			                                     additionalFilters:[],
+			                                     additionalProcessFilters:[],
+			                                     isProcessFiltered:false,
 			                                     additionalColumns:[],
 			                                     selectedAddColumns:[],
 			                                     setRouteParams:function($routeParams){
@@ -393,6 +395,10 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 this.form = {};									
 			                                     },
 
+			                     				resetSampleCodes : function(){
+			                    					this.form.sampleCodes = [];									
+			                    				},
+			                                     
 			                                     initAdditionalFilters:function(){
 			                                    	 this.additionalFilters=[];
 			                                    	 var formFilters = [];
@@ -401,9 +407,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 
 			                                    	 
 			                                    	 
-			                                    	 if(angular.isDefined(this.form.typeCode) && lists.get("process-"+this.form.typeCode) && lists.get("process-"+this.form.typeCode).length === 1){ 
-			                                    		 allFilters = angular.copy(lists.get("process-"+this.form.typeCode)[0].filters);
-			                                    	 }else if(lists.get("processes-search-addfilters") && lists.get("processes-search-addfilters").length === 1){
+			                                    	 if(lists.get("processes-search-addfilters") && lists.get("processes-search-addfilters").length === 1){
 			                                    		 allFilters = angular.copy(lists.get("processes-search-addfilters")[0].filters);			                                    		 
 			                                    	 } 
 			                                    	 if(angular.isDefined(allFilters)){   
@@ -411,11 +415,11 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 for(var i = 0; i  < 5 && allFilters.length > 0 ; i++){
 			                                    		 formFilters.push(allFilters.splice(0, nbElementByColumn));	    								
 			                                    	 }
-			                                    	 }
 			                                    	 //complete to 5 five element to have a great design 
 			                                    	 while(formFilters.length < 5){
 			                                    		 formFilters.push([]);
 			                                    	 }
+			                                    	 }		                                    	 
 
 			                                    	 this.additionalFilters = formFilters;			                                    	 
 			                                     },
@@ -424,7 +428,42 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 if(this.additionalFilters !== undefined && this.additionalFilters.length === 0){
 			                                    		 this.initAdditionalFilters();
 			                                    	 }
-			                                    	 return this.additionalFilters;									
+			                                    	 return this.additionalFilters;
+			                                    	
+			                                     },
+			                                     
+			                                     
+			                                     initAdditionalProcessFilters:function(){
+			                                    	 this.additionalProcessFilters=[];
+			                                    	 var formFilters = [];
+			                                    	 var allFilters = undefined;
+			                                    	 var nbElementByColumn = undefined;	
+			                                    	 
+			                                    	 if(angular.isDefined(this.form.typeCode) && lists.get("process-"+this.form.typeCode) && lists.get("process-"+this.form.typeCode).length === 1){ 
+			                                    		 allFilters = angular.copy(lists.get("process-"+this.form.typeCode)[0].filters);
+			                                    		 this.isProcessFiltered = true;
+			                                    	 }else{
+			                                    		 this.isProcessFiltered = false;
+			                                    	 }
+			                                    	 if(angular.isDefined(allFilters)){   
+			                                    	 nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
+			                                    	 for(var i = 0; i  < 5 && allFilters.length > 0 ; i++){
+			                                    		 formFilters.push(allFilters.splice(0, nbElementByColumn));	    								
+			                                    	 }
+			                                    	//complete to 5 five element to have a great design 
+			                                    	 while(formFilters.length < 5){
+			                                    		 formFilters.push([]);
+			                                    	 }
+			                                    	 }                               	 
+
+			                                    	 this.additionalProcessFilters = formFilters;			                                    	 
+			                                     },
+			                                     
+			                                     getAddProcessFiltersToForm : function(){
+			                                    	 if(this.additionalProcessFilters !== undefined && this.additionalProcessFilters.length === 0){
+			                                    		 this.initAdditionalProcessFilters();
+			                                    	 }
+			                                    	 return this.additionalProcessFilters;									
 			                                     },
 			                                     
 			                                     search : function(){
@@ -434,7 +473,8 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 		                                    		searchService.getColumns();
 			                         				this.datatable.search(this.convertForm());
 			                         				
-			                         			},
+			                         			},			                         			
+			                         			
 
 			                                     refreshSamples : function(){
 			                                    	 if(this.form.projectCodes && this.form.projectCodes.length > 0){
@@ -444,6 +484,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 
 			                                     changeProcessCategory : function(){
 			                                    	 this.additionalFilters=[];
+			                                    	 this.additionalProcessFilters=[];
 			                                    	 this.form.typeCode = undefined;
 			                                    	 this.lists.clear("processTypes");
 
@@ -458,7 +499,8 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 }else{
 			                                    		 this.form.typeCode = undefined;			                                    		
 			                                    	 }
-			                                    	 this.initAdditionalFilters();			                                    	 
+			                                    	 this.initAdditionalFilters();
+			                                    	 this.initAdditionalProcessFilters();
 			                                     },
 			                                     initAdditionalColumns : function(){
 			                                    	 this.additionalColumns=[];

@@ -1,9 +1,42 @@
 @()
 
-@main("index.title", menu("home")) {
-   <div class="jumbotron">
-        <h1>Welcome to Next-Generation LIMS</h1>
-        <p>This a simple and flexible LIMS for next-generation sequencing.</p>
-        <p><a class="btn btn-primary btn-lg">Learn more</a></p>
-      </div>   
+@scripts() = {
+	 <script src="@controllers.experiments.tpl.routes.Experiments.javascriptRoutes" type="text/javascript" charset="utf-8"></script>
+     <script src="@controllers.main.tpl.routes.Main.jsCodes" type="text/javascript" charset="utf-8"></script> 
+     <script src="@routes.Assets.at("datatable/javascripts/services/datatable2.js")" type="text/javascript" charset="utf-8"></script>                           
+     <script src="@routes.Assets.at("ngl-sq/javascripts/home/app.js")" type="text/javascript" charset="utf-8"></script>
+     <script src="@routes.Assets.at("ngl-sq/javascripts/home/search-ctrl.js")" type="text/javascript" charset="utf-8"></script>          
+	 <script src="@routes.Assets.at("ngl-common/javascripts/services/commons.js")" type="text/javascript" charset="utf-8"></script> 	 
+	  <script src="@routes.Assets.at("ngl-common/javascripts/services/list-resize.js")" type="text/javascript" charset="utf-8"></script> 	 
+	                            
+}
+
+@main("index.title", menu("home"), scripts) {
+	<div  class="row">
+	   <div class="jumbotron">
+	        <h1>Welcome to Next-Generation LIMS</h1>
+	        <p>This a simple and flexible LIMS for next-generation sequencing.</p>
+	        <p><a class="btn btn-primary btn-lg">Learn more</a></p>
+	      </div>   
+    </div>
+    <div ng-controller="SearchCtrl" ng-app="home">
+      <div  class="row">
+      <div class="col-md-6 col-lg-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="text-center">
+						<a href="@controllers.experiments.tpl.routes.Experiments.home("search")?stateCodes=IP">
+							<span class="label label-primary pull-right">{{experimentDatatable.totalNumberRecords}}</span>
+							@Messages("home.experiments.ip")							
+						</a>
+					</h3>
+				</div>
+				<div class="panel-body">
+					 	<div datatable="experimentDatatable">
+      					</div>
+				</div>
+			</div>
+		</div>
+      </div>
+    </div>
 }

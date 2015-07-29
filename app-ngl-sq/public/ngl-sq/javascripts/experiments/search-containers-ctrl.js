@@ -25,14 +25,14 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		{
 			"header":Messages("containers.table.support.column"),
 			"property":"support.column",
-			"order":false,
+			"order":true,
 			"position":3,
 			"type":"text"
 		},
 		{
 			"header":Messages("containers.table.support.line"),
 			"property":"support.line",
-			"order":false,
+			"order":true,
 			"position":4,
 			"type":"text"
 		},
@@ -41,6 +41,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"property":"code",
 			"order":true,
 			"position":5,
+			"render":"<div list-resize='cellValue | stringToArray | unique' ' list-resize-min-size='2'>",
 			"type":"text",
 			"groupMethod":"collect"
 		},
@@ -205,10 +206,18 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		}		
 
 		$scope.searchService.initAdditionalFilters();
+		$scope.searchService.initAdditionalProcessFilters();
 	};
 	
 	$scope.reset = function(){
-		$scope.searchService.form = {}
+		$scope.searchService.form = {};
+		$scope.searchService.additionalProcessFilters=[];
+		$scope.searchService.isProcessFiltered=false;
+		
+	};
+	
+	$scope.resetSampleCodes = function(){
+		$scope.searchService.form.sampleCodes = [];									
 	};
 	
 	$scope.loadExperimentTypesLists = function(){
@@ -375,9 +384,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		var additionalFilters = $scope.searchService.additionalFilters = [];
 		var allFilters = undefined;
 		var formFilters = [];
-		if(angular.isDefined($scope.searchService.form.processTypeCode) && $scope.searchService.lists.get("process-"+$scope.searchService.form.processTypeCode) && $scope.searchService.lists.get("process-"+$scope.searchService.form.processTypeCode).length === 1){ 
-			allFilters = angular.copy($scope.searchService.lists.get("process-"+$scope.searchService.form.processTypeCode)[0].filters);
-		}else if($scope.searchService.lists.get("containers-search-addfilters") && $scope.searchService.lists.get("containers-search-addfilters").length === 1){
+		if($scope.searchService.lists.get("containers-search-addfilters") && $scope.searchService.lists.get("containers-search-addfilters").length === 1){
 			allFilters = angular.copy($scope.searchService.lists.get("containers-search-addfilters")[0].filters);
 		}
 
@@ -386,11 +393,12 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			for(var i = 0; i  < 5 && allFilters.length > 0 ; i++){
 				formFilters.push(allFilters.splice(0, nbElementByColumn));	    								
 			}
-		}
 			//complete to 5 five element to have a great design 
 			while(formFilters.length < 5){
 				formFilters.push([]);
 			}
+		}
+			
 
 			$scope.searchService.additionalFilters = additionalFilters = formFilters;
 		
@@ -402,6 +410,40 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		}
 		return $scope.searchService.additionalFilters;									
 	};	
+	
+	$scope.searchService.initAdditionalProcessFilters = function(){
+		$scope.searchService.additionalProcessFilters=[];
+    	 var formFilters = [];
+    	 var allFilters = undefined;
+    	 var nbElementByColumn = undefined;	
+    	 
+    	 if(angular.isDefined($scope.searchService.form.processTypeCode) && $scope.searchService.lists.get("process-"+$scope.searchService.form.processTypeCode) && $scope.searchService.lists.get("process-"+$scope.searchService.form.processTypeCode).length === 1){ 
+    		 allFilters = angular.copy($scope.searchService.lists.get("process-"+$scope.searchService.form.processTypeCode)[0].filters);
+    		 $scope.searchService.isProcessFiltered = true;
+    	 }else{
+    		 $scope.searchService.isProcessFiltered = false;
+    	 }
+    	 if(angular.isDefined(allFilters)){   
+    	 nbElementByColumn = Math.ceil(allFilters.length / 5); //5 columns
+    	 for(var i = 0; i  < 5 && allFilters.length > 0 ; i++){
+    		 formFilters.push(allFilters.splice(0, nbElementByColumn));	    								
+    	 }
+    	//complete to 5 five element to have a great design 
+    	 while(formFilters.length < 5){
+    		 formFilters.push([]);
+    	 }
+    	 }                               	 
+
+    	 $scope.searchService.additionalProcessFilters = formFilters;			                                    	 
+     },
+     
+     $scope.searchService.getAddProcessFiltersToForm = function(){
+    	 if($scope.searchService.additionalProcessFilters !== undefined && $scope.searchService.additionalProcessFilters.length === 0){
+    		 $scope.searchService.initAdditionalProcessFilters();
+    	 }
+    	 return $scope.searchService.additionalProcessFilters;									
+     },
+	
 	
 	$scope.addToBasket = function(containers){
 		for(var i = 0; i < containers.length; i++){
@@ -492,6 +534,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 	$scope.form = {};
 	$scope.loadExperimentTypesLists();
 	$scope.searchService.additionalFilters=[];
+	$scope.searchService.additionalProcessFilters=[];
+	$scope.searchService.isProcessFiltered=false;
 	$scope.searchService.additionalColumns=[];
 	$scope.searchService.selectedAddColumns=[];
 	$scope.searchService.getColumns=$scope.datatableConfig.columns;

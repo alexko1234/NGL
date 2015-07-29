@@ -61,6 +61,7 @@
 							"header":Messages("experiments.table.projectCodes"),
 							"property":"projectCodes",
 							"order":false,
+							"render":"<div list-resize='value.data.projectCodes | unique' list-resize-min-size='3'>",
 							"hide":true,
 							"position":7,
 							"type":"text"
@@ -195,6 +196,15 @@
 				resetForm : function(){					
 					this.form = {};					
 				},
+				
+				resetSampleCodes : function(){
+					this.form.sampleCodes = [];									
+				},
+				
+				resetSampleCodes : function(){
+					this.form.sampleCodes = [];									
+				},
+				
 				search : function(){
 					this.updateForm();
 					mainService.setForm(this.form);				

@@ -135,9 +135,9 @@ public class KitCatalogs extends DocumentController<KitCatalog>{
 		}
 		
 		if(StringUtils.isNotBlank(kitCatalogSearch.name)){
-			queryElts.add(DBQuery.regex("name", Pattern.compile(kitCatalogSearch.name)));
 			queryElts.add(DBQuery.regex("name", Pattern.compile(kitCatalogSearch.name, Pattern.CASE_INSENSITIVE)));
 		}
+		
 		if(StringUtils.isNotBlank(kitCatalogSearch.providerRefName)){
 			queryElts.add(DBQuery.regex("providerRefName", Pattern.compile(kitCatalogSearch.providerRefName,Pattern.CASE_INSENSITIVE)));
 		}

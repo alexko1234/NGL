@@ -310,7 +310,6 @@
 	 
 	 $scope.loadKit = function(){
 		 if($scope.kit.code !== undefined && $scope.kit.code !== ""){
-			 return $http.get(jsRoutes.controllers.reagents.api.Kits.get($scope.kit.code).url)
 			 return $http.get(jsRoutes.controllers.reagents.api.Kits.list().url, {"params":{"code":$scope.kit.code}})
 				.success(function(data, status, headers, config) {
 					if(data!=null && data.length > 0){
@@ -399,8 +398,8 @@
 			}else{
 				promises.push($scope.updateBox(i,$scope.boxes[i]));
 			}
+		}
 		return promises;
-	 }
 	};
 	 
 	 $scope.saveBox = function(i,box){

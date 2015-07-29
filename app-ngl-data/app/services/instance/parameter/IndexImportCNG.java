@@ -15,6 +15,12 @@ import services.instance.AbstractImportDataCNG;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
 
+/**
+ * @author dnoisett
+ * Import Indexes from CNG's LIMS to NGL, ( no update for index)
+ * FDS remplacement de l'appel a Logger par logger
+ */
+
 public class IndexImportCNG extends AbstractImportDataCNG{
 
 	public IndexImportCNG(FiniteDuration durationFromStart,
@@ -24,23 +30,31 @@ public class IndexImportCNG extends AbstractImportDataCNG{
 
 	@Override
 	public void runImport() throws SQLException, DAOException {
-		createIndex(limsServices,contextError);
+		createIndex(); // NW: supression des arguments
 	}
 
-	
-	public static void createIndex(LimsCNGDAO limsServices,ContextValidation contextValidation) throws SQLException, DAOException{
+	// NW: suppression du mot clef "static" 
+	// NW: supression des arguments et renommage de contextValidation en contextError
+	public void createIndex() throws SQLException, DAOException{
+		logger.info("start loading indexes");
 		
-		Logger.debug("start loading indexes");
+		//-1- chargement depuis la base source Postgresql
+		logger.info("1/3 loading from source database...");
+		List<Index> indexes = limsServices.findIndexIlluminaToCreate(contextError) ;
+		logger.info("found "+indexes.size() + " items");
 		
-		List<Index> indexs = limsServices.findIndexIlluminaToCreate(contextValidation) ;
-		
-		for (Index index:indexs) {
+		//-2a- trouver les samples concernés dans la base mongoDB et les supprimer
+		logger.info("2/3 delete from dest database...");
+		for (Index index:indexes) {
 			if (MongoDBDAO.checkObjectExistByCode(InstanceConstants.PARAMETER_COLL_NAME, Index.class, index.code)) {
 				MongoDBDAO.deleteByCode(InstanceConstants.PARAMETER_COLL_NAME, Index.class, index.code);
 			}
-		}	
-		InstanceHelpers.save(InstanceConstants.PARAMETER_COLL_NAME,indexs,contextValidation);
+		}
+
+		//-3- sauvegarde dans la base cible MongoDb
+		logger.info("3/3 saving to dest database...");
+		InstanceHelpers.save(InstanceConstants.PARAMETER_COLL_NAME,indexes,contextError);
 		
-		Logger.debug("end loading indexes");
+		logger.info("end loading indexes");
 	}
 }

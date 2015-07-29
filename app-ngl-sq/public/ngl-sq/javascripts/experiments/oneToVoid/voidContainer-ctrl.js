@@ -197,17 +197,18 @@ angular.module('home').controller('OneToVoidContainerCtrl',['$scope', '$window',
 
 
 	$scope.$on('save', function(e, promises, func, endPromises) {
-		$scope.datatable.save();
+		promises.push($scope.datatable.save());
 		$scope.$emit('viewSaved', promises, func, endPromises);
 	});
 
 	$scope.refreshView = function(){
-		var i = 0;
+		$scope.atomicTransfere.reloadContainersDatatable($scope.datatable);
+		/*	var i = 0;
 		var k = 0;
 		while($scope.experiment.value.atomicTransfertMethods[i] != undefined){
 			$scope.datatable.displayResult[i].data.state = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].state;
 			i++;
-		}
+		}*/
 	};
 
 	$scope.init_atomicTransfert = function(containers, atomicTransfertMethod){

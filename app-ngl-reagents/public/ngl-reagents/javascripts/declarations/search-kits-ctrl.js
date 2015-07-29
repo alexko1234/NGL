@@ -36,7 +36,7 @@ angular.module('home').controller('SearchKitsCtrl', ['$scope', 'datatable','list
 	$scope.datatable = datatable($scope.datatableConfig);		
 	if(angular.isUndefined($scope.getHomePage())){
 		mainService.setHomePage('kits.new');
-		tabService.addTabs({label:Messages('kitDeclarations.tabs.search'),href:jsRoutes.controllers.reagents.tpl.Kits.home("search").url,remove:false});
+		tabService.addTabs({label:Messages('kitDeclarations.tabs.search'),href:jsRoutes.controllers.reagents.tpl.Kits.home("search").url,remove:true});
 		tabService.activeTab(0);
 	}
 	if(angular.isUndefined($scope.getForm())){

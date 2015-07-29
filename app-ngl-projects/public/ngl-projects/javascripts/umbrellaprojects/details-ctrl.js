@@ -12,7 +12,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 	$scope.update = function(){
 		var objProj = angular.copy($scope.umbrellaProject);
 		
-		$http.put(jsRoutes.controllers.umbrellaprojects.api.UmbrellaProjects.update($routeParams.code).url, objProj).success(function(data) {
+		$http.put(jsRoutes.controllers.projects.api.UmbrellaProjects.update($routeParams.code).url, objProj).success(function(data) {
 			$scope.messages.setSuccess("save");
 			mainService.stopEditMode();
 		}).error(function(data, status, headers, config){
@@ -26,7 +26,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 	};
 	
 	var updateData = function(isCancel){
-		$http.get(jsRoutes.controllers.umbrellaprojects.api.UmbrellaProjects.get($routeParams.code).url).success(function(data) {
+		$http.get(jsRoutes.controllers.projects.api.UmbrellaProjects.get($routeParams.code).url).success(function(data) {
 			$scope.umbrellaProject = data;	
 			$scope.stopEditMode();
 		});
@@ -38,12 +38,12 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		$scope.mainService = mainService;
 		$scope.mainService.stopEditMode();
 
-		$http.get(jsRoutes.controllers.umbrellaprojects.api.UmbrellaProjects.get($routeParams.code).url).success(function(data) {
+		$http.get(jsRoutes.controllers.projects.api.UmbrellaProjects.get($routeParams.code).url).success(function(data) {
 			$scope.umbrellaProject = data;		
 		
 			if(tabService.getTabs().length == 0){
-				tabService.addTabs({label:Messages('projects.menu.search'), href:jsRoutes.controllers.umbrellaprojects.tpl.UmbrellaProjects.home("search").url, remove:true});
-				tabService.addTabs({label:$scope.umbrellaProject.code, href:jsRoutes.controllers.umbrellaprojects.tpl.UmbrellaProjects.get($scope.umbrellaProject.code).url, remove:true});
+				tabService.addTabs({label:Messages('projects.menu.search'), href:jsRoutes.controllers.projects.tpl.UmbrellaProjects.home("search").url, remove:true});
+				tabService.addTabs({label:$scope.umbrellaProject.code, href:jsRoutes.controllers.projects.tpl.UmbrellaProjects.get($scope.umbrellaProject.code).url, remove:true});
 				tabService.activeTab(tabService.getTabs(1));
 			}
 			
@@ -65,7 +65,7 @@ angular.module('home').controller('AddCtrl', ['$scope', '$http', '$routeParams',
 	$scope.save = function(){
 		var objUmbrellaProj = angular.copy($scope.form);
 		
-		$http.post(jsRoutes.controllers.umbrellaprojects.api.UmbrellaProjects.save().url, objUmbrellaProj).success(function(data) {
+		$http.post(jsRoutes.controllers.projects.api.UmbrellaProjects.save().url, objUmbrellaProj).success(function(data) {
 			$scope.messages.setSuccess("save");
 		});
 	};	

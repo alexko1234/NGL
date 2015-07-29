@@ -107,10 +107,10 @@
 					<input type="text" class="form-control" ng-model="box.catalogRefCode" ng-keydown="getType($event, box)">
 				</td>
 				<td>
-					<input type="text" class="form-control"ng-model="box.bundleBarCode">
+					<input type="text" class="form-control"ng-model="box.bundleBarCode" ng-keydown="scan($event)">
 				</td>
 				<td>
-					<input type="text"  class="form-control" ng-model="box.barCode" ng-keydown="scan($event)">
+					<input type="text"  class="form-control" ng-model="box.barCode">
 				</td>
 			</tr>
 			</table>

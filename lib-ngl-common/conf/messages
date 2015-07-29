@@ -44,7 +44,7 @@ error.validationexp.outputconcentrationnotnull="La saisie de la concentration du
 error.validationexp.codewithbadchar= "Le champ {0} contient de mauvais caractères"
 error.validationexp.oneInputSupport="Le type d''expérience {0} accepte qu''un seul support en entrée"
 error.validationexp.notAllInputContainer="Le support {0} n'est pas complet"
-
+error.validationexp.containerSupportCodeContainString = "Le code flowcell {0} doit contenir la chaine de caractère {1}" 
 
 #directive messages
 msg.details = [détails]

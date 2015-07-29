@@ -91,3 +91,9 @@
   position: relative;
   top: 40%;
 }
+
+/* Style for specific processes filter */
+
+.filterLine{
+  clear: left;	
+}

@@ -126,7 +126,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 									allData[i].inputInstrumentProperties = $scope.experiment.value.atomicTransfertMethods[position].inputContainerUseds[0].instrumentProperties;
 									allData[i].inputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[position].inputContainerUseds[0].experimentProperties;
 									allData[i].inputContainerUsed =  $scope.experiment.value.atomicTransfertMethods[position].inputContainerUseds[0];
-									allData[i].contents = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].contents;											
+									allData[i].contents = $scope.experiment.value.atomicTransfertMethods[position].inputContainerUseds[0].contents;											
 								}										
 							}
 							input.setData(allData, allData.length);
@@ -138,18 +138,19 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 						var allData = input.getData();
 						if(allData != undefined){
 							for(var i=0;i<allData.length;i++){
-								if($scope.experiment.value.atomicTransfertMethods[i] === null || angular.isUndefined($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0])){
-									$scope.experiment.value.atomicTransfertMethods[i] = {inputContainerUseds:[]};											
+								var position = this.searchInputContainerUsedPosition(allData[i].code);
+								if($scope.experiment.value.atomicTransfertMethods[position] === null || angular.isUndefined($scope.experiment.value.atomicTransfertMethods[position].inputContainerUseds[0])){
+									$scope.experiment.value.atomicTransfertMethods[position] = {inputContainerUseds:[]};											
 								}										
 								//$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].percentage = allData[i].inputContainerUseds[0].percentage;	
-								$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].instrumentProperties = allData[i].inputInstrumentProperties;
-								$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].experimentProperties = allData[i].inputExperimentProperties;
-								$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].contents = allData[i].contents;
-								$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].concentration = allData[i].mesuredConcentration;
-								$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].volume = allData[i].mesuredVolume;
+								$scope.experiment.value.atomicTransfertMethods[position].inputContainerUseds[0].instrumentProperties = allData[i].inputInstrumentProperties;
+								$scope.experiment.value.atomicTransfertMethods[position].inputContainerUseds[0].experimentProperties = allData[i].inputExperimentProperties;
+								$scope.experiment.value.atomicTransfertMethods[position].inputContainerUseds[0].contents = allData[i].contents;
+								$scope.experiment.value.atomicTransfertMethods[position].inputContainerUseds[0].concentration = allData[i].mesuredConcentration;
+								$scope.experiment.value.atomicTransfertMethods[position].inputContainerUseds[0].volume = allData[i].mesuredVolume;
 
-								varExperimentCommonFunctions.removeNullProperties($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].instrumentProperties);
-								varExperimentCommonFunctions.removeNullProperties($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].experimentProperties);
+								varExperimentCommonFunctions.removeNullProperties($scope.experiment.value.atomicTransfertMethods[position].inputContainerUseds[0].instrumentProperties);
+								varExperimentCommonFunctions.removeNullProperties($scope.experiment.value.atomicTransfertMethods[position].inputContainerUseds[0].experimentProperties);
 							}
 
 							input.setData(allData, allData.length);
@@ -498,12 +499,12 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 					}
 					var that = this;
 					$q.all(promises).then(function (res) {
-						var oldDatatableValues = datatable.getData();
+						//var oldDatatableValues = datatable.getData();
 						datatable.setData(resultInput.containers,resultInput.containers.length);
 						if($scope.experiment.outputGenerated == true){									
 							var allData = datatable.getData();
-							var j =0;
-							while(allData[j]){
+							//var j =0;
+							/*while(allData[j]){
 								if(angular.isUndefined(allData[j].outputContainerUsed)){
 									allData[j].outputContainerUsed = oldDatatableValues[j].outputContainerUsed;
 								}
@@ -513,7 +514,25 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 									allData[j].outputContainerUsed = containerUsed;
 								}
 								j++;
-							}								
+							}*/
+							
+							angular.forEach(allData, function(data){
+								var containerTmp = undefined;
+								for(var j=0; j<$scope.experiment.value.atomicTransfertMethods.length;j++){
+									if(data.code===$scope.experiment.value.atomicTransfertMethods[j].inputContainerUseds[0].code){
+										for(var i=0; i<resultOutput.containers.length;i++){
+											if($scope.experiment.value.atomicTransfertMethods[j].outputContainerUseds[0].code===resultOutput.containers[i].code){
+												containerTmp = resultOutput.containers[i];
+												break;
+											}
+										}
+									}
+								}
+								if(!angular.isUndefined(containerTmp)){
+									var containerUsed = {code:containerTmp.code, concentration: containerTmp.mesuredConcentration, volume: containerTmp.mesuredVolume, state: containerTmp.state};									
+									data.outputContainerUsed = containerUsed;		
+								}
+							});
 
 							datatable.setData(allData,allData.length);
 							if(angular.isDefined(outputToExperimentFunc) && angular.isFunction(outputToExperimentFunc)){								
@@ -746,10 +765,11 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 						containersIn = varManyToX.loadInputContainers($scope.experiment.value.atomicTransfertMethods);
 					}
 					promises = promises.concat(containersIn.promises);
-					if(containersOut == undefined && $scope.outputGenerated === true){
+					if(containersOut == undefined && $scope.experiment.outputGenerated === true){
 						containersOut = varXToOne.loadOutputContainers($scope.experiment.value.atomicTransfertMethods);
 						promises = promises.concat(containersOut.promises);
 					}
+					
 					var that = this;
 					$q.all(promises).then(function (res) {
 						containersIn = containersIn;
@@ -768,15 +788,15 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 										containerIn.percentage = percentage;
 									}
 								});
-								if(containersOut != undefined){
+								if(containersOut != undefined && containersOut.containers.length>0){
 									angular.forEach(containersOut.containers, function(container) {
 										if(angular.isArray(container) && container[0].code == $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].code){
 											containerOut.code = container[0].code;
 											containerOut.volume = container[0].mesuredVolume;
 											containerOut.concentration = container[0].mesuredConcentration;
 											containerOut.state = container[0].state;
-											containerOut.experimentProperties = container[0].experimentProperties;
-											containerOut.instrumentProperties = container[0].instrumentProperties;
+											containerOut.experimentProperties = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].experimentProperties;
+											containerOut.instrumentProperties =$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].instrumentProperties;
 											containerOut.locationOnContainerSupport = container[0].locationOnContainerSupport;
 											
 										}else if(container.code == $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].code){
@@ -784,14 +804,17 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 											containerOut.volume = container.mesuredVolume;
 											containerOut.concentration = container.mesuredConcentration;
 											containerOut.state = container.state;
-											containerOut.experimentProperties = container.experimentProperties;
-											containerOut.instrumentProperties = container.instrumentProperties;
+											containerOut.experimentProperties = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].experimentProperties;
+											containerOut.instrumentProperties = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].instrumentProperties;
 											containerOut.locationOnContainerSupport = container.locationOnContainerSupport;
 										}
 										
 										
 									});
+								}else{
+									containerOut = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0];
 								}
+								
 								var tags  = [];
 								var sampleTypes = [];
 								var libProcessTypeCodes = [];
@@ -815,15 +838,20 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 									concentration = containerIn.mesuredConcentration.value;
 								}
 
-
-
 								var mesuredVolume = 0;
 								if(containerIn.mesuredVolume !== undefined && containerIn.mesuredVolume !== null){
 									mesuredVolume = containerIn.mesuredVolume;
 								}
-								var container = {"inputCode":containerIn.code,"inputSupportCode":containerIn.support.code, "projectCodes":containerIn.projectCodes,"sampleCodes":containerIn.sampleCodes,
-										"inputX":containerIn.support.line, "inputTags":tags,"inputSampleTypes":sampleTypes, "inputLibProcessTypeCodes":libProcessTypeCodes, "inputState":containerIn.state,
-										"inputY":containerIn.support.column, "experimentProperties":containerIn.experimentProperties,"fromExperimentTypeCodes":containerIn.fromExperimentTypeCodes,
+								
+								var support = {};
+								if(containerIn.locationOnContainerSupport !== undefined){
+									support = containerIn.locationOnContainerSupport;
+								}else{
+									support = containerIn.support;
+								}
+								var container = {"inputCode":containerIn.code,"inputSupportCode":support.code, "projectCodes":containerIn.projectCodes,"sampleCodes":containerIn.sampleCodes,
+										"inputX":support.line, "inputTags":tags,"inputSampleTypes":sampleTypes, "inputLibProcessTypeCodes":libProcessTypeCodes, "inputState":containerIn.state,
+										"inputY":support.column, "experimentProperties":containerIn.experimentProperties,"fromExperimentTypeCodes":containerIn.fromExperimentTypeCodes,
 										"instrumentProperties":containerIn.instrumentProperties, "outputPositionX":$scope.experiment.value.atomicTransfertMethods[i].line, "percentage": containerIn.percentage, "outputContainerUsed":containerOut,
 										"outputPositionY":$scope.experiment.value.atomicTransfertMethods[i].column,"inputConcentration":concentration,"sampleCodeAndTags":sampleCodeAndTags,"inputVolume":mesuredVolume};//Fake container
 								containers.push(container);
@@ -870,6 +898,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 							$scope.addExperimentPropertiesOutputsColumns();
 							$scope.addInstrumentPropertiesOutputsColumns();
 						}
+						$scope.$broadcast('experimentLoaded');
 					});
 				},					
 				loadExperiment : function(input,outputToExperimentFunc,experimentToOutputFunc){
@@ -967,7 +996,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 
 		};
 
-		var manyToOne = {
+		var oneToVoid = {
 				experimentToInput : function(input){
 					varOneToX.experimentToInput(input);
 				},
@@ -1003,6 +1032,16 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 						this.loadExperimentDatatable(input);
 					}
 				},
+				reloadContainersDatatable : function(datatable){
+					var promises = [];
+					var resultInput = varOneToX.loadInputContainers($scope.experiment.value.atomicTransfertMethods);
+					promises = promises.concat(resultInput.promises);					
+					var that = this;
+					$q.all(promises).then(function (res) {						
+						datatable.setData(resultInput.containers,resultInput.containers.length);						
+						that.experimentToInput(datatable);						
+					});
+				},
 				newExperiment : function(input){
 					if(inputType === "datatable"){
 						varexperimentCommonFunctions.newExperimentDatatable(input);
@@ -1012,7 +1051,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 		};
 
 		init();
-		return manyToOne;
+		return oneToVoid;
 	};
 	return constructor;
 }]).factory('manyToVoid',['$rootScope','manyToX','$http', '$parse', '$q', 'experimentCommonFunctions',  function($rootScope, manyToX, $http, $parse, $q, experimentCommonFunctions){
@@ -1029,7 +1068,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 
 		};
 
-		var manyToOne = {
+		var manyToVoid = {
 				experimentToInput : function(input){
 					varManyToX.experimentToInput(input);
 				},
@@ -1072,7 +1111,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 		};
 
 		init();
-		return manyToOne;
+		return manyToVoid;
 	};
 	return constructor;
 }]);

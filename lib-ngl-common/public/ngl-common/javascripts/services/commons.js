@@ -124,7 +124,7 @@ angular.module('commonsServices', []).
     					load(jsRoutes.controllers.projects.api.ProjectTypes.list().url,params,(key)?key:'projectTypes');
     				},
     				umbrellaProjects : function(params, key){
-    					load(jsRoutes.controllers.umbrellaprojects.api.UmbrellaProjects.list().url,params,(key)?key:'umbrellaProjects');
+    					load(jsRoutes.controllers.projects.api.UmbrellaProjects.list().url,params,(key)?key:'umbrellaProjects');
     				},
     				valuationCriterias: function(params, key){
     					load(jsRoutes.controllers.valuation.api.ValuationCriterias.list().url,params,(key)?key:'valuationCriterias');    					
@@ -185,16 +185,8 @@ angular.module('commonsServices', []).
     					if(angular.isUndefined(params)){
     	    				params = {};
     	    			}
-    					params.objectTypeCode='tag';
-    					load(jsRoutes.controllers.containers.api.Contents.list().url,params,(key)?key:'tags');
-    				},
-    				// FDS 24/06/2015 JIRA NGL-672 ajout pour filtrage par Aliquot barcode
-    				sampleAliquotCodes : function(params, key){
-    					if(angular.isUndefined(params)){
-    	    				params = {};
-    	    			}
-    					params.objectTypeCode='sampleAliquoteCode';
-    					load(jsRoutes.controllers.containers.api.Contents.list().url,params,(key)?key:'sampleAliquotCodes');
+    				//GA 24/07/2015 un peu spécial pour tags car fait partie de la collection parameters...
+    					load(jsRoutes.controllers.commons.api.Parameters.list('index-illumina-sequencing').url,params,(key)?key:'tags');
     				},
     				tagCategories : function(params, key){
     					if(angular.isUndefined(params)){
@@ -340,17 +332,7 @@ angular.module('commonsServices', []).
     					refresh.tagCategories(params, key);
     				}
     				return results[key];
-    			},
-    			// FDS 24/06/2015 JIRA NGL-672 ajout pour filtrage par Aliquot barcode
-    			getSampleAliquoteCodes : function(params,key){
-    				key = (key)?key:'sampleAliquotCodes';
-    				if(results[key] === undefined){
-    					refresh.sampleAliquotCodes(params, key);
-    				}
-    				return results[key];
     			}
-
-
     		};
     		
     	}]).factory('convertValueServices', [function() {
@@ -1123,6 +1105,12 @@ angular.module('commonsServices', []).
     	}).filter('inttostring', function(){
     		return function(input){
     			return String(input);    			
+    		}
+    	}).filter('stringToArray', function(){
+    		return function(input){
+    			var array = [];
+    			array = array.concat(input);
+    			return array;    			
     		}
     	}).filter('countDistinct', ['$parse',function($parse) {
     	    return function(array, key) {

@@ -142,6 +142,10 @@ public class Kits extends DocumentController<Kit>{
 		Query query = null;
 		queryElts.add(DBQuery.is("category", "Kit"));
 
+		if(StringUtils.isNotBlank(kitSearch.code)){
+			queryElts.add(DBQuery.is("code", kitSearch.code));
+		}
+		
 		if(CollectionUtils.isNotEmpty(kitSearch.catalogCodes)){
 			queryElts.add(DBQuery.in("catalogCode", kitSearch.catalogCodes));
 		}
@@ -150,12 +154,32 @@ public class Kits extends DocumentController<Kit>{
 			queryElts.add(DBQuery.is("catalogCode", kitSearch.catalogCode));
 		}
 		
+		if(StringUtils.isNotBlank(kitSearch.catalogRefCode)){
+			queryElts.add(DBQuery.is("catalogRefCode", kitSearch.catalogRefCode));
+		}
+		
+		if(StringUtils.isNotBlank(kitSearch.createUser)){
+			queryElts.add(DBQuery.is("traceInformation.createUser", kitSearch.createUser));
+		}
+		
+		if(StringUtils.isNotBlank(kitSearch.providerOrderCode)){
+			queryElts.add(DBQuery.is("orderInformations.providerOrderCode", kitSearch.providerOrderCode));
+		}
+		
 		if(kitSearch.startToUseDate != null){
 			queryElts.add(DBQuery.greaterThanEquals("startToUseDate", kitSearch.startToUseDate));
 		}
 		
 		if(kitSearch.stopToUseDate != null){
 			queryElts.add(DBQuery.lessThanEquals("stopToUseDate", (DateUtils.addDays(kitSearch.stopToUseDate, 1))));
+		}
+		
+		if(kitSearch.fromReceptionDate != null){
+			queryElts.add(DBQuery.greaterThanEquals("receptionDate", kitSearch.fromReceptionDate));
+		}
+		
+		if(kitSearch.toReceptionDate != null){
+			queryElts.add(DBQuery.lessThanEquals("receptionDate", (DateUtils.addDays(kitSearch.toReceptionDate, 1))));
 		}
 		
 		if(StringUtils.isNotBlank(kitSearch.barCode)){
@@ -167,7 +191,7 @@ public class Kits extends DocumentController<Kit>{
 		}
 		
 		if(StringUtils.isNotBlank(kitSearch.orderCode)){
-			queryElts.add(DBQuery.is("orderCode", kitSearch.orderCode));
+			queryElts.add(DBQuery.is("orderInformations.orderCode", kitSearch.orderCode));
 		}
 		
 		

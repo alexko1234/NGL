@@ -31,7 +31,7 @@ angular.module('home').controller('SearchCtrl',['$scope', '$routeParams', 'datat
 	$scope.reset = function(){
 		$scope.searchService.resetForm();
 	};
-		
+	
 	if(angular.isUndefined(mainService.getHomePage())){
 		mainService.setHomePage('search');
 		tabService.addTabs({label:Messages('analyses.page.tab.search'),href:jsRoutes.controllers.analyses.tpl.Analyses.home("search").url,remove:true});

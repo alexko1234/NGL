@@ -888,26 +888,6 @@ angular.module('home').controller('LanesSAVCtrl', [ '$scope', '$filter', '$http'
 	
 	init();
 }]);
-						$scope.alerts[data[i].code] = data[i]; 
-					}
-					
-					$scope.lanesSAVR1 = datatable(lanesSAVR1Config);
-					$scope.lanesSAVR1.setData($scope.run.lanes, $scope.run.lanes.length);
-					
-					$scope.lanesSAVR2 = datatable(lanesSAVR2Config);
-					$scope.lanesSAVR2.setData($scope.run.lanes, $scope.run.lanes.length);
-					
-				});
-				
-				
-			};
-		});
-	
-	};
-	
-	init();
-}]);
-
 
 
 

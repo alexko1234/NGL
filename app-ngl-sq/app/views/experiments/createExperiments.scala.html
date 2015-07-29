@@ -84,7 +84,7 @@
 						ng-click="updateContainerState('purif')" >@Messages("experiments.button.purif")</button>
 						<div class="modal-body"><a class="btn btn-default dropdown-toggle" href="#" ng-click="buttonContainerState=true;buttonCategoryExperiment=false" >@Messages("experiments.chooseOputContainerState")</a></div>
 						<div class="row">
-							<div ng-show="buttonContainerState" class="col-md-10 col-lg-10" datatable="datatableContainer"></div>
+							<div ng-show="buttonContainerState" class="col-md-10 col-lg-10" ultimate-datatable="datatableContainer"></div>
 						</div>
 					</div>
 				</div>
@@ -391,7 +391,8 @@
 								<input class="form-control" type="text" title='{{instp.name}}' ng-switch-when="false" class="input-small"
 									ng-readonly="!experiment.instrumentInformation.enabled"
 									ng-model="experiment.value.instrumentProperties[instp.code].value"
-									ng-disabled="!experiment.instrumentInformation.enabled"/>
+									ng-disabled="!experiment.instrumentInformation.enabled"
+									dt-default-value="instp.defaultValue"/>
 								
 								<div bt-select class="form-control" bt-options="opt.value as opt.value for opt in instp.possibleValues" dt-default-value="instp.defaultValue"
 									ng-readonly="!experiment.instrumentInformation.enabled" ng-disabled="!experiment.instrumentInformation.enabled" 
@@ -453,15 +454,15 @@
   <div class="panel-heading">@Messages("experiment.reagents")</div>
   <div class="panel-body">
   <div class="row">
-  	<form class="form-horizontal">
+  	<!--<form class="form-horizontal">
 	  	<div class="form-group col-md-5 col-lg-5">
 	  		<div ng-class="reagentCodeErrorClass" class="col-md-5 col-lg-5">
 	  			<input class="form-control" ng-model="searchBarCode" type="text" placeholder="@Messages("experiment.placeholder.reagentOrBoxCode")"  ng-keydown="searchReagentsEvent($event)" />
 	  			<span class="help-block" ng-bind="reagentCodeError">test</span>
 	  		</div>
 	 	</div>
-	 	</form>
-	 	<div class="col-md-12 col-lg-12" datatable="datatableReagent"></div>
+	 	</form>-->
+	 	<div class="col-md-12 col-lg-12" ultimate-datatable="datatableReagent"></div>
  	</div>
   </div>
 </div>

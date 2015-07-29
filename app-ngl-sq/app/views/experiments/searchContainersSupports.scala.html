@@ -12,7 +12,7 @@
 				</div>				
 			}
 			@formGroup{
-				<div class="form-control" bt-select ng-model="searchService.form.projectCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.projects")' bt-options="project.code as project.code for project in searchService.lists.getProjects()"></div>
+				<div class="form-control" bt-select ng-model="searchService.form.projectCodes" multiple="true" filter="true" placeholder='@Messages("search.placeholder.projects")' bt-options="project.code as project.code for project in searchService.lists.getProjects()" ng-change="resetSampleCodes()"></div>
 			}
 					
 		}
@@ -80,7 +80,7 @@
 <!-- @searchForm(form)()("searchService.datatable") -->
 
 <div class="row"> 
-<div class="col-md-12 col-lg-12" datatable="datatable">
+<div class="col-md-12 col-lg-12" ultimate-datatable="datatable">
 	<div dt-form>
 		<ul class="nav nav-tabs margin-bottom-5">
 	   	<li class="active"><a href="#" data-target="#filters" data-toggle="tab">@Messages("search.tab.filters")</a></li>
@@ -112,6 +112,16 @@
 	
 	<div class="tab-pane" id="addfilters">
 	<form class="well well-small">
+			<div ng-if="searchService.isProcessFiltered" class="row">				
+					<div class="col-md-2 col-lg-2" ng-repeat="processFilters in searchService.getAddProcessFiltersToForm()">
+						<div class="form-group" ng-repeat="filter in processFilters">
+							<div dt-compile="filter.html"></div> <!-- used directive from datatable to compile html -->
+						</div>
+					</div>									
+				</div>
+				
+			<hr ng-if="searchService.isProcessFiltered" class="filterLine">
+				
 			<div class="row">
 				<div class="col-md-2 col-lg-2" ng-repeat="filters in searchService.getAddFiltersToForm()">
 					<div class="form-group" ng-repeat="filter in filters">

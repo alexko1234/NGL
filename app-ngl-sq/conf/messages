@@ -1,6 +1,9 @@
 application.name = NGL-SQ
 index.title = Welcome to NGL-SQ
 
+#home
+home.experiments.ip = Experiences en cours
+
 #containerSupports
 containerSupports.title = Supports
 containerSupports.menu = Supports

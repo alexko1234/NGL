@@ -33,13 +33,17 @@ kits.select.catalogCodes = Nom de kits
 kits.possibleUseNumber = Nombre d''utilisation
 kits.catalogRefCode = Ref. catalogue (fournisseur)
 kits.comment = Commentaire
+kits.placeholder.fromReceptionDate = Réception depuis le (jj/mm/aaaa)
+kits.placeholder.toReceptionDate = Réception jusqu'au (jj/mm/aaaa)
+
+kits.createUser = Créé par
 
 kits.creationDate = Date de création
 kits.createUser = Créée par
 kits.modifyDate = Date de modification
 kits.modifyBy = Modifié par
 
-boxes.search = Recherche Boîtes
+boxes.search = Recherche boîtes
 boxes.tabs.search = Recherche Boîtes
 
 boxes.name = Nom boîte
@@ -85,9 +89,9 @@ reagentCatalogs.menu = Catalogue réactifs
 reagentCatalogs.menu.create = Création ref. catalogue
 reagentCatalogs.menu.search = Recherche ref. catalogue
 
-reagentDeclarations.menu = Réactifs receptionnés
+reagentDeclarations.menu = Réception réactifs
 
-declarations.title = Réactifs receptionnés
+declarations.title = Réception réactifs
 
 declarations.kit = Kit
 declarations.reagent = Réactif
