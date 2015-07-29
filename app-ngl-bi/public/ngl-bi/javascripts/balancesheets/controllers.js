@@ -55,6 +55,7 @@ angular.module('home').controller('BalanceSheetsYearCtrl', ['$scope', 'mainServi
 	tabService.activeTab(actualYear - activeYear + 1);
 	
 	
+	
 	// Keeping the active balance sheet opened after we change year
 	$scope.tabs = [true, false, false, false];
 	$scope.setActiveTab = function(value){
