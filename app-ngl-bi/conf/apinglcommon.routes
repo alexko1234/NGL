@@ -1,5 +1,3 @@
-#just for compile main.scala.html
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
 #Common
 GET		/api/commons/states							controllers.commons.api.States.list()
@@ -8,6 +6,10 @@ GET		/api/commons/states/:code					controllers.commons.api.States.get(code: java
 GET		/api/commons/users							controllers.commons.api.Users.list()
 
 GET		/api/commons/types							controllers.commons.api.CommonInfoTypes.list()
+
+#value of property definition
+GET		/api/values									controllers.commons.api.Values.list()
+
 
 #list
 GET		/api/resolutions  							@controllers.resolutions.api.Resolutions.list()
@@ -29,8 +31,6 @@ PUT		/api/stats/configs/:code					controllers.stats.api.StatsConfigurations.upda
 DELETE	/api/stats/configs/:code					controllers.stats.api.StatsConfigurations.delete(code: java.lang.String)
 
 
-#value of property definition
-GET		/api/values									controllers.commons.api.Values.list()
 
 #reporting configuration
 GET    	/api/reporting/configs    	           			controllers.reporting.api.ReportingConfigurations.list()
