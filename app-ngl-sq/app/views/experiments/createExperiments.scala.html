@@ -231,7 +231,7 @@
 						
 						<!--  File -->
 						<div  ng-if="expp.valueType == 'java.io.File'">
-							<input type="file" ng-disabled="!experiment.experimentInformation.enabled" base64-file="experiment.value.experimentProperties[expp.code]" />
+							<input type="file" ng-disabled="!experiment.experimentInformation.enabled" base64-file="experiment.value.experimentProperties[expp.code]"  ng-show="experiment.value.experimentProperties[expp.code] == undefined || experiment.value.experimentProperties[expp.code].value == ''" />
 							<div   ng-show="experiment.value.experimentProperties[expp.code] != undefined && experiment.value.experimentProperties[expp.code].value != ''" >
 							    <a target="_blank" ng-href="data:application/pdf;base64,{{experiment.value.experimentProperties[expp.code].value}}">
 							    {{experiment.value.experimentProperties[expp.code].fullname}}
