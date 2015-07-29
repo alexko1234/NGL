@@ -101,7 +101,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 			edit:{
 				active: !$scope.doneAndRecorded,
 				showButton: true,
-				columnMode:true
+				columnMode:false
 			},
 			messages:{
 				active:false,
@@ -220,26 +220,26 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 			        	 "extraHeaders":{0:"QC Flowcell"}
 			         },
 			         {
-			        	 "header":function() { return $scope.header.qcFlowcell.postLoadingNbActivePores},
-			        	 "property":"postLoadingNbActivePores",
-			        	 "order":true,
-						 "edit":true,
-						 "hide":true,
-			        	 "type":"integer",
-			        	 "position":2,
-			        	 "extraHeaders":{0:"QC Flowcell"}
-
-			         },
-			         {
 			        	 "header":function() { return $scope.header.qcFlowcell.preLoadingNbActivePores},
 			        	 "property":"preLoadingNbActivePores",
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"integer",
+			        	 "position":2,
+			        	 "extraHeaders":{0:"QC Flowcell"}
+			         },
+			         {
+			        	 "header":function() { return $scope.header.qcFlowcell.postLoadingNbActivePores},
+			        	 "property":"postLoadingNbActivePores",
+			        	 "order":true,
+						 "edit":true,
+						 "hide":true,
+			        	 "type":"integer",
 			        	 "position":3,
 			        	 "extraHeaders":{0:"QC Flowcell"}
-			         }			         
+
+			         }		         
 			         ],
 			compact:true,
 			pagination:{
