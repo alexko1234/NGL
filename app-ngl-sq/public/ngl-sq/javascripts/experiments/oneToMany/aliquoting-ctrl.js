@@ -130,13 +130,15 @@ angular.module('home').controller('AliquotingCtrl',['$scope', '$window','datatab
 	//This function copy the experiment informations in the input
 	$scope.$on('experimentToInput', function(e, atomicTransfertMethod) {
 		//The default function is:
-		$scope.atomicTransfere.experimentToInput($scope.datatable);
+		//$scope.atomicTransfere.experimentToInput($scope.datatable);
+		$scope.experimentToInput();
 	});
 	
 	//This function copy the input information to the experiment object
 	$scope.$on('inputToExperiment', function(e, atomicTransfertMethod) {
 		//The default function is:
-		$scope.atomicTransfere.inputToExperiment($scope.datatable);
+		//$scope.atomicTransfere.inputToExperiment($scope.datatable);
+		$scope.inputToExperiment($scope.datatable);
 	});
 	
 	//Call when the view need to delete the instrument propeties for the input
@@ -168,113 +170,64 @@ angular.module('home').controller('AliquotingCtrl',['$scope', '$window','datatab
 		$scope.datatable.addColumn(-1,column);
 	});
 
+	$scope.addOutputColumns = function(){
+	
+	};
+	
 	//Add the output informations to the view
 	$scope.$on('addOutputColumns', function(e) {
 		
 	});
 
-	
-	//Create the level of the properties
-	$scope.$on('addInstrumentPropertiesInputToScope', function(e, data) {
-		if($scope.datatable.getData() != undefined){
-			for(var i=0;i<$scope.datatable.getData().length;i++){
-				for(var j=0; j<data.length;j++){
-					if($scope.getLevel( data[j].levels, "ContainerIn")){
-						var getter = $parse("datatable.displayResult["+i+"].inputInstrumentProperties."+data[j].code+".value");
-						if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[j].instrumentProperties && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[j].instrumentProperties[data[j].code]){
-							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[j].instrumentProperties[data[j].code]);
-						}else{
-							getter.assign($scope,undefined);
-						}
-					}
-				}
-			}
-		}
-	});
-
-	//Create the level of the properties
-	$scope.addExperimentOutputDatatableToScope = function(){
-		var data = $scope.experiment.experimentProperties.inputs;
-		if($scope.datatable.getData() != undefined){
-			for(var i=0;i<$scope.datatable.getData().length;i++){
-				for(var j=0; j<data.length;j++){
-					if($scope.getLevel( data[j].levels, "ContainerOut")){
-						var getter = $parse("datatable.displayResult["+i+"].outputExperimentProperties."+data[j].code+".value");
-						var k = $scope.datatable.displayResult[i].data.inputX;
-						if($scope.experiment.value.atomicTransfertMethods[k-1].outputContainerUsed.experimentProperties && $scope.experiment.value.atomicTransfertMethods[k-1].outputContainerUsed.experimentProperties[data[j].code]){
-							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[k-1].outputContainerUsed.experimentProperties[data[j].code]);
-						}else{
-							getter.assign($scope,undefined);
-						}
-					}
-				}
-			}
-		}
-	};
-
-	//Create the level of the properties
-	$scope.$on('addExperimentPropertiesOutputToScope', function(e, data) {
-		var i = 0;
-		while($scope.experiment.value.atomicTransfertMethods[i] != undefined){
-			for(var j=0; j<data.length;j++){
-				if($scope.getLevel( data[j].levels, "ContainerOut")){
-					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties == null){
-						$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties = {};
-					}
-
-					if(!$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code]){
-						$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.experimentProperties[data[j].code] = undefined;						
-					}
-				}
-			}
-			i++;
-		}
-	});
-
-	//Create the level of the properties
-	$scope.$on('addExperimentPropertiesInputToScope', function(e, data) {
-		if($scope.datatable.getData() != undefined){
-			for(var i=0;i<$scope.datatable.getData().length;i++){
-				for(var j=0; j<data.length;j++){
-					if($scope.getLevel( data[j].levels, "ContainerIn")){
-						var getter = $parse("datatable.displayResult["+i+"].inputExperimentProperties."+data[j].code+".value");
-						if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[j].experimentProperties && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[j].experimentProperties[data[j].code]){
-							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds.experimentProperties[data[j].code]);
-						}else{
-							getter.assign($scope,undefined);
-						}
-					}
-				}
-			}
-		}
-	});
-
-	//Create the level of the properties
-	$scope.$on('addInstrumentPropertiesOutputToScope', function(e, data) {
-		if($scope.datatable.getData() != undefined){
-			for(var i=0;i<$scope.datatable.getData().length;i++){
-				for(var j=0; j<data.length;j++){
-					if($scope.getLevel( data[j].levels, "ContainerOut")){
-						var getter = $parse("datatable.displayResult["+i+"].outputInstrumentProperties."+data[j].code+".value");
-						if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties[data[j].code]){
-							getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUsed.instrumentProperties[data[j].code]);
-						}else{
-							getter.assign($scope,undefined);
-						}
-					}
-				}
-			}
-		}
-	});
-
 	$scope.inputToExperiment = function(){
 		var allData = $scope.datatable.getData();
 		for(var i=0;i<allData.length;i++){
-			$scope.experiment.value.atomicTransfertMethods[allData[i].inputContainerUsed.support.line].inputContainerUseds[0].state = allData[i].inputContainerUsed.state;
-			$scope.experiment.value.atomicTransfertMethods[allData[i].inputContainerUsed.support.line].inputContainerUseds[0].experimentProperties = allData[i].inputExperimentProperties;
-			$scope.experiment.value.atomicTransfertMethods[allData[i].inputContainerUsed.support.line].inputContainerUseds[0].instrumentProperties = allData[i].inputInstrumentProperties;
+			var line = $scope.getInputContainerLine(allData[i].inputContainerUsed.code);
+			$scope.experiment.value.atomicTransfertMethods[line].inputContainerUseds[0].state = allData[i].inputContainerUsed.state;
+			$scope.experiment.value.atomicTransfertMethods[line].inputContainerUseds[0].experimentProperties = allData[i].inputExperimentProperties;
+			$scope.experiment.value.atomicTransfertMethods[line].inputContainerUseds[0].instrumentProperties = allData[i].inputInstrumentProperties;
+		}
+	};
+	
+	$scope.experimentToInput = function(){
+		var allData = $scope.datatable.getData();
+		for(var i=0;i<allData.length;i++){
+			var line = $scope.getInputContainerLine(allData[i].inputContainerUsed.code);
+			allData[i].inputContainerUsed.state = $scope.experiment.value.atomicTransfertMethods[line].inputContainerUseds[0].state;
+			allData[i].inputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[line].inputContainerUseds[0].experimentProperties;
+			allData[i].inputInstrumentProperties = $scope.experiment.value.atomicTransfertMethods[line].inputContainerUseds[0].instrumentProperties;
 		}
 		
+		$scope.datatable.setData(allData, allData.length);
+	};
+	
+	$scope.experimentToOutput = function(){
+		var allData = $scope.datatable.getData();
+		if(allData != undefined){
+			for(var i=0;i<allData.length;i++){
+				if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds!=undefined){
+					var k = 0;
+					for(var i=0; i<$scope.experiment.value.atomicTransfertMethods.length;i++){
+						for(var j=0; j<$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds.length;j++){
+							allData[k].outputInstrumentProperties = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j].instrumentProperties;
+							allData[k].outputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j].experimentProperties;
+							k++;
+						}
+					}
+				}
+			}
+			$scope.datatable.setData(allData, allData.length);
+		}
+	};
+	
+	$scope.getInputContainerLine = function(code){
+		for(var i=0;i<$scope.experiment.value.atomicTransfertMethods.length;i++){
+			if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].code === code){
+				return i;
+			}
+		}
+		throw "Container not in experiment input !";
+		return null;
 	};
 	
 	//Call when the view need to save
@@ -314,7 +267,8 @@ angular.module('home').controller('AliquotingCtrl',['$scope', '$window','datatab
 
 	//Copy thre informations from the experiment to the output
 	$scope.$on('experimentToOutput', function(e, atomicTransfertMethod) {
-		$scope.atomicTransfere.experimentToOutput($scope.datatable);
+		//$scope.atomicTransfere.experimentToOutput($scope.datatable);
+		$scope.experimentToOutput();
 	});
 
 
@@ -344,7 +298,7 @@ angular.module('home').controller('AliquotingCtrl',['$scope', '$window','datatab
 
 	if($scope.experiment.editMode){
 		//When the experiment already exist
-		$scope.atomicTransfere.loadExperiment($scope.datatable);
+		$scope.atomicTransfere.loadExperiment($scope.datatable, undefined, $scope.experimentToOutput);
 		if(!angular.isUndefined(mainService.getBasket())){
 			$scope.basket = mainService.getBasket().get();
 			if($scope.basket.length > 0){
