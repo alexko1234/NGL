@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
+
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
@@ -113,7 +115,21 @@ public class ContainerSupportHelper {
 			}
 			containerSupport.projectCodes.addAll(container.projectCodes);
 			containerSupport.sampleCodes.addAll(container.sampleCodes);
-			containerSupport.fromExperimentTypeCodes.add(experiment.typeCode);
+			
+				
+			if(experiment.categoryCode.equals("transformation")){
+					if(containerSupport.fromExperimentTypeCodes == null){
+						containerSupport.fromExperimentTypeCodes = new HashSet<String>();
+					}
+					containerSupport.fromExperimentTypeCodes.add(experiment.typeCode);
+				}else{
+					if(CollectionUtils.isNotEmpty(container.fromExperimentTypeCodes)){				
+						if(containerSupport.fromExperimentTypeCodes == null){
+							containerSupport.fromExperimentTypeCodes = new HashSet<String>();
+						}
+						containerSupport.fromExperimentTypeCodes.addAll(container.fromExperimentTypeCodes);
+					}
+				}
 
 		}
 		

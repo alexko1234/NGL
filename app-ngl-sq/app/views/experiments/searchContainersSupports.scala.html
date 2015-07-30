@@ -66,7 +66,7 @@
 			}
 			<hr>
 			@formGroup{	
-				<input class="form-control" type="text" ng-model="searchService.form.users" typeahead="user.name as user.name for user in searchService.lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("containerSupports.placeholder.user")' title='@Messages("containerSupports.placeholder.user")'>			
+				<input class="form-control" type="text" ng-model="searchService.form.createUsers" typeahead="user.name as user.name for user in searchService.lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("containerSupports.placeholder.user")' title='@Messages("containerSupports.placeholder.user")'>			
 									
 			}
 			@formGroup{
