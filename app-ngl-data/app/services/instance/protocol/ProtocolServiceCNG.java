@@ -65,6 +65,7 @@ public class ProtocolServiceCNG {
 		lp.add(newProtocol("proto_qc_v1","Proto_QC_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("chip-migration-post-pcr", "chip-migration-pre-pcr", "fluo-quantification", "qpcr-quantification")));
 		lp.add(newProtocol("sop_depot_1","Sop_depot_1","path4","1","production", InstanceFactory.setExperimentTypeCodes("illumina-depot")));
 		lp.add(newProtocol("sop","SOP","path4","1","production",                 InstanceFactory.setExperimentTypeCodes("pcr", "lib-normalization", "prepa-flowcell-cng")));
+		lp.add(newProtocol("sop-1","SOP 1","","1","production",                 InstanceFactory.setExperimentTypeCodes("denat-dil-lib")));
 		
 		for(Protocol protocole:lp){
 			InstanceHelpers.save(InstanceConstants.PROTOCOL_COLL_NAME, protocole,ctx);

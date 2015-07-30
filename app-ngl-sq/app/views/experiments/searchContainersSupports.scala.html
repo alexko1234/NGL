@@ -115,7 +115,7 @@
 			<div ng-if="searchService.isProcessFiltered" class="row">				
 					<div class="col-md-2 col-lg-2" ng-repeat="processFilters in searchService.getAddProcessFiltersToForm()">
 						<div class="form-group" ng-repeat="filter in processFilters">
-							<div dt-compile="filter.html"></div> <!-- used directive from datatable to compile html -->
+							<div udt-compile="filter.html"></div> <!-- used directive from datatable to compile html -->
 						</div>
 					</div>									
 				</div>
@@ -125,7 +125,7 @@
 			<div class="row">
 				<div class="col-md-2 col-lg-2" ng-repeat="filters in searchService.getAddFiltersToForm()">
 					<div class="form-group" ng-repeat="filter in filters">
-						<div dt-compile="filter.html"></div> <!-- used directive from datatable to compile html -->
+						<div udt-compile="filter.html"></div> <!-- used directive from datatable to compile html -->
 					</div>
 				</div>
 				

@@ -53,7 +53,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 			        	 "position":3,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },					 
-					 /*{
+					 {
 			        	 "header":function(){return Messages("containers.table.concentration") + " (nM)"},
 			        	 "property":"mesuredConcentration.value",
 			        	 "order":true,
@@ -93,7 +93,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 			        	 "type":"number",
 			        	 "position":9,
 			        	 "extraHeaders":{0:"Outputs"}
-			         },
+			         }/*,
 			          {
 			        	 "header":Messages("containers.table.projectCodes"),
 			        	 "property":"projectCodes",
