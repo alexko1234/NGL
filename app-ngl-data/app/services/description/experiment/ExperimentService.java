@@ -267,6 +267,7 @@ public class ExperimentService {
 			//17-12-2014 transformation CNG
 
 			//library
+			/*
 			l.add(newExperimentType("Fragmentation","fragmentation",null,200,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
 					getInstrumentUsedTypes("hand","covaris-le220","covaris-e210"),"OneToOne", 
@@ -276,7 +277,7 @@ public class ExperimentService {
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibIndexing(),
 					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-			
+			*/
 			/*l.add(newExperimentType("Librairie dual indexing","librairie-dualindexing",600,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibDualIndexing(),
 					getInstrumentUsedTypes("hand"),"OneToOne", 
@@ -291,28 +292,24 @@ public class ExperimentService {
 			
 			//pre-sequencing
 			//    FDS NGL-356: remommage solution-x-nM=> lib-normalization
+			
 			l.add(newExperimentType("Librairie normalisée","lib-normalization",null,1000,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
 					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 			
+			
+			l.add(newExperimentType("Ext to librairie dénaturée","ext-to-denat-dil-lib",null,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 			// FDS new 02-02-2015, intrument Used =>robot oui mais lequel???
 			l.add(newExperimentType("Librairie dénaturée","denat-dil-lib",null,1100,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsDenatDilLibCNG(),
 					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 
 
-			// NO qc au CNG ??
-			// NO purif au CNG ??
-			// NO void au CNG ??
-			
-			/*
-			l.add(newExperimentType("Préparation flowcell","prepa-flowcell-cng",1100,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcell(),
-					getInstrumentUsedTypes("cBot", "cBot-onboard"),"ManyToOne", 
-					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-			*/
+		
 			l.add(newExperimentType("Pool Tube","pool-tube",null,1200,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
 					getInstrumentUsedTypes("hand","tecan-evo-100"),"ManyToOne", 
@@ -381,18 +378,16 @@ public class ExperimentService {
 			newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","solution-stock"),
 					null,null).save();
 
-			//FDS 02/02/2015 renommage demandé 
 			newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0),false,false,getExperimentTypeNodes("ext-to-qpcr"),
 					null,null).save();
 			
-			//FDS 02/02/2015  nouveau node necessaire pour denat-dil-lib , previousExp est lib-normalization ???
-			/*newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),false,false,getExperimentTypeNodes("lib-normalization"),
-					null,null).save();*/
+			newExperimentTypeNode("ext-to-denat-dil-lib", getExperimentTypes("ext-to-denat-dil-lib").get(0), false, false, null, null, null).save();
 			
-			// FDS 02/02/2015  nouveau node necessaire pour lib-b ??? previousExp est ???
+			newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),false,false,getExperimentTypeNodes("ext-to-denat-dil-lib", "lib-normalization"),
+					null,null).save();
 			
-			// FDS "solution-X-nM" n'existe plus...  en principe c'est lib-b pour "prepa-flowcell-cng" mais pas encore specifie =>  mettre "denat-dil-lib" ???
-			newExperimentTypeNode("prepa-flowcell-cng",getExperimentTypes("prepa-flowcell-cng").get(0),false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","lib-normalization"),
+			
+			newExperimentTypeNode("prepa-flowcell-cng",getExperimentTypes("prepa-flowcell-cng").get(0),false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","denat-dil-lib"),
 					null,null).save();
 			
 	        // FDS 27/02/2015 supression "illumina-depot-cng"
@@ -595,20 +590,30 @@ public class ExperimentService {
 	private static List<PropertyDefinition> getPropertyDefinitionsPrepaflowcellCNG() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		//Outputcontainer
+		//Outputcontainer
 		propertyDefinitions.add(newPropertiesDefinition("% phiX", "phixPercent", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null, null, null, null, "single",1,true,"1"));		
+		
 		propertyDefinitions.add(newPropertiesDefinition("Volume final", "finalVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",2));
-		
-		//InputContainer
-		
-		
+						, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",2));
+				
+				//InputContainer
+				
+				
 		propertyDefinitions.add(newPropertiesDefinition("Conc. dilution", "finalConcentration2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null 
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "pM"),MeasureUnit.find.findByCode( "nM"), "single",11));
+						, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "pM"),MeasureUnit.find.findByCode( "nM"), "single",11));
 
-	
 		return propertyDefinitions;
 	}
 
+	private static List<PropertyDefinition> getPropertyDefinitionsDenatDilLibCNG() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		propertyDefinitions.add(newPropertiesDefinition("Stockage", "storage", LevelService.getLevels(Level.CODE.ContainerOut), String.class, false, null, null, null, null, "single",1,true,null));		
+		
+		return propertyDefinitions;
+	}
+
+	
 
 	private static List<PropertyDefinition> getPropertyDefinitionsLibIndexing() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
