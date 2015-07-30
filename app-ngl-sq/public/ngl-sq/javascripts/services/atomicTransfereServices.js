@@ -30,12 +30,12 @@ angular.module('atomicTransfereServices', [])
 						});
 						promises.push(promise);
 					});
-					var that = this;
+					//var that = this;
 					$q.all(promises).then(function (res) {
 						fn(containers);
 						$scope.doPurifOrQc($scope.experiment.value.typeCode);
 						if(!$scope.experiment.editMode) {
-							$scope.init_experiment(that.containersToContainerUseds(containers), $scope.experimentType.atomicTransfertMethod);
+							$scope.init_experiment(containers, $scope.experimentType.atomicTransfertMethod);
 						}else{
 							$scope.addExperimentPropertiesInputsColumns();
 						}
