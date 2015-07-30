@@ -639,7 +639,7 @@ balanceSheets.nbSequencingType = Nombre de bases Illumina par type séquençage
 balanceSheets.sequencingType = Type séquençage
 balanceSheets.property = Propriété
 balanceSheets.value = Valeur
-balanceSheets.noSampleTypeCode = Type d''échantillon manquant
+balanceSheets.noSampleTypeCode = default-sample-cns
 balanceSheets.percentageForTenProjects = Pourcentage sur dix projets
 balanceSheets.percentageForYear = Pourcentage sur cette année
 
