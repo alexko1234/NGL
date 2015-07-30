@@ -1,0 +1,3 @@
+#projects
+GET		/api/projects								@controllers.projects.api.Projects.list()
+GET		/api/projects/:code							@controllers.projects.api.Projects.get(code: java.lang.String)

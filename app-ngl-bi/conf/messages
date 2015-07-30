@@ -617,17 +617,15 @@ analyses.treatments.gapClosing_ba.percentOfN = % N
 #
 ############
 balanceSheets.page.title = Bilan de production
-balanceSheets.info.loading = Chargement du bilan en cours
 
 balanceSheets.menu = Bilans
-balanceSheets.actualYear = 2015
 balanceSheets.year = Année run
 balanceSheets.nbBases = Nombre de bases Illumina
 balanceSheets.runTypeCode = Type séquençage
 balanceSheets.percentage = Pourcentage
 balanceSheets.projectCode = Code sous-projet
 balanceSheets.projectName = Nom sous-projet
-balanceSheets.projectType = Type Sous-projet
+balanceSheets.projectType = Type d''échantillon
 balanceSheets.quarters = Trimestre
 balanceSheets.monthRun = Mois run
 balanceSheets.sum = Somme : 
@@ -641,14 +639,25 @@ balanceSheets.nbSequencingType = Nombre de bases Illumina par type séquençage
 balanceSheets.sequencingType = Type séquençage
 balanceSheets.property = Propriété
 balanceSheets.value = Valeur
+balanceSheets.noSampleTypeCode = Type d''échantillon manquant
+balanceSheets.percentageForTenProjects = Pourcentage sur dix projets
+balanceSheets.percentageForYear = Pourcentage sur cette année
+
+balanceSheets.info.projectType = * Les readsets en cours de Read Generation n''ont pas l''information du type d''échantillon tant que le transfert n''est pas terminé.
+
+balanceSheets.export.firstTen = 10Projets
+balanceSheets.export.sequencingType = TypeSeq
+balanceSheets.export.quarters = Trimestre
+balanceSheets.export.projectType = TypeProjet
+balanceSheets.export.general = General 
 
 balanceSheets.tab.year = Année 
 balanceSheets.tab.generalBalanceSheets = Bilan général
 balanceSheets.tab.yearlyBalanceSheets = Nombre de bases par an et par technologie
-balanceSheets.tab.sequencingType = Nombre de bases par type séquençage
-balanceSheets.tab.firstTen = 10 premiers projets de cette année
-balanceSheets.tab.quarters = Nombre de bases par trimestre
-balanceSheets.tab.projectType = Nombre de bases par type de projet
+balanceSheets.tab.sequencingType = Bilan par type séquençage
+balanceSheets.tab.firstTen = Bilan des 10 premiers projets de cette année
+balanceSheets.tab.quarters = Bilan par trimestre
+balanceSheets.tab.projectType = Bilan par type d''échantillon *
 
 balanceSheets.january = Janvier
 balanceSheets.february = Février
@@ -679,6 +688,30 @@ stats.page.tab.show = Visualiser les Graphiques
 stats.tabs.charts = Graphiques
 stats.tabs.exclude = Valeurs exclues
 stats.tabs.query = Requête
+
+stats.removedReadsEcoli = % Removed Reads (E. coli)
+stats.bacteria = % Bacteria
+stats.eukaryota = % Eukaryota
+stats.chloroplast = % Chloroplast
+stats.mitochondri = % Mitochondri
+stats.triticum = % Triticum aestivum + triticeae + triticum
+stats.unknownNoHits = % Unknown::No hits
+stats.mergedReads = % Merged reads
+
+stats.export.validSequences = sequences_valides
+stats.export.usefulSequences = sequences_utiles
+stats.export.validSeqPercent = sequences_valides_par_piste
+stats.export.duplicatsPairs = duplicats_pairs
+stats.export.removedReadsEcoli = removed_reads_Ecoli
+stats.export.bacteria = bacteria
+stats.export.eukaryota = eukaryota
+stats.export.chloroplast = chloroplast
+stats.export.mitochondri = mitochondri
+stats.export.triticumTriticeae = triticum_triticeae
+stats.export.unknownNoHits = unknown_no_hits
+stats.export.rRNAR1 = rRNA_R1
+stats.export.estimatedMPInsertSize = estimated_MP_insert_size
+stats.export.mergedReads = merged_reads
 
 stats.typeCode = Type
 stats.property = Propriété

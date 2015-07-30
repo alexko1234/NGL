@@ -33,8 +33,9 @@
 	 
 	 // Others
 	 var selectedYear = 0;
-	 var actualYear = new Date().getFullYear();
-	 var stillLoading = false;
+	 var actualDay = new Date();
+	 var actualYear = actualDay.getFullYear();
+	 var stillLoading = true;
 	 var total = 0;
 	 	 
 	 var manageCache = function(changeYear, year){
@@ -97,18 +98,25 @@
 		 projectForm.includes.push("traceInformation.creationDate");
 		 
 		 // We retrieve everything we need
-		 
 		 $http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url, {params : form})
 		 	.success(function(data, status, headers, config) {
-				 stillLoading = true;
-				 for(var i = 0; i < data.length; i++){
-					 if(data[i].sampleOnContainer != null || data[i].sampleOnContainer != undefined){
-						 data[i].runSequencingStartDate = convertToDate(data[i].runSequencingStartDate);
-						 total += data[i].treatments.ngsrg.default.nbBases.value;	 
-						 readsets.push(data[i]);
-					 }
+			 for(var i = 0; i < data.length; i++){
+				 data[i].runSequencingStartDate = convertToDate(data[i].runSequencingStartDate);
+			 }
+			 for(var i = 0; i < data.length; i++){
+				 if(data[i].runSequencingStartDate.getFullYear() == selectedYear){
+					 total += data[i].treatments.ngsrg.default.nbBases.value;	
+					 readsets.push(data[i]);
 				 }
-			 data = [];
+			 }
+			 
+			 for(var i = 0; i < readsets.length; i++){
+				 if(readsets[i].sampleOnContainer == null || readsets[i].sampleOnContainer == undefined){
+					 readsets[i].sampleOnContainer = {
+							 sampleTypeCode : Messages("balanceSheets.noSampleTypeCode")
+					 };
+				 }
+			 }
 			 $http.get(jsRoutes.controllers.runs.api.Runs.list().url, {params : runForm}).success(function(runData, status, headers, config) {
 				 runs = runData;
 				 runData = [];
@@ -144,11 +152,13 @@
 					 }
 					 
 					 // End of loading
-					 stillLoading = false;
-
+					 if(readsets[0] != undefined){
+						 if(mainService.get('activeYear') == readsets[0].runSequencingStartDate.getFullYear()){
+							 stillLoading = false;
+						 }
+					 }
 				 });
 			 });
-			 
 		 });
 	 }		 
 	 
@@ -157,7 +167,12 @@
 		loadSequencingProduction();
 		loadFirstTen();
 		loadProjectType();
-		stillLoading = false;
+		
+		if(readsets[0] != undefined){
+			 if(mainService.get('activeYear') == readsets[0].runSequencingStartDate.getFullYear()){
+				 stillLoading = false;
+			 }
+		 }
 	 }
 	 
 	 var loadFunctionsFromCache = function(){
@@ -172,6 +187,7 @@
 		 var balanceSheetsQuarters = [];	
 		 var months = [];
 		 var datatableConfig = {
+				showTotalNumberRecords : false,
 				search : {
 					active:false
 				},
@@ -420,6 +436,7 @@
 	 
 	 var loadDtSumSequencingProduction = function(){
 		 var datatableConfig = {
+				 	showTotalNumberRecords : false,
 					search : {
 						active:false
 					},
@@ -500,6 +517,20 @@
 					type:"Number",
 					order : true,
 					position:3
+				},
+				{
+					property:"percentageForTenProjects",
+					header: "balanceSheets.percentageForTenProjects",
+					type:"String",
+					order : true,
+					position:4
+				},
+				{
+					property:"percentageForYear",
+					header:"balanceSheets.percentageForYear",
+					type:"String",
+					order:true,
+					position:5
 				}
 			 ];
 		 
@@ -519,7 +550,9 @@
 					 balanceSheetsFirstTen[i] = {
 						 code : yearlyProjects[i],
 						 name : projects[j].name,
-						 nbBases : 0
+						 nbBases : 0,
+						 percentageForTenProjects:null,
+						 percentageForYear:null
 					 };
 				 }
 			 }
@@ -537,10 +570,22 @@
 		 // We sort the projects by balanceSheetsFirstTen.nbBases
 		 balanceSheetsFirstTen.sort(function(a, b){return parseInt(b.nbBases) - parseInt(a.nbBases)});
 		 
-		 
+
 		 
 		 // We only keep the top ten
 		 balanceSheetsFirstTen = balanceSheetsFirstTen.slice(0,10);
+		 
+		 var nbBasesForTenProjects = 0;
+		 
+		 for(var i = 0; i < balanceSheetsFirstTen.length; i++){
+			 nbBasesForTenProjects += balanceSheetsFirstTen[i].nbBases;
+		 }
+		 
+		 // We calculate percentage for each project
+		 for(var i = 0; i < balanceSheetsFirstTen.length; i++){
+			 balanceSheetsFirstTen[i].percentageForTenProjects = (balanceSheetsFirstTen[i].nbBases * 100 / nbBasesForTenProjects).toFixed(2) + " %";
+			 balanceSheetsFirstTen[i].percentageForYear = (balanceSheetsFirstTen[i].nbBases *100 / total).toFixed(2) + " %";
+		 }
 		 
 		 dataFirstTen = balanceSheetsFirstTen;
 		 
@@ -558,6 +603,7 @@
 	 
 	 var loadDtSumFirstTen = function(){
 		 var datatableConfig = {
+				 	showTotalNumberRecords : false,
 					search : {
 						active:false
 					},
@@ -716,6 +762,7 @@
 	 
 	 var loadDtSumProjectType = function(){
 		 var datatableConfig = {
+				 	showTotalNumberRecords : false,
 					search : {
 						active:false
 					},
@@ -820,6 +867,10 @@
 					 text : Messages("balanceSheets.nbBases")
 				 }
 			 },
+			 exporting : {
+				 enabled : true,
+				 filename : Messages('balanceSheets.export.quarters') + actualYear.toString().substr(2,2) + (actualDay.getMonth()+1) + actualDay.getUTCDate()
+			 },
 			 series : allSeries,
 			 plotOptions : {column:{grouping:false}}
 		 };
@@ -870,6 +921,10 @@
 		            },
 					tickInterval : 2,
 				},
+				exporting : {
+					enabled : true,
+					filename : Messages('balanceSheets.export.sequencingType') + actualYear.toString().substr(2,2) + (actualDay.getMonth()+1) + actualDay.getUTCDate()
+					},
 				series : [{
 					name : Messages("balanceSheets.nbBases"), 
 					data : statData,
@@ -922,6 +977,10 @@
 				 showInLegend : true
 					 }
 				 },
+				 exporting : {
+					 enabled : true,
+					 filename : Messages('balanceSheets.export.firstTen') + actualYear.toString().substr(2,2) + (actualDay.getMonth()+1) + actualDay.getUTCDate()
+					 },
 				 series : [{
 					 name : Messages("balanceSheets.percentage"),
 					 data : allData,
@@ -971,6 +1030,10 @@
 				 		 showInLegend : true
 					 }
 				 },
+				 exporting : {
+					 enabled : true,
+					 filename : Messages('balanceSheets.export.projectType') + actualYear.toString().substr(2,2) + (actualDay.getMonth()+1) + actualDay.getUTCDate()
+					 },
 				 series : [{
 					 name : Messages("balanceSheets.percentage"),
 					 data : allData,
@@ -1070,7 +1133,8 @@
 			var dtSumYearly;
 			var chartYearlyBalanceSheets;
 			var isLoading = true;
-			var actualYear = new Date().getFullYear();
+			var actualDay = new Date();
+			var actualYear = actualDay.getFullYear();
 			
 			var loadData = function(){
 				isLoading = true;
@@ -1245,6 +1309,10 @@
 				            },
 							tickInterval : 2,
 						},
+						exporting : {
+							enabled : true,
+							filename : Messages('balanceSheets.export.general') + actualYear.toString().substr(2,2) + (actualDay.getMonth()+1) + actualDay.getUTCDate() 
+							},
 						series : [{
 							type : 'column',
 							name : Messages("balanceSheets.nbBases"), 

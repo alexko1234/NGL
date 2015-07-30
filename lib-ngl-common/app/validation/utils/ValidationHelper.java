@@ -453,7 +453,7 @@ public class ValidationHelper {
 			
 			for(Map<String, ?> map: list){
 				Object value = map.get(codes[1]);
-				if(!valueClass.isInstance(value)){ //transform only if not the good type
+				if(!valueClass.isInstance(value) && value!=null){ //transform only if not the good type
 					value = convertValue(valueClass, value.toString(), null);
 				}	
 				((Map<String, Object>)map).put(codes[1], value);

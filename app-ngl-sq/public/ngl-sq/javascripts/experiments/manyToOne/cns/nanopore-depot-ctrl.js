@@ -101,7 +101,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 			edit:{
 				active: !$scope.doneAndRecorded,
 				showButton: true,
-				columnMode:true
+				columnMode:false
 			},
 			messages:{
 				active:false,
@@ -159,7 +159,16 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 			        	 "type":"text",
 			        	 "position":3,
 			        	 "extraHeaders":{0:"Bilan chargement"}
-			         }			         
+			         }/*,
+			         {
+			        	 "header":"Date creation",
+			        	 "property":"creationDate",
+			        	 "order":true,
+						 "edit":true,
+						 "hide":true,
+			        	 "type":"date",
+			        	 "position":4
+			         }*/
 			         ],
 			compact:true,
 			pagination:{
@@ -171,7 +180,8 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 			order:{
 				mode:'local', //or 
 				active:true,
-				by:'code'
+				by:'creationDate',
+				reverse : false
 			},
 			remove:{
 				active:true,
@@ -179,7 +189,11 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 			save:{
 				active:true,
 				showButton: false,
-				mode:'local',
+				mode:'local'
+				//value: function(value){ 
+					//if(value.creationDate===undefined )  
+					//value.creationDate=new Date(); 
+					//return value;}
 			},
 			hide:{
 				active:true
@@ -220,26 +234,26 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 			        	 "extraHeaders":{0:"QC Flowcell"}
 			         },
 			         {
-			        	 "header":function() { return $scope.header.qcFlowcell.postLoadingNbActivePores},
-			        	 "property":"postLoadingNbActivePores",
-			        	 "order":true,
-						 "edit":true,
-						 "hide":true,
-			        	 "type":"integer",
-			        	 "position":2,
-			        	 "extraHeaders":{0:"QC Flowcell"}
-
-			         },
-			         {
 			        	 "header":function() { return $scope.header.qcFlowcell.preLoadingNbActivePores},
 			        	 "property":"preLoadingNbActivePores",
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"integer",
+			        	 "position":2,
+			        	 "extraHeaders":{0:"QC Flowcell"}
+			         },
+			         {
+			        	 "header":function() { return $scope.header.qcFlowcell.postLoadingNbActivePores},
+			        	 "property":"postLoadingNbActivePores",
+			        	 "order":true,
+						 "edit":true,
+						 "hide":true,
+			        	 "type":"integer",
 			        	 "position":3,
 			        	 "extraHeaders":{0:"QC Flowcell"}
-			         }			         
+
+			         }		         
 			         ],
 			compact:true,
 			pagination:{
@@ -296,7 +310,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 	$scope.$on('addInstrumentPropertiesInput', function(e, data, possibleValues) {
 		var column = $scope.datatable.newColumn(data.name,"inputInstrumentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Inputs","1":"Instruments"});
 		column.defaultValues = data.defaultValue;
-		$scope.datatable.addColumn(2,column);
+		$scope.datatable.addColumn(data.displayOrder+5,column);
 	});
 	
 	$scope.$on('addExperimentPropertiesInput', function(e, data, possibleValues) {
@@ -305,7 +319,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 			if(data.displayMeasureValue!=undefined) unit = "("+data.displayMeasureValue.value+")";
 			var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"inputExperimentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Inputs"});
 			column.defaultValues = data.defaultValue;
-			$scope.datatable.addColumn(2,column);
+			$scope.datatable.addColumn(data.displayOrder+5,column);
 		}
 	});
 	
@@ -315,14 +329,14 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 			if(data.displayMeasureValue!=undefined) unit = "("+data.displayMeasureValue.value+")";
 			var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"outputExperimentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Outputs"});
 			column.defaultValues = data.defaultValue;
-			$scope.datatable.addColumn(-1,column);
+			$scope.datatable.addColumn(data.displayOrder+5,column);
 		}
 	});
 	
 	$scope.$on('addInstrumentPropertiesOutput', function(e, data, possibleValues) {
 		var column = $scope.datatable.newColumn(data.name,"outputInstrumentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Outputs","1":"Instruments"});
 		column.defaultValues = data.defaultValue;
-		$scope.datatable.addColumn(-1,column);
+		$scope.datatable.addColumn(data.displayOrder+5,column);
 	});
 	
 	$scope.addOutputColumns = function(){
@@ -368,6 +382,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 	});
 	
 	$scope.$on('addExperimentPropertiesOutputToScope', function(e, data) {
+		if($scope.datatable.getData() != undefined){
 		for(var i=0;i<$scope.datatable.getData().length;i++){
 			for(var j=0; j<data.length;j++){
 				if($scope.getLevel( data[j].levels, "ContainerOut")){
@@ -380,6 +395,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 				}
 			}
 		}
+	 }
 	});
 	
 	$scope.$on('addExperimentPropertiesInputToScope', function(e, data) {
@@ -400,6 +416,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 	});
 	
 	$scope.$on('addInstrumentPropertiesOutputToScope', function(e, data) {
+		if($scope.datatable.getData() != undefined){
 		for(var i=0;i<$scope.datatable.getData().length;i++){
 			for(var j=0; j<data.length;j++){
 				if($scope.getLevel( data[j].levels, "ContainerOut")){
@@ -412,6 +429,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 				}
 			}
 		}
+	}
 	});
 	
 	$scope.$on('save', function(e, promises, func, endPromises) {
@@ -462,6 +480,11 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 	var outputLoadingReportToExperiment =function(output){
 		var allData = output.getData();
 		if(allData != undefined){
+			for(var i=0 in allData) {
+				  if(allData[i].creationDate==undefined){
+					  allData[i].creationDate=new Date().getTime();
+				  };
+			}
 			if($scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].experimentProperties==undefined){
 				$scope.experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].experimentProperties={};
 			}
