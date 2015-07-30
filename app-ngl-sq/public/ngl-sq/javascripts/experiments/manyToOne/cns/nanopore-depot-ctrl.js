@@ -382,6 +382,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 	});
 	
 	$scope.$on('addExperimentPropertiesOutputToScope', function(e, data) {
+		if($scope.datatable.getData() != undefined){
 		for(var i=0;i<$scope.datatable.getData().length;i++){
 			for(var j=0; j<data.length;j++){
 				if($scope.getLevel( data[j].levels, "ContainerOut")){
@@ -394,6 +395,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 				}
 			}
 		}
+	 }
 	});
 	
 	$scope.$on('addExperimentPropertiesInputToScope', function(e, data) {
@@ -414,6 +416,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 	});
 	
 	$scope.$on('addInstrumentPropertiesOutputToScope', function(e, data) {
+		if($scope.datatable.getData() != undefined){
 		for(var i=0;i<$scope.datatable.getData().length;i++){
 			for(var j=0; j<data.length;j++){
 				if($scope.getLevel( data[j].levels, "ContainerOut")){
@@ -426,6 +429,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 				}
 			}
 		}
+	}
 	});
 	
 	$scope.$on('save', function(e, promises, func, endPromises) {
