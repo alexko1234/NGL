@@ -364,8 +364,8 @@
 			    
 			   <div class="form-group" ng-repeat="instp in experiment.instrumentProperties.inputs | orderBy : 'displayOrder'"  ng-if="getLevel(instp.levels,'Instrument')">
 								
-						<label  class="col-md-6 col-lg-6 control-label">{{instp.name}}</label>
-					
+						<label  class="col-md-6 col-lg-6 control-label" ng-if="instp.displayMeasureValue==undefined">{{instp.name}}</label>
+						<label  class="col-md-6 col-lg-6 control-label" ng-if="instp.displayMeasureValue!=undefined">{{instp.name}} ({{instp.displayMeasureValue.value}})</label>
 						<div class="col-md-6 col-lg-6" ng-if="instp.valueType == 'java.awt.Image'">
 							<input type="file" ng-disabled="!experiment.instrumentInformation.enabled" base64-img="experiment.value.instrumentProperties[instp.code]" />
 							<div ng-click="setImage(experiment.value.instrumentProperties[instp.code].value,experiment.value.instrumentProperties[instp.code].fullname,experiment.value.instrumentProperties[instp.code].width,
@@ -392,7 +392,7 @@
 									ng-readonly="!experiment.instrumentInformation.enabled"
 									ng-model="experiment.value.instrumentProperties[instp.code].value"
 									ng-disabled="!experiment.instrumentInformation.enabled"
-									dt-default-value="instp.defaultValue"/>
+									udt-default-value="instp.defaultValue"/>
 								
 								<div bt-select class="form-control" bt-options="opt.value as opt.value for opt in instp.possibleValues" dt-default-value="instp.defaultValue"
 									ng-readonly="!experiment.instrumentInformation.enabled" ng-disabled="!experiment.instrumentInformation.enabled" 
