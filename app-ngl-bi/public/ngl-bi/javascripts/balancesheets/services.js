@@ -686,6 +686,7 @@
 			 }; 
 		 var defaultDatatableColumns = [
 				{	property:"type",
+					filter: "codes:'type'",
 				  	header: "balanceSheets.projectType",
 				  	type :"String",
 				  	order : true,
