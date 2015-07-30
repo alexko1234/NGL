@@ -31,8 +31,6 @@ angular.module('home').controller('BalanceSheetsYearCtrl', ['$scope', 'mainServi
                                                     function($scope, mainService, tabService, balanceSheetsSrv, $routeParams){
 	
 	
-	
-	
 	// Service
 	$scope.balanceSheetsService = balanceSheetsSrv;
 	
@@ -43,7 +41,7 @@ angular.module('home').controller('BalanceSheetsYearCtrl', ['$scope', 'mainServi
 	var changeYear = true;
 
 	if(mainService.get('activeYear') == undefined){
-		mainService.put('activeYear', activeYear);
+		mainService.put('activeYear', actualYear);
 	}
 	
 	// Tabs

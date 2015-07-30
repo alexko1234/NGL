@@ -109,10 +109,11 @@
 					 readsets.push(data[i]);
 				 }
 			 }
+			 
 			 for(var i = 0; i < readsets.length; i++){
 				 if(readsets[i].sampleOnContainer == null || readsets[i].sampleOnContainer == undefined){
 					 readsets[i].sampleOnContainer = {
-							 sampleTypeCode : Messages("balanceSheets.otherSampleTypeCode")
+							 sampleTypeCode : Messages("balanceSheets.noSampleTypeCode")
 					 };
 				 }
 			 }
@@ -154,6 +155,7 @@
 					 if(mainService.get('activeYear') == selectedYear){
 						 stillLoading = false;
 					 }
+					 
 				 });
 			 });
 		 });
@@ -164,6 +166,10 @@
 		loadSequencingProduction();
 		loadFirstTen();
 		loadProjectType();
+		
+		if(mainService.get('activeYear') == selectedYear){
+			stillLoading = false;
+		}
 	 }
 	 
 	 var loadFunctionsFromCache = function(){
