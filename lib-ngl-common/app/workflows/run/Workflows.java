@@ -23,6 +23,7 @@ import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBCursor;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 import org.mongojack.WriteResult;
@@ -44,6 +45,7 @@ import com.mongodb.BasicDBObject;
 
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
 
 public class Workflows {
 	
@@ -126,15 +128,17 @@ public class Workflows {
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, 
 					DBQuery.is("code", run.code), DBUpdate.set("dispatch", Boolean.TRUE));
 			
-			List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", run.code), getReadSetKeys()).toList();
-			for(ReadSet readSet: readSets){
+			MongoDBResult<ReadSet> readSetResult = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", run.code));
+			DBCursor<ReadSet> cursor = readSetResult.cursor;
+			while(cursor.hasNext()){
+				ReadSet readSet = cursor.next();
 				State nextReadSetState = cloneState(run.state, contextValidation.getUser());
 				setReadSetState(contextValidation, readSet, nextReadSetState);
 			}			
 			//Synchro old lims
 			if(Play.application().configuration().getBoolean("old.lims.sync", false)){
 				Logger.debug("Old LIMS Run Synchronisation");
-				readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", run.code)).toList();
+				List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", run.code)).toList();
 				Spring.getBeanOfType(ILimsRunServices.class).insertRun(run, readSets, false);
 			}
 			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleFRG, run),null);

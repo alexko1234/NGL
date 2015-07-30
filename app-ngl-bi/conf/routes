@@ -2,10 +2,12 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-->  / common.Routes
-->  / apinglbi.Routes
+->  / apinglcommon.Routes
+->  / apinglprojects.Routes
 ->  / apinglsq.Routes
-->	/ migration.Routes
+->  / apinglbi.Routes
+
+->	/ apimigration.Routes
 ->  /authentication authentication.Routes
 
 # Home page
@@ -62,6 +64,7 @@ GET		/tpl/balance-sheets/js-routes					controllers.balancesheets.tpl.BalanceShee
 
 
 # Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
 GET     /messages.js                				controllers.main.tpl.Main.jsMessages()
 GET     /codes.js        	        				controllers.main.tpl.Main.jsCodes()
 #GET     /api/js-routes.js        	        		controllers.main.tpl.Main.apiJavascriptRoutes()

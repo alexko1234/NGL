@@ -126,7 +126,7 @@ public class ExperimentService {
 		
 		
 		l.add(newExperimentType("Preparation flowcell", "prepa-flowcell",null,1200, 
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcell(),
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcellCNS(),
 				getInstrumentUsedTypes("cBot-interne","cBot"), "ManyToOne", 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 
@@ -143,7 +143,7 @@ public class ExperimentService {
 		
 		
 		l.add(newExperimentType("Préparation flowcell","prepa-flowcell-cng",null,1100,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcell(),
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcellCNG(),
 				getInstrumentUsedTypes("cBot", "cBot-onboard"),"ManyToOne", 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 		
@@ -541,7 +541,9 @@ public class ExperimentService {
 		return propertyDefinitions;
 	}
 	
-	private static List<PropertyDefinition> getPropertyDefinitionsPrepaflowcell() throws DAOException {
+	// GA separation getPropertyDefinitionsPrepaflowcellCNS / getPropertyDefinitionsPrepaflowcellCNG pour JIRA 676
+	//  ==> feuille de calcul differentes pour la prepaflowcell entre CNS et CNG
+	private static List<PropertyDefinition> getPropertyDefinitionsPrepaflowcellCNS() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		//Outputcontainer
 		propertyDefinitions.add(newPropertiesDefinition("% phiX", "phixPercent", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null, null, null, null, "single",1,true,"1"));		
@@ -589,6 +591,24 @@ public class ExperimentService {
 		
 		return propertyDefinitions;
 	}
+	
+	private static List<PropertyDefinition> getPropertyDefinitionsPrepaflowcellCNG() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		//Outputcontainer
+		propertyDefinitions.add(newPropertiesDefinition("% phiX", "phixPercent", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null, null, null, null, "single",1,true,"1"));		
+		propertyDefinitions.add(newPropertiesDefinition("Volume final", "finalVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",2));
+		
+		//InputContainer
+		
+		
+		propertyDefinitions.add(newPropertiesDefinition("Conc. dilution", "finalConcentration2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null 
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "pM"),MeasureUnit.find.findByCode( "nM"), "single",11));
+
+	
+		return propertyDefinitions;
+	}
+
 
 	private static List<PropertyDefinition> getPropertyDefinitionsLibIndexing() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();

@@ -1,0 +1,20 @@
+#lists api
+GET		/api/projects/types								controllers.projects.api.ProjectTypes.list()
+GET		/api/projects/categories						controllers.projects.api.ProjectCategories.list()
+
+#project api
+GET    	/api/projects               					@controllers.projects.api.Projects.list()
+GET    	/api/projects/:code               				@controllers.projects.api.Projects.get(code: java.lang.String)
+HEAD	/api/projects/:code               				@controllers.projects.api.Projects.head(code: java.lang.String)
+POST   	/api/projects									@controllers.projects.api.Projects.save()
+PUT   	/api/projects/:code 							@controllers.projects.api.Projects.update(code: java.lang.String)
+#DELETE	/api/projects/:code								@controllers.projects.api.Projects.delete(code:java.lang.String)
+
+
+#umbrellaProject api
+GET    	/api/umbrellaprojects               			@controllers.projects.api.UmbrellaProjects.list()
+GET    	/api/umbrellaprojects/:code               		@controllers.projects.api.UmbrellaProjects.get(code: java.lang.String)
+HEAD	/api/umbrellaprojects/:code               		@controllers.projects.api.UmbrellaProjects.head(code: java.lang.String)
+POST   	/api/umbrellaprojects							@controllers.projects.api.UmbrellaProjects.save()
+PUT   	/api/umbrellaprojects/:code 					@controllers.projects.api.UmbrellaProjects.update(code: java.lang.String)
+#DELETE	/api/umbrellaprojects/:code						@controllers.projects.api.UmbrellaProjects.delete(code:java.lang.String)
