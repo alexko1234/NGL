@@ -152,10 +152,11 @@
 					 }
 					 
 					 // End of loading
-					 if(mainService.get('activeYear') == selectedYear){
-						 stillLoading = false;
+					 if(readsets[0] != undefined){
+						 if(mainService.get('activeYear') == readsets[0].runSequencingStartDate.getFullYear()){
+							 stillLoading = false;
+						 }
 					 }
-					 
 				 });
 			 });
 		 });
@@ -167,9 +168,11 @@
 		loadFirstTen();
 		loadProjectType();
 		
-		if(mainService.get('activeYear') == selectedYear){
-			stillLoading = false;
-		}
+		if(readsets[0] != undefined){
+			 if(mainService.get('activeYear') == readsets[0].runSequencingStartDate.getFullYear()){
+				 stillLoading = false;
+			 }
+		 }
 	 }
 	 
 	 var loadFunctionsFromCache = function(){
