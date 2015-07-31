@@ -353,7 +353,7 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', '$windo
 				var position = $scope.atomicTransfere.searchOutputPositionByInputContainerCode(allData[i].code || allData[i].inputCode);
 				if(angular.isDefined($scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds[0])){
 					//Etat output container bug
-					//allData[i].outputContainerUsed  = $scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds[0];
+					allData[i].outputContainerUsed  = $scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds[0];
 					allData[i].outputInstrumentProperties = $scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds[0].instrumentProperties;
 					allData[i].outputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds[0].experimentProperties;
 				}										
@@ -396,10 +396,9 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', '$windo
 	$scope.experiment.outputGenerated = $scope.isOutputGenerated();
 	
 	if($scope.experiment.editMode){
-		
-		$scope.atomicTransfere.loadExperiment($scope.datatable, outputToExperimentHelper, experimentToOutputHelper);
 		//inversion function
-		//$scope.atomicTransfere.loadExperiment($scope.datatable, experimentToOutputHelper,outputToExperimentHelper);
+		$scope.atomicTransfere.loadExperiment($scope.datatable, experimentToOutputHelper,outputToExperimentHelper);
+		
 	}else{		
 		$scope.atomicTransfere.newExperiment($scope.datatable);	
 	}
