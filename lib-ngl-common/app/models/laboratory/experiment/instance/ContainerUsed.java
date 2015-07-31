@@ -28,7 +28,8 @@ public class ContainerUsed implements IValidation{
 	// Take for inputContainer or Create for outputContainer
 	public PropertyValue volume;
 	public PropertyValue concentration;
-	
+	public PropertyValue quantity;
+
 	public Set<Content> contents;
 	
 	public Double percentage;

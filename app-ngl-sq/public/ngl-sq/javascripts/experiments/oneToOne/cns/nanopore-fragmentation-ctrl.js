@@ -1,4 +1,4 @@
-angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','oneToOne','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,oneToOne,mainService,tabService) {
+angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','oneToOne','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,oneToOne,mainService,tabService) {
 	$scope.datatableConfig = {
 			name:"FDR_Tube",
 			columns:[
@@ -40,7 +40,7 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$window','da
 						 "hide":true,
 			        	 "type":"text",
 			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
-			        	 "position":4,
+			        	 "position":2,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
 			          {
@@ -50,7 +50,7 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$window','da
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			        	 "position":2,
+			        	 "position":3,
 			        	 "extraHeaders":{0:"Inputs"}
 			         }, 
 					 {
@@ -60,7 +60,7 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$window','da
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			        	 "position":3,
+			        	 "position":4,
 						 "render":"<div list-resize='value.data.sampleCodes | unique'>",
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
@@ -72,7 +72,7 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$window','da
 						 "hide":true,
 			        	 "type":"text",
 						 "filter":"codes:'state'",
-			        	 "position":7,
+			        	 "position":5,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },					 
 					 {
@@ -82,7 +82,7 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$window','da
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":5,
+			        	 "position":6,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
 			         {
@@ -92,27 +92,28 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$window','da
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":6,
+			        	 "position":7,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
 			         {
-			        	 "header":"Conc. finale Ligation (ng/µL)",
+			        	 "header":function(){return Messages("containers.table.concentration") + " (nM)"},
 			        	 "property":"outputContainerUsed.concentration.value",
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":100,
+			        	 "defaultValues":10,
+			        	 "position":8,
 			        	 "extraHeaders":{0:"Outputs"}
 			         },
 			         {
-			        	 "header":"Qté finale Ligation (ng)",
-			        	 "property":"outputContainerUsed.quantity.value",
+			        	 "header":function(){return Messages("containers.table.volume")+ " (µL)"},
+			        	 "property":"outputContainerUsed.volume.value",
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":101,
+			        	 "position":9,
 			        	 "extraHeaders":{0:"Outputs"}
 			         }
 			         ],
@@ -343,7 +344,7 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$window','da
 				var position = $scope.atomicTransfere.searchOutputPositionByInputContainerCode(allData[i].code || allData[i].inputCode);
 				if(angular.isDefined($scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds[0])){
 					//Etat output container bug
-					allData[i].outputContainerUsed  = $scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds[0];
+					//allData[i].outputContainerUsed  = $scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds[0];
 					allData[i].outputInstrumentProperties = $scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds[0].instrumentProperties;
 					allData[i].outputExperimentProperties = $scope.experiment.value.atomicTransfertMethods[position].outputContainerUseds[0].experimentProperties;
 				}										
@@ -354,7 +355,7 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$window','da
 	
 	$scope.init_atomicTransfert = function(containers, atomicTransfertMethod){
 			angular.forEach(containers, function(container,index){
-				$scope.experiment.value.atomicTransfertMethods[index] = {class:atomicTransfertMethod,line:(index+1), column:"1", inputContainerUseds:[], outputContainerUseds:[{quantity:{unit:"ng"},concentration:{unit:"ng/µL"},experimentProperties:{}}]};
+				$scope.experiment.value.atomicTransfertMethods[index] = {class:atomicTransfertMethod,line:(index+1), column:"1", inputContainerUseds:[], outputContainerUseds:[{volume:{unit:"µL"},concentration:{unit:"nM"},experimentProperties:{}}]};
 				$scope.experiment.value.atomicTransfertMethods[index].inputContainerUseds = [{code:container.code,instrumentProperties:{},experimentProperties:{},state:container.state,locationOnContainerSupport:container.support}];
 			});			
 			experimentToOutputHelper($scope.datatable);
