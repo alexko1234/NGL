@@ -529,7 +529,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 									}
 								}
 								if(!angular.isUndefined(containerTmp)){
-									var containerUsed = {code:containerTmp.code, concentration: containerTmp.mesuredConcentration, volume: containerTmp.mesuredVolume, state: containerTmp.state};									
+									var containerUsed = {code:containerTmp.code, quantity :containerTmp.quantity, concentration: containerTmp.mesuredConcentration, volume: containerTmp.mesuredVolume, state: containerTmp.state};									
 									data.outputContainerUsed = containerUsed;		
 								}
 							});
@@ -576,7 +576,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 											}
 										}
 									}
-									var containerUsed = {code:containerTmp.code, concentration: containerTmp.mesuredConcentration, volume: containerTmp.mesuredVolume, state: containerTmp.state};									
+									var containerUsed = {code:containerTmp.code, quantity:containerTmp.mesuredQuantity,concentration: containerTmp.mesuredConcentration, volume: containerTmp.mesuredVolume, state: containerTmp.state};									
 									data.outputContainerUsed = containerUsed;									
 								});
 							}

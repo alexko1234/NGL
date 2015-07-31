@@ -40,7 +40,7 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', '$windo
 						 "hide":true,
 			        	 "type":"text",
 			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
-			        	 "position":2,
+			        	 "position":4,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
 			          {
@@ -50,7 +50,7 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', '$windo
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			        	 "position":3,
+			        	 "position":2,
 			        	 "extraHeaders":{0:"Inputs"}
 			         }, 
 					 {
@@ -60,7 +60,7 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', '$windo
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			        	 "position":4,
+			        	 "position":3,
 						 "render":"<div list-resize='value.data.sampleCodes | unique'>",
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
@@ -72,7 +72,7 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', '$windo
 						 "hide":true,
 			        	 "type":"text",
 						 "filter":"codes:'state'",
-			        	 "position":5,
+			        	 "position":7,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },					 
 					 {
@@ -82,7 +82,7 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', '$windo
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":6,
+			        	 "position":5,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
 			         {
@@ -92,18 +92,27 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', '$windo
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":7,
+			        	 "position":6,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
 			         {
-			        	 "header":function(){return Messages("containers.table.concentration") + " (nM)"},
+			        	 "header":"Conc. finale preCR (ng/µL)",
 			        	 "property":"outputContainerUsed.concentration.value",
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "defaultValues":10,
-			        	 "position":8,
+			        	 "position":100,
+			        	 "extraHeaders":{0:"Outputs"}
+			         },
+			         {
+			        	 "header":"Qté finale preCR (ng)",
+			        	 "property":"outputContainerUsed.quantity.value",
+			        	 "order":true,
+						 "edit":true,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":101,
 			        	 "extraHeaders":{0:"Outputs"}
 			         },
 			         {
@@ -113,7 +122,7 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', '$windo
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":9,
+			        	 "position":102,
 			        	 "extraHeaders":{0:"Outputs"}
 			         }
 			         ],
@@ -355,7 +364,7 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', '$windo
 	
 	$scope.init_atomicTransfert = function(containers, atomicTransfertMethod){
 			angular.forEach(containers, function(container,index){
-				$scope.experiment.value.atomicTransfertMethods[index] = {class:atomicTransfertMethod,line:(index+1), column:"1", inputContainerUseds:[], outputContainerUseds:[{volume:{unit:"µL"},concentration:{unit:"nM"},experimentProperties:{}}]};
+				$scope.experiment.value.atomicTransfertMethods[index] = {class:atomicTransfertMethod,line:(index+1), column:"1", inputContainerUseds:[], outputContainerUseds:[{volume:{unit:"µL"},concentration:{unit:"ng/µL"},quantity:{unit:"ng"},experimentProperties:{}}]};
 				$scope.experiment.value.atomicTransfertMethods[index].inputContainerUseds = [{code:container.code,instrumentProperties:{},experimentProperties:{},state:container.state,locationOnContainerSupport:container.support}];
 			});			
 			experimentToOutputHelper($scope.datatable);
@@ -387,9 +396,10 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', '$windo
 	$scope.experiment.outputGenerated = $scope.isOutputGenerated();
 	
 	if($scope.experiment.editMode){
+		
+		$scope.atomicTransfere.loadExperiment($scope.datatable, outputToExperimentHelper, experimentToOutputHelper);
 		//inversion function
-		//$scope.atomicTransfere.loadExperiment($scope.datatable, outputToExperimentHelper, experimentToOutputHelper);
-		$scope.atomicTransfere.loadExperiment($scope.datatable, experimentToOutputHelper,outputToExperimentHelper);
+		//$scope.atomicTransfere.loadExperiment($scope.datatable, experimentToOutputHelper,outputToExperimentHelper);
 	}else{		
 		$scope.atomicTransfere.newExperiment($scope.datatable);	
 	}
