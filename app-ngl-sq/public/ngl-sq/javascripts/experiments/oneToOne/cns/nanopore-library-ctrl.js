@@ -39,6 +39,7 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$window','da
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
+			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
 			        	 "position":2,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
