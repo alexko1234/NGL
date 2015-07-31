@@ -59,15 +59,15 @@
 			</tab>
 			
 			<tab heading='@Messages("balanceSheets.tab.projectType")' disabled="balanceSheetsService.isLoading()" active="tabs[3]" ng-click='setActiveTab("3")'>
-				<div class="row">
-					<div class="col-md-12 col-lg-12">
-						<br /><div class="alert alert-info">@Messages("balanceSheets.info.projectType")</div>
-					</div>
-				</div>
 				<div ng-if="balanceSheetsService.isLoading()" class="text-center">
 					<div class="inProgressSpinner"><button class="spinnerBtn btn btn-primary btn-lg"><i class="fa fa-spinner fa-spin fa-5x"></i></button></div>
 				</div>
 				<div ng-if="!balanceSheetsService.isLoading()">
+					<div class="row">
+						<div class="col-md-12 col-lg-12">
+							<br /><div class="alert alert-info">@Messages("balanceSheets.info.projectType")</div>
+						</div>
+					</div>
 					<div class="row">
 						<div class="col-md-12 col-lg-12" datatable="balanceSheetsService.dtProjectType()"></div>
 					</div>

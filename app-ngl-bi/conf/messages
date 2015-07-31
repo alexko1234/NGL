@@ -626,6 +626,7 @@ balanceSheets.percentage = Pourcentage
 balanceSheets.projectCode = Code sous-projet
 balanceSheets.projectName = Nom sous-projet
 balanceSheets.projectType = Type d''échantillon
+balanceSheets.categoryType = Catégorie d''échantillon
 balanceSheets.quarters = Trimestre
 balanceSheets.monthRun = Mois run
 balanceSheets.sum = Somme : 

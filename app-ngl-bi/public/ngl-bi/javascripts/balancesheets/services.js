@@ -39,39 +39,40 @@
 	 var total = 0;
 	 	 
 	 var manageCache = function(changeYear, year){
+		 stillLoading = true;
 		 selectedYear = year;
 		 if(mainService.get('yearsInCache') != undefined){
-				var map = mainService.get('yearsInCache');
-				if(!map.has(selectedYear)){
-					loadData(selectedYear);
-				}else{
-					if(changeYear){
-						balanceSheets.setData(map.get(selectedYear), selectedYear);
-						balanceSheets.loadFromCache();
-					}else{
-						if(mainService.get('balanceSheetsActiveTab') == 0) {
-							balanceSheets.showQuarters();
-						}
-						else if(mainService.get('balanceSheetsActiveTab') == 1){
-							balanceSheets.showSequencingProduction();
-						}
-						else if(mainService.get('balanceSheetsActiveTab') == 2){
-							balanceSheets.showFirstTen();						
-						}
-						else if(mainService.get('balanceSheetsActiveTab') == 3){
-							balanceSheets.showProjectType();
-						}
-					}
-				}
-			}else{
+			var map = mainService.get('yearsInCache');
+			if(!map.has(selectedYear)){
 				loadData(selectedYear);
+			}else{
+				if(changeYear){
+					balanceSheets.setData(map.get(selectedYear), selectedYear);
+					balanceSheets.loadFromCache();
+				}else{
+					if(mainService.get('balanceSheetsActiveTab') == 0) {
+						balanceSheets.showQuarters();
+					}
+					else if(mainService.get('balanceSheetsActiveTab') == 1){
+						balanceSheets.showSequencingProduction();
+					}
+					else if(mainService.get('balanceSheetsActiveTab') == 2){
+						balanceSheets.showFirstTen();						
+					}
+					else if(mainService.get('balanceSheetsActiveTab') == 3){
+						balanceSheets.showProjectType();
+					}
+					stillLoading = false;
+				}
 			}
+		}else{
+			loadData(selectedYear);
+		}
 	 }
 	 
 	 
 	 
 	 var loadData = function(year){
-		 stillLoading = true;
 		 flushData();
 
 		 // We initialize our form
@@ -81,6 +82,7 @@
 		 form.includes.push("runTypeCode");
 		 form.includes.push("runSequencingStartDate");
 		 form.includes.push("sampleOnContainer.sampleTypeCode");
+		 form.includes.push("sampleOnContainer.sampleCategoryCode");
 		 form.fromDate = moment("01/01/"+selectedYear, Messages("date.format").toUpperCase()).valueOf();
 		 form.toDate = moment("31/12/"+selectedYear, Messages("date.format").toUpperCase()).valueOf();
 		 form.limit = 20000;
@@ -100,6 +102,9 @@
 		 // We retrieve everything we need
 		 $http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url, {params : form})
 		 	.success(function(data, status, headers, config) {
+		 	 if(readsets.length != 0 && readsets[0].runSequencingStartDate.getFullYear() == mainService.get('activeYear')) {
+		 		 flushData();
+		 	 }
 			 for(var i = 0; i < data.length; i++){
 				 data[i].runSequencingStartDate = convertToDate(data[i].runSequencingStartDate);
 			 }
@@ -168,7 +173,7 @@
 		loadFirstTen();
 		loadProjectType();
 		
-		if(readsets[0] != undefined){
+		 if(readsets[0] != undefined){
 			 if(mainService.get('activeYear') == readsets[0].runSequencingStartDate.getFullYear()){
 				 stillLoading = false;
 			 }
@@ -415,7 +420,7 @@
 			 sum+= balanceSheetsSequencingProduction[i].nbBases;
 		 }
 		 for(var i = 0; i < balanceSheetsSequencingProduction.length; i++){
-			 balanceSheetsSequencingProduction[i].percentage = (balanceSheetsSequencingProduction[i].nbBases*100/sum).toFixed(2) + "%";
+			 balanceSheetsSequencingProduction[i].percentage = (balanceSheetsSequencingProduction[i].nbBases*100/sum).toFixed(2) + " %";
 		 }
 		 
 		 dataSequencing = balanceSheetsSequencingProduction;
@@ -627,6 +632,12 @@
 					header: "balanceSheets.value",
 					type :"Number",
 				  	position:2
+				},
+				{
+					property :"percentage",
+					header: "balanceSheets.percentage",
+					type : "String",
+					position : 3
 				}
 			 ];
 		 
@@ -639,21 +650,17 @@
 		 }
 		 var sum = {
 				 property : Messages("balanceSheets.totalTen"),
-				 value : sumBases
+				 value : sumBases,
+				 percentage : (sumBases * 100 / total).toFixed(2) + " %"
 		 };
 		 linesToColor.push(dataToInsert.push(sum) - 1);
 		 
 		 var totalSum = {
 				 property : Messages("balanceSheets.totalSum"),
-				 value : total
+				 value : total,
+				 percentage : "100 %"
 		 };
 		 linesToColor.push(dataToInsert.push(totalSum) -1);
-		 
-		 var percentage = {
-				 property : Messages("balanceSheets.percentageTotalSum"),
-				 value : (sumBases * 100 / total).toFixed(2)
-		 }
-		 linesToColor.push(dataToInsert.push(percentage) - 1);
 		 
 		 dtSumFirstTen = datatable(datatableConfig);
 		 dtSumFirstTen.setColumnsConfig(defaultDatatableColumns);
@@ -685,30 +692,38 @@
 				}
 			 }; 
 		 var defaultDatatableColumns = [
+		        {
+		        	property : "category",
+		        	header : "balanceSheets.categoryType",
+		        	type : "String",
+		        	order : true,
+		        	position : 1
+		        },
 				{	property:"type",
 					filter: "codes:'type'",
 				  	header: "balanceSheets.projectType",
 				  	type :"String",
 				  	order : true,
-				  	position:1
+				  	position:2
 				},
 				{	property:"nbBases",
 					header: "balanceSheets.nbBases",
 					type :"Number",
 					order : true,
-				  	position:2
+				  	position:3
 				},
 				{
 					property:"percentage",
 					header: "balanceSheets.percentage",
 					type:"String",
 					order : true,
-					position:3
+					position:4
 				}
 			 ];
 		 
 		 // Treatment
 		 var types = [];
+		 var categories = [];
 		 var balanceSheetsProjectType = [];
 		 
 		 // Gathering types of projects
@@ -716,16 +731,33 @@
 			 if(types.indexOf(readsets[i].sampleOnContainer.sampleTypeCode) == -1){
 				 types.push(readsets[i].sampleOnContainer.sampleTypeCode);
 			 }
+			 if(categories.indexOf(readsets[i].sampleOnContainer.sampleCategoryCode) == -1){
+				 categories.push(readsets[i].sampleOnContainer.sampleCategoryCode);
+			 }
 		 }
+		 
 		 
 		 // Initializing main component
 		 for(var i = 0; i < types.length; i++){
 			 balanceSheetsProjectType[i] = {
+					 category : "test",
 					 type : types[i],
 					 nbBases : 0,
 					 percentage : null
 			 };
 		 }
+		 
+		 // categories
+		 for(var i = 0; i < balanceSheetsProjectType.length; i++){
+			 for(var j = 0; j < readsets.length; j++){
+				 if(readsets[j].sampleOnContainer.sampleTypeCode == balanceSheetsProjectType[i].type){
+					 balanceSheetsProjectType[i].category = readsets[j].sampleOnContainer.sampleCategoryCode.toString();
+					 break;
+				 }
+			 }
+		 }
+		 
+		 console.log(balanceSheetsProjectType);
 		 
 		 // NbBases
 		 for(var i = 0; i < readsets.length; i++){
@@ -738,7 +770,7 @@
 		 
 		 // Percentage
 		 for(var i = 0; i < balanceSheetsProjectType.length; i++){
-			 balanceSheetsProjectType[i].percentage = (balanceSheetsProjectType[i].nbBases * 100 / total).toFixed(2) + "%";
+			 balanceSheetsProjectType[i].percentage = (balanceSheetsProjectType[i].nbBases * 100 / total).toFixed(2) + " %";
 		 }
 		 
 		 balanceSheetsProjectType.sort(function(a, b){return parseInt(b.nbBases) - parseInt(a.nbBases)});
@@ -1121,7 +1153,7 @@
 			showSequencingProduction : function(){loadSequencingProduction();},
 			showProjectType : function(){loadProjectType();}
 	 };
-	 
+	 stillLoading = false;
 	 return balanceSheets;	 
  }
  
@@ -1166,8 +1198,7 @@
 								active:false
 							},
 							pagination:{
-								mode:'local',
-								numberRecordsPerPage:25
+								active : false
 							},
 							hide:{
 								active:false
@@ -1222,6 +1253,7 @@
 			var loadDtSumYearly = function(){
 				// Initializing our components
 				var datatableConfig = {
+				 	showTotalNumberRecords : false,
 					search : {
 						active:false
 					},
