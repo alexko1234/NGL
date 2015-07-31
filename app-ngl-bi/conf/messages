@@ -645,6 +645,8 @@ balanceSheets.percentageForTenProjects = Pourcentage sur dix projets
 balanceSheets.percentageForYear = Pourcentage sur cette année
 
 balanceSheets.info.projectType = * Les readsets en cours de Read Generation n''ont pas l''information du type d''échantillon tant que le transfert n''est pas terminé.
+balanceSheets.danger.noData = Aucune donnée pour cette année
+
 
 balanceSheets.export.firstTen = 10Projets
 balanceSheets.export.sequencingType = TypeSeq

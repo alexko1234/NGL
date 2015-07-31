@@ -102,68 +102,77 @@
 		 // We retrieve everything we need
 		 $http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url, {params : form})
 		 	.success(function(data, status, headers, config) {
-		 	 if(readsets.length != 0 && readsets[0].runSequencingStartDate.getFullYear() == mainService.get('activeYear')) {
-		 		 flushData();
-		 	 }
-			 for(var i = 0; i < data.length; i++){
-				 data[i].runSequencingStartDate = convertToDate(data[i].runSequencingStartDate);
-			 }
-			 for(var i = 0; i < data.length; i++){
-				 if(data[i].runSequencingStartDate.getFullYear() == selectedYear){
-					 total += data[i].treatments.ngsrg.default.nbBases.value;	
-					 readsets.push(data[i]);
+		 		
+		 	 // For CNG when no data	
+		     if(data.length == 0){
+		    	 stillLoading = false;
+		     }else{
+		    	 // Test for when the user clicks like a monkey on every year, and twice the same.
+			 	 if(readsets.length != 0 && readsets[0].runSequencingStartDate.getFullYear() == mainService.get('activeYear')) {
+			 		 flushData();
+			 	 }
+				 for(var i = 0; i < data.length; i++){
+					 data[i].runSequencingStartDate = convertToDate(data[i].runSequencingStartDate);
 				 }
-			 }
-			 
-			 for(var i = 0; i < readsets.length; i++){
-				 if(readsets[i].sampleOnContainer == null || readsets[i].sampleOnContainer == undefined){
-					 readsets[i].sampleOnContainer = {
-							 sampleTypeCode : Messages("balanceSheets.noSampleTypeCode")
-					 };
-				 }
-			 }
-			 $http.get(jsRoutes.controllers.runs.api.Runs.list().url, {params : runForm}).success(function(runData, status, headers, config) {
-				 runs = runData;
-				 runData = [];
-				 for(var i = 0; i < runs.length; i++){
-					 // We don't want ARGUS sequencers
-					 if(runs[i].typeCode == "RARGUS"){
-						 runs.splice(i,1);
-					 }else{
-						 runs[i].sequencingStartDate = convertToDate(runs[i].sequencingStartDate);
+				 for(var i = 0; i < data.length; i++){
+					 if(data[i].runSequencingStartDate.getFullYear() == selectedYear){
+						 total += data[i].treatments.ngsrg.default.nbBases.value;	
+						 readsets.push(data[i]);
 					 }
 				 }
-				 $http.get(jsRoutes.controllers.projects.api.Projects.list().url, {params : projectForm}).success(function(projectData, status, headers, config) {
-					 projects = projectData;
-					 projectData = [];
-					 
-					 // Then we load our balance sheets
-					 loadFunctions();
-					 
-					 
-					 
-					 // Caching
-					 var yearMap = new Map();
-					 var years = new Map();
-					 if(mainService.get('yearsInCache') != undefined){
-						 if(!mainService.get('yearsInCache').has(String(selectedYear))){
-							 years = mainService.get('yearsInCache');
-							 years.set(selectedYear, balanceSheets.returnData());
-							 mainService.put('yearsInCache', years);
-						 }
-					 }else{
-						 yearMap.set(selectedYear, balanceSheets.returnData());
-						 mainService.put('yearsInCache', yearMap);
+				 
+				 for(var i = 0; i < readsets.length; i++){
+					 if(readsets[i].sampleOnContainer == null || readsets[i].sampleOnContainer == undefined){
+						 readsets[i].sampleOnContainer = {
+								 sampleTypeCode : Messages("balanceSheets.noSampleTypeCode")
+						 };
 					 }
-					 
-					 // End of loading
-					 if(readsets[0] != undefined){
-						 if(mainService.get('activeYear') == readsets[0].runSequencingStartDate.getFullYear()){
-							 stillLoading = false;
+				 }
+				 $http.get(jsRoutes.controllers.runs.api.Runs.list().url, {params : runForm}).success(function(runData, status, headers, config) {
+					 runs = runData;
+					 runData = [];
+					 for(var i = 0; i < runs.length; i++){
+						 // We don't want ARGUS sequencers
+						 if(runs[i].typeCode == "RARGUS"){
+							 runs.splice(i,1);
+						 }else{
+							 runs[i].sequencingStartDate = convertToDate(runs[i].sequencingStartDate);
 						 }
 					 }
+					 $http.get(jsRoutes.controllers.projects.api.Projects.list().url, {params : projectForm}).success(function(projectData, status, headers, config) {
+						 projects = projectData;
+						 projectData = [];
+						 
+						 // Then we load our balance sheets
+						 loadFunctions();
+						 
+						 
+						 
+						 // Caching
+						 var yearMap = new Map();
+						 var years = new Map();
+						 if(mainService.get('yearsInCache') != undefined){
+							 if(!mainService.get('yearsInCache').has(String(selectedYear))){
+								 years = mainService.get('yearsInCache');
+								 years.set(selectedYear, balanceSheets.returnData());
+								 mainService.put('yearsInCache', years);
+							 }
+						 }else{
+							 yearMap.set(selectedYear, balanceSheets.returnData());
+							 mainService.put('yearsInCache', yearMap);
+						 }
+						 
+						 // End of loading
+						 if(readsets[0] != undefined){
+							 if(mainService.get('activeYear') == readsets[0].runSequencingStartDate.getFullYear()){
+								 stillLoading = false;
+							 }
+						 }
+					 });
 				 });
-			 });
+		     }
+		     
+		    
 		 });
 	 }		 
 	 
@@ -756,9 +765,7 @@
 				 }
 			 }
 		 }
-		 
-		 console.log(balanceSheetsProjectType);
-		 
+		 		 
 		 // NbBases
 		 for(var i = 0; i < readsets.length; i++){
 			 for(var j = 0; j < balanceSheetsProjectType.length; j++){
@@ -1143,6 +1150,7 @@
 			dtSumFirstTen : function(){return dtSumFirstTen},
 			dtSumProjectType : function(){return dtSumProjectType},
 		// others
+			getLength : function(){return readsets.length;},
 			init : function(changeYear, year){manageCache(changeYear, year);},
 			isLoading : function(){return stillLoading;},
 			loadFromCache : function(){loadFunctionsFromCache();},
