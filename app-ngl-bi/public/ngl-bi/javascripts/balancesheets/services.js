@@ -431,6 +431,9 @@
 		 for(var i = 0; i < balanceSheetsSequencingProduction.length; i++){
 			 balanceSheetsSequencingProduction[i].percentage = (balanceSheetsSequencingProduction[i].nbBases*100/sum).toFixed(2) + " %";
 		 }
+		 for(var i = 0; i < balanceSheetsSequencingProduction.length; i++){
+			 balanceSheetsSequencingProduction[i].percentage = parseFloat(balanceSheetsSequencingProduction[i].percentage).toLocaleString() + " %";
+		 }
 		 
 		 dataSequencing = balanceSheetsSequencingProduction;
 		 
@@ -601,6 +604,13 @@
 			 balanceSheetsFirstTen[i].percentageForYear = (balanceSheetsFirstTen[i].nbBases *100 / total).toFixed(2) + " %";
 		 }
 		 
+		 // European formatting
+		 for(var i = 0; i < balanceSheetsFirstTen.length; i++){
+			 balanceSheetsFirstTen[i].percentageForTenProjects = parseFloat(balanceSheetsFirstTen[i].percentageForTenProjects).toLocaleString() + " %";
+			 balanceSheetsFirstTen[i].percentageForYear = parseFloat(balanceSheetsFirstTen[i].percentageForYear).toLocaleString() + " %";
+
+		 }
+		 
 		 dataFirstTen = balanceSheetsFirstTen;
 		 
 		 // Initialize other datatable
@@ -613,6 +623,7 @@
 		 dtFirstTen = datatable(datatableConfig);
 		 dtFirstTen.setColumnsConfig(defaultDatatableColumns);
 		 dtFirstTen.setData(balanceSheetsFirstTen, balanceSheetsFirstTen.length);
+		 
 	 }
 	 
 	 var loadDtSumFirstTen = function(){
@@ -660,7 +671,7 @@
 		 var sum = {
 				 property : Messages("balanceSheets.totalTen"),
 				 value : sumBases,
-				 percentage : (sumBases * 100 / total).toFixed(2) + " %"
+				 percentage : (sumBases * 100 / total).toFixed(2).toLocaleString() + " %"
 		 };
 		 linesToColor.push(dataToInsert.push(sum) - 1);
 		 
@@ -671,10 +682,18 @@
 		 };
 		 linesToColor.push(dataToInsert.push(totalSum) -1);
 		 
+		 // European formatting 
+		 for(var i = 0; i < dataToInsert.length; i++){
+			 dataToInsert[i].percentage = parseFloat(dataToInsert[i].percentage).toLocaleString() + " %";
+		 }
+		 
 		 dtSumFirstTen = datatable(datatableConfig);
 		 dtSumFirstTen.setColumnsConfig(defaultDatatableColumns);
 		 dtSumFirstTen.setData(dataToInsert, dataToInsert.length);
+		 
+		 // Color text in blue
 		 for(var i = 0; i < linesToColor.length; i++) colorBlue(dtSumFirstTen, linesToColor[i]);
+		 
 		 
 	 }
 	 
@@ -778,6 +797,11 @@
 		 // Percentage
 		 for(var i = 0; i < balanceSheetsProjectType.length; i++){
 			 balanceSheetsProjectType[i].percentage = (balanceSheetsProjectType[i].nbBases * 100 / total).toFixed(2) + " %";
+		 }
+		 
+		 // European formatting
+		 for(var i = 0; i < balanceSheetsProjectType.length; i++){
+			 balanceSheetsProjectType[i].percentage = parseFloat(balanceSheetsProjectType[i].percentage).toLocaleString() + " %";
 		 }
 		 
 		 balanceSheetsProjectType.sort(function(a, b){return parseInt(b.nbBases) - parseInt(a.nbBases)});
