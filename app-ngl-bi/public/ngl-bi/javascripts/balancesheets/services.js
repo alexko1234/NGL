@@ -1073,7 +1073,7 @@
 				 exporting : {
 					 enabled : true,
 					 filename : Messages('balanceSheets.export.projectType') + actualYear.toString().substr(2,2) + (actualDay.getMonth()+1) + actualDay.getUTCDate(),
-					 sourceWidth : 1300
+					 sourceWidth : 1000
 				 },
 				 series : [{
 					 name : Messages("balanceSheets.percentage"),
