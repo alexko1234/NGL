@@ -1,27 +1,20 @@
 angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','oneToOne','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,oneToOne,mainService,tabService) {
+
+	/*
+	 1) Code Container
+2) Etat container
+3) Projet(s)
+4) Echantillon(s)
+5) Code aliquot
+6) Tag
+7) Concentration (nM) 
+	 
+	 */
+	
 	$scope.datatableConfig = {
 			name:"FDR_Tube",
 			columns:[
-			  /*       {
-			        	 "header":Messages("containers.table.supportCode"),
-			        	 "property":"support.code",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":0,
-			        	 "extraHeaders":{0:"Inputs"}
-			         },
-			         {
-			        	 "header":Messages("containers.table.categoryCode"),
-			        	 "property":"support.categoryCode",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":1,
-			        	 "extraHeaders":{0:"Inputs"}
-			         },  */
+			 
 					 {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"code",
@@ -32,16 +25,6 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 			        	 "position":1,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
-			         {
-			        	"header":Messages("containers.table.tags"),
-			 			"property": "contents",
-			 			"order":true,
-			 			"hide":true,
-			 			"type":"text",
-			 			"position":2,
-			 			"render":"<div list-resize='value.data.contents | getArray:\"properties.tag.value\" | unique' ' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:"Inputs"}
-			         },
 					 {
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"state.code",
@@ -50,9 +33,50 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 						 "hide":true,
 			        	 "type":"text",
 						 "filter":"codes:'state'",
-			        	 "position":3,
+			        	 "position":2,
 			        	 "extraHeaders":{0:"Inputs"}
-			         },					 
+			         },				         
+			         {
+			        	"header":Messages("containers.table.projectCodes"),
+			 			"property": "projectCodes",
+			 			"order":false,
+			 			"hide":true,
+			 			"type":"text",
+			 			"position":3,
+			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+			        	 "extraHeaders":{0:"Inputs"}
+				     },
+				     {
+			        	"header":Messages("containers.table.sampleCodes"),
+			 			"property": "sampleCodes",
+			 			"order":false,
+			 			"hide":true,
+			 			"type":"text",
+			 			"position":4,
+			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+			        	 "extraHeaders":{0:"Inputs"}
+				     },
+				     {
+			        	"header":"Code aliquot",
+			 			"property": "contents",
+			 			"order":false,
+			 			"hide":true,
+			 			"type":"text",
+			 			"position":5,
+			 			"render": "<div list-resize='cellValue | getArray:\"properties.sampleAliquoteCode.value\"| unique' list-resize-min-size='3'>",
+			        	 "extraHeaders":{0:"Inputs"}
+				     },
+			         {
+			        	"header":Messages("containers.table.tags"),
+			 			"property": "contents",
+			 			"order":false,
+			 			"hide":true,
+			 			"type":"text",
+			 			"position":6,
+			 			"render":"<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' list-resize-min-size='3'>",
+			        	 "extraHeaders":{0:"Inputs"}
+			         },
+				 
 					 {
 			        	 "header":function(){return Messages("containers.table.concentration") + " (nM)"},
 			        	 "property":"mesuredConcentration.value",
@@ -60,10 +84,10 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":4,
+			        	 "position":7,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
-			         {
+			        /* {
 			        	 "header":function(){return Messages("containers.table.volume") + " (µL)"},
 			        	 "property":"mesuredVolume.value",
 			        	 "order":true,
@@ -72,10 +96,11 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 			        	 "type":"number",
 			        	 "position":5,
 			        	 "extraHeaders":{0:"Inputs"}
-			         },
+			         },*/
 			         {
-			        	 "header":function(){return Messages("containers.table.concentration") + " (nM)"},
+			        	 "header":function(){return Messages("containers.table.concentration") + " (pM)"},
 			        	 "property":"outputContainerUsed.concentration.value",
+			        	 "convertValue": {"active":true, "displayMeasureValue":"pM", "saveMeasureValue":"nM"},			        	 
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
@@ -93,38 +118,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 			        	 "type":"number",
 			        	 "position":9,
 			        	 "extraHeaders":{0:"Outputs"}
-			         }/*,
-			          {
-			        	 "header":Messages("containers.table.projectCodes"),
-			        	 "property":"projectCodes",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":3,
-			        	 "extraHeaders":{0:"Inputs"}
-			         }, 
-					 {
-			        	 "header":Messages("containers.table.sampleCodes"),
-			        	 "property":"sampleCodes",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":4,
-						 "render":"<div list-resize='value.data.sampleCodes | unique'>",
-			        	 "extraHeaders":{0:"Inputs"}
-			         },  
-					 {
-			        	 "header":Messages("containers.table.fromExperimentTypeCodes"),
-			        	 "property":"fromExperimentTypeCodes",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":7,
-			        	 "extraHeaders":{0:"Inputs"}
-			         }*/
+			         }
 			         ],
 			compact:true,
 			pagination:{
@@ -232,74 +226,6 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 		$scope.atomicTransfere.inputToExperiment($scope.datatable);		
 	});
 	
-	$scope.$on('addInstrumentPropertiesInputToScope', function(e, data) {
-		if($scope.datatable.getData() != undefined){
-		for(var i=0;i<$scope.datatable.getData().length;i++){
-			for(var j=0; j<data.length;j++){
-				if($scope.getLevel( data[j].levels, "ContainerIn")){
-					var getter = $parse("datatable.displayResult["+i+"].inputInstrumentProperties."+data[j].code+".value");
-					if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].instrumentProperties && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].instrumentProperties[data[j].code]){
-						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].instrumentProperties[data[j].code].value);
-					}else{
-						getter.assign($scope,undefined);
-					}
-				}
-			}
-		}
-	}
-	});
-	
-	$scope.$on('addExperimentPropertiesOutputToScope', function(e, data) {
-		if($scope.datatable.getData() != undefined){
-		for(var i=0;i<$scope.datatable.getData().length;i++){
-			for(var j=0; j<data.length;j++){
-				if($scope.getLevel( data[j].levels, "ContainerOut")){
-					var getter = $parse("datatable.displayResult["+i+"].outputExperimentProperties."+data[j].code+".value");
-					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].experimentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].experimentProperties[data[j].code]){
-						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].experimentProperties[data[j].code].value);
-					}else{
-						getter.assign($scope,undefined);
-					}
-				}
-			}
-		}
-	}
-	});
-	
-	$scope.$on('addExperimentPropertiesInputToScope', function(e, data) {
-		if($scope.datatable.getData() != undefined){
-		for(var i=0;i<$scope.datatable.getData().length;i++){
-			for(var j=0; j<data.length;j++){
-				if($scope.getLevel( data[j].levels, "ContainerIn")){
-					var getter = $parse("datatable.displayResult["+i+"].inputExperimentProperties."+data[j].code+".value");
-					if($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].experimentProperties && $scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].experimentProperties[data[j].code]){
-						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].experimentProperties[data[j].code].value);
-					}else{
-						getter.assign($scope,undefined);
-					}
-				}
-			}
-		}
-	}
-	});
-	
-	$scope.$on('addInstrumentPropertiesOutputToScope', function(e, data) {
-		if($scope.datatable.getData() != undefined){
-		for(var i=0;i<$scope.datatable.getData().length;i++){
-			for(var j=0; j<data.length;j++){
-				if($scope.getLevel( data[j].levels, "ContainerOut")){
-					var getter = $parse("datatable.displayResult["+i+"].outputInstrumentProperties."+data[j].code+".value");
-					if($scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].instrumentProperties && $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].instrumentProperties[data[j].code]){
-						getter.assign($scope,$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[0].instrumentProperties[data[j].code].value);
-					}else{
-						getter.assign($scope,undefined);
-					}
-				}
-			}
-		}
-	}
-	});
-	
 	$scope.$on('save', function(e, promises, func, endPromises) {	
 		$scope.setValidePercentage($scope.experiment.value.atomicTransfertMethods);
 		promises.push($scope.datatable.save());
@@ -317,36 +243,36 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 	});
 	
 	$scope.$on('outputToExperiment', function(e, atomicTransfertMethod) {
-		//$scope.atomicTransfere.outputToExperiment($scope.datatable);
-		outputToExperimentHelper($scope.datatable);
+		$scope.atomicTransfere.outputToExperiment($scope.datatable);
+		//outputToExperimentHelper($scope.datatable);
 	});
 	
-	var outputToExperimentHelper = function(output) {
-		var allData = output.getData();
-		if(allData != undefined){
-			for(var i=0;i<allData.length;i++){
-				var index = $scope.atomicTransfere.searchOutputPositionByInputContainerCode(allData[i].code || allData[i].inputCode);
-				if(angular.isDefined(allData[i].outputContainerUsed)/* && allData[i].outputContainerUsed.code !== undefined*/){
-					$scope.experiment.value.atomicTransfertMethods[index].outputContainerUseds[0] = allData[i].outputContainerUsed;
-				}										
-				if(allData[i].outputInstrumentProperties != undefined){
-					$scope.experiment.value.atomicTransfertMethods[index].outputContainerUseds[0].instrumentProperties = allData[i].outputInstrumentProperties;
-					$scope.atomicTransfere.getVarExperimentCommonFunctions.removeNullProperties($scope.experiment.value.atomicTransfertMethods[index].outputContainerUseds[0].instrumentProperties);
-				}
-				if(allData[i].outputExperimentProperties!= undefined){
-					$scope.experiment.value.atomicTransfertMethods[index].outputContainerUseds[0].experimentProperties = allData[i].outputExperimentProperties;	
-					$scope.atomicTransfere.getVarExperimentCommonFunctions($scope.experiment.value.atomicTransfertMethods[index].outputContainerUseds[0].experimentProperties);
-				}
-			}
-			output.setData(allData,allData.lenght);
-		}
-	};
-	
+//	var outputToExperimentHelper = function(output) {
+//		var allData = output.getData();
+//		if(allData != undefined){
+//			for(var i=0;i<allData.length;i++){
+//				var index = $scope.atomicTransfere.searchOutputPositionByInputContainerCode(allData[i].code || allData[i].inputCode);
+//				if(angular.isDefined(allData[i].outputContainerUsed)/* && allData[i].outputContainerUsed.code !== undefined*/){
+//					$scope.experiment.value.atomicTransfertMethods[index].outputContainerUseds[0] = allData[i].outputContainerUsed;
+//				}										
+//				if(allData[i].outputInstrumentProperties != undefined){
+//					$scope.experiment.value.atomicTransfertMethods[index].outputContainerUseds[0].instrumentProperties = allData[i].outputInstrumentProperties;
+//					$scope.atomicTransfere.getVarExperimentCommonFunctions.removeNullProperties($scope.experiment.value.atomicTransfertMethods[index].outputContainerUseds[0].instrumentProperties);
+//				}
+//				if(allData[i].outputExperimentProperties!= undefined){
+//					$scope.experiment.value.atomicTransfertMethods[index].outputContainerUseds[0].experimentProperties = allData[i].outputExperimentProperties;	
+//					$scope.atomicTransfere.getVarExperimentCommonFunctions($scope.experiment.value.atomicTransfertMethods[index].outputContainerUseds[0].experimentProperties);
+//				}
+//			}
+//			output.setData(allData,allData.lenght);
+//		}
+//	};
+
 	$scope.$on('experimentToOutput', function(e, atomicTransfertMethod) {
-		//$scope.atomicTransfere.experimentToOutput($scope.datatable);
-		experimentToOutputHelper($scope.datatable);
+		$scope.atomicTransfere.experimentToOutput($scope.datatable);
+		//experimentToOutputHelper($scope.datatable);
 	});
-	
+	/*
 	var experimentToOutputHelper = function(output) {
 		var allData = output.getData();
 		if(angular.isDefined(allData) && allData.length>0){
@@ -361,7 +287,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 			output.setData(allData,allData.length)
 		}
 	};
-	
+	*/
 	$scope.init_atomicTransfert = function(containers, atomicTransfertMethod){
 			angular.forEach(containers, function(container,index){
 				$scope.experiment.value.atomicTransfertMethods[index] = {class:atomicTransfertMethod,line:(index+1), column:"1", inputContainerUseds:[], outputContainerUseds:[{volume:{unit:"µL"},concentration:{unit:"nM"},experimentProperties:{}}]};
@@ -396,7 +322,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 	$scope.experiment.outputGenerated = $scope.isOutputGenerated();
 	
 	if($scope.experiment.editMode){
-		$scope.atomicTransfere.loadExperiment($scope.datatable, outputToExperimentHelper, experimentToOutputHelper);
+		$scope.atomicTransfere.loadExperiment($scope.datatable, $scope.atomicTransfere.outputToExperiment, $scope.atomicTransfere.experimentToOutput);
 	}else{		
 		$scope.atomicTransfere.newExperiment($scope.datatable);	
 	}

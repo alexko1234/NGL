@@ -293,17 +293,25 @@ public class ExperimentService {
 			//pre-sequencing
 			//    FDS NGL-356: remommage solution-x-nM=> lib-normalization
 			
+			
+			/* GA : 03/08/2015 old declaration
 			l.add(newExperimentType("Librairie normalisée","lib-normalization",null,1000,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
 					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-			
+			*/
 			
 			l.add(newExperimentType("Ext to librairie dénaturée","ext-to-denat-dil-lib",null,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+			
+			//GA : 03/08/2015 new declaration. lib-normalization became void to avoid to display this step in IHM
+			l.add(newExperimentType("Librairie normalisée","lib-normalization",null,1000,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, "OneToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+			
 			// FDS new 02-02-2015, intrument Used =>robot oui mais lequel???
-			l.add(newExperimentType("Librairie dénaturée","denat-dil-lib",null,1100,
+			l.add(newExperimentType("Dénaturation-dilution","denat-dil-lib",null,1100,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsDenatDilLibCNG(),
 					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
@@ -378,10 +386,15 @@ public class ExperimentService {
 			newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","solution-stock"),
 					null,null).save();
 
+			/* GA : 03/08/2015 old declaration
 			newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0),false,false,getExperimentTypeNodes("ext-to-qpcr"),
 					null,null).save();
-			
+			*/
 			newExperimentTypeNode("ext-to-denat-dil-lib", getExperimentTypes("ext-to-denat-dil-lib").get(0), false, false, null, null, null).save();
+			
+			
+			// GA : 03/08/2015 new temporary declaration
+			newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0),false,false,null,null,null).save();
 			
 			newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),false,false,getExperimentTypeNodes("ext-to-denat-dil-lib", "lib-normalization"),
 					null,null).save();
@@ -608,7 +621,7 @@ public class ExperimentService {
 	private static List<PropertyDefinition> getPropertyDefinitionsDenatDilLibCNG() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
-		propertyDefinitions.add(newPropertiesDefinition("Stockage", "storage", LevelService.getLevels(Level.CODE.ContainerOut), String.class, false, null, null, null, null, "single",1,true,null));		
+		propertyDefinitions.add(newPropertiesDefinition("Stockage", "storage", LevelService.getLevels(Level.CODE.ContainerOut), String.class, false, null, null, null, null, "single",20,true,null));		
 		
 		return propertyDefinitions;
 	}

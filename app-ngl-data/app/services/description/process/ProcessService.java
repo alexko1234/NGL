@@ -1,5 +1,7 @@
 package services.description.process;
 
+import static services.description.DescriptionFactory.newPropertiesDefinition;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -114,17 +116,49 @@ public class ProcessService {
 	private static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepotCNG() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
+		/*
+		 
+		Date prévue (cBot) 	cBotExpectedDate
+		Nom du séquenceur	sequencerName
+		Position	position
+		Nb lanes	numberOfLanes
+		Concentration dilution finale (pM)	finalConcentrationLib
+		% PhiX	phixPercentage
+
+		  
+		  
+		 */
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Date prévue (cBot)","cBotExpectedDate"
+						, LevelService.getLevels(Level.CODE.Process),Date.class, true, "single",100));
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Nom du séquenceur","sequencerName"
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("HISEQ1", "HISEQ2" ,"HISEQ3" ,"HISEQ4" ,"HISEQ5" ,"HISEQ6" ,"HISEQ7" ,"HISEQ8" ,"HISEQ9" ,"HISEQ10" ,"HISEQ11"), "single",150));
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Position","position"
+						, LevelService.getLevels(Level.CODE.Process),String.class, false, DescriptionFactory.newValues("A", "B"), "single",200));
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Nb lanes","numberOfLanes"
+						, LevelService.getLevels(Level.CODE.Process),Double.class, true, "single",250));		
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Concentration dilution finale (pM)","finalConcentrationLib"
+						, LevelService.getLevels(Level.CODE.Process),Double.class, true, null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("pM"), MeasureUnit.find.findByCode("nM"),
+						"single",300));
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("% PhiX","phixPercentage"
+						, LevelService.getLevels(Level.CODE.Process),Integer.class, true, "single",350));
+	
 		//TO do multi value
 		//FDS 11-03-2015 =>NGL-356: supression GAIIx, ajout Nextseq, fusion  "Hiseq 2000", "Hiseq 2500 normal"-> "Hiseq 2000/2500N"
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type séquencage","sequencingType"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("Hiseq 2000/2500N" , "Hiseq 2500 rapide" ,"Miseq","Nextseq"), "single",100));
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("Hiseq 2000 / 2500 high throughput" , "Hiseq 2500 Fast" , "Miseq" , "Nextseq"), "single",400));
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type de lectures", "readType"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("SR","PE"), "single",200));		
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("SR","PE"), "single",450));		
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Longueur de lecture", "readLength"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("50","100","150","250","300","500","600"), "single",300));		
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("50","100","150","250","300","500","600"), "single",500));		
 
 		return propertyDefinitions;
 	}
