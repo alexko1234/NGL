@@ -77,6 +77,7 @@
 
 		 // We initialize our form
 		 var form = {includes : []};
+		 form.includes.push("default");
 		 form.includes.push("treatments.ngsrg.default.nbBases");
 		 form.includes.push("projectCode");
 		 form.includes.push("runTypeCode");
@@ -236,7 +237,7 @@
 		 
 		 // Treatment
 		 // Getting our months
-		 
+		 /*
 		 if(selectedYear == actualYear){
 			 for(var i = 0; i < readsets.length; i++){
 				 // We get our months
@@ -251,6 +252,10 @@
 				 months.push(i);
 			 }
 		 }
+		 */
+		 for(var i = 0; i < 12; i++){
+			 months.push(i);
+		 }
 		 
 		 // Initializing our main object
 		 for(i = 0; i < months.length; i++){
@@ -262,7 +267,11 @@
 		 }
 		 // Calculating our bases for each month
 		 for(var i = 0; i < readsets.length; i++){
-			 balanceSheetsQuarters[readsets[i].runSequencingStartDate.getMonth()].nbBases += readsets[i].treatments.ngsrg.default.nbBases.value;
+			 try{			
+				 	balanceSheetsQuarters[readsets[i].runSequencingStartDate.getMonth()].nbBases += readsets[i].treatments.ngsrg.default.nbBases.value;			
+			 }catch (e) {
+				 console.log("readset with ngsrg.default null "+i+" / "+readsets[i].code);
+			}
 		 }
 		 
 		 dataQuarters = balanceSheetsQuarters;
@@ -779,7 +788,7 @@
 		 for(var i = 0; i < balanceSheetsProjectType.length; i++){
 			 for(var j = 0; j < readsets.length; j++){
 				 if(readsets[j].sampleOnContainer.sampleTypeCode == balanceSheetsProjectType[i].type){
-					 balanceSheetsProjectType[i].category = readsets[j].sampleOnContainer.sampleCategoryCode.toString();
+					 balanceSheetsProjectType[i].category = readsets[j].sampleOnContainer.sampleCategoryCode;
 					 break;
 				 }
 			 }
@@ -1205,6 +1214,7 @@
 			var loadData = function(){
 				isLoading = true;
 				var form = {includes : []};
+				form.includes.push("default");
 				form.includes.push("treatments.ngsrg.default.nbBases");
 				form.includes.push("runSequencingStartDate");
 				form.limit = 100000;
