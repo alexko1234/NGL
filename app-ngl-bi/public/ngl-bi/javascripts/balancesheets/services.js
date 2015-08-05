@@ -1,8 +1,8 @@
  "use strict";
  
  angular.module('ngl-bi.BalanceSheetsService', []).
- factory('balanceSheetsSrv', ['$http', 'mainService', 'datatable', '$parse',
-                                    function($http, mainService, datatable, $parse){
+ factory('balanceSheetsSrv', ['$http', 'mainService', 'datatable', '$parse', '$filter',
+                                    function($http, mainService, datatable, $parse, $filter){
 	 
 	 // From DB
 	 var readsets = [];
@@ -125,7 +125,8 @@
 				 for(var i = 0; i < readsets.length; i++){
 					 if(readsets[i].sampleOnContainer == null || readsets[i].sampleOnContainer == undefined){
 						 readsets[i].sampleOnContainer = {
-								 sampleTypeCode : Messages("balanceSheets.noSampleTypeCode")
+								 sampleTypeCode : 'unknown',
+								 sampleCategoryCode : 'unknown'
 						 };
 					 }
 				 }
@@ -399,6 +400,7 @@
 		 sequencerMap.set("RHS2500R", "Hi2500 Fast");
 		 sequencerMap.set("RMISEQ", "MiSeq");
 		 sequencerMap.set("RGAIIx", "GA IIx");
+		 sequencerMap.set("RNEXTSEQ500", "NextSeq 500");
 		 
 		 // Getting our sequencers
 		 for(var i = 0; i < readsets.length; i++){
@@ -732,6 +734,7 @@
 		        {
 		        	property : "category",
 		        	header : "balanceSheets.categoryType",
+		        	//filter: "codes:'sample_cat'",
 		        	type : "String",
 		        	order : true,
 		        	position : 1
@@ -759,18 +762,19 @@
 			 ];
 		 
 		 // Treatment
-		 var types = [];
-		 var categories = [];
+		 var types = [];	
 		 var balanceSheetsProjectType = [];
 		 
 		 // Gathering types of projects
 		 for(var i = 0; i < readsets.length; i++){
-			 if(types.indexOf(readsets[i].sampleOnContainer.sampleTypeCode) == -1){
-				 types.push(readsets[i].sampleOnContainer.sampleTypeCode);
+			 
+			 //var sampleTypeCode = $filter('codes')(readsets[i].sampleOnContainer.sampleTypeCode, 'type');
+			 var sampleTypeCode = readsets[i].sampleOnContainer.sampleTypeCode;
+			 if(types.indexOf(sampleTypeCode) == -1){
+				 console.log('sampleTypeCode = '+sampleTypeCode+' / '+readsets[i].code);
+				 types.push(sampleTypeCode);
 			 }
-			 if(categories.indexOf(readsets[i].sampleOnContainer.sampleCategoryCode) == -1){
-				 categories.push(readsets[i].sampleOnContainer.sampleCategoryCode);
-			 }
+			
 		 }
 		 
 		 
@@ -788,7 +792,7 @@
 		 for(var i = 0; i < balanceSheetsProjectType.length; i++){
 			 for(var j = 0; j < readsets.length; j++){
 				 if(readsets[j].sampleOnContainer.sampleTypeCode == balanceSheetsProjectType[i].type){
-					 balanceSheetsProjectType[i].category = readsets[j].sampleOnContainer.sampleCategoryCode;
+					 balanceSheetsProjectType[i].category = $filter('codes')(readsets[j].sampleOnContainer.sampleCategoryCode, 'sample_cat');
 					 break;
 				 }
 			 }
@@ -1066,7 +1070,7 @@
 		 var types = [];
 		 var percentages = [];
 		 for(var i = 0; i < data.length; i++){
-			 types.push(data[i].type);
+			 types.push($filter('codes')(data[i].type,'type'));
 			 percentages.push(parseFloat((data[i].nbBases * 100 / total).toFixed(2)));
 		 }
 		 var allData = [];

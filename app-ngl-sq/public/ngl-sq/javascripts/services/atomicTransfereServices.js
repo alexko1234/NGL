@@ -550,6 +550,56 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 						
 					});
 				},
+				
+				loadExperimentDatatable : function(datatable){
+
+                    var promises = [];
+                    var allData = [];
+                    var resultInput = varOneToX.loadInputContainers($scope.experiment.value.atomicTransfertMethods);
+                    promises = promises.concat(resultInput.promises);
+                    var resultOutput = varXToOne.loadOutputContainers($scope.experiment.value.atomicTransfertMethods);
+                    promises = promises.concat(resultOutput.promises);
+                    var that = this;
+                    $q.all(promises).then(function (res) {
+                          var l=0;
+                          for(var i=0; i<$scope.experiment.value.atomicTransfertMethods.length;i++){
+                        	  //in this case you can begin by output or input. it's same because same number one to one
+                                 for(var j=0; j<$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds.length;j++){
+                                        var outputContainerCode = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j].code;
+                                        var inputContainerCode = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].code;
+                                        allData[l] = {"outputNumber":$scope.experiment.value.atomicTransfertMethods[i].outputNumber};
+                                        allData[l].outputContainerUsed = angular.copy($scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j]);
+                                        allData[l].inputContainerUsed = angular.copy($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0]);
+
+                                        for(var k=0;k<resultOutput.containers.length;k++){
+                                              if(resultOutput.containers[k].code === outputContainerCode){
+                                                     allData[l].outputContainer = resultOutput.containers[k];
+                                                     break;
+                                              }
+                                        }
+
+                                        for(var k=0;k<resultInput.containers.length;k++){
+                                              if(resultInput.containers[k].code === inputContainerCode){
+                                                     allData[l].inputContainer = resultInput.containers[k];
+                                                     break;
+                                              }
+                                        }
+                                        l++;
+                                 }
+                          }
+                          datatable.setData(allData, allData.length);
+                          if($scope.isOutputGenerated()){
+                                 $scope.addOutputColumns();
+                                 $scope.addExperimentPropertiesOutputsColumns();
+                                 $scope.addInstrumentPropertiesOutputsColumns();
+                          }
+                          $scope.addExperimentPropertiesInputsColumns();
+                    });
+				},
+				
+				
+				
+				/*
 				loadExperimentDatatable : function(datatable,outputToExperimentFunc,experimentToOutputFunc){
 					var promises = [];
 					var resultInput = varOneToX.loadInputContainers($scope.experiment.value.atomicTransfertMethods);
@@ -637,9 +687,10 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 
 					$scope.addExperimentPropertiesInputsColumns();
 				},
-				loadExperiment : function(input,outputToExperimentFunc,experimentToOutputFunc){
+				*/
+				loadExperiment : function(input){
 					if(inputType === "datatable"){
-						this.loadExperimentDatatable(input,outputToExperimentFunc,experimentToOutputFunc);
+						this.loadExperimentDatatable(input);
 					}
 				},
 				newExperiment : function(input){

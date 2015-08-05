@@ -36,7 +36,8 @@ public class SampleService {
 		l.add(newSampleCategory("ADN Clone", "cloned-DNA"));
 		l.add(newSampleCategory("Matériel Immunoprécipité","IP-sample"));
 		l.add(newSampleCategory("Amplicon", "amplicon"));
-		l.add(newSampleCategory("Inconnu", "default"));
+		l.add(newSampleCategory("Défaut", "default"));
+		l.add(newSampleCategory("Inconnu", "unknown"));
 		l.add(newSampleCategory("ADN", "DNA"));
 		l.add(newSampleCategory("ARN", "RNA"));
 		l.add(newSampleCategory("cDNA", "cDNA"));
@@ -92,8 +93,9 @@ public class SampleService {
 		l.add(newSampleType("Control", "CTRL", SampleCategory.find.findByCode("control"), getSampleCNGPropertyDefinitions(), getInstitutes(Institute.CODE.CNG)));
 		
 		//default values
-		l.add(newSampleType("Indéterminé", "default-sample-cns", SampleCategory.find.findByCode("default"), getSampleCommonPropertyDefinitions(), getInstitutes(Institute.CODE.CNS)));		
-		l.add(newSampleType("Indéterminé", "default-sample-cng", SampleCategory.find.findByCode("default"), getSampleCNGPropertyDefinitions(), getInstitutes(Institute.CODE.CNG)));
+		l.add(newSampleType("Défaut", "default-sample-cns", SampleCategory.find.findByCode("default"), getSampleCommonPropertyDefinitions(), getInstitutes(Institute.CODE.CNS)));		
+		l.add(newSampleType("Défaut", "default-sample-cng", SampleCategory.find.findByCode("default"), getSampleCNGPropertyDefinitions(), getInstitutes(Institute.CODE.CNG)));
+		l.add(newSampleType("Inconnu", "unknown", SampleCategory.find.findByCode("unknown"), getSampleCNGPropertyDefinitions(), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
 		
 		DAOHelpers.saveModels(SampleType.class, l, errors);
 	}
