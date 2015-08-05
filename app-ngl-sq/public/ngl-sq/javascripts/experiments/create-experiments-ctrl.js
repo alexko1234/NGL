@@ -588,8 +588,12 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		var j = 1;
 		while($scope.experiment.value.atomicTransfertMethods[(j-1)] != null){
 			if($scope.experiment.value.atomicTransfertMethods[(j-1)].outputContainerUseds != null){
-				$scope.experiment.outputGenerated = true;
-				return true
+				for(var i=0;i<$scope.experiment.value.atomicTransfertMethods[(j-1)].outputContainerUseds.length;i++){
+					if($scope.experiment.value.atomicTransfertMethods[(j-1)].outputContainerUseds[i].code !== null && $scope.experiment.value.atomicTransfertMethods[(j-1)].outputContainerUseds[i].code !== undefined){
+						$scope.experiment.outputGenerated = true;
+						return true
+					}
+				}
 			}
 			j++;
 		}
@@ -823,8 +827,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 					}
 					$scope.$broadcast('addExperimentPropertiesInput', property, possibleValues);
 				}
-			});
-			$scope.$broadcast('addExperimentPropertiesInputToScope', data);		
+			});	
 		}
 	};
 
@@ -1354,8 +1357,6 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 					$scope.$broadcast('addInstrumentPropertiesInput', property, possibleValues);
 				}
 			});
-
-			$scope.$broadcast('addInstrumentPropertiesInputToScope', data);
 		})
 		.error(function(data, status, headers, config) {
 			$scope.message.clazz = "alert alert-danger";
@@ -1385,14 +1386,13 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 					$scope.$broadcast('addExperimentPropertiesOutput', property, possibleValues);
 				}
 			});
-
-			if(outputGenerated || $scope.experiment.outputGenerated){
-				$scope.$broadcast('addExperimentPropertiesOutputToScope', data);
-			}
 		}
-		if($scope.experiment.value.state.code !== "F"){
+		
+		/*??? why 
+		 * 
+		 * if($scope.experiment.value.state.code !== "F"){
 			$scope.$broadcast('enableEditMode');
-		}
+		}*/
 
 	};
 
@@ -1409,10 +1409,6 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				$scope.$broadcast('addInstrumentPropertiesOutput', property, possibleValues);
 			}
 		});
-
-		if(outputGenerated){
-			$scope.$broadcast('addInstrumentPropertiesOutputToScope', data);
-		}
 
 	};
 
