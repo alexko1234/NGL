@@ -2,26 +2,6 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 	$scope.datatableConfig = {
 			name:"NanoportInputOutput",
 			columns:[
-			         {
-			        	 "header":Messages("containers.table.supportCode"),
-			        	 "property":"support.code",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":0,
-			        	 "extraHeaders":{0:"Inputs"}
-			         },
-			         {
-			        	 "header":Messages("containers.table.categoryCode"),
-			        	 "property":"support.categoryCode",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":1,
-			        	 "extraHeaders":{0:"Inputs"}
-			         },
 					 {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"code",
@@ -72,6 +52,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":7,
+			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
 			        	 "extraHeaders":{0:"Inputs"}
 			         }
 			         ],
@@ -181,7 +162,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$window','data
 				mode:'local', //or 
 				active:true,
 				by:'creationDate',
-				reverse : false
+				reverse : true
 			},
 			remove:{
 				active:true,

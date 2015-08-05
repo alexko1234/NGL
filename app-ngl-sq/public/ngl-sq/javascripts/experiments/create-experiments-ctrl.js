@@ -1482,18 +1482,18 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 
 	if($routeParams.experimentCode){
 		promise = $http.get(jsRoutes.controllers.experiments.api.Experiments.get($routeParams.experimentCode).url)
-		.success(function(data, status, headers, config) {
-			experiment = data;
-			$scope.inProgressNow = false;
-			$scope.inProgressMode();			
-		})
-		.error(function(data, status, headers, config) {
-			$scope.message.clazz = "alert alert-danger";
-			$scope.message.text = Messages('experiments.msg.save.error');
-
-			$scope.message.details = data;
-			$scope.message.isDetails = true;
-		});
+			.success(function(data, status, headers, config) {
+				experiment = data;
+				$scope.inProgressNow = false;
+				$scope.inProgressMode();			
+			})
+			.error(function(data, status, headers, config) {
+				$scope.message.clazz = "alert alert-danger";
+				$scope.message.text = Messages('experiments.msg.save.error');
+	
+				$scope.message.details = data;
+				$scope.message.isDetails = true;
+			});
 	}	
 
 	promise.then(function(result) {
@@ -1511,28 +1511,29 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		}
 
 		promise = $http.get(jsRoutes.controllers.experiments.api.ExperimentTypes.get($scope.experimentType.code).url)
-		.success(function(data, status, headers, config) {
-			$scope.experimentType.category = data.category;
-			$scope.form = mainService.getForm();
-			if($scope.form === undefined){
-				$scope.form = {};
-			}
-			//$scope.form.experimentCategoryCode = $scope.experimentType.category.code;
-			mainService.setForm($scope.form);
-			$scope.experimentType.atomicTransfertMethod = data.atomicTransfertMethod;
-			if($scope.experimentType.atomicTransfertMethod == "OneToVoid"){
-				$scope.experiment.outputVoid = true;
-			}
-			$scope.experiment.experimentProperties.inputs = data.propertiesDefinitions;
-			experiment.typeCode =  data.code;
-		})
-		.error(function(data, status, headers, config) {
-			$scope.message.clazz = "alert alert-danger";
-			$scope.message.text = Messages('experiments.msg.save.error');
-
-			$scope.message.details = data;
-			$scope.message.isDetails = true;
-		});
+			.success(function(data, status, headers, config) {
+				$scope.experimentType.category = data.category;
+				$scope.form = mainService.getForm();
+				if($scope.form === undefined){
+					$scope.form = {};
+				}
+				//$scope.form.experimentCategoryCode = $scope.experimentType.category.code;
+				mainService.setForm($scope.form);
+				$scope.experimentType.atomicTransfertMethod = data.atomicTransfertMethod;
+				if($scope.experimentType.atomicTransfertMethod == "OneToVoid"){
+					$scope.experiment.outputVoid = true;
+				}
+				$scope.experiment.experimentProperties.inputs = data.propertiesDefinitions;
+				experiment.typeCode =  data.code;
+			})
+			.error(function(data, status, headers, config) {
+				$scope.message.clazz = "alert alert-danger";
+				$scope.message.text = Messages('experiments.msg.save.error');
+	
+				$scope.message.details = data;
+				$scope.message.isDetails = true;
+			});
+		
 		promise.then(function(result) {
 			$scope.lists = lists;
 			$scope.lists.clear("containerSupportCategories");

@@ -101,7 +101,8 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 			//TODO volume, proportion
 			outputContainer.mesuredVolume=(PropertySingleValue) this.outputContainerUseds.get(0).volume;
 			outputContainer.mesuredConcentration= (PropertySingleValue) this.outputContainerUseds.get(0).concentration;
-			
+			outputContainer.mesuredQuantity=(PropertySingleValue) this.outputContainerUseds.get(0).quantity;
+
 			
 			Map<String,PropertyValue> properties=ExperimentHelper.getAllPropertiesFromAtomicTransfertMethod(this,experiment);
 			ContainerHelper.addContent(outputContainer, this.getInputContainers(), experiment, properties);

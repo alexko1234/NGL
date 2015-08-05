@@ -50,8 +50,9 @@ public class Containers extends CommonController {
 	final static Form<ContainersSearchForm> containerForm = form(ContainersSearchForm.class);
 	final static Form<ContainerBatchElement> batchElementForm = form(ContainerBatchElement.class);
 	final static Form<ContainersUpdateForm> containersUpdateForm = form(ContainersUpdateForm.class);
-	final static List<String> defaultKeys =  Arrays.asList("support.code","code","support.categoryCode","support.column","support.line","fromExperimentTypeCodes","sampleCodes.length","sampleCodes","contents.length","contents","traceInformation","projectCodes", "inputProcessCodes", "valuation.valid", "state.code");
-
+	final static List<String> defaultKeys =  Arrays.asList("support.code","code","support.categoryCode","support.column","support.line","fromExperimentTypeCodes","sampleCodes","contents","traceInformation","projectCodes", "inputProcessCodes", "valuation.valid", "state.code");
+    // GA 31/07/2015 suppression des parametres "lenght"
+	
 	public static Result get(String code){
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, code);
 		if(container != null){

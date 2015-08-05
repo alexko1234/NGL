@@ -103,7 +103,7 @@ public class InstrumentService {
 		
 		l.add(newInstrumentUsedType("Fluoroskan", "fluoroskan", InstrumentCategory.find.findByCode("fluorometer"),null, 
 				getInstruments(
-						createInstrument("Fluoroskan1", "Fluoroskan1", null, true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS))), 
+						createInstrument("Fluoroskan1", "Fluoroskan1", null, true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS))), 
 				getContainerSupportCategories(new String[]{"tube"}),null, 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS))); //ok
 		

@@ -8,7 +8,7 @@
 				<div ng-if="balanceSheetsService.isLoading()" class="text-center">
 					<div class="inProgressSpinner"><button class="spinnerBtn btn btn-primary btn-lg"><i class="fa fa-spinner fa-spin fa-5x"></i></button></div>
 				</div>
-				<div ng-if="!balanceSheetsService.isLoading()">
+				<div ng-if="!balanceSheetsService.isLoading() && balanceSheetsService.getLength() > 0">
 					<div class="row">
 						<br /><div class="col-md-12 col-lg-12" datatable="balanceSheetsService.dtQuarters()"></div>
 					</div>
@@ -18,13 +18,20 @@
 						</div>
 					</div>
 				</div>
+				<div ng-if="!balanceSheetsService.isLoading() && balanceSheetsService.getLength() == 0">
+					<div class="row">
+						<div class="col-md-3 col-lg-3">
+							<br /><div class="alert alert-danger">@Messages("balanceSheets.danger.noData")</div>
+						</div>
+					</div>
+				</div>
 			</tab>
 			
 			<tab heading='@Messages("balanceSheets.tab.sequencingType")' disabled="balanceSheetsService.isLoading()" active="tabs[1]" ng-click='setActiveTab("1")'>
 				<div ng-if="balanceSheetsService.isLoading()" class="text-center">
 					<div class="inProgressSpinner"><button class="spinnerBtn btn btn-primary btn-lg"><i class="fa fa-spinner fa-spin fa-5x"></i></button></div>
 				</div>
-				<div ng-if="!balanceSheetsService.isLoading()">	
+				<div ng-if="!balanceSheetsService.isLoading() && balanceSheetsService.getLength() > 0">
 					<div class="row">
 						<div class="col-md-12 col-lg-12" datatable="balanceSheetsService.dtSequencingProduction()"></div>
 					</div>
@@ -37,13 +44,20 @@
 						</div>
 					</div>
 				</div>
+				<div ng-if="!balanceSheetsService.isLoading() && balanceSheetsService.getLength() == 0">
+					<div class="row">
+						<div class="col-md-3 col-lg-3">
+							<br /><div class="alert alert-danger">@Messages("balanceSheets.danger.noData")</div>
+						</div>
+					</div>
+				</div>
 			</tab>
 			
 			<tab heading='@Messages("balanceSheets.tab.firstTen")' disabled="balanceSheetsService.isLoading()" active="tabs[2]" ng-click='setActiveTab("2")'>
 				<div ng-if="balanceSheetsService.isLoading()" class="text-center">
 					<div class="inProgressSpinner"><button class="spinnerBtn btn btn-primary btn-lg"><i class="fa fa-spinner fa-spin fa-5x"></i></button></div>
 				</div>
-				<div ng-if="!balanceSheetsService.isLoading()">
+				<div ng-if="!balanceSheetsService.isLoading() && balanceSheetsService.getLength() > 0">
 					<div class="row">
 						<div class="col-md-12 col-lg-12" datatable="balanceSheetsService.dtFirstTen()"></div>
 					</div>
@@ -56,18 +70,25 @@
 						</div>
 					</div>
 				</div>
+				<div ng-if="!balanceSheetsService.isLoading() && balanceSheetsService.getLength() == 0">
+					<div class="row">
+						<div class="col-md-3 col-lg-3">
+							<br /><div class="alert alert-danger">@Messages("balanceSheets.danger.noData")</div>
+						</div>
+					</div>
+				</div>
 			</tab>
 			
 			<tab heading='@Messages("balanceSheets.tab.projectType")' disabled="balanceSheetsService.isLoading()" active="tabs[3]" ng-click='setActiveTab("3")'>
-				<div class="row">
-					<div class="col-md-12 col-lg-12">
-						<br /><div class="alert alert-info">@Messages("balanceSheets.info.projectType")</div>
-					</div>
-				</div>
 				<div ng-if="balanceSheetsService.isLoading()" class="text-center">
 					<div class="inProgressSpinner"><button class="spinnerBtn btn btn-primary btn-lg"><i class="fa fa-spinner fa-spin fa-5x"></i></button></div>
 				</div>
-				<div ng-if="!balanceSheetsService.isLoading()">
+				<div ng-if="!balanceSheetsService.isLoading() && balanceSheetsService.getLength() > 0">
+					<div class="row">
+						<div class="col-md-12 col-lg-12">
+							<br /><div class="alert alert-info">@Messages("balanceSheets.info.projectType")</div>
+						</div>
+					</div>
 					<div class="row">
 						<div class="col-md-12 col-lg-12" datatable="balanceSheetsService.dtProjectType()"></div>
 					</div>
@@ -77,6 +98,13 @@
 					<div class="row">
 						<div class="col-md-12 col-lg-12">
 							<chart value="balanceSheetsService.chartProjectType()"></chart>
+						</div>
+					</div>
+				</div>
+				<div ng-if="!balanceSheetsService.isLoading() && balanceSheetsService.getLength() == 0">
+					<div class="row">
+						<div class="col-md-3 col-lg-3">
+							<br /><div class="alert alert-danger">@Messages("balanceSheets.danger.noData")</div>
 						</div>
 					</div>
 				</div>

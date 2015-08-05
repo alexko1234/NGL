@@ -547,7 +547,8 @@
 			},
 			exporting : {
 				enabled : true, 
-				filename : 'z-score_' + mapExportFileName.get(Messages(statsConfig.column.header)) + '_' + actualDay.getFullYear().toString().substr(2,2) + (actualDay.getMonth()+1) + actualDay.getUTCDate().toString()
+				filename : 'z-score_' + mapExportFileName.get(Messages(statsConfig.column.header)) + '_' + actualDay.getFullYear().toString().substr(2,2) + (actualDay.getMonth()+1) + actualDay.getUTCDate().toString(),
+				sourceWidth : 1200
 			},
 			series : allSeries,
 			plotOptions : {column:{grouping:false}}
@@ -654,7 +655,8 @@
 			},
 			exporting : {
 				enabled : true, 
-				filename : mapExportFileName.get(Messages(statsConfig.column.header)) + '_' + actualDay.getFullYear().toString().substr(2,2) + (actualDay.getMonth()+1) + actualDay.getUTCDate().toString()
+				filename : mapExportFileName.get(Messages(statsConfig.column.header)) + '_' + actualDay.getFullYear().toString().substr(2,2) + (actualDay.getMonth()+1) + actualDay.getUTCDate().toString(),
+				sourceWidth : 1200
 			},
 			series : allSeries,
 			plotOptions : {column:{grouping:false}}
