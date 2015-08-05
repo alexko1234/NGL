@@ -41,7 +41,9 @@ public class CodeLabelDAO {
 						"union all "+
 						"select distinct 'value' as table_name, code, name as label from value "+
 						"union all "+
-						"select distinct 'property_definition' as table_name, code, name as label from property_definition "				
+						"select distinct 'property_definition' as table_name, code, name as label from property_definition "+
+						"union all "+
+						"select distinct 'sample_cat' as table_name, code, name as label from sample_category "
 						;
 		BeanPropertyRowMapper<CodeLabel> mapper = new BeanPropertyRowMapper<CodeLabel>(CodeLabel.class);
 		return this.jdbcTemplate.query(sql, mapper);
