@@ -147,7 +147,7 @@ angular.module('home').controller('TheNameOfTheCtrl',['$scope', '$window','datat
 
 	//Call when the view need to save
 	$scope.$on('save', function(e, promises, func, endPromises) {	
-		//push in the promises the promise of the save you need to do
+		//push in the promises of the save you need to do
 		//promises.push($scope.datatable.save());
 		
 		//Don't change that:

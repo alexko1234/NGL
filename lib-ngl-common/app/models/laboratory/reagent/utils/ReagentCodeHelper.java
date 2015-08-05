@@ -25,12 +25,11 @@ public class ReagentCodeHelper extends CodeHelper{
 	}
 
 	public synchronized String generateBoxCatalogCode(String kitCatalogCode) {
-		return StringUtils.stripAccents(kitCatalogCode + "-"
-				+ generateBarCode());
+		return generateBarCode();
 	}
 
 	public synchronized String generateReagentCatalogCode(String boxCatalogCode) {
-		return boxCatalogCode + "-" + generateBarCode();
+		return generateBarCode();
 	}
 	
 	public synchronized String generateKitCode() {
@@ -38,12 +37,11 @@ public class ReagentCodeHelper extends CodeHelper{
 	}
 
 	public synchronized String generateBoxCode(String kitCode) {
-		return StringUtils.stripAccents(kitCode + "-"
-				+ generateBarCode());
+		return generateBarCode();
 	}
 	
 	public synchronized String generateBoxCode() {
-		return StringUtils.stripAccents(generateBarCode());
+		return generateBarCode();
 	}
 
 	public synchronized String generateReagentCode() {

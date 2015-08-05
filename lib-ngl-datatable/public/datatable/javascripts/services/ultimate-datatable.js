@@ -1,4 +1,4 @@
-/*! ultimate-datatable version 3.2.1 2015-07-29 
+/*! ultimate-datatable version 3.2.1 2015-08-03 
  Ultimate DataTable is distributed open-source under CeCILL FREE SOFTWARE LICENSE. Check out http://www.cecill.info/ for more information about the contents of this license.
 */
 "use strict";
@@ -717,7 +717,7 @@ angular.module('ultimateDataTableServices', []).
 									var displayResultTmp = [];
 									angular.forEach(_displayResult, function(value, key){
 										 var line = {edit:undefined, selected:undefined, trClass:undefined, group:true};
-										 that.push({data:value, line:line});
+										 this.push({data:value, line:line});
 									}, displayResultTmp);			    				
 									that.displayResult = displayResultTmp;		
 								} else{
@@ -3443,7 +3443,7 @@ run(function($templateCache) {
   		    		+'</thead>'
   		    		+'<tbody>'
 					+	'<tr ng-if="udtTable.config.filter.columnMode && !udtTable.config.edit.start" class="filter">'
-  		    		+		'<td ng-repeat="col in udtTable.config.columns" ng-if="!udtTable.isHide(col.id) && !col.showFilter">'
+  		    		+		'<td ng-repeat="col in udtTable.config.columns" ng-if="!udtTable.isHide(col.id)">'
   		    		+			'<div udt-cell-filter/>'
   		    		+		'</td>'
   		    		+	'</tr>'
