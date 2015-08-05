@@ -125,7 +125,7 @@
 				 for(var i = 0; i < readsets.length; i++){
 					 if(readsets[i].sampleOnContainer == null || readsets[i].sampleOnContainer == undefined){
 						 readsets[i].sampleOnContainer = {
-								 sampleTypeCode : 'unknown',
+								 sampleTypeCode : 'not-defined',
 								 sampleCategoryCode : 'unknown'
 						 };
 					 }
@@ -767,14 +767,11 @@
 		 
 		 // Gathering types of projects
 		 for(var i = 0; i < readsets.length; i++){
-			 
 			 //var sampleTypeCode = $filter('codes')(readsets[i].sampleOnContainer.sampleTypeCode, 'type');
 			 var sampleTypeCode = readsets[i].sampleOnContainer.sampleTypeCode;
 			 if(types.indexOf(sampleTypeCode) == -1){
-				 console.log('sampleTypeCode = '+sampleTypeCode+' / '+readsets[i].code);
 				 types.push(sampleTypeCode);
-			 }
-			
+			 }			
 		 }
 		 
 		 
