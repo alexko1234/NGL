@@ -11,32 +11,6 @@
 				"type":"text",
 				"filter":"codes:'kitCatalogs'"
 			});
-			if(mainService.getHomePage() === 'boxes.new'){
-				columns.push({
-					"header":Messages("reagents.table.barCode"),
-					"property":"barCode",
-					"order":true,
-					"type":"text"
-				});
-				columns.push({
-					"header":Messages("reagents.table.expirationDate"),
-					"property":"expirationDate",
-					"order":true,
-					"type":"date"
-				});
-				columns.push({
-					"header":Messages("reagents.table.startToUseDate"),
-					"property":"startToUseDate",
-					"order":true,
-					"type":"date"
-				});
-				columns.push({
-					"header":Messages("reagents.table.stopToUseDate"),
-					"property":"stopToUseDate",
-					"order":true,
-					"type":"date"
-				});
-			}
 			columns.push({
 				"header":Messages("reagents.table.receptionDate"),
 				"property":"receptionDate",

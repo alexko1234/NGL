@@ -4,6 +4,7 @@
 
 ->  / apinglcommon.Routes
 ->  / apinglsq.Routes
+->  / apinglreagents.Routes
 ->  /authentication authentication.Routes
 
 
