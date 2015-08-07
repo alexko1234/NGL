@@ -1,4 +1,4 @@
-package submission;
+package SraValidation;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -102,7 +102,7 @@ public class SubmissionTest extends AbstractTestsSRA {
 		System.out.println("Create new submission for readSet " + readSetCodes.get(0));
 		String submissionCode = null;
 		try {
-			contextValidation = new ContextValidation(userContext);
+			contextValidation = new ContextValidation(userTest);
 			contextValidation.setCreationMode();
 			contextValidation.getContextObjects().put("type", "sra");
 			for (String readSetCode : readSetCodes) {

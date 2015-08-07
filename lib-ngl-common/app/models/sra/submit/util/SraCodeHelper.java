@@ -1,4 +1,6 @@
 package models.sra.submit.util;
+import org.apache.commons.lang3.StringUtils;
+
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.CodeHelper;
@@ -45,7 +47,18 @@ public class SraCodeHelper extends CodeHelper {
 		return ("run_" + readSetCode);
 	}
 	
-	public String generateSampleCode(ReadSet readSet, String projectCode, String strategySample) {
+	public String generateSampleCode(ReadSet readSet, String projectCode, String strategySample) throws SraException {
+		if (readSet== null){
+			throw new SraException("Aucun readSet en argument");
+		}
+		if (StringUtils.isBlank(projectCode)){
+			throw new SraException("Aucun projectCode en argument");
+		}
+		
+		if (StringUtils.isBlank(strategySample)){
+			throw new SraException("Aucun strategySample en argument");
+		}
+		
 		String laboratorySampleCode = readSet.sampleCode;
 		models.laboratory.sample.instance.Sample laboratorySample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, models.laboratory.sample.instance.Sample.class, laboratorySampleCode);
 		String laboratorySampleName = laboratorySample.name;
@@ -57,6 +70,7 @@ public class SraCodeHelper extends CodeHelper {
 		models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
 
 		String codeSample = null;
+		
 		if (strategySample.equalsIgnoreCase("STRATEGY_SAMPLE_CLONE")) {
 			codeSample = "sample_" + projectCode + "_" + taxonId + "_" + clone;
 		} else if (strategySample.equalsIgnoreCase("STRATEGY_SAMPLE_TAXON")) {
@@ -64,7 +78,7 @@ public class SraCodeHelper extends CodeHelper {
 		} else if (strategySample.equalsIgnoreCase("STRATEGY_NO_SAMPLE")) {
 			//envisager d'avoir des fichiers de correspondance 
 		} else {
-			// Declencher une erreur.
+			throw new SraException("StrategySample inconnu : " + strategySample);		
 		}	
 		return codeSample;
 

@@ -20,7 +20,8 @@ public class RunValidationTest extends AbstractTestsSRA {
 	
 	@Test
 	public void validationRunSuccess() throws IOException, SraException {
-		ContextValidation contextValidation = new ContextValidation(userContext);
+		// creation d'un vrai run sans sauvegarde dans la base. Test de la validation.
+		ContextValidation contextValidation = new ContextValidation(userTest);
 		String projectCode = "AWK";
 		String codeReadSet = "AWK_EMOSW_1_H9YKWADXX.IND1"; // lotSeqName pairé et avec mapping
 		ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, codeReadSet);

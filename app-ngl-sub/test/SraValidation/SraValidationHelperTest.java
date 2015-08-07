@@ -16,7 +16,7 @@ import validation.sra.SraValidationHelper;
 public class SraValidationHelperTest extends AbstractTestsSRA {
 	@Test
 	public void validationSraValidationHelperRequiredAndConstraintSuccess() throws IOException, SraException {
-		ContextValidation contextValidation = new ContextValidation(userContext);
+		ContextValidation contextValidation = new ContextValidation(userTest);
 		String librarySelection = "random";
 		SraValidationHelper.requiredAndConstraint(contextValidation, librarySelection, VariableSRA.mapLibrarySelection, "librarySelection");
 		System.out.println("\n - displayErrors pour validationSraValidationHelperRequiredAndConstraintSuccess :");
@@ -26,7 +26,7 @@ public class SraValidationHelperTest extends AbstractTestsSRA {
 	
 	@Test
 	public void validationSraValidationHelperRequiredAndConstraintEchec() throws IOException, SraException {
-		ContextValidation contextValidation = new ContextValidation(userContext);
+		ContextValidation contextValidation = new ContextValidation(userTest);
 		String librarySelection = "farfelue";
 		SraValidationHelper.requiredAndConstraint(contextValidation, librarySelection, VariableSRA.mapLibrarySelection, "librarySelection");
 		System.out.println("\n - displayErrors pour validationSraValidationHelperRequiredAndConstraintEchec :");
@@ -36,7 +36,7 @@ public class SraValidationHelperTest extends AbstractTestsSRA {
 	
 	@Test
 	public void validationSraValidationHelperRequiredAndConstraintNull() throws IOException, SraException {
-		ContextValidation contextValidation = new ContextValidation(userContext);
+		ContextValidation contextValidation = new ContextValidation(userTest);
 		String librarySelection = null;
 		SraValidationHelper.requiredAndConstraint(contextValidation, librarySelection, VariableSRA.mapLibrarySelection, "librarySelection");
 		System.out.println("\n - displayErrors pour validationSraValidationHelperRequiredAndConstraintNull :");
@@ -46,7 +46,7 @@ public class SraValidationHelperTest extends AbstractTestsSRA {
 	
 	@Test
 	public void validationSraValidationHelperRequiredAndConstraintVoidString() throws IOException, SraException {
-		ContextValidation contextValidation = new ContextValidation(userContext);
+		ContextValidation contextValidation = new ContextValidation(userTest);
 		String librarySelection = "";
 		SraValidationHelper.requiredAndConstraint(contextValidation, librarySelection, VariableSRA.mapLibrarySelection, "librarySelection");
 		System.out.println("\n - displayErrors pour validationSraValidationHelperRequiredAndConstraintVoidString :");

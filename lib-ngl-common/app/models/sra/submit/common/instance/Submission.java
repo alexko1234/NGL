@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.sra.submit.sra.instance.Configuration;
@@ -54,7 +56,7 @@ public class Submission extends DBObject implements IValidation {
 		// pour loguer les dernieres modifications utilisateurs
 
 	public Submission(String projectCode, String user) {
-		if (configCode != null) {
+		if (StringUtils.isNotBlank(configCode)){
 			this.config = MongoDBDAO.findByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, configCode);
 		}
 		DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
@@ -95,9 +97,11 @@ public class Submission extends DBObject implements IValidation {
 		*/	
 		SraValidationHelper.validateId(this, contextValidation);
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);			
-		if (contextValidation.getContextObjects().get("type")==null) {
-			contextValidation.addErrors("study non evaluable ", "sans type de contexte de validation");
-		}
+		if (!StringUtils.isNotBlank((CharSequence) contextValidation.getContextObjects().get("type"))){	
+			contextValidation.addErrors("submission non evaluable ", "sans type de contexte de validation");
+			contextValidation.removeKeyFromRootKeyName("submission");
+			return;
+		} 
 		if (contextValidation.getContextObjects().get("type").equals("sra")) {
 			if (this.studyCode == null && this.sampleCodes.size() == 0 &&  this.experimentCodes.size() == 0) {
 				contextValidation.addErrors("studyCode, sampleCodes et experimentCodes ::", "Les 3 champs ne peuvent pas etre vides pour une soumission" + "taille des experiments = " +  this.experimentCodes.size() + ", taille des sample = "+ this.sampleCodes.size());
@@ -116,6 +120,8 @@ public class Submission extends DBObject implements IValidation {
 				contextValidation.addErrors("studyCode, analysisCode et sampleCodes ::", "Les 3 champs doivent etre renseignés pour une soumission WGS" );
 			}
 			SraValidationHelper.validateCode(this, InstanceConstants.SRA_SUBMISSION_WGS_COLL_NAME, contextValidation);
+		} else {
+			contextValidation.addErrors("submission non evaluable ", "avec type de contexte de validation " + contextValidation.getContextObjects().get("type"));	
 		}
 		contextValidation.removeKeyFromRootKeyName("submission");
 	}

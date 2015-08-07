@@ -3,6 +3,8 @@ package models.sra.submit.sra.instance;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.sra.submit.util.VariableSRA;
@@ -74,12 +76,11 @@ public class Experiment extends DBObject implements IValidation {
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySource, VariableSRA.mapLibrarySource, "librarySource");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayout, VariableSRA.mapLibraryLayout, "libraryLayout");
 		// Verifer que lastBaseCoord est bien renseigné ssi paired:
-		if (this.libraryLayout != null && libraryLayout.equalsIgnoreCase("paired")){
+		if (StringUtils.isNotBlank(this.libraryLayout) && libraryLayout.equalsIgnoreCase("paired")){
 			if (this.lastBaseCoord == null) {
 				contextValidation.addErrors("lastBaseCoord", " aucune valeur et donnée pairée");
 			}	
 		}
-		
 		ValidationHelper.required(contextValidation, this.libraryLayoutNominalLength , "libraryLayoutNominalLength");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayoutOrientation, VariableSRA.mapLibraryLayoutOrientation, "libraryLayoutOrientation");
 		//ValidationHelper.required(contextValidation, this.libraryName , "libraryName");

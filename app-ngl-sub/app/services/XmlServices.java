@@ -194,7 +194,7 @@ public class XmlServices {
 					chaine = chaine + "accession=\"" + experiment.accession + "\"";	
 				}
 				chaine = chaine + ">\n";
-				// Le champs title est consideré comme obligatoire
+				// Les champs title et libraryName sont considerés comme obligatoires
 				chaine = chaine + "    <TITLE>" + experiment.title + "</TITLE>\n";
 				chaine = chaine + "    <STUDY_REF refname=\"" + experiment.studyCode +"\">" +"</STUDY_REF>\n";
 				chaine = chaine + "      <DESIGN>\n";

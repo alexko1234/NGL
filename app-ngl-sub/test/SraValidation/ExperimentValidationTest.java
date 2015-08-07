@@ -29,9 +29,8 @@ public class ExperimentValidationTest extends AbstractTestsSRA {
 	@Test
 	public void validationExperimentSuccess() throws IOException, SraException {
 		//this.initConfig();
-		// Tests experiment avec infos obligatoires presentes et bonnes valeurs et mode
-		// creation ou update.
-		//Experiment experiment = new Experiment();
+		// Tests experiment avec infos obligatoires presentes et bonnes valeurs 
+		// sanvegarde dans base en mode creation puis destruction de l'experiment
 		//Ex de donnée pairee avec mapping :
 		String projectCode = "AWK";
 		String codeReadSet = "AWK_EMOSW_1_H9YKWADXX.IND1"; // lotSeqName pairé et avec mapping
@@ -39,16 +38,15 @@ public class ExperimentValidationTest extends AbstractTestsSRA {
 
 		SubmissionServices submissionServices = new SubmissionServices();
 	 
-		Experiment experiment = submissionServices.createExperimentEntity(readSet, projectCode, userContext);
+		Experiment experiment = submissionServices.createExperimentEntity(readSet, projectCode, userTest);
 		experiment.librarySelection = "random";
 		experiment.librarySource = "genomic";
 		experiment.libraryStrategy = "wgs";
-		String user = "william";
 		experiment.traceInformation = new TraceInformation(); 
-		experiment.traceInformation.setTraceInformation(user);
+		experiment.traceInformation.setTraceInformation(userTest);
 		experiment.sampleCode = "sample_code_test";
 		experiment.studyCode = "study_code_test";
-		ContextValidation contextValidation = new ContextValidation(userContext);
+		ContextValidation contextValidation = new ContextValidation(userTest);
 		contextValidation.setCreationMode();
 		experiment.validate(contextValidation);
 		MongoDBDAO.save(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, experiment);
@@ -59,7 +57,6 @@ public class ExperimentValidationTest extends AbstractTestsSRA {
 		System.out.println("contextValidation.errors pour validationExperimentSuccess :");
 		contextValidation.displayErrors(Logger.of("SRA"));
 		Assert.assertTrue(contextValidation.errors.size()==0); // si aucune erreur
-		//Assert.assertTrue(contextValidation.errors.size()==1ou > ); // si aucune erreur
 	}
 
 }
