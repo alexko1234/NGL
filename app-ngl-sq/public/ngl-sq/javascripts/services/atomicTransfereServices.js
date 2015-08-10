@@ -517,19 +517,19 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
                          function($rootScope, oneToX, xToOne, $http, $parse, $q, experimentCommonFunctions,mainService){
 
 	var constructor = function($scope, inputType, outputType){
-		var inputType = inputType;
-		var outputType = outputType;
-		var varOneToX = undefined;
-		var varXToOne = undefined;
+		//var inputType = inputType;
+		//var outputType = outputType;
+		//var varOneToX = undefined;
+		//var varXToOne = undefined;
 
-		var varexperimentCommonFunctions = undefined;
-
+		var experimentCommons = experimentCommonFunctions($scope);
+/*
 		var init = function(){
-			varOneToX = oneToX($scope, inputType);
-			varXToOne = xToOne($scope, outputType);
+			//varOneToX = oneToX($scope, inputType);
+			//varXToOne = xToOne($scope, outputType);
 			varexperimentCommonFunctions = experimentCommonFunctions($scope);
 		};
-
+*/
 		var oneToOne = {
 //				experimentToInput : function(input){
 //					varOneToX.experimentToInput(input);
@@ -542,19 +542,14 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 //				searchOutputPositionByInputContainerCode : function(inputContainerCode){
 //					return varXToOne.searchOutputPositionByInputContainerCode(inputContainerCode);
 //				},
-				inputToExperiment : function(input){
-					varOneToX.inputToExperiment(input);
-				},
-				outputToExperiment : function(output){
-					varXToOne.outputToExperiment(output);
-				},
-				getVarExperimentCommonFunctions : function(properties){
-					return varXToOne.getVarExperimentCommonFunctions(properties);
-				},
-				viewToExperiment:function(input){
-					this.inputToExperiment(input);
-					this.outputToExperiment(input);
-				},
+//				inputToExperiment : function(input){
+//					varOneToX.inputToExperiment(input);
+//				},
+//				outputToExperiment : function(output){
+//					varXToOne.outputToExperiment(output);
+//				},
+				outputType : outputType,
+				
 				newAtomicTransfertMethod : function(){
 					return {
 						class:"OneToOne",
@@ -588,10 +583,13 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 				},
 				
 				getContainerListPromise : function(containerCodes){
-					 return $http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{codes:containerCodes}, atomicObject:this})
-					 	.then(function(result){
-					 		return result.data;
-					 	});					 				 	
+					if(containerCodes.length > 0){
+						 return $http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{codes:containerCodes}, atomicObject:this});		
+					}else{
+						return $q(function(resolve, reject){
+							resolve({data:[]}); //empty array
+						});
+					}								 				 	
 				},
 				
 				loadInputContainerFromAtomicTransfertMethods : function(atomicTransfertMethods){
@@ -601,137 +599,171 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 								this.push(inputContainerUsed.code);
 								}, this);														
 						}, containerInputCodes);
-					return this.getContainerListPromise(containerInputCodes);
+					return this.getContainerListPromise(containerInputCodes).then(function(result){
+				 		var inputContainers = {};
+				 		angular.forEach(result.data, function(container) {
+							this[container.code] = container;
+							}, inputContainers);
+						return {"input":inputContainers};
+				 	});
 				},
 				
 				loadOutputContainerFromAtomicTransfertMethods : function(atomicTransfertMethods){
 					var containerOutpuCodes = [];
 					angular.forEach(atomicTransfertMethods, function(atomicTransfertMethod) {
 						angular.forEach(atomicTransfertMethod.outputContainerUseds, function(outputContainerUsed){
-								this.push(outputContainerUsed.code);
+								if(null !== outputContainerUsed.code && undefined !== outputContainerUsed.code){
+									this.push(outputContainerUsed.code);
+								}									
 								}, this);														
 						}, containerOutpuCodes);
-					return this.getContainerListPromise(containerOutpuCodes);
+															
+					return this.getContainerListPromise(containerOutpuCodes).then(function(result){
+						var outputContainers = {};
+						angular.forEach(result.data, function(container) {
+							this[container.code] = container;
+							}, outputContainers);
+				 		return {"output":outputContainers};
+				 	});
 				},
 				
-				loadInputContainerFromBasket : function(){
-					//TODO 
+				loadInputContainerFromBasket : function(basketValues){					
+						var containerInputCodes = [];
+						angular.forEach(basketValues, function(containerInput) {
+							this.push(containerInput.code);
+						}, containerInputCodes);
+						return this.getContainerListPromise(containerInputCodes).then(function(result){					 		
+							return result.data;
+					 	});					
 				},
 				
-				loadExperimentDatatable : function(datatable){
+				convertExperimentToDatatable : function(datatable){
 					var promises = [];
 					promises.push(this.loadInputContainerFromAtomicTransfertMethods($scope.experiment.value.atomicTransfertMethods));
 					promises.push(this.loadOutputContainerFromAtomicTransfertMethods($scope.experiment.value.atomicTransfertMethods));
-				
-					 
-                    var allData = [];
-                    /*
-                    var resultInput = varOneToX.loadInputContainers($scope.experiment.value.atomicTransfertMethods);
-                    promises = promises.concat(resultInput.promises);
-                    var resultOutput = varXToOne.loadOutputContainers($scope.experiment.value.atomicTransfertMethods);
-                    promises = promises.concat(resultOutput.promises);
-                    */
+									 
+                                      
                     var $that = this;
                     $q.all(promises).then(function (result) {
-                    		console.log(result);
-//                         
-//                    		var l=0;
-//                          for(var i=0; i<$scope.experiment.value.atomicTransfertMethods.length;i++){
-//                        	  //in this case you can begin by output or input. it's same because same number one to one
-//                                 for(var j=0; j<$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds.length;j++){
-//                                        var outputContainerCode = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j].code;
-//                                        var inputContainerCode = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].code;
-//                                        allData[l] = {atomicIndex:i};
-//                                        allData[l].atomicTransfertMethod = angular.copy($scope.experiment.value.atomicTransfertMethods[i]);
-//                                        allData[l].outputContainerUsed = angular.copy($scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j]);
-//                                        allData[l].inputContainerUsed = angular.copy($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0]);
-//
-//                                        for(var k=0;k<resultOutput.containers.length;k++){
-//                                              if(resultOutput.containers[k].code === outputContainerCode){
-//                                                     allData[l].outputContainer = resultOutput.containers[k];
-//                                                     break;
-//                                              }
-//                                        }
-//
-//                                        for(var k=0;k<resultInput.containers.length;k++){
-//                                              if(resultInput.containers[k].code === inputContainerCode){
-//                                                     allData[l].inputContainer = resultInput.containers[k];
-//                                                     break;
-//                                              }
-//                                        }
-//                                        l++;
-//                                  }
-//                          }
-//                          datatable.setData(allData, allData.length);
-//                          //add new atomic in datatable
-//                          $that.addNewAtomicTransfertMethodsInDatatable(datatable);
+		            		var allData = [];
+		                 	var inputContainers, outputContainers;
+		            		if(result[0].input && result[1].output){
+		            			inputContainers = result[0].input;
+		            			outputContainers = result[1].output;
+		            		}else if(result[0].output && result[1].input){
+		            			inputContainers = result[1].input;
+		            			outputContainers = result[0].output;
+		            		}else{
+		            			throw "not managed";
+		            		}
+                    		
+                    		var l=0;
+							for(var i=0; i<$scope.experiment.value.atomicTransfertMethods.length;i++){
+							 //in this case you can begin by output or input. it's same because same number one to one
+							       for(var j=0; j<$scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds.length;j++){
+							              var outputContainerCode = $scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j].code;
+							              var inputContainerCode = $scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0].code;
+							              allData[l] = {atomicIndex:i};
+							              allData[l].atomicTransfertMethod = angular.copy($scope.experiment.value.atomicTransfertMethods[i]);
+							              
+							              allData[l].outputContainerUsed = angular.copy($scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j]);
+							              allData[l].inputContainerUsed = angular.copy($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0]);
+							              
+							              allData[l].outputContainer = outputContainers[outputContainerCode];
+							              allData[l].inputContainer = inputContainers[inputContainerCode];							              
+							              l++;
+							        }
+							}
+							datatable.setData(allData, allData.length);
+							//add new atomic in datatable
+							$that.addNewAtomicTransfertMethodsInDatatable(datatable);
                           
                     });
 				},
-				refreshExperiment : function(input){
-					if(inputType === "datatable"){
-						this.loadExperimentDatatable(input);
-					}else{
-						throw 'not implemented';
-					}
-				},
-				loadExperiment : function(input){
-					if(inputType === "datatable"){
-						this.loadExperimentDatatable(input);
-						//add columns after creta datatable
-						if($scope.isOutputGenerated()){
-                            $scope.addOutputColumns();
-                            $scope.addExperimentPropertiesOutputsColumns();
-                            $scope.addInstrumentPropertiesOutputsColumns();
-						}
-						$scope.addExperimentPropertiesInputsColumns();
-					}else{
-						throw 'not implemented';
-					}					
-				},
 				addNewAtomicTransfertMethodsInDatatable : function(datatable){
-					var containerInputCodes = [];
 					if(null != mainService.getBasket() && null != mainService.getBasket().get()){
-						angular.forEach(mainService.getBasket().get(), function(containerInput) {
-							this.push(containerInput.code);
-						}, containerInputCodes);
-						
-						$http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{codes:containerInputCodes},atomicObject:this})
-						.success(function(data, status, headers, config) {
-							var allData = datatable.getData();
-							if(data!=null){
-								var i=allData.length;
-								angular.forEach(data, function(container){
+						var $that = this;
+						this.loadInputContainerFromBasket(mainService.getBasket().get())
+							.then(function(containers) {								
+								var allData = [], i = 0;
+								if(datatable.getData() !== undefined){
+									allData = datatable.getData();
+									i = allData.length;
+								}
+								
+								angular.forEach(containers, function(container){
 									var line = {};
 									line.atomicIndex=i++;
-									line.atomicTransfertMethod = config.atomicObject.newAtomicTransfertMethod();
+									line.atomicTransfertMethod = $that.newAtomicTransfertMethod();
 									line.inputContainer = container;
-									line.inputContainerUsed = config.atomicObject.convertContainerToInputContainerUsed(line.inputContainer);
-									line.outputContainerUsed = config.atomicObject.newOutputContainerUsed();
+									line.inputContainerUsed = $that.convertContainerToInputContainerUsed(line.inputContainer);
+									line.outputContainerUsed = $that.newOutputContainerUsed();
 									line.outputContainer = undefined;
 									allData.push(line);
 								});
-								 datatable.setData(allData, allData.length);
-							}
-						})
-						.error(function(data, status, headers, config) {
-							alert("error");
+								datatable.setData(allData, allData.length);								
 						});
-					}
-					
-					
-					
-				
+					}					
 				},
-				newExperiment : function(input){
+				viewToExperiment:function(view){
+					if(outputType === "datatable"){
+						var allData = view.getData();
+						if(allData != undefined){
+							$scope.experiment.value.atomicTransfertMethods = []; // to manage remove
+							for(var i=0;i<allData.length;i++){
+								var atomicIndex = allData[i].atomicIndex;								
+								$scope.experiment.value.atomicTransfertMethods[atomicIndex] = allData[i].atomicTransfertMethod
+								$scope.experiment.value.atomicTransfertMethods[atomicIndex].inputContainerUseds[0] = allData[i].inputContainerUsed;	
+								
+								$scope.experiment.value.atomicTransfertMethods[atomicIndex].outputContainerUseds[0] = allData[i].outputContainerUsed;
+								
+								experimentCommons.removeNullProperties($scope.experiment.value.atomicTransfertMethods[atomicIndex].inputContainerUseds[0].instrumentProperties);
+								experimentCommons.removeNullProperties($scope.experiment.value.atomicTransfertMethods[atomicIndex].inputContainerUseds[0].experimentProperties);
+
+								experimentCommons.removeNullProperties($scope.experiment.value.atomicTransfertMethods[atomicIndex].outputContainerUseds[0].instrumentProperties);
+								experimentCommons.removeNullProperties($scope.experiment.value.atomicTransfertMethods[atomicIndex].outputContainerUseds[0].experimentProperties);
+
+							}
+							//remove atomic null
+							var cleanAtomicTransfertMethods = [];
+							for(var i = 0; i < $scope.experiment.value.atomicTransfertMethods.length ; i++){
+								if($scope.experiment.value.atomicTransfertMethods[i] !== null){
+									cleanAtomicTransfertMethods.push($scope.experiment.value.atomicTransfertMethods[i]);
+								}
+							}
+							$scope.experiment.value.atomicTransfertMethods = cleanAtomicTransfertMethods;
+						}
+					}else{
+						throw "not managed";
+					}					
+				},
+				experimentToView:function(view){
 					if(inputType === "datatable"){
-						this.addNewAtomicTransfertMethodsInDatatable(input);
+						if($scope.experiment.editMode){
+							this.convertExperimentToDatatable(view);
+							//add columns after creta datatable
+							if($scope.isOutputGenerated()){
+	                            $scope.addOutputColumns();
+	                            $scope.addExperimentPropertiesOutputsColumns();
+	                            $scope.addInstrumentPropertiesOutputsColumns();
+							}
+							$scope.addExperimentPropertiesInputsColumns();
+						}else{
+							this.addNewAtomicTransfertMethodsInDatatable(view);
+						}
 					}else{
 						throw 'not implemented';
 					}
-					
-					
 				},
+				
+				refreshViewFromExperiment : function(view){
+					if(inputType === "datatable"){
+						this.convertExperimentToDatatable(view);
+					}else{
+						throw 'not implemented';
+					}
+				},
+				
 				
 				/* Old Version
 				newExperiment : function(input){
@@ -742,8 +774,6 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 				},
 				*/
 		};
-
-		init();
 		return oneToOne;
 	};
 	return constructor;

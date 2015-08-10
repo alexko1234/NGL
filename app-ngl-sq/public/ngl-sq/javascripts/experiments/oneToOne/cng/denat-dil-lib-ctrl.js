@@ -137,7 +137,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			        	 "position":12,
+			        	 "position":500,
 			        	 "extraHeaders":{0:"Outputs"}
 			         }
 			         
@@ -193,6 +193,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 	};
 	
 	$scope.$on('deleteInstrumentPropertiesInputs', function(e, header) {
+		console.log("call event deleteInstrumentPropertiesInputs");
 		angular.forEach($scope.datatable.config.columns, function(column, index){
 				if(column.extraHeaders != undefined && column.extraHeaders[1] == header){
 					$scope.datatable.deleteColumn(index);
@@ -201,12 +202,14 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 	});
 	
 	$scope.$on('addInstrumentPropertiesInput', function(e, data, possibleValues) {
+		console.log("call event addInstrumentPropertiesInput");
 		var column = $scope.datatable.newColumn(data.name,"inputContainerUsed.instrumentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Inputs","1":"Instruments"});
 		column.defaultValues = data.defaultValue;
 		$scope.datatable.addColumn(2,column);
 	});
 	
-	$scope.$on('addExperimentPropertiesInput', function(e, data, possibleValues) {				
+	$scope.$on('addExperimentPropertiesInput', function(e, data, possibleValues) {
+		console.log("call event addExperimentPropertiesInput");
 		var unit = "";
 		if(data.displayMeasureValue!=undefined) unit = "("+data.displayMeasureValue.value+")";
 		var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"inputContainerUsed.experimentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Inputs"});
@@ -215,10 +218,12 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 	});
 	
 	$scope.$on('addExperimentPropertiesOutput', function(e, data, possibleValues) {
+		console.log("call event addExperimentPropertiesOutput");
 		var unit = "";
 		if(data.displayMeasureValue!=undefined) unit = "("+data.displayMeasureValue.value+")";
 		var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"outputContainerUsed.experimentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Outputs"});
 		column.defaultValues = data.defaultValue;
+		column.position = data.displayOrder;
 		if(data.displayMeasureValue != undefined && data.displayMeasureValue != null){
 			column.convertValue = {"active":true, "displayMeasureValue":data.displayMeasureValue.value, "saveMeasureValue":data.saveMeasureValue.value};
 		}
@@ -226,6 +231,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 	});
 	
 	$scope.$on('addInstrumentPropertiesOutput', function(e, data, possibleValues) {
+		console.log("call event addInstrumentPropertiesOutput");
 		var column = $scope.datatable.newColumn(data.name,"outputContainerUsed.instrumentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Outputs","1":"Instruments"});
 		column.defaultValues = data.defaultValue;
 		$scope.datatable.addColumn(-1,column);
@@ -240,7 +246,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 	
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");
-		$scope.atomicTransfere.refreshExperiment($scope.datatable);
+		$scope.atomicTransfere.refreshViewFromExperiment($scope.datatable);
 		$scope.$emit('viewRefeshed');
 	});
 	
@@ -265,12 +271,6 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 	
 	//Init
 	$scope.datatable = datatable(datatableConfig);
-	$scope.atomicTransfere = oneToOne($scope,"datatable", "none");
-	if($scope.experiment.editMode){
-		$scope.atomicTransfere.loadExperiment($scope.datatable);
-		
-	}else{		
-		$scope.atomicTransfere.newExperiment($scope.datatable);	
-		
-	}
+	$scope.atomicTransfere = oneToOne($scope, "datatable", "datatable");
+	$scope.atomicTransfere.experimentToView($scope.datatable);	
 }]);
