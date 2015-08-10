@@ -112,6 +112,9 @@
 			 	 if(readsets.length != 0 && readsets[0].runSequencingStartDate.getFullYear() == mainService.get('activeYear')) {
 			 		 flushData();
 			 	 }
+			 	 
+			 	 
+			 	 
 				 for(var i = 0; i < data.length; i++){
 					 data[i].runSequencingStartDate = convertToDate(data[i].runSequencingStartDate);
 				 }
@@ -130,6 +133,40 @@
 						 };
 					 }
 				 }
+				 
+				 $http.get(jsRoutes.controllers.projects.api.Projects.list().url, {params : projectForm}).success(function(projectData, status, headers, config) {
+					 projects = projectData;
+					 projectData = [];
+					 
+					 // Then we load our balance sheets
+					 loadFunctions();
+					 
+					 
+					 
+					 // Caching
+					 var yearMap = new Map();
+					 var years = new Map();
+					 if(mainService.get('yearsInCache') != undefined){
+						 if(!mainService.get('yearsInCache').has(String(selectedYear))){
+							 years = mainService.get('yearsInCache');
+							 years.set(selectedYear, balanceSheets.returnData());
+							 mainService.put('yearsInCache', years);
+						 }
+					 }else{
+						 yearMap.set(selectedYear, balanceSheets.returnData());
+						 mainService.put('yearsInCache', yearMap);
+					 }
+					 
+					 // End of loading
+					 if(readsets[0] != undefined){
+						 if(mainService.get('activeYear') == readsets[0].runSequencingStartDate.getFullYear()){
+							 stillLoading = false;
+						 }
+					 }
+				 });
+				 
+				 
+				 /*
 				 $http.get(jsRoutes.controllers.runs.api.Runs.list().url, {params : runForm}).success(function(runData, status, headers, config) {
 					 runs = runData;
 					 runData = [];
@@ -141,37 +178,9 @@
 							 runs[i].sequencingStartDate = convertToDate(runs[i].sequencingStartDate);
 						 }
 					 }
-					 $http.get(jsRoutes.controllers.projects.api.Projects.list().url, {params : projectForm}).success(function(projectData, status, headers, config) {
-						 projects = projectData;
-						 projectData = [];
-						 
-						 // Then we load our balance sheets
-						 loadFunctions();
-						 
-						 
-						 
-						 // Caching
-						 var yearMap = new Map();
-						 var years = new Map();
-						 if(mainService.get('yearsInCache') != undefined){
-							 if(!mainService.get('yearsInCache').has(String(selectedYear))){
-								 years = mainService.get('yearsInCache');
-								 years.set(selectedYear, balanceSheets.returnData());
-								 mainService.put('yearsInCache', years);
-							 }
-						 }else{
-							 yearMap.set(selectedYear, balanceSheets.returnData());
-							 mainService.put('yearsInCache', yearMap);
-						 }
-						 
-						 // End of loading
-						 if(readsets[0] != undefined){
-							 if(mainService.get('activeYear') == readsets[0].runSequencingStartDate.getFullYear()){
-								 stillLoading = false;
-							 }
-						 }
-					 });
+					
 				 });
+				 */
 		     }
 		     
 		    
@@ -1205,8 +1214,8 @@
  
  
  
- ]).factory('balanceSheetsGeneralSrv', ['$http', 'mainService', 'datatable', '$parse',
-                                        function($http, mainService, datatable, $parse){
+ ]).factory('balanceSheetsGeneralSrv', ['$http', 'mainService', 'datatable', '$parse', '$filter',
+                                        function($http, mainService, datatable, $parse, $filter){
 			var readsets = [];
 			var dtYearlyBalanceSheets;
 			var dtSumYearly;
@@ -1224,9 +1233,11 @@
 				form.limit = 100000;
 				$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url, {params : form}).success(function(data, status, headers, config) {
 					readsets = data;
+					/*
 					for(var i = 0; i < readsets.length; i++){
 						readsets[i].runSequencingStartDate = convertToDate(readsets[i].runSequencingStartDate);
-					}	
+					}
+					*/	
 					loadYearlyBalanceSheets();
 					
 					mainService.put('generalBalanceSheets', readsets);
@@ -1281,7 +1292,8 @@
 				 
 				 // Calculating our bases for each year
 				 for(var i = 0; i < readsets.length; i++){
-					balanceSheetsByYearAndTechnology[readsets[i].runSequencingStartDate.getFullYear() - 2008].nbBases += readsets[i].treatments.ngsrg.default.nbBases.value;
+					var readsetDate =  convertToDate(readsets[i].runSequencingStartDate);
+					balanceSheetsByYearAndTechnology[readsetDate.getFullYear() - 2008].nbBases += readsets[i].treatments.ngsrg.default.nbBases.value;
 				 }
 
 				 // Creating chart
@@ -1349,13 +1361,12 @@
 			
 			var computeChartYearlyBalanceSheets = function(data){
 				 var years = [];
-				 for(var i = 0; i < data.length; i++){
-					 years[i] = data[i].year;
-				 }
 				 var statData = [];
 				 for(var i = 0; i < data.length; i++){
+					 years[i] = data[i].year;
 					 statData[i] = data[i].nbBases;
 				 }
+				 
 				 chartYearlyBalanceSheets = {
 						chart : {
 			                zoomType : 'x',
@@ -1391,7 +1402,8 @@
 						},
 						exporting : {
 							enabled : true,
-							filename : Messages('balanceSheets.export.general') + $filter('date')(new Date(), 'yyyyMMdd_HHmmss')
+							filename : Messages('balanceSheets.export.general') + $filter('date')(new Date(), 'yyyyMMdd_HHmmss'),
+							sourceWidth : 1200
 							},
 						series : [{
 							type : 'column',
