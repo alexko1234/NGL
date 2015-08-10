@@ -943,7 +943,8 @@
 			 },
 			 exporting : {
 				 enabled : true,
-				 filename : Messages('balanceSheets.export.quarters') + actualYear.toString().substr(2,2) + (actualDay.getMonth()+1) + actualDay.getUTCDate()
+				 filename : Messages('balanceSheets.export.quarters') + $filter('date')(new Date(), 'yyyyMMdd_HHmmss'),
+				 sourceWidth : 1200
 			 },
 			 series : allSeries,
 			 plotOptions : {column:{grouping:false}}
@@ -997,7 +998,8 @@
 				},
 				exporting : {
 					enabled : true,
-					filename : Messages('balanceSheets.export.sequencingType') + actualYear.toString().substr(2,2) + (actualDay.getMonth()+1) + actualDay.getUTCDate()
+					filename : Messages('balanceSheets.export.sequencingType') + $filter('date')(new Date(), 'yyyyMMdd_HHmmss'),
+					sourceWidth : 1200
 					},
 				series : [{
 					name : Messages("balanceSheets.nbBases"), 
@@ -1053,7 +1055,8 @@
 				 },
 				 exporting : {
 					 enabled : true,
-					 filename : Messages('balanceSheets.export.firstTen') + actualYear.toString().substr(2,2) + (actualDay.getMonth()+1) + actualDay.getUTCDate()
+					 filename : Messages('balanceSheets.export.firstTen') + $filter('date')(new Date(), 'yyyyMMdd_HHmmss'),
+					 sourceWidth : 1000
 					 },
 				 series : [{
 					 name : Messages("balanceSheets.percentage"),
@@ -1106,7 +1109,7 @@
 				 },
 				 exporting : {
 					 enabled : true,
-					 filename : Messages('balanceSheets.export.projectType') + actualYear.toString().substr(2,2) + (actualDay.getMonth()+1) + actualDay.getUTCDate(),
+					 filename : Messages('balanceSheets.export.projectType') + $filter('date')(new Date(), 'yyyyMMdd_HHmmss'),
 					 sourceWidth : 1000
 				 },
 				 series : [{
@@ -1388,7 +1391,7 @@
 						},
 						exporting : {
 							enabled : true,
-							filename : Messages('balanceSheets.export.general') + actualYear.toString().substr(2,2) + (actualDay.getMonth()+1) + actualDay.getUTCDate() 
+							filename : Messages('balanceSheets.export.general') + $filter('date')(new Date(), 'yyyyMMdd_HHmmss')
 							},
 						series : [{
 							type : 'column',

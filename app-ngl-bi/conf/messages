@@ -651,7 +651,7 @@ balanceSheets.danger.noData = Aucune donnée pour cette année
 balanceSheets.export.firstTen = 10Projets
 balanceSheets.export.sequencingType = TypeSeq
 balanceSheets.export.quarters = Trimestre
-balanceSheets.export.projectType = TypeProjet
+balanceSheets.export.projectType = TypeEchantillon
 balanceSheets.export.general = General 
 
 balanceSheets.tab.year = Année 
