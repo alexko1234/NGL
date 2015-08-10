@@ -40,7 +40,7 @@ public class MigrationUpdateReadSetNbCycles extends CommonController {
 	
 	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 	
-	public static Result migration(String code){
+	public static Result migration(){
 		
 		Logger.info("Start MigrationUpdateReadSetNbCycles");
 		
