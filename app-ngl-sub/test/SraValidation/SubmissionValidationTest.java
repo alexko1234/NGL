@@ -23,32 +23,30 @@ public class SubmissionValidationTest extends AbstractTestsSRA {
 	
 	@Test
 	public void validationSubmissionSuccess() throws IOException, SraException {
-		ContextValidation contextValidation = new ContextValidation(userContext);
+		ContextValidation contextValidation = new ContextValidation(userTest);
 		String projectCode = "AWK";
 		String codeReadSet = "AWK_EMOSW_1_H9YKWADXX.IND1"; // lotSeqName pairé et avec mapping
 		ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, codeReadSet);
 		SubmissionServices submissionServices = new SubmissionServices();
 		Configuration config = new Configuration();
-		config.code = "conf_AWK_10";
+		config.code = "conf_AWK_test";
 		config.projectCode = "AWK";
 		config.strategySample = "strategy_sample_taxon";
 		config.librarySelection = "random";
 		config.librarySource = "genomic";
 		config.libraryStrategy = "wgs";
-		String user = "william";
 		config.traceInformation = new TraceInformation(); 
-		config.traceInformation.setTraceInformation(user);
-		config.state = new State("userValidate", user);
+		config.traceInformation.setTraceInformation(userTest);
+		config.state = new State("userValidate", userTest);
 
 		MongoDBDAO.save(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, config);
 		contextValidation.getContextObjects().put("type", "sra");
 		contextValidation.setCreationMode();
-		Submission submission = submissionServices.createSubmissionEntity(projectCode, config.code, userContext);
+		Submission submission = submissionServices.createSubmissionEntity(projectCode, config.code, userTest);
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, models.sra.submit.sra.instance.Configuration.class, config.code);
-		submission.studyCode = "study_AWK";
+		submission.studyCode = "study_AWK_test";
 		submission.traceInformation = new TraceInformation(); 
-		submission.traceInformation.setTraceInformation(user);
-		//submission.userSubmission = "bio-infoLambda";
+		submission.traceInformation.setTraceInformation(userTest);
 		submission.validate(contextValidation);
 		System.out.println("\ndisplayErrors pour validationSubmissionSuccess :");
 		contextValidation.displayErrors(Logger.of("SRA"));

@@ -30,20 +30,20 @@ public class XmlServicesTest extends AbstractTestsSRA {
 	public void validationXmlServicesSuccess() throws IOException, SraException {
 
 		SubmissionServices submissionServices = new SubmissionServices();
-		String user = "william";	
-		ContextValidation contextValidation = new ContextValidation(user);
+		ContextValidation contextValidation = new ContextValidation(userTest);
 		contextValidation.setCreationMode();
 		contextValidation.getContextObjects().put("type", "sra");
+		// Creer une config et la sauver dans mongodb :
 		Configuration config = new Configuration();
-		config.code = "conf_AWK_5_2";
+		config.code = "conf_AWK_test_xml";
 		config.projectCode = "AWK";
 		config.strategySample = "strategy_sample_taxon";
 		config.librarySelection = "random";
 		config.librarySource = "genomic";
 		config.libraryStrategy = "wgs";
 		config.traceInformation = new TraceInformation(); 
-		config.traceInformation.setTraceInformation(user);
-		config.state = new State("userValidate", user);
+		config.traceInformation.setTraceInformation(userTest);
+		config.state = new State("userValidate", userTest);
 		config.validate(contextValidation);
 		MongoDBDAO.save(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, config);
 		contextValidation.displayErrors(Logger.of("SRA"));
@@ -53,12 +53,11 @@ public class XmlServicesTest extends AbstractTestsSRA {
 		study.centerName=VariableSRA.centerName;
 		study.projectCode = "AWK";
 		study.centerProjectName = "AWK";
-		study.code = "study_AWK_5_2";
+		study.code = "study_AWK_test_xml";
 		study.existingStudyType="Metagenomics";
-		study.traceInformation.setTraceInformation(user);
-		study.code = "study_" + config.projectCode;
-		study.state = new State("userValidate", user);
-		contextValidation = new ContextValidation(user);
+		study.traceInformation.setTraceInformation(userTest);
+		study.state = new State("userValidate", userTest);
+		contextValidation = new ContextValidation(userTest);
 		contextValidation.setCreationMode();
 		contextValidation.getContextObjects().put("type", "sra");
 		study.validate(contextValidation);
@@ -78,7 +77,7 @@ public class XmlServicesTest extends AbstractTestsSRA {
 		readSetCodes.add(codeReadSet4);
 
 		System.out.println("Create new submission for readSet " + codeReadSet4);
-		contextValidation = new ContextValidation(userContext);
+		contextValidation = new ContextValidation(userTest);
 		contextValidation.setCreationMode();
 		contextValidation.getContextObjects().put("type", "sra");
 		String submissionCode = submissionServices.initNewSubmission(config.projectCode, readSetCodes, study.code, config.code, "william", contextValidation);
@@ -86,32 +85,50 @@ public class XmlServicesTest extends AbstractTestsSRA {
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class,  submissionCode);
 		System.out.println("Submission " + submission.code);
 
-		// Simuler la fonction activate e, ajoutant les refSampleCodes dans submission.sampleCodes
+		// Simuler la fonction SubmissionServices.activate en ajoutant studyCode et sampleCodes 
+		// dans la liste des objets à soumettre
+		submission.studyCode = submission.refStudyCode;
 		for (String sampleCode: submission.refSampleCodes) {
 			submission.sampleCodes.add(sampleCode);
 		}        
-		// Sauver la soumission avec son bon sampleCodes :
+		// Sauver la soumission avec les objets study et sample à soumettre
+		// (Les objets experiments et run sont forcement à soumettre)
 		MongoDBDAO.save(InstanceConstants.SRA_SUBMISSION_COLL_NAME, submission);
 
-		
-		String resultDirectory_1 = "/env/cns/submit_traces/SRA/ngl-sub/mesTests/";
-		File dataRep_1 = new File(resultDirectory_1);
-		if (!dataRep_1.exists()){
-			dataRep_1.mkdirs();	
-		}		
-		
-		String resultDirectory = "/env/cns/submit_traces/SRA/ngl-sub/mesTests2/";
+		String resultDirectory = "/env/cns/submit_traces/SRA/NGL_test/tests_xml";
+
 		File dataRep = new File(resultDirectory);
 		if (!dataRep.exists()){
 			dataRep.mkdirs();	
-		}
+		}		
+					
 		File studyFile = new File(resultDirectory+"study.xml");
 		File sampleFile = new File(resultDirectory+"sample.xml");
 		File experimentFile = new File(resultDirectory+"experiment.xml");
 		File runFile = new File(resultDirectory+"run.xml");
 		File submissionFile = new File(resultDirectory+"submission.xml");
-
-		/*XmlServices.writeStudyXml(submission, studyFile);
+		if (studyFile.exists()){
+			studyFile.delete();
+		}
+		if (sampleFile.exists()){
+			sampleFile.delete();
+		}
+		if (experimentFile.exists()){
+			experimentFile.delete();
+		}
+		if (runFile.exists()){
+			runFile.delete();
+		}
+		if (submissionFile.exists()){
+			submissionFile.delete();
+		}
+		if (dataRep.exists()){
+			dataRep.delete();
+		}
+		
+		dataRep.mkdirs();
+		/*
+		XmlServices.writeStudyXml(submission, studyFile);
 		XmlServices.writeSampleXml(submission, sampleFile);
 		XmlServices.writeExperimentXml(submission, experimentFile);
 		XmlServices.writeRunXml(submission, runFile);
@@ -122,14 +139,9 @@ public class XmlServicesTest extends AbstractTestsSRA {
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.Study.class, study.code);
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, models.sra.submit.sra.instance.Configuration.class, config.code);
 		SubmissionServices.cleanDataBase(submission.code);
-
-		//XmlServices xmlServices = new XmlServices();
-		//XmlServices.writeAllXml(submissionCode);
-		MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.Study.class, study.code);
-		MongoDBDAO.deleteByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, models.sra.submit.sra.instance.Configuration.class, config.code);
-		
 		System.out.println("\ndisplayErrors pour validationXmlServicesSuccess :");
 		contextValidation.displayErrors(Logger.of("SRA"));		
-		Assert.assertTrue(contextValidation.errors.size()==0); // si aucune erreur
+		Assert.assertTrue(contextValidation.errors.size()==0); 
+
 	}
 }

@@ -145,6 +145,18 @@
 							return jsRoutes.controllers.reagents.api.Boxes.update(reagent.code).url;
 						}
 					},
+					callback : function(datatable, errors){
+						 if(errors === 0){
+							 $scope.message.clazz="alert alert-success";
+							 $scope.message.text=Messages('reagents.msg.save.sucess');
+							 $scope.message.isDetails = false;
+						 }else if(errors > 0){
+							 $scope.message.clazz = 'alert alert-danger';
+							 $scope.message.text = Messages('reagents.msg.save.error');
+							 $scope.message.details = errors;
+							 $scope.message.isDetails = true;
+						 }
+					},
 					showButton : true,
 					withoutEdit:true
 				},

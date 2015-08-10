@@ -18,7 +18,7 @@ import fr.cea.ig.MongoDBDAO;
 public abstract class AbstractTestsSRA {
 	
 	protected static FakeApplication app;
-	protected final String userContext="user_test";
+	protected final String userTest="user_test";
 	@BeforeClass
 	public  static void startTest() throws InstantiationException, IllegalAccessException, ClassNotFoundException, DAOException{
 		app = getFakeApplication();

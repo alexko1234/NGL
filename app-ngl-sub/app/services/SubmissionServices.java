@@ -54,7 +54,7 @@ public class SubmissionServices {
 		// en revanche on ne doit pas utiliser un experiment ou un run existant
 		
 		//System.out.println("studyCode = " + studyCode);
-		if (!StringUtils.isNotBlank(studyCode)) {
+		if (StringUtils.isBlank(studyCode)) {
 			throw new SraException("studyCode à null incompatible avec soumission");
 		}
 		Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, studyCode);
@@ -70,7 +70,7 @@ public class SubmissionServices {
 			throw new SraException("study.state.code='new' incompatible avec soumission. =>  study.state.code in ('userValidate', 'inWaiting', 'submitted')");
 		}
 		
-		if (!StringUtils.isNotBlank(configCode)) {
+		if (StringUtils.isBlank(configCode)) {
 			throw new SraException("configCode à null incompatible avec soumission");
 		}
 		Configuration config = MongoDBDAO.findByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, configCode);
@@ -98,7 +98,7 @@ public class SubmissionServices {
 		List <Sample> listSamples = new ArrayList<Sample>();
 
 		Submission submission = createSubmissionEntity(projectCode, config.code, user);
-		if (!StringUtils.isNotBlank(config.strategySample)) {
+		if (StringUtils.isBlank(config.strategySample)) {
 			throw new SraException("strategySample à null incompatible avec soumission");
 		}
 		Date date = new Date();
@@ -321,7 +321,9 @@ public class SubmissionServices {
 					//+ " " + submission.submissionDirectory + File.separator + rawData.relatifName;
 					//System.out.println("cmd = " + cmd);
 				}
-			}		
+			}
+		} catch (SraException e) {
+			throw new SraException(" Dans activateSubmission" + e);			
 		} catch (SecurityException e) {
 			throw new SraException(" Dans activateSubmission pb SecurityException: " + e);
 		} catch (UnsupportedOperationException e) {
@@ -389,7 +391,7 @@ public class SubmissionServices {
 		submission.submissionDate = courantDate;
 		System.out.println("submissionCode="+ submission.code);
 		submission.state = new State("new", user);
-		if (configCode != null) {
+		if (StringUtils.isNotBlank(configCode)) {
 			submission.config = MongoDBDAO.findByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, configCode);
 		}
 		return submission;
@@ -400,7 +402,7 @@ public class SubmissionServices {
 
 	//todo: il reste scientificName, classification, comonName à renseigner sur la base de idTaxon, et description
 	// voir si service web existant au NCBI (ou get_taxonId en interne ou encore base de AGC).
-	public Sample fetchSample(ReadSet readSet, String projectCode, String strategySample, String user) {
+	public Sample fetchSample(ReadSet readSet, String projectCode, String strategySample, String user) throws SraException {
 		// Recuperer pour chaque readSet les objets de laboratory qui existent forcemment dans mongoDB, 
 		// et qui permettront de renseigner nos objets SRA :
 		String laboratorySampleCode = readSet.sampleCode;
@@ -562,7 +564,7 @@ public class SubmissionServices {
 		if (laboratoryRun.properties.containsKey("sequencingProgramType")){	
 			String libraryLayout =  (String) laboratoryRun.properties.get("sequencingProgramType").value;
 			
-			if (libraryLayout != null) {
+			if (StringUtils.isNotBlank(libraryLayout)) { 
 				if (libraryLayout.equalsIgnoreCase("SR")){
 					experiment.libraryLayout = "SINGLE";
 					experiment.libraryLayoutOrientation = "forward";
@@ -631,7 +633,7 @@ public class SubmissionServices {
 		System.out.println("'"+readSet.code+"'");
 		experiment.readSpecs = new ArrayList<ReadSpec>();
 		// IF ILLUMINA ET SINGLE  Attention != si nanopore et SINGLE
-		if (experiment.libraryLayout != null && experiment.libraryLayout.equalsIgnoreCase("SINGLE") ) {
+		if (StringUtils.isNotBlank(experiment.libraryLayout) && experiment.libraryLayout.equalsIgnoreCase("SINGLE") ) {
 			ReadSpec readSpec_1 = new ReadSpec();
 			readSpec_1.readIndex = 0; 
 			readSpec_1.readLabel = "F";
@@ -642,8 +644,8 @@ public class SubmissionServices {
 		}
 
 		// IF ILLUMINA ET PAIRED ET "forward-reverse"
-		if (experiment.libraryLayout != null && experiment.libraryLayout.equalsIgnoreCase("PAIRED") 
-				&& experiment.libraryLayoutOrientation != null && experiment.libraryLayoutOrientation.equalsIgnoreCase("forward-reverse") ) {
+		if (StringUtils.isNotBlank(experiment.libraryLayout) && experiment.libraryLayout.equalsIgnoreCase("PAIRED") 
+				&& StringUtils.isNotBlank(experiment.libraryLayoutOrientation) && experiment.libraryLayoutOrientation.equalsIgnoreCase("forward-reverse") ) {
 			ReadSpec readSpec_1 = new ReadSpec();
 			readSpec_1.readIndex = 0;
 			readSpec_1.readLabel = "F";
@@ -662,8 +664,8 @@ public class SubmissionServices {
 
 		}
 		// IF ILLUMINA ET PAIRED ET "reverse-forward"
-		if (experiment.libraryLayout!= null && experiment.libraryLayout.equalsIgnoreCase("PAIRED") 
-				&& experiment.libraryLayoutOrientation!= null && experiment.libraryLayoutOrientation.equalsIgnoreCase("reverse-forward") ) {
+		if (StringUtils.isNotBlank(experiment.libraryLayout) && experiment.libraryLayout.equalsIgnoreCase("PAIRED") 
+				&& StringUtils.isNotBlank(experiment.libraryLayoutOrientation) && experiment.libraryLayoutOrientation.equalsIgnoreCase("reverse-forward") ) {
 			ReadSpec readSpec_1 = new ReadSpec();
 			readSpec_1.readIndex = 0;
 			readSpec_1.readLabel = "R";

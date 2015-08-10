@@ -2,6 +2,8 @@ package models.sra.submit.common.instance;
 
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
+
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.sra.SraValidationHelper;
@@ -47,8 +49,8 @@ public class Study extends DBObject implements IValidation {
 		SraValidationHelper.validateId(this, contextValidation);
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapStatus, "state.code");
-		if (contextValidation.getContextObjects().get("type")==null) {
-			contextValidation.addErrors("study non evaluable ", "sans type de contexte de validation");
+		if (!StringUtils.isNotBlank((CharSequence) contextValidation.getContextObjects().get("type"))){
+			contextValidation.addErrors(" study non evaluable ", "sans type de contexte de validation");
 			contextValidation.removeKeyFromRootKeyName("study");
 			return;
 		}

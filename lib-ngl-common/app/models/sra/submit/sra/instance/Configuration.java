@@ -2,6 +2,8 @@ package models.sra.submit.sra.instance;
 
 import java.io.File;
 
+import org.apache.commons.lang3.StringUtils;
+
 import validation.IValidation;
 import fr.cea.ig.DBObject;
 import models.laboratory.common.instance.State;
@@ -59,7 +61,7 @@ public class Configuration  extends DBObject implements IValidation {
 			SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapStatus, "state.code");
 
 			// Verifier que si User_Experiments est renseigné, la valeur correspond bien à un fichier present sur disque
-			if (userFileExperiments != null) {
+			if (StringUtils.isNotBlank(userFileExperiments)){
 				if (! new File(userFileExperiments).isFile()){
 					contextValidation.addErrors("userFileExperiments", this.userFileExperiments + " n'est pas un fichier");
 				}

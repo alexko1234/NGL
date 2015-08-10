@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
@@ -30,7 +32,7 @@ public class Run implements IValidation {
 			rawData.validate(contextValidation);
 		}
 		// verifier que code est bien renseigné
-		if ((this.code == null) ||(this.code.matches("^\\s*$"))) {
+		if(StringUtils.isBlank(this.code)) {
 			contextValidation.addErrors("run.code", " aucune valeur");
 		} else {
 			// Verifier si on est dans un contexte de creation d'objet, que run.code n'existe pas dans la database (dans collection Experiment)

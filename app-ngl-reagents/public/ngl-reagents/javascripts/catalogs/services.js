@@ -34,6 +34,12 @@
 				"order":true,
 				"type":"text"
 			});
+			columns.push({
+				"header":Messages("kits.code"),
+				"property":"code",
+				"order":true,
+				"type":"text"
+			});
 			
 			return columns;
 		};
