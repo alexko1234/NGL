@@ -98,7 +98,8 @@ public class ContainerHelper {
 				if(outputContainer.inputProcessCodes == null){
 					outputContainer.inputProcessCodes = new HashSet<String>();
 				}
-				outputContainer.inputProcessCodes.addAll(inputContainer.inputProcessCodes); }
+				outputContainer.inputProcessCodes.addAll(inputContainer.inputProcessCodes); 
+			}
 			outputContainer.processTypeCode=inputContainer.processTypeCode;
 
 			if(experiment.categoryCode.equals("transformation")){

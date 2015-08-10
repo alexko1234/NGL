@@ -10,7 +10,7 @@ import controllers.ListForm;
 
 public class ContainersSearchForm extends ListForm{
 	
-	public String code;
+	public String code; //TODO rename in codeRegex ou regexCode and add strict research with code
 	public Set<String> codes;
 	public String projectCode;
 	public Set<String> projectCodes;
@@ -32,9 +32,9 @@ public class ContainersSearchForm extends ListForm{
 	public Set<String> valuations;
 	public Date fromDate;
 	public Date toDate;
-	public String column;
-	public String line;
-	public String createUser;
+	public String column; //TODO rename in supportColumn
+	public String line; //TODO rename in supportLine
+	public String createUser; 
 	public List<String> createUsers;
 	public boolean isEmptyFromExperimentTypeCodes=true;
 	public Map<String, List<String>> properties = new HashMap<String, List<String>>();

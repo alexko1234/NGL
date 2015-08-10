@@ -30,15 +30,17 @@ public class ContainerUsed implements IValidation{
 	public PropertyValue concentration;
 	public PropertyValue quantity;
 
-	public Set<Content> contents;
+	
 	
 	public Double percentage;
 	// Proprietes a renseigner en fonction du type d'experiment ou d'instrument
 	public Map<String,PropertyValue> experimentProperties;
 	public Map<String,PropertyValue> instrumentProperties;
 	
-	public State state;
 	
+	//not used
+	public Set<Content> contents;
+	public State state;	
 	public Set<String> fromExperimentTypeCodes;
 	
 	public ContainerUsed() {
@@ -72,6 +74,7 @@ public class ContainerUsed implements IValidation{
 		ContainerUsedValidation.validateConcentration(contextValidation, concentration);
 		if(contextValidation.getObject("typeCode")!=null){
 			ContainerUsedValidation.validateExperimentProperties(contextValidation.getObject("typeCode").toString(),experimentProperties,contextValidation/*,false*/);//TODO: voir avec Maud
+			//TODO Validate Instrument properties
 		}		
 		
 	}
