@@ -33,7 +33,7 @@ public class SampleService {
 	public static void saveSampleCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<SampleCategory> l = new ArrayList<SampleCategory>();
 		
-		l.add(newSampleCategory("ADN Clone", "cloned-DNA"));
+		l.add(newSampleCategory("ADN Cloné", "cloned-DNA"));
 		l.add(newSampleCategory("Matériel Immunoprécipité","IP-sample"));
 		l.add(newSampleCategory("Amplicon", "amplicon"));
 		l.add(newSampleCategory("Défaut", "default"));
