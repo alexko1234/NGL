@@ -394,7 +394,7 @@
 									ng-disabled="!experiment.instrumentInformation.enabled"
 									udt-default-value="instp.defaultValue"/>
 								
-								<div bt-select class="form-control" bt-options="opt.value as opt.value for opt in instp.possibleValues" dt-default-value="instp.defaultValue"
+								<div bt-select class="form-control" bt-options="opt.value as opt.value for opt in instp.possibleValues" udt-default-value="instp.defaultValue"
 									ng-readonly="!experiment.instrumentInformation.enabled" ng-disabled="!experiment.instrumentInformation.enabled" 
 									ng-model="experiment.value.instrumentProperties[instp.code].value" ng-switch-when="true" 
 									auto-select>
