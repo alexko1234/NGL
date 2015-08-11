@@ -548,6 +548,18 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 //				outputToExperiment : function(output){
 //					varXToOne.outputToExperiment(output);
 //				},
+				
+				deleteDatatableColumnFromHeader : function(datatable, header){
+					var columns = datatable.getColumnsConfig();
+					
+					angular.forEach(columns, function(column, index){
+						if(column.extraHeaders != undefined && column.extraHeaders[1] == header){
+							$scope.datatable.deleteColumn(index);
+						}
+					});
+				},
+				
+				
 				outputType : outputType,
 				
 				newAtomicTransfertMethod : function(){
@@ -564,12 +576,34 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 					return {
 							percentage:100, //rules by defaut need check with server
 							code:container.code,
-							//state:container.state,
+							instrumentProperties:{},
+						    experimentProperties:{},
+						    //can be updated
+						    categoryCode:container.categoryCode, 
+						    volume:container.mesuredVolume, //used in rules
+							concentration:container.mesuredConcentration,  //used in rules
+							quantity:container.mesuredQuantity,
+							contents:container.contents, //used in rules							
 						    locationOnContainerSupport:container.support,
-						    instrumentProperties:{},
-						    experimentProperties:{}
-						    //not put state, mesure etc because not necessary						
+						    fromExperimentTypeCodes:container.fromExperimentTypeCodes
 					};
+					
+					/*
+					 return {"state":container.state
+						}; 
+					 
+					 */
+				},
+				
+				updateContainerUsedFromContainer : function(containerUsed, container){
+					containerUsed.categoryCode = container.categoryCode; 
+					containerUsed.volume = container.mesuredVolume;
+					containerUsed.concentration = container.mesuredConcentration;
+					containerUsed.quantity = container.mesuredQuantity;
+					containerUsed.contents = container.contents;
+					containerUsed.locationOnContainerSupport = container.support;
+					containerUsed.fromExperimentTypeCodes = container.fromExperimentTypeCodes;
+					return containerUsed;
 				},
 				
 				newOutputContainerUsed : function(){
@@ -666,11 +700,13 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 							              allData[l] = {atomicIndex:i};
 							              allData[l].atomicTransfertMethod = angular.copy($scope.experiment.value.atomicTransfertMethods[i]);
 							              
-							              allData[l].outputContainerUsed = angular.copy($scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j]);
 							              allData[l].inputContainerUsed = angular.copy($scope.experiment.value.atomicTransfertMethods[i].inputContainerUseds[0]);
-							              
-							              allData[l].outputContainer = outputContainers[outputContainerCode];
+							              allData[l].inputContainerUsed = $that.updateContainerUsedFromContainer(allData[l].inputContainerUsed, inputContainers[inputContainerCode]);
 							              allData[l].inputContainer = inputContainers[inputContainerCode];							              
+							              
+							              allData[l].outputContainerUsed = angular.copy($scope.experiment.value.atomicTransfertMethods[i].outputContainerUseds[j]);
+							              allData[l].outputContainer = outputContainers[outputContainerCode];
+							              
 							              l++;
 							        }
 							}
@@ -740,17 +776,15 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 				experimentToView:function(view){
 					if(inputType === "datatable"){
 						if($scope.experiment.editMode){
-							this.convertExperimentToDatatable(view);
-							//add columns after creta datatable
-							if($scope.isOutputGenerated()){
-	                            $scope.addOutputColumns();
-	                            $scope.addExperimentPropertiesOutputsColumns();
-	                            $scope.addInstrumentPropertiesOutputsColumns();
-							}
-							$scope.addExperimentPropertiesInputsColumns();
+							this.convertExperimentToDatatable(view);													
 						}else{
 							this.addNewAtomicTransfertMethodsInDatatable(view);
 						}
+						$scope.addOutputColumns();
+                        $scope.addExperimentPropertiesOutputsColumns();
+                        $scope.addExperimentPropertiesInputsColumns();
+                        $scope.addInstrumentPropertiesOutputsColumns();
+						
 					}else{
 						throw 'not implemented';
 					}

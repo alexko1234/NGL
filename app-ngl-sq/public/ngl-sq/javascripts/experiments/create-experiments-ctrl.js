@@ -502,7 +502,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			$scope.experiment.instrumentInformation.enabled = true;
 			$scope.$broadcast('enableEditMode');
 
-			if(mainService.isHomePage('search') && !tabService.isBackupTabs()){
+			if(mainService.isHomePage('search') && !tabService.isBackupTabs() 
+					&& $scope.experiment.value.state.code !== "IP"){
 				tabService.backupTabs();
 				tabService.resetTabs();
 				tabService.addTabs({label:Messages('experiments.tabs.create'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("new").url,remove:false});
@@ -548,7 +549,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		$scope.$broadcast('disableEditMode');
 		$scope.clearMessages();
 		$scope.setEditConfig(false);
-		if(mainService.isHomePage('search') && tabService.isBackupTabs()){
+		if(mainService.isHomePage('search') && tabService.isBackupTabs()
+				&& $scope.experiment.value.state.code !== "IP"){
 			tabService.restoreBackupTabs();
 			tabService.activeTab(1);
 			mainService.setDatatable(undefined);
@@ -1053,8 +1055,9 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 
 		}
 
-		$scope.$broadcast('deleteInstrumentPropertiesInputs', "Instruments");
-		$scope.$broadcast('deleteInstrumentPropertiesOutputs', "Instruments");
+		$scope.$broadcast('deleteInstrumentPropertiesInputs', "Instruments"); //TODO REMOVE AFTER REFACTORING
+		$scope.$broadcast('deleteInstrumentPropertiesOutputs', "Instruments"); //TODO REMOVE AFTER REFACTORING
+		$scope.$broadcast('deleteInstrumentProperties', "Instruments");
 
 		if(loaded == false){
 			$scope.experiment.value.instrumentProperties = {};

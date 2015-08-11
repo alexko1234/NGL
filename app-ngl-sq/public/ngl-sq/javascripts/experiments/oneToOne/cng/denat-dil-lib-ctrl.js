@@ -24,25 +24,14 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 			        	 "type":"text",
 			        	 "position":1,
 			        	 "extraHeaders":{0:"Inputs"}
-			         },
-					 {
-			        	 "header":Messages("containers.table.state.code"),
-			        	 "property":"inputContainer.state.code",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-						 "filter":"codes:'state'",
-			        	 "position":2,
-			        	 "extraHeaders":{0:"Inputs"}
-			         },				         
+			         },					 				         
 			         {
 			        	"header":Messages("containers.table.projectCodes"),
 			 			"property": "inputContainer.projectCodes",
 			 			"order":false,
 			 			"hide":true,
 			 			"type":"text",
-			 			"position":3,
+			 			"position":2,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "extraHeaders":{0:"Inputs"}
 				     },
@@ -52,17 +41,18 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 			 			"order":false,
 			 			"hide":true,
 			 			"type":"text",
-			 			"position":4,
+			 			"position":3,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "extraHeaders":{0:"Inputs"}
 				     },
+				     
 				     {
 			        	"header":"Code aliquot",
 			 			"property": "inputContainer.contents",
 			 			"order":false,
 			 			"hide":true,
 			 			"type":"text",
-			 			"position":5,
+			 			"position":4,
 			 			"render": "<div list-resize='cellValue | getArray:\"properties.sampleAliquoteCode.value\"| unique' list-resize-min-size='3'>",
 			        	 "extraHeaders":{0:"Inputs"}
 				     },
@@ -72,11 +62,10 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 			 			"order":false,
 			 			"hide":true,
 			 			"type":"text",
-			 			"position":6,
+			 			"position":5,
 			 			"render":"<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' list-resize-min-size='3'>",
 			        	 "extraHeaders":{0:"Inputs"}
-			         },
-				 
+			         },				 
 					 {
 			        	 "header":Messages("containers.table.concentration") + " (nM)",
 			        	 "property":"inputContainer.mesuredConcentration.value",
@@ -84,6 +73,16 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"number",
+			        	 "position":6,
+			        	 "extraHeaders":{0:"Inputs"}
+			         },{
+			        	 "header":Messages("containers.table.state.code"),
+			        	 "property":"inputContainer.state.code",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+						 "filter":"codes:'state'",
 			        	 "position":7,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
@@ -106,7 +105,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 						 "hide":true,
 			        	 "type":"number",
 			        	 //"defaultValues":10,
-			        	 "position":8,
+			        	 "position":50,
 			        	 "extraHeaders":{0:"Outputs"}
 			         },
 			         {
@@ -116,7 +115,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":9,
+			        	 "position":51,
 			        	 "extraHeaders":{0:"Outputs"}
 			         },
 			         
@@ -127,7 +126,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			        	 "position":11,
+			        	 "position":52,
 			        	 "extraHeaders":{0:"Outputs"}
 			         },
 			         {
@@ -205,6 +204,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 		console.log("call event addInstrumentPropertiesInput");
 		var column = $scope.datatable.newColumn(data.name,"inputContainerUsed.instrumentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Inputs","1":"Instruments"});
 		column.defaultValues = data.defaultValue;
+		column.position = data.displayOrder;
 		$scope.datatable.addColumn(2,column);
 	});
 	
@@ -214,6 +214,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 		if(data.displayMeasureValue!=undefined) unit = "("+data.displayMeasureValue.value+")";
 		var column = $scope.datatable.newColumn(function(){return data.name+" "+unit;},"inputContainerUsed.experimentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Inputs"});
 		column.defaultValues = data.defaultValue;
+		column.position = data.displayOrder;
 		$scope.datatable.addColumn(data.displayOrder,column);
 	});
 	
@@ -234,6 +235,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 		console.log("call event addInstrumentPropertiesOutput");
 		var column = $scope.datatable.newColumn(data.name,"outputContainerUsed.instrumentProperties."+data.code+".value",data.editable, true,true,$scope.getPropertyColumnType(data.valueType),data.choiceInList,possibleValues,{"0":"Outputs","1":"Instruments"});
 		column.defaultValues = data.defaultValue;
+		column.position = data.displayOrder;
 		$scope.datatable.addColumn(-1,column);
 	});
 	
@@ -246,6 +248,12 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 	
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");
+		
+		var dtConfig = $scope.datatable.getConfig();
+		dtConfig.edit.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
+		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
+		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
+		
 		$scope.atomicTransfere.refreshViewFromExperiment($scope.datatable);
 		$scope.$emit('viewRefeshed');
 	});
