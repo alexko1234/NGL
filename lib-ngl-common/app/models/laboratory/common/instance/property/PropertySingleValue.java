@@ -1,7 +1,6 @@
 package models.laboratory.common.instance.property;
 
 import java.util.Collection;
-import java.util.Collections;
 
 import validation.ContextValidation;
 import validation.utils.ValidationHelper;

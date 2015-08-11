@@ -348,6 +348,9 @@ public class ValidationHelper {
 			if(!valueClass.isInstance(propertyValue.value)){ //transform only if not the good type
 				propertyValue.value = convertValue(valueClass, propertyValue.value.toString(), null);
 			}
+			if(propertyDefinition.saveMeasureValue!=null && propertyValue.unit == null){
+				propertyValue.unit=propertyDefinition.saveMeasureValue.value; 
+			}
 		}catch(Throwable e){
 			Logger.error(e.getMessage(),e);
 			contextValidation.addErrors(propertyDefinition.code+".value", ERROR_BADTYPE_MSG, propertyDefinition.valueType, propertyValue.value);
@@ -374,8 +377,9 @@ public class ValidationHelper {
 				newList.add(value);
 			}			
 			propertyValue.value = newList;
-			if(propertyDefinition.saveMeasureValue!=null){
-				propertyValue.unit=propertyDefinition.saveMeasureValue.value; }
+			if(propertyDefinition.saveMeasureValue!=null && propertyValue.unit == null){
+				propertyValue.unit=propertyDefinition.saveMeasureValue.value; 
+			}
 		}catch(Throwable e){
 			Logger.error(e.getMessage(),e);
 			contextValidation.addErrors(propertyDefinition.code, ERROR_BADTYPE_MSG, propertyDefinition.valueType, propertyValue.value);

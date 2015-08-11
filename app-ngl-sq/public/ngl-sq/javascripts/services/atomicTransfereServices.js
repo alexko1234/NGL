@@ -549,28 +549,69 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 //					varXToOne.outputToExperiment(output);
 //				},
 				
-				deleteDatatableColumnFromHeader : function(datatable, header){
+
+				outputType : outputType,
+				defaultOutputUnit:{volume:undefined, concentration:undefined, quantity:undefined},
+				
+				deleteInstrumentDatatableColumn : function(datatable){
 					var columns = datatable.getColumnsConfig();
 					
 					angular.forEach(columns, function(column, index){
-						if(column.extraHeaders != undefined && column.extraHeaders[1] == header){
-							$scope.datatable.deleteColumn(index);
+						if(column.extraHeaders != undefined && column.extraHeaders[1] === "Instrument"){
+							console.log("check if works correctly : deleteInstrumentDatatableColumn");
+							columns.splice(index,1);
 						}
 					});
+					datatable.setColumnsConfig(columns);
+				},
+				
+				getDisplayUnitFromProperty:function(propertyDefinition){
+					var unit = $parse("displayMeasureValue.value")(propertyDefinition);
+					if(undefined !== unit || null !== unit) return " ("+unit+")";
+					else return undefined;
+				},
+				
+				convertPropertyToDatatableColumn : function(propertyDefinition, propertyNamePrefix, extraHeaders){
+    				var column = {};
+    				column.header = propertyDefinition.name + this.getDisplayUnitFromProperty(propertyDefinition);
+    				column.property = propertyNamePrefix+propertyDefinition.code+".value";
+    				column.edit = propertyDefinition.editable;
+    				column.hide =  true;
+    				column.order = true;
+    				column.type = $scope.getPropertyColumnType(propertyDefinition.valueType);
+    				column.choiceInList = propertyDefinition.choiceInList;
+    				column.position=propertyDefinition.displayOrder;
+    				column.defaultValues = propertyDefinition.defaultValue;
+    				if(propertyDefinition.possibleValues!=undefined){
+    					column.possibleValues = propertyDefinition.possibleValues;
+    				}
+    				if(extraHeaders!=undefined){
+    					column.extraHeaders = extraHeaders;
+    				}
+    				if(propertyDefinition.displayMeasureValue != undefined && propertyDefinition.displayMeasureValue != null){
+    					column.convertValue = {"active":true, "displayMeasureValue":propertyDefinition.displayMeasureValue.value, 
+    							"saveMeasureValue":propertyDefinition.saveMeasureValue.value};
+    				}
+    				return column;
+    			},
+				addExperimentPropertiesToDatatable : function(datatable){
+					var expProperties = $scope.experiment.experimentProperties.inputs;
+					var newColums = []; 
+					var $that = this;
+					if(expProperties != undefined && expProperties != null){
+						angular.forEach(expProperties, function(property){
+							if($scope.getLevel(property.levels, "ContainerOut")){
+								this.push($that.convertPropertyToDatatableColumn(property,"outputContainerUsed.experimentProperties.",{"0":"Outputs"}));								
+							}else if($scope.getLevel(property.levels, "ContainerIn")){
+								this.push($that.convertPropertyToDatatableColumn(property,"inputContainerUsed.experimentProperties.",{"0":"Inputs"}));								
+							}
+							
+						}, newColums);
+					}
+					datatable.setColumnsConfig(datatable.getColumnsConfig().concat(newColums))
 				},
 				
 				
-				outputType : outputType,
-				
-				newAtomicTransfertMethod : function(){
-					return {
-						class:"OneToOne",
-						line:"1", 
-						column:"1", 
-						inputContainerUseds:new Array(1), 
-						outputContainerUseds:new Array(1)
-					};
-				},
 				//Common for all but try to replace slowly
 				convertContainerToInputContainerUsed : function(container){
 					return {
@@ -605,15 +646,25 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 					containerUsed.fromExperimentTypeCodes = container.fromExperimentTypeCodes;
 					return containerUsed;
 				},
-				
-				newOutputContainerUsed : function(){
+				/**
+				 * Create a new OutputContainerUsed. By default unit is the same as inputContainer for volume, concentration, quantity
+				 * In second time, we need to find the default concentration because several concentration are available for one container
+				 */
+				newOutputContainerUsed : function(inputContainer){
 					return {
 						code:undefined,
-						volume:{unit:"µL"}, //not best place to put unit
-						concentration:{unit:"nM"}, //not best place to put unit
+						volume:{unit:this.getUnit(inputContainer.mesuredVolume, this.defaultOutputUnit.volume)}, 
+						concentration:{unit:this.getUnit(inputContainer.mesuredConcentration, this.defaultOutputUnit.concentration)}, 
+						quantity:{unit:this.getUnit(inputContainer.mesuredQuantity, this.defaultOutputUnit.quantity)},
 						instrumentProperties:{},
 					    experimentProperties:{}
 					};
+				},
+				
+				getUnit: function(object, defaultValue){
+					var unit = $parse("unit")(object);
+					if(undefined === unit || null === unit || unit !== defaultValue)unit = defaultValue
+					return unit;
 				},
 				
 				getContainerListPromise : function(containerCodes){
@@ -716,6 +767,15 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
                           
                     });
 				},
+				newAtomicTransfertMethod : function(){
+					return {
+						class:"OneToOne",
+						line:"1", 
+						column:"1", 
+						inputContainerUseds:new Array(1), 
+						outputContainerUseds:new Array(1)
+					};
+				},
 				addNewAtomicTransfertMethodsInDatatable : function(datatable){
 					if(null != mainService.getBasket() && null != mainService.getBasket().get()){
 						var $that = this;
@@ -733,11 +793,12 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 									line.atomicTransfertMethod = $that.newAtomicTransfertMethod();
 									line.inputContainer = container;
 									line.inputContainerUsed = $that.convertContainerToInputContainerUsed(line.inputContainer);
-									line.outputContainerUsed = $that.newOutputContainerUsed();
+									line.outputContainerUsed = $that.newOutputContainerUsed(line.inputContainer);
 									line.outputContainer = undefined;
 									allData.push(line);
 								});
-								datatable.setData(allData, allData.length);								
+								datatable.setData(allData, allData.length);			
+								
 						});
 					}					
 				},
@@ -780,11 +841,14 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 						}else{
 							this.addNewAtomicTransfertMethodsInDatatable(view);
 						}
+						
+						this.addExperimentPropertiesToDatatable(view);
+						/*
 						$scope.addOutputColumns();
                         $scope.addExperimentPropertiesOutputsColumns();
                         $scope.addExperimentPropertiesInputsColumns();
                         $scope.addInstrumentPropertiesOutputsColumns();
-						
+						*/
 					}else{
 						throw 'not implemented';
 					}

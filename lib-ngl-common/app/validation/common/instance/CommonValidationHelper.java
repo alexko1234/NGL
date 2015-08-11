@@ -536,13 +536,13 @@ public class CommonValidationHelper {
 		}
 
 	}
-	
+	/*
 	public static void validateRules(Object object,ContextValidation contextValidation){
 		List<Object> list=new ArrayList<Object>();
 		list.add(object);
 		validateRules(list,contextValidation);
 	}
-
+	*/
 
 	public static void validateExperimentTypeCodes(
 			List<String> experimentTypeCodes, ContextValidation contextValidation) {
