@@ -916,8 +916,7 @@ angular.module('ultimateDataTableServices', []).
 			    							var orderSense = (this.config.order.reverse)?'-':'+';
 				    						orderBy.push(orderSense+orderProperty)
 			    						}
-			    						this.allResult = $filter('orderBy')(this._getAllResult(), orderBy);
-			    						this._getAllResult = function(){return this.allResult;};
+			    						this.allResult = $filter('orderBy')(this.allResult, orderBy);			    						
 		    						}else{
 		    							if(angular.isDefined(this.config.order.by)){
 			    							var orderProperty = "group."+this.config.order.by.id;
@@ -934,8 +933,7 @@ angular.module('ultimateDataTableServices', []).
 		    							var orderSense = (this.config.order.reverse)?'-':'+';
 			    						orderBy.push(orderSense+orderProperty)
 		    						}
-		    						this.allResult = $filter('orderBy')(this._getAllResult(),orderBy);	
-									this._getAllResult = function(){return this.allResult;};
+		    						this.allResult = $filter('orderBy')(this.allResult,orderBy);										
 		    					}		    					    					
 		    				}
 		    			},	
