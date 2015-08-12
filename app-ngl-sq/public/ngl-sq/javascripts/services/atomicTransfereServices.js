@@ -567,7 +567,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 				
 				getDisplayUnitFromProperty:function(propertyDefinition){
 					var unit = $parse("displayMeasureValue.value")(propertyDefinition);
-					if(undefined !== unit || null !== unit) return " ("+unit+")";
+					if(undefined !== unit && null !== unit) return " ("+unit+")";
 					else return undefined;
 				},
 				
