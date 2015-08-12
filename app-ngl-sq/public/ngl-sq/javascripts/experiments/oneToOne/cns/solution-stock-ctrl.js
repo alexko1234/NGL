@@ -1,4 +1,5 @@
-angular.module('home').controller('SolutionStockCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','oneToOne','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,oneToOne,mainService,tabService) {
+angular.module('home').controller('SolutionStockCtrl',['$scope', 'datatable', 'oneToOne',
+                                                       function($scope,datatable, oneToOne) {
 	var datatableConfig = {
 			name:"FDR_Tube",
 			columns:[			  
