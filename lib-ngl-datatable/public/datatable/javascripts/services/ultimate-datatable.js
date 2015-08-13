@@ -80,7 +80,11 @@ angular.module('ultimateDataTableServices', []).
 							},
 							add : {
 								active:false,
-								showButton:true
+								showButton:true,
+								init : function(){
+									return {};
+								},
+								after:true								
 							},
 							show : {
 								active:false,
@@ -368,7 +372,7 @@ angular.module('ultimateDataTableServices', []).
 									this.saveLocal(this.displayResult[i].data, i);
 								}
 								
-								this.setPageNumber({number:0, clazz:''});
+								this.config.pagination.pageNumber=0;
 								var that = this;
 								this.computeDisplayResultTimeOut.then(function(){
 									//Deselect all lines
@@ -379,7 +383,7 @@ angular.module('ultimateDataTableServices', []).
 									if(that.config.pagination.numberRecordsPerPage < that.displayResult.length){
 										that.displayResult.splice(that.config.pagination.numberRecordsPerPage,(that.displayResult.length+1)-that.config.pagination.numberRecordsPerPage);
 									}
-									that.allResult.unshift({});
+									that.allResult.unshift({}); //or push
 									that.totalNumberRecords++;
 									
 									 //group function
@@ -709,7 +713,7 @@ angular.module('ultimateDataTableServices', []).
 							this.computeDisplayResultTimeOut = $timeout(function(){
 								//to manage local pagination
 								var configPagination = that.config.pagination;
-								
+								console.log("call computeDisplayResultTimeOut");
 								var _displayResult = [];
 								if(that.config.group.start && that.config.group.showOnlyGroups){
 									_displayResult = that.allGroupResult.slice((configPagination.pageNumber*configPagination.numberRecordsPerPage), 

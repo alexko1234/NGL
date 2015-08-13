@@ -110,7 +110,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			contextValidation.addKeyToRootKeyName(rootKeyName);
 			if(atomicTransfertMethods.get(i)!=null){
 				atomicTransfertMethods.get(i).validate(contextValidation);
-			}//TODO error when null
+			}//TODO error when null or size 0
 			
 			contextValidation.removeKeyFromRootKeyName(rootKeyName);
 		}

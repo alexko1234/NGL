@@ -815,6 +815,9 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			$scope.$broadcast('enableEditMode');
 			$scope.saveInProgress = false;
 			$scope.spinnerStart=false;
+			if(undefined !== mainService.getBasket() && null !== mainService.getBasket()){
+				mainService.getBasket().reset();
+			}
 			$scope.$broadcast('refresh');
 		});
 	};
@@ -1497,7 +1500,9 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				creationDate:"",
 				modifyUser:"",
 				modifyDate:""
-			}
+			},
+			experimentProperties : {},
+			instrumentProperties : {}
 	};
 
 
@@ -1598,8 +1603,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 					$scope.form.containerSupportCategory = experiment.instrument.inContainerSupportCategoryCode;
 				}
 
-					mainService.setForm($scope.form);
-				
+				mainService.setForm($scope.form);					
 				$scope.edit();
 			}else{
 				$scope.experiment.editMode=true;
@@ -1621,7 +1625,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				$scope.experiment.value.instrument.outContainerSupportCategoryCode = experiment.instrument.outContainerSupportCategoryCode;
 				$scope.experiment.value = experiment;
 				$scope.experiment.value.atomicTransfertMethods = $scope.orderAtomicTransfertMethod($scope.experiment.value.atomicTransfertMethods);
-				
+				$scope.getInstrumentProperties($scope.experiment.value.instrument.typeCode,true);
 				$scope.inProgressNow = false;
 				$scope.inProgressMode();
 				

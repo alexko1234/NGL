@@ -50,8 +50,9 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 		//if(this.outputContainerUsed==null){
 			
 			if(this.inputContainerUseds!=null){
-					
-				this.outputContainerUseds.get(0).code=CodeHelper.getInstance().generateContainerSupportCode();
+				if(null == this.outputContainerUseds.get(0).code){	
+					this.outputContainerUseds.get(0).code=CodeHelper.getInstance().generateContainerSupportCode();
+				}
 				LocationOnContainerSupport support=new LocationOnContainerSupport();
 				support.categoryCode=experiment.instrument.outContainerSupportCategoryCode;
 				// Same position 
@@ -103,6 +104,8 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 			outputContainer.mesuredConcentration= (PropertySingleValue) this.outputContainerUseds.get(0).concentration;
 			outputContainer.mesuredQuantity=(PropertySingleValue) this.outputContainerUseds.get(0).quantity;
 
+				
+			//TODO validation properties !
 			
 			Map<String,PropertyValue> properties=ExperimentHelper.getAllPropertiesFromAtomicTransfertMethod(this,experiment);
 			ContainerHelper.addContent(outputContainer, this.getInputContainers(), experiment, properties);

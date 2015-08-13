@@ -1,6 +1,7 @@
 "use strict";
  
-angular.module('home', ['ngRoute','ultimateDataTableServices','basketServices', 'commonsServices','ui.bootstrap','atomicTransfereServices','dragndropServices','ngl-sq.experimentsServices'], function($routeProvider, $locationProvider) {
+angular.module('home', ['ngRoute','ultimateDataTableServices','basketServices', 'commonsServices','ui.bootstrap','atomicTransfereServices','dragndropServices','ngl-sq.experimentsServices'], 
+		function($routeProvider, $locationProvider) {
 	$routeProvider.when('/experiments/new/home', {
 		templateUrl : jsRoutes.controllers.experiments.tpl.Experiments.searchSupports().url,
 		controller : 'SearchContainerCtrl'
@@ -34,7 +35,6 @@ angular.module('home', ['ngRoute','ultimateDataTableServices','basketServices', 
 		controller : 'SearchContainerCtrl'
 	});
 	
-	
 	$routeProvider.otherwise({redirectTo: '/experiments/new/home'});
 
 	// configure html5 to get links working with bookmarked
@@ -42,8 +42,8 @@ angular.module('home', ['ngRoute','ultimateDataTableServices','basketServices', 
 		  enabled: true,
 		  requireBase: false
 		});
+	
 }).config(function ( $compileProvider) {
-
-    $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|mailto|data):/);
+	$compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|mailto|data):/);
 
 });

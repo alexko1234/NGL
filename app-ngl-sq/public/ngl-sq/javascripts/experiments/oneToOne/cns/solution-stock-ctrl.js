@@ -186,9 +186,9 @@ angular.module('home').controller('SolutionStockCtrl',['$scope', 'datatable', 'o
 		$scope.$emit('viewRefeshed');
 	});
 	
-	//Init
+	//Init		
 	$scope.datatable = datatable(datatableConfig);
-	$scope.atomicTransfere = oneToOne($scope, "datatable", "datatable");
+	$scope.atomicTransfere = oneToOne($scope);
 	$scope.atomicTransfere.defaultOutputUnit.volume = "µL";
 	$scope.atomicTransfere.defaultOutputUnit.concentration = "nM";
 	

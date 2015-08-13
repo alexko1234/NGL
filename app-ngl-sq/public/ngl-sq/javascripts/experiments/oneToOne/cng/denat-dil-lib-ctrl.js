@@ -1,5 +1,5 @@
-angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','oneToOne','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,oneToOne,mainService,tabService) {
-
+angular.module('home').controller('DenatDilLibCtrl',['$scope', 'datatable','oneToOne',
+                                                     function($scope, datatable, oneToOne) {
 	/*
 	 1) Code Container
 2) Etat container
@@ -212,7 +212,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$window','datata
 		
 	//Init
 	$scope.datatable = datatable(datatableConfig);
-	$scope.atomicTransfere = oneToOne($scope, "datatable", "datatable");
+	$scope.atomicTransfere = oneToOne($scope);
 	
 	$scope.atomicTransfere.defaultOutputUnit.volume = "µL";
 	$scope.atomicTransfere.defaultOutputUnit.concentration = "nM";

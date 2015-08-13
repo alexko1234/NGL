@@ -1,4 +1,5 @@
-angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$window','datatable','$http','lists','$parse','$q','$position','oneToOne','mainService','tabService', function($scope,$window, datatable, $http,lists,$parse,$q,$position,oneToOne,mainService,tabService) {
+angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse','datatable','oneToOne',
+                                                         function($scope,$parse, datatable, oneToOne) {
 	var datatableConfig = {
 			name:"FDR_Tube",
 			columns:[			  
@@ -204,7 +205,7 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$window','da
 	
 	//Init
 	$scope.datatable = datatable(datatableConfig);
-	$scope.atomicTransfere = oneToOne($scope, "datatable", "datatable");
+	$scope.atomicTransfere = oneToOne($scope);
 	$scope.atomicTransfere.defaultOutputUnit.volume = "µL";
 	$scope.atomicTransfere.defaultOutputUnit.concentration = "ng/µL";
 	$scope.atomicTransfere.defaultOutputUnit.quantity = "ng";
