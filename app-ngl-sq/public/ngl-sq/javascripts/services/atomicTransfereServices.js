@@ -684,9 +684,12 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
                          function($http, $parse, $q, commonAtomicTransfertMethod, mainService){
 	
 	
-	var constructor = function($scope){
+	var constructor = function($scope, outputIsVoid){
+		
+		var $outputIsVoid = (outputIsVoid !== undefined)?outputIsVoid : false; //false when void in output
 		var $commonATM = commonAtomicTransfertMethod($scope);
 		var view = {
+				$outputIsVoid : $outputIsVoid,
 				$commonATM : $commonATM,
 				newAtomicTransfertMethod : function(){
 					throw 'not defined int atmSingleDatatable';
@@ -723,7 +726,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 					var $that = this;
 					if(expProperties != undefined && expProperties != null){
 						angular.forEach(expProperties, function(property){
-							if($scope.getLevel(property.levels, "ContainerOut")){
+							if(!$that.$outputIsVoid && $scope.getLevel(property.levels, "ContainerOut")){
 								$that.addColumnToDatatable(this, $that.convertOutputPropertiesToDatatableColumn(property));														
 							}else if($scope.getLevel(property.levels, "ContainerIn")){
 								$that.addColumnToDatatable(this,  $that.convertInputPropertiesToDatatableColumn(property));								
@@ -736,21 +739,23 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 				customExperimentToView : undefined, //used to cutom the view with one atm
 				convertExperimentToDatatable : function(datatable, defaultOutputUnit){
 					var promises = [];
-					promises.push($commonATM.loadInputContainerFromAtomicTransfertMethods($scope.experiment.value.atomicTransfertMethods));
+					promises.push($commonATM.loadInputContainerFromAtomicTransfertMethods($scope.experiment.value.atomicTransfertMethods));					
 					promises.push($commonATM.loadOutputContainerFromAtomicTransfertMethods($scope.experiment.value.atomicTransfertMethods));
-					                  
-	                var $that = this;
+					
+					var $that = this;
 	                $q.all(promises).then(function (result) {
 						var allData = [];
 						var inputContainers, outputContainers;
-						if(result[0].input && result[1].output){
+						if(result[0].input){
 							inputContainers = result[0].input;
-							outputContainers = result[1].output;
-						}else if(result[0].output && result[1].input){
+						}else if(result[1].input){
 							inputContainers = result[1].input;
+						}
+						
+						if(!$that.$outputIsVoid && result[1].output){
+							outputContainers = result[1].output;
+						}else if(!$that.$outputIsVoid && result[0].output){
 							outputContainers = result[0].output;
-						}else{
-							throw "not managed";
 						}
 						
 						var l=0;
@@ -761,24 +766,35 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 								
 								var inputContainerCode = atm.inputContainerUseds[j].code;
 								var inputContainer = inputContainers[inputContainerCode];
-						
-								for(var k=0 ; k < atm.outputContainerUseds.length ; k++){
-						              var outputContainerCode = atm.outputContainerUseds[k].code;
-						              var outputContainer = outputContainers[outputContainerCode];
-						              
-						              allData[l] = {atomicIndex:i};
-						              allData[l].atomicTransfertMethod = atm;							              
-						              allData[l].inputContainerUsed = angular.copy(atm.inputContainerUseds[j]);
-						              allData[l].inputContainerUsed = $commonATM.updateContainerUsedFromContainer(allData[l].inputContainerUsed, inputContainer);
-						              allData[l].inputContainer = inputContainer;							              
-						              
-						              allData[l].outputContainerUsed = angular.copy(atm.outputContainerUseds[k]);
-						              allData[l].outputContainer = outputContainer;
-						              
-						              l++;							             
-						        }
-								if($that.customExperimentToView !== undefined){
-									$that.customExperimentToView(atm, inputContainers, outputContainers);
+								if(!$that.$outputIsVoid){
+									for(var k=0 ; k < atm.outputContainerUseds.length ; k++){
+							              var outputContainerCode = atm.outputContainerUseds[k].code;
+							              var outputContainer = outputContainers[outputContainerCode];
+							              
+							              allData[l] = {atomicIndex:i};
+							              allData[l].atomicTransfertMethod = atm;							              
+							              allData[l].inputContainerUsed = angular.copy(atm.inputContainerUseds[j]);
+							              allData[l].inputContainerUsed = $commonATM.updateContainerUsedFromContainer(allData[l].inputContainerUsed, inputContainer);
+							              allData[l].inputContainer = inputContainer;							              
+							              
+							              allData[l].outputContainerUsed = angular.copy(atm.outputContainerUseds[k]);
+							              allData[l].outputContainer = outputContainer;
+							              
+							              l++;							             
+							        }
+									if($that.customExperimentToView !== undefined){
+										$that.customExperimentToView(atm, inputContainers, outputContainers);
+									}
+								}else{
+									allData[l] = {atomicIndex:i};
+									allData[l].atomicTransfertMethod = atm;							              
+									allData[l].inputContainerUsed = angular.copy(atm.inputContainerUseds[j]);
+									allData[l].inputContainerUsed = $commonATM.updateContainerUsedFromContainer(allData[l].inputContainerUsed, inputContainer);
+									allData[l].inputContainer = inputContainer;	
+									l++;
+									if($that.customExperimentToView !== undefined){
+										$that.customExperimentToView(atm, inputContainers);
+									}
 								}
 							}
 						}
@@ -805,8 +821,10 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 									line.atomicTransfertMethod = $that.newAtomicTransfertMethod();
 									line.inputContainer = container;
 									line.inputContainerUsed = $commonATM.convertContainerToInputContainerUsed(line.inputContainer);
-									line.outputContainerUsed = $commonATM.newOutputContainerUsed(line.inputContainer, defaultOutputUnit);
-									line.outputContainer = undefined;
+									if(!$that.$outputIsVoid){
+										line.outputContainerUsed = $commonATM.newOutputContainerUsed(line.inputContainer, defaultOutputUnit);
+										line.outputContainer = undefined;
+									}
 									allData.push(line);
 								});
 								datatable.setData(allData, allData.length);			
@@ -841,13 +859,14 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 							experiment.atomicTransfertMethods[atomicIndex] = allData[i].atomicTransfertMethod
 							experiment.atomicTransfertMethods[atomicIndex].inputContainerUseds[0] = allData[i].inputContainerUsed;	
 							
-							experiment.atomicTransfertMethods[atomicIndex].outputContainerUseds[0] = allData[i].outputContainerUsed;
-							
 							$commonATM.removeNullProperties(experiment.atomicTransfertMethods[atomicIndex].inputContainerUseds[0].instrumentProperties);
 							$commonATM.removeNullProperties(experiment.atomicTransfertMethods[atomicIndex].inputContainerUseds[0].experimentProperties);
-	
-							$commonATM.removeNullProperties(experiment.atomicTransfertMethods[atomicIndex].outputContainerUseds[0].instrumentProperties);
-							$commonATM.removeNullProperties(experiment.atomicTransfertMethods[atomicIndex].outputContainerUseds[0].experimentProperties);
+							
+							if(!this.$outputIsVoid){
+								experiment.atomicTransfertMethods[atomicIndex].outputContainerUseds[0] = allData[i].outputContainerUsed;
+								$commonATM.removeNullProperties(experiment.atomicTransfertMethods[atomicIndex].outputContainerUseds[0].instrumentProperties);
+								$commonATM.removeNullProperties(experiment.atomicTransfertMethods[atomicIndex].outputContainerUseds[0].experimentProperties);
+							}
 	
 						}
 						//remove atomic null
@@ -881,7 +900,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 		atmView.newAtomicTransfertMethod = function(){
 			return {
 				class:"OneToOne",
-				line:"1", 
+				line:"1", //TODO only exact for oneToOne of type  tube to tube but not for plate to plate
 				column:"1", 				
 				inputContainerUseds:new Array(1), 
 				outputContainerUseds:new Array(1)
@@ -905,6 +924,44 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 		return oneToOne;
 	};
 	return constructor;
+
+}]).factory('oneToVoid', ['$http', '$parse', '$q', 'atmToSingleDatatable', 
+                          function($http, $parse, $q , atmToSingleDatatable){
+	
+	var constructor = function($scope, atmViewInput){
+		var atmView = atmViewInput;
+		if(undefined === atmView){
+			atmView = atmToSingleDatatable($scope, true);
+		}
+		
+		atmView.newAtomicTransfertMethod = function(){
+			return {
+				class:"OneToVoid",
+				line:"1", 
+				column:"1", 				
+				inputContainerUseds:new Array(1)
+			};
+		};
+		
+		var oneToVoid = {
+				defaultOutputUnit:{volume:undefined, concentration:undefined, quantity:undefined},
+				//specific of oneToOne and single datatable
+				viewToExperiment:function(view){
+					atmView.viewToExperimentOneToOne(view);
+				},				
+				experimentToView:function(view){
+					atmView.experimentToView(view, this.defaultOutputUnit);
+				},
+				
+				refreshViewFromExperiment: function(view){
+					atmView.refreshViewFromExperiment(view, this.defaultOutputUnit);
+				}				
+		};
+		return oneToVoid;
+	};
+	return constructor;
+	
+	
 }]).factory('oneToMany', ['$rootScope', 'oneToX','xToMany','$http', '$parse', '$q', 'experimentCommonFunctions', function($rootScope, oneToX, xToMany, $http, $parse, $q, experimentCommonFunctions){
 
 	var constructor = function($scope, inputType, outputType){
@@ -1307,7 +1364,10 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 		return manyToOne;
 	};
 	return constructor;
-}]).factory('oneToVoid',['$rootScope','oneToX','$http', '$parse', '$q', 'experimentCommonFunctions',  function($rootScope, oneToX, $http, $parse, $q, experimentCommonFunctions){
+		
+}]);
+/* not used
+.factory('oneToVoid',['$rootScope','oneToX','$http', '$parse', '$q', 'experimentCommonFunctions',  function($rootScope, oneToX, $http, $parse, $q, experimentCommonFunctions){
 
 	var constructor = function($scope, inputType){
 		var inputType = inputType;
@@ -1379,7 +1439,9 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 		return oneToVoid;
 	};
 	return constructor;
-}]).factory('manyToVoid',['$rootScope','manyToX','$http', '$parse', '$q', 'experimentCommonFunctions',  function($rootScope, manyToX, $http, $parse, $q, experimentCommonFunctions){
+}])
+/* not used
+.factory('manyToVoid',['$rootScope','manyToX','$http', '$parse', '$q', 'experimentCommonFunctions',  function($rootScope, manyToX, $http, $parse, $q, experimentCommonFunctions){
 
 	var constructor = function($scope, inputType){
 		var inputType = inputType;
@@ -1440,3 +1502,4 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 	};
 	return constructor;
 }]);
+*/
