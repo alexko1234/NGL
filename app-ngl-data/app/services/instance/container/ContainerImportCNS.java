@@ -71,17 +71,22 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 					contextError.addKeyToRootKeyName(rootKeyName);
 					sample = limsServices.findSampleToCreate(contextError,sampleUsed.sampleCode);
 	
+					
 					if(sample!=null){
 						newSample =(Sample) InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,sample,contextError,true);
+						sampleUsed.referenceCollab=newSample.referenceCollab;
 						if(!contextError.hasErrors()){
 							limsServices.updateMaterielLims(newSample, contextError);
 						}
 					}
+					
 					contextError.removeKeyFromRootKeyName(rootKeyName);
 	
 				}else {	
 					/* Find sample in Mongodb */
-					newSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, sampleUsed.sampleCode);	
+					newSample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, sampleUsed.sampleCode);
+					sampleUsed.referenceCollab=newSample.referenceCollab;
+					
 				}			
 	
 				rootKeyName="container["+container.code+"]";
