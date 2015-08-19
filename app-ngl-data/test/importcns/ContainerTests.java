@@ -115,6 +115,7 @@ public class ContainerTests extends AbstractTests {
 		for(Container container:containers){
 			Content cnt = container.contents.iterator().next();
 			assertThat(cnt.properties.get("libLayoutNominalLength")).isNotNull();
+			assertThat(cnt.referenceCollab).isNotNull();
 			assertThat(cnt.properties.get("libProcessTypeCode")).isNotNull();
 			assertThat(cnt.properties.get("percentPerLane")).isNull();
 			assertThat(((PropertySingleValue) container.mesuredConcentration).unit).isEqualTo("nM");

@@ -30,9 +30,10 @@ public class MappingHelper {
 				if(code!=null){
 					try{
 						unite=rs.getString(propertyDefinition.code+"Unit");
+						properties.put(propertyDefinition.code, new PropertySingleValue(code,unite));
 					}
 					catch(SQLException e){
-						properties.put(propertyDefinition.code, new PropertySingleValue(code,unite));
+						properties.put(propertyDefinition.code, new PropertySingleValue(code));
 					}
 				}
 
