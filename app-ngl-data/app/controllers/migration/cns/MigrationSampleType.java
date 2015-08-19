@@ -34,8 +34,13 @@ public class MigrationSampleType extends CommonController {
 		MigrationNGLSEQ.backupOneCollection(InstanceConstants.CONTAINER_COLL_NAME,Container.class);
 		updateRefecollabAndTaxonSizeInContainer();
 		
-		MigrationNGLSEQ.backupOneCollection(InstanceConstants.READSET_ILLUMINA_COLL_NAME,Container.class);
-		MigrationNGLSEQ.backupOneCollection(InstanceConstants.SAMPLE_COLL_NAME,Container.class);
+		BasicDBObject keys=new BasicDBObject();
+		keys.put("_id",0 );
+		keys.put("code", 1);
+		keys.put("sampleOnContainer", 1);
+		
+		MigrationNGLSEQ.backupOneCollection(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,keys);
+		MigrationNGLSEQ.backupOneCollection(InstanceConstants.SAMPLE_COLL_NAME,Sample.class);
 		updateSampleTypeDefault();
 		
 		return ok("Migration Finish");
@@ -59,6 +64,10 @@ public class MigrationSampleType extends CommonController {
 		MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class
 				,DBQuery.is("typeCode","default-sample-cns").in("projectCodes", "AMP","AHG")
 				,DBUpdate.set("typeCode", "amplicon"));
+		
+		MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class
+				,DBQuery.exists("properties.taxonSize")
+				,DBUpdate.set("properties.taxonSize.unit", "pb"));
 	}
 
 	private static void updateRefecollabAndTaxonSizeInContainer() {
@@ -77,9 +86,7 @@ public class MigrationSampleType extends CommonController {
 			for(Content content:container.contents){
 			
 				content.referenceCollab=sampleRefCollab.get(content.sampleCode);
-				if( content.properties.containsKey("taxonSize")){
-					((PropertySingleValue) content.properties.get("taxonSize")).unit="pb";
-				}
+				
 				if(content.sampleTypeCode.equals("default-sample-cns")){
 					if(container.projectCodes.contains("AMP") || container.projectCodes.contains("AHG"))
 						content.sampleTypeCode="amplicon";
@@ -87,8 +94,9 @@ public class MigrationSampleType extends CommonController {
 						content.sampleTypeCode="unknown";
 					}
 				}
-				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code",container.code), DBUpdate.set("contents",content));
 			}
+			
+			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code",container.code), DBUpdate.set("contents",container.contents));
 			
 		}
 		
