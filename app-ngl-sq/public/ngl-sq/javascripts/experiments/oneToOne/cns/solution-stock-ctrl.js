@@ -1,5 +1,5 @@
-angular.module('home').controller('SolutionStockCtrl',['$scope', 'datatable', 'oneToOne',
-                                                       function($scope,datatable, oneToOne) {
+angular.module('home').controller('SolutionStockCtrl',['$scope', 'atmToSingleDatatable',
+                                                       function($scope, atmToSingleDatatable) {
 	var datatableConfig = {
 			name:"FDR_Tube",
 			columns:[			  
@@ -33,6 +33,17 @@ angular.module('home').controller('SolutionStockCtrl',['$scope', 'datatable', 'o
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "extraHeaders":{0:"Inputs"}
 				     },
+				     {
+			        	 "header":Messages("containers.table.fromExperimentTypeCodes"),
+			        	 "property":"inputContainer.fromExperimentTypeCodes",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
+			        	 "position":4,
+			        	 "extraHeaders":{0:"Inputs"}
+			         },
 			         {
 			        	"header":Messages("containers.table.tags"),
 			 			"property": "inputContainer.contents",
@@ -45,7 +56,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope', 'datatable', 'o
 			         },
 								 
 					 {
-			        	 "header":function(){return Messages("containers.table.concentration") + " (nM)"},
+			        	 "header":Messages("containers.table.concentration") + " (nM)",
 			        	 "property":"inputContainer.mesuredConcentration.value",
 			        	 "order":true,
 						 "edit":false,
@@ -76,7 +87,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope', 'datatable', 'o
 			        	 "extraHeaders":{0:"Inputs"}
 			         },		
 			         {
-			        	 "header":function(){return Messages("containers.table.concentration") + " (nM)"},
+			        	 "header":Messages("containers.table.concentration") + " (nM)",
 			        	 "property":"outputContainerUsed.concentration.value",
 			        	 "order":true,
 						 "edit":true,
@@ -87,7 +98,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope', 'datatable', 'o
 			        	 "extraHeaders":{0:"Outputs"}
 			         },
 			         {
-			        	 "header":function(){return Messages("containers.table.volume")+ " (µL)"},
+			        	 "header":Messages("containers.table.volume")+ " (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
 			        	 "order":true,
 						 "edit":true,
@@ -169,28 +180,45 @@ angular.module('home').controller('SolutionStockCtrl',['$scope', 'datatable', 'o
 
 	$scope.$on('save', function(e, promises, func, endPromises) {	
 		console.log("call event save");
-		$scope.datatable.save();
-		$scope.atomicTransfere.viewToExperiment($scope.datatable);
+		$scope.atmService.data.save();
+		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
 		$scope.$emit('viewSaved', promises, func, endPromises);
 	});
 	
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");		
-		var dtConfig = $scope.datatable.getConfig();
+		var dtConfig = $scope.atmService.data.getConfig();
 		dtConfig.edit.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
 		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
 		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
-		$scope.datatable.setConfig(dtConfig);
+		$scope.atmService.data.setConfig(dtConfig);
 		
-		$scope.atomicTransfere.refreshViewFromExperiment($scope.datatable);
+		$scope.atmService.refreshViewFromExperiment($scope.experiment);
 		$scope.$emit('viewRefeshed');
 	});
 	
 	//Init		
-	$scope.datatable = datatable(datatableConfig);
-	$scope.atomicTransfere = oneToOne($scope);
-	$scope.atomicTransfere.defaultOutputUnit.volume = "µL";
-	$scope.atomicTransfere.defaultOutputUnit.concentration = "nM";
+
+	var atmService = atmToSingleDatatable($scope, datatableConfig);
+	//defined new atomictransfertMethod
+	atmService.newAtomicTransfertMethod = function(){
+		return {
+			class:"OneToOne",
+			line:"1", 
+			column:"1", 				
+			inputContainerUseds:new Array(0), 
+			outputContainerUseds:new Array(0)
+		};
+	};
 	
-	$scope.atomicTransfere.experimentToView($scope.datatable);	
+	//defined default output unit
+	atmService.defaultOutputUnit = {
+			volume : "µL",
+			concentration : "nM"
+	}
+	atmService.experimentToView($scope.experiment);
+	
+	$scope.atmService = atmService;
+	
+	
 }]);

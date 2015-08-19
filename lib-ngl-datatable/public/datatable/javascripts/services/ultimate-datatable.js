@@ -603,7 +603,7 @@ angular.module('ultimateDataTableServices', []).
 									//The function have to return a $scope value
 									colValue = property;
 								}
-								if(colValue !==  undefined && column.type === "number"){
+								if(colValue !== undefined && colValue !== null && column.type === "number"){
 									colValue = colValue.replace(/\u00a0/g,"");
 								}
 								if(colValue === undefined && column.type === "boolean"){

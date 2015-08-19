@@ -1,5 +1,5 @@
-angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'datatable','oneToOne','atmToSingleDatatable',
-                                                               function($scope, $parse, datatable, oneToOne, atmToSingleDatatable) {
+angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmToSingleDatatable', 'datatable',
+                                                               function($scope, $parse,  atmToSingleDatatable, datatable) {
 	var datatableConfig = {
 			name:"FDR_Tube",
 			columns:[
@@ -46,7 +46,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'data
 			         },
 			         					 
 					 {
-			        	 "header":function(){return Messages("containers.table.concentration") + " (ng/µL)"},
+			        	 "header":Messages("containers.table.concentration") + " (ng/µL)",
 			        	 "property":"inputContainer.mesuredConcentration.value",
 			        	 "order":true,
 						 "edit":false,
@@ -56,7 +56,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'data
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
 			         {
-			        	 "header":function(){return Messages("containers.table.volume") + " (µL)"},
+			        	 "header":Messages("containers.table.volume") + " (µL)",
 			        	 "property":"inputContainer.mesuredVolume.value",
 			        	 "order":true,
 						 "edit":false,
@@ -247,16 +247,6 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'data
 			showTotalNumberRecords:false
 	};
 	
-	
-	$scope.$on('save', function(e, promises, func, endPromises) {	
-		console.log("call event save");
-		$scope.datatableQcFlowcell.save();
-		$scope.datatableLoadingReport.save();
-		$scope.datatable.save();		
-		$scope.atomicTransfere.viewToExperiment($scope.datatable);
-		$scope.$emit('viewSaved', promises, func, endPromises);
-	});
-	
 	//call by callback save datatable
 	var copyOtherDTToMainDatatable = function(datatable){
 		var dataMain = datatable.getData();
@@ -276,34 +266,51 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'data
 		datatable.setData(dataMain);
 	}
 	
+	$scope.$on('save', function(e, promises, func, endPromises) {	
+		console.log("call event save");
+		$scope.datatableQcFlowcell.save();
+		$scope.datatableLoadingReport.save();
+		$scope.atmService.data.save();		
+		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
+		$scope.$emit('viewSaved', promises, func, endPromises);
+	});
+	
+	
+	
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");		
-		var dtConfig = $scope.datatable.getConfig();
+		var dtConfig = $scope.atmService.data.getConfig();
 		dtConfig.edit.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
 		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
-		$scope.datatable.setConfig(dtConfig);
+		$scope.atmService.data.setConfig(dtConfig);
 		
-		$scope.atomicTransfere.refreshViewFromExperiment($scope.datatable);
+		$scope.atmService.refreshViewFromExperiment($scope.experiment);
 		$scope.$emit('viewRefeshed');
 	});
 	
 	//Init
-	var qcFlowcellDefault =[{group: "total", preLoadingNbActivePores: undefined, postLoadingNbActivePores: undefined}, 
-	    	                {group: "groupe1", preLoadingNbActivePores: undefined, postLoadingNbActivePores:undefined},
-	    	                {group: "groupe2", preLoadingNbActivePores: undefined, postLoadingNbActivePores:undefined},
-	    	                {group: "groupe3", preLoadingNbActivePores: undefined, postLoadingNbActivePores:undefined},
-	    	                {group: "groupe4", preLoadingNbActivePores: undefined, postLoadingNbActivePores:undefined}];
-	    	
-	$scope.datatable = datatable(datatableConfig);
-	$scope.datatableLoadingReport = datatable(datatableConfigLoadingReport);
-	$scope.datatableLoadingReport.setData([]);
-	$scope.datatableQcFlowcell = datatable(datatableConfigQcFlowcell);
-	$scope.datatableQcFlowcell.setData(qcFlowcellDefault);
 	
-	var mainAtmView = atmToSingleDatatable($scope);
+	var atmService = atmToSingleDatatable($scope, datatableConfig);
+	//defined new atomictransfertMethod
+	atmService.newAtomicTransfertMethod = function(){
+		return {
+			class:"OneToOne",
+			line:"1", 
+			column:"1", 				
+			inputContainerUseds:new Array(0), 
+			outputContainerUseds:new Array(0)
+		};
+	};
+	
+	//defined default output unit
+	atmService.defaultOutputUnit = {
+			volume : "µL",
+			concentration : "ng/µL",
+			quantity : "ng"
+	}
 	
 	//overide defaut method
-	mainAtmView.convertOutputPropertiesToDatatableColumn = function(property){
+	atmService.convertOutputPropertiesToDatatableColumn = function(property){
 		if(property.propertyValueType === "single"){
 			return  this.$commonATM.convertSinglePropertyToDatatableColumn(property,"outputContainerUsed.experimentProperties.",{"0":"Outputs"});
 		}else if(property.propertyValueType === "object_list"){
@@ -314,7 +321,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'data
 			return undefined;						
 		}		
 	};
-	mainAtmView.convertInputPropertiesToDatatableColumn = function(property){
+	atmService.convertInputPropertiesToDatatableColumn = function(property){
 		if(property.propertyValueType === "single"){
 			return this.$commonATM.convertSinglePropertyToDatatableColumn(property,"inputContainerUsed.experimentProperties.",{"0":"Inputs"});
 		}else if(property.propertyValueType === "object_list"){
@@ -327,7 +334,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'data
 		
 	};
 	//custom view for the two other datatable
-	mainAtmView.customExperimentToView = function(atm){
+	atmService.customExperimentToView = function(atm){
 		var loadingReportData = $parse('inputContainerUseds[0].experimentProperties.loadingReport.value')(atm);
 		if(null != loadingReportData && undefined !== loadingReportData)
 			$scope.datatableLoadingReport.setData(loadingReportData);
@@ -337,10 +344,19 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'data
 			$scope.datatableQcFlowcell.setData(qcFlowcellData);
 	}
 	
-	$scope.atomicTransfere = oneToOne($scope, mainAtmView);
-	$scope.atomicTransfere.defaultOutputUnit.volume = "µL";
-	$scope.atomicTransfere.defaultOutputUnit.concentration = "ng/µL";
-	$scope.atomicTransfere.defaultOutputUnit.quantity = "ng";
+	$scope.atmService = atmService;
+	$scope.datatableLoadingReport = datatable(datatableConfigLoadingReport);
+	$scope.datatableLoadingReport.setData([]);
 	
-	$scope.atomicTransfere.experimentToView($scope.datatable);	
+	var qcFlowcellDefault =[{group: "total", preLoadingNbActivePores: undefined, postLoadingNbActivePores: undefined}, 
+	    	                {group: "groupe1", preLoadingNbActivePores: undefined, postLoadingNbActivePores:undefined},
+	    	                {group: "groupe2", preLoadingNbActivePores: undefined, postLoadingNbActivePores:undefined},
+	    	                {group: "groupe3", preLoadingNbActivePores: undefined, postLoadingNbActivePores:undefined},
+	    	                {group: "groupe4", preLoadingNbActivePores: undefined, postLoadingNbActivePores:undefined}];
+	
+	$scope.datatableQcFlowcell = datatable(datatableConfigQcFlowcell);
+	$scope.datatableQcFlowcell.setData(qcFlowcellDefault);
+	
+	atmService.experimentToView($scope.experiment);
+	
 }]);

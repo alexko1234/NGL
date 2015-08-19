@@ -9,7 +9,7 @@
   	border-width: 1px;
   	border-style: dashed;
   	border-color: black;
-  	width: 580px;
+  	width: 100%;
 }
 
 .inputContainerGroupOfTubeTransfert>p {
@@ -17,9 +17,9 @@ margin: 8px 0 8px;
 }
 
 .outputContainersOfTubeTransfert {	
-    margin-left: 40px;
+    /*margin-left: 40px;
     width: 400px;
-	
+	*/
 }
 
 .outputContainersOfTubeTransfert>table>tbody>tr>td{

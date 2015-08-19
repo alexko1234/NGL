@@ -616,7 +616,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 		return oneToMany;
 	};
 	return constructor;
-}]).factory('manyToOne',['$rootScope','manyToX','xToOne','$http', '$parse', '$q', 'experimentCommonFunctions','mainService',  function($rootScope, manyToX, xToOne, $http, $parse, $q, experimentCommonFunctions,mainService){
+}])/*.factory('manyToOne',['$rootScope','manyToX','xToOne','$http', '$parse', '$q', 'experimentCommonFunctions','mainService',  function($rootScope, manyToX, xToOne, $http, $parse, $q, experimentCommonFunctions,mainService){
 
 	var constructor = function($scope, inputType, outputType){
 		var inputType = inputType;
@@ -914,7 +914,7 @@ factory('oneToX', ['$rootScope','experimentCommonFunctions', function($rootScope
 	};
 	return constructor;
 		
-}]);
+}])*/;
 /* not used
 .factory('oneToVoid',['$rootScope','oneToX','$http', '$parse', '$q', 'experimentCommonFunctions',  function($rootScope, oneToX, $http, $parse, $q, experimentCommonFunctions){
 

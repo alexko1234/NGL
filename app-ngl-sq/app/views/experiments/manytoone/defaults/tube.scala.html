@@ -5,18 +5,21 @@
 </ul>
 {{tab}}
 
-<div class="row tab-content tabPaneTable" ng-controller="ManyToOneTubeCtrl" >
+<div class="tab-content tabPaneTable" ng-controller="ManyToOneTubeCtrl" >
 	<div class="col-md-12 col-lg-12 tab-pane active" style="margin-right:auto;margin-left:auto" id="tube">
-	<div ng-model="inputContainers" ng-if="!editMode || doneAndRecorded || inProgressNow" class="col-md-4 col-lg-4 inputContainerGroupOfTubeTransfert">
-		<p><i class="fa fa-download"></i> Inputs</p>
-		<table class="table" >
-		
-		</table>
+		<div ng-model="atmService.data.inputContainers" ng-if="!editMode || doneAndRecorded || inProgressNow" class="col-md-5 col-lg-5">
+			<div class="inputContainerGroupOfTubeTransfert">
+			<p><i class="fa fa-download"></i> Inputs</p>
+			</div>
+			<table class="table" >
+			
+			</table>
 		</div>
 		<!-- InputContainers table -->
-		<div ng-model="inputContainers"  class="col-md-4 col-lg-4 inputContainerGroupOfTubeTransfert" droppable ng-if=" editMode && !inProgressNow && !doneAndRecorded">		
-		<p  ng-show="inputContainers.length==0"><i class="fa fa-download"></i> Inputs</p> 
-			<table class="table" ng-show="inputContainers.length>0">
+		<div ng-model="atmService.data.inputContainers"  class="col-md-5 col-lg-5" droppable ng-if=" editMode && !inProgressNow && !doneAndRecorded">
+			<div class="inputContainerGroupOfTubeTransfert">		
+			<p ng-if="atmService.data.inputContainers.length==0"><i class="fa fa-download"></i> Inputs</p> 
+			<table class="table" ng-if="atmService.data.inputContainers.length > 0">
 			<thead>
 				<tr>
 					<th>
@@ -37,28 +40,23 @@
 						@Messages("containers.table.volume") (µl)
 					</th>
 					<th>
-						@Messages("containers.table.concentration") (nM)
-					</th>
-				<!--	<th>
-						@Messages("containers.table.inputVolume") (µl) 
-					</th>
-			  		<th>
-						@Messages("containers.table.percentageInsidePool")
-					</th>		-->			
+						@Messages("containers.table.concentration") 
+					</th>									
 				</tr>
 				</thead>				
-				<tr ng-model="container" ng-repeat="container in inputContainers | orderBy:'code'" >
+				<tr ng-model="container" ng-repeat="container in atmService.data.inputContainers | orderBy:'code'" >
 					<td>
-						<button ng-disabled="!experiment.experimentProperties.enabled" ng-click="deleteInput(container)" class="litte-icone"><i class="fa fa-trash-o"></i></button>
+						<button ng-disabled="!experiment.experimentProperties.enabled" ng-click="atmService.data.deleteInputContainer(container)" class="litte-icone"><i class="fa fa-trash-o"></i></button>
 					</td>
 					<td>
 						{{container.code}}
 					</td>
 					<td>
-						{{formatArray(container.fromExperimentTypeCodes)}}
+						<div list-resize='container.fromExperimentTypeCodes | unique | codes:"type"' list-resize-min-size='3'>
+						
 					</td>					
 					<td>
-						<div list-resize="properties.tag.value in getTags(container.contents) | unique" list-resize-min-size='5' below vertical></div>						
+						<div list-resize='container.contents | getArray:"properties.tag.value"| unique' list-resize-min-size='5' below vertical>																
 					</td>
 					<td>
 						{{container.state.code | codes:'state'}}
@@ -67,35 +65,30 @@
 						{{container.volume.value}}
 					</td>
 					<td>
-						{{container.concentration.value}}
-					</td>
-						
-			<!-- 		<td>
-						{{container.inputExperimentProperties.inputVolume.value}}
-					</td>
-					<td class="col-sm-1">
-						<input class="form-control input-small valueInput" type="text" placeholder="" ng-readonly="!experiment.experimentProperties.enabled" ng-model="container.percentage" title='@Messages("containers.table.percentage")'  ng-blur="changeValueInTransfertTube()"/>										
-					</td>  -->
+						{{container.concentration.value | number}} {{container.concentration.unit}}
+					</td>						
 				</tr>				
 			</table>
-		</div>	
-		
+			</div>	
+		</div>
+		<div class="col-md-1 col-lg-1">
 		<!-- Drop buttons -->
 		<div ng-if="editMode && !inProgressNow && !doneAndRecorded">
-		<div ng-if="(experiment.value.atomicTransfertMethods[0].inputContainerUseds.length==0 || inputContainers.length>0 ) && experiment.value.state.code =='N'">
-		<button class="dropButtonOfTubeTransfert" ng-click="dropAllInputContainer()" >
+		<div ng-if="(atmService.data.atm[0].inputContainerUseds.length==0 || atmService.data.inputContainers.length>0 ) && experiment.value.state.code =='N'">
+		<button class="dropButtonOfTubeTransfert" ng-click="atmService.data.dropInAllInputContainer(0)" >
 		<i class="fa fa-sign-in fa-2x"></i>
 		</button>
 		</div>
-		<div ng-if="inputContainers.length==0 && experiment.value.state.code =='N' ">
-		<button class="dropButtonOfTubeTransfert" ng-click="dropOutAllInputContainer()" >
+		<div ng-if="atmService.data.inputContainers.length==0 && experiment.value.state.code =='N' ">
+		<button class="dropButtonOfTubeTransfert" ng-click="atmService.data.dropOutAllInputContainer(0)" >
 		<i class="fa fa-sign-in fa-2x fa-rotate-180"></i>
 		</button>
 		</div>
 		</div>
-		
+		</div>
 		<!-- OutputContainers table -->
-		<div class="col-md-5 col-lg-5 outputContainersOfTubeTransfert">
+		<div class="col-md-6 col-lg-6">
+		<div class="outputContainersOfTubeTransfert">
 			<h2>@Messages("experiments.tubetransfert.design") :</h2> 			
 			<table class="table" >
 				<thead>
@@ -129,17 +122,15 @@
 										@Messages("containers.table.volume") (µl)
 									</th>
 									<th>
-										@Messages("containers.table.concentration") (nM)
-									</th>
-								<!--	<th>
-										@Messages("containers.table.inputVolume") (µl) 
-									</th>   -->
+										@Messages("containers.table.concentration")
+									</th>									
 									<th>
 										@Messages("containers.table.percentageInsidePool")
-									</th>								
+									</th>	
+																
 								</tr>
 									
-								<tr ng-model="inputContainerUsed" ng-repeat="inputContainerUsed in experiment.value.atomicTransfertMethods[0].inputContainerUseds | orderBy:'code'" draggable >									
+								<tr ng-model="inputContainerUsed" ng-repeat="inputContainerUsed in atmService.data.atm[0].inputContainerUseds | orderBy:'code'" draggable >									
 									<td>
 										{{inputContainerUsed.code}}
 									</td>
@@ -147,7 +138,7 @@
 										{{formatArray(inputContainerUsed.fromExperimentTypeCodes)}}
 									</td>					
 									<td>
-										<div list-resize="properties.tag.value in getTags(inputContainerUsed.contents) | unique" list-resize-min-size='5' below vertical></div>						
+										<div list-resize='inputContainerUsed.contents | getArray:"properties.tag.value"| unique' list-resize-min-size='5' below vertical>															
 									</td>
 									<td>
 										{{inputContainerUsed.state.code | codes:'state'}}
@@ -156,13 +147,11 @@
 										{{inputContainerUsed.volume.value}}
 									</td>
 									<td>
-										{{inputContainerUsed.concentration.value}}
-									</td>   
-						<!-- 			<td>
-										{{inputContainerUsed.experimentProperties.inputVolume.value}}
-									</td> -->
+										{{inputContainerUsed.concentration.value | number}} {{inputContainerUsed.concentration.unit}}
+									</td> 														
 									<td class="col-sm-1">
-										<input class="form-control input-small valueInput" type="text" placeholder="" ng-readonly="!experiment.experimentProperties.enabled" ng-model="inputContainerUsed.percentage" title='@Messages("containers.table.percentage")' ng-blur="changeValueInTransfertTube()"/>										
+										<input class="form-control input-small valueInput" type="text" placeholder="" ng-readonly="!experiment.experimentProperties.enabled" 
+										ng-model="inputContainerUsed.percentage" title='@Messages("containers.table.percentage")' ng-blur="atmService.data.updateDatatable()"/>										
 									</td>
 								</tr>									
 							</table>
@@ -175,41 +164,19 @@
 									</th>
 									<th>
 										@Messages("containers.table.volume") (µL)
-									</th>
-								<!-- <th ng-repeat="property in experiment.containerOutProperties">
-										{{property.name}}<span ng-if="property.displayMeasureValue"> ({{property.displayMeasureValue.value}})</span>
-									</th> -->	
+									</th>								
 								</tr>
-			   					 <tr ng-model="experiment.value.atomicTransfertMethods[0].outputContainerUseds[0]">
+			   					 <tr>
 									<td >
-										{{experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].code}}
+										{{atmService.data.atm[0].outputContainerUseds[0].code}}
 									</td>
 									<td>
 									<input class="form-control valueInput" type="text" title="Messages("containers.table.volume")"
 											ng-readonly="!experiment.experimentProperties.enabled"
-											ng-model="experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].volume.value"
-								   			ng-blur="changeValueInTransfertTube()"								   			
+											ng-model="atmService.data.atm[0].outputContainerUseds[0].volume.value"
+								   			ng-blur="atmService.data.updateDatatable()"								   			
 								   			/>										
-									</td>
-								<!--	<td style="min-width:70px" ng-repeat="property in experiment.containerOutProperties">
-										<div ng-switch on="property.choiceInList">
-											<input class="form-control valueInput" type="text" ng-switch-when="false" title="{{property.name}}"
-											ng-readonly="!experiment.experimentProperties.enabled"
-											ng-model="experiment.value.atomicTransfertMethods[0].outputContainerUsed.experimentProperties[property.code].value"
-								   			ng-blur="changeValueInTransfertTube()"								   			
-								   			/>
-									
-											<select class="form-control"  
-											ng-readonly="!experiment.experimentInformation.enabled" 
-											ng-disabled="!experiment.experimentInformation.enabled" 
-											ng-model="experiment.value.atomicTransfertMethods[0].outputContainerUsed.experimentProperties[property.code].value"
-											ng-switch-when="true" 
-											ng-blur="changeValueInTransfertTube()"											
-											auto-select>
-											<option ng-repeat="opt in property.possibleValues" value="{{opt.value}}">{{opt.value}}</option>
-								   			</select>
-								  	 </div>
-									</td>   -->
+									</td>							
 								</tr>
 							</table>
 						</td>				
@@ -218,10 +185,9 @@
 				
 			</table>
 		</div>
-		
-		
+		</div>
 	</div>
 	<div class="tab-pane roadmap" id="roadmap">
-		<div class="col-md-12 col-lg-12" ultimate-datatable="datatable"></div>
+		<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data.datatable"></div>
 	</div>
 </div>		

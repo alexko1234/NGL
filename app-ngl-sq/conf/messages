@@ -63,6 +63,7 @@ containers.table.support.name = Support container
 containers.table.stateCode = Etat Support Container
 containers.table.creationDate = Création container
 containers.table.concentration = Concentration
+containers.table.concentration.unit = Unité Concentration
 containers.table.volume = Volume
 containers.table.inputVolume  = Volume engagé
 containers.table.finalvolume = Volume final

@@ -1,5 +1,5 @@
-angular.module('home').controller('OneToVoidContainerCtrl',['$scope', '$parse','datatable','oneToVoid',
-                                                             function($scope,$parse, datatable, oneToVoid) {
+angular.module('home').controller('OneToVoidContainerCtrl',['$scope', '$parse','atmToSingleDatatable',
+                                                             function($scope,$parse, atmToSingleDatatable) {
 	 var datatableConfig = {
 			name:"FDR_Void",
 			columns:[
@@ -41,6 +41,7 @@ angular.module('home').controller('OneToVoidContainerCtrl',['$scope', '$parse','
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":4,
+			        	 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
 					 {
@@ -51,7 +52,7 @@ angular.module('home').controller('OneToVoidContainerCtrl',['$scope', '$parse','
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":5,
-						 "render":"<div list-resize='value.data.sampleCodes | unique'>",
+			        	 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
 					 {
@@ -125,26 +126,38 @@ angular.module('home').controller('OneToVoidContainerCtrl',['$scope', '$parse','
 
 		$scope.$on('save', function(e, promises, func, endPromises) {	
 			console.log("call event save");
-			$scope.datatable.save();
-			$scope.atomicTransfere.viewToExperiment($scope.datatable);
+			$scope.atmService.data.save();
+			$scope.atmService.viewToExperimentOneToOne($scope.experiment);
 			$scope.$emit('viewSaved', promises, func, endPromises);
 		});
 		
 		$scope.$on('refresh', function(e) {
 			console.log("call event refresh");		
-			var dtConfig = $scope.datatable.getConfig();
+			var dtConfig = $scope.atmService.data.getConfig();
 			dtConfig.edit.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
 			dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
 			dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
-			$scope.datatable.setConfig(dtConfig);
+			$scope.atmService.data.setConfig(dtConfig);
 			
-			$scope.atomicTransfere.refreshViewFromExperiment($scope.datatable);
+			$scope.atmService.refreshViewFromExperiment($scope.experiment);
 			$scope.$emit('viewRefeshed');
 		});
 		
-		//Init
-		$scope.datatable = datatable(datatableConfig);
-		$scope.atomicTransfere = oneToVoid($scope);
-		$scope.atomicTransfere.experimentToView($scope.datatable);	
+		
+		var atmService = atmToSingleDatatable($scope, datatableConfig, true);
+		//defined new atomictransfertMethod
+		atmService.newAtomicTransfertMethod = function(){
+			return {
+				class:"OneToVoid",
+				line:"1", 
+				column:"1", 				
+				inputContainerUseds:new Array(0)
+			};
+		};
+		
+		atmService.experimentToView($scope.experiment);
+		
+		$scope.atmService = atmService;
+		
 
 }]);

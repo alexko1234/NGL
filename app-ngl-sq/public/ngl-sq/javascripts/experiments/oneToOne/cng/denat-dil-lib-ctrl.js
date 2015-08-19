@@ -193,29 +193,45 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', 'datatable','oneT
 
 	$scope.$on('save', function(e, promises, func, endPromises) {	
 		console.log("call event save");
-		$scope.datatable.save();
-		$scope.atomicTransfere.viewToExperiment($scope.datatable);
+		$scope.atmService.data.save();
+		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
 		$scope.$emit('viewSaved', promises, func, endPromises);
 	});
 	
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");
 		
-		var dtConfig = $scope.datatable.getConfig();
+		var dtConfig = $scope.atmService.data.getConfig();
 		dtConfig.edit.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
 		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
 		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
+		$scope.atmService.data.setConfig(dtConfig);
 		
-		$scope.atomicTransfere.refreshViewFromExperiment($scope.datatable);
+		$scope.atmService.refreshViewFromExperiment($scope.experiment);
 		$scope.$emit('viewRefeshed');
 	});
 		
 	//Init
-	$scope.datatable = datatable(datatableConfig);
-	$scope.atomicTransfere = oneToOne($scope);
 	
-	$scope.atomicTransfere.defaultOutputUnit.volume = "µL";
-	$scope.atomicTransfere.defaultOutputUnit.concentration = "nM";
+	var atmService = atmToSingleDatatable($scope, datatableConfig);
+	//defined new atomictransfertMethod
+	atmService.newAtomicTransfertMethod = function(){
+		return {
+			class:"OneToOne",
+			line:"1", 
+			column:"1", 				
+			inputContainerUseds:new Array(0), 
+			outputContainerUseds:new Array(0)
+		};
+	};
 	
-	$scope.atomicTransfere.experimentToView($scope.datatable);	
+	//defined default output unit
+	atmService.defaultOutputUnit = {
+			volume : "µL",
+			concentration : "nM"
+	}
+	atmService.experimentToView($scope.experiment);
+	
+	$scope.atmService = atmService;
+	
 }]);

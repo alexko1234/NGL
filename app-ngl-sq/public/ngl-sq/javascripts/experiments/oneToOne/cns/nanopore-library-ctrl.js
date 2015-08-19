@@ -1,5 +1,5 @@
-angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse','datatable','oneToOne',
-                                                         function($scope,$parse, datatable, oneToOne) {
+angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse', 'atmToSingleDatatable',
+                                                         function($scope, $parse, atmToSingleDatatable) {
 	var datatableConfig = {
 			name:"FDR_Tube",
 			columns:[			  
@@ -46,7 +46,7 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse','dat
 			         },
 			         					 
 					 {
-			        	 "header":function(){return Messages("containers.table.concentration") + " (ng/µL)"},
+			        	 "header":Messages("containers.table.concentration") + " (ng/µL)",
 			        	 "property":"inputContainer.mesuredConcentration.value",
 			        	 "order":true,
 						 "edit":false,
@@ -56,7 +56,7 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse','dat
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
 			         {
-			        	 "header":function(){return Messages("containers.table.volume") + " (µL)"},
+			        	 "header":Messages("containers.table.volume") + " (µL)",
 			        	 "property":"inputContainer.mesuredVolume.value",
 			        	 "order":true,
 						 "edit":false,
@@ -186,30 +186,47 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse','dat
 	
 	$scope.$on('save', function(e, promises, func, endPromises) {	
 		console.log("call event save");
-		$scope.datatable.save();
-		$scope.atomicTransfere.viewToExperiment($scope.datatable);
+		$scope.atmService.data.save();
+		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
 		$scope.$emit('viewSaved', promises, func, endPromises);
 	});
 	
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");		
-		var dtConfig = $scope.datatable.getConfig();
+		var dtConfig = $scope.atmService.data.getConfig();
 		dtConfig.edit.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
 		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
 		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
-		$scope.datatable.setConfig(dtConfig);
+		$scope.atmService.data.setConfig(dtConfig);
 		
-		$scope.atomicTransfere.refreshViewFromExperiment($scope.datatable);
+		$scope.atmService.refreshViewFromExperiment($scope.experiment);
 		$scope.$emit('viewRefeshed');
 	});
 	
 	//Init
-	$scope.datatable = datatable(datatableConfig);
-	$scope.atomicTransfere = oneToOne($scope);
-	$scope.atomicTransfere.defaultOutputUnit.volume = "µL";
-	$scope.atomicTransfere.defaultOutputUnit.concentration = "ng/µL";
-	$scope.atomicTransfere.defaultOutputUnit.quantity = "ng";
 	
-	$scope.atomicTransfere.experimentToView($scope.datatable);	
+	
+	var atmService = atmToSingleDatatable($scope, datatableConfig);
+	//defined new atomictransfertMethod
+	atmService.newAtomicTransfertMethod = function(){
+		return {
+			class:"OneToOne",
+			line:"1", 
+			column:"1", 				
+			inputContainerUseds:new Array(0), 
+			outputContainerUseds:new Array(0)
+		};
+	};
+	
+	//defined default output unit
+	atmService.defaultOutputUnit = {
+			volume : "µL",
+			concentration : "ng/µL",
+			quantity : "ng"
+	}
+	atmService.experimentToView($scope.experiment);
+	
+	$scope.atmService = atmService;
+	
 
 }]);

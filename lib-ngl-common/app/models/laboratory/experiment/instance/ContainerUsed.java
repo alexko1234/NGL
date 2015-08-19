@@ -38,7 +38,6 @@ public class ContainerUsed implements IValidation{
 	public Map<String,PropertyValue> instrumentProperties;
 	
 	
-	//not used
 	public Set<Content> contents;
 	public State state;	
 	public Set<String> fromExperimentTypeCodes;
