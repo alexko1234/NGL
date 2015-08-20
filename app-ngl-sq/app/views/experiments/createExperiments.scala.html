@@ -59,9 +59,9 @@
 					<h3 class="modal-title">{{modalTitle}}</h3>	
 				</div>
 				<div  class="modal-body" style="padding:5px">
-				    <button class="btn btn-primary" ng-show="correctResolution==false && (isLastExperiment==false || nextExperimentTypeCodes.length>0)" ng-click="continueProcess=true;continueExperiment()">@Messages("experiments.button.continueProcess")</button>
+				    <button class="btn btn-primary" ng-show="correctResolution==false && (isLastExperiment==false || nextExperimentTypeCodes.length>0) && !isTransfertOneToMany" ng-click="continueProcess=true;continueExperiment()">@Messages("experiments.button.continueProcess")</button>
       				<button ng-if="correctResolution==false" class="btn btn-primary" data-dismiss="modal" ng-click="retryExperiment()">@Messages("experiment.button.retryExperiment")</button>
-					<button  data-dismiss="modal" ng-if="correctResolution==false && isLastExperiment==false"  class="btn btn-primary" ng-click="stopProcess(experiment.processResolutions)">@Messages("experiment.button.stopProcess")</button>
+					<button  data-dismiss="modal" ng-if="correctResolution==false && isLastExperiment==false  && !isTransfertOneToMany"  class="btn btn-primary" ng-click="stopProcess(experiment.processResolutions)">@Messages("experiment.button.stopProcess")</button>
       				<button  data-dismiss="modal" ng-if="isLastExperiment==true || isTransfertOneToMany" data-dismiss="modal" class="btn btn-primary" ng-click="finishProcess()">@Messages("experiments.button.finishProcess")</button>
 							
 				</div>

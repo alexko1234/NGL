@@ -282,10 +282,6 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 								console.log("previousExperimentTypeCode= "+previousExperimentTypeCode);
 							} 
 					
-							if($scope.experiment.value.categoryCode==='transfert' && $scope.experimentType.atomicTransfertMethod=="OneToMany"){
-								$scope.isTransfertOneToMany=true;
-							}
-					
 							$http.get(jsRoutes.controllers.experiments.api.ExperimentTypes.list().url, {params:{"previousExperimentTypeCode":previousExperimentTypeCode}})
 							.success(function(data, status, headers, config) {
 								$scope.nextExperimentTypeCodes = data;
@@ -304,6 +300,11 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 								}
 								else if($scope.correctResolution==true && $scope.isLastExperiment==false || ($scope.correctResolution==true && $scope.nextExperimentTypeCodes.length>0)){
 									$scope.continueProcess=true;
+								}
+								
+								if($scope.experiment.value.categoryCode==='transfert' && $scope.experimentType.atomicTransfertMethod=="OneToMany"){
+									$scope.isTransfertOneToMany=true;
+									$scope.continueProcess=false;
 								}
 								$scope.continueExperiment();
 								angular.element('#modalResolutionProcess').modal('show');
