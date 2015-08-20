@@ -130,13 +130,19 @@ asset.url="http://etna15.genoscope.cns.fr:9099"
 
 # Implementation DAO
 
+<<<<<<< HEAD
 institute="CNG,CNS"
+=======
+institute="CNS,CNG"
+>>>>>>> refactoring sol stock
 
 #Rule configuration
 rules.key=nglSQ
 #rules.changesets=rules/ngl-sq/cns/changesets/changesets.xml
 #NOTE... bug pour ngl-sq-cng   en attendand mettre ngl-sq-cns
 rules.kbasename=ngl-sq-cns
+
+
 
 # Active/Desactive import de donnée
 import.data=false

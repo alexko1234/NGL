@@ -1,9 +1,9 @@
-angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse', 'atmToSingleDatatable',
-                                                         function($scope, $parse, atmToSingleDatatable) {
+angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmToSingleDatatable', 'datatable',
+                                                               function($scope, $parse,  atmToSingleDatatable, datatable) {
 	var datatableConfig = {
 			name:"FDR_Tube",
-			columns:[			  
-					 {
+			columns:[
+			  		 {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"inputContainer.code",
 			        	 "order":true,
@@ -76,29 +76,7 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse', 'at
 			        	 "position":7,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },	
-			         {
-			        	 "header":"Conc. finale Ligation (ng/µL)",
-			        	 "property":"outputContainerUsed.concentration.value",
-			        	 "order":true,
-						 "edit":true,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":50,
-			        	 "extraHeaders":{0:"Outputs"}
-			         },
-			         //pass by copie of dynamic properties
-			         /*
-			         {
-			        	 "header":"Qté finale Ligation (ng)",
-			        	 "property":"outputContainerUsed.quantity.value",
-			        	 "order":true,
-						 "edit":true,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":51,
-			        	 "extraHeaders":{0:"Outputs"}
-			         },
-			         */
+			        
 			         {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"outputContainerUsed.code",
@@ -142,17 +120,17 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse', 'at
 	        	withoutEdit: true,
 	        	showButton:false,
 	        	mode:'local',
-	        	callback:function(datatable){
-	        		copyLigationQuantityToOutputContainerUsedQuantity(datatable);
-	        	}
-	        		
+	        	changeClass:false,
+				callback:function(datatable){
+					copyOtherDTToMainDatatable(datatable);
+				}
 			},
 			hide:{
 				active:true
 			},
 			edit:{
 				active: (!$scope.doneAndRecorded && !$scope.inProgressNow),
-				columnMode:true
+				columnMode:false
 			},
 			messages:{
 				active:false,
@@ -171,31 +149,138 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse', 'at
 			otherButton:{
 				active:true,
 				template:'<button class="btn btn btn-info" ng-click="newPurif()" data-toggle="tooltip" ng-disabled="experiment.value.state.code != \'F\'" ng-hide="!experiment.doPurif" title="'+Messages("experiments.addpurif")+'">Messages("experiments.addpurif")</button><button class="btn btn btn-info" ng-click="newQc()" data-toggle="tooltip" ng-disabled="experiment.value.state.code != \'F\'" ng-hide="!experiment.doQc" title="Messages("experiments.addqc")">Messages("experiments.addqc")</button>'
-			}
+			},
+			showTotalNumberRecords:false
 	};
 	
-	var copyLigationQuantityToOutputContainerUsedQuantity = function(datatable){
-		var data = datatable.getData();
-		angular.forEach(data, function(value){
-			var ligationQuantity = $parse("outputContainerUsed.experimentProperties.ligationQuantity.value")(value);
-			$parse("outputContainerUsed.quantity.value").assign(value, ligationQuantity);
-		})
-		datatable.setData(data);
+	
+	var datatableConfigLoadingReport = {
+			name:"NanoportLoadingReport",
+			columns:[],
+			compact:true,
+			pagination:{
+				active:false
+			},		
+			search:{
+				active:false
+			},
+			order:{
+				mode:'local', //or 
+				active:true,
+				by:'creationDate',
+				reverse : true
+			},
+			remove:{
+				active: true,
+				showButton: true,
+				mode:'local'
+			},
+			save:{
+				active:true,
+				showButton: false,
+				mode:'local',
+				changeClass:false
+			},
+			hide:{
+				active:true
+			},
+			edit:{
+				active: true,
+				showButton: true,
+				columnMode:false
+			},
+			add:{
+				active:true
+			},
+			messages:{
+				active:false,
+				columnMode:true
+			},
+			extraHeaders:{
+				number:1,
+				dynamic:true,
+			},
+			showTotalNumberRecords:false
+	};
+	
+	
+	var datatableConfigQcFlowcell = {
+			name:"NanoportQcFlowcell",
+			columns:[],
+			compact:true,
+			pagination:{
+				active:false
+			},		
+			search:{
+				active:false
+			},
+			order:{
+				mode:'local', //or 
+				active:true,
+				by:'code'
+			},
+			remove:{
+				active:false,
+			},
+			save:{
+				active:true,
+				showButton: false,
+				mode:'local',
+				changeClass:false
+			},
+			hide:{
+				active:true
+			},
+			edit:{
+				active: true,
+				showButton: true,
+				columnMode:false
+			},
+			messages:{
+				active:false,
+				columnMode:true
+			},
+			extraHeaders:{
+				number:1,
+				dynamic:true,
+			},
+			showTotalNumberRecords:false
+	};
+	
+	//call by callback save datatable
+	var copyOtherDTToMainDatatable = function(datatable){
+		var dataMain = datatable.getData();
+		var dataQCFlowcell = $scope.datatableQcFlowcell.getData();
+		var dataLoadingReport = $scope.datatableLoadingReport.getData();
 		
-	} 
+		$parse('outputContainerUsed.experimentProperties.qcFlowcell._type').assign(dataMain[0], "object_list");
+		$parse('outputContainerUsed.experimentProperties.qcFlowcell.value').assign(dataMain[0], dataQCFlowcell);
+		
+		$parse('inputContainerUsed.experimentProperties.loadingReport._type').assign(dataMain[0], "object_list");		
+		$parse('inputContainerUsed.experimentProperties.loadingReport.value').assign(dataMain[0], dataLoadingReport);
+		
+		//copy flowcell code to output code
+		var codeFlowcell = $parse("instrumentProperties.containerSupportCode.value")($scope.experiment.value);
+		$parse('outputContainerUsed.code').assign(dataMain[0],codeFlowcell);
+		
+		datatable.setData(dataMain);
+	}
 	
 	$scope.$on('save', function(e, promises, func, endPromises) {	
 		console.log("call event save");
-		$scope.atmService.data.save();
+		$scope.datatableQcFlowcell.save();
+		$scope.datatableLoadingReport.save();
+		$scope.atmService.data.save();		
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
 		$scope.$emit('viewSaved', promises, func, endPromises);
 	});
+	
+	
 	
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");		
 		var dtConfig = $scope.atmService.data.getConfig();
 		dtConfig.edit.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
-		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
 		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
 		$scope.atmService.data.setConfig(dtConfig);
 		
@@ -204,7 +289,6 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse', 'at
 	});
 	
 	//Init
-	
 	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	//defined new atomictransfertMethod
@@ -224,9 +308,55 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse', 'at
 			concentration : "ng/µL",
 			quantity : "ng"
 	}
-	atmService.experimentToView($scope.experiment);
+	
+	//overide defaut method
+	atmService.convertOutputPropertiesToDatatableColumn = function(property){
+		if(property.propertyValueType === "single"){
+			return  this.$commonATM.convertSinglePropertyToDatatableColumn(property,"outputContainerUsed.experimentProperties.",{"0":"Outputs"});
+		}else if(property.propertyValueType === "object_list"){
+			var newColum = this.$commonATM.convertObjectListPropertyToDatatableColumn(property,"",{"0":"QC Flowcell"});
+			var columns = $scope.datatableQcFlowcell.getColumnsConfig();
+			columns.push(newColum);
+			$scope.datatableQcFlowcell.setColumnsConfig(columns);
+			return undefined;						
+		}		
+	};
+	atmService.convertInputPropertiesToDatatableColumn = function(property){
+		if(property.propertyValueType === "single"){
+			return this.$commonATM.convertSinglePropertyToDatatableColumn(property,"inputContainerUsed.experimentProperties.",{"0":"Inputs"});
+		}else if(property.propertyValueType === "object_list"){
+			var newColum = this.$commonATM.convertObjectListPropertyToDatatableColumn(property,"",{"0":"Bilan chargement"});
+			var columns = $scope.datatableLoadingReport.getColumnsConfig();
+			columns.push(newColum);
+			$scope.datatableLoadingReport.setColumnsConfig(columns);
+			return undefined;
+		}
+		
+	};
+	//custom view for the two other datatable
+	atmService.customExperimentToView = function(atm){
+		var loadingReportData = $parse('inputContainerUseds[0].experimentProperties.loadingReport.value')(atm);
+		if(null != loadingReportData && undefined !== loadingReportData)
+			$scope.datatableLoadingReport.setData(loadingReportData);
+		
+		var qcFlowcellData = $parse('outputContainerUseds[0].experimentProperties.qcFlowcell.value')(atm);
+		if(null != qcFlowcellData && undefined !== qcFlowcellData)
+			$scope.datatableQcFlowcell.setData(qcFlowcellData);
+	}
 	
 	$scope.atmService = atmService;
+	$scope.datatableLoadingReport = datatable(datatableConfigLoadingReport);
+	$scope.datatableLoadingReport.setData([]);
 	
-
+	var qcFlowcellDefault =[{group: "total", preLoadingNbActivePores: undefined, postLoadingNbActivePores: undefined}, 
+	    	                {group: "groupe1", preLoadingNbActivePores: undefined, postLoadingNbActivePores:undefined},
+	    	                {group: "groupe2", preLoadingNbActivePores: undefined, postLoadingNbActivePores:undefined},
+	    	                {group: "groupe3", preLoadingNbActivePores: undefined, postLoadingNbActivePores:undefined},
+	    	                {group: "groupe4", preLoadingNbActivePores: undefined, postLoadingNbActivePores:undefined}];
+	
+	$scope.datatableQcFlowcell = datatable(datatableConfigQcFlowcell);
+	$scope.datatableQcFlowcell.setData(qcFlowcellDefault);
+	
+	atmService.experimentToView($scope.experiment);
+	
 }]);

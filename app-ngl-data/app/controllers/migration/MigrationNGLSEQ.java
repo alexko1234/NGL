@@ -27,6 +27,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
+import com.mongodb.BasicDBObject;
+
 import play.Logger;
 import play.mvc.Result;
 import controllers.CommonController;
@@ -227,6 +229,15 @@ public class MigrationNGLSEQ extends CommonController{
 	public static <T extends DBObject> void backupOneCollection(String collectionName,Class<T> classType) {
 		Logger.info("\tCopie "+collectionName+" start");
 		MongoDBDAO.save(collectionName+"_BCK_"+today,MongoDBDAO.find(collectionName, classType).toList());
+		Logger.info("\tCopie "+collectionName+" end");
+		
+		
+	}
+	
+	
+	public static <T extends DBObject> void backupOneCollection(String collectionName,Class<T> classType,BasicDBObject keys) {
+		Logger.info("\tCopie "+collectionName+" start");
+		MongoDBDAO.save(collectionName+"_BCK_"+today,MongoDBDAO.find(collectionName, classType,DBQuery.empty(),keys).toList());
 		Logger.info("\tCopie "+collectionName+" end");
 		
 		

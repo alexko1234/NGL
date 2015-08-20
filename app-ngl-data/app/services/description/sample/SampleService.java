@@ -33,7 +33,7 @@ public class SampleService {
 	public static void saveSampleCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<SampleCategory> l = new ArrayList<SampleCategory>();
 		
-		l.add(newSampleCategory("ADN Clone", "cloned-DNA"));
+		l.add(newSampleCategory("ADN Cloné", "cloned-DNA"));
 		l.add(newSampleCategory("Matériel Immunoprécipité","IP-sample"));
 		l.add(newSampleCategory("Amplicon", "amplicon"));
 		l.add(newSampleCategory("Défaut", "default"));
@@ -41,6 +41,7 @@ public class SampleService {
 		l.add(newSampleCategory("ADN", "DNA"));
 		l.add(newSampleCategory("ARN", "RNA"));
 		l.add(newSampleCategory("cDNA", "cDNA"));
+		l.add(newSampleCategory("ADN en plug","DNAplug"));
 		
 		//FDS 05/06/2015 JIRA NGL-672: ajout des categories CNG qui n'existaient pas au CNS 
 		l.add(newSampleCategory("FAIRE", "FAIRE"));  // manquant dans sample_parametrage_CNG.xls ( voir Julie)
@@ -76,6 +77,7 @@ public class SampleService {
 		
 		l.add(newSampleType("ARN", "RNA", SampleCategory.find.findByCode("RNA"), getSampleCNGPropertyDefinitions(), getInstitutes(Institute.CODE.CNG)));
 		
+		l.add(newSampleType("ADN en plug", "DNAplug", SampleCategory.find.findByCode("DNAplug"), getSampleDefinitionADNplug(), getInstitutes(Institute.CODE.CNS)));
 		l.add(newSampleType("cDNA", "cDNA", SampleCategory.find.findByCode("cDNA"), getPropertyDefinitionscDNA(), getInstitutes(Institute.CODE.CNS)));	
 
 		l.add(newSampleType("ChIP", "chIP", SampleCategory.find.findByCode("IP-sample"), getSampleCommonPropertyDefinitions(), getInstitutes(Institute.CODE.CNS)));
@@ -93,7 +95,7 @@ public class SampleService {
 		l.add(newSampleType("Control", "CTRL", SampleCategory.find.findByCode("control"), getSampleCNGPropertyDefinitions(), getInstitutes(Institute.CODE.CNG)));
 		
 		//default values
-		l.add(newSampleType("Défaut", "default-sample-cns", SampleCategory.find.findByCode("default"), getSampleCommonPropertyDefinitions(), getInstitutes(Institute.CODE.CNS)));		
+		//l.add(newSampleType("Défaut", "default-sample-cns", SampleCategory.find.findByCode("default"), getSampleCommonPropertyDefinitions(), getInstitutes(Institute.CODE.CNS)));		
 		l.add(newSampleType("Défaut", "default-sample-cng", SampleCategory.find.findByCode("default"), getSampleCNGPropertyDefinitions(), getInstitutes(Institute.CODE.CNG)));
 		l.add(newSampleType("Inconnu", "unknown", SampleCategory.find.findByCode("unknown"), getSampleCommonPropertyDefinitions(), getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS)));
 		
@@ -115,6 +117,13 @@ public class SampleService {
 		propertyDefinitions.add(newPropertiesDefinition("Fragmenté", "isFragmented", LevelService.getLevels(Level.CODE.Sample),Boolean.class, true, "single"));
 		propertyDefinitions.add(newPropertiesDefinition("Adaptateurs", "isAdapters", LevelService.getLevels(Level.CODE.Sample),Boolean.class, true, "single"));
 		propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", LevelService.getLevels(Level.CODE.Sample),Integer.class, false, "single"));
+		return propertyDefinitions;
+	}
+	
+	
+	private static List<PropertyDefinition> getSampleDefinitionADNplug() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", LevelService.getLevels(Level.CODE.Content,Level.CODE.Sample),Double.class, true,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("Mb"), MeasureUnit.find.findByCode("Mb"), "single"));
 		return propertyDefinitions;
 	}
 	

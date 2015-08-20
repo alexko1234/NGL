@@ -46,6 +46,7 @@ public class ContainerHelper {
 		Content finalContent =new Content(sample.code, sample.typeCode, sample.categoryCode);
 		finalContent.projectCode = content.projectCode;
 		finalContent.percentage=content.percentage;
+		finalContent.referenceCollab=content.referenceCollab;
 		
 		SampleType sampleType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.typeCode, "typeCode", SampleType.find,true);
 		ImportType importType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.importTypeCode, "importTypeCode", ImportType.find,true);
@@ -98,7 +99,8 @@ public class ContainerHelper {
 				if(outputContainer.inputProcessCodes == null){
 					outputContainer.inputProcessCodes = new HashSet<String>();
 				}
-				outputContainer.inputProcessCodes.addAll(inputContainer.inputProcessCodes); }
+				outputContainer.inputProcessCodes.addAll(inputContainer.inputProcessCodes); 
+			}
 			outputContainer.processTypeCode=inputContainer.processTypeCode;
 
 			if(experiment.categoryCode.equals("transformation")){

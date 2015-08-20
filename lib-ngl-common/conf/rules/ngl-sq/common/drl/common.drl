@@ -1,0 +1,51 @@
+//created on: Aug 6, 2014
+//Rules for validation
+package rules
+
+
+
+rule "Input not null for all Experiment"
+	@nglSQ( validations )
+	dialect "java"
+	salience 510
+	no-loop
+    when
+    	$experiment:Experiment()
+    	$atomics:AtomicTransfertMethod($inputContainers : inputContainerUseds)
+    	$contextValidation:ContextValidation()
+    	eval($inputContainers.size()==0)
+    then
+    	//Logger.debug("Erreur position "+$atomics.position);
+    	$contextValidation.addErrors("lane["+$atomics.line+"]",	"error.validationexp.emptyoutputcontainer",$atomics.line);
+    end
+    
+
+rule "Set RunStartDate to Illumina Depot, Opgen Depot, Nanopore Depot if not exist"
+@nglSQ (validations )
+	dialect "java"
+	salience 500
+	no-loop
+when
+	$experiment: Experiment($typeCode:typeCode,$typeCode=="illumina-depot"|| $typeCode=="opgen-depot" || $typeCode=="nanopore-depot" , $state: state, $state.code=="N",$experimentProperties: experimentProperties, traceInformation!=null, $creationDate: traceInformation.creationDate)
+	not (Entry(key == "runStartDate") from $experimentProperties.entrySet())
+then	
+	Logger.info("Règle RunStartDate propertie OK");
+	PropertySingleValue value = new PropertySingleValue($creationDate);
+	if($experimentProperties==null){$experimentProperties = new HashMap<String,PropertyValue>();}
+	$experimentProperties.remove("runStartDate");
+	$experimentProperties.put("runStartDate", value);
+	//$contextValidation.addErrors("experiment", "error.validationexp.mandatoryrunstartdate", $typeCode, $runStartDate);
+	Logger.info("Date réel de dépot = " + $experimentProperties.get("runStartDate"));
+	update ($experiment);
+
+end
+
+
+
+
+
+
+
+
+
+    

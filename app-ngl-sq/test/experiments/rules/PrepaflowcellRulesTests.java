@@ -14,6 +14,7 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.ManytoOneContainer;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import play.Logger;
 import play.Logger.ALogger;
@@ -56,6 +57,43 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		contextValidation.displayErrors(logger);
 		assertThat(contextValidation.hasErrors()).isTrue();
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
+
+	}
+	
+	
+	@Test
+	public void validateExperimentSameTagVIDEInPosition() {
+		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
+		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
+		
+		ManytoOneContainer atomicTransfert3 = ExperimentTestHelper.getManytoOneContainer();
+		atomicTransfert3.line="3";
+		atomicTransfert3.column="0";
+		
+		exp.atomicTransfertMethods.add(2,atomicTransfert3);
+		
+		ContainerUsed container3_1=ExperimentTestHelper.getContainerUsed("CONTAINER3_1");
+		container3_1.percentage=20.0;
+		Content content3_1=new Content("CONTENT3","TYPE","CATEGORIE");
+		container3_1.contents=new HashSet<Content>();
+		content3_1.properties=new HashMap<String, PropertyValue>();
+		container3_1.contents.add(content3_1);
+		
+
+		ContainerUsed container3_2=ExperimentTestHelper.getContainerUsed("CONTAINER3_2");
+		container3_2.percentage=80.0;
+		Content content3_2=new Content("CONTENT3","TYPE","CATEGORIE");
+		container3_2.contents=new HashSet<Content>();
+		content3_2.properties=new HashMap<String, PropertyValue>();
+		container3_2.contents.add(content3_2);
+
+		exp.atomicTransfertMethods.get(2).inputContainerUseds.add(container3_1);
+		exp.atomicTransfertMethods.get(2).inputContainerUseds.add(container3_2);
+		
+		ExperimentValidationHelper.validateRules(exp, contextValidation);
+		contextValidation.displayErrors(logger);
+		assertThat(contextValidation.hasErrors()).isFalse();
+		assertThat(contextValidation.errors.size()).isEqualTo(0);
 
 	}
 
@@ -175,6 +213,133 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		contextValidation.displayErrors(logger);
 		assertThat(contextValidation.hasErrors()).isTrue();
 		assertThat(contextValidation.errors.get("instrument").size()).isEqualTo(1);
+	}
+
+	
+	
+	@Test
+	public void validateExperimentSameLibProcessTypeCodeFromEmptyTag() {
+		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
+		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
+		
+		ManytoOneContainer atomicTransfert3 = ExperimentTestHelper.getManytoOneContainer();
+		atomicTransfert3.line="3";
+		atomicTransfert3.column="0";
+		
+		exp.atomicTransfertMethods.add(2,atomicTransfert3);
+		
+		ContainerUsed container3_1=ExperimentTestHelper.getContainerUsed("CONTAINER3_1");
+		container3_1.percentage=20.0;
+		Content content3_1=new Content("CONTENT3","TYPE","CATEGORIE");
+		container3_1.contents=new HashSet<Content>();
+		content3_1.properties=new HashMap<String, PropertyValue>();
+		content3_1.properties.put("libProcessTypeCode", new PropertySingleValue("F"));
+
+		container3_1.contents.add(content3_1);
+		
+
+		ContainerUsed container3_2=ExperimentTestHelper.getContainerUsed("CONTAINER3_2");
+		container3_2.percentage=80.0;
+		Content content3_2=new Content("CONTENT3","TYPE","CATEGORIE");
+		container3_2.contents=new HashSet<Content>();
+		content3_2.properties=new HashMap<String, PropertyValue>();
+		content3_2.properties.put("libProcessTypeCode", new PropertySingleValue("W"));
+		container3_2.contents.add(content3_2);
+
+		exp.atomicTransfertMethods.get(2).inputContainerUseds.add(container3_1);
+		exp.atomicTransfertMethods.get(2).inputContainerUseds.add(container3_2);
+		
+		ExperimentValidationHelper.validateRules(exp, contextValidation);
+		contextValidation.displayErrors(logger);
+		assertThat(contextValidation.hasErrors()).isTrue();
+		assertThat(contextValidation.errors.size()).isEqualTo(1);
+
+	}
+
+	
+	@Test
+	public void validateExperimenfromExperimentTypeCodeFromEmptyTagAndSameLibProcessTypeCode() {
+		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
+		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
+		
+		ManytoOneContainer atomicTransfert3 = ExperimentTestHelper.getManytoOneContainer();
+		atomicTransfert3.line="3";
+		atomicTransfert3.column="0";
+		
+		exp.atomicTransfertMethods.add(2,atomicTransfert3);
+		
+		ContainerUsed container3_1=ExperimentTestHelper.getContainerUsed("CONTAINER3_1");
+		container3_1.percentage=20.0;
+		container3_1.fromExperimentTypeCodes=new HashSet<String>();
+		container3_1.fromExperimentTypeCodes.add("frag");
+		Content content3_1=new Content("CONTENT3","TYPE","CATEGORIE");
+		container3_1.contents=new HashSet<Content>();
+		content3_1.properties=new HashMap<String, PropertyValue>();
+		content3_1.properties.put("libProcessTypeCode", new PropertySingleValue("W"));
+
+		container3_1.contents.add(content3_1);
+		
+
+		ContainerUsed container3_2=ExperimentTestHelper.getContainerUsed("CONTAINER3_2");
+		container3_2.percentage=80.0;
+		container3_2.fromExperimentTypeCodes=new HashSet<String>();
+		container3_2.fromExperimentTypeCodes.add("lib");
+		Content content3_2=new Content("CONTENT3","TYPE","CATEGORIE");
+		container3_2.contents=new HashSet<Content>();
+		content3_2.properties=new HashMap<String, PropertyValue>();
+		content3_2.properties.put("libProcessTypeCode", new PropertySingleValue("W"));
+		container3_2.contents.add(content3_2);
+
+		exp.atomicTransfertMethods.get(2).inputContainerUseds.add(container3_1);
+		exp.atomicTransfertMethods.get(2).inputContainerUseds.add(container3_2);
+		
+		ExperimentValidationHelper.validateRules(exp, contextValidation);
+		contextValidation.displayErrors(logger);
+		assertThat(contextValidation.hasErrors()).isTrue();
+		assertThat(contextValidation.errors.size()).isEqualTo(1);
+
+	}
+	
+	
+	
+	@Test
+	public void validateExperimenfromExperimentTypeCodeFromEmptyTag	() {
+		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
+		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
+		
+		ManytoOneContainer atomicTransfert3 = ExperimentTestHelper.getManytoOneContainer();
+		atomicTransfert3.line="3";
+		atomicTransfert3.column="0";
+		
+		exp.atomicTransfertMethods.add(2,atomicTransfert3);
+		
+		ContainerUsed container3_1=ExperimentTestHelper.getContainerUsed("CONTAINER3_1");
+		container3_1.percentage=20.0;
+		container3_1.fromExperimentTypeCodes=new HashSet<String>();
+		container3_1.fromExperimentTypeCodes.add("frag");
+		Content content3_1=new Content("CONTENT3","TYPE","CATEGORIE");
+		container3_1.contents=new HashSet<Content>();
+		content3_1.properties=new HashMap<String, PropertyValue>();
+		container3_1.contents.add(content3_1);
+		
+
+		ContainerUsed container3_2=ExperimentTestHelper.getContainerUsed("CONTAINER3_2");
+		container3_2.percentage=80.0;
+		container3_2.fromExperimentTypeCodes=new HashSet<String>();
+		container3_2.fromExperimentTypeCodes.add("lib");
+		Content content3_2=new Content("CONTENT3","TYPE","CATEGORIE");
+		container3_2.contents=new HashSet<Content>();
+		content3_2.properties=new HashMap<String, PropertyValue>();
+		container3_2.contents.add(content3_2);
+
+		exp.atomicTransfertMethods.get(2).inputContainerUseds.add(container3_1);
+		exp.atomicTransfertMethods.get(2).inputContainerUseds.add(container3_2);
+		
+		ExperimentValidationHelper.validateRules(exp, contextValidation);
+		contextValidation.displayErrors(logger);
+		assertThat(contextValidation.hasErrors()).isTrue();
+		assertThat(contextValidation.errors.size()).isEqualTo(1);
+
 	}
 
 }

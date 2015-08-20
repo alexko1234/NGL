@@ -15,6 +15,8 @@ declare ContentInfo
 	sampleCode : String
 	tagRealSize : Integer
 	sequence : String
+	libProcessTypeCode :String
+	fromExperimentTypeCode : String
 end
 
 rule "Debug validations"
@@ -35,7 +37,7 @@ rule "Init object LaneInfo in WM"
 	no-loop
     when
     Experiment($typeCode : typeCode, $typeCode!="opgen-depot")
-    $atomicTransfert: AtomicTransfertMethod($position : line)
+    $atomicTransfert: ManytoOneContainer($position : line)
     not LaneInfo($position==position)
     then
     
@@ -53,16 +55,19 @@ rule "Init objects ContentInfo in WM"
 	salience 600
 	no-loop
     when
-    $atomicTransfert: AtomicTransfertMethod($position:line,$inputContainers : inputContainerUseds, $inputContainers.size()!=0)
+    $atomicTransfert: ManytoOneContainer($position:line,$inputContainers : inputContainerUseds, $inputContainers.size()!=0)
 	$container : ContainerUsed( $contents : contents,$contents!=null) from $inputContainers
 	$content : Content() from $contents	 
 	$laneInfo : LaneInfo($position==position)
     then
    
     String tag="VIDE";
+    String libProcessTypeCode="VIDE";
     String tagCategory="VIDE";
     Integer tagRealSize = 0;
     String sequence = "VIDE";
+    String fromCode="VIDE";
+    
     if($content.properties.containsKey("tag")){
     	tag=$content.properties.get("tag").value.toString();
     	Index index=MongoDBDAO.findOne(InstanceConstants.PARAMETER_COLL_NAME, Index.class, DBQuery.is("typeCode", "index-illumina-sequencing").is("code", tag));
@@ -75,31 +80,22 @@ rule "Init objects ContentInfo in WM"
     }
     if($content.properties.containsKey("tagCategory")) tagCategory=$content.properties.get("tagCategory").value.toString();
 
-	ContentInfo contentInfo= new ContentInfo($atomicTransfert.line,$container.code,tag,tagCategory,$content.sampleCode, tagRealSize, sequence);
-	Logger.debug("Content Info Position : "+$atomicTransfert.line+ ", Sample Code :"+$content.sampleCode + ", Container Code :"+$container.code+", Tag :"+tag+", tagCategory :"+tagCategory+", size :"+tagRealSize+", sequence :"+sequence);
+	if($content.properties.containsKey("libProcessTypeCode")){
+		libProcessTypeCode=$content.properties.get("libProcessTypeCode").value.toString();
+	}
+
+	if($container.fromExperimentTypeCodes!=null && $container.fromExperimentTypeCodes.size()>0)
+		fromCode=$container.fromExperimentTypeCodes.iterator().next();
+	
+
+	ContentInfo contentInfo= new ContentInfo($atomicTransfert.line,$container.code,tag,tagCategory,$content.sampleCode, tagRealSize, sequence, libProcessTypeCode,fromCode);
+	Logger.debug("Content Info Position : "+$atomicTransfert.line+ ", Sample Code :"+$content.sampleCode + ", Container Code :"+$container.code+", Tag :"+tag +", tagCategory :"+tagCategory+", size :"+tagRealSize+", sequence :"+sequence + ",libProcessTypeCode :"+libProcessTypeCode+", fromExperimentTypeCode :"+fromCode);
     $laneInfo.getContentInfos().add(contentInfo);
 	insert(contentInfo);
 	
     end
 
 
-
-rule "Input not null for Experiment Type Prepa-flowcell"
-	@nglSQ( validations )
-	dialect "java"
-	salience 510
-	no-loop
-    when
-    	$experiment:Experiment($typeCode : typeCode, $typeCode=="prepa-flowcell")
-    	$atomics:AtomicTransfertMethod($inputContainers : inputContainerUseds)
-    	$contextValidation:ContextValidation()
-    	eval($inputContainers.size()==0)
-    then
-    	//Logger.debug("Erreur position "+$atomics.position);
-    	$contextValidation.addErrors("lane["+$atomics.line+"]",	"error.validationexp.emptyoutputcontainer",$atomics.line);
-    end
-    
-    
 rule "Container duplicate in Lane"
 	@nglSQ( validations )
 	dialect "java"
@@ -107,7 +103,7 @@ rule "Container duplicate in Lane"
 	no-loop
     when
     	  LaneInfo($position:position)
-    	  AtomicTransfertMethod($position==line,$inputContainers : inputContainerUseds)
+    	  ManytoOneContainer($position==line,$inputContainers : inputContainerUseds)
     	  $containerCodes : Set(empty==false, size >= 1) from accumulate( ContainerUsed($containerCode:code) from $inputContainers,
 	                         init( HashSet result = new HashSet(); HashSet containers=new HashSet(); ),
                               action( if(!containers.contains($containerCode)){ containers.add($containerCode); } 
@@ -127,7 +123,7 @@ rule "Sum % percentage per piste = 100 % "
 	salience 580
 	no-loop
     when
-    $atomics:AtomicTransfertMethod($inputContainers : inputContainerUseds)
+    $atomics:ManytoOneContainer($inputContainers : inputContainerUseds)
     Experiment($instrument: instrument)   
     $total : Double() from accumulate(ContainerUsed( $n:percentage, percentage!=null) from $inputContainers, sum( $n ) )
     $container: ContainerUsed($cat : categoryCode) from $inputContainers
@@ -205,7 +201,7 @@ rule "Same sequence"
 	no-loop
 when
 	 LaneInfo($position:position, $contentInfos:contentInfos)
-     $sequences : Set(empty==false, size != $contentInfos.size()) from accumulate( ContentInfo ( $sequence : sequence, $position==position),
+     $sequences : Set(empty==false, size != $contentInfos.size()) from accumulate( ContentInfo ( $sequence : sequence, $sequence!="VIDE", $position==position),
                         collectSet( $sequence) )
 	  $contextValidation:ContextValidation($errors : errors)
 then
@@ -213,32 +209,33 @@ then
     $contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.sameTagSequence", $position, $sequences);
 end
 
-rule "RunStartDate propertie is mandatory to create Illumina Depot and Opgen Depot"
-@nglSQ (validations )
+
+rule "Same liprocessTypeCode for tag VIDE"
+	@nglSQ (validations )
 	dialect "java"
-	salience 500
+	salience 220
 	no-loop
-when
-	$experiment: Experiment($typeCode:typeCode,$typeCode=="illumina-depot"|| $typeCode=="opgen-depot" || $typeCode=="nanopore-depot" , $state: state, $state.code=="N",$experimentProperties: experimentProperties, traceInformation!=null, $creationDate: traceInformation.creationDate)
-	not (Entry(key == "runStartDate") from $experimentProperties.entrySet())
-then	
-	Logger.info("Règle RunStartDate propertie OK");
-	PropertySingleValue value = new PropertySingleValue($creationDate);
-	if($experimentProperties==null){$experimentProperties = new HashMap<String,PropertyValue>();}
-	$experimentProperties.remove("runStartDate");
-	$experimentProperties.put("runStartDate", value);
-	//$contextValidation.addErrors("experiment", "error.validationexp.mandatoryrunstartdate", $typeCode, $runStartDate);
-	Logger.info("Date réel de dépot = " + $experimentProperties.get("runStartDate"));
-	update ($experiment);
+    when
+    	   $contentInfo1 : ContentInfo($tag :tag, $tag=="VIDE",$sampleCode :sampleCode,$position:position,$containerCode1:containerCode, $libProcessTypeCode :libProcessTypeCode, $libProcessTypeCode!="VIDE")
+           $contentInfo2 : ContentInfo(this != $contentInfo1, tag == $tag, position==$position, sampleCode==$sampleCode, $libProcessTypeCode !=libProcessTypeCode, $containerCode2:containerCode)
+           $contextValidation:ContextValidation()
+    then
+    	Logger.debug("LibProcessTypeCode error "+$contentInfo1 + " position "+$position);
+    	$contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.samelibprocesstypecode", $libProcessTypeCode,$containerCode1,$containerCode2);    	
+    end
 
-end
-
-
-
-
-
-
-
-
-
+    
+rule "Same fromExperimentTypeCodes for tag VIDE and same libprocesstypeCode"
+	@nglSQ (validations )
+	dialect "java"
+	salience 210
+	no-loop
+    when
+    	   $contentInfo1 : ContentInfo($tag :tag, $tag=="VIDE",$sampleCode :sampleCode,$position:position,$containerCode1:containerCode, $fromExperimentTypeCode:fromExperimentTypeCode,$libProcessTypeCode :libProcessTypeCode)
+           $contentInfo2 : ContentInfo(this != $contentInfo1, tag == $tag, position==$position, sampleCode==$sampleCode, $libProcessTypeCode ==libProcessTypeCode, $fromExperimentTypeCode!=fromExperimentTypeCode, $containerCode2:containerCode)
+           $contextValidation:ContextValidation()
+    then
+    	Logger.debug("LibProcessTypeCode error "+$contentInfo1 + " position "+$position);
+    	$contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.samefromexperimenttypecode", $fromExperimentTypeCode,$containerCode1,$containerCode2);    	
+    end
     

@@ -80,7 +80,11 @@ angular.module('ultimateDataTableServices', []).
 							},
 							add : {
 								active:false,
-								showButton:true
+								showButton:true,
+								init : function(){
+									return {};
+								},
+								after:true								
 							},
 							show : {
 								active:false,
@@ -268,7 +272,7 @@ angular.module('ultimateDataTableServices', []).
 								this._getAllResult = function(){return _allResult;};
 								
 								this.totalNumberRecords = _allResult.length;
-								this.sortAllResult();
+								//this.sortAllResult();
 								this.computePaginationList();
 								this.computeDisplayResult();
 								var that = this;
@@ -368,7 +372,7 @@ angular.module('ultimateDataTableServices', []).
 									this.saveLocal(this.displayResult[i].data, i);
 								}
 								
-								this.setPageNumber({number:0, clazz:''});
+								this.config.pagination.pageNumber=0;
 								var that = this;
 								this.computeDisplayResultTimeOut.then(function(){
 									//Deselect all lines
@@ -379,7 +383,7 @@ angular.module('ultimateDataTableServices', []).
 									if(that.config.pagination.numberRecordsPerPage < that.displayResult.length){
 										that.displayResult.splice(that.config.pagination.numberRecordsPerPage,(that.displayResult.length+1)-that.config.pagination.numberRecordsPerPage);
 									}
-									that.allResult.unshift({});
+									that.allResult.unshift({}); //or push
 									that.totalNumberRecords++;
 									
 									 //group function
@@ -599,7 +603,7 @@ angular.module('ultimateDataTableServices', []).
 									//The function have to return a $scope value
 									colValue = property;
 								}
-								if(colValue !==  undefined && column.type === "number"){
+								if(colValue !== undefined && colValue !== null && column.type === "number"){
 									colValue = colValue.replace(/\u00a0/g,"");
 								}
 								if(colValue === undefined && column.type === "boolean"){
@@ -709,7 +713,7 @@ angular.module('ultimateDataTableServices', []).
 							this.computeDisplayResultTimeOut = $timeout(function(){
 								//to manage local pagination
 								var configPagination = that.config.pagination;
-								
+								console.log("call computeDisplayResultTimeOut");
 								var _displayResult = [];
 								if(that.config.group.start && that.config.group.showOnlyGroups){
 									_displayResult = that.allGroupResult.slice((configPagination.pageNumber*configPagination.numberRecordsPerPage), 
@@ -916,7 +920,7 @@ angular.module('ultimateDataTableServices', []).
 			    							var orderSense = (this.config.order.reverse)?'-':'+';
 				    						orderBy.push(orderSense+orderProperty)
 			    						}
-			    						this.allResult = $filter('orderBy')(this.allResult, orderBy);	
+			    						this.allResult = $filter('orderBy')(this.allResult, orderBy);			    						
 		    						}else{
 		    							if(angular.isDefined(this.config.order.by)){
 			    							var orderProperty = "group."+this.config.order.by.id;
@@ -933,8 +937,7 @@ angular.module('ultimateDataTableServices', []).
 		    							var orderSense = (this.config.order.reverse)?'-':'+';
 			    						orderBy.push(orderSense+orderProperty)
 		    						}
-		    						this.allResult = $filter('orderBy')(this._getAllResult(),orderBy);	
-									this._getAllResult = function(){return this.allResult;};
+		    						this.allResult = $filter('orderBy')(this.allResult,orderBy);										
 		    					}		    					    					
 		    				}
 		    			},	
@@ -2447,8 +2450,8 @@ directive("udtCell", function(){
 	    				if(col.type === "boolean"){
 	    					editElement = '<input class="form-control"' +defaultValueDirective+' udt-html-filter="{{col.type}}" '+userDirectives+' type="checkbox" class="input-small" ng-model="'+this.getEditProperty(col, header, filter)+ngChange+'/>';
 	    				}else if(!col.choiceInList){
-							//TODO: type='text' because html5 autoformat return a string before that we can format the number ourself
-	    					editElement = '<input class="form-control" '+defaultValueDirective+' '+this.getConvertDirective(col, header)+' udt-html-filter="{{col.type}}" '+userDirectives+' type="text" class="input-small" ng-model="'+this.getEditProperty(col,header,filter)+ngChange+this.getDateTimestamp(col.type)+'/>';
+	    					//TODO: type='text' because html5 autoformat return a string before that we can format the number ourself
+	    					editElement = '<input class="form-control" '+defaultValueDirective+' '+this.getConvertDirective(col, header)+' udt-html-filter="{{col.type}}" '+userDirectives+' type="text" class="input-small" ng-model="'+this.getEditProperty(col,header,filter)+ngChange+this.getDateTimestamp(col.type)+'/>';	    					
 	    				}else if(col.choiceInList){
 	    					switch (col.listStyle) { 
 	    						case "radio":
@@ -3269,7 +3272,7 @@ factory('udtConvertValueServices', [function() {
 				var udtConvertValueServices = {
 				    //Convert the value in inputUnit to outputUnit if the units are different
 					convertValue : function(value, inputUnit, outputUnit, precision){
-							if(inputUnit !== outputUnit && !isNaN(value)){
+							if(inputUnit !== outputUnit && !isNaN(value) && null !== value){
 								var convert = this.getConversion(inputUnit,outputUnit);
 								if(convert != undefined && !angular.isFunction(convert)){
 									value = value * convert;

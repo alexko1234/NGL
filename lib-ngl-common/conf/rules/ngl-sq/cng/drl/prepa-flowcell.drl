@@ -1,0 +1,38 @@
+//created on: Aug 6, 2014
+//Rules for calculations
+package rules
+
+
+rule "Code Flowcell without bad chars"
+    @nglSQ( validations )
+	dialect "java"
+	salience 900
+	no-loop
+    when
+    $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-flowcell-cng",$instrumentProperties:instrumentProperties)
+    $containerSupportCode: PropertyValue($code:value, $code matches ".*[^a-zA-Z0-9].*") from $instrumentProperties.get("containerSupportCode")
+    $contextValidation:ContextValidation()
+    then
+    Logger.debug("Code Flowcell without bad chars");
+    $contextValidation.addErrors("instrument",	"error.validationexp.codewithbadchar", "Code Flowcell");
+end
+
+
+rule "Prepaflowcell validate piste controle"
+	@nglSQ (validations )
+	dialect "java"
+	salience 400
+	no-loop
+    when
+    	Experiment($typeCode:typeCode,$typeCode=="prepa-flowcell-cng",$instrumentProperties:instrumentProperties,$outputContainerSupport:instrument.outContainerSupportCategoryCode)
+    	$control :PropertyValue($value:value, 
+    		($value in ("3","4","5","6","7","8")  && $outputContainerSupport=="flowcell-2" )
+			||
+			( $value in ("2","3","4","5","6","7","8") && $outputContainerSupport=="flowcell-1")    	
+    	) from $instrumentProperties.get("control")
+    	$contextValidation:ContextValidation($errors : errors)
+    then
+    	Logger.debug("outputcontainersupport "+$outputContainerSupport + ", piste controle ");
+    	$contextValidation.addErrors("instrument",	"error.validationexp.badcontrolprepaflowcell", $value,$outputContainerSupport);
+    end    
+

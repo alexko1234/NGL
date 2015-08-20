@@ -1,5 +1,6 @@
-angular.module('home').controller('SolutionStockCtrl',['$scope', 'atmToSingleDatatable',
-                                                       function($scope, atmToSingleDatatable) {
+angular.module('home').controller('TubeToTubeCtrl',['$scope', '$parse', 'atmToSingleDatatable',
+                                                    function($scope, $parse, atmToSingleDatatable){
+                                                    
 	var datatableConfig = {
 			name:"FDR_Tube",
 			columns:[			  
@@ -219,6 +220,4 @@ angular.module('home').controller('SolutionStockCtrl',['$scope', 'atmToSingleDat
 	atmService.experimentToView($scope.experiment);
 	
 	$scope.atmService = atmService;
-	
-	
 }]);

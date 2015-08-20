@@ -100,7 +100,7 @@
 		}
 		return statsService;				
 	}			
-]).factory('queriesConfigReadSetsService', ['$http', '$q', 'datatable', function($http, $q, datatable){
+]).factory('queriesConfigReadSetsService', ['$http', '$q', '$filter', 'datatable', function($http, $q, $filter, datatable){
 	var datatableConfig = {
 			search : {
 				active:false
@@ -177,8 +177,8 @@
 }
 	
 
-]).factory('chartsReadSetsService', ['$http', '$q','$parse', '$window', 'datatable', 'statsConfigReadSetsService','queriesConfigReadSetsService', 'lists', 'mainService',
-                                     function($http, $q, $parse, $window, datatable, statsConfigReadSetsService, queriesConfigReadSetsService, lists, mainService){
+]).factory('chartsReadSetsService', ['$http', '$q','$parse', '$window', '$filter', 'datatable', 'statsConfigReadSetsService','queriesConfigReadSetsService', 'lists', 'mainService',
+                                     function($http, $q, $parse, $window, $filter, datatable, statsConfigReadSetsService, queriesConfigReadSetsService, lists, mainService){
 	
 	var datatableConfig = {
 			group : {
@@ -547,7 +547,7 @@
 			},
 			exporting : {
 				enabled : true, 
-				filename : 'z-score_' + mapExportFileName.get(Messages(statsConfig.column.header)) + '_' + actualDay.getFullYear().toString().substr(2,2) + (actualDay.getMonth()+1) + actualDay.getUTCDate().toString(),
+				filename : 'z-score_' + mapExportFileName.get(Messages(statsConfig.column.header)) + '_' + $filter('date')(new Date(), 'yyyyMMdd_HHmmss'),
 				sourceWidth : 1200
 			},
 			series : allSeries,
@@ -655,7 +655,7 @@
 			},
 			exporting : {
 				enabled : true, 
-				filename : mapExportFileName.get(Messages(statsConfig.column.header)) + '_' + actualDay.getFullYear().toString().substr(2,2) + (actualDay.getMonth()+1) + actualDay.getUTCDate().toString(),
+				filename : mapExportFileName.get(Messages(statsConfig.column.header)) + '_' + $filter('date')(new Date(), 'yyyyMMdd_HHmmss'),
 				sourceWidth : 1200
 			},
 			series : allSeries,

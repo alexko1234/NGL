@@ -21,12 +21,20 @@ public class MappingHelper {
 		for(PropertyDefinition propertyDefinition :propertiesDefinitions)
 		{
 			String code=null;
+			String unite=null;
 			try{
 
 				code=rs.getString(propertyDefinition.code);
+				
 			//	Logger.debug("Property definition to retrieve "+propertyDefinition.code+ "value "+ code);
 				if(code!=null){
-					properties.put(propertyDefinition.code, new PropertySingleValue(code));
+					try{
+						unite=rs.getString(propertyDefinition.code+"Unit");
+						properties.put(propertyDefinition.code, new PropertySingleValue(code,unite));
+					}
+					catch(SQLException e){
+						properties.put(propertyDefinition.code, new PropertySingleValue(code));
+					}
 				}
 
 			}catch (SQLException e) {

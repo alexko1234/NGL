@@ -1,7 +1,9 @@
 #migration
+GET		/compare-lims-files							controllers.migration.CompareLimsVsNGL.compareFile(update:Boolean ?=false)
 GET		/migrationSampleOnContainer					controllers.migration.MigrationUpdateSampleOnContainer.migration(code: java.lang.String ?= "all")
+GET		/migration-fraction							controllers.migration.MigrationFractionRun.migration()
+
 GET		/migrationRSFF								controllers.migration.RemoveStateFromFile.migration()
 GET		/compare-lims-support						controllers.migration.CompareLimsVsNGL.compareSupport(update:Boolean ?=false)
-GET		/compare-lims-files							controllers.migration.CompareLimsVsNGL.compareFile(update:Boolean ?=false)
-GET		/migration-fraction							controllers.migration.MigrationFractionRun.migration()
 GET		/migration-process-type-codes				controllers.migration.MigrationLibProcessTypeCodesRun.migration()
+GET		/readsets/update-nb-cycles					controllers.migration.MigrationUpdateReadSetNbCycles.migration()		
