@@ -231,7 +231,7 @@ rule "Same fromExperimentTypeCodes for tag VIDE and same libprocesstypeCode"
 	salience 210
 	no-loop
     when
-    	   $contentInfo1 : ContentInfo($tag :tag, $tag=="VIDE",$sampleCode :sampleCode,$position:position,$containerCode1:containerCode, $fromExperimentTypeCode:fromExperimentTypeCode,$libProcessTypeCode :libProcessTypeCode, $libProcessTypeCode!="VIDE")
+    	   $contentInfo1 : ContentInfo($tag :tag, $tag=="VIDE",$sampleCode :sampleCode,$position:position,$containerCode1:containerCode, $fromExperimentTypeCode:fromExperimentTypeCode,$libProcessTypeCode :libProcessTypeCode)
            $contentInfo2 : ContentInfo(this != $contentInfo1, tag == $tag, position==$position, sampleCode==$sampleCode, $libProcessTypeCode ==libProcessTypeCode, $fromExperimentTypeCode!=fromExperimentTypeCode, $containerCode2:containerCode)
            $contextValidation:ContextValidation()
     then
