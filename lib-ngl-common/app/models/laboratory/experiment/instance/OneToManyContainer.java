@@ -92,21 +92,57 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 
 		}
 	
+	private void updateOutputContainer(Experiment experiment, ContainerUsed outputContainerUsed, ContextValidation contextValidation)  throws DAOException{
+		
+		if(this.inputContainerUseds!=null){
+			if(null == outputContainerUsed.code){	
+				outputContainerUsed.code=CodeHelper.getInstance().generateContainerSupportCode();
+			}
+			LocationOnContainerSupport support=new LocationOnContainerSupport();
+			support.categoryCode=experiment.instrument.outContainerSupportCategoryCode;
+			// Same position 
+			ContainerSupportCategory containerSupportCategory=ContainerSupportCategory.find.findByCode(experiment.instrument.outContainerSupportCategoryCode);
+
+			if(containerSupportCategory.nbColumn==1 && containerSupportCategory.nbLine==1){
+				support.line="1";
+				support.code = outputContainerUsed.code;
+				support.column="1";
+			}else {
+				contextValidation.addErrors("locationOnContainerSupport",ValidationConstants.ERROR_NOTDEFINED_MSG);
+				Logger.error("Location in support not implemented");
+			}
+
+			outputContainerUsed.locationOnContainerSupport=support;
+
+		}else{
+			contextValidation.addErrors("inputContainerUsed", ValidationConstants.ERROR_NOTEXISTS_MSG);
+		}
+	}
+	
+	
+	
 	@Override
 	public ContextValidation createOutputContainerUsed(Experiment experiment,ContextValidation contextValidation) throws DAOException {
 		//Logger.error("Not implemented");
-		if(this.inputContainerUseds!=null){	
+		if(this.inputContainerUseds!=null && (this.outputContainerUseds == null || this.outputContainerUseds.size() == 0)){	
 			this.outputContainerUseds = new ArrayList<ContainerUsed>();
 			for(int i=0;i<outputNumber;i++){
 				createOutputContainerUsedHelper(experiment, contextValidation);
 			}
-		}else{
+		}else if(this.inputContainerUseds!=null && this.outputContainerUseds != null && this.outputContainerUseds.size() > 0){
+			for(int i = 0; i < this.outputContainerUseds.size(); i++){
+				updateOutputContainer(experiment,  this.outputContainerUseds.get(i), contextValidation);
+			}
+			
+		} else{
 			contextValidation.addErrors("inputContainerUsed", ValidationConstants.ERROR_NOTEXISTS_MSG);
 		}
 		
 		return contextValidation;
 	}
 	
+	
+
 	@Override
 	public ContextValidation saveOutputContainers(Experiment experiment, ContextValidation contextValidation) throws DAOException  {
 
@@ -128,7 +164,7 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 					outputContainer.traceInformation.setTraceInformation(experiment.traceInformation.modifyUser);
 					outputContainer.categoryCode=containerUsed.categoryCode;
 					//Add localisation
-					outputContainer.support=outputContainerUseds.get(0).locationOnContainerSupport;
+					outputContainer.support=containerUsed.locationOnContainerSupport;
 					outputContainer.state=new State("N",experiment.traceInformation.modifyUser);
 					outputContainer.valuation=new Valuation();
 					//TODO volume, proportion
@@ -144,7 +180,7 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 					
 					if(!contextValidation.hasErrors()){
 						ContainerHelper.save(outputContainer,contextValidation);
-						ProcessHelper.updateNewContainerSupportCodes(outputContainerUseds.get(0),inputContainerUseds,experiment);
+						ProcessHelper.updateNewContainerSupportCodes(containerUsed,inputContainerUseds,experiment);
 					}
 	
 				} else {

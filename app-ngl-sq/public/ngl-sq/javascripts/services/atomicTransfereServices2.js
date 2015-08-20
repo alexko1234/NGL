@@ -269,10 +269,11 @@ angular.module('atomicTransfereServices2', [])
 							              var outputContainer = outputContainers[outputContainerCode];
 							              
 							              allData[l] = {atomicIndex:i};
-							              allData[l].atomicTransfertMethod = atm;							              
+							              allData[l].atomicTransfertMethod = atm;
+							              allData[l].inputContainer = inputContainer;							              
+							              
 							              allData[l].inputContainerUsed = angular.copy(atm.inputContainerUseds[j]);
 							              allData[l].inputContainerUsed = $commonATM.updateContainerUsedFromContainer(allData[l].inputContainerUsed, inputContainer);
-							              allData[l].inputContainer = inputContainer;							              
 							              
 							              allData[l].outputContainerUsed = angular.copy(atm.outputContainerUseds[k]);
 							              allData[l].outputContainer = outputContainer;
@@ -350,7 +351,9 @@ angular.module('atomicTransfereServices2', [])
 					}
 					this.convertExperimentATMToDatatable(experiment.value.atomicTransfertMethods);				
 				},
-				
+				viewToExperimentOneToVoid :function(experimentIn){
+					this.viewToExperimentOneToOne(experimentIn);
+				},
 				viewToExperimentOneToOne :function(experimentIn){		
 					if(null === experimentIn || undefined === experimentIn){
 						throw 'experiment is required';
@@ -372,6 +375,49 @@ angular.module('atomicTransfereServices2', [])
 								$commonATM.removeNullProperties(experiment.atomicTransfertMethods[atomicIndex].outputContainerUseds[0].instrumentProperties);
 								$commonATM.removeNullProperties(experiment.atomicTransfertMethods[atomicIndex].outputContainerUseds[0].experimentProperties);
 							}
+	
+						}
+						//remove atomic null
+						var cleanAtomicTransfertMethods = [];
+						for(var i = 0; i < experiment.atomicTransfertMethods.length ; i++){
+							if(experiment.atomicTransfertMethods[i] !== null){
+								cleanAtomicTransfertMethods.push(experiment.atomicTransfertMethods[i]);
+							}
+						}
+						experiment.atomicTransfertMethods = cleanAtomicTransfertMethods;
+					}								
+				},
+				viewToExperimentOneToMany :function(experimentIn){		
+					if(null === experimentIn || undefined === experimentIn){
+						throw 'experiment is required';
+					}
+					experiment = experimentIn.value;
+					var allData = this.data.getData();
+					if(allData != undefined){
+						experiment.atomicTransfertMethods = []; // to manage remove
+						//first reinitialise atomicTransfertMethod
+						for(var i=0;i<allData.length;i++){
+							var atomicIndex = allData[i].atomicIndex;								
+							experiment.atomicTransfertMethods[atomicIndex] = allData[i].atomicTransfertMethod
+							experiment.atomicTransfertMethods[atomicIndex].inputContainerUseds = new Array(0);
+							experiment.atomicTransfertMethods[atomicIndex].outputContainerUseds = new Array(0);
+							
+							//oneTo
+							var inputContainerUsed = allData[i].inputContainerUsed;
+							$commonATM.removeNullProperties(inputContainerUsed.instrumentProperties);
+							$commonATM.removeNullProperties(inputContainerUsed.experimentProperties);
+							experiment.atomicTransfertMethods[atomicIndex].inputContainerUseds.push(inputContainerUsed);	
+							
+						}
+						//ToMany
+						for(var i=0;i<allData.length;i++){
+							var atomicIndex = allData[i].atomicIndex;								
+							
+							var outputContainerUsed = allData[i].outputContainerUsed;
+							$commonATM.removeNullProperties(outputContainerUsed.instrumentProperties);
+							$commonATM.removeNullProperties(outputContainerUsed.experimentProperties);
+							experiment.atomicTransfertMethods[atomicIndex].outputContainerUseds.push(outputContainerUsed);
+							
 	
 						}
 						//remove atomic null
@@ -543,5 +589,122 @@ angular.module('atomicTransfereServices2', [])
 		return view;
 	};
 	return constructor;
-//default view with singleDatatable	
+
+}]).factory('atmToGenerateMany', ['$http', '$parse', '$q', 'commonAtomicTransfertMethod','mainService', 'atmToSingleDatatable', 'datatable', 
+                               function($http, $parse, $q, commonAtomicTransfertMethod, mainService, atmToSingleDatatable, datatable){
+
+	var constructor = function($scope, datatableConfigTubeParam, datatableConfigTubeConfig){
+		var $commonATM = commonAtomicTransfertMethod($scope);
+		
+		var $datatable = datatable(datatableConfigTubeParam);
+		var $atmToSingleDatatable = atmToSingleDatatable($scope, datatableConfigTubeConfig);
+		$atmToSingleDatatable.isAddNew = false;
+		var view = {
+				$commonATM : $commonATM,
+				$atmToSingleDatatable:$atmToSingleDatatable,
+				defaultOutputUnit:{volume:undefined, concentration:undefined, quantity:undefined},
+				data : {
+					$atmToSingleDatatable : $atmToSingleDatatable,
+					datatableParam : $datatable,
+					atm : [], 
+					datatableConfig : $atmToSingleDatatable.data,
+					updateDatatable : function(){
+						this.$atmToSingleDatatable.convertExperimentATMToDatatable(this.atm);
+					},					
+					
+				},
+				newAtomicTransfertMethod : function(){
+					throw 'newAtomicTransfertMethod not defined in atmToGenerateMany client';
+				},
+				generateATM:function(){
+					this.data.datatableParam.save();
+					var allData = this.data.datatableParam.getData();
+					this.data.atm = [];
+					for(var i = 0; i < allData.length; i++){
+						var data = allData[i];
+						var atm = this.newAtomicTransfertMethod();
+						atm.inputContainerUseds.push($commonATM.convertContainerToInputContainerUsed(data.inputContainer));
+						
+						for(var j = 0; j < data.outputNumber ; j++){
+							atm.outputContainerUseds.push($commonATM.newOutputContainerUsed(this.defaultOutputUnit));
+						}
+						this.data.atm.push(atm);
+					}
+					this.data.updateDatatable();
+				},
+				convertExperimentToData:function(experimentATMs){
+					var promises = [];
+					
+					var atms = experimentATMs;
+					var $that = this;
+					$commonATM.loadInputContainerFromAtomicTransfertMethods(atms).then(function (result) {
+						var allData = [];
+						var inputContainers = result.input;
+					
+						$that.data.atm = angular.copy(atms);
+						var allData = []
+						for(var i=0; i< $that.data.atm.length;i++){
+							var atm = $that.data.atm[i];
+							var inputContainerCode = atm.inputContainerUseds[0].code;
+							var inputContainer = inputContainers[inputContainerCode];
+							allData.push({inputContainer:inputContainer, outputNumber:atm.outputContainerUseds.length});
+						}
+						$that.data.datatableParam.setData(allData, allData.length);
+						//add new atomic in datatable
+						$that.addNewAtomicTransfertMethodsInData();
+	                });
+				},
+				
+				//exact for ManyToOne
+				addNewAtomicTransfertMethodsInData : function(){
+					if(null != mainService.getBasket() && null != mainService.getBasket().get()){
+						$that = this;
+						$commonATM.loadInputContainerFromBasket(mainService.getBasket().get())
+							.then(function(containers) {								
+								var allData = [];
+								if($that.data.datatableParam.getData() !== undefined){
+									allData = $that.data.datatableParam.getData();									
+								}
+								
+								angular.forEach(containers, function(container){									
+									allData.push({inputContainer:container, outputNumber:undefined});
+								});
+								$that.data.datatableParam.setData(allData);									
+						});
+					}										
+				},
+				experimentToView:function(experiment){
+					if(null === experiment || undefined === experiment){
+						throw 'experiment is required';
+					}
+					if(experiment.editMode){
+						this.convertExperimentToData(experiment.value.atomicTransfertMethods);	
+						this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.value.atomicTransfertMethods);
+					}else{
+						this.addNewAtomicTransfertMethodsInData();
+					}	
+					this.$atmToSingleDatatable.addExperimentPropertiesToDatatable(experiment.experimentProperties.inputs);
+					
+				},
+				viewToExperiment :function(experiment){		
+					if(null === experiment || undefined === experiment){
+						throw 'experiment is required';
+					}
+					//problem when edit is available on datatable
+					this.$atmToSingleDatatable.data.save();					
+					this.$atmToSingleDatatable.viewToExperimentOneToMany(experiment);					
+				},
+				refreshViewFromExperiment:function(experiment){
+					if(null === experiment || undefined === experiment){
+						throw 'experiment is required';
+					}					
+					this.convertExperimentToData(experiment.value.atomicTransfertMethods);
+					this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.value.atomicTransfertMethods);
+				}
+		}
+		
+		return view;
+	};
+	return constructor;
+	
 }]);

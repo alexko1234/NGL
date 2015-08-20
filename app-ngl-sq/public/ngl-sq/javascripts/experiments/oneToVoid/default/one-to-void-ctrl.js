@@ -1,4 +1,4 @@
-angular.module('home').controller('OneToVoidContainerCtrl',['$scope', '$parse','atmToSingleDatatable',
+angular.module('home').controller('OneToVoidCtrl',['$scope', '$parse','atmToSingleDatatable',
                                                              function($scope,$parse, atmToSingleDatatable) {
 	 var datatableConfig = {
 			name:"FDR_Void",
@@ -127,7 +127,7 @@ angular.module('home').controller('OneToVoidContainerCtrl',['$scope', '$parse','
 		$scope.$on('save', function(e, promises, func, endPromises) {	
 			console.log("call event save");
 			$scope.atmService.data.save();
-			$scope.atmService.viewToExperimentOneToOne($scope.experiment);
+			$scope.atmService.viewToExperimentOneToVoid($scope.experiment);
 			$scope.$emit('viewSaved', promises, func, endPromises);
 		});
 		

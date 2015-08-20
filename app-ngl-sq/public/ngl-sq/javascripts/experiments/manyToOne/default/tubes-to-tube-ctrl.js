@@ -1,4 +1,4 @@
-angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$parse', 'atmToDragNDrop',
+angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToDragNDrop',
                                                                function($scope, $parse, atmToDragNDrop) {
 	
 	
@@ -64,7 +64,7 @@ angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$parse', 'atmT
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
-			        	 "type":"string",
+			        	 "type":"text",
 			        	 "position":5.5,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
@@ -107,7 +107,6 @@ angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$parse', 'atmT
 						 "hide":true,
 						 "mergeCells" : true,
 			        	 "type":"number",
-			        	 "defaultValues":10,
 			        	 "position":50,
 			        	 "extraHeaders":{0:"Outputs"}
 			         },
@@ -118,9 +117,8 @@ angular.module('home').controller('ManyToOneTubeCtrl',['$scope', '$parse', 'atmT
 						 "edit":false,
 						 "hide":true,
 						 "mergeCells" : true,
-			        	 "type":"string",
-			        	 "defaultValues":10,
-			        	 "position":50.5,
+			        	 "type":"text",
+			        	"position":50.5,
 			        	 "extraHeaders":{0:"Outputs"}
 			         },
 			         {
