@@ -62,10 +62,10 @@
 				    <button class="btn btn-primary" ng-show="correctResolution==false && (isLastExperiment==false || nextExperimentTypeCodes.length>0)" ng-click="continueProcess=true;continueExperiment()">@Messages("experiments.button.continueProcess")</button>
       				<button ng-if="correctResolution==false" class="btn btn-primary" data-dismiss="modal" ng-click="retryExperiment()">@Messages("experiment.button.retryExperiment")</button>
 					<button  data-dismiss="modal" ng-if="correctResolution==false && isLastExperiment==false"  class="btn btn-primary" ng-click="stopProcess(experiment.processResolutions)">@Messages("experiment.button.stopProcess")</button>
-      				<button  data-dismiss="modal" ng-if="isLastExperiment==true" data-dismiss="modal" class="btn btn-primary" ng-click="finishProcess()">@Messages("experiments.button.finishProcess")</button>
+      				<button  data-dismiss="modal" ng-if="isLastExperiment==true || isTransfertOneToMany" data-dismiss="modal" class="btn btn-primary" ng-click="finishProcess()">@Messages("experiments.button.finishProcess")</button>
 							
 				</div>
-				<div ng-if="correctResolution==false && isLastExperiment==false" class="modal-footer">	
+				<div ng-if="(correctResolution==false && isLastExperiment==false)" class="modal-footer">	
 		
 					<div class="form-control" bt-select ng-model="experiment.processResolutions" multiple="true" filter="true" placeholder='@Messages("experiments.select.processResolutions")' bt-options="resolution.code as resolution.name for resolution in lists.get('processResolution')"></div>	
 				</div>

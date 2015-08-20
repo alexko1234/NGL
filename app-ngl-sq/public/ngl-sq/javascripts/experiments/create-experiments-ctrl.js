@@ -259,57 +259,61 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		if($scope.experiment.value.state.resolutionCodes !== null && $scope.experiment.value.state.resolutionCodes !== undefined && $scope.experiment.value.state.resolutionCodes.length >= 1){
 			if($scope.experiment.value.state.resolutionCodes != null && $scope.experiment.value.state.resolutionCodes.length === 1 && $scope.experiment.value.state.resolutionCodes[0] === "correct"){
 				$scope.correctResolution=true;
+			} else { 
+				$scope.correctResolution=false;
 			}
-			else { $scope.correctResolution=false;}
 
 			//A revoir
 				
 
-				$scope.isLastExperiment = false;	
-				$scope.continueProcess=false;
-
-				$http.get(jsRoutes.controllers.processes.api.Processes.list().url,{params:{"experimentCode":$scope.experiment.value.code}})
+			$scope.isLastExperiment = false;	
+			$scope.continueProcess=false;
+			$scope.isTransfertOneToMany=false;
+			$http.get(jsRoutes.controllers.processes.api.Processes.list().url,{params:{"experimentCode":$scope.experiment.value.code}})
 				.success(function(data, status, headers, config){			
 					console.log("data="+ data[0].typeCode);
 					var processTypeCode = data[0].typeCode;					
 					$http.get(jsRoutes.controllers.processes.api.ProcessTypes.get(processTypeCode).url)
-					.success(function(data, status,headers,config){
-						$scope.processTypeCode = data;
-					var previousExperimentTypeCode = $scope.experimentType.code;
-						if($scope.experiment.value.categoryCode==='transfert'){
-							previousExperimentTypeCode = $scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[0].fromExperimentTypeCodes[0];
-							console.log("previousExperimentTypeCode= "+previousExperimentTypeCode);
-						} 
-						
-						
-						$http.get(jsRoutes.controllers.experiments.api.ExperimentTypes.list().url, {params:{"previousExperimentTypeCode":previousExperimentTypeCode}})
-						.success(function(data, status, headers, config) {
-							$scope.nextExperimentTypeCodes = data;
-							$scope.lists.refresh.resolutions({"typeCode":$scope.processTypeCode.code}, 'processResolution');
-							$scope.lastExperimentTypeCode = $scope.processTypeCode.lastExperimentType.code;
-							if($scope.lastExperimentTypeCode===previousExperimentTypeCode){
-								$scope.isLastExperiment = true;
+						.success(function(data, status,headers,config){
+							$scope.processTypeCode = data;
+						var previousExperimentTypeCode = $scope.experimentType.code;
+							if($scope.experiment.value.categoryCode==='transfert'){
+								previousExperimentTypeCode = $scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[0].fromExperimentTypeCodes[0];
+								console.log("previousExperimentTypeCode= "+previousExperimentTypeCode);
+							} 
+					
+							if($scope.experiment.value.categoryCode==='transfert' && $scope.experimentType.atomicTransfertMethod=="OneToMany"){
+								$scope.isTransfertOneToMany=true;
 							}
+					
+							$http.get(jsRoutes.controllers.experiments.api.ExperimentTypes.list().url, {params:{"previousExperimentTypeCode":previousExperimentTypeCode}})
+							.success(function(data, status, headers, config) {
+								$scope.nextExperimentTypeCodes = data;
+								$scope.lists.refresh.resolutions({"typeCode":$scope.processTypeCode.code}, 'processResolution');
+								$scope.lastExperimentTypeCode = $scope.processTypeCode.lastExperimentType.code;
+								if($scope.lastExperimentTypeCode===previousExperimentTypeCode){
+									$scope.isLastExperiment = true;
+								}
+		
+								if($scope.nextExperimentTypeCodes !== null && $scope.nextExperimentTypeCodes !== undefined && $scope.nextExperimentTypeCodes.length==0 && $scope.correctResolution === true){
+									return $scope.finishProcess();
+								}
+		
+								if($scope.correctResolution==true && $scope.isLastExperiment==true && $scope.experimentType.atomicTransfertMethod=="OneToVoid"){
+									return $scope.finishProcess();
+								}
+								else if($scope.correctResolution==true && $scope.isLastExperiment==false || ($scope.correctResolution==true && $scope.nextExperimentTypeCodes.length>0)){
+									$scope.continueProcess=true;
+								}
+								$scope.continueExperiment();
+								angular.element('#modalResolutionProcess').modal('show');
+							});
 
-							if($scope.nextExperimentTypeCodes !== null && $scope.nextExperimentTypeCodes !== undefined && $scope.nextExperimentTypeCodes.length==0 && $scope.correctResolution === true){
-								return $scope.finishProcess();
-							}
 
-							if($scope.correctResolution==true && $scope.isLastExperiment==true && $scope.experimentType.atomicTransfertMethod=="OneToVoid"){
-								return $scope.finishProcess();
-							}
-							else if($scope.correctResolution==true && $scope.isLastExperiment==false || ($scope.correctResolution==true && $scope.nextExperimentTypeCodes.length>0)){
-								$scope.continueProcess=true;
-							}
-							$scope.continueExperiment();
-							angular.element('#modalResolutionProcess').modal('show');
-						});
-
-
-					});	
-				});		
+				});	
+			});		
 				
-		}else{
+		} else {
 			$scope.message.clazz = "alert alert-danger";
 			$scope.message.text = Messages('experiments.msg.save.error');
 			$scope.message.details = {"resolution":["propriété obligatoire"]};

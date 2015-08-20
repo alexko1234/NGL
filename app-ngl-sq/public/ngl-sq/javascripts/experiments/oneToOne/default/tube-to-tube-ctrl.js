@@ -1,20 +1,9 @@
-angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToSingleDatatable',
-                                                     function($scope, $parse, atmToSingleDatatable){
-	/*
-	 1) Code Container
-2) Etat container
-3) Projet(s)
-4) Echantillon(s)
-5) Code aliquot
-6) Tag
-7) Concentration (nM) 
-	 
-	 */
-	
+angular.module('home').controller('TubeToTubeCtrl',['$scope', '$parse', 'atmToSingleDatatable',
+                                                    function($scope, $parse, atmToSingleDatatable){
+                                                    
 	var datatableConfig = {
 			name:"FDR_Tube",
-			columns:[
-			 
+			columns:[			  
 					 {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"inputContainer.code",
@@ -24,7 +13,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			        	 "type":"text",
 			        	 "position":1,
 			        	 "extraHeaders":{0:"Inputs"}
-			         },					 				         
+			         },
 			         {
 			        	"header":Messages("containers.table.projectCodes"),
 			 			"property": "inputContainer.projectCodes",
@@ -45,27 +34,28 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "extraHeaders":{0:"Inputs"}
 				     },
-				     
 				     {
-			        	"header":"Code aliquot",
-			 			"property": "inputContainer.contents",
-			 			"order":false,
-			 			"hide":true,
-			 			"type":"text",
-			 			"position":4,
-			 			"render": "<div list-resize='cellValue | getArray:\"properties.sampleAliquoteCode.value\"| unique' list-resize-min-size='3'>",
+			        	 "header":Messages("containers.table.fromExperimentTypeCodes"),
+			        	 "property":"inputContainer.fromExperimentTypeCodes",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
+			        	 "position":4,
 			        	 "extraHeaders":{0:"Inputs"}
-				     },
+			         },
 			         {
 			        	"header":Messages("containers.table.tags"),
 			 			"property": "inputContainer.contents",
-			 			"order":false,
+			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
-			 			"position":5,
-			 			"render":"<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' list-resize-min-size='3'>",
+			 			"position":4,
+			 			"render":"<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' ' list-resize-min-size='3'>",
 			        	 "extraHeaders":{0:"Inputs"}
-			         },				 
+			         },
+								 
 					 {
 			        	 "header":Messages("containers.table.concentration") + " (nM)",
 			        	 "property":"inputContainer.mesuredConcentration.value",
@@ -73,9 +63,20 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"number",
+			        	 "position":5,
+			        	 "extraHeaders":{0:"Inputs"}
+			         },
+			         {
+			        	 "header":function(){return Messages("containers.table.volume") + " (µL)"},
+			        	 "property":"inputContainer.mesuredVolume.value",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"number",
 			        	 "position":6,
 			        	 "extraHeaders":{0:"Inputs"}
-			         },{
+			         },
+			         {
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"inputContainer.state.code",
 			        	 "order":true,
@@ -85,26 +86,15 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 						 "filter":"codes:'state'",
 			        	 "position":7,
 			        	 "extraHeaders":{0:"Inputs"}
-			         },
-			        /* {
-			        	 "header":function(){return Messages("containers.table.volume") + " (µL)"},
-			        	 "property":"mesuredVolume.value",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":5,
-			        	 "extraHeaders":{0:"Inputs"}
-			         },*/
+			         },		
 			         {
-			        	 "header":Messages("containers.table.concentration") + " (pM)",
+			        	 "header":Messages("containers.table.concentration") + " (nM)",
 			        	 "property":"outputContainerUsed.concentration.value",
-			        	 "convertValue": {"active":true, "displayMeasureValue":"pM", "saveMeasureValue":"nM"},			        	 
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 //"defaultValues":10,
+			        	 "defaultValues":10,
 			        	 "position":50,
 			        	 "extraHeaders":{0:"Outputs"}
 			         },
@@ -118,7 +108,6 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			        	 "position":51,
 			        	 "extraHeaders":{0:"Outputs"}
 			         },
-			         
 			         {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"outputContainerUsed.code",
@@ -139,7 +128,6 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			        	 "position":500,
 			        	 "extraHeaders":{0:"Outputs"}
 			         }
-			         
 			         ],
 			compact:true,
 			pagination:{
@@ -151,7 +139,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			order:{
 				mode:'local', //or 
 				active:true,
-				by:'inputContainer.code'
+				by:'code'
 			},
 			remove:{
 				active: (!$scope.doneAndRecorded && !$scope.inProgressNow),
@@ -199,8 +187,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 	});
 	
 	$scope.$on('refresh', function(e) {
-		console.log("call event refresh");
-		
+		console.log("call event refresh");		
 		var dtConfig = $scope.atmService.data.getConfig();
 		dtConfig.edit.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
 		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
@@ -210,9 +197,9 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
 		$scope.$emit('viewRefeshed');
 	});
-		
-	//Init
 	
+	//Init		
+
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	//defined new atomictransfertMethod
 	atmService.newAtomicTransfertMethod = function(){
@@ -233,5 +220,4 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 	atmService.experimentToView($scope.experiment);
 	
 	$scope.atmService = atmService;
-	
 }]);
