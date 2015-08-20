@@ -57,7 +57,8 @@ public abstract class AbstractTestsSRA {
 		//config.put("mongodb.servers","mongouat.genoscope.cns.fr:27018");
 		config.put("ehcacheplugin", "disabled");
 		config.put("mail.smtp.host", "smtp.genoscope.cns.fr");
-
+		config.put("accessionReporting.email.subject.success", "TEST ngl-sub : Ebi Accession Reporting success");		          
+		config.put("accessionReporting.email.subject.error", "TEST ngl-sub : Ebi Accession Reporting errors");
 		config.put("institute", "CNS");
 	
 		return config;

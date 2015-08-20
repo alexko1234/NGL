@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,7 +20,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
+import play.Logger;
+import play.Play;
+
+import com.typesafe.config.ConfigFactory;
+
 import java.util.Date;
+
+import javax.mail.MessagingException;
 
 import mail.MailServiceException;
 import mail.MailServices;
@@ -31,7 +40,7 @@ import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import fr.cea.ig.MongoDBDAO;
 
-public class FileAcServices {
+public class FileAcServices  {
 
 	public static void updateStateSubmission(Submission submission, String status) {
 		submission.state.code=status;
@@ -61,7 +70,34 @@ public class FileAcServices {
 		}
 	}
 	
+/*	public void runReporting() throws UnsupportedEncodingException, MessagingException {
+		
+		try {
+			
+			//Get global parameters for email
+			String expediteur = ConfigFactory.load().getString("reporting.email.from"); 
+			String dest = ConfigFactory.load().getString("reporting.email.to");   
+			String subject = ConfigFactory.load().getString("reporting.email.subject") + " " + ConfigFactory.load().getString("institute") + " " + ConfigFactory.load().getString("ngl.env");
+		    Set<String> destinataires = new HashSet<String>();
+		    destinataires.addAll(Arrays.asList(dest.split(",")));
+		    
+		    MailServices mailService = new MailServices();
+		    
+		    //Get data 
+    
+		    //Send mail using global parameters and content
+		    mailService.sendMail(expediteur, destinataires, subject, new String(content.getBytes(), "iso-8859-1"));
+		    
+		} catch (MailServiceException e) {
+//			Logger.error("MailService error: "+e.getMessage(),e);
+			throw new SraException("traitementFileAC :: parametres d'entree à null" );
 
+		}
+		
+	}
+	*/
+	
+	//
 	public static Submission traitementFileAC(String submissionCode, File ebiFileAc) throws IOException, SraException, MailServiceException {
 		if (StringUtils.isBlank(submissionCode) || (ebiFileAc == null)) {
 			throw new SraException("traitementFileAC :: parametres d'entree à null" );
@@ -80,11 +116,28 @@ public class FileAcServices {
 		}
 		String lg = null;
 		String ligne;
+
+		// Get global parameters for email => utiliser Play.application().configuration().getString plutot que
+		// ConfigFactory.load().getString pour recuperer les parametres pour avoir les surcharges de AbstractTest si 
+		// test unitaires 
 		MailServices mailService = new MailServices();
-		String expediteur = "william@genoscope;cns.fr";
-		Set <String> destinataires = new HashSet();
-		destinataires.add("william@genoscope.cns.fr");
+//		String expediteur = ConfigFactory.load().getString("accessionReporting.email.from"); 
+		String expediteur = Play.application().configuration().getString("accessionReporting.email.from"); 
+
+		String dest = Play.application().configuration().getString("accessionReporting.email.to");   
+		String subjectSuccess = Play.application().configuration().getString("accessionReporting.email.subject.success");
+		
+		//Logger.debug("subjectSuccess = "+Play.application().configuration().getString("accessionReporting.email.subject.success"));
+		
+		String subjectError = Play.application().configuration().getString("accessionReporting.email.subject.error");
+		Set<String> destinataires = new HashSet<String>();
+		destinataires.addAll(Arrays.asList(dest.split(",")));    		    
+
 		String sujet = null;
+		
+		
+		
+		
 		Map<String, String> mapSamples = new HashMap<String, String>(); 
 		Map<String, String> mapExperiments = new HashMap<String, String>(); 
 		Map<String, String> mapRuns = new HashMap<String, String>(); 
@@ -113,7 +166,8 @@ public class FileAcServices {
 					updateStateSubmission(submission, errorStatus); 
 					message = "Absence de la ligne RECEIPT ... pour  " + submissionCode + " dans fichier "+ ebiFileAc.getPath();
 					sujet = "Probleme parsing fichier des AC : ";
-					mailService.sendMail("william@genoscope.cns.fr", destinataires, sujet, message);
+					//mailService.sendMail("william@genoscope.cns.fr", destinataires, sujet, message);
+				    mailService.sendMail(expediteur, destinataires, subjectError, new String(message.getBytes(), "iso-8859-1"));
 					return submission;
 				} 
 				//System.out.println("Traitement des AC :");
@@ -163,9 +217,7 @@ public class FileAcServices {
 		
 		if (StringUtils.isBlank(ebiSubmissionCode)) {
 			//System.out.println("Pas de Recuperation de ebiSubmissionCode");
-		    message += "- ne contient pas d'AC pour ebiSubmissionCode \n";
-			mailService.sendMail("william@genoscope.cns.fr", destinataires, sujet, message);
-			updateStateSubmission(submission, errorStatus);
+		    message += "- ne contient pas ebiSubmissionCode \n";
 			error = true;
 		} 
 		if (! ebiSubmissionCode.equals(submissionCode)) {
@@ -212,7 +264,8 @@ public class FileAcServices {
 
 		if (error){
 			//System.out.println("ERROR" + message);
-			mailService.sendMail("william@genoscope.cns.fr", destinataires, sujet, message);
+			//mailService.sendMail("william@genoscope.cns.fr", destinataires, sujet, message);
+		    mailService.sendMail(expediteur, destinataires, subjectError, new String(message.getBytes(), "iso-8859-1"));
 			updateStateSubmission(submission, errorStatus);
 			return submission;
 		} else {
@@ -262,8 +315,7 @@ public class FileAcServices {
 					DBQuery.is("run.code", code).notExists("accession"),
 					DBUpdate.set("run.accession", ac)); 			
 		}
-		
-		mailService.sendMail("william@genoscope.cns.fr", destinataires, sujet, message);
+		mailService.sendMail(expediteur, destinataires, subjectSuccess, new String(message.getBytes(), "iso-8859-1"));
 		return submission;
 	}
 
