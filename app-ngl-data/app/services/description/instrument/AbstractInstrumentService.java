@@ -1,8 +1,11 @@
 package services.description.instrument;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import models.laboratory.common.description.Institute;
+import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
@@ -37,4 +40,28 @@ public abstract class AbstractInstrumentService {
 		
 	public abstract void saveInstrumentCategories(Map<String, List<ValidationError>> errors) throws DAOException;
 
+	
+	protected static Instrument createInstrument(String code, String name, String shortName, Boolean active, String path, List<Institute> institutes) {
+		Instrument i = new Instrument();
+		i.code = code;
+		i.name = name;
+		i.active=active;
+		i.path=path;
+		i.institutes=institutes;
+		i.shortName = shortName;
+		return i;
+	}
+
+	protected static List<Instrument> getInstruments(Instrument...instruments) {
+		List<Instrument> linstruments = new ArrayList<Instrument>(); 
+		for (Instrument instrument : instruments) {
+			linstruments.add(instrument); 
+		}
+		return linstruments; 
+	}
+
+	
+	protected static List<ContainerSupportCategory> getContainerSupportCategories(String[] codes) throws DAOException{		
+		return DAOHelpers.getModelByCodes(ContainerSupportCategory.class,ContainerSupportCategory.find, codes);
+	}
 }

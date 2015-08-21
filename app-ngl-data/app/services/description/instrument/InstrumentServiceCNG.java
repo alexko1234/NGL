@@ -301,29 +301,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	}
 	
 	
-	private static Instrument createInstrument(String code, String name, String shortName, Boolean active, String path, List<Institute> institutes) {
-		Instrument i = new Instrument();
-		i.code = code;
-		i.name = name;
-		i.active=active;
-		i.path=path;
-		i.institutes=institutes;
-		i.shortName = shortName;
-		return i;
-	}
-
-	private static List<Instrument> getInstruments(Instrument...instruments) {
-		List<Instrument> linstruments = new ArrayList<Instrument>(); 
-		for (Instrument instrument : instruments) {
-			linstruments.add(instrument); 
-		}
-		return linstruments; 
-	}
-
-	
-	private static List<ContainerSupportCategory> getContainerSupportCategories(String[] codes) throws DAOException{		
-		return DAOHelpers.getModelByCodes(ContainerSupportCategory.class,ContainerSupportCategory.find, codes);
-	}
 
 
 }

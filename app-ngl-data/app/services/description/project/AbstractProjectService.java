@@ -9,15 +9,19 @@ import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
 
-public class AbstractProjectService {
+public abstract class AbstractProjectService {
 	
 	
-	public static void main(Map<String, List<ValidationError>> errors)  throws DAOException{
+	public void main(Map<String, List<ValidationError>> errors)  throws DAOException{
 		DAOHelpers.removeAll(ProjectType.class, ProjectType.find);
 		DAOHelpers.removeAll(ProjectCategory.class, ProjectCategory.find);
 		
 		saveProjectCategories(errors);
 		saveProjectTypes(errors);
 	}
+
+	public abstract void saveProjectTypes(Map<String, List<ValidationError>> errors) throws DAOException;
+
+	public abstract void saveProjectCategories(Map<String, List<ValidationError>> errors) throws DAOException;
 
 }

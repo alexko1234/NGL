@@ -22,10 +22,15 @@ public class InstituteService {
 	
 	public static void saveInstitutes(Map<String,List<ValidationError>> errors) throws DAOException{
 		List<Institute> l = new ArrayList<Institute>();
-				
-		l.add(newInstitute("Centre National de Génomique","CNG"));
-		l.add(newInstitute("Centre National de Séquençage","CNS"));
 		
+		String institute=play.Play.application().configuration().getString("institute");
+
+		if(institute.equals("CNG")){
+			l.add(newInstitute("Centre National de Génomique","CNG"));
+		}
+		else if(institute.equals("CNS")){
+			l.add(newInstitute("Centre National de Séquençage","CNS"));
+		}
 		DAOHelpers.saveModels(Institute.class, l, errors);
 	}
 

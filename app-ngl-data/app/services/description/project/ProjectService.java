@@ -3,24 +3,23 @@ package services.description.project;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.project.description.ProjectCategory;
-import models.laboratory.project.description.ProjectType;
 import models.utils.dao.DAOException;
-import models.utils.dao.DAOHelpers;
+import play.Logger;
 import play.data.validation.ValidationError;
 
 public abstract class ProjectService {
 	
-	public void main(Map<String, List<ValidationError>> errors)  throws DAOException{
-		DAOHelpers.removeAll(ProjectType.class, ProjectType.find);
-		DAOHelpers.removeAll(ProjectCategory.class, ProjectCategory.find);
-		
-		saveProjectCategories(errors);
-		saveProjectTypes(errors);
-	}
-	
-	public abstract void saveProjectCategories(Map<String, List<ValidationError>> errors) throws DAOException ;
-	public abstract void saveProjectTypes(Map<String, List<ValidationError>> errors) throws DAOException;
+	public static void main(Map<String,List<ValidationError>> errors) throws DAOException{
+		String institute=play.Play.application().configuration().getString("institute");
+		if (institute.equals("CNS")){
+			(new ProjectServiceCNS()).main(errors);
+		}else if(institute.equals("CNG")){
+			(new ProjectServiceCNG()).main(errors);
+		}else{
+			Logger.error("You need to specify only one institute ! Now, it's "+ play.Play.application().configuration().getString("institute"));
+		}
 
+		}
+	
 	
 }
