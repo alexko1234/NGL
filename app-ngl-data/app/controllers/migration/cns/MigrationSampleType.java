@@ -51,19 +51,19 @@ public class MigrationSampleType extends CommonController {
 		
 		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,
 				DBQuery.is("sampleOnContainer.sampleTypeCode","default-sample-cns").notIn("projectCode", "AMP","AHG"),
-				DBUpdate.set("sampleOnContainer.sampleTypeCode","unknown"));
+				DBUpdate.set("sampleOnContainer.sampleTypeCode","unknown").set("categoryCode", "unknown"));
 		
 		MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class
 				,DBQuery.is("typeCode","default-sample-cns").notIn("projectCodes", "AMP","AHG")
-				,DBUpdate.set("typeCode", "unknown"));
+				,DBUpdate.set("typeCode", "unknown").set("categoryCode", "unknown"));
 		
 		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,
 				DBQuery.is("sampleOnContainer.sampleTypeCode","default-sample-cns").in("projectCode", "AMP","AHG"),
-				DBUpdate.set("sampleOnContainer.sampleTypeCode","amplicon"));
+				DBUpdate.set("sampleOnContainer.sampleTypeCode","amplicon").set("categoryCode", "amplicon"));
 		
 		MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class
 				,DBQuery.is("typeCode","default-sample-cns").in("projectCodes", "AMP","AHG")
-				,DBUpdate.set("typeCode", "amplicon"));
+				,DBUpdate.set("typeCode", "amplicon").set("categoryCode", "amplicon"));
 		
 		MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class
 				,DBQuery.exists("properties.taxonSize")
@@ -88,10 +88,13 @@ public class MigrationSampleType extends CommonController {
 				content.referenceCollab=sampleRefCollab.get(content.sampleCode);
 				
 				if(content.sampleTypeCode.equals("default-sample-cns")){
-					if(container.projectCodes.contains("AMP") || container.projectCodes.contains("AHG"))
+					if(container.projectCodes.contains("AMP") || container.projectCodes.contains("AHG")){
 						content.sampleTypeCode="amplicon";
+						content.sampleCategoryCode="amplicon";
+					}
 					else {
 						content.sampleTypeCode="unknown";
+						content.sampleCategoryCode="unknown";
 					}
 				}
 			}
