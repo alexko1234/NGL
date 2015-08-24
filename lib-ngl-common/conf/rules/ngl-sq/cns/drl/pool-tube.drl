@@ -86,11 +86,11 @@ rule "more than one inputContainer"
 	no-loop
     when
     Experiment($typeCode:typeCode,$typeCode=="pool-tube")
-    $atomicTransfert: ManytoOneContainer(inputContainerUseds!=null, $inputContainerUseds:inputContainerUseds )
+    $atomicTransfert: ManytoOneContainer(inputContainerUseds!=null, $inputContainerUseds:inputContainerUseds,$inputContainerUseds.size()<=1 )
     $contextValidation:ContextValidation($errors : errors)
-    eval($inputContainerUseds.size()<=1)
+    $inputContainer:ContainerUsed() from $inputContainerUseds
     then 
        	//Logger.debug("Nb inputContainerSupportCodes "+$inputContainerSupportCodes.size());
-    	$contextValidation.addErrors("inputContainerSupportCodes","error.validationexp.manyInputSupport", $typeCode);
+    	$contextValidation.addErrors("inputContainerSupportCodes","error.validationexp.manyInputSupport", $inputContainer.code);
     end
 

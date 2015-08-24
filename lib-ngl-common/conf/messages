@@ -23,23 +23,21 @@ error.codenotexists= Le code {0} du type {1} n''existe pas
 error.badstate = L''object {0} n'est pas dans le bon état.
 error.badsizearray = Mauvais taille de tableau ({0} au lieu de {1}
 
-error.validationexp.percentperoutputcontainerlane= "Le pourcentage total à déposer sur la piste {1} est différent de 100% (il vaut  {0}%)."
-error.validationexp.percentperoutputcontainertube= "Le pourcentage total à déposer dans le tube {1} est différent de 100% (il vaut  {0}%)."
-error.validationexp.percentperoutputcontainerwell= "Le pourcentage total à déposer dans le puit {1} est différent de 100% (il vaut  {0}%)."
-error.validationexp.percentperoutputcontainermapcard= "Le pourcentage total à déposer sur la mapcard {1} est différent de 100% (il vaut  {0}%)."
-error.validationexp.percentperoutputcontainerdefault= "Le pourcentage total à déposer dans le container de sortie est différent de 100% (il vaut  {0}%)."
+error.validationexp.percentperoutputcontainerdefault= "Le pourcentage total à déposer dans le container est différent de 100% (il vaut  {0}%)."
 error.validationexp.emptyoutputcontainer="La lane {0} ne possède aucun content."
-error.validationexp.manytagCategory="Plusieurs catégories d''index sont présentes sur la piste {0}"
+error.validationexp.manytagCategory="Plusieurs catégories d''index sont présentes."
 error.validationexp.sametag="L''index {0} n’est pas unique (containers concernés : {1},{2})"
-error.validationexp.samelibprocesstypecode="Le process type {0} n’est pas unique (containers concernés : {1},{2})"
-error.validationexp.samefromexperimenttypecode="L''experiment type {0} n’est pas unique (containers concernés : {1},{2})"
-error.validationexp.duplicateinputcontainers="Le container {0} a été déposé plusieurs fois sur la piste {1}"
+
+error.validationexp.samelibprocesstypecode="Les containers non indexés ({0},{1}) n''ont pas le même type de processus de banque ({2},{3})"
+error.validationexp.samefromexperimenttypecode="Les containers non indexés ({0},{1}) ne proviennet pas du même type d''experience ({2},{3})"
+
+error.validationexp.duplicateinputcontainers="Le container {0} a été déposé plusieurs fois en position {1}"
 error.validationexp.badcontrolprepaflowcell="La piste contrôle {0} n’est pas cohérente avec le contenant sortie choisi {1}"
 error.validationexp.badoutputprepaflowcell="Le contenant sortie {0} n’est pas compatible avec l’instrument choisi {1}"
 error.validationexp.badmesuredconcentrationsolutionstock="La concentration initiale du contenant d'entrée {0} n'a pas une valeur correcte(elle vaut {1} au lieu de {2})"
 error.validationexp.mandatoryrunstartdate="La date réelle de dépôt est obligatoire. Par défaut, elle sera équivalente à la date de création "
-error.validationexp.manytagSize="Plusieurs tailles d''index sont présentes sur la piste {0}"
-error.validationexp.sameTagSequence="Séquence identique ({1}) sur la piste {0}"
+error.validationexp.manytagSize="Plusieurs tailles d''index sont présentes ."
+error.validationexp.sameTagSequence="Séquence identique ({1}) en position {0}"
 error.validationexp.sameconcentration="La concentration du container {0} n''est pas homogène avec celles des autres containers (elle vaut {1} nM)"
 error.validationexp.outputvolumenotnull="La saisie du volume du tube de sortie est obligatoire pour le container {0}"
 error.validationexp.outputconcentrationnotnull="La saisie de la concentration du tube de sortie est obligatoire pour le container {0}"
@@ -47,7 +45,7 @@ error.validationexp.codewithbadchar= "Le champ {0} contient de mauvais caractèr
 error.validationexp.oneInputSupport="Le type d''expérience {0} accepte qu''un seul support en entrée"
 error.validationexp.notAllInputContainer="Le support {0} n'est pas complet"
 error.validationexp.containerSupportCodeContainString = "Le code flowcell {0} doit contenir la chaine de caractère {1}" 
-
+error.validationexp.manyInputSupport ="Le Container {0} est le seul container IN de l''experience"
 #directive messages
 msg.details = [détails]
 msg.success.save = Sauvegarde réussie.

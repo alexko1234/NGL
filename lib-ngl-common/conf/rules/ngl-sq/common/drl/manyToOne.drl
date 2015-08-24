@@ -114,7 +114,7 @@ rule "Container duplicate in Lane"
 		 $contextValidation:ContextValidation()
     then
     	//Logger.debug("Erreur containers "+$containerDuplicate);
- 		$contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.duplicateinputcontainers",$containerDuplicate, $position);
+ 		$contextValidation.addErrors("Position["+$position+"]",	"error.validationexp.duplicateinputcontainers",$containerDuplicate, $position);
     end
    	
 rule "Sum % percentage per piste = 100 % "
@@ -123,8 +123,7 @@ rule "Sum % percentage per piste = 100 % "
 	salience 580
 	no-loop
     when
-    $atomics:ManytoOneContainer($inputContainers : inputContainerUseds)
-    Experiment($instrument: instrument)   
+    $atomics:ManytoOneContainer($inputContainers : inputContainerUseds)   
     $total : Double() from accumulate(ContainerUsed( $n:percentage, percentage!=null) from $inputContainers, sum( $n ) )
     $container: ContainerUsed($cat : categoryCode) from $inputContainers
     eval(!($total>=99.9 && $total<=100) )
@@ -132,22 +131,7 @@ rule "Sum % percentage per piste = 100 % "
    	 then
    		Logger.debug("Regles de validation des pourcentages solexa "+ $total +' '+$atomics.line);   		
    		
-   		if(("tube").equals($instrument.outContainerSupportCategoryCode)){   			 
-   			if(!$contextValidation.errors.containsKey("tube["+$atomics.line+"]")){  		
-   			$contextValidation.addErrors("tube["+$atomics.line+"]",	"error.validationexp.percentperoutputcontainertube", $total,$atomics.line);
-   			}
-   		}else if(Pattern.matches("^flowcell.*",$instrument.outContainerSupportCategoryCode)){
-   			$contextValidation.addErrors("lane["+$atomics.line+"]",	"error.validationexp.percentperoutputcontainerlane", $total,$atomics.line);
-   		}else if(("mapcard").equals($instrument.outContainerSupportCategoryCode)){
-   			if(!$contextValidation.errors.containsKey("mapcard["+$atomics.line+"]")){
-   			$contextValidation.addErrors("mapcard["+$atomics.line+"]",	"error.validationexp.percentperoutputcontainermapcard", $total,$atomics.line);
-   			}
-   		}else{
-   			if(!$contextValidation.errors.containsKey("output container["+$atomics.line+"]")){
-   			$contextValidation.addErrors("output container["+$atomics.line+"]",	"error.validationexp.percentperoutputcontainerdefault", $total);
-   			}
-   		}   	
-   		
+   		$contextValidation.addErrors("Position["+$atomics.line+"]",	"error.validationexp.percentperoutputcontainerdefault", $total);
    	end
    	
 rule "Tag identique sur la meme position"
@@ -161,7 +145,7 @@ rule "Tag identique sur la meme position"
            $contextValidation:ContextValidation()
     then
     	Logger.debug("Tag error "+$contentInfo1 + " position "+$position);
-    	$contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.sametag", $tag,$containerCode1,$containerCode2);    	
+    	$contextValidation.addErrors("Position["+$position+"]",	"error.validationexp.sametag", $tag,$containerCode1,$containerCode2);    	
     end
 
 rule "Many TagCategory on same position"
@@ -176,7 +160,7 @@ when
 	  $contextValidation:ContextValidation($errors : errors)
 then
 	Logger.debug("TagCategory error "+ $tagCategories.size()+" position "+$position);
-    $contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.manytagCategory", $position);
+    $contextValidation.addErrors("Position["+$position+"]",	"error.validationexp.manytagCategory", $position);
 end
 
 rule "Same tag size"
@@ -191,7 +175,7 @@ when
 	  $contextValidation:ContextValidation($errors : errors)
 then
 	Logger.debug("Tag squence error "+ $tagRealSizes+" position "+$position);
-    $contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.manytagSize", $position);
+    $contextValidation.addErrors("Position["+$position+"]",	"error.validationexp.manytagSize", $position);
 end
 
 rule "Same sequence"
@@ -203,10 +187,12 @@ when
 	 LaneInfo($position:position, $contentInfos:contentInfos)
      $sequences : Set(empty==false, size != $contentInfos.size()) from accumulate( ContentInfo ( $sequence : sequence, $sequence!="VIDE", $position==position),
                         collectSet( $sequence) )
+      $seq : String() from $sequences
+      $results : List(size>1) from accumulate( ContentInfo($s:sequence, $seq==$s) from $contentInfos, collectList($s))
 	  $contextValidation:ContextValidation($errors : errors)
 then
 	Logger.debug("Tag squence error "+ $sequences+" and "+$contentInfos.size()+" position "+$position);
-    $contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.sameTagSequence", $position, $sequences);
+    $contextValidation.addErrors("Position["+$position+"]",	"error.validationexp.sameTagSequence", $position,$seq);
 end
 
 
@@ -217,11 +203,19 @@ rule "Same liprocessTypeCode for tag VIDE"
 	no-loop
     when
     	   $contentInfo1 : ContentInfo($tag :tag, $tag=="VIDE",$sampleCode :sampleCode,$position:position,$containerCode1:containerCode, $libProcessTypeCode :libProcessTypeCode, $libProcessTypeCode!="VIDE")
-           $contentInfo2 : ContentInfo(this != $contentInfo1, tag == $tag, position==$position, sampleCode==$sampleCode, $libProcessTypeCode !=libProcessTypeCode, $containerCode2:containerCode)
+           $contentInfo2 : ContentInfo(this != $contentInfo1, tag == $tag, position==$position, sampleCode==$sampleCode, $libProcessTypeCode !=libProcessTypeCode, $libProcessTypeCode2:libProcessTypeCode, $containerCode2:containerCode)
            $contextValidation:ContextValidation()
     then
     	Logger.debug("LibProcessTypeCode error "+$contentInfo1 + " position "+$position);
-    	$contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.samelibprocesstypecode", $libProcessTypeCode,$containerCode1,$containerCode2);    	
+    	List<String> containers=new ArrayList();
+    	containers.add($containerCode1);
+    	containers.add($containerCode2);
+    	Collections.sort(containers);
+    	List<String> libProcessTypeCodes=new ArrayList<String>();
+    	libProcessTypeCodes.add($libProcessTypeCode);
+    	libProcessTypeCodes.add($libProcessTypeCode2);
+    	Collections.sort(libProcessTypeCodes);
+    	$contextValidation.addErrors("Position["+$position+"]",	"error.validationexp.samelibprocesstypecode",containers.get(0),containers.get(1), libProcessTypeCodes.get(0),libProcessTypeCodes.get(1));    	
     end
 
     
@@ -232,10 +226,18 @@ rule "Same fromExperimentTypeCodes for tag VIDE and same libprocesstypeCode"
 	no-loop
     when
     	   $contentInfo1 : ContentInfo($tag :tag, $tag=="VIDE",$sampleCode :sampleCode,$position:position,$containerCode1:containerCode, $fromExperimentTypeCode:fromExperimentTypeCode,$libProcessTypeCode :libProcessTypeCode)
-           $contentInfo2 : ContentInfo(this != $contentInfo1, tag == $tag, position==$position, sampleCode==$sampleCode, $libProcessTypeCode ==libProcessTypeCode, $fromExperimentTypeCode!=fromExperimentTypeCode, $containerCode2:containerCode)
+           $contentInfo2 : ContentInfo(this != $contentInfo1, tag == $tag, position==$position, sampleCode==$sampleCode, $libProcessTypeCode ==libProcessTypeCode, $fromExperimentTypeCode!=fromExperimentTypeCode, $containerCode2:containerCode,$fromExperimentTypeCode2:fromExperimentTypeCode)
            $contextValidation:ContextValidation()
     then
     	Logger.debug("LibProcessTypeCode error "+$contentInfo1 + " position "+$position);
-    	$contextValidation.addErrors("lane["+$position+"]",	"error.validationexp.samefromexperimenttypecode", $fromExperimentTypeCode,$containerCode1,$containerCode2);    	
+    	List<String> containers=new ArrayList<String>();
+    	containers.add($containerCode1);
+    	containers.add($containerCode2);
+    	Collections.sort(containers);
+    	List<String> fromExperimentTypeCode=new ArrayList<String>();
+    	fromExperimentTypeCode.add($fromExperimentTypeCode);
+    	fromExperimentTypeCode.add($fromExperimentTypeCode2);
+    	Collections.sort(fromExperimentTypeCode);
+    	$contextValidation.addErrors("Position["+$position+"]",	"error.validationexp.samefromexperimenttypecode", containers.get(0),containers.get(1),fromExperimentTypeCode.get(0),fromExperimentTypeCode.get(1));    	
     end
     
