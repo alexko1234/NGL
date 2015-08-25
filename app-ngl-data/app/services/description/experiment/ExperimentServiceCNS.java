@@ -99,7 +99,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		//Depot solexa -- FDS 27/02/2015 devient commun
 		l.add(newExperimentType("Depot Illumina", "illumina-depot",null, 1400,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(),
-				getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500"), "OneToVoid", 
+				getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500"), "OneToVoid", 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		
@@ -196,11 +196,11 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					getInstrumentUsedTypes("qubit"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
-			l.add(newExperimentType("Quantification qPCR","qPCR-quantification",null,850,
+	/*		l.add(newExperimentType("Quantification qPCR","qPCR-quantification",null,850,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
 					getInstrumentUsedTypes("rocheLightCycler-qPCR","stratagene-qPCR"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS))); 	
-			
+		*/	
 
 			l.add(newExperimentType("Pool Tube","pool-tube",null,1200,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
@@ -260,9 +260,9 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					getExperimentTypes("ampure-na"), getExperimentTypes("fluo-quantification","chip-migration-pre-pcr")).save();*/
 			
 			newExperimentTypeNode("amplification", getExperimentTypes("amplification").get(0), false, false, getExperimentTypeNodes("librairie-indexing"), 
-					getExperimentTypes("ampure-a"), getExperimentTypes("fluo-quantification","chip-migration-post-pcr","qPCR-quantification")).save();
+					getExperimentTypes("ampure-a"), getExperimentTypes("fluo-quantification","chip-migration-post-pcr"/*,"qPCR-quantification"*/)).save();
 						
-			newExperimentTypeNode("qPCR-quantification",getExperimentTypes("qPCR-quantification").get(0),false,false,getExperimentTypeNodes("amplification"),null,null).save();
+		//	newExperimentTypeNode("qPCR-quantification",getExperimentTypes("qPCR-quantification").get(0),false,false,getExperimentTypeNodes("amplification"),null,null).save();
 
 			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false,false,getExperimentTypeNodes("ext-to-qpcr","amplification"),
 					null,null).save();
