@@ -114,7 +114,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			
 			l.add(newExperimentType("Quantification qPCR","qPCR-quantification",null,850,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
-					getInstrumentUsedTypes("rocheLightCycler-qPCR","stratagene-qPCR"),"OneToVoid", 
+					getInstrumentUsedTypes("rocheLightCycler-qPCR"/*,"stratagene-qPCR"*/),"OneToVoid", 
 					DescriptionFactory.getInstitutes( Institute.CODE.CNG))); 	
 			
 

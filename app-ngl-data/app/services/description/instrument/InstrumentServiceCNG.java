@@ -59,7 +59,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 
 		l.add(newInstrumentUsedType("Main", "hand", InstrumentCategory.find.findByCode("hand"), null, 
 				getInstruments(
-						createInstrument("hand", "Main", null, true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS, Institute.CODE.CNG)) ),
+						createInstrument("hand", "Main", null, true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG)) ),
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 		
@@ -160,6 +160,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-2","flowcell-1","flowcell-4" }), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 
+		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
 
 
