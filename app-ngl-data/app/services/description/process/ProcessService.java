@@ -14,6 +14,7 @@ import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.common.description.Value;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
@@ -192,6 +193,8 @@ public class ProcessService {
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsNanoporeFragmentation() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();		
+
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Type banque","libProcessTypeCode",LevelService.getLevels(Level.CODE.Process,Level.CODE.Content),String.class, true,  DescriptionFactory.newValues("W"), "W","single" ,20));
 		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille banque souhaitée","librarySize",LevelService.getLevels(Level.CODE.Process),Integer.class,true, DescriptionFactory.newValues("8","20")
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "kb"),MeasureUnit.find.findByCode( "kb"), "single",1));

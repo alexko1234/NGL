@@ -12,9 +12,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import org.apache.commons.collections.CollectionUtils;
-
-import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.description.ContainerSupportCategory;
@@ -25,14 +22,20 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.instrument.description.InstrumentUsedType;
+import models.laboratory.processes.description.ProcessType;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.mongojack.DBQuery;
+
 import validation.ContextValidation;
 import validation.utils.BusinessValidationHelper;
+import fr.cea.ig.MongoDBDAO;
 
 public class ContainerHelper {
 
@@ -72,9 +75,11 @@ public class ContainerHelper {
 
 	public static void addContent(Container outputContainer, List<ContainerUsed> inputContainerUseds , Experiment experiment, Map<String,PropertyValue> properties) throws DAOException {
 		
+		List<String> inputContainerCodes=new ArrayList<String>();
+		
 		for(ContainerUsed inputContainerUsed:inputContainerUseds){
 
-			
+			inputContainerCodes.add(inputContainerUsed.code);
 			
 			Container inputContainer=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, inputContainerUsed.code);
 
@@ -116,6 +121,8 @@ public class ContainerHelper {
 					outputContainer.fromExperimentTypeCodes.addAll(inputContainer.fromExperimentTypeCodes);
 				}
 			}
+			
+			
 
 		}		
 		
@@ -140,6 +147,32 @@ public class ContainerHelper {
 				InstanceHelpers.copyPropertyValueFromPropertiesDefinition(instrumentUsedType.getPropertyDefinitionByLevel(Level.CODE.Content), properties,content.properties);
 			}
 		}
+		
+		
+		List<models.laboratory.processes.instance.Process> process=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME
+				, models.laboratory.processes.instance.Process.class, DBQuery.in("experimentCodes", experiment.code).in("containerInputCode", inputContainerCodes)).toList();
+		
+		Set<String > processTypes=new HashSet<String>();
+		 Map<String,PropertyValue> propertiesProcess=new HashMap<String, PropertyValue>();
+		for (models.laboratory.processes.instance.Process p:process){
+			propertiesProcess.putAll(p.properties);
+			processTypes.add(p.typeCode);
+		}
+		
+		for(String processTypeCode:processTypes)
+		{
+			ProcessType processType=BusinessValidationHelper.validateExistDescriptionCode(null, processTypeCode, "typeCode", ProcessType.find,true);
+			if(processType !=null){
+				InstanceHelpers.copyPropertyValueFromPropertiesDefinition(processType.getPropertyDefinitionByLevel(Level.CODE.Container), propertiesProcess,outputContainer.properties);
+			}
+			
+			for(Content content :outputContainer.contents){
+				if(processType !=null){
+					InstanceHelpers.copyPropertyValueFromPropertiesDefinition(processType.getPropertyDefinitionByLevel(Level.CODE.Content), propertiesProcess,content.properties);
+				}
+			}
+		}
+		
 		
 	}
 	
