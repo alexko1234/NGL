@@ -262,6 +262,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 		//copy flowcell code to output code
 		var codeFlowcell = $parse("instrumentProperties.containerSupportCode.value")($scope.experiment.value);
 		$parse('outputContainerUsed.code').assign(dataMain[0],codeFlowcell);
+		$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[0],codeFlowcell);
 		
 		datatable.setData(dataMain);
 	}

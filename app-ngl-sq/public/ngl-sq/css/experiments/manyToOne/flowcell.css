@@ -57,6 +57,13 @@ margin: 8px 0 8px;
 
 /* COMPO FLOWCELL LANES*/
 
+.numberLane {
+	border: 1px solid gray;
+	padding: 4px;
+	font-size: 12px;
+
+}
+
 .flowCellLane {
 	
 	font-size: 10px;	 
@@ -110,12 +117,7 @@ margin: 8px 0 8px;
 	margin-right: 0px;
 }
 
-.numberLane {
-	border: 1px solid gray;
-	padding: 4px;
-	font-size: 12px;
 
-}
 
 #numberLane{
 	max-width: 2px;
@@ -145,12 +147,7 @@ margin: 8px 0 8px;
 	border: none;
 }
 
-.dropZoneHover{
-	border: none;
-	height: 18px;
-	background-color: #f1f1f1;	
-	
-}
+
 
 #dropLittleRightFinger{
 	position: absolute;
@@ -222,3 +219,46 @@ margin: 8px 0 8px;
 	vertical-align: middle;
 }
 
+/*Custom galbini compo flowcell*/
+
+.flowcellTable .table{
+	margin-bottom:0px;		
+} 
+
+.flowcellTable >table>tbody {
+	border-bottom: 2px solid #000000;		
+}
+
+.flowcellTable >table>tbody>tr>td {
+	font-size: 11px;	 	
+}
+
+.flowcellTable >table>thead>tr>th {
+	font-size: 11px;	 	
+}
+
+.flowcellTable >table>tbody+tbody {
+	border-bottom: 2px solid #000000;		
+}
+
+.flowcellTable >table>tbody+tbody>tr>td {
+	font-size: 11px;	 	
+}
+
+.flowcellTable .label {
+	font-size: 12px;	 	
+}
+
+.label-black {
+	background-color: #FFFFFF;
+	color: #000000;
+}
+
+.flowcellTable .over .label{
+	background-color: #5bc0de;
+	color: #FFFFFF;	
+}
+
+.flowcellTable .dropZoneHover{
+	background-color: #f1f1f1;		
+}

@@ -4,16 +4,23 @@
 angular.module('dragndropServices', []).factory('dragndropService', function($rootScope) {
 	dragndropService = {
 			draggedData : {},
+			dragModel:undefined,
 			setDraggedData : function(data){
 				this.draggedData = data;
 			},
 			getDraggedData : function(){
 				return this.draggedData;
+			},
+			setDragModel : function(model){
+				this.dragModel = model;
+			},
+			getDragModel :function(){
+				return this.dragModel;
 			}
 	}
 
 	return dragndropService;
-}).directive('draggable',['dragndropService', function(dragndropService) {
+}).directive('draggable',['dragndropService', '$parse', function(dragndropService, $parse) {
 	return{ 
 		scope:{
 			drag:'&',
@@ -28,10 +35,11 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
 				if(attrs.ngRepeat){
 					var model = attrs.ngRepeat;
 					var match = model.match(REPEAT_REGEXP);
+					var result = match[8];
 					if(match[2] !== undefined){
-						return match[2];
+						result =  match[2];
 					}
-					return match[8];
+					return result;
 				}else if(attrs.ngOptions){
 					var model = attrs.ngOptions;
 					var match = model.match(OPTIONS_REGEXP);
@@ -73,8 +81,12 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
 						doOnDrag(true);
 						e.dataTransfer.effectAllowed = 'move';
 						e.dataTransfer.setData('Text', this.id);// Angular internal system
-						e.dataTransfer.setData('Model', getModel());						
+						var model = getModel();
+						e.dataTransfer.setData('Model', model);	
+						
 						dragndropService.setDraggedData(scope.ngModel);
+						dragndropService.setDragModel($parse(model)(scope.$parent));
+						
 						this.classList.add('drag');							
 						return false;
 					},
@@ -84,7 +96,6 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
 			el.addEventListener(
 					'dragend',
 					function(e) {
-						console.log("drag end !!!");
 						doOnDrag(false);
 						this.classList.remove('drag');
 						return false;
@@ -98,8 +109,7 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
 				drop: '&', // parent
 				model: '=ngModel',
 				dropFn: '=dropFn',
-				beforeDropFn: '=beforeDropFn',
-				dropItem: '=dropItem'
+				beforeDropFn: '=beforeDropFn'
 			},
 			link: function(scope, element, attrs) {
 				var el = element[0];
@@ -142,6 +152,7 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
 							this.classList.remove('over');
 
 							var draggedData = dragndropService.getDraggedData(); 
+							var fromDragModel = dragndropService.getDragModel(); 
 							//var test = e.dataTransfer.getData('Model');
 							//push the data to the model and call the drop callback function
 							scope.$apply(function(scope) {
@@ -156,11 +167,16 @@ angular.module('dragndropServices', []).factory('dragndropService', function($ro
 
 								if(angular.isArray(scope.model) && !alreadyInTheModel){
 									scope.model.push(draggedData);
+									var indexOf = fromDragModel.indexOf(draggedData);
+									if(angular.isArray(fromDragModel) && indexOf !== -1){
+										fromDragModel.splice(indexOf, 1);
+									}
 								}
+								
 								
 								var dropFn = scope.$parent.drop || scope.dropFn;
 								if (!angular.isUndefined(dropFn) && angular.isFunction(dropFn)) {
-									dropFn(e, draggedData, scope.dropItem, scope.model, alreadyInTheModel);
+									dropFn(e, draggedData, scope.model, alreadyInTheModel,  dragndropService.getDragModel());
 								}
 							});
 

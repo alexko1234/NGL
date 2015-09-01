@@ -457,7 +457,7 @@ angular.module('home').controller('ManyToOneFlowcellCtrl',['$scope', '$window','
 		$scope.dragIt=value;
 	};		
 	
-	$scope.drop = function(e, data, droppedItem, ngModel, alreadyInTheModel) {
+	$scope.drop = function(e, data, ngModel, alreadyInTheModel) {
 		//capture the number of the atomicTransfertMethod
 		if(!alreadyInTheModel){
 			var array_regexp = /^experiment.value.atomicTransfertMethods\[([0-9]+)\].+/;

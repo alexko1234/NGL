@@ -1,12 +1,23 @@
-angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToDragNDrop',
+angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'atmToDragNDrop',
                                                                function($scope, $parse, atmToDragNDrop) {
 	
 	
 
 	var datatableConfig = {
 			name:"FDR_Tube",
-			columns:[   
+			columns:[  
+ 
 					 {
+			        	 "header":Messages("containers.table.support.number"),
+			        	 "property":"atomicTransfertMethod.line",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":0,
+			        	 "extraHeaders":{0:"Inputs"}
+			         },	
+			         {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"inputContainer.code",
 			        	 "order":true,
@@ -15,7 +26,7 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 			        	 "type":"text",
 			        	 "position":1,
 			        	 "extraHeaders":{0:"Inputs"}
-			         },		         
+			         },
 			         {
 			        	"header":Messages("containers.table.projectCodes"),
 			 			"property": "inputContainer.projectCodes",
@@ -90,13 +101,13 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
 			         {
-			        	 "header":Messages("containers.table.percentageInsidePool"),
+			        	 "header":Messages("containers.table.percentage"),
 			        	 "property":"inputContainerUsed.percentage",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":10,
+			        	 "position":40,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
 			         {
@@ -105,8 +116,7 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
-						 "mergeCells" : true,
-			        	 "type":"number",
+						 "type":"number",
 			        	 "position":50,
 			        	 "extraHeaders":{0:"Outputs"}
 			         },
@@ -116,8 +126,7 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
-						 "mergeCells" : true,
-			        	 "type":"text",
+						 "type":"text",
 			        	"position":50.5,
 			        	 "extraHeaders":{0:"Outputs"}
 			         },
@@ -127,8 +136,7 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
-						 "mergeCells" : true,
-			        	 "type":"number",
+						 "type":"number",
 			        	 "position":51,
 			        	 "extraHeaders":{0:"Outputs"}
 			         },
@@ -138,8 +146,7 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
-						 "mergeCells" : true,
-			        	 "type":"text",
+						 "type":"text",
 			        	 "position":400,
 			        	 "extraHeaders":{0:"Outputs"}
 			         },
@@ -149,8 +156,7 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
-						 "mergeCells" : true,
-			        	 "type":"text",
+						 "type":"text",
 			        	 "position":500,
 			        	 "extraHeaders":{0:"Outputs"}
 			         }
@@ -165,7 +171,7 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 			order:{
 				mode:'local', //or 
 				active:true,
-				by:'inputContainer.code'
+				by:'atomicTransfertMethod.line'
 			},
 			remove:{
 				active:false,
@@ -174,7 +180,10 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 				active:true,
 				withoutEdit: true,
 				mode:'local',
-				showButton:false
+				showButton:false,
+				callback:function(datatable){
+					copyFlowcellCodeToDT(datatable);
+				}
 			},
 			hide:{
 				active:true
@@ -182,13 +191,9 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 			mergeCells:{
 	        	active:true 
 	        },
-			select:{
-				active:false,
-				showButton:true,
-				isSelectAll:false
-			},
+			
 			edit:{
-				active: false,
+				active: !$scope.doneAndRecorded,
 				columnMode:true
 			},
 			messages:{
@@ -211,13 +216,19 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 			}
 	};	
 	
-	$scope.drop = function(e, data, ngModel, alreadyInTheModel, fromModel) {
-		//capture the number of the atomicTransfertMethod
-		if(!alreadyInTheModel){
-			$scope.atmService.data.updateDatatable();
-		
-		}
+	$scope.dragInProgress=function(value){
+		$scope.dragIt=value;
 	};
+	
+	$scope.getDroppableClass=function(){
+		if($scope.dragIt){
+			return "dropZoneHover";
+		}else{
+			return "";
+		}
+	}
+	
+	
 	
 	$scope.$on('save', function(e, promises, func, endPromises) {	
 		console.log("call event save");		
@@ -226,46 +237,158 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 		$scope.$emit('viewSaved', promises, func, endPromises);
 	});
 	
+	
+	var copyFlowcellCodeToDT = function(datatable){
+		
+		var dataMain = datatable.getData();
+		//copy flowcell code to output code
+		var codeFlowcell = $parse("instrumentProperties.containerSupportCode.value")($scope.experiment.value);
+		
+		for(var i = 0; i < dataMain.length; i++){
+			var atm = dataMain[i].atomicTransfertMethod;
+			var containerCode = codeFlowcell;
+			if($scope.rows.length > 1){ //other than flowcell 1
+				containerCode = codeFlowcell+"_"+atm.line;
+			}
+			$parse('outputContainerUsed.code').assign(dataMain[i],containerCode);
+			$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[i],codeFlowcell);
+		}				
+		datatable.setData(dataMain);
+		
+	}
+	
 	/**
 	 * Update concentration of output if all input are same value and unit
 	 */
 	$scope.updateConcentration = function(experiment){
-		var concentration = undefined;
-		var unit = undefined;
-		var isSame = true;
-		for(var i=0;i<experiment.value.atomicTransfertMethods[0].inputContainerUseds.length;i++){
-			if(concentration === undefined && unit === undefined){
-				concentration = experiment.value.atomicTransfertMethods[0].inputContainerUseds[i].concentration.value;
-				unit = experiment.value.atomicTransfertMethods[0].inputContainerUseds[i].concentration.unit;
-			}else{
-				if(concentration !== experiment.value.atomicTransfertMethods[0].inputContainerUseds[i].concentration.value 
-						|| unit !== experiment.value.atomicTransfertMethods[0].inputContainerUseds[i].concentration.unit){
-					isSame = false;
-					break;
+		
+		for(var j = 0 ; j < experiment.value.atomicTransfertMethods.length; j++){
+			var atm = experiment.value.atomicTransfertMethods[j];
+			var concentration = undefined;
+			var unit = undefined;
+			var isSame = true;
+			for(var i=0;i < atm.inputContainerUseds.length;i++){
+				if(concentration === undefined && unit === undefined){
+					concentration = atm.inputContainerUseds[i].concentration.value;
+					unit = atm.inputContainerUseds[i].concentration.unit;
+				}else{
+					if(concentration !== atm.inputContainerUseds[i].concentration.value 
+							|| unit !== atm.inputContainerUseds[i].concentration.unit){
+						isSame = false;
+						break;
+					}
 				}
 			}
-		}
-		
-		if(isSame){
-			experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].concentration = $scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[0].concentration;
+			
+			if(isSame){
+				atm.outputContainerUseds[0].concentration = atm.inputContainerUseds[0].concentration;				
+			}
 			
 		}
+		
+		
 		
 		
 	};
 	
 	$scope.$on('refresh', function(e) {
-		console.log("call event refresh");		
+		console.log("call event refresh");
+		
+		var dtConfig = $scope.atmService.data.$atmToSingleDatatable.data.getConfig();
+		dtConfig.edit.active = !$scope.doneAndRecorded;
+		$scope.atmService.data.$atmToSingleDatatable.data.setConfig(dtConfig);
+		
+		
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
 		$scope.$emit('viewRefeshed');
 	});
+	//To display sample and tag in one cell
+	$scope.getSampleAndTags = function(container){
+		var sampleCodeAndTags = [];
+		angular.forEach(container.contents, function(content){
+			if(content.properties.tag != undefined && content.sampleCode != undefined){
+				sampleCodeAndTags.push(content.sampleCode+" / "+content.properties.tag.value);
+			}
+		});
+		return sampleCodeAndTags;
+	};
 	
-	var atmService = atmToDragNDrop($scope, 1, datatableConfig);
+	$scope.getDisplayMode = function(atm, rowIndex){
+		
+		if(atm.inputContainerUseds.length === 0){
+			return "empty";
+		}else if(atm.inputContainerUseds.length > 0 && $scope.rows[rowIndex]){
+			return "open";
+		}else{
+			return "compact";
+		}		
+	};
+	
+	$scope.isAllOpen = true;
+	if($scope.experiment.editMode){
+		$scope.isAllOpen = false;
+	}
+	
+	//TODO used container_support_category in future
+	//init number of lane
+	var cscCode = $parse('experiment.value.instrument.outContainerSupportCategoryCode')($scope);
+	$scope.rows = [];
+	var laneCount = 0;
+	if(cscCode !== undefined){
+		laneCount = Number(cscCode.split("-",2)[1]);
+		$scope.rows = new Array(laneCount);
+		for(var i = 0; i < laneCount; i++){
+			$scope.rows[i] = $scope.isAllOpen;
+		}
+		
+	}
+	
+	$scope.hideRowAll = function(){
+		for (var i=0; i<$scope.rows.length;i++){	
+			$scope.rows[i] = false;
+		}	    
+		$scope.isAllOpen = false;	    
+	};
+
+	$scope.showRowAll = function(){
+		for (var i=0; i<$scope.rows.length;i++){	
+			$scope.rows[i] = true;
+		}	    
+		$scope.isAllOpen = true;
+	};
+	
+	$scope.toggleRow = function(rowIndex){
+		$scope.rows[rowIndex] = !$scope.rows[rowIndex];
+	};
+	
+	
+	//init global ContainerOut Properties outside datatable
+	$scope.outputContainerProperties = [];
+	$scope.outputContainerValues = {};
+	angular.forEach($scope.experiment.experimentProperties.inputs, function(property){
+		if($scope.getLevel(property.levels, "ContainerOut")){
+			this.push(property);														
+		}		
+	}, $scope.outputContainerProperties);
+	
+	$scope.updateAllOutputContainerProperty = function(propertyCode){
+		var value = $scope.outputContainerValues[propertyCode];
+		var setter = $parse("outputContainerUseds[0].experimentProperties."+propertyCode+".value").assign;
+		for(var i = 0 ; i < $scope.atmService.data.atm.length ; i++){
+			var atm = $scope.atmService.data.atm[i];
+			if(atm.inputContainerUseds.length > 0){
+				setter(atm, value);
+			}			
+		}		
+	}
+	
+	//init atmService
+	var atmService = atmToDragNDrop($scope, laneCount, datatableConfig);
 	//defined new atomictransfertMethod
-	atmService.newAtomicTransfertMethod = function(){
+	atmService.newAtomicTransfertMethod = function(line){
 		return {
 			class:"ManyToOne",
-			line:"1", //TODO only exact for oneToOne of type  tube to tube but not for plate to plate
+			line:line, 
 			column:"1", 				
 			inputContainerUseds:new Array(0), 
 			outputContainerUseds:new Array(0)

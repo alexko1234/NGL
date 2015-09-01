@@ -187,7 +187,7 @@ angular.module('atomicTransfereServices2', [])
 				data:$datatable,
 				isAddNew:true, //used to add or not new input container in datatable
 				defaultOutputUnit:{volume:undefined, concentration:undefined, quantity:undefined},
-				newAtomicTransfertMethod : function(){
+				newAtomicTransfertMethod : function(line, column){
 					throw 'newAtomicTransfertMethod not defined in atmToSingleDatatable client';
 				},
 				/*
@@ -429,6 +429,49 @@ angular.module('atomicTransfereServices2', [])
 						}
 						experiment.atomicTransfertMethods = cleanAtomicTransfertMethods;
 					}								
+				},
+				viewToExperimentManyToOne :function(experimentIn){		
+					if(null === experimentIn || undefined === experimentIn){
+						throw 'experiment is required';
+					}
+					experiment = experimentIn.value;
+					var allData = this.data.getData();
+					if(allData != undefined){
+						experiment.atomicTransfertMethods = []; // to manage remove
+						//first reinitialise atomicTransfertMethod
+						for(var i=0;i<allData.length;i++){
+							var atomicIndex = allData[i].atomicIndex;								
+							experiment.atomicTransfertMethods[atomicIndex] = allData[i].atomicTransfertMethod
+							experiment.atomicTransfertMethods[atomicIndex].inputContainerUseds = new Array(0);
+							experiment.atomicTransfertMethods[atomicIndex].outputContainerUseds = new Array(0);
+							
+							//ToOne
+							var outputContainerUsed = allData[i].outputContainerUsed;
+							$commonATM.removeNullProperties(outputContainerUsed.instrumentProperties);
+							$commonATM.removeNullProperties(outputContainerUsed.experimentProperties);
+							experiment.atomicTransfertMethods[atomicIndex].outputContainerUseds.push(outputContainerUsed);	
+							
+						}
+						//ManyTo
+						for(var i=0;i<allData.length;i++){
+							var atomicIndex = allData[i].atomicIndex;								
+							
+							var inputContainerUsed = allData[i].inputContainerUsed;
+							$commonATM.removeNullProperties(inputContainerUsed.instrumentProperties);
+							$commonATM.removeNullProperties(inputContainerUsed.experimentProperties);
+							experiment.atomicTransfertMethods[atomicIndex].inputContainerUseds.push(inputContainerUsed);
+							
+	
+						}
+						//remove atomic null
+						var cleanAtomicTransfertMethods = [];
+						for(var i = 0; i < experiment.atomicTransfertMethods.length ; i++){
+							if(experiment.atomicTransfertMethods[i] !== null){
+								cleanAtomicTransfertMethods.push(experiment.atomicTransfertMethods[i]);
+							}
+						}
+						experiment.atomicTransfertMethods = cleanAtomicTransfertMethods;
+					}								
 				}
 		};
 		return view;
@@ -455,6 +498,9 @@ angular.module('atomicTransfereServices2', [])
 					datatable : $atmToSingleDatatable.data,
 					deleteInputContainer : function(inputContainer){
 						this.inputContainers.splice(this.inputContainers.indexOf(inputContainer), 1);
+					},
+					duplicateInputContainer : function(inputContainer, position){
+						this.inputContainers.splice(position+1, 0 , angular.copy(inputContainer));						
 					},
 					dropInAllInputContainer : function(atmIndex){
 						var percentage = {value:0};
@@ -487,13 +533,21 @@ angular.module('atomicTransfereServices2', [])
 						this.atm[atmIndex].inputContainerUseds = [];	
 						this.updateDatatable();
 					},
+					/**
+					 * Call by drop directive
+					 */
+					drop : function(e, data, ngModel, alreadyInTheModel, fromModel){
+						if(!alreadyInTheModel){
+							$scope.atmService.data.updateDatatable();		
+						}
+					},
 					
 					updateDatatable : function(){
 						this.$atmToSingleDatatable.convertExperimentATMToDatatable(this.atm);
 					}
 					
 				},
-				newAtomicTransfertMethod : function(){
+				newAtomicTransfertMethod : function(line, column){
 					throw 'newAtomicTransfertMethod not defined in atmToDragNDrop client';
 				},
 				
@@ -530,7 +584,7 @@ angular.module('atomicTransfereServices2', [])
 	                });
 				},
 				
-				//exact for ManyToOne
+				//exact for ManyToOne not for other
 				addNewAtomicTransfertMethodsInDnD : function(){
 					if(null != mainService.getBasket() && null != mainService.getBasket().get()){
 						$that = this;
@@ -551,7 +605,7 @@ angular.module('atomicTransfereServices2', [])
 					}
 					
 					for(var i = this.data.atm.length; i < $nbATM; i++){
-						var atm = this.newAtomicTransfertMethod();
+						var atm = this.newAtomicTransfertMethod(i+1);
 						atm.outputContainerUseds.push($commonATM.newOutputContainerUsed(this.defaultOutputUnit));
 						this.data.atm.push(atm);
 					}
@@ -574,8 +628,9 @@ angular.module('atomicTransfereServices2', [])
 					if(null === experiment || undefined === experiment){
 						throw 'experiment is required';
 					}
-					//problem when edit is available on datatable
-					experiment.value.atomicTransfertMethods = this.data.atm;					
+					this.$atmToSingleDatatable.data.save();					
+					this.$atmToSingleDatatable.viewToExperimentManyToOne(experiment);
+					this.data.atm = experiment.value.atomicTransfertMethods;
 				},
 				refreshViewFromExperiment:function(experiment){
 					if(null === experiment || undefined === experiment){
@@ -690,7 +745,6 @@ angular.module('atomicTransfereServices2', [])
 					if(null === experiment || undefined === experiment){
 						throw 'experiment is required';
 					}
-					//problem when edit is available on datatable
 					this.$atmToSingleDatatable.data.save();					
 					this.$atmToSingleDatatable.viewToExperimentOneToMany(experiment);					
 				},

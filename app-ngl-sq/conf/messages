@@ -74,11 +74,12 @@ containers.table.supportCode = Support container
 containers.table.support.categoryCode = Catégorie support
 containers.table.support.line = Y
 containers.table.support.column = X
+containers.table.support.number = #
 containers.table.percentage = % à déposer
 containers.table.tags = Tag
-containers.table.sampleTypes = Type samples
+containers.table.sampleTypes = Type échantillon
 containers.table.libProcessTypeCodes = Type librairie
-containers.table.sampleCodeAndTags = Sample / Tag
+containers.table.sampleCodeAndTags = Echantillon / Tag
 containers.table.inputProcessCodes = Processus
 containers.table.percentageInsidePool = % au sein du pool
 
@@ -224,6 +225,8 @@ experiments.createUser = Expérience Créée par
 experiments.modifyDate = Date de modification
 experiments.modifyBy = Modifié par
 experiment.comments = Commentaires
+experiments.inputs = Container en entrée
+experiments.outputs = Container en sortie
 
 experiments.calculation.sheet = Feuille de calcul
 experiments.flowcell.design = Composition flowcell
