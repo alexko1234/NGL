@@ -241,17 +241,18 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 		var dataMain = datatable.getData();
 		//copy flowcell code to output code
 		var codeFlowcell = $parse("instrumentProperties.containerSupportCode.value")($scope.experiment.value);
-		
-		for(var i = 0; i < dataMain.length; i++){
-			var atm = dataMain[i].atomicTransfertMethod;
-			var containerCode = codeFlowcell;
-			if($scope.rows.length > 1){ //other than flowcell 1
-				containerCode = codeFlowcell+"_"+atm.line;
-			}
-			$parse('outputContainerUsed.code').assign(dataMain[i],containerCode);
-			$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[i],codeFlowcell);
-		}				
-		datatable.setData(dataMain);
+		if(null != codeFlowcell && undefined != codeFlowcell){
+			for(var i = 0; i < dataMain.length; i++){
+				var atm = dataMain[i].atomicTransfertMethod;
+				var containerCode = codeFlowcell;
+				if($scope.rows.length > 1){ //other than flowcell 1
+					containerCode = codeFlowcell+"_"+atm.line;
+				}
+				$parse('outputContainerUsed.code').assign(dataMain[i],containerCode);
+				$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[i],codeFlowcell);
+			}				
+			datatable.setData(dataMain);
+		}
 		
 	}
 	
