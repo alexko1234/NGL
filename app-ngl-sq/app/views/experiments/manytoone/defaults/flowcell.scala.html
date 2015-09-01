@@ -1,12 +1,9 @@
-@(laneCount:java.lang.Integer)
-
-<div class="col-md-12 col-lg-12" ng-controller="TubesToFlowcellCtrl">
+@()
 
 <ul class="nav nav-tabs margin-bottom-5" role="tablist">
   <li class="active"><a href="" role="tab" data-target="#tube" data-toggle="tab">@Messages("experiments.flowcell.design")</a></li>
   <li><a href="" role="tab"  data-target="#roadmap" data-toggle="tab" ng-click="atmService.data.updateDatatable()">@Messages("experiments.calculation.sheet")</a></li>  
 </ul>
-
 
 <div class="tab-content"  >
 	<div class="tab-pane active" id="tube">	
@@ -123,8 +120,7 @@
 						<input class="form-control input-sm" type="text"  
 							ng-readonly="!experiment.experimentProperties.enabled" 
 								ng-model="outputContainerValues[property.code]" 
-								ng-change="updateAllOutputContainerProperty(property.code)"
-								ng-blur="atmService.data.updateDatatable()"
+								ng-change="updateAllOutputContainerProperty(property)"								
 								/>					
 			</th>
 			</tr>
@@ -185,7 +181,7 @@
 								title='@Messages("containers.table.percentage")' 
 								ng-readonly="!experiment.experimentProperties.enabled"
 								ng-model="inputContainer.percentage"
-								ng-blur="atmService.data.updateDatatable()" />
+								ng-change="changeValueOnFlowcellDesign()" />
 						</td>
 						<td>							
 							<div list-resize="sampleAndTag in getSampleAndTags(inputContainer)" id="SampleTagCell" below vertical></div>
@@ -204,7 +200,7 @@
 								 title="{{property.name}}"
 								 ng-readonly="!experiment.experimentProperties.enabled" 
 								 ng-model="atm.outputContainerUseds[0].experimentProperties[property.code].value"
-								 ng-blur="atmService.data.updateDatatable()" />						
+								 ng-change="changeValueOnFlowcellDesign(property)" />						
 						</td>											
 					</tr>					
 			</tbody>	
@@ -217,9 +213,8 @@
 		</div>
 	</div>
 	<div class="tab-pane" id="roadmap">
-	<div class="row">
+	<div class="row roadmap">
 		<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data.datatable"></div>
 	</div>
 	</div>
 </div>		
-</div>

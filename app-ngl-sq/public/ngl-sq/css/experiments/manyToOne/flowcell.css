@@ -203,21 +203,7 @@ margin: 8px 0 8px;
 	text-align: center;
 }
 
-.roadmap .datatable .form-group input.form-control:not([type="checkbox"]){
-	padding: 3px 3px 3px;
-	margin: 0px;
-	width: 52px;
-	height: 22px;
-	text-align: left;
-}
 
-.roadmap .datatable .table>tbody>tr>td{
-	border: 1px solid #ddd;
-	max-width: 240px;
-	overflow-wrap: break-word;
-	text-align: left;
-	vertical-align: middle;
-}
 
 /*Custom galbini compo flowcell*/
 
@@ -261,4 +247,12 @@ margin: 8px 0 8px;
 
 .flowcellTable .dropZoneHover{
 	background-color: #f1f1f1;		
+}
+
+.roadmap .datatable .form-group input.form-control:not([type="checkbox"]){
+	padding: 3px 3px 3px;	
+}
+
+.roadmap .datatable .table>tbody>tr>td{
+	overflow-wrap: break-word;
 }

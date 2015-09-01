@@ -228,8 +228,6 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 		}
 	}
 	
-	
-	
 	$scope.$on('save', function(e, promises, func, endPromises) {	
 		console.log("call event save");		
 		$scope.atmService.viewToExperiment($scope.experiment);
@@ -284,11 +282,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 				atm.outputContainerUseds[0].concentration = atm.inputContainerUseds[0].concentration;				
 			}
 			
-		}
-		
-		
-		
-		
+		}		
 	};
 	
 	$scope.$on('refresh', function(e) {
@@ -371,16 +365,22 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 		}		
 	}, $scope.outputContainerProperties);
 	
-	$scope.updateAllOutputContainerProperty = function(propertyCode){
-		var value = $scope.outputContainerValues[propertyCode];
-		var setter = $parse("outputContainerUseds[0].experimentProperties."+propertyCode+".value").assign;
+	$scope.updateAllOutputContainerProperty = function(property){
+		var value = $scope.outputContainerValues[property.code];
+		var setter = $parse("outputContainerUseds[0].experimentProperties."+property.code+".value").assign;
 		for(var i = 0 ; i < $scope.atmService.data.atm.length ; i++){
 			var atm = $scope.atmService.data.atm[i];
 			if(atm.inputContainerUseds.length > 0){
 				setter(atm, value);
 			}			
-		}		
-	}
+		}
+		$scope.changeValueOnFlowcellDesign();
+	};
+	
+	$scope.changeValueOnFlowcellDesign = function(){
+		$scope.atmService.data.updateDatatable();
+	};
+	
 	
 	//init atmService
 	var atmService = atmToDragNDrop($scope, laneCount, datatableConfig);

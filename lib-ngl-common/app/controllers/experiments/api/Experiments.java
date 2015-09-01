@@ -64,7 +64,7 @@ public class Experiments extends CommonController{
 	final static Form<Comment> commentForm = form(Comment.class);
 	final static Form<ExperimentSearchForm> experimentSearchForm = form(ExperimentSearchForm.class);
 	final static Form<ExperimentUpdateForm> experimentUpdateForm = form(ExperimentUpdateForm.class);
-	final static List<String> defaultKeys =  Arrays.asList("categoryCode","code","inputContaierSupportCodes","instrument","outputContainerSupportCodes","projectCodes","protocolCode","reagents","sampleCodes","state","traceInformation","typeCode","atomicTransfertMethods.inputContainerUseds.contents");
+	final static List<String> defaultKeys =  Arrays.asList("categoryCode","code","inputContainerSupportCodes","instrument","outputContainerSupportCodes","projectCodes","protocolCode","reagents","sampleCodes","state","traceInformation","typeCode","atomicTransfertMethods.inputContainerUseds.contents");
 
 	public static final String calculationsRules ="calculations";
 
