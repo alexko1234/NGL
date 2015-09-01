@@ -85,6 +85,12 @@ public class SubmissionBuilder {
 		return this;
 	}
 	
+	public SubmissionBuilder withRefStudyCode(String code)
+	{
+		submission.refStudyCode=code;
+		return this;
+	}
+	
 	public Submission build()
 	{
 		return submission;

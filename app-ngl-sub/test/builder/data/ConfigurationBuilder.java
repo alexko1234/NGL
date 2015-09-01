@@ -13,6 +13,36 @@ public class ConfigurationBuilder {
 		return this;
 	}
 	
+	public ConfigurationBuilder withProjectCode(String projectCode)
+	{
+		configuration.projectCode=projectCode;
+		return this;
+	}
+	
+	public ConfigurationBuilder withStrategySample(String strategy)
+	{
+		configuration.strategySample=strategy;
+		return this;
+	}
+	
+	public ConfigurationBuilder withLibrarySelection(String librarySelection)
+	{
+		configuration.librarySelection=librarySelection;
+		return this;
+	}
+	
+	public ConfigurationBuilder withLibrarySource(String librarySource)
+	{
+		configuration.librarySource=librarySource;
+		return this;
+	}
+	
+	public ConfigurationBuilder withLibraryStrategy(String libraryStrategy)
+	{
+		configuration.libraryStrategy=libraryStrategy;
+		return this;
+	}
+	
 	public ConfigurationBuilder withState(State state)
 	{
 		configuration.state=state;

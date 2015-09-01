@@ -1,6 +1,7 @@
 package builder.data;
 
 import models.sra.submit.common.instance.Study;
+import models.laboratory.common.instance.State;
 
 public class StudyBuilder {
 
@@ -9,6 +10,18 @@ public class StudyBuilder {
 	public StudyBuilder withCode(String code)
 	{
 		study.code=code;
+		return this;
+	}
+	
+	public StudyBuilder withState(State state)
+	{
+		study.state=state;
+		return this;
+	}
+	
+	public StudyBuilder withProjectCode(String projectCode)
+	{
+		study.projectCode=projectCode;
 		return this;
 	}
 	

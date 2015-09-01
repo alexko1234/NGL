@@ -1,6 +1,7 @@
 package builder.data;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import models.sra.submit.sra.instance.RawData;
 import models.sra.submit.sra.instance.Run;
@@ -12,6 +13,18 @@ public class RunBuilder {
 	public RunBuilder withCode(String code)
 	{
 		run.code=code;
+		return this;
+	}
+	
+	public RunBuilder withRunDate(Date runDate)
+	{
+		run.runDate = runDate;
+		return this;
+	}
+	
+	public RunBuilder withRunCenter(String runCenter)
+	{
+		run.runCenter = runCenter;
 		return this;
 	}
 	
