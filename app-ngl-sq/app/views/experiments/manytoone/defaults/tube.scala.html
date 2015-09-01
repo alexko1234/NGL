@@ -6,24 +6,26 @@
   <li class="active"><a href="" role="tab" data-target="#tube" data-toggle="tab">@Messages("experiments.tube.design")</a></li>
   <li><a href="" role="tab"  data-target="#roadmap" data-toggle="tab">@Messages("experiments.calculation.sheet")</a></li>
 </ul>
-{{tab}}
 
 <div class="tab-content" ng-controller="TubesToTubeCtrl" >
 	<div class="tab-pane active" id="tube">
-	
-	<div class="col-md-12 col-lg-12">
+		<div class="row">
+		<div class="col-md-12 col-lg-12">
+		<div class="row">
 		<div ng-model="atmService.data.inputContainers" ng-if="!editMode || doneAndRecorded || inProgressNow" class="col-md-5 col-lg-5">
-			<div class="inputContainerGroupOfTubeTransfert">
-			<p><i class="fa fa-download"></i> Inputs</p>
-			</div>
-			<table class="table" >
-			
-			</table>
+			<div class="panel panel-primary" style="border-style:dashed">
+				<div class="panel-body">		
+					<p><i class="fa fa-download"></i> @Messages("experiments.inputs")</p>
+				</div>
+			</div>	
 		</div>
 		<!-- InputContainers table -->
 		<div ng-model="atmService.data.inputContainers"  class="col-md-5 col-lg-5" droppable ng-if=" editMode && !inProgressNow && !doneAndRecorded">
-			<div class="inputContainerGroupOfTubeTransfert">		
-			<p ng-if="atmService.data.inputContainers.length==0"><i class="fa fa-download"></i> Inputs</p> 
+			<div class="panel panel-primary"  style="border-style:dashed">				
+			<div class="panel-body" ng-if="atmService.data.inputContainers.length==0">		
+				<p><i class="fa fa-download"></i> @Messages("experiments.inputs")</p>
+			</div>
+			
 			<table class="table" ng-if="atmService.data.inputContainers.length > 0">
 			<thead>
 				<tr>
@@ -51,7 +53,7 @@
 				</thead>				
 				<tr ng-model="container" ng-repeat="container in atmService.data.inputContainers | orderBy:'code'" >
 					<td>
-						<button class="btn btn-danger btn-xs" ng-disabled="!experiment.experimentProperties.enabled" ng-click="atmService.data.deleteInputContainer(container)" ><i class="fa fa-trash-o"></i></button>
+						<button class="btn btn-default btn-xs" ng-disabled="!experiment.experimentProperties.enabled" ng-click="atmService.data.deleteInputContainer(container)" ><i class="fa fa-trash-o"></i></button>
 					</td>
 					<td>
 						{{container.code}}
@@ -140,8 +142,8 @@
 										{{inputContainerUsed.code}}
 									</td>
 									<td>
-										{{formatArray(inputContainerUsed.fromExperimentTypeCodes)}}
-									</td>					
+										<div list-resize='inputContainerUsed.contents | getArray:"properties.libProcessTypeCode.value"| unique | codes:"value"'' list-resize-min-size='5' below vertical>
+									</td>						
 									<td>
 										<div list-resize='inputContainerUsed.contents | getArray:"properties.tag.value"| unique' list-resize-min-size='5' below vertical>															
 									</td>
@@ -191,10 +193,15 @@
 			</table>
 		</div>
 		</div>
+		</div>
 	</div>
 	</div>
+	</div>		
+		
 	<div class="tab-pane" id="roadmap">
+	<div class="row">
 		<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data.datatable"></div>
+	</div>
 	</div>
 </div>		
 </div>

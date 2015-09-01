@@ -64,7 +64,7 @@ public class Experiments extends CommonController{
 	final static Form<Comment> commentForm = form(Comment.class);
 	final static Form<ExperimentSearchForm> experimentSearchForm = form(ExperimentSearchForm.class);
 	final static Form<ExperimentUpdateForm> experimentUpdateForm = form(ExperimentUpdateForm.class);
-	final static List<String> defaultKeys =  Arrays.asList("categoryCode","code","inputContaierSupportCodes","instrument","outputContainerSupportCodes","projectCodes","protocolCode","reagents","sampleCodes","state","traceInformation","typeCode","atomicTransfertMethods.inputContainerUseds.contents");
+	final static List<String> defaultKeys =  Arrays.asList("categoryCode","code","inputContainerSupportCodes","instrument","outputContainerSupportCodes","projectCodes","protocolCode","reagents","sampleCodes","state","traceInformation","typeCode","atomicTransfertMethods.inputContainerUseds.contents");
 
 	public static final String calculationsRules ="calculations";
 
@@ -617,11 +617,11 @@ public class Experiments extends CommonController{
 		if(StringUtils.isNotBlank(experimentSearch.sampleCode)){
 			queryElts.add(DBQuery.in("sampleCodes", experimentSearch.sampleCode));
 		}
-
+/*
 		if(CollectionUtils.isNotEmpty(experimentSearch.tags)){
 			queryElts.add(DBQuery.in("atomicTransfertMethods.inputContainerUseds.contents.properties.tag.value", experimentSearch.tags));
 		}
-		
+*/		
 		if(CollectionUtils.isNotEmpty(experimentSearch.users)){
 			queryElts.add(DBQuery.in("traceInformation.createUser", experimentSearch.users));
 		}
@@ -632,12 +632,12 @@ public class Experiments extends CommonController{
 
 		if(CollectionUtils.isNotEmpty(experimentSearch.stateCodes)){
 			queryElts.add(DBQuery.in("state.code", experimentSearch.stateCodes));
-		}else if(experimentSearch.stateCode != null){
-			queryElts.add(DBQuery.in("state.code", experimentSearch.stateCode));
+		}else if(StringUtils.isNotBlank(experimentSearch.stateCode)){
+			queryElts.add(DBQuery.is("state.code", experimentSearch.stateCode));
 		}
 
 		if(StringUtils.isNotBlank(experimentSearch.instrument)){
-			queryElts.add(DBQuery.in("instrument.code", experimentSearch.instrument));
+			queryElts.add(DBQuery.is("instrument.code", experimentSearch.instrument));
 		}
 		
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(experimentSearch.atomicTransfertMethodsInputContainerUsedsContentsProperties, Level.CODE.Content, "atomicTransfertMethods.inputContainerUseds.contents.properties"));

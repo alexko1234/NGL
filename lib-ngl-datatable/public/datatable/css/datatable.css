@@ -48,7 +48,9 @@
 	margin-bottom: 0px;
 }
 
-
+.datatable .xheader {
+	text-align: center;
+}
 .datatable .form-group input.form-control:not([type="checkbox"]) {
 	width: 100%;
 	margin:0px;

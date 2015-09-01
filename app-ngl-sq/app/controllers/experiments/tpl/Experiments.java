@@ -59,8 +59,9 @@ public class Experiments extends CommonController{
 	 * if all classes doesn't exist, a badRequest result is returned with the message "not implemented"
 	 * */
 	public static Result getTemplate(String atomicType, String outputCategoryCode, String experimentType){
-		Logger.info("experimentType " + experimentType);
+		
 		String institute = DescriptionHelper.getInstitute().get(0);	
+		Logger.info(atomicType+" / "+outputCategoryCode+" / "+experimentType+" / "+institute);
 		Html result = getTemplateClass(atomicType, outputCategoryCode, experimentType, institute);
 		if(result == null){
 			result = getTemplateClass(atomicType, outputCategoryCode, experimentType, "common");

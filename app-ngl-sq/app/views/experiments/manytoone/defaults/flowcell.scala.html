@@ -1,21 +1,31 @@
-@(laneCount:java.lang.Integer)
-<ul class="nav nav-tabs" role="tablist">
-  <li class="active"><a href="" role="tab" data-target="#flowcell" data-toggle="tab">@Messages("experiments.flowcell.design")</a></li>
-  <li><a href="" role="tab" data-target="#roadmap" data-toggle="tab">@Messages("experiments.calculation.sheet")</a></li>
+@()
+
+<ul class="nav nav-tabs margin-bottom-5" role="tablist">
+  <li class="active"><a href="" role="tab" data-target="#tube" data-toggle="tab">@Messages("experiments.flowcell.design")</a></li>
+  <li><a href="" role="tab"  data-target="#roadmap" data-toggle="tab" ng-click="atmService.data.updateDatatable()">@Messages("experiments.calculation.sheet")</a></li>  
 </ul>
-{{tab}}
-<div class="row tab-content tabPaneTable" ng-controller="ManyToOneFlowcellCtrl" ng-init="init_flowcell(@laneCount)">
-	<div class="col-md-12 col-lg-12 tab-pane active" style="margin-right:auto;margin-left:auto" id="flowcell">
-	<!-- TODO: Supprimer droppable quand l'expérience  est terminée -->
-		<div ng-model="inputContainers" ng-if="!editMode || doneAndRecorded || inProgressNow" class="col-md-4 col-lg-4 inputContainerGroup">
-		<p><i class="fa fa-download"></i> Inputs</p>
-		<table class="table" >
-		
-		</table>
+
+<div class="tab-content"  >
+	<div class="tab-pane active" id="tube">	
+		<div class="row">
+		<div class="col-md-12 col-lg-12">
+		<div class="row">
+		<div ng-model="atmService.data.inputContainers" ng-if="!editMode || doneAndRecorded || inProgressNow" 
+			class="col-md-6 col-lg-4">
+			<div class="panel panel-primary" style="border-style:dashed">
+				<div class="panel-body">		
+					<p><i class="fa fa-download"></i> @Messages("experiments.inputs")</p>
+				</div>
+			</div>			
 		</div>
-		<div ng-model="inputContainers" ng-if=" editMode && !inProgressNow" droppable class="col-md-4 col-lg-4 inputContainerGroup">		
-			<p  ng-show="inputContainers.length==0"><i class="fa fa-download"></i> Inputs</p>
-			<table ng-show="inputContainers.length>0" class="table" >
+		<!-- InputContainers table -->
+		<div class="col-md-12 col-lg-5" droppable drop-fn="atmService.data.drop" ng-model="atmService.data.inputContainers" ng-if="editMode && !inProgressNow && !doneAndRecorded">
+			<div class="panel panel-primary"  style="border-style:dashed">				
+			<div class="panel-body" ng-if="atmService.data.inputContainers.length==0">		
+				<p><i class="fa fa-download"></i> @Messages("experiments.inputs")</p>
+			</div>
+			
+			<table class="table" ng-if="atmService.data.inputContainers.length > 0">
 			<thead>
 				<tr>
 					<th>
@@ -36,179 +46,175 @@
 						@Messages("containers.table.libProcessTypeCodes")
 					</th>
 					<th>
-					</th>
+					</th>								
 				</tr>
 				</thead>				
-				<tr ng-model="container" ng-repeat="container in inputContainers | orderBy:'code'" draggable drag="dragInProgress">
+				<tr ng-model="container" ng-repeat="container in atmService.data.inputContainers | orderBy:'code'" draggable drag="dragInProgress">
 					<td>
-						<button ng-disabled="!experiment.experimentProperties.enabled" ng-click="deleteInput(container)" class="litte-icone"><i class="fa fa-trash-o"></i></button>
+						<button class="btn btn-default btn-xs" ng-disabled="!experiment.experimentProperties.enabled" ng-click="atmService.data.deleteInputContainer(container)" ><i class="fa fa-trash-o"></i></button>
 					</td>
 					<td>
 						{{container.code}}
 					</td>
 					<td class="col-sm-1">
-						<input class="form-control input-small valueInput" type="text" placeholder="" ng-readonly="!experiment.experimentProperties.enabled" ng-model="container.percentage" title='@Messages("containers.table.percentage")'/>
-					</td>					
+						<input class="form-control input-small valueInput" type="text" placeholder="" 
+						ng-readonly="!experiment.experimentProperties.enabled" 
+						ng-model="container.percentage" title='@Messages("containers.table.percentage")'/>
+					</td>				
 					<td>
-						<div list-resize="properties.tag.value in getTags(container.contents) | unique" list-resize-min-size='5' below vertical></div>						
-					</td>
-					<td title="{{getSampleTypeCodes(container.contents) | unique}}">
-						<div ng-repeat="content in container.contents | unique:'sampleTypeCode'  | limitTo: 12">
-							{{content.sampleTypeCode}}
-						</div>
-						
-					</td>
-					<td title="{{getLibProcessTypeCodes(container.contents) | unique}}">
-						<div ng-repeat="content in container.contents | unique:'properties.libProcessTypeCode.value'">
-							{{content.properties.libProcessTypeCode.value}}
-						</div>
+						<div list-resize='container.contents | getArray:"properties.tag.value"| unique' list-resize-min-size='5' below vertical>																
 					</td>
 					<td>
-					<button ng-click="duplicateContainer(container,$index)"><i class="fa fa-plus-square"></i></button>
+						<div list-resize='container.contents | getArray:"sampleTypeCode"| unique | codes:"type"' list-resize-min-size='5' below vertical>
 					</td>
+					<td>
+						<div list-resize='container.contents | getArray:"properties.libProcessTypeCode.value"| unique ' list-resize-min-size='5' below vertical>
+					</td>							
+					<td>
+						<button class="btn btn-default btn-xs" ng-click="atmService.data.duplicateInputContainer(container,$index)"><i class="fa fa-plus"></i></button>
+					</td>			
 				</tr>				
-			</table>
+			</table>			
+			</div>
 		</div>
-		<div class="col-md-5 col-lg-5 compoFlowcel">
-		<h2>@Messages("experiments.flowcell.design") :</h2> 
-			
-		<table class="table" >
-		<tr>
-		<th>
-		<button ng-click="hideRowAll()"  ng-if="isFilled() && isAllOpen" class="litte-eye headButtonEye"><i class="fa fa-eye-slash"></i></button>
-		<button ng-click="showRowAll()"  ng-if="isFilled() && !isAllOpen" class="litte-eye headButtonEye"><i class="fa fa-eye"></i></button>	
-		</th>
-		<th> </th>	
-		<th> </th>					
-		<th ng-if="isFilled() && isAllOpen">
-		<div class="insertHeadFC" ng-repeat="property in experiment.containerOutProperties track by $index">
-		<input class="form-control valueInput" ng-if="isFilled()" type="text"  ng-readonly="!experiment.experimentProperties.enabled" 
-				 ng-change="updateColumnPropertyCodeValues(property.code)" ng-blur="changeValueInFlowcellCompo()" ng-model="allOutputContainersUsed[property.code].value" />		
-		</div>
-		</th>
-		</tr>
-		@for(i <- 0 to laneCount-1) {			
-		<tr class="flowCellLane">			
-			<th id="numberLane">
-				<b class="numberLane">@(i+1)</b>
+		
+		<div class="col-md-12 col-lg-7 flowcellTable">
+			<table class="table" >
+			<thead>
+			<tr>
+			<th>
+			</th>
+			<th>
+				<button ng-click="hideRowAll()"  ng-if="isAllOpen" class="btn btn-default btn-xs"><i class="fa fa-eye-slash"></i></button>
+				<button ng-click="showRowAll()"  ng-if="!isAllOpen" class="btn btn-default btn-xs"><i class="fa fa-eye"></i></button>							
 			</th>
 			
-				<th ng-if="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0">
-					<button ng-click="hideRow(@i)"  ng-show="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0" class="litte-eye"><i ng-show="rows[@i]" class="fa fa-eye-slash"></i><i  ng-show="!rows[@i]" class="fa fa-eye"></i></button>
-				</th>
+			<th ng-if="isAllOpen">
+				@Messages("containers.table.code")
+			</th>
+			<th ng-if="isAllOpen">
+				@Messages("containers.table.percentage")
+			</th>
+			<th ng-if="isAllOpen">
+				@Messages("containers.table.sampleCodeAndTags")
+			</th>			
+			<th ng-if="isAllOpen">
+				@Messages("containers.table.sampleTypes")
+			</th>
+			<th ng-if="isAllOpen">
+				@Messages("containers.table.libProcessTypeCodes")
+			</th>
+			<th  ng-if="isAllOpen"
+				ng-repeat="property in outputContainerProperties">
+				{{property.name}}<span ng-if="property.displayMeasureValue"> ({{property.displayMeasureValue.value}})</span>
+			</th>
+			<th ng-if="!isAllOpen" colspan="{{5 + outputContainerProperties.length}}"></th>
+			</tr>
 			
-			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" ng-if="!experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0 && !editMode" colspan="7">
-			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="!experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0  && editMode && !dragIt" colspan="7">
-			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable ng-if="!experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0  && editMode && dragIt " class="dropZoneHover" colspan="7">
-			<td ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" ng-if="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0">
-				<div ng-hide="rows[@i]" class="LaneSummary">
-					<span  ng-repeat="flowcell in experiment.value.atomicTransfertMethods[@i].inputContainerUseds">
-						{{flowcell.code}} / {{flowcell.percentage}}% / PhiX:{{experiment.value.atomicTransfertMethods[@i].outputContainerUseds[0].experimentProperties.phixPercent.value || "nr"}}%;<br/>
-					</span>
-				</div>
-				<div class="LaneOutput" ng-show="rows[@i]">
-				<table ng-show="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0 && rows[@i]" class="table">
-				<tr>
-					<th class="LaneData">
-						@Messages("containers.table.code")
-					</th>
-					<th>
-						@Messages("containers.table.percentage")
-					</th>
-					<th class="tagCell">
-						@Messages("containers.table.sampleCodeAndTags")
-					</th>
-			@**	 	<th>
-						@Messages("containers.table.tags")
-					</th>  **@
-					<th>
-						@Messages("containers.table.sampleTypes")
-					</th>
-					<th>
-						@Messages("containers.table.libProcessTypeCodes")
-					</th>
-				</tr>				
-					<tr ng-repeat="flowcell in experiment.value.atomicTransfertMethods[@i].inputContainerUseds"  ng-model="flowcell"  draggable drag="dragInProgress">				
-						<td class="LaneData">							
-							{{flowcell.code}}
+			</thead>
+			<tbody ng-if="isAllOpen">
+			<tr>
+			<th colspan="7"></th>
+		
+			<th ng-repeat="property in outputContainerProperties">
+						<input class="form-control input-sm" type="text"  
+							ng-readonly="!experiment.experimentProperties.enabled" 
+								ng-model="outputContainerValues[property.code]" 
+								ng-change="updateAllOutputContainerProperty(property)"								
+								/>					
+			</th>
+			</tr>
+			</tbody>
+			
+			<tbody ng-repeat="atm in atmService.data.atm" ng-model="atm.inputContainerUseds" 
+				droppable drop-fn="atmService.data.drop" 
+				ng-class="getDroppableClass()"
+				ng-switch="getDisplayMode(atm, $index)">
+				
+				<tr ng-switch-when="empty">
+					<td>			
+						<span class="label label-black" ng-bind="atm.line"></span>
+					</td>
+					<td> 
+						<button class="btn btn-default btn-xs"  ng-click="toggleRow(atm.line - 1)" ng-switch="rows[$index]">
+							<i ng-switch-when="true" class="fa fa-eye-slash"></i>
+							<i ng-switch-when="false" class="fa fa-eye"></i>
+						</button>			
+					</td>
+					<td colspan="{{5 + outputContainerProperties.length}}"></td>
+				</tr>
+				
+				<tr ng-switch-when="compact">	
+					<td>
+						<span class="label label-black" ng-bind="atm.line"></span>
+					</td>
+					<td> 					
+						<button class="btn btn-default btn-xs"  ng-click="toggleRow(atm.line - 1)">
+							<!--  i class="fa fa-eye-slash"></i-->
+							<i class="fa fa-eye"></i>
+						</button>			
+					</td>	
+					<td colspan="{{5 + outputContainerProperties.length}}">
+						<span ng-repeat="inputContainer in atm.inputContainerUseds"  
+							ng-model="inputContainer" draggable drag="dragInProgress">
+							{{inputContainer.code}} / {{inputContainer.percentage}}% / PhiX:{{atm.outputContainerUseds[0].experimentProperties.phixPercent.value || "nr"}}%;<br/>
+						</span>
+					</td>
+				</tr>
+				
+				<tr ng-switch-when="open" ng-repeat="inputContainer in atm.inputContainerUseds"  
+							ng-model="inputContainer" draggable drag="dragInProgress">	
+						<td rowspan="{{atm.inputContainerUseds.length}}" ng-if="$index === 0">
+							<span class="label label-black" ng-bind="atm.line"></span>
+						</td>
+						<td rowspan="{{atm.inputContainerUseds.length}}" ng-if="$index === 0">
+							<button class="btn btn-default btn-xs"  ng-click="toggleRow(atm.line - 1)">
+								<i class="fa fa-eye-slash"></i>
+								<!-- i class="fa fa-eye"></i-->
+							</button>			
+						</td>			
+						<td>							
+							{{inputContainer.code}}
 						</td>
 						<td>
-							<input class="form-control valueInput" type="text" title='@Messages("containers.table.percentage")' ng-readonly="!experiment.experimentProperties.enabled" class="input-small" ng-blur="changeValueInFlowcellCompo(@i)" ng-model="flowcell.percentage" />
+							<input class="form-control input-sm" type="text" 
+								title='@Messages("containers.table.percentage")' 
+								ng-readonly="!experiment.experimentProperties.enabled"
+								ng-model="inputContainer.percentage"
+								ng-change="changeValueOnFlowcellDesign()" />
 						</td>
 						<td>							
-							<div list-resize="sampleAndTag in getSampleAndTags(flowcell) | unique" id="SampleTagCell" below vertical></div>
+							<div list-resize="sampleAndTag in getSampleAndTags(inputContainer)" id="SampleTagCell" below vertical></div>
 						</td>
-				@**		<td  title="{{getTags(flowcell.contents) | unique}}" ng-init="nbItem2 = 5">
-						<div ng-repeat="content in flowcell.contents | unique:'properties.tag.value' |  limitTo:nbItem2">
-								{{content.properties.tag.value}}
-							</div>							
-							
-						<button ng-show="nbItem2==5 && flowcell.contents.length>5" ng-click="nbItem2=flowcell.contents.length" class="small-litte-icone-transparent"> <i><b>...</b></i> </button>
-						<button ng-show="nbItem2>5 && flowcell.contents.length>5" ng-click="nbItem2=5" class="small-litte-icone-transparent "> <i class="fa fa-minus-square-o"></i> </button>
-						</td> **@
-						<td title="{{getSampleTypeCodes(flowcell.contents) | unique}}">
-							<div ng-repeat="content in flowcell.contents | unique:'sampleTypeCode' |  limitTo:12">
-								{{content.sampleTypeCode}}
-							</div>
+						<td>
+							<div list-resize='inputContainer.contents | getArray:"sampleTypeCode"| unique | codes:"type"' list-resize-min-size='5' below vertical>
 						</td> 
-						<td title="{{getLibProcessTypeCodes(flowcell.contents) | unique}}">
-							<div ng-repeat="content in flowcell.contents | unique:'properties.libProcessTypeCode.value'">
-								{{content.properties.libProcessTypeCode.value}}
-							</div>
-						</td>
-						<!--<td>
-								<button ng-disabled="!experiment.experimentProperties.enabled" ng-click="deleteInputOnAtomic(@i,container)"><i class="fa fa-trash-o"></i></button>
-					    </td>  -->
-					</tr>
+						<td>
+							<div list-resize='inputContainer.contents | getArray:"properties.libProcessTypeCode.value"| unique ' list-resize-min-size='5' below vertical>
 					
-					<tr ng-if="!editMode && (doneAndRecorded || inProgressNow)" ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" >
-					<tr ng-if="editMode &&  !doneAndRecorded && !inProgressNow" ng-model="experiment.value.atomicTransfertMethods[@i].inputContainerUseds" droppable >
-						<td ng-if="!dragIt"  colspan=6 class="dropZone" id="dropZoneFCOutput"></td>
-						<td ng-if="dragIt" colspan=6 class="dropZoneHover"></td>				
-					</tr>
-				</table>
-			</div>
-			</td>			
-			<td ng-if="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0 && rows[@i]">
-			
-			<table ng-show="experiment.value.atomicTransfertMethods[@i].inputContainerUseds.length > 0 && rows[@i]" class="table">
-				<tr>
-					<th ng-repeat="property in experiment.containerOutProperties">
-						{{property.name}}<span ng-if="property.displayMeasureValue"> ({{property.displayMeasureValue.value}})</span>
-					</th>
-				</tr>
-			    <tr>
-					<td style="min-width:70px" ng-repeat="property in experiment.containerOutProperties">
-								<div ng-switch on="property.choiceInList">
-								<input class="form-control valueInput" type="text" ng-switch-when="false" title="{{property.name}}"
-									ng-readonly="!experiment.experimentProperties.enabled"
-									ng-model="experiment.value.atomicTransfertMethods[@i].outputContainerUseds[0].experimentProperties[property.code].value"
-								    ng-blur="changeValueInFlowcellCompo(@i)"
-								    ng-change="notifyChange(@i,property)"
-								    />
-									
-								<select class="form-control"  
-										ng-readonly="!experiment.experimentInformation.enabled" 
-										ng-disabled="!experiment.experimentInformation.enabled" 
-										ng-model="experiment.value.atomicTransfertMethods[@i].outputContainerUseds[0].experimentProperties[property.code].value"
-										ng-switch-when="true" 
-										ng-blur="changeValueInFlowcellCompo(@i)"
-										ng-change="notifyChange(@i,property)"
-										auto-select>
-									<option ng-repeat="opt in property.possibleValues" value="{{opt.value}}">{{opt.value}}</option>
-								   </select>
-								   </div>
-					</td>
-			</tr>
+						</td>	
+						<td ng-repeat="property in outputContainerProperties" 
+							ng-if="$parent.$index === 0"
+							rowspan="{{atm.inputContainerUseds.length}}">
+							<input class="form-control input-sm" type="text" 
+								 title="{{property.name}}"
+								 ng-readonly="!experiment.experimentProperties.enabled" 
+								 ng-model="atm.outputContainerUseds[0].experimentProperties[property.code].value"
+								 ng-change="changeValueOnFlowcellDesign(property)" />						
+						</td>											
+					</tr>					
+			</tbody>	
 			</table>
-			
-			</td>			
-		</tr>
-		}
-		</table>
+		</div>
+		
+		
+		</div>
+		</div>
 		</div>
 	</div>
-	<div class="tab-pane roadmap" id="roadmap">
-		<div class="col-md-12 col-lg-12" ultimate-datatable="datatable"></div>
+	<div class="tab-pane" id="roadmap">
+	<div class="row roadmap">
+		<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data.datatable"></div>
 	</div>
-</div>
+	</div>
+</div>		
