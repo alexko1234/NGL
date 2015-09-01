@@ -35,6 +35,15 @@
 					</ul>
 				</li>				
 			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li>
+				<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="user">
+				<i class="fa fa-user"></i> @Context.current().request().username() <b class="caret"></b></a>
+				<ul class="dropdown-menu" role="menu" aria-labelledby="user">
+						<li><a href="/authentication/logout">@Messages("authentification.dropdown_list.signout")</a></li>
+				</ul>
+				</li>				
+			</ul>
 		</div>
 	</div>		
 </nav>

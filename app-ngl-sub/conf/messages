@@ -58,3 +58,6 @@ button.validate=Validate
 #containers.title = Containers
 #containers.menu = Containers
 
+authentification.dropdown_list.username=Utilisateur
+authentification.dropdown_list.profile=Profil
+authentification.dropdown_list.signout=Deconnexion

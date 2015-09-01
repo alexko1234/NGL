@@ -2,6 +2,8 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
+->  /authentication authentication.Routes
+
 # Home page
 GET		/											controllers.main.tpl.Main.home()
 
