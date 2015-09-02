@@ -134,18 +134,35 @@ rule "Sum % percentage per piste = 100 % "
    		$contextValidation.addErrors("Position["+$atomics.line+"]",	"error.validationexp.percentperoutputcontainerdefault", $total);
    	end
    	
-rule "Tag identique sur la meme position"
+rule "For Tag vide same sample"
 	@nglSQ (validations )
 	dialect "java"
 	salience 400
 	no-loop
     when
-    	   $contentInfo1 : ContentInfo($tag :tag,$sampleCode :sampleCode,$position:position,$containerCode1:containerCode)
+    	   $contentInfo1 : ContentInfo($tag :tag, $tag=="VIDE",$sampleCode :sampleCode,$position:position,$containerCode1:containerCode)
            $contentInfo2 : ContentInfo(this != $contentInfo1, tag == $tag, position==$position, sampleCode!=$sampleCode,$containerCode2:containerCode)
            $contextValidation:ContextValidation()
     then
+    	List<String> containers=new ArrayList<String>();
+    	containers.add($containerCode1);
+    	containers.add($containerCode2);
+    	Collections.sort(containers);
     	Logger.debug("Tag error "+$contentInfo1 + " position "+$position);
-    	$contextValidation.addErrors("Position["+$position+"]",	"error.validationexp.sametag", $tag,$containerCode1,$containerCode2);    	
+    	$contextValidation.addErrors("Position["+$position+"]",	"error.validationexp.sameSample",containers.get(0),containers.get(1));    	
+    end
+
+rule "No Tag with Tag "
+	@nglSQ (validations )
+	dialect "java"
+	salience 400
+	no-loop
+    when
+    	   $contentInfo1 : ContentInfo($tag :tag, $tag=="VIDE",$sampleCode :sampleCode,$position:position,$containerCode1:containerCode)
+           $contentInfo2 : ContentInfo(this != $contentInfo1, tag != $tag, position==$position, $containerCode2:containerCode)
+           $contextValidation:ContextValidation()
+    then
+    	$contextValidation.addErrors("Position["+$position+"]",	"error.validationexp.noTagSampleWithTagSample");    	
     end
 
 rule "Many TagCategory on same position"
@@ -155,7 +172,7 @@ rule "Many TagCategory on same position"
 	no-loop
 when
 	 LaneInfo($position:position)
-     $tagCategories : Set(empty==false, size > 1) from accumulate( ContentInfo ( $tagCategory : tagCategory,$position==position),
+     $tagCategories : Set(empty==false, size > 1) from accumulate( ContentInfo ( tag!="VIDE",$tagCategory : tagCategory,$position==position),
                         collectSet( $tagCategory) )
 	  $contextValidation:ContextValidation($errors : errors)
 then
@@ -170,7 +187,7 @@ rule "Same tag size"
 	no-loop
 when
 	 LaneInfo($position:position)
-     $tagRealSizes : Set(empty==false, size > 1) from accumulate( ContentInfo ( $tagRealSize : tagRealSize, $position==position),
+     $tagRealSizes : Set(empty==false, size > 1) from accumulate( ContentInfo ( tag!="VIDE", $tagRealSize : tagRealSize, $position==position),
                         collectSet( $tagRealSize) )
 	  $contextValidation:ContextValidation($errors : errors)
 then

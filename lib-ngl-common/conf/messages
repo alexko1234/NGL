@@ -26,10 +26,11 @@ error.badsizearray = Mauvais taille de tableau ({0} au lieu de {1}
 error.validationexp.percentperoutputcontainerdefault= "Le pourcentage total à déposer dans le container est différent de 100% (il vaut  {0}%)."
 error.validationexp.emptyoutputcontainer="La lane {0} ne possède aucun content."
 error.validationexp.manytagCategory="Plusieurs catégories d''index sont présentes."
-error.validationexp.sametag="L''index {0} n’est pas unique (containers concernés : {1},{2})"
+error.validationexp.sameSample="Les containers non indexés ({0},{1}) n''appartiennent pas au même échantillon"
+error.validationexp.noTagSampleWithTagSample="Présence de containers NON indéxés avec des containers indexés"
 
 error.validationexp.samelibprocesstypecode="Les containers non indexés ({0},{1}) n''ont pas le même type de processus de banque ({2},{3})"
-error.validationexp.samefromexperimenttypecode="Les containers non indexés ({0},{1}) ne proviennet pas du même type d''experience ({2},{3})"
+error.validationexp.samefromexperimenttypecode="Les containers non indexés ({0},{1}) ne proviennent pas du même type d''experience ({2},{3})"
 
 error.validationexp.duplicateinputcontainers="Le container {0} a été déposé plusieurs fois en position {1}"
 error.validationexp.badcontrolprepaflowcell="La piste contrôle {0} n’est pas cohérente avec le contenant sortie choisi {1}"
