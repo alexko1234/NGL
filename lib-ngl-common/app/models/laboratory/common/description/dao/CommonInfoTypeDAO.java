@@ -9,7 +9,6 @@ import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.ObjectType.CODE;
 import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.common.description.ValuationCriteria;
 import models.utils.dao.AbstractDAOMapping;
@@ -52,7 +51,6 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		cit.id = newId;
 		
 		insertState(cit.states, cit.id, false);
-		insertResolution(cit.resolutions, cit.id, false);
 		insertProperties(cit.propertiesDefinitions, cit.id, false);
 		insertInstitutes(cit.institutes, cit.id, false);
 		insertValuationCriterias(cit.criterias, cit.id, false);
@@ -73,7 +71,6 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		String sql = "UPDATE common_info_type SET name=? WHERE id=?";
 		jdbcTemplate.update(sql, cit.name, cit.id);
 		insertState(cit.states, cit.id, true);
-		insertResolution(cit.resolutions, cit.id, true);
 		insertProperties(cit.propertiesDefinitions, cit.id, true);
 		insertInstitutes(cit.institutes, cit.id, true);
 		insertValuationCriterias(cit.criterias, cit.id, true);
@@ -163,21 +160,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		}
 	}
 
-	private void insertResolution(List<Resolution> resolutions, Long citId, boolean deleteBefore) throws DAOException {
-		if(deleteBefore){
-			removeResolution(citId);
-		}
-		//Add resolutions list		
-		if(resolutions!=null && resolutions.size()>0){
-			String sql = "INSERT INTO common_info_type_resolution (fk_common_info_type, fk_resolution) VALUES(?,?)";
-			for(Resolution resolution:resolutions){
-				if(resolution == null || resolution.id == null ){
-					throw new DAOException("resolution is mandatory");
-				}
-				jdbcTemplate.update(sql, citId, resolution.id);
-			}
-		}
-	}
+
 	
 	
 	private void insertInstitutes(List<Institute> institutes, Long citId, boolean deleteBefore) throws DAOException {

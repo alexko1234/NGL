@@ -1,16 +1,12 @@
 package validation;
 
-import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.Resolution;
-import models.laboratory.common.description.State;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
-import models.laboratory.reagent.description.ReagentCatalog;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationHelper;
 
@@ -52,30 +48,6 @@ public class DescriptionValidationHelper {
 			ContextValidation contextValidation) {
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ExperimentType.find,false);		
 		
-	}
-
-	
-	
-	/**
-	 * 
-	 * @param stateCode
-	 * @param contextValidation
-	 * @deprecated "used InstanceValidationHelper.validationStateCode"
-	 */
-	public static void validationStateCode(String stateCode,ContextValidation contextValidation){
-		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, stateCode,"stateCode", State.find);
-	}
-
-	public static void validationResolutionCode(String resolutionCode,
-			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateExistDescriptionCode(contextValidation, resolutionCode,"resolutionCode", Resolution.find);		
-	}
-	
-	public static void validationResolutionCodes(List<String> resolutionCodes,
-			ContextValidation contextValidation) {
-		for(String resolutionCode:resolutionCodes){
-			BusinessValidationHelper.validateExistDescriptionCode(contextValidation, resolutionCode,"resolutionCode", Resolution.find);
-		}
 	}
 
 	

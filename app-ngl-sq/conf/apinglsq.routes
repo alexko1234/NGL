@@ -59,7 +59,6 @@ GET		/api/experiment/types											controllers.experiments.api.ExperimentTypes
 GET		/api/experiment/type/nodes										controllers.experiments.api.ExperimentTypeNodes.list()
 GET		/api/experiment/types/:code										controllers.experiments.api.ExperimentTypes.get(code:java.lang.String)
 GET		/api/experiment/types/defaultfirst/:code						controllers.experiments.api.ExperimentTypes.getDefaultFirstExperiments(code:java.lang.String)
-GET		/api/experiments/protocols 										controllers.experiments.api.Protocols.list()
 GET		/api/experiments/:code											controllers.experiments.api.Experiments.get(code:java.lang.String)
 
 GET		/api/experiment/instrument-properties/:instrumentUsedTypeCode	controllers.experiments.api.Experiments.getInstrumentProperties(instrumentUsedTypeCode:java.lang.String)

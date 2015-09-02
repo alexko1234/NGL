@@ -33,7 +33,7 @@ public class CommonInfoType extends Model<CommonInfoType>{
 	public Integer displayOrder; //position on display
 	
 	public List<State> states = new ArrayList<State>();
-	public List<Resolution> resolutions = new ArrayList<Resolution>();
+	
 
 	public List<PropertyDefinition> propertiesDefinitions=new ArrayList<PropertyDefinition>();
 
@@ -70,7 +70,6 @@ public class CommonInfoType extends Model<CommonInfoType>{
 		this.name=commonInfoType.name;
 		this.code=commonInfoType.code;
 		this.states=commonInfoType.states;
-		this.resolutions=commonInfoType.resolutions;
 		this.propertiesDefinitions=commonInfoType.propertiesDefinitions;
 		this.objectType=commonInfoType.objectType;
 		

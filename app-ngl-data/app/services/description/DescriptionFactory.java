@@ -70,21 +70,7 @@ public class DescriptionFactory {
 		}
 	}
 
-	/**
-	 * Create a resolution category from the resolutionService
-	 * @param name
-	 * @param code
-	 * @param displayOrder
-	 * @return
-	 * @throws DAOException
-	 */
-	public static models.laboratory.common.description.ResolutionCategory newResolutionCategory(String name, String code, Short displayOrder) throws DAOException {		
-		models.laboratory.common.description.ResolutionCategory  rc = new models.laboratory.common.description.ResolutionCategory();
-		rc.code = code;
-		rc.name = name;
-		rc.displayOrder = displayOrder;
-		return rc; 
-	}
+
 	
 	
 	public static ResolutionCategory newResolutionCategory(String name, Short displayOrder) {		
@@ -617,27 +603,6 @@ public class DescriptionFactory {
 		return measureUnit;
 	}
 
-	/**
-	 * deprecated (for old resolution)
-	 * @param name
-	 * @param code
-	 * @param category
-	 * @param institutes
-	 * @param objTypes
-	 * @return
-	 */
-	@Deprecated
-	public static models.laboratory.common.description.Resolution newResolution(String name, String code,
-			models.laboratory.common.description.ResolutionCategory category, List<Institute> institutes, List<ObjectType> objTypes, Short displayOrder) {
-		models.laboratory.common.description.Resolution r = new models.laboratory.common.description.Resolution();
-		r.code = code;
-		r.name = name;
-		r.category = category;
-		r.institutes = institutes;
-		r.objectTypes = objTypes;
-		r.displayOrder = displayOrder;
-		return r;
-	}
 	
 	/**
 	 * define institute

@@ -20,7 +20,7 @@ public class ExperimentType extends CommonInfoType{
 	public ExperimentCategory category;
 	//Relationship accessible by the parent table in the database
 	public List<InstrumentUsedType> instrumentUsedTypes = new ArrayList<InstrumentUsedType>();
-	public List<Protocol> protocols = new ArrayList<Protocol>();
+	//public List<Protocol> protocols = new ArrayList<Protocol>();
 	public String atomicTransfertMethod;
 	
 	public String shortCode;

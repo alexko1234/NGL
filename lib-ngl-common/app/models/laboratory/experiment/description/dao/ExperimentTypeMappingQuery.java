@@ -10,7 +10,6 @@ import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.description.Protocol;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 import models.utils.dao.DAOException;
@@ -54,10 +53,6 @@ public class ExperimentTypeMappingQuery extends MappingSqlQuery<ExperimentType>{
 		}
 		experimentType.setCommonInfoType(commonInfoType);
 		
-		//Get List protocols by common info type
-		ProtocolDAO protocolDAO = Spring.getBeanOfType(ProtocolDAO.class);
-		List<Protocol> protocols = protocolDAO.findByExperimentTypeId(idCommonInfoType);
-		experimentType.protocols=protocols;
 		//Get list instruments by common info type
 		InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
 		List<InstrumentUsedType> instrumentUsedTypes = instrumentUsedTypeDAO.findByExperimentId(idCommonInfoType);

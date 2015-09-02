@@ -85,19 +85,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		checkResolution(resolution);
 	}
 
-	private void checkResolution(Resolution resolution) {
-		Assert.assertNotNull(resolution);
-		Assert.assertNotNull(resolution.id);
-		Assert.assertNotNull(resolution.name);
-		Assert.assertNotNull(resolution.code);
-	}
 
-	private Resolution createResolution(String code, String name) {
-		Resolution resolution = new Resolution();
-		resolution.code=code;
-		resolution.name=name;
-		return resolution;
-	}
 
 	/**
 	 * TEST STATE_CATEGORY

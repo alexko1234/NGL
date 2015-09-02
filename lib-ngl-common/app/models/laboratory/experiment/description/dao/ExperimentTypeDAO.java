@@ -10,7 +10,6 @@ import java.util.Map;
 
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.description.Protocol;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.utils.dao.AbstractDAOCommonInfoType;
 import models.utils.dao.DAOException;
@@ -57,8 +56,6 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		parameters.put("short_code", experimentType.shortCode);
 		jdbcInsert.execute(parameters);
 
-		//Add list protocols
-		insertProtocols(experimentType.protocols, experimentType.id, false);
 		//Add list instruments
 		insertInstrumentUsedTypes(experimentType.instrumentUsedTypes, experimentType.id, false);
 
@@ -83,30 +80,6 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 	}
 
 
-	private void insertProtocols(List<Protocol> protocols, Long id, boolean deleteBefore) throws DAOException {
-		if(deleteBefore){
-			removeProtocols(id);
-		}
-		//Add resolutions list		
-		if(protocols!=null && protocols.size()>0){
-			String sql = "INSERT INTO experiment_type_protocol (fk_experiment_type, fk_protocol) VALUES(?,?)";
-			for(Protocol protocol:protocols){
-				if(protocol == null || protocol.id == null ){
-					throw new DAOException("protocol is mandatory");
-				}
-				jdbcTemplate.update(sql, id,protocol.id);
-			}
-		}
-
-	}
-
-
-	private void removeProtocols(Long id) {
-		String sql = "DELETE FROM experiment_type_protocol WHERE fk_experiment_type=?";
-		jdbcTemplate.update(sql, id);
-
-	}
-
 	private void removeInstrumentUsedTypes(Long id) {
 		String sql = "DELETE FROM experiment_type_instrument_type WHERE fk_experiment_type=?";
 		jdbcTemplate.update(sql, id);
@@ -118,16 +91,12 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 	public void update(ExperimentType experimentType) throws DAOException
 	{
 		ExperimentType expTypeDB = findById(experimentType.id);
-		//Add list protocols
-		insertProtocols(experimentType.protocols, experimentType.id, true);
 		//Add list instruments
 		insertInstrumentUsedTypes(experimentType.instrumentUsedTypes, experimentType.id, true);
 	}
 
 	@Override
 	public void remove(ExperimentType experimentType) throws DAOException {
-		//Remove protocol common_info_type_protocol
-		removeProtocols(experimentType.id);
 		//Remove instrument type common_info_type_instrument_type
 		removeInstrumentUsedTypes(experimentType.id);
 		//Remove experiment
