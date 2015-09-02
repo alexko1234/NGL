@@ -94,104 +94,88 @@
 		</div>
 		</div>
 		<!-- OutputContainers table -->
-		<div class="col-md-6 col-lg-6">
-		<div class="outputContainersOfTubeTransfert">
-			<h2>@Messages("experiments.tubetransfert.design") :</h2> 			
+		<div class="col-md-6 col-lg-6 flowcellTable">		
 			<table class="table" >
 				<thead>
 					<tr>
+						<th colspan="7">
+							@Messages("experiments.inputs")
+						</th>
+						<th colspan="2">
+							@Messages("experiments.outputs")
+						</th>												
+					</tr>
+					<tr>
 						<th>
-							IN
+							@Messages("containers.table.code")
 						</th>
 						<th>
-							OUT
-						</th>												
+							@Messages("containers.table.fromExperimentTypeCodes")
+						</th>
+						<th>
+							@Messages("containers.table.tags")
+						</th>
+						<th>
+							@Messages("containers.table.state.code")
+						</th>
+						<th>
+							@Messages("containers.table.volume") (µl)
+						</th>
+						<th>
+							@Messages("containers.table.concentration")
+						</th>									
+						<th>
+							@Messages("containers.table.percentageInsidePool")
+						</th>
+						<th>
+							@Messages("containers.table.code")
+						</th>
+						<th>
+							@Messages("containers.table.volume") (µL)
+						</th>		
 					</tr>
 				<thead>
 				<tbody>
-					<tr class="outputContainers">
-						<td>
-							<table class="table">								
-								<tr>									
-									<th>
-										@Messages("containers.table.code")
-									</th>
-									<th>
-										@Messages("containers.table.fromExperimentTypeCodes")
-									</th>
-									<th>
-										@Messages("containers.table.tags")
-									</th>
-									<th>
-										@Messages("containers.table.state.code")
-									</th>
-									<th>
-										@Messages("containers.table.volume") (µl)
-									</th>
-									<th>
-										@Messages("containers.table.concentration")
-									</th>									
-									<th>
-										@Messages("containers.table.percentageInsidePool")
-									</th>	
-																
-								</tr>
-									
-								<tr ng-model="inputContainerUsed" ng-repeat="inputContainerUsed in atmService.data.atm[0].inputContainerUseds | orderBy:'code'" draggable >									
-									<td>
-										{{inputContainerUsed.code}}
-									</td>
-									<td>
-										<div list-resize='inputContainerUsed.contents | getArray:"properties.libProcessTypeCode.value"| unique | codes:"value"'' list-resize-min-size='5' below vertical>
-									</td>						
-									<td>
-										<div list-resize='inputContainerUsed.contents | getArray:"properties.tag.value"| unique' list-resize-min-size='5' below vertical>															
-									</td>
-									<td>
-										{{inputContainerUsed.state.code | codes:'state'}}
-									</td>
-									<td>
-										{{inputContainerUsed.volume.value}}
-									</td>
-									<td>
-										{{inputContainerUsed.concentration.value | number}} {{inputContainerUsed.concentration.unit}}
-									</td> 														
-									<td class="col-sm-1">
-										<input class="form-control input-small valueInput" type="text" placeholder="" ng-readonly="!experiment.experimentProperties.enabled" 
-										ng-model="inputContainerUsed.percentage" title='@Messages("containers.table.percentage")' ng-blur="atmService.data.updateDatatable()"/>										
-									</td>
-								</tr>									
-							</table>
-						</td>
-						<td>
-							<table  class="table">
-								<tr>
-									<th>
-										@Messages("containers.table.code")
-									</th>
-									<th>
-										@Messages("containers.table.volume") (µL)
-									</th>								
-								</tr>
-			   					 <tr>
-									<td >
-										{{atmService.data.atm[0].outputContainerUseds[0].code}}
-									</td>
-									<td>
-									<input class="form-control valueInput" type="text" title="Messages("containers.table.volume")"
-											ng-readonly="!experiment.experimentProperties.enabled"
-											ng-model="atmService.data.atm[0].outputContainerUseds[0].volume.value"
-								   			ng-blur="atmService.data.updateDatatable()"								   			
-								   			/>										
-									</td>							
-								</tr>
-							</table>
-						</td>				
-					</tr>
+						<tr ng-model="inputContainerUsed" ng-repeat="inputContainerUsed in atmService.data.atm[0].inputContainerUseds | orderBy:'code'" draggable >									
+							<td>
+								{{inputContainerUsed.code}}
+							</td>
+							<td>
+								<div list-resize='inputContainerUsed.fromExperimentTypeCodes | unique | codes:"type"' list-resize-min-size='5' below vertical>
+							</td>						
+							<td>
+								<div list-resize='inputContainerUsed.contents | getArray:"properties.tag.value"| unique' list-resize-min-size='5' below vertical>															
+							</td>
+							<td>
+								{{inputContainerUsed.state.code | codes:'state'}}
+							</td>
+							<td>
+								{{inputContainerUsed.volume.value}}
+							</td>
+							<td>
+								{{inputContainerUsed.concentration.value | number}} {{inputContainerUsed.concentration.unit}}
+							</td> 														
+							<td>
+								<input class="form-control input-sm" type="text" placeholder="" ng-readonly="!experiment.experimentProperties.enabled" 
+								ng-model="inputContainerUsed.percentage" title='@Messages("containers.table.percentage")' ng-blur="atmService.data.updateDatatable()"/>										
+							</td>
+						
+							<td rowspan="{{atmService.data.atm[0].inputContainerUseds.length}}"
+								ng-if="$index === 0">
+								{{atmService.data.atm[0].outputContainerUseds[0].code}}
+							</td>
+							<td rowspan="{{atmService.data.atm[0].inputContainerUseds.length}}"
+								ng-if="$index === 0">
+							<input class="form-control input-sm" type="text" title="Messages("containers.table.volume")"
+									ng-readonly="!experiment.experimentProperties.enabled"
+									ng-model="atmService.data.atm[0].outputContainerUseds[0].volume.value"
+						   			ng-blur="atmService.data.updateDatatable()"								   			
+						   			/>										
+							</td>							
+						</tr>						
 				</tbody>
 				
 			</table>
-		</div>
 		</div>
 		</div>
 	</div>
@@ -199,7 +183,7 @@
 	</div>		
 		
 	<div class="tab-pane" id="roadmap">
-	<div class="row">
+	<div class="row roadmap">
 		<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data.datatable"></div>
 	</div>
 	</div>

@@ -111,7 +111,7 @@ angular.module('home').controller('CNGTubesToFlowcellCtrl',['$scope', '$parse', 
 		return   this.$commonATM.convertSinglePropertyToDatatableColumn(property,"outputContainerUsed.experimentProperties.",{"0":"lib-B"});
 	};
 	
-	$scope.atmService.experimentToView($scope.experiment);
+	atmToSingleDatatable.addExperimentPropertiesToDatatable($scope.experiment.experimentProperties.inputs);
 	
 	
 }]);

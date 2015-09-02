@@ -230,7 +230,7 @@ experiments.outputs = Container en sortie
 
 experiments.calculation.sheet = Feuille de calcul
 experiments.flowcell.design = Composition flowcell
-experiments.tube.design = Transfert Tube
+experiments.tube.design = Composition Tube
 experiments.tubes.design = Tubes Paramétrage
 experiments.tubes.display = Tubes Composition
 experiments.flowcell.roadMap = Feuille de route
@@ -238,8 +238,6 @@ experiment.reagents = Reactifs
 experiments.addNewReagentLine = Ajouter un réactif
 experiment.placeholder.reagentOrBoxCode = CB boîte ou reactif
 experiments.select.processResolutions = Dans le cas d''un arrêt de processus : sélect. une résolution
-
-experiments.tubetransfert.design = Tube en sortie
 
 experiment.finishExperiment = Que souhaitez-vous faire ?
 experiment.continueProcess=Comment souhaitez-vous continuer ?

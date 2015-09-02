@@ -37,7 +37,7 @@ angular.module('home').controller('CNSTubesToFlowcellCtrl',['$scope', '$parse', 
 		        	 "extraHeaders":{0:"solution stock"}
 		         },				         
 				 {
-		        	 "header":Messages("containers.table.concentration") + "(nM)",
+		        	 "header":Messages("containers.table.concentration") + " (nM)",
 		        	 "property":"inputContainer.mesuredConcentration.value",
 		        	 "order":true,
 					 "edit":false,
@@ -117,8 +117,7 @@ angular.module('home').controller('CNSTubesToFlowcellCtrl',['$scope', '$parse', 
 	
 		
 	atmToSingleDatatable.data.setColumnsConfig(columns);
-	
-	$scope.atmService.experimentToView($scope.experiment);
+	atmToSingleDatatable.addExperimentPropertiesToDatatable($scope.experiment.experimentProperties.inputs);
 	
 	$scope.$parent.changeValueOnFlowcellDesign = function(){
 		$scope.atmService.data.updateDatatable();

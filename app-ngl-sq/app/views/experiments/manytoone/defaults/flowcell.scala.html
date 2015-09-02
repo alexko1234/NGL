@@ -11,7 +11,7 @@
 		<div class="col-md-12 col-lg-12">
 		<div class="row">
 		<div ng-model="atmService.data.inputContainers" ng-if="!editMode || doneAndRecorded || inProgressNow" 
-			class="col-md-6 col-lg-4">
+			class="col-md-6 col-lg-5">
 			<div class="panel panel-primary" style="border-style:dashed">
 				<div class="panel-body">		
 					<p><i class="fa fa-download"></i> @Messages("experiments.inputs")</p>
@@ -144,18 +144,18 @@
 					<td colspan="{{5 + outputContainerProperties.length}}"></td>
 				</tr>
 				
-				<tr ng-switch-when="compact">	
-					<td>
+				<tr ng-switch-when="compact" >	
+					<td class="compactColumn">
 						<span class="label label-black" ng-bind="atm.line"></span>
-					</td>
-					<td> 					
+					</td >
+					<td class="compactColumn"> 					
 						<button class="btn btn-default btn-xs"  ng-click="toggleRow(atm.line - 1)">
 							<!--  i class="fa fa-eye-slash"></i-->
 							<i class="fa fa-eye"></i>
 						</button>			
 					</td>	
-					<td colspan="{{5 + outputContainerProperties.length}}">
-						<span ng-repeat="inputContainer in atm.inputContainerUseds"  
+					<td colspan="{{5 + outputContainerProperties.length}}" >
+						<span ng-repeat="inputContainer in atm.inputContainerUseds"  class="compactText"
 							ng-model="inputContainer" draggable drag="dragInProgress">
 							{{inputContainer.code}} / {{inputContainer.percentage}}% / PhiX:{{atm.outputContainerUseds[0].experimentProperties.phixPercent.value || "nr"}}%;<br/>
 						</span>
@@ -206,8 +206,6 @@
 			</tbody>	
 			</table>
 		</div>
-		
-		
 		</div>
 		</div>
 		</div>
