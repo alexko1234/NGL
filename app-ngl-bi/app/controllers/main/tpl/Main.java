@@ -7,7 +7,6 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
 import models.laboratory.common.description.CodeLabel;
-import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.dao.CodeLabelDAO;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
