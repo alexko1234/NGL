@@ -1,6 +1,6 @@
 "use strict";
  
-angular.module('home', ['ngRoute','ultimateDataTableServices','basketServices', 'commonsServices','ui.bootstrap','atomicTransfereServices','atomicTransfereServices2','dragndropServices','ngl-sq.experimentsServices'], 
+angular.module('home', ['ngRoute','ultimateDataTableServices','basketServices', 'commonsServices','ui.bootstrap','atomicTransfereServices2','dragndropServices','ngl-sq.experimentsServices'], 
 		function($routeProvider, $locationProvider) {
 	$routeProvider.when('/experiments/new/home', {
 		templateUrl : jsRoutes.controllers.experiments.tpl.Experiments.searchSupports().url,

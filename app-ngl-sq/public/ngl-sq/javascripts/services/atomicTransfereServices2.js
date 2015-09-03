@@ -301,8 +301,11 @@ angular.module('atomicTransfereServices2', [])
 						$that.addNewAtomicTransfertMethodsInDatatable();							
 	                });
 				},
-				//One atomic by input only for OneToOne ???
-				addNewAtomicTransfertMethodsInDatatable : function(){
+				//One atomic by input only for OneToOne but not manyToOne ???
+				/**
+				 * type = OneToOne or ManyToOne
+				 */
+				addNewAtomicTransfertMethodsInDatatable : function(type){
 					if(null != mainService.getBasket() && null != mainService.getBasket().get() && this.isAddNew){
 						$that = this;
 						$commonATM.loadInputContainerFromBasket(mainService.getBasket().get())
@@ -312,11 +315,19 @@ angular.module('atomicTransfereServices2', [])
 									allData = $that.data.getData();
 									i = allData.length;
 								}
+								var atomicTransfertMethod = $that.newAtomicTransfertMethod();
+								
 								
 								angular.forEach(containers, function(container){
 									var line = {};
-									line.atomicIndex=i++;
-									line.atomicTransfertMethod = $that.newAtomicTransfertMethod();
+									if(type === "ManyToOne"){
+										line.atomicTransfertMethod = atomicTransfertMethod;
+										line.atomicIndex=0;
+									}else{
+										line.atomicTransfertMethod = $that.newAtomicTransfertMethod();
+										line.atomicIndex=i++;
+									}
+										
 									line.inputContainer = container;
 									line.inputContainerUsed = $commonATM.convertContainerToInputContainerUsed(line.inputContainer);
 									if(!$that.$outputIsVoid){
@@ -331,7 +342,7 @@ angular.module('atomicTransfereServices2', [])
 					}					
 				},
 				
-				experimentToView:function(experiment){
+				experimentToView:function(experiment, type){
 					if(null === experiment || undefined === experiment){
 						throw 'experiment is required';
 					}
@@ -339,7 +350,7 @@ angular.module('atomicTransfereServices2', [])
 					if(experiment.editMode){
 						this.convertExperimentATMToDatatable(experiment.value.atomicTransfertMethods);													
 					}else{
-						this.addNewAtomicTransfertMethodsInDatatable();
+						this.addNewAtomicTransfertMethodsInDatatable(type);
 					}
 					
 					this.addExperimentPropertiesToDatatable(experiment.experimentProperties.inputs);						

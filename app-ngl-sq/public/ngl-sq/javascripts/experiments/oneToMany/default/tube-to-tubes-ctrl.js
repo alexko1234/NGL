@@ -185,7 +185,7 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', 'atmToGenerateMan
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
 			         {
-			        	 "header":Messages("containers.table.quantity") + " (µL)",
+			        	 "header":Messages("containers.table.quantity") + " (ng)",
 			        	 "property":"inputContainer.mesuredQuantity.value",
 			        	 "order":true,
 						 "edit":false,

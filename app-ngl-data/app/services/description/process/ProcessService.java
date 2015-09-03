@@ -197,7 +197,7 @@ public class ProcessService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Type banque","libProcessTypeCode",LevelService.getLevels(Level.CODE.Process,Level.CODE.Content),String.class, true,  DescriptionFactory.newValues("W"), "W","single" ,20));
 		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille banque souhaitée","librarySize",LevelService.getLevels(Level.CODE.Process),Integer.class,true, DescriptionFactory.newValues("8","20")
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "kb"),MeasureUnit.find.findByCode( "kb"), "single",1));
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode( "kb"),MeasureUnit.find.findByCode( "kb"), "single",1));
 
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Commentaire","comment",LevelService.getLevels(Level.CODE.Process),String.class,false,"single",2));
 		
