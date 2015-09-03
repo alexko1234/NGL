@@ -48,11 +48,12 @@ angular.module('home').controller('TubeToTubeCtrl',['$scope', '$parse', 'atmToSi
 			         {
 			        	"header":Messages("containers.table.tags"),
 			 			"property": "inputContainer.contents",
+			 			"filter": "getArray:'properties.tag.value'",
 			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
 			 			"position":4,
-			 			"render":"<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' ' list-resize-min-size='3'>",
+			 			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='3'>",
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
 								 

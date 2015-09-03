@@ -49,21 +49,23 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 				     {
 			        	"header":"Code aliquot",
 			 			"property": "inputContainer.contents",
+			 			"filter": "getArray:'properties.sampleAliquoteCode.value'",
 			 			"order":false,
 			 			"hide":true,
 			 			"type":"text",
 			 			"position":4,
-			 			"render": "<div list-resize='cellValue | getArray:\"properties.sampleAliquoteCode.value\"| unique' list-resize-min-size='3'>",
+			 			"render": "<div list-resize='cellValue | unique' list-resize-min-size='3'>",
 			        	 "extraHeaders":{0:"Inputs"}
 				     },
 			         {
 			        	"header":Messages("containers.table.tags"),
 			 			"property": "inputContainer.contents",
+			 			"filter": "getArray:'properties.tag.value'",
 			 			"order":false,
 			 			"hide":true,
 			 			"type":"text",
 			 			"position":5,
-			 			"render":"<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' list-resize-min-size='3'>",
+			 			"render":"<div list-resize='cellValue |  unique' list-resize-min-size='3'>",
 			        	 "extraHeaders":{0:"Inputs"}
 			         },				 
 					 {
