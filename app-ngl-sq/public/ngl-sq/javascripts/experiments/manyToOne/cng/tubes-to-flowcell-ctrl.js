@@ -108,7 +108,7 @@ angular.module('home').controller('CNGTubesToFlowcellCtrl',['$scope', '$parse', 
 		
 	};
 	atmToSingleDatatable.convertInputPropertiesToDatatableColumn = function(property){
-		return   this.$commonATM.convertSinglePropertyToDatatableColumn(property,"outputContainerUsed.experimentProperties.",{"0":"lib-B"});
+		return   this.$commonATM.convertSinglePropertyToDatatableColumn(property,"inputContainerUsed.experimentProperties.",{"0":"lib-B"});
 	};
 	
 	atmToSingleDatatable.addExperimentPropertiesToDatatable($scope.experiment.experimentProperties.inputs);
