@@ -398,6 +398,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 		// Attention appel de get du controller api.sra.submissions qui est herite
 		$http.get(jsRoutes.controllers.sra.submissions.api.Submissions.get($routeParams.code).url).success(function(data) {
 			$scope.submission = data;	
+			console.log("$routeParams.code:"+$routeParams.code);
 			console.log("Submission.code :"+$scope.submission.code);
 			console.log("Submission.refSampleCodes :"+$scope.submission.refSampleCodes);
 			console.log("Submission.sampleCodes :"+$scope.submission.sampleCodes);

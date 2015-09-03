@@ -7,6 +7,7 @@ import views.html.submissions.home;
 import views.html.submissions.create;
 import views.html.submissions.details;
 import views.html.submissions.activate;
+import views.html.submissions.consultation;
 import controllers.readsets.api.ReadSetsController;
 
 public class Submissions extends CommonController
@@ -29,7 +30,6 @@ public class Submissions extends CommonController
 	
 	public static Result details()
 	{
-		// todo remettre details.render et import views.html.submissions.details;
 		return ok(details.render());
 
 	}
@@ -38,6 +38,11 @@ public class Submissions extends CommonController
 		return ok(activate.render());
 
 	}	
+	public static Result consultation()
+	{
+		return ok(consultation.render());
+
+	}
 	public static Result javascriptRoutes() {
   	    response().setContentType("text/javascript");
   	    return ok(  	    		

@@ -128,7 +128,7 @@
 						order:true});	
 		return columns;
 	};
-	
+		
 	var isInit = false;
 	
 	var initListService = function(){
@@ -143,6 +143,7 @@
 			lists : lists,
 			form : undefined,
 			datatable : undefined,
+			
 			setRouteParams:function($routeParams){
 				var count = 0;
 				for(var p in $routeParams){
@@ -196,6 +197,94 @@
 			}
 	};
 	return activateService;
+	}
+]).factory('submissionsConsultationService', ['$http', 'mainService', 'lists', 'datatable', function($http, mainService, lists, datatable){
+	var getColumns = function(){
+		var columns = [];
+		columns.push({	property:"code",
+			    	  	header: "submissions.code",
+			    	  	type :"text",		    	  	
+			    	  	order:true});
+		columns.push({	property:"state.code",
+						header: "submissions.state",
+						type :"text",
+						order:true});	
+		return columns;
+	};
+	
+	var isInit = false;
+	
+	var initListService = function(){
+		if(!isInit){
+			consultationService.lists.refresh.projects();
+			isInit=true;
+		}
+	};
+	
+		
+	var consultationService = {
+			isRouteParam : false,
+			lists : lists,
+			form : undefined,
+			datatable : undefined,
+			
+			// methode appelee pour remplir le tableau des soumissions 
+			// Recherche toutes les soumissions pour projCode indiqué :
+			search : function(){
+				this.datatable.search({projCode:this.form.projCode});
+				console.log(this.form);
+			},
+			
+			cancel : function(){
+				this.datatable.setData([],0);
+			},
+			
+			
+			resetForm : function(){
+				this.form = {};	
+			},
+			// important pour avoir le menu permettant d'epingler : 
+			setRouteParams:function($routeParams){
+					var count = 0;
+					for(var p in $routeParams){
+						count++;
+						break;
+					}
+					if(count > 0){
+						this.isRouteParam = true;
+						this.form = $routeParams;
+					}
+				},
+				
+			//
+			// initialization of the service
+			 //
+			init : function($routeParams, submissionDTConfig){
+				initListService();
+				
+				//to avoid to lost the previous search
+				if(submissionDTConfig && angular.isUndefined(mainService.getDatatable())){
+					consultationService.datatable = datatable(submissionDTConfig);
+					mainService.setDatatable(consultationService.datatable);
+					consultationService.datatable.setColumnsConfig(getColumns());		
+				}else if(angular.isDefined(mainService.getDatatable())){
+					consultationService.datatable = mainService.getDatatable();			
+				}	
+				
+				//to avoid to lost the previous search
+				if(angular.isDefined(mainService.getForm())){
+					consultationService.form = mainService.getForm();
+					
+				}else{
+					consultationService.resetForm();						
+				}
+				
+				if(angular.isDefined($routeParams)){
+					this.setRouteParams($routeParams);
+				}
+			}
+	};
+	return consultationService;
 }
 ])/*.factory('submissionsValidateService', ['$http', 'mainService', 'lists', 'datatable', function($http, mainService, lists, datatable){
 

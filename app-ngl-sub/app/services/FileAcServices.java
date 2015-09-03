@@ -70,34 +70,7 @@ public class FileAcServices  {
 		}
 	}
 	
-/*	public void runReporting() throws UnsupportedEncodingException, MessagingException {
-		
-		try {
-			
-			//Get global parameters for email
-			String expediteur = ConfigFactory.load().getString("reporting.email.from"); 
-			String dest = ConfigFactory.load().getString("reporting.email.to");   
-			String subject = ConfigFactory.load().getString("reporting.email.subject") + " " + ConfigFactory.load().getString("institute") + " " + ConfigFactory.load().getString("ngl.env");
-		    Set<String> destinataires = new HashSet<String>();
-		    destinataires.addAll(Arrays.asList(dest.split(",")));
-		    
-		    MailServices mailService = new MailServices();
-		    
-		    //Get data 
-    
-		    //Send mail using global parameters and content
-		    mailService.sendMail(expediteur, destinataires, subject, new String(content.getBytes(), "iso-8859-1"));
-		    
-		} catch (MailServiceException e) {
-//			Logger.error("MailService error: "+e.getMessage(),e);
-			throw new SraException("traitementFileAC :: parametres d'entree à null" );
 
-		}
-		
-	}
-	*/
-	
-	//
 	public static Submission traitementFileAC(String submissionCode, File ebiFileAc) throws IOException, SraException, MailServiceException {
 		if (StringUtils.isBlank(submissionCode) || (ebiFileAc == null)) {
 			throw new SraException("traitementFileAC :: parametres d'entree à null" );

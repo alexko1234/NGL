@@ -9,9 +9,11 @@
 	<div class="col-md-12 col-lg-12">
 	<div class="page-header">	
 		<div class="btn-toolbar pull-right" >
-			 <button class="btn btn-default" ng-disabled="!(sampleCheck && experimentCheck && runCheck && rawDataCheck)" ng-click="userValidate()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
-			 <button class="btn btn-default" ng-if="mainService.isEditMode()" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
-			 <button class="btn btn-default" ng-if="!mainService.isEditMode()" ng-click="activeEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>		 					
+			<!--Afficher boutons  uniquement si submission.state.code='new' => ng-if="submission.state.code=='new'"
+			Variable submission declarée dans scope de details.ctrl.js-->
+			 <button class="btn btn-default" ng-if="submission.state.code=='new'" ng-disabled="!(sampleCheck && experimentCheck && runCheck && rawDataCheck)" ng-click="userValidate()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
+			 <button class="btn btn-default" ng-if="mainService.isEditMode() && submission.state.code=='new'" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
+			 <button class="btn btn-default" ng-if="!mainService.isEditMode() && submission.state.code=='new'" ng-click="activeEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>		 					
 		</div>	 
 	</div>
 	</div>
@@ -34,19 +36,21 @@
 		</ul>
 		<div class="tab-content">
 			<div class="tab-pane active" id="sample">
-				<div class="checkbox"><label><input type="checkbox"ng-model="sampleCheck"/>Validate Sample</label></div>
+			<!--Afficher boutons de check uniquement si submission.state.code='new' => ng-if="submission.state.code=='new'"
+			Variable submission declarée dans scope de details.ctrl.js-->
+				<div class="checkbox" ng-if="submission.state.code=='new'"><label><input type="checkbox" ng-model="sampleCheck"/>Validate Sample</label></div>
 				<div datatable="sampleDT"></div>
 			</div>
 			<div class="tab-pane" id="experiment">
-				<div class="checkbox"><label><input type="checkbox" ng-model="experimentCheck"/>Validate Experiment</label></div>
+				<div class="checkbox" ng-if="submission.state.code=='new'"><label><input type="checkbox" ng-model="experimentCheck"/>Validate Experiment</label></div>
 				<div datatable="experimentDT"></div>
 			</div>
 			<div class="tab-pane" id="run">
-				<div class="checkbox"><label><input type="checkbox" ng-model="runCheck"/>Validate Run</label></div>
+				<div class="checkbox" ng-if="submission.state.code=='new'"><label><input type="checkbox" ng-model="runCheck"/>Validate Run</label></div>
 				<div datatable="runDT"></div>
 			</div>
 			<div class="tab-pane" id="rawData">
-				<div class="checkbox"><label><input type="checkbox" ng-model="rawDataCheck"/>Validate Raw Data</label></div>
+				<div class="checkbox" ng-if="submission.state.code=='new'"><label><input type="checkbox" ng-model="rawDataCheck"/>Validate Raw Data</label></div>
 				<div datatable="rawDataDT"></div>
 			</div>
 		</div>

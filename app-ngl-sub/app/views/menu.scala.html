@@ -32,6 +32,7 @@
 					<!-- sous menu create qui appelle controler tpl submission.home -->
 						<li class="@("active".when(nav == "submissions.create"))"><a href="@controllers.sra.submissions.tpl.routes.Submissions.home("create")">@Messages("submissions.menu.create")</a></li>																				
 						<li class="@("active".when(nav == "submissions.activate"))"><a href="@controllers.sra.submissions.tpl.routes.Submissions.home("activate")">@Messages("submissions.menu.activate")</a></li>																				
+						<li class="@("active".when(nav == "submissions.consultation"))"><a href="@controllers.sra.submissions.tpl.routes.Submissions.home("consultation")">@Messages("submissions.menu.consultation")</a></li>																				
 					</ul>
 				</li>				
 			</ul>

@@ -20,6 +20,12 @@ angular.module('home', ['ngRoute', 'commonsServices', 'datatableServices','ui.bo
 		controller : 'ActivateCtrl'
 	});
 	
+	$routeProvider.when('/sra/submissions/consultation/home', {
+		// url qui va appeler controler java de type tpl
+		templateUrl : '/tpl/sra/submissions/consultation',
+		controller : 'ConsultationCtrl'
+	});	
+	
 	/*
 	$routeProvider.when('/sra/submissions/validate/home', {
 		// url qui va appeler controler java de type tpl
