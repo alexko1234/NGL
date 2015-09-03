@@ -64,12 +64,12 @@ public class ValueDAO extends AbstractDAODefault<Value>{
 	}
 
 	public List<Value> findUnique(String propertyDefinitionCode){
-		String sql = 
+		String sql =  
 				"select distinct v.value, v.code, v.name "
 				+"from  NGL.value v "
 			    +"inner join NGL.property_definition pd on pd.id = v.fk_property_definition "
 				+"inner join NGL.common_info_type cit on cit.id = pd.fk_common_info_type "
-				+DAOHelpers.getCommonInfoTypeSQLForInstitute("cit")
+				//+DAOHelpers.getCommonInfoTypeSQLForInstitute("cit")
 			    +"where pd.code = ? "
 			    +"order by v.name";
 		
