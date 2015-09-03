@@ -88,30 +88,57 @@ public class RunServiceCNG  extends AbstractRunService{
 		return values;	
 	}
 	
-	// GA 24/07/2015 remarque: ce sont les valeurs du CNS!!!
 	private static List<Value> getLibProcessTypeCodeValues(){
-		List<Value> values = new ArrayList<Value>();
-		values.add(DescriptionFactory.newValue("A", "A - Mate-pair"));
-		values.add(DescriptionFactory.newValue("B", "B - Multiplex-pairee"));
-		values.add(DescriptionFactory.newValue("C", "C - Multiplex-mate-pair"));
-		values.add(DescriptionFactory.newValue("D", "D - Digestion"));
-		values.add(DescriptionFactory.newValue("E", "E - Paire chevauchant"));
-		values.add(DescriptionFactory.newValue("F",	"F - Paire chevauchant multiplex"));
-		values.add(DescriptionFactory.newValue("G", "G - Capture simple"));
-		values.add(DescriptionFactory.newValue("H", "H - Capture multiplex"));
-		values.add(DescriptionFactory.newValue("K", "K - Mate-pair clip"));
-		values.add(DescriptionFactory.newValue("L", "L - Moleculo-like"));
-		values.add(DescriptionFactory.newValue("M", "M - Multiplex"));
-		values.add(DescriptionFactory.newValue("MI", "MI - Moleculo Illumina"));
-		values.add(DescriptionFactory.newValue("N", "N - Mate-pair Nextera"));
-		values.add(DescriptionFactory.newValue("P", "P - Pairee"));
-		values.add(DescriptionFactory.newValue("S", "S - Simple"));
-		values.add(DescriptionFactory.newValue("U", "U - Simple ou Paire"));
-		values.add(DescriptionFactory.newValue("W", "W - Simple ou Paire multiplex"));
-		values.add(DescriptionFactory.newValue("Z", "Z - BAC ENDs Illumina"));
-		return values;
-		
-	}
+        List<Value> values = new ArrayList<Value>();
+         values.add(DescriptionFactory.newValue("CA","CA - DefCap008_Rg"));
+         values.add(DescriptionFactory.newValue("CAA","CAA - DefCap023"));
+         values.add(DescriptionFactory.newValue("CB","CB - DefCap005_Ex"));
+         values.add(DescriptionFactory.newValue("CC","CC - DefCap006_Ex"));
+         values.add(DescriptionFactory.newValue("CD","CD - DefCap004_Rg"));
+         values.add(DescriptionFactory.newValue("CE","CE - DefCap003_Ex"));
+         values.add(DescriptionFactory.newValue("CF","CF - DefCap002_Ex"));
+         values.add(DescriptionFactory.newValue("CG","CG - DefCap001_Ex"));
+         values.add(DescriptionFactory.newValue("CH","CH - DefCap009_Ex"));
+         values.add(DescriptionFactory.newValue("CI","CI - DefCap010_Ex"));
+         values.add(DescriptionFactory.newValue("CJ","CJ - DefCap011_Ex"));
+         values.add(DescriptionFactory.newValue("CK","CK - DefCap007_Ex"));
+         values.add(DescriptionFactory.newValue("CL","CL - DefCapLUPA"));
+         values.add(DescriptionFactory.newValue("CM","CM - DefCap012_Rg"));
+         values.add(DescriptionFactory.newValue("CN","CN - DefCapINRA1_Rg"));
+         values.add(DescriptionFactory.newValue("CO","CO - DefCapCAPSEQAN"));
+         values.add(DescriptionFactory.newValue("CP","CP - DefCap013_Ex"));
+         values.add(DescriptionFactory.newValue("CQ","CQ - DefCap014_Rg"));
+         values.add(DescriptionFactory.newValue("CR","CR - DefCap015_Ex"));
+         values.add(DescriptionFactory.newValue("CS","CS - DefCap016_Ex"));
+         values.add(DescriptionFactory.newValue("CT","CT - CapNimGenV3_017_Ex"));
+         values.add(DescriptionFactory.newValue("CV","CV - DefCap018_Ex"));
+         values.add(DescriptionFactory.newValue("CW","CW - DefCap019_Rg"));
+         values.add(DescriptionFactory.newValue("CX","CX - DefCap020_Ex"));
+         values.add(DescriptionFactory.newValue("CY","CY - DefCap021"));
+         values.add(DescriptionFactory.newValue("CZ","CZ - DefCap022"));
+         values.add(DescriptionFactory.newValue("DA","DA - DNASeq"));
+         values.add(DescriptionFactory.newValue("DB","DB - MatePairSeq"));
+         values.add(DescriptionFactory.newValue("DC","DC - Dnase-ISeq"));
+         values.add(DescriptionFactory.newValue("DD","DD - PCR-NANO-DNASeq"));
+         values.add(DescriptionFactory.newValue("FA","FA - MeDipSeq"));
+         values.add(DescriptionFactory.newValue("FB","FB - ChipSeq"));
+         values.add(DescriptionFactory.newValue("FC","FC - MeDipSeq/Depl"));
+         values.add(DescriptionFactory.newValue("FD","FD - BisSeq"));
+         values.add(DescriptionFactory.newValue("FE","FE - FAIRESeq"));
+         values.add(DescriptionFactory.newValue("FF","FF - MBDSeq"));
+         values.add(DescriptionFactory.newValue("FG","FG - GROSeq"));
+         values.add(DescriptionFactory.newValue("FH","FH - oxBisSeq"));
+         values.add(DescriptionFactory.newValue("FI","FI - ATACSeq"));
+         values.add(DescriptionFactory.newValue("RA","RA - RNASeq"));
+         values.add(DescriptionFactory.newValue("RB","RB - smallRNASeq"));
+         values.add(DescriptionFactory.newValue("RC","RC - ssRNASeq"));
+         values.add(DescriptionFactory.newValue("RD","RD - ssmRNASeq"));
+         values.add(DescriptionFactory.newValue("RE","RE - sstRNASeq"));
+         values.add(DescriptionFactory.newValue("RF","RF - sstRNASeqGlobin"));
+         values.add(DescriptionFactory.newValue("UN","UN - UKNOWN"));
+        return values;
+    } 
+	
 	
 	private static List<PropertyDefinition> getRunIlluminaPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
