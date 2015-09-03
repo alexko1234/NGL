@@ -5,8 +5,6 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import models.laboratory.common.description.Resolution;
-import models.laboratory.common.description.ResolutionCategory;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.utils.dao.DAOException;

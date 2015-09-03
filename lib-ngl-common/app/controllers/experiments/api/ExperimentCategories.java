@@ -5,13 +5,12 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import models.laboratory.experiment.description.ExperimentCategory;
-import models.laboratory.experiment.description.Protocol;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
+
+import org.apache.commons.lang3.StringUtils;
+
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;

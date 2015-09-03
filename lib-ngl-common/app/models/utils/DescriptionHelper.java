@@ -1,44 +1,12 @@
 package models.utils;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import models.laboratory.common.description.AbstractCategory;
-import models.laboratory.common.description.CommonInfoType;
-import models.laboratory.common.description.MeasureCategory;
-import models.laboratory.common.description.MeasureUnit;
-import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.common.description.Resolution;
-import models.laboratory.common.description.State;
-import models.laboratory.common.description.Value;
-import models.laboratory.common.description.dao.ObjectTypeDAO;
-import models.laboratory.experiment.description.ExperimentCategory;
-import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.description.Protocol;
-import models.laboratory.instrument.description.Instrument;
-import models.laboratory.instrument.description.InstrumentCategory;
-import models.laboratory.instrument.description.InstrumentUsedType;
-import models.laboratory.processes.description.ProcessCategory;
-import models.laboratory.processes.description.ProcessType;
-import models.laboratory.project.description.ProjectCategory;
-import models.laboratory.project.description.ProjectType;
-import models.laboratory.sample.description.ImportCategory;
-import models.laboratory.sample.description.ImportType;
-import models.laboratory.sample.description.SampleCategory;
-import models.laboratory.sample.description.SampleType;
-import models.utils.Model.Finder;
-import models.utils.dao.DAOException;
-import play.Logger;
 import play.Play;
-import play.api.modules.spring.Spring;
-import play.db.DB;
 
 public class DescriptionHelper {
 
