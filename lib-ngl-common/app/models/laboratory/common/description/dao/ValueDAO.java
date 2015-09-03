@@ -66,13 +66,13 @@ public class ValueDAO extends AbstractDAODefault<Value>{
 	public List<Value> findUnique(String propertyDefinitionCode){
 		String sql =  
 				"select distinct v.value, v.code, v.name "
-				+"from  NGL.value v "
-			    +"inner join NGL.property_definition pd on pd.id = v.fk_property_definition "
-				+"inner join NGL.common_info_type cit on cit.id = pd.fk_common_info_type "
-				//+DAOHelpers.getCommonInfoTypeSQLForInstitute("cit")
+				+"from  value v "
+			    +"inner join property_definition pd on pd.id = v.fk_property_definition "
+				+"inner join common_info_type cit on cit.id = pd.fk_common_info_type "
+				+DAOHelpers.getCommonInfoTypeSQLForInstitute("cit")
 			    +"where pd.code = ? "
 			    +"order by v.name";
-		
+		Logger.debug("SQL value " + sql);
 		BeanPropertyRowMapper<Value> mapper = new BeanPropertyRowMapper<Value>(Value.class);
 		return this.jdbcTemplate.query(sql, mapper, propertyDefinitionCode);		
 	}
