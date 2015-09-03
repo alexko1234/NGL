@@ -5,6 +5,7 @@ import java.util.Map;
 
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ExperimentTypeNode;
 import models.laboratory.processes.description.ProcessType;
 import models.utils.dao.DAOException;
@@ -27,6 +28,20 @@ public abstract class AbstractExperimentService {
 		saveExperimentTypeNodes(errors);
 	}
 
+	protected static List<InstrumentUsedType> getInstrumentUsedTypes(String...codes) throws DAOException {
+		return DAOHelpers.getModelByCodes(InstrumentUsedType.class,InstrumentUsedType.find, codes);
+	}
+
+	protected static List<ExperimentType> getExperimentTypes(String...codes) throws DAOException {
+		return DAOHelpers.getModelByCodes(ExperimentType.class,ExperimentType.find, codes);
+	}
+
+	protected static List<ExperimentTypeNode> getExperimentTypeNodes(String...codes) throws DAOException {
+		return DAOHelpers.getModelByCodes(ExperimentTypeNode.class,ExperimentTypeNode.find, codes);
+	}
+
+	
+	
 	abstract void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException ;
 
 	abstract void saveExperimentTypes(Map<String, List<ValidationError>> errors) throws DAOException;

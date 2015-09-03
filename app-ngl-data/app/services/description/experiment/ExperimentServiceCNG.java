@@ -172,34 +172,20 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	}
 
 
-	private static List<InstrumentUsedType> getInstrumentUsedTypes(String...codes) throws DAOException {
-		return DAOHelpers.getModelByCodes(InstrumentUsedType.class,InstrumentUsedType.find, codes);
-	}
-
-	private static List<ExperimentType> getExperimentTypes(String...codes) throws DAOException {
-		return DAOHelpers.getModelByCodes(ExperimentType.class,ExperimentType.find, codes);
-	}
-
-	private static List<ExperimentTypeNode> getExperimentTypeNodes(String...codes) throws DAOException {
-		return DAOHelpers.getModelByCodes(ExperimentTypeNode.class,ExperimentTypeNode.find, codes);
-	}
-
-
+	
 	private static List<PropertyDefinition> getPropertyDefinitionsPrepaflowcellCNG() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		//Outputcontainer
-		//Outputcontainer
-		propertyDefinitions.add(newPropertiesDefinition("% phiX", "phixPercent", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null, null, null, null, "single",1,true,"1"));		
-		
-		propertyDefinitions.add(newPropertiesDefinition("Volume final", "finalVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null
-						, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",2));
-				
-				//InputContainer
-				
-				
+		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Conc. dilution", "finalConcentration2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null 
-						, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "pM"),MeasureUnit.find.findByCode( "nM"), "single",11));
+						, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "pM"),MeasureUnit.find.findByCode( "nM"), "single",25));
 
+		//Outputcontainer		
+		propertyDefinitions.add(newPropertiesDefinition("% phiX", "phixPercent", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null, null, null, null, "single",51,false,"1"));		
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume final", "finalVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null
+						, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",52));
+		
+		
 		return propertyDefinitions;
 	}
 
@@ -210,6 +196,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		return propertyDefinitions;
 	}
+	
+	
 
 
 	//TODO
@@ -233,6 +221,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		propertyDefinitions.add(newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, true, "single"));
 		return propertyDefinitions;
 	}
+	
 	
 	
 
