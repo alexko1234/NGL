@@ -126,7 +126,7 @@
 			</tr>
 			</tbody>
 			
-			<tbody ng-repeat="atm in atmService.data.atm" ng-model="atm.inputContainerUseds" 
+			<tbody ng-repeat="atm in atmService.data.atm | orderBy:'line'" ng-model="atm.inputContainerUseds" 
 				droppable drop-fn="atmService.data.drop" 
 				ng-class="getDroppableClass()"
 				ng-switch="getDisplayMode(atm, $index)">
@@ -155,14 +155,14 @@
 						</button>			
 					</td>	
 					<td colspan="{{5 + outputContainerProperties.length}}" >
-						<span ng-repeat="inputContainer in atm.inputContainerUseds"  class="compactText"
+						<span ng-repeat="inputContainer in atm.inputContainerUseds | orderBy:'code'"  class="compactText"
 							ng-model="inputContainer" draggable drag="dragInProgress">
 							{{inputContainer.code}} / {{inputContainer.percentage}}% / PhiX:{{atm.outputContainerUseds[0].experimentProperties.phixPercent.value || "nr"}}%;<br/>
 						</span>
 					</td>
 				</tr>
 				
-				<tr ng-switch-when="open" ng-repeat="inputContainer in atm.inputContainerUseds"  
+				<tr ng-switch-when="open" ng-repeat="inputContainer in atm.inputContainerUseds | orderBy:'code'"  
 							ng-model="inputContainer" draggable drag="dragInProgress">	
 						<td rowspan="{{atm.inputContainerUseds.length}}" ng-if="$index === 0">
 							<span class="label label-black" ng-bind="atm.line"></span>

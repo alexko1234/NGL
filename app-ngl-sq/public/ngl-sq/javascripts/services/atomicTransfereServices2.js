@@ -172,8 +172,8 @@ angular.module('atomicTransfereServices2', [])
 
 
 	
-}]).factory('atmToSingleDatatable', ['$http', '$parse', '$q', 'commonAtomicTransfertMethod','mainService', 'datatable', 
-                         function($http, $parse, $q, commonAtomicTransfertMethod, mainService, datatable){
+}]).factory('atmToSingleDatatable', ['$http', '$parse', '$filter', '$q', 'commonAtomicTransfertMethod','mainService', 'datatable', 
+                         function($http, $parse, $filter, $q, commonAtomicTransfertMethod, mainService, datatable){
 	
 	
 	var constructor = function($scope, datatableConfig, outputIsVoid){
@@ -260,6 +260,9 @@ angular.module('atomicTransfereServices2', [])
 						var l=0;
 						for(var i=0; i< atms.length;i++){
 							var atm = angular.copy(atms[i]);
+							
+							atm.inputContainerUseds = $filter('orderBy')(atm.inputContainerUseds, 'code');
+							
 							for(var j=0; j<atm.inputContainerUseds.length ; j++){
 								
 								var inputContainerCode = atm.inputContainerUseds[j].code;
