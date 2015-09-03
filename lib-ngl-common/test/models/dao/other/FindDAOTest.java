@@ -6,12 +6,10 @@ import java.util.List;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.common.description.ResolutionCategory;
 import models.laboratory.common.description.StateCategory;
 import models.laboratory.common.description.Value;
 import models.laboratory.common.description.dao.LevelDAO;
 import models.laboratory.common.description.dao.MeasureCategoryDAO;
-import models.laboratory.common.description.dao.ResolutionCategoryDAO;
 import models.laboratory.common.description.dao.StateCategoryDAO;
 import models.laboratory.common.description.dao.ValueDAO;
 import models.laboratory.container.description.ContainerCategory;
@@ -45,7 +43,6 @@ import models.utils.dao.DAOException;
 import org.junit.Assert;
 import org.junit.Test;
 
-import play.Logger;
 import play.api.modules.spring.Spring;
 import utils.AbstractTests;
 
@@ -279,18 +276,6 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertNotNull(typeDAO.findAllForList());
 	}
 
-	@Test
-	public void resolutionCategoryFindTest() throws DAOException {
-		ResolutionCategory type = ResolutionCategory.find.findAll().get(0);
-		Assert.assertNotNull(type);
-		ResolutionCategory cType = ResolutionCategory.find.findByCode(type.code);
-		Assert.assertNotNull(cType);
-		ResolutionCategory cTypeId = ResolutionCategory.find.findById(type.id);
-		Assert.assertNotNull(cTypeId);
-		Assert.assertFalse(ResolutionCategory.find.isCodeExist(""));
-		ResolutionCategoryDAO typeDAO = Spring.getBeanOfType(ResolutionCategoryDAO.class);
-		Assert.assertNotNull(typeDAO.findAllForList());
-	}
 
 	@Test
 	public void runCategoryFindTest() throws DAOException {

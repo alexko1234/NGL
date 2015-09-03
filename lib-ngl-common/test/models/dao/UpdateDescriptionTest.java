@@ -11,7 +11,6 @@ import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.common.description.StateCategory;
 import models.laboratory.common.description.Value;
@@ -19,9 +18,7 @@ import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.description.Protocol;
 import models.laboratory.experiment.description.ProtocolCategory;
-import models.laboratory.experiment.description.dao.ProtocolDAO;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
@@ -38,7 +35,6 @@ import models.utils.dao.DAOException;
 
 import org.junit.Assert;
 
-import play.api.modules.spring.Spring;
 import utils.AbstractTests;
 
 
@@ -71,26 +67,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		Assert.assertNotNull(type.generic);
 	}
 
-	//@Test
-	public void updateResolution() throws DAOException
-	{
-		Resolution resolution = Resolution.find.findByCode("Resol1");
-		checkResolution(resolution);
-		resolution.name="updateResol1";
-		resolution.update();
-		resolution = Resolution.find.findById(resolution.id);
-		checkResolution(resolution);
-		Assert.assertTrue(resolution.name.equals("updateResol1"));
-
-	}
-
-	private void checkResolution(Resolution resolution)
-	{
-		Assert.assertNotNull(resolution);
-		Assert.assertNotNull(resolution.id);
-		Assert.assertNotNull(resolution.name);
-		Assert.assertNotNull(resolution.code);
-	}
+	
 
 	//@Test
 	public void updateStateCategory() throws DAOException
@@ -156,11 +133,6 @@ public class UpdateDescriptionTest extends AbstractTests{
 		Assert.assertNotNull(commonInfoType.id);
 		Assert.assertNotNull(commonInfoType.code);
 		Assert.assertNotNull(commonInfoType.name);
-		Assert.assertNotNull(commonInfoType.resolutions);
-		Assert.assertTrue(commonInfoType.resolutions.size()>0);
-		for(Resolution resolution : commonInfoType.resolutions){
-			checkResolution(resolution);
-		}
 		Assert.assertNotNull(commonInfoType.propertiesDefinitions);
 		Assert.assertTrue(commonInfoType.propertiesDefinitions.size()>0);
 		for(PropertyDefinition propertyDefinition : commonInfoType.propertiesDefinitions){
@@ -227,31 +199,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		Assert.assertNotNull(abstractCategory.name);
 	}
 
-	//@Test
-	public void updateProtocol() throws DAOException
-	{
-		Protocol protocol = Protocol.find.findByCode("proto1");
-		checkProtocol(protocol);
-		protocol.name="updateProto1";
-		protocol.update();
-		protocol = Protocol.find.findById(protocol.id);
-		checkProtocol(protocol);
-		Assert.assertTrue(protocol.name.equals("updateProto1"));
-	}
-
-	private void checkProtocol(Protocol protocol)
-	{
-		Assert.assertNotNull(protocol);
-		Assert.assertNotNull(protocol.id);
-		Assert.assertNotNull(protocol.name);
-		Assert.assertNotNull(protocol.filePath);
-		Assert.assertNotNull(protocol.version);
-		Assert.assertNotNull(protocol.category);
-		checkAbstractCategory(protocol.category);
-		Assert.assertNotNull(protocol.reagentTypes);
-		Assert.assertTrue(protocol.reagentTypes.size()>0);
-
-	}
+	
 	//@Test
 	public void updateContainerSupportCategory() throws DAOException
 	{
@@ -358,11 +306,6 @@ public class UpdateDescriptionTest extends AbstractTests{
 		for(InstrumentUsedType instrumentUsedType : experiment.instrumentUsedTypes){
 			checkInstrumentUsedType(instrumentUsedType);
 		}
-		Assert.assertNotNull(experiment.protocols);
-		Assert.assertTrue(experiment.protocols.size()>0);
-		for(Protocol protocol : experiment.protocols){
-			checkProtocol(protocol);
-		}
 	}
 
 	//@Test
@@ -387,8 +330,6 @@ public class UpdateDescriptionTest extends AbstractTests{
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
 		states.add(State.find.findByCode("state1"));
-		List<Resolution> resolutions = new ArrayList<Resolution>();
-		resolutions.add(Resolution.find.findByCode("resol1"));
 		ObjectType objectType = ObjectType.find.findByCode("Instrument");
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
 		MeasureUnit measureValue = MeasureUnit.find.findByValue("value2");
@@ -396,7 +337,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		possibleValues.add(createValue("value11","value11", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop7", "prop7", true, true, "default", "descProp1", "format1", 1, "in", Level.CODE.Content, true, true, "type1", measureCategory, measureValue, measureValue, possibleValues));
-		CommonInfoType commonInfoType = createCommonInfoType("inst4", "inst4", "inst4", states, resolutions, propertiesDefinitions, objectType);
+		CommonInfoType commonInfoType = createCommonInfoType("inst4", "inst4", "inst4", states, propertiesDefinitions, objectType);
 
 		//Get instrumentCategory
 		InstrumentCategory instrumentCategory = InstrumentCategory.find.findByCode("InstCat1");
@@ -415,7 +356,6 @@ public class UpdateDescriptionTest extends AbstractTests{
 		qualityControlType = ExperimentType.find.findById(qualityControlType.id);
 		checkAbstractExperiment(qualityControlType);
 		Assert.assertTrue(qualityControlType.name.equals("updateQC1"));
-		Assert.assertTrue(qualityControlType.protocols.size()==2);
 		Assert.assertTrue(qualityControlType.instrumentUsedTypes.size()==2);
 	}
 
@@ -431,8 +371,6 @@ public class UpdateDescriptionTest extends AbstractTests{
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
 		states.add(State.find.findByCode("state2"));
-		List<Resolution> resolutions = new ArrayList<Resolution>();
-		resolutions.add(Resolution.find.findByCode("resol1"));
 		ObjectType objectType = ObjectType.find.findByCode("Experiment");
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
 		MeasureUnit measureValue = MeasureUnit.find.findByValue("value2");
@@ -440,36 +378,28 @@ public class UpdateDescriptionTest extends AbstractTests{
 		possibleValues.add(createValue("value13","value13", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop9", "prop9", true, true, "default", "descProp1", "format1", 1, "in", Level.CODE.Content, true, true, "type1", measureCategory, measureValue, measureValue, possibleValues));
-		CommonInfoType commonInfoType = createCommonInfoType("purif2", "purif2", "purif2", states, resolutions, propertiesDefinitions, objectType);
+		CommonInfoType commonInfoType = createCommonInfoType("purif2", "purif2", "purif2", states, propertiesDefinitions, objectType);
 
 		//Create list instrument 
 		List<InstrumentUsedType> instrumentUsedTypes = new ArrayList<InstrumentUsedType>();
 		instrumentUsedTypes.add(InstrumentUsedType.find.findByCode("inst1"));
 
-		//Create liste protocol
-		List<Protocol> protocols = new ArrayList<Protocol>();
-		protocols.add(Protocol.find.findByCode("updateProto1"));
-
 		//Create commonInfoType
 		states = new ArrayList<State>();
 		states.add(State.find.findByCode("state2"));
-		resolutions = new ArrayList<Resolution>();
-		resolutions.add(Resolution.find.findByCode("resol1"));
 		objectType = ObjectType.find.findByCode("Experiment");
 
 		possibleValues = new ArrayList<Value>();
 		possibleValues.add(createValue("value14","value14", true));
 		propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop10", "prop10", true, true, "default", "descProp1", "format1", 1, "in", Level.CODE.Content, true, true, "type1", measureCategory, measureValue, measureValue, possibleValues));
-		commonInfoType = createCommonInfoType("qc2", "qc2", "qc2", states, resolutions, propertiesDefinitions, objectType);
+		commonInfoType = createCommonInfoType("qc2", "qc2", "qc2", states, propertiesDefinitions, objectType);
 
 		//Create list instrument 
 		instrumentUsedTypes = new ArrayList<InstrumentUsedType>();
 		instrumentUsedTypes.add(InstrumentUsedType.find.findByCode("inst1"));
 
 		//Create liste protocol
-		protocols = new ArrayList<Protocol>();
-		protocols.add(Spring.getBeanOfType(ProtocolDAO.class).findByName("updateProto1"));
 		experimentType.update();
 		experimentType=ExperimentType.find.findById(experimentType.id);
 		checkExperimentType(experimentType);
@@ -489,8 +419,6 @@ public class UpdateDescriptionTest extends AbstractTests{
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
 		states.add(State.find.findByCode("state1"));
-		List<Resolution> resolutions = new ArrayList<Resolution>();
-		resolutions.add(Resolution.find.findByCode("resol1"));
 		ObjectType objectType = ObjectType.find.findByCode("Instrument");
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
 		MeasureUnit measureValue = MeasureUnit.find.findByValue("value2");
@@ -498,7 +426,7 @@ public class UpdateDescriptionTest extends AbstractTests{
 		possibleValues.add(createValue("value9", "value9", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop5", "prop5", true, true, "default", "descProp1", "format1", 1, "in", Level.CODE.Content, true, true, "type1", measureCategory, measureValue, measureValue, possibleValues));
-		CommonInfoType commonInfoType = createCommonInfoType("inst3", "inst3", "inst3", states, resolutions, propertiesDefinitions, objectType);
+		CommonInfoType commonInfoType = createCommonInfoType("inst3", "inst3", "inst3", states, propertiesDefinitions, objectType);
 
 		InstrumentCategory instrumentCategory = InstrumentCategory.find.findByCode("InstCat1");
 		//Get instrument
@@ -511,13 +439,11 @@ public class UpdateDescriptionTest extends AbstractTests{
 		//ReagentCategory reagentType = ReagentCategory.find.findByCode("reagent1");
 		//reagentTypes.add(reagentType);
 
-		purificationMethodType.protocols.add(createProtocol("proto3","proto3", "path3", "V2", createProtocolCategory("protoCat4", "protoCat4"), reagentTypes));
-
+	
 		purificationMethodType.update();
 		purificationMethodType = ExperimentType.find.findById(purificationMethodType.id);
 		checkAbstractExperiment(purificationMethodType);
 		Assert.assertTrue(purificationMethodType.name.equals("updatePurif1"));
-		Assert.assertTrue(purificationMethodType.protocols.size()==3);
 		Assert.assertTrue(purificationMethodType.instrumentUsedTypes.size()==2);
 	}
 
@@ -707,12 +633,11 @@ public class UpdateDescriptionTest extends AbstractTests{
 	}
 
 	private CommonInfoType createCommonInfoType(String code, String name, String collectionName, 
-			List<State> variableStates, List<Resolution> resolutions, List<PropertyDefinition> propertiesDefinitions, ObjectType objectType)
+			List<State> variableStates,List<PropertyDefinition> propertiesDefinitions, ObjectType objectType)
 	{
 		CommonInfoType commonInfoType=new CommonInfoType();
 		commonInfoType.code=code;
 		commonInfoType.name=name;
-		commonInfoType.resolutions=resolutions;
 		commonInfoType.propertiesDefinitions=propertiesDefinitions;
 		commonInfoType.objectType=objectType;
 		return commonInfoType;
@@ -759,18 +684,6 @@ public class UpdateDescriptionTest extends AbstractTests{
 	}
 
 
-	private Protocol createProtocol(String code, String name, String filePath, String version, ProtocolCategory protocolCategory, List<ReagentCatalog> reagentTypes)
-	{
-		Protocol protocol = new Protocol();
-		protocol.name=name;
-		protocol.code=code;
-		protocol.filePath=filePath;
-		protocol.version=version;
-		protocol.category=protocolCategory;
-		protocol.reagentTypes=reagentTypes;
-		return protocol;
-	
-	}
 
 
 	private ProtocolCategory createProtocolCategory(String code, String name)

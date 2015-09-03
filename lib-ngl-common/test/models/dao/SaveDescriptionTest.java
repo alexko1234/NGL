@@ -10,7 +10,6 @@ import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.common.description.StateCategory;
 import models.laboratory.common.description.Value;
@@ -18,7 +17,6 @@ import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.description.Protocol;
 import models.laboratory.experiment.description.ProtocolCategory;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
@@ -71,18 +69,6 @@ public class SaveDescriptionTest extends AbstractTests{
 		Assert.assertNotNull(type.id);
 		Assert.assertNotNull(type.code);
 		Assert.assertNotNull(type.generic);
-	}
-
-	/**
-	 * TEST RESOLUTION
-	 * @throws DAOException 
-	 */
-	//@Test
-	public void saveResolution() throws DAOException {
-		Resolution resolution = createResolution("Resol1", "Resol1");
-		resolution.id = resolution.save();
-		resolution=Resolution.find.findById(resolution.id);
-		checkResolution(resolution);
 	}
 
 
@@ -223,11 +209,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		Assert.assertNotNull(commonInfoType.id);
 		Assert.assertNotNull(commonInfoType.code);
 		Assert.assertNotNull(commonInfoType.name);
-		Assert.assertNotNull(commonInfoType.resolutions);
-		Assert.assertTrue(commonInfoType.resolutions.size()>0);
-		for(Resolution resolution : commonInfoType.resolutions){
-			checkResolution(resolution);
-		}
+		
 		Assert.assertNotNull(commonInfoType.propertiesDefinitions);
 		Assert.assertTrue(commonInfoType.propertiesDefinitions.size()>0);
 		for(PropertyDefinition propertyDefinition : commonInfoType.propertiesDefinitions){
@@ -238,11 +220,10 @@ public class SaveDescriptionTest extends AbstractTests{
 	}
 
 	private CommonInfoType createCommonInfoType(String code, String name, String collectionName, 
-			List<State> variableStates, List<Resolution> resolutions, List<PropertyDefinition> propertiesDefinitions, ObjectType objectType)	{
+			List<State> variableStates, List<PropertyDefinition> propertiesDefinitions, ObjectType objectType)	{
 		CommonInfoType commonInfoType=new CommonInfoType();
 		commonInfoType.code=code;
 		commonInfoType.name=name;
-		commonInfoType.resolutions=resolutions;
 		commonInfoType.propertiesDefinitions=propertiesDefinitions;
 		commonInfoType.objectType=objectType;
 		return commonInfoType;
@@ -353,28 +334,8 @@ public class SaveDescriptionTest extends AbstractTests{
 		checkProtocol(protocol);
 	}*/
 
-	private void checkProtocol(Protocol protocol) {
-		Assert.assertNotNull(protocol);
-		Assert.assertNotNull(protocol.id);
-		Assert.assertNotNull(protocol.name);
-		Assert.assertNotNull(protocol.filePath);
-		Assert.assertNotNull(protocol.version);
-		Assert.assertNotNull(protocol.category);
-		checkAbstractCategory(protocol.category);
-		Assert.assertNotNull(protocol.reagentTypes);
-		Assert.assertTrue(protocol.reagentTypes.size()>0);
-	}
+
 	
-	private Protocol createProtocol(String code, String name, String filePath, String version, ProtocolCategory protocolCategory, List<ReagentCatalog> reagentTypes) {
-		Protocol protocol = new Protocol();
-		protocol.name=name;
-		protocol.code=code;
-		protocol.filePath=filePath;
-		protocol.version=version;
-		protocol.category=protocolCategory;
-		protocol.reagentTypes=reagentTypes;
-		return protocol;
-	}
 
 	/**
 	 * TEST CONTAINER_SUPPORT_CATEGORY
@@ -461,8 +422,6 @@ public class SaveDescriptionTest extends AbstractTests{
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
 		states.add(State.find.findByCode("state1"));
-		List<Resolution> resolutions = new ArrayList<Resolution>();
-		resolutions.add(Resolution.find.findByCode("resol1"));
 		ObjectType objectType = ObjectType.find.findByCode("Instrument");
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
 		MeasureUnit measureValue = MeasureUnit.find.findByValue("value2");
@@ -471,7 +430,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		possibleValues.add(createValue("value7","value7", false));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop3", "prop3", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, measureValue, possibleValues));
-		CommonInfoType commonInfoType = createCommonInfoType("inst1", "inst1", "inst1", states, resolutions, propertiesDefinitions, objectType);
+		CommonInfoType commonInfoType = createCommonInfoType("inst1", "inst1", "inst1", states, propertiesDefinitions, objectType);
 
 		//Get instrumentCategory
 		List<ContainerSupportCategory> inContainerSupportCategories = new ArrayList<ContainerSupportCategory>();
@@ -532,11 +491,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		for(InstrumentUsedType instrumentUsedType : experiment.instrumentUsedTypes){
 			checkInstrumentUsedType(instrumentUsedType);
 		}
-		Assert.assertNotNull(experiment.protocols);
-		Assert.assertTrue(experiment.protocols.size()>0);
-		for(Protocol protocol : experiment.protocols){
-			checkProtocol(protocol);
-		}
+		
 	}
 
 	/**
@@ -568,8 +523,6 @@ public class SaveDescriptionTest extends AbstractTests{
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
 		states.add(State.find.findByCode("state2"));
-		List<Resolution> resolutions = new ArrayList<Resolution>();
-		resolutions.add(Resolution.find.findByCode("resol1"));
 		ObjectType objectType = ObjectType.find.findByCode("Experiment");
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
 		MeasureUnit measureValue = MeasureUnit.find.findByValue("value2");
@@ -577,22 +530,19 @@ public class SaveDescriptionTest extends AbstractTests{
 		possibleValues.add(createValue("value10","value10", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop6", "prop6", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, measureValue, possibleValues));
-		CommonInfoType commonInfoType = createCommonInfoType("qc1", "qc1", "qc1", states, resolutions, propertiesDefinitions, objectType);
+		CommonInfoType commonInfoType = createCommonInfoType("qc1", "qc1", "qc1", states, propertiesDefinitions, objectType);
 
 		//Create list instrument 
 		List<InstrumentUsedType> instrumentUsedTypes = new ArrayList<InstrumentUsedType>();
 		instrumentUsedTypes.add(InstrumentUsedType.find.findByCode("inst1"));
 
-		//Create liste protocol
-		List<Protocol> protocols = new ArrayList<Protocol>();
-		protocols.add(Protocol.find.findByCode("proto1"));
 		List<ReagentCatalog> reagentTypes = new ArrayList<ReagentCatalog>();
 		//ReagentCategory reagentType = ReagentCategory.find.findByCode("reagent1");
 		//reagentTypes.add(reagentType);
 		ExperimentCategory experimentCategory = ExperimentCategory.find.findByCode("expCat1");
 		
 		
-		ExperimentType qualityControlType = createExperimentType(commonInfoType, protocols, instrumentUsedTypes,experimentCategory);
+		ExperimentType qualityControlType = createExperimentType(commonInfoType, instrumentUsedTypes,experimentCategory);
 		qualityControlType.id = qualityControlType.save();
 		qualityControlType = ExperimentType.find.findById(qualityControlType.id);
 		checkAbstractExperiment(qualityControlType);
@@ -607,8 +557,6 @@ public class SaveDescriptionTest extends AbstractTests{
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
 		states.add(State.find.findByCode("state2"));
-		List<Resolution> resolutions = new ArrayList<Resolution>();
-		resolutions.add(Resolution.find.findByCode("resol1"));
 		ObjectType objectType = ObjectType.find.findByCode("Experiment");
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
 		MeasureUnit measureValue = MeasureUnit.find.findByValue("value2");
@@ -616,15 +564,11 @@ public class SaveDescriptionTest extends AbstractTests{
 		possibleValues.add(createValue("value12","value12", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop8", "prop8", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, measureValue, possibleValues));
-		CommonInfoType commonInfoType = createCommonInfoType("exp1", "exp1", "exp1", states, resolutions, propertiesDefinitions, objectType);
+		CommonInfoType commonInfoType = createCommonInfoType("exp1", "exp1", "exp1", states, propertiesDefinitions, objectType);
 
 		//Create list instrument 
 		List<InstrumentUsedType> instrumentUsedTypes = new ArrayList<InstrumentUsedType>();
 		instrumentUsedTypes.add(InstrumentUsedType.find.findByCode("inst1"));
-
-		//Create liste protocol
-		List<Protocol> protocols = new ArrayList<Protocol>();
-		protocols.add(Protocol.find.findByCode("proto1"));
 
 		ExperimentType purif = ExperimentType.find.findByCode("purif1");
 		List<ExperimentType> purificationMethodTypes = new ArrayList<ExperimentType>();
@@ -636,7 +580,7 @@ public class SaveDescriptionTest extends AbstractTests{
 
 		ExperimentCategory experimentCategory = ExperimentCategory.find.findByCode("expCat1");
 
-		ExperimentType experimentType = createExperimentType(commonInfoType, protocols, instrumentUsedTypes, experimentCategory);
+		ExperimentType experimentType = createExperimentType(commonInfoType, instrumentUsedTypes, experimentCategory);
 		experimentType.id = experimentType.save();
 		experimentType=ExperimentType.find.findById(experimentType.id);
 		checkExperimentType(experimentType);
@@ -651,8 +595,6 @@ public class SaveDescriptionTest extends AbstractTests{
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
 		states.add(State.find.findByCode("state2"));
-		List<Resolution> resolutions = new ArrayList<Resolution>();
-		resolutions.add(Resolution.find.findByCode("resol1"));
 		ObjectType objectType = ObjectType.find.findByCode("Experiment");
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
 		MeasureUnit measureValue = MeasureUnit.find.findByValue("value2");
@@ -660,14 +602,12 @@ public class SaveDescriptionTest extends AbstractTests{
 		possibleValues.add(createValue("value8", "value8", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop4", "prop4", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, measureValue, possibleValues));
-		CommonInfoType commonInfoType = createCommonInfoType("purif1", "purif1", "purif1", states, resolutions, propertiesDefinitions, objectType);
+		CommonInfoType commonInfoType = createCommonInfoType("purif1", "purif1", "purif1", states, propertiesDefinitions, objectType);
 
 		//Create list instrument 
 		List<InstrumentUsedType> instrumentUsedTypes = new ArrayList<InstrumentUsedType>();
 		instrumentUsedTypes.add(InstrumentUsedType.find.findByCode("inst1"));
 
-		//Create liste protocol
-		List<Protocol> protocols = new ArrayList<Protocol>();
 		//List<ReagentCategory> reagentTypes = new ArrayList<ReagentCategory>();
 		//ReagentCategory reagentType = ReagentCategory.find.findByCode("reagent1");
 		//reagentTypes.add(reagentType);
@@ -676,17 +616,16 @@ public class SaveDescriptionTest extends AbstractTests{
 		ExperimentCategory experimentCategory = ExperimentCategory.find.findByCode("expCat1");
 		
 		
-		ExperimentType purificationMethodType = createExperimentType(commonInfoType, protocols, instrumentUsedTypes, experimentCategory);
+		ExperimentType purificationMethodType = createExperimentType(commonInfoType, instrumentUsedTypes, experimentCategory);
 		purificationMethodType.id = purificationMethodType.save();
 		purificationMethodType = ExperimentType.find.findById(purificationMethodType.id);
 		checkAbstractExperiment(purificationMethodType);
 	}
 
-	private ExperimentType createExperimentType(CommonInfoType commonInfoType, List<Protocol> protocols, List<InstrumentUsedType> instrumentUsedTypes,
+	private ExperimentType createExperimentType(CommonInfoType commonInfoType, List<InstrumentUsedType> instrumentUsedTypes,
 			ExperimentCategory experimentCategory) {
 		ExperimentType experimentType = new ExperimentType();
 		experimentType.setCommonInfoType(commonInfoType);
-		experimentType.protocols=protocols;
 		experimentType.instrumentUsedTypes=instrumentUsedTypes;
 		experimentType.category=experimentCategory;		
 		return experimentType;
@@ -728,8 +667,6 @@ public class SaveDescriptionTest extends AbstractTests{
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
 		states.add(State.find.findByCode("state2"));
-		List<Resolution> resolutions = new ArrayList<Resolution>();
-		resolutions.add(Resolution.find.findByCode("resol1"));
 		ObjectType objectType = ObjectType.find.findByCode("Process");
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
 		MeasureUnit measureValue = MeasureUnit.find.findByValue("value2");
@@ -737,7 +674,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		possibleValues.add(createValue("value16","value16", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop12", "prop12", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, measureValue, possibleValues));
-		CommonInfoType commonInfoType = createCommonInfoType("process1", "process1", "process1", states, resolutions, propertiesDefinitions, objectType);
+		CommonInfoType commonInfoType = createCommonInfoType("process1", "process1", "process1", states, propertiesDefinitions, objectType);
 		ProcessType processType = createProcessType(commonInfoType, experimentTypes, processCategory,expType,expType,expType);
 		processType.id = processType.save();
 		processType = ProcessType.find.findById(processType.id);
@@ -799,8 +736,6 @@ public class SaveDescriptionTest extends AbstractTests{
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
 		states.add(State.find.findByCode("state2"));
-		List<Resolution> resolutions = new ArrayList<Resolution>();
-		resolutions.add(Resolution.find.findByCode("resol1"));
 		ObjectType objectType = ObjectType.find.findByCode("Project");
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
 		MeasureUnit measureValue = MeasureUnit.find.findByValue("value2");
@@ -808,7 +743,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		possibleValues.add(createValue("value17","value17", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop13", "prop13", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, measureValue, possibleValues));
-		CommonInfoType commonInfoType = createCommonInfoType("project1", "project1", "project1", states, resolutions, propertiesDefinitions, objectType);
+		CommonInfoType commonInfoType = createCommonInfoType("project1", "project1", "project1", states, propertiesDefinitions, objectType);
 		ProjectType projectType = createProjectType(commonInfoType, projectCategory);
 		projectType.id = projectType.save();
 		projectType = ProjectType.find.findById(projectType.id);
@@ -857,8 +792,6 @@ public class SaveDescriptionTest extends AbstractTests{
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
 		states.add(State.find.findByCode("state2"));
-		List<Resolution> resolutions = new ArrayList<Resolution>();
-		resolutions.add(Resolution.find.findByCode("resol1"));
 		ObjectType objectType = ObjectType.find.findByCode("Project");
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
 		MeasureUnit measureValue = MeasureUnit.find.findByValue("value2");
@@ -866,7 +799,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		possibleValues.add(createValue("value18","value18", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop14", "prop14", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, measureValue, possibleValues));
-		CommonInfoType commonInfoType = createCommonInfoType("sample1", "sample1", "sample1", states, resolutions, propertiesDefinitions, objectType);
+		CommonInfoType commonInfoType = createCommonInfoType("sample1", "sample1", "sample1", states, propertiesDefinitions, objectType);
 		SampleType sampleType = createSampleType(commonInfoType, sampleCategory);
 		sampleType.id = sampleType.save();
 		sampleType = SampleType.find.findById(sampleType.id);
@@ -900,8 +833,6 @@ public class SaveDescriptionTest extends AbstractTests{
 		//Create commonInfoType
 		List<State> states = new ArrayList<State>();
 		states.add(State.find.findByCode("state2"));
-		List<Resolution> resolutions = new ArrayList<Resolution>();
-		resolutions.add(Resolution.find.findByCode("resol1"));
 		ObjectType objectType = ObjectType.find.findByCode("Import");
 		MeasureCategory measureCategory = MeasureCategory.find.findByCode("cat2");
 		MeasureUnit measureValue = MeasureUnit.find.findByValue("value2");
@@ -909,7 +840,7 @@ public class SaveDescriptionTest extends AbstractTests{
 		possibleValues.add(createValue("value19","value19", true));
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop15", "prop15", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, measureValue, possibleValues));
-		CommonInfoType commonInfoType = createCommonInfoType("import1", "import1", "import1", states, resolutions, propertiesDefinitions, objectType);
+		CommonInfoType commonInfoType = createCommonInfoType("import1", "import1", "import1", states, propertiesDefinitions, objectType);
 		ImportType importType = createImportType(commonInfoType, importCategory);
 		importType.id = importType.save();
 		importType = ImportType.find.findById(importType.id);

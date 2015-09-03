@@ -12,7 +12,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.Resolution;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
@@ -34,6 +33,7 @@ import models.laboratory.processes.instance.SampleOnInputContainer;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
 import models.laboratory.project.instance.Project;
+import models.laboratory.resolutions.instance.Resolution;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;

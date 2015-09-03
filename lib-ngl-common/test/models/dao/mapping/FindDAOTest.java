@@ -11,17 +11,13 @@ import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.common.description.dao.InstituteDAO;
 import models.laboratory.common.description.dao.PropertyDefinitionDAO;
-import models.laboratory.common.description.dao.ResolutionDAO;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.description.dao.ContainerSupportCategoryDAO;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.description.Protocol;
 import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
-import models.laboratory.experiment.description.dao.ProtocolDAO;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentQueryParams;
 import models.laboratory.instrument.description.InstrumentUsedType;
@@ -301,49 +297,7 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertNotNull(pDAO.findByCommonInfoType(citTreatment.id));
 	}
 
-	//@Test
-	public void ProtocolFindTest() throws DAOException {
-		Protocol type = Protocol.find.findAll().get(0);
-		Assert.assertNotNull(type);
-		Protocol cType = Protocol.find.findByCode(type.code);
-		Assert.assertNotNull(cType);
-		Protocol cTypeId = Protocol.find.findById(type.id);
-		Assert.assertNotNull(cTypeId);
-		Assert.assertFalse(Protocol.find.isCodeExist(""));
-		ExperimentType experimentType=ExperimentType.find.findAll().get(0);
-		Assert.assertNotNull(experimentType.code);
-		Protocol protocol = Protocol.find.findByExperimentTypeCode("opgen-depot").get(0);
-		Boolean exist=Protocol.find.isCodeExistForTypeCode(protocol.code, "opgen-depot");
-		Assert.assertTrue(exist);
-		exist=Protocol.find.isCodeExistForTypeCode(protocol.code, "test");
-		Assert.assertFalse(exist);
-		ProtocolDAO pDAO = Spring.getBeanOfType(ProtocolDAO.class);
-		Assert.assertNull(pDAO.findById(Long.valueOf(0)));
-		Assert.assertNull(pDAO.findByName(""));
-	}
-
-	@Test
-	public void ResolutionFindTest() throws DAOException {
-		Resolution type = Resolution.find.findAll().get(0);
-		Assert.assertNotNull(type);
-		Resolution cType = Resolution.find.findByCode(type.code);
-		Assert.assertNotNull(cType);
-		Resolution cTypeId = Resolution.find.findById(type.id);
-		Assert.assertNotNull(cTypeId);
-		Assert.assertFalse(Resolution.find.isCodeExist(""));
-		type = Resolution.find.findByCategoryCode(type.category.code).get(0);
-		Assert.assertNotNull(type);
-		Assert.assertNotNull(Resolution.find.findByObjectTypeCode(ObjectType.CODE.Run));
-		CommonInfoType cit = CommonInfoType.find.findByObjectTypeCode(ObjectType.CODE.Run).get(0); 
-		Assert.assertNotNull(Resolution.find.findByTypeCode(cit.code));
-		Assert.assertFalse(Resolution.find.isCodeExistForTypeCode("", ""));
-		//internal fcts
-		ResolutionDAO rDAO = Spring.getBeanOfType(ResolutionDAO.class);
-		Assert.assertNotNull(rDAO.findByCommonInfoTypeId(cit.id));
-		ObjectType ot = ObjectType.find.findByCode("Run");
-		Assert.assertNotNull(rDAO.findByObjectTypeId(ot.id));
-	}
-
+	
 	@Test
 	public void StateFindTest() throws DAOException {
 		State type = State.find.findAll().get(0);

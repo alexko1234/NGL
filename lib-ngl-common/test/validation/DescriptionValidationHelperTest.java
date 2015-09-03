@@ -1,11 +1,9 @@
 package validation;
 
 import static org.fest.assertions.Assertions.assertThat;
-import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.description.Protocol;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
@@ -41,7 +39,6 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 	static SampleType sampleType;
 	
 	static State state;
-	static Resolution resolution;
 	
 	@BeforeClass
 	public static void initData() throws DAOException{
@@ -68,7 +65,6 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 
 		state=State.find.findAll().get(0);
 		
-		resolution=Resolution.find.findAll().get(0);
 	}
 
 	/*@Test
@@ -316,35 +312,6 @@ public class DescriptionValidationHelperTest extends AbstractTests{
 	public void validationSampleCategoryNotExist() {
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		SampleValidationHelper.validateSampleCategoryCode("notexist", contextValidation);
-		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
-	}	
-	
-	
-	
-	
-
-	/**
-	 * 
-	 *  Resolution
-	 */
-	@Test
-	public void validationResolutionCode() {
-		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		DescriptionValidationHelper.validationResolutionCode(resolution.code, contextValidation);
-		assertThat(contextValidation.errors.size()).isEqualTo(0);
-	}
-	
-	@Test
-	public void validationResolutionNotRequired() {
-		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		DescriptionValidationHelper.validationResolutionCode(null, contextValidation);
-		assertThat(contextValidation.errors.size()).isEqualTo(0);
-	}
-	
-	@Test
-	public void validationResolutionNotExist() {
-		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		DescriptionValidationHelper.validationResolutionCode("notexist", contextValidation);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}	
 	

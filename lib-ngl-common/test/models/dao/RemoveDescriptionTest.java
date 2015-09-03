@@ -3,20 +3,16 @@ package models.dao;
 
 import java.util.List;
 
-import models.laboratory.common.description.Resolution;
 import models.laboratory.common.description.State;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.description.Protocol;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.description.ProjectType;
-import models.laboratory.reagent.description.ReagentCatalog;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleType;
 import models.utils.dao.DAOException;
 
 import org.junit.Assert;
-import org.junit.Test;
 
 import utils.AbstractTests;
 
@@ -65,16 +61,6 @@ public class RemoveDescriptionTest extends AbstractTests{
 	}
 
 	
-
-	//@Test
-	public void removeResolution() throws DAOException
-	{
-		Resolution resol = Resolution.find.findByCode("resol1");
-		resol.remove();
-		Assert.assertNull(Resolution.find.findByCode("resol1"));
-
-	}
-
 	//@Test
 	public void removeState() throws DAOException
 	{
@@ -114,12 +100,5 @@ public class RemoveDescriptionTest extends AbstractTests{
 		Assert.assertNull(ReagentCategory.find.findByCode("reagent1"));
 	}*/
 
-	//@Test
-	public void removeProtocol() throws DAOException
-	{
-		Protocol protocol = Protocol.find.findByCode("updateProto1");
-		protocol.remove();
-		Assert.assertNull(Protocol.find.findByCode("updateProto1"));		
-	}
 	
 }
