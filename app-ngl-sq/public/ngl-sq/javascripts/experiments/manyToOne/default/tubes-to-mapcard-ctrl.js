@@ -113,7 +113,9 @@ angular.module('home').controller('TubesToMapCardCtrl',['$scope', '$parse', 'atm
 				by:'inputContainer.code'
 			},
 			remove:{
-				active:false,
+				active: (!$scope.doneAndRecorded && !$scope.inProgressNow),
+				showButton: (!$scope.doneAndRecorded && !$scope.inProgressNow),
+				mode:'local'
 			},
 			save:{
 				active:true,
@@ -128,7 +130,7 @@ angular.module('home').controller('TubesToMapCardCtrl',['$scope', '$parse', 'atm
 				active:true
 			},
 			edit:{
-				active: !$scope.doneAndRecorded,
+				active: (!$scope.doneAndRecorded && !$scope.inProgressNow),
 				showButton: false,
 				columnMode:true
 			},
@@ -183,7 +185,8 @@ angular.module('home').controller('TubesToMapCardCtrl',['$scope', '$parse', 'atm
 		console.log("call event refresh");
 	
 		var dtConfig = $scope.atmService.data.getConfig();
-		dtConfig.edit.active = !$scope.doneAndRecorded;
+		dtConfig.edit.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
+		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
 		$scope.atmService.data.setConfig(dtConfig);
 		
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
