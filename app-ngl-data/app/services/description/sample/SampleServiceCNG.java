@@ -31,6 +31,7 @@ public class SampleServiceCNG extends AbstractSampleService {
 		l.add(newSampleCategory("Inconnu", "unknown"));
 		l.add(newSampleCategory("Matériel Immunoprécipité","IP-sample"));
 		l.add(newSampleCategory("ARN", "RNA"));
+		l.add(newSampleCategory("ADN", "DNA"));
 		//FDS 05/06/2015 JIRA NGL-672: ajout des categories CNG qui n'existaient pas au CNS 
 		l.add(newSampleCategory("FAIRE", "FAIRE"));  // manquant dans sample_parametrage_CNG.xls ( voir Julie)
 		l.add(newSampleCategory("Methylated Base DNA (MBD)","methylated-base-DNA")); // manquant dans sample_parametrage_CNG.xls ( voir Julie)
@@ -53,7 +54,8 @@ public class SampleServiceCNG extends AbstractSampleService {
 
 		// il y a du ChIP et du MedIP au CNG mais ce n'est pas detaillé au niveau sample dans la base Solexa  creer un.SampleType de meme nom que SampleCategory
 		l.add(newSampleType("Materiel Immunoprecipite", "IP-sample", SampleCategory.find.findByCode("IP-sample"), getSampleCNGPropertyDefinitions(), getInstitutes(Institute.CODE.CNG)));
-		
+		l.add(newSampleType("ADN Génomique", "gDNA", SampleCategory.find.findByCode("DNA"), getPropertyDefinitionsADNGenomic(), getInstitutes(Institute.CODE.CNG))); 
+
 		/* SampleTypes specifique CNG
 		 * utiliser  getSampleCNGPropertyDefinitions()
 		 * pas de subdivisions dans la base solexa...=> SampleType=SampleCategory
@@ -89,6 +91,18 @@ public class SampleServiceCNG extends AbstractSampleService {
 		return propertyDefinitions;
 	}
 	
+	public static List<PropertyDefinition> getPropertyDefinitionsADNGenomic() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", LevelService.getLevels(Level.CODE.Content,Level.CODE.Sample),Double.class, true,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("Mb"), MeasureUnit.find.findByCode("Mb"), "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Fragmenté", "isFragmented", LevelService.getLevels(Level.CODE.Sample),Boolean.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Adaptateurs", "isAdapters", LevelService.getLevels(Level.CODE.Sample),Boolean.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", LevelService.getLevels(Level.CODE.Sample),Integer.class, false, "single"));
+        propertyDefinitions.add(newPropertiesDefinition("WGA", "isWGA", LevelService.getLevels(Level.CODE.Sample),Boolean.class, false, "single"));
+        //TODO GCpercent same as TreatmentService
+        propertyDefinitions.add(newPropertiesDefinition("% GC", "gcPercent", LevelService.getLevels(Level.CODE.Sample),Double.class, false, "single"));
+        //For CNG only
+        return propertyDefinitions;
+	}
 	
 	
 
