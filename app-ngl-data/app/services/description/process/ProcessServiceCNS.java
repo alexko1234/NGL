@@ -141,6 +141,7 @@ public class ProcessServiceCNS extends AbstractProcessService {
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsNanopore() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Type banque","libProcessTypeCode",LevelService.getLevels(Level.CODE.Process,Level.CODE.Content),String.class, true,  DescriptionFactory.newValues("ONT"," Nanopore"), "ONT","single" ,20));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Commentaire","comment",LevelService.getLevels(Level.CODE.Process),String.class,false,"single",2));
 		
 		return propertyDefinitions;
