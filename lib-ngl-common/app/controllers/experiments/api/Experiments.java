@@ -600,7 +600,6 @@ public class Experiments extends CommonController{
 			queryElts.add(DBQuery.in("sampleCodes", experimentSearch.sampleCodes));
 		}
 
-
 		if(CollectionUtils.isNotEmpty(experimentSearch.codes)){
 			queryElts.add(DBQuery.in("codes", experimentSearch.codes));
 		}
@@ -611,7 +610,6 @@ public class Experiments extends CommonController{
 			qs.add(DBQuery.regex("inputContainerSupportCodes",Pattern.compile(experimentSearch.containerSupportCode)));
 			qs.add(DBQuery.regex("outputContainerSupportCodes",Pattern.compile(experimentSearch.containerSupportCode)));
 			queryElts.add(DBQuery.or(qs.toArray(new DBQuery.Query[qs.size()])));
-
 		}	
 
 		if(StringUtils.isNotBlank(experimentSearch.sampleCode)){
@@ -638,6 +636,11 @@ public class Experiments extends CommonController{
 
 		if(StringUtils.isNotBlank(experimentSearch.instrument)){
 			queryElts.add(DBQuery.is("instrument.code", experimentSearch.instrument));
+		}
+		
+		// FDS 21/08/2015 ajout filtrage sur les types d'echantillon
+		if(CollectionUtils.isNotEmpty(experimentSearch.sampleTypeCodes)){
+			queryElts.add(DBQuery.in("atomicTransfertMethods.inputContainerUseds.contents.sampleTypeCode", experimentSearch.sampleTypeCodes));
 		}
 		
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(experimentSearch.atomicTransfertMethodsInputContainerUsedsContentsProperties, Level.CODE.Content, "atomicTransfertMethods.inputContainerUseds.contents.properties"));
