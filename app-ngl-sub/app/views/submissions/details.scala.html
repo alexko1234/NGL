@@ -38,19 +38,19 @@
 			<div class="tab-pane active" id="sample">
 			<!--Afficher boutons de check uniquement si submission.state.code='new' => ng-if="submission.state.code=='new'"
 			Variable submission declarée dans scope de details.ctrl.js-->
-				<div class="checkbox" ng-if="submission.state.code=='new'"><label><input type="checkbox" ng-model="sampleCheck"/>Validate Sample</label></div>
+				<div class="checkbox" ng-hide="submission.state.code!='new'"><label><input type="checkbox" ng-model="sampleCheck"/>Validate Sample</label></div>
 				<div datatable="sampleDT"></div>
 			</div>
 			<div class="tab-pane" id="experiment">
-				<div class="checkbox" ng-if="submission.state.code=='new'"><label><input type="checkbox" ng-model="experimentCheck"/>Validate Experiment</label></div>
+				<div class="checkbox" ng-hide="submission.state.code!='new'"><label><input type="checkbox" ng-model="experimentCheck"/>Validate Experiment</label></div>
 				<div datatable="experimentDT"></div>
 			</div>
 			<div class="tab-pane" id="run">
-				<div class="checkbox" ng-if="submission.state.code=='new'"><label><input type="checkbox" ng-model="runCheck"/>Validate Run</label></div>
+				<div class="checkbox" ng-hide="submission.state.code!='new'"><label><input type="checkbox" ng-model="runCheck"/>Validate Run</label></div>
 				<div datatable="runDT"></div>
 			</div>
 			<div class="tab-pane" id="rawData">
-				<div class="checkbox" ng-if="submission.state.code=='new'"><label><input type="checkbox" ng-model="rawDataCheck"/>Validate Raw Data</label></div>
+				<div class="checkbox" ng-hide="submission.state.code!='new'"><label><input type="checkbox" ng-model="rawDataCheck"/>Validate Raw Data</label></div>
 				<div datatable="rawDataDT"></div>
 			</div>
 		</div>
