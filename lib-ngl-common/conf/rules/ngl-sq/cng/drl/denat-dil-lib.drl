@@ -6,7 +6,7 @@ rule "Concentration not null in Denat dilution outputContainer"
 	salience 930
 	no-loop
     when
-    	$experiment:Experiment($typeCode:typeCode,$typeCode=="denat-dil-lib")
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="denat-dil-lib",$stateCode:state.code=="IP")
 		$atomicTransfert: OneToOneContainer($inputContainerUsed:inputContainerUseds.get(0), $outputContainerUsed: outputContainerUseds.get(0))
 		ContainerUsed($finalConcentration: concentration) from $outputContainerUsed
 		$contextValidation:ContextValidation()
@@ -27,7 +27,7 @@ rule "Volume not null in denat dilution outputContainer"
 	salience 940
 	no-loop
     when
-    	$experiment:Experiment($typeCode:typeCode,$typeCode=="denat-dil-lib")
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="denat-dil-lib",$stateCode:state.code=="IP")
 		$atomicTransfert: OneToOneContainer($inputContainerUsed:inputContainerUseds.get(0), $outputContainerUsed: outputContainerUseds.get(0))
 	   	ContainerUsed($finalVolume: volume) from $outputContainerUsed
     	$contextValidation:ContextValidation()

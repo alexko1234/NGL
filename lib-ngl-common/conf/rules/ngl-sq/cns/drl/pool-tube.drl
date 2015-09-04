@@ -94,3 +94,18 @@ rule "more than one inputContainer"
     	$contextValidation.addErrors("inputContainerSupportCodes","error.validationexp.manyInputSupport", $inputContainer.code);
     end
 
+rule "Volume not null in pool-tube outputContainer"
+    @nglSQ( validations )
+	dialect "java"
+	salience 940
+	no-loop
+    when
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="pool-tube")
+		$atomicTransfert: ManytoOneContainer($outputContainerUsed: outputContainerUseds.get(0))
+	   	ContainerUsed($finalVolume: volume) from $outputContainerUsed
+    	$contextValidation:ContextValidation()
+    	eval($finalVolume == null || $finalVolume.value == null || $finalVolume.value == "")
+    then
+    	Logger.debug("Volume not null in pool-tube outputContainer");
+    	$contextValidation.addErrors("pool-tube","error.validationexp.outputvolumenotnull.light");    	      
+end
