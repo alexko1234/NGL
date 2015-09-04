@@ -10,7 +10,6 @@ import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.ObjectType.CODE;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.State;
-import models.laboratory.common.description.ValuationCriteria;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
@@ -53,7 +52,6 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		insertState(cit.states, cit.id, false);
 		insertProperties(cit.propertiesDefinitions, cit.id, false);
 		insertInstitutes(cit.institutes, cit.id, false);
-		insertValuationCriterias(cit.criterias, cit.id, false);
 		
 		return cit.id;
 	}
@@ -73,7 +71,6 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		insertState(cit.states, cit.id, true);
 		insertProperties(cit.propertiesDefinitions, cit.id, true);
 		insertInstitutes(cit.institutes, cit.id, true);
-		insertValuationCriterias(cit.criterias, cit.id, true);
 	}
 
 	
@@ -179,22 +176,6 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		}
 	}
 	
-	private void insertValuationCriterias(List<ValuationCriteria> criterias, Long citId, boolean deleteBefore) throws DAOException {
-		if(deleteBefore){
-			removeValuationCriterias(citId);
-		}
-		//Add criteria list		
-		if(criterias!=null && criterias.size()>0){
-			String sql = "INSERT INTO valuation_criteria_common_info_type (fk_common_info_type, fk_valuation_criteria) VALUES(?,?)";
-			for(ValuationCriteria criteria : criterias){
-				if(criteria == null || criteria.id == null ){
-					throw new DAOException("criteria is mandatory");
-				}
-				jdbcTemplate.update(sql, citId, criteria.id);
-			}
-		}
-	}
-
 
 /*
 	public List<CommonInfoType> findByName(String typeName) {

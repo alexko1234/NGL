@@ -9,7 +9,6 @@ import java.util.Map;
 import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.common.description.ValuationCriteria;
 import models.laboratory.common.description.Value;
 import models.laboratory.run.description.AnalysisType;
 import models.laboratory.run.description.ReadSetType;
@@ -26,15 +25,15 @@ public class RunServiceCNS extends AbstractRunService {
 	
 	public void saveReadSetType(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ReadSetType> l = new ArrayList<ReadSetType>();
-		l.add(DescriptionFactory.newReadSetType("Default","default-readset",  getReadSetPropertyDefinitions(), null, DescriptionFactory.getInstitutes( Institute.CODE.CNS) ));
-		l.add(DescriptionFactory.newReadSetType("RSARGUS","RSARGUS",  null, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
+		l.add(DescriptionFactory.newReadSetType("Default","default-readset",  getReadSetPropertyDefinitions(),  DescriptionFactory.getInstitutes( Institute.CODE.CNS) ));
+		l.add(DescriptionFactory.newReadSetType("RSARGUS","RSARGUS",  null,  DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
 		
 		DAOHelpers.saveModels(ReadSetType.class, l, errors);
 	}
 	
 	public void saveAnalysisType(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<AnalysisType> l = new ArrayList<AnalysisType>();
-		l.add(DescriptionFactory.newAnalysisType("BAC pool assembly","BPA",  null, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
+		l.add(DescriptionFactory.newAnalysisType("BAC pool assembly","BPA",  null,  DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
 		
 		DAOHelpers.saveModels(AnalysisType.class, l, errors);
 	}
@@ -48,12 +47,12 @@ public class RunServiceCNS extends AbstractRunService {
 	
 	public void saveRunType(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<RunType> l = new ArrayList<RunType>();
-		l.add(DescriptionFactory.newRunType("RHS2000","RHS2000", 8, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), null, DescriptionFactory.getInstitutes( Institute.CODE.CNS) ));
-		l.add(DescriptionFactory.newRunType("RHS2500","RHS2500", 8, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), null, DescriptionFactory.getInstitutes( Institute.CODE.CNS) ));
-		l.add(DescriptionFactory.newRunType("RHS2500R","RHS2500R", 2, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), null,  DescriptionFactory.getInstitutes( Institute.CODE.CNS)));
-		l.add(DescriptionFactory.newRunType("RMISEQ","RMISEQ", 1, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), null,  DescriptionFactory.getInstitutes( Institute.CODE.CNS)));
-		l.add(DescriptionFactory.newRunType("RGAIIx","RGAIIx", 1, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), null,  DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(DescriptionFactory.newRunType("RARGUS","RARGUS", 1, RunCategory.find.findByCode("opgen"), null, null,  DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(DescriptionFactory.newRunType("RHS2000","RHS2000", 8, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(),  DescriptionFactory.getInstitutes( Institute.CODE.CNS) ));
+		l.add(DescriptionFactory.newRunType("RHS2500","RHS2500", 8, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(),  DescriptionFactory.getInstitutes( Institute.CODE.CNS) ));
+		l.add(DescriptionFactory.newRunType("RHS2500R","RHS2500R", 2, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(),  DescriptionFactory.getInstitutes( Institute.CODE.CNS)));
+		l.add(DescriptionFactory.newRunType("RMISEQ","RMISEQ", 1, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), DescriptionFactory.getInstitutes( Institute.CODE.CNS)));
+		l.add(DescriptionFactory.newRunType("RGAIIx","RGAIIx", 1, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(DescriptionFactory.newRunType("RARGUS","RARGUS", 1, RunCategory.find.findByCode("opgen"), null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		DAOHelpers.saveModels(RunType.class, l, errors);
 	}

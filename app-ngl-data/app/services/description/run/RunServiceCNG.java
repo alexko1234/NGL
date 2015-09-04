@@ -9,7 +9,6 @@ import java.util.Map;
 import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.common.description.ValuationCriteria;
 import models.laboratory.common.description.Value;
 import models.laboratory.run.description.AnalysisType;
 import models.laboratory.run.description.ReadSetType;
@@ -25,7 +24,7 @@ public class RunServiceCNG  extends AbstractRunService{
 	
 	public void saveReadSetType(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ReadSetType> l = new ArrayList<ReadSetType>();
-		l.add(DescriptionFactory.newReadSetType("Default","default-readset",  getReadSetPropertyDefinitions(), null, DescriptionFactory.getInstitutes(Institute.CODE.CNG) ));
+		l.add(DescriptionFactory.newReadSetType("Default","default-readset",  getReadSetPropertyDefinitions(),  DescriptionFactory.getInstitutes(Institute.CODE.CNG) ));
 		//l.add(DescriptionFactory.newReadSetType("RSILLUMINA","RSILLUMINA",  getReadSetPropertyDefinitions(), null, DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS) ));
 		
 		DAOHelpers.saveModels(ReadSetType.class, l, errors);
@@ -45,11 +44,11 @@ public class RunServiceCNG  extends AbstractRunService{
 	
 	public void saveRunType(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<RunType> l = new ArrayList<RunType>();
-		l.add(DescriptionFactory.newRunType("RHS2000","RHS2000", 8, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), null, DescriptionFactory.getInstitutes(Institute.CODE.CNG) ));
-		l.add(DescriptionFactory.newRunType("RHS2500","RHS2500", 8, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), null, DescriptionFactory.getInstitutes(Institute.CODE.CNG) ));
-		l.add(DescriptionFactory.newRunType("RHS2500R","RHS2500R", 2, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), null,  DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-		l.add(DescriptionFactory.newRunType("RMISEQ","RMISEQ", 1, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), null,  DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-		l.add(DescriptionFactory.newRunType("RNEXTSEQ500","RNEXTSEQ500", 4, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), null,  DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		l.add(DescriptionFactory.newRunType("RHS2000","RHS2000", 8, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(),  DescriptionFactory.getInstitutes(Institute.CODE.CNG) ));
+		l.add(DescriptionFactory.newRunType("RHS2500","RHS2500", 8, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(),  DescriptionFactory.getInstitutes(Institute.CODE.CNG) ));
+		l.add(DescriptionFactory.newRunType("RHS2500R","RHS2500R", 2, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(),   DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		l.add(DescriptionFactory.newRunType("RMISEQ","RMISEQ", 1, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(),   DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		l.add(DescriptionFactory.newRunType("RNEXTSEQ500","RNEXTSEQ500", 4, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(),   DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 		DAOHelpers.saveModels(RunType.class, l, errors);
 	}
 	
@@ -151,14 +150,6 @@ public class RunServiceCNG  extends AbstractRunService{
 	    return propertyDefinitions;
 	}
 	
-	private static List<ValuationCriteria> getValuationCriterias(String...codes) throws DAOException {
-		List<ValuationCriteria> valuationCriterias = new ArrayList<ValuationCriteria>();
-		for(String code : codes){
-			valuationCriterias.add(ValuationCriteria.find.findByCode(code));
-		}	
-		return valuationCriterias;
-	}
-
 
 
 }

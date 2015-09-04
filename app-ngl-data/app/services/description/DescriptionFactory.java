@@ -15,7 +15,6 @@ import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.description.State;
 import models.laboratory.common.description.StateCategory;
 import models.laboratory.common.description.StateHierarchy;
-import models.laboratory.common.description.ValuationCriteria;
 import models.laboratory.common.description.Value;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
@@ -921,7 +920,7 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	public static ReadSetType newReadSetType(String name, String code, List<PropertyDefinition> propertiesDefinitions, List<ValuationCriteria> valCriterias, List<Institute> institutes) throws DAOException {
+	public static ReadSetType newReadSetType(String name, String code, List<PropertyDefinition> propertiesDefinitions, List<Institute> institutes) throws DAOException {
 		ReadSetType rt = new ReadSetType();
 		rt.code =code;
 		rt.name =name;
@@ -943,7 +942,7 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	public static AnalysisType newAnalysisType(String name, String code, List<PropertyDefinition> propertiesDefinitions, List<ValuationCriteria> valCriterias, List<Institute> institutes) throws DAOException {
+	public static AnalysisType newAnalysisType(String name, String code, List<PropertyDefinition> propertiesDefinitions, List<Institute> institutes) throws DAOException {
 		AnalysisType rt = new AnalysisType();
 		rt.code =code;
 		rt.name =name;
@@ -968,7 +967,7 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	public static RunType newRunType(String name, String code, Integer nbLanes, RunCategory category, List<PropertyDefinition> propertiesDefinitions, List<ValuationCriteria> valCriterias, List<Institute> institutes) throws DAOException {
+	public static RunType newRunType(String name, String code, Integer nbLanes, RunCategory category, List<PropertyDefinition> propertiesDefinitions, List<Institute> institutes) throws DAOException {
 		RunType rt = new RunType();
 		rt.code = code;
 		rt.name = name;
@@ -1080,24 +1079,5 @@ public class DescriptionFactory {
 		
 	}
 	
-
-	/**
-	 * 
-	 * @param name
-	 * @param code
-	 * @param path
-	 * @param institutes
-	 * @return
-	 * @throws DAOException
-	 */
-	public static ValuationCriteria newValuationCriteria(String name, String code, String path,  List<Institute> institutes) throws DAOException {
-		ValuationCriteria v = new ValuationCriteria(); 
-		v.code = code;
-		v.name = name;
-		v.path = path;
-		v.institutes = institutes;
-		return v;
-	}
-
 
 }

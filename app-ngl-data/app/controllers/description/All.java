@@ -3,12 +3,12 @@ package controllers.description;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import play.Logger;
 import play.data.validation.ValidationError;
 import play.libs.Json;
 import play.mvc.Result;
 import services.description.common.InstituteService;
-import services.description.common.ValuationCriteriaService;
 import services.description.common.LevelService;
 import services.description.common.MeasureService;
 import services.description.common.ObjectTypeService;
@@ -31,7 +31,6 @@ public class All extends CommonController {
 		try {
 			Map<String,List<ValidationError>> errors = new HashMap<String, List<ValidationError>>();
 			InstituteService.main(errors);
-			ValuationCriteriaService.main(errors);
 			ObjectTypeService.main(errors);
 			StateService.main(errors); 
 			//ResolutionService.main(errors); 
