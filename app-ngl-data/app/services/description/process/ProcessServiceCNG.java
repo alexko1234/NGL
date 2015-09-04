@@ -43,7 +43,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			
-			l.add(DescriptionFactory.newProcessType("Run Illumina", "illumina-run-cng", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsIlluminaDepotCNG() , getExperimentTypes("denat-dil-lib","prepa-flowcell-cng","illumina-depot"), 
+			l.add(DescriptionFactory.newProcessType("Run Illumina", "illumina-run", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsIlluminaDepotCNG() , getExperimentTypes("denat-dil-lib","prepa-flowcell","illumina-depot"), 
 					getExperimentTypes("denat-dil-lib").get(0), getExperimentTypes("illumina-depot").get(0),getExperimentTypes("ext-to-denat-dil-lib").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 				
 		}

@@ -64,13 +64,13 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 			
 		//Depot solexa -- FDS 27/02/2015 devient commun
-		l.add(newExperimentType("Depot Illumina", "illumina-depot",null, 1400,
+		l.add(newExperimentType("Dépôt sur séquenceur", "illumina-depot",null, 1400,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(),
 				getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500"), "OneToVoid", 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 		
 		
-		l.add(newExperimentType("Préparation flowcell","prepa-flowcell-cng",null,1100,
+		l.add(newExperimentType("Préparation flowcell","prepa-flowcell",null,1100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcellCNG(),
 				getInstrumentUsedTypes("cBot", "cBot-onboard"),"ManyToOne", 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
@@ -160,10 +160,10 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),false,false,getExperimentTypeNodes("ext-to-denat-dil-lib", "lib-normalization"),
 					null,null).save();
 			
-			newExperimentTypeNode("prepa-flowcell-cng",getExperimentTypes("prepa-flowcell-cng").get(0),false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","denat-dil-lib"),
+			newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","denat-dil-lib"),
 					null,null).save();
 		
-			newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false,false,getExperimentTypeNodes("prepa-flowcell-cng"),
+			newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false,false,getExperimentTypeNodes("prepa-flowcell"),
 					null,null).save();
 		}
 		
