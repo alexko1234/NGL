@@ -34,6 +34,7 @@ public class ExperimentSearchForm extends ListForm{
 	
 
 	
+	// FDS 21/08/2015 pour debug only???  ajouter tags et sampleTypeCodes dans le return 
 	@Override
 	public String toString() {
 		return "ExperimentSearchForm [code="+code+", codes="+ codes +", typeCode=" + typeCode
@@ -41,6 +42,8 @@ public class ExperimentSearchForm extends ListForm{
 				+ ", sampleCodes=" + sampleCodes + ", fromDate=" + fromDate
 				+ ", toDate=" + toDate + ", stateCode=" + stateCode
 				+ ", users=" + users +", containerSupportCode=" + containerSupportCode +", containersCodes=" + containersCodes
-				+ ", atomicTransfertMethods="+ atomicTransfertMethods + ", instrument"+ instrument + "]";
+				+ ", atomicTransfertMethods="+ atomicTransfertMethods + ", instrument"+ instrument 
+				+ ", tags=" + tags+  ", sampleTypeCodes="+ sampleTypeCodes
+				+ "]";
 	}
 }
