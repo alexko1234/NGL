@@ -64,7 +64,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 			
 		//Depot solexa -- FDS 27/02/2015 devient commun
-		l.add(newExperimentType("Depot Illumina", "illumina-depot",null, 1400,
+		l.add(newExperimentType("Dépôt sur séquenceur", "illumina-depot",null, 1400,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(),
 				getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500"), "OneToVoid", 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
