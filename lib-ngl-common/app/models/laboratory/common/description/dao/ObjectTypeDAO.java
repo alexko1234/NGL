@@ -62,8 +62,6 @@ public class ObjectTypeDAO extends AbstractDAOMapping<ObjectType>{
 	public void remove(ObjectType objectType) throws DAOException {
 		//Delete state common_info_type_state
 		removeStates(objectType.id);
-		//Delete resolution
-		removeResolutions(objectType.id);
 		super.remove(objectType);
 	}
 
@@ -72,11 +70,6 @@ public class ObjectTypeDAO extends AbstractDAOMapping<ObjectType>{
 		jdbcTemplate.update(sqlState, otId);
 	}
 	
-	private void removeResolutions(Long otId) {
-		String sqlResolution = "DELETE FROM resolution_object_type WHERE fk_object_type=?";
-		jdbcTemplate.update(sqlResolution, otId);
-	}
-
 	
 	/**
 	 * Particular sql with two code must be implemented

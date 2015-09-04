@@ -121,7 +121,6 @@ public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType>{
 		if(deleteBefore){
 			removeExperimentTypes(id);
 		}
-		//Add resolutions list		
 		if(experimentTypes!=null && experimentTypes.size()>0){
 			String sql = "INSERT INTO process_experiment_type(fk_process_type, fk_experiment_type) VALUES(?,?)";
 			for(ExperimentType experimentType:experimentTypes){

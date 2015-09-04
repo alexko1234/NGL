@@ -78,8 +78,6 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 	public void remove(CommonInfoType commonInfoType) throws DAOException {
 		//Delete state common_info_type_state
 		removeStates(commonInfoType.id);
-		//Delete resolution common_info_type_resolution
-		removeResolution(commonInfoType.id);
 		//Delete property_definition
 		removeProperties(commonInfoType.id);
 		//Delete institutes
@@ -88,11 +86,6 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		super.remove(commonInfoType);
 	}
 
-	
-	private void removeResolution( Long citId) {
-		String sqlResol = "DELETE FROM common_info_type_resolution WHERE fk_common_info_type=?";
-		jdbcTemplate.update(sqlResol, citId);
-	}
 	
 	private void removeStates(Long citId) {
 		String sqlState = "DELETE FROM common_info_type_state WHERE fk_common_info_type=?";
@@ -207,16 +200,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 	}
 	
 	
-	public List<CommonInfoType> findByProtocolCode(String code){
-		String sql = sqlCommon +
-				" JOIN experiment_type et ON et.fk_common_info_type = t.id "+
-				"JOIN experiment_type_protocol etp ON etp.fk_experiment_type = et.id "+
-				"JOIN protocol p ON p.id = etp.fk_protocol "+
-				"WHERE p.code=? ";
-		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sql, new SqlParameter("code",Types.VARCHAR));
-		return commonInfoTypeMappingQuery.execute(code);
-				
-	}
+	
 	
 	public CommonInfoType findByExperimentTypeId(Long id){
 		String sql = sqlCommon +

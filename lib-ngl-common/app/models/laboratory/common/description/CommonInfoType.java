@@ -116,11 +116,7 @@ public class CommonInfoType extends Model<CommonInfoType>{
 			return ((CommonInfoTypeDAO)getInstance()).findByExperimentTypeId(id);
 		}
 		
-		//To import Protocols from SQL to MongoDB
-		public List<CommonInfoType> findByProtocolCode(String code) throws DAOException{
-			return ((CommonInfoTypeDAO)getInstance()).findByProtocolCode(code);
-		}
-		
+	
 	}
 
 	public static class AbstractCommonInfoTypeFinder<T> extends Finder<T>{ 

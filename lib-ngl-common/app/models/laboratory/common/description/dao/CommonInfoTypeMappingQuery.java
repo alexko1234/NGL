@@ -56,12 +56,7 @@ public class CommonInfoTypeMappingQuery extends MappingSqlQuery<CommonInfoType>{
 			}
 			commonInfoType.states = states;
 			*/
-			/*
-			//Get Resolutions
-			ResolutionDAO resolutionDAO = Spring.getBeanOfType(ResolutionDAO.class);
-			List<Resolution> resolutions = resolutionDAO.findByCommonInfoTypeId(commonInfoType.id);
-			commonInfoType.resolutions = resolutions;
-			*/
+			
 			
 			//Get properties
 			PropertyDefinitionDAO propertyDefinitionDAO = Spring.getBeanOfType(PropertyDefinitionDAO.class);

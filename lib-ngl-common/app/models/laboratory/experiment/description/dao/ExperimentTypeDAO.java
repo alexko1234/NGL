@@ -67,7 +67,6 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		if(deleteBefore){
 			removeInstrumentUsedTypes(id);
 		}
-		//Add resolutions list		
 		if(instrumentUsedTypes!=null && instrumentUsedTypes.size()>0){
 			String sql = "INSERT INTO experiment_type_instrument_type (fk_experiment_type, fk_instrument_used_type) VALUES(?,?)";
 			for(InstrumentUsedType instrumentUsedType:instrumentUsedTypes){

@@ -187,7 +187,6 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 		if(deleteBefore){
 			removePropertyDefinitionLevel(id);
 		}
-		//Add resolutions list
 		if(levels!=null && levels.size()>0){
 			String sql = "INSERT INTO property_definition_level (fk_property_definition, fk_level) VALUES(?,?)";
 			for(Level level:levels){

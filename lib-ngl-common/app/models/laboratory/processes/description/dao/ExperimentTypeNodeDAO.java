@@ -68,7 +68,6 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 		if(deleteBefore){
 			removePrevious(id);
 		}
-		//Add resolutions list
 		if(previousExperimentType!=null && previousExperimentType.size()>0){
 			String sql = "INSERT INTO previous_nodes(fk_node, fk_previous_node) VALUES(?,?)";
 			for(ExperimentTypeNode experimentTypeNode:previousExperimentType){
@@ -86,7 +85,6 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 		if(deleteBefore){
 			removeSatellites(id);
 		}
-		//Add resolutions list
 		if(experimentTypes!=null && experimentTypes.size()>0){
 			String sql = "INSERT INTO satellite_experiment_type(fk_experiment_type_node, fk_experiment_type) VALUES(?,?)";
 			for(ExperimentType experimentType:experimentTypes){

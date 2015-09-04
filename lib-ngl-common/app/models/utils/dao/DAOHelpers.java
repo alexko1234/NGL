@@ -152,18 +152,10 @@ public class DAOHelpers {
 	}
 	
 	
-	public static String getResolutionSQLForInstitute(String tableAlias){		 
-		return getSQLForInstitute("resolution", tableAlias);		
-	}
-	
 	public static String getInstrumentSQLForInstitute(String tableAlias){		 
 		return getSQLForInstitute("instrument", tableAlias);		
 	}
-	
-	public static String getValuationCriteriaSQLForInstitute(String tableAlias){		 
-		return getSQLForInstitute("valuation_criteria", tableAlias);		
-	}
-	
+		
 	public static String getCommonInfoTypeSQLForInstitute(String tableAlias){		 
 		return getSQLForInstitute("common_info_type", tableAlias);		
 	}

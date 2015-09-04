@@ -90,7 +90,6 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 		if(deleteBefore){
 			removeContainerSupportCategoryIn(id);
 		}
-		//Add resolutions list		
 		if(containerSupportCategories!=null && containerSupportCategories.size()>0){
 			String sql = "INSERT INTO instrument_ut_in_container_support_cat (fk_instrument_used_type,fk_container_support_category) VALUES(?,?)";
 			for(ContainerSupportCategory containerSupportCategory:containerSupportCategories){
@@ -108,7 +107,6 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 			removeContainerSupportCategoryOut(id);
 		}
 		
-		//Add resolutions list		
 		if(containerSupportCategories!=null && containerSupportCategories.size()>0){
 			String sql = "INSERT INTO instrument_ut_out_container_support_cat (fk_instrument_used_type,fk_container_support_category) VALUES(?,?)";
 			for(ContainerSupportCategory containerSupportCategory:containerSupportCategories){
