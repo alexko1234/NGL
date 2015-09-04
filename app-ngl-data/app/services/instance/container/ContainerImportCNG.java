@@ -51,9 +51,9 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		
 		// -3-  TODO 17/06/2015 import des plaques96  10nM et XnM existant dans SOLEXA ???
 		
-		// si on importe des lanes c'est qu'elle ont ete cree par prepa-flowcell-cng...
-		loadContainers("lane","prepa-flowcell-cng");
-		updateContainers("lane","prepa-flowcell-cng");
+		// si on importe des lanes c'est qu'elle ont ete cree par prepa-flowcell...
+		loadContainers("lane","prepa-flowcell");
+		updateContainers("lane","prepa-flowcell");
 		
 	}
 	

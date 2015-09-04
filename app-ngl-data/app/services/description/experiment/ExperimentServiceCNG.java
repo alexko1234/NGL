@@ -70,7 +70,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 		
 		
-		l.add(newExperimentType("Préparation flowcell","prepa-flowcell-cng",null,1100,
+		l.add(newExperimentType("Préparation flowcell","prepa-flowcell",null,1100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcellCNG(),
 				getInstrumentUsedTypes("cBot", "cBot-onboard"),"ManyToOne", 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
@@ -160,10 +160,10 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),false,false,getExperimentTypeNodes("ext-to-denat-dil-lib", "lib-normalization"),
 					null,null).save();
 			
-			newExperimentTypeNode("prepa-flowcell-cng",getExperimentTypes("prepa-flowcell-cng").get(0),false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","denat-dil-lib"),
+			newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","denat-dil-lib"),
 					null,null).save();
 		
-			newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false,false,getExperimentTypeNodes("prepa-flowcell-cng"),
+			newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false,false,getExperimentTypeNodes("prepa-flowcell"),
 					null,null).save();
 		}
 		
