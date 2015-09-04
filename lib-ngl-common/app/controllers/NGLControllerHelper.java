@@ -25,8 +25,7 @@ public class NGLControllerHelper {
 			for(String key : properties.keySet()){
 				PropertyDefinition pd = PropertyDefinition.find.findUnique(key, level);
 				List<String> stringValues = properties.get(key);
-				if(null != pd && CollectionUtils.isNotEmpty(stringValues)){
-					Logger.debug("find pd "+key);
+				if(null != pd && CollectionUtils.isNotEmpty(stringValues)){					
 					Query subQueries = null;
 					List<Object> values = ValidationHelper.convertStringToType(pd.valueType, stringValues);
 					//use $in because is more generic than $is and work to field of type array or single
