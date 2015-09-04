@@ -84,8 +84,6 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		removeProperties(commonInfoType.id);
 		//Delete institutes
 		removeInstitutes(commonInfoType.id);
-		//Delete criteria
-		removeValuationCriterias(commonInfoType.id);
 		
 		super.remove(commonInfoType);
 	}
@@ -122,12 +120,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 		//Delete common_info_type
 	}
 	
-	private void removeValuationCriterias(Long citId) {
-		String sqlCriteria = "DELETE FROM valuation_criteria_common_info_type WHERE fk_common_info_type=?";
-		jdbcTemplate.update(sqlCriteria, citId);
-	}
-	
-	
+		
 	private void insertProperties(List<PropertyDefinition> propertyDefinitions, Long citId, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
 			removeProperties(citId);
