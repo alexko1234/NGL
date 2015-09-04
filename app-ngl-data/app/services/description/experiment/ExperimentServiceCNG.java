@@ -197,9 +197,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		return propertyDefinitions;
 	}
 	
-	
-
-
 	//TODO
 	// Propriete taille en output et non en input ?
 	// Valider les keys
@@ -222,7 +219,4 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		return propertyDefinitions;
 	}
 	
-	
-	
-
 }

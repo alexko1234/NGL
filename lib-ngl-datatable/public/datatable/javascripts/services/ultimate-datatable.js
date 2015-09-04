@@ -123,7 +123,8 @@ angular.module('ultimateDataTableServices', []).
 								callback:undefined, //used to have a callback after save all element. the datatable is pass to callback method and number of error
 								start:false, //if save started
 								number:0, //number of element in progress
-								error:0
+								error:0,
+								newData:[]
 							},
 							remove:{
 								active:false,
@@ -257,7 +258,6 @@ angular.module('ultimateDataTableServices', []).
     					 */
     					searchLocal : function(searchTerms){
 							if(this.config.filter.active === true){
-								var deferred = $q.defer();
 								//Set the properties "" or null to undefined because we don't want to filter this
 								this.setSpinner(true);
 								for(var p in searchTerms) {
@@ -278,9 +278,8 @@ angular.module('ultimateDataTableServices', []).
 								var that = this;
 								this.computeDisplayResultTimeOut.then(function(){
 									that.setSpinner(false);
-									deferred.resolve();
-								});
-								return deferred.promise;
+									
+								});								
 							}
 						},
 						_getAllResult : function(){
@@ -367,35 +366,16 @@ angular.module('ultimateDataTableServices', []).
 		    			 */
 		    			addBlankLine: function(){
 							if(this.config.add.active === true){
-								//Save all the lines (locally)
-								for(var i=0;i<this.displayResult.length;i++){
-									this.saveLocal(this.displayResult[i].data, i);
+								//call inti method for the new data
+								var newData = this.config.add.init(this);
+								var line = {edit:true, selected:true, trClass:undefined, group:false, new:true};
+								 
+								if(this.config.add.after){
+									this.displayResult.push({data:newData, line:line})
+								}else{
+									this.displayResult.unshift({data:newData, line:line})
 								}
-								
-								this.config.pagination.pageNumber=0;
-								var that = this;
-								this.computeDisplayResultTimeOut.then(function(){
-									//Deselect all lines
-									that.selectAll(false);
-									//Create new line already selected
-									var line = {edit:false, selected:true, trClass:undefined, group:false};
-									that.displayResult.unshift({data:{}, line:line});
-									if(that.config.pagination.numberRecordsPerPage < that.displayResult.length){
-										that.displayResult.splice(that.config.pagination.numberRecordsPerPage,(that.displayResult.length+1)-that.config.pagination.numberRecordsPerPage);
-									}
-									that.allResult.unshift({}); //or push
-									that.totalNumberRecords++;
-									
-									 //group function
-									if(that.isGroupActive()){
-										that.displayResult = that.addGroup(that.displayResult);					
-									}
-									
-									that.computePaginationList();
-
-									//setEdit
-									that.setEdit();
-								});
+								this.config.edit.all = true								
 							}
 		    			},
 		    			/**
@@ -571,7 +551,7 @@ angular.module('ultimateDataTableServices', []).
 	    						/* previous mode */
 	    						if(!groupConfig.after && (index === 0 
 	    								|| groupGetter(element.data) !== groupGetter(array[index-1].data))){
-	    							var line = {edit:undefined, selected:undefined, trClass:undefined, group:true};
+	    							var line = {edit:undefined, selected:undefined, trClass:undefined, group:true, new:false};
 	    							this.push({data:groupConfig.data[groupGetter(element.data)], line:line});
 	    						}		    						
 	    						this.push(element);
@@ -579,7 +559,7 @@ angular.module('ultimateDataTableServices', []).
 	    						/* after mode */
 	    						if(groupConfig.after && (index === (array.length - 1) 
 	    								|| groupGetter(element.data) !== groupGetter(array[index+1].data))){
-	    							var line = {edit:undefined, selected:undefined, trClass:undefined, group:true};
+	    							var line = {edit:undefined, selected:undefined, trClass:undefined, group:true, new:false};
 	    							this.push({data:groupConfig.data[groupGetter(element.data)], line:line});
 	    						}		    						
 	    						
@@ -720,7 +700,7 @@ angular.module('ultimateDataTableServices', []).
 											(configPagination.pageNumber*configPagination.numberRecordsPerPage+configPagination.numberRecordsPerPage));
 									var displayResultTmp = [];
 									angular.forEach(_displayResult, function(value, key){
-										 var line = {edit:undefined, selected:undefined, trClass:undefined, group:true};
+										 var line = {edit:undefined, selected:undefined, trClass:undefined, group:true, new:false};
 										 this.push({data:value, line:line});
 									}, displayResultTmp);			    				
 									that.displayResult = displayResultTmp;		
@@ -734,7 +714,7 @@ angular.module('ultimateDataTableServices', []).
 									
 									var displayResultTmp = [];
 									angular.forEach(_displayResult, function(value, key){
-										 var line = {edit:undefined, selected:undefined, trClass:undefined, group:false};
+										 var line = {edit:undefined, selected:undefined, trClass:undefined, group:false, new:false};
 										 this.push({data:value, line:line});
 									}, displayResultTmp);
 									
@@ -1192,7 +1172,7 @@ angular.module('ultimateDataTableServices', []).
 			    							//add the data in table to send in once all the result
 			    							data.push({index:i, data:valueFunction(this.displayResult[i].data)});			    							
 			    						} else{	
-			    							this.saveLocal(valueFunction(this.displayResult[i].data),i);
+			    							this.saveLocal(valueFunction(this.displayResult[i].data), i);
 			    						}
 			    					}						
 			    				}
@@ -1288,11 +1268,16 @@ angular.module('ultimateDataTableServices', []).
 		    					}
 		    					
 		    					//update in the all result table
-								var j = i;
-								if(this.config.pagination.active && !this.isRemoteMode(this.config.pagination.mode)){
-									j = i + (this.config.pagination.pageNumber*this.config.pagination.numberRecordsPerPage);
+								if(!this.displayResult[i].line.new){
+									var j = i;
+									if(this.config.pagination.active && !this.isRemoteMode(this.config.pagination.mode)){
+										j = i + (this.config.pagination.pageNumber*this.config.pagination.numberRecordsPerPage);
+									}
+									this.allResult[j] = angular.copy(this.displayResult[i].data);
+			    					
+								}else{
+									this.config.save.newData.push(data);
 								}
-								this.allResult[j] = angular.copy(this.displayResult[i].data);
 		    					
 		    					if(!this.config.save.keepEdit){
 		    						this.displayResult[i].line.edit = undefined;
@@ -1329,7 +1314,12 @@ angular.module('ultimateDataTableServices', []).
 		    					}
 		    					this.config.save.error = 0;
 		    					this.config.save.start = false;
-		    					this.setSpinner(false);
+		    					//insert new data create by addBlank in result
+		    					if(this.config.save.newData.length > 0){
+		    						this.addData(this.config.save.newData);			    					
+		    					}
+		    					this.config.save.newData = [];
+		    					this.setSpinner(false);		    							    					
 		    				}
 	    					
 		    			},
@@ -1979,7 +1969,7 @@ angular.module('ultimateDataTableServices', []).
 			    				//calcule results ( code extracted from method computeDisplayResult() )
 			    				var displayResultTmp = [];
 			    				angular.forEach(this.allResult, function(value, key){
-			    					 var line = {edit:undefined, selected:undefined, trClass:undefined, group:false};
+			    					 var line = {edit:undefined, selected:undefined, trClass:undefined, group:false, new:false};
 		    						 this.push({data:value, line:line});
 		    					}, displayResultTmp);			    				
 			    				if(this.isGroupActive()){
