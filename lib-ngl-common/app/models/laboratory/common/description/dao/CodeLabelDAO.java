@@ -35,8 +35,6 @@ public class CodeLabelDAO {
 						"union all "+
 						"select 'container_support_cat' as table_name, code, name as label from container_support_category "+
 						"union all "+
-						"select 'valuation_criteria' as table_name, code, name as label from valuation_criteria "+
-						"union all "+
 						"select 'project_cat' as table_name, code, name as label from project_category "+
 						"union all "+
 						"select distinct 'value' as table_name, code, name as label from value "+
