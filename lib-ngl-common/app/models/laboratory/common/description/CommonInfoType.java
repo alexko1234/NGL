@@ -41,8 +41,6 @@ public class CommonInfoType extends Model<CommonInfoType>{
 	
 	public List<Institute> institutes = new ArrayList<Institute>();
 	
-	public List<ValuationCriteria> criterias = new ArrayList<ValuationCriteria>();
-
 	public static CommonInfoTypeFinder find = new CommonInfoTypeFinder();	
 	
 
@@ -74,7 +72,6 @@ public class CommonInfoType extends Model<CommonInfoType>{
 		this.objectType=commonInfoType.objectType;
 		
 		this.institutes=commonInfoType.institutes;
-		this.criterias=commonInfoType.criterias;
 		//position on display
 		this.displayOrder=commonInfoType.displayOrder;
 	}

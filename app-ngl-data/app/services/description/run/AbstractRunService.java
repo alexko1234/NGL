@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.ValuationCriteria;
 import models.laboratory.run.description.AnalysisType;
 import models.laboratory.run.description.ReadSetType;
 import models.laboratory.run.description.RunCategory;
