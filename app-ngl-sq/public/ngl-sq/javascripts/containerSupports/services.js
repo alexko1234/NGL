@@ -259,9 +259,9 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			},
 
 			changeProcessCategory : function(){
-				this.form.processType = undefined;
+				this.form.processTypeCode = undefined;
 				if(this.form.processCategory){
-					lists.refresh.processTypes({"processCategoryCode":this.form.processCategory});
+					lists.refresh.processTypes({"categoryCode":this.form.processCategory});
 				}
 			},
 			/**

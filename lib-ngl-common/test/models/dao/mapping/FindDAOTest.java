@@ -67,7 +67,7 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertNotNull(pt2);
 		ProcessType pt3 = ProcessType.find.findById(pt.id);
 		Assert.assertNotNull(pt3);
-		ProcessType pt4 = ProcessType.find.findByProcessCategoryCode(pt.category.code).get(0);
+		ProcessType pt4 = ProcessType.find.findByProcessCategoryCodes(pt.category.code).get(0);
 		Assert.assertNotNull(pt4);
 		Assert.assertFalse(ProcessType.find.isCodeExist(""));
 		List<ProcessType> pt5 = ProcessType.find.findByExperimentTypeCode("");

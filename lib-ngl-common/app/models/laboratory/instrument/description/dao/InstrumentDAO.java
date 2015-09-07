@@ -122,7 +122,7 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument>{
 				+" inner join common_info_type cit on cit.id = et.fk_common_info_type"					
 				+" where 1=1 ";		
 		
-			if(instumentQueryParams.experimentTypes != null){
+		if(instumentQueryParams.experimentTypes != null){
 			parameters = ArrayUtils.addAll(parameters, instumentQueryParams.experimentTypes.toArray());
 			sqlParameters = ArrayUtils.addAll(sqlParameters, listToSqlParameters(instumentQueryParams.experimentTypes,"cit.code", Types.VARCHAR));			
 			sql += " and cit.code in ("+listToParameters(instumentQueryParams.experimentTypes)+") ";

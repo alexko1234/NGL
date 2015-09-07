@@ -888,7 +888,7 @@ angular.module('commonsServices', []).
 	      		      
       		      
       		      scope.$watchCollection(optionsConfig.sourceKey, function(newValue, oldValue){
-      		    	  if(newValue && newValue.length > 0){
+      		    	  if(newValue && angular.isArray(newValue)){
       		    		items = angular.copy(newValue);      		    		
       		    		render();      		    		
       		    	  }

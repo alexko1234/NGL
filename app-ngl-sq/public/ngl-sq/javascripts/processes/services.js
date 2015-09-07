@@ -489,7 +489,7 @@ factory('processesSearchService', ['$http', 'mainService', 'lists', 'datatable',
 			                                    	 this.lists.clear("processTypes");
 
 			                                    	 if(this.form.categoryCode){
-			                                    		 this.lists.refresh.processTypes({processCategoryCode:this.form.categoryCode});
+			                                    		 this.lists.refresh.processTypes({categoryCodes:this.form.categoryCode});
 			                                    	 }
 			                                     },
 

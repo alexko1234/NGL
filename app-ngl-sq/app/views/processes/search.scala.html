@@ -5,7 +5,7 @@
 		
 	@columnSearchForm{
 		@formGroup{
-			<div bt-select placeholder="@Messages("processes.select.processCategory")" class="form-control" ng-model="searchService.form.categoryCode" bt-options="processCategory.code as processCategory.name for processCategory in searchService.lists.getProcessCategories()" ng-change="searchService.changeProcessCategory()" auto-select>
+			<div bt-select placeholder="@Messages("processes.select.processCategory")" multiple="true" class="form-control" ng-model="searchService.form.categoryCode" bt-options="processCategory.code as processCategory.name for processCategory in searchService.lists.getProcessCategories()" ng-change="searchService.changeProcessCategory()" auto-select>
 			</div>
 		}
 		@formGroup{

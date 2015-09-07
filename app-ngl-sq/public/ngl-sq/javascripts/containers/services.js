@@ -316,9 +316,9 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			},
 
 			changeProcessCategory : function(){
-				this.form.processType = undefined;
+				this.form.processTypeCode = undefined;
 				if(this.form.processCategory){
-					lists.refresh.processTypes({"processCategoryCode":this.form.processCategory});
+					lists.refresh.processTypes({"categoryCode":this.form.processCategory});
 				}
 			},
 			initAdditionalColumns : function(){

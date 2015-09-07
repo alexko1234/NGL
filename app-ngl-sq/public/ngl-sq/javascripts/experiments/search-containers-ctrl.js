@@ -199,7 +199,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		$scope.additionalFilters=[];
 		$scope.searchService.form.processTypeCode = undefined;
 		if($scope.searchService.form.processCategory !== undefined)
-			$scope.searchService.lists.refresh.processTypes({"processCategoryCode":$scope.searchService.form.processCategory});
+			$scope.searchService.lists.refresh.processTypes({"categoryCode":$scope.searchService.form.processCategory});
 	};
 	
 	$scope.changeProcessType = function(){

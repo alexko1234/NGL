@@ -161,7 +161,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 		$scope.lists.clear("processTypes");
 
 		if($scope.searchService.form.processCategory !== undefined && $scope.searchService.form.processCategory !== null){
-			$scope.lists.refresh.processTypes({processCategoryCode:$scope.searchService.form.processCategory});
+			$scope.lists.refresh.processTypes({categoryCode:$scope.searchService.form.processCategory});
 		}
 	};
 

@@ -255,10 +255,11 @@
 				changeProcessCategory : function(){
 					//this.form.experimentType = undefined;
 					//this.form.experimentCategory = undefined;
+					this.form.processTypeCode = undefined;
 					if(this.form.processCategory){
-						lists.refresh.processTypes({processCategoryCode:this.form.processCategory});
+						lists.refresh.processTypes({categoryCode:this.form.processCategory});
 					}
-					this.form.processType = undefined;
+					
 				},
 				
 				changeProcessType : function(){
