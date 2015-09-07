@@ -103,6 +103,7 @@ object ApplicationBuild extends Build {
 	val nglsqDependencies = Seq(
 		javaCore, javaJdbc,
 		  // Add your project dependencies here,
+		"postgresql" % "postgresql" % "8.3-603.jdbc4",
 		"org.assertj" % "assertj-core" % "1.7.1"
 		)
 /*

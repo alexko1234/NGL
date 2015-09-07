@@ -88,7 +88,7 @@ public class ProcessServiceCNS extends AbstractProcessService {
 		//TO do multi value
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type séquencage","sequencingType"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("Hiseq 2000/2500N" , "Hiseq 2500 Rapide" ,"Miseq"), "single",100));
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, getSequencingType(), "single",100));
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type de lectures", "readType"
 						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("SR","PE"), "single",200));		
@@ -102,6 +102,13 @@ public class ProcessServiceCNS extends AbstractProcessService {
 		return propertyDefinitions;
 	}
 
+	private static List<Value> getSequencingType(){
+		List<Value> values = new ArrayList<Value>();
+		values.add(DescriptionFactory.newValue("Hiseq 2000/2500N", "Hiseq 2000 / 2500 N"));
+		values.add(DescriptionFactory.newValue("Hiseq 2500 Rapide", "Hiseq 2500 Rapide"));
+		values.add(DescriptionFactory.newValue("Miseq", "Miseq"));
+		return values;	
+	}
 	
 	private static List<ExperimentType> getExperimentTypes(String...codes) throws DAOException {
 		return DAOHelpers.getModelByCodes(ExperimentType.class,ExperimentType.find, codes);
