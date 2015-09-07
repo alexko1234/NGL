@@ -126,7 +126,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"outputContainerUsed.code",
 			        	 "order":true,
-						 "edit":false,
+						 "edit":true,
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":400,
