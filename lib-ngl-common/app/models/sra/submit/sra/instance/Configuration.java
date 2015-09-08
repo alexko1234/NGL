@@ -32,6 +32,7 @@ public class Configuration  extends DBObject implements IValidation {
 		public String librarySelection = null;// required et constraint: champs de la proc surchargeable dans conf ou par utilisateurs */
 		public String libraryStrategy = null; // required et constraint. Valeur mise par defaut à "WGS" mais surchargeable */
 		public String librarySource = null;   // required et constraint. Valeur mise par defaut à "GENOMIC" mais surchargeable */
+		public String libraryConstructionProtocol = null; //facultatif et texte libre mais assez court.
 		public String userFileExperiments = null; // Nom complet du fichier donnant les informations de librairies specifiques de chaque experiment
 		// si les données ne doivent pas etre prises dans le lims ou dans la configuration.
 		

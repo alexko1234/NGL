@@ -4,3 +4,366 @@ Listening for HTTP on /0:0:0:0:0:0:0:0:9000
 2015-07-20 16:52:25,280 - [INFO] - from play in play-internal-execution-context-1 
 Application started (Dev)
 
+2015-09-08 15:14:07,501 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:jtds:sybase://sybasedev.genoscope.cns.fr:3015/dblims] bound to JNDI as lims
+
+2015-09-08 15:14:07,551 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST] bound to JNDI as ngl
+
+2015-09-08 15:14:08,083 - [DEBUG] - from application in pool-5-thread-3 
+Loading default application context: application-context.xml
+
+2015-09-08 15:14:08,090 - [DEBUG] - from application in pool-5-thread-3 
+Starting Spring application context
+
+2015-09-08 15:14:08,369 - [DEBUG] - from application in pool-5-thread-3 
+PropertyPlaceholderConfigurer with Play properties NOT added
+
+2015-09-08 15:14:10,961 - [DEBUG] - from application in pool-5-thread-3 
+Closing Spring application context
+
+2015-09-08 15:14:11,224 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:jtds:sybase://sybasedev.genoscope.cns.fr:3015/dblims] bound to JNDI as lims
+
+2015-09-08 15:14:11,232 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST] bound to JNDI as ngl
+
+2015-09-08 15:14:11,326 - [DEBUG] - from application in pool-5-thread-3 
+Loading default application context: application-context.xml
+
+2015-09-08 15:14:11,327 - [DEBUG] - from application in pool-5-thread-3 
+Starting Spring application context
+
+2015-09-08 15:14:11,328 - [DEBUG] - from application in pool-5-thread-3 
+PropertyPlaceholderConfigurer with Play properties NOT added
+
+2015-09-08 15:14:11,989 - [DEBUG] - from application in pool-5-thread-3 
+SELECT t.id, t.name, t.code FROM sample_category as t ORDER by t.code
+
+2015-09-08 15:14:12,085 - [DEBUG] - from application in pool-5-thread-3 
+Closing Spring application context
+
+2015-09-08 15:14:12,220 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:jtds:sybase://sybasedev.genoscope.cns.fr:3015/dblims] bound to JNDI as lims
+
+2015-09-08 15:14:12,233 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST] bound to JNDI as ngl
+
+2015-09-08 15:14:12,325 - [DEBUG] - from application in pool-5-thread-3 
+Loading default application context: application-context.xml
+
+2015-09-08 15:14:12,325 - [DEBUG] - from application in pool-5-thread-3 
+Starting Spring application context
+
+2015-09-08 15:14:12,326 - [DEBUG] - from application in pool-5-thread-3 
+PropertyPlaceholderConfigurer with Play properties NOT added
+
+2015-09-08 15:14:12,793 - [DEBUG] - from application in pool-5-thread-3 
+Closing Spring application context
+
+2015-09-08 15:14:12,923 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:jtds:sybase://sybasedev.genoscope.cns.fr:3015/dblims] bound to JNDI as lims
+
+2015-09-08 15:14:12,941 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST] bound to JNDI as ngl
+
+2015-09-08 15:14:13,032 - [DEBUG] - from application in pool-5-thread-3 
+Loading default application context: application-context.xml
+
+2015-09-08 15:14:13,032 - [DEBUG] - from application in pool-5-thread-3 
+Starting Spring application context
+
+2015-09-08 15:14:13,033 - [DEBUG] - from application in pool-5-thread-3 
+PropertyPlaceholderConfigurer with Play properties NOT added
+
+2015-09-08 15:14:13,346 - [DEBUG] - from application in pool-5-thread-3 
+Closing Spring application context
+
+2015-09-08 15:14:13,451 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:jtds:sybase://sybasedev.genoscope.cns.fr:3015/dblims] bound to JNDI as lims
+
+2015-09-08 15:14:13,465 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST] bound to JNDI as ngl
+
+2015-09-08 15:14:13,547 - [DEBUG] - from application in pool-5-thread-3 
+Loading default application context: application-context.xml
+
+2015-09-08 15:14:13,547 - [DEBUG] - from application in pool-5-thread-3 
+Starting Spring application context
+
+2015-09-08 15:14:13,548 - [DEBUG] - from application in pool-5-thread-3 
+PropertyPlaceholderConfigurer with Play properties NOT added
+
+2015-09-08 15:14:13,924 - [DEBUG] - from application in pool-5-thread-3 
+Closing Spring application context
+
+2015-09-08 15:14:14,044 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:jtds:sybase://sybasedev.genoscope.cns.fr:3015/dblims] bound to JNDI as lims
+
+2015-09-08 15:14:14,053 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST] bound to JNDI as ngl
+
+2015-09-08 15:14:14,198 - [DEBUG] - from application in pool-5-thread-3 
+Loading default application context: application-context.xml
+
+2015-09-08 15:14:14,199 - [DEBUG] - from application in pool-5-thread-3 
+Starting Spring application context
+
+2015-09-08 15:14:14,200 - [DEBUG] - from application in pool-5-thread-3 
+PropertyPlaceholderConfigurer with Play properties NOT added
+
+2015-09-08 15:14:14,495 - [DEBUG] - from application in pool-5-thread-3 
+Closing Spring application context
+
+2015-09-08 15:14:14,610 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:jtds:sybase://sybasedev.genoscope.cns.fr:3015/dblims] bound to JNDI as lims
+
+2015-09-08 15:14:14,626 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST] bound to JNDI as ngl
+
+2015-09-08 15:14:14,708 - [DEBUG] - from application in pool-5-thread-3 
+Loading default application context: application-context.xml
+
+2015-09-08 15:14:14,708 - [DEBUG] - from application in pool-5-thread-3 
+Starting Spring application context
+
+2015-09-08 15:14:14,709 - [DEBUG] - from application in pool-5-thread-3 
+PropertyPlaceholderConfigurer with Play properties NOT added
+
+2015-09-08 15:14:15,018 - [DEBUG] - from application in pool-5-thread-3 
+Closing Spring application context
+
+2015-09-08 15:14:15,147 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:jtds:sybase://sybasedev.genoscope.cns.fr:3015/dblims] bound to JNDI as lims
+
+2015-09-08 15:14:15,185 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST] bound to JNDI as ngl
+
+2015-09-08 15:14:15,267 - [DEBUG] - from application in pool-5-thread-3 
+Loading default application context: application-context.xml
+
+2015-09-08 15:14:15,267 - [DEBUG] - from application in pool-5-thread-3 
+Starting Spring application context
+
+2015-09-08 15:14:15,268 - [DEBUG] - from application in pool-5-thread-3 
+PropertyPlaceholderConfigurer with Play properties NOT added
+
+2015-09-08 15:14:15,539 - [DEBUG] - from application in pool-5-thread-3 
+SELECT t.id, t.name, t.code FROM sample_category as t ORDER by t.code
+
+2015-09-08 15:14:15,622 - [DEBUG] - from application in pool-5-thread-3 
+SELECT t.id, t.name, t.code FROM instrument_category as t ORDER by t.code
+
+2015-09-08 15:14:15,847 - [DEBUG] - from application in pool-5-thread-3 
+SELECT t.id, t.code, t.name FROM treatment_context as t ORDER by t.code
+
+2015-09-08 15:14:15,905 - [DEBUG] - from application in pool-5-thread-3 
+SELECT t.id, t.name, t.code FROM measure_category as t ORDER by t.code
+
+2015-09-08 15:14:15,967 - [DEBUG] - from application in pool-5-thread-3 
+SELECT t.id, t.name, t.code FROM container_category as t ORDER by t.code
+
+2015-09-08 15:14:16,015 - [DEBUG] - from application in pool-5-thread-3 
+SELECT t.id, t.name, t.code FROM treatment_category as t ORDER by t.code
+
+2015-09-08 15:14:16,111 - [DEBUG] - from application in pool-5-thread-3 
+SELECT t.id, t.name, t.code FROM experiment_category as t ORDER by t.code
+
+2015-09-08 15:14:16,203 - [DEBUG] - from application in pool-5-thread-3 
+SELECT t.id, t.name, t.code FROM process_category as t ORDER by t.code
+
+2015-09-08 15:14:16,254 - [DEBUG] - from application in pool-5-thread-3 
+SELECT t.id, t.name, t.code FROM run_category as t ORDER by t.code
+
+2015-09-08 15:14:16,311 - [DEBUG] - from application in pool-5-thread-3 
+SELECT t.id, t.name, t.code FROM import_category as t ORDER by t.code
+
+2015-09-08 15:14:16,361 - [DEBUG] - from application in pool-5-thread-3 
+SELECT t.id, t.code, t.name FROM level as t ORDER by t.code
+
+2015-09-08 15:14:16,414 - [DEBUG] - from application in pool-5-thread-3 
+SELECT t.id, t.name, t.code FROM import_category as t ORDER by t.code
+
+2015-09-08 15:14:16,429 - [DEBUG] - from application in pool-5-thread-3 
+SELECT t.id, t.name, t.code FROM treatment_category as t ORDER by t.code
+
+2015-09-08 15:14:16,446 - [DEBUG] - from application in pool-5-thread-3 
+SELECT t.id, t.code, t.name FROM treatment_context as t ORDER by t.code
+
+2015-09-08 15:14:16,465 - [DEBUG] - from application in pool-5-thread-3 
+SELECT t.id, t.name, t.code FROM run_category as t ORDER by t.code
+
+2015-09-08 15:14:16,501 - [DEBUG] - from application in pool-5-thread-3 
+SELECT t.id, t.name, t.code FROM state_category as t ORDER by t.code
+
+2015-09-08 15:14:16,556 - [DEBUG] - from application in pool-5-thread-3 
+SELECT t.id, t.name, t.code FROM project_category as t ORDER by t.code
+
+2015-09-08 15:14:16,607 - [DEBUG] - from application in pool-5-thread-3 
+SELECT t.id, t.name, t.code FROM protocol_category as t ORDER by t.code
+
+2015-09-08 15:14:16,645 - [DEBUG] - from application in pool-5-thread-3 
+SELECT t.id, t.name, t.code FROM sample_category as t ORDER by t.code
+
+2015-09-08 15:14:16,691 - [DEBUG] - from application in pool-5-thread-3 
+Closing Spring application context
+
+2015-09-08 15:14:16,851 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:jtds:sybase://sybasedev.genoscope.cns.fr:3015/dblims] bound to JNDI as lims
+
+2015-09-08 15:14:16,863 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST] bound to JNDI as ngl
+
+2015-09-08 15:14:16,946 - [DEBUG] - from application in pool-5-thread-3 
+Loading default application context: application-context.xml
+
+2015-09-08 15:14:16,946 - [DEBUG] - from application in pool-5-thread-3 
+Starting Spring application context
+
+2015-09-08 15:14:16,947 - [DEBUG] - from application in pool-5-thread-3 
+PropertyPlaceholderConfigurer with Play properties NOT added
+
+2015-09-08 15:14:18,298 - [DEBUG] - from application in pool-5-thread-3 
+Delete collection commonvalidationhelpertest
+
+2015-09-08 15:14:18,481 - [DEBUG] - from application in pool-5-thread-3 
+Closing Spring application context
+
+2015-09-08 15:14:18,594 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:jtds:sybase://sybasedev.genoscope.cns.fr:3015/dblims] bound to JNDI as lims
+
+2015-09-08 15:14:18,600 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST] bound to JNDI as ngl
+
+2015-09-08 15:14:18,683 - [DEBUG] - from application in pool-5-thread-3 
+Loading default application context: application-context.xml
+
+2015-09-08 15:14:18,683 - [DEBUG] - from application in pool-5-thread-3 
+Starting Spring application context
+
+2015-09-08 15:14:18,684 - [DEBUG] - from application in pool-5-thread-3 
+PropertyPlaceholderConfigurer with Play properties NOT added
+
+2015-09-08 15:14:19,470 - [DEBUG] - from application in pool-5-thread-3 
+Closing Spring application context
+
+2015-09-08 15:14:19,576 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:jtds:sybase://sybasedev.genoscope.cns.fr:3015/dblims] bound to JNDI as lims
+
+2015-09-08 15:14:19,581 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST] bound to JNDI as ngl
+
+2015-09-08 15:14:19,661 - [DEBUG] - from application in pool-5-thread-3 
+Loading default application context: application-context.xml
+
+2015-09-08 15:14:19,662 - [DEBUG] - from application in pool-5-thread-3 
+Starting Spring application context
+
+2015-09-08 15:14:19,663 - [DEBUG] - from application in pool-5-thread-3 
+PropertyPlaceholderConfigurer with Play properties NOT added
+
+2015-09-08 15:14:19,911 - [DEBUG] - from application in pool-5-thread-3 
+SELECT t.id, t.name, t.code FROM container_category as t ORDER by t.code
+
+2015-09-08 15:14:20,074 - [DEBUG] - from application in pool-5-thread-3 
+Closing Spring application context
+
+2015-09-08 15:14:20,189 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:jtds:sybase://sybasedev.genoscope.cns.fr:3015/dblims] bound to JNDI as lims
+
+2015-09-08 15:14:20,199 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST] bound to JNDI as ngl
+
+2015-09-08 15:14:20,297 - [DEBUG] - from application in pool-5-thread-3 
+Loading default application context: application-context.xml
+
+2015-09-08 15:14:20,298 - [DEBUG] - from application in pool-5-thread-3 
+Starting Spring application context
+
+2015-09-08 15:14:20,299 - [DEBUG] - from application in pool-5-thread-3 
+PropertyPlaceholderConfigurer with Play properties NOT added
+
+2015-09-08 15:14:21,790 - [DEBUG] - from application in pool-5-thread-3 
+SELECT t.id, t.name, t.code FROM project_category as t ORDER by t.code
+
+2015-09-08 15:14:23,949 - [DEBUG] - from application in pool-5-thread-3 
+Closing Spring application context
+
+2015-09-08 15:14:24,092 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:jtds:sybase://sybasedev.genoscope.cns.fr:3015/dblims] bound to JNDI as lims
+
+2015-09-08 15:14:24,096 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST] bound to JNDI as ngl
+
+2015-09-08 15:14:24,201 - [DEBUG] - from application in pool-5-thread-3 
+Loading default application context: application-context.xml
+
+2015-09-08 15:14:24,201 - [DEBUG] - from application in pool-5-thread-3 
+Starting Spring application context
+
+2015-09-08 15:14:24,202 - [DEBUG] - from application in pool-5-thread-3 
+PropertyPlaceholderConfigurer with Play properties NOT added
+
+2015-09-08 15:14:25,020 - [DEBUG] - from application in pool-5-thread-3 
+{}
+
+2015-09-08 15:14:25,159 - [DEBUG] - from application in pool-5-thread-3 
+Closing Spring application context
+
+2015-09-08 15:14:25,276 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:jtds:sybase://sybasedev.genoscope.cns.fr:3015/dblims] bound to JNDI as lims
+
+2015-09-08 15:14:25,285 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST] bound to JNDI as ngl
+
+2015-09-08 15:14:25,367 - [DEBUG] - from application in pool-5-thread-3 
+Loading default application context: application-context.xml
+
+2015-09-08 15:14:25,368 - [DEBUG] - from application in pool-5-thread-3 
+Starting Spring application context
+
+2015-09-08 15:14:25,368 - [DEBUG] - from application in pool-5-thread-3 
+PropertyPlaceholderConfigurer with Play properties NOT added
+
+2015-09-08 15:14:25,638 - [DEBUG] - from application in pool-5-thread-3 
+SELECT t.id, t.name, t.code FROM sample_category as t ORDER by t.code
+
+2015-09-08 15:14:25,661 - [DEBUG] - from application in pool-5-thread-3 
+Closing Spring application context
+
+2015-09-08 15:14:25,762 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:jtds:sybase://sybasedev.genoscope.cns.fr:3015/dblims] bound to JNDI as lims
+
+2015-09-08 15:14:25,768 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST] bound to JNDI as ngl
+
+2015-09-08 15:14:25,847 - [DEBUG] - from application in pool-5-thread-3 
+Loading default application context: application-context.xml
+
+2015-09-08 15:14:25,847 - [DEBUG] - from application in pool-5-thread-3 
+Starting Spring application context
+
+2015-09-08 15:14:25,848 - [DEBUG] - from application in pool-5-thread-3 
+PropertyPlaceholderConfigurer with Play properties NOT added
+
+2015-09-08 15:14:26,086 - [DEBUG] - from application in pool-5-thread-3 
+Closing Spring application context
+
+2015-09-08 15:14:26,192 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:jtds:sybase://sybasedev.genoscope.cns.fr:3015/dblims] bound to JNDI as lims
+
+2015-09-08 15:14:26,204 - [INFO] - from play in pool-5-thread-3 
+datasource [jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST] bound to JNDI as ngl
+
+2015-09-08 15:14:26,311 - [DEBUG] - from application in pool-5-thread-3 
+Loading default application context: application-context.xml
+
+2015-09-08 15:14:26,311 - [DEBUG] - from application in pool-5-thread-3 
+Starting Spring application context
+
+2015-09-08 15:14:26,311 - [DEBUG] - from application in pool-5-thread-3 
+PropertyPlaceholderConfigurer with Play properties NOT added
+
+2015-09-08 15:14:26,699 - [DEBUG] - from application in pool-5-thread-3 
+Closing Spring application context
+

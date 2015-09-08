@@ -22,6 +22,7 @@ create.placeholder.studiesTypes=Select. type de study
 create.placeholder.librarySelection=librarySelection
 create.placeholder.librarySource=librarySource
 create.placeholder.libraryStrategy=libraryStrategy
+create.placeholder.libraryConstructionProtocol=libraryConstructionProtocol
 create.placeholder.strategySample=strategySample
 
 #Submission

@@ -170,6 +170,13 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			        	edit:false,
 			        	choiceInList:false  
 			        },
+			        {property:"title",
+						header: "title",
+						type :"String",		    	  	
+						hide:true,
+						edit:true,
+						order:true
+					},
 			        {property:"librarySelection",
 						header: "librarySelection",
 						type :"String",
