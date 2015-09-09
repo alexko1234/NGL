@@ -19,11 +19,17 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 				active:true,
 				columnMode:true
 			},
+			group:{
+				active:true
+			},
 			save:{
 				active:true,
 				url:function(line){return jsRoutes.controllers.processes.api.Processes.update(line.code).url;},
 				mode:'remote',
 				method:'put',
+			},
+			exportCSV:{
+				active:true,
 			}
 	};
 

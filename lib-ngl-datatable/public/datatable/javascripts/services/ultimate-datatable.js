@@ -400,7 +400,7 @@ angular.module('ultimateDataTableServices', []).
 				    					var groupData = groupValues[key];
 				    					$parse("group."+this.config.group.by.id).assign(group, key);
 				    					var groupMethodColumns = this.getColumnsConfig().filter(function(column){
-					    					return (column.groupMethod !== undefined && column.groupMethod !== null);
+					    					return (column.groupMethod !== undefined && column.groupMethod !== null && column.property != propertyGroupGetter);
 					    				});
 				    					var that = this;
 				    					//compute for each number column the sum
@@ -437,10 +437,10 @@ angular.module('ultimateDataTableServices', []).
 				    							}
 				    							columnSetter.assign(group, result);	
 				    						}else if('countDistinct' === column.groupMethod){
-				    							var result = $filter('udtCountdistinct')(groupData, column.property); 
+				    							var result = $filter('udtCountdistinct')(groupData, propertyGetter); 
 				    							columnSetter.assign(group, result);
 				    						}else if('collect' === column.groupMethod){
-				    							var result = $filter('udtCollect')(groupData, column.property); 
+				    							var result = $filter('udtCollect')(groupData, propertyGetter); 
 				    							columnSetter.assign(group, result);
 				    						}else{
 				    							console.error("groupMethod is not managed "+column.groupMethod)
@@ -3209,7 +3209,9 @@ filter('udtUnique', function($parse) {
     		    copy = angular.copy,
     		    equals = angular.equals;
 
-	
+    			if(!isArray(collection) && !isObject(collection)){
+					return collection;
+				}
 	    		/**
 	    		* get an object and return array of values
 	    		* @param object

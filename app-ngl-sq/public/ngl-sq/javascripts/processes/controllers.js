@@ -1,7 +1,8 @@
 "use strict";
 
 
-angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable','basket','lists','$filter','$http','mainService','tabService','$parse', function($scope, datatable,basket, lists,$filter,$http,mainService, tabService, $parse) {
+angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable','basket','lists','$filter','$http','mainService','tabService','$parse', 
+                                                          function($scope, datatable,basket, lists,$filter,$http,mainService, tabService, $parse) {
 	$scope.lists = lists;	
 	$scope.searchService = {};
 	$scope.searchService.lists = lists;
@@ -518,7 +519,16 @@ var	datatableConfig = {
 			        	 "position":6,
 			        	 "filter": "codes:'state'",
 			        	 "type":"text"
-			         }			         
+			         },
+			         {
+			        	 "header" : Messages("processes.table.comments"),
+						"property" : "comments[0].comment",
+						"position" : 500,
+						"order" : false,
+						"edit" : true,
+						"hide" : true,
+						"type" : "text"
+			         }
 			         ],
 			         pagination:{
 			        	 active:false
@@ -653,7 +663,16 @@ var	datatableConfig = {
 		        	 "hide":true,
 		        	 "position":37,
 		        	 "type":"text"
-		         }
+		         },
+		         {
+		         "header" : Messages("processes.table.comments"),
+					"property" : "comments[0].comment",
+					"position" : 500,
+					"order" : false,
+					"edit" : true,
+					"hide" : true,
+					"type" : "text"
+			        }
 		 ];
 		
 		columns = columns.concat($scope.processPropertyColumns);
@@ -707,6 +726,7 @@ var	datatableConfig = {
 								typeCode:$scope.form.nextProcessTypeCode,
 								categoryCode:$scope.form.processCategory,
 								properties:processData.properties,
+								comments:data[i].comments,
 								sampleOnInputContainer:{sampleCode:processData.contents[j].sampleCode,
 														sampleCategoryCode:processData.contents[j].sampleCategoryCode,
 														sampleTypeCode:processData.contents[j].sampleTypeCode,
@@ -739,6 +759,7 @@ var	datatableConfig = {
 						projectCode: processData.projectCodes[0],
 						typeCode:$scope.form.nextProcessTypeCode,
 						categoryCode:$scope.form.processCategory,
+						comments:data[i].comments,
 						properties:processData.properties
 				};
 				
@@ -892,8 +913,8 @@ var	datatableConfig = {
 				console.log(data);				
 				angular.forEach(data, function(property){
 					var unit = "";
-					if(angular.isDefined(property.displayMeasureValue)){
-						unit = "("+property.displayMeasureValue+")";
+					if(angular.isDefined(property.displayMeasureValue) && property.displayMeasureValue != null){
+						unit = "("+property.displayMeasureValue.value+")";
 					}				
 						
 					column = $scope.datatable.newColumn(property.name, "properties."+property.code+".value",property.editable,false,true, $scope.getPropertyColumnType(property.valueType),property.choiceInList, property.possibleValues,{});

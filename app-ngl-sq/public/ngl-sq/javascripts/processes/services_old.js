@@ -41,51 +41,37 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 		}
 	};
 
-	var getDefaultColumns = function() {
-		var columns = [];
-
-		columns.push({
+	var searchService = {
+		columnsDefault : [ {
 			"header" : Messages("processes.table.containerInputCode"),
 			"property" : "containerInputCode",
 			"order" : true,
 			"hide" : false,
-			"group" : true,
 			"position" : 1,
 			"type" : "text"
-		});
-		columns.push({
+		}, {
 			"header" : Messages("processes.table.projectCode"),
 			"property" : "projectCode",
 			"order" : true,
 			"hide" : true,
-			"group" : true,
-			"groupMethod" : "collect",
-			"render" : "<div list-resize='cellValue | unique' list-resize-min-size='3'>",
 			"position" : 2,
 			"type" : "text"
-		});
-		columns.push({
+		}, {
 			"header" : Messages("processes.table.sampleCode"),
 			"property" : "sampleCode",
 			"order" : true,
 			"hide" : false,
-			"group" : true,
-			"groupMethod" : "collect",
-			"render" : "<div list-resize='cellValue | unique' list-resize-min-size='3'>",
 			"position" : 3,
 			"type" : "text"
-		});
-		columns.push({
-			"header" : Messages("containers.table.tags"),
+		}, {
+			"header" : "Tag",
 			"property" : "sampleOnInputContainer.properties.tag.value",
 			"type" : "string",
 			"order" : true,
 			"hide" : false,
-			"groupMethod" : "collect",
-			"render" : "<div list-resize='cellValue | unique' list-resize-min-size='3'>",
+			"modes" : [ "datatable" ],
 			"position" : 4
-		});
-		columns.push({
+		}, {
 			"header" : Messages("processes.table.typeCode"),
 			"property" : "typeCode",
 			"filter" : "codes:'type'",
@@ -93,45 +79,25 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"hide" : false,
 			"position" : 5,
 			"type" : "text"
-		});
-		if (mainService.getHomePage() == 'state') {
-			columns.push({
-				"header" : Messages("processes.table.stateCode"),
-				"property" : "state.code",
-				"order" : true,
-				"hide" : false,
-				"position" : 6,
-				"type" : "text",
-				"filter" : "codes:'state'",
-				"edit" : true,
-				"choiceInList" : true,
-				"listStyle":"bt-select",
-				"possibleValues" : "searchService.lists.getStates()",
-			});
-		} else {
-
-			columns.push({
-				"header" : Messages("processes.table.stateCode"),
-				"property" : "state.code",
-				"position" : 6,
-				"order" : true,
-				"hide" : false,
-				"edit" : false,
-				"type" : "text",
-				"filter" : "codes:'state'",
-				"groupMethod" : "collect",
-				"render" : "<div list-resize='cellValue | unique' list-resize-min-size='3'>",
-			});
-		}
-		columns.push({
+		}, {
+			"header" : Messages("processes.table.stateCode"),
+			"property" : "state.code",
+			"position" : 6,
+			"order" : true,
+			"hide" : false,
+			"type" : "text",
+			"filter" : "codes:'state'",
+			"edit" : false,
+			"choiceInList" : true,
+			"possibleValues" : "searchService.lists.getStates()",
+		}, {
 			"header" : Messages("processes.table.resolutionCode"),
 			"property" : "state.resolutionCodes",
 			"position" : 7,
 			"order" : true,
-			"hide" : true,
+			"hide" : false,
 			"type" : "text"
-		});
-		columns.push({
+		}, {
 			"header" : Messages("processes.table.currentExperimentTypeCode"),
 			"property" : "currentExperimentTypeCode",
 			"filter" : "codes:'type'",
@@ -139,80 +105,149 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"hide" : false,
 			"position" : 8,
 			"type" : "text"
-		});
-		columns.push({
+		}, {
 			"header" : Messages("processes.table.newContainerSupportCodes"),
 			"property" : "newContainerSupportCodes",
 			"order" : false,
 			"hide" : false,
 			"position" : 9,
-			"render" : "<div list-resize='cellValue | unique' list-resize-min-size='2'>",
+			"render" : "<div list-resize='value.data.newContainerSupportCodes | unique' list-resize-min-size='2'>",
 			"type" : "text"
-		});
-		columns.push({
+		}, {
 			"header" : Messages("processes.table.experimentCodes"),
 			"property" : "experimentCodes",
 			"order" : false,
 			"hide" : false,
 			"position" : 10,
-			"render" : "<div list-resize='cellValue | unique' list-resize-min-size='2'>",
+			"render" : "<div list-resize='value.data.experimentCodes | unique' list-resize-min-size='2'>",
 			"type" : "text"
-		});
-		columns.push({
+		}, {
 			"header" : Messages("processes.table.code"),
 			"property" : "code",
 			"order" : true,
-			"hide" : true,
-			"groupMethod" : "collect",
-			"render" : "<div list-resize='cellValue | unique' list-resize-min-size='3'>",
+			"hide" : false,
 			"position" : 11,
 			"type" : "text"
-		});
-		columns.push({
+		}, {
 			"header" : Messages("processes.table.creationDate"),
 			"property" : "traceInformation.creationDate",
 			"position" : 12,
 			"order" : true,
-			"hide" : true,
-			"format" : Messages("datetime.format"),
+			"hide" : false,
 			"type" : "date"
-		});
-		columns.push({
-			"header" : Messages("processes.table.endDate"),
-			"property" : "state.historical",
-			"position" : 12,
-			"order" : true,
-			"hide" : true,
-			"filter" : "filter:'F'|get:'date'",
-			"format" : Messages("datetime.format"),
-			"type" : "date"
-		});
-		columns.push({
+		}, {
 			"header" : Messages("processes.table.createUser"),
 			"property" : "traceInformation.createUser",
 			"position" : 13,
 			"order" : true,
-			"hide" : true,
+			"hide" : false,
 			"type" : "text"
-		});
-		columns.push({
-			"header" : Messages("processes.table.comments"),
-			"property" : "comments[0].comment",
-			"position" : 500,
-			"order" : false,
+		} ],
+		columnsDefaultState : [ {
+			"header" : Messages("processes.table.containerInputCode"),
+			"property" : "containerInputCode",
+			"order" : true,
+			"hide" : false,
+			"position" : 1,
+			"type" : "text"
+		}, {
+			"header" : Messages("processes.table.projectCode"),
+			"property" : "projectCode",
+			"order" : true,
+			"hide" : true,
+			"position" : 2,
+			"type" : "text"
+		}, {
+			"header" : Messages("processes.table.sampleCode"),
+			"property" : "sampleCode",
+			"order" : true,
+			"hide" : false,
+			"position" : 3,
+			"type" : "text"
+		}, {
+			"header" : "Tag",
+			"property" : "sampleOnInputContainer.properties.tag.value",
+			"type" : "string",
+			"order" : true,
+			"hide" : false,
+			"modes" : [ "datatable" ],
+			"position" : 4
+		}, {
+			"header" : Messages("processes.table.typeCode"),
+			"property" : "typeCode",
+			"filter" : "codes:'type'",
+			"order" : true,
+			"hide" : false,
+			"position" : 5,
+			"type" : "text"
+		}, {
+			"header" : Messages("processes.table.stateCode"),
+			"property" : "state.code",
+			"order" : true,
+			"hide" : false,
+			"position" : 6,
+			"type" : "text",
+			"filter" : "codes:'state'",
 			"edit" : true,
-			"hide" : true,
+			"choiceInList" : true,
+			"possibleValues" : "searchService.lists.getStates()",
+		}, {
+			"header" : Messages("processes.table.resolutionCode"),
+			"property" : "state.resolutionCodes",
+			"position" : 7,
+			"order" : true,
+			"hide" : false,
 			"type" : "text"
-		});
-		return columns;
-	};
-
-	var searchService = {
-
+		}, {
+			"header" : Messages("processes.table.currentExperimentTypeCode"),
+			"property" : "currentExperimentTypeCode",
+			"filter" : "codes:'type'",
+			"order" : true,
+			"hide" : false,
+			"position" : 8,
+			"type" : "text"
+		}, {
+			"header" : Messages("processes.table.newContainerSupportCodes"),
+			"property" : "newContainerSupportCodes",
+			"order" : false,
+			"hide" : false,
+			"position" : 9,
+			"render" : "<div list-resize='value.data.newContainerSupportCodes | unique' list-resize-min-size='2'>",
+			"type" : "text"
+		}, {
+			"header" : Messages("processes.table.experimentCodes"),
+			"property" : "experimentCodes",
+			"order" : false,
+			"hide" : false,
+			"position" : 10,
+			"render" : "<div list-resize='value.data.experimentCodes | unique' list-resize-min-size='2'>",
+			"type" : "text"
+		}, {
+			"header" : Messages("processes.table.code"),
+			"property" : "code",
+			"order" : true,
+			"hide" : false,
+			"position" : 11,
+			"type" : "text"
+		}, {
+			"header" : Messages("processes.table.creationDate"),
+			"property" : "traceInformation.creationDate",
+			"position" : 12,
+			"order" : true,
+			"hide" : false,
+			"type" : "date"
+		}, {
+			"header" : Messages("processes.table.createUser"),
+			"property" : "traceInformation.createUser",
+			"position" : 13,
+			"order" : true,
+			"hide" : false,
+			"type" : "text"
+		} ],
 		datatable : undefined,
 		isRouteParam : false,
 		lists : lists,
-		getDefaultColumns : getDefaultColumns,
+		getDefaultColumns : this.columnsDefault,
 		additionalFilters : [],
 		additionalProcessFilters : [],
 		isProcessFiltered : false,
@@ -249,10 +284,11 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			var getPropertyColumnType = this.getPropertyColumnType;
 			var datatable = this.datatable;
 			var columnsDefault = this.columnsDefault;
+			var columnsDefaultState = this.columnsDefaultState;
 
 			if (this.selectedAddColumns != undefined && this.selectedAddColumns != null) {
-				columnsDefault = this.getDefaultColumns().concat(this.selectedAddColumns);
-
+				columnsDefault = this.columnsDefault.concat(this.selectedAddColumns);
+				columnsDefaultState = this.columnsDefaultState.concat(this.selectedAddColumns);
 			}
 
 			return $http.get(jsRoutes.controllers.processes.tpl.Processes.getPropertiesDefinitions(typeCode).url).success(function(data, status, headers, config) {
@@ -261,12 +297,12 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 					angular.forEach(data, function(property) {
 						var column = {};
 						var unit = "";
-						if(angular.isDefined(property.displayMeasureValue) && property.displayMeasureValue != null){
-							unit = "(" + property.displayMeasureValue.value + ")";
+						if (angular.isDefined(property.displayMeasureValue)) {
+							unit = "(" + property.displayMeasureValue + ")";
 						}
 
 						column = datatable.newColumn(property.name, "properties." + property.code + ".value", property.editable, false, true, getPropertyColumnType(property.valueType), property.choiceInList, property.possibleValues, {});
-						column.hide=true;
+
 						column.listStyle = "bt-select";
 						column.defaultValues = property.defaultValue;
 						if (property.displayMeasureValue != undefined && property.displayMeasureValue != null) {
@@ -282,15 +318,27 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 						}
 						columns.push(column);
 					});
-					columns = columnsDefault.concat(columns);
+
+					if (mainService.getHomePage() === 'state') {
+						columns = columnsDefaultState.concat(columns);
+					} else {
+						columns = columnsDefault.concat(columns);
+					}
+
 					datatable.setColumnsConfig(columns);
 				}
 
 			}).error(function(data, status, headers, config) {
 				//console.log(data);
-				datatable.setColumnsConfig(getDefaultColumns());
+
+				if (mainService.getHomePage() === 'state') {
+					datatable.setColumnsConfig(columnsDefaultState);
+				} else {
+					datatable.setColumnsConfig(columnsDefault);
+				}
 
 			});
+
 		},
 
 		updateForm : function() {
@@ -402,7 +450,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 		search : function() {
 			this.updateForm();
 			mainService.setForm(this.form);
-			searchService.datatable.setColumnsConfig(this.columnsDefault);
+			searchService.datatable.setColumnsConfig(this.getColumnsDefault());
 			searchService.getColumns();
 			this.datatable.search(this.convertForm());
 
@@ -510,7 +558,11 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			//to avoid to lost the previous search
 			if (datatableConfig && angular.isUndefined(mainService.getDatatable())) {
 				searchService.datatable = datatable(datatableConfig);
-				searchService.datatable.setColumnsConfig(getDefaultColumns());
+				if (mainService.getHomePage() === 'state') {
+					searchService.datatable.setColumnsConfig(this.columnsDefaultState);
+				} else {
+					searchService.datatable.setColumnsConfig(this.columnsDefault);
+				}
 				mainService.setDatatable(searchService.datatable);
 			} else if (angular.isDefined(mainService.getDatatable())) {
 				searchService.datatable = mainService.getDatatable();

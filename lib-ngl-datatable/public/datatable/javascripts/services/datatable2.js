@@ -321,7 +321,7 @@ angular.module('datatableServices', []).
 				    					var groupData = groupValues[key];
 				    					$parse("group."+this.config.group.by.id).assign(group, key);
 				    					var groupMethodColumns = this.getColumnsConfig().filter(function(column){
-					    					return (column.groupMethod !== undefined && column.groupMethod !== null);
+					    					return (column.groupMethod !== undefined && column.groupMethod !== null && column.property != propertyGroupGetter);
 					    				});
 				    					var that = this;
 				    					//compute for each number column the sum
@@ -358,10 +358,10 @@ angular.module('datatableServices', []).
 				    							}
 				    							columnSetter.assign(group, result);	
 				    						}else if('countDistinct' === column.groupMethod){
-				    							var result = $filter('countDistinct')(groupData, column.property); 
+				    							var result = $filter('countDistinct')(groupData, propertyGetter); 
 				    							columnSetter.assign(group, result);
 				    						}else if('collect' === column.groupMethod){
-				    							var result = $filter('collect')(groupData, column.property); 
+				    							var result = $filter('collect')(groupData, propertyGetter); 
 				    							columnSetter.assign(group, result);
 				    						}else{
 				    							console.error("groupMethod is not managed "+column.groupMethod)
@@ -1491,7 +1491,7 @@ angular.module('datatableServices', []).
 		    						
 			    					
 			    					columns[i].id = this.generateColumnId();
-			    					
+			    					/*
 			    					if(columns[i].hide && !this.config.hide.active){
 			    						columns[i].hide = false;
 			    					}
@@ -1501,6 +1501,7 @@ angular.module('datatableServices', []).
 			    					if(columns[i].edit && !this.config.edit.active){
 			    						columns[i].edit = false;
 			    					}
+			    					*/
 			    					//TODO: else{Error here ?}
 			    					
 			    					if(columns[i].choiceInList && !angular.isDefined(columns[i].listStyle)){

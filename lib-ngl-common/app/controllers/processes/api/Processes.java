@@ -62,7 +62,7 @@ public class Processes extends CommonController{
 	final static Form<QueryFieldsForm> saveForm = form(QueryFieldsForm.class);
 	final static Form<ProcessesUpdateForm> processesUpdateForm = form(ProcessesUpdateForm.class);
 	final static Form<ProcessesBatchElement> processSaveBatchForm = form(ProcessesBatchElement.class);
-	final static List<String> defaultKeys =  Arrays.asList("categoryCode","containerInputCode","sampleCode", "sampleOnInputContainer", "typeCode", "state", "currentExperimentTypeCode", "newContainerSupportCodes", "experimentCodes","projectCode", "code", "traceInformation.creationDate", "traceInformation.createUser", "properties");
+	final static List<String> defaultKeys =  Arrays.asList("categoryCode","containerInputCode","sampleCode", "sampleOnInputContainer", "typeCode", "state", "currentExperimentTypeCode", "newContainerSupportCodes", "experimentCodes","projectCode", "code", "traceInformation", "comments", "properties");
 	private static final ALogger logger = Logger.of("Processes");
 
 	public static Result head(String processCode) {
