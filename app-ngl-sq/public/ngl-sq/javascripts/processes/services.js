@@ -75,6 +75,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"position" : 3,
 			"type" : "text"
 		});
+		
 		columns.push({
 			"header" : Messages("containers.table.tags"),
 			"property" : "sampleOnInputContainer.properties.tag.value",
@@ -288,7 +289,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 
 			}).error(function(data, status, headers, config) {
 				//console.log(data);
-				datatable.setColumnsConfig(getDefaultColumns());
+				datatable.setColumnsConfig(columnsDefault);
 
 			});
 		},
