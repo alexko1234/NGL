@@ -62,7 +62,7 @@ public class SraValidationHelper extends CommonValidationHelper{
 				contextValidation.addErrors("readSpec1.readClass :",  "readSpec1 avec mauvais readClass (" + readSpec1.readClass + ")");
 			}
 			if ( ValidationHelper.required(contextValidation, readSpec1.readType, "readType")
-				&& (!readSpec1.readType.equalsIgnoreCase("Forward"))) {
+				&& (!readSpec1.readType.equalsIgnoreCase("forward"))) {
 				contextValidation.addErrors("readSpec1.readType :",  "readSpec1 avec mauvais readType (" + readSpec1.readType + ")");
 			}
 			if ( ValidationHelper.required(contextValidation, readSpec1.lastBaseCoord, "lastBaseCoord")
@@ -93,7 +93,7 @@ public class SraValidationHelper extends CommonValidationHelper{
 					contextValidation.addErrors("readSpec1.readClass :",  "readSpec1 avec mauvais readClass (" + readSpec1.readClass + ")");
 				}
 				if ( ValidationHelper.required(contextValidation, readSpec1.readType, "readType")
-					&& (!readSpec1.readType.equalsIgnoreCase("Forward"))) {
+					&& (!readSpec1.readType.equalsIgnoreCase("forward"))) {
 					contextValidation.addErrors("readSpec1.readType :",  "readSpec1 avec mauvais readType (" + readSpec1.readType + ")");
 				}
 				if ( ValidationHelper.required(contextValidation, readSpec1.lastBaseCoord, "lastBaseCoord")
@@ -158,7 +158,7 @@ public class SraValidationHelper extends CommonValidationHelper{
 					&& (!readSpec2.readClass.equalsIgnoreCase("Application Read"))) {
 					contextValidation.addErrors("readSpec2.readClass :",  "readSpec avec mauvais readClass (" + readSpec1.readClass + ")");					}
 				if ( ValidationHelper.required(contextValidation, readSpec2.readType, "readType")
-					&& (!readSpec2.readType.equalsIgnoreCase("Forward"))) {
+					&& (!readSpec2.readType.equalsIgnoreCase("forward"))) {
 					contextValidation.addErrors("readSpec2.readType :",  "readSpec avec mauvais readType (" + readSpec1.readType + ")");
 				}
 				if ( ValidationHelper.required(contextValidation, readSpec2.lastBaseCoord, "lastBaseCoord")

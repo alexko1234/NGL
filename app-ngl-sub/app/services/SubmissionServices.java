@@ -584,12 +584,12 @@ public class SubmissionServices {
 							PropertyValue libProcessTypeCode = sampleOnContainerProperties.get("libProcessTypeCode");
 							String libProcessTypeCodeValue = (String) libProcessTypeCode.value;
 							if(libProcessTypeCodeValue.equalsIgnoreCase("A")||libProcessTypeCodeValue.equalsIgnoreCase("C")||libProcessTypeCodeValue.equalsIgnoreCase("N")){
-								experiment.libraryLayoutOrientation = "forward-reverse";
+								experiment.libraryLayoutOrientation = "reverse-forward";
 							} else if (libProcessTypeCodeValue.equalsIgnoreCase("W")||libProcessTypeCodeValue.equalsIgnoreCase("F")
 										||libProcessTypeCodeValue.equalsIgnoreCase("H")||libProcessTypeCodeValue.equalsIgnoreCase("L")
-										||libProcessTypeCodeValue.equalsIgnoreCase("Z")||libProcessTypeCodeValue.equalsIgnoreCase("M")
-										||libProcessTypeCodeValue.equalsIgnoreCase("I")||libProcessTypeCodeValue.equalsIgnoreCase("K")){
-								experiment.libraryLayoutOrientation = "reverse-forward";
+										||libProcessTypeCodeValue.equalsIgnoreCase("Z")||libProcessTypeCodeValue.equalsIgnoreCase("MI")
+										||libProcessTypeCodeValue.equalsIgnoreCase("K")){
+								experiment.libraryLayoutOrientation = "forward-reverse";
 							} else {
 								throw new SraException("Pour le readSet " + readSet +  ", valeur de libProcessTypeCodeValue differente A,C,N, W, F, H, L ,Z, M, I, K => " + libProcessTypeCodeValue);
 							}
@@ -638,7 +638,7 @@ public class SubmissionServices {
 			readSpec_1.readIndex = 0; 
 			readSpec_1.readLabel = "F";
 			readSpec_1.readClass = "Application Read";
-			readSpec_1.readType = "Forward";
+			readSpec_1.readType = "forward";
 			readSpec_1.lastBaseCoord = (Integer) 1;
 			experiment.readSpecs.add(readSpec_1);
 		}
