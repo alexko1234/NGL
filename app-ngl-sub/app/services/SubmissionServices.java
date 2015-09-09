@@ -176,7 +176,7 @@ public class SubmissionServices {
 			experiment.librarySelection = config.librarySelection;
 			experiment.librarySource = config.librarySource;
 			experiment.libraryStrategy = config.libraryStrategy;
-
+			experiment.libraryConstructionProtocol = config.libraryConstructionProtocol;
 			// Ajouter l'experiment avec le statut forcement à 'new' à l'objet submission :
 			if (experiment.state.code.equalsIgnoreCase("new")) { 
 				if(!submission.experimentCodes.contains(experiment.code)){

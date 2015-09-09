@@ -126,7 +126,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"outputContainerUsed.code",
 			        	 "order":true,
-						 "edit":false,
+						 "edit":true,
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":400,
@@ -171,7 +171,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 				active:true
 			},
 			edit:{
-				active: (!$scope.doneAndRecorded && !$scope.inProgressNow),
+				active: (!$scope.doneAndRecorded),
 				columnMode:true
 			},
 			messages:{
@@ -205,7 +205,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 		console.log("call event refresh");
 		
 		var dtConfig = $scope.atmService.data.getConfig();
-		dtConfig.edit.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
+		dtConfig.edit.active = (!$scope.doneAndRecorded);
 		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
 		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
 		$scope.atmService.data.setConfig(dtConfig);
