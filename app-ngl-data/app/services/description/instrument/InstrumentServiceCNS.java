@@ -215,10 +215,24 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		
 		l.add(newInstrumentUsedType("MinION", "minION", InstrumentCategory.find.findByCode("nanopore"), getNanoporeDepotProperties(),getInstrumentMinIon() 
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
+		l.add(newInstrumentUsedType("Mk1", "mk1", InstrumentCategory.find.findByCode("nanopore"), getNanoporeDepotProperties(),getInstrumentMKI() 
+				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
 
 	
+	private List<Instrument> getInstrumentMKI() throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("MK1_15456", "MK1 15456", null, true, "/env/atelier/nanopore_MK1_15456", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("MK1_15302", "MK1 15302", null, true, "/env/atelier/nanopore_MK1_15302", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("MK1_15382", "MK1 15382", null, true, "/env/atelier/nanopore_MK1_15382", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("MK1_15407", "MK1 15407", null, true, "/env/atelier/nanopore_MK1_15407", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("MK1_15464", "MK1 15464", null, true, "/env/atelier/nanopore_MK1_15464", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("MK1_15336", "MK1 15336", null, true, "/env/atelier/nanopore_MK1_15336", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		return instruments;
+	}
+
 	private static List<PropertyDefinition> getNanoporeFragmentationProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument),String.class, true,
@@ -227,7 +241,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
         		null, "8000", MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SPEED),MeasureUnit.find.findByCode( "rpm"),MeasureUnit.find.findByCode( "rpm"), "single", 2));
         // unite s
         propertyDefinitions.add(newPropertiesDefinition("Durée", "duration", LevelService.getLevels(Level.CODE.Instrument),String.class, false, 
-        		null, "30",MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_TIME),MeasureUnit.find.findByCode( "s"),MeasureUnit.find.findByCode( "s"), "single", 3));
+        		null, "60",MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_TIME),MeasureUnit.find.findByCode( "s"),MeasureUnit.find.findByCode( "s"), "single", 3));
 		return propertyDefinitions;
 	}
 
@@ -238,8 +252,8 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
         propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",200));
         //Liste a definir
         propertyDefinitions.add(newPropertiesDefinition("Numero PC", "pcNumber", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",300));
-        propertyDefinitions.add(newPropertiesDefinition("Version MinKNOW", "minKnowVersion",LevelService.getLevels(Level.CODE.Instrument),String.class,true,"single",400));
-		propertyDefinitions.add(newPropertiesDefinition("Version Metrichor", "metrichorVersion",LevelService.getLevels(Level.CODE.Instrument),String.class,true,"single",500));
+        propertyDefinitions.add(newPropertiesDefinition("Version MinKNOW", "minKnowVersion",LevelService.getLevels(Level.CODE.Instrument),String.class,false,"single",400));
+		propertyDefinitions.add(newPropertiesDefinition("Version Metrichor", "metrichorVersion",LevelService.getLevels(Level.CODE.Instrument),String.class,false,"single",500));
 		propertyDefinitions.add(newPropertiesDefinition("Metrichor run ID", "metrichorRunId",LevelService.getLevels(Level.CODE.Instrument),String.class,false,"single",600));
 
 		return propertyDefinitions;
@@ -323,6 +337,8 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		instruments.add(createInstrument("MN02670", "MN02670", null, true, "/env/atelier/nanopore_MN02670", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		instruments.add(createInstrument("MN02280", "MN02280", null, true, "/env/atelier/nanopore_MN02280", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("MN02259", "MN02259", null, true, "/env/atelier/nanopore_MN02259", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("MN02833", "MN02833", null, true, "/env/atelier/nanopore_MN02833", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		return instruments;
 	}
 	
