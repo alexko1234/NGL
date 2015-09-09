@@ -213,13 +213,19 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 		//Logger.debug("Container :"+rs.getString("code"));
 		container.code=rs.getString("code");
-		container.categoryCode=containerCategoryCode;
+		
+
+		try{
+			container.categoryCode=rs.getString("containerCategoryCode");
+		} catch(SQLException e){
+			container.categoryCode=containerCategoryCode;
+		}
 
 		container.comments=new ArrayList<Comment>();				
 		container.comments.add(new Comment(rs.getString("comment")));
 		
 		container.state = new State(); 
-		container.state.code=DataMappingCNS.getState(containerCategoryCode,rs.getInt("etatLims"),experimentTypeCode);
+		container.state.code=DataMappingCNS.getState(container.categoryCode,rs.getInt("etatLims"),experimentTypeCode);
 		container.state.user = InstanceHelpers.getUser();
 		container.state.date = new Date();
 
@@ -227,7 +233,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		container.valuation = new Valuation();
 		container.valuation.valid=TBoolean.UNSET; // instead of valid=null;
 
-		container.support=ContainerSupportHelper.getContainerSupport(containerCategoryCode, rs.getInt("nbContainer"), rs.getString("codeSupport"), rs.getString("column"), rs.getString("line"));
+		container.support=ContainerSupportHelper.getContainerSupport(container.categoryCode, rs.getInt("nbContainer"), rs.getString("codeSupport"), rs.getString("column"), rs.getString("line"));
 
 		container.properties= new HashMap<String, PropertyValue>();
 		container.properties.put("limsCode",new PropertySingleValue(rs.getInt("limsCode")));

@@ -493,8 +493,9 @@ public class DataMappingCNS {
 
 	private static String getStateFromStateAmplication(int etatLimsCode) {
 		if(etatLimsCode==2 || etatLimsCode==14 || etatLimsCode==9 ) { return "IW-P"; }
-		else if(etatLimsCode==3 || etatLimsCode==4 ||  etatLimsCode==6 || etatLimsCode==7) { return "UA"; }
+		else if(etatLimsCode==3 || etatLimsCode==4 ||  etatLimsCode==6 || etatLimsCode==7 ) { return "UA"; }
 		else if(etatLimsCode==5 ) { return "IS";}
+		else if(etatLimsCode==10) { return "N";}
 		return null;
 	}
 }
