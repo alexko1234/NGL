@@ -914,10 +914,10 @@ var	datatableConfig = {
 				angular.forEach(data, function(property){
 					var unit = "";
 					if(angular.isDefined(property.displayMeasureValue) && property.displayMeasureValue != null){
-						unit = "("+property.displayMeasureValue.value+")";
+						unit = " ("+property.displayMeasureValue.value+")";
 					}				
 						
-					column = $scope.datatable.newColumn(property.name, "properties."+property.code+".value",property.editable,false,true, $scope.getPropertyColumnType(property.valueType),property.choiceInList, property.possibleValues,{});
+					column = $scope.datatable.newColumn(property.name+unit, "properties."+property.code+".value",property.editable,false,true, $scope.getPropertyColumnType(property.valueType),property.choiceInList, property.possibleValues,{});
 					
 					column.listStyle = "bt-select";
 					column.defaultValues = property.defaultValue;

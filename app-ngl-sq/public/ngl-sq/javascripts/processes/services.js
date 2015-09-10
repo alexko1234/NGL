@@ -263,10 +263,10 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 						var column = {};
 						var unit = "";
 						if(angular.isDefined(property.displayMeasureValue) && property.displayMeasureValue != null){
-							unit = "(" + property.displayMeasureValue.value + ")";
+							unit = " (" + property.displayMeasureValue.value + ")";
 						}
 
-						column = datatable.newColumn(property.name, "properties." + property.code + ".value", property.editable, false, true, getPropertyColumnType(property.valueType), property.choiceInList, property.possibleValues, {});
+						column = datatable.newColumn(property.name+unit, "properties." + property.code + ".value", property.editable, false, true, getPropertyColumnType(property.valueType), property.choiceInList, property.possibleValues, {});
 						column.hide=true;
 						column.listStyle = "bt-select";
 						column.defaultValues = property.defaultValue;
