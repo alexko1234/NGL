@@ -43,6 +43,9 @@ angular.module('atomicTransfereServices', [])
     				if(propertyDefinition.possibleValues!=undefined){
     					column.possibleValues = propertyDefinition.possibleValues;
     				}
+    				if(column.choiceInList){
+    					column.filter = "codes:'value'";
+    				}
     				if(extraHeaders!=undefined){
     					column.extraHeaders = extraHeaders;
     				}

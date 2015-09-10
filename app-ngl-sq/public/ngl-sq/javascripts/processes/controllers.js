@@ -924,6 +924,10 @@ var	datatableConfig = {
 					if(property.displayMeasureValue != undefined && property.displayMeasureValue != null){
 						column.convertValue = {"active":true, "displayMeasureValue":property.displayMeasureValue.value, "saveMeasureValue":property.saveMeasureValue.value};
 					}
+					if(property.choiceInList){
+    					column.filter = "codes:'value'";
+    				}
+					
 					column.position = (9+(property.displayOrder/1000));
 					$scope.processPropertyColumns.push(column);
 					$scope.datatable.addColumn(9+(property.displayOrder/1000),column);	

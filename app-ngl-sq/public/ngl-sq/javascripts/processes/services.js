@@ -277,6 +277,9 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 								"saveMeasureValue" : property.saveMeasureValue.value
 							};
 						}
+						if(property.choiceInList){
+	    					column.filter = "codes:'value'";
+	    				}
 						column.position = (5 + (property.displayOrder / 1000));
 						if (mainService.getHomePage() === 'state') {
 							column.edit = false;
