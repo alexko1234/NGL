@@ -257,7 +257,7 @@ angular.module('ultimateDataTableServices', []).
     					 * local search
     					 */
     					searchLocal : function(searchTerms){
-							if(this.config.filter.active === true){
+							if(this.config.filter.active === true){								
 								//Set the properties "" or null to undefined because we don't want to filter this
 								this.setSpinner(true);
 								for(var p in searchTerms) {
@@ -277,8 +277,7 @@ angular.module('ultimateDataTableServices', []).
 								this.computeDisplayResult();
 								var that = this;
 								this.computeDisplayResultTimeOut.then(function(){
-									that.setSpinner(false);
-									
+									that.setSpinner(false);									
 								});								
 							}
 						},
@@ -1172,7 +1171,7 @@ angular.module('ultimateDataTableServices', []).
 			    							//add the data in table to send in once all the result
 			    							data.push({index:i, data:valueFunction(this.displayResult[i].data)});			    							
 			    						} else{	
-			    							this.saveLocal(valueFunction(this.displayResult[i].data), i);
+			    							this.saveLocal(valueFunction(this.displayResult[i].data),i);
 			    						}
 			    					}						
 			    				}
@@ -1319,7 +1318,7 @@ angular.module('ultimateDataTableServices', []).
 		    						this.addData(this.config.save.newData);			    					
 		    					}
 		    					this.config.save.newData = [];
-		    					this.setSpinner(false);		    							    					
+		    					this.setSpinner(false);	
 		    				}
 	    					
 		    			},
@@ -1714,7 +1713,7 @@ angular.module('ultimateDataTableServices', []).
 		    						
 			    					
 			    					columns[i].id = this.generateColumnId();
-			    					
+			    					/*
 			    					if(columns[i].hide && !this.config.hide.active){
 			    						columns[i].hide = false;
 			    					}
@@ -1727,6 +1726,7 @@ angular.module('ultimateDataTableServices', []).
 									if(columns[i].mergeCells && !this.config.mergeCells.active){
 			    						columns[i].mergeCells = false;
 			    					}
+									*/
 			    					//TODO: else{Error here ?}
 			    					
 			    					if(columns[i].choiceInList && !angular.isDefined(columns[i].listStyle)){
@@ -2019,6 +2019,9 @@ angular.module('ultimateDataTableServices', []).
 				    			    				property += that.getFilter(column);
 				    			    				property += that.getFormatter(column);
 				    			    				colValue = $parse(property)(result.data);
+				    			    				
+				    			    				if(colValue === null)colValue = undefined;
+				    			    				
 				    			    				if(colValue === undefined && isFunction === true){//Because the property here is not $parsable
 				    			    					//The function have to return a $scope value
 				    			    					colValue = property;
@@ -2440,8 +2443,8 @@ directive("udtCell", function(){
 	    				if(col.type === "boolean"){
 	    					editElement = '<input class="form-control"' +defaultValueDirective+' udt-html-filter="{{col.type}}" '+userDirectives+' type="checkbox" class="input-small" ng-model="'+this.getEditProperty(col, header, filter)+ngChange+'/>';
 	    				}else if(!col.choiceInList){
-	    					//TODO: type='text' because html5 autoformat return a string before that we can format the number ourself
-	    					editElement = '<input class="form-control" '+defaultValueDirective+' '+this.getConvertDirective(col, header)+' udt-html-filter="{{col.type}}" '+userDirectives+' type="text" class="input-small" ng-model="'+this.getEditProperty(col,header,filter)+ngChange+this.getDateTimestamp(col.type)+'/>';	    					
+							//TODO: type='text' because html5 autoformat return a string before that we can format the number ourself
+	    					editElement = '<input class="form-control" '+defaultValueDirective+' '+this.getConvertDirective(col, header)+' udt-html-filter="{{col.type}}" '+userDirectives+' type="text" class="input-small" ng-model="'+this.getEditProperty(col,header,filter)+ngChange+this.getDateTimestamp(col.type)+'/>';
 	    				}else if(col.choiceInList){
 	    					switch (col.listStyle) { 
 	    						case "radio":
