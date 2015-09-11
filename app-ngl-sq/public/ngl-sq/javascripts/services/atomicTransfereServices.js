@@ -44,7 +44,7 @@ angular.module('atomicTransfereServices', [])
     					column.possibleValues = propertyDefinition.possibleValues;
     				}
     				if(column.choiceInList){
-    					column.filter = "codes:'value."+property.code+"'";    					
+    					column.filter = "codes:'value."+propertyDefinition.code+"'";    					
     				}
     				if(extraHeaders!=undefined){
     					column.extraHeaders = extraHeaders;
