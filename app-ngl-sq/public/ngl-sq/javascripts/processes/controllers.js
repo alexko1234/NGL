@@ -925,7 +925,7 @@ var	datatableConfig = {
 						column.convertValue = {"active":true, "displayMeasureValue":property.displayMeasureValue.value, "saveMeasureValue":property.saveMeasureValue.value};
 					}
 					if(property.choiceInList){
-    					column.filter = "codes:'value'";
+						column.filter = "codes:'value."+property.code+"'";
     				}
 					
 					column.position = (9+(property.displayOrder/1000));
