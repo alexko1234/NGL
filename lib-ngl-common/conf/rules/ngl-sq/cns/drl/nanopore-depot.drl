@@ -98,3 +98,4 @@ rule "metrichorVersion required in end of experiment (not IP)"
 		 Logger.debug("Error code nanopore-depot instrument properties metrichorVersion");
 		 $contextValidation.addErrors("metrichorVersion","error.required");  
 end*/
+
