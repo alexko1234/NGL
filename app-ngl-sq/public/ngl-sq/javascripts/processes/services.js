@@ -92,6 +92,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"filter" : "codes:'type'",
 			"order" : true,
 			"hide" : false,
+			"groupMethod" : "unique",
 			"position" : 5,
 			"type" : "text"
 		});
@@ -138,6 +139,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"filter" : "codes:'type'",
 			"order" : true,
 			"hide" : false,
+			"groupMethod" : "unique",
 			"position" : 8,
 			"type" : "text"
 		});
@@ -147,7 +149,9 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"order" : false,
 			"hide" : false,
 			"position" : 9,
-			"render" : "<div list-resize='cellValue | unique' list-resize-min-size='2'>",
+			"filter":"unique",
+			"groupMethod" : "unique",
+			"render" : "<div list-resize='cellValue' list-resize-min-size='2'>",
 			"type" : "text"
 		});
 		columns.push({
@@ -156,7 +160,9 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"order" : false,
 			"hide" : false,
 			"position" : 10,
-			"render" : "<div list-resize='cellValue | unique' list-resize-min-size='2'>",
+			"filter" : "unique",
+			"groupMethod" : "unique",
+			"render" : "<div list-resize='cellValue' list-resize-min-size='2'>",
 			"type" : "text"
 		});
 		columns.push({

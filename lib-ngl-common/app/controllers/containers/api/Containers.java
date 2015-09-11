@@ -23,6 +23,7 @@ import com.mongodb.BasicDBObject;
 import controllers.CommonController;
 import controllers.NGLControllerHelper;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBDatatableResponseChunks;
 import fr.cea.ig.MongoDBResult;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
@@ -31,6 +32,7 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
+import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
@@ -127,9 +129,7 @@ public class Containers extends CommonController {
 		
 		if(containersSearch.datatable){
 			MongoDBResult<Container> results = mongoDBFinder(InstanceConstants.CONTAINER_COLL_NAME, containersSearch, Container.class, query, keys);
-			List<Container> containers = results.toList();
-
-			return ok(Json.toJson(new DatatableResponse<Container>(containers, results.count())));
+			return ok(new MongoDBDatatableResponseChunks<Container>(results)).as("application/json");
 		}else if(containersSearch.count){
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("code", 1);
@@ -149,9 +149,9 @@ public class Containers extends CommonController {
 
 			return ok(Json.toJson(los));
 		}else{
-			List<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, query).toList();
+			MongoDBResult<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, query);
 
-			return ok(Json.toJson(results));
+			return ok(new MongoDBDatatableResponseChunks<Container>(results)).as("application/json");
 		}
 				
 	}
