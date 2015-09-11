@@ -60,14 +60,17 @@ public class ProtocolServiceCNS {
 			
 			lp.add(newProtocol("map005","MAP005","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library")));
 			lp.add(newProtocol("map005-on-beads"," MAP005 sur billes","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library")));
-			lp.add(newProtocol("map006","MAP006","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library")));
-			
+
 			
 			lp.add(newProtocol("map005-depot","MAP005_dépôt","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
 			lp.add(newProtocol("map005-on-bead-depot","MAP005 sur billes_dépôt","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
 			lp.add(newProtocol("map006-depot","MAP006_dépôt","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
 						
-			lp.add(newProtocol("ptr-frg-preCR","ptr_fragmentation preCR","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation")));
+			lp.add(newProtocol("map005-preCR","MAP005 preCR","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation")));
+			lp.add(newProtocol("map006-preCR","MAP006 preCR","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation")));
+			lp.add(newProtocol("map006-FFPE","MAP006 FFPE","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation")));
+
+			lp.add(newProtocol("map006","MAP006","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library","nanopore-fragmentation")));
 			
 		}
 		
