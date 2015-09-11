@@ -70,7 +70,7 @@ end
 
 
 
-rule "minKnowVersion required in end of experiment ( not IP)"
+/*rule "minKnowVersion required in end of experiment ( not IP)"
 	@nglSQ( validations )
 	dialect "java"
 	salience 1000
@@ -97,4 +97,4 @@ rule "metrichorVersion required in end of experiment (not IP)"
 	then
 		 Logger.debug("Error code nanopore-depot instrument properties metrichorVersion");
 		 $contextValidation.addErrors("metrichorVersion","error.required");  
-end
+end*/
