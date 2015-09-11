@@ -39,6 +39,9 @@ public class CodeLabelDAO {
 						"union all "+
 						"select distinct 'value' as table_name, code, name as label from value "+
 						"union all "+
+						"select distinct concat('value','.',+pd.code) as table_name, v.code, v.name as label "
+								+ "from value v inner join property_definition pd on pd.id = v.fk_property_definition order by table_name, label"+
+						"union all "+
 						"select distinct 'property_definition' as table_name, code, name as label from property_definition "+
 						"union all "+
 						"select distinct 'sample_cat' as table_name, code, name as label from sample_category "
