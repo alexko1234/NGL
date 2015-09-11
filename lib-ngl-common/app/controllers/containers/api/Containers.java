@@ -24,6 +24,7 @@ import controllers.CommonController;
 import controllers.NGLControllerHelper;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBDatatableResponseChunks;
+import fr.cea.ig.MongoDBResponseChunks;
 import fr.cea.ig.MongoDBResult;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
@@ -149,9 +150,9 @@ public class Containers extends CommonController {
 
 			return ok(Json.toJson(los));
 		}else{
-			List<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, query).toList();
+			MongoDBResult<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, query);
 
-			return ok(Json.toJson(results));
+			return ok(new MongoDBResponseChunks<Container>(results)).as("application/json");	
 		}
 				
 	}
