@@ -45,7 +45,7 @@ public class ProcessServiceCNS extends AbstractProcessService {
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 
-			l.add(DescriptionFactory.newProcessType("Frg prePCR + Librairie ONT", "nanopore-process-library", ProcessCategory.find.findByCode("library"),getPropertyDefinitionsNanoporeFragmentation() , getExperimentTypes("nanopore-fragmentation","nanopore-library"), 
+			l.add(DescriptionFactory.newProcessType("Fragmentation + Librairie ONT", "nanopore-process-library", ProcessCategory.find.findByCode("library"),getPropertyDefinitionsNanoporeFragmentation() , getExperimentTypes("nanopore-fragmentation","nanopore-library"), 
 					getExperimentTypes("nanopore-fragmentation").get(0), getExperimentTypes("nanopore-library").get(0),getExperimentTypes("ext-to-nanopore-frg-preCR").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
 

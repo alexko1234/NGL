@@ -115,7 +115,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
-			l.add(newExperimentType("Fragmentation preCR","nanopore-fragmentation",null,
+			l.add(newExperimentType("Fragmentation-réparation","nanopore-fragmentation",null,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 					getPropertyFragmentationNanopore(), getInstrumentUsedTypes("eppendorf-mini-spin-plus"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
@@ -312,7 +312,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille réelle","measuredLibrarySize",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Integer.class, true, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE),MeasureUnit.find.findByCode( "pb"),MeasureUnit.find.findByCode( "pb"), "single",16));
 		
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb preCR","preCRNumber",LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb réparations","preCRNumber",LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, false, null
 				, null ,null,null, "single",17));
 		/*propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Conc. finale preCR","postPreCRConcentration",LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"), "single",8));
