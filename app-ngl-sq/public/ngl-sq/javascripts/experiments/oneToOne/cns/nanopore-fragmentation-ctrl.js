@@ -77,7 +77,7 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToS
 			        	 "extraHeaders":{0:"Inputs"}
 			         },	
 			         {
-			        	 "header":"Conc. finale preCR (ng/µL)",
+			        	 "header":"Conc. finale (ng/µL)",
 			        	 "property":"outputContainerUsed.concentration.value",
 			        	 "order":true,
 						 "edit":true,
@@ -87,7 +87,7 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToS
 			        	 "extraHeaders":{0:"Outputs"}
 			         },
 			         {
-			        	 "header":"Qté finale preCR (ng)",
+			        	 "header":"Qté finale (ng)",
 			        	 "property":"outputContainerUsed.quantity.value",
 			        	 "order":true,
 						 "edit":true,
