@@ -100,7 +100,7 @@ public class ReadSets extends ReadSetsController{
 			if(null == form.orderBy)form.orderBy = "code";
 			if(null == form.orderSense)form.orderSense = 0;
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);						
-			return ok(Json.toJson(toListObjects(results.toList())));				
+			return ok(Json.toJson(toListObjects(results.toList())));			
 		}else {
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);	
 			return ok(new MongoDBResponseChunks<ReadSet>(results)).as("application/json");	
