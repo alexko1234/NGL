@@ -342,69 +342,20 @@ public class Containers extends CommonController {
 		}
 		
 		
-		// Mode de recherche "avec les champs vides"
-		if(BooleanUtils.isTrue(containersSearch.isEmptyFromExperimentTypeCodes)){
-			if(CollectionUtils.isNotEmpty(containersSearch.fromExperimentTypeCodes)){
-				Logger.info("containersSearch.isEmptyFromExperimentTypeCodes= "+containersSearch.isEmptyFromExperimentTypeCodes);
+		if(CollectionUtils.isNotEmpty(containersSearch.fromExperimentTypeCodes)){
+			
+			if(BooleanUtils.isTrue(containersSearch.isEmptyFromExperimentTypeCodes) || containersSearch.fromExperimentTypeCodes.contains("none")){
+					queryElts.add(DBQuery.or(DBQuery.size("fromExperimentTypeCodes", 0),DBQuery.notExists("fromExperimentTypeCodes")
+					,DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes)));
+			}
+			else {
 				queryElts.add(DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes));
 
 			}
-			// Mode de recherche "sans les champs vides"
-		}else{
-			if(CollectionUtils.isNotEmpty(containersSearch.fromExperimentTypeCodes)){
-				Boolean hasNoneValue = false;
-				//Recherche des champs vides "None" et des autres cas si demandés
-				Iterator<String> iterator = containersSearch.fromExperimentTypeCodes.iterator();
-				while(iterator.hasNext()){
-					String fromExperimentTypeCode = iterator.next();
-					if(("none").equalsIgnoreCase(fromExperimentTypeCode)){
-						hasNoneValue = true;						
-						Logger.info("Trouvé un containersSearch.fromExperimentTypeCodes="+fromExperimentTypeCode);
-						containersSearch.fromExperimentTypeCodes.remove(fromExperimentTypeCode);
-						queryElts.add(DBQuery.or(DBQuery.size("fromExperimentTypeCodes", 0),DBQuery.notExists("fromExperimentTypeCodes"),DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes)));		
-					}
-					
-				}
-			
-				//Recherche sans les "Nones" de recherche "sans les champs vides" 	
-				if( hasNoneValue == false){			
-					queryElts.add(DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes));
-					queryElts.add(DBQuery.nor(DBQuery.size("fromExperimentTypeCodes", 0),DBQuery.notExists("fromExperimentTypeCodes")));
-				}				
-			}			
-
+				
 		}
-
-		/*
-
-		if(CollectionUtils.isNotEmpty(containersSearch.fromExperimentTypeCodes)){
-			// Mode de recherche "avec les champs vides"			
-			if(BooleanUtils.isTrue(containersSearch.isEmptyFromExperimentTypeCodes)){				
-				Logger.info("containersSearch.isEmptyFromExperimentTypeCodes= "+containersSearch.isEmptyFromExperimentTypeCodes);
-				queryElts.add(DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes));
-
-			}else{
-				// Mode de recherche "sans les champs vides"
-				Boolean hasNoneValue = false;
-				//Recherche des champs vides "None" et des autres cas si demandés
-				for(int i=0; i< containersSearch.fromExperimentTypeCodes.size();i++){
-					if(containersSearch.fromExperimentTypeCodes.get(i).equalsIgnoreCase("none")){
-						hasNoneValue = true;
-						Logger.info("Trouvé un containersSearch.fromExperimentTypeCodes="+containersSearch.fromExperimentTypeCodes.get(i));
-						containersSearch.fromExperimentTypeCodes.remove(i);
-						queryElts.add(DBQuery.or(DBQuery.size("fromExperimentTypeCodes", 0),DBQuery.notExists("fromExperimentTypeCodes"),DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes)));	
-					}			
-				}
-				//Recherche sans les "Nones" de recherche "sans les champs vides" 	
-				if( hasNoneValue == false){			
-					queryElts.add(DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes));
-				}
-
-				//queryElts.add(DBQuery.nor(DBQuery.size("fromExperimentTypeCodes", 0),DBQuery.notExists("fromExperimentTypeCodes")));
-			}			
-		}
-
-		 */
+		
+		
 		if(null != containersSearch.fromDate){
 			queryElts.add(DBQuery.greaterThanEquals("traceInformation.creationDate", containersSearch.fromDate));
 		}

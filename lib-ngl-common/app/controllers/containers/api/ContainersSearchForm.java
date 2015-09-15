@@ -36,7 +36,7 @@ public class ContainersSearchForm extends ListForm{
 	public String line; //TODO rename in supportLine
 	public String createUser; 
 	public List<String> createUsers;
-	public boolean isEmptyFromExperimentTypeCodes=true;
+	public boolean isEmptyFromExperimentTypeCodes=false;
 	public Map<String, List<String>> properties = new HashMap<String, List<String>>();
 	public Map<String, List<String>> contentsProperties = new HashMap<String, List<String>>();
 	
