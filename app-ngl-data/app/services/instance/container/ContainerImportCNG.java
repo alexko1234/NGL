@@ -40,12 +40,13 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		// FDS le 2 eme param "experiment-type-code" est l'experience d'ou est est sensé venir le container 
 	
 		// lib-normalization= solexa[ lib10nM + libXnM >= 1nM ]
-		loadContainers("tube","lib-normalization");
-		updateContainers("tube","lib-normalization");
+		// FDS 15/09/2015 pas encore..en prod
+		//loadContainers("tube","lib-normalization");
+		//updateContainers("tube","lib-normalization");
 		
 		// denat-dil-lib = solexa[ libXnM < 1nM  ]
-		loadContainers("tube","denat-dil-lib");
-		updateContainers("tube","denat-dil-lib");
+		//loadContainers("tube","denat-dil-lib");
+		//updateContainers("tube","denat-dil-lib");
 		
 		// TODO ???? autres categories de libraries en tube
 		

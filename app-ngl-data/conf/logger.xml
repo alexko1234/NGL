@@ -54,7 +54,7 @@
 
 	<logger name="play" level="INFO" />
 	<logger name="application" level="DEBUG" />
-	<logger name="services.instance" level="ERROR" />
+	<logger name="services.instance" level="INFO" />
 	<logger name="migration" level="INFO" />
 	
 	<root level="ERROR">
