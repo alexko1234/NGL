@@ -4,7 +4,7 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import org.junit.Test;
 
-import controllers.experiments.api.Experiments;
+import controllers.experiments.api.ExperimentsOld;
 import experiments.ExperimentTestHelper;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.experiment.instance.ContainerUsed;
@@ -78,7 +78,7 @@ public class PoolTubeRulesTest extends AbstractTests {
 
 		ExperimentValidationHelper.validateAtomicTransfertMethodes(exp.atomicTransfertMethods, contextValidation);
 
-		ExperimentHelper.doCalculations(exp,Experiments.calculationsRules);
+		ExperimentHelper.doCalculations(exp,ExperimentsOld.calculationsRules);
 		
 		ManytoOneContainer atomicTransfertResult = (ManytoOneContainer)exp.atomicTransfertMethods.get(0);
 		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("inputVolume")).isNotNull();

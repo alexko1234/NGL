@@ -1,6 +1,7 @@
 "use strict";
 
-angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams', '$filter','datatable','basket','lists','$http','mainService','tabService', function ($scope,$routeParams, $filter, datatable,basket, lists, $http,mainService,tabService) {
+angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParams', '$filter','datatable','basket','lists','$http','mainService','tabService', 
+                                                           function ($scope,$routeParams, $filter, datatable,basket, lists, $http,mainService,tabService) {
 	$scope.searchService = {};
 	$scope.searchService.lists = lists;
 	
@@ -524,7 +525,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 				if(containers[i].group === undefined){
 					this.basket.add(containers[i]);
 					if(($scope.searchService.form.nextExperimentTypeCode) && this.basket.length() > 0 && tabService.getTabs().length === 1){
-						tabService.addTabs({label:$filter('codes')($scope.searchService.form.nextExperimentTypeCode,'type'),href:"/experiments/new/"+$scope.searchService.form.nextExperimentTypeCode,remove:false});
+						tabService.addTabs({label:$filter('codes')($scope.searchService.form.nextExperimentTypeCode,'type'),href:"/experiments/new/list-containers",remove:false});
+						tabService.addTabs({label:"Configuration "+$filter('codes')($scope.searchService.form.nextExperimentTypeCode,'type'),href:"/experiments/new/"+$scope.searchService.form.nextExperimentTypeCode,remove:false});
 					}
 				}else{
 					var basket = this.basket;
@@ -536,7 +538,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 								basket.add(container);
 							});
 							if(($scope.searchService.form.nextExperimentTypeCode) && basket.length() > 0 && tabService.getTabs().length === 1){
-								tabService.addTabs({label:$filter('codes')($scope.searchService.form.nextExperimentTypeCode,'type'),href:"/experiments/new/"+$scope.searchService.form.nextExperimentTypeCode,remove:false});
+								tabService.addTabs({label:$filter('codes')($scope.searchService.form.nextExperimentTypeCode,'type'),href:"/experiments/new/list-containers",remove:false});
+								tabService.addTabs({label:"Configuration "+$filter('codes')($scope.searchService.form.nextExperimentTypeCode,'type'),href:"/experiments/new/"+$scope.searchService.form.nextExperimentTypeCode,remove:false});
 							}
 						}
 					})

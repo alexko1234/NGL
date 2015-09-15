@@ -22,11 +22,8 @@ import play.twirl.api.Html;
 import play.twirl.api.Template0;
 import views.components.datatable.DatatableColumn;
 import views.components.datatable.DatatableHelpers;
-import views.html.experiments.createExperiments;
-import views.html.experiments.home;
-import views.html.experiments.newExperiments;
-import views.html.experiments.search;
-import views.html.experiments.searchContainersSupports;
+import views.html.experiments.*;
+
 import controllers.CommonController;
 
 public class Experiments extends CommonController{
@@ -37,16 +34,24 @@ public class Experiments extends CommonController{
 		return ok(home.render(code));
 	}
 	
-	public static Result edit(String code){
-		return ok(home.render(code));
+	public static Result get(String code){
+		return ok(home.render("search"));
 	}
 	
-	public static Result searchSupports(){
-		return ok(searchContainersSupports.render());
+	public static Result details(){
+		return ok(details.render(getCurrentUser()));
 	}
 	
-	public static Result newExperiments(String experimentTypeCode){
-		return ok(newExperiments.render());
+	public static Result search(String experimentType){
+		return ok(search.render());
+	}
+	
+	public static Result searchContainers(){
+		return ok(searchContainers.render());
+	}
+	
+	public static Result listContainers(){
+		return ok(listContainers.render());
 	}
 	
 	/*This controller return a Result that contain the template, searching for the class that fit the most
@@ -110,32 +115,31 @@ public class Experiments extends CommonController{
 		try{
 			Class<?> clazz = Class.forName("views.html.experiments."+atomicType.toLowerCase()+"."+institute.toLowerCase()+"."+keyWord.toLowerCase());//package in java are always in lower case
 			Method m = clazz.getDeclaredMethod("render");
-			Html html = (Html)m.invoke(null,null);
+			Html html = (Html)m.invoke(null);
 			return html;
 		}catch(Exception e){
 			return null;
 		}
 	}
 	
-	public static Result createOrEditExperiment(){
 	
-		return ok(createExperiments.render(getCurrentUser()));
-	}
-	
-	public static Result search(String experimentType){
-		return ok(search.render());
-	}
 	
 	public static Result javascriptRoutes() {
   	    response().setContentType("text/javascript");
   	    return ok(  	    		
   	      Routes.javascriptRouter("jsRoutes",
   	        // Routes
-  	    		controllers.experiments.tpl.routes.javascript.Experiments.searchSupports(),
+  	    		controllers.experiments.tpl.routes.javascript.Experiments.searchContainers(),
+  	    		controllers.experiments.tpl.routes.javascript.Experiments.search(),
+  	    		controllers.experiments.tpl.routes.javascript.Experiments.listContainers(),
+  	    		controllers.experiments.tpl.routes.javascript.Experiments.getTemplate(),
+  	    		controllers.experiments.tpl.routes.javascript.Experiments.home(),  	    		
+  	    		controllers.experiments.tpl.routes.javascript.Experiments.details(),
+  	    		controllers.experiments.tpl.routes.javascript.Experiments.get(),
+  	    		
   	    		controllers.containers.api.routes.javascript.Containers.list(),
   	    		controllers.containers.api.routes.javascript.ContainerSupports.list(),
   	    		controllers.containers.api.routes.javascript.Containers.get(),
-  	    		controllers.experiments.tpl.routes.javascript.Experiments.search(),
   	    		controllers.processes.api.routes.javascript.Processes.list(),
   	    		controllers.processes.api.routes.javascript.ProcessTypes.list(),
   	    		controllers.processes.api.routes.javascript.ProcessTypes.get(),
@@ -144,28 +148,21 @@ public class Experiments extends CommonController{
   	    		controllers.experiments.api.routes.javascript.ExperimentTypes.list(),
   	    		controllers.experiments.api.routes.javascript.ExperimentTypes.get(),  	    		
   	    		controllers.experiments.api.routes.javascript.ExperimentCategories.list(),
-  	    		controllers.experiments.tpl.routes.javascript.Experiments.newExperiments(),
-  	    		controllers.experiments.tpl.routes.javascript.Experiments.getTemplate(),
-  	    		controllers.experiments.tpl.routes.javascript.Experiments.home(),
-  	    		controllers.experiments.api.routes.javascript.Experiments.list(),
   	    		controllers.experiments.api.routes.javascript.ExperimentTypeNodes.list(),
-  	    		controllers.experiments.tpl.routes.javascript.Experiments.createOrEditExperiment(),
-  	    		controllers.experiments.api.routes.javascript.Experiments.get(),
-  	    		controllers.experiments.api.routes.javascript.Experiments.updateExperimentInformations(),
-  	    		controllers.experiments.api.routes.javascript.Experiments.updateExperimentProperties(),
-  	    		controllers.experiments.api.routes.javascript.Experiments.updateInstrumentInformations(),
-  	    		controllers.experiments.api.routes.javascript.Experiments.updateInstrumentProperties(),
-  	    		controllers.experiments.api.routes.javascript.Experiments.getInstrumentProperties(),
-  	    		controllers.experiments.api.routes.javascript.Experiments.addComment(),
-  	    		controllers.experiments.api.routes.javascript.Experiments.updateComment(),
-  	    		controllers.experiments.api.routes.javascript.Experiments.deleteComment(),
-  	    		controllers.experiments.api.routes.javascript.Experiments.updateStateCode(),
-  	    		controllers.experiments.tpl.routes.javascript.Experiments.edit(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.updateExperimentInformations(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.updateExperimentProperties(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.updateInstrumentInformations(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.updateInstrumentProperties(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.getInstrumentProperties(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.addComment(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.updateComment(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.deleteComment(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.updateStateCode(),
   	    		controllers.instruments.api.routes.javascript.Instruments.list(),
   	    		controllers.instruments.api.routes.javascript.InstrumentUsedTypes.list(),
   	    		controllers.instruments.api.routes.javascript.InstrumentCategories.list(),
-  	    		controllers.experiments.api.routes.javascript.Experiments.save(),
-  	    		controllers.experiments.api.routes.javascript.Experiments.updateContainers(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.save(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.updateContainers(),
   	    		controllers.protocols.api.routes.javascript.Protocols.list(),
   	    		instruments.io.routes.javascript.Outputs.sampleSheets(),
   	    		controllers.resolutions.api.routes.javascript.Resolutions.list(),
@@ -187,12 +184,16 @@ public class Experiments extends CommonController{
   	    		controllers.samples.api.routes.javascript.Samples.list(),
   	    		controllers.commons.api.routes.javascript.Users.list(),
   	    		controllers.containers.api.routes.javascript.Containers.updateBatch(),
-  	    		controllers.experiments.api.routes.javascript.Experiments.retry(),
-  	    		controllers.experiments.api.routes.javascript.Experiments.endOfProcess(),
-  	    		controllers.experiments.api.routes.javascript.Experiments.stopProcess(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.retry(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.endOfProcess(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.stopProcess(),
   	    		controllers.containers.api.routes.javascript.Containers.updateStateBatch(),
 	      		controllers.containers.api.routes.javascript.Contents.list(),
-	      		controllers.commons.api.routes.javascript.Parameters.list()
+	      		controllers.commons.api.routes.javascript.Parameters.list(),
+	      		
+	      		controllers.experiments.api.routes.javascript.Experiments.list(),
+	      		controllers.experiments.api.routes.javascript.Experiments.get()
+  	    		
   	      )	  	      
   	    );
   	}

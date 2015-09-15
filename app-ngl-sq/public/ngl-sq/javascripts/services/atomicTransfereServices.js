@@ -17,6 +17,19 @@ angular.module('atomicTransfereServices', [])
 					if(undefined !== unit && null !== unit) return " ("+unit+")";
 					else return "";
 				},
+				getPropertyColumnType : function(type){
+					if(type === "java.lang.String"){
+						return "text";
+					}else if(type === "java.lang.Double"){
+						return "number";
+					}else if(type === "java.util.Date"){
+						return "date";
+					}else{
+						throw 'not manage : '+type;
+					}
+
+					return type;
+				},
 				convertSinglePropertyToDatatableColumn : function(propertyDefinition, propertyNamePrefix, extraHeaders){
 					return this.convertPropertyToDatatableColumn(propertyDefinition, propertyNamePrefix, ".value", extraHeaders); 
 				},
@@ -36,7 +49,7 @@ angular.module('atomicTransfereServices', [])
     				column.edit = propertyDefinition.editable;
     				column.hide =  true;
     				column.order = true;
-    				column.type = $scope.getPropertyColumnType(propertyDefinition.valueType);
+    				column.type = this.getPropertyColumnType(propertyDefinition.valueType);
     				column.choiceInList = propertyDefinition.choiceInList;
     				column.position=propertyDefinition.displayOrder;
     				column.defaultValues = propertyDefinition.defaultValue;

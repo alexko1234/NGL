@@ -8,8 +8,8 @@ angular.module('commonsServices', []).
 						configDefault : {
 							errorClass:'alert alert-danger',
 							successClass: 'alert alert-success',							
-							errorKey:{save:'msg.error.save',remove:'msg.error.remove'},
-							successKey:{save:'msg.success.save',remove:'msg.success.remove'}
+							errorKey:{save:'msg.error.save',remove:'msg.error.remove', get:'msg.error.get'},
+							successKey:{save:'msg.success.save',remove:'msg.success.remove', get:'msg.success.get'}
 						},
 						config:undefined,
     					configMaster:undefined,

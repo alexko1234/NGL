@@ -26,7 +26,7 @@ import utils.AbstractTests;
 import utils.Constants;
 import validation.ContextValidation;
 import validation.experiment.instance.ExperimentValidationHelper;
-import controllers.experiments.api.Experiments;
+import controllers.experiments.api.ExperimentsOld;
 import fr.cea.ig.MongoDBDAO;
 
 public class ExperimentValidationTests extends AbstractTests {
@@ -121,7 +121,7 @@ public class ExperimentValidationTests extends AbstractTests {
 
 		ExperimentValidationHelper.validateAtomicTransfertMethodes(exp.atomicTransfertMethods, contextValidation);
 
-		ExperimentHelper.doCalculations(exp,Experiments.calculationsRules);
+		ExperimentHelper.doCalculations(exp,ExperimentsOld.calculationsRules);
 
 		ManytoOneContainer atomicTransfertResult = (ManytoOneContainer)exp.atomicTransfertMethods.get(0);
 		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("requiredVolume1")).isNotNull();

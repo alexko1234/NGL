@@ -55,6 +55,8 @@ msg.success.save = Sauvegarde réussie.
 msg.error.save = Erreur de sauvegarde.
 msg.success.remove = Suppression réussie.
 msg.error.remove =  Erreur de suppression.
+msg.success.get = Chargement réussie.
+msg.error.get =  Erreur de chargement.
 
 
 #authentification

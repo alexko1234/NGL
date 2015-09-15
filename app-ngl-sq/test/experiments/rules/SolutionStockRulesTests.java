@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import controllers.experiments.api.Experiments;
+import controllers.experiments.api.ExperimentsOld;
 import experiments.ExperimentTestHelper;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.experiment.instance.ContainerUsed;
@@ -150,7 +150,7 @@ public class SolutionStockRulesTests extends AbstractTests{
 
 		ExperimentValidationHelper.validateAtomicTransfertMethodes(exp.atomicTransfertMethods, contextValidation);
 
-		ExperimentHelper.doCalculations(exp,Experiments.calculationsRules);
+		ExperimentHelper.doCalculations(exp,ExperimentsOld.calculationsRules);
 
 		OneToOneContainer atomicTransfertResult = (OneToOneContainer)exp.atomicTransfertMethods.get(0);	
 		assertThat(atomicTransfertResult.inputContainerUseds.get(atomicTransfertResult.inputContainerUseds.indexOf(containerIn1)).experimentProperties.get("requiredVolume")).isNotNull();		
