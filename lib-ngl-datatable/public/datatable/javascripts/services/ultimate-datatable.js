@@ -705,10 +705,17 @@ angular.module('ultimateDataTableServices', []).
 									that.displayResult = displayResultTmp;		
 								} else{
 									if(configPagination.active && !that.isRemoteMode(configPagination.mode)){
-										_displayResult = angular.copy(that._getAllResult().slice((configPagination.pageNumber*configPagination.numberRecordsPerPage), 
+										//_displayResult = angular.copy(that._getAllResult().slice((configPagination.pageNumber*configPagination.numberRecordsPerPage), 
+										//		(configPagination.pageNumber*configPagination.numberRecordsPerPage+configPagination.numberRecordsPerPage)));
+										
+										_displayResult = $.extend(true,[],that._getAllResult().slice((configPagination.pageNumber*configPagination.numberRecordsPerPage), 
 												(configPagination.pageNumber*configPagination.numberRecordsPerPage+configPagination.numberRecordsPerPage)));
+										
 									}else{ //to manage all records or server pagination
-										_displayResult = angular.copy(that._getAllResult());		    					
+										//_displayResult = angular.copy(that._getAllResult());	
+										_displayResult = $.extend(true,[],that._getAllResult());
+										
+										
 									}
 									
 									var displayResultTmp = [];
@@ -1272,7 +1279,8 @@ angular.module('ultimateDataTableServices', []).
 									if(this.config.pagination.active && !this.isRemoteMode(this.config.pagination.mode)){
 										j = i + (this.config.pagination.pageNumber*this.config.pagination.numberRecordsPerPage);
 									}
-									this.allResult[j] = angular.copy(this.displayResult[i].data);
+									//this.allResult[j] = angular.copy(this.displayResult[i].data);
+									this.allResult[j] = $.extend(true,{},this.displayResult[i].data);
 			    					
 								}else{
 									this.config.save.newData.push(data);
@@ -1530,14 +1538,17 @@ angular.module('ultimateDataTableServices', []).
 		    							this.displayResult[i].line.selected = false;
 		    							this.displayResult[i].line.trClass=undefined;
 		    						}
-		    						selection.push(angular.copy(this.displayResult[i].data));
+		    						//selection.push(angular.copy(this.displayResult[i].data));
+		    						selection.push($.extend(true,{},this.displayResult[i].data));
 		    					}else if(this.displayResult[i].line.groupSelected){
 		    						//unselect selection
 		    						if(unselect){
 		    							this.displayResult[i].line.groupSelected = false;
 		    							this.displayResult[i].line.trClass=undefined;
 		    						}
-		    						selection.push(angular.copy(this.displayResult[i].data));
+		    						//selection.push(angular.copy(this.displayResult[i].data));		    						
+		    						selection.push($.extend(true,{},this.displayResult[i].data));
+		    						
 		    					}
 		    				}
 		    				if(unselect){this.config.select.isSelectAll = false;}

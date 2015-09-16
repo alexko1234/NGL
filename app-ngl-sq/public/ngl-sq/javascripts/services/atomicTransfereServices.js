@@ -262,7 +262,8 @@ angular.module('atomicTransfereServices', [])
 						
 						var l=0;
 						for(var i=0; i< atms.length;i++){
-							var atm = angular.copy(atms[i]);
+							//var atm = angular.copy(atms[i]);
+							var atm = $.extend(true,{}, atms[i]);
 							
 							atm.inputContainerUseds = $filter('orderBy')(atm.inputContainerUseds, 'code');
 							
@@ -279,10 +280,12 @@ angular.module('atomicTransfereServices', [])
 							              allData[l].atomicTransfertMethod = atm;
 							              allData[l].inputContainer = inputContainer;							              
 							              
-							              allData[l].inputContainerUsed = angular.copy(atm.inputContainerUseds[j]);
+							              //allData[l].inputContainerUsed = angular.copy(atm.inputContainerUseds[j]);
+							              allData[l].inputContainerUsed = $.extend(true,{}, atm.inputContainerUseds[j]);
 							              allData[l].inputContainerUsed = $commonATM.updateContainerUsedFromContainer(allData[l].inputContainerUsed, inputContainer);
 							              
-							              allData[l].outputContainerUsed = angular.copy(atm.outputContainerUseds[k]);
+							              //allData[l].outputContainerUsed = angular.copy(atm.outputContainerUseds[k]);
+							              allData[l].outputContainerUsed =  $.extend(true,{}, atm.outputContainerUseds[k]);
 							              allData[l].outputContainer = outputContainer;
 							              
 							              l++;							             
@@ -293,7 +296,8 @@ angular.module('atomicTransfereServices', [])
 								}else{
 									allData[l] = {atomicIndex:i};
 									allData[l].atomicTransfertMethod = atm;							              
-									allData[l].inputContainerUsed = angular.copy(atm.inputContainerUseds[j]);
+									//allData[l].inputContainerUsed = angular.copy(atm.inputContainerUseds[j]);
+									allData[l].inputContainerUsed = $.extend(true,{}, atm.inputContainerUseds[j]);
 									allData[l].inputContainerUsed = $commonATM.updateContainerUsedFromContainer(allData[l].inputContainerUsed, inputContainer);
 									allData[l].inputContainer = inputContainer;	
 									l++;
@@ -527,7 +531,7 @@ angular.module('atomicTransfereServices', [])
 						this.inputContainers.splice(this.inputContainers.indexOf(inputContainer), 1);
 					},
 					duplicateInputContainer : function(inputContainer, position){
-						this.inputContainers.splice(position+1, 0 , angular.copy(inputContainer));						
+						this.inputContainers.splice(position+1, 0 , $.extend(true, {}, inputContainer));						
 					},
 					dropInAllInputContainer : function(atmIndex){
 						var percentage = {value:0};
@@ -595,8 +599,8 @@ angular.module('atomicTransfereServices', [])
 							inputContainers = result[1].input;
 						}
 						
-						$that.data.atm = angular.copy(atms);
-						
+						//$that.data.atm = angular.copy(atms);
+						$that.data.atm = $.extend(true,[], atms);
 						for(var i=0; i< $that.data.atm.length;i++){
 							var atm = $that.data.atm[i];
 							for(var j=0; j<	atm.inputContainerUseds.length ; j++){
@@ -723,7 +727,8 @@ angular.module('atomicTransfereServices', [])
 						var allData = [];
 						var inputContainers = result.input;
 					
-						$that.data.atm = angular.copy(atms);
+						//$that.data.atm = angular.copy(atms);
+						$that.data.atm = $.extend(true,[], atms);
 						var allData = []
 						for(var i=0; i< $that.data.atm.length;i++){
 							var atm = $that.data.atm[i];
