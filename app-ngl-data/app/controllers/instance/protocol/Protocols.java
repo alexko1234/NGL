@@ -2,6 +2,7 @@ package controllers.instance.protocol;
 
 import models.Constants;
 import play.Logger;
+import play.Logger.ALogger;
 import play.libs.Json;
 import play.mvc.Result;
 import services.instance.protocol.ProtocolServiceCNG;
@@ -10,6 +11,9 @@ import validation.ContextValidation;
 import controllers.CommonController;
 
 public class Protocols extends CommonController {
+	
+	public static ALogger logger= Logger.of("Protocols");
+		
 	public static Result save(){
 		ContextValidation ctx = new ContextValidation(Constants.NGL_DATA_USER);
 		ctx.setCreationMode();
@@ -23,6 +27,7 @@ public class Protocols extends CommonController {
 			}
 			
 			if (ctx.errors.size() > 0) {
+				ctx.displayErrors(logger);
 				return badRequest(Json.toJson(ctx.errors));
 			} else {
 				return ok();

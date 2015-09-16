@@ -5,6 +5,7 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import models.laboratory.processes.description.ProcessType;
@@ -29,8 +30,10 @@ public class ProcessTypes extends CommonController{
 		List<ProcessType> processTypes;
 		
 		try{	
-			if(StringUtils.isNotBlank(processTypesSearch.processCategoryCode)){
-				processTypes = ProcessType.find.findByProcessCategoryCode(processTypesSearch.processCategoryCode);
+			if(StringUtils.isNotBlank(processTypesSearch.categoryCode)){
+				processTypes = ProcessType.find.findByProcessCategoryCodes(processTypesSearch.categoryCode);
+			}else if(CollectionUtils.isNotEmpty(processTypesSearch.categoryCodes)){
+				processTypes = ProcessType.find.findByProcessCategoryCodes(processTypesSearch.categoryCodes.toArray(new String[0]));
 			}else{
 				processTypes = ProcessType.find.findAll();
 			}

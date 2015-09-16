@@ -14,7 +14,7 @@ object ApplicationBuild extends Build {
    val appVersion = "1.0-SNAPSHOT"
      
    val sqVersion = "1.10-SNAPSHOT"  
-   val biVersion = "1.20-SNAPSHOT"
+   val biVersion = "1.21-SNAPSHOT"
    val projectsVersion = "1.0-SNAPSHOT"  
    val reagentsVersion = "1.0-SNAPSHOT" 
    val subVersion = "1.0-SNAPSHOT"  
@@ -103,6 +103,7 @@ object ApplicationBuild extends Build {
 	val nglsqDependencies = Seq(
 		javaCore, javaJdbc,
 		  // Add your project dependencies here,
+		"postgresql" % "postgresql" % "8.3-603.jdbc4",
 		"org.assertj" % "assertj-core" % "1.7.1"
 		)
 /*

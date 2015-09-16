@@ -39,8 +39,8 @@ public class ProcessType extends CommonInfoType{
 			super(ProcessTypeDAO.class.getName());			
 		}
 		
-		public List<ProcessType> findByProcessCategoryCode(String processCategoryCode) throws DAOException{
-			return ((ProcessTypeDAO)getInstance()).findByProcessCategoryCode(processCategoryCode);
+		public List<ProcessType> findByProcessCategoryCodes(String...processCategoryCode) throws DAOException{
+			return ((ProcessTypeDAO)getInstance()).findByProcessCategoryCodes(processCategoryCode);
 		}
 
 		public List<ProcessType> findByExperimentTypeCode(String experimentTypeCode) throws DAOException {

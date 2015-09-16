@@ -68,3 +68,34 @@ rule "Validation outputcode nanopore-depot"
 		 $contextValidation.addErrors("instrumentproperties[containerSupportCode]",	"error.validationexp.containerSupportCodeContainString", $containerSupportCode.value, "_"); 
 end
 
+
+
+/*rule "minKnowVersion required in end of experiment ( not IP)"
+	@nglSQ( validations )
+	dialect "java"
+	salience 1000
+	no-loop
+	when 
+	$experiment:Experiment($instrumentProperties: instrumentProperties,$typeCode:typeCode,$typeCode=="nanopore-depot",state.code=="IP")
+	not PropertyValue() from $instrumentProperties.get("minKnowVersion")
+	$contextValidation:ContextValidation($errors : errors)
+	then
+		 Logger.debug("Error code nanopore-depot instrument properties minKnowVersion");
+		 $contextValidation.addErrors("minKnowVersion","error.required");  
+end
+
+
+rule "metrichorVersion required in end of experiment (not IP)"
+	@nglSQ( validations )
+	dialect "java"
+	salience 1000
+	no-loop
+	when 
+	$experiment:Experiment($instrumentProperties: instrumentProperties,$typeCode:typeCode,$typeCode=="nanopore-depot",state.code=="IP")
+	not PropertyValue() from $instrumentProperties.get("metrichorVersion")
+	$contextValidation:ContextValidation($errors : errors)
+	then
+		 Logger.debug("Error code nanopore-depot instrument properties metrichorVersion");
+		 $contextValidation.addErrors("metrichorVersion","error.required");  
+end*/
+

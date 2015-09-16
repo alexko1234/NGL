@@ -52,6 +52,8 @@ import controllers.QueryFieldsForm;
 import controllers.containers.api.Containers;
 import controllers.containers.api.ContainersSearchForm;
 import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBDatatableResponseChunks;
+import fr.cea.ig.MongoDBResponseChunks;
 import fr.cea.ig.MongoDBResult;
 
 public class Processes extends CommonController{
@@ -62,7 +64,7 @@ public class Processes extends CommonController{
 	final static Form<QueryFieldsForm> saveForm = form(QueryFieldsForm.class);
 	final static Form<ProcessesUpdateForm> processesUpdateForm = form(ProcessesUpdateForm.class);
 	final static Form<ProcessesBatchElement> processSaveBatchForm = form(ProcessesBatchElement.class);
-	final static List<String> defaultKeys =  Arrays.asList("categoryCode","containerInputCode","sampleCode", "sampleOnInputContainer", "typeCode", "state", "currentExperimentTypeCode", "newContainerSupportCodes", "experimentCodes","projectCode", "code", "traceInformation.creationDate", "traceInformation.createUser", "properties");
+	final static List<String> defaultKeys =  Arrays.asList("categoryCode","containerInputCode","sampleCode", "sampleOnInputContainer", "typeCode", "state", "currentExperimentTypeCode", "newContainerSupportCodes", "experimentCodes","projectCode", "code", "traceInformation", "comments", "properties");
 	private static final ALogger logger = Logger.of("Processes");
 
 	public static Result head(String processCode) {
@@ -327,8 +329,7 @@ public class Processes extends CommonController{
 		
 		if(processesSearch.datatable){
 			MongoDBResult<Process> results =  mongoDBFinder(InstanceConstants.PROCESS_COLL_NAME, processesSearch, Process.class, query, keys); 
-			List<Process> processes = results.toList();
-			return ok(Json.toJson(new DatatableResponse<Process>(processes, results.count())));
+			return ok(new MongoDBDatatableResponseChunks<Process>(results)).as("application/json");
 		}else if(processesSearch.list){
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("code", 1);
@@ -344,8 +345,7 @@ public class Processes extends CommonController{
 			return ok(Json.toJson(los));
 		}else{
 			MongoDBResult<Process> results = mongoDBFinder(InstanceConstants.PROCESS_COLL_NAME, processesSearch, Process.class, query, keys); 
-			List<Process> processes = results.toList();
-			return ok(Json.toJson(processes));
+			return ok(new MongoDBResponseChunks<Process>(results)).as("application/json");		
 		}
 	}
 

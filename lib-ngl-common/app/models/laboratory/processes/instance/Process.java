@@ -1,5 +1,6 @@
 package models.laboratory.processes.instance;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,7 +33,7 @@ public class Process extends DBObject implements IValidation{
 	public State state;
 
 	public TraceInformation traceInformation;
-	public List<Comment> comments;
+	public List<Comment> comments = new ArrayList<Comment>(0);
 
 	public Map<String,PropertyValue> properties;
 

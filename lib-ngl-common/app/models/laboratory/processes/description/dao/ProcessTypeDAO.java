@@ -1,5 +1,7 @@
 package models.laboratory.processes.description.dao;
 
+import java.sql.Types;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,8 +14,10 @@ import models.utils.ListObject;
 import models.utils.dao.AbstractDAOCommonInfoType;
 import models.utils.dao.DAOException;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
 import play.Logger;
@@ -28,11 +32,14 @@ public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType>{
 				"FROM process_type as c  "+sqlCommonInfoType, false);
 	}
 
-	public List<ProcessType> findByProcessCategoryCode(String processCategoryCode){	
+	public List<ProcessType> findByProcessCategoryCodes(String...processCategoryCodes){	
 		try {
-			String sql = sqlCommonSelect + ",t.name, t.code " + sqlCommonFrom + ", process_category as pc WHERE c.fk_process_category=pc.id AND pc.code=?";
+			String sql = sqlCommonSelect + ",t.name, t.code " + sqlCommonFrom + ", process_category as pc WHERE c.fk_process_category=pc.id "
+						+"AND pc.code in ("+listToParameters(Arrays.asList(processCategoryCodes))+") ";
+			
+			Logger.debug(sql);
 			BeanPropertyRowMapper<ProcessType> mapper = new BeanPropertyRowMapper<ProcessType>(entityClass);
-			return this.jdbcTemplate.query(sql, mapper, processCategoryCode);
+			return this.jdbcTemplate.query(sql, mapper, (Object[])processCategoryCodes);
 		} catch (DataAccessException e) {
 			Logger.warn(e.getMessage());
 			return null;

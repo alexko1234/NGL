@@ -229,7 +229,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getHiseq2500Properties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = getHiseq2000Properties();		
 	   propertyDefinitions.add(0, newPropertiesDefinition("Mode run","runMode"
-	        		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("high-output","rapid run"), "single",50));
+	        		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("high-throughput","rapid run"), "single",50));
         return propertyDefinitions;
 	}
 

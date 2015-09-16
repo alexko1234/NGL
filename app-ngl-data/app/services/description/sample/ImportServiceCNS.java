@@ -58,8 +58,17 @@ public class ImportServiceCNS extends AbstractImportService {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.addAll(getCommonPropertyDefinitions());
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Content), String.class, true, "single"));
-		propertyDefinitions.add(newPropertiesDefinition("Catégorie Tag", "tagCategory", LevelService.getLevels(Level.CODE.Content), String.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Catégorie Tag", "tagCategory", LevelService.getLevels(Level.CODE.Content), String.class, true, getTagCategories(), "single"));
+		
 		return propertyDefinitions;
+	}
+	
+	private static List<Value> getTagCategories(){
+		List<Value> values = new ArrayList<Value>();
+		values.add(DescriptionFactory.newValue("SINGLE-INDEX", "SINGLE-INDEX"));
+		values.add(DescriptionFactory.newValue("DUAL-INDEX", "DUAL-INDEX"));
+		values.add(DescriptionFactory.newValue("MID", "MID"));
+		return values;	
 	}
 	
 	private static List<PropertyDefinition> getTaraPropertyDefinitions() throws DAOException {

@@ -26,10 +26,10 @@ public class LimsRunDAO {
         this.jdbcTemplate = new SimpleJdbcTemplate(dataSource);       
     }
     /**
-     * Return the list of active sequencer
+     * Return the list of active sequencers.
      * @return
      */
-    
+     // 14/09/2015 FDS obsolete ???
     public List<Instrument> getInstruments(){
     	
     	
@@ -40,50 +40,27 @@ public class LimsRunDAO {
     	return this.jdbcTemplate.query(sql, mapper);
     }
     
+    /**
+     * Returns the list of experiments (illumina runs) for a containerSupportCode (flowcell barcode).
+     * @return experiments (illumina runs) for a containerSupportCode (flowcell barcode)
+     */
+    // 14/09/2015 FDS utilisation de la vue v_get_experiments
+
     public List<LimsExperiment> getExperiments(Experiment experiment){
 
-    	if(null != experiment.date){
-	    	String sql = "SELECT m.pc_name as code, min(w.start_date) as date, mt.name as categoryCode, f.nb_cycles" //, f.nb_lanes , mt.type as seq_type, m.model as seq_model
-	    				+" FROM t_flowcell f"
-	    				+" JOIN t_workflow w on w.flowcell_id=f.id"
-	    				//+" JOIN t_stage s on w.stage_id=s.id and ( s.workflow='SEQ' and s.name='Read1')" après passage 2500
-	    				+" JOIN t_machine m on w.machine_id=m.id"
-	    				+" JOIN t_machine_type mt on ( m.type_id=mt.id AND mt.type IN ('GA','HS','H2','MS', 'NS') )"
-	    				+" WHERE f.barcode=? and w.start_date between ? and ?"
-	    				+" GROUP BY m.pc_name,  mt.name, f.nb_cycles";
-	    	BeanPropertyRowMapper<LimsExperiment> mapper = new BeanPropertyRowMapper<LimsExperiment>(LimsExperiment.class);
-	    	return this.jdbcTemplate.query(sql, mapper, experiment.containerSupportCode, minus(experiment.date,5), add(experiment.date,5));    	
-	    	
-    	}else{
-    		String sql = "SELECT m.pc_name as code,  min(w.start_date) as date, mt.name as categoryCode, f.nb_cycles" //, f.nb_lanes , mt.type as seq_type, m.model as seq_model
-    				+" FROM t_flowcell f"
-    				+" JOIN t_workflow w on w.flowcell_id=f.id"
-    				//+" JOIN t_stage s on w.stage_id=s.id and ( s.workflow='SEQ' and s.name='Read1')" après passage 2500
-    				+" JOIN t_machine m on w.machine_id=m.id"
-    				+" JOIN t_machine_type mt on  ( m.type_id=mt.id AND mt.type IN ('GA','HS','H2','MS', 'NS') )"
-    				+" WHERE f.barcode=?"
-    				+" GROUP BY m.pc_name,  mt.name, f.nb_cycles";
-    		BeanPropertyRowMapper<LimsExperiment> mapper = new BeanPropertyRowMapper<LimsExperiment>(LimsExperiment.class);
-        	return this.jdbcTemplate.query(sql, mapper, experiment.containerSupportCode);    	
-    	}
-    	
+        if(null != experiment.date){
+            String sql =" SELECT  code, date, categoryCode,nb_cycles FROM v_get_experiments"
+                               +" WHERE barcode=? and date between ? and ?";
+            BeanPropertyRowMapper<LimsExperiment> mapper = new BeanPropertyRowMapper<LimsExperiment>(LimsExperiment.class);
+            return this.jdbcTemplate.query(sql, mapper, experiment.containerSupportCode, minus(experiment.date,5), add(experiment.date,5));
+
+        }else{
+            String sql =" SELECT  code, date, categoryCode, nb_cycles FROM v_get_experiments"
+                               +" WHERE barcode=?";
+            BeanPropertyRowMapper<LimsExperiment> mapper = new BeanPropertyRowMapper<LimsExperiment>(LimsExperiment.class);
+            return this.jdbcTemplate.query(sql, mapper, experiment.containerSupportCode);
+        }
     }
-    /*
-     * 
-     *
-     * SELECT l.number as lane_number, et.name as exp_name, s.barcode as aliquot_barcode, s.stock_barcode, i.short_name as index_short,
-i.sequence as index_sequence , sl.size, fn_getsampleid_project(s.id) as project_names
----,ind.name
-FROM t_flowcell f
-JOIN t_lane l ON l.flowcell_id=f.id
-JOIN t_sample_lane sl ON sl.lane_id=l.id
-JOIN t_sample s ON sl.sample_id=s.id
-JOIN t_exp_type et on sl.exp_type_id=et.id
-JOIN t_individual ind on s.individual_id=ind.id
-LEFT OUTER JOIN t_index i ON sl.index=i.cng_name
-WHERE f.barcode='$fcbarcode'
-ORDER BY l.number
-     */
     
     private Date minus(Date date, int nbDay) {
 		Calendar c = Calendar.getInstance();
@@ -99,7 +76,7 @@ ORDER BY l.number
     	return c.getTime();
 	}
     
-    
+    // 14/09/2015 FDS obsolete ??? nom incorrect manque un T...
 	public List<LimsLibrary> geContainerSupport(String supportCode){
 		/*
 		 SELECT l.number as lane_number, et.name as exp_name, s.barcode as aliquot_barcode, s.stock_barcode, i.short_name as index_short,
