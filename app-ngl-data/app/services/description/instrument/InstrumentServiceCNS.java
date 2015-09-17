@@ -46,7 +46,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		
 		l.add(newInstrumentCategory("Séquenceur Illumina","illumina-sequencer"));
 		l.add(newInstrumentCategory("Cartographie Optique Opgen","opt-map-opgen"));
-		l.add(newInstrumentCategory("Nanopore","nanopore"));
+		l.add(newInstrumentCategory("Nanopore","nanopore-sequencer"));
 		l.add(newInstrumentCategory("Extérieur","extseq"));
 		
 		l.add(newInstrumentCategory("Robot pipetage","liquid-handling-robot"));
@@ -218,10 +218,10 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 		
 		
-		l.add(newInstrumentUsedType("MinION", "minION", InstrumentCategory.find.findByCode("nanopore"), getNanoporeDepotProperties(),getInstrumentMinIon() 
+		l.add(newInstrumentUsedType("MinION", "minION", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeDepotProperties(),getInstrumentMinIon() 
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
-		l.add(newInstrumentUsedType("Mk1", "mk1", InstrumentCategory.find.findByCode("nanopore"), getNanoporeDepotProperties(),getInstrumentMKI() 
+		l.add(newInstrumentUsedType("Mk1", "mk1", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeDepotProperties(),getInstrumentMKI() 
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}

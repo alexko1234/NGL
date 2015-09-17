@@ -92,10 +92,9 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 				getInstrumentUsedTypes("hand","tecan-evo-100"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
-		//Depot solexa -- FDS 27/02/2015 devient commun
 		l.add(newExperimentType("Depot Illumina", "illumina-depot",null, 1400,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(),
-				getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500"), "OneToVoid", 
+				getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","HISEQ4000"), "OneToVoid", 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		
@@ -103,7 +102,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		
 			//Nanopore
-			l.add(newExperimentType("Ext to Nanopore Fragmentation preCR","ext-to-nanopore-frg-preCR",null,
+			l.add(newExperimentType("Ext to Fragmentation-réparation","ext-to-nanopore-frg-preCR",null,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
