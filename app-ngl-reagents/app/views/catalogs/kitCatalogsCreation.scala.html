@@ -13,7 +13,7 @@
     	</ul>	
 	</div>
 </div>
-	<div class="col-md-10 col-lg-10">
+	<div class="col-md-12 col-lg-12">
 		<div class="row">
 			<div class="btn-toolbar toolbar">
 				<h1 class="col-md-8 col-lg-8 pull-left">
@@ -34,7 +34,7 @@
 		<form class="form-horizontal">
 			<div class="row">
 				<div class="form-group">
-					<label class="col-md-2 col-lg-2 control-label">@Messages("kits.name") :</label>
+					<label class="col-md-2 col-lg-2 control-label">@Messages("kits.name")&nbsp;:</label>
 					<div ng-switch on="editMode">
 						<p class="form-control-static col-md-3 col-lg-3" ng-switch-when="false">{{kit.name}}</p>
 					<div ng-switch-when="true">
@@ -46,9 +46,9 @@
 					</div>
 					</div>
 					</div>
-					<label class="col-md-1 col-lg-1 control-label">@Messages("kits.providerRefName") :</label>
+					<label class="col-md-2 col-lg-2 control-label">@Messages("kits.providerRefName")&nbsp;:</label>
 					<div ng-switch on="editMode">
-						<p class="form-control-static col-md-3 col-lg-3" ng-switch-when="false">{{kit.providerRefName}}</p>
+						<p class="form-control-static col-md-2 col-lg-2" ng-switch-when="false">{{kit.providerRefName}}</p>
 					<div ng-switch-when="true">
 					<div class="col-md-3 col-lg-3" ng-class="getClass('kit.providerRefName')">
 						<input type="text" class="form-control" ng-model="kit.providerRefName" ng-readonly="!editMode" ng-disabled="!editMode">
@@ -58,11 +58,13 @@
 					</div>
 					</div>
 					</div>
-				</div>			
+					<label class="col-md-1 col-lg-1 control-label">@Messages("kit.code.label")&nbsp;:</label>
+					<div class="col-md-1 col-lg-1 form-control-static">{{kit.code}}</div>
+				</div>		
 		    </div>
 		    <div class="row">
 		    	<div class="form-group">
-					<label class="col-md-2 col-lg-2 control-label">@Messages("kits.experimentTypes") :</label>
+					<label class="col-md-2 col-lg-2 control-label">@Messages("kits.experimentTypes")&nbsp;:</label>
 					<div class="col-md-3 col-lg-3" ng-class="getClass('kit.experimentTypeCodes')" >
 						<div class="form-control" bt-select ng-model="kit.experimentTypeCodes"
 						multiple="true" placeholder="@Messages("catalogs.kit.creation.placeholder.experimentTypes")" 
@@ -73,7 +75,7 @@
                             {{mainService.getError("kit.experimentTypeCodes")}}
                         </span>
 					</div>
-					<label class="col-md-1 col-lg-1 control-label">@Messages("kits.catalogRefCode") :</label>
+					<label class="col-md-2 col-lg-2 control-label">@Messages("kits.catalogRefCode")&nbsp;:</label>
 					<div ng-switch on="editMode">
 						<p class="form-control-static col-md-3 col-lg-3" ng-switch-when="false">{{kit.catalogRefCode}}</p>
 					<div ng-switch-when="true">
@@ -85,17 +87,18 @@
 					</div>
 					</div>
 					</div>
+
 					
 					
 				</div>
 		    </div>
 		     <div class="row">
 		    	<div class="form-group">
-					<label class="col-md-2 col-lg-2 control-label">@Messages("kits.active") :</label>
+					<label class="col-md-2 col-lg-2 control-label">@Messages("kits.active")&nbsp;:</label>
 					<div class="col-md-3 col-lg-3">
 						<input type="checkbox" ng-model="kit.active" style="margin-top:8px;">
 					</div>	
-					<label class="col-md-1 col-lg-1 control-label">@Messages("kits.provider") :</label>
+					<label class="col-md-2 col-lg-2 control-label">@Messages("kits.provider")&nbsp;:</label>
 					<div ng-switch on="editMode">
 						<p class="form-control-static col-md-3 col-lg-3" ng-switch-when="false">{{kit.providerCode}}</p>
 					<div ng-switch-when="true">
@@ -177,8 +180,12 @@
                         </span>
 					</div>
 					</div>
-					</div>
+					</div>					
 				</div>
+				</div>
+				<div class="row">
+					<label class="col-md-2 col-lg-2 control-label">@Messages("boxes.code.label")&nbsp;:</label>
+					<div class="form-control-static cold-md-1 col-lg-1">{{box.code}}</div>
 				</div>
 				</div>
 			</form>
