@@ -168,6 +168,11 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"flowcell-8","flowcell-2"}), null, 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
+		l.add(newInstrumentUsedType("HISEQ4000", "HISEQ4000", InstrumentCategory.find.findByCode("illumina-sequencer"), getHiseq4000Properties(), 
+				getInstrumentHiseq4000(),
+				getContainerSupportCategories(new String[]{"flowcell-8"}), null, 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
 		l.add(newInstrumentUsedType("Agilent 2100 bioanalyzer", "agilent-2100-bioanalyzer", InstrumentCategory.find.findByCode("chip-electrophoresis"), getChipElectrophoresisProperties(), 
 				getInstruments(
 						createInstrument("bioAnalyzer1", "BioAnalyzer1", null, true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS )), 
@@ -222,6 +227,8 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 
 	
+	
+
 	private List<Instrument> getInstrumentMKI() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		instruments.add(createInstrument("MN15456", "MK1 15456", null, true, "/env/atelier/nanopore_MN15456", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
@@ -285,6 +292,22 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
         		"2"),"Pas de piste contrôle (auto-calibrage)","single"));
         return propertyDefinitions;
 	}
+	
+	private List<Instrument> getInstrumentHiseq4000() throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("TORNADE", "TORNADE", "T1", true, "/env/atelier/solexa_TORNADE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add(createInstrument("RAFALE", "RAFALE", "R1", true, "/env/atelier/solexa_RAFALE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		return instruments;
+	}
+
+	private List<PropertyDefinition> getHiseq4000Properties() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        propertyDefinitions.add(newPropertiesDefinition("Type lectures", "sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE"), "single",300));
+		propertyDefinitions.add(newPropertiesDefinition("Position","position"
+        		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B"), "single",200));
+	        return propertyDefinitions;
+	}
+	
 
 	private static List<PropertyDefinition> getHiseq2000Properties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();

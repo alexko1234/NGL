@@ -146,10 +146,15 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					getInstrumentUsedTypes("hand","spri"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
-			
+
 			l.add(newExperimentType("Amplification","amplification",null,800,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
 					getInstrumentUsedTypes("hand","thermocycler"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+			
+			l.add(newExperimentType("Sizing sur gel","sizing",null,800,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
+					null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
 
@@ -253,11 +258,14 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					getExperimentTypes("ampure-na"), getExperimentTypes("fluo-quantification","chip-migration-pre-pcr")).save();
 			
 			/*newExperimentTypeNode("librairie-dualindexing", getExperimentTypes("librairie-dualindexing").get(0), false, false, getExperimentTypeNodes("fragmentation"), 
-					getExperimentTypes("ampure-na"), getExperimentTypes("fluo-quantification","chip-migration-pre-pcr")).save();*/
+					getExperimentTypes("ampure-na"), getExperimentTypes("fluo-quantification","chip-migration-pre-pcr")).save();*/			
 			
 			newExperimentTypeNode("amplification", getExperimentTypes("amplification").get(0), false, false, getExperimentTypeNodes("librairie-indexing"), 
 					getExperimentTypes("ampure-a"), getExperimentTypes("fluo-quantification","chip-migration-post-pcr"/*,"qPCR-quantification"*/)).save();
-						
+			
+			newExperimentTypeNode("sizing", getExperimentTypes("sizing").get(0), false, false, getExperimentTypeNodes("amplification"), 
+					null, null).save();
+
 		//	newExperimentTypeNode("qPCR-quantification",getExperimentTypes("qPCR-quantification").get(0),false,false,getExperimentTypeNodes("amplification"),null,null).save();
 
 			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false,false,getExperimentTypeNodes("ext-to-qpcr","amplification"),

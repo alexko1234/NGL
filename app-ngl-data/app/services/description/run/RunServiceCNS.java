@@ -42,6 +42,7 @@ public class RunServiceCNS extends AbstractRunService {
 		List<RunCategory> l = new ArrayList<RunCategory>();
 		l.add(DescriptionFactory.newSimpleCategory(RunCategory.class, "Illumina", "illumina"));
 		l.add(DescriptionFactory.newSimpleCategory(RunCategory.class, "Opgen", "opgen"));
+		l.add(DescriptionFactory.newSimpleCategory(RunCategory.class, "Nanopore", "nanopore"));
 		DAOHelpers.saveModels(RunCategory.class, l, errors);
 	}
 	
@@ -52,8 +53,13 @@ public class RunServiceCNS extends AbstractRunService {
 		l.add(DescriptionFactory.newRunType("RHS2500R","RHS2500R", 2, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(),  DescriptionFactory.getInstitutes( Institute.CODE.CNS)));
 		l.add(DescriptionFactory.newRunType("RMISEQ","RMISEQ", 1, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), DescriptionFactory.getInstitutes( Institute.CODE.CNS)));
 		l.add(DescriptionFactory.newRunType("RGAIIx","RGAIIx", 1, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(DescriptionFactory.newRunType("RHS4000","RHS4000", 1, RunCategory.find.findByCode("illumina"), null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+
 		l.add(DescriptionFactory.newRunType("RARGUS","RARGUS", 1, RunCategory.find.findByCode("opgen"), null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
+		l.add(DescriptionFactory.newRunType("RMINION","RMINION", 1, RunCategory.find.findByCode("nanopore"), null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(DescriptionFactory.newRunType("RMKI","RMKI", 1, RunCategory.find.findByCode("nanopore"), null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+
 		DAOHelpers.saveModels(RunType.class, l, errors);
 	}
 	
