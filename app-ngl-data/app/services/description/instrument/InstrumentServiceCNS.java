@@ -295,8 +295,8 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	
 	private List<Instrument> getInstrumentHiseq4000() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("TORNADE", "TORNADE", "T1", true, "/env/atelier/solexa_TORNADE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
-		instruments.add(createInstrument("RAFALE", "RAFALE", "R1", true, "/env/atelier/solexa_RAFALE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add(createInstrument("TORNADE", "TORNADE", "H5", true, "/env/atelier/solexa_TORNADE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add(createInstrument("RAFALE", "RAFALE", "H9", true, "/env/atelier/solexa_RAFALE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
 		return instruments;
 	}
 
