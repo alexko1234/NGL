@@ -3,14 +3,7 @@
  angular.module('home').controller('CreationKitsCtrl', ['$scope', 'datatable','mainService','tabService','$q','$http','$filter','lists','$routeParams','$location', function ($scope, datatable,mainService,tabService,$q,$http,$filter,lists,$routeParams,$location) {
 	 
 	 $scope.datatableConfig = {
-				columns : [
-					{
-			        	 "header":Messages("reagents.table.code"),
-			        	 "property":"code",
-			        	 "order":true,
-			        	 "type":"text",
-			        	 "edit":false
-			         },
+				columns : [					
 			         {
 			        	 "header":Messages("reagents.table.name"),
 			        	 "property":"name",
@@ -38,6 +31,13 @@
 			        	 "order":true,
 			        	 "type":"text",
 			        	 "edit":true
+			         },
+			         {
+			        	 "header":Messages("reagents.table.code"),
+			        	 "property":"code",
+			        	 "order":true,
+			        	 "type":"text",
+			        	 "edit":false
 			         },
 				],
 				compact:true,
