@@ -28,8 +28,8 @@ import fr.cea.ig.MongoDBDAO;
 
 public class ContainerWorkflows {
 
-	private static final String ruleWorkflowSQ = "workflow";
-	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+	public static final String ruleWorkflowSQ = "workflow";
+	public static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 
 /*
 	public static void nextInputContainerState(Experiment experiment, ContextValidation contextValidation,

@@ -22,7 +22,9 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
 import play.Logger;
+import play.Play;
 import play.libs.F.Promise;
+import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.container.instance.ContainerValidationHelper;
 import validation.experiment.instance.ExperimentValidationHelper;
@@ -39,97 +41,7 @@ public class ExperimentWorkflows {
 	 * @param experiment
 	 *            : the experiment, errors: the filledForm errors
 	 */
-/*public static void setExperimentState(Experiment experiment, State nextState, ContextValidation ctxValidation,
-			boolean stopProcess, boolean retry, List<String> processResolutionCodes) {
 
-		ctxValidation.getContextObjects().put("stateCode", nextState.code);
-		ExperimentValidationHelper.validateState(experiment.typeCode, nextState, ctxValidation);
-
-		// il fau peut etre valider tout l'experiment quand elle passe à "F"
-		ExperimentValidationHelper.validateNewState(experiment, ctxValidation);
-
-		if (!ctxValidation.hasErrors() && !nextState.code.equals(experiment.state)) {
-
-			experiment.traceInformation = StateHelper.getUpdateTraceInformation(experiment.traceInformation,
-					ctxValidation.getUser());
-			experiment.state = StateHelper.updateHistoricalNextState(experiment.state, nextState);
-			experiment.state = nextState;
-
-			if (experiment.state.code.equals("IP")) {
-				try {
-					ExperimentHelper.generateOutputContainerUsed(experiment, ctxValidation);
-					if (!ctxValidation.hasErrors()) {
-						MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, experiment);
-					}
-				} catch (DAOException e) {
-					throw new RuntimeException();
-				}
-			} else if (experiment.state.code.equals("F")) {
-				try {
-					ExperimentHelper.saveOutputContainerUsed(experiment, ctxValidation);
-				} catch (DAOException e) {
-					throw new RuntimeException();
-				}
-				Logger.debug("Apres saveOutputContainerUsed");
-				if (!ctxValidation.hasErrors()) {
-					ContainerWorkflows.nextOutputContainerState(experiment, ctxValidation, stopProcess, retry,processResolutionCodes);
-				}
-
-			}
-
-			if (!ctxValidation.hasErrors()) {
-				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class,
-						DBQuery.is("code", experiment.code),
-						DBUpdate.set("state", experiment.state).set("traceInformation", experiment.traceInformation));
-			}
-
-			if (!ctxValidation.hasErrors()) {
-				ContainerWorkflows.nextInputContainerState(experiment, ctxValidation, stopProcess, retry, processResolutionCodes);
-			}
-		}
-	}
-
-		public static void nextExperimentState(Experiment experiment, ContextValidation contextValidation,
-			boolean stopProcess, boolean retry) {
-		State state = StateHelper.cloneState(experiment.state);
-
-		if (experiment.state == null || experiment.state.code.equals("")) {
-			state.code = "N";
-		} else if (experiment.state.code.equals("N")) {
-			state.code = "IP";
-		} else if (experiment.state.code.equals("IP")) {
-			state.code = "F";
-		}
-
-		setExperimentState(experiment, state, contextValidation, stopProcess, retry, null);
-	}
-	 
-	private static boolean nextExperiment(String typeCode) {
-		List<ExperimentType> experimentTypes;
-		try {
-			experimentTypes = ExperimentType.find.findNextExperimentTypeForAnExperimentTypeCode(typeCode);
-			if (experimentTypes != null && experimentTypes.size() > 0) {
-				return true;
-			} else {
-				return false;
-			}
-
-		} catch (DAOException e) {
-			throw new RuntimeException();
-		}
-	}
-
-	public static boolean doQC(Experiment experiment) {
-		try {
-			ExperimentTypeNode experimentTypeNode = ExperimentTypeNode.find.findByCode(experiment.typeCode);
-			return experimentTypeNode.doQualityControl;
-		} catch (DAOException e) {
-			throw new RuntimeException();
-		}
-
-	}
-
-*/
 	/***********************************************************************/
 	public static void setExperimentState(Experiment experiment, State nextState,ContextValidation contextValidation) {
 
@@ -158,6 +70,9 @@ public class ExperimentWorkflows {
 		MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class,
 				DBQuery.is("code", experiment.code),
 				DBUpdate.set("state", experiment.state).set("traceInformation", experiment.traceInformation));
+		
+		ContainerWorkflows.rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ContainerWorkflows.ruleWorkflowSQ, experiment,contextValidation),null);
+
 
 	}
 

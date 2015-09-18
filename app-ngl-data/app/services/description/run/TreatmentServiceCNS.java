@@ -136,9 +136,16 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 				getTreatmentTypeContexts("pairs"), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "140"));
 
+		//Nanopore
+		l.add(DescriptionFactory.newTreatmentType("MinKnow-Metrichor","minknow-metrichor", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.sequencing.name()), "minknow-metrichor", 
+				getMinknowMetrichorPropertyDefinitions(), 
+				getTreatmentTypeContexts("default"), 
+				DescriptionFactory.getInstitutes( Institute.CODE.CNS), "20"));	
+		
 		DAOHelpers.saveModels(TreatmentType.class, l, errors);
 	}
 	
+
 	private static List<TreatmentTypeContext> getTreatmentTypeContexts(String...codes) throws DAOException {
 		List<TreatmentTypeContext> contexts = new ArrayList<TreatmentTypeContext>();
 		for(String code : codes){
@@ -561,7 +568,24 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 	}
 		
 		
-	
+	private List<PropertyDefinition> getMinknowMetrichorPropertyDefinitions() throws DAOException {
+		
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version MinKNOW","minKnowVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version Metrichor","metrichorVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Metrichor run ID","metrichorRunID", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, true, "single"));
+        
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Channels with Reads","minknowChannelsWithReads", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Events in Reads","minknowEvents", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Complete reads","minknowCompleteReads", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Read count","metrichorReadCount", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, true, "single"));
+
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Total 2D yield (bases)","metrichor2DReadsYield", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Longest 2D read (bases)","metrichorMax2DRead", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, true, "single"));        
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Peak 2D quality score","metrichorMax2DQualityScore", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
+
+		return propertyDefinitions;
+	}
 	
 	
 
