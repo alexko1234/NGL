@@ -43,6 +43,8 @@ kits.createUser = Créée par
 kits.modifyDate = Date de modification
 kits.modifyBy = Modifié par
 
+kit.code.label = Code (NGL)
+
 boxes.search = Recherche boîtes
 boxes.tabs.search = Recherche Boîtes
 
@@ -51,6 +53,7 @@ boxes.storageConditions = Conditions de stockage (°C)
 boxes.catalogRefCode = Ref. catalogue (fournisseur)
 boxes.comment = Commentaire
 boxes.toExpirationDate = Date péremption jusqu''au
+boxes.code.label = Code (NGL) de la boîte
 
 catalogRefCode = REF. catalogue
 bundleBarCode = Lot

@@ -30,3 +30,7 @@ To set the good size and position of the close button in a nav-tab
 .help-block{
 	min-height: 0px;
 }
+
+.bord{
+	border:1px dotted black;
+}

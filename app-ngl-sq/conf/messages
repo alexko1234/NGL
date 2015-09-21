@@ -323,7 +323,8 @@ limsdao.error.emptymapping =Pas de correspondance avec les paramètres suivants 
 initialdata.error.sampleNotExist=Le container {0} 
 
 docs.illumina=Séquençage Illumina
-docs.opticalmapping=Optical mapping Opgen
+docs.nanopore=Séquençage Nanopore
+docs.opticalmapping=Optical mapping
 
 #button
 button.search = Rechercher
