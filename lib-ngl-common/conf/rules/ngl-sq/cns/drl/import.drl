@@ -42,3 +42,6 @@ import models.laboratory.run.instance.InstrumentUsed;
 import models.utils.InstanceHelpers;
 import models.utils.InstanceConstants;
 import java.text.SimpleDateFormat;
+import models.laboratory.run.instance.Treatment;
+import models.laboratory.experiment.instance.ContainerUsed;
+import models.laboratory.run.instance.Lane;
