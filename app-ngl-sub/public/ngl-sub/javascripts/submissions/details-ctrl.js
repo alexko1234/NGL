@@ -342,9 +342,9 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				        	type :"text",		    	  	
 				        	order:true
 				       },
-			           {property:"run.runDate",
+			           {property:"run.runDate | date:'dd/MM/yyyy'",
 				        header: "run.date",
-				       	type :"Date",		    	  	
+				       	type :"date",		    	  	
 				       	order:true
 				       }
 			          
