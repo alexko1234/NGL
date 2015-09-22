@@ -352,9 +352,9 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	
 	private static List<Instrument> getInstrumentMiSeq() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("MELISSE", "MELISSE", "M2", true, "/env/atelier/solexa_MELISSE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
-		instruments.add(createInstrument("MIMOSA", "MIMOSA", "M1", true, "/env/atelier/solexa_MIMOSA", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
-		instruments.add(createInstrument("MISEQ1", "MISEQ1", "M1C", false, "/env/atelier/solexa_MISEQ1", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add(createInstrument("MELISSE", "MELISSE", "M2", true, "/env/ig/atelier/illumina_MELISSE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add(createInstrument("MIMOSA", "MIMOSA", "M1", true, "/env/ig/atelier/illumina_MIMOSA", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add(createInstrument("MISEQ1", "MISEQ1", "M1C", false, "/env/ig/atelier/illumina_MISEQ1", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
 		return instruments;
 	}
 	
@@ -362,14 +362,14 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 
 	public static List<Instrument> getInstrumentHiseq2000() throws DAOException{
 		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("HISEQ2", "HISEQ2", "H2C", false, "/env/atelier/solexa_HISEQ2/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add(createInstrument("HISEQ4", "HISEQ4", "H4C", false, "/env/atelier/solexa_HISEQ4/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add(createInstrument("HISEQ7", "HISEQ7", "H7C", false, "/env/atelier/solexa_HISEQ7/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add(createInstrument("CARBONE", "CARBONE", "H6", true, "/env/atelier/solexa_CARBONE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
-		instruments.add(createInstrument("CHROME", "CHROME", "H1", false, "/env/atelier/solexa_CHROME", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
-		instruments.add(createInstrument("MERCURE", "MERCURE", "H2", true, "/env/atelier/solexa_MERCURE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
-		instruments.add(createInstrument("SOUFRE", "SOUFRE", "H4", true, "/env/atelier/solexa_SOUFRE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
-		instruments.add( createInstrument("PHOSPHORE", "PHOSPHORE", "H3", true, "/env/atelier/solexa_PHOSPHORE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("HISEQ2", "HISEQ2", "H2C", false, "/env/ig/atelier/illumina_HISEQ2/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("HISEQ4", "HISEQ4", "H4C", false, "/env/ig/atelier/illumina_HISEQ4/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("HISEQ7", "HISEQ7", "H7C", false, "/env/ig/atelier/illumina_HISEQ7/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("CARBONE", "CARBONE", "H6", true, "/env/ig/atelier/illumina_CARBONE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add(createInstrument("CHROME", "CHROME", "H1", false, "/env/ig/atelier/illumina_CHROME", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add(createInstrument("MERCURE", "MERCURE", "H2", true, "/env/ig/atelier/illumina_MERCURE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add(createInstrument("SOUFRE", "SOUFRE", "H4", true, "/env/ig/atelier/illumina_SOUFRE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add( createInstrument("PHOSPHORE", "PHOSPHORE", "H3", true, "/env/ig/atelier/illumina_PHOSPHORE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		return instruments;
 	}
 	
@@ -377,9 +377,9 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	
 	private static List<Instrument> getInstrumentGAII() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("BISMUTH", "BISMUTH", "G3", false, "/env/atelier/solexa_BISMUTH", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
-		instruments.add(createInstrument("HELIUM", "HELIUM", "G1", false, "/env/atelier/solexa_HELIUM", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
-		instruments.add(createInstrument("AZOTE", "AZOTE", "G2", false, "/env/atelier/solexa_AZOTE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add(createInstrument("BISMUTH", "BISMUTH", "G3", false, "/env/ig/atelier/illumina_BISMUTH", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add(createInstrument("HELIUM", "HELIUM", "G1", false, "/env/ig/atelier/illumina_HELIUM", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add(createInstrument("AZOTE", "AZOTE", "G2", false, "/env/ig/atelier/illumina_AZOTE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
 		
 		return instruments;
 	}
@@ -387,11 +387,11 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	
 	public static List<Instrument> getInstrumentHiseq2500() throws DAOException{
 		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add( createInstrument("HISEQ9", "HISEQ9", "H9C", false, "/env/atelier/solexa_HISEQ9/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add( createInstrument("HISEQ10", "HISEQ10", "H10C", false, "/env/atelier/solexa_HISEQ10/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add( createInstrument("HISEQ11", "HISEQ11", "H11C", false, "/env/atelier/solexa_HISEQ11/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));		
-		instruments.add( createInstrument("FLUOR", "FLUOR", "H8", true, "/env/atelier/solexa_FLUOR", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add( createInstrument("PLATINE", "PLATINE", "H7", true, "/env/atelier/solexa_PLATINE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add( createInstrument("HISEQ9", "HISEQ9", "H9C", false, "/env/ig/atelier/illumina_HISEQ9/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add( createInstrument("HISEQ10", "HISEQ10", "H10C", false, "/env/ig/atelier/illumina_HISEQ10/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add( createInstrument("HISEQ11", "HISEQ11", "H11C", false, "/env/ig/atelier/illumina_HISEQ11/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));		
+		instruments.add( createInstrument("FLUOR", "FLUOR", "H8", true, "/env/ig/atelier/illumina_FLUOR", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add( createInstrument("PLATINE", "PLATINE", "H7", true, "/env/ig/atelier/illumina_PLATINE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		return instruments;
 	}
 	
