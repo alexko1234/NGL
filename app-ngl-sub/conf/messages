@@ -1,5 +1,6 @@
 application.name = NGL-SUB
 index.title = Bienvenue dans l'application NGL-SUB
+
 #Study
 studies.menu = Study
 studies.menu.create = Creation
@@ -20,6 +21,7 @@ configurations.menu.consultation=Consultation
 configuration.create.success= Sauvegarde réussie de la configuration
 configurations.msg.save.success=Configuration crée
 create.placeholder.studiesTypes=Select. type de study
+
 create.placeholder.librarySelection=librarySelection
 create.placeholder.librarySource=librarySource
 create.placeholder.libraryStrategy=libraryStrategy
@@ -53,14 +55,55 @@ submissions.tabs.rawData=RawData
 submissions.msg.save.success=Sauvegarde réussie de la soumission
 submissions.msg.validate.success=Soumission validée
 submissions.msg.details=Détail de la soumission
-submissions.msg.consultation=Consultation des soumissions
+submissions.msg.consultation=Consultation des soumission
+
+submissions.code=Code
+submissions.state=Etat
+
+#RUN
+
+run.experiment.code=Code experiment
+run.code=Code 
+run.date=Date
+
+#RAW DATA
+rawData.relatifName=relatifName
+
+#SAMPLE 
 sample.code=Code
 sample.projectCode=Code projet
+sample.state=Etat
 sample.taxonId=taxon Id
 sample.classification=Classification
 sample.title=Titre
 sample.description=Description
+sample.clone=Clone
+sample.taxonId=Taxon Id
+sample.classification=Classification
+#EBI label
+sample.commonName=CommonName
+sample.scientificName=ScientificName
 
+#EXPERIMENT
+experiment.code=Code
+experiment.projectCode=Code projet
+experiment.state=Etat
+experiment.sampleCode=Code Sample
+experiment.studyCode=Code Study
+experiment.title=Titre
+#EBI label
+experiment.librarySelection=LibrarySelection
+experiment.libraryStrategy=LibraryStrategy
+experiment.librarySource=LibrarySource
+experiment.libraryLayout=LibraryLayout
+experiment.libraryLayoutNominalLength=LibraryLayoutNominalLength
+experiment.libraryLayoutOrientation=LibraryLayoutOrientation
+experiment.libraryName=LibraryName
+experiment.libraryConstructionProtocol=LibraryConstructionProtocol
+experiment.typePlatform=TypePlatform
+experiment.instrumentModel=InstrumentModel
+experiment.lastBaseCoord=LastBaseCoord
+experiment.spotLength=SpotLength
 
 button.save=Save
 button.reset=Reset
