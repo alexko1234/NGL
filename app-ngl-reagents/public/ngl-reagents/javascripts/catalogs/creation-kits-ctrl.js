@@ -281,6 +281,10 @@
 		 }
 	 };
 	 
+	 $scope.getBoxeTabClass = function(index){
+		return (index === 0)?"active":"";
+	 };
+	 
 	 $scope.saveBoxes = function(){
 		var promises = [];
 		if($scope.kit.code !== undefined && $scope.kit.code !== ""){

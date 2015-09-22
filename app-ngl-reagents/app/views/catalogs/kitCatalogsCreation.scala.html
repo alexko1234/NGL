@@ -121,12 +121,14 @@
 	 </button>
 	<br>
  	<ul class="nav nav-tabs" role="tablist" ng-if="boxes.length > 0">
- 			<li ng-repeat="box in boxes"><a href="" role="tab"  data-target="#{{'box'+$index}}" data-toggle="tab"><button type="button" class="close ng-scope" ng-click="removeBox($index,box.code,box.name)" >x</button><span ng-class="getBoxClass('boxes['+$index+']')">{{box.name || 'box'+$index}}</span></a></li>
+ 			<li ng-repeat="box in boxes" ng-class="getBoxeTabClass($index)"><a href="" role="tab"  data-target="#{{'box'+$index}}" data-toggle="tab"><button type="button" class="close ng-scope" ng-click="removeBox($index,box.code,box.name)" >x</button>
+ 			<span ng-class="getBoxClass('boxes['+$index+']')">{{box.name || 'box'+$index}}</span></a>
+ 			</li>
 	</ul>
 	<span ng-if="boxes.length === 0">@Messages("catalogs.box.empty")</span>
 	<div class="tab-content">
 		<br>
-		<div ng-repeat="box in boxes" class="tab-pane" id="{{'box'+$index}}">
+		<div ng-repeat="box in boxes" class="tab-pane {{getBoxeTabClass($index)}}" id="{{'box'+$index}}">
 			<form class="form-horizontal">
 			  	<div class="row">
 					<div class="form-group">

@@ -13,9 +13,9 @@ import fr.cea.ig.MongoDBDAO;
 public class ReagentCatalog extends AbstractCatalog{
 	public String boxCatalogCode;
 	public String kitCatalogCode;
-	public double storageConditions;
+	public Double storageConditions;
 	
-	public int possibleUseNumber;
+	public Integer possibleUseNumber;
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
