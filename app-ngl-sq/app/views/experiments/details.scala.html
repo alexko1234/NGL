@@ -1,5 +1,18 @@
 @(currentUser:java.lang.String)
 
+@import views.html.helper._
+@import views.html.experiments.partials._
+
+
+@imageModal()
+@headerSection()
+@mainSection()
+
 <div class="row">
-	<div class="col-md-12 col-lg-12"  messages="messages"></div>
+<div class="col-md-12 col-lg-12">
+    <div ng-include="experimentTypeTemplate"></div>
 </div>
+</div>
+
+@reagentsSection()
+@commentSection(currentUser)

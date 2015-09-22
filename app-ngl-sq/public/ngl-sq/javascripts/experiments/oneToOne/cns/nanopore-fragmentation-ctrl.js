@@ -140,8 +140,8 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToS
 				by:'code'
 			},
 			remove:{
-				active: (!$scope.doneAndRecorded && !$scope.inProgressNow),
-				showButton: (!$scope.doneAndRecorded && !$scope.inProgressNow),
+				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
+				showButton: ($scope.isEditModeAvailable() && $scope.isNewState()),
 				mode:'local'
 			},
 			save:{
@@ -154,9 +154,8 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToS
 				active:true
 			},
 			edit:{
-				byDefault : (!$scope.doneAndRecorded && !$scope.inProgressNow),
-				active: (!$scope.doneAndRecorded && !$scope.inProgressNow),
-				columnMode:true
+				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
+				byDefault : ($scope.isEditModeAvailable() && $scope.isNewState()),				columnMode:true
 			},
 			messages:{
 				active:false,
@@ -171,10 +170,6 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToS
 			extraHeaders:{
 				number:2,
 				dynamic:true,
-			},
-			otherButton:{
-				active:true,
-				template:'<button class="btn btn btn-info" ng-click="newPurif()" data-toggle="tooltip" ng-disabled="experiment.value.state.code != \'F\'" ng-hide="!experiment.doPurif" title="'+Messages("experiments.addpurif")+'">Messages("experiments.addpurif")</button><button class="btn btn btn-info" ng-click="newQc()" data-toggle="tooltip" ng-disabled="experiment.value.state.code != \'F\'" ng-hide="!experiment.doQc" title="Messages("experiments.addqc")">Messages("experiments.addqc")</button>'
 			}
 	};
 	
@@ -188,9 +183,8 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToS
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");		
 		var dtConfig = $scope.atmService.data.getConfig();
-		dtConfig.edit.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
-		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
-		$scope.atmService.data.setConfig(dtConfig);
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isNewState());
+		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());		$scope.atmService.data.setConfig(dtConfig);
 		
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
 		$scope.$emit('viewRefeshed');
@@ -214,7 +208,7 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToS
 			concentration : "ng/µL",
 			quantity : "ng"
 	}
-	atmService.experimentToView($scope.experiment);
+	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 	$scope.atmService = atmService;
 	

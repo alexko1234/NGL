@@ -23,7 +23,7 @@ angular.module('home', ['ngRoute','ultimateDataTableServices','basketServices', 
 		controller : 'ListContainersCtrl'
 	});
 	
-	$routeProvider.when('/experiments/new/:typeCode', {
+	$routeProvider.when('/experiments/:code/:typeCode', {
 		templateUrl : function(params){return jsRoutes.controllers.experiments.tpl.Experiments.details().url},
 		controller : 'DetailsCtrl'
 	});

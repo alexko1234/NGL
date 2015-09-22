@@ -51,3 +51,14 @@
 .flowcellTable .dropZoneHover{
 	background-color: #f1f1f1;		
 }
+
+.flowcellTable .sampleCodeAndTags{
+	width:20%
+}
+.roadmap .datatable .form-group input.form-control:not([type="checkbox"]){
+	padding: 3px 3px 3px;	
+}
+
+.roadmap .datatable .table>tbody>tr>td{
+	overflow-wrap: break-word;
+}

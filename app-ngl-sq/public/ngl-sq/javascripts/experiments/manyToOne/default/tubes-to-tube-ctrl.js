@@ -204,10 +204,6 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 			extraHeaders:{
 				number:2,
 				dynamic:true,
-			},
-			otherButton:{
-				active:true,
-				template:'<button class="btn btn btn-info" ng-click="newPurif()" data-toggle="tooltip" ng-disabled="experiment.value.state.code != \'F\'" ng-hide="!experiment.doPurif" title="'+Messages("experiments.addpurif")+'">Messages("experiments.addpurif")</button><button class="btn btn btn-info" ng-click="newQc()" data-toggle="tooltip" ng-disabled="experiment.value.state.code != \'F\'" ng-hide="!experiment.doQc" title="Messages("experiments.addqc")">Messages("experiments.addqc")</button>'
 			}
 	};	
 	
@@ -217,6 +213,10 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 			$scope.atmService.data.updateDatatable();
 		
 		}
+	};
+	
+	$scope.isEditMode = function(){
+		return ($scope.$parent.isEditMode() && $scope.isNewState());
 	};
 	
 	$scope.$on('save', function(e, promises, func, endPromises) {	
@@ -236,13 +236,13 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 		var concentration = undefined;
 		var unit = undefined;
 		var isSame = true;
-		for(var i=0;i<experiment.value.atomicTransfertMethods[0].inputContainerUseds.length;i++){
+		for(var i=0;i<experiment.atomicTransfertMethods[0].inputContainerUseds.length;i++){
 			if(concentration === undefined && unit === undefined){
-				concentration = experiment.value.atomicTransfertMethods[0].inputContainerUseds[i].concentration.value;
-				unit = experiment.value.atomicTransfertMethods[0].inputContainerUseds[i].concentration.unit;
+				concentration = experiment.atomicTransfertMethods[0].inputContainerUseds[i].concentration.value;
+				unit = experiment.atomicTransfertMethods[0].inputContainerUseds[i].concentration.unit;
 			}else{
-				if(concentration !== experiment.value.atomicTransfertMethods[0].inputContainerUseds[i].concentration.value 
-						|| unit !== experiment.value.atomicTransfertMethods[0].inputContainerUseds[i].concentration.unit){
+				if(concentration !== experiment.atomicTransfertMethods[0].inputContainerUseds[i].concentration.value 
+						|| unit !== experiment.atomicTransfertMethods[0].inputContainerUseds[i].concentration.unit){
 					isSame = false;
 					break;
 				}
@@ -250,7 +250,7 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 		}
 		
 		if(isSame){
-			experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].concentration = $scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[0].concentration;
+			experiment.atomicTransfertMethods[0].outputContainerUseds[0].concentration = $scope.experiment.atomicTransfertMethods[0].inputContainerUseds[0].concentration;
 			
 		}
 		
@@ -279,7 +279,7 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 	atmService.defaultOutputUnit = {
 			volume : "µL"			
 	}
-	atmService.experimentToView($scope.experiment);
+	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 	$scope.atmService = atmService;
 	

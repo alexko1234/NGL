@@ -12,15 +12,9 @@
 		<div class="row">
 		<div class="col-md-12 col-lg-12">
 		<div class="row">
-		<div ng-model="atmService.data.inputContainers" ng-if="!editMode || doneAndRecorded || inProgressNow" class="col-md-5 col-lg-5">
-			<div class="panel panel-primary" style="border-style:dashed">
-				<div class="panel-body">		
-					<p><i class="fa fa-download"></i> @Messages("experiments.inputs")</p>
-				</div>
-			</div>	
-		</div>
+		
 		<!-- InputContainers table -->
-		<div ng-model="atmService.data.inputContainers"  class="col-md-5 col-lg-5" droppable ng-if=" editMode && !inProgressNow && !doneAndRecorded">
+		<div ng-model="atmService.data.inputContainers"  class="col-md-5 col-lg-5" droppable ng-if="isEditMode()">
 			<div class="panel panel-primary"  style="border-style:dashed">				
 			<div class="panel-body" ng-if="atmService.data.inputContainers.length==0">		
 				<p><i class="fa fa-download"></i> @Messages("experiments.inputs")</p>
@@ -78,20 +72,20 @@
 			</table>
 			</div>	
 		</div>
-		<div class="col-md-1 col-lg-1">
+		<div class="col-md-1 col-lg-1" ng-if="isEditMode()">
 		<!-- Drop buttons -->
-		<div ng-if="editMode && !inProgressNow && !doneAndRecorded">
-		<div ng-if="(atmService.data.atm[0].inputContainerUseds.length==0 || atmService.data.inputContainers.length>0 ) && experiment.value.state.code =='N'">
+		
+		<div ng-if="(atmService.data.atm[0].inputContainerUseds.length==0 || atmService.data.inputContainers.length>0 )">
 		<button class="btn btn-default btn-lg center-block" ng-click="atmService.data.dropInAllInputContainer(0)" >
 		<i class="fa fa-sign-in fa-2x"></i>
 		</button>
 		</div>
-		<div ng-if="atmService.data.inputContainers.length==0 && experiment.value.state.code =='N' ">
+		<div ng-if="atmService.data.inputContainers.length==0">
 		<button class="btn btn-default btn-lg center-block" ng-click="atmService.data.dropOutAllInputContainer(0)" >
 		<i class="fa fa-sign-in fa-2x fa-rotate-180"></i>
 		</button>
 		</div>
-		</div>
+
 		</div>
 		<!-- OutputContainers table -->
 		<div class="col-md-6 col-lg-6 flowcellTable">		
@@ -156,21 +150,32 @@
 								{{inputContainerUsed.concentration.value | number}} {{inputContainerUsed.concentration.unit}}
 							</td> 														
 							<td>
-								<input class="form-control input-sm" type="text" placeholder="" ng-readonly="!experiment.experimentProperties.enabled" 
-								ng-model="inputContainerUsed.percentage" title='@Messages("containers.table.percentage")' ng-change="atmService.data.updateDatatable()"/>										
+								<div ng-switch on="isEditMode()">						
+									<p class="form-control-static" ng-switch-when="false" ng-bind="inputContainer.percentage" />						 
+									<div ng-switch-when="true">
+										<input class="form-control input-sm" 
+											type="text"
+											ng-model="inputContainerUsed.percentage" 
+											title='@Messages("containers.table.percentage")' 
+											ng-change="atmService.data.updateDatatable()"/>									
+									</div>
+								</div>
 							</td>
 						
 							<td rowspan="{{atmService.data.atm[0].inputContainerUseds.length}}"
 								ng-if="$index === 0">
 								{{atmService.data.atm[0].outputContainerUseds[0].code}}
 							</td>
-							<td rowspan="{{atmService.data.atm[0].inputContainerUseds.length}}"
-								ng-if="$index === 0">
-							<input class="form-control input-sm" type="text" title="Messages("containers.table.volume")"
-									ng-readonly="!experiment.experimentProperties.enabled"
-									ng-model="atmService.data.atm[0].outputContainerUseds[0].volume.value"
-						   			ng-change="atmService.data.updateDatatable()"								   			
-						   			/>										
+							<td rowspan="{{atmService.data.atm[0].inputContainerUseds.length}}"	ng-if="$index === 0">
+								<div ng-switch on="isEditMode()">						
+									<p class="form-control-static" ng-switch-when="false" ng-bind="atmService.data.atm[0].outputContainerUseds[0].volume.value" />						 
+									<div ng-switch-when="true">
+										<input class="form-control input-sm" type="text" title="Messages("containers.table.volume")"									
+										ng-model="atmService.data.atm[0].outputContainerUseds[0].volume.value"
+							   			ng-change="atmService.data.updateDatatable()"								   			
+						   				/>										
+									</div>
+								</div>						
 							</td>							
 						</tr>						
 				</tbody>

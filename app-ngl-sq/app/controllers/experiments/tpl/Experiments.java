@@ -152,8 +152,7 @@ public class Experiments extends CommonController{
   	    		controllers.experiments.api.routes.javascript.ExperimentsOld.updateExperimentInformations(),
   	    		controllers.experiments.api.routes.javascript.ExperimentsOld.updateExperimentProperties(),
   	    		controllers.experiments.api.routes.javascript.ExperimentsOld.updateInstrumentInformations(),
-  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.updateInstrumentProperties(),
-  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.getInstrumentProperties(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.updateInstrumentProperties(),  	    		
   	    		controllers.experiments.api.routes.javascript.ExperimentsOld.addComment(),
   	    		controllers.experiments.api.routes.javascript.ExperimentsOld.updateComment(),
   	    		controllers.experiments.api.routes.javascript.ExperimentsOld.deleteComment(),
@@ -191,6 +190,7 @@ public class Experiments extends CommonController{
 	      		controllers.containers.api.routes.javascript.Contents.list(),
 	      		controllers.commons.api.routes.javascript.Parameters.list(),
 	      		
+	      		controllers.instruments.api.routes.javascript.InstrumentUsedTypes.get(),
 	      		controllers.experiments.api.routes.javascript.Experiments.list(),
 	      		controllers.experiments.api.routes.javascript.Experiments.get()
   	    		

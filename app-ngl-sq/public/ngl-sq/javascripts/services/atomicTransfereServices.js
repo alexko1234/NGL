@@ -20,7 +20,7 @@ angular.module('atomicTransfereServices', [])
 				getPropertyColumnType : function(type){
 					if(type === "java.lang.String"){
 						return "text";
-					}else if(type === "java.lang.Double"){
+					}else if(type === "java.lang.Double" || type === "java.lang.Integer" || type === "java.lang.Long"){
 						return "number";
 					}else if(type === "java.util.Date"){
 						return "date";
@@ -115,10 +115,13 @@ angular.module('atomicTransfereServices', [])
 				loadInputContainerFromAtomicTransfertMethods : function(atomicTransfertMethods){
 					var containerInputCodes = [];
 					angular.forEach(atomicTransfertMethods, function(atomicTransfertMethod) {
-						angular.forEach(atomicTransfertMethod.inputContainerUseds, function(inputContainerUsed){
-								this.push(inputContainerUsed.code);
-								}, this);														
-						}, containerInputCodes);
+						if(atomicTransfertMethod !== null){
+							angular.forEach(atomicTransfertMethod.inputContainerUseds, function(inputContainerUsed){
+									this.push(inputContainerUsed.code);
+									}, this);	
+						}
+					}, containerInputCodes);
+						
 					return this.getContainerListPromise(containerInputCodes).then(function(result){
 				 		var inputContainers = {};
 				 		angular.forEach(result.data, function(container) {
@@ -131,12 +134,15 @@ angular.module('atomicTransfereServices', [])
 				loadOutputContainerFromAtomicTransfertMethods : function(atomicTransfertMethods){
 					var containerOutpuCodes = [];
 					angular.forEach(atomicTransfertMethods, function(atomicTransfertMethod) {
-						angular.forEach(atomicTransfertMethod.outputContainerUseds, function(outputContainerUsed){
-								if(null !== outputContainerUsed.code && undefined !== outputContainerUsed.code){
-									this.push(outputContainerUsed.code);
-								}									
-								}, this);														
-						}, containerOutpuCodes);
+						if(atomicTransfertMethod !== null){
+							angular.forEach(atomicTransfertMethod.outputContainerUseds, function(outputContainerUsed){
+									if(null !== outputContainerUsed.code && undefined !== outputContainerUsed.code){
+										this.push(outputContainerUsed.code);
+									}									
+								}, this);	
+						}
+																			
+					}, containerOutpuCodes);
 															
 					return this.getContainerListPromise(containerOutpuCodes).then(function(result){
 						var outputContainers = {};
@@ -150,7 +156,9 @@ angular.module('atomicTransfereServices', [])
 				loadInputContainerFromBasket : function(basketValues){					
 						var containerInputCodes = [];
 						angular.forEach(basketValues, function(containerInput) {
-							this.push(containerInput.code);
+							if(containerInput !== null){
+								this.push(containerInput.code);
+							}							
 						}, containerInputCodes);
 						return this.getContainerListPromise(containerInputCodes).then(function(result){					 		
 							return result.data;
@@ -237,14 +245,18 @@ angular.module('atomicTransfereServices', [])
 					var newColums = []; 
 					var $that = this;
 					if(expProperties != undefined && expProperties != null){
-						angular.forEach(expProperties, function(property){
-							if(!$that.$outputIsVoid && $scope.getLevel(property.levels, "ContainerOut")){
+						if(!$that.$outputIsVoid){
+							var outNewColumn = $filter('filter')(expProperties, 'ContainerOut');
+							angular.forEach(outNewColumn, function(property){
 								$that.addColumnToDatatable(this, $that.convertOutputPropertiesToDatatableColumn(property));														
-							}else if($scope.getLevel(property.levels, "ContainerIn")){
-								$that.addColumnToDatatable(this,  $that.convertInputPropertiesToDatatableColumn(property));								
-							}
-							
+							}, newColums);
+						}
+						
+						var inNewColumn = $filter('filter')(expProperties, 'ContainerIn')
+						angular.forEach(inNewColumn, function(property){
+							$that.addColumnToDatatable(this, $that.convertInputPropertiesToDatatableColumn(property));														
 						}, newColums);
+												
 					}
 					this.data.setColumnsConfig(this.data.getColumnsConfig().concat(newColums))
 				},
@@ -276,6 +288,9 @@ angular.module('atomicTransfereServices', [])
 						
 						var l=0;
 						for(var i=0; i< atms.length;i++){
+							if(atms[i] === null){
+								continue;
+							}
 							//var atm = angular.copy(atms[i]);
 							var atm = $.extend(true,{}, atms[i]);
 							
@@ -376,25 +391,25 @@ angular.module('atomicTransfereServices', [])
 					}					
 				},
 				
-				experimentToView:function(experiment){
+				experimentToView:function(experiment,experimentType){
 					if(null === experiment || undefined === experiment){
 						throw 'experiment is required';
 					}
 					
-					if(experiment.editMode){
-						this.convertExperimentATMToDatatable(experiment.value.atomicTransfertMethods);													
+					if(!$scope.creationMode){
+						this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods);													
 					}else{
 						this.addNewAtomicTransfertMethodsInDatatable();
 					}
 					
-					this.addExperimentPropertiesToDatatable(experiment.experimentProperties.inputs);						
+					this.addExperimentPropertiesToDatatable(experimentType.propertiesDefinitions);						
 				},
 				
 				refreshViewFromExperiment : function(experiment){
 					if(null === experiment || undefined === experiment){
 						throw 'experiment is required';
 					}
-					this.convertExperimentATMToDatatable(experiment.value.atomicTransfertMethods);				
+					this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods);				
 				},
 				viewToExperimentOneToVoid :function(experimentIn){
 					this.viewToExperimentOneToOne(experimentIn);
@@ -519,8 +534,7 @@ angular.module('atomicTransfereServices', [])
 					}								
 				}
 		};
-		return view;
-		
+		return view;		
 	};
 	return constructor;
 	
@@ -662,17 +676,17 @@ angular.module('atomicTransfereServices', [])
 					}
 					
 				},
-				experimentToView:function(experiment){
+				experimentToView:function(experiment, experimentType){
 					if(null === experiment || undefined === experiment){
 						throw 'experiment is required';
 					}
-					if(experiment.editMode){
-						this.convertExperimentToDnD(experiment.value.atomicTransfertMethods);	
-						this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.value.atomicTransfertMethods);
+					if(!$scope.creationMode){
+						this.convertExperimentToDnD(experiment.atomicTransfertMethods);	
+						this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods);
 					}else{
 						this.addNewAtomicTransfertMethodsInDnD();
 					}	
-					this.$atmToSingleDatatable.addExperimentPropertiesToDatatable(experiment.experimentProperties.inputs);
+					this.$atmToSingleDatatable.addExperimentPropertiesToDatatable(experimentType.propertiesDefinitions);
 					
 				},
 				viewToExperiment :function(experiment){		
@@ -681,14 +695,14 @@ angular.module('atomicTransfereServices', [])
 					}
 					this.$atmToSingleDatatable.data.save();					
 					this.$atmToSingleDatatable.viewToExperimentManyToOne(experiment);
-					this.data.atm = experiment.value.atomicTransfertMethods;
+					this.data.atm = experiment.atomicTransfertMethods;
 				},
 				refreshViewFromExperiment:function(experiment){
 					if(null === experiment || undefined === experiment){
 						throw 'experiment is required';
 					}
-					this.convertExperimentToDnD(experiment.value.atomicTransfertMethods);
-					this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.value.atomicTransfertMethods);
+					this.convertExperimentToDnD(experiment.atomicTransfertMethods);
+					this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods);
 				}
 		}
 		
@@ -780,17 +794,17 @@ angular.module('atomicTransfereServices', [])
 						});
 					}										
 				},
-				experimentToView:function(experiment){
+				experimentToView:function(experiment, experimentType){
 					if(null === experiment || undefined === experiment){
 						throw 'experiment is required';
 					}
-					if(experiment.editMode){
-						this.convertExperimentToData(experiment.value.atomicTransfertMethods);	
-						this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.value.atomicTransfertMethods);
+					if(!$scope.creationMode){
+						this.convertExperimentToData(experiment.atomicTransfertMethods);	
+						this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods);
 					}else{
 						this.addNewAtomicTransfertMethodsInData();
 					}	
-					this.$atmToSingleDatatable.addExperimentPropertiesToDatatable(experiment.experimentProperties.inputs);
+					this.$atmToSingleDatatable.addExperimentPropertiesToDatatable(experimentType.propertiesDefinitions);
 					
 				},
 				viewToExperiment :function(experiment){		
@@ -804,8 +818,8 @@ angular.module('atomicTransfereServices', [])
 					if(null === experiment || undefined === experiment){
 						throw 'experiment is required';
 					}					
-					this.convertExperimentToData(experiment.value.atomicTransfertMethods);
-					this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.value.atomicTransfertMethods);
+					this.convertExperimentToData(experiment.atomicTransfertMethods);
+					this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods);
 				}
 		}
 		

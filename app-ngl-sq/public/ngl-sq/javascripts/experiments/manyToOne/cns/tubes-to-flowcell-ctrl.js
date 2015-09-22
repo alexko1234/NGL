@@ -118,12 +118,12 @@ angular.module('home').controller('CNSTubesToFlowcellCtrl',['$scope', '$parse', 
 	
 		
 	atmToSingleDatatable.data.setColumnsConfig(columns);
-	atmToSingleDatatable.addExperimentPropertiesToDatatable($scope.experiment.experimentProperties.inputs);
+	atmToSingleDatatable.addExperimentPropertiesToDatatable($scope.experimentType.propertiesDefinitions);
 	
 	$scope.$parent.changeValueOnFlowcellDesign = function(){
 		$scope.atmService.data.updateDatatable();
 		
-		if($scope.experiment.editMode){
+		if(!$scope.creationMode){
 			$scope.message.clazz = "alert alert-warning";
 			$scope.message.text = "Vous venez de modifier une valeur";
 			$scope.message.text += ", vous devez impérativement cliquer sur sauvegarder pour que les calculs de la FDR se remettent à jour.";

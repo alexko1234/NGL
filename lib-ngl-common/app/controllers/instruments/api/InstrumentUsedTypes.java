@@ -5,11 +5,12 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.instrument.description.InstrumentUsedType;
+import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import play.Logger;
+import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -46,7 +47,28 @@ public class InstrumentUsedTypes extends CommonController{
 			}
 		}catch (DAOException e) {
 			Logger.error("DAO error: "+e.getMessage(),e);
-			return  Results.internalServerError(e.getMessage());
+			return  internalServerError(e.getMessage());
 		}	
+	}
+	
+	public static Result get(String code){
+		
+		try {
+			InstrumentUsedTypeDAO instrumentUsedTypesDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
+			InstrumentUsedType instrumentUsedType = null;
+
+			instrumentUsedType = instrumentUsedTypesDAO.findByCode(code);
+			if(null != instrumentUsedType){
+				return ok(Json.toJson(instrumentUsedType));
+			}else{
+				return notFound();
+			}
+			
+		} catch (DAOException e) {
+			Logger.error("DAO error",e);
+			return internalServerError(e.getMessage());
+		}
+
+		
 	}
 }

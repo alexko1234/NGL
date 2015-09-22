@@ -111,8 +111,8 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 				by:'code'
 			},
 			remove:{
-				active: (!$scope.doneAndRecorded && !$scope.inProgressNow),
-				showButton: (!$scope.doneAndRecorded && !$scope.inProgressNow),
+				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
+				showButton: ($scope.isEditModeAvailable() && $scope.isNewState()),
 				mode:'local'
 			},
 			save:{
@@ -129,7 +129,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 				active:true
 			},
 			edit:{
-				active: false,
+				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
 				columnMode:false
 			},
 			messages:{
@@ -145,10 +145,6 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 			extraHeaders:{
 				number:2,
 				dynamic:true,
-			},
-			otherButton:{
-				active:true,
-				template:'<button class="btn btn btn-info" ng-click="newPurif()" data-toggle="tooltip" ng-disabled="experiment.value.state.code != \'F\'" ng-hide="!experiment.doPurif" title="'+Messages("experiments.addpurif")+'">Messages("experiments.addpurif")</button><button class="btn btn btn-info" ng-click="newQc()" data-toggle="tooltip" ng-disabled="experiment.value.state.code != \'F\'" ng-hide="!experiment.doQc" title="Messages("experiments.addqc")">Messages("experiments.addqc")</button>'
 			},
 			showTotalNumberRecords:false
 	};
@@ -232,7 +228,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 				active:true
 			},
 			edit:{
-				byDefault : (!$scope.doneAndRecorded && !$scope.inProgressNow),
+				byDefault : ($scope.isEditModeAvailable() && $scope.isNewState()),
 				active: true,
 				showButton: true,
 				columnMode:false
@@ -261,7 +257,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 		$parse('inputContainerUsed.experimentProperties.loadingReport.value').assign(dataMain[0], dataLoadingReport);
 		
 		//copy flowcell code to output code
-		var codeFlowcell = $parse("instrumentProperties.containerSupportCode.value")($scope.experiment.value);
+		var codeFlowcell = $parse("instrumentProperties.containerSupportCode.value")($scope.experiment);
 		if(null != codeFlowcell && undefined != codeFlowcell){
 			$parse('outputContainerUsed.code').assign(dataMain[0],codeFlowcell);
 			$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[0],codeFlowcell);
@@ -283,8 +279,8 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");		
 		var dtConfig = $scope.atmService.data.getConfig();
-		dtConfig.edit.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
-		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isNewState());
+		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.setConfig(dtConfig);
 		
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
@@ -360,6 +356,6 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 	$scope.datatableQcFlowcell = datatable(datatableConfigQcFlowcell);
 	$scope.datatableQcFlowcell.setData(qcFlowcellDefault);
 	
-	atmService.experimentToView($scope.experiment);
+	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 }]);

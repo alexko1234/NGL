@@ -15,13 +15,13 @@ PUT		/api/supports/:code/state										controllers.containers.api.ContainerSupp
 GET		/api/containers													controllers.containers.api.Containers.list()
 #TODO a revoir plutot /api/containers/supports/categories
 GET		/api/containers/container-support-categories  					controllers.containers.api.ContainerSupportCategories.list()
-GET		/api/containers/categories										controllers.containers.api.ContainerCategories.list()
 GET		/api/containers/:code											controllers.containers.api.Containers.get(code:java.lang.String)
 PUT		/api/containers/batch											controllers.containers.api.Containers.updateBatch()
 PUT		/api/containers/state-batch										controllers.containers.api.Containers.updateStateBatch()
 PUT		/api/containers/:code											controllers.containers.api.Containers.update(code:java.lang.String)
 PUT		/api/containers/:code/state										controllers.containers.api.Containers.updateStateCode(code:java.lang.String)
 
+GET		/api/container-categories										controllers.containers.api.ContainerCategories.list()
 
 #processes api
 POST	/api/processes													controllers.processes.api.Processes.save()
@@ -31,10 +31,12 @@ PUT		/api/processes/:code/state										controllers.processes.api.Processes.upd
 DELETE	/api/processes/:code											controllers.processes.api.Processes.delete(code:java.lang.String)
 HEAD	/api/processes/:code               								controllers.processes.api.Processes.head(code: java.lang.String)
 GET		/api/processes													controllers.processes.api.Processes.list()
-GET		/api/processes/types											controllers.processes.api.ProcessTypes.list()
-GET		/api/processes/:code/types										controllers.processes.api.ProcessTypes.get(code: java.lang.String)
-GET		/api/processes/categories										controllers.processes.api.ProcessCategories.list()
 GET		/api/processes/:code											controllers.processes.api.Processes.get(code:java.lang.String)
+
+GET		/api/process-categories											controllers.processes.api.ProcessCategories.list()
+GET		/api/process-types												controllers.processes.api.ProcessTypes.list()
+GET		/api/process-types/:code										controllers.processes.api.ProcessTypes.get(code: java.lang.String)
+
 
 #experiments api
 GET		/api/experiments												@controllers.experiments.api.Experiments.list()
@@ -56,14 +58,12 @@ PUT		/api/experiments/:code/containerSupportCode/:newSupportCode		controllers.ex
 PUT		/api/experiments/:code/state									controllers.experiments.api.ExperimentsOld.updateStateCode(code:java.lang.String)
 PUT		/api/experiments/:code/containers								controllers.experiments.api.ExperimentsOld.updateContainers(code:java.lang.String)
 POST	/api/experiments												controllers.experiments.api.ExperimentsOld.save()
-GET		/api/experiment/categories										controllers.experiments.api.ExperimentCategories.list()
-GET		/api/experiment/types											controllers.experiments.api.ExperimentTypes.list()
-GET		/api/experiment/type/nodes										controllers.experiments.api.ExperimentTypeNodes.list()
-GET		/api/experiment/types/:code										controllers.experiments.api.ExperimentTypes.get(code:java.lang.String)
-GET		/api/experiment/types/defaultfirst/:code						controllers.experiments.api.ExperimentTypes.getDefaultFirstExperiments(code:java.lang.String)
 
-GET		/api/experiment/instrument-properties/:instrumentUsedTypeCode	controllers.experiments.api.ExperimentsOld.getInstrumentProperties(instrumentUsedTypeCode:java.lang.String)
-
+GET		/api/experiment-categories										controllers.experiments.api.ExperimentCategories.list()
+GET		/api/experiment-types											controllers.experiments.api.ExperimentTypes.list()
+GET		/api/experiment-types/:code										controllers.experiments.api.ExperimentTypes.get(code:java.lang.String)
+GET		/api/experiment-types/:code/default-first						controllers.experiments.api.ExperimentTypes.getDefaultFirstExperiments(code:java.lang.String)
+GET		/api/experiment-type-nodes										controllers.experiments.api.ExperimentTypeNodes.list()
 
 #contents 
 #TODO must be remove

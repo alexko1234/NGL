@@ -1,5 +1,5 @@
-angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'atmToDragNDrop',
-                                                               function($scope, $parse, atmToDragNDrop) {
+angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$filter', 'atmToDragNDrop',
+                                                               function($scope, $parse, $filter, atmToDragNDrop) {
 	
 	
 	$scope.isRoadMapAvailable = true;
@@ -192,7 +192,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 	        },
 			
 			edit:{
-				active: !$scope.doneAndRecorded,
+				active: $scope.isEditModeAvailable(),
 				columnMode:true
 			},
 			messages:{
@@ -208,10 +208,6 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 			extraHeaders:{
 				number:2,
 				dynamic:true,
-			},
-			otherButton:{
-				active:true,
-				template:'<button class="btn btn btn-info" ng-click="newPurif()" data-toggle="tooltip" ng-disabled="experiment.value.state.code != \'F\'" ng-hide="!experiment.doPurif" title="'+Messages("experiments.addpurif")+'">Messages("experiments.addpurif")</button><button class="btn btn btn-info" ng-click="newQc()" data-toggle="tooltip" ng-disabled="experiment.value.state.code != \'F\'" ng-hide="!experiment.doQc" title="Messages("experiments.addqc")">Messages("experiments.addqc")</button>'
 			}
 	};	
 	
@@ -235,11 +231,15 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 	});
 	
 	
+	$scope.isEditMode = function(){
+		return ($scope.$parent.isEditMode() && $scope.isNewState());
+	};
+	
 	var copyFlowcellCodeToDT = function(datatable){
 		
 		var dataMain = datatable.getData();
 		//copy flowcell code to output code
-		var codeFlowcell = $parse("instrumentProperties.containerSupportCode.value")($scope.experiment.value);
+		var codeFlowcell = $parse("instrumentProperties.containerSupportCode.value")($scope.experiment);
 		if(null != codeFlowcell && undefined != codeFlowcell){
 			for(var i = 0; i < dataMain.length; i++){
 				var atm = dataMain[i].atomicTransfertMethod;
@@ -295,7 +295,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 		console.log("call event refresh");
 		
 		var dtConfig = $scope.atmService.data.$atmToSingleDatatable.data.getConfig();
-		dtConfig.edit.active = !$scope.doneAndRecorded;
+		dtConfig.edit.active = $scope.isEditModeAvailable();
 		$scope.atmService.data.$atmToSingleDatatable.data.setConfig(dtConfig);
 		
 		
@@ -325,13 +325,13 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 	};
 	
 	$scope.isAllOpen = true;
-	if($scope.experiment.editMode){
+	if(!$scope.creationMode){
 		$scope.isAllOpen = false;
 	}
 	
 	//TODO used container_support_category in future
 	//init number of lane
-	var cscCode = $parse('experiment.value.instrument.outContainerSupportCategoryCode')($scope);
+	var cscCode = $parse('experiment.instrument.outContainerSupportCategoryCode')($scope);
 	$scope.rows = [];
 	var laneCount = 0;
 	if(cscCode !== undefined){
@@ -363,13 +363,8 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 	
 	
 	//init global ContainerOut Properties outside datatable
-	$scope.outputContainerProperties = [];
+	$scope.outputContainerProperties = $filter('filter')($scope.experimentType.propertiesDefinitions, 'ContainerOut');
 	$scope.outputContainerValues = {};
-	angular.forEach($scope.experiment.experimentProperties.inputs, function(property){
-		if($scope.getLevel(property.levels, "ContainerOut")){
-			this.push(property);														
-		}		
-	}, $scope.outputContainerProperties);
 	
 	$scope.updateAllOutputContainerProperty = function(property){
 		var value = $scope.outputContainerValues[property.code];
@@ -405,7 +400,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 	atmService.defaultOutputUnit = {
 			volume : "µL"			
 	}
-	atmService.experimentToView($scope.experiment);
+	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 	$scope.atmService = atmService;
 	

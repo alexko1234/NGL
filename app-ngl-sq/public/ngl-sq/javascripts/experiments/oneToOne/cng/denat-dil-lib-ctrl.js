@@ -197,10 +197,6 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			extraHeaders:{
 				number:2,
 				dynamic:true,
-			},
-			otherButton:{
-				active:true,
-				template:'<button class="btn btn btn-info" ng-click="newPurif()" data-toggle="tooltip" ng-disabled="experiment.value.state.code != \'F\'" ng-hide="!experiment.doPurif" title="'+Messages("experiments.addpurif")+'">Messages("experiments.addpurif")</button><button class="btn btn btn-info" ng-click="newQc()" data-toggle="tooltip" ng-disabled="experiment.value.state.code != \'F\'" ng-hide="!experiment.doQc" title="Messages("experiments.addqc")">Messages("experiments.addqc")</button>'
 			}
 	};
 
@@ -224,7 +220,6 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 		var dtConfig = $scope.atmService.data.getConfig();
 		dtConfig.edit.active = (!$scope.doneAndRecorded );
 		dtConfig.remove.active = (!$scope.doneAndRecorded );
-		dtConfig.remove.showButton = (!$scope.doneAndRecorded );
 		$scope.atmService.data.setConfig(dtConfig);
 		
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
@@ -250,7 +245,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			volume : "µL",
 			concentration : "nM"
 	}
-	atmService.experimentToView($scope.experiment);
+	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 	$scope.atmService = atmService;
 	

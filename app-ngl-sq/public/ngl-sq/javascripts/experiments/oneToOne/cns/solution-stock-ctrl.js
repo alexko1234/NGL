@@ -142,8 +142,8 @@ angular.module('home').controller('SolutionStockCtrl',['$scope', 'atmToSingleDat
 				by:'code'
 			},
 			remove:{
-				active: (!$scope.doneAndRecorded && !$scope.inProgressNow),
-				showButton: (!$scope.doneAndRecorded && !$scope.inProgressNow),
+				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
+				showButton: ($scope.isEditModeAvailable() && $scope.isNewState()),
 				mode:'local'
 			},
 			save:{
@@ -156,7 +156,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope', 'atmToSingleDat
 				active:true
 			},
 			edit:{
-				active: (!$scope.doneAndRecorded && !$scope.inProgressNow),
+				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
 				columnMode:true
 			},
 			messages:{
@@ -172,10 +172,6 @@ angular.module('home').controller('SolutionStockCtrl',['$scope', 'atmToSingleDat
 			extraHeaders:{
 				number:2,
 				dynamic:true,
-			},
-			otherButton:{
-				active:true,
-				template:'<button class="btn btn btn-info" ng-click="newPurif()" data-toggle="tooltip" ng-disabled="experiment.value.state.code != \'F\'" ng-hide="!experiment.doPurif" title="'+Messages("experiments.addpurif")+'">Messages("experiments.addpurif")</button><button class="btn btn btn-info" ng-click="newQc()" data-toggle="tooltip" ng-disabled="experiment.value.state.code != \'F\'" ng-hide="!experiment.doQc" title="Messages("experiments.addqc")">Messages("experiments.addqc")</button>'
 			}
 	};
 
@@ -189,8 +185,8 @@ angular.module('home').controller('SolutionStockCtrl',['$scope', 'atmToSingleDat
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");		
 		var dtConfig = $scope.atmService.data.getConfig();
-		dtConfig.edit.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
-		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isNewState());
+		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.setConfig(dtConfig);
 		
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
@@ -216,7 +212,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope', 'atmToSingleDat
 			volume : "µL",
 			concentration : "nM"
 	}
-	atmService.experimentToView($scope.experiment);
+	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 	$scope.atmService = atmService;
 	

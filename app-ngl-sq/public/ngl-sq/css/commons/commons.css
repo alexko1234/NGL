@@ -75,6 +75,7 @@
 	text-align: left;
 }
 
+/*
 .inProgressSpinner{
 	background-color: #428BCA;
   	height: 80%;
@@ -86,12 +87,26 @@
   	z-index: 1040;
   	text-align: center;
 }
-
+*/
+.inProgressSpinner {
+	padding-left:40%;
+    background-color: #428BCA;
+    bottom: 0;
+    /*height: 100%;*/
+    left: 0;
+    opacity: 0.5;
+    position: absolute;
+    right: 0;
+    top: 0;
+    /*width: 100%;*/
+    z-index: 1040;
+}
+/*
 .spinnerBtn {
   position: relative;
   top: 40%;
 }
-
+*/
 /* Style for specific processes filter */
 
 .filterLine{

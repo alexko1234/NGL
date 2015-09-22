@@ -72,7 +72,7 @@ public class ContainerSupportCategoryDAO extends AbstractDAOMapping<ContainerSup
 			throw new DAOException("idInstrumentUsedType is mandatory");
 		}
 		String sql = sqlCommon+" inner join instrument_ut_in_container_support_cat ON fk_container_support_category=t.id" +
-				" WHERE fk_instrument_used_type=? ";
+				" WHERE fk_instrument_used_type=? order by t.name";
 		return initializeMapping(sql, new SqlParameter("fk_instrument_used_type", Types.BIGINT)).execute(idInstrumentUsedType);		
 	}
 	
@@ -81,7 +81,7 @@ public class ContainerSupportCategoryDAO extends AbstractDAOMapping<ContainerSup
 			throw new DAOException("idInstrumentUsedType is mandatory");
 		}
 		String sql = sqlCommon+" inner join instrument_ut_out_container_support_cat ON fk_container_support_category=t.id" +
-				" WHERE fk_instrument_used_type=? ";
+				" WHERE fk_instrument_used_type=? order by t.name";
 		return initializeMapping(sql, new SqlParameter("fk_instrument_used_type", Types.BIGINT)).execute(idInstrumentUsedType);		
 	}
 
@@ -91,7 +91,7 @@ public class ContainerSupportCategoryDAO extends AbstractDAOMapping<ContainerSup
 			throw new DAOException("categoryCode is mandatory");
 		}
 		String sql = sqlCommon+" inner join container_category as c ON fk_container_category=c.id" +
-				" WHERE c.code=? ";
+				" WHERE c.code=? order by t.name";
 		return initializeMapping(sql, new SqlParameter("categoryCode", Types.VARCHAR)).execute(categoryCode);
 	}
 	
@@ -99,7 +99,9 @@ public class ContainerSupportCategoryDAO extends AbstractDAOMapping<ContainerSup
 		if(null == experimentTypeCode){
 			throw new DAOException("experimentTypeCode is mandatory");
 		}
-		String sql = sqlCommon+", experiment_type_instrument_type e, instrument_ut_in_container_support_cat i, experiment_type et inner join common_info_type as cit ON fk_common_info_type=cit.id WHERE e.fk_experiment_type=et.id AND cit.code=? AND e.fk_instrument_used_type=i.fk_instrument_used_type AND t.id=i.fk_container_support_category";
+		String sql = sqlCommon+", experiment_type_instrument_type e, instrument_ut_in_container_support_cat i, experiment_type et inner join common_info_type as cit ON fk_common_info_type=cit.id "
+				+ "WHERE e.fk_experiment_type=et.id AND cit.code=? AND e.fk_instrument_used_type=i.fk_instrument_used_type AND t.id=i.fk_container_support_category "
+				+ "order by t.name";
 		return initializeMapping(sql, new SqlParameter("experimentTypeCode", Types.VARCHAR)).execute(experimentTypeCode);
 	}
 }

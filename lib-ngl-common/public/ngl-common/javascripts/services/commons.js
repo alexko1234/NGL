@@ -690,9 +690,9 @@ angular.module('commonsServices', []).
   		    	scope:true,
   		    	template:'<div ng-switch on="isEdit()">'
   		    			+'<div ng-switch-when="false">'
-  		    			+'<ul class="list-unstyled">'
+  		    			+'<ul class="list-unstyled form-control-static">'
 		    	  		+'<li ng-repeat-start="item in getItems()" ng-if="groupBy(item, $index)" ng-bind="itemGroupByLabel(item)" style="font-weight:bold"></li>'
-		    	  		+'<li ng-repeat-end  ng-if="item.selected" ng-bind="itemLabel(item)" style="padding-left: 15px;"></li>'
+		    	  		+'<li ng-repeat-end  ng-if="item.selected" ng-bind="itemLabel(item)"></li>'
 			    	  	+'</ul>'
   		    			+'</div>'
   		    			+'<div class="dropdown" ng-switch-when="true">'
