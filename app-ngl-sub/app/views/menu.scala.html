@@ -23,6 +23,7 @@
 					<ul class="dropdown-menu" role="menu" aria-labelledby="configurations">
 					<!-- sous menu create qui appelle controler tpl configuration.home -->
 						<li class="@("active".when(nav == "configurations.create"))"><a href="@controllers.sra.configurations.tpl.routes.Configurations.home("create")">@Messages("configurations.menu.create")</a></li>																				
+						<li class="@("active".when(nav == "configurations.consultation"))"><a href="@controllers.sra.configurations.tpl.routes.Configurations.home("consultation")">@Messages("configurations.menu.consultation")</a></li>																				
 					</ul>
 				</li>				
 				

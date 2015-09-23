@@ -228,11 +228,11 @@
 			form : undefined,
 			datatable : undefined,
 			
-			// methode appelee pour remplir le tableau des soumissions 
-			// Recherche toutes les soumissions pour projCode indiqué :
+			// methode appelee pour remplir le tableau des submissions
+			// Recherche toutes les submissions pour projCode indiqué :
 			search : function(){
 				this.datatable.search({projCode:this.form.projCode});
-				console.log(this.form);
+				console.log("consultationService: " + this.form);
 			},
 			
 			cancel : function(){

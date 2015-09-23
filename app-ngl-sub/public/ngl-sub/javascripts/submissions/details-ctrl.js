@@ -384,7 +384,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 	
 	if(angular.isUndefined(mainService.getHomePage())){
 		mainService.setHomePage('create');
-		tabService.addTabs({label:Messages('submissionss.menu.create'),href:jsRoutes.controllers.sra.submissions.tpl.Submissions.home("create").url,remove:true});
+		tabService.addTabs({label:Messages('submissions.menu.create'),href:jsRoutes.controllers.sra.submissions.tpl.Submissions.home("create").url,remove:true});
 		tabService.activeTab(0); // desactive le lien !
 	}
 	// si on declare dans services => var sraVariables = {};
@@ -516,6 +516,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 
 		
 	/* buttons section */
+	
 	$scope.userValidate = function(){
 		$scope.messages.clear();
 		

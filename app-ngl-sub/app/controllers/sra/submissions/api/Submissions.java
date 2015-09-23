@@ -45,7 +45,7 @@ public class Submissions extends DocumentController<Submission>{
 
 
 	// methode appelee avec url suivante :
-	// http://localhost:9000/api/submissions?datatable=true&paginationMode=local&projCode=BCZ&state=new
+	//localhost:9000/api/sra/submissions?datatable=true&paginationMode=local&projCode=BCZ&state=new
 	// url construite dans services.js 
 	//search : function(){
 	//	this.datatable.search({projCode:this.form.projCode, state:'new'});

@@ -84,7 +84,7 @@ public class Experiment extends DBObject implements IValidation {
 		ValidationHelper.required(contextValidation, this.libraryLayoutNominalLength , "libraryLayoutNominalLength");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryLayoutOrientation, VariableSRA.mapLibraryLayoutOrientation, "libraryLayoutOrientation");
 		//ValidationHelper.required(contextValidation, this.libraryName , "libraryName");
-		ValidationHelper.required(contextValidation, this.libraryConstructionProtocol , "libraryConstructionProtocol");
+		//ValidationHelper.required(contextValidation, this.libraryConstructionProtocol , "libraryConstructionProtocol");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.typePlatform, VariableSRA.mapTypePlatform, "typePlatform");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.instrumentModel, VariableSRA.mapInstrumentModel, "instrumentModel");
 		ValidationHelper.required(contextValidation, this.spotLength , "spotLength");
