@@ -117,3 +117,5 @@ button.validate=Validate
 authentification.dropdown_list.username=Utilisateur
 authentification.dropdown_list.profile=Profil
 authentification.dropdown_list.signout=Deconnexion
+
+date.format=dd/MM/yyyy
