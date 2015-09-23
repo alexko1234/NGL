@@ -471,7 +471,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 
 	
 	private List<PropertyDefinition> getPropertyDefinitionsPrepaflowcellOrdered() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		/*List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
 		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
@@ -508,7 +508,8 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		propertyDefinitions.add(newPropertiesDefinition("Volume final", "finalVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",52,false));
 		
-		return propertyDefinitions;
+		return propertyDefinitions;*/
+		return null;
 	}
 	
 	private static List<PropertyDefinition> getPropertyDefinitionsLibIndexing() throws DAOException {

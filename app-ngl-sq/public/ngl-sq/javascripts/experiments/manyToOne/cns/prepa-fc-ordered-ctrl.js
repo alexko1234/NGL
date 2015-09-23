@@ -1,7 +1,7 @@
 angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$parse', 'atmToDragNDrop',
                                                                function($scope, $parse, atmToDragNDrop) {
 	
-	
+	/*
 
 	var atmToSingleDatatable = $scope.atmService.$atmToSingleDatatable;
 	
@@ -130,5 +130,5 @@ angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$par
 			$scope.message.isDetails = false;
 		}
 	};
-	
+	*/
 }]);

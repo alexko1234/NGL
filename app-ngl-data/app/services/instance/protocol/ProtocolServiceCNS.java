@@ -71,6 +71,8 @@ public class ProtocolServiceCNS {
 			lp.add(newProtocol("map006-FFPE","MAP006 FFPE","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation")));
 
 			lp.add(newProtocol("map006","MAP006","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library","nanopore-fragmentation")));
+			lp.add(newProtocol("ptr_to_def","PTR_TO_DEF","path7","1","production", InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered")));
+
 			
 		}
 		
