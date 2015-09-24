@@ -1064,7 +1064,7 @@ public class LimsCNGDAO {
 						Index index=new Index();
 						
 						// FDS 15/09/2015 repasser a l'ancienne version temporairement (short_name partout)
-						// FDS 24/09/2015 Migration des lanes deja importees donc passer sur nouvelle solution
+						// FDS 24/09/2015 Migration des lanes deja importees donc passer sur nouvelle solution !
 						index.code=rs.getString("nglbi_code");
 						index.shortName=rs.getString("short_name");
 						index.name=rs.getString("cng_name");

@@ -46,7 +46,7 @@ public class MigrationLanes extends CommonController{
 		
 		JacksonDBCollection<Container, String> containersCollBck = MongoDBDAO.getCollection(backupName, Container.class);
 
-		Logger.info("debut Migration Lanes ");
+		Logger.info("debut Migration Lanes");
 
 		// backuper d'abord...
 		backupContainer();
@@ -63,10 +63,6 @@ public class MigrationLanes extends CommonController{
 			
 		//find current collection
 		List<Container> mongoLanes = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("categoryCode", "lane")).toList();
-		
-		//NON l'information "fromExperimentType" n'existe pas en prod
-		//List<Container> mongoLanes = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
-		//DBQuery.and(DBQuery.is("categorieCode", "lane"), DBQuery.is("fromExperimentType", "prepa-flowcell-cng"))).toList();
 		
 		Logger.debug(mongoLanes.size()+" Lanes a migrer...");
 			
@@ -128,7 +124,6 @@ public class MigrationLanes extends CommonController{
 				DBQuery.is("code", mongoLane.code), 
 				DBUpdate.set("fromExperimentTypeCodes", fromexptype).set("contents", solexaLane.contents));
 	
-		
 		if(StringUtils.isNotEmpty(r.getError())){
 			Logger.error("error in fromExperimentTypeCodes update "+ r.getError());
 			return 1;
@@ -142,5 +137,4 @@ public class MigrationLanes extends CommonController{
 		MongoDBDAO.save(backupName, MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList());
 		Logger.info("\tCopie "+InstanceConstants.CONTAINER_COLL_NAME+" to "+backupName+" end");	
 	}
-	
 }
