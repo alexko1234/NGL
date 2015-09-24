@@ -25,7 +25,7 @@
 			
 			}
 			@formGroup{
-				<div bt-select placeholder="@Messages("experiments.intrument")" class="form-control" ng-model="searchService.form.instrument" ng-class="errors.experimentType" bt-options="instrument.code as instrument.name group by instrument.active|codes:'active' for instrument in searchService.lists.getInstruments()|orderBy:['-active','+name']" ng-disabled="!searchService.form.typeCode" >
+				<div bt-select placeholder="@Messages("experiments.intrument")" class="form-control" multiple="true" ng-model="searchService.form.instrument" ng-class="errors.experimentType" bt-options="instrument.code as instrument.name group by instrument.active|codes:'active' for instrument in searchService.lists.getInstruments()|orderBy:['-active','+name']" ng-disabled="!searchService.form.typeCode" >
 				</div>
 			}
 			
