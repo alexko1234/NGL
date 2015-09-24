@@ -2,21 +2,14 @@ package controllers.sra.api;
 
 
 
-import static play.data.Form.form;
-
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.stereotype.Controller;
-
-import models.sra.submit.common.instance.Study;
-import models.sra.submit.common.instance.Submission;
 import models.sra.submit.util.VariableSRA;
-import models.utils.InstanceConstants;
 import models.utils.ListObject;
-import play.Logger;
-import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import controllers.CommonController;
@@ -59,6 +52,13 @@ public class Variables extends CommonController{
 		for(String key : map.keySet()){
 			lo.add(new ListObject(key, map.get(key)));
 		}
+		
+		//Sort by code
+		Collections.sort(lo, new Comparator<ListObject>(){
+		    public int compare(ListObject lo1, ListObject lo2) {
+		    	return lo1.code.compareTo(lo2.code);
+		    }
+		});
 		return lo;
 	}	
 }
