@@ -1063,13 +1063,15 @@ public class LimsCNGDAO {
 					public Index mapRow(ResultSet rs, int rowNum) throws SQLException {
 						Index index=new Index();
 						
-						// FDS 15/09/2015 repasser a l'ancienne version temporairement
-						//index.code=rs.getString("nglbi_code");
-						//index.shortName=rs.getString("short_name");
-						//index.name=rs.getString("cng_name");
-						index.code=rs.getString("short_name");
+						// FDS 15/09/2015 repasser a l'ancienne version temporairement (short_name partout)
+						// FDS 24/09/2015 Migration des lanes deja importees donc passer sur nouvelle solution
+						index.code=rs.getString("nglbi_code");
 						index.shortName=rs.getString("short_name");
-						index.name=rs.getString("short_name");
+						index.name=rs.getString("cng_name");
+						
+						//index.code=rs.getString("short_name");
+						//index.shortName=rs.getString("short_name");
+						//index.name=rs.getString("short_name");
 						
 						index.categoryCode=rs.getString("code_category");
 						index.sequence=rs.getString("sequence");
