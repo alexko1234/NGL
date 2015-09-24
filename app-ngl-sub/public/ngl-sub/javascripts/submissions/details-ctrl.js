@@ -370,7 +370,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				active:true
 			},
 			exportCSV:{
-				active:true
+				active:false
 			},
 			columns : [
 			           {property:"relatifName",

@@ -18,9 +18,6 @@ angular.module('home').controller('CreateCtrl',[ '$http', '$scope', '$routeParam
 			hide:{
 				active:true
 			},
-			exportCSV:{
-				active:true
-			},
 			name:"Submissions"
 	};
 	
