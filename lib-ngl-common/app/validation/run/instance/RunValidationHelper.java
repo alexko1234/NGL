@@ -14,11 +14,12 @@ import play.Logger;
 import org.mongojack.DBQuery;
 
 import fr.cea.ig.MongoDBDAO;
-
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
+import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.project.instance.Project;
+import models.laboratory.run.description.RunCategory;
 import models.laboratory.run.description.RunType;
 import models.laboratory.run.instance.InstrumentUsed;
 import models.laboratory.run.instance.ReadSet;
@@ -26,6 +27,7 @@ import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
+import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationConstants;
 import validation.utils.ValidationHelper;
 
@@ -48,6 +50,11 @@ public class RunValidationHelper extends CommonValidationHelper {
 			ValidationHelper.validateProperties(contextValidation, properties, runType.getPropertyDefinitionByLevel(Level.CODE.Run), true);
 			contextValidation.removeKeyFromRootKeyName("properties");
 		}		
+	}
+	
+	public static void validationRunCategoryCode(String categoryCode,
+			ContextValidation contextValidation) {
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "categoryCode", RunCategory.find,false);
 	}
 	
 	public static void validationLaneReadSetCodes(Integer number, List<String> readSetCodes, ContextValidation contextValidation) {

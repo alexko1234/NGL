@@ -222,7 +222,7 @@
 				lists.refresh.valuationCriterias({objectTypeCode:"ReadSet"});
 				lists.refresh.types({objectTypeCode:"Run"});
 				lists.refresh.runs();
-				lists.refresh.instruments({categoryCodes:["illumina-sequencer","extseq"]});
+				lists.refresh.instruments({categoryCodes:["illumina-sequencer","extseq","nanopore-sequencer"]});
 				//TODO Warn if pass to one application page
 				lists.refresh.reportConfigs({pageCodes:["readsets"+"-"+mainService.getHomePage()]});
 				lists.refresh.reportConfigs({pageCodes:["readsets-addcolumns"]}, "readsets-addcolumns");

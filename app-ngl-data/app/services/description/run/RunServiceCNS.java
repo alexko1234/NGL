@@ -26,6 +26,8 @@ public class RunServiceCNS extends AbstractRunService {
 	public void saveReadSetType(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ReadSetType> l = new ArrayList<ReadSetType>();
 		l.add(DescriptionFactory.newReadSetType("Default","default-readset",  getReadSetPropertyDefinitions(),  DescriptionFactory.getInstitutes( Institute.CODE.CNS) ));
+		l.add(DescriptionFactory.newReadSetType("rsillumina","rsillumina",  getReadSetPropertyDefinitions(),  DescriptionFactory.getInstitutes( Institute.CODE.CNS) ));
+		l.add(DescriptionFactory.newReadSetType("rsnanopore","rsnanopore", null,  DescriptionFactory.getInstitutes( Institute.CODE.CNS) ));
 		l.add(DescriptionFactory.newReadSetType("RSARGUS","RSARGUS",  null,  DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
 		
 		DAOHelpers.saveModels(ReadSetType.class, l, errors);

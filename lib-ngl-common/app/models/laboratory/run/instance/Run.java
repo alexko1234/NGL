@@ -19,6 +19,7 @@ import models.laboratory.common.instance.Valuation;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
+import validation.experiment.instance.ExperimentValidationHelper;
 import validation.run.instance.LaneValidationHelper;
 import validation.run.instance.RunValidationHelper;
 import validation.run.instance.TreatmentValidationHelper;
@@ -29,6 +30,10 @@ public class Run extends DBObject implements IValidation {
         
 	public String typeCode;
 	public Date sequencingStartDate;
+	
+	public String categoryCode;
+	
+	
 	
 	public State state;
 	
@@ -71,6 +76,7 @@ public class Run extends DBObject implements IValidation {
     	RunValidationHelper.validateId(this, contextValidation);
     	RunValidationHelper.validateCode(this, InstanceConstants.RUN_ILLUMINA_COLL_NAME, contextValidation);
     	RunValidationHelper.validateRunType(this.typeCode, this.properties, contextValidation);
+    	RunValidationHelper.validationRunCategoryCode(categoryCode, contextValidation);
     	//TODO ValidationHelper.required(contextValidation, sequencingStartDate, "sequencingStartDate");
     	
     	RunValidationHelper.validateState(this.typeCode, this.state, contextValidation);

@@ -2,6 +2,7 @@ package controllers.runs.tpl;
 
 import play.Routes;
 import play.mvc.Result;
+import views.html.runs.treatments;
 import views.html.runs.details;
 import views.html.runs.home;
 import views.html.runs.laneTreatments;
@@ -41,6 +42,10 @@ public class Runs extends CommonController {
 		return ok(details.render());
 	}
 	
+	public static Result treatments(String code) {
+		return ok(treatments.render(code));
+	}
+	
 	public static Result laneTreatments(String code) {
 		return ok(laneTreatments.render(code));
 	}
@@ -54,8 +59,10 @@ public class Runs extends CommonController {
   	    		controllers.runs.tpl.routes.javascript.Runs.get(), 
   	    		controllers.runs.tpl.routes.javascript.Runs.valuation(),
   	    		controllers.runs.tpl.routes.javascript.Runs.laneTreatments(),
+  	    		controllers.runs.tpl.routes.javascript.Runs.treatments(),
   	    		controllers.runs.api.routes.javascript.Runs.get(),
   	    		controllers.runs.api.routes.javascript.Runs.update(),
+  	    		controllers.runs.api.routes.javascript.RunTreatments.update(),
   	    		controllers.readsets.api.routes.javascript.ReadSets.list(),
   	    		controllers.readsets.tpl.routes.javascript.ReadSets.get(),
   	    		controllers.readsets.tpl.routes.javascript.ReadSets.home(),

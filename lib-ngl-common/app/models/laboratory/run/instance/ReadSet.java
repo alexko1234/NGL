@@ -5,24 +5,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
-import validation.common.instance.CommonValidationHelper;
 import validation.run.instance.FileValidationHelper;
 import validation.run.instance.ReadSetValidationHelper;
 import validation.run.instance.TreatmentValidationHelper;
 import validation.utils.ValidationHelper;
 import fr.cea.ig.DBObject;
 
+@JsonTypeInfo(use=Id.NAME, include=As.PROPERTY, property="typeCode", defaultImpl=models.laboratory.run.instance.ReadSetLane.class)
+@JsonSubTypes({
+	@JsonSubTypes.Type(value = models.laboratory.run.instance.ReadSetLane.class, name = "default-readset"),
+	@JsonSubTypes.Type(value = models.laboratory.run.instance.ReadSetLane.class, name = "rsillumina"),
+	@JsonSubTypes.Type(value = models.laboratory.run.instance.ReadSet.class, name = "rsnanopore")
+})
 public class ReadSet extends DBObject implements IValidation{
 
 	public String typeCode;
@@ -32,8 +39,8 @@ public class ReadSet extends DBObject implements IValidation{
 	public String runCode;
 	public String runTypeCode;
 	public Date runSequencingStartDate;
-	
 	public Integer laneNumber;
+	
 	public Boolean dispatch = Boolean.FALSE;
 	public String sampleCode; //nom de l'ind / ech //used for search
 	public String projectCode;
@@ -86,11 +93,9 @@ public class ReadSet extends DBObject implements IValidation{
 		//TODO passage de la mauvaise cle dans le message d'erreur
 		ReadSetValidationHelper.validateValuation(this.typeCode, this.bioinformaticValuation, contextValidation);
 		ReadSetValidationHelper.validateValuation(this.typeCode, this.productionValuation, contextValidation);
-		ReadSetValidationHelper.validateReadSetCodeInRunLane(this.code, this.runCode, this.laneNumber, contextValidation);
 		ReadSetValidationHelper.validateTraceInformation(this.traceInformation, contextValidation);
 		ReadSetValidationHelper.validateReadSetRunCode(this.runCode ,contextValidation);
-		ReadSetValidationHelper.validateReadSetLaneNumber(this.runCode, this.laneNumber ,contextValidation);
-
+		
 		ReadSetValidationHelper.validateProjectCode(this.projectCode, contextValidation);
 		
 		ReadSetValidationHelper.validateSampleCode(this.sampleCode, this.projectCode, contextValidation);

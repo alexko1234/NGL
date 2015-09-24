@@ -17,8 +17,8 @@ rule "Create Run and ReadSets Nanopore"
 		 run.state=new State("IP-S","ngsrg");
 	
 		run.containerSupportCode=$experiment.outputContainerSupportCodes.toArray()[0].toString();
-   		//run.projectCodes = $experiment.projectCodes;
-    	//run.sampleCodes = $experiment.sampleCodes;
+   		//run.projectCodes = $experiment.projectCodes; //done with readset creation
+    	//run.sampleCodes = $experiment.sampleCodes; //done with readset creation
    		run.traceInformation=new TraceInformation();
    		run.traceInformation.setTraceInformation("ngsrg");
    		
@@ -27,21 +27,15 @@ rule "Create Run and ReadSets Nanopore"
    		run.instrumentUsed.code=$experiment.instrument.code;
     	
     	run.code=((new SimpleDateFormat("yyMMdd")).format(new Date()))+"_"+run.instrumentUsed.code+"_"+run.containerSupportCode;
-
-		run.lanes=new ArrayList<Lane>();
-		Lane lane=new Lane();
-		lane.number=1;
-		run.lanes.add(lane);
-		//A valider
+		
 		Treatment treatment=new Treatment();
-		treatment.code="minknow-metrichor";
+		treatment.code="minknowMetrichor";
 		treatment.typeCode="minknow-metrichor";
 		treatment.categoryCode="sequencing";
-		//run.treatments.put("minknow-metrichor",treatment);
+		treatment.results.put("default",new HashMap<String, PropertyValue>(0));
+		run.treatments.put("minknowMetrichor",treatment);
 		
-		insert(run);
-		
-	
+		insert(run);			
 end
 
 
@@ -56,6 +50,7 @@ rule "Update type Run RMINION"
 	then
 		 Logger.debug("typeCode RMINION");
 		$run.typeCode="RMINION";	
+		$run.categoryCode="nanopore";
 		update($run);
 end
 
@@ -70,6 +65,7 @@ rule "Update type Run RMKI"
 	then
 		Logger.debug("typeCode RMKI");
 		$run.typeCode="RMKI";	
+		$run.categoryCode="nanopore";
 		update($run);
 end
 
@@ -79,7 +75,7 @@ rule "Save Run Nanopore"
 	salience 800
 	no-loop
 	when 
-	$run:Run(typeCode!=null)
+	$run:Run(categoryCode=="nanopore")
 	
     $contextError:ContextValidation()
 	then
@@ -105,16 +101,14 @@ rule "Create ReadSet"
 	
 		//Creation des readsets
 		ReadSet readSet=new ReadSet();
-		//TO DO
-		readSet.typeCode="default-readset";
-		readSet.code=$content.sampleCode+"_ONT_"+$laneNumber+$run.containerSupportCode;
+		readSet.typeCode="rsnanopore";
+		readSet.code=$content.sampleCode+"_ONT_"+$laneNumber+"_"+$run.containerSupportCode;
 		readSet.state=new State("N","ngsrg");
 		
 		readSet.runCode=$run.code;
 		readSet.runTypeCode=$run.typeCode;
 		readSet.runSequencingStartDate=new Date();
 	
-		readSet.laneNumber=Integer.parseInt($laneNumber);
 		readSet.sampleCode=$content.sampleCode;
 		readSet.projectCode=$content.projectCode;
 		//TO DO

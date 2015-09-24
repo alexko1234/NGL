@@ -212,6 +212,19 @@ runs.modal.header.text = Run status flow
 
 runs.treatments.sav = SAV
 runs.treatments.ngsrg = NGS-RG
+runs.treatments.minknowMetrichor = MinKnow-Metrichor
+
+runs.treatments.minknow-metrichor.minKnowVersion = Version MinKNOW
+runs.treatments.minknow-metrichor.metrichorVersion = Version Metrichor
+runs.treatments.minknow-metrichor.metrichorRunID = Metrichor run ID
+runs.treatments.minknow-metrichor.minknowChannelsWithReads = Channels with Reads
+runs.treatments.minknow-metrichor.minknowEvents = Events in Reads
+runs.treatments.minknow-metrichor.minknowCompleteReads = Complete reads
+runs.treatments.minknow-metrichor.metrichorReadCount = Read count
+runs.treatments.minknow-metrichor.metrichor2DReadsYield = Total 2D yield (bases)
+runs.treatments.minknow-metrichor.metrichorMax2DRead = Longest 2D read (bases)
+runs.treatments.minknow-metrichor.metrichorMax2DQualityScore = Peak 2D quality score
+
 
 #search
 sequencingProgramType.value.PE = Pair End

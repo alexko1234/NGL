@@ -29,26 +29,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 				},
 				callback:function(datatable, nbError){
 					if(nbError == 0){
-						var queries = [];
-						queries.push($http.put(jsRoutes.controllers.runs.api.Runs.update($scope.run.code).url+"?fields=keep", {keep:$scope.run.keep}));
-						queries.push($http.put(jsRoutes.controllers.runs.api.Runs.valuation($scope.run.code).url, $scope.run.valuation));
-						
-						$q.all(queries).then(function(results){
-							var error = false;
-							for(var i = 0; i  < results.length; i++){
-								var result = results[i];
-								if(result.status !== 200){
-									error = true;
-								}
-							}
-							if(error){
-								$scope.messages.setError("save");	
-							}else{
-								$scope.messages.setSuccess("save");
-								$scope.mainService.stopEditMode();
-								updateData();
-							}
-						});					
+						saveRun();					
 					}else{
 						$scope.messages.setError("save");
 					}
@@ -179,6 +160,30 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			]
 	};
 	
+	var saveRun = function(){
+		var queries = [];
+		queries.push($http.put(jsRoutes.controllers.runs.api.Runs.update($scope.run.code).url+"?fields=keep", {keep:$scope.run.keep}));
+		queries.push($http.put(jsRoutes.controllers.runs.api.Runs.valuation($scope.run.code).url, $scope.run.valuation));
+		
+		$q.all(queries).then(function(results){
+			var error = false;
+			for(var i = 0; i  < results.length; i++){
+				var result = results[i];
+				if(result.status !== 200){
+					error = true;
+				}
+			}
+			if(error){
+				$scope.messages.setError("save");	
+			}else{
+				$scope.$broadcast('save');
+				$scope.messages.setSuccess("save");
+				$scope.mainService.stopEditMode();
+				updateData();
+			}
+		});
+	}
+	
 	$scope.getTabClass = function(value){
 		 if(value === mainService.get('runActiveTab')){
 			 return 'active';
@@ -192,12 +197,18 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	
 	/* buttons section */
 	$scope.save = function(){
-		$scope.lanesDT.save();		
+		if($scope.isLanesExist()){
+			$scope.lanesDT.save();
+		}else{
+			saveRun();
+		}
 	};
 	
 	$scope.cancel = function(){
 		$scope.messages.clear();
-		$scope.lanesDT.cancel();
+		if($scope.isLanesExist()){
+			$scope.lanesDT.cancel();
+		}
 		$scope.mainService.stopEditMode();
 		updateData(true);				
 	};
@@ -205,7 +216,9 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	$scope.activeEditMode = function(){
 		$scope.messages.clear();
 		$scope.mainService.startEditMode();
-		$scope.lanesDT.setEdit();		
+		if($scope.isLanesExist()){
+			$scope.lanesDT.setEdit();
+		}
 	}
 
 	
@@ -254,7 +267,10 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	var updateData = function(isCancel){
 		$http.get(jsRoutes.controllers.runs.api.Runs.get($routeParams.code).url).success(function(data) {
 			$scope.run = data;	
-			$scope.lanesDT.setData($scope.run.lanes, $scope.run.lanes.length);
+			if($scope.isLanesExist()){
+				$scope.lanesDT.setData($scope.run.lanes, $scope.run.lanes.length);
+			}
+			
 			/*
 			if(isCancel && !isValuationMode()){
 				$scope.lanesDT.cancel();
@@ -273,6 +289,10 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		return ($scope.mainService.isHomePage('valuation') || $routeParams.page === 'valuation');
 	};
 	
+	$scope.isLanesExist = function(){
+		return($scope.run.lanes != null &&  $scope.run.lanes.length > 0)
+	};
+	
 	$scope.highLight = function(prop){
 			if (lists.getValuationCriterias() && $scope.run && $scope.run.valuation) {
 				return "bg-" + $scope.valuationService.valuationCriteriaClass($scope.run, $scope.run.valuation.criteriaCode, prop);
@@ -282,12 +302,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			}
 	};
 	
-	$scope.highLightCtrlLane = function(){
-		if ($scope.run && $scope.run.treatments && $scope.run.treatments.ngsrg &&  $scope.run.treatments.ngsrg["default"].controlLane.value) 
-			return "bg-info";
-		else 
-			return undefined;
-	};
+	
 	
     $scope.deliberatelyTrustHTMLComment = function() {
     	if ($scope.run && $scope.run.valuation && $scope.run.valuation.comment && $scope.run.valuation.comment != null) {
@@ -297,18 +312,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
     		return "";
     	}
     };
-    $scope.getNbCycles = function(){
-    	if($scope.run.treatments){
-    		var ngsrg = $scope.run.treatments.ngsrg["default"];
-    		if(ngsrg.nbCycleRead1){
-    			return ngsrg.nbCycleRead1.value+', '+ngsrg.nbCycleReadIndex1.value+', '+ngsrg.nbCycleReadIndex2.value+', '+ngsrg.nbCycleRead2.value;
-    		}else{
-    			return ngsrg.nbCycle.value;
-    		}
-    		
-    	}
-    	return '';
-    }
+    
    
 	var init = function(){
 		$scope.messages = messages();
@@ -339,7 +343,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			$scope.lists.clear("valuationCriterias");
 			$scope.lists.refresh.valuationCriterias({typeCode:$scope.run.typeCode, objectTypeCode:"Run", orderBy:'name'});
 			
-			if ($scope.run.typeCode != "RARGUS") {
+			if ($scope.isLanesExist()) {
 				$scope.lanesDT = datatable(lanesDTConfig);
 				$scope.lanesDT.setData($scope.run.lanes, $scope.run.lanes.length);
 				if(isValuationMode()){
@@ -351,39 +355,74 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 					$scope.treatments.init($scope.run.lanes[0].treatments, jsRoutes.controllers.runs.tpl.Runs.laneTreatments, 'runs');				
 				}
 				
-				$scope.laneOptions = $filter('orderBy')($scope.run.lanes, 'number');
+				$scope.laneOptions = $filter('orderBy')($scope.run.lanes, 'number');				
 				
-				$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:{runCode:$scope.run.code, includes:["code","state","bioinformaticValuation", "productionValuation","laneNumber","treatments.ngsrg", "sampleOnContainer"]}}).success(function(data) {
-					$scope.readSetsDT = datatable(readSetsDTConfig);
-					$scope.readSetsDT.setData(data, data.length);	
-				});
-				
-				
-				$http.get(jsRoutes.controllers.commons.api.StatesHierarchy.list().url,  {params: {objectTypeCode:"Run"}}).success(function(data) { 
-					for (var i=0; i<data.length; i++) {
-						if (data[i].code == "FE-S") {
-							data[i].specificColor = true;
-							break;
-						}
+			}
+			
+			if(angular.isDefined($scope.run.treatments)){
+				$scope.treatments.init($scope.run.treatments, jsRoutes.controllers.runs.tpl.Runs.treatments, 'runs');				
+			}
+			
+			$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:{runCode:$scope.run.code, includes:["code","state","bioinformaticValuation", "productionValuation","laneNumber","treatments.ngsrg", "sampleOnContainer"]}}).success(function(data) {
+				$scope.readSetsDT = datatable(readSetsDTConfig);
+				$scope.readSetsDT.setData(data, data.length);	
+			});
+			
+			$http.get(jsRoutes.controllers.commons.api.StatesHierarchy.list().url,  {params: {objectTypeCode:"Run"}}).success(function(data) { 
+				for (var i=0; i<data.length; i++) {
+					if (data[i].code == "FE-S") {
+						data[i].specificColor = true;
+						break;
 					}
-					$scope.statesHierarchy = data;	
-				});	
-				
-				if(undefined == mainService.get('runActiveTab')){
-					 mainService.put('runActiveTab', 'general');
-				 }
+				}
+				$scope.statesHierarchy = data;	
+			});	
+			
+			if(undefined == mainService.get('runActiveTab')){
+				 mainService.put('runActiveTab', 'general');
 			}
 		});
 		
 	};
 	
 	init();
+}]).controller('RunMinknowMetrichorCtrl', [ '$scope', '$http', function($scope, $http) {	
 	
+	$scope.$on('save', function(){
+		console.log("save RunMinknowMetrichorCtrl");
+		$http.put(jsRoutes.controllers.runs.api.RunTreatments.update($scope.run.code, $scope.run.treatments.minknowMetrichor.code).url, $scope.run.treatments.minknowMetrichor)
+			.success(function(data){
+				$scope.run.treatments.minknowMetrichor = data;				
+			})
+			.error(function(){
+				$scope.messages.setError("save");				
+			});
+	});
+		
 	
+}]).controller('RunNGSRGIlluminaCtrl', [ '$scope', 'datatable', function($scope, datatable) {
 	
-}]);
+	$scope.getNbCycles = function(){
+    	if($scope.run.treatments){
+    		var ngsrg = $scope.run.treatments.ngsrg["default"];
+    		if(ngsrg.nbCycleRead1){
+    			return ngsrg.nbCycleRead1.value+', '+ngsrg.nbCycleReadIndex1.value+', '+ngsrg.nbCycleReadIndex2.value+', '+ngsrg.nbCycleRead2.value;
+    		}else{
+    			return ngsrg.nbCycle.value;
+    		}
+    		
+    	}
+    	return '';
+    };
+    
+    $scope.highLightCtrlLane = function(){
+		if ($scope.run && $scope.run.treatments && $scope.run.treatments.ngsrg &&  $scope.run.treatments.ngsrg["default"].controlLane.value) 
+			return "bg-info";
+		else 
+			return undefined;
+	};
 
-angular.module('home').controller('LanesNGSRGCtrl', [ '$scope', 'datatable', function($scope, datatable) {
+}]).controller('LanesNGSRGIlluminaCtrl', [ '$scope', 'datatable', function($scope, datatable) {
 	
 	var lanesNGSRGConfig = {
 			name:'lanesNGSRG',
@@ -498,9 +537,7 @@ angular.module('home').controller('LanesNGSRGCtrl', [ '$scope', 'datatable', fun
 	
 	init();
 	
-}]);
-
-angular.module('home').controller('LanesSAVCtrl', [ '$scope', '$filter', '$http', 'datatable', function($scope, $filter, $http, datatable) {
+}]).controller('LanesSAVCtrl', [ '$scope', '$filter', '$http', 'datatable', function($scope, $filter, $http, datatable) {
 	var lanesSAVR1Config = {
 			name:'lanesSAVR1',
 			order :{by:'number',mode:'local'},
@@ -888,8 +925,6 @@ angular.module('home').controller('LanesSAVCtrl', [ '$scope', '$filter', '$http'
 	
 	init();
 }]);
-
-
 
 
 

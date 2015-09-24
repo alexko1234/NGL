@@ -70,7 +70,7 @@
 				lists.refresh.types({objectTypeCode:"Run"});
 				lists.refresh.resolutions({objectTypeCode:"Run"});
 				lists.refresh.runs();
-				lists.refresh.instruments({categoryCodes:["illumina-sequencer","extseq"]});
+				lists.refresh.instruments({categoryCodes:["illumina-sequencer","extseq","nanopore-sequencer"]});
 				lists.refresh.users();
 				lists.refresh.filterConfigs({pageCodes:["runs-addfilters"]}, "runs-addfilters");
 				lists.refresh.reportConfigs({pageCodes:["runs-addcolumns"]}, "runs-addcolumns");

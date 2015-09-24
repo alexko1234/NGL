@@ -22,10 +22,13 @@ import models.laboratory.common.instance.property.PropertyListValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
+import models.laboratory.run.description.RunCategory;
+import models.laboratory.run.description.dao.RunCategoryDAO;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
+import models.utils.dao.DAOException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -258,7 +261,7 @@ public class Runs extends RunsController {
 	}
 
 	//@Permission(value={"creation_update_run_lane"})
-	public static Result save() {
+	public static Result save() throws DAOException {
 		Form<Run> filledForm = getFilledForm(runForm, Run.class);
 		Run runInput = filledForm.get();
 
@@ -272,6 +275,10 @@ public class Runs extends RunsController {
 			runInput.state.code = "N";
 			runInput.state.user = getCurrentUser();
 			runInput.state.date = new Date();
+			
+			if(null == runInput.categoryCode && null != runInput.typeCode){
+				runInput.categoryCode = RunCategory.find.findByTypeCode(runInput.typeCode).code;
+			}
 			
 			
 		} else {

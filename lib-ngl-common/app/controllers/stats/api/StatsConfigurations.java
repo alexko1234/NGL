@@ -43,17 +43,17 @@ public class StatsConfigurations extends CommonController {
 		Query q = getQuery(form);
 		BasicDBObject keys = getKeys(form);
 		if(form.datatable){			
-			MongoDBResult<StatsConfiguration> results = mongoDBFinder(InstanceConstants.STATS_CONFIG_COLL_NAME, form, StatsConfiguration.class, q, keys);				
+			MongoDBResult<StatsConfiguration> results = mongoDBFinder(InstanceConstants.STATS_CONFIG_COLL_NAME, form, StatsConfiguration.class, q, keys).sort("name");				
 			List<StatsConfiguration> statsConfigurations = results.toList();
 			return ok(Json.toJson(new DatatableResponse<StatsConfiguration>(statsConfigurations, results.count())));
 		}else if(form.count){
-			MongoDBResult<StatsConfiguration> results = mongoDBFinder(InstanceConstants.STATS_CONFIG_COLL_NAME, form, StatsConfiguration.class, q, keys);
+			MongoDBResult<StatsConfiguration> results = mongoDBFinder(InstanceConstants.STATS_CONFIG_COLL_NAME, form, StatsConfiguration.class, q, keys).sort("name");
 			int count = results.count();
 			Map<String, Integer> m = new HashMap<String, Integer>(1);
 			m.put("result", count);
 			return ok(Json.toJson(m));
 		}else{
-			MongoDBResult<StatsConfiguration> results = mongoDBFinder(InstanceConstants.STATS_CONFIG_COLL_NAME, form, StatsConfiguration.class, q, keys);							
+			MongoDBResult<StatsConfiguration> results = mongoDBFinder(InstanceConstants.STATS_CONFIG_COLL_NAME, form, StatsConfiguration.class, q, keys).sort("name");							
 			List<StatsConfiguration> statsConfigurations = results.toList();
 			return ok(Json.toJson(statsConfigurations));
 		}
