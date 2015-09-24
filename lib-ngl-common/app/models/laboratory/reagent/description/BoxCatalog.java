@@ -12,8 +12,8 @@ import fr.cea.ig.MongoDBDAO;
 
 public class BoxCatalog extends AbstractCatalog{
 	public String kitCatalogCode;
-	public double storageConditions;
-	public int possibleUseNumber;
+	public Double storageConditions;
+	public Integer possibleUseNumber;
 
 	@Override
 	public void validate(ContextValidation contextValidation) {

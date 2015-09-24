@@ -43,7 +43,7 @@ kits.createUser = Créée par
 kits.modifyDate = Date de modification
 kits.modifyBy = Modifié par
 
-kit.code.label = Code (NGL)
+kit.code.label = Code
 
 boxes.search = Recherche boîtes
 boxes.tabs.search = Recherche Boîtes
@@ -53,7 +53,7 @@ boxes.storageConditions = Conditions de stockage (°C)
 boxes.catalogRefCode = Ref. catalogue (fournisseur)
 boxes.comment = Commentaire
 boxes.toExpirationDate = Date péremption jusqu''au
-boxes.code.label = Code (NGL) de la boîte
+boxes.code.label = Code
 
 catalogRefCode = REF. catalogue
 bundleBarCode = Lot
@@ -75,7 +75,7 @@ reagents.msg.delete.sucess = Suppression réussie
 reagents.msg.delete.error = Suppression echouée
 reagents.msg.catalogCode.error = Mauvais code catalogue
 
-reagents.table.code = Code du réactif
+reagents.table.code = Code
 reagents.table.name = Nom du réactif
 reagents.table.storageConditions = Conditions de stockage (°C)
 reagents.table.catalogRefCode = Ref. catalogue (fournisseur)
