@@ -30,6 +30,24 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		console.log("call activeEditMode");
 		$scope.messages.clear();
 		mainService.startEditMode();
+		
+		if(mainService.isHomePage('search') 
+				&& !tabService.isBackupTabs() 
+				&& $scope.isNewState()){
+			
+			tabService.backupTabs();
+			tabService.resetTabs();
+			tabService.addTabs({label:Messages('experiments.tabs.create'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("new").url,remove:false});
+			tabService.addTabs({label:$scope.experiment.code,href:jsRoutes.controllers.experiments.tpl.Experiments.get($scope.experiment.code).url,remove:true});
+			tabService.activeTab(1);
+			mainService.setDatatable(undefined);
+			
+			var form = {};
+			form.nextExperimentTypeCode = $scope.experimentType.code;
+			form.experimentCategoryCode = $scope.experimentType.category.code;
+			mainService.setForm(form);		
+		}
+		
 	};
 	
 	$scope.cancel = function(){
@@ -37,11 +55,27 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.messages.clear();
 		mainService.stopEditMode();
 		saveInProgress = false;
+		updateData();
+		
+		if(mainService.isHomePage('search') 
+				&& tabService.isBackupTabs() ){
+			$scope.restoreBackupTabs();
+			$scope.activeTab(1);
+			$scope.setDatatable(undefined);	
+			
+			var form = {};
+			form.typeCode = $scope.experimentType.code;
+			form.experimentCategoryCode = $scope.experimentType.category.code;
+			
+			mainService.setForm(form);								
+		}	
 	};
 	
 	$scope.save = function(){
 		console.log("call save");
 		saveInProgress = true;
+		
+		updateData();
 	};
 	
 	$scope.startExperiment = function(){
@@ -93,7 +127,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	
 	$scope.changeInstrumentType = function(){
 		console.log("call changeInstrumentType see getInstrumentsTrigger() in old version");
-		if($scope.experiment || false && $scope.experiment.instrument || false){
+		if($scope.experiment && $scope.experiment.instrument && $scope.experiment.instrument.typeCode){
 			loadInstrumentType($scope.experiment.instrument.typeCode);
 			//reinit experiment instrument
 			$scope.experiment.instrument.code = undefined;
@@ -107,7 +141,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	
 	$scope.loadTemplate = function(){
 		console.log("call loadTemplate see getTemplate() in old version");
-		if($scope.experimentType || false &&  $scope.experiment.instrument || false && $scope.experiment.instrument.outContainerSupportCategoryCode || false ){
+		if($scope.experimentType && $scope.experiment.instrument && $scope.experiment.instrument.outContainerSupportCategoryCode){
 			$scope.experimentTypeTemplate =  jsRoutes.controllers.experiments.tpl.Experiments.getTemplate($scope.experimentType.atomicTransfertMethod.toLowerCase(),$scope.experiment.instrument.outContainerSupportCategoryCode,$scope.experimentType.code).url;
 		}else{
 			$scope.experimentTypeTemplate =  undefined;
@@ -122,6 +156,15 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			.error(function(data, status, headers, config) {
 				$scope.messages.setError("get");
 			});
+	}
+	
+	var updateData = function(){
+		if($scope.experiment.code){
+			$http.get(jsRoutes.controllers.experiments.api.Experiments.get($scope.experiment.code).url).success(function(data) {
+				$scope.experiment = data;				
+			});
+		}
+		
 	}
 	
 	var clearLists = function(){
@@ -153,6 +196,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			tabService.addTabs({label:$routeParams.code,href:jsRoutes.controllers.experiments.tpl.Experiments.get($routeParams.code).url,remove:true});			
 			tabService.activeTab($scope.getTabs(1));
 		}
+		
 		
 		var promise=undefined;
 		
@@ -211,7 +255,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				}
 				
 				clearLists();
-				if($scope.experiment.instrument || false && $scope.experiment.instrument.typeCode || false){
+				if($scope.experiment.instrument && $scope.experiment.instrument.typeCode){
 					loadInstrumentType($scope.experiment.instrument.typeCode);
 				}
 				$scope.loadTemplate();
