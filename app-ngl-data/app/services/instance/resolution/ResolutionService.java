@@ -68,6 +68,7 @@ public class ResolutionService {
 			createReadSetResolutionCNS(ctx); 
 			createAnalysisResolutionCNS(ctx); 
 			createOpgenDepotResolutionCNS(ctx);
+			createIlluminaPrepFCDepotResolutionCNS(ctx);
 			// FDS 15/01: No illumina Depot Resolutions ???
 			createExperimentResolution(ctx); 
 			createProcessResolution(ctx);
@@ -563,6 +564,28 @@ public class ResolutionService {
 		ArrayList<String> al = new ArrayList<String>();
 		al.add("void-opgen-depot");
 		al.add("opgen-depot");		
+		r.typeCodes = al;
+		
+		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
+		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
+	}
+	
+	public static void createIlluminaPrepFCDepotResolutionCNS(ContextValidation ctx) {
+		List<Resolution> l = new ArrayList<Resolution>();
+		
+		l.addAll(getDefaultResolutionCNS());
+		
+		l.add(InstanceFactory.newResolution("réhybridation FC", "rehyb-FC", resolutionCategories.get("Default"), (short) 4));
+		
+		ResolutionConfiguration r = new ResolutionConfiguration();
+		r.code = "expIPDReso";
+		r.resolutions = l;
+		r.objectTypeCode = "Experiment";
+		ArrayList<String> al = new ArrayList<String>();
+		al.add("ext-to-prepa-flowcell");
+		al.add("prepa-flowcell");	
+		al.add("prepa-fc-ordered");	
+		al.add("illumina-depot");	
 		r.typeCodes = al;
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
