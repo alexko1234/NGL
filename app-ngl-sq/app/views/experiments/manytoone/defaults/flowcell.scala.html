@@ -49,7 +49,7 @@
 					</th>								
 				</tr>
 				</thead>				
-				<tr ng-model="container" ng-repeat="container in atmService.data.inputContainers | orderBy:'code'" draggable drag="dragInProgress">
+				<tr ng-model="container" ng-repeat="container in atmService.data.inputContainers | orderBy:'code' track by $index" draggable drag="dragInProgress">
 					<td>
 						<button class="btn btn-default btn-xs" ng-disabled="!experiment.experimentProperties.enabled" ng-click="atmService.data.deleteInputContainer(container)" ><i class="fa fa-trash-o"></i></button>
 					</td>
@@ -105,7 +105,7 @@
 				@Messages("containers.table.libProcessTypeCodes")
 			</th>
 			<th  ng-if="isAllOpen"
-				ng-repeat="property in outputContainerProperties">
+				ng-repeat="property in outputContainerProperties track by $index">
 				{{property.name}}<span ng-if="property.displayMeasureValue"> ({{property.displayMeasureValue.value}})</span>
 			</th>
 			<th ng-if="!isAllOpen" colspan="{{5 + outputContainerProperties.length}}"></th>
@@ -116,7 +116,7 @@
 			<tr>
 			<th colspan="7"></th>
 		
-			<th ng-repeat="property in outputContainerProperties">
+			<th ng-repeat="property in outputContainerProperties track by $index">
 						<input class="form-control input-sm" type="text"  
 							ng-readonly="!experiment.experimentProperties.enabled" 
 								ng-model="outputContainerValues[property.code]" 
@@ -126,7 +126,7 @@
 			</tr>
 			</tbody>
 			
-			<tbody ng-repeat="atm in atmService.data.atm | orderBy:'line'" ng-model="atm.inputContainerUseds" 
+			<tbody ng-repeat="atm in atmService.data.atm | orderBy:'line' track by $index" ng-model="atm.inputContainerUseds" 
 				droppable drop-fn="atmService.data.drop" 
 				ng-class="getDroppableClass()"
 				ng-switch="getDisplayMode(atm, $index)">
@@ -155,14 +155,14 @@
 						</button>			
 					</td>	
 					<td colspan="{{5 + outputContainerProperties.length}}" >
-						<span ng-repeat="inputContainer in atm.inputContainerUseds | orderBy:'code'"  class="compactText"
+						<span ng-repeat="inputContainer in atm.inputContainerUseds | orderBy:'code' track by $index"  class="compactText"
 							ng-model="inputContainer" draggable drag="dragInProgress">
 							{{inputContainer.code}} / {{inputContainer.percentage}}% / PhiX:{{atm.outputContainerUseds[0].experimentProperties.phixPercent.value || "nr"}}%;<br/>
 						</span>
 					</td>
 				</tr>
 				
-				<tr ng-switch-when="open" ng-repeat="inputContainer in atm.inputContainerUseds | orderBy:'code'"  
+				<tr ng-switch-when="open" ng-repeat="inputContainer in atm.inputContainerUseds | orderBy:'code' track by $index"  
 							ng-model="inputContainer" draggable drag="dragInProgress">	
 						<td rowspan="{{atm.inputContainerUseds.length}}" ng-if="$index === 0">
 							<span class="label label-black" ng-bind="atm.line"></span>
@@ -193,7 +193,7 @@
 							<div list-resize='inputContainer.contents | getArray:"properties.libProcessTypeCode.value"| unique ' list-resize-min-size='5' below vertical>
 					
 						</td>	
-						<td ng-repeat="property in outputContainerProperties" 
+						<td ng-repeat="property in outputContainerProperties track by $index" 
 							ng-if="$parent.$index === 0"
 							rowspan="{{atm.inputContainerUseds.length}}">
 							<input class="form-control input-sm" type="text" 
