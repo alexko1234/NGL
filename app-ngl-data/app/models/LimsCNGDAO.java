@@ -1052,24 +1052,25 @@ public class LimsCNGDAO {
 	/*************************************************************************************************************************************************
 	 * To get the indexes and update the "Parameter" collection
 	 * FDS 30/04/2015: nglbi_code=>code, short_name=>shortName (et non plus code), cng_name=>name
-	 * FDS 15/09/2015: revenir a l'ancien code temporairement pour une mise en production
+	 * FDS 15/09/2015: revenir a l'ancien code temporairement pour une mise en production (short_name partout)
+	 * FDS 24/09/2015 Migration des lanes deja importees donc passer sur nouvelle solution !
 	 */
 	public List<Index> findIndexIlluminaToCreate(final ContextValidation contextError)throws SQLException {
-		//List<Index> results = this.jdbcTemplate.query("select nglbi_code, short_name, cng_name,(CASE WHEN type = 1 THEN 'SINGLE-INDEX'::text WHEN type = 2 THEN 'DUAL-INDEX'::text WHEN type = 3 THEN 'MID'::text ELSE NULL::text END) AS code_category,sequence from t_index order by 1" 
-		//		,new RowMapper<Index>() {
-		List<Index> results = this.jdbcTemplate.query("select distinct short_name,(CASE WHEN type = 1 THEN 'SINGLE-INDEX'::text WHEN type = 2 THEN 'DUAL-INDEX'::text WHEN type = 3 THEN 'MID'::text ELSE NULL::text END) AS code_category,sequence from t_index order by 1" 
+		List<Index> results = this.jdbcTemplate.query("select nglbi_code, short_name, cng_name,(CASE WHEN type = 1 THEN 'SINGLE-INDEX'::text WHEN type = 2 THEN 'DUAL-INDEX'::text WHEN type = 3 THEN 'MID'::text ELSE NULL::text END) AS code_category,sequence from t_index order by 1" 
 				,new RowMapper<Index>() {
+		//List<Index> results = this.jdbcTemplate.query("select distinct short_name,(CASE WHEN type = 1 THEN 'SINGLE-INDEX'::text WHEN type = 2 THEN 'DUAL-INDEX'::text WHEN type = 3 THEN 'MID'::text ELSE NULL::text END) AS code_category,sequence from t_index order by 1" 
+		//		,new RowMapper<Index>() {
 					@SuppressWarnings("rawtypes")
 					public Index mapRow(ResultSet rs, int rowNum) throws SQLException {
 						Index index=new Index();
-						
-						// FDS 15/09/2015 repasser a l'ancienne version temporairement
-						//index.code=rs.getString("nglbi_code");
-						//index.shortName=rs.getString("short_name");
-						//index.name=rs.getString("cng_name");
-						index.code=rs.getString("short_name");
+
+						index.code=rs.getString("nglbi_code");
 						index.shortName=rs.getString("short_name");
-						index.name=rs.getString("short_name");
+						index.name=rs.getString("cng_name");
+						
+						//index.code=rs.getString("short_name");
+						//index.shortName=rs.getString("short_name");
+						//index.name=rs.getString("short_name");
 						
 						index.categoryCode=rs.getString("code_category");
 						index.sequence=rs.getString("sequence");

@@ -55,9 +55,7 @@ GET		/cng/migration-tube-import				controllers.migration.cng.TubeImport.migratio
 GET		/cng/migration-concentration			controllers.migration.cng.UpdateConcentration.migration()
 GET		/cng/migration-comments					controllers.migration.cng.MigrationComments.migration()
 GET		/cng/migration-projectcodes-rds			controllers.migration.cng.MigrationProjectCodesFromReadSets.migration()
-
-
-
+GET     /cng/migration-lanes                    controllers.migration.cng.MigrationLanes.migration()
 
 #GET 	/update/readsetfile/:code				controllers.migration.cns.MigrationReadSetFileCNS.updateFileReadSet(code: java.lang.String)
 
