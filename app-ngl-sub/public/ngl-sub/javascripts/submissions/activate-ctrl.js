@@ -12,8 +12,8 @@ angular.module('home').controller('ActivateCtrl',[ '$http', '$scope', '$routePar
 			},
 			otherButtons:{
 				active:true,
-				template:'<button class="btn" title=\'@Messages("button.save")\' ng-click="activate()" data-toggle="tooltip" >'
-						+'<i class="fa fa-save"></i></button>'
+				template:'<button class="btn" ng-click="activate()" data-toggle="tooltip" title="'+Messages("button.activate")+'">'
+				+'<i class="fa fa-play fa-lg"></i></button>'
 			},
 			name:"Submissions"
 	};	

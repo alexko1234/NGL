@@ -110,6 +110,7 @@ button.reset=Reset
 button.cancel=Cancel
 button.edit=Edit
 button.validate=Validate
+button.activate=Activate
 #Containers
 #containers.title = Containers
 #containers.menu = Containers
