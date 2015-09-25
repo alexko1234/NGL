@@ -1164,7 +1164,7 @@ angular.module('ultimateDataTableServices', []).
 		    					var data = [];
 		    					
 								var valueFunction = this.getValueFunction(this.config.save.value);
-		    					for(var i = 0; i < this.displayResult.length; i++){
+		    					for(var i = 0; this.displayResult && i < this.displayResult.length ; i++){
 			    					if(this.displayResult[i].line.edit || this.config.save.withoutEdit){
 			    						//remove datatable properties to avoid this data are retrieve in the json
 			    						this.config.save.number++;

@@ -302,10 +302,10 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', 'atmToGenerateMan
 	};
 	
 	$scope.$on('save', function(e, promises, func, endPromises) {	
-		console.log("call event save");
+		console.log("call event save on tube-to-tubes");
 		$scope.atmService.viewToExperiment($scope.experiment);
 		$scope.updateInputVolume($scope.experiment);
-		$scope.$emit('viewSaved', promises, func, endPromises);
+		$scope.$emit('childSaved', promises, func, endPromises);
 	});
 	
 	
@@ -325,7 +325,7 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', 'atmToGenerateMan
 	
 	
 	$scope.$on('refresh', function(e) {
-		console.log("call event refresh");
+		console.log("call event refresh on tube-to-tubes");
 		
 		var dtConfig = $scope.atmService.data.datatableParam.getConfig();
 		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isNewState());

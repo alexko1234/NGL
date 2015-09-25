@@ -47,7 +47,7 @@
 				</thead>				
 				<tr ng-model="container" ng-repeat="container in atmService.data.inputContainers | orderBy:'code' track by $index" >
 					<td>
-						<button class="btn btn-default btn-xs" ng-disabled="!experiment.experimentProperties.enabled" ng-click="atmService.data.deleteInputContainer(container)" ><i class="fa fa-trash-o"></i></button>
+						<button class="btn btn-default btn-xs"  ng-click="atmService.data.deleteInputContainer(container)" ><i class="fa fa-trash-o"></i></button>
 					</td>
 					<td>
 						{{container.code}}

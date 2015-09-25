@@ -47,6 +47,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			form.experimentCategoryCode = $scope.experimentType.category.code;
 			mainService.setForm(form);		
 		}
+		$scope.$broadcast('activeEditMode');
 		
 	};
 	
@@ -69,14 +70,21 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			
 			mainService.setForm(form);								
 		}	
+		$scope.$broadcast('refresh');
 	};
 	
 	$scope.save = function(){
-		console.log("call save");
+		console.log("call save on main");
 		saveInProgress = true;
-		
+		$scope.$broadcast('save');
 		updateData();
 	};
+	
+	$scope.$on('childSaved', function(e) {
+		console.log('call event childSaved on main');
+		saveInProgress = false;
+		$scope.$broadcast('refresh');
+	});
 	
 	$scope.startExperiment = function(){
 		console.log("call startExperiment");
@@ -344,11 +352,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			        	 active:true,
 			        	 showButton:false,
 			        	 withoutEdit:true,
-			        	 mode:'local',
-			        	 callback:function(datatable){
-			        		 var reagents = datatable.allResult;
-			        		 $scope.experiment.reagents = reagents;
-			        	 }
+			        	 mode:'local'
 			         },
 			         messages:{
 			        	 active:false,
@@ -484,7 +488,8 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	$scope.$on('save', function(e, promises, func, endPromises) {	
 		console.log("call event save for reagents");
 		$scope.datatableReagent.save()
-		$scope.$emit('viewSaved', promises, func, endPromises);
+		$scope.experiment.reagents = $scope.datatableReagent.getData();
+		$scope.$emit('childSaved', promises, func, endPromises);
 	});
 	
 	$scope.$on('refresh', function(e) {

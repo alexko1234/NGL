@@ -4,6 +4,8 @@
 		<div class="page-header">	
 			<div class="btn-toolbar pull-right">
 			 	<button class="btn btn-primary" ng-disabled="isSaveInProgress()" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i></button>
+			 	<button class="btn btn-primary"  ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i></button>
+			 	
 			 	<div class="btn-group" ng-switch on="isEditMode()" ng-if="isEditModeAvailable()">
 			 		<button class="btn btn-default" ng-switch-when="true"  ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i></button>
 			 		<button class="btn btn-default" ng-switch-when="false"  ng-click="activeEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i></button>

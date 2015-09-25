@@ -418,7 +418,7 @@ angular.module('atomicTransfereServices', [])
 					if(null === experimentIn || undefined === experimentIn){
 						throw 'experiment is required';
 					}
-					experiment = experimentIn.value;
+					experiment = experimentIn;
 					var allData = this.data.getData();
 					if(allData != undefined){
 						experiment.atomicTransfertMethods = []; // to manage remove
@@ -451,7 +451,7 @@ angular.module('atomicTransfereServices', [])
 					if(null === experimentIn || undefined === experimentIn){
 						throw 'experiment is required';
 					}
-					experiment = experimentIn.value;
+					experiment = experimentIn;
 					var allData = this.data.getData();
 					if(allData != undefined){
 						experiment.atomicTransfertMethods = []; // to manage remove
@@ -494,7 +494,7 @@ angular.module('atomicTransfereServices', [])
 					if(null === experimentIn || undefined === experimentIn){
 						throw 'experiment is required';
 					}
-					experiment = experimentIn.value;
+					experiment = experimentIn;
 					var allData = this.data.getData();
 					if(allData != undefined){
 						experiment.atomicTransfertMethods = []; // to manage remove
