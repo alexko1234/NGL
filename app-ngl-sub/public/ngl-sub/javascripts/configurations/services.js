@@ -80,35 +80,107 @@
 	}	
 ]).factory('configurationsConsultationService', ['$http', 'mainService', 'lists', 'datatable', function($http, mainService, lists, datatable){
 
-/*	
-methode utilisée pour definir les colonnes du datatable mais dans notre cas elles sont directement definies
-dans consultation-ctrl.js.
+
+// methode utilisée pour definir les colonnes du datatable 
+
 var getColumns = function(){
 		var columns = [];
-		columns.push({	property:"code",
-			    	  	header: "configurations.code",
-			    	  	type :"text",		    	  	
-			    	  	order:true});
-		
-		return columns;
+		columns.push({property:"code",
+			        	header: "configuration.code",
+			        	type :"text",		    	  	
+			        	order:true
+			        });	
+		columns.push({property:"projectCode",
+			        	header: "configuration.projectCode",
+			        	type :"text",		    	  	
+			        	order:false,
+			        	edit:false,
+			        	choiceInList:false  
+			        });	
+		columns.push({property:"librarySelection",
+						header: "configuration.librarySelection",
+						type :"String",
+			        	hide:true,
+			        	edit:true,
+						order:false,
+				    	choiceInList:true,
+				    	listStyle:'bt-select-multiple',
+				    	possibleValues:'consultationService.sraVariables.librarySelection',
+				    });	
+		columns.push({property:"libraryStrategy",
+						header: "configuration.libraryStrategy",
+						type :"String",
+						hide:true,
+						edit:true,
+						order:false,
+						choiceInList:true,
+						listStyle:'bt-select-multiple',
+						possibleValues:'consultationService.sraVariables.libraryStrategy',
+				    });	
+		columns.push({property:"librarySource",
+						header: "configuration.librarySource",
+						type :"String",
+						hide:true,
+						edit:true,
+						order:false,
+						choiceInList:true,
+						listStyle:'bt-select-multiple',
+						possibleValues:'consultationService.sraVariables.librarySource',
+					});	
+		columns.push({property:"libraryConstructionProtocol",
+						 header: "consultationService.libraryConstructionProtocol",
+						 type :"String",		    	  	
+						 hide:true,
+						 edit:true,
+					});	
+		columns.push({property:"state.code",
+			        	  header: "configuration.state.code",
+			        	  type :"text",		    	  	
+			        	  order:false,
+			        	  edit:false,
+			        	  choiceInList:false
+			        });	
+			        	
+			return columns;
 	};
-*/	
+	
+		
+
 	var isInit = false;
 	
 	var initListService = function(){
 		if(!isInit){
 			consultationService.lists.refresh.projects();
+			$http.get(jsRoutes.controllers.sra.api.Variables.get('strategySample').url)
+				.success(function(data) {
+					// initialisation de la variable sraVariables.strategySample utilisée dans consultation.scala.html
+					consultationService.sraVariables.strategySample = data;																					
+			});
+			$http.get(jsRoutes.controllers.sra.api.Variables.get('librarySelection').url)
+			.success(function(data) {
+				consultationService.sraVariables.librarySelection = data;																					
+			});
+			$http.get(jsRoutes.controllers.sra.api.Variables.get('libraryStrategy').url)
+			.success(function(data) {
+				consultationService.sraVariables.libraryStrategy = data;																					
+			});
+			$http.get(jsRoutes.controllers.sra.api.Variables.get('librarySource').url)
+			.success(function(data) {
+				consultationService.sraVariables.librarySource = data;																					
+			});
 			isInit=true;
 		}
 	};
 	
-		
+	
 	var consultationService = {
 			isRouteParam : false,
 			lists : lists,
 			form : undefined,
 			datatable : undefined,
+			sraVariables : {},
 			
+			//console.log("sraVariables :" + sraVariables); 
 			// methode appelee pour remplir le tableau des configurations 
 			// Recherche toutes les configurations pour projCode indiqué :
 			search : function(){
@@ -152,7 +224,7 @@ var getColumns = function(){
 					// On definit la config du tableau configurationDT dans consultation-ctrl.js et les colonnes à afficher dans
 					// consultation-ctrl.js ou bien dans services.js (dernier cas qui permet de reutiliser la definition des colonnes => factorisation du code)
 					// Dans notre cas definition des colonnes dans consultation-ctrl.js d'ou ligne suivante en commentaire.
-					//consultationService.datatable.setColumnsConfig(getColumns());	
+					consultationService.datatable.setColumnsConfig(getColumns());	
 						
 				}else if(angular.isDefined(mainService.getDatatable())){
 					consultationService.datatable = mainService.getDatatable();			

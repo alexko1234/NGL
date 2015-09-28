@@ -15,6 +15,7 @@
 					<ul class="dropdown-menu" role="menu" aria-labelledby="studies">
 					<!-- sous menu create qui appelle controler tpl study.home -->
 						<li class="@("active".when(nav == "studies.create"))"><a href="@controllers.sra.studies.tpl.routes.Studies.home("create")">@Messages("studies.menu.create")</a></li>																				
+						<li class="@("active".when(nav == "studies.consultation"))"><a href="@controllers.sra.studies.tpl.routes.Studies.home("consultation")">@Messages("studies.menu.consultation")</a></li>																				
 					</ul>
 				</li>
 				
