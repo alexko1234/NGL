@@ -300,6 +300,7 @@ public class ResolutionService {
 		r.objectTypeCode = "ReadSet";
 		ArrayList<String> al = new ArrayList<String>();
 		al.add("default-readset");
+		al.add("rsillumina");		
 		r.typeCodes = al;
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "readSetReso");
@@ -386,6 +387,10 @@ public class ResolutionService {
 		al.add("RMISEQ");
 		al.add("RGAIIx");
 		al.add("RARGUS");
+		
+		al.add("RMINION");
+		al.add("RMKI");
+		
 		r.typeCodes = al;
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "runReso");
@@ -455,8 +460,10 @@ public class ResolutionService {
 		r.resolutions = l;
 		r.objectTypeCode = "ReadSet";
 		ArrayList<String> al = new ArrayList<String>();
-		 al.add("default-readset");
-		 al.add("RSARGUS");
+		al.add("default-readset");
+		al.add("rsillumina");
+		al.add("rsnanopore");
+		
 		r.typeCodes = al;
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "readSetReso");

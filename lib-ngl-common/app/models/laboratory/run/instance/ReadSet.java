@@ -24,7 +24,7 @@ import validation.run.instance.TreatmentValidationHelper;
 import validation.utils.ValidationHelper;
 import fr.cea.ig.DBObject;
 
-@JsonTypeInfo(use=Id.NAME, include=As.PROPERTY, property="typeCode", defaultImpl=models.laboratory.run.instance.ReadSetLane.class)
+@JsonTypeInfo(use=Id.NAME, include=As.EXISTING_PROPERTY, property="typeCode", defaultImpl=models.laboratory.run.instance.ReadSetLane.class, visible=true)
 @JsonSubTypes({
 	@JsonSubTypes.Type(value = models.laboratory.run.instance.ReadSetLane.class, name = "default-readset"),
 	@JsonSubTypes.Type(value = models.laboratory.run.instance.ReadSetLane.class, name = "rsillumina"),

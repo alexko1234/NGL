@@ -72,8 +72,8 @@ object ApplicationBuild extends Build {
 		"org.springframework" % "spring-test" % "4.0.3.RELEASE",
 		"org.julienrf" %% "play-jsmessages" % "1.6.2",
 		"javax.mail" % "mail" % "1.4.2",
-	    "org.codehaus.janino" % "janino" % "2.5.15"
-
+	    "org.codehaus.janino" % "janino" % "2.5.15",
+		"com.fasterxml.jackson.core" % "jackson-databind" % "2.5.0"
     	)	
    	val ngldatatableDependencies = Seq(
    	    javaCore
