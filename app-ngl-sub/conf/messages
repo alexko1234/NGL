@@ -12,6 +12,20 @@ create.placeholder.projectCode=Select. code projet
 create.placeholder.abstract=Def. abstract
 create.placeholder.description=Def. description
 create.placeholder.existingStudyType=Type de study
+studies.menu.consultation = Consultation
+study.code=Code
+study.projectCode=ProjectCode
+study.state.code=State
+study.accession=AccessionNumber
+study.releaseDate=ReleaseDate
+study.centerName=CenterName
+study.centerProjectName=CenterProjectName
+study.title=Title
+study.studyAbstract=StudyAbstract
+study.description=Description
+study.bioProjectId=BioProjectId
+study.existingStudyType=ExistingStudyType
+
 
 #Configuration
 configurations.menu = Configurations
@@ -30,7 +44,7 @@ create.placeholder.strategySample=strategySample
 configurations.msg.consultation=Consultation des configurations
 configuration.code=Code
 configuration.projectCode=ProjectCode
-configuration.state=State
+configuration.state.code=State
 configuration.librarySource=LibrarySource
 configuration.libraryConstructionProtocol=LibraryConstructionProtocol
 configuration.libraryStrategy=LibraryStrategy
@@ -110,6 +124,7 @@ button.reset=Reset
 button.cancel=Cancel
 button.edit=Edit
 button.validate=Validate
+button.activate=Activate
 #Containers
 #containers.title = Containers
 #containers.menu = Containers

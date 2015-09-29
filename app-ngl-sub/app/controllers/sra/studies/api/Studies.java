@@ -21,6 +21,7 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
+import views.components.datatable.DatatableResponse;
 import controllers.DocumentController;
 //import models.sra.submit.util.VariableSRA;
 import fr.cea.ig.MongoDBDAO;
@@ -66,22 +67,28 @@ public class Studies extends DocumentController<Study>{
 		
 		return ok(Json.toJson(userStudy.code));
 	}
+
+	// methode list appelee avec url suivante :
+	//localhost:9000/api/sra/studies?datatable=true&paginationMode=local&projCode=BCZ
+	// url construite dans services.js 
+	//search : function(){
+	//	this.datatable.search({projCode:this.form.projCode, state:'new'});
+	//},
 	// Renvoie le Json correspondant à la liste des study ayant le projectCode indique dans la variable du formulaire projectCode et stockee dans
-	// l'instance studiesSearchForm
-	/*public Result list() {	
-		Form<StudiesSearchForm> studiesFilledForm = filledFormQueryString(studiesSearchForm, StudiesSearchForm.class);
-		StudiesSearchForm studiesSearchForm = studiesFilledForm.get();
-		MongoDBResult<Study> results = MongoDBDAO.find(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, DBQuery.is("projectCode", studiesSearchForm.projCode));
-		List<Study> studys = results.toList();
-		return ok(Json.toJson(studys));
-	}*/
-	public Result list() {	
-		StudiesSearchForm studiesFilledForm = filledFormQueryString(StudiesSearchForm.class);
-		Query query = getQuery(studiesFilledForm);
-		MongoDBResult<Study> results = mongoDBFinder(studiesFilledForm, query);		
-		List<Study> studysList = results.toList();
-		return ok(Json.toJson(studysList));
-	}
+	// l'instance studiesSearchForm	
+	public Result list(){	
+		Form<StudiesSearchForm> studiesSearchFilledForm = filledFormQueryString(studiesSearchForm, StudiesSearchForm.class);
+		StudiesSearchForm studiesSearchForm = studiesSearchFilledForm.get();
+		//Logger.debug(studiesSearchForm.state);
+		Query query = getQuery(studiesSearchForm);
+		MongoDBResult<Study> results = mongoDBFinder(studiesSearchForm, query);				
+		List<Study> studiesList = results.toList();
+		if(studiesSearchForm.datatable){
+			return ok(Json.toJson(new DatatableResponse<Study>(studiesList, studiesList.size())));
+		}else{
+			return ok(Json.toJson(studiesList));
+		}
+	}	
 	
 	private Query getQuery(StudiesSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
@@ -94,4 +101,42 @@ public class Studies extends DocumentController<Study>{
 		}
 		return query;
 	}
+	
+	private Study getStudy(String code) {
+		Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, code);
+		return study;
+	}
+	
+	public Result update(String code) {
+		//Get Submission from DB 
+		Study study = getStudy(code);
+		Form<Study> filledForm = getFilledForm(studyForm, Study.class);
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+
+		if (study == null) {
+			//return badRequest("Study with code "+code+" not exist");
+			ctxVal.addErrors("study ", " not exist");
+			return badRequest(filledForm.errorsAsJson());
+		}
+		Study studyInput = filledForm.get();
+		if (code.equals(studyInput.code)) {	
+			ctxVal.setUpdateMode();
+			ctxVal.getContextObjects().put("type","sra");
+			studyInput.traceInformation.setTraceInformation(getCurrentUser());
+			studyInput.validate(ctxVal);
+			if (!ctxVal.hasErrors()) {
+				Logger.info("Update study state "+studyInput.state.code);
+				MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, studyInput);
+				return ok(Json.toJson(studyInput));
+			}else {
+				return badRequest(filledForm.errorsAsJson());
+			}
+		}else{
+			//return badRequest("study code are not the same");
+			ctxVal.addErrors("study " + code, "study code  " + code + " and studyInput.code "+ studyInput.code + "are not the same");
+			return badRequest(filledForm.errorsAsJson());
+		}	
+	}
+
+
 }

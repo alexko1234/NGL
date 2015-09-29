@@ -1,0 +1,35 @@
+@()
+@import views.html.helper._
+
+@formConsultation() = {
+
+	@columnSearchForm{
+		@formGroup{
+			@** ceci est un commentaire
+			**@
+			<div class="form-control" bt-select  ng-model="consultationService.form.projCode" filter="true" placeholder='@Messages("consultation.placeholder.projectCode")' bt-options="project.code as project.code for project in consultationService.lists.getProjects()" required ng-change=search()></div>	
+		}													
+	}
+}
+
+
+<div class="row">
+<div class="col-md-12 col-lg-12"  messages="messages"></div>
+</div>
+
+<div class="row"> 
+	<div class="col-md-12 col-lg-12" datatable="consultationService.datatable">
+		<div dt-form>	
+			<div class="tab-content">
+				<div class="tab-pane active" id="filters">
+					<form name="studyForm" class="well well-small">
+						<div class="row">
+						@formConsultation
+						</div>		
+					</form>	
+				</div>
+			</div>
+		</div>
+	</div>
+</div> 
+

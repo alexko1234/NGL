@@ -20,7 +20,7 @@ angular.module('home').controller('ConsultationCtrl',[ '$http', '$scope', '$rout
 				active:true
 			},
 			exportCSV:{
-				active:true
+				active:false
 			}, 
 			name:"Submissions"
 	};
