@@ -201,11 +201,11 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
         propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb cycles read1 utiles","nbUsefulCycleRead1", LevelService.getLevels(Level.CODE.Lane, Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
         propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb cycles read index1 utiles Casava","nbUsefulCycleReadIndex1", LevelService.getLevels(Level.CODE.Lane, Level.CODE.ReadSet, Level.CODE.Default), Integer.class, false, "single"));
         
-	    //if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){    
+	      
 	    propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Trimming adaptateurs par ngs-rg","casavaAdapterTrimming", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Boolean.class, false, "single"));
-	       	propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases après trimming","nbBaseAfterTrim", LevelService.getLevels(Level.CODE.Run, Level.CODE.Lane, Level.CODE.ReadSet, Level.CODE.Default), Long.class, false, "single"));
-	        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% bases trimmées","percentBaseTrim", LevelService.getLevels(Level.CODE.Run, Level.CODE.Lane, Level.CODE.ReadSet, Level.CODE.Default), Double.class, false, "single"));
-        //}
+	    propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases après trimming","nbBaseAfterTrim", LevelService.getLevels(Level.CODE.Run, Level.CODE.Lane, Level.CODE.ReadSet, Level.CODE.Default), Long.class, false, "single"));
+	    propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% bases trimmées","percentBaseTrim", LevelService.getLevels(Level.CODE.Run, Level.CODE.Lane, Level.CODE.ReadSet, Level.CODE.Default), Double.class, false, "single"));
+       
         return propertyDefinitions;
 	}
 	
@@ -440,7 +440,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Min size (bases)","minSize",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Max size (bases)","maxSize",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Merged reads distribution","mergedReadsDistrib",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Image.class, false, "img"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Overlap distribution","overlapDistrib",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Image.class, true, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Overlap distribution","overlapDistrib",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Image.class, false, "img"));
 		return propertyDefinitions;		
 	}
 	
