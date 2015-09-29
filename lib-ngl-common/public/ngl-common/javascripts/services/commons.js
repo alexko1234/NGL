@@ -394,7 +394,7 @@ angular.module('commonsServices', []).
     				'    <ul>'+
     				'		<li ng-repeat="(key1, value1) in messages.details">{{key1}}'+
     				'		<ul>'+
-    				'			<li ng-repeat="(key2, value2) in value1"> {{key2}} == {{value2}} </li>'+
+    				'			<li ng-repeat="(key2, value2) in value1"> {{value2}} </li>'+
     			    '		</ul>'+
     			    '		</li>'+
     			    '	</ul>'	+

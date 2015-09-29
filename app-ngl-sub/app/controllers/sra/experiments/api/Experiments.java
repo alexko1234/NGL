@@ -65,6 +65,7 @@ public class Experiments extends DocumentController<Experiment> {
 			}else {
 				System.out.println("contextValidation.errors pour experiment :"  +userExperiment.code);
 				ctxVal.displayErrors(Logger.of("SRA"));
+				System.out.println(filledForm.errorsAsJson());
 				return badRequest(filledForm.errorsAsJson());
 			}
 		}else{

@@ -25,18 +25,25 @@ angular.module('home').controller('ActivateCtrl',[ '$http', '$scope', '$routePar
  		if (decompte === 0) {
  			if (error){
  				// afficher message d'erreur sans sauver la soumission.
- 				$scope.messages.setError("save");
+ 				$scope.messages.setError("activate");
  			} else {
- 				$scope.messages.setSuccess("save");
+ 				$scope.messages.setSuccess("activate");
 				//$scope.activateService.search();
  			}
  		}
  		return decompte;
 	}
 	
+	var configMessage = {
+		errorClass:'alert alert-danger',
+		successClass: 'alert alert-success',							
+		errorKey:{save:'msg.error.save',remove:'msg.error.remove',activate:'msg.error.activate'},
+		successKey:{save:'msg.success.save',remove:'msg.success.remove',activate:'msg.success.activate'}
+	};
 	
 	$scope.messages = messages();	
-
+	$scope.messages.setConfig(configMessage);
+	
 	
 	if(angular.isUndefined(mainService.getHomePage())){
 		mainService.setHomePage('activate');
