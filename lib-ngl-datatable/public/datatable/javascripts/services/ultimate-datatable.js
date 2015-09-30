@@ -481,7 +481,7 @@ angular.module('ultimateDataTableServices', []).
 		    				if(this.config.group.active){
 		    					var columnId;
 		    					column === 'all' ? columnId = 'all' : columnId = column.id;
-		    					if(this.config.group.by === undefined || this.config.group.by !== column){
+		    					if(this.config.group.by === undefined || this.config.group.by.property !== column.property){
 		    						this.config.group.start=true;
 		    						if(columnId === "all"){
 		    							this.config.group.by = columnId;
@@ -1750,6 +1750,7 @@ angular.module('ultimateDataTableServices', []).
 			    					
 			    					if(this.config.group.active && angular.isDefined(this.config.group.by) && (columns[i].property === this.config.group.by || columns[i].property === this.config.group.by.property)){
 			    						this.config.group.by = columns[i];
+			    						this.config.group.start=true;
 			    						this.config.group.columns[columns[i].id] = true;
 			    						columns[i].group = true;
 			    					}else{
@@ -3135,7 +3136,7 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
 		    			if(scope.udtTable.config.group.active && scope.udtTable.config.group.start && !scope.udtTable.config.group.showOnlyGroups){
 		    				return scope.udtTable.totalNumberRecords + " - "+scope.udtTable.allGroupResult.length;
 		    			}else if(scope.udtTable.config.group.active && scope.udtTable.config.group.start && scope.udtTable.config.group.showOnlyGroups){
-		    				return scope.udtTable.allGroupResult.length
+		    				return (scope.udtTable.allGroupResult)?scope.udtTable.allGroupResult.length:0;
 		    			}else{
 		    				return scope.udtTable.totalNumberRecords;
 		    			}

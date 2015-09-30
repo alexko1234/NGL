@@ -159,7 +159,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			active:true,
 			showOnlyGroups:true,
 			enableLineSelection:true,
-			showButton:true
+			showButton:true,
+			by:"support.code"
 		},
 		pagination:{
 			mode:'local'
