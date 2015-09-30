@@ -119,6 +119,10 @@ experiment.instrumentModel=InstrumentModel
 experiment.lastBaseCoord=LastBaseCoord
 experiment.spotLength=SpotLength
 
+documentation.menu=Documentation
+documentation.page.title=Documentation
+documentation.ebi.title=Documentation EBI
+
 button.save=Save
 button.reset=Reset
 button.cancel=Cancel

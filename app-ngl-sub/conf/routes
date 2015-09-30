@@ -98,6 +98,11 @@ GET    	/api/readsets	                 			controllers.readsets.api.ReadSets.list
 #---------
 GET		/api/projects								@controllers.projects.api.Projects.list()
 
+#----------------
+# documentation
+#----------------
+GET		/sra/documentation/home						controllers.sra.documentation.tpl.Documentation.home()
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               				controllers.Assets.at(path="/public", file)
 GET     /messages.js                				controllers.main.tpl.Main.jsMessages()
