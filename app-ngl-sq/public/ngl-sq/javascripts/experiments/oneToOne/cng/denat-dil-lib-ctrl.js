@@ -207,7 +207,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 		var dtConfig = $scope.atmService.data.getConfig();
 		dtConfig.edit.active = (!$scope.doneAndRecorded );
 		dtConfig.remove.active = (!$scope.doneAndRecorded );
-		dtConfig.remove.active = (!$scope.doneAndRecorded );
+		dtConfig.remove.showButton = (!$scope.doneAndRecorded );
 		$scope.atmService.data.setConfig(dtConfig);
 		
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
