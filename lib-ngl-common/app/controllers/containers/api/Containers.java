@@ -331,6 +331,7 @@ public class Containers extends CommonController {
 						listProcessType.add(processType.code);
 					}
 				}
+				//TODO Erreur quand pas de processus pour un type d'expérience
 				
 				if(CollectionUtils.isNotEmpty(listProcessType)){
 					queryElts.add(DBQuery.in("processTypeCode", listProcessType));
