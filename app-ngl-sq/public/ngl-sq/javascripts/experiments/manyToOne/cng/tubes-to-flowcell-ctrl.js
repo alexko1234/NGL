@@ -27,6 +27,17 @@ angular.module('home').controller('CNGTubesToFlowcellCtrl',['$scope', '$parse', 
 		        	 "extraHeaders":{0:"librairie denaturée"}
 		         },	
 		         {
+		        	"header":"Code aliquot",
+		 			"property": "inputContainer.contents",
+		 			"filter": "getArray:'properties.sampleAliquoteCode.value'",
+		 			"order":false,
+		 			"hide":true,
+		 			"type":"text",
+		 			"position":1.5,
+		 			"render": "<div list-resize='cellValue | unique' list-resize-min-size='3'>",
+		        	 "extraHeaders":{0:"librairie denaturée"}
+			     },
+		         {
 		        	"header":Messages("containers.table.tags"),
 		 			"property": "inputContainer.contents",
 		 			"filter": "getArray:'properties.tag.value'",
