@@ -89,6 +89,12 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 			
+			l.add(newExperimentType("Aliquot","aliquoting",null,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()),
+					getPropertyAliquoting(), getInstrumentUsedTypes("hand"),"OneToMany", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+			
+			
 			/*
 			l.add(newExperimentType("Migration sur puce","chip-migration",
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
@@ -96,27 +102,27 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 			*/
 			
-			l.add(newExperimentType("Migration sur puce (ampli)","chip-migration-post-pcr",null,650,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
-					getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchipGX"),"OneToVoid", 
-					DescriptionFactory.getInstitutes( Institute.CODE.CNG)));
-			
-			l.add(newExperimentType("Migration sur puce (non ampli)","chip-migration-pre-pcr",null,250,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
-					getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchipGX"),"OneToVoid", 
-					DescriptionFactory.getInstitutes( Institute.CODE.CNG)));
-			
-			
-			l.add(newExperimentType("Dosage fluorimétrique","fluo-quantification",null,450,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
-					getInstrumentUsedTypes("qubit"),"OneToVoid", 
-					DescriptionFactory.getInstitutes( Institute.CODE.CNG)));
-			
-			l.add(newExperimentType("Quantification qPCR","qPCR-quantification",null,850,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
-					getInstrumentUsedTypes("rocheLightCycler-qPCR"/*,"stratagene-qPCR"*/),"OneToVoid", 
-					DescriptionFactory.getInstitutes( Institute.CODE.CNG))); 	
-			
+//			l.add(newExperimentType("Migration sur puce (ampli)","chip-migration-post-pcr",null,650,
+//					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
+//					getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchipGX"),"OneToVoid", 
+//					DescriptionFactory.getInstitutes( Institute.CODE.CNG)));
+//			
+//			l.add(newExperimentType("Migration sur puce (non ampli)","chip-migration-pre-pcr",null,250,
+//					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
+//					getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchipGX"),"OneToVoid", 
+//					DescriptionFactory.getInstitutes( Institute.CODE.CNG)));
+//			
+//			
+//			l.add(newExperimentType("Dosage fluorimétrique","fluo-quantification",null,450,
+//					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
+//					getInstrumentUsedTypes("qubit"),"OneToVoid", 
+//					DescriptionFactory.getInstitutes( Institute.CODE.CNG)));
+//			
+//			l.add(newExperimentType("Quantification qPCR","qPCR-quantification",null,850,
+//					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
+//					getInstrumentUsedTypes("rocheLightCycler-qPCR"/*,"stratagene-qPCR"*/),"OneToVoid", 
+//					DescriptionFactory.getInstitutes( Institute.CODE.CNG))); 	
+//					
 
 
 			
@@ -165,13 +171,22 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 			newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false,false,getExperimentTypeNodes("prepa-flowcell"),
 					null,null).save();
+			
+			newExperimentTypeNode("aliquoting",getExperimentTypes("aliquoting").get(0),false,false,getExperimentTypeNodes("denat-dil-lib"),
+					null,null).save();
 		}
 		
 
 
 	}
 
-
+	private static List<PropertyDefinition> getPropertyAliquoting() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µl"),MeasureUnit.find.findByCode( "µl"), "single",10, false));
+		
+		return propertyDefinitions;
+	}
 	
 	private static List<PropertyDefinition> getPropertyDefinitionsPrepaflowcellCNG() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
