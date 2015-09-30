@@ -10,7 +10,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 7) Concentration (nM) 
 	 
 	 */
-	
+	// JIRA-781 rendre editable quand experience est en cours=> supprimer:  && !$scope.Inprogress 
 	var datatableConfig = {
 			name:"FDR_Tube",
 			columns:[
@@ -157,8 +157,8 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 				by:'inputContainer.code'
 			},
 			remove:{
-				active: (!$scope.doneAndRecorded && !$scope.inProgressNow),
-				showButton: (!$scope.doneAndRecorded && !$scope.inProgressNow),
+				active: (!$scope.doneAndRecorded ),
+				showButton: (!$scope.doneAndRecorded ),
 				mode:'local'
 			},
 			save:{
@@ -171,7 +171,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 				active:true
 			},
 			edit:{
-				active: (!$scope.doneAndRecorded && !$scope.inProgressNow),
+				active: (!$scope.doneAndRecorded ),
 				columnMode:true
 			},
 			messages:{
@@ -205,9 +205,9 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 		console.log("call event refresh");
 		
 		var dtConfig = $scope.atmService.data.getConfig();
-		dtConfig.edit.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
-		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
-		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
+		dtConfig.edit.active = (!$scope.doneAndRecorded );
+		dtConfig.remove.active = (!$scope.doneAndRecorded );
+		dtConfig.remove.active = (!$scope.doneAndRecorded );
 		$scope.atmService.data.setConfig(dtConfig);
 		
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
