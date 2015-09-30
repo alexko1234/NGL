@@ -129,6 +129,9 @@ button.activate=Activate
 #containers.title = Containers
 #containers.menu = Containers
 
+msg.success.activate=Activation réussie
+msg.error.activate=Erreur activation
+
 authentification.dropdown_list.username=Utilisateur
 authentification.dropdown_list.profile=Profil
 authentification.dropdown_list.signout=Deconnexion
