@@ -109,13 +109,9 @@ public class MigrationProjectCodes extends CommonController {
 					//set contents to the new ones
 					WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", oldContainer.code),   
 							DBUpdate.set("contents", newContainer.contents).set("projectCodes", newContainer.projectCodes));
-						
-					if(StringUtils.isNotEmpty(r.getError())){
-						Logger.error("Set container : "+oldContainer.code+" with contents and projectCodes / "+ r.getError());
-					}
-					else {
-						intResultsArray[0] = intResultsArray[0] + 1; 
-					}
+					
+					intResultsArray[0] = intResultsArray[0] + 1; 
+					
 					break;
 				}
 			}
@@ -140,12 +136,7 @@ public class MigrationProjectCodes extends CommonController {
 			WriteResult r2 = (WriteResult) MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", supportCode),   
 					DBUpdate.set("projectCodes", projectCodes));
 			
-			if(StringUtils.isNotEmpty(r2.getError())){
-				Logger.error("Set containerSupport : "+supportCode+" with projectCodes "+ projectCodes + " / " + r2.getError());
-			}
-			else {
-				intResultsArray[1] = intResultsArray[1] + 1; 
-			}
+			intResultsArray[1] = intResultsArray[1] + 1; 			
 		}
 		
 		return intResultsArray;

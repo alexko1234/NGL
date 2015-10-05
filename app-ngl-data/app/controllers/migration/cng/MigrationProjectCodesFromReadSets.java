@@ -167,12 +167,9 @@ public class MigrationProjectCodesFromReadSets  extends CommonController {
 							DBQuery.is("code", oldSupportContainer.code),   
 							DBUpdate.set("sampleCodes", listSampleCodesInSupport).set("projectCodes", listProjectCodesInSupport).set("categoryCode", "flowcell-2"));
 				}
-				if(StringUtils.isNotEmpty(r.getError())){
-					Logger.error("ERROR 5 : Set container support project codes: "+oldSupportContainer.code+" / "+ r.getError());
-				}						
-				else {
-					intResultsArray[0]++; 
-				}
+				
+				intResultsArray[0]++; 
+				
 				
 				//find containers associated with this container support
 				List<Container> oldContainers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code", oldSupportContainer.code)).toList();
@@ -227,14 +224,8 @@ public class MigrationProjectCodesFromReadSets  extends CommonController {
 					WriteResult<Container, String> r2 = (WriteResult<Container, String>) MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
 							DBQuery.is("code", oldContainer.code),   
 							DBUpdate.set("contents", oldContainer.contents).set("sampleCodes", listSampleCodesInContainer).set("projectCodes", listProjectCodesInContainer));					
-					if(StringUtils.isNotEmpty(r2.getError())){
-						Logger.error("ERROR 8 : Set container: "+oldContainer.code+" with contents, sampleCodes and projectCodes / "+ r2.getError());
-
-					}						
-					else {
-						intResultsArray[1]++; 
-					}
-					
+					intResultsArray[1]++; 
+				
 				}
 				
 				//* 

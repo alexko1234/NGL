@@ -8,9 +8,9 @@ rule "Set Lane index properties to ReadSet"
 	salience 600
 	no-loop
 	when
-		$readset : ReadSet ( $readSetCode : code, $runCode : runCode, $laneNumber : laneNumber )		
+		$readset : ReadSet($runCode:runCode, $laneNumber:laneNumber)		
 	then
-		Logger.debug("Set Lane properties to Readset "+$readSetCode);
+		Logger.debug("Set Lane properties to Readset "+$readset.code);
 		BasicDBObject keys = new BasicDBObject();
 		keys.put("code", 1);
 		keys.put("lanes", 1);
@@ -38,7 +38,7 @@ rule "Set Lane index properties to ReadSet"
 			}
 			
 			if(isUpdate){
-				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", $readSetCode),  DBUpdate.set("treatments.ngsrg", readSetNGSRG));
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", $readset.code),  DBUpdate.set("treatments.ngsrg", readSetNGSRG));
 			}
 			
 		}else{

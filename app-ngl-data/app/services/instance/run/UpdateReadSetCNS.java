@@ -146,7 +146,7 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 			ReadSet updateRS;
 			try {
 				updateRS = limsServices.findReadSetToUpdate(rs, contextError);
-				logger.info("Update ReadSet ="+rs.getCode());
+				logger.info("Update ReadSet ="+rs.code);
 				if(updateRS.archiveDate != null && updateRS.archiveId != null){
 					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class
 							, DBQuery.is("code", rs.code)
@@ -155,11 +155,11 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 										.set("traceInformation.modifyDate", new Date())
 										.set("traceInformation.modifyUser", "lims"));					
 				}else if(updateRS.archiveDate == null && updateRS.archiveId != null){
-					contextError.addErrors("archiveDate", "Probleme archivage date null / id not null : "+rs.getCode());
-					logger.error("Probleme archivage date null / id not null : "+rs.getCode());
+					contextError.addErrors("archiveDate", "Probleme archivage date null / id not null : "+rs.code);
+					logger.error("Probleme archivage date null / id not null : "+rs.code);
 				}else if(updateRS.archiveDate != null && updateRS.archiveId == null){
-					contextError.addErrors("archiveId", "Probleme archivage date not null / id null : "+rs.getCode());
-					logger.error("Probleme archivage date not null / id null : "+rs.getCode());
+					contextError.addErrors("archiveId", "Probleme archivage date not null / id null : "+rs.code);
+					logger.error("Probleme archivage date not null / id null : "+rs.code);
 				}
 			} catch (SQLException e) {
 				contextError.addErrors("database", e.getMessage());

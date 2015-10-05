@@ -72,8 +72,7 @@ object ApplicationBuild extends Build {
 		"org.springframework" % "spring-test" % "4.0.3.RELEASE",
 		"org.julienrf" %% "play-jsmessages" % "1.6.2",
 		"javax.mail" % "mail" % "1.4.2",
-	    "org.codehaus.janino" % "janino" % "2.5.15",
-		"com.fasterxml.jackson.core" % "jackson-databind" % "2.5.0"
+	    "org.codehaus.janino" % "janino" % "2.5.15"
     	)	
    	val ngldatatableDependencies = Seq(
    	    javaCore
@@ -91,7 +90,8 @@ object ApplicationBuild extends Build {
    	    "org.kie" % "kie-api" % "6.1.0.Final",
    	    "org.kie" % "kie-internal" % "6.1.0.Final",
 		"fr.cea.ig.modules" %% "authentication" % "1.2-SNAPSHOT",
-		"fr.cea.ig" %% "mongodbplugin" % "1.3.1-SNAPSHOT"
+		//"fr.cea.ig" %% "mongodbplugin" % "1.3.1-SNAPSHOT"
+		"fr.cea.ig" %% "mongodbplugin" % "1.4.0-SNAPSHOT"
    	)
    	val nglbiDependencies = Seq(
 	        // Add your project dependencies here,

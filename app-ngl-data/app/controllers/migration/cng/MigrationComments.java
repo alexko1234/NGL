@@ -67,9 +67,7 @@ public class MigrationComments extends CommonController {
 				WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", oldSample.code),   
 						DBUpdate.unset("comments"));
 					
-				if(StringUtils.isNotEmpty(r.getError())){
-					Logger.error("Unset comments : "+oldSample.code+" / "+r.getError());
-				}				
+					
 			}
 			
 			Logger.info("Remove old comments OK");
@@ -85,9 +83,7 @@ public class MigrationComments extends CommonController {
 						WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code", oldSample.code),   
 								DBUpdate.set("comments", newSample.comments));
 							
-						if(StringUtils.isNotEmpty(r.getError())){
-							Logger.error("Set contents : "+oldSample.code+" / "+r.getError());
-						}
+						
 						
 						n++;
 						break;

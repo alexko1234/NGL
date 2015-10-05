@@ -272,12 +272,7 @@ public class MigrationContentExtended extends CommonController {
 					WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", oldContainer.code),   
 							DBUpdate.set("contents", oldContainer.contents));
 						
-					if(StringUtils.isNotEmpty(r.getError())){
-						Logger.error("Set contents : "+oldContainer.code+" / "+r.getError());
-					}
-					else {
-						n++;
-					}
+					n++;
 					
 					break;
 				}
@@ -301,12 +296,7 @@ public class MigrationContentExtended extends CommonController {
 				WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
 						DBQuery.is("code", readSet.code), DBUpdate.set("sampleOnContainer", sampleOnContainer));
 				
-				if (StringUtils.isNotEmpty(r.getError())) {
-					Logger.error("Set sampleOnContainer : "+readSet.code+" / "+r.getError());
-				}
-				else {
-					n++;
-				}
+				n++;				
 			} else {
 				Logger.error("sampleOnContainer null for "+readSet.code);
 			}

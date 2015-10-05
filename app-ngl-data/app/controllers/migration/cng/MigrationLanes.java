@@ -124,10 +124,7 @@ public class MigrationLanes extends CommonController{
 				DBQuery.is("code", mongoLane.code), 
 				DBUpdate.set("fromExperimentTypeCodes", fromexptype).set("contents", solexaLane.contents));
 	
-		if(StringUtils.isNotEmpty(r.getError())){
-			Logger.error("error in fromExperimentTypeCodes update "+ r.getError());
-			return 1;
-		}
+		
 
 		return migrRes;
 	}

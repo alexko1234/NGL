@@ -293,10 +293,7 @@ public class MigrationContent extends CommonController {
 			for (Container oldContainer : oldContainers) {
 				WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", oldContainer.code),   
 						DBUpdate.unset("contents"));
-					
-				if(StringUtils.isNotEmpty(r.getError())){
-					Logger.error("Unset contents : "+oldContainer.code+" / "+r.getError());
-				}				
+							
 			}
 			
 			Logger.info("Remove old contents OK");
@@ -311,9 +308,6 @@ public class MigrationContent extends CommonController {
 						WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", oldContainer.code),   
 								DBUpdate.set("contents", oldContainer.contents));
 							
-						if(StringUtils.isNotEmpty(r.getError())){
-							Logger.error("Set contents : "+oldContainer.code+" / "+r.getError());
-						}
 						
 						n++;
 						break;

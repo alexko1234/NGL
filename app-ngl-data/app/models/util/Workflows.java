@@ -36,7 +36,7 @@ import validation.run.instance.RunValidationHelper;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 
-import com.mongodb.util.Hash;
+
 
 import fr.cea.ig.MongoDBDAO;
 

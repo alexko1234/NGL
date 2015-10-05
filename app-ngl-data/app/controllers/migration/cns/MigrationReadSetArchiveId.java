@@ -46,7 +46,7 @@ public class MigrationReadSetArchiveId  extends CommonController {
 			ReadSet updateRS;
 			try {
 				updateRS = limsServices.findReadSetToUpdate(rs, contextError);
-				Logger.info("Update ReadSet ="+rs.getCode());
+				Logger.info("Update ReadSet ="+rs.code);
 				if(updateRS.archiveDate != null && updateRS.archiveId != null){
 					
 					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class
@@ -57,9 +57,9 @@ public class MigrationReadSetArchiveId  extends CommonController {
 										.set("traceInformation.modifyUser", "lims"));
 															
 				}else if(updateRS.archiveDate == null && updateRS.archiveId != null){
-					Logger.error("Probleme archivage date null / id not null : "+rs.getCode());
+					Logger.error("Probleme archivage date null / id not null : "+rs.code);
 				}else if(updateRS.archiveDate != null && updateRS.archiveId == null){
-					Logger.error("Probleme archivage date not null / id null : "+rs.getCode());
+					Logger.error("Probleme archivage date not null / id null : "+rs.code);
 				}
 			} catch (Exception e) {
 				Logger.error(e.getMessage());

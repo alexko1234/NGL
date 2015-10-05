@@ -71,12 +71,7 @@ public class UpdateConcentration extends CommonController {
 						WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", oldContainer.code),   
 								DBUpdate.set("mesuredConcentration.unit","nM").set("mesuredConcentration.value", newContainer.mesuredConcentration.value));
 						
-						if(StringUtils.isNotEmpty(r.getError())){
-							Logger.error("Unset contents : "+oldContainer.code+" / "+r.getError());
-						}
-						else {
-							n++;
-						}
+						n++;
 						
 						break;
 					}

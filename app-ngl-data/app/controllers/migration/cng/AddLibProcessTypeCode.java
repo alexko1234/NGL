@@ -105,12 +105,8 @@ public class AddLibProcessTypeCode extends CommonController {
 						WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", oldContainer.code),   
 								DBUpdate.set("contents", oldContainer.contents));
 							
-						if(StringUtils.isNotEmpty(r.getError())){
-							Logger.error("Set contents : "+oldContainer.code+" / "+r.getError());
-						}
-						else {
-							n++;
-						}
+						
+						n++;
 						
 						break;
 					}
