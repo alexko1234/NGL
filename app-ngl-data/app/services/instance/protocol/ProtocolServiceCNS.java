@@ -50,6 +50,10 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("cbot_rapid_run_2500_Illumina","CBot_rapid_run_2500_Illumina","path7","1","production", InstanceFactory.setExperimentTypeCodes("prepa-flowcell")));
 		lp.add(newProtocol("ptr_sox147_v1","PTR_SOX147_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("prepa-flowcell")));
 		
+		lp.add(newProtocol("ptr_to_def","PTR_TO_DEF","path7","1","production", InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered")));
+		
+		
+		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			lp.add(newProtocol("prt_wait","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("aliquoting")));
 			lp.add(newProtocol("fragmentation_ptr_sox140_1","Fragmentation_ptr_sox140_1","path1","1","production", InstanceFactory.setExperimentTypeCodes("fragmentation")));
@@ -71,7 +75,7 @@ public class ProtocolServiceCNS {
 			lp.add(newProtocol("map006-FFPE","MAP006 FFPE","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-fragmentation")));
 
 			lp.add(newProtocol("map006","MAP006","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library","nanopore-fragmentation")));
-			lp.add(newProtocol("ptr_to_def","PTR_TO_DEF","path7","1","production", InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered")));
+			
 
 			
 		}

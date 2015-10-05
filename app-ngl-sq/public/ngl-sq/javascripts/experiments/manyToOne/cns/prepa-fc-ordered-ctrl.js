@@ -1,6 +1,10 @@
 angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$parse', 'atmToDragNDrop',
                                                                function($scope, $parse, atmToDragNDrop) {
 	
+	
+	
+	$scope.$parent.isRoadMapAvailable = false;
+	
 	/*
 
 	var atmToSingleDatatable = $scope.atmService.$atmToSingleDatatable;

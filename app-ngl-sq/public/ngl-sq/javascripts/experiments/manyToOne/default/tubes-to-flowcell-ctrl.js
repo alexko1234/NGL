@@ -2,7 +2,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
                                                                function($scope, $parse, atmToDragNDrop) {
 	
 	
-
+	$scope.isRoadMapAvailable = true;
 	var datatableConfig = {
 			name:"FDR_Tube",
 			columns:[  

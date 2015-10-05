@@ -237,7 +237,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 				null,null).save();
 			newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","solution-stock"),
 					null,null).save();
-			newExperimentTypeNode("prepa-FC-ordered",getExperimentTypes("prepa-fc-ordered").get(0),false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","solution-stock"),
+			newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","solution-stock"),
 					null,null).save();
 			newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false,false,getExperimentTypeNodes("prepa-flowcell","prepa-fc-ordered"),
 					null,null).save();
@@ -471,8 +471,8 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 
 	
 	private List<PropertyDefinition> getPropertyDefinitionsPrepaflowcellOrdered() throws DAOException {
-		/*List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		/*
 		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
 						MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",11, false));
@@ -502,14 +502,14 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		propertyDefinitions.add(newPropertiesDefinition("Concentration finale", "finalConcentration2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "1000"
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "pM"),MeasureUnit.find.findByCode( "pM"),"single",23));
 
-		
+		*/
 		//OuputContainer
 		propertyDefinitions.add(newPropertiesDefinition("% phiX", "phixPercent", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null, null, null, null, "single",51,false,"1"));		
 		propertyDefinitions.add(newPropertiesDefinition("Volume final", "finalVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",52,false));
 		
-		return propertyDefinitions;*/
-		return null;
+		return propertyDefinitions;
+		
 	}
 	
 	private static List<PropertyDefinition> getPropertyDefinitionsLibIndexing() throws DAOException {
