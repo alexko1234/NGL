@@ -27,30 +27,31 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 
 	public void saveProcessCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ProcessCategory> l = new ArrayList<ProcessCategory>();
+		
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Sequençage", "sequencing"));		
+		DAOHelpers.saveModels(ProcessCategory.class, l, errors);
+		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Banque", "library"));
 			l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Sequencage", "pre-sequencing"));
 			l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Banque", "pre-library"));
 
 		}
-		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Sequençage", "sequencing"));		
-		DAOHelpers.saveModels(ProcessCategory.class, l, errors);
+		
 
 	}
 
 	public void saveProcessTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		
-		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-			// JIRA 781 renommer le Processus long 
-			l.add(DescriptionFactory.newProcessType("Dénat, prep FC, dépôt", "illumina-run", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsIlluminaDepotCNG() ,getExperimentTypes("denat-dil-lib","prepa-flowcell","illumina-depot"), 
-					getExperimentTypes("denat-dil-lib").get(0), getExperimentTypes("illumina-depot").get(0),getExperimentTypes("ext-to-denat-dil-lib").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-		    // JIRA 781 ajouter un processus court ( sans denat)
-			l.add(DescriptionFactory.newProcessType("Prep FC, dépôt", "prepfc-depot", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsIlluminaDepotCNG() ,getExperimentTypes("prepa-flowcell","illumina-depot"), 
-					getExperimentTypes("prepa-flowcell").get(0), getExperimentTypes("illumina-depot").get(0),getExperimentTypes("ext-to-prepa-flowcell").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-
-		}
 		
+		// JIRA 781 renommer le Processus long 
+		l.add(DescriptionFactory.newProcessType("Dénat, prep FC, dépôt", "illumina-run", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsIlluminaDepotCNG() ,getExperimentTypes("denat-dil-lib","prepa-flowcell","illumina-depot"), 
+				getExperimentTypes("denat-dil-lib").get(0), getExperimentTypes("illumina-depot").get(0),getExperimentTypes("ext-to-denat-dil-lib").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+	    // JIRA 781 ajouter un processus court ( sans denat)
+		l.add(DescriptionFactory.newProcessType("Prep FC, dépôt", "prepfc-depot", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsIlluminaDepotCNG() ,getExperimentTypes("prepa-flowcell","illumina-depot"), 
+				getExperimentTypes("prepa-flowcell").get(0), getExperimentTypes("illumina-depot").get(0),getExperimentTypes("ext-to-prepa-flowcell").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+
 		DAOHelpers.saveModels(ProcessType.class, l, errors);
 	}
 
