@@ -357,11 +357,12 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 				
 				$scope.laneOptions = $filter('orderBy')($scope.run.lanes, 'number');				
 				
+			}else{
+				if(angular.isDefined($scope.run.treatments)){
+					$scope.treatments.init($scope.run.treatments, jsRoutes.controllers.runs.tpl.Runs.treatments, 'runs');				
+				}
 			}
 			
-			if(angular.isDefined($scope.run.treatments)){
-				$scope.treatments.init($scope.run.treatments, jsRoutes.controllers.runs.tpl.Runs.treatments, 'runs');				
-			}
 			
 			$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url,{params:{runCode:$scope.run.code, includes:["code","state","bioinformaticValuation", "productionValuation","laneNumber","treatments.ngsrg", "sampleOnContainer"]}}).success(function(data) {
 				$scope.readSetsDT = datatable(readSetsDTConfig);
