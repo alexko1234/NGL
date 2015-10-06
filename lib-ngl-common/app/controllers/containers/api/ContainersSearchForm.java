@@ -37,7 +37,12 @@ public class ContainersSearchForm extends ListForm{
 	public String createUser; 
 	public List<String> createUsers;
 	public boolean isEmptyFromExperimentTypeCodes=false;
+	
+	@Deprecated
 	public Map<String, List<String>> properties = new HashMap<String, List<String>>();
+	
+	public Map<String, List<String>> processProperties = new HashMap<String, List<String>>();
+	
 	public Map<String, List<String>> contentsProperties = new HashMap<String, List<String>>();
 	
 	@Override

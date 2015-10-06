@@ -68,7 +68,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 		if(l.size() == 1){
 			return l.get(0);
 		}else{
-			Logger.error("PropertyDefinition findUnique query return more than one result: "+sql);
+			Logger.error("PropertyDefinition findUnique query return more than one result or zero result: "+sql+" / "+code+" / "+levelCode);
 			return null;
 		}		
 	}

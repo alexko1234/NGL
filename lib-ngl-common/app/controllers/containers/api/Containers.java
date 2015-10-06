@@ -221,9 +221,15 @@ public class Containers extends CommonController {
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
 		Query query = DBQuery.empty();
 
-		List<String> processCodes = new ArrayList<String>();
+		
 		if(containersSearch.properties.size() > 0){	
-			List<DBQuery.Query> listProcessQuery = NGLControllerHelper.generateQueriesForProperties(containersSearch.properties, Level.CODE.Process, "properties");
+			Logger.warn("used old properties for processProperties");
+			containersSearch.processProperties.putAll(containersSearch.properties);
+		}
+		
+		if(containersSearch.processProperties.size() > 0){	
+			List<String> processCodes = new ArrayList<String>();
+			List<DBQuery.Query> listProcessQuery = NGLControllerHelper.generateQueriesForProperties(containersSearch.processProperties, Level.CODE.Process, "properties");
 			Query processQuery = DBQuery.and(listProcessQuery.toArray(new DBQuery.Query[queryElts.size()]));
 
 			List<Process> processes = MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, processQuery).toList();
