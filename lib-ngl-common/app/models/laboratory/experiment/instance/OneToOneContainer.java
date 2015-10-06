@@ -53,7 +53,12 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 				if(null == this.outputContainerUseds.get(0).code){	
 					this.outputContainerUseds.get(0).code=CodeHelper.getInstance().generateContainerSupportCode();
 				}
-				LocationOnContainerSupport support=new LocationOnContainerSupport();
+				
+				LocationOnContainerSupport support = this.outputContainerUseds.get(0).locationOnContainerSupport;
+				if(null == support){
+					support = new LocationOnContainerSupport();					
+				}
+				
 				support.categoryCode=experiment.instrument.outContainerSupportCategoryCode;
 				// Same position 
 				ContainerSupportCategory containerSupportCategory=ContainerSupportCategory.find.findByCode(experiment.instrument.outContainerSupportCategoryCode);

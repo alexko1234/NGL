@@ -55,8 +55,13 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 
 			//Code outPutContainer
 			String outPutContainerCode=null;
-			LocationOnContainerSupport support=new LocationOnContainerSupport();
-
+			
+			LocationOnContainerSupport support = this.outputContainerUseds.get(0).locationOnContainerSupport;
+			if(null == support){
+				support = new LocationOnContainerSupport();					
+			}
+			
+			
 			if(experiment.instrumentProperties.get("containerSupportCode")==null){
 				outPutContainerCode=CodeHelper.getInstance().generateContainerSupportCode();
 				support.code=outPutContainerCode;

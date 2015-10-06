@@ -98,7 +98,11 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 			if(null == outputContainerUsed.code){	
 				outputContainerUsed.code=CodeHelper.getInstance().generateContainerSupportCode();
 			}
-			LocationOnContainerSupport support=new LocationOnContainerSupport();
+			LocationOnContainerSupport support=outputContainerUsed.locationOnContainerSupport;
+			if(null == support){
+				support=new LocationOnContainerSupport();
+			}
+			
 			support.categoryCode=experiment.instrument.outContainerSupportCategoryCode;
 			// Same position 
 			ContainerSupportCategory containerSupportCategory=ContainerSupportCategory.find.findByCode(experiment.instrument.outContainerSupportCategoryCode);
