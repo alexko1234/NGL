@@ -15,6 +15,7 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
+import models.laboratory.parameter.Index;
 import models.laboratory.processes.instance.SampleOnInputContainer;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
@@ -249,7 +250,7 @@ public class InstanceHelpers {
 			try {
 				if ((null == tag && sampleUsed.sampleCode.equals(readSet.sampleCode))
 						|| (null != tag && null != sampleUsed.properties.get("tag")
-								&& tag.equals(sampleUsed.properties.get("tag").value) && sampleUsed.sampleCode
+								&& tag.equals(convertTagCodeToTagShortName((String)sampleUsed.properties.get("tag").value)) && sampleUsed.sampleCode
 									.equals(readSet.sampleCode))) {
 					return sampleUsed;
 				}
@@ -259,6 +260,16 @@ public class InstanceHelpers {
 		}
 		Logger.warn("Not found Content for " + readSet.code + " / " + readSet.sampleCode);
 		return null;
+	}
+
+	private static Object convertTagCodeToTagShortName(String tagCode) {
+		Index index=MongoDBDAO.findOne(InstanceConstants.PARAMETER_COLL_NAME, Index.class, DBQuery.is("typeCode", "index-illumina-sequencing").is("code", tagCode));
+		if(null != index){
+			return index.shortName;
+		}else{
+			Logger.error("Index not found for code : "+tagCode);
+			return null;
+		}		
 	}
 
 	private static String getTag(ReadSet readSet) {

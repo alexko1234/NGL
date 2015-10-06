@@ -1,6 +1,6 @@
 #migration
 GET		/compare-lims-files							controllers.migration.CompareLimsVsNGL.compareFile(update:Boolean ?=false)
-GET		/migrationSampleOnContainer					controllers.migration.MigrationUpdateSampleOnContainer.migration(code: java.lang.String ?= "all")
+GET		/migrationSampleOnContainer					controllers.migration.MigrationUpdateSampleOnContainer.migration(code: java.lang.String ?= "all", onlyNull:Boolean ?=false)
 GET		/migration-fraction							controllers.migration.MigrationFractionRun.migration()
 
 GET		/migrationRSFF								controllers.migration.RemoveStateFromFile.migration()
