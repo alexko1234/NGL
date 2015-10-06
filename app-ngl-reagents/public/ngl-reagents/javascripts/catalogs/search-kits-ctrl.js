@@ -33,6 +33,7 @@ angular.module('home').controller('SearchKitsCtrl', ['$scope', 'datatable','list
 		$scope.searchService.resetForm();		
 	};
 	
+	
 	//init
 	$scope.datatable = datatable($scope.datatableConfig);		
 	if(angular.isUndefined($scope.getHomePage())){

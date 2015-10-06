@@ -22,6 +22,8 @@ kits.create = Création individuelle
 kits.create-batch = Création en masse
 
 kits.name = Nom kit (usuel)
+kits.boxName = Nom boîte
+kits.reagentName = Nom réactif
 kits.experimentTypes = Expérience(s)
 kits.provider = Fournisseur
 kits.code = Code

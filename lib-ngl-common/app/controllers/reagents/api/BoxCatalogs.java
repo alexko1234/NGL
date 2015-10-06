@@ -3,8 +3,10 @@ package controllers.reagents.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -13,10 +15,11 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import play.mvc.Results;
+import play.Logger;
 import validation.ContextValidation;
 import validation.utils.ValidationHelper;
 import views.components.datatable.DatatableResponse;
-
+import akka.event.Logging.Debug;
 import com.mongodb.BasicDBObject;
 
 import models.laboratory.reagent.description.AbstractCatalog;
@@ -80,23 +83,28 @@ public class BoxCatalogs extends DocumentController<BoxCatalog>{
 		MongoDBDAO.delete(InstanceConstants.REAGENT_CATALOG_COLL_NAME, AbstractCatalog.class, DBQuery.or(DBQuery.is("code", code),DBQuery.is("boxCatalogCode", code)));
 		return ok();
 	}
-	
+		
 	public Result list(){
 		Form<BoxCatalogSearchForm> boxCatalogFilledForm = filledFormQueryString(boxCatalogSearchForm,BoxCatalogSearchForm.class);
 		BoxCatalogSearchForm boxCatalogSearch = boxCatalogFilledForm.get();
 		BasicDBObject keys = getKeys(boxCatalogSearch);
 		DBQuery.Query query = getQuery(boxCatalogSearch);
+		Logger.debug("query : "+query);
 
 		if(boxCatalogSearch.datatable){
+			Logger.debug("C'est une datatable");
 			MongoDBResult<BoxCatalog> results =  mongoDBFinder(boxCatalogSearch, query);
 			List<BoxCatalog> boxCatalogs = results.toList();
 			
 			return ok(Json.toJson(new DatatableResponse<BoxCatalog>(boxCatalogs, results.count())));
 		}else if (boxCatalogSearch.list){
+			Logger.debug("c'est une liste");
 			keys = new BasicDBObject();
 			keys.put("code", 1);
 			keys.put("name", 1);
 			keys.put("category", 1);
+			keys.put("kitCatalogCode",1);
+			Logger.debug("key: " + keys);
 			
 			if(null == boxCatalogSearch.orderBy)boxCatalogSearch.orderBy = "code";
 			if(null == boxCatalogSearch.orderSense)boxCatalogSearch.orderSense = 0;				
@@ -105,7 +113,7 @@ public class BoxCatalogs extends DocumentController<BoxCatalog>{
 			List<BoxCatalog> boxCatalogs = results.toList();
 			List<ListObject> los = new ArrayList<ListObject>();
 			for(BoxCatalog p: boxCatalogs){					
-					los.add(new ListObject(p.code, p.name));								
+					los.add(new ListObject(p.kitCatalogCode, p.name));								
 			}
 			
 			return Results.ok(Json.toJson(los));
@@ -121,12 +129,16 @@ public class BoxCatalogs extends DocumentController<BoxCatalog>{
 	}
 	
 	private static Query getQuery(BoxCatalogSearchForm boxCatalogSearch){
+		//List<Query> queries = new ArrayList<Query>();
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
 		Query query = null;
 		queryElts.add(DBQuery.is("category", "Box"));
 		
 		if(StringUtils.isNotEmpty(boxCatalogSearch.kitCatalogCode)){
-			queryElts.add(DBQuery.is("kitCatalogCode", boxCatalogSearch.kitCatalogCode));
+			Logger.debug("kitCatalogCode : "+boxCatalogSearch.kitCatalogCode);
+			queryElts.add(DBQuery.is("kitCatalogCode", boxCatalogSearch.kitCatalogCode));			
+		} else if(CollectionUtils.isNotEmpty(boxCatalogSearch.kitCatalogCodes)){
+			queryElts.add(DBQuery.in("kitCatalogCode", boxCatalogSearch.kitCatalogCodes));
 		}
 		
 		if(StringUtils.isNotEmpty(boxCatalogSearch.catalogRefCode)){

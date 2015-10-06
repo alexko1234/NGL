@@ -94,6 +94,7 @@ public class ReagentCatalogs extends DocumentController<ReagentCatalog>{
 			keys.put("code", 1);
 			keys.put("name", 1);
 			keys.put("category", 1);
+			keys.put("kitCatalogCode",1);
 			
 			if(null == reagentCatalogSearch.orderBy)reagentCatalogSearch.orderBy = "code";
 			if(null == reagentCatalogSearch.orderSense)reagentCatalogSearch.orderSense = 0;				
@@ -102,7 +103,7 @@ public class ReagentCatalogs extends DocumentController<ReagentCatalog>{
 			List<ReagentCatalog> ReagentCatalogs = results.toList();
 			List<ListObject> los = new ArrayList<ListObject>();
 			for(ReagentCatalog p: ReagentCatalogs){					
-					los.add(new ListObject(p.code, p.name));								
+					los.add(new ListObject(p.kitCatalogCode, p.name));								
 			}
 			
 			return Results.ok(Json.toJson(los));

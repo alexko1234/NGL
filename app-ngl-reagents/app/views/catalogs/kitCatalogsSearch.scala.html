@@ -5,25 +5,37 @@
 	@columnSearchForm{
 		@formGroup{
 			<!-- <input type="text" class="form-control" ng-model="searchService.form.name" placeholder='@Messages("kits.name")'> -->
-			<div class="form-control" bt-select ng-model="searchService.form.name" multiple="true" filter="true" placeholder='@Messages("kits.name")' bt-options="kit.name as kit.name for kit in searchService.lists.getKitCatalogs()"></div>	
+			<div class="form-control" bt-select ng-model="searchService.form.codes" multiple="true" filter="true" placeholder='@Messages("kits.name")' 
+			bt-options="kit.code as kit.name for kit in searchService.lists.getKitCatalogs()" ></div>
+			<!-- ng-change="searchService.updateBoxCatalogsList()" -->	
 		}
-	}
-	@columnSearchForm{	
+
 		@formGroup{
 			<input type="text" class="form-control" ng-model="searchService.form.providerRefName" placeholder='@Messages("kits.providerRefName")'>
 		}
-	}	
-	@columnSearchForm{
+
 		@formGroup{
 			<input type="text" class="form-control" ng-model="searchService.form.providerCode" placeholder='@Messages("kits.provider")'>
 		}
-	}	
-		
-	@columnSearchForm{
+
 		@formGroup{
 			<input type="text" class="form-control" ng-model="searchService.form.catalogRefCode" placeholder='@Messages("kits.catalogRefCode")'>
 		}
-	}	
+	}
+	
+	@columnSearchForm{
+		@formGroup{
+			<div class="form-control" bt-select ng-model="searchService.form.codesFromBoxCatalog" multiple="true" filter="true" placeholder='@Messages("kits.boxName")' 
+			bt-options="box.code as box.name for box in searchService.lists.getBoxCatalogs()"></div>
+		}
+	}
+	
+	@columnSearchForm{
+		@formGroup{
+			<div class="form-control" bt-select ng-model="searchService.form.codesFromReagentCatalog" multiple="true" filter="true" placeholder='@Messages("kits.reagentName")' 
+			bt-options="reagent.code as reagent.name for reagent in searchService.lists.getReagentCatalogs()"></div>	
+		}
+	}
 }
 
 @searchForm(form)()("searchService.datatable")
