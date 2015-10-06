@@ -3,7 +3,7 @@
 @form() = {
 		@columnSearchForm{
 			@formGroup{	
-				<div bt-select placeholder="@Messages("experiments.select.experimentType.transformations")" class="form-control" ng-model="searchService.form.typeCode" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in searchService.lists.get('transformations')" ng-change="changeExperimentType()" auto-select>
+				<div bt-select placeholder="@Messages("experiments.select.experimentType.transformations")" class="form-control" ng-model="searchService.form.typeCode" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in searchService.lists.get('transformations')" ng-change="searchService.changeExperimentType()" auto-select>
 				</div>
 			}
 			@formGroup{
@@ -25,7 +25,7 @@
 			
 			}
 			@formGroup{
-				<div bt-select placeholder="@Messages("experiments.intrument")" class="form-control" multiple="true" ng-model="searchService.form.instrument" ng-class="errors.experimentType" bt-options="instrument.code as instrument.name group by instrument.active|codes:'active' for instrument in searchService.lists.getInstruments()|orderBy:['-active','+name']" ng-disabled="!searchService.form.typeCode" >
+				<div bt-select placeholder="@Messages("experiments.intrument")" class="form-control" multiple="true" ng-model="searchService.form.instruments" ng-class="errors.experimentType" bt-options="instrument.code as instrument.name group by instrument.active|codes:'active' for instrument in searchService.lists.get('instruments-search-list')|orderBy:['-active','+name']" ng-disabled="!searchService.form.typeCode" >
 				</div>
 			}
 			

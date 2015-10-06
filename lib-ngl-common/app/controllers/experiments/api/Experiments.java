@@ -636,6 +636,8 @@ public class Experiments extends CommonController{
 
 		if(StringUtils.isNotBlank(experimentSearch.instrument)){
 			queryElts.add(DBQuery.is("instrument.code", experimentSearch.instrument));
+		}else if(CollectionUtils.isNotEmpty(experimentSearch.instruments)){
+			queryElts.add(DBQuery.in("instrument.code", experimentSearch.instruments));
 		}
 		
 		// FDS 21/08/2015 ajout filtrage sur les types d'echantillon

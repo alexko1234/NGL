@@ -27,6 +27,7 @@ public class ExperimentSearchForm extends ListForm{
 	public String atomicTransfertMethods;
 	public String reagentOrBoxCode;
 	public String instrument;
+	public Set<String> instruments;
 	
 	public Set<String> tags;
 	public Set<String> sampleTypeCodes;
