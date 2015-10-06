@@ -119,6 +119,16 @@ experiment.instrumentModel=InstrumentModel
 experiment.lastBaseCoord=LastBaseCoord
 experiment.spotLength=SpotLength
 
+documentation.menu=Aide
+documentation.page.title=Documentation
+documentation.ebi.title=Documentation EBI
+documentation.sra.url=Documentation soumission SRA
+documentation.metatdata.url=Documentation méta données
+documentation.intern.title=Configuration 
+documentation.mandatory=Information obligatoire
+documentation.optionnal=Information facultative
+documentation.possible.values=Valeurs possibles
+
 button.save=Save
 button.reset=Reset
 button.cancel=Cancel
