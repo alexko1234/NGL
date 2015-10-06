@@ -134,7 +134,7 @@
 	
 	$scope.getNbCycles = function(){
 		
-		if($scope.readset){
+		if($scope.readset && $scope.readset.treatments && $scope.readset.treatments.ngsrg){
     		var ngsrg = $scope.readset.treatments.ngsrg["default"];
     		if(ngsrg.nbUsefulCycleRead2){
     			return ngsrg.nbUsefulCycleRead1.value+', '+ngsrg.nbUsefulCycleReadIndex1.value+', '+ngsrg.nbUsefulCycleReadIndex2.value+', '+ngsrg.nbUsefulCycleRead2.value;
@@ -177,9 +177,11 @@
 				$scope.treatments.init($scope.readset.treatments, jsRoutes.controllers.readsets.tpl.ReadSets.treatments, 'readsets', {global:true});				
 			}
 			
-			$http.get(jsRoutes.controllers.runs.api.Lanes.get($scope.readset.runCode, $scope.readset.laneNumber).url).success(function(data) {
-				$scope.lane = data;	
-			});	
+			if($scope.readset.laneNumber){
+				$http.get(jsRoutes.controllers.runs.api.Lanes.get($scope.readset.runCode, $scope.readset.laneNumber).url).success(function(data) {
+					$scope.lane = data;	
+				});	
+			}
 			
 			$http.get(jsRoutes.controllers.runs.api.RunTreatments.get($scope.readset.runCode, "ngsrg").url).success(function(data) {
 				$scope.runNGSRG = data;	
