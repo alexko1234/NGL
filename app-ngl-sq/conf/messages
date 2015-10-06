@@ -83,6 +83,7 @@ containers.table.sampleCodeAndTags = Echantillon / Tag
 containers.table.inputProcessCodes = Processus
 containers.table.percentageInsidePool = % au sein du pool
 containers.table.codeAliquot = Code aliquot
+containers.table.stockCode = Stockage
 
 containers.placeholder.fromDate = Container depuis le (jj/mm/aaaa)
 containers.placeholder.toDate = Container jusqu''au (jj/mm/aaaa)

@@ -121,6 +121,16 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			        	 "position":51,
 			        	 "extraHeaders":{0:"Outputs"}
 			         },
+			         {
+			        	 "header":Messages("containers.table.stockCode"),
+			        	 "property":"outputContainerUsed.locationOnContainerSupport.stockCode",
+			        	 "order":true,
+						 "edit":true,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":52,
+			        	 "extraHeaders":{0:"Outputs"}
+			         },
 			         
 			         {
 			        	 "header":Messages("containers.table.code"),

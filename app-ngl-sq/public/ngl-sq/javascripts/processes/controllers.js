@@ -106,6 +106,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			        	 "position":10,
 			 			"groupMethod":"unique"
 			         },
+			        
 			        {
 			        	 "header":Messages("containers.table.valid"),
 			        	 "property":"valuation.valid",
@@ -130,7 +131,17 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 						"hide":true,
 						"type":"text",
 			        	 "position":13
-					 }
+					 },
+					 {
+							"header":Messages("containers.table.stockCode"),
+							"property":"support.stockCode",
+							"order":true,
+							"type":"text",
+							"edit":false,
+							"position":14,
+							"groupMethod":"unique"
+								
+			         }
 			         ],
 			         search:{
 			        	 url:jsRoutes.controllers.containers.api.Containers.list()

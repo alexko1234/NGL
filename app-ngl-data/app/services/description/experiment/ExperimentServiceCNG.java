@@ -216,7 +216,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	private static List<PropertyDefinition> getPropertyDefinitionsDenatDilLibCNG() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
-		propertyDefinitions.add(newPropertiesDefinition("Stockage", "storage", LevelService.getLevels(Level.CODE.ContainerOut), String.class, false, null, null, null, null, "single",55,true,null));		
+		//propertyDefinitions.add(newPropertiesDefinition("Stockage", "storage", LevelService.getLevels(Level.CODE.ContainerOut), String.class, false, null, null, null, null, "single",55,true,null));		
 		
 		return propertyDefinitions;
 	}

@@ -47,7 +47,7 @@ public class LocationOnContainerSupport implements IValidation {
 
 		ContainerSupportValidationHelper.validateUniqueContainerSupportCodePosition(this, contextValidation);
 		ContainerSupportValidationHelper.validateContainerSupportCategoryCode(categoryCode, contextValidation);
-		ContainerSupportValidationHelper.validateStockCode(stockCode, contextValidation);
+		//ContainerSupportValidationHelper.validateStockCode(stockCode, contextValidation);
 		//ContainerSupportValidationHelper.validateSupportCode(supportCode, contextValidation);
 	}
 

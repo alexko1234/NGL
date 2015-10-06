@@ -119,12 +119,22 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"type":"text"
 		},
 		{
+			"header":Messages("containers.table.stockCode"),
+			"property":"support.stockCode",
+			"order":true,
+			"type":"text",
+			"edit":false,
+			"position":15.5,
+			"groupMethod":"unique"
+				
+		 },
+		{
 			"header":Messages("containers.table.inputProcessCodes"),
 			"property":"inputProcessCodes",
 			"order":false,
 			"type":"text",
 			"position":16,
-			"render":"<div list-resize='value.data.inputProcessCodes | unique' list-resize-min-size='3'>",
+			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			"groupMethod":"collect"
 		},
 		{
@@ -140,6 +150,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"groupMethod":"unique"
 				
 		},
+		 
 		{
 			"header":Messages("containers.table.valid"),
 			"property":"valuation.valid",
