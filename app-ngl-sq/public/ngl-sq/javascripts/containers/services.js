@@ -124,8 +124,8 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"type":"text"
 		});
 		columns.push({
-			"header":Messages("containers.table.stockCode"),
-			"property":"support.stockCode",
+			"header":Messages("containers.table.storageCode"),
+			"property":"support.storageCode",
 			"order":true,
 			"type":"text",
 			"edit":false,

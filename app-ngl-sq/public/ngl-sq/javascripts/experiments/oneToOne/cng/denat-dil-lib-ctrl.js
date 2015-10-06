@@ -122,8 +122,8 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			        	 "extraHeaders":{0:"Outputs"}
 			         },
 			         {
-			        	 "header":Messages("containers.table.stockCode"),
-			        	 "property":"outputContainerUsed.locationOnContainerSupport.stockCode",
+			        	 "header":Messages("containers.table.storageCode"),
+			        	 "property":"outputContainerUsed.locationOnContainerSupport.storageCode",
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
