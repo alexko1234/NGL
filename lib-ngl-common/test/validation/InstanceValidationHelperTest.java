@@ -218,7 +218,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	@Test
 	public  void validationStockCodeTest(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		ContainerSupportValidationHelper.validateStockCode(stock.code, contextValidation);
+		ContainerSupportValidationHelper.validateStorageCode(stock.code, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 
@@ -226,14 +226,14 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	@Test
 	public  void validationStockNotRequiredCodeTest(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		ContainerSupportValidationHelper.validateStockCode(null, contextValidation);
+		ContainerSupportValidationHelper.validateStorageCode(null, contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	@Test
 	public  void validationStockNotExistCodeTest(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		ContainerSupportValidationHelper.validateStockCode("notexist", contextValidation);
+		ContainerSupportValidationHelper.validateStorageCode("notexist", contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
 	}
 
