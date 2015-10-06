@@ -117,6 +117,12 @@ angular.module('commonsServices', []).
     				kitCatalogs : function(params, key){
     					load(jsRoutes.controllers.reagents.api.KitCatalogs.list().url,params,(key)?key:'kitCatalogs');
     				},
+    				boxCatalogs : function(params, key) {
+    					load(jsRoutes.controllers.reagents.api.BoxCatalogs.list().url,params,(key)?key:'boxCatalogs');
+    				},
+    				reagentCatalogs : function(params, key) {
+    					load(jsRoutes.controllers.reagents.api.ReagentCatalogs.list().url,params,(key)?key:'reagentCatalogs');
+    				},
        				projectCategories : function(params, key){
     					load(jsRoutes.controllers.projects.api.ProjectCategories.list().url,params,(key)?key:'projectCategories');
     				},
@@ -300,7 +306,19 @@ angular.module('commonsServices', []).
     					refresh.kitCatalogs(params);
     				}
     				return results['kitCatalogs'];
-    			},			
+    			},
+    			getBoxCatalogs : function(params){
+    				if (results['boxCatalogs'] === undefined) {
+    					refresh.boxCatalogs(params);
+    				}
+    				return results['boxCatalogs'];
+    			},
+    			getReagentCatalogs : function(params){
+    				if (results['reagentCatalogs'] === undefined) {
+    					refresh.reagentCatalogs(params);
+    				}
+    				return results['reagentCatalogs'];
+    			},
     			getInstruments : function(){return results['instruments'];},		   
     			getValuations : function(){return results['valuations'];},
     			getValues : function(params, key){

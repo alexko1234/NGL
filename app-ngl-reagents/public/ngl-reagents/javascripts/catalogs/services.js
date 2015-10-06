@@ -50,6 +50,8 @@
 		var initListService = function(){
 			if(!isInit){
 				lists.refresh.experimentTypes({withoutOneToVoid:true});
+				//lists.refresh.boxCatalogs();
+				//lists.refresh.reagentCatalogs();
 				isInit=true;
 			}
 		};
@@ -111,6 +113,11 @@
 						this.search();
 					}
 				},
+				/*updateBoxCatalogsList : function (){
+					
+					//test si null undefined
+					lists.refresh.boxCatalogs({kitCatalogCodes:this.form.codes});
+				},*/
 				/**
 				 * initialise the service
 				 */

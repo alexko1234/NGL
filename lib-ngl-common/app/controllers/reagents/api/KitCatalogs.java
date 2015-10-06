@@ -7,16 +7,19 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import models.laboratory.reagent.description.AbstractCatalog;
+import models.laboratory.reagent.description.BoxCatalog;
 import models.laboratory.reagent.description.KitCatalog;
 import models.laboratory.reagent.utils.ReagentCodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.ListObject;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
+import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -92,17 +95,20 @@ public class KitCatalogs extends DocumentController<KitCatalog>{
 		KitCatalogSearchForm kitCatalogSearch = kitCatalogFilledForm.get();
 		BasicDBObject keys = getKeys(kitCatalogSearch);
 		DBQuery.Query query = getQuery(kitCatalogSearch);
+		Logger.debug("key kits: " + keys);
 
 		if(kitCatalogSearch.datatable){
 			MongoDBResult<KitCatalog> results =  mongoDBFinder(kitCatalogSearch, query);
 			List<KitCatalog> kitCatalogs = results.toList();
 			
 			return ok(Json.toJson(new DatatableResponse<KitCatalog>(kitCatalogs, results.count())));
+			
+			
 		}else if (kitCatalogSearch.list){
 			keys = getKeys(kitCatalogSearch);
 			keys.put("code", 1);
 			keys.put("name", 1);
-			keys.put("category", 1);
+			keys.put("category", 1);			
 			
 			if(null == kitCatalogSearch.orderBy)kitCatalogSearch.orderBy = "code";
 			if(null == kitCatalogSearch.orderSense)kitCatalogSearch.orderSense = 0;				
@@ -132,6 +138,10 @@ public class KitCatalogs extends DocumentController<KitCatalog>{
 		queryElts.add(DBQuery.is("category", "Kit"));
 		if(StringUtils.isNotBlank(kitCatalogSearch.code)){
 			queryElts.add(DBQuery.is("code", kitCatalogSearch.code));
+		} 
+		
+		if(CollectionUtils.isNotEmpty(kitCatalogSearch.codes)) {
+			queryElts.add(DBQuery.in("code",kitCatalogSearch.codes));
 		}
 		
 		if(StringUtils.isNotBlank(kitCatalogSearch.name)){
@@ -148,6 +158,14 @@ public class KitCatalogs extends DocumentController<KitCatalog>{
 		
 		if(StringUtils.isNotBlank(kitCatalogSearch.catalogRefCode)){
 			queryElts.add(DBQuery.is("catalogRefCode", kitCatalogSearch.catalogRefCode));
+		}
+		
+		if (CollectionUtils.isNotEmpty(kitCatalogSearch.codesFromBoxCatalog)) {
+			queryElts.add(DBQuery.in("code",kitCatalogSearch.codesFromBoxCatalog));
+		}
+		
+		if (CollectionUtils.isNotEmpty(kitCatalogSearch.codesFromReagentCatalog)) {
+			queryElts.add(DBQuery.in("code",kitCatalogSearch.codesFromReagentCatalog));
 		}
 		
 		if(kitCatalogSearch.experimentTypeCodes != null){
