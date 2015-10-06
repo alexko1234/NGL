@@ -42,15 +42,17 @@ public class ProtocolServiceCNS {
 		List<Protocol> lp = new ArrayList<Protocol>();
 		
 		lp.add(newProtocol("depot_opgen_ptr_1","Depot_Opgen_prt_1","path7","1","production", InstanceFactory.setExperimentTypeCodes("opgen-depot")));
+		
 		lp.add(newProtocol("hiseq2000_Illumina","HiSeq2000_Illumina","path4","1","production", InstanceFactory.setExperimentTypeCodes("illumina-depot")));
 		lp.add(newProtocol("hiseq2500_fast_Illumina","HiSeq2500_fast_Illumina","path5","1","production", InstanceFactory.setExperimentTypeCodes("illumina-depot")));
 		lp.add(newProtocol("hiseq2500_Illumina","HiSeq2500_Illumina","path6","1","production", InstanceFactory.setExperimentTypeCodes("illumina-depot")));
 		lp.add(newProtocol("ptr_sox147_v1_depot","PTR_SOX147_v1","path6","1","production", InstanceFactory.setExperimentTypeCodes("illumina-depot")));
+		
 		lp.add(newProtocol("prepfc_cbot_ptr_sox139_1","PrepFC_CBot_ptr_sox139_1","path7","1","production", InstanceFactory.setExperimentTypeCodes("prepa-flowcell")));
 		lp.add(newProtocol("cbot_rapid_run_2500_Illumina","CBot_rapid_run_2500_Illumina","path7","1","production", InstanceFactory.setExperimentTypeCodes("prepa-flowcell")));
 		lp.add(newProtocol("ptr_sox147_v1","PTR_SOX147_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("prepa-flowcell")));
 		
-		lp.add(newProtocol("ptr_to_def","PTR_TO_DEF","path7","1","production", InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered")));
+		lp.add(newProtocol("hiseq_4000_system_guide","Illumina Hiseq 4000 system guide","path8","1","production", InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered", "illumina-depot")));
 		
 		
 		

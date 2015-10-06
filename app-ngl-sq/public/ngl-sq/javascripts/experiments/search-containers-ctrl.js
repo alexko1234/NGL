@@ -109,14 +109,16 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"property":"traceInformation.creationDate",
 			"order":true,
 			"position":14,
-			"type":"date"
+			"type":"date",
+			"groupMethod":"unique"
 		},
 		{
 			"header":Messages("containers.table.createUser"),
 			"property":"traceInformation.createUser",
 			"order":true,
 			"position":15,
-			"type":"text"
+			"type":"text",
+			"groupMethod":"unique"
 		},
 		{
 			"header":Messages("containers.table.storageCode"),
