@@ -24,7 +24,7 @@ import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.project.instance.Project;
 import models.laboratory.reagent.instance.Reagent;
 import models.laboratory.sample.instance.Sample;
-import models.laboratory.stock.instance.Stock;
+import models.laboratory.storage.instance.Storage;
 import models.utils.InstanceConstants;
 
 import org.junit.AfterClass;
@@ -48,7 +48,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	static Sample sample1;
 	static Sample sample2;
 	
-	static Stock stock;
+	static Storage stock;
 	
 	static Container container;
 	
@@ -82,7 +82,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, sample2);
 		
 		
-		stock=saveDBOject(Stock.class,InstanceConstants.STOCK_COLL_NAME,"stock" + randomInt);
+		stock=saveDBOject(Storage.class,InstanceConstants.STORAGE_COLL_NAME,"stock" + randomInt);
 		
 		container=saveDBOject(Container.class,InstanceConstants.CONTAINER_COLL_NAME,"container" + randomInt);
 				
@@ -102,7 +102,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		
 		MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, sample2);
 
-		MongoDBDAO.delete(InstanceConstants.STOCK_COLL_NAME, stock);
+		MongoDBDAO.delete(InstanceConstants.STORAGE_COLL_NAME, stock);
 		
 		MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, container);
 		

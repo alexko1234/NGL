@@ -2,7 +2,7 @@ package models.laboratory.container.instance;
 
 
 import models.laboratory.container.description.ContainerSupportCategory;
-import models.laboratory.stock.instance.Stock;
+import models.laboratory.storage.instance.Storage;
 import models.utils.HelperObjects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -33,7 +33,7 @@ public class LocationOnContainerSupport implements IValidation {
 		
 	public String categoryCode;
 
-	public String stockCode;
+	public String storageCode;
 	
 	// Container Position in support
 	public String column;
@@ -47,7 +47,7 @@ public class LocationOnContainerSupport implements IValidation {
 
 		ContainerSupportValidationHelper.validateUniqueContainerSupportCodePosition(this, contextValidation);
 		ContainerSupportValidationHelper.validateContainerSupportCategoryCode(categoryCode, contextValidation);
-		//ContainerSupportValidationHelper.validateStockCode(stockCode, contextValidation);
+		//ContainerSupportValidationHelper.validateStockCode(storageCode, contextValidation);
 		//ContainerSupportValidationHelper.validateSupportCode(supportCode, contextValidation);
 	}
 

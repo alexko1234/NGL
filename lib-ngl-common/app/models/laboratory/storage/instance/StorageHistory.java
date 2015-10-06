@@ -1,4 +1,4 @@
-package models.laboratory.stock.instance;
+package models.laboratory.storage.instance;
 
 import java.util.Date;
 
@@ -10,7 +10,7 @@ import validation.IValidation;
 
 
 
-public class StockUsed implements IValidation{
+public class StorageHistory implements IValidation{
 	//ContainerSupport ref
 	public String barCode;
 	public String createUser;

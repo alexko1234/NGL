@@ -1,4 +1,4 @@
-package models.laboratory.stock.instance;
+package models.laboratory.storage.instance;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ import fr.cea.ig.DBObject;
  *
  */
 @MongoCollection(name="Stock")
-public class Stock extends DBObject implements IValidation{
+public class Storage extends DBObject implements IValidation{
 
 	//Place
 	public String buildingCode;
@@ -42,7 +42,7 @@ public class Stock extends DBObject implements IValidation{
 	public String y;
 	
 	// History stocks/support
-	public List<StockUsed> stockUsed;
+	public List<StorageHistory> stockUsed;
 
 	@JsonIgnore
 	@Override

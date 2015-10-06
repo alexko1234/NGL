@@ -22,7 +22,7 @@ import fr.cea.ig.DBObject;
 public class ContainerSupport extends DBObject implements IValidation{
 	public String categoryCode;
 	public State state;
-	public String stockCode;
+	public String storageCode;
 	public Valuation valuation;
 	public TraceInformation traceInformation;
 	public Set<String> projectCodes;

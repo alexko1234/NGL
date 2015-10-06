@@ -5,7 +5,7 @@ import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.project.instance.Project;
-import models.laboratory.stock.instance.Stock;
+import models.laboratory.storage.instance.Storage;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 import models.utils.instance.ContainerSupportHelper;
@@ -23,11 +23,11 @@ import fr.cea.ig.MongoDBDAO;
 public class ContainerSupportValidationHelperTest extends AbstractTests {
 	static Container container;
 	static Project project;
-	static Stock stock;
+	static Storage stock;
 	
 	@BeforeClass
 	public static void initData() throws DAOException, InstantiationException, IllegalAccessException, ClassNotFoundException{
-		stock=saveDBOject(Stock.class, InstanceConstants.STOCK_COLL_NAME, "stock");
+		stock=saveDBOject(Storage.class, InstanceConstants.STORAGE_COLL_NAME, "stock");
 		
 		container=new Container();
 		container.categoryCode=ContainerCategory.find.findByCode("tube").code;
@@ -38,7 +38,7 @@ public class ContainerSupportValidationHelperTest extends AbstractTests {
 	@AfterClass
 	public static void deleteData() {
 		MongoDBDAO.getCollection(InstanceConstants.CONTAINER_COLL_NAME,Container.class).drop();
-		MongoDBDAO.getCollection(InstanceConstants.STOCK_COLL_NAME,Stock.class).drop();
+		MongoDBDAO.getCollection(InstanceConstants.STORAGE_COLL_NAME,Storage.class).drop();
 
 	}
 	

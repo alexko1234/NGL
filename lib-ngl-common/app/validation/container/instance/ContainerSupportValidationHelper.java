@@ -3,7 +3,7 @@ package validation.container.instance;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.LocationOnContainerSupport;
-import models.laboratory.stock.instance.Stock;
+import models.laboratory.storage.instance.Storage;
 import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;
@@ -36,8 +36,8 @@ public class ContainerSupportValidationHelper extends CommonValidationHelper{
 
 	}
 
-	public static void validateStockCode(String stockCode,ContextValidation contextValidation){
-		BusinessValidationHelper.validateExistInstanceCode(contextValidation, stockCode, "stockCode",Stock.class,InstanceConstants.STOCK_COLL_NAME ,false);
+	public static void validateStorageCode(String storageCode,ContextValidation contextValidation){
+		BusinessValidationHelper.validateExistInstanceCode(contextValidation, storageCode, "storageCode",Storage.class,InstanceConstants.STORAGE_COLL_NAME ,false);
 
 	}
 	
