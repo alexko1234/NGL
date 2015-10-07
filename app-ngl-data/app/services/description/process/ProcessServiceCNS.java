@@ -29,11 +29,11 @@ public class ProcessServiceCNS extends AbstractProcessService {
 	public void saveProcessCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ProcessCategory> l = new ArrayList<ProcessCategory>();
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-			l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Banque", "library"));
 			l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Sequencage", "pre-sequencing"));
 			l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Banque", "pre-library"));
 
 		}
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Banque", "library"));
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Sequençage", "sequencing"));		
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Optical mapping", "mapping"));
 		DAOHelpers.saveModels(ProcessCategory.class, l, errors);
@@ -45,17 +45,6 @@ public class ProcessServiceCNS extends AbstractProcessService {
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 
-			l.add(DescriptionFactory.newProcessType("Fragmentation + Librairie ONT", "nanopore-process-library", ProcessCategory.find.findByCode("library"),getPropertyDefinitionsNanoporeFragmentation() , getExperimentTypes("nanopore-fragmentation","nanopore-library"), 
-					getExperimentTypes("nanopore-fragmentation").get(0), getExperimentTypes("nanopore-library").get(0),getExperimentTypes("ext-to-nanopore-frg-preCR").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-			
-
-			l.add(DescriptionFactory.newProcessType("Librairie ONT", "nanopore-process-library-no-frg", ProcessCategory.find.findByCode("library"),getPropertyDefinitionsNanoporeLibrary() , getExperimentTypes("nanopore-library"), 
-					getExperimentTypes("nanopore-library").get(0), getExperimentTypes("nanopore-library").get(0),getExperimentTypes("ext-to-lib-ONT").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-			
-			l.add(DescriptionFactory.newProcessType("Run Nanopore", "nanopore-run", ProcessCategory.find.findByCode("sequencing"),null , getExperimentTypes("nanopore-depot"), 
-					getExperimentTypes("nanopore-depot").get(0), getExperimentTypes("nanopore-depot").get(0),getExperimentTypes("ext-to-nanopore-depot").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-			
-			
 			l.add(DescriptionFactory.newProcessType("Librairie PE sans sizing", "Lib-PE-NoSizing", ProcessCategory.find.findByCode("library"), getPropertyDefinitionsLib300600(), getExperimentTypes("fragmentation","librairie-indexing","amplification"), 
 					getExperimentTypes("fragmentation").get(0), getExperimentTypes("amplification").get(0), getExperimentTypes("ext-to-library").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		//	l.add(DescriptionFactory.newProcessType("qPCR et normalisation", "qPCR-normalisation", ProcessCategory.find.findByCode("pre-sequencing"), getPropertyDefinitionsQPCRQuantification(), getExperimentTypes("qPCR-quantification","solution-stock"), 
@@ -65,6 +54,18 @@ public class ProcessServiceCNS extends AbstractProcessService {
 					getExperimentTypes("solution-stock").get(0), getExperimentTypes("solution-stock").get(0), getExperimentTypes("ext-to-solution-stock").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 							
 		}
+		
+		
+		l.add(DescriptionFactory.newProcessType("Fragmentation + Librairie ONT", "nanopore-process-library", ProcessCategory.find.findByCode("library"),getPropertyDefinitionsNanoporeFragmentation() , getExperimentTypes("nanopore-fragmentation","nanopore-library","nanopore-depot"), 
+				getExperimentTypes("nanopore-fragmentation").get(0), getExperimentTypes("nanopore-depot").get(0),getExperimentTypes("ext-to-nanopore-frg-precr").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
+
+		l.add(DescriptionFactory.newProcessType("Librairie ONT", "nanopore-process-library-no-frg", ProcessCategory.find.findByCode("library"),getPropertyDefinitionsNanoporeLibrary() , getExperimentTypes("nanopore-library","nanopore-depot"), 
+				getExperimentTypes("nanopore-library").get(0), getExperimentTypes("nanopore-depot").get(0),getExperimentTypes("ext-to-lib-ont").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
+		l.add(DescriptionFactory.newProcessType("Run Nanopore", "nanopore-run", ProcessCategory.find.findByCode("sequencing"),null , getExperimentTypes("nanopore-depot"), 
+				getExperimentTypes("nanopore-depot").get(0), getExperimentTypes("nanopore-depot").get(0),getExperimentTypes("ext-to-nanopore-depot").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
 		
 		l.add(DescriptionFactory.newProcessType("Run Illumina", "illumina-run", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsIlluminaDepotCNS() , getExperimentTypes("prepa-flowcell","prepa-fc-ordered","illumina-depot"), 
 				getExperimentTypes("prepa-flowcell").get(0), getExperimentTypes("illumina-depot").get(0),getExperimentTypes("ext-to-prepa-flowcell").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));

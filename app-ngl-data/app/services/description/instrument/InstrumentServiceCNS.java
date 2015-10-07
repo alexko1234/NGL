@@ -365,10 +365,10 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	
 	private static List<Instrument> getInstrumentMinIon() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("MN02670", "MN 02670", null, false, "/env/atelier/nanopore_MN02670", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add(createInstrument("MN02280", "MN 02280", null, false, "/env/atelier/nanopore_MN02280", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add(createInstrument("MN02259", "MN 02259", null, false, "/env/atelier/nanopore_MN02259", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add(createInstrument("MN02833", "MN 02833", null, false, "/env/atelier/nanopore_MN02833", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("MN02670", "MN 02670", null, true, "/env/atelier/nanopore_MN02670", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("MN02280", "MN 02280", null, true, "/env/atelier/nanopore_MN02280", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("MN02259", "MN 02259", null, true, "/env/atelier/nanopore_MN02259", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("MN02833", "MN 02833", null, true, "/env/atelier/nanopore_MN02833", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		return instruments;
 	}
 	
