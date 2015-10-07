@@ -230,6 +230,9 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 	 * Update concentration of output if all input are same value and unit
 	 */
 	$scope.updateConcentration = function(experiment){
+		
+		//TODO ne pas faire l'update si déjà renseigné
+		
 		var concentration = undefined;
 		var unit = undefined;
 		var isSame = true;

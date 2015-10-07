@@ -260,6 +260,8 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 	 */
 	$scope.updateConcentration = function(experiment){
 		
+		//TODO prendre la propriété atm.inputContainerUseds[0].experimentProperties.finalConcentration2 de l'input pour la comparaison
+		
 		for(var j = 0 ; j < experiment.value.atomicTransfertMethods.length; j++){
 			var atm = experiment.value.atomicTransfertMethods[j];
 			var concentration = undefined;
@@ -278,7 +280,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 				}
 			}
 			
-			if(isSame){
+			if(isSame){				
 				atm.outputContainerUseds[0].concentration = atm.inputContainerUseds[0].concentration;				
 			}
 			

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
@@ -32,6 +33,8 @@ import models.utils.dao.DAOException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.mongojack.DBQuery;
+
+import com.google.common.collect.Multiset.Entry;
 
 import validation.ContextValidation;
 import validation.utils.BusinessValidationHelper;
@@ -126,6 +129,9 @@ public class ContainerHelper {
 
 		}		
 		
+		// fusion content with same projectCode, sampleCode et tag if present
+		outputContainer.contents = fusionContents(outputContainer.contents);
+		
 		//Add properties in Container
 		ExperimentType experimentType =BusinessValidationHelper.validateExistDescriptionCode(null, experiment.typeCode, "typeCode", ExperimentType.find,true);
 		if(experimentType !=null){
@@ -175,7 +181,81 @@ public class ContainerHelper {
 		
 		
 	}
-	
+	/**
+	 * fusion content if same projectCode, sampleCode and tag if exist.
+	 * 
+	 * the fusion : 
+	 * 	- sum the percentage of content 
+	 *  - keep properties with same key and same value
+	 *  - remove properties  with same key and different value
+	 *  - add properties that exists only in one content
+	 *  
+	 * @param contents
+	 * @return
+	 */
+	public static Set<Content> fusionContents(Set<Content> contents) {
+		
+		//groupb by a key
+		Map<String, List<Content>> contentsByKey = contents.stream().collect(Collectors.groupingBy((Content c ) -> getContentKey(c)));
+		
+		//extract values with only one content
+		Map<String, Content> contentsByKeyWithOneValues = contentsByKey.entrySet().stream()
+				.filter((Map.Entry<String, List<Content>> e) -> e.getValue().size() == 1)
+				.collect(Collectors.toMap((Map.Entry<String, List<Content>> e) -> e.getKey(), (Map.Entry<String, List<Content>> e) -> e.getValue().get(0)));
+		
+		//extract values with several contents and fusion the contents
+		Map<String, Content> contentsByKeyWithSeveralValues = contentsByKey.entrySet().stream()
+				.filter((Map.Entry<String, List<Content>> e) -> e.getValue().size() > 1)
+				.collect(Collectors.toMap((Map.Entry<String, List<Content>> e) -> e.getKey(), (Map.Entry<String, List<Content>> e) -> fusionSameContents(e.getValue())));
+		
+		
+		contentsByKeyWithOneValues.putAll(contentsByKeyWithSeveralValues);
+		
+		return new HashSet<Content>(contentsByKeyWithOneValues.values());
+	}
+
+	private static Content fusionSameContents(List<Content> contents) {
+		Content finalContent = new Content();
+		
+		finalContent.projectCode = contents.get(0).projectCode;
+		finalContent.sampleCode = contents.get(0).sampleCode;
+		finalContent.sampleCategoryCode = contents.get(0).sampleCategoryCode;
+		finalContent.sampleTypeCode = contents.get(0).sampleTypeCode;
+		finalContent.referenceCollab = contents.get(0).referenceCollab;
+		finalContent.percentage = new BigDecimal(contents.stream().mapToDouble((Content c) -> c.percentage).sum()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+		
+		
+		for(Content c : contents){
+			for(String key : c.properties.keySet()){
+				PropertyValue<?> pv = c.properties.get(key);
+				finalContent.properties.computeIfAbsent(key, k -> pv);
+				finalContent.properties.computeIfPresent(key, (k,v) -> fusionSameProperty(v, pv));
+			}
+			
+			
+		}
+		
+		
+		
+		return finalContent;
+	}
+
+	private static  PropertyValue<?> fusionSameProperty(PropertyValue<?> currentPv, PropertyValue<?> newPv) {
+		if(currentPv.value.equals(newPv.value)){
+			return currentPv;
+		}else{
+			return null;
+		}		
+	}
+
+	private static String getContentKey(Content content) {
+		if(content.properties.containsKey("tag")){
+			return content.projectCode+"_"+content.sampleCode+"_"+content.properties.get("tag").value;
+		}else{
+			return content.projectCode+"_"+content.sampleCode;
+		}		
+	}
+
 	public static void calculPercentageContent(Set<Content> contents, Double percentage){
 		if(percentage!=null){
 			for(Content cc:contents){

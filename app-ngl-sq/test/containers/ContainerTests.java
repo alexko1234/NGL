@@ -4,7 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.processes.instance.Process;
@@ -111,6 +114,90 @@ public class ContainerTests extends AbstractTests {
 		
 	}
 	
+	
+	@Test
+	public void validateFusionContent(){
+		Set<Content> contents = new HashSet<Content>();
+		
+		Content c1 = new Content();
+		c1.projectCode ="P1";
+		c1.sampleCode = "S1";
+		c1.percentage = 0.10d;
+		c1.properties.put("p1", new PropertySingleValue("1"));
+		c1.properties.put("p2", new PropertySingleValue("2"));
+		c1.properties.put("p3", new PropertySingleValue("3"));
+		
+		contents.add(c1);
+		
+		Content c2= new Content();
+		c2.projectCode ="P1";
+		c2.sampleCode = "S2";
+		c2.percentage = 0.25d;
+		c2.properties.put("p1", new PropertySingleValue("1"));
+		c2.properties.put("p2", new PropertySingleValue("2"));
+		c2.properties.put("p3", new PropertySingleValue("3"));
+		contents.add(c2);
+		
+		Content c3 = new Content();
+		c3.projectCode ="P2";
+		c3.sampleCode = "S3";
+		c3.percentage = 0.30d;
+		c3.properties.put("p1", new PropertySingleValue("1"));
+		c3.properties.put("p2", new PropertySingleValue("2.1"));
+		c3.properties.put("p3", new PropertySingleValue("3.0"));
+		contents.add(c3);
+		
+		Content c4 = new Content();
+		c4.projectCode ="P2";
+		c4.sampleCode = "S3";
+		c4.percentage = 0.35d;
+		c4.properties.put("p1", new PropertySingleValue("1"));
+		c4.properties.put("p2", new PropertySingleValue("2.2"));		
+		contents.add(c4);
+		
+		contents = ContainerHelper.fusionContents(contents);
+		
+		assertThat(contents.size()).isEqualTo(3);
+		
+		for(Content c : contents){
+			
+			if("S3".equals(c.sampleCode)){
+				assertThat(c.percentage).isEqualTo(0.65);
+				assertThat(c.properties.size()).isEqualTo(2);
+				assertThat(c.properties.get("p1")).isNotNull();
+				assertThat(c.properties.get("p3")).isNotNull();
+				assertThat(c.properties.get("p2")).isNull();
+			}
+			
+		}
+		
+		contents = new HashSet<Content>();
+		Content c5 = new Content();
+		c5.projectCode ="P1";
+		c5.sampleCode = "S1";
+		c5.percentage = 0.50d;
+		c5.properties.put("tag", new PropertySingleValue("IND8"));
+		c5.properties.put("p1", new PropertySingleValue("1"));
+		c5.properties.put("p2", new PropertySingleValue("2"));
+		c5.properties.put("p3", new PropertySingleValue("3"));
+		
+		contents.add(c5);
+		
+		Content c6= new Content();
+		c6.projectCode ="P1";
+		c6.sampleCode = "S1";
+		c6.percentage = 0.50d;
+		c5.properties.put("tag", new PropertySingleValue("IND10"));
+		c6.properties.put("p1", new PropertySingleValue("4"));
+		c6.properties.put("p2", new PropertySingleValue("5"));
+		c6.properties.put("p3", new PropertySingleValue("6"));
+		contents.add(c6);
+		
+		contents = ContainerHelper.fusionContents(contents);
+		
+		assertThat(contents.size()).isEqualTo(2);
+		
+	}
 /**********************************Tests of Container class methods (DBObject)***************************************************/		
 	
 	@Test

@@ -56,11 +56,11 @@ public class ProcessServiceCNS extends AbstractProcessService {
 		}
 		
 		
-		l.add(DescriptionFactory.newProcessType("Fragmentation + Librairie ONT", "nanopore-process-library", ProcessCategory.find.findByCode("library"),getPropertyDefinitionsNanoporeFragmentation() , getExperimentTypes("nanopore-fragmentation","nanopore-library","nanopore-depot"), 
+		l.add(DescriptionFactory.newProcessType("Frg, Lib ONT, Dépôt", "nanopore-process-library", ProcessCategory.find.findByCode("library"),getPropertyDefinitionsNanoporeFragmentation() , getExperimentTypes("nanopore-fragmentation","nanopore-library","nanopore-depot"), 
 				getExperimentTypes("nanopore-fragmentation").get(0), getExperimentTypes("nanopore-depot").get(0),getExperimentTypes("ext-to-nanopore-frg-precr").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 
-		l.add(DescriptionFactory.newProcessType("Librairie ONT", "nanopore-process-library-no-frg", ProcessCategory.find.findByCode("library"),getPropertyDefinitionsNanoporeLibrary() , getExperimentTypes("nanopore-library","nanopore-depot"), 
+		l.add(DescriptionFactory.newProcessType("Lib ONT, Dépôt", "nanopore-process-library-no-frg", ProcessCategory.find.findByCode("library"),getPropertyDefinitionsNanoporeLibrary() , getExperimentTypes("nanopore-library","nanopore-depot"), 
 				getExperimentTypes("nanopore-library").get(0), getExperimentTypes("nanopore-depot").get(0),getExperimentTypes("ext-to-lib-ont").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		l.add(DescriptionFactory.newProcessType("Run Nanopore", "nanopore-run", ProcessCategory.find.findByCode("sequencing"),null , getExperimentTypes("nanopore-depot"), 
