@@ -155,38 +155,22 @@ public class Runs extends RunsController {
 		}
 			
 		if(null != form.fromDate){
-			queries.add(DBQuery.greaterThanEquals("sequencingStartDate", form.fromDate));
+			queries.add(DBQuery.greaterThanEquals("sequencingStartDate", getFromDate(form.fromDate).getTime()));
 		}
 		
 		if(null != form.toDate){
-			queries.add(DBQuery.lessThanEquals("sequencingStartDate", form.toDate));
+			queries.add(DBQuery.lessThanEquals("sequencingStartDate", getToDate(form.toDate).getTime()));
 		}
 		
 		if(null != form.fromEndRGDate){
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(form.fromEndRGDate);
-			cal.set(Calendar.HOUR_OF_DAY, 0);
-			cal.set(Calendar.MINUTE, 0);
-			cal.set(Calendar.SECOND, 0);
-			
-			
 			DBQuery.Query fromEndRG = DBQuery.elemMatch("state.historical", 
-					DBQuery.is("code", "F-RG").greaterThanEquals("date", cal.getTime()));
-			
+					DBQuery.is("code", "F-RG").greaterThanEquals("date", getFromDate(form.fromEndRGDate).getTime()));			
 			queries.add(fromEndRG);
 		}
 		
 		if(null != form.toEndRGDate){
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(form.toEndRGDate);
-			cal.set(Calendar.HOUR_OF_DAY, 23);
-			cal.set(Calendar.MINUTE, 59);
-			cal.set(Calendar.SECOND, 59);
-			
-			
-			
 			DBQuery.Query toEndRG = DBQuery.elemMatch("state.historical", 
-					DBQuery.is("code", "F-RG").lessThanEquals("date", cal.getTime()));
+					DBQuery.is("code", "F-RG").lessThanEquals("date", getToDate(form.toEndRGDate).getTime()));
 			
 			queries.add(toEndRG);
 		}
@@ -237,6 +221,10 @@ public class Runs extends RunsController {
 
 		return query;
 	}
+
+
+
+	
 	
 	//@Permission(value={"reading"})
 	public static Result get(String code) {

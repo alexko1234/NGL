@@ -44,6 +44,15 @@
 	margin-bottom: 7px;
 }
 
+.datatable .table>tbody>tr>td,
+.datatable .table>thead>tr>th{
+	overflow-wrap: break-word;
+}
+
+.datatable .table .form-group input.form-control:not([type="checkbox"]) {
+	padding: 3px 3px 3px 3px;
+}
+
 .datatable form .form-group:last-child {
 	margin-bottom: 0px;
 }
