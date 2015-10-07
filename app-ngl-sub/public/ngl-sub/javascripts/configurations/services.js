@@ -128,7 +128,7 @@ var getColumns = function(){
 						possibleValues:'consultationService.sraVariables.librarySource',
 					});	
 		columns.push({property:"libraryConstructionProtocol",
-						 header: "consultationService.libraryConstructionProtocol",
+						 header: "configuration.libraryConstructionProtocol",
 						 type :"String",		    	  	
 						 hide:true,
 						 edit:true,
@@ -140,6 +140,12 @@ var getColumns = function(){
 			        	  edit:false,
 			        	  choiceInList:false
 			        });	
+		columns.push({property:"ebiStudiesSamplesFileName",
+						 header: "configuration.ebiStudiesSamplesFileName",
+						 type :"String",		    	  	
+						 hide:true,
+						 edit:true,
+					});			        
 			        	
 			return columns;
 	};

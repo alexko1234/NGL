@@ -20,7 +20,10 @@
 													
 	}
 	
+		
+		
 	@columnSearchForm{
+	
 		@formGroup{
 			<div class="form-control" bt-select ng-model="createService.form.librarySelection" placeholder='@Messages("create.placeholder.librarySelection")' bt-options="librarySelection.code as librarySelection.name for librarySelection in createService.sraVariables.librarySelection" required></div>			
 		}
@@ -32,7 +35,16 @@
 		}	
 		@formGroup{
 			<textarea rows="2" ng-model="createService.form.libraryConstructionProtocol" placeholder='@Messages("create.placeholder.libraryConstructionProtocol")' ></textarea>
-		}		
+		}	
+		
+		<form ng-submit="upload()">
+			<input id="file" type="file" name="createService.form.ebiStudiesSamplesFileName" />
+		</form>
+		
+		@formGroup{
+			<textarea rows="2" ng-model="createService.form.ebiStudiesSamplesFileName" placeholder='@Messages("create.placeholder.ebiStudiesSamplesFileName")' ></textarea>
+		}
+		
 	}
 }
 
