@@ -57,7 +57,6 @@ public class Configurations extends DocumentController<Configuration>{
 			userConfiguration.state = new State("userValidate", getCurrentUser());
 			userConfiguration.code = SraCodeHelper.getInstance().generateConfigurationCode(userConfiguration.projectCode);
 			userConfiguration.validate(contextValidation);
-			
 			if(contextValidation.errors.size()==0) {
 				MongoDBDAO.save(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, userConfiguration);
 			} else {

@@ -57,6 +57,8 @@ POST	/api/sra/configurations					    @controllers.sra.configurations.api.Configu
 # Studies
 #----------
 GET		/sra/studies/:homeCode/home					controllers.sra.studies.tpl.Studies.home(homeCode: java.lang.String)
+#http://localhost:9000/api/sra/studies?
+#http://localhost:9000/api/sra/studies?datatable=true&paginationMode=local&projCode=BCZ
 GET		/api/sra/studies							@controllers.sra.studies.api.Studies.list()
 POST	/api/sra/studies							@controllers.sra.studies.api.Studies.save()
 GET		/tpl/sra/studies/create					    controllers.sra.studies.tpl.Studies.create()

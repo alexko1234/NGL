@@ -180,7 +180,7 @@ var getColumns = function(){
 			sraVariables : {},
 			
 			//console.log("sraVariables :" + sraVariables); 
-			// Recherche l'ensemble de projCode :
+			// Recherche l'ensemble de studies pour un projCode :
 			search : function(){
 				this.datatable.search({projCode:this.form.projCode});
 				console.log("consultationService: " + this.form);

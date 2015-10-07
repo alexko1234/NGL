@@ -40,6 +40,7 @@ create.placeholder.librarySelection=librarySelection
 create.placeholder.librarySource=librarySource
 create.placeholder.libraryStrategy=libraryStrategy
 create.placeholder.libraryConstructionProtocol=libraryConstructionProtocol
+create.placeholder.ebiStudiesSamplesFileName=ebiStudiesSamplesFileName
 create.placeholder.strategySample=strategySample
 configurations.msg.consultation=Consultation des configurations
 configuration.code=Code
@@ -47,6 +48,7 @@ configuration.projectCode=ProjectCode
 configuration.state.code=State
 configuration.librarySource=LibrarySource
 configuration.libraryConstructionProtocol=LibraryConstructionProtocol
+configuration.ebiStudiesSamplesFileName=EbiSampleOrStudyACFileName
 configuration.libraryStrategy=LibraryStrategy
 configuration.librarySelection=LibrarySelection
 
