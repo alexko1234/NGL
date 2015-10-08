@@ -72,7 +72,7 @@ public class ValueDAO extends AbstractDAODefault<Value>{
 				+DAOHelpers.getCommonInfoTypeSQLForInstitute("cit")
 			    +"where pd.code = ? "
 			    +"order by v.name";
-		Logger.debug("SQL value " + sql);
+		//Logger.debug("SQL value " + sql);
 		BeanPropertyRowMapper<Value> mapper = new BeanPropertyRowMapper<Value>(Value.class);
 		return this.jdbcTemplate.query(sql, mapper, propertyDefinitionCode);		
 	}
