@@ -137,7 +137,7 @@ public class Runs extends RunsController {
 		if (CollectionUtils.isNotEmpty(form.projectCodes)) { //all
 			queries.add(DBQuery.in("projectCodes", form.projectCodes));
 		}else if(StringUtils.isNotBlank(form.projectCode)){
-			queries.add(DBQuery.in("projectCodes", form.projectCode));
+			queries.add(DBQuery.is("projectCodes", form.projectCode));
 		}
 		
 		if (CollectionUtils.isNotEmpty(form.sampleCodes)) { //all

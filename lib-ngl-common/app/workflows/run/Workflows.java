@@ -1,7 +1,7 @@
 package workflows.run;
 
 
-import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -32,7 +32,6 @@ import play.Logger;
 import play.Play;
 import play.api.modules.spring.Spring;
 import play.libs.Akka;
-import rules.services.RulesActor;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
@@ -43,7 +42,7 @@ import akka.actor.Props;
 
 import com.mongodb.BasicDBObject;
 
-import controllers.CommonController;
+
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
@@ -52,7 +51,11 @@ public class Workflows {
 	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 	private static final String ruleFQC="F_QC_1";
 	private static final String ruleFRG="F_RG_1";
-			
+	private static final String ruleIPS="IP_S_1";
+	private static final String ruleFV="F_V_1";
+	private static final String ruleFVQC="F_VQC_1";
+	private static final String ruleAUA="A-UA_1";
+		
 	
 	public static void setRunState(ContextValidation contextValidation, Run run, State nextState) {
 		
@@ -121,7 +124,7 @@ public class Workflows {
 	private static void applyRunRules(ContextValidation contextValidation, Run run) {
 		if("IP-S".equals(run.state.code)){
 			
-			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),"IP_S_1", run),null);
+			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), ruleIPS, run),null);
 			
 		}else if("F-RG".equals(run.state.code)){
 			//update dispatch
@@ -135,15 +138,10 @@ public class Workflows {
 				State nextReadSetState = cloneState(run.state, contextValidation.getUser());
 				setReadSetState(contextValidation, readSet, nextReadSetState);
 			}			
-			//Synchro old lims
-			if(Play.application().configuration().getBoolean("old.lims.sync", false)){
-				Logger.debug("Old LIMS Run Synchronisation");
-				List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", run.code)).toList();
-				Spring.getBeanOfType(ILimsRunServices.class).insertRun(run, readSets, false);
-			}
 			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleFRG, run),null);
 		}else if("F-V".equals(run.state.code)){
-			Spring.getBeanOfType(ILimsRunServices.class).valuationRun(run);
+			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), ruleFV, run),null);
+			
 			//For all lane with VALID = FALSE so we put VALID=FALSE on each read set
 			for (Lane lane : run.lanes) {
 				if (lane.valuation.valid.equals(TBoolean.FALSE)) {
@@ -167,7 +165,8 @@ public class Workflows {
 							State nextState = cloneState(readSet.state, contextValidation.getUser());
 							nextState.code = "F-VQC";
 							setReadSetState(contextValidation, readSet, nextState);
-							Spring.getBeanOfType(ILimsRunServices.class).updateReadSetEtat(readSet, 4);	
+							rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), ruleFV, readSet),null);
+							
 						}
 					}					
 				}
@@ -203,31 +202,24 @@ public class Workflows {
 	}
 	
 	private static void applyReadSetRules(ContextValidation contextValidation, ReadSet readSet) {
-		if("F-RG".equals(readSet.state.code)){
-			//update dispatch
-			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
-					DBQuery.is("code", readSet.code), DBUpdate.set("dispatch", Boolean.TRUE));	
-			
-			//insert sample container properties at the en of the ngsrg
+		if("IP-RG".equals(readSet.state.code)){
+			//insert sample container properties at the end of the ngsrg
 			SampleOnContainer sampleOnContainer = InstanceHelpers.getSampleOnContainer(readSet);
 			if(null != sampleOnContainer){
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
 						DBQuery.is("code", readSet.code), DBUpdate.set("sampleOnContainer", sampleOnContainer));
 			}else{
 				Logger.error("sampleOnContainer null for "+readSet.code);
-			}
+			}			
+		}else if("F-RG".equals(readSet.state.code)){
+			//update dispatch
+			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
+					DBQuery.is("code", readSet.code), DBUpdate.set("dispatch", Boolean.TRUE));	
 			
 			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleFRG, readSet),null);
 			
-		}else if("F-QC".equals(readSet.state.code)){
-			
-			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleFQC, readSet),null);
-			
-			//Synchro old lims
-			if(Play.application().configuration().getBoolean("old.lims.sync", false)){
-				Logger.debug("Old LIMS ReadSet Synchronisation");
-				Spring.getBeanOfType(ILimsRunServices.class).updateReadSetAfterQC(readSet);	
-			}
+		}else if("F-QC".equals(readSet.state.code)){			
+			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ruleFQC, readSet),null);			
 		}else if("F-VQC".equals(readSet.state.code)){
 			if(TBoolean.UNSET.equals(readSet.bioinformaticValuation.valid)){
 				readSet.bioinformaticValuation.valid = readSet.productionValuation.valid;
@@ -237,7 +229,7 @@ public class Workflows {
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
 						DBQuery.is("code", readSet.code), DBUpdate.set("bioinformaticValuation", readSet.bioinformaticValuation));
 			}
-			Spring.getBeanOfType(ILimsRunServices.class).valuationReadSet(readSet, true);
+			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), ruleFVQC, readSet),null);
 			
 		} else if("IW-BA".equals(readSet.state.code)){
 			readSet.bioinformaticValuation.valid = TBoolean.UNSET;
@@ -259,12 +251,9 @@ public class Workflows {
 			}
 			
 			//if change valuation when final step
-			Spring.getBeanOfType(ILimsRunServices.class).valuationReadSet(readSet, false);	
+			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), ruleAUA, readSet),null);
 		}
 	}
-
-	
-
 
 	public static void nextReadSetState(ContextValidation contextValidation, ReadSet readSet) {
 		State nextStep = cloneState(readSet.state, contextValidation.getUser());

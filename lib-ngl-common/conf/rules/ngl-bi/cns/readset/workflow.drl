@@ -43,4 +43,40 @@ rule "Find Fungi for taxonomy treatment"
 		
 end
 
+rule "Synchro readset old lims : updateReadSetAfterQC"
+	@nglBI( F_QC_1 )
+	dialect "java"
+	salience 600
+	no-loop
+	when
+		$readset : ReadSet()
+	then
+		Logger.debug("Synchro readset old lims : updateReadSetAfterQC "+$readset.code);
+		Spring.getBeanOfType(ILimsRunServices.class).updateReadSetAfterQC($readset);
+end
 
+rule "Synchro readset old lims F_VQC : valuationReadSet"
+	@nglBI( F_VQC_1 )
+	dialect "java"
+	salience 600
+	no-loop
+	when
+		$readset : ReadSet()
+	then
+		Logger.debug("Synchro readset old lims F_VQC : valuationReadSet "+$readset.code);
+		Spring.getBeanOfType(ILimsRunServices.class).valuationReadSet($readset, true);
+			
+end
+
+rule "Synchro readset old lims F_AUA : valuationReadSet"
+	@nglBI( A-UA_1 )
+	dialect "java"
+	salience 600
+	no-loop
+	when
+		$readset : ReadSet()
+	then
+		Logger.debug("Synchro readset old lims F_AUA : valuationReadSet "+$readset.code);
+		Spring.getBeanOfType(ILimsRunServices.class).valuationReadSet($readset, false);
+			
+end

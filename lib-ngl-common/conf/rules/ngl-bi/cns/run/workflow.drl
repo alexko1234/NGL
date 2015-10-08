@@ -1,0 +1,39 @@
+package rules
+
+rule "Synchro run old lims"
+	@nglBI( F_RG_1 )
+	dialect "java"
+	salience 600
+	no-loop
+	when
+		$run : Run()
+	then
+		Logger.debug("Old LIMS Run Synchronisation "+$run.code);
+		List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", $run.code)).toList();
+		Spring.getBeanOfType(ILimsRunServices.class).insertRun($run, readSets, false);	
+end
+
+rule "Valuation run old lims"
+	@nglBI( F_V_1 )
+	dialect "java"
+	salience 600
+	no-loop
+	when
+		$run : Run()
+	then
+		Logger.debug("Valuation run old lims "+$run.code);
+		Spring.getBeanOfType(ILimsRunServices.class).valuationRun($run);
+end
+
+
+rule "Update readset state old lims when lane is invalid"
+	@nglBI( F_V_1 )
+	dialect "java"
+	salience 600
+	no-loop
+	when
+		$readset : ReadSet()
+	then
+		Logger.debug("Update readset state old lims when lane is invalid "+$readset.code);
+		Spring.getBeanOfType(ILimsRunServices.class).updateReadSetEtat($readset, 4);	
+end

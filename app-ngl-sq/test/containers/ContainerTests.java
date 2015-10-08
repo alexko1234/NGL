@@ -197,6 +197,8 @@ public class ContainerTests extends AbstractTests {
 		
 		assertThat(contents.size()).isEqualTo(2);
 		
+		System.out.println("TTTT"+null);
+		
 	}
 /**********************************Tests of Container class methods (DBObject)***************************************************/		
 	

@@ -289,7 +289,7 @@ public class InstanceHelpers {
 				Container.class,
 				DBQuery.and(DBQuery.is("support.code", containerSupportCode),
 						DBQuery.is("support.line", readSet.laneNumber.toString()),
-						DBQuery.is("contents.sampleCode", readSet.sampleCode)));
+						DBQuery.in("sampleCodes", readSet.sampleCode)));
 
 		if (cl.size() == 0) {
 			Logger.warn("Not found Container for " + readSet.code + " with : '" + containerSupportCode + ", "
@@ -304,8 +304,7 @@ public class InstanceHelpers {
 		BasicDBObject keys = new BasicDBObject();
 		keys.put("containerSupportCode", 1);
 		Run r = MongoDBDAO
-				.find(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code", readSet.runCode), keys)
-				.toList().get(0);
+				.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code", readSet.runCode), keys);
 		return r.containerSupportCode;
 	}
 

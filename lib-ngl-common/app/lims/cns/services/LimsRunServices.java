@@ -405,7 +405,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 				}
 				if(mapBanques.size()==0){
 					for(BanqueSolexa banque:  dao.getBanqueSolexaFlowcellNGL(run.containerSupportCode)){
-						String key = banque.prsco+"_"+banque.adnnom+"_"+banque.lanenum+"_"+banque.tagkeyseq;
+						String key = banque.prsco+"_"+banque.adnnom+"_"+banque.lanenum+"_"+((banque.tagkeyseq != null)?banque.tagkeyseq:"");
 						Logger.debug("key banque = "+key);
 						mapBanques.put(key, banque);
 					}

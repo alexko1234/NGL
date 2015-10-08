@@ -6,6 +6,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 
+import play.Logger;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.run.description.RunCategory;
 import models.utils.dao.AbstractDAODefault;
@@ -19,7 +20,10 @@ public class RunCategoryDAO extends AbstractDAODefault<RunCategory>{
 	}
 
 	public RunCategory findByTypeCode(String typeCode) throws DAOException {		
-		String sql = getSqlCommon()+" inner join run_type r on r.fk_run_category = t.id where r.code = ?";
+		String sql = getSqlCommon()+" inner join run_type r on r.fk_run_category = t.id "
+				+" inner join common_info_type c on c.id = r.id"
+				+" where c.code = ?";
+		
 		BeanPropertyRowMapper<RunCategory> mapper = new BeanPropertyRowMapper<RunCategory>(entityClass);
 		return this.jdbcTemplate.queryForObject(sql, mapper, typeCode);		
 	}
