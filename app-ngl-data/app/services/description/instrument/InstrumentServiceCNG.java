@@ -86,6 +86,21 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"flowcell-8","flowcell-2"}), null, 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 		
+		l.add(newInstrumentUsedType("NEXTSEQ500", "NEXTSEQ500", InstrumentCategory.find.findByCode("illumina-sequencer"), getNextseq500Properties(), 
+				getInstrumentNextseq500(),
+				getContainerSupportCategories(new String[]{"flowcell-4"}), null, 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		
+		l.add(newInstrumentUsedType("HISEQ4000", "HISEQ4000", InstrumentCategory.find.findByCode("illumina-sequencer"), getHiseq4000Properties(), 
+				getInstrumentHiseq4000(),
+				getContainerSupportCategories(new String[]{"flowcell-8"}), null, 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		
+		l.add(newInstrumentUsedType("HISEQX", "HISEQX", InstrumentCategory.find.findByCode("illumina-sequencer"), getHiseqXProperties(), 
+				getInstrumentHiseqX(),
+				getContainerSupportCategories(new String[]{"flowcell-8"}), null, 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		
 		l.add(newInstrumentUsedType("Agilent 2100 bioanalyzer", "agilent-2100-bioanalyzer", InstrumentCategory.find.findByCode("chip-electrophoresis"), getChipElectrophoresisProperties(), 
 				getInstruments(
 						createInstrument("bioAnalyzer1", "BioAnalyzer1", null, true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNG )), 
@@ -127,10 +142,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 		
 		
-		l.add(newInstrumentUsedType("NEXTSEQ500", "NEXTSEQ500", InstrumentCategory.find.findByCode("illumina-sequencer"), getNEXTSEQ500Properties(), 
-				getInstrumentNEXTSEQ500(),
-				getContainerSupportCategories(new String[]{"flowcell-4"}), null, 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 		
 		l.add(newInstrumentUsedType("Roche Lightcycler qPCR system", "rocheLightCycler-qPCR", InstrumentCategory.find.findByCode("qPCR-system"), getQPCRProperties(), 
 				getInstruments(
@@ -215,7 +226,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
         return propertyDefinitions;
 	}
 	
-	private static List<PropertyDefinition> getNEXTSEQ500Properties() throws DAOException {
+	private static List<PropertyDefinition> getNextseq500Properties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(newPropertiesDefinition("Type lectures", "sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE"), "single",100));
         propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read1", "nbCyclesRead1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",200));
@@ -232,7 +243,33 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	        		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("high-throughput","rapid run"), "single",50));
         return propertyDefinitions;
 	}
-
+	private List<PropertyDefinition> getHiseq4000Properties() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Position","position"
+		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B"), "single",100));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Type lectures", "sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE"), "single",200));
+		propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read1", "nbCyclesRead1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",300));
+		propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index1", "nbCyclesReadIndex1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",400));
+		propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read2", "nbCyclesRead2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",600));
+		propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index2", "nbCyclesReadIndex2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",500));
+		
+		return propertyDefinitions;
+	}
+	
+	private List<PropertyDefinition> getHiseqXProperties() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Position","position"
+		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("A","B"), "single",100));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Type lectures", "sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE"), "single",200));
+		propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read1", "nbCyclesRead1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",300));
+		propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index1", "nbCyclesReadIndex1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",400));
+		propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read2", "nbCyclesRead2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",600));
+		propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index2", "nbCyclesReadIndex2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",500));
+		
+		return propertyDefinitions;
+	}
 	
 	private static List<Instrument> getInstrumentMiSeq() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
@@ -240,12 +277,28 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		return instruments;
 	}
 	
-	private static List<Instrument> getInstrumentNEXTSEQ500() throws DAOException {
+	private static List<Instrument> getInstrumentNextseq500() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		instruments.add(createInstrument("NEXTSEQ1", "NEXTSEQ1", null, true, "/env/atelier/solexa_NEXTSEQ1/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );
 		return instruments;
 	}
 
+	private List<Instrument> getInstrumentHiseq4000() throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("4000", "4000", null, false, "/env/ig/atelier/illumina_4000", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );		
+		return instruments;
+	}
+	
+	private List<Instrument> getInstrumentHiseqX() throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("ASTERIX", "ASTERIX", null, false, "/env/ig/atelier/illumina_ASTERIX", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
+		instruments.add(createInstrument("DIAGNOSTIX", "DIAGNOSTIX", null, false, "/env/ig/atelier/illumina_DIAGNOSTIX", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
+		instruments.add(createInstrument("IDEFIX", "IDEFIX", null, false, "/env/ig/atelier/illumina_IDEFIX", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
+		instruments.add(createInstrument("OBELIX", "OBELIX", null, false, "/env/ig/atelier/illumina_OBELIX", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
+		instruments.add(createInstrument("PANORAMIX", "PANORAMIX", null, false, "/env/ig/atelier/illumina_PANORAMIX", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
+		
+		return instruments;
+	}
 
 	public static List<Instrument> getInstrumentHiseq2000() throws DAOException{
 		List<Instrument> instruments=new ArrayList<Instrument>();

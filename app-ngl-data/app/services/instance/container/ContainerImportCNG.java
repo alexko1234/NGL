@@ -126,8 +126,7 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		//-4- timestamp-er dans la base source Postresql ce qui a été transféré
 		if (containerCategoryCode.equals("lane")) {
 			limsServices.updateLimsLanes(ctrs, contextError, "creation");		
-		}
-		else {
+		} else {
 			//"tube"
 			limsServices.updateLimsTubes(ctrs, contextError, "creation");
 		}

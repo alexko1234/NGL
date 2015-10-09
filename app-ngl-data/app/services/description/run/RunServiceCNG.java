@@ -25,7 +25,7 @@ public class RunServiceCNG  extends AbstractRunService{
 	public void saveReadSetType(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ReadSetType> l = new ArrayList<ReadSetType>();
 		l.add(DescriptionFactory.newReadSetType("Default","default-readset",  getReadSetPropertyDefinitions(),  DescriptionFactory.getInstitutes(Institute.CODE.CNG) ));
-		//l.add(DescriptionFactory.newReadSetType("RSILLUMINA","RSILLUMINA",  getReadSetPropertyDefinitions(), null, DescriptionFactory.getInstitutes(Institute.CODE.CNG, Institute.CODE.CNS) ));
+		l.add(DescriptionFactory.newReadSetType("rsillumina","rsillumina",  getReadSetPropertyDefinitions(),  DescriptionFactory.getInstitutes( Institute.CODE.CNG) ));
 		
 		DAOHelpers.saveModels(ReadSetType.class, l, errors);
 	}
@@ -38,7 +38,6 @@ public class RunServiceCNG  extends AbstractRunService{
 	public void saveRunCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<RunCategory> l = new ArrayList<RunCategory>();
 		l.add(DescriptionFactory.newSimpleCategory(RunCategory.class, "Illumina", "illumina"));
-		l.add(DescriptionFactory.newSimpleCategory(RunCategory.class, "Opgen", "opgen"));
 		DAOHelpers.saveModels(RunCategory.class, l, errors);
 	}
 	
@@ -49,6 +48,9 @@ public class RunServiceCNG  extends AbstractRunService{
 		l.add(DescriptionFactory.newRunType("RHS2500R","RHS2500R", 2, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(),   DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 		l.add(DescriptionFactory.newRunType("RMISEQ","RMISEQ", 1, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(),   DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 		l.add(DescriptionFactory.newRunType("RNEXTSEQ500","RNEXTSEQ500", 4, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(),   DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		l.add(DescriptionFactory.newRunType("RHS4000","RHS4000", 1, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		l.add(DescriptionFactory.newRunType("RHSX","RHSX", 1, RunCategory.find.findByCode("illumina"), getRunIlluminaPropertyDefinitions(), DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+
 		DAOHelpers.saveModels(RunType.class, l, errors);
 	}
 	

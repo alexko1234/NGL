@@ -70,7 +70,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Nom du séquenceur","sequencerName"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("HISEQ1", "HISEQ2" ,"HISEQ3" ,"HISEQ4" ,"HISEQ5" ,"HISEQ6" ,"HISEQ7" ,"HISEQ8" ,"HISEQ9" ,"HISEQ10" ,"HISEQ11"), "single",150));
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, 
+						DescriptionFactory.newValues("HISEQ1", "HISEQ2" ,"HISEQ3" ,"HISEQ4" ,"HISEQ5" ,"HISEQ6" ,"HISEQ7" ,"HISEQ8" ,"HISEQ9" ,"HISEQ10" ,"HISEQ11", "MISEQ1","NEXTSEQ1"), "single",150));
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Position","position"
 						, LevelService.getLevels(Level.CODE.Process),String.class, false, DescriptionFactory.newValues("A", "B"), "single",200));
