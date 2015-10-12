@@ -36,7 +36,6 @@ public class Configuration  extends DBObject implements IValidation {
 		public String userFileExperiments = null; // Nom complet du fichier donnant les informations de librairies specifiques de chaque experiment
 		// si les données ne doivent pas etre prises dans le lims ou dans la configuration.
 		
-		public String ebiStudiesSamplesFileName = null; // Nom complet du fichier donnant les correspondances entre lotSeqName et AC des studies et/ou samples enregistrés à l'EBI par collaborateurs.
 
 		public State state = new State(); // Reference sur "models.laboratory.common.instance.state" 
 								 // pour gerer les differents etats de l'objet.

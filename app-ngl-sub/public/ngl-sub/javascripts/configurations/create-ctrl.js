@@ -27,29 +27,7 @@ angular.module('home').controller('CreateCtrl',[ '$http', '$scope', '$routeParam
 			});
 	};
 	
-	
-/*	$scope.upload = function ($modalInstance) {
-		console.log("Upload file");
-		$scope.file = document.getElementById("file").files[0];
-		console.log($scope.file);
 		
-		return $http({
-		    method: 'POST',
-		    url: "/administrations/upload",
-		    headers: {'Content-Type': undefined},
-		    data : {
-		    	file:$scope.file,
-		    },
-		    transformRequest: formDataObject
-		  }).success(function(data) {
-				$scope.isError=false;
-		  }).error(function(data){
-				$scope.isError=true;
-				$scope.errorMessage=data;
-		  });
-	};
-*/
-	
 	$scope.reset = function(){
 		$scope.createService.resetForm();
 		$scope.messages.clear();
