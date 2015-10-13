@@ -8,16 +8,16 @@ rule "Set Lane index properties to ReadSet"
 	salience 600
 	no-loop
 	when
-		$readset : ReadSet($runCode:runCode, $laneNumber:laneNumber)		
+		$readset : ReadSet()		
 	then
 		Logger.debug("Set Lane properties to Readset "+$readset.code);
 		BasicDBObject keys = new BasicDBObject();
 		keys.put("code", 1);
 		keys.put("lanes", 1);
-		Run run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code", $runCode), keys);
+		Run run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code", $readset.runCode), keys);
 		if(null != run){
 			//Logger.debug("Load RUN "+run.code);
-			Treatment laneNGSRG = run.getLane($laneNumber).treatments.get("ngsrg");
+			Treatment laneNGSRG = run.getLane($readset.laneNumber).treatments.get("ngsrg");
 			Treatment readSetNGSRG = $readset.treatments.get("ngsrg");
 			boolean isUpdate = false;
 			if(null != laneNGSRG.results.get("default").get("nbUsefulCycleReadIndex2")){
@@ -42,7 +42,7 @@ rule "Set Lane index properties to ReadSet"
 			}
 			
 		}else{
-			Logger.error("ReadSet Does not exist: "+$runCode);
+			Logger.error("ReadSet Does not exist: "+$readset.runCode);
 		}
 		
 end

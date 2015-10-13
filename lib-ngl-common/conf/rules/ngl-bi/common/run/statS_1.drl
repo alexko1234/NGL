@@ -7,16 +7,16 @@ rule "Copy Properties from Support and Container to Run"
 	salience 200
 	no-loop
 	when
-		$run : Run ( $containerSupportCode : containerSupportCode )		
+		$run : Run()		
 	then
 		Logger.debug("Copy properties to Run "+$run.code);
-		ContainerSupport cs = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, $containerSupportCode);
+		ContainerSupport cs = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, $run.containerSupportCode);
 		if(null != cs){
 			if (cs.properties != null) {
 				$run.properties.putAll(cs.properties);			
 			}
 			
-			List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code", $containerSupportCode)).toList();
+			List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code", $run.containerSupportCode)).toList();
 			
 			Set<String> libProcessTypeCodes = new TreeSet<String>();
 			for(Container container:containers){
@@ -36,7 +36,7 @@ rule "Copy Properties from Support and Container to Run"
 								.set("projectCodes",new TreeSet<String>(cs.projectCodes))
 								.set("sampleCodes",new TreeSet<String>(cs.sampleCodes)));
 		}else{
-			Logger.error("ContainerSupport null for "+$containerSupportCode);
+			Logger.error("ContainerSupport null for "+$run.containerSupportCode);
 		}
 		
 			

@@ -53,6 +53,7 @@ end
 //nbClusterLane : run.lanes.treatments.ngsrg.default.nbClusterInternalAndIlluminaFilter
 rule "Initialize LaneInfo"
 	@nglBI( F_RG_1 )
+	
 	dialect "java"
 	salience 500
 	no-loop
@@ -62,8 +63,8 @@ rule "Initialize LaneInfo"
 		$mapValue : Map() from $treatment.results.values()
        	$nbClusterLane : Entry(key == "nbClusterInternalAndIlluminaFilter") from $mapValue.entrySet()
 	then
-		Logger.debug("Create LaneInfo "+$lane.getNumber());
-		LaneInfo laneInfo = new LaneInfo($run, $lane, $lane.getReadSetCodes().size(), new ArrayList(),(Long)((PropertyValue)$nbClusterLane.getValue()).getValue());
+		Logger.debug("Create LaneInfo "+$lane.number);
+		LaneInfo laneInfo = new LaneInfo($run, $lane, $lane.readSetCodes.size(), new ArrayList(),(Long)((PropertyValue)$nbClusterLane.getValue()).getValue());
 		insert(laneInfo);
 	
 end
@@ -112,7 +113,7 @@ rule "Calculate seqPercent readSet"
 		Long nbClusterLane = $readSetInfo.getNbClusterLane();
 		Double validSeqPercent = roundValue((double)nbClusterReadSet/nbClusterLane*100);
 		//Create new PropertyValue
-		//Logger.debug("Calculate validSeqPercent readSet :"+validSeqPercent);
+		Logger.debug("Calculate validSeqPercent readSet :"+validSeqPercent);
 		PropertySingleValue propertyValidSeqPercent = new PropertySingleValue(validSeqPercent);
 		//Update treatment for ReadSet in database
 		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,  
@@ -140,7 +141,7 @@ rule "Calculate seqLossPercent Lane"
 		$mapValue.put("seqLossPercent", propertySeqLossPercent);
 		//Update treatment for lane 
 		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
-						DBQuery.and(DBQuery.is("code", $laneInfo.getRun().code), DBQuery.is("lanes.number", $laneInfo.getLane().getNumber())),
+						DBQuery.and(DBQuery.is("code", $laneInfo.getRun().code), DBQuery.is("lanes.number", $laneInfo.getLane().number)),
 						DBUpdate.set("lanes.$.treatments."+$treatment.code, $treatment));
 end
 
