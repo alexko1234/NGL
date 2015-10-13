@@ -38,9 +38,11 @@ rule "Calculate average percentClusterFilter for run"
 		Double percentClusterIlluminaFilter = roundValue((double)nbClusterFilter/nbTotal*100);
 		//Create new PropertyValue
 		PropertySingleValue propertyPercentClusterFilter = new PropertySingleValue(percentClusterIlluminaFilter);
-		$mapValue.put("percentClusterIlluminaFilter", propertyPercentClusterFilter);
 		//Update treatment for Run
-		MongoDBDAO.updateSet(InstanceConstants.RUN_ILLUMINA_COLL_NAME, $run, "treatments."+$treatment.code, $treatment);
+		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+						DBQuery.is("code", $run.code),
+						DBUpdate.set("treatments.ngsrg.default.percentClusterIlluminaFilter", propertyPercentClusterFilter));
+		
 end 
 
 //Create LaneInfo for each lane of a run :
@@ -83,6 +85,7 @@ rule "Get all readSet"
        	$laneInfo : LaneInfo(lane==$lane);
     then
     	//Get readSet from database to calculate each validSeqPercent per readSet
+    	//Logger.debug("Get readSet "+$readSet);
     	ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, $readSet);	
     	ReadSetInfo readSetInfo = new ReadSetInfo($lane,$laneInfo.getNbClusterLane(),readSet);
     	//Update laneInfo
@@ -104,14 +107,17 @@ rule "Calculate seqPercent readSet"
 		$nbCluster : Entry(key=="nbCluster") from $mapValue.entrySet()
 	then
 		//Calculate validSeqPercent
+		
 		Long nbClusterReadSet = ((Long)((PropertyValue)$nbCluster.getValue()).getValue());
 		Long nbClusterLane = $readSetInfo.getNbClusterLane();
 		Double validSeqPercent = roundValue((double)nbClusterReadSet/nbClusterLane*100);
 		//Create new PropertyValue
+		//Logger.debug("Calculate validSeqPercent readSet :"+validSeqPercent);
 		PropertySingleValue propertyValidSeqPercent = new PropertySingleValue(validSeqPercent);
-		$mapValue.put("validSeqPercent", propertyValidSeqPercent);
 		//Update treatment for ReadSet in database
-		MongoDBDAO.updateSet(InstanceConstants.READSET_ILLUMINA_COLL_NAME, $readSetInfo.getReadSet(), "treatments."+$treatment.code, $treatment);
+		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,  
+			DBQuery.is("code",$readSetInfo.getReadSet().code),
+			DBUpdate.set("treatments.ngsrg.default.validSeqPercent", propertyValidSeqPercent));
 		$readSetInfo.setValidSeqPercent(validSeqPercent);
 		update($readSetInfo);
 end
