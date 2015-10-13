@@ -23,9 +23,12 @@ rule "Calculate lostBasesPercent for contigFilterBA treatment"
 		Double lostBasesPercent = roundValue((double)(assemblyContigSize - storedBases)/assemblyContigSize*100);
 		//Create new PropertyValue
 		PropertySingleValue propertylostBasesPercent = new PropertySingleValue(lostBasesPercent);
-		$mapValueCFBA.put("lostBasesPercent", propertylostBasesPercent);
 		//Update analysis
-		MongoDBDAO.updateSet(InstanceConstants.ANALYSIS_COLL_NAME, $analysis, "treatments."+$treatmentCFBA.code, $treatmentCFBA);
+		
+		MongoDBDAO.update(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class, 
+			DBQuery.is("code", $analysis.code),  
+			DBUpdate.set("treatments.contigFilterBA.pairs.lostBasesPercent", propertylostBasesPercent));
+		
 end
 
 

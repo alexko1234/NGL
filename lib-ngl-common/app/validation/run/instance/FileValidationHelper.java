@@ -54,7 +54,7 @@ public class FileValidationHelper extends CommonValidationHelper {
 	
 	public static void validateFileFullName(String fullname, ContextValidation contextValidation) {
 		Class objectClass =  getObjectFromContext("objectClass", Class.class, contextValidation);
-		if(ReadSet.class.equals(objectClass)){
+		if(ReadSet.class.isAssignableFrom(objectClass)){
 			validateReadSetFileFullName(fullname, contextValidation);
 		}else if(Analysis.class.equals(objectClass)){
 			validateAnalysisFileFullName(fullname, contextValidation);
@@ -93,7 +93,7 @@ public class FileValidationHelper extends CommonValidationHelper {
 	
 	public static void validateFileProperties(Map<String, PropertyValue> properties, ContextValidation contextValidation) {
 		Class objectClass =  getObjectFromContext("objectClass", Class.class, contextValidation);
-		if(ReadSet.class.equals(objectClass)){
+		if(ReadSet.class.isAssignableFrom(objectClass)){
 			validateReadSetFileProperties(properties, contextValidation);
 		}else if(Analysis.class.equals(objectClass)){
 			validateAnalysisFileProperties(properties, contextValidation);
