@@ -10,7 +10,7 @@ rule "Synchro run old lims"
 	then
 		Logger.debug("Old LIMS Run Synchronisation "+$run.code);
 		List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", $run.code)).toList();
-		//Spring.getBeanOfType(ILimsRunServices.class).insertRun($run, readSets, false);	
+		Spring.getBeanOfType(ILimsRunServices.class).insertRun($run, readSets, false);	
 end
 
 rule "Valuation run old lims"
