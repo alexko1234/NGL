@@ -5,7 +5,6 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	
 	console.log("call DetailsCtrl");
 	
-	var saveInProgress = false;
 	
 	/*move to a directive*/
 	$scope.setImage = function(imageData, imageName, imageFullSizeWidth, imageFullSizeHeight) {
@@ -76,13 +75,26 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	$scope.save = function(){
 		console.log("call save on main");
 		saveInProgress = true;
-		$scope.$broadcast('save');
-		updateData();
+		$scope.$broadcast('saveReagents');		
 	};
+	
+	$scope.$on('reagentsSaved', function(e) {
+		console.log('call event reagentsSaved on main');
+		$scope.$broadcast('save');
+	});
 	
 	$scope.$on('childSaved', function(e) {
 		console.log('call event childSaved on main');
+		
+		//TODO effective save or update
+		if(creationMode){
+			
+		}else{
+			
+		}
+		
 		saveInProgress = false;
+		updateData();
 		$scope.$broadcast('refresh');
 	});
 	
@@ -193,6 +205,9 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.lists.refresh.experimentCategories();
 	}
 	
+	var creationMode = false;
+	var saveInProgress = false;
+	
 	var init = function(){
 		$scope.messages = messages();
 		$scope.lists = lists;
@@ -211,7 +226,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		if($routeParams.code === 'new'){
 			var defaultExperiment = mainService.get("newExp");
 			if(!defaultExperiment){
-				$scope.creationMode = true;
+				creationMode = true;
 				$scope.startEditMode();
 				defaultExperiment = {
 						state : {
@@ -474,7 +489,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	$scope.datatableReagent = datatable(datatableConfigReagents);
 	
 	$scope.$watch('experiment', function() {
-		console.log('watch experiment')
+		console.log('watch experiment on reagents')
 		if (angular.isDefined($scope.experiment)){
 			if($scope.experiment.reagents === null || $scope.experiment.reagents === undefined || $scope.experiment.reagents.length === 0){
 				$scope.datatableReagent.setData([]);				
@@ -485,16 +500,11 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	
 	});
 
-	$scope.$on('save', function(e, promises, func, endPromises) {	
+	$scope.$on('saveReagents', function(e, promises, func, endPromises) {	
 		console.log("call event save for reagents");
 		$scope.datatableReagent.save()
 		$scope.experiment.reagents = $scope.datatableReagent.getData();
-		$scope.$emit('childSaved', promises, func, endPromises);
-	});
-	
-	$scope.$on('refresh', function(e) {
-		console.log("call event refresh for reagents");				
-		$scope.$emit('viewRefeshed');
+		$scope.$emit('reagentsSaved', promises, func, endPromises);
 	});
 	
 }]).controller('CommentsCtrl',['$scope','$sce', '$http','lists','$parse','$filter','datatable', 

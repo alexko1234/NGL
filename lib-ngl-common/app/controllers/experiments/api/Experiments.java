@@ -4,38 +4,59 @@ import static play.data.Form.form;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
 import org.mongojack.DBQuery.Query;
 
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
+import play.mvc.BodyParser;
 import play.mvc.Result;
 import play.mvc.Results;
+import validation.ContextValidation;
+import validation.experiment.instance.ExperimentValidationHelper;
 import views.components.datatable.DatatableForm;
 import views.components.datatable.DatatableResponse;
+import workflows.container.ContainerWorkflows;
+import workflows.experiment.ExpWorkflows;
 
 import com.mongodb.BasicDBObject;
 
 import models.laboratory.common.description.Level;
+import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.processes.instance.Process;
+import models.laboratory.run.instance.Analysis;
+import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
+import models.utils.dao.DAOException;
+import models.utils.instance.ExperimentHelper;
 import controllers.DocumentController;
 import controllers.NGLControllerHelper;
+import controllers.QueryFieldsForm;
+import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
 public class Experiments extends DocumentController<Experiment>{
-
+	final Form<Experiment> experimentForm = form(Experiment.class);
 	final Form<ExperimentSearchForm> experimentSearchForm = form(ExperimentSearchForm.class);
 	final List<String> defaultKeys =  Arrays.asList("categoryCode","code","inputContainerSupportCodes","instrument","outputContainerSupportCodes","projectCodes","protocolCode","reagents","sampleCodes","state","traceInformation","typeCode","atomicTransfertMethods.inputContainerUseds.contents");
-
+	final ExpWorkflows workflows = new ExpWorkflows();
+	
+	public static final String calculationsRules ="calculations";
 	
 	public Experiments() {
 		super(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class);	
@@ -178,5 +199,86 @@ public class Experiments extends DocumentController<Experiment>{
 
 		return query;
 
+	}
+	
+	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	public Result save() throws DAOException{
+		Form<Experiment> filledForm = getMainFilledForm();
+		Experiment input = filledForm.get();
+		
+		if (null == input._id) {
+			input.code = CodeHelper.getInstance().generateExperimentCode(input);
+			input.traceInformation = new TraceInformation();
+			input.traceInformation.setTraceInformation(getCurrentUser());
+			
+			if(null == input.state){
+				input.state = new State();
+			}
+			input.state.code = "N";
+			input.state.user = getCurrentUser();
+			input.state.date = new Date();	
+						
+		} else {
+			return badRequest("use PUT method to update the experiment");
+		}
+		
+		ExperimentHelper.updateData(input);
+		ExperimentHelper.doCalculations(input, calculationsRules);
+		
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ctxVal.setCreationMode();
+		
+		input.validate(ctxVal);	
+		if (!ctxVal.hasErrors()) {
+			input = saveObject(input);
+			workflows.applyWorkflowRules(ctxVal, input);
+			return ok(Json.toJson(input));
+		} else {
+			return badRequest(filledForm.errorsAsJson());
+		}				
+	}
+	
+	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	public Result update(String code) throws DAOException{
+		Experiment objectInDB =  getObject(code);
+		if(objectInDB == null) {
+			return badRequest("Experiment with code "+code+" does not exist");
+		}
+		//TODO Peux t'on mettre à jour une expérience terminée
+		//	=> Oui mais on ne peut plus modifier sa structure juste les valeurs
+		//	=> comment vérifier le point précédent ????
+		Form<Experiment> filledForm = getMainFilledForm();
+		Experiment input = filledForm.get();
+		
+		if (input.code.equals(code)) {
+			if(null != input.traceInformation){
+				input.traceInformation = getUpdateTraceInformation(input.traceInformation);
+			}else{
+				Logger.error("traceInformation is null !!");
+			}
+			
+			if(!objectInDB.state.code.equals(input.state.code)){
+				return badRequest("you cannot change the state code. Please used the state url ! ");
+			}
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
+			ctxVal.setUpdateMode();
+			
+			
+			ExperimentHelper.cleanContainers(input, ctxVal); //TODO In all state or only for N and IP
+			ExperimentHelper.updateData(input); //TODO In all state or only for N and IP
+			ExperimentHelper.doCalculations(input, calculationsRules);
+			
+			input.validate(ctxVal);
+			
+			if (!ctxVal.hasErrors()) {
+				updateObject(input);				
+				return ok(Json.toJson(input));
+			}else {
+				return badRequest(filledForm.errorsAsJson());			
+			}
+		}else{
+			return badRequest("Experiment code are not the same");
+		}
+				
 	}
 }

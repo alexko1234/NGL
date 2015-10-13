@@ -161,7 +161,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 				validationfacts.add(atomic);
 			}*/
 		}
-		ExperimentValidationHelper.validateRules(validationfacts, contextValidation);
+		validateRules(validationfacts, contextValidation);
 	}
 
 	public static void validateInputOutputContainerSupport(Experiment experiment,

@@ -81,8 +81,8 @@ public class ExperimentHelper extends InstanceHelpers {
 	public static Experiment updateData(Experiment exp) {
 		exp.sampleCodes = new HashSet<String>();
 		exp.projectCodes  = new HashSet<String>();
-
-		for(int i=0;i<exp.atomicTransfertMethods.size();i++)
+		exp.inputContainerSupportCodes  = new HashSet<String>();
+		for(int i=0;i<exp.atomicTransfertMethods.size();i++){
 			if(exp.atomicTransfertMethods.get(i)!=null && exp.atomicTransfertMethods.get(i).inputContainerUseds.size()>0){
 				for(ContainerUsed c:exp.atomicTransfertMethods.get(i).inputContainerUseds){
 					Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, c.code);
@@ -90,17 +90,16 @@ public class ExperimentHelper extends InstanceHelpers {
 					if(container!=null){
 						if(CollectionUtils.isNotEmpty(container.sampleCodes)){
 							exp.sampleCodes.addAll(container.sampleCodes);
-						//	exp.sampleCodes = InstanceHelpers.addCodesList(container.sampleCodes,exp.sampleCodes);
 						}
 						if(CollectionUtils.isNotEmpty(container.projectCodes)){
 							exp.projectCodes.addAll(container.projectCodes);
-						//	exp.projectCodes = InstanceHelpers.addCodesList(container.projectCodes,exp.projectCodes);
 						}						
 					}
-									
-					exp.inputContainerSupportCodes=ExperimentHelper.getInputContainerSupportCodes(exp);
+					exp.inputContainerSupportCodes.add(container.support.code);
+					//exp.inputContainerSupportCodes=getInputContainerSupportCodes(exp);
 				}	
 			}
+		}
 			
 		return exp;
 	}

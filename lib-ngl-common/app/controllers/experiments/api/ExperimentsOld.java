@@ -440,7 +440,7 @@ public class ExperimentsOld extends CommonController{
 		if(exp._id == null || exp._id.equals("")){
 			ContextValidation ctxValidation = new ContextValidation(getCurrentUser(), experimentFilledForm.errors());
 
-			exp.code = CodeHelper.getInstance().generateExperiementCode(exp);
+			exp.code = CodeHelper.getInstance().generateExperimentCode(exp);
 			exp.traceInformation = ExperimentHelper.getUpdateTraceInformation(null, getCurrentUser());
 			exp.state.user=getCurrentUser();
 			ExperimentValidationHelper.validateRules(exp, ctxValidation);
@@ -524,7 +524,7 @@ public class ExperimentsOld extends CommonController{
 
 	}
 
-
+	//TODO A quoi ca sert ???? du support ????
 	public static Result updateContainerSupportCode(String experimentCode,String containerSupportCode){
 
 		Experiment experiment= MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);

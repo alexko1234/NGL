@@ -121,14 +121,14 @@ angular.module('home').controller('OneToVoidCtrl',['$scope', '$parse','atmToSing
 	};
 
 		$scope.$on('save', function(e, promises, func, endPromises) {	
-			console.log("call event save");
+			console.log("call event save on one-to-void");
 			$scope.atmService.data.save();
 			$scope.atmService.viewToExperimentOneToVoid($scope.experiment);
-			$scope.$emit('viewSaved', promises, func, endPromises);
+			$scope.$emit('childSaved', promises, func, endPromises);
 		});
 		
 		$scope.$on('refresh', function(e) {
-			console.log("call event refresh");		
+			console.log("call event refresh on one-to-void");		
 			var dtConfig = $scope.atmService.data.getConfig();
 			dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 			dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());

@@ -224,10 +224,10 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 	}
 	
 	$scope.$on('save', function(e, promises, func, endPromises) {	
-		console.log("call event save");		
+		console.log("call event save on tubes-to-flowcell");		
 		$scope.atmService.viewToExperiment($scope.experiment);
 		$scope.updateConcentration($scope.experiment);
-		$scope.$emit('viewSaved', promises, func, endPromises);
+		$scope.$emit('childSaved', promises, func, endPromises);
 	});
 	
 	
