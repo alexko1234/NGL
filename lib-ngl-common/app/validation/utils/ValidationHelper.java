@@ -345,7 +345,9 @@ public class ValidationHelper {
 	public static boolean convertPropertyValue(ContextValidation contextValidation, PropertySingleValue propertyValue, PropertyDefinition propertyDefinition) {
 		try{
 			Class<?> valueClass = getClass(propertyDefinition.valueType);
+			Logger.debug("class "+valueClass.toString()+" "+propertyValue.value);
 			if(!valueClass.isInstance(propertyValue.value)){ //transform only if not the good type
+				Logger.debug("convertValue "+propertyDefinition.code);
 				propertyValue.value = convertValue(valueClass, propertyValue.value.toString(), null);
 			}
 			if(propertyDefinition.saveMeasureValue!=null && propertyValue.unit == null){

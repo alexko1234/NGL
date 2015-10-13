@@ -369,7 +369,7 @@ public class LimsAbandonDAO {
 			
 			this.jdbcTemplate.update("pc_Fichierlotseq @lseqco=?, @flotseqname=?, @flotseqext=?, "
 					+ "@flotseqascii=?, @tfileco=?, @flabelco=?, @futil=?",
-					lseqco, flotseqname, file.extension, Integer.valueOf((String)file.properties.get("asciiEncoding").value), tfileco, flabelco, file.usable);
+					lseqco, flotseqname, file.extension, Integer.valueOf((String)file.properties.get("asciiEncoding").value.toString()), tfileco, flabelco, file.usable);
 					
 		}
 	}
