@@ -7,10 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 import models.laboratory.run.instance.ReadSet;
+import models.laboratory.run.instance.ReadSetLane;
 import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
+import org.mongojack.DBUpdate;
 
 import play.Logger;
 import play.libs.Json;
@@ -108,12 +110,9 @@ public class ReadSets extends CommonController{
 			if(readSet == null) {
 				return notFound();
 			}
-
+			
 			if (readSet.code.equals(readSetCode)) {
-				Map<String,Object> map = new HashMap<String,Object>();
-				map.put("archiveId", archiveId); //Update
-				map.put("archiveDate", new Date());
-				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSet, map);
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", readSet.code), DBUpdate.set("archiveId", archiveId).set("archiveDate", new Date()));
 				return ok();
 			}
 			else {

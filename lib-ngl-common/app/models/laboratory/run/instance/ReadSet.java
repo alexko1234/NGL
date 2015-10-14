@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import play.Logger;
+
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
@@ -24,12 +26,6 @@ import validation.run.instance.TreatmentValidationHelper;
 import validation.utils.ValidationHelper;
 import fr.cea.ig.DBObject;
 
-@JsonTypeInfo(use=Id.NAME, include=As.EXISTING_PROPERTY, property="typeCode", defaultImpl=models.laboratory.run.instance.ReadSetLane.class, visible=true)
-@JsonSubTypes({
-	@JsonSubTypes.Type(value = models.laboratory.run.instance.ReadSetLane.class, name = "default-readset"),
-	@JsonSubTypes.Type(value = models.laboratory.run.instance.ReadSetLane.class, name = "rsillumina"),
-	@JsonSubTypes.Type(value = models.laboratory.run.instance.ReadSet.class, name = "rsnanopore")
-})
 public class ReadSet extends DBObject implements IValidation{
 
 	public String typeCode;
@@ -96,6 +92,10 @@ public class ReadSet extends DBObject implements IValidation{
 		ReadSetValidationHelper.validateTraceInformation(this.traceInformation, contextValidation);
 		ReadSetValidationHelper.validateReadSetRunCode(this.runCode ,contextValidation);
 		
+		if("default-readset".equals(typeCode) || "rsillumina".equals(typeCode)){
+			Logger.debug("check lane !!!");
+			ReadSetValidationHelper.validateReadSetCodeInRunLane(this.code, this.runCode, this.laneNumber, contextValidation);			
+		}
 		ReadSetValidationHelper.validateProjectCode(this.projectCode, contextValidation);
 		
 		ReadSetValidationHelper.validateSampleCode(this.sampleCode, this.projectCode, contextValidation);
