@@ -6,7 +6,7 @@ rule "Synchro run old lims"
 	salience 600
 	no-loop
 	when
-		$run : Run()
+		$run : Run(categoryCode == "illumina")
 	then
 		Logger.debug("Old LIMS Run Synchronisation "+$run.code);
 		List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("runCode", $run.code)).toList();
@@ -19,7 +19,7 @@ rule "Valuation run old lims"
 	salience 600
 	no-loop
 	when
-		$run : Run()
+		$run : Run(categoryCode == "illumina")
 	then
 		Logger.debug("Valuation run old lims "+$run.code);
 		Spring.getBeanOfType(ILimsRunServices.class).valuationRun($run);
@@ -32,7 +32,7 @@ rule "Update readset state old lims when lane is invalid"
 	salience 600
 	no-loop
 	when
-		$readset : ReadSet()
+		$readset : ReadSet(typeCode == "default-readset" || typeCode == "rsillumina")
 	then
 		Logger.debug("Update readset state old lims when lane is invalid "+$readset.code);
 		Spring.getBeanOfType(ILimsRunServices.class).updateReadSetEtat($readset, 4);	
