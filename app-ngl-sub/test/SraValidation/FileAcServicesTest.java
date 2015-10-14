@@ -22,7 +22,7 @@ import models.laboratory.run.instance.ReadSet;
 import org.junit.Test;
 
 import play.Logger;
-import play.modules.mongojack.MongoDB;
+
 import services.FileAcServices;
 import services.SubmissionServices;
 import validation.ContextValidation;

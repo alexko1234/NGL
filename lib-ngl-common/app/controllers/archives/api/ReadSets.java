@@ -2,12 +2,9 @@ package controllers.archives.api;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import models.laboratory.run.instance.ReadSet;
-import models.laboratory.run.instance.ReadSetLane;
 import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;
@@ -15,9 +12,7 @@ import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
 
 import play.Logger;
-import play.libs.Json;
 import play.mvc.Result;
-import views.components.datatable.DatatableResponse;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mongodb.BasicDBObject;
@@ -25,7 +20,6 @@ import com.mongodb.BasicDBObject;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBDatatableResponseChunks;
-import fr.cea.ig.MongoDBResponseChunks;
 import fr.cea.ig.MongoDBResult;
 /**
  * Controller that manage the readset archive

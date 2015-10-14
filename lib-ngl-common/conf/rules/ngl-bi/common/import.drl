@@ -9,7 +9,6 @@ import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.Analysis;
 import models.laboratory.run.instance.ReadSetProperties;
-import models.laboratory.run.instance.ReadSetLane;
 import models.laboratory.run.instance.Treatment;
 import models.utils.InstanceConstants;
 import models.laboratory.common.instance.PropertyValue;

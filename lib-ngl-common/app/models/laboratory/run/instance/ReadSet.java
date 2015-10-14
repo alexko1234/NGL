@@ -93,7 +93,7 @@ public class ReadSet extends DBObject implements IValidation{
 		ReadSetValidationHelper.validateReadSetRunCode(this.runCode ,contextValidation);
 		
 		if("default-readset".equals(typeCode) || "rsillumina".equals(typeCode)){
-			Logger.debug("check lane !!!");
+			ReadSetValidationHelper.validateReadSetLaneNumber(this.runCode, this.laneNumber ,contextValidation);
 			ReadSetValidationHelper.validateReadSetCodeInRunLane(this.code, this.runCode, this.laneNumber, contextValidation);			
 		}
 		ReadSetValidationHelper.validateProjectCode(this.projectCode, contextValidation);
