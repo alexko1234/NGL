@@ -34,6 +34,8 @@ import models.utils.dao.DAOException;
 import org.apache.commons.collections.CollectionUtils;
 import org.mongojack.DBQuery;
 
+import play.Logger;
+
 import com.google.common.collect.Multiset.Entry;
 
 import validation.ContextValidation;
@@ -294,13 +296,19 @@ public class ContainerHelper {
 				else {
 					newSupport = ContainerSupportHelper.createContainerSupport(container.support.code, null, container.support.categoryCode,"ngl");
 				}
+				
 				newSupport.projectCodes = new  HashSet<String>(container.projectCodes);
 				newSupport.sampleCodes = new  HashSet<String>(container.sampleCodes);
 				newSupport.state=container.state;
 				
-				if(null != container.fromExperimentTypeCodes){//TODO Must be manage for CNG
+				//FDS 14/10/2015 ajout storage code
+				newSupport.storageCode=container.support.storageCode;
+				Logger.debug("3) createSupportFromContainers; Storage Code ="+newSupport.storageCode);
+				
+				if(null != container.fromExperimentTypeCodes){
 					newSupport.fromExperimentTypeCodes = new  HashSet<String>(container.fromExperimentTypeCodes);
 				}
+				
 				if (!mapSupports.containsKey(newSupport.code)) {
 					mapSupports.put(newSupport.code, newSupport);
 				}
@@ -308,7 +316,7 @@ public class ContainerHelper {
 					ContainerSupport oldSupport = (ContainerSupport) mapSupports.get(newSupport.code);
 					oldSupport.projectCodes.addAll(newSupport.projectCodes); 
 					oldSupport.sampleCodes.addAll(newSupport.sampleCodes);
-					if(null != newSupport.fromExperimentTypeCodes && null != oldSupport.fromExperimentTypeCodes){//TODO Must be manage for CNG
+					if(null != newSupport.fromExperimentTypeCodes && null != oldSupport.fromExperimentTypeCodes){
 						oldSupport.fromExperimentTypeCodes.addAll(newSupport.fromExperimentTypeCodes);
 					}
 				}
@@ -329,7 +337,6 @@ public class ContainerHelper {
 			if (container.support != null) {
 				//FDS note 22/06/2015: mapSupportsCodeSeq n'est defini que pour les container de type lane!!
 				//FDS bug 22/06/2015: il manquait le test sur mapSupportsCodeSeq
-				//ContainerSupport newSupport = ContainerSupportHelper.createContainerSupport(container.support.code, mapSupportsCodeSeq.get(container.support.code), container.support.categoryCode,"ngl");
 				
 				ContainerSupport newSupport = null;
 				if (mapSupportsCodeSeq != null) {
@@ -340,7 +347,12 @@ public class ContainerHelper {
 				}
 					
 				newSupport.projectCodes = new  HashSet<String>(container.projectCodes);
-				newSupport.sampleCodes = new  HashSet<String>(container.sampleCodes);							
+				newSupport.sampleCodes = new  HashSet<String>(container.sampleCodes);		
+				
+				//FDS 13/10/2015 ajout storage code   ??? necessaire  pour l'update ?????
+				newSupport.storageCode=container.support.storageCode;
+				Logger.debug("updating support...storage Code="+ newSupport.storageCode);
+				
 				if (!mapSupports.containsKey(newSupport.code)) {
 					mapSupports.put(newSupport.code, newSupport);
 				}
@@ -349,7 +361,6 @@ public class ContainerHelper {
 					oldSupport.projectCodes.addAll(newSupport.projectCodes); 
 					oldSupport.sampleCodes.addAll(newSupport.sampleCodes);
 				}
-
 			}
 		}
 
@@ -370,8 +381,6 @@ public class ContainerHelper {
 				InstanceHelpers.save(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, updatedCs, contextValidation, true);
 			}
 		}
-
-
 	}
 
 	public static Set<Content> contentFromSampleCode(Set<Content> contents,
@@ -397,5 +406,4 @@ public class ContainerHelper {
 		BigDecimal p = (new BigDecimal(100.00/size)).setScale(2, RoundingMode.HALF_UP);						
 		return p.doubleValue();
 	}
-
 }

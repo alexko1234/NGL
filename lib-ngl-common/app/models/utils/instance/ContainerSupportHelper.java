@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 
+import play.Logger;
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
@@ -37,11 +38,13 @@ public class ContainerSupportHelper {
 		containerSupport.categoryCode="tube";
 		containerSupport.column="1";
 		containerSupport.line="1";
+		
 		return containerSupport;
 	}
 
+	// FDS 13/10/2015 ajouter param string storageCode ??
 	public static LocationOnContainerSupport getContainerSupport(
-			String containerCategoryCode, int nbUsableContainer, String containerSupportCode, String x, String y) throws DAOException {
+			String containerCategoryCode, int nbUsableContainer, String containerSupportCode, String x, String y, String storageCode) throws DAOException {
 
 		List<ContainerSupportCategory> containerSupportCategories=ContainerSupportCategory.find.findByContainerCategoryCode(containerCategoryCode);
 
@@ -60,10 +63,29 @@ public class ContainerSupportHelper {
 		containerSupport.code=containerSupportCode;	
 		containerSupport.column=x;
 		containerSupport.line=y;
+		
+		if ( storageCode != null ) {
+			containerSupport.storageCode=storageCode;
+			Logger.debug ("2) getContainerSupport; support "+ containerSupportCode+": storageCode= "+ storageCode);
+		}else {
+			// normal ou pas qu'il n'y ait pas de storage ??
+			Logger.warn("storage code null for support code = "+containerSupportCode);
+		}
+		
 		return containerSupport;
 	}
+	
+	//FDS 13/10/2015 recreer une methode avec la meme signature
+	public static LocationOnContainerSupport getContainerSupport(
+				String containerCategoryCode, int nbUsableContainer, String containerSupportCode, String x, String y) throws DAOException {
+		return getContainerSupport( containerCategoryCode, nbUsableContainer, containerSupportCode, x, y, null);
+	}
+	
 
-	public static ContainerSupport createContainerSupport(String containerSupportCode, PropertyValue sequencingProgramType, String categoryCode, String user){
+	//FDS 13/10/2015 ajouter param string storageCode
+	public static ContainerSupport createContainerSupport(
+			String containerSupportCode, PropertyValue sequencingProgramType, String categoryCode, String user, String storageCode){
+		
 		ContainerSupport s = new ContainerSupport(); 
 
 		s.code = containerSupportCode;	
@@ -77,7 +99,13 @@ public class ContainerSupportHelper {
 		s.traceInformation = new TraceInformation(); 
 		s.traceInformation.setTraceInformation(user);
 		s.valuation = new Valuation();
-
+		
+		//TEST FDS ajouter storageCode ??
+		if ( storageCode != null){
+			s.storageCode = storageCode;
+			Logger.debug("1) createContainerSupport; support "+ containerSupportCode +" : storage code  ="+ storageCode);
+		}
+		
 		s.valuation.valid = TBoolean.UNSET;
 
 		if (sequencingProgramType != null) {
@@ -88,7 +116,14 @@ public class ContainerSupportHelper {
 
 		return s;
 	}
+	
+	//FDS 13/10/2015 recreer une methode avec l'ancienne signature...
+	public static ContainerSupport createContainerSupport(
+			String containerSupportCode, PropertyValue sequencingProgramType, String categoryCode, String user){
 
+		return createContainerSupport(containerSupportCode, sequencingProgramType, categoryCode, user, null) ;
+	}
+		
 	public static void save(ContainerSupport containerSupport,
 			ContextValidation contextValidation) {
 

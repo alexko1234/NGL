@@ -40,6 +40,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import com.typesafe.config.ConfigFactory;
+
 import play.Logger;
 import services.instance.experiment.ExperimentImport;
 import validation.ContextValidation;
@@ -56,7 +58,9 @@ public class LimsCNGDAO {
 
 	private JdbcTemplate jdbcTemplate;
 
-	private static final String CONTAINER_STATE_CODE="IW-P";
+	// FDS 14/10/2015  il faut plusieurs state codes...
+	private static final String CONTAINER_STATE_CODE_IW_P="IW-P";
+	private static final String CONTAINER_STATE_CODE_IS="IS";
 	
 	protected static final String PROJECT_TYPE_CODE_DEFAULT = "default-project";
 	protected static final String PROJECT_STATE_CODE_DEFAULT = "IP";
@@ -66,8 +70,6 @@ public class LimsCNGDAO {
 	
 	protected static final String SAMPLE_TYPE_CODE_DEFAULT = "default-sample-cng"; // inutilisé...
 	protected static final String SAMPLE_USED_TYPE_CODE = "default-sample-cng";	
-	
-	
 	
 	@Autowired
 	@Qualifier("lims")
@@ -143,7 +145,6 @@ public class LimsCNGDAO {
 
 			sample.code=rs.getString("code");
 			
-			// FDS 05/06/2015 JIRA NGL-672  remplacer default-sample-cng par le veritable sampleType
 			String sampleTypeCode=rs.getString("sample_type");
 			//Logger.debug("Sample code :"+sample.code+ " Sample type code :"+sampleTypeCode);
 			
@@ -164,7 +165,6 @@ public class LimsCNGDAO {
 			sample.name=rs.getString("name");
 			sample.referenceCollab= rs.getString("ref_collab");
 			sample.taxonCode=rs.getString("taxon_code");
-
 			sample.importTypeCode=IMPORT_TYPE_CODE_DEFAULT;
 		
 			//FDS: plus necessaire car un sample n'appartient plus qu'a un seul projet ?? A VERIFIER
@@ -182,7 +182,6 @@ public class LimsCNGDAO {
 				sample.comments.add(new Comment(rs.getString("comments")));
 			}
 			
-
 			sample.properties=new HashMap<String, PropertyValue>();
 			sample.properties.put("limsCode", new PropertySingleValue(rs.getInt("lims_code")));
 	
@@ -214,7 +213,7 @@ public class LimsCNGDAO {
 		container.traceInformation = new TraceInformation();
 		container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 		container.code = rs.getString("container_code");
-		//Logger.debug("[commonContainerMapRow] Container code :"+container.code);
+		Logger.debug("[commonContainerMapRow] Container code :"+container.code);
 		
 		container.categoryCode = containerCategoryCode; //lane or tube
 		
@@ -227,7 +226,16 @@ public class LimsCNGDAO {
 		container.fromExperimentTypeCodes.add(experimentTypeCode);
 		
 		container.state = new State(); 
-		container.state.code = CONTAINER_STATE_CODE; 
+		
+		// FDS 14/10/2015 container State Code en test different de celui en prod...
+		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+			container.state.code = CONTAINER_STATE_CODE_IW_P; 
+		}
+		else{
+			// mettre les containers a l'etat en Stock: les utilisateur mettent uniquement ceux qu'ils veulent a IW-P
+			container.state.code = CONTAINER_STATE_CODE_IS; 
+		}
+		
 		container.state.user = InstanceHelpers.getUser();
 		container.state.date = new Date(); 
 		
@@ -237,10 +245,14 @@ public class LimsCNGDAO {
 		// define container support attributes
 		try {
 			// 19/06/2015 modifier nb_container=> nb_usable_container; code_support=> support_code
-			/* 23/06/2015 bug!!! inversion entre x/y  x==> column; y==>line
-			container.support = ContainerSupportHelper.getContainerSupport(containerCategoryCode, rs.getInt("nb_usable_container"),rs.getString("support_code"),rs.getString("row"),rs.getString("column")); 
-			*/
-			container.support = ContainerSupportHelper.getContainerSupport(containerCategoryCode, rs.getInt("nb_usable_container"),rs.getString("support_code"),rs.getString("column"),rs.getString("row"));  
+			// 23/09/2015 bug!!! inversion entre x/y  x==> column; y==>line
+			// 13/10/2015 TEST FDS Ajout de storage Code
+			container.support = ContainerSupportHelper.getContainerSupport(containerCategoryCode, 
+					                                                       rs.getInt("nb_usable_container"),
+					                                                       rs.getString("support_code"),
+					                                                       rs.getString("column"),
+					                                                       rs.getString("row"),
+					                                                       rs.getString("storageCode"));  
 		}
 		catch(DAOException e) {
 			Logger.error("[commonContainerMapRow] Can't get container support !"); 
@@ -260,8 +272,9 @@ public class LimsCNGDAO {
 			}
 			container.mesuredConcentration = new PropertySingleValue(concentration, "nM");
 			
+
 		}
-		// prevoir les well (plaques96) les puits ont des concentrations !!!!
+		// prevoir les 'well' (plaques96) les puits ont des concentrations !!!!
 		
 		// List plus nécessaire, une library n'est plus attribuée qu'a un seul projet ??
 		if (rs.getString("project")!=null) {
@@ -312,7 +325,7 @@ public class LimsCNGDAO {
 				content.properties.put("libProcessTypeCode", new PropertySingleValue("-1"));
 			}
 			
-			// FDS 15/06/2015 JIRA NGL-673 Ajout du barcode du sample solexa initial=> nouvelle propriété de content 
+			// FDS 15/06/2015 JIRA NGL-673 Ajout du barcode de la librairie solexa initiale=> nouvelle propriété de content 
 			if (rs.getString("aliquote_code")!=null) { 
 				//Logger.debug("[commonContainerMapRow] content aliquote code :"+ rs.getString("aliquote_code"));
 				content.properties.put("sampleAliquoteCode", new PropertySingleValue(rs.getString("aliquote_code")));
@@ -767,6 +780,7 @@ public class LimsCNGDAO {
 	 * @throws SQLException
 	 * @throws DAOException
 	 */
+
 	public List<Container> findContainerToCreate(final ContextValidation contextError, String containerCategoryCode, String experimentTypeCode) throws SQLException, DAOException {
 		return findContainerToCreate(contextError, null, containerCategoryCode, experimentTypeCode);
 	}
@@ -778,27 +792,27 @@ public class LimsCNGDAO {
 	 * @return
 	 * @throws DAOException 
 	 */
-	public List<Container> findContainerToCreate(final ContextValidation contextError, String containerCode, String containerCategoryCode, final String experimentTypeCode) throws DAOException {
-		final String _containerCategoryCode = containerCategoryCode;
+
+	public List<Container> findContainerToCreate(final ContextValidation contextError, String containerCode, String containerCategoryCode, String experimentTypeCode) throws DAOException {
 		String sqlView;
 		
 		if (containerCategoryCode.equals("lane")) {
 			sqlView = "v_flowcell_tongl";
 		}
 		else {
-			//"tube"
+			// "tube"
+			// FDS il faut pour les tests des vues specialisees: v_libnorm_tongl, etc...
+			// sqlView = "v_tube_tongl";
 			
-			//sqlView = "v_tube_tongl";
-			//FDS il faut pour les tests des vues specialisees: v_libnorm_tongl, etc...
-			if (experimentTypeCode.equals("lib-normalization")) {
-				sqlView = "v_libnorm_tongl";
+			if (experimentTypeCode.equals("lib-normalization")) {		
+					sqlView = "v_libnorm_tongl"; 
 			}
 			else if (experimentTypeCode.equals("denat-dil-lib")) {
-				sqlView = "v_libdenatdil_tongl";
+					sqlView = "v_libdenatdil_tongl"; /// view originale...
 			}
 			else {
-				//autres experimentTypeCode a venir ??
-				sqlView = "TODO";
+					//autres statusCode a venir ??
+					sqlView = "TODO";
 			}
 		}
 		
@@ -812,7 +826,7 @@ public class LimsCNGDAO {
 					ResultSet rs0 = rs;
 					int rowNum0 = rowNum;
 					ContextValidation ctxErr = contextError; 
-					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, _containerCategoryCode, experimentTypeCode); 
+					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, containerCategoryCode, experimentTypeCode); 
 					return c;
 				}
 			});
@@ -828,8 +842,7 @@ public class LimsCNGDAO {
 					ResultSet rs0 = rs;
 					int rowNum0 = rowNum;
 					ContextValidation ctxErr = contextError; 
-					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, _containerCategoryCode, experimentTypeCode);
-					// debug identique dans commonContainerMapRow..... Logger.debug("Container "+c.code);
+					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, containerCategoryCode, experimentTypeCode);
 					return c;
 				}
 			});
@@ -859,7 +872,7 @@ public class LimsCNGDAO {
 			
 			//sqlView = "v_tube_tongl_reprise";
 			//FDS il faut pour les tests des vues specialisees: v_libnorm_tongl, etc...
-			// ==> permettrait aussi de pouvoir definir le "from experiment" pourchaque type de library...
+			// ==> permet de pouvoir definir le "from experiment" pourchaque type de library...
 			if (experimentTypeCode.equals("lib-normalization")) {
 				sqlView = "v_libnorm_tongl_reprise";
 			}
@@ -874,9 +887,8 @@ public class LimsCNGDAO {
 		// prevoir well (plate96)
 		
 		//04/05/2015 contrainte "isavailable=true" est forcee dans la vue
-		/* 19/06 renommage  code =>container_code;  code_sample=> sample_code
-		 * List<Container> results = this.jdbcTemplate.query("select * from " + sqlView + " order by code, project desc, code_sample, tag, exp_short_name", new Object[]{} 
-		 */
+		//19/06 renommage  code =>container_code;  code_sample=> sample_code 
+		
 		List<Container> results = this.jdbcTemplate.query("select * from " + sqlView + " order by container_code, project desc, sample_code, tag, exp_short_name", new Object[]{} 
 		,new RowMapper<Container>() {
 			public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -896,10 +908,13 @@ public class LimsCNGDAO {
 	 * To get containers updated in CNG database (Solexa database)
 	 * @param contextError
 	 * @return
-	 * @throws SQLException
+	 * @    throws SQLException  NON dit Nicolas...
 	 * @throws DAOException
 	 */
-	public List<Container> findContainerToModify(final ContextValidation contextError, String containerCategoryCode,String experimentTypeCode) throws SQLException, DAOException {
+	
+	// enlever throws SQLException  car jdbcTemplate.query l'enrobe lui meme dans une DataAccessException
+	public List<Container> findContainerToModify(final ContextValidation contextError, String containerCategoryCode,String experimentTypeCode) 
+			throws DAOException {
 		return findContainerToModify(contextError, null, containerCategoryCode,experimentTypeCode);
 	}
 
@@ -911,8 +926,8 @@ public class LimsCNGDAO {
 	 * @return
 	 * @throws DAOException 
 	 */
-	public List<Container> findContainerToModify(final ContextValidation contextError, String containerCode, String containerCategoryCode,final String experimentTypeCode) throws DAOException {		
-		final String _containerCategoryCode = containerCategoryCode;
+	public List<Container> findContainerToModify(final ContextValidation contextError, String containerCode, String containerCategoryCode, String experimentTypeCode) 
+			throws DAOException {		
 		String sqlView;
 		
 		if (containerCategoryCode.equals("lane")) {
@@ -921,8 +936,7 @@ public class LimsCNGDAO {
 		else {
 			//tube
 			//sqlView = "v_tube_updated_tongl";
-			//FDS temporaire ??? ...il faut pour les tests des vues specialisees: v_libnorm_tongl, etc...
-			// ==> permettrait aussi de pouvoir definir le "from experiment" pour chaque type de library...
+			//vues specialisees: v_libnorm_tongl, etc...
 			
 			if (experimentTypeCode.equals("lib-normalization")) {
 				sqlView = "v_libnorm_updated_tongl";
@@ -948,7 +962,7 @@ public class LimsCNGDAO {
 					ResultSet rs0 = rs;
 					int rowNum0 = rowNum;
 					ContextValidation ctxErr = contextError;
-					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, _containerCategoryCode,experimentTypeCode); 
+					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, containerCategoryCode, experimentTypeCode); 
 					return c;
 				}
 			});
@@ -962,7 +976,7 @@ public class LimsCNGDAO {
 					ResultSet rs0 = rs;
 					int rowNum0 = rowNum;
 					ContextValidation ctxErr = contextError; 
-					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, _containerCategoryCode,experimentTypeCode); 
+					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, containerCategoryCode, experimentTypeCode); 
 					return c;
 				}
 			});
@@ -1052,14 +1066,11 @@ public class LimsCNGDAO {
 	/*************************************************************************************************************************************************
 	 * To get the indexes and update the "Parameter" collection
 	 * FDS 30/04/2015: nglbi_code=>code, short_name=>shortName (et non plus code), cng_name=>name
-	 * FDS 15/09/2015: revenir a l'ancien code temporairement pour une mise en production (short_name partout)
 	 * FDS 24/09/2015 Migration des lanes deja importees donc passer sur nouvelle solution !
 	 */
 	public List<Index> findIndexIlluminaToCreate(final ContextValidation contextError)throws SQLException {
 		List<Index> results = this.jdbcTemplate.query("select nglbi_code, short_name, cng_name,(CASE WHEN type = 1 THEN 'SINGLE-INDEX'::text WHEN type = 2 THEN 'DUAL-INDEX'::text WHEN type = 3 THEN 'MID'::text ELSE NULL::text END) AS code_category,sequence from t_index order by 1" 
 				,new RowMapper<Index>() {
-		//List<Index> results = this.jdbcTemplate.query("select distinct short_name,(CASE WHEN type = 1 THEN 'SINGLE-INDEX'::text WHEN type = 2 THEN 'DUAL-INDEX'::text WHEN type = 3 THEN 'MID'::text ELSE NULL::text END) AS code_category,sequence from t_index order by 1" 
-		//		,new RowMapper<Index>() {
 					@SuppressWarnings("rawtypes")
 					public Index mapRow(ResultSet rs, int rowNum) throws SQLException {
 						Index index=new Index();
@@ -1067,10 +1078,6 @@ public class LimsCNGDAO {
 						index.code=rs.getString("nglbi_code");
 						index.shortName=rs.getString("short_name");
 						index.name=rs.getString("cng_name");
-						
-						//index.code=rs.getString("short_name");
-						//index.shortName=rs.getString("short_name");
-						//index.name=rs.getString("short_name");
 						
 						index.categoryCode=rs.getString("code_category");
 						index.sequence=rs.getString("sequence");
