@@ -1,0 +1,13 @@
+package rules
+
+function Double roundValue(Double value)
+{
+	BigDecimal bg = new BigDecimal(value.toString()).setScale(2, RoundingMode.HALF_UP); 
+	return bg.doubleValue();
+}
+
+//function Double roundValue(Double value)
+//{
+//	DecimalFormat df=new DecimalFormat("0.00");
+//	return (Double)df.parse(df.format(value)).doubleValue();
+//}

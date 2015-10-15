@@ -3,6 +3,7 @@ package rules
 
 rule "Copy Properties from Support and Container to Run"
 	@nglBI(IP_S_1)
+	@nglSQ(IP_S_1)
 	dialect "java"
 	salience 200
 	no-loop

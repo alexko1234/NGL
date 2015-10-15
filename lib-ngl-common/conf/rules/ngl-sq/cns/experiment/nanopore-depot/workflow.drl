@@ -14,13 +14,13 @@ rule "Create Run and ReadSets Nanopore"
 		 Run run=new Run();
 		 
  		 run.sequencingStartDate=new Date();
-		 run.state=new State("IP-S","ngsrg");
+		 run.state=new State("N","ngl-sq");
 	
 		run.containerSupportCode=$experiment.outputContainerSupportCodes.toArray()[0].toString();
    		//run.projectCodes = $experiment.projectCodes; //done with readset creation
     	//run.sampleCodes = $experiment.sampleCodes; //done with readset creation
    		run.traceInformation=new TraceInformation();
-   		run.traceInformation.setTraceInformation("ngsrg");
+   		run.traceInformation.setTraceInformation("ngl-sq");
    		
    		run.instrumentUsed=new InstrumentUsed();
    		run.instrumentUsed.typeCode=$experiment.instrument.typeCode;
@@ -81,8 +81,13 @@ rule "Save Run Nanopore"
 	then
 		Logger.debug("Save run nanopore");
 		$contextError.setCreationMode();
-		InstanceHelpers.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME,$run,$contextError,true);
-		
+		$run = (Run)InstanceHelpers.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME,$run,$contextError,true);
+		ContextValidation cv = new ContextValidation("ngl-sq");
+		State nextState = new State();
+		nextState.code = "IP-S";
+		nextState.date = new Date();
+		nextState.user = "ngl-sq";
+		Workflows.setRunState(cv, $run, nextState);		
 end
 
 rule "Create ReadSet"

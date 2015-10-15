@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
-import lims.services.ILimsRunServices;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
@@ -30,7 +29,6 @@ import org.mongojack.WriteResult;
 
 import play.Logger;
 import play.Play;
-import play.api.modules.spring.Spring;
 import play.libs.Akka;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
@@ -41,7 +39,6 @@ import akka.actor.ActorRef;
 import akka.actor.Props;
 
 import com.mongodb.BasicDBObject;
-
 
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
@@ -100,9 +97,11 @@ public class Workflows {
 		if(run.valuation.valid.equals(TBoolean.UNSET)){
 			return false;
 		}
-		for(Lane lane : run.lanes){
-			if(lane.valuation.valid.equals(TBoolean.UNSET)){
-				return false;
+		if(null != run.lanes){
+			for(Lane lane : run.lanes){
+				if(lane.valuation.valid.equals(TBoolean.UNSET)){
+					return false;
+				}
 			}
 		}
 		return true;
@@ -113,9 +112,11 @@ public class Workflows {
 		if(!run.valuation.valid.equals(TBoolean.UNSET)){
 			return true;
 		}
-		for(Lane lane : run.lanes){
-			if(!lane.valuation.valid.equals(TBoolean.UNSET)){
-				return true;
+		if(null != run.lanes){
+			for(Lane lane : run.lanes){
+				if(!lane.valuation.valid.equals(TBoolean.UNSET)){
+					return true;
+				}
 			}
 		}
 		return false;
@@ -143,34 +144,36 @@ public class Workflows {
 			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), ruleFV, run),null);
 			
 			//For all lane with VALID = FALSE so we put VALID=FALSE on each read set
-			for (Lane lane : run.lanes) {
-				if (lane.valuation.valid.equals(TBoolean.FALSE)) {
-					List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-							DBQuery.and(DBQuery.is("runCode", run.code), DBQuery.is("laneNumber", lane.number)), getReadSetKeys()).toList();
-					if(readSets.size() != lane.readSetCodes.size())Logger.error("Problem with number of readsets for run = "+run.code+" and lane = "+lane.number+". Nb RS in lane = "+lane.readSetCodes.size()+", nb RS by query = "+readSets.size());
-					for(ReadSet readSet: readSets){
-						if(TBoolean.UNSET.equals(readSet.productionValuation.valid)){
-							readSet.productionValuation.valid = TBoolean.FALSE;
-							readSet.productionValuation.date = new Date();
-							readSet.productionValuation.user = contextValidation.getUser();
-							if(null == readSet.productionValuation.resolutionCodes)readSet.productionValuation.resolutionCodes = new HashSet<String>(1);
-							readSet.productionValuation.resolutionCodes.add("Run-abandonLane");
-							
-							readSet.traceInformation.modifyDate = new Date();
-							readSet.traceInformation.modifyUser = contextValidation.getUser();
+			if(null != run.lanes){
+				for (Lane lane : run.lanes) {
+					if (lane.valuation.valid.equals(TBoolean.FALSE)) {
+						List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+								DBQuery.and(DBQuery.is("runCode", run.code), DBQuery.is("laneNumber", lane.number)), getReadSetKeys()).toList();
+						if(readSets.size() != lane.readSetCodes.size())Logger.error("Problem with number of readsets for run = "+run.code+" and lane = "+lane.number+". Nb RS in lane = "+lane.readSetCodes.size()+", nb RS by query = "+readSets.size());
+						for(ReadSet readSet: readSets){
+							if(TBoolean.UNSET.equals(readSet.productionValuation.valid)){
+								readSet.productionValuation.valid = TBoolean.FALSE;
+								readSet.productionValuation.date = new Date();
+								readSet.productionValuation.user = contextValidation.getUser();
+								if(null == readSet.productionValuation.resolutionCodes)readSet.productionValuation.resolutionCodes = new HashSet<String>(1);
+								readSet.productionValuation.resolutionCodes.add("Run-abandonLane");
 								
-							MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
-									DBQuery.is("code", readSet.code), DBUpdate.set("productionValuation", readSet.productionValuation).set("traceInformation", readSet.traceInformation));
-							//nextReadSetState(contextValidation, readSet);
-							State nextState = cloneState(readSet.state, contextValidation.getUser());
-							nextState.code = "F-VQC";
-							setReadSetState(contextValidation, readSet, nextState);
-							rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), ruleFV, readSet),null);
-							
-						}
-					}					
+								readSet.traceInformation.modifyDate = new Date();
+								readSet.traceInformation.modifyUser = contextValidation.getUser();
+									
+								MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
+										DBQuery.is("code", readSet.code), DBUpdate.set("productionValuation", readSet.productionValuation).set("traceInformation", readSet.traceInformation));
+								//nextReadSetState(contextValidation, readSet);
+								State nextState = cloneState(readSet.state, contextValidation.getUser());
+								nextState.code = "F-VQC";
+								setReadSetState(contextValidation, readSet, nextState);
+								rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), ruleFV, readSet),null);
+								
+							}
+						}					
+					}
 				}
-			}	
+			}
 		}
 	}
 

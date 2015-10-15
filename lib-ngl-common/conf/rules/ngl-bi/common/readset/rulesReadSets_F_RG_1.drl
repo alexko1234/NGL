@@ -8,7 +8,7 @@ rule "Set Lane index properties to ReadSet"
 	salience 600
 	no-loop
 	when
-		$readset : ReadSet()		
+		$readset : ReadSet(typeCode == "default-readset" || typeCode == "rsillumina")		
 	then
 		Logger.debug("Set Lane properties to Readset "+$readset.code);
 		BasicDBObject keys = new BasicDBObject();

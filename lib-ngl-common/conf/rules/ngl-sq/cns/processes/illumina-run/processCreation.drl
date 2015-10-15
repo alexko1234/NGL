@@ -30,10 +30,3 @@ rule "Calculation of estimatedPercent property of pool process "
         update($process);		
 	end
 
-
-
-function Double roundValue(Double value)
-{
-	BigDecimal bg = new BigDecimal(value.toString()).setScale(2, RoundingMode.HALF_UP); 
-	return bg.doubleValue();
-}
