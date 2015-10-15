@@ -2,36 +2,32 @@ package controllers.sra.configurations.api;
 
 import static play.data.Form.form;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
-import controllers.DocumentController;
-import controllers.sra.submissions.api.SubmissionsSearchForm;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
-import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.TraceInformation;
-import models.sra.submit.sra.instance.Configuration;
+import models.sra.submit.sra.instance.*;
 import models.sra.submit.util.SraCodeHelper;
 import models.utils.InstanceConstants;
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
-import play.mvc.Http.MultipartFormData;
-import play.mvc.Http.MultipartFormData.FilePart;
 import play.mvc.Result;
+import controllers.DocumentController;
+import controllers.sra.submissions.api.SubmissionsSearchForm;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
 import validation.ContextValidation;
+import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.common.instance.State;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+
+import models.sra.submit.common.instance.Submission;
+import models.sra.submit.util.SraException;
 import views.components.datatable.DatatableResponse;
 
 
@@ -50,13 +46,8 @@ public class Configurations extends DocumentController<Configuration>{
 
 	
 	public Result save() {
-		MultipartFormData body = request().body().asMultipartFormData();
-		FilePart spec = body.getFile("file");
-		File file = spec.getFile();
-		
-		Form<Configuration> filledForm = filledFormQueryString(configurationForm, Configuration.class);
+		Form<Configuration> filledForm = getFilledForm(configurationForm, Configuration.class);
 		Configuration userConfiguration = filledForm.get();
-		Logger.debug("Configuration"+userConfiguration);
 		
 		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
 		contextValidation.setCreationMode();	
@@ -147,6 +138,5 @@ public class Configurations extends DocumentController<Configuration>{
 			return badRequest(filledForm.errorsAsJson());
 		}	
 	}
-
 
 }
