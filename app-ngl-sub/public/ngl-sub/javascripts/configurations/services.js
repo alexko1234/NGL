@@ -140,13 +140,6 @@ var getColumns = function(){
 			        	  edit:false,
 			        	  choiceInList:false
 			        });	
-		columns.push({property:"ebiStudiesSamplesFileName",
-						 header: "configuration.ebiStudiesSamplesFileName",
-						 type :"String",		    	  	
-						 hide:true,
-						 edit:true,
-					});			        
-			        	
 			return columns;
 	};
 	
