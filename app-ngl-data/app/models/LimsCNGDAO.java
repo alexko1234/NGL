@@ -213,7 +213,7 @@ public class LimsCNGDAO {
 		container.traceInformation = new TraceInformation();
 		container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 		container.code = rs.getString("container_code");
-		Logger.debug("[commonContainerMapRow] Container code :"+container.code);
+		//Logger.debug("[commonContainerMapRow] Container code :"+container.code);
 		
 		container.categoryCode = containerCategoryCode; //lane or tube
 		
@@ -228,11 +228,12 @@ public class LimsCNGDAO {
 		container.state = new State(); 
 		
 		// FDS 14/10/2015 container State Code en test different de celui en prod...
-		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+		if(	ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+			
 			container.state.code = CONTAINER_STATE_CODE_IW_P; 
 		}
 		else{
-			// mettre les containers a l'etat en Stock: les utilisateur mettent uniquement ceux qu'ils veulent a IW-P
+			// mettre les containers a l'etat en Stock: les utilisateurs mettent uniquement ceux qu'ils veulent a IW-P
 			container.state.code = CONTAINER_STATE_CODE_IS; 
 		}
 		
@@ -246,7 +247,7 @@ public class LimsCNGDAO {
 		try {
 			// 19/06/2015 modifier nb_container=> nb_usable_container; code_support=> support_code
 			// 23/09/2015 bug!!! inversion entre x/y  x==> column; y==>line
-			// 13/10/2015 TEST FDS Ajout de storage Code
+			// 14/10/2015 FDS Ajout de storage Code
 			container.support = ContainerSupportHelper.getContainerSupport(containerCategoryCode, 
 					                                                       rs.getInt("nb_usable_container"),
 					                                                       rs.getString("support_code"),
@@ -325,13 +326,13 @@ public class LimsCNGDAO {
 				content.properties.put("libProcessTypeCode", new PropertySingleValue("-1"));
 			}
 			
-			// FDS 15/06/2015 JIRA NGL-673 Ajout du barcode de la librairie solexa initiale=> nouvelle propriété de content 
+			// FDS 15/06/2015 JIRA NGL-673 Ajout du barcode de la librairie solexa initiale ( aliquot )=> nouvelle propriété de content 
 			if (rs.getString("aliquote_code")!=null) { 
 				//Logger.debug("[commonContainerMapRow] content aliquote code :"+ rs.getString("aliquote_code"));
 				content.properties.put("sampleAliquoteCode", new PropertySingleValue(rs.getString("aliquote_code")));
 			}
 			else {
-				Logger.debug("[commonContainerMapRow] content aliquot code : null !!!!!!");
+				Logger.warn("[commonContainerMapRow] content aliquot code : null !!!!!!");
 				content.properties.put("sampleAliquoteCode", new PropertySingleValue("-1"));
 			}
 			

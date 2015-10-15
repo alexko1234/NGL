@@ -303,7 +303,7 @@ public class ContainerHelper {
 				
 				//FDS 14/10/2015 ajout storage code
 				newSupport.storageCode=container.support.storageCode;
-				Logger.debug("3) createSupportFromContainers; Storage Code ="+newSupport.storageCode);
+				Logger.debug("2) createSupportFromContainers; support "+ newSupport.code + ": storageCode ="+newSupport.storageCode);
 				
 				if(null != container.fromExperimentTypeCodes){
 					newSupport.fromExperimentTypeCodes = new  HashSet<String>(container.fromExperimentTypeCodes);
@@ -349,9 +349,13 @@ public class ContainerHelper {
 				newSupport.projectCodes = new  HashSet<String>(container.projectCodes);
 				newSupport.sampleCodes = new  HashSet<String>(container.sampleCodes);		
 				
-				//FDS 13/10/2015 ajout storage code   ??? necessaire  pour l'update ?????
-				newSupport.storageCode=container.support.storageCode;
-				Logger.debug("updating support...storage Code="+ newSupport.storageCode);
+				//FDS 14/10/2015 ajout storage code 
+				if ( container.support.storageCode != null ){
+				   newSupport.storageCode=container.support.storageCode;
+				   Logger.debug("updating support...storage Code="+ newSupport.storageCode);
+				}else {
+					 Logger.warn("not updating support...storage Code is null");
+				}
 				
 				if (!mapSupports.containsKey(newSupport.code)) {
 					mapSupports.put(newSupport.code, newSupport);

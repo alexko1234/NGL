@@ -66,7 +66,7 @@ public class ContainerSupportHelper {
 		
 		if ( storageCode != null ) {
 			containerSupport.storageCode=storageCode;
-			Logger.debug ("2) getContainerSupport; support "+ containerSupportCode+": storageCode= "+ storageCode);
+			//Logger.debug ("1) getContainerSupport; support "+ containerSupportCode+": storageCode= "+ storageCode);
 		}else {
 			// normal ou pas qu'il n'y ait pas de storage ??
 			Logger.warn("storage code null for support code = "+containerSupportCode);
@@ -75,6 +75,7 @@ public class ContainerSupportHelper {
 		return containerSupport;
 	}
 	
+
 	//FDS 13/10/2015 recreer une methode avec la meme signature
 	public static LocationOnContainerSupport getContainerSupport(
 				String containerCategoryCode, int nbUsableContainer, String containerSupportCode, String x, String y) throws DAOException {
@@ -82,9 +83,8 @@ public class ContainerSupportHelper {
 	}
 	
 
-	//FDS 13/10/2015 ajouter param string storageCode
 	public static ContainerSupport createContainerSupport(
-			String containerSupportCode, PropertyValue sequencingProgramType, String categoryCode, String user, String storageCode){
+			String containerSupportCode, PropertyValue sequencingProgramType, String categoryCode, String user){
 		
 		ContainerSupport s = new ContainerSupport(); 
 
@@ -100,11 +100,12 @@ public class ContainerSupportHelper {
 		s.traceInformation.setTraceInformation(user);
 		s.valuation = new Valuation();
 		
-		//TEST FDS ajouter storageCode ??
-		if ( storageCode != null){
-			s.storageCode = storageCode;
-			Logger.debug("1) createContainerSupport; support "+ containerSupportCode +" : storage code  ="+ storageCode);
-		}
+		//TEST FDS 14/10/2015 ajouter storageCode ??
+		// NON meme en ajoutant un parametre suplementaire en entree dans la methode on ne pas jamais ici..
+		///if ( storageCode != null){
+		///	s.storageCode = storageCode;
+		///	Logger.debug("1) createContainerSupport; support "+ containerSupportCode +" : storage code  ="+ storageCode);
+		///}
 		
 		s.valuation.valid = TBoolean.UNSET;
 
@@ -115,13 +116,6 @@ public class ContainerSupportHelper {
 		}
 
 		return s;
-	}
-	
-	//FDS 13/10/2015 recreer une methode avec l'ancienne signature...
-	public static ContainerSupport createContainerSupport(
-			String containerSupportCode, PropertyValue sequencingProgramType, String categoryCode, String user){
-
-		return createContainerSupport(containerSupportCode, sequencingProgramType, categoryCode, user, null) ;
 	}
 		
 	public static void save(ContainerSupport containerSupport,
