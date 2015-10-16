@@ -1,5 +1,6 @@
 package controllers.sra.submissions.api;
 
+import java.io.File;
 import java.util.List;
 
 import views.components.datatable.DatatableForm;
@@ -11,4 +12,5 @@ public class SubmissionsCreationForm  extends DatatableForm {
 	public String studyCode;
 	public String configurationCode;
 	public List<String> readSetCodes;
+	public String base64File;
 }

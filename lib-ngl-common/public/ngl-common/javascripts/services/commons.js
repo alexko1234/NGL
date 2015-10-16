@@ -593,9 +593,15 @@ angular.module('commonsServices', []).
 		        				  scope.base64File.fullname = file.name;
 		        				  
 		        				  //Get the extension
+		        				  console.log("File type "+file.type);
 		        				  var matchExtension = file.type.match(/^application\/(.*)/);
+		        				  var matchExtensionText = file.type.match(/^text\/(.*)/);
 			        				  if(matchExtension && matchExtension.length > 1){
 			        				  scope.base64File.extension = matchExtension[1];
+			        				  }else if(matchExtensionText && matchExtensionText.length > 1){
+			        					  scope.base64File.extension = matchExtensionText[1];
+			        				  }
+			        				  if(scope.base64File.extension != undefined){
 			        				  scope.base64File._type = "file";
 			        				  
 			        				  //Get the base64 without the extension feature

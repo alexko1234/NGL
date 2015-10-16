@@ -29,7 +29,12 @@
 		**@
 		@formGroup{
 			<div class="form-control" bt-select ng-model="createService.form.readSetCodes" filter="true" multiple="true" placeholder='@Messages("create.placeholder.submissions.readSet")' bt-options="readSet.code as readSet.code for readSet in createService.lists.getReadSets()" required ng-focus="createService.refreshReadSets()"></div>			
-		}													
+		}	
+		
+		@formGroup{
+		
+			<input type="file" base64-file="createService.file"/>
+		}											
 	}
 	
 }
