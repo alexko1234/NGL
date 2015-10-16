@@ -4,30 +4,31 @@ import static play.data.Form.form;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import mail.MailServiceException;
-import models.sra.submit.common.instance.Submission;
-import models.sra.submit.util.SraException;
-import models.utils.InstanceConstants;
 
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
+import controllers.DocumentController;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
+import mail.MailServiceException;
+import models.sra.submit.common.instance.Submission;
+import models.sra.submit.util.SraException;
+import models.utils.InstanceConstants;
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import services.FileAcServices;
 import services.SubmissionServices;
+import services.Tools;
 import services.XmlServices;
 import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
-import controllers.DocumentController;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
 
 public class Submissions extends DocumentController<Submission>{
 
@@ -189,6 +190,9 @@ public class Submissions extends DocumentController<Submission>{
 		SubmissionsCreationForm submissionsCreationForm = filledForm.get();
 		Logger.debug("readsets "+submissionsCreationForm.readSetCodes);
 
+		Logger.debug("Read base64File");
+		InputStream inputFile = Tools.decodeBase64(submissionsCreationForm.base64File);
+		
 		List<String> readSetCodes = submissionsCreationForm.readSetCodes;
 
 		//String codeReadSet1 = "BCZ_BGOSW_2_H9M6KADXX.IND15"; 

@@ -1,22 +1,26 @@
 package services;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.xerces.impl.dv.util.Base64;
 
 import models.sra.submit.util.SraException;
 
 
 public class Tools {
 
-	
+
 	public Map<String, String> loadLotSeqName(File fileSelectLotSeqName) throws SraException {
 		Map<String, String> mapLotSeqName = new HashMap<String, String>();
 		if (fileSelectLotSeqName.exists()) {
@@ -98,7 +102,7 @@ public class Tools {
 					if (ligne.matches("^\\s*$")){
 						continue;
 					}
-					
+
 					Matcher m = p.matcher(ligne);
 					if (!m.find()) {
 						throw new SraException("Probleme de format avec la ligne : '" + ligne +"'");
@@ -113,7 +117,7 @@ public class Tools {
 		}
 		return mapMd5;
 	}
-		
+
 	// Renvoie une copie de la chaine d'entree debarrassee des espaces en debut et fin de chaine:
 	// et debarassee des guillements en debut et fin
 	public String clean(String chaine) {
@@ -121,20 +125,20 @@ public class Tools {
 
 		String pattern = "^\\s*\"*\\s*([^\\s\"]+.*)";;  // si chaine ne contient aucun caractere visible
 		java.util.regex.Pattern p = Pattern.compile(pattern);		
-		
-		
+
+
 		String pattern2 = "(.*[^\\s\"]+)\\s*\"*\\s*$";  // pour supprimer les espaces en debut de chaine
 		java.util.regex.Pattern p2 = Pattern.compile(pattern2);		
 
 		Matcher m = p.matcher(cleanChaine);
-		
+
 		if ( m.find() ) { 
 			//log.debug("$1="+ms.group(1));
 			cleanChaine = m.group(1);
 			//log.debug("ok m1, cleanChaine='"+cleanChaine+"'");
 
 		} 
-			
+
 		Matcher m2 = p2.matcher(cleanChaine);
 		//log.debug("cleanChaine d'entree = '"+cleanChaine+"'");
 		if ( m2.find() ) { 
@@ -142,9 +146,14 @@ public class Tools {
 			cleanChaine = m2.group(1);
 			//log.debug("ok m2, cleanChaine='"+cleanChaine+"'");
 		}
-		
+
 		return cleanChaine;	
 	}
-	
-	
+
+	public static InputStream decodeBase64(String inputBase64){
+		byte[] dataBytes = Base64.decode(inputBase64);
+		return  new ByteArrayInputStream(dataBytes);
+	}
+
+
 }

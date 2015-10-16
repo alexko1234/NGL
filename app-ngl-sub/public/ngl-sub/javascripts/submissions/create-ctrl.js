@@ -34,6 +34,8 @@ angular.module('home').controller('CreateCtrl',[ '$http', '$scope', '$routeParam
 	$scope.createService.init($routeParams, submissionDTConfig);
 	
 	$scope.save = function(){
+		console.log("File to upload "+$scope.createService.file.value);
+		$scope.createService.form.base64File=$scope.createService.file.value;
 		mainService.setForm($scope.createService.form);
 		//$scope.createService.search();
 			$http.post(jsRoutes.controllers.sra.submissions.api.Submissions.save().url, mainService.getForm()).success(function(data) {
