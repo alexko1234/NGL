@@ -64,16 +64,20 @@ public class ProcessHelper {
 
 	public static void updateContainerSupportFromContainer(Container container,ContextValidation contextValidation){
 		ContainerSupport containerSupport=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, container.support.code);
-		if(containerSupport.fromExperimentTypeCodes==null){
-			containerSupport.fromExperimentTypeCodes=new HashSet<String>();
-		}
-		containerSupport.fromExperimentTypeCodes.addAll(container.fromExperimentTypeCodes);
-		//containerSupport.fromExperimentTypeCodes=InstanceHelpers.addCodesList(container.fromExperimentTypeCodes, containerSupport.fromExperimentTypeCodes);
-		ContainerSupportValidationHelper.validateExperimentTypeCodes(containerSupport.fromExperimentTypeCodes, contextValidation);
-		if(!contextValidation.hasErrors()){
-			MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME,ContainerSupport.class,
-					DBQuery.is("code", container.support.code)
-					,DBUpdate.set("fromExperimentTypeCodes",container.fromExperimentTypeCodes));
+		if(null == containerSupport){
+			if(containerSupport.fromExperimentTypeCodes==null){
+				containerSupport.fromExperimentTypeCodes=new HashSet<String>();
+			}
+			containerSupport.fromExperimentTypeCodes.addAll(container.fromExperimentTypeCodes);
+			//containerSupport.fromExperimentTypeCodes=InstanceHelpers.addCodesList(container.fromExperimentTypeCodes, containerSupport.fromExperimentTypeCodes);
+			ContainerSupportValidationHelper.validateExperimentTypeCodes(containerSupport.fromExperimentTypeCodes, contextValidation);
+			if(!contextValidation.hasErrors()){
+				MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME,ContainerSupport.class,
+						DBQuery.is("code", container.support.code)
+						,DBUpdate.set("fromExperimentTypeCodes",container.fromExperimentTypeCodes));
+			}
+		}else{
+			Logger.error("Support container not exist = "+container.support.code);
 		}
 	}
 

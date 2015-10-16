@@ -45,8 +45,7 @@ rule "Update type Run RMINION"
 	salience 900
 	no-loop
 	when 
-
-	$run:Run(typeCode==null,$instrumentTypeCode:instrumentUsed.typeCode,$instrumentTypeCode=="minION")
+		$run:Run(typeCode==null,$instrumentTypeCode:instrumentUsed.typeCode,$instrumentTypeCode=="minION")
 	then
 		 Logger.debug("typeCode RMINION");
 		$run.typeCode="RMINION";	
@@ -75,19 +74,13 @@ rule "Save Run Nanopore"
 	salience 800
 	no-loop
 	when 
-	$run:Run(categoryCode=="nanopore")
-	
-    $contextError:ContextValidation()
+		$run:Run(categoryCode=="nanopore")	
+    	$contextError:ContextValidation()
 	then
 		Logger.debug("Save run nanopore");
 		$contextError.setCreationMode();
 		$run = (Run)InstanceHelpers.save(InstanceConstants.RUN_ILLUMINA_COLL_NAME,$run,$contextError,true);
-		ContextValidation cv = new ContextValidation("ngl-sq");
-		State nextState = new State();
-		nextState.code = "IP-S";
-		nextState.date = new Date();
-		nextState.user = "ngl-sq";
-		Workflows.setRunState(cv, $run, nextState);		
+		update($run);			
 end
 
 rule "Create ReadSet"
@@ -98,12 +91,12 @@ rule "Create ReadSet"
 	when  
 		$experiment:Experiment($atomic:atomicTransfertMethods,$state:state.code,$typeCode:typeCode,$typeCode=="nanopore-depot",$state=="F")
 		AtomicTransfertMethod($inputContainerUseds :inputContainerUseds,$laneNumber:line) from $atomic
-		ContainerUsed($code:code,$contents :contents) from $inputContainerUseds
+		ContainerUsed($code:code,$contents:contents) from $inputContainerUseds
 		$content:Content() from $contents 
-		$run:Run(typeCode!=null)
+		$run:Run(categoryCode=="nanopore")
 		$contextError:ContextValidation()
 	then
-	
+		Logger.debug("ReadSet Creation for run "+$run.code);
 		//Creation des readsets
 		ReadSet readSet=new ReadSet();
 		readSet.typeCode="rsnanopore";
@@ -127,4 +120,22 @@ rule "Create ReadSet"
 				,DBQuery.is("code",$run.code)
 				,DBUpdate.addToSet("sampleCodes", $content.sampleCode).addToSet("projectCodes",$content.projectCode));
 	    
+end
+
+//!!!!! NEED TO CALL IN LAST BECAUSE THE Workflows.setRunState() call DROOLS AND INACTIVE OTHER RULES EXECUTION!!!!!!
+rule "Update Workflow Run Nanopore"
+	@nglSQ( workflow )
+	dialect "java"
+	salience 600
+	no-loop
+	when 
+		$run:Run(categoryCode=="nanopore")	
+    	$contextError:ContextValidation()
+	then
+		Logger.debug("Update Workflow run nanopore");
+		State nextState = new State();
+		nextState.code = "IP-S";
+		nextState.date = new Date();
+		nextState.user = "ngl-sq";
+		Workflows.setRunState($contextError, $run, nextState);				
 end
