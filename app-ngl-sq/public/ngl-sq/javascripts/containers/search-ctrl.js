@@ -23,7 +23,8 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 			by:'traceInformation.creationDate',
 			reverse:true,
 			mode:'local'
-		},
+		}
+		/*,
 		edit:{
 			active:true,
 			columnMode:true
@@ -40,6 +41,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 			}
 		
 		}
+		*/
 	};
 
 	
@@ -54,8 +56,8 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 	
 	//init
 	if(angular.isUndefined($scope.getHomePage())){
-		mainService.setHomePage('new');
-		tabService.addTabs({label:Messages('containers.tabs.search'),href:jsRoutes.controllers.containers.tpl.Containers.home("new").url,remove:false});
+		mainService.setHomePage('search');
+		tabService.addTabs({label:Messages('containers.tabs.search'),href:jsRoutes.controllers.containers.tpl.Containers.home("search").url,remove:false});
 		tabService.activeTab(0);
 	}
 	if(angular.isUndefined($scope.getForm())){
@@ -110,7 +112,7 @@ angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$rou
 	//init
 	if(angular.isUndefined($scope.getHomePage())){
 		mainService.setHomePage('state');
-		tabService.addTabs({label:Messages('containers.tabs.state'),href:jsRoutes.controllers.containers.tpl.Containers.home("new").url,remove:false});
+		tabService.addTabs({label:Messages('containers.tabs.state'),href:jsRoutes.controllers.containers.tpl.Containers.home("state").url,remove:false});
 		tabService.activeTab(0);
 	}
 	

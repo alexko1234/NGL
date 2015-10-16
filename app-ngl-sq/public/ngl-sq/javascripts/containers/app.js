@@ -6,7 +6,7 @@ angular.module('home', ['commonsServices','ngRoute','datatableServices','ui.boot
 		controller : 'SearchCtrl'
 	});
 	$routeProvider.when('/containers/state/home', {
-		templateUrl : jsRoutes.controllers.containers.tpl.Containers.search("home").url,
+		templateUrl : jsRoutes.controllers.containers.tpl.Containers.search().url,
 		controller : 'SearchStateCtrl'
 	});
 	$routeProvider.otherwise({redirectTo: jsRoutes.controllers.containers.tpl.Containers.home("search").url});

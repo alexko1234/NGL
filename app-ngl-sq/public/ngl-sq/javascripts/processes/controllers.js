@@ -347,13 +347,13 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			$http.get(jsRoutes.controllers.reporting.api.ReportingConfigurations.get($scope.searchService.reportingConfigurationCode).url,{searchService:$scope.searchService, datatable:$scope.datatable})
 					.success(function(data, status, headers, config) {
 						config.searchService.reportingConfiguration = data;
-						config.searchService.search();
+						//config.searchService.search();
 						config.datatable.setColumnsConfig(data.columns);																								
 			});
 		}else{
 			$scope.searchService.reportingConfiguration = undefined;
 			$scope.datatable.setColumnsConfig($scope.searchService.getDefaultColumns());
-			$scope.search();
+			//$scope.search();
 		}
 		
 	};
@@ -445,6 +445,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 		$scope.lists.refresh.containerSupportCategories();
 		$scope.lists.refresh.users();
 		lists.refresh.experimentTypes({categoryCode:"transformation", withoutOneToVoid:true});
+		lists.refresh.reportConfigs({pageCodes:["containers-search"]});
 		$scope.lists.refresh.reportConfigs({pageCodes:["containers-addcolumns-processes-creation"]}, "containers-addcolumns-processes-creation");
 		$scope.lists.refresh.filterConfigs({pageCodes:["containers-search-addfilters"]}, "containers-search-addfilters");
 		$scope.searchService.additionalFilters=[];

@@ -102,7 +102,6 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 		columns.push({
 			"header":Messages("containers.table.fromExperimentTypeCodes"),
 			"property":"fromExperimentTypeCodes",
-			//"filter":"codes:'type'",
 			"order":false,
 			"position":11,
 			"type":"text",
@@ -191,30 +190,12 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 				"position":13,
 				"choiceInList": true,
 				"possibleValues":"searchService.lists.getValuations()", 
-				"filter":"codes:'valuation'",
+				"filter":"codes:'valuation'"
 			});
 		}
 				return columns;
 	};
 	
-
-	var configDatatable = {
-			group:{
-				active:true,
-				showOnlyGroups:true,
-				enableLineSelection:true,
-				showButton:true
-			},
-			pagination:{
-				mode:'local'
-			},
-			order:{
-				active:true,
-				by:'code',
-				mode:'local'
-			}
-	};
-
 	var isInit = false;
 
 	var initListService = function(){
@@ -227,6 +208,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			lists.refresh.processCategories();
 			lists.refresh.states({objectTypeCode:"Container"});
 			lists.refresh.users();
+			lists.refresh.reportConfigs({pageCodes:["containers"+"-"+mainService.getHomePage()]});
 			lists.refresh.reportConfigs({pageCodes:["containers-addcolumns"]}, "containers-addcolumns");
 			lists.refresh.filterConfigs({pageCodes:["containers-search-addfilters"]}, "containers-search-addfilters");
 			isInit=true;
@@ -390,13 +372,13 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 					$http.get(jsRoutes.controllers.reporting.api.ReportingConfigurations.get(this.reportingConfigurationCode).url,{searchService:this, datatable:this.datatable})
 							.success(function(data, status, headers, config) {
 								config.searchService.reportingConfiguration = data;
-								config.searchService.search();
+								//config.searchService.search();
 								config.datatable.setColumnsConfig(data.columns);																								
 					});
 				}else{
 					this.reportingConfiguration = undefined;
 					this.datatable.setColumnsConfig(this.getDefaultColumns());
-					this.search();
+					//this.search();
 				}
 				
 			},
