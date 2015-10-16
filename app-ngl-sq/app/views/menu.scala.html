@@ -44,14 +44,17 @@
 							
 							</ul>
   						</li>
-  						<li class="dropdown @("active".when(nav.startsWith("help")))">
-  							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="help">@Messages("docs.menu")<b class="caret"></b></a>
-							<ul class="dropdown-menu" role="menu" aria-labelledby="help">
-								<li><a href="@routes.Assets.at("ngl-sq/documentation/NGL-SQ_Optical_Mapping.pdf")" target="doc">@Messages("docs.opticalmapping")</a></li>
-								<li><a href="@routes.Assets.at("ngl-sq/documentation/NGL_SQ_Illumina.pdf")" target="doc">@Messages("docs.illumina")</a></li>
-								<li><a href="@routes.Assets.at("ngl-sq/documentation/NGL_SQ_Nanopore.pdf")" target="doc">@Messages("docs.nanopore")</a></li>
-							</ul>
-						</li>						
+  						@if("CNS" == play.Play.application().configuration().getString("institute")){
+	  						<li class="dropdown @("active".when(nav.startsWith("help")))">
+	  							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="help">@Messages("docs.menu")<b class="caret"></b></a>
+								<ul class="dropdown-menu" role="menu" aria-labelledby="help">
+									<li><a href="@routes.Assets.at("ngl-sq/documentation/cns/NGL-SQ_Optical_Mapping.pdf")" target="doc">@Messages("docs.opticalmapping")</a></li>
+									<li><a href="@routes.Assets.at("ngl-sq/documentation/cns/NGL_SQ_Illumina.pdf")" target="doc">@Messages("docs.illumina")</a></li>
+									<li><a href="@routes.Assets.at("ngl-sq/documentation/cns/NGL_SQ_Nanopore.pdf")" target="doc">@Messages("docs.nanopore")</a></li>
+								</ul>
+							</li>
+						}
+  												
 			</ul>
 
 			<ul class="nav navbar-nav navbar-right">
