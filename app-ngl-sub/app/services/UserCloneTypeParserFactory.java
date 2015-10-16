@@ -1,6 +1,8 @@
 package services;
 
 import java.util.Map;
+
+import models.sra.submit.common.instance.UserCloneType;
 import models.sra.submit.util.SraException;
 
 public class UserCloneTypeParserFactory  implements IUserObjectFactory {

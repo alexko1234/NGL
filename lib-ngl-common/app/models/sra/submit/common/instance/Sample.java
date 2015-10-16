@@ -36,17 +36,24 @@ public class Sample extends DBObject implements IValidation {
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		contextValidation.addKeyToRootKeyName("sample");
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapStatus, "state.code");
-		SraValidationHelper.validateProjectCode(this.projectCode, contextValidation);
 		SraValidationHelper.validateId(this, contextValidation);
+		
+		
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
+		SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapStatus, "state.code");
+		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
+		
 		if (!StringUtils.isNotBlank((CharSequence) contextValidation.getContextObjects().get("type"))){
 			contextValidation.addErrors("sample non evaluable ", "sans type de contexte de validation");
 		} else if (contextValidation.getContextObjects().get("type").equals("sra")) {
+			SraValidationHelper.validateProjectCode(this.projectCode, contextValidation);
 			SraValidationHelper.validateCode(this, InstanceConstants.SRA_SAMPLE_COLL_NAME, contextValidation);
 		} else if (contextValidation.getContextObjects().get("type").equals("wgs")) {
+			SraValidationHelper.validateProjectCode(this.projectCode, contextValidation);
 			SraValidationHelper.validateCode(this, InstanceConstants.SRA_SAMPLE_WGS_COLL_NAME, contextValidation);
-		} else {
+		}  else if (contextValidation.getContextObjects().get("type").equals("external_sra")) {
+			SraValidationHelper.validateCode(this, InstanceConstants.SRA_SAMPLE_COLL_NAME, contextValidation);
+		}  else {
 			contextValidation.addErrors("sample non evaluable ", "avec type de contexte de validation " + contextValidation.getContextObjects().get("type"));	
 		}
 		contextValidation.removeKeyFromRootKeyName("sample");

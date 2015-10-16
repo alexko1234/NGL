@@ -1,4 +1,4 @@
-package services;
+package models.sra.submit.common.instance;
 
 public class UserCloneType {
 	private String alias = null;

@@ -5,7 +5,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -48,6 +50,9 @@ public class Submission extends DBObject implements IValidation {
 	public String xmlAnalysis = null;
 	public String resultSendXml = null; // Fichier resultat de la commande curl qui doit contenir les AC attribués par l'EBI
 	//public String userSubmission; // login du bioinfo qui a creer ticket.
+	
+	private Map<String, UserCloneType> mapUserClones = new HashMap<String, UserCloneType>();
+
 	public State state;// = new State(); // Reference sur "models.laboratory.common.instance.state" 
 		// pour gerer les differents etats de l'objet.
 		// Les etapes utilisateurs = (new, inWaitingConfiguration,) inProgressConfiguration, finishConfiguration, 

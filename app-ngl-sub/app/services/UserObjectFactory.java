@@ -1,5 +1,7 @@
 package services;
 
+import models.sra.submit.common.instance.UserCloneType;
+
 public class UserObjectFactory {
 
 	/**
