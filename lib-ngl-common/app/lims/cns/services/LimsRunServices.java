@@ -489,7 +489,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 	
 	
 	public DepotSolexa insertFlowcellNGL(Run run){
-		List<models.laboratory.experiment.instance.Experiment> expPrepaflowcell=MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, models.laboratory.experiment.instance.Experiment.class,DBQuery.in("outputContainerSupportCodes", run.containerSupportCode).is("typeCode", "prepa-flowcell")).toList();
+		List<models.laboratory.experiment.instance.Experiment> expPrepaflowcell=MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, models.laboratory.experiment.instance.Experiment.class,DBQuery.in("outputContainerSupportCodes", run.containerSupportCode).in("typeCode", "prepa-flowcell","prepa-fc-ordered")).toList();
 		if(CollectionUtils.isEmpty(expPrepaflowcell)){
 			throw new RuntimeException("Prepaflowcell Experiment with containerOutPut "+run.containerSupportCode+" not found in NGL");
 		}
