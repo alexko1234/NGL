@@ -89,12 +89,17 @@ public class Workflows {
 		if(run.valuation.valid.equals(TBoolean.UNSET)){
 			return false;
 		}
-		for(Lane lane : run.lanes){
-			if(lane.valuation.valid.equals(TBoolean.UNSET)){
-				return false;
+		if(run.lanes != null){
+			for(Lane lane : run.lanes){
+				if(lane.valuation.valid.equals(TBoolean.UNSET)){
+					return false;
+				}
 			}
+			return true;
+		}else{
+			return true;
 		}
-		return true;
+		
 	}
 	
 	public static boolean atLeastOneValuation(Run run) {
@@ -102,12 +107,16 @@ public class Workflows {
 		if(!run.valuation.valid.equals(TBoolean.UNSET)){
 			return true;
 		}
-		for(Lane lane : run.lanes){
-			if(!lane.valuation.valid.equals(TBoolean.UNSET)){
-				return true;
+		if(run.lanes != null){
+			for(Lane lane : run.lanes){
+				if(!lane.valuation.valid.equals(TBoolean.UNSET)){
+					return true;
+				}
 			}
+			return false;
+		}else{
+			return false;
 		}
-		return false;
 	}
 	
 	private static void applyRunRules(ContextValidation contextValidation, Run run) {

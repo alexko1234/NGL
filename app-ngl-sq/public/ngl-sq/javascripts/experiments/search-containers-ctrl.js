@@ -9,6 +9,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"header":Messages("containers.table.supportCode"),
 			"property":"support.code",
 			"order":true,
+			"hide":true,
 			"position":1,
 			"type":"text",
 			"group":true
@@ -18,21 +19,24 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"property":"support.categoryCode",
 			"filter":"codes:'container_support_cat'",
 			"order":true,
+			"hide":true,
 			"position":2,
 			"type":"text",
 			"groupMethod":"unique"
+		},		
+		{
+			"header":Messages("containers.table.support.line"),
+			"property":"support.line",
+			"order":true,
+			"hide":true,
+			"position":3,
+			"type":"text"
 		},
 		{
 			"header":Messages("containers.table.support.column"),
 			"property":"support.column",
 			"order":true,
-			"position":3,
-			"type":"text"
-		},
-		{
-			"header":Messages("containers.table.support.line"),
-			"property":"support.line",
-			"order":true,
+			"hide":true,
 			"position":4,
 			"type":"text"
 		},
@@ -49,6 +53,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"header":Messages("containers.table.projectCodes"),
 			"property":"projectCodes",
 			"order":false,
+			"hide":true,
 			"position":6,					
 			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='2'>",
 			"type":"text",
@@ -58,6 +63,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"header":Messages("containers.table.sampleCodes.length"),
 			"property":"sampleCodes.length",
 			"order":true,
+			"hide":true,
 			"position":7,
 			"type":"number",
 			"groupMethod":"sum"
@@ -66,6 +72,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"header":Messages("containers.table.sampleCodes"),
 			"property":"sampleCodes",
 			"order":false,
+			"hide":true,
 			"hide":true,
 			"position":8,
 			"type":"text",
@@ -77,6 +84,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"header":Messages("containers.table.contents.length"),
 			"property":"contents.length",
 			"order":true,
+			"hide":true,
 			"hide":true,
 			"position":9,
 			"type":"number",
@@ -97,7 +105,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 		{
 			"header":Messages("containers.table.fromExperimentTypeCodes"),
 			"property":"fromExperimentTypeCodes",
-			//"filter":"codes:'type'",
+			"hide":true,
 			"order":false,
 			"position":11,
 			"type":"text",
@@ -108,6 +116,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"header":Messages("containers.table.creationDate"),
 			"property":"traceInformation.creationDate",
 			"order":true,
+			"hide":true,
 			"position":14,
 			"type":"date",
 			"groupMethod":"unique"
@@ -116,6 +125,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"header":Messages("containers.table.createUser"),
 			"property":"traceInformation.createUser",
 			"order":true,
+			"hide":true,
 			"position":15,
 			"type":"text",
 			"groupMethod":"unique"
@@ -124,6 +134,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"header":Messages("containers.table.storageCode"),
 			"property":"support.storageCode",
 			"order":true,
+			"hide":true,
 			"type":"text",
 			"edit":false,
 			"position":15.5,
@@ -134,6 +145,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"header":Messages("containers.table.inputProcessCodes"),
 			"property":"inputProcessCodes",
 			"order":false,
+			"hide":true,
 			"type":"text",
 			"position":16,
 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
@@ -143,6 +155,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"header":Messages("containers.table.state.code"),
 			"property":"state.code",
 			"order":true,
+			"hide":true,
 			"type":"text",
 			"edit":false,
 			"position":12,
@@ -157,6 +170,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"header":Messages("containers.table.valid"),
 			"property":"valuation.valid",
 			"order":true,
+			"hide":true,
 			"type":"text",
 			"edit":true,
 			"position":13,
@@ -188,10 +202,18 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			by:'code',
 			mode:'local'
 		},
+		hide:{
+	 		 active:true
+	 	},
 		otherButtons :{
 			active:true,
 			template:'<button class="btn" ng-disabled="!datatable.isSelect() && !datatable.isSelectGroup()" ng-click="addToBasket(datatable.getSelection(true))" data-toggle="tooltip" title="'+Messages("button.addbasket")+'">'
 					+'<i class="fa fa-shopping-cart fa-lg"></i> ({{basket.length()}})</button>'
+		},
+		messages:{
+			messagesService : {Messages:function(key, args){
+				return Messages(key, args);
+			}}
 		}
 	};
 	

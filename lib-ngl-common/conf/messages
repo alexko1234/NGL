@@ -70,3 +70,5 @@ valuation.FALSE = Non
 valuation.UNSET = ---
 
 bt-select.here = Taper ici !
+
+search.placeholder.reporting.configuration = Sélect. colonnes config.

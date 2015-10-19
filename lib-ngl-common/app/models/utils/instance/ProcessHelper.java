@@ -64,7 +64,7 @@ public class ProcessHelper {
 
 	public static void updateContainerSupportFromContainer(Container container,ContextValidation contextValidation){
 		ContainerSupport containerSupport=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, container.support.code);
-		if(null == containerSupport){
+		if(null != containerSupport){
 			if(containerSupport.fromExperimentTypeCodes==null){
 				containerSupport.fromExperimentTypeCodes=new HashSet<String>();
 			}

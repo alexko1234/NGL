@@ -260,7 +260,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 	 */
 	$scope.updateConcentration = function(experiment){
 		
-		//TODO prendre la propriété atm.inputContainerUseds[0].experimentProperties.finalConcentration2 de l'input pour la comparaison
+		//prendre la propriété atm.inputContainerUseds[0].experimentProperties.finalConcentration2 de l'input pour la comparaison
 		
 		for(var j = 0 ; j < experiment.value.atomicTransfertMethods.length; j++){
 			var atm = experiment.value.atomicTransfertMethods[j];
@@ -269,11 +269,13 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 			var isSame = true;
 			for(var i=0;i < atm.inputContainerUseds.length;i++){
 				if(concentration === undefined && unit === undefined){
-					concentration = atm.inputContainerUseds[i].concentration.value;
-					unit = atm.inputContainerUseds[i].concentration.unit;
+					//concentration = atm.inputContainerUseds[i].concentration.value;
+					//unit = atm.inputContainerUseds[i].concentration.unit;
+					concentration = atm.inputContainerUseds[i].experimentProperties.finalConcentration2.value;
+					unit = atm.inputContainerUseds[i].experimentProperties.finalConcentration2.unit;					
 				}else{
-					if(concentration !== atm.inputContainerUseds[i].concentration.value 
-							|| unit !== atm.inputContainerUseds[i].concentration.unit){
+					if(concentration !== atm.inputContainerUseds[i].experimentProperties.finalConcentration2.value 
+							|| unit !== atm.inputContainerUseds[i].experimentProperties.finalConcentration2.unit){
 						isSame = false;
 						break;
 					}
@@ -281,7 +283,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 			}
 			
 			if(isSame){				
-				atm.outputContainerUseds[0].concentration = atm.inputContainerUseds[0].concentration;				
+				atm.outputContainerUseds[0].concentration = atm.inputContainerUseds[0].experimentProperties.finalConcentration2;				
 			}
 			
 		}		

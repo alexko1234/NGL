@@ -90,9 +90,6 @@ public class ManytoOneContainer extends AtomicTransfertMethod{
 				}
 			}
 
-			PropertyValue volume = new PropertySingleValue();
-			PropertyValue concentration = new PropertySingleValue();
-			
 			if(this.outputContainerUseds!=null){
 				this.outputContainerUseds.get(0).code=outPutContainerCode;				
 			}else {

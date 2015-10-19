@@ -1780,6 +1780,13 @@ angular.module('ultimateDataTableServices', []).
 		    					this.config.columns = angular.copy(settings);
 			    	    		this.configMaster.columns = angular.copy(settings);
 			    	    		this.newExtraHeaderConfig();
+			    	    		
+			    	    		if(this.allResult){
+				    	    		this.computeGroup();
+				    				this.sortAllResult();
+				    				this.computePaginationList();
+				    				this.computeDisplayResult();
+		    					}			    	    		
 		    			    }
 		    			},
 		    			setColumnsConfigWithUrl : function(){
@@ -3039,9 +3046,9 @@ directive('ultimateDatatable', ['$parse', '$q', '$timeout','$templateCache', fun
 			    		}
 						
 						if(arg==null || arg==undefined){
-			    			return scope.udtTable.messages.Messages(message);
+			    			return scope.udtTable.config.messages.transformKey(message);
 						}else{
-							return scope.udtTable.messages.Messages(message, arg);
+							return scope.udtTable.config.messages.transformKey(message, arg);
 						}
 			    	};
 			    	

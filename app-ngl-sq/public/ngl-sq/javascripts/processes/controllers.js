@@ -19,7 +19,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			 			 "group":true
 			         },
 			         {
-			        	 "header":Messages("containers.table.support.categoryCode"),
+			        	 "header":Messages("containers.table.supportCategoryCode"),
 			        	 "property":"support.categoryCode",
 			        	 "filter":"codes:'container_support_cat'",
 			        	 "order":true,
@@ -32,9 +32,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"code",
 			        	 "order":true,
-			        	 "hide":true,
 			        	 "type":"text",
-			        	 "position":3,
+			        	 "position":5,
 			 			 "render":"<div list-resize='cellValue | stringToArray | unique' ' list-resize-min-size='2'>",
 			 			 "groupMethod":"collect"
 			         },
@@ -44,18 +43,18 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			        	 "order":true,
 			        	 "hide":true,
 			        	 "type":"text",
-			        	 "position":4,					
+			        	 "position":6,					
 			 			 "render":"<div list-resize='cellValue | unique' ' list-resize-min-size='2'>",
 			 			 "groupMethod":"collect"
 			         },
 			         {
-				 			"header":Messages("containers.table.sampleCodes.length"),
-				 			"property":"sampleCodes.length",
-				 			"order":true,
-				 			"hide":true,
-				 			"type":"text",
-				        	"position":5,
-				 			"groupMethod":"sum"
+			 			"header":Messages("containers.table.sampleCodes.length"),
+			 			"property":"sampleCodes.length",
+			 			"order":true,
+			 			"hide":true,
+			 			"type":"text",
+			        	"position":7,
+			 			"groupMethod":"sum"
 				 	},
 			 		{
 						"header":Messages("containers.table.sampleCodes"),
@@ -65,7 +64,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 						"type":"text",
 						"render":"<div list-resize='cellValue | unique' list-resize-min-size='3'>",
 						"groupMethod":"collect",
-			        	"position":6
+			        	"position":8
 					},
 			 		{
 						"header":Messages("containers.table.contents.length"),
@@ -73,7 +72,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 						"order":true,
 						"hide":true,
 						"type":"number",
-			        	 "position":7,
+			        	 "position":9,
 			 			"groupMethod":"sum"
 					},
 					{
@@ -84,7 +83,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 						"type":"text",
 						"render":"<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' ' list-resize-min-size='3'>",
 						"groupMethod":"collect",
-			        	"position":8
+			        	"position":10
 					},
 			        {
 			        	 "header":Messages("containers.table.fromExperimentTypeCodes"),
@@ -92,7 +91,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			        	 "order":false,
 			        	 "hide":true,
 			        	 "type":"text",
-			        	 "position":9,
+			        	 "position":11,
 			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
 						"groupMethod":"collect"
 			        },
@@ -103,7 +102,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			        	 "hide":true,
 			        	 "type":"text",
 			        	 "filter":"codes:'state'",
-			        	 "position":10,
+			        	 "position":12,
 			 			"groupMethod":"unique"
 			         },
 			        
@@ -114,7 +113,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			        	 "hide":true,
 			        	 "type":"text",
 			        	 "filter":"codes:'valuation'",
-			        	 "position":11
+			        	 "position":13
 			         },
 			         {
 						"header":Messages("containers.table.creationDate"),
@@ -122,7 +121,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 						"order":true,
 						"hide":true,
 						"type":"date",
-			        	 "position":12
+			        	 "position":14
 					 },
 					 {
 						"header":Messages("containers.table.createUser"),
@@ -130,16 +129,17 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 						"order":true,
 						"hide":true,
 						"type":"text",
-			        	 "position":13
+			        	 "position":15
 					 },
 					 {
-							"header":Messages("containers.table.storageCode"),
-							"property":"support.storageCode",
-							"order":true,
-							"type":"text",
-							"edit":false,
-							"position":14,
-							"groupMethod":"unique"
+						"header":Messages("containers.table.storageCode"),
+						"property":"support.storageCode",
+						"order":true,
+						"hide":true,
+						"type":"text",
+						"edit":false,
+						"position":15.5,
+						"groupMethod":"unique"
 								
 			         }
 			         ],
@@ -154,6 +154,9 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 					},
 			         pagination:{
 			 			mode:'local'
+				 	 },
+				 	 hide:{
+				 		 active:true
 				 	 },
 				 	 order:{
 				 		active:true,
@@ -519,11 +522,11 @@ var	datatableConfig = {
 			 		},
 			         {
 			        	 "header": function(){
-			        		 if($scope.supportView){
-			        			 return Messages("containers.table.stateCode");
-			        		 }else{
-			        			 return  Messages("containers.table.state.code");	
-			        		 }
+				        		 if($scope.supportView){
+				        			 return Messages("containers.table.stateCode");
+				        		 }else{
+				        			 return  Messages("containers.table.state.code");	
+				        		 }
 			        	 },
 			        	 "property":"state.code",
 			        	 "order":true,
@@ -533,7 +536,7 @@ var	datatableConfig = {
 			        	 "type":"text"
 			         },
 			         {
-			        	 "header" : Messages("processes.table.comments"),
+			        	"header" : Messages("processes.table.comments"),
 						"property" : "comments[0].comment",
 						"position" : 500,
 						"order" : false,

@@ -89,21 +89,23 @@
 				</div>	
 				}
 			}
-			</div>		
+			</div>	
+			<hr ng-if="searchService.isProcessFiltered" class="filterLine">
+			<div ng-if="searchService.isProcessFiltered" class="row">				
+				<div class="col-md-2 col-lg-2" ng-repeat="processFilters in searchService.getAddProcessFiltersToForm()">
+					<div class="form-group" ng-repeat="filter in processFilters">
+						<div dt-compile="filter.html"></div> <!-- used directive from datatable to compile html -->
+					</div>
+				</div>									
+			</div>
+				
+				
+				
 		</form>	
 	</div>
 	
 	<div class="tab-pane" id="addfilters">
-	<form class="well well-small">
-			<div ng-if="searchService.isProcessFiltered" class="row">				
-					<div class="col-md-2 col-lg-2" ng-repeat="processFilters in searchService.getAddProcessFiltersToForm()">
-						<div class="form-group" ng-repeat="filter in processFilters">
-							<div dt-compile="filter.html"></div> <!-- used directive from datatable to compile html -->
-						</div>
-					</div>									
-				</div>
-				
-				<hr ng-if="searchService.isProcessFiltered" class="filterLine">
+	<form class="well well-small">			
 			<div class="row">			
 				<div class="col-md-2 col-lg-2" ng-repeat="filters in searchService.getAddFiltersToForm()">
 					<div class="form-group" ng-repeat="filter in filters">
