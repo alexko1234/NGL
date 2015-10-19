@@ -1583,7 +1583,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 			$scope.lists.refresh.protocols({"experimentTypeCode":experiment.typeCode});
 			$scope.lists.refresh.resolutions({"typeCode":experiment.typeCode});
 			$scope.lists.refresh.states({"objectTypeCode":"Experiment"});
-			$scope.lists.refresh.kitCatalogs();
+			$scope.lists.refresh.kitCatalogs({"experimentTypeCodes":experiment.typeCode});
 			$scope.lists.refresh.experimentCategories();
 
 			$scope.doneAndRecorded = false;
