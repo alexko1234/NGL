@@ -5,6 +5,11 @@ angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$par
 	
 	$scope.$parent.isRoadMapAvailable = false;
 	
+	
+	$scope.$parent.updateConcentration = function(experiment){
+		//NOTHING IN WAITING NEW SPECIFICATION
+	};
+	
 	/*
 
 	var atmToSingleDatatable = $scope.atmService.$atmToSingleDatatable;
