@@ -37,86 +37,80 @@
 					<label class="col-md-2 col-lg-2 control-label">@Messages("kits.name")&nbsp;:</label>
 					<div ng-switch on="editMode">
 						<p class="form-control-static col-md-3 col-lg-3" ng-switch-when="false">{{kit.name}}</p>
-					<div ng-switch-when="true">
-					<div class="col-md-3 col-lg-3" ng-class="getClass('kit.name')">
-						<input type="text" class="form-control" ng-model="kit.name" ng-readonly="!editMode" ng-disabled="!editMode">
-						<span class="help-block">
-                            {{mainService.getError("kit.name")}}
-                        </span>
+						<div ng-switch-when="true">
+							<div class="col-md-3 col-lg-3" ng-class="getClass('kit.name')">
+								<input type="text" class="form-control" ng-model="kit.name" ng-readonly="!editMode" ng-disabled="!editMode">
+								<span class="help-block">
+                            		{{mainService.getError("kit.name")}}
+                        		</span>
+							</div>
+						</div>
 					</div>
-					</div>
-					</div>
-					
 					
 					<label class="col-md-2 col-lg-2 control-label">@Messages("kits.provider")&nbsp;:</label>
 					<div ng-switch on="editMode">
 						<p class="form-control-static col-md-3 col-lg-3" ng-switch-when="false">{{kit.providerCode}}</p>
-					<div ng-switch-when="true">
-					<div class="col-md-3 col-lg-3" ng-class="getClass('kit.providerCode')">
-						<input type="text" class="form-control" ng-model="kit.providerCode" ng-readonly="!editMode" ng-disabled="!editMode">
-						<span class="help-block">
-                            {{mainService.getError("kit.providerCode")}}
-                        </span>
-					</div>
-				</div>
-				</div>
-					
-					
-					
-
+						<div ng-switch-when="true">
+							<div class="col-md-3 col-lg-3" ng-class="getClass('kit.providerCode')">
+								<input type="text" class="form-control" ng-model="kit.providerCode" ng-readonly="!editMode" ng-disabled="!editMode">
+								<span class="help-block">
+                            		{{mainService.getError("kit.providerCode")}}
+                        		</span>
+							</div>
+						</div>
+					</div>															
 				</div>		
 		    </div>
+		    
 		    <div class="row">
 		    	<div class="form-group">
 		    		<label class="col-md-2 col-lg-2 control-label">@Messages("kits.providerRefName")&nbsp;:</label>
 					<div ng-switch on="editMode">
 						<p class="form-control-static col-md-3 col-lg-3" ng-switch-when="false">{{kit.providerRefName}}</p>
-					<div ng-switch-when="true">
-					<div class="col-md-3 col-lg-3" ng-class="getClass('kit.providerRefName')">
-						<input type="text" class="form-control" ng-model="kit.providerRefName" ng-readonly="!editMode" ng-disabled="!editMode">
+						<div ng-switch-when="true">
+							<div class="col-md-3 col-lg-3" ng-class="getClass('kit.providerRefName')">
+								<input type="text" class="form-control" ng-model="kit.providerRefName" ng-readonly="!editMode" ng-disabled="!editMode">
+								<span class="help-block">
+                            		{{mainService.getError("kit.providerRefName")}}
+                        		</span>
+							</div>
+						</div>
+					</div>
+					
+					<label class="col-md-2 col-lg-2 control-label">@Messages("kits.experimentTypes")&nbsp;:</label>
+					<div class="col-md-3 col-lg-3" ng-class="getClass('kit.experimentTypeCodes')" >
+						<div class="form-control" bt-select ng-model="kit.experimentTypeCodes"
+							multiple="true" placeholder="@Messages("catalogs.kit.creation.placeholder.experimentTypes")" 
+							bt-options="experimentType.code as experimentType.name for experimentType in lists.getExperimentTypes()"
+							ng-readonly="!editMode" ng-disabled="!editMode" ng-edit="editMode">
+						</div>
 						<span class="help-block">
-                            {{mainService.getError("kit.providerRefName")}}
+                            {{mainService.getError("kit.experimentTypeCodes")}}
                         </span>
-					</div>
-					</div>
-					</div>
-		    							
+					</div>		    							
 				</div>
 		    </div>
+		    
 		     <div class="row">
 		    	<div class="form-group">
 		    		<label class="col-md-2 col-lg-2 control-label">@Messages("kits.catalogRefCode")&nbsp;:</label>
 					<div ng-switch on="editMode">
 						<p class="form-control-static col-md-3 col-lg-3" ng-switch-when="false">{{kit.catalogRefCode}}</p>
-					<div ng-switch-when="true">
-					<div class="col-md-3 col-lg-3" ng-class="getClass('kit.catalogRefCode')">
-						<input type="text" class="form-control" ng-model="kit.catalogRefCode" ng-readonly="!editMode" ng-disabled="!editMode">
-						<span class="help-block">
-                            {{mainService.getError("kit.catalogRefCode")}}
-                        </span>
-					</div>
-					</div>
-					</div>
-		    	
-		    		<label class="col-md-2 col-lg-2 control-label">@Messages("kits.experimentTypes")&nbsp;:</label>
-					<div class="col-md-3 col-lg-3" ng-class="getClass('kit.experimentTypeCodes')" >
-						<div class="form-control" bt-select ng-model="kit.experimentTypeCodes"
-						multiple="true" placeholder="@Messages("catalogs.kit.creation.placeholder.experimentTypes")" 
-						bt-options="experimentType.code as experimentType.name for experimentType in lists.getExperimentTypes()"
-						ng-readonly="!editMode" ng-disabled="!editMode" ng-edit="editMode">
+						<div ng-switch-when="true">
+							<div class="col-md-3 col-lg-3" ng-class="getClass('kit.catalogRefCode')">
+								<input type="text" class="form-control" ng-model="kit.catalogRefCode" ng-readonly="!editMode" ng-disabled="!editMode">
+								<span class="help-block">
+                            		{{mainService.getError("kit.catalogRefCode")}}
+                        		</span>
+							</div>
 						</div>
-						<span class="help-block">
-                            {{mainService.getError("kit.experimentTypeCodes")}}
-                        </span>
-		    		
-						
-
-				</div>	
-			 </div>
+					</div>	
+			 	</div>
+			</div>
 			 
-			 <div class="row">
+			<div class="row">
 		    	<div class="form-group">
-			 		<label class="col-md-2 col-lg-2 control-label">@Messages("kit.code.label")&nbsp;:</label>
+					<label class="col-md-2 col-lg-2 control-label">@Messages("kit.code.label")&nbsp;:</label>
 					<div class="col-md-3 col-lg-3 form-control-static">{{kit.code}}</div>
 					
 					<label class="col-md-2 col-lg-2 control-label">@Messages("kits.active")&nbsp;:</label>
@@ -125,7 +119,7 @@
 					</div>
 				</div>
 			</div>
-	</form>
+		</form>
 	
 <div class="row">
  	<h3 class="pull-left">@Messages("catalogs.box.list") : </h3>
