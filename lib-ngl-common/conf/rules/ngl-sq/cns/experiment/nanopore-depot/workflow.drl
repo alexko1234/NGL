@@ -106,7 +106,7 @@ rule "Create ReadSet"
 		readSet.runCode=$run.code;
 		readSet.runTypeCode=$run.typeCode;
 		readSet.runSequencingStartDate=new Date();
-	
+		readSet.laneNumber=1;
 		readSet.sampleCode=$content.sampleCode;
 		readSet.projectCode=$content.projectCode;
 		//TO DO

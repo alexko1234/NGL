@@ -36,7 +36,7 @@ public class Lanes extends RunsController{
 	//@Permission(value={"reading"})
 	public static Result list(String code) {
 		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
-		if(run == null){
+		if(run == null || run.lanes == null){
 			return badRequest();
 		}
 		return ok(Json.toJson(run.lanes));		
@@ -48,11 +48,13 @@ public class Lanes extends RunsController{
 		if(run == null){
 			return badRequest();
 		}
-		for(Lane lane: run.lanes) {
-			if(lane.number.equals(laneNumber)) {
-				return ok(Json.toJson(lane));	
+		if(null != run.lanes){
+			for(Lane lane: run.lanes) {
+				if(lane.number.equals(laneNumber)) {
+					return ok(Json.toJson(lane));	
+				}
 			}
-		}
+		}		
 		return notFound();
 	}
 

@@ -460,11 +460,14 @@ public class ReadSets extends ReadSetsController{
 		if (run==null) {
 			return badRequest();
 		}
-		for(Lane lane: run.lanes){
-			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, 
-					DBQuery.and(DBQuery.is("code",runCode),DBQuery.is("lanes.number",lane.number)), 
-					DBUpdate.unset("lanes.$.readSetCodes"));		
+		if(null != run.lanes){
+			for(Lane lane: run.lanes){
+				MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, 
+						DBQuery.and(DBQuery.is("code",runCode),DBQuery.is("lanes.number",lane.number)), 
+						DBUpdate.unset("lanes.$.readSetCodes"));		
+			}
 		}
+		
 		
 		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code",runCode), DBUpdate.unset("projectCodes").unset("sampleCodes"));
 		

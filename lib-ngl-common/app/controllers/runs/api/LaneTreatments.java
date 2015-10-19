@@ -148,10 +148,12 @@ public class LaneTreatments extends RunsController{
 	
 	
 	private static Lane getLane(Run run, Integer laneNumber) {
-		for (Lane lane : run.lanes) {
-			if (lane.number.equals(laneNumber)) {
-				return lane;
-			}		
+		if(null != run.lanes){
+			for (Lane lane : run.lanes) {
+				if (lane.number.equals(laneNumber)) {
+					return lane;
+				}		
+			}
 		}
 		throw new RuntimeException("Lane number does not exist "+run.code+" / "+laneNumber);
 	}
