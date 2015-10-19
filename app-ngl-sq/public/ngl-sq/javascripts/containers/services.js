@@ -25,21 +25,21 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"groupMethod":"unique"
 		});
 		columns.push({
-			"header":Messages("containers.table.support.column"),
-			"property":"support.column",
+			"header":Messages("containers.table.support.line"),
+			"property":"support.line",
 			"order":true,
 			"hide":true,
 			"position":3,
 			"type":"text"
 		});
 		columns.push({
-			"header":Messages("containers.table.support.line"),
-			"property":"support.line",
+			"header":Messages("containers.table.support.column"),
+			"property":"support.column",
 			"order":true,
 			"hide":true,
 			"position":4,
 			"type":"text"
-		});
+		});		
 		columns.push({
 			"header":Messages("containers.table.code"),
 			"property":"code",
@@ -63,6 +63,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"header":Messages("containers.table.sampleCodes.length"),
 			"property":"sampleCodes.length",
 			"order":true,
+			"hide":true,
 			"position":7,
 			"type":"number",
 			"groupMethod":"sum"
@@ -103,22 +104,25 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"header":Messages("containers.table.fromExperimentTypeCodes"),
 			"property":"fromExperimentTypeCodes",
 			"order":false,
+			"hide":true,
 			"position":11,
 			"type":"text",
 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
 			"groupMethod":"collect"
 		});		
 		columns.push({
-					"header":Messages("containers.table.creationDate"),
-					"property":"traceInformation.creationDate",
-					"order":true,
-					"position":14,
-					"type":"date"
+			"header":Messages("containers.table.creationDate"),
+			"property":"traceInformation.creationDate",
+			"order":true,
+			"hide":true,
+			"position":14,
+			"type":"date"
 				});
 		columns.push({
 			"header":Messages("containers.table.createUser"),
 			"property":"traceInformation.createUser",
 			"order":true,
+			"hide":true,
 			"position":15,
 			"type":"text"
 		});
@@ -126,6 +130,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"header":Messages("containers.table.storageCode"),
 			"property":"support.storageCode",
 			"order":true,
+			"hide":true,
 			"type":"text",
 			"edit":false,
 			"position":15.5,
@@ -136,6 +141,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 				"header":Messages("containers.table.inputProcessCodes"),
 				"property":"inputProcessCodes",
 				"order":false,
+				"hide":true,
 				"type":"text",
 				"position":16,
 				"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
@@ -147,6 +153,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 				"header":Messages("containers.table.state.code"),
 				"property":"state.code",
 				"order":true,
+				"hide":true,
 				"type":"text",
 				"edit":true,
 				"position":12,
@@ -159,6 +166,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 				"header":Messages("containers.table.valid"),
 				"property":"valuation.valid",
 				"order":true,
+				"hide":true,
 				"type":"text",
 				"edit":false,
 				"position":13,
@@ -171,6 +179,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 				"header":Messages("containers.table.state.code"),
 				"property":"state.code",
 				"order":true,
+				"hide":true,
 				"type":"text",
 				"edit":false,
 				"position":12,
@@ -187,6 +196,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 				"order":true,
 				"type":"text",
 				"edit":true,
+				"hide":true,
 				"position":13,
 				"choiceInList": true,
 				"possibleValues":"searchService.lists.getValuations()", 

@@ -49,7 +49,7 @@ angular.module('home').controller('CNGTubesToFlowcellCtrl',['$scope', '$parse', 
 		        	 "extraHeaders":{0:"librairie denaturée"}
 		         },				         
 				 {
-		        	 "header":Messages("containers.table.concentration") + "(nM)",
+		        	 "header":Messages("containers.table.concentration") + " (nM)",
 		        	 "property":"inputContainer.mesuredConcentration.value",
 		        	 "order":true,
 					 "edit":false,

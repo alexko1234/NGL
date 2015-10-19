@@ -1543,6 +1543,12 @@ angular.module('datatableServices', []).
 		    					this.config.columns = angular.copy(settings);
 			    	    		this.configMaster.columns = angular.copy(settings);
 			    	    		this.newExtraHeaderConfig();
+			    	    		if(this.allResult){
+				    	    		this.computeGroup();
+				    				this.sortAllResult();
+				    				this.computePaginationList();
+				    				this.computeDisplayResult();
+		    					}
 		    			    }
 		    			},
 		    			setColumnsConfigWithUrl : function(){

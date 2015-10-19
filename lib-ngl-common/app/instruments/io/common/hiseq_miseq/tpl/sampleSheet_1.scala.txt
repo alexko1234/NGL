@@ -12,7 +12,7 @@ Experiment Name,@experiment.code
 Date,@(new SimpleDateFormat("dd/MM/yyyy", new Locale("sv", "SE")).format(experiment.experimentProperties.get("runStartDate").value))
 Workflow,GenerateFASTQ
 Application,HiSeq FASTQ Only
-Assay,Genoscope
+Assay,
 Description,
 Chemistry,Default
 
