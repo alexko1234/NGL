@@ -34,7 +34,7 @@ public class MigrationSampleType extends CommonController {
 		MigrationNGLSEQ.backupOneCollection(InstanceConstants.CONTAINER_COLL_NAME,Container.class);
 		updateRefecollabAndTaxonSizeInContainer();
 		
-		BasicDBObject keys=new BasicDBObject();
+		/*BasicDBObject keys=new BasicDBObject();
 		keys.put("_id",0 );
 		keys.put("code", 1);
 		keys.put("sampleOnContainer", 1);
@@ -42,7 +42,7 @@ public class MigrationSampleType extends CommonController {
 		MigrationNGLSEQ.backupOneCollection(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,keys);
 		MigrationNGLSEQ.backupOneCollection(InstanceConstants.SAMPLE_COLL_NAME,Sample.class);
 		updateSampleTypeDefault();
-		
+		*/
 		return ok("Migration Finish");
 	}
 
@@ -72,20 +72,22 @@ public class MigrationSampleType extends CommonController {
 
 	private static void updateRefecollabAndTaxonSizeInContainer() {
 
-		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class).toList();
-		List<Sample> samples =  MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
+		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("contents.properties.taxonSize.unit",null)).toList();
+		//List<Sample> samples =  MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class).toList();
 		
-		Map<String,String> sampleRefCollab=new HashMap<String, String>();
+		Logger.debug("Nb de containers to update : "+containers.size());
+		
+		/*Map<String,String> sampleRefCollab=new HashMap<String, String>();
 		for(Sample sample:samples){
 			
 			sampleRefCollab.put(sample.code, sample.referenceCollab);
-		}
+		}*/
 		
 		for(Container container:containers){
 		
 			for(Content content:container.contents){
 			
-				content.referenceCollab=sampleRefCollab.get(content.sampleCode);
+			/*	content.referenceCollab=sampleRefCollab.get(content.sampleCode);
 				
 				if(content.sampleTypeCode.equals("default-sample-cns")){
 					if(container.projectCodes.contains("AMP") || container.projectCodes.contains("AHG")){
@@ -97,9 +99,13 @@ public class MigrationSampleType extends CommonController {
 						content.sampleCategoryCode="unknown";
 					}
 				}
+			*/
+			
+				 ((PropertySingleValue) content.properties.get("taxonSize")).unit="pb";
 			}
 			
 			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code",container.code), DBUpdate.set("contents",container.contents));
+			
 			
 		}
 		
