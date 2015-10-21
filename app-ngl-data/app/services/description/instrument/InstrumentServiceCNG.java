@@ -285,7 +285,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 
 	private List<Instrument> getInstrumentHiseq4000() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("FALBALA", "FALBALA", null, false, " /env/ig/atelier/illumina_FALBALA", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );		
+		instruments.add(createInstrument("FALBALA", "FALBALA", null, false, "/env/ig/atelier/illumina_FALBALA", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );		
 		return instruments;
 	}
 	

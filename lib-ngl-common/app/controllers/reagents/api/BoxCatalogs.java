@@ -113,7 +113,7 @@ public class BoxCatalogs extends DocumentController<BoxCatalog>{
 			List<BoxCatalog> boxCatalogs = results.toList();
 			List<ListObject> los = new ArrayList<ListObject>();
 			for(BoxCatalog p: boxCatalogs){					
-					los.add(new ListObject(p.kitCatalogCode, p.name));								
+					los.add(new ListObject(p.kitCatalogCode, p.name));	// Pour une recherche avec le code du kitCatalogCode...							
 			}
 			
 			return Results.ok(Json.toJson(los));
