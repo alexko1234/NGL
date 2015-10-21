@@ -557,7 +557,8 @@ var	datatableConfig = {
 			        	 by:'containerInputCode'
 			         },
 			         edit:{  			        	
-			        	 columnMode:true
+			        	 columnMode:true,
+			        	 byDefault : true,
 			         },
 			         save:{
 			        	 active: !$scope.doneAndRecorded,

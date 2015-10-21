@@ -23,6 +23,9 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 			by:'traceInformation.creationDate',
 			reverse:true,
 			mode:'local'
+		},
+		exportCSV:{
+			active:true
 		}
 		/*,
 		edit:{
@@ -98,6 +101,9 @@ angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$rou
 					updateForm.stateCode = container.state.code;
 					return updateForm;
 				}
+			},
+			hide:{
+				active:true
 			}
 	};
 

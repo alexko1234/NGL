@@ -147,63 +147,35 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 				"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 				"groupMethod":"collect"
 			});
+		columns.push({
+			"header":Messages("containers.table.state.code"),
+			"property":"state.code",
+			"order":true,
+			"hide":true,
+			"type":"text",
+			"edit":true,
+			"position":12,
+			"choiceInList": true,
+			"listStyle":"bt-select",
+			"possibleValues":"searchService.lists.getStates()", 
+			"filter":"codes:'state'",
+			"groupMethod":"unique"					
+		});
+		columns.push({
+			"header":Messages("containers.table.valid"),
+			"property":"valuation.valid",
+			"order":true,
+			"type":"text",
+			"edit":false,
+			"hide":true,
+			"position":13,
+			"choiceInList": true,
+			"listStyle":"bt-select",
+			"possibleValues":"searchService.lists.getValuations()", 
+			"filter":"codes:'valuation'"
+		});
 		
-		if(mainService.getHomePage() === 'state'){
-			columns.push({
-				"header":Messages("containers.table.state.code"),
-				"property":"state.code",
-				"order":true,
-				"hide":true,
-				"type":"text",
-				"edit":true,
-				"position":12,
-				"choiceInList": true,
-				"possibleValues":"searchService.lists.getStates()", 
-				"filter":"codes:'state'"
-			});
-			
-			columns.push({
-				"header":Messages("containers.table.valid"),
-				"property":"valuation.valid",
-				"order":true,
-				"hide":true,
-				"type":"text",
-				"edit":false,
-				"position":13,
-				"choiceInList": true,
-				"possibleValues":"searchService.lists.getValuations()", 
-				"filter":"codes:'valuation'",
-			});
-		}else{
-			columns.push({
-				"header":Messages("containers.table.state.code"),
-				"property":"state.code",
-				"order":true,
-				"hide":true,
-				"type":"text",
-				"edit":false,
-				"position":12,
-				"choiceInList": true,
-				"possibleValues":"searchService.lists.getStates()", 
-				"filter":"codes:'state'",
-				"groupMethod":"unique"
-					
-			});
-			
-			columns.push({
-				"header":Messages("containers.table.valid"),
-				"property":"valuation.valid",
-				"order":true,
-				"type":"text",
-				"edit":true,
-				"hide":true,
-				"position":13,
-				"choiceInList": true,
-				"possibleValues":"searchService.lists.getValuations()", 
-				"filter":"codes:'valuation'"
-			});
-		}
-				return columns;
+		return columns;
 	};
 	
 	var isInit = false;

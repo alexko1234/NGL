@@ -90,7 +90,7 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 
 		if(outputContainerUseds!=null && !MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_COLL_NAME,Container.class, this.outputContainerUseds.get(0).code)){
 			// ContainerSupport
-			ContainerSupport support=ContainerSupportHelper.createContainerSupport(this.outputContainerUseds.get(0).locationOnContainerSupport.code, null, 
+			ContainerSupport support=ContainerSupportHelper.createContainerSupport(this.outputContainerUseds.get(0).code, null, 
 					this.outputContainerUseds.get(0).locationOnContainerSupport.categoryCode , experiment.traceInformation.modifyUser);
 
 			// Container
@@ -101,6 +101,7 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 			outputContainer.categoryCode=this.outputContainerUseds.get(0).categoryCode;
 			//Add localisation
 			outputContainer.support=outputContainerUseds.get(0).locationOnContainerSupport;
+			outputContainer.support.code = this.outputContainerUseds.get(0).code;
 			outputContainer.state=new State("N",experiment.traceInformation.modifyUser);
 			outputContainer.valuation=new Valuation();
 

@@ -36,6 +36,7 @@ import models.laboratory.project.instance.Project;
 import models.laboratory.resolutions.instance.Resolution;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
+import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
@@ -353,5 +354,15 @@ public class InstanceTest extends AbstractTests{
 		String collection=type.getSimpleName();
 		String code=type.getSimpleName()+"Code";
 		return MongoDBDAO.findByCode(collection, type, code);		
+	}
+	
+	@Test
+	public void generateExperimentCode() throws InterruptedException{
+		Experiment e = new Experiment();
+		e.typeCode = "test-tt";
+		for(int i = 0; i < 120; i++){
+		
+			System.out.println(CodeHelper.getInstance().generateExperiementCode(e));			
+		}
 	}
 }

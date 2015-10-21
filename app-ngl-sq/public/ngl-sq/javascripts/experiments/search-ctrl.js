@@ -21,6 +21,9 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 			},
 			edit:{
 				active:false
+			},
+			exportCSV:{
+				active:true
 			}
 	};
 	

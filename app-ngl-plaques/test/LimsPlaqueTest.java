@@ -4,6 +4,7 @@ import java.util.List;
 
 import lims.cns.dao.LimsManipDAO;
 import lims.models.Manip;
+import models.laboratory.experiment.instance.Experiment;
 import models.utils.CodeHelper;
 
 import org.junit.Test;
@@ -32,4 +33,6 @@ public class LimsPlaqueTest extends AbstractTests {
 		
 		}
 	}
+	
+	
 }
