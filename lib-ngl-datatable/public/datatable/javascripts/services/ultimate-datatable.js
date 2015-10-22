@@ -578,6 +578,7 @@ angular.module('ultimateDataTableServices', []).
 								property += this.getFilter(column);
 								property += this.getFormatter(column);
 								colValue = $parse(property)(result.data);
+								if(colValue === null)colValue = undefined;
 								if(colValue === undefined && isFunction === true){//Because the property here is not $parsable
 									//The function have to return a $scope value
 									colValue = property;
@@ -607,7 +608,7 @@ angular.module('ultimateDataTableServices', []).
 								} else {
 									colValue =  undefined;
 								}
-								
+								if(colValue === null)colValue = undefined;
 								if(colValue !==  undefined && column.type === "number"){
 									colValue = colValue.replace(/\u00a0/g,"");
 								}				    			    				
@@ -615,7 +616,7 @@ angular.module('ultimateDataTableServices', []).
 							}else if(!result.line.group && column.url !== undefined && column.url !== null) {
 								var url = $parse(column.url)(result.data);
 								colValue = $parse(column.property+this.getFilter(column)+this.getFormatter(column))(this.urlCache[url]);
-								
+								if(colValue === null)colValue = undefined;
 								if(colValue !==  undefined && column.type === "number"){
 									colValue = colValue.replace(/\u00a0/g,"");
 								}
@@ -2070,7 +2071,7 @@ angular.module('ultimateDataTableServices', []).
 				    			    				} else {
 				    			    					colValue =  undefined;
 				    			    				}
-				    			    				
+				    			    				if(colValue === null)colValue = undefined;
 				    			    				if(colValue !==  undefined && column.type === "number"){
 				    			    					colValue = colValue.replace(/\u00a0/g,"");
 				    			    				}				    			    				
@@ -2078,7 +2079,7 @@ angular.module('ultimateDataTableServices', []).
 				    			    			}else if(!result.line.group && column.url !== undefined && column.url !== null  && exportType !== 'groupsOnly') {
 				    			    				var url = $parse(column.url)(result.data);
 				    			    				colValue = $parse(column.property+that.getFilter(column)+that.getFormatter(column))(that.urlCache[url]);
-				    			    				
+				    			    				if(colValue === null)colValue = undefined;
 				    			    				if(colValue !==  undefined && column.type === "number"){
 				    			    					colValue = colValue.replace(/\u00a0/g,"");
 				    			    				}
