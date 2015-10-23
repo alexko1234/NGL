@@ -129,6 +129,7 @@ public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType>{
 			removeExperimentTypes(id);
 		}
 		if(experimentTypes!=null && experimentTypes.size()>0){
+			//TODO add order of experiment
 			String sql = "INSERT INTO process_experiment_type(fk_process_type, fk_experiment_type) VALUES(?,?)";
 			for(ExperimentType experimentType:experimentTypes){
 				if(experimentType == null || experimentType.id == null ){
