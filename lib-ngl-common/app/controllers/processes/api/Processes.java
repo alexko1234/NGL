@@ -15,6 +15,8 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
+import models.laboratory.experiment.description.ExperimentCategory;
+import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import models.utils.CodeHelper;
@@ -30,6 +32,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
+import org.mongojack.DBUpdate.Builder;
 
 import play.Logger;
 import play.Logger.ALogger;
@@ -290,7 +293,7 @@ public class Processes extends CommonController{
 		return badRequest(processesUpdateFilledForm.errorsAsJson());
 	}
 
-	public static Result delete(String code){
+	public static Result delete(String code) throws DAOException{
 		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
 		Form deleteForm = new Form(Process.class);
 		ContextValidation contextValidation=new ContextValidation(getCurrentUser(),deleteForm.errors());
@@ -310,8 +313,15 @@ public class Processes extends CommonController{
 			contextValidation.addErrors("container", ValidationConstants.ERROR_BADSTATE_MSG, container.code);
 		}
 
+		ExperimentType experimentType=ExperimentType.find.findByCode(container.fromExperimentTypeCodes.iterator().next());
+		
 		if(!contextValidation.hasErrors()){
-			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code",container.code),DBUpdate.pull("inputProcessCodes", process.code));
+			
+			Builder updateContainer= DBUpdate.pull("inputProcessCodes", process.code);
+			if(experimentType.category.name.equals(ExperimentCategory.CODE.voidprocess.name())){
+				updateContainer.unset("fromExperimentTypeCodes");
+			}
+			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code",container.code),updateContainer);
 			MongoDBDAO.deleteByCode(InstanceConstants.PROCESS_COLL_NAME,Process.class,  process.code);
 			return ok();
 		}else {
