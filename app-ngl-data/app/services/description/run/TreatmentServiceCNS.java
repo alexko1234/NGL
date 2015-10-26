@@ -51,10 +51,16 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 				Arrays.asList(getTreatmentTypeContext("read1", Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE)), 
 				DescriptionFactory.getInstitutes( Institute.CODE.CNS), "10"));
 		
-		l.add(DescriptionFactory.newTreatmentType("NGSRG","ngsrg-illumina", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ngsrg.name()), "ngsrg", 
-				getNGSRGPropertyDefinitions(), 
+		l.add(DescriptionFactory.newTreatmentType("NGS-RG","ngsrg-illumina", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ngsrg.name()), "ngsrg", 
+				getNGSRGIlluminaPropertyDefinitions(), 
 				getTreatmentTypeContexts("default"), 
 				DescriptionFactory.getInstitutes( Institute.CODE.CNS), "20"));		
+		
+		l.add(DescriptionFactory.newTreatmentType("NGS-RG","ngsrg-nanopore", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ngsrg.name()), "ngsrg", 
+				getNGSRGNanoporePropertyDefinitions(), 
+				getTreatmentTypeContexts("default"), 
+				DescriptionFactory.getInstitutes( Institute.CODE.CNS), "20"));		
+		
 		
 		l.add(DescriptionFactory.newTreatmentType("Global","global", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.global.name()), "global", 
 				getReadSetPropertyDefinitions(), 
@@ -164,7 +170,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 	
 	
 		
-	private static List<PropertyDefinition> getNGSRGPropertyDefinitions() throws DAOException {
+	private static List<PropertyDefinition> getNGSRGIlluminaPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         //Run level
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Position flowcell","flowcellPosition", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, true, "single"));
@@ -213,6 +219,50 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 	    propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases après trimming","nbBaseAfterTrim", LevelService.getLevels(Level.CODE.Run, Level.CODE.Lane, Level.CODE.ReadSet, Level.CODE.Default), Long.class, false, "single"));
 	    propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% bases trimmées","percentBaseTrim", LevelService.getLevels(Level.CODE.Run, Level.CODE.Lane, Level.CODE.ReadSet, Level.CODE.Default), Double.class, false, "single"));
        
+        return propertyDefinitions;
+	}
+
+	private static List<PropertyDefinition> getNGSRGNanoporePropertyDefinitions() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        //Run level
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Occupation des pores","poreOccupancy", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Activité des pores","poreOccupancyTime", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Rendement","yieldBasePairs", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Score qualité","timeAvgQuality", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% pores inactifs","inactivePorePercentage", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Distribution % pores actifs","activePorePercentageDistrib", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% pores actifs (MIN)","activePorePercentageMin", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% pores actifs (MAX)","activePorePercentageMax", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% pores actifs (MOYENNE)","activePorePercentageAvg", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Distribution nb reads / pore","poreNbReadsDistrib", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb reads / pore (MIN)","poreNbReadsMin", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb reads / pore (MAX)","poreNbReadsMax", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb reads / pore (MOYENNE)","poreNbReadsAvg", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Distribution nb bases / pore","poreNbBasesDistrib", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases / pore (MIN)","poreNbBasesMin", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases / pore (MAX)","poreNbBasesMax", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Integer.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases / pore (MOYENNE)","poreNbBasesAvg", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Distribution % durée d'activité des pores","poreActivityTimePercentDistrib", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% durée d'activité des pores (MIN)","poreActivityTimePercentMin", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% durée d'activité des pores (MAX)","poreActivityTimePercentMax", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% durée d'activité des pores (MOYENNE)","poreActivityTimePercentAvg", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Distribution vitesse de séquençage des pores","poreSpeedDistrib", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Vitesse de séquençage des pores (MIN)","poreSpeedDistribMin", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Vitesse de séquençage des pores (MAX)","poreSpeedDistribMax", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Vitesse de séquençage des pores (MOYENNE)","poreSpeedDistribAvg", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Distribution Score Qualité","poreQualityDistrib", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Score Qualité (MIN)","poreQualityMin", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Score Qualité (MAX)","poreQualityMax", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Score Qualité (MOYENNE)","poreQualityAvg", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases 1D forward","nbBases1DForward", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases 1D reverse","nbBases1DReverse", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases 2D all","nbBases2DAll", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases 2D fail","nbBases2DFail", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases 2D pass","nbBases2DPass", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "single"));
+		
         return propertyDefinitions;
 	}
 	

@@ -55,7 +55,8 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"order":false,
 			"hide":true,
 			"position":6,					
-			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='2'>",
+			"render":"<div list-resize='cellValue' ' list-resize-min-size='2'>",
+			"filter":"unique",
 			"type":"text",
 			"groupMethod":"collect"
 		});			
@@ -75,7 +76,8 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"hide":true,
 			"position":8,
 			"type":"text",
-			"render":"<div list-resize='cellValue | unique' list-resize-min-size='3'>",
+			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+			"filter":"unique",
 			"groupMethod":"collect"
 			
 		});
@@ -96,7 +98,8 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"hide":true,
 			"type":"text",
 			"position":10,
-			"render":"<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' ' list-resize-min-size='3'>",
+			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+			"filter":"getArray:'properties.tag.value' | unique",
 			"groupMethod":"collect"
 			
 		});
@@ -107,7 +110,8 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"hide":true,
 			"position":11,
 			"type":"text",
-			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
+			"render":"<div list-resize='cellValue | unique' list-resize-min-size='3'>",
+			"filter":"unique | codes:\"type\"",
 			"groupMethod":"collect"
 		});		
 		columns.push({
@@ -115,8 +119,9 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"property":"traceInformation.creationDate",
 			"order":true,
 			"hide":true,
-			"position":14,
-			"type":"date"
+			"position":14,			
+			"type":"date",
+			"groupMethod":"unique"
 				});
 		columns.push({
 			"header":Messages("containers.table.createUser"),
@@ -124,7 +129,8 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"order":true,
 			"hide":true,
 			"position":15,
-			"type":"text"
+			"type":"text",
+			"groupMethod":"unique"
 		});
 		columns.push({
 			"header":Messages("containers.table.storageCode"),
@@ -147,63 +153,35 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 				"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 				"groupMethod":"collect"
 			});
+		columns.push({
+			"header":Messages("containers.table.state.code"),
+			"property":"state.code",
+			"order":true,
+			"hide":true,
+			"type":"text",
+			"edit":true,
+			"position":12,
+			"choiceInList": true,
+			"listStyle":"bt-select",
+			"possibleValues":"searchService.lists.getStates()", 
+			"filter":"codes:'state'",
+			"groupMethod":"unique"					
+		});
+		columns.push({
+			"header":Messages("containers.table.valid"),
+			"property":"valuation.valid",
+			"order":true,
+			"type":"text",
+			"edit":false,
+			"hide":true,
+			"position":13,
+			"choiceInList": true,
+			"listStyle":"bt-select",
+			"possibleValues":"searchService.lists.getValuations()", 
+			"filter":"codes:'valuation'"
+		});
 		
-		if(mainService.getHomePage() === 'state'){
-			columns.push({
-				"header":Messages("containers.table.state.code"),
-				"property":"state.code",
-				"order":true,
-				"hide":true,
-				"type":"text",
-				"edit":true,
-				"position":12,
-				"choiceInList": true,
-				"possibleValues":"searchService.lists.getStates()", 
-				"filter":"codes:'state'"
-			});
-			
-			columns.push({
-				"header":Messages("containers.table.valid"),
-				"property":"valuation.valid",
-				"order":true,
-				"hide":true,
-				"type":"text",
-				"edit":false,
-				"position":13,
-				"choiceInList": true,
-				"possibleValues":"searchService.lists.getValuations()", 
-				"filter":"codes:'valuation'",
-			});
-		}else{
-			columns.push({
-				"header":Messages("containers.table.state.code"),
-				"property":"state.code",
-				"order":true,
-				"hide":true,
-				"type":"text",
-				"edit":false,
-				"position":12,
-				"choiceInList": true,
-				"possibleValues":"searchService.lists.getStates()", 
-				"filter":"codes:'state'",
-				"groupMethod":"unique"
-					
-			});
-			
-			columns.push({
-				"header":Messages("containers.table.valid"),
-				"property":"valuation.valid",
-				"order":true,
-				"type":"text",
-				"edit":true,
-				"hide":true,
-				"position":13,
-				"choiceInList": true,
-				"possibleValues":"searchService.lists.getValuations()", 
-				"filter":"codes:'valuation'"
-			});
-		}
-				return columns;
+		return columns;
 	};
 	
 	var isInit = false;

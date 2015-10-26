@@ -169,6 +169,7 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 					outputContainer.categoryCode=containerUsed.categoryCode;
 					//Add localisation
 					outputContainer.support=containerUsed.locationOnContainerSupport;
+					outputContainer.support.code = containerUsed.code;
 					outputContainer.state=new State("N",experiment.traceInformation.modifyUser);
 					outputContainer.valuation=new Valuation();
 					//TODO volume, proportion

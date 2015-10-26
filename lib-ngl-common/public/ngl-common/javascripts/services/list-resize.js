@@ -5,7 +5,7 @@
 //Example: <div list-resize="getSampleAndTags(flowcell)" list-resize-min-size="5" [below,below-only-deploy] [vertical]></div>
 angular.module('commonsServices').directive('listResize',['$parse', function($parse) {
 	return {
-		template:'<div ng-if="isArray"><span ng-repeat="v in listValue | limitTo:nbItem">{{v}}{{getSeparator($last)}}<br ng-if="vertical && !$last"><br ng-if="below && $last"></span>'+
+		template:'<div ng-if="isArray"><span ng-repeat="v in listValue | limitTo:nbItem track by $index">{{v}}{{getSeparator($last)}}<br ng-if="vertical && !$last"><br ng-if="below && $last"></span>'+
 		'<button title="{{getFullList(listValue)}}" ng-show="!isDeployed && nbItemMax>nbItemMin" ng-click="switchDeploy()" class="small-litte-icone-transparent"> <i><b>...</b></i> </button>'+
 		'<br ng-if="belowOnlyDeployed">'+
 		'<button ng-show="isDeployed" ng-click="switchDeploy()" class="small-litte-icone-transparent "> <i class="fa fa-minus-square-o"></i> </button></div>'+

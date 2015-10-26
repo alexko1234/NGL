@@ -1833,6 +1833,7 @@ angular.module('datatableServices', []).
 				    			    				} else {
 				    			    					colValue =  undefined;
 				    			    				}
+				    			    				if(colValue === null)colValue = undefined;
 				    			    				
 				    			    				if(colValue !==  undefined && column.type === "number"){
 				    			    					colValue = colValue.replace(/\u00a0/g,"");
@@ -1841,7 +1842,7 @@ angular.module('datatableServices', []).
 				    			    			}else if(!result.line.group && column.url !== undefined && column.url !== null  && exportType !== 'groupsOnly') {
 				    			    				var url = $parse(column.url)(result.data);
 				    			    				colValue = $parse(column.property+that.getFilter(column)+that.getFormatter(column))(that.urlCache[url]);
-				    			    				
+				    			    				if(colValue === null)colValue = undefined;
 				    			    				if(colValue !==  undefined && column.type === "number"){
 				    			    					colValue = colValue.replace(/\u00a0/g,"");
 				    			    				}

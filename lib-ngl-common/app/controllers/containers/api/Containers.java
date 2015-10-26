@@ -319,6 +319,9 @@ public class Containers extends CommonController {
 		}
 
 		if(StringUtils.isNotBlank(containersSearch.nextExperimentTypeCode)){
+			
+			//TODO Prendre la précédente dans chacun des processus et pas celle de l'expérience
+			
 			List<ExperimentType> previous = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(containersSearch.nextExperimentTypeCode);
 			if(CollectionUtils.isNotEmpty(previous)){
 				for(ExperimentType e:previous){
@@ -388,7 +391,10 @@ public class Containers extends CommonController {
 			queryElts.add(DBQuery.is("processTypeCode", containersSearch.processTypeCode));
 		}
 
-		if(StringUtils.isNotBlank(containersSearch.createUser)){   
+		
+		if(CollectionUtils.isNotEmpty(containersSearch.createUsers)){
+			queryElts.add(DBQuery.in("traceInformation.createUser", containersSearch.createUsers));
+		}else if(StringUtils.isNotBlank(containersSearch.createUser)){
 			queryElts.add(DBQuery.is("traceInformation.createUser", containersSearch.createUser));
 		}
 		

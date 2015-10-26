@@ -30,8 +30,8 @@ public class CodeHelper {
 		return SingletonHolder.instance;
 	}
 
-	private SimpleDateFormat getSimpleDateFormat() {
-		return new SimpleDateFormat("yyyyMMdd_HHmmss");
+	private SimpleDateFormat getSimpleDateFormat(String format) {
+		return new SimpleDateFormat(format);
 	}
 
 	protected synchronized String generateBarCode(){
@@ -82,12 +82,37 @@ public class CodeHelper {
 	}
 
 	public synchronized String generateExperiementCode(Experiment exp) {
-		return (exp.typeCode + "-" + getSimpleDateFormat().format(new Date()))
-				.toUpperCase();
+		try {
+			Thread.sleep(1);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			Logger.error("Interruption error: "+e1.getMessage(),e1);
+		}
+		
+		String date = getSimpleDateFormat("yyyyMMdd_HHmmssSSS").format(new Date());
+		Pattern p = Pattern.compile("([0-9]{8})_([0-9]{6})([0-9]{1})([0-9]{1})([0-9]{1})");
+		// Matcher m = p.matcher("151231235959999");//worst situation
+		Matcher m = p.matcher(date);
+		if (m.matches()) {
+			String code = m.group(1)+"_"+m.group(2)+""
+					+Integer.toString(Integer.valueOf(m.group(3)) +10,36)
+					+Integer.toString(Integer.valueOf(m.group(4)) +10,36)
+					+Integer.toString(Integer.valueOf(m.group(5)) +10,36);
+			return (exp.typeCode + "-" + code).toUpperCase();
+		} else {
+			try {
+				Logger.error("Error matches of the date fail"+date);
+				throw new Exception("matches fail " + date);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				Logger.error("Matches error: "+e.getMessage(),e);;
+				return null;
+			}
+		}
 	}
 
 	public synchronized String generateExperimentCommentCode(Comment com) {
-		return (com.createUser + getSimpleDateFormat().format(new Date()) + Math
+		return (com.createUser + getSimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + Math
 				.random()).toUpperCase();
 	}
 }
