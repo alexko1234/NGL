@@ -1,16 +1,8 @@
 angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$parse', 'atmToDragNDrop',
                                                                function($scope, $parse, atmToDragNDrop) {
 	
+
 	
-	
-	$scope.$parent.isRoadMapAvailable = false;
-	
-	
-	$scope.$parent.updateConcentration = function(experiment){
-		//NOTHING IN WAITING NEW SPECIFICATION
-	};
-	
-	/*
 
 	var atmToSingleDatatable = $scope.atmService.$atmToSingleDatatable;
 	
@@ -23,7 +15,7 @@ angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$par
 					 "hide":true,
 		        	 "type":"text",
 		        	 "position":0,
-		        	 "extraHeaders":{0:"solution stock"}
+		        	 "extraHeaders":{0:"Solution Stock"}
 		         },	
 		         {
 		        	 "header":Messages("containers.table.supportCode"),
@@ -33,7 +25,7 @@ angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$par
 					 "hide":true,
 		        	 "type":"text",
 		        	 "position":1,
-		        	 "extraHeaders":{0:"solution stock"}
+		        	 "extraHeaders":{0:"Solution Stock"}
 		         },	
 		         {
 		        	"header":Messages("containers.table.tags"),
@@ -44,7 +36,7 @@ angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$par
 		 			"type":"text",
 		 			"position":2,
 		 			"render":"<div list-resize='cellValue | unique' list-resize-min-size='3'>",
-		        	 "extraHeaders":{0:"solution stock"}
+		        	 "extraHeaders":{0:"Solution Stock"}
 		         },				         
 				 {
 		        	 "header":Messages("containers.table.concentration") + " (nM)",
@@ -54,7 +46,7 @@ angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$par
 					 "hide":true,
 		        	 "type":"number",
 		        	 "position":5,
-		        	 "extraHeaders":{0:"solution stock"}
+		        	 "extraHeaders":{0:"Solution Stock"}
 		         },
 		        
 		         {
@@ -65,7 +57,7 @@ angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$par
 					 "hide":true,
 		        	 "type":"number",
 		        	 "position":6,
-		        	 "extraHeaders":{0:"solution stock"}
+		        	 "extraHeaders":{0:"Solution Stock"}
 		         },
 		         {
 		        	 "header":Messages("containers.table.state.code"),
@@ -76,7 +68,7 @@ angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$par
 		        	 "type":"text",
 					 "filter":"codes:'state'",
 		        	 "position":7,
-		        	 "extraHeaders":{0:"solution stock"}
+		        	 "extraHeaders":{0:"Solution Stock"}
 		         },
 		         {
 		        	 "header":Messages("containers.table.percentage"),
@@ -117,9 +109,9 @@ angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$par
 	};
 	atmToSingleDatatable.convertInputPropertiesToDatatableColumn = function(property){
 		if(property.displayOrder < 20){		
-			return   this.$commonATM.convertSinglePropertyToDatatableColumn(property,"inputContainerUsed.experimentProperties.",{"0":"denaturation"});
+			return   this.$commonATM.convertSinglePropertyToDatatableColumn(property,"inputContainerUsed.experimentProperties.",{"0":"Dilution"});
 		}else if(property.displayOrder < 30){
-			return   this.$commonATM.convertSinglePropertyToDatatableColumn(property,"inputContainerUsed.experimentProperties.",{"0":"dilution"});
+			return   this.$commonATM.convertSinglePropertyToDatatableColumn(property,"inputContainerUsed.experimentProperties.",{"0":"Dénaturation - neutralisation"});
 		}else if(property.displayOrder < 50){
 			return   this.$commonATM.convertSinglePropertyToDatatableColumn(property,"inputContainerUsed.experimentProperties.",{"0":"prep FC"});
 		}
@@ -139,5 +131,5 @@ angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$par
 			$scope.message.isDetails = false;
 		}
 	};
-	*/
+	
 }]);
