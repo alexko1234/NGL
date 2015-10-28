@@ -233,11 +233,7 @@ public class ContainerHelper {
 				finalContent.properties.computeIfAbsent(key, k -> pv);
 				finalContent.properties.computeIfPresent(key, (k,v) -> fusionSameProperty(v, pv));
 			}
-			
-			
 		}
-		
-		
 		
 		return finalContent;
 	}
@@ -265,9 +261,7 @@ public class ContainerHelper {
 				if(cc.percentage != null){
 					bd = (new BigDecimal((cc.percentage*percentage)/100.00)).setScale(2, BigDecimal.ROUND_HALF_UP);
 				}
-				cc.percentage= cc.percentage == null ? percentage : bd.doubleValue();
-					
-					
+				cc.percentage= cc.percentage == null ? percentage : bd.doubleValue();		
 			}
 		}
 	}

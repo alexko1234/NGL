@@ -42,7 +42,7 @@ public class ContainerSupportHelper {
 		return containerSupport;
 	}
 
-	// FDS 13/10/2015 ajouter param string storageCode ??
+	// FDS 13/10/2015 ajouter param string storageCode
 	public static LocationOnContainerSupport getContainerSupport(
 			String containerCategoryCode, int nbUsableContainer, String containerSupportCode, String x, String y, String storageCode) throws DAOException {
 
@@ -68,7 +68,7 @@ public class ContainerSupportHelper {
 			containerSupport.storageCode=storageCode;
 			//Logger.debug ("1) getContainerSupport; support "+ containerSupportCode+": storageCode= "+ storageCode);
 		}else {
-			// normal ou pas qu'il n'y ait pas de storage ??
+			// normal ou pas qu'il n'y ait pas de storage code  ??
 			Logger.warn("storage code null for support code = "+containerSupportCode);
 		}
 		
@@ -99,13 +99,6 @@ public class ContainerSupportHelper {
 		s.traceInformation = new TraceInformation(); 
 		s.traceInformation.setTraceInformation(user);
 		s.valuation = new Valuation();
-		
-		//TEST FDS 14/10/2015 ajouter storageCode ??
-		// NON meme en ajoutant un parametre suplementaire en entree dans la methode on ne pas jamais ici..
-		///if ( storageCode != null){
-		///	s.storageCode = storageCode;
-		///	Logger.debug("1) createContainerSupport; support "+ containerSupportCode +" : storage code  ="+ storageCode);
-		///}
 		
 		s.valuation.valid = TBoolean.UNSET;
 
