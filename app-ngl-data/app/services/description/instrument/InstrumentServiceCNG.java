@@ -277,13 +277,13 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	private static List<Instrument> getInstrumentMiSeq() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		instruments.add(createInstrument("MISEQ1", "MISEQ1", null, true, "/env/atelier/solexa_MISEQ1/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );
+		instruments.add(createInstrument("MISEQ2", "MISEQ2", null, false, "/env/atelier/solexa_MISEQ2/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );
 		return instruments;
 	}
 	
 	private static List<Instrument> getInstrumentNextseq500() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		instruments.add(createInstrument("NEXTSEQ1", "NEXTSEQ1", null, true, "/env/atelier/solexa_NEXTSEQ1/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );
-		instruments.add(createInstrument("NEXTSEQ2", "NEXTSEQ2", null, false, "/env/atelier/solexa_NEXTSEQ2/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );
 		return instruments;
 	}
 
