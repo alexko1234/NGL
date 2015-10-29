@@ -362,6 +362,7 @@ public class ContainerHelper {
 			}
 		}
 
+		// FDS 29/10/2015 il manque lq prise necompre de la modification du storageCode !!!! TODO !!!
 		for (Map.Entry<String,ContainerSupport> e : mapSupports.entrySet()) {
 			ContainerSupport dbCs = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, e.getKey());
 

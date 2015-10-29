@@ -41,14 +41,14 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		//     le 3 eme param "importState" est le status du container a importer
 	
 		// lib-normalization= solexa[ lib10nM + libXnM >= 1nM ]
-		// FDS 15/09/2015 pas encore..en prod
+	
 		
-		//loadContainers("tube","lib-normalization","is");//uniquement pour la reprise du passif ; commenter en synchro normale
+		loadContainers("tube","lib-normalization","is");//
 		loadContainers("tube","lib-normalization","iw-p");
 		updateContainers("tube","lib-normalization"); // pas de specificite de status pour la mise a jour
 		
 		// NOTE: denat-dil-lib = solexa[ libXnM < 1nM  ]
-		//loadContainers("tube","denat-dil-lib","is");//uniquement pour la reprise du passif ; commenter en synchro normale
+		loadContainers("tube","denat-dil-lib","is");//
 		loadContainers("tube","denat-dil-lib","iw-p");
 		updateContainers("tube","denat-dil-lib"); // pas de specificite de status pour la mise a jour
 		
