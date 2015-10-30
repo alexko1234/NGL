@@ -3310,6 +3310,10 @@ factory('udtConvertValueServices', [function() {
 							return (1/1000);
 						}else if((inputUnit === 'ng' && outputUnit === '�g') || (inputUnit === '�l' && outputUnit === 'ml') || (inputUnit === 'nM' && outputUnit === 'pM')){
 							return 1000;
+						}else if ((inputUnit === 'mM' && outputUnit === 'nM')){
+							return 1000000;
+						}else if ((inputUnit === 'nM' && outputUnit === 'mM')){
+							return 1/1000000;
 						}
 						return undefined;
 					},
