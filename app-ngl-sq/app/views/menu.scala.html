@@ -54,6 +54,15 @@
 								</ul>
 							</li>
 						}
+						@if("CNG" == play.Play.application().configuration().getString("institute")){
+	  						<li class="dropdown @("active".when(nav.startsWith("help")))">
+	  							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="help">@Messages("docs.menu")<b class="caret"></b></a>
+								<ul class="dropdown-menu" role="menu" aria-labelledby="help">
+								 <!-- Guide d'utilisation NGL-SQ-Séquençage.pdf Modifié par Julie Guy le Mar 27 Oct 2015 12:29:19 -->
+									<li><a href="@routes.Assets.at("ngl-sq/documentation/cng/NGL_SQ_Illumina-CNG.pdf")" target="doc">@Messages("docs.illumina")</a></li>
+								</ul>
+							</li>
+						}
   												
 			</ul>
 
