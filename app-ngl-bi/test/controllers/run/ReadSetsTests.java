@@ -23,6 +23,7 @@ import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mongojack.DBQuery;
@@ -72,9 +73,9 @@ public class ReadSetsTests extends AbstractTestsCNG {
 		}
 	}
 	
-	 @Test
-	 public void testReadSetsCreate() { 
-		 // create a run with two readsets associated to this run
+	@Before
+	public void removeData()
+	{
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET"));
 		if(runDelete!=null){
 			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
@@ -87,6 +88,12 @@ public class ReadSetsTests extends AbstractTestsCNG {
 		if(readSetDelete!=null){
 			MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
 		}
+
+		readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("code","rdCode2"));
+		if(readSetDelete!=null){
+			MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
+		}
+		
 		Sample sample = MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code","SampleCode"));
 		if (sample!= null) {
 			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,sample._id);
@@ -95,9 +102,13 @@ public class ReadSetsTests extends AbstractTestsCNG {
 		if (project!= null) {
 			MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, Project.class, project._id);
 		}
-		
-		sample = RunMockHelper.newSample("SampleCode");
-		project = RunMockHelper.newProject("ProjectCode");
+	}
+	
+	 @Test
+	 public void testReadSetsCreate() { 
+		 // create a run with two readsets associated to this run
+		Sample sample = RunMockHelper.newSample("SampleCode");
+		Project project = RunMockHelper.newProject("ProjectCode");
 		
 		MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, sample);
 		MongoDBDAO.save(InstanceConstants.PROJECT_COLL_NAME, project);
@@ -134,25 +145,9 @@ public class ReadSetsTests extends AbstractTestsCNG {
 	 
 	 @Test
 	 public void testArchiveReadSet() {
-		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET"));
-		if(runDelete!=null){
-			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
-		}
-		ReadSet readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("code","rdCode"));
-		if(readSetDelete!=null){
-			MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
-		}
-		Sample sample = MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code","SampleCode"));
-		if (sample!= null) {
-			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,sample._id);
-		}
-		Project project = MongoDBDAO.findOne(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code","ProjectCode"));
-		if (project!= null) {
-			MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, Project.class, project._id);
-		}
 		
-		sample = RunMockHelper.newSample("SampleCode");
-		project = RunMockHelper.newProject("ProjectCode");
+		Sample sample = RunMockHelper.newSample("SampleCode");
+		Project project = RunMockHelper.newProject("ProjectCode");
 		
 		MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, sample);
 		MongoDBDAO.save(InstanceConstants.PROJECT_COLL_NAME, project);
@@ -190,29 +185,9 @@ public class ReadSetsTests extends AbstractTestsCNG {
 
 	 @Test
 	 public void testAchiveList(){
-		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET"));
-		if(runDelete!=null){
-			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
-		}
-		ReadSet readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("code","rdCode"));
-		if(readSetDelete!=null){
-			MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
-		}
-		readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("code","rdCode2"));
-		if(readSetDelete!=null){
-			MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
-		}
-		Sample sample = MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code","SampleCode"));
-		if (sample!= null) {
-			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,sample._id);
-		}
-		Project project = MongoDBDAO.findOne(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code","ProjectCode"));
-		if (project!= null) {
-			MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, Project.class, project._id);
-		}
 		
-		sample = RunMockHelper.newSample("SampleCode");
-		project = RunMockHelper.newProject("ProjectCode");
+		Sample sample = RunMockHelper.newSample("SampleCode");
+		Project project = RunMockHelper.newProject("ProjectCode");
 		
 		MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, sample);
 		MongoDBDAO.save(InstanceConstants.PROJECT_COLL_NAME, project);
@@ -256,29 +231,9 @@ public class ReadSetsTests extends AbstractTestsCNG {
 
 	 @Test
 	 public void testDeleteReadsets(){
-		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET"));
-		if(runDelete!=null){
-			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
-		}
-		ReadSet readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("code","rdCode"));
-		if(readSetDelete!=null){
-			MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
-		}
-		readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("code","rdCode2"));
-		if(readSetDelete!=null){
-			MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
-		}
-		Sample sample = MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code","SampleCode"));
-		if (sample!= null) {
-			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,sample._id);
-		}
-		Project project = MongoDBDAO.findOne(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code","ProjectCode"));
-		if (project!= null) {
-			MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, Project.class, project._id);
-		}
 		
-		sample = RunMockHelper.newSample("SampleCode");
-		project = RunMockHelper.newProject("ProjectCode");
+		Sample sample = RunMockHelper.newSample("SampleCode");
+		Project project = RunMockHelper.newProject("ProjectCode");
 		
 		MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, sample);
 		MongoDBDAO.save(InstanceConstants.PROJECT_COLL_NAME, project);
@@ -324,30 +279,15 @@ public class ReadSetsTests extends AbstractTestsCNG {
 	 
 	@Test 
 	public void testRemoveReadset(){
-		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET"));
-		if(runDelete!=null){
-			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
-		}
-		ReadSet readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("code","rdCode"));
-		if(readSetDelete!=null){
-			MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
-		}
-		Sample sample = MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code","SampleCode"));
-		if (sample!= null) {
-			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,sample._id);
-		}
-		Project project = MongoDBDAO.findOne(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code","ProjectCode"));
-		if (project!= null) {
-			MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, Project.class, project._id);
-		}
 		
-		sample = RunMockHelper.newSample("SampleCode");
-		project = RunMockHelper.newProject("ProjectCode");
+		Sample sample = RunMockHelper.newSample("SampleCode");
+		Project project = RunMockHelper.newProject("ProjectCode");
 		
 		MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, sample);
 		MongoDBDAO.save(InstanceConstants.PROJECT_COLL_NAME, project);
 	
 		Run run = RunMockHelper.newRun("YANN_TEST1FORREADSET");
+		run.state=null;
 		run.dispatch = true; // For the archive test
 		Lane lane = RunMockHelper.newLane(1);
 		Lane lane2 = RunMockHelper.newLane(2);
@@ -360,6 +300,7 @@ public class ReadSetsTests extends AbstractTestsCNG {
 		run.lanes = lanes;
 		
 		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+		Logger.info(contentAsString(result));
 		assertThat(status(result)).isEqualTo(OK);
 		
 		result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readset)));
