@@ -12,15 +12,12 @@ import services.instance.project.ProjectImportCNS;
 public class ImportDataCNG {
 	
 	public ImportDataCNG(){
-		// on peut fixer l'heure de declenchement comme dans un cron ici 16h00 ??????
-		// exemple: new ProjectImportCNS(Duration.create(ImportDataUtil.nextExecutionInSeconds(16,00),TimeUnit.SECONDS),Duration.create(4,TimeUnit.HOURS));
-		
-		// les differents imports sont lancés en meme temps==> les logg s'entrecroisent a l'affichage !!!
+		// 1er parametre=delai avant 1er declenchement, 2eme parametre=delai pour repetition
+		// decaler les demarrerr pour eviter que les logg s'entrecroisent a l'affichage !!!
 		
 		new ProjectImportCNG(Duration.create(4,TimeUnit.SECONDS),Duration.create(60,TimeUnit.MINUTES));
-		new IndexImportCNG(Duration.create(4,TimeUnit.SECONDS),Duration.create(60,TimeUnit.MINUTES));		
+		new IndexImportCNG(Duration.create(20,TimeUnit.SECONDS),Duration.create(24,TimeUnit.HOURS));		
 		//new ExperimentImportCNG(Duration.create(4,TimeUnit.SECONDS),Duration.create(60,TimeUnit.MINUTES));	
-		new ContainerImportCNG(Duration.create(4,TimeUnit.SECONDS),Duration.create(10,TimeUnit.MINUTES));
+		new ContainerImportCNG(Duration.create(30,TimeUnit.SECONDS),Duration.create(10,TimeUnit.MINUTES));
 	}
-
 }

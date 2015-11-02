@@ -39,10 +39,9 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		// -2- tubes
 		// FDS le 2 eme param "experiment-type-code" est l'experience d'ou est est sensé venir le container 
 		//     le 3 eme param "importState" est le status du container a importer
-	
-		// lib-normalization= solexa[ lib10nM + libXnM >= 1nM ]
-	
 		
+		// NOTE: lib-normalization= solexa[ lib10nM + libXnM >= 1nM ]
+			
 		loadContainers("tube","lib-normalization","is");//
 		loadContainers("tube","lib-normalization","iw-p");
 		updateContainers("tube","lib-normalization"); // pas de specificite de status pour la mise a jour
@@ -52,8 +51,7 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		loadContainers("tube","denat-dil-lib","iw-p");
 		updateContainers("tube","denat-dil-lib"); // pas de specificite de status pour la mise a jour
 		
-		// -3-  TODO  import des puits/plaques96  10nM et XnM 
-		       
+		// -3-  TODO  import des puits/plaques96  10nM et XnM 	       
 		/*  PAS ENCORE EN PROD.. prochaine version??
 		loadContainers("plate-well","lib-normalization","iw-p");
 		updateContainers("plate-well","lib-normalization");
@@ -66,10 +64,11 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		/* a importer pendant la phase de transition: les flowcells sont crees dans Solexaprod
 		   puis importees comme si elles avait ete crees par prepa-flowcell...
 		   ==> a desactiver une fois la creation des Flowcells faites dans NGL 
-		       pas de status sur une lane dans solexa...
+		         ( pas de status sur une lane dans solexa...)
+		  02/11/2015 continuer a importer les flowcells jusqu'a??????
 		*/
-		//loadContainers("lane","prepa-flowcell",null);
-		//updateContainers("lane","prepa-flowcell");
+		loadContainers("lane","prepa-flowcell",null);
+		updateContainers("lane","prepa-flowcell");
 	}
 	
 	public void loadSamples() throws SQLException, DAOException {

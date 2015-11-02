@@ -345,10 +345,10 @@ public class ContainerHelper {
 				
 				//FDS 14/10/2015 ajout storage code 
 				if ( container.support.storageCode != null ){
-				   newSupport.storageCode=container.support.storageCode;
-				   Logger.debug("updating support...storage Code="+ newSupport.storageCode);
+					newSupport.storageCode=container.support.storageCode;
+					Logger.debug("updating support...storage Code="+ newSupport.storageCode);
 				}else {
-					 Logger.warn("not updating support...storage Code is null");
+					Logger.warn("not updating support...storage Code is null");
 				}
 				
 				if (!mapSupports.containsKey(newSupport.code)) {
@@ -362,20 +362,25 @@ public class ContainerHelper {
 			}
 		}
 
-		// FDS 29/10/2015 il manque lq prise necompre de la modification du storageCode !!!! TODO !!!
-		for (Map.Entry<String,ContainerSupport> e : mapSupports.entrySet()) {
-			ContainerSupport dbCs = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, e.getKey());
+		// GA 02/11/2015 prise en compte de la modification du storageCode... pourrait etre null ???
+		for (Map.Entry<String,ContainerSupport> support : mapSupports.entrySet()) {
+			ContainerSupport dbCs = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, support.getKey());
 
-			ContainerSupport updatedCs = e.getValue();
+			ContainerSupport updatedCs = support.getValue();
 
 			updatedCs.traceInformation = dbCs.traceInformation;
 			updatedCs.traceInformation.modifyDate = new Date();
 			updatedCs.traceInformation.modifyUser = "ngl";
 
-			if (!( dbCs.projectCodes.containsAll(updatedCs.projectCodes) && dbCs.sampleCodes.containsAll(updatedCs.sampleCodes) 
-					&& updatedCs.projectCodes.containsAll(dbCs.projectCodes) && updatedCs.sampleCodes.containsAll(dbCs.sampleCodes)) ) {
+			// FDS NOTE: projectCodes et sampleCodes sont des listes ils faut faire les tests d'inclusions dans les 2 sens !
+			if (!dbCs.projectCodes.containsAll(updatedCs.projectCodes) 
+				|| !updatedCs.projectCodes.containsAll(dbCs.projectCodes) 
+				|| !dbCs.sampleCodes.containsAll(updatedCs.sampleCodes) 
+				|| !updatedCs.sampleCodes.containsAll(dbCs.sampleCodes) 
+				|| (null != updatedCs.storageCode && !updatedCs.storageCode.equals(dbCs.storageCode))
+				|| (null != dbCs.storageCode && !dbCs.storageCode.equals(updatedCs.storageCode))) {
 
-				MongoDBDAO.deleteByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, e.getKey());
+				MongoDBDAO.deleteByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, support.getKey());
 
 				InstanceHelpers.save(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, updatedCs, contextValidation, true);
 			}
