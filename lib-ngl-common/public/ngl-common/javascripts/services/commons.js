@@ -364,9 +364,10 @@ angular.module('commonsServices', []).
 									value = value * convert;
 									if(precision !== undefined){
 										value = value.toPrecision(precision);
-									}else{
-										value = value.toPrecision(convert.toString().length);
 									}
+									//else{
+									//	value = value.toPrecision(convert.toString().length);
+									//}
 								}else if(convert == undefined){
 									throw "Error: Unknown Conversion "+inputUnit+" to "+outputUnit;
 									return undefined;
@@ -499,7 +500,8 @@ angular.module('commonsServices', []).
                 	
                 	//model to view when the user go out of the input
                 	element.bind('blur', function () {
-                		var convertedValue = convertValues.convertValue(ngModel.$modelValue, property.saveMeasureValue, property.displayMeasureValue, ngModel.$viewValue.length);
+                		//var convertedValue = convertValues.convertValue(ngModel.$modelValue, property.saveMeasureValue, property.displayMeasureValue, ngModel.$viewValue.length);
+                		var convertedValue = convertValues.convertValue(ngModel.$modelValue, property.saveMeasureValue, property.displayMeasureValue);                		
                 		ngModel.$setViewValue($filter('number')(convertedValue));
 						ngModel.$render();
 						//We restart the watcher when the user is out of the inputs

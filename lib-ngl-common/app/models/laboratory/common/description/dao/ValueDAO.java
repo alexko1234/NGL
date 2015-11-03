@@ -53,8 +53,7 @@ public class ValueDAO extends AbstractDAODefault<Value>{
 
 	@Override
 	public Value findByCode(String code) throws DAOException {
-		throw new UnsupportedOperationException("Value does not have a code");
-		
+		throw new UnsupportedOperationException("Value does not have a code");		
 	}
 	
 	@Override

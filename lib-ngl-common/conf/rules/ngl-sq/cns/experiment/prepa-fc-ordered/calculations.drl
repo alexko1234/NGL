@@ -60,7 +60,7 @@ rule "prepa-fc-ordered volume PhiX"
 		 eval($phixConcentration.value != null &&  Double.class.isInstance($phixConcentration.value) && $phixPercent.value != null &&  Double.class.isInstance($phixPercent.value) && $finalConcentration1.value != null && Double.class.isInstance($finalConcentration1.value) && $finalVolume1.value != null && Double.class.isInstance($finalVolume1.value))
 	then
 		Logger.debug("Calculation prepa-fc-ordered  phixVolume: "+ $experiment.code+ " "+ $atomicTransfert.line);
-		PropertySingleValue value = new PropertySingleValue(Math.round(((Double)$phixPercent.value*1000.0*(Double)$finalConcentration1.value*(Double)$finalVolume1.value/(Double)$phixConcentration.value))/100.0,"\u00B5L");
+		PropertySingleValue value = new PropertySingleValue(Math.round(((Double)$phixPercent.value*(Double)$finalConcentration1.value*(Double)$finalVolume1.value/(Double)$phixConcentration.value))/100.0,"\u00B5L");
 		if($experimentProperties.get("phixVolume") != null){
 			$experimentProperties.remove("phixVolume");
 		}

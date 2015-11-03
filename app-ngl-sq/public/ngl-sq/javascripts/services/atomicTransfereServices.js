@@ -44,6 +44,7 @@ angular.module('atomicTransfereServices', [])
     					column.possibleValues = propertyDefinition.possibleValues;
     				}
     				if(column.choiceInList){
+    					//column.listStyle = "bt-select";
     					column.filter = "codes:'value."+propertyDefinition.code+"'";    					
     				}
     				if(extraHeaders!=undefined){
