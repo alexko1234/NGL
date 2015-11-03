@@ -107,6 +107,5 @@ public class ReadSet extends DBObject implements IValidation{
 		TreatmentValidationHelper.validationTreatments(this.treatments, contextValidation);
 		FileValidationHelper.validationFiles(this.files, contextValidation);
 	}
-
 	
 }
