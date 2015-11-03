@@ -96,7 +96,7 @@ public abstract class AbstractTestsCNG {
 	    config.put("auth.method", "cas");
 	    config.put("auth.application", "ngl-bi");
 	    
-	    config.put("institute", "CNS");
+	    config.put("institute", "CNG");
 	    config.put("mail.smtp.host", "smtp.genoscope.cns.fr");
 	    config.put("play.spring.context-path", "cns-application-context.xml");
 	    config.put("rules.key", "nglBI");

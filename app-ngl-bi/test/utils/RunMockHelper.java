@@ -66,7 +66,7 @@ public class RunMockHelper {
 		run.instrumentUsed.typeCode = "HISEQ2000";
 		
 		run.typeCode = "RHS2000";
-		
+		run.categoryCode = "illumina";
 		State state = new State();
 		run.state = state;
 		run.state.code = "F";
