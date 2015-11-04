@@ -133,6 +133,8 @@ public class Plates extends CommonController {
 		    code = "LIB_"+code;
 		}else if(Integer.valueOf(18).equals(typeCode)){
 		    code = "PCR_"+code;
+		}else if(Integer.valueOf(14).equals(typeCode)){
+		    code = "STK_"+code;
 		}else{
 		    code = "PL_"+code;
 		}
