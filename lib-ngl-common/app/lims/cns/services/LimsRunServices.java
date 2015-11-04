@@ -30,6 +30,7 @@ import mail.MailServiceException;
 import mail.MailServices;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.Valuation;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.run.instance.Lane;
 //import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
@@ -39,6 +40,7 @@ import models.utils.dao.DAOException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -291,16 +293,19 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 				
 			}
 		}catch(Throwable t){
-			logger.error(readSet.code+" : "+t.getMessage());
+			logger.error(readSet.code+" : "+t.getMessage(), t);
 		}
 	}
 
 
-	private void sendMailAgirs(ReadSet readSet) throws MailServiceException {
+	private synchronized void sendMailAgirs(ReadSet readSet) throws MailServiceException {
 		Logger.debug("send mail agirs");
 		if(!MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-				DBQuery.is("runCode", readSet.runCode).notIn("state.historical.code", "F-VQC"))){
-			Logger.debug("send mail agirs");
+				DBQuery.is("runCode", readSet.runCode).notIn("state.historical.code", "F-VQC"))
+				&& MongoDBDAO.checkObjectExist(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
+						DBQuery.is("code", readSet.runCode).notEquals("properties.sendMailAgirs.value", Boolean.TRUE))){
+			
+			Logger.debug("send mail agirs now");
 			String biurl = "http://ngl-bi.genoscope.cns.fr";
 			
 			List<ReadSet> readsets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
@@ -336,6 +341,11 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 			Set<String> destinataires = new HashSet<String>();
 			destinataires.addAll(Arrays.asList(alertMailDest.split(",")));
 			mailService.sendMail(alertMailExp, destinataires, "[NGL-BI] Tous les readsets du run "+readSet.runCode+" ont ete evalues.", message.toString());
+			
+			//update run properties
+			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, 
+					DBQuery.is("code", readSet.runCode),
+					DBUpdate.set("properties.sendMailAgirs", new PropertySingleValue(Boolean.TRUE)));
 		}				
 	}
 
@@ -385,8 +395,9 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 			if(deleteBeforeInsert){
 				try{
 					dao.deleteRun(run.code);
+					dao.deleteFlowcellNGL(run.containerSupportCode);					
 				} catch(Throwable t){
-					
+					logger.error("Delete RUN : "+run.code+" : "+t.getMessage(),t);
 				}
 			}
 			
