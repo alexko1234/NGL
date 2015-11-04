@@ -10,6 +10,7 @@ import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.common.description.Value;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ProcessCategory;
 import models.laboratory.processes.description.ProcessType;
@@ -35,23 +36,38 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 			l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Banque", "library"));
 			l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Sequencage", "pre-sequencing"));
 			l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Banque", "pre-library"));
-
 		}
-		
-
 	}
 
 	public void saveProcessTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		
-		
 		// JIRA 781 renommer le Processus long 
-		l.add(DescriptionFactory.newProcessType("Dénat, prep FC, dépôt", "illumina-run", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsIlluminaDepotCNG() ,getExperimentTypes("denat-dil-lib","prepa-flowcell","illumina-depot"), 
-				getExperimentTypes("denat-dil-lib").get(0), getExperimentTypes("illumina-depot").get(0),getExperimentTypes("ext-to-denat-dil-lib").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-	    // JIRA 781 ajouter un processus court ( sans denat)
-		l.add(DescriptionFactory.newProcessType("Prep FC, dépôt", "prepfc-depot", ProcessCategory.find.findByCode("sequencing"),getPropertyDefinitionsIlluminaDepotCNG() ,getExperimentTypes("prepa-flowcell","illumina-depot"), 
-				getExperimentTypes("prepa-flowcell").get(0), getExperimentTypes("illumina-depot").get(0),getExperimentTypes("ext-to-prepa-flowcell").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		l.add(DescriptionFactory.newProcessType("Dénat, prep FC, dépôt", "illumina-run", ProcessCategory.find.findByCode("sequencing"),
+				getPropertyDefinitionsIlluminaDepotCNG() ,
+				getExperimentTypes("denat-dil-lib","prepa-flowcell","illumina-depot"), 
+				getExperimentTypes("denat-dil-lib").get(0), 
+				getExperimentTypes("illumina-depot").get(0),
+				getExperimentTypes("ext-to-denat-dil-lib").get(0), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+	   
+		// JIRA 781 ajouter un processus court ( sans denat)
+		l.add(DescriptionFactory.newProcessType("Prep FC, dépôt", "prepFC-depot", ProcessCategory.find.findByCode("sequencing"),
+				getPropertyDefinitionsIlluminaDepotCNG() ,getExperimentTypes("prepa-flowcell","illumina-depot"), 
+				getExperimentTypes("prepa-flowcell").get(0), 
+				getExperimentTypes("illumina-depot").get(0),
+				getExperimentTypes("ext-to-prepa-flowcell").get(0), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 
+		// FDS ajout 04/11/2015 -- JIRA 838: nouveau processus court prepa-fc-ordonée + illumina-depot
+		l.add(DescriptionFactory.newProcessType("4000/X5 (prep FC ordonnée)", "prepFCordered-depot", ProcessCategory.find.findByCode("sequencing"),
+				getPropertyDefinitionsIlluminaDepotCNG() ,getExperimentTypes("prepa-fc-ordered","illumina-depot"), 
+				getExperimentTypes("prepa-fc-ordered").get(0),
+				getExperimentTypes("illumina-depot").get(0),
+				getExperimentTypes("ext-to-prepa-fc-ordered").get(0), 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+
+		
 		DAOHelpers.saveModels(ProcessType.class, l, errors);
 	}
 
@@ -68,10 +84,29 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		% PhiX	phixPercentage
 		*/
 		
+		// FDS 04/11/2015 creations de listes intermediaires...
+		// FDS 04/11/2015 -- JIRA 838 ajout  des HISEQ4000 et HISEQX
+		List<Value> listSequencers;
+	    // HISEQ2000
+		listSequencers= DescriptionFactory.newValues("HISEQ1", "HISEQ2" , "HISEQ3" , "HISEQ4" ,"HISEQ5" ,"HISEQ6" ,"HISEQ7" ,"HISEQ8");
+		// HISEQ2500
+	    listSequencers= DescriptionFactory.newValues("HISEQ9", "HISEQ10", "HISEQ11");
+	    // MISEQ
+		listSequencers= DescriptionFactory.newValues("MISEQ1", "MISEQ2");
+		// NEXTSEQ500
+		listSequencers= DescriptionFactory.newValues("NEXTSEQ1");
+		// HISEQ4000
+		listSequencers= DescriptionFactory.newValues("FALBALA");
+		// HISEQX
+		listSequencers= DescriptionFactory.newValues("ASTERIX","DIAGNOSTIX","IDEFIX","OBELIX","PANORAMIX");
+	
 		propertyDefinitions.add(
-				DescriptionFactory.newPropertiesDefinition("Nom du séquenceur","sequencerName"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, 
-						DescriptionFactory.newValues("HISEQ1", "HISEQ2" ,"HISEQ3" ,"HISEQ4" ,"HISEQ5" ,"HISEQ6" ,"HISEQ7" ,"HISEQ8" ,"HISEQ9" ,"HISEQ10" ,"HISEQ11", "MISEQ1","NEXTSEQ1"), "single",150));
+				DescriptionFactory.newPropertiesDefinition("Nom du séquenceur","sequencerName",
+						LevelService.getLevels(Level.CODE.Process),String.class, true, 
+						//DescriptionFactory.newValues("HISEQ1", "HISEQ2" , "HISEQ3" , "HISEQ4" ,"HISEQ5" ,"HISEQ6" ,"HISEQ7" ,"HISEQ8" ,"HISEQ9" ,"HISEQ10" ,"HISEQ11", "MISEQ1","NEXTSEQ1"),
+						listSequencers,
+						"single",150));
+		
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Position","position"
 						, LevelService.getLevels(Level.CODE.Process),String.class, false, DescriptionFactory.newValues("A", "B"), "single",200));

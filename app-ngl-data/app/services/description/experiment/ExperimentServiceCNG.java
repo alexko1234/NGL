@@ -54,12 +54,15 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	}
 
 
-	public void saveExperimentTypes(
-			Map<String, List<ValidationError>> errors) throws DAOException {
+	public void saveExperimentTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 		
-		//Prepaflowcell : to finish
 		l.add(newExperimentType("Ext to prepa flowcell","ext-to-prepa-flowcell",null,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		
+		//FDS ajout 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered
+		l.add(newExperimentType("Ext to prepa flowcell ordered","ext-to-prepa-fc-ordered",null,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 		
@@ -68,37 +71,39 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				getInstrumentUsedTypes("cBot", "cBot-onboard"),"ManyToOne", 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 		
+		//FDS ajout 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered
+		//                                           utilise la meme methode getPropertyDefinitionsPrepaflowcellCNG
+		//                                           pas cBot-onboard                                
+		l.add(newExperimentType("Prép. flowcell ordonnée","prepa-fc-ordered",null,1100,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcellCNG(),
+				getInstrumentUsedTypes("cBot"),"ManyToOne", 
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 		
 		l.add(newExperimentType("Ext to librairie dénaturée","ext-to-denat-dil-lib",null,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 		
-		// FDS new 02-02-2015, intrument Used =>robot oui mais lequel???
+		// FDS ajout 02-02-2015, intrument Used =>robot oui mais lequel???
 		l.add(newExperimentType("Dénaturation-dilution","denat-dil-lib",null,1100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsDenatDilLibCNG(),
 				getInstrumentUsedTypes("hand"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 
-		
 		//GA : 03/08/2015 new declaration. lib-normalization became void to avoid to display this step in IHM
 		l.add(newExperimentType("Librairie normalisée","lib-normalization",null,1000,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, "OneToOne", 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));		
 		
-		
-		//Depot sur sequenceur -- FDS 28/10/2015  ajout "HISEQ4000","HISEQX"
+		//FDS 28/10/2015  ajout "HISEQ4000","HISEQX"
 		l.add(newExperimentType("Dépôt sur séquenceur", "illumina-depot",null, 1400,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(),
 				getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500","HISEQ4000","HISEQX"), "OneToVoid", 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
 				
-		
 		l.add(newExperimentType("Aliquot","aliquoting",null,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()),
 				getPropertyAliquoting(), getInstrumentUsedTypes("hand"),"OneToMany", 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-		
-		
 		
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
@@ -159,7 +164,10 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	public void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
 
 		newExperimentTypeNode("ext-to-prepa-flowcell", getExperimentTypes("ext-to-prepa-flowcell").get(0), false, false, null, null, null).save();
-	
+		
+		//FDS ajout 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered
+		newExperimentTypeNode("ext-to-prepa-fc-ordered", getExperimentTypes("ext-to-prepa-fc-ordered").get(0), false, false, null, null, null).save();
+		
 		newExperimentTypeNode("ext-to-denat-dil-lib", getExperimentTypes("ext-to-denat-dil-lib").get(0), false, false, null, null, null).save();
 		
 		newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0),false,false,null,null,null).save();
@@ -170,8 +178,13 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","denat-dil-lib"),
 				null,null).save();
+		
+		//FDS ajout 04/11/2015 -- JIRA NGL-838 ajout prepa-fc-ordered, attention previous node normal est "lib-normalization" (et non "denat-dil-lib")
+		newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),false,false,getExperimentTypeNodes("ext-to-prepa-fc-ordered","lib-normalization"),
+				null,null).save();
 	
-		newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false,false,getExperimentTypeNodes("prepa-flowcell"),
+		//FDS modif 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered
+		newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false,false,getExperimentTypeNodes("prepa-flowcell","prepa-fc-ordered"),
 				null,null).save();
 		
 		newExperimentTypeNode("aliquoting",getExperimentTypes("aliquoting").get(0),false,false,getExperimentTypeNodes("denat-dil-lib"),
