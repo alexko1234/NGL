@@ -59,7 +59,7 @@ public class LimsRunServices implements ILimsRunServices {
 			exp.instrument.categoryCode = nglExp.instrument.typeCode;
 			
 			if(nglExp.experimentProperties.containsKey("runStartDate")){
-				exp.date = new Date((Long)nglExp.experimentProperties.get("runStartDate").value);
+				exp.date = (Date)nglExp.experimentProperties.get("runStartDate").value;
 				
 			}else{
 				exp.date = nglExp.traceInformation.creationDate;
