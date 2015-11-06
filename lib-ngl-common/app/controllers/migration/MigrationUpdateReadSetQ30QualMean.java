@@ -1,5 +1,9 @@
 package controllers.migration;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
@@ -14,8 +18,13 @@ import play.mvc.Result;
 
 public class MigrationUpdateReadSetQ30QualMean extends CommonController{
 
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmm");
+	
 	public static Result migration()
 	{
+		
+		backUpReadSet();
+		
 		//Read input
 		String[] inputData = getDataToUpdate();
 		Logger.debug("Nb inputData "+inputData.length);
@@ -49,6 +58,26 @@ public class MigrationUpdateReadSetQ30QualMean extends CommonController{
 			return ok("Migration finish");
 	}
 
+	private static void backUpReadSet()
+	{
+		String backupName = InstanceConstants.READSET_ILLUMINA_COLL_NAME+"_BCK_SUBSQ1740_"+sdf.format(new java.util.Date());
+		Logger.info("\tCopie "+InstanceConstants.READSET_ILLUMINA_COLL_NAME+" to "+backupName+" start");
+		
+		List<ReadSet> readSets = new ArrayList<ReadSet>();
+		String[] inputData = getDataToUpdate();
+		for(int i=0; i<inputData.length; i++){
+			//code get readset
+			Logger.debug("Line "+inputData[i]);
+			String[] readSetData = inputData[i].split(" ");
+			String codeReadSet = readSetData[0];
+			ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, codeReadSet);
+			readSets.add(readSet);
+		}
+		MongoDBDAO.save(backupName, readSets);
+		Logger.info("\tCopie "+InstanceConstants.READSET_ILLUMINA_COLL_NAME+" to "+backupName+" end");
+		
+	}
+	
 	private static String[] getDataToUpdate()
 	{
 		String data = "BPN_BOSF_1_H3TGMBBXX.IND10 87.34 37.01#"+
