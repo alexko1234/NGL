@@ -274,62 +274,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		return propertyDefinitions;
 	}
 	
-	private static List<Instrument> getInstrumentMiSeq() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("MISEQ1", "MISEQ1", null, true, "/env/atelier/solexa_MISEQ1/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );
-		instruments.add(createInstrument("MISEQ2", "MISEQ2", null, false, "/env/atelier/solexa_MISEQ2/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );
-		return instruments;
-	}
-	
-	private static List<Instrument> getInstrumentNextseq500() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("NEXTSEQ1", "NEXTSEQ1", null, true, "/env/atelier/solexa_NEXTSEQ1/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );
-		return instruments;
-	}
-
-	/* FDS 28/10/2015 activated=true + ajout / final  + ajout static!!*/
-	private static List<Instrument> getInstrumentHiseq4000() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("FALBALA", "FALBALA", null, false, "/env/ig/atelier/illumina_FALBALA/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );		
-		return instruments;
-	}
-	
-	/* FDS 28/10/2015 activated=true + ajout / final + ajout static!!*/
-	private static List<Instrument> getInstrumentHiseqX() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("ASTERIX",   "ASTERIX",    null, false, "/env/ig/atelier/illumina_ASTERIX/",    DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
-		instruments.add(createInstrument("DIAGNOSTIX","DIAGNOSTIX", null, false, "/env/ig/atelier/illumina_DIAGNOSTIX/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
-		instruments.add(createInstrument("IDEFIX",    "IDEFIX",     null, false, "/env/ig/atelier/illumina_IDEFIX/",     DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
-		instruments.add(createInstrument("OBELIX",    "OBELIX",     null, false, "/env/ig/atelier/illumina_OBELIX/",     DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
-		instruments.add(createInstrument("PANORAMIX", "PANORAMIX",  null, false, "/env/ig/atelier/illumina_PANORAMIX/",  DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
-		
-		return instruments;
-	}
-
-	public static List<Instrument> getInstrumentHiseq2000() throws DAOException{
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("HISEQ1", "HISEQ1", null, true, "/env/atelier/solexa_HISEQ1/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-		instruments.add(createInstrument("HISEQ2", "HISEQ2", null, true, "/env/atelier/solexa_HISEQ2/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-		instruments.add(createInstrument("HISEQ3", "HISEQ3", null, true, "/env/atelier/solexa_HISEQ3/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-		instruments.add(createInstrument("HISEQ4", "HISEQ4", null, true, "/env/atelier/solexa_HISEQ4/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-		instruments.add(createInstrument("HISEQ5", "HISEQ5", null, true, "/env/atelier/solexa_HISEQ5/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-		instruments.add(createInstrument("HISEQ6", "HISEQ6", null, true, "/env/atelier/solexa_HISEQ6/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-		instruments.add(createInstrument("HISEQ7", "HISEQ7", null, true, "/env/atelier/solexa_HISEQ7/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-		instruments.add(createInstrument("HISEQ8", "HISEQ8", null, true, "/env/atelier/solexa_HISEQ8/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );
-		return instruments;
-	}
-
-	
-	public static List<Instrument> getInstrumentHiseq2500() throws DAOException{
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add( createInstrument("HISEQ9", "HISEQ9", null, true, "/env/atelier/solexa_HISEQ9/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-		instruments.add( createInstrument("HISEQ10", "HISEQ10", null, true, "/env/atelier/solexa_HISEQ10/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-		instruments.add( createInstrument("HISEQ11", "HISEQ11", null, true, "/env/atelier/solexa_HISEQ11/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
-		return instruments;
-	}
-	
-
-	
 	private static List<PropertyDefinition> getCovarisProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("Frag_PE300","Frag_PE400","Frag_PE500","Frag_cDNA_Solexa"), "single"));
@@ -360,7 +304,61 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		return l;
 	}
 	
+	private static List<Instrument> getInstrumentMiSeq() throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("MISEQ1", "MISEQ1", null, true, "/env/ig/atelier/illumina/cng/MISEQ1/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );
+		instruments.add(createInstrument("MISEQ2", "MISEQ2", null, false, "/env/ig/atelier/illumina/cng/MISEQ2/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );
+		return instruments;
+	}
 	
+	private static List<Instrument> getInstrumentNextseq500() throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("NEXTSEQ1", "NEXTSEQ1", null, true, "/env/ig/atelier/illumina/cng/NEXTSEQ1/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );
+		return instruments;
+	}
+
+	/* FDS 28/10/2015 activated=true + ajout / final  + ajout static!!*/
+	private static List<Instrument> getInstrumentHiseq4000() throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("FALBALA", "FALBALA", null, false, "/env/ig/atelier/illumina/cng/FALBALA/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );		
+		return instruments;
+	}
+	
+	/* FDS 28/10/2015 activated=true + ajout / final + ajout static!!*/
+	private static List<Instrument> getInstrumentHiseqX() throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("ASTERIX",   "ASTERIX",    null, false, "/env/ig/atelier/illumina/cng/ASTERIX/",    DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
+		instruments.add(createInstrument("DIAGNOSTIX","DIAGNOSTIX", null, false, "/env/ig/atelier/illumina/cng/DIAGNOSTIX/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
+		instruments.add(createInstrument("IDEFIX",    "IDEFIX",     null, false, "/env/ig/atelier/illumina/cng/IDEFIX/",     DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
+		instruments.add(createInstrument("OBELIX",    "OBELIX",     null, false, "/env/ig/atelier/illumina/cng/OBELIX/",     DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
+		instruments.add(createInstrument("PANORAMIX", "PANORAMIX",  null, false, "/env/ig/atelier/illumina/cng/PANORAMIX/",  DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
+		
+		return instruments;
+	}
+
+	public static List<Instrument> getInstrumentHiseq2000() throws DAOException{
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("HISEQ1", "HISEQ1", null, true, "/env/ig/atelier/illumina/cng/HISEQ1/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		instruments.add(createInstrument("HISEQ2", "HISEQ2", null, true, "/env/ig/atelier/illumina/cng/HISEQ2/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		instruments.add(createInstrument("HISEQ3", "HISEQ3", null, true, "/env/ig/atelier/illumina/cng/HISEQ3/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		instruments.add(createInstrument("HISEQ4", "HISEQ4", null, true, "/env/ig/atelier/illumina/cng/HISEQ4/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		instruments.add(createInstrument("HISEQ5", "HISEQ5", null, true, "/env/ig/atelier/illumina/cng/HISEQ5/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		instruments.add(createInstrument("HISEQ6", "HISEQ6", null, true, "/env/ig/atelier/illumina/cng/HISEQ6/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		instruments.add(createInstrument("HISEQ7", "HISEQ7", null, true, "/env/ig/atelier/illumina/cng/HISEQ7/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		instruments.add(createInstrument("HISEQ8", "HISEQ8", null, true, "/env/ig/atelier/illumina/cng/HISEQ8/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );
+		return instruments;
+	}
+
+	
+	public static List<Instrument> getInstrumentHiseq2500() throws DAOException{
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add( createInstrument("HISEQ9", "HISEQ9", null, true, "/env/ig/atelier/illumina/cng/HISEQ9/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		instruments.add( createInstrument("HISEQ10", "HISEQ10", null, true, "/env/ig/atelier/illumina/cng/HISEQ10/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		instruments.add( createInstrument("HISEQ11", "HISEQ11", null, true, "/env/ig/atelier/illumina/cng/HISEQ11/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+		return instruments;
+	}
+	
+
 
 
 }

@@ -229,18 +229,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	
 	
 
-	private List<Instrument> getInstrumentMKI() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("MN15456", "MK15456", null, true, "/env/ig/atelier/nanopore/cns/MN15456", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add(createInstrument("MN15302", "MK15302", null, true, "/env/ig/atelier/nanopore/cns/MN15302", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add(createInstrument("MN15382", "MK15382", null, true, "/env/ig/atelier/nanopore/cns/MN15382", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add(createInstrument("MN15407", "MK15407", null, true, "/env/ig/atelier/nanopore/cns/MN15407", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add(createInstrument("MN15464", "MK15464", null, true, "/env/ig/atelier/nanopore/cns/MN15464", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add(createInstrument("MN15336", "MK15336", null, true, "/env/ig/atelier/nanopore/cns/MN15336", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add(createInstrument("MN15782", "MK15782", null, true, "/env/ig/atelier/nanopore/cns/MN15782", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add(createInstrument("MN15794", "MK15794", null, true, "/env/ig/atelier/nanopore/cns/MN15794", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		return instruments;
-	}
+	
 
 	private static List<PropertyDefinition> getNanoporeFragmentationProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
@@ -295,13 +284,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
         return propertyDefinitions;
 	}
 	
-	private List<Instrument> getInstrumentHiseq4000() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("TORNADE", "TORNADE", "H5", true, "/env/ig/atelier/illumina_TORNADE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
-		instruments.add(createInstrument("RAFALE", "RAFALE", "H9", true, "/env/ig/atelier/illumina_RAFALE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
-		return instruments;
-	}
-
+	
 	private List<PropertyDefinition> getHiseq4000Properties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		 propertyDefinitions.add(newPropertiesDefinition("Position","position"
@@ -365,83 +348,6 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 	
 	
-	private static List<Instrument> getInstrumentMinIon() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("MN02528", "MN02528", null, true, "/env/ig/atelier/nanopore/cns/MN02528", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add(createInstrument("MN02670", "MN02670", null, true, "/env/ig/atelier/nanopore/cns/MN02670", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add(createInstrument("MN02280", "MN02280", null, true, "/env/ig/atelier/nanopore/cns/MN02280", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add(createInstrument("MN02259", "MN02259", null, true, "/env/ig/atelier/nanopore/cns/MN02259", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add(createInstrument("MN02833", "MN02833", null, true, "/env/ig/atelier/nanopore/cns/MN02833", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		return instruments;
-	}
-	
-
-	private static List<Instrument> getInstrumentEppendorfMiniSpinPlus() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("MiniSpin plus 1", "miniSpinPlus1", null, true, "path", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		return instruments;
-	}
-	
-	
-	private static List<Instrument> getInstrumentMiSeq() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("MELISSE", "MELISSE", "M2", true, "/env/ig/atelier/illumina_MELISSE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
-		instruments.add(createInstrument("MIMOSA", "MIMOSA", "M1", true, "/env/ig/atelier/illumina_MIMOSA", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
-		instruments.add(createInstrument("MISEQ1", "MISEQ1", "M1C", false, "/env/ig/atelier/illumina_MISEQ1", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
-		return instruments;
-	}
-	
-
-
-	public static List<Instrument> getInstrumentHiseq2000() throws DAOException{
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("HISEQ2", "HISEQ2", "H2C", false, "/env/ig/atelier/illumina_HISEQ2/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add(createInstrument("HISEQ4", "HISEQ4", "H4C", false, "/env/ig/atelier/illumina_HISEQ4/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add(createInstrument("HISEQ7", "HISEQ7", "H7C", false, "/env/ig/atelier/illumina_HISEQ7/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add(createInstrument("CARBONE", "CARBONE", "H6", true, "/env/ig/atelier/illumina_CARBONE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
-		instruments.add(createInstrument("CHROME", "CHROME", "H1", false, "/env/ig/atelier/illumina_CHROME", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
-		instruments.add(createInstrument("MERCURE", "MERCURE", "H2", true, "/env/ig/atelier/illumina_MERCURE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
-		instruments.add(createInstrument("SOUFRE", "SOUFRE", "H4", true, "/env/ig/atelier/illumina_SOUFRE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
-		instruments.add( createInstrument("PHOSPHORE", "PHOSPHORE", "H3", true, "/env/ig/atelier/illumina_PHOSPHORE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		return instruments;
-	}
-	
-
-	
-	private static List<Instrument> getInstrumentGAII() throws DAOException {
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("BISMUTH", "BISMUTH", "G3", false, "/env/ig/atelier/illumina_BISMUTH", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
-		instruments.add(createInstrument("HELIUM", "HELIUM", "G1", false, "/env/ig/atelier/illumina_HELIUM", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
-		instruments.add(createInstrument("AZOTE", "AZOTE", "G2", false, "/env/ig/atelier/illumina_AZOTE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
-		
-		return instruments;
-	}
-
-	
-	public static List<Instrument> getInstrumentHiseq2500() throws DAOException{
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add( createInstrument("HISEQ9", "HISEQ9", "H9C", false, "/env/ig/atelier/illumina_HISEQ9/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add( createInstrument("HISEQ10", "HISEQ10", "H10C", false, "/env/ig/atelier/illumina_HISEQ10/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add( createInstrument("HISEQ11", "HISEQ11", "H11C", false, "/env/ig/atelier/illumina_HISEQ11/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));		
-		instruments.add( createInstrument("FLUOR", "FLUOR", "H8", true, "/env/ig/atelier/illumina_FLUOR", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add( createInstrument("PLATINE", "PLATINE", "H7", true, "/env/ig/atelier/illumina_PLATINE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		return instruments;
-	}
-	
-	public static List<Instrument> getInstrumentOpgen()throws DAOException{
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add( createInstrument("APOLLON", "APOLLON", null, true, "/env/ig/atelier/opgen/cns/APOLLON", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		return instruments;
-	}
-	
-	public static List<Instrument> getInstrumentExtSolexa()throws DAOException{
-		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add( createInstrument("EXTGAIIX", "EXTGAIIX", "G0", true, "/env/atelier", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add( createInstrument("EXTHISEQ", "EXTHISEQ", "H0", true, "/env/atelier", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		instruments.add( createInstrument("EXTMISEQ", "EXTMISEQ", "M0", true, "/env/atelier", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		return instruments;
-	}
-	
 	private static List<PropertyDefinition> getCovarisProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("Frag_PE300","Frag_PE400","Frag_PE500","Frag_cDNA_Solexa"), "single"));
@@ -478,6 +384,99 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		return l;
 	}
 		
+	
+	public static List<Instrument> getInstrumentOpgen()throws DAOException{
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add( createInstrument("APOLLON", "APOLLON", null, true, "/env/ig/atelier/opgen/cns/APOLLON", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		return instruments;
+	}
+	
+	private static List<Instrument> getInstrumentGAII() throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("BISMUTH", "BISMUTH", "G3", false, "/env/ig/atelier/illumina_BISMUTH", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add(createInstrument("HELIUM", "HELIUM", "G1", false, "/env/ig/atelier/illumina_HELIUM", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add(createInstrument("AZOTE", "AZOTE", "G2", false, "/env/ig/atelier/illumina_AZOTE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		
+		return instruments;
+	}
+
+	private static List<Instrument> getInstrumentMiSeq() throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("MELISSE", "MELISSE", "M2", true, "/env/ig/atelier/illumina/cns/MELISSE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add(createInstrument("MIMOSA", "MIMOSA", "M1", true, "/env/ig/atelier/illumina/cns/MIMOSA", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add(createInstrument("MISEQ1", "MISEQ1", "M1C", false, "/env/ig/atelier/illumina/cng/MISEQ1", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		return instruments;
+	}
+	
+	public static List<Instrument> getInstrumentHiseq2000() throws DAOException{
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("HISEQ2", "HISEQ2", "H2C", false, "/env/ig/atelier/illumina/cng/HISEQ2/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("HISEQ4", "HISEQ4", "H4C", false, "/env/ig/atelier/illumina/cng/HISEQ4/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("HISEQ7", "HISEQ7", "H7C", false, "/env/ig/atelier/illumina/cng/HISEQ7/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("CARBONE", "CARBONE", "H6", true, "/env/ig/atelier/illumina/cns/CARBONE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add(createInstrument("CHROME", "CHROME", "H1", false, "/env/ig/atelier/illumina_CHROME", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add(createInstrument("MERCURE", "MERCURE", "H2", true, "/env/ig/atelier/illumina/cns/MERCURE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add(createInstrument("SOUFRE", "SOUFRE", "H4", true, "/env/ig/atelier/illumina/cns/SOUFRE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add( createInstrument("PHOSPHORE", "PHOSPHORE", "H3", true, "/env/ig/atelier/illumina/cns/PHOSPHORE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		return instruments;
+	}
+	
+	public static List<Instrument> getInstrumentHiseq2500() throws DAOException{
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add( createInstrument("HISEQ9", "HISEQ9", "H9C", false, "/env/ig/atelier/illumina/cng/HISEQ9/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add( createInstrument("HISEQ10", "HISEQ10", "H10C", false, "/env/ig/atelier/illumina/cng/HISEQ10/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add( createInstrument("HISEQ11", "HISEQ11", "H11C", false, "/env/ig/atelier/illumina/cng/HISEQ11/", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));		
+		instruments.add( createInstrument("FLUOR", "FLUOR", "H8", true, "/env/ig/atelier/illumina/cns/FLUOR", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add( createInstrument("PLATINE", "PLATINE", "H7", true, "/env/ig/atelier/illumina/cns/PLATINE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		return instruments;
+	}
+	
+	private List<Instrument> getInstrumentHiseq4000() throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("TORNADE", "TORNADE", "H5", true, "/env/ig/atelier/illumina/cns/TORNADE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		instruments.add(createInstrument("RAFALE", "RAFALE", "H9", true, "/env/ig/atelier/illumina/cns/RAFALE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		return instruments;
+	}
+
+	
+	public static List<Instrument> getInstrumentExtSolexa()throws DAOException{
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add( createInstrument("EXTGAIIX", "EXTGAIIX", "G0", true, "/env/atelier", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add( createInstrument("EXTHISEQ", "EXTHISEQ", "H0", true, "/env/atelier", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add( createInstrument("EXTMISEQ", "EXTMISEQ", "M0", true, "/env/atelier", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		return instruments;
+	}
+	
+	
+	private List<Instrument> getInstrumentMKI() throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("MN15456", "MK15456", null, true, "/env/ig/atelier/nanopore/cns/MN15456", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("MN15302", "MK15302", null, true, "/env/ig/atelier/nanopore/cns/MN15302", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("MN15382", "MK15382", null, true, "/env/ig/atelier/nanopore/cns/MN15382", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("MN15407", "MK15407", null, true, "/env/ig/atelier/nanopore/cns/MN15407", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("MN15464", "MK15464", null, true, "/env/ig/atelier/nanopore/cns/MN15464", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("MN15336", "MK15336", null, true, "/env/ig/atelier/nanopore/cns/MN15336", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("MN15782", "MK15782", null, true, "/env/ig/atelier/nanopore/cns/MN15782", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("MN15794", "MK15794", null, true, "/env/ig/atelier/nanopore/cns/MN15794", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		return instruments;
+	}
+	
+	private static List<Instrument> getInstrumentMinIon() throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("MN02528", "MN02528", null, true, "/env/ig/atelier/nanopore/cns/MN02528", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("MN02670", "MN02670", null, true, "/env/ig/atelier/nanopore/cns/MN02670", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("MN02280", "MN02280", null, true, "/env/ig/atelier/nanopore/cns/MN02280", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("MN02259", "MN02259", null, true, "/env/ig/atelier/nanopore/cns/MN02259", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("MN02833", "MN02833", null, true, "/env/ig/atelier/nanopore/cns/MN02833", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		return instruments;
+	}
+	
+
+	private static List<Instrument> getInstrumentEppendorfMiniSpinPlus() throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("MiniSpin plus 1", "miniSpinPlus1", null, true, "path", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		return instruments;
+	}
 	
 
 }
