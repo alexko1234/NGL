@@ -158,7 +158,7 @@
 				<tr ng-switch-when="open" ng-repeat="inputContainer in atm.inputContainerUseds | orderBy:'code' track by $index"  
 							ng-model="inputContainer" draggable drag="dragInProgress">	
 						<td rowspan="{{atm.inputContainerUseds.length}}" ng-if="$index === 0">
-							<span class="label label-black" ng-bind="atm.line"></span>
+							<span class="form-control-static label label-black" ng-bind="atm.line"></span>
 						</td>
 						<td rowspan="{{atm.inputContainerUseds.length}}" ng-if="$index === 0">
 							<button class="btn btn-default btn-xs"  ng-click="toggleRow(atm.line - 1)">
@@ -171,7 +171,7 @@
 						</td>
 						<td>
 							<div ng-switch on="isEditMode()">						
-								<p class="form-control-static" ng-switch-when="false" ng-bind="inputContainer.percentage" />						 
+								<span ng-switch-when="false" ng-bind="inputContainer.percentage"></span>						 
 								<div ng-switch-when="true">
 									<input class="form-control input-sm" type="text" 
 										title='@Messages("containers.table.percentage")' 
@@ -196,7 +196,7 @@
 							rowspan="{{atm.inputContainerUseds.length}}">
 								 
 							<div ng-switch on="isEditMode()">						
-								<p class="form-control-static" ng-switch-when="false" ng-bind="atm.outputContainerUseds[0].experimentProperties[property.code].value" />						 
+								<span ng-switch-when="false" ng-bind="atm.outputContainerUseds[0].experimentProperties[property.code].value"></span>						 
 								<div ng-switch-when="true">
 									<input class="form-control input-sm" type="text" 
 										 title="{{property.name}}"

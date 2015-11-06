@@ -362,7 +362,7 @@ public class InstanceTest extends AbstractTests{
 		e.typeCode = "test-tt";
 		for(int i = 0; i < 120; i++){
 		
-			System.out.println(CodeHelper.getInstance().generateExperiementCode(e));			
+			System.out.println(CodeHelper.getInstance().generateExperimentCode(e));			
 		}
 	}
 }
