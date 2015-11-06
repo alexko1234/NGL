@@ -8,3 +8,5 @@ GET		/migrationRSFF								controllers.migration.RemoveStateFromFile.migration()
 GET		/compare-lims-support						controllers.migration.CompareLimsVsNGL.compareSupport(update:Boolean ?=false)
 GET		/migration-process-type-codes				controllers.migration.MigrationLibProcessTypeCodesRun.migration()
 GET		/readsets/update-nb-cycles					controllers.migration.MigrationUpdateReadSetNbCycles.migration()		
+
+GET		/readsets/update-q-qualityScore				controllers.migration.MigrationUpdateReadSetQ30QualMean.migration()
