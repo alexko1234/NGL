@@ -65,13 +65,13 @@ public class ProtocolServiceCNG {
 		
 		//lp.add(newProtocol("proto_qc_v1","Proto_QC_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("chip-migration-post-pcr", "chip-migration-pre-pcr", "fluo-quantification", "qpcr-quantification")));
 		lp.add(newProtocol("sop-1","SOP 1","","1","production", InstanceFactory.setExperimentTypeCodes("illumina-depot","prepa-flowcell","denat-dil-lib","aliquoting")));
-		lp.add(newProtocol("sop-1","SOP en attente","","1","production", InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered")));
+		lp.add(newProtocol("sop-en-attente","SOP en attente","?","1","production", InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered")));
 		//lp.add(newProtocol("sop-1","SOP 1","","1","production", InstanceFactory.setExperimentTypeCodes("prepa-flowcell")));
 		//lp.add(newProtocol("sop-1","SOP 1","","1","production", InstanceFactory.setExperimentTypeCodes("denat-dil-lib")));
 		//lp.add(newProtocol("sop-1","SOP 1","","1","production", InstanceFactory.setExperimentTypeCodes("aliquoting")));
 		for(Protocol protocole:lp){
 			InstanceHelpers.save(InstanceConstants.PROTOCOL_COLL_NAME, protocole,ctx);
-			Logger.debug("");
+			Logger.debug("protocol '"+protocole.name + "' saved..." );
 		}
 	}
 	

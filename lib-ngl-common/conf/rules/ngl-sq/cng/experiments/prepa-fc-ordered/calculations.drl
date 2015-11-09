@@ -1,0 +1,43 @@
+package rules
+
+
+rule "prepa-fc-ordered"
+	@nglSQ( calculations )
+	dialect "java"
+	salience 1000
+	no-loop
+	lock-on-active true
+    when
+    	 $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-fc-ordered", $stateCode : state.code, $stateCode!="F")
+    	 $atomicTransfert: ManytoOneContainer( )
+    	 ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null, $concentrationIN:concentration) from $atomicTransfert.inputContainerUseds
+    	 
+    then
+    	Logger.debug("Experiment prepa-fc-ordered");
+    end
+
+rule "prepa-fc-ordered concentration final"
+	@nglSQ( calculations )
+	dialect "java"
+	salience 800
+	lock-on-active true
+	no-loop
+    when
+    	 $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-fc-ordered", $stateCode : state.code, $stateCode!="F")
+    	 $atomicTransfert: ManytoOneContainer( )
+    	 $inputContainer:ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null) from $atomicTransfert.inputContainers
+    	 ContainerUsed( $experimentPropertiesOut : experimentProperties,$experimentPropertiesOut!=null) from $atomicTransfert.outputContainers
+    	 $finalVolume : PropertyValue() from $experimentPropertiesOut.get("finalVolume")
+    	 $inputVolume2 : PropertyValue() from $experimentProperties.get("inputVolume2")
+    	 $finalConcentration1 : PropertyValue() from $inputContainer.concentration
+    	 eval($finalConcentration1.value != null && Double.class.isInstance($finalConcentration1.value) && $inputVolume2.value != null && Double.class.isInstance($inputVolume2.value) && $finalConcentration1.value != null && Double.class.isInstance($finalVolume.value) && (Double)$finalVolume.value !=0)
+   	then
+   		Logger.debug("Calculation prepa-fc-ordered finalConcentration2 : "+ $experiment.code+ " "+ $atomicTransfert.line);
+   		PropertySingleValue value = new PropertySingleValue(Math.round(((Double)$finalConcentration1.value*(Double)$inputVolume2.value/(Double)$finalVolume.value)*100.0)/100.0,"pM");
+   		if($experimentProperties.get("finalConcentration2") != null){
+   			$experimentProperties.remove("finalConcentration2");
+   		}
+   		
+   		$experimentProperties.put("finalConcentration2",value);
+   		update($experiment);
+   	end
