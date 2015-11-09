@@ -32,6 +32,11 @@
 		@formGroup{
 			<input type="text" class="form-control" ng-model="searchService.form.providerCode" placeholder='@Messages("kits.providerFiltre")'>
 		}
+		
+		@formGroup{
+			<div class="form-control" bt-select ng-model="searchService.form.experimentCodes" multiple="true" filter="true" placeholder='@Messages("expeiments.name")'
+			bt-options="experiment.code as experiment.name for experiment in searchService.lists.getExperimentTypes()" ></div>
+		}
 	}
 	
 	@columnSearchForm{
