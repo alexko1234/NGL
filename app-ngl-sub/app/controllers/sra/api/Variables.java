@@ -24,6 +24,8 @@ public class Variables extends CommonController{
 			return ok(Json.toJson(toListObjects(VariableSRA.mapLaboratoryName)));
 		} else if (name.equalsIgnoreCase("strategySample")){
 			return ok(Json.toJson(toListObjects(VariableSRA.mapStrategySample)));
+		} else if (name.equalsIgnoreCase("strategyStudy")){
+			return ok(Json.toJson(toListObjects(VariableSRA.mapStrategyStudy)));
 		} else if(name.equalsIgnoreCase("existingStudyType")){
 			return ok(Json.toJson(toListObjects(VariableSRA.mapExistingStudyType)));
 		} else if (name.equalsIgnoreCase("libraryStrategy")){

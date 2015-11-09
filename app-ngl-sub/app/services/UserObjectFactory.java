@@ -1,6 +1,7 @@
 package services;
 
 import models.sra.submit.common.instance.UserCloneType;
+import models.sra.submit.common.instance.UserExperimentType;
 
 public class UserObjectFactory {
 
@@ -21,5 +22,12 @@ public class UserObjectFactory {
         return new UserCloneType();
     }
 
-    
+    /**
+     * Create an instance of UserExperimentType
+     * 
+     */
+    public UserExperimentType createUserExperimentType() {
+        return new UserExperimentType();
+    }
+  
 }

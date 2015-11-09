@@ -30,10 +30,10 @@ public class Submission extends DBObject implements IValidation {
 	public String projectCode = null;     // required pour nos stats //Reference code de la collection project NGL
  	public String accession = null;       // numeros d'accession attribué par ebi */
 	public Date submissionDate = null;
-	public String refStudyCode = null;    // study referencé par cette soumission, pas forcement à soumettre
+	public List<String> refStudyCodes = new ArrayList<String>();    // study referencés par cette soumission, pas forcement à soumettre
 	public List<String> refSampleCodes = new ArrayList<String>(); // liste des codes des samples references par cette soumission, pas forcement a soumettre à l'EBI.
-	public String studyCode = null;       // study à soumettre à l'ebi
-	public String analysisCode = null;       // study à soumettre à l'ebi
+	public String studyCode = null;          // study à soumettre à l'ebi si strategy_internal_study
+	public String analysisCode = null;       // analysis à soumettre à l'ebi
 	public List<String> sampleCodes = new ArrayList<String>(); // liste des codes des sample à soumettre à l'ebi
 	public List<String> experimentCodes = new ArrayList<String>(); // liste des codes des experiments à soumettre à l'ebi
 	public List<String> runCodes = new ArrayList<String>(); // liste des codes des runs à soumettre à l'ebi
@@ -51,7 +51,7 @@ public class Submission extends DBObject implements IValidation {
 	public String resultSendXml = null; // Fichier resultat de la commande curl qui doit contenir les AC attribués par l'EBI
 	//public String userSubmission; // login du bioinfo qui a creer ticket.
 	
-	private Map<String, UserCloneType> mapUserClones = new HashMap<String, UserCloneType>();
+	public Map<String, UserCloneType> mapUserClone = new HashMap<String, UserCloneType>();
 
 	public State state;// = new State(); // Reference sur "models.laboratory.common.instance.state" 
 		// pour gerer les differents etats de l'objet.
@@ -108,17 +108,40 @@ public class Submission extends DBObject implements IValidation {
 			return;
 		} 
 		if (contextValidation.getContextObjects().get("type").equals("sra")) {
-			if (this.studyCode == null && this.sampleCodes.size() == 0 &&  this.experimentCodes.size() == 0) {
-				contextValidation.addErrors("studyCode, sampleCodes et experimentCodes ::", "Les 3 champs ne peuvent pas etre vides pour une soumission" + "taille des experiments = " +  this.experimentCodes.size() + ", taille des sample = "+ this.sampleCodes.size());
-			}
 			if (this.config == null) {
 				contextValidation.addErrors("config", "objet qui doit etre renseigné");
-			} else {
-				// pas de validation, on considere que l'objet a ete recupere valide de la base
-				if (!config.state.code.equals("userValidate")){
+			} else { 
+				// pas de validation integrale de config qui a ete stocke dans la base donc valide mais verification
+				// de quelques contraintes en lien avec soumission.
+				if (StringUtils.isBlank(config.state.code) || !config.state.code.equalsIgnoreCase("userValidate")){
 					contextValidation.addErrors("config.state.code", "'" + config.state.code + "' n'est pas à la valeur attendue 'userValidate'");
 				}
+				if (this.config.strategyStudy.equalsIgnoreCase("strategy_internal_study")) {
+					if (StringUtils.isBlank(this.studyCode)) {
+						contextValidation.addErrors("strategy_study", "strategy_internal_study incompatible avec studyCode vide");
+					}
+				} else if (this.config.strategyStudy.equalsIgnoreCase("strategy_external_study")) {
+					if (StringUtils.isNotBlank(this.studyCode)){
+						contextValidation.addErrors("strategy_study", "strategy_external_study incompatible avec studyCode renseigne : '" + this.studyCode +"'");
+					}
+					if (this.mapUserClone == null || this.mapUserClone.isEmpty()){
+						contextValidation.addErrors("strategy_study", "strategy_external_study incompatible avec mapUserClone non renseigné");
+					}
+				} else {
+					contextValidation.addErrors("strategy_study", "valeur non attendue '" + this.config.strategyStudy + "'");
+				}
+				if (this.config.strategySample.equalsIgnoreCase("strategy_external_sample")) {
+					if (this.sampleCodes.size() != 0) {
+						contextValidation.addErrors("strategy_external_sample incompatible avec samples à soumettre : ", "taille sampleCode = "  + this.sampleCodes.size());
+					}
+					if (this.mapUserClone == null || this.mapUserClone.isEmpty()){
+						contextValidation.addErrors("strategy_sample", "strategy_external_sample incompatible avec mapUserClone non renseigné");
+					}
+				}
 			}
+			if (StringUtils.isBlank(this.studyCode) && this.sampleCodes.size() == 0 &&  this.experimentCodes.size() == 0) {
+				contextValidation.addErrors("studyCode, sampleCodes et experimentCodes ::", "Les 3 champs ne peuvent pas etre vides pour une soumission" + "taille des experiments = " +  this.experimentCodes.size() + ", taille des sample = "+ this.sampleCodes.size());
+			}		
 			SraValidationHelper.validateCode(this, InstanceConstants.SRA_SUBMISSION_COLL_NAME, contextValidation);
 		} else if (contextValidation.getContextObjects().get("type").equals("wgs")) {
 			if (this.studyCode == null || this.analysisCode == null ||this.sampleCodes.size() == 0) {

@@ -1,5 +1,6 @@
 package services;
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,26 +33,28 @@ public class UserCloneTypeParser {
 		separator = "\\|";
 	}
 	
-	public List<UserCloneType> load(File file) throws SraException {
+//	public List<UserCloneType> load(File file) throws SraException {
+	public List<UserCloneType> load(InputStream inputStream) throws SraException {
 		List<UserCloneType> listUserClones = new ArrayList<UserCloneType>();
-		if (file.exists()) {
+		if (inputStream != null) {
 			ColumnParser parser = new ColumnParser(keyField, separator);
 			if (parser.setAllowedFields(allowedFields)) {
-				listUserClones = (List<UserCloneType>)parser.load(file, new UserCloneTypeParserFactory());
+				listUserClones = (List<UserCloneType>)parser.load(inputStream, new UserCloneTypeParserFactory());
 			} else {
 				throw new SraException("Probleme lors de l'installation des champs autorises");
 			}
 		}
-		return listUserClones;
+			return listUserClones;
 	}
 	
-	public Map<String, UserCloneType> loadMap(File file) throws SraException {
+	
+	public Map<String, UserCloneType> loadMap(InputStream inputStream) throws SraException {
 		Map<String, UserCloneType> mapUserClones = new HashMap<String, UserCloneType>();
 		
-		if (file.exists()) {
+		if (inputStream!=null) {
 			ColumnParser parser = new ColumnParser(keyField, separator);
 			if (parser.setAllowedFields(allowedFields)) {
-				mapUserClones = (Map<String, UserCloneType>)parser.loadMap(file, new UserCloneTypeParserFactory());
+				mapUserClones = (Map<String, UserCloneType>)parser.loadMap(inputStream, new UserCloneTypeParserFactory());
 			} else {
 				throw new SraException("Probleme lors de l'installation des champs autorises");
 			}

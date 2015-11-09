@@ -40,8 +40,8 @@ create.placeholder.librarySelection=librarySelection
 create.placeholder.librarySource=librarySource
 create.placeholder.libraryStrategy=libraryStrategy
 create.placeholder.libraryConstructionProtocol=libraryConstructionProtocol
-create.placeholder.ebiStudiesSamplesFileName=ebiStudiesSamplesFileName
 create.placeholder.strategySample=strategySample
+create.placeholder.strategyStudy=strategyStudy
 configurations.msg.consultation=Consultation des configurations
 configuration.code=Code
 configuration.projectCode=ProjectCode
@@ -67,12 +67,11 @@ submissions.tabs.sample=Sample
 submissions.tabs.experiment=Experiment
 submissions.tabs.run=Run
 submissions.tabs.rawData=RawData
-
+createService.placeholder.submissions.file=Charger le fichier cloneToAc
 submissions.msg.save.success=Sauvegarde réussie de la soumission
 submissions.msg.validate.success=Soumission validée
 submissions.msg.details=Détail de la soumission
 submissions.msg.consultation=Consultation des soumission
-
 submissions.code=Code
 submissions.state=Etat
 

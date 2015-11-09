@@ -100,7 +100,7 @@ public class SubmissionsTest extends AbstractTestController{
 		.withProjectCode(projectCode)
 		.withSubmissionDirectory(subDirectory)
 		.withStudyCode(studyCode)
-		.withRefStudyCode(studyCode1)
+		//.withRefStudyCode(studyCode1)
 		.withConfig(new ConfigurationBuilder().withCode("config1").withState(new StateBuilder().withCode(codeUserValidate).build()).build())
 		.withState(new StateBuilder().withCode(codeUserValidate).build())
 		.withTraceInformation(new TraceInformationBuilder().withCreateUser("user1").withCreationDate(new Date()).build())

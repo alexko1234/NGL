@@ -6,7 +6,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
@@ -17,6 +21,8 @@ import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import mail.MailServiceException;
 import models.sra.submit.common.instance.Submission;
+import models.sra.submit.common.instance.UserCloneType;
+import models.sra.submit.common.instance.UserExperimentType;
 import models.sra.submit.util.SraException;
 import models.utils.InstanceConstants;
 import play.Logger;
@@ -26,11 +32,15 @@ import play.mvc.Result;
 import services.FileAcServices;
 import services.SubmissionServices;
 import services.Tools;
+import services.UserCloneTypeParser;
+import services.UserExperimentTypeParser;
 import services.XmlServices;
 import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
 
 public class Submissions extends DocumentController<Submission>{
+	private Map<String, UserCloneType> mapUserClones = new HashMap<String, UserCloneType>();
+	private Map<String, UserExperimentType> mapUserExperiments = new HashMap<String, UserExperimentType>();
 
 	public Submissions() {
 		super(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class);
@@ -183,42 +193,66 @@ public class Submissions extends DocumentController<Submission>{
 	}
 
 
-	public Result save() throws SraException, IOException
-	{
+	// methode appelée  depuis interface submissions.create-ctrl.js (submissions.create.scala.html)
+	public Result save() throws SraException, IOException {
+
 		Form<SubmissionsCreationForm> filledForm = getFilledForm(submissionsCreationForm, SubmissionsCreationForm.class);
 		Logger.debug("filledForm "+filledForm);
 		SubmissionsCreationForm submissionsCreationForm = filledForm.get();
 		Logger.debug("readsets "+submissionsCreationForm.readSetCodes);
-
-		Logger.debug("Read base64File");
-		InputStream inputFile = Tools.decodeBase64(submissionsCreationForm.base64File);
 		
-		List<String> readSetCodes = submissionsCreationForm.readSetCodes;
-
-		//String codeReadSet1 = "BCZ_BGOSW_2_H9M6KADXX.IND15"; 
-		//String codeReadSet2 = "BCZ_BIOSW_2_H9M6KADXX.IND19"; 
-
 		String user = getCurrentUser();
-
-		SubmissionServices submissionServices = new SubmissionServices();
-		String submissionCode;
 		ContextValidation contextValidation = new ContextValidation(user, filledForm.errors());
 		contextValidation.setCreationMode();
 		contextValidation.getContextObjects().put("type", "sra");
+		
+		String submissionCode;
 		try {
-			submissionCode = submissionServices.initNewSubmission(submissionsCreationForm.projCode, readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, user, contextValidation);
+			if (StringUtils.isBlank(submissionsCreationForm.base64UserFileExperiments)){
+				submissionsCreationForm.base64UserFileExperiments="";
+			}
+			if (StringUtils.isBlank(submissionsCreationForm.base64UserFileClonesToAc)){
+				submissionsCreationForm.base64UserFileClonesToAc="";
+			}
+		
+			Logger.debug("Read base64UserFileExperiments");
+			InputStream inputStreamUserFileExperiments = Tools.decodeBase64(submissionsCreationForm.base64UserFileExperiments);
+			UserExperimentTypeParser userExperimentsParser = new UserExperimentTypeParser();
+			mapUserExperiments = userExperimentsParser.loadMap(inputStreamUserFileExperiments);		
+			for (Iterator<Entry<String, UserExperimentType>> iterator = mapUserExperiments.entrySet().iterator(); iterator.hasNext();) {
+				Entry<String, UserExperimentType> entry = iterator.next();
+				System.out.println("  cle de exp = '" + entry.getKey() + "'");
+				System.out.println("       nominal_length : '" + entry.getValue().getNominalLength()+  "'");
+				System.out.println("       title : '" + entry.getValue().getTitle()+  "'");
+				System.out.println("       lib_name : '" + entry.getValue().getLibraryName()+  "'");
+				System.out.println("       lib_source : '" + entry.getValue().getLibrarySource()+  "'");
+			}
+			Logger.debug("Read base64UserFileClonesToAc");
+			InputStream inputStreamUserFileClonesToAc = Tools.decodeBase64(submissionsCreationForm.base64UserFileClonesToAc);
+			UserCloneTypeParser userClonesParser = new UserCloneTypeParser();
+			mapUserClones = userClonesParser.loadMap(inputStreamUserFileClonesToAc);		
+			//System.out.println("\ntaille de la map des userClone = " + mapUserClones.size());
+			/*for (Iterator<Entry<String, UserCloneType>> iterator = mapUserClones.entrySet().iterator(); iterator.hasNext();) {
+			  Entry<String, UserCloneType> entry = iterator.next();
+			  System.out.println("cle du userClone = '" + entry.getKey() + "'");
+			  System.out.println("       study_ac : '" + entry.getValue().getStudyAc()+  "'");
+			  System.out.println("       sample_ac : '" + entry.getValue().getSampleAc()+  "'");
+			}*/
+		
+			List<String> readSetCodes = submissionsCreationForm.readSetCodes;
+		
+			//String codeReadSet1 = "BCZ_BGOSW_2_H9M6KADXX.IND15"; 
+			//String codeReadSet2 = "BCZ_BIOSW_2_H9M6KADXX.IND19"; 
+
+		
+			SubmissionServices submissionServices = new SubmissionServices();
+			submissionCode = submissionServices.initNewSubmission(readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, mapUserClones, mapUserExperiments, user, contextValidation);
 			if (contextValidation.hasErrors()){
 				contextValidation.displayErrors(Logger.of("SRA"));
 				return badRequest(filledForm.errorsAsJson());
-				
-			}
+			}	
+			
 		} catch (SraException e) {
-		/*	if (contextValidation.hasErrors()){
-				return badRequest(filledForm.errorsAsJson());
-			}else{
-				return badRequest("{Error : {\"exception\" : \""+e.getMessage()+"\"}}");
-			}
-			*/
 			contextValidation.addErrors("save submission ", e.getMessage()); // si solution avec ctxVal
 			return badRequest(filledForm.errorsAsJson());
 		}

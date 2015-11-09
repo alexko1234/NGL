@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -12,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 import models.sra.submit.util.SraException;
 
@@ -113,13 +114,16 @@ public class ColumnParser {
 	}
 	
 
-	public List load(File file, IUserObjectFactory factory) throws SraException {
+//	public List load(File file, IUserObjectFactory factory) throws SraException {
+	public List load(InputStream inputStream, IUserObjectFactory factory) throws SraException {
 		List<Object> userCnsObject = new ArrayList<Object>();
-		if (! file.exists()) {
-			throw new SraException("le fichier '" + file + "'n'existe pas ou n'est pas lisible");
+		if (inputStream==null) {
+			throw new SraException("le flux '" + inputStream + "'n'existe pas ou n'est pas lisible");
 		}
 		try {
-			BufferedReader input_buffer = new BufferedReader(new FileReader(file));
+			//BufferedReader input_buffer = new BufferedReader(new FileReader(file));
+			BufferedReader input_buffer = new BufferedReader(new InputStreamReader(inputStream));
+
 			int cp = 1;
 			String [] nameFieldsInFile = null;
 			String [] valFieldsInFile = null;
@@ -178,14 +182,16 @@ public class ColumnParser {
 		return userCnsObject;
 	}
 	
+	//public Map loadMap(File file, IUserObjectFactory factory) throws SraException {
 	
-	public Map loadMap(File file, IUserObjectFactory factory) throws SraException {
+	public Map loadMap(InputStream inputStream, IUserObjectFactory factory) throws SraException {
 		Map<String, Object> mapUserObject = new HashMap<String, Object>(); 
-		if (!file.exists()) {
-			throw new SraException("le fichier '" + file + "'n'existe pas ou n'est pas lisible");
+		if (inputStream==null) {
+			throw new SraException("le flux '" + inputStream + "'n'existe pas ou n'est pas lisible");
 		}
 		try {
-			BufferedReader input_buffer = new BufferedReader(new FileReader(file));
+			//BufferedReader input_buffer = new BufferedReader(new FileReader(file));
+			BufferedReader input_buffer = new BufferedReader(new InputStreamReader(inputStream));
 			int cp = 1;
 			String [] nameFieldsInFile = null;
 			String [] valFieldsInFile = null;

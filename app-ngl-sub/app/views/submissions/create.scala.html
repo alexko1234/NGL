@@ -9,20 +9,23 @@
 			**@
 			<div class="form-control" bt-select  ng-model="createService.form.projCode" filter="true" placeholder='@Messages("create.placeholder.projectCode")' bt-options="project.code as project.code for project in createService.lists.getProjects()" required ng-change="createService.refreshSubmissions()"></div>	
 		}
-		@** 
-		bt-options = createService.lists.getSraStudies() defini dans ngl-common/common.js
-		ng-focus = appelle refreshSraStudies de createService
-		**@
-		@formGroup{
-			<div class="form-control" bt-select ng-model="createService.form.studyCode" placeholder='@Messages("create.placeholder.submissions.study")' bt-options="study.code as study.code for study in createService.lists.getSraStudies()" required ng-focus="createService.refreshSraStudies()"></div>			
-		}
+		
 		@** 
 		bt-options = createService.lists.getSraConfigurations() defini dans ngl-common/common.js
 		ng-focus = appelle refreshSraConfigurations de createService
 		**@
 		@formGroup{
-			<div class="form-control" bt-select ng-model="createService.form.configurationCode" placeholder='@Messages("create.placeholder.submissions.configuration")' bt-options="configuration.code as configuration.code for configuration in createService.lists.getSraConfigurations()" required ng-focus="createService.refreshSraConfigurations()"></div>			
+			<div class="form-control" bt-select ng-model="createService.form.configurationCode" placeholder='@Messages("create.placeholder.submissions.configuration")' bt-options="configuration.code as configuration.code for configuration in createService.lists.getSraConfigurations()" required ng-focus="createService.refreshSraConfigurations()" ng-click="createService.displayStudies()"></div>			
 		}
+		
+		@** 
+		bt-options = createService.lists.getSraStudies() defini dans ngl-common/common.js
+		ng-focus = appelle refreshSraStudies de createService
+		**@
+		@formGroup{
+			<div class="form-control" bt-select ng-if="createService.internalStudies" ng-model="createService.form.studyCode" placeholder='@Messages("create.placeholder.submissions.study")' bt-options="study.code as study.code for study in createService.lists.getSraStudies()" ng-focus="createService.refreshSraStudies()"></div>			
+		}
+		
 		@** 
 		bt-options = createService.lists.getReadSets() defini dans ngl-common/common.js
 		ng-focus = appelle refreshReadSets de createService
@@ -30,11 +33,28 @@
 		@formGroup{
 			<div class="form-control" bt-select ng-model="createService.form.readSetCodes" filter="true" multiple="true" placeholder='@Messages("create.placeholder.submissions.readSet")' bt-options="readSet.code as readSet.code for readSet in createService.lists.getReadSets()" required ng-focus="createService.refreshReadSets()"></div>			
 		}	
+		@** utilisation d'une directive base-64 (Yann): nom , type et contenu en base 64 du fichier recupere en javascritp**@
+		@**<input type="file" base64-file="createService.file", ng-if="createService.externalStudies"/>**@
 		
 		@formGroup{
+			<div class="html"  placeholder='@Messages("fileCloneToAc-----------")' ></div>			
+		}
 		
-			<input type="file" base64-file="createService.file"/>
-		}											
+		<div>
+			@columnLabelValue(Messages("userFileExperiments")){
+				<input type="file" base64-file="createService.userFileExperiments"/>
+			}
+		</div>
+		
+		
+		<div ng-if="createService.externalStudies">
+			@columnLabelValue(Messages("fileCloneToAc")){
+				<input type="file" base64-file="createService.userFileClonesToAc" ng-if="createService.externalStudies"/>
+			}
+		</div>
+		
+		
+								
 	}
 	
 }

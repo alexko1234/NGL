@@ -31,6 +31,9 @@
 				lists : lists,
 				form : undefined,
 				datatable : undefined,
+				internalStudies : true,
+				externalStudies : false,
+				
 				setRouteParams:function($routeParams){
 					var count = 0;
 					for(var p in $routeParams){
@@ -73,6 +76,24 @@
 						this.lists.refresh.readSets({projectCode:this.form.projCode});
 					}
 				},
+				// fonction qui recupere objet configuration dont le code est saisi par utilisateur et qui en fonction
+				// de config.strategy_internal_study determine si la variable internal_studies est à true ou false.
+				displayStudies : function(){
+					if(this.form.configurationCode !== null && this.form.configurationCode !== undefined){
+						//get configuration
+						$http.get(jsRoutes.controllers.sra.configurations.api.Configurations.get(this.form.configurationCode).url).success(function(data) {
+							if(data.strategyStudy == 'strategy_internal_study'){
+								createService.internalStudies=true;
+								createService.externalStudies=false;
+							}else{
+								createService.internalStudies=false;
+								createService.externalStudies=true;	
+							}
+						});
+					}
+				},
+				
+
 				// methode appelee pour remplir le tableau des soumissions 
 				search : function(){
 					this.datatable.search({projCode:this.form.projCode, state:'new'});

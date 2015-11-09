@@ -19,7 +19,7 @@ public class Study extends DBObject implements IValidation {
 	// StudyType
 	//public String alias;             // required mais remplacé par code herité de DBObject, et valeur = study_projectCode_num
 	public String title = "";	       // required next soon      
- 	public String projectCode;         // required pour nos stats   
+ 	public String projectCode;         // required pour nos stats  
 	public String studyAbstract = "";  // required next soon 
 	public String description = "";    
 	public int bioProjectId;           // doit etre mis à 0 si absent.

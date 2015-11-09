@@ -22,8 +22,10 @@ public class Configuration  extends DBObject implements IValidation {
 		//public String studyCode = null;
 		public String strategySample = null;  // required et constraint :
 		//("STRATEGY_SAMPLE_TAXON", "STRATEGY_SAMPLE_CLONE", "STRATEGY_NO_SAMPLE");
-		public String strategyStudy = null; // required et contraint existingStudyType
+		public String strategyStudy = "strategy_internal_study"; // required et contraint 
 		// Whole Genome Sequencing, Metagenomics, transcriptome analysis
+
+		//public String studyCode = null;       // study à soumettre à l'ebi si strategyStudy==strategy_internal_study
 		
 		// Informations de library obligatoires qui sont prises dans le lims mais qui peuvent etre surchargées 
 		// par le la configuration ou encore par le  fichier User_Experiments.csv si les valeurs sont specifiques 
@@ -58,18 +60,26 @@ public class Configuration  extends DBObject implements IValidation {
 			SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySelection, VariableSRA.mapLibrarySelection, "librarySelection");
 			SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryStrategy, VariableSRA.mapLibraryStrategy, "libraryStrategy");
 			SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySource, VariableSRA.mapLibrarySource, "librarySource");
-			SraValidationHelper.requiredAndConstraint(contextValidation, this.strategySample, VariableSRA.mapStrategySample, "strategySample");
 			SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapStatus, "state.code");
-
+			SraValidationHelper.requiredAndConstraint(contextValidation, this.strategySample, VariableSRA.mapStrategySample, "strategySample");
+			SraValidationHelper.requiredAndConstraint(contextValidation, this.strategyStudy, VariableSRA.mapStrategyStudy, "strategyStudy");
+			
+			/*if (StringUtils.isBlank(this.studyCode)) {
+				if (StringUtils.isBlank(this.strategyStudy) || ! this.strategyStudy.equalsIgnoreCase("strategy_external_study")){
+					contextValidation.addErrors("Pb study dans objet configuration", "Aucun studyCode et strategyStudy != 'strategy_external_study'");
+				}
+			}*/
+			
+			
 			// Verifier que si User_Experiments est renseigné, la valeur correspond bien à un fichier present sur disque
-			if (StringUtils.isNotBlank(userFileExperiments)){
+			/*if (StringUtils.isNotBlank(userFileExperiments)){
 				if (! new File(userFileExperiments).isFile()){
 					contextValidation.addErrors("userFileExperiments", this.userFileExperiments + " n'est pas un fichier");
 				}
 				if (! new File(userFileExperiments).canRead()){
 					contextValidation.addErrors("userFileExperiments", this.userFileExperiments + " n'est pas un fichier lisible");
 				}
-			}		
+			}*/		
 			// verifier que code est bien renseigné
 			SraValidationHelper.validateCode(this, InstanceConstants.SRA_CONFIGURATION_COLL_NAME, contextValidation);
 			SraValidationHelper.validateId(this, contextValidation);

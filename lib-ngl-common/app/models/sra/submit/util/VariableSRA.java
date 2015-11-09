@@ -33,12 +33,18 @@ public interface VariableSRA {
 	};
 	static final Map<String, String> mapStrategySample =  new HashMap<String, String>() {
 		{
-			put("strategy_no_sample", "strategy_no_sample"); // Si pas de sample à creer parce que fournis par les collaborateurs
+			put("strategy_external_sample", "strategy_external_sample"); // Si pas de sample à creer parce que fournis par les collaborateurs
 			put("strategy_sample_taxon", "strategy_sample_taxon"); // si sample specifique par code_projet et taxon
 			put("strategy_sample_clone", "strategy_sample_clone"); // si sample specifique par code_projet et clone
 		}
 	};
 	
+	static final Map<String, String> mapStrategyStudy =  new HashMap<String, String>() {
+		{
+			put("strategy_external_study", "strategy_external_study"); // Si pas de study à creer parce que fournis par les collaborateurs
+			put("strategy_internal_study", "strategy_internal_study"); 
+		}
+	};	
 	static final Map<String, String> mapStatus = new HashMap<String, String>() {
 		{
 			put("new", "new"); 
@@ -49,6 +55,13 @@ public interface VariableSRA {
 			
 		}
 	};  
+	
+	static final Map<String, String> mapExternalStatus = new HashMap<String, String>() {
+		{
+			put("submitted", "submitted");
+			
+		}
+	}; 	
 	
 	static final Map<String, String> mapExistingStudyType = new HashMap<String, String>() {
 		{

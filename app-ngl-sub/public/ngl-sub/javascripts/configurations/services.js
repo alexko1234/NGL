@@ -13,6 +13,11 @@
 					// initialisation de la variable createService.sraVariables.strategySample utilisée dans create.scala.html
 					createService.sraVariables.strategySample = data;																					
 				});
+				$http.get(jsRoutes.controllers.sra.api.Variables.get('strategyStudy').url)
+				.success(function(data) {
+					// initialisation de la variable createService.sraVariables.strategyStudy utilisé dans create.scala.html
+					createService.sraVariables.strategyStudy = data;																					
+				});
 				$http.get(jsRoutes.controllers.sra.api.Variables.get('librarySelection').url)
 				.success(function(data) {
 					createService.sraVariables.librarySelection = data;																					

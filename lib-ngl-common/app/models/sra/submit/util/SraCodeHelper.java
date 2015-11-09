@@ -34,7 +34,7 @@ public class SraCodeHelper extends CodeHelper {
 	
 	public synchronized String generateSubmissionCode(String projectCode) {
 		// cns_projectCode_YYYYMMDDHHMMSSSS
-		return ("cns_" + projectCode + "_" + this.getInstance().generateBarCode()).toUpperCase();
+		return ("sub_" + projectCode + "_" + this.getInstance().generateBarCode()).toUpperCase();
 	}
 	
 	public String generateExperimentCode(String readSetCode) {
@@ -46,6 +46,15 @@ public class SraCodeHelper extends CodeHelper {
 		// run_readSetCode
 		return ("run_" + readSetCode);
 	}
+	
+	public String generateExternalSampleCode(String sampleAc) throws SraException {
+		return("externalSample_" + sampleAc);
+	}
+	
+	public String generateExternalStudyCode(String studyAc) throws SraException {
+		return("externalStudy_" + studyAc);
+	}
+		
 	
 	public String generateSampleCode(ReadSet readSet, String projectCode, String strategySample) throws SraException {
 		if (readSet== null){
@@ -61,13 +70,13 @@ public class SraCodeHelper extends CodeHelper {
 		
 		String laboratorySampleCode = readSet.sampleCode;
 		models.laboratory.sample.instance.Sample laboratorySample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, models.laboratory.sample.instance.Sample.class, laboratorySampleCode);
-		String laboratorySampleName = laboratorySample.name;
+		//String laboratorySampleName = laboratorySample.name;
 
 		String clone = laboratorySample.referenceCollab;
 		String taxonId = laboratorySample.taxonCode;
 
-		String laboratoryRunCode = readSet.runCode;
-		models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
+		//String laboratoryRunCode = readSet.runCode;
+		//models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
 
 		String codeSample = null;
 		
@@ -75,12 +84,11 @@ public class SraCodeHelper extends CodeHelper {
 			codeSample = "sample_" + projectCode + "_" + taxonId + "_" + clone;
 		} else if (strategySample.equalsIgnoreCase("STRATEGY_SAMPLE_TAXON")) {
 			codeSample = "sample_" + projectCode + "_" + taxonId;
-		} else if (strategySample.equalsIgnoreCase("STRATEGY_NO_SAMPLE")) {
-			//envisager d'avoir des fichiers de correspondance 
+		} else if (strategySample.equalsIgnoreCase("STRATEGY_EXTERNAL_SAMPLE")) {
+			throw new SraException("STRATEGY_EXTERNAL_SAMPLE :  + utiliser generateExternalSampleCode");		
 		} else {
 			throw new SraException("StrategySample inconnu : " + strategySample);		
 		}	
 		return codeSample;
-
 	}
 }

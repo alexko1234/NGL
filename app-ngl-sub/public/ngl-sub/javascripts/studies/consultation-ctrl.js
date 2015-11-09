@@ -14,12 +14,25 @@ angular.module('home').controller('ConsultationCtrl',[ '$http', '$scope', '$rout
 			pagination:{active:false},
 			select:{active:true},
 			showTotalNumberRecords:false,
-			edit : {
+			/*edit : {
 				active:true,       // permettre edition des champs editables
 				showButton : true, // bouton d'edition visible
 				withoutSelect : true,
 				columnMode : true
+			},*/
+			edit : {
+				active:true, // permettre edition des champs editables
+				showButton : true,// bouton d'edition visible
+				withoutSelect : true,
+				columnMode : true,
+				lineMode : function(line){
+					if(line.state.code == "new")
+						return true;
+					else 
+						return false;
+				}
 			},
+			
 			cancel : {
 				showButton:true
 			},

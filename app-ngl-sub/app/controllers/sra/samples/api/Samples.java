@@ -5,6 +5,7 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.sra.submit.common.instance.AbstractSample;
 import models.sra.submit.common.instance.Sample;
 import models.sra.submit.common.instance.Submission;
 import models.utils.InstanceConstants;
@@ -23,36 +24,36 @@ import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import models.laboratory.common.instance.State;
 
-public class Samples extends DocumentController<Sample>{
+public class Samples extends DocumentController<AbstractSample>{
 
 	
 	final static Form<SamplesSearchForm> samplesSearchForm = form(SamplesSearchForm.class);
-	final static Form<Sample> sampleForm = form(Sample.class);
+	final static Form<AbstractSample> sampleForm = form(AbstractSample.class);
 
 	public Samples() {
-		super(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class);
+		super(InstanceConstants.SRA_SAMPLE_COLL_NAME, AbstractSample.class);
 	}
 
 	public Result list()
 	{
 		SamplesSearchForm form = filledFormQueryString(SamplesSearchForm.class);
 		Query query = getQuery(form);
-		MongoDBResult<Sample> results = mongoDBFinder(form, query);							
-		List<Sample> list = results.toList();
+		MongoDBResult<AbstractSample> results = mongoDBFinder(form, query);							
+		List<AbstractSample> list = results.toList();
 		return ok(Json.toJson(list));
 	}
 	
 	public Result update(String code)
 	{
 		//Get Submission from DB 
-		Sample sample = getSample(code);
-		Form<Sample> filledForm = getFilledForm(sampleForm, Sample.class);
+		AbstractSample sample = getSample(code);
+		Form<AbstractSample> filledForm = getFilledForm(sampleForm, AbstractSample.class);
 		if (sample == null) {
 			filledForm.reject("Sample " +  code, "not exist in database");  // si solution filledForm.reject
 			return badRequest(filledForm.errorsAsJson());
 		}
 
-		Sample sampleInput = filledForm.get();
+		AbstractSample sampleInput = filledForm.get();
 
 		if (code.equals(sampleInput.code)) {
 			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
@@ -73,9 +74,9 @@ public class Samples extends DocumentController<Sample>{
 		}	
 	}
 	
-	private Sample getSample(String code)
+	private AbstractSample getSample(String code)
 	{
-		Sample sample = MongoDBDAO.findByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, code);
+		AbstractSample sample = MongoDBDAO.findByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, AbstractSample.class, code);
 		return sample;
 	}
 

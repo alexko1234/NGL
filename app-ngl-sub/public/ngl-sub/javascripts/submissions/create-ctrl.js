@@ -34,8 +34,17 @@ angular.module('home').controller('CreateCtrl',[ '$http', '$scope', '$routeParam
 	$scope.createService.init($routeParams, submissionDTConfig);
 	
 	$scope.save = function(){
-		console.log("File to upload "+$scope.createService.file.value);
-		$scope.createService.form.base64File=$scope.createService.file.value;
+		$scope.createService.form.base64UserFileClonesToAc=""; // important si le fichier utilisateur ne peut pas ou ne doit pas etre chargé que form.base64File soit
+		// mis à chaine vide et non à null pour l'appel de l'url sra/api/submissions
+		
+		if ($scope.createService.userFileClonesToAc !==null && $scope.createService.userFileClonesToAc !== undefined) {
+			$scope.createService.form.base64UserFileClonesToAc=$scope.createService.userFileClonesToAc.value;
+		}
+		 
+		$scope.createService.form.base64UserFileExperiments=""; 
+		if ($scope.createService.userFileExperiments !==null && $scope.createService.userFileExperiments !== undefined) {
+			$scope.createService.form.base64UserFileExperiments=$scope.createService.userFileExperiments.value;
+		} 		
 		mainService.setForm($scope.createService.form);
 		//$scope.createService.search();
 			$http.post(jsRoutes.controllers.sra.submissions.api.Submissions.save().url, mainService.getForm()).success(function(data) {
