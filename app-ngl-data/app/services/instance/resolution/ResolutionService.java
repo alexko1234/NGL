@@ -57,7 +57,6 @@ public class ResolutionService {
 			createRunResolutionCNG(ctx); 
 			createReadSetResolutionCNG(ctx); 
 			// FDS 15/01: no Analysis Resolutions ???
-			// FDS 15/01: No illumina Depot Resolutions ???
 			createIlluminaPrepFCDepotResolutionCNG(ctx);
 			createExperimentResolution(ctx);
 			createProcessResolution(ctx);
@@ -591,7 +590,9 @@ public class ResolutionService {
 		r.objectTypeCode = "Experiment";
 		ArrayList<String> al = new ArrayList<String>();
 		al.add("ext-to-prepa-flowcell");
-		al.add("prepa-flowcell");	
+		al.add("prepa-flowcell");		
+		al.add("ext-to-prepa-fc-ordered"); //FDS ajout 10/11/2015  -- JIRA NGL-838
+		al.add("prepa-fc-ordered");	       //FDS ajout 10/11/2015  -- JIRA NGL-838
 		al.add("illumina-depot");	
 		r.typeCodes = al;
 		
