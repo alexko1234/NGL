@@ -456,6 +456,26 @@ readsets.treatments.trimming.rejectedPairs = Rejected Pairs
 readsets.treatments.trimming.trimStored = Trim. Stored
 
 
+readsets.treatments.exome.nbReads = Nb reads
+readsets.treatments.exome.mappedReads = Mapped reads
+readsets.treatments.exome.mappedReadsPercent = Percent Mapped reads
+readsets.treatments.exome.pairingPercent = Percent Pairing
+readsets.treatments.exome.duplicatedReads = Duplicated reads
+readsets.treatments.exome.duplicatedReadsPercent = Percent Duplicated Reads
+readsets.treatments.exome.sizeRegionsTiled = Size Regions Tiled
+readsets.treatments.exome.targetPercent = Percent target
+readsets.treatments.exome.percentNT30X = Percent NT 30X
+readsets.treatments.exome.percentNT20X = Percent NT 20X
+readsets.treatments.exome.percentNT10X = Percent NT 10X
+readsets.treatments.exome.percentNT5X = Percent NT 5X
+readsets.treatments.exome.nbRegions0X = Nb regions 0X
+readsets.treatments.exome.regions0XPercent = Percent regions 0X
+readsets.treatments.exome.nbRegionsFullCover = Nb regions full cover
+readsets.treatments.exome.regionsFullCoverPercent = Percent Regions Full Cover
+readsets.treatments.exome.meanCover = Mean cover
+readsets.treatments.exome.medianCover = Median cover
+readsets.treatments.exome.sdCover = SD cover
+
 #treatments names
 readsets.treatments.global = Global
 readsets.treatments.ngsrg = NGS-RG
@@ -473,6 +493,7 @@ readsets.treatments.contaminationPhiX = Contam. PhiX
 readsets.treatments.sortingRibo = Sorting Ribo
 readsets.treatments.mapping = Mapping
 readsets.treatments.taxonomy = Taxonomy 
+readsets.treatments.exome = Exome 
 
 readsets.treatments.images.margin=25
 
