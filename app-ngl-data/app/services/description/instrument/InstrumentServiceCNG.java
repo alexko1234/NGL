@@ -320,7 +320,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	/* FDS 28/10/2015 activated=true + ajout / final  + ajout static!!*/
 	private static List<Instrument> getInstrumentHiseq4000() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("FALBALA", "FALBALA", null, true, "/env/ig/atelier/illumina/cng/FALBALA/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );		
+		instruments.add(createInstrument("FALBALA", "FALBALA", null, false, "/env/ig/atelier/illumina/cng/FALBALA/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );		
 		return instruments;
 	}
 	
@@ -328,10 +328,10 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	private static List<Instrument> getInstrumentHiseqX() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		instruments.add(createInstrument("ASTERIX",   "ASTERIX",    null, true, "/env/ig/atelier/illumina/cng/ASTERIX/",    DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
-		instruments.add(createInstrument("DIAGNOSTIX","DIAGNOSTIX", null, true, "/env/ig/atelier/illumina/cng/DIAGNOSTIX/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
-		instruments.add(createInstrument("IDEFIX",    "IDEFIX",     null, true, "/env/ig/atelier/illumina/cng/IDEFIX/",     DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
-		instruments.add(createInstrument("OBELIX",    "OBELIX",     null, true, "/env/ig/atelier/illumina/cng/OBELIX/",     DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
-		instruments.add(createInstrument("PANORAMIX", "PANORAMIX",  null, true, "/env/ig/atelier/illumina/cng/PANORAMIX/",  DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
+		instruments.add(createInstrument("DIAGNOSTIX","DIAGNOSTIX", null, false, "/env/ig/atelier/illumina/cng/DIAGNOSTIX/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
+		instruments.add(createInstrument("IDEFIX",    "IDEFIX",     null, false, "/env/ig/atelier/illumina/cng/IDEFIX/",     DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
+		instruments.add(createInstrument("OBELIX",    "OBELIX",     null, false, "/env/ig/atelier/illumina/cng/OBELIX/",     DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
+		instruments.add(createInstrument("PANORAMIX", "PANORAMIX",  null, false, "/env/ig/atelier/illumina/cng/PANORAMIX/",  DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
 		
 		return instruments;
 	}
