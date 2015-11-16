@@ -1,4 +1,4 @@
-"use strict";
+ "use strict";
 
 angular.module('commonsServices', []).
     	factory('messages', function(){

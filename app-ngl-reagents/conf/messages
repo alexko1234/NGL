@@ -2,6 +2,8 @@ application.name = NGL-Reagents
 index.title = Welcome to NGL-Reagents
 catalogs.title = Catalogue
 
+boolean.value.TRUE = Oui
+boolean.value.FALSE = Non
 
 catalogs.kit.creation = Création d'un nouveau kit dans le catalogue
 catalogs.kit.edit = Modification dans le catalogue du kit
@@ -32,6 +34,7 @@ kits.providerRefName = Nom kit (fournisseur)
 kits.providerRefNameFiltre = Regex nom kit (fournisseur)
 kits.active = En cours d'utilisation
 kits.active = En cours d''utilisation
+kits.state = Utilisé
 kits.select.experimentTypeCodes = Type expériences
 kits.select.catalogCodes = Nom de kits
 kits.possibleUseNumber = Nombre d''utilisation
@@ -115,6 +118,8 @@ declarations.kit.creation.save = Sauvegarder le kit
 declarations.kit.creation.remove = Supprimer le kit
 declarations.kit.creation.unedit = Annuler
 declarations.kit.creation.placeholder.catalogRefCode = Ref. catalogue (fournisseur)
+
+experiments.name = Type d''expérience
 
 kit.catalogCode =  Nom kit (usuel)
 reagents.table.catalogName = Nom kit catalogue

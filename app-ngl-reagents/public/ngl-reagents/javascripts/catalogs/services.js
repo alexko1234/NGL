@@ -50,6 +50,10 @@
 		var initListService = function(){
 			if(!isInit){
 				lists.refresh.experimentTypes({withoutOneToVoid:true});
+				lists.state = [{'name': 'oui',
+								'code' : true},
+								{'name': 'non',
+								 'code': false}];
 				//lists.refresh.boxCatalogs();
 				//lists.refresh.reagentCatalogs();
 				isInit=true;
