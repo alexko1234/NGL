@@ -139,7 +139,7 @@ angular.module('home').controller('ListContainersCtrl', ['$scope', 'datatable','
 	
 	//init
 	$scope.datatable = datatable($scope.datatableConfig);
-	$scope.basket = $scope.getBasket();
+	$scope.basket = mainService.getBasket();
 	$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);
 	$scope.supports = $scope.basket.get();
 	//$scope.supportToContainers();

@@ -41,7 +41,9 @@ import validation.container.instance.ContainerValidationHelper;
 @MongoCollection(name="Container")
 public class Container extends DBObject implements IValidation {
 
-
+	//duplication for input in exp : code, categoryCode, contents, mesured*, //contents just for tag and tagCategory 
+	//duplication for output in exp :code, categoryCode, contents, mesured*, //contents just for tag and tagCategory
+	
 	@JsonIgnore
 	public final static String HEADER="Container.code;Container.categoryCode;Container.comments;LocationOnContainerSupport.categorycode;LocationOnContainerSupport.x;LocationOnContainerSupport.y;LocationOnContainerSupport.barecode";
 
@@ -66,9 +68,9 @@ public class Container extends DBObject implements IValidation {
 	public Set<QualityControlResult> qualityControlResults;
 
 	//Stock management 
-	public PropertySingleValue mesuredVolume;
-	public PropertySingleValue mesuredConcentration;
-	public PropertySingleValue mesuredQuantity;
+	public PropertySingleValue mesuredVolume;        //rename to volume
+	public PropertySingleValue mesuredConcentration; //rename to concentration
+	public PropertySingleValue mesuredQuantity; 	 //rename to quantity
 
 	public List<PropertyValue> calculedVolume;
 

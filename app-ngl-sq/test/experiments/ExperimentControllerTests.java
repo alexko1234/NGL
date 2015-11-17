@@ -67,7 +67,7 @@ public class ExperimentControllerTests extends AbstractTests {
 		assertThat(exp.inputContainerSupportCodes).isNotNull();
 		assertThat(exp.outputContainerSupportCodes).isNull();
 		//Valide process = "IP", InputContainer ="IW-E"
-		List<ContainerUsed> containersUsed=exp.getAllInPutContainer();
+		List<ContainerUsed> containersUsed=exp.getAllInputContainers();
 		for(ContainerUsed containerUsed:containersUsed){
 			Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.code);
 			assertThat(container.state.code).isEqualTo("IW-E");

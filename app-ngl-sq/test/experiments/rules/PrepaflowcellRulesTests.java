@@ -14,7 +14,7 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.ManytoOneContainer;
+import models.laboratory.experiment.instance.ManyToOneContainer;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import play.Logger;
 import play.Logger.ALogger;
@@ -66,7 +66,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
 		
-		ManytoOneContainer atomicTransfert3 = ExperimentTestHelper.getManytoOneContainer();
+		ManyToOneContainer atomicTransfert3 = ExperimentTestHelper.getManytoOneContainer();
 		atomicTransfert3.line="3";
 		atomicTransfert3.column="0";
 		
@@ -222,7 +222,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
 		
-		ManytoOneContainer atomicTransfert3 = ExperimentTestHelper.getManytoOneContainer();
+		ManyToOneContainer atomicTransfert3 = ExperimentTestHelper.getManytoOneContainer();
 		atomicTransfert3.line="3";
 		atomicTransfert3.column="0";
 		
@@ -262,7 +262,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
 		
-		ManytoOneContainer atomicTransfert3 = ExperimentTestHelper.getManytoOneContainer();
+		ManyToOneContainer atomicTransfert3 = ExperimentTestHelper.getManytoOneContainer();
 		atomicTransfert3.line="3";
 		atomicTransfert3.column="0";
 		
@@ -307,7 +307,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
 		
-		ManytoOneContainer atomicTransfert3 = ExperimentTestHelper.getManytoOneContainer();
+		ManyToOneContainer atomicTransfert3 = ExperimentTestHelper.getManytoOneContainer();
 		atomicTransfert3.line="3";
 		atomicTransfert3.column="0";
 		

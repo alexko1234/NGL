@@ -286,8 +286,9 @@ angular.module('atomicTransfereServices', [])
 							outputContainers = result[0].output;
 						}
 						
-						var l=0;
+						var l=0, atomicIndex=0;
 						for(var i=0; i< atms.length;i++){
+							
 							if(atms[i] === null){
 								continue;
 							}
@@ -305,7 +306,7 @@ angular.module('atomicTransfereServices', [])
 							              var outputContainerCode = atm.outputContainerUseds[k].code;
 							              var outputContainer = outputContainers[outputContainerCode];
 							              
-							              allData[l] = {atomicIndex:i};
+							              allData[l] = {atomicIndex:atomicIndex};
 							              allData[l].atomicTransfertMethod = atm;
 							              allData[l].inputContainer = inputContainer;							              
 							              
@@ -323,7 +324,7 @@ angular.module('atomicTransfereServices', [])
 										$that.customExperimentToView(atm, inputContainers, outputContainers);
 									}
 								}else{
-									allData[l] = {atomicIndex:i};
+									allData[l] = {atomicIndex:atomicIndex};
 									allData[l].atomicTransfertMethod = atm;							              
 									//allData[l].inputContainerUsed = angular.copy(atm.inputContainerUseds[j]);
 									allData[l].inputContainerUsed = $.extend(true,{}, atm.inputContainerUseds[j]);
@@ -335,6 +336,7 @@ angular.module('atomicTransfereServices', [])
 									}
 								}
 							}
+							atomicIndex++;
 						}
 						$that.data.setData(allData, allData.length);
 						//add new atomic in datatable
@@ -440,7 +442,7 @@ angular.module('atomicTransfereServices', [])
 						//remove atomic null
 						var cleanAtomicTransfertMethods = [];
 						for(var i = 0; i < experiment.atomicTransfertMethods.length ; i++){
-							if(experiment.atomicTransfertMethods[i] !== null){
+							if(experiment.atomicTransfertMethods[i]){
 								cleanAtomicTransfertMethods.push(experiment.atomicTransfertMethods[i]);
 							}
 						}

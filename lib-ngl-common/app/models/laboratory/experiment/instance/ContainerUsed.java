@@ -14,7 +14,7 @@ import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.common.instance.CommonValidationHelper;
-import validation.container.ContainerUsedValidation;
+import validation.experiment.instance.ContainerUsedValidation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -39,6 +39,8 @@ public class ContainerUsed implements IValidation{
 	
 	
 	public Set<Content> contents;
+	
+	//TODO remove available
 	public State state;	
 	public Set<String> fromExperimentTypeCodes;
 	

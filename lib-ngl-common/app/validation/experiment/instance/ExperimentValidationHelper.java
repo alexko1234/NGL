@@ -15,7 +15,7 @@ import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.ManytoOneContainer;
+import models.laboratory.experiment.instance.ManyToOneContainer;
 import models.laboratory.experiment.instance.OneToOneContainer;
 import models.laboratory.experiment.instance.OneToVoidContainer;
 import models.laboratory.instrument.description.InstrumentUsedType;
@@ -101,18 +101,20 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 		}
 	}
 
-	public static void validateAtomicTransfertMethodes(
+	public static void validateAtomicTransfertMethods(
 			List <AtomicTransfertMethod> atomicTransfertMethods,
 			ContextValidation contextValidation) {
 		String rootKeyName;
 		for(int i=0;i<atomicTransfertMethods.size();i++){
 			rootKeyName="atomictransfertmethod"+"["+i+"]";
-			contextValidation.addKeyToRootKeyName(rootKeyName);
 			if(atomicTransfertMethods.get(i)!=null){
+				contextValidation.addKeyToRootKeyName(rootKeyName);
 				atomicTransfertMethods.get(i).validate(contextValidation);
-			}//TODO error when null or size 0
+				contextValidation.removeKeyFromRootKeyName(rootKeyName);
+			}else{
+				contextValidation.addErrors(rootKeyName, "error.validationexp.atomicTransfertMethod.null");
+			}
 			
-			contextValidation.removeKeyFromRootKeyName(rootKeyName);
 		}
 	}
 
@@ -149,8 +151,8 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 		Logger.debug("Validate rules");
 		validationfacts.add(exp);
 		for(int i=0;i<exp.atomicTransfertMethods.size();i++){
-			if(ManytoOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
-				ManytoOneContainer atomic = (ManytoOneContainer) exp.atomicTransfertMethods.get(i);
+			if(ManyToOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
+				ManyToOneContainer atomic = (ManyToOneContainer) exp.atomicTransfertMethods.get(i);
 				validationfacts.add(atomic);
 			}else if(OneToOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
 				OneToOneContainer atomic = (OneToOneContainer) exp.atomicTransfertMethods.get(i);

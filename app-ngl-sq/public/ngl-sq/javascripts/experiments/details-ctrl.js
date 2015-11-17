@@ -6,7 +6,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	console.log("call DetailsCtrl");
 	
 	
-	/*move to a directive*/
+	/* move to a directive */
 	$scope.setImage = function(imageData, imageName, imageFullSizeWidth, imageFullSizeHeight) {
 		$scope.modalImage = imageData;
 
@@ -16,12 +16,14 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		var zoom = Math.min((document.body.clientWidth - margin) / imageFullSizeWidth, 1);
 
 		$scope.modalWidth = imageFullSizeWidth * zoom;
-		$scope.modalHeight = imageFullSizeHeight * zoom; //in order to conserve image ratio
+		$scope.modalHeight = imageFullSizeHeight * zoom; // in order to
+															// conserve image
+															// ratio
 		$scope.modalLeft = (document.body.clientWidth - $scope.modalWidth)/2;
 
 		$scope.modalTop = (window.innerHeight - $scope.modalHeight)/2;
 
-		$scope.modalTop = $scope.modalTop - 50; //height of header and footer
+		$scope.modalTop = $scope.modalTop - 50; // height of header and footer
 	}
 	
 	
@@ -86,17 +88,45 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	$scope.$on('childSaved', function(e) {
 		console.log('call event childSaved on main');
 		
-		//TODO effective save or update
+		// TODO effective save or update
 		if(creationMode){
-			
+			$http.post(jsRoutes.controllers.experiments.api.Experiments.save().url,$scope.experiment)
+				.success(function(data, status, headers, config) {
+					$scope.messages.setSuccess("save");						
+					// purge basket when save ok or not ?
+					resetBasket();					
+					$scope.experiment = data;
+					$scope.$broadcast('refresh'); // utile seulement si le
+													// save fontionne
+					creationMode = false;
+					// unedit or not ???					
+					saveInProgress = false;										
+				})
+				.error(function(data, status, headers, config) {
+					$scope.messages.setError("save");
+					$scope.messages.setDetails(data);					
+					saveInProgress = false;	
+				});
 		}else{
-			
+			$http.put(jsRoutes.controllers.experiments.api.Experiments.update($scope.experiment.code).url,$scope.experiment)
+			.success(function(data, status, headers, config) {
+				$scope.messages.setSuccess("save");						
+				// purge basket when save ok or not ?
+				resetBasket();					
+				$scope.experiment = data;
+				$scope.$broadcast('refresh'); // utile seulement si le				
+				saveInProgress = false;										
+			})
+			.error(function(data, status, headers, config) {
+				$scope.messages.setError("save");
+				$scope.messages.setDetails(data);
+				
+				saveInProgress = false;	
+			});			
 		}
 		
-		saveInProgress = false;
-		updateData();
-		$scope.$broadcast('refresh');
 	});
+	
 	
 	$scope.startExperiment = function(){
 		console.log("call startExperiment");
@@ -149,15 +179,13 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		console.log("call changeInstrumentType see getInstrumentsTrigger() in old version");
 		if($scope.experiment && $scope.experiment.instrument && $scope.experiment.instrument.typeCode){
 			loadInstrumentType($scope.experiment.instrument.typeCode);
-			//reinit experiment instrument
+			// reinit experiment instrument
 			$scope.experiment.instrument.code = undefined;
 			$scope.experiment.instrument.outContainerSupportCategoryCode = undefined;	
 			
 		}
 		$scope.experimentTypeTemplate = undefined;		
 	}
-	
-	
 	
 	$scope.loadTemplate = function(){
 		console.log("call loadTemplate see getTemplate() in old version");
@@ -168,10 +196,15 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		}				
 	}
 	
+	var resetBasket = function(){
+		if(mainService.getBasket())mainService.getBasket().reset();
+	}
+	
 	var loadInstrumentType = function(code){
 		$http.get(jsRoutes.controllers.instruments.api.InstrumentUsedTypes.get(code).url)
 			.success(function(data, status, headers, config) {
 				$scope.instrumentType = data;
+				$scope.experiment.instrument.categoryCode = $scope.instrumentType.category.code;
 			})
 			.error(function(data, status, headers, config) {
 				$scope.messages.setError("get");
@@ -183,8 +216,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			$http.get(jsRoutes.controllers.experiments.api.Experiments.get($scope.experiment.code).url).success(function(data) {
 				$scope.experiment = data;				
 			});
-		}
-		
+		}		
 	}
 	
 	var clearLists = function(){
@@ -200,8 +232,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.lists.refresh.protocols({"experimentTypeCode":$scope.experimentType.code});
 		$scope.lists.refresh.resolutions({"typeCode":$scope.experimentType.code});
 		$scope.lists.refresh.states({"objectTypeCode":"Experiment"});
-		
-		$scope.lists.refresh.kitCatalogs();
+		$scope.lists.refresh.kitCatalogs({"experimentTypeCodes":$scope.experiment.typeCode});
 		$scope.lists.refresh.experimentCategories();
 	}
 	
@@ -258,11 +289,11 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				experiment = result;
 			}
 			
-			//experiment.state.code = 'N';
+			// experiment.state.code = 'N';
 			
 			return experiment;
 		}).then(function(experiment){
-			//console.log(experiment);
+			// console.log(experiment);
 			
 			$http.get(jsRoutes.controllers.experiments.api.ExperimentTypes.get(experiment.typeCode).url).error(function(data, status, headers, config) {
 				$scope.messages.setError("get");
@@ -382,19 +413,19 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			        	 active:true
 			         }
 			         /*
-			         otherButtons:{
-			        	 active:true,
-			        	 template:'<button class="btn btn btn-info" ng-click="addNewReagentLine()" title="'+Messages("experiments.addNewReagentLine")+'">'+Messages("experiments.addNewReagentLine")+'</button>'
-			         }
-			         */
+						 * otherButtons:{ active:true, template:'<button
+						 * class="btn btn btn-info"
+						 * ng-click="addNewReagentLine()"
+						 * title="'+Messages("experiments.addNewReagentLine")+'">'+Messages("experiments.addNewReagentLine")+'</button>' }
+						 */
 	};
 
 	$scope.scan = function(e, property, propertyName){
-		//console.log(property);
-		//console.log(e);
+		// console.log(property);
+		// console.log(e);
 		if(e.keyCode === 9 || e.keyCode === 13){
 			property[propertyName] += '_';
-			//console.log(property);
+			// console.log(property);
 			e.preventDefault();
 		}
 	};
@@ -479,12 +510,9 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		return false
 	};
 	/*
-	$scope.addNewReagentLine = function(){
-		$scope.datatableReagent.save();
-		$scope.datatableReagent.addData([{}]);
-		$scope.datatableReagent.setEdit();
-	};
-	*/
+	 * $scope.addNewReagentLine = function(){ $scope.datatableReagent.save();
+	 * $scope.datatableReagent.addData([{}]); $scope.datatableReagent.setEdit(); };
+	 */
 	
 	$scope.datatableReagent = datatable(datatableConfigReagents);
 	

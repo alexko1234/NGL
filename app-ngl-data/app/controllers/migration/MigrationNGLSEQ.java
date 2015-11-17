@@ -272,7 +272,7 @@ public class MigrationNGLSEQ extends CommonController{
 		for(Experiment experiment:experiments){
 			Logger.debug("Experiment to update"+experiment.code);
 			Set<String> inputContainerSupportCodes=new HashSet<String>();
-			for(ContainerUsed containerUsed:experiment.getAllInPutContainer()){
+			for(ContainerUsed containerUsed:experiment.getAllInputContainers()){
 				if(containerUsed.locationOnContainerSupport==null)
 				 {
 					inputContainerSupportCodes.add(containerUsed.code);

@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.ManytoOneContainer;
+import models.laboratory.experiment.instance.ManyToOneContainer;
 import models.laboratory.experiment.instance.OneToManyContainer;
 import models.laboratory.experiment.instance.OneToOneContainer;
 import models.laboratory.experiment.instance.OneToVoidContainer;
@@ -65,7 +65,7 @@ public class MigrationExperiment extends CommonController{
 			if(atomics.getValue() instanceof OneToOneContainerOld){
 				atomicTransfertMethod=new OneToOneContainer();
 			}else if(atomics.getValue() instanceof ManytoOneContainerOld){
-				atomicTransfertMethod=new ManytoOneContainer();
+				atomicTransfertMethod=new ManyToOneContainer();
 			}else if(atomics.getValue() instanceof OneToManyContainerOld){
 				atomicTransfertMethod=new OneToManyContainer();
 			}else if (atomics.getValue() instanceof OneToVoidContainerOld){

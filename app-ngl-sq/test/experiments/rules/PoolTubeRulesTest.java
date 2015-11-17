@@ -9,7 +9,7 @@ import experiments.ExperimentTestHelper;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.ManytoOneContainer;
+import models.laboratory.experiment.instance.ManyToOneContainer;
 import models.utils.instance.ExperimentHelper;
 import play.Logger;
 import play.Logger.ALogger;
@@ -37,7 +37,7 @@ public class PoolTubeRulesTest extends AbstractTests {
 		Experiment exp = ExperimentTestHelper.getFakeExperiment();
 		exp.state.code = "IP";
 		exp.typeCode="pool-tube";
-		ManytoOneContainer atomicTransfert = ExperimentTestHelper.getManytoOneContainer();
+		ManyToOneContainer atomicTransfert = ExperimentTestHelper.getManytoOneContainer();
 		
 		ContainerUsed containerIn1 = ExperimentTestHelper.getContainerUsed("containerUsedIn1");
 		containerIn1.percentage = 20.0;
@@ -76,11 +76,11 @@ public class PoolTubeRulesTest extends AbstractTests {
 		contextValidation.putObject("stateCode", exp.state.code);
 		contextValidation.putObject("typeCode", exp.typeCode);
 
-		ExperimentValidationHelper.validateAtomicTransfertMethodes(exp.atomicTransfertMethods, contextValidation);
+		ExperimentValidationHelper.validateAtomicTransfertMethods(exp.atomicTransfertMethods, contextValidation);
 
 		ExperimentHelper.doCalculations(exp,ExperimentsOld.calculationsRules);
 		
-		ManytoOneContainer atomicTransfertResult = (ManytoOneContainer)exp.atomicTransfertMethods.get(0);
+		ManyToOneContainer atomicTransfertResult = (ManyToOneContainer)exp.atomicTransfertMethods.get(0);
 		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("inputVolume")).isNotNull();
 		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("inputVolume").value).isInstanceOf(Double.class);
 		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("inputVolume").value).isEqualTo(new Double(8.0));

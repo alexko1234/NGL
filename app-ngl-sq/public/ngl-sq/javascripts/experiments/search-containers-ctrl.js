@@ -575,7 +575,7 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 		tabService.activeTab(0);
 	}
 	
-	if(angular.isUndefined($scope.getBasket())){
+	if(angular.isUndefined(mainService.getBasket())){
 		$scope.basket = basket();			
 		mainService.setBasket($scope.basket);
 	} else {

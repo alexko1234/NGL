@@ -39,10 +39,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import fr.cea.ig.MongoDBDAO;
 
-public class ManytoOneContainer extends AtomicTransfertMethod{
+public class ManyToOneContainer extends AtomicTransfertMethod{
 
 
-	public ManytoOneContainer(){
+	public ManyToOneContainer(){
 		super();
 	}
 

@@ -9,7 +9,7 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.ManytoOneContainer;
+import models.laboratory.experiment.instance.ManyToOneContainer;
 import models.utils.instance.ExperimentHelper;
 
 import org.junit.AfterClass;
@@ -41,10 +41,10 @@ public class ExperimentTests extends AbstractTests{
 	public void updateDataMethodExperiment(){
 
 		Experiment exp=ExperimentTestHelper.getFakeExperiment();
-		ManytoOneContainer atomicTransfert1 = ExperimentTestHelper.getManytoOneContainer();
+		ManyToOneContainer atomicTransfert1 = ExperimentTestHelper.getManytoOneContainer();
 		atomicTransfert1.line="1";
 		atomicTransfert1.column="0";
-		ManytoOneContainer atomicTransfert2 = ExperimentTestHelper.getManytoOneContainer();
+		ManyToOneContainer atomicTransfert2 = ExperimentTestHelper.getManytoOneContainer();
 		atomicTransfert2.line="2";
 		atomicTransfert2.column="0";
 		
@@ -60,7 +60,7 @@ public class ExperimentTests extends AbstractTests{
 		assertThat(exp.projectCodes).isNull();
 		assertThat(exp.sampleCodes).isNull();
 		assertThat(exp.inputContainerSupportCodes).isNull();
-		exp=ExperimentHelper.updateData(exp);
+		exp=ExperimentHelper.updateXCodes(exp);
 		assertThat("ADI").isIn(exp.projectCodes);
 		assertThat("ADI_RD").isIn(exp.sampleCodes);
 		assertThat("ADI_RD1").isIn(exp.inputContainerSupportCodes);

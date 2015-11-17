@@ -13,7 +13,7 @@ import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.ManytoOneContainer;
+import models.laboratory.experiment.instance.ManyToOneContainer;
 import models.laboratory.experiment.instance.OneToManyContainer;
 import models.laboratory.experiment.instance.OneToOneContainer;
 import models.laboratory.experiment.instance.OneToVoidContainer;
@@ -38,8 +38,8 @@ public class ExperimentTestHelper {
 		
 	}
 	
-	public static ManytoOneContainer getManytoOneContainer(){
-		ManytoOneContainer atomicTransfertMethod = new ManytoOneContainer();
+	public static ManyToOneContainer getManytoOneContainer(){
+		ManyToOneContainer atomicTransfertMethod = new ManyToOneContainer();
 		atomicTransfertMethod.inputContainerUseds = new ArrayList<ContainerUsed>();
 		atomicTransfertMethod.outputContainerUseds = new ArrayList<ContainerUsed>();
 		return atomicTransfertMethod;
@@ -108,10 +108,10 @@ public class ExperimentTestHelper {
 	public static Experiment getFakeExperimentWithAtomicExperiment(String typeCode){
 		Experiment exp = ExperimentTestHelper.getFakeExperiment();
 		exp.typeCode=typeCode;		
-		ManytoOneContainer atomicTransfert1 = ExperimentTestHelper.getManytoOneContainer();
+		ManyToOneContainer atomicTransfert1 = ExperimentTestHelper.getManytoOneContainer();
 		atomicTransfert1.line="1";
 		atomicTransfert1.column="0";
-		ManytoOneContainer atomicTransfert2 = ExperimentTestHelper.getManytoOneContainer();
+		ManyToOneContainer atomicTransfert2 = ExperimentTestHelper.getManytoOneContainer();
 		atomicTransfert2.line="2";
 		atomicTransfert2.column="0";
 		
@@ -154,10 +154,10 @@ public class ExperimentTestHelper {
 	public static Experiment getFakeExperimentWithAtomicExperimentManyToOne(String typeCode){
 		Experiment exp = getFakeExperiment();
 		exp.typeCode=typeCode;		
- 		ManytoOneContainer atomicTransfert1 = ExperimentTestHelper.getManytoOneContainer();
+ 		ManyToOneContainer atomicTransfert1 = ExperimentTestHelper.getManytoOneContainer();
  		atomicTransfert1.line="1";
 		atomicTransfert1.column="0";
-		ManytoOneContainer atomicTransfert2 = ExperimentTestHelper.getManytoOneContainer();
+		ManyToOneContainer atomicTransfert2 = ExperimentTestHelper.getManytoOneContainer();
 		atomicTransfert2.line="2";
 		atomicTransfert2.column="0";
 		

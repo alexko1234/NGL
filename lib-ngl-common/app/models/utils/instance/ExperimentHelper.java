@@ -6,13 +6,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.ManytoOneContainer;
+import models.laboratory.experiment.instance.ManyToOneContainer;
 import models.laboratory.experiment.instance.OneToOneContainer;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.instance.Process;
@@ -77,8 +78,8 @@ public class ExperimentHelper extends InstanceHelpers {
 		}
 		return exp;	
 	}
-
-	public static Experiment updateData(Experiment exp) {
+	@Deprecated
+	public static Experiment updateXCodes(Experiment exp) {
 		exp.sampleCodes = new HashSet<String>();
 		exp.projectCodes  = new HashSet<String>();
 		exp.inputContainerSupportCodes  = new HashSet<String>();
@@ -138,7 +139,7 @@ public class ExperimentHelper extends InstanceHelpers {
 
 		List<String> containerCodes=new ArrayList<String>();
 		List<String> processCodes=new ArrayList<String>();
-		for(ContainerUsed containerUsed:exp.getAllInPutContainer()){
+		for(ContainerUsed containerUsed:exp.getAllInputContainers()){
 			containerCodes.add(containerUsed.code);
 		}
 
@@ -214,8 +215,8 @@ public class ExperimentHelper extends InstanceHelpers {
 		ArrayList<Object> facts = new ArrayList<Object>();
 		facts.add(exp);
 		for(int i=0;i<exp.atomicTransfertMethods.size();i++){
-			if(ManytoOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
-				ManytoOneContainer atomic = (ManytoOneContainer) exp.atomicTransfertMethods.get(i);
+			if(ManyToOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
+				ManyToOneContainer atomic = (ManyToOneContainer) exp.atomicTransfertMethods.get(i);
 				facts.add(atomic);
 			}
 			if(OneToOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
@@ -227,24 +228,24 @@ public class ExperimentHelper extends InstanceHelpers {
 		List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), rulesName, facts);
 		
 		for(Object obj:factsAfterRules){
-			if(ManytoOneContainer.class.isInstance(obj)){
-				exp.atomicTransfertMethods.remove((ManytoOneContainer)obj);
-				exp.atomicTransfertMethods.add((ManytoOneContainer) obj);
+			if(ManyToOneContainer.class.isInstance(obj)){
+				exp.atomicTransfertMethods.remove((ManyToOneContainer)obj);
+				exp.atomicTransfertMethods.add((ManyToOneContainer) obj);
 			}
 		}
 		
 	}
 
-	
+	@Deprecated
 	public static void cleanContainers(Experiment experiment, ContextValidation contextValidation){
 		//load experiment from mongoDB
 		Experiment exp = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, experiment.code);
 		//extract containerIn From DB
-		List<ContainerUsed> containersInFromDB = exp.getAllInPutContainer();
-		List<ContainerUsed> containersIn = experiment.getAllInPutContainer();
+		List<ContainerUsed> containersInFromDB = exp.getAllInputContainers();
+		List<ContainerUsed> containersIn = experiment.getAllInputContainers();
 		
-		Set<Container> addedContainers = new HashSet<>( MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
-				DBQuery.in("code",getDiff(containersIn,containersInFromDB))).toList());
+		List<Container> addedContainers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
+				DBQuery.in("code",getDiff(containersIn,containersInFromDB))).toList();
 		if(addedContainers.size() > 0){
 			ContainerWorkflows.setContainerState(addedContainers, "IW-E", contextValidation);
 			
@@ -254,18 +255,18 @@ public class ExperimentHelper extends InstanceHelpers {
 			}
 		}
 		
-		Set<Container> deletedContainers = new HashSet<>( MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class
-				,DBQuery.in("code", getDiff(containersInFromDB,containersIn))).toList());
+		List<Container> deletedContainers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class
+				,DBQuery.in("code", getDiff(containersInFromDB,containersIn))).toList();
 		if(deletedContainers.size() > 0){
 			
-			String nextContainerState=ContainerWorkflows.getNextContainerStateFromExperimentCategory(exp.categoryCode);			
+			String nextContainerState=ContainerWorkflows.getAvailableContainerStateFromExperimentCategory(exp.categoryCode);			
 			ContainerWorkflows.setContainerState(deletedContainers, nextContainerState, contextValidation);
 			for(Container deletedContainer:deletedContainers){
 				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.and(DBQuery.or(DBQuery.in("containerInputCode", deletedContainer.code),DBQuery.in("newContainerSupportCodes", deletedContainer.code)),DBQuery.notEquals("state.code", "F")), DBUpdate.unset("currentExperimentTypeCode").pull("experimentCodes", exp.code));
 			}
 		}
 	}
-	
+	@Deprecated
 	public static List<String> getDiff(List<ContainerUsed> containersFrom, List<ContainerUsed> containersTo){
 		
 		containersFrom=flattenContainerUsed(containersFrom);
@@ -289,8 +290,8 @@ public class ExperimentHelper extends InstanceHelpers {
 		return containerDiff;
 	}
 	
-	
-	public static List<ContainerUsed> flattenContainerUsed(List<ContainerUsed> containerUseds){
+	@Deprecated
+	private static List<ContainerUsed> flattenContainerUsed(List<ContainerUsed> containerUseds){
 		List<ContainerUsed> results=new ArrayList<ContainerUsed>(containerUseds);
 		for(int i=0;i<containerUseds.size();i++){
 			String code=containerUseds.get(i).code;
@@ -306,4 +307,9 @@ public class ExperimentHelper extends InstanceHelpers {
 		}
 		return results;
 	}
+
+
+
+
+
 }

@@ -157,7 +157,7 @@ public class ProcessWorkflows {
 		State nextState = new State();
 		Set<String> processList=new HashSet<String>();
 
-		nextState.code=ContainerWorkflows.getNextContainerStateFromExperimentCategory(experimentCategoryCode);
+		nextState.code=ContainerWorkflows.getAvailableContainerStateFromExperimentCategory(experimentCategoryCode);
 
 		Set<String> inputContainers=new HashSet<String>();
 		for (Process process : processes) {
@@ -165,7 +165,7 @@ public class ProcessWorkflows {
 			processList.add(process.code);
 		}
 
-		Set<Container> containers=new HashSet<>(MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("code",inputContainers)).toList());
+		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("code",inputContainers)).toList();
 		for(Container container : containers){
 			ProcessHelper.updateContainer(container,processTypeCode, processList,contextValidation);
 			ProcessHelper.updateContainerSupportFromContainer(container,contextValidation);
@@ -194,7 +194,7 @@ public class ProcessWorkflows {
 
 	}*/
 
-	public static boolean setProcessState(Set<Process> processes, String nextStateProcesses, Set<String> resolutions,
+	public static boolean setProcessState(List<Process> processes, String nextStateProcesses, Set<String> resolutions,
 			ContextValidation ctxValidation) {
 
 		Map<String,Set<String>> containersToUpdate=new HashMap<String,Set<String>>();

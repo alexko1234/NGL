@@ -18,11 +18,11 @@ public class InstrumentUsed implements IValidation {
 	//TODO ?? ces infos sont pour l'instant dans Experiment ???
 	//public String typeCode;
 	//public Map<String,PropertyValue> properties
+	public String typeCode;
 	public String categoryCode;
 	public String inContainerSupportCategoryCode;
 	public String outContainerSupportCategoryCode;
-	public String typeCode;
-
+	
 
 	@JsonIgnore
 	@Override

@@ -4,10 +4,10 @@ import models.laboratory.common.description.dao.LevelDAO;
 import models.utils.Model;
 
 public class Level extends Model<Level>{
-	
-	public enum CODE {Container, ContainerIn, ContainerOut, Content, ContentIn, ContentOut, Experiment, Instrument, 
+	//not used ContentIn, ContentOut, ContainerSupportIn, ContainerSupportOut
+	public enum CODE {Container, ContainerIn, ContainerOut, Content, ContainerSupport, Experiment, Instrument, 
 		Project, Process, Run, Sample, Lane, ReadSet, File,
-		Read1, Read2, Single, Pairs, Default, Analysis, ContainerSupport, ContainerSupportIn, ContainerSupportOut};
+		Read1, Read2, Single, Pairs, Default, Analysis};
 		
 	public static Finder<Level> find = new Finder<Level>(LevelDAO.class.getName()); 
 	

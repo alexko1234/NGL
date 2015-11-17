@@ -11,7 +11,7 @@ import experiments.ExperimentTestHelper;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.ManytoOneContainer;
+import models.laboratory.experiment.instance.ManyToOneContainer;
 import models.laboratory.experiment.instance.OneToOneContainer;
 import models.utils.instance.ExperimentHelper;
 import play.Logger;
@@ -148,7 +148,7 @@ public class SolutionStockRulesTests extends AbstractTests{
 		contextValidation.putObject("stateCode", exp.state.code);
 		contextValidation.putObject("typeCode", exp.typeCode);
 
-		ExperimentValidationHelper.validateAtomicTransfertMethodes(exp.atomicTransfertMethods, contextValidation);
+		ExperimentValidationHelper.validateAtomicTransfertMethods(exp.atomicTransfertMethods, contextValidation);
 
 		ExperimentHelper.doCalculations(exp,ExperimentsOld.calculationsRules);
 

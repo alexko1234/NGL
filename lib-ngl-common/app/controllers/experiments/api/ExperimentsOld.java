@@ -269,13 +269,13 @@ public class ExperimentsOld extends CommonController{
 		Form<Experiment> experimentFilledForm = getFilledForm(experimentForm,Experiment.class);
 		Experiment exp = experimentFilledForm.get();
 
-		exp = ExperimentHelper.updateData(exp);
+		exp = ExperimentHelper.updateXCodes(exp);
 		ContextValidation contextValidation = new ContextValidation(getCurrentUser(),  experimentFilledForm.errors());
 		contextValidation.setUpdateMode();
 		contextValidation.putObject("stateCode", exp.state.code);
 		contextValidation.putObject("typeCode", exp.typeCode);
 
-		ExperimentValidationHelper.validateAtomicTransfertMethodes(exp.atomicTransfertMethods, contextValidation);
+		ExperimentValidationHelper.validateAtomicTransfertMethods(exp.atomicTransfertMethods, contextValidation);
 		ExperimentValidationHelper.validateRules(exp, contextValidation);
 
 		if(!contextValidation.hasErrors()){
@@ -357,7 +357,7 @@ public class ExperimentsOld extends CommonController{
 		}
 
 		ExperimentUpdateState experimentUpdateState=new ExperimentUpdateState();
-		experimentUpdateState.nextStateInputContainers=ContainerWorkflows.getNextContainerStateFromExperimentCategory(exp.categoryCode);
+		experimentUpdateState.nextStateInputContainers=ContainerWorkflows.getAvailableContainerStateFromExperimentCategory(exp.categoryCode);
 		experimentUpdateState.nextStateOutputContainers="UA";
 
 		ExperimentWorkflows.setExperimentUpdateState(exp,experimentUpdateState,contextValidation);
@@ -450,7 +450,7 @@ public class ExperimentsOld extends CommonController{
 				exp.validate(ctxValidation);
 				ExperimentHelper.doCalculations(exp,calculationsRules);
 
-				ExperimentHelper.updateData(exp);
+				ExperimentHelper.updateXCodes(exp);
 
 				if(!ctxValidation.hasErrors()){
 					MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME,exp);
@@ -459,7 +459,7 @@ public class ExperimentsOld extends CommonController{
 							DBQuery.in("code", ExperimentHelper.getAllProcessCodesFromExperiment(exp))
 							,DBUpdate.set("currentExperimentTypeCode", exp.typeCode).push("experimentCodes", exp.code),true);
 
-					Set<Container> inputContainers=new HashSet<>(MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code",exp.inputContainerSupportCodes)).toList());
+					List<Container> inputContainers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code",exp.inputContainerSupportCodes)).toList();
 					ContainerWorkflows.setContainerState(inputContainers,"IW-E",ctxValidation);
 				}
 			}
@@ -514,7 +514,7 @@ public class ExperimentsOld extends CommonController{
 	public static Result updateData(String experimentCode){
 		Experiment experiment= MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
 		if(experiment!=null){
-			ExperimentHelper.updateData(experiment);
+			ExperimentHelper.updateXCodes(experiment);
 			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME,Experiment.class,DBQuery.is("code",experimentCode)
 					,DBUpdate.set("projectCodes",experiment.projectCodes).set("sampleCodes",experiment.sampleCodes).set("inputContainerSupportCodes", experiment.inputContainerSupportCodes));
 			return ok(Json.toJson(experiment));

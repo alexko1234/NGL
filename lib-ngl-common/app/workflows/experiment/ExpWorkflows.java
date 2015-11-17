@@ -1,6 +1,7 @@
 package workflows.experiment;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import models.laboratory.common.instance.State;
@@ -8,6 +9,7 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
+import models.utils.dao.DAOException;
 import models.utils.instance.ExperimentHelper;
 
 import org.mongojack.DBQuery;
@@ -25,16 +27,26 @@ public class ExpWorkflows extends Workflows<Experiment>{
 	@Override
 	public void applyWorkflowRules(ContextValidation validation, Experiment exp) {
 		if("N".equals(exp.state.code)){
-
-			MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME,Process.class,
-					DBQuery.in("code", ExperimentHelper.getAllProcessCodesFromExperiment(exp))
-					,DBUpdate.set("currentExperimentTypeCode", exp.typeCode).push("experimentCodes", exp.code),true);
-
-			Set<Container> inputContainers=new HashSet<>(MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code",exp.inputContainerSupportCodes)).toList());
-			ContainerWorkflows.setContainerState(inputContainers,"IW-E", validation);
+			if(validation.isCreationMode()){
+				ExpWorkflowsHelper.updateContainersAndProcesses(exp, validation); 
+			}else if(validation.isUpdateMode()){
+				ExpWorkflowsHelper.updateRemoveContainersFromExperiment(exp, validation); 
+				ExpWorkflowsHelper.updateAddContainersToExperiment(exp, validation);				
+			}
+			ExpWorkflowsHelper.updateXCodes(exp); 			
 			
 		}else if("IP".equals(exp.state.code)){
-			
+			//generate output code. need to be upgraded
+			try {
+				ExperimentHelper.generateOutputContainerUsed(exp, validation);
+				if (!validation.hasErrors()) {
+					MongoDBDAO.save(InstanceConstants.EXPERIMENT_COLL_NAME, exp);
+				}
+			} catch (DAOException e) {
+				throw new RuntimeException();
+			}
+			//update containers & processes state
+			ExpWorkflowsHelper.updateContainersAndProcessesState(exp, validation, "IU", "IP");
 		}else if("F".equals(exp.state.code)){
 			
 		}

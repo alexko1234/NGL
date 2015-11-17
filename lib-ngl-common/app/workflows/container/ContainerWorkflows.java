@@ -258,7 +258,7 @@ public class ContainerWorkflows {
 */
 	/**********************************************************/
 
-	public static boolean setContainerState(Set<Container> containers,String nextState,ContextValidation contextValidation){
+	public static boolean setContainerState(List<Container> containers,String nextState,ContextValidation contextValidation){
 
 		Set<String> supporContainerSet=new HashSet<String>();
 
@@ -284,7 +284,8 @@ public class ContainerWorkflows {
 				rulesContainers.add(container);
 			}
 
-			ContainerWorkflows.rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ContainerWorkflows.ruleWorkflowSQ, rulesContainers),null);
+			//TODO ? rules for Containers ????
+			//ContainerWorkflows.rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ContainerWorkflows.ruleWorkflowSQ, rulesContainers),null);
 			
 			List<ContainerSupport> containerSupports=MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("code",supporContainerSet).notEquals("state.code",nextState)).toList();
 			for(ContainerSupport containerSupport:containerSupports){
@@ -304,7 +305,13 @@ public class ContainerWorkflows {
 		}
 		return true;
 	}
-	public static String getNextContainerStateFromExperimentCategory(String categoryCode) {
+	
+	/**
+	 * Return the available container state for a experiment category code
+	 * @param categoryCode
+	 * @return
+	 */
+	public static String getAvailableContainerStateFromExperimentCategory(String categoryCode) {
 		String nextContainerState=null;
 		if(categoryCode.equals(ExperimentCategory.CODE.transformation.name())){
 			nextContainerState="A-TM";

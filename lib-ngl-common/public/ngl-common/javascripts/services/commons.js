@@ -411,9 +411,9 @@ angular.module('commonsServices', []).
     				'<strong>{{messages.text}}</strong><button class="btn btn-link" ng-click="messages.showDetails=!messages.showDetails" ng-show="messages.isDetails">{{messages.transformKey("msg.details")}}</button>'+
     				'<div ng-show="messages.showDetails">'+
     				'    <ul>'+
-    				'		<li ng-repeat="(key1, value1) in messages.details">{{key1}}'+
+    				'		<li ng-repeat="(key1, value1) in messages.details track by $index">{{key1}}'+
     				'		<ul>'+
-    				'			<li ng-repeat="(key2, value2) in value1"> {{value2}} </li>'+
+    				'			<li ng-repeat="(key2, value2) in value1  track by $index"> {{value2}} </li>'+
     			    '		</ul>'+
     			    '		</li>'+
     			    '	</ul>'	+

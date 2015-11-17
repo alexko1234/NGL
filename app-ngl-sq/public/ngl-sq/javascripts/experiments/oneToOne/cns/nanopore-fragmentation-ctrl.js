@@ -155,7 +155,8 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToS
 			},
 			edit:{
 				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
-				byDefault : ($scope.isEditModeAvailable() && $scope.isNewState()),				columnMode:true
+				byDefault : ($scope.isEditModeAvailable() && $scope.isNewState()),				
+				columnMode:true
 			},
 			messages:{
 				active:false,
@@ -177,15 +178,15 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToS
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
-		$scope.$emit('viewSaved', promises, func, endPromises);
+		$scope.$emit('childSaved', promises, func, endPromises);
 	});
 	
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");		
 		var dtConfig = $scope.atmService.data.getConfig();
 		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isNewState());
-		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());		$scope.atmService.data.setConfig(dtConfig);
-		
+		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
+		$scope.atmService.data.setConfig(dtConfig);
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
 		$scope.$emit('viewRefeshed');
 	});

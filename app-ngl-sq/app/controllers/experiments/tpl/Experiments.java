@@ -137,6 +137,29 @@ public class Experiments extends CommonController{
   	    		controllers.experiments.tpl.routes.javascript.Experiments.details(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.get(),
   	    		
+  	    		
+  	    		controllers.instruments.api.routes.javascript.InstrumentUsedTypes.get(),
+	      		controllers.experiments.api.routes.javascript.Experiments.list(),
+	      		controllers.experiments.api.routes.javascript.Experiments.get(),
+	      		controllers.experiments.api.routes.javascript.Experiments.save(),
+	      		controllers.experiments.api.routes.javascript.Experiments.update(),
+  	    		
+  	    		
+  	    		//controllers.experiments.api.routes.javascript.ExperimentsOld.updateExperimentInformations(),
+  	    		//controllers.experiments.api.routes.javascript.ExperimentsOld.updateExperimentProperties(),
+  	    		//controllers.experiments.api.routes.javascript.ExperimentsOld.updateInstrumentInformations(),
+  	    		//controllers.experiments.api.routes.javascript.ExperimentsOld.updateInstrumentProperties(),  	    		
+  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.addComment(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.updateComment(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.deleteComment(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.updateStateCode(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.retry(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.endOfProcess(),
+  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.stopProcess(),
+  	    		//controllers.experiments.api.routes.javascript.ExperimentsOld.save(),
+  	    		//controllers.experiments.api.routes.javascript.ExperimentsOld.updateContainers(),
+  	    		
+  	    		
   	    		controllers.containers.api.routes.javascript.Containers.list(),
   	    		controllers.containers.api.routes.javascript.ContainerSupports.list(),
   	    		controllers.containers.api.routes.javascript.Containers.get(),
@@ -149,19 +172,9 @@ public class Experiments extends CommonController{
   	    		controllers.experiments.api.routes.javascript.ExperimentTypes.get(),  	    		
   	    		controllers.experiments.api.routes.javascript.ExperimentCategories.list(),
   	    		controllers.experiments.api.routes.javascript.ExperimentTypeNodes.list(),
-  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.updateExperimentInformations(),
-  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.updateExperimentProperties(),
-  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.updateInstrumentInformations(),
-  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.updateInstrumentProperties(),  	    		
-  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.addComment(),
-  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.updateComment(),
-  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.deleteComment(),
-  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.updateStateCode(),
   	    		controllers.instruments.api.routes.javascript.Instruments.list(),
   	    		controllers.instruments.api.routes.javascript.InstrumentUsedTypes.list(),
   	    		controllers.instruments.api.routes.javascript.InstrumentCategories.list(),
-  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.save(),
-  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.updateContainers(),
   	    		controllers.protocols.api.routes.javascript.Protocols.list(),
   	    		instruments.io.routes.javascript.Outputs.sampleSheets(),
   	    		controllers.resolutions.api.routes.javascript.Resolutions.list(),
@@ -169,10 +182,7 @@ public class Experiments extends CommonController{
   	      		controllers.reporting.api.routes.javascript.FilteringConfigurations.list(),
   	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.list(),
 	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.get(),
-	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.save(),
-	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.update(),
-	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.delete(),
-  	      		controllers.reagents.api.routes.javascript.KitCatalogs.list(),
+	      		controllers.reagents.api.routes.javascript.KitCatalogs.list(),
   	      		controllers.reagents.api.routes.javascript.Kits.list(),
   	      		controllers.reagents.api.routes.javascript.Boxes.list(),
   	      		controllers.reagents.api.routes.javascript.Reagents.list(),
@@ -183,16 +193,11 @@ public class Experiments extends CommonController{
   	    		controllers.samples.api.routes.javascript.Samples.list(),
   	    		controllers.commons.api.routes.javascript.Users.list(),
   	    		controllers.containers.api.routes.javascript.Containers.updateBatch(),
-  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.retry(),
-  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.endOfProcess(),
-  	    		controllers.experiments.api.routes.javascript.ExperimentsOld.stopProcess(),
   	    		controllers.containers.api.routes.javascript.Containers.updateStateBatch(),
 	      		controllers.containers.api.routes.javascript.Contents.list(),
-	      		controllers.commons.api.routes.javascript.Parameters.list(),
+	      		controllers.commons.api.routes.javascript.Parameters.list()
 	      		
-	      		controllers.instruments.api.routes.javascript.InstrumentUsedTypes.get(),
-	      		controllers.experiments.api.routes.javascript.Experiments.list(),
-	      		controllers.experiments.api.routes.javascript.Experiments.get()
+	      		
   	    		
   	      )	  	      
   	    );

@@ -81,17 +81,17 @@ public class ExperimentWorkflows {
 		//Search Process, Containers and validate state code
 		if(experimentUpdateState.nextStateProcesses!=null && !ctxValidation.hasErrors()){
 			//Exclu les processus qui sont deja a cette etat
-			experimentUpdateState.processes=new HashSet<>(MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class,DBQuery.in("experimentCodes", exp.code).notEquals("state.code",experimentUpdateState.nextStateProcesses)).toList());
+			experimentUpdateState.processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class,DBQuery.in("experimentCodes", exp.code).notEquals("state.code",experimentUpdateState.nextStateProcesses)).toList();
 			ProcessValidationHelper.validateStateCode(experimentUpdateState.nextStateProcesses, ctxValidation);
 		}
 
 		if(experimentUpdateState.nextStateInputContainers!=null && !ctxValidation.hasErrors()){
-			experimentUpdateState.inputContainers=new HashSet<>(MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code",exp.inputContainerSupportCodes)).toList());
+			experimentUpdateState.inputContainers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code",exp.inputContainerSupportCodes)).toList();
 			ContainerValidationHelper.validateStateCode(experimentUpdateState.nextStateInputContainers,ctxValidation);
 		}
 
 		if(experimentUpdateState.nextStateOutputContainers!=null && !ctxValidation.hasErrors()){
-			experimentUpdateState.outputContainers= new HashSet<>(MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code",exp.outputContainerSupportCodes)).toList());
+			experimentUpdateState.outputContainers= MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code",exp.outputContainerSupportCodes)).toList();
 			ContainerValidationHelper.validateStateCode(experimentUpdateState.nextStateOutputContainers,ctxValidation);
 		}
 

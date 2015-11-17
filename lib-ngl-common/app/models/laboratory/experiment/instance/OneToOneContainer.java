@@ -1,19 +1,9 @@
 package models.laboratory.experiment.instance;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.map.HashedMap;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import controllers.authorisation.PermissionHelper;
-import validation.ContextValidation;
 import models.laboratory.common.description.Level;
-import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
@@ -25,7 +15,6 @@ import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
 import models.utils.instance.ContainerSupportHelper;
@@ -33,9 +22,10 @@ import models.utils.instance.ExperimentHelper;
 import models.utils.instance.ProcessHelper;
 import play.Logger;
 import validation.ContextValidation;
-import validation.common.instance.CommonValidationHelper;
 import validation.utils.ValidationConstants;
-import controllers.CommonController;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import fr.cea.ig.MongoDBDAO;
 
 public class OneToOneContainer extends AtomicTransfertMethod{
@@ -114,8 +104,8 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 			//TODO validation properties !
 			
 			Map<String,PropertyValue> properties=ExperimentHelper.getAllPropertiesFromAtomicTransfertMethod(this,experiment);
-			ContainerHelper.addContent(outputContainer, this.getInputContainers(), experiment, properties);
-			ContainerSupportHelper.updateData(support, this.getInputContainers(), experiment, properties);
+			ContainerHelper.addContent(outputContainer, this.inputContainerUseds, experiment, properties);
+			ContainerSupportHelper.updateData(support, this.outputContainerUseds, experiment, properties);
 			contextValidation.setCreationMode();
 			ContainerSupportHelper.save(support, contextValidation);
 
@@ -145,16 +135,5 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 			contextValidation.removeObject("level");
 		}
 	}
-	@JsonIgnore
-	public List<ContainerUsed> getInputContainers(){
-		return inputContainerUseds;
-	}
-
-	@JsonIgnore
-	public List<ContainerUsed> getOutputContainers(){		
-		return outputContainerUseds;
-	}
-
-
 
 }

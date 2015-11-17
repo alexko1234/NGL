@@ -78,7 +78,7 @@ public class Experiment extends DBObject implements IValidation {
 	}
 	
 	@JsonIgnore
-	public List<ContainerUsed> getAllInPutContainer(){
+	public List<ContainerUsed> getAllInputContainers(){
 		List<ContainerUsed> containersUSed=new ArrayList<ContainerUsed>();
 		if(this.atomicTransfertMethods!=null){
 			for(int i=0;i<this.atomicTransfertMethods.size();i++){
@@ -93,7 +93,7 @@ public class Experiment extends DBObject implements IValidation {
 	}
 	
 	@JsonIgnore
-	public List<ContainerUsed> getAllOutPutContainerWhithInPutContainer(){
+	public List<ContainerUsed> getAllOutputContainers(){
 		List<ContainerUsed> containersUSed=new ArrayList<ContainerUsed>();
 		if(this.atomicTransfertMethods!=null){
 			for(int i=0;i<this.atomicTransfertMethods.size();i++){
@@ -113,20 +113,21 @@ public class Experiment extends DBObject implements IValidation {
 		contextValidation.putObject(CommonValidationHelper.FIELD_TYPE_CODE , typeCode);
 		contextValidation.putObject(CommonValidationHelper.STATE_CODE , state.code);
 		ExperimentValidationHelper.validateCode(this, InstanceConstants.EXPERIMENT_COLL_NAME, contextValidation);
-		//ExperimentValidationHelper.validateState(this.typeCode, this.state, contextValidation);
 		ExperimentValidationHelper.validationExperimentType(typeCode, experimentProperties, contextValidation);
 		ExperimentValidationHelper.validationExperimentCategoryCode(categoryCode, contextValidation);
-		contextValidation.putObject(CommonValidationHelper.FIELD_TYPE_CODE , typeCode);
-		ExperimentValidationHelper.validateResolutionCodes(state.resolutionCodes,contextValidation);
+		ExperimentValidationHelper.validateState(this.typeCode, this.state, contextValidation);
 		ExperimentValidationHelper.validationProtocol(typeCode,protocolCode,contextValidation);
 		ExperimentValidationHelper.validateInstrumentUsed(instrument,instrumentProperties,contextValidation);
-		ExperimentValidationHelper.validateAtomicTransfertMethodes(atomicTransfertMethods,contextValidation);
-		ExperimentValidationHelper.validateReagents(reagents,contextValidation);
+		ExperimentValidationHelper.validateAtomicTransfertMethods(atomicTransfertMethods,contextValidation);
+		ExperimentValidationHelper.validateReagents(reagents,contextValidation); //TODO active reagents validation inside ReagentUsed
 		ExperimentValidationHelper.validateTraceInformation(traceInformation, contextValidation);		
-		ExperimentValidationHelper.validateRules(this,contextValidation);
+		
 		ExperimentValidationHelper.validateInputOutputContainerSupport(this,contextValidation);
 		
-
+		//TODO Validate projectCodes, sampleCodes
+		
+		ExperimentValidationHelper.validateRules(this,contextValidation);
+		
 	}
 
 	
