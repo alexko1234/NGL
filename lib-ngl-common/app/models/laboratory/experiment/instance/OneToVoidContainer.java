@@ -12,7 +12,7 @@ public class OneToVoidContainer extends AtomicTransfertMethod {
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		contextValidation.putObject("level", Level.CODE.ContainerIn);
-		for(ContainerUsed inputContainerUsed:inputContainerUseds){
+		for(InputContainerUsed inputContainerUsed:inputContainerUseds){
 			inputContainerUsed.validate(contextValidation);
 		}
 		contextValidation.removeObject("level");

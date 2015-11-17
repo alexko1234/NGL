@@ -93,8 +93,8 @@ public class ManyToOneContainer extends AtomicTransfertMethod{
 			if(this.outputContainerUseds!=null){
 				this.outputContainerUseds.get(0).code=outPutContainerCode;				
 			}else {
-				this.outputContainerUseds = new ArrayList<ContainerUsed>();
-				this.outputContainerUseds.add(new ContainerUsed(outPutContainerCode));
+				this.outputContainerUseds = new ArrayList<OutputContainerUsed>();
+				this.outputContainerUseds.add(new OutputContainerUsed(outPutContainerCode));
 			}
 			
 			support.categoryCode=experiment.instrument.outContainerSupportCategoryCode;
@@ -139,8 +139,8 @@ public class ManyToOneContainer extends AtomicTransfertMethod{
 
 				//Add contents to container and data projets, sample ... in containersupport
 				Map<String,PropertyValue> properties=ExperimentHelper.getAllPropertiesFromAtomicTransfertMethod(this,experiment);
-				ContainerHelper.addContent(outputContainer, this.getInputContainers(), experiment, properties);
-				ContainerSupportHelper.updateData(support, this.getInputContainers(), experiment, properties);
+				ContainerHelper.addContent(outputContainer, this.inputContainerUseds, experiment, properties);
+				ContainerSupportHelper.updateData(support, this.inputContainerUseds, experiment, properties);
 				ContainerSupportHelper.save(support,contextValidation);
 				
 				if(!contextValidation.hasErrors()){
@@ -168,7 +168,7 @@ public class ManyToOneContainer extends AtomicTransfertMethod{
 		AtomicTransfertMethodValidationHelper.validateOneOutputContainer(outputContainerUseds, contextValidation);
 		
 		contextValidation.addKeyToRootKeyName("inputContainerUseds");
-		for(ContainerUsed containerUsed:inputContainerUseds){
+		for(InputContainerUsed containerUsed:inputContainerUseds){
 			contextValidation.putObject("level", Level.CODE.ContainerIn);
 			containerUsed.validate(contextValidation);
 			contextValidation.removeObject("level");
@@ -178,15 +178,6 @@ public class ManyToOneContainer extends AtomicTransfertMethod{
 		AtomicTransfertMethodValidationHelper.validateOneOutputContainer(outputContainerUseds, contextValidation);
 	}
 
-	@JsonIgnore
-	public List<ContainerUsed> getInputContainers(){
-		return inputContainerUseds;
-	}
-
-	@JsonIgnore
-	public List<ContainerUsed> getOutputContainers(){		
-		return outputContainerUseds;
-	}
 
 
 

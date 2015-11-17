@@ -23,6 +23,7 @@ import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
@@ -121,9 +122,9 @@ public class ContainerSupportHelper {
 	}
 
 
-	public static void updateData(ContainerSupport containerSupport,List<ContainerUsed> inputContainerUseds, Experiment experiment, Map<String, PropertyValue> properties) {
+	public static void updateData(ContainerSupport containerSupport,List<InputContainerUsed> inputContainerUseds, Experiment experiment, Map<String, PropertyValue> properties) {
 
-		for(ContainerUsed inputContainerUsed:inputContainerUseds){
+		for(InputContainerUsed inputContainerUsed:inputContainerUseds){
 
 			Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, inputContainerUsed.code);
 			if(containerSupport.projectCodes == null){

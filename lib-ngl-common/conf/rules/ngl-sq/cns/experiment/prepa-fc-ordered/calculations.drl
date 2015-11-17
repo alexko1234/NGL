@@ -9,8 +9,8 @@ rule "prepa-fc-ordered"
 	lock-on-active true
     when
     	 $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-fc-ordered", $stateCode : state.code, $stateCode!="F")
-    	 $atomicTransfert: ManytoOneContainer( )
-    	 ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null, $concentrationIN:concentration) from $atomicTransfert.inputContainerUseds
+    	 $atomicTransfert: ManyToOneContainer( )
+    	 InputContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null, $concentrationIN:concentration) from $atomicTransfert.inputContainerUseds
     	 
     then
     	Logger.debug("Experiment prepa-fc-ordered");
@@ -24,8 +24,8 @@ rule "prepa-fc-ordered volume stock engaged in denaturation"
 	lock-on-active true
     when
     	 $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-fc-ordered", $stateCode : state.code, $stateCode!="F")
-    	 $atomicTransfert: ManytoOneContainer( )
-    	 ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null, $concentrationIN:concentration) from $atomicTransfert.inputContainerUseds
+    	 $atomicTransfert: ManyToOneContainer( )
+    	 InputContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null, $concentrationIN:concentration) from $atomicTransfert.inputContainerUseds
     	 $finalConcentration1 : PropertyValue() from $experimentProperties.get("finalConcentration1")
     	 $finalVolume1 : PropertyValue() from $experimentProperties.get("finalVolume1")
     	 eval($finalVolume1.value != null && Double.class.isInstance($finalVolume1.value) && $finalConcentration1.value != null && Double.class.isInstance($finalConcentration1.value) && Double.parseDouble($concentrationIN.value.toString()) != 0)
@@ -50,9 +50,9 @@ rule "prepa-fc-ordered volume PhiX"
 	lock-on-active true
 	when
 		 $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-fc-ordered", $stateCode : state.code, $stateCode!="F")
-		 $atomicTransfert: ManytoOneContainer( )
-		 ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null) from $atomicTransfert.inputContainerUseds
-		 ContainerUsed( $experimentPropertiesOut : experimentProperties,$experimentPropertiesOut!=null) from $atomicTransfert.outputContainerUseds
+		 $atomicTransfert: ManyToOneContainer( )
+		 InputContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null) from $atomicTransfert.inputContainerUseds
+		 OutputContainerUsed( $experimentPropertiesOut : experimentProperties,$experimentPropertiesOut!=null) from $atomicTransfert.outputContainerUseds
 		 $phixPercent : PropertyValue() from $experimentPropertiesOut.get("phixPercent")
 		 $finalConcentration1 : PropertyValue() from $experimentProperties.get("finalConcentration1")
 		 $finalVolume1 : PropertyValue() from $experimentProperties.get("finalVolume1")
@@ -77,8 +77,8 @@ rule "prepa-fc-ordered volume RSB"
 	no-loop
     when
     	 $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-fc-ordered", $stateCode : state.code, $stateCode!="F")
-    	 $atomicTransfert: ManytoOneContainer( )
-    	 ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null, $concentrationIN:concentration) from $atomicTransfert.inputContainers
+    	 $atomicTransfert: ManyToOneContainer( )
+    	 InputContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null, $concentrationIN:concentration) from $atomicTransfert.inputContainerUseds
     	 $phixVolume : PropertyValue() from $experimentProperties.get("phixVolume")
     	 $finalVolume1 : PropertyValue() from $experimentProperties.get("finalVolume1")
     	 $inputVolume : PropertyValue() from $experimentProperties.get("inputVolume")
@@ -101,9 +101,9 @@ rule "prepa-fc-ordered concentration final"
 	no-loop
     when
     	 $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-fc-ordered", $stateCode : state.code, $stateCode!="F")
-    	 $atomicTransfert: ManytoOneContainer( )
-    	 ContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null) from $atomicTransfert.inputContainers
-    	 ContainerUsed( $experimentPropertiesOut : experimentProperties,$experimentPropertiesOut!=null) from $atomicTransfert.outputContainers
+    	 $atomicTransfert: ManyToOneContainer( )
+    	 InputContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null) from $atomicTransfert.inputContainerUseds
+    	 OutputContainerUsed( $experimentPropertiesOut : experimentProperties,$experimentPropertiesOut!=null) from $atomicTransfert.outputContainerUseds
     	 $finalVolume : PropertyValue() from $experimentPropertiesOut.get("finalVolume")
     	 $inputVolume2 : PropertyValue() from $experimentProperties.get("inputVolume2")
     	 $finalConcentration1 : PropertyValue() from $experimentProperties.get("finalConcentration1")

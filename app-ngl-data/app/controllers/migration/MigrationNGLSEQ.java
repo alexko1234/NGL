@@ -17,6 +17,7 @@ import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.parameter.Index;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
@@ -272,7 +273,7 @@ public class MigrationNGLSEQ extends CommonController{
 		for(Experiment experiment:experiments){
 			Logger.debug("Experiment to update"+experiment.code);
 			Set<String> inputContainerSupportCodes=new HashSet<String>();
-			for(ContainerUsed containerUsed:experiment.getAllInputContainers()){
+			for(InputContainerUsed containerUsed:experiment.getAllInputContainers()){
 				if(containerUsed.locationOnContainerSupport==null)
 				 {
 					inputContainerSupportCodes.add(containerUsed.code);

@@ -8,7 +8,7 @@ rule "Concentration not null in Denat dilution outputContainer"
     when
     	$experiment:Experiment($typeCode:typeCode,$typeCode=="denat-dil-lib",$stateCode:state.code=="IP")
 		$atomicTransfert: OneToOneContainer($inputContainerUsed:inputContainerUseds.get(0), $outputContainerUsed: outputContainerUseds.get(0))
-		ContainerUsed($finalConcentration: concentration) from $outputContainerUsed
+		OutputContainerUsed($finalConcentration: concentration) from $outputContainerUsed
 		$contextValidation:ContextValidation()
 		eval($finalConcentration == null || $finalConcentration.value == null || $finalConcentration.value == "") 
     then
@@ -29,7 +29,7 @@ rule "Volume not null in denat dilution outputContainer"
     when
     	$experiment:Experiment($typeCode:typeCode,$typeCode=="denat-dil-lib",$stateCode:state.code=="IP")
 		$atomicTransfert: OneToOneContainer($inputContainerUsed:inputContainerUseds.get(0), $outputContainerUsed: outputContainerUseds.get(0))
-	   	ContainerUsed($finalVolume: volume) from $outputContainerUsed
+	   	OutputContainerUsed($finalVolume: volume) from $outputContainerUsed
     	$contextValidation:ContextValidation()
     	eval($finalVolume == null || $finalVolume.value == null || $finalVolume.value == "")
     then

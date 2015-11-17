@@ -18,7 +18,7 @@ import validation.experiment.instance.ContainerUsedValidation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
+@Deprecated
 public class ContainerUsed implements IValidation{
 	
 	public String code;

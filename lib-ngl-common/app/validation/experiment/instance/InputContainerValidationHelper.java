@@ -10,7 +10,7 @@ import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.instance.InputContainer;
+import models.laboratory.experiment.instance.InputContainerUsed;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
@@ -19,7 +19,7 @@ import validation.utils.ValidationHelper;
 public class InputContainerValidationHelper extends CommonValidationHelper {
 
 	public static void compareInputContainerWithContainer(
-			ContextValidation contextValidation, InputContainer inputContainer,
+			ContextValidation contextValidation, InputContainerUsed inputContainer,
 			Container container) {
 		
 		if(!inputContainer.categoryCode.equals(container.categoryCode)){

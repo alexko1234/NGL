@@ -23,8 +23,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 })
 public abstract class AtomicTransfertMethod implements IValidation {
 
-	public List<ContainerUsed> inputContainerUseds;
-	public List<ContainerUsed> outputContainerUseds;
+	public List<InputContainerUsed> inputContainerUseds;
+	public List<OutputContainerUsed> outputContainerUseds;
 	public String line;
 	public String column;
 	public Comment comment;

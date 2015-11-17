@@ -9,6 +9,7 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.ManyToOneContainer;
 import models.utils.instance.ExperimentHelper;
 
@@ -51,8 +52,8 @@ public class ExperimentTests extends AbstractTests{
 		exp.atomicTransfertMethods.add(0,atomicTransfert1);
 		exp.atomicTransfertMethods.add(1, atomicTransfert2);
 		
-		atomicTransfert1.inputContainerUseds=new ArrayList<ContainerUsed>();
-		ContainerUsed containerUsed = new ContainerUsed(CONTAINER_CODE);
+		atomicTransfert1.inputContainerUseds=new ArrayList<InputContainerUsed>();
+		InputContainerUsed containerUsed = new InputContainerUsed(CONTAINER_CODE);
 		containerUsed.locationOnContainerSupport=new LocationOnContainerSupport();
 		containerUsed.locationOnContainerSupport.code=CONTAINER_CODE;
 		atomicTransfert1.inputContainerUseds.add(containerUsed);
@@ -71,21 +72,21 @@ public class ExperimentTests extends AbstractTests{
 	@Test
 	public void diffInputContainerExperiment(){
 		
-		ContainerUsed containerA1=new ContainerUsed("A");
-		ContainerUsed containerA2=new ContainerUsed("A");
-		ContainerUsed containerA3=new ContainerUsed("A");
-		ContainerUsed containerA4=new ContainerUsed("A");
-		ContainerUsed containerA5=new ContainerUsed("A");
-		ContainerUsed containerA6=new ContainerUsed("A");
-		ContainerUsed containerA7=new ContainerUsed("A");
-		ContainerUsed containerA8=new ContainerUsed("A");
-		ContainerUsed containerB1=new ContainerUsed("B");
-		ContainerUsed containerB2=new ContainerUsed("B");
-		ContainerUsed containerC1=new ContainerUsed("C");
-		ContainerUsed containerD1=new ContainerUsed("D");
-		ContainerUsed containerD2=new ContainerUsed("D");
+		InputContainerUsed containerA1=new InputContainerUsed("A");
+		InputContainerUsed containerA2=new InputContainerUsed("A");
+		InputContainerUsed containerA3=new InputContainerUsed("A");
+		InputContainerUsed containerA4=new InputContainerUsed("A");
+		InputContainerUsed containerA5=new InputContainerUsed("A");
+		InputContainerUsed containerA6=new InputContainerUsed("A");
+		InputContainerUsed containerA7=new InputContainerUsed("A");
+		InputContainerUsed containerA8=new InputContainerUsed("A");
+		InputContainerUsed containerB1=new InputContainerUsed("B");
+		InputContainerUsed containerB2=new InputContainerUsed("B");
+		InputContainerUsed containerC1=new InputContainerUsed("C");
+		InputContainerUsed containerD1=new InputContainerUsed("D");
+		InputContainerUsed containerD2=new InputContainerUsed("D");
 		
-		List<ContainerUsed> containersFrom=new ArrayList<ContainerUsed>();
+		List<InputContainerUsed> containersFrom=new ArrayList<InputContainerUsed>();
 		containersFrom.add(containerA1);
 		containersFrom.add(containerA2);
 		containersFrom.add(containerA3);
@@ -97,7 +98,7 @@ public class ExperimentTests extends AbstractTests{
 		containersFrom.add(containerB1);
 		containersFrom.add(containerB2);
 		containersFrom.add(containerC1);
-		List<ContainerUsed> containersTo=new ArrayList<ContainerUsed>(containersFrom);
+		List<InputContainerUsed> containersTo=new ArrayList<InputContainerUsed>(containersFrom);
 		
 		List<String> containersDiff=null;
 		containersDiff=ExperimentHelper.getDiff(containersFrom,containersTo);

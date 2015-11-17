@@ -91,7 +91,7 @@ rule "Create ReadSet"
 	when  
 		$experiment:Experiment($atomic:atomicTransfertMethods,$state:state.code,$typeCode:typeCode,$typeCode=="nanopore-depot",$state=="F")
 		AtomicTransfertMethod($inputContainerUseds :inputContainerUseds,$laneNumber:line) from $atomic
-		ContainerUsed($code:code,$contents:contents) from $inputContainerUseds
+		InputContainerUsed($code:code,$contents:contents) from $inputContainerUseds
 		$content:Content() from $contents 
 		$run:Run(categoryCode=="nanopore")
 		$contextError:ContextValidation()

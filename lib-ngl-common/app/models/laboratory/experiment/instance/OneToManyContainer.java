@@ -80,11 +80,11 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 			PropertyValue concentration = new PropertySingleValue();
 			
 			support.categoryCode=experiment.instrument.outContainerSupportCategoryCode;
-			ContainerUsed containerUsed = new ContainerUsed(outPutContainerCode);
+			OutputContainerUsed containerUsed = new OutputContainerUsed(outPutContainerCode);
 			containerUsed.locationOnContainerSupport=support;
 			containerUsed.validate(contextValidation);
 			if(	this.outputContainerUseds == null){
-				this.outputContainerUseds = new ArrayList<ContainerUsed>();
+				this.outputContainerUseds = new ArrayList<OutputContainerUsed>();
 			}
 			
 			this.outputContainerUseds.add(containerUsed);
@@ -92,7 +92,7 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 
 		}
 	
-	private void updateOutputContainer(Experiment experiment, ContainerUsed outputContainerUsed, ContextValidation contextValidation)  throws DAOException{
+	private void updateOutputContainer(Experiment experiment, OutputContainerUsed outputContainerUsed, ContextValidation contextValidation)  throws DAOException{
 		
 		if(this.inputContainerUseds!=null){
 			if(null == outputContainerUsed.code){	
@@ -129,7 +129,7 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 	public ContextValidation createOutputContainerUsed(Experiment experiment,ContextValidation contextValidation) throws DAOException {
 		//Logger.error("Not implemented");
 		if(this.inputContainerUseds!=null && (this.outputContainerUseds == null || this.outputContainerUseds.size() == 0)){	
-			this.outputContainerUseds = new ArrayList<ContainerUsed>();
+			this.outputContainerUseds = new ArrayList<OutputContainerUsed>();
 			for(int i=0;i<outputNumber;i++){
 				createOutputContainerUsedHelper(experiment, contextValidation);
 			}
@@ -151,7 +151,7 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 	public ContextValidation saveOutputContainers(Experiment experiment, ContextValidation contextValidation) throws DAOException  {
 
 		if(this.inputContainerUseds.size()!=0){
-			for(ContainerUsed containerUsed:outputContainerUseds){
+			for(OutputContainerUsed containerUsed:outputContainerUseds){
 				if(containerUsed.code!=null && !MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.code)){
 					// Output ContainerSupport
 					ContainerSupport support =MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME,ContainerSupport.class, containerUsed.locationOnContainerSupport.code);
@@ -179,8 +179,8 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 	
 					//Add contents to container and data projets, sample ... in containersupport
 					Map<String,PropertyValue> properties=ExperimentHelper.getAllPropertiesFromAtomicTransfertMethod(this,experiment);
-					ContainerHelper.addContent(outputContainer, this.getInputContainers(), experiment, properties);
-					ContainerSupportHelper.updateData(support, this.getInputContainers(), experiment, properties);
+					ContainerHelper.addContent(outputContainer, this.inputContainerUseds, experiment, properties);
+					ContainerSupportHelper.updateData(support, this.inputContainerUseds, experiment, properties);
 					ContainerSupportHelper.save(support,contextValidation);
 					
 					if(!contextValidation.hasErrors()){
@@ -202,7 +202,7 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 		if(CollectionUtils.isNotEmpty(outputContainerUseds)){
 			contextValidation.putObject("level", Level.CODE.ContainerOut);
 			contextValidation.addKeyToRootKeyName("outputContainerUsed");
-			for(ContainerUsed containerUsed:outputContainerUseds){
+			for(OutputContainerUsed containerUsed:outputContainerUseds){
 				containerUsed.validate(contextValidation);
 			}
 			contextValidation.removeKeyFromRootKeyName("outputContainerUsed");
@@ -218,14 +218,7 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 		AtomicTransfertMethodValidationHelper.validateOneInputContainer(inputContainerUseds, contextValidation);
 		
 	}
-	@JsonIgnore
-	public List<ContainerUsed> getInputContainers(){			
-		return inputContainerUseds;
-	}
-	@JsonIgnore
-	public List<ContainerUsed> getOutputContainers(){
-		return outputContainerUseds;
-	}
+	
 
 	
 }

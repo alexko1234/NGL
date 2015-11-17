@@ -78,8 +78,8 @@ public class Experiment extends DBObject implements IValidation {
 	}
 	
 	@JsonIgnore
-	public List<ContainerUsed> getAllInputContainers(){
-		List<ContainerUsed> containersUSed=new ArrayList<ContainerUsed>();
+	public List<InputContainerUsed> getAllInputContainers(){
+		List<InputContainerUsed> containersUSed=new ArrayList<InputContainerUsed>();
 		if(this.atomicTransfertMethods!=null){
 			for(int i=0;i<this.atomicTransfertMethods.size();i++){
 				if(this.atomicTransfertMethods.get(i)!=null && this.atomicTransfertMethods.get(i).inputContainerUseds.size()>0){
@@ -93,8 +93,8 @@ public class Experiment extends DBObject implements IValidation {
 	}
 	
 	@JsonIgnore
-	public List<ContainerUsed> getAllOutputContainers(){
-		List<ContainerUsed> containersUSed=new ArrayList<ContainerUsed>();
+	public List<OutputContainerUsed> getAllOutputContainers(){
+		List<OutputContainerUsed> containersUSed=new ArrayList<OutputContainerUsed>();
 		if(this.atomicTransfertMethods!=null){
 			for(int i=0;i<this.atomicTransfertMethods.size();i++){
 				if(this.atomicTransfertMethods.get(i).outputContainerUseds.size()!=0){

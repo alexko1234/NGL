@@ -9,7 +9,9 @@ import experiments.ExperimentTestHelper;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.ManyToOneContainer;
+import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.utils.instance.ExperimentHelper;
 import play.Logger;
 import play.Logger.ALogger;
@@ -39,27 +41,27 @@ public class PoolTubeRulesTest extends AbstractTests {
 		exp.typeCode="pool-tube";
 		ManyToOneContainer atomicTransfert = ExperimentTestHelper.getManytoOneContainer();
 		
-		ContainerUsed containerIn1 = ExperimentTestHelper.getContainerUsed("containerUsedIn1");
+		InputContainerUsed containerIn1 = ExperimentTestHelper.getInputContainerUsed("containerUsedIn1");
 		containerIn1.percentage = 20.0;
 		containerIn1.experimentProperties = null;
 		
-		ContainerUsed containerIn2 = ExperimentTestHelper.getContainerUsed("containerUsedIn2");
+		InputContainerUsed containerIn2 = ExperimentTestHelper.getInputContainerUsed("containerUsedIn2");
 		containerIn2.percentage = 20.0;
 		containerIn2.experimentProperties = null;
 		
-		ContainerUsed containerIn3 = ExperimentTestHelper.getContainerUsed("containerUsedIn3");
+		InputContainerUsed containerIn3 = ExperimentTestHelper.getInputContainerUsed("containerUsedIn3");
 		containerIn3.percentage = 20.0;
 		containerIn3.experimentProperties = null;
 		
-		ContainerUsed containerIn4 = ExperimentTestHelper.getContainerUsed("containerUsedIn4");
+		InputContainerUsed containerIn4 = ExperimentTestHelper.getInputContainerUsed("containerUsedIn4");
 		containerIn4.percentage = 20.0;
 		containerIn4.experimentProperties = null;
 		
-		ContainerUsed containerIn5 = ExperimentTestHelper.getContainerUsed("containerUsedIn5");
+		InputContainerUsed containerIn5 = ExperimentTestHelper.getInputContainerUsed("containerUsedIn5");
 		containerIn5.percentage = 20.0;
 		containerIn5.experimentProperties = null;
 		
-		ContainerUsed containerOut1 = ExperimentTestHelper.getContainerUsed("containerUsedOut1");
+		OutputContainerUsed containerOut1 = ExperimentTestHelper.getOutputContainerUsed("containerUsedOut1");
 		containerOut1.volume = new PropertySingleValue(new Double(40.0));
 		
 		atomicTransfert.inputContainerUseds.add(containerIn1);

@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 import models.utils.instance.ExperimentHelper;
@@ -30,7 +31,7 @@ public class ExpWorkflowsHelper {
 		Set<String> projectCodes  = new HashSet<String>();
 		Set<String> inputContainerSupportCodes  = new HashSet<String>();
 		
-		List<String> inputContainerCodes = exp.getAllInputContainers().stream().map((ContainerUsed c) -> c.code).collect(Collectors.toList());
+		List<String> inputContainerCodes = exp.getAllInputContainers().stream().map((InputContainerUsed c) -> c.code).collect(Collectors.toList());
 		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("code", inputContainerCodes)).toList();
 		for(Container container:containers){			
 			if(CollectionUtils.isNotEmpty(container.projectCodes)){
@@ -52,7 +53,7 @@ public class ExpWorkflowsHelper {
 
 	
 	public static void updateContainersAndProcesses(Experiment exp, ContextValidation ctxVal) {
-		List<String> inputContainerCodes = exp.getAllInputContainers().stream().map((ContainerUsed c) -> c.code).collect(Collectors.toList());
+		List<String> inputContainerCodes = exp.getAllInputContainers().stream().map((InputContainerUsed c) -> c.code).collect(Collectors.toList());
 		if(inputContainerCodes.size() > 0){
 			List<Container> inputContainers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("code", inputContainerCodes)).toList();
 			ContainerWorkflows.setContainerState(inputContainers,"IW-E", ctxVal);
@@ -65,7 +66,7 @@ public class ExpWorkflowsHelper {
 	}
 	
 	public static void updateContainersAndProcessesState(Experiment exp, ContextValidation ctxVal, String containerStateCode, String processStateCode) {
-		List<String> inputContainerCodes = exp.getAllInputContainers().stream().map((ContainerUsed c) -> c.code).collect(Collectors.toList());
+		List<String> inputContainerCodes = exp.getAllInputContainers().stream().map((InputContainerUsed c) -> c.code).collect(Collectors.toList());
 		if(inputContainerCodes.size() > 0){
 			List<Container> inputContainers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("code", inputContainerCodes).notEquals("state.code", containerStateCode)).toList();
 			ContainerWorkflows.setContainerState(inputContainers,containerStateCode, ctxVal);
@@ -116,8 +117,8 @@ public class ExpWorkflowsHelper {
 
 
 	private static List<String> getNewContainerCodes(Experiment expFromDB, Experiment expFromUser) {
-		List<String> containerCodesFromDB = expFromDB.getAllInputContainers().stream().map((ContainerUsed c) -> c.code).collect(Collectors.toList());
-		List<String> containerCodesFromUser = expFromUser.getAllInputContainers().stream().map((ContainerUsed c) -> c.code).collect(Collectors.toList());
+		List<String> containerCodesFromDB = expFromDB.getAllInputContainers().stream().map((InputContainerUsed c) -> c.code).collect(Collectors.toList());
+		List<String> containerCodesFromUser = expFromUser.getAllInputContainers().stream().map((InputContainerUsed c) -> c.code).collect(Collectors.toList());
 		
 		List<String> newContainersCodes = new ArrayList<String>();
 		for(String codeFromDB:containerCodesFromUser){
@@ -132,8 +133,8 @@ public class ExpWorkflowsHelper {
 
 
 	private static List<String> getRemoveContainerCodes(Experiment expFromDB, Experiment expFromUser) {
-		List<String> containerCodesFromDB = expFromDB.getAllInputContainers().stream().map((ContainerUsed c) -> c.code).collect(Collectors.toList());
-		List<String> containerCodesFromUser = expFromUser.getAllInputContainers().stream().map((ContainerUsed c) -> c.code).collect(Collectors.toList());
+		List<String> containerCodesFromDB = expFromDB.getAllInputContainers().stream().map((InputContainerUsed c) -> c.code).collect(Collectors.toList());
+		List<String> containerCodesFromUser = expFromUser.getAllInputContainers().stream().map((InputContainerUsed c) -> c.code).collect(Collectors.toList());
 		
 		List<String> removeContainersCodes = new ArrayList<String>();
 		for(String codeFromDB:containerCodesFromDB){

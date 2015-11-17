@@ -12,7 +12,9 @@ import models.laboratory.common.instance.property.PropertyImgValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.ManyToOneContainer;
+import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.utils.InstanceConstants;
 import models.utils.instance.ExperimentHelper;
 
@@ -94,7 +96,7 @@ public class ExperimentValidationTests extends AbstractTests {
 		exp.typeCode="prepa-flowcell";
 		ManyToOneContainer atomicTransfert = ExperimentTestHelper.getManytoOneContainer();
 
-		ContainerUsed containerIn1 = ExperimentTestHelper.getContainerUsed("containerUsedIn1");
+		InputContainerUsed containerIn1 = ExperimentTestHelper.getInputContainerUsed("containerUsedIn1");
 		containerIn1.percentage = 50.0;
 		containerIn1.concentration = new PropertySingleValue(new Integer(10)); 
 		containerIn1.experimentProperties.put("NaOHVolume", new PropertySingleValue(new Double(1)));
@@ -105,7 +107,7 @@ public class ExperimentValidationTests extends AbstractTests {
 		containerIn1.experimentProperties.put("finalConcentration2", new PropertySingleValue(new Double(0.014)));
 		containerIn1.experimentProperties.put("finalVolume2", new PropertySingleValue(new Double(1000)));
 
-		ContainerUsed containerOut1 = ExperimentTestHelper.getContainerUsed("containerUsedOut1");
+		OutputContainerUsed containerOut1 = ExperimentTestHelper.getOutputContainerUsed("containerUsedOut1");
 		containerOut1.experimentProperties.put("phixPercent", new PropertySingleValue(new Double(1)));
 		containerOut1.experimentProperties.put("finalVolume", new PropertySingleValue(new Double(120)));
 

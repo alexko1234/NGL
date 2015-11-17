@@ -25,7 +25,9 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OneToOneContainer;
+import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.processes.instance.Process;
@@ -279,10 +281,10 @@ public class InstanceTest extends AbstractTests{
 		experiment.atomicTransfertMethods= new ArrayList<AtomicTransfertMethod>();
 		for(int i=0; i<10; i++){
 			OneToOneContainer oneToOneContainer =new OneToOneContainer();
-			oneToOneContainer.inputContainerUseds=new ArrayList<ContainerUsed>();
-			oneToOneContainer.inputContainerUseds.add( new ContainerUsed("containerInput"+i));
-			oneToOneContainer.outputContainerUseds = new ArrayList<ContainerUsed>();
-			oneToOneContainer.outputContainerUseds.add(new ContainerUsed("containerOutput"+i));
+			oneToOneContainer.inputContainerUseds=new ArrayList<InputContainerUsed>();
+			oneToOneContainer.inputContainerUseds.add( new InputContainerUsed("containerInput"+i));
+			oneToOneContainer.outputContainerUseds = new ArrayList<OutputContainerUsed>();
+			oneToOneContainer.outputContainerUseds.add(new OutputContainerUsed("containerOutput"+i));
 			experiment.atomicTransfertMethods.add(i,oneToOneContainer);
 		}
 		

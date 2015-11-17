@@ -22,6 +22,7 @@ import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.sample.description.ImportType;
@@ -78,11 +79,11 @@ public class ContainerHelper {
 
 	}
 
-	public static void addContent(Container outputContainer, List<ContainerUsed> inputContainerUseds , Experiment experiment, Map<String,PropertyValue> properties) throws DAOException {
+	public static void addContent(Container outputContainer, List<InputContainerUsed> inputContainerUseds , Experiment experiment, Map<String,PropertyValue> properties) throws DAOException {
 		
 		List<String> inputContainerCodes=new ArrayList<String>();
 		
-		for(ContainerUsed inputContainerUsed:inputContainerUseds){
+		for(InputContainerUsed inputContainerUsed:inputContainerUseds){
 
 			inputContainerCodes.add(inputContainerUsed.code);
 			

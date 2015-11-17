@@ -11,8 +11,10 @@ import experiments.ExperimentTestHelper;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.ManyToOneContainer;
 import models.laboratory.experiment.instance.OneToOneContainer;
+import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.utils.instance.ExperimentHelper;
 import play.Logger;
 import play.Logger.ALogger;
@@ -42,17 +44,17 @@ public class SolutionStockRulesTests extends AbstractTests{
 		exp.typeCode="solution-stock";
 		OneToOneContainer atomicTransfert = ExperimentTestHelper.getOnetoOneContainer();
 		
-		ContainerUsed containerIn1 = ExperimentTestHelper.getContainerUsed("containerUsedIn1");		
+		InputContainerUsed containerIn1 = ExperimentTestHelper.getInputContainerUsed("containerUsedIn1");		
 		containerIn1.concentration = new PropertySingleValue(new Double(19.23)); 
 		containerIn1.volume = new PropertySingleValue(new Double(25.00));
 		containerIn1.percentage = 100.0;
 		containerIn1.experimentProperties=null;
 		
-		ContainerUsed containerOut1 = ExperimentTestHelper.getContainerUsed("containerUsedOut1");
+		OutputContainerUsed containerOut1 = ExperimentTestHelper.getOutputContainerUsed("containerUsedOut1");
 		containerOut1.volume =  null;
 		containerOut1.concentration = new PropertySingleValue( new Double(10.0));
 		
-		atomicTransfert.inputContainerUseds = new ArrayList<ContainerUsed>();
+		atomicTransfert.inputContainerUseds = new ArrayList<InputContainerUsed>();
 		atomicTransfert.inputContainerUseds.add(containerIn1);
 		atomicTransfert.outputContainerUseds.add(containerOut1);		
 
@@ -83,17 +85,17 @@ public class SolutionStockRulesTests extends AbstractTests{
 		exp.typeCode="solution-stock";
 		OneToOneContainer atomicTransfert = ExperimentTestHelper.getOnetoOneContainer();
 		
-		ContainerUsed containerIn1 = ExperimentTestHelper.getContainerUsed("containerUsedIn1");		
+		InputContainerUsed containerIn1 = ExperimentTestHelper.getInputContainerUsed("containerUsedIn1");		
 		containerIn1.concentration = new PropertySingleValue(new Double(19.23)); 
 		containerIn1.volume = new PropertySingleValue(new Double(25.00));
 		containerIn1.percentage = 100.0;
 		containerIn1.experimentProperties=null;
 		
-		ContainerUsed containerOut1 = ExperimentTestHelper.getContainerUsed("containerUsedOut1");
+		OutputContainerUsed containerOut1 = ExperimentTestHelper.getOutputContainerUsed("containerUsedOut1");
 		containerOut1.volume = new PropertySingleValue(new Double(30.0));
 		containerOut1.concentration =  null;
 		
-		atomicTransfert.inputContainerUseds = new ArrayList<ContainerUsed>();
+		atomicTransfert.inputContainerUseds = new ArrayList<InputContainerUsed>();
 		atomicTransfert.inputContainerUseds.add(containerIn1);
 		atomicTransfert.outputContainerUseds.add(containerOut1);
 		atomicTransfert.line = "1";
@@ -126,18 +128,18 @@ public class SolutionStockRulesTests extends AbstractTests{
 		exp.typeCode="solution-stock";
 		OneToOneContainer atomicTransfert = ExperimentTestHelper.getOnetoOneContainer();
 
-		ContainerUsed containerIn1 = ExperimentTestHelper.getContainerUsed("containerUsedIn1");		
+		InputContainerUsed containerIn1 = ExperimentTestHelper.getInputContainerUsed("containerUsedIn1");		
 		containerIn1.concentration = new PropertySingleValue(new Double(19.23)); 
 		containerIn1.volume = new PropertySingleValue(new Double(25.00)); 
 		containerIn1.experimentProperties=null;
 		
-		ContainerUsed containerOut1 = ExperimentTestHelper.getContainerUsed("containerUsedOut1");
+		OutputContainerUsed containerOut1 = ExperimentTestHelper.getOutputContainerUsed("containerUsedOut1");
 		containerOut1.volume =  new PropertySingleValue(new Double(30.0));
 		containerOut1.concentration = new PropertySingleValue( new Double(10.0));		
 		containerOut1.experimentProperties.put("requiredVolume", new PropertySingleValue());
 		containerOut1.experimentProperties.put("bufferVolume", new PropertySingleValue());
 
-		atomicTransfert.inputContainerUseds = new ArrayList<ContainerUsed>();
+		atomicTransfert.inputContainerUseds = new ArrayList<InputContainerUsed>();
 		atomicTransfert.inputContainerUseds.add(containerIn1);
 		atomicTransfert.outputContainerUseds.add(containerOut1);
 

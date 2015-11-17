@@ -11,6 +11,8 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.InputContainerUsed;
+import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
@@ -82,8 +84,8 @@ public class ProcessHelper {
 	}
 
 
-	public static void updateNewContainerSupportCodes(ContainerUsed outputContainerUsed,
-			List<ContainerUsed> inputContainerUseds,Experiment experiment) {
+	public static void updateNewContainerSupportCodes(OutputContainerUsed outputContainerUsed,
+			List<InputContainerUsed> inputContainerUseds,Experiment experiment) {
 		List<Query> queryOr = new ArrayList<Query>();
 		queryOr.add(DBQuery.in("containerInputCode",ContainerUsedHelper.getContainerCodes(inputContainerUseds)));
 		queryOr.add(DBQuery.in("newContainerSupportCodes",ContainerUsedHelper.getContainerSupportCodes(inputContainerUseds)));
@@ -99,7 +101,7 @@ public class ProcessHelper {
 
 	}
 
-
+	@Deprecated
 	public static void updateNewContainerSupportCodes(List<ContainerUsed> outputContainerUseds,
 			ContainerUsed inputContainerUsed,Experiment experiment) {
 		List<Query> queryOr = new ArrayList<Query>();
@@ -112,11 +114,11 @@ public class ProcessHelper {
 		}
 
 		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,query,
-				DBUpdate.pushAll("newContainerSupportCodes",ContainerUsedHelper.getContainerSupportCodes(outputContainerUseds)),true);
+				DBUpdate.pushAll("newContainerSupportCodes",ContainerUsedHelper.getContainerSupportCodesOld(outputContainerUseds)),true);
 
 	}
 
-
+	@Deprecated
 	public static void updateNewContainerSupportCodes(ContainerUsed outputContainerUsed,
 			ContainerUsed inputContainerUsed, Experiment experiment) {
 		List<Query> queryOr = new ArrayList<Query>();

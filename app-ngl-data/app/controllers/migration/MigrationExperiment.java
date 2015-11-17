@@ -76,8 +76,8 @@ public class MigrationExperiment extends CommonController{
 				throw new RuntimeException("Erreur line = 0");
 			}
 			atomicTransfertMethod.column="1";
-			atomicTransfertMethod.inputContainerUseds=atomics.getValue().getInputContainers();
-			atomicTransfertMethod.outputContainerUseds=atomics.getValue().getOutputContainers();
+			//atomicTransfertMethod.inputContainerUseds=atomics.getValue().getInputContainers();
+			//atomicTransfertMethod.outputContainerUseds=atomics.getValue().getOutputContainers();
 			exp.atomicTransfertMethods.add(atomicTransfertMethod);
 		}
 		//Validation des atomicstransfertmethod

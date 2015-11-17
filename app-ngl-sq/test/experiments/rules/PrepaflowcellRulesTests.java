@@ -14,6 +14,7 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.ManyToOneContainer;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import play.Logger;
@@ -49,7 +50,10 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		content.properties.put("tagCategory", new PropertySingleValue("TAGCATEGORIE"));
 		container.contents.add(content);
 
-		ContainerUsed containerUsed=new ContainerUsed(container);
+		InputContainerUsed containerUsed=new InputContainerUsed();
+		containerUsed.code = container.code;
+		containerUsed.volume = container.mesuredVolume;
+		containerUsed.contents=container.contents;
 		containerUsed.percentage= 0.0;
 		exp.atomicTransfertMethods.get(0).inputContainerUseds.add(containerUsed);
 
@@ -72,7 +76,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		
 		exp.atomicTransfertMethods.add(2,atomicTransfert3);
 		
-		ContainerUsed container3_1=ExperimentTestHelper.getContainerUsed("CONTAINER3_1");
+		InputContainerUsed container3_1=ExperimentTestHelper.getInputContainerUsed("CONTAINER3_1");
 		container3_1.percentage=20.0;
 		Content content3_1=new Content("CONTENT3","TYPE","CATEGORIE");
 		container3_1.contents=new HashSet<Content>();
@@ -80,7 +84,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		container3_1.contents.add(content3_1);
 		
 
-		ContainerUsed container3_2=ExperimentTestHelper.getContainerUsed("CONTAINER3_2");
+		InputContainerUsed container3_2=ExperimentTestHelper.getInputContainerUsed("CONTAINER3_2");
 		container3_2.percentage=80.0;
 		Content content3_2=new Content("CONTENT3","TYPE","CATEGORIE");
 		container3_2.contents=new HashSet<Content>();
@@ -109,7 +113,10 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		content.properties.put("tagCategory", new PropertySingleValue("OTHERCATEGORIE"));
 		container.contents.add(content);
 
-		ContainerUsed containerUsed=new ContainerUsed(container);
+		InputContainerUsed containerUsed=new InputContainerUsed();
+		containerUsed.code = container.code;
+		containerUsed.volume = container.mesuredVolume;
+		containerUsed.contents=container.contents;
 		containerUsed.percentage= 0.0;
 		exp.atomicTransfertMethods.get(0).inputContainerUseds.add(containerUsed);
 
@@ -131,7 +138,10 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		content.properties.put("tagCategory", new PropertySingleValue("TAGCATEGORIE"));
 		container.contents.add(content);
 
-		ContainerUsed containerUsed=new ContainerUsed(container);
+		InputContainerUsed containerUsed=new InputContainerUsed();
+		containerUsed.code = container.code;
+		containerUsed.volume = container.mesuredVolume;
+		containerUsed.contents=container.contents;
 		containerUsed.percentage= 10.0;
 		exp.atomicTransfertMethods.get(0).inputContainerUseds.add(containerUsed);
 
@@ -160,7 +170,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		ContextValidation contextValidation = new ContextValidation(Constants.TEST_USER);
 		Experiment exp=ExperimentTestHelper.getFakeExperimentWithAtomicExperiment("prepa-flowcell");
 
-		ContainerUsed container1_1=ExperimentTestHelper.getContainerUsed("CONTAINER1_1");
+		InputContainerUsed container1_1=ExperimentTestHelper.getInputContainerUsed("CONTAINER1_1");
 		container1_1.percentage=0.0;
 		Content content1_1=new Content("CONTENT1_1","TYPE","CATEGORIE");
 		container1_1.contents=new HashSet<Content>();
@@ -228,7 +238,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		
 		exp.atomicTransfertMethods.add(2,atomicTransfert3);
 		
-		ContainerUsed container3_1=ExperimentTestHelper.getContainerUsed("CONTAINER3_1");
+		InputContainerUsed container3_1=ExperimentTestHelper.getInputContainerUsed("CONTAINER3_1");
 		container3_1.percentage=20.0;
 		Content content3_1=new Content("CONTENT3","TYPE","CATEGORIE");
 		container3_1.contents=new HashSet<Content>();
@@ -238,7 +248,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		container3_1.contents.add(content3_1);
 		
 
-		ContainerUsed container3_2=ExperimentTestHelper.getContainerUsed("CONTAINER3_2");
+		InputContainerUsed container3_2=ExperimentTestHelper.getInputContainerUsed("CONTAINER3_2");
 		container3_2.percentage=80.0;
 		Content content3_2=new Content("CONTENT3","TYPE","CATEGORIE");
 		container3_2.contents=new HashSet<Content>();
@@ -268,7 +278,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		
 		exp.atomicTransfertMethods.add(2,atomicTransfert3);
 		
-		ContainerUsed container3_1=ExperimentTestHelper.getContainerUsed("CONTAINER3_1");
+		InputContainerUsed container3_1=ExperimentTestHelper.getInputContainerUsed("CONTAINER3_1");
 		container3_1.percentage=20.0;
 		container3_1.fromExperimentTypeCodes=new HashSet<String>();
 		container3_1.fromExperimentTypeCodes.add("frag");
@@ -280,7 +290,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		container3_1.contents.add(content3_1);
 		
 
-		ContainerUsed container3_2=ExperimentTestHelper.getContainerUsed("CONTAINER3_2");
+		InputContainerUsed container3_2=ExperimentTestHelper.getInputContainerUsed("CONTAINER3_2");
 		container3_2.percentage=80.0;
 		container3_2.fromExperimentTypeCodes=new HashSet<String>();
 		container3_2.fromExperimentTypeCodes.add("lib");
@@ -313,7 +323,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		
 		exp.atomicTransfertMethods.add(2,atomicTransfert3);
 		
-		ContainerUsed container3_1=ExperimentTestHelper.getContainerUsed("CONTAINER3_1");
+		InputContainerUsed container3_1=ExperimentTestHelper.getInputContainerUsed("CONTAINER3_1");
 		container3_1.percentage=20.0;
 		container3_1.fromExperimentTypeCodes=new HashSet<String>();
 		container3_1.fromExperimentTypeCodes.add("frag");
@@ -323,7 +333,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		container3_1.contents.add(content3_1);
 		
 
-		ContainerUsed container3_2=ExperimentTestHelper.getContainerUsed("CONTAINER3_2");
+		InputContainerUsed container3_2=ExperimentTestHelper.getInputContainerUsed("CONTAINER3_2");
 		container3_2.percentage=80.0;
 		container3_2.fromExperimentTypeCodes=new HashSet<String>();
 		container3_2.fromExperimentTypeCodes.add("lib");

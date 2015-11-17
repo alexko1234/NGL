@@ -35,6 +35,7 @@ import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.ExperimentUpdateState;
+import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
 import models.laboratory.processes.instance.Process;
@@ -534,7 +535,7 @@ public class ExperimentsOld extends CommonController{
 
 			//Experiment
 			for(AtomicTransfertMethod atomicTransfertMethods:experiment.atomicTransfertMethods){
-				for(ContainerUsed containerUsed:atomicTransfertMethods.outputContainerUseds){
+				for(OutputContainerUsed containerUsed:atomicTransfertMethods.outputContainerUseds){
 					containerSupportCodeOld=containerUsed.locationOnContainerSupport.code;
 					//Remplace ancien code par le nouveau dans le nom du container
 					containerUsed.code=containerUsed.code.replace(containerSupportCodeOld, containerSupportCode);
