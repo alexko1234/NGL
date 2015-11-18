@@ -229,39 +229,67 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Activité des pores","poreOccupancyTime", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Rendement","yieldBasePairs", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Score qualité","timeAvgQuality", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Métriques des pores","poreMetrics", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% pores inactifs","inactivePorePercentage", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Distribution % pores actifs","activePorePercentageDistrib", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% pores actifs (MIN)","activePorePercentageMin", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% pores actifs (MAX)","activePorePercentageMax", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% pores actifs (MOYENNE)","activePorePercentageAvg", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Distribution nb reads / pore","poreNbReadsDistrib", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
+		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Distribution nb reads / pore","poreNbReadsDistrib", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb reads / pore (MIN)","poreNbReadsMin", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Integer.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb reads / pore (MAX)","poreNbReadsMax", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Integer.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb reads / pore (MOYENNE)","poreNbReadsAvg", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Distribution nb bases / pore","poreNbBasesDistrib", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
+		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Distribution nb bases / pore","poreNbBasesDistrib", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases / pore (MIN)","poreNbBasesMin", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Integer.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases / pore (MAX)","poreNbBasesMax", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Integer.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases / pore (MOYENNE)","poreNbBasesAvg", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Distribution % durée d'activité des pores","poreActivityTimePercentDistrib", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
+		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Distribution % durée d'activité des pores","poreActivityTimePercentDistrib", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% durée d'activité des pores (MIN)","poreActivityTimePercentMin", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% durée d'activité des pores (MAX)","poreActivityTimePercentMax", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% durée d'activité des pores (MOYENNE)","poreActivityTimePercentAvg", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Distribution vitesse de séquençage des pores","poreSpeedDistrib", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
+		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Distribution vitesse de séquençage des pores","poreSpeedDistrib", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Vitesse de séquençage des pores (MIN)","poreSpeedDistribMin", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Vitesse de séquençage des pores (MAX)","poreSpeedDistribMax", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Vitesse de séquençage des pores (MOYENNE)","poreSpeedDistribAvg", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
 		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Distribution Score Qualité","poreQualityDistrib", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
 		
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Score Qualité (MIN)","poreQualityMin", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Score Qualité (MAX)","poreQualityMax", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
+		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Score Qualité (MIN)","poreQualityMin", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
+		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Score Qualité (MAX)","poreQualityMax", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Score Qualité (MOYENNE)","poreQualityAvg", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
 		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases 1D forward","nbBases1DForward", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases 1D reverse","nbBases1DReverse", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases 2D all","nbBases2DAll", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases 2D fail","nbBases2DFail", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "single"));
+		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases 2D fail","nbBases2DFail", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases 2D pass","nbBases2DPass", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "single"));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases utiles","totalUsefulBases", LevelService.getLevels(Level.CODE.Run,Level.CODE.Default), Long.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version MinKnow","minkowVersion", LevelService.getLevels(Level.CODE.Run,Level.CODE.Default), String.class, true, "single"));
+		
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences 1D forward","1DForward.NbReads", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille 1D forward (MOYENNE)","1DForward.AvgSize", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Double.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille 1D forward (MAX)","1DForward.MaxSize", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("N50 1D forward","1DForward.N50", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences 1D reverse","1DReverse.NbReads", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille 1D reverse (MOYENNE)","1DReverse.AvgSize", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Double.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille 1D reverse (MAX)","1DReverse.MaxSize", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("N50 1D reverse","1DReverse.N50", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences 2D all","2DAll.NbReads", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille 2D all (MOYENNE)","2DAll.AvgSize", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Double.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille 2D all (MAX)","2DAll.MaxSize", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("N50 2D all","2DAll.N50", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Integer.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences > 10kb 2D all","2DAll.NbReadsOver10kb", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% GC 2D all","2DAll.GCPercent", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Double.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences 2D pass","2DPass.NbReads", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "object_list"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Nb sequences 2D pass","2DPass.ReadsPercent", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Double.class, false, "object_list"));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("GC Distribution","GCDistribution", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Image.class, true, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Read Length vs Read Quality","readLengthVsreadQuality", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Image.class, true, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Read Length Distribution","readLengthDistribution", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Image.class, true, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Read Quality Distribution","readQualityDistribution", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Image.class, true, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Kmers Distribution","KmersDistribution", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Image.class, true, "img"));
 		
         return propertyDefinitions;
 	}
@@ -271,6 +299,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
         // just readset level
         propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Useful sequences","usefulSequences", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "single"));
         propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Useful bases","usefulBases", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "single"));
+        propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Nb sequences utiles","usefulSequencesPercent", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, false, "single"));
         return propertyDefinitions;
 	}
 	
