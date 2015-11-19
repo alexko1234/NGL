@@ -61,11 +61,11 @@ rule "Validation outputcode nanopore-depot"
 	when 
 	$experiment:Experiment($instrumentProperties: instrumentProperties,$typeCode:typeCode,$typeCode=="nanopore-depot")
 	$containerSupportCode : PropertyValue() from $instrumentProperties.get("containerSupportCode")
-	eval(!$containerSupportCode.value.toString().contains("_"))
+	eval(!$containerSupportCode.value.toString().matches("^.+_[A-Z]{1}$"))
 	$contextValidation:ContextValidation($errors : errors)
 	then
 		 Logger.debug("Error code nanopore-depot "+$containerSupportCode.value);
-		 $contextValidation.addErrors("instrumentproperties[containerSupportCode]",	"error.validationexp.containerSupportCodeContainString", $containerSupportCode.value, "_"); 
+		 $contextValidation.addErrors("instrumentproperties[containerSupportCode]",	"error.validationexp.containerSupportCodeContainString", $containerSupportCode.value, "_[A-Z]"); 
 end
 
 

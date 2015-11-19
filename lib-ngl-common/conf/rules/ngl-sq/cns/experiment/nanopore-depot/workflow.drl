@@ -9,12 +9,12 @@ rule "Create Run and ReadSets Nanopore"
 	$experiment:Experiment($state:state.code,$typeCode:typeCode,$typeCode=="nanopore-depot",$state=="F")
 	
 	then
-		 Logger.debug("Nanopore-depot update state code : "+$state);
-		 //Creation run
-		 Run run=new Run();
-		 
- 		 run.sequencingStartDate=new Date();
-		 run.state=new State("N","ngl-sq");
+		Logger.debug("Nanopore-depot update state code : "+$state);
+		//Creation run
+		Run run=new Run();
+		Date runStartDate = (Date)$experiment.experimentProperties.get("runStartDate").value;
+		run.sequencingStartDate=runStartDate;
+		run.state=new State("N","ngl-sq");
 	
 		run.containerSupportCode=$experiment.outputContainerSupportCodes.toArray()[0].toString();
    		//run.projectCodes = $experiment.projectCodes; //done with readset creation
@@ -26,7 +26,7 @@ rule "Create Run and ReadSets Nanopore"
    		run.instrumentUsed.typeCode=$experiment.instrument.typeCode;
    		run.instrumentUsed.code=$experiment.instrument.code;
     	
-    	run.code=((new SimpleDateFormat("yyMMdd")).format(new Date()))+"_"+run.instrumentUsed.code+"_"+run.containerSupportCode;
+    	run.code=((new SimpleDateFormat("yyMMdd")).format(runStartDate))+"_"+run.instrumentUsed.code+"_"+run.containerSupportCode;
 		
 		Treatment treatment=new Treatment();
 		treatment.code="minknowMetrichor";
@@ -98,6 +98,8 @@ rule "Create ReadSet"
 	then
 		Logger.debug("ReadSet Creation for run "+$run.code);
 		//Creation des readsets
+		Date runStartDate = (Date)$experiment.experimentProperties.get("runStartDate").value;
+ 		 
 		ReadSet readSet=new ReadSet();
 		readSet.typeCode="rsnanopore";
 		readSet.code=$content.sampleCode+"_ONT_"+$laneNumber+"_"+$run.containerSupportCode;
@@ -105,7 +107,7 @@ rule "Create ReadSet"
 		
 		readSet.runCode=$run.code;
 		readSet.runTypeCode=$run.typeCode;
-		readSet.runSequencingStartDate=new Date();
+		readSet.runSequencingStartDate=runStartDate;
 		readSet.laneNumber=1;
 		readSet.sampleCode=$content.sampleCode;
 		readSet.projectCode=$content.projectCode;
