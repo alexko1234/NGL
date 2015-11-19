@@ -10,3 +10,4 @@ GET		/migration-process-type-codes				controllers.migration.MigrationLibProcessT
 GET		/readsets/update-nb-cycles					controllers.migration.MigrationUpdateReadSetNbCycles.migration()		
 
 GET		/readsets/update-q-qualityScore				controllers.migration.MigrationUpdateReadSetQ30QualMean.migration()
+GET		/migration-sequencing-start-date			controllers.migration.MigrationUpdateSequencingStartDateNanopore.migration()
