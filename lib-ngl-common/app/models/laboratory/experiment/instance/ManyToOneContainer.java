@@ -157,25 +157,9 @@ public class ManyToOneContainer extends AtomicTransfertMethod{
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		if(CollectionUtils.isNotEmpty(outputContainerUseds)){
-			contextValidation.putObject("level", Level.CODE.ContainerOut);
-			contextValidation.addKeyToRootKeyName("outputContainerUsed");
-			outputContainerUseds.get(0).validate(contextValidation);
-			contextValidation.removeKeyFromRootKeyName("outputContainerUsed");
-			contextValidation.removeObject("level");
-		}
-		
+		super.validate(contextValidation);
 		AtomicTransfertMethodValidationHelper.validateOneOutputContainer(outputContainerUseds, contextValidation);
-		
-		contextValidation.addKeyToRootKeyName("inputContainerUseds");
-		for(InputContainerUsed containerUsed:inputContainerUseds){
-			contextValidation.putObject("level", Level.CODE.ContainerIn);
-			containerUsed.validate(contextValidation);
-			contextValidation.removeObject("level");
-		}
-		contextValidation.removeKeyFromRootKeyName("inputContainerUseds");
-		
-		AtomicTransfertMethodValidationHelper.validateOneOutputContainer(outputContainerUseds, contextValidation);
+		AtomicTransfertMethodValidationHelper.validateOutputContainers(contextValidation, outputContainerUseds);
 	}
 
 

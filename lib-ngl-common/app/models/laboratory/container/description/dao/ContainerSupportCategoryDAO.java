@@ -95,13 +95,16 @@ public class ContainerSupportCategoryDAO extends AbstractDAOMapping<ContainerSup
 		return initializeMapping(sql, new SqlParameter("categoryCode", Types.VARCHAR)).execute(categoryCode);
 	}
 	
-	public List<ContainerSupportCategory> findByExperimentTypeCode(String experimentTypeCode) throws DAOException{
+	public List<ContainerSupportCategory> findInputByExperimentTypeCode(String experimentTypeCode) throws DAOException{
 		if(null == experimentTypeCode){
 			throw new DAOException("experimentTypeCode is mandatory");
 		}
-		String sql = sqlCommon+", experiment_type_instrument_type e, instrument_ut_in_container_support_cat i, experiment_type et inner join common_info_type as cit ON fk_common_info_type=cit.id "
-				+ "WHERE e.fk_experiment_type=et.id AND cit.code=? AND e.fk_instrument_used_type=i.fk_instrument_used_type AND t.id=i.fk_container_support_category "
-				+ "order by t.name";
+		String sql = sqlCommon
+				+" inner join instrument_ut_in_container_support_cat iuics on iuics.fk_container_support_category = t.id"
+				+" inner join experiment_type_instrument_type etit on etit.fk_instrument_used_type=iuics.fk_instrument_used_type"
+				+" inner join experiment_type et on et.id = etit.fk_experiment_type"
+				+" inner join common_info_type as cit ON cit.id = et.fk_common_info_type"
+				+" where cit.code=?";		
 		return initializeMapping(sql, new SqlParameter("experimentTypeCode", Types.VARCHAR)).execute(experimentTypeCode);
 	}
 }

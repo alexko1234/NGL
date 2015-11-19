@@ -24,7 +24,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.modalTop = (window.innerHeight - $scope.modalHeight)/2;
 
 		$scope.modalTop = $scope.modalTop - 50; // height of header and footer
-	}
+	};
 	
 	
 	$scope.activeEditMode = function(){
@@ -96,16 +96,17 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 					// purge basket when save ok or not ?
 					resetBasket();					
 					$scope.experiment = data;
-					$scope.$broadcast('refresh'); // utile seulement si le
-													// save fontionne
+					$scope.$broadcast('refresh'); // utile seulement si le													// save fontionne
 					creationMode = false;
 					// unedit or not ???					
-					saveInProgress = false;										
+					saveInProgress = false;		
+					mainService.put("experiment",$scope.experiment);
 				})
 				.error(function(data, status, headers, config) {
 					$scope.messages.setError("save");
 					$scope.messages.setDetails(data);					
 					saveInProgress = false;	
+					
 				});
 		}else{
 			$http.put(jsRoutes.controllers.experiments.api.Experiments.update($scope.experiment.code).url,$scope.experiment)
@@ -115,7 +116,8 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				resetBasket();					
 				$scope.experiment = data;
 				$scope.$broadcast('refresh'); // utile seulement si le				
-				saveInProgress = false;										
+				saveInProgress = false;							
+				mainService.put("experiment",$scope.experiment);
 			})
 			.error(function(data, status, headers, config) {
 				$scope.messages.setError("save");
@@ -173,19 +175,23 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	
 	$scope.isOutputATMVoid = function(){
 		return ($scope.experimentType.atomicTransfertMethod === "OneToVoid");
-	}
+	};
 	
 	$scope.changeInstrumentType = function(){
 		console.log("call changeInstrumentType see getInstrumentsTrigger() in old version");
 		if($scope.experiment && $scope.experiment.instrument && $scope.experiment.instrument.typeCode){
-			loadInstrumentType($scope.experiment.instrument.typeCode);
-			// reinit experiment instrument
-			$scope.experiment.instrument.code = undefined;
-			$scope.experiment.instrument.outContainerSupportCategoryCode = undefined;	
-			
+			var instrumentTypeCode = $scope.experiment.instrument.typeCode;
+			$scope.experiment.instrument = {};
+			$scope.experiment.instrumentProperties = undefined;
+			$scope.instrumentType = undefined;
+			loadInstrumentType(instrumentTypeCode);												
+		}else {
+			$scope.experiment.instrument = {};
+			$scope.experiment.instrumentProperties = undefined;
+			$scope.instrumentType = undefined;
 		}
 		$scope.experimentTypeTemplate = undefined;		
-	}
+	};
 	
 	$scope.loadTemplate = function(){
 		console.log("call loadTemplate see getTemplate() in old version");
@@ -194,30 +200,67 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		}else{
 			$scope.experimentTypeTemplate =  undefined;
 		}				
-	}
+	};
 	
 	var resetBasket = function(){
 		if(mainService.getBasket())mainService.getBasket().reset();
-	}
+	};
 	
 	var loadInstrumentType = function(code){
 		$http.get(jsRoutes.controllers.instruments.api.InstrumentUsedTypes.get(code).url)
 			.success(function(data, status, headers, config) {
 				$scope.instrumentType = data;
-				$scope.experiment.instrument.categoryCode = $scope.instrumentType.category.code;
+				updateInstrumentIfNeeded();				
+				mainService.put("instrumentType",$scope.instrumentType);				
+				
 			})
 			.error(function(data, status, headers, config) {
 				$scope.messages.setError("get");
 			});
-	}
+	};
+	
+	var updateInstrumentIfNeeded = function(){
+		var instrument = $scope.experiment.instrument;
+		if(undefined === instrument.typeCode){
+			instrument.typeCode = $scope.instrumentType.code;
+		}
+		if(undefined === instrument.categoryCode){
+			instrument.categoryCode = $scope.instrumentType.category.code;
+		}
+		if(undefined === instrument.inContainerSupportCategoryCode || null === instrument.inContainerSupportCategoryCode){
+			instrument.inContainerSupportCategoryCode = getInContainerSupportCategoryCode();
+		}
+		if(undefined === instrument.outContainerSupportCategoryCode){
+			instrument.outContainerSupportCategoryCode = getOutContainerSupportCategoryCode();
+		}
+	};
+	
+	
+	var getInContainerSupportCategoryCode = function(){
+		if(mainService.getBasket() && mainService.getBasket().get() && mainService.getBasket().get()[0]){
+			return mainService.getBasket().get()[0].support.categoryCode; 
+		}else {
+			return $parse('atomicTransfertMethods[0].inputContainerUseds[0].locationOnContainerSupport.categoryCode')($scope.experiment);			
+		}
+	};
+	
+	
+	var getOutContainerSupportCategoryCode = function(){
+		if($scope.isOutputATMVoid()){
+			return "void";					
+		}else{
+			return undefined
+		}
+	};
 	
 	var updateData = function(){
 		if($scope.experiment.code){
 			$http.get(jsRoutes.controllers.experiments.api.Experiments.get($scope.experiment.code).url).success(function(data) {
-				$scope.experiment = data;				
+				$scope.experiment = data;		
+				mainService.put("experiment",$scope.experiment);
 			});
 		}		
-	}
+	};
 	
 	var clearLists = function(){
 		$scope.lists.clear("instrumentUsedTypes");
@@ -234,7 +277,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.lists.refresh.states({"objectTypeCode":"Experiment"});
 		$scope.lists.refresh.kitCatalogs({"experimentTypeCodes":$scope.experiment.typeCode});
 		$scope.lists.refresh.experimentCategories();
-	}
+	};
 	
 	var creationMode = false;
 	var saveInProgress = false;
@@ -260,16 +303,16 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				creationMode = true;
 				$scope.startEditMode();
 				defaultExperiment = {
-						state : {
-							resolutionCodes : [],
-							code : "N"
-						},
-						reagents : [],
-						atomicTransfertMethods : [],
-						comments : [],
-						typeCode:$routeParams.typeCode
-					};
-				
+					state : {
+						resolutionCodes : [],
+						code : "N"
+					},
+					reagents : [],
+					atomicTransfertMethods : [],
+					comments : [],
+					typeCode:$routeParams.typeCode,
+					instrument:{}
+				};				
 				mainService.put("newExp", defaultExperiment);
 			}
 			
@@ -304,14 +347,15 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				$scope.experiment.typeCode =  $scope.experimentType.code;
 				$scope.experiment.categoryCode = $scope.experimentType.category.code;
 				
-				if($scope.isOutputATMVoid()){
-					$scope.experiment.instrument.outContainerSupportCategoryCode = "void";					
-				}
-				
 				clearLists();
 				if($scope.experiment.instrument && $scope.experiment.instrument.typeCode){
 					loadInstrumentType($scope.experiment.instrument.typeCode);
 				}
+				
+				mainService.put("experiment",$scope.experiment);
+				mainService.put("experimentType",$scope.experimentType);
+				
+				
 				$scope.loadTemplate();
 			});			
 		})

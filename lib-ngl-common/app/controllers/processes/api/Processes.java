@@ -204,7 +204,7 @@ public class Processes extends CommonController{
 		ProcessValidationHelper.validateProcessCategory(process.categoryCode,contextValidation);
 		ProcessValidationHelper.validateState(process.typeCode,process.state, contextValidation);
 		ProcessValidationHelper.validateTraceInformation(process.traceInformation, contextValidation);
-		ProcessValidationHelper.validateContainerCode(process.containerInputCode, contextValidation);
+		ProcessValidationHelper.validateContainerCode(process.containerInputCode, contextValidation, "containerInputCode");
 		
 		List<Process> processes = new ArrayList<Process>();
 		for(Content c:container.contents){

@@ -40,7 +40,8 @@ public class CommonValidationHelper {
 
 	public static final String FIELD_CODE = "code";
 	public static final String FIELD_TYPE_CODE = "typeCode";
-	public static final String STATE_CODE = "stateCode";
+	public static final String FIELD_STATE_CODE = "stateCode";
+	public static final String FIELD_INST_USED = "instrumentUsed";
 
 	/**
 	 * Validate if code is unique in MongoDB collection
@@ -165,7 +166,8 @@ public class CommonValidationHelper {
 
 	
 	
-	public static <T extends DBObject> void validateRequiredInstanceCode(String code, String key, Class<T> type, String collectionName,ContextValidation contextValidation) {
+	public static <T extends DBObject> void validateRequiredInstanceCode(String code, String key, Class<T> type, 
+			String collectionName,ContextValidation contextValidation) {
 		if(required(contextValidation, code, key)){
 			validateExistInstanceCode(contextValidation, code, key, type,collectionName);
 		}
@@ -181,8 +183,8 @@ public class CommonValidationHelper {
 	 * @param returnObject
 	 * @return
 	 */
-	public static <T extends DBObject> T validateRequiredInstanceCode(ContextValidation contextValidation,
-			String code, String key, Class<T> type, String collectionName, boolean returnObject) {
+	public static <T extends DBObject> T validateRequiredInstanceCode(String code, String key, Class<T> type, String collectionName, 
+			ContextValidation contextValidation, boolean returnObject) {
 		T o = null;
 		if(required(contextValidation, code, key)){
 			o = validateExistInstanceCode(contextValidation, code, key, type,collectionName, returnObject);
@@ -493,16 +495,12 @@ public class CommonValidationHelper {
 	}
 
 
-	public static void validateContainerCode(String containerCode, ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, containerCode, "containerCode", Container.class,InstanceConstants.CONTAINER_COLL_NAME);
+	public static void validateContainerCode(String containerCode, ContextValidation contextValidation, String propertyName) {
+		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, containerCode, propertyName, Container.class,InstanceConstants.CONTAINER_COLL_NAME);
 	}
 	
-	public static void validateContainerSupportCode (String containerSupportCode, ContextValidation contextValidation) {		
-		if (ValidationHelper.required(contextValidation, containerSupportCode, "containerSupportCode")) {
-			if (! MongoDBDAO.checkObjectExist(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,  DBQuery.is("code", containerSupportCode))) {
-				contextValidation.addErrors("containerSupportCode", ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, containerSupportCode);
-			}
-		}		 
+	public static void validateContainerSupportCode (String containerSupportCode, ContextValidation contextValidation, String propertyName) {
+		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, containerSupportCode, propertyName, ContainerSupport.class,InstanceConstants.CONTAINER_SUPPORT_COLL_NAME);		
 	}
 	
 	

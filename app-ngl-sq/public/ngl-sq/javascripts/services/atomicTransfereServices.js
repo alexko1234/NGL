@@ -72,19 +72,18 @@ angular.module('atomicTransfereServices', [])
 				//Common for all but try to replace slowly
 				convertContainerToInputContainerUsed : function(container){
 					return {
-							percentage:100, //rules by defaut need check with server
-							code:container.code,
-							instrumentProperties:{},
-						    experimentProperties:{},
-						    //can be updated
-						    categoryCode:container.categoryCode, 
-						    volume:container.mesuredVolume, //used in rules
-							concentration:container.mesuredConcentration,  //used in rules
-							quantity:container.mesuredQuantity,
-							contents:container.contents, //used in rules							
-						    locationOnContainerSupport:container.support,
-						    fromExperimentTypeCodes:container.fromExperimentTypeCodes,
-						    state:container.state
+						code:container.code,
+						categoryCode:container.categoryCode, 
+						contents:container.contents, //used in rules							
+					    locationOnContainerSupport:container.support,
+					    volume:container.mesuredVolume, //used in rules
+						concentration:container.mesuredConcentration,  //used in rules
+						quantity:container.mesuredQuantity,
+						instrumentProperties:{},
+					    experimentProperties:{},
+					    percentage:100, //rules by defaut need check with server
+						//can be updated
+						fromExperimentTypeCodes:container.fromExperimentTypeCodes
 					};
 					/*
 					 return {"state":container.state
@@ -94,13 +93,12 @@ angular.module('atomicTransfereServices', [])
 				},
 				updateContainerUsedFromContainer : function(containerUsed, container){
 					containerUsed.categoryCode = container.categoryCode; 
+					containerUsed.contents = container.contents;
+					containerUsed.locationOnContainerSupport = container.support;
 					containerUsed.volume = container.mesuredVolume;
 					containerUsed.concentration = container.mesuredConcentration;
 					containerUsed.quantity = container.mesuredQuantity;
-					containerUsed.contents = container.contents;
-					containerUsed.locationOnContainerSupport = container.support;
 					containerUsed.fromExperimentTypeCodes = container.fromExperimentTypeCodes;
-					containerUsed.state = container.state;
 					return containerUsed;
 				},
 				getContainerListPromise : function(containerCodes){
@@ -169,9 +167,16 @@ angular.module('atomicTransfereServices', [])
 				 * Create a new OutputContainerUsed. By default unit is the same as inputContainer for volume, concentration, quantity
 				 * In second time, we need to find the default concentration because several concentration are available for one container
 				 */
-				newOutputContainerUsed : function(defaultOutputUnit, inputContainer){
+				newOutputContainerUsed : function(defaultOutputUnit, atmLine, atmColumn, inputContainer){
 					return {
 						code:undefined,
+						categoryCode:getContainerCategoryCode(), 
+						locationOnContainerSupport:{
+							categoryCode:getSupportContainerCategoryCode(), 
+							line:atmLine,
+							column:atmColumn
+						},
+						contents:undefined, //populate by the server
 						volume:{unit:this.getUnit($parse('mesuredVolume')(inputContainer), defaultOutputUnit.volume)}, 
 						concentration:{unit:this.getUnit($parse('mesuredConcentration')(inputContainer), defaultOutputUnit.concentration)}, 
 						quantity:{unit:this.getUnit($parse('mesuredQuantity')(inputContainer), defaultOutputUnit.quantity)},
@@ -179,10 +184,32 @@ angular.module('atomicTransfereServices', [])
 					    experimentProperties:{}
 					};
 				},
-				
-				
-				
-				
+				updateOutputContainerUsed:function(outputContainer, atmLine, atmColumn){
+					if(null === outputContainer.categoryCode || undefined === outputContainer.categoryCode){
+						outputContainer.categoryCode = getContainerCategoryCode();
+					}
+					if(null === outputContainer.locationOnContainerSupport || undefined === outputContainer.locationOnContainerSupport){
+						outputContainer.locationOnContainerSupport = {};
+					}
+					if(null === outputContainer.locationOnContainerSupport.categoryCode || undefined === outputContainer.locationOnContainerSupport.categoryCode){
+						outputContainer.locationOnContainerSupport.categoryCode = getSupportContainerCategoryCode();
+					}
+					if(null === outputContainer.locationOnContainerSupport.line || undefined === outputContainer.locationOnContainerSupport.line){
+						outputContainer.locationOnContainerSupport.line = atmLine;
+					}
+					if(null === outputContainer.locationOnContainerSupport.column || undefined === outputContainer.locationOnContainerSupport.column){
+						outputContainer.locationOnContainerSupport.column = atmColumn;
+					}
+					
+				},				
+				getContainerCategoryCode :function(){
+					var supportContainerCategoryCode = getSupportContainerCategoryCode();
+					var instrumentType = mainService.get("instrumentType");
+					//TODO Compare
+				},				
+				getSupportContainerCategoryCode :function(){
+					return mainService.get("experiment").instrument.outContainerSupportCategoryCode;
+				},				
 				getUnit: function(object, defaultValue){
 					var unit = $parse("unit")(object);
 					if(undefined === unit || null === unit || unit !== defaultValue)unit = defaultValue
@@ -316,7 +343,7 @@ angular.module('atomicTransfereServices', [])
 							              
 							              //allData[l].outputContainerUsed = angular.copy(atm.outputContainerUseds[k]);
 							              allData[l].outputContainerUsed =  $.extend(true,{}, atm.outputContainerUseds[k]);
-							              allData[l].outputContainer = outputContainer;
+							              allData[l].outputContainer = $commonATM.updateOutputContainerUsed(allData[l].outputContainerUsed, atm.line, atm.column);
 							              
 							              l++;							             
 							        }
@@ -382,7 +409,8 @@ angular.module('atomicTransfereServices', [])
 									line.inputContainer = container;
 									line.inputContainerUsed = $commonATM.convertContainerToInputContainerUsed(line.inputContainer);
 									if(!$that.$outputIsVoid){
-										line.outputContainerUsed = $commonATM.newOutputContainerUsed($that.defaultOutputUnit,line.inputContainer);
+										line.outputContainerUsed = $commonATM.newOutputContainerUsed($that.defaultOutputUnit,line.atomicTransfertMethod.line,
+												line.atomicTransfertMethod.column,line.inputContainer);
 										line.outputContainer = undefined;
 									}
 									allData.push(line);
@@ -393,7 +421,7 @@ angular.module('atomicTransfereServices', [])
 					}					
 				},
 				
-				experimentToView:function(experiment,experimentType){
+				experimentToView:function(experiment, experimentType){
 					if(null === experiment || undefined === experiment){
 						throw 'experiment is required';
 					}
@@ -411,7 +439,7 @@ angular.module('atomicTransfereServices', [])
 					if(null === experiment || undefined === experiment){
 						throw 'experiment is required';
 					}
-					this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods);				
+					this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.instrument);				
 				},
 				viewToExperimentOneToVoid :function(experimentIn){
 					this.viewToExperimentOneToOne(experimentIn);
@@ -673,7 +701,7 @@ angular.module('atomicTransfereServices', [])
 					
 					for(var i = this.data.atm.length; i < $nbATM; i++){
 						var atm = this.newAtomicTransfertMethod(i+1);
-						atm.outputContainerUseds.push($commonATM.newOutputContainerUsed(this.defaultOutputUnit));
+						atm.outputContainerUseds.push($commonATM.newOutputContainerUsed(this.defaultOutputUnit, atm.line, atm.column));
 						this.data.atm.push(atm);
 					}
 					
@@ -704,7 +732,7 @@ angular.module('atomicTransfereServices', [])
 						throw 'experiment is required';
 					}
 					this.convertExperimentToDnD(experiment.atomicTransfertMethods);
-					this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods);
+					this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.instrument);
 				}
 		}
 		
@@ -748,7 +776,7 @@ angular.module('atomicTransfereServices', [])
 						atm.inputContainerUseds.push($commonATM.convertContainerToInputContainerUsed(data.inputContainer));
 						
 						for(var j = 0; j < data.outputNumber ; j++){
-							atm.outputContainerUseds.push($commonATM.newOutputContainerUsed(this.defaultOutputUnit));
+							atm.outputContainerUseds.push($commonATM.newOutputContainerUsed(this.defaultOutputUnit,atm.line,atm.column));
 						}
 						this.data.atm.push(atm);
 					}
@@ -821,7 +849,7 @@ angular.module('atomicTransfereServices', [])
 						throw 'experiment is required';
 					}					
 					this.convertExperimentToData(experiment.atomicTransfertMethods);
-					this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods);
+					this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.instrument);
 				}
 		}
 		

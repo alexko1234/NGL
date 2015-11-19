@@ -23,8 +23,8 @@ import play.Logger;
  */
 public abstract class AbstractDAODefault<T> extends AbstractDAO<T>{
 
-	private String sqlCommon;
-	private boolean usedInstitute = false;
+	protected String sqlCommon;
+	protected boolean usedInstitute = false;
 	
 	protected AbstractDAODefault(String tableName, Class<T> entityClass, boolean useGeneratedKey) {
 		super(tableName, entityClass,useGeneratedKey);		

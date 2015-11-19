@@ -3,10 +3,11 @@ package models.laboratory.experiment.instance;
 import java.util.Set;
 
 import models.laboratory.common.description.Level;
+import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
-import validation.experiment.instance.InputContainerValidationHelper;
+import validation.experiment.instance.ContainerUsedValidationHelper;
 
 public class InputContainerUsed extends AbstractContainerUsed {
 	
@@ -14,7 +15,9 @@ public class InputContainerUsed extends AbstractContainerUsed {
 	public Double percentage; //percentage of input in the final output
 	public Set<String> fromExperimentTypeCodes; //used in rules
 	
-
+	//TODO Must be remove after refactoring just keep for backward compatibility
+	public State state;
+	
 	public InputContainerUsed() {
 		super();
 		
@@ -28,16 +31,16 @@ public class InputContainerUsed extends AbstractContainerUsed {
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		Container container = InputContainerValidationHelper.validateExistInstanceCode(contextValidation, code, Container.class, InstanceConstants.CONTAINER_COLL_NAME, true);
-		InputContainerValidationHelper.compareInputContainerWithContainer(contextValidation, this, container);
+		Container container = ContainerUsedValidationHelper.validateExistInstanceCode(contextValidation, code, Container.class, InstanceConstants.CONTAINER_COLL_NAME, true);
+		ContainerUsedValidationHelper.compareInputContainerWithContainer(this, container, contextValidation);
+		ContainerUsedValidationHelper.validateInputContainerCategoryCode(categoryCode, contextValidation);
+		ContainerUsedValidationHelper.validateVolume(volume, contextValidation);
+		ContainerUsedValidationHelper.validateConcentration(concentration, contextValidation);
+		ContainerUsedValidationHelper.validateQuantity(quantity, contextValidation);
 		
-		InputContainerValidationHelper.validateVolume(contextValidation, volume);
-		InputContainerValidationHelper.validateConcentration(contextValidation, concentration);
-		InputContainerValidationHelper.validateQuantity(contextValidation, quantity);
-		
-		InputContainerValidationHelper.validatePercentage(contextValidation, percentage);
-		InputContainerValidationHelper.validateExperimentProperties(contextValidation, experimentProperties, Level.CODE.ContainerIn);
-		InputContainerValidationHelper.validateInstrumentProperties(contextValidation, instrumentProperties, Level.CODE.ContainerIn);
+		ContainerUsedValidationHelper.validatePercentage(percentage, contextValidation);
+		ContainerUsedValidationHelper.validateExperimentProperties(experimentProperties, Level.CODE.ContainerIn, contextValidation);
+		ContainerUsedValidationHelper.validateInstrumentProperties(instrumentProperties, Level.CODE.ContainerIn, contextValidation);
 	}
 
 	

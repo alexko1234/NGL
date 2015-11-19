@@ -81,7 +81,7 @@ public class ExperimentsOld extends CommonController{
 
 		ExperimentValidationHelper.validateReagents(exp.reagents, ctx);
 		ExperimentValidationHelper.validateResolutionCodes(exp.typeCode, exp.state.resolutionCodes, ctx);		
-		ExperimentValidationHelper.validationProtocol(exp.typeCode,exp.protocolCode,ctx);
+		ExperimentValidationHelper.validationProtocoleCode(exp.typeCode,exp.protocolCode,ctx);
 
 		if (!ctx.hasErrors()) {
 
@@ -276,7 +276,7 @@ public class ExperimentsOld extends CommonController{
 		contextValidation.putObject("stateCode", exp.state.code);
 		contextValidation.putObject("typeCode", exp.typeCode);
 
-		ExperimentValidationHelper.validateAtomicTransfertMethods(exp.atomicTransfertMethods, contextValidation);
+		//ExperimentValidationHelper.validateAtomicTransfertMethods(exp.atomicTransfertMethods, contextValidation);
 		ExperimentValidationHelper.validateRules(exp, contextValidation);
 
 		if(!contextValidation.hasErrors()){

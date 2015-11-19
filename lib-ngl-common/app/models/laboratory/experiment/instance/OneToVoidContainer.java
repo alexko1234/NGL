@@ -5,18 +5,17 @@ import java.util.List;
 
 import models.laboratory.common.description.Level;
 import validation.ContextValidation;
+import validation.experiment.instance.AtomicTransfertMethodValidationHelper;
 
 public class OneToVoidContainer extends AtomicTransfertMethod {
 
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		contextValidation.putObject("level", Level.CODE.ContainerIn);
-		for(InputContainerUsed inputContainerUsed:inputContainerUseds){
-			inputContainerUsed.validate(contextValidation);
-		}
-		contextValidation.removeObject("level");
-
+		super.validate(contextValidation);
+		AtomicTransfertMethodValidationHelper.validateOneInputContainer(inputContainerUseds, contextValidation);
+		AtomicTransfertMethodValidationHelper.validateVoidOutputContainer(outputContainerUseds, contextValidation);
+		
 	}
 
 	@Override

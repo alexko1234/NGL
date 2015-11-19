@@ -6,6 +6,7 @@ import models.laboratory.common.instance.Comment;
 import models.utils.dao.DAOException;
 import validation.ContextValidation;
 import validation.IValidation;
+import validation.experiment.instance.AtomicTransfertMethodValidationHelper;
 import validation.utils.ValidationHelper;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -41,9 +42,7 @@ public abstract class AtomicTransfertMethod implements IValidation {
 	public void validate(ContextValidation contextValidation) {
 		ValidationHelper.required(contextValidation, line, "line");
 		ValidationHelper.required(contextValidation, column, "column");
-		//AtomicTransfertMethodValidationHelper.validateInputContainers(contextValidation, inputContainerUseds);
-		//AtomicTransfertMethodValidationHelper.validateOutputContainers(contextValidation, outputContainerUseds);
-		
+		AtomicTransfertMethodValidationHelper.validateInputContainers(contextValidation, inputContainerUseds);
 		
 	}
 	

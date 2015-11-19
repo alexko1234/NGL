@@ -14,7 +14,7 @@ import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationHelper;
-
+@Deprecated
 public class ContainerUsedValidation extends CommonValidationHelper{
 
 	public static void validateExperimentProperties(String typeCode, Map<String,PropertyValue> properties, ContextValidation contextValidation,Boolean updateRequired) 

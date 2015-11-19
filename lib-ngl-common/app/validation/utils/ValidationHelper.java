@@ -35,6 +35,10 @@ import static validation.utils.ValidationConstants.*;
 
 public class ValidationHelper {
 	
+	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, Boolean validateNotDefined) {
+		validateProperties(contextValidation, properties, propertyDefinitions, validateNotDefined, true);
+	}
+	
 	/**
 	 * 
 	 * @param contextValidation
@@ -42,7 +46,7 @@ public class ValidationHelper {
 	 * @param propertyDefinitions
 	 * @param validateNotDefined
 	 */
-	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, Boolean validateNotDefined) {
+	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, Boolean validateNotDefined, Boolean testRequired) {
 		Map<String, PropertyValue> inputProperties = new HashMap<String, PropertyValue>(0);
 		if(properties!=null && !properties.isEmpty()){
 			inputProperties = new HashMap<String, PropertyValue>(properties);		
@@ -57,7 +61,7 @@ public class ValidationHelper {
 			PropertyDefinition propertyDefinition=(PropertyDefinition) pdefs.toArray()[0];			
 			
 			//if pv null and required
-			if( pv==null && propertyDefinition.required){				
+			if( pv==null && propertyDefinition.required && testRequired){				
 				contextValidation.addErrors(propertyDefinition.code+".value", ERROR_REQUIRED_MSG,"");					
 	        	
 			}else if (pv != null){
@@ -141,7 +145,7 @@ public class ValidationHelper {
 	 * @param propertyDefinitions
 	 */
 	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions){
-		validateProperties(contextValidation, properties, propertyDefinitions, true);		
+		validateProperties(contextValidation, properties, propertyDefinitions, true, true);		
 	}
 
 	

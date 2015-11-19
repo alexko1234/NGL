@@ -1,6 +1,5 @@
 package models.laboratory.experiment.instance;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -69,7 +68,7 @@ public class ContainerUsed implements IValidation{
 			CommonValidationHelper.validateUniqueInstanceCode(contextValidation, code, Container.class, InstanceConstants.CONTAINER_COLL_NAME);
 		}
 		else if(contextValidation.getObject("stateCode").equals("F")) {
-			CommonValidationHelper.validateContainerCode(code, contextValidation);
+			CommonValidationHelper.validateContainerCode(code, contextValidation, "code");
 		} 
 		ContainerUsedValidation.validateVolume(contextValidation, volume);
 		ContainerUsedValidation.validateConcentration(contextValidation, concentration);

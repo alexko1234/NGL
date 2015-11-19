@@ -33,8 +33,8 @@ public class ContainerSupportCategory extends AbstractCategory<ContainerSupportC
 			return ((ContainerSupportCategoryDAO) getInstance()).findByContainerCategoryCode(categoryCode);
 		}
 		
-		public List<ContainerSupportCategory> findByExperimentTypeCode(String experimentTypeCode) throws DAOException{
-			return ((ContainerSupportCategoryDAO) getInstance()).findByExperimentTypeCode(experimentTypeCode);
+		public List<ContainerSupportCategory> findInputByExperimentTypeCode(String experimentTypeCode) throws DAOException{
+			return ((ContainerSupportCategoryDAO) getInstance()).findInputByExperimentTypeCode(experimentTypeCode);
 		}
 
 	}	

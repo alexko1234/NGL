@@ -17,8 +17,8 @@ import org.mongojack.MongoCollection;
 
 import validation.ContextValidation;
 import validation.IValidation;
-import validation.common.instance.CommonValidationHelper;
-import validation.experiment.instance.ExperimentValidationHelper;
+import static validation.common.instance.CommonValidationHelper.*;
+import static validation.experiment.instance.ExperimentValidationHelper.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -110,23 +110,25 @@ public class Experiment extends DBObject implements IValidation {
 	@Override
 	public void validate(ContextValidation contextValidation) {
 
-		contextValidation.putObject(CommonValidationHelper.FIELD_TYPE_CODE , typeCode);
-		contextValidation.putObject(CommonValidationHelper.STATE_CODE , state.code);
-		ExperimentValidationHelper.validateCode(this, InstanceConstants.EXPERIMENT_COLL_NAME, contextValidation);
-		ExperimentValidationHelper.validationExperimentType(typeCode, experimentProperties, contextValidation);
-		ExperimentValidationHelper.validationExperimentCategoryCode(categoryCode, contextValidation);
-		ExperimentValidationHelper.validateState(this.typeCode, this.state, contextValidation);
-		ExperimentValidationHelper.validationProtocol(typeCode,protocolCode,contextValidation);
-		ExperimentValidationHelper.validateInstrumentUsed(instrument,instrumentProperties,contextValidation);
-		ExperimentValidationHelper.validateAtomicTransfertMethods(atomicTransfertMethods,contextValidation);
-		ExperimentValidationHelper.validateReagents(reagents,contextValidation); //TODO active reagents validation inside ReagentUsed
-		ExperimentValidationHelper.validateTraceInformation(traceInformation, contextValidation);		
+		if(contextValidation.getObject(FIELD_STATE_CODE) == null){
+			contextValidation.putObject(FIELD_STATE_CODE , state.code);
+			
+		}
+		validateCode(this, InstanceConstants.EXPERIMENT_COLL_NAME, contextValidation);
+		validationExperimentType(typeCode, experimentProperties, contextValidation);
+		validationExperimentCategoryCode(categoryCode, contextValidation);
+		validateState(this.typeCode, this.state, contextValidation);
+		validationProtocoleCode(typeCode,protocolCode,contextValidation);
+		validateInstrumentUsed(instrument,instrumentProperties,contextValidation);
+		validateAtomicTransfertMethods(typeCode, instrument, atomicTransfertMethods,contextValidation);
+		validateReagents(reagents,contextValidation); //TODO active reagents validation inside ReagentUsed
+		validateTraceInformation(traceInformation, contextValidation);		
 		
-		ExperimentValidationHelper.validateInputOutputContainerSupport(this,contextValidation);
+		validateInputOutputContainerSupport(this,contextValidation);
 		
 		//TODO Validate projectCodes, sampleCodes
 		
-		ExperimentValidationHelper.validateRules(this,contextValidation);
+		validateRules(this,contextValidation);
 		
 	}
 

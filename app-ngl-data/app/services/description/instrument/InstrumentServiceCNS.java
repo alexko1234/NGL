@@ -219,10 +219,10 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		//DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 		
 		
-		l.add(newInstrumentUsedType("MinION", "minION", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeDepotProperties(),getInstrumentMinIon() 
+		l.add(newInstrumentUsedType("MinION", "minION", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeInstrumentProperties(),getInstrumentMinIon() 
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
-		l.add(newInstrumentUsedType("Mk1", "mk1", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeDepotProperties(),getInstrumentMKI() 
+		l.add(newInstrumentUsedType("Mk1", "mk1", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeInstrumentProperties(),getInstrumentMKI() 
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		l.add(newInstrumentUsedType("IRYS", "IRYS", InstrumentCategory.find.findByCode("opt-map-bionano"), getIrysDepotProperties(),getInstrumentIRYS() 
@@ -267,7 +267,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 
 
-	private static List<PropertyDefinition> getNanoporeDepotProperties() throws DAOException {
+	private static List<PropertyDefinition> getNanoporeInstrumentProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
         propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",200,"7.3"));

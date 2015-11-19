@@ -37,7 +37,7 @@ public class ContextValidation {
 	}
 
 	public ContextValidation(String user, Map<String,List<ValidationError>> errors){
-		this.errors= errors;
+		this.errors = errors;
 		contextObjects= new TreeMap<String, Object>();
 		this.user = user;
 	}
@@ -100,7 +100,7 @@ public class ContextValidation {
 		if (!errors.containsKey(key)) {
 			errors.put(key, new ArrayList<ValidationError>());
 		}
-		errors.get(key).add(new ValidationError(key, message,  java.util.Arrays.asList(arguments)));		
+		errors.get(key).add(new ValidationError(key, message,  java.util.Arrays.asList(arguments)));			
 	}
 
 	public void addErrors(Map<String,List<ValidationError>> errors){

@@ -22,6 +22,7 @@ import models.utils.instance.ExperimentHelper;
 import models.utils.instance.ProcessHelper;
 import play.Logger;
 import validation.ContextValidation;
+import validation.experiment.instance.AtomicTransfertMethodValidationHelper;
 import validation.utils.ValidationConstants;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -125,15 +126,10 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
-
-		contextValidation.putObject("level", Level.CODE.ContainerIn);		
-		inputContainerUseds.get(0).validate(contextValidation);	
-		contextValidation.removeObject("level");
-		if(outputContainerUseds != null){
-			contextValidation.putObject("level", Level.CODE.ContainerOut);
-			outputContainerUseds.get(0).validate(contextValidation);
-			contextValidation.removeObject("level");
-		}
+		super.validate(contextValidation);
+		AtomicTransfertMethodValidationHelper.validateOneInputContainer(inputContainerUseds, contextValidation);
+		AtomicTransfertMethodValidationHelper.validateOneOutputContainer(outputContainerUseds, contextValidation);
+		AtomicTransfertMethodValidationHelper.validateOutputContainers(contextValidation, outputContainerUseds);
 	}
 
 }

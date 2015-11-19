@@ -411,9 +411,9 @@ angular.module('commonsServices', []).
     				'<strong>{{messages.text}}</strong><button class="btn btn-link" ng-click="messages.showDetails=!messages.showDetails" ng-show="messages.isDetails">{{messages.transformKey("msg.details")}}</button>'+
     				'<div ng-show="messages.showDetails">'+
     				'    <ul>'+
-    				'		<li ng-repeat="(key1, value1) in messages.details track by $index">{{key1}}'+
+    				'		<li ng-repeat="message in messages.details | toArray | orderBy: \'$key\' track by $index">{{message.$key}}'+
     				'		<ul>'+
-    				'			<li ng-repeat="(key2, value2) in value1  track by $index"> {{value2}} </li>'+
+    				'			<li ng-repeat="(key2, value2) in message track by $index"> {{value2}} </li>'+
     			    '		</ul>'+
     			    '		</li>'+
     			    '	</ul>'	+
@@ -1208,5 +1208,21 @@ angular.module('commonsServices', []).
     			}
     			return flatArray;
     		}
-    	});
+    	}).filter('toArray', function () { //transform object to array
+    		  return function (obj, addKey) {
+    			    if (!angular.isObject(obj)) return obj;
+    			    if ( addKey === false ) {
+    			      return Object.keys(obj).map(function(key) {
+    			        return obj[key];
+    			      });
+    			    } else {
+    			      return Object.keys(obj).map(function (key) {
+    			        var value = obj[key];
+    			        return angular.isObject(value) ?
+    			          Object.defineProperty(value, '$key', { enumerable: false, value: key}) :
+    			          { $key: key, $value: value };
+    			      });
+    			    }
+    			  };
+    			});
     	

@@ -241,21 +241,21 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	@Test
 	public  void validationContainerCodeTest(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		CommonValidationHelper.validateContainerCode(container.code,contextValidation );
+		CommonValidationHelper.validateContainerCode(container.code,contextValidation, "code" );
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	@Test
 	public  void validationContainerCodeRequiredTest(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		CommonValidationHelper.validateContainerCode(null,contextValidation );
+		CommonValidationHelper.validateContainerCode(null,contextValidation, "code");
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 	
 	@Test
 	public  void validationContainerCodeNotExistTest(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		CommonValidationHelper.validateContainerCode("notexist",contextValidation );
+		CommonValidationHelper.validateContainerCode("notexist",contextValidation, "code");
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 	
