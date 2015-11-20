@@ -265,7 +265,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases 2D pass","nbBases2DPass", LevelService.getLevels(Level.CODE.Run,Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "single"));
 		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb bases utiles","totalUsefulBases", LevelService.getLevels(Level.CODE.Run,Level.CODE.Default), Long.class, true, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version MinKnow","minkowVersion", LevelService.getLevels(Level.CODE.Run,Level.CODE.Default), String.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version MinKnow","minknowVersion", LevelService.getLevels(Level.CODE.Run,Level.CODE.Default), String.class, true, "single"));
 		
 		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences 1D forward","1DForward.NbReads", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Long.class, true, "object_list"));
