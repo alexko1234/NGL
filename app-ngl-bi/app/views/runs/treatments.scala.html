@@ -25,37 +25,37 @@
 					<input  ng-switch-when="true" class="form-control" type="text" ng-model="run.treatments.minknowMetrichor.default.metrichorRunID.value" />
 				}
 				@views.html.helper.columnLabelValue(Messages("runs.treatments.minknow-metrichor.minknowChannelsWithReads")){
-					<p ng-switch-when="false" class="form-control-static" ng-bind="run.treatments.minknowMetrichor.default.minknowChannelsWithReads.value"></p>
-					<input  ng-switch-when="true" class="form-control" type="text" ng-model="run.treatments.minknowMetrichor.default.minknowChannelsWithReads.value" />					
+					<p ng-switch-when="false" class="form-control-static" ng-bind="run.treatments.minknowMetrichor.default.minknowChannelsWithReads.value | number"></p>
+					<input  ng-switch-when="true" class="form-control" type="text" ng-model="run.treatments.minknowMetrichor.default.minknowChannelsWithReads.value"/>
 				}
 				@views.html.helper.columnLabelValue(Messages("runs.treatments.minknow-metrichor.minknowEvents")){
-					<p ng-switch-when="false" class="form-control-static" ng-bind="run.treatments.minknowMetrichor.default.minknowEvents.value"></p>
+					<p ng-switch-when="false" class="form-control-static" ng-bind="run.treatments.minknowMetrichor.default.minknowEvents.value | number"></p>
 					<input  ng-switch-when="true" class="form-control" type="text" ng-model="run.treatments.minknowMetrichor.default.minknowEvents.value" />					
 				}
 			}
 			@column(){
 				@views.html.helper.columnLabelValue(Messages("runs.treatments.minknow-metrichor.minknowCompleteReads")){
-			  		<p ng-switch-when="false" class="form-control-static" ng-bind="run.treatments.minknowMetrichor.default.minknowCompleteReads.value"></p>
+			  		<p ng-switch-when="false" class="form-control-static" ng-bind="run.treatments.minknowMetrichor.default.minknowCompleteReads.value | number"></p>
 					<input  ng-switch-when="true" class="form-control" type="text" ng-model="run.treatments.minknowMetrichor.default.minknowCompleteReads.value" />
 					
 				}
 				@views.html.helper.columnLabelValue(Messages("runs.treatments.minknow-metrichor.metrichorReadCount")){
-					<p ng-switch-when="false" class="form-control-static" ng-bind="run.treatments.minknowMetrichor.default.metrichorReadCount.value"></p>
+					<p ng-switch-when="false" class="form-control-static" ng-bind="run.treatments.minknowMetrichor.default.metrichorReadCount.value | number"></p>
 					<input  ng-switch-when="true" class="form-control" type="text" ng-model="run.treatments.minknowMetrichor.default.metrichorReadCount.value" />
 					
 				}
 				@views.html.helper.columnLabelValue(Messages("runs.treatments.minknow-metrichor.metrichor2DReadsYield")){
-					<p ng-switch-when="false" class="form-control-static" ng-bind="run.treatments.minknowMetrichor.default.metrichor2DReadsYield.value"></p>
-					<input  ng-switch-when="true" class="form-control" type="text" ng-model="run.treatments.minknowMetrichor.default.metrichor2DReadsYield.value" />
+					<p ng-switch-when="false" class="form-control-static" ng-bind="run.treatments.minknowMetrichor.default.metrichor2DReadsYield.value | number"></p>
+					<input  ng-switch-when="true" class="form-control" type="text" ng-model="run.treatments.minknowMetrichor.default.metrichor2DReadsYield.value"/>
 					
 				}
 				@views.html.helper.columnLabelValue(Messages("runs.treatments.minknow-metrichor.metrichorMax2DRead")){
-					<p ng-switch-when="false" class="form-control-static" ng-bind="run.treatments.minknowMetrichor.default.metrichorMax2DRead.value"></p>
+					<p ng-switch-when="false" class="form-control-static" ng-bind="run.treatments.minknowMetrichor.default.metrichorMax2DRead.value | number"></p>
 					<input  ng-switch-when="true" class="form-control" type="text" ng-model="run.treatments.minknowMetrichor.default.metrichorMax2DRead.value" />
 					
 				}
 				@views.html.helper.columnLabelValue(Messages("runs.treatments.minknow-metrichor.metrichorMax2DQualityScore")){
-					<p ng-switch-when="false" class="form-control-static" ng-bind="run.treatments.minknowMetrichor.default.metrichorMax2DQualityScore.value"></p>
+					<p ng-switch-when="false" class="form-control-static" ng-bind="run.treatments.minknowMetrichor.default.metrichorMax2DQualityScore.value | number:2"></p>
 					<input  ng-switch-when="true" class="form-control" type="text" ng-model="run.treatments.minknowMetrichor.default.metrichorMax2DQualityScore.value" />
 					
 				}
