@@ -21,7 +21,7 @@
 					<input  ng-switch-when="true" class="form-control" type="text" ng-model="run.treatments.minknowMetrichor.default.metrichorVersion.value" />					
 				}
 				@views.html.helper.columnLabelValue(Messages("runs.treatments.minknow-metrichor.metrichorRunID")){
-					<p ng-switch-when="false" class="form-control-static" ng-bind="run.treatments.minknowMetrichor.default.metrichorRunID.value"></p>
+					<p ng-switch-when="false" class="form-control-static" ng-bind="run.treatments.minknowMetrichor.default.metrichorRunID.value | number"></p>
 					<input  ng-switch-when="true" class="form-control" type="text" ng-model="run.treatments.minknowMetrichor.default.metrichorRunID.value" />
 				}
 				@views.html.helper.columnLabelValue(Messages("runs.treatments.minknow-metrichor.minknowChannelsWithReads")){
