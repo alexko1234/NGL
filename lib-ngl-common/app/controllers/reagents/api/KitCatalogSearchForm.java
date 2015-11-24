@@ -2,6 +2,7 @@ package controllers.reagents.api;
 
 import java.util.List;
 
+import models.laboratory.common.instance.Valuation;
 import controllers.ListForm;
 
 public class KitCatalogSearchForm extends ListForm{
@@ -14,6 +15,5 @@ public class KitCatalogSearchForm extends ListForm{
 	public List<String> codesFromBoxCatalog;
 	public List<String> codesFromReagentCatalog;
 	public List<String> experimentTypeCodes;
-	public boolean isActive = true;
-	
+	public Boolean isActive;	
 }
