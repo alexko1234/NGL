@@ -1,6 +1,7 @@
 package controllers.migration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -443,7 +444,7 @@ public class CompareLimsVsNGL extends CommonController {
 	public static Result compareFile(Boolean update) {
 		
 		LimsAbandonDAO  limsAbandonDAO = Spring.getBeanOfType(LimsAbandonDAO.class);
-		MongoDBResult<ReadSet> readsets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class);
+		MongoDBResult<ReadSet> readsets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.in("typeCode", Arrays.asList("default-readset","rsillumina")));
 		
 		ContextValidation cv = new ContextValidation("ngl");
 		cv.addKeyToRootKeyName("readsets");
