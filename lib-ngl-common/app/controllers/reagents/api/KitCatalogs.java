@@ -171,8 +171,10 @@ public class KitCatalogs extends DocumentController<KitCatalog>{
 		if(kitCatalogSearch.experimentTypeCodes != null){
 			queryElts.add(DBQuery.in("experimentTypeCodes", kitCatalogSearch.experimentTypeCodes));
 		}
-		
-		queryElts.add(DBQuery.is("active", kitCatalogSearch.isActive));
+	
+		if (null != kitCatalogSearch.isActive) {
+			queryElts.add(DBQuery.is("active", kitCatalogSearch.isActive));
+		}
 		
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
