@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
@@ -16,9 +17,11 @@ import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.ManyToOneContainer;
 import models.laboratory.experiment.instance.OneToOneContainer;
 import models.laboratory.experiment.instance.OneToVoidContainer;
+import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.protocol.instance.Protocol;
@@ -107,6 +110,9 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			}
 			
 		}
+		
+		//TODO validate number of ATM against SupportContainerCategory nbLine and nbColumn
+		
 		contextValidation.removeObject(FIELD_TYPE_CODE);
 		contextValidation.removeObject(FIELD_INST_USED);
 	}
@@ -144,6 +150,13 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			contextValidation.addKeyToRootKeyName("instrumentUsed");
 			instrumentUsed.validate(contextValidation);
 			contextValidation.removeKeyFromRootKeyName("instrumentUsed");
+			
+			InstrumentUsedType instrumentUsedType = BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, instrumentUsed.typeCode, "typeCode", InstrumentUsedType.find,true);
+			if(instrumentUsedType!=null){
+				contextValidation.addKeyToRootKeyName("instrumentProperties");
+				ValidationHelper.validateProperties(contextValidation, properties, instrumentUsedType.getPropertiesDefinitionDefaultLevel(), false);
+				contextValidation.removeKeyFromRootKeyName("instrumentProperties");
+			}
 		}
 	}
 	
@@ -168,29 +181,37 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 		validateRules(validationfacts, contextValidation);
 	}
 
-	public static void validateInputOutputContainerSupport(Experiment experiment,
+	public static void validateInputContainerSupport(Set<String> inputContainerSupportCodes,
+			List<InputContainerUsed> allInputContainers,
 			ContextValidation contextValidation) {
-		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
-
-		if(CollectionUtils.isNotEmpty(experiment.outputContainerSupportCodes)){
-			int i= 0;
-			for(String supportCode:experiment.outputContainerSupportCodes){
-				CommonValidationHelper.validateContainerSupportCode(supportCode, contextValidation, "outputContainerSupportCodes["+i+++"]");
-			}
-			
-		}
-
-		if(!stateCode.equals("N")){
-			if(required(contextValidation, experiment.inputContainerSupportCodes, "inputContainerSupportCodes")){
-				int i= 0;
-				for(String supportCode:experiment.inputContainerSupportCodes){
-					CommonValidationHelper.validateContainerSupportCode(supportCode, contextValidation, "inputContainerSupportCodes["+i+++"]");
-				}				
+		
+		if(required(contextValidation, inputContainerSupportCodes, "inputContainerSupportCodes")){
+			Set<String> allInputCode = allInputContainers.stream().map((InputContainerUsed i) -> i.code).collect(Collectors.toSet());
+			if(!allInputCode.equals(inputContainerSupportCodes)){
+				contextValidation.addErrors("inputContainerSupportCodes", "");
 			}
 		}
-
 	}
 
+	
+	
+	public static void validateOutputContainerSupport(Set<String> outputContainerSupportCodes,
+			List<OutputContainerUsed> allOutputContainers,
+			ContextValidation contextValidation) {
+		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
+		
+		if(!"N".equals(stateCode)){
+			if(required(contextValidation, outputContainerSupportCodes, "outputContainerSupportCodes")){
+				Set<String> allInputCode = allOutputContainers.stream().map((OutputContainerUsed i) -> i.code).collect(Collectors.toSet());
+				if(!allInputCode.equals(allOutputContainers)){
+					contextValidation.addErrors("outputContainerSupportCodes", "");
+				}
+			}
+		}
+		
+	}
+
+	
 	@Deprecated
 	public static void validateNewState(Experiment experiment,
 			ContextValidation contextValidation){

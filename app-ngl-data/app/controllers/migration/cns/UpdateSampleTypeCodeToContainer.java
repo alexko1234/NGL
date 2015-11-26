@@ -39,7 +39,7 @@ public class UpdateSampleTypeCodeToContainer  extends CommonController {
 			int i = 0;
 			for(Container c : containers){
 				i++;
-				Set<Content> contents = c.contents;
+				List<Content> contents = c.contents;
 				
 				for(Content content:contents){
 					if(content.sampleCode != null && (content.sampleTypeCode == null || content.sampleCategoryCode == null)){

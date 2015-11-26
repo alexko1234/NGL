@@ -63,36 +63,36 @@ public class Container extends DBObject implements IValidation {
 
 	//Embedded content with values;
 	//public List<Content> contents;
-	public Set<Content> contents;
+	public List<Content> contents;
 	// Embedded QC result, this data are copying from collection QC
-	public Set<QualityControlResult> qualityControlResults;
+	public Set<QualityControlResult> qualityControlResults; //TODO GA remove
 
 	//Stock management 
-	public PropertySingleValue mesuredVolume;        //rename to volume
-	public PropertySingleValue mesuredConcentration; //rename to concentration
-	public PropertySingleValue mesuredQuantity; 	 //rename to quantity
+	public PropertySingleValue mesuredVolume;        //TODO GA rename to volume
+	public PropertySingleValue mesuredConcentration; //TODO GA rename to concentration
+	public PropertySingleValue mesuredQuantity; 	 //TODO GA rename to quantity
 
-	public List<PropertyValue> calculedVolume;
+	public List<PropertyValue> calculedVolume; //TODO GA remove
 
 	// For search optimisation
-	public Set<String> projectCodes; // getProjets //TODO SET instead of LIST
-	public Set<String> sampleCodes; // getSamples //TODO SET instead of LIST
+	public Set<String> projectCodes; // getProjets
+	public Set<String> sampleCodes; // getSamples
 	// ExperimentType must be an internal or external experiment ( origine )
 	// List for pool experimentType
 	public Set<String> fromExperimentTypeCodes; // getExperimentType
 
 	// Propager au container de purif ??
 	//public String fromExperimentCode; ??
-	public String fromPurifingCode;
+	public String fromPurifingCode; //TODO GA remove
 	//public String fromExtractionTypeCode;
 	//process
-	public String processTypeCode; //TODO GA : est ce bien utile comme info ?
-
-	public Set<String> inputProcessCodes;
+	public String processTypeCode; //TODO GA remove and replace by processTypeCodes warning find container for create experiment ?
+	public Set<String> processTypeCodes;
+	public Set<String> inputProcessCodes; //TODO GA rename to processCodes
 
 	public Container(){
 		properties=new HashMap<String, PropertyValue>();
-		contents=new HashSet<Content>();
+		contents=new ArrayList<Content>();
 		traceInformation=new TraceInformation();
 		projectCodes = new HashSet<String>();
 		sampleCodes = new HashSet<String>();

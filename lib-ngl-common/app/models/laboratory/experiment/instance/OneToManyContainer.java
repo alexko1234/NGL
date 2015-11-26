@@ -23,6 +23,7 @@ import models.utils.instance.ExperimentHelper;
 import models.utils.instance.ProcessHelper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -123,7 +124,36 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 		}
 	}
 	
-	
+	@Override
+	public void updateOutputCodeIfNeeded(ContainerSupportCategory outputCsc, String supportCode) {
+		//case tube :one support for each output
+		if(outputCsc.nbLine.compareTo(Integer.valueOf(1)) == 0 && outputCsc.nbColumn.compareTo(Integer.valueOf(1)) == 0){
+			outputContainerUseds.forEach((OutputContainerUsed ocu) -> {
+					if(null == ocu.locationOnContainerSupport.code){
+						String newSupportCode = CodeHelper.getInstance().generateContainerSupportCode();
+						ocu.locationOnContainerSupport.code = newSupportCode;
+						ocu.code = newSupportCode;
+					}
+				}
+			);
+		}else if(outputCsc.nbLine.compareTo(Integer.valueOf(1)) > 0 && outputCsc.nbColumn.compareTo(Integer.valueOf(1)) == 0){
+			outputContainerUseds.forEach((OutputContainerUsed ocu) -> {
+				if(null == ocu.locationOnContainerSupport.code){
+					ocu.locationOnContainerSupport.code = supportCode;
+					ocu.code = supportCode+"_"+ocu.locationOnContainerSupport.line;
+				}
+			}
+		);
+		}else if(outputCsc.nbLine.compareTo(Integer.valueOf(1)) > 0 && outputCsc.nbColumn.compareTo(Integer.valueOf(1)) > 0){
+			outputContainerUseds.forEach((OutputContainerUsed ocu) -> {
+				if(null == ocu.locationOnContainerSupport.code){
+					ocu.locationOnContainerSupport.code = supportCode;
+					ocu.code = supportCode+"_"+ocu.locationOnContainerSupport.line+"_"+ocu.locationOnContainerSupport.column;
+				}
+			}
+		);
+		}
+	}
 	
 	@Override
 	public ContextValidation createOutputContainerUsed(Experiment experiment,ContextValidation contextValidation) throws DAOException {

@@ -40,7 +40,7 @@ import fr.cea.ig.MongoDBDAO;
 
 public class ExperimentHelper extends InstanceHelpers {
 
-
+	@Deprecated
 	public static void generateOutputContainerUsed(Experiment exp, ContextValidation contextValidation) throws DAOException{
 
 		if (!contextValidation.hasErrors()) {
@@ -54,7 +54,7 @@ public class ExperimentHelper extends InstanceHelpers {
 
 
 
-
+	@Deprecated
 	public static void saveOutputContainerUsed(Experiment exp, ContextValidation contextValidation) throws DAOException{
 
 		if (!contextValidation.hasErrors()) {

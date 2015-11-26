@@ -214,15 +214,15 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 				
 		
-		l.add(newInstrumentUsedType("Eppendorf MiniSpin plus", "eppendorf-mini-spin-plus", InstrumentCategory.find.findByCode("centrifuge"), getNanoporeFragmentationProperties(),  getInstrumentEppendorfMiniSpinPlus()
+		l.add(newInstrumentUsedType("Eppendorf MiniSpin plus", "eppendorf-mini-spin-plus", InstrumentCategory.find.findByCode("centrifuge"), getNanoporeMiniSpinProperties(),  getInstrumentEppendorfMiniSpinPlus()
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		//DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 		
 		
-		l.add(newInstrumentUsedType("MinION", "minION", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeInstrumentProperties(),getInstrumentMinIon() 
+		l.add(newInstrumentUsedType("MinION", "minION", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeSequencerProperties(),getInstrumentMinIon() 
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
-		l.add(newInstrumentUsedType("Mk1", "mk1", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeInstrumentProperties(),getInstrumentMKI() 
+		l.add(newInstrumentUsedType("Mk1", "mk1", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeSequencerProperties(),getInstrumentMKI() 
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		l.add(newInstrumentUsedType("IRYS", "IRYS", InstrumentCategory.find.findByCode("opt-map-bionano"), getIrysDepotProperties(),getInstrumentIRYS() 
@@ -254,7 +254,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		return null;
 	}
 
-	private static List<PropertyDefinition> getNanoporeFragmentationProperties() throws DAOException {
+	private static List<PropertyDefinition> getNanoporeMiniSpinProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument),String.class, true,
         		DescriptionFactory.newValues("G-TUBE"), "G-TUBE", null, null, null, "single", 1));
@@ -267,7 +267,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 
 
-	private static List<PropertyDefinition> getNanoporeInstrumentProperties() throws DAOException {
+	private static List<PropertyDefinition> getNanoporeSequencerProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Code Flowcell", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
         propertyDefinitions.add(newPropertiesDefinition("Version Flowcell", "flowcellChemistry", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",200,"7.3"));

@@ -53,6 +53,9 @@ error.validationexp.atomicTransfertMethod.null = "L'ATM est null"
 error.validationexp.inputContainer.categoryCode.notequals = "Le categoryCode du container {0} n'est pas le même que celui dans la collection CONTAINER"
 error.validationexp.inputContainer.contents.sizenotequals = "Le nombre de contents du container {0} n'est pas le même que celui dans la collection CONTAINER"
 error.validationexp.inputContainer.percentage = "Le pourcentage de container en entrée doit être : 0 < x <= 100"
+error.validationexp.inputContainerSupportCodes = "La valeur de la liste n'est pas correcte"
+error.validationexp.outputContainerSupportCodes = "La valeur de la liste n'est pas correcte"
+
 
 #directive messages
 msg.details = [détails]

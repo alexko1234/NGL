@@ -43,6 +43,7 @@ GET		/api/experiments												@controllers.experiments.api.Experiments.list()
 GET		/api/experiments/:code											@controllers.experiments.api.Experiments.get(code:java.lang.String)
 POST	/api/experiments												@controllers.experiments.api.Experiments.save()
 PUT		/api/experiments/:code											@controllers.experiments.api.Experiments.update(code:java.lang.String)
+PUT		/api/experiments/:code/state									@controllers.experiments.api.Experiments.state(code:java.lang.String)
 
 POST	/api/experiments/sample-sheets 									instruments.io.Outputs.sampleSheets()
 #PUT		/api/experiments/:code/experiment-information					controllers.experiments.api.ExperimentsOld.updateExperimentInformations(code:java.lang.String)
@@ -58,7 +59,7 @@ POST	/api/experiments/:code/comment									controllers.experiments.api.Experime
 PUT		/api/experiments/:code/comment									controllers.experiments.api.ExperimentsOld.updateComment(code:java.lang.String)
 DELETE	/api/experiments/:code/comment/:commentCode						controllers.experiments.api.ExperimentsOld.deleteComment(code:java.lang.String, commentCode:java.lang.String)
 PUT		/api/experiments/:code/containerSupportCode/:newSupportCode		controllers.experiments.api.ExperimentsOld.updateContainerSupportCode(code:java.lang.String,newSupportCode:java.lang.String)
-PUT		/api/experiments/:code/state									controllers.experiments.api.ExperimentsOld.updateStateCode(code:java.lang.String)
+#PUT		/api/experiments/:code/state									controllers.experiments.api.ExperimentsOld.updateStateCode(code:java.lang.String)
 #PUT		/api/experiments/:code/containers								controllers.experiments.api.ExperimentsOld.updateContainers(code:java.lang.String)
 #POST	/api/experiments												controllers.experiments.api.ExperimentsOld.save()
 

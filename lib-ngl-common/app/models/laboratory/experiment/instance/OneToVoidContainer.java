@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import models.laboratory.common.description.Level;
+import models.laboratory.container.description.ContainerSupportCategory;
 import validation.ContextValidation;
 import validation.experiment.instance.AtomicTransfertMethodValidationHelper;
 
@@ -28,5 +29,14 @@ public class OneToVoidContainer extends AtomicTransfertMethod {
 	public ContextValidation saveOutputContainers(Experiment experiment, ContextValidation contextValidation) {
 		return contextValidation;
 	}
+
+	@Override
+	public void updateOutputCodeIfNeeded(ContainerSupportCategory outputCsc,
+			String supportCode) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
 
 }

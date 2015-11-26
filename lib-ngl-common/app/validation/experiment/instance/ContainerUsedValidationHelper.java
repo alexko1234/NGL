@@ -184,7 +184,7 @@ public class ContainerUsedValidationHelper extends CommonValidationHelper {
 		
 	}
 
-	public static void validateOutputContents(Set<Content> contents, ContextValidation contextValidation) {
+	public static void validateOutputContents(List<Content> contents, ContextValidation contextValidation) {
 		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
 		if("N".equals(stateCode) && null != contents){
 			int i = 0;

@@ -124,13 +124,16 @@ public class Experiment extends DBObject implements IValidation {
 		validateReagents(reagents,contextValidation); //TODO active reagents validation inside ReagentUsed
 		validateTraceInformation(traceInformation, contextValidation);		
 		
-		validateInputOutputContainerSupport(this,contextValidation);
+		validateInputContainerSupport(inputContainerSupportCodes,getAllInputContainers(),contextValidation);
+		validateOutputContainerSupport(outputContainerSupportCodes,getAllOutputContainers(),contextValidation);
 		
 		//TODO Validate projectCodes, sampleCodes
 		
 		validateRules(this,contextValidation);
 		
 	}
+
+	
 
 	
 }

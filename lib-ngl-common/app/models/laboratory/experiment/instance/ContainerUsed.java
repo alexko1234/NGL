@@ -1,5 +1,6 @@
 package models.laboratory.experiment.instance;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,7 +38,7 @@ public class ContainerUsed implements IValidation{
 	public Map<String,PropertyValue> instrumentProperties;
 	
 	
-	public Set<Content> contents;
+	public List<Content> contents;
 	
 	//TODO remove available
 	public State state;	

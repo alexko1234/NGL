@@ -13,7 +13,6 @@ public class InputContainerUsed extends AbstractContainerUsed {
 	
 	
 	public Double percentage; //percentage of input in the final output
-	public Set<String> fromExperimentTypeCodes; //used in rules
 	
 	//TODO Must be remove after refactoring just keep for backward compatibility
 	public State state;

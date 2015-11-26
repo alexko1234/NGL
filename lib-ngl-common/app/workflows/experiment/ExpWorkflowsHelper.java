@@ -1,23 +1,42 @@
 package workflows.experiment;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import models.laboratory.common.description.Level;
+import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.Content;
+import models.laboratory.experiment.description.ExperimentCategory;
+import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
+import models.laboratory.experiment.instance.OutputContainerUsed;
+import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.instance.Process;
+import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
+import models.utils.InstanceHelpers;
+import models.utils.instance.ContainerHelper;
 import models.utils.instance.ExperimentHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
+import controllers.experiments.api.ExperimentCategories;
 import validation.ContextValidation;
 import workflows.container.ContainerWorkflows;
 import workflows.process.ProcessWorkflows;
@@ -145,5 +164,120 @@ public class ExpWorkflowsHelper {
 		
 		return removeContainersCodes;
 	}
+
+	/**
+	 * Update OutputContainerUsed :
+	 * 		- generate ContainerSupportCode and ContainerCode if needed
+	 * 		- populate content, projectCodes, sampleCodes, fromExperimentTypeCodes, processTypeCodes, inputProcessCodes
+	 * 		- remove empty volume, quantity, concentration
+	 * 
+	 * !! missing populate properties on container !!		
+	 * 
+	 * @param exp
+	 * @param validation
+	 */
+	public static void updateATMs(Experiment exp) {
+		ContainerSupportCategory outputCsc = ContainerSupportCategory.find.findByCode(exp.instrument.outContainerSupportCategoryCode);
+		
+		if(outputCsc.nbLine.equals(Integer.valueOf(1)) && outputCsc.nbColumn.equals(Integer.valueOf(1))){
+			exp.atomicTransfertMethods.forEach((AtomicTransfertMethod atm) -> updateOutputContainerUsed(exp, atm, outputCsc, CodeHelper.getInstance().generateContainerSupportCode()));
+		}else if(!outputCsc.nbLine.equals(Integer.valueOf(1))){
+			String supportCode = CodeHelper.getInstance().generateContainerSupportCode();
+			exp.atomicTransfertMethods.forEach((AtomicTransfertMethod atm) -> updateOutputContainerUsed(exp, atm, outputCsc, supportCode));
+		}	
+		
+		MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", exp.code), DBUpdate.set("atomicTransfertMethods", exp.atomicTransfertMethods));
+	}
+
+
+	private static void updateOutputContainerUsed(Experiment exp, AtomicTransfertMethod atm, ContainerSupportCategory outputCsc, String supportCode) {
+		atm.updateOutputCodeIfNeeded(outputCsc, supportCode);
+		
+		Set<String> projectCodes = atm.inputContainerUseds.stream().map((InputContainerUsed icu) -> icu.projectCodes).flatMap(Set::stream).collect(Collectors.toSet());
+		Set<String> sampleCodes = atm.inputContainerUseds.stream().map((InputContainerUsed icu) -> icu.sampleCodes).flatMap(Set::stream).collect(Collectors.toSet());
+		Set<String> fromExperimentTypeCodes = getFromExperimentTypeCodes(exp, atm);
+		Set<String> processTypeCodes = atm.inputContainerUseds.stream().map((InputContainerUsed icu) -> icu.processTypeCodes).flatMap(Set::stream).collect(Collectors.toSet());
+		Set<String> inputProcessCodes = atm.inputContainerUseds.stream().map((InputContainerUsed icu) -> icu.inputProcessCodes).flatMap(Set::stream).collect(Collectors.toSet());
+		List<Content> contents = getContents(exp, atm);
+		
+		
+		atm.outputContainerUseds.forEach((OutputContainerUsed ocu) ->{
+			ocu.projectCodes = projectCodes;
+			ocu.sampleCodes = sampleCodes;
+			ocu.fromExperimentTypeCodes = fromExperimentTypeCodes;
+			ocu.processTypeCodes = processTypeCodes;
+			ocu.inputProcessCodes = inputProcessCodes;
+			ocu.contents = contents;
+			
+			if(ocu.volume.value == null)ocu.volume=null;
+			if(ocu.concentration.value == null)ocu.concentration=null;
+			if(ocu.quantity.value == null)ocu.quantity=null;			
+		});
+	}
+
+
+	private static Set<String> getFromExperimentTypeCodes(Experiment exp, AtomicTransfertMethod atm) {
+		Set<String> _fromExperimentTypeCodes = new HashSet(0);
+		if(!ExperimentCategory.CODE.transformation.equals(ExperimentCategory.CODE.valueOf(exp.categoryCode))){
+			_fromExperimentTypeCodes.add(exp.categoryCode);
+		}else{
+			_fromExperimentTypeCodes = atm.inputContainerUseds.stream().map((InputContainerUsed icu) -> icu.fromExperimentTypeCodes).flatMap(Set::stream).collect(Collectors.toSet());
+		}
+		return _fromExperimentTypeCodes;
+	}
+
+
+	private static List<Content> getContents(Experiment exp, AtomicTransfertMethod atm) {
+		List<Content> contents =  atm.inputContainerUseds.stream().map((InputContainerUsed icu) -> ContainerHelper.calculPercentageContent(icu.contents, icu.percentage)).flatMap(List::stream).collect(Collectors.toList());
+		contents = ContainerHelper.fusionContents(contents);
+		
+		ExperimentType expType = ExperimentType.find.findByCode(exp.typeCode);
+		List<PropertyDefinition> experimentPropertyDefinitions = expType.getPropertyDefinitionByLevel(Level.CODE.Content);
+		
+		Map<String,PropertyValue> allExperimentProperties=new HashMap<String, PropertyValue>(0);
+		if(null != exp.experimentProperties)allExperimentProperties.putAll(exp.experimentProperties);
+		allExperimentProperties.putAll(atm.inputContainerUseds.stream()
+				.filter((InputContainerUsed icu) -> icu.experimentProperties != null)
+				.map((InputContainerUsed icu) -> icu.experimentProperties.entrySet())
+				.flatMap(Set::stream)
+				.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
+		allExperimentProperties.putAll(atm.outputContainerUseds.stream()
+				.filter((OutputContainerUsed ocu) -> ocu.experimentProperties != null)
+				.map((OutputContainerUsed ocu) -> ocu.experimentProperties.entrySet())
+				.flatMap(Set::stream)
+				.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
+		
+		
+		InstrumentUsedType insType = InstrumentUsedType.find.findByCode(exp.instrument.typeCode);
+		List<PropertyDefinition> instrumentPropertyDefinitions = insType.getPropertyDefinitionByLevel(Level.CODE.Content);
+		Map<String,PropertyValue> allInstrumentProperties=new HashMap<String, PropertyValue>();
+		if(null != exp.instrumentProperties)allInstrumentProperties.putAll(exp.instrumentProperties);
+		allInstrumentProperties.putAll(atm.inputContainerUseds.stream()
+				.filter((InputContainerUsed icu) -> icu.instrumentProperties != null)
+				.map((InputContainerUsed icu) -> icu.instrumentProperties.entrySet())
+				.flatMap(Set::stream)
+				.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
+		allInstrumentProperties.putAll(atm.outputContainerUseds.stream()
+				.filter((OutputContainerUsed ocu) -> ocu.instrumentProperties != null)
+				.map((OutputContainerUsed ocu) -> ocu.instrumentProperties.entrySet())
+				.flatMap(Set::stream)
+				.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
+		
+		
+		contents.forEach((Content c) ->{
+			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(experimentPropertyDefinitions, allExperimentProperties, c.properties);
+			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(instrumentPropertyDefinitions, allInstrumentProperties, c.properties);
+		});
+		
+		
+		return contents;
+	}
+
+
+	private static Set<Entry<String, PropertyValue>> getVoidEntrySet() {
+		return (new HashMap<String, PropertyValue>(0)).entrySet();
+	}
+
+	
 
 }

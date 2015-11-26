@@ -7,7 +7,7 @@ import models.laboratory.container.description.dao.ContainerSupportCategoryDAO;
 import models.utils.dao.DAOException;
 
 public class ContainerSupportCategory extends AbstractCategory<ContainerSupportCategory>{
-
+	
 	public Integer nbUsableContainer;
 	
 	public Integer nbLine;

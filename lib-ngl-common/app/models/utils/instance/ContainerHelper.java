@@ -78,7 +78,7 @@ public class ContainerHelper {
 		container.sampleCodes.add(sample.code);
 
 	}
-
+	@Deprecated
 	public static void addContent(Container outputContainer, List<InputContainerUsed> inputContainerUseds , Experiment experiment, Map<String,PropertyValue> properties) throws DAOException {
 		
 		List<String> inputContainerCodes=new ArrayList<String>();
@@ -89,7 +89,7 @@ public class ContainerHelper {
 			
 			Container inputContainer=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, inputContainerUsed.code);
 
-			Set<Content> contents = new HashSet<Content>(inputContainer.contents);
+			List<Content> contents = inputContainer.contents;
 			
 			if(inputContainerUsed.percentage==null){
 				inputContainerUsed.percentage=100.0/inputContainerUseds.size();
@@ -196,7 +196,7 @@ public class ContainerHelper {
 	 * @param contents
 	 * @return
 	 */
-	public static Set<Content> fusionContents(Set<Content> contents) {
+	public static List<Content> fusionContents(List<Content> contents) {
 		
 		//groupb by a key
 		Map<String, List<Content>> contentsByKey = contents.stream().collect(Collectors.groupingBy((Content c ) -> getContentKey(c)));
@@ -214,7 +214,7 @@ public class ContainerHelper {
 		
 		contentsByKeyWithOneValues.putAll(contentsByKeyWithSeveralValues);
 		
-		return new HashSet<Content>(contentsByKeyWithOneValues.values());
+		return new ArrayList(contentsByKeyWithOneValues.values());
 	}
 
 	private static Content fusionSameContents(List<Content> contents) {
@@ -255,16 +255,17 @@ public class ContainerHelper {
 		}		
 	}
 
-	public static void calculPercentageContent(Set<Content> contents, Double percentage){
+	public static List<Content> calculPercentageContent(List<Content> contents, Double percentage){
 		if(percentage!=null){
 			for(Content cc:contents){
-				BigDecimal bd=null;				
 				if(cc.percentage != null){
-					bd = (new BigDecimal((cc.percentage*percentage)/100.00)).setScale(2, BigDecimal.ROUND_HALF_UP);
-				}
-				cc.percentage= cc.percentage == null ? percentage : bd.doubleValue();		
+					cc.percentage = (new BigDecimal((cc.percentage*percentage)/100.00)).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+				}else{
+					cc.percentage = percentage;
+				}						
 			}
 		}
+		return contents;
 	}
 
 
@@ -388,7 +389,7 @@ public class ContainerHelper {
 		}
 	}
 
-	public static Set<Content> contentFromSampleCode(Set<Content> contents,
+	public static Set<Content> contentFromSampleCode(List<Content> contents,
 			String sampleCode) {
 		Set<Content> contentsFind=new HashSet<Content>();
 		for(Content content:contents){

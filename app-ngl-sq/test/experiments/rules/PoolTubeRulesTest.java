@@ -78,7 +78,7 @@ public class PoolTubeRulesTest extends AbstractTests {
 		contextValidation.putObject("stateCode", exp.state.code);
 		contextValidation.putObject("typeCode", exp.typeCode);
 
-		ExperimentValidationHelper.validateAtomicTransfertMethods(exp.atomicTransfertMethods, contextValidation);
+		ExperimentValidationHelper.validateAtomicTransfertMethods(exp.typeCode, exp.instrument, exp.atomicTransfertMethods, contextValidation);
 
 		ExperimentHelper.doCalculations(exp,ExperimentsOld.calculationsRules);
 		

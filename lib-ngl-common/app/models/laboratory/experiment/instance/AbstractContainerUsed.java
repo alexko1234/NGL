@@ -1,5 +1,6 @@
 package models.laboratory.experiment.instance;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,15 +13,23 @@ import models.laboratory.container.instance.LocationOnContainerSupport;
 public abstract class AbstractContainerUsed implements IValidation{
 	public String code;
 	public String categoryCode;
-	public Set<Content> contents;
+	public List<Content> contents;
 	public LocationOnContainerSupport locationOnContainerSupport;
 	
-	public PropertySingleValue volume;        //rename to volume
-	public PropertySingleValue concentration; //rename to concentration
-	public PropertySingleValue quantity; 	 //rename to quantity
+	public PropertySingleValue volume;        
+	public PropertySingleValue concentration; 
+	public PropertySingleValue quantity; 	
 	
 	public Map<String,PropertyValue> experimentProperties;
 	public Map<String,PropertyValue> instrumentProperties;
+	
+	
+	public Set<String> projectCodes; 
+	public Set<String> sampleCodes; 
+	public Set<String> fromExperimentTypeCodes; 
+	public Set<String> processTypeCodes;
+	public Set<String> inputProcessCodes;
+	
 	
 	public AbstractContainerUsed() {
 		super();

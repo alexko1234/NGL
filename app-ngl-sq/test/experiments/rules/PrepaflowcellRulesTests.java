@@ -2,6 +2,7 @@ package experiments.rules;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -12,7 +13,6 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
-import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.ManyToOneContainer;
@@ -79,7 +79,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		InputContainerUsed container3_1=ExperimentTestHelper.getInputContainerUsed("CONTAINER3_1");
 		container3_1.percentage=20.0;
 		Content content3_1=new Content("CONTENT3","TYPE","CATEGORIE");
-		container3_1.contents=new HashSet<Content>();
+		container3_1.contents=new ArrayList<Content>();;
 		content3_1.properties=new HashMap<String, PropertyValue>();
 		container3_1.contents.add(content3_1);
 		
@@ -87,7 +87,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		InputContainerUsed container3_2=ExperimentTestHelper.getInputContainerUsed("CONTAINER3_2");
 		container3_2.percentage=80.0;
 		Content content3_2=new Content("CONTENT3","TYPE","CATEGORIE");
-		container3_2.contents=new HashSet<Content>();
+		container3_2.contents=new ArrayList<Content>();
 		content3_2.properties=new HashMap<String, PropertyValue>();
 		container3_2.contents.add(content3_2);
 
@@ -173,7 +173,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		InputContainerUsed container1_1=ExperimentTestHelper.getInputContainerUsed("CONTAINER1_1");
 		container1_1.percentage=0.0;
 		Content content1_1=new Content("CONTENT1_1","TYPE","CATEGORIE");
-		container1_1.contents=new HashSet<Content>();
+		container1_1.contents=new ArrayList<Content>();
 		content1_1.properties=new HashMap<String, PropertyValue>();
 		content1_1.properties.put("tag", new PropertySingleValue("IND1"));
 		content1_1.properties.put("tagCategory", new PropertySingleValue("TAGCATEGORIE"));
@@ -241,7 +241,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		InputContainerUsed container3_1=ExperimentTestHelper.getInputContainerUsed("CONTAINER3_1");
 		container3_1.percentage=20.0;
 		Content content3_1=new Content("CONTENT3","TYPE","CATEGORIE");
-		container3_1.contents=new HashSet<Content>();
+		container3_1.contents=new ArrayList<Content>();
 		content3_1.properties=new HashMap<String, PropertyValue>();
 		content3_1.properties.put("libProcessTypeCode", new PropertySingleValue("F"));
 
@@ -251,7 +251,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		InputContainerUsed container3_2=ExperimentTestHelper.getInputContainerUsed("CONTAINER3_2");
 		container3_2.percentage=80.0;
 		Content content3_2=new Content("CONTENT3","TYPE","CATEGORIE");
-		container3_2.contents=new HashSet<Content>();
+		container3_2.contents=new ArrayList<Content>();
 		content3_2.properties=new HashMap<String, PropertyValue>();
 		content3_2.properties.put("libProcessTypeCode", new PropertySingleValue("W"));
 		container3_2.contents.add(content3_2);
@@ -283,7 +283,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		container3_1.fromExperimentTypeCodes=new HashSet<String>();
 		container3_1.fromExperimentTypeCodes.add("frag");
 		Content content3_1=new Content("CONTENT3","TYPE","CATEGORIE");
-		container3_1.contents=new HashSet<Content>();
+		container3_1.contents=new ArrayList<Content>();
 		content3_1.properties=new HashMap<String, PropertyValue>();
 		content3_1.properties.put("libProcessTypeCode", new PropertySingleValue("W"));
 
@@ -295,7 +295,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		container3_2.fromExperimentTypeCodes=new HashSet<String>();
 		container3_2.fromExperimentTypeCodes.add("lib");
 		Content content3_2=new Content("CONTENT3","TYPE","CATEGORIE");
-		container3_2.contents=new HashSet<Content>();
+		container3_2.contents=new ArrayList<Content>();
 		content3_2.properties=new HashMap<String, PropertyValue>();
 		content3_2.properties.put("libProcessTypeCode", new PropertySingleValue("W"));
 		container3_2.contents.add(content3_2);
@@ -328,7 +328,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		container3_1.fromExperimentTypeCodes=new HashSet<String>();
 		container3_1.fromExperimentTypeCodes.add("frag");
 		Content content3_1=new Content("CONTENT3","TYPE","CATEGORIE");
-		container3_1.contents=new HashSet<Content>();
+		container3_1.contents=new ArrayList<Content>();
 		content3_1.properties=new HashMap<String, PropertyValue>();
 		container3_1.contents.add(content3_1);
 		
@@ -338,7 +338,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		container3_2.fromExperimentTypeCodes=new HashSet<String>();
 		container3_2.fromExperimentTypeCodes.add("lib");
 		Content content3_2=new Content("CONTENT3","TYPE","CATEGORIE");
-		container3_2.contents=new HashSet<Content>();
+		container3_2.contents=new ArrayList<Content>();
 		content3_2.properties=new HashMap<String, PropertyValue>();
 		container3_2.contents.add(content3_2);
 

@@ -223,7 +223,7 @@ public class Experiments extends DocumentController<Experiment>{
 		input.validate(ctxVal);	
 		if (!ctxVal.hasErrors()) {
 			input = saveObject(input);
-			workflows.applyWorkflowRules(ctxVal, input);
+			workflows.applyCurrentStateRules(ctxVal, input);
 			return ok(Json.toJson(input));
 		} else {
 			return badRequest(filledForm.errorsAsJson());
@@ -259,9 +259,7 @@ public class Experiments extends DocumentController<Experiment>{
 			
 			input.validate(ctxVal);			
 			if (!ctxVal.hasErrors()) {
-				if("N".equals(objectInDB.state.code)){
-					workflows.applyWorkflowRules(ctxVal, input);					
-				}
+				workflows.applyCurrentStateRules(ctxVal, input);					
 				updateObject(input);	
 				return ok(Json.toJson(input));
 			}else {

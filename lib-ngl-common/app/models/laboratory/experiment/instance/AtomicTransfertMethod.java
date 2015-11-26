@@ -3,6 +3,7 @@ package models.laboratory.experiment.instance;
 import java.util.List;
 
 import models.laboratory.common.instance.Comment;
+import models.laboratory.container.description.ContainerSupportCategory;
 import models.utils.dao.DAOException;
 import validation.ContextValidation;
 import validation.IValidation;
@@ -34,9 +35,13 @@ public abstract class AtomicTransfertMethod implements IValidation {
 		super();
 	}
 	
-	
+	@Deprecated
 	public abstract ContextValidation createOutputContainerUsed(Experiment experiment, ContextValidation contextValidation) throws DAOException;
+	@Deprecated	
 	public abstract ContextValidation saveOutputContainers(Experiment experiment, ContextValidation contextValidation) throws DAOException;
+	
+	public abstract void updateOutputCodeIfNeeded(ContainerSupportCategory outputCsc, String supportCode);
+	
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
@@ -45,6 +50,7 @@ public abstract class AtomicTransfertMethod implements IValidation {
 		AtomicTransfertMethodValidationHelper.validateInputContainers(contextValidation, inputContainerUseds);
 		
 	}
+
 	
 	
 	

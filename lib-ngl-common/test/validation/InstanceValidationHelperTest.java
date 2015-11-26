@@ -327,8 +327,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		v.valid = TBoolean.UNSET;
 		c.valuation = v;
 		
-		Set<Content> alc = new HashSet<Content>();
-		c.contents = alc;
+		c.contents = new ArrayList<Content>();
 				
 		c.validate(contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
@@ -398,8 +397,8 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		v.valid = TBoolean.UNSET;
 		c.valuation = v;
 		
-		Set<Content> alc = new HashSet<Content>();
-		c.contents = alc;
+		c.contents = new ArrayList<Content>();
+		
 				
 		c.validate(contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(1);

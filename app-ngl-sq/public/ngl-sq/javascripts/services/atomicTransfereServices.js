@@ -83,7 +83,12 @@ angular.module('atomicTransfereServices', [])
 					    experimentProperties:{},
 					    percentage:100, //rules by defaut need check with server
 						//can be updated
-						fromExperimentTypeCodes:container.fromExperimentTypeCodes
+						sampleCodes:container.sampleCodes,
+						projectCodes:container.projectCodes,
+					    fromExperimentTypeCodes:container.fromExperimentTypeCodes,
+					    processTypeCodes:(container.processTypeCode)?[container.processTypeCode]:container.processTypeCodes,
+						inputProcessCodes:container.inputProcessCodes
+						
 					};
 					/*
 					 return {"state":container.state
@@ -98,7 +103,11 @@ angular.module('atomicTransfereServices', [])
 					containerUsed.volume = container.mesuredVolume;
 					containerUsed.concentration = container.mesuredConcentration;
 					containerUsed.quantity = container.mesuredQuantity;
-					containerUsed.fromExperimentTypeCodes = container.fromExperimentTypeCodes;
+					containerUsed.sampleCodes=container.sampleCodes;
+					containerUsed.projectCodes=container.projectCodes;
+					containerUsed.fromExperimentTypeCodes=container.fromExperimentTypeCodes;
+					containerUsed.processTypeCodes=(container.processTypeCode)?[container.processTypeCode]:container.processTypeCodes;
+					containerUsed.inputProcessCodes=container.inputProcessCodes;
 					return containerUsed;
 				},
 				getContainerListPromise : function(containerCodes){
@@ -170,9 +179,9 @@ angular.module('atomicTransfereServices', [])
 				newOutputContainerUsed : function(defaultOutputUnit, atmLine, atmColumn, inputContainer){
 					return {
 						code:undefined,
-						categoryCode:getContainerCategoryCode(), 
+						categoryCode:this.getContainerCategoryCode(), 
 						locationOnContainerSupport:{
-							categoryCode:getSupportContainerCategoryCode(), 
+							categoryCode:this.getSupportContainerCategoryCode(), 
 							line:atmLine,
 							column:atmColumn
 						},
@@ -186,13 +195,13 @@ angular.module('atomicTransfereServices', [])
 				},
 				updateOutputContainerUsed:function(outputContainer, atmLine, atmColumn){
 					if(null === outputContainer.categoryCode || undefined === outputContainer.categoryCode){
-						outputContainer.categoryCode = getContainerCategoryCode();
+						outputContainer.categoryCode = this.getContainerCategoryCode();
 					}
 					if(null === outputContainer.locationOnContainerSupport || undefined === outputContainer.locationOnContainerSupport){
 						outputContainer.locationOnContainerSupport = {};
 					}
 					if(null === outputContainer.locationOnContainerSupport.categoryCode || undefined === outputContainer.locationOnContainerSupport.categoryCode){
-						outputContainer.locationOnContainerSupport.categoryCode = getSupportContainerCategoryCode();
+						outputContainer.locationOnContainerSupport.categoryCode = this.getSupportContainerCategoryCode();
 					}
 					if(null === outputContainer.locationOnContainerSupport.line || undefined === outputContainer.locationOnContainerSupport.line){
 						outputContainer.locationOnContainerSupport.line = atmLine;
@@ -203,9 +212,20 @@ angular.module('atomicTransfereServices', [])
 					
 				},				
 				getContainerCategoryCode :function(){
-					var supportContainerCategoryCode = getSupportContainerCategoryCode();
+					var supportContainerCategoryCode = this.getSupportContainerCategoryCode();
 					var instrumentType = mainService.get("instrumentType");
-					//TODO Compare
+					var containerCategoryCode = [];
+					angular.forEach(instrumentType.outContainerSupportCategories,function(value){
+						if(supportContainerCategoryCode === value.code){
+							containerCategoryCode[0] = value.containerCategory.code;
+						}
+					},containerCategoryCode);
+					if(containerCategoryCode.length === 1){
+						return containerCategoryCode[0];
+					}else{
+						throw "not found containerCategoryCode";
+					}
+					
 				},				
 				getSupportContainerCategoryCode :function(){
 					return mainService.get("experiment").instrument.outContainerSupportCategoryCode;

@@ -96,11 +96,18 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 					// purge basket when save ok or not ?
 					resetBasket();					
 					$scope.experiment = data;
-					$scope.$broadcast('refresh'); // utile seulement si le													// save fontionne
-					creationMode = false;
-					// unedit or not ???					
-					saveInProgress = false;		
 					mainService.put("experiment",$scope.experiment);
+					$scope.$broadcast('refresh'); // utile seulement si le save fontionne
+					
+					creationMode = false;
+					mainService.setHomePage('search')
+					tabService.resetTabs();
+					tabService.addTabs({label:Messages('experiments.tabs.search'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("search").url,remove:true});
+					tabService.addTabs({label:$scope.experiment.code,href:jsRoutes.controllers.experiments.tpl.Experiments.get($scope.experiment.code).url,remove:true});			
+					mainService.stopEditMode();
+					
+					saveInProgress = false;		
+					
 				})
 				.error(function(data, status, headers, config) {
 					$scope.messages.setError("save");
@@ -115,9 +122,11 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				// purge basket when save ok or not ?
 				resetBasket();					
 				$scope.experiment = data;
+				mainService.put("experiment",$scope.experiment);
+				
 				$scope.$broadcast('refresh'); // utile seulement si le				
 				saveInProgress = false;							
-				mainService.put("experiment",$scope.experiment);
+				
 			})
 			.error(function(data, status, headers, config) {
 				$scope.messages.setError("save");
@@ -185,7 +194,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			$scope.experiment.instrumentProperties = undefined;
 			$scope.instrumentType = undefined;
 			loadInstrumentType(instrumentTypeCode);												
-		}else {
+		}else if($scope.experiment){
 			$scope.experiment.instrument = {};
 			$scope.experiment.instrumentProperties = undefined;
 			$scope.instrumentType = undefined;

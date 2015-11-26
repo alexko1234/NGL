@@ -13,7 +13,7 @@ public abstract class Workflows<T> {
 
 	
 	
-	public abstract void applyWorkflowRules(ContextValidation validation, T object);
+	public abstract void applyCurrentStateRules(ContextValidation validation, T object);
 	
 	public abstract void setState(ContextValidation contextValidation, T object, State nextState);
 	
