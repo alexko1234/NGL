@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
@@ -18,6 +17,7 @@ import models.laboratory.processes.description.ProcessType;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
+import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 import services.description.common.MeasureService;
@@ -52,7 +52,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("denat-dil-lib").get(0), 
 				getExperimentTypes("illumina-depot").get(0),
 				getExperimentTypes("ext-to-denat-dil-lib").get(0), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+				DescriptionFactory.getInstitutes(Contants.CODE.CNG)));
 	   
 		// JIRA 781 ajouter un processus court (sans denat)
 		l.add(DescriptionFactory.newProcessType("Prep FC, dépôt", "prepFC-depot", ProcessCategory.find.findByCode("sequencing"),
@@ -60,7 +60,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("prepa-flowcell").get(0), 
 				getExperimentTypes("illumina-depot").get(0),
 				getExperimentTypes("ext-to-prepa-flowcell").get(0), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+				DescriptionFactory.getInstitutes(Contants.CODE.CNG)));
 
 		// FDS ajout 04/11/2015 -- JIRA 838: nouveau processus court prepa-fc-ordonée + illumina-depot
 		l.add(DescriptionFactory.newProcessType("4000/X5 (prep FC ordonnée)", "prepFCordered-depot", ProcessCategory.find.findByCode("sequencing"),
@@ -68,7 +68,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("prepa-fc-ordered").get(0),
 				getExperimentTypes("illumina-depot").get(0),
 				getExperimentTypes("ext-to-prepa-fc-ordered").get(0), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+				DescriptionFactory.getInstitutes(Contants.CODE.CNG)));
 
 		DAOHelpers.saveModels(ProcessType.class, l, errors);
 	}

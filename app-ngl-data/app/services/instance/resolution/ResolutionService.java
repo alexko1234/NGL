@@ -36,7 +36,7 @@ public class ResolutionService {
 		
 		String inst=play.Play.application().configuration().getString("institute");
 		
-		if ( inst.equals("CNS") || inst.equals("CNG") ) {
+		if ( inst.equals("CNS") || inst.equals("CNG") || inst.equals("TEST") ) {
 			Logger.info("Create and save "+inst+ " resolution categories ...");
 			
 			saveResolutions(ctx, inst);
@@ -72,6 +72,10 @@ public class ResolutionService {
 			createIryPreparationNLRSResolutionCNS(ctx);
 			createDepotBionanoResolutionCNS(ctx);
 			// FDS 15/01: No illumina Depot Resolutions ???
+			createExperimentResolution(ctx); 
+			createProcessResolution(ctx);
+		}else if ( inst.equals("TEST") ){		
+			resolutionCategories = createResolutionCategoriesCNS();
 			createExperimentResolution(ctx); 
 			createProcessResolution(ctx);
 		}

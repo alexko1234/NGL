@@ -11,6 +11,7 @@ import play.data.validation.ValidationError;
 import static services.description.DescriptionFactory.*;
 
 public class InstituteService {
+	
 	public static void main(Map<String, List<ValidationError>> errors) throws DAOException{		
 		
 		//DAOHelpers.removeAll(Institute.class, Institute.find);
@@ -30,6 +31,9 @@ public class InstituteService {
 		}
 		else if(institute.equals("CNS")){
 			l.add(newInstitute("Centre National de Séquençage","CNS"));
+		}
+		else if(institute.equals("TEST")){
+			l.add(newInstitute("Test","TEST"));
 		}
 		DAOHelpers.saveModels(Institute.class, l, errors);
 	}

@@ -28,7 +28,7 @@ import models.laboratory.protocol.instance.Protocol;
 import models.laboratory.reagent.instance.ReagentUsed;
 import models.utils.InstanceConstants;
 
-import org.apache.commons.collections.CollectionUtils;
+
 import org.mongojack.DBQuery;
 
 import play.Logger;
@@ -163,21 +163,27 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 	
 	public static void validateRules(Experiment exp,ContextValidation contextValidation){
 		ArrayList<Object> validationfacts = new ArrayList<Object>();
-		Logger.debug("Validate rules");
 		validationfacts.add(exp);
+		exp.atomicTransfertMethods.forEach((AtomicTransfertMethod atm) -> validationfacts.add(atm));
+		
+		/*
 		for(int i=0;i<exp.atomicTransfertMethods.size();i++){
+			
+			
+			
 			if(ManyToOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
 				ManyToOneContainer atomic = (ManyToOneContainer) exp.atomicTransfertMethods.get(i);
 				validationfacts.add(atomic);
 			}else if(OneToOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
 				OneToOneContainer atomic = (OneToOneContainer) exp.atomicTransfertMethods.get(i);
 				validationfacts.add(atomic);
-			}/*else if(OneToVoidContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
+			}else if(OneToVoidContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
 				OneToVoidContainer atomic = (OneToVoidContainer) exp.atomicTransfertMethods.get(i);
 				Logger.debug("Add oneToVoid ");
 				validationfacts.add(atomic);
-			}*/
+			}
 		}
+		*/	
 		validateRules(validationfacts, contextValidation);
 	}
 
@@ -202,9 +208,9 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 		
 		if(!"N".equals(stateCode)){
 			if(required(contextValidation, outputContainerSupportCodes, "outputContainerSupportCodes")){
-				Set<String> allInputCode = allOutputContainers.stream().map((OutputContainerUsed i) -> i.code).collect(Collectors.toSet());
-				if(!allInputCode.equals(allOutputContainers)){
-					contextValidation.addErrors("outputContainerSupportCodes", "");
+				Set<String> allInputCode = allOutputContainers.stream().map((OutputContainerUsed i) -> i.locationOnContainerSupport.code).collect(Collectors.toSet());
+				if(!allInputCode.equals(outputContainerSupportCodes)){
+					contextValidation.addErrors("outputContainerSupportCodes", "error.validationexp.outputContainerSupportCodes");
 				}
 			}
 		}

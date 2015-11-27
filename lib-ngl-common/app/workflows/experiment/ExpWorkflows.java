@@ -1,5 +1,6 @@
 package workflows.experiment;
 
+import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
 import models.laboratory.common.instance.State;
 import models.laboratory.experiment.instance.Experiment;
 import models.utils.InstanceConstants;
@@ -20,22 +21,33 @@ public class ExpWorkflows extends Workflows<Experiment>{
 	@Override
 	public void applyCurrentStateRules(ContextValidation validation, Experiment exp) {
 		if("N".equals(exp.state.code)){
-			if(validation.isCreationMode()){
-				ExpWorkflowsHelper.updateContainersAndProcesses(exp, validation); 
-			}else if(validation.isUpdateMode()){
+			ExpWorkflowsHelper.updateXCodes(exp);
+			if(validation.isUpdateMode()){
 				ExpWorkflowsHelper.updateRemoveContainersFromExperiment(exp, validation); 
 				ExpWorkflowsHelper.updateAddContainersToExperiment(exp, validation);				
-			}
-			ExpWorkflowsHelper.updateXCodes(exp); 						
+			}			 						
 		}
 	}
 
-	private void applyPreStateRules(ContextValidation validation, Experiment exp, State nextState) {
-		if("IP".equals(nextState.code)){
-			ExpWorkflowsHelper.updateATMs(exp);				
-			//update containers & processes state
-			ExpWorkflowsHelper.updateContainersAndProcessesState(exp, validation, "IU", "IP");
+	public void applyPreStateRules(ContextValidation validation, Experiment exp, State nextState) {
+		if("N".equals(nextState.code)){
+			ExpWorkflowsHelper.updateXCodes(exp); 	
+		} else if("IP".equals(nextState.code)){
+			ExpWorkflowsHelper.updateATMs(exp);	
+			ExpWorkflowsHelper.updateOutputContainerCodes(exp);
 		}else if("F".equals(nextState.code)){
+			
+		}
+	}
+	
+	public void applyPostStateRules(ContextValidation validation, Experiment exp){
+		if("N".equals(exp.code)){
+			if(validation.isCreationMode()){
+				ExpWorkflowsHelper.updateContainersAndProcesses(exp, validation); 
+			}
+		} else if("IP".equals(exp.code)){			
+			ExpWorkflowsHelper.updateContainersAndProcessesState(exp, validation, "IU", "IP");
+		}else if("F".equals(exp.code)){
 			
 		}
 	}
@@ -48,6 +60,7 @@ public class ExpWorkflows extends Workflows<Experiment>{
 		CommonValidationHelper.validateState(exp.typeCode, nextState, contextValidation);
 		if(!contextValidation.hasErrors() && !nextState.code.equals(exp.state.code)){
 			applyPreStateRules(contextValidation, exp, nextState);
+			contextValidation.putObject(FIELD_STATE_CODE , nextState.code);
 			exp.validate(contextValidation);
 			if(!contextValidation.hasErrors()){
 				boolean goBack = goBack(exp.state, nextState);
@@ -60,7 +73,7 @@ public class ExpWorkflows extends Workflows<Experiment>{
 						DBQuery.is("code", exp.code),
 						DBUpdate.set("state", exp.state).set("traceInformation", exp.traceInformation));
 				
-				applyCurrentStateRules(contextValidation, exp);
+				applyPostStateRules(contextValidation, exp);
 				nextState(contextValidation, exp);
 			}			
 		}

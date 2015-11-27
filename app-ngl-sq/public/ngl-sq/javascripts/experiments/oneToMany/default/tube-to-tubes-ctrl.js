@@ -301,11 +301,11 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', 'atmToGenerateMan
 		return ($scope.$parent.isEditMode() && $scope.isNewState());
 	};
 	
-	$scope.$on('save', function(e, promises, func, endPromises) {	
+	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save on tube-to-tubes");
 		$scope.atmService.viewToExperiment($scope.experiment);
 		$scope.updateInputVolume($scope.experiment);
-		$scope.$emit('childSaved', promises, func, endPromises);
+		$scope.$emit('childSaved', callbackFunction);
 	});
 	
 	

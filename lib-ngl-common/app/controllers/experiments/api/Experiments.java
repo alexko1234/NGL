@@ -217,13 +217,12 @@ public class Experiments extends DocumentController<Experiment>{
 		}
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 		ctxVal.setCreationMode();
-		
+		workflows.applyPreStateRules(ctxVal, input, input.state);		
 		ExperimentHelper.doCalculations(input, calculationsRules);
-		
 		input.validate(ctxVal);	
 		if (!ctxVal.hasErrors()) {
 			input = saveObject(input);
-			workflows.applyCurrentStateRules(ctxVal, input);
+			workflows.applyPostStateRules(ctxVal, input);
 			return ok(Json.toJson(input));
 		} else {
 			return badRequest(filledForm.errorsAsJson());

@@ -120,11 +120,11 @@ angular.module('home').controller('OneToVoidCtrl',['$scope', '$parse','atmToSing
 			}
 	};
 
-		$scope.$on('save', function(e, promises, func, endPromises) {	
+		$scope.$on('save', function(e, callbackFunction) {	
 			console.log("call event save on one-to-void");
 			$scope.atmService.data.save();
 			$scope.atmService.viewToExperimentOneToVoid($scope.experiment);
-			$scope.$emit('childSaved', promises, func, endPromises);
+			$scope.$emit('childSaved', callbackFunction);
 		});
 		
 		$scope.$on('refresh', function(e) {

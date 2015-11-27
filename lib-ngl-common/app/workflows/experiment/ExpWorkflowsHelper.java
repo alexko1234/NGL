@@ -66,10 +66,21 @@ public class ExpWorkflowsHelper {
 		exp.sampleCodes = sampleCodes;
 		exp.inputContainerSupportCodes = inputContainerSupportCodes;		
 		
-		MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class,DBQuery.is("code", exp.code)
+		MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", exp.code)
 				,DBUpdate.set("projectCodes", exp.projectCodes).set("sampleCodes", exp.sampleCodes).set("inputContainerSupportCodes", exp.inputContainerSupportCodes));
 	}
 
+
+	public static void updateOutputContainerCodes(Experiment exp) {
+		Set<String> outputContainerSupportCodes = exp.getAllOutputContainers().stream().map((OutputContainerUsed c) -> c.locationOnContainerSupport.code).collect(Collectors.toSet());
+		exp.outputContainerSupportCodes = outputContainerSupportCodes; 
+		MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", exp.code)
+				,DBUpdate.set("outputContainerSupportCodes", exp.outputContainerSupportCodes));
+	}
+
+	
+
+	
 	
 	public static void updateContainersAndProcesses(Experiment exp, ContextValidation ctxVal) {
 		List<String> inputContainerCodes = exp.getAllInputContainers().stream().map((InputContainerUsed c) -> c.code).collect(Collectors.toList());
@@ -209,9 +220,9 @@ public class ExpWorkflowsHelper {
 			ocu.inputProcessCodes = inputProcessCodes;
 			ocu.contents = contents;
 			
-			if(ocu.volume.value == null)ocu.volume=null;
-			if(ocu.concentration.value == null)ocu.concentration=null;
-			if(ocu.quantity.value == null)ocu.quantity=null;			
+			if(ocu.volume != null && ocu.volume.value == null)ocu.volume=null;
+			if(ocu.concentration != null &&ocu.concentration.value == null)ocu.concentration=null;
+			if(ocu.quantity != null &&ocu.quantity.value == null)ocu.quantity=null;			
 		});
 	}
 
@@ -274,10 +285,5 @@ public class ExpWorkflowsHelper {
 	}
 
 
-	private static Set<Entry<String, PropertyValue>> getVoidEntrySet() {
-		return (new HashMap<String, PropertyValue>(0)).entrySet();
-	}
-
-	
 
 }

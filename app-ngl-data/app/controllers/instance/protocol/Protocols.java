@@ -22,6 +22,8 @@ public class Protocols extends CommonController {
 				ProtocolServiceCNS.main(ctx);
 			}else if(play.Play.application().configuration().getString("institute").equals("CNG")){
 				ProtocolServiceCNG.main(ctx);
+			}else if(play.Play.application().configuration().getString("institute").equals("TEST")){
+				ProtocolServiceCNS.main(ctx);
 			}else{
 				Logger.error("You need to specify only one institute ! Now, it's "+ play.Play.application().configuration().getString("institute"));
 			}

@@ -200,7 +200,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			}
 	};
 
-	$scope.$on('save', function(e, promises, func, endPromises) {	
+	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
@@ -211,7 +211,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			$parse('locationOnContainerSupport.code').assign(atm.outputContainerUseds[0], atm.outputContainerUseds[0].code);			
 		}
 		
-		$scope.$emit('viewSaved', promises, func, endPromises);
+		$scope.$emit('childSaved', callbackFunction);
 	});
 	
 	$scope.$on('refresh', function(e) {

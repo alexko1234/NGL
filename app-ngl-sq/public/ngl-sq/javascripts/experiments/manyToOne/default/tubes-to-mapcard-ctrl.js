@@ -170,11 +170,11 @@ angular.module('home').controller('TubesToMapCardCtrl',['$scope', '$parse', 'atm
 		datatable.setData(dataMain);
 	}
 	
-	$scope.$on('save', function(e, promises, func, endPromises) {	
+	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentManyToOne($scope.experiment);
-		$scope.$emit('viewSaved', promises, func, endPromises);
+		$scope.$emit('childSaved', callbackFunction);
 	});
 	
 	$scope.$on('refresh', function(e) {

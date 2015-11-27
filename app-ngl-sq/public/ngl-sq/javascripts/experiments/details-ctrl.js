@@ -74,79 +74,105 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.$broadcast('refresh');
 	};
 	
-	$scope.save = function(){
+	$scope.save = function(callbackFunction){
 		console.log("call save on main");
+		$scope.messages.clear();
 		saveInProgress = true;
-		$scope.$broadcast('saveReagents');		
+		$scope.$broadcast('saveReagents', callbackFunction);		
 	};
 	
-	$scope.$on('reagentsSaved', function(e) {
+	$scope.startExperiment = function(){
+		console.log("call startExperiment");
+		$scope.save(function(){
+			console.log("call callback startExperiment");
+			$http.put(jsRoutes.controllers.experiments.api.Experiments.state($scope.experiment.code).url, {code:"IP"})
+			.success(function(data, status, headers, config) {
+				endSaveSuccess(data);															
+			})
+			.error(function(data, status, headers, config) {
+				$scope.messages.setError("save");
+				$scope.messages.setDetails(data);				
+				saveInProgress = false;	
+			});
+		});
+	};
+	
+	
+	$scope.finishExperiment = function(){
+		console.log("call finishExperiment");
+		$scope.save(function(){
+			console.log("call callback finishExperiment");
+			$http.put(jsRoutes.controllers.experiments.api.Experiments.state($scope.experiment.code).url, {code:"F"})
+			.success(function(data, status, headers, config) {
+				endSaveSuccess(data);															
+			})
+			.error(function(data, status, headers, config) {
+				$scope.messages.setError("save");
+				$scope.messages.setDetails(data);				
+				saveInProgress = false;	
+			});			
+		});
+	};
+	
+	$scope.$on('reagentsSaved', function(e, callbackFunction) {
 		console.log('call event reagentsSaved on main');
-		$scope.$broadcast('save');
+		$scope.$broadcast('save', callbackFunction);
 	});
 	
-	$scope.$on('childSaved', function(e) {
+	
+	var endSaveSuccess = function(newExperiment){
+		if(creationMode){
+			creationMode = false;
+			mainService.setHomePage('search')
+			tabService.resetTabs();
+			tabService.addTabs({label:Messages('experiments.tabs.search'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("search").url,remove:true});
+			tabService.addTabs({label:$scope.experiment.code,href:jsRoutes.controllers.experiments.tpl.Experiments.get($scope.experiment.code).url,remove:true});											
+		}
+		// purge basket when save ok or not ?
+		resetBasket();					
+		mainService.put("experiment",$scope.experiment);
+		mainService.stopEditMode();
+		$scope.experiment = newExperiment;
+		$scope.messages.setSuccess("save");						
+		saveInProgress = false;
+		$scope.$broadcast('refresh'); // utile seulement si l'update fonctionne				
+	}
+	
+	$scope.$on('childSaved', function(e, callbackFunction) {
 		console.log('call event childSaved on main');
 		
 		// TODO effective save or update
 		if(creationMode){
-			$http.post(jsRoutes.controllers.experiments.api.Experiments.save().url,$scope.experiment)
+			$http.post(jsRoutes.controllers.experiments.api.Experiments.save().url, $scope.experiment, {callbackFunction:callbackFunction})
 				.success(function(data, status, headers, config) {
-					$scope.messages.setSuccess("save");						
-					// purge basket when save ok or not ?
-					resetBasket();					
-					$scope.experiment = data;
-					mainService.put("experiment",$scope.experiment);
-					$scope.$broadcast('refresh'); // utile seulement si le save fontionne
-					
-					creationMode = false;
-					mainService.setHomePage('search')
-					tabService.resetTabs();
-					tabService.addTabs({label:Messages('experiments.tabs.search'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("search").url,remove:true});
-					tabService.addTabs({label:$scope.experiment.code,href:jsRoutes.controllers.experiments.tpl.Experiments.get($scope.experiment.code).url,remove:true});			
-					mainService.stopEditMode();
-					
-					saveInProgress = false;		
-					
+					if(config.callbackFunction){
+						config.callbackFunction();
+					}else{
+						endSaveSuccess(data);
+					}						
 				})
 				.error(function(data, status, headers, config) {
 					$scope.messages.setError("save");
 					$scope.messages.setDetails(data);					
-					saveInProgress = false;	
-					
+					saveInProgress = false;						
 				});
 		}else{
-			$http.put(jsRoutes.controllers.experiments.api.Experiments.update($scope.experiment.code).url,$scope.experiment)
+			$http.put(jsRoutes.controllers.experiments.api.Experiments.update($scope.experiment.code).url, $scope.experiment, {callbackFunction:callbackFunction})
 			.success(function(data, status, headers, config) {
-				$scope.messages.setSuccess("save");						
-				// purge basket when save ok or not ?
-				resetBasket();					
-				$scope.experiment = data;
-				mainService.put("experiment",$scope.experiment);
-				
-				$scope.$broadcast('refresh'); // utile seulement si le				
-				saveInProgress = false;							
-				
+				if(config.callbackFunction){
+					config.callbackFunction();
+				}else{
+					endSaveSuccess(data);
+				}											
 			})
 			.error(function(data, status, headers, config) {
 				$scope.messages.setError("save");
-				$scope.messages.setDetails(data);
-				
+				$scope.messages.setDetails(data);				
 				saveInProgress = false;	
 			});			
 		}
 		
 	});
-	
-	
-	$scope.startExperiment = function(){
-		console.log("call startExperiment");
-	};
-	
-	$scope.finishExperiment = function(){
-		console.log("call finishExperiment");
-	};
-	
 	
 	$scope.isWorkflowModeAvailable = function(nextStateCode){
 		if($scope.experiment !== undefined){
@@ -581,11 +607,11 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	
 	});
 
-	$scope.$on('saveReagents', function(e, promises, func, endPromises) {	
+	$scope.$on('saveReagents', function(e, callbackFunction) {	
 		console.log("call event save for reagents");
 		$scope.datatableReagent.save()
 		$scope.experiment.reagents = $scope.datatableReagent.getData();
-		$scope.$emit('reagentsSaved', promises, func, endPromises);
+		$scope.$emit('reagentsSaved', callbackFunction);
 	});
 	
 }]).controller('CommentsCtrl',['$scope','$sce', '$http','lists','$parse','$filter','datatable', 

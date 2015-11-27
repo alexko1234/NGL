@@ -174,11 +174,11 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToS
 			}
 	};
 	
-	$scope.$on('save', function(e, promises, func, endPromises) {	
+	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
-		$scope.$emit('childSaved', promises, func, endPromises);
+		$scope.$emit('childSaved', callbackFunction);
 	});
 	
 	$scope.$on('refresh', function(e) {

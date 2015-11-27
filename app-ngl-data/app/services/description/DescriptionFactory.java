@@ -1133,9 +1133,9 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	public static List<Institute> getInstitutes(Institute.CODE...codes) throws DAOException {
+	public static List<Institute> getInstitutes(Constants.CODE...codes) throws DAOException {
 		List<Institute> institutes = new ArrayList<Institute>();
-		for(Institute.CODE code : codes){
+		for(Constants.CODE code : codes){
 			institutes.add(Institute.find.findByCode(code.name()));
 		}
 		return institutes;

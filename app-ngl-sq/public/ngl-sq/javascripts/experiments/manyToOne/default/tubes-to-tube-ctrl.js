@@ -219,11 +219,11 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 		return ($scope.$parent.isEditMode() && $scope.isNewState());
 	};
 	
-	$scope.$on('save', function(e, promises, func, endPromises) {	
+	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save on tubes-to-tube");		
 		$scope.atmService.viewToExperiment($scope.experiment);
 		$scope.updateConcentration($scope.experiment);
-		$scope.$emit('childSaved', promises, func, endPromises);
+		$scope.$emit('childSaved', callbackFunction);
 	});
 	
 	/**

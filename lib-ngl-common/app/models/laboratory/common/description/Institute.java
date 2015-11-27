@@ -11,8 +11,6 @@ import models.utils.Model;
  */
 public class Institute extends Model<Institute>{
 
-	public enum CODE{CNG, CNS};
-	
 	public String name;
 	
 	public static Finder<Institute> find = new Finder<Institute>(InstituteDAO.class.getName()); 

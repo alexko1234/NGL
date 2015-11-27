@@ -265,13 +265,13 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 		datatable.setData(dataMain);
 	}
 	
-	$scope.$on('save', function(e, promises, func, endPromises) {	
+	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
 		$scope.datatableQcFlowcell.save();
 		$scope.datatableLoadingReport.save();
 		$scope.atmService.data.save();		
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
-		$scope.$emit('viewSaved', promises, func, endPromises);
+		$scope.$emit('childSaved', callbackFunction);
 	});
 	
 	

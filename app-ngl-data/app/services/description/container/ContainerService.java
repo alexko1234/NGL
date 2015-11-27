@@ -35,6 +35,7 @@ public class ContainerService {
 		l.add(DescriptionFactory.newSimpleCategory(ContainerCategory.class, "Puit", "well"));
 		l.add(DescriptionFactory.newSimpleCategory(ContainerCategory.class, "Lane", "lane"));
 		l.add(DescriptionFactory.newSimpleCategory(ContainerCategory.class, "MapCard", "mapcard"));		
+		l.add(DescriptionFactory.newSimpleCategory(ContainerCategory.class, "Void", "void"));	
 		l.add(DescriptionFactory.newSimpleCategory(ContainerCategory.class, "Irys FC", "irys-fc"));		
 		DAOHelpers.saveModels(ContainerCategory.class, l, errors);
 	}
@@ -54,6 +55,7 @@ public class ContainerService {
 		l.add(newContainerSupportCategory("Flowcell 4", "flowcell-4", 4, 1, 4, ContainerCategory.find.findByCode("lane")));
 		l.add(newContainerSupportCategory("Flowcell 2", "flowcell-2", 2, 1, 2, ContainerCategory.find.findByCode("lane")));
 		l.add(newContainerSupportCategory("Flowcell 1", "flowcell-1", 1, 1, 1, ContainerCategory.find.findByCode("lane")));
+		l.add(newContainerSupportCategory("Void", "void", 0, 0, 0, ContainerCategory.find.findByCode("void")));
 		l.add(newContainerSupportCategory("Irys Chip", "irys-chip", 2, 1, 1, ContainerCategory.find.findByCode("irys-fc")));
 		DAOHelpers.saveModels(ContainerSupportCategory.class, l, errors);
 		

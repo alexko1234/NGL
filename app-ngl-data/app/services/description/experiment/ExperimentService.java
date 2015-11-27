@@ -16,7 +16,10 @@ public class ExperimentService {
 		(new ExperimentServiceCNS()).main(errors);
 	}else if(institute.equals("CNG")){
 		(new ExperimentServiceCNG()).main(errors);
-	}else{
+	}else if(institute.equals("TEST")){
+		(new ExperimentServiceTEST()).main(errors);
+	}
+	else{
 		Logger.error("You need to specify only one institute ! Now, it's "+ play.Play.application().configuration().getString("institute"));
 	}
 

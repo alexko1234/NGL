@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
@@ -22,6 +21,7 @@ import models.laboratory.processes.description.ExperimentTypeNode;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
+import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 import services.description.common.MeasureService;
@@ -59,7 +59,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		l.add(newExperimentType("Ext to prepa flowcell","ext-to-prepa-flowcell",null,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		//FDS ajout 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered
 		l.add(newExperimentType("Ext to prepa flowcell ordered","ext-to-prepa-fc-ordered",null,
@@ -69,7 +69,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		l.add(newExperimentType("Préparation flowcell","prepa-flowcell",null,1100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcellCNG(),
 				getInstrumentUsedTypes("cBot", "cBot-onboard"),"ManyToOne", 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		//FDS ajout 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered, attention pas cBot-onboard                                
 		l.add(newExperimentType("Prép. flowcell ordonnée","prepa-fc-ordered",null,1100,
@@ -79,29 +79,28 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		l.add(newExperimentType("Ext to librairie dénaturée","ext-to-denat-dil-lib",null,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 02-02-2015, intrument Used =>robot oui mais lequel???
 		l.add(newExperimentType("Dénaturation-dilution","denat-dil-lib",null,1100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsDenatDilLibCNG(),
 				getInstrumentUsedTypes("hand"),"OneToOne", 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
 		//GA : 03/08/2015 new declaration. lib-normalization became void to avoid to display this step in IHM
 		l.add(newExperimentType("Librairie normalisée","lib-normalization",null,1000,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, "OneToOne", 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));		
-		
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
 		//FDS 28/10/2015  ajout "HISEQ4000","HISEQX"
 		l.add(newExperimentType("Dépôt sur séquenceur", "illumina-depot",null, 1400,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(),
 				getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500","HISEQ4000","HISEQX"), "OneToVoid", 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
 		l.add(newExperimentType("Aliquot","aliquoting",null,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()),
 				getPropertyAliquoting(), getInstrumentUsedTypes("hand"),"OneToMany", 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){

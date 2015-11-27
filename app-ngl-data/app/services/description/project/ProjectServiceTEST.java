@@ -16,7 +16,7 @@ import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
 import services.description.common.LevelService;
 
-public class ProjectServiceCNS extends AbstractProjectService{
+public class ProjectServiceTEST extends AbstractProjectService{
 
 	
 	public void saveProjectCategories(Map<String, List<ValidationError>> errors) throws DAOException {
@@ -28,8 +28,8 @@ public class ProjectServiceCNS extends AbstractProjectService{
 	public void saveProjectTypes(Map<String, List<ValidationError>> errors) throws DAOException{
 		List<ProjectType> l = new ArrayList<ProjectType>();
 		
-		l.add(DescriptionFactory.newProjectType("Defaut", "default-project", ProjectCategory.find.findByCode("default"), null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		l.add(DescriptionFactory.newProjectType("France Génomique", "france-genomique", ProjectCategory.find.findByCode("default"), getFGPropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		l.add(DescriptionFactory.newProjectType("Defaut", "default-project", ProjectCategory.find.findByCode("default"), null, DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
+		l.add(DescriptionFactory.newProjectType("France Génomique", "france-genomique", ProjectCategory.find.findByCode("default"), getFGPropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
 		DAOHelpers.saveModels(ProjectType.class, l, errors);
 		

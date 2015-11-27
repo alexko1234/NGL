@@ -18,8 +18,6 @@ import models.laboratory.common.description.Value;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.ProtocolCategory;
-import models.laboratory.instrument.description.InstrumentUsedType;
-import models.laboratory.processes.description.ExperimentTypeNode;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
@@ -29,7 +27,7 @@ import services.description.common.LevelService;
 import services.description.common.MeasureService;
 
 import com.typesafe.config.ConfigFactory;
-public class ExperimentServiceCNS extends AbstractExperimentService {
+public class ExperimentServiceTEST extends AbstractExperimentService {
 
 	
 	@SuppressWarnings("unchecked")
@@ -59,266 +57,117 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 	public void saveExperimentTypes(
 			Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
-
+/*
 		l.add(newExperimentType("Ext to dépôt opgen","ext-to-opgen-depot",null,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), getPropertyDefinitionExtToOpgenDepot(), null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
 		l.add(newExperimentType("Depot Opgen", "opgen-depot",null,1600
 				, ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionOpgenDepot(), 
-				getInstrumentUsedTypes("ARGUS"), "ManyToOne", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+				getInstrumentUsedTypes("ARGUS"), "ManyToOne", DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
 		//Prepaflowcell : to finish
 		l.add(newExperimentType("Ext to prepa flowcell","ext-to-prepa-flowcell",null,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
 		l.add(newExperimentType("Ext to qPCR","ext-to-qpcr",null,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
 		l.add(newExperimentType("Ext to Solution-stock","ext-to-solution-stock",null,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
 		
 		l.add(newExperimentType("Preparation flowcell", "prepa-flowcell",null,1200, 
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcellCNS(),
 				getInstrumentUsedTypes("cBot-interne","cBot"), "ManyToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
 		l.add(newExperimentType("Prep. flowcell ordonnée", "prepa-fc-ordered",null,1200, 
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcellOrdered(),
 				getInstrumentUsedTypes("cBot"), "ManyToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
 
 		l.add(newExperimentType("Solution stock","solution-stock",null,1000,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionSolutionStock(),
 				getInstrumentUsedTypes("hand","tecan-evo-100"),"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
 		l.add(newExperimentType("Depot Illumina", "illumina-depot",null, 1400,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(),
 				getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","HISEQ4000"), "OneToVoid", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
 		
 		//Nanopore
 		l.add(newExperimentType("Ext to Fragmentation-réparation","ext-to-nanopore-frg-precr",null,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
 		l.add(newExperimentType("Ext to Librairie ONT","ext-to-lib-ont",null,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
 		l.add(newExperimentType("Ext to Depot Nanopore","ext-to-nanopore-depot",null,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
 		l.add(newExperimentType("Fragmentation-réparation","nanopore-fragmentation",null,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 				getPropertyFragmentationNanopore(), getInstrumentUsedTypes("eppendorf-mini-spin-plus"),"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
 		l.add(newExperimentType("Aliquot","aliquoting",null,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()),
 				getPropertyAliquoting(), getInstrumentUsedTypes("hand"),"OneToMany", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 
 		l.add(newExperimentType("Librairie ONT","nanopore-library",null,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 				getPropertyLibrairieNanopore(), getInstrumentUsedTypes("hand"),"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
 		l.add(newExperimentType("Depot Nanopore","nanopore-depot",null,200,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDepotNanopore(),
 				getInstrumentUsedTypes("minion","mk1"),"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
+				DescriptionFactory.getInstitutes(Constants.CODE.TEST) ));
 
 		l.add(newExperimentType("Pool Tube","pool-tube",null,1200,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
 				getInstrumentUsedTypes("hand","tecan-evo-100"),"ManyToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
+				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
+		*/
+		l.add(newExperimentType("Ext to Test One To One","ext-to-test-one-to-one",null,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
-		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+		l.add(newExperimentType("Test One To One","test-one-to-one",null,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+				getPropertyTestOneToOne(), getInstrumentUsedTypes("one-to-one"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
-			//Bionano
-			
-			l.add(newExperimentType("Ext to prep NLRS","ext-to-nlrs-prep",null,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
-					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-			
-			l.add(newExperimentType("Irys Prep NLRS","irys-nlrs-prep",null,2000,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionIrysPrepNLRS(),
-					getInstrumentUsedTypes("hand"),"OneToOne", 
-					DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
-			
-			l.add(newExperimentType("Préparation Irys CHIP","irys-chip-preparation",null,2100,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionPreparationIrysChip(),
-					getInstrumentUsedTypes("irys-hand"),"ManyToOne", 
-					DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
-			
-			l.add(newExperimentType("Dépôt BioNano","bionano-depot",null,2200,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionDepotBionano(),
-					getInstrumentUsedTypes("IRYS"),"OneToVoid", 
-					DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
-			
-			//library
-			l.add(newExperimentType("Fragmentation","fragmentation",null,200,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionFragmentation(),
-					getInstrumentUsedTypes("hand","covaris-s2","covaris-e210"),"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
-			
-			l.add(newExperimentType("Librairie indexée","librairie-indexing",null,400,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibIndexing(),
-					getInstrumentUsedTypes("hand","spri"),"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-			
-
-			l.add(newExperimentType("Amplification","amplification",null,800,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
-					getInstrumentUsedTypes("hand","thermocycler"),"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-			
-			l.add(newExperimentType("Sizing sur gel","sizing",null,800,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
-					null,"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-			
-
-			//quality control
-
-			//purif
-			l.add(newExperimentType("Ampure Non Ampli","ampure-na",null,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()),
-					null, getInstrumentUsedTypes("hand"),"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-			
-			l.add(newExperimentType("Ampure Ampli","ampure-a",null,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null,
-					getInstrumentUsedTypes("hand"),"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
-			//void
-			l.add(newExperimentType("Ext to Banque","ext-to-library",null,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-			l.add(newExperimentType("Ext to prepa flowcell","ext-to-prepa-flowcell",null,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-			
-			
-			l.add(newExperimentType("Migration sur puce (ampli)","chip-migration-post-pcr",null,650,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
-					getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchipGX"),"OneToVoid", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-			
-			l.add(newExperimentType("Migration sur puce (non ampli)","chip-migration-pre-pcr",null,250,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
-					getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchipGX"),"OneToVoid", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-			
-			
-			l.add(newExperimentType("Dosage fluorimétrique","fluo-quantification",null,450,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
-					getInstrumentUsedTypes("qubit"),"OneToVoid", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-			
-	/*		l.add(newExperimentType("Quantification qPCR","qPCR-quantification",null,850,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
-					getInstrumentUsedTypes("rocheLightCycler-qPCR","stratagene-qPCR"),"OneToVoid", 
-					DescriptionFactory.getInstitutes(Institute.CODE.CNS))); 	
-		*/	
-
-			
-
-		}
+		
 
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
 
 	}
 
 
-	private List<PropertyDefinition> getPropertyDefinitionDepotBionano() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Temps de concentration recommandé","ptrConcentrationTime", LevelService.getLevels(Level.CODE.ContainerIn),Integer.class, true, null,
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SPEED),MeasureUnit.find.findByCode( "s"),MeasureUnit.find.findByCode( "s"),"single",9, true));
-		propertyDefinitions.add(newPropertiesDefinition("Temps de concentration réel","realConcentrationTime", LevelService.getLevels(Level.CODE.ContainerIn),Integer.class, true, DescriptionFactory.newValues("600","450","400","350","300","250","200","150"),
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SPEED),MeasureUnit.find.findByCode( "s"),MeasureUnit.find.findByCode( "s"),"single",10, true));
-		propertyDefinitions.add(newPropertiesDefinition("Nombre de cycles","nbCycles", LevelService.getLevels(Level.CODE.ContainerIn),Integer.class, true, null, null, null, null,"single", 11, true));
-		//Image 
-		propertyDefinitions.add(newPropertiesDefinition("Photo zone pillar","pillarRegionPicture", LevelService.getLevels(Level.CODE.ContainerIn),String.class, false, null, null, null, null,"single", 12, true));
-		propertyDefinitions.add(newPropertiesDefinition("Voltage","voltage", LevelService.getLevels(Level.CODE.ContainerIn),Integer.class, false, null, null, null, null,"single", 11, true));
-		propertyDefinitions.add(newPropertiesDefinition("Nb d'optimisations","nbOfOptimizations", LevelService.getLevels(Level.CODE.ContainerIn),Integer.class, false, DescriptionFactory.newValues("2","3","4"), null, null, null,"single", 13, true));
-		
-		propertyDefinitions.add(newPropertiesDefinition("Optimized Bump Time","optimizedBumpTime", LevelService.getLevels(Level.CODE.ContainerIn),Integer.class, false, null,
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SPEED),MeasureUnit.find.findByCode( "s"),MeasureUnit.find.findByCode( "s"),"single",14, true));
-		propertyDefinitions.add(newPropertiesDefinition("Optimized Load Time","optimizedLoadTime", LevelService.getLevels(Level.CODE.ContainerIn),Integer.class, false, null,
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SPEED),MeasureUnit.find.findByCode( "s"),MeasureUnit.find.findByCode( "s"),"single",15, true));
-				
-		return propertyDefinitions;
-	}
+	
 
-
-	private List<PropertyDefinition> getPropertyDefinitionPreparationIrysChip() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",51,true,"8"));		
-		return propertyDefinitions;
-	}
-
-
-	private List<PropertyDefinition> getPropertyDefinitionIrysPrepNLRS() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null,
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",8, true));
-		
-		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null,
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",9, true));
-
-		propertyDefinitions.add(newPropertiesDefinition("Quantité prévue par le protocole","requiredQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null,
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",11, true));
-		//File
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Tableau sélection enzyme","enzymeLabelDensity",LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, "file", 12));
-
-		propertyDefinitions.add(newPropertiesDefinition("Enzyme de restriction", "restrictionEnzyme", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true,DescriptionFactory.newValues("BspQI","Bsm1","BbvCI","BsrD1"), null, "single",13));
-		
-		propertyDefinitions.add(newPropertiesDefinition("Unités d'enzyme","enzymeUnit", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null, null, null, null,"single", 14, true));
-		
-		propertyDefinitions.add(newPropertiesDefinition("Volume Enzyme","restrictionEnzymeVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null,
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",15, true));
-
-		propertyDefinitions.add(newPropertiesDefinition("Enzyme de restriction 2", "restrictionEnzyme2", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false,DescriptionFactory.newValues("BspQI","Bsm1","BbvCI","BsrD1"), null, "single",16));
-		
-		propertyDefinitions.add(newPropertiesDefinition("Volume Enzyme 2","restrictionEnzyme2Volume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, false, null,
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",17, true));
-		
-		propertyDefinitions.add(newPropertiesDefinition("Unités d'enzyme 2","enzyme2Unit", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, false, null, null, null, null,"single", 18, true));
-		
-		propertyDefinitions.add(newPropertiesDefinition("Concentration 1", "measuredConc1", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"),"single",19, true));
-
-		propertyDefinitions.add(newPropertiesDefinition("Concentration 2", "measuredConc2", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"),"single",20, true));
-
-		propertyDefinitions.add(newPropertiesDefinition("Concentration 3", "measuredConc3", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"),"single",21, true));
-
-		propertyDefinitions.add(newPropertiesDefinition("Concentration ADN NLRS", "nlrsConcentration", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), Double.class, true, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"),"single",22, true));
-
-		propertyDefinitions.add(newPropertiesDefinition("Ecart-type","standardDeviation", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, false, null, null, null, null,"single", 23, true));
-
-		return propertyDefinitions;
-	}
+	
 
 
 	public void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
-
+		newExperimentTypeNode("ext-to-test-one-to-one", getExperimentTypes("ext-to-test-one-to-one").get(0), false, false, null, null, null).save();
+		newExperimentTypeNode("test-one-to-one",getExperimentTypes("test-one-to-one").get(0),false,false,getExperimentTypeNodes("ext-to-test-one-to-one"),null,null).save();
+		
+		/*
+		
 		newExperimentTypeNode("ext-to-opgen-depot", getExperimentTypes("ext-to-opgen-depot").get(0), false, false, null, null, null).save();
 		newExperimentTypeNode("ext-to-prepa-flowcell", getExperimentTypes("ext-to-prepa-flowcell").get(0), false, false, null, null, null).save();
 		newExperimentTypeNode("ext-to-qpcr", getExperimentTypes("ext-to-qpcr").get(0), false, false, null, null, null).save();	
@@ -344,45 +193,34 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		newExperimentTypeNode("pool-tube",getExperimentTypes("pool-tube").get(0),false,false,getExperimentTypeNodes("solution-stock","nanopore-library"),null,null).save();		
 		newExperimentTypeNode("aliquoting",getExperimentTypes("aliquoting").get(0),false,false,getExperimentTypeNodes("nanopore-fragmentation"),null,null).save();
 		
+		*/
 		
-		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-			newExperimentTypeNode("ext-to-library", getExperimentTypes("ext-to-library").get(0), false, false, null, null, null).save();
-			
-			//Bionano
-			newExperimentTypeNode("ext-to-nlrs-prep", getExperimentTypes("ext-to-nlrs-prep").get(0), false, false, null, null, null).save();	
-			newExperimentTypeNode("irys-nlrs-prep",getExperimentTypes("irys-nlrs-prep").get(0),false,false,getExperimentTypeNodes("ext-to-nlrs-prep"),null,null).save();
-			newExperimentTypeNode("irys-chip-preparation",getExperimentTypes("irys-chip-preparation").get(0),false,false,getExperimentTypeNodes("irys-nlrs-prep"),null,null).save();
-			newExperimentTypeNode("bionano-depot",getExperimentTypes("bionano-depot").get(0),false,false,getExperimentTypeNodes("irys-chip-preparation"),null,null).save();
-
-			
-			//REM : experimentTypes list confirmées par Julie
-			newExperimentTypeNode("fragmentation", getExperimentTypes("fragmentation").get(0), false, false, getExperimentTypeNodes("ext-to-library"), 
-					getExperimentTypes("ampure-na"), getExperimentTypes("fluo-quantification","chip-migration-pre-pcr")).save();
-			
-			newExperimentTypeNode("librairie-indexing", getExperimentTypes("librairie-indexing").get(0), false, false, getExperimentTypeNodes("fragmentation"), 
-					getExperimentTypes("ampure-na"), getExperimentTypes("fluo-quantification","chip-migration-pre-pcr")).save();
-			
-			/*newExperimentTypeNode("librairie-dualindexing", getExperimentTypes("librairie-dualindexing").get(0), false, false, getExperimentTypeNodes("fragmentation"), 
-					getExperimentTypes("ampure-na"), getExperimentTypes("fluo-quantification","chip-migration-pre-pcr")).save();*/			
-			
-			newExperimentTypeNode("amplification", getExperimentTypes("amplification").get(0), false, false, getExperimentTypeNodes("librairie-indexing"), 
-					getExperimentTypes("ampure-a"), getExperimentTypes("fluo-quantification","chip-migration-post-pcr"/*,"qPCR-quantification"*/)).save();
-			
-			newExperimentTypeNode("sizing", getExperimentTypes("sizing").get(0), false, false, getExperimentTypeNodes("amplification"), 
-					null, null).save();
-
-		//	newExperimentTypeNode("qPCR-quantification",getExperimentTypes("qPCR-quantification").get(0),false,false,getExperimentTypeNodes("amplification"),null,null).save();
-
-		//	newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false,false,getExperimentTypeNodes("ext-to-qpcr","amplification"),
-			//		null,null).save();
-			
-			
-		}
 		
 
 
 	}
 
+	
+	private static List<PropertyDefinition> getPropertyTestOneToOne() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		
+		propertyDefinitions.add(newPropertiesDefinition("Exp Content 1", "expContent1", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, false, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Exp 1", "exp1", LevelService.getLevels(Level.CODE.Experiment), String.class, false, "single"));
+		
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Cont. In Content 1","contInContent1",LevelService.getLevels(Level.CODE.ContainerIn,Level.CODE.Content), String.class, true, null, null ,null,null, "single",11));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Cont. In 1","contIn1",LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null, null ,null,null, "single",12));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Cont. Out Content 1","contOutContent1",LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, null ,null,null, "single",13));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Cont. Out 1","contOut1",LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, null, null ,null,null, "single",14));
+		
+		return propertyDefinitions;
+
+	}
+
+	
+	
 	
 	private static List<PropertyDefinition> getPropertyAliquoting() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
@@ -480,7 +318,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"), "single",50));*/
 		// Problème code car doit etre measuredquantity
 		
-		propertyDefinitions.add(newPropertiesDefinition("Qté finale Ligation","ligationQuantity", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content),Double.class, false, null
+		propertyDefinitions.add(newPropertiesDefinition("Qté finale Ligation","ligationQuantity", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content),Double.class, true, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"), "single",60)); 
 
 		return propertyDefinitions;
@@ -583,7 +421,6 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 
 		
 		//OuputContainer
-		//keep order declaration between phixPercent and finalVolume
 		propertyDefinitions.add(newPropertiesDefinition("% phiX", "phixPercent", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null, null, null, null, "single",51,false,"1"));		
 		propertyDefinitions.add(newPropertiesDefinition("Volume final", "finalVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",28,false));
