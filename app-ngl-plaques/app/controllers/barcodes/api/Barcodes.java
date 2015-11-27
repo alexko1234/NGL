@@ -75,6 +75,8 @@ public class Barcodes extends CommonController {
 		    code = "LIBE_"+code;
 		}else if(Integer.valueOf(18).equals(typeCode)){
 		    code = "PCRE_"+code;
+		}else if(Integer.valueOf(14).equals(typeCode)){
+		    code = "STKE_"+code;
 		}else{
 		    code = "PLE_"+code;
 		}
