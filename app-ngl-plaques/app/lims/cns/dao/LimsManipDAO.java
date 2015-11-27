@@ -77,7 +77,7 @@ public class LimsManipDAO {
     }
 
     public List<Plate> findPlates(Integer emnco, String projetValue, String plaqueId, String matmanom, Integer percodc, String fromDate, String toDate) {
-    	Logger.info("pl_PlaqueSolexa @prsco="+projetValue+", @emnco="+emnco);
+    	Logger.info("pl_PlaqueSolexa @prsco="+projetValue+", @emnco="+emnco+", @fromDate="+fromDate+", @toDate="+toDate);
 		List<Plate> plates = this.jdbcTemplate.query("pl_PlaqueSolexa @prsco=?, @emnco=?, @plaqueId=?, @matmanom=?, @percodc=?, @fromDate=?, @toDate=?", new Object[]{projetValue, emnco, plaqueId, matmanom,percodc,fromDate,toDate}, new RowMapper<Plate>() {
 	        public Plate mapRow(ResultSet rs, int rowNum) throws SQLException {
 	        	Plate plate = new Plate();

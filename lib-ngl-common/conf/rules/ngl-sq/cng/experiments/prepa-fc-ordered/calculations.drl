@@ -33,7 +33,7 @@ rule "prepa-fc-ordered concentration final"
     	 eval($finalConcentration1.value != null && Double.class.isInstance($finalConcentration1.value) && $inputVolume2.value != null && Double.class.isInstance($inputVolume2.value) && $finalConcentration1.value != null && Double.class.isInstance($finalVolume.value) && (Double)$finalVolume.value !=0)
    	then
    		Logger.debug("Calculation prepa-fc-ordered finalConcentration2 : "+ $experiment.code+ " "+ $atomicTransfert.line);
-   		PropertySingleValue value = new PropertySingleValue(Math.round(((Double)$finalConcentration1.value*(Double)$inputVolume2.value/(Double)$finalVolume.value)*100.0)/100.0,"pM");
+   		PropertySingleValue value = new PropertySingleValue(Math.round(((Double)$finalConcentration1.value*(Double)$inputVolume2.value/(Double)$finalVolume.value)*100.0)/100.0,"nM");
    		if($experimentProperties.get("finalConcentration2") != null){
    			$experimentProperties.remove("finalConcentration2");
    		}

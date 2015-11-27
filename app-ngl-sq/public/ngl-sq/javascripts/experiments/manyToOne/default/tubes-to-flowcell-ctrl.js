@@ -127,7 +127,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 						 "edit":false,
 						 "hide":true,
 						 "type":"text",
-			        	"position":50.5,
+			        	 "position":50.5,
 			        	 "extraHeaders":{0:"Outputs"}
 			         },
 			         {
