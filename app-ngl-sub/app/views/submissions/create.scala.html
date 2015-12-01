@@ -33,6 +33,7 @@
 		@formGroup{
 			<div class="form-control" bt-select ng-model="createService.form.readSetCodes" filter="true" multiple="true" placeholder='@Messages("create.placeholder.submissions.readSet")' bt-options="readSet.code as readSet.code for readSet in createService.lists.getReadSets()" required ng-focus="createService.refreshReadSets()"></div>			
 		}	
+		
 		@** utilisation d'une directive base-64 (Yann): nom , type et contenu en base 64 du fichier recupere en javascritp**@
 		@**<input type="file" base64-file="createService.file", ng-if="createService.externalStudies"/>**@
 		
@@ -40,19 +41,21 @@
 			<div class="html"  placeholder='@Messages("fileCloneToAc-----------")' ></div>			
 		}
 		
-		<div>
+		<!--div>
 			@columnLabelValue(Messages("userFileExperiments")){
 				<input type="file" base64-file="createService.userFileExperiments"/>
 			}
-		</div>
+		</div-->
 		
-		
+		<div>
+			<label>@Messages("userFileExperiments")</label> 
+			<input type="file" id="file" base64-file="createService.userFileExperiments"/>
+			<BR><BR>
+		</div>		
 		<div ng-if="createService.externalStudies">
-			@columnLabelValue(Messages("fileCloneToAc")){
-				<input type="file" base64-file="createService.userFileClonesToAc" ng-if="createService.externalStudies"/>
-			}
-		</div>
-		
+			<label>@Messages("userFileCloneToAc")</label> 
+			<input type="file" base64-file="createService.userFileClonesToAc" ng-if="createService.externalStudies"/>
+		</div>		
 		
 								
 	}

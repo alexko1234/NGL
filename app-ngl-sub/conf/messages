@@ -3,16 +3,16 @@ index.title = Bienvenue dans l'application NGL-SUB
 
 #Study
 studies.menu = Study
-studies.menu.create = Creation
+studies.menu.create = Création
 studies.page.title=Study
-study.create.success= Sauvegarde réussie du study
+study.create.success= Sauvegarde du study reussie
 studies.msg.save.success=Study crée
-create.placeholder.studiesTitle=Titre study
-create.placeholder.projectCode=Select. code projet
-create.placeholder.abstract=Def. abstract
-create.placeholder.description=Def. description
-create.placeholder.existingStudyType=Type de study
-studies.menu.consultation = Consultation
+create.placeholder.studiesTitle= * Title du study
+create.placeholder.projectCode= * Choisir un code projet
+create.placeholder.abstract= * Donner un Abstract
+create.placeholder.description= * Donner une description
+create.placeholder.existingStudyType= * Choisir un type de study
+studies.menu.consultation = Recherche
 study.code=Code
 study.projectCode=ProjectCode
 study.state.code=State
@@ -29,20 +29,20 @@ study.existingStudyType=ExistingStudyType
 
 #Configuration
 configurations.menu = Configurations
-configurations.menu.create = Creation
+configurations.menu.create = Création
 configurations.page.title=Configurations
-configurations.menu.consultation=Consultation
-configuration.create.success= Sauvegarde réussie de la configuration
+configurations.menu.consultation=Recherche
+configuration.create.success= Sauvegarde de la configuration réussie
 configurations.msg.save.success=Configuration crée
-create.placeholder.studiesTypes=Select. type de study
+create.placeholder.studiesTypes=Choisir un type de study
 
-create.placeholder.librarySelection=librarySelection
-create.placeholder.librarySource=librarySource
-create.placeholder.libraryStrategy=libraryStrategy
+create.placeholder.librarySelection= * librarySelection
+create.placeholder.librarySource= * librarySource
+create.placeholder.libraryStrategy= * libraryStrategy
 create.placeholder.libraryConstructionProtocol=libraryConstructionProtocol
-create.placeholder.strategySample=strategySample
-create.placeholder.strategyStudy=strategyStudy
-configurations.msg.consultation=Consultation des configurations
+create.placeholder.strategySample= * strategySample
+create.placeholder.strategyStudy= * strategyStudy
+configurations.msg.consultation=Recherche des configurations
 configuration.code=Code
 configuration.projectCode=ProjectCode
 configuration.state.code=State
@@ -51,18 +51,20 @@ configuration.libraryConstructionProtocol=LibraryConstructionProtocol
 configuration.ebiStudiesSamplesFileName=EbiSampleOrStudyACFileName
 configuration.libraryStrategy=LibraryStrategy
 configuration.librarySelection=LibrarySelection
+configuration.strategySample=strategySample
+configuration.strategyStudy=strategyStudy
 
 #Submission
 submissions.menu=Soumission
-submissions.menu.create=Creation-Validation
-submissions.menu.consultation=Consultation
-submissions.menu.activate=Activer
+submissions.menu.create=Création
+submissions.menu.consultation=Recherche
+submissions.menu.activate=Démarrer la soumission.
 submissions.page.title=Soumission
-create.placeholder.submissions.study=Select. study
-create.placeholder.submissions.configuration=Select.  configuration
-create.placeholder.submissions.readSet=Select. lotSeq
-activate.placeholder.projectCode=Select. code projet
-consultation.placeholder.projectCode=Select. code projet
+create.placeholder.submissions.study= * Choisir un study
+create.placeholder.submissions.configuration= * Choisir une configuration
+create.placeholder.submissions.readSet= * Choisir les readSets
+activate.placeholder.projectCode= * Choisir un code projet
+consultation.placeholder.projectCode= * Choisir un code projet
 submissions.tabs.sample=Sample
 submissions.tabs.experiment=Experiment
 submissions.tabs.run=Run
@@ -71,9 +73,11 @@ createService.placeholder.submissions.file=Charger le fichier cloneToAc
 submissions.msg.save.success=Sauvegarde réussie de la soumission
 submissions.msg.validate.success=Soumission validée
 submissions.msg.details=Détail de la soumission
-submissions.msg.consultation=Consultation des soumission
+submissions.msg.consultation=Recherche des soumission
 submissions.code=Code
 submissions.state=Etat
+userFileExperiments=userFileExperiments :
+userFileCloneToAc= * userFileCloneToAc :
 
 #RUN
 
@@ -89,15 +93,13 @@ sample.code=Code
 sample.projectCode=Code projet
 sample.state=Etat
 sample.taxonId=taxon Id
-sample.classification=Classification
-sample.title=Titre
+sample.title= * Title
 sample.description=Description
 sample.clone=Clone
-sample.taxonId=Taxon Id
-sample.classification=Classification
+sample.taxonId= * Taxon Id
 #EBI label
-sample.commonName=CommonName
-sample.scientificName=ScientificName
+sample.commonName=Common Name
+sample.scientificName= * Scientific Name
 
 #EXPERIMENT
 experiment.code=Code
@@ -105,19 +107,19 @@ experiment.projectCode=Code projet
 experiment.state=Etat
 experiment.sampleCode=Code Sample
 experiment.studyCode=Code Study
-experiment.title=Titre
+experiment.title=Title
 #EBI label
-experiment.librarySelection=LibrarySelection
-experiment.libraryStrategy=LibraryStrategy
-experiment.librarySource=LibrarySource
-experiment.libraryLayout=LibraryLayout
-experiment.libraryLayoutNominalLength=LibraryLayoutNominalLength
-experiment.libraryLayoutOrientation=LibraryLayoutOrientation
-experiment.libraryName=LibraryName
-experiment.libraryConstructionProtocol=LibraryConstructionProtocol
-experiment.typePlatform=TypePlatform
-experiment.instrumentModel=InstrumentModel
-experiment.lastBaseCoord=LastBaseCoord
+experiment.librarySelection= * Library Selection
+experiment.libraryStrategy= * Library Strategy
+experiment.librarySource= * Library Source
+experiment.libraryLayout= * Library Layout
+experiment.libraryLayoutNominalLength=Library Layout Nominal Length
+experiment.libraryLayoutOrientation=Library Layout Orientation
+experiment.libraryName= * Library Name
+experiment.libraryConstructionProtocol=Library Construction Protocol
+experiment.typePlatform= * Type Platform
+experiment.instrumentModel= * Instrument Model
+experiment.lastBaseCoord=Last Base Coordonée
 experiment.spotLength=SpotLength
 
 documentation.menu=Aide

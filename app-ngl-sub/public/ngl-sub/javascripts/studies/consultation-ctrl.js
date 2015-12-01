@@ -14,12 +14,6 @@ angular.module('home').controller('ConsultationCtrl',[ '$http', '$scope', '$rout
 			pagination:{active:false},
 			select:{active:true},
 			showTotalNumberRecords:false,
-			/*edit : {
-				active:true,       // permettre edition des champs editables
-				showButton : true, // bouton d'edition visible
-				withoutSelect : true,
-				columnMode : true
-			},*/
 			edit : {
 				active:true, // permettre edition des champs editables
 				showButton : true,// bouton d'edition visible

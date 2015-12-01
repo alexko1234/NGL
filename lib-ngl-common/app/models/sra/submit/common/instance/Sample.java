@@ -16,7 +16,6 @@ public class Sample extends AbstractSample {
 	//public String alias;         // required mais remplacé par code herité de DBObject
 	public String projectCode;     // required pour nos stats //Reference code de la collection project NGL  
 	public int taxonId;            // required 
-	public String classification;     
 	public String commonName;     
 	public String scientificName;  // required next soon 
 	public String title;           // required next soon 

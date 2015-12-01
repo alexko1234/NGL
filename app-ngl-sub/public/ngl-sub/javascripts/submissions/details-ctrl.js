@@ -24,6 +24,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 						return false;
 				}
 			},
+			/*
 			save : {
 				active:true,
 				showButton : false,
@@ -44,6 +45,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			hide:{
 				active:true
 			},
+			*/
 			columns : [
 			        {property:"code",
 			        	  header: "sample.code",
@@ -134,6 +136,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				withoutSelect : true,
 				columnMode : true
 			},
+			/*
 			save : {
 				active:true,
 				mode:'local',
@@ -157,11 +160,12 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			exportCSV:{
 				active:false
 			},
+			*/
 			columns : [
 			        {property:"code",
 			        	header: "experiment.code",
 			        	type :"text",		    	  	
-			        	order:true
+			        	order:false
 			        },	
 			        {property:"projectCode",
 			        	header: "experiment.projectCode",
@@ -175,7 +179,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 						type :"String",		    	  	
 						hide:true,
 						edit:true,
-						order:true
+						order:false
 					},
 			        {property:"librarySelection",
 						header: "experiment.librarySelection",
@@ -222,7 +226,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			        	type :"integer",		    	  	
 			        	hide:true,
 						edit:true,
-			        	order:true
+			        	order:false
 					},	
 					{property:"libraryLayoutOrientation",
 						header: "experiment.libraryLayoutOrientation",
@@ -239,14 +243,14 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 						type :"String",		    	  	
 						hide:true,
 						edit:true,
-						order:true
+						order:false
 					},
 					{property:"libraryConstructionProtocol",
 						 header: "experiment.libraryConstructionProtocol",
 						 type :"String",		    	  	
 						 hide:true,
 						 edit:true,
-						 order:true
+						 order:false
 					},
 					{property:"typePlatform",
 						 header: "experiment.typePlatform",
@@ -267,14 +271,14 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			        	type :"integer",		    	  	
 			        	hide:true,
 						edit:true,
-			        	order:true
+			        	order:false
 					},	
 					{property:"spotLength",
 			        	header: "experiment.spotLength",
 			        	type :"Long",		    	  	
 			        	hide:true,
 						edit:true,
-			        	order:true
+			        	order:false
 					},	
 					{property:"sampleCode",
 			        	header: "experiment.sampleCode",
@@ -293,7 +297,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 					 {property:"state.code",
 			        	  header: "experiment.state",
 			        	  type :"text",		    	  	
-			        	  order:false,
+			        	  order:true,
 			        	  edit:false,
 			        	  choiceInList:false
 			        }

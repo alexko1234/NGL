@@ -14,8 +14,8 @@
 					<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="studies">@Messages("studies.menu")<b class="caret"></b></a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="studies">
 					<!-- sous menu create qui appelle controler tpl study.home -->
-						<li class="@("active".when(nav == "studies.create"))"><a href="@controllers.sra.studies.tpl.routes.Studies.home("create")">@Messages("studies.menu.create")</a></li>																				
 						<li class="@("active".when(nav == "studies.consultation"))"><a href="@controllers.sra.studies.tpl.routes.Studies.home("consultation")">@Messages("studies.menu.consultation")</a></li>																				
+						<li class="@("active".when(nav == "studies.create"))"><a href="@controllers.sra.studies.tpl.routes.Studies.home("create")">@Messages("studies.menu.create")</a></li>																				
 					</ul>
 				</li>
 				
@@ -23,8 +23,8 @@
 					<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="configurations">@Messages("configurations.menu")<b class="caret"></b></a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="configurations">
 					<!-- sous menu create qui appelle controler tpl configuration.home -->
-						<li class="@("active".when(nav == "configurations.create"))"><a href="@controllers.sra.configurations.tpl.routes.Configurations.home("create")">@Messages("configurations.menu.create")</a></li>																				
 						<li class="@("active".when(nav == "configurations.consultation"))"><a href="@controllers.sra.configurations.tpl.routes.Configurations.home("consultation")">@Messages("configurations.menu.consultation")</a></li>																				
+						<li class="@("active".when(nav == "configurations.create"))"><a href="@controllers.sra.configurations.tpl.routes.Configurations.home("create")">@Messages("configurations.menu.create")</a></li>																				
 					</ul>
 				</li>				
 				
@@ -32,9 +32,9 @@
 					<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="submissions">@Messages("submissions.menu")<b class="caret"></b></a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="submissions">
 					<!-- sous menu create qui appelle controler tpl submission.home -->
+						<li class="@("active".when(nav == "submissions.consultation"))"><a href="@controllers.sra.submissions.tpl.routes.Submissions.home("consultation")">@Messages("submissions.menu.consultation")</a></li>																				
 						<li class="@("active".when(nav == "submissions.create"))"><a href="@controllers.sra.submissions.tpl.routes.Submissions.home("create")">@Messages("submissions.menu.create")</a></li>																				
 						<li class="@("active".when(nav == "submissions.activate"))"><a href="@controllers.sra.submissions.tpl.routes.Submissions.home("activate")">@Messages("submissions.menu.activate")</a></li>																				
-						<li class="@("active".when(nav == "submissions.consultation"))"><a href="@controllers.sra.submissions.tpl.routes.Submissions.home("consultation")">@Messages("submissions.menu.consultation")</a></li>																				
 					</ul>
 				</li>
 				<li class="@("active".when(nav == "documentation"))">

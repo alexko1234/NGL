@@ -102,6 +102,26 @@ var getColumns = function(){
 			        	edit:false,
 			        	choiceInList:false  
 			        });	
+		columns.push({property:"strategySample",
+						header: "configuration.strategySample",
+						type :"String",
+						hide:true,
+						edit:true,
+						order:false,
+						choiceInList:true,
+						listStyle:'bt-select-multiple',
+						possibleValues:'consultationService.sraVariables.strategySample',
+					});	
+		columns.push({property:"strategyStudy",
+						header: "configuration.strategyStudy",
+						type :"String",
+						hide:true,
+						edit:true,
+						order:false,
+						choiceInList:true,
+						listStyle:'bt-select-multiple',
+						possibleValues:'consultationService.sraVariables.strategyStudy',
+					});	
 		columns.push({property:"librarySelection",
 						header: "configuration.librarySelection",
 						type :"String",
