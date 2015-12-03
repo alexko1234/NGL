@@ -347,8 +347,9 @@ public class ValidationHelper {
 	 */
 	public static boolean convertPropertyValue(ContextValidation contextValidation, PropertySingleValue propertyValue, PropertyDefinition propertyDefinition) {
 		try{
+			propertyValue.value = cleanValue(propertyValue.value);
 			Class<?> valueClass = getClass(propertyDefinition.valueType);
-			if(!valueClass.isInstance(propertyValue.value)){ //transform only if not the good type
+			if(null != propertyValue.value && !valueClass.isInstance(propertyValue.value)){ //transform only if not the good type
 				Logger.debug("convertValue "+propertyDefinition.code);
 				propertyValue.value = convertValue(valueClass, propertyValue.value.toString(), null);
 			}
@@ -361,6 +362,24 @@ public class ValidationHelper {
 			return false;
 		}
 		return true;
+	}
+	
+	public static Object cleanValue(Object object){
+		if(object == null) {
+			return null;
+        }else if(object instanceof String && StringUtils.isBlank((String)object)) {
+        	return null;
+        }else if(object instanceof Collection && CollectionUtils.isEmpty((Collection)object)) {
+        	return null;        	
+        }else if(object instanceof Map && MapUtils.isEmpty((Map)object)) {
+        	return null;       	
+        }else if(object instanceof byte[] && ((byte[])object).length==0) {
+        	return null;
+        }else{
+        	return object;
+        }
+               
+       		
 	}
 	
 	/**
@@ -581,7 +600,7 @@ public class ValidationHelper {
 	public static boolean required(ContextValidation contextValidation, Object object, String property){
 		boolean isValid = true;
 		if(object == null) {
-			isValid =  false;
+			isValid = false;
         }
         if(isValid && object instanceof String) {
         	isValid =  StringUtils.isNotBlank((String)object);

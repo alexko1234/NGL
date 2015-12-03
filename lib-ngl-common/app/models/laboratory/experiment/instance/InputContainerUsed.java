@@ -14,6 +14,13 @@ public class InputContainerUsed extends AbstractContainerUsed {
 	
 	public Double percentage; //percentage of input in the final output
 	
+	public Set<String> projectCodes; 
+	public Set<String> sampleCodes; 
+	public Set<String> fromExperimentTypeCodes; 
+	public Set<String> processTypeCodes;
+	public Set<String> inputProcessCodes;
+	
+	
 	//TODO Must be remove after refactoring just keep for backward compatibility
 	public State state;
 	

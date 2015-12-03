@@ -23,14 +23,6 @@ public abstract class AbstractContainerUsed implements IValidation{
 	public Map<String,PropertyValue> experimentProperties;
 	public Map<String,PropertyValue> instrumentProperties;
 	
-	
-	public Set<String> projectCodes; 
-	public Set<String> sampleCodes; 
-	public Set<String> fromExperimentTypeCodes; 
-	public Set<String> processTypeCodes;
-	public Set<String> inputProcessCodes;
-	
-	
 	public AbstractContainerUsed() {
 		super();
 		

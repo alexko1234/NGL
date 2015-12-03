@@ -127,7 +127,7 @@ angular.module('home').controller('TubeToTubeCtrl',['$scope', '$parse', 'atmToSi
 			        	 "type":"text",
 			        	 "position":500,
 			        	 "extraHeaders":{0:"Outputs"}
-			         }
+			         }			        
 			         ],
 			compact:true,
 			pagination:{
@@ -150,6 +150,7 @@ angular.module('home').controller('TubeToTubeCtrl',['$scope', '$parse', 'atmToSi
 				active:true,
 	        	withoutEdit: true,
 	        	showButton:false,
+	        	changeClass:false,
 	        	mode:'local'
 			},
 			hide:{
@@ -160,8 +161,7 @@ angular.module('home').controller('TubeToTubeCtrl',['$scope', '$parse', 'atmToSi
 				columnMode:true
 			},
 			messages:{
-				active:false,
-				columnMode:true
+				active:false
 			},
 			exportCSV:{
 				active:true,

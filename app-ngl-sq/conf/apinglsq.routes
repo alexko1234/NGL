@@ -43,7 +43,7 @@ GET		/api/experiments												@controllers.experiments.api.Experiments.list()
 GET		/api/experiments/:code											@controllers.experiments.api.Experiments.get(code:java.lang.String)
 POST	/api/experiments												@controllers.experiments.api.Experiments.save()
 PUT		/api/experiments/:code											@controllers.experiments.api.Experiments.update(code:java.lang.String)
-PUT		/api/experiments/:code/state									@controllers.experiments.api.Experiments.state(code:java.lang.String)
+PUT		/api/experiments/:code/state									@controllers.experiments.api.Experiments.updateState(code:java.lang.String)
 
 POST	/api/experiments/sample-sheets 									instruments.io.Outputs.sampleSheets()
 #PUT		/api/experiments/:code/experiment-information					controllers.experiments.api.ExperimentsOld.updateExperimentInformations(code:java.lang.String)

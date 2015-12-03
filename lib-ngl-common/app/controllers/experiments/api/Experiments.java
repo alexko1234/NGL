@@ -222,9 +222,10 @@ public class Experiments extends DocumentController<Experiment>{
 		input.validate(ctxVal);	
 		if (!ctxVal.hasErrors()) {
 			input = saveObject(input);
-			workflows.applyPostStateRules(ctxVal, input);
+			workflows.applySuccessPostStateRules(ctxVal, input);
 			return ok(Json.toJson(input));
 		} else {
+			workflows.applyErrorPostStateRules(ctxVal, input, input.state);
 			return badRequest(filledForm.errorsAsJson());
 		}				
 	}
@@ -270,7 +271,7 @@ public class Experiments extends DocumentController<Experiment>{
 				
 	}
 	
-	public Result state(String code){
+	public Result updateState(String code){
 		Experiment objectInDB = getObject(code);
 		if(objectInDB == null) {
 			return notFound();

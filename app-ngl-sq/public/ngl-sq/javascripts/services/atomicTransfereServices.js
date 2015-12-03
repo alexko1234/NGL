@@ -79,8 +79,8 @@ angular.module('atomicTransfereServices', [])
 					    volume:container.mesuredVolume, //used in rules
 						concentration:container.mesuredConcentration,  //used in rules
 						quantity:container.mesuredQuantity,
-						instrumentProperties:{},
-					    experimentProperties:{},
+						instrumentProperties:undefined,
+					    experimentProperties:undefined,
 					    percentage:100, //rules by defaut need check with server
 						//can be updated
 						sampleCodes:container.sampleCodes,
@@ -189,8 +189,8 @@ angular.module('atomicTransfereServices', [])
 						volume:{unit:this.getUnit($parse('mesuredVolume')(inputContainer), defaultOutputUnit.volume)}, 
 						concentration:{unit:this.getUnit($parse('mesuredConcentration')(inputContainer), defaultOutputUnit.concentration)}, 
 						quantity:{unit:this.getUnit($parse('mesuredQuantity')(inputContainer), defaultOutputUnit.quantity)},
-						instrumentProperties:{},
-					    experimentProperties:{}
+						instrumentProperties:undefined,
+					    experimentProperties:undefined
 					};
 				},
 				updateOutputContainerUsed:function(outputContainer, atmLine, atmColumn){
@@ -209,6 +209,7 @@ angular.module('atomicTransfereServices', [])
 					if(null === outputContainer.locationOnContainerSupport.column || undefined === outputContainer.locationOnContainerSupport.column){
 						outputContainer.locationOnContainerSupport.column = atmColumn;
 					}
+					return outputContainer;
 					
 				},				
 				getContainerCategoryCode :function(){
@@ -307,6 +308,7 @@ angular.module('atomicTransfereServices', [])
 					}
 					this.data.setColumnsConfig(this.data.getColumnsConfig().concat(newColums))
 				},
+				
 				customExperimentToView : undefined, //used to cutom the view with one atm
 				
 				convertExperimentATMToDatatable : function(experimentATMs){
@@ -363,8 +365,8 @@ angular.module('atomicTransfereServices', [])
 							              
 							              //allData[l].outputContainerUsed = angular.copy(atm.outputContainerUseds[k]);
 							              allData[l].outputContainerUsed =  $.extend(true,{}, atm.outputContainerUseds[k]);
-							              allData[l].outputContainer = $commonATM.updateOutputContainerUsed(allData[l].outputContainerUsed, atm.line, atm.column);
-							              
+							              allData[l].outputContainerUsed = $commonATM.updateOutputContainerUsed(allData[l].outputContainerUsed, atm.line, atm.column);
+							              allData[l].outputContainer = outputContainer;
 							              l++;							             
 							        }
 									if($that.customExperimentToView !== undefined){
@@ -854,8 +856,7 @@ angular.module('atomicTransfereServices', [])
 					}else{
 						this.addNewAtomicTransfertMethodsInData();
 					}	
-					this.$atmToSingleDatatable.addExperimentPropertiesToDatatable(experimentType.propertiesDefinitions);
-					
+					this.$atmToSingleDatatable.addExperimentPropertiesToDatatable(experimentType.propertiesDefinitions);					
 				},
 				viewToExperiment :function(experiment){		
 					if(null === experiment || undefined === experiment){

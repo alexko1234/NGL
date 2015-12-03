@@ -43,9 +43,9 @@ public class Process extends DBObject implements IValidation{
 	public String sampleCode;
 
 	public String currentExperimentTypeCode;
-	public String containerInputCode;
+	public String containerInputCode; //TODO rename to inputContainerCode
 
-	public Set<String> newContainerSupportCodes;
+	public Set<String> newContainerSupportCodes; //TODO rename to outputContainerSupportCodes
 	public Set<String> experimentCodes;
 
 	public SampleOnInputContainer sampleOnInputContainer;

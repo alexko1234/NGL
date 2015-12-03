@@ -6,6 +6,7 @@ import models.laboratory.experiment.instance.Experiment;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 import models.utils.instance.ExperimentHelper;
+import models.utils.instance.ProcessHelper;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
@@ -30,27 +31,45 @@ public class ExpWorkflows extends Workflows<Experiment>{
 	}
 
 	public void applyPreStateRules(ContextValidation validation, Experiment exp, State nextState) {
+		exp.traceInformation = updateTraceInformation(exp.traceInformation, nextState); 			
+		
 		if("N".equals(nextState.code)){
 			ExpWorkflowsHelper.updateXCodes(exp); 	
 		} else if("IP".equals(nextState.code)){
-			ExpWorkflowsHelper.updateATMs(exp);	
+			ExpWorkflowsHelper.updateATMs(exp, false);	
 			ExpWorkflowsHelper.updateOutputContainerCodes(exp);
 		}else if("F".equals(nextState.code)){
+			ExpWorkflowsHelper.updateATMs(exp, false);	
+			ExpWorkflowsHelper.updateOutputContainerCodes(exp);		
+			ExpWorkflowsHelper.createOutputContainerSupports(exp, validation);
+		}
+	}
+	
+	public void applySuccessPostStateRules(ContextValidation validation, Experiment exp){
+		if("N".equals(exp.state.code)){
+			if(validation.isCreationMode()){
+				ExpWorkflowsHelper.updateInputContainersAndProcesses(exp, validation); 
+			}
+		} else if("IP".equals(exp.state.code)){			
+			ExpWorkflowsHelper.updateInputContainersAndProcessesState(exp, validation, "IU", "IP");
+		}else if("F".equals(exp.state.code)){
+			ExpWorkflowsHelper.updateInputContainersAndProcessesState(exp, validation, "IS", "IP");
+			
+			//ProcessHelper.updateNewContainerSupportCodes(outputContainerUseds.get(0),inputContainerUseds,experiment);
 			
 		}
 	}
 	
-	public void applyPostStateRules(ContextValidation validation, Experiment exp){
-		if("N".equals(exp.code)){
-			if(validation.isCreationMode()){
-				ExpWorkflowsHelper.updateContainersAndProcesses(exp, validation); 
-			}
-		} else if("IP".equals(exp.code)){			
-			ExpWorkflowsHelper.updateContainersAndProcessesState(exp, validation, "IU", "IP");
-		}else if("F".equals(exp.code)){
+	public void applyErrorPostStateRules(ContextValidation validation, Experiment exp, State nextState){
+		if("N".equals(nextState.code)){
 			
+		} else if("IP".equals(nextState.code)){			
+			
+		}else if("F".equals(nextState.code)){
+			ExpWorkflowsHelper.deleteOutputContainerSupports(exp, validation);
 		}
 	}
+	
 	
 	@Override
 	public void setState(ContextValidation contextValidation,
@@ -66,16 +85,17 @@ public class ExpWorkflows extends Workflows<Experiment>{
 				boolean goBack = goBack(exp.state, nextState);
 				if(goBack)Logger.debug(exp.code+" : back to the workflow. "+exp.state.code +" -> "+nextState.code);		
 				
-				exp.traceInformation = updateTraceInformation(exp.traceInformation, nextState); 
 				exp.state = updateHistoricalNextState(exp.state, nextState);
 				
 				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME,  Experiment.class, 
 						DBQuery.is("code", exp.code),
 						DBUpdate.set("state", exp.state).set("traceInformation", exp.traceInformation));
 				
-				applyPostStateRules(contextValidation, exp);
+				applySuccessPostStateRules(contextValidation, exp);
 				nextState(contextValidation, exp);
-			}			
+			}else{
+				applyErrorPostStateRules(contextValidation, exp, nextState);
+			}
 		}
 		
 	}

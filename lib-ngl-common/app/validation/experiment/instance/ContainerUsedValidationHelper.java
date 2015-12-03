@@ -17,6 +17,7 @@ import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OutputContainerUsed;
+import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import static models.utils.InstanceConstants.*;
 import validation.ContextValidation;
@@ -44,7 +45,7 @@ public class ContainerUsedValidationHelper extends CommonValidationHelper {
 		String typeCode = getObjectFromContext(FIELD_TYPE_CODE, String.class, contextValidation);
 		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
 		
-		ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ExperimentType.find,true);
+		ExperimentType exType= ExperimentType.find.findByCode(typeCode);
 		if(exType!=null){
 			contextValidation.addKeyToRootKeyName("experimentProperties");
 			List<PropertyDefinition> propertyDefinitions=exType.getPropertyDefinitionByLevel(level);
@@ -58,13 +59,13 @@ public class ContainerUsedValidationHelper extends CommonValidationHelper {
 	}
 	
 	public static void validateInstrumentProperties(Map<String,PropertyValue> properties,  Level.CODE level, ContextValidation contextValidation) {
-		String typeCode = getObjectFromContext(FIELD_TYPE_CODE, String.class, contextValidation);
+		InstrumentUsed instrument = getObjectFromContext(FIELD_INST_USED, InstrumentUsed.class, contextValidation);
 		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
 		
-		ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ExperimentType.find,true);
-		if(exType!=null){
+		InstrumentUsedType instType=InstrumentUsedType.find.findByCode(instrument.typeCode);
+		if(instType!=null){
 			contextValidation.addKeyToRootKeyName("instrumentProperties");
-			List<PropertyDefinition> propertyDefinitions=exType.getPropertyDefinitionByLevel(level);
+			List<PropertyDefinition> propertyDefinitions=instType.getPropertyDefinitionByLevel(level);
 			if("N".equals(stateCode)){
 				ValidationHelper.validateProperties(contextValidation, properties, propertyDefinitions, false, false);				
 			}else{

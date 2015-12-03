@@ -91,24 +91,16 @@ public class Container extends DBObject implements IValidation {
 	public Set<String> inputProcessCodes; //TODO GA rename to processCodes
 
 	public Container(){
-		properties=new HashMap<String, PropertyValue>();
+		//properties=new HashMap<String, PropertyValue>();
 		contents=new ArrayList<Content>();
 		traceInformation=new TraceInformation();
 		projectCodes = new HashSet<String>();
 		sampleCodes = new HashSet<String>();
-		comments = new ArrayList<>();
-		qualityControlResults = new HashSet<>();
-		calculedVolume = new ArrayList<>();
+		//comments = new ArrayList<>();
+		//qualityControlResults = new HashSet<>();
+		//calculedVolume = new ArrayList<>();
 		fromExperimentTypeCodes = new HashSet<>();
 	
-	}
-
-	@JsonIgnore
-	public Container(Content sampleUsed){
-
-		this.contents.add(sampleUsed);
-		this.traceInformation=new TraceInformation();
-		properties=new HashMap<String, PropertyValue>();
 	}
 
 	

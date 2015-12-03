@@ -234,12 +234,12 @@ public class InstrumentServiceTEST extends AbstractInstrumentService{
 	
 	private static List<PropertyDefinition> getTestOneToOneProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-        propertyDefinitions.add(newPropertiesDefinition("Inst. Content 1", "instCont1", LevelService.getLevels(Level.CODE.Instrument,Level.CODE.Content),String.class, true,
+        propertyDefinitions.add(newPropertiesDefinition("Inst. Content 1", "instCont1", LevelService.getLevels(Level.CODE.Instrument),String.class, true,
         		DescriptionFactory.newValues("G-TUBE"), "G-TUBE", null, null, null, "single", 1));
         propertyDefinitions.add(newPropertiesDefinition("Inst. 1", "inst1", LevelService.getLevels(Level.CODE.Instrument),String.class, false,
         		null, "8000", MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SPEED),MeasureUnit.find.findByCode( "rpm"),MeasureUnit.find.findByCode( "rpm"), "single", 2));
         // unite s
-        propertyDefinitions.add(newPropertiesDefinition("Inst. Container 1", "instContainer1", LevelService.getLevels(Level.CODE.Instrument,Level.CODE.Container),String.class, false, 
+        propertyDefinitions.add(newPropertiesDefinition("Inst. Container 1", "instContainer1", LevelService.getLevels(Level.CODE.Instrument),String.class, false, 
         		null, "60",MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_TIME),MeasureUnit.find.findByCode( "s"),MeasureUnit.find.findByCode( "s"), "single", 3));
 		return propertyDefinitions;
 	}

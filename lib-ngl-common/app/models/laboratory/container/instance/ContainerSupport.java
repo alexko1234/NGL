@@ -14,6 +14,7 @@ import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.container.instance.ContainerSupportValidationHelper;
+import validation.container.instance.ContainerValidationHelper;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -36,7 +37,7 @@ public class ContainerSupport extends DBObject implements IValidation{
 		projectCodes= new HashSet<>();
 		sampleCodes= new HashSet<>();
 		fromExperimentTypeCodes= new HashSet<>();
-		properties = new HashMap<>();
+		//properties = new HashMap<>();
 	}
 
 
@@ -44,6 +45,7 @@ public class ContainerSupport extends DBObject implements IValidation{
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {
+		ContainerSupportValidationHelper.validateId(this, contextValidation);
 		ContainerSupportValidationHelper.validateCode(this, InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, contextValidation);
 		ContainerSupportValidationHelper.validateContainerSupportCategoryCode(categoryCode, contextValidation);
 		ContainerSupportValidationHelper.validateProjectCodes(projectCodes, contextValidation);

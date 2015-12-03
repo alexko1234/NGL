@@ -83,9 +83,13 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	
 	$scope.startExperiment = function(){
 		console.log("call startExperiment");
-		$scope.save(function(){
+		$scope.save(function(experiment){
 			console.log("call callback startExperiment");
-			$http.put(jsRoutes.controllers.experiments.api.Experiments.state($scope.experiment.code).url, {code:"IP"})
+			
+			mainService.put("experiment",$scope.experiment);
+			$scope.experiment = experiment;
+			
+			$http.put(jsRoutes.controllers.experiments.api.Experiments.updateState(experiment.code).url, {code:"IP"})
 			.success(function(data, status, headers, config) {
 				endSaveSuccess(data);															
 			})
@@ -100,13 +104,17 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	
 	$scope.finishExperiment = function(){
 		console.log("call finishExperiment");
-		$scope.save(function(){
+		$scope.save(function(experiment){
 			console.log("call callback finishExperiment");
-			$http.put(jsRoutes.controllers.experiments.api.Experiments.state($scope.experiment.code).url, {code:"F"})
+			
+			mainService.put("experiment",$scope.experiment);
+			$scope.experiment = experiment;
+			
+			$http.put(jsRoutes.controllers.experiments.api.Experiments.updateState(experiment.code).url, {code:"F"})
 			.success(function(data, status, headers, config) {
 				endSaveSuccess(data);															
 			})
-			.error(function(data, status, headers, config) {
+			.error(function(data, status, headers, config) {				
 				$scope.messages.setError("save");
 				$scope.messages.setDetails(data);				
 				saveInProgress = false;	
@@ -121,19 +129,12 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	
 	
 	var endSaveSuccess = function(newExperiment){
-		if(creationMode){
-			creationMode = false;
-			mainService.setHomePage('search')
-			tabService.resetTabs();
-			tabService.addTabs({label:Messages('experiments.tabs.search'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("search").url,remove:true});
-			tabService.addTabs({label:$scope.experiment.code,href:jsRoutes.controllers.experiments.tpl.Experiments.get($scope.experiment.code).url,remove:true});											
-		}
 		// purge basket when save ok or not ?
 		resetBasket();					
 		mainService.put("experiment",$scope.experiment);
-		mainService.stopEditMode();
 		$scope.experiment = newExperiment;
 		$scope.messages.setSuccess("save");						
+		mainService.stopEditMode();
 		saveInProgress = false;
 		$scope.$broadcast('refresh'); // utile seulement si l'update fonctionne				
 	}
@@ -145,8 +146,15 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		if(creationMode){
 			$http.post(jsRoutes.controllers.experiments.api.Experiments.save().url, $scope.experiment, {callbackFunction:callbackFunction})
 				.success(function(data, status, headers, config) {
+					
+					creationMode = false;
+					mainService.setHomePage('search')
+					tabService.resetTabs();
+					tabService.addTabs({label:Messages('experiments.tabs.search'),href:jsRoutes.controllers.experiments.tpl.Experiments.home("search").url,remove:true});
+					tabService.addTabs({label:data.code,href:jsRoutes.controllers.experiments.tpl.Experiments.get(data.code).url,remove:true});
+					
 					if(config.callbackFunction){
-						config.callbackFunction();
+						config.callbackFunction(data);
 					}else{
 						endSaveSuccess(data);
 					}						
@@ -160,7 +168,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			$http.put(jsRoutes.controllers.experiments.api.Experiments.update($scope.experiment.code).url, $scope.experiment, {callbackFunction:callbackFunction})
 			.success(function(data, status, headers, config) {
 				if(config.callbackFunction){
-					config.callbackFunction();
+					config.callbackFunction(data);
 				}else{
 					endSaveSuccess(data);
 				}											

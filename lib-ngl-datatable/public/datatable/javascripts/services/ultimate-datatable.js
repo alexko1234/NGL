@@ -2970,7 +2970,7 @@ directive('udtTable', function(){
 			    					if(!line.selected){
 			    						line.selected=true;
 			    						line.trClass="info";
-			    					} else{
+			    					} else {
 										line.selected=false;
 			    						line.trClass=undefined;
 									}
