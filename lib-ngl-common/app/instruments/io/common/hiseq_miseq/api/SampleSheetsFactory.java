@@ -25,7 +25,7 @@ public class SampleSheetsFactory extends AbstractSampleSheetsfactory{
 
 	@Override
 	public File generate() {
-		List<Container> containers = getContainersFromExperiment();
+		List<Container> containers = getInputContainersFromExperiment();
 		
 		String content = format(sampleSheet_1.render(experiment, containers).body());
 		File file = new File(SampleSheetsFactoryHelper.getSampleSheetFilePath(experiment.instrument.code)+containers.get(0).support.code+".csv");

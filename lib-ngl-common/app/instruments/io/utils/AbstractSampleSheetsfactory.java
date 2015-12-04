@@ -15,6 +15,7 @@ import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.parameter.Index;
 import models.utils.InstanceConstants;
 
+import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 
 import play.Logger;
@@ -37,7 +38,7 @@ public abstract class AbstractSampleSheetsfactory {
 		return "";
 	}
 	
-	protected List<Container> getContainersFromExperiment(){
+	protected List<Container> getInputContainersFromExperiment(){
 		List<Container> containers = new ArrayList<Container>();
 		for(int i=0; i<this.experiment.atomicTransfertMethods.size();i++){
 			for(ContainerUsed cu : this.experiment.atomicTransfertMethods.get(i).inputContainerUseds){
@@ -57,8 +58,45 @@ public abstract class AbstractSampleSheetsfactory {
 		return index;
 	}
 	
+	public static String getSequence(Index index, TagModel tagModel){
+		if("NONE".equals(tagModel.tagType)){
+			return null;
+		}else if("SINGLE-INDEX".equals(tagModel.tagType)){
+			if(null == index || "MID".equals(index.categoryCode)){
+				return getIndex(null, tagModel.maxTag1Size);
+			} else {
+				return getIndex(index.sequence, tagModel.maxTag1Size);
+			}
+		}else if("DUAL-INDEX".equals(tagModel.tagType)){
+			if(null == index || "MID".equals(index.categoryCode)){
+				return StringUtils.repeat("N", tagModel.maxTag1Size)+"-"+StringUtils.repeat("N", tagModel.maxTag2Size);
+			}else if("SINGLE-INDEX".equals(index.categoryCode)){
+				return getIndex(index.sequence, tagModel.maxTag1Size)+"-"+getIndex(null, tagModel.maxTag2Size);
+			}else {
+				String[] sequences = index.sequence.split("-",2);
+				return getIndex(sequences[0], tagModel.maxTag1Size)+"-"+getIndex(sequences[1], tagModel.maxTag2Size);
+			}
+		}else{
+			throw new RuntimeException("Index not manage "+tagModel.tagType);
+		}
+	}
+
+	private static String getIndex(String sequence, Integer maxIndexSize) {
+		if(null == sequence){
+			return StringUtils.repeat("N", maxIndexSize);
+		}else if(sequence.length() < maxIndexSize){
+			return sequence.concat(StringUtils.repeat("N", maxIndexSize-sequence.length()));
+		}else{
+			return sequence;
+		}
+	}
+	
 	public static String getSequence(Index index){
-		return index!=null?index.sequence:"";
+		if(index != null && !index.categoryCode.equals("MID")){
+			return index.sequence;
+		}else{
+			return null;
+		}
 	}
 	
 	public static String getContentProperty(Content content, String propertyName){
