@@ -12,3 +12,4 @@ GET		/readsets/update-nb-cycles					controllers.migration.MigrationUpdateReadSet
 GET		/readsets/update-q-qualityScore				controllers.migration.MigrationUpdateReadSetQ30QualMean.migration()
 GET		/migration-sequencing-start-date			controllers.migration.MigrationUpdateSequencingStartDateNanopore.migration()
 GET		/migration-metrichor-run-id					controllers.migration.MigrationUpdateRunMetrichorRunID.migration()
+GET		/check-type-description						controllers.migration.CheckTypeDescription.check()

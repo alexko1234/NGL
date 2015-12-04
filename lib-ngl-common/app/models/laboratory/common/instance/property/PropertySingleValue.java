@@ -21,7 +21,7 @@ public class PropertySingleValue extends PropertyValue<Object>{
 		super();
 	}
 	public PropertySingleValue(Object value) {
-		super(value);		
+		super(value);	
 	}
 	public PropertySingleValue(Object value, String unit) {
 		super(value);
@@ -35,6 +35,7 @@ public class PropertySingleValue extends PropertyValue<Object>{
 	}
 	@Override
 	public void validate(ContextValidation contextValidation) {
+		super.validate(contextValidation);
 		PropertyDefinition propertyDefinition = (PropertyDefinition) ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).toArray()[0];
 		if(ValidationHelper.checkIfActive(contextValidation, propertyDefinition)){
 			if(ValidationHelper.required(contextValidation, this, propertyDefinition)){				

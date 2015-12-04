@@ -16,7 +16,7 @@ import models.laboratory.common.instance.PropertyValue;
 public class PropertyListValue extends PropertyValue<List<? extends Object>>{
 	
 	public String unit;
-		
+	
 	public PropertyListValue() {
 		super();
 	}
@@ -34,6 +34,7 @@ public class PropertyListValue extends PropertyValue<List<? extends Object>>{
 	}
 	@Override
 	public void validate(ContextValidation contextValidation) {
+		super.validate(contextValidation);
 		PropertyDefinition propertyDefinition = (PropertyDefinition) ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).toArray()[0];
 		if(ValidationHelper.checkIfActive(contextValidation, propertyDefinition)){
 			if(ValidationHelper.required(contextValidation, this, propertyDefinition)){				

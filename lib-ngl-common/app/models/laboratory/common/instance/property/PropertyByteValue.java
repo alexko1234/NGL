@@ -30,6 +30,7 @@ public class PropertyByteValue extends PropertyValue<byte[]>{
 	
 	@Override
 	public void validate(ContextValidation contextValidation) { 
+		super.validate(contextValidation);
 		PropertyDefinition propertyDefinition = (PropertyDefinition) ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).toArray()[0];
 		if(ValidationHelper.checkIfActive(contextValidation, propertyDefinition)){
 			ValidationHelper.required(contextValidation, this, propertyDefinition); 

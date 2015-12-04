@@ -42,9 +42,12 @@ public abstract class AbstractTestsCNS {
 		Map<String,String> config = new HashMap<String,String>();
 		config.put("application.secret", "ezfzzefzefz");
 		config.put("evolutionplugin","disabled");
-		config.put("mongodb.database", "NGL-TESTU");
-		config.put("mongodb.credentials", "testu:testu");
-		config.put("mongodb.servers", "mongodev.genoscope.cns.fr:27017");
+		//config.put("mongodb.database", "NGL-TESTU");
+		//config.put("mongodb.credentials", "testu:testu");
+		//config.put("mongodb.servers", "mongodev.genoscope.cns.fr:27017");
+		config.put("mongodb.database", "CNS-NGL");
+		config.put("mongodb.credentials", "ngl:ngl");
+		config.put("mongodb.servers", "mongouat.genoscope.cns.fr:27018");
 		config.put("mongodb.defaultWriteConcern", "SAFE"); 
 		
 		config.put("db.default.driver", "com.mysql.jdbc.Driver");
@@ -52,9 +55,13 @@ public abstract class AbstractTestsCNS {
 		//config.put("db.default.url", "jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL");
 		//config.put("db.default.user", "ngl");
 		//config.put("db.default.password", "ngl");
-		config.put("db.default.url", "jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST");
-		config.put("db.default.user", "NGL_user");
-		config.put("db.default.password", "NGL_passwd");
+		//config.put("db.default.url", "jdbc:mysql://mysqldev.genoscope.cns.fr:3306/NGL_TEST");
+		//config.put("db.default.user", "NGL_user");
+		//config.put("db.default.password", "NGL_passwd");
+		
+		config.put("db.default.url", "jdbc:mysql://mysqluat.genoscope.cns.fr:3307/CNS_NGL");
+		config.put("db.default.user", "ngl");
+		config.put("db.default.password", "ngluat");
 		
 		config.put("db.default.partitionCount", "1");
 		config.put("db.default.maxConnectionsPerPartition", "10");
