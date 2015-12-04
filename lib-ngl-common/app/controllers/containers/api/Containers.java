@@ -343,13 +343,13 @@ public class Containers extends CommonController {
 				//TODO Erreur quand pas de processus pour un type d'expérience
 				
 				if(CollectionUtils.isNotEmpty(listProcessType)){
-					//queryElts.add(DBQuery.in("processTypeCode", listProcessType));
+					queryElts.add(DBQuery.in("processTypeCode", listProcessType));
 				}
 				
 			}else{
 				//throw new RuntimeException("nextExperimentTypeCode = "+ containersSearch.nextExperimentTypeCode +" does not exist!");
 			}
-			//queryElts.add(DBQuery.nor(DBQuery.notExists("inputProcessCodes"),DBQuery.size("inputProcessCodes", 0)));
+			queryElts.add(DBQuery.nor(DBQuery.notExists("inputProcessCodes"),DBQuery.size("inputProcessCodes", 0)));
 		}
 		
 		
