@@ -1,4 +1,4 @@
-/*! ultimate-datatable version 3.2.1 2015-08-03 
+/*! ultimate-datatable version 3.2.2-SNAPSHOT 2015-12-04 
  Ultimate DataTable is distributed open-source under CeCILL FREE SOFTWARE LICENSE. Check out http://www.cecill.info/ for more information about the contents of this license.
 */
 "use strict";
@@ -14,7 +14,8 @@ angular.module('ultimateDataTableServices', []).
 								list:{},//if dynamic=false
 								dynamic:true //if dynamic=true, the headers will be auto generated
 							},//ex: extraHeaders:{number:2,dynamic:false,list:{0:[{"label":"test","colspan":"1"},{"label":"a","colspan":"1"}],1:[{"label":"test2","colspan":"5"}]}}
-							columns : [], /*ex : 
+                columns: [],
+                /*ex :
 												{
 													"header":"Code Container", //the title //used by default Messages
 													"property":"code", //the property to bind or function used to extract the value
@@ -67,7 +68,19 @@ angular.module('ultimateDataTableServices', []).
 								numberPageListMax:3,
 	    						pageList:[],
 								numberRecordsPerPage:10,
-	    						numberRecordsPerPageList: [{number:10, clazz:''},{number:25, clazz:''},{number:50, clazz:''},{number:100, clazz:''}]
+                    numberRecordsPerPageList: [{
+                        number: 10,
+                        clazz: ''
+                    }, {
+                        number: 25,
+                        clazz: ''
+                    }, {
+                        number: 50,
+                        clazz: ''
+                    }, {
+                        number: 100,
+                        clazz: ''
+                    }]
 							},
 							order : {
 								active:true,
@@ -137,7 +150,10 @@ angular.module('ultimateDataTableServices', []).
 								counter:0,
 								number:0, //number of element in progress
 								error:0,
-								ids:{errors:[],success:[]}
+                    ids: {
+                        errors: [],
+                        success: []
+                    }
 							},
 							select:{
 								active:true,
@@ -162,8 +178,14 @@ angular.module('ultimateDataTableServices', []).
 								active:false,
 								errorClass:'alert alert-danger',
 								successClass: 'alert alert-success',
-								errorKey:{save:'datatable.msg.error.save',remove:'datatable.msg.error.remove'},
-								successKey:{save:'datatable.msg.success.save',remove:'datatable.msg.success.remove'},
+                    errorKey: {
+                        save: 'datatable.msg.error.save',
+                        remove: 'datatable.msg.error.remove'
+                    },
+                    successKey: {
+                        save: 'datatable.msg.success.save',
+                        remove: 'datatable.msg.success.remove'
+                    },
 								text:undefined,
 								clazz:undefined,
 								messagesService:udtI18n(navigator.language || navigator.userLanguage),
@@ -269,7 +291,9 @@ angular.module('ultimateDataTableServices', []).
 								var _allResult = angular.copy(this.allResult);
 								_allResult = $filter('filter')(this.allResult, searchTerms, false);
 								
-								this._getAllResult = function(){return _allResult;};
+                    this._getAllResult = function() {
+                        return _allResult;
+                    };
 								
 								this.totalNumberRecords = _allResult.length;
 								//this.sortAllResult();
@@ -295,7 +319,10 @@ angular.module('ultimateDataTableServices', []).
 			    				if(url){
 			    					this.setSpinner(true);
 									var that = this;
-			    					$http.get(url(),{params:this.getParams(params), datatable:this}).success(function(data, status, headers, config) {
+                        $http.get(url(), {
+                            params: this.getParams(params),
+                            datatable: this
+                        }).success(function(data, status, headers, config) {
 			    						config.datatable.setData(data.data, data.recordsNumber);
 										that.computeDisplayResultTimeOut.then(function(){
 											that.setSpinner(false);
@@ -331,7 +358,9 @@ angular.module('ultimateDataTableServices', []).
 		    				this.sortAllResult();
 		    				this.computePaginationList();
 		    				this.computeDisplayResult();
-							this._getAllResult = function(){return this.allResult;};		    				
+                this._getAllResult = function() {
+                    return this.allResult;
+                };
 		    			},
 		    			/**
 		    			 * Return all the data
@@ -357,7 +386,9 @@ angular.module('ultimateDataTableServices', []).
 			    				this.sortAllResult();
 			    				this.computePaginationList();
 			    				this.computeDisplayResult();
-								this._getAllResult = function(){return this.allResult;};		
+                    this._getAllResult = function() {
+                        return this.allResult;
+                    };
 			    			}
 		    			},
 						/**
@@ -367,12 +398,24 @@ angular.module('ultimateDataTableServices', []).
 							if(this.config.add.active === true){
 								//call inti method for the new data
 								var newData = this.config.add.init(this);
-								var line = {edit:true, selected:true, trClass:undefined, group:false, new:true};
+                    var line = {
+                        edit: true,
+                        selected: true,
+                        trClass: undefined,
+                        group: false,
+                        new: true
+                    };
 								 
 								if(this.config.add.after){
-									this.displayResult.push({data:newData, line:line})
+                        this.displayResult.push({
+                            data: newData,
+                            line: line
+                        })
 								}else{
-									this.displayResult.unshift({data:newData, line:line})
+                        this.displayResult.unshift({
+                            data: newData,
+                            line: line
+                        })
 								}
 								this.config.edit.all = true								
 							}
@@ -536,9 +579,12 @@ angular.module('ultimateDataTableServices', []).
 		    			},
 		    			getGroupColumnClass : function(columnId){
 		    				if(this.config.group.active){
-		    					if(!this.config.group.columns[columnId]) {return 'fa fa-bars';}
-	    						else  {return 'fa fa-outdent';}		    							    							    							    						    					    					
+                    if (!this.config.group.columns[columnId]) {
+                        return 'fa fa-bars';
 		    				} else{
+                        return 'fa fa-outdent';
+                    }
+                } else {
 		    					//console.log("order is not active !!!");
 		    				}
 		    			},
@@ -548,18 +594,34 @@ angular.module('ultimateDataTableServices', []).
 	    					var groupConfig = this.config.group;
 	    					displayResultTmp.forEach(function(element, index, array){
 	    						/* previous mode */
-	    						if(!groupConfig.after && (index === 0 
-	    								|| groupGetter(element.data) !== groupGetter(array[index-1].data))){
-	    							var line = {edit:undefined, selected:undefined, trClass:undefined, group:true, new:false};
-	    							this.push({data:groupConfig.data[groupGetter(element.data)], line:line});
+                    if (!groupConfig.after && (index === 0 || groupGetter(element.data) !== groupGetter(array[index - 1].data))) {
+                        var line = {
+                            edit: undefined,
+                            selected: undefined,
+                            trClass: undefined,
+                            group: true,
+                            new: false
+                        };
+                        this.push({
+                            data: groupConfig.data[groupGetter(element.data)],
+                            line: line
+                        });
 	    						}		    						
 	    						this.push(element);
 	    						
 	    						/* after mode */
-	    						if(groupConfig.after && (index === (array.length - 1) 
-	    								|| groupGetter(element.data) !== groupGetter(array[index+1].data))){
-	    							var line = {edit:undefined, selected:undefined, trClass:undefined, group:true, new:false};
-	    							this.push({data:groupConfig.data[groupGetter(element.data)], line:line});
+                    if (groupConfig.after && (index === (array.length - 1) || groupGetter(element.data) !== groupGetter(array[index + 1].data))) {
+                        var line = {
+                            edit: undefined,
+                            selected: undefined,
+                            trClass: undefined,
+                            group: true,
+                            new: false
+                        };
+                        this.push({
+                            data: groupConfig.data[groupGetter(element.data)],
+                            line: line
+                        });
 	    						}		    						
 	    						
 	    					},displayResult);
@@ -693,36 +755,45 @@ angular.module('ultimateDataTableServices', []).
 							this.computeDisplayResultTimeOut = $timeout(function(){
 								//to manage local pagination
 								var configPagination = that.config.pagination;
-								console.log("call computeDisplayResultTimeOut");
+
 								var _displayResult = [];
 								if(that.config.group.start && that.config.group.showOnlyGroups){
-									_displayResult = that.allGroupResult.slice((configPagination.pageNumber*configPagination.numberRecordsPerPage), 
-											(configPagination.pageNumber*configPagination.numberRecordsPerPage+configPagination.numberRecordsPerPage));
+                        _displayResult = that.allGroupResult.slice((configPagination.pageNumber * configPagination.numberRecordsPerPage), (configPagination.pageNumber * configPagination.numberRecordsPerPage + configPagination.numberRecordsPerPage));
 									var displayResultTmp = [];
 									angular.forEach(_displayResult, function(value, key){
-										 var line = {edit:undefined, selected:undefined, trClass:undefined, group:true, new:false};
-										 this.push({data:value, line:line});
+                            var line = {
+                                edit: undefined,
+                                selected: undefined,
+                                trClass: undefined,
+                                group: true,
+                                new: false
+                            };
+                            this.push({
+                                data: value,
+                                line: line
+                            });
 									}, displayResultTmp);			    				
 									that.displayResult = displayResultTmp;		
 								} else{
 									if(configPagination.active && !that.isRemoteMode(configPagination.mode)){
-										//_displayResult = angular.copy(that._getAllResult().slice((configPagination.pageNumber*configPagination.numberRecordsPerPage), 
-										//		(configPagination.pageNumber*configPagination.numberRecordsPerPage+configPagination.numberRecordsPerPage)));
-										
 										_displayResult = $.extend(true,[],that._getAllResult().slice((configPagination.pageNumber*configPagination.numberRecordsPerPage), 
 												(configPagination.pageNumber*configPagination.numberRecordsPerPage+configPagination.numberRecordsPerPage)));
-										
 									}else{ //to manage all records or server pagination
-										//_displayResult = angular.copy(that._getAllResult());	
 										_displayResult = $.extend(true,[],that._getAllResult());
-										
-										
 									}
-									
 									var displayResultTmp = [];
 									angular.forEach(_displayResult, function(value, key){
-										 var line = {edit:undefined, selected:undefined, trClass:undefined, group:false, new:false};
-										 this.push({data:value, line:line});
+                            var line = {
+                                edit: undefined,
+                                selected: undefined,
+                                trClass: undefined,
+                                group: false,
+                                new: false
+                            };
+                            this.push({
+                                data: value,
+                                line: line
+                            });
 									}, displayResultTmp);
 									
 									//group function
@@ -759,7 +830,9 @@ angular.module('ultimateDataTableServices', []).
 	    							var url = $parse(column.url)(value);
 		    						if(!angular.isDefined(urlCache[url])){
 		    							urlCache[url] = "in waiting data ...";
-		    							urlQueries.push($http.get(url, {url:url}));
+                            urlQueries.push($http.get(url, {
+                                url: url
+                            }));
 		    						}		    								    					
 		    					});
 		    				});
@@ -798,7 +871,11 @@ angular.module('ultimateDataTableServices', []).
 	    						
 	    						if(nbPages > 1 && nbPages <= configPagination.numberPageListMax){
 			    					for(var i = 0; i < nbPages; i++){
-			    						configPagination.pageList.push({number:i, label:i+1,  clazz:(i!=currentPageNumber)?'':'active'});
+                            configPagination.pageList.push({
+                                number: i,
+                                label: i + 1,
+                                clazz: (i != currentPageNumber) ? '' : 'active'
+                            });
 			    					}
 		    					}else if (nbPages > configPagination.numberPageListMax){
 		    						var min = currentPageNumber - ((configPagination.numberPageListMax-1)/2);
@@ -815,15 +892,35 @@ angular.module('ultimateDataTableServices', []).
 		    							max=nbPages;
 		    						}
 		    						
-		    						configPagination.pageList.push({number:0, label:'<<',  clazz:(currentPageNumber!=min)?'':'disabled'});
-		    						configPagination.pageList.push({number:currentPageNumber-1, label:'<',  clazz:(currentPageNumber!=min)?'':'disabled'});
+                        configPagination.pageList.push({
+                            number: 0,
+                            label: '<<',
+                            clazz: (currentPageNumber != min) ? '' : 'disabled'
+                        });
+                        configPagination.pageList.push({
+                            number: currentPageNumber - 1,
+                            label: '<',
+                            clazz: (currentPageNumber != min) ? '' : 'disabled'
+                        });
 		    						
 		    						for(; min < max; min++){
-		    							configPagination.pageList.push({number:min, label:min+1,  clazz:(min!=currentPageNumber)?'':'active'});
+                            configPagination.pageList.push({
+                                number: min,
+                                label: min + 1,
+                                clazz: (min != currentPageNumber) ? '' : 'active'
+                            });
 			    					}
 		    						
-		    						configPagination.pageList.push({number:currentPageNumber+1, label:'>',  clazz:(currentPageNumber!=max-1)?'':'disabled'});
-		    						configPagination.pageList.push({number:nbPages-1, label:'>>',  clazz:(currentPageNumber!=max-1)?'':'disabled'});
+                        configPagination.pageList.push({
+                            number: currentPageNumber + 1,
+                            label: '>',
+                            clazz: (currentPageNumber != max - 1) ? '' : 'disabled'
+                        });
+                        configPagination.pageList.push({
+                            number: nbPages - 1,
+                            label: '>>',
+                            clazz: (currentPageNumber != max - 1) ? '' : 'disabled'
+                        });
 		    					}		    					
 		    				}else{
 		    					//console.log("pagination is not active !!!");
@@ -979,13 +1076,20 @@ angular.module('ultimateDataTableServices', []).
 		    			getOrderColumnClass : function(columnId){
 		    				if(this.config.order.active){
 		    					if(angular.isDefined(this.config.group.by) && this.config.group.by.id === columnId && !this.config.group.showOnlyGroups){
-		    						if(!this.config.order.groupReverse) {return 'fa fa-sort-up';}
-		    						else {return 'fa fa-sort-down';}	
+                        if (!this.config.order.groupReverse) {
+                            return 'fa fa-sort-up';
 		    					}else{
-		    						if(!this.config.order.columns[columnId]) {return 'fa fa-sort';}
-		    						else if(this.config.order.columns[columnId] && !this.config.order.reverse) {return 'fa fa-sort-up';}		    						
-		    						else if(this.config.order.columns[columnId] && this.config.order.reverse) {return 'fa fa-sort-down';}	
+                            return 'fa fa-sort-down';
 		    					}
+                    } else {
+                        if (!this.config.order.columns[columnId]) {
+                            return 'fa fa-sort';
+                        } else if (this.config.order.columns[columnId] && !this.config.order.reverse) {
+                            return 'fa fa-sort-up';
+                        } else if (this.config.order.columns[columnId] && this.config.order.reverse) {
+                            return 'fa fa-sort-down';
+                        }
+                    }
 		    						    							    						    					    					
 		    				} else{
 		    					//console.log("order is not active !!!");
@@ -1068,7 +1172,9 @@ angular.module('ultimateDataTableServices', []).
 		    				if(this.config.edit.active){
 								var that = this;
 								this.computeDisplayResultTimeOut.then(function(){
-									that._getAllResult = function(){return that.allResult;};
+                        that._getAllResult = function() {
+                            return that.allResult;
+                        };
 									that.config.edit.columns = {};
 									var find = false;
 									for(var i = 0; i < that.displayResult.length; i++){
@@ -1088,14 +1194,14 @@ angular.module('ultimateDataTableServices', []).
 									if(find){
 										that.config.edit.start = true;
 										if(column){
+                                that.config.edit.all = false;
 											var columnId = column.id
 											if(angular.isUndefined(that.config.edit.columns[columnId])){
 												that.config.edit.columns[columnId] = {};
 											}
 											that.config.edit.columns[columnId].edit=true;			    						
+                            } else that.config.edit.all = true;
 										}
-										else that.config.edit.all = true;
-									}
 								});
 							}else{
 								//console.log("edit is not active !");
@@ -1164,7 +1270,7 @@ angular.module('ultimateDataTableServices', []).
 		    					var data = [];
 		    					
 								var valueFunction = this.getValueFunction(this.config.save.value);
-		    					for(var i = 0; this.displayResult && i < this.displayResult.length ; i++){
+                    for (var i = 0; i < this.displayResult.length; i++) {
 			    					if(this.displayResult[i].line.edit || this.config.save.withoutEdit){
 			    						//remove datatable properties to avoid this data are retrieve in the json
 			    						this.config.save.number++;
@@ -1176,7 +1282,10 @@ angular.module('ultimateDataTableServices', []).
 			    							data.push(this.getSaveRemoteRequest(this.displayResult[i].data, i));			    							
 			    						} else if(this.isRemoteMode(this.config.save.mode) && this.config.save.batch){
 			    							//add the data in table to send in once all the result
-			    							data.push({index:i, data:valueFunction(this.displayResult[i].data)});			    							
+                                data.push({
+                                    index: i,
+                                    data: valueFunction(this.displayResult[i].data)
+                                });
 			    						} else{	
 			    							this.saveLocal(valueFunction(this.displayResult[i].data),i);
 			    						}
@@ -1247,10 +1356,15 @@ angular.module('ultimateDataTableServices', []).
 		    				}
 		    				if(urlFunction){
 			    				if(this.config.save.batch){
-			    					return $http[method](urlFunction(value), value, {datatable:this});
+                        return $http[method](urlFunction(value), value, {
+                            datatable: this
+                        });
 			    				}else{
 			    					var valueFunction = this.getValueFunction(this.config.save.value);
-			    					return $http[method](urlFunction(value), valueFunction(value), {datatable:this,index:i}).
+                        return $http[method](urlFunction(value), valueFunction(value), {
+                            datatable: this,
+                            index: i
+                        }).
 			    					success(function(data, status, headers, config) {
 			    						  config.datatable.saveRemoteOneElement(status, data, config.index);
 			    					}).
@@ -1279,9 +1393,9 @@ angular.module('ultimateDataTableServices', []).
 									if(this.config.pagination.active && !this.isRemoteMode(this.config.pagination.mode)){
 										j = i + (this.config.pagination.pageNumber*this.config.pagination.numberRecordsPerPage);
 									}
-									//this.allResult[j] = angular.copy(this.displayResult[i].data);
 									this.allResult[j] = $.extend(true,{},this.displayResult[i].data);
 			    					
+
 								}else{
 									this.config.save.newData.push(data);
 								}
@@ -1358,7 +1472,10 @@ angular.module('ultimateDataTableServices', []).
 			    					this.config.remove.start = true;
 			    					this.config.remove.number = 0;
 			    					this.config.remove.error = 0;
-			    					this.config.remove.ids = {errors:[],success:[]};
+                        this.config.remove.ids = {
+                            errors: [],
+                            success: []
+                        };
 			    					
 			    					for(var i = 0; i < this.displayResult.length; i++){
 			    						if(this.displayResult[i].line.selected && (!this.displayResult[i].line.edit || this.config.remove.withEdit)){
@@ -1402,7 +1519,11 @@ angular.module('ultimateDataTableServices', []).
 		    			removeRemote : function(value, i){
 		    				var url = this.getUrlFunction(this.config.remove.url);
 			    			if(url){
-			    				return $http['delete'](url(value), {datatable:this, index:i, value:value})
+                    return $http['delete'](url(value), {
+                            datatable: this,
+                            index: i,
+                            value: value
+                        })
 			    				.success(function(data, status, headers, config) {
 			    					config.datatable.config.remove.ids.success.push(config.index);
 			    					config.datatable.config.remove.number--;						    				
@@ -1472,7 +1593,10 @@ angular.module('ultimateDataTableServices', []).
 									that.config.remove.error = 0;
 									that.config.remove.start = false;
 									that.config.remove.counter = 0;
-									that.config.remove.ids = {error:[],success:[]};
+                        that.config.remove.ids = {
+                            error: [],
+                            success: []
+                        };
 									that.setSpinner(false);
 								});
 		    				}
@@ -1538,7 +1662,6 @@ angular.module('ultimateDataTableServices', []).
 		    							this.displayResult[i].line.selected = false;
 		    							this.displayResult[i].line.trClass=undefined;
 		    						}
-		    						//selection.push(angular.copy(this.displayResult[i].data));
 		    						selection.push($.extend(true,{},this.displayResult[i].data));
 		    					}else if(this.displayResult[i].line.groupSelected){
 		    						//unselect selection
@@ -1546,12 +1669,12 @@ angular.module('ultimateDataTableServices', []).
 		    							this.displayResult[i].line.groupSelected = false;
 		    							this.displayResult[i].line.trClass=undefined;
 		    						}
-		    						//selection.push(angular.copy(this.displayResult[i].data));		    						
 		    						selection.push($.extend(true,{},this.displayResult[i].data));
-		    						
 		    					}
 		    				}
-		    				if(unselect){this.config.select.isSelectAll = false;}
+                if (unselect) {
+                    this.config.select.isSelectAll = false;
+                }
 		    				return selection;
 		    			},
 		    			/**
@@ -1593,14 +1716,10 @@ angular.module('ultimateDataTableServices', []).
 		    			},
 		    			
 		    			isShowToolbarButtons: function(){
-		    				return ( this.isShowCRUDButtons()
-		    						|| this.isShowHideButtons()  || (this.config.show.active && this.config.show.showButton)  
-		    						|| this.isShowExportCSVButton()
-		    						|| this.isShowOtherButtons());
+                return (this.isShowCRUDButtons() || this.isShowHideButtons() || (this.config.show.active && this.config.show.showButton) || this.isShowExportCSVButton() || this.isShowOtherButtons());
 		    			},
 		    			isShowCRUDButtons: function(){
-		    				return (  (this.config.edit.active && this.config.edit.showButton) 
-		    						||  (this.config.save.active && this.config.save.showButton) || (this.config.remove.active && this.config.remove.showButton));
+                return ((this.config.edit.active && this.config.edit.showButton) || (this.config.save.active && this.config.save.showButton) || (this.config.remove.active && this.config.remove.showButton));
 		    			},
 		    			isShowHideButtons: function(){
 		    				return (this.config.hide.active && this.config.hide.showButton && this.getHideColumns().length > 0);
@@ -1675,10 +1794,14 @@ angular.module('ultimateDataTableServices', []).
 		    			getUrlFunction : function(url){
 		    				if(angular.isObject(url)){
 		    					if(angular.isDefined(url.url)){
-		    						return function(value){return url.url};
+                        return function(value) {
+                            return url.url
+                        };
 		    					}
 		    				}else if(angular.isString(url)){
-		    					return function(value){return url};
+                    return function(value) {
+                        return url
+                    };
 		    				} else if(angular.isFunction(url)){
 		    					return url;
 		    				}
@@ -1691,7 +1814,9 @@ angular.module('ultimateDataTableServices', []).
 		    				if(angular.isFunction(valueFunction)){
 		    					return valueFunction;
 		    				}
-		    				return function(value){return value};
+                return function(value) {
+                    return value
+                };
 		    			},
 		    			/**
 		    			 * test is remote mode
@@ -1772,7 +1897,11 @@ angular.module('ultimateDataTableServices', []).
 			    					if(columns[i].convertValue !== undefined && columns[i].convertValue.active === true && (columns[i].convertValue.displayMeasureValue === undefined || columns[i].convertValue.saveMeasureValue === undefined)){
 			    						 throw "Columns config error: "+columns[i].property+" convertValue=active but convertValue.displayMeasureValue or convertValue.saveMeasureValue is missing";
 			    					}
+                        
+                        if(null === columns[i].showFilter || undefined === columns[i].showFilter){
+                            columns[i].showFilter = false;
 			    				}
+                    }
 		    					
 		    					var settings = $.extend(true, [], this.configColumnDefault, columns);
 		    					settings = $filter('orderBy')(settings, 'position');
@@ -1780,7 +1909,6 @@ angular.module('ultimateDataTableServices', []).
 		    					this.config.columns = angular.copy(settings);
 			    	    		this.configMaster.columns = angular.copy(settings);
 			    	    		this.newExtraHeaderConfig();
-			    	    		
 			    	    		if(this.allResult){
 				    	    		this.computeGroup();
 				    				this.sortAllResult();
@@ -1790,7 +1918,9 @@ angular.module('ultimateDataTableServices', []).
 		    			    }
 		    			},
 		    			setColumnsConfigWithUrl : function(){
-		    				$http.get(this.config.columnsUrl,{datatable:this}).success(function(data, status, headers, config) {		    						
+                $http.get(this.config.columnsUrl, {
+                    datatable: this
+                }).success(function(data, status, headers, config) {
 	    						config.datatable.setColumnsConfig(data);
 	    					});
 		    			},
@@ -1923,13 +2053,19 @@ angular.module('ultimateDataTableServices', []).
 				    							lineUsed = true;
 				    							if(count>0){
 				    								//adding the empty header of undefined extraHeader columns
-				    								this.addToExtraHeaderConfig(i,{"label":"","colspan":count});
+                                        this.addToExtraHeaderConfig(i, {
+                                            "label": "",
+                                            "colspan": count
+                                        });
 				    								count = 0;//Reset the count to 0
 				    							}
 				    							//The first time the header will be undefined
 				    							if(header == undefined){	
 				    								//create the new header with colspan 0 (the current column will be counted)
-							    					header =  {"label":this.config.columns[j].extraHeaders[i],"colspan":0};
+                                        header = {
+                                            "label": this.config.columns[j].extraHeaders[i],
+                                            "colspan": 0
+                                        };
 							    				}
 				    							
 				    							//if two near columns have the same header
@@ -1941,7 +2077,10 @@ angular.module('ultimateDataTableServices', []).
 				    								this.addToExtraHeaderConfig(i, header);
 				    								//and create the new one with colspan 1
 				    								//colspan = 1 because we're already on the first column who have this header
-				    								header =  {"label":this.config.columns[j].extraHeaders[i],"colspan":1};
+                                        header = {
+                                            "label": this.config.columns[j].extraHeaders[i],
+                                            "colspan": 1
+                                        };
 				    							}
 				    						
 				    						}else if(header != undefined){
@@ -1964,7 +2103,10 @@ angular.module('ultimateDataTableServices', []).
 				    				//If we have undefined column left
 				    				//And the line have at least one item
 				    				if(count>0 && (lineUsed === true || header != undefined)){
-				    					this.addToExtraHeaderConfig(i,{"label":"","colspan":count});
+                            this.addToExtraHeaderConfig(i, {
+                                "label": "",
+                                "colspan": count
+                            });
 				    					count = 0;
 				    				}
 				    				
@@ -1983,13 +2125,24 @@ angular.module('ultimateDataTableServices', []).
 		    			exportCSV : function(exportType) {
 		    				if(this.config.exportCSV.active){
 			    				this.config.exportCSV.start = true;
-			    				var cas, delimiter = this.config.exportCSV.delimiter, lineValue = "", colValue, that = this; 		    				
+                    var cas, delimiter = this.config.exportCSV.delimiter,
+                        lineValue = "",
+                        colValue, that = this;
 			    				
 			    				//calcule results ( code extracted from method computeDisplayResult() )
 			    				var displayResultTmp = [];
 			    				angular.forEach(this.allResult, function(value, key){
-			    					 var line = {edit:undefined, selected:undefined, trClass:undefined, group:false, new:false};
-		    						 this.push({data:value, line:line});
+                        var line = {
+                            edit: undefined,
+                            selected: undefined,
+                            trClass: undefined,
+                            group: false,
+                            new: false
+                        };
+                        this.push({
+                            data: value,
+                            line: line
+                        });
 		    					}, displayResultTmp);			    				
 			    				if(this.isGroupActive()){
 			    					displayResultTmp = this.addGroup(displayResultTmp);					
@@ -2038,9 +2191,7 @@ angular.module('ultimateDataTableServices', []).
 				    			    				property += that.getFilter(column);
 				    			    				property += that.getFormatter(column);
 				    			    				colValue = $parse(property)(result.data);
-				    			    				
 				    			    				if(colValue === null)colValue = undefined;
-				    			    				
 				    			    				if(colValue === undefined && isFunction === true){//Because the property here is not $parsable
 				    			    					//The function have to return a $scope value
 				    			    					colValue = property;
@@ -2096,12 +2247,13 @@ angular.module('ultimateDataTableServices', []).
 			    					var fixedstring = "\ufeff" + lineValue;		    							    					
 			    					
 			    					//save
-			    					var blob = new Blob([fixedstring], {type: "text/plain;charset=utf-8"}); 
+                        var blob = new Blob([fixedstring], {
+                            type: "text/plain;charset=utf-8"
+                        });
 			    					var currdatetime = $filter('date')(new Date(), 'yyyyMMdd_HHmmss');
 			    					var text_filename = (this.config.name || this.configDefault.name) + "_" + currdatetime;		    					
 			    					saveAs(blob, text_filename + ".csv");
-			    				}
-			    				else {
+                    } else {
 			    					alert("No data to print. Select the data you need");
 			    				}
 			    				this.config.exportCSV.start = false;
@@ -2154,15 +2306,11 @@ angular.module('ultimateDataTableServices', []).
 		    				var posDrop = droppedCol.position;
 		    				var posDrag = draggedCol.position;
 		    				for(var i=0;i<datatable.config.columns.length;i++){
-		    					if(posDrag < posDrop &&  datatable.config.columns[i].position > posDrag 
-		    							&& datatable.config.columns[i].position < posDrop
-		    							&& datatable.config.columns[i].id !== draggedCol.id){
+                    if (posDrag < posDrop && datatable.config.columns[i].position > posDrag && datatable.config.columns[i].position < posDrop && datatable.config.columns[i].id !== draggedCol.id) {
 		    						datatable.config.columns[i].position--;
 		    					}
 		    					
-		    					if(posDrag > posDrop &&  datatable.config.columns[i].position > posDrop 
-		    							&& datatable.config.columns[i].position < posDrag
-		    							&& datatable.config.columns[i].id !== draggedCol.id){
+                    if (posDrag > posDrop && datatable.config.columns[i].position > posDrop && datatable.config.columns[i].position < posDrag && datatable.config.columns[i].id !== draggedCol.id) {
 		    						datatable.config.columns[i].position++;
 		    					}
 		    					
@@ -2185,8 +2333,7 @@ angular.module('ultimateDataTableServices', []).
 				return datatable;
     		}
     		return constructor;
-    	}]); 
-;angular.module('ultimateDataTableServices').
+}]);;angular.module('ultimateDataTableServices').
 //If the select or multiple choices contain 1 element, this directive select it automaticaly
 //EXAMPLE: <select ng-model="x" ng-option="x as x for x in x" udtAutoselect>...</select>
 directive('udtAutoselect',['$parse', function($parse) {
@@ -2228,9 +2375,9 @@ directive('udtBtselect',  ['$parse', '$document', '$window', '$filter', function
   		    	scope:true,
   		    	template:'<div ng-switch on="isEdit()">'
   		    			+'<div ng-switch-when="false">'
-  		    			+'<ul class="list-unstyled form-control-static">'
+  		    			+'<ul class="list-unstyled">'
 		    	  		+'<li ng-repeat-start="item in getItems()" ng-if="groupBy(item, $index)" ng-bind="itemGroupByLabel(item)" style="font-weight:bold"></li>'
-		    	  		+'<li ng-repeat-end  ng-if="item.selected" ng-bind="itemLabel(item)"></li>'
+		    	  		+'<li ng-repeat-end  ng-if="item.selected" ng-bind="itemLabel(item)" style="padding-left: 15px;"></li>'
 			    	  	+'</ul>'
   		    			+'</div>'
   		    			+'<div class="dropdown" ng-switch-when="true">'
@@ -2736,7 +2883,6 @@ directive('udtConvertvalue',['udtConvertValueServices','$filter', function(udtCo
                 	
                 	//model to view when the user go out of the input
                 	element.bind('blur', function () {
-                		//var convertedValue = convertValues.convertValue(ngModel.$modelValue, property.saveMeasureValue, property.displayMeasureValue, ngModel.$viewValue.length);
                 		var convertedValue = convertValues.convertValue(ngModel.$modelValue, property.saveMeasureValue, property.displayMeasureValue);
                 		ngModel.$setViewValue($filter('number')(convertedValue));
 						ngModel.$render();
@@ -3235,6 +3381,7 @@ filter('udtUnique', function($parse) {
     			if(!isArray(collection) && !isObject(collection)){
 					return collection;
 				}
+	
 	    		/**
 	    		* get an object and return array of values
 	    		* @param object
@@ -3294,9 +3441,6 @@ factory('udtConvertValueServices', [function() {
 									if(precision !== undefined){
 										value = value.toPrecision(precision);
 									}
-									//else{
-									//	value = value.toPrecision(convert.toString().length);
-									//}
 								}else if(convert == undefined){
 									throw "Error: Unknown Conversion "+inputUnit+" to "+outputUnit;
 									return undefined;
@@ -3379,8 +3523,8 @@ factory('udtI18n', [function() {
 							"result":"Results",
 							"date.format":"MM/dd/yyyy",
 							"datetime.format":"MM/dd/yyyy HH:mm:ss",
-							"datatable.button.selectall":"Tout Sélectionner",
-							"datatable.button.unselectall" :"Tout Délectionner",
+							"datatable.button.selectall":"Select all",
+							"datatable.button.unselectall" :"Deselect all",
 							"datatable.button.cancel":"Cancel",
 							"datatable.button.hide":"Hide",
 							"datatable.button.show":"Show Details",
@@ -3410,6 +3554,42 @@ factory('udtI18n', [function() {
 							"datatable.button.basicExportCSV" : "Export all lines",
 							"datatable.button.groupedExportCSV" : "Export only grouped lines",
 							"datatable.button.showOnlyGroups" : "See only group"
+						},
+						"nl":{
+							"result": "Resultaten",
+							"date.format": "dd/MM/yyyy",
+							"datetime.format": "dd/MM/yyyy HH:mm:ss",
+							"datatable.button.selectall": "Selecteer alles",
+							"datatable.button.unselectall": "Deselecteer alles",
+							"datatable.button.cancel": "Annuleren",
+							"datatable.button.hide": "Verberg",
+							"datatable.button.show": "Toon details",
+							"datatable.button.edit": "Bewerk",
+							"datatable.button.sort": "Sorteer",
+							"datatable.button.save": "Opslaan",
+							"datatable.button.add": "Toevoegen",
+							"datatable.button.remove": "Verwijderen",
+							"datatable.button.searchLocal": "Zoek",
+							"datatable.button.resetSearchLocal": "Annuleer",
+							"datatable.button.length": "Grote ({0})",
+							"datatable.totalNumberRecords": "{0} Resultaten",
+							"datatable.button.exportCSV": "CSV Export",
+							"datatable.msg.success.save": "Opslag is succesvol",
+							"datatable.msg.error.save": "Er zijn {0} backup(s) met een fout.",
+							"datatable.msg.success.remove": "Alles is succesvol verwijderd.",
+							"datatable.msg.error.remove": " Er zijn {0} verwijderingen met een fout.",
+							"datatable.remove.confirm": "Bevestigd u de verwijdering?",
+							"datatable.export.sum": "(Som)",
+							"datatable.export.average": "(Gemiddeld)",
+							"datatable.export.unique":"(Enkele waarde)",
+							"datatable.export.countDistinct": "(Aantal unieke waarden)",
+							"datatable.export.yes": "Ja",
+							"datatable.export.no": "Nee",
+							"datatable.button.group": "Groeperen / Degroeperen",
+							"datatable.button.generalGroup": "Groepeer alle geselecteerde regels",
+							"datatable.button.basicExportCSV": "Exporteer alle regels",
+							"datatable.button.groupedExportCSV": "Exporteer alleen de gegroepeerde regels",
+							"datatable.button.showOnlyGroups": "Toon alleen de groep"
 						}
 					},
 					
@@ -3436,7 +3616,8 @@ factory('udtI18n', [function() {
 
 angular.module('ultimateDataTableServices').
 run(function($templateCache) {
-  $templateCache.put('ultimate-datatable.html', '<div name="datatable" class="datatable">'
+  $templateCache.put('ultimate-datatable.html',
+    '<div name="datatable" class="datatable">'
   		    		+'<div ng-transclude/>'
   		    		+'<div udt-toolbar ng-if="udtTable.isShowToolbar()"/>'  		    		
   		    		+'<div udt-messages ng-if="udtTable.config.messages.active"/>'
@@ -3444,13 +3625,21 @@ run(function($templateCache) {
   		    		+'</div>');
 })
 .run(function($templateCache) {
-  $templateCache.put('udt-table.html', '<div name="udt-table" class="row"><div class="col-md-12 col-lg-12">'
-  		    		+'<div class="inProgress" ng-if="udtTable.config.spinner.start"><button class="btn btn-primary btn-lg"><i class="fa fa-spinner fa-spin fa-5x"></i></button></div>'
+  $templateCache.put('udt-table.html',
+    '<div name="udt-table" class="row">'
+   +    '<div class="col-md-12 col-lg-12">'
+   +        '<div class="inProgress" ng-if="udtTable.config.spinner.start">'
+   +            '<button class="btn btn-primary btn-lg">'
+   +                '<i class="fa fa-spinner fa-spin fa-5x"></i>'
+   +            '</button>'
+   +        '</div>'
   		    		+'<form class="form-inline">'
   		    		+'<table class="table table-condensed table-hover table-bordered">'
   		    		+'<thead>'
   		    		+'<tr ng-repeat="(key,headers) in udtTable.getExtraHeaderConfig()">'
-  		    		+	'<th colspan="{{header.colspan}}" ng-repeat="header in headers" class="xheader"><span ng-bind="udtTableFunctions.messages.Messages(header.label)"/></th>'
+   +                        '<th colspan="{{header.colspan}}" ng-repeat="header in headers" class="xheader">'
+   +                            '<span ng-bind="udtTableFunctions.messages.Messages(header.label)"/>'
+   +                        '</th>'
   		    		+'</tr>'
   		    		+'<tr>'
   		    		+	'<th id="{{column.id}}" ng-repeat="column in udtTable.getColumnsConfig()" ng-model="column" draggable ng-if="!udtTable.isHide(column.id)">'
@@ -3467,7 +3656,7 @@ run(function($templateCache) {
   		    		+'<tbody>'
 					+	'<tr ng-if="udtTable.config.filter.columnMode && !udtTable.config.edit.start" class="filter">'
   		    		+		'<td ng-repeat="col in udtTable.config.columns" ng-if="!udtTable.isHide(col.id)">'
-  		    		+			'<div udt-cell-filter/>'
+   +                            '<div ng-if="col.showFilter" udt-cell-filter/>'
   		    		+		'</td>'
   		    		+	'</tr>'
   		    		+	'<tr ng-if="udtTable.isEdit()">'
@@ -3483,16 +3672,19 @@ run(function($templateCache) {
   		    		+'</tbody>'
   		    		+'</table>'
   		    		+'</form>'
-  		    		+'</div></div>');
+   +    '</div>'
+   +'</div>');
 })
 .run(function($templateCache) {
-  $templateCache.put('udt-cell.html', '<div>'
+  $templateCache.put('udt-cell.html',
+    '<div>'
 	  		    		+'<div ng-if="col.edit" udt-editable-cell></div>'
 	  		    		+'<div ng-if="!col.edit" udt-cell-read></div>'		    		
   		    		+'</div>');
 })
 .run(function($templateCache) {
-  $templateCache.put('udt-editableCell.html', '<div ng-switch on="udtTable.isEdit(col.id, value.line)">'
+  $templateCache.put('udt-editableCell.html',
+    '<div ng-switch on="udtTable.isEdit(col.id, value.line)">'
 	  		    		+'<div ng-switch-when="true" >'
 	  		    		+	'<div udt-cell-edit></div>'  		    		
 	  		    		+'</div>'
@@ -3500,30 +3692,42 @@ run(function($templateCache) {
   		    		+'</div>');
 })
 .run(function($templateCache) {
-  $templateCache.put('udt-cellRead.html', '<div udt-compile="udtTableFunctions.getDisplayElement(col)"></div>');
+  $templateCache.put('udt-cellRead.html',
+    '<div udt-compile="udtTableFunctions.getDisplayElement(col)"></div>');
 })
 .run(function($templateCache) {
-  $templateCache.put('udt-cellEdit.html', '<div udt-compile="udtTableFunctions.getEditElement(col)"></div>');
+  $templateCache.put('udt-cellEdit.html',
+    '<div udt-compile="udtTableFunctions.getEditElement(col)"></div>');
 })
 .run(function($templateCache) {
-  $templateCache.put('udt-cellFilter.html', '<div udt-compile="udtTableFunctions.getEditElement(col, false, true)"></div>');
+  $templateCache.put('udt-cellFilter.html',
+    '<div udt-compile="udtTableFunctions.getEditElement(col, false, true)"></div>');
 })
 .run(function($templateCache) {
-  $templateCache.put('udt-cellHeader.html', '<div ng-if="col.edit" ng-switch on="udtTable.isEdit(col.id)">'  		    			
-  		    		+	'<div ng-switch-when="true" udt-compile="udtTableFunctions.getEditElement(col, true)"></div><div ng-switch-default></div>'
+  $templateCache.put('udt-cellHeader.html',
+    '<div ng-if="col.edit" ng-switch on="udtTable.isEdit(col.id)">'
+   +    '<div ng-switch-when="true" udt-compile="udtTableFunctions.getEditElement(col, true)"></div>'
+   +    '<div ng-switch-default></div>'
   		    		+'</div>');
 })
 .run(function($templateCache) {
-  $templateCache.put('udt-messages.html', '<div name="udt-messages" class="row"><div class="col-md-12 col-lg-12">'
-  		    		+'<div ng-class="udtTable.config.messages.clazz" ng-if="udtTable.config.messages.text !== undefined"><strong>{{udtTable.config.messages.text}}</strong>'
+  $templateCache.put('udt-messages.html',
+    '<div name="udt-messages" class="row">'
+   +    '<div class="col-md-12 col-lg-12">'
+   +        '<div ng-class="udtTable.config.messages.clazz" ng-if="udtTable.config.messages.text !== undefined">'
+   +            '<strong>{{udtTable.config.messages.text}}</strong>'
   		    		+'</div>'
-  		    		+'</div></div>');
+   +    '</div>'
+   +'</div>');
 })
 .run(function($templateCache) {
-  $templateCache.put('udt-form.html', '<div name="udt-form"  class="row"><div class="col-md-12 col-lg-12" ng-transclude/></div>');
+  $templateCache.put('udt-form.html',
+    '<div name="udt-form"  class="row"><div class="col-md-12 col-lg-12" ng-transclude/></div>');
 })
 .run(function($templateCache) {
-  $templateCache.put('udt-toolbar.html', '<div name="udt-toolbar" class="row margin-bottom-3"><div class="col-md-12 col-lg-12">'
+  $templateCache.put('udt-toolbar.html',
+    '<div name="udt-toolbar" class="row margin-bottom-3">'
+   +    '<div class="col-md-12 col-lg-12">'
   		    		+'<div class="btn-toolbar pull-left" name="udt-toolbar-buttons" ng-if="udtTable.isShowToolbarButtons()">'
   		    		+'<div class="btn-group"  ng-switch on="udtTable.config.select.isSelectAll">'
   		    		+	'<button class="btn btn-default" ng-disabled="udtTable.isEmpty()" ng-click="udtTable.selectAll(true)" ng-show="udtTable.isShowButton(\'select\')" ng-switch-when="false" data-toggle="tooltip" title="{{udtTableFunctions.messages.Messages(\'datatable.button.selectall\')}}">'
@@ -3543,7 +3747,6 @@ run(function($templateCache) {
   		    		+		'<span ng-if="!udtTable.isCompactMode()"> {{udtTableFunctions.messages.Messages(\'datatable.button.show\')}}</span>'
   		    		+	'</button>'
   		    		+'</div>'
-  		    		
   		    		+'<div class="btn-group" ng-if="udtTable.isShowCRUDButtons()">'
   		    		+	'<button class="btn btn-default" ng-click="udtTableFunctions.setEdit()" ng-disabled="!udtTable.canEdit()"  ng-if="udtTable.isShowButton(\'edit\')" data-toggle="tooltip" title="{{udtTableFunctions.messages.Messages(\'datatable.button.edit\')}}">'
   		    		+		'<i class="fa fa-edit"></i>'
@@ -3575,14 +3778,18 @@ run(function($templateCache) {
   		    		+	'<span class="caret"/>'
   		    		+'</button>'
   		    		+'<ul class="dropdown-menu">'
-  		    		/* Basic Export */
-  		    		+	'<li><a href="" ng-click="udtTableFunctions.exportCSV(\'all\')"><i class="fa fa-file-text-o"></i> {{udtTableFunctions.messages.Messages(\'datatable.button.basicExportCSV\')}}</a></li>'
-  		    		/* Grouped Export */
-  		    		+	'<li><a href="" ng-click="udtTableFunctions.exportCSV(\'groupsOnly\')"><i class="fa fa-file-text-o"></i> {{udtTableFunctions.messages.Messages(\'datatable.button.groupedExportCSV\')}}</a></li>'
+   +                    '<li>'
+   +                        '<a href="" ng-click="udtTableFunctions.exportCSV(\'all\')">'
+   +                            '<i class="fa fa-file-text-o"></i> {{udtTableFunctions.messages.Messages(\'datatable.button.basicExportCSV\')}}'
+   +                        '</a>'
+   +                    '</li>'
+   +                    '<li>'
+   +                        '<a href="" ng-click="udtTableFunctions.exportCSV(\'groupsOnly\')">'
+   +                            '<i class="fa fa-file-text-o"></i> {{udtTableFunctions.messages.Messages(\'datatable.button.groupedExportCSV\')}}'
+   +                        '</a>'
+   +                    '</li>'
   		    		+'</ul>'
-  		    		
   		    		+'</div>'
-  		    		
   		    		+'<div class="btn-group" ng-if="udtTable.isShowButton(\'group\')">'
   		    		+	'<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" ng-disabled="udtTable.isEmpty()" data-toggle="tooltip" title="{{udtTableFunctions.messages.Messages(\'datatable.button.group\')}}">'
   		    		+		'<i class="fa fa-bars"></i> '
@@ -3591,19 +3798,30 @@ run(function($templateCache) {
   		    		+	'</button>'
   		    		+	'<ul class="dropdown-menu">'
   		    		+		'<li ng-repeat="column in udtTable.getGroupColumns()">'
-  		    		+			'<a href="" ng-click="udtTableFunctions.setGroupColumn(column)" ng-switch on="!udtTable.isGroup(column.id)"><i class="fa fa-bars" ng-switch-when="true"></i><i class="fa fa-outdent" ng-switch-when="false"></i> <span ng-bind="udtTableFunctions.messages.Messages(column.header)"/></a>' 
+   +                        '<a href="" ng-click="udtTableFunctions.setGroupColumn(column)" ng-switch on="!udtTable.isGroup(column.id)">'
+   +                            '<i class="fa fa-bars" ng-switch-when="true"></i>'
+   +                            '<i class="fa fa-outdent" ng-switch-when="false"></i> '
+   +                            '<span ng-bind="udtTableFunctions.messages.Messages(column.header)"/>'
+   +                        '</a>' 
   		    		+		'</li>'	
   		    		+		'<li class="divider"></li>'
   		    		+		'<li>'
-  		    		+			'<a href="" ng-click="udtTable.setGroupColumn(\'all\')" ng-switch on="!udtTable.isGroup(\'all\')"><i class="fa fa-bars" ng-switch-when="true"></i><i class="fa fa-outdent" ng-switch-when="false"></i> <span ng-bind="udtTableFunctions.messages.Messages(\'datatable.button.generalGroup\')"/></a>'
+   +                        '<a href="" ng-click="udtTable.setGroupColumn(\'all\')" ng-switch on="!udtTable.isGroup(\'all\')">'
+   +                            '<i class="fa fa-bars" ng-switch-when="true"></i>'
+   +                            '<i class="fa fa-outdent" ng-switch-when="false"></i> '
+   +                            '<span ng-bind="udtTableFunctions.messages.Messages(\'datatable.button.generalGroup\')"/>'
+   +                        '</a>'
   		    		+		'</li>'
   		    		+		'<li class="dropdown-header" style="font-size:12px;color:#333">'
-  		    		+			'<div class="checkbox"><label><input type="checkbox" ng-model="udtTable.config.group.showOnlyGroups" ng-click="udtTableFunctions.updateShowOnlyGroups()"/>{{udtTableFunctions.messages.Messages(\'datatable.button.showOnlyGroups\')}}</label></div>'
+   +                        '<div class="checkbox">'
+   +                            '<label>'
+   +                                '<input type="checkbox" ng-model="udtTable.config.group.showOnlyGroups" ng-click="udtTableFunctions.updateShowOnlyGroups()"/>{{udtTableFunctions.messages.Messages(\'datatable.button.showOnlyGroups\')}}'
+   +                            '</label>'
+   +                        '</div>'
   		    		+		'</li>'  		    		
   		    		+	'</ul>'
   		    		+'</div>'
-		    		
-  		    		+'<div class="btn-group" ng-if="udtTable.isShowHideButtons()">' //todo bt-select
+   +            '<div class="btn-group" ng-if="udtTable.isShowHideButtons()">'
   		    		+	'<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" data-toggle="tooltip" title="{{udtTableFunctions.messages.Messages(\'datatable.button.hide\')}}">'
   		    		+		'<i class="fa fa-eye-slash"></i> '
   		    		+		'<span ng-if="!udtTable.isCompactMode()"> {{udtTableFunctions.messages.Messages(\'datatable.button.hide\')}} </span>'
@@ -3611,7 +3829,11 @@ run(function($templateCache) {
   		    		+	'</button>'
   		    		+	'<ul class="dropdown-menu">'
   		    		+		'<li ng-repeat="column in udtTable.getHideColumns()">'
-  		    		+		'<a href="" ng-click="udtTableFunctions.setHideColumn(column)" ng-switch on="udtTable.isHide(column.id)"><i class="fa fa-eye" ng-switch-when="true"></i><i class="fa fa-eye-slash" ng-switch-when="false"></i> <span ng-bind="udtTableFunctions.messages.Messages(column.header)"/></a>'
+   +                        '<a href="" ng-click="udtTableFunctions.setHideColumn(column)" ng-switch on="udtTable.isHide(column.id)">'
+   +                            '<i class="fa fa-eye" ng-switch-when="true"></i>'
+   +                            '<i class="fa fa-eye-slash" ng-switch-when="false"></i> '
+   +                            '<span ng-bind="udtTableFunctions.messages.Messages(column.header)"/>'
+   +                        '</a>'
   		    		+		'</li>'
   		    		+	'</ul>'
   		    		+'</div>'
@@ -3648,7 +3870,11 @@ run(function($templateCache) {
   		    		+'</div>'
   		    		+'<div class="btn-toolbar pull-right" name="udt-toolbar-pagination"  ng-if="udtTable.isShowToolbarPagination()">'
   		    		+	'<div class="btn-group" ng-if="udtTable.isShowPagination()">'
-  		    		+		'<ul class="pagination"><li ng-repeat="page in udtTable.config.pagination.pageList" ng-class="page.clazz"><a href="" ng-click="udtTableFunctions.setPageNumber(page);" ng-bind="page.label"></a></li></ul>'
+   +                '<ul class="pagination">'
+   +                    '<li ng-repeat="page in udtTable.config.pagination.pageList" ng-class="page.clazz">'
+   +                        '<a href="" ng-click="udtTableFunctions.setPageNumber(page);" ng-bind="page.label"></a>'
+   +                    '</li>'
+   +                '</ul>'
   		    		+	'</div>'
   		    		+	'<div class="btn-group">'
   		    		+		'<button data-toggle="dropdown" class="btn btn-default dropdown-toggle">'
@@ -3661,5 +3887,6 @@ run(function($templateCache) {
   		    		+		'</ul>'
   		    		+	'</div>'
   		    		+'</div>'  		    		  		    	
-  		    		+'</div></div>');
+   +    '</div>'
+   +'</div>');
 });
