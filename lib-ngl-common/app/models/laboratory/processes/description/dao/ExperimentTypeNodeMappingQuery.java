@@ -42,7 +42,8 @@ public class ExperimentTypeNodeMappingQuery  extends MappingSqlQuery<ExperimentT
 			node.doQualityControl = rs.getBoolean("doQualityControl");
 			node.mandatoryPurification = rs.getBoolean("mandatoryPurification");
 			node.mandatoryQualityControl = rs.getBoolean("mandatoryQualityControl");
-			
+			node.doTransfert=rs.getBoolean("doTransfert");
+			node.mandatoryTransfert = rs.getBoolean("mandatoryTransfert");
 			ExperimentTypeDAO expTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
 			
 			node.experimentType = expTypeDAO.findById(rs.getLong("fk_experiment_type"));
@@ -54,6 +55,8 @@ public class ExperimentTypeNodeMappingQuery  extends MappingSqlQuery<ExperimentT
 					node.possiblePurificationTypes.add(et);
 				}else if(ExperimentCategory.CODE.qualitycontrol.equals(ExperimentCategory.CODE.valueOf(et.category.code))){
 					node.possibleQualityControlTypes.add(et);
+				}else if(ExperimentCategory.CODE.transfert.equals(ExperimentCategory.CODE.valueOf(et.category.code))){
+					node.possibleTransferts.add(et);
 				}else{
 					throw new DAOException("Bad Satellite "+et.code);
 				}

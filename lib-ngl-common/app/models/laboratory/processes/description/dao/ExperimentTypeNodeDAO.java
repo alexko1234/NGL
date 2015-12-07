@@ -18,7 +18,7 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 
 	public ExperimentTypeNodeDAO() {
 		super("experiment_type_node", ExperimentTypeNode.class, ExperimentTypeNodeMappingQuery.class,
-				"SELECT t.id, t.code, t.doPurification, t.mandatoryPurification, t.doQualityControl, t.mandatoryQualityControl," +
+				"SELECT t.id, t.code, t.doPurification, t.mandatoryPurification, t.doQualityControl, t.mandatoryQualityControl,t.doTransfert, t.mandatoryTransfert " +
 				"t.fk_experiment_type FROM experiment_type_node as t", true);
 	}
 
@@ -38,6 +38,9 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 		parameters.put("doQualityControl", value.doQualityControl);
 		parameters.put("mandatoryQualityControl", value.mandatoryQualityControl);
 		parameters.put("fk_experiment_type", value.experimentType.id);
+		parameters.put("doTransfert", value.doTransfert);
+		parameters.put("mandatoryTransfert", value.mandatoryTransfert);
+
 		value.id = (Long) jdbcInsert.executeAndReturnKey(parameters);
 
 		List<ExperimentType> experimentTypes = new ArrayList<ExperimentType>();
@@ -47,6 +50,10 @@ public class ExperimentTypeNodeDAO  extends AbstractDAOMapping<ExperimentTypeNod
 		}
 		if(null != value.possiblePurificationTypes){
 			experimentTypes.addAll(value.possiblePurificationTypes);
+		}
+		if(null != value.possibleTransferts){
+			experimentTypes.addAll(value.possibleTransferts);
+
 		}
 		if(experimentTypes.size() > 0){
 			insertSatellites(experimentTypes, value.id, false);

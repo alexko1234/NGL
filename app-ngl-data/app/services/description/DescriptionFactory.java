@@ -782,12 +782,14 @@ public class DescriptionFactory {
 	 * @param experimentType
 	 * @param mandatoryPurif
 	 * @param mandatoryQC
+	 * @param mandatoryQC
 	 * @param previousExp
 	 * @param purifTypes
 	 * @param qcTypes
+	 * @param transfertTypes
 	 * @return
 	 */
-	public static ExperimentTypeNode newExperimentTypeNode(String code, ExperimentType experimentType, boolean mandatoryPurif, boolean mandatoryQC, List<ExperimentTypeNode> previousExp, List<ExperimentType> purifTypes, List<ExperimentType> qcTypes) {
+	public static ExperimentTypeNode newExperimentTypeNode(String code, ExperimentType experimentType, boolean mandatoryPurif, boolean mandatoryQC,boolean mandatoryTransfert, List<ExperimentTypeNode> previousExp, List<ExperimentType> purifTypes, List<ExperimentType> qcTypes,List<ExperimentType> transfertTypes) {
 		ExperimentTypeNode etn = new ExperimentTypeNode();
 		etn.code = code;
 		etn.experimentType = experimentType;
@@ -795,10 +797,29 @@ public class DescriptionFactory {
 		etn.mandatoryPurification = mandatoryPurif;
 		etn.doQualityControl = (qcTypes != null && qcTypes.size() > 0)?true:false;
 		etn.mandatoryQualityControl = mandatoryQC;
+		etn.doQualityControl = (qcTypes != null && qcTypes.size() > 0)?true:false;
+		etn.mandatoryTransfert=mandatoryTransfert;
+		etn.doTransfert = (transfertTypes != null && transfertTypes.size() > 0)?true:false;
 		etn.possiblePurificationTypes = purifTypes;
 		etn.possibleQualityControlTypes = qcTypes;
+		etn.possibleTransferts=transfertTypes;
 		etn.previousExperimentType = previousExp;
 		return etn;
+	}
+	
+	/**
+	 * 
+	 * @param code
+	 * @param experimentType
+	 * @param mandatoryPurif
+	 * @param mandatoryQC
+	 * @param previousExp
+	 * @param purifTypes
+	 * @param qcTypes
+	 * @return
+	 */
+	public static ExperimentTypeNode newExperimentTypeNode(String code, ExperimentType experimentType, boolean mandatoryPurif, boolean mandatoryQC, List<ExperimentTypeNode> previousExp, List<ExperimentType> purifTypes, List<ExperimentType> qcTypes) {
+		return newExperimentTypeNode(code, experimentType, mandatoryPurif, mandatoryQC, false, previousExp, purifTypes, qcTypes, null);
 	}
 
 	/**

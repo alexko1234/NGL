@@ -16,11 +16,16 @@ public class ExperimentTypeNode extends Model<ExperimentTypeNode>{
 	//Possibility to do quality control
 	public boolean doQualityControl=Boolean.FALSE;
 	public boolean mandatoryQualityControl=Boolean.FALSE;
-	
+
+	//Possibility to do transfert
+	public boolean doTransfert=Boolean.FALSE;
+	public boolean mandatoryTransfert=Boolean.FALSE;
+
 	public ExperimentType experimentType;
 	public List<ExperimentTypeNode> previousExperimentType=new ArrayList<ExperimentTypeNode>();;
 	public List<ExperimentType> possibleQualityControlTypes=new ArrayList<ExperimentType>();
 	public List<ExperimentType> possiblePurificationTypes=new ArrayList<ExperimentType>();
+	public List<ExperimentType> possibleTransferts=new ArrayList<ExperimentType>();
 	
 	
 	public static Finder<ExperimentTypeNode> find = new Finder<ExperimentTypeNode>(ExperimentTypeNodeDAO.class.getName());
