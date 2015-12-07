@@ -14,13 +14,29 @@
 	</div>
 </div>
 	<div class="col-md-10 col-lg-10">
-		<div class="row">
+		<!-- <div class="row">
 			<div class="btn-toolbar toolbar">
 				<h1 class="col-md-2 col-lg-2 declaration-title pull-left">
-					{{getName()}} 
+					{{getName()}}
 				</h1>
+				<div class="col-md-2 col-lg-1 saveAndEditButtons" >
+							<div class="form-control" bt-select ng-model="kit.declarationType"
+								bt-options="obj.code as obj.name for obj in objectTypes"
+								ng-readonly="!editMode || (kit.code != undefined && kit.code != '')" ng-disabled="(kit.code != undefined && kit.code != '')" ng-hide="(kit.code != undefined && kit.code != '')">
+							</div>
+				</div>
+				<div class="col-md-2 col-lg-2 pull-right">
+					<button class="btn btn-default saveAndEditButtons" ng-click="edit()" ng-show="editMode==false" data-toggle="tooltip" title="@Messages("declarations.kit.creation.edit")"><i class="fa fa-edit"></i></button>
+					<button class="btn btn-default saveAndEditButtons" ng-click="unedit()" ng-show="editMode==true" data-toggle="tooltip" title="@Messages("declarations.kit.creation.unedit")"><i class="fa fa-undo"></i></button>	
+					<button class="btn btn-primary saveAndEditButtons" ng-disabled="saveInProgress == true || !editMode || kit.declarationType=='' || kit.declarationType==undefined" ng-click="saveAll();" data-toggle="tooltip"  title="@Messages("declarations.kit.creation.save")">
+						<i class="fa fa-save"></i>
+					</button>
+					<button class="btn btn-danger saveAndEditButtons" ng-disabled="saveInProgress == true || (kit.code == undefined ||  kit.code == '')" ng-click="removeKit()" data-toggle="tooltip"  title="@Messages("declarations.kit.creation.remove")">
+						<i class="fa fa-trash-o fa-lg"></i>
+					</button>
+				</div>
 			</div>
-		</div>
+		</div> -->
 		<div class="row">
 	
 		<div class="col-md-3 col-lg-4 pull-right">
