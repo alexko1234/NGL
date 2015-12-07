@@ -72,8 +72,8 @@ public class SubmissionServices {
 		if (config == null) {
 			throw new SraException("config " + config.code + " n'existe pas dans database");
 		} 
-		if (StringUtils.isBlank(config.state.code) || !config.state.code.equalsIgnoreCase("userValidate")){
-			throw new SraException("config.state.code != 'userValidate' incompatible avec soumission");
+		if (StringUtils.isBlank(config.state.code) || !config.state.code.equalsIgnoreCase("uservalidate")){
+			throw new SraException("config.state.code != 'uservalidate' incompatible avec soumission");
 		}
 		if (config.strategyStudy.equalsIgnoreCase("strategy_internal_study")) {
 			if (StringUtils.isBlank(studyCode)) {
@@ -307,7 +307,7 @@ public class SubmissionServices {
 		contextValidation.setCreationMode();
 		
 		for (Sample sampleElt: listSamples) {
-			//sampleElt.state = new State("inWaiting", user);
+			//sampleElt.state = new State("inwaiting", user);
 			if (!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, "code", sampleElt.code)){	
 				sampleElt.validate(contextValidation);
 				MongoDBDAO.save(InstanceConstants.SRA_SAMPLE_COLL_NAME, sampleElt);
@@ -331,7 +331,7 @@ public class SubmissionServices {
 		}	
 		
 		for (Experiment expElt: listExperiments) {
-			//expElt.state = new State("inWaiting", user);
+			//expElt.state = new State("inwaiting", user);
 			expElt.validate(contextValidation);
 			if (!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, "code", expElt.code)){	
 				MongoDBDAO.save(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, expElt);
@@ -447,10 +447,10 @@ public class SubmissionServices {
 			throw new SraException(" Dans activateSubmission pb IOException: " + e);		
 		}
 		
-		// mettre à jour objet soumission et experiment et sample avec state ="inWaiting" :		
-		if (submission.state.code.equalsIgnoreCase("userValidate")) {
+		// mettre à jour objet soumission et experiment et sample avec state ="inwaiting" :		
+		if (submission.state.code.equalsIgnoreCase("uservalidate")) {
 			
-			// mettre à jour le champs submission.studyCode si besoin, si study à soumettre, si study avec state=userValidate
+			// mettre à jour le champs submission.studyCode si besoin, si study à soumettre, si study avec state=uservalidate
 			if (submission.config.strategyStudy.equalsIgnoreCase("strategy_external_study")){
 				// le status des study n'est pas à modifié et rien à soumettre
 			} else {
@@ -459,8 +459,8 @@ public class SubmissionServices {
 				}
 				for (String studyCode: submission.refStudyCodes) {
 					Study study =  MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, submission.studyCode);
-					if (study.state.code.equalsIgnoreCase("userValidate")){
-						study.state.code = "inWaiting";
+					if (study.state.code.equalsIgnoreCase("uservalidate")){
+						study.state.code = "inwaiting";
 						// mettre a jour la liste des studies a soumettre dans objet submission :
 						submission.studyCode = studyCode;
 						// mettre a jour dans base l'objet study à soumettre avec bon state
@@ -477,15 +477,15 @@ public class SubmissionServices {
 			} else {
 				for (String sampleCode: submission.refSampleCodes) {
 					Sample sample = MongoDBDAO.findByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, sampleCode);
-					if ( sample.state.code.equalsIgnoreCase("userValidate") ) {
-						sample.state.code = "inWaiting";
+					if ( sample.state.code.equalsIgnoreCase("uservalidate") ) {
+						sample.state.code = "inwaiting";
 						// mettre a jour la liste des samples a soumettre dans objet submission :
 						if (! submission.sampleCodes.contains(sampleCode)){
 							submission.sampleCodes.add(sampleCode);
 						}
 						MongoDBDAO.update(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class,
 								DBQuery.is("code", sampleCode).notExists("accession"),
-								DBUpdate.set("state.code", "inWaiting").set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 			
+								DBUpdate.set("state.code", "inwaiting").set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 			
 					
 					}
 				}
@@ -493,17 +493,17 @@ public class SubmissionServices {
 			// mettre à jour les experiment pour le state :
 			for (String experimentCode: submission.experimentCodes) {
 				Experiment expElt =  MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
-				if ( expElt.state.code.equalsIgnoreCase("userValidate") ) {
-					expElt.state.code = "inWaiting";
+				if ( expElt.state.code.equalsIgnoreCase("uservalidate") ) {
+					expElt.state.code = "inwaiting";
 					MongoDBDAO.update(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class,
 							DBQuery.is("code", experimentCode).notExists("accession"),
-							DBUpdate.set("state.code", "inWaiting").set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 
+							DBUpdate.set("state.code", "inwaiting").set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 
 				}
 			}
 			// mettre à jour la soumission pour le state :
 			MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class,
 					DBQuery.is("code", submission.code).notExists("accession"),
-					DBUpdate.set("state.code", "inWaiting").set("studyCode", submission.studyCode).set("sampleCodes", submission.sampleCodes).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 
+					DBUpdate.set("state.code", "inwaiting").set("studyCode", submission.studyCode).set("sampleCodes", submission.sampleCodes).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 
 
 		}
 	}
@@ -570,12 +570,12 @@ public class SubmissionServices {
 				throw new SraException("study " + study.code + " n'existe pas dans database");
 			} 
 			if (study.state == null) {
-				throw new SraException("study.state== null incompatible avec soumission. =>  study.state.code in ('userValidate', 'inWaiting', 'submitted')");
+				throw new SraException("study.state== null incompatible avec soumission. =>  study.state.code in ('uservalidate', 'inWaiting', 'submitted')");
 			}
 			if (study.state.code.equalsIgnoreCase("new")){
 			// declencher exception, la soumission ne peut se faire sans un study validé par user ou
 			// study deja en cours de soumission voir soumis.
-				throw new SraException("study.state.code='new' incompatible avec soumission. =>  study.state.code in ('userValidate', 'inWaiting', 'submitted')");
+				throw new SraException("study.state.code='new' incompatible avec soumission. =>  study.state.code in ('uservalidate', 'inwaiting', 'submitted')");
 			}
 			// mettre à jour l'objet submission pour le study et la release_date :
 			submission.refStudyCodes.add(study.code);
@@ -999,7 +999,7 @@ public class SubmissionServices {
 							System.out.println(sampleCode + " utilise par objet Submission " + sub.code);
 						}
 					} else {
-						// todo : verifier qu'on ne detruit que des samples en new ou userValidate
+						// todo : verifier qu'on ne detruit que des samples en new ou uservalidate
 						System.out.println("deletion dans base pour sample "+sampleCode);
 						MongoDBDAO.deleteByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, models.sra.submit.common.instance.Sample.class, sampleCode);		
 					}
@@ -1014,7 +1014,7 @@ public class SubmissionServices {
 							System.out.println(experimentCode + " utilise par objet Submission " + sub.code);
 						}
 					} else {
-						// todo : verifier qu'on ne detruit que des experiments en new ou userValidate
+						// todo : verifier qu'on ne detruit que des experiments en new ou uservalidate
 						System.out.println("deletion dans base pour experiment "+experimentCode);
 						MongoDBDAO.deleteByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, experimentCode);
 					}

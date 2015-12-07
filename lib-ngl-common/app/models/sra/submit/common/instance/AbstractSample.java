@@ -20,9 +20,8 @@ public abstract class AbstractSample extends DBObject implements IValidation {
 
 	public String accession;       // numeros d'accession attribué par ebi 
 	public State state; //= new State();// Reference sur "models.laboratory.common.instance.state" 
-	 // pour gerer les differents etats de l'objet.
-	 // Les etapes utilisateurs = (new, inWaitingConfiguration,) inProgressConfiguration, finishConfiguration, 
-	 // Les etapes automatisables via birds : inWaitingSubmission, inProgressSubmission, finishSubmission, submit
+	 // pour gerer les differents etats de l'objet.(new, inwaiting, inprogress, submitted)
+
 	public TraceInformation traceInformation = new TraceInformation();
 	
 	public AbstractSample() {

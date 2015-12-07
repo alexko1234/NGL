@@ -48,8 +48,7 @@ public class Experiment extends DBObject implements IValidation {
 	public Run run = null; // le run est rattache à l'experiment
 	public State state = new State(); // Reference sur "models.laboratory.common.instance.state" 
 							 // pour gerer les differents etats de l'objet.
-							 // Les etapes utilisateurs = (new, inWaitingConfiguration,) inProgressConfiguration, finishConfiguration, 
-							 // Les etapes automatisables via birds : inWaitingSubmission, inProgressSubmission, finishSubmission, submit
+							
 	public TraceInformation traceInformation= new TraceInformation();// .Reference sur "models.laboratory.common.instance.TraceInformation" 
 		// pour loguer les dernieres modifications utilisateurs
 

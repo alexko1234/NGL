@@ -45,7 +45,8 @@ angular.module('home').controller('ConsultationCtrl',[ '$http', '$scope', '$rout
 		} else {
 			console.log("Cancel datatable");
 			$scope.consultationService.cancel();
-		}	
+		}
+			
 	};
 
 }]);

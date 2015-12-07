@@ -44,6 +44,8 @@ public class Variables extends CommonController{
 			return ok(Json.toJson(toListObjects(VariableSRA.mapInstrumentModel)));
 		} else if (name.equalsIgnoreCase("analysisFileType")){
 			return ok(Json.toJson(toListObjects(VariableSRA.mapAnalysisFileType)));
+		} else if (name.equalsIgnoreCase("status")){
+			return ok(Json.toJson(toListObjects(VariableSRA.mapStatus)));
 		} else {
 			return badRequest("champs inexistant");
 		}

@@ -54,7 +54,7 @@ public class FileAcServicesTest  extends AbstractTestsSRA {
 	
 	public static void createDataSetForFileAcServices()throws SraException {
 		// Creation d'une soumission complete en attente des numeros d'accession :
-		String status = "inProgress"; // a changer pour waitingAc ?
+		String status = "inprogress"; // a changer pour waitingAc ?
 		
 		String studyCode = "test_AC_study_AWK";
 		String configCode = "test_AC_conf_AWK";

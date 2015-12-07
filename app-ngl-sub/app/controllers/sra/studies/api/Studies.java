@@ -47,7 +47,7 @@ public class Studies extends DocumentController<Study>{
 			if (userStudy._id == null) {
 				userStudy.traceInformation = new TraceInformation(); 
 				userStudy.traceInformation.setTraceInformation(getCurrentUser());
-				userStudy.state = new State("userValidate", getCurrentUser());
+				userStudy.state = new State("uservalidate", getCurrentUser());
 				userStudy.centerName=VariableSRA.centerName;
 				userStudy.centerProjectName = userStudy.projectCode;
 				userStudy.code = SraCodeHelper.getInstance().generateStudyCode(userStudy.projectCode);	

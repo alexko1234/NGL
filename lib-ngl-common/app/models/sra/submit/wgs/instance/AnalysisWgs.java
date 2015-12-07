@@ -35,9 +35,7 @@ public class AnalysisWgs extends DBObject implements IValidation {
 		
 		public State state = new State("New", null); // Reference sur "models.laboratory.common.instance.state"
 		 	// pour gerer les differents etats de l'objet.
-		 	// Les etapes utilisateurs = (new, inWaitingConfiguration,) inProgressConfiguration, finishConfiguration, 
-		 	// Les etapes automatisables via birds : inWaitingSubmission, inProgressSubmission, finishSubmission, submit
-
+		 
 		public TraceInformation traceInformation = new TraceInformation();// .Reference sur "models.laboratory.common.instance.TraceInformation" 
 			// pour loguer les dernieres modifications utilisateurs	
 		@Override

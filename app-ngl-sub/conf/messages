@@ -79,6 +79,8 @@ submissions.state=Etat
 userFileExperiments=userFileExperiments :
 userFileCloneToAc= * userFileCloneToAc :
 
+consultation.placeholder.state= Choisir l'état de la soumission
+
 #RUN
 
 run.experiment.code=Code experiment

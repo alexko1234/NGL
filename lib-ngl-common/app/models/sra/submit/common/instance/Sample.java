@@ -25,8 +25,7 @@ public class Sample extends AbstractSample {
 	public Date releaseDate;       // required, date de mise à disposition en public par l'EBI
 	//public State state; //= new State();// Reference sur "models.laboratory.common.instance.state" 
 	 // pour gerer les differents etats de l'objet.
-	 // Les etapes utilisateurs = (new, inWaitingConfiguration,) inProgressConfiguration, finishConfiguration, 
-	 // Les etapes automatisables via birds : inWaitingSubmission, inProgressSubmission, finishSubmission, submit
+
 	//public TraceInformation traceInformation = new TraceInformation(); champs mis dans AbstractSample
 
 	public Sample() {

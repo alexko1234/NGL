@@ -185,7 +185,7 @@
 
 			// methode appelee pour remplir le tableau des soumissions 
 			search : function(){
-				this.datatable.search({projCode:this.form.projCode, state:'userValidate'});
+				this.datatable.search({projCode:this.form.projCode, state:'uservalidate'});
 			},
 			cancel : function(){
 				this.datatable.setData([],0);
@@ -235,25 +235,45 @@
 	
 	var isInit = false;
 	
-	var initListService = function(){
+	var initListService = function(){	
 		if(!isInit){
 			consultationService.lists.refresh.projects();
+			$http.get(jsRoutes.controllers.sra.api.Variables.get('status').url)
+			.success(function(data) {
+			// initialisation de la variable consultationService.sraVariables.state utilisée dans consultation.scala.html
+			consultationService.sraVariables.state = data;	
+			console.log("state " + data);																					
+			});			
 			isInit=true;
 		}
 	};
 	
-		
+	
+
+			
 	var consultationService = {
 			isRouteParam : false,
 			lists : lists,
+			sraVariables : {},
 			form : undefined,
 			datatable : undefined,
+			
 			
 			// methode appelee pour remplir le tableau des submissions
 			// Recherche toutes les submissions pour projCode indiqué :
 			search : function(){
-				this.datatable.search({projCode:this.form.projCode});
-				console.log("consultationService: " + this.form);
+				console.log("consultationService:projCode " + this.form.projCode);	
+				console.log("consultationService:state !!!!!'" + this.form.state+"'");
+				//console.log("consultationService:state " + sraVariables.state);	
+				
+				//if(this.form.projCode!==null && this.form.projCode !== undefined){
+					
+				console.log("consultationService:state " + this.form.state);
+				if (this.form.state!==null && this.form.state !== undefined){
+					this.datatable.search({projCode:this.form.projCode, state : this.form.state});
+				} else {
+					this.datatable.search({projCode:this.form.projCode});
+				}
 			},
 			
 			cancel : function(){
@@ -333,7 +353,7 @@
 			
 			// methode appelee pour remplir le tableau des soumissions 
 			search : function(){
-				this.datatable.search({projCode:this.form.projCode, state:'userValidate'});
+				this.datatable.search({projCode:this.form.projCode, state:'uservalidate'});
 			},
 			cancel : function(){
 				this.datatable.setData([],0);

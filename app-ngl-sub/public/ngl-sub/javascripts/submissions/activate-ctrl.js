@@ -7,7 +7,7 @@ angular.module('home').controller('ActivateCtrl',[ '$http', '$scope', '$routePar
 			pagination:{mode:'local'},			
 			order :{mode:'local', by:'code', reverse : true},
 			search:{
-				//url:jsRoutes.controllers.sra.submissions.api.Submissions.list().url+'?state=userValidate'
+				//url:jsRoutes.controllers.sra.submissions.api.Submissions.list().url+'?state=uservalidate'
 				url:jsRoutes.controllers.sra.submissions.api.Submissions.list()
 			},
 			otherButtons:{
@@ -82,7 +82,7 @@ angular.module('home').controller('ActivateCtrl',[ '$http', '$scope', '$routePar
 	  
 		for(var i = 0; i < tab_submissions.length ; i++){
 			console.log("submissionCode = " + tab_submissions[i].code + " state = "+ tab_submissions[i].state.code);
-			// met à jour dans la base les objets qui doivent etres soumis à l'EBI avec status "inWaiting".
+			// met à jour dans la base les objets qui doivent etres soumis à l'EBI avec status "inwaiting".
 			$http.put(jsRoutes.controllers.sra.submissions.api.Submissions.activate(tab_submissions[i].code).url, tab_submissions[i])
 			.success(function(data){
 		   		decompte = processInSubmission(decompte, error);

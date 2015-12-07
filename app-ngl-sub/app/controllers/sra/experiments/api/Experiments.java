@@ -54,7 +54,7 @@ public class Experiments extends DocumentController<Experiment> {
 			ctxVal.getContextObjects().put("type", "sra");
 			userExperiment.traceInformation.setTraceInformation(getCurrentUser());
 			
-			//userExperiment.state = new State("userValidate", getCurrentUser());
+			//userExperiment.state = new State("uservalidate", getCurrentUser());
 			userExperiment.validate(ctxVal);
 			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!updateExperiment: " +userExperiment.code );
 			System.out.println("experiment.state: " +userExperiment.state.code );

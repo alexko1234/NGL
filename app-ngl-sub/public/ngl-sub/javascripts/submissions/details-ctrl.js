@@ -486,7 +486,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 	init();
 
 	function closeSubmission(){
-	   	$scope.submission.state.code = "userValidate";		
+	   	$scope.submission.state.code = "uservalidate";		
 		$http.put(jsRoutes.controllers.sra.submissions.api.Submissions.update($scope.submission.code).url, $scope.submission)
  				.success(function(data) {
 					//Set success message
@@ -540,7 +540,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 		// Mise à jour du status  des samples :
 		for(var i = 0; i < tab_samples.length ; i++){
 			console.log("sampleCode = " + tab_samples[i].code + " state = "+ tab_samples[i].state.code);
-			tab_samples[i].state.code = "userValidate";
+			tab_samples[i].state.code = "uservalidate";
 			console.log("sampleCode = " + tab_samples[i].code + " state = "+ tab_samples[i].state.code);
 			// sauvegarde dans database asynchrone
 			$http.put(jsRoutes.controllers.sra.samples.api.Samples.update(tab_samples[i].code).url, tab_samples[i])
@@ -566,7 +566,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 		// Mise à jour du statut des experiments :
 		for(var i = 0; i < tab_experiments.length ; i++){
 			console.log("experimentCode = " + tab_experiments[i].code + " state = "+ tab_experiments[i].state.code);
-			tab_experiments[i].state.code = "userValidate";
+			tab_experiments[i].state.code = "uservalidate";
 			console.log("experimentCode = " + tab_experiments[i].code + " state = "+ tab_experiments[i].state.code);
 			// sauvegarde dans database :
 			$http.put(jsRoutes.controllers.sra.experiments.api.Experiments.update(tab_experiments[i].code).url, tab_experiments[i]).success(function(data){
@@ -587,7 +587,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 		// sauvegarde cote client des experiments avec bon statut :
 		$scope.experimentDT.save(); // fait le save cote client mais n'utilise pas url et ne fait pas save dans database.
 		
-		//mise a jour l'etat de submission a userValidate realise dans closeSubmission appelé par processInSubmission
+		//mise a jour l'etat de submission a uservalidate realise dans closeSubmission appelé par processInSubmission
 	
 	};
 	

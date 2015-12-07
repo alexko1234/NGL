@@ -45,10 +45,11 @@ public interface VariableSRA {
 			put("strategy_internal_study", "strategy_internal_study"); 
 		}
 	};	
+	
 	static final Map<String, String> mapStatus = new HashMap<String, String>() {
-		{
+		{  
 			put("new", "new"); 
-			put("uservalidate", "userValidate");
+			put("uservalidate", "userValidate"); // value_database, label.
 			put("inwaiting", "inWaiting"); 
 			put("inprogress", "inProgress");
 			put("submitted", "submitted");
@@ -65,7 +66,7 @@ public interface VariableSRA {
 	
 	static final Map<String, String> mapExistingStudyType = new HashMap<String, String>() {
 		{
-			put("whole genome sequencing", "Whole Genome Sequencing"); 
+			put("whole genome sequencing", "Whole Genome Sequencing"); // value_database, label=value_ebi.
 			put("metagenomics", "Metagenomics");
 			put("transcriptome analysis", "Transcriptome Analysis");
 			put("epigenetics","Epigenetics");
@@ -236,7 +237,10 @@ public interface VariableSRA {
 			put("other", "other"); 			
 		}
 	};
-		
-}
+	
+
+	
+	
+};
 
 
