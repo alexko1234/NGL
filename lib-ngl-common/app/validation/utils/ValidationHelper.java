@@ -430,7 +430,7 @@ public class ValidationHelper {
 			Map<String, Object> map = (Map<String, Object>) propertyValue.value;
 			Object value = map.get(codes[1]);
 			
-			if(!valueClass.isInstance(value)){ //transform only if not the good type
+			if(!valueClass.isInstance(value) && value!=null){ //transform only if not the good type
 				value = convertValue(valueClass, value.toString(), null);
 			}	
 			map.put(codes[1], value);			
@@ -784,5 +784,26 @@ public class ValidationHelper {
 		}
 	}
 
+	
+	/**
+	 * Check if property value type is the same as property definition type 
+	 * @param contextValidation
+	 * @param propertyValue
+	 * @param propertyDefinitions
+	 * @return
+	 */
+	public static boolean checkType(ContextValidation contextValidation, PropertyValue propertyValue, Collection<PropertyDefinition> propertyDefinitions)
+	{
+		boolean isSame = true;
+		for(PropertyDefinition propDef : propertyDefinitions){
+			if(!propertyValue._type.equals(propDef.propertyValueType)){
+				Logger.error("Error property "+propDef.code+" : "+propertyValue.value+" expected "+propDef.propertyValueType+ " found "+propertyValue._type);
+				//TODO à activer si la prod se passe bien
+				//contextValidation.addErrors(propDef.code, ERROR_PROPERTY_TYPE, propertyValue.value, propDef.propertyValueType,propertyValue._type);
+				isSame=false;
+			}
+		}
+		return isSame;
+	}
 	
 }

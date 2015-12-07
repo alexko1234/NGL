@@ -18,6 +18,7 @@ import com.google.common.io.Files;
  */
 public class PropertyFileValue extends PropertyByteValue{
 	
+	
 	public PropertyFileValue() {
 		super();
 	}

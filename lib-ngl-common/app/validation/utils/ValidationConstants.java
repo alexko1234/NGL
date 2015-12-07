@@ -22,6 +22,8 @@ public interface ValidationConstants {
 	
 	public static final String ERROR_REQUIRED_MSG = "error.required";
 	
+	public static final String ERROR_PROPERTY_TYPE = "error.propertytype";
+	
 	public static final String ERROR_VALUENOTAUTHORIZED_MSG = "error.valuenotauthorized";
 	
 	public static final String ERROR_BADSIZEARRAY = "error.badsizearray";

@@ -16,6 +16,7 @@ error.badtype = Mauvais type : {0} / {1}
 error.notactive = Propriété non active 
 error.notdefined = Propriété non définie
 error.required = Propriété obligatoire
+error.propertytype = Mauvais type de propriété : {0}. Type attendu {1} / Type trouvé {2}
 error.codenotunique = Le code {0} n''est pas unique.
 error.notunique = la valeur {0} de la propriété {1} n''est pas unique.
 error.codeNotFound= L''objet {0} de type {1} n''a pas été trouvé

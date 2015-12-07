@@ -33,7 +33,7 @@ public class SampleSheetsFactoryHelper {
 		}
 		if(instrument != null){
 			if(Play.application().configuration().getString("ngl.path.instrument") != null){
-				return Play.application().configuration().getString("ngl.path.instrument")+instrument.path+File.separator+"SampleSheet"+File.separator;
+				return Play.application().configuration().getString("ngl.path.instrument")+File.separator;
 			}else{
 				return instrument.path+File.separator+"SampleSheet"+File.separator;
 			}

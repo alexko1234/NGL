@@ -16,6 +16,7 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.common.instance.property.PropertyObjectListValue;
+import models.laboratory.common.instance.property.PropertyObjectValue;
 import models.laboratory.common.instance.property.PropertyListValue;
 import fr.cea.ig.MongoDBDAO;
 import play.Logger;

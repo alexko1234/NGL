@@ -16,6 +16,7 @@ import validation.utils.ValidationHelper;
  */
 public class PropertyImgValue extends PropertyFileValue {
 
+	
 	public PropertyImgValue() {
 		super();
 	}

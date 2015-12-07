@@ -37,6 +37,7 @@ public class PropertyObjectListValue extends PropertyValue<List<Map<String, ?>>>
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
+		super.validate(contextValidation);
 		Iterator<PropertyDefinition> propertyDefinitions = ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).iterator();
 		while(propertyDefinitions.hasNext()){
 			PropertyDefinition propertyDefinition = propertyDefinitions.next();

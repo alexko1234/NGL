@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import models.laboratory.common.description.PropertyDefinition;
-
+import models.laboratory.common.instance.PropertyValue;
 import validation.ContextValidation;
 import validation.utils.ValidationHelper;
 
@@ -14,7 +14,7 @@ import validation.utils.ValidationHelper;
  * used to stock a complex object
  * an object is stock in Map with key = property and value = value of property
  */
-public class PropertyObjectValue extends PropertyMapValue{
+public class PropertyObjectValue extends PropertyValue<Map<String,?>>{
 	
 	public PropertyObjectValue() {
 		super();		
@@ -39,6 +39,7 @@ public class PropertyObjectValue extends PropertyMapValue{
 	@SuppressWarnings("unchecked")
 	@Override
 	public void validate(ContextValidation contextValidation) {
+		super.validate(contextValidation);
 		Iterator<PropertyDefinition> propertyDefinitions = ((Collection<PropertyDefinition>)contextValidation.getObject("propertyDefinitions")).iterator();
 		while(propertyDefinitions.hasNext()){
 			PropertyDefinition propertyDefinition = propertyDefinitions.next();

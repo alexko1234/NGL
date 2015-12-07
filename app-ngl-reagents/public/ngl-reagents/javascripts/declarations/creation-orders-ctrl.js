@@ -8,7 +8,6 @@
 						 "header":Messages("reagents.table.catalogCode"),
 						 "property":"catalogCode",
 						 "order":true,
-						 "type":"text",
 						 "filter":"codes:'boxCatalogs'"
 					},
 					{
@@ -165,7 +164,7 @@
 				},
 				 edit:{
 		        	 active:true,
-		        	 columnMode:true,
+		        	 columnMode:true, // Mode bandeau du haut
 		        	 showButton : true,
 		        	 byDefault : false
 		         },
@@ -226,7 +225,21 @@
 				});
 			}
 	};
-	 
+	
+	$scope.getName = function(){
+		 if($scope.kit.code === undefined){
+			 return Messages("declarations.kit.creation");
+		 }
+		 var code = $scope.kit.code;
+			 if(code !== undefined){
+			 if(code.length > 30){
+				 code = code.substring(0,30)+"...";
+			 }
+			 
+			 return code;
+		 }
+	     return "";
+	 };
 	 
 	 $scope.newBox = function(){
 		 $scope.boxes.push({"category":"Box", "receptionDate":moment(new Date()).valueOf(), "state":{code:"N"}});
