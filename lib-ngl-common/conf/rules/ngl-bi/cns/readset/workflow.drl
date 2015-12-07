@@ -80,3 +80,30 @@ rule "Synchro readset old lims F_AUA : valuationReadSet"
 		Spring.getBeanOfType(ILimsRunServices.class).valuationReadSet($readset, false);
 			
 end
+
+rule "Calculate 2DPass.readsPercent for ngsrg-nanopore"
+	@nglBI( F_RG_1 )
+	dialect "java"
+	salience 600
+	no-loop
+	when
+		$readset : ReadSet($treatment : treatments["ngsrg"], $treatment!=null, $treatment.typeCode == "ngsrg-nanopore")
+		$mapValue : Map() from $treatment.results.values()
+		$2DPass : Entry(key=="2DPass") from $mapValue.entrySet()
+		$1DForward : Entry(key=="1DForward") from $mapValue.entrySet()
+	then
+		Logger.debug("Calculate 2DPass.readsPercent");
+		PropertyObjectValue propertyValueTwoD = (PropertyObjectValue)$2DPass.getValue();
+		Map mapPropertyValueTwoD = propertyValueTwoD.getValue();
+		Long twoDPassNbReads = (Long)mapPropertyValueTwoD.get("nbReads");
+		
+		Long oneDForwardNbReads = (Long)((Map)((PropertyValue)$1DForward.getValue()).getValue()).get("nbReads");
+		
+		Double twoDPassReadsPercent = roundValue((double)twoDPassNbReads/oneDForwardNbReads*100);
+		
+		mapPropertyValueTwoD.put("readsPercent", twoDPassReadsPercent);
+		MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+						DBQuery.is("code", $readset.code),
+						DBUpdate.set("treatments.ngsrg.default.2DPass", propertyValueTwoD));
+		
+end

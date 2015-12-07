@@ -252,7 +252,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Vitesse de séquençage des pores (MAX)","poreSpeedDistribMax", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Vitesse de séquençage des pores (MOYENNE)","poreSpeedDistribAvg", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
 		
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Distribution Score Qualité","poreQualityDistrib", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
+		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Distribution Score Qualité","poreQualityDistrib", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Image.class, true, "img"));
 		
 		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Score Qualité (MIN)","poreQualityMin", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
 		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Score Qualité (MAX)","poreQualityMax", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, true, "single"));
