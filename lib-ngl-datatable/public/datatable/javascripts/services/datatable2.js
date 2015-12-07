@@ -2256,7 +2256,7 @@ angular.module('datatableServices', []).
   		    		+'</tr>'
   		    		+'</thead>'
   		    		+'<tbody>'
-  		    		+	'<tr ng-if="dtTable.isEdit()">'
+  		    		+	'<tr ng-if="dtTable.isEdit()" class="editParent">'
   		    		+		'<td ng-repeat="col in dtTable.config.columns" ng-if="!dtTable.isHide(col.id)">'
   		    		+			'<div dt-cell-header/>'
   		    		+		'</td>'
