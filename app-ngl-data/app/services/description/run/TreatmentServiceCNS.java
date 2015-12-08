@@ -83,6 +83,11 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 				//getTreatmentTypeContexts("pairs", "default"), 
 				DescriptionFactory.getInstitutes( Institute.CODE.CNS), "90"));
 		
+		l.add(DescriptionFactory.newTreatmentType("Mapping Nanopore ","mapping-nanopore", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "mapping", 
+				getMappingNanoporePropertyDefinitions(), 
+				getTreatmentTypeContexts("default"), 
+				DescriptionFactory.getInstitutes( Institute.CODE.CNS), "90"));
+		
 		l.add(DescriptionFactory.newTreatmentType("Trimming","trimming", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "trimmingStd,trimmingVector", 
 				getTrimmingPropertyDefinitions(), 
 				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE), 
@@ -520,6 +525,62 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Errors position in reads","errorPosition",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1, Level.CODE.Read2), Image.class, false, "img"));	
 		
 		return propertyDefinitions;		
+	}
+	
+	public static List<PropertyDefinition> getMappingNanoporePropertyDefinitions() throws DAOException
+	{
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb paires de bases alignées 1D forward","1DForward.nbAlignedBasePairs",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées 1D forward","1DForward.nbAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées sur 100% de leur longueur 1D forward","1DForward.nbAlignedReadsL100",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées avec 100% d'identité 1D forward","1DForward.nbAlignedReadsID100",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées sur 100% de leur longueur et avec 100% d'identité 1D forward","1DForward.nbAlignedReadsL100ID100",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Moyenne du % d'identité des séquences 1D forward","1DForward.identityPercentageAvg",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille max d'alignement des séquences 1D forward","1DForward.readAlignementSizeMax",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb loci 1D forward","1DForward.nbLoci",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Couverture (1D forward) par rapport à la référence","1DForward.referenceCoverage",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb paires de bases alignées 1D reverse","1DReverse.nbAlignedBasePairs",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées 1D reverse","1DReverse.nbAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées sur 100% de leur longueur 1D reverse","1DReverse.nbAlignedReadsL100",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées avec 100% d'identité 1D reverse","1DReverse.nbAlignedReadsID100",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées sur 100% de leur longueur et avec 100% d'identité 1D reverse","1DReverse.nbAlignedReadsL100ID100",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Moyenne du % d'identité des séquences 1D reverse","1DReverse.identityPercentageAvg",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille max d'alignement des séquences 1D reverse","1DReverse.readAlignementSizeMax",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb loci 1D reverse","1DReverse.nbLoci",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Couverture (1D reverse) par rapport à la référence","1DReverse.referenceCoverage",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb paires de bases alignées 2D all","2DAll.nbAlignedBasePairs",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées 2D all","2DAll.nbAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées sur 100% de leur longueur 2D all","2DAll.nbAlignedReadsL100",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées avec 100% d'identité 2D all","2DAll.nbAlignedReadsID100",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées sur 100% de leur longueur et avec 100% d'identité 2D all","2DAll.nbAlignedReadsL100ID100",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Moyenne du % d'identité des séquences 2D all","2DAll.identityPercentageAvg",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille max d'alignement des séquences 2D all","2DAll.readAlignementSizeMax",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb loci 2D all","2DAll.nbLoci",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Couverture (2D all) par rapport à la référence","2DAll.referenceCoverage",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb paires de bases alignées 2D fail","2DFail.nbAlignedBasePairs",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées 2D fail","2DFail.nbAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées sur 100% de leur longueur 2D fail","2DFail.nbAlignedReadsL100",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées avec 100% d'identité 2D fail","2DFail.nbAlignedReadsID100",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées sur 100% de leur longueur et avec 100% d'identité 2D fail","2DFail.nbAlignedReadsL100ID100",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Moyenne du % d'identité des séquences 2D fail","2DFail.identityPercentageAvg",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille max d'alignement des séquences 2D fail","2DFail.readAlignementSizeMax",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb loci 2D fail","2DFail.nbLoci",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Couverture (2D fail) par rapport à la référence","2DFail.referenceCoverage",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb paires de bases alignées 2D pass","2DPass.nbAlignedBasePairs",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées 2D pass","2DPass.nbAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées sur 100% de leur longueur 2D pass","2DPass.nbAlignedReadsL100",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées avec 100% d'identité 2D pass","2DPass.nbAlignedReadsID100",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées sur 100% de leur longueur et avec 100% d'identité 2D pass","2DPass.nbAlignedReadsL100ID100",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Moyenne du % d'identité des séquences 2D pass","2DPass.identityPercentageAvg",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille max d'alignement des séquences 2D pass","2DPass.readAlignementSizeMax",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb loci 2D pass","2DPass.nbLoci",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, true, "object"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Couverture (2D pass) par rapport à la référence","2DPass.referenceCoverage",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true, "object"));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% identité (read) vs quality (read)","identityPercentVsReadQuality",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Image.class, true, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% identité (read) vs longueur alignée (read)","identityPercentVsReadAlignedLength",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Image.class, false, "img"));
+				
+		return propertyDefinitions;	
 	}
 	
 	public static List<PropertyDefinition> getMergingPropertyDefinitions() throws DAOException{
