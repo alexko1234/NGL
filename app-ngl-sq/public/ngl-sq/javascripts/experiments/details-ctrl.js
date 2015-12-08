@@ -9,6 +9,19 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		return creationMode;
 	};
 	
+	$scope.getNbAvailableAdditionnalButtons = function(){
+		var nbButtons = 0;
+		for(var i = 0; i < additionnalButtons.length; i++){
+			if(additionnalButtons[i].isShow()){
+				nbButtons++;
+			}
+		}
+		
+		return nbButtons;
+	};
+	$scope.getAdditionnalButtons = function(){
+		return additionnalButtons;
+	};
 	/* move to a directive */
 	$scope.setImage = function(imageData, imageName, imageFullSizeWidth, imageFullSizeHeight) {
 		$scope.modalImage = imageData;
@@ -329,8 +342,10 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	
 	var creationMode = false;
 	var saveInProgress = false;
+	var additionnalButtons = [];
 	
 	var init = function(){
+		
 		$scope.messages = messages();
 		$scope.lists = lists;
 		$scope.mainService = mainService;

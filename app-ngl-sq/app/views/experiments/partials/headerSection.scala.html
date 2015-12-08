@@ -3,6 +3,21 @@
 	<div class="col-md-12 col-lg-12">
 		<div class="page-header">	
 			<div class="btn-toolbar pull-right">
+			
+				<div class="btn-group " id="experiment_action" ng-if="getNbAvailableAdditionnalButtons() > 1">
+					<a class="btn btn-default dropdown-toggle" data-toggle="dropdown"> @Messages("experiments.additionnalButtons") 
+						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu dropdown-menu-right">
+						<li ng-repeat="button in getAdditionnalButtons() track by $index">
+							<a href="#" ng-disabled="button.isDisabled()" ng-show="button.isShow()" ng-bind="button.label" ng-click="button.click()"></a>
+						</li>
+					</ul>
+				</div>
+				<button ng-if="getNbAvailableAdditionnalButtons() === 1" ng-repeat="button in getAdditionnalButtons() track by $index" class="btn btn-default" ng-show="button.isShow()"  ng-click="button.click()" ng-bind="button.label"></button>
+			 	
+			
+			
 			 	<button class="btn btn-primary" ng-disabled="isSaveInProgress()" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i></button>
 			 	
 			 	<div class="btn-group" ng-switch on="isEditMode()" ng-if="isEditModeAvailable()">

@@ -204,6 +204,7 @@ experiments.menu.transformation = Créer une Transformation
 experiments.menu.voidprocess = Créer un Voidprocess
 experiments.create = Créer une expérience
 experiments.save = Sauvegarder
+experiments.additionnalButtons = Actions
 experiments.save_all = Sauvegarder tout
 experiments.edit = Editer
 experiments.unedit = Désactiver l''édition
