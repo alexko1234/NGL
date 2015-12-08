@@ -126,7 +126,7 @@ public class Experiment extends DBObject implements IValidation {
 		
 		validateInputContainerSupport(inputContainerSupportCodes,getAllInputContainers(),contextValidation);
 		validateOutputContainerSupport(outputContainerSupportCodes,getAllOutputContainers(),contextValidation);
-		
+		validateComments(comments, contextValidation);
 		//TODO Validate projectCodes, sampleCodes
 		
 		validateRules(this,contextValidation);

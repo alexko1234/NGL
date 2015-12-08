@@ -222,6 +222,7 @@ experiment.button.addComment = Ajouter un commentaire
 experiment.comment.button.update = Mettre à jour
 experiment.comment.button.save = Envoyer
 experiment.comment.button.cancel = Annuler
+experiment.comment.button.add = Ajouter
 experiments.begin_progress = Démarrer la progression
 experiments.sampleSheet = Feuille de route
 experiments.button.finish  = Terminer

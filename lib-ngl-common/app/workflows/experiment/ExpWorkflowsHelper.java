@@ -2,6 +2,7 @@ package workflows.experiment;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -446,6 +447,24 @@ public class ExpWorkflowsHelper {
 				.collect(Collectors.toList());
 		}else{
 			return new ArrayList<Map.Entry<String, PropertyValue>>();
+		}
+		
+	}
+
+
+	public static void updateComments(Experiment exp, ContextValidation validation) {
+		if(null != exp.comments && exp.comments.size() > 0){
+			exp.comments.forEach(comment -> {
+				if(comment.createUser == null){
+					comment.createUser = validation.getUser();
+					comment.creationDate = new Date();
+				}else if(comment.creationDate == null){
+					comment.creationDate = new Date();
+				}
+				if(comment.code == null){
+					comment.code = CodeHelper.getInstance().generateExperimentCommentCode(comment);	
+				}
+			});
 		}
 		
 	}

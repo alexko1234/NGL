@@ -28,6 +28,7 @@ public class ExpWorkflows extends Workflows<Experiment>{
 				ExpWorkflowsHelper.updateAddContainersToExperiment(exp, validation);				
 			}			 						
 		}
+		ExpWorkflowsHelper.updateComments(exp, validation);
 	}
 
 	public void applyPreStateRules(ContextValidation validation, Experiment exp, State nextState) {

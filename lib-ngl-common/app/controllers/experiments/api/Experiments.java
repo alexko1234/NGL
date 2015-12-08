@@ -256,10 +256,9 @@ public class Experiments extends DocumentController<Experiment>{
 			ctxVal.setUpdateMode();
 			
 			ExperimentHelper.doCalculations(input, calculationsRules);
-			
+			workflows.applyCurrentStateRules(ctxVal, input);
 			input.validate(ctxVal);			
-			if (!ctxVal.hasErrors()) {
-				workflows.applyCurrentStateRules(ctxVal, input);					
+			if (!ctxVal.hasErrors()) {									
 				updateObject(input);	
 				return ok(Json.toJson(input));
 			}else {

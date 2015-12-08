@@ -69,9 +69,8 @@ public class InstanceHelpers {
 			comments = new ArrayList<Comment>();
 		}
 
-		Comment newComment = new Comment(comment);
-		newComment.createUser = user;
-
+		Comment newComment = new Comment(comment, user);
+		
 		comments.add(newComment);
 		return comments;
 	}

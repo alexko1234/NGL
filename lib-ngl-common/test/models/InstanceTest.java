@@ -99,7 +99,7 @@ public class InstanceTest extends AbstractTests{
 
 		project.name="projectName";
 		project.comments=new ArrayList<Comment>();
-		project.comments.add(new Comment("comment"));
+		project.comments.add(new Comment("comment", "ngl-test"));
 		project.traceInformation=new TraceInformation();
 		project.traceInformation.setTraceInformation("test");
 		project.typeCode="projectType";
@@ -206,7 +206,7 @@ public class InstanceTest extends AbstractTests{
 		//public String fromPurifingCode;
 
 		container.comments=new ArrayList<Comment>();
-		container.comments.add(new Comment("comment"));
+		container.comments.add(new Comment("comment", "ngl-test"));
 		container.traceInformation.setTraceInformation("test"); 
 
 		MongoDBDAO.save(Container.class.getSimpleName(), container);
@@ -275,7 +275,7 @@ public class InstanceTest extends AbstractTests{
 
 
 		experiment.comments=new ArrayList<Comment>();
-		experiment.comments.add(new Comment("comment"));
+		experiment.comments.add(new Comment("comment", "ngl-test"));
 		experiment.traceInformation.setTraceInformation("test"); 
 
 		experiment.atomicTransfertMethods= new ArrayList<AtomicTransfertMethod>();

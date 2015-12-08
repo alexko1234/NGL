@@ -2,15 +2,16 @@ package models.laboratory.common.instance;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import models.utils.CodeHelper;
+
 
 import validation.ContextValidation;
 import validation.IValidation;
+import validation.utils.ValidationHelper;
 
 /**
  * Comment are embedded data in collection like Container, Experiment.... 
  * 
- * @author mhaquell
  *
  */
 public class Comment implements IValidation {
@@ -20,26 +21,24 @@ public class Comment implements IValidation {
 	public String createUser;
 	public Date creationDate;
 	
-	public Comment(String comment) {
-		setComment(comment);
+	public Comment(String comment, String user) {
+		this.createUser = user;
+		this.comment=comment;
+		this.creationDate = new Date();
+		this.code = CodeHelper.getInstance().generateExperimentCommentCode(this);		
 	}
 	
 	public Comment(){
 		
 	}
 	
-	public void setComment(String comment){
-		
-		if(creationDate==null) 
-			creationDate = new Date();
-		this.comment=comment;
-		
-	}
-
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
-
+		ValidationHelper.required(contextValidation, code, "code"); //TODO check if not exist on the same object
+		ValidationHelper.required(contextValidation, comment, "comment");
+		ValidationHelper.required(contextValidation, createUser, "createUser");
+		ValidationHelper.required(contextValidation, creationDate, "creationDate");
 	}
 	
 }

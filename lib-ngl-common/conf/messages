@@ -55,7 +55,7 @@ error.validationexp.inputContainer.contents.sizenotequals = "Le nombre de conten
 error.validationexp.inputContainer.percentage = "Le pourcentage de container en entrée doit être : 0 < x <= 100"
 error.validationexp.inputContainerSupportCodes = "La valeur de la liste n'est pas correcte"
 error.validationexp.outputContainerSupportCodes = "La valeur de la liste n'est pas correcte"
-
+error.validationexp.comments.null = "Le commentaire est null"
 
 #directive messages
 msg.details = [détails]

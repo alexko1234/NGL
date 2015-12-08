@@ -5,7 +5,7 @@
 		  <!-- Default panel contents -->
 		  <div class="panel-heading">@Messages("experiment.comments") ({{experiment.comments.length}})</div>		 
 			   <ul class="list-group">
-				   <li class="list-group-item" ng-repeat="com in experiment.comments">
+				   <li class="list-group-item" ng-repeat="com in experiment.comments track by $index">
 					   <div class="row">
 						   <div class="col-lg-1 col-md-1" style="text-align:center">
 						  		<div><i class="fa fa-user fa-4x"></i></div>						  		
@@ -16,8 +16,8 @@
 						    </div>
 						    <div class="col-lg-2 col-md-2" >
 						    <div class="btn-group-vertical pull-right">
-						    	<button class="btn btn-default" ng-show="com.createUser == '@currentUser'" data-toggle="modal" data-target="#myModal" ng-click="setCurrentComment(com)"><i class="fa fa-edit"></i></button>
-						   	 	<button class="btn btn-default" ng-show="com.createUser == '@currentUser'" ng-click="delete(com)"><i class="fa fa-trash-o"></i></button>						    	
+						    	<button class="btn btn-default" ng-show="com.createUser == '@currentUser' || isCreationMode()" data-toggle="modal" data-target="#myModal" ng-click="setUpdate(com, $index)"><i class="fa fa-edit"></i></button>
+						   	 	<button class="btn btn-default" ng-show="com.createUser == '@currentUser' || isCreationMode()" ng-click="remove(com, $index)"><i class="fa fa-trash-o"></i></button>						    	
 						    </div>
 						    </div>
 						    </div>					   
@@ -43,8 +43,8 @@
 	      </div>
 	      <div class="modal-footer">
 	        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">@Messages("experiment.comment.button.cancel")</button>
-			<button data-dismiss="modal" class="btn btn-primary" ng-if="currentComment.code == undefined"  ng-click="save();">@Messages("experiment.comment.button.save")</button>
-	      	<button data-dismiss="modal" class="btn btn-primary" ng-if="currentComment.code != undefined" ng-click="update();">@Messages("experiment.comment.button.update")</button>
+			<button data-dismiss="modal" class="btn btn-primary" ng-show="!isUpdate()"  ng-click="save();">@Messages("experiment.comment.button.save")</button>
+	      	<button data-dismiss="modal" class="btn btn-primary" ng-show="isUpdate()" ng-click="update();">@Messages("experiment.comment.button.update")</button>
 	      
 	      </div>
 	    </div><!-- /.modal-content -->

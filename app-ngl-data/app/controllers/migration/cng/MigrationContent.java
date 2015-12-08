@@ -96,7 +96,7 @@ public class MigrationContent extends CommonController {
 				if (rs.getString("comment") != null) {
 					container.comments=new ArrayList<Comment>();	
 					//just one comment for one lane (container)
-					container.comments.add(new Comment(rs.getString("comment")));
+					container.comments.add(new Comment(rs.getString("comment"), "ngl-test"));
 				}
 				
 				container.state = new State(); 

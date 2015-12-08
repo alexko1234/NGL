@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.ContainerSupport;
@@ -27,6 +28,7 @@ import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.protocol.instance.Protocol;
 import models.laboratory.reagent.instance.ReagentUsed;
 import models.utils.InstanceConstants;
+
 
 
 import org.mongojack.DBQuery;
@@ -217,6 +219,21 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 		
 	}
 
+	public static void validateComments(List<Comment> comments, ContextValidation contextValidation){
+		if(null != comments && comments.size() > 0){
+			for(int i=0;i<comments.size();i++){
+				String rootKeyName="comments"+"["+i+"]";
+				if(comments.get(i)!=null){
+					contextValidation.addKeyToRootKeyName(rootKeyName);
+					comments.get(i).validate(contextValidation);
+					contextValidation.removeKeyFromRootKeyName(rootKeyName);
+				}else{
+					contextValidation.addErrors(rootKeyName, "error.validationexp.comments.null");
+				}
+				
+			}
+		}
+	}
 	
 	@Deprecated
 	public static void validateNewState(Experiment experiment,

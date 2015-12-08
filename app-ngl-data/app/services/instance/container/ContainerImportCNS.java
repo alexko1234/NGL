@@ -222,7 +222,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		}
 
 		container.comments=new ArrayList<Comment>();				
-		container.comments.add(new Comment(rs.getString("comment")));
+		container.comments.add(new Comment(rs.getString("comment"), "ngl-test"));
 		
 		container.state = new State(); 
 		container.state.code=DataMappingCNS.getState(container.categoryCode,rs.getInt("etatLims"),experimentTypeCode);

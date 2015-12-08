@@ -5,6 +5,9 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	
 	console.log("call DetailsCtrl");
 	
+	$scope.isCreationMode=function(){
+		return creationMode;
+	};
 	
 	/* move to a directive */
 	$scope.setImage = function(imageData, imageName, imageFullSizeWidth, imageFullSizeHeight) {
@@ -88,8 +91,9 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			
 			mainService.put("experiment",$scope.experiment);
 			$scope.experiment = experiment;
-			
-			$http.put(jsRoutes.controllers.experiments.api.Experiments.updateState(experiment.code).url, {code:"IP"})
+			var state = $scope.experiment.state;
+			state.code = "IP";
+			$http.put(jsRoutes.controllers.experiments.api.Experiments.updateState(experiment.code).url, state)
 			.success(function(data, status, headers, config) {
 				endSaveSuccess(data);															
 			})
@@ -109,8 +113,9 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			
 			mainService.put("experiment",$scope.experiment);
 			$scope.experiment = experiment;
-			
-			$http.put(jsRoutes.controllers.experiments.api.Experiments.updateState(experiment.code).url, {code:"F"})
+			var state = $scope.experiment.state;
+			state.code = "F";
+			$http.put(jsRoutes.controllers.experiments.api.Experiments.updateState(experiment.code).url, state)
 			.success(function(data, status, headers, config) {
 				endSaveSuccess(data);															
 			})
@@ -631,54 +636,73 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		return $sce.trustAsHtml(text.replace(/\n/g, "<br>"));
 	};
 	
-	$scope.setCurrentComment = function(com){
-		$scope.currentComment = com;
-	};
 	
-	$scope.save = function(){		
-		$scope.messages.clear();
-		$http.post(jsRoutes.controllers.experiments.api.ExperimentsOld.addComment($scope.experiment.code).url, $scope.currentComment)
-		.success(function(data, status, headers, config) {
-			if(data!=null){
-				$scope.messages.setSuccess("save");
-				$scope.experiment.comments.push(data);
-				$scope.currentComment = {comment:undefined};
-			}
-		})
-		.error(function(data, status, headers, config) {
-			$scope.messages.setError("save");
-			$scope.messages.setDetails(data);
-		});		
-	};
 	
-	$scope.update = function(){
-		$scope.messages.clear();
-		$http.put(jsRoutes.controllers.experiments.api.ExperimentsOld.updateComment($scope.experiment.code).url, $scope.currentComment)
-		.success(function(data, status, headers, config) {
-			if(data!=null){
-				$scope.messages.setSuccess("save");
-				$scope.currentComment = {comment:undefined};
-			}
-		})
-		.error(function(data, status, headers, config) {
-			$scope.messages.setError("save");
-			$scope.messages.setDetails(data);
-		});
-	};
-	
-	$scope.delete = function(com){
-		if (confirm(Messages("comments.remove.confirm"))) {
+	$scope.save = function(){	
+		if($scope.isCreationMode()){
+			$scope.experiment.comments.push($scope.currentComment);
+			$scope.currentComment = {comment:undefined};
+		}else{
 			$scope.messages.clear();
-			$http.delete(jsRoutes.controllers.experiments.api.ExperimentsOld.deleteComment($scope.experiment.code, com.code).url)
+			$http.post(jsRoutes.controllers.experiments.api.ExperimentComments.save($scope.experiment.code).url, $scope.currentComment)
+			.success(function(data, status, headers, config) {
+				if(data!=null){
+					$scope.messages.setSuccess("save");
+					$scope.experiment.comments.push(data);
+					$scope.currentComment = {comment:undefined};
+				}
+			})
+			.error(function(data, status, headers, config) {
+				$scope.messages.setError("save");
+				$scope.messages.setDetails(data);
+			});		
+		}		
+	};
+	
+	$scope.isUpdate = function(){
+		return ($scope.index != undefined);		
+	};
+	
+	$scope.setUpdate = function(comment, index){
+		$scope.currentComment = angular.copy(comment);
+		$scope.index = index;
+	};
+	
+	$scope.update = function(){		
+		if($scope.isCreationMode()){
+			$scope.experiment.comments[$scope.index] = $scope.currentComment;
+			$scope.currentComment = {comment:undefined};
+			$scope.index = undefined;			
+		}else{	
+			$scope.messages.clear();
+			$http.put(jsRoutes.controllers.experiments.api.ExperimentComments.update($scope.experiment.code, $scope.currentComment.code).url, $scope.currentComment)
+			.success(function(data, status, headers, config) {
+				if(data!=null){
+					$scope.messages.setSuccess("save");
+					$scope.experiment.comments[$scope.index] = $scope.currentComment;
+					$scope.currentComment = {comment:undefined};
+					$scope.index = undefined;
+				}
+			})
+			.error(function(data, status, headers, config) {
+				$scope.messages.setError("save");
+				$scope.messages.setDetails(data);
+			});
+		}
+	};
+	
+	$scope.remove = function(comment, index){
+		if($scope.isCreationMode()){
+			$scope.currentComment = {comment:undefined};
+			$scope.experiment.comments.splice(index, 1);
+		}else if (confirm(Messages("comments.remove.confirm"))) {
+			$scope.messages.clear();
+			$http.delete(jsRoutes.controllers.experiments.api.ExperimentComments.delete($scope.experiment.code, comment.code).url)
 			.success(function(data, status, headers, config) {
 				if(data!=null){
 					$scope.messages.setSuccess("save");
 					$scope.currentComment = {comment:undefined};
-					for(var i=0;$scope.experiment.comments.length;i++){
-						if($scope.experiment.comments[i].code == com.code){
-							$scope.experiment.comments.splice(i, 1);
-						}
-					}
+					$scope.experiment.comments.splice(index, 1);
 				}
 			})
 			.error(function(data, status, headers, config) {

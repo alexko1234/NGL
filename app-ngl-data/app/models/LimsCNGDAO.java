@@ -179,7 +179,7 @@ public class LimsCNGDAO {
 			sample.comments=new ArrayList<Comment>();
 			
 			if (rs.getString("comments") != null) {
-				sample.comments.add(new Comment(rs.getString("comments")));
+				sample.comments.add(new Comment(rs.getString("comments"), "ngl-data"));
 			}
 			
 			sample.properties=new HashMap<String, PropertyValue>();
@@ -220,7 +220,7 @@ public class LimsCNGDAO {
 		
 		if (rs.getString("comment") != null) {
 			container.comments = new ArrayList<Comment>();	
-			container.comments.add(new Comment(rs.getString("comment")));
+			container.comments.add(new Comment(rs.getString("comment"), "ngl-data"));
 		}
 		
 		container.fromExperimentTypeCodes=new HashSet<String>();
