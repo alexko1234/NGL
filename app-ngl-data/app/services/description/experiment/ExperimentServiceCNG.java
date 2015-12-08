@@ -64,7 +64,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		//FDS ajout 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered
 		l.add(newExperimentType("Ext to prepa flowcell ordered","ext-to-prepa-fc-ordered",null,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		l.add(newExperimentType("Préparation flowcell","prepa-flowcell",null,1100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcellCNG(),
@@ -75,7 +75,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		l.add(newExperimentType("Prép. flowcell ordonnée","prepa-fc-ordered",null,1100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcellOrderedCNG(),
 				getInstrumentUsedTypes("cBot"),"ManyToOne", 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		l.add(newExperimentType("Ext to librairie dénaturée","ext-to-denat-dil-lib",null,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 

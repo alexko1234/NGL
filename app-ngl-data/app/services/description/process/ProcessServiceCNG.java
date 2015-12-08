@@ -52,7 +52,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("denat-dil-lib").get(0), 
 				getExperimentTypes("illumina-depot").get(0),
 				getExperimentTypes("ext-to-denat-dil-lib").get(0), 
-				DescriptionFactory.getInstitutes(Contants.CODE.CNG)));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 	   
 		// JIRA 781 ajouter un processus court (sans denat)
 		l.add(DescriptionFactory.newProcessType("Prep FC, dépôt", "prepFC-depot", ProcessCategory.find.findByCode("sequencing"),
@@ -60,7 +60,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("prepa-flowcell").get(0), 
 				getExperimentTypes("illumina-depot").get(0),
 				getExperimentTypes("ext-to-prepa-flowcell").get(0), 
-				DescriptionFactory.getInstitutes(Contants.CODE.CNG)));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
 		// FDS ajout 04/11/2015 -- JIRA 838: nouveau processus court prepa-fc-ordonée + illumina-depot
 		l.add(DescriptionFactory.newProcessType("4000/X5 (prep FC ordonnée)", "prepFCordered-depot", ProcessCategory.find.findByCode("sequencing"),
@@ -68,7 +68,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("prepa-fc-ordered").get(0),
 				getExperimentTypes("illumina-depot").get(0),
 				getExperimentTypes("ext-to-prepa-fc-ordered").get(0), 
-				DescriptionFactory.getInstitutes(Contants.CODE.CNG)));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
 		DAOHelpers.saveModels(ProcessType.class, l, errors);
 	}

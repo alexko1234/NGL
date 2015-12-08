@@ -86,7 +86,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		l.add(DescriptionFactory.newTreatmentType("Mapping Nanopore ","mapping-nanopore", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "mapping", 
 				getMappingNanoporePropertyDefinitions(), 
 				getTreatmentTypeContexts("default"), 
-				DescriptionFactory.getInstitutes( Institute.CODE.CNS), "90"));
+				DescriptionFactory.getInstitutes( Constants.CODE.CNS), "90"));
 		
 		l.add(DescriptionFactory.newTreatmentType("Trimming","trimming", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "trimmingStd,trimmingVector", 
 				getTrimmingPropertyDefinitions(), 
