@@ -307,6 +307,9 @@ experiments.table.resolutionCodes = Résolution
 experiments.intrumentCategory = Contenant sortie
 experiments.table.creationDate = Date de création exp.
 experiments.table.createUser = Expérience Créée par
+
+experiments.finalResolutionModal.title = Veuillez choisir une résolution :
+
 containers.table.outputNumber = Nb aliquots
 
 

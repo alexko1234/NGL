@@ -30,9 +30,8 @@
 					<button class="btn btn-default" ng-if="isWorkflowModeAvailable('F')" ng-click="finishExperiment()" title="@Messages("experiments.button.finish")"><i class="fa fa-stop"></i> @Messages("experiments.button.finish")</button>		
 			 	</div>
 			 	
-			 	<button class="btn btn-default" data-toggle="modal" data-target="#myModal" title="@Messages("experiment.button.addComment")"><i class="fa fa-comment"></i></button>
-		
-			 			
+			 	<button class="btn btn-default" data-toggle="modal" data-target="#commentModal" title="@Messages("experiment.button.addComment")"><i class="fa fa-comment"></i></button>
+				
 			</div>	
 			 <h1>		
 			 	<span ng-bind="experiment.code || '@Messages("experiments.noCode")'"></span> 			 	

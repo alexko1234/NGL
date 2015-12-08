@@ -121,23 +121,34 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	
 	$scope.finishExperiment = function(){
 		console.log("call finishExperiment");
-		$scope.save(function(experiment){
-			console.log("call callback finishExperiment");
+		
+		if($scope.experiment.state.resolutionCodes !== null 
+				&& $scope.experiment.state.resolutionCodes !== undefined 
+				&& $scope.experiment.state.resolutionCodes.length > 0){
 			
-			mainService.put("experiment",$scope.experiment);
-			$scope.experiment = experiment;
-			var state = $scope.experiment.state;
-			state.code = "F";
-			$http.put(jsRoutes.controllers.experiments.api.Experiments.updateState(experiment.code).url, state)
-			.success(function(data, status, headers, config) {
-				endSaveSuccess(data);															
-			})
-			.error(function(data, status, headers, config) {				
-				$scope.messages.setError("save");
-				$scope.messages.setDetails(data);				
-				saveInProgress = false;	
-			});			
-		});
+			angular.element('#finalResolutionModal').modal('hide');
+			
+			$scope.save(function(experiment){
+				console.log("call callback finishExperiment");
+				
+				mainService.put("experiment",$scope.experiment);
+				$scope.experiment = experiment;
+				var state = $scope.experiment.state;
+				state.code = "F";
+				$http.put(jsRoutes.controllers.experiments.api.Experiments.updateState(experiment.code).url, state)
+				.success(function(data, status, headers, config) {
+					endSaveSuccess(data);
+					angular.element('#finalDispatchModal').modal('show');
+				})
+				.error(function(data, status, headers, config) {				
+					$scope.messages.setError("save");
+					$scope.messages.setDetails(data);				
+					saveInProgress = false;	
+				});			
+			});
+		}else{
+			angular.element('#finalResolutionModal').modal('show');
+		}
 	};
 	
 	$scope.$on('reagentsSaved', function(e, callbackFunction) {
