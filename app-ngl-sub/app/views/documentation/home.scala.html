@@ -112,5 +112,74 @@
 			</li>
 		</ul>
 	</div>
+
+	<div class="panel-heading">
+		<h3>@Messages("documentation.userFileExperiments")</h3>
+	</div>
+	<div class="panel-body">
+		<ul>
+		<li><h4>utilité du fichier :</h4>
+		Il permet de surcharger certaines informations de NGL ou de la configuration de soumission pour construire les objets 'experiment'.
+		<li><h4>Format du fichier :</h4>
+		En colonnes délimitées par le caractère '|'. La premiere ligne du fichier permet de definir la legende (type-information de chaque colonne) tandis que les lignes suivantes du fichier correspondent aux valeurs. <br>
+		Les lignes commencant par le caractère '#' sont ignorées (commentaires).<br> 
+		La legende doit obligatoirement comporter le champs "experiment_alias".<br>
+		<li><h4>Type d'informations pouvant apparaitre dans le fichier :</h4>
+		<ul>
+			<li><strong>experiment_alias</strong> :   Valeur de la forme exp_readsetCode.
+			<li><strong>nominal_length</strong> :     Valeur correspondant à un entier
+			<li><strong>library_strategy</strong> :   Voir valeurs autorisées ci-dessus. 
+			<li><strong>library_source</strong> :     Voir valeurs autorisées ci-dessus. 
+			<li><strong>library_selection</strong> :  Voir valeurs autorisées ci-dessus. 
+			<li><strong>library_name</strong> :       Valeur correspondant à une chaine de caractères sans espaces. 
+			<li><strong>title </strong> :             Courte chaine de caractères.	
+		</ul>		
+		<li><h4>Exemple de fichier :</h4>
+        #--------------------------------------------- <br>
+        experiment_alias	|	nominal_length         <br>  
+        #--------------------------------------------- <br>
+        exp_AWP_AOSF_1_D0HW7ACXX.IND12	|	297 <br>
+        exp_AWP_AOSF_4_D0HW7ACXX.IND12	|	297 <br>
+        exp_AWP_AOSA_7_D0HW7ACXX	|	2852 <br>
+        exp_AWP_AOSA_8_D0HW7ACXX	|	3292 <br>
+		
+		
+	</div>	
+	<div class="panel-heading">
+		<h3>@Messages("documentation.userFileCloneToAc")</h3>
+	</div>
+	<div class="panel-body">		
+		<ul>
+		<li><h4>utilité du fichier :</h4>	
+		Il permet de donner les correspondance entre les noms de clones et les numéros d'accession des objets 'sample' et 'study' soumis par des collaborateurs. 
+		<li><h4>Format du fichier :</h4>
+		En colonnes délimitées par le caractère '|'. La premiere ligne du fichier permet de definir la legende (type-information de chaque colonne) tandis que les lignes suivantes du fichier correspondent aux valeurs.<br> 
+		Les lignes commencant par le caractère '#' sont ignorées (commentaires).<br> 
+		La legende doit obligatoirement comporter le champs "clone_alias"
+		<li><h4>Type d'informations pouvant apparaitre dans le fichier :</h4>
+		<ul>
+			<li><strong>clone_alias</strong> : Nom du clone dans NGL
+			<li><strong>sample_ac</strong> :   Numéros d'accession du sample
+			<li><strong>study_ac</strong> :     Numéros d'accession du study
+		</ul>	
+
+		
+		<li><h4>Exemple de fichier :</h4>
+
+		#-------------------------------------------<br>
+		clone_alias|sample_ac|study_ac <br>
+		#--------------------------------------------<br>
+		"IROO-C3-0001"|"ERS154526"|"ERP001583"<br>
+		"IROO-D6-0002"|"ERS154527"|"ERP001583"<br>
+		"IROO-D6-0003"|"ERS154528"|"ERP001583"<br>
+		"IROO-D6-0004"|"ERS154529"|"ERP001583"<br>
+		"IROO-D6-0005"|"ERS154530"|"ERP001583"<br>
+		"IROO-E5-5146"|"ERS154531"|"ERP001583"<br>
+		"IROO-F5-5079"|"ERS154532"|"ERP001583"<br>		
+		
+	</div>	
+
 </div>
+
+
 }

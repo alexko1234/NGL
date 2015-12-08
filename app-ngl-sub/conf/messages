@@ -133,6 +133,8 @@ documentation.intern.title=Configuration
 documentation.mandatory=Information obligatoire
 documentation.optionnal=Information facultative
 documentation.possible.values=Valeurs possibles
+documentation.userFileExperiments=Fichier userFileExperiments
+documentation.userFileCloneToAc=Fichier userFileCloneToAc
 
 button.save=Save
 button.reset=Reset
