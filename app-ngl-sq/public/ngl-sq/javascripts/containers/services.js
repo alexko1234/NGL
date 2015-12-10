@@ -113,7 +113,26 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"render":"<div list-resize='cellValue | unique' list-resize-min-size='3'>",
 			"filter":"unique | codes:\"type\"",
 			"groupMethod":"collect"
-		});		
+		});	
+		columns.push({
+			"header":Messages("containers.table.mesuredConcentration.value"),
+			"property":"mesuredConcentration.value",
+			"order":true,
+			"hide":true,
+			"position":11.6,
+			"format":2,
+			"type":"number",
+			"groupMethod":"unique"
+		});	
+		columns.push({
+			"header":Messages("containers.table.mesuredConcentration.unit"),
+			"property":"mesuredConcentration.unit",
+			"order":true,
+			"hide":true,
+			"position":11.7,
+			"type":"text",
+			"groupMethod":"unique"
+		});
 		columns.push({
 			"header":Messages("containers.table.creationDate"),
 			"property":"traceInformation.creationDate",

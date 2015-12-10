@@ -95,7 +95,26 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
 						"groupMethod":"collect"
 			        },
-			         {
+					{
+						"header":Messages("containers.table.mesuredConcentration.value"),
+						"property":"mesuredConcentration.value",
+						"order":true,
+						"hide":true,
+						"position":11.6,
+						"format":2,
+						"type":"number",
+						"groupMethod":"unique"
+					},
+					{
+						"header":Messages("containers.table.mesuredConcentration.unit"),
+						"property":"mesuredConcentration.unit",
+						"order":true,
+						"hide":true,
+						"position":11.7,
+						"type":"text",
+						"groupMethod":"unique"
+					},
+			        {
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"state.code",
 			        	 "order":true,
@@ -104,8 +123,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			        	 "filter":"codes:'state'",
 			        	 "position":12,
 			 			"groupMethod":"unique"
-			         },
-			        
+			         },	        
 			        {
 			        	 "header":Messages("containers.table.valid"),
 			        	 "property":"valuation.valid",
