@@ -18,13 +18,13 @@ import models.laboratory.common.instance.PropertyValue;
 public class PropertySingleValue extends PropertyValue<Object>{
 	
 	public PropertySingleValue() {
-		super();
+		super(PropertyValue.singleType);
 	}
 	public PropertySingleValue(Object value) {
-		super(value);	
+		super(PropertyValue.singleType, value);	
 	}
 	public PropertySingleValue(Object value, String unit) {
-		super(value);
+		super(PropertyValue.singleType, value);
 		this.unit = unit;
 	}
 	

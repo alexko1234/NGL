@@ -17,16 +17,16 @@ import validation.utils.ValidationHelper;
 public class PropertyObjectValue extends PropertyValue<Map<String,?>>{
 	
 	public PropertyObjectValue() {
-		super();		
+		super(PropertyValue.objectType);		
 	}
 	
 	public PropertyObjectValue(Map<String, ?> value) {
-		super(value);		
+		super(PropertyValue.objectType, value);		
 	}
 	
 	
 	public PropertyObjectValue(Map<String, ?> value, Map<String,String> unit) {
-		super(value);
+		super(PropertyValue.objectType, value);
 		this.unit = unit;
 	}
 	

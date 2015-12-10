@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 import models.laboratory.common.description.PropertyDefinition;
-
+import models.laboratory.common.instance.PropertyValue;
 import validation.ContextValidation;
 import validation.utils.ValidationHelper;
 
@@ -20,11 +20,11 @@ public class PropertyFileValue extends PropertyByteValue{
 	
 	
 	public PropertyFileValue() {
-		super();
+		super(PropertyValue.fileType);
 	}
 	
 	public PropertyFileValue(java.io.File value) throws IOException {
-		super(Files.toByteArray(value));
+		super(PropertyValue.fileType, Files.toByteArray(value));
 		this.extension = Files.getFileExtension(value.getName());
 		this.fullname = value.getName();
 	}

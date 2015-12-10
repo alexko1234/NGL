@@ -19,13 +19,13 @@ import models.laboratory.common.instance.PropertyValue;
 public class PropertyObjectListValue extends PropertyValue<List<Map<String, ?>>>{
 	
 	public PropertyObjectListValue() {
-		super();
+		super(PropertyValue.objectListType);
 	}
 	public PropertyObjectListValue(List<Map<String, ?>> value) {
-		super(value);	
+		super(PropertyValue.objectListType, value);	
 	}
 	public PropertyObjectListValue(List<Map<String, ?>> value, Map<String,String> unit) {
-		super(value);
+		super(PropertyValue.objectListType, value);
 		this.unit = unit;
 	}
 	

@@ -17,7 +17,6 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.property.PropertyByteValue;
 import models.laboratory.common.instance.property.PropertyListValue;
-import models.laboratory.common.instance.property.PropertyMapValue;
 import models.laboratory.common.instance.property.PropertyObjectListValue;
 import models.laboratory.common.instance.property.PropertyObjectValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
@@ -389,32 +388,6 @@ public class ValidationHelper {
 		return true;
 	}
 	
-	/**
-	 * Transform the value of propertyValue to the good type
-	 * @param propertyValue
-	 * @param propertyDefinition
-	 * @param contextValidation
-	 * @return
-	 */
-	public static boolean convertPropertyValue(ContextValidation contextValidation, PropertyMapValue propertyValue, PropertyDefinition propertyDefinition) {
-		try{
-			Class<?> valueClass = getClass(propertyDefinition.valueType);
-			Map<String, Object> newMap = new HashMap<String, Object>(propertyValue.value.size());
-			for(Entry<String,? extends Object> entryValue : propertyValue.value.entrySet()){
-				Object value = entryValue.getValue();
-				if(!valueClass.isInstance(value)){ //transform only if not the good type
-					value = convertValue(valueClass, value.toString(), null);
-				}
-				newMap.put(entryValue.getKey(), value);
-			}			
-			propertyValue.value = newMap;
-		}catch(Throwable e){
-			Logger.error(e.getMessage(),e);
-			contextValidation.addErrors(propertyDefinition.code, ERROR_BADTYPE_MSG, propertyDefinition.valueType, propertyValue.value);
-			return false;
-		}
-		return true;
-	}
 	
 	/**
 	 * Transform the value of propertyValue to the good type
@@ -518,33 +491,6 @@ public class ValidationHelper {
 		}
 	}
 	
-	/**
-	 * Check if propertyValue is required
-	 * @param contextValidation
-	 * @param propertyValue
-	 * @param propertyDefinition
-	 * @return
-	 */
-	public static boolean required(ContextValidation contextValidation, PropertyMapValue propertyValue, PropertyDefinition propertyDefinition){
-		if(propertyDefinition.required && required(contextValidation, propertyValue, propertyDefinition.code)){
-			boolean isValid = true;
-			if(MapUtils.isNotEmpty(propertyValue.value)){
-				for(Entry<String, ?> entryValue : propertyValue.value.entrySet()){
-					if(!required(contextValidation, entryValue.getValue(), propertyDefinition.code+".value."+entryValue.getKey())){
-						isValid = false;
-					}
-				}	
-	        }else{
-	        	isValid = false;
-	        	contextValidation.addErrors(propertyDefinition.code+".value", ERROR_REQUIRED_MSG,propertyValue.value);
-	        }			
-			return isValid;
-		}else if(propertyDefinition.required){
-			return false;
-		}else{
-			return true;
-		}
-	}
 	
 	/**
 	 * Check if propertyValue is required
@@ -696,26 +642,6 @@ public class ValidationHelper {
 		}
 	}
 	
-	/**
-	 * Check if the value is in the list
-	 * @param contextValidation
-	 * @param propertyValue
-	 * @param propertyDefinition
-	 * @return
-	 */
-	public static boolean checkIfExistInTheList(ContextValidation contextValidation, PropertyMapValue propertyValue, PropertyDefinition propertyDefinition){
-		if(propertyDefinition.choiceInList){
-			for(Entry<String, ?> entryValue : propertyValue.value.entrySet()){
-				Object value = entryValue.getValue();
-				if(!checkIfExistInTheList(propertyDefinition, value.toString())){
-					contextValidation.addErrors(propertyDefinition.code+".value."+entryValue.getKey(), ERROR_VALUENOTAUTHORIZED_MSG, value);
-				}
-			}			
-			return false;
-		}else{
-			return true;
-		}
-	}
 	
 	/**
 	 * 

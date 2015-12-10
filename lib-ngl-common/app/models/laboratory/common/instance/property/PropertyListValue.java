@@ -18,13 +18,13 @@ public class PropertyListValue extends PropertyValue<List<? extends Object>>{
 	public String unit;
 	
 	public PropertyListValue() {
-		super();
+		super(PropertyValue.listType);
 	}
 	public PropertyListValue(List<? extends Object> value) {
-		super(value);
+		super(PropertyValue.listType, value);
 	}
 	public PropertyListValue(List<? extends Object> value, String unit) {
-		super(value);
+		super(PropertyValue.listType, value);
 		this.unit = unit;
 	}
 

@@ -16,7 +16,6 @@ import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.common.instance.property.PropertyImgValue;
 import models.laboratory.common.instance.property.PropertyListValue;
-import models.laboratory.common.instance.property.PropertyMapValue;
 import models.laboratory.common.instance.property.PropertyObjectListValue;
 import models.laboratory.common.instance.property.PropertyObjectValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
@@ -64,7 +63,6 @@ public class ValidationHelperTests extends AbstractTests {
 		pFileValue.value = data;
 		pFileValue.fullname = "krona.html";
 		pFileValue.extension = "html";
-		pFileValue._type = "file";
 		
 		ContextValidation cv = new ContextValidation(Constants.TEST_USER);
 		
@@ -92,7 +90,6 @@ public class ValidationHelperTests extends AbstractTests {
 		pFileValue.value = data;
 		pFileValue.fullname = "krona.html";
 		pFileValue.extension = "";
-		pFileValue._type = "file";
 		ContextValidation cv = new ContextValidation(Constants.TEST_USER); 
 
 		PropertyDefinition pDef = getPropertyFileDefinition();
@@ -120,7 +117,6 @@ public class ValidationHelperTests extends AbstractTests {
 		pFileValue.value = data;
 		pFileValue.fullname = "";
 		pFileValue.extension = "";
-		pFileValue._type = "file";
 		ContextValidation cv = new ContextValidation(Constants.TEST_USER); 
 
 		PropertyDefinition pDef = getPropertyFileDefinition();
@@ -151,7 +147,6 @@ public class ValidationHelperTests extends AbstractTests {
 		pImgValue.extension = "jpg";
 		pImgValue.width = 4;
 		pImgValue.height = 4;
-		pImgValue._type = "img";
 		
 		ContextValidation cv = new ContextValidation(Constants.TEST_USER); 
 
@@ -179,7 +174,6 @@ public class ValidationHelperTests extends AbstractTests {
 		pImgValue.value = data;
 		pImgValue.fullname = "phylogeneticTree2.jpg";
 		pImgValue.extension = "jpg";
-		pImgValue._type = "img";
 		
 		ContextValidation cv = new ContextValidation(Constants.TEST_USER); 
 
@@ -225,12 +219,10 @@ public class ValidationHelperTests extends AbstractTests {
 		Map<String, PropertyValue> m = new HashMap<String, PropertyValue>();
 		
 		PropertySingleValue propSingle = new PropertySingleValue();
-		propSingle._type="single";
 		m.put("single1-1", propSingle);
 		m.put("single1-2", propSingle);
 		m.put("single1-3", null);
 		PropertyListValue propList = new PropertyListValue();
-		propList._type="list";
 		m.put("list2-1", propList);
 		propList.value=new ArrayList();
 		m.put("list2-2",propList);
@@ -243,7 +235,6 @@ public class ValidationHelperTests extends AbstractTests {
 		mapObject.put("2", null);
 		mapObject.put("3", "");
 		PropertyObjectValue propObject = new PropertyObjectValue(mapObject);
-		propObject._type="object";
 		m.put("object4", propObject);
 		
 		
@@ -252,7 +243,6 @@ public class ValidationHelperTests extends AbstractTests {
 		l.add(mapObject);
 		l.add(mapObject);
 		PropertyObjectListValue propObjectList =  new PropertyObjectListValue(l);
-		propObjectList._type="list";
 		m.put("listObject5",propObjectList);
 		
 		return m;
@@ -296,25 +286,18 @@ public class ValidationHelperTests extends AbstractTests {
 	private Map<String, PropertyValue> getPropertiesSingle(){
 		Map<String, PropertyValue> m = new HashMap<String, PropertyValue>();
 		PropertySingleValue propText = new PropertySingleValue("test");
-		propText._type="single";
 		m.put("String", propText);
 		PropertySingleValue propInt = new PropertySingleValue(33);
-		propInt._type="single";
 		m.put("Integer", propInt);
 		PropertySingleValue propDouble = new PropertySingleValue(36985214456467789654D);
-		propDouble._type="single";
 		m.put("Double", propDouble);
 		PropertySingleValue propBoolean = new PropertySingleValue(Boolean.TRUE);
-		propBoolean._type="single";
 		m.put("Boolean", propBoolean);
 		PropertySingleValue propLong = new PropertySingleValue(36985214456467654L);
-		propLong._type="single";
 		m.put("Long", propLong);
 		PropertySingleValue propDate = new PropertySingleValue(new Date());
-		propDate._type="single";
 		m.put("Date", propDate);
 		PropertySingleValue propTBoolean = new PropertySingleValue(TBoolean.UNSET);
-		propTBoolean._type="single";
 		m.put("TBoolean", propTBoolean);
 		return m;
 	}
@@ -333,25 +316,18 @@ public class ValidationHelperTests extends AbstractTests {
 	private Map<String, PropertyValue> getPropertiesSingleString(){
 		Map<String, PropertyValue> m = new HashMap<String, PropertyValue>();
 		PropertySingleValue propString = new PropertySingleValue("test");
-		propString._type="single";
 		m.put("String", propString);
 		PropertySingleValue propInt = new PropertySingleValue(33+"");
-		propInt._type="single";
 		m.put("Integer", propInt);
 		PropertySingleValue propDouble = new PropertySingleValue(36985214456467789654D+"");
-		propDouble._type="single";
 		m.put("Double", propDouble);
 		PropertySingleValue propBoolean  = new PropertySingleValue(Boolean.TRUE.toString());
-		propBoolean._type="single";
 		m.put("Boolean", propBoolean);
 		PropertySingleValue propLong = new PropertySingleValue(36985214456467654L+"");
-		propLong._type="single";
 		m.put("Long", propLong);
 		PropertySingleValue propDate = new PropertySingleValue(new Date().getTime()+"");
-		propDate._type="single";
 		m.put("Date", propDate);
 		PropertySingleValue propTBoolean = new PropertySingleValue("UNSET");
-		propTBoolean._type="single";
 		m.put("TBoolean", propTBoolean);
 		return m;
 	}
@@ -394,25 +370,18 @@ public class ValidationHelperTests extends AbstractTests {
 	private Map<String, PropertyValue> getPropertiesListString(){
 		Map<String, PropertyValue> m = new HashMap<String, PropertyValue>();
 		PropertyListValue propListString = new PropertyListValue(Arrays.asList("test", "test2", "tes3"));
-		propListString._type="list";
 		m.put("String", propListString);
 		PropertyListValue propListInt = new PropertyListValue(Arrays.asList("33","36","65"));
-		propListInt._type="list";
 		m.put("Integer", propListInt);
 		PropertyListValue propListDouble = new PropertyListValue(Arrays.asList("36985214456467789654"));
-		propListDouble._type="list";
 		m.put("Double", propListDouble);
 		PropertyListValue propListBoolean = new PropertyListValue(Arrays.asList(Boolean.TRUE.toString()));
-		propListBoolean._type="list";
 		m.put("Boolean", propListBoolean);
 		PropertyListValue propListLong = new PropertyListValue(Arrays.asList(36985214456467654L+""));
-		propListLong._type="list";
 		m.put("Long", propListLong);
 		PropertyListValue propListDate = new PropertyListValue(Arrays.asList(new Date().getTime()+""));
-		propListDate._type="list";
 		m.put("Date", propListDate);
 		PropertyListValue propListTBoolean = new PropertyListValue(Arrays.asList("UNSET"));
-		propListTBoolean._type="list";
 		m.put("TBoolean", propListTBoolean);
 		return m;
 	}
@@ -429,31 +398,6 @@ public class ValidationHelperTests extends AbstractTests {
 		propertyDefinitions.add(newPropertiesDefinition("TBoolean", "TBoolean", PropertyListValue.class, TBoolean.class, true, "list"));
 		return propertyDefinitions;
 	}
-	
-	/**
-	 * Deprecated PropertyObjectValue replace PropertyMapValue 
-	 */
-	//@Test
-	public void validatePropertiesMapString() {
-		ContextValidation cv = new ContextValidation(Constants.TEST_USER);
-		ValidationHelper.validateProperties(cv, getPropertiesMapString(), getPropertyDefinitionsMap());
-		showErrors(cv);
-		assertThat(cv.errors.size()).isEqualTo(0);
-		
-	}
-	
-	private Map<String, PropertyValue> getPropertiesMapString(){
-		Map<String, PropertyValue> m = new HashMap<String, PropertyValue>();
-		m.put("String", new PropertyMapValue(getMap("test", "test2", "tes3")));
-		m.put("Integer", new PropertyMapValue(getMap("33","36","65")));
-		m.put("Double", new PropertyMapValue(getMap("36985214456467789654")));
-		m.put("Boolean", new PropertyMapValue(getMap(Boolean.TRUE.toString())));
-		m.put("Long", new PropertyMapValue(getMap(36985214456467654L+"")));
-		m.put("Date", new PropertyMapValue(getMap(new Date().getTime()+"")));
-		m.put("TBoolean", new PropertyMapValue(getMap("UNSET", "TRUE")));
-		return m;
-	}
-	
 	
 	private Map<String, String> getMap(String...strings) {
 		Map<String, String> m = new HashMap<String, String>();
@@ -491,7 +435,6 @@ public class ValidationHelperTests extends AbstractTests {
 	private Map<String, PropertyValue> getPropertiesObjectString(){
 		Map<String, PropertyValue> m = new HashMap<String, PropertyValue>();
 		PropertyObjectValue propObject = new PropertyObjectValue(getMap("test", "45", "36985214456467789654"));
-		propObject._type="object";
 		m.put("Object", propObject);
 		
 		return m;

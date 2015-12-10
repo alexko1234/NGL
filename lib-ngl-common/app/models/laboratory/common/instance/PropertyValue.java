@@ -23,29 +23,39 @@ import validation.utils.ValidationHelper;
  */
 @JsonTypeInfo(use=Id.NAME, include=As.EXTERNAL_PROPERTY, property="_type", defaultImpl=models.laboratory.common.instance.property.PropertySingleValue.class, visible=true)
 @JsonSubTypes({
-	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertySingleValue.class, name = "single"),
-	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyListValue.class, name = "list"),
-	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyFileValue.class, name = "file"),
-	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyImgValue.class, name = "img"),
-	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyObjectValue.class, name = "object"),
-	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyObjectListValue.class, name = "object_list")
+	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertySingleValue.class, name = PropertyValue.singleType),
+	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyListValue.class, name = PropertyValue.listType),
+	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyFileValue.class, name = PropertyValue.fileType),
+	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyImgValue.class, name = PropertyValue.imgType),
+	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyObjectValue.class, name = PropertyValue.objectType),
+	@JsonSubTypes.Type(value = models.laboratory.common.instance.property.PropertyObjectListValue.class, name = PropertyValue.objectListType)
 })
 public abstract class PropertyValue<T> implements IValidation {
+	
+	public static final String singleType = "single";
+	public static final String listType = "list";
+	public static final String fileType = "file";
+	public static final String imgType = "img";
+	public static final String objectType = "object";
+	public static final String objectListType = "object_list";
 	
 	public String _type;
 	public T value;
 	
-	public PropertyValue() {
+	public PropertyValue(String _type) {
 		super();
+		this._type=_type;
 	}
-	public PropertyValue(T value) {
+	public PropertyValue(String _type, T value) {
 		super();
+		this._type=_type;
 		this.value = value;
 	}
 	
 	
-	public PropertyValue(T value, String unit) {
+	public PropertyValue(String _type, T value, String unit) {
 		super();
+		this._type = _type;
 		this.value = value;		
 	}
 	

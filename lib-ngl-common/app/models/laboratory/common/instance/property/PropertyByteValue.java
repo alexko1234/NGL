@@ -15,11 +15,11 @@ import models.laboratory.common.instance.PropertyValue;
  */
 public class PropertyByteValue extends PropertyValue<byte[]>{
 	
-	public PropertyByteValue() {
-		super();
+	public PropertyByteValue(String _type) {
+		super(_type);
 	}
-	public PropertyByteValue(byte[] value) {
-		super(value);		
+	public PropertyByteValue(String _type, byte[] value) {
+		super(_type, value);		
 	}
 	
 	

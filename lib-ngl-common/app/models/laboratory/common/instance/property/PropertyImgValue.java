@@ -6,6 +6,7 @@ import java.util.Collection;
 import play.Logger;
 
 import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.common.instance.PropertyValue;
 import validation.ContextValidation;
 import validation.utils.ValidationHelper;
 
@@ -19,10 +20,12 @@ public class PropertyImgValue extends PropertyFileValue {
 	
 	public PropertyImgValue() {
 		super();
+		super._type=PropertyValue.imgType;
 	}
 	
 	public PropertyImgValue(java.io.File value, Integer width, Integer height) throws IOException {
 		super(value);
+		super._type=PropertyValue.imgType;
 		this.width = width;
 		this.height = height;
 	}
