@@ -1,6 +1,6 @@
 "use strict";
 
-angular.module('home').controller('ConsultationCtrl',[ '$http', '$scope', '$routeParams' , '$q', 'mainService', 'lists', 'tabService','messages','submissionsConsultationService',
+angular.module('home').controller('ValidationCtrl',[ '$http', '$scope', '$routeParams' , '$q', 'mainService', 'lists', 'tabService','messages','submissionsConsultationService',
 	                                                  function($http, $scope, $routeParams, $q, mainService, lists, tabService, messages, submissionsConsultationService) { 
 
 
@@ -29,8 +29,8 @@ angular.module('home').controller('ConsultationCtrl',[ '$http', '$scope', '$rout
 
 	
 	if(angular.isUndefined(mainService.getHomePage())){
-		mainService.setHomePage('consultation');
-		tabService.addTabs({label:Messages('submissions.menu.consultation'),href:jsRoutes.controllers.sra.submissions.tpl.Submissions.home("consultation").url,remove:true});
+		mainService.setHomePage('validation');
+		tabService.addTabs({label:Messages('submissions.menu.validation'),href:jsRoutes.controllers.sra.submissions.tpl.Submissions.home("consultation").url,remove:true});
 		tabService.activeTab(0); // desactive le lien !
 	}
 	// si on declare dans services => var sraVariables = {};
@@ -38,12 +38,15 @@ angular.module('home').controller('ConsultationCtrl',[ '$http', '$scope', '$rout
 
 	$scope.consultationService = submissionsConsultationService;	
 	$scope.consultationService.init($routeParams, submissionDTConfig);
-	$scope.consultationService.isValidation = false;
-	console.log("consultation-ctrl:state " + $scope.consultationService.form.state);
+	$scope.consultationService.isValidation = true;
+	
+	$scope.consultationService.form.state = 'new';
+	console.log("validation-ctrl:state " + $scope.consultationService.form.state);
 
 	$scope.search = function(){
 		if($scope.consultationService.form.projCode!=null){
 			$scope.consultationService.search();
+			
 		} else {
 			console.log("Cancel datatable");
 			$scope.consultationService.cancel();

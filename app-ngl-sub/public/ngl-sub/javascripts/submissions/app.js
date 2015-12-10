@@ -26,14 +26,13 @@ angular.module('home', ['ngRoute', 'commonsServices', 'datatableServices','ui.bo
 		controller : 'ConsultationCtrl'
 	});	
 	
-	/*
-	$routeProvider.when('/sra/submissions/validate/home', {
+	
+	$routeProvider.when('/sra/submissions/validation/home', {
 		// url qui va appeler controler java de type tpl
-		templateUrl : '/tpl/sra/submissions/validate',
-		controller : 'ValidateCtrl'
+		templateUrl : '/tpl/sra/submissions/consultation',
+		controller : 'ValidationCtrl'
 	});		
 	
-	*/
 	$routeProvider.otherwise({redirectTo: '/sra/submissions/create/home'});
 
 	// configure html5 to get links working with bookmarked
