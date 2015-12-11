@@ -17,6 +17,7 @@ import org.mongojack.MongoCollection;
 
 import validation.ContextValidation;
 import validation.IValidation;
+import validation.container.instance.ContainerValidationHelper;
 import static validation.common.instance.CommonValidationHelper.*;
 import static validation.experiment.instance.ExperimentValidationHelper.*;
 
@@ -63,8 +64,12 @@ public class Experiment extends DBObject implements IValidation {
 	public Set<String> sampleCodes;
 	
 	public Set<String> inputContainerSupportCodes;
+	public Set<String> inputContainerCodes;
+	public Set<String> inputProcessCodes;
 	
 	public Set<String> outputContainerSupportCodes;
+	
+	
 	
 	public Experiment(){
 		traceInformation=new TraceInformation();
@@ -114,6 +119,7 @@ public class Experiment extends DBObject implements IValidation {
 			contextValidation.putObject(FIELD_STATE_CODE , state.code);
 			
 		}
+		validateId(this, contextValidation);
 		validateCode(this, InstanceConstants.EXPERIMENT_COLL_NAME, contextValidation);
 		validationExperimentType(typeCode, experimentProperties, contextValidation);
 		validationExperimentCategoryCode(categoryCode, contextValidation);
@@ -123,11 +129,13 @@ public class Experiment extends DBObject implements IValidation {
 		validateAtomicTransfertMethods(typeCode, instrument, atomicTransfertMethods,contextValidation);
 		validateReagents(reagents,contextValidation); //TODO active reagents validation inside ReagentUsed
 		validateTraceInformation(traceInformation, contextValidation);		
+		validateComments(comments, contextValidation);
 		
+		
+		//TODO GA Validation not mandatory because is computing by NGL and can decrease performance ??
 		validateInputContainerSupport(inputContainerSupportCodes,getAllInputContainers(),contextValidation);
 		validateOutputContainerSupport(outputContainerSupportCodes,getAllOutputContainers(),contextValidation);
-		validateComments(comments, contextValidation);
-		//TODO Validate projectCodes, sampleCodes
+		//TODO GA Validate projectCodes, sampleCodes. same question 
 		
 		validateRules(this,contextValidation);
 		

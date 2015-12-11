@@ -26,6 +26,7 @@ import akka.actor.ActorRef;
 import akka.actor.Props;
 import fr.cea.ig.MongoDBDAO;
 
+@Deprecated
 public class ContainerWorkflows {
 
 	public static final String ruleWorkflowSQ = "workflow";

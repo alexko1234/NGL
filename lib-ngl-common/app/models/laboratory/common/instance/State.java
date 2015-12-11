@@ -35,8 +35,7 @@ public class State implements IValidation {
 		CommonValidationHelper.validateStateCode(this.code, contextValidation);
 		ValidationHelper.required(contextValidation, date, "date");
 		ValidationHelper.required(contextValidation, user, "user");
-		CommonValidationHelper.validateResolutionCodes(resolutionCodes,
-				contextValidation);
+		CommonValidationHelper.validateResolutionCodes(resolutionCodes,	contextValidation);
 	}
 
 }

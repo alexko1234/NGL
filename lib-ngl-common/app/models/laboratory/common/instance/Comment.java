@@ -35,7 +35,7 @@ public class Comment implements IValidation {
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		ValidationHelper.required(contextValidation, code, "code"); //TODO check if not exist on the same object
+		ValidationHelper.required(contextValidation, code, "code"); //TODO GA check if not exist on the same object
 		ValidationHelper.required(contextValidation, comment, "comment");
 		ValidationHelper.required(contextValidation, createUser, "createUser");
 		ValidationHelper.required(contextValidation, creationDate, "creationDate");

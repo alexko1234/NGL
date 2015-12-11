@@ -1,5 +1,7 @@
 package models.laboratory.container.instance;
 
+import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,7 +26,7 @@ import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
-import validation.container.instance.ContainerValidationHelper;
+import static validation.container.instance.ContainerValidationHelper.*;
 
 
 
@@ -86,6 +88,9 @@ public class Container extends DBObject implements IValidation {
 	public String fromPurifingCode; //TODO GA remove
 	//public String fromExtractionTypeCode;
 	//process
+	
+	//TODO GA merge in same objet processTypeCode and processCode and add a list of this object
+	//TODO GA may be with fromExperimentTypeCodes ???
 	public String processTypeCode; //TODO GA remove and replace by processTypeCodes warning find container for create experiment ?
 	public Set<String> processTypeCodes;
 	public Set<String> inputProcessCodes; //TODO GA rename to processCodes
@@ -119,19 +124,24 @@ public class Container extends DBObject implements IValidation {
 	@Override
 	public void validate(ContextValidation contextValidation){
 		
-    	ContainerValidationHelper.validateId(this, contextValidation);
-		ContainerValidationHelper.validateCode(this, InstanceConstants.CONTAINER_COLL_NAME, contextValidation);
-		ContainerValidationHelper.validateStateCode(this, contextValidation);
-		ContainerValidationHelper.validateTraceInformation(this.traceInformation, contextValidation);
-		ContainerValidationHelper.validateContainerCategoryCode(categoryCode, contextValidation);
-		ContainerValidationHelper.validateProcessTypeCode(processTypeCode, contextValidation);
-		ContainerValidationHelper.validateProjectCodes(projectCodes, contextValidation);
-		ContainerValidationHelper.validateSampleCodes(sampleCodes, contextValidation);
-		ContainerValidationHelper.validateExperimentTypeCodes(fromExperimentTypeCodes, contextValidation);
-		ContainerValidationHelper.validateExperimentCode(fromPurifingCode, contextValidation);//bug here Yann
-		ContainerValidationHelper.validateContents(contents,contextValidation);
-		ContainerValidationHelper.validateContainerSupport(support,contextValidation);//bug here Yann
-		ContainerValidationHelper.validateProcessCodes(inputProcessCodes,contextValidation);
+		if(contextValidation.getObject(FIELD_STATE_CODE) == null){
+			contextValidation.putObject(FIELD_STATE_CODE , state.code);			
+		}
+		
+    	validateId(this, contextValidation);
+		validateCode(this, InstanceConstants.CONTAINER_COLL_NAME, contextValidation);
+		validateState(this.state, contextValidation);
+		validateTraceInformation(this.traceInformation, contextValidation);
+		validateContainerCategoryCode(categoryCode, contextValidation);
+		validateProcessTypeCode(processTypeCode, contextValidation);
+		//TODO GA processTypeCodes
+		validateProjectCodes(projectCodes, contextValidation);
+		validateSampleCodes(sampleCodes, contextValidation);
+		validateExperimentTypeCodes(fromExperimentTypeCodes, contextValidation);
+		validateExperimentCode(fromPurifingCode, contextValidation);//bug here Yann
+		validateContents(contents,contextValidation);
+		validateContainerSupport(support,contextValidation);//bug here Yann
+		validateInputProcessCodes(inputProcessCodes,contextValidation);
 		
 	}
 

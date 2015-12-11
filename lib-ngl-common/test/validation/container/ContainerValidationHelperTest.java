@@ -437,7 +437,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 		inputProcessCodes.add(process1.code);
 		inputProcessCodes.add(process2.code);
 		inputProcessCodes.add(process3.code);
-		ContainerValidationHelper.validateProcessCodes(inputProcessCodes, contextValidation);
+		ContainerValidationHelper.validateInputProcessCodes(inputProcessCodes, contextValidation);
 		contextValidation.displayErrors(logger);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
@@ -449,7 +449,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 		inputProcessCodes.add("");
 		inputProcessCodes.add("");
 		inputProcessCodes.add("");
-		ContainerValidationHelper.validateProcessCodes(inputProcessCodes, contextValidation);
+		ContainerValidationHelper.validateInputProcessCodes(inputProcessCodes, contextValidation);
 		contextValidation.displayErrors(logger);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);		
 	}

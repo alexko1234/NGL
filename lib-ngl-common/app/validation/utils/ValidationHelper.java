@@ -745,7 +745,7 @@ public class ValidationHelper {
 	{
 		boolean isSame = true;
 		for(PropertyDefinition propDef : propertyDefinitions){
-			if(!propertyValue._type.equals(propDef.propertyValueType)){
+			if(propertyValue._type == null || !propertyValue._type.equals(propDef.propertyValueType)){
 				Logger.error("Error property "+propDef.code+" : "+propertyValue.value+" expected "+propDef.propertyValueType+ " found "+propertyValue._type);
 				//TODO à activer si la prod se passe bien
 				//contextValidation.addErrors(propDef.code, ERROR_PROPERTY_TYPE, propertyValue.value, propDef.propertyValueType,propertyValue._type);

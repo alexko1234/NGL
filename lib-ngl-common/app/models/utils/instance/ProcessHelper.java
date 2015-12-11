@@ -16,7 +16,6 @@ import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 
 import org.mongojack.DBQuery;
@@ -27,6 +26,7 @@ import play.Logger;
 import play.Play;
 import rules.services.RulesServices6;
 import validation.ContextValidation;
+import validation.common.instance.CommonValidationHelper;
 import validation.container.instance.ContainerSupportValidationHelper;
 import validation.container.instance.ContainerValidationHelper;
 import fr.cea.ig.MongoDBDAO;
@@ -50,10 +50,13 @@ public class ProcessHelper {
 			container.inputProcessCodes=new HashSet<String>();
 		}
 		container.inputProcessCodes.addAll(codes);
+		
+//		contextValidation.putObject(CommonValidationHelper.FIELD_STATE_CODE, container.state.code);
+		
 //		container.inputProcessCodes=InstanceHelpers.addCodesList(codes, container.inputProcessCodes);
-		ContainerValidationHelper.validateProcessCodes(container.inputProcessCodes,contextValidation);
-		ContainerValidationHelper.validateExperimentTypeCodes(container.fromExperimentTypeCodes, contextValidation);
-		ContainerValidationHelper.validateProcessTypeCode(container.processTypeCode, contextValidation);
+//		ContainerValidationHelper.validateInputProcessCodes(container.inputProcessCodes,contextValidation);
+//		ContainerValidationHelper.validateExperimentTypeCodes(container.fromExperimentTypeCodes, contextValidation);
+//		ContainerValidationHelper.validateProcessTypeCode(container.processTypeCode, contextValidation);
 		if(!contextValidation.hasErrors()){
 			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
 					DBQuery.is("code",container.code),
@@ -72,6 +75,7 @@ public class ProcessHelper {
 			}
 			containerSupport.fromExperimentTypeCodes.addAll(container.fromExperimentTypeCodes);
 			//containerSupport.fromExperimentTypeCodes=InstanceHelpers.addCodesList(container.fromExperimentTypeCodes, containerSupport.fromExperimentTypeCodes);
+			contextValidation.putObject(CommonValidationHelper.FIELD_STATE_CODE, container.state.code);
 			ContainerSupportValidationHelper.validateExperimentTypeCodes(containerSupport.fromExperimentTypeCodes, contextValidation);
 			if(!contextValidation.hasErrors()){
 				MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME,ContainerSupport.class,

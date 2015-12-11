@@ -6,14 +6,20 @@ import java.util.HashSet;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.TransientState;
+import models.laboratory.experiment.instance.Experiment;
 import models.utils.dao.DAOException;
 import validation.ContextValidation;
 
 public abstract class Workflows<T> {
 
 	
+	public abstract void applyPreStateRules(ContextValidation validation, T exp, State nextState);
 	
 	public abstract void applyCurrentStateRules(ContextValidation validation, T object);
+	
+	public abstract void applySuccessPostStateRules(ContextValidation validation, T exp);
+	
+	public abstract void applyErrorPostStateRules(ContextValidation validation, T exp, State nextState);
 	
 	public abstract void setState(ContextValidation contextValidation, T object, State nextState);
 	
@@ -56,6 +62,14 @@ public abstract class Workflows<T> {
 		nextState.code = state.code;
 		nextState.date = new Date();
 		nextState.user = user;
+		return nextState;
+	}
+	
+	protected static State getNewState(String stateCode, String user) {
+		State nextState = new State();
+		nextState.code = stateCode;
+		nextState.user = user;
+		nextState.date = new Date();
 		return nextState;
 	}
 	

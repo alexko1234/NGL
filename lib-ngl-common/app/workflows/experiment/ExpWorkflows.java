@@ -2,11 +2,9 @@ package workflows.experiment;
 
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
 import models.laboratory.common.instance.State;
+import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.instance.Experiment;
 import models.utils.InstanceConstants;
-import models.utils.dao.DAOException;
-import models.utils.instance.ExperimentHelper;
-import models.utils.instance.ProcessHelper;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
@@ -19,13 +17,15 @@ import fr.cea.ig.MongoDBDAO;
 
 public class ExpWorkflows extends Workflows<Experiment>{
 	
+	public static ExpWorkflows instance = new ExpWorkflows();
+	
 	@Override
 	public void applyCurrentStateRules(ContextValidation validation, Experiment exp) {
 		if("N".equals(exp.state.code)){
 			ExpWorkflowsHelper.updateXCodes(exp);
 			if(validation.isUpdateMode()){
-				ExpWorkflowsHelper.updateRemoveContainersFromExperiment(exp, validation); 
-				ExpWorkflowsHelper.updateAddContainersToExperiment(exp, validation);				
+				ExpWorkflowsHelper.updateRemoveContainersFromExperiment(exp, validation, getNewState(getContainerStateFromExperimentCategory(exp.categoryCode), validation.getUser())); 
+				ExpWorkflowsHelper.updateAddContainersToExperiment(exp, validation, getNewState("IW-E", validation.getUser()));				
 			}			 						
 		}
 		ExpWorkflowsHelper.updateComments(exp, validation);
@@ -48,13 +48,18 @@ public class ExpWorkflows extends Workflows<Experiment>{
 	
 	public void applySuccessPostStateRules(ContextValidation validation, Experiment exp){
 		if("N".equals(exp.state.code)){
-			if(validation.isCreationMode()){
-				ExpWorkflowsHelper.updateInputContainersAndProcesses(exp, validation); 
-			}
-		} else if("IP".equals(exp.state.code)){			
-			ExpWorkflowsHelper.updateInputContainersAndProcessesState(exp, validation, "IU", "IP");
+			ExpWorkflowsHelper.updateStateOfInputContainers(exp, getNewState("IW-E", validation.getUser()), validation);
+			ExpWorkflowsHelper.updateStateOfInputContainerSupports(exp, getNewState("IW-E", validation.getUser()), validation);
+			ExpWorkflowsHelper.linkExperimentWithProcesses(exp, validation);			
+		} else if("IP".equals(exp.state.code)){		
+			ExpWorkflowsHelper.updateStateOfInputContainers(exp, getNewState("IU", validation.getUser()), validation);
+			ExpWorkflowsHelper.updateStateOfInputContainerSupports(exp, getNewState("IU", validation.getUser()), validation);
+			ExpWorkflowsHelper.updateStateOfProcesses(exp,  getNewState("IP", validation.getUser()), validation);
+			
 		}else if("F".equals(exp.state.code)){
-			ExpWorkflowsHelper.updateInputContainersAndProcessesState(exp, validation, "IS", "IP");
+			ExpWorkflowsHelper.updateStateOfInputContainers(exp, getNewState("IW-D", validation.getUser()), validation);
+			ExpWorkflowsHelper.updateStateOfInputContainerSupports(exp, getNewState("IW-D", validation.getUser()), validation);
+			ExpWorkflowsHelper.updateStateOfProcesses(exp,  getNewState("IP", validation.getUser()), validation);
 			
 			//ProcessHelper.updateNewContainerSupportCodes(outputContainerUseds.get(0),inputContainerUseds,experiment);
 			
@@ -106,4 +111,22 @@ public class ExpWorkflows extends Workflows<Experiment>{
 		//in case of experiment nothing to do !	
 	}
 
+	/**
+	 * Return the available container state for a experiment category code
+	 * @param categoryCode
+	 * @return
+	 */
+	private static String getContainerStateFromExperimentCategory(String categoryCode) {
+		String nextContainerState=null;
+		if(categoryCode.equals(ExperimentCategory.CODE.transformation.name())){
+			nextContainerState="A-TM";
+		}else if(categoryCode.equals(ExperimentCategory.CODE.transfert.name())){
+			nextContainerState="A-TF";
+		}else if(categoryCode.equals(ExperimentCategory.CODE.qualitycontrol.name())){
+			nextContainerState="A-QC";
+		}else if(categoryCode.equals(ExperimentCategory.CODE.purification.name())){
+			nextContainerState="A-PF";
+		}
+		return nextContainerState;
+	}
 }

@@ -48,7 +48,7 @@ public class Experiments extends DocumentController<Experiment>{
 	final Form<Experiment> experimentForm = form(Experiment.class);
 	final Form<ExperimentSearchForm> experimentSearchForm = form(ExperimentSearchForm.class);
 	final List<String> defaultKeys =  Arrays.asList("categoryCode","code","inputContainerSupportCodes","instrument","outputContainerSupportCodes","projectCodes","protocolCode","reagents","sampleCodes","state","traceInformation","typeCode","atomicTransfertMethods.inputContainerUseds.contents");
-	final ExpWorkflows workflows = new ExpWorkflows();
+	final ExpWorkflows workflows = ExpWorkflows.instance;
 	
 	public static final String calculationsRules ="calculations";
 	

@@ -104,7 +104,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			
 			mainService.put("experiment",$scope.experiment);
 			$scope.experiment = experiment;
-			var state = $scope.experiment.state;
+			var state = angular.copy($scope.experiment.state);
 			state.code = "IP";
 			$http.put(jsRoutes.controllers.experiments.api.Experiments.updateState(experiment.code).url, state)
 			.success(function(data, status, headers, config) {
@@ -133,7 +133,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				
 				mainService.put("experiment",$scope.experiment);
 				$scope.experiment = experiment;
-				var state = $scope.experiment.state;
+				var state =  angular.copy($scope.experiment.state);
 				state.code = "F";
 				$http.put(jsRoutes.controllers.experiments.api.Experiments.updateState(experiment.code).url, state)
 				.success(function(data, status, headers, config) {

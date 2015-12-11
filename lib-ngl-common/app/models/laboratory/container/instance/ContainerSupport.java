@@ -1,5 +1,7 @@
 package models.laboratory.container.instance;
 
+import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -28,7 +30,7 @@ public class ContainerSupport extends DBObject implements IValidation{
 	public TraceInformation traceInformation;
 	public Set<String> projectCodes;
 	public Set<String> sampleCodes;
-	public Set<String> fromExperimentTypeCodes;
+	public Set<String> fromExperimentTypeCodes; //TODO GA useful ???
 	public Map<String, PropertyValue> properties;
 	
 	
@@ -45,11 +47,17 @@ public class ContainerSupport extends DBObject implements IValidation{
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {
+		if(contextValidation.getObject(FIELD_STATE_CODE) == null){
+			contextValidation.putObject(FIELD_STATE_CODE , state.code);
+			
+		}
+		
 		ContainerSupportValidationHelper.validateId(this, contextValidation);
 		ContainerSupportValidationHelper.validateCode(this, InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, contextValidation);
 		ContainerSupportValidationHelper.validateContainerSupportCategoryCode(categoryCode, contextValidation);
 		ContainerSupportValidationHelper.validateProjectCodes(projectCodes, contextValidation);
 		ContainerSupportValidationHelper.validateSampleCodes(sampleCodes, contextValidation);
 		ContainerSupportValidationHelper.validateExperimentTypeCodes(fromExperimentTypeCodes, contextValidation);
+		//TODO Validate properties
 	}
 }

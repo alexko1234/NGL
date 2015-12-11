@@ -1,6 +1,5 @@
 package validation.experiment.instance;
 
-import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
 import static validation.utils.ValidationHelper.required;
 
 import java.util.ArrayList;
@@ -9,19 +8,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
-import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
-import models.laboratory.experiment.instance.ManyToOneContainer;
-import models.laboratory.experiment.instance.OneToOneContainer;
-import models.laboratory.experiment.instance.OneToVoidContainer;
 import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.instance.InstrumentUsed;
@@ -29,11 +23,8 @@ import models.laboratory.protocol.instance.Protocol;
 import models.laboratory.reagent.instance.ReagentUsed;
 import models.utils.InstanceConstants;
 
-
-
 import org.mongojack.DBQuery;
 
-import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;

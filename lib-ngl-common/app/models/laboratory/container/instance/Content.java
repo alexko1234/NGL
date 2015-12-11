@@ -35,8 +35,7 @@ public class Content implements IValidation{
 	
 	public Map<String,PropertyValue> properties;
 	public Content(){
-		properties=new HashMap<String, PropertyValue>();
-		
+		properties=new HashMap<String, PropertyValue>();		
 	}
 
 	@JsonIgnore
@@ -44,8 +43,7 @@ public class Content implements IValidation{
 		this.sampleCode=sampleCode;
 		this.sampleTypeCode=typeCode;
 		this.sampleCategoryCode=categoryCode;
-		this.properties=new HashMap<String, PropertyValue>();
-		
+		this.properties=new HashMap<String, PropertyValue>();		
 	}
 
 
@@ -54,7 +52,7 @@ public class Content implements IValidation{
 	public void validate(ContextValidation contextValidation) {
 
 		ContentValidationHelper.validateSampleCode(sampleCode, contextValidation);
-		SampleValidationHelper.validateSampleCategoryCode(sampleCategoryCode,contextValidation);
+		ContentValidationHelper.validateSampleCategoryCode(sampleCategoryCode,contextValidation);
 		ContentValidationHelper.validateSampleTypeCode(sampleTypeCode,contextValidation);
 		ContentValidationHelper.validatePercentageContent(percentage, contextValidation);
 		ContentValidationHelper.validateProjectCode(projectCode, contextValidation);

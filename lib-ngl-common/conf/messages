@@ -57,6 +57,8 @@ error.validationexp.inputContainerSupportCodes = "La valeur de la liste n'est pa
 error.validationexp.outputContainerSupportCodes = "La valeur de la liste n'est pas correcte"
 error.validationexp.comments.null = "Le commentaire est null"
 
+error.validation.container.inputProcesses.notnull = "Le container est associé à un processus"
+
 #directive messages
 msg.details = [détails]
 msg.success.save = Sauvegarde réussie.
