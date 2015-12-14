@@ -348,6 +348,30 @@ readsets.treatments.ngsrg_illumina.validSeqPercent = % Séquences valides / pist
 readsets.treatments.ngsrg_illumina.fraction = Fraction de run
 readsets.treatments.ngsrg_illumina.nbReadIllumina = Nb Read Illumina
 
+readsets.treatments.ngsrg_nanopore.nbBases1DForward = Nb bases 1D forward
+readsets.treatments.ngsrg_nanopore.nbBases1DReverse = Nb bases 1D reverse
+readsets.treatments.ngsrg_nanopore.nbBases2DAll = Nb bases 2D all
+readsets.treatments.ngsrg_nanopore.nbBases2DPass = Nb bases 2D pass
+
+readsets.treatments.ngsrg_nanopore.1DForward = 1D forward
+readsets.treatments.ngsrg_nanopore.1DReverse = 1D reverse
+readsets.treatments.ngsrg_nanopore.2DAll = 2D all
+readsets.treatments.ngsrg_nanopore.2DPass = 2D pass
+readsets.treatments.ngsrg_nanopore.nbReads = Nb séquences
+readsets.treatments.ngsrg_nanopore.avgSize = Taille (MOYENNE)
+readsets.treatments.ngsrg_nanopore.maxSize = Taille (MAX)
+readsets.treatments.ngsrg_nanopore.N50 = N50
+readsets.treatments.ngsrg_nanopore.nbReadsOver10kb = Nb séquences > 10kb
+readsets.treatments.ngsrg_nanopore.GCPercent = % GC
+readsets.treatments.ngsrg_nanopore.readsPercent = % Nb sequences
+
+readsets.treatments.ngsrg_nanopore.GCDistribution = GC Distribution
+readsets.treatments.ngsrg_nanopore.readLengthVsreadQuality = Read Length vs Read Quality
+readsets.treatments.ngsrg_nanopore.readLengthDistribution = Read Length Distribution
+readsets.treatments.ngsrg_nanopore.readQualityDistribution = Read Quality Distribution
+readsets.treatments.ngsrg_nanopore.KmersDistribution = Kmers Distribution
+
+
 readsets.treatments.mapping.tabs.read1 = Read 1
 readsets.treatments.mapping.tabs.read2 = Read 2
 readsets.treatments.mapping.tabs.pairs = Données (R1+R2)
