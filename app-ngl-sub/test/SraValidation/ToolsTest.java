@@ -3,21 +3,26 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 
-import scala.xml.Node;
+import play.libs.F.Promise;
+import play.libs.ws.WS;
+import play.libs.ws.WSResponse;
 import utils.AbstractTestsSRA;
-import play.libs.XML;
-import play.libs.ws.*;
-import play.mvc.Result;
-import static play.libs.F.Function;
-import static play.libs.F.Promise;
 public class ToolsTest extends AbstractTestsSRA {
 		
 	@Test
@@ -56,19 +61,35 @@ public class ToolsTest extends AbstractTestsSRA {
 		
 	}
 	@Test
-	public void testhttp() throws IOException  {
+	public void testhttp() throws IOException, XPathExpressionException  {
 		Promise<WSResponse> homePage = WS.url("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&id=1735743&retmote=xml").get();
-		Promise<Node> xml = homePage.map(response -> {
-			System.out.println();
+		Promise<Document> xml = homePage.map(response -> {
+			System.out.println("response "+response.getBody());
 			//Document d = XML.fromString(response.getBody());
-			Node n = scala.xml.XML.loadString(response.getBody());
-			System.out.println("J'ai une reponse ?"+ n.toString());
-			return n;
+			//Node n = scala.xml.XML.loadString(response.getBody());
+			//System.out.println("J'ai une reponse ?"+ n.toString());
+			DocumentBuilderFactory dbf =
+		            DocumentBuilderFactory.newInstance();
+			//dbf.setValidating(false);
+			//dbf.setSchema(null);
+	        DocumentBuilder db = dbf.newDocumentBuilder();
+	        Document doc = db.parse(new InputSource(new StringReader(response.getBody())));
+			return doc;
 		});
 		
 		
-		System.out.println("J'ai une reponse ?"+ xml.toString());
-	
+		System.out.println("J'ai une reponse xml ?"+xml.get(1000) );
+		Document doc = xml.get(1000);
+		XPath xPath =  XPathFactory.newInstance().newXPath();
+		String expression = "/TaxaSet/Taxon/ScientificName";
+
+		//read a string value
+		String scientifiqueName = xPath.compile(expression).evaluate(doc);
+		System.out.println("Scientifique name "+scientifiqueName);
+		
+
+
+	   
 		//Promise<WSResponse> result = WS.url("http://example.com").post("content");	
 	
 	}
