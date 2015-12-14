@@ -113,6 +113,25 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"groupMethod":"collect"
 		},
 		{
+			"header":Messages("containers.table.mesuredConcentration.value"),
+			"property":"mesuredConcentration.value",
+			"order":true,
+			"hide":true,
+			"position":11.6,
+			"format":2,
+			"type":"number",
+			"groupMethod":"unique"
+		},	
+		{
+			"header":Messages("containers.table.mesuredConcentration.unit"),
+			"property":"mesuredConcentration.unit",
+			"order":true,
+			"hide":true,
+			"position":11.7,
+			"type":"text",
+			"groupMethod":"unique"
+		},
+		{
 			"header":Messages("containers.table.creationDate"),
 			"property":"traceInformation.creationDate",
 			"order":true,

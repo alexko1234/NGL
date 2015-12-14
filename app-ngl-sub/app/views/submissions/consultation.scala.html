@@ -5,22 +5,17 @@
 
 	@columnSearchForm{
 		@formGroup{
-			@** ceci est un commentaire
-			<div class="form-control" bt-select  ng-model="consultationService.form.projCode" filter="true" placeholder='@Messages("consultation.placeholder.projectCode")' bt-options="project.code as project.code for project in consultationService.lists.getProjects()" submissionForm.$valid && required ng-change="search()"></div>	
-			
-			**@
 			<div class="form-control" bt-select  ng-model="consultationService.form.projCode" filter="true" placeholder='@Messages("consultation.placeholder.projectCode")' bt-options="project.code as project.code for project in consultationService.lists.getProjects()" required ng-change="search()"></div>	
 		}	
 		@**"consultation.placeholder.state" est definit dans le fichier /conf/messages.
-		La variable consultationService.sraVariables.state est initialise dans /public/javascripts/submissions/services.js
+		La variable consultationService.sraVariables.state est initialisee dans /public/javascripts/submissions/services.js
 		au niveau de createService et initListService 
 		<div class="form-control" bt-select ng-model="consultationService.form.state" placeholder='@Messages("consultation.placeholder.state")' bt-options="state.code as state.name for state in consultationService.sraVariables.state" required ng-change=search()></div>			
 		Attention required pris en compte ssi submissionForm.$valid car pas de bouton submit d'ou demande explicite de validation du formulaire avant de lancer search().
-		**@
+		**@		
 		@formGroup{
-			<div class="form-control" bt-select ng-model="consultationService.form.state" placeholder='@Messages("consultation.placeholder.state")' bt-options="state.code as state.name for state in consultationService.sraVariables.state" required ng-change=search()></div>			
-		}
-		
+			<div class="form-control" bt-select ng-if="!consultationService.isValidation" ng-model="consultationService.form.state" placeholder='@Messages("consultation.placeholder.state")' bt-options="state.code as state.name for state in consultationService.sraVariables.state" required ng-change=search()></div>			
+		}	
 	}
 }
 

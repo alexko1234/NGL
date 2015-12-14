@@ -53,7 +53,7 @@ public class Containers extends CommonController {
 	final static Form<ContainersSearchForm> containerForm = form(ContainersSearchForm.class);
 	final static Form<ContainerBatchElement> batchElementForm = form(ContainerBatchElement.class);
 	final static Form<ContainersUpdateForm> containersUpdateForm = form(ContainersUpdateForm.class);
-	final static List<String> defaultKeys =  Arrays.asList("code","fromExperimentTypeCodes","sampleCodes","contents","traceInformation","projectCodes", "inputProcessCodes", "valuation.valid", "state", "support");
+	final static List<String> defaultKeys =  Arrays.asList("code","fromExperimentTypeCodes","sampleCodes","contents","traceInformation","projectCodes", "inputProcessCodes", "valuation.valid", "state", "support","mesuredConcentration");
     // GA 31/07/2015 suppression des parametres "lenght"
 	
 	public static Result get(String code){

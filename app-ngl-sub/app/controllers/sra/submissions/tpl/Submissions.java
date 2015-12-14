@@ -1,14 +1,13 @@
 package controllers.sra.submissions.tpl;
 
-import controllers.CommonController;
 import play.Routes;
 import play.mvc.Result;
-import views.html.submissions.home;
-import views.html.submissions.create;
-import views.html.submissions.details;
 import views.html.submissions.activate;
 import views.html.submissions.consultation;
-import controllers.readsets.api.ReadSetsController;
+import views.html.submissions.create;
+import views.html.submissions.details;
+import views.html.submissions.home;
+import controllers.CommonController;
 
 public class Submissions extends CommonController
 {
@@ -43,6 +42,9 @@ public class Submissions extends CommonController
 		return ok(consultation.render());
 
 	}
+
+
+
 	public static Result javascriptRoutes() {
   	    response().setContentType("text/javascript");
   	    return ok(  	    		
