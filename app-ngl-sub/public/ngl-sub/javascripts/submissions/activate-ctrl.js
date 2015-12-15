@@ -73,7 +73,8 @@ angular.module('home').controller('ActivateCtrl',[ '$http', '$scope', '$routePar
 		var error = false;
 		//Get data du datable
 		console.log("Get data ");
-		var tab_submissions = $scope.activateService.datatable.getData();
+		//var tab_submissions = $scope.activateService.datatable.getData();
+		var tab_submissions = $scope.activateService.datatable.getSelection(true);
 		var decompte = tab_submissions.length ;
 		
 		//boucle data
