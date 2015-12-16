@@ -183,6 +183,35 @@ runs.lane.ngsrg_illumina.phasing = Phasing
 runs.lane.ngsrg_illumina.prephasing = Prephasing
 runs.lane.ngsrg_illumina.nbCycles = Nb Cycles Utiles
 runs.lane.ngsrg_illumina.seqLossPercent = % Perte
+
+runs.ngsrg_nanopore.poreOccupancy = Occupation des pores
+runs.ngsrg_nanopore.poreOccupancyTime = Activité des pores
+runs.ngsrg_nanopore.yieldBasePairs = Rendement
+runs.ngsrg_nanopore.timeAvgQuality = Score qualité
+runs.ngsrg_nanopore.poreMetrics = Métriques des pores
+runs.ngsrg_nanopore.inactivePorePercentage = % pores inactifs
+runs.ngsrg_nanopore.activePorePercentage = % pores actifs
+runs.ngsrg_nanopore.poreNbReadsMin = Nb reads / pore (MIN)
+runs.ngsrg_nanopore.poreNbReadsMax = Nb reads / pore (MAX)
+runs.ngsrg_nanopore.poreNbReadsAvg = Nb reads / pore (MOYENNE)
+runs.ngsrg_nanopore.poreNbBasesMin = Nb bases / pore (MIN)
+runs.ngsrg_nanopore.poreNbBasesMax = Nb bases / pore (MAX)
+runs.ngsrg_nanopore.poreNbBasesAvg = Nb bases / pore (MOYENNE)
+runs.ngsrg_nanopore.poreActivityTimePercentMin = % durée d'activité des pores (MIN)
+runs.ngsrg_nanopore.poreActivityTimePercentMax = % durée d'activité des pores (MAX)
+runs.ngsrg_nanopore.poreActivityTimePercentAvg = % durée d'activité des pores (MOYENNE)
+runs.ngsrg_nanopore.poreSpeedDistribMin = Vitesse de séquençage des pores (MIN)
+runs.ngsrg_nanopore.poreSpeedDistribMax = Vitesse de séquençage des pores (MAX)
+runs.ngsrg_nanopore.poreSpeedDistribAvg = Vitesse de séquençage des pores (MOYENNE)
+
+runs.ngsrg_nanopore.poreQualityAvg = Score Qualité (MOYENNE)
+runs.ngsrg_nanopore.nbBases1DForward = Nb bases 1D forward
+runs.ngsrg_nanopore.nbBases1DReverse = Nb bases 1D reverse
+runs.ngsrg_nanopore.nbBases2DAll = Nb bases 2D all
+runs.ngsrg_nanopore.nbBases2DPass = Nb bases 2D pass
+runs.ngsrg_nanopore.totalUsefulBases = Nb bases utiles
+runs.ngsrg_nanopore.minknowVersion = Version MinKnow
+
 runs.lane.sav.read1 = Read 1
 runs.lane.sav.read2 = Read 2
 runs.lane.sav.clusterDensity = Density (K/mm2)

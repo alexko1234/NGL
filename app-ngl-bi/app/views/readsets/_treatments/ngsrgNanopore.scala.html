@@ -25,8 +25,8 @@
 </div>
 
 <!-- Tableau a 2 dimensions -->
-<div class="row">
-	<div class="col-md-11 col-lg-11">	
+ <div class="row">
+	<div class="col-md-4 col-lg-4">	
 		 <table class="table table-condensed table-hover table-bordered">
 			<thead>
 				<tr>
@@ -40,45 +40,45 @@
 			<tbody>
 				<tr>
 					<th>@Messages("readsets.treatments.ngsrg_nanopore.nbReads")</th>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.1DForward.nbReads.value | number}}</td>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.1DReverse.nbReads.value | number}}</td>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.2DAll.nbReads.value | number}}</td>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.2DPass.nbReads.value | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DForward'].value.nbReads | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.nbReads | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.nbReads | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DPass'].value.nbReads | number}}</td>
 				</tr>						
 				<tr>
 					<th>@Messages("readsets.treatments.ngsrg_nanopore.avgSize")</th>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.1DForward.avgSize.value | number:2}}</td>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.1DReverse.avgSize.value | number:2}}</td>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.2DAll.avgSize.value | number:2}}</td>
-					<td></td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DForward'].value.avgSize | number:2}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.avgSize | number:2}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.avgSize | number:2}}</td>
+					<td class="active"></td>
 				</tr>	
 				<tr>
 					<th>@Messages("readsets.treatments.ngsrg_nanopore.maxSize")</th>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.1DForward.maxSize.value | number}}</td>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.1DReverse.maxSize.value | number}}</td>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.2DAll.maxSize.value | number}}</td>
-					<td></td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DForward'].value.maxSize | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.maxSize | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.maxSize | number}}</td>
+					<td class="active"></td>
 				</tr>
 				<tr>
 					<th>@Messages("readsets.treatments.ngsrg_nanopore.N50")</th>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.1DForward.N50.value | number}}</td>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.1DReverse.N50.value | number}}</td>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.2DAll.N50.value | number}}</td>
-					<td></td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DForward'].value.N50 | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.N50 | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.N50 | number}}</td>
+					<td class="active"></td>
 				</tr>	
 				<tr>
 					<th>@Messages("readsets.treatments.ngsrg_nanopore.N50")</th>
-					<td></td>
-					<td></td>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.2DAll.nbReadsOver10kb.value | number}}</td>
-					<td></td>
+					<td class="active"></td>
+					<td class="active"></td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.nbReadsOver10kb | number}}</td>
+					<td class="active"></td>
 				</tr>			
 				<tr>
 					<th>@Messages("readsets.treatments.ngsrg_nanopore.GCPercent")</th>
-					<td></td>
-					<td></td>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.2DAll.GCPercent.value | number:2}}</td>
-					<td></td>
+					<td class="active"></td>
+					<td class="active"></td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.GCPercent | number:2}}</td>
+					<td class="active"></td>
 				</tr>						
 			</tbody>
 		 </table>
@@ -97,8 +97,9 @@
 		 </a> 
 	    </div>
 </div>
-		
+
 <div class="row">
+	<div class="col-md-5 col-lg-5">
 	<div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal" 
 		ng-click="setImage(readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.readLengthVsreadQuality.value,'readLengthVsreadQuality','',treament.code!=undefined?treament.code:treatments.getTreatment().code,
 		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.readLengthVsreadQuality.width,
@@ -107,9 +108,8 @@
 		    <img id="default_readLengthVsreadQuality" ng-src="data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.readLengthVsreadQuality.value}}" />
 		 </a> 
 	    </div>
-</div>
-
-<div class="row">
+	</div>
+	<div class="col-md-5 col-lg-5">
 	<div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal" 
 		ng-click="setImage(readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.readLengthDistribution.value,'readLengthDistribution','',treament.code!=undefined?treament.code:treatments.getTreatment().code,
 		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.readLengthDistribution.width,
@@ -118,9 +118,12 @@
 		    <img id="default_readLengthDistribution" ng-src="data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.readLengthDistribution.value}}" />
 		 </a> 
 	    </div>
+	 </div>
+	
 </div>
 
 <div class="row">
+	 <div class="col-md-5 col-lg-5">
 	<div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal" 
 		ng-click="setImage(readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.readQualityDistribution.value,'readQualityDistribution','',treament.code!=undefined?treament.code:treatments.getTreatment().code,
 		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.readQualityDistribution.width,
@@ -128,10 +131,9 @@
 		 <a href="#">
 		    <img id="default_readQualityDistribution" ng-src="data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.readQualityDistribution.value}}" />
 		 </a> 
-	    </div>
-</div>
-
-<div class="row">
+	   </div>
+	   </div>
+	  <div class="col-md-5 col-lg-5">
 	<div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal" 
 		ng-click="setImage(readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.KmersDistribution.value,'KmersDistribution','',treament.code!=undefined?treament.code:treatments.getTreatment().code,
 		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.KmersDistribution.width,
@@ -140,4 +142,6 @@
 		    <img id="default_KmersDistribution" ng-src="data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.KmersDistribution.value}}" />
 		 </a> 
 	    </div>
-</div>
+	    </div>
+	 
+	</div>
