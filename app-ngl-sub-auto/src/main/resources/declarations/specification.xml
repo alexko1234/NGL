@@ -32,7 +32,8 @@ H:\birdsSpec.xsd">
 			<KeyValueElement key="-l" value="300M" parameterName="optionl"/>
 			<KeyValueElement key="--file-list" value="%directoryPath%/list_aspera_WGS" parameterName="fileList"/>
 			<KeyValueElement key="--mode" value="send" parameterName="mode"/>
-			<KeyValueElement key="--host" value="webin.ebi.ac.uk" parameterName="hostName"/>
+			<!-- <KeyValueElement key="--host" value="webin.ebi.ac.uk" parameterName="hostName"/> -->
+			<KeyValueElement key="--host" value="fasp.sra.ebi.ac.uk" parameterName="hostName"/>
 			<KeyValueElement key="--user" value="Webin-9" parameterName="userEBI"/>
 			<LineElement line="-T" parameterName="encryption"/>
 			<LineElement line="." parameterName="localDirectory"/>
