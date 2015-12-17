@@ -397,8 +397,15 @@ public class SubmissionServices {
 		if (submission == null){
 			throw new SraException("aucun objet submission dans la base pour  : " + submissionCode);
 		}
-		
 		try {
+			// Determiner le repertoire de soumission:
+			DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
+			Date courantDate = new java.util.Date();
+			String st_my_date = dateFormat.format(courantDate);
+			if (StringUtils.isBlank((submission.projectCode))){
+				throw new SraException("Dans activateSubmission: impossible de determiner le repertoire de soumission avec submission.projectCode à nul");
+			} 
+			submission.submissionDirectory = VariableSRA.submissionRootDirectory + File.separator + submission.projectCode + File.separator + st_my_date;
 			File dataRep = new File(submission.submissionDirectory);
 			System.out.println("Creation du repertoire de soumission et liens vers donnees brutes " + submission.submissionDirectory);
 			if (dataRep.exists()){
@@ -500,11 +507,10 @@ public class SubmissionServices {
 							DBUpdate.set("state.code", "inwaiting").set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 
 				}
 			}
-			// mettre à jour la soumission pour le state :
+			// mettre à jour la soumission pour le state et pour le directory :
 			MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class,
 					DBQuery.is("code", submission.code).notExists("accession"),
-					DBUpdate.set("state.code", "inwaiting").set("studyCode", submission.studyCode).set("sampleCodes", submission.sampleCodes).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 
-
+					DBUpdate.set("state.code", "inwaiting").set("studyCode", submission.studyCode).set("sampleCodes", submission.sampleCodes).set("submissionDirectory", submission.submissionDirectory).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 
 		}
 	}
 		

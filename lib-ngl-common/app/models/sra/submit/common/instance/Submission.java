@@ -66,10 +66,7 @@ public class Submission extends DBObject implements IValidation {
 		DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
 		Date courantDate = new java.util.Date();
 		String st_my_date = dateFormat.format(courantDate);	
-		if (projectCode != null ) {
-			this.submissionDirectory = VariableSRA.submissionRootDirectory + File.separator + projectCode + File.separator + st_my_date;
-			this.projectCode = projectCode;
-		}
+		// determination du repertoire de soumission dans methode activate SubmissionServices
 		this.submissionDate = courantDate;
 		this.traceInformation = new TraceInformation();
 		this.traceInformation.setTraceInformation(user);
@@ -90,8 +87,15 @@ public class Submission extends DBObject implements IValidation {
 		// verifier que champs contraints presents avec valeurs autorisees:
 		ValidationHelper.required(contextValidation, this.submissionDate , "submissionDate");
 		ValidationHelper.required(contextValidation, this.submissionDirectory , "submissionDirectory");
-		// Verifier que status est bien renseigné avec valeurs autorisees.
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapStatus, "state.code");
+		// Verifier que status est bien renseigné avec valeurs autorisees et que submissionDirectory est bien renseigné une
+		// fois que l'objet est en status "inWaiting" (etape activate de la soumission)
+		if(SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapStatus, "state.code")){
+			if(this.state.code.equalsIgnoreCase("inwaiting") 
+					||this.state.code.equalsIgnoreCase("inprogress")
+					|| this.state.code.equalsIgnoreCase("submitted")) {
+				ValidationHelper.required(contextValidation, this.	submissionDirectory , "submissionDirectory");
+			}
+		}
 		/*ValidationHelper.required(contextValidation, this.xmlStudys , "xmlStudys");
 		ValidationHelper.required(contextValidation, this.xmlSamples , "xmlSamples");
 		ValidationHelper.required(contextValidation, this.xmlExperiments , "xmlExperiments");
