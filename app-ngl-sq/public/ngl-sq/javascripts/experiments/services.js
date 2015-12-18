@@ -4,12 +4,21 @@
 	factory('experimentsSearchService', ['$http', 'mainService', 'lists', 'datatable', function($http, mainService, lists, datatable){
 		var getColumns = function(){
 			var columns = [
+			             {
+			            	 "header":Messages("experiments.table.typeCode"),
+			            	 "property":"typeCode",
+			            	 "filter":"codes:'type'",
+			            	 "order":true,
+			            	 "hide":true,
+			            	 "position":1,
+			            	 "type":"text"
+			             },
 						{
 							"header":Messages("experiments.table.code"),
 							"property":"code",
 							"order":true,
-							"hide":true,
-							"position":1,
+							"hide":false,
+							"position":2,
 							"type":"text"
 						},
 						{
@@ -17,22 +26,13 @@
 							"property":"instrument.code",
 							"order":true,
 							"hide":true,
-							"position":2,
+							"position":3,
 							"type":"text",
 							"filter":"codes:'instrument'"
 						},						
 						{
 							"header":Messages("experiments.table.categoryCode"),
 							"property":"categoryCode",
-							"order":true,
-							"hide":true,
-							"position":3,
-							"type":"text"
-						},
-						{
-							"header":Messages("experiments.table.typeCode"),
-							"property":"typeCode",
-							"filter":"codes:'type'",
 							"order":true,
 							"hide":true,
 							"position":4,

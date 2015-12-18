@@ -19,6 +19,9 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 				reverse :true,
 				mode:'local'
 			},
+			hide:{
+		 		 active:true
+		 	},
 			edit:{
 				active:false
 			},
