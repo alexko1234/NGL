@@ -70,23 +70,15 @@
 @if(code == "ngsrg-nanopore") {
 
 	<div class="row">
-	<div class="col-md-4 col-lg-4">
+	<div class="col-md-10 col-lg-10">
 		<table class="table table-condensed table-hover table-bordered">
 			<thead>
 				<tr>
 					<th>@Messages("runs.ngsrg_nanopore.inactivePorePercentage")</th>
 					<th>@Messages("runs.ngsrg_nanopore.activePorePercentage")</th>
-					<th>@Messages("runs.ngsrg_nanopore.poreNbReadsMin")</th>
-					<th>@Messages("runs.ngsrg_nanopore.poreNbReadsMax")</th>
-					<th>@Messages("runs.ngsrg_nanopore.poreNbReadsAvg")</th>
-					<th>@Messages("runs.ngsrg_nanopore.poreNbBasesMin")</th>
-					<th>@Messages("runs.ngsrg_nanopore.poreNbBasesMax")</th>
-					<th>@Messages("runs.ngsrg_nanopore.poreNbBasesAvg")</th>
-					<th>@Messages("runs.ngsrg_nanopore.poreActivityTimePercentMin")</th>
-					<th>@Messages("runs.ngsrg_nanopore.poreActivityTimePercentMax")</th>
 					<th>@Messages("runs.ngsrg_nanopore.poreActivityTimePercentAvg")</th>
-					<th>@Messages("runs.ngsrg_nanopore.poreSpeedDistribMin")</th>
-					<th>@Messages("runs.ngsrg_nanopore.poreSpeedDistribMax")</th>
+					<th>@Messages("runs.ngsrg_nanopore.poreNbReadsAvg")</th>
+					<th>@Messages("runs.ngsrg_nanopore.poreNbBasesAvg")</th>
 					<th>@Messages("runs.ngsrg_nanopore.poreSpeedDistribAvg")</th>
 					<th>@Messages("runs.ngsrg_nanopore.poreQualityAvg")</th>
 					<th>@Messages("runs.ngsrg_nanopore.nbBases1DForward")</th>
@@ -101,17 +93,9 @@
 				<tr>
 					<td>{{run.treatments.ngsrg.default.inactivePorePercentage.value | number:2}}</td>
 					<td>{{run.treatments.ngsrg.default.activePorePercentage.value | number:2}}</td>
-					<td>{{run.treatments.ngsrg.default.poreNbReadsMin.value | number}}</td>
-					<td>{{run.treatments.ngsrg.default.poreNbReadsMax.value | number}}</td>
-					<td>{{run.treatments.ngsrg.default.poreNbReadsAvg.value | number:2}}</td>
-					<td>{{run.treatments.ngsrg.default.poreNbBasesMin.value | number}}</td>
-					<td>{{run.treatments.ngsrg.default.poreNbBasesMax.value | number}}</td>
-					<td>{{run.treatments.ngsrg.default.poreNbBasesAvg.value | number:2}}</td>
-					<td>{{run.treatments.ngsrg.default.poreActivityTimePercentMin.value | number:2}}</td>
-					<td>{{run.treatments.ngsrg.default.poreActivityTimePercentMax.value | number:2}}</td>
 					<td>{{run.treatments.ngsrg.default.poreActivityTimePercentAvg.value | number:2}}</td>
-					<td>{{run.treatments.ngsrg.default.poreSpeedDistribMin.value | number:2}}</td>
-					<td>{{run.treatments.ngsrg.default.poreSpeedDistribMax.value | number:2}}</td>
+					<td>{{run.treatments.ngsrg.default.poreNbReadsAvg.value | number:2}}</td>
+					<td>{{run.treatments.ngsrg.default.poreNbBasesAvg.value | number:2}}</td>
 					<td>{{run.treatments.ngsrg.default.poreSpeedDistribAvg.value | number:2}}</td>
 					<td>{{run.treatments.ngsrg.default.poreQualityAvg.value | number:2}}</td>
 					<td>{{run.treatments.ngsrg.default.nbBases1DForward.value | number}}</td>
@@ -127,6 +111,18 @@
 	</div>
 
   	<!-- Add images -->
+  	<div class="row">
+	<div class="col-md-10 col-lg-10">
+	<div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal" 
+		ng-click="setImage(run.treatments.ngsrg.default.poreMetrics.value,'poreMetrics','','ngsrg',
+		run.treatments.ngsrg.default.poreMetrics.width,
+		run.treatments.ngsrg.default.poreMetrics.height)">
+		 <a href="#">
+		    <img id="default_poreMetrics" ng-src="data:image/png;base64,{{run.treatments.ngsrg.default.poreMetrics.value}}" />
+		 </a> 
+	    </div>
+	    </div>
+	</div>
   	<div class="row">
   	<div class="col-md-5 col-lg-5">
 	<div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal" 
@@ -171,16 +167,7 @@
 	    </div>
 	   </div>
 	</div>
-	<div class="row">
-	<div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal" 
-		ng-click="setImage(run.treatments.ngsrg.default.poreMetrics.value,'poreMetrics','','ngsrg',
-		run.treatments.ngsrg.default.poreMetrics.width,
-		run.treatments.ngsrg.default.poreMetrics.height)">
-		 <a href="#">
-		    <img id="default_poreMetrics" ng-src="data:image/png;base64,{{run.treatments.ngsrg.default.poreMetrics.value}}" />
-		 </a> 
-	    </div>
-	</div>
+	
 }
 
 

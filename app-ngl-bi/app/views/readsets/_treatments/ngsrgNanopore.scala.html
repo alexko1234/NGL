@@ -1,32 +1,7 @@
 @()
-
-<!-- Tableau simple  -->
-<div class="row">
-	<div class="col-md-4 col-lg-4">
-		<table class="table table-condensed table-hover table-bordered">
-			<thead>
-				<tr>
-					<th>@Messages("readsets.treatments.ngsrg_nanopore.nbBases1DForward")</th>
-					<th>@Messages("readsets.treatments.ngsrg_nanopore.nbBases1DReverse")</th>
-					<th>@Messages("readsets.treatments.ngsrg_nanopore.nbBases2DAll")</th>
-					<th>@Messages("readsets.treatments.ngsrg_nanopore.nbBases2DPass")</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.nbBases1DForward.value | number}}</td>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.nbBases1DReverse.value | number}}</td>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.nbBases2DAll.value | number}}</td>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.nbBases2DPass.value | number}}</td>
-				</tr>		
-			</tbody>
-		</table>			
-	</div>
-</div>
-
 <!-- Tableau a 2 dimensions -->
  <div class="row">
-	<div class="col-md-4 col-lg-4">	
+	<div class="col-md-6 col-lg-6">	
 		 <table class="table table-condensed table-hover table-bordered">
 			<thead>
 				<tr>
@@ -38,6 +13,14 @@
 				</tr>
 			</thead>
 			<tbody>
+				<tr>
+					<th>@Messages("readsets.treatments.ngsrg_nanopore.nbBases")</th>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.nbBases1DForward.value | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.nbBases1DReverse.value | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.nbBases2DAll.value | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.nbBases2DPass.value | number}}</td>
+				</tr>	
+				
 				<tr>
 					<th>@Messages("readsets.treatments.ngsrg_nanopore.nbReads")</th>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DForward'].value.nbReads | number}}</td>
@@ -67,7 +50,7 @@
 					<td class="active"></td>
 				</tr>	
 				<tr>
-					<th>@Messages("readsets.treatments.ngsrg_nanopore.N50")</th>
+					<th>@Messages("readsets.treatments.ngsrg_nanopore.nbReadsOver10kb")</th>
 					<td class="active"></td>
 					<td class="active"></td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.nbReadsOver10kb | number}}</td>
@@ -87,16 +70,7 @@
 
 <!-- Image -->
 
-<div class="row">
-	<div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal" 
-		ng-click="setImage(readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.GCDistribution.value,'GCDistribution','',treament.code!=undefined?treament.code:treatments.getTreatment().code,
-		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.GCDistribution.width,
-		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.GCDistribution.height)">
-		 <a href="#">
-		    <img id="default_GCDistribution" ng-src="data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.GCDistribution.value}}" />
-		 </a> 
-	    </div>
-</div>
+
 
 <div class="row">
 	<div class="col-md-5 col-lg-5">
@@ -145,3 +119,15 @@
 	    </div>
 	 
 	</div>
+<div class="row">
+	 <div class="col-md-5 col-lg-5">
+	<div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal" 
+		ng-click="setImage(readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.GCDistribution.value,'GCDistribution','',treament.code!=undefined?treament.code:treatments.getTreatment().code,
+		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.GCDistribution.width,
+		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.GCDistribution.height)">
+		 <a href="#">
+		    <img id="default_GCDistribution" ng-src="data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.GCDistribution.value}}" />
+		 </a> 
+	    </div>
+	    </div>
+</div>
