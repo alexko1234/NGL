@@ -108,7 +108,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"property":"fromExperimentTypeCodes",
 			"order":false,
 			"hide":true,
-			"position":11,
+			"position":5.5,
 			"type":"text",
 			"render":"<div list-resize='cellValue | unique' list-resize-min-size='3'>",
 			"filter":"unique | codes:\"type\"",
@@ -119,7 +119,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"property":"mesuredConcentration.value",
 			"order":true,
 			"hide":true,
-			"position":11.6,
+			"position":11.1,
 			"format":2,
 			"type":"number",
 			"groupMethod":"unique"
@@ -129,7 +129,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"property":"mesuredConcentration.unit",
 			"order":true,
 			"hide":true,
-			"position":11.7,
+			"position":11.2,
 			"type":"text",
 			"groupMethod":"unique"
 		});

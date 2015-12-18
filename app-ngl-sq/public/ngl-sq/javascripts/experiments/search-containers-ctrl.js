@@ -107,7 +107,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"property":"fromExperimentTypeCodes",
 			"hide":true,
 			"order":false,
-			"position":11,
+			"position":5.5,
 			"type":"text",
 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
 			"groupMethod":"collect"
@@ -117,7 +117,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"property":"mesuredConcentration.value",
 			"order":true,
 			"hide":true,
-			"position":11.6,
+			"position":11.1,
 			"format":2,
 			"type":"number",
 			"groupMethod":"unique"
@@ -127,7 +127,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope','$routeParams
 			"property":"mesuredConcentration.unit",
 			"order":true,
 			"hide":true,
-			"position":11.7,
+			"position":11.2,
 			"type":"text",
 			"groupMethod":"unique"
 		},
