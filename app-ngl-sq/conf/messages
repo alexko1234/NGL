@@ -84,7 +84,7 @@ containers.table.inputProcessCodes = Processus
 containers.table.percentageInsidePool = % au sein du pool
 containers.table.codeAliquot = Code aliquot
 containers.table.storageCode = Stockage
-containers.table.mesuredConcentration.unit= Concentration Unité
+containers.table.mesuredConcentration.unit=Unité Concentration 
 containers.table.mesuredConcentration.value=Concentration Container
 
 containers.placeholder.fromDate = Container depuis le (jj/mm/aaaa)
