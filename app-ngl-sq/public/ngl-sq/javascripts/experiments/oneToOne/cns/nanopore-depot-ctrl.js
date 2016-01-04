@@ -129,7 +129,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 				active:true
 			},
 			edit:{
-				active: (!$scope.doneAndRecorded && !$scope.inProgressNow),
+				active: false,
 				columnMode:false
 			},
 			messages:{
@@ -232,6 +232,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 				active:true
 			},
 			edit:{
+				byDefault : (!$scope.doneAndRecorded && $scope.inProgressNow),
 				active: true,
 				showButton: true,
 				columnMode:false
