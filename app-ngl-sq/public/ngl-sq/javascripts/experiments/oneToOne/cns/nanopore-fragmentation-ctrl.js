@@ -154,6 +154,7 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToS
 				active:true
 			},
 			edit:{
+				byDefault : (!$scope.doneAndRecorded && !$scope.inProgressNow),
 				active: (!$scope.doneAndRecorded && !$scope.inProgressNow),
 				columnMode:true
 			},
