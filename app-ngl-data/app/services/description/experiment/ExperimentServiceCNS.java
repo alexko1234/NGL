@@ -145,6 +145,22 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		
+			//Bionano
+			l.add(newExperimentType("Irys Prep NLRS","irys-nlrs-prep",null,2000,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionIrysPrepNLRS(),
+					getInstrumentUsedTypes("hand"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
+			
+			l.add(newExperimentType("Préparation Irys CHIP","irys-chip-preparation",null,2100,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionPreparationIrysChip(),
+					getInstrumentUsedTypes("hand"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
+			
+			l.add(newExperimentType("Dépôt BioNano","bionano-depot",null,2200,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionFragmentation(),
+					getInstrumentUsedTypes("hand","covaris-s2","covaris-e210"),"OneToVoid", 
+					DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
+			
 			
 			//library
 			l.add(newExperimentType("Fragmentation","fragmentation",null,200,
@@ -226,6 +242,18 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 	
 
 	
+
+
+	private List<PropertyDefinition> getPropertyDefinitionPreparationIrysChip() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	private List<PropertyDefinition> getPropertyDefinitionIrysPrepNLRS() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 
 	public void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
