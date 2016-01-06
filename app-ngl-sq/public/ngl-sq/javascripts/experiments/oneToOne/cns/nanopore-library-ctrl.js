@@ -151,7 +151,7 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse', 'at
 				active:true
 			},
 			edit:{
-				byDefault : (!$scope.doneAndRecorded && !$scope.inProgressNow),
+				byDefault : ($scope.doneAndRecorded && !$scope.inProgressNow),
 				active: (!$scope.doneAndRecorded && !$scope.inProgressNow),
 				columnMode:true
 			},

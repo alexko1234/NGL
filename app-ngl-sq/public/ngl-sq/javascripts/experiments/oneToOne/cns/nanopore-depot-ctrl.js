@@ -232,7 +232,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 				active:true
 			},
 			edit:{
-				byDefault : (!$scope.doneAndRecorded && $scope.inProgressNow),
+				byDefault : (!$scope.doneAndRecorded && !$scope.inProgressNow),
 				active: true,
 				showButton: true,
 				columnMode:false

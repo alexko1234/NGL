@@ -190,7 +190,6 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToS
 		var dtConfig = $scope.atmService.data.getConfig();
 		dtConfig.edit.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
 		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
-		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
 		$scope.atmService.data.setConfig(dtConfig);
 		
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
