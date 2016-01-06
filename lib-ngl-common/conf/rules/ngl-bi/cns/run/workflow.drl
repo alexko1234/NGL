@@ -37,3 +37,173 @@ rule "Update readset state old lims when lane is invalid"
 		Logger.debug("Update readset state old lims when lane is invalid "+$readset.code);
 		Spring.getBeanOfType(ILimsRunServices.class).updateReadSetEtat($readset, 4);	
 end
+
+#1DForward.nbBases / 1DForward.nbBases
+#1DForward.reads / 1DForward.reads
+rule "Calculate 1DForward basesPercent and readPercent for ngsrg-nanopore"
+	@nglBI( F_RG_1 )
+	dialect "java"
+	salience 600
+	no-loop
+	when
+		$run : Run($treatment : treatments["ngsrg"], $treatment!=null, $treatment.typeCode == "ngsrg-nanopore")
+		$mapValue : Map() from $treatment.results.values()
+		$1DForward : Entry(key=="1DForward") from $mapValue.entrySet()
+	then
+		Logger.debug("Calculate 1DForward.basesPercent");
+		PropertyObjectValue propertyValue1DForward = (PropertyObjectValue)$1DForward.getValue();
+		Map mapPropertyValue1DForward = propertyValue1DForward.getValue();
+		
+		Long value1DForwardNbBases = (Long)mapPropertyValue1DForward.get("nbBases");
+		Double value1DForwardBasesPercent = roundValue((double)value1DForwardNbBases/value1DForwardNbBases);
+		mapPropertyValue1DForward.put("basesPercent", value1DForwardBasesPercent);
+		
+		Logger.debug("Calculate 1DForward.readsPercent");
+		Long value1DForwardNbReads = (Long)mapPropertyValue1DForward.get("nbReads");
+		Double value1DForwardReadsPercent = roundValue((double)value1DForwardNbReads/value1DForwardNbReads);
+		mapPropertyValue1DForward.put("readsPercent", value1DForwardReadsPercent);
+		
+		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class,  
+			DBQuery.is("code",$run.code),
+			DBUpdate.set("treatments.ngsrg.default.1DForward", propertyValue1DForward));
+end
+
+#1DReverse.nbBases / 1DForward.nbBases
+#1DReverse.reads / 1DForward.reads
+rule "Calculate 1DReverse basesPercent and readsPercent for ngsrg-nanopore"
+	@nglBI( F_RG_1 )
+	dialect "java"
+	salience 600
+	no-loop
+	when
+		$run : Run($treatment : treatments["ngsrg"], $treatment!=null, $treatment.typeCode == "ngsrg-nanopore")
+		$mapValue : Map() from $treatment.results.values()
+		$1DForward : Entry(key=="1DForward") from $mapValue.entrySet()
+		$1DReverse : Entry(key=="1DReverse") from $mapValue.entrySet()
+	then
+		Logger.debug("Calculate 1DReverse.basesPercent");
+		
+		Long value1DForwardNbBases = (Long)((PropertyObjectValue)$1DForward.getValue()).getValue().get("nbBases");
+		Long value1DForwardNbReads = (Long)((PropertyObjectValue)$1DForward.getValue()).getValue().get("nbReads");
+		
+		PropertyObjectValue propertyValue1DReverse = (PropertyObjectValue)$1DReverse.getValue();
+		Map mapPropertyValue1DReverse = propertyValue1DReverse.getValue();
+		
+		Long value1DReverseNbBases = (Long)mapPropertyValue1DReverse.get("nbBases");
+		Double value1DReverseBasesPercent = roundValue((double)value1DReverseNbBases/value1DForwardNbBases);
+		mapPropertyValue1DForward.put("basesPercent", value1DReverseBasesPercent);
+		
+		Logger.debug("Calculate 1DReverse.readsPercent");
+		Long value1DReverseNbReads = (Long)mapPropertyValue1DReverse.get("nbReads");
+		Double value1DReverseReadsPercent = roundValue((double)value1DReverseNbReads/value1DForwardNbReads);
+		mapPropertyValue1DForward.put("readsPercent", value1DReverseReadsPercent);
+		
+		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class,  
+			DBQuery.is("code",$run.code),
+			DBUpdate.set("treatments.ngsrg.default.1DReverse", propertyValue1DReverse));
+end
+
+#2DAll.nbBases / 1DForward.nbBases
+#2DAll.nbReads / 1DForward.nbReads
+rule "Calculate 2DAll basesPercent and readsPercent for ngsrg-nanopore"
+	@nglBI( F_RG_1 )
+	dialect "java"
+	salience 600
+	no-loop
+	when
+		$run : Run($treatment : treatments["ngsrg"], $treatment!=null, $treatment.typeCode == "ngsrg-nanopore")
+		$mapValue : Map() from $treatment.results.values()
+		$1DForward : Entry(key=="1DForward") from $mapValue.entrySet()
+		$2DAll : Entry(key=="2DAll") from $mapValue.entrySet()
+	then
+		Logger.debug("Calculate 2DAll.basesPercent");
+		Long value1DForwardNbBases = (Long)((PropertyObjectValue)$1DForward.getValue()).getValue().get("nbBases");
+		Long value1DForwardNbReads = (Long)((PropertyObjectValue)$1DForward.getValue()).getValue().get("nbReads");
+		
+		PropertyObjectValue propertyValue2DAll = (PropertyObjectValue)$2DAll.getValue();
+		Map mapPropertyValue2DAll = propertyValue2DAll.getValue();
+		
+		Long value2DAllNbBases = (Long)mapPropertyValue2DAll.get("nbBases");
+		Double value2DAllBasesPercent = roundValue((double)value2DAllNbBases/value1DForwardNbBases);
+		mapPropertyValue2DAll.put("basesPercent", value2DAllBasesPercent);
+		
+		Logger.debug("Calculate 2DAll.readsPercent");
+		Long value2DAllNbReads = (Long)mapPropertyValue2DAll.get("nbReads");
+		Double value2DAllReadsPercent = roundValue((double)value2DAllNbReads/value1DForwardNbReads);
+		mapPropertyValue2DAll.put("readsPercent", value2DAllReadsPercent);
+		
+		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class,  
+			DBQuery.is("code",$run.code),
+			DBUpdate.set("treatments.ngsrg.default.2DAll", propertyValue2DAll));
+end
+
+#2DPass.nbBases / 1DForward.nbBases
+#2DPass.nbReads / 1DForward.nbReads
+rule "Calculate 2DPass basesPercent and nbReads for ngsrg-nanopore"
+	@nglBI( F_RG_1 )
+	dialect "java"
+	salience 600
+	no-loop
+	when
+		$run : Run($treatment : treatments["ngsrg"], $treatment!=null, $treatment.typeCode == "ngsrg-nanopore")
+		$mapValue : Map() from $treatment.results.values()
+		$1DForward : Entry(key=="1DForward") from $mapValue.entrySet()
+		$2DPass : Entry(key=="2DPass") from $mapValue.entrySet()
+	then
+		Logger.debug("Calculate 2DPass.basesPercent");
+		
+		Long value1DForwardNbBases = (Long)((PropertyObjectValue)$1DForward.getValue()).getValue().get("nbBases");
+		Long value1DForwardNbReads = (Long)((PropertyObjectValue)$1DForward.getValue()).getValue().get("nbReads");
+		
+		PropertyObjectValue propertyValue2DPass = (PropertyObjectValue)$2DPass.getValue();
+		Map mapPropertyValue2DPass = propertyValue2DPass.getValue();
+		
+		Long value2DPassNbBases = (Long)mapPropertyValue2DPass.get("nbBases");
+		Double value2DPassBasesPercent = roundValue((double)value2DPassNbBases/value1DForwardNbBases);
+		mapPropertyValue2DPass.put("basesPercent", value2DPassBasesPercent);
+		
+		Logger.debug("Calculate 2DPass.readsPercent");
+		Long value2DPassNbReads = (Long)mapPropertyValue2DPass.get("nbReads");
+		Double value2DPassReadsPercent = roundValue((double)value2DPassNbReads/value1DForwardNbReads);
+		mapPropertyValue2DPass.put("readsPercent", value2DPassReadsPercent);
+		
+		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class,  
+			DBQuery.is("code",$run.code),
+			DBUpdate.set("treatments.ngsrg.default.2DPass", propertyValue2DPass));
+end
+
+#useful.nbBases / 1DForward.nbBases
+#useful.nbReads / 1DForward.nbReads
+rule "Calculate useful basesPercent and readsPercent for ngsrg-nanopore"
+	@nglBI( F_RG_1 )
+	dialect "java"
+	salience 600
+	no-loop
+	when
+		$run : Run($treatment : treatments["ngsrg"], $treatment!=null, $treatment.typeCode == "ngsrg-nanopore")
+		$mapValue : Map() from $treatment.results.values()
+		$1DForward : Entry(key=="1DForward") from $mapValue.entrySet()
+		$useful : Entry(key=="useful") from $mapValue.entrySet()
+	then
+		Logger.debug("Calculate useful.basesPercent");
+		
+		Long value1DForwardNbBases = (Long)((PropertyObjectValue)$1DForward.getValue()).getValue().get("nbBases");
+		Long value1DForwardNbReads = (Long)((PropertyObjectValue)$1DForward.getValue()).getValue().get("nbReads");
+		
+		PropertyObjectValue propertyValueUseful = (PropertyObjectValue)$useful.getValue();
+		Map mapPropertyValueUseful = propertyValueUseful.getValue();
+		
+		Long valueUsefulNbBases = (Long)mapPropertyValueUseful.get("nbBases");
+		Double usefulBasesPercent = roundValue((double)valueUsefulNbBases/value1DForwardNbBases);
+		mapPropertyValue2DPass.put("basesPercent", usefulBasesPercent);
+		
+		Logger.debug("Calculate useful.readsPercent");
+		Long valueUsefulNbReads = (Long)mapPropertyValueUseful.get("nbReads");
+		Double usefulReadsPercent = roundValue((double)valueUsefulNbReads/value1DForwardNbReads);
+		mapPropertyValue2DPass.put("readsPercent", usefulReadsPercent);
+		
+		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class,  
+			DBQuery.is("code",$run.code),
+			DBUpdate.set("treatments.ngsrg.default.useful", propertyValueUseful));
+end
+
