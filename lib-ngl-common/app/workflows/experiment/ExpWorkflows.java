@@ -62,8 +62,8 @@ public class ExpWorkflows extends Workflows<Experiment>{
 			
 		}else if("F".equals(exp.state.code)){
 			if(TBoolean.TRUE.equals(exp.status.valid)){
-				ExpWorkflowsHelper.updateStateOfInputContainers(exp, getNewState("IS", validation.getUser()), validation);
-				ExpWorkflowsHelper.updateStateOfInputContainerSupports(exp, getNewState("IS", validation.getUser()), validation);				
+				ExpWorkflowsHelper.updateStateOfInputContainers(exp, getNewState("IW-D", validation.getUser()), validation);
+				ExpWorkflowsHelper.updateStateOfInputContainerSupports(exp, getNewState("IW-D", validation.getUser()), validation);				
 			}else{
 				ExpWorkflowsHelper.updateStateOfInputContainers(exp, getNewState("IW-D", validation.getUser()), validation);
 				ExpWorkflowsHelper.updateStateOfInputContainerSupports(exp, getNewState("IW-D", validation.getUser()), validation);				

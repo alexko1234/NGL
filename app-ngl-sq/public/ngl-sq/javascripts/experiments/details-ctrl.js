@@ -1268,10 +1268,8 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 						var containers = result.input;
 						initDisplayValues([$scope.experiment.typeCode]);
 						for(var key in containers){
-							if(containers[key].state.code === 'IW-D'){
-								inputContainers.push({container:containers[key], status:getValidStatus(), dispatch:undefined, processResolutions:[]});
-								processTypeCodes = processTypeCodes.concat(containers[key].processTypeCodes);	
-							}
+							inputContainers.push({container:containers[key], status:getValidStatus(), dispatch:undefined, processResolutions:[]});
+							processTypeCodes = processTypeCodes.concat(containers[key].processTypeCodes);								
 						}
 							
 						$scope.containersDT = datatable(datatableConfig);
