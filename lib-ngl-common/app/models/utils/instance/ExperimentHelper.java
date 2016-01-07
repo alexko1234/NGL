@@ -71,6 +71,7 @@ public class ExperimentHelper extends InstanceHelpers {
 
 	}
 
+	@Deprecated
 	public static Experiment updateInstrumentCategory(Experiment exp) throws DAOException{
 		Logger.debug("Test categoryCode :"+exp.instrument.categoryCode+" .");
 		if((exp.instrument.categoryCode == null ||exp.instrument.categoryCode.equals("") ) && exp.instrument.typeCode!=null){

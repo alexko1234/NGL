@@ -453,7 +453,6 @@ public class ExpWorkflowsHelper {
 		
 		State state = new State("N", validation.getUser());
 		TraceInformation traceInformation = new TraceInformation(validation.getUser());
-		//TODO GA management of many output for process, we need to duplicate the processes
 		List<Container> newContainers = new ArrayList<Container>();
 		if(atm.outputContainerUseds != null && atm.outputContainerUseds.size() != 0){
 			OutputContainerUsed ocu = atm.outputContainerUseds.get(0);
@@ -526,7 +525,15 @@ public class ExpWorkflowsHelper {
 		treeNode.from = new From();
 		treeNode.from.experimentCode = exp.code;
 		treeNode.from.experimentTypeCode = exp.typeCode;
-		treeNode.from.containers = atm.inputContainerUseds.stream().map(icu -> new ParentContainers(icu.code, icu.locationOnContainerSupport.code, icu.fromExperimentTypeCodes)).collect(Collectors.toList());
+		treeNode.from.containers = atm.inputContainerUseds.stream().map(icu -> {
+			ParentContainers pc = new ParentContainers();
+			pc.code = icu.code;
+			pc.supportCode = icu.locationOnContainerSupport.code;
+			pc.fromTransformationTypeCodes = icu.fromExperimentTypeCodes;
+			pc.processCodes = icu.inputProcessCodes;
+			pc.processTypeCodes = icu.processTypeCodes;
+			return pc;
+			}).collect(Collectors.toList());
 		
 		treeNode.paths = new ArrayList<String>();
 		

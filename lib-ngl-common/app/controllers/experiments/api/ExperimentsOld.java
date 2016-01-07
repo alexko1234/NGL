@@ -58,7 +58,7 @@ import views.components.datatable.DatatableForm;
 import views.components.datatable.DatatableResponse;
 import workflows.container.ContainerWorkflows;
 import workflows.experiment.ExperimentWorkflows;
-
+@Deprecated
 public class ExperimentsOld extends CommonController{
 
 	final static Form<Experiment> experimentForm = form(Experiment.class);

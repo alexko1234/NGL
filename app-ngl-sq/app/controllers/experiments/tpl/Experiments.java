@@ -154,6 +154,7 @@ public class Experiments extends CommonController{
   	    		controllers.containers.api.routes.javascript.ContainerSupports.updateState(),
   	    		controllers.processes.api.routes.javascript.Processes.updateState(),
   	    		
+  	    		//TODO GA Must be remove
   	    		//controllers.experiments.api.routes.javascript.ExperimentsOld.updateExperimentInformations(),
   	    		//controllers.experiments.api.routes.javascript.ExperimentsOld.updateExperimentProperties(),
   	    		//controllers.experiments.api.routes.javascript.ExperimentsOld.updateInstrumentInformations(),

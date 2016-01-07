@@ -340,7 +340,7 @@ public class Containers extends CommonController {
 
 		if(StringUtils.isNotBlank(containersSearch.nextExperimentTypeCode)){
 			
-			//TODO Prendre la précédente dans chacun des processus et pas celle de l'expérience
+			//TODO GA Prendre la précédente dans chacun des processus et pas celle de l'expérience
 			
 			List<ExperimentType> previous = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(containersSearch.nextExperimentTypeCode);
 			if(CollectionUtils.isNotEmpty(previous)){

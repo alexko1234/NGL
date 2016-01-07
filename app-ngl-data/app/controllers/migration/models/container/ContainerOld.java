@@ -54,7 +54,7 @@ public class ContainerOld extends DBObject {
 		public String fromPurifingCode;
 		//public String fromExtractionTypeCode;
 		//process
-		public String processTypeCode; //TODO GA : est ce bien utile comme info ?
+		public String processTypeCode; 
 
 		public List<String> inputProcessCodes;
 

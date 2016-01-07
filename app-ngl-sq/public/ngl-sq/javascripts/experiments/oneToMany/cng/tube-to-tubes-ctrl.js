@@ -41,8 +41,8 @@ angular.module('home').controller('CNGTubeToTubesCtrl',['$scope', 'atmToGenerate
 				by:'inputContainer.code'
 			},
 			remove:{
-				active: (!$scope.doneAndRecorded && !$scope.inProgressNow),
-				showButton: (!$scope.doneAndRecorded && !$scope.inProgressNow),
+				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
+				showButton: ($scope.isEditModeAvailable() && $scope.isNewState()),
 				mode:'local'
 			},
 			save:{
@@ -57,7 +57,7 @@ angular.module('home').controller('CNGTubeToTubesCtrl',['$scope', 'atmToGenerate
 				active:true
 			},
 			edit:{
-				active: !$scope.inProgressNow && !$scope.doneAndRecorded,
+				active: $scope.isNewState() && $scope.isEditModeAvailable(),
 				columnMode:true,
 				withoutSelect:true,
 				byDefault : false,
@@ -236,7 +236,7 @@ angular.module('home').controller('CNGTubeToTubesCtrl',['$scope', 'atmToGenerate
 				active:true 
 			},			
 			edit:{
-				active: !$scope.inProgressNow && !$scope.doneAndRecorded,
+				active: $scope.isNewState() && $scope.isEditModeAvailable(),
 				columnMode:true
 			},
 			messages:{
@@ -283,13 +283,13 @@ angular.module('home').controller('CNGTubeToTubesCtrl',['$scope', 'atmToGenerate
 		console.log("call event refresh");
 		
 		var dtConfig = $scope.atmService.data.datatableParam.getConfig();
-		dtConfig.edit.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
-		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isNewState());
+		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.datatableParam.setConfig(dtConfig);
 		
 		var dtConfig = $scope.atmService.data.datatableConfig.getConfig();
-		dtConfig.edit.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
-		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isNewState());
+		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.datatableConfig.setConfig(dtConfig);
 		
 		

@@ -7,19 +7,13 @@ public class ParentContainers {
 	public String code;
 	public String supportCode;
 	public Set<String> fromTransformationTypeCodes;
-	
-	//TODO GA fromTransformationCodes
-	//TODO GA processTypeCodes
-	//TODO GA processCodes
+	//public Set<String> fromTransformationCodes; TODO GA when refactoring container
+	public Set<String> processTypeCodes;
+	public Set<String> processCodes;
 	
 	public ParentContainers() {
 		super();		
 	}
 
-	public ParentContainers(String code, String supportCode, Set<String> fromTransformationTypeCodes) {
-		this.code = code;
-		this.supportCode = supportCode;
-		this.fromTransformationTypeCodes = fromTransformationTypeCodes;
-	}
-
+	
 }

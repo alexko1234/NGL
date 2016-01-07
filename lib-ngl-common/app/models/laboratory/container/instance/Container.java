@@ -82,7 +82,7 @@ public class Container extends DBObject implements IValidation {
 	public Set<String> sampleCodes; // getSamples
 	// ExperimentType must be an internal or external experiment ( origine )
 	// List for pool experimentType
-	public Set<String> fromExperimentTypeCodes; // getExperimentType //TODO GA fromTransformationCodes
+	public Set<String> fromExperimentTypeCodes; // getExperimentType //TODO GA add fromTransformationCodes
 
 	// Propager au container de purif ??
 	//public String fromExperimentCode; ??

@@ -167,8 +167,8 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 				by:'inputContainer.code'
 			},
 			remove:{
-				active: (!$scope.doneAndRecorded ),
-				showButton: (!$scope.doneAndRecorded ),
+				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
+				showButton: ($scope.isEditModeAvailable() && $scope.isNewState()),
 				mode:'local'
 			},
 			save:{
@@ -181,7 +181,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 				active:true
 			},
 			edit:{
-				active: (!$scope.doneAndRecorded ),
+				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
 				columnMode:true
 			},
 			messages:{
@@ -218,8 +218,8 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 		console.log("call event refresh");
 		
 		var dtConfig = $scope.atmService.data.getConfig();
-		dtConfig.edit.active = (!$scope.doneAndRecorded );
-		dtConfig.remove.active = (!$scope.doneAndRecorded );
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isNewState());
+		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.setConfig(dtConfig);
 		
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
