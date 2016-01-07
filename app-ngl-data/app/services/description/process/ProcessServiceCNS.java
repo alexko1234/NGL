@@ -45,6 +45,7 @@ public class ProcessServiceCNS extends AbstractProcessService {
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 
+		
 			l.add(DescriptionFactory.newProcessType("Librairie PE sans sizing", "Lib-PE-NoSizing", ProcessCategory.find.findByCode("library"), getPropertyDefinitionsLib300600(), getExperimentTypes("fragmentation","librairie-indexing","amplification"), 
 					getExperimentTypes("fragmentation").get(0), getExperimentTypes("amplification").get(0), getExperimentTypes("ext-to-library").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		//	l.add(DescriptionFactory.newProcessType("qPCR et normalisation", "qPCR-normalisation", ProcessCategory.find.findByCode("pre-sequencing"), getPropertyDefinitionsQPCRQuantification(), getExperimentTypes("qPCR-quantification","solution-stock"), 
@@ -54,6 +55,16 @@ public class ProcessServiceCNS extends AbstractProcessService {
 					getExperimentTypes("solution-stock").get(0), getExperimentTypes("solution-stock").get(0), getExperimentTypes("ext-to-solution-stock").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 							
 		}
+		
+		//Bionano
+		l.add(DescriptionFactory.newProcessType("NLRS Prep BioNano", "bionano-nlrs-process", ProcessCategory.find.findByCode("mapping"), getPropertyDefinitionsBionano(), getExperimentTypes("irys-nlrs-prep","irys-chip-preparation","bionano-depot"), 
+				getExperimentTypes("irys-nlrs-prep").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-nlrs-prep").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
+		l.add(DescriptionFactory.newProcessType("Irys Chip, dépôt", "bionano-chip-process", ProcessCategory.find.findByCode("mapping"), getPropertyDefinitionsBionano(), getExperimentTypes("irys-chip-preparation","bionano-depot"), 
+				getExperimentTypes("irys-chip-preparation").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-nlrs-prep").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
+		l.add(DescriptionFactory.newProcessType("Redépôt BioNano", "bionano-run", ProcessCategory.find.findByCode("mapping"), getPropertyDefinitionsBionano(), getExperimentTypes("bionano-depot"), 
+				getExperimentTypes("bionano-depot").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-nlrs-prep").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		
 		l.add(DescriptionFactory.newProcessType("Frg, Lib ONT, Dépôt", "nanopore-process-library", ProcessCategory.find.findByCode("library"),getPropertyDefinitionsNanoporeFragmentation() , getExperimentTypes("nanopore-fragmentation","nanopore-library","nanopore-depot"), 
@@ -82,6 +93,11 @@ public class ProcessServiceCNS extends AbstractProcessService {
 						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("standard","HD"), "single"));
 		return propertyDefinitions;
 	}*/
+
+	private List<PropertyDefinition> getPropertyDefinitionsBionano() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	private static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepotCNS() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();

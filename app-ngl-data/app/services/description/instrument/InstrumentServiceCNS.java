@@ -137,7 +137,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentUsedType("Main", "hand", InstrumentCategory.find.findByCode("hand"), null, 
 				getInstruments(
 						createInstrument("hand", "Main", null, true, null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)) ),
-				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube","irys-fc"}), 
+				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		l.add(newInstrumentUsedType("QuBit", "qubit", InstrumentCategory.find.findByCode("fluorometer"), getQuBitProperties(), 
@@ -226,9 +226,27 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		l.add(newInstrumentUsedType("IRYS", "IRYS", InstrumentCategory.find.findByCode("opt-map-bionano"), getIrysDepotProperties(),getInstrumentIRYS() 
-				,getContainerSupportCategories(new String[]{"irys-fc"}), null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+				,getContainerSupportCategories(new String[]{"irys-chip"}), null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
+		l.add(newInstrumentUsedType("IRYS", "IRYS", InstrumentCategory.find.findByCode("opt-map-bionano"), getIrysDepotProperties(),getInstrumentIRYS() 
+				,getContainerSupportCategories(new String[]{"irys-chip"}), null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
+		l.add(newInstrumentUsedType("Main", "hand-irys", InstrumentCategory.find.findByCode("hand"), getIrysChipProperties(),getInstrumentHand() 
+				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"irys-chip"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
+	}
+
+	private List<Instrument> getInstrumentHand() throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("HAND", "HAND", null, true, "HAND", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		return instruments;
+	}
+
+	private List<PropertyDefinition> getIrysChipProperties() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        propertyDefinitions.add(newPropertiesDefinition("Code Irys CHIP", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
+		return propertyDefinitions;
 	}
 
 	private List<PropertyDefinition> getIrysDepotProperties() {
