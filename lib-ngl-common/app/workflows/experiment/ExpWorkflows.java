@@ -68,7 +68,7 @@ public class ExpWorkflows extends Workflows<Experiment>{
 				ExpWorkflowsHelper.updateStateOfInputContainers(exp, getNewState("IW-D", validation.getUser()), validation);
 				ExpWorkflowsHelper.updateStateOfInputContainerSupports(exp, getNewState("IW-D", validation.getUser()), validation);				
 			}
-			ExpWorkflowsHelper.updateStateOfProcesses(exp,  getNewState("IP", validation.getUser()), validation);			
+			ExpWorkflowsHelper.updateStateOfProcesses(exp, getNewState("IP", validation.getUser()), validation);			
 		}
 	}
 	
