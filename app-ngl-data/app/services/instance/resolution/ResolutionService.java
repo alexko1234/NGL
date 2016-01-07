@@ -676,7 +676,8 @@ public class ResolutionService {
 	public static void createProcessResolution(ContextValidation ctx) {
 		List<Resolution> l = new ArrayList<Resolution>();
 
-		l.add(InstanceFactory.newResolution("processus partiel","processus-partiel", resolutionCategories.get("Default"), (short) 1));
+		l.add(InstanceFactory.newResolution("déroulement correct","correct", resolutionCategories.get("Default"), (short) 1));
+		l.add(InstanceFactory.newResolution("processus partiel","processus-partiel", resolutionCategories.get("Default"), (short) 2));
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "processReso";

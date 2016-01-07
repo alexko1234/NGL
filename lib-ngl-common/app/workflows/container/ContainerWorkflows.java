@@ -193,7 +193,7 @@ public class ContainerWorkflows {
 
 	}
 	
-	
+	@Deprecated
 	public static void setContainerState(Container container, State nextState, ContextValidation contextValidation){
 		String lastStateCode=container.state.code;
 		container.traceInformation = StateHelper.updateTraceInformation(container.traceInformation, nextState);
