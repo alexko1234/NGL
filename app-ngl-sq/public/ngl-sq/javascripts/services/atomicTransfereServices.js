@@ -443,7 +443,7 @@ angular.module('atomicTransfereServices', [])
 					}					
 				},
 				
-				experimentToView:function(experiment, experimentType){
+				experimentToView:function(experiment, experimentType, showExpProperties){
 					if(null === experiment || undefined === experiment){
 						throw 'experiment is required';
 					}
@@ -453,8 +453,9 @@ angular.module('atomicTransfereServices', [])
 					}else{
 						this.addNewAtomicTransfertMethodsInDatatable();
 					}
-					
-					this.addExperimentPropertiesToDatatable(experimentType.propertiesDefinitions);						
+					if(showExpProperties || showExpProperties === undefined){
+						this.addExperimentPropertiesToDatatable(experimentType.propertiesDefinitions);
+					}
 				},
 				
 				refreshViewFromExperiment : function(experiment){

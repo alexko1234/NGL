@@ -70,6 +70,8 @@ public abstract class AbstractDAO<T> {
 	
 	public abstract T findByCode(String code) throws DAOException;
 
+	public abstract List<T> findByCodes(List<String> code) throws DAOException;
+
 	public abstract long save(T value) throws DAOException;
 
 	public abstract void update(T value) throws DAOException;

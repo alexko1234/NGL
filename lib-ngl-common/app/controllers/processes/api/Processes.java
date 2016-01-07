@@ -14,6 +14,7 @@ import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
@@ -45,6 +46,8 @@ import validation.utils.ValidationConstants;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableForm;
 import views.components.datatable.DatatableResponse;
+import workflows.container.ContSupportWorkflows;
+import workflows.process.ProcWorkflows;
 import workflows.process.ProcessWorkflows;
 
 import com.mongodb.BasicDBObject;
@@ -69,7 +72,8 @@ public class Processes extends CommonController{
 	final static Form<ProcessesBatchElement> processSaveBatchForm = form(ProcessesBatchElement.class);
 	final static List<String> defaultKeys =  Arrays.asList("categoryCode","containerInputCode","sampleCode", "sampleOnInputContainer", "typeCode", "state", "currentExperimentTypeCode", "newContainerSupportCodes", "experimentCodes","projectCode", "code", "traceInformation", "comments", "properties");
 	private static final ALogger logger = Logger.of("Processes");
-
+	final static Form<State> stateForm = form(State.class);
+	
 	public static Result head(String processCode) {
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, processCode)){			
 			return ok();					
@@ -275,7 +279,7 @@ public class Processes extends CommonController{
 			return badRequest("process code are not the same");
 		}
 	}
-
+	@Deprecated
 	public static Result updateStateCode(String code){
 		Form<ProcessesUpdateForm> processesUpdateFilledForm = getFilledForm(processesUpdateForm,ProcessesUpdateForm.class);
 		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), processesUpdateFilledForm.errors());
@@ -293,6 +297,25 @@ public class Processes extends CommonController{
 		return badRequest(processesUpdateFilledForm.errorsAsJson());
 	}
 
+	public static Result updateState(String code){
+		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
+		if(process == null){
+			return badRequest();
+		}
+		Form<State> filledForm =  getFilledForm(stateForm, State.class);
+		State state = filledForm.get();
+		state.date = new Date();
+		state.user = getCurrentUser();
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ProcWorkflows.instance.setState(ctxVal, process, state);
+		if (!ctxVal.hasErrors()) {
+			return ok(Json.toJson(MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code)));
+		}else {
+			return badRequest(filledForm.errorsAsJson());
+		}
+	}
+	
+	
 	public static Result delete(String code) throws DAOException{
 		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
 		Form deleteForm = new Form(Process.class);

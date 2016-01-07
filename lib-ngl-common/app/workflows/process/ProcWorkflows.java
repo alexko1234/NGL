@@ -58,7 +58,7 @@ public class ProcWorkflows extends Workflows<Process> {
 			applyPreStateRules(currentCtxValidation, process, nextState);
 			currentCtxValidation.putObject(FIELD_STATE_CODE , nextState.code);
 			//TODO GA improve performance to validate only field impacted by state
-			//process.validate(contextValidation); //in comment because no field are state dependant
+			//process.validate(contextValidation); //in comment because no field are state dependant			
 			if(!currentCtxValidation.hasErrors()){
 				boolean goBack = goBack(process.state, nextState);
 				if(goBack)Logger.debug(process.code+" : back to the workflow. "+process.state.code +" -> "+nextState.code);		

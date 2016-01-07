@@ -34,6 +34,8 @@ public class ProcessTypes extends CommonController{
 				processTypes = ProcessType.find.findByProcessCategoryCodes(processTypesSearch.categoryCode);
 			}else if(CollectionUtils.isNotEmpty(processTypesSearch.categoryCodes)){
 				processTypes = ProcessType.find.findByProcessCategoryCodes(processTypesSearch.categoryCodes.toArray(new String[0]));
+			}if(CollectionUtils.isNotEmpty(processTypesSearch.codes)){
+				processTypes = ProcessType.find.findByCodes(processTypesSearch.codes);
 			}else{
 				processTypes = ProcessType.find.findAll();
 			}

@@ -14,7 +14,7 @@
 		<div class="row">
 		
 		<!-- InputContainers table -->
-		<div ng-model="atmService.data.inputContainers"  class="col-md-5 col-lg-5" droppable ng-if="isEditMode()">
+		<div ng-model="atmService.data.inputContainers"  class="col-md-5 col-lg-5" droppable ng-if="mainService.isEditMode()">
 			<div class="panel panel-primary"  style="border-style:dashed">				
 			<div class="panel-body" ng-if="atmService.data.inputContainers.length==0">		
 				<p><i class="fa fa-download"></i> @Messages("experiments.inputs")</p>
@@ -72,7 +72,7 @@
 			</table>
 			</div>	
 		</div>
-		<div class="col-md-1 col-lg-1" ng-if="isEditMode()">
+		<div class="col-md-1 col-lg-1" ng-if="mainService.isEditMode()">
 		<!-- Drop buttons -->
 		
 		<div ng-if="(atmService.data.atm[0].inputContainerUseds.length==0 || atmService.data.inputContainers.length>0 )">
@@ -150,7 +150,7 @@
 								{{inputContainerUsed.concentration.value | number}} {{inputContainerUsed.concentration.unit}}
 							</td> 														
 							<td>
-								<div ng-switch on="isEditMode()">						
+								<div ng-switch on="mainService.isEditMode()">						
 									<p class="form-control-static" ng-switch-when="false" ng-bind="inputContainer.percentage" />						 
 									<div ng-switch-when="true">
 										<input class="form-control input-sm" 
@@ -167,7 +167,7 @@
 								{{atmService.data.atm[0].outputContainerUseds[0].code}}
 							</td>
 							<td rowspan="{{atmService.data.atm[0].inputContainerUseds.length}}"	ng-if="$index === 0">
-								<div ng-switch on="isEditMode()">						
+								<div ng-switch on="mainService.isEditMode()">						
 									<p class="form-control-static" ng-switch-when="false" ng-bind="atmService.data.atm[0].outputContainerUseds[0].volume.value" />						 
 									<div ng-switch-when="true">
 										<input class="form-control input-sm" type="text" title="Messages("containers.table.volume")"									

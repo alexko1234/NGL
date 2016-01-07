@@ -1,5 +1,5 @@
-angular.module('home').controller('TubeToTubesCtrl',['$scope', 'atmToGenerateMany',
-                                                               function($scope, atmToGenerateMany) {
+angular.module('home').controller('TubeToTubesCtrl',['$scope', '$parse', 'atmToGenerateMany',
+                                                               function($scope, $parse, atmToGenerateMany) {
 	
 		
 	var datatableConfigTubeParam = {
@@ -319,7 +319,10 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', 'atmToGenerateMan
 				this.input += Number(output.volume.value);
 			}, volume);
 			
-			atm.inputContainerUseds[0].experimentProperties["inputVolume"] = {value:volume.input, unit:"µL"};
+			if(angular.isNumber(volume.input)){
+				$parse('inputContainerUseds[0].experimentProperties["inputVolume"]').assign(atm, {value:volume.input, unit:"µL"});
+			}
+			//atm.inputContainerUseds[0].experimentProperties["inputVolume"] = {value:volume.input, unit:"µL"};
 		}				
 	};
 	

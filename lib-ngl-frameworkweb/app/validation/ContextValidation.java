@@ -55,8 +55,7 @@ public class ContextValidation {
 	public Object getObject(String key){
 		if(contextObjects.containsKey(key)) {
 			return contextObjects.get(key);
-		}
-		else {
+		} else {
 			return null;
 		}
 	}

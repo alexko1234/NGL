@@ -16,7 +16,7 @@
 					<p class="form-control-static" ng-bind="experiment.typeCode | codes:'type'"/>
 					}			    
 					@columnLabelValue(Messages("experiments.protocol")){
-					<div ng-switch on="isEditMode()">						
+					<div ng-switch on="mainService.isEditMode()">						
 						<p class="form-control-static" ng-switch-when="false" ng-bind="experiment.protocolCode | codes:'protocol'" />						 
 						<div ng-switch-when="true">
 							<div bt-select class="form-control"
@@ -31,11 +31,19 @@
 			   	 	<p class="form-control-static" ng-bind="experiment.state.code | codes:'state'"/>
 					}
 					
+					@columnLabelValue(Messages("experiments.status")){
+			    		<div ng-switch on="mainService.isEditMode()">
+							<p ng-switch-when="false" class="form-control-static" ng-model='experiment.status.valid' codes="valuation"/>
+							<div ng-switch-when="true">
+								<div bt-select class="form-control" ng-model="experiment.status.valid" bt-options="valid.code as valid.name for valid in lists.getValuations()"></div>
+							</div>
+						</div>						
+					}	
 					
-			    	@columnLabelValue(Messages("experiments.resolution")){
+			    	@columnLabelValue(Messages("experiments.resolutions")){
 			    	<div bt-select class="form-control" ng-model="experiment.state.resolutionCodes" multiple="true" 
 			    		bt-options="valid.code as valid.name for valid in lists.getResolutions()" 
-			    		ng-edit="isEditMode()">
+			    		ng-edit="mainService.isEditMode()">
 			    	</div>							
 					}	
 					
@@ -58,7 +66,7 @@
 			    <form class="form-horizontal">
 			    
 			    @columnLabelValue(Messages("experiments.intrumentUsedType")){
-			    	<div ng-switch on="isEditMode()">						
+			    	<div ng-switch on="mainService.isEditMode()">						
 						<p class="form-control-static" ng-switch-when="false" ng-bind="experiment.instrument.typeCode | codes:'type'" />						 
 						<div ng-switch-when="true">
 							<div bt-select class="form-control"
@@ -73,7 +81,7 @@
 				}
 			     
 			     @columnLabelValue(Messages("experiments.intrument")){
-			     	<div ng-switch on="isEditMode()">						
+			     	<div ng-switch on="mainService.isEditMode()">						
 						<p class="form-control-static" ng-switch-when="false" ng-bind="experiment.instrument.code| codes:'instrument'" />						 
 						<div ng-switch-when="true">
 							<div bt-select class="form-control"
@@ -81,6 +89,7 @@
 								bt-options="instrumentInformation.code as instrumentInformation.name for instrumentInformation in instrumentType.instruments"
 								ng-hide="!experiment.instrument.typeCode"	
 								placeholder='@Messages("experiments.select.instrument")'	
+								ng-change="loadTemplate()"
 								auto-select>								
 							</div>
 						</div>
@@ -90,7 +99,7 @@
 				<div class="form-group" ng-if="(experiment.instrument.typeCode !== undefined &&  experiment.instrument.typeCode !== null && !isOutputATMVoid())">
 					<label class="col-md-6 col-lg-6 control-label">@Messages("experiments.intrumentCategory")</label>
 					<div class="col-md-6 col-lg-6">
-					<div ng-switch on="isEditMode()">						
+					<div ng-switch on="mainService.isEditMode()">						
 						<p class="form-control-static" ng-switch-when="false" ng-bind="experiment.instrument.outContainerSupportCategoryCode | codes:'container_support_cat'" />						 
 						<div ng-switch-when="true">
 							<div bt-select class="form-control"

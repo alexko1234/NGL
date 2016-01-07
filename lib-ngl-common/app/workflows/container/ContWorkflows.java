@@ -68,6 +68,7 @@ public class ContWorkflows extends Workflows<Container> {
 			}		
 		} 
 		
+		//TODO GA update support if possible
 		
 	}
 
@@ -90,7 +91,7 @@ public class ContWorkflows extends Workflows<Container> {
 			applyPreStateRules(currentCtxValidation, container, nextState);
 			currentCtxValidation.putObject(FIELD_STATE_CODE , nextState.code);
 			//TODO GA improve performance to validate only field impacted by state
-			container.validate(currentCtxValidation);
+			//container.validate(currentCtxValidation); //in comment because no field are state dependant
 			if(!currentCtxValidation.hasErrors()){
 				boolean goBack = goBack(container.state, nextState);
 				if(goBack)Logger.debug(container.code+" : back to the workflow. "+container.state.code +" -> "+nextState.code);		

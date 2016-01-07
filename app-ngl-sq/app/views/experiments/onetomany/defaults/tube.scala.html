@@ -1,6 +1,6 @@
 @()
 <div class="col-md-12 col-lg-12" ng-controller="TubeToTubesCtrl">
-	<div class="row" ng-if="isEditMode()">
+	<div class="row" ng-if="mainService.isEditMode()">
 			<div class="col-md-2 col-lg-2" ultimate-datatable="atmService.data.datatableParam" ></div>
 			<div class="col-md-1 col-lg-1" >
 				<!-- Drop buttons -->
@@ -11,7 +11,7 @@
 			<div class="col-md-9 col-lg-9" ultimate-datatable="atmService.data.datatableConfig"></div>
 
 	</div>
-	<div class="row" ng-if="!isEditMode()">
+	<div class="row" ng-if="!mainService.isEditMode()">
 	<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data.datatableConfig"></div>
 	</div>
 </div>

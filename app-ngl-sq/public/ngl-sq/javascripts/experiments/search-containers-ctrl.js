@@ -525,7 +525,7 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 				if(containers[i].group === undefined){
 					this.basket.add(containers[i]);
 					if(($scope.searchService.form.nextExperimentTypeCode) && this.basket.length() > 0 && tabService.getTabs().length === 1){
-						tabService.addTabs({label:$filter('codes')($scope.searchService.form.nextExperimentTypeCode,'type'),href:"/experiments/new/list-containers",remove:false});
+						//tabService.addTabs({label:$filter('codes')($scope.searchService.form.nextExperimentTypeCode,'type'),href:"/experiments/new/list-containers",remove:false});
 						tabService.addTabs({label:"Configuration "+$filter('codes')($scope.searchService.form.nextExperimentTypeCode,'type'),href:"/experiments/new/"+$scope.searchService.form.nextExperimentTypeCode,remove:false});
 					}
 				}else{
@@ -538,7 +538,7 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 								basket.add(container);
 							});
 							if(($scope.searchService.form.nextExperimentTypeCode) && basket.length() > 0 && tabService.getTabs().length === 1){
-								tabService.addTabs({label:$filter('codes')($scope.searchService.form.nextExperimentTypeCode,'type'),href:"/experiments/new/list-containers",remove:false});
+								//tabService.addTabs({label:$filter('codes')($scope.searchService.form.nextExperimentTypeCode,'type'),href:"/experiments/new/list-containers",remove:false});
 								tabService.addTabs({label:"Configuration "+$filter('codes')($scope.searchService.form.nextExperimentTypeCode,'type'),href:"/experiments/new/"+$scope.searchService.form.nextExperimentTypeCode,remove:false});
 							}
 						}

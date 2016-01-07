@@ -45,7 +45,9 @@ import validation.ContextValidation;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableForm;
 import views.components.datatable.DatatableResponse;
+import workflows.container.ContWorkflows;
 import workflows.container.ContainerWorkflows;
+import workflows.run.Workflows;
 
 public class Containers extends CommonController {
 
@@ -55,7 +57,7 @@ public class Containers extends CommonController {
 	final static Form<ContainersUpdateForm> containersUpdateForm = form(ContainersUpdateForm.class);
 	final static List<String> defaultKeys =  Arrays.asList("code","fromExperimentTypeCodes","sampleCodes","contents","traceInformation","projectCodes", "inputProcessCodes", "valuation.valid", "state", "support","mesuredConcentration");
     // GA 31/07/2015 suppression des parametres "lenght"
-	
+	final static Form<State> stateForm = form(State.class);
 	public static Result get(String code){
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, code);
 		if(container != null){
@@ -72,7 +74,7 @@ public class Containers extends CommonController {
 			return notFound();
 		}	
 	}
-
+	@Deprecated
 	public static Result updateBatch(){
 		List<Form<ContainerBatchElement>> filledForms =  getFilledFormList(batchElementForm, ContainerBatchElement.class);
 
@@ -157,7 +159,7 @@ public class Containers extends CommonController {
 				
 	}
 
-
+	@Deprecated
 	public static Result updateStateCode(String code){
 		Form<ContainersUpdateForm> containerUpdateFilledForm = getFilledForm(containersUpdateForm, ContainersUpdateForm.class);
 		ContextValidation contextValidation = new ContextValidation(getCurrentUser(),containerUpdateFilledForm.errors());
@@ -174,7 +176,7 @@ public class Containers extends CommonController {
 		return badRequest(containerUpdateFilledForm.errorsAsJson());
 	}
 
-
+	@Deprecated
 	public static Result updateStateBatch(){
 		Form<ContainersUpdateForm> containerUpdateFilledForm = getFilledForm(containersUpdateForm, ContainersUpdateForm.class);
 		ContextValidation contextValidation = new ContextValidation(getCurrentUser(),containerUpdateFilledForm.errors());
@@ -209,6 +211,24 @@ public class Containers extends CommonController {
 		return ok(Json.toJson(response));
 	}
 
+	
+	public static Result updateState(String code){
+		Container container = findContainer(code);
+		if(container == null){
+			return badRequest();
+		}
+		Form<State> filledForm =  getFilledForm(stateForm, State.class);
+		State state = filledForm.get();
+		state.date = new Date();
+		state.user = getCurrentUser();
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContWorkflows.instance.setState(ctxVal, container, state);
+		if (!ctxVal.hasErrors()) {
+			return ok(Json.toJson(findContainer(code)));
+		}else {
+			return badRequest(filledForm.errorsAsJson());
+		}
+	}
 
 
 	/**
@@ -343,7 +363,7 @@ public class Containers extends CommonController {
 				//TODO Erreur quand pas de processus pour un type d'expérience
 				
 				if(CollectionUtils.isNotEmpty(listProcessType)){
-					queryElts.add(DBQuery.in("processTypeCode", listProcessType));
+					queryElts.add(DBQuery.or(DBQuery.in("processTypeCode", listProcessType),DBQuery.in("processTypeCodes", listProcessType)));
 				}
 				
 			}else{
@@ -388,7 +408,7 @@ public class Containers extends CommonController {
 		}
 
 		if(StringUtils.isNotBlank(containersSearch.processTypeCode)){   
-			queryElts.add(DBQuery.is("processTypeCode", containersSearch.processTypeCode));
+			queryElts.add(DBQuery.or(DBQuery.is("processTypeCode", containersSearch.processTypeCode), DBQuery.in("processTypeCodes", containersSearch.processTypeCode)));
 		}
 
 		
@@ -403,7 +423,7 @@ public class Containers extends CommonController {
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
 		}		
-
+		
 		return query;
 	}
 	

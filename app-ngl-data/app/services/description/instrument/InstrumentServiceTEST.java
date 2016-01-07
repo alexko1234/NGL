@@ -225,7 +225,12 @@ public class InstrumentServiceTEST extends AbstractInstrumentService{
 		*/
 		l.add(newInstrumentUsedType("Test One To One", "one-to-one", InstrumentCategory.find.findByCode("centrifuge"), getTestOneToOneProperties(),  getInstrumentTestOneToOne()
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
-		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
+		
+		l.add(newInstrumentUsedType("Main", "hand", InstrumentCategory.find.findByCode("hand"), null, 
+				getInstruments(
+						createInstrument("hand", "Main", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.TEST)) ),
+				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
 		
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);

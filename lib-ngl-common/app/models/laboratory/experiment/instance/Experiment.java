@@ -9,6 +9,7 @@ import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.common.instance.Valuation;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.reagent.instance.ReagentUsed;
 import models.utils.InstanceConstants;
@@ -17,7 +18,6 @@ import org.mongojack.MongoCollection;
 
 import validation.ContextValidation;
 import validation.IValidation;
-import validation.container.instance.ContainerValidationHelper;
 import static validation.common.instance.CommonValidationHelper.*;
 import static validation.experiment.instance.ExperimentValidationHelper.*;
 
@@ -43,7 +43,7 @@ public class Experiment extends DBObject implements IValidation {
 	public String typeCode;
 	public String categoryCode;
 	
-	public TraceInformation traceInformation;
+	public TraceInformation traceInformation = new TraceInformation();;
 	public Map<String,PropertyValue> experimentProperties;
 	
 	public Map<String, PropertyValue> instrumentProperties;
@@ -51,7 +51,8 @@ public class Experiment extends DBObject implements IValidation {
 	public InstrumentUsed instrument;
 	public String protocolCode;
 
-	public State state;
+	public State state = new State();
+	public Valuation status = new Valuation();
 	
 	public List<AtomicTransfertMethod> atomicTransfertMethods; 
 	
@@ -60,28 +61,28 @@ public class Experiment extends DBObject implements IValidation {
 	public List<Comment> comments;
 	
 	public Set<String> projectCodes;
-	
 	public Set<String> sampleCodes;
 	
 	public Set<String> inputContainerSupportCodes;
 	public Set<String> inputContainerCodes;
 	public Set<String> inputProcessCodes;
+	public Set<String> inputProcessTypeCodes;
+	public Set<String> inputFromTransformationTypeCodes;
 	
+	public Set<String> outputContainerCodes;
 	public Set<String> outputContainerSupportCodes;
 	
 	
 	
 	public Experiment(){
-		traceInformation=new TraceInformation();
-		state=new State();
+		traceInformation=new TraceInformation();		
 	}
 	
 	public Experiment(String code){
-		this.code=code;
-		traceInformation=new TraceInformation();
-		state=new State();
+		this.code=code;		
 	}
 	
+	@Deprecated
 	@JsonIgnore
 	public List<InputContainerUsed> getAllInputContainers(){
 		List<InputContainerUsed> containersUSed=new ArrayList<InputContainerUsed>();
@@ -96,13 +97,13 @@ public class Experiment extends DBObject implements IValidation {
 		}
 		return containersUSed;
 	}
-	
+	@Deprecated
 	@JsonIgnore
 	public List<OutputContainerUsed> getAllOutputContainers(){
 		List<OutputContainerUsed> containersUSed=new ArrayList<OutputContainerUsed>();
 		if(this.atomicTransfertMethods!=null){
 			for(int i=0;i<this.atomicTransfertMethods.size();i++){
-				if(this.atomicTransfertMethods.get(i).outputContainerUseds.size()!=0){
+				if(this.atomicTransfertMethods.get(i).outputContainerUseds != null && this.atomicTransfertMethods.get(i).outputContainerUseds.size()!=0){
 					containersUSed.addAll(this.atomicTransfertMethods.get(i).outputContainerUseds);
 				}
 			}
@@ -124,6 +125,7 @@ public class Experiment extends DBObject implements IValidation {
 		validationExperimentType(typeCode, experimentProperties, contextValidation);
 		validationExperimentCategoryCode(categoryCode, contextValidation);
 		validateState(this.typeCode, this.state, contextValidation);
+		validateStatus(this.typeCode, this.status, contextValidation);
 		validationProtocoleCode(typeCode,protocolCode,contextValidation);
 		validateInstrumentUsed(instrument,instrumentProperties,contextValidation);
 		validateAtomicTransfertMethods(typeCode, instrument, atomicTransfertMethods,contextValidation);
@@ -134,13 +136,14 @@ public class Experiment extends DBObject implements IValidation {
 		
 		//TODO GA Validation not mandatory because is computing by NGL and can decrease performance ??
 		validateInputContainerSupport(inputContainerSupportCodes,getAllInputContainers(),contextValidation);
-		validateOutputContainerSupport(outputContainerSupportCodes,getAllOutputContainers(),contextValidation);
+		//validateOutputContainerSupport(outputContainerSupportCodes,getAllOutputContainers(),contextValidation); //because empty with void
 		//TODO GA Validate projectCodes, sampleCodes. same question 
 		
 		validateRules(this,contextValidation);
 		
 	}
 
+	
 	
 
 	

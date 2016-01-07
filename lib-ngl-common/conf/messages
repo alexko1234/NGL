@@ -56,6 +56,7 @@ error.validationexp.inputContainer.percentage = "Le pourcentage de container en 
 error.validationexp.inputContainerSupportCodes = "La valeur de la liste n'est pas correcte"
 error.validationexp.outputContainerSupportCodes = "La valeur de la liste n'est pas correcte"
 error.validationexp.comments.null = "Le commentaire est null"
+error.validationexp.status.empty = "Vous devez renseigner le statut avant de terminer l''expérience"
 
 error.validation.container.inputProcesses.notnull = "Le container est associé à un processus"
 

@@ -125,18 +125,18 @@ public class ExperimentHelper extends InstanceHelpers {
 			if(inputContainerUsed.instrumentProperties!=null)
 				properties.putAll(inputContainerUsed.instrumentProperties);
 		}		
-
-		List<OutputContainerUsed> outputContainerUseds=atomicTransfertMethod.outputContainerUseds;
-		for(OutputContainerUsed outputContainerUsed:outputContainerUseds){
-			if(outputContainerUsed.experimentProperties!=null)
-				properties.putAll(outputContainerUsed.experimentProperties);
-			if(outputContainerUsed.instrumentProperties!=null)
-				properties.putAll(outputContainerUsed.instrumentProperties);
+		if(null != atomicTransfertMethod.outputContainerUseds){
+			List<OutputContainerUsed> outputContainerUseds=atomicTransfertMethod.outputContainerUseds;
+			for(OutputContainerUsed outputContainerUsed:outputContainerUseds){
+				if(outputContainerUsed.experimentProperties!=null)
+					properties.putAll(outputContainerUsed.experimentProperties);
+				if(outputContainerUsed.instrumentProperties!=null)
+					properties.putAll(outputContainerUsed.instrumentProperties);
+			}
 		}
-
 		return properties;
 	}
-
+	@Deprecated
 	public static List<String> getAllProcessCodesFromExperiment(Experiment exp){
 
 		List<String> containerCodes=new ArrayList<String>();

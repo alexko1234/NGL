@@ -49,6 +49,7 @@ containers.tabs.state = Changement d''Etat Container
 
 #Containers table
 containers.table.code = Code Container
+containers.table.support.code = Code Support / Container
 containers.table.supportCategoryCode = Catégorie support
 containers.table.categoryCode = Catégorie Support
 containers.table.projectCodes = Projet(s)
@@ -84,6 +85,8 @@ containers.table.inputProcessCodes = Processus
 containers.table.percentageInsidePool = % au sein du pool
 containers.table.codeAliquot = Code aliquot
 containers.table.storageCode = Stockage
+containers.table.status = Statut
+containers.table.dispatch = Orientation
 containers.table.mesuredConcentration.unit=Unité Concentration 
 containers.table.mesuredConcentration.value=Concentration Container
 
@@ -99,7 +102,17 @@ containers.select.categoryCode =  Catégorie container
 containers.select.categorySupportCode =  Catégorie support
 containers.select.fromExperimentTypeCodes= Container issu du type d''exp.
 
+containers.dispatch.value.0 = Recommencer
+containers.dispatch.value.1 = Arrêt Processus
+containers.dispatch.value.2 = Exp. Suivante
+containers.dispatch.value.3 = Exp. QC
+containers.dispatch.value.4 = Exp. Purification
+containers.dispatch.value.5 = Exp. Transfert
+containers.dispatch.value.6 = Terminé
 
+containers.table.processResolutions = Processus résolutions
+containers.dispatch.value.mandatory = L''orientation du container est obligatoire
+containers.status.value.mandatory = Le statut du container est obligatoire
 comments.remove.confirm = Pouvez-vous confirmer la suppression ?
 
 #search
@@ -230,7 +243,8 @@ experiments.button.finish  = Terminer
 experiments.button.start  = Démarrer
 experiments.finished  = Terminé
 experiments.type = Type d''expérience
-experiments.resolution = Résolution expérience
+experiments.status = Statut
+experiments.resolutions = Résolutions
 experiments.protocol = Protocole
 experiments.creationDate = Date de création
 experiments.createUser = Créée par
@@ -308,10 +322,11 @@ experiments.intrumentCategory = Contenant sortie
 experiments.table.creationDate = Date de création exp.
 experiments.table.createUser = Expérience Créée par
 
-experiments.finalResolutionModal.title = Veuillez choisir une résolution :
+experiments.finalResolutionModal.title = Veuillez définir le statut de l''expérience :
 
 containers.table.outputNumber = Nb aliquots
 
+experiment.dispatch.title = Orientation des containers : 
 
 experiment.panel.experimentInformation = Expérience
 experiment.panel.instrumentInformation = Instrument

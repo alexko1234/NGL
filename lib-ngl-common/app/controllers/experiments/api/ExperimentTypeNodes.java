@@ -3,10 +3,13 @@ package controllers.experiments.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.processes.description.ExperimentTypeNode;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
@@ -22,6 +25,21 @@ public class ExperimentTypeNodes extends CommonController{
 
 	final static Form<ExperimentTypeNodesSearchForm> experimentTypeNodeForm = form(ExperimentTypeNodesSearchForm.class);
 	
+	public static Result get(String code){
+		try {
+			ExperimentTypeNode experimentTypeNode = ExperimentTypeNode.find.findByCode(code);
+			if(experimentTypeNode == null){
+				return notFound();
+			}else{
+				return ok(Json.toJson(experimentTypeNode));
+			}
+			
+		} catch (DAOException e) {
+			return internalServerError(e.getMessage());
+		}		
+	}
+	
+	
 	public static Result list() throws DAOException{
 		Form<ExperimentTypeNodesSearchForm>  experimentTypeNodeFilledForm = filledFormQueryString(experimentTypeNodeForm,ExperimentTypeNodesSearchForm.class);
 		ExperimentTypeNodesSearchForm experimentTypeNodesSearch = experimentTypeNodeFilledForm.get();
@@ -30,6 +48,8 @@ public class ExperimentTypeNodes extends CommonController{
 			
 			if(StringUtils.isNotBlank(experimentTypeNodesSearch.code)){
 				experimentTypeNodes.add(ExperimentTypeNode.find.findByCode(experimentTypeNodesSearch.code));
+			}else if(CollectionUtils.isNotEmpty(experimentTypeNodesSearch.codes)){
+				experimentTypeNodes.addAll(ExperimentTypeNode.find.findByCodes(experimentTypeNodesSearch.codes));
 			}else{
 				experimentTypeNodes = ExperimentTypeNode.find.findAll();
 			}

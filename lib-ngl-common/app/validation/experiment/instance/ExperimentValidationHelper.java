@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TBoolean;
+import models.laboratory.common.instance.Valuation;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
@@ -63,16 +65,41 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			contextValidation.addKeyToRootKeyName("state");
 			state.validate(contextValidation);
 			
+			/*
 			String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
 			if("F".equals(stateCode)){
 				ValidationHelper.required(contextValidation, state.resolutionCodes, "resolutionCodes");
 			}
-			
+			*/
 			contextValidation.removeKeyFromRootKeyName("state");
 			contextValidation.removeObject(FIELD_TYPE_CODE);
 		}		
 	}
 	
+	public static void validateStatus(String typeCode, Valuation status, ContextValidation contextValidation) {
+		if (ValidationHelper.required(contextValidation, status, "status")) {
+			contextValidation.putObject(FIELD_TYPE_CODE, typeCode);
+			contextValidation.addKeyToRootKeyName("status");
+			status.validate(contextValidation);
+			contextValidation.removeKeyFromRootKeyName("status");
+			contextValidation.removeObject(FIELD_TYPE_CODE);
+			
+			String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
+			/*
+			if("F".equals(stateCode)){
+				ValidationHelper.required(contextValidation, status.resolutionCodes, "resolutionCodes");
+			}
+			*/
+			if("F".equals(stateCode) && TBoolean.UNSET.equals(status.valid)){
+				contextValidation.addErrors("status", "error.validationexp.status.empty");
+			}
+			
+			
+			
+		}	
+		
+	}
+
 	
 	public static void validationExperimentCategoryCode(String categoryCode,
 			ContextValidation contextValidation) {

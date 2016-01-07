@@ -3,6 +3,7 @@ package controllers.containers.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -27,6 +28,8 @@ import play.mvc.Result;
 import validation.ContextValidation;
 import validation.container.instance.ContainerValidationHelper;
 import views.components.datatable.DatatableResponse;
+import workflows.container.ContSupportWorkflows;
+import workflows.container.ContWorkflows;
 import workflows.container.ContainerWorkflows;
 
 import com.mongodb.BasicDBObject;
@@ -40,7 +43,7 @@ public class ContainerSupports extends CommonController {
 
 	final static Form<ContainerSupportsSearchForm> supportForm = form(ContainerSupportsSearchForm.class);
 	final static Form<ContainerSupportsUpdateForm> containerSupportUpdateForm = form(ContainerSupportsUpdateForm.class);
-
+	final static Form<State> stateForm = form(State.class);
 	public static Result get(String code){
 		ContainerSupport support = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, code);
 		if(support != null){
@@ -93,10 +96,11 @@ public class ContainerSupports extends CommonController {
 		return ok("{}");
 	}
 
+	@Deprecated
 	public static Result updateBatch(){
 		return ok();
 	}
-	
+	@Deprecated
 	public static Result updateStateCode(String code){
 		Form<ContainerSupportsUpdateForm> containerSupportUpdateFilledForm = getFilledForm(containerSupportUpdateForm, ContainerSupportsUpdateForm.class);
 		ContextValidation contextValidation = new ContextValidation(getCurrentUser(),containerSupportUpdateFilledForm.errors());
@@ -137,7 +141,23 @@ public class ContainerSupports extends CommonController {
 		return badRequest(containerSupportUpdateFilledForm.errorsAsJson());
 		}
 		
-
+	public static Result updateState(String code){
+		ContainerSupport support = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, code);
+		if(support == null){
+			return badRequest();
+		}
+		Form<State> filledForm =  getFilledForm(stateForm, State.class);
+		State state = filledForm.get();
+		state.date = new Date();
+		state.user = getCurrentUser();
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ContSupportWorkflows.instance.setState(ctxVal, support, state);
+		if (!ctxVal.hasErrors()) {
+			return ok(Json.toJson(MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, code)));
+		}else {
+			return badRequest(filledForm.errorsAsJson());
+		}
+	}
 	/**
 	 * Construct the support query
 	 * @param supportsSearch

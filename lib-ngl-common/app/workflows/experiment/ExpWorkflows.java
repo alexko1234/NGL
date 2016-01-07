@@ -2,9 +2,11 @@ package workflows.experiment;
 
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
 import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TBoolean;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.instance.Experiment;
 import models.utils.InstanceConstants;
+import models.utils.instance.ProcessHelper;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
@@ -28,11 +30,13 @@ public class ExpWorkflows extends Workflows<Experiment>{
 				ExpWorkflowsHelper.updateAddContainersToExperiment(exp, validation, getNewState("IW-E", validation.getUser()));				
 			}			 						
 		}
+		ExpWorkflowsHelper.updateStatus(exp, validation);
 		ExpWorkflowsHelper.updateComments(exp, validation);
 	}
 
 	public void applyPreStateRules(ContextValidation validation, Experiment exp, State nextState) {
 		exp.traceInformation = updateTraceInformation(exp.traceInformation, nextState); 			
+		ExpWorkflowsHelper.updateStatus(exp, validation);
 		
 		if("N".equals(nextState.code)){
 			ExpWorkflowsHelper.updateXCodes(exp); 	
@@ -47,22 +51,24 @@ public class ExpWorkflows extends Workflows<Experiment>{
 	}
 	
 	public void applySuccessPostStateRules(ContextValidation validation, Experiment exp){
+		ExpWorkflowsHelper.linkExperimentWithProcesses(exp, validation);
 		if("N".equals(exp.state.code)){
 			ExpWorkflowsHelper.updateStateOfInputContainers(exp, getNewState("IW-E", validation.getUser()), validation);
-			ExpWorkflowsHelper.updateStateOfInputContainerSupports(exp, getNewState("IW-E", validation.getUser()), validation);
-			ExpWorkflowsHelper.linkExperimentWithProcesses(exp, validation);			
+			ExpWorkflowsHelper.updateStateOfInputContainerSupports(exp, getNewState("IW-E", validation.getUser()), validation);					
 		} else if("IP".equals(exp.state.code)){		
 			ExpWorkflowsHelper.updateStateOfInputContainers(exp, getNewState("IU", validation.getUser()), validation);
 			ExpWorkflowsHelper.updateStateOfInputContainerSupports(exp, getNewState("IU", validation.getUser()), validation);
 			ExpWorkflowsHelper.updateStateOfProcesses(exp,  getNewState("IP", validation.getUser()), validation);
 			
 		}else if("F".equals(exp.state.code)){
-			ExpWorkflowsHelper.updateStateOfInputContainers(exp, getNewState("IW-D", validation.getUser()), validation);
-			ExpWorkflowsHelper.updateStateOfInputContainerSupports(exp, getNewState("IW-D", validation.getUser()), validation);
-			ExpWorkflowsHelper.updateStateOfProcesses(exp,  getNewState("IP", validation.getUser()), validation);
-			
-			//ProcessHelper.updateNewContainerSupportCodes(outputContainerUseds.get(0),inputContainerUseds,experiment);
-			
+			if(TBoolean.TRUE.equals(exp.status.valid)){
+				ExpWorkflowsHelper.updateStateOfInputContainers(exp, getNewState("IS", validation.getUser()), validation);
+				ExpWorkflowsHelper.updateStateOfInputContainerSupports(exp, getNewState("IS", validation.getUser()), validation);				
+			}else{
+				ExpWorkflowsHelper.updateStateOfInputContainers(exp, getNewState("IW-D", validation.getUser()), validation);
+				ExpWorkflowsHelper.updateStateOfInputContainerSupports(exp, getNewState("IW-D", validation.getUser()), validation);				
+			}
+			ExpWorkflowsHelper.updateStateOfProcesses(exp,  getNewState("IP", validation.getUser()), validation);			
 		}
 	}
 	

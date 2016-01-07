@@ -4,9 +4,13 @@ import java.sql.Types;
 import java.util.List;
 
 import org.springframework.asm.Type;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
+
+import play.Logger;
 
 
 /**
@@ -53,6 +57,20 @@ public abstract class AbstractDAOMapping<T> extends AbstractDAO<T> {
 		return initializeMapping(sql, new SqlParameter("code",Types.VARCHAR)).findObject(code);
 	}
 
+	public List<T> findByCodes(List<String> codes) throws DAOException
+	{
+		if(null == codes){
+			throw new DAOException("codes is mandatory");
+		}
+		try {
+			String sql =sqlCommon+" WHERE t.code in ("+listToParameters(codes)+")";
+			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
+			return initializeMapping(sql, listToSqlParameters(codes ,"t.code", Types.VARCHAR)).execute(codes.toArray( new String[0]));			
+		} catch (DataAccessException e) {
+			Logger.warn(e.getMessage());
+			return null;
+		}
+	}
 
 	protected MappingSqlQuery<T> initializeMapping(String sql, SqlParameter...sqlParams) throws DAOException
 	{

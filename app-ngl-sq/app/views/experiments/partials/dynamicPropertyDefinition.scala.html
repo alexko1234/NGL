@@ -2,7 +2,7 @@
 <label  class="col-md-6 col-lg-6 control-label" ng-bind="propertyDef.displayMeasureValue ? propertyDef.name+' ('+propertyDef.displayMeasureValue.value+')' : propertyDef.name"></label>													
 						
 						<div ng-switch-when="java.util.Date" class="col-md-6 col-lg-6">
-						  	<div ng-switch on="isEditMode()">
+						  	<div ng-switch on="mainService.isEditMode()">
 						  		<p class="form-control-static" ng-switch-when="false" ng-bind="experiment.@{name}[propertyDef.code].value | date:'@Messages("date.format")'" />
 						  		<input class="form-control" ng-switch-when="true" type="text" class="input-small"									
 									placeholder="@Messages("date.format")" 
@@ -10,7 +10,7 @@
 						  	</div>
 						</div>
 						<div ng-switch-when="java.io.File" class="col-md-6 col-lg-6">
-							<div ng-switch on="isEditMode()">
+							<div ng-switch on="mainService.isEditMode()">
 								<input type="file" ng-switch-when="true" base64-file="experiment.@{name}[propertyDef.code]" />
 								<div ng-switch-when="false" ng-if="experiment.@{name}[propertyDef.code] !== undefined">
 							    <a target="_blank" ng-href="data:application/{{experiment.@{name}[propertyDef.code].extension}};base64,{{experiment.@{name}[expp.code].value}}">
@@ -23,7 +23,7 @@
 						  	</div>															
 						</div>
 						<div ng-switch-when="java.awt.Image" class="col-md-6 col-lg-6">
-						  	<div ng-switch on="isEditMode()">
+						  	<div ng-switch on="mainService.isEditMode()">
 						  		<input type="file" ng-switch-when="true" base64-img="experiment.@{name}[propertyDef.code]" />
 								<div ng-switch-when="false" ng-click="setImage(experiment.@{name}[propertyDef.code].value,
 									experiment.@{name}[propertyDef.code].fullname,
@@ -44,7 +44,7 @@
 						</div>						
 						<div ng-switch-default class="col-md-6 col-lg-6" ng-switch on="propertyDef.choiceInList">
 						
-							<div ng-switch-when="false" ng-switch on="isEditMode()">
+							<div ng-switch-when="false" ng-switch on="mainService.isEditMode()">
 								<p ng-switch-when="false" class="form-control-static" ng-bind="experiment.@{name}[propertyDef.code].value" />
 								<input 	ng-switch-when="true" class="form-control" type="text" title='{{propertyDef.name}}'  class="input-small"
 										ng-model="experiment.@{name}[propertyDef.code].value"									
@@ -55,6 +55,6 @@
 									ng-model="experiment.@{name}[propertyDef.code].value"
 									udt-default-value="propertyDef.defaultValue" 									 
 			    					bt-options="opt.code as opt.name for opt in propertyDef.possibleValues" 
-			    					ng-edit="isEditMode()">
+			    					ng-edit="mainService.isEditMode()">
 			    				</div>				    				
 						</div>

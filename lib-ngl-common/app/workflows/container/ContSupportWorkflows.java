@@ -59,6 +59,7 @@ public class ContSupportWorkflows extends Workflows<ContainerSupport> {
 			currentCtxValidation.putObject(FIELD_STATE_CODE , nextState.code);
 			//TODO GA improve performance to validate only field impacted by state
 			//containerSupport.validate(contextValidation); //in comment because no field are state dependant
+			//TODO GA what is the rules to change the support state, need a support state ??
 			if(!currentCtxValidation.hasErrors()){
 				boolean goBack = goBack(containerSupport.state, nextState);
 				if(goBack)Logger.debug(containerSupport.code+" : back to the workflow. "+containerSupport.state.code +" -> "+nextState.code);		

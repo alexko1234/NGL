@@ -150,7 +150,22 @@ public class ExperimentServiceTEST extends AbstractExperimentService {
 				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
 		
+		l.add(newExperimentType("Test One To One 2","test-one-to-one-2",null,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+				getPropertyTestOneToOne(), getInstrumentUsedTypes("one-to-one"),"OneToVoid", 
+				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
+		
+		
+		l.add(newExperimentType("Aliquot","aliquoting",null,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()),
+				getPropertyAliquoting(), getInstrumentUsedTypes("hand"),"OneToMany", 
+				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
+		
+		l.add(newExperimentType("Pool Tube","pool-tube",null,1200,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), 
+				getPropertyDefinitionPoolTube(), getInstrumentUsedTypes("hand"),"ManyToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
 
@@ -164,7 +179,8 @@ public class ExperimentServiceTEST extends AbstractExperimentService {
 
 	public void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
 		newExperimentTypeNode("ext-to-test-one-to-one", getExperimentTypes("ext-to-test-one-to-one").get(0), false, false, null, null, null).save();
-		newExperimentTypeNode("test-one-to-one",getExperimentTypes("test-one-to-one").get(0),false,false,getExperimentTypeNodes("ext-to-test-one-to-one"),null,null).save();
+		newExperimentTypeNode("test-one-to-one",getExperimentTypes("test-one-to-one").get(0),false,false,false,getExperimentTypeNodes("ext-to-test-one-to-one"),null,null,getExperimentTypes("aliquoting","pool-tube")).save();
+		newExperimentTypeNode("test-one-to-one-2",getExperimentTypes("test-one-to-one-2").get(0),false,false,false,getExperimentTypeNodes("test-one-to-one"),null,null,null).save();
 		
 		/*
 		

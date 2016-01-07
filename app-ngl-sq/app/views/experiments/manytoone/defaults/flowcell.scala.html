@@ -12,7 +12,7 @@
 		<div class="row">
 		
 		<!-- InputContainers table -->
-		<div class="col-md-12 col-lg-5" droppable drop-fn="atmService.data.drop" ng-model="atmService.data.inputContainers"  ng-if="isEditMode()">
+		<div class="col-md-12 col-lg-5" droppable drop-fn="atmService.data.drop" ng-model="atmService.data.inputContainers"  ng-if="mainService.isEditMode()">
 			<div class="panel panel-primary"  style="border-style:dashed">				
 			<div class="panel-body" ng-if="atmService.data.inputContainers.length==0">		
 				<p><i class="fa fa-download"></i> @Messages("experiments.inputs")</p>
@@ -106,7 +106,7 @@
 			</tr>
 			
 			</thead>
-			<tbody ng-if="isAllOpen && isEditMode()">
+			<tbody ng-if="isAllOpen && mainService.isEditMode()">
 			<tr>
 			<th colspan="7"></th>
 		
@@ -170,7 +170,7 @@
 							{{inputContainer.code}}
 						</td>
 						<td>
-							<div ng-switch on="isEditMode()">						
+							<div ng-switch on="mainService.isEditMode()">						
 								<span ng-switch-when="false" ng-bind="inputContainer.percentage"></span>						 
 								<div ng-switch-when="true">
 									<input class="form-control input-sm" type="text" 
@@ -195,7 +195,7 @@
 							ng-if="$parent.$index === 0"
 							rowspan="{{atm.inputContainerUseds.length}}">
 								 
-							<div ng-switch on="isEditMode()">						
+							<div ng-switch on="mainService.isEditMode()">						
 								<span ng-switch-when="false" ng-bind="atm.outputContainerUseds[0].experimentProperties[property.code].value"></span>						 
 								<div ng-switch-when="true">
 									<input class="form-control input-sm" type="text" 

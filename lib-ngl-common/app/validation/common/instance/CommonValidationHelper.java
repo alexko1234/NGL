@@ -436,7 +436,7 @@ public class CommonValidationHelper {
 		if(null != resoCodes){
 			int i = 0;
 			for(String resoCode: resoCodes){
-				if (! MongoDBDAO.checkObjectExist(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, DBQuery.and(DBQuery.is("resolutions.code", resoCode), DBQuery.is("objectTypeCodes", objectTypeCode.toString())))) {
+				if (! MongoDBDAO.checkObjectExist(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, DBQuery.and(DBQuery.is("resolutions.code", resoCode), DBQuery.is("objectTypeCode", objectTypeCode.toString())))) {
 					contextValidation.addErrors("resolutionCodes["+i+"]", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, resoCode);
 				}
 				i++;

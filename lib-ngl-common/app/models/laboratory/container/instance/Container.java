@@ -22,6 +22,7 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.common.instance.property.PropertySingleValue;
+import models.laboratory.container.instance.tree.TreeOfLifeNode;
 import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
@@ -81,7 +82,7 @@ public class Container extends DBObject implements IValidation {
 	public Set<String> sampleCodes; // getSamples
 	// ExperimentType must be an internal or external experiment ( origine )
 	// List for pool experimentType
-	public Set<String> fromExperimentTypeCodes; // getExperimentType
+	public Set<String> fromExperimentTypeCodes; // getExperimentType //TODO GA fromTransformationCodes
 
 	// Propager au container de purif ??
 	//public String fromExperimentCode; ??
@@ -93,8 +94,12 @@ public class Container extends DBObject implements IValidation {
 	//TODO GA may be with fromExperimentTypeCodes ???
 	public String processTypeCode; //TODO GA remove and replace by processTypeCodes warning find container for create experiment ?
 	public Set<String> processTypeCodes;
-	public Set<String> inputProcessCodes; //TODO GA rename to processCodes
+	public Set<String> inputProcessCodes; //TODO GA rename to processCodes or currentProcessCodes
 
+	//tree of life
+	public TreeOfLifeNode treeOfLife;
+	
+	
 	public Container(){
 		//properties=new HashMap<String, PropertyValue>();
 		contents=new ArrayList<Content>();
@@ -133,7 +138,7 @@ public class Container extends DBObject implements IValidation {
 		validateState(this.state, contextValidation);
 		validateTraceInformation(this.traceInformation, contextValidation);
 		validateContainerCategoryCode(categoryCode, contextValidation);
-		validateProcessTypeCode(processTypeCode, contextValidation);
+		//validateProcessTypeCode(processTypeCode, contextValidation);
 		//TODO GA processTypeCodes
 		validateProjectCodes(projectCodes, contextValidation);
 		validateSampleCodes(sampleCodes, contextValidation);
