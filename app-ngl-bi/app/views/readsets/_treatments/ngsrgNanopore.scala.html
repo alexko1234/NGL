@@ -6,23 +6,23 @@
 			<thead>
 				<tr>
 					<th></th>
-					<th>@Messages("readsets.treatments.ngsrg_nanopore.1DForward")</th>
-					<th>@Messages("readsets.treatments.ngsrg_nanopore.1DReverse")</th>
-					<th>@Messages("readsets.treatments.ngsrg_nanopore.2DAll")</th>
-					<th>@Messages("readsets.treatments.ngsrg_nanopore.2DPass")</th>
+					<th>@Messages("treatments.ngsrg_nanopore.1DForward")</th>
+					<th>@Messages("treatments.ngsrg_nanopore.1DReverse")</th>
+					<th>@Messages("treatments.ngsrg_nanopore.2DAll")</th>
+					<th>@Messages("treatments.ngsrg_nanopore.2DPass")</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<th>@Messages("readsets.treatments.ngsrg_nanopore.nbBases")</th>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.nbBases1DForward.value | number}}</td>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.nbBases1DReverse.value | number}}</td>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.nbBases2DAll.value | number}}</td>
-					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.nbBases2DPass.value | number}}</td>
+					<th>@Messages("treatments.ngsrg_nanopore.nbBases")</th>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DForward'].value.nbBases | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.nbBases | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.nbBases | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DPass'].value.nbBases | number}}</td>
 				</tr>	
 				
 				<tr>
-					<th>@Messages("readsets.treatments.ngsrg_nanopore.nbReads")</th>
+					<th>@Messages("treatments.ngsrg_nanopore.nbReads")</th>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DForward'].value.nbReads | number}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.nbReads | number}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.nbReads | number}}</td>
@@ -33,36 +33,43 @@
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DForward'].value.avgSize | number:2}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.avgSize | number:2}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.avgSize | number:2}}</td>
-					<td class="active"></td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DPass'].value.avgSize | number:2}}</td>
 				</tr>	
 				<tr>
 					<th>@Messages("readsets.treatments.ngsrg_nanopore.maxSize")</th>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DForward'].value.maxSize | number}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.maxSize | number}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.maxSize | number}}</td>
-					<td class="active"></td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DPass'].value.maxSize | number}}</td>
 				</tr>
 				<tr>
 					<th>@Messages("readsets.treatments.ngsrg_nanopore.N50")</th>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DForward'].value.N50 | number}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.N50 | number}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.N50 | number}}</td>
-					<td class="active"></td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DPass'].value.N50 | number}}</td>
 				</tr>	
 				<tr>
 					<th>@Messages("readsets.treatments.ngsrg_nanopore.nbReadsOver10kb")</th>
-					<td class="active"></td>
-					<td class="active"></td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DForward'].value.nbReadsOver10kb | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.nbReadsOver10kb | number}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.nbReadsOver10kb | number}}</td>
-					<td class="active"></td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DPass'].value.nbReadsOver10kb | number}}</td>
 				</tr>			
 				<tr>
 					<th>@Messages("readsets.treatments.ngsrg_nanopore.GCPercent")</th>
-					<td class="active"></td>
-					<td class="active"></td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DForward'].value.GCPercent | number:2}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.GCPercent | number:2}}</td>
 					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.GCPercent | number:2}}</td>
-					<td class="active"></td>
-				</tr>						
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DPass'].value.GCPercent | number:2}}</td>
+				</tr>	
+				<tr>
+					<th>@Messages("readsets.treatments.ngsrg_nanopore.qualityAvg")</th>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DForward'].value.qualityAvg | number:2}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.qualityAvg | number:2}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.qualityAvg | number:2}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DPass'].value.qualityAvg | number:2}}</td>
+				</tr>					
 			</tbody>
 		 </table>
 	</div>
