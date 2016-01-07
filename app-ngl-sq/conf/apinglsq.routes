@@ -9,7 +9,7 @@ GET		/api/supports/:code												controllers.containers.api.ContainerSupports
 HEAD	/api/supports/:code												controllers.containers.api.ContainerSupports.head(code:java.lang.String)
 PUT		/api/supports/:code/state										controllers.containers.api.ContainerSupports.updateState(code:java.lang.String)
 
-
+#TODO GA replace by new version
 PUT		/api-old/supports/batch											controllers.containers.api.ContainerSupports.updateBatch()
 PUT		/api-old/supports/:code/state									controllers.containers.api.ContainerSupports.updateStateCode(code:java.lang.String)
 
@@ -22,7 +22,7 @@ GET		/api/containers/:code											controllers.containers.api.Containers.get(c
 
 PUT		/api/containers/:code/state										controllers.containers.api.Containers.updateState(code:java.lang.String)
 
-
+#TODO GA replace by new version
 PUT		/api-old/containers/batch											controllers.containers.api.Containers.updateBatch()
 PUT		/api-old/containers/state-batch										controllers.containers.api.Containers.updateStateBatch()
 PUT		/api-old/containers/:code											controllers.containers.api.Containers.update(code:java.lang.String)

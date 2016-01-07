@@ -43,7 +43,7 @@ public class ContWorkflows extends Workflows<Container> {
 	public void applySuccessPostStateRules(ContextValidation validation,
 			Container container) {
 		
-		if("IS".equals(container.state.code)){
+		if("IS".equals(container.state.code) || "UA".equals(container.state.code)){
 			//TODO GA improve the extraction of fromExperimentTypeCodes after refactoring inputProcessCodes and processTypeCode
 			 
 			 boolean unsetFromExperimentTypeCodes = false;

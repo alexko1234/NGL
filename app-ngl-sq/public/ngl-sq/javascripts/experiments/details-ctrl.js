@@ -102,8 +102,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			form.experimentCategoryCode = $scope.experimentType.category.code;
 			
 			mainService.setForm(form);								
-		}	
-		$scope.$broadcast('refresh');
+		}			
 	};
 	
 	$scope.save = function(callbackFunction){
@@ -342,6 +341,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			$http.get(jsRoutes.controllers.experiments.api.Experiments.get($scope.experiment.code).url).success(function(data) {
 				$scope.experiment = data;		
 				mainService.put("experiment",$scope.experiment);
+				$scope.$broadcast('refresh');
 			});
 		}		
 	};
@@ -1047,6 +1047,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		//TODO Bash Mode to manage when one error
 		$q.all(containerPromises).then(function(result){
 			console.log("all containerPromises done TODO error management");
+			$scope.$emit('dispatchDone');
 		});
 		
 		$q.all(supportPromises).then(function(result){
@@ -1055,8 +1056,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		
 		$q.all(processPromises).then(function(result){
 			console.log("all processPromises done TODO error management");
-		});
-		$scope.$emit('dispatchDone');
+		});		
 	};
 	var callbackSaveForOutputContainer = function(datatable){
 		//usable function
@@ -1142,6 +1142,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		//TODO Bash Mode to manage when one error
 		$q.all(containerPromises).then(function(result){
 			console.log("all containerPromises done TODO error management");
+			$scope.$emit('dispatchDone');
 		});
 		
 		$q.all(supportPromises).then(function(result){
@@ -1151,7 +1152,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$q.all(processPromises).then(function(result){
 			console.log("all processPromises done TODO error management");
 		});
-		$scope.$emit('dispatchDone');
+		
 	}
 	
 	var dispatchValues;
@@ -1238,8 +1239,8 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 							}
 						}
 							
-						$scope.outputContainersDT = datatable(datatableConfig);
-						$scope.outputContainersDT.setData(outputContainers);
+						$scope.containersDT = datatable(datatableConfig);
+						$scope.containersDT.setData(outputContainers);
 						
 						$http.get(jsRoutes.controllers.processes.api.ProcessTypes.list().url,{params:{codes:processTypeCodes}})
 							.success(function(data, status,headers,config){
