@@ -142,6 +142,33 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
+	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, String propertyValueType, int displayOrder, String defaultValue) throws DAOException{
+		PropertyDefinition pd = new PropertyDefinition();		
+		pd.name = name;
+		pd.code = code;
+		pd.active = true;
+		pd.levels = levels;
+		pd.valueType = type.getName();
+		pd.required = required;
+		pd.choiceInList = false;
+		pd.propertyValueType = propertyValueType;
+		pd.defaultValue=defaultValue;
+		pd.displayOrder=displayOrder;
+		return pd;
+	}
+	
+	/**
+	 * 
+	 * @param name
+	 * @param code
+	 * @param levels
+	 * @param type
+	 * @param required
+	 * @param propertyValueType TODO
+	 * @param displayOrder
+	 * @return
+	 * @throws DAOException
+	 */
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, String propertyValueType, String defaultValue) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
