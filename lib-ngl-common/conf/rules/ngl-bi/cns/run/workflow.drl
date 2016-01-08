@@ -53,12 +53,12 @@ rule "Calculate 1DForward basesPercent and readPercent for ngsrg-nanopore"
 		Map mapPropertyValue1DForward = propertyValue1DForward.getValue();
 		
 		Long value1DForwardNbBases = (Long)mapPropertyValue1DForward.get("nbBases");
-		Double value1DForwardBasesPercent = roundValue((double)value1DForwardNbBases/value1DForwardNbBases);
+		Double value1DForwardBasesPercent = roundValue((double)value1DForwardNbBases/value1DForwardNbBases*100);
 		mapPropertyValue1DForward.put("basesPercent", value1DForwardBasesPercent);
 		
 		Logger.debug("Calculate 1DForward.readsPercent");
 		Long value1DForwardNbReads = (Long)mapPropertyValue1DForward.get("nbReads");
-		Double value1DForwardReadsPercent = roundValue((double)value1DForwardNbReads/value1DForwardNbReads);
+		Double value1DForwardReadsPercent = roundValue((double)value1DForwardNbReads/value1DForwardNbReads*100);
 		mapPropertyValue1DForward.put("readsPercent", value1DForwardReadsPercent);
 		
 		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class,  
@@ -86,12 +86,12 @@ rule "Calculate 1DReverse basesPercent and readsPercent for ngsrg-nanopore"
 		Map mapPropertyValue1DReverse = propertyValue1DReverse.getValue();
 		
 		Long value1DReverseNbBases = (Long)mapPropertyValue1DReverse.get("nbBases");
-		Double value1DReverseBasesPercent = roundValue((double)value1DReverseNbBases/value1DForwardNbBases);
+		Double value1DReverseBasesPercent = roundValue((double)value1DReverseNbBases/value1DForwardNbBases*100);
 		mapPropertyValue1DReverse.put("basesPercent", value1DReverseBasesPercent);
 		
 		Logger.debug("Calculate 1DReverse.readsPercent");
 		Long value1DReverseNbReads = (Long)mapPropertyValue1DReverse.get("nbReads");
-		Double value1DReverseReadsPercent = roundValue((double)value1DReverseNbReads/value1DForwardNbReads);
+		Double value1DReverseReadsPercent = roundValue((double)value1DReverseNbReads/value1DForwardNbReads*100);
 		mapPropertyValue1DReverse.put("readsPercent", value1DReverseReadsPercent);
 		
 		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class,  
@@ -118,12 +118,12 @@ rule "Calculate 2DAll basesPercent and readsPercent for ngsrg-nanopore"
 		Map mapPropertyValue2DAll = propertyValue2DAll.getValue();
 		
 		Long value2DAllNbBases = (Long)mapPropertyValue2DAll.get("nbBases");
-		Double value2DAllBasesPercent = roundValue((double)value2DAllNbBases/value1DForwardNbBases);
+		Double value2DAllBasesPercent = roundValue((double)value2DAllNbBases/value1DForwardNbBases*100);
 		mapPropertyValue2DAll.put("basesPercent", value2DAllBasesPercent);
 		
 		Logger.debug("Calculate 2DAll.readsPercent");
 		Long value2DAllNbReads = (Long)mapPropertyValue2DAll.get("nbReads");
-		Double value2DAllReadsPercent = roundValue((double)value2DAllNbReads/value1DForwardNbReads);
+		Double value2DAllReadsPercent = roundValue((double)value2DAllNbReads/value1DForwardNbReads*100);
 		mapPropertyValue2DAll.put("readsPercent", value2DAllReadsPercent);
 		
 		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class,  
@@ -151,12 +151,12 @@ rule "Calculate 2DPass basesPercent and nbReads for ngsrg-nanopore"
 		Map mapPropertyValue2DPass = propertyValue2DPass.getValue();
 		
 		Long value2DPassNbBases = (Long)mapPropertyValue2DPass.get("nbBases");
-		Double value2DPassBasesPercent = roundValue((double)value2DPassNbBases/value1DForwardNbBases);
+		Double value2DPassBasesPercent = roundValue((double)value2DPassNbBases/value1DForwardNbBases*100);
 		mapPropertyValue2DPass.put("basesPercent", value2DPassBasesPercent);
 		
 		Logger.debug("Calculate 2DPass.readsPercent");
 		Long value2DPassNbReads = (Long)mapPropertyValue2DPass.get("nbReads");
-		Double value2DPassReadsPercent = roundValue((double)value2DPassNbReads/value1DForwardNbReads);
+		Double value2DPassReadsPercent = roundValue((double)value2DPassNbReads/value1DForwardNbReads*100);
 		mapPropertyValue2DPass.put("readsPercent", value2DPassReadsPercent);
 		
 		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class,  
@@ -184,12 +184,12 @@ rule "Calculate useful basesPercent and readsPercent for ngsrg-nanopore"
 		Map mapPropertyValueUseful = propertyValueUseful.getValue();
 		
 		Long valueUsefulNbBases = (Long)mapPropertyValueUseful.get("nbBases");
-		Double usefulBasesPercent = roundValue((double)valueUsefulNbBases/value1DForwardNbBases);
+		Double usefulBasesPercent = roundValue((double)valueUsefulNbBases/value1DForwardNbBases*100);
 		mapPropertyValueUseful.put("basesPercent", usefulBasesPercent);
 		
 		Logger.debug("Calculate useful.readsPercent");
 		Long valueUsefulNbReads = (Long)mapPropertyValueUseful.get("nbReads");
-		Double usefulReadsPercent = roundValue((double)valueUsefulNbReads/value1DForwardNbReads);
+		Double usefulReadsPercent = roundValue((double)valueUsefulNbReads/value1DForwardNbReads*100);
 		mapPropertyValueUseful.put("readsPercent", usefulReadsPercent);
 		
 		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class,  
