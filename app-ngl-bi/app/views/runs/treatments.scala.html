@@ -14,11 +14,11 @@
 			@column(){
 				@views.html.helper.columnLabelValue(Messages("runs.treatments.minknow-metrichor.minKnowVersion")){					
 					<p ng-switch-when="false" class="form-control-static" ng-bind="run.treatments.minknowMetrichor.default.minKnowVersion.value"></p>
-					<input  ng-switch-when="true" class="form-control" type="text" ng-model="run.treatments.minknowMetrichor.default.minKnowVersion.value" />					
+					<input  ng-switch-when="true" class="form-control" type="text" ng-model="run.treatments.minknowMetrichor.default.minKnowVersion.value" dt-default-value="propDefinitions['minKnowVersion'].defaultValue"/>					
 				}
 				@views.html.helper.columnLabelValue(Messages("runs.treatments.minknow-metrichor.metrichorVersion")){
 					<p ng-switch-when="false" class="form-control-static" ng-bind="run.treatments.minknowMetrichor.default.metrichorVersion.value"></p>
-					<input  ng-switch-when="true" class="form-control" type="text" ng-model="run.treatments.minknowMetrichor.default.metrichorVersion.value" />					
+					<input  ng-switch-when="true" class="form-control" type="text" ng-model="run.treatments.minknowMetrichor.default.metrichorVersion.value" dt-default-value="propDefinitions['metrichorVersion'].defaultValue"/>					
 				}
 				@views.html.helper.columnLabelValue(Messages("runs.treatments.minknow-metrichor.metrichorRunID")){
 					<p ng-switch-when="false" class="form-control-static" ng-bind="run.treatments.minknowMetrichor.default.metrichorRunID.value | number"></p>

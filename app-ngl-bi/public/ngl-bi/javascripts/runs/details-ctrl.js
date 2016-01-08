@@ -389,6 +389,15 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	init();
 }]).controller('RunMinknowMetrichorCtrl', [ '$scope', '$http', function($scope, $http) {	
 	
+	var init = function(){
+		$scope.propDefinitions = {};
+		var tabDefinitions = $scope.treatments.getTreatment().propDefinitions;
+		for(var i=0;i<tabDefinitions.length;i++){
+			var result = tabDefinitions[i];
+			$scope.propDefinitions[result.code]=result;
+		}
+		
+	}
 	$scope.$on('save', function(){
 		console.log("save RunMinknowMetrichorCtrl");
 		$http.put(jsRoutes.controllers.runs.api.RunTreatments.update($scope.run.code, $scope.run.treatments.minknowMetrichor.code).url, $scope.run.treatments.minknowMetrichor)
@@ -399,7 +408,8 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 				$scope.messages.setError("save");				
 			});
 	});
-		
+
+	init();
 	
 }]).controller('RunNGSRGIlluminaCtrl', [ '$scope', 'datatable', function($scope, datatable) {
 	
