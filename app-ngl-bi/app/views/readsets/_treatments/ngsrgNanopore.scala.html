@@ -106,14 +106,14 @@
 <div class="row">
 	 <div class="col-md-5 col-lg-5">
 	<div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal" 
-		ng-click="setImage(readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.readQualityDistribution.value,'readQualityDistribution','',treament.code!=undefined?treament.code:treatments.getTreatment().code,
-		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.readQualityDistribution.width,
-		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.readQualityDistribution.height)">
+		ng-click="setImage(readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.GCDistribution.value,'GCDistribution','',treament.code!=undefined?treament.code:treatments.getTreatment().code,
+		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.GCDistribution.width,
+		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.GCDistribution.height)">
 		 <a href="#">
-		    <img id="default_readQualityDistribution" ng-src="data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.readQualityDistribution.value}}" />
+		    <img id="default_GCDistribution" ng-src="data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.GCDistribution.value}}" />
 		 </a> 
-	   </div>
-	   </div>
+	    </div>
+	    </div>
 	  <div class="col-md-5 col-lg-5">
 	<div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal" 
 		ng-click="setImage(readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.KmersDistribution.value,'KmersDistribution','',treament.code!=undefined?treament.code:treatments.getTreatment().code,
@@ -129,12 +129,13 @@
 <div class="row">
 	 <div class="col-md-5 col-lg-5">
 	<div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal" 
-		ng-click="setImage(readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.GCDistribution.value,'GCDistribution','',treament.code!=undefined?treament.code:treatments.getTreatment().code,
-		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.GCDistribution.width,
-		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.GCDistribution.height)">
+		ng-click="setImage(readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.readQualityDistribution.value,'readQualityDistribution','',treament.code!=undefined?treament.code:treatments.getTreatment().code,
+		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.readQualityDistribution.width,
+		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.readQualityDistribution.height)">
 		 <a href="#">
-		    <img id="default_GCDistribution" ng-src="data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.GCDistribution.value}}" />
+		    <img id="default_readQualityDistribution" ng-src="data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.readQualityDistribution.value}}" />
 		 </a> 
-	    </div>
-	    </div>
+	   </div>
+	   </div>
+	
 </div>
