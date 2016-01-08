@@ -160,32 +160,32 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	
 	public void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
 
-		newExperimentTypeNode("ext-to-prepa-flowcell", getExperimentTypes("ext-to-prepa-flowcell").get(0), false, false, null, null, null).save();
+		newExperimentTypeNode("ext-to-prepa-flowcell", getExperimentTypes("ext-to-prepa-flowcell").get(0), false, false, false, null, null, null, null).save();
 		
 		//FDS ajout 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered
-		newExperimentTypeNode("ext-to-prepa-fc-ordered", getExperimentTypes("ext-to-prepa-fc-ordered").get(0), false, false, null, null, null).save();
+		newExperimentTypeNode("ext-to-prepa-fc-ordered", getExperimentTypes("ext-to-prepa-fc-ordered").get(0), false, false, false, null, null, null, null).save();
 		
-		newExperimentTypeNode("ext-to-denat-dil-lib", getExperimentTypes("ext-to-denat-dil-lib").get(0), false, false, null, null, null).save();
+		newExperimentTypeNode("ext-to-denat-dil-lib", getExperimentTypes("ext-to-denat-dil-lib").get(0), false, false, false, null, null, null, null).save();
 		
-		newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0),false,false,null,null,null).save();
+		newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), false, false, false, null, null, null, getExperimentTypes("aliquoting")).save();
 		
 		
-		newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),false,false,getExperimentTypeNodes("ext-to-denat-dil-lib", "lib-normalization"),
-				null,null).save();
+		newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),false,false,false,getExperimentTypeNodes("ext-to-denat-dil-lib", "lib-normalization"),
+				null,null, null).save();
 		
-		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","denat-dil-lib"),
-				null,null).save();
+		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false,false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","denat-dil-lib"),
+				null,null, null).save();
 		
 		//FDS ajout 04/11/2015 -- JIRA NGL-838 ajout prepa-fc-ordered, attention previous node normal est "lib-normalization" (et non "denat-dil-lib")
-		newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),false,false,getExperimentTypeNodes("ext-to-prepa-fc-ordered","lib-normalization"),
-				null,null).save();
+		newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),false,false,false,getExperimentTypeNodes("ext-to-prepa-fc-ordered","lib-normalization"),
+				null,null, null).save();
 	
 		//FDS modif 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered
-		newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false,false,getExperimentTypeNodes("prepa-flowcell","prepa-fc-ordered"),
-				null,null).save();
+		newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false,false,false,getExperimentTypeNodes("prepa-flowcell","prepa-fc-ordered"),
+				null,null, null).save();
 		
-		newExperimentTypeNode("aliquoting",getExperimentTypes("aliquoting").get(0),false,false,getExperimentTypeNodes("denat-dil-lib"),
-				null,null).save();
+		newExperimentTypeNode("aliquoting",getExperimentTypes("aliquoting").get(0),false,false,false,getExperimentTypeNodes("lib-normalization"),
+				null,null, null).save();
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 					
