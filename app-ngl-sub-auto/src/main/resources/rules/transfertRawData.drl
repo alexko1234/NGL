@@ -42,6 +42,7 @@ rule "unix syntax ncftpput for EBI"
 			//Organize order parameterLine
 			String parameterLine = $strategy.getParameterValue().get("cert") + " " + 
 									$strategy.getParameterValue().get("encryption") + " " +
+									$strategy.getParameterValue().get("optionk") + " " +
 									$strategy.getParameterValue().get("optionl") + " " +
 									$strategy.getParameterValue().get("fileList").replace("--file-list ","--file-list=") + " " +
 									$strategy.getParameterValue().get("mode").replace("--mode ","--mode=") + " " +

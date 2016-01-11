@@ -21,7 +21,6 @@ H:\birdsSpec.xsd">
 	<!-- Treatment for file transfert  -->
 	<Treatment name="transfertRawData" useJobScheduler="true" checkIfNewTreatmentAlreadyPerformed="true">
 	
-		<!-- TODO voir si on veut nommer les jobs spécifiquement -->
 		<ExecutableSpecification commandSyntaxStrategyName="ncftpputSyntax">
 			<Executable path="/usr/local/aspera/connect/bin/ascp" user="william" host="etna15.genoscope.cns.fr"/>
 			<Lsf job="ascpJob" queue="big" />
@@ -30,10 +29,10 @@ H:\birdsSpec.xsd">
 		<ParametersSpecification>
 			<KeyValueElement key="-i" value="~/.ssh/ebi.sra" parameterName="cert"/>
 			<KeyValueElement key="-l" value="300M" parameterName="optionl"/>
+			<KeyValueElement key="-k" value="2" parameterName="optionk"/>
 			<KeyValueElement key="--file-list" value="%directoryPath%/list_aspera_WGS" parameterName="fileList"/>
 			<KeyValueElement key="--mode" value="send" parameterName="mode"/>
-			<!-- <KeyValueElement key="--host" value="webin.ebi.ac.uk" parameterName="hostName"/> -->
-			<KeyValueElement key="--host" value="fasp.sra.ebi.ac.uk" parameterName="hostName"/>
+			<KeyValueElement key="--host" value="webin.ebi.ac.uk" parameterName="hostName"/>
 			<KeyValueElement key="--user" value="Webin-9" parameterName="userEBI"/>
 			<LineElement line="-T" parameterName="encryption"/>
 			<LineElement line="." parameterName="localDirectory"/>

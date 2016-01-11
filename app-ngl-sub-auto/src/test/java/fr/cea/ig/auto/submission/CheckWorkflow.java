@@ -117,7 +117,7 @@ public class CheckWorkflow extends GenericTest{
 		Job jobTransfertRawData = CoreJobServiceFactory.getInstance().getJobBySpecification("transfertRawData",em.getEm()).iterator().next();
 		Assert.assertNotNull(jobTransfertRawData);
 		log.debug("Command aspera "+jobTransfertRawData.getUnixCommand());
-		Assert.assertTrue(jobTransfertRawData.getUnixCommand().contains("-i ~/.ssh/ebi.sra -T -l 300M"));
+		Assert.assertTrue(jobTransfertRawData.getUnixCommand().contains("-i ~/.ssh/ebi.sra -T -k 2 -l 300M"));
 		Assert.assertTrue(jobTransfertRawData.getUnixCommand().endsWith(" --mode=send --host=webin.ebi.ac.uk --user=Webin-9 ."));
 		Assert.assertTrue(jobTransfertRawData.getUnixCommand().contains(jobTransfertRawData.getUniqueJobResource("rawDataDir").getProperty("submissionDirectory")+"/list_aspera_WGS"));
 
