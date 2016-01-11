@@ -418,7 +418,11 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 					}
 				}
 				if(!alreadyOnBasket){
-					this.basket.add(containers[i]);
+					//TODO GA to test angular !!!
+					var _container = angular.copy(containers[i]);
+					_container.properties = undefined;
+					_container.comments=[];
+					this.basket.add(_container);
 				}
 			}
 			tabService.addTabs({label:$filter('codes')($scope.searchService.form.nextProcessTypeCode,"type"),href:$scope.searchService.form.nextProcessTypeCode,remove:false});
@@ -787,8 +791,6 @@ var	datatableConfig = {
 			for(i=0;i<data.length;i++){
 				url =  jsRoutes.controllers.processes.api.Processes.save().url;
 				var processData = data[i];
-				processData.properties.limsCode = undefined;
-				processData.properties.receptionDate = undefined;
 				var process = {
 						projectCode: processData.projectCodes[0],
 						typeCode:$scope.form.nextProcessTypeCode,

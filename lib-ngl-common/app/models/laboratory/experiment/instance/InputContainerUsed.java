@@ -21,7 +21,7 @@ public class InputContainerUsed extends AbstractContainerUsed {
 	public Set<String> inputProcessCodes;
 	
 	
-	//TODO Must be remove after refactoring just keep for backward compatibility
+	//keep for some html page pool or flowcell
 	public State state;
 	
 	public InputContainerUsed() {

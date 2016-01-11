@@ -232,23 +232,28 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 	$scope.updateConcentration = function(experiment){
 		
 		if(experiment.atomicTransfertMethods && experiment.atomicTransfertMethods[0]){
-		//TODO ne pas faire l'update si déjà renseigné
+		// ne pas faire l'update si déjà renseigné
 			var concentration = undefined;
 			var unit = undefined;
 			var isSame = true;
 			for(var i=0;i<experiment.atomicTransfertMethods[0].inputContainerUseds.length;i++){
-				if(concentration === undefined && unit === undefined){
-					concentration = experiment.atomicTransfertMethods[0].inputContainerUseds[i].concentration.value;
-					unit = experiment.atomicTransfertMethods[0].inputContainerUseds[i].concentration.unit;
-				}else{
-					if(concentration !== experiment.atomicTransfertMethods[0].inputContainerUseds[i].concentration.value 
-							|| unit !== experiment.atomicTransfertMethods[0].inputContainerUseds[i].concentration.unit){
-						isSame = false;
-						break;
+				if(experiment.atomicTransfertMethods[0].inputContainerUseds[i].concentration !== null 
+						&& experiment.atomicTransfertMethods[0].inputContainerUseds[i].concentration !== undefined){
+					if(concentration === undefined && unit === undefined){
+						concentration = experiment.atomicTransfertMethods[0].inputContainerUseds[i].concentration.value;
+						unit = experiment.atomicTransfertMethods[0].inputContainerUseds[i].concentration.unit;
+					}else{
+						if(concentration !== experiment.atomicTransfertMethods[0].inputContainerUseds[i].concentration.value 
+								|| unit !== experiment.atomicTransfertMethods[0].inputContainerUseds[i].concentration.unit){
+							isSame = false;
+							break;
+						}
 					}
 				}
 			}
-			if(isSame){
+			if(isSame 
+					&& (experiment.atomicTransfertMethods[0].outputContainerUseds[0].concentration === null
+						|| experiment.atomicTransfertMethods[0].outputContainerUseds[0].concentration === undefined)){
 				experiment.atomicTransfertMethods[0].outputContainerUseds[0].concentration = $scope.experiment.atomicTransfertMethods[0].inputContainerUseds[0].concentration;
 				
 			}

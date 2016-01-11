@@ -550,6 +550,13 @@ public class ExpWorkflowsHelper {
 	}
 
 
+	private static Set<String> getPropertyDefinitionCodesByLevel(List<PropertyDefinition> propertyDefs, Level.CODE level){
+		
+		Level l = new Level(level);
+		
+		return propertyDefs.stream().filter(pd -> pd.levels.contains(l)).map(pd -> pd.code).collect(Collectors.toSet());
+	}
+	
 	private static Map<String, PropertyValue> getPropertiesForALevel(Experiment exp, CODE code) {
 		return getPropertiesForALevel(exp, null, code);
 	}
@@ -558,33 +565,37 @@ public class ExpWorkflowsHelper {
 		Map<String, PropertyValue> propertiesForALevel = new HashMap<String, PropertyValue>();
 		
 		ExperimentType expType = ExperimentType.find.findByCode(exp.typeCode);
-		List<PropertyDefinition> experimentPropertyDefinitions = expType.getPropertyDefinitionByLevel(level);
+		//List<PropertyDefinition> experimentPropertyDefinitions = expType.getPropertyDefinitionByLevel(level);
+		Set<String> experimentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevel(expType.propertiesDefinitions, level);
 		
 		//extract experiment content properties
 		Map<String,PropertyValue> allExperimentProperties=new HashMap<String, PropertyValue>(0);
 		if(null != exp.experimentProperties)allExperimentProperties.putAll(exp.experimentProperties);
-		if(null != atm){
-			allExperimentProperties.putAll(atm.inputContainerUseds.stream()
+		if(null != atm ){
+			propertiesForALevel.putAll(atm.inputContainerUseds.stream()
 					.filter((InputContainerUsed icu) -> icu.experimentProperties != null)
 					.map((InputContainerUsed icu) -> icu.experimentProperties.entrySet())
 					.flatMap(Set::stream)
+					.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()))					
+					//TODO GA Bug when they have the same property on two differents icu
 					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
 			if(null != atm.outputContainerUseds){
-				allExperimentProperties.putAll(atm.outputContainerUseds.stream()
+				propertiesForALevel.putAll(atm.outputContainerUseds.stream()
 						.filter((OutputContainerUsed ocu) -> ocu.experimentProperties != null)
 						.map((OutputContainerUsed ocu) -> ocu.experimentProperties.entrySet())
 						.flatMap(Set::stream)
+						.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()))
 						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
 			}
+			//InstanceHelpers.copyPropertyValueFromPropertiesDefinition(experimentPropertyDefinitions, allExperimentProperties, propertiesForALevel);			
 		}
-		InstanceHelpers.copyPropertyValueFromPropertiesDefinition(experimentPropertyDefinitions, allExperimentProperties, propertiesForALevel);
 		
 		//extract instrument content properties
 		InstrumentUsedType insType = InstrumentUsedType.find.findByCode(exp.instrument.typeCode);
 		List<PropertyDefinition> instrumentPropertyDefinitions = insType.getPropertyDefinitionByLevel(level);
 		Map<String,PropertyValue> allInstrumentProperties=new HashMap<String, PropertyValue>();
 		if(null != exp.instrumentProperties)allInstrumentProperties.putAll(exp.instrumentProperties);
-		if(null != atm){
+		if(null != atm && instrumentPropertyDefinitions.size() > 0){
 			allInstrumentProperties.putAll(atm.inputContainerUseds.stream()
 					.filter((InputContainerUsed icu) -> icu.instrumentProperties != null)
 					.map((InputContainerUsed icu) -> icu.instrumentProperties.entrySet())
@@ -597,9 +608,8 @@ public class ExpWorkflowsHelper {
 						.flatMap(Set::stream)
 						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
 			}
-		
+			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(instrumentPropertyDefinitions, allInstrumentProperties, propertiesForALevel);			
 		}
-		InstanceHelpers.copyPropertyValueFromPropertiesDefinition(instrumentPropertyDefinitions, allInstrumentProperties, propertiesForALevel);
 		
 		if(null != atm){
 			//extract process content properties for only the inputContainer of the process
@@ -648,6 +658,7 @@ public class ExpWorkflowsHelper {
 				}else if(comment.creationDate == null){
 					comment.creationDate = new Date();
 				}
+				
 				if(comment.code == null){
 					comment.code = CodeHelper.getInstance().generateExperimentCommentCode(comment);	
 				}

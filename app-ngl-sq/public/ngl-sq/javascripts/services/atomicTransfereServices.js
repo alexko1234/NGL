@@ -87,8 +87,8 @@ angular.module('atomicTransfereServices', [])
 						projectCodes:container.projectCodes,
 					    fromExperimentTypeCodes:container.fromExperimentTypeCodes,
 					    processTypeCodes:(container.processTypeCode)?[container.processTypeCode]:container.processTypeCodes,
-						inputProcessCodes:container.inputProcessCodes
-						
+						inputProcessCodes:container.inputProcessCodes,
+						state : container.state
 					};
 					/*
 					 return {"state":container.state
@@ -108,6 +108,7 @@ angular.module('atomicTransfereServices', [])
 					containerUsed.fromExperimentTypeCodes=container.fromExperimentTypeCodes;
 					containerUsed.processTypeCodes=(container.processTypeCode)?[container.processTypeCode]:container.processTypeCodes;
 					containerUsed.inputProcessCodes=container.inputProcessCodes;
+					containerUsed.state = container.state;
 					return containerUsed;
 				},
 				getContainerListPromise : function(containerCodes){

@@ -37,8 +37,8 @@ public class ExpWorkflows extends Workflows<Experiment>{
 	public void applyPreStateRules(ContextValidation validation, Experiment exp, State nextState) {
 		exp.traceInformation = updateTraceInformation(exp.traceInformation, nextState); 			
 		ExpWorkflowsHelper.updateStatus(exp, validation);
-		
 		if("N".equals(nextState.code)){
+			ExpWorkflowsHelper.updateComments(exp, validation);
 			ExpWorkflowsHelper.updateXCodes(exp); 	
 		} else if("IP".equals(nextState.code)){
 			ExpWorkflowsHelper.updateATMs(exp, false);	

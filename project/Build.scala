@@ -13,7 +13,7 @@ object ApplicationBuild extends Build {
    val appName = "ngl"
    val appVersion = "1.0-SNAPSHOT"
      
-   val sqVersion = "1.15.7-SNAPSHOT"  
+   val sqVersion = "1.16.X-SNAPSHOT"  
    val biVersion = "1.26-SNAPSHOT"
    val projectsVersion = "1.0-SNAPSHOT"  
    val reagentsVersion = "1.1-SNAPSHOT" 
