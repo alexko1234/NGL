@@ -174,6 +174,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			save:{
 				active:true,
 	        	withoutEdit: true,
+	        	changeClass:false,
 	        	showButton:false,
 	        	mode:'local'
 			},

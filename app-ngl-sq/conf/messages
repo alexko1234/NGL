@@ -102,13 +102,21 @@ containers.select.categoryCode =  Catégorie container
 containers.select.categorySupportCode =  Catégorie support
 containers.select.fromExperimentTypeCodes= Container issu du type d''exp.
 
-containers.dispatch.value.0 = Recommencer
-containers.dispatch.value.1 = Arrêt Processus
-containers.dispatch.value.2 = Exp. Suivante
-containers.dispatch.value.3 = Exp. QC
-containers.dispatch.value.4 = Exp. Purification
-containers.dispatch.value.5 = Exp. Transfert
-containers.dispatch.value.6 = Terminé
+#containers.dispatch.value.0 = Recommencer
+#containers.dispatch.value.1 = Arrêt Processus
+#containers.dispatch.value.2 = Exp. Suivante
+#containers.dispatch.value.3 = Exp. QC
+#containers.dispatch.value.4 = Exp. Purification
+#containers.dispatch.value.5 = Exp. Transfert
+#containers.dispatch.value.6 = Terminer
+
+containers.dispatch.value.0 = Exp. Suivante
+containers.dispatch.value.1 = Exp. Transfert
+containers.dispatch.value.2 = Exp. QC
+containers.dispatch.value.3 = Exp. Purification
+containers.dispatch.value.4 = Terminer
+containers.dispatch.value.5 = Recommencer
+containers.dispatch.value.6 = Arrêt Processus
 
 containers.table.processResolutions = Processus résolutions
 containers.dispatch.value.mandatory = L''orientation du container est obligatoire

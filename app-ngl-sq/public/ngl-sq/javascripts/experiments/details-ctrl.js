@@ -51,11 +51,12 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.$broadcast('initDispatchModal');
 	};
 	
-	$scope.$on('initDispatchModalDone', function(e, callbackFunction) {
+	$scope.$on('initDispatchModalDone', function(e) {
 		angular.element('#finalDispatchModal').modal('show');
 	});
 	
-	$scope.$on('dispatchDone', function(e, callbackFunction) {
+	$scope.$on('dispatchDone', function(e) {
+		$scope.messages.setSuccess("save");
 		updateData();
 		angular.element('#finalDispatchModal').modal('hide');
 	});
@@ -925,9 +926,9 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				dvet = dispatchValuesForExperimentType[$scope.experiment.typeCode];
     		}
 			
-			if(value.data.status === 'FALSE' && (value.data.dispatch !== 0 && value.data.dispatch !== 1)){
+			if(value.data.status === 'FALSE' && (value.data.dispatch !== 5 && value.data.dispatch !== 6)){
 				value.data.dispatch = undefined;
-			}else if(value.data.status === 'TRUE' && (value.data.dispatch === 0 || value.data.dispatch === 1)){
+			}else if(value.data.status === 'TRUE' && (value.data.dispatch === 5 || value.data.dispatch === 6)){
 				value.data.dispatch = undefined;
 			}else if(value.data.status === 'UNSET'){
 				value.data.dispatch = undefined;
@@ -936,9 +937,9 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			}
 			
 			if(dvet && dvet.indexOf(dispatchCode) !== -1){
-				if(value.data.status === 'FALSE' && (dispatchCode === 0 || dispatchCode === 1)){
+				if(value.data.status === 'FALSE' && (dispatchCode === 5 || dispatchCode === 6)){
 					return true;
-				}else if(value.data.status === 'TRUE' && dispatchCode !== 0 && dispatchCode !== 1){
+				}else if(value.data.status === 'TRUE' && dispatchCode !== 5 && dispatchCode !== 6){
 					return true;
 				}else{
 					return false;
@@ -1024,20 +1025,20 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			if(data[i].status === 'TRUE'){
 				containerPromises = containerPromises.concat(getContainerStateRequests([codes.inputContainerCode], "IS"));
 				supportPromises = supportPromises.concat(getContainerSupportStateRequests([codes.inputSupportCode], "IS"));
-				if(data[i].dispatch === 2){
+				if(data[i].dispatch === 0){
 					if($scope.isProcessResolutionsMustBeSet({data:data[i]})){
 						processPromises = processPromises.concat(getProcessStateRequests(codes.processCodes,"F", data[i].processResolutions));
 					}		        					
-				}else if(data[i].dispatch === 6){
+				}else if(data[i].dispatch === 4){
 					processPromises = processPromises.concat(getProcessStateRequests(codes.processCodes,"F", data[i].processResolutions));
 				}				
 				
 			}else if(data[i].status === 'FALSE'){
-				if(data[i].dispatch === 0){
+				if(data[i].dispatch === 5){
 					containerPromises = containerPromises.concat(getContainerStateRequests([codes.inputContainerCode], getInputStateForRetry()));
 					supportPromises = supportPromises.concat(getContainerSupportStateRequests([codes.inputSupportCode], getInputStateForRetry()));
 					
-				}else if(data[i].dispatch === 1){		
+				}else if(data[i].dispatch === 6){		
 					containerPromises = containerPromises.concat(getContainerStateRequests([codes.inputContainerCode], "IS"));
 					supportPromises = supportPromises.concat(getContainerSupportStateRequests([codes.inputSupportCode], "IS"));
 					
@@ -1096,20 +1097,20 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				containerPromises = containerPromises.concat(getContainerStateRequests(codes.inputContainerCodes, "IS"));
 				supportPromises = supportPromises.concat(getContainerSupportStateRequests(codes.inputSupportCodes, "IS"));
 				var outputStateCode = null;
-				if(data[i].dispatch === 2){
+				if(data[i].dispatch === 0){
 					if($scope.isProcessResolutionsMustBeSet({data:data[i]})){
 						outputStateCode = "IW-P";
 						processPromises = processPromises.concat(getProcessStateRequests(codes.processCodes,"F", data[i].processResolutions));
 					}else{
 						outputStateCode = "A-TM";
 					} 		        					
-				}else if(data[i].dispatch === 3){
-					outputStateCode = "A-QC";
-				}else if(data[i].dispatch === 4){
-					outputStateCode = "A-PF";
-				}else if(data[i].dispatch === 5){
+				}else if(data[i].dispatch === 1){
 					outputStateCode = "A-TF";
-				}else if(data[i].dispatch === 6){
+				}else if(data[i].dispatch === 2){
+					outputStateCode = "A-QC";
+				}else if(data[i].dispatch === 3){
+					outputStateCode = "A-PF";
+				}else if(data[i].dispatch === 4){
 					outputStateCode = "IS";
 					processPromises = processPromises.concat(getProcessStateRequests(codes.processCodes,"F", data[i].processResolutions));
 				}
@@ -1122,14 +1123,14 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				}
 				
 			}else if(data[i].status === 'FALSE'){
-				if(data[i].dispatch === 0){
+				if(data[i].dispatch === 5){
 					containerPromises = containerPromises.concat(getContainerStateRequests(codes.inputContainerCodes, getInputStateForRetry()));
 					supportPromises = supportPromises.concat(getContainerSupportStateRequests(codes.inputSupportCodes, getInputStateForRetry()));
 					
 					containerPromises = containerPromises.concat(getContainerStateRequests([codes.outputContainerCode], "UA"));
 					supportPromises = supportPromises.concat(getContainerSupportStateRequests([codes.outputSupportCode], "UA"));
 					
-				}else if(data[i].dispatch === 1){		
+				}else if(data[i].dispatch === 6){		
 					containerPromises = containerPromises.concat(getContainerStateRequests(codes.inputContainerCodes, "IS"));
 					supportPromises = supportPromises.concat(getContainerSupportStateRequests(codes.inputSupportCodes, "IS"));
 					
@@ -1168,15 +1169,16 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		//TODO GA rename to fromTransformationCodes
 		if(value !== undefined){
 			var fromTransformationTypeCode = ($scope.isOutputATMVoid())?$scope.experiment.typeCode:value.data.container.fromExperimentTypeCodes[0];
-			if(value.data.dispatch === 1 || 
-					((value.data.dispatch === 2 || value.data.dispatch === 6) 
+			if(value.data.dispatch === 6 || 
+					((value.data.dispatch === 0 || value.data.dispatch === 4) 
 							&& fromTransformationTypeCode === processTypes[value.data.container.processTypeCodes[0]].lastExperimentType.code)){
 				return true;
 			}else{
+				value.data.processResolutions = undefined;
 				return false;
 			}
 		}else{
-			return false;
+			return true;
 		}
 	};
 	
@@ -1206,12 +1208,12 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 							$http.get(jsRoutes.controllers.experiments.api.ExperimentTypeNodes.get(fromTransformationTypeCode).url)
 								.success(function(data, status,headers,config){
 									for(var i = 0; i <= 6 ; i++){
-										if((i === 3 && data.doQualityControl) || 
-												(i === 4 && data.doPurification) ||
-													(i === 5 && data.doTransfert) ||
-														(i === 6 && !isNextExperimentType) ||
-														(i === 2 && isNextExperimentType) ||
-													i < 2){
+										if((i === 1 && data.doTransfert) || 
+												(i === 2 && data.doQualityControl) || 
+													(i === 3 && data.doPurification) ||
+														(i === 4 && !isNextExperimentType) ||
+														(i === 0 && isNextExperimentType) ||
+													i > 4){
 											dispatchValuesForExperimentType[data.code].push(i);
 										}
 									}
@@ -1219,8 +1221,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 						});
 				}				
 			};
-		
-			//TODO when void
+					
 			if(!$scope.isOutputATMVoid()){
 				atmService.loadOutputContainerFromAtomicTransfertMethods($scope.experiment.atomicTransfertMethods).then(function (result) {
 					
@@ -1252,9 +1253,8 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 								
 							});
 						
-					}//TODO les void and when ok
-					
-					console.log("outputContainers : "+outputContainers.length);
+					}
+					//console.log("outputContainers : "+outputContainers.length);
 				});
 			}else {
 				atmService.loadInputContainerFromAtomicTransfertMethods($scope.experiment.atomicTransfertMethods).then(function (result) {

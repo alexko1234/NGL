@@ -147,6 +147,7 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToS
 			save:{
 				active:true,
 	        	withoutEdit: true,
+	        	changeClass:false,
 	        	showButton:false,
 	        	mode:'local'
 			},

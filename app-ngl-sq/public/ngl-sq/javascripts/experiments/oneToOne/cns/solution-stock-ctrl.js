@@ -150,6 +150,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope', 'atmToSingleDat
 				active:true,
 	        	withoutEdit: true,
 	        	showButton:false,
+	        	changeClass:false,
 	        	mode:'local'
 			},
 			hide:{

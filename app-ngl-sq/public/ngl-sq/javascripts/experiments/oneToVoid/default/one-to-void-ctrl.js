@@ -95,13 +95,15 @@ angular.module('home').controller('OneToVoidCtrl',['$scope', '$parse','atmToSing
 			},
 			save:{
 				active:true,
+	        	changeClass:false,
 				mode:'local',
 			},
 			hide:{
 				active:true
 			},
 			edit:{
-				active:true,
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),				
 				columnMode:true
 			},
 			messages:{
@@ -130,7 +132,7 @@ angular.module('home').controller('OneToVoidCtrl',['$scope', '$parse','atmToSing
 		$scope.$on('refresh', function(e) {
 			console.log("call event refresh on one-to-void");		
 			var dtConfig = $scope.atmService.data.getConfig();
-			dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isNewState());
+			dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
 			dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 			$scope.atmService.data.setConfig(dtConfig);
 			
@@ -138,6 +140,16 @@ angular.module('home').controller('OneToVoidCtrl',['$scope', '$parse','atmToSing
 			$scope.$emit('viewRefeshed');
 		});
 		
+		$scope.$on('cancel', function(e) {
+			console.log("call event cancel");
+			$scope.atmService.data.cancel();						
+		});
+		
+		$scope.$on('activeEditMode', function(e) {
+			console.log("call event activeEditMode");
+			$scope.atmService.data.selectAll(true);
+			$scope.atmService.data.setEdit();
+		});
 		
 		var atmService = atmToSingleDatatable($scope, datatableConfig, true);
 		//defined new atomictransfertMethod

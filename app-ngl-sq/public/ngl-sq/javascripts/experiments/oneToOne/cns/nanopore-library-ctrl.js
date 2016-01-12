@@ -141,6 +141,7 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse', 'at
 				active:true,
 	        	withoutEdit: true,
 	        	showButton:false,
+	        	changeClass:false,
 	        	mode:'local',
 	        	callback:function(datatable){
 	        		copyLigationQuantityToOutputContainerUsedQuantity(datatable);
