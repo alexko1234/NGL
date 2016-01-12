@@ -111,7 +111,7 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', '$parse', 'atmToG
 				active:true
 			},
 			edit:{
-				active: $scope.isNewState() && $scope.isEditModeAvailable(),
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),				
 				columnMode:true,
 				withoutSelect:true,
 				byDefault : false,
@@ -277,7 +277,7 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', '$parse', 'atmToG
 				active:true 
 			},			
 			edit:{
-				active: $scope.isNewState() && $scope.isEditModeAvailable(),
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),								
 				columnMode:true
 			},
 			messages:{
@@ -335,14 +335,29 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', '$parse', 'atmToG
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.datatableParam.setConfig(dtConfig);
 		
-		var dtConfig = $scope.atmService.data.datatableConfig.getConfig();
-		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isNewState());
+		dtConfig = $scope.atmService.data.datatableConfig.getConfig();
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.datatableConfig.setConfig(dtConfig);
 		
-		
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
 		$scope.$emit('viewRefeshed');
+	});
+	
+	$scope.$on('cancel', function(e) {
+		console.log("call event cancel");
+		$scope.atmService.data.datatableParam.cancel();
+		$scope.atmService.data.datatableConfig.cancel();
+				
+	});
+	
+	$scope.$on('activeEditMode', function(e) {
+		console.log("call event activeEditMode");
+		$scope.atmService.data.datatableParam.selectAll(true);
+		$scope.atmService.data.datatableParam.setEdit();
+		
+		$scope.atmService.data.datatableConfig.selectAll(true);
+		$scope.atmService.data.datatableConfig.setEdit();
 	});
 	
 	var atmService = atmToGenerateMany($scope, datatableConfigTubeParam, datatableConfigTubeConfig);

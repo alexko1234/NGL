@@ -129,7 +129,9 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 				active:true
 			},
 			edit:{
-				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				byDefault:($scope.isCreationMode()),
 				columnMode:false
 			},
 			messages:{
@@ -228,9 +230,9 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 				active:true
 			},
 			edit:{
-				byDefault : ($scope.isEditModeAvailable() && $scope.isNewState()),
 				active: true,
 				showButton: true,
+				byDefault : ($scope.isCreationMode()),				
 				columnMode:false
 			},
 			messages:{
@@ -279,12 +281,42 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");		
 		var dtConfig = $scope.atmService.data.getConfig();
-		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isNewState());
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
+		dtConfig.edit.byDefault = false;
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.setConfig(dtConfig);
-		
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
 		$scope.$emit('viewRefeshed');
+	});
+	
+	$scope.$on('cancel', function(e) {
+		console.log("call event cancel");
+		$scope.atmService.data.cancel();
+		$scope.datatableQcFlowcell.cancel();
+		$scope.datatableLoadingReport.cancel();
+		
+		if($scope.isCreationMode()){
+			var dtConfig = $scope.atmService.data.getConfig();
+			dtConfig.edit.byDefault = false;
+			$scope.atmService.data.setConfig(dtConfig);
+			
+			dtConfig = $scope.datatableQcFlowcell.getConfig();
+			dtConfig.edit.byDefault = false;
+			$scope.datatableQcFlowcell.setConfig(dtConfig);
+		}
+		
+	});
+	
+	$scope.$on('activeEditMode', function(e) {
+		console.log("call event activeEditMode");
+		$scope.atmService.data.selectAll(true);
+		$scope.atmService.data.setEdit();
+		
+		$scope.datatableQcFlowcell.selectAll(true);
+		$scope.datatableQcFlowcell.setEdit();
+		
+		$scope.datatableLoadingReport.selectAll(true);
+		$scope.datatableLoadingReport.setEdit();
 	});
 	
 	//Init

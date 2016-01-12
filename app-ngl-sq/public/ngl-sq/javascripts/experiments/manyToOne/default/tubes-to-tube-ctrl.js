@@ -267,6 +267,16 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 		$scope.$emit('viewRefeshed');
 	});
 	
+	
+	$scope.$on('cancel', function(e) {
+		console.log("call event cancel");
+		
+	});
+	
+	$scope.$on('activeEditMode', function(e) {
+		console.log("call event activeEditMode");
+	});
+	
 	var atmService = atmToDragNDrop($scope, 1, datatableConfig);
 	//defined new atomictransfertMethod
 	atmService.newAtomicTransfertMethod = function(){

@@ -192,7 +192,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 	        },
 			
 			edit:{
-				active: $scope.isEditModeAvailable(),
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
 				columnMode:true
 			},
 			messages:{
@@ -295,13 +295,27 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 		console.log("call event refresh");
 		
 		var dtConfig = $scope.atmService.data.$atmToSingleDatatable.data.getConfig();
-		dtConfig.edit.active = $scope.isEditModeAvailable();
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
 		$scope.atmService.data.$atmToSingleDatatable.data.setConfig(dtConfig);
 		
 		
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
 		$scope.$emit('viewRefeshed');
 	});
+	
+	
+	$scope.$on('cancel', function(e) {
+		console.log("call event cancel");
+		$scope.atmService.data.$atmToSingleDatatable.data.cancel();
+				
+	});
+	
+	$scope.$on('activeEditMode', function(e) {
+		console.log("call event activeEditMode");
+		$scope.atmService.data.$atmToSingleDatatable.data.selectAll(true);
+		$scope.atmService.data.$atmToSingleDatatable.data.setEdit();
+	});
+	
 	//To display sample and tag in one cell
 	$scope.getSampleAndTags = function(container){
 		var sampleCodeAndTags = [];

@@ -189,6 +189,18 @@ angular.module('home').controller('TubesToMapCardCtrl',['$scope', '$parse', 'atm
 		$scope.$emit('viewRefeshed');
 	});
 	
+	$scope.$on('cancel', function(e) {
+		console.log("call event cancel");
+		$scope.atmService.data.cancel();
+		
+	});
+	
+	$scope.$on('activeEditMode', function(e) {
+		console.log("call event activeEditMode");
+		$scope.atmService.data.selectAll(true);
+		$scope.atmService.data.setEdit();
+	});
+	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	//defined new atomictransfertMethod
 	atmService.newAtomicTransfertMethod = function(){
