@@ -47,6 +47,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	};
 	
 	$scope.initDispatchModal = function(){
+		$scope.messages.clear();
 		$scope.$broadcast('initDispatchModal');
 	};
 	
@@ -86,6 +87,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	
 	$scope.cancel = function(){
 		console.log("call cancel");
+		$scope.$broadcast('cancel');
 		$scope.messages.clear();
 		mainService.stopEditMode();
 		saveInProgress = false;

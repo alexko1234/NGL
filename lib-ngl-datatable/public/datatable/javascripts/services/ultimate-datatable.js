@@ -202,6 +202,7 @@ angular.module('ultimateDataTableServices', []).
 							spinner:{
 								start:false
 							},
+                callbackEndDisplayResult : function(){},
 							compact:true //mode compact pour le nom des bouttons
 							
 						},
@@ -799,6 +800,7 @@ angular.module('ultimateDataTableServices', []).
 										that.config.edit.withoutSelect = true;
 										that.setEdit();
 									}								
+                        that.config.callbackEndDisplayResult();
 								}
 							}, time);
 		    			},

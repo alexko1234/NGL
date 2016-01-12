@@ -151,7 +151,8 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse', 'at
 				active:true
 			},
 			edit:{
-				active: ($scope.isEditModeAvailable() && $scope.isNewState()),				byDefault: ($scope.isEditModeAvailable() && $scope.isNewState()),
+				active: ($scope.isEditModeAvailable() && $scope.isNewState()),				
+				byDefault: ($scope.isEditModeAvailable() && $scope.isNewState()),
 				columnMode:true
 			},
 			messages:{
@@ -191,7 +192,6 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse', 'at
 		console.log("call event refresh");		
 		var dtConfig = $scope.atmService.data.getConfig();
 		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isNewState());
-		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.setConfig(dtConfig);
 		

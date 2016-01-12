@@ -438,8 +438,7 @@ angular.module('atomicTransfereServices', [])
 									}
 									allData.push(line);
 								});
-								$that.data.setData(allData, allData.length);			
-								
+								$that.data.setData(allData, allData.length);											
 						});
 					}					
 				},
