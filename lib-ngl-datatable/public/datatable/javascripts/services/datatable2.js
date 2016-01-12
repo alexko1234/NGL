@@ -726,10 +726,10 @@ angular.module('datatableServices', []).
 		    					var columnPropertyName = column.property;
 		    					var columnId  = column.id;
 		    					
-		    					if(angular.isDefined(this.config.group.by) &&  this.config.group.by.property === columnPropertyName && !this.config.group.showOnlyGroups){
+		    					if(angular.isDefined(this.config.group.by) &&  this.config.group.by.id === column.id && !this.config.group.showOnlyGroups){
 		    						this.config.order.groupReverse = !this.config.order.groupReverse; 		    						
 		    					}else{
-		    						if(!angular.isDefined(this.config.order.by) || this.config.order.by.property !== columnPropertyName){
+		    						if(!angular.isDefined(this.config.order.by) || this.config.order.by.id !== column.id){
 			    						this.config.order.by = column;
 			    						this.config.order.reverse = false;
 			    					}else{
