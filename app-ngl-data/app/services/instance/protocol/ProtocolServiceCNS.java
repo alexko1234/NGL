@@ -70,6 +70,9 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("prt_wait","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("aliquoting")));
 		lp.add(newProtocol("ptr_pool_tube_v1","PTR_POOL_TUBE_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("pool-tube")));
 		
+		lp.add(newProtocol("ptr_irys-nlrs-prep","PTR_IRYS_PREP","path7","1","production", InstanceFactory.setExperimentTypeCodes("irys-nlrs-prep")));
+		lp.add(newProtocol("ptr_irys-chip-preparation","PTR_IRYS_CHIP_PREP","path7","1","production", InstanceFactory.setExperimentTypeCodes("irys-chip-preparation")));
+		lp.add(newProtocol("ptr_bionano-depot","PTR_BIONANO_DEPOT","path7","1","production", InstanceFactory.setExperimentTypeCodes("bionano-depot")));
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			lp.add(newProtocol("fragmentation_ptr_sox140_1","Fragmentation_ptr_sox140_1","path1","1","production", InstanceFactory.setExperimentTypeCodes("fragmentation")));

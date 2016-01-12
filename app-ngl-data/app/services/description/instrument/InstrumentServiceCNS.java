@@ -52,6 +52,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentCategory("Robot pipetage","liquid-handling-robot"));
 		l.add(newInstrumentCategory("Appareil de sizing","sizing-system"));
 				
+		l.add(newInstrumentCategory("Cartographie optique BioNano", "opt-map-bionano"));
 		DAOHelpers.saveModels(InstrumentCategory.class, l, errors);
 		
 	}
@@ -215,7 +216,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		
 		l.add(newInstrumentUsedType("Eppendorf MiniSpin plus", "eppendorf-mini-spin-plus", InstrumentCategory.find.findByCode("centrifuge"), getNanoporeFragmentationProperties(),  getInstrumentEppendorfMiniSpinPlus()
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
+		//DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 		
 		
 		l.add(newInstrumentUsedType("MinION", "minION", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeDepotProperties(),getInstrumentMinIon() 
@@ -223,13 +224,35 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		
 		l.add(newInstrumentUsedType("Mk1", "mk1", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeDepotProperties(),getInstrumentMKI() 
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
+		l.add(newInstrumentUsedType("IRYS", "IRYS", InstrumentCategory.find.findByCode("opt-map-bionano"), getIrysDepotProperties(),getInstrumentIRYS() 
+				,getContainerSupportCategories(new String[]{"irys-chip"}), null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
+		l.add(newInstrumentUsedType("IRYS", "IRYS", InstrumentCategory.find.findByCode("opt-map-bionano"), getIrysDepotProperties(),getInstrumentIRYS() 
+				,getContainerSupportCategories(new String[]{"irys-chip"}), null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
+		l.add(newInstrumentUsedType("Main", "hand-irys", InstrumentCategory.find.findByCode("hand"), getIrysChipProperties(),getInstrumentHand() 
+				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"irys-chip"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
 
-	
-	
+	private List<Instrument> getInstrumentHand() throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("HAND", "HAND", null, true, "HAND", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		return instruments;
+	}
 
-	
+	private List<PropertyDefinition> getIrysChipProperties() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        propertyDefinitions.add(newPropertiesDefinition("Code Irys CHIP", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
+		return propertyDefinitions;
+	}
+
+	private List<PropertyDefinition> getIrysDepotProperties() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	private static List<PropertyDefinition> getNanoporeFragmentationProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
@@ -478,5 +501,11 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		return instruments;
 	}
 	
+
+	private List<Instrument> getInstrumentIRYS() throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("ODYSSEE", "ODYSSEE", null, true, "/env/ig/atelier/bionano/cns/ODYSSEE", DescriptionFactory.getInstitutes(Institute.CODE.CNS)) );
+		return instruments;
+	}
 
 }
