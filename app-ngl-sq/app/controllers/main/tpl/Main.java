@@ -44,6 +44,11 @@ public class Main extends CommonController{
 		sb.append("\"valuation.TRUE\":\"Oui\",");
 		sb.append("\"valuation.FALSE\":\"Non\",");
 		sb.append("\"valuation.UNSET\":\"---\",");
+		
+		sb.append("\"status.TRUE\":\"OK\",");
+		sb.append("\"status.FALSE\":\"KO\",");
+		sb.append("\"status.UNSET\":\"---\",");
+		
 		List<Protocol> protocols = MongoDBDAO.find(InstanceConstants.PROTOCOL_COLL_NAME,Protocol.class).toList();
 		for(Protocol protocol:protocols){
 			sb.append("\"").append("protocol").append(".").append(protocol.code).append("\":\"").append(protocol.name).append("\",");

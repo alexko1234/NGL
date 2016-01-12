@@ -83,10 +83,14 @@ angular.module('commonsServices', []).
     	}).factory('lists', ['$http', function($http){
     		var inProgress = {};
     		var results = {
-    				valuations : [{code:"TRUE", name:Messages("valuation.value.TRUE")},
-    				                 {code:"FALSE", name:Messages("valuation.value.FALSE")},
-    				                 {code:"UNSET", name:Messages("valuation.value.UNSET")}],    				
-    				booleans : [{code:"true", name:Messages("boolean.value.TRUE")}, {code:"false", name:Messages("boolean.value.FALSE")}]
+    				valuations : [{code:"TRUE", name:Messages("valuation.TRUE")},
+    				                 {code:"FALSE", name:Messages("valuation.FALSE")},
+    				                 {code:"UNSET", name:Messages("valuation.UNSET")}],    				
+    				status : [{code:"TRUE", name:Messages("status.TRUE")},
+    				                 {code:"FALSE", name:Messages("status.FALSE")},
+    				                 {code:"UNSET", name:Messages("status.UNSET")}],    				
+	    				                 
+    				booleans : [{code:"true", name:Messages("boolean.TRUE")}, {code:"false", name:Messages("boolean.FALSE")}]
     			};    		
     		
     		var refresh = {

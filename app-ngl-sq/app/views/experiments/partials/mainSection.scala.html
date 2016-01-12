@@ -33,9 +33,9 @@
 					
 					@columnLabelValue(Messages("experiments.status")){
 			    		<div ng-switch on="mainService.isEditMode()">
-							<p ng-switch-when="false" class="form-control-static" ng-model='experiment.status.valid' codes="valuation"/>
+							<p ng-switch-when="false" class="form-control-static" ng-model='experiment.status.valid' codes="status"/>
 							<div ng-switch-when="true">
-								<div bt-select class="form-control" ng-model="experiment.status.valid" bt-options="valid.code as valid.name for valid in lists.getValuations()"></div>
+								<div bt-select class="form-control" ng-model="experiment.status.valid" bt-options="valid.code as valid.name for valid in lists.get('status')"></div>
 							</div>
 						</div>						
 					}	

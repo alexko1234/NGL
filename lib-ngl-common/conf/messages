@@ -83,6 +83,10 @@ valuation.TRUE = Oui
 valuation.FALSE = Non
 valuation.UNSET = ---
 
+status.TRUE = OK
+status.FALSE = KO
+status.UNSET = ---
+
 bt-select.here = Taper ici !
 
 search.placeholder.reporting.configuration = Sélect. colonnes config.

@@ -820,7 +820,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			        	 "filter":"codes:'valuation'",
 			        	 "choiceInList":true,
 					     "listStyle":"bt-select",
-					     "possibleValues":"lists.getValuations()",					     
+					     "possibleValues":"lists.get('status')",					     
 			        	 "position":8
 					    },
 					    {
