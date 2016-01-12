@@ -245,14 +245,24 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 	}
 
 
-	
-
-	
-
-
-	private List<PropertyDefinition> getPropertyDefinitionDepotBionano() {
-		// TODO Auto-generated method stub
-		return null;
+	private List<PropertyDefinition> getPropertyDefinitionDepotBionano() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("Temps de concentration recommandé","ptrConcentrationTime", LevelService.getLevels(Level.CODE.ContainerIn),Integer.class, true, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SPEED),MeasureUnit.find.findByCode( "s"),MeasureUnit.find.findByCode( "s"),"single",9, true));
+		propertyDefinitions.add(newPropertiesDefinition("Temps de concentration réel","realConcentrationTime", LevelService.getLevels(Level.CODE.ContainerIn),Integer.class, true, DescriptionFactory.newValues("600","450","400","350","300","250","200","150"),
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SPEED),MeasureUnit.find.findByCode( "s"),MeasureUnit.find.findByCode( "s"),"single",10, true));
+		propertyDefinitions.add(newPropertiesDefinition("Nombre de cycles","nbCycles", LevelService.getLevels(Level.CODE.ContainerIn),Integer.class, true, null, null, null, null,"single", 11, true));
+		//Image 
+		propertyDefinitions.add(newPropertiesDefinition("Photo zone pillar","pillarRegionPicture", LevelService.getLevels(Level.CODE.ContainerIn),String.class, false, null, null, null, null,"single", 12, true));
+		propertyDefinitions.add(newPropertiesDefinition("Voltage","voltage", LevelService.getLevels(Level.CODE.ContainerIn),Integer.class, false, null, null, null, null,"single", 11, true));
+		propertyDefinitions.add(newPropertiesDefinition("Nb d'optimisations","nbOfOptimizations", LevelService.getLevels(Level.CODE.ContainerIn),Integer.class, false, DescriptionFactory.newValues("2","3","4"), null, null, null,"single", 13, true));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Optimized Bump Time","optimizedBumpTime", LevelService.getLevels(Level.CODE.ContainerIn),Integer.class, false, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SPEED),MeasureUnit.find.findByCode( "s"),MeasureUnit.find.findByCode( "s"),"single",14, true));
+		propertyDefinitions.add(newPropertiesDefinition("Optimized Load Time","optimizedLoadTime", LevelService.getLevels(Level.CODE.ContainerIn),Integer.class, false, null,
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SPEED),MeasureUnit.find.findByCode( "s"),MeasureUnit.find.findByCode( "s"),"single",15, true));
+				
+		return propertyDefinitions;
 	}
 
 
@@ -265,25 +275,6 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 
 	private List<PropertyDefinition> getPropertyDefinitionIrysPrepNLRS() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		
-		//Concentration IN	measuredConcentration
-		//Volume engagé (µl)	inputVolume
-		//Quantité engagée (ng)	inputQuantity
-		
-		//Quantité prévue par le protocole (ng)	requiredQuantity
-		//Tableau sélection enzyme	enzymeLabelDensity
-		//Enzyme de restriction	restrictionEnzyme
-		//Unités d'enzyme	enzymeUnit
-		//Volume Enzyme (µl)	restrictionEnzymeVolume
-		//Enzyme de restriction 2	restrictionEnzyme2
-		//Volume Enzyme 2 (µl)	restrictionEnzyme2Volume
-		//Unités d'enzyme 2	enzyme2Unit
-		//Concentration 1 (ng/µl)	measuredConc1
-		//Concentration 2 (ng/µl)	measuredConc2
-		//Concentration 3 (ng/µl)	measuredConc3
-		//Concentration moyenne (ng/µl)	measuredConcentration
-		//Concentration ADN NLRS (ng/µl)	nlrsConcentration
-		//Ecart-type	
 
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null,
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",9, true));
