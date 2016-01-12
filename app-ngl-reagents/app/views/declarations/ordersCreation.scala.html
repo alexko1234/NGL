@@ -84,21 +84,21 @@
 							</div>
 							</div>
 							</div>
-					    	</div>
-						    	<div class="form-group">
-								<label class="col-md-4 col-lg-3 control-label">@Messages("order.providerCode") :</label>
+					</div>
+					<div class="form-group">
+							<label class="col-md-4 col-lg-3 control-label">@Messages("order.providerCode") :</label>
 								<div ng-switch on="editMode">
 									<p class="form-control-static" ng-switch-when="false">{{order.providerCode}}</p>
-								<div ng-switch-when="true">
-								<div class="col-md-5 col-lg-5" ng-class="getClass('providerCode')">
-									<input type="text" class="form-control" ng-model="order.providerCode" ng-readonly="!editMode" ng-disabled="!editMode" />
-									<span class="help-block">
-			                            {{mainService.getError("order.providerCode")}}
-			                        </span>
+									<div ng-switch-when="true">
+										<div class="col-md-5 col-lg-5" ng-class="getClass('providerCode')">
+											<input type="text" class="form-control" ng-model="order.providerCode" ng-readonly="!editMode" ng-disabled="!editMode" />
+											<span class="help-block">
+			                            		{{mainService.getError("order.providerCode")}}
+			                        		</span>
+										</div>
+									</div>
 								</div>
-								</div>
-								</div>
-					    	</div>							
+					</div>							
 				</form>
 			  </div>
 			</div>
