@@ -658,10 +658,10 @@ angular.module('atomicTransfereServices', [])
 						this.$atmToSingleDatatable.convertExperimentATMToDatatable(this.atm);
 					},
 					updateFromDatatable : function(){
-						var experiment = {value:{}};
+						var experiment = {};
 						this.$atmToSingleDatatable.data.save();					
 						this.$atmToSingleDatatable.viewToExperimentManyToOne(experiment);
-						this.atm = experiment.value.atomicTransfertMethods;
+						this.atm = experiment.atomicTransfertMethods;
 					}
 					
 				},

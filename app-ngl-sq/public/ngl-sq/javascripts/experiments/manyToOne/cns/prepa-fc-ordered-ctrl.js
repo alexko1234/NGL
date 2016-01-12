@@ -119,16 +119,17 @@ angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$par
 	
 		
 	atmToSingleDatatable.data.setColumnsConfig(columns);
-	atmToSingleDatatable.addExperimentPropertiesToDatatable($scope.experiment.experimentProperties.inputs);
+	atmToSingleDatatable.addExperimentPropertiesToDatatable($scope.experimentType.propertiesDefinitions);
 	
 	$scope.$parent.changeValueOnFlowcellDesign = function(){
 		$scope.atmService.data.updateDatatable();
 		
 		if($scope.experiment.editMode){
-			$scope.message.clazz = "alert alert-warning";
-			$scope.message.text = "Vous venez de modifier une valeur";
-			$scope.message.text += ", vous devez impérativement cliquer sur sauvegarder pour que les calculs de la FDR se remettent à jour.";
-			$scope.message.isDetails = false;
+			$scope.messages.clazz = "alert alert-warning";
+			$scope.messages.text = "Vous venez de modifier une valeur";
+			$scope.messages.text += ", vous devez impérativement cliquer sur sauvegarder pour que les calculs de la FDR se remettent à jour.";
+			$scope.messages.showDetails = false;
+			$scope.messages.open();
 		}
 	};
 	

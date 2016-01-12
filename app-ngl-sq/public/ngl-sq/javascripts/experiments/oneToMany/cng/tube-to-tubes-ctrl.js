@@ -265,8 +265,8 @@ angular.module('home').controller('CNGTubeToTubesCtrl',['$scope', 'atmToGenerate
 	
 	
 	$scope.updateInputVolume = function(experiment){
-		for(var i=0 ; i < experiment.value.atomicTransfertMethods.length ; i++){
-			var atm = experiment.value.atomicTransfertMethods[i];
+		for(var i=0 ; i < experiment.atomicTransfertMethods.length ; i++){
+			var atm = experiment.atomicTransfertMethods[i];
 			
 			var volume = {input:0};
 			

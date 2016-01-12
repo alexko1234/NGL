@@ -205,8 +205,8 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
 		
-		for(var i = 0 ; i < $scope.experiment.value.atomicTransfertMethods.length ; i++){
-			var atm = $scope.experiment.value.atomicTransfertMethods[i];
+		for(var i = 0 ; i < $scope.experiment.atomicTransfertMethods.length ; i++){
+			var atm = $scope.experiment.atomicTransfertMethods[i];
 			
 			$parse('locationOnContainerSupport.code').assign(atm.outputContainerUseds[0], atm.outputContainerUseds[0].code);			
 		}
