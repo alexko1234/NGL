@@ -91,6 +91,7 @@ public class ContainerUsedValidationHelper extends CommonValidationHelper {
 			PropertyDefinition pd = new PropertyDefinition();			
 			pd.code = "volume";
 			pd.valueType = Double.class.getName();
+			pd.propertyValueType = PropertyValue.singleType;
 			pdefs.add(pd);
 			contextValidation.putObject("propertyDefinitions", pdefs);
 			volume.validate(contextValidation);
@@ -105,6 +106,7 @@ public class ContainerUsedValidationHelper extends CommonValidationHelper {
 			PropertyDefinition pd = new PropertyDefinition();
 			pd.code = "concentration";
 			pd.valueType = Double.class.getName();
+			pd.propertyValueType = PropertyValue.singleType;
 			pdefs.add(pd);
 			contextValidation.putObject("propertyDefinitions", pdefs);
 			concentration.validate(contextValidation);
@@ -119,6 +121,7 @@ public class ContainerUsedValidationHelper extends CommonValidationHelper {
 			PropertyDefinition pd = new PropertyDefinition();
 			pd.code = "quantity";
 			pd.valueType = Double.class.getName();
+			pd.propertyValueType = PropertyValue.singleType;
 			pdefs.add(pd);
 			contextValidation.putObject("propertyDefinitions", pdefs);
 			quantity.validate(contextValidation);
