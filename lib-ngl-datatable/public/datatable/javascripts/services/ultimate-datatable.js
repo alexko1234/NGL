@@ -934,13 +934,12 @@ angular.module('ultimateDataTableServices', []).
 		    			 */
 		    			setOrderColumn : function(column){
 		    				if(this.config.order.active){
-		    					var columnPropertyName = column.property;
 		    					var columnId  = column.id;
 		    					
-		    					if(angular.isDefined(this.config.group.by) &&  this.config.group.by.property === columnPropertyName && !this.config.group.showOnlyGroups){
+		    					if(angular.isDefined(this.config.group.by) &&  this.config.group.by.id === columnId && !this.config.group.showOnlyGroups){
 		    						this.config.order.groupReverse = !this.config.order.groupReverse; 		    						
 		    					}else{
-		    						if(!angular.isDefined(this.config.order.by) || this.config.order.by.property !== columnPropertyName){
+		    						if(!angular.isDefined(this.config.order.by) || this.config.order.by.id !== columnId){
 			    						this.config.order.by = column;
 			    						this.config.order.reverse = false;
 			    					}else{
