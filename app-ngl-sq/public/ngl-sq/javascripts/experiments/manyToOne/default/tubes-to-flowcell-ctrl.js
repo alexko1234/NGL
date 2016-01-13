@@ -267,23 +267,23 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 			var unit = undefined;
 			var isSame = true;
 			for(var i=0;i < atm.inputContainerUseds.length;i++){
-				if(concentration === undefined && unit === undefined){
-					//concentration = atm.inputContainerUseds[i].concentration.value;
-					//unit = atm.inputContainerUseds[i].concentration.unit;
-					if(null != atm.inputContainerUseds[i].experimentProperties.finalConcentration2){
+				if(atm.inputContainerUseds[i].experimentProperties && atm.inputContainerUseds[i].experimentProperties.finalConcentration2){				
+					if(concentration === undefined && unit === undefined){
+						//concentration = atm.inputContainerUseds[i].concentration.value;
+						//unit = atm.inputContainerUseds[i].concentration.unit;					
 						concentration = atm.inputContainerUseds[i].experimentProperties.finalConcentration2.value;
-						unit = atm.inputContainerUseds[i].experimentProperties.finalConcentration2.unit;
-					}
-				}else{
-					if(concentration !== atm.inputContainerUseds[i].experimentProperties.finalConcentration2.value 
-							|| unit !== atm.inputContainerUseds[i].experimentProperties.finalConcentration2.unit){
-						isSame = false;
-						break;
+						unit = atm.inputContainerUseds[i].experimentProperties.finalConcentration2.unit;					
+					}else{
+						if(concentration !== atm.inputContainerUseds[i].experimentProperties.finalConcentration2.value 
+								|| unit !== atm.inputContainerUseds[i].experimentProperties.finalConcentration2.unit){
+							isSame = false;
+							break;
+						}
 					}
 				}
 			}
 			
-			if(isSame){				
+			if(isSame && atm.inputContainerUseds[0].experimentProperties){				
 				atm.outputContainerUseds[0].concentration = atm.inputContainerUseds[0].experimentProperties.finalConcentration2;				
 			}
 			
