@@ -1226,10 +1226,12 @@
 			
 			var loadData = function(){
 				isLoading = true;
-				var form = {includes : []};
+				var form = {includes : [], typeCodes : []};
 				form.includes.push("default");
 				form.includes.push("treatments.ngsrg.default.nbBases");
 				form.includes.push("runSequencingStartDate");
+				form.typeCodes.push("default-readset");
+				form.typeCodes.push("rsillumina")
 				form.limit = 100000;
 				$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url, {params : form}).success(function(data, status, headers, config) {
 					readsets = data;

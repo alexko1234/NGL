@@ -129,6 +129,13 @@ public class ReadSets extends ReadSetsController{
 	private static Query getQuery(ReadSetsSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;
+		
+		if (StringUtils.isNotBlank(form.typeCode)) { //all
+			queries.add(DBQuery.is("typeCode", form.typeCode));
+		}else if(CollectionUtils.isNotEmpty(form.typeCodes)){
+			queries.add(DBQuery.in("typeCode", form.typeCodes));
+		}
+		
 		if (StringUtils.isNotBlank(form.runCode)) { //all
 			queries.add(DBQuery.is("runCode", form.runCode));
 		}else if(CollectionUtils.isNotEmpty(form.runCodes)){
