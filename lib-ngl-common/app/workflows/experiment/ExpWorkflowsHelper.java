@@ -639,7 +639,9 @@ public class ExpWorkflowsHelper {
 	private static List<Map.Entry<String,PropertyValue>> getProcessesProperties(InputContainerUsed icu) {
 		List<Process> processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code", icu.inputProcessCodes).is("containerInputCode", icu.code)).toList();
 		if(null != processes && processes.size() > 0){
-			return processes.stream().map((Process p) -> p.properties.entrySet())
+			return processes.stream()
+				.filter(p -> p.properties != null)
+				.map((Process p) -> p.properties.entrySet())
 				.flatMap(Set::stream)
 				.collect(Collectors.toList());
 		}else{

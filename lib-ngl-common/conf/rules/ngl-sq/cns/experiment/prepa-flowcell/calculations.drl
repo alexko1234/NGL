@@ -2,6 +2,24 @@
 //Rules for calculations
 package rules
 
+rule "test cal"
+	@nglSQ( calculations )
+	dialect "java"
+	salience 1000
+	no-loop
+	lock-on-active true
+    when
+    	 $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-flowcell", $stateCode : state.code, $stateCode!="F")
+    	 $atomicTransfert: ManyToOneContainer( )
+    	 InputContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null, $concentrationIN:concentration) from $atomicTransfert.inputContainerUseds
+    	 $finalConcentration1 : PropertyValue() from $experimentProperties.get("finalConcentration1")
+    	 $finalVolume1 : PropertyValue() from $experimentProperties.get("finalVolume1")
+    	 eval($finalVolume1.value != null && $finalConcentration1.value != null && Double.class.isInstance($finalConcentration1.value) && Double.parseDouble($concentrationIN.value.toString()) != 0)
+    then
+   		Logger.debug("Calculation Test  1: ");   		
+   	end
+
+
 rule "volume stock engaged in denat"
 	@nglSQ( calculations )
 	dialect "java"
