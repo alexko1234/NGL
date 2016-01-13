@@ -28,10 +28,10 @@ rule "prepa-fc-ordered volume stock engaged in denaturation"
     	 InputContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null, $concentrationIN:concentration) from $atomicTransfert.inputContainerUseds
     	 $finalConcentration1 : PropertyValue() from $experimentProperties.get("finalConcentration1")
     	 $finalVolume1 : PropertyValue() from $experimentProperties.get("finalVolume1")
-    	 eval($finalVolume1.value != null && Double.class.isInstance($finalVolume1.value) && $finalConcentration1.value != null && Double.class.isInstance($finalConcentration1.value) && Double.parseDouble($concentrationIN.value.toString()) != 0)
+    	 eval($finalVolume1.value != null && Number.class.isInstance($finalVolume1.value) && $finalConcentration1.value != null && Number.class.isInstance($finalConcentration1.value) && convertPVToDouble($concentrationIN) != 0)
    	then
    		Logger.debug("Calculation prepa-fc-ordered inputVolume: "+ $experiment.code+ " "+ $atomicTransfert.line+" "+ $finalConcentration1.value+"  "+$concentrationIN.value);
-   		PropertySingleValue value = new PropertySingleValue(Math.round((Double)$finalConcentration1.value*(Double)$finalVolume1.value/Double.parseDouble($concentrationIN.value.toString())*100.0)/100.0,"\u00B5L");
+   		PropertySingleValue value = new PropertySingleValue(Math.round(convertPVToDouble($finalConcentration1)*convertPVToDouble($finalVolume1)/convertPVToDouble($concentrationIN)*100.0)/100.0,"\u00B5L");
    		if($experimentProperties.get("inputVolume") != null){
    			$experimentProperties.remove("inputVolume");
    		}
@@ -57,10 +57,10 @@ rule "prepa-fc-ordered volume PhiX"
 		 $finalConcentration1 : PropertyValue() from $experimentProperties.get("finalConcentration1")
 		 $finalVolume1 : PropertyValue() from $experimentProperties.get("finalVolume1")
 		 $phixConcentration : PropertyValue() from $experimentProperties.get("phixConcentration")
-		 eval($phixConcentration.value != null &&  Double.class.isInstance($phixConcentration.value) && $phixPercent.value != null &&  Double.class.isInstance($phixPercent.value) && $finalConcentration1.value != null && Double.class.isInstance($finalConcentration1.value) && $finalVolume1.value != null && Double.class.isInstance($finalVolume1.value))
+		 eval($phixConcentration.value != null &&  Number.class.isInstance($phixConcentration.value) && $phixPercent.value != null &&  Number.class.isInstance($phixPercent.value) && $finalConcentration1.value != null && Number.class.isInstance($finalConcentration1.value) && $finalVolume1.value != null && Number.class.isInstance($finalVolume1.value))
 	then
 		Logger.debug("Calculation prepa-fc-ordered  phixVolume: "+ $experiment.code+ " "+ $atomicTransfert.line);
-		PropertySingleValue value = new PropertySingleValue(Math.round(((Double)$phixPercent.value*(Double)$finalConcentration1.value*(Double)$finalVolume1.value/(Double)$phixConcentration.value))/100.0,"\u00B5L");
+		PropertySingleValue value = new PropertySingleValue(Math.round((convertPVToDouble($phixPercent)*convertPVToDouble($finalConcentration1)*convertPVToDouble($finalVolume1)/convertPVToDouble($phixConcentration)))/100.0,"\u00B5L");
 		if($experimentProperties.get("phixVolume") != null){
 			$experimentProperties.remove("phixVolume");
 		}
@@ -82,10 +82,10 @@ rule "prepa-fc-ordered volume RSB"
     	 $phixVolume : PropertyValue() from $experimentProperties.get("phixVolume")
     	 $finalVolume1 : PropertyValue() from $experimentProperties.get("finalVolume1")
     	 $inputVolume : PropertyValue() from $experimentProperties.get("inputVolume")
-    	 eval($inputVolume.value != null && Double.class.isInstance($inputVolume.value) && $finalVolume1.value != null && Double.class.isInstance($finalVolume1.value) && $phixVolume.value != null && Double.class.isInstance($phixVolume.value))
+    	 eval($inputVolume.value != null && Number.class.isInstance($inputVolume.value) && $finalVolume1.value != null && Number.class.isInstance($finalVolume1.value) && $phixVolume.value != null && Number.class.isInstance($phixVolume.value))
    	then
    		Logger.debug("Calculation prepa-fc-ordered rsbVolume: "+ $experiment.code+ " "+ $atomicTransfert.line);
-   		PropertySingleValue value = new PropertySingleValue(Math.round(((Double)$finalVolume1.value-(Double)$inputVolume.value-(Double)$phixVolume.value)*100.0)/100.0,"\u00B5L");
+   		PropertySingleValue value = new PropertySingleValue(Math.round((convertPVToDouble($finalVolume1)-convertPVToDouble($inputVolume)-convertPVToDouble($phixVolume))*100.0)/100.0,"\u00B5L");
    		if($experimentProperties.get("rsbVolume") != null){
    			$experimentProperties.remove("rsbVolume");
    		}
@@ -107,10 +107,10 @@ rule "prepa-fc-ordered concentration final"
     	 $finalVolume : PropertyValue() from $experimentPropertiesOut.get("finalVolume")
     	 $inputVolume2 : PropertyValue() from $experimentProperties.get("inputVolume2")
     	 $finalConcentration1 : PropertyValue() from $experimentProperties.get("finalConcentration1")
-    	 eval($finalConcentration1.value != null && Double.class.isInstance($finalConcentration1.value) && $inputVolume2.value != null && Double.class.isInstance($inputVolume2.value) && $finalConcentration1.value != null && Double.class.isInstance($finalVolume.value) && (Double)$finalVolume.value !=0)
+    	 eval($finalConcentration1.value != null && Number.class.isInstance($finalConcentration1.value) && $inputVolume2.value != null && Number.class.isInstance($inputVolume2.value) && $finalConcentration1.value != null && Number.class.isInstance($finalVolume.value) && convertPVToDouble($finalVolume) !=0)
    	then
    		Logger.debug("Calculation prepa-fc-ordered finalConcentration2 : "+ $experiment.code+ " "+ $atomicTransfert.line);
-   		PropertySingleValue value = new PropertySingleValue(Math.round(((Double)$finalConcentration1.value*(Double)$inputVolume2.value/(Double)$finalVolume.value)*100.0)/100.0,"nM");
+   		PropertySingleValue value = new PropertySingleValue(Math.round((convertPVToDouble($finalConcentration1)*convertPVToDouble($inputVolume2)/convertPVToDouble($finalVolume))*100.0)/100.0,"nM");
    		if($experimentProperties.get("finalConcentration2") != null){
    			$experimentProperties.remove("finalConcentration2");
    		}
