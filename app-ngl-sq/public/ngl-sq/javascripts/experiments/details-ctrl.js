@@ -975,6 +975,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		return containerPromises;
 		
 	};
+	
 	var getContainerSupportStateRequests = function(supportCodes, stateCode){
 		var supportPromises = [];
 		supportCodes.forEach(function(value){
