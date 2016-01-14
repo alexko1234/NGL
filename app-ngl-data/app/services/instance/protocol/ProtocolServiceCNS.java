@@ -70,19 +70,16 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("prt_wait","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("aliquoting")));
 		lp.add(newProtocol("ptr_pool_tube_v1","PTR_POOL_TUBE_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("pool-tube")));
 		
-		lp.add(newProtocol("ptr_irys-nlrs-prep","PTR_IRYS_PREP","path7","1","production", InstanceFactory.setExperimentTypeCodes("irys-nlrs-prep")));
-		lp.add(newProtocol("ptr_irys-chip-preparation","PTR_IRYS_CHIP_PREP","path7","1","production", InstanceFactory.setExperimentTypeCodes("irys-chip-preparation")));
-		lp.add(newProtocol("ptr_bionano-depot","PTR_BIONANO_DEPOT","path7","1","production", InstanceFactory.setExperimentTypeCodes("bionano-depot")));
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+			lp.add(newProtocol("Irys Prep Labelling NLRS (300/900)","irys-prep-nlrs-300-900","path7","1","production", InstanceFactory.setExperimentTypeCodes("irys-nlrs-prep","irys-chip-preparation")));
+			lp.add(newProtocol("ptr_standard","bionano_standard_ptr","path7","1","production", InstanceFactory.setExperimentTypeCodes("bionano-depot")));
+			lp.add(newProtocol("ptr_modifié","bionano_customized_ptr","path7","1","production", InstanceFactory.setExperimentTypeCodes("bionano-depot")));
+			
 			lp.add(newProtocol("fragmentation_ptr_sox140_1","Fragmentation_ptr_sox140_1","path1","1","production", InstanceFactory.setExperimentTypeCodes("fragmentation")));
 			//lp.add(newProtocol("bqspri_ptr_sox142_1","BqSPRI_ptr_sox142_1","path2","1","production", InstanceFactory.setExperimentTypeCodes("librairie-indexing", "librairie-dualindexing")));
 			lp.add(newProtocol("amplif_ptr_sox144_1","Amplif_ptr_sox144_1","path3","1","production", InstanceFactory.setExperimentTypeCodes("amplification", "solution-stock")));
 			lp.add(newProtocol("proto_qc_v1","Proto_QC_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("chip-migration-post-pcr", "chip-migration-pre-pcr", "fluo-quantification"/*, "qpcr-quantification"*/)));
-			
-			
-			
-			
 
 			
 		}

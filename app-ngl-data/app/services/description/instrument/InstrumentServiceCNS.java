@@ -231,7 +231,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentUsedType("IRYS", "IRYS", InstrumentCategory.find.findByCode("opt-map-bionano"), getIrysDepotProperties(),getInstrumentIRYS() 
 				,getContainerSupportCategories(new String[]{"irys-chip"}), null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
-		l.add(newInstrumentUsedType("Main", "hand-irys", InstrumentCategory.find.findByCode("hand"), getIrysChipProperties(),getInstrumentHand() 
+		l.add(newInstrumentUsedType("Main", "irys-hand", InstrumentCategory.find.findByCode("hand"), getIrysChipProperties(),getInstrumentHand() 
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"irys-chip"}), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
@@ -239,7 +239,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 
 	private List<Instrument> getInstrumentHand() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("HAND", "HAND", null, true, "HAND", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		instruments.add(createInstrument("Main", "main", null, true, "main", DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 		return instruments;
 	}
 

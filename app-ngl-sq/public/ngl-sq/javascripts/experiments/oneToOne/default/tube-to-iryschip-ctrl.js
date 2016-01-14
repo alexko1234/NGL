@@ -61,7 +61,7 @@
 			         					 
 					 {
 			        	 "header":Messages("containers.table.concentration"),
-			        	 "property":"inputContainer.mesuredConcentration.value",
+			        	 "property":"inputContainer.contents[0].properties.nlrsConcentration.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -71,7 +71,7 @@
 			         },
 			         {
 			        	 "header":Messages("containers.table.concentration.unit"),
-			        	 "property":"inputContainer.mesuredConcentration.unit",
+			        	 "property":"inputContainer.contents[0].properties.nlrsConcentration.unit",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -109,36 +109,6 @@
 			        	 "type":"number",
 			        	 "position":40,
 			        	 "extraHeaders":{0:"Inputs"}
-			         },
-			         {
-			        	 "header":Messages("containers.table.concentration"),
-			        	 "property":"outputContainerUsed.concentration.value",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-						 "type":"number",
-			        	 "position":50,
-			        	 "extraHeaders":{0:"Outputs"}
-			         },
-			         {
-			        	 "header":Messages("containers.table.concentration.unit"),
-			        	 "property":"outputContainerUsed.concentration.unit",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-						 "type":"text",
-			        	 "position":50.5,
-			        	 "extraHeaders":{0:"Outputs"}
-			         },
-			         {
-			        	 "header":Messages("containers.table.volume")+" (µL)",
-			        	 "property":"outputContainerUsed.volume.value",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-						 "type":"number",
-			        	 "position":51,
-			        	 "extraHeaders":{0:"Outputs"}
 			         },
 			         {
 			        	 "header":Messages("containers.table.code"),

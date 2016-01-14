@@ -69,11 +69,16 @@ public class ResolutionService {
 			createAnalysisResolutionCNS(ctx); 
 			createOpgenDepotResolutionCNS(ctx);
 			createIlluminaPrepFCDepotResolutionCNS(ctx);
+			createIryPreparationNLRSResolutionCNS(ctx);
+			createDepotBionanoResolutionCNS(ctx);
 			// FDS 15/01: No illumina Depot Resolutions ???
 			createExperimentResolution(ctx); 
 			createProcessResolution(ctx);
 		}
 	}
+
+
+	
 
 	// FDS 20/01 retour aux 2 methodes initiales, mais correction pour CNG: ajout    resoCategories.put("Default",...
 	public static HashMap<String, ResolutionCategory> createResolutionCategoriesCNG(){	
@@ -620,6 +625,45 @@ public class ResolutionService {
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
+	}
+	
+	private static void createIryPreparationNLRSResolutionCNS(ContextValidation ctx) {
+	List<Resolution> l = new ArrayList<Resolution>();
+		
+		l.addAll(getDefaultResolutionCNS());
+		
+		l.add(InstanceFactory.newResolution("marquage incorrect", "echec-labeling", resolutionCategories.get("Default"), (short) 4));
+		
+		ResolutionConfiguration r = new ResolutionConfiguration();
+		r.code = "expIrysPrepNLRSReso";
+		r.resolutions = l;
+		r.objectTypeCode = "Experiment";
+		ArrayList<String> al = new ArrayList<String>();
+		al.add("irys-nlrs-prep");
+		r.typeCodes = al;
+		
+		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
+		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
+	}
+	
+	private static void createDepotBionanoResolutionCNS(ContextValidation ctx) {
+		List<Resolution> l = new ArrayList<Resolution>();
+		
+		l.addAll(getDefaultResolutionCNS());
+		
+		l.add(InstanceFactory.newResolution("marquage incorrect", "echec-labeling", resolutionCategories.get("Default"), (short) 4));
+		
+		ResolutionConfiguration r = new ResolutionConfiguration();
+		r.code = "expDepotBionanoReso";
+		r.resolutions = l;
+		r.objectTypeCode = "Experiment";
+		ArrayList<String> al = new ArrayList<String>();
+		al.add("bionano-depot");
+		r.typeCodes = al;
+		
+		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
+		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
+		
 	}
 	
 	public static void createProcessResolution(ContextValidation ctx) {

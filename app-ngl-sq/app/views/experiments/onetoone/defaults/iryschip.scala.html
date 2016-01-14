@@ -144,7 +144,7 @@
 					<td colspan="{{4 + outputContainerProperties.length}}" >
 						<span ng-repeat="inputContainer in atm.inputContainerUseds | orderBy:'code' track by $index"  class="compactText"
 							ng-model="inputContainer" draggable drag="dragInProgress">
-							{{inputContainer.code}} / {{inputContainer.percentage}}% / PhiX:{{atm.outputContainerUseds[0].experimentProperties.phixPercent.value || "nr"}}%;<br/>
+							{{inputContainer.code}} / {{inputContainer.percentage}}%<br/>
 						</span>
 					</td>
 				</tr>
