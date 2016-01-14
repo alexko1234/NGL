@@ -102,7 +102,7 @@ rule "Create ReadSet"
  		 
 		ReadSet readSet=new ReadSet();
 		readSet.typeCode="rsnanopore";
-		readSet.code=$content.sampleCode+"ONT_"+$laneNumber+"_"+$run.containerSupportCode;
+		readSet.code=$content.sampleCode+"_ONT_"+$laneNumber+"_"+$run.containerSupportCode;
 		readSet.state=new State("N","ngsrg");
 		
 		readSet.runCode=$run.code;
