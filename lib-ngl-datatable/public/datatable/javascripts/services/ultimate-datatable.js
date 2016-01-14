@@ -2723,7 +2723,6 @@ directive("udtCell", function(){
 	    				if(colType==="date"){
 	    					return 'udt-date-timestamp';
 	    				}
-	    				
 	    				return '';
 	    			};
   		    	}
@@ -3004,7 +3003,7 @@ directive('udtDefaultValue',['$parse', function($parse) {
 	    						defaultValue = defaultValues;
 	    					}
 	    				});
-	    				
+	    				//TODO GA ?? better way with formatter
 						scope.$watch(ngModel, function(value){
 				                if(defaultValue!= null && (ngModel.$modelValue == undefined || ngModel.$modelValue == "")){
 									ngModel.$setViewValue(defaultValue);
@@ -3088,7 +3087,21 @@ directive("udtHtmlFilter", function($filter) {
 					    	   }else if(attrs.udtHtmlFilter == "number"){
 					    		   	convertedData = $filter('number')(convertedData);
 					    	   }
+					    	  return convertedData;
+					    }); 
 					    	
+					    ngModelController.$parsers.push(function(data) {
+					    	var convertedData = data;
+					    	   if(attrs.udtHtmlFilter == "number" && null != convertedData && undefined != convertedData 
+					    			   && angular.isString(convertedData)){
+					    		   convertedData = convertedData.replace(",",".");
+					    		   if(!isNaN(convertedData) && convertedData !== ""){						    			   
+					    			   convertedData = convertedData*1;
+					    		   }else if( isNaN(convertedData) || convertedData === ""){
+					    			   convertedData = undefined;
+					    		   }
+					    	   }					
+					    	   //TODO GA date and datetime quiz about timestamps
 					    	  return convertedData;
 					    });   
 					  }
@@ -3486,9 +3499,9 @@ factory('udtConvertValueServices', [function() {
 					},
 					//Get the multiplier to convert the value
 					getConversion : function(inputUnit, outputUnit){
-						if((inputUnit === '�g' && outputUnit === 'ng') || (inputUnit === 'ml' && outputUnit === '�l') || (inputUnit === 'pM' && outputUnit === 'nM')){
+						if((inputUnit === 'µg' && outputUnit === 'ng') || (inputUnit === 'ml' && outputUnit === 'µl') || (inputUnit === 'pM' && outputUnit === 'nM')){
 							return (1/1000);
-						}else if((inputUnit === 'ng' && outputUnit === '�g') || (inputUnit === '�l' && outputUnit === 'ml') || (inputUnit === 'nM' && outputUnit === 'pM')){
+						}else if((inputUnit === 'ng' && outputUnit === 'µg') || (inputUnit === 'µl' && outputUnit === 'ml') || (inputUnit === 'nM' && outputUnit === 'pM')){
 							return 1000;
 						}else if ((inputUnit === 'mM' && outputUnit === 'nM')){
 							return 1000000;

@@ -45,7 +45,7 @@
 			</div>	
 			 <h1>		
 			 	<span ng-bind="experiment.code || '@Messages("experiments.noCode")'"></span> 			 	
-			 	<small>   
+			 	<small ng-if="!isCreationMode()">   
 			 		<span ng-bind="experiment.state.code|codes:'state'"></span>
 			 	</small>
 		 	</h1>			 

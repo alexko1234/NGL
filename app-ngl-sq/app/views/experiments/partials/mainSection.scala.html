@@ -28,7 +28,7 @@
 					</div>
 					}	
 			   	 	@columnLabelValue(Messages("experiments.state")){
-			   	 	<p class="form-control-static" ng-bind="experiment.state.code | codes:'state'"/>
+			   	 		<p class="form-control-static" ng-bind="experiment.state.code | codes:'state'" ng-if="!isCreationMode()"/>
 					}
 					
 					@columnLabelValue(Messages("experiments.status")){
