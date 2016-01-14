@@ -621,7 +621,8 @@ public class ExpWorkflowsHelper {
 						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
 			}					
 		}
-		
+		/* Do not extract property from process because the risk to have the same property on several process is very big
+		 * To put process property in container used rules*/
 		if(null != atm){
 			//extract process content properties for only the inputContainer of the process
 			List<String> processesPropertyDefinitionCodes = atm.inputContainerUseds.stream()
@@ -649,7 +650,10 @@ public class ExpWorkflowsHelper {
 				.collect(Collectors.toList());		
 	}
 
-
+	/**
+	 * Extract process property for only the first experiment of the process
+	 * 
+	 */
 	private static List<Map.Entry<String,PropertyValue>> getProcessesProperties(InputContainerUsed icu) {
 		List<Process> processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code", icu.inputProcessCodes).is("containerInputCode", icu.code)).toList();
 		if(null != processes && processes.size() > 0){
