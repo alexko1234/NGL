@@ -91,6 +91,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.$broadcast('cancel');
 		$scope.messages.clear();
 		mainService.stopEditMode();
+		finishEditMode=false;
 		saveInProgress = false;
 		updateData();
 		
@@ -224,6 +225,16 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		}
 		
 	});
+	
+	var finishEditMode = false;
+	$scope.isFinishEditMode = function(){		
+		return finishEditMode;	
+	};
+	
+	$scope.activeFinishEditMode = function(){		
+		finishEditMode=true;
+	};
+	
 	
 	$scope.isWorkflowModeAvailable = function(nextStateCode){
 		if($scope.experiment !== undefined){

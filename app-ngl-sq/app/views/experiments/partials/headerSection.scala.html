@@ -17,6 +17,8 @@
 				<button ng-if="getNbAvailableAdditionnalButtons() === 1" ng-repeat="button in getAdditionnalButtons() track by $index" class="btn btn-default" ng-show="button.isShow()"  ng-click="button.click()" ng-bind="button.label"></button>
 			 	
 			
+							
+			
 				<button class="btn btn-default" ng-if="isDispactchModalAvailable()" ng-click="initDispatchModal()"><i class="fa fa-arrows-alt"></i></button>
 				
 			 	<button class="btn btn-primary" ng-disabled="isSaveInProgress()" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i></button>
@@ -25,6 +27,12 @@
 			 		<button class="btn btn-default" ng-switch-when="true"  ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i></button>
 			 		<button class="btn btn-default" ng-switch-when="false"  ng-click="activeEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i></button>
 			 	</div>		
+			 	
+			 	<div class="btn-group" ng-switch on="isFinishEditMode()" ng-if="isFinishState()">
+			 		<button class="btn btn-default" ng-switch-when="true"  ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i></button>
+			 		<button class="btn btn-default" ng-switch-when="false"  ng-click="activeFinishEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i></button>
+			 	</div>		
+			 	
 			 	
 			 	<div class="btn-group">
 			 		<button class="btn btn-default" ng-if="isWorkflowModeAvailable('IP')" ng-click="startExperiment()" title="@Messages("experiments.button.start")"><i class="fa fa-play"></i> @Messages("experiments.button.start")</button>
