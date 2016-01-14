@@ -969,7 +969,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	var getContainerStateRequests = function(containerCodes, stateCode){
 		var containerPromises = [];
 		containerCodes.forEach(function(value){
-			this.push($http.put(jsRoutes.controllers.containers.api.Containers.updateState(value).url,{code:stateCode}));
+			this.push($http.put(jsRoutes.controllers.containers.api.Containers.updateState(value).url,{code:stateCode}));			
 		},containerPromises);
 		
 		return containerPromises;
@@ -1100,6 +1100,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		var containerPromises = [];
 		var supportPromises = [];
 		var processPromises = [];
+		
 		var data = datatable.getData();
 		for(var i = 0 ; i < data.length ; i++){
 			

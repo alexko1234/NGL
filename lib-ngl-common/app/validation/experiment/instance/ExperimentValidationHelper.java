@@ -212,9 +212,9 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			ContextValidation contextValidation) {
 		
 		if(required(contextValidation, inputContainerSupportCodes, "inputContainerSupportCodes")){
-			Set<String> allInputCode = allInputContainers.stream().map((InputContainerUsed i) -> i.code).collect(Collectors.toSet());
+			Set<String> allInputCode = allInputContainers.stream().map((InputContainerUsed i) -> i.locationOnContainerSupport.code).collect(Collectors.toSet());
 			if(!allInputCode.equals(inputContainerSupportCodes)){
-				contextValidation.addErrors("inputContainerSupportCodes", "");
+				contextValidation.addErrors("inputContainerSupportCodes", "error.inputContainerSupportCodes.notequals.allinputContainerSupportCode");
 			}
 		}
 	}

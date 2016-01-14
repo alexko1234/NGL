@@ -782,7 +782,7 @@ angular.module('atomicTransfereServices', [])
 					atm : [], 
 					datatableConfig : $atmToSingleDatatable.data,
 					updateDatatable : function(){
-						this.$atmToSingleDatatable.convertExperimentATMToDatatable(this.atm);
+						this.$atmToSingleDatatable.convertExperimentATMToDatatable(this.atm);						
 					},					
 					
 				},
@@ -803,7 +803,7 @@ angular.module('atomicTransfereServices', [])
 						}
 						this.data.atm.push(atm);
 					}
-					this.data.updateDatatable();
+					this.data.updateDatatable();					
 				},
 				convertExperimentToData:function(experimentATMs){
 					var promises = [];

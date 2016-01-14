@@ -170,7 +170,8 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 			},
 			order:{
 				mode:'local', //or 
-				active:true
+				active:true,
+				by:"atomicTransfertMethod.line"
 			},
 			remove:{
 				active:false,

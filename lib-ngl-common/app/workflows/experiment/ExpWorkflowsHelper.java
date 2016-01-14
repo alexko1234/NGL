@@ -565,73 +565,87 @@ public class ExpWorkflowsHelper {
 		Map<String, PropertyValue> propertiesForALevel = new HashMap<String, PropertyValue>();
 		
 		ExperimentType expType = ExperimentType.find.findByCode(exp.typeCode);
-		//List<PropertyDefinition> experimentPropertyDefinitions = expType.getPropertyDefinitionByLevel(level);
 		Set<String> experimentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevel(expType.propertiesDefinitions, level);
 		
 		//extract experiment content properties
-		Map<String,PropertyValue> allExperimentProperties=new HashMap<String, PropertyValue>(0);
-		if(null != exp.experimentProperties)allExperimentProperties.putAll(exp.experimentProperties);
-		if(null != atm ){
+		if(null != exp.experimentProperties && experimentPropertyDefinitionCodes.size() > 0){
+			propertiesForALevel.putAll(exp.experimentProperties.entrySet()
+					.stream()
+					.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()))
+					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
+		}
+				
+		
+		if(null != atm && experimentPropertyDefinitionCodes.size() > 0){
+			//TODO GA bug when several the same properties in input when map create in collectors
 			propertiesForALevel.putAll(atm.inputContainerUseds.stream()
 					.filter((InputContainerUsed icu) -> icu.experimentProperties != null)
 					.map((InputContainerUsed icu) -> icu.experimentProperties.entrySet())
 					.flatMap(Set::stream)
 					.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()))					
-					//TODO GA Bug when they have the same property on two differents icu
 					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
 			if(null != atm.outputContainerUseds){
+				//TODO GA bug when several the same properties in output when map create in collectors
 				propertiesForALevel.putAll(atm.outputContainerUseds.stream()
 						.filter((OutputContainerUsed ocu) -> ocu.experimentProperties != null)
 						.map((OutputContainerUsed ocu) -> ocu.experimentProperties.entrySet())
 						.flatMap(Set::stream)
 						.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()))
 						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
-			}
-			//InstanceHelpers.copyPropertyValueFromPropertiesDefinition(experimentPropertyDefinitions, allExperimentProperties, propertiesForALevel);			
+			}			
 		}
 		
 		//extract instrument content properties
 		InstrumentUsedType insType = InstrumentUsedType.find.findByCode(exp.instrument.typeCode);
-		List<PropertyDefinition> instrumentPropertyDefinitions = insType.getPropertyDefinitionByLevel(level);
-		Map<String,PropertyValue> allInstrumentProperties=new HashMap<String, PropertyValue>();
-		if(null != exp.instrumentProperties)allInstrumentProperties.putAll(exp.instrumentProperties);
-		if(null != atm && instrumentPropertyDefinitions.size() > 0){
-			allInstrumentProperties.putAll(atm.inputContainerUseds.stream()
+		Set<String> instrumentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevel(insType.propertiesDefinitions, level);
+		
+		if(null != exp.instrumentProperties && instrumentPropertyDefinitionCodes.size() > 0){
+			propertiesForALevel.putAll(exp.instrumentProperties.entrySet()
+					.stream()
+					.filter(entry -> instrumentPropertyDefinitionCodes.contains(entry.getKey()))
+					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
+		}
+		if(null != atm && instrumentPropertyDefinitionCodes.size() > 0){
+			propertiesForALevel.putAll(atm.inputContainerUseds.stream()
 					.filter((InputContainerUsed icu) -> icu.instrumentProperties != null)
 					.map((InputContainerUsed icu) -> icu.instrumentProperties.entrySet())
 					.flatMap(Set::stream)
+					.filter(entry -> instrumentPropertyDefinitionCodes.contains(entry.getKey()))
 					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
 			if(null != atm.outputContainerUseds){
-				allInstrumentProperties.putAll(atm.outputContainerUseds.stream()
+				propertiesForALevel.putAll(atm.outputContainerUseds.stream()
 						.filter((OutputContainerUsed ocu) -> ocu.instrumentProperties != null)
 						.map((OutputContainerUsed ocu) -> ocu.instrumentProperties.entrySet())
 						.flatMap(Set::stream)
+						.filter(entry -> instrumentPropertyDefinitionCodes.contains(entry.getKey()))
 						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
-			}
-			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(instrumentPropertyDefinitions, allInstrumentProperties, propertiesForALevel);			
+			}					
 		}
 		
 		if(null != atm){
 			//extract process content properties for only the inputContainer of the process
-			List<PropertyDefinition> processesPropertyDefinitions = atm.inputContainerUseds.stream()
-					.map((InputContainerUsed icu) -> getProcessesPropertyDefinitions(icu, level))
+			List<String> processesPropertyDefinitionCodes = atm.inputContainerUseds.stream()
+					.map((InputContainerUsed icu) -> getProcessesPropertyDefinitionCodes(icu, level))
 					.flatMap(List::stream)
 					.collect(Collectors.toList()); 
-			Map<String,PropertyValue> allProcessesProperties=atm.inputContainerUseds.stream()
-					.map((InputContainerUsed icu) -> getProcessesProperties(icu))
-					.flatMap(List::stream)
-					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue()));
-			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(processesPropertyDefinitions, allProcessesProperties, propertiesForALevel);			
+			if(processesPropertyDefinitionCodes.size() >0){
+				propertiesForALevel.putAll(atm.inputContainerUseds.stream()
+						.map((InputContainerUsed icu) -> getProcessesProperties(icu))
+						.flatMap(List::stream)
+						.filter(entry -> processesPropertyDefinitionCodes.contains(entry.getKey()))
+						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));				
+			}
 		}
 		
 		return propertiesForALevel;
 	}
 	
-	private static List<PropertyDefinition> getProcessesPropertyDefinitions(InputContainerUsed icu, Level.CODE level) {		
+	private static List<String> getProcessesPropertyDefinitionCodes(InputContainerUsed icu, Level.CODE level) {		
 		return icu.processTypeCodes.stream()
 				.map((String code) ->ProcessType.find.findByCode(code))
 				.map((ProcessType p) -> p.getPropertyDefinitionByLevel(level))
 				.flatMap(List::stream)
+				.map(pd -> pd.code)
 				.collect(Collectors.toList());		
 	}
 
