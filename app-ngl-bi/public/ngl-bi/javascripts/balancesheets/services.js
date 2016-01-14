@@ -76,7 +76,7 @@
 		 flushData();
 
 		 // We initialize our form
-		 var form = {includes : []};
+		 var form = {includes : [], typeCodes : []};
 		 form.includes.push("default");
 		 form.includes.push("treatments.ngsrg.default.nbBases");
 		 form.includes.push("projectCode");
@@ -86,6 +86,8 @@
 		 form.includes.push("sampleOnContainer.sampleCategoryCode");
 		 form.fromDate = moment("01/01/"+selectedYear, Messages("date.format").toUpperCase()).valueOf();
 		 form.toDate = moment("31/12/"+selectedYear, Messages("date.format").toUpperCase()).valueOf();
+		 form.typeCodes.push("default-readset");
+		 form.typeCodes.push("rsillumina");
 		 form.limit = 20000;
 		 
 		 var runForm = {includes : []};
@@ -1226,10 +1228,12 @@
 			
 			var loadData = function(){
 				isLoading = true;
-				var form = {includes : []};
+				var form = {includes : [], typeCodes : []};
 				form.includes.push("default");
 				form.includes.push("treatments.ngsrg.default.nbBases");
 				form.includes.push("runSequencingStartDate");
+				form.typeCodes.push("default-readset");
+				form.typeCodes.push("rsillumina");
 				form.limit = 100000;
 				$http.get(jsRoutes.controllers.readsets.api.ReadSets.list().url, {params : form}).success(function(data, status, headers, config) {
 					readsets = data;

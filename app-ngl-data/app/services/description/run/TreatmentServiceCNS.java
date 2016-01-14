@@ -573,6 +573,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille max d'alignement des séquences 1D forward","1DForward.readAlignementSizeMax",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb loci 1D forward","1DForward.nbLoci",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, true, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Couverture (1D forward) par rapport à la référence","1DForward.referenceCoverage",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true, "object"));
+		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb paires de bases alignées 1D reverse","1DReverse.nbAlignedBasePairs",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées 1D reverse","1DReverse.nbAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées sur 100% de leur longueur 1D reverse","1DReverse.nbAlignedReadsL100",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
@@ -582,6 +583,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille max d'alignement des séquences 1D reverse","1DReverse.readAlignementSizeMax",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb loci 1D reverse","1DReverse.nbLoci",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, true, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Couverture (1D reverse) par rapport à la référence","1DReverse.referenceCoverage",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true, "object"));
+		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb paires de bases alignées 2D all","2DAll.nbAlignedBasePairs",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées 2D all","2DAll.nbAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées sur 100% de leur longueur 2D all","2DAll.nbAlignedReadsL100",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
@@ -591,6 +593,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille max d'alignement des séquences 2D all","2DAll.readAlignementSizeMax",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb loci 2D all","2DAll.nbLoci",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, true, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Couverture (2D all) par rapport à la référence","2DAll.referenceCoverage",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true, "object"));
+		
 		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb paires de bases alignées 2D fail","2DFail.nbAlignedBasePairs",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
 		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées 2D fail","2DFail.nbAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
 		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées sur 100% de leur longueur 2D fail","2DFail.nbAlignedReadsL100",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
@@ -600,6 +603,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Taille max d'alignement des séquences 2D fail","2DFail.readAlignementSizeMax",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
 		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb loci 2D fail","2DFail.nbLoci",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Integer.class, true, "object"));
 		//propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Couverture (2D fail) par rapport à la référence","2DFail.referenceCoverage",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Double.class, true, "object"));
+		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb paires de bases alignées 2D pass","2DPass.nbAlignedBasePairs",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées 2D pass","2DPass.nbAlignedReads",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nb séquences alignées sur 100% de leur longueur 2D pass","2DPass.nbAlignedReadsL100",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Default), Long.class, true, "object"));

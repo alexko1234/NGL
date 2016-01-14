@@ -13,6 +13,9 @@ import controllers.ListForm;
 
 public class ReadSetsSearchForm extends ListForm{
 	
+	public String typeCode;
+	public Set<String> typeCodes;
+	
 	public Set<String> stateCodes;
 	public String stateCode;
 	

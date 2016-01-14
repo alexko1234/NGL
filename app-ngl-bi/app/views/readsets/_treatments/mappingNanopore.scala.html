@@ -1,0 +1,114 @@
+@()
+<!-- Tableau a 2 dimensions -->
+ <div class="row">
+	<div class="col-md-6 col-lg-6">	
+		 <table class="table table-condensed table-hover table-bordered">
+			<thead>
+				<tr>
+					<th></th>
+					<th>@Messages("treatments.nanopore.1DForward")</th>
+					<th>@Messages("treatments.nanopore.1DReverse")</th>
+					<th>@Messages("treatments.nanopore.2DAll")</th>
+					<th>@Messages("treatments.nanopore.2DPass")</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th>@Messages("readsets.treatments.mapping_nanopore.nbAlignedBasePairs")</th>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DForward'].value.nbAlignedBasePairs | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.nbAlignedBasePairs | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.nbAlignedBasePairs | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DPass'].value.nbAlignedBasePairs | number}}</td>
+				</tr>	
+				
+				<tr>
+					<th>@Messages("readsets.treatments.mapping_nanopore.nbAlignedReads")</th>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DForward'].value.nbAlignedReads | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.nbAlignedReads | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.nbAlignedReads | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DPass'].value.nbAlignedReads | number}}</td>
+				</tr>						
+				<tr>
+					<th>@Messages("readsets.treatments.mapping_nanopore.nbAlignedReadsL100")</th>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DForward'].value.nbAlignedReadsL100 | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.nbAlignedReadsL100 | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.nbAlignedReadsL100 | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DPass'].value.nbAlignedReadsL100 | number}}</td>
+				</tr>	
+				<tr>
+					<th>@Messages("readsets.treatments.mapping_nanopore.nbAlignedReadsID100")</th>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DForward'].value.nbAlignedReadsID100 | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.nbAlignedReadsID100 | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.nbAlignedReadsID100 | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DPass'].value.nbAlignedReadsID100 | number}}</td>
+				</tr>
+				<tr>
+					<th>@Messages("readsets.treatments.mapping_nanopore.nbAlignedReadsL100ID100")</th>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DForward'].value.nbAlignedReadsL100ID100 | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.nbAlignedReadsL100ID100 | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.nbAlignedReadsL100ID100 | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DPass'].value.nbAlignedReadsL100ID100 | number}}</td>
+				</tr>	
+				<tr>
+					<th>@Messages("readsets.treatments.mapping_nanopore.identityPercentageAvg")</th>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DForward'].value.identityPercentageAvg | number:2}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.identityPercentageAvg | number:2}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.identityPercentageAvg | number:2}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DPass'].value.identityPercentageAvg | number:2}}</td>
+				</tr>			
+				<tr>
+					<th>@Messages("readsets.treatments.mapping_nanopore.readAlignementSizeMax")</th>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DForward'].value.readAlignementSizeMax | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.readAlignementSizeMax | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.readAlignementSizeMax | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DPass'].value.readAlignementSizeMax | number}}</td>
+				</tr>	
+				<tr>
+					<th>@Messages("readsets.treatments.mapping_nanopore.nbLoci")</th>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DForward'].value.nbLoci | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.nbLoci | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.nbLoci | number}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DPass'].value.nbLoci | number}}</td>
+				</tr>
+				<tr>
+					<th>@Messages("readsets.treatments.mapping_nanopore.referenceCoverage")</th>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DForward'].value.referenceCoverage | number:2}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['1DReverse'].value.referenceCoverage | number:2}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DAll'].value.referenceCoverage | number:2}}</td>
+					<td>{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default['2DPass'].value.referenceCoverage | number:2}}</td>
+				</tr>					
+			</tbody>
+		 </table>
+	</div>
+</div>
+
+<!-- Image -->
+
+
+
+<div class="row">
+	<div class="col-md-8 col-lg-8">
+	<div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal" 
+		ng-click="setImage(readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.identityPercentVsReadQuality.value,'identityPercentVsReadQuality','',treament.code!=undefined?treament.code:treatments.getTreatment().code,
+		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.identityPercentVsReadQuality.width,
+		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.identityPercentVsReadQuality.height)">
+		 <a href="#">
+		    <img id="default_identityPercentVsReadQuality" ng-src="data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.identityPercentVsReadQuality.value}}" />
+		 </a> 
+	    </div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-8 col-lg-8">
+	<div class="thumbnail" data-target="#myImageModal" role="button" data-toggle="modal" 
+		ng-click="setImage(readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.identityPercentVsReadAlignedLength.value,'identityPercentVsReadAlignedLength','',treament.code!=undefined?treament.code:treatments.getTreatment().code,
+		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.identityPercentVsReadAlignedLength.width,
+		readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.identityPercentVsReadAlignedLength.height)">
+		 <a href="#">
+		    <img id="default_identityPercentVsReadAlignedLength" ng-src="data:image/png;base64,{{readset.treatments[treament.code!=undefined?treament.code:treatments.getTreatment().code].default.identityPercentVsReadAlignedLength.value}}" />
+		 </a> 
+	    </div>
+	 </div>
+	
+</div>
+
