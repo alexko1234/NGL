@@ -57,6 +57,7 @@ public class ProtocolServiceCNS {
 		
 		lp.add(newProtocol("map005","MAP005","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library")));
 		lp.add(newProtocol("map005-on-beads"," MAP005 sur billes","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library")));
+		lp.add(newProtocol("map006-low-input","MAP006 low input","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library")));
 		lp.add(newProtocol("map005-depot","MAP005_dépôt","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
 		lp.add(newProtocol("map005-on-bead-depot","MAP005 sur billes_dépôt","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
 		lp.add(newProtocol("map006-depot","MAP006_dépôt","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-depot")));
