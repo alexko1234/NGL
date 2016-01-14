@@ -55,7 +55,7 @@ public class ProcessServiceCNS extends AbstractProcessService {
 					getExperimentTypes("solution-stock").get(0), getExperimentTypes("solution-stock").get(0), getExperimentTypes("ext-to-solution-stock").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
 			//Bionano
-			l.add(DescriptionFactory.newProcessType("NLRS Prep BioNano", "bionano-nlrs-process", ProcessCategory.find.findByCode("mapping"), getPropertyDefinitionsBionano(), getExperimentTypes("irys-nlrs-prep","irys-chip-preparation","bionano-depot"), 
+			l.add(DescriptionFactory.newProcessType("NLRS, Irys chip, dépôt", "bionano-nlrs-process", ProcessCategory.find.findByCode("mapping"), getPropertyDefinitionsBionano(), getExperimentTypes("irys-nlrs-prep","irys-chip-preparation","bionano-depot"), 
 					getExperimentTypes("irys-nlrs-prep").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-nlrs-prep").get(0), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
 			
 			l.add(DescriptionFactory.newProcessType("Irys Chip, dépôt", "bionano-chip-process", ProcessCategory.find.findByCode("mapping"), getPropertyDefinitionsBionano(), getExperimentTypes("irys-chip-preparation","bionano-depot"), 

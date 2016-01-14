@@ -651,7 +651,10 @@ public class ResolutionService {
 		
 		l.addAll(getDefaultResolutionCNS());
 		
-		l.add(InstanceFactory.newResolution("marquage incorrect", "echec-labeling", resolutionCategories.get("Default"), (short) 4));
+		l.add(InstanceFactory.newResolution("nb cycles insuffisant", "echec-nbCycleInsuf", resolutionCategories.get("Default"), (short) 4));
+		l.add(InstanceFactory.newResolution("problème passage des molécules région pillar", "echec-pillarRegion", resolutionCategories.get("Default"), (short) 5));
+		l.add(InstanceFactory.newResolution("labelling incorrect", "echec-labeling", resolutionCategories.get("Default"), (short) 6));
+		l.add(InstanceFactory.newResolution("utilisation du NanoAnalyzer", "nanoAnalyzer", resolutionCategories.get("Default"), (short) 7));
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "expDepotBionanoReso";
