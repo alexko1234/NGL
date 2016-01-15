@@ -363,7 +363,7 @@
 	//defined new atomictransfertMethod
 	atmService.newAtomicTransfertMethod = function(line){
 		return {
-			class:"OneToOne",
+			class:"ManyToOne",
 			line:line, 
 			column:"1", 				
 			inputContainerUseds:new Array(0), 

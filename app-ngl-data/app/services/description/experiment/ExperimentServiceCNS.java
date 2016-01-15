@@ -158,7 +158,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 			
 			l.add(newExperimentType("Préparation Irys CHIP","irys-chip-preparation",null,2100,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionPreparationIrysChip(),
-					getInstrumentUsedTypes("irys-hand"),"OneToOne", 
+					getInstrumentUsedTypes("irys-hand"),"ManyToOne", 
 					DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
 			
 			l.add(newExperimentType("Dépôt BioNano","bionano-depot",null,2200,
