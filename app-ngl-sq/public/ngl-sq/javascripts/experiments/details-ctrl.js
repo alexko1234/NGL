@@ -692,7 +692,10 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		return $sce.trustAsHtml(text.replace(/\n/g, "<br>"));
 	};
 	
-	
+	$scope.cancel = function(){	
+		$scope.currentComment = {comment:undefined};
+		$scope.index = undefined;
+	};
 	
 	$scope.save = function(){	
 		if($scope.isCreationMode()){

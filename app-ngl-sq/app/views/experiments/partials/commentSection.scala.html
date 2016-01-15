@@ -16,7 +16,7 @@
 						    </div>
 						    <div class="col-lg-2 col-md-2" >
 						    <div class="btn-group-vertical pull-right">
-						    	<button class="btn btn-default" ng-show="com.createUser == '@currentUser' || isCreationMode()" data-toggle="modal" data-target="#myModal" ng-click="setUpdate(com, $index)"><i class="fa fa-edit"></i></button>
+						    	<button class="btn btn-default" ng-show="com.createUser == '@currentUser' || isCreationMode()" data-toggle="modal" data-target="#commentModal" ng-click="setUpdate(com, $index)"><i class="fa fa-edit"></i></button>
 						   	 	<button class="btn btn-default" ng-show="com.createUser == '@currentUser' || isCreationMode()" ng-click="remove(com, $index)"><i class="fa fa-trash-o"></i></button>						    	
 						    </div>
 						    </div>
@@ -42,7 +42,7 @@
 			</form>
 	      </div>
 	      <div class="modal-footer">
-	        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">@Messages("experiment.comment.button.cancel")</button>
+	        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true" ng-click="cancel();">@Messages("experiment.comment.button.cancel")</button>
 			<button data-dismiss="modal" class="btn btn-primary" ng-show="!isUpdate()"  ng-click="save();">@Messages("experiment.comment.button.save")</button>
 	      	<button data-dismiss="modal" class="btn btn-primary" ng-show="isUpdate()" ng-click="update();">@Messages("experiment.comment.button.update")</button>
 	      
