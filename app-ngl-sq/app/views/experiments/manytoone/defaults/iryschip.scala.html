@@ -39,6 +39,9 @@
 						@Messages("containers.table.percentage")
 					</th>
 					<th>
+						@Messages("containers.table.nlrsConcentration")
+					</th>
+					<th>
 						@Messages("containers.table.sampleTypes")
 					</th>
 					<th>
@@ -56,6 +59,9 @@
 						<input class="form-control input-small valueInput" type="text" placeholder="" 
 						ng-readonly="true" 
 						ng-model="container.percentage" title='@Messages("containers.table.percentage")'/>
+					</td>
+					<td>
+						<p class="form-control-static">{{container.contents[0].properties.nlrsConcentration.value}}</p>
 					</td>				
 					<td>
 						<div list-resize='container.contents | getArray:"sampleTypeCode"| unique | codes:"type"' list-resize-min-size='5' below vertical>
@@ -86,8 +92,12 @@
 				@Messages("containers.table.percentage")
 			</th>
 			<th ng-if="isAllOpen">
+				@Messages("containers.table.nlrsConcentration")
+			</th>
+			<th ng-if="isAllOpen">
 				@Messages("containers.table.iryschip.sampleCodes")
-			</th>			
+			</th>
+						
 			<th ng-if="isAllOpen">
 				@Messages("containers.table.sampleTypes")
 			</th>
@@ -128,7 +138,7 @@
 							<i ng-switch-when="false" class="fa fa-eye"></i>
 						</button>			
 					</td>
-					<td colspan="{{4 + outputContainerProperties.length}}"></td>
+					<td colspan="{{5 + outputContainerProperties.length}}"></td>
 				</tr>
 				
 				<tr ng-switch-when="compact" >	
@@ -141,10 +151,10 @@
 							<i class="fa fa-eye"></i>
 						</button>			
 					</td>	
-					<td colspan="{{4 + outputContainerProperties.length}}" >
+					<td colspan="{{5 + outputContainerProperties.length}}" >
 						<span ng-repeat="inputContainer in atm.inputContainerUseds | orderBy:'code' track by $index"  class="compactText"
 							ng-model="inputContainer" draggable drag="dragInProgress">
-							{{inputContainer.code}} / {{inputContainer.percentage}}%<br/>
+							{{inputContainer.code}} / {{inputContainer.percentage}}% / <br/>
 						</span>
 					</td>
 				</tr>
@@ -163,16 +173,20 @@
 						<td>							
 							{{inputContainer.code}}
 						</td>
-						<td>
+						<td class="col-sm-1">
 							<input class="form-control input-sm" type="text" 
 								title='@Messages("containers.table.percentage")' 
 								ng-readonly=true
 								ng-model="inputContainer.percentage"
 								ng-change="changeValueOnFlowcellDesign()" />
 						</td>
-						<td>							
-							<div list-resize="sampleAndTag in getSampleAndTags(inputContainer)" id="SampleTagCell" below vertical></div>
+						<td class="col-sm-2">
+							<p class="form-control-static">{{inputContainer.contents[0].properties.nlrsConcentration.value}}</p>
 						</td>
+						<td>							
+							<div list-resize='inputContainer.contents | getArray:"sampleCode" ' list-resize-min-size='5' below vertical>
+						</td>
+						
 						<td>
 							<div list-resize='inputContainer.contents | getArray:"sampleTypeCode"| unique | codes:"type"' list-resize-min-size='5' below vertical>
 						</td> 

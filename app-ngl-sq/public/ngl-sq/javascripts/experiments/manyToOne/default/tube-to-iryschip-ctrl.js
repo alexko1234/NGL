@@ -57,10 +57,9 @@
 			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
 			        	 "position":4,
 			        	 "extraHeaders":{0:"Inputs"}
-			         },
-			         					 
+			         },			         					 
 					 {
-			        	 "header":Messages("containers.table.concentration"),
+			        	 "header":Messages("containers.table.nlrsConcentration"),
 			        	 "property":"inputContainer.contents[0].properties.nlrsConcentration.value",
 			        	 "order":true,
 						 "edit":false,
@@ -77,16 +76,6 @@
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":5.5,
-			        	 "extraHeaders":{0:"Inputs"}
-			         },
-			         {
-			        	 "header":Messages("containers.table.volume") + " (µL)",
-			        	 "property":"inputContainer.mesuredVolume.value",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":6,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
 			         {

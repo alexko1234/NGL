@@ -88,6 +88,7 @@ containers.table.mesuredConcentration.unit=Unité Concentration
 containers.table.mesuredConcentration.value=Concentration Container
 
 containers.table.iryschip.sampleCodes= Echantillon
+containers.table.nlrsConcentration= Concentration ADN NLRS (ng/µL)
 
 containers.placeholder.fromDate = Container depuis le (jj/mm/aaaa)
 containers.placeholder.toDate = Container jusqu''au (jj/mm/aaaa)
