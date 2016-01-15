@@ -13,6 +13,8 @@ import org.mongojack.DBUpdate;
 import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
+import validation.container.instance.ContainerSupportValidationHelper;
+import validation.container.instance.ContainerValidationHelper;
 import workflows.Workflows;
 import fr.cea.ig.MongoDBDAO;
 
@@ -53,7 +55,7 @@ public class ContSupportWorkflows extends Workflows<ContainerSupport> {
 		ContextValidation currentCtxValidation = new ContextValidation(contextValidation.getUser());
 		currentCtxValidation.setUpdateMode();
 		
-		CommonValidationHelper.validateState(ObjectType.CODE.Container, nextState, currentCtxValidation);
+		ContainerSupportValidationHelper.validateNextState(containerSupport, nextState, currentCtxValidation);
 		if(!currentCtxValidation.hasErrors() && !nextState.code.equals(containerSupport.state.code)){
 			applyPreStateRules(currentCtxValidation, containerSupport, nextState);
 			currentCtxValidation.putObject(FIELD_STATE_CODE , nextState.code);

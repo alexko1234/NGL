@@ -19,6 +19,7 @@ import models.laboratory.experiment.instance.Experiment;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
+import validation.container.instance.ContainerValidationHelper;
 import workflows.Workflows;
 
 public class ContWorkflows extends Workflows<Container> {
@@ -86,7 +87,7 @@ public class ContWorkflows extends Workflows<Container> {
 		ContextValidation currentCtxValidation = new ContextValidation(contextValidation.getUser());
 		currentCtxValidation.setUpdateMode();
 		
-		CommonValidationHelper.validateState(ObjectType.CODE.Container, nextState, currentCtxValidation);
+		ContainerValidationHelper.validateNextState(container, nextState, currentCtxValidation);
 		if(!currentCtxValidation.hasErrors() && !nextState.code.equals(container.state.code)){
 			applyPreStateRules(currentCtxValidation, container, nextState);
 			currentCtxValidation.putObject(FIELD_STATE_CODE , nextState.code);

@@ -65,6 +65,19 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 		}		
 	}
 	
+	public static void validateNextState(Container container, State nextState, ContextValidation contextValidation) {
+		CommonValidationHelper.validateState(ObjectType.CODE.Container, nextState, contextValidation);
+		if(!contextValidation.hasErrors()){
+			String nextStateCode = nextState.code;
+			String currentStateCode = container.state.code;
+			if(("IS".equals(currentStateCode) || "UA".equals(currentStateCode)) && !nextStateCode.equals("IW-P")){
+				contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
+			}
+		}
+				
+	}
+	
+	
 	@Deprecated
 	public static void validateStateCode(String stateCode,ContextValidation contextValidation){
 		contextValidation.addKeyToRootKeyName("state");

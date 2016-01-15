@@ -1205,7 +1205,11 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			if(dispatchValues === undefined){
 				dispatchValues = [];
 				for(var i = 0; i <= 6 ; i++){
-					dispatchValues.push({"code":i,"name":Messages("containers.dispatch.value."+i)});						
+					if($scope.experimentType.atomicTransfertMethod !== "OneToMany" || 
+							($scope.experimentType.atomicTransfertMethod === "OneToMany" && i !== 5)){
+						dispatchValues.push({"code":i,"name":Messages("containers.dispatch.value."+i)});
+					}
+											
 				}
 			}
 			
