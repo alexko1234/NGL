@@ -254,7 +254,9 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 			}
 			if(isSame 
 					&& (experiment.atomicTransfertMethods[0].outputContainerUseds[0].concentration === null
-						|| experiment.atomicTransfertMethods[0].outputContainerUseds[0].concentration === undefined)){
+							|| experiment.atomicTransfertMethods[0].outputContainerUseds[0].concentration.value === null
+						|| experiment.atomicTransfertMethods[0].outputContainerUseds[0].concentration === undefined
+						|| experiment.atomicTransfertMethods[0].outputContainerUseds[0].concentration.value === undefined)){
 				experiment.atomicTransfertMethods[0].outputContainerUseds[0].concentration = $scope.experiment.atomicTransfertMethods[0].inputContainerUseds[0].concentration;
 				
 			}
