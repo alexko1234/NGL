@@ -50,6 +50,24 @@ import org.mongojack.DBUpdate;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+import java.io.StringReader;
+
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+
+import play.libs.F.Promise;
+import play.libs.ws.WS;
+import play.libs.ws.WSResponse;
+
+
+
+
 // todo : implementer recuperation instrumentModel et libraryName.
 
 public class SubmissionServices {
@@ -72,8 +90,9 @@ public class SubmissionServices {
 		if (config == null) {
 			throw new SraException("config " + config.code + " n'existe pas dans database");
 		} 
-		if (StringUtils.isBlank(config.state.code) || !config.state.code.equalsIgnoreCase("uservalidate")){
-			throw new SraException("config.state.code != 'uservalidate' incompatible avec soumission");
+		//if (StringUtils.isBlank(config.state.code) || !config.state.code.equalsIgnoreCase("uservalidate")){
+		if (StringUtils.isBlank(config.state.code)) {
+			throw new SraException("config.state.code sans valeur incompatible avec soumission");
 		}
 		if (config.strategyStudy.equalsIgnoreCase("strategy_internal_study")) {
 			if (StringUtils.isBlank(studyCode)) {
@@ -338,11 +357,16 @@ public class SubmissionServices {
 				System.out.println ("sauvegarde dans la base de l'experiment " + expElt.code);
 			}
 		}		
-		
+		// update la configuration pour le statut 'used' :
+		MongoDBDAO.update(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, 
+				DBQuery.is("code", config.code),
+				DBUpdate.set("state.code", "used").set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date()));	
+
 		// valider submission une fois les experiment et sample sauves, et sauver submission
 		//submission.state = new State("inWaiting", user);
 		contextValidation.setCreationMode();
 		contextValidation.getContextObjects().put("type", "sra");
+		contextValidation.getContextObjects().put("configuration", config);
 		submission.validate(contextValidation);
 
 		if (!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "code",submission.code)){	
@@ -453,12 +477,25 @@ public class SubmissionServices {
 		} catch (IOException e) {
 			throw new SraException(" Dans activateSubmission pb IOException: " + e);		
 		}
-		
+		// Recuperer objet soumission dans base :
+		Configuration config =  MongoDBDAO.findByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, submission.configCode);
+		if (config == null) {
+			throw new SraException("Dans activateSubmission aucun objet config dans la base pour " + submission.configCode);
+		}			System.out.println("Aucun objet submission dans la base pour "+ submissionCode);
+
+		if (StringUtils.isBlank(config.strategyStudy)){
+			throw new SraException("Dans activateSubmission champs strategyStudy non renseigné pour config "+ submission.configCode);
+		}
+		if (StringUtils.isBlank(config.strategySample)){
+			throw new SraException("Dans activateSubmission champs strategySample non renseigné pour config "+ submission.configCode);
+		}
+				
 		// mettre à jour objet soumission et experiment et sample avec state ="inwaiting" :		
 		if (submission.state.code.equalsIgnoreCase("uservalidate")) {
 			
 			// mettre à jour le champs submission.studyCode si besoin, si study à soumettre, si study avec state=uservalidate
-			if (submission.config.strategyStudy.equalsIgnoreCase("strategy_external_study")){
+			
+			if (config.strategyStudy.equalsIgnoreCase("strategy_external_study")){ 
 				// le status des study n'est pas à modifié et rien à soumettre
 			} else {
 				if (submission.refStudyCodes.size() > 1) {
@@ -479,7 +516,7 @@ public class SubmissionServices {
 			}
 
 			// mettre à jour les samples pour le state :
-			if (submission.config.strategySample.equalsIgnoreCase("strategy_external_sample")){
+			if (config.strategySample.equalsIgnoreCase("strategy_external_sample")){
 				// le status des samples n'est pas modifié et rien a soumettre		
 			} else {
 				for (String sampleCode: submission.refSampleCodes) {
@@ -507,6 +544,7 @@ public class SubmissionServices {
 							DBUpdate.set("state.code", "inwaiting").set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 
 				}
 			}
+		
 			// mettre à jour la soumission pour le state et pour le directory :
 			MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class,
 					DBQuery.is("code", submission.code).notExists("accession"),
@@ -514,23 +552,6 @@ public class SubmissionServices {
 		}
 	}
 		
-/*	public Submission createSubmissionEntity(String projectCode, String configCode, String user){
-		System.out.println ("config.code = " + configCode);
-		Submission submission = null;
-		DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
-		Date courantDate = new java.util.Date();
-		String st_my_date = dateFormat.format(courantDate);	
-		submission = new Submission(projectCode, user);
-		submission.code = SraCodeHelper.getInstance().generateSubmissionCode(projectCode);
-		submission.submissionDate = courantDate;
-		System.out.println("submissionCode="+ submission.code);
-		submission.state = new State("new", user);
-		if (StringUtils.isNotBlank(configCode)) {
-			submission.config = MongoDBDAO.findByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, configCode);
-		}
-		return submission;
-	}
-*/
 	
 	private Submission createSubmissionEntity(Configuration config, String studyCode, String user, Map<String, UserCloneType> mapUserClones) throws SraException{
 		if (config==null) {
@@ -546,7 +567,7 @@ public class SubmissionServices {
 		System.out.println("submissionCode="+ submission.code);
 		submission.state = new State("new", user);
 		submission.release = false;
-		submission.config = config;
+		submission.configCode = config.code;
 		if (mapUserClones != null) {
 			for (Iterator<Entry<String, UserCloneType>> iterator = mapUserClones.entrySet().iterator(); iterator.hasNext();) {
 				Entry<String, UserCloneType> entry = iterator.next();
@@ -600,7 +621,32 @@ public class SubmissionServices {
 		return submission;
 	}
 
+	public String getNcbiScientificName(Integer taxonId) throws IOException, XPathExpressionException  {
+		Promise<WSResponse> homePage = WS.url("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=taxonomy&id="+taxonId+"&retmote=xml").get();
+		Promise<Document> xml = homePage.map(response -> {
+			System.out.println("response "+response.getBody());
+			//Document d = XML.fromString(response.getBody());
+			//Node n = scala.xml.XML.loadString(response.getBody());
+			//System.out.println("J'ai une reponse ?"+ n.toString());
+			DocumentBuilderFactory dbf =
+		            DocumentBuilderFactory.newInstance();
+			//dbf.setValidating(false);
+			//dbf.setSchema(null);
+	        DocumentBuilder db = dbf.newDocumentBuilder();
+	        Document doc = db.parse(new InputSource(new StringReader(response.getBody())));
+			return doc;
+		});
+		
+		Document doc = xml.get(1000);
+		XPath xPath =  XPathFactory.newInstance().newXPath();
+		String expression = "/TaxaSet/Taxon/ScientificName";
 
+		//read a string value
+		String scientificName = xPath.compile(expression).evaluate(doc);
+		return scientificName;	
+	}
+		
+		
 
 
 	//todo: il reste scientificName, classification, comonName à renseigner sur la base de idTaxon, et description
@@ -634,6 +680,15 @@ public class SubmissionServices {
 			sample = new Sample();
 			sample.code = codeSample;
 			sample.taxonId = new Integer(taxonId);
+			// enrichir le sample avec scientific_name :
+			try {
+				String scientificName = getNcbiScientificName(sample.taxonId);
+				sample.scientificName = scientificName;
+			} catch (XPathExpressionException | IOException e) {
+				e.printStackTrace();
+				throw new SraException("impossible de recuperer le scientificName au ncbi pour le sample.code '"+ sample.code + "' et le taxonId '" + taxonId + "' : \n" + e.getMessage());
+			}
+			
 			sample.clone = laboratorySample.referenceCollab;
 			sample.projectCode = projectCode;
 			sample.state = new State("new", user);
@@ -1025,6 +1080,15 @@ public class SubmissionServices {
 						MongoDBDAO.deleteByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, experimentCode);
 					}
 				}
+			}
+			// verifier que la config à l'etat used n'est pas utilisé par une autre soumission avant de remettre son etat à 'new'
+
+			// update la configuration pour le statut en remettant le statut new si pas utilisé par ailleurs :
+			List <Submission> submissionList = MongoDBDAO.find(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, DBQuery.in("configCode", submission.configCode)).toList();
+			if (submissionList.size() <= 1) {
+				MongoDBDAO.update(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, 
+						DBQuery.is("code", submission.configCode),
+						DBUpdate.set("state.code", "new").set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date()));	
 			}
 			System.out.println("deletion dans base pour submission "+submissionCode);
 			MongoDBDAO.deleteByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);

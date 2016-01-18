@@ -37,7 +37,6 @@ public class Submission extends DBObject implements IValidation {
 	public List<String> sampleCodes = new ArrayList<String>(); // liste des codes des sample à soumettre à l'ebi
 	public List<String> experimentCodes = new ArrayList<String>(); // liste des codes des experiments à soumettre à l'ebi
 	public List<String> runCodes = new ArrayList<String>(); // liste des codes des runs à soumettre à l'ebi
-	public Configuration config = null;
 	public String configCode = null;
 	public String submissionDirectory = null;
 	public Boolean release = false;
@@ -60,9 +59,9 @@ public class Submission extends DBObject implements IValidation {
 		// pour loguer les dernieres modifications utilisateurs
 
 	public Submission(String projectCode, String user) {
-		if (StringUtils.isNotBlank(configCode)){
+		/*if (StringUtils.isNotBlank(configCode)){
 			this.config = MongoDBDAO.findByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, configCode);
-		}
+		}*/
 		DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
 		Date courantDate = new java.util.Date();
 		String st_my_date = dateFormat.format(courantDate);	
@@ -110,20 +109,29 @@ public class Submission extends DBObject implements IValidation {
 			contextValidation.removeKeyFromRootKeyName("submission");
 			return;
 		} 
+
+		Configuration config = (Configuration) contextValidation.getContextObjects().get("configuration");
+		
 		if (contextValidation.getContextObjects().get("type").equals("sra")) {
-			if (this.config == null) {
-				contextValidation.addErrors("config", "objet qui doit etre renseigné");
+			if (config == null) {
+				contextValidation.addErrors("configuration", "objet qui doit etre renseigné dans le contexte de validation");
 			} else { 
 				// pas de validation integrale de config qui a ete stocke dans la base donc valide mais verification
 				// de quelques contraintes en lien avec soumission.
 				if (StringUtils.isBlank(config.state.code) || !config.state.code.equalsIgnoreCase("userValidate")){
 					contextValidation.addErrors("config.state.code", "'" + config.state.code + "' n'est pas à la valeur attendue 'userValidate'");
 				}
-				if (this.config.strategyStudy.equalsIgnoreCase("strategy_internal_study")) {
+				
+				if (StringUtils.isBlank(config.strategyStudy)||StringUtils.isBlank(config.strategySample)){
+					
+				}
+				if (StringUtils.isBlank(config.strategyStudy)){
+					contextValidation.addErrors("strategy_study", "champs qui doit etre renseigne dans la configuration passee dans le contexte de validation");
+				} else if (config.strategyStudy.equalsIgnoreCase("strategy_internal_study")) {
 					if (StringUtils.isBlank(this.studyCode)) {
 						contextValidation.addErrors("strategy_study", "strategy_internal_study incompatible avec studyCode vide");
 					}
-				} else if (this.config.strategyStudy.equalsIgnoreCase("strategy_external_study")) {
+				} else if (config.strategyStudy.equalsIgnoreCase("strategy_external_study")) {
 					if (StringUtils.isNotBlank(this.studyCode)){
 						contextValidation.addErrors("strategy_study", "strategy_external_study incompatible avec studyCode renseigne : '" + this.studyCode +"'");
 					}
@@ -131,14 +139,18 @@ public class Submission extends DBObject implements IValidation {
 						contextValidation.addErrors("strategy_study", "strategy_external_study incompatible avec mapUserClone non renseigné");
 					}
 				} else {
-					contextValidation.addErrors("strategy_study", "valeur non attendue '" + this.config.strategyStudy + "'");
+					contextValidation.addErrors("strategy_study", "valeur non attendue '" + config.strategyStudy + "'");
 				}
-				if (this.config.strategySample.equalsIgnoreCase("strategy_external_sample")) {
-					if (this.sampleCodes.size() != 0) {
-						contextValidation.addErrors("strategy_external_sample incompatible avec samples à soumettre : ", "taille sampleCode = "  + this.sampleCodes.size());
-					}
-					if (this.mapUserClone == null || this.mapUserClone.isEmpty()){
-						contextValidation.addErrors("strategy_sample", "strategy_external_sample incompatible avec mapUserClone non renseigné");
+				if (StringUtils.isBlank(config.strategySample)){
+					contextValidation.addErrors("strategy_sample", "champs qui doit etre renseigne dans la configuration passee dans le contexte de validation");
+				} else {
+					if(config.strategySample.equalsIgnoreCase("strategy_external_sample")) {
+						if (this.sampleCodes.size() != 0) {
+							contextValidation.addErrors("strategy_external_sample incompatible avec samples à soumettre : ", "taille sampleCode = "  + this.sampleCodes.size());
+						}
+						if (this.mapUserClone == null || this.mapUserClone.isEmpty()){
+							contextValidation.addErrors("strategy_sample", "strategy_external_sample incompatible avec mapUserClone non renseigné");
+						}
 					}
 				}
 			}

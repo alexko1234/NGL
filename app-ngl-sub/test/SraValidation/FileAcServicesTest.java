@@ -135,7 +135,7 @@ public class FileAcServicesTest  extends AbstractTestsSRA {
 		submission.code = submissionCode;
 		//System.out.println("submissionCode="+ submissionCode);
 		submission.state = new State("new", user);
-		submission.config = config;
+		submission.configCode = config.code;
 		submission.studyCode = studyCode;
 		submission.sampleCodes.add(sampleCode);
 		submission.experimentCodes.add(experimentCode);

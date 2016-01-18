@@ -54,7 +54,7 @@ public class Configurations extends DocumentController<Configuration>{
 		if (userConfiguration._id == null) {
 			userConfiguration.traceInformation = new TraceInformation(); 
 			userConfiguration.traceInformation.setTraceInformation(getCurrentUser());
-			userConfiguration.state = new State("uservalidate", getCurrentUser());
+			userConfiguration.state = new State("new", getCurrentUser());
 			userConfiguration.code = SraCodeHelper.getInstance().generateConfigurationCode(userConfiguration.projectCode);
 			userConfiguration.validate(contextValidation);
 			if(contextValidation.errors.size()==0) {

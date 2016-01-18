@@ -180,6 +180,11 @@ var getColumns = function(){
 					// initialisation de la variable sraVariables.strategySample utilisée dans consultation.scala.html
 					consultationService.sraVariables.strategySample = data;																					
 			});
+			$http.get(jsRoutes.controllers.sra.api.Variables.get('strategyStudy').url)
+				.success(function(data) {
+					// initialisation de la variable sraVariables.strategyStudy utilisée dans consultation.scala.html
+					consultationService.sraVariables.strategyStudy = data;																					
+			});
 			$http.get(jsRoutes.controllers.sra.api.Variables.get('librarySelection').url)
 			.success(function(data) {
 				consultationService.sraVariables.librarySelection = data;																					
