@@ -174,6 +174,7 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 				active:true,
 				withoutEdit: true,
 				mode:'local',
+				changeClass:false,
 				showButton:false
 			},
 			hide:{

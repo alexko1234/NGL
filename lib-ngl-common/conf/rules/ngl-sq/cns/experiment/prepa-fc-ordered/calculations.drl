@@ -1,6 +1,26 @@
 package rules
 
 
+rule "test moi"
+	@nglSQ( calculations )
+	dialect "java"
+	salience 700
+	no-loop
+	lock-on-active true
+	when
+		 $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-fc-ordered", $stateCode : state.code, $stateCode!="F")
+		 $atomicTransfert: ManyToOneContainer( )
+		 InputContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null) from $atomicTransfert.inputContainerUseds
+		 OutputContainerUsed( $experimentPropertiesOut : experimentProperties,$experimentPropertiesOut!=null) from $atomicTransfert.outputContainerUseds
+		 $phixPercent : PropertyValue() from $experimentPropertiesOut.get("phixPercent")
+		 $finalConcentration1 : PropertyValue() from $experimentProperties.get("finalConcentration1")
+		 $finalVolume1 : PropertyValue() from $experimentProperties.get("finalVolume1")
+		 $phixConcentration : PropertyValue() from $experimentProperties.get("phixConcentration")
+		 //eval($phixConcentration.value != null &&  Number.class.isInstance($phixConcentration.value) && $phixPercent.value != null &&  Number.class.isInstance($phixPercent.value) && $finalConcentration1.value != null && Number.class.isInstance($finalConcentration1.value) && $finalVolume1.value != null && Number.class.isInstance($finalVolume1.value))
+	then
+		Logger.debug("TEST OK GUI");		
+	end
+
 rule "prepa-fc-ordered"
 	@nglSQ( calculations )
 	dialect "java"

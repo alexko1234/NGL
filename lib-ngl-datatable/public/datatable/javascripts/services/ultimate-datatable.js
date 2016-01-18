@@ -1,4 +1,4 @@
-/*! ultimate-datatable version 3.2.2-SNAPSHOT 2016-01-08 
+/*! ultimate-datatable version 3.2.2-SNAPSHOT 2016-01-15 
  Ultimate DataTable is distributed open-source under CeCILL FREE SOFTWARE LICENSE. Check out http://www.cecill.info/ for more information about the contents of this license.
 */
 "use strict";
@@ -256,7 +256,7 @@ angular.module('ultimateDataTableServices', []).
     						 }
     					 },
     					/**
-    					 * External search réinit pageNumber to 0
+             * External search re-init pageNumber to 0
     					 */
     					search : function(params){
     						this.config.edit = angular.copy(this.configMaster.edit);
@@ -266,39 +266,6 @@ angular.module('ultimateDataTableServices', []).
 		    				this.config.pagination.pageNumber = 0;
 							this._search(angular.copy(params));							
     					},
-						/**
-    					 * local search
-    					 */
-    					searchLocal : function(searchTerms){
-							if(this.config.filter.active === true){								
-								//Set the properties "" or null to undefined because we don't want to filter this
-								this.setSpinner(true);
-								for(var p in searchTerms) {
-									if(searchTerms[p] != undefined && (searchTerms[p] === undefined || searchTerms[p] === null || searchTerms[p] === "")){
-										searchTerms[p] = undefined;
-									}
-								}
-								
-								var _allResult = angular.copy(this.allResult);
-								_allResult = $filter('filter')(this.allResult, searchTerms, false);
-								
-                    this._getAllResult = function() {
-                        return _allResult;
-                    };
-								
-								this.totalNumberRecords = _allResult.length;
-								//this.sortAllResult();
-								this.computePaginationList();
-								this.computeDisplayResult();
-								var that = this;
-								this.computeDisplayResultTimeOut.then(function(){
-									that.setSpinner(false);									
-								});								
-							}
-						},
-						_getAllResult : function(){
-							return this.allResult;
-						},
     					//search functions
     					/**
 		    			 * Internal Search function to populate the datatable
@@ -347,11 +314,7 @@ angular.module('ultimateDataTableServices', []).
 		    				this.loadUrlColumnProperty();
 		    				this.computeGroup();
 		    				this.sortAllResult();
-		    				this.computePaginationList();
 		    				this.computeDisplayResult();
-                this._getAllResult = function() {
-                    return this.allResult;
-                };
 		    			},
 		    			/**
 		    			 * Return all the data
@@ -375,11 +338,7 @@ angular.module('ultimateDataTableServices', []).
 			    				this.loadUrlColumnProperty();
 			    				this.computeGroup();
 			    				this.sortAllResult();
-			    				this.computePaginationList();
 			    				this.computeDisplayResult();
-                    this._getAllResult = function() {
-                        return this.allResult;
-                    };
 			    			}
 		    			},
 						/**
@@ -551,7 +510,6 @@ angular.module('ultimateDataTableServices', []).
 		    					
 		    					this.computeGroup();
 		    					this.sortAllResult(); //sort all the result
-		    					this.computePaginationList(); //redefined pagination
 				    			this.computeDisplayResult(); //redefined the result must be displayed
 								var that = this;
 				    			this.computeDisplayResultTimeOut.then(function(){
@@ -565,7 +523,6 @@ angular.module('ultimateDataTableServices', []).
 		    			},
 		    			updateShowOnlyGroups : function(){
 		    				this.sortAllResult(); //sort all the result
-		    				this.computePaginationList(); //redefined pagination
 			    			this.computeDisplayResult(); //redefined the result must be displayed				    							    			
 		    			},
 		    			getGroupColumnClass : function(columnId){
@@ -765,34 +722,55 @@ angular.module('ultimateDataTableServices', []).
                             });
 									}, displayResultTmp);			    				
 									that.displayResult = displayResultTmp;		
+                        that.computePaginationList();
 								} else{
-									if(configPagination.active && !that.isRemoteMode(configPagination.mode)){
-										_displayResult = $.extend(true,[],that._getAllResult().slice((configPagination.pageNumber*configPagination.numberRecordsPerPage), 
-												(configPagination.pageNumber*configPagination.numberRecordsPerPage+configPagination.numberRecordsPerPage)));
-									}else{ //to manage all records or server pagination
-										_displayResult = $.extend(true,[],that._getAllResult());
+                    	var _allResult = that.allResult;
+                    	
+                    	if(that.config.filter.active === true){
+                    		 var searchTerms = {data:{}};
+                             for (var p in that.searchTerms) {
+                               if (that.searchTerms[p] !== undefined && that.searchTerms[p] !== null && that.searchTerms[p] !== "") {
+                                 searchTerms.data[p] = that.searchTerms[p];
 									}
-									var displayResultTmp = [];
-									angular.forEach(_displayResult, function(value, key){
+                             }
+                             _allResult = $filter('filter')(_allResult, searchTerms, false);
+                    	}
+                     
+                      
+                      _displayResult = _allResult.map(function(data, index){
                             var line = {
-                                "edit": undefined,
-                                "selected": undefined,
-                                "trClass": undefined,
-                                "group": false,
-                                "new": false
+                            edit: undefined,
+                            selected: undefined,
+                            trClass: undefined,
+                            group: false,
+                            new: false,
+                            allResultIndex: index
                             };
-                            this.push({
-                                data: value,
+                        return {
+                            data: data,
                                 line: line
+                        };
                             });
-									}, displayResultTmp);
 									
+                      if(that.config.filter.active === true){
+                        _displayResult = $filter('filter')(_displayResult, searchTerms, false);
+                      }
+
+                      if(configPagination.pageList === undefined || configPagination.pageList.length === 0 || that.totalNumberRecords !== _displayResult.length){
+                        that.totalNumberRecords = _displayResult.length;
+                        that.computePaginationList();
+                      }
+
+                      if (configPagination.active && !that.isRemoteMode(configPagination.mode)) {
+                        _displayResult = _displayResult.slice((configPagination.pageNumber * configPagination.numberRecordsPerPage), (configPagination.pageNumber * configPagination.numberRecordsPerPage + configPagination.numberRecordsPerPage));
+                      }
+
 									//group function
 									that.config.mergeCells.rowspans = undefined;
 									if(that.isGroupActive()){
-										that.displayResult = that.addGroup(displayResultTmp);					
+                          that.displayResult = that.addGroup(_displayResult);
 									}else{
-										that.displayResult = displayResultTmp;
+                          that.displayResult = _displayResult;
 										that.computeRowSpans();
 									}
 									
@@ -800,8 +778,10 @@ angular.module('ultimateDataTableServices', []).
 										that.config.edit.withoutSelect = true;
 										that.setEdit();
 									}								
+					  if(angular.isFunction(that.config.callbackEndDisplayResult)){
                         that.config.callbackEndDisplayResult();
 								}
+                    }
 							}, time);
 		    			},
 		    			/**
@@ -945,7 +925,6 @@ angular.module('ultimateDataTableServices', []).
 	    							if(this.isRemoteMode(this.config.pagination.mode)){
 	    								this.searchWithLastParams();
 	    							}else{
-	    								this.computePaginationList();
 	    								this.computeDisplayResult();	    								
 	    							}	    							
 	    						}
@@ -969,7 +948,6 @@ angular.module('ultimateDataTableServices', []).
 		    						if(this.isRemoteMode(this.config.pagination.mode)){
 										this.searchWithLastParams();
 									}else{
-										this.computePaginationList();
 										this.computeDisplayResult();
 									}
 	    						}
@@ -1164,9 +1142,6 @@ angular.module('ultimateDataTableServices', []).
 		    				if(this.config.edit.active){
 								var that = this;
 								this.computeDisplayResultTimeOut.then(function(){
-                        that._getAllResult = function() {
-                            return that.allResult;
-                        };
 									that.config.edit.columns = {};
 									var find = false;
 									for(var i = 0; i < that.displayResult.length; i++){
@@ -1381,11 +1356,7 @@ angular.module('ultimateDataTableServices', []).
 		    					
 		    					//update in the all result table
                     if (!this.displayResult[i].line["new"]) {
-									var j = i;
-									if(this.config.pagination.active && !this.isRemoteMode(this.config.pagination.mode)){
-										j = i + (this.config.pagination.pageNumber*this.config.pagination.numberRecordsPerPage);
-									}
-									this.allResult[j] = $.extend(true,{},this.displayResult[i].data);
+                        this.allResult[this.displayResult[i].line.allResultIndex] = angular.copy(this.displayResult[i].data);
 			    					
 
 								}else{
@@ -1473,9 +1444,9 @@ angular.module('ultimateDataTableServices', []).
 			    						if(this.displayResult[i].line.selected && (!this.displayResult[i].line.edit || this.config.remove.withEdit)){
 				    						if(this.isRemoteMode(this.config.remove.mode)){
 				    							this.config.remove.number++;
-				    							this.removeRemote(this.displayResult[i].data, i);				    							
+                                    this.removeRemote(this.displayResult[i].data, this.displayResult[i].line.allResultIndex);
 				    						}else{
-				    							this.config.remove.ids.success.push(i);				    							
+                                    this.config.remove.ids.success.push(this.displayResult[i].line.allResultIndex);
 				    						}
 				    					}						
 				    				}
@@ -1494,13 +1465,7 @@ angular.module('ultimateDataTableServices', []).
 		    			removeLocal: function(i){
 		    				if(this.config.remove.active && this.config.remove.start){
 			    				//update in the all result table
-								var j ;
-								if(this.config.pagination.active && !this.isRemoteMode(this.config.pagination.mode)){
-									j = (i + (this.config.pagination.pageNumber*this.config.pagination.numberRecordsPerPage)) - this.config.remove.counter;
-								}else{
-									j = i - this.config.remove.counter;
-								}
-								this.allResult.splice(j,1);
+                    this.allResult.splice(i, 1);
 								this.config.remove.counter++;
 								this.totalNumberRecords--;																						
 		    				} else{
@@ -1558,7 +1523,6 @@ angular.module('ultimateDataTableServices', []).
 			    					this.config.remove.callback(this,this.config.remove.error);
 			    				}	
 		    					
-		    					this.computePaginationList();
 		    					this.computeDisplayResult();
 								var that = this;
 		    					this.computeDisplayResultTimeOut.then(function(){
@@ -1700,7 +1664,6 @@ angular.module('ultimateDataTableServices', []).
 								this.totalNumberRecords = this.allResult.length;
                     this.setHideColumnByDefault();
                     this.newExtraHeaderConfig();
-			    				this.computePaginationList();
 			    				this.computeDisplayResult();
 			    				
 		    				}
@@ -1922,7 +1885,6 @@ angular.module('ultimateDataTableServices', []).
 			    	    		if(this.allResult){
 				    	    		this.computeGroup();
 				    				this.sortAllResult();
-				    				this.computePaginationList();
 				    				this.computeDisplayResult();
 		    					}			    	    		
 		    			    }
@@ -1972,7 +1934,6 @@ angular.module('ultimateDataTableServices', []).
 
 
 		    	    		if(this.displayResult && this.displayResult.length > 0){
-		    	    			this.computePaginationList();
 		    	    			this.computeDisplayResult();		    	    			
 		    	    		}
 		    			},
@@ -2624,7 +2585,7 @@ directive("udtCell", function(){
     			    	if(header){
     			    		ngChange = '" ng-change="udtTable.updateColumn(col.property, col.id)"';
 						}else if(filter){
-							ngChange = '" udt-change="udtTable.searchLocal(udtTable.searchTerms)"';
+							ngChange = '" udt-change="udtTable.computeDisplayResult()"';
     			    	}else{
     			    		defaultValueDirective = 'udt-default-value="col.defaultValues"';
     			    	}
@@ -2723,6 +2684,7 @@ directive("udtCell", function(){
 	    				if(colType==="date"){
 	    					return 'udt-date-timestamp';
 	    				}
+
 	    				return '';
 	    			};
   		    	}
@@ -2829,7 +2791,8 @@ directive("udtCell", function(){
 	    			}	    					    		
   		    	}
     		};
-    	});;angular.module('ultimateDataTableServices').
+    	});
+;angular.module('ultimateDataTableServices').
 directive('udtChange', ['$interval', function($interval) {
 	return {
 		require: 'ngModel',
@@ -3003,7 +2966,7 @@ directive('udtDefaultValue',['$parse', function($parse) {
 	    						defaultValue = defaultValues;
 	    					}
 	    				});
-	    				//TODO GA ?? better way with formatter
+	    				
 						scope.$watch(ngModel, function(value){
 				                if(defaultValue!= null && (ngModel.$modelValue == undefined || ngModel.$modelValue == "")){
 									ngModel.$setViewValue(defaultValue);
@@ -3087,21 +3050,7 @@ directive("udtHtmlFilter", function($filter) {
 					    	   }else if(attrs.udtHtmlFilter == "number"){
 					    		   	convertedData = $filter('number')(convertedData);
 					    	   }
-					    	  return convertedData;
-					    }); 
 					    	
-					    ngModelController.$parsers.push(function(data) {
-					    	var convertedData = data;
-					    	   if(attrs.udtHtmlFilter == "number" && null != convertedData && undefined != convertedData 
-					    			   && angular.isString(convertedData)){
-					    		   convertedData = convertedData.replace(",",".");
-					    		   if(!isNaN(convertedData) && convertedData !== ""){						    			   
-					    			   convertedData = convertedData*1;
-					    		   }else if( isNaN(convertedData) || convertedData === ""){
-					    			   convertedData = undefined;
-					    		   }
-					    	   }					
-					    	   //TODO GA date and datetime quiz about timestamps
 					    	  return convertedData;
 					    });   
 					  }
@@ -3499,9 +3448,9 @@ factory('udtConvertValueServices', [function() {
 					},
 					//Get the multiplier to convert the value
 					getConversion : function(inputUnit, outputUnit){
-						if((inputUnit === 'µg' && outputUnit === 'ng') || (inputUnit === 'ml' && outputUnit === 'µl') || (inputUnit === 'pM' && outputUnit === 'nM')){
+						if((inputUnit === '�g' && outputUnit === 'ng') || (inputUnit === 'ml' && outputUnit === '�l') || (inputUnit === 'pM' && outputUnit === 'nM')){
 							return (1/1000);
-						}else if((inputUnit === 'ng' && outputUnit === 'µg') || (inputUnit === 'µl' && outputUnit === 'ml') || (inputUnit === 'nM' && outputUnit === 'pM')){
+						}else if((inputUnit === 'ng' && outputUnit === '�g') || (inputUnit === '�l' && outputUnit === 'ml') || (inputUnit === 'nM' && outputUnit === 'pM')){
 							return 1000;
 						}else if ((inputUnit === 'mM' && outputUnit === 'nM')){
 							return 1000000;
@@ -3928,24 +3877,24 @@ run(function($templateCache) {
   		    		+'</div>'
 					+ '<div class="col-xs-2 .col-sm-3 col-md-3 col-lg-3" name="udt-toolbar-filter" ng-if="udtTable.config.filter.active === true">'
 					+  '<div class="col-xs-12 .col-sm-6 col-md-7 col-lg-8 input-group" ng-if="udtTable.isCompactMode()">'
-					+   '<input class="form-control input-compact" udt-change="udtTable.searchLocal(udtTable.searchTerms)" type="text" ng-model="udtTable.searchTerms.$" ng-keydown="$event.keyCode==13 ? udtTable.searchLocal(udtTable.searchTerms) : \'\'">'
+   +                '<input class="form-control input-compact" udt-change="udtTable.computeDisplayResult()" type="text" ng-model="udtTable.searchTerms.$" ng-keydown="$event.keyCode==13 ? udtTable.computeDisplayResult() : \'\'">'
 					+	'<span class="input-group-btn">'
-					+		'<button ng-if="udtTable.config.filter.active === true" class="btn btn-default search-button" ng-click="udtTable.searchLocal(udtTable.searchTerms)" title="{{udtTableFunctions.messages.Messages(\'datatable.button.searchLocal\')}}">'
+   +                    '<button ng-if="udtTable.config.filter.active === true" class="btn btn-default search-button" ng-click="udtTable.computeDisplayResult()" title="{{udtTableFunctions.messages.Messages(\'datatable.button.searchLocal\')}}">'
   		    		+			'<i class="fa fa-search"></i>'
   		    		+		'</button>'	
-					+		'<button ng-if="udtTable.config.filter.active === true" class="btn btn-default search-button" ng-click="udtTable.searchTerms={};udtTable.searchLocal()" title="{{udtTableFunctions.messages.Messages(\'datatable.button.resetSearchLocal\')}}">'
+   +                    '<button ng-if="udtTable.config.filter.active === true" class="btn btn-default search-button" ng-click="udtTable.searchTerms={};udtTable.computeDisplayResult()" title="{{udtTableFunctions.messages.Messages(\'datatable.button.resetSearchLocal\')}}">'
   		    		+			'<i class="fa fa-times"></i>'
   		    		+		'</button>'
 					+ '</span>'
 					+ '</div>'
 					+  '<div class="col-xs-12 .col-sm-12 col-md-12 col-lg-12 input-group" ng-if="!udtTable.isCompactMode()">'
-					+   '<input class="form-control" utd-change="udtTable.searchLocal(udtTable.searchTerms)" type="text" ng-model="udtTable.searchTerms.$">'
+   +                '<input class="form-control" utd-change="udtTable.computeDisplayResult()" type="text" ng-model="udtTable.searchTerms.$">'
 					+	'<span class="input-group-btn">'
-					+		'<button ng-if="udtTable.config.filter.active === true" class="btn btn-default search-button" ng-click="udtTable.searchLocal(udtTable.searchTerms)" title="{{udtTableFunctions.messages.Messages(\'datatable.button.searchLocal\')}}">'
+   +                    '<button ng-if="udtTable.config.filter.active === true" class="btn btn-default search-button" ng-click="udtTable.computeDisplayResult()" title="{{udtTableFunctions.messages.Messages(\'datatable.button.searchLocal\')}}">'
   		    		+			'<i class="fa fa-search"></i>'
 					+			'<span> {{udtTableFunctions.messages.Messages(\'datatable.button.searchLocal\')}} </span>'
   		    		+		'</button>'	
-					+		'<button ng-if="udtTable.config.filter.active === true" class="btn btn-default search-button" ng-click="udtTable.searchTerms={};udtTable.searchLocal()" title="{{udtTableFunctions.messages.Messages(\'datatable.button.resetSearchLocal\')}}">'
+   +                    '<button ng-if="udtTable.config.filter.active === true" class="btn btn-default search-button" ng-click="udtTable.searchTerms={};udtTable.computeDisplayResult()" title="{{udtTableFunctions.messages.Messages(\'datatable.button.resetSearchLocal\')}}">'
   		    		+			'<i class="fa fa-times"></i>'
 					+			'<span> {{udtTableFunctions.messages.Messages(\'datatable.button.resetSearchLocal\')}} </span>'
   		    		+		'</button>'

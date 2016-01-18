@@ -121,6 +121,7 @@ angular.module('home').controller('TubesToMapCardCtrl',['$scope', '$parse', 'atm
 				active:true,
 				withoutEdit: true,
 				showButton: false,
+				changeClass:false,
 				mode:'local',
 				callback:function(datatable){
 					copyFlowcellCodeToDT(datatable);

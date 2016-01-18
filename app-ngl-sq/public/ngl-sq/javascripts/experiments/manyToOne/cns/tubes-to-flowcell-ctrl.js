@@ -123,7 +123,7 @@ angular.module('home').controller('CNSTubesToFlowcellCtrl',['$scope', '$parse', 
 	$scope.$parent.changeValueOnFlowcellDesign = function(){
 		$scope.atmService.data.updateDatatable();
 		
-		if(!$scope.creationMode){
+		if($scope.experiment.editMode && !$scope.isCreationMode()){
 			$scope.messages.clazz = "alert alert-warning";
 			$scope.messages.text = "Vous venez de modifier une valeur";
 			$scope.messages.text += ", vous devez impérativement cliquer sur sauvegarder pour que les calculs de la FDR se remettent à jour.";

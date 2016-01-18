@@ -181,6 +181,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 				withoutEdit: true,
 				mode:'local',
 				showButton:false,
+				changeClass:false,
 				callback:function(datatable){
 					copyFlowcellCodeToDT(datatable);
 				}

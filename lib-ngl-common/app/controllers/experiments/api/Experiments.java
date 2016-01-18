@@ -219,6 +219,7 @@ public class Experiments extends DocumentController<Experiment>{
 		ctxVal.setCreationMode();
 		workflows.applyPreStateRules(ctxVal, input, input.state);		
 		ExperimentHelper.doCalculations(input, calculationsRules);
+		
 		input.validate(ctxVal);	
 		if (!ctxVal.hasErrors()) {
 			input = saveObject(input);
@@ -254,7 +255,6 @@ public class Experiments extends DocumentController<Experiment>{
 			}
 			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 			ctxVal.setUpdateMode();
-			//TODO GA convert property before calculations
 			ExperimentHelper.doCalculations(input, calculationsRules);
 			workflows.applyCurrentStateRules(ctxVal, input);
 			input.validate(ctxVal);			
