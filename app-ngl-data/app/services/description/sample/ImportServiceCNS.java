@@ -144,8 +144,10 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("100", "Station100"));
 		values.add(DescriptionFactory.newValue("102", "Station102"));
 		values.add(DescriptionFactory.newValue("109", "Station109"));
-		values.add(DescriptionFactory.newValue("10001", "Villefranche"));
-		values.add(DescriptionFactory.newValue("10002", "Elat"));
+		values.add(DescriptionFactory.newValue("10000", "Station1000"));
+		values.add(DescriptionFactory.newValue("10001", "Station1001"));
+		values.add(DescriptionFactory.newValue("10002", "Station1002"));
+		values.add(DescriptionFactory.newValue("10003", "Station10003"));
 		values.add(DescriptionFactory.newValue("111", "Station111"));
 		values.add(DescriptionFactory.newValue("122", "Station122"));
 		values.add(DescriptionFactory.newValue("123", "Station123"));
@@ -174,6 +176,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("112", "Station112"));
 		values.add(DescriptionFactory.newValue("53", "Station53"));
 		values.add(DescriptionFactory.newValue("54", "Station54"));
+		values.add(DescriptionFactory.newValue("56", "Station56"));
 		values.add(DescriptionFactory.newValue("62", "Station62"));
 		values.add(DescriptionFactory.newValue("71", "Station71"));
 		values.add(DescriptionFactory.newValue("80", "Station80"));
@@ -220,8 +223,6 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("153", "Station153"));
 		values.add(DescriptionFactory.newValue("150", "Station150"));
 		values.add(DescriptionFactory.newValue("130", "Station130"));
-		values.add(DescriptionFactory.newValue("56", "Station56"));
-		values.add(DescriptionFactory.newValue("10003", "Station10003"));
 		values.add(DescriptionFactory.newValue("155", "Station155"));
 		values.add(DescriptionFactory.newValue("158", "Station158"));
 		values.add(DescriptionFactory.newValue("163", "Station163"));
@@ -248,6 +249,7 @@ public class ImportServiceCNS extends AbstractImportService {
 	
 	private static List<Value> getTaraDepthCodeValues(boolean reverse){
 		List<Value> values = new ArrayList<Value>();
+		values.add(DescriptionFactory.newValue("COR", "Coral"));
 		values.add(DescriptionFactory.newValue("CTL", "CTL"));
 		values.add(DescriptionFactory.newValue("DCM", "Deep Chlorophyl Maximum"));
 		values.add(DescriptionFactory.newValue("DOP", "DCM and OMZ Pool"));
@@ -274,9 +276,11 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("PFK", "B6B5"));
 		values.add(DescriptionFactory.newValue("PFL", "B8B7"));
 		values.add(DescriptionFactory.newValue("PFM", "B10B9"));
+		values.add(DescriptionFactory.newValue("SKT", "Skeleton and Tissues"));
 		values.add(DescriptionFactory.newValue("SOD", "Surface OMZ and DCM Pool"));
 		values.add(DescriptionFactory.newValue("SOP", "Surface and OMZ Pool"));
 		values.add(DescriptionFactory.newValue("SUR", "Surface"));
+		values.add(DescriptionFactory.newValue("SWR", "Sweet water rinse"));
 		values.add(DescriptionFactory.newValue("SXL", "Sub-MixedLayer@100m"));
 		values.add(DescriptionFactory.newValue("ZZZ", "DiscreteDepth"));
 		
