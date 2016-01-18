@@ -144,10 +144,10 @@ public class ImportServiceCNS extends AbstractImportService {
 		values.add(DescriptionFactory.newValue("100", "Station100"));
 		values.add(DescriptionFactory.newValue("102", "Station102"));
 		values.add(DescriptionFactory.newValue("109", "Station109"));
-		values.add(DescriptionFactory.newValue("1000", "Station1000"));
-		values.add(DescriptionFactory.newValue("10001", "Station10001"));
-		values.add(DescriptionFactory.newValue("10002", "Station10002"));
-		values.add(DescriptionFactory.newValue("10003", "Station10003"));
+		values.add(DescriptionFactory.newValue("1000", "Moorea"));
+		values.add(DescriptionFactory.newValue("10001", "Villefranche"));
+		values.add(DescriptionFactory.newValue("10002", "Elat"));
+		values.add(DescriptionFactory.newValue("10003", "Toulon"));
 		values.add(DescriptionFactory.newValue("111", "Station111"));
 		values.add(DescriptionFactory.newValue("122", "Station122"));
 		values.add(DescriptionFactory.newValue("123", "Station123"));
