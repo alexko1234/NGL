@@ -753,7 +753,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                         var displayResultTmp = [];
                         angular.forEach(_displayResult, function(value, key) {
                             var line = {
-                                "edit": undefined,
+                                "edit": (that.config.edit.start)?true:undefined,
                                 "selected": undefined,
                                 "trClass": undefined,
                                 "group": true,
@@ -775,7 +775,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                         var displayResultTmp = [];
                         angular.forEach(_displayResult, function(value, key) {
                             var line = {
-                                "edit": undefined,
+                            	"edit": (that.config.edit.start)?true:undefined,
                                 "selected": undefined,
                                 "trClass": undefined,
                                 "group": false,
