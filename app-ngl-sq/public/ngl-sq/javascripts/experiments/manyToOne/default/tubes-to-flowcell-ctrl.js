@@ -340,7 +340,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 	};
 	
 	$scope.isAllOpen = true;
-	if(!$scope.creationMode){
+	if(!$scope.isCreationMode()){
 		$scope.isAllOpen = false;
 	}
 	

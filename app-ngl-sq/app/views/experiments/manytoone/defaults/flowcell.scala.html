@@ -52,7 +52,9 @@
 						<input class="form-control input-small valueInput" 
 									type="text" 
 									ng-model="container.percentage" 
-									title='@Messages("containers.table.percentage")'/>
+									title='@Messages("containers.table.percentage")'
+									udt-html-filter="number"
+									/>
 						
 					</td>				
 					<td>
@@ -113,7 +115,8 @@
 			<th ng-repeat="property in outputContainerProperties track by $index">
 						<input class="form-control input-sm" type="text"  
 						ng-model="outputContainerValues[property.code]" 
-						ng-change="updateAllOutputContainerProperty(property)"								
+						ng-change="updateAllOutputContainerProperty(property)"	
+						udt-html-filter="number"							
 						/>									
 			</th>
 			</tr>
@@ -176,7 +179,8 @@
 									<input class="form-control input-sm" type="text" 
 										title='@Messages("containers.table.percentage")' 
 										ng-model="inputContainer.percentage"
-										ng-change="changeValueOnFlowcellDesign()" />								
+										ng-change="changeValueOnFlowcellDesign()" 
+										udt-html-filter="number"/>								
 								</div>
 							</div>
 						
@@ -201,7 +205,8 @@
 									<input class="form-control input-sm" type="text" 
 										 title="{{property.name}}"
 										 ng-model="atm.outputContainerUseds[0].experimentProperties[property.code].value"
-										 ng-change="changeValueOnFlowcellDesign(property)" />		
+										 ng-change="changeValueOnFlowcellDesign(property)"
+										 udt-html-filter="number" />		
 							
 								</div>
 							</div>								 

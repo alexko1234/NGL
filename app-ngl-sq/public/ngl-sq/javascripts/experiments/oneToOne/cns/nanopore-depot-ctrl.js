@@ -285,6 +285,11 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 		dtConfig.edit.byDefault = false;
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.setConfig(dtConfig);
+		
+		dtConfig = $scope.datatableQcFlowcell.getConfig();
+		dtConfig.edit.byDefault = false;
+		$scope.datatableQcFlowcell.setConfig(dtConfig);
+		
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
 		$scope.$emit('viewRefeshed');
 	});

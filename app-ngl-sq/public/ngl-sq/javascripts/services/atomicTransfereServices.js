@@ -448,7 +448,7 @@ angular.module('atomicTransfereServices', [])
 						throw 'experiment is required';
 					}
 					
-					if(!$scope.creationMode){
+					if(!$scope.isCreationMode()){
 						this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods);													
 					}else{
 						this.addNewAtomicTransfertMethodsInDatatable();
@@ -733,7 +733,7 @@ angular.module('atomicTransfereServices', [])
 					if(null === experiment || undefined === experiment){
 						throw 'experiment is required';
 					}
-					if(!$scope.creationMode){
+					if(!$scope.isCreationMode()){
 						this.convertExperimentToDnD(experiment.atomicTransfertMethods);	
 						this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods);
 					}else{
@@ -851,7 +851,7 @@ angular.module('atomicTransfereServices', [])
 					if(null === experiment || undefined === experiment){
 						throw 'experiment is required';
 					}
-					if(!$scope.creationMode){
+					if(!$scope.isCreationMode()){
 						this.convertExperimentToData(experiment.atomicTransfertMethods);	
 						this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods);
 					}else{
