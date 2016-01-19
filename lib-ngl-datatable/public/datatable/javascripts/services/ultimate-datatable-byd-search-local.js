@@ -3748,7 +3748,7 @@ run(function($templateCache) {
    +                            '<div ng-if="col.showFilter" udt-cell-filter/>'
    +                        '</td>'
    +                    '</tr>'
-   +                    '<tr ng-if="udtTable.isEdit()">'
+   +                    '<tr ng-if="udtTable.isEdit()" class="editParent">'
    +                        '<td ng-repeat="col in udtTable.config.columns" ng-if="!udtTable.isHide(col.id)">'
    +                            '<div udt-cell-header/>'
    +                        '</td>'
