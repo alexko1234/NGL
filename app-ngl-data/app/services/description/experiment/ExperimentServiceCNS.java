@@ -149,22 +149,22 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 			
 			l.add(newExperimentType("Ext to prep NLRS","ext-to-nlrs-prep",null,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
-					DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
 			l.add(newExperimentType("Irys Prep NLRS","irys-nlrs-prep",null,2000,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionIrysPrepNLRS(),
 					getInstrumentUsedTypes("hand"),"OneToOne", 
-					DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 			
 			l.add(newExperimentType("Préparation Irys CHIP","irys-chip-preparation",null,2100,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionPreparationIrysChip(),
 					getInstrumentUsedTypes("irys-hand"),"ManyToOne", 
-					DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 			
 			l.add(newExperimentType("Dépôt BioNano","bionano-depot",null,2200,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionDepotBionano(),
 					getInstrumentUsedTypes("IRYS"),"OneToVoid", 
-					DescriptionFactory.getInstitutes(Institute.CODE.CNS) ));
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 			
 			//library
 			l.add(newExperimentType("Fragmentation","fragmentation",null,200,
@@ -231,7 +231,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 	/*		l.add(newExperimentType("Quantification qPCR","qPCR-quantification",null,850,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
 					getInstrumentUsedTypes("rocheLightCycler-qPCR","stratagene-qPCR"),"OneToVoid", 
-					DescriptionFactory.getInstitutes(Institute.CODE.CNS))); 	
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 	
 		*/	
 
 			

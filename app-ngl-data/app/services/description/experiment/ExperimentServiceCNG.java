@@ -119,29 +119,29 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			l.add(newExperimentType("Migration sur puce","chip-migration",
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
 					getProtocols("proto_qc_v1"), getInstrumentUsedTypes("agilent-2100-bioanalyzer","labChipGX"),"OneToVoid", 
-					DescriptionFactory.getInstitutes(Institute.CODE.CNG)));
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			*/
 			
 //			l.add(newExperimentType("Migration sur puce (ampli)","chip-migration-post-pcr",null,650,
 //					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
 //					getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchipGX"),"OneToVoid", 
-//					DescriptionFactory.getInstitutes( Institute.CODE.CNG)));
+//					DescriptionFactory.getInstitutes( Constants.CODE.CNG)));
 //			
 //			l.add(newExperimentType("Migration sur puce (non ampli)","chip-migration-pre-pcr",null,250,
 //					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
 //					getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchipGX"),"OneToVoid", 
-//					DescriptionFactory.getInstitutes( Institute.CODE.CNG)));
+//					DescriptionFactory.getInstitutes( Constants.CODE.CNG)));
 //			
 //			
 //			l.add(newExperimentType("Dosage fluorimétrique","fluo-quantification",null,450,
 //					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
 //					getInstrumentUsedTypes("qubit"),"OneToVoid", 
-//					DescriptionFactory.getInstitutes( Institute.CODE.CNG)));
+//					DescriptionFactory.getInstitutes( Constants.CODE.CNG)));
 //			
 //			l.add(newExperimentType("Quantification qPCR","qPCR-quantification",null,850,
 //					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
 //					getInstrumentUsedTypes("rocheLightCycler-qPCR"/*,"stratagene-qPCR"*/),"OneToVoid", 
-//					DescriptionFactory.getInstitutes( Institute.CODE.CNG))); 	
+//					DescriptionFactory.getInstitutes( Constants.CODE.CNG))); 	
 //					
 
 
