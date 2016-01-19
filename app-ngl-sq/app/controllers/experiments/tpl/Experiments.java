@@ -154,25 +154,6 @@ public class Experiments extends CommonController{
   	    		controllers.containers.api.routes.javascript.ContainerSupports.updateState(),
   	    		controllers.processes.api.routes.javascript.Processes.updateState(),
   	    		
-  	    		//TODO GA Must be remove
-  	    		//controllers.experiments.api.routes.javascript.ExperimentsOld.updateExperimentInformations(),
-  	    		//controllers.experiments.api.routes.javascript.ExperimentsOld.updateExperimentProperties(),
-  	    		//controllers.experiments.api.routes.javascript.ExperimentsOld.updateInstrumentInformations(),
-  	    		//controllers.experiments.api.routes.javascript.ExperimentsOld.updateInstrumentProperties(),  	    		
-  	    		//controllers.experiments.api.routes.javascript.ExperimentsOld.addComment(),
-  	    		//controllers.experiments.api.routes.javascript.ExperimentsOld.updateComment(),
-  	    		//controllers.experiments.api.routes.javascript.ExperimentsOld.deleteComment(),
-  	    		//controllers.experiments.api.routes.javascript.ExperimentsOld.updateStateCode(),
-  	    		//controllers.experiments.api.routes.javascript.ExperimentsOld.retry(),
-  	    		//controllers.experiments.api.routes.javascript.ExperimentsOld.endOfProcess(),
-  	    		//controllers.experiments.api.routes.javascript.ExperimentsOld.stopProcess(),
-  	    		//controllers.experiments.api.routes.javascript.ExperimentsOld.save(),
-  	    		//controllers.experiments.api.routes.javascript.ExperimentsOld.updateContainers(),
-  	    		//controllers.experiments.api.routes.javascript.ExperimentTypeNodes.list(),
-  	    		//controllers.containers.api.routes.javascript.Containers.updateBatch(),
-  	    		//controllers.containers.api.routes.javascript.Containers.updateStateBatch(),
-	      		
-  	    		
   	    		controllers.containers.api.routes.javascript.Containers.list(),
   	    		controllers.containers.api.routes.javascript.ContainerSupports.list(),
   	    		controllers.containers.api.routes.javascript.Containers.get(),

@@ -69,23 +69,6 @@ GET		/api/experiment-types/:code/default-first						controllers.experiments.api.
 GET		/api/experiment-type-nodes										controllers.experiments.api.ExperimentTypeNodes.list()
 GET		/api/experiment-type-nodes/:code								controllers.experiments.api.ExperimentTypeNodes.get(code:java.lang.String)
 
-#PUT		/api/experiments/:code/experiment-information					controllers.experiments.api.ExperimentsOld.updateExperimentInformations(code:java.lang.String)
-#PUT		/api/experiments/:code/experiment-properties					controllers.experiments.api.ExperimentsOld.updateExperimentProperties(code:java.lang.String)
-#PUT		/api/experiments/:code/instrument-information					controllers.experiments.api.ExperimentsOld.updateInstrumentInformations(code:java.lang.String)
-#PUT		/api/experiments/:code/instrument-properties					controllers.experiments.api.ExperimentsOld.updateInstrumentProperties(code:java.lang.String)
-#PUT		/api/experiments/:code/data										controllers.experiments.api.ExperimentsOld.updateData(code:java.lang.String)
-#POST	/api/experiments/:code/comment									controllers.experiments.api.ExperimentsOld.addComment(code:java.lang.String)
-#PUT		/api/experiments/:code/comment									controllers.experiments.api.ExperimentsOld.updateComment(code:java.lang.String)
-#DELETE	/api/experiments/:code/comment/:commentCode						controllers.experiments.api.ExperimentsOld.deleteComment(code:java.lang.String, commentCode:java.lang.String)
-#PUT		/api/experiments/:code/state									controllers.experiments.api.ExperimentsOld.updateStateCode(code:java.lang.String)
-#PUT		/api/experiments/:code/containers								controllers.experiments.api.ExperimentsOld.updateContainers(code:java.lang.String)
-#POST	/api/experiments												controllers.experiments.api.ExperimentsOld.save()
-#PUT		/api/experiments/:code/retry									controllers.experiments.api.ExperimentsOld.retry(code:java.lang.String)
-#PUT		/api/experiments/:code/stop-process								controllers.experiments.api.ExperimentsOld.stopProcess(code:java.lang.String)
-#PUT		/api/experiments/:code/end-of-process							controllers.experiments.api.ExperimentsOld.endOfProcess(code:java.lang.String)
-#PUT		/api/experiments/:code/containerSupportCode/:newSupportCode		controllers.experiments.api.ExperimentsOld.updateContainerSupportCode(code:java.lang.String,newSupportCode:java.lang.String)
-
-
 #contents 
 #TODO GA must be remove
 GET		/api/contents													controllers.containers.api.Contents.list()
