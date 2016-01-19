@@ -83,9 +83,7 @@ public class Submission extends DBObject implements IValidation {
 		contextValidation.addKeyToRootKeyName("submission");
 		// verifier que projectCode est bien renseigné et existe dans lims :
 		SraValidationHelper.validateProjectCode(this.projectCode, contextValidation);
-		// verifier que champs contraints presents avec valeurs autorisees:
-		ValidationHelper.required(contextValidation, this.submissionDate , "submissionDate");
-		ValidationHelper.required(contextValidation, this.submissionDirectory , "submissionDirectory");
+
 		// Verifier que status est bien renseigné avec valeurs autorisees et que submissionDirectory est bien renseigné une
 		// fois que l'objet est en status "inWaiting" (etape activate de la soumission)
 		if(SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapStatus, "state.code")){
@@ -93,6 +91,7 @@ public class Submission extends DBObject implements IValidation {
 					||this.state.code.equalsIgnoreCase("inprogress")
 					|| this.state.code.equalsIgnoreCase("submitted")) {
 				ValidationHelper.required(contextValidation, this.	submissionDirectory , "submissionDirectory");
+				ValidationHelper.required(contextValidation, this.submissionDate , "submissionDate");
 			}
 		}
 		/*ValidationHelper.required(contextValidation, this.xmlStudys , "xmlStudys");
@@ -118,8 +117,8 @@ public class Submission extends DBObject implements IValidation {
 			} else { 
 				// pas de validation integrale de config qui a ete stocke dans la base donc valide mais verification
 				// de quelques contraintes en lien avec soumission.
-				if (StringUtils.isBlank(config.state.code) || !config.state.code.equalsIgnoreCase("userValidate")){
-					contextValidation.addErrors("config.state.code", "'" + config.state.code + "' n'est pas à la valeur attendue 'userValidate'");
+				if (StringUtils.isBlank(config.state.code)){
+					contextValidation.addErrors("config.state.code", "'" + config.state.code + "' n'est pas à la valeur attendue 'used'");
 				}
 				
 				if (StringUtils.isBlank(config.strategyStudy)||StringUtils.isBlank(config.strategySample)){

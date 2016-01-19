@@ -84,7 +84,7 @@ public class SubmissionServices {
 			throw new SraException("configCode à null incompatible avec soumission");
 		}
 		Configuration config = MongoDBDAO.findByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, configCode);
-
+		
 		Study study = null;
 		
 		if (config == null) {
@@ -357,13 +357,25 @@ public class SubmissionServices {
 				System.out.println ("sauvegarde dans la base de l'experiment " + expElt.code);
 			}
 		}		
-		// update la configuration pour le statut 'used' :
+		// update le study pour le statut 'uservalidate' mais aussi l'objet courant 
+		study.state.code="used";
+		study.traceInformation.modifyDate = new Date();
+		study.traceInformation.modifyUser = VariableSRA.admin;
+		MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
+				DBQuery.is("code", study.code),
+				DBUpdate.set("state.code", "uservalidate").set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date()));	
+		
+		// update la configuration pour le statut 'used' mais aussi l'objet courant qui va etre passé dans contextValidation:
+		config.state.code="used";
+		config.traceInformation.modifyDate = new Date();
+		config.traceInformation.modifyUser = VariableSRA.admin;
+		
 		MongoDBDAO.update(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, 
 				DBQuery.is("code", config.code),
 				DBUpdate.set("state.code", "used").set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date()));	
 
 		// valider submission une fois les experiment et sample sauves, et sauver submission
-		//submission.state = new State("inWaiting", user);
+		//submission.state = new State("inwaiting", user);
 		contextValidation.setCreationMode();
 		contextValidation.getContextObjects().put("type", "sra");
 		contextValidation.getContextObjects().put("configuration", config);
@@ -510,7 +522,7 @@ public class SubmissionServices {
 						// mettre a jour dans base l'objet study à soumettre avec bon state
 						MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class,
 								DBQuery.is("code", study.code).notExists("accession"),
-								DBUpdate.set("state.code", "inWaiting").set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 
+								DBUpdate.set("state.code", "inwaiting").set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 
 					}
 				}
 			}
@@ -568,6 +580,7 @@ public class SubmissionServices {
 		submission.state = new State("new", user);
 		submission.release = false;
 		submission.configCode = config.code;
+		submission.projectCode = config.projectCode;
 		if (mapUserClones != null) {
 			for (Iterator<Entry<String, UserCloneType>> iterator = mapUserClones.entrySet().iterator(); iterator.hasNext();) {
 				Entry<String, UserCloneType> entry = iterator.next();
@@ -597,7 +610,7 @@ public class SubmissionServices {
 				throw new SraException("study " + study.code + " n'existe pas dans database");
 			} 
 			if (study.state == null) {
-				throw new SraException("study.state== null incompatible avec soumission. =>  study.state.code in ('uservalidate', 'inWaiting', 'submitted')");
+				throw new SraException("study.state== null incompatible avec soumission. =>  study.state.code in ('uservalidate', 'inwaiting', 'submitted')");
 			}
 			if (study.state.code.equalsIgnoreCase("new")){
 			// declencher exception, la soumission ne peut se faire sans un study validé par user ou
