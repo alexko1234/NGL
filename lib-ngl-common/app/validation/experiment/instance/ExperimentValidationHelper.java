@@ -131,8 +131,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			
 		}
 		
-		//TODO validate number of ATM against SupportContainerCategory nbLine and nbColumn
-		
+		//TODO GA validate number of ATM against SupportContainerCategory nbLine and nbColumn
 		contextValidation.removeObject(FIELD_TYPE_CODE);
 		contextValidation.removeObject(FIELD_INST_USED);
 	}

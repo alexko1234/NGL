@@ -54,9 +54,11 @@ error.validationexp.inputContainer.categoryCode.notequals = "Le categoryCode du 
 error.validationexp.inputContainer.contents.sizenotequals = "Le nombre de contents du container {0} n'est pas le même que celui dans la collection CONTAINER"
 error.validationexp.inputContainer.percentage = "Le pourcentage de container en entrée doit être : 0 < x <= 100"
 error.validationexp.inputContainerSupportCodes = "La valeur de la liste n'est pas correcte"
-error.validationexp.outputContainerSupportCodes = "La valeur de la liste n'est pas correcte"
-error.validationexp.comments.null = "Le commentaire est null"
-error.validationexp.status.empty = "Vous devez renseigner le statut avant de terminer l''expérience"
+error.validationexp.outputContainerSupportCodes = La valeur de la liste n'est pas correcte
+error.validationexp.comments.null = Le commentaire est null
+error.validationexp.status.empty = Vous devez renseigner le statut avant de terminer l''expérience
+error.validationexp.container.alreadyused = Le container {0} est déjà en cours d''utilisation
+error.validationexp.support.alreadyused = Le support {0} est déjà en cours d''utilisation
 
 error.validation.container.inputProcesses.notnull = "Le container est associé à un processus"
 

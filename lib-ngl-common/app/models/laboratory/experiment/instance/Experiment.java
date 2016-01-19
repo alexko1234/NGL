@@ -120,6 +120,8 @@ public class Experiment extends DBObject implements IValidation {
 			contextValidation.putObject(FIELD_STATE_CODE , state.code);
 			
 		}
+		contextValidation.putObject(FIELD_EXPERIMENT , this);
+		
 		validateId(this, contextValidation);
 		validateCode(this, InstanceConstants.EXPERIMENT_COLL_NAME, contextValidation);
 		validationExperimentType(typeCode, experimentProperties, contextValidation);
@@ -140,7 +142,7 @@ public class Experiment extends DBObject implements IValidation {
 		//TODO GA Validate projectCodes, sampleCodes. same question 
 		
 		validateRules(this,contextValidation);
-		
+		contextValidation.removeObject(FIELD_EXPERIMENT);
 	}
 
 	

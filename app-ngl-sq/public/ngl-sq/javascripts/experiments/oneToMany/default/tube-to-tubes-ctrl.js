@@ -299,10 +299,6 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', '$parse', 'atmToG
 
 	};	
 	
-	$scope.isEditMode = function(){
-		return ($scope.$parent.isEditMode() && $scope.isNewState());
-	};
-	
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save on tube-to-tubes");
 		$scope.atmService.viewToExperiment($scope.experiment);

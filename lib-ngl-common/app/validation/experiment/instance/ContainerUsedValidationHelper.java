@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.mongojack.DBQuery;
+
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
@@ -15,6 +18,7 @@ import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.instrument.description.InstrumentUsedType;
@@ -134,13 +138,33 @@ public class ContainerUsedValidationHelper extends CommonValidationHelper {
 		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
 		if(("N".equals(stateCode) && null != code) || "IP".equals(stateCode)){
 			if(ValidationHelper.required(contextValidation, code, "code")){
-				validateUniqueInstanceCode(contextValidation, code, Container.class, CONTAINER_COLL_NAME);
+				if(validateUniqueInstanceCode(contextValidation, code, Container.class, CONTAINER_COLL_NAME)){
+					validateContainerNotUsedInOtherExperiment(contextValidation, code);
+				}
+				
 			}
 		}else if("F".equals(stateCode)){
-			validateRequiredInstanceCode(code, "code",  Container.class, CONTAINER_COLL_NAME,contextValidation);	
+			validateRequiredInstanceCode(code, "code",  Container.class, CONTAINER_COLL_NAME,contextValidation);			
 		}
 	}
 	
+	private static void validateContainerNotUsedInOtherExperiment(ContextValidation contextValidation, String containerCode) {
+		Experiment exp = getObjectFromContext(FIELD_EXPERIMENT, Experiment.class, contextValidation);
+		if(MongoDBDAO.checkObjectExist(EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.notEquals("code", exp.code).in("outputContainerCodes", containerCode))){
+			contextValidation.addErrors("atomicTransfertMethods.outputContainerUseds.code", "error.validationexp.container.alreadyused",containerCode);
+		}
+		
+	}
+	
+	private static void validateSupportContainerNotUsedInOtherExperiment(ContextValidation contextValidation, String supportContainerCode) {
+		Experiment exp = getObjectFromContext(FIELD_EXPERIMENT, Experiment.class, contextValidation);
+		if(MongoDBDAO.checkObjectExist(EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.notEquals("code", exp.code)
+				.in("atomicTransfertMethods.outputContainerUseds.locationOnContainerSupport.code", supportContainerCode))){
+			contextValidation.addErrors("code", "error.validationexp.support.alreadyused",supportContainerCode);
+		}
+		
+	}
+
 	public static void validateLocationOnSupportOnContainer(LocationOnContainerSupport locationOnContainerSupport, ContextValidation contextValidation) {
 		if(ValidationHelper.required(contextValidation, locationOnContainerSupport, "locationOnContainerSupport")){
 			
@@ -153,10 +177,13 @@ public class ContainerUsedValidationHelper extends CommonValidationHelper {
 			String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
 			if(("N".equals(stateCode) && null != locationOnContainerSupport.code) || "IP".equals(stateCode)){
 				if(ValidationHelper.required(contextValidation, locationOnContainerSupport.code, "code")){
-					validateUniqueInstanceCode(contextValidation, locationOnContainerSupport.code, ContainerSupport.class, CONTAINER_SUPPORT_COLL_NAME);
+					if(validateUniqueInstanceCode(contextValidation, locationOnContainerSupport.code, ContainerSupport.class, CONTAINER_SUPPORT_COLL_NAME)){
+						validateSupportContainerNotUsedInOtherExperiment(contextValidation, locationOnContainerSupport.code);
+					}
+					
 				}
 			}else if("F".equals(stateCode)){
-				validateRequiredInstanceCode(locationOnContainerSupport.code, "code",  ContainerSupport.class, CONTAINER_SUPPORT_COLL_NAME,contextValidation);	
+				validateRequiredInstanceCode(locationOnContainerSupport.code, "code",  ContainerSupport.class, CONTAINER_SUPPORT_COLL_NAME,contextValidation);					
 			}
 			
 			contextValidation.removeKeyFromRootKeyName("locationOnContainerSupport");
