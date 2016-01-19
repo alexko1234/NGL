@@ -248,7 +248,7 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 			$scope.searchService.lists.refresh.containerSupportCategories({experimentTypeCode:$scope.searchService.form.nextExperimentTypeCode});
 		}
 		$scope.experimentCategory = experimentCategory;
-		//this.search();
+		this.search();
 	};
 	
 	$scope.changeProcessCategory = function(){
