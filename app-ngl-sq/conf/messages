@@ -49,7 +49,8 @@ containers.tabs.state = Changement d''Etat Container
 
 #Containers table
 containers.table.code = Code Container
-containers.table.support.code = Code Support / Container
+containers.table.support.out.code = Code Support / Container (Sortie)
+containers.table.support.in.code = Code Support / Container (Entrée)
 containers.table.supportCategoryCode = Catégorie support
 containers.table.categoryCode = Catégorie Support
 containers.table.projectCodes = Projet(s)
@@ -329,6 +330,7 @@ experiments.table.resolutionCodes = Résolution
 experiments.intrumentCategory = Contenant sortie
 experiments.table.creationDate = Date de création exp.
 experiments.table.createUser = Expérience Créée par
+experiments.table.status = Statut
 
 experiments.finalResolutionModal.title = Veuillez définir le statut de l''expérience :
 

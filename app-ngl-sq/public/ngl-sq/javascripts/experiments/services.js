@@ -48,14 +48,22 @@
 							"filter":"codes:'state'"
 						},
 						{
+							"header":Messages("experiments.table.status"),
+							"property":"status.valid",
+							"render":"<div bt-select ng-model='value.data.status.valid' bt-options='valid.code as valid.name for valid in searchService.lists.get(\"status\")'  ng-edit='false'></div>",
+							"order":false,
+							"hide":true,
+							"position":5.5,
+							"type":"text"
+						},
+						{
 							"header":Messages("experiments.table.resolutionCodes"),
 							"property":"state.resolutionCodes",
-							//"filter":"codes:'Experiment.resolution'",
 							"render":"<div bt-select ng-model='value.data.state.resolutionCodes' bt-options='valid.code as valid.name for valid in searchService.lists.getResolutions()'  ng-edit=\"false\"></div>",
 							"order":false,
 							"hide":true,
 							"position":6,
-							"type":"date"
+							"type":"text"
 						},
 						{
 							"header":Messages("experiments.table.projectCodes"),

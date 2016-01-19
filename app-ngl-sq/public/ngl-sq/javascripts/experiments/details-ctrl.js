@@ -774,96 +774,122 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
                                function($scope,$http,$q,$parse,lists,mainService,datatable, commonAtomicTransfertMethod) {
 	console.log("Dispatch Ctrl");
 	
+	getColumns = function(){
+		var columns = [];
+		if(!$scope.isOutputATMVoid()){
+			columns.push({
+				"header":Messages("containers.table.support.in.code"),
+				"property":"container.treeOfLife.from.containers",
+				"render":'<div list-resize="cellValue | collect:\'supportCode+&quot; / &quot;+code\' | unique" list-resize-min-size="3" vertical="true">',
+				"order":true,
+				"edit":false,
+				"hide":true,
+				"type":"text",
+				"position":0.5
+			});
+			
+			columns.push({
+				"header":Messages("containers.table.support.out.code"),
+				"property":"container.support.code+' / '+container.code",
+				"order":true,
+				"edit":false,
+				"hide":true,
+				"type":"text",
+				"position":1
+			});
+		}else{
+			columns.push({
+				"header":Messages("containers.table.support.in.code"),
+				"property":"container.support.code +' / '+container.code",
+				"order":true,
+				"edit":false,
+				"hide":true,
+				"type":"text",
+				"position":1
+			});
+		}
+		columns.push({
+	        "header":Messages("containers.table.projectCodes"),
+	 		"property": "container.projectCodes",
+	 		"order":false,
+	 		"hide":true,
+	 		"type":"text",
+	 		"position":2,
+	 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>"
+	    });
+		columns.push({
+        	"header":Messages("containers.table.sampleCodes"),
+ 			"property": "container.sampleCodes",
+ 			"order":false,
+ 			"hide":true,
+ 			"type":"text",
+ 			"position":3,
+ 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>"
+	    });
+		columns.push({
+        	"header":Messages("containers.table.tags"),
+ 			"property": "container.contents",
+ 			"filter": "getArray:'properties.tag.value'",
+ 			"order":true,
+ 			"hide":true,
+ 			"type":"text",
+ 			"position":4,
+ 			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='3'>"
+	    });
+		columns.push({
+			"header":Messages("containers.table.state.code"),
+			"property":"container.state.code",
+			"order":true,
+			"edit":false,
+			"hide":true,
+			"type":"text",
+			"filter":"codes:'state'",
+			"position":7
+		});
+		columns.push({
+			"header":Messages("containers.table.status"),
+			"property":"status",
+			"order":false,
+			"edit":true,
+			"hide":false,
+			"type":"text",
+			"filter":"codes:'valuation'",
+			"choiceInList":true,
+			"listStyle":"bt-select",
+			"possibleValues":"lists.get('status')",					     
+			"position":8
+		});
+		columns.push({
+	       	"header":Messages("containers.table.dispatch"),
+	    	"property":"dispatch",
+	    	"order":false,
+			"edit":true,
+			"hide":false,
+	    	"type":"text",
+	    	"choiceInList":true,
+		    "listStyle":"radio",
+		    "possibleValues":"getDispatchValues()",
+		    "editDirectives":"ng-if='isDispatchValueAvailable(opt.code, value)'",
+	    	"position":9
+		});
+		columns.push({
+	       	"header":Messages("containers.table.processResolutions"),
+	    	"property":"processResolutions",
+	    	"order":false,
+			"edit":true,
+			"hide":false,
+	    	"type":"text",
+	    	"choiceInList":true,
+		    "listStyle":"bt-select-multiple",
+		    "possibleValues":"lists.get('processResolutions')",
+		    "editDirectives":"ng-if='isProcessResolutionsMustBeSet(value)'",
+		    "position":10
+		});		
+		return columns;
+	};
+	
 	var datatableConfig = {
 			name:"dispatch",
-			columns:[			  
-					 {
-			        	 "header":Messages("containers.table.support.code"),
-			        	 "property":"container.support.code +' / '+container.code",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":1
-			         },		         
-			         {
-			        	"header":Messages("containers.table.projectCodes"),
-			 			"property": "container.projectCodes",
-			 			"order":false,
-			 			"hide":true,
-			 			"type":"text",
-			 			"position":2,
-			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>"
-				     },
-				     {
-			        	"header":Messages("containers.table.sampleCodes"),
-			 			"property": "container.sampleCodes",
-			 			"order":false,
-			 			"hide":true,
-			 			"type":"text",
-			 			"position":3,
-			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>"
-				     },
-				     {
-			        	"header":Messages("containers.table.tags"),
-			 			"property": "container.contents",
-			 			"filter": "getArray:'properties.tag.value'",
-			 			"order":true,
-			 			"hide":true,
-			 			"type":"text",
-			 			"position":4,
-			 			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='3'>"
-				      },
-				      {
-			        	 "header":Messages("containers.table.state.code"),
-			        	 "property":"container.state.code",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-						 "filter":"codes:'state'",
-			        	 "position":7
-				       },
-				       {
-			        	 "header":Messages("containers.table.status"),
-			        	 "property":"status",
-			        	 "order":false,
-						 "edit":true,
-						 "hide":false,
-			        	 "type":"text",
-			        	 "filter":"codes:'valuation'",
-			        	 "choiceInList":true,
-					     "listStyle":"bt-select",
-					     "possibleValues":"lists.get('status')",					     
-			        	 "position":8
-					    },
-					    {
-			        	 "header":Messages("containers.table.dispatch"),
-			        	 "property":"dispatch",
-			        	 "order":false,
-						 "edit":true,
-						 "hide":false,
-			        	 "type":"text",
-			        	 "choiceInList":true,
-					     "listStyle":"radio",
-					     "possibleValues":"getDispatchValues()",
-					     "editDirectives":"ng-if='isDispatchValueAvailable(opt.code, value)'",
-			        	 "position":9
-						},
-						{
-			        	 "header":Messages("containers.table.processResolutions"),
-			        	 "property":"processResolutions",
-			        	 "order":false,
-						 "edit":true,
-						 "hide":false,
-			        	 "type":"text",
-			        	 "choiceInList":true,
-					     "listStyle":"bt-select-multiple",
-					     "possibleValues":"lists.get('processResolutions')",
-					     "editDirectives":"ng-if='isProcessResolutionsMustBeSet(value)'",
-					     "position":10
-						}					   				       				      				     
-			         ],
 			compact:true,
 			pagination:{
 				active:false
@@ -1261,7 +1287,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 								initDisplayValues(containers[key].fromExperimentTypeCodes);
 							}
 						}
-							
+						datatableConfig.columns = getColumns(),
 						$scope.containersDT = datatable(datatableConfig);
 						$scope.containersDT.setData(outputContainers);
 						
@@ -1293,7 +1319,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 							inputContainers.push({container:containers[key], status:getValidStatus(), dispatch:undefined, processResolutions:[]});
 							processTypeCodes = processTypeCodes.concat(containers[key].processTypeCodes);								
 						}
-							
+						datatableConfig.columns = getColumns(),						
 						$scope.containersDT = datatable(datatableConfig);
 						$scope.containersDT.setData(inputContainers);
 						

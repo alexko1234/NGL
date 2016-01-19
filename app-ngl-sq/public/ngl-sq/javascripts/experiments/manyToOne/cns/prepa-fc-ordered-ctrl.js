@@ -124,7 +124,7 @@ angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$par
 	$scope.$parent.changeValueOnFlowcellDesign = function(){
 		$scope.atmService.data.updateDatatable();
 		
-		if($scope.experiment.editMode && !$scope.isCreationMode()){
+		if($scope.mainService.isEditMode() && !$scope.isCreationMode()){
 			$scope.messages.clazz = "alert alert-warning";
 			$scope.messages.text = "Vous venez de modifier une valeur";
 			$scope.messages.text += ", vous devez impérativement cliquer sur sauvegarder pour que les calculs de la FDR se remettent à jour.";
