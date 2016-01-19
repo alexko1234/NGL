@@ -14,3 +14,4 @@ GET		/migration-sequencing-start-date			controllers.migration.MigrationUpdateSeq
 GET		/migration-metrichor-run-id					controllers.migration.MigrationUpdateRunMetrichorRunID.migration()
 GET		/check-type-description						controllers.migration.CheckTypeDescription.check()
 GET		/create-run-nanopore						controllers.migration.MigrationCreateRunNanopore.migration()
+GET		/migration-sample-aliquote-codes			controllers.migration.MigrationPropSampleAliquoteCode.migration()

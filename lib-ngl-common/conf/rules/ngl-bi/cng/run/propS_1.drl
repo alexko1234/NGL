@@ -1,7 +1,7 @@
 //created on: Nov 21, 2013
 package rules
 
-rule "Copy Properties from Support and Container to Run"
+rule "Copy Properties SampleAliquotCode from Support and Container to Run"
 	@nglBI(IP_S_1)
 	dialect "java"
 	salience 150
