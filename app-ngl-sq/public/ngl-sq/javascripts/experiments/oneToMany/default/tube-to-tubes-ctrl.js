@@ -299,12 +299,6 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', '$parse', 'atmToG
 
 	};	
 	
-	$scope.$on('save', function(e, callbackFunction) {	
-		console.log("call event save on tube-to-tubes");
-		$scope.atmService.viewToExperiment($scope.experiment);
-		$scope.updateInputVolume($scope.experiment);
-		$scope.$emit('childSaved', callbackFunction);
-	});
 	
 	
 	$scope.updateInputVolume = function(experiment){
@@ -323,6 +317,33 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', '$parse', 'atmToG
 			//atm.inputContainerUseds[0].experimentProperties["inputVolume"] = {value:volume.input, unit:"µL"};
 		}				
 	};
+	
+	
+	/**
+	 * Update concentration. Copy input concentration to all outputs
+	 */
+	$scope.updateConcentration = function(experiment){
+		
+		for(var j = 0 ; j < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; j++){
+			var atm = experiment.atomicTransfertMethods[j];
+			if(atm.inputContainerUseds[0].concentration !== null 
+					&& atm.inputContainerUseds[0].concentration !== undefined){
+				var concentration = atm.inputContainerUseds[0].concentration;				
+				for(var i = 0 ; i < atm.outputContainerUseds.length ; i++){
+					$parse("outputContainerUseds["+i+"].concentration").assign(atm, concentration);
+				}
+			}
+			
+		}		
+	};
+	
+	$scope.$on('save', function(e, callbackFunction) {	
+		console.log("call event save on tube-to-tubes");
+		$scope.atmService.viewToExperiment($scope.experiment);
+		$scope.updateInputVolume($scope.experiment);
+		$scope.updateConcentration($scope.experiment);
+		$scope.$emit('childSaved', callbackFunction);
+	});
 	
 	
 	$scope.$on('refresh', function(e) {
