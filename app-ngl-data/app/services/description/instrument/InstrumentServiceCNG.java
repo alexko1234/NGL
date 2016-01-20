@@ -331,7 +331,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		instruments.add(createInstrument("DIAGNOSTIX","DIAGNOSTIX", null, true, "/env/ig/atelier/illumina/cng/DIAGNOSTIX/", DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
 		instruments.add(createInstrument("IDEFIX",    "IDEFIX",     null, true, "/env/ig/atelier/illumina/cng/IDEFIX/",     DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
 		instruments.add(createInstrument("OBELIX",    "OBELIX",     null, true, "/env/ig/atelier/illumina/cng/OBELIX/",     DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
-		instruments.add(createInstrument("PANORAMIX", "PANORAMIX",  null, true, "/env/ig/atelier/illumina/cng/PANORAMIX/",  DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );	
+		instruments.add(createInstrument("PANORAMIX", "PANORAMIX",  null, true, "/env/ig/atelier/illumina/cng/PANORAMIX/",  DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );
+		instruments.add(createInstrument("EXTHISEQX ", "EXTHISEQX ",  null, true, "/env/ig/atelier/illumina/cng/EXTHISEQX/",  DescriptionFactory.getInstitutes(Institute.CODE.CNG)) );
 		
 		return instruments;
 	}
