@@ -39,7 +39,7 @@ public class ContentValidationHelper extends CommonValidationHelper {
 			Pattern ptn = Pattern.compile("\\d*\\.\\d\\d?$");
 			Matcher mtr = ptn.matcher(String.valueOf(percentage));
 			//pecentage is mandatory
-			if(percentage<0.0 ||percentage>100.00 || !mtr.matches()){
+			if(percentage<0.0 || percentage>100.00 || !mtr.matches()){
 				contextValidation.addErrors("percentage", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, percentage);
 			}
 		}

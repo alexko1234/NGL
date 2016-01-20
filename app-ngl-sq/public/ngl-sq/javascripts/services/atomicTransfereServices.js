@@ -627,7 +627,7 @@ angular.module('atomicTransfereServices', [])
 						
 						
 						if(percentage.value != 100){
-							var percentageForOneContainer = Math.floor(10000/inputContainerUseds.length)/100
+							var percentageForOneContainer = Math.floor(100000/inputContainerUseds.length)/1000
 							
 							angular.forEach(inputContainerUseds, function(container){
 								container.percentage = percentageForOneContainer;

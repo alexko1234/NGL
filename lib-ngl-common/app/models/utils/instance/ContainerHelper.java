@@ -259,7 +259,7 @@ public class ContainerHelper {
 		if(percentage!=null){
 			for(Content cc:contents){
 				if(cc.percentage != null){
-					cc.percentage = (new BigDecimal((cc.percentage*percentage)/100.00)).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+					cc.percentage = (new BigDecimal((cc.percentage*percentage)/100.00)).setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
 				}else{
 					cc.percentage = percentage;
 				}						
