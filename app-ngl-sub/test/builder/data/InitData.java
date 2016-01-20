@@ -4,17 +4,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import models.sra.submit.common.instance.Submission;
-import models.sra.submit.sra.instance.Experiment;
-import models.sra.submit.common.instance.Sample;
-
-import models.utils.InstanceConstants;
-
 import org.junit.Test;
 
+import fr.cea.ig.MongoDBDAO;
+import models.sra.submit.common.instance.Sample;
+import models.sra.submit.common.instance.Submission;
+import models.sra.submit.sra.instance.Configuration;
+import models.sra.submit.sra.instance.Experiment;
+import models.utils.InstanceConstants;
 import play.Logger;
 import utils.AbstractTestData;
-import fr.cea.ig.MongoDBDAO;
 
 public class InitData extends AbstractTestData{
 
@@ -29,6 +28,7 @@ public class InitData extends AbstractTestData{
 		String codeSamp1 = "codeSamp1";
 		String codeRun1 = "codeRun1";
 		String codeRun2 = "codeRun2";
+		String codeConfig = "codeConfig";
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		Date dateSubmission =sdf.parse("26/01/2015");
@@ -37,8 +37,17 @@ public class InitData extends AbstractTestData{
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Submission.class,codeExp1);
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Submission.class,codeExp2);
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, codeSamp1);
+		MongoDBDAO.deleteByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, codeConfig);
 		
 		
+		Configuration configuration = new ConfigurationBuilder()
+		.withCode(codeConfig)
+		.withState(new StateBuilder()
+				.withCode("userValidate")
+				.withUser("userTest")
+				.build())
+		.build();
+		MongoDBDAO.save(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, configuration);
 		
 		Submission submission = new SubmissionBuilder()
 									.withCode(codeSub1)
@@ -49,13 +58,7 @@ public class InitData extends AbstractTestData{
 												.withCode("inWaiting")
 												.withUser("ejacoby@genoscope.cns.fr")
 												.build())
-									.withConfig(new ConfigurationBuilder()
-												.withCode("codeConfig")
-												.withState(new StateBuilder()
-														.withCode("userValidate")
-														.withUser("userTest")
-														.build())
-												.build())
+									.withConfigCode(configuration.code)
 									.withTraceInformation(new TraceInformationBuilder()
 														.withCreateUser("userTest")
 														.withCreationDate(new Date())

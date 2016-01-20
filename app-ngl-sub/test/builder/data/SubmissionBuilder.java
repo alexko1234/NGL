@@ -23,7 +23,11 @@ public class SubmissionBuilder {
 		submission.projectCode=projectCode;
 		return this;
 	}
-	
+	public SubmissionBuilder withConfigCode(String configCode)
+	{
+		submission.configCode=configCode;
+		return this;
+	}
 	
 	public SubmissionBuilder withSubmissionDirectory(String submissionDirectory)
 	{
@@ -43,11 +47,7 @@ public class SubmissionBuilder {
 		return this;
 	}
 	
-	public SubmissionBuilder withConfig(Configuration config)
-	{
-		submission.config=config;
-		return this;
-	}
+	
 	
 	public SubmissionBuilder withTraceInformation(TraceInformation traceInformation)
 	{

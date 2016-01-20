@@ -17,7 +17,6 @@ public class ExternalSample extends AbstractSample {
 	
 	public ExternalSample() {
 		super();	
-		super._type="ExternalSample";
 		state = new State("submitted", null); // Reference sur "models.laboratory.common.instance.state"
 	}
 

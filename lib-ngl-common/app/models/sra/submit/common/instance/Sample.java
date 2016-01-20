@@ -31,7 +31,6 @@ public class Sample extends AbstractSample {
 
 	public Sample() {
 		super();
-		super._type="Sample";
 	}
 
 	

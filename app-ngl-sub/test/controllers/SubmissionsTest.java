@@ -94,6 +94,16 @@ public class SubmissionsTest extends AbstractTestController{
 		.build();
 		MongoDBDAO.save(InstanceConstants.PROJECT_COLL_NAME, project);
 
+		//Create Cconfiguration
+		Configuration config = new ConfigurationBuilder()
+		.withCode(configCode1)
+		.withStrategySample("STRATEGY_SAMPLE_CLONE")
+		.withLibrarySelection("size fractionation")
+		.withLibrarySource("synthetic")
+		.withLibraryStrategy("cloneend")
+		.withState(new StateBuilder().withCode(codeUserValidate).build())
+		.build();
+		MongoDBDAO.save(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, config);
 		//Create simple submission with state
 		Submission submission = new SubmissionBuilder()
 		.withCode(subCode1)
@@ -101,7 +111,7 @@ public class SubmissionsTest extends AbstractTestController{
 		.withSubmissionDirectory(subDirectory)
 		.withStudyCode(studyCode)
 		//.withRefStudyCode(studyCode1)
-		.withConfig(new ConfigurationBuilder().withCode("config1").withState(new StateBuilder().withCode(codeUserValidate).build()).build())
+		.withConfigCode(config.code)
 		.withState(new StateBuilder().withCode(codeUserValidate).build())
 		.withTraceInformation(new TraceInformationBuilder().withCreateUser("user1").withCreationDate(new Date()).build())
 		.addSampleCode("samp1")
@@ -139,15 +149,7 @@ public class SubmissionsTest extends AbstractTestController{
 		.build();
 		MongoDBDAO.save(InstanceConstants.SRA_STUDY_COLL_NAME, study);
 		
-		Configuration config = new ConfigurationBuilder()
-		.withCode(configCode1)
-		.withStrategySample("STRATEGY_SAMPLE_CLONE")
-		.withLibrarySelection("size fractionation")
-		.withLibrarySource("synthetic")
-		.withLibraryStrategy("cloneend")
-		.withState(new StateBuilder().withCode(codeUserValidate).build())
-		.build();
-		MongoDBDAO.save(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, config);
+		
 		
 		//Create laboratory entity
 		ReadSet readSet = new LaboratoryReadSetBuilder()
