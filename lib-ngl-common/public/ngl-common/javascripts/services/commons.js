@@ -686,8 +686,7 @@ angular.module('commonsServices', []).
         	.directive('btSelect',  ['$parse', '$document', '$window', '$filter', function($parse,$document, $window, $filter)  {
 			//0000111110000000000022220000000000000000000000333300000000000000444444444444444000000000555555555555555000000066666666666666600000000000000007777000000000000000000088888
     		var BT_OPTIONS_REGEXP = /^\s*([\s\S]+?)(?:\s+as\s+([\s\S]+?))?(?:\s+group\s+by\s+([\s\S]+?))?\s+for\s+(?:([\$\w][\$\w]*))\s+in\s+([\s\S]+?)$/;                        
-    		var BT2_OPTIONS_REGEXP = /^\s*([\s\S]+?)(?:\s+as\s+([\s\S]+?))?(?:\s+group\s+by\s+([\s\S]+?))?(?:\s+disable\s+when\s+([\s\S]+?))?\s+for\s+(?:([\$\w][\$\w]*)|(?:\(\s*([\$\w][\$\w]*)\s*,\s*([\$\w][\$\w]*)\s*\)))\s+in\s+([\s\S]+?)(?:\s+track\s+by\s+([\s\S]+?))?$/;
-            // 1: value expression (valueFn)
+    		 // 1: value expression (valueFn)
             // 2: label expression (displayFn)
             // 3: group by expression (groupByFn)
             // 4: disable when expression (disableWhenFn)
@@ -707,18 +706,30 @@ angular.module('commonsServices', []).
 		    	  		+'<li ng-repeat-end  ng-if="item.selected" ng-bind="itemLabel(item)"></li>'
 			    	  	+'</ul>'
   		    			+'</div>'
-  		    			+'<div class="dropdown" ng-switch-when="true">'
-  				        
+  		    			+'<div class="dropdown" ng-switch-when="true">'  				        
+  		    			
   		    			+'<div class="input-group">'
-  		    			+'<input type="text" style="background:white" ng-class="inputClass" ng-model="selectedLabels" placeholder="{{placeholder}}" title="{{placeholder}}" readonly/>'
+  		    			
+  		    			+'<div class="input-group-btn" ng-if="isTextarea()">'
+  		    			//textarea mode
+  		    			+'<button tabindex="-1" data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle" type="button" ng-disabled="isDisabled()" ng-click="open()">'
+  		    			+'<i class="fa fa-list-ul"></i>'
+  		    			+'</button>'
+  		    			+'<ul class="dropdown-menu dropdown-menu-left"  role="menu">'
+  				        +'<li>'
+  				        +'<textarea ng-class="inputClass" ng-model="textareaValue" ng-change="setTextareaValue(textareaValue)" rows="5"></textarea>'  				      
+  				        +'</li>'  				        
+		    	  		+'</ul>'		    	  		
+		    	  		+'</div>'
+  		    			
+		    	  		//select mode
+  		    			+'<input type="text" style="background:white" ng-class="inputClass" ng-model="selectedLabels" placeholder="{{placeholder}}" title="{{placeholder}}" readonly/>'  		    			
   		    			+'<div class="input-group-btn">'
-  		    			+'<button tabindex="-1" data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" type="button" ng-disabled="isDisabled()" ng-click="open()">'
+  		    			+'<button tabindex="-1" data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle" type="button" ng-disabled="isDisabled()" ng-click="open()">'
   		    			+'<span class="caret"></span>'
   		    			+'</button>'
   		    			+'<ul class="dropdown-menu dropdown-menu-right"  role="menu">'
   				        +'<li ng-if="filter"><input ng-class="inputClass" type="text" ng-click="inputClick($event)" ng-model="filterValue" ng-change="setFilterValue(filterValue)" placeholder="{{getMessage(\'bt-select.here\')}}"/></li>'
-
-
   				        // Liste des items déja cochés
 		    	  		+'<li ng-repeat-start="item in getSelectedItems()" ng-if="groupBy(item, $index) && acceptsMultiple()"></li>'
   				        +'<li class="dropdown-header" ng-if="groupBy(item, $index)" ng-bind="itemGroupByLabel(item)"></li>'
@@ -727,10 +738,7 @@ angular.module('commonsServices', []).
 		    	  		+'<i class="fa fa-check pull-right" ng-show="item.selected"></i>'
 		    	  		+'<span class="text" ng-bind="itemLabel(item)" style="margin-right:30px;"></span>'		    	  		
 		    	  		+'</a></li>'
-		    	  		+'<li ng-show="getSelectedItems().length > 0" class="divider pull-left" style="width: 100%;"></li>'
-		    	  		
-		    	  		
-
+		    	  		+'<li ng-show="getSelectedItems().length > 0" class="divider pull-left" style="width: 100%;"></li>'		    	  		
   				        // Liste des items
   				        +'<li ng-repeat-start="item in getItems()" ng-if="groupBy(item, $index)" class="divider"></li>'
   				        +'<li class="dropdown-header" ng-if="groupBy(item, $index)" ng-bind="itemGroupByLabel(item)"></li>'
@@ -739,9 +747,9 @@ angular.module('commonsServices', []).
 		    	  		+'<i class="fa fa-check pull-right" ng-show="item.selected"></i>'
 		    	  		+'<span class="text" ng-bind="itemLabel(item)" style="margin-right:30px;"></span>'		    	  		
 		    	  		+'</a></li>'
-		    	  		+'</ul>'
-		    	  		
+		    	  		+'</ul>'		    	  		
 		    	  		+'</div>'
+		    	  		
 		    	  		+'</div>'
 		    	  		+'</div>'
 		    	  		+'</div>'
@@ -757,6 +765,7 @@ angular.module('commonsServices', []).
 	      		     
 	      		      var ngModelCtrl = ctrls[0],
 	      		          multiple = attr.multiple || false,
+	      		          textarea = attr.textarea || false,
 	      		          btOptions = attr.btOptions,
 	      		          editMode = (attr.ngEdit)?$parse(attr.ngEdit):undefined,
 	      		          filter = attr.filter || false;
@@ -765,6 +774,7 @@ angular.module('commonsServices', []).
 	      		      var items = [];
 	      		      var groupByLabels = {};
 	      		      var filterValue;
+	      		      var textareaValue;
 	      		      var ngFocus = attr.ngFocus;
 	      		      var ngModelValue = attr.ngModel;
 	      		      function parseBtsOptions(input){
@@ -801,6 +811,18 @@ angular.module('commonsServices', []).
 	      		     scope.setFilterValue = function(value){
 	      		    	filterValue = value
 	      		     };
+	      		     
+	      		     scope.isTextarea = function(){
+	      		    	return (multiple && textarea); 
+	      		     };
+	      		     scope.textareaValue = textareaValue; 
+	      		     scope.setTextareaValue = function(values, $event){
+	      		    	if(multiple){
+      		    			var selectedValues = values.split(/\s*[,;\n]\s*/);
+      		    			ngModelCtrl.$setViewValue(selectedValues);
+      		    			ngModelCtrl.$render();      		    			
+      		    	  	}	      		    	 	      		    	 
+	      		     }; 
 	      		     
 	      		     scope.open = function(){
 	      		    	 if(ngFocus){
@@ -955,12 +977,12 @@ angular.module('commonsServices', []).
 				      	    		}
 			      	    		}	      	    		
 			      	    	}
+		      	    	}else if(textarea){
+		      	    		selectedLabels = modelValues;
 		      	    	}
 		      	    	scope.selectedLabels = selectedLabels;
-	      	        };
-	      	        
-	      		  }
-	      		  
+	      	        };	      	        		      		
+	      		  }	      		  
   		    };
     	}]).directive('chart', function() {
     	    return {
