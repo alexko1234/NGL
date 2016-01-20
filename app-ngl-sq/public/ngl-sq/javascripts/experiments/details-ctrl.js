@@ -1282,7 +1282,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 						
 						var containers = result.output;
 						for(var key in containers){
-							if(containers[key].state.code === 'N' || true){
+							if(containers[key].state.code === 'N'){
 								outputContainers.push({container:containers[key], status:getValidStatus(), dispatch:undefined, processResolutions:[]});
 								processTypeCodes = processTypeCodes.concat(containers[key].processTypeCodes);
 								initDisplayValues(containers[key].fromExperimentTypeCodes);
