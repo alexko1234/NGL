@@ -90,7 +90,6 @@ public class SubmissionServices {
 		if (config == null) {
 			throw new SraException("config " + config.code + " n'existe pas dans database");
 		} 
-		//if (StringUtils.isBlank(config.state.code) || !config.state.code.equalsIgnoreCase("uservalidate")){
 		if (StringUtils.isBlank(config.state.code)) {
 			throw new SraException("config.state.code sans valeur incompatible avec soumission");
 		}
@@ -358,7 +357,7 @@ public class SubmissionServices {
 			}
 		}		
 		// update le study pour le statut 'uservalidate' mais aussi l'objet courant 
-		study.state.code="used";
+		study.state.code = "uservalidate";
 		study.traceInformation.modifyDate = new Date();
 		study.traceInformation.modifyUser = VariableSRA.admin;
 		MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
@@ -610,13 +609,9 @@ public class SubmissionServices {
 				throw new SraException("study " + study.code + " n'existe pas dans database");
 			} 
 			if (study.state == null) {
-				throw new SraException("study.state== null incompatible avec soumission. =>  study.state.code in ('uservalidate', 'inwaiting', 'submitted')");
+				throw new SraException("study.state== null incompatible avec soumission. =>  study.state.code in ('new', 'uservalidate', 'inwaiting', 'submitted')");
 			}
-			if (study.state.code.equalsIgnoreCase("new")){
-			// declencher exception, la soumission ne peut se faire sans un study validé par user ou
-			// study deja en cours de soumission voir soumis.
-				throw new SraException("study.state.code='new' incompatible avec soumission. =>  study.state.code in ('uservalidate', 'inwaiting', 'submitted')");
-			}
+			
 			// mettre à jour l'objet submission pour le study et la release_date :
 			submission.refStudyCodes.add(study.code);
 			submission.studyCode = study.code;
