@@ -84,7 +84,7 @@ PUT		/api/sra/samples/:code						@controllers.sra.samples.api.Samples.update(cod
 # Experiments
 #-------------
 GET		/api/sra/experiments						@controllers.sra.experiments.api.Experiments.list()
-PUT		/api/sra/experiments						@controllers.sra.experiments.api.Experiments.update(code: java.lang.String)
+PUT		/api/sra/experiments/:code					@controllers.sra.experiments.api.Experiments.update(code: java.lang.String)
 
 #-------------------
 # ExperimentsRawData

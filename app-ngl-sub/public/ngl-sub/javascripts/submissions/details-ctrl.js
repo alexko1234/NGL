@@ -24,7 +24,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 						return false;
 				}
 			},
-			/*
+			
 			save : {
 				active:true,
 				showButton : false,
@@ -39,7 +39,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 					return line;
 				},
 			},
-			cancel : {
+			/*cancel : {
 				showButton:true
 			},
 			hide:{
@@ -136,7 +136,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				withoutSelect : true,
 				columnMode : true
 			},
-			/*
+			
 			save : {
 				active:true,
 				mode:'local',
@@ -150,7 +150,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 					return line;
 				},
 			},
-			cancel : {
+			/*cancel : {
 				showButton:true
 			},
 			hide:{

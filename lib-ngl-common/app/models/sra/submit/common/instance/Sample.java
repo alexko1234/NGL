@@ -7,6 +7,7 @@ import models.utils.InstanceConstants;
 
 import org.apache.commons.lang3.StringUtils;
 
+import play.Logger;
 import validation.ContextValidation;
 import validation.sra.SraValidationHelper;
 
@@ -30,11 +31,13 @@ public class Sample extends AbstractSample {
 
 	public Sample() {
 		super();
+		super._type="Sample";
 	}
 
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
+		Logger.info("Validate sample");
 		contextValidation.addKeyToRootKeyName("sample");
 		SraValidationHelper.validateId(this, contextValidation);
 		
