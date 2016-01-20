@@ -2418,7 +2418,7 @@ directive('udtBtselect',  ['$parse', '$document', '$window', '$filter', function
   		    			+'<div class="input-group">'
   		    			+'<input type="text" style="background:white" ng-class="inputClass" ng-model="selectedLabels" placeholder="{{placeholder}}" title="{{placeholder}}" readonly/>'
   		    			+'<div class="input-group-btn">'
-  		    			+'<button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-disabled="isDisabled()" ng-click="open()">'
+  		    			+'<button tabindex="-1" data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" type="button" ng-disabled="isDisabled()" ng-click="open()">'
   		    			+'<span class="caret"></span>'
   		    			+'</button>'
   				        +'<ul class="dropdown-menu dropdown-menu-right"  role="menu">'
@@ -2529,12 +2529,14 @@ directive('udtBtselect',  ['$parse', '$document', '$window', '$filter', function
       		    	 return optionsConfig.groupByGetter(item);
       		      }
       		      
-      		      scope.itemLabel = function(item){	      		    	
-      		    	 return item[optionsConfig.viewMapper.replace(optionsConfig.itemName+'.','')];  
+      		     scope.itemLabel = function(item){	      		    	
+      		    	// return item[optionsConfig.viewMapper.replace(optionsConfig.itemName+'.','')];  
+      		    	return $parse(optionsConfig.viewMapper.replace(optionsConfig.itemName+'.',''))(item);
       		      };
       		      
       		      scope.itemValue = function(item){
-      		    	 return item[optionsConfig.modelMapper.replace(optionsConfig.itemName+'.','')];  
+      		    	 //return item[optionsConfig.modelMapper.replace(optionsConfig.itemName+'.','')];
+      		    	  return $parse(optionsConfig.modelMapper.replace(optionsConfig.itemName+'.',''))(item);
       		      };
       		      
       		      scope.selectItem = function(item, $event){
@@ -2655,13 +2657,13 @@ directive("udtCell", function(){
 	    							editElement = '<select class="form-control" multiple="true" '+defaultValueDirective+' ng-options="opt.code '+this.getFormatter(col)+' as opt.name '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+userDirectives+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+'></select>';
 		    						break;
 	    						case "bt-select":
-	    							editElement = '<div udt-html-filter="{{col.type}}" class="form-control" udt-btselect '+defaultValueDirective+' placeholder="" bt-dropdown-class="dropdown-menu-right" bt-options="opt.code '+this.getFormatter(col)+' as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+userDirectives+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+'></div>';
+	    							editElement = '<div udt-html-filter="{{col.type}}" class="form-control" udt-btselect '+defaultValueDirective+' placeholder="" bt-dropdown-class="dropdown-menu-right" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+userDirectives+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+'></div>';
 	    							break;
 								case "bt-select-filter":
-	    							editElement = '<div udt-html-filter="{{col.type}}" class="form-control" filter="true" udt-btselect '+defaultValueDirective+' placeholder="" bt-dropdown-class="dropdown-menu-right" bt-options="opt.code '+this.getFormatter(col)+' as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+userDirectives+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+'></div>';
+	    							editElement = '<div udt-html-filter="{{col.type}}" class="form-control" filter="true" udt-btselect '+defaultValueDirective+' placeholder="" bt-dropdown-class="dropdown-menu-right" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+userDirectives+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+'></div>';
 	    							break;
 	    						case "bt-select-multiple":
-	    							editElement = '<div class="form-control" '+defaultValueDirective+' udt-btselect multiple="true" bt-dropdown-class="dropdown-menu-right" placeholder="" bt-options="opt.code '+this.getFormatter(col)+' as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+userDirectives+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+'></div>';
+	    							editElement = '<div class="form-control" '+defaultValueDirective+' udt-btselect multiple="true" bt-dropdown-class="dropdown-menu-right" placeholder="" bt-options="opt.code as opt.name  '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+userDirectives+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+'></div>';
 	    							break;
 	    						default:
 	    							editElement = '<select udt-html-filter="{{col.type}}" class="form-control" '+defaultValueDirective+' ng-options="opt.code '+this.getFormatter(col)+' as opt.name '+this.getGroupBy(col)+' for opt in '+this.getOptions(col)+'" '+userDirectives+' ng-model="'+this.getEditProperty(col,header,filter)+ngChange+'></select>';
@@ -3151,6 +3153,16 @@ directive('udtTable', function(){
 	    				}
 	    			};
 	    		
+	    			scope.udtTableFunctions.getThClass = function(col, currentScope){
+	    				if(angular.isFunction(col.thClass)){
+	    					return col.thClass(col);
+	    				} else if(angular.isString(col.thClass)){
+	    					//we try to evaluation the string against the scope
+	    					return currentScope.$eval(col.thClass) || col.thClass;
+	    				}else{
+	    					return '';
+	    				}
+	    			};
 	    			/**
 					 * Select all the table line or just one
 					 */
@@ -3731,7 +3743,7 @@ run(function($templateCache) {
    +                        '</th>'
    +                    '</tr>'
    +                    '<tr>'
-   +                        '<th id="{{column.id}}" ng-repeat="column in udtTable.getColumnsConfig()" ng-model="column" draggable ng-if="!udtTable.isHide(column.id)">'
+   +                        '<th id="{{column.id}}" ng-repeat="column in udtTable.getColumnsConfig()" ng-model="column" draggable ng-if="!udtTable.isHide(column.id)" ng-class="udtTableFunctions.getThClass(column, this)">'
    +                            '<span ng-model="udtTable" droppable drop-fn="udtTable.onDrop" drop-item="column" ng-bind="udtTableFunctions.messages.Messages(column.header)"/>'
    +                            '<div class="btn-group pull-right">'
    +                                '<button class="btn btn-xs" ng-click="udtTableFunctions.setEdit(column)"        ng-if="udtTable.isShowButton(\'edit\', column)"  ng-disabled="!udtTable.canEdit()" data-toggle="tooltip" title="{{udtTableFunctions.messages.Messages(\'datatable.button.edit\')}}"><i class="fa fa-edit"></i></button>'

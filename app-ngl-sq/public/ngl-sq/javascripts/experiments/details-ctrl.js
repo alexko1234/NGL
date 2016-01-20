@@ -857,7 +857,8 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			"choiceInList":true,
 			"listStyle":"bt-select",
 			"possibleValues":"lists.get('status')",					     
-			"position":8
+			"position":8,
+			"thClass":"columnWidth70px"
 		});
 		columns.push({
 	       	"header":Messages("containers.table.dispatch"),
@@ -1281,7 +1282,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 						
 						var containers = result.output;
 						for(var key in containers){
-							if(containers[key].state.code === 'N'){
+							if(containers[key].state.code === 'N' || true){
 								outputContainers.push({container:containers[key], status:getValidStatus(), dispatch:undefined, processResolutions:[]});
 								processTypeCodes = processTypeCodes.concat(containers[key].processTypeCodes);
 								initDisplayValues(containers[key].fromExperimentTypeCodes);

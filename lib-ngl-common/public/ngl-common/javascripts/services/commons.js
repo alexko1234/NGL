@@ -683,11 +683,19 @@ angular.module('commonsServices', []).
         		 }
         		};
         		}])
-        		.directive('btSelect',  ['$parse', '$document', '$window', '$filter', function($parse,$document, $window, $filter)  {
+        	.directive('btSelect',  ['$parse', '$document', '$window', '$filter', function($parse,$document, $window, $filter)  {
 			//0000111110000000000022220000000000000000000000333300000000000000444444444444444000000000555555555555555000000066666666666666600000000000000007777000000000000000000088888
     		var BT_OPTIONS_REGEXP = /^\s*([\s\S]+?)(?:\s+as\s+([\s\S]+?))?(?:\s+group\s+by\s+([\s\S]+?))?\s+for\s+(?:([\$\w][\$\w]*))\s+in\s+([\s\S]+?)$/;                        
-    		//var BT_OPTIONS_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?\s+for\s+(?:([\$\w][\$\w\d]*))\s+in\s+(.*)$/;
-    		// jshint maxlen: 100
+    		var BT2_OPTIONS_REGEXP = /^\s*([\s\S]+?)(?:\s+as\s+([\s\S]+?))?(?:\s+group\s+by\s+([\s\S]+?))?(?:\s+disable\s+when\s+([\s\S]+?))?\s+for\s+(?:([\$\w][\$\w]*)|(?:\(\s*([\$\w][\$\w]*)\s*,\s*([\$\w][\$\w]*)\s*\)))\s+in\s+([\s\S]+?)(?:\s+track\s+by\s+([\s\S]+?))?$/;
+            // 1: value expression (valueFn)
+            // 2: label expression (displayFn)
+            // 3: group by expression (groupByFn)
+            // 4: disable when expression (disableWhenFn)
+            // 5: array item variable name
+            // 6: object item key variable name
+            // 7: object item value variable name
+            // 8: collection expression
+            // 9: track by expression
   		    return {
   		    	restrict: 'A',
   		    	replace:false,
@@ -704,7 +712,7 @@ angular.module('commonsServices', []).
   		    			+'<div class="input-group">'
   		    			+'<input type="text" style="background:white" ng-class="inputClass" ng-model="selectedLabels" placeholder="{{placeholder}}" title="{{placeholder}}" readonly/>'
   		    			+'<div class="input-group-btn">'
-  		    			+'<button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-disabled="isDisabled()" ng-click="open()">'
+  		    			+'<button tabindex="-1" data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" type="button" ng-disabled="isDisabled()" ng-click="open()">'
   		    			+'<span class="caret"></span>'
   		    			+'</button>'
   		    			+'<ul class="dropdown-menu dropdown-menu-right"  role="menu">'
@@ -866,11 +874,13 @@ angular.module('commonsServices', []).
       		      }
       		      
       		      scope.itemLabel = function(item){	      		    	
-      		    	 return item[optionsConfig.viewMapper.replace(optionsConfig.itemName+'.','')];  
+      		    	// return item[optionsConfig.viewMapper.replace(optionsConfig.itemName+'.','')];  
+      		    	return $parse(optionsConfig.viewMapper.replace(optionsConfig.itemName+'.',''))(item);
       		      };
       		      
       		      scope.itemValue = function(item){
-      		    	 return item[optionsConfig.modelMapper.replace(optionsConfig.itemName+'.','')];  
+      		    	 //return item[optionsConfig.modelMapper.replace(optionsConfig.itemName+'.','')];
+      		    	  return $parse(optionsConfig.modelMapper.replace(optionsConfig.itemName+'.',''))(item);
       		      };
       		      
       		      scope.$watch(ngModelValue, function(newValue, oldValue){
