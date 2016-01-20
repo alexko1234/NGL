@@ -162,7 +162,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			convertForm : function(){
 				var _form = angular.copy(this.form);
 				if(_form.projectCodes || _form.sampleCodes || _form.containerSupportCategory || _form.containerSupportCategories || _form.state || _form.states 
-						|| _form.createUser || _form.containerSupportCode  || _form.valuations || _form.fromDate || _form.toDate){	
+						|| _form.createUser || _form.codeRegex || _form.codes  || _form.valuations || _form.fromDate || _form.toDate){	
 
 					var jsonSearch = {};
 
@@ -193,12 +193,16 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 						jsonSearch.stateCodes = _form.states;
 					}
 
-					if(_form.containerSupportCode){
-						jsonSearch.codeRegex = _form.containerSupportCode;
+					if(_form.codeRegex){
+						jsonSearch.codeRegex = _form.codeRegex;
 					}
 					
 					if(_form.createUser){
 						jsonSearch.createUser = _form.createUser;
+					}
+					
+					if(_form.codes){
+						jsonSearch.codes = _form.codes;
 					}
 
 					if(_form.fromDate)jsonSearch.fromDate = moment(_form.fromDate, Messages("date.format").toUpperCase()).valueOf();

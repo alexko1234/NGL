@@ -9,6 +9,7 @@ import controllers.ListForm;
 
 public class ContainerSupportsSearchForm extends ListForm {
 	public String code;
+	public List<String> codes;
 	public String codeRegex;
 	public String containerSupportCategory;
 	public List<String> containerSupportCategories;

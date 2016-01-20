@@ -291,11 +291,11 @@ public class Containers extends CommonController {
 			queryElts.add(DBQuery.in("sampleCodes", containersSearch.sampleCode));
 		}
 
-		if(StringUtils.isNotBlank(containersSearch.supportCode)){
+		if(CollectionUtils.isNotEmpty(containersSearch.supportCodes)){
+			queryElts.add(DBQuery.in("support.code", containersSearch.supportCodes));
+		}else if(StringUtils.isNotBlank(containersSearch.supportCode)){
 			queryElts.add(DBQuery.is("support.code", containersSearch.supportCode));
-		}
-		
-		if(StringUtils.isNotBlank(containersSearch.supportCodeRegex)){
+		}else if(StringUtils.isNotBlank(containersSearch.supportCodeRegex)){
 			queryElts.add(DBQuery.regex("support.code", Pattern.compile(containersSearch.supportCodeRegex)));
 		}
 

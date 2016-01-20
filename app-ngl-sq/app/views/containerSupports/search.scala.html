@@ -28,7 +28,10 @@
 			</div>			
 		}
 		@formGroup{
-			<input class="form-control" type="text" ng-model="searchService.form.containerSupportCode"  placeholder='@Messages("search.placeholder.containerSupport")' title='@Messages("search.placeholder.containerSupport")'>			
+			@***
+			<input class="form-control" type="text" ng-model="searchService.form.codeRegex"  placeholder='@Messages("search.placeholder.containerSupport")' title='@Messages("search.placeholder.containerSupport")'>			
+			***@
+			<div  class="form-control" bt-input ng-model-input="searchService.form.codeRegex" ng-model-textarea="searchService.form.codes" placeholder='@Messages("search.placeholder.containerSupport")' ></div>			
 									
 		}
 			

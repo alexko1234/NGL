@@ -25,6 +25,7 @@ public class ContainersSearchForm extends ListForm{
 	public String processCategory;
 	public String nextProcessTypeCode;
 	public String supportCode;
+	public Set<String> supportCodes;
 	public String supportCodeRegex;
 	public String containerSupportCategory;
 	public Set<String> containerSupportCategories;

@@ -240,10 +240,14 @@ public class ContainerSupports extends CommonController {
 			queryElts.add(DBQuery.in("state.code", supportsSearch.stateCodes));
 		}
 
-		if(StringUtils.isNotBlank(supportsSearch.code)){
-			queryElts.add(DBQuery.regex("code", Pattern.compile(supportsSearch.code)));
+		if(CollectionUtils.isNotEmpty(supportsSearch.codes)){
+			queryElts.add(DBQuery.in("code", supportsSearch.codes));
+		}else if(StringUtils.isNotBlank(supportsSearch.code)){
+			queryElts.add(DBQuery.is("code", supportsSearch.code));
+		}else if(StringUtils.isNotBlank(supportsSearch.codeRegex)){
+			queryElts.add(DBQuery.regex("code", Pattern.compile(supportsSearch.codeRegex)));
 		}
-
+		
 		if(CollectionUtils.isNotEmpty(supportsSearch.projectCodes)){
 			queryElts.add(DBQuery.in("projectCodes", supportsSearch.projectCodes));
 		}
@@ -256,9 +260,7 @@ public class ContainerSupports extends CommonController {
 			queryElts.add(DBQuery.lessThanEquals("traceInformation.creationDate", supportsSearch.toDate));
 		}
 
-		if(StringUtils.isNotBlank(supportsSearch.codeRegex)){
-			queryElts.add(DBQuery.regex("code", Pattern.compile(supportsSearch.codeRegex)));
-		}
+		
 		
 		if(StringUtils.isNotBlank(supportsSearch.createUser)){   
 			queryElts.add(DBQuery.is("traceInformation.createUser", supportsSearch.createUser));
