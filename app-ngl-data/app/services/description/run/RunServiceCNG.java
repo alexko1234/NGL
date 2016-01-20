@@ -148,7 +148,7 @@ public class RunServiceCNG  extends AbstractRunService{
 		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Types processus banque","libProcessTypeCodes",LevelService.getLevels(Level.CODE.Run), String.class, false,
 				getLibProcessTypeCodeValues(), "list"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Code aliquot","sampleAliquoteCodes",LevelService.getLevels(Level.CODE.Run), String.class, false,
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Codes aliquots","sampleAliquoteCodes",LevelService.getLevels(Level.CODE.Run), String.class, false,
 				getLibProcessTypeCodeValues(), "list"));
 	    return propertyDefinitions;
 	}
