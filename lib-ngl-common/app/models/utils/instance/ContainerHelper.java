@@ -283,6 +283,8 @@ public class ContainerHelper {
 
 		HashMap<String,ContainerSupport> mapSupports = new HashMap<String,ContainerSupport>();
 
+		// FDS NOTE: TODO ?? pour les containers de type well ou lane il ne faudrait faire l'appel a createContainerSupport qu'une seule fois !!!
+		// ce code a marché pour les lanes...
 		for (Container container : containers) {
 			if (container.support != null) {
 				ContainerSupport newSupport = null;

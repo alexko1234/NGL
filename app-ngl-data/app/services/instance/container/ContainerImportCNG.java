@@ -20,11 +20,12 @@ import play.Logger;
  * @author dnoisett
  * Import samples and container from CNG's LIMS to NGL 
  * FDS remplacement de l'appel a Logger par logger
+ * FDS 14/01/2016 desactivation import des lanes (plus necessaire depuis la mise en production NGL-SQ 10/2015)
  */
 
 public class ContainerImportCNG extends AbstractImportDataCNG{
 
-	public ContainerImportCNG(FiniteDuration durationFromStart,
+	public ContainerImportCNG (FiniteDuration durationFromStart,
 			FiniteDuration durationFromNextIteration) {
 		super("ContainerImportCNG",durationFromStart, durationFromNextIteration);
 	}
@@ -33,42 +34,49 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 	public void runImport() throws SQLException, DAOException {	
 		
 		// -1-  !!! les samples ne sont pas au sens NGL des containers bien qu'ils soient importés ici !!!
-		loadSamples();	 	
-		updateSamples();
+		//loadSamples();	 	
+		//updateSamples();
 		
-		// -2- tubes
-		// FDS le 2 eme param "experiment-type-code" est l'experience d'ou est est sensé venir le container 
-		//     le 3 eme param "importState" est le status du container a importer
+		// FDS: loadContainers: le 2 eme param "experiment-type-code" est l'experience d'ou est sensé venir le container 
+		//                      le 3 eme param "importState" est le status du container a importer
 		
-		// NOTE: lib-normalization= solexa[ lib10nM + libXnM >= 1nM ]
-			
-		loadContainers("tube","lib-normalization","is");//
-		loadContainers("tube","lib-normalization","iw-p");
-		updateContainers("tube","lib-normalization"); // pas de specificite de status pour la mise a jour
-		
-		// NOTE: denat-dil-lib = solexa[ libXnM < 1nM  ]
-		loadContainers("tube","denat-dil-lib","is");//
-		loadContainers("tube","denat-dil-lib","iw-p");
-		updateContainers("tube","denat-dil-lib"); // pas de specificite de status pour la mise a jour
-		
-		// -3-  TODO  import des puits/plaques96  10nM et XnM 	       
-		/*  PAS ENCORE EN PROD.. prochaine version??
-		loadContainers("plate-well","lib-normalization","iw-p");
-		updateContainers("plate-well","lib-normalization");
-		
-		loadContainers("plate-well","denat-dil-lib","iw-p");
-		updateContainers("plate-well","denat-dil-lib");
+		// -2- FDS 14-01-2016 NGL-909 ajouter l'import des plaques de samples SOLEXA 
+		/* Ce sont les containers !!!
+		   si on reprend la methode loadContainers comment alors distinger les plaques de sample des plaques de libraries ??
+		     =>surcharger un peu le parametre containerCategoryCode
+		       sample-well / library-well au lieu de simplement 'well'
 		*/
 		
-		// --4- lanes/flowcells
-		/* a importer pendant la phase de transition: les flowcells sont crees dans Solexaprod
-		   puis importees comme si elles avait ete crees par prepa-flowcell...
-		   ==> a desactiver une fois la creation des Flowcells faites dans NGL 
-		         ( pas de status sur une lane dans solexa...)
-		  02/11/2015 continuer a importer les flowcells jusqu'a??????
+        //experiment-type-code:"void" => passe pas la validation!!!! essai avec null =>MARCHE mais...
+		loadContainers("sample-well",null,"is");// is=in stock
+		//updateContainers("sample-well","void");// ca a un sens la mise a jour de plaques ???? A TESTER
+		
+		// -3- librairies en tube
+		
+		//-3.1- lib-normalization= solexa[ lib10nM + libXnM >= 1nM ]	
+		//loadContainers("tube","lib-normalization","is"); // is=in stock
+		//loadContainers("tube","lib-normalization","iw-p"); //iw-p=in waiting processus
+		//updateContainers("tube","lib-normalization"); // pas de specificite de status pour la mise a jour
+		
+		//-3.2- denat-dil-lib = solexa[ libXnM < 1nM  ]
+		//loadContainers("tube","denat-dil-lib","is"); //is=in stock
+		//loadContainers("tube","denat-dil-lib","iw-p"); //iw-p=in waiting processus
+		//updateContainers("tube","denat-dil-lib"); // pas de specificite de status pour la mise a jour
+		
+		/* -4-  import de librairies en plaques96  10nM et XnM 	   TODO plus tard ????       
+		loadContainers("library-well","lib-normalization","iw-p");
+		updateContainers("library-well","lib-normalization");
+		
+		loadContainers("library-well","denat-dil-lib","iw-p");
+		updateContainers("library-well","denat-dil-lib");
 		*/
+		
+		/* -5- lanes/flowcells
+		14/01/2016 desactivé puisque la creation des flowcells est faite dans NGL-SQ
+		
 		loadContainers("lane","prepa-flowcell",null);
 		updateContainers("lane","prepa-flowcell");
+		*/
 	}
 	
 	public void loadSamples() throws SQLException, DAOException {
@@ -118,6 +126,7 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 	}
 	
 	// 22/10/2015 ajout parametre importState pour la reprise
+	// 14/01/2016  NGL-909 : containerCategoryCode surchargee: sample-well, library-well possibles
 	public void loadContainers(String containerCategoryCode, String experimentTypeCode, String importState) throws SQLException, DAOException {
 		Logger.debug("Start loading containers of type:" + containerCategoryCode + " from experiment type: "+ experimentTypeCode);		
 		
@@ -126,26 +135,39 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		
 		HashMap<String, PropertyValue<String>> mapCodeSupportSeq = null;
 		
+		/* 14/01/2016  on n'importe plus de lanes...
 		if (containerCategoryCode.equals("lane")) {
 			// propriété specifique aux containers "lanes"
 			mapCodeSupportSeq = limsServices.setSequencingProgramTypeToContainerSupport(contextError, "creation");
 		}
+		*/
 		
-		//-2- création en mémoire
+		//-2- création du containerSupport
 		ContainerHelper.createSupportFromContainers(containers, mapCodeSupportSeq, contextError);
 		
 		//-3- sauvegarde dans la base cible MongoDb
 		List<Container> ctrs=InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME, containers, contextError, true);
 		
-		//-4- timestamp-er dans la base source Postresql ce qui a été transféré
-		if (containerCategoryCode.equals("lane")) {
+		//-4- mise a jours dans la base source Postresql ce qui a été transféré
+		//    FDS 14/01/2016 differentiencier les cas sample-well, library-well 
+		
+		/* on n'importe plus de lanes
+		  if (containerCategoryCode.equals("lane")) {
 			limsServices.updateLimsLanes(ctrs, contextError, "creation");		
 		}
-		else {
-			//"tube" OR "plate-well"
+		else */
+		if (containerCategoryCode.equals("tube")) {
 			limsServices.updateLimsTubes(ctrs, contextError, "creation");
 		}
-			
+		else if (containerCategoryCode.equals("sample-well")) {
+			limsServices.updateLimsSamplePlates(ctrs, contextError, "creation");
+		}
+		/* PAS ENCORE EN PROD
+		else if (containerCategoryCode.equals("library-well")) {.
+			limsServices.updateLimsTubePlates(ctrs, contextError, "creation");
+		}
+		*/
+		 
 		Logger.debug("End loading containers of type " + containerCategoryCode+ " from experiment type: "+ experimentTypeCode);		
 	}
 	
@@ -158,12 +180,14 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		
 		HashMap<String, PropertyValue<String>> mapCodeSupportSeq = null;
 		
+		/* 14/01/2016 on n'importe plus les lanes
 		if (containerCategoryCode.equals("lane")) {
 			// propriété specifique aux containers "lanes"
 			mapCodeSupportSeq = limsServices.setSequencingProgramTypeToContainerSupport(contextError, "update");
 		}
+		*/
 		
-		//-2- Modifier les containers en mémoire
+		//-2- Modifier les containersSupports
 		ContainerHelper.updateSupportFromUpdatedContainers(containers, mapCodeSupportSeq, contextError);
 		
 		//-3- trouver les containers concernés dans la base mongoDB et les supprimer
@@ -178,14 +202,24 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		//-4- sauvegarde dans la base cible MongoDb
 		List<Container> ctrs=InstanceHelpers.save(InstanceConstants.CONTAINER_COLL_NAME, containers, contextError, true);
 		
-		//-5- timestamp-er dans la base source Postresql ce qui a été traité
+		//-5- mise a jour dans la base source Postresql ce qui a été traité
+		
+		/* 14/01/2016 on ne traite plus les lanes
 		if (containerCategoryCode.equals("lane")) {
 			limsServices.updateLimsLanes(ctrs, contextError, "update");		
 		}
-		else {
-			//"tube" OR "plate-well"
+		else */
+		if  (containerCategoryCode.equals("tube")) {
 			limsServices.updateLimsTubes(ctrs, contextError, "update");
 		}
+		else if (containerCategoryCode.equals("sample-well")) {
+			limsServices.updateLimsSamplePlates(ctrs, contextError, "update");
+		}
+		/* PAS ENCORE EN PROD
+		else if (containerCategoryCode.equals("library-well")) {
+			limsServices.updateLimsTubePlates(ctrs, contextError, "update");
+		}
+		*/
 		
 		Logger.debug("End updating containers of type: " + containerCategoryCode+ " from experiment type: "+ experimentTypeCode);	
 	}

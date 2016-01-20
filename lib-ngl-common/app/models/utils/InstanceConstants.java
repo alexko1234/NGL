@@ -29,7 +29,8 @@ public interface InstanceConstants {
 	public static final String SRA_ANALYSIS_WGS_COLL_NAME="ngl_sub.AnalysisWgs";
 	public static final String SRA_CONFIGURATION_COLL_NAME="ngl_sub.Configuration";
 	public static final String PARAMETER_COLL_NAME = "ngl_common.Parameter";
-	public static final String REPORTING_CONFIG_COLL_NAME = "ngl_common.ReportingConfiguration";
+	public static final String REPORTING_CONFIG_COLL_NAME = "ngl_common.ReportingConfiguration"; 
+	public static final String FILEIMPORT_CONFIG_COLL_NAME = "ngl_common.FileImportConfiguration";// FDS ajout  12-01-2016
 	public static final String STATS_CONFIG_COLL_NAME = "ngl_common.StatsConfiguration";
 	public static final String FILTERING_CONFIG_COLL_NAME = "ngl_common.FilteringConfiguration";
 	public static final String VALUATION_CRITERIA_COLL_NAME = "ngl_common.ValuationCriteria";
