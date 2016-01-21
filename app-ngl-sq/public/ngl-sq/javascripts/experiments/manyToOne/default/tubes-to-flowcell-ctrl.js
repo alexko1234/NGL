@@ -232,11 +232,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
-	
-	$scope.isEditMode = function(){
-		return ($scope.$parent.isEditMode() && $scope.isNewState());
-	};
-	
+
 	var copyFlowcellCodeToDT = function(datatable){
 		
 		var dataMain = datatable.getData();

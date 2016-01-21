@@ -25,6 +25,7 @@ import models.laboratory.protocol.instance.Protocol;
 import models.laboratory.reagent.instance.ReagentUsed;
 import models.utils.InstanceConstants;
 
+import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 
 import validation.ContextValidation;
@@ -44,6 +45,10 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 				if(!MongoDBDAO.checkObjectExist(InstanceConstants.PROTOCOL_COLL_NAME, Protocol.class, DBQuery.and(DBQuery.is("code",protocolCode), DBQuery.in("experimentTypeCodes", typeCode)))){
 					contextValidation.addErrors("protocolCode", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, protocolCode);
 				}				
+			}
+		}else if(StringUtils.isNotBlank(protocolCode)){
+			if(!MongoDBDAO.checkObjectExist(InstanceConstants.PROTOCOL_COLL_NAME, Protocol.class, DBQuery.and(DBQuery.is("code",protocolCode), DBQuery.in("experimentTypeCodes", typeCode)))){
+				contextValidation.addErrors("protocolCode", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, protocolCode);
 			}
 		}
 	}
