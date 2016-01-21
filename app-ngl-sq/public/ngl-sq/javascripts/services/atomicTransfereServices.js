@@ -36,11 +36,25 @@ angular.module('atomicTransfereServices', [])
 				convertObjectPropertyToDatatableColumn : function(propertyDefinition, propertyNamePrefix, extraHeaders){
 					return this.convertPropertyToDatatableColumn(propertyDefinition, propertyNamePrefix, "", extraHeaders); 
 				},
+				convertFilePropertyToDatatableColumn : function(propertyDefinition, propertyNamePrefix, extraHeaders){
+					return this.convertPropertyToDatatableColumn(propertyDefinition, propertyNamePrefix, "", extraHeaders); 
+				},
+				convertImagePropertyToDatatableColumn : function(propertyDefinition, propertyNamePrefix, extraHeaders){
+					return this.convertPropertyToDatatableColumn(propertyDefinition, propertyNamePrefix, "", extraHeaders); 
+				},
 				convertObjectListPropertyToDatatableColumn : function(propertyDefinition, propertyNamePrefix, extraHeaders){
 					//in case of list the datatable manage the list so we remove the prefix of the property definition					
 					var pd = angular.copy(propertyDefinition);
 					pd.code = pd.code.substring(pd.code.indexOf(".")+1, pd.code.length);					
 					return this.convertPropertyToDatatableColumn(pd, propertyNamePrefix, "", extraHeaders); 
+				},
+				convertTypePropertyToDatatableColumn : function(propertyDefinition, propertyNamePrefix, extraHeaders){
+					if(propertyDefinition.valueType==="java.io.File"){
+						return this.convertFilePropertyToDatatableColumn(propertyDefinition, propertyNamePrefix, extraHeaders);
+					}else if(propertyDefinition.valueType==="java.awt.Image"){
+						return this.convertImagePropertyToDatatableColumn(propertyDefinition, propertyNamePrefix, extraHeaders);
+					}
+					return this.convertSinglePropertyToDatatableColumn(propertyDefinition, propertyNamePrefix, extraHeaders); 
 				},
 				convertPropertyToDatatableColumn : function(propertyDefinition, propertyNamePrefix, propertyNameSuffix,extraHeaders){
     				var column = {};
@@ -284,10 +298,10 @@ angular.module('atomicTransfereServices', [])
 					}
 				},				
 				convertOutputPropertiesToDatatableColumn : function(property){
-					return  $commonATM.convertSinglePropertyToDatatableColumn(property,"outputContainerUsed.experimentProperties.",{"0":"Outputs"});
+					return  $commonATM.convertTypePropertyToDatatableColumn(property,"outputContainerUsed.experimentProperties.",{"0":"Outputs"});
 				},
 				convertInputPropertiesToDatatableColumn : function(property){
-					return  $commonATM.convertSinglePropertyToDatatableColumn(property,"inputContainerUsed.experimentProperties.",{"0":"Inputs"});
+					return  $commonATM.convertTypePropertyToDatatableColumn(property,"inputContainerUsed.experimentProperties.",{"0":"Inputs"});
 				},				
 				addExperimentPropertiesToDatatable : function(experimentProperties){
 					var expProperties = experimentProperties;

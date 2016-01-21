@@ -2669,9 +2669,7 @@ directive("udtCell", function(){
 	    			
 	    			
 	    			scope.udtTableFunctions.getEditProperty = function(col, header, filter){
-	    				if(col.type==="java.io.file" || col.type==="java.awt.image"){
-	    			    	return "value.data."+col.property.replace(".value","");
-	    			    } else if(header){
+	    				if(header){
     			    		return  "udtTable.config.edit.columns."+col.id+".value";
     			    	} else if(filter){
 							return "udtTable.searchTerms."+col.property;
@@ -2935,11 +2933,12 @@ directive("udtCell", function(){
 			    		}	    				
 	    			};
 	    			
-	    			if(scope.col.type==="java.io.file" || scope.col.type ==="java.awt.image"){
-	    				scope.cellValue = scope.$eval(scope.col.property.replace(".value",""), scope.value.data);
+	    			if(scope.col.type === "img" || scope.col.type === "image"){
+	    				scope.cellValue = getDisplayFunction(scope.col, true);
 	    			}else{
 	    				scope.cellValue = getDisplayFunction(scope.col, false);
-	    			}	    					    		
+	    			}	
+	    				    					    		
   		    	}
     		};
     	});
