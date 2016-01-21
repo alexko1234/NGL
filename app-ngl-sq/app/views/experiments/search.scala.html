@@ -36,8 +36,11 @@
 				</div>
 			}
 			@formGroup{
+			@***
 				<input class="form-control" type="text" ng-model="searchService.form.containerSupportCode" placeholder='@Messages("search.placeholder.containerSupport")' title='@Messages("search.placeholder.containerSupport")'>			
-				
+			***@	
+				<bt-input  class="form-control" input-ng-model="searchService.form.containerSupportCodeRegex" textarea-ng-model="searchService.form.containerSupportCodes" placeholder='@Messages("search.placeholder.containerSupport")' ></bt-input>			
+			
 			}
 			@formGroup{	
 				<input class="form-control" type="text" ng-model="searchService.form.code" typeahead="experiment.code as experiment.name for experiment in searchService.lists.getExperiments() | filter:$viewValue | limitTo:20" typeahead-min-length='3' placeholder='@Messages("experiment.placeholder.code")' title='@Messages("experiment.placeholder.code")'>				

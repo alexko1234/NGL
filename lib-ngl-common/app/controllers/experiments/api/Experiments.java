@@ -147,8 +147,20 @@ public class Experiments extends DocumentController<Experiment>{
 		if(StringUtils.isNotBlank(experimentSearch.containerSupportCode)){			
 			List<DBQuery.Query> qs = new ArrayList<DBQuery.Query>();
 
-			qs.add(DBQuery.regex("inputContainerSupportCodes",Pattern.compile(experimentSearch.containerSupportCode)));
-			qs.add(DBQuery.regex("outputContainerSupportCodes",Pattern.compile(experimentSearch.containerSupportCode)));
+			qs.add(DBQuery.in("inputContainerSupportCodes",experimentSearch.containerSupportCode));
+			qs.add(DBQuery.in("outputContainerSupportCodes",experimentSearch.containerSupportCode));
+			queryElts.add(DBQuery.or(qs.toArray(new DBQuery.Query[qs.size()])));
+		}else if(CollectionUtils.isNotEmpty(experimentSearch.containerSupportCodes)){			
+			List<DBQuery.Query> qs = new ArrayList<DBQuery.Query>();
+
+			qs.add(DBQuery.in("inputContainerSupportCodes",experimentSearch.containerSupportCodes));
+			qs.add(DBQuery.in("outputContainerSupportCodes",experimentSearch.containerSupportCodes));
+			queryElts.add(DBQuery.or(qs.toArray(new DBQuery.Query[qs.size()])));
+		}else if(StringUtils.isNotBlank(experimentSearch.containerSupportCodeRegex)){			
+			List<DBQuery.Query> qs = new ArrayList<DBQuery.Query>();
+
+			qs.add(DBQuery.regex("inputContainerSupportCodes",Pattern.compile(experimentSearch.containerSupportCodeRegex)));
+			qs.add(DBQuery.regex("outputContainerSupportCodes",Pattern.compile(experimentSearch.containerSupportCodeRegex)));
 			queryElts.add(DBQuery.or(qs.toArray(new DBQuery.Query[qs.size()])));
 		}	
 

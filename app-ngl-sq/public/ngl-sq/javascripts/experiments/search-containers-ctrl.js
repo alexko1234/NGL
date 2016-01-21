@@ -213,7 +213,7 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 			mode:'local'
 		},
 		filter:{
-			"active":true,
+			"active":false,
 			"highlight":true,
 			"columnMode":false
 		},

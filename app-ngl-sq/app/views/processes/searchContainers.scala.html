@@ -33,7 +33,11 @@
 			</div>
 		}
 		@formGroup{
+		@***
 			<input class="form-control" type="text" ng-model="searchService.form.supportCodeRegex" placeholder='@Messages("search.placeholder.containerSupport")' title='@Messages("search.placeholder.containerSupport")'>			
+		***@
+			<bt-input  class="form-control" input-ng-model="searchService.form.supportCodeRegex" textarea-ng-model="searchService.form.supportCodes" placeholder='@Messages("search.placeholder.containerSupport")' ></bt-input>			
+			
 		}
 	}
 	@columnSearchForm{

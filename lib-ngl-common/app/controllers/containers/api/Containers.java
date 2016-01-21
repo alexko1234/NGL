@@ -272,6 +272,8 @@ public class Containers extends CommonController {
 		if(CollectionUtils.isNotEmpty(containersSearch.codes)){
 			queryElts.add(DBQuery.in("code", containersSearch.codes));
 		}else if(StringUtils.isNotBlank(containersSearch.code)){
+			queryElts.add(DBQuery.is("code", containersSearch.code));
+		}else if(StringUtils.isNotBlank(containersSearch.codeRegex)){
 			queryElts.add(DBQuery.regex("code", Pattern.compile(containersSearch.code)));
 		}
 

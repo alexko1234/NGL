@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
@@ -409,12 +411,20 @@ public class Processes extends CommonController{
 			queryElts.add(DBQuery.in("sampleOnInputContainer.sampleTypeCode", processesSearch.sampleTypeCodes));
 		}
 
-		if(StringUtils.isNotBlank(processesSearch.processCode)){
-			queryElts.add(DBQuery.regex("code", Pattern.compile(processesSearch.processCode)));
-		}		
-
+		if(StringUtils.isNotBlank(processesSearch.code)){
+			queryElts.add(DBQuery.is("code", processesSearch.code));
+		}else if(CollectionUtils.isNotEmpty(processesSearch.codes)){
+			queryElts.add(DBQuery.in("code", processesSearch.codes));
+		}else if(StringUtils.isNotBlank(processesSearch.codeRegex)){
+			queryElts.add(DBQuery.regex("code", Pattern.compile(processesSearch.codeRegex)));
+		}
+		
 		if(StringUtils.isNotBlank(processesSearch.experimentCode)){
-			queryElts.add(DBQuery.regex("experimentCodes",Pattern.compile(processesSearch.experimentCode)));
+			queryElts.add(DBQuery.in("experimentCodes", processesSearch.experimentCode));
+		}else if(CollectionUtils.isNotEmpty(processesSearch.experimentCodes)){
+			queryElts.add(DBQuery.in("experimentCodes", processesSearch.experimentCodes));
+		}else if(StringUtils.isNotBlank(processesSearch.experimentCodeRegex)){
+			queryElts.add(DBQuery.regex("experimentCodes", Pattern.compile(processesSearch.experimentCodeRegex)));
 		}
 
 		if(StringUtils.isNotBlank(processesSearch.typeCode)){
@@ -446,26 +456,35 @@ public class Processes extends CommonController{
 			queryElts.add(DBQuery.lessThanEquals("traceInformation.creationDate", (DateUtils.addDays(processesSearch.toDate, 1))));
 		}
 
-		if(StringUtils.isNotBlank(processesSearch.supportCode) || StringUtils.isNotBlank(processesSearch.containerSupportCategory) ){
+		if(StringUtils.isNotBlank(processesSearch.supportCode) || 
+				StringUtils.isNotBlank(processesSearch.supportCodeRegex) ||
+					CollectionUtils.isNotEmpty(processesSearch.supportCodes) ||	
+						StringUtils.isNotBlank(processesSearch.containerSupportCategory) ){
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("code", 1);
 
 			ContainersSearchForm cs = new ContainersSearchForm();
-			cs.supportCodeRegex = processesSearch.supportCode;
+			cs.supportCodeRegex = processesSearch.supportCodeRegex;
+			cs.supportCode = processesSearch.supportCode;
+			cs.supportCodes = processesSearch.supportCodes;
 			cs.containerSupportCategory=processesSearch.containerSupportCategory;
 
 			List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, Containers.getQuery(cs), keys).toList();
 			//InputContainer
 			List<Query> queryContainer = new ArrayList<Query>();
-			for(Container c: containers){
-				queryContainer.add(DBQuery.is("containerInputCode", c.code));
+			if(containers.size() > 0){
+				queryContainer.add(DBQuery.in("containerInputCode", containers.stream().map(c -> c.code).collect(Collectors.toList())));
 			}
-			//OutputContainers. We need to find all containers using the protocol.
-			Logger.debug("newContainerSupportCodes :"+processesSearch.supportCode);
-			queryContainer.add(DBQuery.regex("newContainerSupportCodes",Pattern.compile(processesSearch.supportCode)));
-
-
+			
+			if(StringUtils.isNotBlank(processesSearch.supportCode)){
+				queryContainer.add(DBQuery.is("newContainerSupportCodes",processesSearch.supportCode));
+			} else if(StringUtils.isNotBlank(processesSearch.supportCodeRegex)){
+				queryContainer.add(DBQuery.regex("newContainerSupportCodes",Pattern.compile(processesSearch.supportCodeRegex)));
+			} else if(CollectionUtils.isNotEmpty(processesSearch.supportCodes)){
+				queryContainer.add(DBQuery.in("newContainerSupportCodes",processesSearch.supportCodes));
+			}
+			
 			if(queryContainer.size()!=0){
 				queryElts.add(DBQuery.or(queryContainer.toArray(new Query[queryContainer.size()])));
 			}
