@@ -72,6 +72,22 @@ import play.libs.ws.WSResponse;
 
 public class SubmissionServices {
 
+	public String updateLaboratorySampleForNcbiScientificName(String taxonCode) throws SraException {		
+		try {
+			String scientificName = getNcbiScientificName(new Integer(taxonCode));
+			// Met a jour dans la base les laboratorySample qui n'ont pas encore de ncbiScientificName.
+			// Pas de gestion des incoherences de mise à jour !!!
+			MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,
+					DBQuery.is("taxonCode", taxonCode).notExists("ncbiScientificName"),
+					DBUpdate.set("ncbiScientificName", scientificName).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date()));
+			return scientificName;
+			
+		} catch (XPathExpressionException | IOException e) {
+			e.printStackTrace();
+			throw new SraException("impossible de recuperer le scientificName au ncbi pour le taxonId '" + taxonCode + "' : \n" + e.getMessage());
+		}
+	}
+	
 	public String initNewSubmission(List<String> readSetCodes, String studyCode, String configCode, Map<String, UserCloneType>mapUserClones, Map<String, UserExperimentType> mapUserExperiments, String user, ContextValidation contextValidation) throws SraException, IOException {
 		// Pour une premiere soumission d'un readSet, on peut devoir utiliser un study ou un sample existant, deja soumis à l'EBI, ou non
 		// en revanche on ne doit pas utiliser un experiment ou un run existant
@@ -170,21 +186,29 @@ public class SubmissionServices {
 				continue;
 			}
 					
-
+			// Recuperer scientificName via NCBI pour ce readSet. Le scientificName est utilisé dans la construction
+			// des samples et des experiments 
+			String laboratorySampleCode = readSet.sampleCode;
+			models.laboratory.sample.instance.Sample laboratorySample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, models.laboratory.sample.instance.Sample.class, laboratorySampleCode);
+			String taxonId = laboratorySample.taxonCode;
+			String scientificName = laboratorySample.ncbiScientificName;
+			if (StringUtils.isBlank(scientificName)){
+				updateLaboratorySampleForNcbiScientificName(taxonId);
+			}
+			
 			// Creer les objets avec leurs alias ou code, les instancier completement et les sauver.
 
-			
 			// Creer l'experiment :
-			Experiment experiment = createExperimentEntity(readSet, config.projectCode, user);
+			Experiment experiment = createExperimentEntity(readSet, config.projectCode, scientificName, user);
 			experiment.librarySelection = config.librarySelection;
 			experiment.librarySource = config.librarySource;
 			experiment.libraryStrategy = config.libraryStrategy;
 			experiment.libraryConstructionProtocol = config.libraryConstructionProtocol;
 			
-			String laboratorySampleCode = readSet.sampleCode;
-			models.laboratory.sample.instance.Sample laboratorySample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, models.laboratory.sample.instance.Sample.class, laboratorySampleCode);
 			String laboratorySampleName = laboratorySample.name;
 			String clone = laboratorySample.referenceCollab;
+			
+			
 			// Creer le sample si besoin :
 			if (config.strategySample.equalsIgnoreCase("strategy_external_sample")){
 				if (StringUtils.isBlank(clone)) {
@@ -213,10 +237,9 @@ public class SubmissionServices {
 					listExternalSamples.add(externalSample);
 				}	
 				// mettre à jour l'experiment pour la reference sample :
-				experiment.sampleCode = externalSample.code;
-
+				experiment.sampleCode = externalSample.code; 
 			} else {
-				Sample sample = fetchSample(readSet, config.projectCode, config.strategySample, user);
+				Sample sample = fetchSample(readSet, config.projectCode, config.strategySample, scientificName, user);
 				// Renseigner l'objet submission :
 				// Verifier que l'objet sample n'a jamais ete soumis et n'est pas en cours de soumission
 				System.out.println("sample = " + sample + " et state="+ sample.state.code);
@@ -231,6 +254,7 @@ public class SubmissionServices {
 				}	
 				// mettre à jour l'experiment pour la reference sample :
 				experiment.sampleCode = sample.code;
+
 			}
 			
 
@@ -377,7 +401,6 @@ public class SubmissionServices {
 		//submission.state = new State("inwaiting", user);
 		contextValidation.setCreationMode();
 		contextValidation.getContextObjects().put("type", "sra");
-		contextValidation.getContextObjects().put("configuration", config);
 		submission.validate(contextValidation);
 
 		if (!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "code",submission.code)){	
@@ -455,26 +478,33 @@ public class SubmissionServices {
 			
 				System.out.println("exp = "+ expElt.code);
 				for (RawData rawData :expElt.run.listRawData){
-					System.out.println("run = "+ expElt.run.code);
-					File fileCible = new File(rawData.directory + File.separator + rawData.relatifName);
-					File fileLien = new File(submission.submissionDirectory + File.separator + rawData.relatifName);
-					if(fileLien.exists()){
-						fileLien.delete();
+					if (StringUtils.isBlank(rawData.location)) {
+						throw new SraException(" Dans activateSubmission" + rawData.relatifName + " avec location non renseignée");				
 					}
-					if (!fileCible.exists()){
-						System.out.println("Le fichier cible n'existe pas  : " + fileCible);
-						throw new SraException("Le fichier cible n'existe pas  : " + fileCible);
-					}
-					System.out.println("fileCible = " + fileCible);
-					System.out.println("fileLien = " + fileLien);
+					if (rawData.location.equalsIgnoreCase("CNS")) {
+						System.out.println("run = "+ expElt.run.code);
+						File fileCible = new File(rawData.directory + File.separator + rawData.relatifName);
+						File fileLien = new File(submission.submissionDirectory + File.separator + rawData.relatifName);
+						if(fileLien.exists()){
+							fileLien.delete();
+						}
+						if (!fileCible.exists()){
+							System.out.println("Le fichier cible n'existe pas  : " + fileCible);
+							throw new SraException("Le fichier cible n'existe pas  : " + fileCible);
+						}
+						System.out.println("fileCible = " + fileCible);
+						System.out.println("fileLien = " + fileLien);
 
-					Path lien = Paths.get(fileLien.getPath());
-					Path cible = Paths.get(fileCible.getPath());
-					Files.createSymbolicLink(lien, cible);
-					System.out.println("Lien symbolique avec :  lien= "+lien+" et  cible="+cible);
-					//String cmd = "ln -s -f " + rawData.directory + File.separator + rawData.relatifName
-					//+ " " + submission.submissionDirectory + File.separator + rawData.relatifName;
-					//System.out.println("cmd = " + cmd);
+						Path lien = Paths.get(fileLien.getPath());
+						Path cible = Paths.get(fileCible.getPath());
+						Files.createSymbolicLink(lien, cible);
+						System.out.println("Lien symbolique avec :  lien= "+lien+" et  cible="+cible);
+						//String cmd = "ln -s -f " + rawData.directory + File.separator + rawData.relatifName
+						//+ " " + submission.submissionDirectory + File.separator + rawData.relatifName;
+						//System.out.println("cmd = " + cmd);
+					} else {
+						System.out.println("Donnée "+ rawData.relatifName + " localisée au " + rawData.location);
+					}
 				}
 			}
 		} catch (SraException e) {
@@ -659,7 +689,7 @@ public class SubmissionServices {
 
 	//todo: il reste scientificName, classification, comonName à renseigner sur la base de idTaxon, et description
 	// voir si service web existant au NCBI (ou get_taxonId en interne ou encore base de AGC).
-	public Sample fetchSample(ReadSet readSet, String projectCode, String strategySample, String user) throws SraException {
+	public Sample fetchSample(ReadSet readSet, String projectCode, String strategySample, String scientificName, String user) throws SraException {
 		// Recuperer pour chaque readSet les objets de laboratory qui existent forcemment dans mongoDB, 
 		// et qui permettront de renseigner nos objets SRA :
 		String laboratorySampleCode = readSet.sampleCode;
@@ -688,15 +718,8 @@ public class SubmissionServices {
 			sample = new Sample();
 			sample.code = codeSample;
 			sample.taxonId = new Integer(taxonId);
-			// enrichir le sample avec scientific_name :
-			try {
-				String scientificName = getNcbiScientificName(sample.taxonId);
-				sample.scientificName = scientificName;
-			} catch (XPathExpressionException | IOException e) {
-				e.printStackTrace();
-				throw new SraException("impossible de recuperer le scientificName au ncbi pour le sample.code '"+ sample.code + "' et le taxonId '" + taxonId + "' : \n" + e.getMessage());
-			}
-			
+			// enrichir le sample avec scientific_name:
+			sample.scientificName = scientificName;
 			sample.clone = laboratorySample.referenceCollab;
 			sample.projectCode = projectCode;
 			sample.state = new State("new", user);
@@ -735,7 +758,7 @@ public class SubmissionServices {
 	/*
 	 * 
 	 */
-	public Experiment createExperimentEntity(ReadSet readSet, String projectCode, String user) throws SraException {
+	public Experiment createExperimentEntity(ReadSet readSet, String projectCode, String scientificName, String user) throws SraException {
 		// On cree l'experiment pour le readSet demandé.
 		// La validite du readSet doit avoir été testé avant.
 
@@ -749,15 +772,32 @@ public class SubmissionServices {
 		String laboratoryRunCode = readSet.runCode;
 		
 		models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
+		Map<String, PropertyValue> sampleOnContainerProperties =readSet.sampleOnContainer.properties;
+		Set <String> listKeysSampleOnContainerProperties = null;
+
+		if (sampleOnContainerProperties != null) {
+			listKeysSampleOnContainerProperties = sampleOnContainerProperties.keySet();  // Obtenir la liste des clés
+			for(String k: listKeysSampleOnContainerProperties) {
+				System.out.print("lulu cle = '" + k+"'  => ");
+				PropertyValue propertyValue = sampleOnContainerProperties.get(k);
+				System.out.println(propertyValue.value);
+			}
+			if (sampleOnContainerProperties.containsKey("libProcessTypeCode")) {
+				String libProcessTypeCode = (String) sampleOnContainerProperties.get("libProcessTypeCode").getValue();
+			}
+		}
+		String libProcessTypeCodeVal = (String) sampleOnContainerProperties.get("libProcessTypeCode").getValue();
+		String typeCode = readSet.typeCode;
+		experiment.title = scientificName + "_" + typeCode + "_" + libProcessTypeCodeVal;
+				
+		InstrumentUsed instrumentUsed = laboratoryRun.instrumentUsed;
+		System.out.println(" !!!!!!!!! instrumentUsed.code = " + instrumentUsed.code);
+		System.out.println("!!!!!!!!!!!! instrumentUsed.typeCode = " + instrumentUsed.typeCode);
+		System.out.println("!!!!!!!!! instrumentUsed.typeCodeMin = '" + instrumentUsed.typeCode.toLowerCase()+"'");
 		
-		/*InstrumentUsed instrumentUsed = laboratoryRun.instrumentUsed;
-		System.out.println("instrumentUsed.code = " + instrumentUsed.code);
-		System.out.println("instrumentUsed.typeCode = " + instrumentUsed.typeCode);
-		System.out.println("instrumentUsed.typeCodeMin = '" + instrumentUsed.typeCode.toLowerCase()+"'");
-		*/
 		experiment.instrumentModel = VariableSRA.mapInstrumentModel.get(laboratoryRun.typeCode.toLowerCase());
 		experiment.libraryLayoutNominalLength = null;
-		
+
 		// mettre la valeur calculée de libraryLayoutNominalLength
 		models.laboratory.run.instance.Treatment treatmentMapping = readSet.treatments.get("mapping");
 		if (treatmentMapping != null) {
@@ -790,16 +830,16 @@ public class SubmissionServices {
 		if (experiment.libraryLayoutNominalLength == null) {
 			// mettre valeur theorique de libraryLayoutNominalLength (valeur a prendre dans readSet.sampleOnContainer.properties.nominalLength) 
 			// voir recup un peu plus bas:
-			Map<String, PropertyValue> sampleOnContainerProperties = readSet.sampleOnContainer.properties;
+			//Map<String, PropertyValue> sampleOnContainerProperties = readSet.sampleOnContainer.properties;
 			if (sampleOnContainerProperties != null) {
-				Set <String> listKeysSampleOnContainerProperties = sampleOnContainerProperties.keySet();  // Obtenir la liste des clés
+				//Set <String> listKeysSampleOnContainerProperties = sampleOnContainerProperties.keySet();  // Obtenir la liste des clés
 			
-				/*for(String k: listKeysSampleOnContainerProperties){
-					System.out.print("cle = '" + k +"'");
+				for(String k: listKeysSampleOnContainerProperties){
+					System.out.print("MA cle = '" + k +"'");
 					PropertyValue propertyValue = sampleOnContainerProperties.get(k);
 					System.out.print(propertyValue.toString());
-					System.out.println(", value  => "+propertyValue.value);
-				} */
+					System.out.println(", MA value  => "+propertyValue.value);
+				} 
 				
 				if (sampleOnContainerProperties.containsKey("libLayoutNominalLength")) {	
 					//System.out.println("recherche valeur theorique possible");
@@ -821,12 +861,10 @@ public class SubmissionServices {
 		String laboratorySampleCode = readSet.sampleCode;
 		models.laboratory.sample.instance.Sample laboratorySample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, models.laboratory.sample.instance.Sample.class, laboratorySampleCode);
 		String taxonId = laboratorySample.taxonCode;
-		String taxonName = getTaxonName(taxonId);
-
+		
 		//String laboratoryRunCode = readSet.runCode;
 		//models.laboratory.run.instance.Run  laboratoryRun = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, models.laboratory.run.instance.Run.class, laboratoryRunCode);
 		String technology = laboratoryRun.instrumentUsed.typeCode;
-		experiment.title = taxonName + technology + "typeBanqueAmplifiee?";
 		
 		// Recuperer l'information spotLength, 
 		models.laboratory.run.instance.Treatment treatmentNgsrg = (laboratoryRun.treatments.get("ngsrg"));
@@ -858,9 +896,9 @@ public class SubmissionServices {
 					experiment.libraryLayoutOrientation = "forward";
 				} else if( libraryLayout.equalsIgnoreCase("PE") || libraryLayout.equalsIgnoreCase("MP")){
 					experiment.libraryLayout = "PAIRED";
-					Map<String, PropertyValue> sampleOnContainerProperties = readSet.sampleOnContainer.properties;
+					//Map<String, PropertyValue> sampleOnContainerProperties = readSet.sampleOnContainer.properties;
 					if (sampleOnContainerProperties != null) {
-						Set <String> listKeysSampleOnContainerProperties = sampleOnContainerProperties.keySet();  // Obtenir la liste des clés
+						//Set <String> listKeysSampleOnContainerProperties = sampleOnContainerProperties.keySet();  // Obtenir la liste des clés
 					
 						/*for(String k: listKeysSampleOnContainerProperties){
 							System.out.print("cle = " + k);
@@ -975,10 +1013,6 @@ public class SubmissionServices {
 
 	
 	
-	
-	public String getTaxonName(String taxonId) {
-		return "taxonNameFor_" + taxonId;
-	}
 
 
 	public Run createRunEntity(ReadSet readSet, String projectCode) {
@@ -1002,14 +1036,11 @@ public class SubmissionServices {
 		
 		//run.projectCode = projectCode;
 		run.runCenter = VariableSRA.centerName;
-		
 		// Renseigner le run pour ces fichiers sur la base des fichiers associes au readSet :
 		// chemin des fichiers pour ce readset :
 		String dataDir = readSet.path;
 		for (models.laboratory.run.instance.File runInstanceFile: list_files) {
-			String runInstanceRelatifFileName = runInstanceFile.fullname;
 			String runInstanceExtentionFileName = runInstanceFile.extension;
-			
 			// conditions qui doivent etre suffisantes puisque verification préalable que le readSet
 			// est bien valide pour la bioinformatique.
 			if (runInstanceFile.usable 
@@ -1020,6 +1051,7 @@ public class SubmissionServices {
 					rawData.extention = runInstanceFile.extension;
 					rawData.directory = dataDir.replaceFirst("\\/$", ""); // oter / terminal si besoin
 					rawData.relatifName = runInstanceFile.fullname;
+					rawData.location = readSet.location;
 					run.listRawData.add(rawData);
 					if (runInstanceFile.properties != null && runInstanceFile.properties.containsKey("md5")) {
 						System.out.println("Recuperation du md5 pour" + rawData.relatifName + rawData.extention);

@@ -53,7 +53,7 @@ public class Sample extends DBObject implements IValidation{
 	public Valuation valuation;
 	//public List<CollaboratorInvolve> collaborators;
 	public String taxonCode;
-		
+
 	public List<Comment> comments;
 	public TraceInformation traceInformation;
 

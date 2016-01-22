@@ -23,16 +23,12 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 public abstract class AbstractStudy extends DBObject implements IValidation {
 
 	public String accession;       // numeros d'accession attribué par ebi 
-	//public State state; 
 	public TraceInformation traceInformation = new TraceInformation();
 	public State state; 
 
 	public AbstractStudy() {
 		super();
 	} 
-	
-
-
 	
 	
 }

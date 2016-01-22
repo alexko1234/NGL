@@ -108,12 +108,16 @@ public class Submission extends DBObject implements IValidation {
 			contextValidation.removeKeyFromRootKeyName("submission");
 			return;
 		} 
+		if (StringUtils.isBlank(this.configCode)){
+			contextValidation.addErrors("submission non evaluable ", "sans configCode dans la soumission '" + this.code + "'");
+			contextValidation.removeKeyFromRootKeyName("submission");
+			return;
+		} 
+		Configuration config = MongoDBDAO.findByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, this.configCode);
 
-		Configuration config = (Configuration) contextValidation.getContextObjects().get("configuration");
-		
 		if (contextValidation.getContextObjects().get("type").equals("sra")) {
 			if (config == null) {
-				contextValidation.addErrors("configuration", "objet qui doit etre renseigné dans le contexte de validation");
+				contextValidation.addErrors("submission.configCode", "objet configuration '" + this.configCode + "' qui n'existe pas dans base");
 			} else { 
 				// pas de validation integrale de config qui a ete stocke dans la base donc valide mais verification
 				// de quelques contraintes en lien avec soumission.
@@ -153,6 +157,7 @@ public class Submission extends DBObject implements IValidation {
 					}
 				}
 			}
+		
 			if (StringUtils.isBlank(this.studyCode) && this.sampleCodes.size() == 0 &&  this.experimentCodes.size() == 0) {
 				contextValidation.addErrors("studyCode, sampleCodes et experimentCodes ::", "Les 3 champs ne peuvent pas etre vides pour une soumission" + "taille des experiments = " +  this.experimentCodes.size() + ", taille des sample = "+ this.sampleCodes.size());
 			}		

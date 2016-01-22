@@ -14,7 +14,8 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
-public class Study extends DBObject implements IValidation {
+
+public class Study extends AbstractStudy {
 
 	// StudyType
 	//public String alias;             // required mais remplacé par code herité de DBObject, et valeur = study_projectCode_num
