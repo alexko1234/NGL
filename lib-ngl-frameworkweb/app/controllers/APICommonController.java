@@ -5,6 +5,7 @@ import static play.data.Form.form;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -123,8 +124,17 @@ public abstract class APICommonController<T> extends Controller{
 			for(String key :queryString.keySet()){
 				
 				try {
-					if(isNotEmpty(queryString.get(key))){	
-						wrapper.setPropertyValue(key, queryString.get(key));
+					if(isNotEmpty(queryString.get(key))){
+						Object value = queryString.get(key);
+						if(wrapper.isWritableProperty(key)){
+							Class c = wrapper.getPropertyType(key);
+							//TODO used conversion spring system
+							if(null != c && Date.class.isAssignableFrom(c)){
+								//wrapper.setPropertyValue(key, new Date(Long.valueOf(value[0])));
+								value = new Date(Long.valueOf(((String[])value)[0]));
+							}							
+						}
+						wrapper.setPropertyValue(key, value);
 					}
 				} catch (Exception e) {
 					throw new RuntimeException(e);
