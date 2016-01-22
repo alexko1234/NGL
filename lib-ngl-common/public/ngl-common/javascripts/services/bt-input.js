@@ -10,7 +10,7 @@ angular.module('commonsServices').directive('btInput', [ '$parse', '$filter', fu
 			+ '<div class="input-group">'
 			+ '<div class="input-group-btn">'
 			//textarea mode
-			+ '<button tabindex="-1" data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle" type="button" ng-disabled="isDisabled()" ng-click="open()">' 
+			+ '<button tabindex="-1" data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" type="button" ng-disabled="isDisabled()" ng-click="open()">' 
 			+ '<i class="fa fa-list-ul"></i>' + '</button>' + '<ul class="dropdown-menu dropdown-menu-left"  role="menu">' 
 			+ '<li>' 
 			+ '<textarea ng-class="inputClass" ng-model="textareaValue" ng-change="setTextareaNgModel()" rows="5"></textarea>' 
@@ -35,7 +35,7 @@ angular.module('commonsServices').directive('btInput', [ '$parse', '$filter', fu
 				scope.textareaValue = undefined;
 				textarea = true;
 				
-				scope.$watch(attr.textareaNgModel, function(newValue, oldValue){
+				scope.$parent.$watch(attr.textareaNgModel, function(newValue, oldValue){
 			    	  if(newValue === undefined || newValue === null){
 			    		  scope.textareaValue = undefined;      		    				    		   		    		
 			    	  }

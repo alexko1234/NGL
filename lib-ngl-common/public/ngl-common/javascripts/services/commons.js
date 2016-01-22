@@ -712,7 +712,7 @@ angular.module('commonsServices', []).
   		    			
   		    			+'<div class="input-group-btn" ng-if="isTextarea()">'
   		    			//textarea mode
-  		    			+'<button tabindex="-1" data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle" type="button" ng-disabled="isDisabled()" ng-click="open()">'
+  		    			+'<button tabindex="-1" data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" type="button" ng-disabled="isDisabled()" ng-click="open()">'
   		    			+'<i class="fa fa-list-ul"></i>'
   		    			+'</button>'
   		    			+'<ul class="dropdown-menu dropdown-menu-left"  role="menu">'
@@ -729,7 +729,7 @@ angular.module('commonsServices', []).
   		    			+'<span class="caret"></span>'
   		    			+'</button>'
   		    			+'<ul class="dropdown-menu dropdown-menu-right"  role="menu">'
-  				        +'<li ng-if="filter"><input ng-class="inputClass" type="text" ng-click="inputClick($event)" ng-model="filterValue" ng-change="setFilterValue(filterValue)" placeholder="{{getMessage(\'bt-select.here\')}}"/></li>'
+  				        +'<li ng-show="filter"><input ng-class="inputClass" type="text" ng-click="inputClick($event)" ng-model="filterValue" ng-change="setFilterValue(filterValue)" placeholder="{{getMessage(\'bt-select.here\')}}"/></li>'
   				        // Liste des items déja cochés
 		    	  		+'<li ng-repeat-start="item in getSelectedItems()" ng-if="groupBy(item, $index) && acceptsMultiple()"></li>'
   				        +'<li class="dropdown-header" ng-if="groupBy(item, $index)" ng-bind="itemGroupByLabel(item)"></li>'
@@ -774,7 +774,6 @@ angular.module('commonsServices', []).
 	      		      var items = [];
 	      		      var groupByLabels = {};
 	      		      var filterValue;
-	      		      var textareaValue;
 	      		      var ngFocus = attr.ngFocus;
 	      		      var ngModelValue = attr.ngModel;
 	      		      function parseBtsOptions(input){
@@ -815,7 +814,6 @@ angular.module('commonsServices', []).
 	      		     scope.isTextarea = function(){
 	      		    	return (multiple && textarea); 
 	      		     };
-	      		     scope.textareaValue = textareaValue; 
 	      		     scope.setTextareaValue = function(values, $event){
 	      		    	if(multiple){
       		    			var selectedValues = values.split(/\s*[,;\n]\s*/);
@@ -909,6 +907,11 @@ angular.module('commonsServices', []).
       		    	     if(newValue!= undefined && newValue !== null && oldValue !== newValue){		    		
       		    	    	 render();
       		    	     }
+      		    	   if(newValue === undefined || newValue === null){
+ 			    		  scope.textareaValue = undefined;      		    				    		   		    		
+ 			    	  }
+      		    	     
+      		    	     
       		      }, true);
       		      
       		      scope.selectItem = function(item, $event){      		    	  

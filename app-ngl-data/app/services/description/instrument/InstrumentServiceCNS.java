@@ -239,7 +239,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 
 	private List<Instrument> getInstrumentHand() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("irys-hand", "Main", null, true, "main", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("irys-hand", "Main", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return instruments;
 	}
 

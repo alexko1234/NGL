@@ -129,10 +129,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 				active:true
 			},
 			edit:{
-				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
-				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
-				byDefault:($scope.isCreationMode()),
-				columnMode:false
+				active: false
 			},
 			messages:{
 				active:false,
@@ -281,8 +278,8 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");		
 		var dtConfig = $scope.atmService.data.getConfig();
-		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
-		dtConfig.edit.byDefault = false;
+		//dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
+		//dtConfig.edit.byDefault = false;
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.setConfig(dtConfig);
 		
@@ -301,9 +298,9 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 		$scope.datatableLoadingReport.cancel();
 		
 		if($scope.isCreationMode()){
-			var dtConfig = $scope.atmService.data.getConfig();
-			dtConfig.edit.byDefault = false;
-			$scope.atmService.data.setConfig(dtConfig);
+			//var dtConfig = $scope.atmService.data.getConfig();
+			//dtConfig.edit.byDefault = false;
+			//$scope.atmService.data.setConfig(dtConfig);
 			
 			dtConfig = $scope.datatableQcFlowcell.getConfig();
 			dtConfig.edit.byDefault = false;
