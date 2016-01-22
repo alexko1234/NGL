@@ -100,7 +100,8 @@ public class FileAcServicesTest  extends AbstractTestsSRA {
 
 		// creer un objet Experiment (avec son run associé) valide avec un status "inWaiting" et le sauver dans mongodb :
 		ReadSet readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode);
-		Experiment experiment = SubmissionServices.createExperimentEntity(readSet, config.projectCode, "william");
+		String scientificName = "scientificName bidon";
+		Experiment experiment = SubmissionServices.createExperimentEntity(readSet, config.projectCode, scientificName, "william");
 		// changer le code de experiment :
 		experiment.code = experimentCode;
 		experiment.sampleCode = sampleCode;
