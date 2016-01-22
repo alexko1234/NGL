@@ -180,6 +180,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.experiment = newExperiment;
 		$scope.messages.setSuccess("save");						
 		mainService.stopEditMode();
+		finishEditMode=false;
 		saveInProgress = false;
 		$scope.$broadcast('refresh'); // utile seulement si l'update fonctionne				
 	}

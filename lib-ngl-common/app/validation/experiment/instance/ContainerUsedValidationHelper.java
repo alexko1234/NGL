@@ -224,7 +224,16 @@ public class ContainerUsedValidationHelper extends CommonValidationHelper {
 				content.validate(contextValidation);
 				contextValidation.removeKeyFromRootKeyName("contents["+i+++"]");
 			}
-		}else if(!"N".equals(stateCode)){
+		}else if("IP".equals(stateCode)){
+			if(ValidationHelper.required(contextValidation, contents, "contents")){
+				int i = 0;
+				for(Content content: contents){
+					contextValidation.addKeyToRootKeyName("contents["+i+"]");
+					content.validate(contextValidation);
+					contextValidation.removeKeyFromRootKeyName("contents["+i+++"]");
+				}
+			}
+		}else if("F".equals(stateCode) && contents != null){ //GA 22/01/2016 hack for old experiment without contents, remove in 2017
 			if(ValidationHelper.required(contextValidation, contents, "contents")){
 				int i = 0;
 				for(Content content: contents){
