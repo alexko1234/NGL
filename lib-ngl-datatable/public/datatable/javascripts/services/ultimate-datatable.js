@@ -2603,8 +2603,6 @@ directive("udtCell", function(){
 	    					editElement = '<input class="form-control"' +defaultValueDirective+' udt-html-filter="{{col.type}}" '+userDirectives+' type="checkbox" class="input-small" ng-model="'+this.getEditProperty(col, header, filter)+ngChange+'/>';
 	    				}
 	    				else if(col.type === "java.awt.image"){
-	    					
-	    					var value=this.getEditProperty(col, header, filter);
 	    					editElement=
                             '<input ng-if="'+this.getEditProperty(col, header, filter)+' === undefined" type="file" base64-img="'+this.getEditProperty(col, header, filter)+'" />'
     						+'<div  ng-click="setImage('+this.getEditProperty(col, header, filter)+'.value,'
