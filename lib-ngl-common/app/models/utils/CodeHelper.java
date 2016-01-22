@@ -81,7 +81,7 @@ public class CodeHelper {
 		return (process.sampleCode + "_" + process.typeCode + "_" + generateBarCode()).toUpperCase();
 	}
 
-	public synchronized String generateExperiementCode(Experiment exp) {
+	public synchronized String generateExperimentCode(Experiment exp) {
 		try {
 			Thread.sleep(1);
 		} catch (InterruptedException e1) {

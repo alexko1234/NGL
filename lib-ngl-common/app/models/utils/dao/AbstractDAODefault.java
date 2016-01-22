@@ -1,5 +1,6 @@
 package models.utils.dao;
 
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +24,8 @@ import play.Logger;
  */
 public abstract class AbstractDAODefault<T> extends AbstractDAO<T>{
 
-	private String sqlCommon;
-	private boolean usedInstitute = false;
+	protected String sqlCommon;
+	protected boolean usedInstitute = false;
 	
 	protected AbstractDAODefault(String tableName, Class<T> entityClass, boolean useGeneratedKey) {
 		super(tableName, entityClass,useGeneratedKey);		
@@ -123,6 +124,21 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T>{
 			String sql = getSqlCommon()+" WHERE t.code=?";
 			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
 			return this.jdbcTemplate.queryForObject(sql, mapper, code);
+		} catch (DataAccessException e) {
+			Logger.warn(e.getMessage());
+			return null;
+		}
+	}
+	
+	public List<T> findByCodes(List<String> codes) throws DAOException
+	{
+		if(null == codes){
+			throw new DAOException("codes is mandatory");
+		}
+		try {
+			String sql = getSqlCommon()+" WHERE t.code in ("+listToParameters(codes)+")";
+			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
+			return this.jdbcTemplate.query(sql, mapper, listToSqlParameters(codes ,"t.code", Types.VARCHAR));
 		} catch (DataAccessException e) {
 			Logger.warn(e.getMessage());
 			return null;

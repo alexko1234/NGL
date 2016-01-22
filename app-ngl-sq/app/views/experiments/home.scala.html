@@ -5,7 +5,8 @@
 @scripts() = {
  	<script src="@controllers.main.tpl.routes.Main.jsCodes" type="text/javascript" charset="utf-8"></script> 
 	
-	<script src="@routes.Assets.at("datatable/javascripts/services/ultimate-datatable.js")" type="text/javascript" charset="utf-8"></script>
+	<!-- script src="@routes.Assets.at("datatable/javascripts/services/ultimate-datatable.js")" type="text/javascript" charset="utf-8"></script-->
+	<script src="@routes.Assets.at("datatable/javascripts/services/ultimate-datatable-byd-search-local.js")" type="text/javascript" charset="utf-8"></script>
 	
 	<script src="@routes.Assets.at("ngl-sq/javascripts/experiments/app.js")" type="text/javascript" charset="utf-8"></script>  	
 	
@@ -13,17 +14,23 @@
 	<script src="@routes.Assets.at("ngl-common/javascripts/services/basket.js")" type="text/javascript" charset="utf-8"></script>  
 	<script src="@routes.Assets.at("ngl-common/javascripts/controllers/mainctrl.js")" type="text/javascript" charset="utf-8"></script> 
 	<script src="@routes.Assets.at("ngl-common/javascripts/services/commons.js")" type="text/javascript" charset="utf-8"></script> 
-	<script src="@routes.Assets.at("ngl-common/javascripts/services/list-resize.js")" type="text/javascript" charset="utf-8"></script> 
+	<script src="@routes.Assets.at("ngl-common/javascripts/services/list-resize.js")" type="text/javascript" charset="utf-8"></script> 	
+	<script src="@routes.Assets.at("ngl-common/javascripts/services/bt-input.js")" type="text/javascript" charset="utf-8"></script> 	
 	
 	<script src="@routes.Assets.at("ngl-sq/javascripts/services/dragndrop.js")" type="text/javascript" charset="utf-8"></script> 
+	
 	<script src="@routes.Assets.at("ngl-sq/javascripts/services/atomicTransfereServices.js")" type="text/javascript" charset="utf-8"></script>
+	
 	<script src="@routes.Assets.at("ngl-sq/javascripts/experiments/search-containers-ctrl.js")" type="text/javascript" charset="utf-8"></script>
+	<script src="@routes.Assets.at("ngl-sq/javascripts/experiments/list-containers-ctrl.js")" type="text/javascript" charset="utf-8"></script>
 	<script src="@routes.Assets.at("ngl-sq/javascripts/experiments/services.js")" type="text/javascript" charset="utf-8"></script>  	
-	<script src="@routes.Assets.at("ngl-sq/javascripts/experiments/new-experiments-ctrl.js")" type="text/javascript" charset="utf-8"></script>
-	<script src="@routes.Assets.at("ngl-sq/javascripts/experiments/create-experiments-ctrl.js")" type="text/javascript" charset="utf-8"></script>
+	<script src="@routes.Assets.at("ngl-sq/javascripts/experiments/details-ctrl.js")" type="text/javascript" charset="utf-8"></script>
+	<!-- script src="@routes.Assets.at("ngl-sq/javascripts/experiments/create-experiments-ctrl.js")" type="text/javascript" charset="utf-8"></script-->
 	<script src="@routes.Assets.at("ngl-sq/javascripts/experiments/search-ctrl.js")" type="text/javascript" charset="utf-8"></script>
 	
 	<script src="@routes.Assets.at("ngl-sq/javascripts/experiments/oneToVoid/default/one-to-void-ctrl.js")" type="text/javascript" charset="utf-8"></script>
+	<script src="@routes.Assets.at("ngl-sq/javascripts/experiments/oneToVoid/default/illumina-depot-ctrl.js")" type="text/javascript" charset="utf-8"></script>
+	
 	<script src="@routes.Assets.at("ngl-sq/javascripts/experiments/oneToOne/default/tube-to-tube-ctrl.js")" type="text/javascript" charset="utf-8"></script>
 	<script src="@routes.Assets.at("ngl-sq/javascripts/experiments/oneToMany/default/tube-to-tubes-ctrl.js")" type="text/javascript" charset="utf-8"></script>
 	<script src="@routes.Assets.at("ngl-sq/javascripts/experiments/manyToOne/default/tubes-to-tube-ctrl.js")" type="text/javascript" charset="utf-8"></script>
@@ -50,7 +57,7 @@
 
 @css() = {
 <link rel="stylesheet" href="@routes.Assets.at("ngl-sq/css/commons/commons.css")">
-<link rel="stylesheet" href="@routes.Assets.at("ngl-sq/css/experiments/manyToOne/flowcell.css")">
+<link rel="stylesheet" href="@routes.Assets.at("ngl-sq/css/experiments/manyToOne/manyToOne.css")">
 <link rel="stylesheet" href="@routes.Assets.at("ngl-sq/css/experiments/new-experiments.css")">
 <link rel="stylesheet" href="@routes.Assets.at("ngl-sq/css/experiments/create-experiments.css")">
 }

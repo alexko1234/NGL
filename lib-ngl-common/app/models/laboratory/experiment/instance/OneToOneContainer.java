@@ -1,19 +1,11 @@
 package models.laboratory.experiment.instance;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang.NotImplementedException;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import controllers.authorisation.PermissionHelper;
-import validation.ContextValidation;
 import models.laboratory.common.description.Level;
-import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
@@ -25,7 +17,6 @@ import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
 import models.utils.instance.ContainerSupportHelper;
@@ -33,9 +24,11 @@ import models.utils.instance.ExperimentHelper;
 import models.utils.instance.ProcessHelper;
 import play.Logger;
 import validation.ContextValidation;
-import validation.common.instance.CommonValidationHelper;
+import validation.experiment.instance.AtomicTransfertMethodValidationHelper;
 import validation.utils.ValidationConstants;
-import controllers.CommonController;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import fr.cea.ig.MongoDBDAO;
 
 public class OneToOneContainer extends AtomicTransfertMethod{
@@ -114,8 +107,8 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 			//TODO validation properties !
 			
 			Map<String,PropertyValue> properties=ExperimentHelper.getAllPropertiesFromAtomicTransfertMethod(this,experiment);
-			ContainerHelper.addContent(outputContainer, this.getInputContainers(), experiment, properties);
-			ContainerSupportHelper.updateData(support, this.getInputContainers(), experiment, properties);
+			ContainerHelper.addContent(outputContainer, this.inputContainerUseds, experiment, properties);
+			ContainerSupportHelper.updateData(support, this.inputContainerUseds, experiment, properties);
 			contextValidation.setCreationMode();
 			ContainerSupportHelper.save(support, contextValidation);
 
@@ -134,27 +127,41 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 	}
 
 	@Override
-	public void validate(ContextValidation contextValidation) {
-
-		contextValidation.putObject("level", Level.CODE.ContainerIn);		
-		inputContainerUseds.get(0).validate(contextValidation);	
-		contextValidation.removeObject("level");
-		if(outputContainerUseds != null){
-			contextValidation.putObject("level", Level.CODE.ContainerOut);
-			outputContainerUseds.get(0).validate(contextValidation);
-			contextValidation.removeObject("level");
+	public void updateOutputCodeIfNeeded(ContainerSupportCategory outputCsc, String supportCode) {
+		//case tube :one support for each atm
+		if(outputCsc.nbLine.compareTo(Integer.valueOf(1)) == 0 && outputCsc.nbColumn.compareTo(Integer.valueOf(1)) == 0){
+			outputContainerUseds.forEach((OutputContainerUsed ocu) -> {
+					if(null == ocu.locationOnContainerSupport.code){
+						ocu.locationOnContainerSupport.code = supportCode;
+						ocu.code = supportCode;
+					}
+				}
+			);
+		}else if(outputCsc.nbLine.compareTo(Integer.valueOf(1)) > 0 && outputCsc.nbColumn.compareTo(Integer.valueOf(1)) == 0){
+			outputContainerUseds.forEach((OutputContainerUsed ocu) -> {
+				if(null == ocu.locationOnContainerSupport.code){
+					ocu.locationOnContainerSupport.code = supportCode;
+					ocu.code = supportCode+"_"+ocu.locationOnContainerSupport.line;
+				}
+			}
+		);
+		}else if(outputCsc.nbLine.compareTo(Integer.valueOf(1)) > 0 && outputCsc.nbColumn.compareTo(Integer.valueOf(1)) > 0){
+			outputContainerUseds.forEach((OutputContainerUsed ocu) -> {
+				if(null == ocu.locationOnContainerSupport.code){
+					ocu.locationOnContainerSupport.code = supportCode;
+					ocu.code = supportCode+"_"+ocu.locationOnContainerSupport.line+"_"+ocu.locationOnContainerSupport.column;
+				}
+			}
+		);
 		}
 	}
-	@JsonIgnore
-	public List<ContainerUsed> getInputContainers(){
-		return inputContainerUseds;
+	
+	@Override
+	public void validate(ContextValidation contextValidation) {
+		super.validate(contextValidation);
+		AtomicTransfertMethodValidationHelper.validateOneInputContainer(inputContainerUseds, contextValidation);
+		AtomicTransfertMethodValidationHelper.validateOneOutputContainer(outputContainerUseds, contextValidation);
+		AtomicTransfertMethodValidationHelper.validateOutputContainers(contextValidation, outputContainerUseds);
 	}
-
-	@JsonIgnore
-	public List<ContainerUsed> getOutputContainers(){		
-		return outputContainerUseds;
-	}
-
-
 
 }

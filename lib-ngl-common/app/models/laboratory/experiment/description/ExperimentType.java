@@ -3,6 +3,8 @@ package models.laboratory.experiment.description;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
@@ -29,8 +31,10 @@ public class ExperimentType extends CommonInfoType{
 		super(ExperimentTypeDAO.class.getName());		
 	}
 	
+	@JsonIgnore
 	public static ExperimentTypeFinder find = new ExperimentTypeFinder();
 	
+	@JsonIgnore
 	public List<PropertyDefinition> getPropertiesDefinitionDefaultLevel(){
 		return getPropertyDefinitionByLevel(models.laboratory.common.description.Level.CODE.Experiment);
 	}

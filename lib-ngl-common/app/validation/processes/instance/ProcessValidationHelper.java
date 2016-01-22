@@ -52,7 +52,7 @@ public class ProcessValidationHelper extends CommonValidationHelper {
 	
 	public static void validateStateCode(String stateCode,ContextValidation contextValidation){
 		contextValidation.addKeyToRootKeyName("state");
-		CommonValidationHelper.validateStateCode(stateCode,ObjectType.CODE.Process, contextValidation);
+		CommonValidationHelper.validateStateCode(ObjectType.CODE.Process, stateCode, contextValidation);
 		contextValidation.removeKeyFromRootKeyName("state");
 	}
 	

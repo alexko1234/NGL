@@ -32,7 +32,7 @@ public class ContainerSupportCategories extends CommonController{
 			if(StringUtils.isNotBlank(containerSupportCategoriesSearch.instrumentUsedTypeCode)){
 				containerSupportCategories = InstrumentUsedType.find.findByCode(containerSupportCategoriesSearch.instrumentUsedTypeCode).outContainerSupportCategories;
 			}else if(StringUtils.isNotBlank(containerSupportCategoriesSearch.experimentTypeCode)){
-				containerSupportCategories = ContainerSupportCategory.find.findByExperimentTypeCode(containerSupportCategoriesSearch.experimentTypeCode); 
+				containerSupportCategories = ContainerSupportCategory.find.findInputByExperimentTypeCode(containerSupportCategoriesSearch.experimentTypeCode); 
 			}else{
 				containerSupportCategories = ContainerSupportCategory.find.findAll();
 			}

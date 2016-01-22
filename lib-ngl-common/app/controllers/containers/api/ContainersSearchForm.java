@@ -10,7 +10,8 @@ import controllers.ListForm;
 
 public class ContainersSearchForm extends ListForm{
 	
-	public String code; //TODO rename in codeRegex ou regexCode and add strict research with code
+	public String code; 
+	public String codeRegex;
 	public Set<String> codes;
 	public String projectCode;
 	public Set<String> projectCodes;
@@ -25,6 +26,7 @@ public class ContainersSearchForm extends ListForm{
 	public String processCategory;
 	public String nextProcessTypeCode;
 	public String supportCode;
+	public Set<String> supportCodes;
 	public String supportCodeRegex;
 	public String containerSupportCategory;
 	public Set<String> containerSupportCategories;

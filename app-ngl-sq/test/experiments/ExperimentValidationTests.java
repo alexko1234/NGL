@@ -12,7 +12,9 @@ import models.laboratory.common.instance.property.PropertyImgValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.ManytoOneContainer;
+import models.laboratory.experiment.instance.InputContainerUsed;
+import models.laboratory.experiment.instance.ManyToOneContainer;
+import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.utils.InstanceConstants;
 import models.utils.instance.ExperimentHelper;
 
@@ -26,7 +28,7 @@ import utils.AbstractTests;
 import utils.Constants;
 import validation.ContextValidation;
 import validation.experiment.instance.ExperimentValidationHelper;
-import controllers.experiments.api.Experiments;
+import controllers.experiments.api.ExperimentsOld;
 import fr.cea.ig.MongoDBDAO;
 
 public class ExperimentValidationTests extends AbstractTests {
@@ -92,9 +94,9 @@ public class ExperimentValidationTests extends AbstractTests {
 		Experiment exp = ExperimentTestHelper.getFakeExperiment();
 		exp.state.code = "IP";
 		exp.typeCode="prepa-flowcell";
-		ManytoOneContainer atomicTransfert = ExperimentTestHelper.getManytoOneContainer();
+		ManyToOneContainer atomicTransfert = ExperimentTestHelper.getManytoOneContainer();
 
-		ContainerUsed containerIn1 = ExperimentTestHelper.getContainerUsed("containerUsedIn1");
+		InputContainerUsed containerIn1 = ExperimentTestHelper.getInputContainerUsed("containerUsedIn1");
 		containerIn1.percentage = 50.0;
 		containerIn1.concentration = new PropertySingleValue(new Integer(10)); 
 		containerIn1.experimentProperties.put("NaOHVolume", new PropertySingleValue(new Double(1)));
@@ -105,7 +107,7 @@ public class ExperimentValidationTests extends AbstractTests {
 		containerIn1.experimentProperties.put("finalConcentration2", new PropertySingleValue(new Double(0.014)));
 		containerIn1.experimentProperties.put("finalVolume2", new PropertySingleValue(new Double(1000)));
 
-		ContainerUsed containerOut1 = ExperimentTestHelper.getContainerUsed("containerUsedOut1");
+		OutputContainerUsed containerOut1 = ExperimentTestHelper.getOutputContainerUsed("containerUsedOut1");
 		containerOut1.experimentProperties.put("phixPercent", new PropertySingleValue(new Double(1)));
 		containerOut1.experimentProperties.put("finalVolume", new PropertySingleValue(new Double(120)));
 
@@ -119,11 +121,11 @@ public class ExperimentValidationTests extends AbstractTests {
 		contextValidation.putObject("stateCode", exp.state.code);
 		contextValidation.putObject("typeCode", exp.typeCode);
 
-		ExperimentValidationHelper.validateAtomicTransfertMethodes(exp.atomicTransfertMethods, contextValidation);
+		ExperimentValidationHelper.validateAtomicTransfertMethods(exp.typeCode, exp.instrument, exp.atomicTransfertMethods, contextValidation);
 
-		ExperimentHelper.doCalculations(exp,Experiments.calculationsRules);
+		ExperimentHelper.doCalculations(exp,ExperimentsOld.calculationsRules);
 
-		ManytoOneContainer atomicTransfertResult = (ManytoOneContainer)exp.atomicTransfertMethods.get(0);
+		ManyToOneContainer atomicTransfertResult = (ManyToOneContainer)exp.atomicTransfertMethods.get(0);
 		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("requiredVolume1")).isNotNull();
 		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("requiredVolume1").value).isInstanceOf(Double.class);
 		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("requiredVolume1").value).isEqualTo(new Double(4));

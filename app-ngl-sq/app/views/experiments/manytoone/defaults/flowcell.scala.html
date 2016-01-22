@@ -10,22 +10,14 @@
 		<div class="row">
 		<div class="col-md-12 col-lg-12">
 		<div class="row">
-		<div ng-model="atmService.data.inputContainers" ng-if="!editMode || doneAndRecorded || inProgressNow" 
-			class="col-md-6 col-lg-5">
-			<div class="panel panel-primary" style="border-style:dashed">
-				<div class="panel-body">		
-					<p><i class="fa fa-download"></i> @Messages("experiments.inputs")</p>
-				</div>
-			</div>			
-		</div>
+		
 		<!-- InputContainers table -->
-		<div class="col-md-12 col-lg-5" droppable drop-fn="atmService.data.drop" ng-model="atmService.data.inputContainers" ng-if="editMode && !inProgressNow && !doneAndRecorded">
+		<div class="col-md-12 col-lg-5" droppable drop-fn="atmService.data.drop" ng-model="atmService.data.inputContainers"  ng-if="mainService.isEditMode()">
 			<div class="panel panel-primary"  style="border-style:dashed">				
 			<div class="panel-body" ng-if="atmService.data.inputContainers.length==0">		
 				<p><i class="fa fa-download"></i> @Messages("experiments.inputs")</p>
 			</div>
-			
-			<table class="table" ng-if="atmService.data.inputContainers.length > 0">
+			<table class="table" ng-if="atmService.data.inputContainers.length > 0" >
 			<thead>
 				<tr>
 					<th>
@@ -51,15 +43,19 @@
 				</thead>				
 				<tr ng-model="container" ng-repeat="container in atmService.data.inputContainers | orderBy:'code' track by $index" draggable drag="dragInProgress">
 					<td>
-						<button class="btn btn-default btn-xs" ng-disabled="!experiment.experimentProperties.enabled" ng-click="atmService.data.deleteInputContainer(container)" ><i class="fa fa-trash-o"></i></button>
+						<button class="btn btn-default btn-xs" ng-disabled="!mainService.isEditModeAvailable() && !isNewState()" ng-click="atmService.data.deleteInputContainer(container)" ><i class="fa fa-trash-o"></i></button>
 					</td>
 					<td>
 						{{container.code}}
 					</td>
 					<td class="col-sm-1">
-						<input class="form-control input-small valueInput" type="text" placeholder="" 
-						ng-readonly="!experiment.experimentProperties.enabled" 
-						ng-model="container.percentage" title='@Messages("containers.table.percentage")'/>
+						<input class="form-control input-small valueInput" 
+									type="text" 
+									ng-model="container.percentage" 
+									title='@Messages("containers.table.percentage")'
+									udt-html-filter="number"
+									/>
+						
 					</td>				
 					<td>
 						<div list-resize='container.contents | getArray:"properties.tag.value"| unique' list-resize-min-size='5' below vertical>																
@@ -95,7 +91,7 @@
 			<th ng-if="isAllOpen">
 				@Messages("containers.table.percentage")
 			</th>
-			<th ng-if="isAllOpen">
+			<th ng-if="isAllOpen" class="sampleCodeAndTags">
 				@Messages("containers.table.sampleCodeAndTags")
 			</th>			
 			<th ng-if="isAllOpen">
@@ -112,16 +108,16 @@
 			</tr>
 			
 			</thead>
-			<tbody ng-if="isAllOpen">
+			<tbody ng-if="isAllOpen && mainService.isEditMode()">
 			<tr>
 			<th colspan="7"></th>
 		
 			<th ng-repeat="property in outputContainerProperties track by $index">
 						<input class="form-control input-sm" type="text"  
-							ng-readonly="!experiment.experimentProperties.enabled" 
-								ng-model="outputContainerValues[property.code]" 
-								ng-change="updateAllOutputContainerProperty(property)"								
-								/>					
+						ng-model="outputContainerValues[property.code]" 
+						ng-change="updateAllOutputContainerProperty(property)"	
+						udt-html-filter="number"							
+						/>									
 			</th>
 			</tr>
 			</tbody>
@@ -165,7 +161,7 @@
 				<tr ng-switch-when="open" ng-repeat="inputContainer in atm.inputContainerUseds | orderBy:'code' track by $index"  
 							ng-model="inputContainer" draggable drag="dragInProgress">	
 						<td rowspan="{{atm.inputContainerUseds.length}}" ng-if="$index === 0">
-							<span class="label label-black" ng-bind="atm.line"></span>
+							<span class="form-control-static label label-black" ng-bind="atm.line"></span>
 						</td>
 						<td rowspan="{{atm.inputContainerUseds.length}}" ng-if="$index === 0">
 							<button class="btn btn-default btn-xs"  ng-click="toggleRow(atm.line - 1)">
@@ -177,30 +173,44 @@
 							{{inputContainer.code}}
 						</td>
 						<td>
-							<input class="form-control input-sm" type="text" 
-								title='@Messages("containers.table.percentage")' 
-								ng-readonly="!experiment.experimentProperties.enabled"
-								ng-model="inputContainer.percentage"
-								ng-change="changeValueOnFlowcellDesign()" />
+							<div ng-switch on="mainService.isEditMode()">						
+								<span ng-switch-when="false" ng-bind="inputContainer.percentage"></span>						 
+								<div ng-switch-when="true">
+									<input class="form-control input-sm" type="text" 
+										title='@Messages("containers.table.percentage")' 
+										ng-model="inputContainer.percentage"
+										ng-change="changeValueOnFlowcellDesign()" 
+										udt-html-filter="number"/>								
+								</div>
+							</div>
+						
 						</td>
 						<td>							
-							<div list-resize="sampleAndTag in getSampleAndTags(inputContainer)" id="SampleTagCell" below vertical></div>
+							<div list-resize="sampleAndTag in getSampleAndTags(inputContainer)" list-resize-min-size='2' below vertical></div>
 						</td>
 						<td>
-							<div list-resize='inputContainer.contents | getArray:"sampleTypeCode"| unique | codes:"type"' list-resize-min-size='5' below vertical>
+							<div list-resize='inputContainer.contents | getArray:"sampleTypeCode"| unique | codes:"type"' list-resize-min-size='2' below vertical>
 						</td> 
 						<td>
-							<div list-resize='inputContainer.contents | getArray:"properties.libProcessTypeCode.value"| unique ' list-resize-min-size='5' below vertical>
+							<div list-resize='inputContainer.contents | getArray:"properties.libProcessTypeCode.value"| unique ' list-resize-min-size='2' below vertical>
 					
 						</td>	
 						<td ng-repeat="property in outputContainerProperties track by $index" 
 							ng-if="$parent.$index === 0"
 							rowspan="{{atm.inputContainerUseds.length}}">
-							<input class="form-control input-sm" type="text" 
-								 title="{{property.name}}"
-								 ng-readonly="!experiment.experimentProperties.enabled" 
-								 ng-model="atm.outputContainerUseds[0].experimentProperties[property.code].value"
-								 ng-change="changeValueOnFlowcellDesign(property)" />						
+								 
+							<div ng-switch on="mainService.isEditMode()">						
+								<span ng-switch-when="false" ng-bind="atm.outputContainerUseds[0].experimentProperties[property.code].value"></span>						 
+								<div ng-switch-when="true">
+									<input class="form-control input-sm" type="text" 
+										 title="{{property.name}}"
+										 ng-model="atm.outputContainerUseds[0].experimentProperties[property.code].value"
+										 ng-change="changeValueOnFlowcellDesign(property)"
+										 udt-html-filter="number" />		
+							
+								</div>
+							</div>								 
+								 				
 						</td>											
 					</tr>					
 			</tbody>	

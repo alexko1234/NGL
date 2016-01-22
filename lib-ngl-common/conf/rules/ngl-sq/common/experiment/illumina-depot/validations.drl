@@ -22,7 +22,7 @@ rule "init inputsupport"
     when
 	Experiment($typeCode:typeCode,$typeCode=="illumina-depot",$atomics:atomicTransfertMethods,$atomics!=null)
 	AtomicTransfertMethod($inputContainerUseds:inputContainerUseds) from $atomics
-    ContainerUsed($support:locationOnContainerSupport.code,$categoryCode:locationOnContainerSupport.categoryCode) from $inputContainerUseds
+    InputContainerUsed($support:locationOnContainerSupport.code,$categoryCode:locationOnContainerSupport.categoryCode) from $inputContainerUseds
 	not InputSupport($support==code)
     then
 		//Logger.debug("Support"+$support +" de category "+$categoryCode);
@@ -38,7 +38,7 @@ rule "init InputContainer"
     when
 	Experiment($typeCode:typeCode,$typeCode=="illumina-depot",$atomics:atomicTransfertMethods,$atomics!=null)
     AtomicTransfertMethod($inputContainerUseds:inputContainerUseds) from $atomics
-    $containerUsed:ContainerUsed($code:code) from $inputContainerUseds
+    $containerUsed:InputContainerUsed($code:code) from $inputContainerUseds
     not InputContainer(code==$code)
     then
     InputContainer inputContainer=new InputContainer($code,$containerUsed.getLocationOnContainerSupport().getCode(),$containerUsed.getLocationOnContainerSupport().getLine(),

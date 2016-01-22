@@ -8,4 +8,6 @@ public class ProcessTypesSearchForm extends ListForm{
 	public String categoryCode;
 	
 	public List<String> categoryCodes;
+	
+	public List<String> codes;
 }

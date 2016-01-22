@@ -2,6 +2,8 @@ package models.laboratory.instrument.description;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
@@ -29,7 +31,7 @@ public class InstrumentUsedType extends CommonInfoType{
 		super(InstrumentUsedTypeDAO.class.getName());
 	}
 	
-
+	@JsonIgnore
 	public List<PropertyDefinition> getPropertiesDefinitionDefaultLevel(){
 		return getPropertyDefinitionByLevel(Level.CODE.Instrument);
 	}

@@ -27,4 +27,5 @@ public interface ValidationConstants {
 	public static final String ERROR_VALUENOTAUTHORIZED_MSG = "error.valuenotauthorized";
 	
 	public static final String ERROR_BADSIZEARRAY = "error.badsizearray";
+		
 }

@@ -1,6 +1,9 @@
 package models.laboratory.common.instance;
 
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.utils.ValidationHelper;
@@ -21,6 +24,22 @@ public class TraceInformation implements IValidation {
 	public String modifyUser;
 	public Date modifyDate;
 	
+	public TraceInformation() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	public TraceInformation(String createUser) {
+		super();
+		if (createUser!=null){
+			this.createUser = createUser;
+			this.creationDate = new Date();
+		}
+	}
+
+	
+
+	@JsonIgnore
 	public void setTraceInformation(String user){
 		if (createUser==null){
 			createUser=user;

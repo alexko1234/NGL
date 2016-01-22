@@ -1,6 +1,6 @@
 package models.utils.dao;
 
-public class DAOException extends Exception{
+public class DAOException extends RuntimeException{
 
 	/**
 	 * 

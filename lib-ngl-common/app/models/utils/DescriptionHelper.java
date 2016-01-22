@@ -388,10 +388,10 @@ public class DescriptionHelper {
 				institute = Arrays.asList(appInstitute.split("\\s*,\\s*"));
 			}else {
 				institute=new ArrayList<String>();
-			}
-
+			}			
 		}
 		return institute;
+		//return new ArrayList<String>();
 	}
 	
 }

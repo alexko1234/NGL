@@ -4,12 +4,14 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import org.junit.Test;
 
-import controllers.experiments.api.Experiments;
+import controllers.experiments.api.ExperimentsOld;
 import experiments.ExperimentTestHelper;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.ManytoOneContainer;
+import models.laboratory.experiment.instance.InputContainerUsed;
+import models.laboratory.experiment.instance.ManyToOneContainer;
+import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.utils.instance.ExperimentHelper;
 import play.Logger;
 import play.Logger.ALogger;
@@ -37,29 +39,29 @@ public class PoolTubeRulesTest extends AbstractTests {
 		Experiment exp = ExperimentTestHelper.getFakeExperiment();
 		exp.state.code = "IP";
 		exp.typeCode="pool-tube";
-		ManytoOneContainer atomicTransfert = ExperimentTestHelper.getManytoOneContainer();
+		ManyToOneContainer atomicTransfert = ExperimentTestHelper.getManytoOneContainer();
 		
-		ContainerUsed containerIn1 = ExperimentTestHelper.getContainerUsed("containerUsedIn1");
+		InputContainerUsed containerIn1 = ExperimentTestHelper.getInputContainerUsed("containerUsedIn1");
 		containerIn1.percentage = 20.0;
 		containerIn1.experimentProperties = null;
 		
-		ContainerUsed containerIn2 = ExperimentTestHelper.getContainerUsed("containerUsedIn2");
+		InputContainerUsed containerIn2 = ExperimentTestHelper.getInputContainerUsed("containerUsedIn2");
 		containerIn2.percentage = 20.0;
 		containerIn2.experimentProperties = null;
 		
-		ContainerUsed containerIn3 = ExperimentTestHelper.getContainerUsed("containerUsedIn3");
+		InputContainerUsed containerIn3 = ExperimentTestHelper.getInputContainerUsed("containerUsedIn3");
 		containerIn3.percentage = 20.0;
 		containerIn3.experimentProperties = null;
 		
-		ContainerUsed containerIn4 = ExperimentTestHelper.getContainerUsed("containerUsedIn4");
+		InputContainerUsed containerIn4 = ExperimentTestHelper.getInputContainerUsed("containerUsedIn4");
 		containerIn4.percentage = 20.0;
 		containerIn4.experimentProperties = null;
 		
-		ContainerUsed containerIn5 = ExperimentTestHelper.getContainerUsed("containerUsedIn5");
+		InputContainerUsed containerIn5 = ExperimentTestHelper.getInputContainerUsed("containerUsedIn5");
 		containerIn5.percentage = 20.0;
 		containerIn5.experimentProperties = null;
 		
-		ContainerUsed containerOut1 = ExperimentTestHelper.getContainerUsed("containerUsedOut1");
+		OutputContainerUsed containerOut1 = ExperimentTestHelper.getOutputContainerUsed("containerUsedOut1");
 		containerOut1.volume = new PropertySingleValue(new Double(40.0));
 		
 		atomicTransfert.inputContainerUseds.add(containerIn1);
@@ -76,11 +78,11 @@ public class PoolTubeRulesTest extends AbstractTests {
 		contextValidation.putObject("stateCode", exp.state.code);
 		contextValidation.putObject("typeCode", exp.typeCode);
 
-		ExperimentValidationHelper.validateAtomicTransfertMethodes(exp.atomicTransfertMethods, contextValidation);
+		ExperimentValidationHelper.validateAtomicTransfertMethods(exp.typeCode, exp.instrument, exp.atomicTransfertMethods, contextValidation);
 
-		ExperimentHelper.doCalculations(exp,Experiments.calculationsRules);
+		ExperimentHelper.doCalculations(exp,ExperimentsOld.calculationsRules);
 		
-		ManytoOneContainer atomicTransfertResult = (ManytoOneContainer)exp.atomicTransfertMethods.get(0);
+		ManyToOneContainer atomicTransfertResult = (ManyToOneContainer)exp.atomicTransfertMethods.get(0);
 		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("inputVolume")).isNotNull();
 		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("inputVolume").value).isInstanceOf(Double.class);
 		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("inputVolume").value).isEqualTo(new Double(8.0));

@@ -44,11 +44,9 @@ public class LocationOnContainerSupport implements IValidation {
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {
-
+		ContainerSupportValidationHelper.validateContainerSupportCode(code, contextValidation, "code");
 		ContainerSupportValidationHelper.validateUniqueContainerSupportCodePosition(this, contextValidation);
-		ContainerSupportValidationHelper.validateContainerSupportCategoryCode(categoryCode, contextValidation);
-		//ContainerSupportValidationHelper.validateStockCode(storageCode, contextValidation);
-		//ContainerSupportValidationHelper.validateSupportCode(supportCode, contextValidation);
+		ContainerSupportValidationHelper.validateContainerSupportCategoryCode(categoryCode, contextValidation);		
 	}
 
 

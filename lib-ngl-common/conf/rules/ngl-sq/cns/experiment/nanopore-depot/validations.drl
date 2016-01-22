@@ -17,7 +17,7 @@ rule "init inputsupport nanopore"
     when
 	Experiment($typeCode:typeCode,$typeCode=="nanopore-depot",$atomics:atomicTransfertMethods,$atomics!=null)
 	AtomicTransfertMethod($inputContainerUseds:inputContainerUseds) from $atomics
-    ContainerUsed($support:locationOnContainerSupport.code,$categoryCode:locationOnContainerSupport.categoryCode) from $inputContainerUseds
+    InputContainerUsed($support:locationOnContainerSupport.code,$categoryCode:locationOnContainerSupport.categoryCode) from $inputContainerUseds
 	not InputSupport($support==code)
     then
 		//Logger.debug("Support"+$support +" de category "+$categoryCode);

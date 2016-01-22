@@ -32,13 +32,14 @@ GET		/tpl/processes/js-routes										controllers.processes.tpl.Processes.javas
 
 #experiments tpl
 GET 	/experiments/:homecode/home																controllers.experiments.tpl.Experiments.home(homecode:java.lang.String)
-GET 	/experiments/:experimentCode															controllers.experiments.tpl.Experiments.edit(experimentCode:java.lang.String)
-GET		/tpl/experiments/search-supports														controllers.experiments.tpl.Experiments.searchSupports()
-GET		/tpl/experiments/newExperiments/:experimentTypeCode										controllers.experiments.tpl.Experiments.newExperiments(experimentTypeCode:java.lang.String)
-GET		/tpl/experiments/js-routes																controllers.experiments.tpl.Experiments.javascriptRoutes()
+GET 	/experiments/:code																		controllers.experiments.tpl.Experiments.get(code:java.lang.String)
+GET		/tpl/experiments/details																controllers.experiments.tpl.Experiments.details()		
+GET		/tpl/experiments/search-containers														controllers.experiments.tpl.Experiments.searchContainers()
+GET		/tpl/experiments/list-containers														controllers.experiments.tpl.Experiments.listContainers()
 GET		/tpl/experiments/get-template/:atomicType/:outputCategoryCode/:experimentType			controllers.experiments.tpl.Experiments.getTemplate(atomicType:java.lang.String,outputCategoryCode:java.lang.String, experimentType:java.lang.String)
-GET		/tpl/experiments/create-or-edit-experiment												controllers.experiments.tpl.Experiments.createOrEditExperiment()
+#GET		/tpl/experiments/create-or-edit-experiment												controllers.experiments.tpl.Experiments.createOrEditExperiment()
 GET		/tpl/experiments/search/:experimentTypeCode												controllers.experiments.tpl.Experiments.search(experimentTypeCode:java.lang.String)
+GET		/tpl/experiments/js-routes																controllers.experiments.tpl.Experiments.javascriptRoutes()
 
 
 #tags api

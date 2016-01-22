@@ -174,6 +174,7 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 				active:true,
 				withoutEdit: true,
 				mode:'local',
+				changeClass:false,
 				showButton:false
 			},
 			hide:{
@@ -204,10 +205,6 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 			extraHeaders:{
 				number:2,
 				dynamic:true,
-			},
-			otherButton:{
-				active:true,
-				template:'<button class="btn btn btn-info" ng-click="newPurif()" data-toggle="tooltip" ng-disabled="experiment.value.state.code != \'F\'" ng-hide="!experiment.doPurif" title="'+Messages("experiments.addpurif")+'">Messages("experiments.addpurif")</button><button class="btn btn btn-info" ng-click="newQc()" data-toggle="tooltip" ng-disabled="experiment.value.state.code != \'F\'" ng-hide="!experiment.doQc" title="Messages("experiments.addqc")">Messages("experiments.addqc")</button>'
 			}
 	};	
 	
@@ -219,11 +216,15 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 		}
 	};
 	
-	$scope.$on('save', function(e, promises, func, endPromises) {	
-		console.log("call event save");		
+	$scope.isEditMode = function(){
+		return ($scope.$parent.isEditMode() && $scope.isNewState());
+	};
+	
+	$scope.$on('save', function(e, callbackFunction) {	
+		console.log("call event save on tubes-to-tube");		
 		$scope.atmService.viewToExperiment($scope.experiment);
 		$scope.updateConcentration($scope.experiment);
-		$scope.$emit('viewSaved', promises, func, endPromises);
+		$scope.$emit('childSaved', callbackFunction);
 	});
 	
 	/**
@@ -231,36 +232,52 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 	 */
 	$scope.updateConcentration = function(experiment){
 		
-		//TODO ne pas faire l'update si déjà renseigné
-		
-		var concentration = undefined;
-		var unit = undefined;
-		var isSame = true;
-		for(var i=0;i<experiment.value.atomicTransfertMethods[0].inputContainerUseds.length;i++){
-			if(concentration === undefined && unit === undefined){
-				concentration = experiment.value.atomicTransfertMethods[0].inputContainerUseds[i].concentration.value;
-				unit = experiment.value.atomicTransfertMethods[0].inputContainerUseds[i].concentration.unit;
-			}else{
-				if(concentration !== experiment.value.atomicTransfertMethods[0].inputContainerUseds[i].concentration.value 
-						|| unit !== experiment.value.atomicTransfertMethods[0].inputContainerUseds[i].concentration.unit){
-					isSame = false;
-					break;
+		if(experiment.atomicTransfertMethods && experiment.atomicTransfertMethods[0]){
+		// ne pas faire l'update si déjà renseigné
+			var concentration = undefined;
+			var unit = undefined;
+			var isSame = true;
+			for(var i=0;i<experiment.atomicTransfertMethods[0].inputContainerUseds.length;i++){
+				if(experiment.atomicTransfertMethods[0].inputContainerUseds[i].concentration !== null 
+						&& experiment.atomicTransfertMethods[0].inputContainerUseds[i].concentration !== undefined){
+					if(concentration === undefined && unit === undefined){
+						concentration = experiment.atomicTransfertMethods[0].inputContainerUseds[i].concentration.value;
+						unit = experiment.atomicTransfertMethods[0].inputContainerUseds[i].concentration.unit;
+					}else{
+						if(concentration !== experiment.atomicTransfertMethods[0].inputContainerUseds[i].concentration.value 
+								|| unit !== experiment.atomicTransfertMethods[0].inputContainerUseds[i].concentration.unit){
+							isSame = false;
+							break;
+						}
+					}
 				}
 			}
+			if(isSame 
+					&& (experiment.atomicTransfertMethods[0].outputContainerUseds[0].concentration === null
+							|| experiment.atomicTransfertMethods[0].outputContainerUseds[0].concentration.value === null
+						|| experiment.atomicTransfertMethods[0].outputContainerUseds[0].concentration === undefined
+						|| experiment.atomicTransfertMethods[0].outputContainerUseds[0].concentration.value === undefined)){
+				experiment.atomicTransfertMethods[0].outputContainerUseds[0].concentration = $scope.experiment.atomicTransfertMethods[0].inputContainerUseds[0].concentration;
+				
+			}
 		}
-		
-		if(isSame){
-			experiment.value.atomicTransfertMethods[0].outputContainerUseds[0].concentration = $scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[0].concentration;
-			
-		}
-		
-		
+
 	};
 	
 	$scope.$on('refresh', function(e) {
-		console.log("call event refresh");		
+		console.log("call event refresh on tubes-to-tube");		
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
 		$scope.$emit('viewRefeshed');
+	});
+	
+	
+	$scope.$on('cancel', function(e) {
+		console.log("call event cancel");
+		
+	});
+	
+	$scope.$on('activeEditMode', function(e) {
+		console.log("call event activeEditMode");
 	});
 	
 	var atmService = atmToDragNDrop($scope, 1, datatableConfig);
@@ -279,7 +296,7 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 	atmService.defaultOutputUnit = {
 			volume : "µL"			
 	}
-	atmService.experimentToView($scope.experiment);
+	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 	$scope.atmService = atmService;
 	

@@ -6,8 +6,6 @@ function Double roundValue(Double value)
 	return bg.doubleValue();
 }
 
-//function Double roundValue(Double value)
-//{
-//	DecimalFormat df=new DecimalFormat("0.00");
-//	return (Double)df.parse(df.format(value)).doubleValue();
-//}
+function Double convertPVToDouble(PropertyValue pv){
+	return Double.valueOf(pv.value.toString());
+}

@@ -1,5 +1,6 @@
 package models.laboratory.experiment.instance;
 
+import java.util.List;
 import java.util.Set;
 
 import models.laboratory.container.instance.Container;
@@ -11,9 +12,9 @@ public class ExperimentUpdateState {
 	public Set<String> processResolutionCodes;
 	public String nextStateInputContainers;
 	public String nextStateOutputContainers;
-	public Set<Process> processes ;
-	public Set<Container> inputContainers;
-	public Set<Container> outputContainers;
+	public List<Process> processes ;
+	public List<Container> inputContainers;
+	public List<Container> outputContainers;
 	@Override
 	public String toString() {
 		return "ExperimentUpdateState [nextStateProcesses="

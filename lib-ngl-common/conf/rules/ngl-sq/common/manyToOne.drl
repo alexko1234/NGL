@@ -37,7 +37,7 @@ rule "Init object LaneInfo in WM"
 	no-loop
     when
     Experiment($typeCode : typeCode, $typeCode!="opgen-depot")
-    $atomicTransfert: ManytoOneContainer($position : line)
+    $atomicTransfert: ManyToOneContainer($position : line)
     not LaneInfo($position==position)
     then
     
@@ -55,8 +55,8 @@ rule "Init objects ContentInfo in WM"
 	salience 600
 	no-loop
     when
-    $atomicTransfert: ManytoOneContainer($position:line,$inputContainers : inputContainerUseds, $inputContainers.size()!=0)
-	$container : ContainerUsed( $contents : contents,$contents!=null) from $inputContainers
+    $atomicTransfert: ManyToOneContainer($position:line,$inputContainers : inputContainerUseds, $inputContainers.size()!=0)
+	$container : InputContainerUsed( $contents : contents,$contents!=null) from $inputContainers
 	$content : Content() from $contents	 
 	$laneInfo : LaneInfo($position==position)
     then
@@ -103,8 +103,8 @@ rule "Container duplicate in Lane"
 	no-loop
     when
     	  LaneInfo($position:position)
-    	  ManytoOneContainer($position==line,$inputContainers : inputContainerUseds)
-    	  $containerCodes : Set(empty==false, size >= 1) from accumulate( ContainerUsed($containerCode:code) from $inputContainers,
+    	  ManyToOneContainer($position==line,$inputContainers : inputContainerUseds)
+    	  $containerCodes : Set(empty==false, size >= 1) from accumulate( InputContainerUsed($containerCode:code) from $inputContainers,
 	                         init( HashSet result = new HashSet(); HashSet containers=new HashSet(); ),
                               action( if(!containers.contains($containerCode)){ containers.add($containerCode); } 
                               				else if(!result.contains($containerCode)) { result.add($containerCode);} ),
@@ -123,9 +123,9 @@ rule "Sum % percentage per piste = 100 % "
 	salience 580
 	no-loop
     when
-    $atomics:ManytoOneContainer($inputContainers : inputContainerUseds)   
-    $total : Double() from accumulate(ContainerUsed( $n:percentage, percentage!=null) from $inputContainers, sum( $n ) )
-    $container: ContainerUsed($cat : categoryCode) from $inputContainers
+    $atomics:ManyToOneContainer($inputContainers : inputContainerUseds)   
+    $total : Double() from accumulate(InputContainerUsed( $n:percentage, percentage!=null) from $inputContainers, sum( $n ) )
+    $container: InputContainerUsed($cat : categoryCode) from $inputContainers
     eval(!($total>=99.9 && $total<=100) )
     $contextValidation:ContextValidation()
    	 then

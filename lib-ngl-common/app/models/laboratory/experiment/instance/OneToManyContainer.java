@@ -23,6 +23,7 @@ import models.utils.instance.ExperimentHelper;
 import models.utils.instance.ProcessHelper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -80,11 +81,11 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 			PropertyValue concentration = new PropertySingleValue();
 			
 			support.categoryCode=experiment.instrument.outContainerSupportCategoryCode;
-			ContainerUsed containerUsed = new ContainerUsed(outPutContainerCode);
+			OutputContainerUsed containerUsed = new OutputContainerUsed(outPutContainerCode);
 			containerUsed.locationOnContainerSupport=support;
 			containerUsed.validate(contextValidation);
 			if(	this.outputContainerUseds == null){
-				this.outputContainerUseds = new ArrayList<ContainerUsed>();
+				this.outputContainerUseds = new ArrayList<OutputContainerUsed>();
 			}
 			
 			this.outputContainerUseds.add(containerUsed);
@@ -92,7 +93,7 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 
 		}
 	
-	private void updateOutputContainer(Experiment experiment, ContainerUsed outputContainerUsed, ContextValidation contextValidation)  throws DAOException{
+	private void updateOutputContainer(Experiment experiment, OutputContainerUsed outputContainerUsed, ContextValidation contextValidation)  throws DAOException{
 		
 		if(this.inputContainerUseds!=null){
 			if(null == outputContainerUsed.code){	
@@ -123,13 +124,42 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 		}
 	}
 	
-	
+	@Override
+	public void updateOutputCodeIfNeeded(ContainerSupportCategory outputCsc, String supportCode) {
+		//case tube :one support for each output
+		if(outputCsc.nbLine.compareTo(Integer.valueOf(1)) == 0 && outputCsc.nbColumn.compareTo(Integer.valueOf(1)) == 0){
+			outputContainerUseds.forEach((OutputContainerUsed ocu) -> {
+					if(null == ocu.locationOnContainerSupport.code){
+						String newSupportCode = CodeHelper.getInstance().generateContainerSupportCode();
+						ocu.locationOnContainerSupport.code = newSupportCode;
+						ocu.code = newSupportCode;
+					}
+				}
+			);
+		}else if(outputCsc.nbLine.compareTo(Integer.valueOf(1)) > 0 && outputCsc.nbColumn.compareTo(Integer.valueOf(1)) == 0){
+			outputContainerUseds.forEach((OutputContainerUsed ocu) -> {
+				if(null == ocu.locationOnContainerSupport.code){
+					ocu.locationOnContainerSupport.code = supportCode;
+					ocu.code = supportCode+"_"+ocu.locationOnContainerSupport.line;
+				}
+			}
+		);
+		}else if(outputCsc.nbLine.compareTo(Integer.valueOf(1)) > 0 && outputCsc.nbColumn.compareTo(Integer.valueOf(1)) > 0){
+			outputContainerUseds.forEach((OutputContainerUsed ocu) -> {
+				if(null == ocu.locationOnContainerSupport.code){
+					ocu.locationOnContainerSupport.code = supportCode;
+					ocu.code = supportCode+"_"+ocu.locationOnContainerSupport.line+"_"+ocu.locationOnContainerSupport.column;
+				}
+			}
+		);
+		}
+	}
 	
 	@Override
 	public ContextValidation createOutputContainerUsed(Experiment experiment,ContextValidation contextValidation) throws DAOException {
 		//Logger.error("Not implemented");
 		if(this.inputContainerUseds!=null && (this.outputContainerUseds == null || this.outputContainerUseds.size() == 0)){	
-			this.outputContainerUseds = new ArrayList<ContainerUsed>();
+			this.outputContainerUseds = new ArrayList<OutputContainerUsed>();
 			for(int i=0;i<outputNumber;i++){
 				createOutputContainerUsedHelper(experiment, contextValidation);
 			}
@@ -151,7 +181,7 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 	public ContextValidation saveOutputContainers(Experiment experiment, ContextValidation contextValidation) throws DAOException  {
 
 		if(this.inputContainerUseds.size()!=0){
-			for(ContainerUsed containerUsed:outputContainerUseds){
+			for(OutputContainerUsed containerUsed:outputContainerUseds){
 				if(containerUsed.code!=null && !MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.code)){
 					// Output ContainerSupport
 					ContainerSupport support =MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME,ContainerSupport.class, containerUsed.locationOnContainerSupport.code);
@@ -179,8 +209,8 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 	
 					//Add contents to container and data projets, sample ... in containersupport
 					Map<String,PropertyValue> properties=ExperimentHelper.getAllPropertiesFromAtomicTransfertMethod(this,experiment);
-					ContainerHelper.addContent(outputContainer, this.getInputContainers(), experiment, properties);
-					ContainerSupportHelper.updateData(support, this.getInputContainers(), experiment, properties);
+					ContainerHelper.addContent(outputContainer, this.inputContainerUseds, experiment, properties);
+					ContainerSupportHelper.updateData(support, this.inputContainerUseds, experiment, properties);
 					ContainerSupportHelper.save(support,contextValidation);
 					
 					if(!contextValidation.hasErrors()){
@@ -199,33 +229,11 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		if(CollectionUtils.isNotEmpty(outputContainerUseds)){
-			contextValidation.putObject("level", Level.CODE.ContainerOut);
-			contextValidation.addKeyToRootKeyName("outputContainerUsed");
-			for(ContainerUsed containerUsed:outputContainerUseds){
-				containerUsed.validate(contextValidation);
-			}
-			contextValidation.removeKeyFromRootKeyName("outputContainerUsed");
-			contextValidation.removeObject("level");
-		}
-		
-		contextValidation.addKeyToRootKeyName("inputContainerUseds");
-		contextValidation.putObject("level", Level.CODE.ContainerIn);
-		inputContainerUseds.get(0).validate(contextValidation);
-		contextValidation.removeObject("level");
-		contextValidation.removeKeyFromRootKeyName("inputContainerUseds");
-		
+		super.validate(contextValidation);
 		AtomicTransfertMethodValidationHelper.validateOneInputContainer(inputContainerUseds, contextValidation);
-		
+		AtomicTransfertMethodValidationHelper.validateOutputContainers(contextValidation, outputContainerUseds);
 	}
-	@JsonIgnore
-	public List<ContainerUsed> getInputContainers(){			
-		return inputContainerUseds;
-	}
-	@JsonIgnore
-	public List<ContainerUsed> getOutputContainers(){
-		return outputContainerUseds;
-	}
+	
 
 	
 }

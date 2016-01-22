@@ -79,7 +79,7 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 	public void validationProtocolFinishTest() throws DAOException{
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.getContextObjects().put("stateCode", "F");
-		ExperimentValidationHelper.validationProtocol(experimentType.code,protocol.code, contextValidation);
+		ExperimentValidationHelper.validationProtocoleCode(experimentType.code,protocol.code, contextValidation);
 		Assert.assertTrue(contextValidation.errors.size()==0);
 	}
 	
@@ -87,7 +87,7 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 	public void validationProtocolNullFinishTest() throws DAOException{
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.getContextObjects().put("stateCode", "F");
-		ExperimentValidationHelper.validationProtocol(experimentType.code,null, contextValidation);
+		ExperimentValidationHelper.validationProtocoleCode(experimentType.code,null, contextValidation);
 		Assert.assertTrue(contextValidation.errors.size()==1);
 	}
 	
@@ -95,7 +95,7 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 	public void validationProtocolNotExperimentTypeFinishTest() throws DAOException{
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.getContextObjects().put("stateCode", "F");
-		ExperimentValidationHelper.validationProtocol("test",protocol.code, contextValidation);
+		ExperimentValidationHelper.validationProtocoleCode("test",protocol.code, contextValidation);
 		Assert.assertTrue(contextValidation.errors.size()==1);
 	}
 
@@ -103,7 +103,7 @@ public class ExperimentValidationHelperTest extends AbstractTests {
 	public void validationProtocolNewTest() throws DAOException{
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
 		contextValidation.getContextObjects().put("stateCode", "N");
-		ExperimentValidationHelper.validationProtocol(experimentType.code,null, contextValidation);
+		ExperimentValidationHelper.validationProtocoleCode(experimentType.code,null, contextValidation);
 		Assert.assertTrue(contextValidation.errors.size()==0);
 	}
 	

@@ -2,28 +2,33 @@ package models.laboratory.container.description;
 
 import java.util.List;
 
-import play.api.modules.spring.Spring;
 import models.laboratory.common.description.AbstractCategory;
 import models.laboratory.container.description.dao.ContainerCategoryDAO;
-import models.laboratory.processes.description.dao.ProcessTypeDAO;
+import models.laboratory.container.description.dao.ContainerSupportCategoryDAO;
 import models.utils.ListObject;
+import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
+import play.api.modules.spring.Spring;
 
 public class ContainerCategory extends AbstractCategory<ContainerCategory>{
 
-	public static Finder<ContainerCategory> find = new Finder<ContainerCategory>(ContainerCategoryDAO.class.getName()); 
+	public static ContainerCategoryFinder find = new ContainerCategoryFinder(); 
 	
 	public ContainerCategory() {
 		super(ContainerCategoryDAO.class.getName());
 	}
 
 	
-	/**
-	 * Return a list of ListObject that help populating the <select> input
-	 * @return List<ListObject>
-	 */
-	public static List<ListObject> findAllForList() throws DAOException{
-		ContainerCategoryDAO containerCategoryDAO = Spring.getBeanOfType(ContainerCategoryDAO.class);
-		return containerCategoryDAO.findAllForList();
-	}
+	public static class ContainerCategoryFinder extends Finder<ContainerCategory> {
+		
+		public ContainerCategoryFinder() {
+			super(ContainerCategoryDAO.class.getName());
+			
+		}
+
+		public ContainerCategory findByContainerSupportCategoryCode(String containerSupportCategoryCode) {
+			return ((ContainerCategoryDAO) getInstance()).findByContainerSupportCategoryCode(containerSupportCategoryCode);
+		}
+		
+	}	
 }

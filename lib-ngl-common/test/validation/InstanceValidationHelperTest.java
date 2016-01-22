@@ -241,21 +241,21 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	@Test
 	public  void validationContainerCodeTest(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		CommonValidationHelper.validateContainerCode(container.code,contextValidation );
+		CommonValidationHelper.validateContainerCode(container.code,contextValidation, "code" );
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	@Test
 	public  void validationContainerCodeRequiredTest(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		CommonValidationHelper.validateContainerCode(null,contextValidation );
+		CommonValidationHelper.validateContainerCode(null,contextValidation, "code");
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 	
 	@Test
 	public  void validationContainerCodeNotExistTest(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		CommonValidationHelper.validateContainerCode("notexist",contextValidation );
+		CommonValidationHelper.validateContainerCode("notexist",contextValidation, "code");
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 	
@@ -327,8 +327,7 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		v.valid = TBoolean.UNSET;
 		c.valuation = v;
 		
-		Set<Content> alc = new HashSet<Content>();
-		c.contents = alc;
+		c.contents = new ArrayList<Content>();
 				
 		c.validate(contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(1);
@@ -398,8 +397,8 @@ public class InstanceValidationHelperTest extends AbstractTests {
 		v.valid = TBoolean.UNSET;
 		c.valuation = v;
 		
-		Set<Content> alc = new HashSet<Content>();
-		c.contents = alc;
+		c.contents = new ArrayList<Content>();
+		
 				
 		c.validate(contextValidation);
 		assertThat(contextValidation.errors.size()).isEqualTo(1);

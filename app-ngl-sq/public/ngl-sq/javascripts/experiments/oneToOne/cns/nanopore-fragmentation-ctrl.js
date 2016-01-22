@@ -140,13 +140,14 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToS
 				by:'code'
 			},
 			remove:{
-				active: (!$scope.doneAndRecorded && !$scope.inProgressNow),
-				showButton: (!$scope.doneAndRecorded && !$scope.inProgressNow),
+				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
+				showButton: ($scope.isEditModeAvailable() && $scope.isNewState()),
 				mode:'local'
 			},
 			save:{
 				active:true,
 	        	withoutEdit: true,
+	        	changeClass:false,
 	        	showButton:false,
 	        	mode:'local'
 			},
@@ -154,8 +155,9 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToS
 				active:true
 			},
 			edit:{
-				byDefault : (!$scope.doneAndRecorded && !$scope.inProgressNow),
-				active: (!$scope.doneAndRecorded && !$scope.inProgressNow),
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				byDefault:($scope.isCreationMode()),
 				columnMode:true
 			},
 			messages:{
@@ -171,32 +173,49 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToS
 			extraHeaders:{
 				number:2,
 				dynamic:true,
-			},
-			otherButton:{
-				active:true,
-				template:'<button class="btn btn btn-info" ng-click="newPurif()" data-toggle="tooltip" ng-disabled="experiment.value.state.code != \'F\'" ng-hide="!experiment.doPurif" title="'+Messages("experiments.addpurif")+'">Messages("experiments.addpurif")</button><button class="btn btn btn-info" ng-click="newQc()" data-toggle="tooltip" ng-disabled="experiment.value.state.code != \'F\'" ng-hide="!experiment.doQc" title="Messages("experiments.addqc")">Messages("experiments.addqc")</button>'
 			}
 	};
 	
-	$scope.$on('save', function(e, promises, func, endPromises) {	
+	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
-		$scope.$emit('viewSaved', promises, func, endPromises);
+		$scope.$emit('childSaved', callbackFunction);
 	});
 	
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");		
 		var dtConfig = $scope.atmService.data.getConfig();
-		dtConfig.edit.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
-		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
+		dtConfig.edit.byDefault = false;
+		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.setConfig(dtConfig);
-		
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
 		$scope.$emit('viewRefeshed');
 	});
 	
+	$scope.$on('cancel', function(e) {
+		console.log("call event cancel");
+		$scope.atmService.data.cancel();
+		
+		if($scope.isCreationMode()){
+			var dtConfig = $scope.atmService.data.getConfig();
+			dtConfig.edit.byDefault = false;
+			$scope.atmService.data.setConfig(dtConfig);
+		}
+		
+	});
+	
+	$scope.$on('activeEditMode', function(e) {
+		console.log("call event activeEditMode");
+		$scope.atmService.data.selectAll(true);
+		$scope.atmService.data.setEdit();
+	});
+	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
+	
+	
+	
 	//defined new atomictransfertMethod
 	atmService.newAtomicTransfertMethod = function(){
 		return {
@@ -214,8 +233,8 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToS
 			concentration : "ng/µL",
 			quantity : "ng"
 	}
-	atmService.experimentToView($scope.experiment);
+	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 	$scope.atmService = atmService;
-	
+		
 }]);

@@ -49,6 +49,8 @@ containers.tabs.state = Changement d''Etat Container
 
 #Containers table
 containers.table.code = Code Container
+containers.table.support.out.code = Code Support / Container (Sortie)
+containers.table.support.in.code = Code Support / Container (Entrée)
 containers.table.supportCategoryCode = Catégorie support
 containers.table.categoryCode = Catégorie Support
 containers.table.projectCodes = Projet(s)
@@ -84,6 +86,8 @@ containers.table.inputProcessCodes = Processus
 containers.table.percentageInsidePool = % au sein du pool
 containers.table.codeAliquot = Code aliquot
 containers.table.storageCode = Stockage
+containers.table.status = Statut
+containers.table.dispatch = Orientation
 containers.table.mesuredConcentration.unit=Unité Concentration 
 containers.table.mesuredConcentration.value=Concentration Container
 
@@ -99,7 +103,25 @@ containers.select.categoryCode =  Catégorie container
 containers.select.categorySupportCode =  Catégorie support
 containers.select.fromExperimentTypeCodes= Container issu du type d''exp.
 
+#containers.dispatch.value.0 = Recommencer
+#containers.dispatch.value.1 = Arrêt Processus
+#containers.dispatch.value.2 = Exp. Suivante
+#containers.dispatch.value.3 = Exp. QC
+#containers.dispatch.value.4 = Exp. Purification
+#containers.dispatch.value.5 = Exp. Transfert
+#containers.dispatch.value.6 = Terminer
 
+containers.dispatch.value.0 = Exp. Suivante
+containers.dispatch.value.1 = Exp. Transfert
+containers.dispatch.value.2 = Exp. QC
+containers.dispatch.value.3 = Exp. Purification
+containers.dispatch.value.4 = Terminer
+containers.dispatch.value.5 = Recommencer
+containers.dispatch.value.6 = Arrêt Processus
+
+containers.table.processResolutions = Processus résolutions
+containers.dispatch.value.mandatory = L''orientation du container est obligatoire
+containers.status.value.mandatory = Le statut du container est obligatoire
 comments.remove.confirm = Pouvez-vous confirmer la suppression ?
 
 #search
@@ -204,6 +226,7 @@ experiments.menu.transformation = Créer une Transformation
 experiments.menu.voidprocess = Créer un Voidprocess
 experiments.create = Créer une expérience
 experiments.save = Sauvegarder
+experiments.additionnalButtons = Actions
 experiments.save_all = Sauvegarder tout
 experiments.edit = Editer
 experiments.unedit = Désactiver l''édition
@@ -215,22 +238,25 @@ experiments.intrument = Instrument
 experiments.status = Statut
 experiments.intrumentUsedType = Type d''instrument
 experiments.generateOutput = Générer tube sortie
-experiment.noComments = Pas de commentaire
-experiment.leaveComment = Laissez votre commentaire
-experiment.addComment = Ajouter un commentaire
-experiment.comment.update = Mettre à jour
-experiment.seeComments = Voir les commentaires
-experiment.sendComment = Envoyer
-experiment.cancelComment = Annuler
+
+experiment.comment.textarea = Laissez votre commentaire
+experiment.comment.title = Commentaire
+experiment.button.addComment = Ajouter un commentaire
+experiment.comment.button.update = Mettre à jour
+experiment.comment.button.save = Envoyer
+experiment.comment.button.cancel = Annuler
+experiment.comment.button.add = Ajouter
 experiments.begin_progress = Démarrer la progression
 experiments.sampleSheet = Feuille de route
-experiments.finish  = Terminer
+experiments.button.finish  = Terminer
+experiments.button.start  = Démarrer
 experiments.finished  = Terminé
 experiments.type = Type d''expérience
-experiments.resolution = Résolution expérience
+experiments.status = Statut
+experiments.resolutions = Résolutions
 experiments.protocol = Protocole
 experiments.creationDate = Date de création
-experiments.createUser = Expérience Créée par
+experiments.createUser = Créée par
 experiments.modifyDate = Date de modification
 experiments.modifyBy = Modifié par
 experiment.comments = Commentaires
@@ -304,7 +330,18 @@ experiments.table.resolutionCodes = Résolution
 experiments.intrumentCategory = Contenant sortie
 experiments.table.creationDate = Date de création exp.
 experiments.table.createUser = Expérience Créée par
+experiments.table.status = Statut
+
+experiments.finalResolutionModal.title = Veuillez définir le statut de l''expérience :
+
 containers.table.outputNumber = Nb aliquots
+
+experiment.dispatch.title = Orientation des containers : 
+
+experiment.panel.experimentInformation = Expérience
+experiment.panel.instrumentInformation = Instrument
+experiment.panel.traceInformation = Info
+
 
 reagents.table.kitname = Nom du kit
 reagents.table.boxcode = Code boîte (REF-LOT-CB supplémentaire(s))

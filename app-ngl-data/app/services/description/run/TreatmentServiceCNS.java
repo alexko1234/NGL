@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.run.description.TreatmentCategory;
@@ -17,6 +16,7 @@ import models.laboratory.run.description.TreatmentTypeContext;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
+import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 
@@ -49,109 +49,109 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		l.add(DescriptionFactory.newTreatmentType("SAV","sav", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.sequencing.name()), "sav", 
 				getSAVPropertyDefinitions(), 
 				Arrays.asList(getTreatmentTypeContext("read1", Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE)), 
-				DescriptionFactory.getInstitutes( Institute.CODE.CNS), "10"));
+				DescriptionFactory.getInstitutes( Constants.CODE.CNS), "10"));
 		
 		l.add(DescriptionFactory.newTreatmentType("NGS-RG","ngsrg-illumina", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ngsrg.name()), "ngsrg", 
 				getNGSRGIlluminaPropertyDefinitions(), 
 				getTreatmentTypeContexts("default"), 
-				DescriptionFactory.getInstitutes( Institute.CODE.CNS), "20"));		
+				DescriptionFactory.getInstitutes( Constants.CODE.CNS), "20"));		
 		
 		l.add(DescriptionFactory.newTreatmentType("NGS-RG","ngsrg-nanopore", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ngsrg.name()), "ngsrg", 
 				getNGSRGNanoporePropertyDefinitions(), 
 				getTreatmentTypeContexts("default"), 
-				DescriptionFactory.getInstitutes( Institute.CODE.CNS), "20"));		
+				DescriptionFactory.getInstitutes( Constants.CODE.CNS), "20"));		
 		
 		
 		l.add(DescriptionFactory.newTreatmentType("Global","global", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.global.name()), "global", 
 				getReadSetPropertyDefinitions(), 
 				getTreatmentTypeContexts("default"), 
-				DescriptionFactory.getInstitutes( Institute.CODE.CNS), "0"));
+				DescriptionFactory.getInstitutes( Constants.CODE.CNS), "0"));
 		
 		l.add(DescriptionFactory.newTreatmentType("Read Quality","read-quality", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "readQualityRaw,readQualityClean", 
 				getReadQualityPropertyDefinitions(), 
 				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE)), 
-				DescriptionFactory.getInstitutes( Institute.CODE.CNS), "30,83"));
+				DescriptionFactory.getInstitutes( Constants.CODE.CNS), "30,83"));
 		
 		l.add(DescriptionFactory.newTreatmentType("Duplicates","duplicates", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "duplicatesRaw,duplicatesClean", 
 				getDuplicatesPropertyDefinitions(), 
 				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE)), 
-				DescriptionFactory.getInstitutes( Institute.CODE.CNS), "32,86"));
+				DescriptionFactory.getInstitutes( Constants.CODE.CNS), "32,86"));
 		
 		l.add(DescriptionFactory.newTreatmentType("Mapping","mapping", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "mapping", 
 				getMappingPropertyDefinitions(), 
 				Arrays.asList(getTreatmentTypeContext("read1",Boolean.FALSE), getTreatmentTypeContext("read2", Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE), getTreatmentTypeContext("default", Boolean.TRUE)),
 				//getTreatmentTypeContexts("pairs", "default"), 
-				DescriptionFactory.getInstitutes( Institute.CODE.CNS), "90"));
+				DescriptionFactory.getInstitutes( Constants.CODE.CNS), "90"));
 		
 		l.add(DescriptionFactory.newTreatmentType("Mapping Nanopore ","mapping-nanopore", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "mapping", 
 				getMappingNanoporePropertyDefinitions(), 
 				getTreatmentTypeContexts("default"), 
-				DescriptionFactory.getInstitutes( Institute.CODE.CNS), "90"));
+				DescriptionFactory.getInstitutes( Constants.CODE.CNS), "90"));
 		
 		l.add(DescriptionFactory.newTreatmentType("Trimming","trimming", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "trimmingStd,trimmingVector", 
 				getTrimmingPropertyDefinitions(), 
 				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE), 
 				getTreatmentTypeContext("single", Boolean.FALSE)), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "33,50"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "33,50"));
 		
 		l.add(DescriptionFactory.newTreatmentType("First Base Report", "firstBaseReport", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "firstBaseReport",
 				getFirstBaseReportPropertyDefinitions(),
 				Arrays.asList(getTreatmentTypeContext("read1", Boolean.TRUE)),
-				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "5")
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "5")
 				);
 		
 		l.add(DescriptionFactory.newTreatmentType("Contamination","contamination", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "contaminationColi,contaminationVector,contaminationPhiX", 
 				getContaminationPropertyDefinitions(), 
 				Arrays.asList(getTreatmentTypeContext("read1",Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE), 
 				getTreatmentTypeContext("single", Boolean.FALSE)), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "35,36,60"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "35,36,60"));
 		
 		//specific CNS
 		l.add(DescriptionFactory.newTreatmentType("Taxonomy","taxonomy", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "taxonomy", 
 				getTaxonomyPropertyDefinitions(), 
 				getTreatmentTypeContexts("read1"), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "70"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "70"));
 		
 		l.add(DescriptionFactory.newTreatmentType("Sorting Ribo","sorting-ribo", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "sortingRibo", 
 				getSortingRiboPropertyDefinitions(), 
 				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE), getTreatmentTypeContext("single", Boolean.FALSE)), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "80"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "80"));
 		
 		l.add(DescriptionFactory.newTreatmentType("Merging","merging", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "merging", 
 				getMergingPropertyDefinitions(), 
 				getTreatmentTypeContexts("pairs"), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "100"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "100"));
 		
 		l.add(DescriptionFactory.newTreatmentType("Merging BA","merging-ba", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ba.name()), "mergingBA", 
 				getMergingBAPropertyDefinitions(), 
 				getTreatmentTypeContexts("pairs"), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "110"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "110"));
 		
 		l.add(DescriptionFactory.newTreatmentType("Assembly BA","assembly-ba", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ba.name()), "assemblyBA", 
 				getAssemblyBAPropertyDefinitions(), 
 				getTreatmentTypeContexts("pairs"), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "120"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "120"));
 		
 		l.add(DescriptionFactory.newTreatmentType("Contig Filter BA","contigFilter-ba", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ba.name()), "contigFilterBA", 
 				getContigFilterBAPropertyDefinitions(), 
 				getTreatmentTypeContexts("pairs"), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "125"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "125"));
 		
 		l.add(DescriptionFactory.newTreatmentType("Scaffolding BA","scaffolding-ba", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ba.name()), "scaffoldingBA", 
 				getScaffoldingBAPropertyDefinitions(), 
 				getTreatmentTypeContexts("pairs"), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "130"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "130"));
 
 		l.add(DescriptionFactory.newTreatmentType("Gap Closing BA","gapClosing-ba", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ba.name()), "gapClosingBA", 
 				getGapClosingBAPropertyDefinitions(), 
 				getTreatmentTypeContexts("pairs"), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNS), "140"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "140"));
 
 		//Nanopore
 		l.add(DescriptionFactory.newTreatmentType("MinKnow-Metrichor","minknow-metrichor", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.sequencing.name()), "minknowMetrichor", 
 				getMinknowMetrichorPropertyDefinitions(), 
 				getTreatmentTypeContexts("default"), 
-				DescriptionFactory.getInstitutes( Institute.CODE.CNS), "20"));	
+				DescriptionFactory.getInstitutes( Constants.CODE.CNS), "20"));	
 		
 		DAOHelpers.saveModels(TreatmentType.class, l, errors);
 	}

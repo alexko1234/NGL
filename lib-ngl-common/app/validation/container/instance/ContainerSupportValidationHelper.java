@@ -1,7 +1,10 @@
 package validation.container.instance;
 
+import models.laboratory.common.description.ObjectType;
+import models.laboratory.common.instance.State;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.storage.instance.Storage;
 import models.utils.InstanceConstants;
@@ -39,6 +42,18 @@ public class ContainerSupportValidationHelper extends CommonValidationHelper{
 	public static void validateStorageCode(String storageCode,ContextValidation contextValidation){
 		BusinessValidationHelper.validateExistInstanceCode(contextValidation, storageCode, "storageCode",Storage.class,InstanceConstants.STORAGE_COLL_NAME ,false);
 
+	}
+	
+	public static void validateNextState(ContainerSupport container, State nextState, ContextValidation contextValidation) {
+		CommonValidationHelper.validateState(ObjectType.CODE.Container, nextState, contextValidation);
+		if(!contextValidation.hasErrors()){
+			String nextStateCode = nextState.code;
+			String currentStateCode = container.state.code;
+			if(("IS".equals(currentStateCode) || "UA".equals(currentStateCode)) && !nextStateCode.equals("IW-P")){
+				contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
+			}
+		}
+				
 	}
 	
 

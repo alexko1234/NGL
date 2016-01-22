@@ -5,6 +5,7 @@ import java.util.List;
 
 import models.laboratory.common.instance.Comment;
 import models.laboratory.experiment.instance.ContainerUsed;
+import models.laboratory.experiment.instance.InputContainerUsed;
 import models.utils.dao.DAOException;
 import validation.ContextValidation;
 import validation.IValidation;

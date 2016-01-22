@@ -13,10 +13,12 @@ import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
-import models.laboratory.experiment.instance.ManytoOneContainer;
+import models.laboratory.experiment.instance.InputContainerUsed;
+import models.laboratory.experiment.instance.ManyToOneContainer;
 import models.laboratory.experiment.instance.OneToManyContainer;
 import models.laboratory.experiment.instance.OneToOneContainer;
 import models.laboratory.experiment.instance.OneToVoidContainer;
+import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import models.utils.dao.DAOException;
@@ -38,32 +40,31 @@ public class ExperimentTestHelper {
 		
 	}
 	
-	public static ManytoOneContainer getManytoOneContainer(){
-		ManytoOneContainer atomicTransfertMethod = new ManytoOneContainer();
-		atomicTransfertMethod.inputContainerUseds = new ArrayList<ContainerUsed>();
-		atomicTransfertMethod.outputContainerUseds = new ArrayList<ContainerUsed>();
+	public static ManyToOneContainer getManytoOneContainer(){
+		ManyToOneContainer atomicTransfertMethod = new ManyToOneContainer();
+		atomicTransfertMethod.inputContainerUseds = new ArrayList<InputContainerUsed>();
+		atomicTransfertMethod.outputContainerUseds = new ArrayList<OutputContainerUsed>();
 		return atomicTransfertMethod;
 	}
 	
 	public static OneToOneContainer getOnetoOneContainer(){
 		OneToOneContainer atomicTransfertMethod = new OneToOneContainer();
-		atomicTransfertMethod.inputContainerUseds = new ArrayList<ContainerUsed>();
-		atomicTransfertMethod.outputContainerUseds = new ArrayList<ContainerUsed>();
+		atomicTransfertMethod.inputContainerUseds = new ArrayList<InputContainerUsed>();
+		atomicTransfertMethod.outputContainerUseds = new ArrayList<OutputContainerUsed>();
 		
 		return atomicTransfertMethod;
 	}
 	
 	public static OneToManyContainer getOnetoManyContainer(){
 		OneToManyContainer atomicTransfertMethod = new OneToManyContainer();
-		atomicTransfertMethod.inputContainerUseds = new ArrayList<ContainerUsed>();
-		atomicTransfertMethod.outputContainerUseds = new ArrayList<ContainerUsed>();
+		atomicTransfertMethod.inputContainerUseds = new ArrayList<InputContainerUsed>();
+		atomicTransfertMethod.outputContainerUseds = new ArrayList<OutputContainerUsed>();
 		return atomicTransfertMethod;
 	}
 	
-	public static ContainerUsed getContainerUsed(String code){
-		ContainerUsed containerUsed = new ContainerUsed(code);
-		containerUsed.state = new State();
-		containerUsed.state.code = "IW-E";
+	
+	public static InputContainerUsed getInputContainerUsed(String code){
+		InputContainerUsed containerUsed = new InputContainerUsed(code);
 		containerUsed.experimentProperties =  new HashMap<String, PropertyValue>();
 		containerUsed.instrumentProperties =  new HashMap<String, PropertyValue>();
 		containerUsed.locationOnContainerSupport=new LocationOnContainerSupport();
@@ -72,9 +73,18 @@ public class ExperimentTestHelper {
 	}
 	
 	
-	public static ContainerUsed getContainerUsed(String code, Double percentage){
-		ContainerUsed containerUsed=getContainerUsed(code);
+	public static InputContainerUsed getInputContainerUsed(String code, Double percentage){
+		InputContainerUsed containerUsed=getInputContainerUsed(code);
 		containerUsed.percentage=percentage;
+		return containerUsed;
+	}
+	
+	public static OutputContainerUsed getOutputContainerUsed(String code){
+		OutputContainerUsed containerUsed = new OutputContainerUsed(code);
+		containerUsed.experimentProperties =  new HashMap<String, PropertyValue>();
+		containerUsed.instrumentProperties =  new HashMap<String, PropertyValue>();
+		containerUsed.locationOnContainerSupport=new LocationOnContainerSupport();
+		containerUsed.locationOnContainerSupport.code=code;
 		return containerUsed;
 	}
 	
@@ -108,20 +118,20 @@ public class ExperimentTestHelper {
 	public static Experiment getFakeExperimentWithAtomicExperiment(String typeCode){
 		Experiment exp = ExperimentTestHelper.getFakeExperiment();
 		exp.typeCode=typeCode;		
-		ManytoOneContainer atomicTransfert1 = ExperimentTestHelper.getManytoOneContainer();
+		ManyToOneContainer atomicTransfert1 = ExperimentTestHelper.getManytoOneContainer();
 		atomicTransfert1.line="1";
 		atomicTransfert1.column="0";
-		ManytoOneContainer atomicTransfert2 = ExperimentTestHelper.getManytoOneContainer();
+		ManyToOneContainer atomicTransfert2 = ExperimentTestHelper.getManytoOneContainer();
 		atomicTransfert2.line="2";
 		atomicTransfert2.column="0";
 		
 		exp.atomicTransfertMethods.add(0,atomicTransfert1);
 		exp.atomicTransfertMethods.add(1, atomicTransfert2);
 		
-		ContainerUsed container1_1=ExperimentTestHelper.getContainerUsed("CONTAINER1_1");
+		InputContainerUsed container1_1=ExperimentTestHelper.getInputContainerUsed("CONTAINER1_1");
 		container1_1.percentage=20.0;
 		Content content1_1=new Content("CONTENT1_1","TYPE","CATEGORIE");
-		container1_1.contents=new HashSet<Content>();
+		container1_1.contents=new ArrayList<Content>();
 		content1_1.properties=new HashMap<String, PropertyValue>();
 		content1_1.properties.put("tag", new PropertySingleValue("IND1"));
 		content1_1.properties.put("tagCategory", new PropertySingleValue("TAGCATEGORIE"));
@@ -129,10 +139,10 @@ public class ExperimentTestHelper {
 		content1_1.properties.put("tagCategory", new PropertySingleValue("TAGCATEGORIE"));
 		container1_1.contents.add(content1_1);
 		
-		ContainerUsed container1_2=ExperimentTestHelper.getContainerUsed("CONTAINER1_2");
+		InputContainerUsed container1_2=ExperimentTestHelper.getInputContainerUsed("CONTAINER1_2");
 		container1_2.percentage= 80.0;
 		Content content1_2=new Content("CONTENT1_2","TYPE","CATEGORIE");
-		container1_2.contents=new HashSet<Content>();
+		container1_2.contents=new ArrayList<Content>();
 		content1_2.properties=new HashMap<String, PropertyValue>();
 		content1_2.properties.put("tag", new PropertySingleValue("IND1"));
 		content1_2.properties.put("tagCategory", new PropertySingleValue("TAGCATEGORIE"));
@@ -141,10 +151,10 @@ public class ExperimentTestHelper {
 		atomicTransfert1.inputContainerUseds.add(container1_1);
 		atomicTransfert1.inputContainerUseds.add(container1_2);
 		
-		ContainerUsed container2_2=ExperimentTestHelper.getContainerUsed("CONTAINER2_2");
+		InputContainerUsed container2_2=ExperimentTestHelper.getInputContainerUsed("CONTAINER2_2");
 		container2_2.percentage= 100.0;
 		Content content2_2=new Content("CONTENT2_2","TYPE","CATEGORIE");
-		container2_2.contents=new HashSet<Content>();
+		container2_2.contents=new ArrayList<Content>();
 		content2_2.properties=new HashMap<String, PropertyValue>();
 		container2_2.contents.add(content2_2);
 		atomicTransfert2.inputContainerUseds.add(container2_2);
@@ -154,20 +164,20 @@ public class ExperimentTestHelper {
 	public static Experiment getFakeExperimentWithAtomicExperimentManyToOne(String typeCode){
 		Experiment exp = getFakeExperiment();
 		exp.typeCode=typeCode;		
- 		ManytoOneContainer atomicTransfert1 = ExperimentTestHelper.getManytoOneContainer();
+ 		ManyToOneContainer atomicTransfert1 = ExperimentTestHelper.getManytoOneContainer();
  		atomicTransfert1.line="1";
 		atomicTransfert1.column="0";
-		ManytoOneContainer atomicTransfert2 = ExperimentTestHelper.getManytoOneContainer();
+		ManyToOneContainer atomicTransfert2 = ExperimentTestHelper.getManytoOneContainer();
 		atomicTransfert2.line="2";
 		atomicTransfert2.column="0";
 		
 		exp.atomicTransfertMethods.add(0,atomicTransfert1);
 		exp.atomicTransfertMethods.add(1, atomicTransfert2);
 		
-		ContainerUsed container1_1=ExperimentTestHelper.getContainerUsed("ADI_RD1");
+		InputContainerUsed container1_1=ExperimentTestHelper.getInputContainerUsed("ADI_RD1");
 		container1_1.percentage=20.0;
 		Content content1_1=new Content("ADI_RD","MeTa-DNA","DNA");
-		container1_1.contents=new HashSet<Content>();
+		container1_1.contents=new ArrayList<Content>();
 		content1_1.properties=new HashMap<String, PropertyValue>();
 /*		content1_1.properties.put("tag", new PropertySingleValue("IND1"));
 		content1_1.properties.put("tagCategory", new PropertySingleValue("TAGCATEGORIE"));*/
@@ -175,10 +185,10 @@ public class ExperimentTestHelper {
 		content1_1.properties.put("tagCategory", new PropertySingleValue("TAGCATEGORIE"));
 		container1_1.contents.add(content1_1);
 		
-		ContainerUsed container1_2=ExperimentTestHelper.getContainerUsed("C2EV3ACXX_3");
+		InputContainerUsed container1_2=ExperimentTestHelper.getInputContainerUsed("C2EV3ACXX_3");
 		container1_2.percentage= 80.0;
 		Content content1_2=new Content("BFB_AABA","amplicon","amplicon");
-		container1_2.contents=new HashSet<Content>();
+		container1_2.contents=new ArrayList<Content>();
 		content1_2.properties=new HashMap<String, PropertyValue>();
 		content1_2.properties.put("tag", new PropertySingleValue("IND1"));
 		content1_2.properties.put("tagCategory", new PropertySingleValue("TAGCATEGORIE"));
@@ -187,10 +197,10 @@ public class ExperimentTestHelper {
 		atomicTransfert1.inputContainerUseds.add(container1_1);
 		atomicTransfert1.inputContainerUseds.add(container1_2);
 		
-		ContainerUsed container2_2=ExperimentTestHelper.getContainerUsed("C2EV3ACXX_5");
+		InputContainerUsed container2_2=ExperimentTestHelper.getInputContainerUsed("C2EV3ACXX_5");
 		container2_2.percentage= 100.0;
 		Content content2_2=new Content("ADI_RD","MeTa-DNA","DNA");
-		container2_2.contents=new HashSet<Content>();
+		container2_2.contents=new ArrayList<Content>();
 		content2_2.properties=new HashMap<String, PropertyValue>();
 		container2_2.contents.add(content2_2);
 		atomicTransfert2.inputContainerUseds.add(container2_2);
@@ -251,8 +261,8 @@ public class ExperimentTestHelper {
 
 	public static OneToVoidContainer getOnetoVoidContainer(String code,Double percentage) {
 		OneToVoidContainer atomicTransfertMethod = new OneToVoidContainer();
-		atomicTransfertMethod.inputContainerUseds = new ArrayList<ContainerUsed>();
-		atomicTransfertMethod.inputContainerUseds.add(ExperimentTestHelper.getContainerUsed(code,percentage));
+		atomicTransfertMethod.inputContainerUseds = new ArrayList<InputContainerUsed>();
+		atomicTransfertMethod.inputContainerUseds.add(ExperimentTestHelper.getInputContainerUsed(code,percentage));
 		return atomicTransfertMethod;
 	}
 }

@@ -227,7 +227,8 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public  void validationContentTest(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		Set<Content> localContents=new HashSet<Content>(); 
+		List<Content> localContents=new ArrayList<Content>();		
+		
 		localContents.add(sampleUsed);
 		localContents.add(sampleUsed1);
 		ContainerValidationHelper.validateContents(localContents, contextValidation);
@@ -248,7 +249,8 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public void validationContentSampleUsedTest(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		Set<Content> localContents=new HashSet<Content>();
+		List<Content> localContents=new ArrayList<Content>();		
+		
 		localContents.add(new Content("","",""));
 		Iterator<Content> iterator = localContents.iterator();
 		iterator.next().percentage = 100.00;
@@ -267,7 +269,8 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public void validationPercentageContentsWithGoodValues(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		Set<Content> localContents=new HashSet<Content>();		
+		List<Content> localContents=new ArrayList<Content>();		
+		
 		//Test with good values
 		sampleUsed.percentage=75.00;
 		sampleUsed1.percentage=25.00;		
@@ -281,7 +284,8 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public void validationPercentageContentsWithEquiMolarValues(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		Set<Content> localContents=new HashSet<Content>();		
+		List<Content> localContents=new ArrayList<Content>();		
+		
 		//Test with equimolar values
 		sampleUsed.percentage=33.33;
 		sampleUsed1.percentage=33.33;
@@ -297,7 +301,8 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public void validationPercentageContentsWithNegativeValue(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		Set<Content> localContents=new HashSet<Content>();						
+		List<Content> localContents=new ArrayList<Content>();		
+					
 		//Test with a value less than 0				
 		sampleUsed.percentage=-50.00;
 		sampleUsed1.percentage= 100.00;		
@@ -311,7 +316,8 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public void validationPercentageContentsWithHundred(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		Set<Content> localContents=new HashSet<Content>();
+		List<Content> localContents=new ArrayList<Content>();		
+		
 		//Test with a sum of values different than 100			
 		sampleUsed.percentage=20.00;
 		sampleUsed1.percentage= 20.00;		
@@ -325,7 +331,8 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public void validationPercentageContentsWithBigValue(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		Set<Content> localContents=new HashSet<Content>();		
+		List<Content> localContents=new ArrayList<Content>();		
+		
 		//Test with a value greater than 100
 		sampleUsed.percentage=10.00;
 		sampleUsed1.percentage= 250.00;		
@@ -430,7 +437,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 		inputProcessCodes.add(process1.code);
 		inputProcessCodes.add(process2.code);
 		inputProcessCodes.add(process3.code);
-		ContainerValidationHelper.validateProcessCodes(inputProcessCodes, contextValidation);
+		ContainerValidationHelper.validateInputProcessCodes(inputProcessCodes, contextValidation);
 		contextValidation.displayErrors(logger);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
@@ -442,7 +449,7 @@ public class ContainerValidationHelperTest extends AbstractTests {
 		inputProcessCodes.add("");
 		inputProcessCodes.add("");
 		inputProcessCodes.add("");
-		ContainerValidationHelper.validateProcessCodes(inputProcessCodes, contextValidation);
+		ContainerValidationHelper.validateInputProcessCodes(inputProcessCodes, contextValidation);
 		contextValidation.displayErrors(logger);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);		
 	}

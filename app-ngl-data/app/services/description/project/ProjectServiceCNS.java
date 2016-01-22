@@ -1,12 +1,12 @@
 package services.description.project;
 
+import services.description.Constants;
 import services.description.DescriptionFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.project.description.ProjectCategory;
@@ -28,8 +28,8 @@ public class ProjectServiceCNS extends AbstractProjectService{
 	public void saveProjectTypes(Map<String, List<ValidationError>> errors) throws DAOException{
 		List<ProjectType> l = new ArrayList<ProjectType>();
 		
-		l.add(DescriptionFactory.newProjectType("Defaut", "default-project", ProjectCategory.find.findByCode("default"), null, DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
-		l.add(DescriptionFactory.newProjectType("France Génomique", "france-genomique", ProjectCategory.find.findByCode("default"), getFGPropertyDefinitions(), DescriptionFactory.getInstitutes(Institute.CODE.CNS)));
+		l.add(DescriptionFactory.newProjectType("Defaut", "default-project", ProjectCategory.find.findByCode("default"), null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		l.add(DescriptionFactory.newProjectType("France Génomique", "france-genomique", ProjectCategory.find.findByCode("default"), getFGPropertyDefinitions(), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		DAOHelpers.saveModels(ProjectType.class, l, errors);
 		

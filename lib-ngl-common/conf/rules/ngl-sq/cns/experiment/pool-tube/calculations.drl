@@ -20,9 +20,9 @@ rule "InputVolume"
 	no-loop
     when
 		$experiment:Experiment($typeCode:typeCode,$typeCode=="pool-tube")
-		$atomicTransfert: ManytoOneContainer($inputContainerUseds : inputContainerUseds, $inputContainerUseds!=null , $outputContainerUsed: outputContainerUseds, $outputContainerUsed!=null )
-		$containerUsed: ContainerUsed($percentage: percentage, $percentage!=null) from $inputContainerUseds
-		ContainerUsed($finalVolume: volume, $finalVolume!=null) from $outputContainerUsed
+		$atomicTransfert: ManyToOneContainer($inputContainerUseds : inputContainerUseds, $inputContainerUseds!=null , $outputContainerUsed: outputContainerUseds, $outputContainerUsed!=null )
+		$containerUsed: InputContainerUsed($percentage: percentage, $percentage!=null) from $inputContainerUseds
+		OutputContainerUsed($finalVolume: volume, $finalVolume!=null) from $outputContainerUsed
 		eval( Double.class.isInstance($percentage) && $finalVolume.getValue()!=null)
     then
         Logger.debug("InputVolume calculation");
@@ -47,14 +47,14 @@ rule "outputConcentration"
 	no-loop
  	when
  	$experiment:Experiment($typeCode:typeCode,$typeCode=="pool-tube")
-	$atomicTransfert: ManytoOneContainer(inputContainerUseds!=null , $outputContainerUseds: outputContainerUseds, $outputContainerUseds!=null, $inputContainerUseds:inputContainerUseds )
-	 $inputConcentrations : Set(empty==false, size==1) from accumulate( ContainerUsed( $inputConcentration : concentration) from $inputContainerUseds,
+	$atomicTransfert: ManyToOneContainer(inputContainerUseds!=null , $outputContainerUseds: outputContainerUseds, $outputContainerUseds!=null, $inputContainerUseds:inputContainerUseds )
+	 $inputConcentrations : Set(empty==false, size==1) from accumulate( InputContainerUsed( $inputConcentration : concentration) from $inputContainerUseds,
                         collectSet( $inputConcentration) )
- 	$outputContainerUsed : ContainerUsed($concentration: concentration) from $outputContainerUseds
- 	eval($atomicTransfert.getInputContainerUseds().get(0).getConcentration()!=null && ($concentration==null || $concentration.value==null))
+ 	$outputContainerUsed : OutputContainerUsed($concentration: concentration) from $outputContainerUseds
+ 	eval($atomicTransfert.inputContainerUseds.get(0).getConcentration()!=null && ($concentration==null || $concentration.value==null))
  	then
  		Logger.debug("input concentration to outputconcentration");
-	 	$outputContainerUsed.concentration=$atomicTransfert.getInputContainerUseds().get(0).getConcentration();
+	 	$outputContainerUsed.concentration=$atomicTransfert.inputContainerUseds.get(0).getConcentration();
  		
 end
 
@@ -65,9 +65,9 @@ end
 	no-loop
     when
 		$experiment:Experiment($typeCode:typeCode,$typeCode=="pool-tube")
-		$atomicTransfert: ManytoOneContainer($inputContainerUseds : inputContainerUseds, $inputContainerUseds!=null)
-		$total : Double() from accumulate(ContainerUsed($c: concentration, $c!=null) from $inputContainerUseds, sum( Double.parseDouble($c.getValue().toString()) ) )
-		$containerUsed: ContainerUsed($code: code,$concentration: concentration, $concentration!=null) from $inputContainerUseds				
+		$atomicTransfert: ManyToOneContainer($inputContainerUseds : inputContainerUseds, $inputContainerUseds!=null)
+		$total : Double() from accumulate(InputContainerUsed($c: concentration, $c!=null) from $inputContainerUseds, sum( Double.parseDouble($c.getValue().toString()) ) )
+		$containerUsed: InputContainerUsed($code: code,$concentration: concentration, $concentration!=null) from $inputContainerUseds				
 		$contextValidation:ContextValidation()
 		eval( Double.parseDouble($concentration.getValue().toString())!= (Double) $total/$inputContainerUseds.size())
     then
@@ -86,9 +86,9 @@ rule "more than one inputContainer"
 	no-loop
     when
     Experiment($typeCode:typeCode,$typeCode=="pool-tube")
-    $atomicTransfert: ManytoOneContainer(inputContainerUseds!=null, $inputContainerUseds:inputContainerUseds,$inputContainerUseds.size()<=1 )
+    $atomicTransfert: ManyToOneContainer(inputContainerUseds!=null, $inputContainerUseds:inputContainerUseds,$inputContainerUseds.size()<=1 )
     $contextValidation:ContextValidation($errors : errors)
-    $inputContainer:ContainerUsed() from $inputContainerUseds
+    $inputContainer:InputContainerUsed() from $inputContainerUseds
     then 
        	//Logger.debug("Nb inputContainerSupportCodes "+$inputContainerSupportCodes.size());
     	$contextValidation.addErrors("inputContainerSupportCodes","error.validationexp.manyInputSupport", $inputContainer.code);
@@ -101,8 +101,8 @@ rule "Volume not null in pool-tube outputContainer"
 	no-loop
     when
     	$experiment:Experiment($typeCode:typeCode,$typeCode=="pool-tube")
-		$atomicTransfert: ManytoOneContainer($outputContainerUsed: outputContainerUseds.get(0))
-	   	ContainerUsed($finalVolume: volume) from $outputContainerUsed
+		$atomicTransfert: ManyToOneContainer($outputContainerUsed: outputContainerUseds.get(0))
+	   	OutputContainerUsed($finalVolume: volume) from $outputContainerUsed
     	$contextValidation:ContextValidation()
     	eval($finalVolume == null || $finalVolume.value == null || $finalVolume.value == "")
     then

@@ -79,6 +79,11 @@ public class Model<T> {
 		}
 		
 		@JsonIgnore
+		public List<T> findByCodes(List<String> codes) throws DAOException {
+			return getInstance().findByCodes(codes);
+		}
+		
+		@JsonIgnore
 		public Boolean isCodeExist(String code) throws DAOException {
 			return getInstance().isCodeExist(code);
 		}

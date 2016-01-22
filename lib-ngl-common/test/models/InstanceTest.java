@@ -25,7 +25,9 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OneToOneContainer;
+import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.instance.InstrumentUsed;
 import models.laboratory.processes.instance.Process;
@@ -97,7 +99,7 @@ public class InstanceTest extends AbstractTests{
 
 		project.name="projectName";
 		project.comments=new ArrayList<Comment>();
-		project.comments.add(new Comment("comment"));
+		project.comments.add(new Comment("comment", "ngl-test"));
 		project.traceInformation=new TraceInformation();
 		project.traceInformation.setTraceInformation("test");
 		project.typeCode="projectType";
@@ -204,7 +206,7 @@ public class InstanceTest extends AbstractTests{
 		//public String fromPurifingCode;
 
 		container.comments=new ArrayList<Comment>();
-		container.comments.add(new Comment("comment"));
+		container.comments.add(new Comment("comment", "ngl-test"));
 		container.traceInformation.setTraceInformation("test"); 
 
 		MongoDBDAO.save(Container.class.getSimpleName(), container);
@@ -273,16 +275,16 @@ public class InstanceTest extends AbstractTests{
 
 
 		experiment.comments=new ArrayList<Comment>();
-		experiment.comments.add(new Comment("comment"));
+		experiment.comments.add(new Comment("comment", "ngl-test"));
 		experiment.traceInformation.setTraceInformation("test"); 
 
 		experiment.atomicTransfertMethods= new ArrayList<AtomicTransfertMethod>();
 		for(int i=0; i<10; i++){
 			OneToOneContainer oneToOneContainer =new OneToOneContainer();
-			oneToOneContainer.inputContainerUseds=new ArrayList<ContainerUsed>();
-			oneToOneContainer.inputContainerUseds.add( new ContainerUsed("containerInput"+i));
-			oneToOneContainer.outputContainerUseds = new ArrayList<ContainerUsed>();
-			oneToOneContainer.outputContainerUseds.add(new ContainerUsed("containerOutput"+i));
+			oneToOneContainer.inputContainerUseds=new ArrayList<InputContainerUsed>();
+			oneToOneContainer.inputContainerUseds.add( new InputContainerUsed("containerInput"+i));
+			oneToOneContainer.outputContainerUseds = new ArrayList<OutputContainerUsed>();
+			oneToOneContainer.outputContainerUseds.add(new OutputContainerUsed("containerOutput"+i));
 			experiment.atomicTransfertMethods.add(i,oneToOneContainer);
 		}
 		
@@ -362,7 +364,7 @@ public class InstanceTest extends AbstractTests{
 		e.typeCode = "test-tt";
 		for(int i = 0; i < 120; i++){
 		
-			System.out.println(CodeHelper.getInstance().generateExperiementCode(e));			
+			System.out.println(CodeHelper.getInstance().generateExperimentCode(e));			
 		}
 	}
 }

@@ -40,8 +40,10 @@ public class CommonValidationHelper {
 
 	public static final String FIELD_CODE = "code";
 	public static final String FIELD_TYPE_CODE = "typeCode";
-	public static final String STATE_CODE = "stateCode";
-
+	public static final String FIELD_STATE_CODE = "stateCode";
+	public static final String FIELD_EXPERIMENT = "experiment";
+	public static final String FIELD_INST_USED = "instrumentUsed";
+	public static final String FIELD_OBJECT_TYPE_CODE = "objectTypeCode";
 	/**
 	 * Validate if code is unique in MongoDB collection
 	 * Unique code is validate if key "_id" not in map contextObjects or if value of key "_id" is null else no code validation
@@ -165,7 +167,8 @@ public class CommonValidationHelper {
 
 	
 	
-	public static <T extends DBObject> void validateRequiredInstanceCode(String code, String key, Class<T> type, String collectionName,ContextValidation contextValidation) {
+	public static <T extends DBObject> void validateRequiredInstanceCode(String code, String key, Class<T> type, 
+			String collectionName,ContextValidation contextValidation) {
 		if(required(contextValidation, code, key)){
 			validateExistInstanceCode(contextValidation, code, key, type,collectionName);
 		}
@@ -181,8 +184,8 @@ public class CommonValidationHelper {
 	 * @param returnObject
 	 * @return
 	 */
-	public static <T extends DBObject> T validateRequiredInstanceCode(ContextValidation contextValidation,
-			String code, String key, Class<T> type, String collectionName, boolean returnObject) {
+	public static <T extends DBObject> T validateRequiredInstanceCode(String code, String key, Class<T> type, String collectionName, 
+			ContextValidation contextValidation, boolean returnObject) {
 		T o = null;
 		if(required(contextValidation, code, key)){
 			o = validateExistInstanceCode(contextValidation, code, key, type,collectionName, returnObject);
@@ -343,10 +346,13 @@ public class CommonValidationHelper {
 		}		
 	}
 	
-	public static void validateStateCode(String stateCode,ContextValidation contextValidation) {
+	public static void validateStateCode(String stateCode, ContextValidation contextValidation) {
 		if (contextValidation.getContextObjects().containsKey(FIELD_TYPE_CODE)) {
 			String typeCode = getObjectFromContext(FIELD_TYPE_CODE, String.class, contextValidation);
 			validateStateCode(typeCode, stateCode, contextValidation);
+		} else if(contextValidation.getContextObjects().containsKey(FIELD_OBJECT_TYPE_CODE)){
+			ObjectType.CODE objectTypeCode = getObjectFromContext(FIELD_OBJECT_TYPE_CODE, ObjectType.CODE.class, contextValidation);
+			validateStateCode(objectTypeCode, stateCode, contextValidation);
 		} else {
 			validateRequiredDescriptionCode(contextValidation, stateCode,"state.code", models.laboratory.common.description.State.find);
 		}
@@ -360,6 +366,16 @@ public class CommonValidationHelper {
 			state.validate(contextValidation);
 			contextValidation.removeKeyFromRootKeyName("state");
 			contextValidation.removeObject(FIELD_TYPE_CODE);
+		}		
+	}
+	
+	public static void validateState(ObjectType.CODE objectTypeCode, State state, ContextValidation contextValidation) {
+		if (ValidationHelper.required(contextValidation, state, "state")) {
+			contextValidation.putObject(FIELD_OBJECT_TYPE_CODE, objectTypeCode);
+			contextValidation.addKeyToRootKeyName("state");
+			state.validate(contextValidation);
+			contextValidation.removeKeyFromRootKeyName("state");
+			contextValidation.removeObject(FIELD_OBJECT_TYPE_CODE);
 		}		
 	}
 	
@@ -377,7 +393,7 @@ public class CommonValidationHelper {
 	}
 	
 	
-	protected  static void validateStateCode(String stateCode, ObjectType.CODE objectType, ContextValidation contextValidation) {
+	protected static void validateStateCode(ObjectType.CODE objectType, String stateCode, ContextValidation contextValidation) {
 		try {
 			if (required(contextValidation, stateCode, "code")) {
 				if (!models.laboratory.common.description.State.find.isCodeExistForObjectTypeCode(stateCode, objectType)) {
@@ -392,8 +408,13 @@ public class CommonValidationHelper {
 
 	
 	public static void validateResolutionCodes(Set<String> resoCodes,ContextValidation contextValidation){
-		String typeCode = getObjectFromContext(FIELD_TYPE_CODE, String.class, contextValidation);
-		validateResolutionCodes(typeCode, resoCodes, contextValidation);
+		if (contextValidation.getContextObjects().containsKey(FIELD_TYPE_CODE)) {
+			String typeCode = getObjectFromContext(FIELD_TYPE_CODE, String.class, contextValidation);
+			validateResolutionCodes(typeCode, resoCodes, contextValidation);
+		} else if(contextValidation.getContextObjects().containsKey(FIELD_OBJECT_TYPE_CODE)){
+			ObjectType.CODE objectTypeCode = getObjectFromContext(FIELD_OBJECT_TYPE_CODE, ObjectType.CODE.class, contextValidation);
+			validateResolutionCodes(objectTypeCode, resoCodes, contextValidation);
+		} 				
 	}
 	
 	public static void validateResolutionCodes(String typeCode, Set<String> resoCodes, ContextValidation contextValidation){
@@ -405,6 +426,18 @@ public class CommonValidationHelper {
 				typeCodes.add(typeCode);
 				
 				if (! MongoDBDAO.checkObjectExist(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, DBQuery.and(DBQuery.is("resolutions.code", resoCode), DBQuery.in("typeCodes", typeCodes)))) {
+					contextValidation.addErrors("resolutionCodes["+i+"]", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, resoCode);
+				}
+				i++;
+			}
+		}
+	}
+	
+	public static void validateResolutionCodes(ObjectType.CODE objectTypeCode, Set<String> resoCodes, ContextValidation contextValidation){
+		if(null != resoCodes){
+			int i = 0;
+			for(String resoCode: resoCodes){
+				if (! MongoDBDAO.checkObjectExist(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, DBQuery.and(DBQuery.is("resolutions.code", resoCode), DBQuery.is("objectTypeCode", objectTypeCode.toString())))) {
 					contextValidation.addErrors("resolutionCodes["+i+"]", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, resoCode);
 				}
 				i++;
@@ -493,16 +526,12 @@ public class CommonValidationHelper {
 	}
 
 
-	public static void validateContainerCode(String containerCode, ContextValidation contextValidation) {
-		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, containerCode, "containerCode", Container.class,InstanceConstants.CONTAINER_COLL_NAME);
+	public static void validateContainerCode(String containerCode, ContextValidation contextValidation, String propertyName) {
+		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, containerCode, propertyName, Container.class,InstanceConstants.CONTAINER_COLL_NAME);
 	}
 	
-	public static void validateContainerSupportCode (String containerSupportCode, ContextValidation contextValidation) {		
-		if (ValidationHelper.required(contextValidation, containerSupportCode, "containerSupportCode")) {
-			if (! MongoDBDAO.checkObjectExist(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,  DBQuery.is("code", containerSupportCode))) {
-				contextValidation.addErrors("containerSupportCode", ValidationConstants.ERROR_CODE_NOTEXISTS_MSG, containerSupportCode);
-			}
-		}		 
+	public static void validateContainerSupportCode (String containerSupportCode, ContextValidation contextValidation, String propertyName) {
+		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, containerSupportCode, propertyName, ContainerSupport.class,InstanceConstants.CONTAINER_SUPPORT_COLL_NAME);		
 	}
 	
 	

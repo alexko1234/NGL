@@ -30,6 +30,7 @@ PUT    	/api/reporting/configs/:code					controllers.reporting.api.ReportingConf
 DELETE	/api/reporting/configs/:code					controllers.reporting.api.ReportingConfigurations.delete(code: java.lang.String)
 
 #instruments
-GET		/api/instruments/types  						controllers.instruments.api.InstrumentUsedTypes.list()
-GET		/api/instruments/categories  					controllers.instruments.api.InstrumentCategories.list()
+GET		/api/instrument-categories  					controllers.instruments.api.InstrumentCategories.list()
 GET		/api/instruments								controllers.instruments.api.Instruments.list()
+GET 	/api/instrument-types/:code 					controllers.instruments.api.InstrumentUsedTypes.get(code:java.lang.String)
+GET		/api/instrument-types  							controllers.instruments.api.InstrumentUsedTypes.list()

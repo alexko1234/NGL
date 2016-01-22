@@ -23,7 +23,8 @@ public class ExperimentSearchForm extends ListForm{
 	public Set<String> stateCodes;
 	public Set<String> users;
 	public String containerSupportCode;
-	public Set<String> containersCodes;	
+	public Set<String> containerSupportCodes;
+	public String containerSupportCodeRegex;
 	public String atomicTransfertMethods;
 	public String reagentOrBoxCode;
 	public String instrument;
@@ -42,7 +43,7 @@ public class ExperimentSearchForm extends ListForm{
 				+ ", categoryCode="	+ categoryCode + ", projectCodes=" + projectCodes
 				+ ", sampleCodes=" + sampleCodes + ", fromDate=" + fromDate
 				+ ", toDate=" + toDate + ", stateCode=" + stateCode
-				+ ", users=" + users +", containerSupportCode=" + containerSupportCode +", containersCodes=" + containersCodes
+				+ ", users=" + users +", containerSupportCode=" + containerSupportCode 
 				+ ", atomicTransfertMethods="+ atomicTransfertMethods + ", instrument"+ instrument 
 				+ ", tags=" + tags+  ", sampleTypeCodes="+ sampleTypeCodes
 				+ "]";

@@ -1,5 +1,5 @@
-angular.module('home').controller('TubeToTubesCtrl',['$scope', 'atmToGenerateMany',
-                                                               function($scope, atmToGenerateMany) {
+angular.module('home').controller('TubeToTubesCtrl',['$scope', '$parse', 'atmToGenerateMany',
+                                                               function($scope, $parse, atmToGenerateMany) {
 	
 		
 	var datatableConfigTubeParam = {
@@ -95,8 +95,8 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', 'atmToGenerateMan
 				by:'inputContainer.code'
 			},
 			remove:{
-				active: (!$scope.doneAndRecorded && !$scope.inProgressNow),
-				showButton: (!$scope.doneAndRecorded && !$scope.inProgressNow),
+				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
+				showButton: ($scope.isEditModeAvailable() && $scope.isNewState()),
 				mode:'local'
 			},
 			save:{
@@ -111,11 +111,11 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', 'atmToGenerateMan
 				active:true
 			},
 			edit:{
-				active: !$scope.inProgressNow && !$scope.doneAndRecorded,
-				columnMode:true,
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				byDefault:($scope.isCreationMode()),
 				withoutSelect:true,
-				byDefault : false,
-				showButton : true
+				columnMode:true
 			},	
 			cancel : {
 				active:true
@@ -277,7 +277,9 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', 'atmToGenerateMan
 				active:true 
 			},			
 			edit:{
-				active: !$scope.inProgressNow && !$scope.doneAndRecorded,
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),	
+				byDefault:($scope.isCreationMode()),
+				withoutSelect:true,
 				columnMode:true
 			},
 			messages:{
@@ -297,17 +299,11 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', 'atmToGenerateMan
 
 	};	
 	
-	$scope.$on('save', function(e, promises, func, endPromises) {	
-		console.log("call event save");
-		$scope.atmService.viewToExperiment($scope.experiment);
-		$scope.updateInputVolume($scope.experiment);
-		$scope.$emit('viewSaved', promises, func, endPromises);
-	});
 	
 	
 	$scope.updateInputVolume = function(experiment){
-		for(var i=0 ; i < experiment.value.atomicTransfertMethods.length ; i++){
-			var atm = experiment.value.atomicTransfertMethods[i];
+		for(var i=0 ; i < experiment.atomicTransfertMethods.length ; i++){
+			var atm = experiment.atomicTransfertMethods[i];
 			
 			var volume = {input:0};
 			
@@ -315,27 +311,81 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', 'atmToGenerateMan
 				this.input += Number(output.volume.value);
 			}, volume);
 			
-			atm.inputContainerUseds[0].experimentProperties["inputVolume"] = {value:volume.input, unit:"µL"};
+			if(angular.isNumber(volume.input)){
+				$parse('inputContainerUseds[0].experimentProperties["inputVolume"]').assign(atm, {value:volume.input, unit:"µL"});
+			}
+			//atm.inputContainerUseds[0].experimentProperties["inputVolume"] = {value:volume.input, unit:"µL"};
 		}				
 	};
 	
 	
+	/**
+	 * Update concentration. Copy input concentration to all outputs
+	 */
+	$scope.updateConcentration = function(experiment){
+		
+		for(var j = 0 ; j < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; j++){
+			var atm = experiment.atomicTransfertMethods[j];
+			if(atm.inputContainerUseds[0].concentration !== null 
+					&& atm.inputContainerUseds[0].concentration !== undefined){
+				var concentration = atm.inputContainerUseds[0].concentration;				
+				for(var i = 0 ; i < atm.outputContainerUseds.length ; i++){
+					$parse("outputContainerUseds["+i+"].concentration").assign(atm, concentration);
+				}
+			}
+			
+		}		
+	};
+	
+	$scope.$on('save', function(e, callbackFunction) {	
+		console.log("call event save on tube-to-tubes");
+		$scope.atmService.viewToExperiment($scope.experiment);
+		$scope.updateInputVolume($scope.experiment);
+		$scope.updateConcentration($scope.experiment);
+		$scope.$emit('childSaved', callbackFunction);
+	});
+	
+	
 	$scope.$on('refresh', function(e) {
-		console.log("call event refresh");
+		console.log("call event refresh on tube-to-tubes");
 		
 		var dtConfig = $scope.atmService.data.datatableParam.getConfig();
-		dtConfig.edit.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
-		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isNewState());
+		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.datatableParam.setConfig(dtConfig);
 		
-		var dtConfig = $scope.atmService.data.datatableConfig.getConfig();
-		dtConfig.edit.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
-		dtConfig.remove.active = (!$scope.doneAndRecorded && !$scope.inProgressNow);
+		dtConfig = $scope.atmService.data.datatableConfig.getConfig();
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
+		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.datatableConfig.setConfig(dtConfig);
-		
 		
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
 		$scope.$emit('viewRefeshed');
+	});
+	
+	$scope.$on('cancel', function(e) {
+		console.log("call event cancel");
+		$scope.atmService.data.datatableParam.cancel();
+		$scope.atmService.data.datatableConfig.cancel();
+				
+		if($scope.isCreationMode()){
+			var dtConfig = $scope.atmService.data.datatableParam.getConfig();
+			dtConfig.edit.byDefault = false;
+			$scope.atmService.data.datatableParam.setConfig(dtConfig);
+			
+			dtConfig = $scope.atmService.data.datatableConfig.getConfig();
+			dtConfig.edit.byDefault = false;
+			$scope.atmService.data.datatableConfig.setConfig(dtConfig);
+		}
+	});
+	
+	$scope.$on('activeEditMode', function(e) {
+		console.log("call event activeEditMode");
+		$scope.atmService.data.datatableParam.selectAll(true);
+		$scope.atmService.data.datatableParam.setEdit();
+		
+		$scope.atmService.data.datatableConfig.selectAll(true);
+		$scope.atmService.data.datatableConfig.setEdit();
 	});
 	
 	var atmService = atmToGenerateMany($scope, datatableConfigTubeParam, datatableConfigTubeConfig);
@@ -355,7 +405,7 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', 'atmToGenerateMan
 			volume : "µL",
 			quantity:"ng"
 	}
-	atmService.experimentToView($scope.experiment);
+	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 	$scope.atmService = atmService;
 }]);

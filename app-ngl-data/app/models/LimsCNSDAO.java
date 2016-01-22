@@ -169,7 +169,7 @@ public class LimsCNSDAO{
 				sample.taxonCode=rs.getString("taxonCode");
 
 				sample.comments=new ArrayList<Comment>();
-				sample.comments.add(new Comment(rs.getString("comment")));
+				sample.comments.add(new Comment(rs.getString("comment"), "ngl-test"));
 				sample.categoryCode=sampleType.category.code;
 
 				sample.properties=new HashMap<String, PropertyValue>();

@@ -7,65 +7,70 @@ GET		/api/samples/:code												controllers.samples.api.Samples.get(code: jav
 GET		/api/supports													controllers.containers.api.ContainerSupports.list()
 GET		/api/supports/:code												controllers.containers.api.ContainerSupports.get(code:java.lang.String)
 HEAD	/api/supports/:code												controllers.containers.api.ContainerSupports.head(code:java.lang.String)
-PUT		/api/supports/batch												controllers.containers.api.ContainerSupports.updateBatch()
-PUT		/api/supports/:code/state										controllers.containers.api.ContainerSupports.updateStateCode(code:java.lang.String)
+PUT		/api/supports/:code/state										controllers.containers.api.ContainerSupports.updateState(code:java.lang.String)
+
+#TODO GA replace by new version
+PUT		/api-old/supports/batch											controllers.containers.api.ContainerSupports.updateBatch()
+PUT		/api-old/supports/:code/state									controllers.containers.api.ContainerSupports.updateStateCode(code:java.lang.String)
 
 
 #containers api
 GET		/api/containers													controllers.containers.api.Containers.list()
 #TODO a revoir plutot /api/containers/supports/categories
 GET		/api/containers/container-support-categories  					controllers.containers.api.ContainerSupportCategories.list()
-GET		/api/containers/categories										controllers.containers.api.ContainerCategories.list()
 GET		/api/containers/:code											controllers.containers.api.Containers.get(code:java.lang.String)
-PUT		/api/containers/batch											controllers.containers.api.Containers.updateBatch()
-PUT		/api/containers/state-batch										controllers.containers.api.Containers.updateStateBatch()
-PUT		/api/containers/:code											controllers.containers.api.Containers.update(code:java.lang.String)
-PUT		/api/containers/:code/state										controllers.containers.api.Containers.updateStateCode(code:java.lang.String)
 
+PUT		/api/containers/:code/state										controllers.containers.api.Containers.updateState(code:java.lang.String)
+
+#TODO GA replace by new version
+PUT		/api-old/containers/batch											controllers.containers.api.Containers.updateBatch()
+PUT		/api-old/containers/state-batch										controllers.containers.api.Containers.updateStateBatch()
+PUT		/api-old/containers/:code											controllers.containers.api.Containers.update(code:java.lang.String)
+PUT		/api-old/containers/:code/state										controllers.containers.api.Containers.updateStateCode(code:java.lang.String)
+
+GET		/api/container-categories										controllers.containers.api.ContainerCategories.list()
 
 #processes api
 POST	/api/processes													controllers.processes.api.Processes.save()
 POST	/api/processes/batch											controllers.processes.api.Processes.saveBatch()
 PUT		/api/processes/:code											controllers.processes.api.Processes.update(code:java.lang.String)
-PUT		/api/processes/:code/state										controllers.processes.api.Processes.updateStateCode(code:java.lang.String)
+PUT		/api/processes/:code/state										controllers.processes.api.Processes.updateState(code:java.lang.String)
 DELETE	/api/processes/:code											controllers.processes.api.Processes.delete(code:java.lang.String)
 HEAD	/api/processes/:code               								controllers.processes.api.Processes.head(code: java.lang.String)
 GET		/api/processes													controllers.processes.api.Processes.list()
-GET		/api/processes/types											controllers.processes.api.ProcessTypes.list()
-GET		/api/processes/:code/types										controllers.processes.api.ProcessTypes.get(code: java.lang.String)
-GET		/api/processes/categories										controllers.processes.api.ProcessCategories.list()
 GET		/api/processes/:code											controllers.processes.api.Processes.get(code:java.lang.String)
 
+PUT		/api-old/processes/:code/state										controllers.processes.api.Processes.updateStateCode(code:java.lang.String)
+
+
+GET		/api/process-categories											controllers.processes.api.ProcessCategories.list()
+GET		/api/process-types												controllers.processes.api.ProcessTypes.list()
+GET		/api/process-types/:code										controllers.processes.api.ProcessTypes.get(code: java.lang.String)
+
+
 #experiments api
-GET		/api/experiments												controllers.experiments.api.Experiments.list()
+GET		/api/experiments												@controllers.experiments.api.Experiments.list()
+GET		/api/experiments/:code											@controllers.experiments.api.Experiments.get(code:java.lang.String)
+POST	/api/experiments												@controllers.experiments.api.Experiments.save()
+PUT		/api/experiments/:code											@controllers.experiments.api.Experiments.update(code:java.lang.String)
+PUT		/api/experiments/:code/state									@controllers.experiments.api.Experiments.updateState(code:java.lang.String)
+POST	/api/experiments/:code/comments									@controllers.experiments.api.ExperimentComments.save(code:java.lang.String)
+PUT		/api/experiments/:code/comments/:commentCode					@controllers.experiments.api.ExperimentComments.update(code:java.lang.String, commentCode:java.lang.String)
+DELETE	/api/experiments/:code/comments/:commentCode					@controllers.experiments.api.ExperimentComments.delete(code:java.lang.String, commentCode:java.lang.String)
+
+
 POST	/api/experiments/sample-sheets 									instruments.io.Outputs.sampleSheets()
-PUT		/api/experiments/:code/experiment-information					controllers.experiments.api.Experiments.updateExperimentInformations(code:java.lang.String)
-PUT		/api/experiments/:code/experiment-properties					controllers.experiments.api.Experiments.updateExperimentProperties(code:java.lang.String)
-PUT		/api/experiments/:code/instrument-information					controllers.experiments.api.Experiments.updateInstrumentInformations(code:java.lang.String)
-PUT		/api/experiments/:code/instrument-properties					controllers.experiments.api.Experiments.updateInstrumentProperties(code:java.lang.String)
-PUT		/api/experiments/:code/data										controllers.experiments.api.Experiments.updateData(code:java.lang.String)
-PUT		/api/experiments/:code/retry									controllers.experiments.api.Experiments.retry(code:java.lang.String)
-PUT		/api/experiments/:code/stop-process								controllers.experiments.api.Experiments.stopProcess(code:java.lang.String)
-PUT		/api/experiments/:code/end-of-process							controllers.experiments.api.Experiments.endOfProcess(code:java.lang.String)
-POST	/api/experiments/:code/comment									controllers.experiments.api.Experiments.addComment(code:java.lang.String)
-PUT		/api/experiments/:code/comment									controllers.experiments.api.Experiments.updateComment(code:java.lang.String)
-DELETE	/api/experiments/:code/comment/:commentCode						controllers.experiments.api.Experiments.deleteComment(code:java.lang.String, commentCode:java.lang.String)
-PUT		/api/experiments/:code/containerSupportCode/:newSupportCode		controllers.experiments.api.Experiments.updateContainerSupportCode(code:java.lang.String,newSupportCode:java.lang.String)
-PUT		/api/experiments/:code/state									controllers.experiments.api.Experiments.updateStateCode(code:java.lang.String)
-PUT		/api/experiments/:code/containers								controllers.experiments.api.Experiments.updateContainers(code:java.lang.String)
-POST	/api/experiments												controllers.experiments.api.Experiments.save()
-GET		/api/experiment/categories										controllers.experiments.api.ExperimentCategories.list()
-GET		/api/experiment/types											controllers.experiments.api.ExperimentTypes.list()
-GET		/api/experiment/type/nodes										controllers.experiments.api.ExperimentTypeNodes.list()
-GET		/api/experiment/types/:code										controllers.experiments.api.ExperimentTypes.get(code:java.lang.String)
-GET		/api/experiment/types/defaultfirst/:code						controllers.experiments.api.ExperimentTypes.getDefaultFirstExperiments(code:java.lang.String)
-GET		/api/experiments/:code											controllers.experiments.api.Experiments.get(code:java.lang.String)
 
-GET		/api/experiment/instrument-properties/:instrumentUsedTypeCode	controllers.experiments.api.Experiments.getInstrumentProperties(instrumentUsedTypeCode:java.lang.String)
 
+GET		/api/experiment-categories										controllers.experiments.api.ExperimentCategories.list()
+GET		/api/experiment-types											controllers.experiments.api.ExperimentTypes.list()
+GET		/api/experiment-types/:code										controllers.experiments.api.ExperimentTypes.get(code:java.lang.String)
+GET		/api/experiment-types/:code/default-first						controllers.experiments.api.ExperimentTypes.getDefaultFirstExperiments(code:java.lang.String)
+GET		/api/experiment-type-nodes										controllers.experiments.api.ExperimentTypeNodes.list()
+GET		/api/experiment-type-nodes/:code								controllers.experiments.api.ExperimentTypeNodes.get(code:java.lang.String)
 
 #contents 
-#TODO must be remove
+#TODO GA must be remove
 GET		/api/contents													controllers.containers.api.Contents.list()
 
 

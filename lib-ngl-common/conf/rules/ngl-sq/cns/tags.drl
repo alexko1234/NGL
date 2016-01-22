@@ -28,13 +28,13 @@ rule "Generate TagInfo from Experiment"
 		Map<String, ContainerSupport> supports = new HashMap<String, ContainerSupport>();
 		
 		for(AtomicTransfertMethod atm : atomics){
-			List<ContainerUsed> cuinputs = atm.inputContainerUseds;
+			List<InputContainerUsed> cuinputs = atm.inputContainerUseds;
 			Set<String> sampleCodes = new TreeSet<String>();
 			Set<String> projectCodes = new TreeSet<String>();
 			Set<String> libProcessTypeCodes = new TreeSet<String>();
 			Set<String> tags = new TreeSet<String>();
 			//extract content info
-			for(ContainerUsed cu:cuinputs){
+			for(InputContainerUsed cu:cuinputs){
 				if(null != cu.contents){
 					for(Content content : cu.contents){
 						projectCodes.add(content.projectCode);
@@ -49,9 +49,9 @@ rule "Generate TagInfo from Experiment"
 				}
 			}
 							
-			List<ContainerUsed> cuoutputs = atm.outputContainerUseds;
+			List<OutputContainerUsed> cuoutputs = atm.outputContainerUseds;
 			//generate support
-			for(ContainerUsed cu:cuoutputs){
+			for(OutputContainerUsed cu:cuoutputs){
 				ContainerSupport support = null;
 				if(null != cu.locationOnContainerSupport){
 					if(!supports.containsKey(cu.locationOnContainerSupport.code)){

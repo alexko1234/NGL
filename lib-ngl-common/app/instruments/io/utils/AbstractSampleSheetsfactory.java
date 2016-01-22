@@ -12,6 +12,7 @@ import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.parameter.Index;
 import models.utils.InstanceConstants;
 
@@ -41,7 +42,7 @@ public abstract class AbstractSampleSheetsfactory {
 	protected List<Container> getInputContainersFromExperiment(){
 		List<Container> containers = new ArrayList<Container>();
 		for(int i=0; i<this.experiment.atomicTransfertMethods.size();i++){
-			for(ContainerUsed cu : this.experiment.atomicTransfertMethods.get(i).inputContainerUseds){
+			for(InputContainerUsed cu : this.experiment.atomicTransfertMethods.get(i).inputContainerUseds){
 				containers.add(MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, cu.code));
 			}
 		}
@@ -141,7 +142,7 @@ public abstract class AbstractSampleSheetsfactory {
 		return (String) container.properties.get(propertyName).value;
 	}
 	
-	public static String getInputContainerUsedExperimentProperty(ContainerUsed container, String propertyName){		
+	public static String getInputContainerUsedExperimentProperty(InputContainerUsed container, String propertyName){		
 		return container.experimentProperties.get(propertyName).value.toString().replace(".",",") ;
 	}
 		

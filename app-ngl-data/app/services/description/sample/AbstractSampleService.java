@@ -10,6 +10,7 @@ import models.laboratory.sample.description.SampleType;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
+import services.description.Constants;
 import services.description.DescriptionFactory;
 
 public abstract class AbstractSampleService {
@@ -32,9 +33,9 @@ public abstract class AbstractSampleService {
 		return sc;
 	}
 	
-	public static List<Institute> getInstitutes(Institute.CODE...codes) throws DAOException {
+	public static List<Institute> getInstitutes(Constants.CODE...codes) throws DAOException {
 		List<Institute> institutes = new ArrayList<Institute>();
-		for(Institute.CODE code : codes){
+		for(Constants.CODE code : codes){
 			institutes.add(Institute.find.findByCode(code.name()));
 		}
 		return institutes;

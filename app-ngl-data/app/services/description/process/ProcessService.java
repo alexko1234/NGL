@@ -17,6 +17,8 @@ public class ProcessService {
 			(new ProcessServiceCNS()).main(errors);
 		}else if(institute.equals("CNG")){
 			(new ProcessServiceCNG()).main(errors);
+		}else if(institute.equals("TEST")){
+			(new ProcessServiceTEST()).main(errors);
 		}else{
 			Logger.error("You need to specify only one institute ! Now, it's "+ play.Play.application().configuration().getString("institute"));
 		}

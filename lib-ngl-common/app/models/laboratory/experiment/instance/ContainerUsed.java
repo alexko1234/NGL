@@ -14,11 +14,11 @@ import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.common.instance.CommonValidationHelper;
-import validation.container.ContainerUsedValidation;
+import validation.experiment.instance.ContainerUsedValidation;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
+@Deprecated
 public class ContainerUsed implements IValidation{
 	
 	public String code;
@@ -38,7 +38,9 @@ public class ContainerUsed implements IValidation{
 	public Map<String,PropertyValue> instrumentProperties;
 	
 	
-	public Set<Content> contents;
+	public List<Content> contents;
+	
+	//TODO remove available
 	public State state;	
 	public Set<String> fromExperimentTypeCodes;
 	
@@ -67,7 +69,7 @@ public class ContainerUsed implements IValidation{
 			CommonValidationHelper.validateUniqueInstanceCode(contextValidation, code, Container.class, InstanceConstants.CONTAINER_COLL_NAME);
 		}
 		else if(contextValidation.getObject("stateCode").equals("F")) {
-			CommonValidationHelper.validateContainerCode(code, contextValidation);
+			CommonValidationHelper.validateContainerCode(code, contextValidation, "code");
 		} 
 		ContainerUsedValidation.validateVolume(contextValidation, volume);
 		ContainerUsedValidation.validateConcentration(contextValidation, concentration);

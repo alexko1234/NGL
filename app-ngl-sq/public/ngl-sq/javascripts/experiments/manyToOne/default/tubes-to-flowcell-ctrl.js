@@ -1,5 +1,5 @@
-angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'atmToDragNDrop',
-                                                               function($scope, $parse, atmToDragNDrop) {
+angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$filter', 'atmToDragNDrop',
+                                                               function($scope, $parse, $filter, atmToDragNDrop) {
 	
 	
 	$scope.isRoadMapAvailable = true;
@@ -170,7 +170,8 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 			},
 			order:{
 				mode:'local', //or 
-				active:true
+				active:true,
+				by:"atomicTransfertMethod.line"
 			},
 			remove:{
 				active:false,
@@ -180,6 +181,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 				withoutEdit: true,
 				mode:'local',
 				showButton:false,
+				changeClass:false,
 				callback:function(datatable){
 					copyFlowcellCodeToDT(datatable);
 				}
@@ -192,7 +194,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 	        },
 			
 			edit:{
-				active: !$scope.doneAndRecorded,
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
 				columnMode:true
 			},
 			messages:{
@@ -208,10 +210,6 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 			extraHeaders:{
 				number:2,
 				dynamic:true,
-			},
-			otherButton:{
-				active:true,
-				template:'<button class="btn btn btn-info" ng-click="newPurif()" data-toggle="tooltip" ng-disabled="experiment.value.state.code != \'F\'" ng-hide="!experiment.doPurif" title="'+Messages("experiments.addpurif")+'">Messages("experiments.addpurif")</button><button class="btn btn btn-info" ng-click="newQc()" data-toggle="tooltip" ng-disabled="experiment.value.state.code != \'F\'" ng-hide="!experiment.doQc" title="Messages("experiments.addqc")">Messages("experiments.addqc")</button>'
 			}
 	};	
 	
@@ -227,19 +225,19 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 		}
 	}
 	
-	$scope.$on('save', function(e, promises, func, endPromises) {	
-		console.log("call event save");		
+	$scope.$on('save', function(e, callbackFunction) {	
+		console.log("call event save on tubes-to-flowcell");		
 		$scope.atmService.viewToExperiment($scope.experiment);
 		$scope.updateConcentration($scope.experiment);
-		$scope.$emit('viewSaved', promises, func, endPromises);
+		$scope.$emit('childSaved', callbackFunction);
 	});
 	
-	
+
 	var copyFlowcellCodeToDT = function(datatable){
 		
 		var dataMain = datatable.getData();
 		//copy flowcell code to output code
-		var codeFlowcell = $parse("instrumentProperties.containerSupportCode.value")($scope.experiment.value);
+		var codeFlowcell = $parse("instrumentProperties.containerSupportCode.value")($scope.experiment);
 		if(null != codeFlowcell && undefined != codeFlowcell){
 			for(var i = 0; i < dataMain.length; i++){
 				var atm = dataMain[i].atomicTransfertMethod;
@@ -261,30 +259,29 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 	$scope.updateConcentration = function(experiment){
 		
 		//prendre la propriété atm.inputContainerUseds[0].experimentProperties.finalConcentration2 de l'input pour la comparaison
-		
-		for(var j = 0 ; j < experiment.value.atomicTransfertMethods.length; j++){
-			var atm = experiment.value.atomicTransfertMethods[j];
+		for(var j = 0 ; j < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; j++){
+			var atm = experiment.atomicTransfertMethods[j];
 			var concentration = undefined;
 			var unit = undefined;
 			var isSame = true;
 			for(var i=0;i < atm.inputContainerUseds.length;i++){
-				if(concentration === undefined && unit === undefined){
-					//concentration = atm.inputContainerUseds[i].concentration.value;
-					//unit = atm.inputContainerUseds[i].concentration.unit;
-					if(null != atm.inputContainerUseds[i].experimentProperties.finalConcentration2){
+				if(atm.inputContainerUseds[i].experimentProperties && atm.inputContainerUseds[i].experimentProperties.finalConcentration2){				
+					if(concentration === undefined && unit === undefined){
+						//concentration = atm.inputContainerUseds[i].concentration.value;
+						//unit = atm.inputContainerUseds[i].concentration.unit;					
 						concentration = atm.inputContainerUseds[i].experimentProperties.finalConcentration2.value;
-						unit = atm.inputContainerUseds[i].experimentProperties.finalConcentration2.unit;
-					}
-				}else{
-					if(concentration !== atm.inputContainerUseds[i].experimentProperties.finalConcentration2.value 
-							|| unit !== atm.inputContainerUseds[i].experimentProperties.finalConcentration2.unit){
-						isSame = false;
-						break;
+						unit = atm.inputContainerUseds[i].experimentProperties.finalConcentration2.unit;					
+					}else{
+						if(concentration !== atm.inputContainerUseds[i].experimentProperties.finalConcentration2.value 
+								|| unit !== atm.inputContainerUseds[i].experimentProperties.finalConcentration2.unit){
+							isSame = false;
+							break;
+						}
 					}
 				}
 			}
 			
-			if(isSame){				
+			if(isSame && atm.inputContainerUseds[0].experimentProperties){				
 				atm.outputContainerUseds[0].concentration = atm.inputContainerUseds[0].experimentProperties.finalConcentration2;				
 			}
 			
@@ -295,13 +292,27 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 		console.log("call event refresh");
 		
 		var dtConfig = $scope.atmService.data.$atmToSingleDatatable.data.getConfig();
-		dtConfig.edit.active = !$scope.doneAndRecorded;
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
 		$scope.atmService.data.$atmToSingleDatatable.data.setConfig(dtConfig);
 		
 		
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
 		$scope.$emit('viewRefeshed');
 	});
+	
+	
+	$scope.$on('cancel', function(e) {
+		console.log("call event cancel");
+		$scope.atmService.data.$atmToSingleDatatable.data.cancel();
+				
+	});
+	
+	$scope.$on('activeEditMode', function(e) {
+		console.log("call event activeEditMode");
+		$scope.atmService.data.$atmToSingleDatatable.data.selectAll(true);
+		$scope.atmService.data.$atmToSingleDatatable.data.setEdit();
+	});
+	
 	//To display sample and tag in one cell
 	$scope.getSampleAndTags = function(container){
 		var sampleCodeAndTags = [];
@@ -325,13 +336,13 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 	};
 	
 	$scope.isAllOpen = true;
-	if($scope.experiment.editMode){
+	if(!$scope.isCreationMode()){
 		$scope.isAllOpen = false;
 	}
 	
 	//TODO used container_support_category in future
 	//init number of lane
-	var cscCode = $parse('experiment.value.instrument.outContainerSupportCategoryCode')($scope);
+	var cscCode = $parse('experiment.instrument.outContainerSupportCategoryCode')($scope);
 	$scope.rows = [];
 	var laneCount = 0;
 	if(cscCode !== undefined){
@@ -363,13 +374,8 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 	
 	
 	//init global ContainerOut Properties outside datatable
-	$scope.outputContainerProperties = [];
+	$scope.outputContainerProperties = $filter('filter')($scope.experimentType.propertiesDefinitions, 'ContainerOut');
 	$scope.outputContainerValues = {};
-	angular.forEach($scope.experiment.experimentProperties.inputs, function(property){
-		if($scope.getLevel(property.levels, "ContainerOut")){
-			this.push(property);														
-		}		
-	}, $scope.outputContainerProperties);
 	
 	$scope.updateAllOutputContainerProperty = function(property){
 		var value = $scope.outputContainerValues[property.code];
@@ -405,7 +411,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', 'at
 	atmService.defaultOutputUnit = {
 			volume : "µL"			
 	}
-	atmService.experimentToView($scope.experiment);
+	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 	$scope.atmService = atmService;
 	

@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import models.laboratory.common.description.Institute;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.run.description.TreatmentCategory;
@@ -17,6 +16,7 @@ import models.laboratory.run.description.TreatmentTypeContext;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
+import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 
@@ -49,99 +49,99 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 		l.add(DescriptionFactory.newTreatmentType("SAV","sav", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.sequencing.name()), "sav", 
 				getSAVPropertyDefinitions(), 
 				Arrays.asList(getTreatmentTypeContext("read1", Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE)), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "10"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "10"));
 		
 		l.add(DescriptionFactory.newTreatmentType("NGSRG","ngsrg-illumina", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ngsrg.name()), "ngsrg", 
 				getNGSRGPropertyDefinitions(), 
 				getTreatmentTypeContexts("default"), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "20"));		
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "20"));		
 		
 		l.add(DescriptionFactory.newTreatmentType("Global","global", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.global.name()), "global", 
 				getReadSetPropertyDefinitions(), 
 				getTreatmentTypeContexts("default"), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "0"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "0"));
 		
 		l.add(DescriptionFactory.newTreatmentType("Read Quality","read-quality", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "readQualityRaw,readQualityClean", 
 				getReadQualityPropertyDefinitions(), 
 				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE)), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "30,83"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "30,83"));
 		
 		l.add(DescriptionFactory.newTreatmentType("Duplicates","duplicates", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "duplicatesRaw,duplicatesClean", 
 				getDuplicatesPropertyDefinitions(), 
 				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE)), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "32,86"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "32,86"));
 		
 		l.add(DescriptionFactory.newTreatmentType("Mapping","mapping", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "mapping", 
 				getMappingPropertyDefinitions(), 
 				Arrays.asList(getTreatmentTypeContext("read1",Boolean.FALSE), getTreatmentTypeContext("read2", Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE), getTreatmentTypeContext("default", Boolean.TRUE)),
 				//getTreatmentTypeContexts("pairs", "default"), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "90"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "90"));
 		
 		l.add(DescriptionFactory.newTreatmentType("Trimming","trimming", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "trimmingStd,trimmingVector", 
 				getTrimmingPropertyDefinitions(), 
 				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE), 
 				getTreatmentTypeContext("single", Boolean.FALSE)), 
-				DescriptionFactory.getInstitutes( Institute.CODE.CNG), "33,50"));
+				DescriptionFactory.getInstitutes( Constants.CODE.CNG), "33,50"));
 		
 		l.add(DescriptionFactory.newTreatmentType("First Base Report", "firstBaseReport", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "firstBaseReport",
 				getFirstBaseReportPropertyDefinitions(),
 				Arrays.asList(getTreatmentTypeContext("read1", Boolean.TRUE)),
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "5")
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "5")
 				);
 		
 		l.add(DescriptionFactory.newTreatmentType("Contamination","contamination", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "contaminationColi,contaminationVector,contaminationPhiX", 
 				getContaminationPropertyDefinitions(), 
 				Arrays.asList(getTreatmentTypeContext("read1",Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE), 
 				getTreatmentTypeContext("single", Boolean.FALSE)), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "35,36,60"));		
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "35,36,60"));		
 		
 		
 		//specific CNG 
 		l.add(DescriptionFactory.newTreatmentType("alignSingleRead BLAT","alignsingleread-blat", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "alignSingleReadBLATRaw", 
 				getASRBPropertyDefinitions(), 
 				getTreatmentTypeContexts("read1", "read2"), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "50"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "50"));
 		
 		l.add(DescriptionFactory.newTreatmentType("alignSingleRead SOAP2","alignsingleread-soap2", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "alignSingleReadSOAP2Raw", 
 				getASRSPropertyDefinitions(), 
 				getTreatmentTypeContexts("read1", "read2"), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "60"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "60"));
 		
 		l.add(DescriptionFactory.newTreatmentType("Exome","exome", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "exome", 
 				getExomeTreatmentPropertyDefinitions(), 
 				getTreatmentTypeContexts("pairs"), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "100"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "100"));
 		
 		l.add(DescriptionFactory.newTreatmentType("Whole Genome","whole-genome", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "wholeGenome", 
 				getWholeExomeTreatmentPropertyDefinitions(), 
 				getTreatmentTypeContexts("pairs"), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "110"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "110"));
 		
 		l.add(DescriptionFactory.newTreatmentType("RNAseq","rna-seq", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "RNAseq", 
 				getRnaSeqTreatmentPropertyDefinitions(), 
 				getTreatmentTypeContexts("pairs"), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "120"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "120"));
 		
 		l.add(DescriptionFactory.newTreatmentType("ChiPseq","chip-seq", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "ChiPseq", 
 				getChiPSeqTreatmentPropertyDefinitions(), 
 				getTreatmentTypeContexts("read1"), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "130"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "130"));
 		
 		l.add(DescriptionFactory.newTreatmentType("ChiPseq-PE","chipseq-pe", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "ChiPseqPE", 
 				getChiPSeqPETreatmentPropertyDefinitions(), 
 				getTreatmentTypeContexts("pairs"), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "140"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "140"));
 		
 		l.add(DescriptionFactory.newTreatmentType("FAIREseq","faire-seq", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "FAIREseq", 
 				getFaireSeqTreatmentPropertyDefinitions(), 
 				getTreatmentTypeContexts("read1"), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "150"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "150"));
 		
 		//TODO : level parameter must be verified
 		l.add(DescriptionFactory.newTreatmentType("Sample Control","sample-control", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "sampleControl", 
 				getSampleControlTreatmentPropertyDefinitions(), 
 				getTreatmentTypeContexts("pairs"), 
-				DescriptionFactory.getInstitutes(Institute.CODE.CNG), "160"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "160"));
 		DAOHelpers.saveModels(TreatmentType.class, l, errors);
 	}
 	

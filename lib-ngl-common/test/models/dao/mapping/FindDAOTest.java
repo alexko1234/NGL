@@ -196,7 +196,7 @@ public class FindDAOTest extends AbstractTests {
 		Assert.assertNotNull(cTypeId);
 		Assert.assertFalse(ContainerSupportCategory.find.isCodeExist(""));
 		Assert.assertNotNull(ContainerSupportCategory.find.findByContainerCategoryCode(""));
-		Assert.assertNotNull(ContainerSupportCategory.find.findByExperimentTypeCode(""));
+		Assert.assertNotNull(ContainerSupportCategory.find.findInputByExperimentTypeCode(""));
 		Assert.assertFalse(ContainerSupportCategory.find.isCodeExist("")); 
 		//internal fcts
 		ContainerSupportCategoryDAO cscDAO = Spring.getBeanOfType(ContainerSupportCategoryDAO.class); 

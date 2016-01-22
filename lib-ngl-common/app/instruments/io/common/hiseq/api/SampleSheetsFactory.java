@@ -44,9 +44,9 @@ public class SampleSheetsFactory extends AbstractSampleSheetsfactory{
 
 	private TagModel getTagModel(List<Container> containers) {
 		List<PropertyValue> tags = containers.stream().map((Container container) -> container.contents)
-			.flatMap(Set::stream)
-			.filter((Content c) -> c.properties.containsKey("tag"))
-			.filter((Content c) -> !c.properties.get("tagCategory").equals("MID"))
+			.flatMap(List::stream)
+			.filter(c -> c.properties.containsKey("tag"))
+			.filter(c -> !c.properties.get("tagCategory").equals("MID"))
 			.map((Content c) -> c.properties.get("tag"))
 			.collect(Collectors.toList())
 			;

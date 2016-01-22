@@ -35,6 +35,7 @@ public class ContainerService {
 		l.add(DescriptionFactory.newSimpleCategory(ContainerCategory.class, "Puit", "well"));
 		l.add(DescriptionFactory.newSimpleCategory(ContainerCategory.class, "Lane", "lane"));
 		l.add(DescriptionFactory.newSimpleCategory(ContainerCategory.class, "MapCard", "mapcard"));		
+		l.add(DescriptionFactory.newSimpleCategory(ContainerCategory.class, "Void", "void"));	
 		l.add(DescriptionFactory.newSimpleCategory(ContainerCategory.class, "Irys FC", "irys-fc"));		
 		DAOHelpers.saveModels(ContainerCategory.class, l, errors);
 	}
@@ -48,12 +49,13 @@ public class ContainerService {
 		List<ContainerSupportCategory> l = new ArrayList<ContainerSupportCategory>();
 		l.add(newContainerSupportCategory("Tube", "tube", 1, 1, 1, ContainerCategory.find.findByCode("tube")));
 		l.add(newContainerSupportCategory("MapCard", "mapcard", 1, 1, 1, ContainerCategory.find.findByCode("mapcard")));
-		l.add(newContainerSupportCategory("Plaque 96", "sheet-96", 12, 8, 96, ContainerCategory.find.findByCode("well")));
-		l.add(newContainerSupportCategory("Plaque 384", "sheet-384", 24, 96, 384, ContainerCategory.find.findByCode("well")));
+		l.add(newContainerSupportCategory("Plaque 96", "96-well-plate", 12, 8, 96, ContainerCategory.find.findByCode("well")));
+		l.add(newContainerSupportCategory("Plaque 384", "384-well-plate", 24, 96, 384, ContainerCategory.find.findByCode("well")));
 		l.add(newContainerSupportCategory("Flowcell 8", "flowcell-8", 8, 1, 8, ContainerCategory.find.findByCode("lane")));
 		l.add(newContainerSupportCategory("Flowcell 4", "flowcell-4", 4, 1, 4, ContainerCategory.find.findByCode("lane")));
 		l.add(newContainerSupportCategory("Flowcell 2", "flowcell-2", 2, 1, 2, ContainerCategory.find.findByCode("lane")));
 		l.add(newContainerSupportCategory("Flowcell 1", "flowcell-1", 1, 1, 1, ContainerCategory.find.findByCode("lane")));
+		l.add(newContainerSupportCategory("Void", "void", 0, 0, 0, ContainerCategory.find.findByCode("void")));
 		l.add(newContainerSupportCategory("Irys Chip", "irys-chip", 2, 1, 1, ContainerCategory.find.findByCode("irys-fc")));
 		DAOHelpers.saveModels(ContainerSupportCategory.class, l, errors);
 		

@@ -328,6 +328,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 				
 				if(lists.get("containers-addcolumns") && lists.get("containers-addcolumns").length === 1){
 					var formColumns = [];
+					//we used the order in the document to order column in display and not the position value !!!!
 					var allColumns = angular.copy(lists.get("containers-addcolumns")[0].columns);
 					var nbElementByColumn = Math.ceil(allColumns.length / 5); //5 columns
 					for(var i = 0; i  < 5 && allColumns.length > 0 ; i++){

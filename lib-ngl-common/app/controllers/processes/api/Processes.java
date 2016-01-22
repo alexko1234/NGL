@@ -9,11 +9,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
@@ -45,6 +48,8 @@ import validation.utils.ValidationConstants;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableForm;
 import views.components.datatable.DatatableResponse;
+import workflows.container.ContSupportWorkflows;
+import workflows.process.ProcWorkflows;
 import workflows.process.ProcessWorkflows;
 
 import com.mongodb.BasicDBObject;
@@ -69,7 +74,8 @@ public class Processes extends CommonController{
 	final static Form<ProcessesBatchElement> processSaveBatchForm = form(ProcessesBatchElement.class);
 	final static List<String> defaultKeys =  Arrays.asList("categoryCode","containerInputCode","sampleCode", "sampleOnInputContainer", "typeCode", "state", "currentExperimentTypeCode", "newContainerSupportCodes", "experimentCodes","projectCode", "code", "traceInformation", "comments", "properties");
 	private static final ALogger logger = Logger.of("Processes");
-
+	final static Form<State> stateForm = form(State.class);
+	
 	public static Result head(String processCode) {
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, processCode)){			
 			return ok();					
@@ -204,7 +210,7 @@ public class Processes extends CommonController{
 		ProcessValidationHelper.validateProcessCategory(process.categoryCode,contextValidation);
 		ProcessValidationHelper.validateState(process.typeCode,process.state, contextValidation);
 		ProcessValidationHelper.validateTraceInformation(process.traceInformation, contextValidation);
-		ProcessValidationHelper.validateContainerCode(process.containerInputCode, contextValidation);
+		ProcessValidationHelper.validateContainerCode(process.containerInputCode, contextValidation, "containerInputCode");
 		
 		List<Process> processes = new ArrayList<Process>();
 		for(Content c:container.contents){
@@ -275,7 +281,7 @@ public class Processes extends CommonController{
 			return badRequest("process code are not the same");
 		}
 	}
-
+	@Deprecated
 	public static Result updateStateCode(String code){
 		Form<ProcessesUpdateForm> processesUpdateFilledForm = getFilledForm(processesUpdateForm,ProcessesUpdateForm.class);
 		ContextValidation contextValidation = new ContextValidation(getCurrentUser(), processesUpdateFilledForm.errors());
@@ -293,6 +299,25 @@ public class Processes extends CommonController{
 		return badRequest(processesUpdateFilledForm.errorsAsJson());
 	}
 
+	public static Result updateState(String code){
+		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
+		if(process == null){
+			return badRequest();
+		}
+		Form<State> filledForm =  getFilledForm(stateForm, State.class);
+		State state = filledForm.get();
+		state.date = new Date();
+		state.user = getCurrentUser();
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ProcWorkflows.instance.setState(ctxVal, process, state);
+		if (!ctxVal.hasErrors()) {
+			return ok(Json.toJson(MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code)));
+		}else {
+			return badRequest(filledForm.errorsAsJson());
+		}
+	}
+	
+	
 	public static Result delete(String code) throws DAOException{
 		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
 		Form deleteForm = new Form(Process.class);
@@ -386,20 +411,32 @@ public class Processes extends CommonController{
 			queryElts.add(DBQuery.in("sampleOnInputContainer.sampleTypeCode", processesSearch.sampleTypeCodes));
 		}
 
-		if(StringUtils.isNotBlank(processesSearch.processCode)){
-			queryElts.add(DBQuery.regex("code", Pattern.compile(processesSearch.processCode)));
-		}		
-
+		if(StringUtils.isNotBlank(processesSearch.code)){
+			queryElts.add(DBQuery.is("code", processesSearch.code));
+		}else if(CollectionUtils.isNotEmpty(processesSearch.codes)){
+			queryElts.add(DBQuery.in("code", processesSearch.codes));
+		}else if(StringUtils.isNotBlank(processesSearch.codeRegex)){
+			queryElts.add(DBQuery.regex("code", Pattern.compile(processesSearch.codeRegex)));
+		}
+		
 		if(StringUtils.isNotBlank(processesSearch.experimentCode)){
-			queryElts.add(DBQuery.regex("experimentCodes",Pattern.compile(processesSearch.experimentCode)));
+			queryElts.add(DBQuery.in("experimentCodes", processesSearch.experimentCode));
+		}else if(CollectionUtils.isNotEmpty(processesSearch.experimentCodes)){
+			queryElts.add(DBQuery.in("experimentCodes", processesSearch.experimentCodes));
+		}else if(StringUtils.isNotBlank(processesSearch.experimentCodeRegex)){
+			queryElts.add(DBQuery.regex("experimentCodes", Pattern.compile(processesSearch.experimentCodeRegex)));
 		}
 
 		if(StringUtils.isNotBlank(processesSearch.typeCode)){
 			queryElts.add(DBQuery.is("typeCode", processesSearch.typeCode));
+		}else if(CollectionUtils.isNotEmpty(processesSearch.typeCodes)){
+			queryElts.add(DBQuery.in("typeCode", processesSearch.typeCodes));
 		}
 
 		if(StringUtils.isNotBlank(processesSearch.categoryCode)){
 			queryElts.add(DBQuery.is("categoryCode", processesSearch.categoryCode));
+		}else if(CollectionUtils.isNotEmpty(processesSearch.categoryCodes)){
+			queryElts.add(DBQuery.in("categoryCode", processesSearch.categoryCodes));
 		}
 
 		if(CollectionUtils.isNotEmpty(processesSearch.stateCodes)){
@@ -423,26 +460,35 @@ public class Processes extends CommonController{
 			queryElts.add(DBQuery.lessThanEquals("traceInformation.creationDate", (DateUtils.addDays(processesSearch.toDate, 1))));
 		}
 
-		if(StringUtils.isNotBlank(processesSearch.supportCode) || StringUtils.isNotBlank(processesSearch.containerSupportCategory) ){
+		if(StringUtils.isNotBlank(processesSearch.supportCode) || 
+				StringUtils.isNotBlank(processesSearch.supportCodeRegex) ||
+					CollectionUtils.isNotEmpty(processesSearch.supportCodes) ||	
+						StringUtils.isNotBlank(processesSearch.containerSupportCategory) ){
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("code", 1);
 
 			ContainersSearchForm cs = new ContainersSearchForm();
-			cs.supportCodeRegex = processesSearch.supportCode;
+			cs.supportCodeRegex = processesSearch.supportCodeRegex;
+			cs.supportCode = processesSearch.supportCode;
+			cs.supportCodes = processesSearch.supportCodes;
 			cs.containerSupportCategory=processesSearch.containerSupportCategory;
 
 			List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, Containers.getQuery(cs), keys).toList();
 			//InputContainer
 			List<Query> queryContainer = new ArrayList<Query>();
-			for(Container c: containers){
-				queryContainer.add(DBQuery.is("containerInputCode", c.code));
+			if(containers.size() > 0){
+				queryContainer.add(DBQuery.in("containerInputCode", containers.stream().map(c -> c.code).collect(Collectors.toList())));
 			}
-			//OutputContainers. We need to find all containers using the protocol.
-			Logger.debug("newContainerSupportCodes :"+processesSearch.supportCode);
-			queryContainer.add(DBQuery.regex("newContainerSupportCodes",Pattern.compile(processesSearch.supportCode)));
-
-
+			
+			if(StringUtils.isNotBlank(processesSearch.supportCode)){
+				queryContainer.add(DBQuery.is("newContainerSupportCodes",processesSearch.supportCode));
+			} else if(StringUtils.isNotBlank(processesSearch.supportCodeRegex)){
+				queryContainer.add(DBQuery.regex("newContainerSupportCodes",Pattern.compile(processesSearch.supportCodeRegex)));
+			} else if(CollectionUtils.isNotEmpty(processesSearch.supportCodes)){
+				queryContainer.add(DBQuery.in("newContainerSupportCodes",processesSearch.supportCodes));
+			}
+			
 			if(queryContainer.size()!=0){
 				queryElts.add(DBQuery.or(queryContainer.toArray(new Query[queryContainer.size()])));
 			}

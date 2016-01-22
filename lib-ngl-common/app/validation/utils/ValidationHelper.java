@@ -35,6 +35,10 @@ import static validation.utils.ValidationConstants.*;
 
 public class ValidationHelper {
 	
+	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, Boolean validateNotDefined) {
+		validateProperties(contextValidation, properties, propertyDefinitions, validateNotDefined, true);
+	}
+	
 	/**
 	 * 
 	 * @param contextValidation
@@ -42,7 +46,7 @@ public class ValidationHelper {
 	 * @param propertyDefinitions
 	 * @param validateNotDefined
 	 */
-	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, Boolean validateNotDefined) {
+	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, Boolean validateNotDefined, Boolean testRequired) {
 		Map<String, PropertyValue> inputProperties = new HashMap<String, PropertyValue>(0);
 		if(properties!=null && !properties.isEmpty()){
 			inputProperties = new HashMap<String, PropertyValue>(properties);		
@@ -57,7 +61,7 @@ public class ValidationHelper {
 			PropertyDefinition propertyDefinition=(PropertyDefinition) pdefs.toArray()[0];			
 			
 			//if pv null and required
-			if( pv==null && propertyDefinition.required){				
+			if( pv==null && propertyDefinition.required && testRequired){				
 				contextValidation.addErrors(propertyDefinition.code+".value", ERROR_REQUIRED_MSG,"");					
 	        	
 			}else if (pv != null){
@@ -141,7 +145,7 @@ public class ValidationHelper {
 	 * @param propertyDefinitions
 	 */
 	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions){
-		validateProperties(contextValidation, properties, propertyDefinitions, true);		
+		validateProperties(contextValidation, properties, propertyDefinitions, true, true);		
 	}
 
 	
@@ -343,8 +347,9 @@ public class ValidationHelper {
 	 */
 	public static boolean convertPropertyValue(ContextValidation contextValidation, PropertySingleValue propertyValue, PropertyDefinition propertyDefinition) {
 		try{
+			propertyValue.value = cleanValue(propertyValue.value);
 			Class<?> valueClass = getClass(propertyDefinition.valueType);
-			if(!valueClass.isInstance(propertyValue.value)){ //transform only if not the good type
+			if(null != propertyValue.value && !valueClass.isInstance(propertyValue.value)){ //transform only if not the good type
 				Logger.debug("convertValue "+propertyDefinition.code);
 				propertyValue.value = convertValue(valueClass, propertyValue.value.toString(), null);
 			}
@@ -357,6 +362,24 @@ public class ValidationHelper {
 			return false;
 		}
 		return true;
+	}
+	
+	public static Object cleanValue(Object object){
+		if(object == null) {
+			return null;
+        }else if(object instanceof String && StringUtils.isBlank((String)object)) {
+        	return null;
+        }else if(object instanceof Collection && CollectionUtils.isEmpty((Collection)object)) {
+        	return null;        	
+        }else if(object instanceof Map && MapUtils.isEmpty((Map)object)) {
+        	return null;       	
+        }else if(object instanceof byte[] && ((byte[])object).length==0) {
+        	return null;
+        }else{
+        	return object;
+        }
+               
+       		
 	}
 	
 	/**
@@ -577,7 +600,7 @@ public class ValidationHelper {
 	public static boolean required(ContextValidation contextValidation, Object object, String property){
 		boolean isValid = true;
 		if(object == null) {
-			isValid =  false;
+			isValid = false;
         }
         if(isValid && object instanceof String) {
         	isValid =  StringUtils.isNotBlank((String)object);
@@ -722,7 +745,7 @@ public class ValidationHelper {
 	{
 		boolean isSame = true;
 		for(PropertyDefinition propDef : propertyDefinitions){
-			if(!propertyValue._type.equals(propDef.propertyValueType)){
+			if(propertyValue._type == null || !propertyValue._type.equals(propDef.propertyValueType)){
 				Logger.error("Error property "+propDef.code+" : "+propertyValue.value+" expected "+propDef.propertyValueType+ " found "+propertyValue._type);
 				//TODO à activer si la prod se passe bien
 				//contextValidation.addErrors(propDef.code, ERROR_PROPERTY_TYPE, propertyValue.value, propDef.propertyValueType,propertyValue._type);

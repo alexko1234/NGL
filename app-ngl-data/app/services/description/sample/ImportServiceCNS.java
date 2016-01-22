@@ -17,6 +17,7 @@ import models.laboratory.sample.description.ImportType;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
+import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 
@@ -39,10 +40,10 @@ public class ImportServiceCNS extends AbstractImportService {
 			Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ImportType> l = new ArrayList<ImportType>();
 		
-		l.add(newImportType("Defaut", "default-import", ImportCategory.find.findByCode("sample-import"), getCommonPropertyDefinitions(), getInstitutes(Institute.CODE.CNS)));
-		l.add(newImportType("Banque", "library", ImportCategory.find.findByCode("sample-import"), getLibraryPropertyDefinitions(), getInstitutes(Institute.CODE.CNS)));
-		l.add(newImportType("Tara", "tara-default", ImportCategory.find.findByCode("sample-import"), getTaraPropertyDefinitions(), getInstitutes(Institute.CODE.CNS)));
-		l.add(newImportType("Banque tara", "tara-library", ImportCategory.find.findByCode("sample-import"), getLibraryTaraPropertyDefinitions(), getInstitutes(Institute.CODE.CNS)));
+		l.add(newImportType("Defaut", "default-import", ImportCategory.find.findByCode("sample-import"), getCommonPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
+		l.add(newImportType("Banque", "library", ImportCategory.find.findByCode("sample-import"), getLibraryPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
+		l.add(newImportType("Tara", "tara-default", ImportCategory.find.findByCode("sample-import"), getTaraPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
+		l.add(newImportType("Banque tara", "tara-library", ImportCategory.find.findByCode("sample-import"), getLibraryTaraPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		
 		DAOHelpers.saveModels(ImportType.class, l, errors);
 		
@@ -343,9 +344,9 @@ public class ImportServiceCNS extends AbstractImportService {
 		return propertyDefinitions;
 	}
 	
-	public static List<Institute> getInstitutes(Institute.CODE...codes) throws DAOException {
+	public static List<Institute> getInstitutes(Constants.CODE...codes) throws DAOException {
 		List<Institute> institutes = new ArrayList<Institute>();
-		for(Institute.CODE code : codes){
+		for(Constants.CODE code : codes){
 			institutes.add(Institute.find.findByCode(code.name()));
 		}
 		return institutes;

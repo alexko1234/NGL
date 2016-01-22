@@ -21,21 +21,22 @@ rule "Input not null for all Experiment"
     
 
 rule "Set RunStartDate to Illumina Depot, Opgen Depot, Nanopore Depot if not exist"
-@nglSQ (validations )
+@nglSQ (calculations )
 	dialect "java"
 	salience 500
 	no-loop
 when
-	$experiment: Experiment($typeCode:typeCode,$typeCode=="illumina-depot"|| $typeCode=="opgen-depot" || $typeCode=="nanopore-depot" , $state: state, $state.code=="N",$experimentProperties: experimentProperties, traceInformation!=null, $creationDate: traceInformation.creationDate)
-	not (Entry(key == "runStartDate") from $experimentProperties.entrySet())
+	$experiment: Experiment($typeCode:typeCode,$typeCode=="illumina-depot"|| $typeCode=="opgen-depot" || $typeCode=="nanopore-depot" , $state: state, $state.code=="N", 
+					$experimentProperties: experimentProperties, (null == $experimentProperties || (null != $experimentProperties && null == $experimentProperties.get("runStartDate"))), traceInformation!=null, $creationDate: traceInformation.creationDate)	
 then	
-	Logger.info("Règle RunStartDate propertie OK");
+	Logger.info("Regle RunStartDate propertie OK");
+	if($experimentProperties==null){
+		$experiment.experimentProperties=new HashMap<String,PropertyValue>();
+	}
 	PropertySingleValue value = new PropertySingleValue($creationDate);
-	if($experimentProperties==null){$experimentProperties = new HashMap<String,PropertyValue>();}
-	$experimentProperties.remove("runStartDate");
-	$experimentProperties.put("runStartDate", value);
+	$experiment.experimentProperties.put("runStartDate", value);
 	//$contextValidation.addErrors("experiment", "error.validationexp.mandatoryrunstartdate", $typeCode, $runStartDate);
-	Logger.info("Date réel de dépot = " + $experimentProperties.get("runStartDate"));
+	Logger.info("Date reel de dépot = " + $experiment.experimentProperties.get("runStartDate"));
 	update ($experiment);
 
 end

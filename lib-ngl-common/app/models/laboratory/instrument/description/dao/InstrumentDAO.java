@@ -108,7 +108,7 @@ public class InstrumentDAO extends AbstractDAOMapping<Instrument>{
 	}
 	
 	public List<Instrument> findByInstrumentUsedType(long idInstrumentUsedType) throws DAOException {
-		String sql = sqlCommon + " WHERE t.fk_instrument_used_type=? and t.active=1";
+		String sql = sqlCommon + " WHERE t.fk_instrument_used_type=? and t.active=1 order by t.name";
 		return initializeMapping(sql, new SqlParameter("t.fk_instrument_used_type", Types.INTEGER)).execute(idInstrumentUsedType);
 	}
 	

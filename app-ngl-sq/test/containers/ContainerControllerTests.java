@@ -140,7 +140,7 @@ public class ContainerControllerTests extends AbstractTests{
 	public void validateUpdate() {		
 		String code = "C2EV3ACXX_8";
 		Container c1 = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,code);		
-		c1.comments.add(new Comment("TEST UNITAIRE validateUpdate "));		
+		c1.comments.add(new Comment("TEST UNITAIRE validateUpdate ", "ngl-test"));		
 		Result result = callAction(controllers.containers.api.routes.ref.Containers.update(code),fakeRequest().withJsonBody(Json.toJson(c1)));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		

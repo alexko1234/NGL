@@ -18,6 +18,7 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OneToVoidContainer;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.instance.InstrumentUsed;
@@ -144,11 +145,9 @@ public class ExperimentImport {
 				OneToVoidContainer atomicTransfertMethod = new OneToVoidContainer();		
 				atomicTransfertMethod.line = "1";
 				atomicTransfertMethod.column = "1";
-				atomicTransfertMethod.inputContainerUseds = new ArrayList<ContainerUsed>();
-				ContainerUsed cnt = new ContainerUsed();
+				atomicTransfertMethod.inputContainerUseds = new ArrayList<InputContainerUsed>();
+				InputContainerUsed cnt = new InputContainerUsed();
 				cnt.code = c.code;
-				cnt.state = new State(); 		
-				cnt.state.code = c.state.code;
 				atomicTransfertMethod.inputContainerUseds.add(cnt);
 				
 				LocationOnContainerSupport locationOnContainerSupport = new LocationOnContainerSupport(); 

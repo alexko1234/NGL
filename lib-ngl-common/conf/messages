@@ -21,7 +21,7 @@ error.codenotunique = Le code {0} n''est pas unique.
 error.notunique = la valeur {0} de la propriété {1} n''est pas unique.
 error.codeNotFound= L''objet {0} de type {1} n''a pas été trouvé
 error.codenotexists= Le code {0} du type {1} n''existe pas
-error.badstate = L''object {0} n'est pas dans le bon état.
+error.badstate = L''etat {0} n'est pas authorisé.
 error.badsizearray = Mauvais taille de tableau ({0} au lieu de {1}
 
 error.validationexp.percentperoutputcontainerdefault= "Le pourcentage total à déposer dans le container est différent de 100% (il vaut  {0}%)."
@@ -49,12 +49,27 @@ error.validationexp.oneInputSupport="Le type d''expérience {0} accepte qu''un s
 error.validationexp.notAllInputContainer="Le support {0} n'est pas complet"
 error.validationexp.containerSupportCodeContainString = "Le code flowcell {0} doit contenir la chaine de caractère {1}" 
 error.validationexp.manyInputSupport ="Le Container {0} est le seul container IN de l''experience"
+error.validationexp.atomicTransfertMethod.null = "L'ATM est null"
+error.validationexp.inputContainer.categoryCode.notequals = "Le categoryCode du container {0} n'est pas le même que celui dans la collection CONTAINER"
+error.validationexp.inputContainer.contents.sizenotequals = "Le nombre de contents du container {0} n'est pas le même que celui dans la collection CONTAINER"
+error.validationexp.inputContainer.percentage = "Le pourcentage de container en entrée doit être : 0 < x <= 100"
+error.validationexp.inputContainerSupportCodes = "La valeur de la liste n'est pas correcte"
+error.validationexp.outputContainerSupportCodes = La valeur de la liste n'est pas correcte
+error.validationexp.comments.null = Le commentaire est null
+error.validationexp.status.empty = Vous devez renseigner le statut avant de terminer l''expérience
+error.validationexp.container.alreadyused = Le container {0} est déjà en cours d''utilisation
+error.validationexp.support.alreadyused = Le support {0} est déjà en cours d''utilisation
+
+error.validation.container.inputProcesses.notnull = "Le container est associé à un processus"
+
 #directive messages
 msg.details = [détails]
 msg.success.save = Sauvegarde réussie.
 msg.error.save = Erreur de sauvegarde.
 msg.success.remove = Suppression réussie.
 msg.error.remove =  Erreur de suppression.
+msg.success.get = Chargement réussie.
+msg.error.get =  Erreur de chargement.
 
 
 #authentification
@@ -69,6 +84,10 @@ boolean.unset = ---
 valuation.TRUE = Oui
 valuation.FALSE = Non
 valuation.UNSET = ---
+
+status.TRUE = OK
+status.FALSE = KO
+status.UNSET = ---
 
 bt-select.here = Taper ici !
 

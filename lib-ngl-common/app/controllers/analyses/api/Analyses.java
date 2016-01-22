@@ -229,7 +229,7 @@ public class Analyses extends DocumentController<Analysis>{
 					return badRequest(filledForm.errorsAsJson());			
 				}
 			}else{
-				return badRequest("readset code are not the same");
+				return badRequest("Analysis code are not the same");
 			}
 		}else{ //update only some authorized properties
 			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	

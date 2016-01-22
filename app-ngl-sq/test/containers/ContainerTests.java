@@ -2,6 +2,7 @@ package containers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -117,7 +118,7 @@ public class ContainerTests extends AbstractTests {
 	
 	@Test
 	public void validateFusionContent(){
-		Set<Content> contents = new HashSet<Content>();
+		List<Content> contents = new ArrayList<Content>();
 		
 		Content c1 = new Content();
 		c1.projectCode ="P1";
@@ -171,7 +172,7 @@ public class ContainerTests extends AbstractTests {
 			
 		}
 		
-		contents = new HashSet<Content>();
+		contents = new ArrayList<Content>();
 		Content c5 = new Content();
 		c5.projectCode ="P1";
 		c5.sampleCode = "S1";

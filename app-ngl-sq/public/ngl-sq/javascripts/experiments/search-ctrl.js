@@ -4,7 +4,7 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 			show:{
 				active:true,
 				add :function(line){
-					tabService.addTabs({label:line.code,href:jsRoutes.controllers.experiments.tpl.Experiments.edit(line.code).url,remove:true});
+					tabService.addTabs({label:line.code,href:jsRoutes.controllers.experiments.tpl.Experiments.get(line.code).url,remove:true});
 				}
 			},
 			search:{

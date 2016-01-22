@@ -85,6 +85,7 @@ public class PropertyDefinitionMappingQuery extends MappingSqlQuery<PropertyDefi
 			//Add possible values
 			ValueDAO valueDAO = Spring.getBeanOfType(ValueDAO.class);
 			List<Value> values = valueDAO.findByPropertyDefinition(propertyDefinition.id);
+			//TODO GA convert value to the good type number or string ???
 			propertyDefinition.possibleValues = values;
 		}else{ //pd.code, pd.type, pd.property_value_type, pd.choice_in_list
 			propertyDefinition.code = rs.getString("code");

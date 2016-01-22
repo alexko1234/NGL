@@ -15,6 +15,8 @@ public abstract class ProjectService {
 			(new ProjectServiceCNS()).main(errors);
 		}else if(institute.equals("CNG")){
 			(new ProjectServiceCNG()).main(errors);
+		}else if(institute.equals("TEST")){
+			(new ProjectServiceTEST()).main(errors);
 		}else{
 			Logger.error("You need to specify only one institute ! Now, it's "+ play.Play.application().configuration().getString("institute"));
 		}

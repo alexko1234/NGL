@@ -200,7 +200,7 @@ public class ExperimentWorkflowTests extends AbstractTests {
 		
 		Experiment expUpdate=MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, code);
 		assertThat(expUpdate.state.code).isEqualTo("IP");
-		assertThat(expUpdate.getAllOutPutContainerWhithInPutContainer()).isNotEmpty();
+		assertThat(expUpdate.getAllOutputContainers()).isNotEmpty();
 		
 		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.in("support.code", expUpdate.inputContainerSupportCodes) ).toList();
 		assertThat(containers).isNotEmpty();
@@ -288,7 +288,7 @@ public class ExperimentWorkflowTests extends AbstractTests {
 		
 		Experiment expUpdate=MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, code);
 		assertThat(expUpdate.state.code).isEqualTo("IP");
-		assertThat(expUpdate.getAllOutPutContainerWhithInPutContainer()).isNotEmpty();
+		assertThat(expUpdate.getAllOutputContainers()).isNotEmpty();
 		
 		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME,Container.class,DBQuery.in("support.code", expUpdate.inputContainerSupportCodes) ).toList();
 		assertThat(containers).isNotEmpty();

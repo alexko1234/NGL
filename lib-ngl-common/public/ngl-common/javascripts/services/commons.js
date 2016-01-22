@@ -8,8 +8,8 @@ angular.module('commonsServices', []).
 						configDefault : {
 							errorClass:'alert alert-danger',
 							successClass: 'alert alert-success',							
-							errorKey:{save:'msg.error.save',remove:'msg.error.remove'},
-							successKey:{save:'msg.success.save',remove:'msg.success.remove'}
+							errorKey:{save:'msg.error.save',remove:'msg.error.remove', get:'msg.error.get'},
+							successKey:{save:'msg.success.save',remove:'msg.success.remove', get:'msg.success.get'}
 						},
 						config:undefined,
     					configMaster:undefined,
@@ -83,10 +83,14 @@ angular.module('commonsServices', []).
     	}).factory('lists', ['$http', function($http){
     		var inProgress = {};
     		var results = {
-    				valuations : [{code:"TRUE", name:Messages("valuation.value.TRUE")},
-    				                 {code:"FALSE", name:Messages("valuation.value.FALSE")},
-    				                 {code:"UNSET", name:Messages("valuation.value.UNSET")}],    				
-    				booleans : [{code:"true", name:Messages("boolean.value.TRUE")}, {code:"false", name:Messages("boolean.value.FALSE")}]
+    				valuations : [{code:"TRUE", name:Messages("valuation.TRUE")},
+    				                 {code:"FALSE", name:Messages("valuation.FALSE")},
+    				                 {code:"UNSET", name:Messages("valuation.UNSET")}],    				
+    				status : [{code:"TRUE", name:Messages("status.TRUE")},
+    				                 {code:"FALSE", name:Messages("status.FALSE")},
+    				                 {code:"UNSET", name:Messages("status.UNSET")}],    				
+	    				                 
+    				booleans : [{code:"true", name:Messages("boolean.TRUE")}, {code:"false", name:Messages("boolean.FALSE")}]
     			};    		
     		
     		var refresh = {
@@ -411,9 +415,9 @@ angular.module('commonsServices', []).
     				'<strong>{{messages.text}}</strong><button class="btn btn-link" ng-click="messages.showDetails=!messages.showDetails" ng-show="messages.isDetails">{{messages.transformKey("msg.details")}}</button>'+
     				'<div ng-show="messages.showDetails">'+
     				'    <ul>'+
-    				'		<li ng-repeat="(key1, value1) in messages.details">{{key1}}'+
+    				'		<li ng-repeat="message in messages.details | toArray | orderBy: \'$key\' track by $index">{{message.$key}}'+
     				'		<ul>'+
-    				'			<li ng-repeat="(key2, value2) in value1"> {{value2}} </li>'+
+    				'			<li ng-repeat="(key2, value2) in message track by $index"> {{value2}} </li>'+
     			    '		</ul>'+
     			    '		</li>'+
     			    '	</ul>'	+
@@ -679,34 +683,53 @@ angular.module('commonsServices', []).
         		 }
         		};
         		}])
-        		.directive('btSelect',  ['$parse', '$document', '$window', '$filter', function($parse,$document, $window, $filter)  {
+        	.directive('btSelect',  ['$parse', '$document', '$window', '$filter', function($parse,$document, $window, $filter)  {
 			//0000111110000000000022220000000000000000000000333300000000000000444444444444444000000000555555555555555000000066666666666666600000000000000007777000000000000000000088888
     		var BT_OPTIONS_REGEXP = /^\s*([\s\S]+?)(?:\s+as\s+([\s\S]+?))?(?:\s+group\s+by\s+([\s\S]+?))?\s+for\s+(?:([\$\w][\$\w]*))\s+in\s+([\s\S]+?)$/;                        
-    		//var BT_OPTIONS_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?\s+for\s+(?:([\$\w][\$\w\d]*))\s+in\s+(.*)$/;
-    		// jshint maxlen: 100
+    		 // 1: value expression (valueFn)
+            // 2: label expression (displayFn)
+            // 3: group by expression (groupByFn)
+            // 4: disable when expression (disableWhenFn)
+            // 5: array item variable name
+            // 6: object item key variable name
+            // 7: object item value variable name
+            // 8: collection expression
+            // 9: track by expression
   		    return {
   		    	restrict: 'A',
   		    	replace:false,
   		    	scope:true,
   		    	template:'<div ng-switch on="isEdit()">'
   		    			+'<div ng-switch-when="false">'
-  		    			+'<ul class="list-unstyled">'
+  		    			+'<ul class="list-unstyled form-control-static">'
 		    	  		+'<li ng-repeat-start="item in getItems()" ng-if="groupBy(item, $index)" ng-bind="itemGroupByLabel(item)" style="font-weight:bold"></li>'
-		    	  		+'<li ng-repeat-end  ng-if="item.selected" ng-bind="itemLabel(item)" style="padding-left: 15px;"></li>'
+		    	  		+'<li ng-repeat-end  ng-if="item.selected" ng-bind="itemLabel(item)"></li>'
 			    	  	+'</ul>'
   		    			+'</div>'
-  		    			+'<div class="dropdown" ng-switch-when="true">'
-  				        
+  		    			+'<div class="dropdown" ng-switch-when="true">'  				        
+  		    			
   		    			+'<div class="input-group">'
-  		    			+'<input type="text" style="background:white" ng-class="inputClass" ng-model="selectedLabels" placeholder="{{placeholder}}" title="{{placeholder}}" readonly/>'
+  		    			
+  		    			+'<div class="input-group-btn" ng-if="isTextarea()">'
+  		    			//textarea mode
+  		    			+'<button tabindex="-1" data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" type="button" ng-disabled="isDisabled()" ng-click="open()">'
+  		    			+'<i class="fa fa-list-ul"></i>'
+  		    			+'</button>'
+  		    			+'<ul class="dropdown-menu dropdown-menu-left"  role="menu">'
+  				        +'<li>'
+  				        +'<textarea ng-class="inputClass" ng-model="textareaValue" ng-change="setTextareaValue(textareaValue)" rows="5"></textarea>'  				      
+  				        +'</li>'  				        
+		    	  		+'</ul>'		    	  		
+		    	  		+'</div>'
+  		    			
+		    	  		//select mode
+  		    			+'<input type="text" style="background:white" ng-class="inputClass" ng-model="selectedLabels" placeholder="{{placeholder}}" title="{{placeholder}}" readonly/>'  		    			
   		    			+'<div class="input-group-btn">'
-  		    			+'<button tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button" ng-disabled="isDisabled()" ng-click="open()">'
+  		    			+'<button tabindex="-1" data-toggle="dropdown" class="btn btn-default btn-sm dropdown-toggle" type="button" ng-disabled="isDisabled()" ng-click="open()">'
   		    			+'<span class="caret"></span>'
   		    			+'</button>'
   		    			+'<ul class="dropdown-menu dropdown-menu-right"  role="menu">'
-  				        +'<li ng-if="filter"><input ng-class="inputClass" type="text" ng-click="inputClick($event)" ng-model="filterValue" ng-change="setFilterValue(filterValue)" placeholder="{{getMessage(\'bt-select.here\')}}"/></li>'
-
-
+  				        +'<li ng-show="filter"><input ng-class="inputClass" type="text" ng-click="inputClick($event)" ng-model="filterValue" ng-change="setFilterValue(filterValue)" placeholder="{{getMessage(\'bt-select.here\')}}"/></li>'
   				        // Liste des items déja cochés
 		    	  		+'<li ng-repeat-start="item in getSelectedItems()" ng-if="groupBy(item, $index) && acceptsMultiple()"></li>'
   				        +'<li class="dropdown-header" ng-if="groupBy(item, $index)" ng-bind="itemGroupByLabel(item)"></li>'
@@ -715,10 +738,7 @@ angular.module('commonsServices', []).
 		    	  		+'<i class="fa fa-check pull-right" ng-show="item.selected"></i>'
 		    	  		+'<span class="text" ng-bind="itemLabel(item)" style="margin-right:30px;"></span>'		    	  		
 		    	  		+'</a></li>'
-		    	  		+'<li ng-show="getSelectedItems().length > 0" class="divider pull-left" style="width: 100%;"></li>'
-		    	  		
-		    	  		
-
+		    	  		+'<li ng-show="getSelectedItems().length > 0" class="divider pull-left" style="width: 100%;"></li>'		    	  		
   				        // Liste des items
   				        +'<li ng-repeat-start="item in getItems()" ng-if="groupBy(item, $index)" class="divider"></li>'
   				        +'<li class="dropdown-header" ng-if="groupBy(item, $index)" ng-bind="itemGroupByLabel(item)"></li>'
@@ -727,9 +747,9 @@ angular.module('commonsServices', []).
 		    	  		+'<i class="fa fa-check pull-right" ng-show="item.selected"></i>'
 		    	  		+'<span class="text" ng-bind="itemLabel(item)" style="margin-right:30px;"></span>'		    	  		
 		    	  		+'</a></li>'
-		    	  		+'</ul>'
-		    	  		
+		    	  		+'</ul>'		    	  		
 		    	  		+'</div>'
+		    	  		
 		    	  		+'</div>'
 		    	  		+'</div>'
 		    	  		+'</div>'
@@ -745,6 +765,7 @@ angular.module('commonsServices', []).
 	      		     
 	      		      var ngModelCtrl = ctrls[0],
 	      		          multiple = attr.multiple || false,
+	      		          textarea = attr.textarea || false,
 	      		          btOptions = attr.btOptions,
 	      		          editMode = (attr.ngEdit)?$parse(attr.ngEdit):undefined,
 	      		          filter = attr.filter || false;
@@ -789,6 +810,17 @@ angular.module('commonsServices', []).
 	      		     scope.setFilterValue = function(value){
 	      		    	filterValue = value
 	      		     };
+	      		     
+	      		     scope.isTextarea = function(){
+	      		    	return (multiple && textarea); 
+	      		     };
+	      		     scope.setTextareaValue = function(values, $event){
+	      		    	if(multiple){
+      		    			var selectedValues = values.split(/\s*[,;\n]\s*/);
+      		    			ngModelCtrl.$setViewValue(selectedValues);
+      		    			ngModelCtrl.$render();      		    			
+      		    	  	}	      		    	 	      		    	 
+	      		     }; 
 	      		     
 	      		     scope.open = function(){
 	      		    	 if(ngFocus){
@@ -862,17 +894,24 @@ angular.module('commonsServices', []).
       		      }
       		      
       		      scope.itemLabel = function(item){	      		    	
-      		    	 return item[optionsConfig.viewMapper.replace(optionsConfig.itemName+'.','')];  
+      		    	// return item[optionsConfig.viewMapper.replace(optionsConfig.itemName+'.','')];  
+      		    	return $parse(optionsConfig.viewMapper.replace(optionsConfig.itemName+'.',''))(item);
       		      };
       		      
       		      scope.itemValue = function(item){
-      		    	 return item[optionsConfig.modelMapper.replace(optionsConfig.itemName+'.','')];  
+      		    	 //return item[optionsConfig.modelMapper.replace(optionsConfig.itemName+'.','')];
+      		    	  return $parse(optionsConfig.modelMapper.replace(optionsConfig.itemName+'.',''))(item);
       		      };
       		      
       		      scope.$watch(ngModelValue, function(newValue, oldValue){
       		    	     if(newValue!= undefined && newValue !== null && oldValue !== newValue){		    		
       		    	    	 render();
       		    	     }
+      		    	   if(newValue === undefined || newValue === null){
+ 			    		  scope.textareaValue = undefined;      		    				    		   		    		
+ 			    	  }
+      		    	     
+      		    	     
       		      }, true);
       		      
       		      scope.selectItem = function(item, $event){      		    	  
@@ -941,12 +980,12 @@ angular.module('commonsServices', []).
 				      	    		}
 			      	    		}	      	    		
 			      	    	}
+		      	    	}else if(textarea){
+		      	    		selectedLabels = modelValues;
 		      	    	}
 		      	    	scope.selectedLabels = selectedLabels;
-	      	        };
-	      	        
-	      		  }
-	      		  
+	      	        };	      	        		      		
+	      		  }	      		  
   		    };
     	}]).directive('chart', function() {
     	    return {
@@ -1208,5 +1247,21 @@ angular.module('commonsServices', []).
     			}
     			return flatArray;
     		}
-    	});
+    	}).filter('toArray', function () { //transform object to array
+    		  return function (obj, addKey) {
+    			    if (!angular.isObject(obj)) return obj;
+    			    if ( addKey === false ) {
+    			      return Object.keys(obj).map(function(key) {
+    			        return obj[key];
+    			      });
+    			    } else {
+    			      return Object.keys(obj).map(function (key) {
+    			        var value = obj[key];
+    			        return angular.isObject(value) ?
+    			          Object.defineProperty(value, '$key', { enumerable: false, value: key}) :
+    			          { $key: key, $value: value };
+    			      });
+    			    }
+    			  };
+    			});
     	

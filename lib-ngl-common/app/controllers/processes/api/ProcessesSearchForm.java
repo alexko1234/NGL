@@ -10,13 +10,18 @@ import controllers.ListForm;
 
 public class ProcessesSearchForm extends ListForm{
 	public String typeCode;
+	public List<String> typeCodes;
 	public String categoryCode;
+	public List<String> categoryCodes;
 	public String sampleCode;
 	public Set<String> sampleCodes;
 	public Set<String> sampleTypeCodes;
 	public String projectCode;
 	public Set<String> projectCodes;
 	public String supportCode;
+	public String supportCodeRegex;
+	public Set<String> supportCodes;
+	
 	public String stateCode;
 	public Set<String> stateCodes;
 	public String containerSupportCategory;
@@ -25,7 +30,11 @@ public class ProcessesSearchForm extends ListForm{
 	public String createUser;
 	public Set<String> users;
 	public String experimentCode;
-	public String processCode;
+	public List<String> experimentCodes;
+	public String experimentCodeRegex;
+	public String code;
+	public List<String> codes;
+	public String codeRegex;
 	public Map<String, List<String>> properties = new HashMap<String, List<String>>();
 	public String fromSupportCode;
 	public Map<String, List<String>> sampleOnInputContainerProperties = new HashMap<String, List<String>>();
@@ -39,7 +48,7 @@ public class ProcessesSearchForm extends ListForm{
 				+ ", stateCodes=" + stateCodes + ", containerSupportCategory="
 				+ containerSupportCategory + ", fromDate=" + fromDate
 				+ ", toDate=" + toDate + ", users=" + users + ", createUser=" + createUser 
-				+ ", experimentCode=" + experimentCode +", processCode="+ processCode + ", properties="
+				+ ", experimentCode=" + experimentCode +", code="+ code + ", properties="
 				+ properties + ", fromSupportCode="+fromSupportCode +"]";
 	}
 }

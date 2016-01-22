@@ -27,7 +27,8 @@ import models.laboratory.common.instance.TransientState;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.ContainerUsed;
-import models.laboratory.experiment.instance.ManytoOneContainer;
+import models.laboratory.experiment.instance.InputContainerUsed;
+import models.laboratory.experiment.instance.ManyToOneContainer;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
@@ -515,7 +516,7 @@ public class LimsAbandonDAO {
 		 for(AtomicTransfertMethod atomicTransfertMethods: expPrepaflowcell.atomicTransfertMethods)
 		 {
 			 int laneNum=Integer.valueOf(atomicTransfertMethods.line);
-			 for(ContainerUsed containerUsed : atomicTransfertMethods.inputContainerUseds){
+			 for(InputContainerUsed containerUsed : atomicTransfertMethods.inputContainerUseds){
 				 Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.code);
 				 int matmacos=Double.valueOf(container.properties.get("limsCode").value.toString()).intValue();
 				 Logger.debug("Matmaco solution stock "+matmacos+" percentage "+containerUsed.percentage+", laneNum ="+laneNum);
