@@ -247,12 +247,9 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 
 			return type;
 		},
-		getColumns : function() {
-			var typeCode = "";
+		setColumns : function() {
 			var columns = [];
-			if (this.form.typeCode) {
-				typeCode = this.form.typeCode;
-			}
+			
 			var getPropertyColumnType = this.getPropertyColumnType;
 			var datatable = this.datatable;
 			var columnsDefault = this.columnsDefault;
@@ -261,46 +258,51 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 				columnsDefault = this.getDefaultColumns().concat(this.selectedAddColumns);
 
 			}
-
-			return $http.get(jsRoutes.controllers.processes.tpl.Processes.getPropertiesDefinitions(typeCode).url).success(function(data, status, headers, config) {
-				if (data != null) {
-					console.log(data);
-					angular.forEach(data, function(property) {
-						var column = {};
-						var unit = "";
-						if(angular.isDefined(property.displayMeasureValue) && property.displayMeasureValue != null){
-							unit = " (" + property.displayMeasureValue.value + ")";
-						}
-
-						column = datatable.newColumn(property.name+unit, "properties." + property.code + ".value", property.editable, false, true, getPropertyColumnType(property.valueType), property.choiceInList, property.possibleValues, {});
-						column.hide=true;
-						column.listStyle = "bt-select";
-						column.defaultValues = property.defaultValue;
-						if (property.displayMeasureValue != undefined && property.displayMeasureValue != null) {
-							column.convertValue = {
-								"active" : true,
-								"displayMeasureValue" : property.displayMeasureValue.value,
-								"saveMeasureValue" : property.saveMeasureValue.value
-							};
-						}
-						if(property.choiceInList){
-	    					column.filter = "codes:'value."+property.code+"'";
-	    				}
-						column.position = (5 + (property.displayOrder / 1000));
-						if (mainService.getHomePage() === 'state') {
-							column.edit = false;
-						}
-						columns.push(column);
-					});
-					columns = columnsDefault.concat(columns);
-					datatable.setColumnsConfig(columns);
-				}
-
-			}).error(function(data, status, headers, config) {
-				//console.log(data);
+			if (angular.isArray(this.form.typeCodes) && this.form.typeCodes.length === 1) {
+				var typeCode = this.form.typeCodes[0];
+			
+				$http.get(jsRoutes.controllers.processes.tpl.Processes.getPropertiesDefinitions(typeCode).url).success(function(data, status, headers, config) {
+					if (data != null) {
+						console.log(data);
+						angular.forEach(data, function(property) {
+							var column = {};
+							var unit = "";
+							if(angular.isDefined(property.displayMeasureValue) && property.displayMeasureValue != null){
+								unit = " (" + property.displayMeasureValue.value + ")";
+							}
+	
+							column = datatable.newColumn(property.name+unit, "properties." + property.code + ".value", property.editable, false, true, getPropertyColumnType(property.valueType), property.choiceInList, property.possibleValues, {});
+							column.hide=true;
+							column.listStyle = "bt-select";
+							column.defaultValues = property.defaultValue;
+							if (property.displayMeasureValue != undefined && property.displayMeasureValue != null) {
+								column.convertValue = {
+									"active" : true,
+									"displayMeasureValue" : property.displayMeasureValue.value,
+									"saveMeasureValue" : property.saveMeasureValue.value
+								};
+							}
+							if(property.choiceInList){
+		    					column.filter = "codes:'value."+property.code+"'";
+		    				}
+							column.position = (5 + (property.displayOrder / 1000));
+							if (mainService.getHomePage() === 'state') {
+								column.edit = false;
+							}
+							columns.push(column);
+						});
+						columns = columnsDefault.concat(columns);
+						datatable.setColumnsConfig(columns);
+					}
+	
+				}).error(function(data, status, headers, config) {
+					//console.log(data);
+					datatable.setColumnsConfig(columnsDefault);
+	
+				});
+			}else{
 				datatable.setColumnsConfig(columnsDefault);
-
-			});
+			}
 		},
 
 		updateForm : function() {
@@ -382,8 +384,9 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			var allFilters = undefined;
 			var nbElementByColumn = undefined;
 
-			if (angular.isDefined(this.form.typeCode) && lists.get("process-" + this.form.typeCode) && lists.get("process-" + this.form.typeCode).length === 1) {
-				allFilters = angular.copy(lists.get("process-" + this.form.typeCode)[0].filters);
+			if (angular.isArray(this.form.typeCodes) && this.form.typeCodes.length === 1 
+					&& lists.get("process-" + this.form.typeCodes[0]) && lists.get("process-" + this.form.typeCodes[0]).length === 1) {
+				allFilters = angular.copy(lists.get("process-" + this.form.typeCodes[0])[0].filters);
 				this.isProcessFiltered = true;
 			} else {
 				this.isProcessFiltered = false;
@@ -413,7 +416,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			this.updateForm();
 			mainService.setForm(this.form);
 			searchService.datatable.setColumnsConfig(this.columnsDefault);
-			searchService.getColumns();
+			searchService.setColumns();
 			this.datatable.search(this.convertForm());
 
 		},
@@ -426,28 +429,28 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			}
 		},
 
-		changeProcessCategory : function() {
-			this.additionalFilters = [];
+		changeProcessCategories : function() {
 			this.additionalProcessFilters = [];
-			this.form.typeCode = undefined;
+			this.form.typeCodes = undefined;
 			this.lists.clear("processTypes");
 
-			if (this.form.categoryCode) {
+			if (this.form.categoryCodes) {
 				this.lists.refresh.processTypes({
-					categoryCodes : this.form.categoryCode
+					categoryCodes : this.form.categoryCodes
 				});
 			}
 		},
 
 		changeProcessTypeCode : function() {
-			if (angular.isDefined(this.form.categoryCode)) {
-				lists.refresh.filterConfigs({
-					pageCodes : [ "process-" + this.form.typeCode ]
-				}, "process-" + this.form.typeCode);
+			if (angular.isDefined(this.form.categoryCodes)) {
+				if(angular.isArray(this.form.typeCodes) && this.form.typeCodes.length === 0){
+					lists.refresh.filterConfigs({
+						pageCodes : [ "process-" + this.form.typeCodes[0] ]
+					}, "process-" + this.form.typeCodes[0]);
+				}				
 			} else {
-				this.form.typeCode = undefined;
+				this.form.typeCodes = undefined;
 			}
-			this.initAdditionalFilters();
 			this.initAdditionalProcessFilters();
 		},
 		initAdditionalColumns : function() {
