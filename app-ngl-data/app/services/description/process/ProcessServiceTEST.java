@@ -1,6 +1,7 @@
 package services.description.process;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +61,9 @@ public class ProcessServiceTEST extends AbstractProcessService {
 		
 		l.add(DescriptionFactory.newProcessType("Run Opgen", "opgen-run", ProcessCategory.find.findByCode("mapping"),null , getExperimentTypes("opgen-depot"), getExperimentTypes("opgen-depot").get(0), getExperimentTypes("opgen-depot").get(0),getExperimentTypes("ext-to-opgen-depot").get(0), DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		*/
-		l.add(DescriptionFactory.newProcessType("Test", "test", ProcessCategory.find.findByCode("library"),getTestProperties() , getExperimentTypes("test-one-to-one","test-one-to-one-2"), getExperimentTypes("test-one-to-one").get(0), getExperimentTypes("test-one-to-one-2").get(0),getExperimentTypes("ext-to-test-one-to-one").get(0), DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
+		l.add(DescriptionFactory.newProcessType("Test", "test", ProcessCategory.find.findByCode("library"),getTestProperties() , 
+				Arrays.asList(getPET("test-one-to-one",0),getPET("test-one-to-one-2",0)),
+				getExperimentTypes("test-one-to-one").get(0), getExperimentTypes("test-one-to-one-2").get(0),getExperimentTypes("ext-to-test-one-to-one").get(0), DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
 		
 		
@@ -103,11 +106,7 @@ public class ProcessServiceTEST extends AbstractProcessService {
 		return values;	
 	}
 	
-	private static List<ExperimentType> getExperimentTypes(String...codes) throws DAOException {
-		return DAOHelpers.getModelByCodes(ExperimentType.class,ExperimentType.find, codes);
-	}
-
-
+	
 	public static List<PropertyDefinition> getPropertyDefinitionsLib300600() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		

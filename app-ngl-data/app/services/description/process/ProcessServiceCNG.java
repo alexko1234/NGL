@@ -1,6 +1,7 @@
 package services.description.process;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +49,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		// FDS 09/11/2015  -- JIRA 838  la liste des sequenceurs est differente pour le processType "4000/X5"
 		l.add(DescriptionFactory.newProcessType("Dénat, prep FC, dépôt", "illumina-run", ProcessCategory.find.findByCode("sequencing"),
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell") ,
-				getExperimentTypes("denat-dil-lib","prepa-flowcell","illumina-depot"), 
+				Arrays.asList(getPET("denat-dil-lib",0),getPET("prepa-flowcell",1),getPET("illumina-depot",2)), 
 				getExperimentTypes("denat-dil-lib").get(0), 
 				getExperimentTypes("illumina-depot").get(0),
 				getExperimentTypes("ext-to-denat-dil-lib").get(0), 
@@ -56,7 +57,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	   
 		// JIRA 781 ajouter un processus court (sans denat)
 		l.add(DescriptionFactory.newProcessType("Prep FC, dépôt", "prepFC-depot", ProcessCategory.find.findByCode("sequencing"),
-				getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell") ,getExperimentTypes("prepa-flowcell","illumina-depot"), 
+				getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell") ,
+				Arrays.asList(getPET("prepa-flowcell",0),getPET("illumina-depot",1)), 
 				getExperimentTypes("prepa-flowcell").get(0), 
 				getExperimentTypes("illumina-depot").get(0),
 				getExperimentTypes("ext-to-prepa-flowcell").get(0), 
@@ -64,7 +66,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 
 		// FDS ajout 04/11/2015 -- JIRA 838: nouveau processus court prepa-fc-ordonée + illumina-depot
 		l.add(DescriptionFactory.newProcessType("4000/X5 (prep FC ordonnée)", "prepFCordered-depot", ProcessCategory.find.findByCode("sequencing"),
-				getPropertyDefinitionsIlluminaDepotCNG("prepa-fc-ordered") ,getExperimentTypes("prepa-fc-ordered","illumina-depot"), 
+				getPropertyDefinitionsIlluminaDepotCNG("prepa-fc-ordered") ,
+				Arrays.asList(getPET("prepa-fc-ordered",0),getPET("illumina-depot",1)), 
 				getExperimentTypes("prepa-fc-ordered").get(0),
 				getExperimentTypes("illumina-depot").get(0),
 				getExperimentTypes("ext-to-prepa-fc-ordered").get(0), 
@@ -146,11 +149,5 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	}
 
 	
-	private static List<ExperimentType> getExperimentTypes(String...codes) throws DAOException {
-		return DAOHelpers.getModelByCodes(ExperimentType.class,ExperimentType.find, codes);
-	}
-
-
-
 
 }

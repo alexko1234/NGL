@@ -13,7 +13,7 @@ public class ProcessType extends CommonInfoType{
 
 	public ProcessCategory category;
 	
-	public List<ExperimentType> experimentTypes;
+	public List<ProcessExperimentType> experimentTypes;
 	
 	public ExperimentType voidExperimentType;
 	
