@@ -24,6 +24,10 @@ angular.module('atomicTransfereServices', [])
 						return "number";
 					}else if(type === "java.util.Date"){
 						return "date";
+					}else if(type ==="java.io.File"){
+						return "file";
+					}else if(type ==="java.awt.Image"){
+						return "img";
 					}else{
 						throw 'not manage : '+type;
 					}
@@ -49,9 +53,9 @@ angular.module('atomicTransfereServices', [])
 					return this.convertPropertyToDatatableColumn(pd, propertyNamePrefix, "", extraHeaders); 
 				},
 				convertTypePropertyToDatatableColumn : function(propertyDefinition, propertyNamePrefix, extraHeaders){
-					if(propertyDefinition.valueType==="java.io.File"){
+					if(propertyDefinition.propertyValueType==="file"){
 						return this.convertFilePropertyToDatatableColumn(propertyDefinition, propertyNamePrefix, extraHeaders);
-					}else if(propertyDefinition.valueType==="java.awt.Image"){
+					}else if(propertyDefinition.propertyValueType==="img"){
 						return this.convertImagePropertyToDatatableColumn(propertyDefinition, propertyNamePrefix, extraHeaders);
 					}
 					return this.convertSinglePropertyToDatatableColumn(propertyDefinition, propertyNamePrefix, extraHeaders); 
