@@ -789,7 +789,7 @@ public class SubmissionServices {
 		String libProcessTypeCodeVal = (String) sampleOnContainerProperties.get("libProcessTypeCode").getValue();
 		String typeCode = readSet.typeCode;
 		experiment.title = scientificName + "_" + typeCode + "_" + libProcessTypeCodeVal;
-				
+		experiment.libraryName = readSet.sampleCode + "_" + libProcessTypeCodeVal;			
 		InstrumentUsed instrumentUsed = laboratoryRun.instrumentUsed;
 		System.out.println(" !!!!!!!!! instrumentUsed.code = " + instrumentUsed.code);
 		System.out.println("!!!!!!!!!!!! instrumentUsed.typeCode = " + instrumentUsed.typeCode);
