@@ -2823,9 +2823,7 @@ directive("udtCell", function(){
 	    				}else{
 	    					if(col.type === "boolean"){
 	    						return '<div ng-switch on="cellValue"><i ng-switch-when="true" class="fa fa-check-square-o"></i><i ng-switch-default class="fa fa-square-o"></i></div>';
-	    					}else if(col.type==="img"){
-	    						if(!scope.cellValue.extension)console.log("missing format for img !!");
-	    						
+	    					}else if(col.type==="img"){	    						
 	    						return '<div  ng-click="setImage(cellValue.value,cellValue.fullname,cellValue.width,cellValue.height)"  class="thumbnail col-md-6 col-lg-6" ng-if="cellValue !== undefined" > <div data-target="#modalImage" role="button" data-toggle="modal" ><a href="#"><img ng-src="data:image/{{cellValue.extension}};base64,{{cellValue.value}}" width="50" height="50"/></a></div></div>';		    					    
 	    					}else if(col.type==="file"){
 	    						return  '<a target="_blank" ng-href="data:application/{{cellValue.extension}};base64,{{cellValue.value}}">'

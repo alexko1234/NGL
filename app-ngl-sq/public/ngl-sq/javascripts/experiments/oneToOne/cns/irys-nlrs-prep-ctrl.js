@@ -77,7 +77,7 @@ angular.module('home').controller('IrysNlrsPrepCtrl',['$scope', '$parse', 'atmTo
 			        	 "extraHeaders":{0:"Inputs"}
 			         },		
 			         {
-			        	 "header":Messages("containers.table.concentration") + " (ng/µL)",
+			        	 "header":Messages("containers.table.irysprep.concentration") + " (ng/µL)",
 			        	 "property":"outputContainerUsed.concentration.value",
 			        	 "order":true,
 						 "edit":true,

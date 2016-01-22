@@ -26,7 +26,7 @@ rule "Set RunStartDate to Illumina Depot, Opgen Depot, Nanopore Depot if not exi
 	salience 500
 	no-loop
 when
-	$experiment: Experiment($typeCode:typeCode,$typeCode=="illumina-depot"|| $typeCode=="opgen-depot" || $typeCode=="nanopore-depot" , $state: state, $state.code=="N", 
+	$experiment: Experiment($typeCode:typeCode,$typeCode=="illumina-depot"|| $typeCode=="opgen-depot" || $typeCode=="nanopore-depot" || $typeCode=="bionano-depot" , $state: state, $state.code=="N", 
 					$experimentProperties: experimentProperties, (null == $experimentProperties || (null != $experimentProperties && null == $experimentProperties.get("runStartDate"))), traceInformation!=null, $creationDate: traceInformation.creationDate)	
 then	
 	Logger.info("Regle RunStartDate propertie OK");

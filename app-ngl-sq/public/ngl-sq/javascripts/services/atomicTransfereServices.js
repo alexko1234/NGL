@@ -28,6 +28,8 @@ angular.module('atomicTransfereServices', [])
 						return "file";
 					}else if(type ==="java.awt.Image"){
 						return "img";
+					}else if(type ==="java.lang.Boolean"){
+						return "boolean";	
 					}else{
 						throw 'not manage : '+type;
 					}
