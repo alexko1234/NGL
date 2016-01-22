@@ -180,6 +180,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.experiment = newExperiment;
 		$scope.messages.setSuccess("save");						
 		mainService.stopEditMode();
+		finishEditMode=false;
 		saveInProgress = false;
 		$scope.$broadcast('refresh'); // utile seulement si l'update fonctionne				
 	}
@@ -318,17 +319,21 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	
 	var updateInstrumentIfNeeded = function(){
 		var instrument = $scope.experiment.instrument;
-		if(undefined === instrument.typeCode){
+		if(undefined === instrument.typeCode || null === instrument.typeCode){
 			instrument.typeCode = $scope.instrumentType.code;
 		}
-		if(undefined === instrument.categoryCode){
+		if(undefined === instrument.categoryCode || null === instrument.categoryCode){
 			instrument.categoryCode = $scope.instrumentType.category.code;
 		}
 		if(undefined === instrument.inContainerSupportCategoryCode || null === instrument.inContainerSupportCategoryCode){
 			instrument.inContainerSupportCategoryCode = getInContainerSupportCategoryCode();
 		}
-		if(undefined === instrument.outContainerSupportCategoryCode){
+		if(undefined === instrument.outContainerSupportCategoryCode|| null === instrument.outContainerSupportCategoryCode){
 			instrument.outContainerSupportCategoryCode = getOutContainerSupportCategoryCode();
+		}
+		
+		if($scope.experimentTypeTemplate === undefined){
+			$scope.loadTemplate();
 		}
 	};
 	

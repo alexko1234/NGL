@@ -26,12 +26,14 @@
 							header: "readsets.projectCode",
 							type :"text",
 							order:true,
-							group:true,							
+							group:true,
+							groupMethod:"countDistinct",
 				    	  	position:4});			
 			columns.push({	property:"sampleCode",
 							header: "readsets.sampleCode",
 							type :"text",
 							group:true,
+							groupMethod:"countDistinct",
 							order:true,
 				    	  	position:5});
 			columns.push({	property:"runSequencingStartDate",

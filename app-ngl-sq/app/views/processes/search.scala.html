@@ -5,14 +5,14 @@
 		
 	@columnSearchForm{
 		@formGroup{
-			<div bt-select placeholder="@Messages("processes.select.processCategory")" multiple="true" class="form-control" ng-model="searchService.form.categoryCode" bt-options="processCategory.code as processCategory.name for processCategory in searchService.lists.getProcessCategories()" ng-change="searchService.changeProcessCategory()" auto-select>
+			<div bt-select placeholder="@Messages("processes.select.processCategory")" multiple=true class="form-control" ng-model="searchService.form.categoryCodes" bt-options="processCategory.code as processCategory.name for processCategory in searchService.lists.getProcessCategories()" ng-change="searchService.changeProcessCategories()" auto-select>
 			</div>
 		}
 		@formGroup{
-			<div class="form-control" bt-select ng-model="searchService.form.projectCodes" multiple="true"  textarea="true" filter="true" placeholder='@Messages("search.placeholder.projects")' bt-options="project.code as project.code for project in searchService.lists.getProjects()" ng-change="searchService.resetSampleCodes()"></div>			
+			<div class="form-control" bt-select ng-model="searchService.form.projectCodes" multiple=true  textarea=true filter=true placeholder='@Messages("search.placeholder.projects")' bt-options="project.code as project.code for project in searchService.lists.getProjects()" ng-change="searchService.resetSampleCodes()"></div>			
 		}
 		@formGroup{
-			<div bt-select placeholder="@Messages("processes.select.state")" multiple="true" filter="true" class="form-control" ng-model="searchService.form.stateCodes" bt-options="stateCode.code as stateCode.name for stateCode in searchService.lists.getStates()" auto-select>
+			<div bt-select placeholder="@Messages("processes.select.state")" multiple="true" filter=true class="form-control" ng-model="searchService.form.stateCodes" bt-options="stateCode.code as stateCode.name for stateCode in searchService.lists.getStates()" auto-select>
 			</div>
 		}		
 			
@@ -21,7 +21,7 @@
 	@columnSearchForm{	
 	
 		@formGroup{
-			<div bt-select placeholder="@Messages("processes.select.processType")" ng-disabled="searchService.form.categoryCode === undefined" class="form-control" ng-model="searchService.form.typeCode" bt-options="typeCode.code as typeCode.name for typeCode in searchService.lists.getProcessTypes()" ng-change="searchService.changeProcessTypeCode()" auto-select>
+			<div bt-select placeholder="@Messages("processes.select.processType")" multiple=true ng-disabled="searchService.form.categoryCodes === undefined" class="form-control" ng-model="searchService.form.typeCodes" bt-options="typeCode.code as typeCode.name for typeCode in searchService.lists.getProcessTypes()" ng-change="searchService.changeProcessTypeCode()" auto-select>
 			</div>
 		}
 		@formGroup{

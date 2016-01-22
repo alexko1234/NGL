@@ -10,7 +10,9 @@ import controllers.ListForm;
 
 public class ProcessesSearchForm extends ListForm{
 	public String typeCode;
+	public List<String> typeCodes;
 	public String categoryCode;
+	public List<String> categoryCodes;
 	public String sampleCode;
 	public Set<String> sampleCodes;
 	public Set<String> sampleTypeCodes;
