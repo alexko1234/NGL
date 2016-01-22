@@ -2603,11 +2603,18 @@ directive("udtCell", function(){
 	    					editElement = '<input class="form-control"' +defaultValueDirective+' udt-html-filter="{{col.type}}" '+userDirectives+' type="checkbox" class="input-small" ng-model="'+this.getEditProperty(col, header, filter)+ngChange+'/>';
 	    				}
 	    				else if(col.type === "java.awt.image"){
-	    					editElement='<input ng-if="'+this.getEditProperty(col, header, filter)+' === undefined" type="file" base64-img="'+this.getEditProperty(col, header, filter)+'" />'
-    						+'<div class="thumbnail col-md-6 col-lg-6" ng-if="'+this.getEditProperty(col, header, filter)+' !== undefined" >'
+	    					
+	    					var value=this.getEditProperty(col, header, filter);
+	    					editElement=
+                            '<input ng-if="'+this.getEditProperty(col, header, filter)+' === undefined" type="file" base64-img="'+this.getEditProperty(col, header, filter)+'" />'
+    						+'<div  ng-click="setImage('+this.getEditProperty(col, header, filter)+'.value,'
+                        	+this.getEditProperty(col, header, filter)+'.fullname,'
+                        	+this.getEditProperty(col, header, filter)+'.width,'
+                        	+this.getEditProperty(col, header, filter)+'.height)" '
+                        	+'  class="thumbnail col-md-6 col-lg-6" ng-if="'+this.getEditProperty(col, header, filter)+' !== undefined" >'
                             +'  <div data-target="#modalImage" role="button" data-toggle="modal" >'
                             +'     <a href="#">'
-                            +'    <img  src="data:image/{{'+this.getEditProperty(col, header, filter).extension+'}};base64,{{'+this.getEditProperty(col, header, filter).value+'}}" width="50" height="50" />'
+                            +'    <img  ng-src="data:image/{{'+this.getEditProperty(col, header, filter)+'.extension}};base64,{{'+this.getEditProperty(col, header, filter)+'.value}}" width="50" height="50" />'
                             +'     </a>'
                             +' </div>'
                             +' </div>'
@@ -2887,7 +2894,7 @@ directive("udtCell", function(){
 	    					}else if(col.type==="java.awt.image"){
 	    						if(!scope.cellValue.extension)console.log("missing format for img !!");
 	    						
-	    						return '<img ng-src="data:image/{{cellValue.extension}};base64,{{cellValue.value}}" width="50" height="50"/>';		    					    
+	    						return '<div  ng-click="setImage(cellValue.value,cellValue.fullname,cellValue.width,cellValue.height)"  class="thumbnail col-md-6 col-lg-6" ng-if="cellValue !== undefined" > <div data-target="#modalImage" role="button" data-toggle="modal" ><a href="#"><img ng-src="data:image/{{cellValue.extension}};base64,{{cellValue.value}}" width="50" height="50"/></a></div></div>';		    					    
 	    					}else if(col.type==="java.io.file"){
 	    						return  '<a target="_blank" ng-href="data:application/{{cellValue.extension}};base64,{{cellValue.value}}">'
                                 +'{{cellValue.fullname}}'
