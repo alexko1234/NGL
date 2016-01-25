@@ -101,7 +101,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 						"order":true,
 						"hide":true,
 						"position":11.1,
-						"format":2,
+						"format":3,
 						"type":"number",
 						"groupMethod":"unique"
 					},
@@ -940,7 +940,7 @@ var	datatableConfig = {
 		return $http.get(jsRoutes.controllers.processes.tpl.Processes.getPropertiesDefinitions(typeCode).url)
 		.success(function(data, status, headers, config) {
 			if(data!=null){
-				if(data.length>0 && !$scope.doneAndRecorded){
+				if(!$scope.doneAndRecorded){
 					 $scope.editableFunc(true);					
 				}else{
 					 $scope.editableFunc(false);				

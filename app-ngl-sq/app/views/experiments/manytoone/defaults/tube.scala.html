@@ -105,7 +105,10 @@
 						</th>
 						<th>
 							@Messages("containers.table.fromExperimentTypeCodes")
-						</th>
+						</th>						
+						<th>
+							@Messages("containers.table.project_sample")
+						</th>						
 						<th>
 							@Messages("containers.table.tags")
 						</th>
@@ -136,6 +139,9 @@
 							</td>
 							<td>
 								<div list-resize='inputContainerUsed.fromExperimentTypeCodes | unique | codes:"type"' list-resize-min-size='5' below vertical>
+							</td>
+							<td>
+								<div list-resize="inputContainerUsed.contents | collect:'projectCode+&quot; / &quot;+sampleCode' | unique" list-resize-min-size="5" vertical="true">																					
 							</td>						
 							<td>
 								<div list-resize='inputContainerUsed.contents | getArray:"properties.tag.value"| unique' list-resize-min-size='5' below vertical>															
@@ -151,7 +157,7 @@
 							</td> 														
 							<td>
 								<div ng-switch on="mainService.isEditMode()">						
-									<p class="form-control-static" ng-switch-when="false" ng-bind="inputContainer.percentage" />						 
+									<p class="form-control-static" ng-switch-when="false" ng-bind="inputContainerUsed.percentage" />						 
 									<div ng-switch-when="true">
 										<input class="form-control input-sm" 
 											type="text"

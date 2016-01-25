@@ -36,10 +36,8 @@ public class ContentValidationHelper extends CommonValidationHelper {
 	public static void validatePercentageContent(Double percentage, ContextValidation contextValidation){
 
 		if(required(contextValidation, percentage, "percentage")){
-			Pattern ptn = Pattern.compile("\\d*\\.\\d\\d?$");
-			Matcher mtr = ptn.matcher(String.valueOf(percentage));
 			//pecentage is mandatory
-			if(percentage<0.0 || percentage>100.00 || !mtr.matches()){
+			if(percentage<0.0 || percentage>100.00){
 				contextValidation.addErrors("percentage", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, percentage);
 			}
 		}

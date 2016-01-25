@@ -11,7 +11,7 @@ docs.menu = Aide
 button.addbasket = Ajouter au panier
 
 #validation error
-error.valuenotauthorized = Valeur non authorisée : {0}
+error.valuenotauthorized = Valeur non autorisée : {0}
 error.badtype = Mauvais type : {0} / {1}
 error.notactive = Propriété non active 
 error.notdefined = Propriété non définie

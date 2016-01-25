@@ -785,7 +785,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			columns.push({
 				"header":Messages("containers.table.support.in.code"),
 				"property":"container.treeOfLife.from.containers",
-				"render":'<div list-resize="cellValue | collect:\'supportCode+&quot; / &quot;+code\' | unique" list-resize-min-size="3" vertical="true">',
+				"render":'<div list-resize="cellValue | collect:\'code\' | unique" list-resize-min-size="3" vertical="true">',
 				"order":true,
 				"edit":false,
 				"hide":true,
@@ -795,7 +795,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			
 			columns.push({
 				"header":Messages("containers.table.support.out.code"),
-				"property":"container.support.code+' / '+container.code",
+				"property":"container.code",
 				"order":true,
 				"edit":false,
 				"hide":true,
@@ -805,7 +805,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		}else{
 			columns.push({
 				"header":Messages("containers.table.support.in.code"),
-				"property":"container.support.code +' / '+container.code",
+				"property":"container.code",
 				"order":true,
 				"edit":false,
 				"hide":true,

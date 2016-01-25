@@ -120,7 +120,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"order":true,
 			"hide":true,
 			"position":11.1,
-			"format":2,
+			"format":3,
 			"type":"number",
 			"groupMethod":"unique"
 		});	
