@@ -102,6 +102,8 @@ search.placeholder.stats.configuration = Sélect. une configuration.
 search.placeholder.fromEndRGDate = Fin RG depuis le (jj/mm/aaaa)
 search.placeholder.toEndRGDate = Fin RG jusqu''au (jj/mm/aaaa)
 
+search.placeholder.userLogin = Sélect. un login utilisateur
+
 button.search = Rechercher
 button.reset = Réinitialiser
 button.validate = Sauvegarder
@@ -869,4 +871,20 @@ readsets.treatments.sortingRibo.read1.rRNAPercent = % rRNA R1
 readsets.treatments.sortingRibo.read2.rRNAPercent = % rRNA R2
 readsets.treatments.sortingRibo.single.rRNAPercent = % rRNA Single
 
+###############
+#
+#authorisation users
+#
+###############
+authorisation.menu = Administration
+authorisation.menu.userroles = Gestion des roles utilisateurs
+authorisation.userroles.page = Gestion des roles utilisateurs
+authorisation.users.page.tab.search = Recherche des utilisateurs
 
+###############
+#
+#user
+#
+###############
+user.login = Login
+user.roles = Roles

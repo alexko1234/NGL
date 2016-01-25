@@ -1,4 +1,6 @@
 @()
+@import play.mvc.Http.Context
+@import controllers.authorisation.PermissionHelper
 
 <!-- ----------------------------------------------------------------------------- -->
 <!-- Modal to display image in full size -->
@@ -27,10 +29,12 @@
 	<div class="col-md-12 col-lg-12">
 		<div class="page-header">	
 			<div class="btn-toolbar pull-right">
-			 	<button class="btn btn-default" ng-if="isEditMode()" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
-			 	<button class="btn btn-default" ng-if="isEditMode()" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
+				@if(PermissionHelper.checkPermission(Context.current().session(), "writing")){
+				 	<button class="btn btn-default" ng-if="isEditMode()" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i> @Messages("button.validate")</button>
+				 	<button class="btn btn-default" ng-if="isEditMode()" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
 			 	
-		 		<button class="btn btn-default" ng-if="!isEditMode()" ng-click="activeEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>
+		 			<button class="btn btn-default" ng-if="!isEditMode()" ng-click="activeEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i> @Messages("button.edit")</button>
+				}
 				<button class="btn btn-default" ng-click="activePrintMode(readset.code)" data-toggle="tooltip" title="@Messages("button.printMode")" ><i class="fa fa-print"></i> @Messages("button.printMode")</button>
 			</div>
 			@partials.details_header()		 

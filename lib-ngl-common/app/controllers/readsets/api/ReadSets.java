@@ -4,7 +4,6 @@ import static play.data.Form.form;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,9 +11,24 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
+import org.mongojack.DBUpdate;
+
+import com.mongodb.BasicDBObject;
+
+import akka.actor.ActorRef;
+import akka.actor.Props;
+import controllers.NGLControllerHelper;
+import controllers.QueryFieldsForm;
+import controllers.authorisation.Permission;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBDatatableResponseChunks;
+import fr.cea.ig.MongoDBResponseChunks;
+import fr.cea.ig.MongoDBResult;
 import models.laboratory.common.description.Level;
-import models.laboratory.common.description.Level.CODE;
-import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
@@ -25,15 +39,6 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
-import models.utils.dao.DAOException;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.mongojack.DBQuery;
-import org.mongojack.DBQuery.Query;
-import org.mongojack.DBUpdate;
-import org.mongojack.WriteResult;
-
 import play.Logger;
 import play.Play;
 import play.data.Form;
@@ -44,23 +49,9 @@ import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.run.instance.ReadSetValidationHelper;
-import validation.utils.ValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableForm;
 import workflows.run.Workflows;
-import akka.actor.ActorRef;
-import akka.actor.Props;
-
-import com.mongodb.BasicDBObject;
-
-
-
-import controllers.NGLControllerHelper;
-import controllers.QueryFieldsForm;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBDatatableResponseChunks;
-import fr.cea.ig.MongoDBResponseChunks;
-import fr.cea.ig.MongoDBResult;
 
 
 
@@ -76,7 +67,7 @@ public class ReadSets extends ReadSetsController{
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("code", "path");
 	final static List<String> defaultKeys =  Arrays.asList("code", "runCode", "runTypeCode", "laneNumber", "projectCode", "sampleCode", "runSequencingStartDate", "state", "productionValuation", "bioinformaticValuation", "properties");
-	//@Permission(value={"reading"})
+	@Permission(value={"reading"})
 	public static Result list() {
 		//Form<ReadSetsSearchForm> filledForm = filledFormQueryString(searchForm, ReadSetsSearchForm.class);
 		//ReadSetsSearchForm form = filledForm.get();
@@ -268,7 +259,7 @@ public class ReadSets extends ReadSetsController{
 		return query;
 	}
 	
-	//@Permission(value={"reading"})
+	@Permission(value={"reading"})
 	public static Result get(String readSetCode) {
 		DatatableForm form = filledFormQueryString(DatatableForm.class);
 		ReadSet readSet =  getReadSet(readSetCode, form.includes.toArray(new String[0]));		
@@ -280,7 +271,7 @@ public class ReadSets extends ReadSetsController{
 		}		
 	}
 	
-	//@Permission(value={"reading"})
+	@Permission(value={"reading"})
 	public static Result head(String readSetCode) {
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode)){			
 			return ok();					
@@ -289,7 +280,7 @@ public class ReadSets extends ReadSetsController{
 		}	
 	}
 	
-	
+	@Permission(value={"writing"})
 	public static Result save(){
 		
 		Form<ReadSet> filledForm = getFilledForm(readSetForm, ReadSet.class);
@@ -357,7 +348,7 @@ public class ReadSets extends ReadSetsController{
 	}
 	
 	
-	
+	@Permission(value={"writing"})
 	public static Result update(String readSetCode){
 		ReadSet readSet =  getReadSet(readSetCode);
 		if(readSet == null) {
@@ -438,7 +429,7 @@ public class ReadSets extends ReadSetsController{
 		}
 	}
 	
-	//@Permission(value={"delete_readset"}) 
+	@Permission(value={"writing"}) 
 	public static Result delete(String readSetCode) { 
 		ReadSet readSet = getReadSet(readSetCode);
 		if (readSet == null) {
@@ -470,7 +461,7 @@ public class ReadSets extends ReadSetsController{
 	}
 	
 	
-	//@Permission(value={"delete_readset"})
+	@Permission(value={"writing"})
 	public static Result deleteByRunCode(String runCode) {
 		Run run  = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runCode);
 		if (run==null) {
@@ -492,6 +483,7 @@ public class ReadSets extends ReadSetsController{
 		return ok();
 	}
 	
+	@Permission(value={"writing"})
 	public static Result state(String code){
 		ReadSet readSet = getReadSet(code);
 		if(readSet == null){
@@ -510,6 +502,7 @@ public class ReadSets extends ReadSetsController{
 		}
 	}
 	
+	@Permission(value={"writing"})
 	public static Result stateBatch(){
 		List<Form<ReadSetBatchElement>> filledForms =  getFilledFormList(batchElementForm, ReadSetBatchElement.class);
 		
@@ -537,6 +530,7 @@ public class ReadSets extends ReadSetsController{
 		return ok(Json.toJson(response));
 	}
 	
+	@Permission(value={"writing"})
 	public static Result valuation(String code){
 		ReadSet readSet = getReadSet(code);
 		if(readSet == null){
@@ -561,6 +555,7 @@ public class ReadSets extends ReadSetsController{
 		}
 	}
 
+	@Permission(value={"writing"})
 	public static Result valuationBatch(){
 		List<Form<ReadSetBatchElement>> filledForms =  getFilledFormList(batchElementForm, ReadSetBatchElement.class);
 		
@@ -593,6 +588,7 @@ public class ReadSets extends ReadSetsController{
 		return ok(Json.toJson(response));
 	}
 	
+	@Permission(value={"writing"})
 	public static Result properties(String code){
 		ReadSet readSet = getReadSet(code);
 		if(readSet == null){
@@ -620,6 +616,7 @@ public class ReadSets extends ReadSetsController{
 		}		
 	}
 	
+	@Permission(value={"writing"})
 	public static Result propertiesBatch(){
 		List<Form<ReadSetBatchElement>> filledForms =  getFilledFormList(batchElementForm, ReadSetBatchElement.class);
 		
@@ -677,6 +674,7 @@ public class ReadSets extends ReadSetsController{
 		return regex;
 	}
 
+	@Permission(value={"writing"})
 	public static Result applyRules(String code, String rulesCode){
 		ReadSet readSet = getReadSet(code);
 		if(readSet != null){

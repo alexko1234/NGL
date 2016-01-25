@@ -4,23 +4,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import models.laboratory.run.instance.ReadSet;
-import models.utils.InstanceConstants;
-
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
-
-import play.Logger;
-import play.mvc.Result;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mongodb.BasicDBObject;
 
 import controllers.CommonController;
+import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBDatatableResponseChunks;
 import fr.cea.ig.MongoDBResult;
+import models.laboratory.run.instance.ReadSet;
+import models.utils.InstanceConstants;
+import play.Logger;
+import play.mvc.Result;
 /**
  * Controller that manage the readset archive
  * @author galbini
@@ -33,7 +32,7 @@ public class ReadSets extends CommonController{
 	 * @return
 	 */
 	 
-	//@Permission(value={"reading"})
+	@Permission(value={"reading"})
 	public static Result list(){
 
 		BasicDBObject keys = new BasicDBObject();
@@ -44,7 +43,6 @@ public class ReadSets extends CommonController{
 		MongoDBResult<ReadSet> results =  MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, getQuery(archive), keys);		
 		return ok(new MongoDBDatatableResponseChunks<ReadSet>(results, r -> convertToArchive(archive, r))).as("application/json");		
 	}
-
 
 
 	private static Archive convertToArchive(Integer archive, ReadSet readSet) {
@@ -94,7 +92,7 @@ public class ReadSets extends CommonController{
 		return archive;
 	}
 
-	//@Permission(value={"archiving"})
+	@Permission(value={"writing"})	//@Permission(value={"archiving"})
 	public static Result save(String readSetCode) {
 		JsonNode json = request().body().asJson();
 		String archiveId = json.get("archiveId").asText();		
@@ -119,7 +117,7 @@ public class ReadSets extends CommonController{
 		}
 	}
 
-	
+	@Permission(value={"writing"})
 	public static Result delete(Integer i){
 		
 		if(i % 2 == 0){
@@ -128,5 +126,4 @@ public class ReadSets extends CommonController{
 		
 		return ok();
 	}
-
 }

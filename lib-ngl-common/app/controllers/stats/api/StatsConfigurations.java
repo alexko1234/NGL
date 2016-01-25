@@ -28,6 +28,7 @@ import views.components.datatable.DatatableResponse;
 import com.mongodb.BasicDBObject;
 
 import controllers.CommonController;
+import controllers.authorisation.Permission;
 import controllers.reporting.api.ConfigurationsSearchForm;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
@@ -36,6 +37,7 @@ public class StatsConfigurations extends CommonController {
 	final static Form<StatsConfiguration> reportConfigForm = form(StatsConfiguration.class);
 	final static Form<ConfigurationsSearchForm> searchForm = form(ConfigurationsSearchForm.class);
 	
+	@Permission(value={"reading"})
 	public static Result list() {
 		Form<ConfigurationsSearchForm> filledForm = filledFormQueryString(searchForm, ConfigurationsSearchForm.class);
 		ConfigurationsSearchForm form = filledForm.get();
@@ -73,6 +75,7 @@ public class StatsConfigurations extends CommonController {
 		return query;
 	}
 
+	@Permission(value={"reading"})
 	public static Result get(String code) {
 		StatsConfiguration statsConfiguration =  getStatsConfiguration(code);		
 		if(statsConfiguration != null) {
@@ -83,6 +86,7 @@ public class StatsConfigurations extends CommonController {
 		}			
 	}
 	
+	@Permission(value={"writing"})
 	public static Result save() {
 		Form<StatsConfiguration> filledForm = getFilledForm(reportConfigForm, StatsConfiguration.class);
 		StatsConfiguration statsConfiguration = filledForm.get();
@@ -107,6 +111,7 @@ public class StatsConfigurations extends CommonController {
 		}
 	}
 	
+	@Permission(value={"writing"})
 	public static Result update(String code) {
 		StatsConfiguration statsConfiguration =  getStatsConfiguration(code);
 		if(statsConfiguration == null) {
@@ -136,6 +141,7 @@ public class StatsConfigurations extends CommonController {
 		}				
 	}
 	
+	@Permission(value={"writing"})
 	public static Result delete(String code) {
 		StatsConfiguration statsConfiguration =  getStatsConfiguration(code);
 		if(statsConfiguration == null) {

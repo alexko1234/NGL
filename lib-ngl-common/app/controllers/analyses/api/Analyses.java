@@ -48,6 +48,7 @@ import com.mongodb.BasicDBObject;
 import controllers.DocumentController;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
+import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 @Controller
@@ -66,7 +67,7 @@ public class Analyses extends DocumentController<Analysis>{
 		super(InstanceConstants.ANALYSIS_COLL_NAME, Analysis.class);		
 	}
 	
-	//@Permission(value={"reading"})
+	@Permission(value={"reading"})
 	public Result list() {
 		//Form<AnalysesSearchForm> filledForm = filledFormQueryString(searchForm, AnalysesSearchForm.class);
 		//AnalysesSearchForm form = filledForm.get();
@@ -149,6 +150,7 @@ public class Analyses extends DocumentController<Analysis>{
 		return query;
 	}
 	
+	@Permission(value={"writing"})
 	public Result save(){
 		
 		Form<Analysis> filledForm = getMainFilledForm();
@@ -194,6 +196,7 @@ public class Analyses extends DocumentController<Analysis>{
 		
 	}
 
+	@Permission(value={"writing"})
 	public Result update(String code){
 		Analysis objectInDB =  getObject(code);
 		if(objectInDB == null) {
@@ -257,7 +260,7 @@ public class Analyses extends DocumentController<Analysis>{
 	}
 	
 	
-	
+	@Permission(value={"writing"})
 	public Result state(String code){
 		Analysis objectInDB = getObject(code);
 		if(objectInDB == null) {
@@ -276,6 +279,7 @@ public class Analyses extends DocumentController<Analysis>{
 		}
 	}
 	
+	@Permission(value={"writing"})
 	public Result stateBatch(){
 		List<Form<AnalysesBatchElement>> filledForms =  getFilledFormList(batchElementForm, AnalysesBatchElement.class);
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
@@ -302,6 +306,7 @@ public class Analyses extends DocumentController<Analysis>{
 		return ok(Json.toJson(response));
 	}
 	
+	@Permission(value={"writing"})
 	public Result valuation(String code){
 		Analysis objectInDB = getObject(code);
 		if(objectInDB == null) {
@@ -327,6 +332,7 @@ public class Analyses extends DocumentController<Analysis>{
 		}
 	}
 
+	@Permission(value={"writing"})
 	public Result valuationBatch(){
 		List<Form<AnalysesBatchElement>> filledForms =  getFilledFormList(batchElementForm, AnalysesBatchElement.class);
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
@@ -358,6 +364,7 @@ public class Analyses extends DocumentController<Analysis>{
 		return ok(Json.toJson(response));
 	}
 	
+	@Permission(value={"writing"})
 	public Result properties(String code){
 		Analysis objectInDB = getObject(code);
 		if(objectInDB == null) {
@@ -381,6 +388,7 @@ public class Analyses extends DocumentController<Analysis>{
 		}		
 	}
 	
+	@Permission(value={"writing"})
 	public Result propertiesBatch(){
 		List<Form<AnalysesBatchElement>> filledForms =  getFilledFormList(batchElementForm, AnalysesBatchElement.class);
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
@@ -408,6 +416,7 @@ public class Analyses extends DocumentController<Analysis>{
 		return ok(Json.toJson(response));
 	}
 	
+	@Permission(value={"writing"})
 	public Result applyRules(String code, String rulesCode)
 	{
 		Analysis objectInDB = getObject(code);

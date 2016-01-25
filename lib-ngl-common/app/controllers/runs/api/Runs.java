@@ -4,31 +4,8 @@ import static play.data.Form.form;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
-
-import models.laboratory.common.description.Level;
-import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.TBoolean;
-import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.common.instance.Valuation;
-import models.laboratory.common.instance.property.PropertyListValue;
-import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.ContainerSupport;
-import models.laboratory.container.instance.Content;
-import models.laboratory.run.description.RunCategory;
-import models.laboratory.run.description.dao.RunCategoryDAO;
-import models.laboratory.run.instance.ReadSet;
-import models.laboratory.run.instance.Run;
-import models.utils.InstanceConstants;
-import models.utils.ListObject;
-import models.utils.dao.DAOException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -36,13 +13,32 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 import org.mongojack.DBUpdate;
 
+import com.mongodb.BasicDBObject;
+
+import akka.actor.ActorRef;
+import akka.actor.Props;
+import controllers.NGLControllerHelper;
+import controllers.QueryFieldsForm;
+import controllers.authorisation.Permission;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
+import models.laboratory.common.description.Level;
+import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.TBoolean;
+import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.common.instance.Valuation;
+import models.laboratory.run.description.RunCategory;
+import models.laboratory.run.instance.ReadSet;
+import models.laboratory.run.instance.Run;
+import models.utils.InstanceConstants;
+import models.utils.ListObject;
+import models.utils.dao.DAOException;
 import play.Logger;
 import play.Play;
 import play.data.Form;
 import play.libs.Akka;
 import play.libs.Json;
 import play.mvc.Result;
-import rules.services.RulesActor;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
@@ -50,16 +46,6 @@ import validation.run.instance.RunValidationHelper;
 import views.components.datatable.DatatableForm;
 import views.components.datatable.DatatableResponse;
 import workflows.run.Workflows;
-import akka.actor.ActorRef;
-import akka.actor.Props;
-
-import com.mongodb.BasicDBObject;
-
-import controllers.NGLControllerHelper;
-import controllers.QueryFieldsForm;
-import controllers.authorisation.Permission;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
 /**
  * Controller around Run object
  *
@@ -75,7 +61,7 @@ public class Runs extends RunsController {
 	
 	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 
-	//@Permission(value={"reading"})
+	@Permission(value={"reading"})
 	public static Result list(){
 
 		//Form<RunsSearchForm> filledForm = filledFormQueryString(searchForm, RunsSearchForm.class);
@@ -103,8 +89,6 @@ public class Runs extends RunsController {
 			return ok(Json.toJson(runs));
 		}
 	}
-
-	
 
 	private static List<ListObject> toListObjects(List<Run> runs){
 		List<ListObject> jo = new ArrayList<ListObject>();
@@ -222,11 +206,8 @@ public class Runs extends RunsController {
 		return query;
 	}
 
-
-
 	
-	
-	//@Permission(value={"reading"})
+	@Permission(value={"reading"})
 	public static Result get(String code) {
 		
 		DatatableForm form = filledFormQueryString(DatatableForm.class);
@@ -239,7 +220,7 @@ public class Runs extends RunsController {
 		}
 	}
 
-	//@Permission(value={"reading"})
+	@Permission(value={"reading"})
 	public static Result head(String code){
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code)){			
 			return ok();					
@@ -248,7 +229,8 @@ public class Runs extends RunsController {
 		}
 	}
 
-	//@Permission(value={"creation_update_run_lane"})
+	
+	@Permission(value={"writing"})	//@Permission(value={"creation_update_run_lane"})
 	public static Result save() throws DAOException {
 		Form<Run> filledForm = getFilledForm(runForm, Run.class);
 		Run runInput = filledForm.get();
@@ -285,7 +267,7 @@ public class Runs extends RunsController {
 		}
 	}
 
-	//@Permission(value={"creation_update_run_lane"})
+	@Permission(value={"writing"})	//@Permission(value={"creation_update_run_lane"})
 	public static Result update(String code) {
 		Run run = getRun(code);
 		if (run == null) {
@@ -346,10 +328,8 @@ public class Runs extends RunsController {
 		}
 	}
 
-	
 
-
-
+	@Permission(value={"writing"})
 	public static Result delete(String code) {
 		Run run = getRun(code);
 		if (run == null) {
@@ -363,7 +343,7 @@ public class Runs extends RunsController {
 
 	
 	
-	//@Permission(value={"valuation_run_lane"})
+	@Permission(value={"writing"})	//@Permission(value={"valuation_run_lane"})
 	public static Result valuation(String code){
 		Run run = getRun(code);
 		if(run == null){
@@ -391,6 +371,7 @@ public class Runs extends RunsController {
 		}
 	}
 
+	@Permission(value={"writing"})
 	public static Result applyRules(String code, String rulesCode){
 		Run run = getRun(code);
 		if(run!=null){

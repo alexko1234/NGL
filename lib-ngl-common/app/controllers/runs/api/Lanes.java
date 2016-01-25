@@ -33,7 +33,7 @@ public class Lanes extends RunsController{
 	
 	
 	
-	//@Permission(value={"reading"})
+	@Permission(value={"reading"})
 	public static Result list(String code) {
 		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
 		if(run == null || run.lanes == null){
@@ -42,7 +42,7 @@ public class Lanes extends RunsController{
 		return ok(Json.toJson(run.lanes));		
 	}
 	
-	//@Permission(value={"reading"})
+	@Permission(value={"reading"})
 	public static Result get(String code, Integer laneNumber) {
 		Run run = getRun(code, laneNumber);
 		if(run == null){
@@ -58,7 +58,7 @@ public class Lanes extends RunsController{
 		return notFound();
 	}
 
-	//@Permission(value={"reading"})
+	@Permission(value={"reading"})
 	public static Result head(String code, Integer laneNumber){
 		if(MongoDBDAO.checkObjectExist(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 				DBQuery.and(DBQuery.is("code", code), DBQuery.is("lanes.number", laneNumber)))){			
@@ -68,7 +68,7 @@ public class Lanes extends RunsController{
 		}
 	}
 	
-	//@Permission(value={"creation_update_run_lane"})
+	@Permission(value={"writing"})	//@Permission(value={"creation_update_run_lane"})
 	public static Result save(String code) {
 		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
 		if(run == null){
@@ -95,7 +95,7 @@ public class Lanes extends RunsController{
 	}
 
 	
-	//@Permission(value={"creation_update_run_lane"})
+	@Permission(value={"writing"})	//@Permission(value={"creation_update_run_lane"})
 	public static Result update(String code, Integer laneNumber){
 		Run run = getRun(code, laneNumber);
 		if(run == null){
@@ -121,7 +121,8 @@ public class Lanes extends RunsController{
 			return badRequest("lane number are not the same");
 		}
 	}
-		
+	
+	@Permission(value={"writing"})	
 	public static Result delete(String code, Integer laneNumber) { 
 		Run run = getRun(code, laneNumber);
 		if(run == null){
@@ -135,6 +136,7 @@ public class Lanes extends RunsController{
 	
 	}
 	
+	@Permission(value={"writing"})
 	public static Result deleteByRunCode(String code) {
 		Run run = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, code);
 		if (run==null) {
@@ -146,7 +148,7 @@ public class Lanes extends RunsController{
 	}
 	
 	
-	//@Permission(value={"valuation_run_lane"})
+	@Permission(value={"writing"})	//@Permission(value={"valuation_run_lane"})
 	public static Result valuation(String code, Integer laneNumber){
 		Run run = getRun(code, laneNumber);
 		if(run == null){

@@ -21,6 +21,7 @@ import validation.ContextValidation;
 import validation.run.instance.FileValidationHelper;
 import controllers.QueryFieldsForm;
 import controllers.SubDocumentController;
+import controllers.authorisation.Permission;
 
 @Controller
 public class Files extends SubDocumentController<Analysis, File> {
@@ -51,7 +52,7 @@ public class Files extends SubDocumentController<Analysis, File> {
 		return objectInDB.files;
 	}
 	
-	//@Permission(value={"creation_update_files"})
+	@Permission(value={"writing"})	//@Permission(value={"creation_update_files"})
 	public Result save(String parentCode) {
 		Analysis objectInDB = getObject(parentCode);
 		if (objectInDB == null) {
@@ -77,7 +78,7 @@ public class Files extends SubDocumentController<Analysis, File> {
 		}
 	}
 	
-	//@Permission(value={"creation_update_files"})
+	@Permission(value={"writing"})	//@Permission(value={"creation_update_files"})
 	public Result update(String parentCode, String fullname) {
 		Analysis objectInDB = getObject(getSubObjectQuery(parentCode, fullname));
 		if (objectInDB == null) {
@@ -134,7 +135,7 @@ public class Files extends SubDocumentController<Analysis, File> {
 		}
 	}
 
-	//@Permission(value={"delete_files"})
+	@Permission(value={"writing"})	//@Permission(value={"delete_files"})
 	public Result delete(String parentCode, String fullname) {
 		Analysis objectInDB = getObject(getSubObjectQuery(parentCode, fullname));
 		if (objectInDB == null) {
@@ -146,6 +147,7 @@ public class Files extends SubDocumentController<Analysis, File> {
 		return ok();
 	}
 	
+	@Permission(value={"writing"})
 	public Result deleteByParentCode(String parentCode) {
 		Analysis objectInDB = getObject(parentCode);
 		if (objectInDB == null) {

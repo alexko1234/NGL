@@ -21,7 +21,7 @@ public class ReadSetTreatments extends ReadSetsController{
 
 	final static Form<Treatment> treatmentForm = form(Treatment.class);
 	
-	//@Permission(value={"reading"})
+	@Permission(value={"reading"})
 	public static Result list(String readSetCode){
 		ReadSet readSet = getReadSet(readSetCode);
 		if (readSet != null) {
@@ -31,7 +31,7 @@ public class ReadSetTreatments extends ReadSetsController{
 		}		
 	}
 	
-	//@Permission(value={"reading"})
+	@Permission(value={"reading"})
 	public static Result get(String readSetCode, String treatmentCode){
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.exists("treatments."+treatmentCode)));
@@ -42,7 +42,7 @@ public class ReadSetTreatments extends ReadSetsController{
 		}		
 	}
 	
-	//@Permission(value={"reading"})
+	@Permission(value={"reading"})
 	public static Result head(String readSetCode, String treatmentCode){
 		if(MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.exists("treatments."+treatmentCode)))){
@@ -52,7 +52,7 @@ public class ReadSetTreatments extends ReadSetsController{
 		}
 	}
 	
-	//@Permission(value={"creation_update_treatments"})
+	@Permission(value={"writing"})	//@Permission(value={"creation_update_treatments"})
 	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public static Result save(String readSetCode){
 		ReadSet readSet = getReadSet(readSetCode);
@@ -84,7 +84,7 @@ public class ReadSetTreatments extends ReadSetsController{
 		}		
 	}
 
-	//@Permission(value={"creation_update_treatments"})
+	@Permission(value={"writing"})	//@Permission(value={"creation_update_treatments"})
 	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public static Result update(String readSetCode, String treatmentCode){
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
@@ -117,7 +117,7 @@ public class ReadSetTreatments extends ReadSetsController{
 		}
 	}
 	
-	//@Permission(value={"delete_treatments"})
+	@Permission(value={"writing"})	//@Permission(value={"delete_treatments"})
 	public static Result delete(String readSetCode, String treatmentCode){
 		ReadSet readSet = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.and(DBQuery.is("code", readSetCode), DBQuery.exists("treatments."+treatmentCode)));
@@ -129,6 +129,7 @@ public class ReadSetTreatments extends ReadSetsController{
 		return ok();		
 	}
 	
+	@Permission(value={"writing"})
 	public static Result deleteAll(String readSetCode){
 		ReadSet readSet = getReadSet(readSetCode);
 		if (readSet == null) {
@@ -138,7 +139,4 @@ public class ReadSetTreatments extends ReadSetsController{
 				DBQuery.is("code", readSetCode), DBUpdate.unset("treatments").set("traceInformation", getUpdateTraceInformation(readSet)));			
 		return ok();		
 	}
-	
-	
-
 }

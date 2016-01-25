@@ -15,6 +15,7 @@ import play.mvc.With;
  * 	
  * 
  * 	@author ydeshayes
+ * 	@author michieli
  */
 
 @With(PermissionAction.class)
@@ -24,6 +25,6 @@ import play.mvc.With;
 @Documented
 public @interface Permission {
 	String[] value() default "";//name/value permission
-	String[] teams() default "";//the teams
-	boolean  allPermissions() default false;//need to have all the permission(true) or just one(false) 
+//	String[] teams() default "";//the teams
+//	boolean  allPermissions() default false;//need to have all the permission(true) or just one(false) 
 }

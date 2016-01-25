@@ -4,7 +4,7 @@ package controllers.authorisation;
  * Permission and team manager
  * 
  * @author ydeshayes
- * 
+ * @author michieli
  */
 
 import java.util.List;
@@ -12,7 +12,9 @@ import java.util.List;
 import models.administration.authorisation.Role;
 import models.administration.authorisation.Team;
 import models.administration.authorisation.User;
+import models.administration.authorisation.Permission;
 import models.utils.dao.DAOException;
+import play.Logger;
 import play.mvc.Http.Session;
 
 
@@ -29,14 +31,23 @@ public class PermissionHelper {
 	 * @throws DAOException 
 	 */
 	public static boolean checkPermission(Session ses, String codePermission) throws DAOException {
-		User user = User.find.findByLogin(ses.get(COOKIE_SESSION));  
-		if(user!=null) {
-			for(Role role:user.roles) {
-				for(models.administration.authorisation.Permission perm:role.permissions) {
-					if(perm.code.equals(codePermission))
-						return true;
-				}
-			}
+		List<Permission> permissions = Permission.find.findByUserLogin(ses.get(COOKIE_SESSION));
+		for(Permission p:permissions){
+			if(codePermission.equals(p.code))
+				return true;
+		}
+		return false;
+	}
+	
+	
+	/*
+	 * Method checkRole()
+	 */
+	public static boolean checkRole(Session ses, String labelRole) throws DAOException{
+		List<Role> roles = Role.find.findByUserLogin(ses.get(COOKIE_SESSION));
+		for(Role r:roles){
+			if(labelRole.equals(r.label))
+				return true;
 		}
 		return false;
 	}
@@ -49,37 +60,38 @@ public class PermissionHelper {
 	 * @return true if the user can access to the resources
 	 * @throws DAOException 
 	 */
-	public static boolean checkPermission(Session ses,  List<String> codePermission, boolean allPermission) throws DAOException {
-		User user = User.find.findByLogin(ses.get(COOKIE_SESSION));  
-		//Logger.debug("check perm "+codePermission+" / "+user);
-		if(user!=null) {
-			if(!allPermission){
-				for(Role role:user.roles) {
-					//Logger.debug("compare with role "+role.label);
-					for(models.administration.authorisation.Permission perm:role.permissions) {
-						//Logger.debug("compare with perm "+perm.label);
-						for(String permissionAsk:codePermission){
-							if(perm.code.equals(permissionAsk))
-								return true;
-						}
-					}
-				}
-			}else{
-				int i=0;
-				for(Role role:user.roles) {
-					for(models.administration.authorisation.Permission perm:role.permissions) {
-						for(String permissionAsk:codePermission){	
-							if(perm.code.equals(permissionAsk))
-								i++;
-						}
-					}
-				
-			}
-			return i == codePermission.size();	
-		}
-		}
-		return false;
-	}
+//	public static boolean checkPermission(Session ses,  List<String> codePermission, boolean allPermission) throws DAOException {
+//		User user = User.find.findByLogin(ses.get(COOKIE_SESSION));  
+//		Logger.debug("Le User lastname : " + user.lastname);
+//		Logger.debug("check perm "+codePermission+" / "+user);
+//		if(user!=null) {
+//			if(!allPermission){
+//				for(Role role:user.roles) {
+//					Logger.debug("compare with role "+role.label);
+//					for(models.administration.authorisation.Permission perm:role.permissions) {
+//						Logger.debug("compare with perm "+perm.label);
+//						for(String permissionAsk:codePermission){
+//							if(perm.code.equals(permissionAsk))
+//								return true;
+//						}
+//					}
+//				}
+//			}else{
+//				int i=0;
+//				for(Role role:user.roles) {
+//					for(models.administration.authorisation.Permission perm:role.permissions) {
+//						for(String permissionAsk:codePermission){	
+//							if(perm.code.equals(permissionAsk))
+//								i++;
+//						}
+//					}
+//				
+//			}
+//			return i == codePermission.size();	
+//		}
+//		}
+//		return false;
+//	}
 	
 	public static User getUser(long id) throws DAOException {
 		return User.find.findById(id);

@@ -151,6 +151,9 @@ angular.module('commonsServices', []).
     				users : function(params, key){
     					load(jsRoutes.controllers.commons.api.Users.list().url,params,(key)?key:'users');    					
     				},
+    				roles : function(params, key){
+    					load(jsRoutes.controllers.commons.api.Roles.list().url, params, (key)?key:'roles');
+    				},
     				experiments : function(params, key){
     					load(jsRoutes.controllers.experiments.api.Experiments.list().url,params,(key)?key:'experiments');    					
     				},
@@ -231,6 +234,7 @@ angular.module('commonsServices', []).
     					this.states(params);
     					this.types(params);
     					this.users(params);
+    					this.roles(params);
     					this.experiments(params);
     					this.experimentTypes(params);
     					this.runs(params);
@@ -281,6 +285,7 @@ angular.module('commonsServices', []).
     			getUmbrellaProjects : function(){return results['umbrellaProjects'];},
     			getSamples : function(){return results['samples'];},
     			getUsers : function(){return results['users'];},
+    			getRoles : function(){return results['roles'];},
     			getExperiments : function(){return results['experiments'];},
     			getContainerSupports : function(){return results['containerSupports'];},
     			getContainerCategories : function(){return results['containerCategories'];},

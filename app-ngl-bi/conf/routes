@@ -58,16 +58,20 @@ GET		/tpl/stats/:type/show						controllers.stats.tpl.Stats.show(type: java.lang
 GET		/tpl/stats/js-routes						controllers.stats.tpl.Stats.javascriptRoutes()
 
 #balance sheets tpl
-GET 	/balance-sheets/:year/home					    controllers.balancesheets.tpl.BalanceSheets.home(year : java.lang.String)	
-GET		/tpl/balance-sheets/year						controllers.balancesheets.tpl.BalanceSheets.year()			
-GET		/tpl/balance-sheets/general						controllers.balancesheets.tpl.BalanceSheets.general()
-GET		/tpl/balance-sheets/js-routes					controllers.balancesheets.tpl.BalanceSheets.javascriptRoutes()
+GET 	/balance-sheets/:year/home					controllers.balancesheets.tpl.BalanceSheets.home(year : java.lang.String)	
+GET		/tpl/balance-sheets/year					controllers.balancesheets.tpl.BalanceSheets.year()			
+GET		/tpl/balance-sheets/general					controllers.balancesheets.tpl.BalanceSheets.general()
+GET		/tpl/balance-sheets/js-routes				controllers.balancesheets.tpl.BalanceSheets.javascriptRoutes()
 
+#users tpl
+GET		/users/:homecode/home						controllers.authorisation.tpl.Users.home(homecode: java.lang.String)
+GET		/tpl/users/search							controllers.authorisation.tpl.Users.search()
+GET		/tpl/users/js-routes						controllers.authorisation.tpl.Users.javascriptRoutes()
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET     /assets/*file              					controllers.Assets.at(path="/public", file)
 GET     /messages.js                				controllers.main.tpl.Main.jsMessages()
 GET     /codes.js        	        				controllers.main.tpl.Main.jsCodes()
-#GET     /api/js-routes.js        	        		controllers.main.tpl.Main.apiJavascriptRoutes()
+#GET    /api/js-routes.js        	        		controllers.main.tpl.Main.apiJavascriptRoutes()
 
 

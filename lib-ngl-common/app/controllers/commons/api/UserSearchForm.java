@@ -4,6 +4,6 @@ import java.util.List;
 
 import controllers.ListForm;
 
-public class UserSearchFrom extends ListForm{
-	public List<String> logins;
+public class UserSearchForm extends ListForm{
+	public String login;
 }

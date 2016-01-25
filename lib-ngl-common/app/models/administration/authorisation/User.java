@@ -7,17 +7,10 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import fr.cea.ig.authentication.html.IAuthenticate;
 import models.administration.authorisation.description.dao.UserDAO;
-import models.laboratory.common.description.Institute;
-import models.laboratory.common.description.Level;
-import models.laboratory.common.description.PropertyDefinition;
-import models.laboratory.common.description.dao.InstituteDAO;
-import models.laboratory.common.description.dao.PropertyDefinitionDAO;
-import models.laboratory.common.description.dao.StateDAO;
 import models.utils.Model;
-import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
+import play.Logger;
 import play.data.validation.ValidationError;
 
 
@@ -33,7 +26,6 @@ public class User extends Model<User>{
 		
 		public String lastname;
 		
-		
 		public String email;
 		
 		/**
@@ -47,12 +39,15 @@ public class User extends Model<User>{
 		public String password;
 		
 		public String confirmpassword;
-		public List<Role> roles;
+		// Attribute used to Lists the roles labels
+		public List<Long> roleIds;
+		
 		public List<Team> teams;
 		public List<Application> applications;
 		
 		@JsonIgnore
 		public static UserFinder find = new UserFinder();
+		
 		@JsonIgnore
 		public  Map<String,List<ValidationError>> validate() {
 		        if(!password.equals(confirmpassword)) {
@@ -66,19 +61,27 @@ public class User extends Model<User>{
 		        return null;
 		}
 		
-		
+		/**
+		 * 
+		 * @author michieli
+		 *		Intern Class UserFinder
+		 */
 		public static class UserFinder extends Finder<User>{
 
 			public UserFinder() {
 				super(UserDAO.class.getName());
-				 //super(StateDAO.class.getName());
 			}
 			
-			public User findByLogin(String login) throws DAOException{
+			public List<User> findAll() throws DAOException{
+				return ((UserDAO)getInstance()).findAll();
+			}
+			
+			public User findByLogin(String login) throws DAOException{			
 				return ((UserDAO)getInstance()).findByLogin(login);
 			}
 			
-			
-			
+			public List<User> findByLikeLogin(String aLike) throws DAOException{
+				return ((UserDAO)getInstance()).findByLikeLogin(aLike);
+			}	
 		}
 }

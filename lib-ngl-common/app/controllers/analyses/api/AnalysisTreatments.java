@@ -16,6 +16,7 @@ import play.mvc.BodyParser;
 import play.mvc.Result;
 import validation.ContextValidation;
 import controllers.SubDocumentController;
+import controllers.authorisation.Permission;
 @Controller
 public class AnalysisTreatments extends SubDocumentController<Analysis, Treatment>{
 
@@ -36,7 +37,7 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 	}
 	
 	
-	//@Permission(value={"creation_update_treatments"})
+	@Permission(value={"writing"})	//@Permission(value={"creation_update_treatments"})
 	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public Result save(String parentCode){
 		Analysis objectInDB = getObject(parentCode);
@@ -64,7 +65,7 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 		}		
 	}
 
-	//@Permission(value={"creation_update_treatments"})
+	@Permission(value={"writing"})	//@Permission(value={"creation_update_treatments"})
 	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public Result update(String parentCode, String code){
 		Analysis objectInDB = getObject(getSubObjectQuery(parentCode, code));
@@ -94,7 +95,7 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 		}
 	}
 	
-	//@Permission(value={"delete_treatments"})
+	@Permission(value={"writing"})	//@Permission(value={"delete_treatments"})
 	public Result delete(String parentCode, String code){
 		Analysis objectInDB = getObject(getSubObjectQuery(parentCode, code));
 		if (objectInDB == null) {
@@ -106,6 +107,7 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 		return ok();		
 	}
 	
+	@Permission(value={"writing"})
 	public  Result deleteAll(String parentCode){
 		Analysis objectInDB = getObject(parentCode);
 		if (objectInDB == null) {
@@ -115,7 +117,4 @@ public class AnalysisTreatments extends SubDocumentController<Analysis, Treatmen
 				DBUpdate.unset("treatments").set("traceInformation", getUpdateTraceInformation(objectInDB.traceInformation)));
 		return ok();
 	}
-	
-	
-
 }

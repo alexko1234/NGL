@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
+import controllers.authorisation.Permission;
 import models.laboratory.common.instance.TransientState;
 import models.laboratory.run.instance.Run;
 import play.data.Form;
@@ -26,16 +27,17 @@ public class State extends RunsController {
     final static Form<HistoricalStateSearchForm> historicalForm = form(HistoricalStateSearchForm.class);
     final static Form<RunBatchElement> batchElementForm = form(RunBatchElement.class);
     
+    @Permission(value={"reading"})
     public static Result get(String code) {
 	Run runValue = getRun(code, "state");
-	if (runValue != null) {
-	    return ok(Json.toJson(runValue.state));
-	} else {
-	    return notFound();
-	}
+		if (runValue != null) {
+		    return ok(Json.toJson(runValue.state));
+		} else {
+		    return notFound();
+		}
     }
 
-    // @Permission(value={"workflow_run_lane"})
+    @Permission(value={"writing"})	// @Permission(value={"workflow_run_lane"})
     public static Result update(String code) {
 		Run run = getRun(code);
 		if (run == null) {
@@ -55,6 +57,7 @@ public class State extends RunsController {
 		}
     }
     
+    @Permission(value={"writing"})
     public static Result updateBatch() {
     	List<Form<RunBatchElement>> filledForms =  getFilledFormList(batchElementForm, RunBatchElement.class);
 		
@@ -81,6 +84,7 @@ public class State extends RunsController {
 		return ok(Json.toJson(response));
     }
     
+    @Permission(value={"reading"})
     public static Result historical(String code) {
 		Run runValue = getRun(code, "state");
 		if (runValue != null) {
