@@ -145,7 +145,7 @@ public class LimsCNGDAO {
 			sample.code=rs.getString("code");
 			
 			String sampleTypeCode=rs.getString("sample_type");
-			//Logger.debug("Sample code :"+sample.code+ " Sample type code :"+sampleTypeCode);
+			Logger.debug("[commonSampleMapRowSample] code :"+sample.code+ " Sample type code :"+sampleTypeCode);
 			
 			SampleType sampleType=null;
 			try {
@@ -563,10 +563,21 @@ public class LimsCNGDAO {
 	 */
 	public List<Sample> findSampleToModify(final ContextValidation contextError, String sampleCode) throws SQLException, DAOException {		
 		List<Sample> results = null;
+		//FDS  25/01/2016 fusion des 2 appels a this.jdbcTemplate.query
+		String sqlQuery = "";
+		Object[] queryObj = null;
 		
-		//FDS code a  factoriser !!!
-		if (sampleCode != null) { 
-			results = this.jdbcTemplate.query("select * from v_sample_updated_tongl where code=? order by code, project desc, comments", new Object[]{sampleCode}
+		if (sampleCode != null) { 	
+			sqlQuery = "select * from v_sample_updated_tongl where code=? order by code, project desc, comments";
+			Logger.debug("Modify 1 sample ("+ sampleCode+ ") with SOLEXA sql: "+ sqlQuery );
+			queryObj = new Object[]{sampleCode};
+		} else {
+			sqlQuery = "select * from v_sample_updated_tongl order by code, project desc, comments";
+			Logger.debug("Modify samples with SOLEXA sql: "+ sqlQuery );
+			queryObj = new Object[]{};
+		}
+		
+		results = this.jdbcTemplate.query(sqlQuery, queryObj
 			,new RowMapper<Sample>() {
 				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
@@ -576,19 +587,6 @@ public class LimsCNGDAO {
 					return s;
 				}
 			});
-		}
-		else { // mass loading
-			results = this.jdbcTemplate.query("select * from v_sample_updated_tongl order by code, project desc, comments",new Object[]{}
-			,new RowMapper<Sample>() {
-				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
-					ResultSet rs0 = rs;
-					int rowNum0 = rowNum;
-					ContextValidation ctxErr = contextError; 
-					Sample s=  commonSampleMapRow(rs0, rowNum0, ctxErr); 
-					return s;
-				}
-			});			
-		}	
 		
 		//demultiplexSample toujours necessaire car le code est le SOLEXA stock_barcode=> plusieurs samples peuvent avoir le meme code
 		return demultiplexSample(results);	
@@ -616,11 +614,22 @@ public class LimsCNGDAO {
 	 */
 	public List<Sample> findSampleToCreate(final ContextValidation contextError, String sampleCode) throws SQLException, DAOException {		
 		List<Sample> results = null;
+		//FDS  25/01/2016 fusion des 2 appels a this.jdbcTemplate.query
+		String sqlQuery = "";
+		Object[] queryObj = null;
 		
-		//FDS code a factoriser
-		
-		if (sampleCode != null) { 
-			results = this.jdbcTemplate.query("select * from v_sample_tongl where code=? order by code, project desc, comments", new Object[]{sampleCode}
+		if (sampleCode != null) {	
+			sqlQuery = "select * from v_sample_tongl where code = ? order by code, project desc, comments";
+			Logger.debug("Import 1 sample ("+ sampleCode+ ") with SOLEXA sql: "+ sqlQuery );
+			queryObj = new Object[]{sampleCode};
+		}
+		else {		
+			sqlQuery = "select * from v_sample_tongl order by code, project desc, comments";
+			Logger.debug("Import samples with SOLEXA sql:" +  sqlQuery );
+			queryObj = new Object[]{};
+		}
+
+		results = this.jdbcTemplate.query(sqlQuery, queryObj
 			,new RowMapper<Sample>() {
 				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
@@ -630,19 +639,6 @@ public class LimsCNGDAO {
 					return s;
 				}
 			});
-		}
-		else { // mass loading
-			results = this.jdbcTemplate.query("select * from v_sample_tongl order by code, project desc, comments",new Object[]{}
-			,new RowMapper<Sample>() {
-				public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
-					ResultSet rs0 = rs;
-					int rowNum0 = rowNum;
-					ContextValidation ctxErr = contextError; 
-					Sample s=  commonSampleMapRow(rs0, rowNum0, ctxErr); 
-					return s;
-				}
-			});			
-		}	
 		
 		//demultiplexSample toujours necessaire car le code est le SOLEXA stock_barcode=> plusieurs samples peuvent avoir le meme code
 		return demultiplexSample(results);	
@@ -833,6 +829,9 @@ public class LimsCNGDAO {
 		String sqlQuery="";
 		String sqlClause="";
 		String sqlOrder="";
+		Object[] queryObj = null;
+
+	
 		
 		/* FDS 14/01/2016  on n'import plus les lanes
 		if (containerCategoryCode.equals("lane")) {
@@ -904,20 +903,21 @@ public class LimsCNGDAO {
 			}	
 		} */
 		
+		// fusion des 2 appels a jdbcTemplate.query
 		List<Container> results = null;
 		if (containerCode != null) {
 			// FDS note: si containerCategoryCode = sample-well ou library-well=> n'a aucun sens d'importer un puits tout seul!!!
 			Logger.debug("Import container " + containerCategoryCode +"("+ containerCode+ ") with SOLEXA sql: "+ sqlView + sqlClause + sqlOrder);
 			sqlQuery="select * from " + sqlView + " where container_code = ? " + sqlClause + sqlOrder;
+			queryObj = new Object[]{containerCode};
 		}
 		else {
 			Logger.debug("Import containers " + containerCategoryCode + " with SOLEXA sql: "+ sqlView + sqlClause+ sqlOrder);
 			sqlQuery="select * from " + sqlView + " where 1=1 " + sqlClause + sqlOrder;
+			queryObj = new Object[]{};
 		}
 		
-		// fusion des 2 appels a jdbcTemplate.query en passant par sqlQuery !! A FAIRE AILLEURS AUSSI
-
-		results = this.jdbcTemplate.query(sqlQuery, new Object[]{} ,new RowMapper<Container>() {
+		results = this.jdbcTemplate.query(sqlQuery, queryObj, new RowMapper<Container>() {
 		public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 				ResultSet rs0 = rs;
 				int rowNum0 = rowNum;
@@ -1087,8 +1087,7 @@ public class LimsCNGDAO {
 			Logger.debug("Modify containers " + containerCategoryCode + " with SOLEXA view: "+ sqlView );
 		}
 			
-		
-			results = this.jdbcTemplate.query("select * from " + sqlView + sqlClause + sqlOrder, queryObj 
+		results = this.jdbcTemplate.query("select * from " + sqlView + sqlClause + sqlOrder, queryObj 
 			,new RowMapper<Container>() {
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
@@ -1098,23 +1097,7 @@ public class LimsCNGDAO {
 					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, containerCategoryCode, experimentTypeCode, null);
 					return c;
 				}
-			});
-			
-		/*
-		else {
-			Logger.debug("Modify containers " + containerCategoryCode + " with SOLEXA sql: "+ sqlView );
-			results = this.jdbcTemplate.query("select * from " + sqlView + sqlOrder, new Object[]{} 
-			,new RowMapper<Container>() {
-				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
-					ResultSet rs0 = rs;
-					int rowNum0 = rowNum;
-					ContextValidation ctxErr = contextError; 
-					// en modification passer importState=null
-					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, containerCategoryCode, experimentTypeCode, null); 
-					return c;
-				}
-			});
-		 */
+			});			
 		
 		//FDS NOTE: c'est dans demultiplexContainer.createContent() que sont crees le(s) content(s) d'un container
 		return demultiplexContainer(results);			
@@ -1406,5 +1389,4 @@ public class LimsCNGDAO {
 		}
 		contextError.removeKeyFromRootKeyName(key);
 	}
-	
 }
