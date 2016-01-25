@@ -30,6 +30,7 @@ public class ImportDataCNG {
 		//new ExperimentImportCNG(Duration.create(4,TimeUnit.SECONDS),Duration.create(60,TimeUnit.MINUTES));	
 		
 		//vérifier s'il y a des containers a importer toutes les 10 minutes
-		new ContainerImportCNG(Duration.create(30,TimeUnit.SECONDS),Duration.create(10,TimeUnit.MINUTES));
+//pour dev: 1 au lieu de 30 secondes d'attente !!!
+		new ContainerImportCNG(Duration.create(1,TimeUnit.SECONDS),Duration.create(10,TimeUnit.MINUTES));
 	}
 }

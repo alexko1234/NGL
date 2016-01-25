@@ -166,7 +166,6 @@ public class LimsCNGDAO {
 			sample.taxonCode=rs.getString("taxon_code");
 			sample.importTypeCode=IMPORT_TYPE_CODE_DEFAULT;
 		
-			//FDS: plus necessaire car un sample n'appartient plus qu'a un seul projet ??
 			sample.projectCodes=new HashSet<String>();
 			if (rs.getString("project") != null) {
 				sample.projectCodes.add(rs.getString("project"));
@@ -184,15 +183,15 @@ public class LimsCNGDAO {
 			sample.properties=new HashMap<String, PropertyValue>();
 			sample.properties.put("limsCode", new PropertySingleValue(rs.getInt("lims_code")));
 	
-			/* FDS et GA 16/06/2015: le sampleType gDNA est commun CNG/CNG. les 3 propriétés  isAdapters, isFragmented, taxonSize 
-			    sont obligatoires au CNS. Comme elles n'existent pas au CNG, il faut leur fournir une valeur par defaut pour que
-			    la validation fonctionne
-			*/
+			/*GA+FDS 20/01/2016 depuis la separation des bases de description CNG/CNS  ce n'est plus necessaire...
+			  suppression de ces proprietes dans SampleServiceCNG
+			  
 			if (sample.typeCode.equals("gDNA")) {	
 				sample.properties.put("isAdapters", new PropertySingleValue(false)); 
 				sample.properties.put("isFragmented", new PropertySingleValue(false)); 
 				sample.properties.put("taxonSize", new PropertySingleValue(0)); 		   
-			}			
+			}
+			*/			
 			
 			return sample;
 	}
@@ -210,23 +209,26 @@ public class LimsCNGDAO {
 	 */
 	private Container commonContainerMapRow(ResultSet rs, int rowNum, ContextValidation ctxErr, String containerCategoryCode, String experimentTypeCode, String importState) throws SQLException {
 		Container container = new Container();
+		String specialContainerCategoryCode=containerCategoryCode; // garder une trace pour les cas xxx-well
 		
 		container.traceInformation = new TraceInformation();
 		container.traceInformation.setTraceInformation(InstanceHelpers.getUser());
 		container.code = rs.getString("container_code");
 		Logger.debug("[commonContainerMapRow] Container code :"+container.code);
-		
 
-		if (rs.getString("comment") != null) {
+		//FDS 20/01/2016 ne pas ajouter des commentaires vides  ""...
+		if ((rs.getString("comment") != null) && (! rs.getString("comment").equals(""))) {
 			container.comments = new ArrayList<Comment>();	
 			container.comments.add(new Comment(rs.getString("comment"), "ngl-data"));
 		}
 		
-		container.fromExperimentTypeCodes=new HashSet<String>();
-		container.fromExperimentTypeCodes.add(experimentTypeCode);
+		//FDS 20/01/2016 n'ajouter que s'il n'y a qq chose!!
+		if (experimentTypeCode != null) {
+			container.fromExperimentTypeCodes=new HashSet<String>();
+			container.fromExperimentTypeCodes.add(experimentTypeCode);
+		}
 		
 		container.state = new State(); 
-		
 		// si pas d'import State forcer a 'in stock'
 		if ( (importState == null)  || (importState.equals("is")) ) {
 			container.state.code = CONTAINER_STATE_CODE_IS; 
@@ -234,7 +236,6 @@ public class LimsCNGDAO {
 		else if (importState.equals("iw-p")) {
 			container.state.code = CONTAINER_STATE_CODE_IW_P;
 		}
-		
 		container.state.user = InstanceHelpers.getUser();
 		container.state.date = new Date(); 
 		
@@ -260,16 +261,14 @@ public class LimsCNGDAO {
 			else if ( containerCategoryCode.equals("sample-well")){
 				container.mesuredConcentration = new PropertySingleValue(concentration, "ng/µl");
 				
-				//FDS on a aussi un volume !!! TEST...........
+				//FDS dans ce cas on a aussi un volume 
 				Double volume= null;
 				if ((Float) rs.getFloat("volume") != null) {
 					 d = new BigDecimal(rs.getFloat("volume"));
 					 BigDecimal d2 = d.setScale(2, BigDecimal.ROUND_HALF_UP); 
 					 volume = d2.doubleValue();
 				}
-				// A VERIFIER  PAR GUILLAUME!!
-				Logger.debug("[commonContainerMapRow] volume :"+ volume );
-				container.calculedVolume.add(new PropertySingleValue(volume,"µl"));
+				container.mesuredVolume = new PropertySingleValue(volume,"µl");
 			}
 			/* PAS ENCORE EN PROD
 			else if ( containerCategoryCode.equals("library-well")){
@@ -336,37 +335,41 @@ public class LimsCNGDAO {
 			
 			content.properties = new HashMap<String, PropertyValue>();
 			
-			if (rs.getString("tag")!=null) { 
-				content.properties.put("tag", new PropertySingleValue(rs.getString("tag")));
-				content.properties.put("tagCategory", new PropertySingleValue(rs.getString("tagcategory")));
-			}
-			else {
-				content.properties.put("tag",new PropertySingleValue("-1")); // specific value for making comparison, suppress it at the end of the function...
-				content.properties.put("tagCategory",new PropertySingleValue("-1"));// specific value for making comparison, suppress it at the end of the function...
-			}				
-
-			if (rs.getString("exp_short_name")!=null) {
-				content.properties.put("libProcessTypeCode", new PropertySingleValue(rs.getString("exp_short_name")));
-			}
-			else {
-				Logger.warn("[commonContainerMapRow] content exp_short_name : null !!!!!!( normal pour sample-well..)");
-				content.properties.put("libProcessTypeCode", new PropertySingleValue("-1"));// specific value for making comparison, suppress it at the end of the function...
+			//FDS 20/01/2016 ne pas ajouter ces proprietes pour sample-well, elle ne peuvent pas exister...
+			if (! specialContainerCategoryCode.equals("sample-well"))
+			{
+				if (rs.getString("tag")!=null) { 
+					content.properties.put("tag", new PropertySingleValue(rs.getString("tag")));
+					content.properties.put("tagCategory", new PropertySingleValue(rs.getString("tagcategory")));
+				}
+				else {
+					content.properties.put("tag",new PropertySingleValue("-1")); // specific value for making comparison, suppressed in demultiplexContainer
+					content.properties.put("tagCategory",new PropertySingleValue("-1"));// specific value for making comparison, suppressed in demultiplexContainer
+				}				
+				if (rs.getString("exp_short_name")!=null) {
+					content.properties.put("libProcessTypeCode", new PropertySingleValue(rs.getString("exp_short_name")));
+				}
+				else {
+					Logger.warn("[commonContainerMapRow] content exp_short_name : null !!!!!!");
+					content.properties.put("libProcessTypeCode", new PropertySingleValue("-1"));// specific value for making comparison, suppressed in demultiplexContainer
+				}
+			
+				// FDS 15/06/2015 JIRA NGL-673 Ajout du barcode de la librairie solexa initiale ( aliquot )=> nouvelle propriété de content 
+				if (rs.getString("aliquote_code")!=null) { 
+					content.properties.put("sampleAliquoteCode", new PropertySingleValue(rs.getString("aliquote_code")));
+				}
+				else {
+					Logger.warn("[commonContainerMapRow] content aliquote code : null !!!!!");
+					content.properties.put("sampleAliquoteCode", new PropertySingleValue("-1"));// specific value for making comparison, suppressed in demultiplexContainer
+				}
 			}
 			
-			// FDS 15/06/2015 JIRA NGL-673 Ajout du barcode de la librairie solexa initiale ( aliquot )=> nouvelle propriété de content 
-			if (rs.getString("aliquote_code")!=null) { 
-				content.properties.put("sampleAliquoteCode", new PropertySingleValue(rs.getString("aliquote_code")));
-			}
-			else {
-				Logger.warn("[commonContainerMapRow] content aliquote code : null !!!!!!( normal pour sample-well..)");
-				content.properties.put("sampleAliquoteCode", new PropertySingleValue("-1"));
-			}
-			
-			container.contents.add(content);			
+			container.contents.add(content);	
 			
 			container.sampleCodes=new HashSet<String>();
-			container.sampleCodes.add(rs.getString("sample_code"));
-				
+			container.sampleCodes.add(rs.getString("sample_code"));	
+			Logger.debug("[commonContainerMapRow] container sampleCodes: " + container.sampleCodes);
+			
 		}
 
 		container.fromPurifingCode = null;				
@@ -394,6 +397,7 @@ public class LimsCNGDAO {
 		else {
 			Logger.error("Wrong value of seq_program_type : " + rs.getString("seq_program_type") + "! (expected SE ou PR) for code : " + rs.getString("support_code")); 
 		}
+		
 		return containerSupport;
 	}	
 	
@@ -403,7 +407,6 @@ public class LimsCNGDAO {
 	 */
 	
 	/*************************************************************************************************************************************************
-	 ** FDS 29/04/2015 remise dans l'etat initial.. garder findProjectToCreate et findProjectToModify....
 	 **
 	 * 1a - To get new projects
 	 * @param contextError
@@ -424,7 +427,6 @@ public class LimsCNGDAO {
 		});
 		return results;
 	}
-	
 
 	/*************************************************************************************************************************************************
 	 * 1b - To get projects that have been updated in Soxela
@@ -562,6 +564,7 @@ public class LimsCNGDAO {
 	public List<Sample> findSampleToModify(final ContextValidation contextError, String sampleCode) throws SQLException, DAOException {		
 		List<Sample> results = null;
 		
+		//FDS code a  factoriser !!!
 		if (sampleCode != null) { 
 			results = this.jdbcTemplate.query("select * from v_sample_updated_tongl where code=? order by code, project desc, comments", new Object[]{sampleCode}
 			,new RowMapper<Sample>() {
@@ -613,6 +616,8 @@ public class LimsCNGDAO {
 	 */
 	public List<Sample> findSampleToCreate(final ContextValidation contextError, String sampleCode) throws SQLException, DAOException {		
 		List<Sample> results = null;
+		
+		//FDS code a factoriser
 		
 		if (sampleCode != null) { 
 			results = this.jdbcTemplate.query("select * from v_sample_tongl where code=? order by code, project desc, comments", new Object[]{sampleCode}
@@ -750,10 +755,9 @@ public class LimsCNGDAO {
 		return results;
 	}
 	
-	
 	/*************************************************************************************************************************************************
-	 * Create a content and attach it to the contents of a container 
-	 * FDS comment : only if the container is multiplexed... othrerwise the container Content no1 has been created in common ContainerMapRow
+	 * Create a content and attach it to a container 
+	 * FDS comment : only if the container is multiplexed... otherrwise the container Content no1 has been created in common ContainerMapRow
 	 * @param results
 	 * @param posCurrent
 	 * @param posNext
@@ -785,7 +789,7 @@ public class LimsCNGDAO {
 		}
 		
 		//FDS 16/06/2015 JIRA NGL-673: ajouter aliquote code 
-		//FDS 19/01/2016 !! pas d'aliquote code pour des containers qui contiennent des samles
+		//FDS 19/01/2016 !! pas d'aliquote code pour des containers qui contiennent des samples
 		if (results.get(posNext).contents.toArray(new Content[0])[0].properties.get("sampleAliquoteCode") == null) {
 			Logger.debug("[createContent] content.sampleCode =" + content.sampleCode + " pas de aliquote code !!!!!");
 		}
@@ -799,13 +803,12 @@ public class LimsCNGDAO {
 		return results;
 	}
 	
-
 	/*************************************************************************************************************************************************
-	 * To get new containers
+	 * To create new containers
 	 * @param contextError
 	 * @param containerCategoryCode
 	 * @param experimentTypeCode
-	 * @param importState 22/10/2015 parametre pour reprise avec creation a des states differents
+	 * @param importState 22/10/2015 parametre pour avec creation a des states differents
 	 * @return
 	 * @throws SQLException
 	 * @throws DAOException
@@ -816,11 +819,10 @@ public class LimsCNGDAO {
 	}
 	
 	/**
-	 * To get new containers
-	 * method for mass loading
+	 * To create a particular new container
 	 * @param containerCategoryCode
 	 * @param experimentTypeCode
-	 * @param importState 22/10/2015 parametre pour reprise avec creation a des states differents
+	 * @param importState 22/10/2015 parametre reprise avec creation a des states differents
 	 * @param contextError
 	 * @return
 	 * @throws DAOException 
@@ -832,7 +834,7 @@ public class LimsCNGDAO {
 		String sqlClause="";
 		String sqlOrder="";
 		
-		/* FDS 14/01/2016 normalement on n'import plus les lanes
+		/* FDS 14/01/2016  on n'import plus les lanes
 		if (containerCategoryCode.equals("lane")) {
 			sqlView = "v_flowcell_tongl";
 			sqlClause="";
@@ -902,11 +904,10 @@ public class LimsCNGDAO {
 			}	
 		} */
 		
-		
 		List<Container> results = null;
 		if (containerCode != null) {
 			// FDS note: si containerCategoryCode = sample-well ou library-well=> n'a aucun sens d'importer un puits tout seul!!!
-			Logger.debug("Import container " + containerCategoryCode +"("+ containerCode+ ") with SOLEXA sql: "+ sqlView + sqlClause+ sqlOrder);
+			Logger.debug("Import container " + containerCategoryCode +"("+ containerCode+ ") with SOLEXA sql: "+ sqlView + sqlClause + sqlOrder);
 			sqlQuery="select * from " + sqlView + " where container_code = ? " + sqlClause + sqlOrder;
 		}
 		else {
@@ -915,7 +916,6 @@ public class LimsCNGDAO {
 		}
 		
 		// fusion des 2 appels a jdbcTemplate.query en passant par sqlQuery !! A FAIRE AILLEURS AUSSI
-		// results = this.jdbcTemplate.query("select * from " + sqlView + " order by container_code, project desc, sample_code, tag, exp_short_name", new Object[]{} 
 
 		results = this.jdbcTemplate.query(sqlQuery, new Object[]{} ,new RowMapper<Container>() {
 		public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -932,23 +932,20 @@ public class LimsCNGDAO {
 		return demultiplexContainer(results);			
 	}
 	
-	
 	/*************************************************************************************************************************************************
-	 * To get all containers (for mass loading the first time or for migration)
+	 * To create all containers (for mass loading the first time or for migration)
+	 * pas de parametre importState => tout sera créé 'In Stock'...
 	 * @param contextError
 	 * @param containerCategoryCode
 	 * @param experimentTypeCode
 	 * @param 
 	 * @return
 	 * @throws DAOException
-	 *  DEPRECATED... ( voir findContainerToCreate...)
 	 */
 	public List<Container> findAllContainer(final ContextValidation contextError, String containerCategoryCode, String experimentTypeCode) throws DAOException {
 		final String _containerCategoryCode = containerCategoryCode;
-		String sqlView="";
-		String sqlQuery="";
-		String sqlClause="";
-		String sqlOrder="";
+		String sqlView = "";
+		String sqlOrder = "";
 		
 		/* 19/01/2016 normalement on n'importe plus les lanes
 		if (containerCategoryCode.equals("lane")) {
@@ -970,7 +967,7 @@ public class LimsCNGDAO {
 		}
 		else if (containerCategoryCode.equals("sample-well")) {
 				sqlView = "v_sample_plate_tongl_reprise"; // TODO ???
-				sqlOrder=" order by container_code, project desc, sample_code";
+				sqlOrder = " order by container_code, project desc, sample_code";
 				
 		}
 		/* PAS ENCORE EN PROD
@@ -984,7 +981,7 @@ public class LimsCNGDAO {
 			else {
 				//autres experimentTypeCode a venir ??
 				sqlView = "TODO??";
-				sqlOrder="??"
+				sqlOrder = "??"
 			}
 		}
 		*/
@@ -995,7 +992,8 @@ public class LimsCNGDAO {
 				ResultSet rs0 = rs;
 				int rowNum0 = rowNum;
 				ContextValidation ctxErr = contextError; 
-				Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, _containerCategoryCode,experimentTypeCode, null); 
+				//importState non précisé => tout sera créé 'In Stock'...
+				Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, _containerCategoryCode, experimentTypeCode, null);
 				return c;
 			}
 		});
@@ -1003,10 +1001,10 @@ public class LimsCNGDAO {
 		//FDS NOTE: c'est dans demultiplexContainer.createContent() que sont crees le(s) content(s) d'un container
 		return demultiplexContainer(results);			
 	}
-	
 
 	/*************************************************************************************************************************************************
-	 * To get containers updated in CNG database (Solexa database)
+	 * To update containers
+	 * pas de param importState => .... 
 	 * @param contextError
 	 * @param containerCategoryCode
 	 * @param experimentTypeCode
@@ -1020,10 +1018,9 @@ public class LimsCNGDAO {
 			throws DAOException {
 		return findContainerToModify(contextError, null, containerCategoryCode,experimentTypeCode);
 	}
-
 	
 	/**
-	 * To get a particular container updated (with its code) !! 2 categories: lane / tube
+	 * To update a particular container
 	 * method for mass loading
 	 * @param contextError
 	 * @param containerCategoryCode
@@ -1032,12 +1029,11 @@ public class LimsCNGDAO {
 	 * @return
 	 * @throws DAOException 
 	 */
-	public List<Container> findContainerToModify(final ContextValidation contextError, String containerCode, String containerCategoryCode, String experimentTypeCode) 
-			throws DAOException {		
-		String sqlView="";
-		String sqlQuery="";
-		String sqlClause="";
-		String sqlOrder="";
+	public List<Container> findContainerToModify(final ContextValidation contextError, String containerCode, String containerCategoryCode, String experimentTypeCode) throws DAOException {		
+		String sqlView = "";
+		String sqlClause = "";
+		String sqlOrder = "";
+		Object[] queryObj=null;
 		
 		/* normalement on n'import plus les lanes...
 		if (containerCategoryCode.equals("lane")) {
@@ -1055,11 +1051,13 @@ public class LimsCNGDAO {
 				//autres experimentTypeCode a venir ??
 				sqlView = "TODO ??";
 			}
-			sqlOrder=" order by container_code, project desc, sample_code, tag, exp_short_name";
+			sqlOrder = " order by container_code, project desc, sample_code, tag, exp_short_name";
 		}
 		else if (containerCategoryCode.equals("sample-well")) {
-			sqlView = "v_sample_plate_updated_tongl";
-			sqlOrder="order by container_code, project desc, sample_code";
+			sqlView ="v_sample_plate_updated_tongl";
+			
+			// pas de tag ni exp_short_name
+			sqlOrder = " order by container_code, project desc, sample_code";
 		}
 		/* PAS ENCORE EN PROD
 		else if (containerCategoryCode.equals("library-well")) {
@@ -1077,21 +1075,32 @@ public class LimsCNGDAO {
 		}
 		*/
 	
-		List<Container> results = null;		
+		List<Container> results = null;	
+		
+		// FDS 21/01/2016 fusion des 2 appel a jdbcTemplate.query
 		if (containerCode != null) {
-			Logger.debug("Modify 1 container " + containerCategoryCode +"("+ containerCode+ ") with SOLEXA sql: "+ sqlView );
-			results = this.jdbcTemplate.query("select * from " + sqlView + " where container_code = ? "+ sqlOrder, new Object[]{containerCode} 
+			sqlClause = " where container_code = ? ";
+			queryObj = new Object[]{containerCode};
+			
+			Logger.debug("Modify 1 container " + containerCategoryCode +"("+ containerCode+ ") with SOLEXA view: "+ sqlView );
+		}else {
+			Logger.debug("Modify containers " + containerCategoryCode + " with SOLEXA view: "+ sqlView );
+		}
+			
+		
+			results = this.jdbcTemplate.query("select * from " + sqlView + sqlClause + sqlOrder, queryObj 
 			,new RowMapper<Container>() {
 				public Container mapRow(ResultSet rs, int rowNum) throws SQLException {
 					ResultSet rs0 = rs;
 					int rowNum0 = rowNum;
 					ContextValidation ctxErr = contextError;
-					// en modification passer importState=null
-					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, containerCategoryCode, experimentTypeCode, null); 
+					// en modification passer importState=null... ecrasera l'ancienne  valeur et mettra 'In Stock' ??????
+					Container c=  commonContainerMapRow(rs0, rowNum0, ctxErr, containerCategoryCode, experimentTypeCode, null);
 					return c;
 				}
 			});
-		}
+			
+		/*
 		else {
 			Logger.debug("Modify containers " + containerCategoryCode + " with SOLEXA sql: "+ sqlView );
 			results = this.jdbcTemplate.query("select * from " + sqlView + sqlOrder, new Object[]{} 
@@ -1105,7 +1114,7 @@ public class LimsCNGDAO {
 					return c;
 				}
 			});
-		}
+		 */
 		
 		//FDS NOTE: c'est dans demultiplexContainer.createContent() que sont crees le(s) content(s) d'un container
 		return demultiplexContainer(results);			
@@ -1121,6 +1130,7 @@ public class LimsCNGDAO {
 	 */
 	public HashMap<String, PropertyValue<String>>  setSequencingProgramTypeToContainerSupport(final ContextValidation contextError, String mode)  throws DAOException {
 		String sqlView;
+		String sqlQuery;
 		
 		if (mode.equals("creation")) {
 			sqlView = "v_flowcell_tongl"; 
@@ -1130,7 +1140,9 @@ public class LimsCNGDAO {
 		}
 		
 		List<ContainerSupport> results = null;
-		results = this.jdbcTemplate.query("select support_code, seq_program_type from " + sqlView + " order by container_code, project desc, sample_code, tag, exp_short_name", new Object[]{} 
+		
+		sqlQuery= "select support_code, seq_program_type from " + sqlView + " order by container_code, project desc, sample_code, tag, exp_short_name";
+		results = this.jdbcTemplate.query(sqlQuery, new Object[]{} 
 		,new RowMapper<ContainerSupport>() {
 			public ContainerSupport mapRow(ResultSet rs, int rowNum) throws SQLException {
 				ResultSet rs0 = rs;
