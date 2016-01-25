@@ -62,7 +62,7 @@ public class ProcessServiceTEST extends AbstractProcessService {
 		l.add(DescriptionFactory.newProcessType("Run Opgen", "opgen-run", ProcessCategory.find.findByCode("mapping"),null , getExperimentTypes("opgen-depot"), getExperimentTypes("opgen-depot").get(0), getExperimentTypes("opgen-depot").get(0),getExperimentTypes("ext-to-opgen-depot").get(0), DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		*/
 		l.add(DescriptionFactory.newProcessType("Test", "test", ProcessCategory.find.findByCode("library"),getTestProperties() , 
-				Arrays.asList(getPET("test-one-to-one",0),getPET("test-one-to-one-2",0)),
+				Arrays.asList(getPET("ext-to-test-one-to-one",-1),getPET("test-one-to-one",0),getPET("test-one-to-one-2",0)),
 				getExperimentTypes("test-one-to-one").get(0), getExperimentTypes("test-one-to-one-2").get(0),getExperimentTypes("ext-to-test-one-to-one").get(0), DescriptionFactory.getInstitutes(Constants.CODE.TEST)));
 		
 		

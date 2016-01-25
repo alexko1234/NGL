@@ -360,6 +360,10 @@ public class Containers extends CommonController {
 				if(CollectionUtils.isNotEmpty(processTypes)){
 					for(ProcessType processType:processTypes){
 						listProcessType.add(processType.code);
+						
+						//TODO GA NEW CODE TO ASSOCIATE expType and processType 
+						List<ExperimentType> previousExpType = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCodeAndProcessTypeCode(containersSearch.nextExperimentTypeCode,processType.code);
+						Logger.debug("NB Previous exp : "+previousExpType.size());
 					}
 				}
 				//TODO Erreur quand pas de processus pour un type d'expérience
@@ -367,6 +371,8 @@ public class Containers extends CommonController {
 				if(CollectionUtils.isNotEmpty(listProcessType)){
 					queryElts.add(DBQuery.or(DBQuery.in("processTypeCode", listProcessType),DBQuery.in("processTypeCodes", listProcessType)));
 				}
+				
+				
 				
 			}else{
 				//throw new RuntimeException("nextExperimentTypeCode = "+ containersSearch.nextExperimentTypeCode +" does not exist!");
