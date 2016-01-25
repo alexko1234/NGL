@@ -45,6 +45,13 @@ import org.apache.commons.collections.CollectionUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
+import akka.actor.ActorRef;
+import akka.actor.Props;
+import play.Play;
+import play.libs.Akka;
+import rules.services.RulesActor6;
+import rules.services.RulesMessage;
+import rules.services.RulesServices6;
 import validation.ContextValidation;
 import validation.processes.instance.ProcessValidationHelper;
 import workflows.container.ContSupportWorkflows;
@@ -693,6 +700,11 @@ public class ExpWorkflowsHelper {
 			exp.status.user = validation.getUser();
 		}
 		
+	}
+	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+
+	public static void callWorkflowRules(ContextValidation validation, Experiment exp) {
+		rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", exp, validation),null);
 	}
 
 

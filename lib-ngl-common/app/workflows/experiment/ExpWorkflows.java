@@ -70,6 +70,8 @@ public class ExpWorkflows extends Workflows<Experiment>{
 			}
 			ExpWorkflowsHelper.updateStateOfProcesses(exp, getNewState("IP", validation.getUser()), validation);			
 		}
+		//TODO call workflow rules
+		ExpWorkflowsHelper.callWorkflowRules(validation, exp);
 	}
 	
 	public void applyErrorPostStateRules(ContextValidation validation, Experiment exp, State nextState){
