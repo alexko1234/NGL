@@ -32,6 +32,7 @@ public class Submission extends DBObject implements IValidation {
 	public Date submissionDate = null;
 	public List<String> refStudyCodes = new ArrayList<String>();    // study referencés par cette soumission, pas forcement à soumettre
 	public List<String> refSampleCodes = new ArrayList<String>(); // liste des codes des samples references par cette soumission, pas forcement a soumettre à l'EBI.
+	//public List<String> refReadSetCodes = new ArrayList<String>(); // liste des codes des readSet references par cette soumission(pas de soumission).
 	public String studyCode = null;          // study à soumettre à l'ebi si strategy_internal_study
 	public String analysisCode = null;       // analysis à soumettre à l'ebi
 	public List<String> sampleCodes = new ArrayList<String>(); // liste des codes des sample à soumettre à l'ebi
