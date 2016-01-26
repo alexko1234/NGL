@@ -5,7 +5,6 @@ import java.util.List;
 import fr.cea.ig.DBObject;
 
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.experiment.instance.ContainerUsed;
 import org.mongojack.MongoCollection;
 
 @MongoCollection(name="Basket")

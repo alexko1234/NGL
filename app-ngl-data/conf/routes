@@ -29,12 +29,11 @@ GET		/api/instance/protocols					controllers.instance.protocol.Protocols.save()
 GET 	/api/import/updateTara					controllers.instance.ImportDatas.updateTara()
 
 GET		/migration-container-support			controllers.migration.MigrationDataCNS.updateFromExperimentTypeCodesContainerSupport()
-GET		/migration-experiment					controllers.migration.MigrationExperiment.migrationExperiment()
+
 GET		/migration-sequencing-run				controllers.migration.AddSequencingProgramTypeToRun.migration()
 GET		/migration-vcc							controllers.migration.ValuationCriteriaCodes.migration()
 GET		/migration-percentage-content			controllers.migration.AddPercentageContent.migration()
 GET		/migration-runstartdate-opgen-depot		controllers.migration.AddRunStartDateToOpgenDepot.migration()
-GET		/migration-ngl-sq						controllers.migration.MigrationNGLSEQ.migration()
 
 GET		/migration-tara							controllers.migration.cns.MigrationTara.migration()
 GET 	/deleteSample							controllers.migration.cns.MigrationTara.deleteSampleNotInLims()
@@ -42,7 +41,7 @@ GET 	/deleteSample							controllers.migration.cns.MigrationTara.deleteSampleNot
 GET		/migration-sampleOnInputContainer-process 		 controllers.migration.AddSampleOnInputContainerInProcess.migration()
 GET		/cns/migration-sampleType				controllers.migration.cns.MigrationSampleType.migration()
 GET		/cns/migration						    controllers.migration.cns.MigrationReadSetFileCNS.migration()
-GET		/cns/migration-container				controllers.migration.cns.MigrationContainerMeasure.migration()
+
 GET		/cns/libprocesstype-ext					controllers.migration.cns.MigrationLibProcessTypeRunExt.migration()
 GET		/cns/update-content-sample			    controllers.migration.cns.UpdateSampleTypeCodeToContainer.migrationContainer()
 GET		/cns/update-readset					    controllers.migration.cns.UpdateSampleTypeCodeToContainer.migrationReadset()		

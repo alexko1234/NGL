@@ -26,7 +26,6 @@ import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TransientState;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
-import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.ManyToOneContainer;
 import models.laboratory.run.instance.File;

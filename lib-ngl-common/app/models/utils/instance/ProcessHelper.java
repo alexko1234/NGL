@@ -9,7 +9,6 @@ import java.util.Set;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
-import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OutputContainerUsed;
@@ -104,53 +103,7 @@ public class ProcessHelper {
 
 
 	}
-
-	@Deprecated
-	public static void updateNewContainerSupportCodes(List<ContainerUsed> outputContainerUseds,
-			ContainerUsed inputContainerUsed,Experiment experiment) {
-		List<Query> queryOr = new ArrayList<Query>();
-		queryOr.add(DBQuery.is("containerInputCode",inputContainerUsed.code));
-		queryOr.add(DBQuery.in("newContainerSupportCodes",inputContainerUsed.locationOnContainerSupport.code));
-		Query query=null;
-		query=DBQuery.and(DBQuery.in("experimentCodes",experiment.code));
-		if(queryOr.size()!=0){
-			query=query.and(DBQuery.or(queryOr.toArray(new Query[queryOr.size()])));
-		}
-
-		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,query,
-				DBUpdate.pushAll("newContainerSupportCodes",ContainerUsedHelper.getContainerSupportCodesOld(outputContainerUseds)),true);
-
-	}
-
-	@Deprecated
-	public static void updateNewContainerSupportCodes(ContainerUsed outputContainerUsed,
-			ContainerUsed inputContainerUsed, Experiment experiment) {
-		List<Query> queryOr = new ArrayList<Query>();
-		Query query=null;
-		String containerSupportCode=null;
-
-		queryOr.add(DBQuery.is("containerInputCode",inputContainerUsed.code));
-
-		if(inputContainerUsed.locationOnContainerSupport==null){
-			containerSupportCode=inputContainerUsed.code;
-		}else { 
-			containerSupportCode=inputContainerUsed.locationOnContainerSupport.code;
-		}
-
-		queryOr.add(DBQuery.in("newContainerSupportCodes",containerSupportCode));
-
-		query=DBQuery.and(DBQuery.in("experimentCodes",experiment.code));
-		if(queryOr.size()!=0){
-			query=query.and(DBQuery.or(queryOr.toArray(new Query[queryOr.size()])));
-		}
-
-		Logger.debug("Push newContainerSupportCodes "+ outputContainerUsed.locationOnContainerSupport.code +" in Process with experiment "+experiment.code 
-				+ ", containers input "+inputContainerUsed.code 
-				+", containers new "+inputContainerUsed.code);
-		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,query,
-				DBUpdate.push("newContainerSupportCodes",outputContainerUsed.locationOnContainerSupport.code),true);
-	}
-
+	
 	public static Process applyRules(Process proc, ContextValidation ctx ,String rulesName){
 		ArrayList<Object> facts = new ArrayList<Object>();
 		facts.add(proc);

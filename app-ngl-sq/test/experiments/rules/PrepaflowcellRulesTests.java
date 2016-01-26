@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import org.junit.Test;
-
-import experiments.ExperimentTestHelper;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
@@ -17,12 +14,16 @@ import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.ManyToOneContainer;
 import models.laboratory.instrument.instance.InstrumentUsed;
+
+import org.junit.Test;
+
 import play.Logger;
 import play.Logger.ALogger;
 import utils.AbstractTests;
 import utils.Constants;
 import validation.ContextValidation;
 import validation.experiment.instance.ExperimentValidationHelper;
+import experiments.ExperimentTestHelper;
 
 public class PrepaflowcellRulesTests extends AbstractTests {
 	

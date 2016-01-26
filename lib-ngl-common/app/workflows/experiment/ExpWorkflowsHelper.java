@@ -1,7 +1,6 @@
 package workflows.experiment;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,7 +17,6 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
@@ -31,32 +29,31 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
-import models.laboratory.experiment.instance.OneToVoidContainer;
 import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
-import models.utils.InstanceHelpers;
 import models.utils.instance.ContainerHelper;
+import models.utils.instance.ExperimentHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
-import akka.actor.ActorRef;
-import akka.actor.Props;
+
+
 import play.Play;
 import play.libs.Akka;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
-import rules.services.RulesServices6;
 import validation.ContextValidation;
-import validation.processes.instance.ProcessValidationHelper;
 import workflows.container.ContSupportWorkflows;
 import workflows.container.ContWorkflows;
 import workflows.process.ProcWorkflows;
+import akka.actor.ActorRef;
+import akka.actor.Props;
 import fr.cea.ig.MongoDBDAO;
 
 public class ExpWorkflowsHelper {
@@ -151,37 +148,6 @@ public class ExpWorkflowsHelper {
 				DBUpdate.set("currentExperimentTypeCode", exp.typeCode).push("experimentCodes", exp.code),true);
 		
 	}
-
-	/*
-	@Deprecated	
-	public static void updateInputContainersAndProcesses(Experiment exp, ContextValidation ctxVal) {
-		List<String> inputContainerCodes = exp.getAllInputContainers().stream().map((InputContainerUsed c) -> c.code).collect(Collectors.toList());
-		if(inputContainerCodes.size() > 0){
-			List<Container> inputContainers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("code", inputContainerCodes)).toList();
-			ContainerWorkflows.setContainerState(inputContainers,"IW-E", ctxVal);
-			//TODO GA Revoir Gestion workflow process			
-			Set<String> processCodes = inputContainers.stream().map((Container c)-> c.inputProcessCodes).flatMap(Set::stream).collect(Collectors.toSet());			
-			MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME,Process.class,
-					DBQuery.in("code", processCodes).notEquals("state.code", "F"), 
-					DBUpdate.set("currentExperimentTypeCode", exp.typeCode).push("experimentCodes", exp.code),true);		
-		}
-	}
-	*/
-	/*
-	@Deprecated
-	public static void updateInputContainersAndProcessesState(Experiment exp, ContextValidation ctxVal, String containerStateCode, String processStateCode) {
-		List<String> inputContainerCodes = exp.getAllInputContainers().stream().map((InputContainerUsed c) -> c.code).collect(Collectors.toList());
-		if(inputContainerCodes.size() > 0){
-			List<Container> inputContainers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("code", inputContainerCodes).notEquals("state.code", containerStateCode)).toList();
-			ContainerWorkflows.setContainerState(inputContainers,containerStateCode, ctxVal);
-			
-			//TODO GA Revoir Gestion workflow process
-			Set<String> processCodes = inputContainers.stream().map((Container c)-> c.inputProcessCodes).flatMap(Set::stream).collect(Collectors.toSet());			
-			List<Process> processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class,DBQuery.in("code", processCodes).notEquals("state.code", processStateCode)).toList();
-			ProcessWorkflows.setProcessState(processes, processStateCode, null, ctxVal);
-		}
-	}
-	*/
 	
 	public static void updateAddContainersToExperiment(Experiment expFromUser, ContextValidation ctxVal, State nextState) {
 		Experiment expFromDB = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, expFromUser.code);
@@ -237,8 +203,8 @@ public class ExpWorkflowsHelper {
 	}
 
 	private static List<String> getNewContainerCodes(Experiment expFromDB, Experiment expFromUser) {
-		List<String> containerCodesFromDB = expFromDB.getAllInputContainers().stream().map((InputContainerUsed c) -> c.code).collect(Collectors.toList());
-		List<String> containerCodesFromUser = expFromUser.getAllInputContainers().stream().map((InputContainerUsed c) -> c.code).collect(Collectors.toList());
+		List<String> containerCodesFromDB = ExperimentHelper.getAllInputContainers(expFromDB).stream().map((InputContainerUsed c) -> c.code).collect(Collectors.toList());
+		List<String> containerCodesFromUser = ExperimentHelper.getAllInputContainers(expFromUser).stream().map((InputContainerUsed c) -> c.code).collect(Collectors.toList());
 		
 		List<String> newContainersCodes = new ArrayList<String>();
 		for(String codeFromDB:containerCodesFromUser){
@@ -250,11 +216,12 @@ public class ExpWorkflowsHelper {
 	}
 
 
-
+	
+		
 
 	private static List<String> getRemoveContainerCodes(Experiment expFromDB, Experiment expFromUser) {
-		List<String> containerCodesFromDB = expFromDB.getAllInputContainers().stream().map((InputContainerUsed c) -> c.code).collect(Collectors.toList());
-		List<String> containerCodesFromUser = expFromUser.getAllInputContainers().stream().map((InputContainerUsed c) -> c.code).collect(Collectors.toList());
+		List<String> containerCodesFromDB = ExperimentHelper.getAllInputContainers(expFromDB).stream().map((InputContainerUsed c) -> c.code).collect(Collectors.toList());
+		List<String> containerCodesFromUser = ExperimentHelper.getAllInputContainers(expFromUser).stream().map((InputContainerUsed c) -> c.code).collect(Collectors.toList());
 		
 		List<String> removeContainersCodes = new ArrayList<String>();
 		for(String codeFromDB:containerCodesFromDB){

@@ -2,7 +2,6 @@ package validation.experiment.instance;
 
 import java.util.List;
 
-
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OutputContainerUsed;
 import validation.ContextValidation;

@@ -1,9 +1,5 @@
 package models.laboratory.experiment.instance;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import models.laboratory.common.description.Level;
 import models.laboratory.container.description.ContainerSupportCategory;
 import validation.ContextValidation;
 import validation.experiment.instance.AtomicTransfertMethodValidationHelper;
@@ -17,17 +13,6 @@ public class OneToVoidContainer extends AtomicTransfertMethod {
 		AtomicTransfertMethodValidationHelper.validateOneInputContainer(inputContainerUseds, contextValidation);
 		AtomicTransfertMethodValidationHelper.validateVoidOutputContainer(outputContainerUseds, contextValidation);
 		
-	}
-
-	@Override
-	public ContextValidation createOutputContainerUsed(Experiment experiment,ContextValidation contextValidation) {
-		return contextValidation;
-	}
-	
-
-	@Override
-	public ContextValidation saveOutputContainers(Experiment experiment, ContextValidation contextValidation) {
-		return contextValidation;
 	}
 
 	@Override
