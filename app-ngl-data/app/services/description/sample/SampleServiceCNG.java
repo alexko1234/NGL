@@ -53,10 +53,10 @@ public class SampleServiceCNG extends AbstractSampleService {
 		
 		// il y a du ChIP et du MedIP au CNG mais ce n'est pas detaillé au niveau sample dans la base Solexa  creer un.SampleType de meme nom que SampleCategory
 		l.add(newSampleType("Materiel Immunoprecipite", "IP-sample", SampleCategory.find.findByCode("IP-sample"), getSampleCNGPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
-		l.add(newSampleType("ADN Génomique", "gDNA", SampleCategory.find.findByCode("DNA"), getPropertyDefinitionsADNGenomic(), getInstitutes(Constants.CODE.CNG))); 
+		l.add(newSampleType("ADN Génomique", "gDNA", SampleCategory.find.findByCode("DNA"), getSampleCNGPropertyDefinitions(), getInstitutes(Constants.CODE.CNG))); 
 
 		//FDS 20/01/2016 l.add(newSampleType("ADN Génomique", "gDNA", SampleCategory.find.findByCode("DNA"), getPropertyDefinitionsADNGenomic(), getInstitutes(Institute.CODE.CNG))); 
-		l.add(newSampleType("ADN Génomique", "gDNA", SampleCategory.find.findByCode("DNA"), getSampleCNGPropertyDefinitions(), getInstitutes(Institute.CODE.CNG))); 
+		l.add(newSampleType("ADN Génomique", "gDNA", SampleCategory.find.findByCode("DNA"), getSampleCNGPropertyDefinitions(), getInstitutes(Constants.CODE.CNG))); 
 
 		/* pas de subdivisions dans la base solexa...=> SampleType=SampleCategory*/
 		l.add(newSampleType("FAIRE", "FAIRE", SampleCategory.find.findByCode("FAIRE"), getSampleCNGPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
@@ -66,7 +66,7 @@ public class SampleServiceCNG extends AbstractSampleService {
 		
 		//default values		
 		l.add(newSampleType("Défaut", "default-sample-cng", SampleCategory.find.findByCode("default"), getSampleCNGPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
-		l.add(newSampleType("Inconnu", "unknown", SampleCategory.find.findByCode("unknown"), getSampleCommonPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
+		l.add(newSampleType("Inconnu", "unknown", SampleCategory.find.findByCode("unknown"), getSampleCNGPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
 		
 		//use only in  NGL-BI. Please not used in sample import !!!!!!!!!!!!!!!
 		l.add(newSampleType("Non défini", "not-defined", SampleCategory.find.findByCode("unknown"),null, getInstitutes(Constants.CODE.CNG)));
