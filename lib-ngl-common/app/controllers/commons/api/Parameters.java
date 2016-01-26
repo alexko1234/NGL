@@ -13,6 +13,7 @@ import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -72,7 +73,10 @@ public class Parameters extends CommonController {
 		queries.add(DBQuery.is("typeCode", form.typeCode));
 		
 		if (StringUtils.isNotBlank(form.sequence)) { 
-			queries.add(DBQuery.in("sequence", form.sequence));
+			queries.add(DBQuery.is("sequence", form.sequence));
+		}
+		if(CollectionUtils.isNotEmpty(form.categoryCodes)){
+			queries.add(DBQuery.in("categoryCode", form.categoryCodes));
 		}
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
