@@ -378,13 +378,7 @@ public class ContainerHelper {
 
 			ContainerSupport updatedCs = support.getValue();
 
-			
-			/* 22/01/2016 TEST REMPLACER ..
-			updatedCs.traceInformation = dbCs.traceInformation;
-			updatedCs.traceInformation.modifyDate = new Date();
-			updatedCs.traceInformation.modifyUser = "ngl-data";
-			*/
-		
+			// FDS: la constante ngl.app.models.Constants NGL_DATA_USER n'est pas accessible ici...
 			updatedCs.traceInformation = InstanceHelpers.getUpdateTraceInformation(dbCs.traceInformation, "ngl-data");
 
 			// FDS 22/01/2016 Pourquoi ce test ??? pourquoi tout containerSupport modifié n'est pas automatiquement supprimé ???

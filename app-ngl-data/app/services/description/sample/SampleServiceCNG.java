@@ -47,6 +47,7 @@ public class SampleServiceCNG extends AbstractSampleService {
 		List<SampleType> l = new ArrayList<SampleType>();
 		
 		// GA 20/01/2016 utiliser getSampleCNGPropertyDefinitions dans tous les cas !!
+		//TODO ...remplacer   Institute.CODE.CNG   par   Constants.CODE.CNG
 		
 		l.add(newSampleType("ARN", "RNA", SampleCategory.find.findByCode("RNA"), getSampleCNGPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));
 		
@@ -56,7 +57,6 @@ public class SampleServiceCNG extends AbstractSampleService {
 
 		//FDS 20/01/2016 l.add(newSampleType("ADN Génomique", "gDNA", SampleCategory.find.findByCode("DNA"), getPropertyDefinitionsADNGenomic(), getInstitutes(Institute.CODE.CNG))); 
 		l.add(newSampleType("ADN Génomique", "gDNA", SampleCategory.find.findByCode("DNA"), getSampleCNGPropertyDefinitions(), getInstitutes(Institute.CODE.CNG))); 
-
 
 		/* pas de subdivisions dans la base solexa...=> SampleType=SampleCategory*/
 		l.add(newSampleType("FAIRE", "FAIRE", SampleCategory.find.findByCode("FAIRE"), getSampleCNGPropertyDefinitions(), getInstitutes(Constants.CODE.CNG)));

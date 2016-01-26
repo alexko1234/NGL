@@ -368,8 +368,7 @@ public class LimsCNGDAO {
 			
 			container.sampleCodes=new HashSet<String>();
 			container.sampleCodes.add(rs.getString("sample_code"));	
-			Logger.debug("[commonContainerMapRow] container sampleCodes: " + container.sampleCodes);
-			
+			Logger.debug("[commonContainerMapRow] container sampleCodes: " + container.sampleCodes);		
 		}
 
 		container.fromPurifingCode = null;				
@@ -592,7 +591,6 @@ public class LimsCNGDAO {
 		return demultiplexSample(results);	
 	}
 	
-	
 	/*************************************************************************************************************************************************
 	 * 2e To get new samples
 	 * @param contextError
@@ -714,7 +712,6 @@ public class LimsCNGDAO {
 			
 			for (Content content : r.contents) {		
 				//remove bad properties;  FDS comments 04/05/2015 : valeurs -1 positionnées dans commonContainerMapRow 
-
 				// FDS 17/06/2015 ajout sampleAliquoteCode pour JIRA NGL-673
 				for (String propName : new String[]{"tag", "tagCategory", "libProcessTypeCode", "sampleAliquoteCode"}) {
 					PropertyValue<?> propVal = content.properties.get(propName);
@@ -753,7 +750,6 @@ public class LimsCNGDAO {
 	
 	/*************************************************************************************************************************************************
 	 * Create a content and attach it to a container 
-	 * FDS comment : only if the container is multiplexed... otherrwise the container Content no1 has been created in common ContainerMapRow
 	 * @param results
 	 * @param posCurrent
 	 * @param posNext
@@ -771,7 +767,6 @@ public class LimsCNGDAO {
 		content.sampleCategoryCode =results.get(posNext).contents.toArray(new Content[0])[0].sampleCategoryCode;
 		
 		content.properties = new HashMap<String, PropertyValue>();
-		
 		// FDS: il peut ne pas y avoir d'index et pourtant pas de pb de null pointer exception ici ???
 		content.properties.put("tag", new PropertySingleValue(results.get(posNext).contents.toArray(new Content[0])[0].properties.get("tag").value));
 		content.properties.put("tagCategory", new PropertySingleValue(results.get(posNext).contents.toArray(new Content[0])[0].properties.get("tagCategory").value));
@@ -809,7 +804,6 @@ public class LimsCNGDAO {
 	 * @throws SQLException
 	 * @throws DAOException
 	 */
-
 	public List<Container> findContainerToCreate(final ContextValidation contextError, String containerCategoryCode, String experimentTypeCode, String importState) throws SQLException, DAOException {
 		return findContainerToCreate(contextError, null, containerCategoryCode, experimentTypeCode, importState);
 	}
@@ -823,7 +817,6 @@ public class LimsCNGDAO {
 	 * @return
 	 * @throws DAOException 
 	 */
-
 	public List<Container> findContainerToCreate(final ContextValidation contextError, String containerCode, String containerCategoryCode, String experimentTypeCode, String importState) throws DAOException {
 		String sqlView="";
 		String sqlQuery="";
@@ -831,8 +824,6 @@ public class LimsCNGDAO {
 		String sqlOrder="";
 		Object[] queryObj = null;
 
-	
-		
 		/* FDS 14/01/2016  on n'import plus les lanes
 		if (containerCategoryCode.equals("lane")) {
 			sqlView = "v_flowcell_tongl";
@@ -1012,8 +1003,6 @@ public class LimsCNGDAO {
 	 * @    throws SQLException  NON dit Nicolas...car jdbcTemplate.query l'enrobe lui meme dans une DataAccessException
 	 * @throws DAOException
 	 */
-	
-	// enlever throws SQLException  
 	public List<Container> findContainerToModify(final ContextValidation contextError, String containerCategoryCode, String experimentTypeCode) 
 			throws DAOException {
 		return findContainerToModify(contextError, null, containerCategoryCode,experimentTypeCode);
@@ -1110,7 +1099,7 @@ public class LimsCNGDAO {
 	 * @param mode
 	 * @return
 	 * @throws DAOException
-	 */
+	 */	
 	public HashMap<String, PropertyValue<String>>  setSequencingProgramTypeToContainerSupport(final ContextValidation contextError, String mode)  throws DAOException {
 		String sqlView;
 		String sqlQuery;
@@ -1146,7 +1135,6 @@ public class LimsCNGDAO {
 		return mapCodeSupportSequencing;
 	}
 	
-	
 	/*************************************************************************************************************************************************
 	 * FDS 14/01/2016 DEPRECATED...on n'importe plus les flowcells
 	 * for eventually find all the "depot" (in case of a migration) 
@@ -1168,7 +1156,7 @@ public class LimsCNGDAO {
 	/*************************************************************************************************************************************************
 	 * FDS 14/01/2016 DEPRECATED...on n'importe plus les flowcells
 	 * for normal use
-	 */
+	 */	
 	public List<Experiment> findIlluminaDepotExperiment(final ContextValidation contextError, final String protocoleCode) throws DAOException {
 		List<Experiment> results = this.jdbcTemplate.query("SELECT * FROM v_depotfc_tongl ORDER BY 1", new Object[]{} 
 		,new RowMapper<Experiment>() {
@@ -1187,7 +1175,7 @@ public class LimsCNGDAO {
 	/*************************************************************************************************************************************************
 	 * To get the indexes and update the "Parameter" collection
 	 * FDS 30/04/2015: nglbi_code=>code, short_name=>shortName (et non plus code), cng_name=>name!
-	 */
+	 */	
 	public List<Index> findIndexIlluminaToCreate(final ContextValidation contextError)throws SQLException {
 		List<Index> results = this.jdbcTemplate.query("select nglbi_code, short_name, cng_name,(CASE WHEN type = 1 THEN 'SINGLE-INDEX'::text WHEN type = 2 THEN 'DUAL-INDEX'::text WHEN type = 3 THEN 'MID'::text ELSE NULL::text END) AS code_category,sequence from t_index order by 1" 
 				,new RowMapper<Index>() {
@@ -1247,7 +1235,6 @@ public class LimsCNGDAO {
 		
 		contextError.removeKeyFromRootKeyName(key);
 	}
-
 	
 	/*************************************************************************************************************************************************
 	 * FDS 14/01/2016 DEPRECATED on n'importe plus les lanes...
@@ -1322,7 +1309,7 @@ public class LimsCNGDAO {
 	
 	/*************************************************************************************************************************************************
 	 * FDS 18/01/2016 UPDATE sample plates import/update dates 
-	 *    Pour les plaques de samples, il est impossible de passer paer la mise a jour de la table t_sampe
+	 *    Pour les plaques de samples, il est impossible de passer par la mise a jour de la table t_sampe
 	 *    qui est deja mise a jour lors des sample au sens NGL..
 	 *    on ne peut donc que passer par la mise a jour de la table t_group...
 	 * @param containers
@@ -1363,7 +1350,6 @@ public class LimsCNGDAO {
 	/*************************************************************************************************************************************************
 	 * FDS 14/10/2016 DEPRECATED...on n'importe plus les flowcell..
 	 * UPDATE main table witch contains experiments of type "depots" in Solexa to keep trace of the imports
-	 * 
 	 * @param experiments
 	 * @param contextError
 	 * @param mode
