@@ -68,16 +68,16 @@ public class ProcessServiceCNS extends AbstractProcessService {
 			*/
 			//Bionano
 			l.add(DescriptionFactory.newProcessType("NLRS, Irys chip, dépôt", "bionano-nlrs-process", ProcessCategory.find.findByCode("mapping"), getPropertyDefinitionsBionano(), 
-					Arrays.asList(getPET("ext-to-nlrs-prep",-1),getPET("irys-nlrs-prep",0),getPET("irys-chip-preparation",1),getPET("bionano-depot",2)), 
-					getExperimentTypes("irys-nlrs-prep").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-nlrs-prep").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+					Arrays.asList(getPET("ext-to-irys-nlrs-prep",-1),getPET("irys-nlrs-prep",0),getPET("irys-chip-preparation",1),getPET("bionano-depot",2)), 
+					getExperimentTypes("irys-nlrs-prep").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-irys-nlrs-prep").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
 			l.add(DescriptionFactory.newProcessType("Irys Chip, dépôt", "bionano-chip-process", ProcessCategory.find.findByCode("mapping"), getPropertyDefinitionsBionano(), 
-					Arrays.asList(getPET("ext-to-nlrs-prep",-1),getPET("irys-chip-preparation",0),getPET("bionano-depot",1)),
-					getExperimentTypes("irys-chip-preparation").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-nlrs-prep").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+					Arrays.asList(getPET("ext-to-irys-chip-preparation",-1),getPET("irys-chip-preparation",0),getPET("bionano-depot",1)),
+					getExperimentTypes("irys-chip-preparation").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-irys-chip-preparation").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
 			l.add(DescriptionFactory.newProcessType("Redépôt BioNano", "bionano-run", ProcessCategory.find.findByCode("mapping"), getPropertyDefinitionsBionano(), 
-					Arrays.asList(getPET("ext-to-nlrs-prep",-1), getPET("bionano-depot",0)), 
-					getExperimentTypes("bionano-depot").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-nlrs-prep").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+					Arrays.asList(getPET("ext-to-bionano-depot",-1), getPET("bionano-depot",0)), 
+					getExperimentTypes("bionano-depot").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-bionano-depot").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 								
 		}
 	

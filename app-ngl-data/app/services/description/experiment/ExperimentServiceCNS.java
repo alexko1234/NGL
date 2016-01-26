@@ -58,26 +58,34 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 	public void saveExperimentTypes(
 			Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
-
-		l.add(newExperimentType("Ext to dépôt opgen","ext-to-opgen-depot",null,
+		//Depot Opgen
+		l.add(newExperimentType("Ext to dépôt opgen","ext-to-opgen-depot",null, -1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), getPropertyDefinitionExtToOpgenDepot(), null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(newExperimentType("Depot Opgen", "opgen-depot",null,1600
-				, ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionOpgenDepot(), 
+		l.add(newExperimentType("Depot Opgen", "opgen-depot",null,3500,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionOpgenDepot(), 
 				getInstrumentUsedTypes("ARGUS"), "ManyToOne", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
+		
+		//Illumina
 		//Prepaflowcell : to finish
-		l.add(newExperimentType("Ext to prepa flowcell","ext-to-prepa-flowcell",null,
+		l.add(newExperimentType("Ext to prepa flowcell","ext-to-prepa-flowcell",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
+		/*
 		l.add(newExperimentType("Ext to qPCR","ext-to-qpcr",null,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(newExperimentType("Ext to Solution-stock","ext-to-solution-stock",null,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		*/
+		
+		l.add(newExperimentType("Solution stock","solution-stock",null,1000,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionSolutionStock(),
+				getInstrumentUsedTypes("hand","tecan-evo-100"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		
@@ -86,16 +94,12 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 				getInstrumentUsedTypes("cBot-interne","cBot"), "ManyToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(newExperimentType("Prep. flowcell ordonnée", "prepa-fc-ordered",null,1200, 
+		l.add(newExperimentType("Prep. flowcell ordonnée", "prepa-fc-ordered",null,1300, 
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcellOrdered(),
 				getInstrumentUsedTypes("cBot"), "ManyToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 
-		l.add(newExperimentType("Solution stock","solution-stock",null,1000,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionSolutionStock(),
-				getInstrumentUsedTypes("hand","tecan-evo-100"),"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(newExperimentType("Depot Illumina", "illumina-depot",null, 1400,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(),
@@ -104,64 +108,73 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		
 		
 		//Nanopore
-		l.add(newExperimentType("Ext to Fragmentation-réparation","ext-to-nanopore-frg-precr",null,
+		l.add(newExperimentType("Ext to Fragmentation-réparation","ext-to-nanopore-frg-precr",null, -1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(newExperimentType("Ext to Librairie ONT","ext-to-lib-ont",null,
+		l.add(newExperimentType("Ext to Librairie ONT","ext-to-lib-ont",null, -1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(newExperimentType("Ext to Depot Nanopore","ext-to-nanopore-depot",null,
+		l.add(newExperimentType("Ext to Depot Nanopore","ext-to-nanopore-depot",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(newExperimentType("Fragmentation-réparation","nanopore-fragmentation",null,
+		l.add(newExperimentType("Fragmentation-réparation","nanopore-fragmentation",null,2100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 				getPropertyFragmentationNanopore(), getInstrumentUsedTypes("eppendorf-mini-spin-plus"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(newExperimentType("Aliquot","aliquoting",null,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()),
-				getPropertyAliquoting(), getInstrumentUsedTypes("hand"),"OneToMany", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(newExperimentType("Librairie ONT","nanopore-library",null,
+		l.add(newExperimentType("Librairie ONT","nanopore-library",null,2200,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 				getPropertyLibrairieNanopore(), getInstrumentUsedTypes("hand"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(newExperimentType("Depot Nanopore","nanopore-depot",null,200,
+		l.add(newExperimentType("Depot Nanopore","nanopore-depot",null,2300,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDepotNanopore(),
 				getInstrumentUsedTypes("minion","mk1"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 
-		l.add(newExperimentType("Pool Tube","pool-tube",null,1200,
+		l.add(newExperimentType("Pool Tube","pool-tube",null,1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
 				getInstrumentUsedTypes("hand","tecan-evo-100"),"ManyToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-	
+		l.add(newExperimentType("Aliquot","aliquoting",null,2,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()),
+				getPropertyAliquoting(), getInstrumentUsedTypes("hand"),"OneToMany", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
 		
-		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){	
-			
+		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+		
 			//Bionano
 			
-			l.add(newExperimentType("Ext to prep NLRS","ext-to-nlrs-prep",null,
+			l.add(newExperimentType("Ext to Irys Prep NLRS","ext-to-irys-nlrs-prep",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
-			l.add(newExperimentType("Irys Prep NLRS","irys-nlrs-prep",null,2000,
+			l.add(newExperimentType("Ext to Préparation Irys CHIP","ext-to-irys-chip-preparation",null,-1,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
+			l.add(newExperimentType("Ext to Dépôt BioNano","ext-to-bionano-depot",null,-1,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
+			
+			l.add(newExperimentType("Irys Prep NLRS","irys-nlrs-prep",null,3100,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionIrysPrepNLRS(),
 					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 			
-			l.add(newExperimentType("Préparation Irys CHIP","irys-chip-preparation",null,2100,
+			l.add(newExperimentType("Préparation Irys CHIP","irys-chip-preparation",null,3200,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionPreparationIrysChip(),
 					getInstrumentUsedTypes("irys-hand"),"ManyToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 			
-			l.add(newExperimentType("Dépôt BioNano","bionano-depot",null,2200,
+			l.add(newExperimentType("Dépôt BioNano","bionano-depot",null,3300,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionDepotBionano(),
 					getInstrumentUsedTypes("IRYS"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
@@ -329,15 +342,16 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 
 	public void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
 
+		//newExperimentTypeNode("ext-to-qpcr", getExperimentTypes("ext-to-qpcr").get(0), false, false, false, null, null, null, null).save();	
+		//newExperimentTypeNode("ext-to-solution-stock", getExperimentTypes("ext-to-solution-stock").get(0), false, false, false, null, null, null, null).save();
+		
 		newExperimentTypeNode("ext-to-opgen-depot", getExperimentTypes("ext-to-opgen-depot").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("ext-to-prepa-flowcell", getExperimentTypes("ext-to-prepa-flowcell").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("ext-to-qpcr", getExperimentTypes("ext-to-qpcr").get(0), false, false, false, null, null, null, null).save();	
-		newExperimentTypeNode("ext-to-solution-stock", getExperimentTypes("ext-to-solution-stock").get(0), false, false, false, null, null, null, null).save();	
-
 		newExperimentTypeNode("opgen-depot",getExperimentTypes("opgen-depot").get(0),false,false, false,getExperimentTypeNodes("ext-to-opgen-depot"),null,null,null).save();
 		
 		
-		newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,getExperimentTypeNodes("ext-to-qpcr"),null,null,getExperimentTypes("pool-tube")).save();
+		newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,/*getExperimentTypeNodes("ext-to-qpcr")*/null,null,null,getExperimentTypes("pool-tube")).save();
+		
+		newExperimentTypeNode("ext-to-prepa-flowcell", getExperimentTypes("ext-to-prepa-flowcell").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false, false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","solution-stock"),null,null,null).save();
 		newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),false, false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","solution-stock"),null,null,null).save();
 		newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false, false,false,getExperimentTypeNodes("prepa-flowcell","prepa-fc-ordered"),	null,null,null).save();
@@ -356,11 +370,13 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 	
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			//Bionano
-			newExperimentTypeNode("ext-to-nlrs-prep", getExperimentTypes("ext-to-nlrs-prep").get(0), false, false, null, null, null).save();	
-			newExperimentTypeNode("irys-nlrs-prep",getExperimentTypes("irys-nlrs-prep").get(0),false,false,getExperimentTypeNodes("ext-to-nlrs-prep"),null,null).save();
-			newExperimentTypeNode("irys-chip-preparation",getExperimentTypes("irys-chip-preparation").get(0),false,false,getExperimentTypeNodes("irys-nlrs-prep"),null,null).save();
-			newExperimentTypeNode("bionano-depot",getExperimentTypes("bionano-depot").get(0),false,false,getExperimentTypeNodes("irys-chip-preparation"),null,null).save();
+			newExperimentTypeNode("ext-to-irys-nlrs-prep", getExperimentTypes("ext-to-irys-nlrs-prep").get(0), false, false, null, null, null).save();	
+			newExperimentTypeNode("ext-to-irys-chip-preparation", getExperimentTypes("ext-to-irys-chip-preparation").get(0), false, false, null, null, null).save();	
+			newExperimentTypeNode("ext-to-bionano-depot", getExperimentTypes("ext-to-bionano-depot").get(0), false, false, null, null, null).save();	
 
+			newExperimentTypeNode("irys-nlrs-prep",getExperimentTypes("irys-nlrs-prep").get(0),false,false,getExperimentTypeNodes("ext-to-irys-nlrs-prep"),null,null).save();
+			newExperimentTypeNode("irys-chip-preparation",getExperimentTypes("irys-chip-preparation").get(0),false,false,getExperimentTypeNodes("ext-to-irys-chip-preparation","irys-nlrs-prep"),null,null).save();
+			newExperimentTypeNode("bionano-depot",getExperimentTypes("bionano-depot").get(0),false,false,getExperimentTypeNodes("ext-to-bionano-depot","irys-chip-preparation"),null,null).save();
 			
 			/*
 			newExperimentTypeNode("ext-to-library", getExperimentTypes("ext-to-library").get(0), false, false, null, null, null).save();

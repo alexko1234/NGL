@@ -57,47 +57,49 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	public void saveExperimentTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 		
-		l.add(newExperimentType("Ext to prepa flowcell","ext-to-prepa-flowcell",null,
+		l.add(newExperimentType("Ext to prepa flowcell","ext-to-prepa-flowcell",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		//FDS ajout 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered
-		l.add(newExperimentType("Ext to prepa flowcell ordered","ext-to-prepa-fc-ordered",null,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
-		l.add(newExperimentType("Préparation flowcell","prepa-flowcell",null,1100,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcellCNG(),
-				getInstrumentUsedTypes("cBot", "cBot-onboard"),"ManyToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
-		//FDS ajout 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered, attention pas cBot-onboard                                
-		l.add(newExperimentType("Prép. flowcell ordonnée","prepa-fc-ordered",null,1100,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcellOrderedCNG(),
-				getInstrumentUsedTypes("cBot"),"ManyToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
-		l.add(newExperimentType("Ext to librairie dénaturée","ext-to-denat-dil-lib",null,
+		l.add(newExperimentType("Ext to prepa flowcell ordered","ext-to-prepa-fc-ordered",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 02-02-2015, intrument Used =>robot oui mais lequel???
-		l.add(newExperimentType("Dénaturation-dilution","denat-dil-lib",null,1100,
+		l.add(newExperimentType("Dénaturation-dilution","denat-dil-lib",null,1000,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsDenatDilLibCNG(),
 				getInstrumentUsedTypes("hand"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
 		//GA : 03/08/2015 new declaration. lib-normalization became void to avoid to display this step in IHM
-		l.add(newExperimentType("Librairie normalisée","lib-normalization",null,1000,
+		l.add(newExperimentType("Librairie normalisée","lib-normalization",null,1100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, "OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
+				
+		
+		l.add(newExperimentType("Préparation flowcell","prepa-flowcell",null,1200,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcellCNG(),
+				getInstrumentUsedTypes("cBot", "cBot-onboard"),"ManyToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
+		//FDS ajout 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered, attention pas cBot-onboard                                
+		l.add(newExperimentType("Prép. flowcell ordonnée","prepa-fc-ordered",null,1300,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcellOrderedCNG(),
+				getInstrumentUsedTypes("cBot"),"ManyToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
+		l.add(newExperimentType("Ext to librairie dénaturée","ext-to-denat-dil-lib",null,-1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
 		//FDS 28/10/2015  ajout "HISEQ4000","HISEQX"
 		l.add(newExperimentType("Dépôt sur séquenceur", "illumina-depot",null, 1400,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),getPropertyDefinitionsIlluminaDepot(),
 				getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500","HISEQ4000","HISEQX"), "OneToVoid", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
-		l.add(newExperimentType("Aliquot","aliquoting",null,
+		l.add(newExperimentType("Aliquot","aliquoting",null,1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()),
 				getPropertyAliquoting(), getInstrumentUsedTypes("hand"),"OneToMany", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));

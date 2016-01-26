@@ -6,8 +6,6 @@ public class ProcessExperimentType {
 	public ExperimentType experimentType;
 	public Integer positionInProcess;
 	
-	
-	
 	public ProcessExperimentType() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -17,7 +15,7 @@ public class ProcessExperimentType {
 			Integer processOrder) {
 		super();
 		this.experimentType = experimentType;
-		this.positionInProcess = processOrder;
+		this.positionInProcess = processOrder;		
 	}
 	
 	
