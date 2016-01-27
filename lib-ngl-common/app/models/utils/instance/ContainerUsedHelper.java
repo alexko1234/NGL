@@ -7,7 +7,6 @@ import java.util.List;
 
 
 import models.laboratory.experiment.instance.AbstractContainerUsed;
-import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.InputContainerUsed;
 
 public class ContainerUsedHelper {
@@ -30,12 +29,4 @@ public class ContainerUsedHelper {
 		return containerSupportCodes;
 	}
 	
-	public static List<String> getContainerSupportCodesOld(List<ContainerUsed> inputContainerUseds) {
-		List<String> containerSupportCodes=new ArrayList<String>();
-		for(ContainerUsed containerUsed:inputContainerUseds){
-			containerSupportCodes.add(containerUsed.locationOnContainerSupport.code);
-		}
-		return containerSupportCodes;
-	}
-
 }

@@ -1,14 +1,15 @@
 package validation.experiment.instance;
 
+import static models.utils.InstanceConstants.CONTAINER_COLL_NAME;
+import static models.utils.InstanceConstants.CONTAINER_SUPPORT_COLL_NAME;
+import static models.utils.InstanceConstants.EXPERIMENT_COLL_NAME;
+import static validation.utils.ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.mongojack.DBQuery;
-
-import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
@@ -20,15 +21,15 @@ import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
-import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.instance.InstrumentUsed;
-import static models.utils.InstanceConstants.*;
+
+import org.mongojack.DBQuery;
+
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
-import validation.utils.BusinessValidationHelper;
-import static validation.utils.ValidationConstants.*;
 import validation.utils.ValidationHelper;
+import fr.cea.ig.MongoDBDAO;
 
 public class ContainerUsedValidationHelper extends CommonValidationHelper {
 

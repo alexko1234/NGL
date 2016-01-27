@@ -6,7 +6,6 @@ import models.laboratory.common.instance.TBoolean;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.instance.Experiment;
 import models.utils.InstanceConstants;
-import models.utils.instance.ProcessHelper;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
@@ -70,7 +69,6 @@ public class ExpWorkflows extends Workflows<Experiment>{
 			}
 			ExpWorkflowsHelper.updateStateOfProcesses(exp, getNewState("IP", validation.getUser()), validation);			
 		}
-		//TODO call workflow rules
 		ExpWorkflowsHelper.callWorkflowRules(validation, exp);
 	}
 	

@@ -69,13 +69,6 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			contextValidation.putObject(FIELD_TYPE_CODE, typeCode);
 			contextValidation.addKeyToRootKeyName("state");
 			state.validate(contextValidation);
-			
-			/*
-			String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
-			if("F".equals(stateCode)){
-				ValidationHelper.required(contextValidation, state.resolutionCodes, "resolutionCodes");
-			}
-			*/
 			contextValidation.removeKeyFromRootKeyName("state");
 			contextValidation.removeObject(FIELD_TYPE_CODE);
 		}		
@@ -89,17 +82,10 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			contextValidation.removeKeyFromRootKeyName("status");
 			contextValidation.removeObject(FIELD_TYPE_CODE);
 			
-			String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
-			/*
-			if("F".equals(stateCode)){
-				ValidationHelper.required(contextValidation, status.resolutionCodes, "resolutionCodes");
-			}
-			*/
+			String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);			
 			if("F".equals(stateCode) && TBoolean.UNSET.equals(status.valid)){
 				contextValidation.addErrors("status", "error.validationexp.status.empty");
 			}
-			
-			
 			
 		}	
 		
@@ -140,35 +126,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 		contextValidation.removeObject(FIELD_TYPE_CODE);
 		contextValidation.removeObject(FIELD_INST_USED);
 	}
-/*
-	public static void validateInstrumentUsed(InstrumentUsed instrumentUsed, Map<String,PropertyValue> properties, ContextValidation contextValidation) {
-		if(ValidationHelper.required(contextValidation, instrumentUsed, "instrumentUsed")){
-			InstrumentUsedType instrumentUsedType = BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, instrumentUsed.typeCode, "typeCode", InstrumentUsedType.find,true);
 
-			String stateCode= getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
-
-			if(instrumentUsedType!=null){
-				List<PropertyDefinition> listPropertyDefinitions=instrumentUsedType.getPropertiesDefinitionDefaultLevel();
-				contextValidation.addKeyToRootKeyName("instrumentProperties");
-				ValidationHelper.validateProperties(contextValidation, properties, listPropertyDefinitions, false);
-				contextValidation.removeKeyFromRootKeyName("instrumentProperties");
-				//TODO MUST BE DROOLS
-				for(PropertyDefinition propertyDefinition:listPropertyDefinitions){			
-					if(propertyDefinition.code.equals("containerSupportCode")){
-						if(!stateCode.equals("F") && properties.get("containerSupportCode")!=null){
-							ContainerSupportValidationHelper.validateUniqueInstanceCode(contextValidation,properties.get("containerSupportCode").value.toString() , ContainerSupport.class, InstanceConstants.CONTAINER_SUPPORT_COLL_NAME);
-						}
-					}
-				}
-			}
-
-			contextValidation.addKeyToRootKeyName("instrumentUsed");
-			instrumentUsed.validate(contextValidation); 
-			contextValidation.removeKeyFromRootKeyName("instrumentUsed");
-			
-		}
-	}
-*/
 	public static void validateInstrumentUsed(InstrumentUsed instrumentUsed, Map<String,PropertyValue> properties, ContextValidation contextValidation) {
 		if(ValidationHelper.required(contextValidation, instrumentUsed, "instrumentUsed")){
 			contextValidation.addKeyToRootKeyName("instrumentUsed");
@@ -190,24 +148,6 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 		validationfacts.add(exp);
 		exp.atomicTransfertMethods.forEach((AtomicTransfertMethod atm) -> validationfacts.add(atm));
 		
-		/*
-		for(int i=0;i<exp.atomicTransfertMethods.size();i++){
-			
-			
-			
-			if(ManyToOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
-				ManyToOneContainer atomic = (ManyToOneContainer) exp.atomicTransfertMethods.get(i);
-				validationfacts.add(atomic);
-			}else if(OneToOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
-				OneToOneContainer atomic = (OneToOneContainer) exp.atomicTransfertMethods.get(i);
-				validationfacts.add(atomic);
-			}else if(OneToVoidContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
-				OneToVoidContainer atomic = (OneToVoidContainer) exp.atomicTransfertMethods.get(i);
-				Logger.debug("Add oneToVoid ");
-				validationfacts.add(atomic);
-			}
-		}
-		*/	
 		validateRules(validationfacts, contextValidation);
 	}
 
@@ -257,31 +197,4 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 		}
 	}
 	
-	@Deprecated
-	public static void validateNewState(Experiment experiment,
-			ContextValidation contextValidation){
-		ExperimentValidationHelper.validateResolutionCodes(experiment.typeCode,experiment.state.resolutionCodes,contextValidation);
-		ExperimentValidationHelper.validationProtocoleCode(experiment.typeCode,experiment.protocolCode,contextValidation);
-		//Validation InstrumentUsedType
-		ExperimentValidationHelper.validateInstrumentUsed(experiment.instrument,experiment.instrumentProperties,contextValidation);
-		//TODO Validate Properties
-	}
-	@Deprecated
-	public static void validateResolutionCodes(String typeCode,Set<String> resoCodes,ContextValidation contextValidation){
-		String stateCode= getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
-		if(stateCode.equals("F")){
-			if(required(contextValidation, resoCodes, "resolution")){
-				CommonValidationHelper.validateResolutionCodes(typeCode,resoCodes,contextValidation);
-			}
-		}else {
-			CommonValidationHelper.validateResolutionCodes(typeCode,resoCodes,contextValidation);
-		}
-	}
-/*
-	public static void validateState(String typeCode, State state, ContextValidation contextValidation){
-		if(contextValidation.getObject(FIELD_STATE_CODE)!=null){
-			CommonValidationHelper.validateState(typeCode, state, contextValidation);
-		}
-	}
-*/
 }

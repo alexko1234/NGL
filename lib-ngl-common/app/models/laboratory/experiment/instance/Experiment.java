@@ -1,6 +1,22 @@
 package models.laboratory.experiment.instance;
 
-import java.util.ArrayList;
+
+import static validation.common.instance.CommonValidationHelper.FIELD_EXPERIMENT;
+import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
+import static validation.common.instance.CommonValidationHelper.validateCode;
+import static validation.common.instance.CommonValidationHelper.validateId;
+import static validation.common.instance.CommonValidationHelper.validateTraceInformation;
+import static validation.experiment.instance.ExperimentValidationHelper.validateAtomicTransfertMethods;
+import static validation.experiment.instance.ExperimentValidationHelper.validateComments;
+import static validation.experiment.instance.ExperimentValidationHelper.validateInstrumentUsed;
+import static validation.experiment.instance.ExperimentValidationHelper.validateReagents;
+import static validation.experiment.instance.ExperimentValidationHelper.validateRules;
+import static validation.experiment.instance.ExperimentValidationHelper.validateState;
+import static validation.experiment.instance.ExperimentValidationHelper.validateStatus;
+import static validation.experiment.instance.ExperimentValidationHelper.validationExperimentCategoryCode;
+import static validation.experiment.instance.ExperimentValidationHelper.validationExperimentType;
+import static validation.experiment.instance.ExperimentValidationHelper.validationProtocoleCode;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -18,8 +34,6 @@ import org.mongojack.MongoCollection;
 
 import validation.ContextValidation;
 import validation.IValidation;
-import static validation.common.instance.CommonValidationHelper.*;
-import static validation.experiment.instance.ExperimentValidationHelper.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -82,35 +96,6 @@ public class Experiment extends DBObject implements IValidation {
 		this.code=code;		
 	}
 	
-	@Deprecated
-	@JsonIgnore
-	public List<InputContainerUsed> getAllInputContainers(){
-		List<InputContainerUsed> containersUSed=new ArrayList<InputContainerUsed>();
-		if(this.atomicTransfertMethods!=null){
-			for(int i=0;i<this.atomicTransfertMethods.size();i++){
-				if(this.atomicTransfertMethods.get(i)!=null && this.atomicTransfertMethods.get(i).inputContainerUseds.size()>0){
-					containersUSed.addAll(this.atomicTransfertMethods.get(i).inputContainerUseds);
-				}
-				
-			}
-
-		}
-		return containersUSed;
-	}
-	@Deprecated
-	@JsonIgnore
-	public List<OutputContainerUsed> getAllOutputContainers(){
-		List<OutputContainerUsed> containersUSed=new ArrayList<OutputContainerUsed>();
-		if(this.atomicTransfertMethods!=null){
-			for(int i=0;i<this.atomicTransfertMethods.size();i++){
-				if(this.atomicTransfertMethods.get(i).outputContainerUseds != null && this.atomicTransfertMethods.get(i).outputContainerUseds.size()!=0){
-					containersUSed.addAll(this.atomicTransfertMethods.get(i).outputContainerUseds);
-				}
-			}
-
-		}
-		return containersUSed;
-	}
 	
 	@JsonIgnore
 	@Override
@@ -134,12 +119,6 @@ public class Experiment extends DBObject implements IValidation {
 		validateReagents(reagents,contextValidation); //TODO active reagents validation inside ReagentUsed
 		validateTraceInformation(traceInformation, contextValidation);		
 		validateComments(comments, contextValidation);
-		
-		
-		//TODO GA Validation not mandatory because is computing by NGL and can decrease performance ??
-		validateInputContainerSupport(inputContainerSupportCodes,getAllInputContainers(),contextValidation);
-		//validateOutputContainerSupport(outputContainerSupportCodes,getAllOutputContainers(),contextValidation); //because empty with void
-		//TODO GA Validate projectCodes, sampleCodes. same question 
 		
 		validateRules(this,contextValidation);
 		contextValidation.removeObject(FIELD_EXPERIMENT);
