@@ -22,7 +22,8 @@ import play.api.modules.spring.Spring;
 
 @Repository
 public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentUsedType>{
-
+	InstrumentDAO instrumentDAO = Spring.getBeanOfType(InstrumentDAO.class);
+	
 	protected InstrumentUsedTypeDAO() {
 		super("instrument_used_type", InstrumentUsedType.class, InstrumentUsedTypeMappingQuery.class, 
 				"SELECT distinct c.id, c.fk_common_info_type, c.fk_instrument_category ",
@@ -149,7 +150,7 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 		String sqlExp = "DELETE FROM experiment_type_instrument_type WHERE fk_instrument_used_type=?";
 		jdbcTemplate.update(sqlExp, instrumentUsedType.id);
 		//remove instruments
-		removeInstruments(instrumentUsedType.id);
+		deleteFKFromInstruments(instrumentUsedType.id);
 		removeContainerSupportCategoryIn(instrumentUsedType.id);
 		removeContainerSupportCategoryOut(instrumentUsedType.id);
 		//remove instrument used type
@@ -160,23 +161,38 @@ public class InstrumentUsedTypeDAO extends AbstractDAOCommonInfoType<InstrumentU
 	}
 
 
+	
 	private void saveInstruments(InstrumentUsedType instrumentUsedType, List<Instrument> instruments, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
-			removeInstruments(instrumentUsedType.id);
+			deleteFKFromInstruments(instrumentUsedType.id);
 		}		
 		if(instruments!=null && instruments.size()>0){
-			InstrumentDAO instrumentDAO = Spring.getBeanOfType(InstrumentDAO.class);
 			for(Instrument instrument : instruments){
-				instrument.instrumentUsedType = instrumentUsedType;
-				instrumentDAO.save(instrument);
+				if(!instrumentDAO.isCodeExist(instrument.code)){
+					Logger.debug("create new instrument : "+instrument.code);
+					instrument.instrumentUsedType = instrumentUsedType;
+					instrumentDAO.save(instrument);
+				}else{
+					updateFKInstrumentUsedType(instrument.code, instrumentUsedType.id);
+				}
 			}
 		}
 	}
 
-	
-	
-	private void removeInstruments(Long id) {
-		String sqlInst = "DELETE FROM instrument WHERE fk_instrument_used_type=?";
+	private void updateFKInstrumentUsedType(String code, Long id) {
+		String sqlInst = "update instrument set fk_instrument_used_type=? WHERE code=?";
+		jdbcTemplate.update(sqlInst, id, code);
+	}
+
+	private void removeInstruments(List<Instrument> instruments) {
+		for(Instrument instrument : instruments){
+			instrumentDAO.remove(instrument);
+		}
+		
+	}
+
+	private void deleteFKFromInstruments(Long id) {
+		String sqlInst = "update instrument set fk_instrument_used_type=null WHERE fk_instrument_used_type=?";
 		jdbcTemplate.update(sqlInst, id);
 	}
 
