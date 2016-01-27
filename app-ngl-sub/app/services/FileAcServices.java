@@ -31,6 +31,7 @@ import javax.mail.MessagingException;
 
 import mail.MailServiceException;
 import mail.MailServices;
+import models.laboratory.run.instance.ReadSet;
 import models.sra.submit.common.instance.Sample;
 import models.sra.submit.common.instance.Study;
 import models.sra.submit.common.instance.Submission;
@@ -58,16 +59,24 @@ public class FileAcServices  {
 			for (int i = 0; i < submission.sampleCodes.size() ; i++) {
 				MongoDBDAO.update(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class,
 						DBQuery.is("code", submission.sampleCodes.get(i)).notExists("accession"),
-						DBUpdate.set("state.code", "submitted").set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 			
+						DBUpdate.set("state.code", status).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 			
 			}
 		}
 		if (submission.experimentCodes != null){
 			for (int i = 0; i < submission.experimentCodes.size() ; i++) {
+				Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, submission.experimentCodes.get(i));
+				// Updater objet experiment :
 				MongoDBDAO.update(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class,
 						DBQuery.is("code", submission.experimentCodes.get(i)).notExists("accession"),
-						DBUpdate.set("state.code", "submitted").set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 			
+						DBUpdate.set("state.code", status).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 			
+				// Updater objet readSet :
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,
+						DBQuery.is("code", experiment.readSetCode),
+						DBUpdate.set("state.code", status).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 			
 			}
+				
 		}
+		
 	}
 	
 
@@ -245,7 +254,7 @@ public class FileAcServices  {
 			//System.out.println("OK");
 		}
 		
-		// Mise à jour de la soumission et de ses objets pour les AC et pour le status :
+		// Mise à jour dans la base de la soumission et de ses objets pour les AC et pour le status :
 		
 		sujet = "Liste des AC attribues pour la soumission "  + submissionCode ;
 		message = "Liste des AC attribues pour la soumission "  + submissionCode + " : </br></br>";
@@ -276,9 +285,16 @@ public class FileAcServices  {
 			String code = entry.getKey();
 			String ac = entry.getValue();
 			message += "experimentCode = " + code + ",   AC = "+ ac + "</br>";  
+
 			MongoDBDAO.update(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class,
 					DBQuery.is("code", code).notExists("accession"),
 					DBUpdate.set("accession", ac).set("state.code", okStatus).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 
+			// mettre à jour le readSet pour le submissionState :
+			Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, code);
+			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,
+					DBQuery.is("code", experiment.readSetCode).exists("submissionState.code"),
+					DBUpdate.set("submissionState.code", okStatus).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 
+			
 		}
 		for(Entry<String, String> entry : mapRuns.entrySet()) {
 			String code = entry.getKey();

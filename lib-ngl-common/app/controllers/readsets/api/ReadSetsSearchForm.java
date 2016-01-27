@@ -19,6 +19,10 @@ public class ReadSetsSearchForm extends ListForm{
 	public Set<String> stateCodes;
 	public String stateCode;
 	
+	public Set<String> submissionStateCodes;
+	public String submissionStateCode;
+	
+	
 	public Set<String> projectCodes;
 	public String projectCode;
 	

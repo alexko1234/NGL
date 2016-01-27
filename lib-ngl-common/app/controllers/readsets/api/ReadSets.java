@@ -136,6 +136,12 @@ public class ReadSets extends ReadSetsController{
 			queries.add(DBQuery.in("typeCode", form.typeCodes));
 		}
 		
+		if (StringUtils.isNotBlank(form.submissionStateCode)) { 
+			queries.add(DBQuery.is("submissionState.code", form.submissionStateCode));
+		}else if(CollectionUtils.isNotEmpty(form.submissionStateCodes)){
+			queries.add(DBQuery.in("submissionStateCode", form.submissionStateCodes));
+		}
+		
 		if (StringUtils.isNotBlank(form.runCode)) { //all
 			queries.add(DBQuery.is("runCode", form.runCode));
 		}else if(CollectionUtils.isNotEmpty(form.runCodes)){
@@ -299,7 +305,10 @@ public class ReadSets extends ReadSetsController{
 			readSetInput.state.code = "N";
 			readSetInput.state.user = getCurrentUser();
 			readSetInput.state.date = new Date();	
-						
+			readSetInput.submissionState.date = new Date();	
+			readSetInput.submissionState.code = "none";	
+			readSetInput.submissionState.user = getCurrentUser();
+
 			//hack to simplify ngsrg => move to workflow but workflow not call here !!!
 			if(null != readSetInput.runCode && (null == readSetInput.runSequencingStartDate || null == readSetInput.runTypeCode)){
 				updateReadSet(readSetInput);
