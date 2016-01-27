@@ -4,24 +4,23 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import java.util.ArrayList;
 
-import org.junit.Test;
-
-import controllers.experiments.api.ExperimentsOld;
-import experiments.ExperimentTestHelper;
 import models.laboratory.common.instance.property.PropertySingleValue;
-import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
-import models.laboratory.experiment.instance.ManyToOneContainer;
 import models.laboratory.experiment.instance.OneToOneContainer;
 import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.utils.instance.ExperimentHelper;
+
+import org.junit.Test;
+
+import controllers.experiments.api.Experiments;
 import play.Logger;
 import play.Logger.ALogger;
 import utils.AbstractTests;
 import utils.Constants;
 import validation.ContextValidation;
 import validation.experiment.instance.ExperimentValidationHelper;
+import experiments.ExperimentTestHelper;
 
 public class SolutionStockRulesTests extends AbstractTests{
 	
@@ -152,7 +151,7 @@ public class SolutionStockRulesTests extends AbstractTests{
 
 		ExperimentValidationHelper.validateAtomicTransfertMethods(exp.typeCode, exp.instrument, exp.atomicTransfertMethods, contextValidation);
 
-		ExperimentHelper.doCalculations(exp,ExperimentsOld.calculationsRules);
+		ExperimentHelper.doCalculations(exp,Experiments.calculationsRules);
 
 		OneToOneContainer atomicTransfertResult = (OneToOneContainer)exp.atomicTransfertMethods.get(0);	
 		assertThat(atomicTransfertResult.inputContainerUseds.get(atomicTransfertResult.inputContainerUseds.indexOf(containerIn1)).experimentProperties.get("requiredVolume")).isNotNull();		

@@ -22,7 +22,7 @@ import com.mongodb.BasicDBObject;
 import play.Logger;
 import play.mvc.Result;
 import controllers.CommonController;
-import controllers.migration.MigrationNGLSEQ;
+
 import fr.cea.ig.MongoDBDAO;
 
 public class MigrationSampleType extends CommonController {
@@ -31,7 +31,7 @@ public class MigrationSampleType extends CommonController {
 
 		Logger.info(">>>>>>>>>>> Migration NGL in Container, Sample, ReadSet and Process starts");
 
-		MigrationNGLSEQ.backupOneCollection(InstanceConstants.CONTAINER_COLL_NAME,Container.class);
+		//MigrationNGLSEQ.backupOneCollection(InstanceConstants.CONTAINER_COLL_NAME,Container.class);
 		updateRefecollabAndTaxonSizeInContainer();
 		
 		/*BasicDBObject keys=new BasicDBObject();

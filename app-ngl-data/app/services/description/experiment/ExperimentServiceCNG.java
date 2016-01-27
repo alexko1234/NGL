@@ -171,7 +171,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		
 		newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),false,false,false,getExperimentTypeNodes("ext-to-denat-dil-lib", "lib-normalization"),
-				null,null, null).save();
+				null,null, getExperimentTypes("aliquoting")).save();
 		
 		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false,false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","denat-dil-lib"),
 				null,null, null).save();

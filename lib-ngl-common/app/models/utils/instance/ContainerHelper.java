@@ -20,7 +20,6 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.instrument.description.InstrumentUsedType;
@@ -284,22 +283,25 @@ public class ContainerHelper {
 		HashMap<String,ContainerSupport> mapSupports = new HashMap<String,ContainerSupport>();
 
 		for (Container container : containers) {
+			Logger.debug(" createSupportFromContainers; container.code "+ container.code );
+			
 			if (container.support != null) {
 				ContainerSupport newSupport = null;
-				if (mapSupportsCodeSeq != null) {
-					newSupport = ContainerSupportHelper.createContainerSupport(container.support.code, mapSupportsCodeSeq.get(container.support.code), container.support.categoryCode,"ngl");
-				}
-				else {
-					newSupport = ContainerSupportHelper.createContainerSupport(container.support.code, null, container.support.categoryCode,"ngl");
-				}
+				
+				// 21/01/2016 TEST  ne creer qu'une seule fois le containerSupport...PAS REUSSI retour au code ...
+				Logger.debug(" createSupportFromContainers; creating support "+ container.support.code );
+				
+				// mapSupportsCodeSeq n'existe que pour les flowcell...
+				// NW utilisation d'un operateur ternaire
+				newSupport = ContainerSupportHelper.createContainerSupport(container.support.code,
+																			(mapSupportsCodeSeq != null ? mapSupportsCodeSeq.get(container.support.code) : null),
+																			container.support.categoryCode, "ngl");
 				
 				newSupport.projectCodes = new  HashSet<String>(container.projectCodes);
 				newSupport.sampleCodes = new  HashSet<String>(container.sampleCodes);
 				newSupport.state=container.state;
-				
 				//FDS 14/10/2015 ajout storage code
 				newSupport.storageCode=container.support.storageCode;
-				Logger.debug("2) createSupportFromContainers; support "+ newSupport.code + ": storageCode ="+newSupport.storageCode);
 				
 				if(null != container.fromExperimentTypeCodes){
 					newSupport.fromExperimentTypeCodes = new  HashSet<String>(container.fromExperimentTypeCodes);
@@ -316,7 +318,6 @@ public class ContainerHelper {
 						oldSupport.fromExperimentTypeCodes.addAll(newSupport.fromExperimentTypeCodes);
 					}
 				}
-
 			}
 		}
 
@@ -324,33 +325,29 @@ public class ContainerHelper {
 
 	}
 
-
 	public static void updateSupportFromUpdatedContainers(List<Container> updatedContainers, Map<String, PropertyValue<String>> mapSupportsCodeSeq, ContextValidation contextValidation){
 
 		HashMap<String,ContainerSupport> mapSupports = new HashMap<String,ContainerSupport>();
 
 		for (Container container : updatedContainers) {
 			if (container.support != null) {
-				//FDS note 22/06/2015: mapSupportsCodeSeq n'est defini que pour les container de type lane!!
-				//FDS bug 22/06/2015: il manquait le test sur mapSupportsCodeSeq
 				
 				ContainerSupport newSupport = null;
-				if (mapSupportsCodeSeq != null) {
-					newSupport = ContainerSupportHelper.createContainerSupport(container.support.code, mapSupportsCodeSeq.get(container.support.code), container.support.categoryCode,"ngl");
-				}
-				else {
-					newSupport = ContainerSupportHelper.createContainerSupport(container.support.code, null, container.support.categoryCode,"ngl");
-				}
+				
+				//FDS note 22/06/2015: mapSupportsCodeSeq n'est defini que pour les container de type lane!!
+				//21/01/2016  NW utilisation d'un operateur ternaire
+				newSupport = ContainerSupportHelper.createContainerSupport(container.support.code,
+																			(mapSupportsCodeSeq != null ? mapSupportsCodeSeq.get(container.support.code) : null),
+																			container.support.categoryCode, "ngl");
 					
 				newSupport.projectCodes = new  HashSet<String>(container.projectCodes);
-				newSupport.sampleCodes = new  HashSet<String>(container.sampleCodes);		
+				newSupport.sampleCodes = new  HashSet<String>(container.sampleCodes);	
+				// FDS TEST ajout 22/01/2016
+				newSupport.fromExperimentTypeCodes = new  HashSet<String>(container.fromExperimentTypeCodes);		
 				
 				//FDS 14/10/2015 ajout storage code 
 				if ( container.support.storageCode != null ){
 					newSupport.storageCode=container.support.storageCode;
-					Logger.debug("updating support...storage Code="+ newSupport.storageCode);
-				}else {
-					Logger.warn("not updating support...storage Code is null");
 				}
 				
 				if (!mapSupports.containsKey(newSupport.code)) {
@@ -359,33 +356,51 @@ public class ContainerHelper {
 				else {
 					ContainerSupport oldSupport = (ContainerSupport) mapSupports.get(newSupport.code);
 					oldSupport.projectCodes.addAll(newSupport.projectCodes); 
-					oldSupport.sampleCodes.addAll(newSupport.sampleCodes);
+					//Logger.debug("[updateSupportFromUpdatedContainers] adding projectCodes " +  newSupport.projectCodes + " to containerSupport " + oldSupport.code);
+					
+					oldSupport.sampleCodes.addAll(newSupport.sampleCodes); 
+					//Logger.debug("[updateSupportFromUpdatedContainers] adding sampleCodes "+ newSupport.sampleCodes + " to containerSupport " + oldSupport.code);
+					
+					//FDS TEST ajout 22/01/2016 
+					// et si null ??
+					oldSupport.fromExperimentTypeCodes.addAll(newSupport.fromExperimentTypeCodes); 
+					Logger.debug("[updateSupportFromUpdatedContainers] adding fromExperimentTypeCodes "+ newSupport.fromExperimentTypeCodes + " to containerSupport " + oldSupport.code);
 				}
 			}
 		}
 
-		// GA 02/11/2015 prise en compte de la modification du storageCode... pourrait etre null ???
+        // boucler sur les containers suports modifiés plus haut..
 		for (Map.Entry<String,ContainerSupport> support : mapSupports.entrySet()) {
+			
+			//Logger.debug("[updateSupportFromUpdatedContainers] get from mongo ContainerSupport: "+ support.getKey() );
 			ContainerSupport dbCs = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, support.getKey());
 
 			ContainerSupport updatedCs = support.getValue();
 
-			updatedCs.traceInformation = dbCs.traceInformation;
-			updatedCs.traceInformation.modifyDate = new Date();
-			updatedCs.traceInformation.modifyUser = "ngl";
+			// FDS: la constante ngl.app.models.Constants NGL_DATA_USER n'est pas accessible ici...
+			updatedCs.traceInformation = InstanceHelpers.getUpdateTraceInformation(dbCs.traceInformation, "ngl-data");
 
-			// FDS NOTE: projectCodes et sampleCodes sont des listes ils faut faire les tests d'inclusions dans les 2 sens !
-			if (!dbCs.projectCodes.containsAll(updatedCs.projectCodes) 
+			// FDS 22/01/2016 Pourquoi ce test ??? pourquoi tout containerSupport modifié n'est pas automatiquement supprimé ???
+			//     NOTE: projectCodes et sampleCodes sont des listes ils faut faire les tests d'inclusions dans les 2 sens !
+			// GA 02/11/2015 prise en compte de la modification du storageCode ( !!peut etre null )
+			// FDS ajout test 
+			if (   !dbCs.projectCodes.containsAll(updatedCs.projectCodes)
 				|| !updatedCs.projectCodes.containsAll(dbCs.projectCodes) 
 				|| !dbCs.sampleCodes.containsAll(updatedCs.sampleCodes) 
 				|| !updatedCs.sampleCodes.containsAll(dbCs.sampleCodes) 
+				|| !dbCs.fromExperimentTypeCodes.containsAll(updatedCs.fromExperimentTypeCodes) 
+				|| !updatedCs.fromExperimentTypeCodes.containsAll(dbCs.fromExperimentTypeCodes) 
 				|| (null != updatedCs.storageCode && !updatedCs.storageCode.equals(dbCs.storageCode))
 				|| (null != dbCs.storageCode && !dbCs.storageCode.equals(updatedCs.storageCode))) {
-
+				
+				//Logger.debug("[updateSupportFromUpdatedContainers] detete from mongo ContainerSupport: "+ support.getKey() );
 				MongoDBDAO.deleteByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, support.getKey());
-
+				
+				//Logger.debug("[updateSupportFromUpdatedContainers] save to mongo ContainerSupport: "+ updatedCs.code);
 				InstanceHelpers.save(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, updatedCs, contextValidation, true);
 			}
+			// pour debug..
+			//else { Logger.debug("[updateSupportFromUpdatedContainers] NOT deleting an NOT saving in mongo "+ support.getKey() );}
 		}
 	}
 

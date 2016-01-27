@@ -10,7 +10,6 @@ import java.util.Map.Entry;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.property.PropertyImgValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
-import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.ManyToOneContainer;
@@ -22,13 +21,12 @@ import org.junit.Test;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
-import play.Logger;
 import play.data.validation.ValidationError;
 import utils.AbstractTests;
 import utils.Constants;
 import validation.ContextValidation;
 import validation.experiment.instance.ExperimentValidationHelper;
-import controllers.experiments.api.ExperimentsOld;
+import controllers.experiments.api.Experiments;
 import fr.cea.ig.MongoDBDAO;
 
 public class ExperimentValidationTests extends AbstractTests {
@@ -123,7 +121,7 @@ public class ExperimentValidationTests extends AbstractTests {
 
 		ExperimentValidationHelper.validateAtomicTransfertMethods(exp.typeCode, exp.instrument, exp.atomicTransfertMethods, contextValidation);
 
-		ExperimentHelper.doCalculations(exp,ExperimentsOld.calculationsRules);
+		ExperimentHelper.doCalculations(exp,Experiments.calculationsRules);
 
 		ManyToOneContainer atomicTransfertResult = (ManyToOneContainer)exp.atomicTransfertMethods.get(0);
 		assertThat(atomicTransfertResult.inputContainerUseds.get(0).experimentProperties.get("requiredVolume1")).isNotNull();

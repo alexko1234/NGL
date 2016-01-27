@@ -1,16 +1,11 @@
 package models.laboratory.instrument.instance;
 
 
-import models.laboratory.instrument.description.Instrument;
-import models.laboratory.instrument.description.InstrumentCategory;
-import models.utils.HelperObjects;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.experiment.instance.InstrumentUsedValidationHelper;
-import validation.utils.BusinessValidationHelper;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class InstrumentUsed implements IValidation {
 

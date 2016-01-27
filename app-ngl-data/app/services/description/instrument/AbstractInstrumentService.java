@@ -18,9 +18,6 @@ public abstract class AbstractInstrumentService {
 	
 	public void main(Map<String, List<ValidationError>> errors) throws DAOException{
 		
-		Logger.debug("Begin remove Instrument");
-		DAOHelpers.removeAll(Instrument.class, Instrument.find);
-		
 		Logger.debug("Begin remove Instrument Used Type");
 		DAOHelpers.removeAll(InstrumentUsedType.class, InstrumentUsedType.find);
 		

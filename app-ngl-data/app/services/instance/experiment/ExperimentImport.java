@@ -16,7 +16,6 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
-import models.laboratory.experiment.instance.ContainerUsed;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OneToVoidContainer;
@@ -190,7 +189,7 @@ public class ExperimentImport {
 		//experiment.experimentProperties.put("runStartDate", new PropertySingleValue(rs.getDate("min_date")));
 		
 		//set inputContainerSupportCodes
-		experiment.inputContainerSupportCodes = ExperimentHelper.getInputContainerSupportCodes(experiment);
+		//experiment.inputContainerSupportCodes = ExperimentHelper.getInputContainerSupportCodes(experiment);
 
 		//return the object with this main attributes defined
 		return experiment;
