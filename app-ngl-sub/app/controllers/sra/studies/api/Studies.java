@@ -7,7 +7,9 @@ import java.util.List;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
+import models.sra.submit.common.instance.AbstractStudy;
 import models.sra.submit.common.instance.Study;
+//import models.sra.submit.common.instance.Study;
 import models.sra.submit.util.SraCodeHelper;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
@@ -28,19 +30,19 @@ import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
 
-public class Studies extends DocumentController<Study>{
+public class Studies extends DocumentController<AbstractStudy>{
 
-	final static Form<Study> studyForm = form(Study.class);
+	final static Form<AbstractStudy> studyForm = form(AbstractStudy.class);
 	final static Form<StudiesSearchForm> studiesSearchForm = form(StudiesSearchForm.class);
 	
 	public Studies() {
-		super(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class);
+		super(InstanceConstants.SRA_STUDY_COLL_NAME, AbstractStudy.class);
 	}
 
 
 	public Result save() {
-		Form<Study> filledForm = getFilledForm(studyForm, Study.class);
-		Study userStudy = filledForm.get();
+		Form<AbstractStudy> filledForm = getFilledForm(studyForm, AbstractStudy.class);
+		AbstractStudy userStudy = filledForm.get();
 		
 			ContextValidation contextValidation = new ContextValidation(getCurrentUser(), filledForm.errors());
 			contextValidation.setCreationMode();	
@@ -48,9 +50,11 @@ public class Studies extends DocumentController<Study>{
 				userStudy.traceInformation = new TraceInformation(); 
 				userStudy.traceInformation.setTraceInformation(getCurrentUser());
 				userStudy.state = new State("new", getCurrentUser());
-				userStudy.centerName=VariableSRA.centerName;
-				userStudy.centerProjectName = userStudy.projectCode;
-				userStudy.code = SraCodeHelper.getInstance().generateStudyCode(userStudy.projectCode);	
+				if (userStudy instanceof Study){
+					((Study)userStudy).centerName=VariableSRA.centerName;
+					((Study)userStudy).centerProjectName = ((Study)userStudy).projectCode;
+					((Study)userStudy).code = SraCodeHelper.getInstance().generateStudyCode(((Study)userStudy).projectCode);	
+				}
 				contextValidation.getContextObjects().put("type", "sra");
 				userStudy.validate(contextValidation);
 				//Logger.info("utilisateur = "+getCurrentUser());	
@@ -81,10 +85,10 @@ public class Studies extends DocumentController<Study>{
 		StudiesSearchForm studiesSearchForm = studiesSearchFilledForm.get();
 		//Logger.debug(studiesSearchForm.state);
 		Query query = getQuery(studiesSearchForm);
-		MongoDBResult<Study> results = mongoDBFinder(studiesSearchForm, query);				
-		List<Study> studiesList = results.toList();
+		MongoDBResult<AbstractStudy> results = mongoDBFinder(studiesSearchForm, query);				
+		List<AbstractStudy> studiesList = results.toList();
 		if(studiesSearchForm.datatable){
-			return ok(Json.toJson(new DatatableResponse<Study>(studiesList, studiesList.size())));
+			return ok(Json.toJson(new DatatableResponse<AbstractStudy>(studiesList, studiesList.size())));
 		}else{
 			return ok(Json.toJson(studiesList));
 		}
@@ -102,15 +106,15 @@ public class Studies extends DocumentController<Study>{
 		return query;
 	}
 	
-	private Study getStudy(String code) {
-		Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, code);
+	private AbstractStudy getStudy(String code) {
+		AbstractStudy study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, AbstractStudy.class, code);
 		return study;
 	}
 	
 	public Result update(String code) {
 		//Get Submission from DB 
-		Study study = getStudy(code);
-		Form<Study> filledForm = getFilledForm(studyForm, Study.class);
+		AbstractStudy study = getStudy(code);
+		Form<AbstractStudy> filledForm = getFilledForm(studyForm, AbstractStudy.class);
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 
 		if (study == null) {
@@ -118,7 +122,7 @@ public class Studies extends DocumentController<Study>{
 			ctxVal.addErrors("study ", " not exist");
 			return badRequest(filledForm.errorsAsJson());
 		}
-		Study studyInput = filledForm.get();
+		AbstractStudy studyInput = filledForm.get();
 		if (code.equals(studyInput.code)) {	
 			ctxVal.setUpdateMode();
 			ctxVal.getContextObjects().put("type","sra");

@@ -140,7 +140,7 @@ public class SubmissionServices {
 		// - sans studyCode si strategy_external_study et en confidentiel 
 		Submission submission = createSubmissionEntity(config, studyCode, user, mapUserClones);
 
-		// Recuperer la liste des objets ReadSet
+		// Recuperer la liste des objets ReadSet et mettre leur status à jour :
 		List <ReadSet> readSets = new ArrayList<ReadSet>();
 		for (String readSetCode : readSetCodes) {
 			if (StringUtils.isNotBlank(readSetCode)) {
@@ -149,6 +149,9 @@ public class SubmissionServices {
 				if (readSet == null){
 					throw new SraException("readSet " + readSet.code + " n'existe pas dans database");
 				} else {
+					/*if(!submission.refReadSetCodes.contains(readSet.code)){
+						submission.refReadSetCodes.add(readSet.code);
+					}*/
 					readSets.add(readSet);
 				}
 			}
@@ -185,7 +188,7 @@ public class SubmissionServices {
 				errorMessage = errorMessage + "  - Soumission impossible pour le readset '" + readSet.code + "' parceque non valide pour la bioinformatique \n";
 				continue;
 			}
-					
+			
 			// Recuperer scientificName via NCBI pour ce readSet. Le scientificName est utilisé dans la construction
 			// des samples et des experiments 
 			String laboratorySampleCode = readSet.sampleCode;
@@ -193,7 +196,7 @@ public class SubmissionServices {
 			String taxonId = laboratorySample.taxonCode;
 			String scientificName = laboratorySample.ncbiScientificName;
 			if (StringUtils.isBlank(scientificName)){
-				updateLaboratorySampleForNcbiScientificName(taxonId);
+				scientificName=updateLaboratorySampleForNcbiScientificName(taxonId);
 			}
 			
 			// Creer les objets avec leurs alias ou code, les instancier completement et les sauver.
@@ -379,7 +382,21 @@ public class SubmissionServices {
 				MongoDBDAO.save(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, expElt);
 				System.out.println ("sauvegarde dans la base de l'experiment " + expElt.code);
 			}
+		}	
+		
+		// Updater les readSets pour le status dans la base:
+		for (ReadSet readSet : readSets) {
+			if (readSet == null){
+				throw new SraException("readSet " + readSet.code + " n'existe pas dans database");
+			} else {
+				readSet.submissionState.code = "new";
+				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,
+						DBQuery.is("code", readSet.code),
+						DBUpdate.set("submissionState.code", "new").set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date()));
+			}
 		}		
+		
+		
 		// update le study pour le statut 'uservalidate' mais aussi l'objet courant 
 		study.state.code = "uservalidate";
 		study.traceInformation.modifyDate = new Date();
@@ -789,7 +806,7 @@ public class SubmissionServices {
 		String libProcessTypeCodeVal = (String) sampleOnContainerProperties.get("libProcessTypeCode").getValue();
 		String typeCode = readSet.typeCode;
 		experiment.title = scientificName + "_" + typeCode + "_" + libProcessTypeCodeVal;
-		experiment.libraryName = readSet.sampleCode + "_" + libProcessTypeCodeVal;			
+		experiment.libraryName = readSet.sampleCode + "_" +libProcessTypeCodeVal;			
 		InstrumentUsed instrumentUsed = laboratoryRun.instrumentUsed;
 		System.out.println(" !!!!!!!!! instrumentUsed.code = " + instrumentUsed.code);
 		System.out.println("!!!!!!!!!!!! instrumentUsed.typeCode = " + instrumentUsed.typeCode);
@@ -1105,10 +1122,12 @@ public class SubmissionServices {
 						MongoDBDAO.deleteByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, models.sra.submit.common.instance.Sample.class, sampleCode);		
 					}
 				}
-			}		
+			}
+
 			if (! submission.experimentCodes.isEmpty()) {
 				for (String experimentCode : submission.experimentCodes) {
 					// verifier que l'experiment n'est pas utilisé par autre objet submission avant destruction
+					Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
 					List <Submission> submissionList = MongoDBDAO.find(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, DBQuery.in("experimentCodes", experimentCode)).toList();
 					if (submissionList.size() > 1) {
 						for (Submission sub: submissionList) {
@@ -1119,10 +1138,23 @@ public class SubmissionServices {
 						System.out.println("deletion dans base pour experiment "+experimentCode);
 						MongoDBDAO.deleteByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, experimentCode);
 					}
+					// mettre le status pour la soumission des readSet à null si possible: 
+					// verifier que le readSet n'est pas utilisé par autre objet submission avant changement status
+					List <Submission> submissionList2 = MongoDBDAO.find(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, DBQuery.in("experimentCodes", experiment.readSetCode)).toList();
+					if (submissionList2.size() > 1) {
+						for (Submission sub: submissionList2) {
+							System.out.println(experiment.readSetCode + " utilise par objet Submission " + sub.code);
+						}
+					} else {
+						// remettre les readSet dans la base sans aucun status pour submissionState :
+						MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,
+								DBQuery.is("code", experiment.readSetCode),
+								DBUpdate.set("submissionState", null).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date()));
+					}	
 				}
 			}
+			
 			// verifier que la config à l'etat used n'est pas utilisé par une autre soumission avant de remettre son etat à 'new'
-
 			// update la configuration pour le statut en remettant le statut new si pas utilisé par ailleurs :
 			List <Submission> submissionList = MongoDBDAO.find(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, DBQuery.in("configCode", submission.configCode)).toList();
 			if (submissionList.size() <= 1) {
