@@ -306,8 +306,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	
 	private static List<Instrument> getInstrumentMiSeq() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("MISEQ1", "MISEQ1", null, true, "/env/ig/atelier/illumina/cng/MISEQ1/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
-		instruments.add(createInstrument("MISEQ2", "MISEQ2", null, true, "/env/ig/atelier/illumina/cng/MISEQ2/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
+		instruments.add(createInstrument("MISEQ1", "MISEQ1", null, false, "/env/ig/atelier/illumina/cng/MISEQ1/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
+		instruments.add(createInstrument("MISEQ2", "MISEQ2", null, false, "/env/ig/atelier/illumina/cng/MISEQ2/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
 		return instruments;
 	}
 	
