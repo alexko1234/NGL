@@ -47,7 +47,8 @@
 					</td>
 					<td class="col-sm-1">
 						<input class="form-control input-small valueInput" 
-									type="text" 
+									type="text"
+									ng-readonly="true" 
 									ng-model="container.percentage" 
 									title='@Messages("containers.table.percentage")'
 									udt-html-filter="number"
@@ -167,18 +168,15 @@
 						<td>							
 							{{inputContainer.code}}
 						</td>
-						<td>
-							<div ng-switch on="mainService.isEditMode()">						
-								<span ng-switch-when="false" ng-bind="inputContainer.percentage"></span>						 
-								<div ng-switch-when="true">
+						<td class="col-sm-1">
+								<div>
 									<input class="form-control input-sm" type="text" 
 										title='@Messages("containers.table.percentage")' 
 										ng-model="inputContainer.percentage"
+										ng-readonly=true
 										ng-change="changeValueOnFlowcellDesign()" 
 										udt-html-filter="number"/>								
 								</div>
-							</div>
-						
 						</td>
 						<td class="col-sm-2">
 							<p class="form-control-static">{{inputContainer.contents[0].properties.nlrsConcentration.value}}</p>
