@@ -196,7 +196,7 @@ public class SubmissionServices {
 			String taxonId = laboratorySample.taxonCode;
 			String scientificName = laboratorySample.ncbiScientificName;
 			if (StringUtils.isBlank(scientificName)){
-				updateLaboratorySampleForNcbiScientificName(taxonId);
+				scientificName=updateLaboratorySampleForNcbiScientificName(taxonId);
 			}
 			
 			// Creer les objets avec leurs alias ou code, les instancier completement et les sauver.

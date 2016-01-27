@@ -45,7 +45,7 @@ public class ReadSet extends DBObject implements IValidation{
 	public Valuation bioinformaticValuation = new Valuation(); //TODO rename to bioinformaticUsable
 	
     public String location; //CCRT or CNS or CNG
-    public State submissionState = new State(); 
+    public State submissionState; 
     public String path;
 	public String archiveId;
 	public Date archiveDate;

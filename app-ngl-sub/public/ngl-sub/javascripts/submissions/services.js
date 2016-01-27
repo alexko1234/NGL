@@ -73,7 +73,7 @@
 				refreshReadSets : function(){
 					if(this.form.projCode!==null && this.form.projCode !== undefined){
 						// appel de refresh.ReadSets dans lists de common.js
-						this.lists.refresh.readSets({projectCode:this.form.projCode, submissionState:null});
+						this.lists.refresh.readSets({projectCode:this.form.projCode, submissionStateCode:"none"});
 					}
 				},
 				// fonction qui recupere objet configuration dont le code est saisi par utilisateur et qui en fonction

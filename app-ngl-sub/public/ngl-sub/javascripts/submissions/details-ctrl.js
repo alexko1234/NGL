@@ -39,6 +39,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 					return line;
 				},
 			},
+			
 			/*cancel : {
 				showButton:true
 			},
@@ -130,19 +131,19 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			pagination:{active:false},
 			select:{active:true},
 			showTotalNumberRecords:false,
-			edit : {
+			edit:{
 				active:true,
 				showButton : false,
 				withoutSelect : true,
-				columnMode : true
-				lineMode : function(line){
-					if(line.state.code == "new")
+				columnMode : true,
+				lineMode:function(line){
+					if(line.state.code == "new"){
 						return true;
-					else 
+					}else {
 						return false;
-				}
+					}
+				},
 			},
-			
 			save : {
 				active:true,
 				mode:'local',
@@ -322,25 +323,6 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				withoutSelect : true,
 				columnMode : true
 			},
-			/*
-			save : {
-				active:true,
-				showButton : true,
-				changeClass : false,
-				url:function(value){
-					return jsRoutes.controllers.sra.experiments.api.Experiments.update(value.code).url;
-				},
-				method:'put'
-			},
-			cancel : {
-				showButton:true
-			},
-			hide:{
-				active:true
-			},
-			exportCSV:{
-				active:true
-			},*/
 			columns : [
 			           {property:"run.code",
 			        	header: "run.code",
@@ -547,6 +529,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 		for(var i = 0; i < tab_samples.length ; i++){
 			console.log("sampleCode = " + tab_samples[i].code + " state = "+ tab_samples[i].state.code);
 			tab_samples[i].state.code = "uservalidate";
+			console.log("sampleTitle = " + tab_samples[i].title + " state = "+ tab_samples[i].state.code);
 			console.log("sampleCode = " + tab_samples[i].code + " state = "+ tab_samples[i].state.code);
 			// sauvegarde dans database asynchrone
 			$http.put(jsRoutes.controllers.sra.samples.api.Samples.update(tab_samples[i].code).url, tab_samples[i])
@@ -555,6 +538,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			//$scope.messages.clazz="alert alert-success";
 			//$scope.messages.text=Messages('submissions.msg.validate.success');
 			//$scope.messages.open();
+			
 			decompte = processInSubmission(decompte, error);
 			}).error(function(data){
 			$scope.messages.addDetails(data);
