@@ -16,6 +16,9 @@ import models.utils.InstanceConstants;
 import models.utils.instance.ContainerHelper;
 
 import org.junit.Test;
+import org.mongojack.DBQuery;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import play.Logger;
 import play.Logger.ALogger;
@@ -211,7 +214,7 @@ public class ContainerTests extends AbstractTests {
 		process.code="validateGetCurrentProcesses";
 		Process p=MongoDBDAO.save(InstanceConstants.PROCESS_COLL_NAME,process);
 		cnt.inputProcessCodes.add("validateGetCurrentProcesses");
-		List<Process> processes =  cnt.getCurrentProcesses();
+		List<Process> processes =  getCurrentProcesses(cnt);
 		MongoDBDAO.delete(InstanceConstants.PROCESS_COLL_NAME, p);		
 		assertThat(processes).isNotNull().isNotEmpty();		
 	}
@@ -220,9 +223,17 @@ public class ContainerTests extends AbstractTests {
 	public void validateGetNullCurrentProcesses() {		
 		Container cnt =  ContainerTestHelper.getFakeContainer();
 		cnt.inputProcessCodes = null;
-		assertThat(cnt.getCurrentProcesses()).isNullOrEmpty();				
+		assertThat(getCurrentProcesses(cnt)).isNullOrEmpty();				
 	}
 	
+	public List<Process> getCurrentProcesses(Container c) {
+		List<Process> processes=new ArrayList<Process>();
+		if(c.inputProcessCodes!=null){
+			processes= MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code",c.inputProcessCodes)).toList();
+		}
+		return processes;
+		
+	}
 /**********************************Tests of Containers class methods (Controller)***************************************************/	
 	
 	

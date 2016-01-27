@@ -112,18 +112,6 @@ public class Container extends DBObject implements IValidation {
 		fromExperimentTypeCodes = new HashSet<>();
 	
 	}
-
-	
-	@JsonIgnore
-	public List<Process> getCurrentProcesses() {
-		List<Process> processes=new ArrayList<Process>();
-		if(inputProcessCodes!=null){
-			processes= MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code",inputProcessCodes)).toList();
-		}
-		return processes;
-		
-	}
-
 		
 	@JsonIgnore
 	@Override
