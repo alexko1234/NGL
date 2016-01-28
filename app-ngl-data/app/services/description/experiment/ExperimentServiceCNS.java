@@ -84,7 +84,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		*/
 		
 		l.add(newExperimentType("Solution stock","solution-stock",null,1000,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionSolutionStock(),
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), getPropertyDefinitionSolutionStock(),
 				getInstrumentUsedTypes("hand","tecan-evo-100"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
