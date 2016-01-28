@@ -490,20 +490,20 @@
 					}
 				 }; 
 		 var defaultDatatableColumns = [
-				{	property:"property",
-				  	header: "balanceSheets.property",
-				  	type :"String",
-				  	position:1
+				{	"property":"property",
+				  	"header": Messages("balanceSheets.property"),
+				  	"type" :"text",
+				  	"position":1
 				},
-				{	property:"value",
-					header: "balanceSheets.value",
-					type :"Number",
-				  	position:2
+				{	"property":"value",
+					"header": Messages("balanceSheets.value"),
+					"type" :"number",
+				  	"position":2
 				}
 			 ];
 		 var sum = [{
-				 property : Messages('balanceSheets.sum'),
-				 value : total
+				 "property" : Messages('balanceSheets.sum'),
+				 "value" : total
 		 }];
 		 
 		 
@@ -538,38 +538,38 @@
 				}
 			 }; 
 		 var defaultDatatableColumns = [
-				{	property:"code",
-				  	header: "balanceSheets.projectCode",
-				  	type :"String",
-				  	order : true,
-				  	position:1
+				{	"property":"code",
+				  	"header": Messages("balanceSheets.projectCode"),
+				  	"type" :"text",
+				  	"order" : true,
+				  	"position":1
 				},
-				{	property:"name",
-					header: "balanceSheets.projectName",
-					type :"String",
-					order : true,
-				  	position:2
-				},
-				{
-					property:"nbBases",
-					header: "balanceSheets.nbBases",
-					type:"Number",
-					order : true,
-					position:3
+				{	"property":"name",
+					"header": Messages("balanceSheets.projectName"),
+					"type" :"text",
+					"order" : true,
+				  	"position":2
 				},
 				{
-					property:"percentageForTenProjects",
-					header: "balanceSheets.percentageForTenProjects",
-					type:"String",
-					order : true,
-					position:4
+					"property":"nbBases",
+					"header": Messages("balanceSheets.nbBases"),
+					"type":"number",
+					"order" : true,
+					"position":3
 				},
 				{
-					property:"percentageForYear",
-					header:"balanceSheets.percentageForYear",
-					type:"String",
-					order:true,
-					position:5
+					"property":"percentageForTenProjects",
+					"header": Messages("balanceSheets.percentageForTenProjects"),
+					"type":"text",
+					"order" : true,
+					"position":4
+				},
+				{
+					"property":"percentageForYear",
+					"header":Messages("balanceSheets.percentageForYear"),
+					"type":"text",
+					"order":true,
+					"position":5
 				}
 			 ];
 		 
@@ -665,21 +665,21 @@
 					}
 				 }; 
 		 var defaultDatatableColumns = [
-				{	property:"property",
-				  	header: "balanceSheets.property",
-				  	type :"String",
-				  	position:1
+				{	"property":"property",
+				  	"header": Messages("balanceSheets.property"),
+				  	"type" :"text",
+				  	"position":1
 				},
-				{	property:"value",
-					header: "balanceSheets.value",
-					type :"Number",
-				  	position:2
+				{	"property":"value",
+					"header": Messages("balanceSheets.value"),
+					"type" :"number",
+				  	"position":2
 				},
 				{
-					property :"percentage",
-					header: "balanceSheets.percentage",
-					type : "String",
-					position : 3
+					"property" :"percentage",
+					"header": Messages("balanceSheets.percentage"),
+					"type" : "text",
+					"position" : 3
 				}
 			 ];
 		 
@@ -743,32 +743,32 @@
 			 }; 
 		 var defaultDatatableColumns = [
 		        {
-		        	property : "category",
-		        	header : "balanceSheets.categoryType",
+		        	"property" : "category",
+		        	"header" : Messages("balanceSheets.categoryType"),
 		        	//filter: "codes:'sample_cat'",
-		        	type : "String",
-		        	order : true,
-		        	position : 1
+		        	"type" : "text",
+		        	"order" : true,
+		        	"position" : 1
 		        },
-				{	property:"type",
-					filter: "codes:'type'",
-				  	header: "balanceSheets.projectType",
-				  	type :"String",
-				  	order : true,
-				  	position:2
+				{	"property":"type",
+					"filter": "codes:'type'",
+				  	"header": Messages("balanceSheets.projectType"),
+				  	"type" :"text",
+				  	"order" : true,
+				  	"position":2
 				},
-				{	property:"nbBases",
-					header: "balanceSheets.nbBases",
-					type :"Number",
-					order : true,
-				  	position:3
+				{	"property":"nbBases",
+					"header": Messages("balanceSheets.nbBases"),
+					"type" :"Number",
+					"order" : true,
+				  	"position":3
 				},
 				{
-					property:"percentage",
-					header: "balanceSheets.percentage",
-					type:"String",
-					order : true,
-					position:4
+					"property":"percentage",
+					"header": Messages("balanceSheets.percentage"),
+					"type":"text",
+					"order" : true,
+					"position":4
 				}
 			 ];
 		 
@@ -862,15 +862,15 @@
 					}
 				 }; 
 		 var defaultDatatableColumns = [
-				{	property:"property",
-				  	header: "balanceSheets.property",
-				  	type :"String",
-				  	position:1
+				{	"property":"property",
+				  	"header": Messages("balanceSheets.property"),
+				  	"type" :"text",
+				  	"position":1
 				},
-				{	property:"value",
-					header: "balanceSheets.value",
-					type :"Number",
-				  	position:2
+				{	"property":"value",
+					"header": Messages("balanceSheets.value"),
+					"type" :"number",
+				  	"position":2
 				}
 			 ];
 		 
@@ -1270,15 +1270,15 @@
 							}
 						 };
 						 var defaultDatatableColumns = [
-							{	property:"year",
-							  	header: "balanceSheets.year",
-							  	type :"String",
-							  	position:1
+							{	"property":"year",
+							  	"header": Messages("balanceSheets.year"),
+							  	"type" :"text",
+							  	"position":1
 							},
-							{	property:"nbBases",
-								header: "balanceSheets.nbBases",
-								type :"Number",
-							  	position:2,
+							{	"property":"nbBases",
+								"header": Messages("balanceSheets.nbBases"),
+								"type" :"number",
+							  	"position":2,
 							}
 						 ];	
 				 
@@ -1331,15 +1331,15 @@
 					}
 				 };
 				 var defaultDatatableColumns = [
-					{	property:"property",
-					  	header: "balanceSheets.property",
-					  	type :"String",
-					  	position:1
+					{	"property":"property",
+					  	"header": Messages("balanceSheets.property"),
+					  	"type" :"text",
+					  	"position":1
 					},
-					{	property:"value",
-						header: "balanceSheets.value",
-						type :"Number",
-					  	position:2,
+					{	"property":"value",
+						"header": Messages("balanceSheets.value"),
+						"type" :"number",
+					  	"position":2,
 					}
 				 ];	
 				 
