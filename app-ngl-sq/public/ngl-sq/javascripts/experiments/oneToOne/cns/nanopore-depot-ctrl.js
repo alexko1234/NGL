@@ -129,7 +129,10 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 				active:true
 			},
 			edit:{
-				active: false
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				byDefault:($scope.isCreationMode()),
+				columnMode:true
 			},
 			messages:{
 				active:false,
