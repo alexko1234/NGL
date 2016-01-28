@@ -15,3 +15,4 @@ GET		/migration-metrichor-run-id					controllers.migration.MigrationUpdateRunMet
 GET		/check-type-description						controllers.migration.CheckTypeDescription.check()
 GET		/create-run-nanopore						controllers.migration.MigrationCreateRunNanopore.migration()
 GET		/migration-sample-aliquote-codes			controllers.migration.MigrationPropSampleAliquoteCode.migration()
+GET		/migration-submission-state					controllers.migration.MigrationUpdateSubmissionState.migration()
