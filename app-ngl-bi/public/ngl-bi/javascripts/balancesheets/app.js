@@ -1,6 +1,6 @@
 "use strict";
  
-angular.module('home', ['ngRoute', 'datatableServices','commonsServices', 'ui.bootstrap', 
+angular.module('home', ['ngRoute', 'ultimateDataTableServices','commonsServices', 'ui.bootstrap', 
                         'ngl-bi.BalanceSheetsService'], function($routeProvider, $locationProvider) {
 	
 	$routeProvider.when('/balance-sheets/general/home',{

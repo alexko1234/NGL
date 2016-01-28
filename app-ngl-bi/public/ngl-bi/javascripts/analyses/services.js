@@ -5,82 +5,91 @@
 		
 		var getColumns = function(){
 			var columns = [];
-			columns.push({	property:"code",
-				    	  	header: "analyses.code",
-				    	  	type :"text",		    	  	
-				    	  	order:true});
-			columns.push({	property:"typeCode",
-							filter:"codes:'type'",
-							header: "analyses.typeCode",
-							type :"text",
-							order:true});
-			columns.push({	property:"masterReadSetCodes",
-							header: "analyses.masterReadSetCodes",
-							type :"text",
-							});					
-			columns.push({	property:"projectCodes",
-							header: "analyses.projectCodes",
-							type :"text",
-							});
-			columns.push({	property:"sampleCodes",
-							header: "analyses.sampleCodes",
-							type :"text",
-							});
+			columns.push({	"property":"code",
+							"header":Messages("analyses.code"),
+							"type":"text",		    	  	
+				    	  	"order":true
+			});
+			columns.push({	"property":"typeCode",
+							"filter":"codes:'type'",
+							"header":Messages("analyses.typeCode"),
+							"type":"text",
+							"order":true
+			});
+			columns.push({	"property":"masterReadSetCodes",
+							"header":Messages("analyses.masterReadSetCodes"),
+							"type":"text",
+			});					
+			columns.push({	"property":"projectCodes",
+							"header":Messages("analyses.projectCodes"),
+							"type":"text",
+			});
+			columns.push({	"property":"sampleCodes",
+							"header":Messages("analyses.sampleCodes"),
+							"type":"text",
+			});
 			if(!mainService.isHomePage('state')){
-				columns.push({	property:"state.code",
-								filter:"codes:'state'",
-								header: "analyses.state.code",
-								type :"text",
-								order:true});
+				columns.push({	"property":"state.code",
+								"filter":"codes:'state'",
+								"header":Messages("analyses.state.code"),
+								"type":"text",
+								"order":true
+				});
 			}else{
-				columns.push({	property:"state.code",
-								filter:"codes:'state'",
-								header: "analyses.state.code",
-								type :"text",
-								edit:true,
-								order:true,
-						    	choiceInList:true,
-						    	listStyle:'bt-select',
-						    	possibleValues:'searchService.lists.getStates()'});
+				columns.push({	"property":"state.code",
+								"filter":"codes:'state'",
+								"header":Messages("analyses.state.code"),
+								"type":"text",
+								"edit":true,
+								"order":true,
+						    	"choiceInList":true,
+						    	"listStyle":'bt-select',
+						    	"possibleValues":'searchService.lists.getStates()'
+				});
 			}
 			if(!mainService.isHomePage('valuation')){
-				columns.push({	property:"valuation.valid",
-								filter:"codes:'valuation'",
-								header: "analyses.valuation.valid",
-								type :"text",
-						    	order:true});
-				columns.push({	property:"valuation.resolutionCodes",
-								header: "analyses.valuation.resolutions",
-								render:'<div bt-select ng-model="value.data.valuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
-								type :"text",
-								hide:true});
+				columns.push({	"property":"valuation.valid",
+								"filter":"codes:'valuation'",
+								"header":Messages("analyses.valuation.valid"),
+								"type":"text",
+								"order":true
+				});
+				columns.push({	"property":"valuation.resolutionCodes",
+								"header":Messages("analyses.valuation.resolutions"),
+								"render":'<div bt-select ng-model="value.data.valuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
+								"type":"text",
+								"hide":true
+				});
 			}else{
-				columns.push({	property:"valuation.valid",
-								filter:"codes:'valuation'",
-								header: "analyses.valuation.valid",
-								type :"text",
-						    	order:true,
-						    	edit:true,
-						    	choiceInList:true,
-						    	listStyle:'bt-select',
-						    	possibleValues:'searchService.lists.getValuations()'});
-				columns.push({	property:"valuation.criteriaCode",
-								filter:"codes:'valuation_criteria'",
-								header: "analyses.valuation.criteria",
-								type :"text",
-						    	edit:true,
-						    	choiceInList:true,
-						    	listStyle:'bt-select',
-						    	possibleValues:'searchService.lists.getValuationCriterias()'});
-				columns.push({	property:"valuation.resolutionCodes",
-								header: "analyses.valuation.resolutions",
-								render:'<div bt-select ng-model="value.data.valuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
-								type :"text",
-						    	edit:true,
-						    	choiceInList:true,
-						    	listStyle:'bt-select-multiple',
-						    	possibleValues:'searchService.lists.getResolutions()',
-						    	groupBy:'category.name'});
+				columns.push({	"property":"valuation.valid",
+								"filter":"codes:'valuation'",
+								"header":Messages("analyses.valuation.valid"),
+								"type":"text",
+								"order":true,
+								"edit":true,
+								"choiceInList":true,
+								"listStyle":'bt-select',
+								"possibleValues":'searchService.lists.getValuations()'
+				});
+				columns.push({	"property":"valuation.criteriaCode",
+								"filter":"codes:'valuation_criteria'",
+								"header":Messages("analyses.valuation.criteria"),
+								"type":"text",
+								"edit":true,
+								"choiceInList":true,
+								"listStyle":'bt-select',
+								"possibleValues":'searchService.lists.getValuationCriterias()'
+				});
+				columns.push({	"property":"valuation.resolutionCodes",
+								"header":Messages("analyses.valuation.resolutions"),
+								"render":'<div bt-select ng-model="value.data.valuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
+								"type":"text",
+								"edit":true,
+								"choiceInList":true,
+						    	"listStyle":'bt-select-multiple',
+						    	"possibleValues":'searchService.lists.getResolutions()',
+						    	"groupBy":'category.name'
+				});
 			}					
 			return columns;
 		};

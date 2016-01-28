@@ -1,6 +1,6 @@
 "use strict";
  
-angular.module('home', ['ngRoute','datatableServices', 'commonsServices'], function($routeProvider, $locationProvider) {
+angular.module('home', ['ngRoute','ultimateDataTableServices', 'commonsServices'], function($routeProvider, $locationProvider) {
 	
 	$routeProvider.when('/printing/tags/home', {
 		templateUrl : jsRoutes.controllers.printing.tpl.Tags.display().url,

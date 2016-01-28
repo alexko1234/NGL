@@ -3,7 +3,9 @@
 @scripts() = {
 	 <script src="@controllers.experiments.tpl.routes.Experiments.javascriptRoutes" type="text/javascript" charset="utf-8"></script>
      <script src="@controllers.main.tpl.routes.Main.jsCodes" type="text/javascript" charset="utf-8"></script> 
-     <script src="@routes.Assets.at("datatable/javascripts/services/datatable2.js")" type="text/javascript" charset="utf-8"></script>                           
+     
+     <script src="@routes.Assets.at("datatable/javascripts/services/ultimate-datatable.js")" type="text/javascript" charset="utf-8"></script>                           
+     
      <script src="@routes.Assets.at("ngl-sq/javascripts/home/app.js")" type="text/javascript" charset="utf-8"></script>
      <script src="@routes.Assets.at("ngl-sq/javascripts/home/search-ctrl.js")" type="text/javascript" charset="utf-8"></script>          
 	 <script src="@routes.Assets.at("ngl-common/javascripts/services/commons.js")" type="text/javascript" charset="utf-8"></script> 	 
@@ -34,8 +36,8 @@
 					</h3>
 				</div>
 				<div class="panel-body">
-					 	<div datatable="experimentIPDatatable"></div>
-				</div>
+      					</div>
+					 	<div ultimate-datatable="experimentIPDatatable"></div>				</div>
 			</div>
 		</div>
 		<div class="col-md-6 col-lg-6">
@@ -49,7 +51,7 @@
 					</h3>
 				</div>
 				<div class="panel-body">
-					 	<div datatable="experimentNDatatable"></div>
+					 	<div ultimate-datatable="experimentNDatatable"></div>
 				</div>
 			</div>
 		</div>

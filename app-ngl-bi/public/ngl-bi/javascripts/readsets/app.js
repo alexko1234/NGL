@@ -1,5 +1,5 @@
 "use strict";
-angular.module('home', ['ngRoute', 'datatableServices','commonsServices','biCommonsServices', 'biWorkflowChartServices', 'ui.bootstrap','ngl-bi.ReadSetsServices'], 
+angular.module('home', ['ngRoute', 'ultimateDataTableServices','commonsServices','biCommonsServices', 'biWorkflowChartServices', 'ui.bootstrap','ngl-bi.ReadSetsServices'], 
 	function($routeProvider, $locationProvider) {
 	
 	

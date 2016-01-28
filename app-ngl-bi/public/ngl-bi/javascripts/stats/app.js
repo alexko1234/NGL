@@ -1,5 +1,5 @@
 "use strict";
-angular.module('home', ['ngRoute', 'datatableServices','commonsServices','biCommonsServices', 'ui.bootstrap', 
+angular.module('home', ['ngRoute', 'ultimateDataTableServices','commonsServices','biCommonsServices', 'ui.bootstrap', 
                         'ngl-bi.StatsServices','ngl-bi.ReadSetsServices', 'basketServices'], function($routeProvider, $locationProvider) {
 	
 	$routeProvider.when('/stats/readsets/home', {

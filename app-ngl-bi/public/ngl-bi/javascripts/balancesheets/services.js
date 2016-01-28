@@ -229,21 +229,21 @@
 				}
 			 }; 
 		 var defaultDatatableColumns = [
-				{	property:"quarter",
-				  	header: "balanceSheets.quarters",
-				  	type :"String",
-				  	position:1
+				{	"property":"quarter",
+					"header":Messages("balanceSheets.quarters"),
+				  	"type":"text",
+				  	"position":1
 				},
-				{	property:"month",
-					header: "balanceSheets.monthRun",
-					type :"String",
-				  	position:2
+				{	"property":"month",
+					"header":Messages("balanceSheets.monthRun"),
+					"type":"text",
+					"position":2
 				},
 				{
-					property:"nbBases",
-					header: "balanceSheets.nbBases",
-					type:"Number",
-					position:3
+					"property":"nbBases",
+					"header":Messages("balanceSheets.nbBases"),
+					"type":"number",
+					"position":3
 				}
 			 ];
 		 
@@ -378,24 +378,24 @@
 					}
 				 }; 
 		 var defaultDatatableColumns = [
-				{	property:"name",
-				  	header: "balanceSheets.runTypeCode",
-				  	type :"String",
-				  	order : true,
-				  	position:1
+				{	"property":"name",
+					"header":Messages("balanceSheets.runTypeCode"),
+					"type":"text",
+					"order":true,
+				  	"position":1
 				},
-				{	property:"nbBases",
-					header: "balanceSheets.nbBases",
-					type :"Number",
-					order : true,
-				  	position:2
+				{	"property":"nbBases",
+					"header":Messages("balanceSheets.nbBases"),
+					"type":"number",
+					"order":true,
+				  	"position":2
 				},
 				{
-					property:"percentage",
-					header: "balanceSheets.percentage",
-					type:"String",
-					order : true,
-					position:3
+					"property":"percentage",
+					"header":Messages("balanceSheets.percentage"),
+					"type":"text",
+					"order":true,
+					"position":3
 				}
 			 ];
 		 

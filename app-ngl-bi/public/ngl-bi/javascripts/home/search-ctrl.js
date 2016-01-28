@@ -17,32 +17,32 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable' , functio
 			},
 			showTotalNumberRecords:false,
 			columns : [
-			           {  	property:"code",
-					    	header: "runs.code",
-					    	type :"text",
-					    	order:true
+			           {  	"property":"code",
+			        	   	"header":Messages("runs.code"),
+			        	   	"type":"text",
+			        	   	"order":true
 						},
-						{	property:"typeCode",
-							header: "runs.typeCode",
-							type :"text",
-					    	order:true
+						{	"property":"typeCode",
+							"header":Messages("runs.typeCode"),
+							"type":"text",
+							"order":true
 						},
-						{	property:"sequencingStartDate",
-							header: "runs.sequencingStartDate",
-							type :"date",
-					    	order:true
+						{	"property":"sequencingStartDate",
+							"header":Messages("runs.sequencingStartDate"),
+							"type":"date",
+							"order":true
 						},
-						{	property:"state.code",
-							filter:"codes:'state'",
-							header: "runs.stateCode",
-							type :"text",
-							order:true								
+						{	"property":"state.code",
+							"filter":"codes:'state'",
+							"header":Messages("runs.stateCode"),
+							"type":"text",
+							"order":true								
 						},
-						{	property:"valuation.valid",
-							filter:"codes:'valuation'",
-							header: "runs.valuation.valid",
-							type :"text",
-					    	order:true
+						{	"property":"valuation.valid",
+							"filter":"codes:'valuation'",
+							"header":Messages("runs.valuation.valid"),
+							"type":"text",
+							"order":true
 						} 
 						]
 	};

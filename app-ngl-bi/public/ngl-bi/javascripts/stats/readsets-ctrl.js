@@ -10,7 +10,7 @@ angular.module('home').controller('StatsChoiceCtrl',['$scope', '$location','$mod
 			var modalInstance = $modal.open({
 			      templateUrl: 'myChoice.html',
 			      backdrop : 'static',
-			      controller : 'ModalChoiceCtrl',	      
+			      controller : 'ModalChoiceCtrl',
 			    });
 			
 			modalInstance.result.then(function (value) {

@@ -1,6 +1,6 @@
 "use strict";
 
-angular.module('home', ['commonsServices','ngRoute','datatableServices','ui.bootstrap','ngl-sq.containerSupportsServices'], function($routeProvider, $locationProvider) {
+angular.module('home', ['commonsServices','ngRoute','ultimateDataTableServices','ui.bootstrap','ngl-sq.containerSupportsServices'], function($routeProvider, $locationProvider) {
 	$routeProvider.when('/supports/search/home', {
 		templateUrl : jsRoutes.controllers.containers.tpl.ContainerSupports.search().url,
 		controller : 'SearchCtrl'

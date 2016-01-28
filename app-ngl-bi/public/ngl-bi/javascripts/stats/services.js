@@ -15,17 +15,17 @@
 				},
 				columns : [
 					{
-						   property:"column.header",
-						   header: "stats.property",
-						   type :"text",
-						   order:true
+						"property":"column.header",
+						"header": Messages("stats.property"),
+						"type" :"text",
+						"order":true
 					},
-			           {	
-			        	   property:"typeCode",
-			        	   header: "stats.typeCode",
-			        	   type :"text",		    	  	
-			        	   order:true
-			           }
+			        {	
+						"property":"typeCode",
+			        	"header": Messages("stats.typeCode"),
+			        	"type" :"text",		    	  	
+			        	"order":true
+			        }
 				]
 		};
 		
@@ -117,18 +117,18 @@
 			},
 			columns : [
 			           {
-			        	   property:"form",
-			        	   render:function(v){
+			        	   "property":"form",
+			        	   "render":function(v){
 			        		 return JSON.stringify(v.form);  
 			        	   },
-			        	   header: "query.form",
-			        	   type :"text"
+			        	   "header": Messages("query.form"),
+			        	   "type" :"text"
 			           },
 			           {	
-			        	   property:"nbResults",
-			        	   header: "query.nbResults",
-			        	   type :"number",		    	  	
-			        	   order:true
+			        	   "property":"nbResults",
+			        	   "header": Messages("query.nbResults"),
+			        	   "type" :"number",		    	  	
+			        	   "order":true
 			           }
 			]
 	};
@@ -205,80 +205,80 @@
 			}
 	};
 	var defaultDatatableColumns = [
-			{	property:"code",
-			  	header: "readsets.code",
-			  	type :"text",		    	  	
-			  	order:true,
-			  	position:1
+			{	"property":"code",
+			  	"header": Messages("readsets.code"),
+			  	"type" :"text",		    	  	
+			  	"order":true,
+			  	"position":1
 			},
-			{	property:"runCode",
-				header: "readsets.runCode",
-				type :"text",
-				order:true,
-				group:true,
-			  	position:2
+			{	"property":"runCode",
+				"header": Messages("readsets.runCode"),
+				"type" :"text",
+				"order":true,
+				"group":true,
+			  	"position":2
 			},
-			{	property:"laneNumber",
-				header: "readsets.laneNumber",
-				type :"text",
-				order:true,
-			  	position:3
+			{	"property":"laneNumber",
+				"header": Messages("readsets.laneNumber"),
+				"type" :"text",
+				"order":true,
+			  	"position":3
 			},
-			{	property:"projectCode",
-				header: "readsets.projectCode",
-				type :"text",
-				order:true,
-				group:true,
-			  	position:4
+			{	"property":"projectCode",
+				"header": Messages("readsets.projectCode"),
+				"type" :"text",
+				"order":true,
+				"group":true,
+			  	"position":4
 			},
-			{	property:"sampleCode",
-				header: "readsets.sampleCode",
-				type :"text",
-				order:true,
-				group:true,
-			  	position:5
+			{	"property":"sampleCode",
+				"header": Messages("readsets.sampleCode"),
+				"type" :"text",
+				"order":true,
+				"group":true,
+			  	"position":5
 		  	},
-		  	{	property:"runSequencingStartDate",
-				header: "runs.sequencingStartDate",
-				type :"date",
-				order:true,
-			  	position:6
+		  	{	"property":"runSequencingStartDate",
+				"header": Messages("runs.sequencingStartDate"),
+				"type" :"date",
+				"order":true,
+			  	"position":6
 		  	},
-		  	{	property:"state.code",
-				filter:"codes:'state'",
-				header: "readsets.stateCode",
-				type :"text",
-				order:true,
-			  	position:7
+		  	{	"property":"state.code",
+				"filter":"codes:'state'",
+				"header": Messages("readsets.stateCode"),
+				"type" :"text",
+				"order":true,
+			  	"position":7
 			},
-		 	{	property:"productionValuation.valid",
-				filter:"codes:'valuation'",
-				header: "readsets.productionValuation.valid",
+		 	{	"property":"productionValuation.valid",
+				"filter":"codes:'valuation'",
+				"header": Messages("readsets.productionValuation.valid"),
 				
-				type :"text",
-		    	order:true,
-			  	position:70
+				"type" :"text",
+		    	"order":true,
+			  	"position":70
 			},
-			{	property:"productionValuation.resolutionCodes",
-				header: "readsets.productionValuation.resolutions",
-				render:'<div bt-select ng-model="value.data.productionValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
-				type :"text",
-				hide:true,
-			  	position:72
+			{	"property":"productionValuation.resolutionCodes",
+				"header": Messages("readsets.productionValuation.resolutions"),
+				"render":'<div bt-select ng-model="value.data.productionValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
+				"type" :"text",
+				"hide":true,
+			  	"position":72
 			},
-			{	property:"bioinformaticValuation.valid",
-				filter:"codes:'valuation'",
-				header: "readsets.bioinformaticValuation.valid",
-				type :"text",
-		    	order:true,
-			  	position:80
+			{	"property":"bioinformaticValuation.valid",
+				"filter":"codes:'valuation'",
+				"header": Messages("readsets.bioinformaticValuation.valid"),
+				"type" :"text",
+		    	"order":true,
+			  	"position":80
 			},
-			{	property:"bioinformaticValuation.resolutionCodes",
-				header: "readsets.bioinformaticValuation.resolutions",
-				render:'<div bt-select ng-model="value.data.bioinformaticValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
-				type :"text",
-				hide:true,
-			  	position:82
+			{	"property":"bioinformaticValuation.resolutionCodes",
+				"header": Messages("readsets.bioinformaticValuation.resolutions"),
+				"render":'<div bt-select ng-model="value.data.bioinformaticValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
+				"type" :"text",
+				"hide":true,
+			  	"position":82
 			}];
 	var readsetDatatable;
 	var charts = [];

@@ -5,54 +5,54 @@
 		
 		var getDefaultColumns = function(){
 				var columns = [
-							    {  	property:"code",
-							    	header: "runs.code",
-							    	type :"String",
-							    	order:true,
-							    	position:1
+							    {  	"property":"code",
+							    	"header": Messages("runs.code"),
+							    	"type" :"text",
+							    	"order":true,
+							    	"position":1
 								},
-								{	property:"typeCode",
-									header: "runs.typeCode",
-									type :"String",
-							    	order:true,
-							    	position:2
+								{	"property":"typeCode",
+									"header": Messages("runs.typeCode"),
+									"type" :"text",
+							    	"order":true,
+							    	"position":2
 								},
-								{	property:"sequencingStartDate",
-									header: "runs.sequencingStartDate",
-									type :"Date",
-							    	order:true,
-							    	position:3
+								{	"property":"sequencingStartDate",
+									"header": Messages("runs.sequencingStartDate"),
+									"type" :"date",
+							    	"order":true,
+							    	"position":3
 								},
-								{	property:"state.historical|filter:'F-RG'|get:'date'",
-									header: "runs.endOfRG",
-									type :"date",
-							    	order:true,
-							    	position:4
+								{	"property":"state.historical|filter:'F-RG'|get:'date'",
+									"header": Messages("runs.endOfRG"),
+									"type" :"date",
+							    	"order":true,
+							    	"position":4
 								},
-								{	property:"state.code",
-									filter:"codes:'state'",					
-									header: "runs.stateCode",
-									type :"String",
-									edit:true,
-									order:true,
-									choiceInList:true,
-							    	listStyle:'bt-select',
-							    	possibleValues:'searchService.lists.getStates()',
-							    	position:5	
+								{	"property":"state.code",
+									"filter":"codes:'state'",					
+									"header": Messages("runs.stateCode"),
+									"type" :"text",
+									"edit":true,
+									"order":true,
+									"choiceInList":true,
+							    	"listStyle":'bt-select',
+							    	"possibleValues":'searchService.lists.getStates()',
+							    	"position":5	
 								},
-								{	property:"valuation.valid",
-									filter:"codes:'valuation'",					
-									header: "runs.valuation.valid",
-									type :"String",
-							    	order:true,
-							    	position:100
+								{	"property":"valuation.valid",
+									"filter":"codes:'valuation'",					
+									"header": Messages("runs.valuation.valid"),
+									"type" :"text",
+							    	"order":true,
+							    	"position":100
 								},
-								{	property:"valuation.resolutionCodes",
-									header: "runs.valuation.resolutions",
-									render:'<div bt-select ng-model="value.data.valuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
-									type :"text",
-									hide:true,
-							    	position:101
+								{	"property":"valuation.resolutionCodes",
+									"header": Messages("runs.valuation.resolutions"),
+									"render":'<div bt-select ng-model="value.data.valuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
+									"type" :"text",
+									"hide":true,
+									"position":101
 								} 
 							];						
 				return columns;

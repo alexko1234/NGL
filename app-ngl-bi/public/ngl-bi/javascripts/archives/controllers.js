@@ -24,35 +24,35 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 			},
 			columns : [
 						{	
-							property:"runCode",
-						  	header: "archives.table.runcode",
-						  	type :"String",
-						  	order:true
+							"property":"runCode",
+						  	"header":Messages("archives.table.runcode"),
+						  	"type":"String",
+						  	"order":true
 						 }, {	
-							property:"projectCode",
-						  	header: "archives.table.projectcode",
-						  	type :"String",
-						  	order:true
+							"property":"projectCode",
+							"header":Messages("archives.table.projectcode"),
+							"type":"String",
+							"order":true
 						 }, {	
-							property:"readSetCode",
-						  	header: "archives.table.readsetcode",
-						  	type :"String",
-						  	order:true
+							"property":"readSetCode",
+							"header":Messages("archives.table.readsetcode"),
+							"type":"String",
+							"order":true
 						 }, {	
-							property:"path",
-						  	header: "archives.table.path",
-						  	type :"String",
-						  	order:true
+							"property":"path",
+							"header":Messages("archives.table.path"),
+							"type":"String",
+							"order":true
 						 },{	
-							property:"date",
-						  	header: "archives.table.date",
-						  	type :"Date",
-						  	order:true
+							"property":"date",
+							"header":Messages("archives.table.date"),
+							"type":"Date",
+							"order":true
 						 },{	
-							property:"id",
-						  	header: "archives.table.backupid",
-						  	type :"String",
-						  	order:true
+							"property":"id",
+							"header":Messages("archives.table.backupid"),
+							"type":"String",
+							"order":true
 						 }			           
 			 ]			
 			

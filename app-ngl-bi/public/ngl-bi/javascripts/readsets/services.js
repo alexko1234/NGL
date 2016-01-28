@@ -7,207 +7,214 @@
 			var columns = [];
 			
 			columns.push({	property:"code",
-				    	  	header: "readsets.code",
+							"header":Messages("readsets.code"),
 				    	  	type :"text",		    	  	
 				    	  	order:true,
 				    	  	position:1});
 			columns.push({	property:"runCode",
-							header: "readsets.runCode",
+							header: Messages("readsets.runCode"),
 							type :"text",
 							group:true,
 							order:true,
 				    	  	position:2});
 			columns.push({	property:"laneNumber",
-							header: "readsets.laneNumber",
+							header: Messages("readsets.laneNumber"),
 							type :"text",
 							order:true,
 				    	  	position:3});
 			columns.push({	property:"projectCode",
-							header: "readsets.projectCode",
+							header: Messages("readsets.projectCode"),
 							type :"text",
 							order:true,
 							group:true,
 							groupMethod:"countDistinct",
 				    	  	position:4});			
 			columns.push({	property:"sampleCode",
-							header: "readsets.sampleCode",
+							header: Messages("readsets.sampleCode"),
 							type :"text",
 							group:true,
 							groupMethod:"countDistinct",
 							order:true,
 				    	  	position:5});
 			columns.push({	property:"runSequencingStartDate",
-							header: "runs.sequencingStartDate",
+							header: Messages("runs.sequencingStartDate"),
 							type :"date",
 							order:true,
 				    	  	position:6});
 			if(mainService.getHomePage() == 'search'){
-					columns.push({	property:"state.code",
-									filter:"codes:'state'",
-									header: "readsets.stateCode",
-									type :"text",
-									order:true,
-						    	  	position:7});
+					columns.push({	"property":"state.code",
+									"filter":"codes:'state'",
+									"header":Messages("readsets.stateCode"),
+									"type":"text",
+									"order":true,
+									"position":7
+					});
 					
-					columns.push({	property:"productionValuation.valid",
-									filter:"codes:'valuation'",
-									header: "readsets.productionValuation.valid",
-									type :"text",
-							    	order:true,
-						    	  	position:70});
+					columns.push({	"property":"productionValuation.valid",
+									"filter":"codes:'valuation'",
+									"header":Messages("readsets.productionValuation.valid"),
+									"type":"text",
+									"order":true,
+									"position":70
+					});
 					
-					columns.push({	property:"productionValuation.resolutionCodes",
-									header: "readsets.productionValuation.resolutions",
-									render:'<div bt-select ng-model="value.data.productionValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
-									type :"text",
-									hide:true,
-						    	  	position:72});
+					columns.push({	"property":"productionValuation.resolutionCodes",
+									"header":Messages("readsets.productionValuation.resolutions"),
+									"render":'<div bt-select ng-model="value.data.productionValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
+									"type":"text",
+									"hide":true,
+									"position":72
+					});
 					
-					columns.push({	property:"bioinformaticValuation.valid",
-									filter:"codes:'valuation'",
-									header: "readsets.bioinformaticValuation.valid",
-									type :"text",
-							    	order:true,
-						    	  	position:80});
+					columns.push({	"property":"bioinformaticValuation.valid",
+									"filter":"codes:'valuation'",
+									"header":Messages("readsets.bioinformaticValuation.valid"),
+									"type":"text",
+									"order":true,
+									"position":80
+					});
 					
-					columns.push({	property:"bioinformaticValuation.resolutionCodes",
-									header: "readsets.bioinformaticValuation.resolutions",
-									render:'<div bt-select ng-model="value.data.bioinformaticValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
-									type :"text",
-									hide:true,
-						    	  	position:82});
+					columns.push({	"property":"bioinformaticValuation.resolutionCodes",
+									"header":Messages("readsets.bioinformaticValuation.resolutions"),
+									"render":'<div bt-select ng-model="value.data.bioinformaticValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
+									"type":"text",
+									"hide":true,
+									"position":82
+					});
 			}else if(mainService.getHomePage() == 'valuation'){
-					columns.push({	property:"state.code",
-									filter:"codes:'state'",
-									header: "readsets.stateCode",
-									type :"text",
-									order:true,
-						    	  	position:7});
+					columns.push({	"property":"state.code",
+									"filter":"codes:'state'",
+									"header":Messages("readsets.stateCode"),
+									"type":"text",
+									"order":true,
+									"position":7
+					});
 					
-					columns.push({	property:"productionValuation.valid",
-									filter:"codes:'valuation'",
-									header: "readsets.productionValuation.valid",
-									type :"text",
-							    	order:true,
-							    	edit:true,
-							    	choiceInList:true,
-							    	listStyle:'bt-select',
-							    	possibleValues:'searchService.lists.getValuations()',
-						    	  	position:70
-							    	});
+					columns.push({	"property":"productionValuation.valid",
+									"filter":"codes:'valuation'",
+									"header":Messages("readsets.productionValuation.valid"),
+									"type":"text",
+									"order":true,
+									"edit":true,
+									"choiceInList":true,
+									"listStyle":'bt-select',
+							    	"possibleValues":'searchService.lists.getValuations()',
+							    	"position":70
+					});
 					
-					columns.push({	property:"productionValuation.criteriaCode",
-									filter:"codes:'valuation_criteria'",
-									header: "readsets.productionValuation.criteria",
-									type :"text",
-							    	edit:true,
-							    	choiceInList:true,
-							    	listStyle:'bt-select',
-							    	possibleValues:'searchService.lists.getValuationCriterias()',
-						    	  	position:71
+					columns.push({	"property":"productionValuation.criteriaCode",
+									"filter":"codes:'valuation_criteria'",
+									"header":Messages("readsets.productionValuation.criteria"),
+									"type":"text",
+									"edit":true,
+									"choiceInList":true,
+									"listStyle":'bt-select',
+							    	"possibleValues":'searchService.lists.getValuationCriterias()',
+							    	"position":71
 				    });
 					
-					columns.push({	property:"productionValuation.resolutionCodes",
-									header: "readsets.productionValuation.resolutions",
-									render:'<div bt-select ng-model="value.data.productionValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
-									type :"text",
-							    	edit:true,
-							    	choiceInList:true,
-							    	listStyle:'bt-select-multiple',
-							    	possibleValues:'searchService.lists.getResolutions()',
-							    	groupBy:'category.name',
-						    	  	position:72
+					columns.push({	"property":"productionValuation.resolutionCodes",
+									"header":Messages("readsets.productionValuation.resolutions"),
+									"render":'<div bt-select ng-model="value.data.productionValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
+									"type":"text",
+									"edit":true,
+									"choiceInList":true,
+									"listStyle":'bt-select-multiple',
+							    	"possibleValues":'searchService.lists.getResolutions()',
+							    	"groupBy":'category.name',
+							    	"position":72
 							    		
 					});
 					
-					columns.push({	property:"bioinformaticValuation.valid",
-									filter:"codes:'valuation'",
-									header: "readsets.bioinformaticValuation.valid",
-									type :"text",
-									order:true,
-							    	edit:true,
-							    	choiceInList:true,
-							    	listStyle:'bt-select',
-							    	possibleValues:'searchService.lists.getValuations()',
-						    	  	position:80
+					columns.push({	"property":"bioinformaticValuation.valid",
+									"filter":"codes:'valuation'",
+									"header":Messages("readsets.bioinformaticValuation.valid"),
+									"type":"text",
+									"order":true,
+									"edit":true,
+									"choiceInList":true,
+									"listStyle":'bt-select',
+							    	"possibleValues":'searchService.lists.getValuations()',
+							    	"position":80
 					});	
 					
-					columns.push({	property:"bioinformaticValuation.resolutionCodes",
-									header: "readsets.bioinformaticValuation.resolutions",
-									render:'<div bt-select ng-model="value.data.bioinformaticValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
-									type :"text",
-									edit:true,
-							    	choiceInList:true,
-							    	listStyle:'bt-select-multiple',
-							    	possibleValues:'searchService.lists.getResolutions()',
-							    	groupBy:'category.name',
-						    	  	position:82
+					columns.push({	"property":"bioinformaticValuation.resolutionCodes",
+									"header":Messages("readsets.bioinformaticValuation.resolutions"),
+									"render":'<div bt-select ng-model="value.data.bioinformaticValuation.resolutionCodes" bt-options="valid.code as valid.name group by valid.category.name for valid in searchService.lists.getResolutions()" ng-edit="false"></div>',
+									"type":"text",
+									"edit":true,
+									"choiceInList":true,
+									"listStyle":'bt-select-multiple',
+							    	"possibleValues":'searchService.lists.getResolutions()',
+							    	"groupBy":'category.name',
+							    	"position":82
 					});
 					
 			}else if(mainService.getHomePage() == 'state'){
-					columns.push({	property:"state.code",
-									filter:"codes:'state'",
-									header: "readsets.stateCode",
-									type :"text",
-									edit:true,
-									order:true,
-							    	choiceInList:true,
-							    	listStyle:'bt-select',
-							    	possibleValues:'searchService.lists.getStates()',
-						    	  	position:7});
-					
-					columns.push({	property:"productionValuation.valid",
-									filter:"codes:'valuation'",
-									header: "readsets.productionValuation.valid",
-									type :"text",
-							    	order:true,
-						    	  	position:70    	
+					columns.push({	"property":"state.code",
+									"filter":"codes:'state'",
+									"header":Messages("readsets.stateCode"),
+									"type":"text",
+									"edit":true,
+									"order":true,
+									"choiceInList":true,
+									"listStyle":'bt-select',
+							    	"possibleValues":'searchService.lists.getStates()',
+							    	"position":7
 					});
 					
-					columns.push({	property:"bioinformaticValuation.valid",
-									filter:"codes:'valuation'",
-									header: "readsets.bioinformaticValuation.valid",
-									type :"text",
-									order:true,
-						    	  	position:80
+					columns.push({	"property":"productionValuation.valid",
+									"filter":"codes:'valuation'",
+									"header":Messages("readsets.productionValuation.valid"),
+									"type":"text",
+									"order":true,
+									"position":70    	
+					});
+					
+					columns.push({	"property":"bioinformaticValuation.valid",
+									"filter":"codes:'valuation'",
+									"header":Messages("readsets.bioinformaticValuation.valid"),
+									"type":"text",
+									"order":true,
+									"position":80
 					});
 					
 			}else if(mainService.getHomePage() == 'batch'){
-					columns.push({	property:"state.code",
-									filter:"codes:'state'",
-									header: "readsets.stateCode",
-									type :"text",
-									order:true,
-							    	choiceInList:true,
-							    	listStyle:'bt-select',
-							    	possibleValues:'searchService.lists.getStates()',
-							    	position:7
-							    	});
-					columns.push({	property:"productionValuation.valid",
-									filter:"codes:'valuation'",
-									header: "readsets.productionValuation.valid",
-									type :"text",
-							    	order:true,
-						    	  	position:70    	
-							    	});
-					columns.push({	property:"bioinformaticValuation.valid",
-									filter:"codes:'valuation'",
-									header: "readsets.bioinformaticValuation.valid",
-									type :"text",
-									order:true,
-						    	  	position:80
-				    });
-					columns.push({	property:"properties.isSentCCRT.value",
-									header: "readsets.properties.isSentCCRT",
-									type :"boolean",
-									edit:true,
-						    	  	position:90
+					columns.push({	"property":"state.code",
+									"filter":"codes:'state'",
+									"header":Messages("readsets.stateCode"),
+									"type":"text",
+									"order":true,
+							    	"choiceInList":true,
+							    	"listStyle":'bt-select',
+							    	"possibleValues":'searchService.lists.getStates()',
+							    	"position":7
 					});
-					columns.push({	property:"properties.isSentCollaborator.value",
-									header: "readsets.properties.isSentCollaborator",
-									type :"boolean",
-									edit:true,
-						    	  	position:91
+					columns.push({	"property":"productionValuation.valid",
+									"filter":"codes:'valuation'",
+									"header":Messages("readsets.productionValuation.valid"),
+									"type":"text",
+									"order":true,
+									"position":70    	
+					});
+					columns.push({	"property":"bioinformaticValuation.valid",
+									"filter":"codes:'valuation'",
+									"header":Messages("readsets.bioinformaticValuation.valid"),
+									"type":"text",
+									"order":true,
+									"position":80
+				    });
+					columns.push({	"property":"properties.isSentCCRT.value",
+									"header":Messages("readsets.properties.isSentCCRT"),
+									"type":"boolean",
+									"edit":true,
+									"position":90
+					});
+					columns.push({	"property":"properties.isSentCollaborator.value",
+									"header":Messages("readsets.properties.isSentCollaborator"),
+									"type":"boolean",
+									"edit":true,
+									"position":91
 					});
 			}
 			
