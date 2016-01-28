@@ -147,8 +147,6 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		
-		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-		
 			//Bionano
 			
 			l.add(newExperimentType("Ext to Irys Prep NLRS","ext-to-irys-nlrs-prep",null,-1,
@@ -403,9 +401,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 			//		null,null).save();
 			
 			
-		}
 		
-
 
 	}
 
