@@ -3,7 +3,7 @@
 angular.module('ngl-sq.containerSupportsServices', []).
 factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'datatable', function($http, mainService, lists, datatable){
 	var tags = [];
-	var getColumnsDefault = function(){
+	var getColumns = function(){
 		var columns = [];
 		columns.push({
 			"header":Messages("containerSupports.table.code"),
@@ -129,8 +129,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 	};
 
 	var searchService = {
-			getColumns:getColumnsDefault,
-			getDefaultColumns:getColumnsDefault,
+			getColumns:getColumns,
 			datatable:undefined,
 			isRouteParam:false,
 			lists : lists,
@@ -269,11 +268,6 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 					lists.refresh.processTypes({"categoryCode":this.form.processCategory});
 				}
 			},
-			resetDatatableColumns:function(){
-				//this.initAdditionalColumns();
-				this.datatable.setColumnsConfig(this.getDefaultColumns());
-				this.search();
-			},
 			/**
 			 * initialise the service
 			 */
@@ -284,7 +278,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 				if(datatableConfig && angular.isUndefined(mainService.getDatatable())){
 					searchService.datatable = datatable(datatableConfig);
 					mainService.setDatatable(searchService.datatable);
-					searchService.datatable.setColumnsConfig(getColumnsDefault());		
+					searchService.datatable.setColumnsConfig(getColumns());		
 				}else if(angular.isDefined(mainService.getDatatable())){
 					searchService.datatable = mainService.getDatatable();			
 				}	
