@@ -3,10 +3,10 @@
 @import views.html.helper._
 
 <div class="row" ng-init="@initMethod"> 
-<div class="col-md-12 col-lg-12" datatable="@datatableName">
+<div class="col-md-12 col-lg-12" ultimate-datatable="@datatableName">
 
 	@if(inputs.body != ""){
-	<div dt-form>
+	<div udt-form>
 	<form class="well well-small" @formAttrs>
 		<div class="row">
 		@inputs
