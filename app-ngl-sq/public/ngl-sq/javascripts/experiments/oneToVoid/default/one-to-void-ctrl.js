@@ -91,7 +91,10 @@ angular.module('home').controller('OneToVoidCtrl',['$scope', '$parse','atmToSing
 				by:'ContainerInputCode'
 			},
 			remove:{
-				active:false,
+				active: ( $scope.isNewState()),
+				withEdit : true,
+				showButton: ($scope.isNewState()),				
+				mode:'local'
 			},
 			save:{
 				active:true,
@@ -102,8 +105,9 @@ angular.module('home').controller('OneToVoidCtrl',['$scope', '$parse','atmToSing
 				active:true
 			},
 			edit:{
-				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
-				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),				
+				active: true,
+				showButton: true,
+				byDefault:$scope.isNewState(),
 				columnMode:true
 			},
 			messages:{
@@ -132,7 +136,7 @@ angular.module('home').controller('OneToVoidCtrl',['$scope', '$parse','atmToSing
 		$scope.$on('refresh', function(e) {
 			console.log("call event refresh on one-to-void");		
 			var dtConfig = $scope.atmService.data.getConfig();
-			dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
+			byDefault:$scope.isNewState();
 			dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 			$scope.atmService.data.setConfig(dtConfig);
 			

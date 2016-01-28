@@ -129,7 +129,8 @@
 			},
 			order:{
 				mode:'local', //or 
-				active:true
+				active:true,
+				by:"outputContainerUsed.code"
 			},
 			remove:{
 				active:false,
@@ -153,6 +154,7 @@
 			
 			edit:{
 				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				byDefault:$scope.isNewState(),				
 				columnMode:true
 			},
 			messages:{

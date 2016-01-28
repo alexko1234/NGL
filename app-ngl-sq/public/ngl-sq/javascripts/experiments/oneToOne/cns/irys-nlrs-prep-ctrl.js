@@ -83,7 +83,7 @@ angular.module('home').controller('IrysNlrsPrepCtrl',['$scope', '$parse', 'atmTo
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":50,
+			        	 "position":22,
 			        	 "extraHeaders":{0:"Outputs"}
 			         },
 			         {
@@ -137,7 +137,7 @@ angular.module('home').controller('IrysNlrsPrepCtrl',['$scope', '$parse', 'atmTo
 			edit:{
 				active: $scope.isEditModeAvailable(),
 				showButton: $scope.isEditModeAvailable(),
-				byDefault:false,				
+				byDefault:$scope.isNewState(),				
 				columnMode:true
 			},
 			messages:{

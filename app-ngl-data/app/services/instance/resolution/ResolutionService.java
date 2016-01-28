@@ -637,6 +637,9 @@ public class ResolutionService {
 		l.addAll(getDefaultResolutionCNS());
 		
 		l.add(InstanceFactory.newResolution("marquage incorrect", "echec-labeling", resolutionCategories.get("Default"), (short) 4));
+		l.add(InstanceFactory.newResolution("hors gamme", "out-of-range", resolutionCategories.get("Default"), (short) 5));
+		l.add(InstanceFactory.newResolution("conc. < 5 : over-staining risk", "over-staining-risk", resolutionCategories.get("Default"), (short) 6));
+		l.add(InstanceFactory.newResolution("conc. > 9 : over-loading risk", "over-loading-risk", resolutionCategories.get("Default"), (short) 7));
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "expIrysPrepNLRSReso";
@@ -659,6 +662,7 @@ public class ResolutionService {
 		l.add(InstanceFactory.newResolution("problème passage des molécules région pillar", "echec-pillarRegion", resolutionCategories.get("Default"), (short) 5));
 		l.add(InstanceFactory.newResolution("labelling incorrect", "echec-labeling", resolutionCategories.get("Default"), (short) 6));
 		l.add(InstanceFactory.newResolution("utilisation du NanoAnalyzer", "nanoAnalyzer", resolutionCategories.get("Default"), (short) 7));
+		
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "expDepotBionanoReso";
