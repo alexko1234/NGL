@@ -409,7 +409,7 @@ public class SubmissionServices {
 		config.state.code="used";
 		config.traceInformation.modifyDate = new Date();
 		config.traceInformation.modifyUser = VariableSRA.admin;
-		
+		// confWorkflow.setState(configCode, state avec valeur à "V-SUB"
 		MongoDBDAO.update(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, 
 				DBQuery.is("code", config.code),
 				DBUpdate.set("state.code", "used").set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date()));	
