@@ -148,7 +148,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 
 		
 			//Bionano
-			
+		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){	
 			l.add(newExperimentType("Ext to Irys Prep NLRS","ext-to-irys-nlrs-prep",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
@@ -244,7 +244,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					getInstrumentUsedTypes("rocheLightCycler-qPCR","stratagene-qPCR"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 	
 		*/	
-
+		}
 		
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
 
