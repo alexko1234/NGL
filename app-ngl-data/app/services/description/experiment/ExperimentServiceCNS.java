@@ -245,10 +245,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 	
 		*/	
 
-			
-
-		}
-
+		
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
 
 	}
@@ -400,7 +397,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		//	newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false,false,getExperimentTypeNodes("ext-to-qpcr","amplification"),
 			//		null,null).save();
 			
-			
+		}
 		
 
 	}
