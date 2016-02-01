@@ -73,10 +73,9 @@ public class Container extends DBObject implements IValidation {
 	//Stock management 
 	public PropertySingleValue mesuredVolume;        //TODO GA rename to volume
 	public PropertySingleValue mesuredConcentration; //TODO GA rename to concentration
-	public PropertySingleValue mesuredQuantity; 	 //TODO GA rename to quantity
+	public PropertySingleValue quantity; 	
 
-	public List<PropertyValue> calculedVolume; //TODO GA remove
-
+	
 	// For search optimisation
 	public Set<String> projectCodes; // getProjets
 	public Set<String> sampleCodes; // getSamples
@@ -108,7 +107,6 @@ public class Container extends DBObject implements IValidation {
 		sampleCodes = new HashSet<String>();
 		//comments = new ArrayList<>();
 		//qualityControlResults = new HashSet<>();
-		//calculedVolume = new ArrayList<>();
 		fromExperimentTypeCodes = new HashSet<>();
 	
 	}

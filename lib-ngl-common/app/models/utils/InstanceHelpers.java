@@ -220,7 +220,7 @@ public class InstanceHelpers {
 		sampleOnInputContainer.containerCode = container.code;
 		sampleOnInputContainer.containerSupportCode = container.support.code;
 		sampleOnInputContainer.mesuredVolume = container.mesuredVolume;
-		sampleOnInputContainer.mesuredQuantity = container.mesuredQuantity;
+		sampleOnInputContainer.mesuredQuantity = container.quantity;
 		sampleOnInputContainer.mesuredConcentration = container.mesuredConcentration;
 
 		sampleOnInputContainer.lastUpdateDate = new Date();

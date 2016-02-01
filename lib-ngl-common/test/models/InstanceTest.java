@@ -201,7 +201,6 @@ public class InstanceTest extends AbstractTests{
 			
 		//public List<QualityControlResult> qualityControlResults; 
 		//public List<Proper> mesuredVolume;
-		//public List<Volume> calculedVolume;		
 		//public String fromPurifingCode;
 
 		container.comments=new ArrayList<Comment>();
