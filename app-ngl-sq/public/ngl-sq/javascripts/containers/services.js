@@ -104,8 +104,8 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			
 		});
 		columns.push({
-			"header":Messages("containers.table.fromExperimentTypeCodes"),
-			"property":"fromExperimentTypeCodes",
+			"header":Messages("containers.table.fromTransformationTypeCodes"),
+			"property":"fromTransformationTypeCodes",
 			"order":false,
 			"hide":true,
 			"position":5.5,
@@ -163,7 +163,7 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 				
 		});
 		columns.push({
-				"header":Messages("containers.table.inputProcessCodes"),
+				"header":Messages("containers.table.processCodes"),
 				"property":"processCodes",
 				"order":false,
 				"hide":true,

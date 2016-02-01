@@ -30,7 +30,7 @@ public class ContainerSupport extends DBObject implements IValidation{
 	public TraceInformation traceInformation;
 	public Set<String> projectCodes;
 	public Set<String> sampleCodes;
-	public Set<String> fromExperimentTypeCodes; //TODO GA useful ???
+	public Set<String> fromTransformationTypeCodes; //TODO GA useful ???
 	public Map<String, PropertyValue> properties;
 	
 	
@@ -38,7 +38,7 @@ public class ContainerSupport extends DBObject implements IValidation{
 	public ContainerSupport() {
 		projectCodes= new HashSet<>();
 		sampleCodes= new HashSet<>();
-		fromExperimentTypeCodes= new HashSet<>();
+		fromTransformationTypeCodes= new HashSet<>();
 		//properties = new HashMap<>();
 	}
 
@@ -57,7 +57,7 @@ public class ContainerSupport extends DBObject implements IValidation{
 		ContainerSupportValidationHelper.validateContainerSupportCategoryCode(categoryCode, contextValidation);
 		ContainerSupportValidationHelper.validateProjectCodes(projectCodes, contextValidation);
 		ContainerSupportValidationHelper.validateSampleCodes(sampleCodes, contextValidation);
-		ContainerSupportValidationHelper.validateExperimentTypeCodes(fromExperimentTypeCodes, contextValidation);
+		ContainerSupportValidationHelper.validateExperimentTypeCodes(fromTransformationTypeCodes, contextValidation);
 		//TODO Validate properties
 	}
 }

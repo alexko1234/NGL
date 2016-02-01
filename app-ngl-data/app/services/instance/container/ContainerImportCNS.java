@@ -258,8 +258,8 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		container.quantity=new PropertySingleValue(Math.round(rs.getFloat("mesuredQuantity")*100.0)/100.0, "ng");
 		
 		if(null != experimentTypeCode){
-			container.fromExperimentTypeCodes=new HashSet<String>();
-			container.fromExperimentTypeCodes.add(experimentTypeCode);	
+			container.fromTransformationTypeCodes=new HashSet<String>();
+			container.fromTransformationTypeCodes.add(experimentTypeCode);	
 		}
 		
 		container.projectCodes=new HashSet<String>();					

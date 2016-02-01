@@ -133,24 +133,24 @@ public class ContainerSupportHelper {
 			if(containerSupport.sampleCodes == null){
 				containerSupport.sampleCodes = new HashSet<String>();
 			}
-			if(containerSupport.fromExperimentTypeCodes == null){
-				containerSupport.fromExperimentTypeCodes = new HashSet<String>();
+			if(containerSupport.fromTransformationTypeCodes == null){
+				containerSupport.fromTransformationTypeCodes = new HashSet<String>();
 			}
 			containerSupport.projectCodes.addAll(container.projectCodes);
 			containerSupport.sampleCodes.addAll(container.sampleCodes);
 			
 				
 			if(experiment.categoryCode.equals("transformation")){
-					if(containerSupport.fromExperimentTypeCodes == null){
-						containerSupport.fromExperimentTypeCodes = new HashSet<String>();
+					if(containerSupport.fromTransformationTypeCodes == null){
+						containerSupport.fromTransformationTypeCodes = new HashSet<String>();
 					}
-					containerSupport.fromExperimentTypeCodes.add(experiment.typeCode);
+					containerSupport.fromTransformationTypeCodes.add(experiment.typeCode);
 				}else{
-					if(CollectionUtils.isNotEmpty(container.fromExperimentTypeCodes)){				
-						if(containerSupport.fromExperimentTypeCodes == null){
-							containerSupport.fromExperimentTypeCodes = new HashSet<String>();
+					if(CollectionUtils.isNotEmpty(container.fromTransformationTypeCodes)){				
+						if(containerSupport.fromTransformationTypeCodes == null){
+							containerSupport.fromTransformationTypeCodes = new HashSet<String>();
 						}
-						containerSupport.fromExperimentTypeCodes.addAll(container.fromExperimentTypeCodes);
+						containerSupport.fromTransformationTypeCodes.addAll(container.fromTransformationTypeCodes);
 					}
 				}
 
@@ -176,7 +176,7 @@ public class ContainerSupportHelper {
 		for(Container container : containers){
 			containerSupport.projectCodes.addAll(container.projectCodes);
 			containerSupport.sampleCodes.addAll(container.sampleCodes);
-			containerSupport.fromExperimentTypeCodes.addAll(container.fromExperimentTypeCodes);
+			containerSupport.fromTransformationTypeCodes.addAll(container.fromTransformationTypeCodes);
 		}
 
 

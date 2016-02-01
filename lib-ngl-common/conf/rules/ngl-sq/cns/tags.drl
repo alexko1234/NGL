@@ -131,8 +131,8 @@ rule "Generate TagInfo from ContainerSupport"
 		tagSupport.properties.put("tags", new PropertyListValue(new ArrayList<String>(tags)));	
 		
 		retract($support);
-		if($support.fromExperimentTypeCodes.size() == 1){
-			TagInfo tagInfo = new TagInfo($support.fromExperimentTypeCodes.iterator().next(), tagSupport);
+		if($support.fromTransformationTypeCodes.size() == 1){
+			TagInfo tagInfo = new TagInfo($support.fromTransformationTypeCodes.iterator().next(), tagSupport);
 			insert(tagInfo);
 		}else{
 			TagInfo tagInfo = new TagInfo(null, tagSupport);

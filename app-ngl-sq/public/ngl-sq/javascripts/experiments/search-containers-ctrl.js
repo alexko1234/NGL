@@ -104,8 +104,8 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 			
 		},
 		{
-			"header":Messages("containers.table.fromExperimentTypeCodes"),
-			"property":"fromExperimentTypeCodes",
+			"header":Messages("containers.table.fromTransformationTypeCodes"),
+			"property":"fromTransformationTypeCodes",
 			"hide":true,
 			"order":false,
 			"position":5.5,
@@ -162,7 +162,7 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 				
 		 },
 		{
-			"header":Messages("containers.table.inputProcessCodes"),
+			"header":Messages("containers.table.processCodes"),
 			"property":"processCodes",
 			"order":false,
 			"hide":true,

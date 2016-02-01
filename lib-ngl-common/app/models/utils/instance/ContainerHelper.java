@@ -198,8 +198,8 @@ public class ContainerHelper {
 				//FDS 14/10/2015 ajout storage code
 				newSupport.storageCode=container.support.storageCode;
 				
-				if(null != container.fromExperimentTypeCodes){
-					newSupport.fromExperimentTypeCodes = new  HashSet<String>(container.fromExperimentTypeCodes);
+				if(null != container.fromTransformationTypeCodes){
+					newSupport.fromTransformationTypeCodes = new  HashSet<String>(container.fromTransformationTypeCodes);
 				}
 				
 				if (!mapSupports.containsKey(newSupport.code)) {
@@ -209,8 +209,8 @@ public class ContainerHelper {
 					ContainerSupport oldSupport = (ContainerSupport) mapSupports.get(newSupport.code);
 					oldSupport.projectCodes.addAll(newSupport.projectCodes); 
 					oldSupport.sampleCodes.addAll(newSupport.sampleCodes);
-					if(null != newSupport.fromExperimentTypeCodes && null != oldSupport.fromExperimentTypeCodes){
-						oldSupport.fromExperimentTypeCodes.addAll(newSupport.fromExperimentTypeCodes);
+					if(null != newSupport.fromTransformationTypeCodes && null != oldSupport.fromTransformationTypeCodes){
+						oldSupport.fromTransformationTypeCodes.addAll(newSupport.fromTransformationTypeCodes);
 					}
 				}
 			}
@@ -238,7 +238,7 @@ public class ContainerHelper {
 				newSupport.projectCodes = new  HashSet<String>(container.projectCodes);
 				newSupport.sampleCodes = new  HashSet<String>(container.sampleCodes);	
 				// FDS TEST ajout 22/01/2016
-				newSupport.fromExperimentTypeCodes = new  HashSet<String>(container.fromExperimentTypeCodes);		
+				newSupport.fromTransformationTypeCodes = new  HashSet<String>(container.fromTransformationTypeCodes);		
 				
 				//FDS 14/10/2015 ajout storage code 
 				if ( container.support.storageCode != null ){
@@ -258,8 +258,8 @@ public class ContainerHelper {
 					
 					//FDS TEST ajout 22/01/2016 
 					// et si null ??
-					oldSupport.fromExperimentTypeCodes.addAll(newSupport.fromExperimentTypeCodes); 
-					Logger.debug("[updateSupportFromUpdatedContainers] adding fromExperimentTypeCodes "+ newSupport.fromExperimentTypeCodes + " to containerSupport " + oldSupport.code);
+					oldSupport.fromTransformationTypeCodes.addAll(newSupport.fromTransformationTypeCodes); 
+					Logger.debug("[updateSupportFromUpdatedContainers] adding fromTransformationTypeCodes "+ newSupport.fromTransformationTypeCodes + " to containerSupport " + oldSupport.code);
 				}
 			}
 		}
@@ -283,8 +283,8 @@ public class ContainerHelper {
 				|| !updatedCs.projectCodes.containsAll(dbCs.projectCodes) 
 				|| !dbCs.sampleCodes.containsAll(updatedCs.sampleCodes) 
 				|| !updatedCs.sampleCodes.containsAll(dbCs.sampleCodes) 
-				|| !dbCs.fromExperimentTypeCodes.containsAll(updatedCs.fromExperimentTypeCodes) 
-				|| !updatedCs.fromExperimentTypeCodes.containsAll(dbCs.fromExperimentTypeCodes) 
+				|| !dbCs.fromTransformationTypeCodes.containsAll(updatedCs.fromTransformationTypeCodes) 
+				|| !updatedCs.fromTransformationTypeCodes.containsAll(dbCs.fromTransformationTypeCodes) 
 				|| (null != updatedCs.storageCode && !updatedCs.storageCode.equals(dbCs.storageCode))
 				|| (null != dbCs.storageCode && !dbCs.storageCode.equals(updatedCs.storageCode))) {
 				

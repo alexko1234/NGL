@@ -86,8 +86,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			        	"position":10
 					},
 			        {
-			        	 "header":Messages("containers.table.fromExperimentTypeCodes"),
-			        	 "property":"fromExperimentTypeCodes",			        	 
+			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
+			        	 "property":"fromTransformationTypeCodes",			        	 
 			        	 "order":false,
 			        	 "hide":true,
 			        	 "type":"text",
@@ -215,7 +215,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	
 	$scope.selectDefaultFromExperimentType = function(){
 		var selectionList = {};	
-		$scope.searchService.form.fromExperimentTypeCodes=[];
+		$scope.searchService.form.fromTransformationTypeCodes=[];
 			
 		if(angular.isDefined($scope.searchService.form.nextProcessTypeCode)){
 			selectionList = angular.copy($scope.lists.getExperimentTypesWithNone());
@@ -229,8 +229,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 							console.log("experimentType.code= "+experimentType.code);
 							console.log("item.code= "+item.code);
 							console.log("index= "+index);								
-							$scope.searchService.form.fromExperimentTypeCodes.push(item.code);							
-							console.log("form.fromExperimentTypeCodes= "+$scope.searchService.form.fromExperimentTypeCodes);
+							$scope.searchService.form.fromTransformationTypeCodes.push(item.code);							
+							console.log("form.fromTransformationTypeCodes= "+$scope.searchService.form.fromTransformationTypeCodes);
 						}
 					});
 				});
@@ -266,7 +266,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 		if((_form.processCategory && _form.nextProcessTypeCode) || _form.createUser){			
 			_form.stateCode = 'IW-P';
 			
-			if(_form.fromExperimentTypeCodes){			
+			if(_form.fromTransformationTypeCodes){			
 				_form.isEmptyFromExperimentTypeCodes = false;
 			}
 

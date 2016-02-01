@@ -84,8 +84,8 @@ rule "Init objects ContentInfo in WM"
 		libProcessTypeCode=$content.properties.get("libProcessTypeCode").value.toString();
 	}
 
-	if($container.fromExperimentTypeCodes!=null && $container.fromExperimentTypeCodes.size()>0)
-		fromCode=$container.fromExperimentTypeCodes.iterator().next();
+	if($container.fromTransformationTypeCodes!=null && $container.fromTransformationTypeCodes.size()>0)
+		fromCode=$container.fromTransformationTypeCodes.iterator().next();
 	
 
 	ContentInfo contentInfo= new ContentInfo($atomicTransfert.line,$container.code,tag,tagCategory,$content.sampleCode, tagRealSize, sequence, libProcessTypeCode,fromCode);
@@ -236,7 +236,7 @@ rule "Same liprocessTypeCode for tag VIDE"
     end
 
     
-rule "Same fromExperimentTypeCodes for tag VIDE and same libprocesstypeCode"
+rule "Same fromTransformationTypeCodes for tag VIDE and same libprocesstypeCode"
 	@nglSQ (validations )
 	dialect "java"
 	salience 210

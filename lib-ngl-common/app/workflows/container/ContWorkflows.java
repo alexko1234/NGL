@@ -51,21 +51,21 @@ public class ContWorkflows extends Workflows<Container> {
 			Container container) {
 		
 		if("IS".equals(container.state.code) || "UA".equals(container.state.code)){
-			//TODO GA improve the extraction of fromExperimentTypeCodes
+			//TODO GA improve the extraction of fromTransformationTypeCodes
 			 
 			 boolean unsetFromExperimentTypeCodes = false;
-			 if(null != container.fromExperimentTypeCodes && container.fromExperimentTypeCodes.size() == 1){
-				 String code = container.fromExperimentTypeCodes.iterator().next();
+			 if(null != container.fromTransformationTypeCodes && container.fromTransformationTypeCodes.size() == 1){
+				 String code = container.fromTransformationTypeCodes.iterator().next();
 				 if(code.startsWith("ext"))unsetFromExperimentTypeCodes=true;
-			 }else if(null != container.fromExperimentTypeCodes && container.fromExperimentTypeCodes.size() > 1){
-				 Logger.error("several fromExperimentTypeCodes not managed");
+			 }else if(null != container.fromTransformationTypeCodes && container.fromTransformationTypeCodes.size() > 1){
+				 Logger.error("several fromTransformationTypeCodes not managed");
 			 }
 			
 			if(unsetFromExperimentTypeCodes){
 				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
 						DBQuery.is("code",container.code), DBUpdate.unset("processCodes")
 																	.unset("processTypeCodes")
-																	.unset("fromExperimentTypeCodes"));
+																	.unset("fromTransformationTypeCodes"));
 			}else{
 				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
 						DBQuery.is("code",container.code), DBUpdate.unset("processCodes")

@@ -188,8 +188,8 @@ public class ContainerSupports extends CommonController {
 			queryElts.add(DBQuery.in("categoryCode", supportsSearch.containerSupportCategories));
 		}
 
-		if(CollectionUtils.isNotEmpty(supportsSearch.fromExperimentTypeCodes)){
-			queryElts.add(DBQuery.in("fromExperimentTypeCodes", supportsSearch.fromExperimentTypeCodes));
+		if(CollectionUtils.isNotEmpty(supportsSearch.fromTransformationTypeCodes)){
+			queryElts.add(DBQuery.in("fromTransformationTypeCodes", supportsSearch.fromTransformationTypeCodes));
 		}		
 
 		//These fields are not in the ContainerSupport collection then we use the Container collection

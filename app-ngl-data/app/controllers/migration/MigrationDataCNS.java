@@ -83,13 +83,13 @@ public static Result updateFromExperimentTypeCodesContainerSupport() throws DAOE
 			List<Container> containers =MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code", containerSupport.code)).toList();
 			List<String> fromExperimentTypeCodes=new ArrayList<String>();
 			for(Container container:containers){
-				if(container.fromExperimentTypeCodes!=null)
-					fromExperimentTypeCodes.addAll(container.fromExperimentTypeCodes);
+				if(container.fromTransformationTypeCodes!=null)
+					fromExperimentTypeCodes.addAll(container.fromTransformationTypeCodes);
 					//InstanceHelpers.addCodesList(container.fromExperimentTypeCodes,fromExperimentTypeCodes);
 			}
 			if(fromExperimentTypeCodes.size()!=0){
 				Logger.info("update support"+containerSupport.code);
-				MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code",containerSupport.code),DBUpdate.set("fromExperimentTypeCodes", fromExperimentTypeCodes));
+				MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code",containerSupport.code),DBUpdate.set("fromTransformationTypeCodes", fromExperimentTypeCodes));
 			}
 		}
 		

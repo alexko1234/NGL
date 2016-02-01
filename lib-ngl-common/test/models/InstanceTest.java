@@ -195,8 +195,8 @@ public class InstanceTest extends AbstractTests{
 		
 		container.contents.add(new Content("SampleCode", "sampleType", "sampleCategory"));
 
-		container.fromExperimentTypeCodes=new HashSet<String>();
-		container.fromExperimentTypeCodes.add("experimentType");
+		container.fromTransformationTypeCodes=new HashSet<String>();
+		container.fromTransformationTypeCodes.add("experimentType");
 		 
 			
 		//public List<QualityControlResult> qualityControlResults; 
@@ -234,9 +234,9 @@ public class InstanceTest extends AbstractTests{
 		//assertThat(container.contents.get(0).sampleCategoryCode).isEqualTo("sampleCategory");
 		//assertThat(container.contents.get(0).sampleTypeCode).isEqualTo("sampleType");
 
-		assertThat(container.fromExperimentTypeCodes).isNotEmpty();
-		assertThat(container.fromExperimentTypeCodes.size()).isEqualTo(1);
-		assertThat(container.fromExperimentTypeCodes.toArray(new String[0])[0]).isEqualTo("experimentType");
+		assertThat(container.fromTransformationTypeCodes).isNotEmpty();
+		assertThat(container.fromTransformationTypeCodes.size()).isEqualTo(1);
+		assertThat(container.fromTransformationTypeCodes.toArray(new String[0])[0]).isEqualTo("experimentType");
 
 	}
 

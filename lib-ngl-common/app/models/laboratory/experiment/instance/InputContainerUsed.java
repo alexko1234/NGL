@@ -16,9 +16,9 @@ public class InputContainerUsed extends AbstractContainerUsed {
 	
 	public Set<String> projectCodes; 
 	public Set<String> sampleCodes; 
-	public Set<String> fromExperimentTypeCodes; 
+	public Set<String> fromTransformationTypeCodes; 
 	public Set<String> processTypeCodes;
-	public Set<String> inputProcessCodes;
+	public Set<String> processCodes ;
 	
 	
 	//keep for some html page pool or flowcell

@@ -58,7 +58,7 @@ public class Containers extends CommonController {
 	final static Form<ContainersSearchForm> containerForm = form(ContainersSearchForm.class);
 	final static Form<ContainerBatchElement> batchElementForm = form(ContainerBatchElement.class);
 	final static Form<ContainersUpdateForm> containersUpdateForm = form(ContainersUpdateForm.class);
-	final static List<String> defaultKeys =  Arrays.asList("code","fromExperimentTypeCodes","sampleCodes","contents","traceInformation","projectCodes", "processCodes", "valuation.valid", "state", "support","concentration");
+	final static List<String> defaultKeys =  Arrays.asList("code","fromTransformationTypeCodes","sampleCodes","contents","traceInformation","projectCodes", "processCodes", "valuation.valid", "state", "support","concentration");
     // GA 31/07/2015 suppression des parametres "lenght"
 	final static Form<State> stateForm = form(State.class);
 	
@@ -349,9 +349,9 @@ public class Containers extends CommonController {
 						queryElts.add(DBQuery.or(DBQuery.size("fromExperimentTypeCodes", 0),DBQuery.notExists("fromExperimentTypeCodes")
 						,DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes)));					
 				}else if(!onlyEx){
-					queryElts.add(DBQuery.in("fromExperimentTypeCodes", listePrevious));
+					queryElts.add(DBQuery.in("fromTransformationTypeCodes", listePrevious));
 				}else{
-					queryElts.add(DBQuery.or(DBQuery.size("fromExperimentTypeCodes", 0),DBQuery.notExists("fromExperimentTypeCodes")));
+					queryElts.add(DBQuery.or(DBQuery.size("fromTransformationTypeCodes", 0),DBQuery.notExists("fromTransformationTypeCodes")));
 				}
 				
 			
@@ -371,7 +371,7 @@ public class Containers extends CommonController {
 				}
 
 				if(CollectionUtils.isNotEmpty(listePrevious)){
-					queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", listePrevious)));
+					queryElts.add(DBQuery.or(DBQuery.in("fromTransformationTypeCodes", listePrevious)));
 				}
 			
 			//NextExperimentTypeCode appartient au processType des containers
@@ -407,7 +407,7 @@ public class Containers extends CommonController {
 					List<ExperimentType> previousExpType = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCodeAndProcessTypeCode(containersSearch.nextExperimentTypeCode,processType.code);
 					Logger.debug("NB Previous exp : "+previousExpType.size());
 					Set<String> previousExpTypeCodes = previousExpType.stream().map(et -> et.code).collect(Collectors.toSet());
-					subQueryElts.add(DBQuery.in("processTypeCodes", processType.code).in("fromExperimentTypeCodes", previousExpTypeCodes));
+					subQueryElts.add(DBQuery.in("processTypeCodes", processType.code).in("fromTransformationTypeCodes", previousExpTypeCodes));
 				}
 				queryElts.add(DBQuery.or(subQueryElts.toArray(new DBQuery.Query[0])));
 			}else{
@@ -418,12 +418,15 @@ public class Containers extends CommonController {
 			
 		} else if(CollectionUtils.isNotEmpty(containersSearch.fromExperimentTypeCodes)){
 			
-			if(BooleanUtils.isTrue(containersSearch.isEmptyFromExperimentTypeCodes) || containersSearch.fromExperimentTypeCodes.contains("none")){
-					queryElts.add(DBQuery.or(DBQuery.size("fromExperimentTypeCodes", 0),DBQuery.notExists("fromExperimentTypeCodes")
-					,DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes)));
+		
+		if(CollectionUtils.isNotEmpty(containersSearch.fromTransformationTypeCodes)){
+			
+			if(BooleanUtils.isTrue(containersSearch.isEmptyFromExperimentTypeCodes) || containersSearch.fromTransformationTypeCodes.contains("none")){
+					queryElts.add(DBQuery.or(DBQuery.size("fromTransformationTypeCodes", 0),DBQuery.notExists("fromTransformationTypeCodes")
+					,DBQuery.in("fromTransformationTypeCodes", containersSearch.fromTransformationTypeCodes)));
 			}
 			else {
-				queryElts.add(DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes));
+				queryElts.add(DBQuery.in("fromTransformationTypeCodes", containersSearch.fromTransformationTypeCodes));
 
 			}
 				

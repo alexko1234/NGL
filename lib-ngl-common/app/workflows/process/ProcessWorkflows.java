@@ -138,9 +138,9 @@ public class ProcessWorkflows {
 						MongoDBDAO
 						.update(InstanceConstants.CONTAINER_COLL_NAME,
 								Container.class,
-								DBQuery.is("code", containerInPutCode).in("fromExperimentTypeCodes",
+								DBQuery.is("code", containerInPutCode).in("fromTransformationTypeCodes",
 										processType.voidExperimentType.code),
-										DBUpdate.unset("fromExperimentTypeCodes"));
+										DBUpdate.unset("fromTransformationTypeCodes"));
 						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
 								DBQuery.is("code",containerInPutCode), DBUpdate.unset("processCodes").unset("processTypeCodes"),
 								true);

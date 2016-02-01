@@ -79,8 +79,8 @@ public class ExpWorkflowsHelper {
 				projectCodes.addAll(inputContainer.projectCodes);
 				sampleCodes.addAll(inputContainer.sampleCodes);
 				inputContainerSupportCodes.add(inputContainer.locationOnContainerSupport.code);
-				inputProcessCodes.addAll(inputContainer.inputProcessCodes);
-				inputFromTransformationTypeCodes.addAll(inputContainer.fromExperimentTypeCodes);
+				inputProcessCodes.addAll(inputContainer.processCodes);
+				inputFromTransformationTypeCodes.addAll(inputContainer.fromTransformationTypeCodes);
 				inputProcessTypeCodes.addAll(inputContainer.processTypeCodes);
 			});
 		
@@ -236,7 +236,7 @@ public class ExpWorkflowsHelper {
 	/**
 	 * Update OutputContainerUsed :
 	 * 		- generate ContainerSupportCode and ContainerCode if needed
-	 * 		- populate content, projectCodes, sampleCodes, fromExperimentTypeCodes, processTypeCodes, inputProcessCodes
+	 * 		- populate content, projectCodes, sampleCodes, fromTransformationTypeCodes, processTypeCodes, inputProcessCodes
 	 * 		- remove empty volume, quantity, concentration
 	 * 
 	 * !! missing populate properties on container !!		
@@ -280,7 +280,7 @@ public class ExpWorkflowsHelper {
 		if(ExperimentCategory.CODE.transformation.equals(ExperimentCategory.CODE.valueOf(exp.categoryCode))){
 			_fromExperimentTypeCodes.add(exp.typeCode);
 		}else{
-			_fromExperimentTypeCodes = atm.inputContainerUseds.stream().map((InputContainerUsed icu) -> icu.fromExperimentTypeCodes).flatMap(Set::stream).collect(Collectors.toSet());
+			_fromExperimentTypeCodes = atm.inputContainerUseds.stream().map((InputContainerUsed icu) -> icu.fromTransformationTypeCodes).flatMap(Set::stream).collect(Collectors.toSet());
 		}
 		return _fromExperimentTypeCodes;
 	}
@@ -386,7 +386,7 @@ public class ExpWorkflowsHelper {
 		support.storageCode = getSupportStorageCode(containers, validation);
 		support.projectCodes = containers.stream().map(c -> c.projectCodes).flatMap(Set::stream).collect(Collectors.toSet());
 		support.sampleCodes = containers.stream().map(c -> c.sampleCodes).flatMap(Set::stream).collect(Collectors.toSet());
-		support.fromExperimentTypeCodes = containers.stream().map(c -> c.fromExperimentTypeCodes).flatMap(Set::stream).collect(Collectors.toSet());
+		support.fromTransformationTypeCodes = containers.stream().map(c -> c.fromTransformationTypeCodes).flatMap(Set::stream).collect(Collectors.toSet());
 		validation.removeKeyFromRootKeyName("creation.outputSupport."+code);
 		return support;
 	}
@@ -412,7 +412,7 @@ public class ExpWorkflowsHelper {
 	}
 
 	private static List<Container> createOutputContainers(Experiment exp, AtomicTransfertMethod atm, ContextValidation validation) {
-		Set<String> fromExperimentTypeCodes = getFromExperimentTypeCodes(exp, atm);
+		Set<String> fromTransformationTypeCodes = getFromExperimentTypeCodes(exp, atm);
 		Map<String, PropertyValue> containerProperties = getPropertiesForALevel(exp, atm, CODE.Container);
 		TreeOfLifeNode tree = getTreeOfLifeNode(exp, atm);
 		
@@ -425,7 +425,7 @@ public class ExpWorkflowsHelper {
 			projectCodes.addAll(icu.projectCodes);
 			sampleCodes.addAll(icu.sampleCodes);
 			processTypeCodes.addAll(icu.processTypeCodes);
-			inputProcessCodes.addAll(icu.inputProcessCodes);
+			inputProcessCodes.addAll(icu.processCodes);
 		});
 		
 		
@@ -445,7 +445,7 @@ public class ExpWorkflowsHelper {
 			c.volume = ocu.volume;
 			c.projectCodes = projectCodes;
 			c.sampleCodes = sampleCodes;
-			c.fromExperimentTypeCodes = fromExperimentTypeCodes;
+			c.fromTransformationTypeCodes = fromTransformationTypeCodes;
 			c.processTypeCodes = processTypeCodes;
 			c.processCodes = inputProcessCodes;
 			c.state = state;
@@ -470,7 +470,7 @@ public class ExpWorkflowsHelper {
 				c.volume = ocu.volume;
 				c.projectCodes = projectCodes;
 				c.sampleCodes = sampleCodes;
-				c.fromExperimentTypeCodes = fromExperimentTypeCodes;
+				c.fromTransformationTypeCodes = fromTransformationTypeCodes;
 				c.processTypeCodes = processTypeCodes;
 				c.processCodes = newInputProcessCodes;
 				c.state = state;
@@ -507,8 +507,8 @@ public class ExpWorkflowsHelper {
 			ParentContainers pc = new ParentContainers();
 			pc.code = icu.code;
 			pc.supportCode = icu.locationOnContainerSupport.code;
-			pc.fromTransformationTypeCodes = icu.fromExperimentTypeCodes;
-			pc.processCodes = icu.inputProcessCodes;
+			pc.fromTransformationTypeCodes = icu.fromTransformationTypeCodes;
+			pc.processCodes = icu.processCodes;
 			pc.processTypeCodes = icu.processTypeCodes;
 			return pc;
 			}).collect(Collectors.toList());
@@ -633,7 +633,7 @@ public class ExpWorkflowsHelper {
 	 * 
 	 */
 	private static List<Map.Entry<String,PropertyValue>> getProcessesProperties(InputContainerUsed icu) {
-		List<Process> processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code", icu.inputProcessCodes).is("containerInputCode", icu.code)).toList();
+		List<Process> processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code", icu.processCodes).is("containerInputCode", icu.code)).toList();
 		if(null != processes && processes.size() > 0){
 			return processes.stream()
 				.filter(p -> p.properties != null)

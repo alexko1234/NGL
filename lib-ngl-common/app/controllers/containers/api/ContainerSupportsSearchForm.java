@@ -20,7 +20,7 @@ public class ContainerSupportsSearchForm extends ListForm {
 	public String processTypeCode;
 	public List<String> projectCodes;
 	public List<String> sampleCodes;
-	public List<String> fromExperimentTypeCodes;
+	public List<String> fromTransformationTypeCodes;
 	public String createUser;
 	public List<String> valuations;
 	public Date fromDate;
@@ -37,7 +37,7 @@ public class ContainerSupportsSearchForm extends ListForm {
 				+ projectCodes + ", sampleCodes=" + sampleCodes
 				+ ", containerSupportCategory=" + containerSupportCategory
 				+ ", containerSupportCategories=" + containerSupportCategories
-				+ ", fromExperimentTypeCodes=" + fromExperimentTypeCodes
+				+ ", fromTransformationTypeCodes=" + fromTransformationTypeCodes
 				+ ", fromDate=" + fromDate + ", toDate=" + toDate + ", createUser=" + createUser + ", users="
 				+ users + "]";
 	}

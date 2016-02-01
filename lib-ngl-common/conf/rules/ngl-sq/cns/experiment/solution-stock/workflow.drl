@@ -26,8 +26,8 @@ rule "Create Object ContainerUpdateLims"
 	no-loop
     when
     
-		$container:Container($fromExperimentTypeCodes:fromExperimentTypeCodes,$properties:properties)
-		$experimentType :String() from $fromExperimentTypeCodes
+		$container:Container($fromTransformationTypeCodes:fromTransformationTypeCodes,$properties:properties)
+		$experimentType :String() from $fromTransformationTypeCodes
 		$limsCode : PropertyValue() from $properties.get("limsCode")
     then
     	ContainerUpdateLims containerUpdateLims=new ContainerUpdateLims();

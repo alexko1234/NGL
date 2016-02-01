@@ -224,8 +224,8 @@ public class LimsCNGDAO {
 		
 		//FDS 20/01/2016 n'ajouter que s'il n'y a qq chose!!
 		if (experimentTypeCode != null) {
-			container.fromExperimentTypeCodes=new HashSet<String>();
-			container.fromExperimentTypeCodes.add(experimentTypeCode);
+			container.fromTransformationTypeCodes=new HashSet<String>();
+			container.fromTransformationTypeCodes.add(experimentTypeCode);
 		}
 		
 		container.state = new State(); 

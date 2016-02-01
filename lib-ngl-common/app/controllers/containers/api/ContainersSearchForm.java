@@ -30,7 +30,7 @@ public class ContainersSearchForm extends ListForm{
 	public String supportCodeRegex;
 	public String containerSupportCategory;
 	public Set<String> containerSupportCategories;
-	public Set<String> fromExperimentTypeCodes;
+	public Set<String> fromTransformationTypeCodes;
 	public Set<String> valuations;
 	public Date fromDate;
 	public Date toDate;
@@ -57,7 +57,7 @@ public class ContainersSearchForm extends ListForm{
 				+ ", supportCode=" + supportCode
 				+ ", containerSupportCategory=" + containerSupportCategory
 				+ ", containerSupportCategories=" + containerSupportCategories
-				+ ", fromExperimentTypeCodes=" + fromExperimentTypeCodes
+				+ ", fromTransformationTypeCodes=" + fromTransformationTypeCodes
 				+ ", valuations=" + valuations + ", createUser=" + createUser 
 				+ ", fromDate=" + fromDate + ", toDate=" + toDate + "]";
 	}

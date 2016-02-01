@@ -74,7 +74,7 @@ public class SampleHelper {
 		}
 		
 		if(!ctx.hasErrors()){
-			MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.in("sampleCodes", sampleCode).notExists("fromExperimentTypeCodes"));
+			MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.in("sampleCodes", sampleCode).notExists("fromTransformationTypeCodes"));
 			Logger.info("Delete container for sampleCode "+sampleCode);
 			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME,Sample.class,DBQuery.is("code", sampleCode));
 			Logger.info("Delete sample for sampleCode "+sampleCode);

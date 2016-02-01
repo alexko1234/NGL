@@ -29,7 +29,7 @@
 						@Messages("containers.table.code")
 					</th>
 					<th>
-						@Messages("containers.table.fromExperimentTypeCodes")
+						@Messages("containers.table.fromTransformationTypeCodes")
 					</th>
 					<th>
 						@Messages("containers.table.tags")
@@ -53,7 +53,7 @@
 						{{container.code}}
 					</td>
 					<td>
-						<div list-resize='container.fromExperimentTypeCodes | unique | codes:"type"' list-resize-min-size='3'>
+						<div list-resize='container.fromTransformationTypeCodes | unique | codes:"type"' list-resize-min-size='3'>
 						
 					</td>					
 					<td>
@@ -104,7 +104,7 @@
 							@Messages("containers.table.code")
 						</th>
 						<th>
-							@Messages("containers.table.fromExperimentTypeCodes")
+							@Messages("containers.table.fromTransformationTypeCodes")
 						</th>						
 						<th>
 							@Messages("containers.table.project_sample")
@@ -138,7 +138,7 @@
 								{{inputContainerUsed.code}}
 							</td>
 							<td>
-								<div list-resize='inputContainerUsed.fromExperimentTypeCodes | unique | codes:"type"' list-resize-min-size='5' below vertical>
+								<div list-resize='inputContainerUsed.fromTransformationTypeCodes | unique | codes:"type"' list-resize-min-size='5' below vertical>
 							</td>
 							<td>
 								<div list-resize="inputContainerUsed.contents | collect:'projectCode+&quot; / &quot;+sampleCode' | unique" list-resize-min-size="5" vertical="true">																					

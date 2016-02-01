@@ -101,7 +101,7 @@ public class InitDataHelper {
 	
 	public static List<String> getSupportCodesInContext(String categoryCode, String experimentTypeCode){
 		List<String> codes = new ArrayList<String>();
-		List<ContainerSupport> containerSupports = MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.and(DBQuery.is("categoryCode", categoryCode), DBQuery.in("fromExperimentTypeCodes", experimentTypeCode))).toList();
+		List<ContainerSupport> containerSupports = MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.and(DBQuery.is("categoryCode", categoryCode), DBQuery.in("fromTransformationTypeCodes", experimentTypeCode))).toList();
 		for(ContainerSupport cs: containerSupports){
 			codes.add(cs.code);
 		}

@@ -156,24 +156,24 @@ public class ContainerSupportTest extends AbstractTests {
 		lcs = dcs.data;		
 		assertThat(lcs).isNullOrEmpty();
 		
-		//Test with fromExperimentTypeCodes (good fromExperimentTypeCodes)		
-		ssf.fromExperimentTypeCodes = new ArrayList<String>();
-		ssf.fromExperimentTypeCodes.add("solution-stock");		
-		result = callAction(controllers.containers.api.routes.ref.ContainerSupports.list(), fakeRequest(play.test.Helpers.GET, "?datatable="+String.valueOf(ssf.datatable)+"&fromExperimentTypeCodes="+ssf.fromExperimentTypeCodes.get(0)));
+		//Test with fromTransformationTypeCodes (good fromTransformationTypeCodes)		
+		ssf.fromTransformationTypeCodes = new ArrayList<String>();
+		ssf.fromTransformationTypeCodes.add("solution-stock");		
+		result = callAction(controllers.containers.api.routes.ref.ContainerSupports.list(), fakeRequest(play.test.Helpers.GET, "?datatable="+String.valueOf(ssf.datatable)+"&fromTransformationTypeCodes="+ssf.fromTransformationTypeCodes.get(0)));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);	
 		
 		dcs = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<ContainerSupport>>(){});
 		lcs = dcs.data;
 		Logger.info("");
 		for(int i=0; i<lcs.size();i++){
-			assertThat(lcs.get(i).fromExperimentTypeCodes).contains(ssf.fromExperimentTypeCodes.get(0));
+			assertThat(lcs.get(i).fromTransformationTypeCodes).contains(ssf.fromTransformationTypeCodes.get(0));
 			Logger.info("");
 		}	
 		
-		//Test with fromExperimentTypeCodes (bad fromExperimentTypeCodes)
-		ssf.fromExperimentTypeCodes = new ArrayList<String>();
-		ssf.fromExperimentTypeCodes.add("badFromExperimentTypeCodes");		
-		result = callAction(controllers.containers.api.routes.ref.ContainerSupports.list(), fakeRequest(play.test.Helpers.GET, "?datatable="+String.valueOf(ssf.datatable)+"&fromExperimentTypeCodes="+ssf.fromExperimentTypeCodes.get(0)));
+		//Test with fromTransformationTypeCodes (bad fromTransformationTypeCodes)
+		ssf.fromTransformationTypeCodes = new ArrayList<String>();
+		ssf.fromTransformationTypeCodes.add("badFromExperimentTypeCodes");		
+		result = callAction(controllers.containers.api.routes.ref.ContainerSupports.list(), fakeRequest(play.test.Helpers.GET, "?datatable="+String.valueOf(ssf.datatable)+"&fromTransformationTypeCodes="+ssf.fromTransformationTypeCodes.get(0)));
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		dcs = mh.convertValue(mh.resultToJsNode(result), new TypeReference<DatatableResponseForTest<ContainerSupport>>(){});
@@ -191,7 +191,7 @@ public class ContainerSupportTest extends AbstractTests {
 		Logger.info("");
 		
 		for(int i=0; i<lcs.size();i++){
-			assertThat("solution-stock").isIn(lcs.get(i).fromExperimentTypeCodes);			
+			assertThat("solution-stock").isIn(lcs.get(i).fromTransformationTypeCodes);			
 		}		
 		
 		

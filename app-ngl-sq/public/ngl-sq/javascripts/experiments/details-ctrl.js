@@ -1008,7 +1008,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	
 	$scope.isDispatchValueAvailable = function(dispatchCode, value){
 		if(value !== undefined){
-			var dvet = dispatchValuesForExperimentType[value.data.container.fromExperimentTypeCodes[0]];						
+			var dvet = dispatchValuesForExperimentType[value.data.container.fromTransformationTypeCodes[0]];						
 			if($scope.isOutputATMVoid()){
 				dvet = dispatchValuesForExperimentType[$scope.experiment.typeCode];
     		}
@@ -1257,7 +1257,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	$scope.isProcessResolutionsMustBeSet = function(value){
 		//TODO GA rename to fromTransformationCodes
 		if(value !== undefined){
-			var fromTransformationTypeCode = ($scope.isOutputATMVoid())?$scope.experiment.typeCode:value.data.container.fromExperimentTypeCodes[0];
+			var fromTransformationTypeCode = ($scope.isOutputATMVoid())?$scope.experiment.typeCode:value.data.container.fromTransformationTypeCodes[0];
 			if(value.data.dispatch === 6 || 
 					((value.data.dispatch === 0 || value.data.dispatch === 4) 
 							&& fromTransformationTypeCode === processTypes[value.data.container.processTypeCodes[0]].lastExperimentType.code)){
@@ -1289,9 +1289,9 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				}
 			}
 			
-			var initDisplayValues = function(fromExperimentTypeCodes){
+			var initDisplayValues = function(fromTransformationTypeCodes){
 				
-				var fromTransformationTypeCode = fromExperimentTypeCodes[0];				
+				var fromTransformationTypeCode = fromTransformationTypeCodes[0];				
 				if(undefined === dispatchValuesForExperimentType[fromTransformationTypeCode]){	
 					dispatchValuesForExperimentType[fromTransformationTypeCode] = [];
 					$http.get(jsRoutes.controllers.experiments.api.ExperimentTypes.list().url,{params:{previousExperimentTypeCode:fromTransformationTypeCode}})
@@ -1331,7 +1331,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 							if(containers[key].state.code === 'N'){
 								outputContainers.push({container:containers[key], status:getValidStatus(), dispatch:undefined, processResolutions:[]});
 								processTypeCodes = processTypeCodes.concat(containers[key].processTypeCodes);
-								initDisplayValues(containers[key].fromExperimentTypeCodes);
+								initDisplayValues(containers[key].fromTransformationTypeCodes);
 							}
 						}
 						datatableConfig.columns = getColumns(),

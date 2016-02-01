@@ -81,7 +81,7 @@ public class Container extends DBObject implements IValidation {
 	public Set<String> sampleCodes; // getSamples
 	// ExperimentType must be an internal or external experiment ( origine )
 	// List for pool experimentType
-	public Set<String> fromExperimentTypeCodes; // getExperimentType //TODO GA add fromTransformationCodes
+	public Set<String> fromTransformationTypeCodes; // getExperimentType //TODO GA add fromTransformationCodes
 
 	// Propager au container de purif ??
 	//public String fromExperimentCode; ??
@@ -90,7 +90,6 @@ public class Container extends DBObject implements IValidation {
 	//process
 	
 	//TODO GA merge in same objet processTypeCode and processCode and add a list of this object
-	//TODO GA may be with fromExperimentTypeCodes ???
 	public Set<String> processTypeCodes;
 	public Set<String> processCodes; //TODO GA rename to processCodes or currentProcessCodes
 
@@ -106,7 +105,7 @@ public class Container extends DBObject implements IValidation {
 		sampleCodes = new HashSet<String>();
 		//comments = new ArrayList<>();
 		//qualityControlResults = new HashSet<>();
-		fromExperimentTypeCodes = new HashSet<>();
+		fromTransformationTypeCodes = new HashSet<>();
 	
 	}
 		
@@ -127,7 +126,7 @@ public class Container extends DBObject implements IValidation {
 		//TODO GA processTypeCodes
 		validateProjectCodes(projectCodes, contextValidation);
 		validateSampleCodes(sampleCodes, contextValidation);
-		validateExperimentTypeCodes(fromExperimentTypeCodes, contextValidation);
+		validateExperimentTypeCodes(fromTransformationTypeCodes, contextValidation);
 		validateExperimentCode(fromPurifingCode, contextValidation);//bug here Yann
 		validateContents(contents,contextValidation);
 		validateContainerSupport(support,contextValidation);//bug here Yann

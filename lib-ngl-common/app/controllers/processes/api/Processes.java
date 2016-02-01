@@ -389,13 +389,13 @@ public class Processes extends CommonController{
 			contextValidation.addErrors("container", ValidationConstants.ERROR_BADSTATE_MSG, container.code);
 		}
 
-		ExperimentType experimentType=ExperimentType.find.findByCode(container.fromExperimentTypeCodes.iterator().next());
+		ExperimentType experimentType=ExperimentType.find.findByCode(container.fromTransformationTypeCodes.iterator().next());
 		
 		if(!contextValidation.hasErrors()){
 			
 			Builder updateContainer= DBUpdate.pull("processCodes", process.code);
 			if(experimentType.category.name.equals(ExperimentCategory.CODE.voidprocess.name())){
-				updateContainer.unset("fromExperimentTypeCodes");
+				updateContainer.unset("fromTransformationTypeCodes");
 			}
 			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code",container.code),updateContainer);
 			MongoDBDAO.deleteByCode(InstanceConstants.PROCESS_COLL_NAME,Process.class,  process.code);

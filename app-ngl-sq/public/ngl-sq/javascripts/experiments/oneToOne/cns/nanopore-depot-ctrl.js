@@ -34,8 +34,8 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 			        	 "extraHeaders":{0:"Inputs"}
 				     },
 				     {
-			        	 "header":Messages("containers.table.fromExperimentTypeCodes"),
-			        	 "property":"inputContainer.fromExperimentTypeCodes",
+			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
+			        	 "property":"inputContainer.fromTransformationTypeCodes",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,

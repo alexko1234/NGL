@@ -278,7 +278,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 							$scope.processTypeCode = data;
 						var previousExperimentTypeCode = $scope.experimentType.code;
 							if($scope.experiment.value.categoryCode==='transfert'){
-								previousExperimentTypeCode = $scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[0].fromExperimentTypeCodes[0];
+								previousExperimentTypeCode = $scope.experiment.value.atomicTransfertMethods[0].inputContainerUseds[0].fromTransformationTypeCodes[0];
 								console.log("previousExperimentTypeCode= "+previousExperimentTypeCode);
 							} 
 					

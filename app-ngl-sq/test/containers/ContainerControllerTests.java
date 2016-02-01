@@ -277,7 +277,7 @@ public class ContainerControllerTests extends AbstractTests{
 		
 		for(int i=0;i<lc.size();i++){
 			c = (Container) lc.get(i);
-			assertThat("solution-stock").isIn(c.fromExperimentTypeCodes);			
+			assertThat("solution-stock").isIn(c.fromTransformationTypeCodes);			
 			Logger.info("");
 		}
 		

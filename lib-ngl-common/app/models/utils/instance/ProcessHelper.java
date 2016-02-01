@@ -34,12 +34,12 @@ import fr.cea.ig.MongoDBDAO;
 public class ProcessHelper {
 
 	public static void updateContainer(Container container, String typeCode, Set<String> codes,ContextValidation contextValidation){
-		if(container.fromExperimentTypeCodes == null || container.fromExperimentTypeCodes.size() == 0){
-			container.fromExperimentTypeCodes = new HashSet<String>();
+		if(container.fromTransformationTypeCodes == null || container.fromTransformationTypeCodes.size() == 0){
+			container.fromTransformationTypeCodes = new HashSet<String>();
 			ProcessType processType;
 			try {
 				processType = ProcessType.find.findByCode(typeCode);
-				container.fromExperimentTypeCodes.add(processType.voidExperimentType.code);
+				container.fromTransformationTypeCodes.add(processType.voidExperimentType.code);
 
 			} catch (DAOException e) {
 				throw new RuntimeException();
@@ -51,18 +51,12 @@ public class ProcessHelper {
 		}
 		container.processCodes.addAll(codes);
 		
-//		contextValidation.putObject(CommonValidationHelper.FIELD_STATE_CODE, container.state.code);
-		
-//		container.inputProcessCodes=InstanceHelpers.addCodesList(codes, container.inputProcessCodes);
-//		ContainerValidationHelper.validateInputProcessCodes(container.inputProcessCodes,contextValidation);
-//		ContainerValidationHelper.validateExperimentTypeCodes(container.fromExperimentTypeCodes, contextValidation);
-//		ContainerValidationHelper.validateProcessTypeCode(container.processTypeCode, contextValidation);
 		if(!contextValidation.hasErrors()){
 			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
 					DBQuery.is("code",container.code),
 					DBUpdate.set("processCodes", container.processCodes)
 					.set("processTypeCodes", container.processTypeCodes)
-					.set("fromExperimentTypeCodes",container.fromExperimentTypeCodes));
+					.set("fromTransformationTypeCodes",container.fromTransformationTypeCodes));
 		}
 	}
 
@@ -70,17 +64,16 @@ public class ProcessHelper {
 	public static void updateContainerSupportFromContainer(Container container,ContextValidation contextValidation){
 		ContainerSupport containerSupport=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, container.support.code);
 		if(null != containerSupport){
-			if(containerSupport.fromExperimentTypeCodes==null){
-				containerSupport.fromExperimentTypeCodes=new HashSet<String>();
+			if(containerSupport.fromTransformationTypeCodes==null){
+				containerSupport.fromTransformationTypeCodes=new HashSet<String>();
 			}
-			containerSupport.fromExperimentTypeCodes.addAll(container.fromExperimentTypeCodes);
-			//containerSupport.fromExperimentTypeCodes=InstanceHelpers.addCodesList(container.fromExperimentTypeCodes, containerSupport.fromExperimentTypeCodes);
+			containerSupport.fromTransformationTypeCodes.addAll(container.fromTransformationTypeCodes);
 			contextValidation.putObject(CommonValidationHelper.FIELD_STATE_CODE, container.state.code);
-			ContainerSupportValidationHelper.validateExperimentTypeCodes(containerSupport.fromExperimentTypeCodes, contextValidation);
+			ContainerSupportValidationHelper.validateExperimentTypeCodes(containerSupport.fromTransformationTypeCodes, contextValidation);
 			if(!contextValidation.hasErrors()){
 				MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME,ContainerSupport.class,
 						DBQuery.is("code", container.support.code)
-						,DBUpdate.set("fromExperimentTypeCodes",container.fromExperimentTypeCodes));
+						,DBUpdate.set("fromTransformationTypeCodes",container.fromTransformationTypeCodes));
 			}
 		}else{
 			Logger.error("Support container not exist = "+container.support.code);

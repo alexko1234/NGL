@@ -82,7 +82,7 @@ public class MigrationCreateRunNanopore extends CommonController{
 					containerSupport.traceInformation.setTraceInformation("ngl-bi");
 					containerSupport.projectCodes.add(projectCode);
 					containerSupport.sampleCodes.add(sampleCode);
-					containerSupport.fromExperimentTypeCodes.add("nanopore-depot");
+					containerSupport.fromTransformationTypeCodes.add("nanopore-depot");
 
 					//Validate containerSupport
 					containerSupport.validate(ctxVal);
@@ -107,7 +107,7 @@ public class MigrationCreateRunNanopore extends CommonController{
 					container.contents.add(content);
 					container.projectCodes.add(projectCode);
 					container.sampleCodes.add(sampleCode);
-					container.fromExperimentTypeCodes.add("nanopore-depot");
+					container.fromTransformationTypeCodes.add("nanopore-depot");
 
 					//Validate container
 					container.validate(ctxVal);

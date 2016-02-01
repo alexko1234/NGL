@@ -144,7 +144,6 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 		if(contextValidation.getObject("workflow")!=null){
 			workflow=true;
 		}
-//		if(( CollectionUtils.isEmpty(container.inputProcessCodes) || !container.state.historical.get(container.state.historical.size() - 2).code.equals("UA")) && container.state.code.equals("A") ){
 		if( CollectionUtils.isEmpty(container.processCodes) && container.state.code.startsWith("A") && !workflow ){
 			contextValidation.addErrors("state.code",ValidationConstants.ERROR_BADSTATE_MSG,container.code );
 		}

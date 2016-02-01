@@ -37,6 +37,7 @@ import utils.AbstractTests;
 import utils.Constants;
 import validation.common.instance.CommonValidationHelper;
 import validation.container.instance.ContainerSupportValidationHelper;
+import validation.utils.BusinessValidationHelper;
 import fr.cea.ig.MongoDBDAO;
 
 public class InstanceValidationHelperTest extends AbstractTests {
@@ -264,24 +265,28 @@ public class InstanceValidationHelperTest extends AbstractTests {
 	@Test
 	public  void validationReagentInstanceCodeTest(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		InstanceValidationHelper.validationReagentInstanceCode(reagentInstance.code,contextValidation );
+		validationReagentInstanceCode(reagentInstance.code,contextValidation );
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
 	
 	@Test
 	public  void validationReagentInstanceCodeRequiredTest(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		InstanceValidationHelper.validationReagentInstanceCode(null,contextValidation );
+		validationReagentInstanceCode(null,contextValidation );
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
 	
 	@Test
 	public  void validationReagentCodeNotExistTest(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		InstanceValidationHelper.validationReagentInstanceCode("notexist",contextValidation );
+		validationReagentInstanceCode("notexist",contextValidation );
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}
-	
+	public static void validationReagentInstanceCode(String reagentInstanceCode, ContextValidation contextValidation) {
+		contextValidation.addKeyToRootKeyName("reagent");
+		BusinessValidationHelper.validateRequiredInstanceCode(contextValidation, reagentInstanceCode, "code", Reagent.class,InstanceConstants.REAGENT_INSTANCE_COLL_NAME);
+		contextValidation.removeKeyFromRootKeyName("reagent");
+	}
 	@Test
 	public  void validationContainerContentsTestInUpdateMode(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);

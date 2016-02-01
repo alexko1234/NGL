@@ -281,8 +281,8 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		
 		InputContainerUsed container3_1=ExperimentTestHelper.getInputContainerUsed("CONTAINER3_1");
 		container3_1.percentage=20.0;
-		container3_1.fromExperimentTypeCodes=new HashSet<String>();
-		container3_1.fromExperimentTypeCodes.add("frag");
+		container3_1.fromTransformationTypeCodes=new HashSet<String>();
+		container3_1.fromTransformationTypeCodes.add("frag");
 		Content content3_1=new Content("CONTENT3","TYPE","CATEGORIE");
 		container3_1.contents=new ArrayList<Content>();
 		content3_1.properties=new HashMap<String, PropertyValue>();
@@ -293,8 +293,8 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 
 		InputContainerUsed container3_2=ExperimentTestHelper.getInputContainerUsed("CONTAINER3_2");
 		container3_2.percentage=80.0;
-		container3_2.fromExperimentTypeCodes=new HashSet<String>();
-		container3_2.fromExperimentTypeCodes.add("lib");
+		container3_2.fromTransformationTypeCodes=new HashSet<String>();
+		container3_2.fromTransformationTypeCodes.add("lib");
 		Content content3_2=new Content("CONTENT3","TYPE","CATEGORIE");
 		container3_2.contents=new ArrayList<Content>();
 		content3_2.properties=new HashMap<String, PropertyValue>();
@@ -326,8 +326,8 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 		
 		InputContainerUsed container3_1=ExperimentTestHelper.getInputContainerUsed("CONTAINER3_1");
 		container3_1.percentage=20.0;
-		container3_1.fromExperimentTypeCodes=new HashSet<String>();
-		container3_1.fromExperimentTypeCodes.add("frag");
+		container3_1.fromTransformationTypeCodes=new HashSet<String>();
+		container3_1.fromTransformationTypeCodes.add("frag");
 		Content content3_1=new Content("CONTENT3","TYPE","CATEGORIE");
 		container3_1.contents=new ArrayList<Content>();
 		content3_1.properties=new HashMap<String, PropertyValue>();
@@ -336,8 +336,8 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 
 		InputContainerUsed container3_2=ExperimentTestHelper.getInputContainerUsed("CONTAINER3_2");
 		container3_2.percentage=80.0;
-		container3_2.fromExperimentTypeCodes=new HashSet<String>();
-		container3_2.fromExperimentTypeCodes.add("lib");
+		container3_2.fromTransformationTypeCodes=new HashSet<String>();
+		container3_2.fromTransformationTypeCodes.add("lib");
 		Content content3_2=new Content("CONTENT3","TYPE","CATEGORIE");
 		container3_2.contents=new ArrayList<Content>();
 		content3_2.properties=new HashMap<String, PropertyValue>();
