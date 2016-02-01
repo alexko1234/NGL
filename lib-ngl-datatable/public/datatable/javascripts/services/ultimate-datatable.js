@@ -2642,7 +2642,7 @@ directive("udtCell", function(){
 						}
 
 	    				if(col.type === "boolean"){
-	    					editElement = '<input class="form-control"' +defaultValueDirective+' udt-html-filter="{{col.type}}" '+userDirectives+' type="checkbox" class="input-small" ng-model="'+this.getEditProperty(col, header, filter)+ngChange+'/>';
+	    					editElement = '<input ng-true-value="true" ng-false-value="false" class="form-control"' +defaultValueDirective+' udt-html-filter="{{col.type}}" '+userDirectives+' type="checkbox" class="input-small" ng-model="'+this.getEditProperty(col, header, filter)+ngChange+'/>';
 	    				}else if(col.type === "img"){
 	    					
 	    					var value=this.getEditProperty(col, header, filter);
@@ -3146,7 +3146,15 @@ directive("udtHtmlFilter", function($filter) {
 					    		   }else if( isNaN(convertedData) || convertedData === ""){
 					    			   convertedData = undefined;
 					    		   }
-					    	   }					
+					    	   }else if(attrs.udtHtmlFilter == "boolean" && null != convertedData && undefined != convertedData 
+					    			   && angular.isString(convertedData)){
+					    		   if(convertedData === "true"){
+					    			   convertedData = true;
+					    		   }else if(convertedData === "false"){
+					    			   convertedData = false;
+					    		   }
+					    		   
+					    	   }
 					    	   //TODO GA date and datetime quiz about timestamps
 					    	  return convertedData;
 					    }); 
