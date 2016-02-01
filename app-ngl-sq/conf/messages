@@ -3,6 +3,7 @@ index.title = Welcome to NGL-SQ
 
 #home
 home.experiments.ip = Experiences en cours
+home.experiments.new = Experiences à nouveau
 
 #containerSupports
 containerSupports.title = Supports
@@ -103,7 +104,7 @@ containers.placeholder.user = Container créé par
 containers.select.state =  Etats container
 containers.select.categoryCode =  Catégorie container
 containers.select.categorySupportCode =  Catégorie support
-containers.select.fromExperimentTypeCodes= Container issu du type d''exp.
+containers.select.fromExperimentTypeCodes= Issu du type d''exp.
 
 #containers.dispatch.value.0 = Recommencer
 #containers.dispatch.value.1 = Arrêt Processus

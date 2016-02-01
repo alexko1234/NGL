@@ -17,7 +17,7 @@ import play.Logger;
 
 public abstract class AbstractDAOCommonInfoType<T extends CommonInfoType> extends AbstractDAOMapping<T> {
 
-	protected final static String sqlCommonInfoType="JOIN common_info_type as t ON t.id=c.fk_common_info_type ";
+	protected final static String sqlCommonInfoType="INNER JOIN common_info_type as t ON t.id=c.fk_common_info_type ";
 	protected String sqlCommonFrom;
 	protected String sqlCommonSelect;
 

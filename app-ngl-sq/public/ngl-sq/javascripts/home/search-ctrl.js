@@ -88,8 +88,11 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable' , functio
 	
 	
 	
-		$scope.experimentDatatable = datatable(datatableConfig);			
-		$scope.experimentDatatable.search({stateCodes:["IP"]});
+		$scope.experimentIPDatatable = datatable(datatableConfig);			
+		$scope.experimentIPDatatable.search({stateCodes:["IP"]});
+		
+		$scope.experimentNDatatable = datatable(datatableConfig);			
+		$scope.experimentNDatatable.search({stateCodes:["N"]});
 }]);
 
 

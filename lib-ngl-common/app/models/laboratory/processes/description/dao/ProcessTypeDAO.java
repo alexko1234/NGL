@@ -10,6 +10,7 @@ import java.util.Map;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.processes.description.ProcessExperimentType;
 import models.laboratory.processes.description.ProcessType;
 import models.utils.ListObject;
 import models.utils.dao.AbstractDAOCommonInfoType;
@@ -125,18 +126,18 @@ public class ProcessTypeDAO extends AbstractDAOCommonInfoType<ProcessType>{
 	}
 
 	private void insertExperimentTypes(
-			List<ExperimentType> experimentTypes, Long id, boolean deleteBefore) throws DAOException {
+			List<ProcessExperimentType> experimentTypes, Long id, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
 			removeExperimentTypes(id);
 		}
 		if(experimentTypes!=null && experimentTypes.size()>0){
 			//TODO add order of experiment
-			String sql = "INSERT INTO process_experiment_type(fk_process_type, fk_experiment_type) VALUES(?,?)";
-			for(ExperimentType experimentType:experimentTypes){
-				if(experimentType == null || experimentType.id == null ){
+			String sql = "INSERT INTO process_experiment_type(fk_process_type, fk_experiment_type, position_in_process) VALUES(?,?,?)";
+			for(ProcessExperimentType experimentType:experimentTypes){
+				if(experimentType == null || experimentType.experimentType == null || experimentType.experimentType.id == null ){
 					throw new DAOException("experimentType is mandatory");
 				}
-				jdbcTemplate.update(sql, id, experimentType.id);
+				jdbcTemplate.update(sql, id, experimentType.experimentType.id, experimentType.positionInProcess);
 			}
 		}		
 	}

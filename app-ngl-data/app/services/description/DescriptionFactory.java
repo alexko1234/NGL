@@ -25,6 +25,7 @@ import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ExperimentTypeNode;
 import models.laboratory.processes.description.ProcessCategory;
+import models.laboratory.processes.description.ProcessExperimentType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
@@ -931,7 +932,7 @@ public class DescriptionFactory {
 	 * @throws DAOException
 	 */
 	public static ProcessType newProcessType(String name, String code, ProcessCategory category, List<PropertyDefinition> propertiesDefinitions, 
-			List<ExperimentType> experimentTypes, ExperimentType firstExperimentType, ExperimentType lastExperimentType, ExperimentType voidExperimentType, List<Institute> institutes) throws DAOException {
+			List<ProcessExperimentType> experimentTypes, ExperimentType firstExperimentType, ExperimentType lastExperimentType, ExperimentType voidExperimentType, List<Institute> institutes) throws DAOException {
 		ProcessType pt = new ProcessType();
 		pt.code =code.toLowerCase();
 		pt.name =name;

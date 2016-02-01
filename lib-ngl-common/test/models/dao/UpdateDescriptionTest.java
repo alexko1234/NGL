@@ -23,6 +23,7 @@ import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ProcessCategory;
+import models.laboratory.processes.description.ProcessExperimentType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
@@ -488,8 +489,8 @@ public class UpdateDescriptionTest extends AbstractTests{
 		checkAbstractCategory(processType.category);
 		Assert.assertNotNull(processType.experimentTypes);
 		Assert.assertTrue(processType.experimentTypes.size()>0);
-		for(ExperimentType experimentType : processType.experimentTypes){
-			checkExperimentType(experimentType);
+		for(ProcessExperimentType experimentType : processType.experimentTypes){
+			checkExperimentType(experimentType.experimentType);
 		}
 		Assert.assertNotNull(processType.voidExperimentType.id);
 		Assert.assertNotNull(processType.firstExperimentType.id);

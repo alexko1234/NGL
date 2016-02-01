@@ -63,7 +63,7 @@ public class StateService {
 		l.add(newState("Evaluation en cours", "IP-V", true, 825, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.Run.name()),  true, "V"));
 		l.add(newState("Evaluation terminée", "F-V", true, 849, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.Run.name(), ObjectType.CODE.Analysis.name()), true, "V"));		
 
-		l.add(newState("Nouveau", "N", true, 0, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Project.name(), ObjectType.CODE.Experiment.name(), ObjectType.CODE.Process.name(), ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name(), ObjectType.CODE.Sample.name(), ObjectType.CODE.Instrument.name(), ObjectType.CODE.Reagent.name(), ObjectType.CODE.Import.name(), ObjectType.CODE.Treatment.name(),ObjectType.CODE.Container.name(),ObjectType.CODE.Analysis.name()), true, "N"));		
+		l.add(newState("Nouveau", "N", true, 0, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Project.name(), ObjectType.CODE.Experiment.name(), ObjectType.CODE.Process.name(), ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name(), ObjectType.CODE.Sample.name(), ObjectType.CODE.Instrument.name(), ObjectType.CODE.Reagent.name(), ObjectType.CODE.Import.name(), ObjectType.CODE.Treatment.name(),ObjectType.CODE.Container.name(),ObjectType.CODE.Analysis.name(),ObjectType.CODE.SRASubmission.name()), true, "N"));		
 		l.add(newState("En cours", "IP", true, 500, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Project.name(), ObjectType.CODE.Experiment.name(), ObjectType.CODE.Process.name(), ObjectType.CODE.Sample.name(), ObjectType.CODE.Instrument.name(), ObjectType.CODE.Reagent.name(), ObjectType.CODE.Import.name(), ObjectType.CODE.Treatment.name()), true, null));
 		l.add(newState("Processus en attente", "IW-P", true, 100, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.Container.name()), true, null));
 		l.add(newState("Expérience en attente", "IW-E", true, 200, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.Container.name()), true, null));
@@ -97,6 +97,13 @@ public class StateService {
 		
 		l.add(newState("EVAL. Analyse BI en attente", "IW-VBA", true, 800, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.ReadSet.name()), true, "VBA"));
 		l.add(newState("EVAL. Analyse BI terminée", "F-VBA", true, 899, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.ReadSet.name()), false, "VBA"));		
+		
+		l.add(newState("Soumission Validée utilisateur", "V-SUB", true, 2000, StateCategory.find.findByCode("V"), getObjectTypes(ObjectType.CODE.SRASubmission.name()), true, null));		
+		l.add(newState("Soumission en attente", "IW-SUB", true, 2001, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.SRASubmission.name()), true, null));		
+		l.add(newState("Soumission en cours", "IP-SUB", true, 2002, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.SRASubmission.name()), true, null));		
+		l.add(newState("Soumission terminée", "F-SUB", true, 2003, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.SRASubmission.name()), true, null));		
+		l.add(newState("Soumission en echec", "FE-SUB", true, 2004, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.SRASubmission.name()), true, null));		
+
 		
 		DAOHelpers.saveModels(State.class, l, errors);
 	}

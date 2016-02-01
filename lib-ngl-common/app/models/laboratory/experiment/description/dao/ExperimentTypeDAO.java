@@ -141,6 +141,24 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		return initializeMapping(sql, new SqlParameter("cp.code", Types.VARCHAR)).execute(code);
 	}
 	
+	public List<ExperimentType> findPreviousExperimentTypeForAnExperimentTypeCodeAndProcessTypeCode(String code, String processTypeCode) throws DAOException{
+
+		String sql = sqlCommon+" inner join experiment_type_node as n on n.fk_experiment_type = t.id"+
+				" inner join process_experiment_type as previous_pet on previous_pet.fk_experiment_type = t.id"+
+				" 	inner join process_type as previous_pt on previous_pt.id = previous_pet.fk_process_type"+
+				" 		inner join common_info_type as previous_cpt on previous_cpt.id = previous_pt.fk_common_info_type and previous_cpt.code=?"+
+				" inner join experiment_type_node as previous_node on previous_node.fk_experiment_type = t.id"+
+				" 	inner join previous_nodes as pn on pn.fk_previous_node = previous_node.id"+
+				"		inner join experiment_type_node as current_node on current_node.id = pn.fk_node"+ 		
+				" 			inner join common_info_type as current_t on current_t.id = current_node.fk_experiment_type"+ 
+				"				inner join process_experiment_type as current_pet on current_pet.fk_experiment_type = current_t.id"+
+				"					inner join common_info_type as current_pt on current_pt.id = current_pet.fk_process_type and current_pt.code=?"+
+				" where current_t.code=? and previous_pet.position_in_process = current_pet.position_in_process-1";
+
+		return initializeMapping(sql, new SqlParameter("previous_cpt.code", Types.VARCHAR),
+				new SqlParameter("current_pt.code", Types.VARCHAR),new SqlParameter("current_t.code", Types.VARCHAR)).execute(processTypeCode, processTypeCode, code);
+	}
+	
 	public List<ExperimentType> findNextExperimentTypeForAnExperimentTypeCode(String code) throws DAOException{
 
 		String sql = sqlCommon+" inner join experiment_type_node as n on n.fk_experiment_type = t.id"+

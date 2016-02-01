@@ -54,8 +54,8 @@ public class ProcessTypeMappingQuery extends MappingSqlQuery<ProcessType>{
 			processType.category = processCategory;
 			//Get list experimentType
 			ExperimentTypeDAO expTypeDAO = Spring.getBeanOfType(ExperimentTypeDAO.class);
-			List<ExperimentType> experimentTypes = expTypeDAO.findByProcessTypeId(processType.id);
-			processType.experimentTypes=experimentTypes;
+			//List<ExperimentType> experimentTypes = expTypeDAO.findByProcessTypeId(processType.id);
+			//processType.experimentTypes=experimentTypes;
 			//Get voidExperimentType
 			processType.voidExperimentType=expTypeDAO.findById(idVoidExpType);
 			//Get voidExperimentType

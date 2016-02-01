@@ -9,7 +9,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -343,7 +345,7 @@ public class Containers extends CommonController {
 		if(StringUtils.isNotBlank(containersSearch.nextExperimentTypeCode)){
 			
 			//TODO GA Prendre la précédente dans chacun des processus et pas celle de l'expérience
-			
+			/*
 			List<ExperimentType> previous = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(containersSearch.nextExperimentTypeCode);
 			if(CollectionUtils.isNotEmpty(previous)){
 				for(ExperimentType e:previous){
@@ -360,6 +362,10 @@ public class Containers extends CommonController {
 				if(CollectionUtils.isNotEmpty(processTypes)){
 					for(ProcessType processType:processTypes){
 						listProcessType.add(processType.code);
+						
+						//TODO GA NEW CODE TO ASSOCIATE expType and processType 
+						List<ExperimentType> previousExpType = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCodeAndProcessTypeCode(containersSearch.nextExperimentTypeCode,processType.code);
+						Logger.debug("NB Previous exp : "+previousExpType.size());
 					}
 				}
 				//TODO Erreur quand pas de processus pour un type d'expérience
@@ -368,10 +374,30 @@ public class Containers extends CommonController {
 					queryElts.add(DBQuery.or(DBQuery.in("processTypeCode", listProcessType),DBQuery.in("processTypeCodes", listProcessType)));
 				}
 				
+				
+				
 			}else{
 				//throw new RuntimeException("nextExperimentTypeCode = "+ containersSearch.nextExperimentTypeCode +" does not exist!");
 			}
 			queryElts.add(DBQuery.nor(DBQuery.notExists("inputProcessCodes"),DBQuery.size("inputProcessCodes", 0)));
+			*/
+			
+			List<DBQuery.Query> subQueryElts = new ArrayList<DBQuery.Query>();
+			List<ProcessType> processTypes=ProcessType.find.findByExperimentTypeCode(containersSearch.nextExperimentTypeCode);
+			if(CollectionUtils.isNotEmpty(processTypes)){
+				for(ProcessType processType:processTypes){
+					List<ExperimentType> previousExpType = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCodeAndProcessTypeCode(containersSearch.nextExperimentTypeCode,processType.code);
+					Logger.debug("NB Previous exp : "+previousExpType.size());
+					Set<String> previousExpTypeCodes = previousExpType.stream().map(et -> et.code).collect(Collectors.toSet());
+					subQueryElts.add(DBQuery.or(DBQuery.in("processTypeCode", processType.code),DBQuery.in("processTypeCodes", processType.code)).in("fromExperimentTypeCodes", previousExpTypeCodes));
+				}
+				queryElts.add(DBQuery.or(subQueryElts.toArray(new DBQuery.Query[0])));
+			}else{
+				//if not processType we not return any container
+				queryElts.add(DBQuery.notExists("code"));
+			}
+			
+			
 		}
 		
 		

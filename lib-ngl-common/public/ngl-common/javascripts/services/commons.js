@@ -259,16 +259,10 @@ angular.module('commonsServices', []).
     		};
     		
     		function putNoneInResult (result){
-    			var newObject = {};
-				var newArray = [];
-				if(angular.isDefined(result)){
-					newObject = result;    				
-    				newArray = Object.keys(newObject);
-    				if(newObject[newArray.length-1].code!=="none"){
-    					newObject[newArray.length]={name: "None", code: "none"};
-    				}    				 
+    			if(result[0].code !== "none"){
+					result.unshift({name: "None", code: "none"});
 				}
-    			 return result;
+				return result;
     		};
     		
     		return {

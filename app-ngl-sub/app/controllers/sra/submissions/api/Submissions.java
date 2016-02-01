@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -20,6 +21,7 @@ import controllers.DocumentController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import mail.MailServiceException;
+import models.laboratory.common.instance.State;
 import models.sra.submit.common.instance.Submission;
 import models.sra.submit.common.instance.UserCloneType;
 import models.sra.submit.common.instance.UserExperimentType;
@@ -37,6 +39,7 @@ import services.UserExperimentTypeParser;
 import services.XmlServices;
 import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
+import workflows.sra.submission.SubmissionWorkflows;
 
 public class Submissions extends DocumentController<Submission>{
 	private Map<String, UserCloneType> mapUserClones = new HashMap<String, UserCloneType>();
@@ -53,6 +56,8 @@ public class Submissions extends DocumentController<Submission>{
 	final static Form<SubmissionsCreationForm> submissionsCreationForm = form(SubmissionsCreationForm.class);
 	// declaration d'une instance submissionSearchForm qui permet de recuperer la liste des soumissions => utilisee dans list()
 	final static Form<SubmissionsSearchForm> submissionsSearchForm = form(SubmissionsSearchForm.class);
+	final SubmissionWorkflows subWorkflows = SubmissionWorkflows.instance;
+	final static Form<State> stateForm = form(State.class);
 
 
 	// methode appelee avec url suivante :
@@ -124,6 +129,29 @@ public class Submissions extends DocumentController<Submission>{
 	}
 
 
+	public Result updateState(String code){
+		
+		//Get Submission from DB 
+		Submission submission = getSubmission(code); // ou bien Submission submission2 = getObject(code);
+		Form<State> filledForm = getFilledForm(stateForm, State.class);
+		State state = filledForm.get();
+		state.date = new Date();
+		state.user = getCurrentUser();
+		
+		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+		if (submission == null) {
+			//return badRequest("Submission with code "+code+" not exist");
+			ctxVal.addErrors("submission " + code,  " not exist in database");	
+			return badRequest(filledForm.errorsAsJson());
+		}
+		subWorkflows.setState(ctxVal, submission, state);
+		if (!ctxVal.hasErrors()) {
+			return ok(Json.toJson(getObject(code)));
+		}else {
+			return badRequest(filledForm.errorsAsJson());
+		}
+	}
+	
 	public Result createXml(String code)
 	{
 		//Get Submission from DB 

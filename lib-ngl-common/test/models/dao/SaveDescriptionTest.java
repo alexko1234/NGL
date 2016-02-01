@@ -22,6 +22,7 @@ import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ProcessCategory;
+import models.laboratory.processes.description.ProcessExperimentType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.project.description.ProjectCategory;
 import models.laboratory.project.description.ProjectType;
@@ -660,8 +661,8 @@ public class SaveDescriptionTest extends AbstractTests{
 	 */
 	//@Test
 	public void saveProcessType() throws DAOException {
-		List<ExperimentType> experimentTypes = new ArrayList<ExperimentType>();
-		ExperimentType expType = ExperimentType.find.findByCode("exp1");
+		List<ProcessExperimentType> experimentTypes = new ArrayList<ProcessExperimentType>();
+		ProcessExperimentType expType = new ProcessExperimentType(ExperimentType.find.findByCode("exp1"),0);
 		experimentTypes.add(expType);
 		ProcessCategory processCategory = ProcessCategory.find.findByCode("processCat1");
 		//Create commonInfoType
@@ -675,13 +676,13 @@ public class SaveDescriptionTest extends AbstractTests{
 		List<PropertyDefinition> propertiesDefinitions = new ArrayList<PropertyDefinition>();
 		propertiesDefinitions.add(createPropertyDefinition("prop12", "prop12", true, true, "default", "descProp1", "format1", 1, "in", "content", true, true, "type1", measureCategory, measureValue, measureValue, possibleValues));
 		CommonInfoType commonInfoType = createCommonInfoType("process1", "process1", "process1", states, propertiesDefinitions, objectType);
-		ProcessType processType = createProcessType(commonInfoType, experimentTypes, processCategory,expType,expType,expType);
+		ProcessType processType = createProcessType(commonInfoType, experimentTypes, processCategory,expType.experimentType,expType.experimentType,expType.experimentType);
 		processType.id = processType.save();
 		processType = ProcessType.find.findById(processType.id);
 		checkProcessType(processType);
 	}
 	
-	private ProcessType createProcessType(CommonInfoType commonInfoType, List<ExperimentType> experimentTypes, ProcessCategory processCategory, 
+	private ProcessType createProcessType(CommonInfoType commonInfoType, List<ProcessExperimentType> experimentTypes, ProcessCategory processCategory, 
 			ExperimentType voidExpType, ExperimentType firstExpType, ExperimentType lastExpType) {
 		ProcessType processType = new ProcessType();
 		processType.setCommonInfoType(commonInfoType);
@@ -699,8 +700,8 @@ public class SaveDescriptionTest extends AbstractTests{
 		checkAbstractCategory(processType.category);
 		Assert.assertNotNull(processType.experimentTypes);
 		Assert.assertTrue(processType.experimentTypes.size()>0);
-		for(ExperimentType experimentType : processType.experimentTypes){
-			checkExperimentType(experimentType);
+		for(ProcessExperimentType experimentType : processType.experimentTypes){
+			checkExperimentType(experimentType.experimentType);
 		}
 		Assert.assertNotNull(processType.voidExperimentType.id);
 		Assert.assertNotNull(processType.firstExperimentType.id);
