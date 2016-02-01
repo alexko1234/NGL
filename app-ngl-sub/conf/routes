@@ -18,11 +18,15 @@ GET		/tpl/sra/submissions/consultation				controllers.sra.submissions.tpl.Submis
 GET		/tpl/sra/submissions/details					controllers.sra.submissions.tpl.Submissions.details()
 GET		/tpl/sra/submissions/js-routes					controllers.sra.submissions.tpl.Submissions.javascriptRoutes()
 PUT		/api/sra/submissions/:submissionCode/activate	@controllers.sra.submissions.api.Submissions.activate(submissionCode : java.lang.String)
+
 # Mise à jour d'un objet submission et de ses composants :
 PUT		/sra/submissions/:code 							@controllers.sra.submissions.api.Submissions.update(code: java.lang.String) 
+# todo verifier s'il faut prefixer de api pour updateState
+PUT		/api/sra/submissions/:code/state				@controllers.sra.submissions.api.Submissions.updateState(code:java.lang.String)
 POST	/api/sra/submissions                            @controllers.sra.submissions.api.Submissions.save()
 GET		/api/sra/submissions							@controllers.sra.submissions.api.Submissions.list()
 GET		/api/sra/submissions/:code						@controllers.sra.submissions.api.Submissions.get(code: java.lang.String)
+
 # Creation des fichiers xml pour l'objet submission :
 PUT		/sra/submissions/:code/xml						@controllers.sra.submissions.api.Submissions.createXml(code: java.lang.String)
 # Traitement des AC et mise a jour du status de l'objet submission :
