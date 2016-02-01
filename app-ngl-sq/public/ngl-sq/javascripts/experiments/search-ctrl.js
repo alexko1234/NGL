@@ -73,7 +73,7 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 	$scope.searchService.init($routeParams, $scope.datatableConfig);	
 	
 	
-	if($scope.form.experimentType){
-		//$scope.search();
-	}
+	if($scope.searchService.isRouteParam){
+		$scope.search();
+	}	
 }]);

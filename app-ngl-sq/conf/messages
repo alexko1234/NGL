@@ -3,6 +3,7 @@ index.title = Welcome to NGL-SQ
 
 #home
 home.experiments.ip = Experiences en cours
+home.experiments.new = Experiences à nouveau
 
 #containerSupports
 containerSupports.title = Supports
