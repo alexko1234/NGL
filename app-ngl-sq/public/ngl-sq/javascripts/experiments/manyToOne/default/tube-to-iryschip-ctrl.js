@@ -154,6 +154,7 @@
 			
 			edit:{
 				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				byDefault:$scope.isCreationMode(),				
 				columnMode:true
 			},
 			messages:{

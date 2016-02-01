@@ -21,6 +21,7 @@ angular.module('home').controller('OneToVoidCtrl',['$scope', '$parse','atmToSing
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":2,
+			 			 "filter":"codes:'container_support_cat'",
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
 					 {
@@ -107,7 +108,7 @@ angular.module('home').controller('OneToVoidCtrl',['$scope', '$parse','atmToSing
 			edit:{
 				active: true,
 				showButton: true,
-				byDefault:$scope.isNewState(),
+				byDefault:$scope.isCreationMode(),				
 				columnMode:true
 			},
 			messages:{
@@ -136,7 +137,7 @@ angular.module('home').controller('OneToVoidCtrl',['$scope', '$parse','atmToSing
 		$scope.$on('refresh', function(e) {
 			console.log("call event refresh on one-to-void");		
 			var dtConfig = $scope.atmService.data.getConfig();
-			byDefault:$scope.isNewState();
+			dtConfig.edit.byDefault= false;
 			dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 			$scope.atmService.data.setConfig(dtConfig);
 			

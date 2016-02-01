@@ -116,7 +116,18 @@ rule "input all container from support"
 	end
 
 
-
+rule "Atomictransfert methods empty"
+	@nglSQ( validations )
+	dialect "java"
+	salience 1000
+	no-loop
+    when
+    	$experiment:Experiment($atomics:atomicTransfertMethods)
+    	$contextValidation:ContextValidation($errors : errors)
+    	eval($atomics.size()==0)
+    then
+    	$contextValidation.addErrors("atomicTransfertMethods",	"error.validationexp.emptycontainer");
+    end
 
 
 

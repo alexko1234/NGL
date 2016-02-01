@@ -26,6 +26,7 @@ error.badsizearray = Mauvais taille de tableau ({0} au lieu de {1}
 
 error.validationexp.percentperoutputcontainerdefault= "Le pourcentage total à déposer dans le container est différent de 100% (il vaut  {0}%)."
 error.validationexp.emptyoutputcontainer="La lane {0} ne possède aucun content."
+error.validationexp.emptycontainer="Il n''y a aucun container dans l''expérience"
 error.validationexp.manytagCategory="Plusieurs catégories d''index sont présentes."
 error.validationexp.sameSample="Les containers non indexés ({0},{1}) n''appartiennent pas au même échantillon"
 error.validationexp.noTagSampleWithTagSample="Présence de containers NON indéxés avec des containers indexés"
