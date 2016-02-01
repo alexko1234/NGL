@@ -186,8 +186,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false,false,false,getExperimentTypeNodes("prepa-flowcell","prepa-fc-ordered"),
 				null,null, null).save();
 		
-		newExperimentTypeNode("aliquoting",getExperimentTypes("aliquoting").get(0),false,false,false,getExperimentTypeNodes("lib-normalization"),
-				null,null, null).save();
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 					

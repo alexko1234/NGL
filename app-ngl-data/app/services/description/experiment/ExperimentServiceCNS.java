@@ -359,10 +359,6 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		newExperimentTypeNode("nanopore-library",getExperimentTypes("nanopore-library").get(0),false, false,false,getExperimentTypeNodes("ext-to-lib-ont","nanopore-fragmentation"),null,null,getExperimentTypes("pool-tube")).save();
 		newExperimentTypeNode("nanopore-depot",getExperimentTypes("nanopore-depot").get(0),false, false,false,getExperimentTypeNodes("nanopore-library","ext-to-nanopore-depot"),null,null,null).save();
 		
-		newExperimentTypeNode("pool-tube",getExperimentTypes("pool-tube").get(0),false, false,false,getExperimentTypeNodes("solution-stock","nanopore-library"),null,null,null).save();		
-		newExperimentTypeNode("aliquoting",getExperimentTypes("aliquoting").get(0),false, false,false,getExperimentTypeNodes("nanopore-fragmentation"),null,null,null).save();
-		
-	
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			//Bionano
 			newExperimentTypeNode("ext-to-irys-nlrs-prep", getExperimentTypes("ext-to-irys-nlrs-prep").get(0), false, false, null, null, null).save();	
