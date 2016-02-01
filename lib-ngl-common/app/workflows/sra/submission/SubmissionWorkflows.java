@@ -120,18 +120,6 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 			
 		}
 		applySuccessPostStateRules(contextValidation, object);
-		// mettre à jour etat des samples, experiments, study, readset et conf
-		/*if (StringUtils.isNotBlank(object.configCode)) {
-			// Recuperer object conf pour mettre historique des state traceInformation à jour:
-			Configuration conf = MongoDBDAO.findByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, object.configCode);
-			conf.state = updateHistoricalNextState(conf.state, nextState);
-			conf.traceInformation = updateTraceInformation(conf.traceInformation, nextState);
-			// Mettre à jour study pour le state, traceInformation 
-			MongoDBDAO.update(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, 
-					DBQuery.is("code", object.code),
-					DBUpdate.set("state", conf.state).set("traceInformation", conf.traceInformation));
-		}*/
-		
 	}
 
 

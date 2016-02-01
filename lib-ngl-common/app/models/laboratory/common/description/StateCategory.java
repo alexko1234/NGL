@@ -4,7 +4,8 @@ import models.laboratory.common.description.dao.StateCategoryDAO;
 
 public class StateCategory extends AbstractCategory<StateCategory>{
 	
-	public enum CODE{F,IP,IW,N,V}; 
+
+	public enum CODE{F,IP,IW,N,V,U}; 
 	
 	public static Finder<StateCategory> find = new Finder<StateCategory>(StateCategoryDAO.class.getName()); 
 	
