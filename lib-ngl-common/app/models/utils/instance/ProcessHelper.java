@@ -1,6 +1,7 @@
 package models.utils.instance;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -44,7 +45,7 @@ public class ProcessHelper {
 				throw new RuntimeException();
 			}
 		}
-		container.processTypeCode = typeCode;
+		container.processTypeCodes = Collections.singleton(typeCode);
 		if(container.processCodes==null){
 			container.processCodes=new HashSet<String>();
 		}
@@ -60,7 +61,7 @@ public class ProcessHelper {
 			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
 					DBQuery.is("code",container.code),
 					DBUpdate.set("processCodes", container.processCodes)
-					.set("processTypeCode", container.processTypeCode)
+					.set("processTypeCodes", container.processTypeCodes)
 					.set("fromExperimentTypeCodes",container.fromExperimentTypeCodes));
 		}
 	}

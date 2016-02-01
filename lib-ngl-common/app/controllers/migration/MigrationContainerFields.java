@@ -42,10 +42,10 @@ public static Result migration(){
 		
 		
 		//3 move processTypeCode to processTypeCodes
-		MongoDBResult<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.exists("processTypeCode"));
+		MongoDBResult<ContainerOld> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, ContainerOld.class, DBQuery.exists("processTypeCode"));
 		
 		results.toList().forEach(c -> {
-			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code",c.code),
+			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, ContainerOld.class, DBQuery.is("code",c.code),
 					DBUpdate.set("processTypeCodes",Collections.singleton(c.processTypeCode)).unset("processTypeCode")) ;
 		});
 		

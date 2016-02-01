@@ -51,7 +51,7 @@ public class ContWorkflows extends Workflows<Container> {
 			Container container) {
 		
 		if("IS".equals(container.state.code) || "UA".equals(container.state.code)){
-			//TODO GA improve the extraction of fromExperimentTypeCodes after refactoring processCodes and processTypeCode
+			//TODO GA improve the extraction of fromExperimentTypeCodes
 			 
 			 boolean unsetFromExperimentTypeCodes = false;
 			 if(null != container.fromExperimentTypeCodes && container.fromExperimentTypeCodes.size() == 1){
@@ -64,14 +64,12 @@ public class ContWorkflows extends Workflows<Container> {
 			if(unsetFromExperimentTypeCodes){
 				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
 						DBQuery.is("code",container.code), DBUpdate.unset("processCodes")
-																	.unset("processTypeCode")
 																	.unset("processTypeCodes")
 																	.unset("fromExperimentTypeCodes"));
 			}else{
 				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
 						DBQuery.is("code",container.code), DBUpdate.unset("processCodes")
-																.unset("processTypeCodes")
-																.unset("processTypeCode"));
+																.unset("processTypeCodes"));
 			}		
 		} 
 		callWorkflowRules(validation,container);		

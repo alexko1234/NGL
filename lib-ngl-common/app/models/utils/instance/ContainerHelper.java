@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -76,112 +77,6 @@ public class ContainerHelper {
 
 		container.sampleCodes.add(sample.code);
 
-	}
-	@Deprecated
-	public static void addContent(Container outputContainer, List<InputContainerUsed> inputContainerUseds , Experiment experiment, Map<String,PropertyValue> properties) throws DAOException {
-		
-		List<String> inputContainerCodes=new ArrayList<String>();
-		
-		for(InputContainerUsed inputContainerUsed:inputContainerUseds){
-
-			inputContainerCodes.add(inputContainerUsed.code);
-			
-			Container inputContainer=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, inputContainerUsed.code);
-
-			List<Content> contents = inputContainer.contents;
-			
-			if(inputContainerUsed.percentage==null){
-				inputContainerUsed.percentage=100.0/inputContainerUseds.size();
-			}
-			calculPercentageContent(contents,inputContainerUsed.percentage);
-			outputContainer.contents.addAll(contents);
-			if(outputContainer.projectCodes == null){
-				outputContainer.projectCodes = new HashSet<String>();
-			}
-			outputContainer.projectCodes.addAll(inputContainer.projectCodes);
-			if(outputContainer.sampleCodes == null){
-				outputContainer.sampleCodes = new HashSet<String>();
-			}
-			outputContainer.sampleCodes.addAll(inputContainer.sampleCodes);
-			outputContainer.categoryCode = ContainerSupportCategory.find.findByCode(experiment.instrument.outContainerSupportCategoryCode).containerCategory.code;
-			
-			if(CollectionUtils.isNotEmpty(inputContainer.processCodes)){
-				if(outputContainer.processCodes == null){
-					outputContainer.processCodes = new HashSet<String>();
-				}
-				outputContainer.processCodes.addAll(inputContainer.processCodes); 
-			}
-			outputContainer.processTypeCode=inputContainer.processTypeCode;
-
-			if(experiment.categoryCode.equals("transformation")){
-				if(outputContainer.fromExperimentTypeCodes == null){
-					outputContainer.fromExperimentTypeCodes = new HashSet<String>();
-				}
-				outputContainer.fromExperimentTypeCodes.add(experiment.typeCode);
-			}else{
-				if(CollectionUtils.isNotEmpty(inputContainer.fromExperimentTypeCodes)){				
-					if(outputContainer.fromExperimentTypeCodes == null){
-						outputContainer.fromExperimentTypeCodes = new HashSet<String>();
-					}
-					outputContainer.fromExperimentTypeCodes.addAll(inputContainer.fromExperimentTypeCodes);
-				}
-			}
-			
-			
-
-		}		
-		
-		// fusion content with same projectCode, sampleCode et tag if present
-		outputContainer.contents = fusionContents(outputContainer.contents);
-		
-		//Add properties in Container
-		ExperimentType experimentType =BusinessValidationHelper.validateExistDescriptionCode(null, experiment.typeCode, "typeCode", ExperimentType.find,true);
-		if(experimentType !=null){
-			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(experimentType.getPropertyDefinitionByLevel(Level.CODE.Container), properties,outputContainer.properties);
-		}
-
-		InstrumentUsedType instrumentUsedType=BusinessValidationHelper.validateExistDescriptionCode(null, experiment.instrument.typeCode, "typeCode", InstrumentUsedType.find,true);
-		if(instrumentUsedType !=null){
-			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(instrumentUsedType.getPropertyDefinitionByLevel(Level.CODE.Container), properties,outputContainer.properties);
-		}
-		
-		//Add properties in Content List of Container
-		for(Content content :outputContainer.contents){
-			if(experimentType !=null){
-				InstanceHelpers.copyPropertyValueFromPropertiesDefinition(experimentType.getPropertyDefinitionByLevel(Level.CODE.Content), properties,content.properties);
-			}
-
-			if(instrumentUsedType !=null){
-				InstanceHelpers.copyPropertyValueFromPropertiesDefinition(instrumentUsedType.getPropertyDefinitionByLevel(Level.CODE.Content), properties,content.properties);
-			}
-		}
-		
-		
-		List<models.laboratory.processes.instance.Process> process=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME
-				, models.laboratory.processes.instance.Process.class, DBQuery.in("experimentCodes", experiment.code).in("containerInputCode", inputContainerCodes)).toList();
-		
-		Set<String > processTypes=new HashSet<String>();
-		 Map<String,PropertyValue> propertiesProcess=new HashMap<String, PropertyValue>();
-		for (models.laboratory.processes.instance.Process p:process){
-			propertiesProcess.putAll(p.properties);
-			processTypes.add(p.typeCode);
-		}
-		
-		for(String processTypeCode:processTypes)
-		{
-			ProcessType processType=BusinessValidationHelper.validateExistDescriptionCode(null, processTypeCode, "typeCode", ProcessType.find,true);
-			if(processType !=null){
-				InstanceHelpers.copyPropertyValueFromPropertiesDefinition(processType.getPropertyDefinitionByLevel(Level.CODE.Container), propertiesProcess,outputContainer.properties);
-			}
-			
-			for(Content content :outputContainer.contents){
-				if(processType !=null){
-					InstanceHelpers.copyPropertyValueFromPropertiesDefinition(processType.getPropertyDefinitionByLevel(Level.CODE.Content), propertiesProcess,content.properties);
-				}
-			}
-		}
-		
-		
 	}
 	/**
 	 * fusion content if same projectCode, sampleCode and tag if exist.

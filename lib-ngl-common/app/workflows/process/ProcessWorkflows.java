@@ -142,7 +142,7 @@ public class ProcessWorkflows {
 										processType.voidExperimentType.code),
 										DBUpdate.unset("fromExperimentTypeCodes"));
 						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
-								DBQuery.is("code",containerInPutCode), DBUpdate.unset("processCodes").unset("processTypeCode"),
+								DBQuery.is("code",containerInPutCode), DBUpdate.unset("processCodes").unset("processTypeCodes"),
 								true);
 
 					} catch (DAOException e) {

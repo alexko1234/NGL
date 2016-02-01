@@ -125,7 +125,7 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 			contextValidation.addErrors("processCodes", "error.validation.container.inputProcesses.notnull");
 		}		
 	}
-
+	@Deprecated
 	public static void validateProcessTypeCode(String processTypeCode,
 			ContextValidation contextValidation) {
 		BusinessValidationHelper.validateExistDescriptionCode(contextValidation, processTypeCode, "processTypeCode", ProcessType.find);

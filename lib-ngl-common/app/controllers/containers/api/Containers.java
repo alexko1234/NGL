@@ -389,7 +389,7 @@ public class Containers extends CommonController {
 				//TODO Erreur quand pas de processus pour un type d'expérience
 				
 				if(CollectionUtils.isNotEmpty(listProcessType)){
-					queryElts.add(DBQuery.or(DBQuery.in("processTypeCode", listProcessType),DBQuery.in("processTypeCodes", listProcessType)));
+					queryElts.add(DBQuery.in("processTypeCodes", listProcessType));
 				}
 				
 				
@@ -407,7 +407,7 @@ public class Containers extends CommonController {
 					List<ExperimentType> previousExpType = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCodeAndProcessTypeCode(containersSearch.nextExperimentTypeCode,processType.code);
 					Logger.debug("NB Previous exp : "+previousExpType.size());
 					Set<String> previousExpTypeCodes = previousExpType.stream().map(et -> et.code).collect(Collectors.toSet());
-					subQueryElts.add(DBQuery.or(DBQuery.in("processTypeCode", processType.code),DBQuery.in("processTypeCodes", processType.code)).in("fromExperimentTypeCodes", previousExpTypeCodes));
+					subQueryElts.add(DBQuery.in("processTypeCodes", processType.code).in("fromExperimentTypeCodes", previousExpTypeCodes));
 				}
 				queryElts.add(DBQuery.or(subQueryElts.toArray(new DBQuery.Query[0])));
 			}else{
@@ -451,7 +451,7 @@ public class Containers extends CommonController {
 		}
 
 		if(StringUtils.isNotBlank(containersSearch.processTypeCode)){   
-			queryElts.add(DBQuery.or(DBQuery.is("processTypeCode", containersSearch.processTypeCode), DBQuery.in("processTypeCodes", containersSearch.processTypeCode)));
+			queryElts.add(DBQuery.in("processTypeCodes", containersSearch.processTypeCode));
 		}
 
 		

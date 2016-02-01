@@ -91,7 +91,6 @@ public class Container extends DBObject implements IValidation {
 	
 	//TODO GA merge in same objet processTypeCode and processCode and add a list of this object
 	//TODO GA may be with fromExperimentTypeCodes ???
-	public String processTypeCode; //TODO GA remove and replace by processTypeCodes warning find container for create experiment ?
 	public Set<String> processTypeCodes;
 	public Set<String> processCodes; //TODO GA rename to processCodes or currentProcessCodes
 
