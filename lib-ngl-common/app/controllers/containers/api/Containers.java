@@ -58,7 +58,7 @@ public class Containers extends CommonController {
 	final static Form<ContainersSearchForm> containerForm = form(ContainersSearchForm.class);
 	final static Form<ContainerBatchElement> batchElementForm = form(ContainerBatchElement.class);
 	final static Form<ContainersUpdateForm> containersUpdateForm = form(ContainersUpdateForm.class);
-	final static List<String> defaultKeys =  Arrays.asList("code","fromExperimentTypeCodes","sampleCodes","contents","traceInformation","projectCodes", "inputProcessCodes", "valuation.valid", "state", "support","concentration");
+	final static List<String> defaultKeys =  Arrays.asList("code","fromExperimentTypeCodes","sampleCodes","contents","traceInformation","projectCodes", "processCodes", "valuation.valid", "state", "support","concentration");
     // GA 31/07/2015 suppression des parametres "lenght"
 	final static Form<State> stateForm = form(State.class);
 	
@@ -268,7 +268,7 @@ public class Containers extends CommonController {
 			for(Process p : processes){
 				processCodes.add(p.code);
 			}
-			queryElts.add(DBQuery.in("inputProcessCodes", processCodes));
+			queryElts.add(DBQuery.in("processCodes", processCodes));
 		}
 		
 		if (CollectionUtils.isNotEmpty(containersSearch.sampleTypeCodes)) { //all
@@ -397,7 +397,7 @@ public class Containers extends CommonController {
 			}else{
 				//throw new RuntimeException("nextExperimentTypeCode = "+ containersSearch.nextExperimentTypeCode +" does not exist!");
 			}
-			queryElts.add(DBQuery.nor(DBQuery.notExists("inputProcessCodes"),DBQuery.size("inputProcessCodes", 0)));
+			queryElts.add(DBQuery.nor(DBQuery.notExists("processCodes"),DBQuery.size("processCodes", 0)));
 			*/
 			
 			List<DBQuery.Query> subQueryElts = new ArrayList<DBQuery.Query>();

@@ -111,18 +111,18 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 		}		
 	}
 
-	public static void validateInputProcessCodes(Set<String> inputProcessCodes, ContextValidation contextValidation) {
-		if(inputProcessCodes!=null && inputProcessCodes.size() > 0){
-			for(String processCode: inputProcessCodes){
-				BusinessValidationHelper.validateExistInstanceCode(contextValidation, processCode, "inputProcessCodes", Process.class, InstanceConstants.PROCESS_COLL_NAME); 
+	public static void validateInputProcessCodes(Set<String> processCodes, ContextValidation contextValidation) {
+		if(processCodes!=null && processCodes.size() > 0){
+			for(String processCode: processCodes){
+				BusinessValidationHelper.validateExistInstanceCode(contextValidation, processCode, "processCodes", Process.class, InstanceConstants.PROCESS_COLL_NAME); 
 			}
 		}
 		
 		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
 		if(stateCode.startsWith("A") || stateCode.startsWith("IW-E")){
-			ValidationHelper.required(contextValidation, inputProcessCodes, "inputProcessCodes");
-		}else if("IW-P".equals(stateCode) && CollectionUtils.isNotEmpty(inputProcessCodes)){
-			contextValidation.addErrors("inputProcessCodes", "error.validation.container.inputProcesses.notnull");
+			ValidationHelper.required(contextValidation, processCodes, "processCodes");
+		}else if("IW-P".equals(stateCode) && CollectionUtils.isNotEmpty(processCodes)){
+			contextValidation.addErrors("processCodes", "error.validation.container.inputProcesses.notnull");
 		}		
 	}
 
@@ -145,10 +145,10 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 			workflow=true;
 		}
 //		if(( CollectionUtils.isEmpty(container.inputProcessCodes) || !container.state.historical.get(container.state.historical.size() - 2).code.equals("UA")) && container.state.code.equals("A") ){
-		if( CollectionUtils.isEmpty(container.inputProcessCodes) && container.state.code.startsWith("A") && !workflow ){
+		if( CollectionUtils.isEmpty(container.processCodes) && container.state.code.startsWith("A") && !workflow ){
 			contextValidation.addErrors("state.code",ValidationConstants.ERROR_BADSTATE_MSG,container.code );
 		}
-		if(CollectionUtils.isNotEmpty(container.inputProcessCodes) && container.state.code.equals("IW-P") && !workflow){
+		if(CollectionUtils.isNotEmpty(container.processCodes) && container.state.code.equals("IW-P") && !workflow){
 			contextValidation.addErrors("state.code",ValidationConstants.ERROR_BADSTATE_MSG,container.code );
 		}
 		contextValidation.addKeyToRootKeyName("state");

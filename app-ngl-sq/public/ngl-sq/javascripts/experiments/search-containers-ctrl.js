@@ -163,7 +163,7 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 		 },
 		{
 			"header":Messages("containers.table.inputProcessCodes"),
-			"property":"inputProcessCodes",
+			"property":"processCodes",
 			"order":false,
 			"hide":true,
 			"type":"text",

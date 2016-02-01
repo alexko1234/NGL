@@ -209,11 +209,11 @@ public class ContainerTests extends AbstractTests {
 	@Test
 	public void validateGetCurrentProcesses() {		
 		Container cnt =  ContainerTestHelper.getFakeContainer("tube");
-		cnt.inputProcessCodes=new HashSet<String>();
+		cnt.processCodes=new HashSet<String>();
 		Process process=new Process();
 		process.code="validateGetCurrentProcesses";
 		Process p=MongoDBDAO.save(InstanceConstants.PROCESS_COLL_NAME,process);
-		cnt.inputProcessCodes.add("validateGetCurrentProcesses");
+		cnt.processCodes.add("validateGetCurrentProcesses");
 		List<Process> processes =  getCurrentProcesses(cnt);
 		MongoDBDAO.delete(InstanceConstants.PROCESS_COLL_NAME, p);		
 		assertThat(processes).isNotNull().isNotEmpty();		
@@ -222,14 +222,14 @@ public class ContainerTests extends AbstractTests {
 	@Test
 	public void validateGetNullCurrentProcesses() {		
 		Container cnt =  ContainerTestHelper.getFakeContainer();
-		cnt.inputProcessCodes = null;
+		cnt.processCodes = null;
 		assertThat(getCurrentProcesses(cnt)).isNullOrEmpty();				
 	}
 	
 	public List<Process> getCurrentProcesses(Container c) {
 		List<Process> processes=new ArrayList<Process>();
-		if(c.inputProcessCodes!=null){
-			processes= MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code",c.inputProcessCodes)).toList();
+		if(c.processCodes!=null){
+			processes= MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code",c.processCodes)).toList();
 		}
 		return processes;
 		

@@ -93,7 +93,7 @@ public class Container extends DBObject implements IValidation {
 	//TODO GA may be with fromExperimentTypeCodes ???
 	public String processTypeCode; //TODO GA remove and replace by processTypeCodes warning find container for create experiment ?
 	public Set<String> processTypeCodes;
-	public Set<String> inputProcessCodes; //TODO GA rename to processCodes or currentProcessCodes
+	public Set<String> processCodes; //TODO GA rename to processCodes or currentProcessCodes
 
 	//tree of life
 	public TreeOfLifeNode treeOfLife;
@@ -132,7 +132,7 @@ public class Container extends DBObject implements IValidation {
 		validateExperimentCode(fromPurifingCode, contextValidation);//bug here Yann
 		validateContents(contents,contextValidation);
 		validateContainerSupport(support,contextValidation);//bug here Yann
-		validateInputProcessCodes(inputProcessCodes,contextValidation);
+		validateInputProcessCodes(processCodes,contextValidation);
 		
 	}
 

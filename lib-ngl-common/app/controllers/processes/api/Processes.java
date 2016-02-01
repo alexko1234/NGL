@@ -393,7 +393,7 @@ public class Processes extends CommonController{
 		
 		if(!contextValidation.hasErrors()){
 			
-			Builder updateContainer= DBUpdate.pull("inputProcessCodes", process.code);
+			Builder updateContainer= DBUpdate.pull("processCodes", process.code);
 			if(experimentType.category.name.equals(ExperimentCategory.CODE.voidprocess.name())){
 				updateContainer.unset("fromExperimentTypeCodes");
 			}

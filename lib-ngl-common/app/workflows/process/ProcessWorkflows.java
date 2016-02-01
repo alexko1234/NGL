@@ -27,102 +27,7 @@ import fr.cea.ig.MongoDBDAO;
 
 public class ProcessWorkflows {
 
-	/*public static boolean endOfProcess(ContainerUsed containerUsed, String experimentTypeCode) {
-		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
-				containerUsed.code);
-		ProcessType processType;
-		try {
-			Logger.debug("Container :" + containerUsed.code);
-			if (container.getCurrentProcesses() == null)
-				return true;
-			processType = ProcessType.find.findByCode(container.getCurrentProcesses().get(0).typeCode);
-			if (processType.lastExperimentType.code.equals(experimentTypeCode)) {
-				return true;
-			} else {
-				return false;
-			}
 
-		} catch (DAOException e) {
-			throw new RuntimeException();
-		}
-	}
-
-	public static boolean endOfProcess(String processCode, String experimentTypeCode) {
-		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, processCode);
-		ProcessType processType;
-		try {
-			Logger.debug("Process " + processCode);
-			processType = ProcessType.find.findByCode(process.typeCode);
-			if (processType.lastExperimentType.code.equals(experimentTypeCode)) {
-				return true;
-			} else {
-				return false;
-			}
-
-		} catch (DAOException e) {
-			throw new RuntimeException();
-		}
-	}
-
-	public static void nextProcessState(Container container, String experimentTypeCode,
-			ContextValidation contextValidation, boolean stopProcess, boolean retry, List<String> processResolutionCodes) {
-		if (container.inputProcessCodes != null) {
-			for (String processCode : container.inputProcessCodes) {
-
-				State processState = new State();
-				processState.date = new Date();
-				processState.user = contextValidation.getUser();
-
-				if (container.state.code.equals("IU") && ProcessWorkflows.checkProcessState("N", processCode)) {
-					processState.code = "IP";
-				} else if ((container.state.code.equals("UA") || container.state.code.equals("IS"))
-						&& !retry
-						&& ProcessWorkflows.checkProcessState("IP", processCode)
-						&& (stopProcess || (experimentTypeCode != null && endOfProcess(processCode, experimentTypeCode)))) {
-					processState.code = "F";
-					processState.resolutionCodes = processResolutionCodes;
-				}
-
-				if (processState.code != null) {
-					ProcessWorkflows.setProcessState(processCode, processState, contextValidation);
-				}
-
-				if(ProcessWorkflows.checkProcessState("F", processCode)){
-					ProcessType processType;
-					try {
-						Process process=MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class,processCode);
-						processType = ProcessType.find.findByCode(process.typeCode);
-						MongoDBDAO
-						.update(InstanceConstants.CONTAINER_COLL_NAME,
-								Container.class,
-								DBQuery.is("code", process.containerInputCode).in("fromExperimentTypeCodes",
-										processType.voidExperimentType.code),
-										DBUpdate.unset("fromExperimentTypeCodes"));
-						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
-								DBQuery.is("code", process.containerInputCode), DBUpdate.unset("inputProcessCodes"),
-								true);
-						List<String> stateCodes=new ArrayList<String>();
-						stateCodes.add("UA");
-						stateCodes.add("IS");
-						stateCodes.add("F");
-						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
-								DBQuery.in("support.code", process.newContainerSupportCodes).in("state.code",stateCodes),
-								DBUpdate.unset("inputProcessCodes"), true);
-
-					} catch (DAOException e) {
-					}
-				}	
-
-			}
-
-		}
-	}
-
-	public static boolean checkProcessState(String stateCode, String processCode) {
-		return MongoDBDAO.checkObjectExist(InstanceConstants.PROCESS_COLL_NAME, Process.class,
-				DBQuery.is("code", processCode).is("state.code", stateCode));
-	}
-	 */
 	public static void setProcessState(String processCode, State nextState, ContextValidation contextValidation) {
 		Process process = MongoDBDAO.findOne(InstanceConstants.PROCESS_COLL_NAME, Process.class,
 				DBQuery.is("code", processCode));
@@ -237,7 +142,7 @@ public class ProcessWorkflows {
 										processType.voidExperimentType.code),
 										DBUpdate.unset("fromExperimentTypeCodes"));
 						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
-								DBQuery.is("code",containerInPutCode), DBUpdate.unset("inputProcessCodes").unset("processTypeCode"),
+								DBQuery.is("code",containerInPutCode), DBUpdate.unset("processCodes").unset("processTypeCode"),
 								true);
 
 					} catch (DAOException e) {
@@ -256,7 +161,7 @@ public class ProcessWorkflows {
 			stateCodes.add("IW-P");
 			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
 					DBQuery.in("support.code", newContainerSupports).in("state.code",stateCodes),
-					DBUpdate.unset("inputProcessCodes").unset("processTypeCode"), true);
+					DBUpdate.unset("processCodes").unset("processTypeCodes"), true);
 		}
 
 		return true;

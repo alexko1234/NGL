@@ -47,7 +47,7 @@ public class UpdateSolutionStockCNS extends AbstractImportDataCNS {
 			else if(container.state.code!=containerUpdate.state.code){
 				//Update state container
 				ContextValidation contextValidation= new ContextValidation(Constants.NGL_DATA_USER);
-				if(containerUpdate.state.code.equals("IS")&& CollectionUtils.isNotEmpty(container.inputProcessCodes)){
+				if(containerUpdate.state.code.equals("IS")&& CollectionUtils.isNotEmpty(container.processCodes)){
 				//	contextValidation.addErrors("code", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, container.code);
 					Logger.warn("La solution stock "+container.code +" ne peut pas etre mise a l etat IS car elle a des processus");
 				}else {

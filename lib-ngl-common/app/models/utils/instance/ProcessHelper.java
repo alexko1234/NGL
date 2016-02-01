@@ -45,10 +45,10 @@ public class ProcessHelper {
 			}
 		}
 		container.processTypeCode = typeCode;
-		if(container.inputProcessCodes==null){
-			container.inputProcessCodes=new HashSet<String>();
+		if(container.processCodes==null){
+			container.processCodes=new HashSet<String>();
 		}
-		container.inputProcessCodes.addAll(codes);
+		container.processCodes.addAll(codes);
 		
 //		contextValidation.putObject(CommonValidationHelper.FIELD_STATE_CODE, container.state.code);
 		
@@ -59,7 +59,7 @@ public class ProcessHelper {
 		if(!contextValidation.hasErrors()){
 			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
 					DBQuery.is("code",container.code),
-					DBUpdate.set("inputProcessCodes", container.inputProcessCodes)
+					DBUpdate.set("processCodes", container.processCodes)
 					.set("processTypeCode", container.processTypeCode)
 					.set("fromExperimentTypeCodes",container.fromExperimentTypeCodes));
 		}

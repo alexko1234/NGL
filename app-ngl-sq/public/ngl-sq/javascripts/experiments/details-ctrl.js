@@ -1093,7 +1093,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			var codes = {	
 					inputContainerCode:inputContainer.code, 
 					inputSupportCode:inputContainer.support.code, 
-					processCodes:inputContainer.inputProcessCodes
+					processCodes:inputContainer.processCodes
 			};
 			
 			return codes;
@@ -1157,7 +1157,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 					inputContainerCodes:[], 
 					outputSupportCode:outputContainer.support.code, 
 					inputSupportCodes:[], 
-					processCodes:outputContainer.inputProcessCodes
+					processCodes:outputContainer.processCodes
 			};
 			
 			inputContainers = outputContainer.treeOfLife.from.containers;

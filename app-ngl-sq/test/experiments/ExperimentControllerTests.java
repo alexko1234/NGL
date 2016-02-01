@@ -73,7 +73,7 @@ public class ExperimentControllerTests extends AbstractTests {
 		for(InputContainerUsed containerUsed:containersUsed){
 			Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerUsed.code);
 			assertThat(container.state.code).isEqualTo("IW-E");
-			List<Process> processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code", container.inputProcessCodes)).toList();
+			List<Process> processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code", container.processCodes)).toList();
 			for(Process process:processes){
 				assertThat(process.state.code).isEqualTo("N");
 			}

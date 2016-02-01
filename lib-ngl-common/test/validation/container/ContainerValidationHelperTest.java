@@ -433,11 +433,11 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public void validationProcessCodes(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		Set<String> inputProcessCodes = new HashSet<String>();
-		inputProcessCodes.add(process1.code);
-		inputProcessCodes.add(process2.code);
-		inputProcessCodes.add(process3.code);
-		ContainerValidationHelper.validateInputProcessCodes(inputProcessCodes, contextValidation);
+		Set<String> processCodes = new HashSet<String>();
+		processCodes.add(process1.code);
+		processCodes.add(process2.code);
+		processCodes.add(process3.code);
+		ContainerValidationHelper.validateInputProcessCodes(processCodes, contextValidation);
 		contextValidation.displayErrors(logger);
 		assertThat(contextValidation.errors.size()).isEqualTo(0);
 	}
@@ -445,11 +445,11 @@ public class ContainerValidationHelperTest extends AbstractTests {
 	@Test
 	public void validationProcessCodesNull(){
 		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		Set<String> inputProcessCodes = new HashSet<String>();
-		inputProcessCodes.add("");
-		inputProcessCodes.add("");
-		inputProcessCodes.add("");
-		ContainerValidationHelper.validateInputProcessCodes(inputProcessCodes, contextValidation);
+		Set<String> processCodes = new HashSet<String>();
+		processCodes.add("");
+		processCodes.add("");
+		processCodes.add("");
+		ContainerValidationHelper.validateInputProcessCodes(processCodes, contextValidation);
 		contextValidation.displayErrors(logger);
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);		
 	}

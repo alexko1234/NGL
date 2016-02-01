@@ -160,7 +160,7 @@ public class ExpWorkflowsHelper {
 			MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("code", newContainerCodes))
 					.cursor.forEach(c -> {				
 				newContainerSupportCodes.add(c.support.code);
-				newProcessCodes.addAll(c.inputProcessCodes);
+				newProcessCodes.addAll(c.processCodes);
 				containerWorkflows.setState(ctxVal, c, nextState);
 			});
 			
@@ -186,7 +186,7 @@ public class ExpWorkflowsHelper {
 			MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.in("code", removeContainerCodes)).cursor
 					.forEach(c -> {
 						removeContainerSupportCodes.add(c.support.code);
-						removeProcessCodes.addAll(c.inputProcessCodes);
+						removeProcessCodes.addAll(c.processCodes);
 						containerWorkflows.setState(ctxVal, c, nextState);
 					});
 			MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.in("code", removeContainerSupportCodes)).cursor
@@ -334,7 +334,7 @@ public class ExpWorkflowsHelper {
 						container.traceInformation = traceInformation;
 						MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, container);
 						MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
-								DBQuery.in("code", container.inputProcessCodes).notIn("newContainerSupportCodes", container.support.code),
+								DBQuery.in("code", container.processCodes).notIn("newContainerSupportCodes", container.support.code),
 								DBUpdate.push("newContainerSupportCodes",container.support.code));
 					}
 				});
@@ -447,7 +447,7 @@ public class ExpWorkflowsHelper {
 			c.sampleCodes = sampleCodes;
 			c.fromExperimentTypeCodes = fromExperimentTypeCodes;
 			c.processTypeCodes = processTypeCodes;
-			c.inputProcessCodes = inputProcessCodes;
+			c.processCodes = inputProcessCodes;
 			c.state = state;
 			c.traceInformation = traceInformation;
 			c.treeOfLife=tree;
@@ -472,7 +472,7 @@ public class ExpWorkflowsHelper {
 				c.sampleCodes = sampleCodes;
 				c.fromExperimentTypeCodes = fromExperimentTypeCodes;
 				c.processTypeCodes = processTypeCodes;
-				c.inputProcessCodes = newInputProcessCodes;
+				c.processCodes = newInputProcessCodes;
 				c.state = state;
 				c.traceInformation = traceInformation;
 				c.treeOfLife=tree;

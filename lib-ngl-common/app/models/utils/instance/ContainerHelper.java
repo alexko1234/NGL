@@ -105,11 +105,11 @@ public class ContainerHelper {
 			outputContainer.sampleCodes.addAll(inputContainer.sampleCodes);
 			outputContainer.categoryCode = ContainerSupportCategory.find.findByCode(experiment.instrument.outContainerSupportCategoryCode).containerCategory.code;
 			
-			if(CollectionUtils.isNotEmpty(inputContainer.inputProcessCodes)){
-				if(outputContainer.inputProcessCodes == null){
-					outputContainer.inputProcessCodes = new HashSet<String>();
+			if(CollectionUtils.isNotEmpty(inputContainer.processCodes)){
+				if(outputContainer.processCodes == null){
+					outputContainer.processCodes = new HashSet<String>();
 				}
-				outputContainer.inputProcessCodes.addAll(inputContainer.inputProcessCodes); 
+				outputContainer.processCodes.addAll(inputContainer.processCodes); 
 			}
 			outputContainer.processTypeCode=inputContainer.processTypeCode;
 

@@ -107,7 +107,7 @@ angular.module('atomicTransfereServices', [])
 						projectCodes:container.projectCodes,
 					    fromExperimentTypeCodes:container.fromExperimentTypeCodes,
 					    processTypeCodes:(container.processTypeCode)?[container.processTypeCode]:container.processTypeCodes,
-						inputProcessCodes:container.inputProcessCodes,
+						inputProcessCodes:container.processCodes,
 						state : container.state
 					};
 					/*
@@ -127,7 +127,7 @@ angular.module('atomicTransfereServices', [])
 					containerUsed.projectCodes=container.projectCodes;
 					if(container.state.code === 'IU'){ //because after the processTypeCodes and inputProcessCodes is set to null
 						containerUsed.processTypeCodes=(container.processTypeCode)?[container.processTypeCode]:container.processTypeCodes;
-						containerUsed.inputProcessCodes=container.inputProcessCodes;
+					containerUsed.inputProcessCodes=container.processCodes;
 						containerUsed.fromExperimentTypeCodes=container.fromExperimentTypeCodes;						
 					}
 					containerUsed.state = container.state;
