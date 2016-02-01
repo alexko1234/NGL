@@ -2630,7 +2630,7 @@ directive("udtCell", function(){
 						}else if(filter){
 							ngChange = '" udt-change="udtTable.searchLocal(udtTable.searchTerms)"';
     			    	}else{
-    			    		defaultValueDirective = 'udt-default-value="col.defaultValues"';
+    			    		defaultValueDirective = 'udt-default-value="col"';
     			    	}
 
 						var userDirectives = "";
@@ -2642,7 +2642,7 @@ directive("udtCell", function(){
 						}
 
 	    				if(col.type === "boolean"){
-	    					editElement = '<input ng-true-value="true" ng-false-value="false" class="form-control"' +defaultValueDirective+' udt-html-filter="{{col.type}}" '+userDirectives+' type="checkbox" class="input-small" ng-model="'+this.getEditProperty(col, header, filter)+ngChange+'/>';
+	    					editElement = '<input class="form-control"' +defaultValueDirective+'type="checkbox" class="input-small" ng-model="'+this.getEditProperty(col, header, filter)+ngChange+'/>';	    					
 	    				}else if(col.type === "img"){
 	    					
 	    					var value=this.getEditProperty(col, header, filter);
@@ -3043,17 +3043,28 @@ directive('udtDefaultValue',['$parse', function($parse) {
 	    		return {
 	    			require: 'ngModel',
 	    			link: function(scope, element, attrs, ngModel) {
-	    				var defaultValue = null;
-	    				scope.$watch(attrs.udtDefaultValue, function(defaultValues){
-	    					if(defaultValues != undefined){
-	    						defaultValue = defaultValues;
+	    				var _col = null;
+	    				scope.$watch(attrs.udtDefaultValue, function(col){
+	    					if(col !== undefined && col.defaultValues !== undefined && col.defaultValues !== null ){
+	    						_col = col;
 	    					}
 	    				});
 	    				//TODO GA ?? better way with formatter
 						scope.$watch(ngModel, function(value){
-				                if(defaultValue!= null && (ngModel.$modelValue == undefined || ngModel.$modelValue == "")){
-									ngModel.$setViewValue(defaultValue);
-									ngModel.$render();
+				                if(_col != null && (ngModel.$modelValue == undefined || ngModel.$modelValue == "")){
+									if(_col.type === "boolean"){
+										if(_col.defaultValues === "true" || _col.defaultValues === true){
+											ngModel.$setViewValue(true);
+											ngModel.$render();
+										}else if(_col.defaultValues === "false" || _col.defaultValues === false){
+											ngModel.$setViewValue(false);
+											ngModel.$render();
+										}											
+									}else{
+										ngModel.$setViewValue(_col.defaultValues);
+										ngModel.$render();
+									}
+				                	
 								}
 					    });
 	    			}
@@ -3146,14 +3157,6 @@ directive("udtHtmlFilter", function($filter) {
 					    		   }else if( isNaN(convertedData) || convertedData === ""){
 					    			   convertedData = undefined;
 					    		   }
-					    	   }else if(attrs.udtHtmlFilter == "boolean" && null != convertedData && undefined != convertedData 
-					    			   && angular.isString(convertedData)){
-					    		   if(convertedData === "true"){
-					    			   convertedData = true;
-					    		   }else if(convertedData === "false"){
-					    			   convertedData = false;
-					    		   }
-					    		   
 					    	   }
 					    	   //TODO GA date and datetime quiz about timestamps
 					    	  return convertedData;
