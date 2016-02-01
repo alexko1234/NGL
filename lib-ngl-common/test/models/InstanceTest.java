@@ -200,7 +200,7 @@ public class InstanceTest extends AbstractTests{
 		 
 			
 		//public List<QualityControlResult> qualityControlResults; 
-		//public List<Proper> mesuredVolume;
+		//public List<Proper> volume;
 		//public String fromPurifingCode;
 
 		container.comments=new ArrayList<Comment>();
@@ -310,7 +310,7 @@ public class InstanceTest extends AbstractTests{
 		
 		assertThat(sampleOnInputContainer.containerCode).isNotEmpty().isNotNull();
 		assertThat(sampleOnInputContainer.containerSupportCode).isNotEmpty().isNotNull();
-		assertThat(sampleOnInputContainer.mesuredConcentration).isNotNull();
+		assertThat(sampleOnInputContainer.concentration).isNotNull();
 		Date d = new Date();
 		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		assertThat(sdf.format(d)).isEqualTo(sdf.format(sampleOnInputContainer.lastUpdateDate));

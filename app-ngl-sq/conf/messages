@@ -90,8 +90,8 @@ containers.table.codeAliquot = Code aliquot
 containers.table.storageCode = Stockage
 containers.table.status = Statut
 containers.table.dispatch = Orientation
-containers.table.mesuredConcentration.unit=Unité Concentration 
-containers.table.mesuredConcentration.value=Concentration Container
+containers.table.concentration.unit=Unité Concentration 
+containers.table.concentration.value=Concentration Container
 
 containers.table.iryschip.sampleCodes= Echantillon
 containers.table.irysprep.concentration=Concentration Moyenne
@@ -199,8 +199,8 @@ processes.table.line = X
 processes.table.columns = Y
 processes.table.tag = Tag
 processes.table.sampleOnInputContainer.properties.tag = Tag
-processes.table.sampleOnInputContainer.mesuredVolume = Volume
-processes.table.sampleOnInputContainer.mesuredConcentration = Concentration
+processes.table.sampleOnInputContainer.volume = Volume
+processes.table.sampleOnInputContainer.concentration = Concentration
 processes.table.sampleOnInputContainer.unit.volume = Unité de volume
 processes.table.sampleOnInputContainer.unit.concentration = Unité de concentration
 

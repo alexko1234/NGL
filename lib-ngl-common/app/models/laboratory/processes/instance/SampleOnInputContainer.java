@@ -8,9 +8,9 @@ import validation.processes.instance.SampleOnInputContainerValidationHelper;
 
 public class SampleOnInputContainer extends SampleOnContainer implements IValidation{
 	
-	public PropertySingleValue mesuredVolume;
-	public PropertySingleValue mesuredConcentration;
-	public PropertySingleValue mesuredQuantity;
+	public PropertySingleValue volume;
+	public PropertySingleValue concentration;
+	public PropertySingleValue quantity;
 	
 
 	@Override
@@ -25,8 +25,8 @@ public class SampleOnInputContainer extends SampleOnContainer implements IValida
 
 	@Override
 	public String toString() {
-		return super.toString().replace(']', ' ') + ", mesuredVolume=" + mesuredVolume + ", mesuredConcentration="
-				+ mesuredConcentration + ", mesuredQuantity=" + mesuredQuantity + "]";
+		return super.toString().replace(']', ' ') + ", volume=" + volume + ", concentration="
+				+ concentration + ", quantity=" + quantity + "]";
 	}
 	
 	

@@ -7,6 +7,7 @@ import java.util.Collections;
 
 import models.laboratory.container.instance.Container;
 import models.laboratory.run.instance.ReadSet;
+import models.laboratory.processes.instance.Process;
 import models.utils.InstanceConstants;
 
 
@@ -27,6 +28,7 @@ import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
 public class MigrationContainerFields extends CommonController {
+	
 public static Result migration(){
 		
 		Logger.info("Start MigrationContainerFields");
@@ -89,6 +91,18 @@ public static Result migration(){
 			
 			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, e) ;
 		});
+		
+		//6 migration on processes
+		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.exists("sampleOnInputContainer.mesuredQuantity"),
+				DBUpdate.rename("sampleOnInputContainer.mesuredQuantity", "sampleOnInputContainer.quantity"));
+		
+		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.exists("sampleOnInputContainer.mesuredVolume"),
+				DBUpdate.rename("sampleOnInputContainer.mesuredVolume", "sampleOnInputContainer.volume"));
+		
+		
+		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.exists("sampleOnInputContainer.mesuredConcentration"),
+				DBUpdate.rename("sampleOnInputContainer.mesuredConcentration", "sampleOnInputContainer.concentration"));
+		
 		return ok("Migration Finish");
 
 	}
