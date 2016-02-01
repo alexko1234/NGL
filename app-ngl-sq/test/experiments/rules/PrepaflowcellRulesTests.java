@@ -53,7 +53,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 
 		InputContainerUsed containerUsed=new InputContainerUsed();
 		containerUsed.code = container.code;
-		containerUsed.volume = container.mesuredVolume;
+		containerUsed.volume = container.volume;
 		containerUsed.contents=container.contents;
 		containerUsed.percentage= 0.0;
 		exp.atomicTransfertMethods.get(0).inputContainerUseds.add(containerUsed);
@@ -116,7 +116,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 
 		InputContainerUsed containerUsed=new InputContainerUsed();
 		containerUsed.code = container.code;
-		containerUsed.volume = container.mesuredVolume;
+		containerUsed.volume = container.volume;
 		containerUsed.contents=container.contents;
 		containerUsed.percentage= 0.0;
 		exp.atomicTransfertMethods.get(0).inputContainerUseds.add(containerUsed);
@@ -141,7 +141,7 @@ public class PrepaflowcellRulesTests extends AbstractTests {
 
 		InputContainerUsed containerUsed=new InputContainerUsed();
 		containerUsed.code = container.code;
-		containerUsed.volume = container.mesuredVolume;
+		containerUsed.volume = container.volume;
 		containerUsed.contents=container.contents;
 		containerUsed.percentage= 10.0;
 		exp.atomicTransfertMethods.get(0).inputContainerUseds.add(containerUsed);

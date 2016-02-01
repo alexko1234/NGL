@@ -71,8 +71,8 @@ public class Container extends DBObject implements IValidation {
 	public Set<QualityControlResult> qualityControlResults; //TODO GA remove
 
 	//Stock management 
-	public PropertySingleValue mesuredVolume;        //TODO GA rename to volume
-	public PropertySingleValue mesuredConcentration; //TODO GA rename to concentration
+	public PropertySingleValue volume;        //TODO GA rename to volume
+	public PropertySingleValue concentration; //TODO GA rename to concentration
 	public PropertySingleValue quantity; 	
 
 	

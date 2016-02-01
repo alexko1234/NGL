@@ -440,9 +440,9 @@ public class ExpWorkflowsHelper {
 			c.contents = ocu.contents;
 			c.support = ocu.locationOnContainerSupport;
 			c.properties = containerProperties;
-			c.mesuredConcentration = ocu.concentration;
+			c.concentration = ocu.concentration;
 			c.quantity = ocu.quantity;
-			c.mesuredVolume = ocu.volume;
+			c.volume = ocu.volume;
 			c.projectCodes = projectCodes;
 			c.sampleCodes = sampleCodes;
 			c.fromExperimentTypeCodes = fromExperimentTypeCodes;
@@ -465,9 +465,9 @@ public class ExpWorkflowsHelper {
 				c.contents = ocu.contents;
 				c.support = ocu.locationOnContainerSupport;
 				c.properties = containerProperties;
-				c.mesuredConcentration = ocu.concentration;
+				c.concentration = ocu.concentration;
 				c.quantity = ocu.quantity;
-				c.mesuredVolume = ocu.volume;
+				c.volume = ocu.volume;
 				c.projectCodes = projectCodes;
 				c.sampleCodes = sampleCodes;
 				c.fromExperimentTypeCodes = fromExperimentTypeCodes;

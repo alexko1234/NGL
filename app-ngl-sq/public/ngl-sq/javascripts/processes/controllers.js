@@ -96,8 +96,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 						"groupMethod":"collect"
 			        },
 					{
-						"header":Messages("containers.table.mesuredConcentration.value"),
-						"property":"mesuredConcentration.value",
+						"header":Messages("containers.table.concentration.value"),
+						"property":"concentration.value",
 						"order":true,
 						"hide":true,
 						"position":11.1,
@@ -106,8 +106,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 						"groupMethod":"unique"
 					},
 					{
-						"header":Messages("containers.table.mesuredConcentration.unit"),
-						"property":"mesuredConcentration.unit",
+						"header":Messages("containers.table.concentration.unit"),
+						"property":"concentration.unit",
 						"order":true,
 						"hide":true,
 						"position":11.2,
@@ -824,9 +824,9 @@ var	datatableConfig = {
 														properties:processData.contents[j].properties,
 														containerCode:data[i].code,
 														containerSupportCode:data[i].support.code,
-														mesuredVolume:data[i].mesuredVolume,
-														mesuredQuantity:data[i].mesuredQuantity,
-														mesuredConcentration:data[i].mesuredConcentration}
+														volume:data[i].volume,
+														quantity:data[i].quantity,
+														concentration:data[i].concentration}
 						}};
 						processes.push(process);
 					}

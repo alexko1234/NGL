@@ -49,7 +49,7 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', '$parse', 'atmToG
 			         },
 			         {
 			        	 "header":Messages("containers.table.volume") + " (µL)",
-			        	 "property":"inputContainer.mesuredVolume.value",
+			        	 "property":"inputContainer.volume.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -176,7 +176,7 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', '$parse', 'atmToG
 			         },
 			         {
 			        	 "header":Messages("containers.table.volume") + " (µL)",
-			        	 "property":"inputContainer.mesuredVolume.value",
+			        	 "property":"inputContainer.volume.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -186,7 +186,7 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', '$parse', 'atmToG
 			         },
 			         {
 			        	 "header":Messages("containers.table.quantity") + " (ng)",
-			        	 "property":"inputContainer.mesuredQuantity.value",
+			        	 "property":"inputContainer.quantity.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,

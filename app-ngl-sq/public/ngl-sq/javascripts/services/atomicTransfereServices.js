@@ -96,9 +96,9 @@ angular.module('atomicTransfereServices', [])
 						categoryCode:container.categoryCode, 
 						contents:container.contents, //used in rules							
 					    locationOnContainerSupport:container.support,
-					    volume:container.mesuredVolume, //used in rules
-						concentration:container.mesuredConcentration,  //used in rules
-						quantity:container.mesuredQuantity,
+					    volume:container.volume, //used in rules
+						concentration:container.concentration,  //used in rules
+						quantity:container.quantity,
 						instrumentProperties:undefined,
 					    experimentProperties:undefined,
 					    percentage:100, //rules by defaut need check with server
@@ -120,9 +120,9 @@ angular.module('atomicTransfereServices', [])
 					containerUsed.categoryCode = container.categoryCode; 
 					containerUsed.contents = container.contents;
 					containerUsed.locationOnContainerSupport = container.support;
-					containerUsed.volume = container.mesuredVolume;
-					containerUsed.concentration = container.mesuredConcentration;
-					containerUsed.quantity = container.mesuredQuantity;
+					containerUsed.volume = container.volume;
+					containerUsed.concentration = container.concentration;
+					containerUsed.quantity = container.quantity;
 					containerUsed.sampleCodes=container.sampleCodes;
 					containerUsed.projectCodes=container.projectCodes;
 					if(container.state.code === 'IU'){ //because after the processTypeCodes and inputProcessCodes is set to null
@@ -209,9 +209,9 @@ angular.module('atomicTransfereServices', [])
 							column:atmColumn
 						},
 						contents:undefined, //populate by the server
-						volume:{unit:this.getUnit($parse('mesuredVolume')(inputContainer), defaultOutputUnit.volume)}, 
-						concentration:{unit:this.getUnit($parse('mesuredConcentration')(inputContainer), defaultOutputUnit.concentration)}, 
-						quantity:{unit:this.getUnit($parse('mesuredQuantity')(inputContainer), defaultOutputUnit.quantity)},
+						volume:{unit:this.getUnit($parse('volume')(inputContainer), defaultOutputUnit.volume)}, 
+						concentration:{unit:this.getUnit($parse('concentration')(inputContainer), defaultOutputUnit.concentration)}, 
+						quantity:{unit:this.getUnit($parse('quantity')(inputContainer), defaultOutputUnit.quantity)},
 						instrumentProperties:undefined,
 					    experimentProperties:undefined
 					};

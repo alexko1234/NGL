@@ -69,7 +69,7 @@ public class UpdateConcentration extends CommonController {
 
 						//update concentration unit and value
 						WriteResult r = (WriteResult) MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", oldContainer.code),   
-								DBUpdate.set("mesuredConcentration.unit","nM").set("mesuredConcentration.value", newContainer.mesuredConcentration.value));
+								DBUpdate.set("concentration.unit","nM").set("concentration.value", newContainer.concentration.value));
 						
 						n++;
 						
@@ -80,7 +80,7 @@ public class UpdateConcentration extends CommonController {
 			}
 			
 			//delete concentration < 2nM
-			MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.lessThan("mesuredConcentration.value", 2));
+			MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.lessThan("concentration.value", 2));
 						
 		} else {
 			Logger.info("Migration of concentration already executed !");

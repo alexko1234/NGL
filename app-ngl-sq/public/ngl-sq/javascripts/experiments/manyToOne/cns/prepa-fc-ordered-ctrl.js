@@ -40,7 +40,7 @@ angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$par
 		         },				         
 				 {
 		        	 "header":Messages("containers.table.concentration") + " (nM)",
-		        	 "property":"inputContainer.mesuredConcentration.value",
+		        	 "property":"inputContainer.concentration.value",
 		        	 "order":true,
 					 "edit":false,
 					 "hide":true,
@@ -51,7 +51,7 @@ angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$par
 		        
 		         {
 		        	 "header":Messages("containers.table.volume") + " (µL)",
-		        	 "property":"inputContainer.mesuredVolume.value",
+		        	 "property":"inputContainer.volume.value",
 		        	 "order":true,
 					 "edit":false,
 					 "hide":true,

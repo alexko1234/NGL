@@ -70,7 +70,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			         },				 
 					 {
 			        	 "header":Messages("containers.table.concentration") + " (nM)",
-			        	 "property":"inputContainer.mesuredConcentration.value",
+			        	 "property":"inputContainer.concentration.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -91,7 +91,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			         },
 			        /* {
 			        	 "header":function(){return Messages("containers.table.volume") + " (µL)"},
-			        	 "property":"mesuredVolume.value",
+			        	 "property":"volume.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,

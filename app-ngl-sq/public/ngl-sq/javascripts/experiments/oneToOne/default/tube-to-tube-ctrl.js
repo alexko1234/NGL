@@ -59,7 +59,7 @@ angular.module('home').controller('TubeToTubeCtrl',['$scope', '$parse', 'atmToSi
 								 
 					 {
 			        	 "header":Messages("containers.table.concentration") + " (nM)",
-			        	 "property":"inputContainer.mesuredConcentration.value",
+			        	 "property":"inputContainer.concentration.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -69,7 +69,7 @@ angular.module('home').controller('TubeToTubeCtrl',['$scope', '$parse', 'atmToSi
 			         },
 			         {
 			        	 "header":function(){return Messages("containers.table.volume") + " (µL)"},
-			        	 "property":"inputContainer.mesuredVolume.value",
+			        	 "property":"inputContainer.volume.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,

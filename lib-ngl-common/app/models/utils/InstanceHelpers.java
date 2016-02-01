@@ -219,9 +219,9 @@ public class InstanceHelpers {
 		sampleOnInputContainer.referenceCollab = getReferenceCollab(content.sampleCode);		
 		sampleOnInputContainer.containerCode = container.code;
 		sampleOnInputContainer.containerSupportCode = container.support.code;
-		sampleOnInputContainer.mesuredVolume = container.mesuredVolume;
+		sampleOnInputContainer.mesuredVolume = container.volume;
 		sampleOnInputContainer.mesuredQuantity = container.quantity;
-		sampleOnInputContainer.mesuredConcentration = container.mesuredConcentration;
+		sampleOnInputContainer.mesuredConcentration = container.concentration;
 
 		sampleOnInputContainer.lastUpdateDate = new Date();
 		return sampleOnInputContainer;

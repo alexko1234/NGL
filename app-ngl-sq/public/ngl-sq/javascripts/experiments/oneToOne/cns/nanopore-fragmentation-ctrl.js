@@ -47,7 +47,7 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToS
 			         					 
 					 {
 			        	 "header":Messages("containers.table.concentration") + " (ng/µL)",
-			        	 "property":"inputContainer.mesuredConcentration.value",
+			        	 "property":"inputContainer.concentration.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -57,7 +57,7 @@ angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToS
 			         },
 			         {
 			        	 "header":Messages("containers.table.volume") + " (µL)",
-			        	 "property":"inputContainer.mesuredVolume.value",
+			        	 "property":"inputContainer.volume.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,

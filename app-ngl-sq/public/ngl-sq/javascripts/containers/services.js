@@ -115,8 +115,8 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"groupMethod":"collect"
 		});	
 		columns.push({
-			"header":Messages("containers.table.mesuredConcentration.value"),
-			"property":"mesuredConcentration.value",
+			"header":Messages("containers.table.concentration.value"),
+			"property":"concentration.value",
 			"order":true,
 			"hide":true,
 			"position":11.1,
@@ -125,8 +125,8 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 			"groupMethod":"unique"
 		});	
 		columns.push({
-			"header":Messages("containers.table.mesuredConcentration.unit"),
-			"property":"mesuredConcentration.unit",
+			"header":Messages("containers.table.concentration.unit"),
+			"property":"concentration.unit",
 			"order":true,
 			"hide":true,
 			"position":11.2,

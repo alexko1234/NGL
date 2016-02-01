@@ -256,10 +256,10 @@ public class LimsCNGDAO {
 			}
 					
 			if ( containerCategoryCode.equals("tube")){
-				container.mesuredConcentration = new PropertySingleValue(concentration, "nM");
+				container.concentration = new PropertySingleValue(concentration, "nM");
 			}
 			else if ( containerCategoryCode.equals("sample-well")){
-				container.mesuredConcentration = new PropertySingleValue(concentration, "ng/µl");
+				container.concentration = new PropertySingleValue(concentration, "ng/µl");
 				
 				//FDS dans ce cas on a aussi un volume 
 				Double volume= null;
@@ -268,11 +268,11 @@ public class LimsCNGDAO {
 					 BigDecimal d2 = d.setScale(2, BigDecimal.ROUND_HALF_UP); 
 					 volume = d2.doubleValue();
 				}
-				container.mesuredVolume = new PropertySingleValue(volume,"µl");
+				container.volume = new PropertySingleValue(volume,"µl");
 			}
 			/* PAS ENCORE EN PROD
 			else if ( containerCategoryCode.equals("library-well")){
-						container.mesuredConcentration = new PropertySingleValue(concentration, "???");
+						container.concentration = new PropertySingleValue(concentration, "???");
 			}
 			*/
 		}

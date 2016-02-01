@@ -118,7 +118,7 @@ public class ContainerTests extends AbstractTests {
 			assertThat(cnt.referenceCollab).isNotNull();
 			assertThat(cnt.properties.get("libProcessTypeCode")).isNotNull();
 			assertThat(cnt.properties.get("percentPerLane")).isNull();
-			assertThat(((PropertySingleValue) container.mesuredConcentration).unit).isEqualTo("nM");
+			assertThat(((PropertySingleValue) container.concentration).unit).isEqualTo("nM");
 			assertThat(cnt.percentage).isNotNull();
 			for(ContainerSupport support:containerSupports){
 				if(support.code.equals(container.support.code)){

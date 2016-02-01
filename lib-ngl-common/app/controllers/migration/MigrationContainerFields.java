@@ -26,6 +26,9 @@ public static Result migration(){
 		//1 remove calculedVolume
 		MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.exists("calculedVolume"),DBUpdate.unset("calculedVolume"));
 		
+		//2 rename mesuredQuantity to quantity, mesuredConcentration to concentration
+		MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.exists("mesuredQuantity"),
+				DBUpdate.rename("mesuredQuantity", "quantity").rename("mesuredVolume", "volume").rename("mesuredConcentration", "concentration"));
 		return ok("Migration Finish");
 
 	}

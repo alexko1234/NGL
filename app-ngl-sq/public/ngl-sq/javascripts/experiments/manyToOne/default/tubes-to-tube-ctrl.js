@@ -50,7 +50,7 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 			         					 
 					 {
 			        	 "header":Messages("containers.table.concentration"),
-			        	 "property":"inputContainer.mesuredConcentration.value",
+			        	 "property":"inputContainer.concentration.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -60,7 +60,7 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 			         },
 			         {
 			        	 "header":Messages("containers.table.concentration.unit"),
-			        	 "property":"inputContainer.mesuredConcentration.unit",
+			        	 "property":"inputContainer.concentration.unit",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -70,7 +70,7 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 			         },
 			         {
 			        	 "header":Messages("containers.table.volume") + " (µL)",
-			        	 "property":"inputContainer.mesuredVolume.value",
+			        	 "property":"inputContainer.volume.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
