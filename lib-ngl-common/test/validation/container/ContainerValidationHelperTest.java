@@ -192,30 +192,6 @@ public class ContainerValidationHelperTest extends AbstractTests {
 		assertThat(contextValidation.errors.size()).isNotEqualTo(0);
 	}	
 	
-	@Test
-	public  void validateExperimentCodeTest(){
-		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		ContainerValidationHelper.validateExperimentCode(experiment.code, contextValidation);
-		contextValidation.displayErrors(logger);
-		assertThat(contextValidation.errors.size()).isEqualTo(0);
-	}
-
-
-	@Test
-	public  void validateExperimentNotRequiredCodeTest(){
-		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		ContainerValidationHelper.validateExperimentCode(null, contextValidation);
-		contextValidation.displayErrors(logger);
-		assertThat(contextValidation.errors.size()).isEqualTo(0);
-	}
-	
-	@Test
-	public  void validateExperimentNotExistCodeTest(){
-		ContextValidation contextValidation=new ContextValidation(Constants.TEST_USER);
-		ContainerValidationHelper.validateExperimentCode("notexist", contextValidation);
-		contextValidation.displayErrors(logger);
-		assertThat(contextValidation.errors.size()).isEqualTo(1);
-	}	
 	
 	
 	/**

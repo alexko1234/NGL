@@ -163,8 +163,7 @@ public class MigrationContent extends CommonController {
 				
 
 			
-				container.fromPurifingCode = null;				
-
+				
 				return container;
 			}
 		});       

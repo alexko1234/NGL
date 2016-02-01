@@ -83,12 +83,6 @@ public class Container extends DBObject implements IValidation {
 	// List for pool experimentType
 	public Set<String> fromTransformationTypeCodes; // getExperimentType //TODO GA add fromTransformationCodes
 
-	// Propager au container de purif ??
-	//public String fromExperimentCode; ??
-	public String fromPurifingCode; //TODO GA remove
-	//public String fromExtractionTypeCode;
-	//process
-	
 	//TODO GA merge in same objet processTypeCode and processCode and add a list of this object
 	public Set<String> processTypeCodes;
 	public Set<String> processCodes; //TODO GA rename to processCodes or currentProcessCodes
@@ -127,7 +121,6 @@ public class Container extends DBObject implements IValidation {
 		validateProjectCodes(projectCodes, contextValidation);
 		validateSampleCodes(sampleCodes, contextValidation);
 		validateExperimentTypeCodes(fromTransformationTypeCodes, contextValidation);
-		validateExperimentCode(fromPurifingCode, contextValidation);//bug here Yann
 		validateContents(contents,contextValidation);
 		validateContainerSupport(support,contextValidation);//bug here Yann
 		validateInputProcessCodes(processCodes,contextValidation);

@@ -201,8 +201,7 @@ public class InstanceTest extends AbstractTests{
 			
 		//public List<QualityControlResult> qualityControlResults; 
 		//public List<Proper> volume;
-		//public String fromPurifingCode;
-
+		
 		container.comments=new ArrayList<Comment>();
 		container.comments.add(new Comment("comment", "ngl-test"));
 		container.traceInformation.setTraceInformation("test"); 

@@ -371,8 +371,7 @@ public class LimsCNGDAO {
 			Logger.debug("[commonContainerMapRow] container sampleCodes: " + container.sampleCodes);		
 		}
 
-		container.fromPurifingCode = null;				
-
+		
 		return container;
 	}
 	

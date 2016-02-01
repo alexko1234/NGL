@@ -31,12 +31,6 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode, "categoryCode", ContainerCategory.find,false);
 
 	}
-
-	
-	public static void validateExperimentCode(String experimentCode,
-			ContextValidation contextValidation) {
-		BusinessValidationHelper.validateExistInstanceCode(contextValidation, experimentCode, "fromPurifingCode", Experiment.class, InstanceConstants.EXPERIMENT_COLL_NAME, false);
-	}
 	
 	public static void validateContents(List<Content> contents, ContextValidation contextValidation) {
 		
