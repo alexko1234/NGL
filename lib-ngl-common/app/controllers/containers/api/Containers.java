@@ -336,11 +336,20 @@ public class Containers extends CommonController {
 			ProcessType processType = ProcessType.find.findByCode(containersSearch.nextProcessTypeCode);
 			if(processType != null){
 				List<ExperimentType> experimentTypes = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(processType.firstExperimentType.code);
+				boolean onlyEx = true;
 				for(ExperimentType e:experimentTypes){
 					Logger.info(e.code);
+					if(!e.code.startsWith("ex")){
+						onlyEx = false;
+					}
 					listePrevious.add(e.code);
 				}			
-				queryElts.add(DBQuery.in("fromExperimentTypeCodes", listePrevious));
+				if(!onlyEx){
+					queryElts.add(DBQuery.in("fromExperimentTypeCodes", listePrevious));
+				}else{
+					queryElts.add(DBQuery.or(DBQuery.size("fromExperimentTypeCodes", 0),DBQuery.notExists("fromExperimentTypeCodes")));
+				}
+				
 			
 			}else{
 				Logger.error("NGL-SQ bad nextProcessTypeCode: "+containersSearch.nextProcessTypeCode);
