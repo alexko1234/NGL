@@ -7,5 +7,5 @@ public class ReagentSearchForm extends ListForm{
 	public String kitCode;
 	
 	public String boxBarCode;
-	public String barCode;
+	public String providerID;
 }

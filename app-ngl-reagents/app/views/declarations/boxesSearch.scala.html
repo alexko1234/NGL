@@ -4,7 +4,7 @@
 @form() = {
 	@columnSearchForm{
 		@formGroup{
-			<input type="text" class="form-control" ng-model="searchService.form.barCode" placeholder='@Messages("boxes.barCode")'>
+			<input type="text" class="form-control" ng-model="searchService.form.providerID" placeholder='@Messages("boxes.providerID")'>
 		}
 		@formGroup{
 			<input type="text" class="form-control" ng-model="searchService.form.orderCode" placeholder='@Messages("order.code")'>
@@ -12,7 +12,7 @@
 	}
 	@columnSearchForm{
 	@formGroup{
-			<input type="text" class="form-control" ng-model="searchService.form.bundleBarCode" placeholder='@Messages("boxes.bundleBarCode")'>
+			<input type="text" class="form-control" ng-model="searchService.form.lotNumber" placeholder='@Messages("boxes.lotNumber")'>
 		}
 	@formGroup{
 			<input class="form-control" type="text" ng-model="searchService.form.fromReceptionDate" date-timestamp placeholder='@Messages("kits.placeholder.fromReceptionDate")' title='@Messages("kits.placeholder.fromReceptionDate")'>	

@@ -10,8 +10,8 @@ public class BoxSearchForm extends ListForm{
 	public String code;
 	public String kitCode;
 	public String name;
-	public String barCode;
-	public String bundleBarCode;
+	public String providerID;
+	public String lotNumber;
 	public String catalogRefCode;
 	
 	public String orderCode;

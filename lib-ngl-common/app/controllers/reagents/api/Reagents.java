@@ -150,10 +150,10 @@ public class Reagents extends DocumentController<Reagent>{
 			queryElts.add(DBQuery.is("kitCode", reagentSearch.kitCode));
 		}
 		
-		if(StringUtils.isNotEmpty(reagentSearch.barCode) && StringUtils.isNotEmpty(reagentSearch.boxBarCode)){
+		if(StringUtils.isNotEmpty(reagentSearch.providerID) && StringUtils.isNotEmpty(reagentSearch.boxBarCode)){
 			BoxSearchForm boxSearch = new BoxSearchForm();
-			boxSearch.barCode = reagentSearch.boxBarCode;
-			boxSearch.bundleBarCode = reagentSearch.boxBarCode;
+			boxSearch.providerID = reagentSearch.boxBarCode;
+			boxSearch.lotNumber = reagentSearch.boxBarCode;
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("code", 1);
 			keys.put("category", 1);
@@ -162,7 +162,7 @@ public class Reagents extends DocumentController<Reagent>{
 			for(Box b:boxes){
 				boxCodes.add(b.code);
 			}
-			queryElts.add(DBQuery.or(DBQuery.regex("barCode", Pattern.compile(reagentSearch.barCode)),DBQuery.in("boxCode", boxCodes)));
+			queryElts.add(DBQuery.or(DBQuery.regex("barCode", Pattern.compile(reagentSearch.providerID)),DBQuery.in("boxCode", boxCodes)));
 		}else if(StringUtils.isNotEmpty(reagentSearch.boxBarCode)){
 			queryElts.add(DBQuery.is("boxBarCode", reagentSearch.boxBarCode));
 		} 

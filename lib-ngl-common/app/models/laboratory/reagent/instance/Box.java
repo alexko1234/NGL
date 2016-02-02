@@ -21,8 +21,8 @@ public class Box extends AbstractDeclaration{
 	
 	public String kitCode;
 
-	public String barCode;
-	public String bundleBarCode;
+	public String providerID;
+	public String lotNumber;
 	
 	public Date startToUseDate;
 	public Date stopToUseDate;
@@ -39,7 +39,7 @@ public class Box extends AbstractDeclaration{
 	public void validate(ContextValidation contextValidation) {
 		ValidationHelper.required(contextValidation, code, "code");
 		ValidationHelper.required(contextValidation, catalogCode, "catalogCode");
-		ValidationHelper.required(contextValidation, barCode, "barCode");
+		ValidationHelper.required(contextValidation, providerID, "providerID");
 		ValidationHelper.required(contextValidation, receptionDate, "receptionDate");
 		ValidationHelper.required(contextValidation, expirationDate, "expirationDate");
 		ValidationHelper.required(contextValidation, state, "state");

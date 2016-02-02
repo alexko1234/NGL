@@ -168,7 +168,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 
 
 	$scope.searchReagents = function(){
-		$http.get(jsRoutes.controllers.reagents.api.Reagents.list().url, {params:{"barCode":$scope.searchBarCode, "boxBarCode":$scope.searchBarCode}})
+		$http.get(jsRoutes.controllers.reagents.api.Reagents.list().url, {params:{"providerID":$scope.searchBarCode, "boxBarCode":$scope.searchBarCode}})
 		.success(function(data, status,headers,config){
 			console.log(data);
 			var datatableData = $scope.datatableReagent.getData();
@@ -176,8 +176,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 				var closureData = data[i];
 				$http.get(jsRoutes.controllers.reagents.api.Boxes.list().url, {params:{"code":data[i].boxCode}})
 				.success(function(dataBox, status,headers,config){
-					var r = {"boxCode":dataBox[0].catalogRefCode+"_"+dataBox[0].bundleBarCode+"_"+dataBox[0].barCode,
-							"code":closureData.catalogRefCode+"_"+closureData.bundleBarCode+"_"+closureData.barCode,
+					var r = {"boxCode":dataBox[0].catalogRefCode+"_"+dataBox[0].+"_"+dataBox[0].providerID,
+							"code":closureData.catalogRefCode+"_"+closureData.+"_"+closureData.providerID,
 							"kitCatalogCode":closureData.catalogCode};
 					if($scope.isReagentAdded(r.code) === false){
 						datatableData.push(r);
@@ -195,7 +195,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		$scope.reagentCodeErrorClass = ""
 		$scope.reagentCodeError = "";
 		if($scope.searchBarCode !== undefined && $scope.searchBarCode !== ""){
-			$http.get(jsRoutes.controllers.reagents.api.Reagents.list().url, {params:{"barCode":$scope.searchBarCode, "boxBarCode":$scope.searchBarCode}})
+			$http.get(jsRoutes.controllers.reagents.api.Reagents.list().url, {params:{"providerID":$scope.searchBarCode, "boxBarCode":$scope.searchBarCode}})
 			.success(function(data, status,headers,config){
 				console.log(data);
 				var datatableData = $scope.datatableReagent.getData();
@@ -205,8 +205,8 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 					$http.get(jsRoutes.controllers.reagents.api.Boxes.list().url, {params:{"code":data[i].boxCode}})
 					.success(function(dataBox, status,headers,config){
 						if(data.length>0){
-							var r = {"boxCode":dataBox[0].catalogRefCode+"_"+dataBox[0].bundleBarCode+"_"+dataBox[0].barCode,
-									"code":closureData.catalogRefCode+"_"+closureData.bundleBarCode+"_"+closureData.barCode,
+							var r = {"boxCode":dataBox[0].catalogRefCode+"_"+dataBox[0].+"_"+dataBox[0].providerID,
+									"code":closureData.catalogRefCode+"_"+closureData.+"_"+closureData.providerID,
 									"kitCatalogCode":closureData.catalogCode};
 							if($scope.isReagentAdded(r.code) === false){
 								datatableData.push(r);

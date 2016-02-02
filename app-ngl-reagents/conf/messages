@@ -63,8 +63,8 @@ boxes.toExpirationDate = Date péremption jusqu''au
 boxes.code.label = Code
 
 catalogRefCode = REF. catalogue
-bundleBarCode = Lot
-barCode = ID unique
+lotNumber = Lot
+providerID = ID Fournisseur
 
 kitCatalogs.tabs.create = Création d'un kit dans le catalogue
 kitCatalogs.tabs.search = Rechercher un kit dans le catalogue
@@ -88,7 +88,7 @@ reagents.table.storageConditions = Conditions de stockage (°C)
 reagents.table.catalogRefCode = Ref. catalogue (fournisseur)
 reagents.table.comment = Commentaire
 reagents.table.stockInformation = Stockage
-reagents.table.bundleBarCode = Lot
+reagents.table.lotNumber = Lot
 reagents.table.category = Type
 reagents.table.creationDate = Date de création
 reagents.table.createUser = Expérience Créée par
@@ -123,18 +123,18 @@ experiments.name = Type d''expérience
 
 kit.catalogCode =  Nom kit (usuel)
 reagents.table.catalogName = Nom kit catalogue
-kits.barCode = ID unique
+kits.providerID = ID Fournisseur
 kits.expirationDate = Date de péremption
 kits.receptionDate = Date de réception	
-order.code = Ref. commande (fournisseur)
-order.providerCode = N° commande (interne)
+order.providerCode = Ref. commande (fournisseur)
+order.code = N° commande (interne)
 kit.refCommand = Information commande
 kits.startToUseDate = Date de début d''utilisation
 kits.stopToUseDate = Date de fin d''utilisation
 kits.state.code = Etat
 
 
-boxes.barCode = ID unique
+boxes.providerID = ID Fournisseur
 boxes.expirationDate = Date de péremption
 boxes.receptionDate = Date de réception
 boxes.possibleUseNumber = Nombre d''utilisations
@@ -143,9 +143,9 @@ boxes.stopToUseDate = Date fin utilisation
 boxes.state.code = Etat
 boxes.insert.warning = Voulez-vous supprimer les boîtes existantes ?
 boxes.stockInformation = Informations de stockage
-boxes.bundleBarCode = Lot
+boxes.lotNumber = Lot
 
-reagents.table.barCode = ID unique
+reagents.table.providerID = ID Fournisseur
 reagents.table.expirationDate = Date péremption
 reagents.table.receptionDate = Date de reception
 reagents.table.orderCode = Ref. commande (fournisseur)

@@ -142,14 +142,14 @@ factory('boxesSearchService', ['$http', 'mainService', 'lists', 'datatable', fun
 			"type":"text"
 		});
 		columns.push({
-			"header":Messages("reagents.table.bundleBarCode"),
-			"property":"bundleBarCode",
+			"header":Messages("reagents.table.lotNumber"),
+			"property":"lotNumber",
 			"order":true,
 			"type":"text"
 		});
 		columns.push({
-			"header":Messages("reagents.table.barCode"),
-			"property":"barCode",
+			"header":Messages("reagents.table.providerID"),
+			"property":"providerID",
 			"order":true,
 			"type":"text"
 		});

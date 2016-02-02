@@ -203,26 +203,26 @@
 					</div>
 					</div>
 					</div>	
-					<label class="col-md-2 col-lg-2 control-label">@Messages("boxes.barCode") :</label>
+					<label class="col-md-2 col-lg-2 control-label">@Messages("boxes.providerID") :</label>
 					<div ng-switch on="editMode">
-							<p class="form-control-static col-md-1 col-lg-1" ng-switch-when="false">{{box.barCode}}</p>
+							<p class="form-control-static col-md-1 col-lg-1" ng-switch-when="false">{{box.providerID}}</p>
 					<div ng-switch-when="true">
-					<div class="col-md-2 col-lg-2" ng-class="getClass('boxes['+$index+'].barCode')">
-						<input class="form-control" ng-change="boxBarCodeUpdate($index, box)" type="text" ng-model="box.barCode" ng-readonly="!editMode || (kit.declarationType!='kit' && kit.declarationType!='box')" ng-disabled="!editMode || (kit.declarationType!='kit' && kit.declarationType!='box')">
+					<div class="col-md-2 col-lg-2" ng-class="getClass('boxes['+$index+'].providerID')">
+						<input class="form-control" ng-change="boxBarCodeUpdate($index, box)" type="text" ng-model="box.providerID" ng-readonly="!editMode || (kit.declarationType!='kit' && kit.declarationType!='box')" ng-disabled="!editMode || (kit.declarationType!='kit' && kit.declarationType!='box')">
 						<span class="help-block">
-                           {{mainService.getError("boxes["+$index+"].barCode")}}
+                           {{mainService.getError("boxes["+$index+"].providerID")}}
                      		</span>
 					</div>
 					</div>
 					</div>
-					<label class="col-md-1 col-lg-1  control-label">@Messages("boxes.bundleBarCode") :</label>
+					<label class="col-md-1 col-lg-1  control-label">@Messages("boxes.lotNumber") :</label>
 					<div ng-switch on="editMode">
-							<p class="form-control-static col-md-2 col-lg-2" ng-switch-when="false">{{box.bundleBarCode}}</p>
+							<p class="form-control-static col-md-2 col-lg-2" ng-switch-when="false">{{box.lotNumber}}</p>
 					<div ng-switch-when="true">
-					<div class="col-md-2 col-lg-2" ng-class="getClass('boxes['+$index+'].bundleBarCode')">
-						<input class="form-control" type="text" ng-model="box.bundleBarCode" ng-readonly="!editMode || (kit.declarationType!='kit' && kit.declarationType!='box')" ng-disabled="!editMode || (kit.declarationType!='kit' && kit.declarationType!='box')">
+					<div class="col-md-2 col-lg-2" ng-class="getClass('boxes['+$index+'].lotNumber')">
+						<input class="form-control" type="text" ng-model="box.lotNumber" ng-readonly="!editMode || (kit.declarationType!='kit' && kit.declarationType!='box')" ng-disabled="!editMode || (kit.declarationType!='kit' && kit.declarationType!='box')">
 						<span class="help-block">
-                           {{mainService.getError("boxes["+$index+"].bundleBarCode")}}
+                           {{mainService.getError("boxes["+$index+"].lotNumber")}}
                      	</span>
 					</div>
 					</div>

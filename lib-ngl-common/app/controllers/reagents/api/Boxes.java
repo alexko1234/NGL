@@ -188,15 +188,15 @@ public class Boxes extends DocumentController<Box>{
 		if(boxSearch.catalogCodes != null){
 			queryElts.add(DBQuery.in("catalogCode", boxSearch.catalogCodes));
 		}
-		if(StringUtils.isNotEmpty(boxSearch.barCode) && StringUtils.isNotEmpty(boxSearch.bundleBarCode)){
-			queryElts.add(DBQuery.or(DBQuery.regex("barCode", Pattern.compile(boxSearch.barCode, Pattern.CASE_INSENSITIVE)),DBQuery.regex("bundleBarCode", Pattern.compile(boxSearch.bundleBarCode, Pattern.CASE_INSENSITIVE))));
+		if(StringUtils.isNotEmpty(boxSearch.providerID) && StringUtils.isNotEmpty(boxSearch.lotNumber)){
+			queryElts.add(DBQuery.or(DBQuery.regex("providerID", Pattern.compile(boxSearch.providerID, Pattern.CASE_INSENSITIVE)),DBQuery.regex("lotNumber", Pattern.compile(boxSearch.lotNumber, Pattern.CASE_INSENSITIVE))));
 		}else{
-			if(StringUtils.isNotEmpty(boxSearch.barCode)){
-				queryElts.add(DBQuery.regex("barCode", Pattern.compile(boxSearch.barCode, Pattern.CASE_INSENSITIVE)));
+			if(StringUtils.isNotEmpty(boxSearch.providerID)){
+				queryElts.add(DBQuery.regex("providerID", Pattern.compile(boxSearch.providerID, Pattern.CASE_INSENSITIVE)));
 			} 
 			
-			if(StringUtils.isNotBlank(boxSearch.bundleBarCode)){
-				queryElts.add(DBQuery.regex("bundleBarCode", Pattern.compile(boxSearch.bundleBarCode, Pattern.CASE_INSENSITIVE)));
+			if(StringUtils.isNotBlank(boxSearch.lotNumber)){
+				queryElts.add(DBQuery.regex("lotNumber", Pattern.compile(boxSearch.lotNumber, Pattern.CASE_INSENSITIVE)));
 			}
 		}
 		if(queryElts.size() > 0){

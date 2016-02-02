@@ -94,7 +94,7 @@
 				},
 				 edit:{
 		        	 active:true,
-		        	 columnMode:false,
+		        	 columnMode:true,
 		        	 showButton : true,
 		        	 withoutSelect:true,
 		        	 byDefault : false
