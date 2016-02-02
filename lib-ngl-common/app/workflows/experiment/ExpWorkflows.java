@@ -31,6 +31,7 @@ public class ExpWorkflows extends Workflows<Experiment>{
 		}
 		ExpWorkflowsHelper.updateStatus(exp, validation);
 		ExpWorkflowsHelper.updateComments(exp, validation);
+		ExpWorkflowsHelper.updateXCodes(exp); //TODO //GA 22/01/2016 hack for old experiment without contents, remove in 03/2016
 	}
 
 	public void applyPreStateRules(ContextValidation validation, Experiment exp, State nextState) {

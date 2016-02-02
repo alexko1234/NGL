@@ -225,7 +225,7 @@ public class ContainerUsedValidationHelper extends CommonValidationHelper {
 				content.validate(contextValidation);
 				contextValidation.removeKeyFromRootKeyName("contents["+i+++"]");
 			}
-		}else if("IP".equals(stateCode)){
+		}else if("IP".equals(stateCode)  && contents != null){ //TODO //GA 22/01/2016 hack for old experiment without contents, remove in 03/2016
 			if(ValidationHelper.required(contextValidation, contents, "contents")){
 				int i = 0;
 				for(Content content: contents){

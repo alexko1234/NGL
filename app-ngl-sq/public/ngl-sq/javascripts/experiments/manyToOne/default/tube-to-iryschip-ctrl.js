@@ -261,9 +261,6 @@
 	};
 	
 	$scope.isAllOpen = true;
-	if(!$scope.isCreationMode()){
-		$scope.isAllOpen = false;
-	}
 	
 	//TODO used container_support_category in future
 	//init number of lane

@@ -332,24 +332,30 @@ public class Containers extends CommonController {
 
 		List<String> listePrevious = new ArrayList<String>();
 		if(StringUtils.isNotBlank(containersSearch.nextProcessTypeCode)){					
-			listePrevious = ExperimentType.find.findVoidProcessExperimentTypeCode(containersSearch.nextProcessTypeCode);
-			if(CollectionUtils.isNotEmpty(listePrevious)){			
-				ProcessType processType = ProcessType.find.findByCode(containersSearch.nextProcessTypeCode);
-				List<ExperimentType> experimentTypes = new ArrayList<ExperimentType>();
-				if(processType != null){
-					experimentTypes = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(processType.firstExperimentType.code);
-				}else{
-					Logger.error("NGL-SQ bad nextProcessTypeCode: "+containersSearch.nextProcessTypeCode);
-					return null;
-				}
+					
+			ProcessType processType = ProcessType.find.findByCode(containersSearch.nextProcessTypeCode);
+			if(processType != null){
+				List<ExperimentType> experimentTypes = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(processType.firstExperimentType.code);
+				boolean onlyEx = true;
 				for(ExperimentType e:experimentTypes){
 					Logger.info(e.code);
+					if(!e.code.startsWith("ex")){
+						onlyEx = false;
+					}
 					listePrevious.add(e.code);
 				}			
-				queryElts.add(DBQuery.or(DBQuery.in("fromExperimentTypeCodes", listePrevious),DBQuery.notExists("fromExperimentTypeCodes"),DBQuery.size("fromExperimentTypeCodes", 0)));
+				if(!onlyEx){
+					queryElts.add(DBQuery.in("fromExperimentTypeCodes", listePrevious));
+				}else{
+					queryElts.add(DBQuery.or(DBQuery.size("fromExperimentTypeCodes", 0),DBQuery.notExists("fromExperimentTypeCodes")));
+				}
+				
+			
 			}else{
-				throw new RuntimeException("nextProcessTypeCode = "+ containersSearch.nextProcessTypeCode +" does not exist!");
+				Logger.error("NGL-SQ bad nextProcessTypeCode: "+containersSearch.nextProcessTypeCode);
+				return null;
 			}
+			
 		}
 
 		if(StringUtils.isNotBlank(containersSearch.nextExperimentTypeCode)){

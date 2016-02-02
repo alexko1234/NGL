@@ -263,7 +263,7 @@ angular.module('commonsServices', []).
     		};
     		
     		function putNoneInResult (result){
-    			if(result[0].code !== "none"){
+    			if(result !== undefined && result !== null && result[0].code !== "none"){
 					result.unshift({name: "None", code: "none"});
 				}
 				return result;
