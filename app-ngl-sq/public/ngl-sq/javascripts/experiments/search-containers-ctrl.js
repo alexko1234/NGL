@@ -219,7 +219,8 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 		},
 		order:{
 			active:true,
-			by:'code',
+			by:'traceInformation.creationDate',
+			reverse : true,
 			mode:'local'
 		},
 		hide:{
