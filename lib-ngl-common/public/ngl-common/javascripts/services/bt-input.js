@@ -13,7 +13,7 @@ angular.module('commonsServices').directive('btInput', [ '$parse', '$filter', fu
 			+ '<button tabindex="-1" data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" type="button" ng-disabled="isDisabled()" ng-click="open()">' 
 			+ '<i class="fa fa-list-ul"></i>' + '</button>' + '<ul class="dropdown-menu dropdown-menu-left"  role="menu">' 
 			+ '<li>' 
-			+ '<textarea ng-class="inputClass" ng-model="textareaValue" ng-change="setTextareaNgModel()" rows="5"></textarea>' 
+			+ '<textarea ng-class="inputClass" ng-model="textareaValue" ng-keydown="intercept($event)" ng-keyup="setTextareaNgModel()" rows="5" ></textarea>' 
 			+ '</li>' 
 			+ '</ul>' 
 			+ '</div>'
@@ -43,6 +43,14 @@ angular.module('commonsServices').directive('btInput', [ '$parse', '$filter', fu
 			}
 			
 			var ngFocus = attr.ngFocus;
+			
+			scope.intercept = function(event){
+				if(event.keyCode === 9){ //tab event
+					scope.textareaValue = scope.textareaValue+'\n'
+					event.preventDefault();
+				}
+				//scope.setTextareaNgModel()				
+			};
 			
 			scope.isTextarea = function() {
 				return textarea;

@@ -29,21 +29,6 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h3 class="text-center">
-						<a href="@controllers.experiments.tpl.routes.Experiments.home("search")?stateCodes=IP">
-							<span class="label label-primary pull-right">{{experimentDatatable.totalNumberRecords}}</span>
-							@Messages("home.experiments.ip")							
-						</a>
-					</h3>
-				</div>
-				<div class="panel-body">
-      					</div>
-					 	<div ultimate-datatable="experimentIPDatatable"></div>				</div>
-			</div>
-		</div>
-		<div class="col-md-6 col-lg-6">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="text-center">
 						<a href="@controllers.experiments.tpl.routes.Experiments.home("search")?stateCodes=N">
 							<span class="label label-primary pull-right">{{experimentDatatable.totalNumberRecords}}</span>
 							@Messages("home.experiments.new")							
@@ -55,6 +40,22 @@
 				</div>
 			</div>
 		</div>
-      </div>
+      
+      <div class="col-md-6 col-lg-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="text-center">
+						<a href="@controllers.experiments.tpl.routes.Experiments.home("search")?stateCodes=IP">
+							<span class="label label-primary pull-right">{{experimentDatatable.totalNumberRecords}}</span>
+							@Messages("home.experiments.ip")							
+						</a>
+					</h3>
+				</div>
+				<div class="panel-body">
+      					<div ultimate-datatable="experimentIPDatatable"></div>				
+      			</div>
+			</div>
+		</div>
+		</div>
     </div>
 }
