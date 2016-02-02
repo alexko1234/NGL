@@ -1016,7 +1016,7 @@ var	datatableConfig = {
 	$scope.basket = mainService.getBasket();
 	$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);
 	$scope.addNewProcessColumns();
-	$scope.datatable.selectAll(false);
+	//$scope.datatable.selectAll(false);
 	if($scope.basket.length() != 0){
 		$scope.doneAndRecorded = false;
 		$scope.changeConfigFunc(true);
