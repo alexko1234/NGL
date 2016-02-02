@@ -20,11 +20,13 @@ import play.mvc.Result;
 import play.mvc.Results;
 import views.components.datatable.DatatableResponse;
 import controllers.CommonController;
+import controllers.authorisation.Permission;
 
 public class ExperimentTypeNodes extends CommonController{
 
 	final static Form<ExperimentTypeNodesSearchForm> experimentTypeNodeForm = form(ExperimentTypeNodesSearchForm.class);
 	
+	@Permission(value={"reading"})
 	public static Result get(String code){
 		try {
 			ExperimentTypeNode experimentTypeNode = ExperimentTypeNode.find.findByCode(code);
@@ -39,7 +41,7 @@ public class ExperimentTypeNodes extends CommonController{
 		}		
 	}
 	
-	
+	@Permission(value={"reading"})
 	public static Result list() throws DAOException{
 		Form<ExperimentTypeNodesSearchForm>  experimentTypeNodeFilledForm = filledFormQueryString(experimentTypeNodeForm,ExperimentTypeNodesSearchForm.class);
 		ExperimentTypeNodesSearchForm experimentTypeNodesSearch = experimentTypeNodeFilledForm.get();

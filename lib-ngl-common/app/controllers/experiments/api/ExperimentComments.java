@@ -22,6 +22,7 @@ import play.data.Form;
 import play.mvc.Result;
 import validation.ContextValidation;
 import controllers.SubDocumentController;
+import controllers.authorisation.Permission;
 @Controller
 public class ExperimentComments extends SubDocumentController<Experiment, Comment>{
 
@@ -46,6 +47,7 @@ public class ExperimentComments extends SubDocumentController<Experiment, Commen
 		return null;
 	}
 	
+	@Permission(value={"writing"})
 	public Result save(String parentCode){
 		Experiment objectInDB = getObject(parentCode);
 		if (objectInDB == null) {
@@ -78,6 +80,7 @@ public class ExperimentComments extends SubDocumentController<Experiment, Commen
 		}		
 	}
 
+	@Permission(value={"writing"})
 	public Result update(String parentCode, String code){
 		Experiment objectInDB = getObject(getSubObjectQuery(parentCode, code));
 		if (objectInDB == null) {
@@ -109,6 +112,7 @@ public class ExperimentComments extends SubDocumentController<Experiment, Commen
 		}
 	}
 	
+	@Permission(value={"writing"})
 	public Result delete(String parentCode, String code){
 		Experiment objectInDB = getObject(getSubObjectQuery(parentCode, code));
 		if (objectInDB == null) {

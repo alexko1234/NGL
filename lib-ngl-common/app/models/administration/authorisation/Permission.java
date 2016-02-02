@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import models.administration.authorisation.description.dao.PermissionDAO;
 import models.utils.Model;
 import models.utils.dao.DAOException;
+import play.Logger;
 
 /**
  * 
@@ -16,7 +17,6 @@ import models.utils.dao.DAOException;
 public class Permission extends Model<Permission>{
 
 	public String label;
-	// Code de Permission (pr l'instant = reading ou writting)
 	public String code;
 
 	@JsonIgnore

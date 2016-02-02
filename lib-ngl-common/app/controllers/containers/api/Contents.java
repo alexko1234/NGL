@@ -19,11 +19,13 @@ import org.mongojack.DBQuery;
 import com.mongodb.BasicDBObject;
 
 import controllers.CommonController;
+import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 
 public class Contents extends CommonController {
 
 	// XN 30/06/2015 Modified to be generic with any content properties
+	@Permission(value={"reading"})
 	@SuppressWarnings("unchecked")
 	public static Result list() throws DAOException{
 		

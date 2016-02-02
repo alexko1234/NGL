@@ -21,11 +21,13 @@ import play.mvc.Result;
 import play.mvc.Results;
 import views.components.datatable.DatatableResponse;
 import controllers.CommonController;
+import controllers.authorisation.Permission;
 
 public class ProcessTypes extends CommonController{
 	
 	final static Form<ProcessTypesSearchForm> processTypeForm = form(ProcessTypesSearchForm.class);
 	
+	@Permission(value={"reading"})
 	public static Result list() throws DAOException{
 		Form<ProcessTypesSearchForm> processTypeFilledForm = filledFormQueryString(processTypeForm,ProcessTypesSearchForm.class);
 		ProcessTypesSearchForm processTypesSearch = processTypeFilledForm.get();
@@ -59,6 +61,7 @@ public class ProcessTypes extends CommonController{
 		}	
 	}
 	
+	@Permission(value={"reading"})
 	public static Result get(String code) throws DAOException{		 
 			ProcessType processType = ProcessType.find.findByCode(code);
 			if(processType!=null){

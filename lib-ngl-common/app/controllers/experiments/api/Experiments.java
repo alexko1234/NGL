@@ -39,6 +39,7 @@ import com.mongodb.BasicDBObject;
 
 import controllers.DocumentController;
 import controllers.NGLControllerHelper;
+import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBResult;
 
 public class Experiments extends DocumentController<Experiment>{
@@ -56,6 +57,7 @@ public class Experiments extends DocumentController<Experiment>{
 		super(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class);	
 	}
 	
+	@Permission(value={"reading"})
 	public Result list(){
 		//Form<ExperimentSearchForm> experimentFilledForm = filledFormQueryString(experimentSearchForm,ExperimentSearchForm.class);
 		//ExperimentSearchForm experimentsSearch = experimentFilledForm.get();
@@ -207,6 +209,7 @@ public class Experiments extends DocumentController<Experiment>{
 
 	}
 	
+	@Permission(value={"writing"})
 	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public Result save() throws DAOException{
 		Form<Experiment> filledForm = getMainFilledForm();
@@ -243,6 +246,7 @@ public class Experiments extends DocumentController<Experiment>{
 		}				
 	}
 	
+	@Permission(value={"writing"})
 	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
 	public Result update(String code) throws DAOException{
 		Experiment objectInDB =  getObject(code);
@@ -282,6 +286,7 @@ public class Experiments extends DocumentController<Experiment>{
 				
 	}
 	
+	@Permission(value={"writing"})
 	public Result updateState(String code){
 		Experiment objectInDB = getObject(code);
 		if(objectInDB == null) {

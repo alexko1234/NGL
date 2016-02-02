@@ -35,6 +35,7 @@ import workflows.container.ContainerWorkflows;
 import com.mongodb.BasicDBObject;
 
 import controllers.CommonController;
+import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
@@ -44,6 +45,8 @@ public class ContainerSupports extends CommonController {
 	final static Form<ContainerSupportsSearchForm> supportForm = form(ContainerSupportsSearchForm.class);
 	final static Form<ContainerSupportsUpdateForm> containerSupportUpdateForm = form(ContainerSupportsUpdateForm.class);
 	final static Form<State> stateForm = form(State.class);
+	
+	@Permission(value={"reading"})
 	public static Result get(String code){
 		ContainerSupport support = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, code);
 		if(support != null){
@@ -53,6 +56,7 @@ public class ContainerSupports extends CommonController {
 		return notFound();
 	}
 
+	@Permission(value={"reading"})
 	public static Result head(String code) {
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, code)){			
 			return ok();					
@@ -61,6 +65,7 @@ public class ContainerSupports extends CommonController {
 		}	
 	}
 
+	@Permission(value={"reading"})
 	public static Result list() throws DAOException{		
 		ContainerSupportsSearchForm supportsSearch = filledFormQueryString(ContainerSupportsSearchForm.class);
 
@@ -96,10 +101,13 @@ public class ContainerSupports extends CommonController {
 		return ok("{}");
 	}
 
+	@Permission(value={"writing"})
 	@Deprecated
 	public static Result updateBatch(){
 		return ok();
 	}
+	
+	@Permission(value={"writing"})
 	@Deprecated
 	public static Result updateStateCode(String code){
 		Form<ContainerSupportsUpdateForm> containerSupportUpdateFilledForm = getFilledForm(containerSupportUpdateForm, ContainerSupportsUpdateForm.class);
@@ -140,7 +148,8 @@ public class ContainerSupports extends CommonController {
 		}
 		return badRequest(containerSupportUpdateFilledForm.errorsAsJson());
 		}
-		
+	
+	@Permission(value={"writing"})	
 	public static Result updateState(String code){
 		ContainerSupport support = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, code);
 		if(support == null){

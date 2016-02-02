@@ -1,4 +1,6 @@
 @()
+@import play.mvc.Http.Context
+@import controllers.authorisation.PermissionHelper
 <div class="row">
 	<div class="col-md-12 col-lg-12">
 		<div class="page-header">	
@@ -21,23 +23,25 @@
 			
 				<button class="btn btn-default" ng-if="isDispactchModalAvailable()" ng-click="initDispatchModal()"><i class="fa fa-arrows-alt"></i></button>
 				
-			 	<button class="btn btn-primary" ng-disabled="isSaveInProgress()" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i></button>
-			 	
-			 	<div class="btn-group" ng-switch on="mainService.isEditMode()" ng-if="isEditModeAvailable()">
-			 		<button class="btn btn-default" ng-switch-when="true"  ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i></button>
-			 		<button class="btn btn-default" ng-switch-when="false"  ng-click="activeEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i></button>
-			 	</div>		
-			 	
-			 	<div class="btn-group" ng-switch on="isFinishEditMode()" ng-if="isFinishState()">
-			 		<button class="btn btn-default" ng-switch-when="true"  ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i></button>
-			 		<button class="btn btn-default" ng-switch-when="false"  ng-click="activeFinishEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i></button>
-			 	</div>		
-			 	
-			 	
-			 	<div class="btn-group">
-			 		<button class="btn btn-default" ng-if="isWorkflowModeAvailable('IP')" ng-click="startExperiment()" title="@Messages("experiments.button.start")"><i class="fa fa-play"></i> @Messages("experiments.button.start")</button>
-					<button class="btn btn-default" ng-if="isWorkflowModeAvailable('F')" ng-click="finishExperiment()" title="@Messages("experiments.button.finish")"><i class="fa fa-stop"></i> @Messages("experiments.button.finish")</button>		
-			 	</div>
+				@if(PermissionHelper.checkPermission(Context.current().session(), "writing")){
+				 	<button class="btn btn-primary" ng-disabled="isSaveInProgress()" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i></button>
+				 	
+				 	<div class="btn-group" ng-switch on="mainService.isEditMode()" ng-if="isEditModeAvailable()">
+				 		<button class="btn btn-default" ng-switch-when="true"  ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i></button>
+				 		<button class="btn btn-default" ng-switch-when="false"  ng-click="activeEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i></button>
+				 	</div>		
+				 	
+				 	<div class="btn-group" ng-switch on="isFinishEditMode()" ng-if="isFinishState()">
+				 		<button class="btn btn-default" ng-switch-when="true"  ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")" ><i class="fa fa-undo"></i></button>
+				 		<button class="btn btn-default" ng-switch-when="false"  ng-click="activeFinishEditMode()" data-toggle="tooltip" title="@Messages("button.edit")" ><i class="fa fa-edit"></i></button>
+				 	</div>		
+				 	
+				 	
+				 	<div class="btn-group">
+				 		<button class="btn btn-default" ng-if="isWorkflowModeAvailable('IP')" ng-click="startExperiment()" title="@Messages("experiments.button.start")"><i class="fa fa-play"></i> @Messages("experiments.button.start")</button>
+						<button class="btn btn-default" ng-if="isWorkflowModeAvailable('F')" ng-click="finishExperiment()" title="@Messages("experiments.button.finish")"><i class="fa fa-stop"></i> @Messages("experiments.button.finish")</button>		
+			 		</div>
+			 	}
 			 	
 			 	<button class="btn btn-default" data-toggle="modal" data-target="#commentModal" title="@Messages("experiment.button.addComment")"><i class="fa fa-comment"></i></button>
 			 	

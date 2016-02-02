@@ -18,11 +18,13 @@ import play.mvc.Result;
 import play.mvc.Results;
 import views.components.datatable.DatatableResponse;
 import controllers.CommonController;
+import controllers.authorisation.Permission;
 
 public class ExperimentCategories extends CommonController{
 	
 	final static Form<ExperimentCategoriesSearchForm> experimentCategoryForm = form(ExperimentCategoriesSearchForm.class);
 	
+	@Permission(value={"reading"})
 	public static Result list() throws DAOException{
 		Form<ExperimentCategoriesSearchForm>  experimentCategoryFilledForm = filledFormQueryString(experimentCategoryForm,ExperimentCategoriesSearchForm.class);
 		ExperimentCategoriesSearchForm experimentCategoriesSearch = experimentCategoryFilledForm.get();

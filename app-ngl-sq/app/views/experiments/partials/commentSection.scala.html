@@ -1,4 +1,6 @@
 @(currentUser:java.lang.String)
+@import play.mvc.Http.Context
+@import controllers.authorisation.PermissionHelper
 <div class="row" ng-controller="CommentsCtrl">
 	<div class="col-md-12 col-lg-12">
 		<div class="panel panel-default">
@@ -41,12 +43,14 @@
 			
 			</form>
 	      </div>
-	      <div class="modal-footer">
-	        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true" ng-click="cancel();">@Messages("experiment.comment.button.cancel")</button>
-			<button data-dismiss="modal" class="btn btn-primary" ng-show="!isUpdate()"  ng-click="save();">@Messages("experiment.comment.button.save")</button>
-	      	<button data-dismiss="modal" class="btn btn-primary" ng-show="isUpdate()" ng-click="update();">@Messages("experiment.comment.button.update")</button>
 	      
-	      </div>
+	      @if(PermissionHelper.checkPermission(Context.current().session(), "writing")){
+		     <div class="modal-footer">
+		       	<button class="btn btn-default" data-dismiss="modal" aria-hidden="true" ng-click="cancel();">@Messages("experiment.comment.button.cancel")</button>
+				<button data-dismiss="modal" class="btn btn-primary" ng-show="!isUpdate()"  ng-click="save();">@Messages("experiment.comment.button.save")</button>
+		      	<button data-dismiss="modal" class="btn btn-primary" ng-show="isUpdate()" ng-click="update();">@Messages("experiment.comment.button.update")</button>
+		     </div>
+		   }
 	    </div><!-- /.modal-content -->
 	  </div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->

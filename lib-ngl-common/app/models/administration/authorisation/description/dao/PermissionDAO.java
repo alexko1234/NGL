@@ -37,7 +37,7 @@ public class PermissionDAO extends AbstractDAODefault<Permission>{
 				+ "INNER JOIN user_role AS ur ON r.id = ur.role_id "
 				+ "INNER JOIN user AS u ON ur.user_id = u.id "
 				+ "WHERE u.login=?";
-		// Logger.debug(sql);
+		//Logger.debug(sql);
 		BeanPropertyRowMapper<Permission> mapper = new BeanPropertyRowMapper<Permission>(entityClass);
 		return this.jdbcTemplate.query(sql, mapper, aLogin);
 	}

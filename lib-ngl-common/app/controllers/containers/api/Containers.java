@@ -24,6 +24,7 @@ import com.mongodb.BasicDBObject;
 
 import controllers.CommonController;
 import controllers.NGLControllerHelper;
+import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBDatatableResponseChunks;
 import fr.cea.ig.MongoDBResponseChunks;
@@ -60,6 +61,8 @@ public class Containers extends CommonController {
 	final static List<String> defaultKeys =  Arrays.asList("code","fromExperimentTypeCodes","sampleCodes","contents","traceInformation","projectCodes", "inputProcessCodes", "valuation.valid", "state", "support","mesuredConcentration");
     // GA 31/07/2015 suppression des parametres "lenght"
 	final static Form<State> stateForm = form(State.class);
+	
+	@Permission(value={"reading"})
 	public static Result get(String code){
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, code);
 		if(container != null){
@@ -69,6 +72,7 @@ public class Containers extends CommonController {
 		return notFound();
 	}
 
+	@Permission(value={"reading"})
 	public static Result head(String code) {
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, code)){			
 			return ok();					
@@ -76,6 +80,8 @@ public class Containers extends CommonController {
 			return notFound();
 		}	
 	}
+	
+	@Permission(value={"writing"})
 	@Deprecated
 	public static Result updateBatch(){
 		List<Form<ContainerBatchElement>> filledForms =  getFilledFormList(batchElementForm, ContainerBatchElement.class);
@@ -111,6 +117,7 @@ public class Containers extends CommonController {
 		return  MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code",containerCode));
 	}
 
+	@Permission(value={"writing"})
 	public static Result update(String containerCode){
 		if(MongoDBDAO.checkObjectExist(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", containerCode))){
 			Form<Container> containerFilledForm = getFilledForm(containersForm,Container.class);
@@ -126,6 +133,7 @@ public class Containers extends CommonController {
 		return badRequest();
 	}
 
+	@Permission(value={"reading"})
 	public static Result list() throws DAOException{
 		//Form<ContainersSearchForm> containerFilledForm = filledFormQueryString(containerForm,ContainersSearchForm.class);
 		ContainersSearchForm containersSearch = filledFormQueryString(ContainersSearchForm.class);
@@ -161,6 +169,7 @@ public class Containers extends CommonController {
 				
 	}
 
+	@Permission(value={"writing"})
 	@Deprecated
 	public static Result updateStateCode(String code){
 		Form<ContainersUpdateForm> containerUpdateFilledForm = getFilledForm(containersUpdateForm, ContainersUpdateForm.class);
@@ -178,6 +187,7 @@ public class Containers extends CommonController {
 		return badRequest(containerUpdateFilledForm.errorsAsJson());
 	}
 
+	@Permission(value={"writing"})
 	@Deprecated
 	public static Result updateStateBatch(){
 		Form<ContainersUpdateForm> containerUpdateFilledForm = getFilledForm(containersUpdateForm, ContainersUpdateForm.class);
@@ -213,7 +223,7 @@ public class Containers extends CommonController {
 		return ok(Json.toJson(response));
 	}
 
-	
+	@Permission(value={"writing"})
 	public static Result updateState(String code){
 		Container container = findContainer(code);
 		if(container == null){

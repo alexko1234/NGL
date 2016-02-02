@@ -19,11 +19,13 @@ import play.mvc.Result;
 import play.mvc.Results;
 import views.components.datatable.DatatableResponse;
 import controllers.CommonController;
+import controllers.authorisation.Permission;
 
 public class ExperimentTypes extends CommonController{
 	
 	final static Form<ExperimentTypesSearchForm> experimentTypeForm = form(ExperimentTypesSearchForm.class);
 	
+	@Permission(value={"reading"})
 	public static Result get(String code){
 		ExperimentType experimentType = null;
 		try {
@@ -38,6 +40,7 @@ public class ExperimentTypes extends CommonController{
 		return ok(Json.toJson(experimentType));
 	}
 	
+	@Permission(value={"reading"})
 	public static Result list() throws DAOException{
 		Form<ExperimentTypesSearchForm> experimentTypeFilledForm = filledFormQueryString(experimentTypeForm,ExperimentTypesSearchForm.class);
 		ExperimentTypesSearchForm experimentTypesSearch = experimentTypeFilledForm.get();
@@ -78,6 +81,7 @@ public class ExperimentTypes extends CommonController{
 		}	
 	}
 	
+	@Permission(value={"reading"})
 	public static Result getDefaultFirstExperiments(String processTypeCode) throws DAOException{		
 			ProcessType processType = ProcessType.find.findByCode(processTypeCode);
 			List<ExperimentType> expTypes = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(processType.firstExperimentType.code);

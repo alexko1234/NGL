@@ -28,6 +28,7 @@ import views.components.datatable.DatatableResponse;
 import com.mongodb.BasicDBObject;
 
 import controllers.CommonController;
+import controllers.authorisation.Permission;
 import controllers.utils.FormUtils;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
@@ -35,6 +36,7 @@ import fr.cea.ig.MongoDBResult;
 public class Samples extends CommonController{
 	final static Form<SamplesSearchForm> sampleForm = form(SamplesSearchForm.class);
 
+	@Permission(value={"reading"})
 	public static Result get(String code){
 		Sample sample = null;
 		// Pour récupérer une liste de referenceCollab de samples
@@ -62,7 +64,7 @@ public class Samples extends CommonController{
 		}
 	}
 	
-
+	@Permission(value={"reading"})
 	public static Result list(){
 		Form<SamplesSearchForm> sampleFilledForm = filledFormQueryString(sampleForm,SamplesSearchForm.class);
 		SamplesSearchForm samplesSearch = sampleFilledForm.get();

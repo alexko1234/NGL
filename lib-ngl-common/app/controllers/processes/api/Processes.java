@@ -57,6 +57,7 @@ import com.mongodb.BasicDBObject;
 import controllers.CommonController;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
+import controllers.authorisation.Permission;
 import controllers.containers.api.Containers;
 import controllers.containers.api.ContainersSearchForm;
 import fr.cea.ig.MongoDBDAO;
@@ -76,6 +77,7 @@ public class Processes extends CommonController{
 	private static final ALogger logger = Logger.of("Processes");
 	final static Form<State> stateForm = form(State.class);
 	
+	@Permission(value={"reading"})
 	public static Result head(String processCode) {
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, processCode)){			
 			return ok();					
@@ -83,7 +85,8 @@ public class Processes extends CommonController{
 			return notFound();
 		}	
 	}
-
+	
+	@Permission(value={"reading"})
 	public static Result get(String code){
 		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
 		if(process == null){
@@ -92,6 +95,7 @@ public class Processes extends CommonController{
 		return ok(Json.toJson(process));
 	}
 
+	@Permission(value={"writing"})
 	public static Result save(){	
 		Form<ProcessesSaveQueryForm>  filledQueryFieldsForm = filledFormQueryString(processSaveQueryForm, ProcessesSaveQueryForm.class);
 		ProcessesSaveQueryForm queryFieldsForm = filledQueryFieldsForm.get();		
@@ -136,6 +140,7 @@ public class Processes extends CommonController{
 		}
 	}
 
+	@Permission(value={"writing"})
 	public static Result saveBatch(){
 		Form<ProcessesSaveQueryForm>  filledQueryFieldsForm = filledFormQueryString(processSaveQueryForm, ProcessesSaveQueryForm.class);
 		List<Form<ProcessesBatchElement>> filledForms =  getFilledFormList(processSaveBatchForm, ProcessesBatchElement.class);
@@ -256,6 +261,7 @@ public class Processes extends CommonController{
 		return processes;
 	}
 
+	@Permission(value={"writing"})
 	public static Result update(String code){
 		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
 		if(process == null){
@@ -281,6 +287,8 @@ public class Processes extends CommonController{
 			return badRequest("process code are not the same");
 		}
 	}
+	
+	@Permission(value={"writing"})
 	@Deprecated
 	public static Result updateStateCode(String code){
 		Form<ProcessesUpdateForm> processesUpdateFilledForm = getFilledForm(processesUpdateForm,ProcessesUpdateForm.class);
@@ -299,6 +307,7 @@ public class Processes extends CommonController{
 		return badRequest(processesUpdateFilledForm.errorsAsJson());
 	}
 
+	@Permission(value={"writing"})
 	public static Result updateState(String code){
 		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
 		if(process == null){
@@ -317,7 +326,7 @@ public class Processes extends CommonController{
 		}
 	}
 	
-	
+	@Permission(value={"writing"})
 	public static Result delete(String code) throws DAOException{
 		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
 		Form deleteForm = new Form(Process.class);
@@ -355,6 +364,7 @@ public class Processes extends CommonController{
 		}
 	}
 
+	@Permission(value={"reading"})
 	public static Result list() throws DAOException{
 		//Form<ProcessesSearchForm> processesFilledForm = filledFormQueryString(processesSearchForm,ProcessesSearchForm.class);
 		ProcessesSearchForm processesSearch = filledFormQueryString(ProcessesSearchForm.class);

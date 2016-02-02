@@ -15,11 +15,13 @@ import play.mvc.Result;
 import play.mvc.Results;
 import views.components.datatable.DatatableResponse;
 import controllers.CommonController;
+import controllers.authorisation.Permission;
 
 public class ProcessCategories extends CommonController{
 	
 	final static Form<ProcessCategoriesSearchForm> processCategoryForm = form(ProcessCategoriesSearchForm.class);
 	
+	@Permission(value={"reading"})
 	public static Result list() throws DAOException{
 		Form<ProcessCategoriesSearchForm> processCategoryFilledForm = filledFormQueryString(processCategoryForm,ProcessCategoriesSearchForm.class);
 		ProcessCategoriesSearchForm processCategoriesSearch = processCategoryFilledForm.get();
