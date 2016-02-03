@@ -82,12 +82,17 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		*/
-		
-		l.add(newExperimentType("Solution stock","solution-stock",null,1000,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), getPropertyDefinitionSolutionStock(),
-				getInstrumentUsedTypes("hand","tecan-evo-100"),"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
+		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){	
+			l.add(newExperimentType("Solution stock","solution-stock",null,1000,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), getPropertyDefinitionSolutionStock(),
+					getInstrumentUsedTypes("hand","tecan-evo-100"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		}else{
+			l.add(newExperimentType("Solution stock","solution-stock",null,1000,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionSolutionStock(),
+					getInstrumentUsedTypes("hand","tecan-evo-100"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		}
 		
 		l.add(newExperimentType("Preparation flowcell", "prepa-flowcell",null,1200, 
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcellCNS(),
