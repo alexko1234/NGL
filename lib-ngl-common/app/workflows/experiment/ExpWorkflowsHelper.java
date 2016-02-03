@@ -304,6 +304,8 @@ public class ExpWorkflowsHelper {
 	 * @param validation
 	 */
 	public static void createOutputContainerSupports(Experiment exp, ContextValidation validation) {
+		TraceInformation traceInformation = new TraceInformation(validation.getUser());
+		
 		Map<String, List<Container>> containersBySupportCode = exp.atomicTransfertMethods.stream()
 				.map(atm -> createOutputContainers(exp, atm, validation))
 				.flatMap(List::stream)
@@ -324,10 +326,12 @@ public class ExpWorkflowsHelper {
 			
 			support.validate(supportsValidation);
 			if(!supportsValidation.hasErrors()){
+				support.traceInformation = traceInformation;
 				MongoDBDAO.save(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, support);
 				containers.forEach(container -> {
 					container.validate(supportsValidation);
 					if(!supportsValidation.hasErrors()){
+						container.traceInformation = traceInformation;
 						MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, container);
 						MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
 								DBQuery.in("code", container.inputProcessCodes).notIn("newContainerSupportCodes", container.support.code),
