@@ -25,4 +25,19 @@ public class TaxonomyServicesTest extends AbstractTests{
 		Assert.assertNotNull(lineage);
 		Assert.assertEquals("cellular organisms; Bacteria; Terrabacteria group; Firmicutes; Bacilli; Lactobacillales; Streptococcaceae; Lactococcus", lineage);
 	}
+	
+	@Test
+	public void shouldNoTaxonomyInfo()
+	{
+		String scientificName = TaxonomyServices.getScientificName("135");
+		Assert.assertNull(scientificName);
+		String lineage = TaxonomyServices.getLineage("135");
+		Assert.assertNull(lineage);
+	}
+	
+	@Test
+	public void shouldNoTaxonomyInfoTaxonCodeNull()
+	{
+		Assert.assertNull(TaxonomyServices.getScientificName(null));
+	}
 }

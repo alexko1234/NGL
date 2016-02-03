@@ -11,6 +11,14 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+
+import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
@@ -44,20 +52,12 @@ import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
-
+import ncbi.services.TaxonomyServices;
 import play.Logger;
 import play.api.modules.spring.Spring;
 import services.instance.container.ContainerImportCNS;
 import validation.ContextValidation;
 import validation.utils.ValidationConstants;
-import fr.cea.ig.MongoDBDAO;
 
 
 /**
@@ -167,7 +167,9 @@ public class LimsCNSDAO{
 				sample.name=rs.getString("name");
 				sample.referenceCollab=rs.getString("referenceCollab");
 				sample.taxonCode=rs.getString("taxonCode");
-
+				//Get scientificName
+				sample.ncbiScientificName=TaxonomyServices.getScientificName(sample.taxonCode);
+				sample.ncbiLineage=TaxonomyServices.getLineage(sample.taxonCode);
 				sample.comments=new ArrayList<Comment>();
 				sample.comments.add(new Comment(rs.getString("comment"), "ngl-test"));
 				sample.categoryCode=sampleType.category.code;

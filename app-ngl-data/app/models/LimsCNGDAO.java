@@ -33,6 +33,7 @@ import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
 import models.utils.instance.ContainerSupportHelper;
+import ncbi.services.TaxonomyServices;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -164,6 +165,8 @@ public class LimsCNGDAO {
 			sample.name=rs.getString("name");
 			sample.referenceCollab= rs.getString("ref_collab");
 			sample.taxonCode=rs.getString("taxon_code");
+			sample.ncbiScientificName=TaxonomyServices.getScientificName(sample.taxonCode);
+			sample.ncbiLineage=TaxonomyServices.getLineage(sample.taxonCode);
 			sample.importTypeCode=IMPORT_TYPE_CODE_DEFAULT;
 		
 			sample.projectCodes=new HashSet<String>();

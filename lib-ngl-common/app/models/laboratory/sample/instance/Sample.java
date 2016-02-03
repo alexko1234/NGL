@@ -4,21 +4,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.mongojack.MongoCollection;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import fr.cea.ig.DBObject;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.Valuation;
 import models.utils.InstanceConstants;
-
-import org.mongojack.MongoCollection;
-
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.sample.instance.SampleValidationHelper;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import fr.cea.ig.DBObject;
 
 /**
  * 
@@ -53,7 +51,8 @@ public class Sample extends DBObject implements IValidation{
 	public Valuation valuation;
 	//public List<CollaboratorInvolve> collaborators;
 	public String taxonCode;
-	public String ncbiScientificName; // nom scientific associé au taxonCode au NCBI
+	public String ncbiScientificName;
+	public String ncbiLineage;
 	public List<Comment> comments;
 	public TraceInformation traceInformation;
 
@@ -75,6 +74,7 @@ public class Sample extends DBObject implements IValidation{
 		SampleValidationHelper.validateSampleType(typeCode,importTypeCode,properties,contextValidation);
 		SampleValidationHelper.validateTraceInformation(traceInformation, contextValidation);
 		//TODO validation taxon
+		
 	}
 
 

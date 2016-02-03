@@ -4,12 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Required;
-
-import play.Logger;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
@@ -42,5 +38,4 @@ public class SampleValidationHelper extends CommonValidationHelper {
 				ValidationHelper.validateProperties(contextValidation,properties, proDefinitions);
 			}
 	}
-
 }
