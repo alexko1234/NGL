@@ -775,7 +775,7 @@ public class LimsCNSDAO{
 					Process process=new Process();
 					process.typeCode=processType.code;
 					process.categoryCode=processType.category.code;
-					process.containerInputCode=container.code;
+					process.inputContainerCode=container.code;
 					process.projectCode=rs.getString("projectCode");
 					process.sampleCode=rs.getString("sampleCode");
 					process.traceInformation=new TraceInformation();

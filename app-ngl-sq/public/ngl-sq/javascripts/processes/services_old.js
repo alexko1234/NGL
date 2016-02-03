@@ -43,8 +43,8 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 
 	var searchService = {
 		columnsDefault : [ {
-			"header" : Messages("processes.table.containerInputCode"),
-			"property" : "containerInputCode",
+			"header" : Messages("processes.table.inputContainerCode"),
+			"property" : "inputContainerCode",
 			"order" : true,
 			"hide" : false,
 			"position" : 1,
@@ -144,8 +144,8 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"type" : "text"
 		} ],
 		columnsDefaultState : [ {
-			"header" : Messages("processes.table.containerInputCode"),
-			"property" : "containerInputCode",
+			"header" : Messages("processes.table.inputContainerCode"),
+			"property" : "inputContainerCode",
 			"order" : true,
 			"hide" : false,
 			"position" : 1,

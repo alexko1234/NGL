@@ -35,7 +35,7 @@ angular.module('home').controller('ListContainersCtrl', ['$scope', 'datatable','
 			order:{
 				mode:'local',
 				active:true,
-				by:'containerInputCode'
+				by:'inputContainerCode'
 			},
 			remove:{
 				active:true,

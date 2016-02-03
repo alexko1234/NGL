@@ -73,7 +73,7 @@ public class Processes extends CommonController{
 	final static Form<QueryFieldsForm> saveForm = form(QueryFieldsForm.class);
 	final static Form<ProcessesUpdateForm> processesUpdateForm = form(ProcessesUpdateForm.class);
 	final static Form<ProcessesBatchElement> processSaveBatchForm = form(ProcessesBatchElement.class);
-	final static List<String> defaultKeys =  Arrays.asList("categoryCode","containerInputCode","sampleCode", "sampleOnInputContainer", "typeCode", "state", "currentExperimentTypeCode", "newContainerSupportCodes", "experimentCodes","projectCode", "code", "traceInformation", "comments", "properties");
+	final static List<String> defaultKeys =  Arrays.asList("categoryCode","inputContainerCode","sampleCode", "sampleOnInputContainer", "typeCode", "state", "currentExperimentTypeCode", "newContainerSupportCodes", "experimentCodes","projectCode", "code", "traceInformation", "comments", "properties");
 	private static final ALogger logger = Logger.of("Processes");
 	final static Form<State> stateForm = form(State.class);
 	
@@ -264,7 +264,7 @@ public class Processes extends CommonController{
 			//code generation
 			newProcess.categoryCode = process.categoryCode;
 			newProcess.comments = process.comments;
-			newProcess.containerInputCode = process.containerInputCode;
+			newProcess.inputContainerCode = process.inputContainerCode;
 			newProcess.currentExperimentTypeCode = newProcess.currentExperimentTypeCode;
 			newProcess.experimentCodes = process.experimentCodes;
 			newProcess.newContainerSupportCodes = process.newContainerSupportCodes;
@@ -377,9 +377,9 @@ public class Processes extends CommonController{
 			return notFound("Process with code "+code+" does not exist");
 		}
 
-		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,process.containerInputCode);
+		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,process.inputContainerCode);
 		if(container==null){
-			return notFound("Container process "+code+"with code "+process.containerInputCode+" does not exist");
+			return notFound("Container process "+code+"with code "+process.inputContainerCode+" does not exist");
 		}
 		if(!process.state.code.equals("N")){
 			contextValidation.addErrors("process", ValidationConstants.ERROR_BADSTATE_MSG, container.code);
@@ -530,7 +530,7 @@ public class Processes extends CommonController{
 			//InputContainer
 			List<Query> queryContainer = new ArrayList<Query>();
 			if(containers.size() > 0){
-				queryContainer.add(DBQuery.in("containerInputCode", containers.stream().map(c -> c.code).collect(Collectors.toList())));
+				queryContainer.add(DBQuery.in("inputContainerCode", containers.stream().map(c -> c.code).collect(Collectors.toList())));
 			}
 			
 			if(StringUtils.isNotBlank(processesSearch.supportCode)){

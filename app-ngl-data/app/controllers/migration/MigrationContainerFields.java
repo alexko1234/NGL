@@ -66,11 +66,14 @@ public static Result migration(){
 		results2.toList().forEach(e -> {
 			e.atomicTransfertMethods.forEach(atm -> {
 				atm.inputContainerUseds.forEach(icu -> {
-					icu.fromTransformationTypeCodes = icu.fromExperimentTypeCodes;
-					icu.processCodes = icu.inputProcessCodes;
-					
+					if(null != icu.fromExperimentTypeCodes && icu.fromExperimentTypeCodes.size() > 0){
+						icu.fromTransformationTypeCodes = icu.fromExperimentTypeCodes;						
+					}
+					if(null != icu.inputProcessCodes && icu.inputProcessCodes.size() > 0){
+						icu.processCodes = icu.inputProcessCodes;					
+					}
 					icu.fromExperimentTypeCodes = null;
-					icu.inputProcessCodes = null;
+					icu.inputProcessCodes = null;					
 				});
 			});
 			
@@ -81,8 +84,14 @@ public static Result migration(){
 		results3.toList().forEach(e -> {
 			e.atomicTransfertMethods.forEach(atm -> {
 				atm.inputContainerUseds.forEach(icu -> {
-					icu.fromTransformationTypeCodes = icu.fromExperimentTypeCodes;
-					icu.processCodes = icu.inputProcessCodes;
+					
+					if(null != icu.fromExperimentTypeCodes && icu.fromExperimentTypeCodes.size() > 0){
+						icu.fromTransformationTypeCodes = icu.fromExperimentTypeCodes;						
+					}
+					if(null != icu.inputProcessCodes && icu.inputProcessCodes.size() > 0){
+						icu.processCodes = icu.inputProcessCodes;					
+					}
+					
 					
 					icu.fromExperimentTypeCodes = null;
 					icu.inputProcessCodes = null;
@@ -103,7 +112,46 @@ public static Result migration(){
 		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.exists("sampleOnInputContainer.mesuredConcentration"),
 				DBUpdate.rename("sampleOnInputContainer.mesuredConcentration", "sampleOnInputContainer.concentration"));
 		
+		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.exists("containerInputCode"),
+				DBUpdate.rename("containerInputCode", "inputContainerCode"));
+		
+		/*
+		   Query control Container
+			{$or :[
+			{"calculedVolume":{$exists:1}},
+			{"mesuredQuantity":{$exists:1}},
+			{"mesuredVolume":{$exists:1}},
+			{"mesuredConcentration":{$exists:1}},
+			{"inputProcessCodes":{$exists:1}},
+			{"fromExperimentTypeCodes":{$exists:1}},
+			{"processTypeCode":{$exists:1}}
+			]}
+		  
+		   Query control Support
+			{$or :[
+			
+			{"fromExperimentTypeCodes":{$exists:1}}
+			]}	
+			
+		   Query control experiment
+			{$or :[
+			
+			{"atomicTransfertMethods.inputContainerUseds.inputProcessCodes":{$exists:1}}
+			{"atomicTransfertMethods.inputContainerUseds.fromExperimentTypeCodes":{$exists:1}}
+			
+			]}		   
+		  Query control Process
+		  {$or :[
+			{"sampleOnInputContainer.mesuredQuantity":{$exists:1}},
+			{"sampleOnInputContainer.mesuredVolume":{$exists:1}},
+			{"sampleOnInputContainer.mesuredConcentration":{$exists:1}},
+			{"sampleOnInputContainer.containerInputCode":{$exists:1}}
+			]}
+		 */
+		
 		return ok("Migration Finish");
 
+		
+		//
 	}
 }

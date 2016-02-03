@@ -45,8 +45,8 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 		var columns = [];
 
 		columns.push({
-			"header" : Messages("processes.table.containerInputCode"),
-			"property" : "containerInputCode",
+			"header" : Messages("processes.table.inputContainerCode"),
+			"property" : "inputContainerCode",
 			"order" : true,
 			"hide" : false,
 			"group" : true,

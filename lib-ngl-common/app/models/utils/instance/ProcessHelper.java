@@ -84,7 +84,7 @@ public class ProcessHelper {
 	public static void updateNewContainerSupportCodes(OutputContainerUsed outputContainerUsed,
 			List<InputContainerUsed> inputContainerUseds,Experiment experiment) {
 		List<Query> queryOr = new ArrayList<Query>();
-		queryOr.add(DBQuery.in("containerInputCode",ContainerUsedHelper.getContainerCodes(inputContainerUseds)));
+		queryOr.add(DBQuery.in("inputContainerCode",ContainerUsedHelper.getContainerCodes(inputContainerUseds)));
 		queryOr.add(DBQuery.in("newContainerSupportCodes",ContainerUsedHelper.getContainerSupportCodes(inputContainerUseds)));
 		Query query=null;
 		query=DBQuery.and(DBQuery.in("experimentCodes",experiment.code));

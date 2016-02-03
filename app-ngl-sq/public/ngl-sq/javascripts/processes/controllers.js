@@ -619,7 +619,7 @@ var	datatableConfig = {
 			         order:{
 			        	 mode:'local',
 			        	 active:true,
-			        	 by:'containerInputCode'
+			        	 by:'inputContainerCode'
 			         },
 			         edit:{  			        	
 			        	 columnMode:true,
@@ -660,8 +660,8 @@ var	datatableConfig = {
 	var getProcessesColumns = function(){
 		var columns = [
 		         {
-		        	 "header":Messages("processes.table.containerInputCode"),
-		        	 "property":"containerInputCode",
+		        	 "header":Messages("processes.table.inputContainerCode"),
+		        	 "property":"inputContainerCode",
 		        	 "order":true,
 		        	 "hide":true,
 		        	 "position":1,
@@ -670,7 +670,7 @@ var	datatableConfig = {
 		         {
 			 			"header":Messages("containers.table.contents.length"),
 			 			"property":"contents.length",
-			 			"url":"'/api/containers/'+containerInputCode",
+			 			"url":"'/api/containers/'+inputContainerCode",
 			 			"order":true,
 			 			"hide":true,
 			 			"position":2,
@@ -687,7 +687,7 @@ var	datatableConfig = {
 	/*	         {
 		        	 "header":Messages("processes.table.columns"),
 		        	 "property":"support.column*1",
-		        	 "url":"'/api/containers/'+containerInputCode",
+		        	 "url":"'/api/containers/'+inputContainerCode",
 		        	 "order":true,
 		        	 "hide":true,
 		        	 "position":3.5,
@@ -696,7 +696,7 @@ var	datatableConfig = {
 		         {
 		        	 "header":Messages("processes.table.line"),
 		        	 "property":"support.line",
-		        	 "url":"'/api/containers/'+containerInputCode",
+		        	 "url":"'/api/containers/'+inputContainerCode",
 		        	 "order":true,
 		        	 "hide":true,
 		        	 "position":3,
@@ -812,7 +812,7 @@ var	datatableConfig = {
 						var process = {index:i, data:{
 								projectCode: data[i].contents[j].projectCode,
 								sampleCode: data[i].contents[j].sampleCode,
-								containerInputCode: processData.code,
+								inputContainerCode: processData.code,
 								typeCode:$scope.form.nextProcessTypeCode,
 								categoryCode:$scope.form.processCategory,
 								properties:processData.properties,

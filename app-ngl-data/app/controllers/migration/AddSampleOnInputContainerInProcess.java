@@ -48,7 +48,7 @@ public class AddSampleOnInputContainerInProcess extends CommonController {
 		Logger.debug("Migre " + processes.size() + " PROCESSES");
 		for (Process process : processes) {
 			Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
-					process.containerInputCode);
+					process.inputContainerCode);
 			Logger.debug("Container Code="+ container.code);
 			for (Content content : container.contents) {
 				if ((process.sampleCode).equals(content.sampleCode)){

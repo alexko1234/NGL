@@ -43,7 +43,7 @@ public class Process extends DBObject implements IValidation{
 	public String sampleCode;
 
 	public String currentExperimentTypeCode;
-	public String containerInputCode; //TODO rename to inputContainerCode and add supportCode
+	public String inputContainerCode; //TODO rename to inputContainerCode and add supportCode
 
 	public Set<String> newContainerSupportCodes; //TODO rename to outputContainerSupportCodes and add outputContainerCodes
 	public Set<String> experimentCodes;
@@ -60,7 +60,7 @@ public class Process extends DBObject implements IValidation{
 		ProcessValidationHelper.validateProcessCategory(categoryCode,contextValidation);
 		ProcessValidationHelper.validateState(typeCode,state, contextValidation);
 		ProcessValidationHelper.validateTraceInformation(traceInformation, contextValidation);
-		ProcessValidationHelper.validateContainerCode(containerInputCode, contextValidation, "containerInputCode");
+		ProcessValidationHelper.validateContainerCode(inputContainerCode, contextValidation, "inputContainerCode");
 		ProcessValidationHelper.validateProjectCode(projectCode, contextValidation);
 		ProcessValidationHelper.validateSampleCode(sampleCode, projectCode, contextValidation);
 		ProcessValidationHelper.validateCurrentExperimentTypeCode(currentExperimentTypeCode,contextValidation);		

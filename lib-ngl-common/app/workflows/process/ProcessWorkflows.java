@@ -66,7 +66,7 @@ public class ProcessWorkflows {
 
 		Set<String> inputContainers=new HashSet<String>();
 		for (Process process : processes) {
-			inputContainers.add(process.containerInputCode);
+			inputContainers.add(process.inputContainerCode);
 			processList.add(process.code);
 		}
 
@@ -78,26 +78,6 @@ public class ProcessWorkflows {
 		ContainerWorkflows.setContainerState(containers, nextState.code, contextValidation);
 	}
 
-	/*public static void nextContainerStateFromNewProcess(Process process, String experimentTypeCode, String experimentCategoryCode,
-			ContextValidation contextValidation) {
-		State nextState = new State();
-		if (process.state != null && process.state.code.equals("N")) {
-			if (experimentCategoryCode.equals(ExperimentCategory.CODE.qualitycontrol.name())) {
-				nextState.code = "A-QC";
-			} else if (experimentCategoryCode.equals(ExperimentCategory.CODE.purification.name())) {
-				nextState.code = "A-PF";
-			} else if (experimentCategoryCode.equals(ExperimentCategory.CODE.transfert.name())) {
-				nextState.code = "A-TF";
-			} else if (experimentCategoryCode.equals(ExperimentCategory.CODE.transformation.name())) {
-				nextState.code = "A-TM";
-			}
-		}
-
-		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code",process.containerInputCode)).toList();
-		ContainerWorkflows.setContainerState(containers, nextState.code, contextValidation);
-//		ContainerWorkflows.setContainerState(process.containerInputCode, experimentTypeCode, nextState, contextValidation, false, false, null);
-
-	}*/
 
 	public static boolean setProcessState(List<Process> processes, String nextStateProcesses, Set<String> resolutions,
 			ContextValidation ctxValidation) {
@@ -122,7 +102,7 @@ public class ProcessWorkflows {
 				if(containerInputCodes==null){
 					containerInputCodes=new HashSet<String>();
 				}
-				containerInputCodes.add(process.containerInputCode);
+				containerInputCodes.add(process.inputContainerCode);
 				containersToUpdate.put(process.typeCode,containerInputCodes);
 				newContainerSupports.addAll(process.newContainerSupportCodes);
 			}
@@ -167,14 +147,4 @@ public class ProcessWorkflows {
 		return true;
 	}
 
-	/*public static void stopProcess(String processCode, ContextValidation contextValidation,List<String> processResolutionCodes) {
-		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, processCode);
-		if (process != null) {
-			State state = new State();
-			state.code = "IS";
-			contextValidation.setUpdateMode();
-			ContainerWorkflows.setContainerState(process.containerInputCode, process.currentExperimentTypeCode, state,
-					contextValidation, true, false,processResolutionCodes);
-		}
-	}*/
 }
