@@ -239,6 +239,7 @@ public class InstanceHelpers {
 		sc.percentage = content.percentage;
 		sc.properties = content.properties;
 		sc.referenceCollab = getReferenceCollab(readSet.sampleCode);
+		sc.mesuredConcentration = container.mesuredConcentration;
 		
 		return sc;
 	}

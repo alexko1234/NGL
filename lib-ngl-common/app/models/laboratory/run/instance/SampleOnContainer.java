@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.common.instance.property.PropertySingleValue;
 
 /**
  * Class used to stock information from sample on the last container
@@ -31,6 +32,8 @@ public class SampleOnContainer {
 	public Double percentage;
 	//Collaborator's reference
 	public String referenceCollab;	
+	//Measured concentration from Container
+	public PropertySingleValue mesuredConcentration;
 
 
 
