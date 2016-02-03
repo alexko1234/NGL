@@ -185,7 +185,12 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			        	 active:true,
 			        	 template:'<button class="btn" ng-disabled="!datatable.isSelect()" ng-click="addToBasket(datatable.getSelection(true))" data-toggle="tooltip" title="'+Messages("button.addbasket")+'">'
 			        	 +'<i class="fa fa-shopping-cart fa-lg"></i> ({{basket.length()}})'
-			         }
+			         },
+			         messages : {
+							transformKey: function(key, args) {
+			                       return Messages(key, args);
+			                }
+					}
 	};
 
 
@@ -597,7 +602,10 @@ var	datatableConfig = {
 			        	 }
 			         },
 			         messages:{
-			        	 active:false
+			        	 active:false,
+			        	 transformKey: function(key, args) {
+				             return Messages(key, args);
+			        	 }
 			         },
 			         otherButtons :{
 			        	 active:true,

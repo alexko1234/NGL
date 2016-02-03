@@ -231,12 +231,14 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 			template:'<button class="btn" ng-disabled="!datatable.isSelect() && !datatable.isSelectGroup()" ng-click="addToBasket(datatable.getSelection(true))" data-toggle="tooltip" title="'+Messages("button.addbasket")+'">'
 					+'<i class="fa fa-shopping-cart fa-lg"></i> ({{basket.length()}})</button>'
 		},
-		messages:{
-			messagesService : {Messages:function(key, args){
-				return Messages(key, args);
-			}}
+		messages : {
+				transformKey: function(key, args) {
+                    return Messages(key, args);
+                }
 		}
 	};
+	
+	
 	
 	$scope.changeExperimentType = function(experimentCategory){
 		tabService.removeTab(2);

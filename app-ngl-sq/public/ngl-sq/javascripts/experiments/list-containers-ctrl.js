@@ -58,7 +58,10 @@ angular.module('home').controller('ListContainersCtrl', ['$scope', 'datatable','
 				}
 			},
 			messages:{
-				active:true
+				active:true,
+				transformKey: function(key, args) {
+	                        return Messages(key, args);
+				}
 			},
 			otherButtons:{
 				active:true,

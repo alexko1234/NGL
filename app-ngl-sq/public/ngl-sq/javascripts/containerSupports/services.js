@@ -274,6 +274,11 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			init : function($routeParams, datatableConfig){
 				initListService();
 
+				datatableConfig.messages = {
+						transformKey: function(key, args) {
+	                        return Messages(key, args);
+	                    }
+				};
 				// to avoid to lost the previous search
 				if(datatableConfig && angular.isUndefined(mainService.getDatatable())){
 					searchService.datatable = datatable(datatableConfig);
