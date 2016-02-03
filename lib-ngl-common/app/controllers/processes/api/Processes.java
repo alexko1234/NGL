@@ -73,7 +73,7 @@ public class Processes extends CommonController{
 	final static Form<QueryFieldsForm> saveForm = form(QueryFieldsForm.class);
 	final static Form<ProcessesUpdateForm> processesUpdateForm = form(ProcessesUpdateForm.class);
 	final static Form<ProcessesBatchElement> processSaveBatchForm = form(ProcessesBatchElement.class);
-	final static List<String> defaultKeys =  Arrays.asList("categoryCode","inputContainerCode","sampleCode", "sampleOnInputContainer", "typeCode", "state", "currentExperimentTypeCode", "newContainerSupportCodes", "experimentCodes","projectCode", "code", "traceInformation", "comments", "properties");
+	final static List<String> defaultKeys =  Arrays.asList("categoryCode","inputContainerCode","sampleCode", "sampleOnInputContainer", "typeCode", "state", "currentExperimentTypeCode", "outputContainerSupportCodes", "experimentCodes","projectCode", "code", "traceInformation", "comments", "properties");
 	private static final ALogger logger = Logger.of("Processes");
 	final static Form<State> stateForm = form(State.class);
 	
@@ -267,7 +267,7 @@ public class Processes extends CommonController{
 			newProcess.inputContainerCode = process.inputContainerCode;
 			newProcess.currentExperimentTypeCode = newProcess.currentExperimentTypeCode;
 			newProcess.experimentCodes = process.experimentCodes;
-			newProcess.newContainerSupportCodes = process.newContainerSupportCodes;
+			newProcess.outputContainerSupportCodes = process.outputContainerSupportCodes;
 			newProcess.properties = process.properties;
 			newProcess.state = process.state;
 			newProcess.traceInformation = process.traceInformation;
@@ -534,11 +534,11 @@ public class Processes extends CommonController{
 			}
 			
 			if(StringUtils.isNotBlank(processesSearch.supportCode)){
-				queryContainer.add(DBQuery.is("newContainerSupportCodes",processesSearch.supportCode));
+				queryContainer.add(DBQuery.is("outputContainerSupportCodes",processesSearch.supportCode));
 			} else if(StringUtils.isNotBlank(processesSearch.supportCodeRegex)){
-				queryContainer.add(DBQuery.regex("newContainerSupportCodes",Pattern.compile(processesSearch.supportCodeRegex)));
+				queryContainer.add(DBQuery.regex("outputContainerSupportCodes",Pattern.compile(processesSearch.supportCodeRegex)));
 			} else if(CollectionUtils.isNotEmpty(processesSearch.supportCodes)){
-				queryContainer.add(DBQuery.in("newContainerSupportCodes",processesSearch.supportCodes));
+				queryContainer.add(DBQuery.in("outputContainerSupportCodes",processesSearch.supportCodes));
 			}
 			
 			if(queryContainer.size()!=0){

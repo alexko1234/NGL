@@ -81,11 +81,11 @@ public class Container extends DBObject implements IValidation {
 	public Set<String> sampleCodes; // getSamples
 	// ExperimentType must be an internal or external experiment ( origine )
 	// List for pool experimentType
-	public Set<String> fromTransformationTypeCodes; // getExperimentType //TODO GA add fromTransformationCodes
-
+	public Set<String> fromTransformationTypeCodes;
+	//public Set<String> fromTransformationCodes; //TODO GA need management
 	//TODO GA merge in same objet processTypeCode and processCode and add a list of this object
 	public Set<String> processTypeCodes;
-	public Set<String> processCodes; //TODO GA rename to processCodes or currentProcessCodes
+	public Set<String> processCodes;
 
 	//tree of life
 	public TreeOfLifeNode treeOfLife;

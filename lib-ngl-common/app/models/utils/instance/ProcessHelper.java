@@ -85,7 +85,7 @@ public class ProcessHelper {
 			List<InputContainerUsed> inputContainerUseds,Experiment experiment) {
 		List<Query> queryOr = new ArrayList<Query>();
 		queryOr.add(DBQuery.in("inputContainerCode",ContainerUsedHelper.getContainerCodes(inputContainerUseds)));
-		queryOr.add(DBQuery.in("newContainerSupportCodes",ContainerUsedHelper.getContainerSupportCodes(inputContainerUseds)));
+		queryOr.add(DBQuery.in("outputContainerSupportCodes",ContainerUsedHelper.getContainerSupportCodes(inputContainerUseds)));
 		Query query=null;
 		query=DBQuery.and(DBQuery.in("experimentCodes",experiment.code));
 		if(queryOr.size()!=0){
@@ -93,7 +93,7 @@ public class ProcessHelper {
 		}
 
 		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,query,
-				DBUpdate.push("newContainerSupportCodes",outputContainerUsed.locationOnContainerSupport.code),true);
+				DBUpdate.push("outputContainerSupportCodes",outputContainerUsed.locationOnContainerSupport.code),true);
 
 
 	}

@@ -144,8 +144,8 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"type" : "text"
 		});
 		columns.push({
-			"header" : Messages("processes.table.newContainerSupportCodes"),
-			"property" : "newContainerSupportCodes",
+			"header" : Messages("processes.table.outputContainerSupportCodes"),
+			"property" : "outputContainerSupportCodes",
 			"order" : false,
 			"hide" : false,
 			"position" : 9,

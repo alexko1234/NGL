@@ -104,7 +104,7 @@ public class ProcessWorkflows {
 				}
 				containerInputCodes.add(process.inputContainerCode);
 				containersToUpdate.put(process.typeCode,containerInputCodes);
-				newContainerSupports.addAll(process.newContainerSupportCodes);
+				newContainerSupports.addAll(process.outputContainerSupportCodes);
 			}
 
 		}

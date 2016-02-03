@@ -334,8 +334,8 @@ public class ExpWorkflowsHelper {
 						container.traceInformation = traceInformation;
 						MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, container);
 						MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
-								DBQuery.in("code", container.processCodes).notIn("newContainerSupportCodes", container.support.code),
-								DBUpdate.push("newContainerSupportCodes",container.support.code));
+								DBQuery.in("code", container.processCodes).notIn("outputContainerSupportCodes", container.support.code),
+								DBUpdate.push("outputContainerSupportCodes",container.support.code));
 					}
 				});
 			}				
@@ -345,8 +345,8 @@ public class ExpWorkflowsHelper {
 		if(supportsValidation.hasErrors()){
 			containersBySupportCode.entrySet().forEach(entry -> {
 				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,
-						DBQuery.in("newContainerSupportCodes", entry.getKey()),
-						DBUpdate.pull("newContainerSupportCodes",entry.getKey()));
+						DBQuery.in("outputContainerSupportCodes", entry.getKey()),
+						DBUpdate.pull("outputContainerSupportCodes",entry.getKey()));
 				MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code", entry.getKey()));
 				MongoDBDAO.delete(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", entry.getKey()));
 			});
@@ -363,8 +363,8 @@ public class ExpWorkflowsHelper {
 		if(null != exp.outputContainerSupportCodes){
 			exp.outputContainerSupportCodes.forEach(code -> {
 				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,
-						DBQuery.in("newContainerSupportCodes", code),
-						DBUpdate.pull("newContainerSupportCodes",code));
+						DBQuery.in("outputContainerSupportCodes", code),
+						DBUpdate.pull("outputContainerSupportCodes",code));
 				MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code", code));
 				MongoDBDAO.delete(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", code));
 			});

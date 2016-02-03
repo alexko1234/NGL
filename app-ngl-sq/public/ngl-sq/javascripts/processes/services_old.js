@@ -106,12 +106,12 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"position" : 8,
 			"type" : "text"
 		}, {
-			"header" : Messages("processes.table.newContainerSupportCodes"),
-			"property" : "newContainerSupportCodes",
+			"header" : Messages("processes.table.outputContainerSupportCodes"),
+			"property" : "outputContainerSupportCodes",
 			"order" : false,
 			"hide" : false,
 			"position" : 9,
-			"render" : "<div list-resize='value.data.newContainerSupportCodes | unique' list-resize-min-size='2'>",
+			"render" : "<div list-resize='value.data.outputContainerSupportCodes | unique' list-resize-min-size='2'>",
 			"type" : "text"
 		}, {
 			"header" : Messages("processes.table.experimentCodes"),
@@ -207,12 +207,12 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"position" : 8,
 			"type" : "text"
 		}, {
-			"header" : Messages("processes.table.newContainerSupportCodes"),
-			"property" : "newContainerSupportCodes",
+			"header" : Messages("processes.table.outputContainerSupportCodes"),
+			"property" : "outputContainerSupportCodes",
 			"order" : false,
 			"hide" : false,
 			"position" : 9,
-			"render" : "<div list-resize='value.data.newContainerSupportCodes | unique' list-resize-min-size='2'>",
+			"render" : "<div list-resize='value.data.outputContainerSupportCodes | unique' list-resize-min-size='2'>",
 			"type" : "text"
 		}, {
 			"header" : Messages("processes.table.experimentCodes"),

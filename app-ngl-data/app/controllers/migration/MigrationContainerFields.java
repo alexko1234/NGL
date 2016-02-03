@@ -115,6 +115,9 @@ public static Result migration(){
 		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.exists("containerInputCode"),
 				DBUpdate.rename("containerInputCode", "inputContainerCode"));
 		
+		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.exists("newContainerSupportCodes"),
+				DBUpdate.rename("newContainerSupportCodes", "outputContainerSupportCodes"));
+		
 		/*
 		   Query control Container
 			{$or :[

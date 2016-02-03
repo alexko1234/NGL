@@ -43,9 +43,10 @@ public class Process extends DBObject implements IValidation{
 	public String sampleCode;
 
 	public String currentExperimentTypeCode;
-	public String inputContainerCode; //TODO rename to inputContainerCode and add supportCode
+	public String inputContainerCode; 
 
-	public Set<String> newContainerSupportCodes; //TODO rename to outputContainerSupportCodes and add outputContainerCodes
+	public Set<String> outputContainerSupportCodes;
+	//public Set<String> outputContainerCodes; //TODO GA need management
 	public Set<String> experimentCodes;
 
 	public SampleOnInputContainer sampleOnInputContainer;
