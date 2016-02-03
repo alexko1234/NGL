@@ -184,9 +184,9 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			 			mode:'local'
 			 		 },
 			         otherButtons :{
-			        	 active:true,
-			        	 template:'<button class="btn" ng-disabled="!datatable.isSelect()" ng-click="addToBasket(datatable.getSelection(true))" data-toggle="tooltip" title="'+Messages("button.addbasket")+'">'
-			        	 +'<i class="fa fa-shopping-cart fa-lg"></i> ({{basket.length()}})'
+			    			active:true,
+			    			template:'<button class="btn" ng-disabled="!datatable.isSelect() && !datatable.isSelectGroup()" ng-click="addToBasket(datatable.getSelection(true))" data-toggle="tooltip" title="'+Messages("button.addbasket")+'">'
+			    					+'<i class="fa fa-shopping-cart fa-lg"></i> ({{basket.length()}})</button>'
 			         },
 			         messages : {
 							transformKey: function(key, args) {
@@ -643,14 +643,15 @@ var	datatableConfig = {
 			        	 transformKey: function(key, args) {
 				             return Messages(key, args);
 			        	 }
-			         }/*,
+			         },
 			         otherButtons :{
 			        	 active:true,
-			        	 template:'<button ng-if="doneAndRecorded==false" class="btn" ng-click="save()"><i class="fa fa-save"></i></button><button ng-if="doneAndRecorded==false" ng-click="swithView()" ng-disabled="loadView"  class="btn btn-info" ng-switch="supportView">'+Messages("baskets.switchView")+
+			        	 template:'<button ng-if="doneAndRecorded==false" class="btn" ng-click="save()"><i class="fa fa-save"></i></button>'
+			        	 /*+' <button ng-if="doneAndRecorded==false" ng-click="swithView()" ng-disabled="loadView"  class="btn btn-info" ng-switch="supportView">'+Messages("baskets.switchView")+
 			        	 ' '+'<b ng-switch-when="true" class="switchLabel">'+
 			        	 Messages("baskets.switchView.containers")+'</b>'+
-			        	 '<b ng-switch-when="false" class="switchLabel">'+Messages("baskets.switchView.supports")+'</b></button></button>'
-			         }*/
+			        	 '<b ng-switch-when="false" class="switchLabel">'+Messages("baskets.switchView.supports")+'</b></button></button>'*/
+			         }
 	};
 
 	var getProcessesColumns = function(){
