@@ -164,12 +164,13 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			         search:{
 			        	 url:jsRoutes.controllers.containers.api.Containers.list()
 			         },
-			 		group:{
-						active:true,
-						showOnlyGroups:true,
-						enableLineSelection:true,
-						showButton:true
-					},
+			         group:{
+			 			active:true,
+			 			showOnlyGroups:true,
+			 			enableLineSelection:true,
+			 			showButton:true,
+			 			by:"support.code"
+			 		},
 			         pagination:{
 			 			mode:'local'
 				 	 },
@@ -178,7 +179,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 				 	 },
 				 	 order:{
 				 		active:true,
-				 		by:'code',
+				 		by:'traceInformation.creationDate',
+				 		reverse : true,
 			 			mode:'local'
 			 		 },
 			         otherButtons :{
@@ -404,7 +406,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	};
 	
 	$scope.searchService.getAddFiltersToForm = function(){
-		if($scope.searchService.additionalFilters.length === 0){
+		if($scope.searchService.additionalFilters=== undefined || $scope.searchService.additionalFilters.length === 0){
 			$scope.searchService.initAdditionalFilters();
 		}
 		return $scope.searchService.additionalFilters;									
@@ -412,6 +414,14 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	
 
 	$scope.addToBasket = function(containers){
+		
+		var cleanContainer=function(container){
+			var _container = angular.copy(container);
+			_container.properties = undefined;
+			_container.comments=[];
+			return  _container;
+		};
+		
 		$scope.errors.processType = {};
 		$scope.errors.processCategory = {};
 		if($scope.searchService.form.nextProcessTypeCode){
@@ -420,15 +430,40 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 				for(var j=0;j<this.basket.get().length;j++){
 					if(this.basket.get()[j].code === containers[i].code){
 						alreadyOnBasket = true;
+					}else{
+						var test = $scope.datatable.getGroupColumnValue(containers[i], "code");
+						if($scope.datatable.getGroupColumnValue(containers[i], "code")!=undefined && $scope.datatable.getGroupColumnValue(containers[i], "code")[0] === this.basket.get()[j].code){
+							alreadyOnBasket = true;
+						}
 					}
 				}
 				if(!alreadyOnBasket){
-					//TODO GA to test angular !!!
-					var _container = angular.copy(containers[i]);
-					_container.properties = undefined;
-					_container.comments=[];
-					this.basket.add(_container);
+					
+					if(containers[i].group === undefined){
+						//TODO GA to test angular !!!
+						this.basket.add(cleanContainer(containers[i]));
+					}else {
+						var basket = this.basket;
+						var supportCode = $scope.datatable.getGroupColumnValue(containers[i], "support.code");
+						$http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{"supportCode":supportCode}})
+						.success(function(data, status, headers, config) {
+							if(data!=null){
+								angular.forEach(data, function(container){
+									basket.add(cleanContainer(container));
+								});
+							}
+						})
+						.error(function(data, status, headers, config) {
+							alert("error");
+						});
+						
+					}
 				}
+			
+				if(($scope.searchService.form.nextProcessTypeCode) && this.basket.length() > 0 && tabService.getTabs().length === 1){
+					tabService.addTabs({label:$filter('codes')($scope.searchService.form.nextProcessTypeCode,"type"),href:$scope.searchService.form.nextProcessTypeCode,remove:false});
+				}
+
 			}
 			tabService.addTabs({label:$filter('codes')($scope.searchService.form.nextProcessTypeCode,"type"),href:$scope.searchService.form.nextProcessTypeCode,remove:false});
 		}else{
@@ -596,6 +631,8 @@ var	datatableConfig = {
 			         },
 			         remove:{			        	 
 			        	 mode:'local',
+			        	 active:true,
+			        	 withEdit:true,
 			        	 callback : function(datatable){
 			        		 $scope.basket.reset();
 			        		 $scope.basket.add(datatable.allResult);
@@ -606,14 +643,14 @@ var	datatableConfig = {
 			        	 transformKey: function(key, args) {
 				             return Messages(key, args);
 			        	 }
-			         },
+			         }/*,
 			         otherButtons :{
 			        	 active:true,
 			        	 template:'<button ng-if="doneAndRecorded==false" class="btn" ng-click="save()"><i class="fa fa-save"></i></button><button ng-if="doneAndRecorded==false" ng-click="swithView()" ng-disabled="loadView"  class="btn btn-info" ng-switch="supportView">'+Messages("baskets.switchView")+
 			        	 ' '+'<b ng-switch-when="true" class="switchLabel">'+
 			        	 Messages("baskets.switchView.containers")+'</b>'+
 			        	 '<b ng-switch-when="false" class="switchLabel">'+Messages("baskets.switchView.supports")+'</b></button></button>'
-			         }
+			         }*/
 	};
 
 	var getProcessesColumns = function(){
@@ -744,7 +781,7 @@ var	datatableConfig = {
 		}
 
 
-		$scope.datatable.config.columns[0].header = "containers.table.code";
+		$scope.datatable.config.columns[0].header = Messages("containers.table.code");
 	};
 
 	$scope.save = function (){
@@ -923,7 +960,7 @@ var	datatableConfig = {
 
 		console.log($scope.datatable.config);
 		if($scope.datatable.config.columns.length>0)
-			$scope.datatable.config.columns[0].header = "containers.table.supportCode";
+			$scope.datatable.config.columns[0].header = Messages("containers.table.supportCode");
 	};
 
 	$scope.getPropertyColumnType = function(type){
