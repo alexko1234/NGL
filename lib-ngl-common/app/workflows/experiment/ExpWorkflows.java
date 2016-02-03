@@ -28,10 +28,11 @@ public class ExpWorkflows extends Workflows<Experiment>{
 				ExpWorkflowsHelper.updateRemoveContainersFromExperiment(exp, validation, getNewState(getContainerStateFromExperimentCategory(exp.categoryCode), validation.getUser())); 
 				ExpWorkflowsHelper.updateAddContainersToExperiment(exp, validation, getNewState("IW-E", validation.getUser()));				
 			}			 						
+		}else if("IP".equals(exp.state.code)){
+			ExpWorkflowsHelper.updateXCodes(exp); //TODO GA 22/01/2016 hack for old experiment without contents, remove in 03/2016
 		}
 		ExpWorkflowsHelper.updateStatus(exp, validation);
-		ExpWorkflowsHelper.updateComments(exp, validation);
-		ExpWorkflowsHelper.updateXCodes(exp); //TODO //GA 22/01/2016 hack for old experiment without contents, remove in 03/2016
+		ExpWorkflowsHelper.updateComments(exp, validation);		
 	}
 
 	public void applyPreStateRules(ContextValidation validation, Experiment exp, State nextState) {

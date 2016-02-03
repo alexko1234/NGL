@@ -125,9 +125,11 @@ angular.module('atomicTransfereServices', [])
 					containerUsed.quantity = container.mesuredQuantity;
 					containerUsed.sampleCodes=container.sampleCodes;
 					containerUsed.projectCodes=container.projectCodes;
-					containerUsed.fromExperimentTypeCodes=container.fromExperimentTypeCodes;
-					containerUsed.processTypeCodes=(container.processTypeCode)?[container.processTypeCode]:container.processTypeCodes;
-					containerUsed.inputProcessCodes=container.inputProcessCodes;
+					if(container.state.code === 'IU'){ //because after the processTypeCodes and inputProcessCodes is set to null
+						containerUsed.processTypeCodes=(container.processTypeCode)?[container.processTypeCode]:container.processTypeCodes;
+						containerUsed.inputProcessCodes=container.inputProcessCodes;
+						containerUsed.fromExperimentTypeCodes=container.fromExperimentTypeCodes;						
+					}
 					containerUsed.state = container.state;
 					return containerUsed;
 				},
