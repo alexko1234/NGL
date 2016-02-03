@@ -33,20 +33,21 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		List<ProcessCategory> l = new ArrayList<ProcessCategory>();
 		
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Sequençage", "sequencing"));		
-		DAOHelpers.saveModels(ProcessCategory.class, l, errors);
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Banque", "library"));// FDS ajout 27/01/2016: JIRA-NGL 894
 		
-		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-			l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Banque", "library"));
+		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){	
 			l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Sequencage", "pre-sequencing"));
 			l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Banque", "pre-library"));
 		}
+		
+		// FDS c'est ici qu'il faut la sauvegarde!!
+		DAOHelpers.saveModels(ProcessCategory.class, l, errors);
 	}
 
 	public void saveProcessTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		
 		// JIRA 781 renommer le Processus long 
-		// FDS 09/11/2015  -- JIRA 838  la liste des sequenceurs est differente pour le processType "4000/X5"
 		l.add(DescriptionFactory.newProcessType("Dénat, prep FC, dépôt", "illumina-run", ProcessCategory.find.findByCode("sequencing"),
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell") ,
 				Arrays.asList(getPET("ext-to-denat-dil-lib",-1),getPET("lib-normalization",-1),getPET("denat-dil-lib",0),getPET("prepa-flowcell",1),getPET("illumina-depot",2)), 
@@ -72,12 +73,22 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("illumina-depot").get(0),
 				getExperimentTypes("ext-to-prepa-fc-ordered").get(0), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-
+		
+		// FDS ajout 27/01/2016 -- JIRA NGL-894: nouveau processus pour X5
+		l.add(DescriptionFactory.newProcessType("X5_WG PCR free", "x5-wg-pcr-free", ProcessCategory.find.findByCode("library"),
+				getPropertyDefinitionsX5WgPcrFree(),
+				getExperimentTypes("prep-pcr-free","lib-normalization","prepa-fc-ordered","illumina-depot"), // list of experiment type in process type 
+				getExperimentTypes("prep-pcr-free").get(0),        //first experiment type
+				getExperimentTypes("illumina-depot").get(0),       //last experiment type
+				getExperimentTypes("ext-to-prep-pcr-free").get(0), //void experiment type
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
 		DAOHelpers.saveModels(ProcessType.class, l, errors);
 	}
 	
 	
 	// FDS 09/11/2015  -- JIRA 838 : ajout parametre String pour construire 2 listes differentes
+	//                               la liste des sequenceurs est differente pour le processType "4000/X5"
 	private static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepotCNG(String expType) throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
@@ -110,10 +121,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Nom du séquenceur","sequencerName",
-						LevelService.getLevels(Level.CODE.Process),String.class, true, 
-						//DescriptionFactory.newValues("HISEQ1", "HISEQ2" , "HISEQ3" , "HISEQ4" ,"HISEQ5" ,"HISEQ6" ,"HISEQ7" ,"HISEQ8" ,"HISEQ9" ,"HISEQ10" ,"HISEQ11", "MISEQ1","NEXTSEQ1"),
-						listSequencers,
-						"single",150));
+						LevelService.getLevels(Level.CODE.Process),String.class, true, listSequencers, "single",150));
 		
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Position","position"
@@ -148,6 +156,22 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		return propertyDefinitions;
 	}
 
+	//FDS ajout 28/01/2016 -- JIRA NGL-894: nouveau processus pour X5
+	private static List<PropertyDefinition> getPropertyDefinitionsX5WgPcrFree() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 	
+		//TODO 
+		// propertyDefinitions.add(........);
+		
+		//il y a illumina-depot dans la liste des experiments de ce processus, 
+		// ==> faut-il appeler  getPropertyDefinitionsIlluminaDepotCNG  ????
+		//     dans la spec pour l'instant(29/01/2016) : PAS DE PRORIETE DE PROCESSUS"
+		
+		return propertyDefinitions;
+	}
 
+	
+	private static List<ExperimentType> getExperimentTypes(String...codes) throws DAOException {
+		return DAOHelpers.getModelByCodes(ExperimentType.class,ExperimentType.find, codes);
+	}
 }

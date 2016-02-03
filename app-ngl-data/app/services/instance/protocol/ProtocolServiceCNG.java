@@ -60,15 +60,18 @@ public class ProtocolServiceCNG {
 
 	
 	//FDS ajout 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered
+	//FDS ajout 02/01/2016 -- JIRA NGL-894: ajout prep-pcr-free
 	public static void saveProtocols(ContextValidation ctx){		
 		List<Protocol> lp = new ArrayList<Protocol>();
 		
 		//lp.add(newProtocol("proto_qc_v1","Proto_QC_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("chip-migration-post-pcr", "chip-migration-pre-pcr", "fluo-quantification", "qpcr-quantification")));
 		lp.add(newProtocol("sop-1","SOP 1","","1","production", InstanceFactory.setExperimentTypeCodes("illumina-depot","prepa-flowcell","denat-dil-lib","aliquoting")));
 		lp.add(newProtocol("sop-en-attente","SOP en attente","?","1","production", InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered")));
+		lp.add(newProtocol("1a-sop-ill-pcrfree-080915","1A_SOP_ILL_PCRfree_080915", "?","1","production",InstanceFactory.setExperimentTypeCodes("prep-pcr-free")));
 		//lp.add(newProtocol("sop-1","SOP 1","","1","production", InstanceFactory.setExperimentTypeCodes("prepa-flowcell")));
 		//lp.add(newProtocol("sop-1","SOP 1","","1","production", InstanceFactory.setExperimentTypeCodes("denat-dil-lib")));
 		//lp.add(newProtocol("sop-1","SOP 1","","1","production", InstanceFactory.setExperimentTypeCodes("aliquoting")));
+		
 		for(Protocol protocole:lp){
 			InstanceHelpers.save(InstanceConstants.PROTOCOL_COLL_NAME, protocole,ctx);
 			Logger.debug("protocol '"+protocole.name + "' saved..." );

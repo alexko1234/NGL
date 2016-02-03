@@ -53,17 +53,19 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		DAOHelpers.saveModels(ExperimentCategory.class, l, errors);
 	}
 
-
+	
 	public void saveExperimentTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 		
 		l.add(newExperimentType("Ext to prepa flowcell","ext-to-prepa-flowcell",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, 
+				null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		//FDS ajout 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered
 		l.add(newExperimentType("Ext to prepa flowcell ordered","ext-to-prepa-fc-ordered",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, 
+				null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 02-02-2015, intrument Used =>robot oui mais lequel???
@@ -73,10 +75,13 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
 		//GA : 03/08/2015 new declaration. lib-normalization became void to avoid to display this step in IHM
+		//FDS 01/02/2016 comment reutiliser lib-normalisation mais en plaque cette fois ci ?????? mettre type 'transformation' au lieu de 'voidprocess' et instrument Janus 
+		//   ??? Voir Guillaume
 		l.add(newExperimentType("Librairie normalisée","lib-normalization",null,1100,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null, "OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
-				
+				//ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, 
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
+				getInstrumentUsedTypes("hand","janus"), "OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));				
 		
 		l.add(newExperimentType("Préparation flowcell","prepa-flowcell",null,1200,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsPrepaflowcellCNG(),
@@ -90,7 +95,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		l.add(newExperimentType("Ext to librairie dénaturée","ext-to-denat-dil-lib",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, 
+				null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		//FDS 28/10/2015  ajout "HISEQ4000","HISEQX"
@@ -104,6 +110,17 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				getPropertyAliquoting(), getInstrumentUsedTypes("hand"),"OneToMany", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
+		//FDS 01/02/2016 ajout -- JIRA NGL-894: processus et experiments pour X5, 9999 a changer !!!!!!
+		l.add(newExperimentType("Prep PCR free","prep-pcr-free",null,9999,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+				getPropertyDefinitionsPrepPcrFree(), getInstrumentUsedTypes("covaris-e210-and-sciclone-ngsx","covaris-le220-and-sciclone-ngsx","covaris-e220-and-sciclone-ngsx"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
+		//FDS 01/02/2016 necessaire ??? oui mais type=voidprocess
+		l.add(newExperimentType("Ext Prep PCR free","ext-to-prep-pcr-free",null,-1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),null, 
+				null ,"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		
@@ -114,9 +131,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			//transformation
 			
 		
-			
-			
-			
 			/*
 			l.add(newExperimentType("Migration sur puce","chip-migration",
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
@@ -146,61 +160,85 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 //					DescriptionFactory.getInstitutes( Constants.CODE.CNG))); 	
 //					
 
-
 			
 			/**********************************************************************************/
-			
-			
 			
 		}
 
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
-
 	}
 
 
 	
 	public void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
 
-		newExperimentTypeNode("ext-to-prepa-flowcell", getExperimentTypes("ext-to-prepa-flowcell").get(0), false, false, false, null, null, null, null).save();
+		newExperimentTypeNode("ext-to-prepa-flowcell", getExperimentTypes("ext-to-prepa-flowcell").get(0), 
+				false, false, false, 
+				null, null, null, null
+				).save();
 		
 		//FDS ajout 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered
-		newExperimentTypeNode("ext-to-prepa-fc-ordered", getExperimentTypes("ext-to-prepa-fc-ordered").get(0), false, false, false, null, null, null, null).save();
+		newExperimentTypeNode("ext-to-prepa-fc-ordered", getExperimentTypes("ext-to-prepa-fc-ordered").get(0), 
+				false, false, false, 
+				null, null, null, null
+				).save();
 		
-		newExperimentTypeNode("ext-to-denat-dil-lib", getExperimentTypes("ext-to-denat-dil-lib").get(0), false, false, false, null, null, null, null).save();
+		newExperimentTypeNode("ext-to-denat-dil-lib", getExperimentTypes("ext-to-denat-dil-lib").get(0),
+				false, false, false,
+				null, null, null, null
+				).save();
 		
-		newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), false, false, false, null, null, null, getExperimentTypes("aliquoting")).save();
+		//FDS il faut creer le node "ext-to-prep-pcr-free" avant le node "prep-pcr-free"
+		newExperimentTypeNode("ext-to-prep-pcr-free",getExperimentTypes("ext-to-prep-pcr-free").get(0),
+				false,false,false,
+				null, null, null, null
+				).save();
 		
+		newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), 
+				false, false, false, 
+				null, null, null, getExperimentTypes("aliquoting")
+				).save();
 		
-		newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),false,false,false,getExperimentTypeNodes("ext-to-denat-dil-lib", "lib-normalization"),
-				null,null, getExperimentTypes("aliquoting")).save();
+		newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),
+				false,false,false,getExperimentTypeNodes("ext-to-denat-dil-lib", "lib-normalization"),
+				null,null, getExperimentTypes("aliquoting")
+				).save();
 		
-		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false,false,false,getExperimentTypeNodes("ext-to-prepa-flowcell","denat-dil-lib"),
-				null,null, null).save();
+		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),
+				false,false,false,
+				getExperimentTypeNodes("ext-to-prepa-flowcell","denat-dil-lib"),null,null, null
+				).save();
 		
 		//FDS ajout 04/11/2015 -- JIRA NGL-838 ajout prepa-fc-ordered, attention previous node normal est "lib-normalization" (et non "denat-dil-lib")
-		newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),false,false,false,getExperimentTypeNodes("ext-to-prepa-fc-ordered","lib-normalization"),
-				null,null, null).save();
+		newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),
+				false,false,false,
+				getExperimentTypeNodes("ext-to-prepa-fc-ordered","lib-normalization"),null,null, null
+				).save();
 	
 		//FDS modif 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered
-		newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),false,false,false,getExperimentTypeNodes("prepa-flowcell","prepa-fc-ordered"),
-				null,null, null).save();
+		newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),
+				false,false,false,
+				getExperimentTypeNodes("prepa-flowcell","prepa-fc-ordered"),null,null, null
+				).save();
 		
+		//FDS ajout 04/11/2015 -- JIRA NGL-894: processus et experiments pour X5, previous est ???
+		newExperimentTypeNode("prep-pcr-free",getExperimentTypes("prep-pcr-free").get(0),
+				false,false,false,
+				getExperimentTypeNodes("ext-to-prep-pcr-free"),null,null, null  
+				).save();
 		
+							
+			
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-					
 			
-			// GA : 03/08/2015 new temporary declaration
-			
-			
+			// GA : 03/08/2015 new temporary declaration	
 		}
-		
-
-
 	}
 
 	private static List<PropertyDefinition> getPropertyAliquoting() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé","inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µl"),MeasureUnit.find.findByCode( "µl"), "single",10, false));
 		
@@ -215,10 +253,9 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 						, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "pM"),MeasureUnit.find.findByCode( "nM"), "single",25));
 
 		//Outputcontainer		
-		propertyDefinitions.add(newPropertiesDefinition("% phiX", "phixPercent", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null, null, null, null, "single",51,false,"1", null));		
+		propertyDefinitions.add(newPropertiesDefinition("% phiX", "phixPercent", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null, null, null, null, "single",51,false,"1",null));		
 		propertyDefinitions.add(newPropertiesDefinition("Volume final", "finalVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null
 						, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",52, false));
-		
 		
 		return propertyDefinitions;
 	}
@@ -227,11 +264,13 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	private List<PropertyDefinition> getPropertyDefinitionsPrepaflowcellOrderedCNG() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
+		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé", "inputVolume2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5"
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",21));
 		propertyDefinitions.add(newPropertiesDefinition("Vol. NaOH", "NaOHVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5"
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",22));
-		propertyDefinitions.add(newPropertiesDefinition("Conc. NaOH", "NaOHConcentration", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null, null, null, null, "single",23,true,"0.1N", null));
+		propertyDefinitions.add(newPropertiesDefinition("Conc. NaOH", "NaOHConcentration", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null
+				,null, null, null, "single",23,true,"0.1N",null));
 		propertyDefinitions.add(newPropertiesDefinition("Vol. TrisHCL", "trisHCLVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5"
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",24));
 		propertyDefinitions.add(newPropertiesDefinition("Conc. TrisHCL", "trisHCLConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "200000000" 
@@ -243,9 +282,9 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 
 		//OuputContainer
 		//keep order declaration between phixPercent and finalVolume
-		propertyDefinitions.add(newPropertiesDefinition("% phiX", "phixPercent", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null, null, null, null, "single",51,false,"1", null));		
+		propertyDefinitions.add(newPropertiesDefinition("% phiX", "phixPercent", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null, null, null, null, "single",51,false,"1",null));		
 		propertyDefinitions.add(newPropertiesDefinition("Volume final", "finalVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",28,false, "50", null));
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",28,false, "50",null));
 		
 		return propertyDefinitions;
 		
@@ -254,6 +293,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	private static List<PropertyDefinition> getPropertyDefinitionsDenatDilLibCNG() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
+		//FDS 01/02/2016 pourquoi est commenté ???
 		//propertyDefinitions.add(newPropertiesDefinition("Stockage", "storage", LevelService.getLevels(Level.CODE.ContainerOut), String.class, false, null, null, null, null, "single",55,true,null));		
 		
 		return propertyDefinitions;
@@ -265,20 +305,56 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	public static List<PropertyDefinition> getPropertyDefinitionsChipMigration() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		// A supprimer une fois le type de support category sera géré
+		
+		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Position","position", LevelService.getLevels(Level.CODE.ContainerIn),Integer.class, true, "single"));
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, "single"));		
-		propertyDefinitions.add(newPropertiesDefinition("Taille", "size", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, true,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("kb"), MeasureUnit.find.findByCode("kb"), "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, "single"));
+		
+		//Outputcontainer
+		propertyDefinitions.add(newPropertiesDefinition("Taille", "size", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, true
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("kb"), MeasureUnit.find.findByCode("kb"), "single"));
 		// Voir avec Guillaume comment gérer les fichiers
 		propertyDefinitions.add(newPropertiesDefinition("Profil DNA HS", "fileResult", LevelService.getLevels(Level.CODE.ContainerOut),String.class, true, "single"));
+		
 		return propertyDefinitions;
 	}
 	
 	private static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepot() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
 		//Utiliser par import ngl-data CNG de creation des depot-illumina
 		//propertyDefinitions.add(newPropertiesDefinition("Code LIMS", "limsCode", LevelService.getLevels(Level.CODE.Experiment), Integer.class, false, "single"));	
 		propertyDefinitions.add(newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, true, "single"));
+		
 		return propertyDefinitions;
+	}
+	
+	private List<PropertyDefinition> getPropertyDefinitionsPrepPcrFree() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		//InputContainer
+		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé Frag", "inputVolumeFrag", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5"
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",2198));
+		propertyDefinitions.add(newPropertiesDefinition("Quantité. engagée Frag", "inputQuantityFrag", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5"
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",2199));
+		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé Lib", "inputVolumeLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5"
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",2198));
+		propertyDefinitions.add(newPropertiesDefinition("Quantité. engagée Lib", "inputQuantityLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5"
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",2199));
+	
+
+		//OuputContainer
+		propertyDefinitions.add(newPropertiesDefinition("Taille insert (théor.)", "insertSize", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, true
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("kb"), MeasureUnit.find.findByCode("kb"), "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Taille librairie (théor.)", "librarySize", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, true
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("kb"), MeasureUnit.find.findByCode("kb"), "single"));
+
+		//out ??????????????
+		propertyDefinitions.add(newPropertiesDefinition("Volume Out", "measuredVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",28,false, "50",null));
+		
+		return propertyDefinitions;
+		
 	}
 	
 }
