@@ -218,7 +218,6 @@ public class Processes extends CommonController{
 		}
 		*/
 		containers.parallelStream().forEach(container -> {
-			p.containerInputCode = container.code;			
 			processes.addAll(saveAllContentsProcesses(p, container, contextValidation ));
 		});
 		
@@ -228,7 +227,7 @@ public class Processes extends CommonController{
 
 	private static List<Process> saveAllContentsProcesses(Process process, Container container, ContextValidation contextValidation){	
 		//The process is replicated in each content, so we can validate once
-		ProcessValidationHelper.validateContainerCode(process.containerInputCode, contextValidation, "containerInputCode");
+		ProcessValidationHelper.validateContainerCode(container.code, contextValidation, "containerInputCode");
 		
 		final List<Process> processes = new ArrayList<Process>();
 		container.contents.parallelStream().forEach(c -> {
@@ -236,7 +235,7 @@ public class Processes extends CommonController{
 			//code generation
 			newProcess.categoryCode = process.categoryCode;
 			newProcess.comments = process.comments;
-			newProcess.containerInputCode = process.containerInputCode;
+			newProcess.containerInputCode = container.code;
 			newProcess.currentExperimentTypeCode = newProcess.currentExperimentTypeCode;
 			newProcess.experimentCodes = process.experimentCodes;
 			newProcess.newContainerSupportCodes = process.newContainerSupportCodes;
