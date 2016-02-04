@@ -9,7 +9,13 @@ import java.util.Set;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
+import akka.actor.ActorRef;
+import akka.actor.Props;
 import play.Logger;
+import play.Play;
+import play.libs.Akka;
+import rules.services.RulesActor6;
+import rules.services.RulesMessage;
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
@@ -68,11 +74,14 @@ public class ContWorkflows extends Workflows<Container> {
 																.unset("processTypeCode"));
 			}		
 		} 
-		
-		//TODO GA update support if possible
-		
+		callWorkflowRules(validation,container);		
 	}
+	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 
+	public static void callWorkflowRules(ContextValidation validation, Container container) {
+		rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", container, validation),null);
+	}
+	
 	@Override
 	public void applyErrorPostStateRules(ContextValidation validation,
 			Container container, State nextState) {
