@@ -123,9 +123,9 @@ public class Processes extends CommonController{
 			}else if(StringUtils.isNotBlank(queryFieldsForm.fromContainerInputCode) && StringUtils.isBlank(queryFieldsForm.fromSupportContainerCode)) {							
 
 				if(!contextValidation.hasErrors()){
-					Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, process.containerInputCode);
+					Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, process.inputContainerCode);
 					Process p = filledForm.get();
-					p.containerInputCode = container.code;
+					p.inputContainerCode = container.code;
 					valdateCommonProcessAttribut(p, contextValidation);
 					processes.addAll(saveAllContentsProcesses(p, container, contextValidation ));
 				}				
@@ -218,6 +218,7 @@ public class Processes extends CommonController{
 		}
 		*/
 		containers.parallelStream().forEach(container -> {
+			p.inputContainerCode = container.code;			
 			processes.addAll(saveAllContentsProcesses(p, container, contextValidation ));
 		});
 		
@@ -235,10 +236,10 @@ public class Processes extends CommonController{
 			//code generation
 			newProcess.categoryCode = process.categoryCode;
 			newProcess.comments = process.comments;
-			newProcess.containerInputCode = container.code;
+			newProcess.inputContainerCode = container.code;
 			newProcess.currentExperimentTypeCode = newProcess.currentExperimentTypeCode;
 			newProcess.experimentCodes = process.experimentCodes;
-			newProcess.newContainerSupportCodes = process.newContainerSupportCodes;
+			newProcess.outputContainerSupportCodes = process.outputContainerSupportCodes;
 			newProcess.properties = process.properties;
 			newProcess.state = process.state;
 			newProcess.traceInformation = process.traceInformation;
