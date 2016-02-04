@@ -550,11 +550,11 @@ var	datatableConfig = {
 			         },
 			         {
 			        	 "header":Messages("processes.table.columns"),
-			        	 "property":"support.column",
+			        	 "property":"support.column*1",
 			        	 "order":true,
 			        	 "hide":true,
 			        	 "position":3,
-			        	 "type":"text"
+			        	 "type":"number"
 			         },  */
 			         {
 			        	 "header":Messages("processes.table.projectCode"),
@@ -683,12 +683,12 @@ var	datatableConfig = {
 		         },
 	/*	         {
 		        	 "header":Messages("processes.table.columns"),
-		        	 "property":"support.column",
+		        	 "property":"support.column*1",
 		        	 "url":"'/api/containers/'+containerInputCode",
 		        	 "order":true,
 		        	 "hide":true,
 		        	 "position":3.5,
-		        	 "type":"text"
+		        	 "type":"number"
 		         },
 		         {
 		        	 "header":Messages("processes.table.line"),

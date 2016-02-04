@@ -35,11 +35,11 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 		},
 		{
 			"header":Messages("containers.table.support.column"),
-			"property":"support.column",
+			"property":"support.column*1",
 			"order":true,
 			"hide":true,
 			"position":4,
-			"type":"text"
+			"type":"number"
 		},
 		{
 			"header":Messages("containers.table.code"),

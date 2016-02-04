@@ -119,13 +119,15 @@ public class Processes extends CommonController{
 			contextValidation.setCreationMode();
 			contextValidation.putObject("workflow", true);
 			if(StringUtils.isNotBlank(queryFieldsForm.fromSupportContainerCode) && StringUtils.isBlank(queryFieldsForm.fromContainerInputCode)){			
-				processes = saveFromSupport(queryFieldsForm.fromSupportContainerCode, filledForm, contextValidation);
+				processes = saveFromSupport(queryFieldsForm.fromSupportContainerCode, filledForm.get(), contextValidation);
 			}else if(StringUtils.isNotBlank(queryFieldsForm.fromContainerInputCode) && StringUtils.isBlank(queryFieldsForm.fromSupportContainerCode)) {							
 
 				if(!contextValidation.hasErrors()){
 					Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, process.containerInputCode);
-					filledForm.get().containerInputCode = container.code;
-					processes.addAll(saveAllContentsProcesses(filledForm, container, contextValidation ));
+					Process p = filledForm.get();
+					p.containerInputCode = container.code;
+					valdateCommonProcessAttribut(p, contextValidation);
+					processes.addAll(saveAllContentsProcesses(p, container, contextValidation ));
 				}				
 			}else{
 				return badRequest("Params 'from object' required!");
@@ -140,6 +142,13 @@ public class Processes extends CommonController{
 		}
 	}
 
+	private static void valdateCommonProcessAttribut(Process process, ContextValidation contextValidation) {
+		ProcessValidationHelper.validateProcessType(process.typeCode,process.properties,contextValidation);
+		ProcessValidationHelper.validateProcessCategory(process.categoryCode,contextValidation);
+		ProcessValidationHelper.validateState(process.typeCode,process.state, contextValidation);
+		ProcessValidationHelper.validateTraceInformation(process.traceInformation, contextValidation);			
+	}
+
 	@Permission(value={"writing"})
 	public static Result saveBatch(){
 		Form<ProcessesSaveQueryForm>  filledQueryFieldsForm = filledFormQueryString(processSaveQueryForm, ProcessesSaveQueryForm.class);
@@ -148,7 +157,7 @@ public class Processes extends CommonController{
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
 		ProcessesSaveQueryForm processesSaveQueryForm=filledQueryFieldsForm.get();
 
-		Form batchForm = new Form(Process.class);
+		Form<Process> batchForm = new Form<Process>(Process.class);
 		List<Process> processes = new ArrayList<Process>();
 		ContextValidation contextValidation =new ContextValidation(getCurrentUser(), batchForm.errors());
 
@@ -197,27 +206,60 @@ public class Processes extends CommonController{
 		return badRequest(Json.toJson(response));
 	}
 
-	private static List<Process> saveFromSupport(String supportCode, Form<Process> filledForm, ContextValidation contextValidation){			
+	private static List<Process> saveFromSupport(String supportCode, Process p, ContextValidation contextValidation){			
 		List<Process> processes = new ArrayList<Process>();
 		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("support.code", supportCode)).toList();
+		
+		valdateCommonProcessAttribut(p, contextValidation);
+		/*
 		for(Container container:containers){			
-			filledForm.get().containerInputCode = container.code;
-			processes.addAll(saveAllContentsProcesses(filledForm, container, contextValidation ));
+			p.containerInputCode = container.code;			
+			processes.addAll(saveAllContentsProcesses(p, container, contextValidation ));
 		}
+		*/
+		containers.parallelStream().forEach(container -> {
+			p.containerInputCode = container.code;			
+			processes.addAll(saveAllContentsProcesses(p, container, contextValidation ));
+		});
+		
 		return processes;	
 	}
 
 
-	private static List<Process> saveAllContentsProcesses(Form<Process> filledForm, Container container, ContextValidation contextValidation){	
-		Process process = filledForm.get();
+	private static List<Process> saveAllContentsProcesses(Process process, Container container, ContextValidation contextValidation){	
 		//The process is replicated in each content, so we can validate once
-		ProcessValidationHelper.validateProcessType(process.typeCode,process.properties,contextValidation);
-		ProcessValidationHelper.validateProcessCategory(process.categoryCode,contextValidation);
-		ProcessValidationHelper.validateState(process.typeCode,process.state, contextValidation);
-		ProcessValidationHelper.validateTraceInformation(process.traceInformation, contextValidation);
 		ProcessValidationHelper.validateContainerCode(process.containerInputCode, contextValidation, "containerInputCode");
 		
-		List<Process> processes = new ArrayList<Process>();
+		final List<Process> processes = new ArrayList<Process>();
+		container.contents.parallelStream().forEach(c -> {
+			Process newProcess = new Process();
+			//code generation
+			newProcess.categoryCode = process.categoryCode;
+			newProcess.comments = process.comments;
+			newProcess.containerInputCode = process.containerInputCode;
+			newProcess.currentExperimentTypeCode = newProcess.currentExperimentTypeCode;
+			newProcess.experimentCodes = process.experimentCodes;
+			newProcess.newContainerSupportCodes = process.newContainerSupportCodes;
+			newProcess.properties = process.properties;
+			newProcess.state = process.state;
+			newProcess.traceInformation = process.traceInformation;
+			newProcess.typeCode = process.typeCode;
+			newProcess.sampleCode = c.sampleCode;
+			newProcess.projectCode = c.projectCode;
+			newProcess.code = CodeHelper.getInstance().generateProcessCode(newProcess);
+			newProcess.sampleOnInputContainer = InstanceHelpers.getSampleOnInputContainer(c, container);				
+			//Logger.info("New process code : "+newProcess.code);
+			processes.add(newProcess);	
+			//We don't need to validate all the properties for each creation
+			//because the new process is just a copy of the one in the form
+			//newProcess.validate(contextValidation);
+			//These are the properties that change for each process so we have to validate them each time we create
+			//the copy
+			ProcessValidationHelper.validateCode(newProcess, InstanceConstants.PROCESS_COLL_NAME, contextValidation);
+			ProcessValidationHelper.validateProjectCode(newProcess.projectCode, contextValidation);
+			ProcessValidationHelper.validateSampleCode(newProcess.sampleCode, newProcess.projectCode, contextValidation);
+		});
+		/*
 		for(Content c:container.contents){
 			Process newProcess = new Process();
 			//code generation
@@ -246,7 +288,7 @@ public class Processes extends CommonController{
 			ProcessValidationHelper.validateProjectCode(newProcess.projectCode, contextValidation);
 			ProcessValidationHelper.validateSampleCode(newProcess.sampleCode, newProcess.projectCode, contextValidation);
 		}
-
+		 */
 		if(!contextValidation.hasErrors()){
 			List<Process> savedProcesses = new ArrayList<Process>();
 			for(Process p:processes){
@@ -255,8 +297,9 @@ public class Processes extends CommonController{
 					savedProcesses.add(savedProcess);
 				}
 			}
-			processes = ProcessHelper.applyRules(savedProcesses, contextValidation, "processCreation");
-			ProcessWorkflows.nextContainerStateFromNewProcesses(processes, process.typeCode, contextValidation);
+			List<Process> processes2 = ProcessHelper.applyRules(savedProcesses, contextValidation, "processCreation");
+			ProcessWorkflows.nextContainerStateFromNewProcesses(processes2, process.typeCode, contextValidation);
+			return processes2;
 		}
 		return processes;
 	}

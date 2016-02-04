@@ -58,7 +58,7 @@ public class CodeHelper {
 			code += Integer.toString(minsec, 36);// minute
 
 			code += Integer.toString(Integer.valueOf(m.group(7)) + 36, 36);// millisecond
-			Logger.debug("Container code generated "+code);
+			//Logger.debug("Container code generated "+code);
 			return code.toUpperCase();
 		} else {
 			try {

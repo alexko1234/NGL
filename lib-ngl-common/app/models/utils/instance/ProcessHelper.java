@@ -116,11 +116,8 @@ public class ProcessHelper {
 	public static List<Process>  applyRules(List<Process> processes, ContextValidation ctx ,String rulesName){
 		ArrayList<Object> facts = new ArrayList<Object>();
 		facts.add(ctx);
-		for(Process proc:processes){
-		facts.add(proc);
-		}
+		facts.addAll(processes);
 		
-
 		List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), rulesName, facts);
 		
 
