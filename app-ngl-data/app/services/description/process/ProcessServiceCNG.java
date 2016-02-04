@@ -52,7 +52,6 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		l.add(DescriptionFactory.newProcessType("Dénat, prep FC, dépôt", "illumina-run", ProcessCategory.find.findByCode("sequencing"),
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell"),
             	Arrays.asList(getPET("ext-to-denat-dil-lib",-1), getPET("denat-dil-lib",0),getPET("prepa-flowcell",1),getPET("illumina-depot",2)),// ordered list of experiment type in process type
-				//getExperimentTypes("denat-dil-lib","prepa-flowcell","illumina-depot"), // list of experiment type in process type
 				getExperimentTypes("denat-dil-lib").get(0),        //first experiment type
 				getExperimentTypes("illumina-depot").get(0),       //last experiment type
 				getExperimentTypes("ext-to-denat-dil-lib").get(0), // void experiment type
@@ -62,7 +61,6 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		l.add(DescriptionFactory.newProcessType("Prep FC, dépôt", "prepFC-depot", ProcessCategory.find.findByCode("sequencing"),
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell"),
 				Arrays.asList(getPET("ext-to-prepa-flowcell",-1),getPET("prepa-flowcell",0),getPET("illumina-depot",1) ), //ordered list of experiment type in process type
-				//getExperimentTypes("prepa-flowcell","illumina-depot"), // list of experiment type in process type
 				getExperimentTypes("prepa-flowcell").get(0),        //first experiment type
 				getExperimentTypes("illumina-depot").get(0),        //last experiment type
 				getExperimentTypes("ext-to-prepa-flowcell").get(0), // void experiment type
@@ -72,7 +70,6 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		l.add(DescriptionFactory.newProcessType("4000/X5 (prep FC ordonnée)", "prepFCordered-depot", ProcessCategory.find.findByCode("sequencing"),
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-fc-ordered"),
 				Arrays.asList(getPET("ext-to-prepa-fc-ordered",-1),getPET("prepa-fc-ordered",0),getPET("illumina-depot",1) ), //ordered list of experiment type in process type
-				//getExperimentTypes("prepa-fc-ordered","illumina-depot"), // list of experiment type in process type
 				getExperimentTypes("prepa-fc-ordered").get(0),        //first experiment type
 				getExperimentTypes("illumina-depot").get(0),          //last experiment type
 				getExperimentTypes("ext-to-prepa-fc-ordered").get(0), // void experiment type
@@ -82,7 +79,6 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		l.add(DescriptionFactory.newProcessType("X5_WG PCR free", "x5-wg-pcr-free", ProcessCategory.find.findByCode("library"),
 				getPropertyDefinitionsX5WgPcrFree(),
 				Arrays.asList(getPET("ext-to-prep-pcr-free",-1),getPET("prep-pcr-free",0),getPET("illumina-depot",1) ), //ordered list of experiment type in process type
-				//getExperimentTypes("prep-pcr-free","lib-normalization","prepa-fc-ordered","illumina-depot"), // list of experiment type in process type 
 				getExperimentTypes("prep-pcr-free").get(0),        //first experiment type
 				getExperimentTypes("illumina-depot").get(0),       //last experiment type
 				getExperimentTypes("ext-to-prep-pcr-free").get(0), //void experiment type
@@ -166,8 +162,4 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		return propertyDefinitions;
 	}
 
-	
-	private static List<ExperimentType> getExperimentTypes(String...codes) throws DAOException {
-		return DAOHelpers.getModelByCodes(ExperimentType.class,ExperimentType.find, codes);
-	}
 }

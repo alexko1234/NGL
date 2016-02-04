@@ -58,6 +58,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 		
 		/** ext , display order -1 **/
+		
 		l.add(newExperimentType("Ext to prepa flowcell","ext-to-prepa-flowcell",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, 
 				null,"OneToOne", 
@@ -80,7 +81,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null ,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		/** display order ordered **/
+		/** ordered by display order **/
 		
 		l.add(newExperimentType("Aliquot","aliquoting",null, 1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()),
@@ -189,7 +190,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null, null, null, null
 				).save();
 		
-		//FDS il faut creer le node "ext-to-prep-pcr-free" avant le node "prep-pcr-free"
+		//FDS 01/02/2016 ajout -- JIRA NGL-894 4: processus et experiments pour X5
 		newExperimentTypeNode("ext-to-prep-pcr-free",getExperimentTypes("ext-to-prep-pcr-free").get(0),
 				false,false,false,
 				null, null, null, null
@@ -202,8 +203,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				).save();
 		
 		newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),
-				false,false,false,getExperimentTypeNodes("ext-to-denat-dil-lib", "lib-normalization"),
-				null,null, getExperimentTypes("aliquoting")
+				false,false,false,
+				getExperimentTypeNodes("ext-to-denat-dil-lib", "lib-normalization"),null,null, getExperimentTypes("aliquoting")
 				).save();
 		
 		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),
