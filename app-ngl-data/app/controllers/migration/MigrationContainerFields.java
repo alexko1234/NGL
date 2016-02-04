@@ -103,14 +103,14 @@ public static Result migration(){
 		
 		//6 migration on processes
 		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.exists("sampleOnInputContainer.mesuredQuantity"),
-				DBUpdate.rename("sampleOnInputContainer.mesuredQuantity", "sampleOnInputContainer.quantity"));
+				DBUpdate.rename("sampleOnInputContainer.mesuredQuantity", "sampleOnInputContainer.containerQuantity"));
 		
 		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.exists("sampleOnInputContainer.mesuredVolume"),
-				DBUpdate.rename("sampleOnInputContainer.mesuredVolume", "sampleOnInputContainer.volume"));
+				DBUpdate.rename("sampleOnInputContainer.mesuredVolume", "sampleOnInputContainer.containerVolume"));
 		
 		
 		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.exists("sampleOnInputContainer.mesuredConcentration"),
-				DBUpdate.rename("sampleOnInputContainer.mesuredConcentration", "sampleOnInputContainer.concentration"));
+				DBUpdate.rename("sampleOnInputContainer.mesuredConcentration", "sampleOnInputContainer.containerConcentration"));
 		
 		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.exists("containerInputCode"),
 				DBUpdate.rename("containerInputCode", "inputContainerCode"));

@@ -824,9 +824,9 @@ var	datatableConfig = {
 														properties:processData.contents[j].properties,
 														containerCode:data[i].code,
 														containerSupportCode:data[i].support.code,
-														volume:data[i].volume,
-														quantity:data[i].quantity,
-														concentration:data[i].concentration}
+														containerVolume:data[i].volume,
+														containerQuantity:data[i].quantity,
+														containerConcentration:data[i].concentration}
 						}};
 						processes.push(process);
 					}

@@ -309,7 +309,7 @@ public class InstanceTest extends AbstractTests{
 		
 		assertThat(sampleOnInputContainer.containerCode).isNotEmpty().isNotNull();
 		assertThat(sampleOnInputContainer.containerSupportCode).isNotEmpty().isNotNull();
-		assertThat(sampleOnInputContainer.concentration).isNotNull();
+		assertThat(sampleOnInputContainer.containerConcentration).isNotNull();
 		Date d = new Date();
 		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		assertThat(sdf.format(d)).isEqualTo(sdf.format(sampleOnInputContainer.lastUpdateDate));
