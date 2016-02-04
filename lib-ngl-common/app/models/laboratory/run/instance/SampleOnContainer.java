@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 
@@ -33,10 +35,8 @@ public class SampleOnContainer {
 	//Collaborator's reference
 	public String referenceCollab;	
 	//Measured concentration from Container
-	public PropertySingleValue mesuredConcentration;
-
-
-
+	public PropertySingleValue containerConcentration;
+	
 
 	@Override
 	public String toString() {
