@@ -190,6 +190,10 @@
 			$http.get(jsRoutes.controllers.commons.api.StatesHierarchy.list().url,  {params: {objectTypeCode:"ReadSet"}}).success(function(data) {
 				$scope.statesHierarchy = data;	
 			});	
+			
+			$http.get(jsRoutes.controllers.samples.api.Samples.get($scope.readset.sampleCode).url).success(function(data){
+				$scope.sample=data;
+			});
 					
 			if(undefined == mainService.get('readSetActiveTab')){
 				 mainService.put('readSetActiveTab', 'general');

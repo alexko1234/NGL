@@ -1,6 +1,7 @@
 package ncbi.services;
 
 import java.io.StringReader;
+import java.util.concurrent.TimeoutException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -32,13 +33,19 @@ public class TaxonomyServices {
 				Document doc = db.parse(new InputSource(new StringReader(response.getBody())));
 				return doc;
 			});
-			//By default wait 5000ms
-			Document doc = xml.get(5000);
-			XPath xPath =  XPathFactory.newInstance().newXPath();
-			//String expression = "/TaxaSet/Taxon/ScientificName";
-
-			//read a string value
-			String value = xPath.compile(expression).evaluate(doc);
+			String value = "";
+			int nbTry=0;
+			while(nbTry<3 || StringUtils.isNotBlank(value)){
+				try {
+					value=getValue(xml, expression);
+				} catch (RuntimeException e) {
+					//Retry connect
+					nbTry++;
+				}
+			}
+			if(nbTry==3)
+				Logger.error("NCBI Timeout for taxonId "+taxonCode);
+			
 			if(StringUtils.isBlank(value))
 				return null;
 			else
@@ -47,6 +54,15 @@ public class TaxonomyServices {
 			return null;
 	}
 
+	public static String getValue(Promise<Document> xml, String expression) throws XPathExpressionException, RuntimeException
+	{
+		Document doc = xml.get(10000);
+		XPath xPath =  XPathFactory.newInstance().newXPath();
+		//String expression = "/TaxaSet/Taxon/ScientificName";
+		//read a string value
+		return xPath.compile(expression).evaluate(doc);
+	}
+	
 	public static String getScientificName(String taxonCode)
 	{
 		try {
