@@ -48,12 +48,12 @@
 								<p ng-switch-when="false" class="form-control-static" ng-bind="experiment.@{name}[propertyDef.code].value" />
 								<input 	ng-switch-when="true" class="form-control" type="text" title='{{propertyDef.name}}'  class="input-small"
 										ng-model="experiment.@{name}[propertyDef.code].value"									
-										udt-default-value="propertyDef.defaultValue"/>
+										default-value="propertyDef.defaultValue"/>
 							
 							</div>
 								<div ng-switch-when="true" bt-select class="form-control" 
 									ng-model="experiment.@{name}[propertyDef.code].value"
-									udt-default-value="propertyDef.defaultValue" 									 
+									default-value="propertyDef.defaultValue" 									 
 			    					bt-options="opt.code as opt.name for opt in propertyDef.possibleValues" 
 			    					ng-edit="mainService.isEditMode()">
 			    				</div>				    				

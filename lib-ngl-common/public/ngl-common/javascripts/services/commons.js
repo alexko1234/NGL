@@ -1017,7 +1017,26 @@ angular.module('commonsServices', []).
     	        }
     	    };
     	    
-    	}).filter('filters',['$filter',function ($filter) {
+    	}).directive('defaultValue',['$parse', function($parse) {
+    		return {
+    			require: 'ngModel',
+    			link: function(scope, element, attrs, ngModel) {
+    				var _defaultValue = null;
+    				scope.$watch(attrs.defaultValue, function(defaultValue){
+    					if(defaultValue !== undefined && defaultValue !== null ){
+    						_defaultValue = defaultValue;
+    					}
+    				});
+    				//TODO GA ?? better way with formatter
+					scope.$watch(ngModel, function(value){
+			                if(_defaultValue != null && (ngModel.$modelValue == undefined || ngModel.$modelValue == "")){
+									ngModel.$setViewValue(_defaultValue);
+									ngModel.$render();
+							}
+				    });
+    			}
+    		};	    	
+    	}]).filter('filters',['$filter',function ($filter) {
     		return function (array, expressions) {
     			if (!angular.isArray(expressions)) expressions = [expressions];
     			var filtered = [];
