@@ -344,7 +344,11 @@ public class Containers extends CommonController {
 					}
 					listePrevious.add(e.code);
 				}			
-				if(!onlyEx){
+				
+				if(CollectionUtils.isNotEmpty(containersSearch.fromExperimentTypeCodes) && containersSearch.fromExperimentTypeCodes.contains("none")){
+						queryElts.add(DBQuery.or(DBQuery.size("fromExperimentTypeCodes", 0),DBQuery.notExists("fromExperimentTypeCodes")
+						,DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes)));					
+				}else if(!onlyEx){
 					queryElts.add(DBQuery.in("fromExperimentTypeCodes", listePrevious));
 				}else{
 					queryElts.add(DBQuery.or(DBQuery.size("fromExperimentTypeCodes", 0),DBQuery.notExists("fromExperimentTypeCodes")));
@@ -356,9 +360,7 @@ public class Containers extends CommonController {
 				return null;
 			}
 			
-		}
-
-		if(StringUtils.isNotBlank(containersSearch.nextExperimentTypeCode)){
+		}else if(StringUtils.isNotBlank(containersSearch.nextExperimentTypeCode)){
 			
 			//TODO GA Prendre la précédente dans chacun des processus et pas celle de l'expérience
 			/*
@@ -414,10 +416,7 @@ public class Containers extends CommonController {
 			}
 			
 			
-		}
-		
-		
-		if(CollectionUtils.isNotEmpty(containersSearch.fromExperimentTypeCodes)){
+		} else if(CollectionUtils.isNotEmpty(containersSearch.fromExperimentTypeCodes)){
 			
 			if(BooleanUtils.isTrue(containersSearch.isEmptyFromExperimentTypeCodes) || containersSearch.fromExperimentTypeCodes.contains("none")){
 					queryElts.add(DBQuery.or(DBQuery.size("fromExperimentTypeCodes", 0),DBQuery.notExists("fromExperimentTypeCodes")
