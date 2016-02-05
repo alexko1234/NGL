@@ -460,7 +460,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                                     console.log("computeGroup Error : " + e);
                                 }
                             } else if ('unique' === column.groupMethod) {
-                                var result = $filter('unique')(groupData, column.property);
+                                var result = $filter('udtUnique')(groupData, column.property);
                                 if (result.length > 1) {
                                     result = '#MULTI';
                                 } else if (result.length === 1) {
@@ -3539,9 +3539,11 @@ filter('udtUnique', function($parse) {
 
     		      //checked if the unique identifier is already exist
     		      function some(array, member) {
-    		        if(isUndefined(member)) {
+    		        /*
+    		    	if(isUndefined(member)) {
     		          return false;
     		        }
+    		        */
     		        return array.some(function(el) {
     		          return equals(el, member);
     		        });

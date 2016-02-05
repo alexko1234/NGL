@@ -1157,7 +1157,9 @@ angular.module('commonsServices', []).
     	    	if(angular.isObject(objects)  && objects.length > 0){    	    		
     	    		angular.forEach(objects, function(value, index){
     	    			get=$parse(key)(value);    	    			
-    	    			data.push(get);    	    			
+    	    			if(get){
+    	    				data.push(get);    	    			
+    	    			}
     	    		});    	    		
     	    	}     	    	
     	    	return data;
