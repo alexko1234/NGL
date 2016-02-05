@@ -3045,7 +3045,7 @@ directive('udtDefaultValue',['$parse', function($parse) {
 	    			link: function(scope, element, attrs, ngModel) {
 	    				var _col = null;
 	    				scope.$watch(attrs.udtDefaultValue, function(col){
-	    					if(col !== undefined && col.defaultValues !== undefined && col.defaultValues !== null ){
+	    					if(col !== null && col !== undefined && col.defaultValues !== undefined && col.defaultValues !== null ){
 	    						_col = col;
 	    					}
 	    				});

@@ -176,6 +176,8 @@ public class Experiments extends CommonController{
   	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.list(),
 	      		controllers.reporting.api.routes.javascript.ReportingConfigurations.get(),
 	      		controllers.reagents.api.routes.javascript.KitCatalogs.list(),
+	      		controllers.reagents.api.routes.javascript.BoxCatalogs.list(),
+	      		controllers.reagents.api.routes.javascript.ReagentCatalogs.list(),
   	      		controllers.reagents.api.routes.javascript.Kits.list(),
   	      		controllers.reagents.api.routes.javascript.Boxes.list(),
   	      		controllers.reagents.api.routes.javascript.Reagents.list(),

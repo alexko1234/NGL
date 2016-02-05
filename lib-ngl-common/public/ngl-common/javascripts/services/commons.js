@@ -310,17 +310,19 @@ angular.module('commonsServices', []).
     				}
     				return results['kitCatalogs'];
     			},
-    			getBoxCatalogs : function(params){
-    				if (results['boxCatalogs'] === undefined) {
-    					refresh.boxCatalogs(params);
+    			getBoxCatalogs : function(params,key){
+    				key = (key)?key:'boxCatalogs';
+					if (results[key] === undefined) {
+    					refresh.boxCatalogs(params,key);
     				}
-    				return results['boxCatalogs'];
+    				return results[key];
     			},
-    			getReagentCatalogs : function(params){
-    				if (results['reagentCatalogs'] === undefined) {
-    					refresh.reagentCatalogs(params);
+    			getReagentCatalogs : function(params,key){
+    				key = (key)?key:'reagentCatalogs';					
+    				if (results[key] === undefined) {
+    					refresh.reagentCatalogs(params,key);
     				}
-    				return results['reagentCatalogs'];
+    				return results[key];
     			},
     			getInstruments : function(){return results['instruments'];},		   
     			getValuations : function(){return results['valuations'];},

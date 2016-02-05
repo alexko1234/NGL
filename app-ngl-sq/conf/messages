@@ -347,6 +347,8 @@ experiment.panel.traceInformation = Info
 
 
 reagents.table.kitname = Nom du kit
+reagents.table.boxname = Nom de la boite
+reagents.table.reagentname = Nom du reactif
 reagents.table.boxcode = Code boîte (REF-LOT-CB supplémentaire(s))
 reagents.table.reagentcode = Code du réactif (REF-LOT-CB supplémentaire(s))
 reagents.table.description = Description

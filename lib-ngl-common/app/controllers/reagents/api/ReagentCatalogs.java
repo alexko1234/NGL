@@ -103,7 +103,7 @@ public class ReagentCatalogs extends DocumentController<ReagentCatalog>{
 			List<ReagentCatalog> ReagentCatalogs = results.toList();
 			List<ListObject> los = new ArrayList<ListObject>();
 			for(ReagentCatalog p: ReagentCatalogs){					
-					los.add(new ListObject(p.kitCatalogCode, p.name));								
+					los.add(new ListObject(p.code, p.name));								
 			}
 			
 			return Results.ok(Json.toJson(los));
