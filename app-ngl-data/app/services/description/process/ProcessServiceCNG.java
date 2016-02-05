@@ -47,32 +47,36 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	public void saveProcessTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		// Modif GA=> ListExperimentType doit etre ordonnee=> Arrays.asList( )
+		//            par convention les experimentTypes externes aux processus doivent avoir l'indice (-1) dans la methode getPET
+		// TODO: il faudra renommer les 'ext' en donnant le nom du processus ex: ext-to-denat-dil-lib---> ext-to-illumina-run
+		//       pour distinguer les containers qui arrivent dans le processus sans "fromExperimenType" des containers qui viendraient 
+		//       d'un collaborateur exterieur ex : ext-denat-dil-lib
 		
 		// JIRA 781 renommer le Processus long 
 		l.add(DescriptionFactory.newProcessType("Dénat, prep FC, dépôt", "illumina-run", ProcessCategory.find.findByCode("sequencing"),
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell"),
-            	Arrays.asList(getPET("ext-to-denat-dil-lib",-1), getPET("denat-dil-lib",0),getPET("prepa-flowcell",1),getPET("illumina-depot",2)),// ordered list of experiment type in process type
+            	Arrays.asList(getPET("ext-to-denat-dil-lib",-1), getPET("lib-normalization",-1), getPET("denat-dil-lib",0),getPET("prepa-flowcell",1),getPET("illumina-depot",2)),// ordered list of experiment type in process type
 				getExperimentTypes("denat-dil-lib").get(0),        //first experiment type
 				getExperimentTypes("illumina-depot").get(0),       //last experiment type
-				getExperimentTypes("ext-to-denat-dil-lib").get(0), // void experiment type
+				getExperimentTypes("ext-to-denat-dil-lib").get(0), //void experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 	   
 		// JIRA 781 ajouter un processus court (sans denat)
 		l.add(DescriptionFactory.newProcessType("Prep FC, dépôt", "prepFC-depot", ProcessCategory.find.findByCode("sequencing"),
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-flowcell"),
-				Arrays.asList(getPET("ext-to-prepa-flowcell",-1),getPET("prepa-flowcell",0),getPET("illumina-depot",1) ), //ordered list of experiment type in process type
+				Arrays.asList(getPET("ext-to-prepa-flowcell",-1),getPET("denat-dil-lib",-1),getPET("prepa-flowcell",0),getPET("illumina-depot",1) ), //ordered list of experiment type in process type
 				getExperimentTypes("prepa-flowcell").get(0),        //first experiment type
 				getExperimentTypes("illumina-depot").get(0),        //last experiment type
-				getExperimentTypes("ext-to-prepa-flowcell").get(0), // void experiment type
+				getExperimentTypes("ext-to-prepa-flowcell").get(0), //void experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
 		// FDS ajout 04/11/2015 -- JIRA 838: nouveau processus court prepa-fc-ordonée + illumina-depot
 		l.add(DescriptionFactory.newProcessType("4000/X5 (prep FC ordonnée)", "prepFCordered-depot", ProcessCategory.find.findByCode("sequencing"),
 				getPropertyDefinitionsIlluminaDepotCNG("prepa-fc-ordered"),
-				Arrays.asList(getPET("ext-to-prepa-fc-ordered",-1),getPET("prepa-fc-ordered",0),getPET("illumina-depot",1) ), //ordered list of experiment type in process type
+				Arrays.asList(getPET("ext-to-prepa-fc-ordered",-1),getPET("lib-normalization",-1),getPET("prepa-fc-ordered",0),getPET("illumina-depot",1) ), //ordered list of experiment type in process type
 				getExperimentTypes("prepa-fc-ordered").get(0),        //first experiment type
 				getExperimentTypes("illumina-depot").get(0),          //last experiment type
-				getExperimentTypes("ext-to-prepa-fc-ordered").get(0), // void experiment type
+				getExperimentTypes("ext-to-prepa-fc-ordered").get(0), //void experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		// FDS ajout 27/01/2016 -- JIRA NGL-894: nouveau processus pour X5

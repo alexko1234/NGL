@@ -291,6 +291,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 	   propertyDefinitions.add(0, newPropertiesDefinition("Mode run","runMode"
 	        		, LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("high-throughput","rapid run"), "single",50));
+	   
         return propertyDefinitions;
 	}
 	
@@ -327,8 +328,9 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getCovarisProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
-		l.add(newPropertiesDefinition("Programme Covaris", "programCovaris", LevelService.getLevels(Level.CODE.Instrument), String.class, true, 
-				                       newValues("PCR FREE PROD NGS FINAL"), "single"));
+		// essai ajout default value...
+		l.add(newPropertiesDefinition("Programme Covaris", "programCovaris", LevelService.getLevels(Level.CODE.Instrument), String.class, true,
+				                       newValues("PCR FREE PROD NGS FINAL"), "PCR FREE PROD NGS FINAL", "single"));
 		return l;
 	}
 	
@@ -360,25 +362,30 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getQPCRProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
-		l.add(newPropertiesDefinition("Nb. Echantillon", "sampleNumber", LevelService.getLevels(Level.CODE.Instrument), Integer.class, true, "single"));		
+		l.add(newPropertiesDefinition("Nb. Echantillon", "sampleNumber", LevelService.getLevels(Level.CODE.Instrument), Integer.class, true, "single"));	
+		
 		return l;
 	}
 	
-	//FDS 29/01/2016 ajout ScicloneNGSX -- JIRA NGL-894
+	//FDS 29/01/2016 ajout SicloneNGSX -- JIRA NGL-894
 	private static List<PropertyDefinition> getSicloneNGSXProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		
+		// essai ajout default value...	
 		l.add(newPropertiesDefinition("Programme Siclone NGSX", "programSicloneNGSX", LevelService.getLevels(Level.CODE.Instrument), String.class, true, 
-				                       newValues("TruSeq PcrFree lib prep"),  "single"));
+				                       newValues("TruSeq PcrFree lib prep"), "TruSeq PcrFree lib prep", "single"));
 		return l;
 	}
 	
 	//FDS 29/01/2016 (instrument fictif composé de 2 instruments) -- JIRA NGL-894
+	//    ses propriétés sont la somme des propriétés de chacun (Attention au noms de propriété communs...)
 	private static List<PropertyDefinition> getCovarisAndScicloneNGSProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
 		l.addAll(getCovarisProperties());
 		l.addAll(getSicloneNGSXProperties());
+		
+		//05/01/2016.ajouter une propriété outputContainerSupportCode a saisie libre
+		l.add(newPropertiesDefinition("Output plate barcode", "outputContainerSupportCode", LevelService.getLevels(Level.CODE.Instrument), String.class, true, "single"));
 		
 		return l;
 	}

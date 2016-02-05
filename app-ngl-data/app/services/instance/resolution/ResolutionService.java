@@ -58,6 +58,7 @@ public class ResolutionService {
 			createReadSetResolutionCNG(ctx); 
 			// FDS 15/01: no Analysis Resolutions ???
 			createIlluminaPrepFCDepotResolutionCNG(ctx);
+			createPrepPcrFreeResolutionCNG(ctx);
 			createExperimentResolution(ctx);
 			createProcessResolution(ctx);
 		}
@@ -673,8 +674,27 @@ public class ResolutionService {
 		r.typeCodes = al;
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
-		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
+		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);	
+	}
+	// FDS 05/02/2016 -- JIRA NGL-894 experience ey processus X5
+	private static void createPrepPcrFreeResolutionCNG(ContextValidation ctx) {
+		List<Resolution> l = new ArrayList<Resolution>();
 		
+		l.addAll(getDefaultResolutionCNS());
+		
+		l.add(InstanceFactory.newResolution("échec échantillons par puits", "echec-echPuit", resolutionCategories.get("Default"), (short) 4));
+		l.add(InstanceFactory.newResolution("contamination", "contamination", resolutionCategories.get("Default"), (short) 5));
+		
+		ResolutionConfiguration r = new ResolutionConfiguration();
+		r.code = "expPrepPcrFreeReso";
+		r.resolutions = l;
+		r.objectTypeCode = "Experiment";
+		ArrayList<String> al = new ArrayList<String>();
+		al.add("prep-pcr-free"); /// mettre quoi ici ?????
+		r.typeCodes = al;
+		
+		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
+		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);	
 	}
 	
 	public static void createProcessResolution(ContextValidation ctx) {
