@@ -247,8 +247,9 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	}
 
 	private List<PropertyDefinition> getIrysDepotProperties() {
-		// TODO Auto-generated method stub
-		return null;
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+        propertyDefinitions.add(newPropertiesDefinition("Version Logiciel", "softwareVersion", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
+		return propertyDefinitions;
 	}
 
 	private static List<PropertyDefinition> getNanoporeMiniSpinProperties() throws DAOException {
