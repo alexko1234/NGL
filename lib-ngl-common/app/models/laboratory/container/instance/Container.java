@@ -71,8 +71,8 @@ public class Container extends DBObject implements IValidation {
 	public Set<QualityControlResult> qualityControlResults; //TODO GA remove
 
 	//Stock management 
-	public PropertySingleValue volume;        //TODO GA rename to volume
-	public PropertySingleValue concentration; //TODO GA rename to concentration
+	public PropertySingleValue volume;        
+	public PropertySingleValue concentration; 
 	public PropertySingleValue quantity; 	
 
 	
@@ -82,7 +82,7 @@ public class Container extends DBObject implements IValidation {
 	// ExperimentType must be an internal or external experiment ( origine )
 	// List for pool experimentType
 	public Set<String> fromTransformationTypeCodes;
-	//public Set<String> fromTransformationCodes; //TODO GA need management
+	public Set<String> fromTransformationCodes; 
 	//TODO GA merge in same objet processTypeCode and processCode and add a list of this object
 	public Set<String> processTypeCodes;
 	public Set<String> processCodes;

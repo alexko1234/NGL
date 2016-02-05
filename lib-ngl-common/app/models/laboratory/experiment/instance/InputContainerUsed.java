@@ -16,7 +16,8 @@ public class InputContainerUsed extends AbstractContainerUsed {
 	
 	public Set<String> projectCodes; 
 	public Set<String> sampleCodes; 
-	public Set<String> fromTransformationTypeCodes; 
+	public Set<String> fromTransformationTypeCodes;
+	public Set<String> fromTransformationCodes;
 	public Set<String> processTypeCodes;
 	public Set<String> processCodes ;
 	

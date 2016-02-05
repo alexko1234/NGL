@@ -284,6 +284,18 @@ public class ExpWorkflowsHelper {
 		}
 		return _fromExperimentTypeCodes;
 	}
+	
+	private static Set<String> getFromExperimentCodes(Experiment exp, AtomicTransfertMethod atm) {
+		Set<String> _fromExperimentCodes = new HashSet<String>(0);
+		if(ExperimentCategory.CODE.transformation.equals(ExperimentCategory.CODE.valueOf(exp.categoryCode))){
+			_fromExperimentCodes.add(exp.code);
+		}else{
+			_fromExperimentCodes = atm.inputContainerUseds.stream()
+					.filter((InputContainerUsed icu) -> icu.fromTransformationCodes != null)
+					.map((InputContainerUsed icu) -> icu.fromTransformationCodes).flatMap(Set::stream).collect(Collectors.toSet());
+		}
+		return _fromExperimentCodes;
+	}
 
 
 	private static List<Content> getContents(Experiment exp, AtomicTransfertMethod atm) {
@@ -413,6 +425,7 @@ public class ExpWorkflowsHelper {
 
 	private static List<Container> createOutputContainers(Experiment exp, AtomicTransfertMethod atm, ContextValidation validation) {
 		Set<String> fromTransformationTypeCodes = getFromExperimentTypeCodes(exp, atm);
+		Set<String> fromTransformationCodes = getFromExperimentCodes(exp, atm);
 		Map<String, PropertyValue> containerProperties = getPropertiesForALevel(exp, atm, CODE.Container);
 		TreeOfLifeNode tree = getTreeOfLifeNode(exp, atm);
 		
@@ -446,6 +459,7 @@ public class ExpWorkflowsHelper {
 			c.projectCodes = projectCodes;
 			c.sampleCodes = sampleCodes;
 			c.fromTransformationTypeCodes = fromTransformationTypeCodes;
+			c.fromTransformationCodes = fromTransformationCodes;			
 			c.processTypeCodes = processTypeCodes;
 			c.processCodes = inputProcessCodes;
 			c.state = state;
@@ -471,6 +485,7 @@ public class ExpWorkflowsHelper {
 				c.projectCodes = projectCodes;
 				c.sampleCodes = sampleCodes;
 				c.fromTransformationTypeCodes = fromTransformationTypeCodes;
+				c.fromTransformationCodes = fromTransformationCodes;
 				c.processTypeCodes = processTypeCodes;
 				c.processCodes = newInputProcessCodes;
 				c.state = state;
@@ -508,6 +523,7 @@ public class ExpWorkflowsHelper {
 			pc.code = icu.code;
 			pc.supportCode = icu.locationOnContainerSupport.code;
 			pc.fromTransformationTypeCodes = icu.fromTransformationTypeCodes;
+			pc.fromTransformationCodes = icu.fromTransformationCodes;			
 			pc.processCodes = icu.processCodes;
 			pc.processTypeCodes = icu.processTypeCodes;
 			return pc;
