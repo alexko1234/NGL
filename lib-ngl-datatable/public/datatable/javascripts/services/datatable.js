@@ -916,7 +916,7 @@ angular.module('datatableServices', []).
 		    			setColumnsConfig: function(columns){
 		    				if(angular.isDefined(columns)){
 		    					for(var i = 0 ; i < columns.length; i++){
-			    					if(columns[i].id == null){
+			    					if(columns[i].id === null){
 			    						columns[i].id = this.generateColumnId();
 			    					}
 			    					if(columns[i].hide && !this.config.hide.active){
@@ -1070,7 +1070,7 @@ angular.module('datatableServices', []).
 				    								count = 0;//Reset the count to 0
 				    							}
 				    							//The first time the header will be undefined
-				    							if(header == undefined){	
+				    							if(header === undefined){	
 				    								//create the new header with colspan 0 (the current column will be counted)
 							    					header =  {"label":this.config.columns[j].extraHeaders[i],"colspan":0};
 							    				}

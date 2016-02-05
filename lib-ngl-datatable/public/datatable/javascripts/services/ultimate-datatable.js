@@ -2094,7 +2094,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                                         count = 0; //Reset the count to 0
                                     }
                                     //The first time the header will be undefined
-                                    if (header == undefined) {
+                                    if (header === undefined) {
                                         //create the new header with colspan 0 (the current column will be counted)
                                         header = {
                                             "label": this.config.columns[j].extraHeaders[i],
@@ -2103,7 +2103,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                                     }
 
                                     //if two near columns have the same header
-                                    if (this.config.columns[j].extraHeaders[i] == header.label) {
+                                    if (this.config.columns[j].extraHeaders[i] === header.label) {
                                         header.colspan += 1;
                                     } else {
                                         //We have a new header
@@ -2312,7 +2312,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
 
             getFilter: function(col) {
                 var filter = '';
-                if (col.convertValue != undefined && col.convertValue.active == true && col.convertValue.saveMeasureValue != col.convertValue.displayMeasureValue) {
+                if (col.convertValue !== undefined && col.convertValue.active === true && col.convertValue.saveMeasureValue != col.convertValue.displayMeasureValue) {
                     filter += '|udtConvert:' + JSON.stringify(col.convertValue);
 
                 }
@@ -2357,7 +2357,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
 
         };
 
-        if (arguments.length == 2) {
+        if (arguments.length === 2) {
             iConfig = arguments[1];
             console.log("used bad constructor for datatable, only one argument is required the config");
         }
@@ -2388,7 +2388,7 @@ directive('udtAutoselect',['$parse', function($parse) {
 						var model = $parse(match[7]);
 						scope.$watch(model, function(value){
 							if(value){
-				                if(value.length === 1 && (ngModel.$modelValue == undefined || ngModel.$modelValue == "")){
+				                if(value.length === 1 && (ngModel.$modelValue === undefined || ngModel.$modelValue === "")){
 									ngModel.$setViewValue(value[0].code);
 									ngModel.$render();
 								}
@@ -2732,7 +2732,7 @@ directive("udtCell", function(){
 			    	};
 
 			    	scope.udtTableFunctions.getConvertDirective = function(col, header){
-			    		if(col.convertValue != undefined && col.convertValue.active == true && col.convertValue.saveMeasureValue != col.convertValue.displayMeasureValue){
+			    		if(col.convertValue != undefined && col.convertValue.active === true && col.convertValue.saveMeasureValue !== col.convertValue.displayMeasureValue){
 			    			return 'udt-convertvalue="col.convertValue"';
 			    		}
 			    		return "";
@@ -3055,7 +3055,7 @@ directive('udtDefaultValue',['$parse', function($parse) {
 	    				});
 	    				//TODO GA ?? better way with formatter
 						scope.$watch(ngModel, function(value){
-				                if(_col != null && (ngModel.$modelValue == undefined || ngModel.$modelValue == "")){
+				                if(_col != null && (ngModel.$modelValue === undefined || ngModel.$modelValue === "")){
 									if(_col.type === "boolean"){
 										if(_col.defaultValues === "true" || _col.defaultValues === true){
 											ngModel.$setViewValue(true);
@@ -3109,7 +3109,7 @@ directive('udtForm', function(){
 		}
 		
 		scope.$watch('keywords', function(newValue, oldValue) {
-			if (!newValue || newValue == '' || !scope.active) {
+			if (!newValue || newValue === '' || !scope.active) {
 				if(scope.udtHighlight !== undefined && scope.udtHighlight !== null)
 					element.html(scope.udtHighlight.toString());
 				return false;
@@ -3141,11 +3141,11 @@ directive("udtHtmlFilter", function($filter) {
 					  link: function(scope, element, attrs, ngModelController) {
 					    ngModelController.$formatters.push(function(data) {
 					    	var convertedData = data;
-					    	  if(attrs.udtHtmlFilter == "datetime"){
+					    	  if(attrs.udtHtmlFilter === "datetime"){
 					    			convertedData = $filter('date')(convertedData, scope.udtTableFunctions.messages.Messages("datetime.format"));
-					    	   }else if(attrs.udtHtmlFilter == "date"){
+					    	   }else if(attrs.udtHtmlFilter === "date"){
 					    		   	convertedData = $filter('date')(convertedData, scope.udtTableFunctions.messages.Messages("date.format"));
-					    	   }else if(attrs.udtHtmlFilter == "number"){
+					    	   }else if(attrs.udtHtmlFilter === "number"){
 					    		   	convertedData = $filter('number')(convertedData);
 					    	   }					    	
 					    	  return convertedData;
@@ -3153,7 +3153,7 @@ directive("udtHtmlFilter", function($filter) {
 					    
 					    ngModelController.$parsers.push(function(data) {
 					    	var convertedData = data;
-					    	   if(attrs.udtHtmlFilter == "number" && null != convertedData && undefined != convertedData 
+					    	   if(attrs.udtHtmlFilter === "number" && null != convertedData && undefined != convertedData 
 					    			   && angular.isString(convertedData)){
 					    		   convertedData = convertedData.replace(",",".");
 					    		   if(!isNaN(convertedData) && convertedData !== ""){						    			   
@@ -3560,7 +3560,7 @@ factory('udtConvertValueServices', [function() {
 									if(precision !== undefined){
 										value = value.toPrecision(precision);
 									}
-								}else if(convert == undefined){
+								}else if(convert === undefined){
 									throw "Error: Unknown Conversion "+inputUnit+" to "+outputUnit;
 									return undefined;
 								}
