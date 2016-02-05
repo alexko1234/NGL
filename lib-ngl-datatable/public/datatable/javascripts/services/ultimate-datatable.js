@@ -799,6 +799,8 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                         if (that.config.edit.byDefault) {
                             that.config.edit.withoutSelect = true;
                             that.setEdit();
+                        }else if(!that.config.edit.byDefault && that.config.edit.withoutSelect){
+                        	that.config.edit.withoutSelect = false;                            
                         }
 						if(angular.isFunction(that.config.callbackEndDisplayResult)){
 							that.config.callbackEndDisplayResult();
