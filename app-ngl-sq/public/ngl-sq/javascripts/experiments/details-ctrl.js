@@ -488,7 +488,29 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			        	 "listStyle":"bt-select-filter",
 			        	 "choiceInList":true,
 			        	 "possibleValues": 'lists.getKitCatalogs()',
-			        	 "render":'<div bt-select ng-model="value.data.kitCatalogCode" bt-options="kitCatalog.code as kitCatalog.name for kitCatalog in lists.getKitCatalogs()" ng-edit="false" placeholder="Messages("experiment.placeholder.reagents.kit")"></div>',
+			        	 "render":'<div bt-select ng-model="value.data.kitCatalogCode" bt-options="v.code as v.name for v in lists.getKitCatalogs()" ng-edit="false"></div>',
+			        	 "edit":true
+			         },
+			         {
+			        	 "header":Messages("reagents.table.boxname"),
+			        	 "property":"boxCatalogCode",
+			        	 "order":false,
+			        	 "type":"text",
+			        	 "listStyle":"bt-select-filter",
+			        	 "choiceInList":true,
+			        	 "possibleValues": 'getBoxCatalogs(value)',
+			        	 "render":'<div bt-select ng-model="value.data.boxCatalogCode" bt-options="v.code as v.name for v in getBoxCatalogs(value)" ng-edit="false"></div>',			        	 
+			        	 "edit":true
+			         },
+			         {
+			        	 "header":Messages("reagents.table.reagentname"),
+			        	 "property":"reagentCatalogCode",
+			        	 "order":false,
+			        	 "type":"text",
+			        	 "listStyle":"bt-select-filter",
+			        	 "choiceInList":true,
+			        	 "possibleValues": 'getReagentCatalogs(value)',
+			        	 "render":'<div bt-select ng-model="value.data.reagentCatalogCode" bt-options="v.code as v.name for v in getReagentCatalogs(value)" ng-edit="false"></div>',			        	 
 			        	 "edit":true
 			         },
 			         {
@@ -590,6 +612,25 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		}
 	};
 
+	$scope.getBoxCatalogs = function(value){
+		
+		var kitCatalogCode = $parse("data.kitCatalogCode")(value);
+		
+		if(null !== kitCatalogCode && undefined !== kitCatalogCode){
+			return lists.getBoxCatalogs({"kitCatalogCode":kitCatalogCode},"boxCatalogs-"+kitCatalogCode);
+		}				
+	}
+	
+	$scope.getReagentCatalogs = function(value){
+		
+		var kitCatalogCode = $parse("data.kitCatalogCode")(value);
+		var boxCatalogCode = $parse("data.boxCatalogCode")(value);
+		
+		if(null !== kitCatalogCode && undefined !== kitCatalogCode
+				&& null !== boxCatalogCode && undefined !== boxCatalogCode){
+			return lists.getReagentCatalogs({"kitCatalogCode":kitCatalogCode,"boxCatalogCode":boxCatalogCode},"reagentCatalogs-"+kitCatalogCode+"-"+boxCatalogCode);
+		}				
+	}
 
 	$scope.searchReagents = function(){
 		$http.get(jsRoutes.controllers.reagents.api.Reagents.list().url, {params:{"barCode":$scope.searchBarCode, "boxBarCode":$scope.searchBarCode}})
