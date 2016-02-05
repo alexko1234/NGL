@@ -1,4 +1,4 @@
-angular.module('home').controller('OneToVoidCtrl',['$scope', '$parse','atmToSingleDatatable',
+angular.module('home').controller('BionanoDepotCtrl',['$scope', '$parse','atmToSingleDatatable',
                                                              function($scope,$parse, atmToSingleDatatable) {
 	 var datatableConfig = {
 			name:"FDR_Void",
@@ -92,7 +92,10 @@ angular.module('home').controller('OneToVoidCtrl',['$scope', '$parse','atmToSing
 				by:'ContainerInputCode'
 			},
 			remove:{
-				active:false,
+				active: ( $scope.isNewState()),
+				withEdit : true,
+				showButton: ($scope.isNewState()),				
+				mode:'local'
 			},
 			save:{
 				active:true,
@@ -103,8 +106,9 @@ angular.module('home').controller('OneToVoidCtrl',['$scope', '$parse','atmToSing
 				active:true
 			},
 			edit:{
-				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
-				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),				
+				active: true,
+				showButton: true,
+				byDefault:$scope.isCreationMode(),				
 				columnMode:true
 			},
 			messages:{
@@ -133,7 +137,7 @@ angular.module('home').controller('OneToVoidCtrl',['$scope', '$parse','atmToSing
 		$scope.$on('refresh', function(e) {
 			console.log("call event refresh on one-to-void");		
 			var dtConfig = $scope.atmService.data.getConfig();
-			dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
+			dtConfig.edit.byDefault= false;
 			dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 			$scope.atmService.data.setConfig(dtConfig);
 			
