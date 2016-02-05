@@ -53,7 +53,7 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 	private void updateLSRunProjMissingData(ContextValidation contextError) {
 		MongoDBResult<ReadSet> results = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,  
 				DBQuery.or(DBQuery.is("location",null), DBQuery.is("sampleOnContainer.properties.insertSizeGoal",null),
-						DBQuery.and(DBQuery.is("sampleOnContainer.sampleCategoryCode", "RNA"), DBQuery.is("sampleOnContainer.properties.strandOrientation",null))),getReadSetKeys());
+						DBQuery.and(DBQuery.in("sampleOnContainer.sampleCategoryCode", "RNA", "cDNA"), DBQuery.is("sampleOnContainer.properties.strandOrientation",null))),getReadSetKeys());
 		
 		Logger.info("Start synchro LSRunProjMissingData  : nb ReadSet ="+results.count());
 		logger.info("Start synchro LSRunProjMissingData  : nb ReadSet ="+results.count());
@@ -78,7 +78,7 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 		ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
 		validateReadSet(readset, contextValidation);
 		if(!contextValidation.hasErrors()){
-			if("RNA".equals(sampleCategoryCode)){
+			if("RNA".equals(sampleCategoryCode) || "cDNA".equals(sampleCategoryCode)){
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class
 						, DBQuery.is("code", readset.code)
 						, DBUpdate.set("path", readset.path)
