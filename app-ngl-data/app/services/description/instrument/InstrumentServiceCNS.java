@@ -248,7 +248,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 
 	private List<PropertyDefinition> getIrysDepotProperties() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-        propertyDefinitions.add(newPropertiesDefinition("Version Logiciel", "softwareVersion", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));
+        propertyDefinitions.add(newPropertiesDefinition("Version Logiciel", "softwareVersion", LevelService.getLevels(Level.CODE.Instrument),String.class, false, "single",100));
 		return propertyDefinitions;
 	}
 
