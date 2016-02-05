@@ -81,7 +81,7 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 			"property" : "sampleOnInputContainer.properties.tag.value",
 			"type" : "string",
 			"order" : true,
-			"hide" : false,
+			"hide" : true,
 			"groupMethod" : "collect",
 			"render" : "<div list-resize='cellValue | unique' list-resize-min-size='3'>",
 			"position" : 4

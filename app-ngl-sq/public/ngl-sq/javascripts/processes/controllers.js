@@ -131,7 +131,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 			        	 "hide":true,
 			        	 "type":"text",
 			        	 "filter":"codes:'valuation'",
-			        	 "position":13
+			        	 "position":13,
+			        	 "groupMethod":"unique"
 			         },
 			         {
 						"header":Messages("containers.table.creationDate"),
@@ -139,7 +140,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 						"order":true,
 						"hide":true,
 						"type":"date",
-			        	 "position":14
+			        	 "position":14,
+			        	 "groupMethod":"unique"
 					 },
 					 {
 						"header":Messages("containers.table.createUser"),
@@ -147,7 +149,8 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 						"order":true,
 						"hide":true,
 						"type":"text",
-			        	 "position":15
+			        	 "position":15,
+			        	 "groupMethod":"unique"
 					 },
 					 {
 						"header":Messages("containers.table.storageCode"),
