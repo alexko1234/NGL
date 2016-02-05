@@ -1,5 +1,7 @@
 package models.laboratory.reporting.instance;
 
+import com.sun.javafx.collections.MappingChange.Map;
+
 import validation.ContextValidation;
 import validation.IValidation;
 
@@ -31,6 +33,9 @@ public class Column implements IValidation{
 	public Double position;
 	
 	public String[] queryIncludeKeys; //if void used property
+	
+	public Map<String, ?> convertValue;
+	
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
