@@ -501,6 +501,14 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			        	 "possibleValues": 'getBoxCatalogs(value)',
 			        	 "render":'<div bt-select ng-model="value.data.boxCatalogCode" bt-options="v.code as v.name for v in getBoxCatalogs(value)" ng-edit="false"></div>',			        	 
 			        	 "edit":true
+			         },			         
+			         {
+			        	 "header":Messages("reagents.table.boxcode"),
+			        	 "property":"boxCode",
+			        	 "order":true,
+			        	 "type":"text",
+			        	 "edit":true,
+			        	 "editDirectives":'ng-keydown="scan($event,value.data,\'boxCode\')"'
 			         },
 			         {
 			        	 "header":Messages("reagents.table.reagentname"),
@@ -512,14 +520,6 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			        	 "possibleValues": 'getReagentCatalogs(value)',
 			        	 "render":'<div bt-select ng-model="value.data.reagentCatalogCode" bt-options="v.code as v.name for v in getReagentCatalogs(value)" ng-edit="false"></div>',			        	 
 			        	 "edit":true
-			         },
-			         {
-			        	 "header":Messages("reagents.table.boxcode"),
-			        	 "property":"boxCode",
-			        	 "order":true,
-			        	 "type":"text",
-			        	 "edit":true,
-			        	 "editDirectives":'ng-keydown="scan($event,value.data,\'boxCode\')"'
 			         },
 			         {
 			        	 "header":Messages("reagents.table.reagentcode"),
