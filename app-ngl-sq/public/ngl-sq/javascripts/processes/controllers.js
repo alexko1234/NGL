@@ -703,20 +703,23 @@ var	datatableConfig = {
 		        	 "type":"text"
 		         },   */
 		         {
-		        	 "header":Messages("processes.table.sampleOnInputContainer.properties.tag"),
-		        	 "property":"sampleOnInputContainer.properties.tag.value",
-		        	 "order":true,
-		        	 "hide":true,
-		        	 "position":4,
-		        	 "type":"text"
+		        	"header" : Messages("containers.table.tags"),
+		 			"property" : "sampleOnInputContainer.properties.tag.value",
+		 			"type" : "text",
+		 			"order" : true,
+		 			"hide" : true,
+		 			"position":4,
+		 			"groupMethod" : "collect",
+		 			"render" : "<div list-resize='cellValue | unique' list-resize-min-size='3'>",		        	
 		         },		         
 		         {
-		        	 "header":Messages("processes.table.typeCode"),
-		        	 "property":"typeCode",
-		        	 "order":true,
-		        	 "hide":true,
-		        	 "position":9,
-		        	 "type":"text"
+		        	 "header" : Messages("processes.table.typeCode"),
+		 			"property" : "typeCode",
+		 			"filter" : "codes:'type'",
+		 			"order" : true,
+		 			"hide" : true,
+		 			"position" : 9,
+		 			"type" : "text"		        	
 		         },
 		         {
 		        	 "header":Messages("processes.table.stateCode"),
