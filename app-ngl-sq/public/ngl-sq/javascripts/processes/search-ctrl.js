@@ -9,7 +9,8 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 				mode:'local'
 			},
 			order:{
-				by:'code',
+				by:'traceInformation.creationDate',
+				reverse : true,
 				mode:'local'
 			},
 			hide:{
@@ -75,7 +76,8 @@ angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$rou
 				mode:'local'
 			},
 			order:{
-				by:'code',
+				by:'traceInformation.creationDate',
+				reverse : true,
 				mode:'local'
 			},
 			edit:{
@@ -138,7 +140,8 @@ angular.module('home').controller('SearchRemoveCtrl', ['$scope','$location','$ro
 				mode:'local'
 			},
 			order:{
-				by:'code',
+				by:'traceInformation.creationDate',
+				reverse : true,
 				mode:'local'
 			},
 			edit:{
