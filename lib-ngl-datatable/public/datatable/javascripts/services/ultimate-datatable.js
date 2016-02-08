@@ -2312,7 +2312,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
 
             getFilter: function(col) {
                 var filter = '';
-                if (col.convertValue !== undefined && col.convertValue.active === true && col.convertValue.saveMeasureValue != col.convertValue.displayMeasureValue) {
+                if (col.convertValue !== undefined && col.convertValue !== null && col.convertValue.active === true && col.convertValue.saveMeasureValue != col.convertValue.displayMeasureValue) {
                     filter += '|udtConvert:' + JSON.stringify(col.convertValue);
 
                 }
@@ -2732,7 +2732,7 @@ directive("udtCell", function(){
 			    	};
 
 			    	scope.udtTableFunctions.getConvertDirective = function(col, header){
-			    		if(col.convertValue != undefined && col.convertValue.active === true && col.convertValue.saveMeasureValue !== col.convertValue.displayMeasureValue){
+			    		if(col.convertValue != undefined && col.convertValue !== null && col.convertValue.active === true && col.convertValue.saveMeasureValue !== col.convertValue.displayMeasureValue){
 			    			return 'udt-convertvalue="col.convertValue"';
 			    		}
 			    		return "";
