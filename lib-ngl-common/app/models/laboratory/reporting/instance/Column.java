@@ -1,6 +1,7 @@
 package models.laboratory.reporting.instance;
 
-import com.sun.javafx.collections.MappingChange.Map;
+
+import java.util.Map;
 
 import validation.ContextValidation;
 import validation.IValidation;
@@ -25,6 +26,7 @@ public class Column implements IValidation{
 	public String groupBy; //list group by
 	
 	public String possibleValues;
+	public Map<String, ?> convertValue;
 	public String tdClass;
 	
 	public String url;
@@ -34,7 +36,7 @@ public class Column implements IValidation{
 	
 	public String[] queryIncludeKeys; //if void used property
 	
-	public Map<String, ?> convertValue;
+	
 	
 	
 	@Override

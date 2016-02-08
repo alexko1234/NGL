@@ -1906,7 +1906,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                             columns[i].position = initPosition++;
                         }
 
-                        if (columns[i].convertValue !== undefined && columns[i].convertValue.active === true && (columns[i].convertValue.displayMeasureValue === undefined || columns[i].convertValue.saveMeasureValue === undefined)) {
+                        if (columns[i].convertValue !== undefined && columns[i].convertValue !== null && columns[i].convertValue.active === true && (columns[i].convertValue.displayMeasureValue === undefined || columns[i].convertValue.saveMeasureValue === undefined)) {
                             throw "Columns config error: " + columns[i].property + " convertValue=active but convertValue.displayMeasureValue or convertValue.saveMeasureValue is missing";
                         }
 
