@@ -10,7 +10,13 @@ import models.utils.InstanceConstants;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
+import akka.actor.ActorRef;
+import akka.actor.Props;
 import play.Logger;
+import play.Play;
+import play.libs.Akka;
+import rules.services.RulesActor6;
+import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.container.instance.ContainerSupportValidationHelper;
@@ -38,8 +44,30 @@ public class ContSupportWorkflows extends Workflows<ContainerSupport> {
 	
 	@Override
 	public void applySuccessPostStateRules(ContextValidation validation,
-			ContainerSupport container) {
-				
+			ContainerSupport containerSupport) {
+		
+		if("IS".equals(containerSupport.state.code) || "UA".equals(containerSupport.state.code)){
+			//TODO GA improve the extraction of fromExperimentTypeCodes after refactoring inputProcessCodes and processTypeCode
+			 
+			 boolean unsetFromExperimentTypeCodes = false;
+			 if(null != containerSupport.fromExperimentTypeCodes && containerSupport.fromExperimentTypeCodes.size() == 1){
+				 String code = containerSupport.fromExperimentTypeCodes.iterator().next();
+				 if(code.startsWith("ext"))unsetFromExperimentTypeCodes=true;
+			 }else if(null != containerSupport.fromExperimentTypeCodes && containerSupport.fromExperimentTypeCodes.size() > 1){
+				 Logger.error("several fromExperimentTypeCodes not managed");
+			 }
+			
+			if(unsetFromExperimentTypeCodes){
+				MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, Container.class,
+						DBQuery.is("code",containerSupport.code), DBUpdate.unset("fromExperimentTypeCodes"));
+			}	
+		} 
+		callWorkflowRules(validation,containerSupport);		
+	}
+	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
+
+	public static void callWorkflowRules(ContextValidation validation, ContainerSupport containerSupport) {
+		rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", containerSupport, validation),null);
 	}
 
 	@Override
