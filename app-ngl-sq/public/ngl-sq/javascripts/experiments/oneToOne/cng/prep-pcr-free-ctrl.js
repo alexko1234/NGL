@@ -3,11 +3,11 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 // FDS 04/02/2016 -- JIRA NGL-894 : prep pcr free experiment
 
 	var datatableConfig = {
-			name:"FDR_Tube A_CHANGER", //// faut mettre quoi ??
+			name:"FDR_Plaque", //peut servir pour le nom de fichier si export demandé
 			columns:[
 			         //-------- INPUT containers section -----------
 			         
-			         /* plus parlant pour l'utilisateur d'avoir Plate barcode | line | colomn
+			         /* plus parlant pour l'utilisateur d'avoir Plate barcode | line | column
 					  {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"inputContainer.code",
@@ -18,18 +18,17 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			        	 "extraHeaders":{0:"Inputs"}
 			         },	
 			         */				
-			         //TEST ajout "Plate barcode") HARDCODED....
 			          {
-			        	 "header":Messages("Plate barcode"),
+			        	 "header":Messages("containers.table.support.name"),
 			        	 "property":"inputContainerUsed.locationOnContainerSupport.code",
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":1,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
-			         // TEST "line" HARDCODED....
-			          {
-			        	 "header":Messages("line"),
+			         // Line
+			         {
+			        	 "header":Messages("containers.table.support.line"),
 			        	 "property":"inputContainerUsed.locationOnContainerSupport.line",
 			        	 "order":true,
 						 "hide":true,
@@ -37,13 +36,14 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			        	 "position":2,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
-			         // TEST "Column" HARDCODED...
-			          {
-			        	 "header":Messages("Column"),
-			        	 "property":"inputContainerUsed.locationOnContainerSupport.column",
+			         // column
+			         // astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel forcer a numerique.=> type:number,   property:  *1
+			         {
+			        	 "header":Messages("containers.table.support.column"),
+			        	 "property":"inputContainerUsed.locationOnContainerSupport.column*1",
 			        	 "order":true,
 						 "hide":true,
-			        	 "type":"text",
+			        	 "type":"number",
 			        	 "position":3,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },	
@@ -101,19 +101,10 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			        	 "position":30,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
-			         //------ OUTPUT containers section ------
 			         
-			         // TEST "Plate barcode" HARDCODED
-			         {
-			        	 "header":"Plate barcode",
-			        	 "property":"intrument.code", //  un test il faudrait instrumentProperty.outPutContainerSupportCode ???
-						 "hide":true,
-						 "edit":false,
-			        	 "type":"text",
-			        	 "position":100,
-			        	 "extraHeaders":{0:"Outputs"}
-			         },
-			         /* ne pas aficher les containercodes..
+			         //------ OUTPUT containers section ------
+
+		            /* ne pas aficher les containercodes ????? 
 			         {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"outputContainerUsed.code",
@@ -121,9 +112,29 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 						 "hide":true,
 						 "edit":false,
 			        	 "type":"text",
-			        	 "position":101,
+			        	 "position":100,
 			        	 "extraHeaders":{0:"Outputs"}
 			         },*/
+			         // TEST Line
+			         {
+			        	 "header":Messages("containers.table.support.line"),
+			        	 "property":"outputContainerUsed.locationOnContainerSupport.line",
+			        	 "order":true,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":110,
+			        	 "extraHeaders":{0:"Outputs"}
+			         },
+			         // TEST column
+			         {
+			        	 "header":Messages("containers.table.support.column"),
+			        	 "property":"outputContainerUsed.locationOnContainerSupport.column",
+			        	 "order":true,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":111,
+			        	 "extraHeaders":{0:"Outputs"}
+			         },	
 			         // Volume
 			         {
 			        	 "header":Messages("containers.table.volume")+ " (µl)",
@@ -132,40 +143,19 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":102,
+			        	 "position":120,
 			        	 "extraHeaders":{0:"Outputs"}
 			         },
 			         // Pas de concentration, elle sera mesuree plus tard
-			         // TEST "Tag" HARDCODED
-			         {
-			        	 "header":Messages("Tag"),
-			        	 "property":"", //???
-			        	 "order":true,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":103,
-			        	 "extraHeaders":{0:"Outputs"}
-			         },
-			         // TEST "Tag Category" HARDCODED
-			         {
-			        	 "header":Messages("Tag Category"),
-			        	 "property":"", //???
-			        	 "order":true,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":104,
-			        	 "extraHeaders":{0:"Outputs"}
-			         },
 			         // Etat outpout container
 			         {
 			        	 "header":Messages("containers.table.stateCode"),
-			        	 //"property":"outputContainer.state.code | codes:'state'", /// comment ca marche ???? a l'air de planter....
-			        	 "property":"outputContainer.state.code",
+			        	 "property":"outputContainer.state.code | codes:'state'",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			        	 "position":110,
+			        	 "position":160,
 			        	 "extraHeaders":{0:"Outputs"}
 			         },
 			         //Storage... ne pas l'afficher N fois !!!!!
@@ -176,7 +166,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"text",
-			        	 "position":120,
+			        	 "position":170,
 			        	 "extraHeaders":{0:"Outputs"}
 			         }
 			         ],

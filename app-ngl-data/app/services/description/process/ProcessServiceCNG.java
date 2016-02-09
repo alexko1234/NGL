@@ -49,7 +49,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		// Modif GA=> ListExperimentType doit etre ordonnee=> Arrays.asList( )
 		//            par convention les experimentTypes externes aux processus doivent avoir l'indice (-1) dans la methode getPET
 		// TODO: il faudra renommer les 'ext' en donnant le nom du processus ex: ext-to-denat-dil-lib---> ext-to-illumina-run
-		//       pour distinguer les containers qui arrivent dans le processus sans "fromExperimenType" des containers qui viendraient 
+		//       pour distinguer les containers qui arrivent dans le processus sans "fromExperimentType" des containers qui viendraient 
 		//       d'un collaborateur exterieur ex : ext-denat-dil-lib
 		
 		// JIRA 781 renommer le Processus long 
@@ -165,5 +165,4 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		
 		return propertyDefinitions;
 	}
-
 }

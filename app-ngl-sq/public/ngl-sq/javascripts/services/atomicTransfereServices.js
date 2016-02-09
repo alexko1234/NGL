@@ -454,7 +454,8 @@ angular.module('atomicTransfereServices', [])
 										line.atomicTransfertMethod = atomicTransfertMethod;
 										line.atomicIndex=0;
 									}else{
-										line.atomicTransfertMethod = $that.newAtomicTransfertMethod();
+										//GA 08/02/2016 input plate organization is the same as ouput plate organization !!
+										line.atomicTransfertMethod = $that.newAtomicTransfertMethod(container.support.line, container.support.column);
 										line.atomicIndex=i++;
 									}
 										
