@@ -15,7 +15,7 @@
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="process">@Messages("containerSupports.menu")<b class="caret"></b></a>
 							<ul class="dropdown-menu" role="menu" aria-labelledby="process">
 								<li class="@("active".when(nav == "containerSupports.search"))"><a href="@controllers.containers.tpl.routes.ContainerSupports.home("search")">@Messages("containerSupports.menu.search")</a></li>
-								@if(PermissionHelper.checkPermission(Context.current().session(), "writing")){
+								@if(PermissionHelper.checkPermission(Context.current().request().username(), "writing")){
 									<li class="@("active".when(nav == "containerSupports.state"))"><a href="@controllers.containers.tpl.routes.ContainerSupports.home("state")">@Messages("containerSupports.menu.state")</a></li>																				
 								}
 							</ul>
@@ -25,7 +25,7 @@
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="process">@Messages("containers.menu")<b class="caret"></b></a>
 							<ul class="dropdown-menu" role="menu" aria-labelledby="process">
 								<li class="@("active".when(nav == "containers.search"))"><a href="@controllers.containers.tpl.routes.Containers.home("search")">@Messages("containers.menu.search")</a></li>
-								@if(PermissionHelper.checkPermission(Context.current().session(), "writing")){
+								@if(PermissionHelper.checkPermission(Context.current().request().username(), "writing")){
 									<li class="@("active".when(nav == "containers.state"))"><a href="@controllers.containers.tpl.routes.Containers.home("state")">@Messages("containers.menu.state")</a></li>																				
 								}
 							</ul>
@@ -35,7 +35,7 @@
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="process">@Messages("processes.menu")<b class="caret"></b></a>
 							<ul class="dropdown-menu" role="menu" aria-labelledby="process">
 								<li class="@("active".when(nav == "processes.search"))"><a href="@controllers.processes.tpl.routes.Processes.home("search")">@Messages("processes.menu.search")</a></li>																				
-								@if(PermissionHelper.checkPermission(Context.current().session(), "writing")){
+								@if(PermissionHelper.checkPermission(Context.current().request().username(), "writing")){
 									<li class="@("active".when(nav == "processes.new"))"><a href="@controllers.processes.tpl.routes.Processes.home("new")">@Messages("processes.menu.creation")</a></li>
 									<li class="@("active".when(nav == "processes.state"))"><a href="@controllers.processes.tpl.routes.Processes.home("state")">@Messages("processes.menu.state")</a></li>
 									<li class="@("active".when(nav == "processes.remove"))"><a href="@controllers.processes.tpl.routes.Processes.home("remove")">@Messages("processes.menu.remove")</a></li>
@@ -47,7 +47,7 @@
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="process">@Messages("experiments.menu")<b class="caret"></b></a>
 							<ul class="dropdown-menu" role="menu" aria-labelledby="process">
 								<li class="@("active".when(nav ==  "experiments.search"))"><a href="@controllers.experiments.tpl.routes.Experiments.home("search")">@Messages("experiments.menu.search")</a></li>
-								@if(PermissionHelper.checkPermission(Context.current().session(), "writing")){
+								@if(PermissionHelper.checkPermission(Context.current().request().username(), "writing")){
 									<li class="@("active".when(nav ==  "experiments.new"))"><a href="@controllers.experiments.tpl.routes.Experiments.home("new")">@Messages("experiments.menu.creation")</a></li>
 								}
 							</ul>

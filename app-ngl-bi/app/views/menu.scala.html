@@ -16,7 +16,7 @@
 
     	<div class="collapse navbar-collapse">
     		<ul class="nav navbar-nav">
-    			@if(PermissionHelper.checkPermission(Context.current().session(), "writing")){
+    			@if(PermissionHelper.checkPermission(Context.current().request().username(), "writing")){
 					<li class="dropdown @("active".when(nav.endsWith("valuation")))">
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="valuation">@Messages("valuation.menu")<b class="caret"></b></a>
 						<ul class="dropdown-menu" role="menu" aria-labelledby="valuation">
@@ -31,7 +31,7 @@
 					<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="runs">@Messages("runs.menu")<b class="caret"></b></a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="runs">
 						<li class="@("active".when(nav == "runs.search"))"><a href="@controllers.runs.tpl.routes.Runs.home("search")">@Messages("runs.menu.search")</a></li>																				
-						@if(PermissionHelper.checkPermission(Context.current().session(), "writing")){
+						@if(PermissionHelper.checkPermission(Context.current().request().username(), "writing")){
 							<li class="@("active".when(nav == "runs.valuation"))"><a href="@controllers.runs.tpl.routes.Runs.home("valuation")">@Messages("runs.menu.valuation")</a></li>																												
 							<li class="@("active".when(nav == "runs.state"))"><a href="@controllers.runs.tpl.routes.Runs.home("state")">@Messages("runs.menu.state")</a></li>
 						}
@@ -42,7 +42,7 @@
 					<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="readsets">@Messages("readsets.menu")<b class="caret"></b></a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="readsets">
 						<li class="@("active".when(nav == "readsets.search"))"><a href="@controllers.readsets.tpl.routes.ReadSets.home("search")">@Messages("readsets.menu.search")</a></li>																				
-						@if(PermissionHelper.checkPermission(Context.current().session(), "writing")){	
+						@if(PermissionHelper.checkPermission(Context.current().request().username(), "writing")){	
 							<li class="@("active".when(nav == "readsets.valuation"))"><a href="@controllers.readsets.tpl.routes.ReadSets.home("valuation")">@Messages("readsets.menu.valuation")</a></li>	
 							<li class="@("active".when(nav == "readsets.state"))"><a href="@controllers.readsets.tpl.routes.ReadSets.home("state")">@Messages("readsets.menu.state")</a></li>
 							<li class="@("active".when(nav == "readsets.batch"))"><a href="@controllers.readsets.tpl.routes.ReadSets.home("batch")">@Messages("readsets.menu.batch")</a></li>
@@ -54,7 +54,7 @@
 					<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="readsets">@Messages("analyses.menu")<b class="caret"></b></a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="readsets">
 						<li class="@("active".when(nav == "analyses.search"))"><a href="@controllers.analyses.tpl.routes.Analyses.home("search")">@Messages("analyses.menu.search")</a></li>																				
-						@if(PermissionHelper.checkPermission(Context.current().session(), "writing")){
+						@if(PermissionHelper.checkPermission(Context.current().request().username(), "writing")){
 							<li class="@("active".when(nav == "analyses.valuation"))"><a href="@controllers.analyses.tpl.routes.Analyses.home("valuation")">@Messages("analyses.menu.valuation")</a></li>	
 							<li class="@("active".when(nav == "analyses.state"))"><a href="@controllers.analyses.tpl.routes.Analyses.home("state")">@Messages("analyses.menu.state")</a></li>
 						}
@@ -80,7 +80,7 @@
 					<a href="@routes.Assets.at("ngl-bi/documentation/DOC_UTILISATEUR.pdf")" target="doc">@Messages("docs.menu")</a>
 				</li>
 				
-				@if(PermissionHelper.checkPermission(Context.current().session(), "admin")){
+				@if(PermissionHelper.checkPermission(Context.current().request().username(), "admin")){
 					<li class="dropdown @("active".when(nav.startsWith("admin")))">
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="admin"><i class="fa fa-users"></i> @Messages("authorisation.menu")<b class="caret"></b></a>
 						<ul class="dropdown-menu" role="menu" aria-labelledby="users">
@@ -88,7 +88,7 @@
 						</ul>
 					</li>
 				} 
-				<!-- 	<li><a href="#">@PermissionHelper.checkPermission(Context.current().session(), "admin")</a></li>	-->
+				<!-- 	<li><a href="#">@PermissionHelper.checkPermission(Context.current().request().username(), "admin")</a></li>	-->
 				
 								
 			</ul>

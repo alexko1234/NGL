@@ -21,25 +21,6 @@ import models.utils.dao.DAOException;
 
 public class PermissionHelper {
 	
-	private static final String COOKIE_SESSION = "NGL_FILTER_USER";
-	
-
-	/**
-	 * 
-	 * @param ses the user session
-	 * @param codePermission the code of the permission that you want to verify
-	 * @return true if the user can access to the resources
-	 * @throws DAOException 
-	 */
-	public static boolean checkPermission(Session ses, String codePermission) throws DAOException {
-		List<Permission> permissions = Permission.find.findByUserLogin(ses.get(COOKIE_SESSION));
-		for(Permission p:permissions){
-			if(codePermission.equals(p.code))
-				return true;
-		}
-		return false;
-	}
-	
 	/**
 	 * 
 	 * @param ses the user session

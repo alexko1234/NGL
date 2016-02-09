@@ -5,25 +5,25 @@
 	<div class="col-md-12 col-lg-12">
 		<div class="page-header">	
 			<div class="btn-toolbar pull-right">
-			
-				<div class="btn-group " id="experiment_action" ng-if="getNbAvailableAdditionnalButtons() > 1">
-					<a class="btn btn-default dropdown-toggle" data-toggle="dropdown"> @Messages("experiments.additionnalButtons") 
-						<span class="caret"></span>
-					</a>
-					<ul class="dropdown-menu dropdown-menu-right">
-						<li ng-repeat="button in getAdditionnalButtons() track by $index">
-							<a href="#" ng-disabled="button.isDisabled()" ng-show="button.isShow()" ng-bind="button.label" ng-click="button.click()"></a>
-						</li>
-					</ul>
-				</div>
-				<button ng-if="getNbAvailableAdditionnalButtons() === 1" ng-repeat="button in getAdditionnalButtons() track by $index" class="btn btn-default" ng-show="button.isShow()"  ng-click="button.click()" ng-bind="button.label"></button>
-			 	
-			
-							
-			
-				<button class="btn btn-default" ng-if="isDispactchModalAvailable()" ng-click="initDispatchModal()"><i class="fa fa-arrows-alt"></i></button>
+			@if(PermissionHelper.checkPermission(Context.current().request().username(), "writing")){
+					<div class="btn-group " id="experiment_action" ng-if="getNbAvailableAdditionnalButtons() > 1">
+						<a class="btn btn-default dropdown-toggle" data-toggle="dropdown"> @Messages("experiments.additionnalButtons") 
+							<span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu dropdown-menu-right">
+							<li ng-repeat="button in getAdditionnalButtons() track by $index">
+								<a href="#" ng-disabled="button.isDisabled()" ng-show="button.isShow()" ng-bind="button.label" ng-click="button.click()"></a>
+							</li>
+						</ul>
+					</div>
+					<button ng-if="getNbAvailableAdditionnalButtons() === 1" ng-repeat="button in getAdditionnalButtons() track by $index" class="btn btn-default" ng-show="button.isShow()"  ng-click="button.click()" ng-bind="button.label"></button>
+				 	
 				
-				@if(PermissionHelper.checkPermission(Context.current().session(), "writing")){
+								
+				
+					<button class="btn btn-default" ng-if="isDispactchModalAvailable()" ng-click="initDispatchModal()"><i class="fa fa-arrows-alt"></i></button>
+					
+				
 				 	<button class="btn btn-primary" ng-disabled="isSaveInProgress()" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")" ><i class="fa fa-save"></i></button>
 				 	
 				 	<div class="btn-group" ng-switch on="mainService.isEditMode()" ng-if="isEditModeAvailable()">
@@ -41,11 +41,11 @@
 				 		<button class="btn btn-default" ng-if="isWorkflowModeAvailable('IP')" ng-click="startExperiment()" title="@Messages("experiments.button.start")"><i class="fa fa-play"></i> @Messages("experiments.button.start")</button>
 						<button class="btn btn-default" ng-if="isWorkflowModeAvailable('F')" ng-click="finishExperiment()" title="@Messages("experiments.button.finish")"><i class="fa fa-stop"></i> @Messages("experiments.button.finish")</button>		
 			 		</div>
+			 	
+			 		<button class="btn btn-default" data-toggle="modal" data-target="#commentModal" title="@Messages("experiment.button.addComment")"><i class="fa fa-comment"></i></button>
+			 	
 			 	}
-			 	
-			 	<button class="btn btn-default" data-toggle="modal" data-target="#commentModal" title="@Messages("experiment.button.addComment")"><i class="fa fa-comment"></i></button>
-			 	
-				
+			 				 					
 			</div>	
 			 <h1>		
 			 	<span ng-bind="experiment.code || '@Messages("experiments.noCode")'"></span> 			 	
