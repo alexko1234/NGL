@@ -20,7 +20,9 @@ import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.mongojack.DBQuery;
+import org.mongojack.DBQuery.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +50,7 @@ public class LimsRunServices implements ILimsRunServices {
 	public Experiment getExperiments(Experiment experiment) {
 		//NGL
 		List<models.laboratory.experiment.instance.Experiment> nglExps =  MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, models.laboratory.experiment.instance.Experiment.class, 
-				DBQuery.is("typeCode", "illumina-depot").in("inputContainerSupportCodes", experiment.containerSupportCode)).toList();
+				getQuery(experiment)).toList();
 		if(nglExps.size() == 1){
 			
 			models.laboratory.experiment.instance.Experiment nglExp = nglExps.get(0);
@@ -93,6 +95,23 @@ public class LimsRunServices implements ILimsRunServices {
 				return null;
 			}
 		}
+	}
+
+	private Query getQuery(Experiment experiment) {
+		Query q = DBQuery.is("typeCode", "illumina-depot");
+		
+		if(null != experiment.containerSupportCode)
+			q.in("inputContainerSupportCodes", experiment.containerSupportCode);
+		
+		if( null != experiment.date){
+			q.greaterThanEquals("experimentProperties.runStartDate.value", experiment.date);
+			q.lessThanEquals("experimentProperties.runStartDate.value", (DateUtils.addDays(experiment.date, 1)));		
+		}
+		
+		if(null != experiment.instrument && null != experiment.instrument.code){
+			q.is("instrument.code", experiment.instrument.code);
+		}
+		return q; 
 	}
 
 	@Override

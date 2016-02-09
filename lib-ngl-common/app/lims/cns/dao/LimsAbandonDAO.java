@@ -105,11 +105,11 @@ public class LimsAbandonDAO {
 
 	public List<LimsExperiment> getExperiments(Experiment experiment) {
 		BeanPropertyRowMapper<LimsExperiment> mapper = new BeanPropertyRowMapper<LimsExperiment>(LimsExperiment.class);
-    	
+    	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
 		if(null != experiment.date){
-			Logger.info("pl_DepotsolexaUneFCtoNGL @flowcellid='"+experiment.containerSupportCode+"', @daterun="+experiment.date);
+			Logger.info("pl_DepotsolexaUneFCtoNGL @flowcellid='"+experiment.containerSupportCode+"', @daterun="+ sdf.format(experiment.date));
 			
-			return this.jdbcTemplate.query("pl_DepotsolexaUneFCtoNGL @flowcellid=?, @daterun=?", mapper, experiment.containerSupportCode, experiment.date);
+			return this.jdbcTemplate.query("pl_DepotsolexaUneFCtoNGL @flowcellid=?, @daterun=?", mapper, experiment.containerSupportCode, sdf.format(experiment.date));
 		}else{
 			Logger.info("pl_DepotsolexaUneFCtoNGL @flowcellid='"+experiment.containerSupportCode+"'");
 			

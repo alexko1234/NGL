@@ -39,8 +39,10 @@ import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+import org.mongojack.DBQuery.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -98,11 +100,28 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 		throw new RuntimeException("Not Implemented");
 	}
 
+	private Query getQuery(Experiment experiment) {
+		Query q = DBQuery.is("typeCode", "illumina-depot");
+		
+		if(null != experiment.containerSupportCode)
+			q.in("inputContainerSupportCodes", experiment.containerSupportCode);
+		
+		if( null != experiment.date){
+			q.greaterThanEquals("experimentProperties.runStartDate.value", experiment.date);
+			q.lessThanEquals("experimentProperties.runStartDate.value", (DateUtils.addDays(experiment.date, 1)));		
+		}
+		
+		if(null != experiment.instrument && null != experiment.instrument.code){
+			q.is("instrument.code", experiment.instrument.code);
+		}
+		return q; 
+	}
+	
 	@Override
 	public Experiment getExperiments(Experiment experiment) {
 		//NGL
 		List<models.laboratory.experiment.instance.Experiment> nglExps =  MongoDBDAO.find(InstanceConstants.EXPERIMENT_COLL_NAME, models.laboratory.experiment.instance.Experiment.class, 
-				DBQuery.is("typeCode", "illumina-depot").in("inputContainerSupportCodes", experiment.containerSupportCode)).toList();
+				getQuery(experiment)).toList();
 		if(nglExps.size() == 1){
 			
 			models.laboratory.experiment.instance.Experiment nglExp = nglExps.get(0);
