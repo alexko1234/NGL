@@ -20,6 +20,19 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			"order":true,
 			"type":"text"
 		});
+		
+		columns.push({
+			"header":Messages("containers.table.fromExperimentTypeCodes"),
+			"property":"fromExperimentTypeCodes",
+			"order":false,
+			"hide":true,
+			"position":2.5,
+			"type":"text",
+			"render":"<div list-resize='cellValue | unique' list-resize-min-size='3'>",
+			"filter":"unique | codes:\"type\"",
+			"groupMethod":"collect"
+		});	
+		
 		columns.push({
 			"header":Messages("containerSupports.table.sampleCodes.length"),
 			"property":"sampleCodes.length",
@@ -148,7 +161,8 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 
 			updateForm : function(){
 				//this.form.includes = [];
-				this.form.includes = ["default","code","categoryCode","column","line","sampleCodes.length","sampleCodes","traceInformation","projectCodes", "valuation.valid", "state.code"];
+				/*
+				this.form.includes = ["default"];
 				for(var i = 0 ; i < this.selectedAddColumns.length ; i++){
 					//remove .value if present to manage correctly properties (single, list, etc.)
 					if(this.selectedAddColumns[i].queryIncludeKeys && this.selectedAddColumns[i].queryIncludeKeys.length > 0){
@@ -158,6 +172,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 					}
 					
 				}
+				*/
 			},
 			convertForm : function(){
 				var _form = angular.copy(this.form);

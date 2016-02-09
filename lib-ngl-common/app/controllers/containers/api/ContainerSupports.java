@@ -45,7 +45,6 @@ public class ContainerSupports extends CommonController {
 	final static Form<ContainerSupportsSearchForm> supportForm = form(ContainerSupportsSearchForm.class);
 	final static Form<ContainerSupportsUpdateForm> containerSupportUpdateForm = form(ContainerSupportsUpdateForm.class);
 	final static Form<State> stateForm = form(State.class);
-	
 	@Permission(value={"reading"})
 	public static Result get(String code){
 		ContainerSupport support = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, code);
