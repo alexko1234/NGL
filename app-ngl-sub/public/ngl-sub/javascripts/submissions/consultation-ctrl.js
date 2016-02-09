@@ -42,7 +42,7 @@ angular.module('home').controller('ConsultationCtrl',[ '$http', '$scope', '$rout
 	console.log("consultation-ctrl:state " + $scope.consultationService.form.state);
 
 	$scope.search = function(){
-		if($scope.consultationService.form.projCode!=null){
+		if($scope.consultationService.form.projCode!==null){
 			$scope.consultationService.search();
 		} else {
 			console.log("Cancel datatable");

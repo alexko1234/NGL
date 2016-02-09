@@ -53,7 +53,7 @@
 				
 				refreshSubmissions : function(){
 					if(this.form.projCode!==null && this.form.projCode !== undefined){
-						this.datatable.search({projCode:this.form.projCode, state:'new'});
+						this.datatable.search({projCode:this.form.projCode, state:'N'});
 					}
 				},
 				
@@ -82,7 +82,7 @@
 					if(this.form.configurationCode !== null && this.form.configurationCode !== undefined){
 						//get configuration
 						$http.get(jsRoutes.controllers.sra.configurations.api.Configurations.get(this.form.configurationCode).url).success(function(data) {
-							if(data.strategyStudy == 'strategy_internal_study'){
+							if(data.strategyStudy === 'strategy_internal_study'){
 								createService.internalStudies=true;
 								createService.externalStudies=false;
 							}else{
@@ -96,7 +96,7 @@
 
 				// methode appelee pour remplir le tableau des soumissions 
 				search : function(){
-					this.datatable.search({projCode:this.form.projCode, state:'new'});
+					this.datatable.search({projCode:this.form.projCode, state:'N'});
 				},
 				/**
 				 * initialization of the service
@@ -112,7 +112,7 @@
 					}else if(angular.isDefined(mainService.getDatatable())){
 						createService.datatable = mainService.getDatatable();		
 						if(this.form.projCode!==null && this.form.projCode !== undefined){
-							this.datatable.search({projCode:this.form.projCode, state:'new'});
+							this.datatable.search({projCode:this.form.projCode, state:'N'});
 						}
 					}	
 					
@@ -185,7 +185,7 @@
 
 			// methode appelee pour remplir le tableau des soumissions 
 			search : function(){
-				this.datatable.search({projCode:this.form.projCode, state:'uservalidate'});
+				this.datatable.search({projCode:this.form.projCode, state:'V-SUB'});
 			},
 			cancel : function(){
 				this.datatable.setData([],0);
@@ -460,7 +460,7 @@
 			
 			// methode appelee pour remplir le tableau des soumissions 
 			search : function(){
-				this.datatable.search({projCode:this.form.projCode, state:'uservalidate'});
+				this.datatable.search({projCode:this.form.projCode, state:'V-SUB'});
 			},
 			cancel : function(){
 				this.datatable.setData([],0);

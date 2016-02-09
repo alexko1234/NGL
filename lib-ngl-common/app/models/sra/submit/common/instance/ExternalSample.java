@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
 
+import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.sra.submit.util.VariableSRA;
@@ -17,7 +18,7 @@ public class ExternalSample extends AbstractSample {
 	
 	public ExternalSample() {
 		super();	
-		state = new State("submitted", null); // Reference sur "models.laboratory.common.instance.state"
+		state = new State("F-SUB", null); // Reference sur "models.laboratory.common.instance.state"
 	}
 
 
@@ -28,6 +29,7 @@ public class ExternalSample extends AbstractSample {
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
 		SraValidationHelper.validateCode(this, InstanceConstants.SRA_SAMPLE_COLL_NAME, contextValidation);
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapExternalStatus, "state.code");
+		SraValidationHelper.validateState(ObjectType.CODE.SRASubmission, this.state, contextValidation);
 
 		// Pour l'instant externalSample apparait uniquement dans sra d'ou verif du context.type inutile
 		/*if (!StringUtils.isNotBlank((CharSequence) contextValidation.getContextObjects().get("type"))){

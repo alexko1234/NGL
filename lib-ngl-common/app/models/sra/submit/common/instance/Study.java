@@ -10,6 +10,7 @@ import validation.sra.SraValidationHelper;
 import validation.utils.ValidationHelper;
 import fr.cea.ig.DBObject;
 import fr.cea.ig.MongoDBDAO;
+import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.sra.submit.util.VariableSRA;
@@ -30,12 +31,7 @@ public class Study extends AbstractStudy {
   	public String centerName = VariableSRA.centerName;        // required pour nos stats valeur fixee à GSC */
     public String centerProjectName; // required pour nos stats valeur fixée à projectCode
     
-	public State state = new State("New", null); // Reference sur "models.laboratory.common.instance.state"
-	 	// pour gerer les differents etats de l'objet.
-
-	public TraceInformation traceInformation = new TraceInformation();// .Reference sur "models.laboratory.common.instance.TraceInformation" 
-		// pour loguer les dernieres modifications utilisateurs	
-
+	
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
@@ -46,8 +42,10 @@ public class Study extends AbstractStudy {
 		ValidationHelper.required(contextValidation, this.centerProjectName , "centerProjectName");
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.centerName, VariableSRA.mapCenterName, "centerName");
 		SraValidationHelper.validateId(this, contextValidation);
+		SraValidationHelper.validateCode(this, InstanceConstants.SRA_STUDY_COLL_NAME, contextValidation);
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapStatus, "state.code");
+		SraValidationHelper.validateState(ObjectType.CODE.SRASubmission, this.state, contextValidation);
+
 		if (!StringUtils.isNotBlank((CharSequence) contextValidation.getContextObjects().get("type"))){
 			contextValidation.addErrors(" study non evaluable ", "sans type de contexte de validation");
 			contextValidation.removeKeyFromRootKeyName("study");
@@ -65,7 +63,6 @@ public class Study extends AbstractStudy {
 			}
 		} else {
 			System.out.println("contextValidationType = "+contextValidation.getContextObjects().get("type"));
-
 			contextValidation.addErrors("study non evaluable ", "avec type de contexte de validation " + contextValidation.getContextObjects().get("type"));	
 		}
 		contextValidation.removeKeyFromRootKeyName("study");

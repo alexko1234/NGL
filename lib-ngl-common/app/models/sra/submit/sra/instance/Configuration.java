@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import validation.IValidation;
 import fr.cea.ig.DBObject;
+import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.sra.submit.util.VariableSRA;
@@ -42,7 +43,7 @@ public class Configuration  extends DBObject implements IValidation {
 		public State state = new State(); // Reference sur "models.laboratory.common.instance.state" 
 								 // pour gerer les differents etats de l'objet.
 								
-		public TraceInformation traceInformation; // new TraceInformation .Reference sur "models.laboratory.common.instance.TraceInformation" 
+		public TraceInformation traceInformation = new TraceInformation(); // Reference sur "models.laboratory.common.instance.TraceInformation" 
 			// pour loguer les dernieres modifications utilisateurs
 
 		
@@ -59,7 +60,8 @@ public class Configuration  extends DBObject implements IValidation {
 			SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySelection, VariableSRA.mapLibrarySelection, "librarySelection");
 			SraValidationHelper.requiredAndConstraint(contextValidation, this.libraryStrategy, VariableSRA.mapLibraryStrategy, "libraryStrategy");
 			SraValidationHelper.requiredAndConstraint(contextValidation, this.librarySource, VariableSRA.mapLibrarySource, "librarySource");
-			SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapStatus, "state.code");
+			SraValidationHelper.validateState(ObjectType.CODE.SRAConfiguration, this.state, contextValidation);
+
 			SraValidationHelper.requiredAndConstraint(contextValidation, this.strategySample, VariableSRA.mapStrategySample, "strategySample");
 			SraValidationHelper.requiredAndConstraint(contextValidation, this.strategyStudy, VariableSRA.mapStrategyStudy, "strategyStudy");
 			
@@ -80,8 +82,9 @@ public class Configuration  extends DBObject implements IValidation {
 				}
 			}*/		
 			// verifier que code est bien renseigné
-			SraValidationHelper.validateCode(this, InstanceConstants.SRA_CONFIGURATION_COLL_NAME, contextValidation);
+			//SraValidationHelper.validateCode(this, InstanceConstants.SRA_CONFIGURATION_COLL_NAME, contextValidation);
 			SraValidationHelper.validateId(this, contextValidation);
+			SraValidationHelper.validateCode(this, InstanceConstants.SRA_CONFIGURATION_COLL_NAME, contextValidation);
 			SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
 			contextValidation.removeKeyFromRootKeyName("configuration");
 		}

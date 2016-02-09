@@ -61,10 +61,10 @@ public class Submissions extends DocumentController<Submission>{
 
 
 	// methode appelee avec url suivante :
-	//localhost:9000/api/sra/submissions?datatable=true&paginationMode=local&projCode=BCZ&state=new
+	//localhost:9000/api/sra/submissions?datatable=true&paginationMode=local&projCode=BCZ&state=N
 	// url construite dans services.js 
 	//search : function(){
-	//	this.datatable.search({projCode:this.form.projCode, state:'new'});
+	//	this.datatable.search({projCode:this.form.projCode, state:'N'});
 	//},
 	
 	public Result list(){	
@@ -101,8 +101,7 @@ public class Submissions extends DocumentController<Submission>{
 		//Get Submission from DB 
 		Submission submission = getSubmission(code);
 		Form<Submission> filledForm = getFilledForm(submissionForm, Submission.class);
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
-
+		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser());
 		if (submission == null) {
 			//return badRequest("Submission with code "+code+" not exist");
 			ctxVal.addErrors("submission ", " not exist");
@@ -130,7 +129,7 @@ public class Submissions extends DocumentController<Submission>{
 
 
 	public Result updateState(String code){
-		
+		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser());
 		//Get Submission from DB 
 		Submission submission = getSubmission(code); // ou bien Submission submission2 = getObject(code);
 		Form<State> filledForm = getFilledForm(stateForm, State.class);
@@ -138,7 +137,6 @@ public class Submissions extends DocumentController<Submission>{
 		state.date = new Date();
 		state.user = getCurrentUser();
 		
-		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 		if (submission == null) {
 			//return badRequest("Submission with code "+code+" not exist");
 			ctxVal.addErrors("submission " + code,  " not exist in database");	
@@ -151,6 +149,7 @@ public class Submissions extends DocumentController<Submission>{
 			return badRequest(filledForm.errorsAsJson());
 		}
 	}
+	
 	
 	public Result createXml(String code)
 	{
@@ -195,8 +194,9 @@ public class Submissions extends DocumentController<Submission>{
 		}
 		Logger.debug("filledForm "+filledForm);
 		File ebiFileAc = filledForm.get();
+		ContextValidation ctxVal = new ContextValidation(this.getCurrentUser());
 		try {
-			submission = FileAcServices.traitementFileAC(code, ebiFileAc);
+			submission = FileAcServices.traitementFileAC(ctxVal, code, ebiFileAc);
 		} catch (IOException e) {
 			//return badRequest(e.getMessage());
 			filledForm.reject("Submission " + code + " et ebiFileAc " +ebiFileAc, e.getMessage());  // si solution filledForm.reject
@@ -274,7 +274,7 @@ public class Submissions extends DocumentController<Submission>{
 
 		
 			SubmissionServices submissionServices = new SubmissionServices();
-			submissionCode = submissionServices.initNewSubmission(readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, mapUserClones, mapUserExperiments, user, contextValidation);
+			submissionCode = submissionServices.initNewSubmission(readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, mapUserClones, mapUserExperiments, contextValidation);
 			if (contextValidation.hasErrors()){
 				contextValidation.displayErrors(Logger.of("SRA"));
 				return badRequest(filledForm.errorsAsJson());
@@ -296,11 +296,12 @@ public class Submissions extends DocumentController<Submission>{
 		// affichage des erreurs via messages.addDetails qui passe par 
 		// solution filledForm et reject 
 		// ou bien solution ctxVal.addErrors
-		
+		String user = this.getCurrentUser();
+		ContextValidation contextValidation = new ContextValidation(user);
 		Form<Submission> filledForm = getFilledForm(submissionForm, Submission.class); 
 		//ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); // si solution avec ctxVal
 		try {
-			submissionServices.activateSubmission(submissionCode);			
+			submissionServices.activateSubmission(contextValidation, submissionCode);			
 			submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
 		} catch (SraException e) {
 			//return badRequest(Json.toJson(e.getMessage()));

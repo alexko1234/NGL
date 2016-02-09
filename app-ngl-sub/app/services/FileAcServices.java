@@ -22,6 +22,8 @@ import org.mongojack.DBUpdate;
 
 import play.Logger;
 import play.Play;
+import validation.ContextValidation;
+import workflows.sra.submission.SubmissionWorkflows;
 
 import com.typesafe.config.ConfigFactory;
 
@@ -31,6 +33,7 @@ import javax.mail.MessagingException;
 
 import mail.MailServiceException;
 import mail.MailServices;
+import models.laboratory.common.instance.State;
 import models.laboratory.run.instance.ReadSet;
 import models.sra.submit.common.instance.Sample;
 import models.sra.submit.common.instance.Study;
@@ -42,6 +45,7 @@ import models.utils.InstanceConstants;
 import fr.cea.ig.MongoDBDAO;
 
 public class FileAcServices  {
+	final static SubmissionWorkflows submissionWorkflows = SubmissionWorkflows.instance;
 
 	public static void updateStateSubmission(Submission submission, String status) {
 		submission.state.code=status;
@@ -80,7 +84,7 @@ public class FileAcServices  {
 	}
 	
 
-	public static Submission traitementFileAC(String submissionCode, File ebiFileAc) throws IOException, SraException, MailServiceException {
+	public static Submission traitementFileAC(ContextValidation ctxVal, String submissionCode, File ebiFileAc) throws IOException, SraException, MailServiceException {
 		if (StringUtils.isBlank(submissionCode) || (ebiFileAc == null)) {
 			throw new SraException("traitementFileAC :: parametres d'entree à null" );
 		}
@@ -254,24 +258,24 @@ public class FileAcServices  {
 			//System.out.println("OK");
 		}
 		
-		// Mise à jour dans la base de la soumission et de ses objets pour les AC et pour le status :
-		
+		// Mise à jour dans la base de la soumission et de ses objets pour les AC :
+		ctxVal.setUpdateMode();
 		sujet = "Liste des AC attribues pour la soumission "  + submissionCode ;
 		message = "Liste des AC attribues pour la soumission "  + submissionCode + " : </br></br>";
 		String retourChariot = "</br>";
 		
 		message += "submissionCode = " + submissionCode + ",   AC = "+ submissionAc + "</br>";  
-		submission.state.code=okStatus;
 		submission.accession=submissionAc;
+		String user = ctxVal.getUser();
 		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, 
 				DBQuery.is("code", submissionCode).notExists("accession"),
-				DBUpdate.set("accession", submissionAc).set("state.code", okStatus).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date()));	
+				DBUpdate.set("accession", submissionAc).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date()));	
 
 		if (StringUtils.isNotBlank(ebiStudyCode)) {
 			message += "studyCode = " + ebiStudyCode + ",   AC = "+ studyAc + "</br>";  
 			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
 					DBQuery.is("code", ebiStudyCode).notExists("accession"),
-					DBUpdate.set("accession", studyAc).set("state.code", okStatus).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date()));
+					DBUpdate.set("accession", studyAc).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date()));
 		}
 		for(Entry<String, String> entry : mapSamples.entrySet()) {
 			String code = entry.getKey();
@@ -279,7 +283,7 @@ public class FileAcServices  {
 			message += "sampleCode = " + code + ",   AC = "+ ac + "</br>";  
 			MongoDBDAO.update(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class,
 					DBQuery.is("code", code).notExists("accession"),
-					DBUpdate.set("accession", ac).set("state.code", okStatus).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 		
+					DBUpdate.set("accession", ac).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date())); 		
 		}
 		for(Entry<String, String> entry : mapExperiments.entrySet()) {
 			String code = entry.getKey();
@@ -288,13 +292,7 @@ public class FileAcServices  {
 
 			MongoDBDAO.update(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class,
 					DBQuery.is("code", code).notExists("accession"),
-					DBUpdate.set("accession", ac).set("state.code", okStatus).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 
-			// mettre à jour le readSet pour le submissionState :
-			Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, code);
-			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,
-					DBQuery.is("code", experiment.readSetCode).exists("submissionState.code"),
-					DBUpdate.set("submissionState.code", okStatus).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 
-			
+					DBUpdate.set("accession", ac).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date())); 	
 		}
 		for(Entry<String, String> entry : mapRuns.entrySet()) {
 			String code = entry.getKey();
@@ -304,6 +302,10 @@ public class FileAcServices  {
 					DBQuery.is("run.code", code).notExists("accession"),
 					DBUpdate.set("run.accession", ac)); 			
 		}
+		State state = new State("F-SUB", user);
+		
+		submissionWorkflows.setState(ctxVal, submission, state);
+	
 		mailService.sendMail(expediteur, destinataires, subjectSuccess, new String(message.getBytes(), "iso-8859-1"));
 		return submission;
 	}

@@ -158,7 +158,9 @@ public class FileAcServicesTest  extends AbstractTestsSRA {
 		File fileEbi = new File("/env/cns/submit_traces/SRA/NGL_test/tests_AC/RESULT_AC_ok");
 		//Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
 		
-		Submission submission = FileAcServices.traitementFileAC(submissionCode, fileEbi); 
+		String user = "william";
+		ContextValidation ctxVal = new ContextValidation(user);
+		Submission submission = FileAcServices.traitementFileAC(ctxVal, submissionCode, fileEbi); 
 		Assert.assertTrue(MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "accession", "ERA000000"));
 		deleteDataSetForFileAcServices();
 		
@@ -174,8 +176,9 @@ public class FileAcServicesTest  extends AbstractTestsSRA {
 		// Fichier des AC incomplet sans le bon alias pour experiment:
 		File fileEbi = new File("/env/cns/submit_traces/SRA/NGL_test/tests_AC/RESULT_AC_ERROR");
 		//Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, submissionCode);
-
-		FileAcServices.traitementFileAC(submissionCode, fileEbi);
+		String user = "william";
+		ContextValidation ctxVal = new ContextValidation(user);
+		FileAcServices.traitementFileAC(ctxVal, submissionCode, fileEbi);
 		Assert.assertTrue(!MongoDBDAO.checkObjectExist(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, "accession", "ERA000000"));
 		deleteDataSetForFileAcServices();
 

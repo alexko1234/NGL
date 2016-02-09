@@ -24,7 +24,7 @@ public abstract class AbstractStudy extends DBObject implements IValidation {
 
 	public String accession;       // numeros d'accession attribué par ebi 
 	public TraceInformation traceInformation = new TraceInformation();
-	public State state; 
+	public State state = new State(); 
 
 	public AbstractStudy() {
 		super();

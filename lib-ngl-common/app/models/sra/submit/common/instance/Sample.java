@@ -2,6 +2,8 @@ package models.sra.submit.common.instance;
 
 import java.util.Date;
 
+import models.laboratory.common.description.ObjectType;
+import models.laboratory.common.instance.State;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 
@@ -23,10 +25,8 @@ public class Sample extends AbstractSample {
 	public String description;      
 	public String clone;           
 	//public String accession;       // numeros d'accession attribué par ebi champs mis dans AbstractSample
-	public Date releaseDate;       // required, date de mise à disposition en public par l'EBI
-	//public State state; //= new State();// Reference sur "models.laboratory.common.instance.state" 
-	 // pour gerer les differents etats de l'objet.
-
+	public Date releaseDate;         // required, date de mise à disposition en public par l'EBI
+	//public State state; //= new State();// Reference sur "models.laboratory.common.instance.state" mis dans AbstractSample
 	//public TraceInformation traceInformation = new TraceInformation(); champs mis dans AbstractSample
 
 	public Sample() {
@@ -41,7 +41,8 @@ public class Sample extends AbstractSample {
 		SraValidationHelper.validateId(this, contextValidation);
 		
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapStatus, "state.code");
+		//SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapStatus, "state.code");
+		SraValidationHelper.validateState(ObjectType.CODE.SRASubmission, this.state, contextValidation);
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
 		
 		if (!StringUtils.isNotBlank((CharSequence) contextValidation.getContextObjects().get("type"))){

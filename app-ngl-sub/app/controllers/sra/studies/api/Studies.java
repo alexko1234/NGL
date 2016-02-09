@@ -49,7 +49,7 @@ public class Studies extends DocumentController<AbstractStudy>{
 			if (userStudy._id == null) {
 				userStudy.traceInformation = new TraceInformation(); 
 				userStudy.traceInformation.setTraceInformation(getCurrentUser());
-				userStudy.state = new State("new", getCurrentUser());
+				userStudy.state = new State("N", getCurrentUser());
 				if (userStudy instanceof Study){
 					((Study)userStudy).centerName=VariableSRA.centerName;
 					((Study)userStudy).centerProjectName = ((Study)userStudy).projectCode;
@@ -76,7 +76,7 @@ public class Studies extends DocumentController<AbstractStudy>{
 	//localhost:9000/api/sra/studies?datatable=true&paginationMode=local&projCode=BCZ
 	// url construite dans services.js 
 	//search : function(){
-	//	this.datatable.search({projCode:this.form.projCode, state:'new'});
+	//	this.datatable.search({projCode:this.form.projCode, state:'N'});
 	//},
 	// Renvoie le Json correspondant à la liste des study ayant le projectCode indique dans la variable du formulaire projectCode et stockee dans
 	// l'instance studiesSearchForm	
@@ -135,7 +135,7 @@ public class Studies extends DocumentController<AbstractStudy>{
 			}else {
 				return badRequest(filledForm.errorsAsJson());
 			}
-		}else{
+		} else {
 			//return badRequest("study code are not the same");
 			ctxVal.addErrors("study " + code, "study code  " + code + " and studyInput.code "+ studyInput.code + "are not the same");
 			return badRequest(filledForm.errorsAsJson());

@@ -44,6 +44,7 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 			Submission object) {	
 		
 		if (StringUtils.isNotBlank(object.studyCode)) {
+			if (! object.state.code.equalsIgnoreCase("N")) {
 			// Recuperer object study pour mettre historique des state traceInformation à jour:
 			Study study = MongoDBDAO.findByCode(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, object.studyCode);
 			study.state = updateHistoricalNextState(study.state, object.state);
@@ -52,6 +53,7 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
 					DBQuery.is("code", object.code).notExists("accession"),
 					DBUpdate.set("state", study.state).set("traceInformation", study.traceInformation));
+			}
 		}		
 		if (object.sampleCodes != null){
 			for (int i = 0; i < object.sampleCodes.size() ; i++) {
@@ -86,7 +88,6 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 						DBQuery.is("code", experiment.readSetCode),
 						DBUpdate.set("submissionState", readset.submissionState).set("traceInformation", readset.traceInformation));
 			}
-				
 		}
 	}
 
@@ -117,9 +118,10 @@ public class SubmissionWorkflows extends Workflows<Submission>{
 			MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME,  Submission.class, 
 				DBQuery.is("code", object.code),
 				DBUpdate.set("state", object.state).set("traceInformation", object.traceInformation));
-			
+			if (! object.state.code.equalsIgnoreCase("N")){
+				applySuccessPostStateRules(contextValidation, object);
+			}
 		}
-		applySuccessPostStateRules(contextValidation, object);
 	}
 
 

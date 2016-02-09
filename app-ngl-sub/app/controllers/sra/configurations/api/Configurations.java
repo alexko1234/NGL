@@ -29,15 +29,17 @@ import org.apache.commons.lang.StringUtils;
 import models.sra.submit.common.instance.Submission;
 import models.sra.submit.util.SraException;
 import views.components.datatable.DatatableResponse;
+import workflows.sra.submission.ConfigurationWorkflows;
 
 
 public class Configurations extends DocumentController<Configuration>{
-
+	
 	final static Form<Configuration> configurationForm = form(Configuration.class);
 	// declaration d'une instance configurationSearchForm qui permet de recuperer la liste des configurations => utilisee dans list()
 	final static Form<ConfigurationsSearchForm> configurationsSearchForm = form(ConfigurationsSearchForm.class);
 
 	final static Form<SubmissionsSearchForm> submissionsSearchForm = form(SubmissionsSearchForm.class);
+	final ConfigurationWorkflows configWorkflows = ConfigurationWorkflows.instance;
 
 
 	public Configurations() {
@@ -54,7 +56,10 @@ public class Configurations extends DocumentController<Configuration>{
 		if (userConfiguration._id == null) {
 			userConfiguration.traceInformation = new TraceInformation(); 
 			userConfiguration.traceInformation.setTraceInformation(getCurrentUser());
-			userConfiguration.state = new State("new", getCurrentUser());
+			State state = new State("N", getCurrentUser());
+			// Ne pas passer par configWorkflows ici car setState possible si mode update si object existe deja
+			//configWorkflows.setState(contextValidation, userConfiguration, state);
+			userConfiguration.state = state;
 			userConfiguration.code = SraCodeHelper.getInstance().generateConfigurationCode(userConfiguration.projectCode);
 			userConfiguration.validate(contextValidation);
 			if(contextValidation.errors.size()==0) {
@@ -74,7 +79,7 @@ public class Configurations extends DocumentController<Configuration>{
 	//localhost:9000/api/sra/configurations?datatable=true&paginationMode=local&projCode=BCZ
 	// url construite dans services.js 
 	//search : function(){
-	//	this.datatable.search({projCode:this.form.projCode, state:'new'});
+	//	this.datatable.search({projCode:this.form.projCode, state:'N'});
 	//},
 	public Result list(){	
 		Form<ConfigurationsSearchForm> configurationsSearchFilledForm = filledFormQueryString(configurationsSearchForm, ConfigurationsSearchForm.class);

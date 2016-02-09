@@ -184,7 +184,8 @@ public class StateDAO extends AbstractDAOMapping<State>{
 		String sql = sqlCommon +
 				"JOIN state_object_type cs ON cs.fk_state=t.id "+
 				"JOIN object_type c on c.id =cs.fk_object_type "+
-				" where t.code=? and c.code=?";		
+				" where t.code=? and c.code=?";	
+		
 		return( initializeMapping(sql, new SqlParameter("t.code", Types.VARCHAR),
 				 new SqlParameter("c.code", Types.VARCHAR)).findObject(code, objectTypeCode) != null )? true : false;	
 	}

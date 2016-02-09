@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
+import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.sra.submit.sra.instance.Configuration;
@@ -30,8 +31,8 @@ public class Submission extends DBObject implements IValidation {
 	public String projectCode = null;     // required pour nos stats //Reference code de la collection project NGL
  	public String accession = null;       // numeros d'accession attribué par ebi */
 	public Date submissionDate = null;
-	public List<String> refStudyCodes = new ArrayList<String>();    // study referencés par cette soumission, pas forcement à soumettre
-	public List<String> refSampleCodes = new ArrayList<String>(); // liste des codes des samples references par cette soumission, pas forcement a soumettre à l'EBI.
+	public List<String> refStudyCodes = new ArrayList<String>();  // Liste de tous les codes des AbstractStudy (ExternalStudy et Study) referencés par cette soumission, pas forcement à soumettre à l'EBI.
+	public List<String> refSampleCodes = new ArrayList<String>(); // liste de tous les codes des AbstractSamples (ExternalSample ou Sample) references par cette soumission, pas forcement a soumettre à l'EBI.
 	//public List<String> refReadSetCodes = new ArrayList<String>(); // liste des codes des readSet references par cette soumission(pas de soumission).
 	public String studyCode = null;          // study à soumettre à l'ebi si strategy_internal_study
 	public String analysisCode = null;       // analysis à soumettre à l'ebi
@@ -41,8 +42,7 @@ public class Submission extends DBObject implements IValidation {
 	public String configCode = null;
 	public String submissionDirectory = null;
 	public Boolean release = false;
-	public String type = null; // SRA ou WGS
-	public String xmlStudys = null; // nom relatif du fichier xml des studys rempli uniquement si le fichier existe.
+	public String xmlStudys = null;  // nom relatif du fichier xml des studys rempli uniquement si le fichier existe.
 	public String xmlSamples = null;
 	public String xmlExperiments = null;
 	public String xmlRuns = null;
@@ -53,16 +53,13 @@ public class Submission extends DBObject implements IValidation {
 	
 	public Map<String, UserCloneType> mapUserClone = new HashMap<String, UserCloneType>();
 
-	public State state;// = new State(); // Reference sur "models.laboratory.common.instance.state" 
-		// pour gerer les differents etats de l'objet.
-
-	public TraceInformation traceInformation;// .Reference sur "models.laboratory.common.instance.TraceInformation" 
+	public State state = new State(); // Reference sur "models.laboratory.common.instance.state" 
+	// pour gerer les differents etats de l'objet en fonction de l'avancement dans le workflow de la soumission
+	
+	public TraceInformation traceInformation = new TraceInformation();// .Reference sur "models.laboratory.common.instance.TraceInformation" 
 		// pour loguer les dernieres modifications utilisateurs
 
 	public Submission(String projectCode, String user) {
-		/*if (StringUtils.isNotBlank(configCode)){
-			this.config = MongoDBDAO.findByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, Configuration.class, configCode);
-		}*/
 		DateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy");	
 		Date courantDate = new java.util.Date();
 		String st_my_date = dateFormat.format(courantDate);	
@@ -87,10 +84,19 @@ public class Submission extends DBObject implements IValidation {
 
 		// Verifier que status est bien renseigné avec valeurs autorisees et que submissionDirectory est bien renseigné une
 		// fois que l'objet est en status "inWaiting" (etape activate de la soumission)
-		if(SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapStatus, "state.code")){
+		/*if(SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapStatus, "state.code")){
 			if(this.state.code.equalsIgnoreCase("inwaiting") 
 					||this.state.code.equalsIgnoreCase("inprogress")
 					|| this.state.code.equalsIgnoreCase("submitted")) {
+				ValidationHelper.required(contextValidation, this.	submissionDirectory , "submissionDirectory");
+				ValidationHelper.required(contextValidation, this.submissionDate , "submissionDate");
+			}
+		}*/
+		SraValidationHelper.validateState(ObjectType.CODE.SRASubmission, this.state, contextValidation);
+		if (StringUtils.isNotBlank(this.state.code)){
+			if(this.state.code.equalsIgnoreCase("IW-SUB") 
+					||this.state.code.equalsIgnoreCase("IP-SUB")
+					|| this.state.code.equalsIgnoreCase("F-SUB")) {
 				ValidationHelper.required(contextValidation, this.	submissionDirectory , "submissionDirectory");
 				ValidationHelper.required(contextValidation, this.submissionDate , "submissionDate");
 			}

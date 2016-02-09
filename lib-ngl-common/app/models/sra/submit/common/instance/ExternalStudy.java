@@ -5,16 +5,19 @@ import org.apache.commons.lang3.StringUtils;
 
 import validation.ContextValidation;
 import validation.sra.SraValidationHelper;
+import workflows.sra.submission.SubmissionWorkflows;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
+import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
 
 
 public class ExternalStudy extends AbstractStudy {
+	final SubmissionWorkflows subWorkflows = SubmissionWorkflows.instance;
 
 	public ExternalStudy() {
 		super();
-		state = new State("submitted", null); // Reference sur "models.laboratory.common.instance.state"
+		state = new State("F-SUB", null); // Reference sur "models.laboratory.common.instance.state"
 	}
 
 
@@ -42,6 +45,7 @@ public class ExternalStudy extends AbstractStudy {
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
 		SraValidationHelper.validateCode(this, InstanceConstants.SRA_STUDY_COLL_NAME, contextValidation);
 		SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapExternalStatus, "state.code");
+		SraValidationHelper.validateState(ObjectType.CODE.SRASubmission, this.state, contextValidation);
 
 		contextValidation.removeKeyFromRootKeyName("externalStudy");
 	}

@@ -40,11 +40,11 @@ angular.module('home').controller('ValidationCtrl',[ '$http', '$scope', '$routeP
 	$scope.consultationService.init($routeParams, submissionDTConfig);
 	$scope.consultationService.isValidation = true;
 	
-	$scope.consultationService.form.state = 'new';
+	$scope.consultationService.form.state = 'N';
 	console.log("validation-ctrl:state " + $scope.consultationService.form.state);
 
 	$scope.search = function(){
-		if($scope.consultationService.form.projCode!=null){
+		if($scope.consultationService.form.projCode!==null){
 			$scope.consultationService.search();
 			
 		} else {

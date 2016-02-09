@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.sra.submit.util.VariableSRA;
@@ -49,7 +50,7 @@ public class Experiment extends DBObject implements IValidation {
 	public State state = new State(); // Reference sur "models.laboratory.common.instance.state" 
 							 // pour gerer les differents etats de l'objet.
 							
-	public TraceInformation traceInformation= new TraceInformation();// .Reference sur "models.laboratory.common.instance.TraceInformation" 
+	public TraceInformation traceInformation = new TraceInformation();// .Reference sur "models.laboratory.common.instance.TraceInformation" 
 		// pour loguer les dernieres modifications utilisateurs
 
 	// ajouter instrumentModel et libraryName.
@@ -58,14 +59,8 @@ public class Experiment extends DBObject implements IValidation {
 		contextValidation.addKeyToRootKeyName("experiment");
 		// Verifier que status est bien rensigne, et si != new alors libraryName renseigné :
 		System.out.println("Dans exp.validate, stateCode =" +state.code);
-
-		if(SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapStatus, "state.code")){
-			System.out.println("Dans exp.validate, stateCode =" +state.code);
-			if(! this.state.code.equalsIgnoreCase("new")) {
-				System.out.println("stateCode =" +state.code +" et libraryName = " + libraryName);
-				ValidationHelper.required(contextValidation, this.libraryName , "libraryName");
-			}
-		}
+		SraValidationHelper.validateState(ObjectType.CODE.SRASubmission, this.state, contextValidation);
+		ValidationHelper.required(contextValidation, this.libraryName , "libraryName");
 		// Verifer que projectCode est bien renseigné et qu'il existe bien dans lims :
 		SraValidationHelper.validateProjectCode(this.projectCode, contextValidation);
 		ValidationHelper.required(contextValidation, this.title , "title");

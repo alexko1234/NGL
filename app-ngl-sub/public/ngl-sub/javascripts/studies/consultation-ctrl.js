@@ -20,7 +20,7 @@ angular.module('home').controller('ConsultationCtrl',[ '$http', '$scope', '$rout
 				withoutSelect : true,
 				columnMode : true,
 				lineMode : function(line){
-					if(line.state.code == "new")
+					if(line.state.code === "N")
 						return true;
 					else 
 						return false;
@@ -75,7 +75,7 @@ angular.module('home').controller('ConsultationCtrl',[ '$http', '$scope', '$rout
 	$scope.consultationService.init($routeParams, studiesDTConfig);
 	
 	$scope.search = function(){
-		if($scope.consultationService.form.projCode!=null){
+		if($scope.consultationService.form.projCode!==null){
 			$scope.consultationService.search();
 		} else {
 			console.log("Cancel datatable");
