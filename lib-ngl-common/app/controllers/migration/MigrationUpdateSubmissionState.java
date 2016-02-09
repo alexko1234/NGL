@@ -31,7 +31,7 @@ public class MigrationUpdateSubmissionState extends CommonController {
 		keys.put("treatments", 0);
 		
 		Logger.info("Migration submission state start");
-		//backupReadSet();
+		backupReadSet();
 		List<ReadSet> readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.notExists("submissionState"), keys).toList();
 		
 		Logger.debug("migre "+readSets.size()+" readSets");

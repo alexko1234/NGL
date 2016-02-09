@@ -298,7 +298,7 @@ public class ReadSets extends ReadSetsController{
 			readSetInput.state.user = getCurrentUser();
 			readSetInput.state.date = new Date();	
 			readSetInput.submissionState.date = new Date();	
-			readSetInput.submissionState.code = "none";	
+			readSetInput.submissionState.code = "NONE";	
 			readSetInput.submissionState.user = getCurrentUser();
 
 			//hack to simplify ngsrg => move to workflow but workflow not call here !!!
