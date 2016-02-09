@@ -66,19 +66,19 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		//FDS ajout 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered
 		l.add(newExperimentType("Ext to prepa flowcell ordered","ext-to-prepa-fc-ordered",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, 
-				null,"OneToOne", 
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), 
+				null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		l.add(newExperimentType("Ext to librairie dénaturée","ext-to-denat-dil-lib",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, 
-				null,"OneToOne", 
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), 
+				null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		//FDS 01/02/2016 ajout -- JIRA NGL-894 4: processus et experiments pour X5
 		l.add(newExperimentType("Ext Prep PCR free","ext-to-prep-pcr-free",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),null, 
-				null ,"OneToOne", 
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
+				null, null ,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		/** ordered by display order **/
@@ -95,7 +95,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				getInstrumentUsedTypes("covaris-e210-and-sciclone-ngsx","covaris-le220-and-sciclone-ngsx","covaris-e220-and-sciclone-ngsx"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		
 		l.add(newExperimentType("Dénaturation-dilution","denat-dil-lib",null,1000,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 				getPropertyDefinitionsDenatDilLibCNG(),
@@ -103,9 +102,10 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
 		//FDS modif 02/02/2016 ne plus mettre type voidprocess, ajout intrumentType janus
+		//      et ajout getProperty...
 		l.add(newExperimentType("Librairie normalisée","lib-normalization",null,1100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
-				null,
+				getPropertyDefinitionsLibNormalization(),
 				getInstrumentUsedTypes("hand","janus"), "OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));				
 		
@@ -179,6 +179,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 
 	
 	public void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
+		//NOTE FDS: les nodes qui apparaissent en previous doivent etre crees avant...
 
 		newExperimentTypeNode("ext-to-prepa-flowcell", getExperimentTypes("ext-to-prepa-flowcell").get(0), 
 				false, false, false, 
@@ -196,16 +197,22 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null, null, null, null
 				).save();
 		
-		//FDS 01/02/2016 ajout -- JIRA NGL-894 4: processus et experiments pour X5
+		//FDS  ajout 01/02/2016 -- JIRA NGL-894 : processus et experiments pour X5
 		newExperimentTypeNode("ext-to-prep-pcr-free",getExperimentTypes("ext-to-prep-pcr-free").get(0),
 				false,false,false,
 				null, null, null, null
 				).save();
 		
+		//FDS ajout 01/02/2016 -- JIRA NGL-894: processus et experiments pour X5
+		newExperimentTypeNode("prep-pcr-free",getExperimentTypes("prep-pcr-free").get(0),
+				false,false,false,
+				getExperimentTypeNodes("ext-to-prep-pcr-free"),null,null, null  
+				).save();
 		
+		//FDS modification 09/11/2016 -- JIRA NGL-894: processus et experiments pour X5; ajout "prep-pcr-free" dans les previous
 		newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), 
 				false, false, false, 
-				null, null, null, getExperimentTypes("aliquoting")
+				getExperimentTypeNodes("prep-pcr-free"), null, null, getExperimentTypes("aliquoting")
 				).save();
 		
 		newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),
@@ -218,22 +225,17 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				getExperimentTypeNodes("ext-to-prepa-flowcell","denat-dil-lib"),null,null, null
 				).save();
 		
-		//FDS ajout 04/11/2015 -- JIRA NGL-838 ajout prepa-fc-ordered, attention previous node normal est "lib-normalization" (et non "denat-dil-lib")
+		//FDS ajout 04/11/2015 -- JIRA NGL-838 
 		newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),
 				false,false,false,
 				getExperimentTypeNodes("ext-to-prepa-fc-ordered","lib-normalization"),null,null, null
 				).save();
-	
-		//FDS modif 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered
+
+		//FDS modif 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered dans les previous 
+		//FDS modif 09/02/2016 -- JIRA NGL-894: ajout prep-pcr-free dans les previous 
 		newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),
 				false,false,false,
-				getExperimentTypeNodes("prepa-flowcell","prepa-fc-ordered"),null,null, null
-				).save();
-		
-		//FDS ajout 04/11/2015 -- JIRA NGL-894: processus et experiments pour X5, previous est ???
-		newExperimentTypeNode("prep-pcr-free",getExperimentTypes("prep-pcr-free").get(0),
-				false,false,false,
-				getExperimentTypeNodes("ext-to-prep-pcr-free"),null,null, null  
+				getExperimentTypeNodes("prepa-flowcell","prepa-fc-ordered","prep-pcr-free"),null,null, null
 				).save();
 		
 					
@@ -338,18 +340,18 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		return propertyDefinitions;
 	}
 	
-	// FDS 5/02/2016
+	// FDS ajout 05/02/2016 -- JIRA NGL-894: experiment PrepPcrFree pour le process X5
 	private List<PropertyDefinition> getPropertyDefinitionsPrepPcrFree() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
 		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé Frag", "inputVolumeFrag", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, "55"
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µl"), MeasureUnit.find.findByCode("µl"),"single",20));
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µL"), MeasureUnit.find.findByCode("µL"),"single",20));
 		propertyDefinitions.add(newPropertiesDefinition("Quantité. engagée Frag", "inputQuantityFrag", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, "1100"
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode("ng"), MeasureUnit.find.findByCode("ng"),"single",21));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Vol. engagé Lib", "inputVolumeLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "55"
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µl"), MeasureUnit.find.findByCode("µl"),"single",22));
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µL"), MeasureUnit.find.findByCode("µL"),"single",22));
 		propertyDefinitions.add(newPropertiesDefinition("Quantité. engagée Lib", "inputQuantityLib", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "1100"
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY), MeasureUnit.find.findByCode("ng"), MeasureUnit.find.findByCode("ng"),"single",23));
 	
@@ -366,6 +368,19 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				, null, null, null,"single",140));
 		propertyDefinitions.add(newPropertiesDefinition("Type de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, "SINGLE-INDEX"
 				, null, null, null,"single", 141));
+		
+		return propertyDefinitions;
+	}
+	
+	
+	// FDS ajout 05/02/2016 -- JIRA NGL-894: experiment librairie normalization fait partie du process X5
+	//     comment distinguer l'experience en plaque ou en tubes ????
+	private List<PropertyDefinition> getPropertyDefinitionsLibNormalization() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		//InputContainer TODO
+		
+		//OuputContainer TODO
 		
 		return propertyDefinitions;
 	}

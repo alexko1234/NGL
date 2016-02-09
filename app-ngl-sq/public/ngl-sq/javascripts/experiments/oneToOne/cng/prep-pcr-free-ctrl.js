@@ -137,7 +137,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			         },	
 			         // Volume
 			         {
-			        	 "header":Messages("containers.table.volume")+ " (µl)",
+			        	 "header":Messages("containers.table.volume")+ " (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
 			        	 "order":true,
 						 "edit":true,
@@ -157,8 +157,8 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			        	 "type":"text",
 			        	 "position":160,
 			        	 "extraHeaders":{0:"Outputs"}
-			         },
-			         //Storage... ne pas l'afficher N fois !!!!!
+			         }
+			         /* Storage... ne pas l'afficher N fois !!!!!
 			         {
 			        	 "header":Messages("containers.table.storageCode"),
 			        	 "property":"outputContainerUsed.locationOnContainerSupport.storageCode",
@@ -168,7 +168,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			        	 "type":"text",
 			        	 "position":170,
 			        	 "extraHeaders":{0:"Outputs"}
-			         }
+			         }*/
 			         ],
 			compact:true,
 			pagination:{
@@ -192,7 +192,10 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 	        	withoutEdit: true,
 	        	changeClass:false,
 	        	showButton:false,
-	        	mode:'local'
+	        	mode:'local',
+	        	callback:function(datatable){
+					copyPlateCodeAndStorageToDT(datatable);
+	        	}
 			},
 			hide:{
 				active:true
@@ -224,14 +227,54 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
 		
+		/* POURQUOI CETTE BOUCLE ?? elle n'est pas dans tubes-to-flowcell-ctrl.js
+		 *                          mais elle vient de denat-dil-lib-ctrl,js....
 		for(var i = 0 ; i < $scope.experiment.atomicTransfertMethods.length ; i++){
 			var atm = $scope.experiment.atomicTransfertMethods[i];
 			
 			$parse('locationOnContainerSupport.code').assign(atm.outputContainerUseds[0], atm.outputContainerUseds[0].code);			
 		}
+		*/
 		
 		$scope.$emit('childSaved', callbackFunction);
 	});
+	
+	//FDS EN COURS ( copie depuis tubes-to-flowcell-ctrl.js)
+	var copyPlateCodeAndStorageToDT = function(datatable){
+
+		var dataMain = datatable.getData();
+		
+		/* pas necessaire de verifier le type outContainerSupportCategoryCode ???
+		var cscCode = $parse('experiment.instrument.outContainerSupportCategoryCode')($scope);
+		if(cscCode !== undefined){
+			wellsCount = Number(cscCode.split("-",2)[0]);
+		    console.log("TESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSST "+ wellsCount);
+			//alert ("wellsCount ="+wellsCount);
+			}
+		}
+		*/
+		
+		//-1- copy plate code to output code
+		var codePlate = $parse("instrumentProperties.outputContainerSupportCode.value")($scope.experiment);
+		console.log("setting outputContainerUsed code from: "+ codePlate);
+		if(null != codePlate && undefined != codePlate){
+			for(var i = 0; i < dataMain.length; i++){
+				var atm = dataMain[i].atomicTransfertMethod;
+				var containerCode = codePlate+"_"+atm.line + atm.column;
+
+				$parse('outputContainerUsed.code').assign(dataMain[i],containerCode);
+				$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[i],codePlate);
+			}
+			
+			//-2- TODO copy storage to containerSupport...?????
+			/*
+			var storage = $parse("instrumentProperties.outputStorage.value")($scope.experiment);
+			alert ("TODO : setting containerSupport storage to : "+ storage);
+			*/	
+			
+			datatable.setData(dataMain);
+		}
+	}
 	
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");		
@@ -266,9 +309,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	//defined new atomictransfertMethod
-	// FDS ce code est prevu pour les tube line:1, column:1...
-	//  TODO  ==> utiliser des variables !!
-	//  TODO  modifier atomicTransfereServices.js ?????
+	// FDS ajout variables pour ligne et colonne ( doivent etre prises en compte dans atomicTransfereServices.js)
 	atmService.newAtomicTransfertMethod = function(l, c){
 		return {
 			class:"OneToOne",
@@ -281,7 +322,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 	
 	//defined default output unit
 	atmService.defaultOutputUnit = {
-			volume : "µl",
+			volume : "µL",
 			concentration : "nM"
 	}
 	atmService.experimentToView($scope.experiment, $scope.experimentType);

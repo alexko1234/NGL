@@ -384,9 +384,10 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		l.addAll(getCovarisProperties());
 		l.addAll(getSicloneNGSXProperties());
 		
-		//05/01/2016.ajouter une propriété outputContainerSupportCode a saisie libre
+		//05/02/2016.ajouter une propriété outputContainerSupportCode a saisie libre mais obligatoire
 		l.add(newPropertiesDefinition("Output plate barcode", "outputContainerSupportCode", LevelService.getLevels(Level.CODE.Instrument), String.class, true, "single"));
-		
+		//TEST 09/02/2016 ajouter une propriété storage optionnelle
+		l.add(newPropertiesDefinition("Output plate storage", "outputStorage", LevelService.getLevels(Level.CODE.Instrument), String.class, false, "single"));
 		return l;
 	}
 	
