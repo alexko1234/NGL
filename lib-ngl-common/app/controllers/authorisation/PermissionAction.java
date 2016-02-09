@@ -15,13 +15,27 @@ import play.mvc.Result;
  */
 public class PermissionAction extends Action<Permission> {
 
+	private static final String COOKIE_SESSION = "NGL_FILTER_USER";
 	@Override
-	public F.Promise<Result> call(Context ctx) throws Throwable {
+	public F.Promise<Result> call(Context context) throws Throwable {
+		//TODO GA need to upgrade to play 2.4 to have the benefit of :
+		/*
+		 Note: If you want the action composition annotation(s) put on a Controller class to be executed before the one(s) put on action methods 
+		 set play.http.actionComposition.controllerAnnotationsFirst = true in application.conf. 
+		 However, be aware that if you use a third party module in your project it may rely on a certain execution order of its annotations.
+		 */
+		String username = context.session().get(COOKIE_SESSION);
+		
+		String userAgent = context.request().getHeader("User-Agent");
+		if(userAgent != null && userAgent.equals("bot")){
+			username = "ngsrg";
+		}
+		
 		for(String checkPermission:configuration.value()){
 			if(checkPermission.equals("") || !(Play.application().configuration().getString("auth.mode").equals("prod"))){
-					return delegate.call(ctx);
-			} else if (PermissionHelper.checkPermission(ctx.session(), checkPermission)){
-						return delegate.call(ctx);
+					return delegate.call(context);
+			} else if (PermissionHelper.checkPermission(username, checkPermission)){
+						return delegate.call(context);
 			} else {
 				return Promise.promise(new Function0<Result>(){
 							public Result apply() {

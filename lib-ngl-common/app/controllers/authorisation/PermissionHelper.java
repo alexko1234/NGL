@@ -9,17 +9,18 @@ package controllers.authorisation;
 
 import java.util.List;
 
+import play.mvc.Http.Session;
 import models.administration.authorisation.Role;
 import models.administration.authorisation.Team;
 import models.administration.authorisation.User;
 import models.administration.authorisation.Permission;
 import models.utils.dao.DAOException;
-import play.Logger;
-import play.mvc.Http.Session;
+
 
 
 
 public class PermissionHelper {
+	
 	private static final String COOKIE_SESSION = "NGL_FILTER_USER";
 	
 
@@ -39,12 +40,30 @@ public class PermissionHelper {
 		return false;
 	}
 	
+	/**
+	 * 
+	 * @param ses the user session
+	 * @param codePermission the code of the permission that you want to verify
+	 * @return true if the user can access to the resources
+	 * @throws DAOException 
+	 */
+	public static boolean checkPermission(String username, String codePermission) throws DAOException {
+		if(null != username){
+			List<Permission> permissions = Permission.find.findByUserLogin(username);
+			for(Permission p:permissions){
+				if(codePermission.equals(p.code))
+					return true;
+			}
+		}
+		return false;
+	}
+	
 	
 	/*
 	 * Method checkRole()
 	 */
-	public static boolean checkRole(Session ses, String labelRole) throws DAOException{
-		List<Role> roles = Role.find.findByUserLogin(ses.get(COOKIE_SESSION));
+	public static boolean checkRole(String username, String labelRole) throws DAOException{
+		List<Role> roles = Role.find.findByUserLogin(username);
 		for(Role r:roles){
 			if(labelRole.equals(r.label))
 				return true;
@@ -107,8 +126,8 @@ public class PermissionHelper {
 	 * @return true if the user is in the team
 	 * @throws DAOException 
 	 */
-	public static boolean checkTeam(Session ses, String varteam) throws DAOException {
-		User user = User.find.findByLogin(ses.get(COOKIE_SESSION));  
+	public static boolean checkTeam(String username, String varteam) throws DAOException {
+		User user = User.find.findByLogin(username);  
 		if(user!=null) {
 			for(Team team:user.teams) {
 				if(team.nom.equals(varteam))
@@ -124,12 +143,12 @@ public class PermissionHelper {
 	 * @return  if the user is in one of these team
 	 * @throws DAOException 
 	 */
-	public static boolean checkTeam(Session ses, List<String> teams) throws DAOException {
+	public static boolean checkTeam(String username, List<String> teams) throws DAOException {
 		//By default -> [""]
 		if(teams.size() < 2 && teams.get(0).equalsIgnoreCase(""))
 			return true;
 		
-		User user = User.find.findByLogin(ses.get(COOKIE_SESSION));  
+		User user = User.find.findByLogin(username);  
 		if(user!=null) {
 			for(Team team:user.teams) {
 				for(String varteam:teams){
