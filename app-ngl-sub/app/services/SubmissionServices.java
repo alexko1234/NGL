@@ -125,9 +125,11 @@ public class SubmissionServices {
 		if (StringUtils.isBlank(config.state.code)) {
 			throw new SraException("Configuration " + config.code + " avec champs state.code non renseigne");
 		}
-		if (!config.state.code.equalsIgnoreCase("N") || !config.state.code.equalsIgnoreCase("U-SUB")) {
-			throw new SraException("Configuration " + config.code + " avec state.code = "+ config.state.code);
+		System.out.println("dans init, config.state.code='"+config.state.code+"'");
+		if (!"N".equalsIgnoreCase(config.state.code) && !"U-SUB".equalsIgnoreCase(config.state.code)) {
+			throw new SraException("Configuration " + config.code + " avec state.code = '"+ config.state.code+"'");
 		}
+		System.out.println("dans init, config.state.code='"+config.state.code+"'");
 		if (config.strategyStudy.equalsIgnoreCase("strategy_internal_study")) {
 			if (StringUtils.isBlank(studyCode)) {
 				throw new SraException("Configuration " + config.code + " avec strategy_study = 'strategy_internal_study' incompatible avec studyCode vide passé en parametre");
@@ -431,7 +433,8 @@ public class SubmissionServices {
 				confState.code = "U-SUB";
 				confState.user = user;
 				configWorkflows.setState(contextValidation, config, confState);
-
+		System.out.println("on est passé par configWorkflows.setState et state.code='" + config.state.code+"'");		
+				
 		// updater si besoin le study pour le statut 'V-SUB'
 		if (study != null && StringUtils.isNotBlank(submission.studyCode)){
 			study.state.code = "V-SUB";

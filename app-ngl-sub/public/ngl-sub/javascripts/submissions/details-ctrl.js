@@ -18,7 +18,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				withoutSelect : true,
 				columnMode : true,
 				lineMode : function(line){
-					if(line.state.code == "new")
+					if(line.state.code === "N")
 						return true;
 					else 
 						return false;
@@ -137,7 +137,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 				withoutSelect : true,
 				columnMode : true,
 				lineMode:function(line){
-					if(line.state.code == "new"){
+					if(line.state.code === "N"){
 						return true;
 					}else {
 						return false;
@@ -474,7 +474,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 	init();
 
 	function closeSubmission(){
-	    // $scope.submission.state.code = "uservalidate";		
+	    // $scope.submission.state.code = "V-SUB";		
 		//$http.put(jsRoutes.controllers.sra.submissions.api.Submissions.update($scope.submission.code).url, $scope.submission)
 		var state = angular.copy($scope.submission.state);
 		state.code = "V-SUB";
@@ -531,7 +531,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 		// Mise à jour du status  des samples :
 		for(var i = 0; i < tab_samples.length ; i++){
 			console.log("sampleCode = " + tab_samples[i].code + " state = "+ tab_samples[i].state.code);
-			//tab_samples[i].state.code = "uservalidate";
+			//tab_samples[i].state.code = "V-SUB";
 			console.log("sampleTitle = " + tab_samples[i].title + " state = "+ tab_samples[i].state.code);
 			console.log("sampleCode = " + tab_samples[i].code + " state = "+ tab_samples[i].state.code);
 			// sauvegarde dans database asynchrone
@@ -559,7 +559,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 		// Mise à jour du statut des experiments :
 		for(var i = 0; i < tab_experiments.length ; i++){
 			console.log("experimentCode = " + tab_experiments[i].code + " state = "+ tab_experiments[i].state.code);
-			//tab_experiments[i].state.code = "uservalidate";
+			//tab_experiments[i].state.code = "V-SUB";
 			console.log("experimentCode = " + tab_experiments[i].code + " state = "+ tab_experiments[i].state.code);
 			// sauvegarde dans database :
 			$http.put(jsRoutes.controllers.sra.experiments.api.Experiments.update(tab_experiments[i].code).url, tab_experiments[i]).success(function(data){
@@ -580,7 +580,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 		// sauvegarde cote client des experiments avec bon statut :
 		$scope.experimentDT.save(); // fait le save cote client mais n'utilise pas url et ne fait pas save dans database.
 		
-		//mise a jour l'etat de submission a uservalidate realise dans closeSubmission appelé par processInSubmission
+		//mise a jour l'etat de submission a V-SUB realise dans closeSubmission appelé par processInSubmission
 	
 	};
 	
