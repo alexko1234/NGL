@@ -647,7 +647,8 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 					    	"header": Messages("runs.lane.sav.alignedPerc"),
 					    	"type":"text",
 					    	"order":false,
-					    	"extraHeaders":{"0":Messages("runs.lane.sav.read1")}
+					    	"extraHeaders":{"0":Messages("runs.lane.sav.read1")},
+					    	"tdClass": "valuationService.valuationCriteriaClass({lanes:value.data}, run.valuation.criteriaCode, 'lanes.treatments.sav.read1.alignedPerc.value')"
 						},
 						{  	"property":function(value){
 								return $filter('number')(value.treatments.sav.read1.errorRatePerc.value,2) +' +/- '+$filter('number')(value.treatments.sav.read1.errorRatePercStd.value,2);						
@@ -813,7 +814,8 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			    	"header": Messages("runs.lane.sav.alignedPerc"),
 			    	"type":"text",
 			    	"order":false,
-			    	"extraHeaders":{"0":Messages("runs.lane.sav.read2")}
+			    	"extraHeaders":{"0":Messages("runs.lane.sav.read2")},
+			    	"tdClass" : "valuationService.valuationCriteriaClass({lanes:value.data}, run.valuation.criteriaCode, 'lanes.treatments.sav.read2.alignedPerc.value')"
 				},
 				{  	"property":function(value){
 						return $filter('number')(value.treatments.sav.read2.errorRatePerc.value,2) +' +/- '+$filter('number')(value.treatments.sav.read2.errorRatePercStd.value,2);						
