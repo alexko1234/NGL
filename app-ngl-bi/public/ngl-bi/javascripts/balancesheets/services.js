@@ -226,7 +226,12 @@
 				},
 				select : {
 					active : false
-				}
+				},
+				callbackEndDisplayResult : function(){
+					 for(var i = 0; i < linesToColor.length; i++){
+						 colorBlue(dtQuarters, linesToColor[i]);
+					 }
+				},
 			 }; 
 		 var defaultDatatableColumns = [
 				{	"property":"quarter",
@@ -346,9 +351,10 @@
 		 dtQuarters = datatable(datatableConfig);
 		 dtQuarters.setColumnsConfig(defaultDatatableColumns);	 
 		 dtQuarters.setData(balanceSheetsQuarters, balanceSheetsQuarters.length);
-		 for(var i = 0; i < linesToColor.length; i++){
-			 colorBlue(dtQuarters, linesToColor[i]);
-		 }
+			 
+		
+		
+		
 	 }
 	 
 	 
@@ -487,7 +493,10 @@
 					},
 					select : {
 						active : false
-					}
+					},
+					callbackEndDisplayResult : function(){
+						 colorBlue(dtSumSequencingProduction, 0);
+					},
 				 }; 
 		 var defaultDatatableColumns = [
 				{	"property":"property",
@@ -510,7 +519,7 @@
 		 dtSumSequencingProduction = datatable(datatableConfig);
 		 dtSumSequencingProduction.setColumnsConfig(defaultDatatableColumns);
 		 dtSumSequencingProduction.setData(sum, 1);
-		 colorBlue(dtSumSequencingProduction, 0);
+		
 	 }
 	 
 	 
@@ -662,6 +671,10 @@
 					},
 					select : {
 						active : false
+					},
+					callbackEndDisplayResult : function(){
+						 // Color text in blue
+						 for(var i = 0; i < linesToColor.length; i++) colorBlue(dtSumFirstTen, linesToColor[i]);
 					}
 				 }; 
 		 var defaultDatatableColumns = [
@@ -713,8 +726,7 @@
 		 dtSumFirstTen.setColumnsConfig(defaultDatatableColumns);
 		 dtSumFirstTen.setData(dataToInsert, dataToInsert.length);
 		 
-		 // Color text in blue
-		 for(var i = 0; i < linesToColor.length; i++) colorBlue(dtSumFirstTen, linesToColor[i]);
+		
 		 
 		 
 	 }
@@ -859,6 +871,9 @@
 					},
 					select : {
 						active : false
+					},
+					callbackEndDisplayResult : function(){
+						colorBlue(dtSumProjectType, 0); 
 					}
 				 }; 
 		 var defaultDatatableColumns = [
@@ -883,7 +898,7 @@
 		 dtSumProjectType = datatable(datatableConfig);
 		 dtSumProjectType.setColumnsConfig(defaultDatatableColumns);
 		 dtSumProjectType.setData(sum, 1);
-		 colorBlue(dtSumProjectType, 0); 
+		 
 		 
 	 }
 	 
@@ -1328,6 +1343,9 @@
 					},
 					select : {
 						active : false
+					},
+					callbackEndDisplayResult : function(){
+						 colorBlue(dtSumYearly, 0);	
 					}
 				 };
 				 var defaultDatatableColumns = [
@@ -1358,8 +1376,6 @@
 				 dtSumYearly = datatable(datatableConfig);
 				 dtSumYearly.setColumnsConfig(defaultDatatableColumns);
 				 dtSumYearly.setData(sum, 1);
-				 colorBlue(dtSumYearly, 0);		 
-			 
 			}
 			
 			
