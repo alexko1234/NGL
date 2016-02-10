@@ -46,7 +46,6 @@ public class ProcessServiceCNS extends AbstractProcessService {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-
 			//Bionano
 		/*
 			l.add(DescriptionFactory.newProcessType("Librairie PE sans sizing", "Lib-PE-NoSizing", ProcessCategory.find.findByCode("library"), getPropertyDefinitionsLib300600(), getExperimentTypes("fragmentation","librairie-indexing","amplification"), 
@@ -57,20 +56,22 @@ public class ProcessServiceCNS extends AbstractProcessService {
 			l.add(DescriptionFactory.newProcessType("Normalisation", "normalisation-process", ProcessCategory.find.findByCode("pre-sequencing"), getPropertyDefinitionsQPCRQuantification(), getExperimentTypes("solution-stock"), 
 					getExperimentTypes("solution-stock").get(0), getExperimentTypes("solution-stock").get(0), getExperimentTypes("ext-to-solution-stock").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			*/
-			//Bionano
-			l.add(DescriptionFactory.newProcessType("NLRS, Irys chip, dépôt", "bionano-nlrs-process", ProcessCategory.find.findByCode("mapping"), getPropertyDefinitionsBionano(), 
-					Arrays.asList(getPET("ext-to-bionano-nlrs-process",-1),getPET("irys-nlrs-prep",0),getPET("irys-chip-preparation",1),getPET("bionano-depot",2)), 
-					getExperimentTypes("irys-nlrs-prep").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-bionano-nlrs-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-			
-			l.add(DescriptionFactory.newProcessType("Irys Chip, dépôt", "bionano-chip-process", ProcessCategory.find.findByCode("mapping"), getPropertyDefinitionsBionano(), 
-					Arrays.asList(getPET("ext-to-bionano-chip-process",-1),getPET("irys-nlrs-prep",-1),getPET("irys-chip-preparation",0),getPET("bionano-depot",1)),
-					getExperimentTypes("irys-chip-preparation").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-bionano-chip-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-			
-			l.add(DescriptionFactory.newProcessType("Redépôt BioNano", "bionano-run", ProcessCategory.find.findByCode("mapping"), getPropertyDefinitionsBionano(), 
-					Arrays.asList(getPET("ext-to-bionano-run",-1), getPET("irys-chip-preparation",-1), getPET("bionano-depot",0)), 
-					getExperimentTypes("bionano-depot").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-bionano-run").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-								
 		}
+
+			//Bionano
+		l.add(DescriptionFactory.newProcessType("NLRS, Irys chip, dépôt", "bionano-nlrs-process", ProcessCategory.find.findByCode("mapping"), getPropertyDefinitionsBionano(), 
+				Arrays.asList(getPET("ext-to-bionano-nlrs-process",-1),getPET("irys-nlrs-prep",0),getPET("irys-chip-preparation",1),getPET("bionano-depot",2)), 
+				getExperimentTypes("irys-nlrs-prep").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-bionano-nlrs-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(DescriptionFactory.newProcessType("Irys Chip, dépôt", "bionano-chip-process", ProcessCategory.find.findByCode("mapping"), getPropertyDefinitionsBionano(), 
+				Arrays.asList(getPET("ext-to-bionano-chip-process",-1),getPET("irys-nlrs-prep",-1),getPET("irys-chip-preparation",0),getPET("bionano-depot",1)),
+				getExperimentTypes("irys-chip-preparation").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-bionano-chip-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		l.add(DescriptionFactory.newProcessType("Redépôt BioNano", "bionano-run", ProcessCategory.find.findByCode("mapping"), getPropertyDefinitionsBionano(), 
+				Arrays.asList(getPET("ext-to-bionano-run",-1), getPET("irys-chip-preparation",-1), getPET("bionano-depot",0)), 
+				getExperimentTypes("bionano-depot").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-bionano-run").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+							
+		
 	
 		l.add(DescriptionFactory.newProcessType("Frg, Lib ONT, Dépôt", "nanopore-process-library", ProcessCategory.find.findByCode("library"),getPropertyDefinitionsNanoporeFragmentation() , 
 				Arrays.asList(getPET("ext-to-nanopore-process-library",-1),getPET("nanopore-fragmentation",0),getPET("nanopore-library",1),getPET("nanopore-depot",2)), 
