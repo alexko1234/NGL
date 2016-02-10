@@ -374,7 +374,8 @@ initialdata.error.sampleNotExist=Le container {0}
 
 docs.illumina=Séquençage Illumina
 docs.nanopore=Séquençage Nanopore
-docs.opticalmapping=Optical mapping
+docs.opticalmapping.opgen=Optical mapping Opgen
+docs.opticalmapping.bionano=Optical mapping BioNano
 
 #button
 button.search = Rechercher
