@@ -104,7 +104,7 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 	private void validateReadSet(ReadSet readset, ContextValidation contextValidation) {
 		
 		ValidationHelper.required(contextValidation, readset.path, "path");
-		ValidationHelper.required(contextValidation, readset.location, "path");
+		ValidationHelper.required(contextValidation, readset.location, "location");
 		ValidationHelper.required(contextValidation, readset.properties.get("insertSizeGoal"), "properties.insertSizeGoal");
 		ValidationHelper.required(contextValidation, readset.properties.get("strandOrientation"), "properties.strandOrientation");
 		
