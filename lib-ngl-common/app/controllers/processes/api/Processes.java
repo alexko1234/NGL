@@ -218,7 +218,6 @@ public class Processes extends CommonController{
 		}
 		*/
 		containers.parallelStream().forEach(container -> {
-			p.inputContainerCode = container.code;			
 			processes.addAll(saveAllContentsProcesses(p, container, contextValidation ));
 		});
 		

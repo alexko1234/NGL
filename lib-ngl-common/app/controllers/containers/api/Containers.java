@@ -345,9 +345,9 @@ public class Containers extends CommonController {
 					listePrevious.add(e.code);
 				}			
 				
-				if(CollectionUtils.isNotEmpty(containersSearch.fromExperimentTypeCodes) && containersSearch.fromExperimentTypeCodes.contains("none")){
-						queryElts.add(DBQuery.or(DBQuery.size("fromExperimentTypeCodes", 0),DBQuery.notExists("fromExperimentTypeCodes")
-						,DBQuery.in("fromExperimentTypeCodes", containersSearch.fromExperimentTypeCodes)));					
+				if(CollectionUtils.isNotEmpty(containersSearch.fromTransformationTypeCodes) && containersSearch.fromTransformationTypeCodes.contains("none")){
+						queryElts.add(DBQuery.or(DBQuery.size("fromTransformationTypeCodes", 0),DBQuery.notExists("fromTransformationTypeCodes")
+						,DBQuery.in("fromTransformationTypeCodes", containersSearch.fromTransformationTypeCodes)));					
 				}else if(!onlyEx){
 					queryElts.add(DBQuery.in("fromTransformationTypeCodes", listePrevious));
 				}else{
@@ -416,10 +416,7 @@ public class Containers extends CommonController {
 			}
 			
 			
-		} else if(CollectionUtils.isNotEmpty(containersSearch.fromExperimentTypeCodes)){
-			
-		
-		if(CollectionUtils.isNotEmpty(containersSearch.fromTransformationTypeCodes)){
+		} else if(CollectionUtils.isNotEmpty(containersSearch.fromTransformationTypeCodes)){
 			
 			if(BooleanUtils.isTrue(containersSearch.isEmptyFromExperimentTypeCodes) || containersSearch.fromTransformationTypeCodes.contains("none")){
 					queryElts.add(DBQuery.or(DBQuery.size("fromTransformationTypeCodes", 0),DBQuery.notExists("fromTransformationTypeCodes")
