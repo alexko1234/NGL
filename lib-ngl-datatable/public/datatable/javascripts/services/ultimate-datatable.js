@@ -795,16 +795,16 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                             that.displayResult = displayResultTmp;
                             that.computeRowSpans();
                         }
-
-                        if (that.config.edit.byDefault) {
+                        
+                    	if (that.config.edit.byDefault) {
                             that.config.edit.withoutSelect = true;
                             that.setEdit();
-                        }else if(!that.config.edit.byDefault && that.config.edit.withoutSelect){
-                        	that.config.edit.withoutSelect = false;                            
+                            that.config.edit.withoutSelect = false;
                         }
-						if(angular.isFunction(that.config.callbackEndDisplayResult)){
+                    	
+                    	if(angular.isFunction(that.config.callbackEndDisplayResult)){
 							that.config.callbackEndDisplayResult();
-						}                        
+						}                                                
                     }
                 }, time);
             },
