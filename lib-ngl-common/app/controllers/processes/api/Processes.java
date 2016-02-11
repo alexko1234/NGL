@@ -211,12 +211,7 @@ public class Processes extends CommonController{
 		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("support.code", supportCode)).toList();
 		
 		valdateCommonProcessAttribut(p, contextValidation);
-		/*
-		for(Container container:containers){			
-			p.containerInputCode = container.code;			
-			processes.addAll(saveAllContentsProcesses(p, container, contextValidation ));
-		}
-		*/
+		
 		containers.parallelStream().forEach(container -> {
 			processes.addAll(saveAllContentsProcesses(p, container, contextValidation ));
 		});
@@ -227,7 +222,7 @@ public class Processes extends CommonController{
 
 	private static List<Process> saveAllContentsProcesses(Process process, Container container, ContextValidation contextValidation){	
 		//The process is replicated in each content, so we can validate once
-		ProcessValidationHelper.validateContainerCode(container.code, contextValidation, "containerInputCode");
+		ProcessValidationHelper.validateContainerCode(container.code, contextValidation, "inputContainerCode");
 		
 		final List<Process> processes = new ArrayList<Process>();
 		container.contents.parallelStream().forEach(c -> {

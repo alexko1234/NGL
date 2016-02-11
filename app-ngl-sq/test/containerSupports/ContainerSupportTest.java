@@ -251,7 +251,7 @@ public class ContainerSupportTest extends AbstractTests {
 		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
 		
 		lc = mh.convertValue(mh.resultToJsNode(result), new TypeReference<ArrayList<ListObject>>(){});
-		List<Container> l = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("processTypeCode", ssf.processTypeCode)).toList();
+		List<Container> l = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.in("processTypeCodes", ssf.processTypeCode)).toList();
 		List<String> lst = new ArrayList<String>();
 		for(Container c:l){
 			lst.add(c.support.code);

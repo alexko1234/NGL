@@ -265,7 +265,7 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 		//lists.refresh.filterConfigs({pageCodes:["process-"+$scope.searchService.form.processTypeCode]}, "process-"+$scope.searchService.form.processTypeCode);
 		if(angular.isDefined($scope.searchService.form.processCategory)){						
 			$scope.searchService.lists.refresh.filterConfigs({pageCodes:["process-"+$scope.searchService.form.processTypeCode]}, "process-"+$scope.searchService.form.processTypeCode);			                                    		 
-		}else{
+		} else{
 			$scope.searchService.form.processTypeCode = undefined;			                                    		
 		}		
 

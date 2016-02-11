@@ -22,8 +22,8 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 		});
 		
 		columns.push({
-			"header":Messages("containers.table.fromExperimentTypeCodes"),
-			"property":"fromExperimentTypeCodes",
+			"header":Messages("containers.table.fromTransformationTypeCodes"),
+			"property":"fromTransformationTypeCodes",
 			"order":false,
 			"hide":true,
 			"position":2.5,

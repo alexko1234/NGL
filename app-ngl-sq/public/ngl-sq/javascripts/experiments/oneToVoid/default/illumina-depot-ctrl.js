@@ -102,9 +102,7 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 				active:true
 			},
 			edit:{
-				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
-				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),				
-				columnMode:true
+				active: false
 			},
 			messages:{
 				active:false,
@@ -132,8 +130,6 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 		$scope.$on('refresh', function(e) {
 			console.log("call event refresh on one-to-void");		
 			var dtConfig = $scope.atmService.data.getConfig();
-			dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
-			dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 			$scope.atmService.data.setConfig(dtConfig);
 			
 			$scope.atmService.refreshViewFromExperiment($scope.experiment);

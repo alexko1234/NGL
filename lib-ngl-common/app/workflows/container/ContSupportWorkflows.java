@@ -47,19 +47,19 @@ public class ContSupportWorkflows extends Workflows<ContainerSupport> {
 			ContainerSupport containerSupport) {
 		
 		if("IS".equals(containerSupport.state.code) || "UA".equals(containerSupport.state.code)){
-			//TODO GA improve the extraction of fromExperimentTypeCodes after refactoring inputProcessCodes and processTypeCode
+			//TODO GA improve the extraction of fromTransformationTypeCodes after refactoring inputProcessCodes and processTypeCode
 			 
 			 boolean unsetFromExperimentTypeCodes = false;
-			 if(null != containerSupport.fromExperimentTypeCodes && containerSupport.fromExperimentTypeCodes.size() == 1){
-				 String code = containerSupport.fromExperimentTypeCodes.iterator().next();
+			 if(null != containerSupport.fromTransformationTypeCodes && containerSupport.fromTransformationTypeCodes.size() == 1){
+				 String code = containerSupport.fromTransformationTypeCodes.iterator().next();
 				 if(code.startsWith("ext"))unsetFromExperimentTypeCodes=true;
-			 }else if(null != containerSupport.fromExperimentTypeCodes && containerSupport.fromExperimentTypeCodes.size() > 1){
-				 Logger.error("several fromExperimentTypeCodes not managed");
+			 }else if(null != containerSupport.fromTransformationTypeCodes && containerSupport.fromTransformationTypeCodes.size() > 1){
+				 Logger.error("several fromTransformationTypeCodes not managed");
 			 }
 			
 			if(unsetFromExperimentTypeCodes){
 				MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, Container.class,
-						DBQuery.is("code",containerSupport.code), DBUpdate.unset("fromExperimentTypeCodes"));
+						DBQuery.is("code",containerSupport.code), DBUpdate.unset("fromTransformationTypeCodes"));
 			}	
 		} 
 		callWorkflowRules(validation,containerSupport);		

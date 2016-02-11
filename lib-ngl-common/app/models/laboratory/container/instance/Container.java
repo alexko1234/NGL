@@ -83,7 +83,6 @@ public class Container extends DBObject implements IValidation {
 	// List for pool experimentType
 	public Set<String> fromTransformationTypeCodes;
 	public Set<String> fromTransformationCodes; 
-	//TODO GA merge in same objet processTypeCode and processCode and add a list of this object
 	public Set<String> processTypeCodes;
 	public Set<String> processCodes;
 
@@ -116,7 +115,6 @@ public class Container extends DBObject implements IValidation {
 		validateState(this.state, contextValidation);
 		validateTraceInformation(this.traceInformation, contextValidation);
 		validateContainerCategoryCode(categoryCode, contextValidation);
-		//validateProcessTypeCode(processTypeCode, contextValidation);
 		//TODO GA processTypeCodes
 		validateProjectCodes(projectCodes, contextValidation);
 		validateSampleCodes(sampleCodes, contextValidation);
