@@ -297,9 +297,9 @@ public class ReadSets extends ReadSetsController{
 			readSetInput.state.code = "N";
 			readSetInput.state.user = getCurrentUser();
 			readSetInput.state.date = new Date();	
+			readSetInput.submissionState = new State("NONE", getCurrentUser());
 			readSetInput.submissionState.date = new Date();	
-			readSetInput.submissionState.code = "NONE";	
-			readSetInput.submissionState.user = getCurrentUser();
+			
 
 			//hack to simplify ngsrg => move to workflow but workflow not call here !!!
 			if(null != readSetInput.runCode && (null == readSetInput.runSequencingStartDate || null == readSetInput.runTypeCode)){
