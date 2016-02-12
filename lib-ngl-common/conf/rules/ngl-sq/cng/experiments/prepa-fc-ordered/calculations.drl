@@ -26,7 +26,7 @@ rule "prepa-fc-ordered concentration final"
     	 $experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-fc-ordered", $stateCode : state.code, $stateCode!="F")
     	 $atomicTransfert: ManyToOneContainer( )
     	 $inputContainer:InputContainerUsed( $experimentProperties : experimentProperties,$experimentProperties!=null) from $atomicTransfert.inputContainerUseds
-    	 OutputContainerUsed( $experimentPropertiesOut : experimentProperties,$experimentPropertiesOut!=null) from $atomicTransfert.outputContainerUseds
+    	 $outputContainerUsed: OutputContainerUsed( $experimentPropertiesOut : experimentProperties,$experimentPropertiesOut!=null) from $atomicTransfert.outputContainerUseds
     	 $finalVolume : PropertyValue() from $experimentPropertiesOut.get("finalVolume")
     	 $inputVolume2 : PropertyValue() from $experimentProperties.get("inputVolume2")
     	 $finalConcentration1 : PropertyValue() from $inputContainer.concentration
@@ -39,5 +39,6 @@ rule "prepa-fc-ordered concentration final"
    		}
    		
    		$experimentProperties.put("finalConcentration2",value);
+   		$outputContainerUsed.concentration = value;
    		update($experiment);
    	end

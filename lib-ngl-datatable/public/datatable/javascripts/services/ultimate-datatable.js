@@ -797,9 +797,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                         }
                         
                     	if (that.config.edit.byDefault) {
-                            that.config.edit.withoutSelect = true;
-                            that.setEdit();
-                            that.config.edit.withoutSelect = false;
+                            that.setEdit();                           
                         }
                     	
                     	if(angular.isFunction(that.config.callbackEndDisplayResult)){
@@ -1175,7 +1173,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                         var find = false;
                         for (var i = 0; i < that.displayResult.length; i++) {
 
-                            if (that.displayResult[i].line.selected || that.config.edit.withoutSelect) {
+                            if (that.displayResult[i].line.selected || that.config.edit.withoutSelect || that.config.edit.byDefault) {
                                 if (angular.isUndefined(that.config.edit.lineMode) || (angular.isFunction(that.config.edit.lineMode) && that.config.edit.lineMode(that.displayResult[i].data))) {
                                     that.displayResult[i].line.edit = true;
                                     find = true;
