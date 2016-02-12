@@ -4,11 +4,11 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 // probleme comment traiter des tubes ou des plaques ???
 	
 	
-// EN COURS...................
 	
+	// actuellement le nom du header est en dur dans ATM (Inputs ou Outputs )
+	// donc utiliser ici message va introduire des erreurs... laisser aussi les valeurs en dur pour l'instant
 	var inputExtraHeaders="Inputs";
 	var outputExtraHeaders="Outputs";
-	
 	//var inputExtraHeaders=Messages("containers.table.support.in.code");
 	//var outputExtraHeaders=Messages("containers.table.support.out.code");
 	
@@ -82,7 +82,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 				     //Aliquot    essayer avec Used  ??? toujours pas
 				     {
 				        "header":Messages("containers.table.codeAliquot"),
-				 		"property": "inputContainerUsed.sampleAliquoteCodes", /// trouver la bonneeeeee
+				 		"property": "inputContainerUsed.sampleAliquoteCodes", /// PBBBBBBBBBB
 				 		"order":true,
 				 		"hide":true,
 				 		"type":"text",
@@ -90,10 +90,10 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 				 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 				        "extraHeaders":{0:inputExtraHeaders}
 					 },
-				     //Tag        Used ?????? toujours pas    avec value ????
+				     //Tag        Used ?????? toujours pas    avec value ???? non plus...
 					 {
 					    "header":Messages("containers.table.tags"),
-					 	"property": "inputContainerUsed.tags.value", /// trouver la bonneeeeee
+					 	"property": "inputContainerUsed.tags.value", /// PBBBBBBBBBBBB
 					 	"order":true,
 					 	"hide":true,
 					 	"type":"text",
@@ -103,7 +103,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 					 },
 				     //Concentration  Used ?????? OUIIII
 					 {
-			        	 "header":Messages("containers.table.concentration") + " (ng/µL)",
+			        	 "header":Messages("containers.table.concentration") + " (ng/µL)", 
 			        	 "property":"inputContainerUsed.volume.value",
 			        	 "order":true,
 						 "hide":true,
@@ -111,6 +111,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 			        	 "position":13,
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
+			         
 			         // colonnes specifiques instrument viennent ici
 			         
 			         // Etat input Container
