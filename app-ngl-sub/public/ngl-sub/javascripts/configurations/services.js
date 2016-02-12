@@ -160,6 +160,7 @@ var getColumns = function(){
 					});	
 		columns.push({property:"state.code",
 			        	  header: "configuration.state.code",
+			        	  "filter":"codes:'state'",
 			        	  type :"text",		    	  	
 			        	  order:false,
 			        	  edit:false,

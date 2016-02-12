@@ -110,6 +110,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 					},
 
 					 {property:"state.code",
+					 	  "filter":"codes:'state'",
 			        	  header: "state",
 			        	  type :"text",		    	  	
 			        	  order:false,

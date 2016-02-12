@@ -70,7 +70,9 @@ public class Submissions extends DocumentController<Submission>{
 	public Result list(){	
 		Form<SubmissionsSearchForm> submissionsSearchFilledForm = filledFormQueryString(submissionsSearchForm, SubmissionsSearchForm.class);
 		SubmissionsSearchForm submissionsSearchForm = submissionsSearchFilledForm.get();
-		Logger.debug(submissionsSearchForm.state);
+		//modif 		Logger.debug(submissionsSearchForm.state);
+
+		Logger.debug(submissionsSearchForm.stateCode);
 		Query query = getQuery(submissionsSearchForm);
 		MongoDBResult<Submission> results = mongoDBFinder(submissionsSearchForm, query);				
 		List<Submission> submissionsList = results.toList();
@@ -88,8 +90,11 @@ public class Submissions extends DocumentController<Submission>{
 		if (StringUtils.isNotBlank(form.projCode)) { //all
 			queries.add(DBQuery.in("projectCode", form.projCode));
 		}
-		if (StringUtils.isNotBlank(form.state)) { //all
-			queries.add(DBQuery.in("state.code", form.state));
+		//modif		if (StringUtils.isNotBlank(form.state)) { //all
+
+		//if (StringUtils.isNotBlank(form.state.code)) { //all
+		if (StringUtils.isNotBlank(form.stateCode)) { //all
+			queries.add(DBQuery.in("state.code", form.stateCode));
 		}	
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));

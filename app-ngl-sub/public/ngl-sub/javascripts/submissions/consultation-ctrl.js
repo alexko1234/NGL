@@ -39,7 +39,7 @@ angular.module('home').controller('ConsultationCtrl',[ '$http', '$scope', '$rout
 	$scope.consultationService = submissionsConsultationService;	
 	$scope.consultationService.init($routeParams, submissionDTConfig);
 	$scope.consultationService.isValidation = false;
-	console.log("consultation-ctrl:state " + $scope.consultationService.form.state);
+	console.log("consultation-ctrl:state " + $scope.consultationService.form.stateCode);
 
 	$scope.search = function(){
 		if($scope.consultationService.form.projCode!==null){

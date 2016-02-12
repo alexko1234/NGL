@@ -116,6 +116,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			        },
 			        {property:"state.code",
 			        	  header: "sample.state",
+			        	  //"filter":"codes:'state'",
 			        	  type :"text",		    	  	
 			        	  order:false,
 			        	  edit:false,
@@ -302,6 +303,7 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			        	order:true
 					},
 					 {property:"state.code",
+					     "filter":"codes:'state'",
 			        	  header: "experiment.state",
 			        	  type :"text",		    	  	
 			        	  order:true,

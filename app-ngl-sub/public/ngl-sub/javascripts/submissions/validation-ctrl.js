@@ -30,7 +30,7 @@ angular.module('home').controller('ValidationCtrl',[ '$http', '$scope', '$routeP
 	
 	if(angular.isUndefined(mainService.getHomePage())){
 		mainService.setHomePage('validation');
-		tabService.addTabs({label:Messages('submissions.menu.validation'),href:jsRoutes.controllers.sra.submissions.tpl.Submissions.home("consultation").url,remove:true});
+		tabService.addTabs({label:Messages('submissions.menu.validation'),href:jsRoutes.controllers.sra.submissions.tpl.Submissions.home("validation").url,remove:true});
 		tabService.activeTab(0); // desactive le lien !
 	}
 	// si on declare dans services => var sraVariables = {};
@@ -40,13 +40,12 @@ angular.module('home').controller('ValidationCtrl',[ '$http', '$scope', '$routeP
 	$scope.consultationService.init($routeParams, submissionDTConfig);
 	$scope.consultationService.isValidation = true;
 	
-	$scope.consultationService.form.state = 'N';
-	console.log("validation-ctrl:state " + $scope.consultationService.form.state);
+	$scope.consultationService.form.stateCode = 'N';
+	console.log("validation-ctrl:stateCode " + $scope.consultationService.form.stateCode);
 
 	$scope.search = function(){
 		if($scope.consultationService.form.projCode!==null){
 			$scope.consultationService.search();
-			
 		} else {
 			console.log("Cancel datatable");
 			$scope.consultationService.cancel();

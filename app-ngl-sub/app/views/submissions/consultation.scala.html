@@ -10,11 +10,12 @@
 		@**"consultation.placeholder.state" est definit dans le fichier /conf/messages.
 		La variable consultationService.sraVariables.state est initialisee dans /public/javascripts/submissions/services.js
 		au niveau de createService et initListService 
-		<div class="form-control" bt-select ng-model="consultationService.form.state" placeholder='@Messages("consultation.placeholder.state")' bt-options="state.code as state.name for state in consultationService.sraVariables.state" required ng-change=search()></div>			
+		<div class="form-control" bt-select ng-model="consultationService.form.state" placeholder='@Messages("consultation.placeholder.state")' bt-options="state.code as state.name for state in consultationService.lists.states" required ng-change=search()></div>			
 		Attention required pris en compte ssi submissionForm.$valid car pas de bouton submit d'ou demande explicite de validation du formulaire avant de lancer search().
+			<div class="form-control" bt-select ng-if="!consultationService.isValidation" ng-model="consultationService.form.stateCode" placeholder='@Messages("consultation.placeholder.state")' bt-options="state.code as state.name for state in consultationService.lists.getStates()" required ng-change=search()></div>			
 		**@		
 		@formGroup{
-			<div class="form-control" bt-select ng-if="!consultationService.isValidation" ng-model="consultationService.form.state" placeholder='@Messages("consultation.placeholder.state")' bt-options="state.code as state.name for state in consultationService.sraVariables.state" required ng-change=search()></div>			
+			<div class="form-control" bt-select ng-if="!consultationService.isValidation" ng-model="consultationService.form.stateCode" placeholder='@Messages("consultation.placeholder.state")' bt-options="state.code as state.name for state in consultationService.lists.getStates()" required ng-change=search()></div>			
 		}	
 	}
 }

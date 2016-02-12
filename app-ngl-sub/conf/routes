@@ -22,7 +22,7 @@ PUT		/api/sra/submissions/:submissionCode/activate	@controllers.sra.submissions.
 # Mise à jour d'un objet submission et de ses composants :
 PUT		/sra/submissions/:code 							@controllers.sra.submissions.api.Submissions.update(code: java.lang.String) 
 # todo verifier s'il faut prefixer de api pour updateState
-PUT		/api/sra/submissions/:code/state				@controllers.sra.submissions.api.Submissions.updateState(code:java.lang.String)
+PUT		/sra/submissions/:code/state				    @controllers.sra.submissions.api.Submissions.updateState(code:java.lang.String)
 POST	/api/sra/submissions                            @controllers.sra.submissions.api.Submissions.save()
 GET		/api/sra/submissions							@controllers.sra.submissions.api.Submissions.list()
 GET		/api/sra/submissions/:code						@controllers.sra.submissions.api.Submissions.get(code: java.lang.String)
@@ -104,11 +104,17 @@ GET    	/api/readsets	                 			controllers.readsets.api.ReadSets.list
 #---------
 GET		/api/projects								@controllers.projects.api.Projects.list()
 
+# states from ngl-Common
+GET		/api/commons/states							controllers.commons.api.States.list()
+
 #----------------
 # documentation
 #----------------
 GET		/sra/documentation/home						controllers.sra.documentation.tpl.Documentation.home()
 
+
+
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               				controllers.Assets.at(path="/public", file)
-GET     /messages.js                				controllers.main.tpl.Main.jsMessages()
+GET     /assets/*file               									controllers.Assets.at(path="/public", file)
+GET     /messages.js                									controllers.main.tpl.Main.jsMessages()
+GET     /codes.js        	        									controllers.main.tpl.Main.jsCodes()

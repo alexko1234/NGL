@@ -293,7 +293,9 @@ angular.module('commonsServices', []).
     			getExperimentTypes : function(){return results['experimentTypes'];},
     			getExperimentTypesWithNone : function(){   								   				
     				return putNoneInResult(results['experimentTypes']);},
-    			getStates : function(){return results['states'];},
+    			getStates : function(){
+    				return results['states'];
+    				},
     			getRuns : function(){return results['runs'];},
     			getInstrumentCategories : function(){return results['instrumentCategories'];},
     			getProtocols : function(){return results['protocols'];},

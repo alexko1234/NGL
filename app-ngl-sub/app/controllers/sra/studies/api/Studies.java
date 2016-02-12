@@ -14,6 +14,7 @@ import models.sra.submit.util.SraCodeHelper;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -100,6 +101,10 @@ public class Studies extends DocumentController<AbstractStudy>{
 		if (StringUtils.isNotBlank(form.projCode)) { //all
 			queries.add(DBQuery.in("projectCode", form.projCode));
 		}	
+		if (CollectionUtils.isNotEmpty(form.stateCodes)) { //all
+			queries.add(DBQuery.in("state.code", form.stateCodes));
+		}
+		
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}

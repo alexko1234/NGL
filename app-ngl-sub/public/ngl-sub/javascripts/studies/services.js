@@ -102,6 +102,7 @@ var getColumns = function(){
 			        	});	*/
 			 columns.push({property:"state.code",
 			        	header: "study.state.code",
+			        	"filter":"codes:'state'",
 			        	type :"text",		    	  	
 			        	order:true
 			        	});	

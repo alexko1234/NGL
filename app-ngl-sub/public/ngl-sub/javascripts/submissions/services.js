@@ -10,6 +10,7 @@
 				    	  	type :"text",		    	  	
 				    	  	order:true});
 			columns.push({	property:"state.code",
+							"filter":"codes:'state'",
 							header: "submissions.state",
 							type :"text",
 							order:true});	
@@ -53,14 +54,15 @@
 				
 				refreshSubmissions : function(){
 					if(this.form.projCode!==null && this.form.projCode !== undefined){
-						this.datatable.search({projCode:this.form.projCode, state:'N'});
+						this.datatable.search({projCode:this.form.projCode, stateCode:'N'});
 					}
 				},
 				
 				refreshSraStudies : function(){
 					if(this.form.projCode!==null && this.form.projCode !== undefined){
 						// appel de refresh.sraStudies dans lists de common.js
-						this.lists.refresh.sraStudies({projCode:this.form.projCode});
+						//this.lists.refresh.sraStudies({projCode:this.form.projCode});
+						this.lists.refresh.sraStudies({projCode:this.form.projCode, stateCodes:["N", "F-SUB"]});
 					}
 				},
 				
@@ -96,7 +98,7 @@
 
 				// methode appelee pour remplir le tableau des soumissions 
 				search : function(){
-					this.datatable.search({projCode:this.form.projCode, state:'N'});
+					this.datatable.search({projCode:this.form.projCode, stateCode:'N'});
 				},
 				/**
 				 * initialization of the service
@@ -112,7 +114,7 @@
 					}else if(angular.isDefined(mainService.getDatatable())){
 						createService.datatable = mainService.getDatatable();		
 						if(this.form.projCode!==null && this.form.projCode !== undefined){
-							this.datatable.search({projCode:this.form.projCode, state:'N'});
+							this.datatable.search({projCode:this.form.projCode, stateCode:'N'});
 						}
 					}	
 					
@@ -144,6 +146,7 @@
 			    	  	type :"text",		    	  	
 			    	  	order:true});
 		columns.push({	property:"state.code",
+						"filter":"codes:'state'",
 						header: "submissions.state",
 						type :"text",
 						order:true});	
@@ -185,7 +188,8 @@
 
 			// methode appelee pour remplir le tableau des soumissions 
 			search : function(){
-				this.datatable.search({projCode:this.form.projCode, state:'V-SUB'});
+				console.log("activateService.search:projCode " + this.form.projCode);	
+				this.datatable.search({projCode:this.form.projCode, stateCode:'V-SUB'});
 			},
 			cancel : function(){
 				this.datatable.setData([],0);
@@ -227,23 +231,30 @@
 			    	  	type :"text",		    	  	
 			    	  	order:true});
 		columns.push({	property:"state.code",
+						"filter":"codes:'state'",
 						header: "submissions.state",
 						type :"text",
 						order:true});	
 		return columns;
 	};
-	
+
 	var isInit = false;
+	
 	
 	var initListService = function(){	
 		if(!isInit){
-			consultationService.lists.refresh.projects();
+			lists.refresh.projects();
+			/* initialisation de la variable consultationService.sraVariables.state utilisée dans consultation.scala.html
+			
 			$http.get(jsRoutes.controllers.sra.api.Variables.get('status').url)
 			.success(function(data) {
-			// initialisation de la variable consultationService.sraVariables.state utilisée dans consultation.scala.html
-			consultationService.sraVariables.state = data;	
+			//initialisation de la variable consultationService.sraVariables.state utilisée dans consultation.scala.html
+			//consultationService.sraVariables.state = data;	
 			console.log("state " + data);																					
-			});			
+			});	*/	
+			
+			lists.refresh.states({objectTypeCode:"SRASubmission"});
+			//lists.refresh.states({objectTypeCode:"SRASubmission"},"SRASubmissionState");
 			isInit=true;
 		}
 	};
@@ -268,13 +279,13 @@
 									
 				console.log("consultationService:state " + this.form.state);
 				
-				if (this.form.state!==null && this.form.state !== undefined){
+				/*if (this.form.state!==null && this.form.state !== undefined){
 					this.datatable.search({projCode:this.form.projCode, state : this.form.state});
 				} else {
 					this.datatable.search({projCode:this.form.projCode});
-				}
+				}*/
+				this.datatable.search(this.form);
 			},
-			
 			cancel : function(){
 				this.datatable.setData([],0);
 			},
@@ -380,6 +391,9 @@
 				} else {
 					this.datatable.search({projCode:this.form.projCode});
 				}
+				
+				//this.datatable.search(this.form);
+				
 			},
 			
 			cancel : function(){
