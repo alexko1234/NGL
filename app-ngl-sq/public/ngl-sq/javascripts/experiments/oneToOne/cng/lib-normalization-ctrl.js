@@ -1,7 +1,17 @@
-angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToSingleDatatable',
+angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'atmToSingleDatatable',
                                                      function($scope, $parse, atmToSingleDatatable){
-// FDS 04/02/2016 -- JIRA NGL-894 : prep pcr free experiment
-
+// FDS 15/02/2016 -- JIRA NGL-894 : lib-normalization experiment
+// probleme comment traiter des tubes ou des plaques ???
+	
+	
+// EN COURS...................
+	
+	var inputExtraHeaders="Inputs";
+	var outputExtraHeaders="Outputs";
+	
+	//var inputExtraHeaders=Messages("containers.table.support.in.code");
+	//var outputExtraHeaders=Messages("containers.table.support.out.code");
+	
 	var datatableConfig = {
 			name:"FDR_Plaque", //peut servir pour le nom de fichier si export demandé
 			columns:[
@@ -17,17 +27,16 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			        	 "position":1,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },	
-			         */		
-			         // FDS TEST utiliser  Messages dans extraHeaders
-			          {
+			         */				
+			         {
 			        	 "header":Messages("containers.table.support.name"),
 			        	 "property":"inputContainerUsed.locationOnContainerSupport.code",
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":1,
-			        	 "extraHeaders":{0: Messages("containers.table.support.in.code")}
+			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
-			         // Line
+			         // Line ( si plaque )
 			         {
 			        	 "header":Messages("containers.table.support.line"),
 			        	 "property":"inputContainerUsed.locationOnContainerSupport.line",
@@ -35,9 +44,9 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":2,
-			        	 "extraHeaders":{0:Messages("containers.table.support.in.code")}
+			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
-			         // column
+			         // column ( si plaque )
 			         // astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel forcer a numerique.=> type:number,   property:  *1
 			         {
 			        	 "header":Messages("containers.table.support.column"),
@@ -46,52 +55,65 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":3,
-			        	 "extraHeaders":{0:Messages("containers.table.support.in.code")}
+			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },	
-			         // Project(s)  TESTER avec Used...
+			         // Project(s)             si rajoute Used ?? marche encore
 			         {
 			        	"header":Messages("containers.table.projectCodes"),
-			 			"property": "inputContainer.projectCodes",
+			 			"property": "inputContainerUsed.projectCodes",
 			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
-			 			"position":11,
+			 			"position":4,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("containers.table.support.in.code")}
+			        	 "extraHeaders":{0:inputExtraHeaders}
 				     },
-				     //Echantillon(s)    TESTER avec Used...
+				     //Echantillon(s)    si rajoute Used ???? marche encore
 				     {
 			        	"header":Messages("containers.table.sampleCodes"),
-			 			"property": "inputContainer.sampleCodes",
+			 			"property": "inputContainerUsed.sampleCodes",
 			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
-			 			"position":12,
+			 			"position":5,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("containers.table.support.in.code")}
+			        	"extraHeaders":{0:inputExtraHeaders}
 				     },
-				     //Concentration     TESTER avec Used... pourquoi mesured??????
+				     //Aliquot    essayer avec Used  ??? toujours pas
+				     {
+				        "header":Messages("containers.table.codeAliquot"),
+				 		"property": "inputContainerUsed.sampleAliquoteCodes", /// trouver la bonneeeeee
+				 		"order":true,
+				 		"hide":true,
+				 		"type":"text",
+				 		"position":6,
+				 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+				        "extraHeaders":{0:inputExtraHeaders}
+					 },
+				     //Tag        Used ?????? toujours pas    avec value ????
+					 {
+					    "header":Messages("containers.table.tags"),
+					 	"property": "inputContainerUsed.tags.value", /// trouver la bonneeeeee
+					 	"order":true,
+					 	"hide":true,
+					 	"type":"text",
+					 	"position":6,
+					 	"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+					    "extraHeaders":{0:inputExtraHeaders}
+					 },
+				     //Concentration  Used ?????? OUIIII
 					 {
 			        	 "header":Messages("containers.table.concentration") + " (ng/µL)",
-			        	 "property":"inputContainer.mesuredConcentration.value",
+			        	 "property":"inputContainerUsed.volume.value",
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":13,
-			        	 "extraHeaders":{0:Messages("containers.table.support.in.code")}
-			         },
-			         // Volume       manque qqchose avant mesuredVolume ???? .... pourquoi mesured??????
-			         {
-			        	 "header":function(){return Messages("containers.table.volume") + " (µL)"},
-			        	 "property":"mesuredVolume.value",
-			        	 "order":true,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":14,
-			        	 "extraHeaders":{0:Messages("containers.table.support.in.code")}
+			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
 			         // colonnes specifiques instrument viennent ici
-			         // Etat input Container   TESTER avec Used...
+			         
+			         // Etat input Container
 			         {
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"inputContainer.state.code",
@@ -100,7 +122,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			        	 "type":"text",
 						 "filter":"codes:'state'",
 			        	 "position":30,
-			        	 "extraHeaders":{0:Messages("containers.table.support.in.code")}
+			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
 			         
 			         //------ OUTPUT containers section ------
@@ -116,7 +138,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			        	 "position":100,
 			        	 "extraHeaders":{0:"Outputs"}
 			         },*/
-			         // TEST Line
+			         // Line
 			         {
 			        	 "header":Messages("containers.table.support.line"),
 			        	 "property":"outputContainerUsed.locationOnContainerSupport.line",
@@ -124,9 +146,9 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":110,
-			        	 "extraHeaders":{0:Messages("containers.table.support.out.code")}
+			        	 "extraHeaders":{0:outputExtraHeaders}
 			         },
-			         // TEST column
+			         // column
 			         {
 			        	 "header":Messages("containers.table.support.column"),
 			        	 "property":"outputContainerUsed.locationOnContainerSupport.column",
@@ -134,20 +156,10 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":111,
-			        	 "extraHeaders":{0:Messages("containers.table.support.out.code")}
+			        	 "extraHeaders":{0:outputExtraHeaders}
 			         },	
+			         // Concentration et volume mesurees sont des proprietes de l'experiment
 			         // Volume
-			         {
-			        	 "header":Messages("containers.table.volume")+ " (µL)",
-			        	 "property":"outputContainerUsed.volume.value",
-			        	 "order":true,
-						 "edit":true,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":120,
-			        	 "extraHeaders":{0:Messages("containers.table.support.out.code")}
-			         },
-			         // Pas de concentration, elle sera mesuree plus tard
 			         // Etat outpout container      !! containers.table.stateCode c'est pour le support
 			         {
 			        	 "header":Messages("containers.table.state.code"),
@@ -157,7 +169,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":160,
-			        	 "extraHeaders":{0:Messages("containers.table.support.out.code")}
+			        	 "extraHeaders":{0:outputExtraHeaders}
 			         }
 			         ],
 			compact:true,

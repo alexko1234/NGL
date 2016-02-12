@@ -28,6 +28,7 @@ public class ProtocolServiceCNG {
 		Logger.info(institute+" Protocols collection creation is done!");
 	}
 
+	// FDS 10/02/2016 vieux code obsolete ????
 	/*
 	public static void saveProtocolsCNG(ContextValidation ctx){
 		
@@ -58,15 +59,15 @@ public class ProtocolServiceCNG {
 		MongoDBDAO.delete(InstanceConstants.PROTOCOL_COLL_NAME, Protocol.class, DBQuery.empty());
 	}
 
-	
-	//FDS ajout 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered
-	//FDS ajout 02/01/2016 -- JIRA NGL-894: ajout prep-pcr-free
 	public static void saveProtocols(ContextValidation ctx){		
 		List<Protocol> lp = new ArrayList<Protocol>();
 		
+		// protocoles communs a plusieurs Experiment Types
 		//lp.add(newProtocol("proto_qc_v1","Proto_QC_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("chip-migration-post-pcr", "chip-migration-pre-pcr", "fluo-quantification", "qpcr-quantification")));
-		lp.add(newProtocol("sop-1","SOP 1","","1","production", InstanceFactory.setExperimentTypeCodes("illumina-depot","prepa-flowcell","denat-dil-lib","aliquoting")));
-		lp.add(newProtocol("sop-en-attente","SOP en attente","?","1","production", InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered")));
+		lp.add(newProtocol("sop-1","SOP 1","?","1","production", InstanceFactory.setExperimentTypeCodes("illumina-depot","prepa-flowcell","denat-dil-lib","aliquoting")));
+		lp.add(newProtocol("sop-en-attente","SOP en attente","?","1","production", InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered","lib-normalization")));
+		
+		// protocoles specifiques
 		lp.add(newProtocol("1a-sop-ill-pcrfree-080915","1A_SOP_ILL_PCRfree_080915", "?","1","production",InstanceFactory.setExperimentTypeCodes("prep-pcr-free")));
 		//lp.add(newProtocol("sop-1","SOP 1","","1","production", InstanceFactory.setExperimentTypeCodes("prepa-flowcell")));
 		//lp.add(newProtocol("sop-1","SOP 1","","1","production", InstanceFactory.setExperimentTypeCodes("denat-dil-lib")));
@@ -78,8 +79,4 @@ public class ProtocolServiceCNG {
 		}
 	}
 	
-	
-	
-
-
 }
