@@ -281,7 +281,10 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 				}
 			}
 			
-			if(isSame && atm.inputContainerUseds[0].experimentProperties){				
+			if(isSame && atm.inputContainerUseds[0].experimentProperties){	
+				if(null === atm.inputContainerUseds[0].experimentProperties.finalConcentration2.unit || undefined === atm.inputContainerUseds[0].experimentProperties.finalConcentration2){
+					atm.inputContainerUseds[0].experimentProperties.finalConcentration2.unit = atmService.defaultOutputUnit.concentration;
+				}
 				atm.outputContainerUseds[0].concentration = atm.inputContainerUseds[0].experimentProperties.finalConcentration2;				
 			}
 			
@@ -409,7 +412,8 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 	
 	//defined default output unit
 	atmService.defaultOutputUnit = {
-			volume : "µL"			
+			volume : "µL",
+			concentration:"nM"
 	}
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
