@@ -282,7 +282,8 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 			}
 			
 			if(isSame && atm.inputContainerUseds[0].experimentProperties && atm.inputContainerUseds[0].experimentProperties.finalConcentration2){	
-				if(null === atm.inputContainerUseds[0].experimentProperties.finalConcentration2.unit || undefined === atm.inputContainerUseds[0].experimentProperties.finalConcentration2){
+				if(null === atm.inputContainerUseds[0].experimentProperties.finalConcentration2.unit 
+						|| undefined === atm.inputContainerUseds[0].experimentProperties.finalConcentration2.unit){
 					atm.inputContainerUseds[0].experimentProperties.finalConcentration2.unit = atmService.defaultOutputUnit.concentration;
 				}
 				atm.outputContainerUseds[0].concentration = atm.inputContainerUseds[0].experimentProperties.finalConcentration2;				
