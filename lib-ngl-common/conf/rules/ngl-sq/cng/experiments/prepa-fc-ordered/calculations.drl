@@ -38,7 +38,6 @@ rule "prepa-fc-ordered concentration final"
    			$experimentProperties.remove("finalConcentration2");
    		}
    		
-   		$experimentProperties.put("finalConcentration2",value);
-   		$outputContainerUsed.concentration = value;
+   		$experimentProperties.put("finalConcentration2",value);   		
    		update($experiment);
    	end
