@@ -38,6 +38,7 @@ public class CheckWorkflow extends GenericTest{
 
 	/**
 	 * Call initData of NGL-SUB unit test (builder.data)
+	 * And run NGL-SUB on localhost
 	 * @throws PersistenceException
 	 * @throws BirdsException
 	 * @throws FatalException
@@ -57,7 +58,7 @@ public class CheckWorkflow extends GenericTest{
 		JSONDevice jsonDevice = new JSONDevice();
 
 		//Replace executable of createXML
-		replaceExecutable("createXML", "SRA", CoreTreatmentSpecificationServiceFactory.getInstance().getTreatmentSpecification("createXML", "SRA").getExecutableSpecification().getExecutable().getExecutablePath().replace("appprod", "appdev"));
+		replaceExecutable("createXML", "SRA", CoreTreatmentSpecificationServiceFactory.getInstance().getTreatmentSpecification("createXML", "SRA").getExecutableSpecification().getExecutable().getExecutablePath().replace("appprod.genoscope.cns.fr:9005", "localhost:9000"));
 
 		//Replace executable of transfertRawData 
 		//TODO voir si existe url de test au NCBI
@@ -79,7 +80,7 @@ public class CheckWorkflow extends GenericTest{
 		ResourceProperties rp = groupJob.getUniqueJobResource("subData").getResourceProperties();
 		String codeSubmission = rp.get("code");
 		Assert.assertNotNull(codeSubmission);
-		Assert.assertEquals(rp.get("state.code"),"inWaiting");
+		Assert.assertEquals(rp.get("state.code"),"IW-SUB");
 		Assert.assertNotNull(rp.get("submissionDirectory"));
 		Assert.assertNotNull(rp.get("submissionDate"));
 		for(String key : rp.keysSet()){
@@ -92,7 +93,7 @@ public class CheckWorkflow extends GenericTest{
 
 		//Check group update state in transfert ressource
 		//Get submission in waiting ==0
-		Set<ResourceProperties> setRP = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/submissions?state=inWaiting");
+		Set<ResourceProperties> setRP = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/submissions?stateCode=IW-SUB");
 		Assert.assertEquals(setRP.size(),0);
 
 
@@ -165,18 +166,19 @@ public class CheckWorkflow extends GenericTest{
 
 		//Get Submission from database
 		
-		Set<ResourceProperties> setRPSub = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/submissions?state=submitted");
+		//TODO change to FE-SUB
+		Set<ResourceProperties> setRPSub = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/submissions?stateCode=errorResultSendXml");
 		log.debug("Set RPub "+setRPSub);
 		Assert.assertTrue(setRPSub.size()==1);
 		ResourceProperties RPSub = setRPSub.iterator().next();
-		Assert.assertTrue(RPSub.get("state.code").equals("submitted"));
-		Assert.assertNotNull(RPSub.get("accession"));
+		//TODO No accession
+		//Assert.assertTrue(RPSub.get("state.code").equals("FE-SUB"));
+		//Assert.assertNotNull(RPSub.get("accession"));
 		//Update state submission from IN_PROGRESS to IN_WAITING at the end of test
 	  	//Get submission
-	  	String JSONSubmission = jsonDevice.httpGet(ProjectProperties.getProperty("server")+"/api/sra/submissions/"+codeSubmission);
-	  	//Modify submission
-	  	String newJSONSubmission = jsonDevice.modifyJSON(JSONSubmission, "state.code", "inWaiting");
-	  	jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission, newJSONSubmission);
+		String newState = "{\"code\":\"IW-SUB\"}";
+		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/state", newState);
+	  	
 
 	}
 

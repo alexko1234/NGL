@@ -1,5 +1,7 @@
 package builder.data;
 
+import java.util.HashSet;
+
 import models.laboratory.common.instance.State;
 
 public class StateBuilder {
@@ -19,6 +21,7 @@ public class StateBuilder {
 	}
 	
 	public State build(){
+		state.historical=new HashSet<>();
 		return state;
 	}
 	

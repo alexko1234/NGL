@@ -104,6 +104,8 @@ public class ExperimentBuilder {
 		experiment.studyCode=studyCode;
 		return this;
 	}
+	
+	
 	public ExperimentBuilder withTraceInformation(TraceInformation traceInformation)
 	{
 		experiment.traceInformation=traceInformation;

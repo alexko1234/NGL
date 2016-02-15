@@ -67,7 +67,7 @@ rule "POST DONE EXECUTION of sendXML : File AC results operation"
 		//Get unique resource 
 		String state = resourcePropertiesSet.iterator().next().get("state.code");
 		log.debug("State from treatment AC "+state);
-		if(state.equals("errorResultSendXml"))
+		if(state.equals("FE-SUB"))
 			$job.setExecutionState(Job.ERROR_STATUS);
 end
 
