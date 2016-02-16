@@ -47,23 +47,24 @@ import fr.cea.ig.MongoDBDAO;
 public class FileAcServices  {
 	final static SubmissionWorkflows submissionWorkflows = SubmissionWorkflows.instance;
 
-	public static void updateStateSubmission(Submission submission, String status) {
-		submission.state.code=status;
+	public static void updateStateSubmission(ContextValidation ctxVal, Submission submission, String status) {
+		submission.state.code = status;
+		String user = ctxVal.getUser();
 		// Mettre à jour objets submission et sous-objet study, sample et experiment pour status.
 		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class, 
 				DBQuery.is("code", submission.code).notExists("accession"),
-				DBUpdate.set("state.code", status).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date()));	
+				DBUpdate.set("state.code", status).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date()));	
 
 		if (StringUtils.isNotBlank(submission.studyCode)) {
 			MongoDBDAO.update(InstanceConstants.SRA_STUDY_COLL_NAME, Study.class, 
 					DBQuery.is("code", submission.code).notExists("accession"),
-					DBUpdate.set("state.code", status).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date()));	
+					DBUpdate.set("state.code", status).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date()));	
 		}
 		if (submission.sampleCodes != null){
 			for (int i = 0; i < submission.sampleCodes.size() ; i++) {
 				MongoDBDAO.update(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class,
 						DBQuery.is("code", submission.sampleCodes.get(i)).notExists("accession"),
-						DBUpdate.set("state.code", status).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 			
+						DBUpdate.set("state.code", status).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date())); 			
 			}
 		}
 		if (submission.experimentCodes != null){
@@ -72,15 +73,14 @@ public class FileAcServices  {
 				// Updater objet experiment :
 				MongoDBDAO.update(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class,
 						DBQuery.is("code", submission.experimentCodes.get(i)).notExists("accession"),
-						DBUpdate.set("state.code", status).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 			
+						DBUpdate.set("state.code", status).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date())); 			
 				// Updater objet readSet :
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class,
 						DBQuery.is("code", experiment.readSetCode),
-						DBUpdate.set("state.code", status).set("traceInformation.modifyUser", VariableSRA.admin).set("traceInformation.modifyDate", new Date())); 			
+						DBUpdate.set("state.code", status).set("traceInformation.modifyUser", user).set("traceInformation.modifyDate", new Date())); 			
 			}
 				
 		}
-		
 	}
 	
 
@@ -132,8 +132,8 @@ public class FileAcServices  {
 		String message = null;
 		String ebiSubmissionCode = null;
 		String ebiStudyCode = null;
-		String errorStatus = "errorResultSendXml";
-		String okStatus = "submitted";
+		String errorStatus = "FE-SUB";
+		String okStatus = "F-SUB";
 		
 		while ((lg = inputBuffer.readLine()) != null) {
 			if (lg.startsWith("<?")){
@@ -149,7 +149,7 @@ public class FileAcServices  {
 				if ( ! m.find() ) {
 					//System.out.println("ligne RECEIPT absente dans '"+lg+"'");
 					// mettre status à jour
-					updateStateSubmission(submission, errorStatus); 
+					updateStateSubmission(ctxVal, submission, errorStatus); 
 					message = "Absence de la ligne RECEIPT ... pour  " + submissionCode + " dans fichier "+ ebiFileAc.getPath();
 					sujet = "Probleme parsing fichier des AC : ";
 					//mailService.sendMail("william@genoscope.cns.fr", destinataires, sujet, message);
@@ -252,7 +252,7 @@ public class FileAcServices  {
 			//System.out.println("ERROR" + message);
 			//mailService.sendMail("william@genoscope.cns.fr", destinataires, sujet, message);
 		    mailService.sendMail(expediteur, destinataires, subjectError, new String(message.getBytes(), "iso-8859-1"));
-			updateStateSubmission(submission, errorStatus);
+			updateStateSubmission(ctxVal, submission, "FE-SUB");
 			return submission;
 		} else {
 			//System.out.println("OK");
@@ -302,7 +302,7 @@ public class FileAcServices  {
 					DBQuery.is("run.code", code).notExists("accession"),
 					DBUpdate.set("run.accession", ac)); 			
 		}
-		State state = new State("F-SUB", user);
+		State state = new State(okStatus, user);
 		
 		submissionWorkflows.setState(ctxVal, submission, state);
 	
