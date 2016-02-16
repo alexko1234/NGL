@@ -27,7 +27,7 @@ public class RunServiceCNS extends AbstractRunService {
 		List<ReadSetType> l = new ArrayList<ReadSetType>();
 		l.add(DescriptionFactory.newReadSetType("Default","default-readset",  getReadSetPropertyDefinitions(),  DescriptionFactory.getInstitutes( Constants.CODE.CNS) ));
 		l.add(DescriptionFactory.newReadSetType("rsillumina","rsillumina",  getReadSetPropertyDefinitions(),  DescriptionFactory.getInstitutes( Constants.CODE.CNS) ));
-		l.add(DescriptionFactory.newReadSetType("rsnanopore","rsnanopore", null,  DescriptionFactory.getInstitutes( Constants.CODE.CNS) ));
+		l.add(DescriptionFactory.newReadSetType("rsnanopore","rsnanopore", getReadSetPropertyDefinitionsNanopore(),  DescriptionFactory.getInstitutes( Constants.CODE.CNS) ));
 		l.add(DescriptionFactory.newReadSetType("RSARGUS","RSARGUS",  null,  DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 		
 		DAOHelpers.saveModels(ReadSetType.class, l, errors);
@@ -88,6 +88,14 @@ public class RunServiceCNS extends AbstractRunService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Code aliquot","sampleAliquoteCode",LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.Content), String.class, false, "single"));
 		
+		return propertyDefinitions;
+	}
+	private static List<PropertyDefinition> getReadSetPropertyDefinitionsNanopore() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("asciiEncoding","asciiEncoding",LevelService.getLevels(Level.CODE.File), String.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("label","label",LevelService.getLevels(Level.CODE.File), String.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("md5","md5",LevelService.getLevels(Level.CODE.File), String.class, false, "single"));
+				
 		return propertyDefinitions;
 	}
 	
