@@ -80,9 +80,11 @@ public class AbstractTests {
 		config.put("institute", "CNS");
 		config.put("import.data","false");
 	
-		config.put("rules.key","nglBI" );
-		config.put("rules.changesets","rules/ngl-bi/cns/changesets/changesets.xml");
 		
+		config.put("rules.key","nglSQ" );
+		//config.put("rules.changesets","rules/ngl-bi/cns/changesets/changesets.xml");
+		config.put("rules.kbasename", "ngl-all-cns");
+		//config.put("play.spring.context-path", "application-context.xml");
 		config.put("auth.cas.urlvalidator", "https://cas.genoscope.cns.fr:8443/cas/serviceValidate");
 		config.put("auth.cas.urllogin", "https://cas.genoscope.cns.fr:8443/cas/login");
 		config.put("auth.cas.renew", "false");

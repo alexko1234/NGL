@@ -25,6 +25,7 @@ public class TaxonomyServices {
 	public static String getTaxonomyInfo(String taxonCode, String expression) throws XPathExpressionException
 	{
 		if(taxonCode!=null && expression!=null){
+			Logger.debug("Get taxo info for "+expression+" for taxon "+taxonCode);
 			Promise<WSResponse> homePage = WS.url(URLNCBI+"&id="+taxonCode).get();
 			Promise<Document> xml = homePage.map(response -> {
 				DocumentBuilderFactory dbf =
@@ -33,13 +34,15 @@ public class TaxonomyServices {
 				Document doc = db.parse(new InputSource(new StringReader(response.getBody())));
 				return doc;
 			});
-			String value = "";
+			String value = null;
 			int nbTry=0;
-			while(nbTry<3 || StringUtils.isNotBlank(value)){
+			while(nbTry<3 && value==null){
 				try {
 					value=getValue(xml, expression);
-				} catch (RuntimeException e) {
+					Logger.debug("Value "+value);
+				} catch (TimeoutException e) {
 					//Retry connect
+					Logger.debug("Retry connect NCBI");
 					nbTry++;
 				}
 			}
@@ -54,7 +57,7 @@ public class TaxonomyServices {
 			return null;
 	}
 
-	public static String getValue(Promise<Document> xml, String expression) throws XPathExpressionException, RuntimeException
+	public static String getValue(Promise<Document> xml, String expression) throws XPathExpressionException, RuntimeException, TimeoutException
 	{
 		Document doc = xml.get(10000);
 		XPath xPath =  XPathFactory.newInstance().newXPath();

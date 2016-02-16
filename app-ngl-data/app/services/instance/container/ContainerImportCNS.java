@@ -63,12 +63,11 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 	
 
 			for(Content sampleUsed : contents){
-	
 				/* Sample content not in MongoDB */
 				if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, sampleUsed.sampleCode)){
-	
 					rootKeyName="sample["+sampleUsed.sampleCode+"]";
 					contextError.addKeyToRootKeyName(rootKeyName);
+					
 					sample = limsServices.findSampleToCreate(contextError,sampleUsed.sampleCode);
 	
 					

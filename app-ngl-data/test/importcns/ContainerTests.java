@@ -17,6 +17,7 @@ import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -44,7 +45,13 @@ public class ContainerTests extends AbstractTests {
 	}
 
 
-	@Test 
+	@AfterClass
+	public static  void deleteData()  {		
+		//Delete sample for next unit test importSolutionStockTest
+		MongoDBDAO.deleteByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, "AXD_TQBA");
+		MongoDBDAO.deleteByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, "AXD_TQAA");
+	}
+	//@Test 
 	public void importPrepaflowcellTest() throws SQLException, DAOException{
 
 		ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
@@ -68,9 +75,9 @@ public class ContainerTests extends AbstractTests {
 	}
 
 
-	
-	
-	@Test 
+
+
+	//@Test 
 	public void importPrepaflowcellExtTest() throws SQLException, DAOException{
 
 		ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
@@ -87,28 +94,28 @@ public class ContainerTests extends AbstractTests {
 		Assert.assertTrue(containers.size()>0);
 		List<ContainerSupport> containerSupports=MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("code", AllTests.prepaExtCodes)).toList();
 		Assert.assertEquals(containerSupports.size(), AllTests.prepaExtCodes.size());
-		
+
 	}
-	
-	
+
+
 	@Test 
 	public void importSolutionStockTest() throws SQLException, DAOException{
 
 		ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
 		List<String> solutionStocks=new ArrayList<String>();
-		
+
 		solutionStocks.add("AXD_msCCH_d1");
 		//Creation 
 		String sql="pl_SolutionStockToNGL @noms=\'"+StringUtils.join(solutionStocks,",")+"\'";
-		
+
 		ContainerImportCNS.createContainers(contextValidation,sql,"tube","F","solution-stock","pl_ContentFromContainer @matmanom=?");
-		
+
 		contextValidation.displayErrors(logger);
 		Assert.assertEquals(contextValidation.errors.size(),0);
-		
+
 		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code", solutionStocks)).toList();
 		Assert.assertTrue(containers.size()>0);
-		
+
 		List<ContainerSupport> containerSupports=MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("code", solutionStocks)).toList();
 		Assert.assertEquals(containerSupports.size(),solutionStocks.size());
 
@@ -125,28 +132,37 @@ public class ContainerTests extends AbstractTests {
 					assertThat(container.state.code).isEqualTo(support.state.code);
 				}
 			}
+			//Get sample
+			Sample sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, cnt.sampleCode);
+			Logger.debug("Sample "+sample.code+" taxon "+sample.taxonCode);
+			assertThat(sample).isNotNull();
+			Logger.debug("Sample ncbiLineage "+sample.ncbiLineage+" scientific name "+sample.ncbiScientificName);
+			assertThat(sample.ncbiLineage).isNotNull();
+			assertThat(sample.ncbiScientificName).isNotNull();
 		}
-		
+
 		MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.in("code",solutionStocks), DBUpdate.set("state.code","IW-P"));
-		
+
 		//En reserve update state container
 		UpdateSolutionStockCNS.updateSolutionStock(sql + ", @updated=1", contextValidation,"tube","solution-stock");
 		contextValidation.displayErrors(logger);
 		Assert.assertEquals(contextValidation.errors.size(),0);
-		
+
 		containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code", solutionStocks)).toList();
 		Assert.assertTrue(containers.size()>0);
-		
+
 		for(Container container:containers){
 			assertThat(container.state.code).isNotEqualTo("IW-P");
 			assertThat(container.state.code).isEqualTo("IS");
 
 		}
+
+
 	}
-	
-	
+
+
 	//@Test
-		public void updateSampleTest() throws SQLException, DAOException{
+	public void updateSampleTest() throws SQLException, DAOException{
 
 		List<ReadSet> readSetsBefore=MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.in("sampleOnContainer.sampleCode", AllTests.sampleCodes)).toList();
 		assertThat(readSetsBefore.size()).isEqualTo(AllTests.sampleCodes.size());
@@ -169,5 +185,5 @@ public class ContainerTests extends AbstractTests {
 		assertThat(samples.size()).isEqualTo(AllTests.sampleCodes.size());
 
 
-		}
+	}
 }
