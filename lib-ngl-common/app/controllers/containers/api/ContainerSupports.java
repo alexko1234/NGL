@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
@@ -27,6 +28,7 @@ import play.libs.Json;
 import play.mvc.Result;
 import validation.ContextValidation;
 import validation.container.instance.ContainerValidationHelper;
+import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableResponse;
 import workflows.container.ContSupportWorkflows;
 import workflows.container.ContWorkflows;
@@ -44,10 +46,11 @@ public class ContainerSupports extends CommonController {
 
 	final static Form<ContainerSupportsSearchForm> supportForm = form(ContainerSupportsSearchForm.class);
 	final static Form<ContainerSupportsUpdateForm> containerSupportUpdateForm = form(ContainerSupportsUpdateForm.class);
+	final static Form<ContainerSupportBatchElement> batchElementForm = form(ContainerSupportBatchElement.class);
 	final static Form<State> stateForm = form(State.class);
 	@Permission(value={"reading"})
 	public static Result get(String code){
-		ContainerSupport support = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, code);
+		ContainerSupport support = getSupport(code);
 		if(support != null){
 			return ok(Json.toJson(support));
 		}
@@ -100,11 +103,6 @@ public class ContainerSupports extends CommonController {
 		return ok("{}");
 	}
 
-	@Permission(value={"writing"})
-	@Deprecated
-	public static Result updateBatch(){
-		return ok();
-	}
 	
 	@Permission(value={"writing"})
 	@Deprecated
@@ -150,7 +148,7 @@ public class ContainerSupports extends CommonController {
 	
 	@Permission(value={"writing"})	
 	public static Result updateState(String code){
-		ContainerSupport support = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, code);
+		ContainerSupport support = getSupport(code);
 		if(support == null){
 			return badRequest();
 		}
@@ -161,10 +159,45 @@ public class ContainerSupports extends CommonController {
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 		ContSupportWorkflows.instance.setState(ctxVal, support, state);
 		if (!ctxVal.hasErrors()) {
-			return ok(Json.toJson(MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, code)));
+			return ok(Json.toJson(getSupport(code)));
 		}else {
 			return badRequest(filledForm.errorsAsJson());
 		}
+	}
+
+	private static ContainerSupport getSupport(String code) {
+		return MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, code);
+	}
+	
+	
+	@Permission(value={"writing"})
+	public static Result updateStateBatch(){
+		List<Form<ContainerSupportBatchElement>> filledForms =  getFilledFormList(batchElementForm, ContainerSupportBatchElement.class);
+		
+		final String user = getCurrentUser();
+		
+		List<DatatableBatchResponseElement> response = filledForms.parallelStream()
+			.map(filledForm -> {
+				ContainerSupportBatchElement element = filledForm.get();
+				ContainerSupport support = getSupport(element.data.code);
+				if(null != support){
+					State state = element.data.state;
+					state.date = new Date();
+					state.user = user;
+					ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+					ContSupportWorkflows.instance.setState(ctxVal, support, state);
+					if (!ctxVal.hasErrors()) {
+						return new DatatableBatchResponseElement(OK,  getSupport(support.code), element.index);
+					}else {
+						return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(), element.index);
+					}
+				}else {
+					return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
+				}
+			}).collect(Collectors.toList());;
+		
+		
+		return ok(Json.toJson(response));
 	}
 	/**
 	 * Construct the support query

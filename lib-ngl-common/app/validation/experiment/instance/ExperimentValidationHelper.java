@@ -148,6 +148,10 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 		validationfacts.add(exp);
 		exp.atomicTransfertMethods.forEach((AtomicTransfertMethod atm) -> validationfacts.add(atm));
 		
+		State s = new State();
+		s.code = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
+		
+		validationfacts.add(s);
 		validateRules(validationfacts, contextValidation);
 	}
 

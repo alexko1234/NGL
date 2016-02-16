@@ -58,6 +58,7 @@ import controllers.CommonController;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
+import controllers.containers.api.ContainerSupportBatchElement;
 import controllers.containers.api.Containers;
 import controllers.containers.api.ContainersSearchForm;
 import fr.cea.ig.MongoDBDAO;
@@ -72,7 +73,7 @@ public class Processes extends CommonController{
 	final static Form<ProcessesSearchForm> processesSearchForm = form(ProcessesSearchForm.class);
 	final static Form<QueryFieldsForm> saveForm = form(QueryFieldsForm.class);
 	final static Form<ProcessesUpdateForm> processesUpdateForm = form(ProcessesUpdateForm.class);
-	final static Form<ProcessesBatchElement> processSaveBatchForm = form(ProcessesBatchElement.class);
+	final static Form<ProcessesBatchElement> batchElementForm = form(ProcessesBatchElement.class);
 	final static List<String> defaultKeys =  Arrays.asList("categoryCode","inputContainerCode","sampleCode", "sampleOnInputContainer", "typeCode", "state", "currentExperimentTypeCode", "outputContainerSupportCodes", "experimentCodes","projectCode", "code", "traceInformation", "comments", "properties");
 	private static final ALogger logger = Logger.of("Processes");
 	final static Form<State> stateForm = form(State.class);
@@ -88,7 +89,7 @@ public class Processes extends CommonController{
 	
 	@Permission(value={"reading"})
 	public static Result get(String code){
-		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
+		Process process = getProcess(code);
 		if(process == null){
 			return notFound();
 		}
@@ -152,7 +153,7 @@ public class Processes extends CommonController{
 	@Permission(value={"writing"})
 	public static Result saveBatch(){
 		Form<ProcessesSaveQueryForm>  filledQueryFieldsForm = filledFormQueryString(processSaveQueryForm, ProcessesSaveQueryForm.class);
-		List<Form<ProcessesBatchElement>> filledForms =  getFilledFormList(processSaveBatchForm, ProcessesBatchElement.class);
+		List<Form<ProcessesBatchElement>> filledForms =  getFilledFormList(batchElementForm, ProcessesBatchElement.class);
 
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
 		ProcessesSaveQueryForm processesSaveQueryForm=filledQueryFieldsForm.get();
@@ -300,7 +301,7 @@ public class Processes extends CommonController{
 
 	@Permission(value={"writing"})
 	public static Result update(String code){
-		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
+		Process process = getProcess(code);
 		if(process == null){
 			return notFound("Process with code "+code+" does not exist");
 		}
@@ -346,7 +347,7 @@ public class Processes extends CommonController{
 
 	@Permission(value={"writing"})
 	public static Result updateState(String code){
-		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
+		Process process = getProcess(code);
 		if(process == null){
 			return badRequest();
 		}
@@ -357,15 +358,46 @@ public class Processes extends CommonController{
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 		ProcWorkflows.instance.setState(ctxVal, process, state);
 		if (!ctxVal.hasErrors()) {
-			return ok(Json.toJson(MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code)));
+			return ok(Json.toJson(getProcess(code)));
 		}else {
 			return badRequest(filledForm.errorsAsJson());
 		}
 	}
+
+	private static Process getProcess(String code) {
+		return MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
+	}
+	
+	@Permission(value={"writing"})
+	public static Result updateStateBatch(){
+		List<Form<ProcessesBatchElement>> filledForms =  getFilledFormList(batchElementForm, ProcessesBatchElement.class);
+		final String user = getCurrentUser();
+		List<DatatableBatchResponseElement> response = filledForms.parallelStream()
+		.map(filledForm -> {
+			ProcessesBatchElement element = filledForm.get();
+			Process process = getProcess(element.data.code);
+			if(null != process){
+				State state = element.data.state;
+				state.date = new Date();
+				state.user = user;
+				ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+				ProcWorkflows.instance.setState(ctxVal, process, state);
+				if (!ctxVal.hasErrors()) {
+					return new DatatableBatchResponseElement(OK,  getProcess(process.code), element.index);
+				}else {
+					return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(), element.index);
+				}
+			}else {
+				return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
+			}
+		}).collect(Collectors.toList());
+		
+		return ok(Json.toJson(response));
+	}
 	
 	@Permission(value={"writing"})
 	public static Result delete(String code) throws DAOException{
-		Process process = MongoDBDAO.findByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, code);
+		Process process = getProcess(code);
 		Form deleteForm = new Form(Process.class);
 		ContextValidation contextValidation=new ContextValidation(getCurrentUser(),deleteForm.errors());
 		if(process == null){

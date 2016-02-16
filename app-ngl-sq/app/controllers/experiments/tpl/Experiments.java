@@ -151,8 +151,12 @@ public class Experiments extends CommonController{
   	    		controllers.experiments.api.routes.javascript.ExperimentTypeNodes.get(),
   	    		
   	    		controllers.containers.api.routes.javascript.Containers.updateState(),
+  	    		controllers.containers.api.routes.javascript.Containers.updateStateBatch(),
   	    		controllers.containers.api.routes.javascript.ContainerSupports.updateState(),
+  	    		controllers.containers.api.routes.javascript.ContainerSupports.updateStateBatch(),
+  	    		
   	    		controllers.processes.api.routes.javascript.Processes.updateState(),
+  	    		controllers.processes.api.routes.javascript.Processes.updateStateBatch(),
   	    		
   	    		controllers.containers.api.routes.javascript.Containers.list(),
   	    		controllers.containers.api.routes.javascript.ContainerSupports.list(),
@@ -190,8 +194,6 @@ public class Experiments extends CommonController{
   	    		controllers.containers.api.routes.javascript.Contents.list(),
 	      		controllers.commons.api.routes.javascript.Parameters.list()
 	      		
-	      		
-  	    		
   	      )	  	      
   	    );
   	}

@@ -14,19 +14,8 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 			mode:'local'
 		},
 		edit:{
-			active:true,
+			active:false,
 			columnMode:true
-		},
-		save:{
-			active:true,
-			url:jsRoutes.controllers.containers.api.ContainerSupports.updateBatch().url,
-			batch:true,
-			method:'put',
-			callback: function(reason, error){
-				
-				console.log("callback reason=" + reason);
-				console.log("callback error=" + error);
-			}
 		}
 	};
 

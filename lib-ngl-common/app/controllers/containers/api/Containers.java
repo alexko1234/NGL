@@ -25,6 +25,7 @@ import com.mongodb.BasicDBObject;
 import controllers.CommonController;
 import controllers.NGLControllerHelper;
 import controllers.authorisation.Permission;
+import controllers.readsets.api.ReadSetBatchElement;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBDatatableResponseChunks;
 import fr.cea.ig.MongoDBResponseChunks;
@@ -189,7 +190,7 @@ public class Containers extends CommonController {
 
 	@Permission(value={"writing"})
 	@Deprecated
-	public static Result updateStateBatch(){
+	public static Result updateStateBatchOld(){
 		Form<ContainersUpdateForm> containerUpdateFilledForm = getFilledForm(containersUpdateForm, ContainersUpdateForm.class);
 		ContextValidation contextValidation = new ContextValidation(getCurrentUser(),containerUpdateFilledForm.errors());
 		ContainersSearchForm containersSearch = filledFormQueryString(ContainersSearchForm.class);
@@ -242,6 +243,32 @@ public class Containers extends CommonController {
 		}
 	}
 
+	@Permission(value={"writing"})
+	public static Result updateStateBatch(){
+		List<Form<ContainerBatchElement>> filledForms =  getFilledFormList(batchElementForm, ContainerBatchElement.class);
+		final String user = getCurrentUser();
+		List<DatatableBatchResponseElement> response = filledForms.parallelStream()
+		.map(filledForm -> {
+			ContainerBatchElement element = filledForm.get();
+			Container container = findContainer(element.data.code);
+			if(null != container){
+				State state = element.data.state;
+				state.date = new Date();
+				state.user = user;
+				ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+				ContWorkflows.instance.setState(ctxVal, container, state);
+				if (!ctxVal.hasErrors()) {
+					return new DatatableBatchResponseElement(OK,  findContainer(container.code), element.index);
+				}else {
+					return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(), element.index);
+				}
+			}else {
+				return new DatatableBatchResponseElement(BAD_REQUEST, element.index);
+			}
+		}).collect(Collectors.toList());;
+		
+		return ok(Json.toJson(response));
+	}
 
 	/**
 	 * Construct the container query

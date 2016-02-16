@@ -1,5 +1,5 @@
 /bin/
-
+**/application.conf
 **/target
 **/.classpath
 **/.project
@@ -8,7 +8,6 @@
 **/logs
 **/project/project
 **/.tern*
-**/.gitignore
 /target/
 /project/project
 /.settings
