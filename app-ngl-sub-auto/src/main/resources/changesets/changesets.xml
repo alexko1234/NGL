@@ -34,6 +34,8 @@
 		<resource type="DRF" source="classpath:rules/wf_submission.rf" />
 		<resource type="DRL" source="classpath:rules/wf_submission.drl" />
 		
+		<resource type="DRF" source="classpath:rules/wf_submission_dev.rf" />
+		
 		
 		<resource source='classpath:rules/transfertRawData.drl'
 			type='DRL' />

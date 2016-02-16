@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+<Specification xmlns="http://www.genoscope.cns.fr/specification"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.genoscope.cns.fr/specification
+H:\birdsSpec.xsd">
+
+	<!-- Group treatment for submission -->
+	<Treatment name="WF_Submission" checkIfNewTreatmentAlreadyPerformed="true" ruleFlowId="fr.cea.ig.auto.submission.WorkflowSubmission_dev">
+		<ExecutableSpecification>
+			<Executable />
+		</ExecutableSpecification>
+		<ParametersSpecification />
+		<InputsSpecification>
+			<InputElement name="subData" count="1" resourceType="submission">
+				<Referential name="nglSubRef" />			
+			</InputElement>
+		</InputsSpecification>
+	</Treatment>
+	
+	<!-- Treatment : call NGL SUB services to create xml files to send to EBI -->
+	<Treatment name="createXML" useJobScheduler="false" checkIfNewTreatmentAlreadyPerformed="true">
+		<ExecutableSpecification commandSyntaxStrategyName="createXMLSyntax">
+			<!-- TODO call REST API NGL-SUB -->
+			<Executable path="curl -X PUT http://apppdev.genoscope.cns.fr:9005/sra/submissions/%code%/xml"/>
+		</ExecutableSpecification>
+		
+		<InputsSpecification>
+			<InputElement name="subToXML" count="1" resourceType="submission">
+				<Referential name="internalRefSubmission"/>
+			</InputElement>
+		</InputsSpecification>
+		<OutputsSpecification>
+			<OutputElement name="outputSubXML" resourceType="submissionXML">
+				<Referential name="internalRefSubmissionXML" />
+			</OutputElement>
+		</OutputsSpecification>
+	</Treatment>
+	
+</Specification>

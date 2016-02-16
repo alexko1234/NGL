@@ -167,12 +167,12 @@ public class CheckWorkflow extends GenericTest{
 		//Get Submission from database
 		
 		//TODO change to FE-SUB
-		Set<ResourceProperties> setRPSub = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/submissions?stateCode=errorResultSendXml");
+		Set<ResourceProperties> setRPSub = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/submissions?stateCode=FE-SUB");
 		log.debug("Set RPub "+setRPSub);
 		Assert.assertTrue(setRPSub.size()==1);
 		ResourceProperties RPSub = setRPSub.iterator().next();
 		//TODO No accession
-		//Assert.assertTrue(RPSub.get("state.code").equals("FE-SUB"));
+		Assert.assertTrue(RPSub.get("state.code").equals("FE-SUB"));
 		//Assert.assertNotNull(RPSub.get("accession"));
 		//Update state submission from IN_PROGRESS to IN_WAITING at the end of test
 	  	//Get submission
