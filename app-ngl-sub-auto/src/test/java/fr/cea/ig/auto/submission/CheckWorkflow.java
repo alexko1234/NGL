@@ -2,14 +2,9 @@ package fr.cea.ig.auto.submission;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashSet;
 import java.util.Set;
-
-import junit.framework.Assert;
 
 import org.apache.log4j.Logger;
 import org.junit.Before;
@@ -26,8 +21,8 @@ import fr.genoscope.lis.devsi.birds.api.persistence.PersistenceServiceFactory;
 import fr.genoscope.lis.devsi.birds.api.test.GenericTest;
 import fr.genoscope.lis.devsi.birds.impl.factory.CoreJobServiceFactory;
 import fr.genoscope.lis.devsi.birds.impl.factory.CoreTreatmentSpecificationServiceFactory;
-import fr.genoscope.lis.devsi.birds.impl.factory.JobServiceFactory;
 import fr.genoscope.lis.devsi.birds.impl.properties.ProjectProperties;
+import junit.framework.Assert;
 
 public class CheckWorkflow extends GenericTest{
 
@@ -93,7 +88,7 @@ public class CheckWorkflow extends GenericTest{
 
 		//Check group update state in transfert ressource
 		//Get submission in waiting ==0
-		Set<ResourceProperties> setRP = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/submissions?stateCode=IW-SUB");
+		Set<ResourceProperties> setRP = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/submissions?stateCode=IW-SUB","bot");
 		Assert.assertEquals(setRP.size(),0);
 
 
@@ -167,7 +162,7 @@ public class CheckWorkflow extends GenericTest{
 		//Get Submission from database
 		
 		//TODO change to FE-SUB
-		Set<ResourceProperties> setRPSub = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/submissions?stateCode=FE-SUB");
+		Set<ResourceProperties> setRPSub = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/submissions?stateCode=FE-SUB","bot");
 		log.debug("Set RPub "+setRPSub);
 		Assert.assertTrue(setRPSub.size()==1);
 		ResourceProperties RPSub = setRPSub.iterator().next();
@@ -177,7 +172,7 @@ public class CheckWorkflow extends GenericTest{
 		//Update state submission from IN_PROGRESS to IN_WAITING at the end of test
 	  	//Get submission
 		String newState = "{\"code\":\"IW-SUB\"}";
-		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/state", newState);
+		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/state", newState, "bot");
 	  	
 
 	}

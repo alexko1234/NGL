@@ -88,7 +88,7 @@ public class CheckWorkflowDev extends GenericTest{
 
 		//Check group update state in transfert ressource
 		//Get submission in waiting ==0
-		Set<ResourceProperties> setRP = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/submissions?stateCode=IW-SUB");
+		Set<ResourceProperties> setRP = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/submissions?stateCode=IW-SUB","bot");
 		Assert.assertEquals(setRP.size(),0);
 
 

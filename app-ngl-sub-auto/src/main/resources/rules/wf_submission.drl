@@ -19,7 +19,7 @@ rule "select resources from nglsub"
 	then
 		Logger log = Logger.getLogger("ngl.sub.rules");
 		$rps.initialize();
-		Set<ResourceProperties> resourcePropertiesSet = $device.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/submissions?stateCode=IW-SUB");
+		Set<ResourceProperties> resourcePropertiesSet = $device.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/submissions?stateCode=IW-SUB", "bot");
 		log.debug("size resources "+resourcePropertiesSet.size());
 		$rps.addResourcePropertiesSet(resourcePropertiesSet);
 		modify($rps){};
@@ -50,6 +50,6 @@ rule "add resources submission to internal referential internalRefSubmission for
 	  	//Call PUT update with submission modified
 	  	log.debug("Call PUT "+ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/state");
 	  	log.debug("With JSON "+newState);
-	  	jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/state", newState);
+	  	jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/state", newState,"bot");
 	  	
 end
