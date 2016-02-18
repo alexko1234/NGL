@@ -18,6 +18,7 @@ public abstract class AbstractContainerUsed implements IValidation{
 	public PropertySingleValue volume;        
 	public PropertySingleValue concentration; 
 	public PropertySingleValue quantity; 	
+	public PropertySingleValue size; 	
 	
 	public Map<String,PropertyValue> experimentProperties;
 	public Map<String,PropertyValue> instrumentProperties;

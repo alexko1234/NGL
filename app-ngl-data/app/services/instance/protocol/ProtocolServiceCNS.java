@@ -84,7 +84,11 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("proto_qc_v1","Proto_QC_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("chip-migration-post-pcr", "chip-migration-pre-pcr", "fluo-quantification", "qpcr-quantification")));
 		*/
 			
-			if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){}
+			if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+				
+				lp.add(newProtocol("proto_qc_v1","Proto_QC_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("qpcr-quantification")));
+				
+			}
 		
 		for(Protocol protocole:lp){
 			InstanceHelpers.save(InstanceConstants.PROTOCOL_COLL_NAME, protocole,ctx);

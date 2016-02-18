@@ -228,6 +228,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save on tubes-to-flowcell");		
 		$scope.atmService.viewToExperiment($scope.experiment);
+		$scope.updatePropertyUnit($scope.experiment);
 		$scope.updateConcentration($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});

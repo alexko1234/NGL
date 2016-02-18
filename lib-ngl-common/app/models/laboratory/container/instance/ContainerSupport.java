@@ -39,7 +39,7 @@ public class ContainerSupport extends DBObject implements IValidation{
 		projectCodes= new HashSet<>();
 		sampleCodes= new HashSet<>();
 		fromTransformationTypeCodes= new HashSet<>();
-		//properties = new HashMap<>();
+		valuation = new Valuation();
 	}
 
 

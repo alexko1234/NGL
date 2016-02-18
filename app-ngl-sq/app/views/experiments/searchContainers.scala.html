@@ -32,7 +32,7 @@
 		}
 		@columnSearchForm{
 			@formGroup{	
-				<div bt-select placeholder="@Messages("experiments.select.experimentType.qualitycontrols")" class="form-control" ng-model="searchService.form.nextExperimentTypeCode" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in searchService.lists.get('qualitycontrol')" ng-change="changeExperimentType('qualitycontrol')" auto-select>
+				<div bt-select placeholder="@Messages("experiments.select.experimentType.qualitycontrols")" class="form-control" ng-model="searchService.form.nextExperimentTypeCode" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in searchService.lists.get('qualitycontrol')" ng-change="changeExperimentType('qualitycontrol')">
 				</div>
 			}
 			<hr>
@@ -49,7 +49,7 @@
 		}
 		@columnSearchForm{
 			@formGroup{	
-				<div bt-select placeholder="@Messages("experiments.select.experimentType.purifications")" class="form-control" ng-model="searchService.form.nextExperimentTypeCode" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in searchService.lists.get('purification')" ng-change="changeExperimentType('purification')" auto-select>
+				<div bt-select placeholder="@Messages("experiments.select.experimentType.purifications")" class="form-control" ng-model="searchService.form.nextExperimentTypeCode" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in searchService.lists.get('purification')" ng-change="changeExperimentType('purification')">
 				</div>
 			}
 			<hr>

@@ -43,7 +43,9 @@ import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import play.Logger;
 import play.data.Form;
+import play.i18n.Lang;
 import play.libs.Json;
+import play.mvc.Http;
 import play.mvc.Result;
 import validation.ContextValidation;
 import views.components.datatable.DatatableBatchResponseElement;
@@ -59,7 +61,7 @@ public class Containers extends CommonController {
 	final static Form<ContainersSearchForm> containerForm = form(ContainersSearchForm.class);
 	final static Form<ContainerBatchElement> batchElementForm = form(ContainerBatchElement.class);
 	final static Form<ContainersUpdateForm> containersUpdateForm = form(ContainersUpdateForm.class);
-	final static List<String> defaultKeys =  Arrays.asList("code","fromTransformationTypeCodes","sampleCodes","contents","traceInformation","projectCodes", "processCodes", "valuation.valid", "state", "support","concentration");
+	final static List<String> defaultKeys =  Arrays.asList("code","fromTransformationTypeCodes","sampleCodes","contents","traceInformation","projectCodes", "processCodes", "valuation", "state", "support","concentration");
     // GA 31/07/2015 suppression des parametres "lenght"
 	final static Form<State> stateForm = form(State.class);
 	
@@ -247,6 +249,7 @@ public class Containers extends CommonController {
 	public static Result updateStateBatch(){
 		List<Form<ContainerBatchElement>> filledForms =  getFilledFormList(batchElementForm, ContainerBatchElement.class);
 		final String user = getCurrentUser();
+		final Lang lang = Http.Context.Implicit.lang();
 		List<DatatableBatchResponseElement> response = filledForms.parallelStream()
 		.map(filledForm -> {
 			ContainerBatchElement element = filledForm.get();
@@ -260,7 +263,7 @@ public class Containers extends CommonController {
 				if (!ctxVal.hasErrors()) {
 					return new DatatableBatchResponseElement(OK,  findContainer(container.code), element.index);
 				}else {
-					return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(), element.index);
+					return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(lang), element.index);
 				}
 			}else {
 				return new DatatableBatchResponseElement(BAD_REQUEST, element.index);

@@ -3,14 +3,14 @@
 @form() = {
 		@columnSearchForm{
 			@formGroup{	
-				<div bt-select placeholder="@Messages("experiments.select.experimentType.transformations")" class="form-control" ng-model="searchService.form.typeCode" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in searchService.lists.get('transformations')" ng-change="searchService.changeExperimentType()" auto-select>
+				<div bt-select placeholder="@Messages("experiments.select.experimentType.transformations")" class="form-control" ng-model="searchService.form.typeCode" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in searchService.lists.get('transformations')" ng-change="searchService.changeExperimentType()">
 				</div>
 			}
 			@formGroup{
-				<div class="form-control" bt-select ng-model="searchService.form.projectCodes" multiple="true"  textarea="true" filter="true" placeholder='@Messages("search.placeholder.projects")' bt-options="project.code as project.code for project in searchService.lists.getProjects()" ng-change="searchService.resetSampleCodes()" auto-select></div>
+				<div class="form-control" bt-select ng-model="searchService.form.projectCodes" multiple="true"  textarea="true" filter="true" placeholder='@Messages("search.placeholder.projects")' bt-options="project.code as project.code for project in searchService.lists.getProjects()" ng-change="searchService.resetSampleCodes()"></div>
 			}			
 			@formGroup{
-				<div bt-select placeholder="@Messages("experiments.select.state")" multiple="true" filter="true" class="form-control" ng-model="searchService.form.stateCodes" bt-options="stateCode.code as stateCode.name for stateCode in searchService.lists.getStates()" auto-select>
+				<div bt-select placeholder="@Messages("experiments.select.state")" multiple="true" filter="true" class="form-control" ng-model="searchService.form.stateCodes" bt-options="stateCode.code as stateCode.name for stateCode in searchService.lists.getStates()">
 				</div>
 			}	
 			
@@ -21,7 +21,7 @@
 				</div>				
 			}
 			@formGroup{
-				<div class="form-control" bt-select ng-model="searchService.form.sampleCodes" multiple="true"  textarea="true" filter="true" placeholder='@Messages("search.placeholder.samples")' bt-options="sample.code as sample.code for sample in searchService.lists.getSamples()" ng-focus="searchService.refreshSamples()" auto-select></div>			
+				<div class="form-control" bt-select ng-model="searchService.form.sampleCodes" multiple="true"  textarea="true" filter="true" placeholder='@Messages("search.placeholder.samples")' bt-options="sample.code as sample.code for sample in searchService.lists.getSamples()" ng-focus="searchService.refreshSamples()"></div>			
 			
 			}
 			@formGroup{
@@ -32,7 +32,7 @@
 		}
 		@columnSearchForm{
 			@formGroup{	
-				<div bt-select placeholder="@Messages("experiments.select.experimentType.qualitycontrols")" class="form-control" ng-model="searchService.form.typeCode" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in searchService.lists.get('qualitycontrols')" ng-change="searchService.changeExperimentType()" auto-select>
+				<div bt-select placeholder="@Messages("experiments.select.experimentType.qualitycontrols")" class="form-control" ng-model="searchService.form.typeCode" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in searchService.lists.get('qualitycontrols')" ng-change="searchService.changeExperimentType()">
 				</div>
 			}
 			@formGroup{
@@ -48,7 +48,7 @@
 		}
 		@columnSearchForm{
 			@formGroup{	
-				<div bt-select placeholder="@Messages("experiments.select.experimentType.purifications")" class="form-control" ng-model="searchService.form.typeCode" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in searchService.lists.get('purifications')" ng-change="searchService.changeExperimentType()" auto-select>
+				<div bt-select placeholder="@Messages("experiments.select.experimentType.purifications")" class="form-control" ng-model="searchService.form.typeCode" ng-class="errors.experimentType" bt-options="experimentType.code as experimentType.name for experimentType in searchService.lists.get('purifications')" ng-change="searchService.changeExperimentType()">
 				</div>
 			}
 			@formGroup{			

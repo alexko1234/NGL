@@ -40,7 +40,9 @@ import org.mongojack.DBUpdate.Builder;
 import play.Logger;
 import play.Logger.ALogger;
 import play.data.Form;
+import play.i18n.Lang;
 import play.libs.Json;
+import play.mvc.Http;
 import play.mvc.Result;
 import validation.ContextValidation;
 import validation.processes.instance.ProcessValidationHelper;
@@ -372,6 +374,7 @@ public class Processes extends CommonController{
 	public static Result updateStateBatch(){
 		List<Form<ProcessesBatchElement>> filledForms =  getFilledFormList(batchElementForm, ProcessesBatchElement.class);
 		final String user = getCurrentUser();
+		final Lang lang = Http.Context.Implicit.lang();
 		List<DatatableBatchResponseElement> response = filledForms.parallelStream()
 		.map(filledForm -> {
 			ProcessesBatchElement element = filledForm.get();
@@ -385,7 +388,7 @@ public class Processes extends CommonController{
 				if (!ctxVal.hasErrors()) {
 					return new DatatableBatchResponseElement(OK,  getProcess(process.code), element.index);
 				}else {
-					return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(), element.index);
+					return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(lang), element.index);
 				}
 			}else {
 				return new DatatableBatchResponseElement(BAD_REQUEST, element.index);

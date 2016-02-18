@@ -3,6 +3,7 @@ package workflows.container;
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -19,6 +20,7 @@ import rules.services.RulesMessage;
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
@@ -71,7 +73,13 @@ public class ContWorkflows extends Workflows<Container> {
 						DBQuery.is("code",container.code), DBUpdate.unset("processCodes")
 																.unset("processTypeCodes"));
 			}		
-		} 
+		}else if("A-QC".equals(container.state.code)){
+			Valuation v = new Valuation();
+			v.date = new Date();
+			v.user = validation.getUser();
+			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
+					DBQuery.is("code",container.code), DBUpdate.set("valuation",v));
+		}
 		callWorkflowRules(validation,container);		
 	}
 	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));

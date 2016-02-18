@@ -4,6 +4,7 @@ import java.util.Set;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.instance.Container;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
@@ -21,6 +22,7 @@ public class InputContainerUsed extends AbstractContainerUsed {
 	public Set<String> processTypeCodes;
 	public Set<String> processCodes ;
 	
+	public Valuation valuation; //only on input because qc are to-void experiment !
 	
 	//keep for some html page pool or flowcell
 	public State state;

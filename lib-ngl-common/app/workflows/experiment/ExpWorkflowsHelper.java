@@ -21,6 +21,7 @@ import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
+import models.laboratory.container.instance.QualityControlResult;
 import models.laboratory.container.instance.tree.From;
 import models.laboratory.container.instance.tree.ParentContainers;
 import models.laboratory.container.instance.tree.TreeOfLifeNode;
@@ -43,6 +44,9 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
 
+
+
+import org.mongojack.DBUpdate.Builder;
 
 import play.Play;
 import play.libs.Akka;
@@ -692,6 +696,39 @@ public class ExpWorkflowsHelper {
 
 	public static void callWorkflowRules(ContextValidation validation, Experiment exp) {
 		rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"), "workflow", exp, validation),null);
+	}
+
+
+	/**
+	 * update volume, concentration, quantity and size only if present
+	 * @param exp
+	 * @param validation
+	 */
+	public static void updateInputContainers(Experiment exp, ContextValidation validation) {
+		exp.atomicTransfertMethods
+			.parallelStream()
+			.map(atm -> atm.inputContainerUseds)
+			.flatMap(List::stream)
+			.forEach(icu ->{
+				Container c = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,icu.code);
+				
+				if(null != icu.concentration)c.concentration = icu.concentration;
+				if(null != icu.quantity)c.quantity = icu.quantity;
+				if(null != icu.volume)c.volume = icu.volume;
+				if(null != icu.size)c.size = icu.size;
+				if(null != icu.valuation)c.valuation = icu.valuation;
+				
+				c.traceInformation.modifyDate = new Date();
+				c.traceInformation.modifyUser = validation.getUser();
+				
+				if(null == c.qualityControlResults)c.qualityControlResults = new ArrayList<QualityControlResult>(0);
+				
+				c.qualityControlResults.add(new QualityControlResult(exp.code, exp.typeCode, c.qualityControlResults.size(), icu.experimentProperties));
+				
+				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,c);
+								
+			});
+		
 	}
 
 

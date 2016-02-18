@@ -68,13 +68,12 @@ public class Container extends DBObject implements IValidation {
 	//public List<Content> contents;
 	public List<Content> contents;
 	// Embedded QC result, this data are copying from collection QC
-	public Set<QualityControlResult> qualityControlResults; //TODO GA remove
+	public List<QualityControlResult> qualityControlResults; 
 
-	//Stock management 
 	public PropertySingleValue volume;        
 	public PropertySingleValue concentration; 
 	public PropertySingleValue quantity; 	
-
+	public PropertySingleValue size;
 	
 	// For search optimisation
 	public Set<String> projectCodes; // getProjets
@@ -86,6 +85,7 @@ public class Container extends DBObject implements IValidation {
 	public Set<String> processTypeCodes;
 	public Set<String> processCodes;
 
+	
 	//tree of life
 	public TreeOfLifeNode treeOfLife;
 	
@@ -99,7 +99,7 @@ public class Container extends DBObject implements IValidation {
 		//comments = new ArrayList<>();
 		//qualityControlResults = new HashSet<>();
 		fromTransformationTypeCodes = new HashSet<>();
-	
+		valuation = new Valuation();	
 	}
 		
 	@JsonIgnore

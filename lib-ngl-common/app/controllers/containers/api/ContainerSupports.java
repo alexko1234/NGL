@@ -24,7 +24,9 @@ import org.mongojack.DBQuery.Query;
 
 import play.Logger;
 import play.data.Form;
+import play.i18n.Lang;
 import play.libs.Json;
+import play.mvc.Http;
 import play.mvc.Result;
 import validation.ContextValidation;
 import validation.container.instance.ContainerValidationHelper;
@@ -175,7 +177,7 @@ public class ContainerSupports extends CommonController {
 		List<Form<ContainerSupportBatchElement>> filledForms =  getFilledFormList(batchElementForm, ContainerSupportBatchElement.class);
 		
 		final String user = getCurrentUser();
-		
+		final Lang lang = Http.Context.Implicit.lang();
 		List<DatatableBatchResponseElement> response = filledForms.parallelStream()
 			.map(filledForm -> {
 				ContainerSupportBatchElement element = filledForm.get();
@@ -189,7 +191,7 @@ public class ContainerSupports extends CommonController {
 					if (!ctxVal.hasErrors()) {
 						return new DatatableBatchResponseElement(OK,  getSupport(support.code), element.index);
 					}else {
-						return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(), element.index);
+						return new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(lang), element.index);
 					}
 				}else {
 					return new DatatableBatchResponseElement(BAD_REQUEST, element.index);

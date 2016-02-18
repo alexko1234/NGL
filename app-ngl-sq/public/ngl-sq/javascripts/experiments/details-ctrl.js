@@ -294,10 +294,36 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	$scope.loadTemplate = function(){
 		console.log("call loadTemplate see getTemplate() in old version");
 		if($scope.experimentType && $scope.experiment.instrument && $scope.experiment.instrument.outContainerSupportCategoryCode){
-			$scope.experimentTypeTemplate =  jsRoutes.controllers.experiments.tpl.Experiments.getTemplate($scope.experimentType.atomicTransfertMethod.toLowerCase(),$scope.experiment.instrument.outContainerSupportCategoryCode,$scope.experimentType.code).url;
+			$scope.experimentTypeTemplate =  jsRoutes.controllers.experiments.tpl.Experiments.getTemplate($scope.experimentType.atomicTransfertMethod.toLowerCase(),
+					$scope.experiment.instrument.outContainerSupportCategoryCode,
+					$scope.experimentType.category.code,
+					$scope.experimentType.code).url;
 		}else{
 			$scope.experimentTypeTemplate =  undefined;
 		}				
+	};
+	
+	$scope.updatePropertyUnit = function(experiment){
+		$scope.experimentType.propertiesDefinitions.forEach(function(propertyDef){
+			if(propertyDef.saveMeasureValue){
+				experiment.atomicTransfertMethods.forEach(function(atm){
+					if(atm.inputContainerUseds){
+						atm.inputContainerUseds.forEach(function(icu){
+							if(icu.experimentProperties && icu.experimentProperties[propertyDef.code]){
+								icu.experimentProperties[propertyDef.code].unit = propertyDef.saveMeasureValue.code;
+							}
+						});
+					}
+					if(atm.outputContainerUseds){
+						atm.outputContainerUseds.forEach(function(ocu){
+							if(ocu.experimentProperties && ocu.experimentProperties[propertyDef.code]){
+								ocu.experimentProperties[propertyDef.code].unit = propertyDef.saveMeasureValue.code;
+							}
+						});
+					}
+				});
+			}
+		});		
 	};
 	
 	var resetBasket = function(){
@@ -1009,7 +1035,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	$scope.isDispatchValueAvailable = function(dispatchCode, value){
 		if(value !== undefined){
 			var dvet = dispatchValuesForExperimentType[value.data.container.fromTransformationTypeCodes[0]];						
-			if($scope.isOutputATMVoid()){
+			if($scope.isOutputATMVoid() && $scope.experiment.categoryCode !== 'qualitycontrol'){
 				dvet = dispatchValuesForExperimentType[$scope.experiment.typeCode];
     		}
 			
@@ -1113,15 +1139,48 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			var codes = getXCodes(data[i].container);
 			
 			if(data[i].status === 'TRUE'){
-				containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IS"));
-				supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "IS"));
-				if(data[i].dispatch === 0){
-					if($scope.isProcessResolutionsMustBeSet({data:data[i]})){
+				
+				if($scope.experiment.categoryCode === 'qualitycontrol'){
+					if(data[i].dispatch === 0){
+						if($scope.isProcessResolutionsMustBeSet({data:data[i]})){
+							containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IW-P"));
+							supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "IW-P"));
+							
+							processPromises = processPromises.concat(getProcessStateRequests(i, codes.processCodes,"F", data[i].processResolutions));
+						}else{
+							containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "A-TM"));
+							supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "A-TM"));
+						}
+						
+					}else if(data[i].dispatch === 1){
+						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "A-TF"));
+						supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "A-TF"));
+						
+					}else if(data[i].dispatch === 2){
+						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "A-QC"));
+						supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode],  "A-QC"));
+						
+					}else if(data[i].dispatch === 3){
+						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode],  "A-PF"));
+						supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "A-PF"));
+						
+					}else if(data[i].dispatch === 4){
+						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IS"));
+						supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "IS"));
 						processPromises = processPromises.concat(getProcessStateRequests(i, codes.processCodes,"F", data[i].processResolutions));
-					}		        					
-				}else if(data[i].dispatch === 4){
-					processPromises = processPromises.concat(getProcessStateRequests(i, codes.processCodes,"F", data[i].processResolutions));
-				}				
+					}
+				}else{
+				
+					containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IS"));
+					supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "IS"));
+					if(data[i].dispatch === 0){
+						if($scope.isProcessResolutionsMustBeSet({data:data[i]})){
+							processPromises = processPromises.concat(getProcessStateRequests(i, codes.processCodes,"F", data[i].processResolutions));
+						}		        					
+					}else if(data[i].dispatch === 4){
+						processPromises = processPromises.concat(getProcessStateRequests(i, codes.processCodes,"F", data[i].processResolutions));
+					}				
+				}
 				
 			}else if(data[i].status === 'FALSE'){
 				if(data[i].dispatch === 5){
@@ -1241,6 +1300,8 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 									},function(data, status,headers,config){
 										console.log("ERROR to update state for processes");
 									});
+						}else{
+							$scope.$emit('dispatchDone');
 						}
 				},function(data, status,headers,config){
 					console.log("ERROR to update state for containers");
@@ -1364,10 +1425,18 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 						var processTypeCodes = [];
 						
 						var containers = result.input;
-						initDisplayValues([$scope.experiment.typeCode]);
+						if($scope.experiment.categoryCode !== 'qualitycontrol'){
+							initDisplayValues([$scope.experiment.typeCode]);
+						}
+						
 						for(var key in containers){
-							inputContainers.push({container:containers[key], status:getValidStatus(), dispatch:undefined, processResolutions:[]});
-							processTypeCodes = processTypeCodes.concat(containers[key].processTypeCodes);								
+							if(containers[key].state.code === 'IW-D'){
+								inputContainers.push({container:containers[key], status:getValidStatus(), dispatch:undefined, processResolutions:[]});
+								processTypeCodes = processTypeCodes.concat(containers[key].processTypeCodes);	
+								if($scope.experiment.categoryCode === 'qualitycontrol'){
+									initDisplayValues(containers[key].fromTransformationTypeCodes);
+								}
+							}
 						}
 						datatableConfig.columns = getColumns(),						
 						$scope.containersDT = datatable(datatableConfig);

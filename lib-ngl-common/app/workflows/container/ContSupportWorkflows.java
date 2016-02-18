@@ -1,8 +1,12 @@
 package workflows.container;
 
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
+
+import java.util.Date;
+
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
+import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.utils.InstanceConstants;
@@ -61,7 +65,13 @@ public class ContSupportWorkflows extends Workflows<ContainerSupport> {
 				MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, Container.class,
 						DBQuery.is("code",containerSupport.code), DBUpdate.unset("fromTransformationTypeCodes"));
 			}	
-		} 
+		} else if("A-QC".equals(containerSupport.state.code)){
+			Valuation v = new Valuation();
+			v.date = new Date();
+			v.user = validation.getUser();
+			MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, Container.class,
+					DBQuery.is("code",containerSupport.code), DBUpdate.set("valuation",v));
+		}
 		callWorkflowRules(validation,containerSupport);		
 	}
 	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));

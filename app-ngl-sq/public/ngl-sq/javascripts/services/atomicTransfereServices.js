@@ -99,6 +99,7 @@ angular.module('atomicTransfereServices', [])
 					    volume:container.volume, //used in rules
 						concentration:container.concentration,  //used in rules
 						quantity:container.quantity,
+						size:container.size,
 						instrumentProperties:undefined,
 					    experimentProperties:undefined,
 					    percentage:100, //rules by defaut need check with server
@@ -109,7 +110,8 @@ angular.module('atomicTransfereServices', [])
 						fromTransformationCodes:container.fromTransformationCodes,
 					    processTypeCodes:container.processTypeCodes,
 					    processCodes:container.processCodes,
-						state : container.state
+						state : container.state,
+						valuation : container.valuation
 					};
 					/*
 					 return {"state":container.state
@@ -124,15 +126,16 @@ angular.module('atomicTransfereServices', [])
 					containerUsed.volume = container.volume;
 					containerUsed.concentration = container.concentration;
 					containerUsed.quantity = container.quantity;
+					containerUsed.size = container.size;
 					containerUsed.sampleCodes=container.sampleCodes;
 					containerUsed.projectCodes=container.projectCodes;
 					if(container.state.code === 'IU'){ //because after the processTypeCodes and processCodes is set to null
-					containerUsed.fromTransformationTypeCodes=container.fromTransformationTypeCodes;
-					containerUsed.fromTransformationCodes=container.fromTransformationCodes;
-					containerUsed.processTypeCodes=container.processTypeCodes;
-					containerUsed.processCodes=container.processCodes;											
+						containerUsed.fromTransformationTypeCodes=container.fromTransformationTypeCodes;
+						containerUsed.fromTransformationCodes=container.fromTransformationCodes;
+						containerUsed.processTypeCodes=container.processTypeCodes;
+						containerUsed.processCodes=container.processCodes;											
 					}
-					containerUsed.state = container.state;
+					containerUsed.state = container.state; //TODO GA need to be remove but keep for backward compatibility
 					return containerUsed;
 				},
 				getContainerListPromise : function(containerCodes){

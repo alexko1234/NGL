@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import  java.lang.reflect.Method;
 
+import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.instance.Experiment;
 import models.utils.DescriptionHelper;
 import play.Logger;
@@ -23,7 +24,6 @@ import play.twirl.api.Template0;
 import views.components.datatable.DatatableColumn;
 import views.components.datatable.DatatableHelpers;
 import views.html.experiments.*;
-
 import controllers.CommonController;
 
 public class Experiments extends CommonController{
@@ -63,7 +63,12 @@ public class Experiments extends CommonController{
 	 * then if the class doesn't exist it will search for views.html.experiments.@atomicType.default.@outputCategoryCode
 	 * if all classes doesn't exist, a badRequest result is returned with the message "not implemented"
 	 * */
-	public static Result getTemplate(String atomicType, String outputCategoryCode, String experimentType){
+	public static Result getTemplate(String atomicType, String outputCategoryCode, String experimentCategoryCode, String experimentType){
+		
+		
+		if(ExperimentCategory.CODE.qualitycontrol.toString().equals(experimentCategoryCode)){
+			outputCategoryCode = outputCategoryCode+"_"+experimentCategoryCode;			
+		}
 		
 		String institute = DescriptionHelper.getInstitute().get(0);	
 		Logger.info(atomicType+" / "+outputCategoryCode+" / "+experimentType+" / "+institute);

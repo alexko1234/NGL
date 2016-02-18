@@ -59,17 +59,15 @@ public class ExpWorkflows extends Workflows<Experiment>{
 		} else if("IP".equals(exp.state.code)){		
 			ExpWorkflowsHelper.updateStateOfInputContainers(exp, getNewState("IU", validation.getUser()), validation);
 			ExpWorkflowsHelper.updateStateOfInputContainerSupports(exp, getNewState("IU", validation.getUser()), validation);
-			ExpWorkflowsHelper.updateStateOfProcesses(exp,  getNewState("IP", validation.getUser()), validation);
-			
+			ExpWorkflowsHelper.updateStateOfProcesses(exp,  getNewState("IP", validation.getUser()), validation);			
 		}else if("F".equals(exp.state.code)){
-			if(TBoolean.TRUE.equals(exp.status.valid)){
-				ExpWorkflowsHelper.updateStateOfInputContainers(exp, getNewState("IW-D", validation.getUser()), validation);
-				ExpWorkflowsHelper.updateStateOfInputContainerSupports(exp, getNewState("IW-D", validation.getUser()), validation);				
-			}else{
-				ExpWorkflowsHelper.updateStateOfInputContainers(exp, getNewState("IW-D", validation.getUser()), validation);
-				ExpWorkflowsHelper.updateStateOfInputContainerSupports(exp, getNewState("IW-D", validation.getUser()), validation);				
+			ExpWorkflowsHelper.updateStateOfInputContainers(exp, getNewState("IW-D", validation.getUser()), validation);
+			ExpWorkflowsHelper.updateStateOfInputContainerSupports(exp, getNewState("IW-D", validation.getUser()), validation);				
+			ExpWorkflowsHelper.updateStateOfProcesses(exp, getNewState("IP", validation.getUser()), validation);
+			
+			if(ExperimentCategory.CODE.qualitycontrol.toString().equals(exp.categoryCode)){
+				ExpWorkflowsHelper.updateInputContainers(exp, validation);
 			}
-			ExpWorkflowsHelper.updateStateOfProcesses(exp, getNewState("IP", validation.getUser()), validation);			
 		}
 		ExpWorkflowsHelper.callWorkflowRules(validation, exp);
 	}

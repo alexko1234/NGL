@@ -1,4 +1,4 @@
-angular.module('home').controller('OneToVoidCtrl',['$scope', '$parse','atmToSingleDatatable',
+angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSingleDatatable',
                                                              function($scope,$parse, atmToSingleDatatable) {
 	 var datatableConfig = {
 			name:"FDR_Void",
@@ -78,6 +78,20 @@ angular.module('home').controller('OneToVoidCtrl',['$scope', '$parse','atmToSing
 			        	 "position":7,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
+			         {
+			        	 "header":Messages("containers.table.valuation.valid"),
+			        	 "property":"inputContainerUsed.valuation.valid",
+			        	 "filter":"codes:'valuation'",
+			        	 "order":true,
+						 "edit":true,
+						 "hide":false,
+			        	 "type":"text",
+			        	 "choiceInList":true,
+						 "listStyle":'bt-select',
+					     "possibleValues":'lists.getValuations()',
+			        	 "position":20,
+			        	 "extraHeaders":{0:"Inputs"}
+			         },
 			         ],
 			compact:true,
 			pagination:{
@@ -98,14 +112,14 @@ angular.module('home').controller('OneToVoidCtrl',['$scope', '$parse','atmToSing
 			save:{
 				active:true,
 	        	changeClass:false,
-				mode:'local',
+				mode:'local'
 			},
 			hide:{
 				active:true
 			},
 			edit:{
-				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
-				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
+				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
 				byDefault:($scope.isCreationMode()),
 				columnMode:true
 			},
@@ -127,15 +141,17 @@ angular.module('home').controller('OneToVoidCtrl',['$scope', '$parse','atmToSing
 
 		$scope.$on('save', function(e, callbackFunction) {	
 			console.log("call event save on one-to-void");
-			$scope.atmService.data.save();
+			$scope.atmService.data.save();			
 			$scope.atmService.viewToExperimentOneToVoid($scope.experiment);
+			$scope.updatePropertyUnit($scope.experiment);
+			$scope.copyPropertiesToInputContainer($scope.experiment); //override from child
 			$scope.$emit('childSaved', callbackFunction);
 		});
 		
 		$scope.$on('refresh', function(e) {
 			console.log("call event refresh on one-to-void");		
 			var dtConfig = $scope.atmService.data.getConfig();
-			dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
+			dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
 			dtConfig.edit.byDefault = false;
 			dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 			$scope.atmService.data.setConfig(dtConfig);

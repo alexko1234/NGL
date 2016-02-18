@@ -196,8 +196,10 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 			"position":13,
 			"choiceInList": true,
 			"possibleValues":"searchService.lists.getValuations()", 
-			"filter":"codes:'valuation'"	
+			"filter":"codes:'valuation'",
+       	 	"groupMethod":"unique"
 		}
+		
 		],	
 		search:{
 			url:jsRoutes.controllers.containers.api.Containers.list()

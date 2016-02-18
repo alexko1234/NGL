@@ -96,6 +96,7 @@ containers.table.concentration.value=Concentration Container
 containers.table.iryschip.sampleCodes= Echantillon
 containers.table.irysprep.concentration=Concentration Moyenne
 containers.table.nlrsConcentration= Concentration arrondie (ng/µL)
+containers.table.valuation.valid = Valid ?
 
 containers.placeholder.fromDate = Container depuis le (jj/mm/aaaa)
 containers.placeholder.toDate = Container jusqu''au (jj/mm/aaaa)
