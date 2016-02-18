@@ -11,8 +11,12 @@ containerSupports.menu = Supports
 containerSupports.menu.creation = Création
 containerSupports.menu.search = Rechercher
 containerSupports.menu.state = Changement d''Etat
+containerSupports.menu.scanner = Code-Barre
+
 containerSupports.tabs.search = Recherche Supports
-containerSupports.tabs.state = Changement d''Etat Supports
+containerSupports.tabs.state = Changement d'Etat Supports
+containerSupports.tabs.scanner = Recherche par Code Barre
+containerSupports.scanner.title = Code-Barre de Support
 
 #containerSupports table
 containerSupports.table.code= Supports
@@ -27,6 +31,17 @@ containerSupports.table.sampleCodes = Echantillon(s)
 containerSupports.table.valid = Support valide ?
 containerSupports.table.creationDate = Création Support
 containerSupports.table.createUser = Support créé par
+
+
+containerSupports.scanner.categoryCode = Catégorie 
+containerSupports.scanner.state.code = Etat 
+containerSupports.scanner.sampleCodes.length = ..Quantité
+containerSupports.scanner.sampleCodes = Echant. 
+containerSupports.scanner.projectCodes = Projet(s) 
+containerSupports.scanner.valid = Valide
+containerSupports.scanner.creationDate = Créé le
+containers.scanner.createUser = Créé par 
+containerSupports.scanner.code = Support
 
 containerSupports.select.state =  Etats Support
 containerSupports.select.categoryCode =  Catégorie Support
@@ -142,6 +157,7 @@ search.placeholder.user = Créé par
 search.placeholder.containerSupport = Regex pour code support
 search.placeholder.experiment = Regex pour expérience
 search.placeholder.process = Regex pour processus
+search.placeholder.barCodes = Scan du Code Barre
 
 search.tab.addfilters = Filtres supplémentaires
 search.tab.filters = Filtres

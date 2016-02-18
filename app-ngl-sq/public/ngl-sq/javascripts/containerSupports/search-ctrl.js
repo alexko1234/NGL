@@ -1,6 +1,6 @@
 "use strict"
-
-angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','$filter','mainService','tabService','containerSupportsSearchService','$routeParams', function($scope, datatable, lists,$filter,mainService,tabService,containerSupportsSearchService,$routeParams) {
+angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','$filter','mainService','tabService','containerSupportsSearchService','$routeParams', 
+                                                 function($scope, datatable, lists,$filter,mainService,tabService,containerSupportsSearchService,$routeParams) {
 	$scope.datatableConfig = {
 		search:{
 			url:jsRoutes.controllers.containers.api.ContainerSupports.list()
@@ -16,6 +16,18 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 		edit:{
 			active:false,
 			columnMode:true
+		},
+		save:{
+			active:true,
+			url:jsRoutes.controllers.containers.api.ContainerSupports.updateBatch().url,
+			batch:true,
+			mode:'remote',
+			method:'put',
+			callback: function(reason, error){
+				
+				console.log("callback reason=" + reason);
+				console.log("callback error=" + error);
+			}
 		}
 	};
 
@@ -41,11 +53,13 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 	
 	$scope.searchService = containerSupportsSearchService;
 	$scope.searchService.init($routeParams, $scope.datatableConfig)
+
 }]);
 
 
 "use strict"
-angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$routeParams', 'datatable','lists','$filter','$http','mainService','tabService','containerSupportsSearchService', function($scope,$location,$routeParams, datatable, lists,$filter,$http,mainService,tabService,containerSupportsSearchService) {
+angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$routeParams', 'datatable','lists','$filter','$http','mainService','tabService','containerSupportsSearchService', 
+                                                      function($scope,$location,$routeParams, datatable, lists,$filter,$http,mainService,tabService,containerSupportsSearchService) {
 	$scope.datatableConfig = {
 			search:{
 				url:jsRoutes.controllers.containers.api.ContainerSupports.list()
@@ -99,6 +113,5 @@ angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$rou
 	if($scope.form.project || $scope.form.type){
 		$scope.search();
 	}
-	
-	
+		
 }]);

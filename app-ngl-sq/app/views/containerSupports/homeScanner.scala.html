@@ -1,0 +1,105 @@
+@()
+
+@scripts() = {
+    	<script src="@controllers.main.tpl.routes.Main.jsCodes" type="text/javascript" charset="utf-8"></script>
+		<script src="@routes.Assets.at("ngl-sq/javascripts/containerSupports/barCodeScan/app.js")" type="text/javascript" charset="utf-8"></script>
+		<script src="@routes.Assets.at("ngl-common/javascripts/services/commons.js")" type="text/javascript" charset="utf-8"></script>
+    	<script src="@routes.Assets.at("ngl-common/javascripts/services/list-resize.js")" type="text/javascript" charset="utf-8"></script>
+		<script src="@routes.Assets.at("ngl-sq/javascripts/containerSupports/barCodeScan/search-ctrl.js")" type="text/javascript" charset="utf-8"></script>
+		<script src="@routes.Assets.at("ngl-sq/javascripts/containerSupports/barCodeScan/services.js")" type="text/javascript" charset="utf-8"></script> 
+		<script src="@controllers.containers.tpl.routes.ContainerSupports.javascriptRoutes" type="text/javascript" charset="utf-8"></script>
+}
+
+@css() = {
+<link rel="stylesheet" href="@routes.Assets.at("ngl-sq/css/commons/commons.css")">
+}
+
+
+@views.html.main("containerSupports.scanner.title", menu("containerSupports.scanner"), scripts,css){
+<div class="row scanner"  ng-controller="SearchScan" ng-app="home">
+	<div class="col-xs-12">
+	
+		<div class="row">	
+			<div class="col-xs-12">
+				<form class="form-inline">
+					<input id="scan" type="text" class="form-control input-sm" ng-model="searchService.form.code" ng-keydown="intercept($event)" placeholder='@Messages("search.placeholder.barCodes")' title='@Messages("search.placeholder.barCodes")'>										
+				</form>
+			</div>
+		</div>
+		
+		<div class="row" ng-if="searchService.response.data">
+			<div class="col-xs-12">
+				<form class="form-horizontal">			
+					<legend>
+						<h4>{{searchService.response.data.code}}</h4>
+					</legend>
+					<div class="form-group">
+						<label class="col-xs-5 control-label">@Messages("containerSupports.scanner.creationDate")</label>
+						<div class="col-xs-7">
+							<p>{{searchService.response.data.traceInformation.creationDate|date:'@Messages("date.format")'}}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-5 control-label">@Messages("containers.scanner.createUser")</label>
+						<div class="col-xs-7">
+							<p>{{searchService.response.data.traceInformation.createUser}}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-5 control-label">@Messages("containerSupports.scanner.projectCodes")</label>
+						<div class="col-xs-7">
+							<div list-resize='{{searchService.response.data.projectCodes}}' list-resize-min-size='3' vertical></div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-5 control-label">{{searchService.response.data.sampleCodes.length}} @Messages("containerSupports.scanner.sampleCodes")</label>
+						<div class="col-xs-7">
+							<div list-resize='{{searchService.response.data.sampleCodes}}' list-resize-min-size='3' vertical></div>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-5 control-label">@Messages("containerSupports.scanner.categoryCode")</label>
+						<div class="col-xs-7">
+							<p>{{searchService.response.data.categoryCode|codes:'container_support_cat'}}</p>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-xs-5 control-label">@Messages("containerSupports.scanner.state.code")</label>
+						<div class="col-xs-7">
+							<p>{{searchService.response.data.state.code|codes:'state'}}</p>
+						</div>
+					</div>
+							
+					<div class="form-group">
+						<label class="col-xs-5 control-label">@Messages("containerSupports.scanner.valid")</label>
+						<div class="col-xs-7">
+							<p>{{searchService.response.data.valuation.valid|codes:'valuation'}}</p>
+						</div>
+					</div>
+					
+				</form>
+			</div>
+		</div>
+		
+		<div class="row" ng-if="(searchService.response) && (searchService.response.status !== 200)">
+			<div class="col-xs-12">
+				<form class="form-horizontal form-control">			
+					<div class="form-group  form-group-sm">
+						<label class="col-xs-2 control-label">{{searchService.response.status}}</label>
+						<div class="col-xs-4">
+							<p>{{searchService.response.statusText}}</p>
+						</div>
+						<div class="col-xs-6" ng-show="(searchService.response.status === 404)">
+							<p>@Messages("msg.notFound")</p>
+						</div>
+						<div class="col-xs-6" ng-show="(searchService.response.status === 500)">
+							<p>@Messages("msg.internalError")</p>
+						</div>					
+					</div>
+				</form>
+			</div>
+		</div>
+	
+	</div>
+</div>
+}

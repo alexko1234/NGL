@@ -2,20 +2,24 @@ package controllers.containers.tpl;
 
 import play.Routes;
 import play.mvc.Result;
-import views.html.containerSupports.home;
-import views.html.containerSupports.search;
+import views.html.containerSupports.*;
 import controllers.CommonController;
 import controllers.containers.tpl.routes.javascript;
 
 public class ContainerSupports extends CommonController{
 	
-	public static Result home(String code){
-		return ok(home.render(code));
-	}	
+	public static Result home(String code){		
+		return ok(home.render(code));		
+	}
+	
+	public static Result homeScanner(){		
+		return ok(homeScanner.render());		
+	}
 	
 	public static Result search(){
 		return ok(search.render());
 	}
+	
 	
 	public static Result javascriptRoutes() {
   	    response().setContentType("text/javascript");
@@ -24,7 +28,8 @@ public class ContainerSupports extends CommonController{
   	        // Routes
   	    		controllers.containers.tpl.routes.javascript.ContainerSupports.search(),
   	    		controllers.containers.tpl.routes.javascript.ContainerSupports.home(),
-  	    		controllers.containers.api.routes.javascript.ContainerSupports.list(),  	    	
+  	    		controllers.containers.api.routes.javascript.ContainerSupports.updateBatch(),
+  	    		controllers.containers.api.routes.javascript.ContainerSupports.get(),
   	    		controllers.containers.api.routes.javascript.ContainerSupportCategories.list(),
   	    		controllers.containers.api.routes.javascript.ContainerSupports.updateStateCode(),
   	    		controllers.projects.api.routes.javascript.Projects.list(),
@@ -37,10 +42,7 @@ public class ContainerSupports extends CommonController{
   	    		controllers.containers.api.routes.javascript.ContainerCategories.list(),
   	    		controllers.containers.api.routes.javascript.Containers.updateBatch(),
   	    		controllers.commons.api.routes.javascript.Users.list()
-  	    		
-  	    		
   	      )	  	      
   	    );
   	}
-
 }

@@ -119,8 +119,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 				"filter":"codes:'valuation'",
 			});
 		}
-
-
+		
 		return columns;
 	};
 
@@ -176,64 +175,9 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			},
 			convertForm : function(){
 				var _form = angular.copy(this.form);
-				if(_form.projectCodes || _form.sampleCodes || _form.containerSupportCategory || _form.containerSupportCategories || _form.state || _form.states 
-						|| _form.createUser || _form.codeRegex || _form.codes  || _form.valuations || _form.fromDate || _form.toDate){	
-
-					var jsonSearch = {};
-
-					if(_form.projectCodes){
-						jsonSearch.projectCodes = _form.projectCodes;
-					}			
-					if(_form.sampleCodes){
-						jsonSearch.sampleCodes = _form.sampleCodes;
-					}		
-
-					if(_form.valuations){
-						jsonSearch.valuations = _form.valuations;
-					}					
-
-					if(_form.containerSupportCategory){
-						jsonSearch.containerSupportCategory = _form.containerSupportCategory;
-					}
-					
-					if(_form.containerSupportCategories){
-						jsonSearch.containerSupportCategories = _form.containerSupportCategories;
-					}
-
-					if(_form.state){
-						jsonSearch.stateCode = _form.state;
-					}
-
-					if(_form.states){
-						jsonSearch.stateCodes = _form.states;
-					}
-
-					if(_form.codeRegex){
-						jsonSearch.codeRegex = _form.codeRegex;
-					}
-					
-					if(_form.createUser){
-						jsonSearch.createUser = _form.createUser;
-					}
-					
-					if(_form.codes){
-						jsonSearch.codes = _form.codes;
-					}
-
-					if(_form.fromDate)jsonSearch.fromDate = moment(_form.fromDate, Messages("date.format").toUpperCase()).valueOf();
-					if(_form.toDate)jsonSearch.toDate = moment(_form.toDate, Messages("date.format").toUpperCase()).valueOf();
-
-					jsonSearch.includes = _form.includes;
-					
-					mainService.setForm(_form);
-					
-					return jsonSearch;
-				}else{
-					this.datatable.setData([],0);
-					return undefined;
-
-				}
-
+				if(_form.fromDate)_form.fromDate = moment(_form.fromDate, Messages("date.format").toUpperCase()).valueOf();
+				if(_form.toDate)_form.toDate = moment(_form.toDate, Messages("date.format").toUpperCase()).valueOf();		
+				return _form
 			},
 
 			resetForm : function(){
