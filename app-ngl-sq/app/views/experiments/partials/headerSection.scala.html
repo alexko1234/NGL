@@ -4,8 +4,9 @@
 <div class="row">
 	<div class="col-md-12 col-lg-12">
 		<div class="page-header">	
-			<div class="btn-toolbar pull-right">
 			@if(PermissionHelper.checkPermission(Context.current().request().username(), "writing")){
+			<div class="btn-toolbar pull-right">
+			
 					<div class="btn-group " id="experiment_action" ng-if="getNbAvailableAdditionnalButtons() > 1">
 						<a class="btn btn-default dropdown-toggle" data-toggle="dropdown"> @Messages("experiments.additionnalButtons") 
 							<span class="caret"></span>

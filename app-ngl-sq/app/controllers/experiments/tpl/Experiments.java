@@ -163,6 +163,9 @@ public class Experiments extends CommonController{
   	    		controllers.processes.api.routes.javascript.Processes.updateState(),
   	    		controllers.processes.api.routes.javascript.Processes.updateStateBatch(),
   	    		
+  	    		controllers.instruments.io.routes.javascript.IO.generateFile(),
+  	    		controllers.instruments.io.routes.javascript.IO.importFile(),
+  	    		
   	    		controllers.containers.api.routes.javascript.Containers.list(),
   	    		controllers.containers.api.routes.javascript.ContainerSupports.list(),
   	    		controllers.containers.api.routes.javascript.Containers.get(),
@@ -178,7 +181,8 @@ public class Experiments extends CommonController{
   	    		controllers.instruments.api.routes.javascript.InstrumentUsedTypes.list(),
   	    		controllers.instruments.api.routes.javascript.InstrumentCategories.list(),
   	    		controllers.protocols.api.routes.javascript.Protocols.list(),
-  	    		instruments.io.routes.javascript.Outputs.sampleSheets(),
+  	    		//instruments.io.routes.javascript.Outputs.generateFile(),
+  	    		//instruments.io.routes.javascript.Inputs.importFile(),
   	    		controllers.resolutions.api.routes.javascript.Resolutions.list(),
   	    		controllers.commons.api.routes.javascript.States.list(),
   	      		controllers.reporting.api.routes.javascript.FilteringConfigurations.list(),

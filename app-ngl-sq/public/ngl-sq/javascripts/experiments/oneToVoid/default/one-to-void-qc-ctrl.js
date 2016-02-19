@@ -136,7 +136,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 			extraHeaders:{
 				number:2,
 				dynamic:true,
-			}
+			}			
 	};
 
 		$scope.$on('save', function(e, callbackFunction) {	
