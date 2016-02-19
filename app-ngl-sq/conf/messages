@@ -35,13 +35,14 @@ containerSupports.table.createUser = Support créé par
 
 containerSupports.scanner.categoryCode = Catégorie 
 containerSupports.scanner.state.code = Etat 
-containerSupports.scanner.sampleCodes.length = ..Quantité
-containerSupports.scanner.sampleCodes = Echant. 
+containerSupports.scanner.sampleCodes.length = Nb. Echant
+containerSupports.scanner.sampleCodes = Echantillon(s) 
 containerSupports.scanner.projectCodes = Projet(s) 
 containerSupports.scanner.valid = Valide
 containerSupports.scanner.creationDate = Créé le
-containers.scanner.createUser = Créé par 
+containerSupports.scanner.createUser = Créé par 
 containerSupports.scanner.code = Support
+containerSupports.scanner.fromTransformationTypeCodes = Issu Type d''exp
 
 containerSupports.select.state =  Etats Support
 containerSupports.select.categoryCode =  Catégorie Support
