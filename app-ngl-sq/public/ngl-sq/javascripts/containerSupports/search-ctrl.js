@@ -19,7 +19,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 		},
 		save:{
 			active:true,
-			url:jsRoutes.controllers.containers.api.ContainerSupports.updateBatch().url,
+			url:jsRoutes.controllers.containers.api.ContainerSupports.updateStateBatch().url,
 			batch:true,
 			mode:'remote',
 			method:'put',
