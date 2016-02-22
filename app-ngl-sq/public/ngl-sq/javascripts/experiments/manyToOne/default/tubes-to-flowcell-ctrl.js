@@ -297,6 +297,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 		
 		var dtConfig = $scope.atmService.data.$atmToSingleDatatable.data.getConfig();
 		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
+		dtConfig.edit.byDefault = false;
 		$scope.atmService.data.$atmToSingleDatatable.data.setConfig(dtConfig);
 		
 		

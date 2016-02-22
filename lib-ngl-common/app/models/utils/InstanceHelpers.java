@@ -263,7 +263,7 @@ public class InstanceHelpers {
 	}
 
 	private static Object convertTagCodeToTagShortName(String tagCode) {
-		Index index=MongoDBDAO.findOne(InstanceConstants.PARAMETER_COLL_NAME, Index.class, DBQuery.is("typeCode", "index-illumina-sequencing").is("code", tagCode));
+		Index index=MongoDBDAO.findOne(InstanceConstants.PARAMETER_COLL_NAME, Index.class, DBQuery.in("typeCode", "index-illumina-sequencing","index-nanopore-sequencing").is("code", tagCode));
 		if(null != index){
 			return index.shortName;
 		}else{
