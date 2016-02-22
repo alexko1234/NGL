@@ -179,14 +179,31 @@ angular.module('home').controller('NanoporeLibraryCtrl',['$scope', '$parse', 'at
 			var ligationQuantity = $parse("outputContainerUsed.experimentProperties.ligationQuantity.value")(value);
 			$parse("outputContainerUsed.quantity.value").assign(value, ligationQuantity);
 		})
-		datatable.setData(data);
+		//datatable.setData(data);
 		
-	} 
+	} ;
+	
+	var removeTagCategoryIfNeeded = function(experiment){
+		if(null !== experiment.atomicTransfertMethods && undefined !== experiment.atomicTransfertMethods){
+			experiment.atomicTransfertMethods.forEach(function(atm){
+				var tagCategory = $parse("outputContainerUseds[0].experimentProperties.tagCategory")(atm);
+				var tag = $parse("outputContainerUseds[0].experimentProperties.tag")(atm);
+				
+				if((tag === null || tag === undefined) && 
+						tagCategory !== null && tagCategory !== undefined 
+						){
+					atm.outputContainerUseds[0].experimentProperties.tagCategory = undefined;
+				}
+			})
+		}
+	};
 	
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
+		removeTagCategoryIfNeeded($scope.experiment);
+		
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	

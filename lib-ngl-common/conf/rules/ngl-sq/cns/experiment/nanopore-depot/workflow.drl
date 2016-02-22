@@ -103,6 +103,11 @@ rule "Create ReadSet"
 		ReadSet readSet=new ReadSet();
 		readSet.typeCode="rsnanopore";
 		readSet.code=$content.sampleCode+"_ONT_"+$laneNumber+"_"+$run.containerSupportCode;
+		if($content.properties.containsKey("tag")){
+			readSet.code=readSet.code+"."+$content.properties.get("tag").value;
+		}
+		
+		
 		readSet.state=new State("N","ngsrg");
 		
 		readSet.runCode=$run.code;

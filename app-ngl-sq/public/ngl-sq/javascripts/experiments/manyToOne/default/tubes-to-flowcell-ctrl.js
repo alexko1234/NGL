@@ -248,7 +248,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 				$parse('outputContainerUsed.code').assign(dataMain[i],containerCode);
 				$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[i],codeFlowcell);
 			}				
-			datatable.setData(dataMain);
+			//datatable.setData(dataMain);
 		}
 		
 	}

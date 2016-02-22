@@ -44,6 +44,18 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 			        	 "position":4,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },
+			         
+			         {
+			 			"header":Messages("containers.table.tags"),
+			 			"property": "inputContainer.contents",
+			 			"order":false,
+			 			"edit":false,
+			 			"hide":true,
+			 			"type":"text",
+			 			"position":4.5,
+			 			"render":"<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' ' list-resize-min-size='3'>",
+			 			"extraHeaders":{0:"Inputs"}			 			
+			 		},
 			         					 
 					 {
 			        	 "header":Messages("containers.table.concentration") + " (ng/µL)",
@@ -264,7 +276,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 			$parse('outputContainerUsed.code').assign(dataMain[0],codeFlowcell);
 			$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[0],codeFlowcell);
 		}
-		datatable.setData(dataMain);
+		//datatable.setData(dataMain);
 	}
 	
 	$scope.$on('save', function(e, callbackFunction) {	
