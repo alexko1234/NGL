@@ -53,7 +53,7 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		// -3- librairies en tube
 		
 		//-3.1- lib-normalization= solexa[ lib10nM + libXnM >= 1nM ]	
-	    //loadContainers("tube","lib-normalization","is"); // is=in stock
+	    loadContainers("tube","lib-normalization","is"); // is=in stock
 	    loadContainers("tube","lib-normalization","iw-p"); //iw-p=in waiting processus
 	    updateContainers("tube","lib-normalization"); // pas de specificite de status pour la mise a jour
 		
