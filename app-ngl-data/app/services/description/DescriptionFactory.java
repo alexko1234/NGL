@@ -256,35 +256,6 @@ public class DescriptionFactory {
 		return pd;
 	}
 
-	/**
-	 * 
-	 * @param name
-	 * @param code
-	 * @param levels
-	 * @param type
-	 * @param required
-	 * @param values
-	 * @param displayOrder
-	 * @return
-	 * @throws DAOException
-	 */
-	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, Boolean editable, List<Value> values, String defaultValue, String propertyValueType, int displayOrder) {
-		
-		PropertyDefinition pd = new PropertyDefinition();		
-		pd.name = name;
-		pd.code = code;
-		pd.active = true;
-		pd.levels = levels;
-		pd.valueType = type.getName();
-		pd.required = required;
-		pd.editable = editable;
-		pd.choiceInList = true;		
-		pd.possibleValues = values;
-		pd.defaultValue=defaultValue;
-		pd.propertyValueType = propertyValueType;
-		pd.displayOrder=displayOrder;
-		return pd;
-	}
 	
 	/**
 	 * 
@@ -369,39 +340,6 @@ public class DescriptionFactory {
 		return pd;
 	}
 
-	/**
-	 * 
-	 * @param name
-	 * @param code
-	 * @param levels
-	 * @param type
-	 * @param required
-	 * @param values
-	 * @param measureCategory
-	 * @param displayMeasureUnit
-	 * @param saveMeasureUnit
-	 * @param propertyValueType TODO
-	 * @return
-	 * @throws DAOException
-	 */
-	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, 
-			List<Value> values, MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit, String propertyValueType) throws DAOException{
-		PropertyDefinition pd = new PropertyDefinition();		
-		pd.name = name;
-		pd.code = code;
-		pd.active = true;
-		pd.levels = levels;
-		pd.valueType = type.getName();
-		pd.required = required;
-		pd.choiceInList = true;		
-		pd.possibleValues = values;
-		pd.measureCategory = measureCategory;
-		pd.displayMeasureValue = displayMeasureUnit;
-		pd.saveMeasureValue = saveMeasureUnit;	
-		pd.propertyValueType = propertyValueType;
-		return pd;
-	}
-	
 	
 	/**
 	 * 
