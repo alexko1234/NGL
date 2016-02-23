@@ -31,24 +31,37 @@ public class NGLControllerHelper {
 				List<String> stringValues = properties.get(keyValue);
 				if(null != pd && CollectionUtils.isNotEmpty(stringValues)){					
 					Query subQueries = null;
-					List<Object> values = null;
 					if(key.length == 1){
-						values = ValidationHelper.convertStringToType(pd.valueType, stringValues);
-					}else if(key.length > 1){
+						List<Object> values = ValidationHelper.convertStringToType(pd.valueType, stringValues);
+					
+						//use $in because is more generic than $is and work to field of type array or single
+						subQueries = DBQuery.in(prefixPropertyPath+"."+key[0]+".value", values);
+						//in case of property is not defined in the document ???
+						if(Boolean.class.getName().equals(pd.valueType) && !((Boolean)values.get(0)).booleanValue()){
+							subQueries = DBQuery.or(subQueries, DBQuery.notExists(prefixPropertyPath+"."+key[0]+".value"));
+						}						
+					}else if(key.length > 1 && stringValues.size() == 1){
 						if(key[1].equals("regex")){
-							values = convertStringToPattern(stringValues);
+							Pattern pattern = convertStringToPattern(stringValues.get(0));
+							subQueries = DBQuery.regex(prefixPropertyPath+"."+key[0]+".value", pattern);
+							queries.add(subQueries);							
+						}else if(key[1].equals("gte") && stringValues.size() == 1){
+							Object value = ValidationHelper.convertStringToType(pd.valueType, stringValues.get(0));
+							subQueries = DBQuery.greaterThanEquals(prefixPropertyPath+"."+key[0]+".value", value);							
+						}else if(key[1].equals("gt") && stringValues.size() == 1){
+							Object value = ValidationHelper.convertStringToType(pd.valueType, stringValues.get(0));
+							subQueries = DBQuery.greaterThan(prefixPropertyPath+"."+key[0]+".value", value);							
+						}else if(key[1].equals("lte") && stringValues.size() == 1){
+							Object value = ValidationHelper.convertStringToType(pd.valueType, stringValues.get(0));
+							subQueries = DBQuery.lessThanEquals(prefixPropertyPath+"."+key[0]+".value", value);							
+						}else if(key[1].equals("lt") && stringValues.size() == 1){
+							Object value = ValidationHelper.convertStringToType(pd.valueType, stringValues.get(0));
+							subQueries = DBQuery.lessThan(prefixPropertyPath+"."+key[0]+".value", value);							
 						}else{
 							throw new RuntimeException("key[1] not valid : "+key[1]);
 						}
 					}else{
-						throw new RuntimeException("key not valid : "+keyValue);
-					}
-					
-					//use $in because is more generic than $is and work to field of type array or single
-					subQueries = DBQuery.in(prefixPropertyPath+"."+key[0]+".value", values);
-					//in case of property is not defined in the document ???
-					if(Boolean.class.getName().equals(pd.valueType) && !((Boolean)values.get(0)).booleanValue()){
-						subQueries = DBQuery.or(subQueries, DBQuery.notExists(prefixPropertyPath+"."+key[0]+".value"));
+						throw new RuntimeException("key not valid : "+keyValue+" or stringValues.size != 1 / "+stringValues.size());
 					}
 					queries.add(subQueries);
 				}				
@@ -59,8 +72,13 @@ public class NGLControllerHelper {
 		return queries;
 	}
 	
-	private static List<Object> convertStringToPattern(List<String> values) {
-		List<Object> objects = new ArrayList<Object>(values.size());
+	private static Pattern convertStringToPattern(String value) {
+		
+		return Pattern.compile(value);
+	}
+	
+	private static List<Pattern> convertStringToPatterns(List<String> values) {
+		List<Pattern> objects = new ArrayList<Pattern>(values.size());
 		for(String value : values){
 			objects.add(Pattern.compile(value));
 		}	

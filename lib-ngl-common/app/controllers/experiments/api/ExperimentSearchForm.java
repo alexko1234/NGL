@@ -27,14 +27,20 @@ public class ExperimentSearchForm extends ListForm{
 	public String containerSupportCodeRegex;
 	public String atomicTransfertMethods;
 	public String reagentOrBoxCode;
+	
 	public String instrument;
 	public Set<String> instruments;
 	
-	public Set<String> tags;
+	public String instrumentCode;
+	public Set<String> instrumentCodes;
+	
+	
 	public Set<String> sampleTypeCodes;
 	public Map<String, List<String>> atomicTransfertMethodsInputContainerUsedsContentsProperties = new HashMap<String, List<String>>();
 	
-
+	public Map<String, List<String>> experimentProperties = new HashMap<String, List<String>>();
+	public Map<String, List<String>> instrumentProperties = new HashMap<String, List<String>>();
+	
 	
 	// FDS 21/08/2015 pour debug only???  ajouter tags et sampleTypeCodes dans le return 
 	@Override
@@ -45,7 +51,7 @@ public class ExperimentSearchForm extends ListForm{
 				+ ", toDate=" + toDate + ", stateCode=" + stateCode
 				+ ", users=" + users +", containerSupportCode=" + containerSupportCode 
 				+ ", atomicTransfertMethods="+ atomicTransfertMethods + ", instrument"+ instrument 
-				+ ", tags=" + tags+  ", sampleTypeCodes="+ sampleTypeCodes
+				+ ", sampleTypeCodes="+ sampleTypeCodes
 				+ "]";
 	}
 }
