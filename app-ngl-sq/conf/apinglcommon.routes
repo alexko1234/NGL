@@ -11,8 +11,9 @@ GET		/api/resolutions		  										@controllers.resolutions.api.Resolutions.list
 
 
 #Parameter
-GET    /api/parameters/:typeCode										controllers.commons.api.Parameters.list(typeCode:java.lang.String)
-GET    /api/parameters/:typeCode/:code 									controllers.commons.api.Parameters.get(typeCode:java.lang.String,code:java.lang.String)
+GET		/api/parameters									controllers.commons.api.Parameters.list()
+GET		/api/parameters/:typeCode						controllers.commons.api.Parameters.listByCode(typeCode: java.lang.String)
+GET     /api/parameters/:typeCode/:code 				controllers.commons.api.Parameters.get(typeCode:java.lang.String,code:java.lang.String)
 
 
 #reporting

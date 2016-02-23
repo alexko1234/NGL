@@ -13,6 +13,9 @@ public class RunsSearchForm extends ListForm {
     public List<String> codes;
     public String code;
     
+    public List<String> categoryCodes;
+    public String categoryCode;
+    
     public List<String> stateCodes;
     public String stateCode;
 

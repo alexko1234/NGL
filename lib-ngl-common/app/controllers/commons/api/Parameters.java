@@ -28,10 +28,22 @@ public class Parameters extends CommonController {
 	// GA 24/07/2015 implementaton de la form +  params list et datatablecd SOL
 	final static Form<ParametersSearchForm> form = form(ParametersSearchForm.class);
 
-	public static Result list(String typeCode) throws DAOException {
+	public static Result list() {
+	    Form<ParametersSearchForm> filledForm = filledFormQueryString(form, ParametersSearchForm.class);
+		ParametersSearchForm parametersSearch = filledForm.get();
+		return list(parametersSearch);
+				
+    }
+
+	public static Result listByCode(String typeCode) {
 	    Form<ParametersSearchForm> filledForm = filledFormQueryString(form, ParametersSearchForm.class);
 		ParametersSearchForm parametersSearch = filledForm.get();
 		parametersSearch.typeCode=typeCode;
+		return list(parametersSearch);
+				
+    }
+	
+	private static Result list(ParametersSearchForm parametersSearch) {
 		Query query = getQuery(parametersSearch);		
 		
 		List<Parameter> values=MongoDBDAO.find(InstanceConstants.PARAMETER_COLL_NAME, Parameter.class, query).toList();
@@ -47,8 +59,9 @@ public class Parameters extends CommonController {
 		} else {
 			return ok(Json.toJson(values));
 		}
-				
-    }
+	}
+	
+	
  
 	public static Result get(String typeCode, String code) throws DAOException {
 		Parameter index=MongoDBDAO.findOne(InstanceConstants.PARAMETER_COLL_NAME, Parameter.class, DBQuery.is("typeCode", typeCode).is("code", code));
@@ -62,8 +75,11 @@ public class Parameters extends CommonController {
 	private static Query getQuery(ParametersSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;
-
-		queries.add(DBQuery.is("typeCode", form.typeCode));
+		if (StringUtils.isNotBlank(form.typeCode)) { 
+			queries.add(DBQuery.is("typeCode", form.typeCode));
+		}else if(CollectionUtils.isNotEmpty(form.typeCodes)){
+			queries.add(DBQuery.in("typeCode", form.typeCodes));
+		}
 		
 		if (StringUtils.isNotBlank(form.sequence)) { 
 			queries.add(DBQuery.is("sequence", form.sequence));
