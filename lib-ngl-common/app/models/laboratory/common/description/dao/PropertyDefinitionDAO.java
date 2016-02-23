@@ -52,7 +52,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 	public PropertyDefinition findUnique(String code, Level.CODE levelCode){
 		
 		String sql = 
-				"select distinct pd.code, pd.type, pd.property_value_type, pd.choice_in_list" 
+				"select distinct pd.code, pd.type, pd.property_value_type" 
 				+"	from  property_definition pd"
 				+"	inner join property_definition_level pdf on pdf.fk_property_definition = pd.id"
 				+"	inner join level l on l.id = pdf.fk_level and l.code = ?"
