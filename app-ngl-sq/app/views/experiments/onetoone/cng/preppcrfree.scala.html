@@ -1,5 +1,32 @@
 @()
 
-<div class="row" ng-controller="PrepPcrFreeCtrl">
+<div class="col-sm-12 col-lg-12" ng-controller="PrepPcrFreeCtrl">
+
+<!-- gerer ici la distinction tube vs plaque ????  <div class="row" ng-if="xxxxx()">  -->
+
+  <div class="panel panel-default">
+    <form class="form-inline">
+         <div class="form-group">
+              <label for="plateCode"  class="control-label">@Messages("experiments.outputs")</label>
+                  <input class="form-control input-sm" type="text" id="plateCode"
+									                     title=@Messages("experiments.outputs")
+			  							                 ng-model="ouputContainer.supportCode" />	
+	     </div>
+         <div class="form-group">
+             <label for="plateStorage" class="control-label">@Messages("experiments.outputContainerStorage")</label>
+                <input class="form-control input-sm" type="text" id="plateStorage"
+									                 title=@Messages("experiments.outputContainerStorage") 
+			 						                 ng-model="ouputContainer.storageCode" />	
+	     </div>
+         <div class="form-group">
+             <label for="instrumentFile" class="control-label">@Messages("experiments.instrumentFile")</label>
+                <input class="form-control input-sm" type="file" id="instrumentFile" 		 
+                                                 ng-model="InstrumentFile" />				  
+        </div>
+   </form>		
+  </div>
+  
+  <div class="row">
 	<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data"></div>						
+  </div>
 </div>

@@ -101,7 +101,6 @@ containers.table.support.column = Colonne
 containers.table.support.number = #
 containers.table.percentage = % à déposer
 containers.table.tags = Tag
-# ajout FDS...
 containers.table.tagCategory=Type de Tag
 containers.table.sampleTypes = Type échantillon
 containers.table.libProcessTypeCodes = Type librairie
@@ -291,8 +290,15 @@ experiments.createUser = Créée par
 experiments.modifyDate = Date de modification
 experiments.modifyBy = Modifié par
 experiment.comments = Commentaires
+
+# modif a faire pour etre homogene avec sortie ???
 experiments.inputs = Container en entrée
-experiments.outputs = Container en sortie
+# modif FDS demandee par Julie....experiments.outputs = Container en sortie
+experiments.outputs = Code support de sortie
+
+# ajout FDS test...
+experiments.outputContainerStorage= Stockage support de sortie
+experiments.instrumentFile = Fichier de l''instrument
 
 experiments.calculation.sheet = Feuille de calcul
 experiments.flowcell.design = Composition flowcell

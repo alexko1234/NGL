@@ -384,11 +384,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		l.addAll(getCovarisProperties());
 		l.addAll(getSicloneNGSXProperties());
 		
-		//05/02/2016 Ne sont pas reellement des propriétés d'instrument...a améliorer par la suite...
-		// outputContainerSupportCode a saisie libre mais obligatoire
-		l.add(newPropertiesDefinition("Barcode plaque en sortie", "outputContainerSupportCode", LevelService.getLevels(Level.CODE.Instrument), String.class, true, "single"));
-		// storage optionnel
-		l.add(newPropertiesDefinition("Stockage plaque en sortie", "outputStorage", LevelService.getLevels(Level.CODE.Instrument), String.class, false, "single"));
 		return l;
 	}
 	
@@ -398,12 +393,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, 
                 newValues("waiting-program"),  "single"));
-		
-		//15/02/2016 Ne sont pas reellement des propriétés d'instrument...a améliorer par la suite...
-		// outputContainerSupportCode a saisie libre mais obligatoire
-		l.add(newPropertiesDefinition("Barcode plaque en sortie", "outputContainerSupportCode", LevelService.getLevels(Level.CODE.Instrument), String.class, true, "single"));
-		// storage optionnel
-		l.add(newPropertiesDefinition("Stockage plaque en sortie", "outputStorage", LevelService.getLevels(Level.CODE.Instrument), String.class, false, "single"));
 		
 		return l;
 	}
