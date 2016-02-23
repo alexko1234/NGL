@@ -1,5 +1,7 @@
 @()
 
+@import play.mvc.Http.Context
+
 @scripts() = {
 	 <script src="@controllers.experiments.tpl.routes.Experiments.javascriptRoutes" type="text/javascript" charset="utf-8"></script>
      <script src="@controllers.main.tpl.routes.Main.jsCodes" type="text/javascript" charset="utf-8"></script> 
@@ -15,13 +17,13 @@
 
 @main("index.title", menu("home"), scripts) {
 	<div  class="row">
-	<div  class="col-md-12 col-lg-12">
-	   <div class="jumbotron">
-	        <h1>Welcome to Next-Generation LIMS</h1>
-	        <p>This a simple and flexible LIMS for next-generation sequencing.</p>
-	        <p><a class="btn btn-primary btn-lg">Learn more</a></p>
-	      </div>  
-	      </div> 
+		<div  class="col-md-12 col-lg-12">
+		   <div class="jumbotron">
+		        <h1>@Messages("home.h10.header", Context.current().request().username())</h1>
+		        <p>@Messages("home.p.comment")</p>
+		        <p><a class="btn btn-primary btn-lg">@Messages("home.a.comment")</a></p>
+		   </div>  
+		</div> 
     </div>
     <div ng-controller="SearchCtrl" ng-app="home">
       <div  class="row">

@@ -9,7 +9,7 @@ home.title.help.name=Aide NGL-BI
 
 #home page main
 home.h10.header=Bienvenue {0} sur NGL - Bio Informatique
-home.p.comment=NGL-BI est un LIMS simple et flexible pour le suivi des données bioinformatique issues du séquençage de nouvelle génération.
+home.p.comment=NGL-BI est un LIMS simple et flexible pour le suivi des données bioinformatique issues du Séquençage de Nouvelle Génération.
 home.a.comment=En savoir plus...
 
 home.runs.ips = Runs en cours de séquençage
