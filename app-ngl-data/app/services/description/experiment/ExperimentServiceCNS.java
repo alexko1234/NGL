@@ -252,7 +252,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			l.add(newExperimentType("Quantification qPCR","qpcr-quantification", null,850,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsQPCR(), 
-					getInstrumentUsedTypes("hand","stratagene-qPCR"),"OneToVoid", 
+					getInstrumentUsedTypes("stratagene-qPCR"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 	
 			
 		}

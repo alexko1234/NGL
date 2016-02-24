@@ -409,6 +409,7 @@ button.cancel = Annuler
 button.readsets.show = Voir Readsets
 button.readsets.valuation = Evaluer Readsets
 button.edit = Editer
+button.import.file = Import fichier
 
 date.format= dd/MM/yyyy
 date.format.french= jj/mm/aaaa
