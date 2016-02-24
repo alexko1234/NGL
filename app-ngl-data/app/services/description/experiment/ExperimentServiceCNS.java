@@ -281,7 +281,13 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		newExperimentTypeNode("ext-to-nanopore-run", getExperimentTypes("ext-to-nanopore-run").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("ext-to-nanopore-process-library", getExperimentTypes("ext-to-nanopore-process-library").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("ext-to-nanopore-process-library-no-frg", getExperimentTypes("ext-to-nanopore-process-library-no-frg").get(0), false, false, false, null, null, null, null).save();
-		newExperimentTypeNode("nanopore-fragmentation",getExperimentTypes("nanopore-fragmentation").get(0),false, false,false,getExperimentTypeNodes("ext-to-nanopore-process-library"),null,getExperimentTypes("qpcr-quantification"),getExperimentTypes("aliquoting")).save();
+		
+		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+			newExperimentTypeNode("nanopore-fragmentation",getExperimentTypes("nanopore-fragmentation").get(0),false, false,false,getExperimentTypeNodes("ext-to-nanopore-process-library"),null,getExperimentTypes("qpcr-quantification"),getExperimentTypes("aliquoting")).save();
+		}else{
+			newExperimentTypeNode("nanopore-fragmentation",getExperimentTypes("nanopore-fragmentation").get(0),false, false,false,getExperimentTypeNodes("ext-to-nanopore-process-library"),null,null,getExperimentTypes("aliquoting")).save();
+			
+		}
 		newExperimentTypeNode("nanopore-library",getExperimentTypes("nanopore-library").get(0),false, false,false,getExperimentTypeNodes("ext-to-nanopore-process-library-no-frg","nanopore-fragmentation"),null,null,getExperimentTypes("pool-tube")).save();
 		newExperimentTypeNode("nanopore-depot",getExperimentTypes("nanopore-depot").get(0),false, false,false,getExperimentTypeNodes("nanopore-library","ext-to-nanopore-run"),null,null,null).save();
 		
