@@ -180,7 +180,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 				getInstrumentUsedTypes("IRYS"),"OneToVoid", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 		//library
-		/*
+		
 		l.add(newExperimentType("Fragmentation","fragmentation",null,200,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionFragmentation(),
 				getInstrumentUsedTypes("hand","covaris-s2","covaris-e210"),"OneToOne", 
@@ -202,7 +202,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 				null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-
+/*
 			//quality control
 
 			//purif
