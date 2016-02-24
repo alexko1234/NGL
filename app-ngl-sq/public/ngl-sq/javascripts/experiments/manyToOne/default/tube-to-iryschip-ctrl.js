@@ -207,7 +207,7 @@
 				$parse('outputContainerUsed.code').assign(dataMain[i],containerCode);
 				$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[i],codeFlowcell);
 			}				
-			datatable.setData(dataMain);
+			//datatable.setData(dataMain);
 		}
 		
 	}
@@ -219,6 +219,7 @@
 		
 		var dtConfig = $scope.atmService.data.$atmToSingleDatatable.data.getConfig();
 		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
+		dtConfig.edit.byDefault = false;
 		$scope.atmService.data.$atmToSingleDatatable.data.setConfig(dtConfig);
 		
 		
@@ -228,8 +229,7 @@
 	
 	$scope.$on('cancel', function(e) {
 		console.log("call event cancel");
-		$scope.atmService.data.$atmToSingleDatatable.data.cancel();
-				
+		$scope.atmService.data.$atmToSingleDatatable.data.cancel();				
 	});
 	
 	$scope.$on('activeEditMode', function(e) {

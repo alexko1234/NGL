@@ -31,6 +31,7 @@ import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
 import models.laboratory.parameter.Index;
+import models.laboratory.parameter.IlluminaIndex;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import models.laboratory.project.instance.BioinformaticParameters;
@@ -719,7 +720,7 @@ public class LimsCNSDAO{
 				,new RowMapper<Index>() {
 					@SuppressWarnings("rawtypes")
 					public Index mapRow(ResultSet rs, int rowNum) throws SQLException {
-						Index index=new Index();
+						Index index=new IlluminaIndex();
 						index.code=rs.getString("tagkeyseq");
 						index.name=rs.getString("tagkeyseq");
 						index.shortName=rs.getString("tagkeyseq");

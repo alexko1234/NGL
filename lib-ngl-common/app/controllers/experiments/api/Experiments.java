@@ -192,6 +192,10 @@ public class Experiments extends DocumentController<Experiment>{
 			queryElts.add(DBQuery.is("instrument.code", experimentSearch.instrument));
 		}else if(CollectionUtils.isNotEmpty(experimentSearch.instruments)){
 			queryElts.add(DBQuery.in("instrument.code", experimentSearch.instruments));
+		}else if(StringUtils.isNotBlank(experimentSearch.instrumentCode)){
+			queryElts.add(DBQuery.is("instrument.code", experimentSearch.instrumentCode));
+		}else if(CollectionUtils.isNotEmpty(experimentSearch.instrumentCodes)){
+			queryElts.add(DBQuery.in("instrument.code", experimentSearch.instrumentCodes));
 		}
 		
 		// FDS 21/08/2015 ajout filtrage sur les types d'echantillon
@@ -200,6 +204,8 @@ public class Experiments extends DocumentController<Experiment>{
 		}
 		
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(experimentSearch.atomicTransfertMethodsInputContainerUsedsContentsProperties, Level.CODE.Content, "atomicTransfertMethods.inputContainerUseds.contents.properties"));
+		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(experimentSearch.experimentProperties, Level.CODE.Experiment, "experimentProperties"));
+		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(experimentSearch.instrumentProperties, Level.CODE.Instrument, "instrumentProperties"));
 
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));

@@ -196,10 +196,10 @@ angular.module('commonsServices', []).
     				},
     				tags : function(params, key){
     					if(angular.isUndefined(params)){
-    	    				params = {};
+    	    				params = {typeCodes:['index-illumina-sequencing','index-nanopore-sequencing']};
     	    			}
     				//GA 24/07/2015 un peu spécial pour tags car fait partie de la collection parameters...
-    					load(jsRoutes.controllers.commons.api.Parameters.list('index-illumina-sequencing').url,params,(key)?key:'tags');
+    					load(jsRoutes.controllers.commons.api.Parameters.list().url,params,(key)?key:'tags');
     				},
     				tagCategories : function(params, key){
     					if(angular.isUndefined(params)){

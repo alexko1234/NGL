@@ -70,7 +70,7 @@ rule "Init objects ContentInfo in WM"
     
     if($content.properties.containsKey("tag")){
     	tag=$content.properties.get("tag").value.toString();
-    	Index index=MongoDBDAO.findOne(InstanceConstants.PARAMETER_COLL_NAME, Index.class, DBQuery.is("typeCode", "index-illumina-sequencing").is("code", tag));
+    	Index index=MongoDBDAO.findOne(InstanceConstants.PARAMETER_COLL_NAME, Index.class, DBQuery.in("typeCode", "index-illumina-sequencing","index-nanopore-sequencing").is("code", tag));
     	if(index != null){
     		sequence = index.sequence;
     		tagRealSize = index.sequence.length();

@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.mongojack.DBQuery;
+
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
@@ -19,6 +21,8 @@ import models.laboratory.common.description.Value;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.ProtocolCategory;
+import models.laboratory.parameter.NanoporeIndex;
+import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
 import play.data.validation.ValidationError;
@@ -28,6 +32,8 @@ import services.description.common.LevelService;
 import services.description.common.MeasureService;
 
 import com.typesafe.config.ConfigFactory;
+
+import fr.cea.ig.MongoDBDAO;
 public class ExperimentServiceCNS extends AbstractExperimentService {
 
 	
@@ -504,6 +510,11 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"), "single",11));
 //		propertyDefinitions.add(newPropertiesDefinition("Taille", "librarySize", LevelService.getLevels(Level.CODE.ContainerOut), Integer.class, true, null
 	//			, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "kb"),MeasureUnit.find.findByCode( "kb"), "single",8));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Tag","tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content),String.class, false, getTagNanopore(), "single",13));
+		propertyDefinitions.add(newPropertiesDefinition("Catégorie tag","tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content),String.class, false, getTagCategoriesNanopore(),"SINGLE-INDEX", "single",14));
+		
+		
 		propertyDefinitions.add(newPropertiesDefinition("Conc. finale End Repair","postEndRepairConcentration", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, false, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION),MeasureUnit.find.findByCode( "ng/µl"),MeasureUnit.find.findByCode( "ng/µl"), "single",15));
 		propertyDefinitions.add(newPropertiesDefinition("Qté finale End Repair","postEndRepairQuality", LevelService.getLevels(Level.CODE.ContainerOut),Double.class, false, null
@@ -522,7 +533,24 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		propertyDefinitions.add(newPropertiesDefinition("Qté finale Ligation","ligationQuantity", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content),Double.class, false, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"), "single",60)); 
 
+		
 		return propertyDefinitions;
+	}
+
+	private static List<Value> getTagNanopore() {
+		List<NanoporeIndex> indexes = MongoDBDAO.find(InstanceConstants.PARAMETER_COLL_NAME, NanoporeIndex.class, DBQuery.is("typeCode", "index-nanopore-sequencing")).toList();
+		List<Value> values = new ArrayList<Value>();
+		indexes.forEach(index -> {
+			values.add(DescriptionFactory.newValue(index.code, index.name));	
+		});
+		
+		return values;
+	}
+
+	private static List<Value> getTagCategoriesNanopore(){
+		List<Value> values = new ArrayList<Value>();
+		values.add(DescriptionFactory.newValue("SINGLE-INDEX", "SINGLE-INDEX"));		
+		return values;	
 	}
 
 	private static List<PropertyDefinition> getPropertyDefinitionFragmentation() throws DAOException {

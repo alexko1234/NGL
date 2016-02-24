@@ -1,10 +1,15 @@
 package services.instance.parameter;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import models.LimsCNSDAO;
+import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.parameter.Index;
+import models.laboratory.parameter.NanoporeIndex;
+import models.laboratory.parameter.Parameter;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
@@ -22,22 +27,47 @@ public class IndexImportCNS extends AbstractImportDataCNS{
 
 	@Override
 	public void runImport() throws SQLException, DAOException {
-		createIndex(limsServices,contextError);
+		createIndexIllumina(limsServices,contextError);
+		createIndexNanopore(contextError);
 	}
 
 	
-	public static void createIndex(LimsCNSDAO limsServices,ContextValidation contextValidation) throws SQLException, DAOException{
+	public static void createIndexIllumina(LimsCNSDAO limsServices,ContextValidation contextValidation) throws SQLException, DAOException{
 		
 	List<Index> indexs = limsServices.findIndexIlluminaToCreate(contextValidation) ;
 		
 		for(Index index:indexs){
-	
-			if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.PARAMETER_COLL_NAME, Index.class, index.code)){
-				MongoDBDAO.deleteByCode(InstanceConstants.PARAMETER_COLL_NAME, Index.class, index.code);
+			if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.PARAMETER_COLL_NAME, Parameter.class, index.code)){
+				MongoDBDAO.deleteByCode(InstanceConstants.PARAMETER_COLL_NAME, Parameter.class, index.code);
 			}
 		}
 	
 		InstanceHelpers.save(InstanceConstants.PARAMETER_COLL_NAME,indexs,contextValidation);
 		
+	}
+	
+	public static void createIndexNanopore(ContextValidation contextValidation){
+		
+			for(int i = 1 ; i <= 12 ; i++){
+				Index index = getNanoporeIndex(i);				
+				if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.PARAMETER_COLL_NAME, Parameter.class, index.code)){
+					InstanceHelpers.save(InstanceConstants.PARAMETER_COLL_NAME,index,contextValidation);
+				}
+			}
+			
+		}
+
+	private static Index getNanoporeIndex(int i) {
+		Index index = new NanoporeIndex();
+		String code = (i < 10)?"NB0"+i:"NB"+i;
+		index.code = code;
+		index.name = code;
+		index.shortName = code;
+		index.sequence = code;
+		index.categoryCode = "SINGLE-INDEX";
+		index.supplierName = new HashMap<String,String>();
+		index.supplierName.put("oxfordNanopore", code);
+		index.traceInformation=new TraceInformation("ngl-data");
+		return index;
 	}
 }

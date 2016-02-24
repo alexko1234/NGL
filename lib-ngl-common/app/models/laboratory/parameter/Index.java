@@ -2,36 +2,31 @@ package models.laboratory.parameter;
 
 import java.util.Map;
 
-import models.laboratory.common.instance.TraceInformation;
-import models.utils.InstanceConstants;
 import validation.ContextValidation;
-import validation.IValidation;
-import validation.common.instance.CommonValidationHelper;
 import validation.utils.ValidationHelper;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import fr.cea.ig.DBObject;
 
-public class Index extends DBObject implements IValidation{
+public abstract class Index extends Parameter{
 
-	public final String typeCode="index-illumina-sequencing"; 
-	public String categoryCode;
+	
+	public Index(String typeCode) {
+		super(typeCode);		
+	}
+
 	public String sequence;
 	
-	public String name;
 	public String shortName; //used by NGS-RG
 	
 	public Map<String,String> supplierName;
-	public TraceInformation traceInformation;
+	
 	
 	@JsonIgnore
 	@Override
 	public void validate(ContextValidation contextValidation) {
-		CommonValidationHelper.validateCode(this, InstanceConstants.PARAMETER_COLL_NAME, contextValidation);
-		ValidationHelper.required(contextValidation, categoryCode, "categoryCode");
+		super.validate(contextValidation);
 		ValidationHelper.required(contextValidation, sequence, "sequence");
-		ValidationHelper.required(contextValidation, name, "name");
 		ValidationHelper.required(contextValidation, shortName, "shortName");
 	}
 }

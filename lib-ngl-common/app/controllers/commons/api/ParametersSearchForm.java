@@ -7,6 +7,7 @@ import controllers.ListForm;
 public class ParametersSearchForm extends ListForm{
 
 	public String typeCode;
+	public Set<String> typeCodes;
 	public String sequence;
 	public Set<String> categoryCodes;
 }

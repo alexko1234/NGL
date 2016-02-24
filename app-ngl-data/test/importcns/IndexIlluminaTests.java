@@ -38,7 +38,7 @@ public class IndexIlluminaTests extends AbstractTests{
 	@Test
 	public void importIndex() throws SQLException, DAOException{
 		ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
-		IndexImportCNS.createIndex(limsServices,contextValidation);
+		IndexImportCNS.createIndexIllumina(limsServices,contextValidation);
 		Assert.assertEquals(contextValidation.errors.size(),0);
 	}
 

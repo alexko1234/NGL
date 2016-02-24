@@ -22,7 +22,8 @@ GET		/api/instruments/:code						controllers.instruments.api.Instruments.get(cod
 PUT		/api/instruments/:code						controllers.instruments.api.Instruments.update(code: java.lang.String)
 
 #parameters
-GET		/api/parameters/:typeCode					controllers.commons.api.Parameters.list(typeCode: java.lang.String)
+GET		/api/parameters								controllers.commons.api.Parameters.list()
+GET		/api/parameters/:typeCode					controllers.commons.api.Parameters.listByCode(typeCode: java.lang.String)
 GET		/api/parameters/:typeCode/:code				controllers.commons.api.Parameters.get(typeCode: java.lang.String, code: java.lang.String)
 
 #stats api

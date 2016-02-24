@@ -168,7 +168,7 @@ angular.module('home').controller('TubesToMapCardCtrl',['$scope', '$parse', 'atm
 				
 			}				
 		}
-		datatable.setData(dataMain);
+		//datatable.setData(dataMain);
 	}
 	
 	$scope.$on('save', function(e, callbackFunction) {	

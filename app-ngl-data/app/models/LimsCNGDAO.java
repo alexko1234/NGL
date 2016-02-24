@@ -24,6 +24,7 @@ import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.parameter.Index;
+import models.laboratory.parameter.IlluminaIndex;
 import models.laboratory.project.description.ProjectType;
 import models.laboratory.project.instance.BioinformaticParameters;
 import models.laboratory.project.instance.Project;
@@ -1183,7 +1184,7 @@ public class LimsCNGDAO {
 				,new RowMapper<Index>() {
 					@SuppressWarnings("rawtypes")
 					public Index mapRow(ResultSet rs, int rowNum) throws SQLException {
-						Index index=new Index();
+						Index index=new IlluminaIndex();
 
 						index.code=rs.getString("nglbi_code");
 						index.shortName=rs.getString("short_name");

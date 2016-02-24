@@ -531,7 +531,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	
 }]);
 
-angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http','mainService','$q', function($scope, datatable,$http,mainService,$q) {
+angular.module('home').controller('ListNewCtrl', ['$scope', 'datatable','$http','mainService','tabService','$q', function($scope, datatable,$http,mainService,tabService,$q) {
 
 var	datatableConfig = {
 			columns:[
@@ -874,6 +874,7 @@ var	datatableConfig = {
 				$scope.datatable.displayResult[i].line.trClass = "success";
 			}
 			$scope.changeConfigFunc(false);
+			tabService.removeTab(0);
 			$scope.datatable.config.spinner.start = false;
 		}, function(res){
 			$scope.datatable.config.spinner.start = false;

@@ -249,7 +249,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 				$parse('outputContainerUsed.code').assign(dataMain[i],containerCode);
 				$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[i],codeFlowcell);
 			}				
-			datatable.setData(dataMain);
+			//datatable.setData(dataMain);
 		}
 		
 	}
@@ -298,6 +298,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 		
 		var dtConfig = $scope.atmService.data.$atmToSingleDatatable.data.getConfig();
 		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
+		dtConfig.edit.byDefault = false;
 		$scope.atmService.data.$atmToSingleDatatable.data.setConfig(dtConfig);
 		
 		
