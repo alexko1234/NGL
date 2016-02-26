@@ -264,8 +264,8 @@ public class LimsAbandonDAO {
     	ls.lmnbbase= (Long)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbBaseInternalAndIlluminaFilter");
     	ls.lmnbcycle= (Integer)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCycleRead1")+","+(Integer)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCycleRead2"); 
     	ls.pistnbcycle= (Integer)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCycleRead1")+(Integer)getNGSRGProperty(lane.treatments.get("ngsrg"),"nbCycleRead2");
-    	ls.lmphasing= (String)getNGSRGProperty(lane.treatments.get("ngsrg"),"phasing");
-    	ls.lmprephasing= (String)getNGSRGProperty(lane.treatments.get("ngsrg"),"prephasing");
+    	//ls.lmphasing= (String)getNGSRGProperty(lane.treatments.get("ngsrg"),"phasing");
+    	//ls.lmprephasing= (String)getNGSRGProperty(lane.treatments.get("ngsrg"),"prephasing");
 		return ls;
 	}
 
