@@ -19,6 +19,7 @@ import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
+import models.laboratory.container.instance.QualityControlResult;
 import models.laboratory.processes.instance.Process;
 import models.laboratory.sample.instance.Sample;
 import models.util.DataMappingCNS;
@@ -29,7 +30,9 @@ import models.utils.instance.ContainerHelper;
 import models.utils.instance.ContainerSupportHelper;
 import models.utils.instance.ProcessHelper;
 
+import org.eclipse.jetty.util.log.Log;
 import org.mongojack.DBQuery;
+import org.specs2.reporter.TextPrinter.Print;
 
 import play.Logger;
 import scala.concurrent.duration.FiniteDuration;
@@ -244,6 +247,8 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		}
 
 		String mesuredConcentrationUnit="ng/µl";
+		String mesuredSizeUnit="pb";
+
 		try{
 			if(   rs.getString("measuredConcentrationUnit")!=null){
 				mesuredConcentrationUnit=rs.getString("measuredConcentrationUnit");
@@ -252,9 +257,58 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 			
 		}
 		
-		container.concentration=new PropertySingleValue(Math.round(rs.getFloat("mesuredConcentration")*100.0)/100.0, mesuredConcentrationUnit);
-		container.volume=new PropertySingleValue(Math.round(rs.getFloat("mesuredVolume")*100.0)/100.0, "µl");
-		container.quantity=new PropertySingleValue(Math.round(rs.getFloat("mesuredQuantity")*100.0)/100.0, "ng");
+		try{
+			if(   rs.getString("measuredSizeUnit")!=null){
+				mesuredSizeUnit=rs.getString("measuredSizeUnit");
+			}
+		} catch(SQLException e){
+			
+		}
+		
+		container.concentration=new PropertySingleValue(Math.round(rs.getFloat("measuredConcentration")*100.0)/100.0, mesuredConcentrationUnit);
+		container.volume=new PropertySingleValue(Math.round(rs.getFloat("measuredVolume")*100.0)/100.0, "µl");
+		container.quantity=new PropertySingleValue(Math.round(rs.getFloat("measuredQuantity")*100.0)/100.0, "ng");
+		
+		try{
+			if(rs.getString("measuredSize")!=null){
+			container.size=new PropertySingleValue(Math.round(rs.getFloat("measuredSize")*100.0)/100.0, mesuredSizeUnit);
+			}
+		}catch(SQLException e){
+			
+		}
+
+		container.qualityControlResults=new ArrayList<QualityControlResult>();
+				
+				
+		try{
+			if(rs.getString("concentrationTypeCode")!=null){
+				QualityControlResult qcConcentrationResult=new QualityControlResult();
+				qcConcentrationResult.typeCode=rs.getString("concentrationTypeCode");
+				qcConcentrationResult.code=qcConcentrationResult.typeCode+"_"+container.code;
+				qcConcentrationResult.properties=new HashMap<String, PropertyValue>();
+				qcConcentrationResult.properties.put("concentration", container.concentration);
+				qcConcentrationResult.date=rs.getDate("dateConcentration");
+				container.qualityControlResults.add(qcConcentrationResult);
+			}
+		}catch(SQLException e){
+			
+		}
+		try{
+			
+			if(rs.getString("sizeTypeCode")!=null){
+				log.debug("SizeTypeCode");
+				QualityControlResult qcSizeResult=new QualityControlResult();
+				qcSizeResult.typeCode=rs.getString("sizeTypeCode");
+				qcSizeResult.code=qcSizeResult.typeCode+"_"+container.code;
+				qcSizeResult.properties=new HashMap<String, PropertyValue>();
+				qcSizeResult.properties.put("size", container.size);
+				qcSizeResult.date=rs.getDate("sizeConcentration");
+				container.qualityControlResults.add(qcSizeResult);
+			}
+		}catch(SQLException e){
+			
+		}
+
 		
 		if(null != experimentTypeCode){
 			container.fromTransformationTypeCodes=new HashSet<String>();

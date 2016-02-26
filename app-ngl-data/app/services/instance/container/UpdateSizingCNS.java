@@ -23,21 +23,21 @@ import com.mongodb.MongoException;
 
 import fr.cea.ig.MongoDBDAO;
 
-public class UpdateAmpliCNS extends AbstractImportDataCNS {
+public class UpdateSizingCNS extends AbstractImportDataCNS {
 
-	public UpdateAmpliCNS(FiniteDuration durationFromStart,
+	public UpdateSizingCNS(FiniteDuration durationFromStart,
 			FiniteDuration durationFromNextIteration) {
-		super("UpdateAmpli", durationFromStart, durationFromNextIteration);
+		super("UpdateSizing", durationFromStart, durationFromNextIteration);
 
 	}
 
 	@Override
 	public void runImport() throws SQLException, DAOException, MongoException, RulesException {
-		updateAmpliCNS("pl_BanqueAmpliToNGL @updated=1",contextError,"tube","amplification");
+		updateSizingCNS("pl_SizingToNGL @updated=1",contextError,"tube","sizing");
 
 	}
 
-	public static void updateAmpliCNS(String sql,ContextValidation contextError,String containerCategoryCode,String experimentTypeCode) throws SQLException {
+	public static void updateSizingCNS(String sql,ContextValidation contextError,String containerCategoryCode,String experimentTypeCode) throws SQLException {
 		List<Container> containers=	limsServices.findContainersToCreate(sql,contextError, containerCategoryCode,null,experimentTypeCode);
 		List<Container> containerUpdated=new ArrayList<Container>();
 		for(Container containerUpdate:containers){
@@ -50,7 +50,7 @@ public class UpdateAmpliCNS extends AbstractImportDataCNS {
 				ContextValidation contextValidation= new ContextValidation(Constants.NGL_DATA_USER);
 				if(containerUpdate.state.code.equals("IS")&& CollectionUtils.isNotEmpty(container.processCodes)){
 				//	contextValidation.addErrors("code", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, container.code);
-					Logger.warn("La banque amplifiée "+container.code +" ne peut pas etre mise a l etat IS car elle a des processus");
+					Logger.warn("Le sizing "+container.code +" ne peut pas etre mise a l etat IS car elle a des processus");
 				}else {
 					ContainerWorkflows.setContainerState(container, containerUpdate.state, contextValidation);
 				}

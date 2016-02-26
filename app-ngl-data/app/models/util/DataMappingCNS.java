@@ -486,16 +486,15 @@ public class DataMappingCNS {
 		}else if(experimentTypeCode.equals("solution-stock")){
 			return getStateFromStateSolutionStock(etatLims);
 		}else if(experimentTypeCode.equals("amplification") || experimentTypeCode.equals("sizing")){
-			return getStateFromStateAmplication(etatLims);
+			return getStateFromStateAmplification(etatLims);
 		}
 		return null;
 	}
 
-	private static String getStateFromStateAmplication(int etatLimsCode) {
-		if(etatLimsCode==2 || etatLimsCode==14 || etatLimsCode==9 ) { return "IW-P"; }
-		else if(etatLimsCode==3 || etatLimsCode==4 ||  etatLimsCode==6 || etatLimsCode==7 ) { return "UA"; }
-		else if(etatLimsCode==5 ) { return "IS";}
-		else if(etatLimsCode==10) { return "N";}
+	private static String getStateFromStateAmplification(int etatLimsCode) {
+		if(etatLimsCode==2  ) { return "IW-P"; }
+		else if(etatLimsCode==3 || etatLimsCode==4 ||  etatLimsCode==6 || etatLimsCode==7 || etatLimsCode==8 ) { return "UA"; }
+		else if(etatLimsCode==1 || etatLimsCode==5 || etatLimsCode==9 ||  etatLimsCode==10 || etatLimsCode==11 || etatLimsCode==12 || etatLimsCode==13 || etatLimsCode==14  ) { return "IS";}
 		return null;
 	}
 }
