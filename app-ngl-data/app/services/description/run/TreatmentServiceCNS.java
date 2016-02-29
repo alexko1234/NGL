@@ -107,10 +107,10 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "35,36,60"));
 		
 		//specific CNS
-		l.add(DescriptionFactory.newTreatmentType("Taxonomy","taxonomy", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "taxonomy", 
+		l.add(DescriptionFactory.newTreatmentType("Taxonomy","taxonomy", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "taxonomy,taxonomyKraken", 
 				getTaxonomyPropertyDefinitions(), 
 				getTreatmentTypeContexts("read1"), 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "70"));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "70,71"));
 		
 		l.add(DescriptionFactory.newTreatmentType("Sorting Ribo","sorting-ribo", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "sortingRibo", 
 				getSortingRiboPropertyDefinitions(), 
