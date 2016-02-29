@@ -25,7 +25,7 @@ public class MigrationUpdateNCBITaxonSample extends CommonController {
 	public static Result migration(String code, Boolean onlyNull){
 
 		Logger.info("Migration sample start");
-		backupSample(code);
+		//backupSample(code);
 		List<Sample> samples = null;
 		if(!"all".equals(code)){
 			samples = MongoDBDAO.find(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code",code)).toList();						
