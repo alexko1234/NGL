@@ -27,6 +27,7 @@ import org.mongojack.DBUpdate;
 import play.Logger;
 import play.Logger.ALogger;
 import services.instance.container.ContainerImportCNS;
+import services.instance.container.UpdateAmpliCNS;
 import services.instance.container.UpdateSolutionStockCNS;
 import services.instance.sample.UpdateSampleCNS;
 import utils.AbstractTests;
@@ -161,6 +162,69 @@ public class ContainerTests extends AbstractTests {
 	}
 
 
+	@Test 
+	public void importBanqueAmpliTest() throws SQLException, DAOException{
+
+		ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
+		List<String> banqueAmpli=new ArrayList<String>();
+
+		banqueAmpli.add("AXD_msCCH_d1");
+		//Creation 
+		String sql="pl_BanqueAmpliToNGL @noms=\'"+StringUtils.join(banqueAmpli,",")+"\'";
+
+		ContainerImportCNS.createContainers(contextValidation,sql,"tube","F","amplification","pl_ContentFromContainer @matmanom=?");
+
+		contextValidation.displayErrors(logger);
+		Assert.assertEquals(contextValidation.errors.size(),0);
+
+		List<Container> containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code", banqueAmpli)).toList();
+		Assert.assertTrue(containers.size()>0);
+
+		List<ContainerSupport> containerSupports=MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("code", banqueAmpli)).toList();
+		Assert.assertEquals(containerSupports.size(),banqueAmpli.size());
+
+		for(Container container:containers){
+			Content cnt = container.contents.iterator().next();
+			assertThat(cnt.properties.get("libLayoutNominalLength")).isNotNull();
+			assertThat(cnt.referenceCollab).isNotNull();
+			assertThat(cnt.properties.get("libProcessTypeCode")).isNotNull();
+			assertThat(cnt.properties.get("percentPerLane")).isNull();
+			assertThat(((PropertySingleValue) container.concentration).unit).isEqualTo("nM");
+			assertThat(cnt.percentage).isNotNull();
+			for(ContainerSupport support:containerSupports){
+				if(support.code.equals(container.support.code)){
+					assertThat(container.state.code).isEqualTo(support.state.code);
+				}
+			}
+			//Get sample
+			Sample sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, cnt.sampleCode);
+			Logger.debug("Sample "+sample.code+" taxon "+sample.taxonCode);
+			assertThat(sample).isNotNull();
+			Logger.debug("Sample ncbiLineage "+sample.ncbiLineage+" scientific name "+sample.ncbiScientificName);
+			assertThat(sample.ncbiLineage).isNotNull();
+			assertThat(sample.ncbiScientificName).isNotNull();
+		}
+
+		MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.in("code",banqueAmpli), DBUpdate.set("state.code","IW-P"));
+
+		//En reserve update state container
+		UpdateAmpliCNS.updateAmpliCNS(sql + ", @updated=1", contextValidation,"tube","amplification");
+		contextValidation.displayErrors(logger);
+		Assert.assertEquals(contextValidation.errors.size(),0);
+
+		containers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code", banqueAmpli)).toList();
+		Assert.assertTrue(containers.size()>0);
+
+		for(Container container:containers){
+			assertThat(container.state.code).isNotEqualTo("IW-P");
+			assertThat(container.state.code).isEqualTo("IS");
+
+		}
+
+
+	}
+
+	
 	//@Test
 	public void updateSampleTest() throws SQLException, DAOException{
 

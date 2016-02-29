@@ -30,9 +30,7 @@ import models.utils.instance.ContainerHelper;
 import models.utils.instance.ContainerSupportHelper;
 import models.utils.instance.ProcessHelper;
 
-import org.eclipse.jetty.util.log.Log;
 import org.mongojack.DBQuery;
-import org.specs2.reporter.TextPrinter.Print;
 
 import play.Logger;
 import scala.concurrent.duration.FiniteDuration;
@@ -233,8 +231,13 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 
 		
 		container.valuation = new Valuation();
-		container.valuation.valid=TBoolean.UNSET; // instead of valid=null;
-
+		
+		try{
+			container.valuation.valid=TBoolean.valueOf(rs.getString("valide"));
+		} catch(SQLException e){
+			container.valuation.valid=TBoolean.UNSET;
+		}
+		
 		container.support=ContainerSupportHelper.getContainerSupport(container.categoryCode, rs.getInt("nbContainer"), rs.getString("codeSupport"), rs.getString("column"), rs.getString("line"));
 
 		container.properties= new HashMap<String, PropertyValue>();
@@ -278,8 +281,6 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		}
 
 		container.qualityControlResults=new ArrayList<QualityControlResult>();
-				
-				
 		try{
 			if(rs.getString("concentrationTypeCode")!=null){
 				QualityControlResult qcConcentrationResult=new QualityControlResult();
@@ -287,22 +288,22 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 				qcConcentrationResult.code=qcConcentrationResult.typeCode+"_"+container.code;
 				qcConcentrationResult.properties=new HashMap<String, PropertyValue>();
 				qcConcentrationResult.properties.put("concentration", container.concentration);
-				qcConcentrationResult.date=rs.getDate("dateConcentration");
+				qcConcentrationResult.date=rs.getDate("concentrationDate");
 				container.qualityControlResults.add(qcConcentrationResult);
-			}
-		}catch(SQLException e){
+				}
+			}catch(SQLException e){
 			
 		}
 		try{
 			
 			if(rs.getString("sizeTypeCode")!=null){
-				log.debug("SizeTypeCode");
+			
 				QualityControlResult qcSizeResult=new QualityControlResult();
 				qcSizeResult.typeCode=rs.getString("sizeTypeCode");
 				qcSizeResult.code=qcSizeResult.typeCode+"_"+container.code;
 				qcSizeResult.properties=new HashMap<String, PropertyValue>();
 				qcSizeResult.properties.put("size", container.size);
-				qcSizeResult.date=rs.getDate("sizeConcentration");
+				qcSizeResult.date=rs.getDate("sizeDate");
 				container.qualityControlResults.add(qcSizeResult);
 			}
 		}catch(SQLException e){

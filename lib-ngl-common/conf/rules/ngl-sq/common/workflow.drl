@@ -68,6 +68,21 @@ rule "Solution stock UA"
     	$containerUpdateLims.setLimsStateCode(3);
     	update($containerUpdateLims);
     end
+
+rule "Banque Amplifié/Sizing  A-TM ou A-QC"
+@nglSQ( workflow )
+	dialect "java"
+	salience 800
+	no-loop
+    when
+    	$containerUpdateLims:ContainerUpdateLims((experimentType=="amplification" || experimentType=="sizing"),(stateCode=="A-TM" || stateCode=="A-QC"),limsStateCode==null)
+    then
+    	//Logger.debug("Container "+$containerUpdateLims.getCode()+"( code lims :"+$containerUpdateLims.getLimsCode()+")  update lims state");
+    	//Etat Lims = En reserve
+    	$containerUpdateLims.setLimsStateCode(5);
+    	update($containerUpdateLims);
+    end
+    
     
 rule "Update State Container in Lims"
 	@nglSQ( workflow )
