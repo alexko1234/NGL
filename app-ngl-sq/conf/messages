@@ -166,9 +166,8 @@ search.placeholder.user = Créé par
 search.placeholder.containerSupport = Regex pour code support
 search.placeholder.experiment = Regex pour expérience
 search.placeholder.process = Regex pour processus
-search.placeholder.barCodes = Scan du Code Barre
-search.placeholder.pool = Regex pour le pool
-
+search.placeholder.barCodes = Scan du code barre
+search.placeholder.pools = Pools
 search.tab.addfilters = Filtres supplémentaires
 search.tab.filters = Filtres
 search.tab.addcolumns = Colonnes supplémentaires

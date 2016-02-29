@@ -7,13 +7,11 @@
 			<div class="form-control" bt-select ng-model="searchService.form.projectCodes" multiple="true" textarea="true" filter="true" placeholder='@Messages("search.placeholder.projects")' bt-options="project.code as project.code for project in searchService.lists.getProjects()" ng-change="searchService.resetSampleCodes()"></div>
 		}
 		@formGroup{
-			<div bt-select placeholder="@Messages("containers.select.state")" multiple="true" filter="true" class="form-control" ng-model="searchService.form.stateCodes" bt-options="stateCode.code as stateCode.name for stateCode in searchService.lists.getStates()" auto-select>
-			</div>	
+			<div bt-select placeholder="@Messages("containers.select.state")" multiple="true" filter="true" class="form-control" ng-model="searchService.form.stateCodes" bt-options="stateCode.code as stateCode.name for stateCode in searchService.lists.getStates()" auto-select></div>	
 								
 		}	
 		@formGroup{
-			<div bt-select placeholder="@Messages("processes.select.processCategory")" class="form-control" ng-model="searchService.form.processCategory" bt-options="processCategory.code as processCategory.name for processCategory in searchService.lists.getProcessCategories()" ng-change="searchService.changeProcessCategory()" auto-select>
-			</div>								
+			<div bt-select placeholder="@Messages("processes.select.processCategory")" class="form-control" ng-model="searchService.form.processCategory" bt-options="processCategory.code as processCategory.name for processCategory in searchService.lists.getProcessCategories()" ng-change="searchService.changeProcessCategory()" auto-select></div>								
 			}
 	}
 	@columnSearchForm{
@@ -22,19 +20,16 @@
 		}
 		@formGroup{
 			<div class="form-control" bt-select ng-model="searchService.form.valuations" multiple="true" placeholder="@Messages("containers.table.valid")" 
-				bt-options="valuation.code as valuation.name for valuation in searchService.lists.getValuations()">
-			</div>
+				bt-options="valuation.code as valuation.name for valuation in searchService.lists.getValuations()"></div>
 		}		
 		@formGroup{
-			<div bt-select placeholder="@Messages("processes.select.processType")" class="form-control" ng-model="searchService.form.processTypeCode" bt-options="processType.code as processType.name for processType in searchService.lists.getProcessTypes()" ng-change="searchService.changeProcessType()" auto-select>
-			</div>					
+			<div bt-select placeholder="@Messages("processes.select.processType")" class="form-control" ng-model="searchService.form.processTypeCode" bt-options="processType.code as processType.name for processType in searchService.lists.getProcessTypes()" ng-change="searchService.changeProcessType()" auto-select></div>					
 		}
 		
 	}
 	@columnSearchForm{
-			@formGroup{
-			<div bt-select placeholder="@Messages("containers.select.categorySupportCode")" class="form-control" multiple="true" ng-model="searchService.form.containerSupportCategories" bt-options="CategorySupport.code as CategorySupport.name for CategorySupport in searchService.lists.getContainerSupportCategories()"  auto-select>
-			</div>
+		@formGroup{
+			<div bt-select placeholder="@Messages("containers.select.categorySupportCode")" class="form-control" multiple="true" ng-model="searchService.form.containerSupportCategories" bt-options="CategorySupport.code as CategorySupport.name for CategorySupport in searchService.lists.getContainerSupportCategories()"  auto-select></div>
 			
 		}
 		@formGroup{
@@ -42,22 +37,50 @@
 			<input class="form-control" type="text" ng-model="searchService.form.supportCodeRegex"  placeholder='@Messages("search.placeholder.containerSupport")' title='@Messages("search.placeholder.containerSupport")'>			
 			***@
 			
-			<bt-input  class="form-control"  input-ng-model="searchService.form.supportCodeRegex" textarea-ng-model="searchService.form.supportCodes" placeholder='@Messages("search.placeholder.containerSupport")' ></bt-input>			
-									
+			<bt-input  class="form-control"  input-ng-model="searchService.form.supportCodeRegex" textarea-ng-model="searchService.form.supportCodes" placeholder='@Messages("search.placeholder.containerSupport")' ></bt-input>									
+		}
+		@formGroup{
+			@***							
+			<!-- Solution Doc Bootstrap -->
+			<div class="input-group">
+				<span class="input-group-addon">
+					<input type="checkbox" ng-model="searchService.form.pool">		
+				</span>	
+				<span class="form-control" style="background-color: #eee;"> @Messages("search.placeholder.pools")</span>	
+			</div>	
+				
+			<!-- Solution W3Schools -->	
+								
+			
+			<!-- Solution NGL (colonnes supplementaires) -->
+			<div class="checkbox">
+				<label>				
+					<input type="checkbox" ng-model="searchService.form.pool">
+					@Messages("search.placeholder.pools")	
+				</label>
+			</div>			
+			***@
+			
+			<div class="form-control-static">	
+				<div class="col-xs-1">
+					<input type="checkbox" ng-model="searchService.form.pool">
+				</div>
+				<label class="control-label col-xs-1" for="checkbox">@Messages("search.placeholder.pools")</label>		
+			</div>			
+																		
 		}
 			
 	}
 	@columnSearchForm{
 		@formGroup{
-			<input class="form-control" type="text" ng-model="searchService.form.fromDate" placeholder='@Messages("containers.placeholder.fromDate")' title='@Messages("containers.placeholder.fromDate")'>	
-						
+			<input class="form-control" type="text" ng-model="searchService.form.fromDate" placeholder='@Messages("containers.placeholder.fromDate")' title='@Messages("containers.placeholder.fromDate")'>					
 		}
 		@formGroup{
 			<div class="form-control" bt-select ng-model="searchService.form.fromTransformationTypeCodes" multiple="true" placeholder="@Messages("containers.select.fromTransformationTypeCodes")" 
 				bt-options="expType.code as expType.name for expType in searchService.lists.getExperimentTypesWithNone()">
 			</div>
-			
 		}
+		
 	}
 	@columnSearchForm{
 		@formGroup{
@@ -100,9 +123,8 @@
 					</button>
 					<button title='@Messages("button.reset")' data-toggle="tooltip" ng-click="reset()"  class="btn btn-default">
 						<i class="fa fa-undo"></i>
-					</button>
-												 	
-				</div>	
+					</button>						 	
+				</div>
 				}
 				@formGroup{
 					@buttons

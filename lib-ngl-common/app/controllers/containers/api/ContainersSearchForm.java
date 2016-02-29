@@ -28,6 +28,7 @@ public class ContainersSearchForm extends ListForm{
 	public String supportCode;
 	public Set<String> supportCodes;
 	public String supportCodeRegex;
+	public boolean pool;
 	public String containerSupportCategory;
 	public Set<String> containerSupportCategories;
 	public Set<String> fromTransformationTypeCodes;
