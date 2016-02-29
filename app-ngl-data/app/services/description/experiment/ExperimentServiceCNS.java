@@ -179,29 +179,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionDepotBionano(),
 				getInstrumentUsedTypes("IRYS"),"OneToVoid", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
-		//library
-		
-		l.add(newExperimentType("Fragmentation","fragmentation",null,200,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionFragmentation(),
-				getInstrumentUsedTypes("hand","covaris-s2","covaris-e210"),"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
-		
-		l.add(newExperimentType("Librairie indexée","librairie-indexing",null,400,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibIndexing(),
-				getInstrumentUsedTypes("hand","spri"),"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
-
-		l.add(newExperimentType("Amplification","amplification",null,800,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
-				getInstrumentUsedTypes("hand","thermocycler"),"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
-		l.add(newExperimentType("Sizing sur gel","sizing",null,800,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
-				null,"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
+	
 /*
 			//quality control
 
@@ -253,8 +231,31 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 			l.add(newExperimentType("Quantification qPCR","qpcr-quantification", null,850,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsQPCR(), 
 					getInstrumentUsedTypes("stratagene-qPCR"),"OneToVoid", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 	
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
 			
+			//library
+			
+			l.add(newExperimentType("Fragmentation","fragmentation",null,200,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionFragmentation(),
+					getInstrumentUsedTypes("hand","covaris-s2","covaris-e210"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
+			
+			l.add(newExperimentType("Librairie indexée","librairie-indexing",null,400,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsLibIndexing(),
+					getInstrumentUsedTypes("hand","spri"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
+
+			l.add(newExperimentType("Amplification","amplification",null,800,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
+					getInstrumentUsedTypes("hand","thermocycler"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
+			l.add(newExperimentType("Sizing sur gel","sizing",null,800,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
+					null,"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
 		}
 		
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
