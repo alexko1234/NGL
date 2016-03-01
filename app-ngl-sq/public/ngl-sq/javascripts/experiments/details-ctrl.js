@@ -22,6 +22,9 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	$scope.getAdditionnalButtons = function(){
 		return additionnalButtons;
 	};
+	$scope.setAdditionnalButtons = function(buttons){
+		additionnalButtons = buttons;
+	};
 	/* move to a directive */
 	$scope.setImage = function(imageData, imageName, imageFullSizeWidth, imageFullSizeHeight) {
 		$scope.modalImage = imageData;

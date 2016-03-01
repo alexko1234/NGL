@@ -187,11 +187,11 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 			});
 		};
 		
-		$scope.getAdditionnalButtons().push({
+		$scope.setAdditionnalButtons([{
 			isDisabled : function(){return $scope.isCreationMode();},
 			isShow:function(){return true},
 			click:generateSampleSheet,
 			label:Messages("experiments.sampleSheet")
-		});
+		}]);
 
 }]);
