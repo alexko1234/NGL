@@ -40,42 +40,13 @@
 			<bt-input  class="form-control"  input-ng-model="searchService.form.supportCodeRegex" textarea-ng-model="searchService.form.supportCodes" placeholder='@Messages("search.placeholder.containerSupport")' ></bt-input>									
 		}
 		@formGroup{
-			@***									
-			<!-- Solution Doc Bootstrap -->
-			<div class="input-group">
-				<span class="input-group-addon">
-					<input type="checkbox" ng-model="searchService.form.pool">		
-				</span>	
-				<span class="form-control" style="background-color: #eee;"> @Messages("search.placeholder.pools")</span>	
-			</div>	
-				
-			<!-- Solution W3Schools -->	
-			<div class="form-control-static">	
-				<div class="col-xs-1">
-					<input type="checkbox" ng-model="searchService.form.pool">
-				</div>
-				<label class="control-label col-xs-1" for="checkbox">@Messages("search.placeholder.pools")</label>		
-			</div>
-								
-			<!-- Solution NGL (colonnes supplementaires) -->
+		
 			<div class="checkbox">
-				<label>				
-					<input type="checkbox" ng-model="searchService.form.pool">
-					@Messages("search.placeholder.pools")	
+				<label>
+					<input type="checkbox" ng-model="searchService.form.pool"> @Messages("search.placeholder.pools")
 				</label>
 			</div>			
-			***@
-			<div class="form-group">
-				<div class="col-xs-2">
-					<div class="checkbox">
-						<input id="poolCheck" type="checkbox" ng-model="searchService.form.pool">	
-					</div>
-				</div>
-				<label for="poolCheck" class="col-xs-10 control-label"> @Messages("search.placeholder.pools")</label>
-			
-			</div>
-			
-																	
+																
 		}
 			
 	}
