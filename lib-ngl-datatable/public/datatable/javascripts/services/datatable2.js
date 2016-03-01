@@ -32,7 +32,7 @@ angular.module('datatableServices', []).
 													"listStyle":"select"/"radio", //if choiceInList=true, listStyle="select" is a select input, listStyle="radio" is a radio input
 													"possibleValues":null, //The list of possible choices
 													"format" : null, //number format or date format or datetime format
-													"extraHeaders":{"0":"Inputs"}, //the extraHeaders list
+													"extraHeaders":{"0":"Messages("experiments.inputs")"}, //the extraHeaders list
 													"tdClass : function with data and property as parameter than return css class or just the css class",
 													"position": position of the column,
 													"group": false //if column can be used to group data

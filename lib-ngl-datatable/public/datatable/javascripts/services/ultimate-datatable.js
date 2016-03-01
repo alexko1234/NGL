@@ -36,7 +36,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                      "listStyle":"select"/"radio", //if choiceInList=true, listStyle="select" is a select input, listStyle="radio" is a radio input
                      "possibleValues":null, //The list of possible choices
                      "format" : null, //number format or date format or datetime format
-                     "extraHeaders":{"0":"Inputs"}, //the extraHeaders list
+                     "extraHeaders":{"0":"Messages("experiments.inputs")"}, //the extraHeaders list
                      "tdClass" : function with data and property as parameter than return css class or just the css class",
                      "position": position of the column,
                      "group": false //if column can be used to group data
@@ -3800,7 +3800,7 @@ run(function($templateCache) {
    +                        '</th>'
    +                    '</tr>'
    +                    '<tr>'
-   +                        '<th id="{{column.id}}" ng-repeat="column in udtTable.getColumnsConfig()" ng-model="column" draggable ng-if="!udtTable.isHide(column.id)" ng-class="udtTableFunctions.getThClass(column, this)">'
+   +                        '<th id="{{column.id}}" ng-repeat="column in udtTable.getColumnsConfig()" ng-model="column" ng-if="!udtTable.isHide(column.id)" ng-class="udtTableFunctions.getThClass(column, this)">'
    +                            '<span ng-model="udtTable" droppable drop-fn="udtTable.onDrop" drop-item="column" ng-bind="udtTableFunctions.messages.Messages(column.header)"/>'
    +                            '<div class="btn-group pull-right">'
    +                                '<button class="btn btn-xs" ng-click="udtTableFunctions.setEdit(column)"        ng-if="udtTable.isShowButton(\'edit\', column)"  ng-disabled="!udtTable.canEdit()" data-toggle="tooltip" title="{{udtTableFunctions.messages.Messages(\'datatable.button.edit\')}}"><i class="fa fa-edit"></i></button>'

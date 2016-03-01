@@ -4,9 +4,6 @@ import java.util.List;
 
 import models.laboratory.common.description.AbstractCategory;
 import models.laboratory.experiment.description.dao.ExperimentCategoryDAO;
-import models.laboratory.instrument.description.Instrument;
-import models.laboratory.instrument.description.dao.InstrumentDAO;
-import models.utils.Model.Finder;
 import models.utils.dao.DAOException;
 
 public class ExperimentCategory extends AbstractCategory<ExperimentCategory>{

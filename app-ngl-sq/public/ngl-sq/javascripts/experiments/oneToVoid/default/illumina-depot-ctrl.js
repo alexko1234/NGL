@@ -11,7 +11,7 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":1,
-			        	 "extraHeaders":{0:"Inputs"}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
 			        	 "header":Messages("containers.table.categoryCode"),
@@ -21,7 +21,7 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":2,
-			        	 "extraHeaders":{0:"Inputs"}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 					 {
 			        	 "header":Messages("containers.table.code"),
@@ -31,7 +31,7 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":3,
-			        	 "extraHeaders":{0:"Inputs"}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 					 {
 			        	 "header":Messages("containers.table.projectCodes"),
@@ -42,7 +42,7 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 			        	 "type":"text",
 			        	 "position":4,
 			        	 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:"Inputs"}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 					 {
 			        	 "header":Messages("containers.table.sampleCodes"),
@@ -53,7 +53,7 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 			        	 "type":"text",
 			        	 "position":5,
 			        	 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:"Inputs"}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 					 {
 			        	 "header":Messages("containers.table.stateCode"),
@@ -64,7 +64,7 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 			        	 "type":"text",
 						 "filter":"codes:'state'",
 			        	 "position":6,
-			        	 "extraHeaders":{0:"Inputs"}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
@@ -75,7 +75,7 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 			        	 "type":"text",
 			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
 			        	 "position":7,
-			        	 "extraHeaders":{0:"Inputs"}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         ],
 			compact:true,

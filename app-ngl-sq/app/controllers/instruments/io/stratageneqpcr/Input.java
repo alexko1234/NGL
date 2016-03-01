@@ -8,6 +8,7 @@ import java.util.Map;
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.InputContainerUsed;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -27,14 +28,16 @@ public class Input extends AbstractInput {
 		
 		Workbook wb = WorkbookFactory.create(is);
 		Sheet sheet = wb.getSheetAt(0);
-		Map<String,Double> results = new HashMap<String,Double>(0);
+		Map<String,Data> results = new HashMap<String,Data>(0);
 		for(int i = 31; i <= sheet.getLastRowNum(); i=i+4){
 			String sampleBarcode = getStringValue(sheet.getRow(i).getCell(1));
-			Double concentration = getNumericValue(sheet.getRow(i).getCell(10));
+			Double concentration1 = getNumericValue(sheet.getRow(i).getCell(10));
+			Double concentration2 = getNumericValue(sheet.getRow(i).getCell(12));
 			
 			if(ValidationHelper.required(contextValidation, sampleBarcode, "nom échantillon : ligne ="+i)
-					&& ValidationHelper.required(contextValidation, concentration, "Moy. concentration : ligne ="+i)){
-				results.put(sampleBarcode.replaceAll("_\\d$",""), concentration);
+					&& ValidationHelper.required(contextValidation, concentration1, "Moy. concentration (nM) : ligne ="+i)
+					&& ValidationHelper.required(contextValidation, concentration2, "Moy. concentration (ng/µl) : ligne ="+i)){
+				results.put(sampleBarcode.replaceAll("_\\d$",""), new Data(concentration1, concentration2));
 			}			
 		}
 		//validation
@@ -54,20 +57,20 @@ public class Input extends AbstractInput {
 				.stream()
 				.map(atm -> atm.inputContainerUseds.get(0))
 				.forEach(icu -> {
-					PropertySingleValue concentration = null;
-					if(!icu.experimentProperties.containsKey("concentration1")){
-						concentration = new PropertySingleValue();
-						icu.experimentProperties.put("concentration1", concentration);
-					}else{
-						concentration = (PropertySingleValue)icu.experimentProperties.get("concentration1");
-					}
-					concentration.value = results.get(icu.code);
-					concentration.unit = "nM";
+					PropertySingleValue concentration1 = getPSV(icu, "concentration1");
+					concentration1.value = results.get(icu.code).concentration1;
+					concentration1.unit = "nM";
+					
+					PropertySingleValue concentration2 = getPSV(icu, "concentration2");
+					concentration2.value = results.get(icu.code).concentration2;
+					concentration2.unit = "ng/µl";
 				});
 		}
 		
 		return experiment;
 	}
+
+	
 	
 	
 

@@ -99,7 +99,7 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
 			"hide":true,
 			"type":"text",
 			"position":10,
-			"render":"<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' ' list-resize-min-size='3'>",
+			"render":"<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' list-resize-min-size='3'>",
 			"groupMethod":"collect"
 			
 		},

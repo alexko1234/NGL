@@ -444,7 +444,8 @@ public class DescriptionFactory {
 	
 	
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, 
-			List<Value> values, MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit, String propertyValueType, int displayOrder, Boolean editable,String defaultValue) throws DAOException{
+			List<Value> values, MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit,
+			String propertyValueType, int displayOrder, Boolean editable,String defaultValue, String displayFormat) throws DAOException{
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
 		pd.code = code;
@@ -464,6 +465,7 @@ public class DescriptionFactory {
 		pd.displayOrder=displayOrder;
 		pd.editable=editable;
 		pd.defaultValue=defaultValue;
+		pd.displayFormat = displayFormat;
 		
 		return pd;
 	}

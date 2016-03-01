@@ -24,7 +24,7 @@ angular.module('datatableServices', []).
 													"choiceInList":false, //when the column is in edit mode, the edition is a list of choices or not
 													"listStyle":"select"/"radio", //if choiceInList=true, listStyle="select" is a select input, listStyle="radio" is a radio input
 													"possibleValues":null, //The list of possible choices
-													"extraHeaders":{"0":"Inputs"}, //the extraHeaders list
+													"extraHeaders":{"0":"Messages("experiments.inputs")"}, //the extraHeaders list
 												  }*/
 							columnsUrl:undefined, //Load columns config
 							search : {

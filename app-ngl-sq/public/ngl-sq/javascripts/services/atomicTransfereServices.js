@@ -73,6 +73,7 @@ angular.module('atomicTransfereServices', [])
     				column.choiceInList = propertyDefinition.choiceInList;
     				column.position=propertyDefinition.displayOrder;
     				column.defaultValues = propertyDefinition.defaultValue;
+    				column.format = propertyDefinition.displayFormat;
     				if(propertyDefinition.possibleValues!=undefined){
     					column.possibleValues = propertyDefinition.possibleValues;
     				}
@@ -311,10 +312,10 @@ angular.module('atomicTransfereServices', [])
 					}
 				},				
 				convertOutputPropertiesToDatatableColumn : function(property){
-					return  $commonATM.convertTypePropertyToDatatableColumn(property,"outputContainerUsed.experimentProperties.",{"0":"Outputs"});
+					return  $commonATM.convertTypePropertyToDatatableColumn(property,"outputContainerUsed.experimentProperties.",{"0":Messages("experiments.outputs")});
 				},
 				convertInputPropertiesToDatatableColumn : function(property){
-					return  $commonATM.convertTypePropertyToDatatableColumn(property,"inputContainerUsed.experimentProperties.",{"0":"Inputs"});
+					return  $commonATM.convertTypePropertyToDatatableColumn(property,"inputContainerUsed.experimentProperties.",{"0":Messages("experiments.inputs")});
 				},				
 				addExperimentPropertiesToDatatable : function(experimentProperties){
 					var expProperties = experimentProperties;

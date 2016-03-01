@@ -723,7 +723,7 @@ public class ExpWorkflowsHelper {
 				
 				if(null == c.qualityControlResults)c.qualityControlResults = new ArrayList<QualityControlResult>(0);
 				
-				c.qualityControlResults.add(new QualityControlResult(exp.code, exp.typeCode, c.qualityControlResults.size(), icu.experimentProperties));
+				c.qualityControlResults.add(new QualityControlResult(exp.code, exp.typeCode, c.qualityControlResults.size(), icu.experimentProperties, c.valuation));
 				
 				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,c);
 								

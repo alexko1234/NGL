@@ -36,7 +36,8 @@
 							"order":true,
 							"hide":true,
 							"position":4,
-							"type":"text"
+							"type":"text",
+							"filter":"codes:'experiment_cat'"
 						},
 						{
 							"header":Messages("experiments.table.state.code"),

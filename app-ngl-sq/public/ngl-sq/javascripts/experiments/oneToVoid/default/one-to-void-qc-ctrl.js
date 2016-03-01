@@ -11,7 +11,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":1,
-			        	 "extraHeaders":{0:"Inputs"}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
 			        	 "header":Messages("containers.table.categoryCode"),
@@ -22,7 +22,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 			        	 "type":"text",
 			        	 "position":2,
 			 			 "filter":"codes:'container_support_cat'",
-			        	 "extraHeaders":{0:"Inputs"}
+			 			"extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 					 {
 			        	 "header":Messages("containers.table.code"),
@@ -32,40 +32,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":3,
-			        	 "extraHeaders":{0:"Inputs"}
-			         },
-					 {
-			        	 "header":Messages("containers.table.projectCodes"),
-			        	 "property":"inputContainer.projectCodes",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":4,
-			        	 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:"Inputs"}
-			         },
-					 {
-			        	 "header":Messages("containers.table.sampleCodes"),
-			        	 "property":"inputContainer.sampleCodes",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":5,
-			        	 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:"Inputs"}
-			         },
-					 {
-			        	 "header":Messages("containers.table.stateCode"),
-			        	 "property":"inputContainer.state.code",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-						 "filter":"codes:'state'",
-			        	 "position":6,
-			        	 "extraHeaders":{0:"Inputs"}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
@@ -75,11 +42,88 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 						 "hide":true,
 			        	 "type":"text",
 			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
-			        	 "position":7,
-			        	 "extraHeaders":{0:"Inputs"}
+			        	 "position":4,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
 			        	 "header":Messages("containers.table.valuation.valid"),
+			        	 "property":"inputContainer.valuation.valid",
+			        	 "filter":"codes:'valuation'",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":false,
+			        	 "type":"text",			        	
+			        	 "position":5,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
+					 {
+			        	 "header":Messages("containers.table.projectCodes"),
+			        	 "property":"inputContainer.projectCodes",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":6,
+			        	 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
+					 {
+			        	 "header":Messages("containers.table.sampleCodes"),
+			        	 "property":"inputContainer.sampleCodes",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":7,
+			        	 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
+			         
+			         {
+			 			"header":Messages("containers.table.tags"),
+			 			"property": "inputContainer.contents",
+			 			"order":false,
+			 			"hide":true,
+			 			"type":"text",
+			 			"position":8,
+			 			"render":"<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' list-resize-min-size='3'>",
+			 			"extraHeaders":{0:Messages("experiments.inputs")} 			
+			 			
+			 		},
+			 		{
+			 			"header":Messages("containers.table.libProcessType"),
+			 			"property": "inputContainer.contents",
+			 			"order":false,
+			 			"hide":true,
+			 			"type":"text",
+			 			"position":9,
+			 			"render":"<div list-resize='cellValue | getArray:\"properties.libProcessTypeCode.value\" | unique' list-resize-min-size='3'>",
+			 			"extraHeaders":{0:Messages("experiments.inputs")}	 						 			
+			 		},
+			 		{
+			 			"header":Messages("containers.table.size"),
+			 			"property": "inputContainer.size.value",
+			 			"order":false,
+			 			"hide":true,
+			 			"type":"text",
+			 			"position":10,
+			 			"extraHeaders":{0:Messages("experiments.inputs")}			 						 			
+			 		},
+			         
+					 {
+			        	 "header":Messages("containers.table.stateCode"),
+			        	 "property":"inputContainer.state.code",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+						 "filter":"codes:'state'",
+			        	 "position":11,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
+			         
+			         {
+			        	 "header":Messages("containers.table.valuationqc.valid"),
 			        	 "property":"inputContainerUsed.valuation.valid",
 			        	 "filter":"codes:'valuation'",
 			        	 "order":true,
@@ -90,7 +134,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 						 "listStyle":'bt-select',
 					     "possibleValues":'lists.getValuations()',
 			        	 "position":20,
-			        	 "extraHeaders":{0:"Inputs"}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         ],
 			compact:true,

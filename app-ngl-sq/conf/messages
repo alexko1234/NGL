@@ -113,11 +113,14 @@ containers.table.status = Statut
 containers.table.dispatch = Orientation
 containers.table.concentration.unit=Unité Concentration 
 containers.table.concentration.value=Concentration Container
+containers.table.libProcessType = Type processus Banque (code)	
+containers.table.size = Taille (bp)
 
 containers.table.iryschip.sampleCodes= Echantillon
 containers.table.irysprep.concentration=Concentration Moyenne
 containers.table.nlrsConcentration= Concentration arrondie (ng/µL)
-containers.table.valuation.valid = Valid ?
+containers.table.valuation.valid = Valide
+containers.table.valuationqc.valid = Valide ? (QC courant)
 
 containers.placeholder.fromDate = Container depuis le (jj/mm/aaaa)
 containers.placeholder.toDate = Container jusqu''au (jj/mm/aaaa)
@@ -391,7 +394,7 @@ backet.view.containers = Vue containers
 
 error.codeNotExist=Le code {0} n''existe pas
 error.propertyNotExist=La propriété {0} n''existe pas pour {1}
-limsdao.error.emptymapping =Pas de correspondance avec les paramètres suivants :{0}
+limsdao.error.emptymapping=Pas de correspondance avec les paramètres suivants :{0}
 
 #initialdata
 initialdata.error.sampleNotExist=Le container {0} 
@@ -419,7 +422,7 @@ valuation.value.FALSE = Non
 valuation.value.UNSET = -
 
 experiments.msg.import.error = Problème lors de l'import :
-experiments.msg.import.success = Import réussi, merci de vérifier puis de sauvegardez.
+experiments.msg.import.success = Import réussi, merci de vérifier puis de sauvegarder.
 
 io.error.instance.notexist = La classe ''{0}'' n''existe pas 
 io.error.resultat.notexist = ''{0}'' n''existe pas
