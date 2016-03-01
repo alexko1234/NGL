@@ -168,9 +168,6 @@ public class LimsCNSDAO{
 				sample.name=rs.getString("name");
 				sample.referenceCollab=rs.getString("referenceCollab");
 				sample.taxonCode=rs.getString("taxonCode");
-				//Get scientificName
-				sample.ncbiScientificName=TaxonomyServices.getScientificName(sample.taxonCode);
-				sample.ncbiLineage=TaxonomyServices.getLineage(sample.taxonCode);
 				sample.comments=new ArrayList<Comment>();
 				sample.comments.add(new Comment(rs.getString("comment"), "ngl-test"));
 				sample.categoryCode=sampleType.category.code;

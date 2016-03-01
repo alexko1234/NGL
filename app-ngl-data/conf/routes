@@ -41,6 +41,9 @@ GET 	/deleteSample							controllers.migration.cns.MigrationTara.deleteSampleNot
 GET 	/migration/containers					controllers.migration.MigrationContainerFields.migration()
 
 GET		/migration-sampleOnInputContainer-process 		 controllers.migration.AddSampleOnInputContainerInProcess.migration()
+GET		/migrationTaxonSample					controllers.migration.MigrationUpdateNCBITaxonSample.migration(code: java.lang.String ?= "all", onlyNull:Boolean ?=false)
+
+
 GET		/cns/migration-sampleType				controllers.migration.cns.MigrationSampleType.migration()
 GET		/cns/migration						    controllers.migration.cns.MigrationReadSetFileCNS.migration()
 

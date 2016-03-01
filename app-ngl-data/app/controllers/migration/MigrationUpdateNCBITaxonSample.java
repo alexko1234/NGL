@@ -13,6 +13,7 @@ import models.utils.InstanceConstants;
 import ncbi.services.TaxonomyServices;
 import play.Logger;
 import play.mvc.Result;
+import services.instance.sample.UpdateSampleNCBITaxonCNS;
 
 /**
  * Update SampleOnContainer on ReadSet
@@ -50,8 +51,15 @@ public class MigrationUpdateNCBITaxonSample extends CommonController {
 
 
 	private static void migreSample(Sample sample) {
-		String ncbiScientificName=TaxonomyServices.getScientificName(sample.taxonCode);
-		String ncbiLineage=TaxonomyServices.getLineage(sample.taxonCode);
+		String ncbiScientificName=null;
+		String ncbiLineage=null;
+		if(play.Play.application().configuration().getString("institute").equals("CNS")){
+			ncbiScientificName=UpdateSampleNCBITaxonCNS.getScientificNameCNS(sample.taxonCode);
+			ncbiLineage=UpdateSampleNCBITaxonCNS.getLineageCNS(sample.taxonCode);
+		}else{
+			ncbiScientificName=TaxonomyServices.getScientificName(sample.taxonCode);
+			ncbiLineage=TaxonomyServices.getLineage(sample.taxonCode);
+		}
 		MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME,  Sample.class, 
 				DBQuery.is("code", sample.code), DBUpdate.set("ncbiScientificName", ncbiScientificName).set("ncbiLineage", ncbiLineage));
 		if(ncbiScientificName==null)

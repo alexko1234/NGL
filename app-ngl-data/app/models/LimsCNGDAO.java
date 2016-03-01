@@ -166,8 +166,6 @@ public class LimsCNGDAO {
 			sample.name=rs.getString("name");
 			sample.referenceCollab= rs.getString("ref_collab");
 			sample.taxonCode=rs.getString("taxon_code");
-			sample.ncbiScientificName=TaxonomyServices.getScientificName(sample.taxonCode);
-			sample.ncbiLineage=TaxonomyServices.getLineage(sample.taxonCode);
 			sample.importTypeCode=IMPORT_TYPE_CODE_DEFAULT;
 		
 			sample.projectCodes=new HashSet<String>();
