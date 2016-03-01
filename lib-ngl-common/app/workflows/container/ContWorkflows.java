@@ -73,12 +73,6 @@ public class ContWorkflows extends Workflows<Container> {
 						DBQuery.is("code",container.code), DBUpdate.unset("processCodes")
 																.unset("processTypeCodes"));
 			}		
-		}else if("A-QC".equals(container.state.code)){
-			Valuation v = new Valuation();
-			v.date = new Date();
-			v.user = validation.getUser();
-			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,
-					DBQuery.is("code",container.code), DBUpdate.set("valuation",v));
 		}
 		callWorkflowRules(validation,container);		
 	}

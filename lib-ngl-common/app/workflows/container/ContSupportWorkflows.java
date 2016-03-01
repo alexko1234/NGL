@@ -65,12 +65,6 @@ public class ContSupportWorkflows extends Workflows<ContainerSupport> {
 				MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, Container.class,
 						DBQuery.is("code",containerSupport.code), DBUpdate.unset("fromTransformationTypeCodes"));
 			}	
-		} else if("A-QC".equals(containerSupport.state.code)){
-			Valuation v = new Valuation();
-			v.date = new Date();
-			v.user = validation.getUser();
-			MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, Container.class,
-					DBQuery.is("code",containerSupport.code), DBUpdate.set("valuation",v));
 		}
 		callWorkflowRules(validation,containerSupport);		
 	}
