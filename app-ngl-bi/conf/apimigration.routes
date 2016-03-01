@@ -16,4 +16,4 @@ GET		/check-type-description						controllers.migration.CheckTypeDescription.che
 GET		/create-run-nanopore						controllers.migration.MigrationCreateRunNanopore.migration()
 GET		/migration-sample-aliquote-codes			controllers.migration.MigrationPropSampleAliquoteCode.migration()
 GET		/migration-submission-state					controllers.migration.MigrationUpdateSubmissionState.migration()
-GET		/migrationTaxonSample						controllers.migration.MigrationUpdateNCBITaxonSample.migration(code: java.lang.String ?= "all", onlyNull:Boolean ?=false)
+GET		/migrationTaxonSample						controllers.migration.MigrationUpdateNCBITaxonSample.migration(code: java.lang.String ?= "all", onlyNull:Boolean ?=false)GET		/migration-fungi							controllers.migration.MigrationTaxonomyFungi.migration()
