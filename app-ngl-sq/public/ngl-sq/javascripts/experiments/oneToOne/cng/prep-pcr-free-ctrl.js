@@ -1,7 +1,13 @@
-angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToSingleDatatable',
-                                                     function($scope, $parse, atmToSingleDatatable){
+angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToSingleDatatable','$http',
+                                                     function($scope, $parse, atmToSingleDatatable, $http){
 // FDS 04/02/2016 -- JIRA NGL-894 : prep pcr free experiment
 
+	// actuellement le nom du header est en dur dans ATM (Inputs ou Outputs )... laisser les valeurs en dur pour l'instant
+	var inputExtraHeaders="Inputs";
+	var outputExtraHeaders="Outputs";
+	//var inputExtraHeaders=Messages("containers.table.support.in.code");
+	//var outputExtraHeaders=Messages("containers.table.support.out.code");	
+	
 	var datatableConfig = {
 			name:"FDR_Plaque", //peut servir pour le nom de fichier si export demandé
 			columns:[
@@ -17,127 +23,118 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			        	 "position":1,
 			        	 "extraHeaders":{0:"Inputs"}
 			         },	
-			         */		
-			         // FDS TEST utiliser  Messages dans extraHeaders
-			          {
+			         */		        
+			          { // support Container
 			        	 "header":Messages("containers.table.support.name"),
 			        	 "property":"inputContainerUsed.locationOnContainerSupport.code",
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":1,
-			        	 "extraHeaders":{0: Messages("containers.table.support.in.code")}
-			         },
-			         // Line
-			         {
+			        	 "extraHeaders":{0: inputExtraHeaders}
+			         },    
+			         { // Ligne
 			        	 "header":Messages("containers.table.support.line"),
 			        	 "property":"inputContainerUsed.locationOnContainerSupport.line",
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":2,
-			        	 "extraHeaders":{0:Messages("containers.table.support.in.code")}
+			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },
-			         // column
-			         // astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel forcer a numerique.=> type:number,   property:  *1
-			         {
+			         { // colonne
 			        	 "header":Messages("containers.table.support.column"),
+			        	 // astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel forcer a numerique.=> type:number,   property:  *1
 			        	 "property":"inputContainerUsed.locationOnContainerSupport.column*1",
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":3,
-			        	 "extraHeaders":{0:Messages("containers.table.support.in.code")}
-			         },	
-			         // Project(s)  TESTER avec Used...
-			         {
+			        	 "extraHeaders":{0: inputExtraHeaders}
+			         },	  
+			         { // Projet(s)
 			        	"header":Messages("containers.table.projectCodes"),
-			 			"property": "inputContainer.projectCodes",
+			 			"property": "inputContainerUsed.projectCodes",
 			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
 			 			"position":11,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("containers.table.support.in.code")}
+			        	 "extraHeaders":{0: inputExtraHeaders}
 				     },
-				     //Echantillon(s)    TESTER avec Used...
-				     {
+				     { // Echantillon(s) 
 			        	"header":Messages("containers.table.sampleCodes"),
-			 			"property": "inputContainer.sampleCodes",
+			 			"property": "inputContainerUsed.sampleCodes",
 			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
 			 			"position":12,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("containers.table.support.in.code")}
+			        	 "extraHeaders":{0: inputExtraHeaders}
 				     },
-				     //Concentration     TESTER avec Used... pourquoi mesured??????
-					 {
+					 { // Concentration
 			        	 "header":Messages("containers.table.concentration") + " (ng/µL)",
-			        	 "property":"inputContainer.mesuredConcentration.value",
+			        	 "property":"inputContainerUsed.concentration.value",
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":13,
-			        	 "extraHeaders":{0:Messages("containers.table.support.in.code")}
-			         },
-			         // Volume       manque qqchose avant mesuredVolume ???? .... pourquoi mesured??????
-			         {
-			        	 "header":function(){return Messages("containers.table.volume") + " (µL)"},
-			        	 "property":"mesuredVolume.value",
+			        	 "extraHeaders":{0: inputExtraHeaders}
+			         },  
+			         { // Volume
+			        	 "header":Messages("containers.table.volume") + " (µL)",
+			        	 "property":"inputContainerUsed.volume.value",
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":14,
-			        	 "extraHeaders":{0:Messages("containers.table.support.in.code")}
+			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },
-			         // colonnes specifiques instrument viennent ici
-			         // Etat input Container   TESTER avec Used...
-			         {
+			         
+			         //--->  colonnes specifiques instrument viennent ici      
+			         
+			         { // Etat input Container 
 			        	 "header":Messages("containers.table.state.code"),
-			        	 "property":"inputContainer.state.code",
+			        	 "property":"inputContainerUsed.state.code",
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"text",
 						 "filter":"codes:'state'",
 			        	 "position":30,
-			        	 "extraHeaders":{0:Messages("containers.table.support.in.code")}
+			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },
 			         
 			         //------ OUTPUT containers section ------
 
-		            /* ne pas aficher les containercodes ????? 
+		            /* ne pas aficher les containercodes ?????  si pour DEBUG... */
 			         {
-			        	 "header":Messages("containers.table.code"),
+			        	 "header":"[["+Messages("containers.table.code") +"]]",
 			        	 "property":"outputContainerUsed.code",
 			        	 "order":true,
 						 "hide":true,
 						 "edit":false,
 			        	 "type":"text",
 			        	 "position":100,
-			        	 "extraHeaders":{0:"Outputs"}
-			         },*/
-			         // TEST Line
-			         {
+			        	 "extraHeaders":{0: outputExtraHeaders}
+			         },
+			         { //  Ligne
 			        	 "header":Messages("containers.table.support.line"),
 			        	 "property":"outputContainerUsed.locationOnContainerSupport.line",
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":110,
-			        	 "extraHeaders":{0:Messages("containers.table.support.out.code")}
-			         },
-			         // TEST column
-			         {
+			        	 "extraHeaders":{0: outputExtraHeaders}
+			         },     
+			         { // colonne
 			        	 "header":Messages("containers.table.support.column"),
 			        	 "property":"outputContainerUsed.locationOnContainerSupport.column",
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":111,
-			        	 "extraHeaders":{0:Messages("containers.table.support.out.code")}
-			         },	
-			         // Volume
-			         {
+			        	 "extraHeaders":{0: outputExtraHeaders}
+			         },	  
+			         { // Volume
 			        	 "header":Messages("containers.table.volume")+ " (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
 			        	 "order":true,
@@ -145,19 +142,19 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":120,
-			        	 "extraHeaders":{0:Messages("containers.table.support.out.code")}
+			        	 "extraHeaders":{0: outputExtraHeaders}
 			         },
-			         // Pas de concentration, elle sera mesuree plus tard
-			         // Etat outpout container      !! containers.table.stateCode c'est pour le support
-			         {
+			         // Pas de concentration, elle sera mesuree plus tard...
+			         { // Etat outpout container      
+			        	 //!!!!! containers.table.stateCode c'est pour le support
 			        	 "header":Messages("containers.table.state.code"),
-			        	 "property":"outputContainer.state.code | codes:'state'",
+			        	 "property":"outputContainerUsed.state.code | codes:'state'",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":160,
-			        	 "extraHeaders":{0:Messages("containers.table.support.out.code")}
+			        	 "extraHeaders":{0: outputExtraHeaders}
 			         }
 			         ],
 			compact:true,
@@ -184,7 +181,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 	        	showButton:false,
 	        	mode:'local',
 	        	callback:function(datatable){
-					copyPlateCodeAndStorageToDT(datatable);
+	        		copyContainerSupportCodeAndStorageCodeToDT(datatable);
 	        	}
 			},
 			hide:{
@@ -210,8 +207,9 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 				number:2,
 				dynamic:true,
 			}
-	};
-
+	}; // fin struct datatableConfig
+	
+	
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
 		$scope.atmService.data.save();
@@ -219,40 +217,29 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
-	var copyPlateCodeAndStorageToDT = function(datatable){
+	var copyContainerSupportCodeAndStorageCodeToDT = function(datatable){
 
 		var dataMain = datatable.getData();
 		
-		/* pas necessaire de verifier le type outContainerSupportCategoryCode ???
-		var cscCode = $parse('experiment.instrument.outContainerSupportCategoryCode')($scope);
-		if(cscCode !== undefined){
-			wellsCount = Number(cscCode.split("-",2)[0]);
-		    console.log("TESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSST "+ wellsCount);
-			//alert ("wellsCount ="+wellsCount);
-			}
-		}
-		*/
+		// pas necessaire de verifier le type outContainerSupportCategoryCode ??? 	
+		//-1- copy plate barcode code to output code	
+		var outputContainerSupportCode = $parse('outputContainerSupportCode')($scope);
+		var storageCode = $parse('outputContainerSupportStorageCode')($scope);
 		
-		//-1- copy plate code to output code
-		var codePlate = $parse("instrumentProperties.outputContainerSupportCode.value")($scope.experiment);
-		console.log("setting outputContainerUsed code from: "+ codePlate);
-		if(null != codePlate && undefined != codePlate){
+		if(null != outputContainerSupportCode && undefined != outputContainerSupportCode){
+			//console.log("outputContainerSupportCode =="+ outputContainerSupportCode);
 			for(var i = 0; i < dataMain.length; i++){
 				var atm = dataMain[i].atomicTransfertMethod;
-				var containerCode = codePlate+"_"+atm.line + atm.column;
+				var containerCode = outputContainerSupportCode+"_"+atm.line + atm.column;
 
 				$parse('outputContainerUsed.code').assign(dataMain[i],containerCode);
-				$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[i],codePlate);
+				$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[i],outputContainerSupportCode);
+				//reporter le storageCode sur chacun des containers
+				$parse('outputContainerUsed.locationOnContainerSupport.storageCode').assign(dataMain[i],storageCode);
 			}
-			
-			//-2- TODO copy storage to containerSupport...?????
-			/*
-			var storage = $parse("instrumentProperties.outputStorage.value")($scope.experiment);
-			alert ("TODO : setting containerSupport storage to : "+ storage);
-			*/	
-			
-			datatable.setData(dataMain);
 		}
+		
+	    datatable.setData(dataMain);
 	}
 	
 	$scope.$on('refresh', function(e) {
@@ -307,5 +294,52 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 	$scope.atmService = atmService;
+	
+	/// TEST de recuperation des valers precedentes...
+	$scope.outputContainerSupportCode=$scope.experiment.atomicTransfertMethods[0];
+	$scope.outputContainerSupportStorageCode=$scope.experimentType;
+	
+	
+	var importData = function(){
+		$scope.messages.clear();
+		
+		$http.post(jsRoutes.controllers.instruments.io.IO.importFile($scope.experiment.code).url, $scope.file)
+		.success(function(data, status, headers, config) {
+			
+			$scope.messages.clazz="alert alert-success";
+			$scope.messages.text=Messages('experiments.msg.import.success');
+			$scope.messages.showDetails = false;
+			$scope.messages.open();	
+			//only atm because we cannot override directly experiment on scope.parent
+			$scope.experiment.atomicTransfertMethods = data.atomicTransfertMethods;
+			$scope.file = undefined;
+			// nettoyer le  select File...
+			angular.element('#importFile')[0].value = null;
+			$scope.$emit('refresh');
+			
+		})
+		.error(function(data, status, headers, config) {
+			
+			$scope.messages.clazz = "alert alert-danger";
+			$scope.messages.text = Messages('experiments.msg.import.error');
+			$scope.messages.setDetails(data);
+			$scope.messages.open();	
+			$scope.file = undefined;
+			// nettoyer le  select File...
+			angular.element('#importFile')[0].value = null;
+		});		
+	};
+	
+
+	
+	$scope.button = {
+		isShow:function(){
+			return ($scope.isInProgressState() && !$scope.mainService.isEditMode())
+			},
+		isFileSet:function(){
+			return ($scope.file === undefined)?"disabled":"";
+		},
+		click:importData,		
+	};
 	
 }]);

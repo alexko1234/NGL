@@ -37,7 +37,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		l.add(DescriptionFactory.newSimpleCategory(ProtocolCategory.class, "Developpement", "development"));
 		l.add(DescriptionFactory.newSimpleCategory(ProtocolCategory.class, "Production", "production"));
 		DAOHelpers.saveModels(ProtocolCategory.class, l, errors);
-
 	}
 	
 	/**
@@ -101,8 +100,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				getInstrumentUsedTypes("hand"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
-		//FDS modif 02/02/2016 ne plus mettre type voidprocess, ajout intrumentType janus
-		//      et ajout getProperty...
+		//FDS modif 02/02/2016 ne plus mettre type voidprocess, ajout intrumentType janus et ajout getProperty...
 		l.add(newExperimentType("Librairie normalisée","lib-normalization",null,1100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 				getPropertyDefinitionsLibNormalization(),
@@ -260,10 +258,11 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Conc. chargement", "finalConcentration2", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null 
-						, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("pM"), MeasureUnit.find.findByCode("nM"), "single",25));
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("pM"), MeasureUnit.find.findByCode("nM"), "single",25));
 
 		//Outputcontainer		
-		propertyDefinitions.add(newPropertiesDefinition("% phiX", "phixPercent", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null, null, null, null, "single",51,false,"1"));		
+		propertyDefinitions.add(newPropertiesDefinition("% phiX", "phixPercent", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null
+				, null, null, null, "single",51,false,"1",null));		
 		propertyDefinitions.add(newPropertiesDefinition("Volume final", "finalVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null
 						, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µL"), MeasureUnit.find.findByCode("µL"), "single",52, false));
 		
@@ -280,7 +279,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		propertyDefinitions.add(newPropertiesDefinition("Vol. NaOH", "NaOHVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5"
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µL"), MeasureUnit.find.findByCode("µL"),"single",22));
 		propertyDefinitions.add(newPropertiesDefinition("Conc. NaOH", "NaOHConcentration", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, null
-				,null, null, null, "single",23,true,"0.1N"));
+				,null, null, null, "single",23,true,"0.1N",null));
 		propertyDefinitions.add(newPropertiesDefinition("Vol. TrisHCL", "trisHCLVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "5"
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µL"), MeasureUnit.find.findByCode("µL"), "single",24));
 		propertyDefinitions.add(newPropertiesDefinition("Conc. TrisHCL", "trisHCLConcentration", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, "200000000" 
@@ -293,9 +292,9 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		//OuputContainer
 		//keep order declaration between phixPercent and finalVolume
 		propertyDefinitions.add(newPropertiesDefinition("% phiX", "phixPercent", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null, null
-				, null, null, "single",51,false,"1"));		
+				, null, null, "single",51,false,"1",null));		
 		propertyDefinitions.add(newPropertiesDefinition("Volume final", "finalVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode( "µL"), "single",28,false, "50"));
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode( "µL"), "single",28,false, "50",null));
 		
 		return propertyDefinitions;
 		
@@ -358,15 +357,14 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		//OuputContainer
 		// GA 08/02/2016 =>  ces proprietes de containerOut doivent etre propagees au content
 		propertyDefinitions.add(newPropertiesDefinition("Taille insert (théor.)", "insertSize", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content),Integer.class, true, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),"single",130,true,"350"));
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),"single",130,true,"350", null));
 		propertyDefinitions.add(newPropertiesDefinition("Taille librairie (théor.)", "librarySize", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content),Integer.class, true, null	
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),"single", 131, true,"470"));
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),"single",131, true,"470",null));
 		
 		// GA 08/02/2016 => ajouter tag and tagCategory !
-		// pour DEBUG  : ajouter IND306/SINGLE-INDEX en default value (laisser required a true...)
-		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, "IND306"
+		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null
 				, null, null, null,"single",140));
-		propertyDefinitions.add(newPropertiesDefinition("Type de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, "SINGLE-INDEX"
+		propertyDefinitions.add(newPropertiesDefinition("Type de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null
 				, null, null, null,"single", 141));
 		
 		return propertyDefinitions;
@@ -383,7 +381,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		//OuputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Concentration finale", "mesuredConcentration", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode( "nM"), MeasureUnit.find.findByCode( "nM"), "single",130,true,"2"));
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode( "nM"), MeasureUnit.find.findByCode( "nM"), "single",130,true,"2","toto"));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Volume final", "mesuredVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode( "µL"), "single",140));

@@ -291,13 +291,12 @@ experiments.modifyDate = Date de modification
 experiments.modifyBy = Modifié par
 experiment.comments = Commentaires
 
-# modif a faire pour etre homogene avec sortie ???
-experiments.inputs = Container en entrée
-# modif FDS demandee par Julie....experiments.outputs = Container en sortie
-experiments.outputs = Code support de sortie
 
-# ajout FDS test...
-experiments.outputContainerStorage= Stockage support de sortie
+experiments.inputs = Container en entrée
+experiments.outputs = Container en sortie
+
+experiments.outputContainerSupportCode= Code support de sortie
+experiments.outputContainerSupportStorageCode= Stockage support de sortie
 experiments.instrumentFile = Fichier de l''instrument
 
 experiments.calculation.sheet = Feuille de calcul
@@ -401,7 +400,7 @@ backet.view.containers = Vue containers
 
 error.codeNotExist=Le code {0} n''existe pas
 error.propertyNotExist=La propriété {0} n''existe pas pour {1}
-limsdao.error.emptymapping=Pas de correspondance avec les paramètres suivants :{0}
+limsdao.error.emptymapping =Pas de correspondance avec les paramètres suivants :{0}
 
 #initialdata
 initialdata.error.sampleNotExist=Le container {0} 
@@ -428,8 +427,16 @@ valuation.value.TRUE = Oui
 valuation.value.FALSE = Non
 valuation.value.UNSET = -
 
+#import fichier
 experiments.msg.import.error = Problème lors de l'import :
-experiments.msg.import.success = Import réussi, merci de vérifier puis de sauvegarder.
+experiments.msg.import.success = Import réussi, merci de vérifier puis de sauvegardez.
+experiments.msg.import.sheet.missing = L''onglet ''{0}'' est manquant
+experiments.msg.import.header.missing = Le champ d''entête ''{0}'' est manquant ligne {1} / colonne {2}
+experiments.msg.import.position.unkwnown = La position ''{0}'' ne correspond pas à un format de plaque connu; ligne {1}
+experiments.msg.import.position.outofbonds = La position ''{0}'' ne correspond pas au format {1}-puits; ligne {2}
+experiments.msg.import.position.alreadyfound = La position ''{0}'' a déjà été trouvée; ligne {1}
+experiments.msg.import.tag.missing = Pas de Tag pour la position ''{0}''
+experiments.msg.import.tag.notexist = Le Tag ''{0}'' n''existe pas; ligne {1}
 
 io.error.instance.notexist = La classe ''{0}'' n''existe pas 
 io.error.resultat.notexist = ''{0}'' n''existe pas
