@@ -319,7 +319,7 @@ public class Containers extends CommonController {
 			queryElts.add(DBQuery.regex("code", Pattern.compile(containersSearch.codeRegex)));
 		}
 		
-		if(BooleanUtils.isTrue(containersSearch.pool)){
+		if(BooleanUtils.isTrue(containersSearch.isPool)){
 			queryElts.add(DBQuery.exists("contents.1"));
 		}
 
