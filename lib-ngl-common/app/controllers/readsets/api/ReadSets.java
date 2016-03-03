@@ -184,7 +184,11 @@ public class ReadSets extends ReadSetsController{
 			queries.add(DBQuery.lessThanEquals("runSequencingStartDate", form.toDate));
 		}
 		
-		if (StringUtils.isNotBlank(form.regexCode)) { //all
+		if (StringUtils.isNotBlank(form.code)) { //all
+			queries.add(DBQuery.is("code", form.code));
+		}else if(CollectionUtils.isNotEmpty(form.codes)){
+			queries.add(DBQuery.in("code", form.codes));
+		}else if (StringUtils.isNotBlank(form.regexCode)) { //all
 			queries.add(DBQuery.regex("code", Pattern.compile(form.regexCode)));
 		}
 		

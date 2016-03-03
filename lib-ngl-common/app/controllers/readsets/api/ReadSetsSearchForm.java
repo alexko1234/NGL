@@ -48,6 +48,8 @@ public class ReadSetsSearchForm extends ListForm{
 	public Date fromDate;
 	public Date toDate;
 	
+	public String code;
+	public Set<String> codes;
 	public String regexCode;
 	public String regexSampleCode;
     
