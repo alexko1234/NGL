@@ -3,7 +3,6 @@ package controllers.instruments.io.covarisandsciclonengsx;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,15 +15,14 @@ import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.InputContainerUsed;
+import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.parameter.Index;
-
 import validation.ContextValidation;
 import validation.utils.ValidationHelper;
-
 import controllers.instruments.io.utils.AbstractInput;
 import controllers.instruments.io.utils.InputHelper;
 import controllers.instruments.io.utils.TagModel;
-
 import play.Logger;
 
 public abstract class CovarisAndScicloneInput extends AbstractInput {
@@ -40,7 +38,6 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 		Sheet sheet = wb.getSheet("Indexing");//case sensitive??
 		if (sheet == null ){
 			contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.sheet.missing","Indexing");
-			Logger.info ("sheet Indexing not found");
 			return experiment;
 		}
 		/* description de l'onglet a traiter:
@@ -54,7 +51,7 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 		
 		//verifier qu'on trouve les 3 headers
 		if ( getStringValue(sheet.getRow(2).getCell(0))==null ){
-			contextValidation.addErrors("Erreur fichier", "experiments.msg.import.header.missing","3","A");
+			contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.header.missing","3","A");
 		}
 		if ( getStringValue(sheet.getRow(2).getCell(1))==null ){
 			contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.header.missing","3","B");
@@ -81,7 +78,7 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 				if (indexNum != null ){
 					String indexName = getStringValue(sheet.getRow(i).getCell(2)); // !! c'est une formule
 					// verifier que cet index existe (type fixe pour l'instant...)
-					Index idx = InputHelper.getIndexByName(indexName,"illumina-sequencing-index");
+					Index idx = InputHelper.getIndexByName(indexName,"index-illumina-sequencing");
 					if ( idx != null) {
 						results.put(platePosition,idx );
 					} else {
@@ -103,30 +100,37 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 				});
 		}
 		
-		/*
-		//update tag et tag Categorie
+		
+		//update tag et tag Categorie ...
+		Logger.info ("update tag and tagCatgory");
 		if(!contextValidation.hasErrors()){
 			experiment.atomicTransfertMethods
 				.stream()
-				.map(atm -> atm.inputContainerUseds.get(0))
-				.forEach(icu -> {
-					PropertySingleValue concentration1 = getPSV(icu, "concentration1");
-					concentration1.value = results.get(icu.code).concentration1;
-					concentration1.unit = "nM";
+				.forEach(atm -> {	
+					InputContainerUsed icu = atm.inputContainerUseds.get(0);
+					OutputContainerUsed ocu = atm.outputContainerUseds.get(0);
+					String icupos=getCodePosition(icu.code);
 					
-					PropertySingleValue concentration2 = getPSV(icu, "concentration2");
-					concentration2.value = results.get(icu.code).concentration2;
-					concentration2.unit = "ng/µl";
+					///PropertySingleValue tag = getPSV(ocu, "tag");
+					PropertySingleValue tagPsv = new PropertySingleValue();
+					tagPsv.value = results.get(icupos).name;
+					ocu.experimentProperties.put("tag", tagPsv);
+					
+					//PropertySingleValue tagCategory = getPSV(ocu, "tagCategory");
+					PropertySingleValue tagCategoryPsv = new PropertySingleValue();
+					tagCategoryPsv.value = results.get(icupos).categoryCode;
+					ocu.experimentProperties.put("tagCategory", tagCategoryPsv);
 				});
 		}
-		*/
+		
 		
 		return experiment;
     }
 	
+	// A METTRE AILLEURS....
 	//extraire la partie finale?? ou utiliser container.line + container.column ?
 	public String getCodePosition(String icuCode) {
-		return icuCode.substring(icuCode.indexOf("_"));
+		return icuCode.substring(icuCode.indexOf("_")+1);
 	}
 
 }

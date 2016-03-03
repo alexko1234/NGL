@@ -20,7 +20,7 @@ public class InputHelper {
 	public static boolean isPlatePosition(ContextValidation contextValidation, String position, int plFormat, int lineNum){
 
 		if ((position.length() < 2) || (position.length() > 3 )) {
-			contextValidation.addErrors("Erreur fichier", "experiments.msg.import.position.unkwnown", position, lineNum);
+			contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.position.unkwnown", position, lineNum);
 			return false;
 		}
 		
@@ -34,14 +34,14 @@ public class InputHelper {
 			if (row.matches("[A-H]") && (col>=1 && col<=12)){
 				return true;
 			} else { 
-				contextValidation.addErrors("Erreur fichier", "experiments.msg.import.position.outofbonds", position, plFormat, lineNum);
+				contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.position.outofbonds", position, plFormat, lineNum);
 				return false; 
 			}
 		} else if (plFormat==384){
 	    	if (row.matches("[A-P]") &&  (col>=1 && col <=24)){
 				return true;
 			} else { 
-				contextValidation.addErrors("Erreur fichier", "experiments.msg.import.position.outofbonds", position, plFormat, lineNum);
+				contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.position.outofbonds", position, plFormat, lineNum);
 				return false;
 			}
 	    	

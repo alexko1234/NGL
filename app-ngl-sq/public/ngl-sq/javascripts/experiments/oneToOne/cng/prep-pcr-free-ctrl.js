@@ -2,11 +2,8 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
                                                      function($scope, $parse, atmToSingleDatatable, $http){
 // FDS 04/02/2016 -- JIRA NGL-894 : prep pcr free experiment
 
-	// actuellement le nom du header est en dur dans ATM (Inputs ou Outputs )... laisser les valeurs en dur pour l'instant
-	var inputExtraHeaders="Inputs";
-	var outputExtraHeaders="Outputs";
-	//var inputExtraHeaders=Messages("containers.table.support.in.code");
-	//var outputExtraHeaders=Messages("containers.table.support.out.code");	
+	var inputExtraHeaders=Messages("experiments.inputs");
+	var outputExtraHeaders=Messages("experiments.outputs");	
 	
 	var datatableConfig = {
 			name:"FDR_Plaque", //peut servir pour le nom de fichier si export demandé
@@ -221,24 +218,26 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 
 		var dataMain = datatable.getData();
 		
-		// pas necessaire de verifier le type outContainerSupportCategoryCode ??? 	
-		//-1- copy plate barcode code to output code	
-		var outputContainerSupportCode = $parse('outputContainerSupportCode')($scope);
-		var storageCode = $parse('outputContainerSupportStorageCode')($scope);
-		
-		if(null != outputContainerSupportCode && undefined != outputContainerSupportCode){
-			//console.log("outputContainerSupportCode =="+ outputContainerSupportCode);
-			for(var i = 0; i < dataMain.length; i++){
-				var atm = dataMain[i].atomicTransfertMethod;
-				var containerCode = outputContainerSupportCode+"_"+atm.line + atm.column;
+		var outputContainerSupportCode = $scope.outputContainerSupport.Code;
+		var outputContainerSupportStorageCode = $scope.outputContainerSupport.StorageCode;
 
-				$parse('outputContainerUsed.code').assign(dataMain[i],containerCode);
+		if( null != outputContainerSupportCode && undefined != outputContainerSupportCode){
+			for(var i = 0; i < dataMain.length; i++){
+				console.log('copy outputContainerSupportCode : '+outputContainerSupportCode +' to datatable');
+				var atm = dataMain[i].atomicTransfertMethod;
+				var newContainerCode = outputContainerSupportCode+"_"+atm.line + atm.column;
+
+				$parse('outputContainerUsed.code').assign(dataMain[i],newContainerCode);
 				$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[i],outputContainerSupportCode);
-				//reporter le storageCode sur chacun des containers
-				$parse('outputContainerUsed.locationOnContainerSupport.storageCode').assign(dataMain[i],storageCode);
+				
+				if( null != outputContainerSupportStorageCode && undefined != outputContainerSupportStorageCode){
+					console.log('copy outputContainerSupportStorageCode :'+outputContainerSupportStorageCode+ ' to datatable');
+				    $parse('outputContainerUsed.locationOnContainerSupport.storageCode').assign(dataMain[i],outputContainerSupportStorageCode);
+				}
 			}
 		}
 		
+		console.log('SETTING NOW...');
 	    datatable.setData(dataMain);
 	}
 	
@@ -295,10 +294,6 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 	
 	$scope.atmService = atmService;
 	
-	/// TEST de recuperation des valers precedentes...
-	$scope.outputContainerSupportCode=$scope.experiment.atomicTransfertMethods[0];
-	$scope.outputContainerSupportStorageCode=$scope.experimentType;
-	
 	
 	var importData = function(){
 		$scope.messages.clear();
@@ -330,7 +325,16 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 		});		
 	};
 	
-
+	// TEST de recuperation des valeurs deja presente dans le datatable..
+	$scope.outputContainerSupport = {
+			                         code : $scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.code , 
+			                         storageCode: $scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.storageCode
+			                        };
+	
+	console.log("previous code: "+ $scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.code);
+	console.log("previous StorageCode: "+ $scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.storageCode);
+		
+	
 	
 	$scope.button = {
 		isShow:function(){

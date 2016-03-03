@@ -3,29 +3,58 @@
 <div class="col-sm-12 col-lg-12" ng-controller="PrepPcrFreeCtrl">
 
 <!-- gerer ici la distinction tube vs plaque ????  <div class="row" ng-if="xxxxx()">  -->
-
-  <div class="panel panel-default">
-    <form class="form-inline">
-         <div class="form-group">
-              <label for="plateCode"  class="control-label">@Messages("experiments.outputs")</label>
-                  <input class="form-control input-sm" type="text" id="plateCode"
-									                     title=@Messages("experiments.outputs")
-			  							                 ng-model="ouputContainer.supportCode" />	
+<!--  exemple.. ng-bind="atm.outputContainerUseds[0].experimentProperties[property.code].value"></span> -->
+ 
+  
+    <form class="form-inline margin-bottom-7">
+         <div class="form-group col-lg-3">          
+              <div ng-switch on="mainService.isEditMode()"> 
+              <div ng-switch-when="false">   
+                   <label for="plateCode" class="control-label">@Messages("experiments.outputContainerSupportCode")</label>
+                   <span class="form-control-static" ng-bind="outputContainerSupport.code"></span>    
+               </div>                           
+               <div ng-switch-when="true">
+                   <label for="plateCode"  class="control-label">@Messages("experiments.outputContainerSupportCode")</label>
+                   <input class="form-control input-sm" type="text" id="plateCode"
+									                    title=@Messages("experiments.outputContainerSupportCode")
+			  							                ng-model="outputContainerSupport.code" />	
+			  </div>
+			  </div>   
 	     </div>
-         <div class="form-group">
-             <label for="plateStorage" class="control-label">@Messages("experiments.outputContainerStorage")</label>
-                <input class="form-control input-sm" type="text" id="plateStorage"
-									                 title=@Messages("experiments.outputContainerStorage") 
-			 						                 ng-model="ouputContainer.storageCode" />	
+	     
+         <div class="form-group col-lg-3">
+              <div ng-switch on="mainService.isEditMode()"> 
+              <div ng-switch-when="false">   
+                   <label for="plateStorage" class="control-label">@Messages("experiments.outputContainerSupportStorageCode")</label>
+                   <span class="form-control-static" ng-bind="outputContainerSupport.storageCode"></span> 
+              </div>
+               <div ng-switch-when="true">
+                  <label for="plateStorage" class="control-label">@Messages("experiments.outputContainerSupportStorageCode")</label>
+                  <input class="form-control-static input-sm" type="text" id="plateStorage"
+									                   title=@Messages("experiments.outputContainerSupportStorageCode") 
+			 						                   ng-model="outputContainerSupport.storageCode" />	
+			  </div>
+			  </div>   
 	     </div>
-         <div class="form-group">
-             <label for="instrumentFile" class="control-label">@Messages("experiments.instrumentFile")</label>
-                <input class="form-control input-sm" type="file" id="instrumentFile" 		 
-                                                 ng-model="InstrumentFile" />				  
+         <div class="form-group col-lg-6">
+             <label for="importFile" class="col-md-3 col-lg-3 control-label">@Messages("experiments.instrumentFile")</label>
+             <div class="input-group" >
+                <input class="form-control input-sm" type="file" 
+                									 base64-file="file"
+                									 id="importFile" 		  
+                									 ng-model="InstrumentFile" />
+                <span class="input-group-btn">									 
+                     <button class="btn btn-primary" ng-click="button.click()" 
+                                                     ng-disabled="button.isFileSet()" 
+                                                     title="@Messages("button.import.file")"><i class="fa fa-upload"></i>
+                     </button>     
+                </span> 
+            </div>                         				  
         </div>
    </form>		
-  </div>
-  
+ 
+
+
   <div class="row">
 	<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data"></div>						
   </div>
