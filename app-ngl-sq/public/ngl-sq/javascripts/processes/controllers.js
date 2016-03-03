@@ -419,7 +419,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 	$scope.addToBasket = function(containers){
 		
 		var cleanContainer=function(container){
-			var _container = angular.copy(container);
+			var _container = $.extend(true,{},container);
 			_container.properties = undefined;
 			_container.comments=[];
 			return  _container;
@@ -427,6 +427,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 		
 		$scope.errors.processType = {};
 		$scope.errors.processCategory = {};
+		var supportCodes = [];
 		if($scope.searchService.form.nextProcessTypeCode){
 			for(var i = 0; i < containers.length; i++){
 				var alreadyOnBasket = false;
@@ -447,19 +448,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 						this.basket.add(cleanContainer(containers[i]));
 					}else {
 						var basket = this.basket;
-						var supportCode = $scope.datatable.getGroupColumnValue(containers[i], "support.code");
-						$http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{"supportCode":supportCode}})
-						.success(function(data, status, headers, config) {
-							if(data!=null){
-								angular.forEach(data, function(container){
-									basket.add(cleanContainer(container));
-								});
-							}
-						})
-						.error(function(data, status, headers, config) {
-							alert("error");
-						});
-						
+						supportCodes.push($scope.datatable.getGroupColumnValue(containers[i], "support.code"));												
 					}
 				}
 			
@@ -468,6 +457,19 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 				}
 
 			}
+			if(supportCodes.length > 0){
+				$http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{"supportCodes":supportCodes}})
+				.success(function(data, status, headers, config) {
+					if(data!=null){
+						angular.forEach(data, function(container){
+							basket.add(cleanContainer(container));
+						});
+					}
+				}).error(function(data, status, headers, config) {
+					alert("error");
+				});
+			}
+			
 			tabService.addTabs({label:$filter('codes')($scope.searchService.form.nextProcessTypeCode,"type"),href:$scope.searchService.form.nextProcessTypeCode,remove:false});
 		}else{
 			if(!$scope.searchService.form.processCategory){
@@ -1067,8 +1069,8 @@ var	datatableConfig = {
 	
 	$scope.datatable = datatable(datatableConfig);	
 	$scope.basket = mainService.getBasket();
-	$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);
 	$scope.addNewProcessColumns();
+	$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);	
 	//$scope.datatable.selectAll(false);
 	if($scope.basket.length() != 0){
 		$scope.doneAndRecorded = false;

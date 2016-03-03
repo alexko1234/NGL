@@ -337,6 +337,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
              * Set all data used by search method or directly when local data
              */
             setData: function(data, recordsNumber) {
+            	this.setSpinner(true);
                 var configPagination = this.config.pagination;
                 if (configPagination.active && !this.isRemoteMode(configPagination.mode)) {
                     this.config.pagination.pageNumber = 0;
@@ -352,6 +353,10 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                 this._getAllResult = function() {
                     return this.allResult;
                 };
+                var that = this;
+                this.computeDisplayResultTimeOut.then(function() {
+                	that.setSpinner(false);
+                });
             },
             /**
              * Return all the data
