@@ -1119,7 +1119,8 @@ angular.module('commonsServices', []).
     	    	if(!array)return undefined;
     	    	if(!angular.isArray(array) && (angular.isObject(array) || angular.isNumber(array))) array = [array];
     	    	else if(!angular.isArray(array)) throw "input is not an array, object or a number !";
-    	    	
+    	    	else if(angular.isArray(array) && array.length === 0) return undefined;
+    	    		
     	    	if(key && !angular.isString(key))throw "key is not valid, only string is authorized";
     	    	
     	    	var params = {sum:0, key:key};
