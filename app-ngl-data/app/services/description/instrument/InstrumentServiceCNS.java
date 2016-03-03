@@ -47,7 +47,8 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentCategory("Séquenceur Illumina","illumina-sequencer"));
 		l.add(newInstrumentCategory("Cartographie Optique Opgen","opt-map-opgen"));
 		l.add(newInstrumentCategory("Séquenceur Nanopore","nanopore-sequencer"));
-		l.add(newInstrumentCategory("Extérieur","extseq"));
+		
+		//l.add(newInstrumentCategory("Extérieur","extseq"));
 		
 		l.add(newInstrumentCategory("Robot pipetage","liquid-handling-robot"));
 		l.add(newInstrumentCategory("Appareil de sizing","sizing-system"));
@@ -108,10 +109,10 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"mapcard"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));	
 		
-		l.add(newInstrumentUsedType("EXTSOLEXA", "EXTSOLEXA", InstrumentCategory.find.findByCode("extseq"), null, 
+		/*l.add(newInstrumentUsedType("EXTSOLEXA", "EXTSOLEXA", InstrumentCategory.find.findByCode("extseq"), null, 
 				getInstrumentExtSolexa(),
 				getContainerSupportCategories(new String[]{"flowcell-2","flowcell-1","flowcell-8"}),null, 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));*/
 		
 		l.add(newInstrumentUsedType("Biomek FX", "biomekFX", InstrumentCategory.find.findByCode("liquid-handling-robot"), null, 
 				getInstruments(
@@ -417,6 +418,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		instruments.add(createInstrument("BISMUTH", "BISMUTH", "G3", false, "/env/ig/atelier/illumina_BISMUTH", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
 		instruments.add(createInstrument("HELIUM", "HELIUM", "G1", false, "/env/ig/atelier/illumina_HELIUM", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
 		instruments.add(createInstrument("AZOTE", "AZOTE", "G2", false, "/env/ig/atelier/illumina_AZOTE", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
+		instruments.add(createInstrument("EXTGAIIX", "EXTGAIIX", "G0", true, "/env/atelier", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		return instruments;
 	}
@@ -426,6 +428,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		instruments.add(createInstrument("MELISSE", "MELISSE", "M2", true, "/env/ig/atelier/illumina/cns/MELISSE", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
 		instruments.add(createInstrument("MIMOSA", "MIMOSA", "M1", true, "/env/ig/atelier/illumina/cns/MIMOSA", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
 		instruments.add(createInstrument("MISEQ1", "MISEQ1", "M1C", false, "/env/ig/atelier/illumina/cng/MISEQ1", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
+		instruments.add(createInstrument("EXTMISEQ", "EXTMISEQ", "M0", true, "/env/atelier", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return instruments;
 	}
 	
@@ -439,6 +442,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		instruments.add(createInstrument("MERCURE", "MERCURE", "H2", true, "/env/ig/atelier/illumina/cns/MERCURE", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
 		instruments.add(createInstrument("SOUFRE", "SOUFRE", "H4", true, "/env/ig/atelier/illumina/cns/SOUFRE", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
 		instruments.add( createInstrument("PHOSPHORE", "PHOSPHORE", "H3", true, "/env/ig/atelier/illumina/cns/PHOSPHORE", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add( createInstrument("EXTHISEQ", "EXTHISEQ", "H0", true, "/env/atelier", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return instruments;
 	}
 	
@@ -449,6 +453,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		instruments.add( createInstrument("HISEQ11", "HISEQ11", "H11C", false, "/env/ig/atelier/illumina/cng/HISEQ11/", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));		
 		instruments.add( createInstrument("FLUOR", "FLUOR", "H8", true, "/env/ig/atelier/illumina/cns/FLUOR", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add( createInstrument("PLATINE", "PLATINE", "H7", true, "/env/ig/atelier/illumina/cns/PLATINE", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add( createInstrument("EXTHISEQ", "EXTHISEQ", "H0", true, "/env/atelier", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return instruments;
 	}
 	
@@ -456,17 +461,18 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		instruments.add(createInstrument("TORNADE", "TORNADE", "H5", true, "/env/ig/atelier/illumina/cns/TORNADE", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
 		instruments.add(createInstrument("RAFALE", "RAFALE", "H9", true, "/env/ig/atelier/illumina/cns/RAFALE", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
+		instruments.add(createInstrument("EXTHISEQ", "EXTHISEQ", "H0", true, "/env/atelier", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return instruments;
 	}
 
 	
-	public static List<Instrument> getInstrumentExtSolexa()throws DAOException{
+	/*public static List<Instrument> getInstrumentExtSolexa()throws DAOException{
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		instruments.add( createInstrument("EXTGAIIX", "EXTGAIIX", "G0", true, "/env/atelier", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add( createInstrument("EXTHISEQ", "EXTHISEQ", "H0", true, "/env/atelier", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add( createInstrument("EXTMISEQ", "EXTMISEQ", "M0", true, "/env/atelier", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return instruments;
-	}
+	}*/
 	
 	
 	private List<Instrument> getInstrumentMKI() throws DAOException {
