@@ -229,7 +229,8 @@
 				lists.refresh.states({objectTypeCode:"ReadSet", display:true},'statetrue');
 				lists.refresh.states({objectTypeCode:"ReadSet"});			
 				lists.refresh.valuationCriterias({objectTypeCode:"ReadSet"});
-				lists.refresh.types({objectTypeCode:"Run"});
+				lists.refresh.types({objectTypeCode:"Run"},"runTypes");
+				lists.refresh.types({objectTypeCode:"ReadSet"},"readSetTypes");
 				lists.refresh.runs();
 				lists.refresh.instruments({categoryCodes:["illumina-sequencer","extseq","nanopore-sequencer"]});
 				//TODO Warn if pass to one application page

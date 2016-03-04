@@ -73,6 +73,7 @@ search.placeholder.toDate = Run jusqu''au (jj/mm/aaaa)
 search.placeholder.states = Sélect. des états
 search.placeholder.instruments = Sélect. des instruments
 search.placeholder.types = Sélect. des types
+search.placeholder.categories = Sélect. des catégories
 search.placeholder.type = Sélect. un type
 search.placeholder.properties = Sélect. des propriétés
 search.placeholder.runtypes = Sélect. des types de run
