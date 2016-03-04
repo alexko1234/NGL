@@ -2,11 +2,7 @@
 
 <div class="col-sm-12 col-lg-12" ng-controller="PrepPcrFreeCtrl">
 
-<!-- gerer ici la distinction tube vs plaque ????  <div class="row" ng-if="xxxxx()">  -->
-<!--  exemple.. ng-bind="atm.outputContainerUseds[0].experimentProperties[property.code].value"></span> -->
- 
-  
-    <form class="form-inline margin-bottom-7">
+    <form class="form-inline margin-bottom-7"> <!--  le margin-bottom est écrasé qq part !!!-->
          <div class="form-group col-lg-3">          
               <div ng-switch on="mainService.isEditMode()"> 
               <div ng-switch-when="false">   
@@ -28,7 +24,7 @@
                    <label for="plateStorage" class="control-label">@Messages("experiments.outputContainerSupportStorageCode")</label>
                    <span class="form-control-static" ng-bind="outputContainerSupport.storageCode"></span> 
               </div>
-               <div ng-switch-when="true">
+              <div ng-switch-when="true">
                   <label for="plateStorage" class="control-label">@Messages("experiments.outputContainerSupportStorageCode")</label>
                   <input class="form-control-static input-sm" type="text" id="plateStorage"
 									                   title=@Messages("experiments.outputContainerSupportStorageCode") 
@@ -36,7 +32,8 @@
 			  </div>
 			  </div>   
 	     </div>
-         <div class="form-group col-lg-6">
+	     <!-- test ajout  ng-show="button.isShow() -->
+         <div class="form-group col-lg-6"  ng-show="button.isShow()">
              <label for="importFile" class="col-md-3 col-lg-3 control-label">@Messages("experiments.instrumentFile")</label>
              <div class="input-group" >
                 <input class="form-control input-sm" type="file" 
@@ -52,7 +49,6 @@
             </div>                         				  
         </div>
    </form>		
- 
 
 
   <div class="row">

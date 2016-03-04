@@ -6,7 +6,8 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 	var outputExtraHeaders=Messages("experiments.outputs");	
 	
 	var datatableConfig = {
-			name:"FDR_Plaque", //peut servir pour le nom de fichier si export demandé
+			name:"FDR_Plaque", // sert pour le nom de fichier si export demandé
+			//Guillaume le 04/03 => utiliser containerUsed seulement pour proprietes dynamiques...
 			columns:[
 			         //-------- INPUT containers section -----------
 			         
@@ -18,12 +19,12 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":1,
-			        	 "extraHeaders":{0:"Inputs"}
+			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },	
 			         */		        
-			          { // support Container
+			          { // barcode plaque entree == input support Container code
 			        	 "header":Messages("containers.table.support.name"),
-			        	 "property":"inputContainerUsed.locationOnContainerSupport.code",
+			        	 "property":"inputContainer.support.code",
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":1,
@@ -31,7 +32,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			         },    
 			         { // Ligne
 			        	 "header":Messages("containers.table.support.line"),
-			        	 "property":"inputContainerUsed.locationOnContainerSupport.line",
+			        	 "property":"inputContainer.support.line",
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"text",
@@ -41,7 +42,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			         { // colonne
 			        	 "header":Messages("containers.table.support.column"),
 			        	 // astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel forcer a numerique.=> type:number,   property:  *1
-			        	 "property":"inputContainerUsed.locationOnContainerSupport.column*1",
+			        	 "property":"inputContainer.support.column*1",
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"number",
@@ -50,7 +51,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			         },	  
 			         { // Projet(s)
 			        	"header":Messages("containers.table.projectCodes"),
-			 			"property": "inputContainerUsed.projectCodes",
+			 			"property": "inputContainer.projectCodes",
 			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
@@ -60,7 +61,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 				     },
 				     { // Echantillon(s) 
 			        	"header":Messages("containers.table.sampleCodes"),
-			 			"property": "inputContainerUsed.sampleCodes",
+			 			"property": "inputContainer.sampleCodes",
 			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
@@ -70,7 +71,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 				     },
 					 { // Concentration
 			        	 "header":Messages("containers.table.concentration") + " (ng/µL)",
-			        	 "property":"inputContainerUsed.concentration.value",
+			        	 "property":"inputContainer.concentration.value",
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"number",
@@ -79,7 +80,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			         },  
 			         { // Volume
 			        	 "header":Messages("containers.table.volume") + " (µL)",
-			        	 "property":"inputContainerUsed.volume.value",
+			        	 "property":"inputContainer.volume.value",
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"number",
@@ -87,44 +88,54 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },
 			         
-			         //--->  colonnes specifiques instrument viennent ici      
+			         //--->  colonnes specifiques instrument s'inserent ici      
 			         
 			         { // Etat input Container 
 			        	 "header":Messages("containers.table.state.code"),
-			        	 "property":"inputContainerUsed.state.code",
+			        	 "property":"inputContainer.state.code | codes:'state'",  // |codes:'state' ==> permet de décoder le code en texte
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"text",
-						 "filter":"codes:'state'",
 			        	 "position":30,
 			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },
 			         
 			         //------ OUTPUT containers section ------
 
-		            /* ne pas aficher les containercodes ?????  si pour DEBUG... */
+		            /* ne pas aficher les containercodes  sauf pour DEBUG.
 			         {
-			        	 "header":"[["+Messages("containers.table.code") +"]]",
-			        	 "property":"outputContainerUsed.code",
+			        	 "header":Messages("containers.table.code")",
+			        	 "property":"outputContainer.code",
 			        	 "order":true,
 						 "hide":true,
 						 "edit":false,
 			        	 "type":"text",
 			        	 "position":100,
 			        	 "extraHeaders":{0: outputExtraHeaders}
-			         },
-			         { //  Ligne
+			         },*/
+			          { //  barcode plaque sortie == support Container code... faut Used sinon a l'etat nouveau on a rien...!!!
+			        	 "header":Messages("containers.table.support.name"),
+			        	 "property":"outputContainerUsed.locationOnContainerSupport.code", 
+			        	  //"property":"outputContainer.support.code",
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":100,
+			        	 "extraHeaders":{0: outputExtraHeaders}
+			         },  
+			         { //  Ligne... faut Used sinon a l'etat nouveau on a rien...!!!
 			        	 "header":Messages("containers.table.support.line"),
-			        	 "property":"outputContainerUsed.locationOnContainerSupport.line",
+			        	  //"property":"outputContainer.support.line",
+			        	 "property":"outputContainerUsed.locationOnContainerSupport.line", 
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":110,
 			        	 "extraHeaders":{0: outputExtraHeaders}
 			         },     
-			         { // colonne
+			         { // colonne... faut Used sinon a l'etat nouveau on a rien...!!!
 			        	 "header":Messages("containers.table.support.column"),
-			        	 "property":"outputContainerUsed.locationOnContainerSupport.column",
+			        	 //"property":"outputContainer.support.column",
+			        	 "property":"outputContainerUsed.locationOnContainerSupport.column", 
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"text",
@@ -133,7 +144,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			         },	  
 			         { // Volume
 			        	 "header":Messages("containers.table.volume")+ " (µL)",
-			        	 "property":"outputContainerUsed.volume.value",
+			        	 "property":"outputContainer.volume.value",
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
@@ -141,11 +152,12 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			        	 "position":120,
 			        	 "extraHeaders":{0: outputExtraHeaders}
 			         },
+			         
 			         // Pas de concentration, elle sera mesuree plus tard...
+			         
 			         { // Etat outpout container      
-			        	 //!!!!! containers.table.stateCode c'est pour le support
 			        	 "header":Messages("containers.table.state.code"),
-			        	 "property":"outputContainerUsed.state.code | codes:'state'",
+			        	 "property":"outputContainer.state.code | codes:'state'",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -162,7 +174,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 				active:false
 			},
 			order:{
-				mode:'local', //or 
+				mode:'local',
 				active:true,
 				by:'inputContainer.code'
 			},
@@ -218,12 +230,12 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 
 		var dataMain = datatable.getData();
 		
-		var outputContainerSupportCode = $scope.outputContainerSupport.Code;
-		var outputContainerSupportStorageCode = $scope.outputContainerSupport.StorageCode;
+		var outputContainerSupportCode = $scope.outputContainerSupport.code;
+		var outputContainerSupportStorageCode = $scope.outputContainerSupport.storageCode;
 
-		if( null != outputContainerSupportCode && undefined != outputContainerSupportCode){
+		if ( null != outputContainerSupportCode && undefined != outputContainerSupportCode){
 			for(var i = 0; i < dataMain.length; i++){
-				console.log('copy outputContainerSupportCode : '+outputContainerSupportCode +' to datatable');
+				
 				var atm = dataMain[i].atomicTransfertMethod;
 				var newContainerCode = outputContainerSupportCode+"_"+atm.line + atm.column;
 
@@ -231,13 +243,11 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 				$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[i],outputContainerSupportCode);
 				
 				if( null != outputContainerSupportStorageCode && undefined != outputContainerSupportStorageCode){
-					console.log('copy outputContainerSupportStorageCode :'+outputContainerSupportStorageCode+ ' to datatable');
 				    $parse('outputContainerUsed.locationOnContainerSupport.storageCode').assign(dataMain[i],outputContainerSupportStorageCode);
 				}
 			}
 		}
 		
-		console.log('SETTING NOW...');
 	    datatable.setData(dataMain);
 	}
 	
@@ -308,7 +318,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			//only atm because we cannot override directly experiment on scope.parent
 			$scope.experiment.atomicTransfertMethods = data.atomicTransfertMethods;
 			$scope.file = undefined;
-			// nettoyer le  select File...
+			// reinitialiser le  select File...
 			angular.element('#importFile')[0].value = null;
 			$scope.$emit('refresh');
 			
@@ -320,30 +330,42 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			$scope.messages.setDetails(data);
 			$scope.messages.open();	
 			$scope.file = undefined;
-			// nettoyer le  select File...
+			// reinitialiser le  select File...
 			angular.element('#importFile')[0].value = null;
 		});		
 	};
 	
-	// TEST de recuperation des valeurs deja presente dans le datatable..
-	$scope.outputContainerSupport = {
+	// recuperation dans le premier outputContainer trouvé pour reaffichage
+	/*MARCHAIT SAUF EN CREATION D"EXPERIENCE
+		$scope.outputContainerSupport = {
 			                         code : $scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.code , 
 			                         storageCode: $scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.storageCode
 			                        };
+    */
 	
-	console.log("previous code: "+ $scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.code);
-	console.log("previous StorageCode: "+ $scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.storageCode);
+	$scope.outputContainerSupport = { code : null , storageCode : null};	
 		
+	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) { 
+		 $scope.outputContainerSupport.code=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.code;
+	}
+	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) {
+		$scope.outputContainerSupport.storageCode=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.storageCode;
+	}
 	
+	console.log("previous code: "+ $scope.outputContainerSupport.code);
+	console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
 	
 	$scope.button = {
 		isShow:function(){
-			return ($scope.isInProgressState() && !$scope.mainService.isEditMode())
+			//return ($scope.isInProgressState() && !$scope.mainService.isEditMode())
+			// il faut aussi le bouton a l'etat New pour charger les Tags !!
+			return ( $scope.isNewState() || ($scope.isInProgressState() )  && !$scope.mainService.isEditMode() )
 			},
 		isFileSet:function(){
 			return ($scope.file === undefined)?"disabled":"";
 		},
 		click:importData,		
 	};
+	
 	
 }]);
