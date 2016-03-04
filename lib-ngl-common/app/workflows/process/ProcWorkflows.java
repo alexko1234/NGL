@@ -4,6 +4,7 @@ import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+import org.springframework.stereotype.Service;
 
 import play.Logger;
 import fr.cea.ig.MongoDBDAO;
@@ -15,10 +16,10 @@ import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import workflows.Workflows;
-
+@Service
 public class ProcWorkflows extends Workflows<Process> {
 
-	public static ProcWorkflows instance = new ProcWorkflows();
+	//public static ProcWorkflows instance = new ProcWorkflows();
 	
 	@Override
 	public void applyPreStateRules(ContextValidation validation,

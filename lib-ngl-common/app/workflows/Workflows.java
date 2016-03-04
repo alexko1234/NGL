@@ -3,15 +3,17 @@ package workflows;
 import java.util.Date;
 import java.util.HashSet;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.TransientState;
-import models.laboratory.experiment.instance.Experiment;
-import models.utils.dao.DAOException;
+import services.description.StateService;
 import validation.ContextValidation;
 
 public abstract class Workflows<T> {
-
+	@Autowired
+	StateService stateService;
 	
 	public abstract void applyPreStateRules(ContextValidation validation, T exp, State nextState);
 	
@@ -33,8 +35,8 @@ public abstract class Workflows<T> {
 	}
 
 	protected boolean goBack(State previousState, State nextState) {
-		models.laboratory.common.description.State nextStateDesc = getStateDescription(nextState);
-		models.laboratory.common.description.State previousStateDesc = getStateDescription(previousState);
+		models.laboratory.common.description.State nextStateDesc = stateService.getStateDescription(nextState.code);
+		models.laboratory.common.description.State previousStateDesc = stateService.getStateDescription(previousState.code);
 		boolean goBack = false;
 		if(nextStateDesc.position < previousStateDesc.position){
 			goBack=true;
@@ -43,15 +45,7 @@ public abstract class Workflows<T> {
 		return goBack;
 	}
 
-	protected models.laboratory.common.description.State getStateDescription(
-			State state) {
-		try {
-			return models.laboratory.common.description.State.find.findByCode(state.code);
-
-		} catch (DAOException e) {
-			throw new RuntimeException(e);
-		}
-	}
+	
 	/**
 	 * Clone State without historical
 	 * @param state

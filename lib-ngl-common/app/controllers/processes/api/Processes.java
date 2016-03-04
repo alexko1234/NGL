@@ -5,22 +5,16 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Pattern;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
-import models.laboratory.container.instance.ContainerSupport;
-import models.laboratory.container.instance.Content;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
@@ -39,6 +33,7 @@ import org.mongojack.DBUpdate.Builder;
 
 import play.Logger;
 import play.Logger.ALogger;
+import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.i18n.Lang;
 import play.libs.Json;
@@ -49,8 +44,6 @@ import validation.processes.instance.ProcessValidationHelper;
 import validation.utils.ValidationConstants;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableForm;
-import views.components.datatable.DatatableResponse;
-import workflows.container.ContSupportWorkflows;
 import workflows.process.ProcWorkflows;
 import workflows.process.ProcessWorkflows;
 
@@ -60,7 +53,6 @@ import controllers.CommonController;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
-import controllers.containers.api.ContainerSupportBatchElement;
 import controllers.containers.api.Containers;
 import controllers.containers.api.ContainersSearchForm;
 import fr.cea.ig.MongoDBDAO;
@@ -79,7 +71,7 @@ public class Processes extends CommonController{
 	final static List<String> defaultKeys =  Arrays.asList("categoryCode","inputContainerCode","sampleCode", "sampleOnInputContainer", "typeCode", "state", "currentExperimentTypeCode", "outputContainerSupportCodes", "experimentCodes","projectCode", "code", "traceInformation", "comments", "properties");
 	private static final ALogger logger = Logger.of("Processes");
 	final static Form<State> stateForm = form(State.class);
-	
+	final static ProcWorkflows workflows = Spring.getBeanOfType(ProcWorkflows.class);
 	@Permission(value={"reading"})
 	public static Result head(String processCode) {
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.PROCESS_COLL_NAME, Process.class, processCode)){			
@@ -358,7 +350,7 @@ public class Processes extends CommonController{
 		state.date = new Date();
 		state.user = getCurrentUser();
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
-		ProcWorkflows.instance.setState(ctxVal, process, state);
+		workflows.setState(ctxVal, process, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getProcess(code)));
 		}else {
@@ -384,7 +376,7 @@ public class Processes extends CommonController{
 				state.date = new Date();
 				state.user = user;
 				ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
-				ProcWorkflows.instance.setState(ctxVal, process, state);
+				workflows.setState(ctxVal, process, state);
 				if (!ctxVal.hasErrors()) {
 					return new DatatableBatchResponseElement(OK,  getProcess(process.code), element.index);
 				}else {

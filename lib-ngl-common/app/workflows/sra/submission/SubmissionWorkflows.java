@@ -3,6 +3,7 @@ package workflows.sra.submission;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+import org.springframework.stereotype.Service;
 
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.ObjectType;
@@ -19,10 +20,10 @@ import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.sra.SraValidationHelper;
 import workflows.Workflows;
-
+@Service
 public class SubmissionWorkflows extends Workflows<Submission>{
 
-	public static SubmissionWorkflows instance= new SubmissionWorkflows();
+	//public static SubmissionWorkflows instance= new SubmissionWorkflows();
 
 
 	@Override

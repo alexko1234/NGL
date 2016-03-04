@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.common.description.State;
 import models.laboratory.common.description.Value;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.TBoolean;
@@ -29,14 +30,29 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
 import play.Logger;
+import play.api.modules.spring.Spring;
 import play.data.validation.ValidationError;
+import services.description.StateService;
 import validation.ContextValidation;
+import validation.common.instance.CommonValidationHelper;
 import static validation.utils.ValidationConstants.*;
 
 public class ValidationHelper {
 	
+	private static StateService stateService = Spring.getBeanOfType(StateService.class);
+	
 	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, Boolean validateNotDefined) {
-		validateProperties(contextValidation, properties, propertyDefinitions, validateNotDefined, true);
+		validateProperties(contextValidation, properties, propertyDefinitions, validateNotDefined, true, null, null);
+	}
+	
+	/**
+	 * 
+	 * @param contextValidation
+	 * @param properties
+	 * @param propertyDefinitions
+	 */
+	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions){
+		validateProperties(contextValidation, properties, propertyDefinitions, true, true, null, null);		
 	}
 	
 	/**
@@ -46,12 +62,11 @@ public class ValidationHelper {
 	 * @param propertyDefinitions
 	 * @param validateNotDefined
 	 */
-	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, Boolean validateNotDefined, Boolean testRequired) {
+	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, Boolean validateNotDefined, Boolean testRequired, String currentStateCode, String defaultRequiredState) {
 		Map<String, PropertyValue> inputProperties = new HashMap<String, PropertyValue>(0);
 		if(properties!=null && !properties.isEmpty()){
 			inputProperties = new HashMap<String, PropertyValue>(properties);		
-		}
-		
+		}		
 		Multimap<String, PropertyDefinition> multimap = getMultimap(propertyDefinitions);
 		
 		for(String key : multimap.keySet()){
@@ -61,7 +76,8 @@ public class ValidationHelper {
 			PropertyDefinition propertyDefinition=(PropertyDefinition) pdefs.toArray()[0];			
 			
 			//if pv null and required
-			if( pv==null && propertyDefinition.required && testRequired){				
+			if( pv==null && propertyDefinition.required && testRequired 
+					&& isStateRequired(currentStateCode, propertyDefinition.requiredState, defaultRequiredState)){				
 				contextValidation.addErrors(propertyDefinition.code+".value", ERROR_REQUIRED_MSG,"");					
 	        	
 			}else if (pv != null){
@@ -120,6 +136,18 @@ public class ValidationHelper {
 		}
 	}
 	
+	private static boolean isStateRequired(String currentStateCode,
+			String requiredState, String defaultRequiredState) {
+
+		if(null == currentStateCode || (null == defaultRequiredState && null == requiredState)){
+			return true;
+		}else{
+			State currentState = stateService.getStateDescription(currentStateCode);
+			State pdRequiredState = stateService.getStateDescription((requiredState == null)?defaultRequiredState:requiredState);
+			return currentState.position >= pdRequiredState.position;
+		}						
+	}
+
 	/**
 	 * transform the list of multimap where the key is the prefix of the code.
 	 * 
@@ -138,15 +166,7 @@ public class ValidationHelper {
 		return multimap;
 	}
 
-	/**
-	 * 
-	 * @param contextValidation
-	 * @param properties
-	 * @param propertyDefinitions
-	 */
-	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions){
-		validateProperties(contextValidation, properties, propertyDefinitions, true, true);		
-	}
+	
 
 	
 	/**

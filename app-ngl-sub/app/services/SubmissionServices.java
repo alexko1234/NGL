@@ -66,7 +66,8 @@ import java.io.StringReader;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-import controllers.CommonController;
+
+import play.api.modules.spring.Spring;
 import play.libs.F.Promise;
 import play.libs.ws.WS;
 import play.libs.ws.WSResponse;
@@ -76,9 +77,9 @@ import play.libs.ws.WSResponse;
 
 
 public class SubmissionServices {
-	final SubmissionWorkflows subWorkflows = SubmissionWorkflows.instance;
-	final ConfigurationWorkflows configWorkflows = ConfigurationWorkflows.instance;
-	final SubmissionWorkflows submissionWorkflows = SubmissionWorkflows.instance;
+	final SubmissionWorkflows subWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
+	final ConfigurationWorkflows configWorkflows = Spring.getBeanOfType(ConfigurationWorkflows.class);
+	final SubmissionWorkflows submissionWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
 
 	public String updateLaboratorySampleForNcbiScientificName(String taxonCode, ContextValidation contextValidation) throws SraException {		
 		try {

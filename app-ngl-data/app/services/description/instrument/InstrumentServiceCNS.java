@@ -86,7 +86,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); //ok
 		
 		
-		l.add(newInstrumentUsedType("Stratagene qPCR system", "stratagene-qPCR", InstrumentCategory.find.findByCode("qPCR-system"), getQPCRProperties(), 
+		l.add(newInstrumentUsedType("Stratagene qPCR system", "stratagene-qPCR", InstrumentCategory.find.findByCode("qPCR-system"), null, 
 				getInstruments(
 						createInstrument("Stratagene1", "Stratagene1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))),
 				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), null, 
@@ -397,12 +397,6 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getQuBitProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		l.add(newPropertiesDefinition("Kit", "kit", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("HS", "BR"), "single"));		
-		return l;
-	}
-	
-	private static List<PropertyDefinition> getQPCRProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Nb. Echantillon", "sampleNumber", LevelService.getLevels(Level.CODE.Instrument), Integer.class, true, "single"));		
 		return l;
 	}
 		

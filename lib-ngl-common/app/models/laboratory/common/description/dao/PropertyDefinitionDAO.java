@@ -24,7 +24,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 
 	protected PropertyDefinitionDAO() {
 		super("property_definition", PropertyDefinition.class, PropertyDefinitionMappingQuery.class,
-				"SELECT id,code,name,required,editable,active,type,display_format,display_order,default_value,description,"
+				"SELECT id,code,name,required,required_state,editable,active,type,display_format,display_order,default_value,description,"
 						+ "choice_in_list,fk_measure_category, property_value_type,fk_save_measure_unit,fk_display_measure_unit,fk_common_info_type "
 				+" FROM property_definition as t",true);
 	}
@@ -95,7 +95,7 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 		parameters.put("default_value", propertyDefinition.defaultValue);
 		parameters.put("property_value_type", propertyDefinition.propertyValueType);
 		parameters.put("fk_common_info_type", idCommonInfoType);
-
+		parameters.put("required_state", propertyDefinition.requiredState);
 
 		if(null != propertyDefinition.measureCategory){
 			if(null ==  propertyDefinition.measureCategory.id){
@@ -132,11 +132,11 @@ public class PropertyDefinitionDAO extends AbstractDAOMapping<PropertyDefinition
 	{
 		String sql = "UPDATE property_definition SET name=?, description=?, required=?, editable=?, " +
 				"active=?,choice_in_list=?, type=?, display_format=?, " +
-				"display_order=?, default_value=?,  property_value_type=?" +
+				"display_order=?, default_value=?,  property_value_type=?,  required_state=?" +
 				" WHERE id=?";
 		jdbcTemplate.update(sql, propertyDefinition.name, propertyDefinition.description, propertyDefinition.required,propertyDefinition.editable,
 				propertyDefinition.active, propertyDefinition.choiceInList, propertyDefinition.valueType, propertyDefinition.displayFormat,
-				propertyDefinition.displayOrder, propertyDefinition.defaultValue, propertyDefinition.propertyValueType,
+				propertyDefinition.displayOrder, propertyDefinition.defaultValue, propertyDefinition.propertyValueType,propertyDefinition.requiredState,
 				propertyDefinition.id);
 
 		//Update measure category

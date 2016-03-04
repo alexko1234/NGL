@@ -56,8 +56,9 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 	public static void validationExperimentType(String typeCode, Map<String,PropertyValue> properties, ContextValidation contextValidation) {
 		ExperimentType exType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", ExperimentType.find,true);
 		if(exType!=null){
+			String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
 			contextValidation.addKeyToRootKeyName("experimentProperties");
-			ValidationHelper.validateProperties(contextValidation, properties, exType.getPropertiesDefinitionDefaultLevel(), true);
+			ValidationHelper.validateProperties(contextValidation, properties, exType.getPropertiesDefinitionDefaultLevel(), true, true, stateCode, "IP");
 			contextValidation.removeKeyFromRootKeyName("experimentProperties");
 		}
 		
@@ -135,8 +136,9 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			
 			InstrumentUsedType instrumentUsedType = BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, instrumentUsed.typeCode, "typeCode", InstrumentUsedType.find,true);
 			if(instrumentUsedType!=null){
+				String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
 				contextValidation.addKeyToRootKeyName("instrumentProperties");
-				ValidationHelper.validateProperties(contextValidation, properties, instrumentUsedType.getPropertiesDefinitionDefaultLevel(), false);
+				ValidationHelper.validateProperties(contextValidation, properties, instrumentUsedType.getPropertiesDefinitionDefaultLevel(), true, true, stateCode, "IP");
 				contextValidation.removeKeyFromRootKeyName("instrumentProperties");
 			}
 		}

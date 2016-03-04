@@ -22,6 +22,7 @@ import org.mongojack.DBUpdate;
 
 import play.Logger;
 import play.Play;
+import play.api.modules.spring.Spring;
 import validation.ContextValidation;
 import workflows.sra.submission.SubmissionWorkflows;
 
@@ -45,7 +46,7 @@ import models.utils.InstanceConstants;
 import fr.cea.ig.MongoDBDAO;
 
 public class FileAcServices  {
-	final static SubmissionWorkflows submissionWorkflows = SubmissionWorkflows.instance;
+	final static SubmissionWorkflows submissionWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
 
 	public static void updateStateSubmission(ContextValidation ctxVal, Submission submission, String status) {
 		submission.state.code = status;

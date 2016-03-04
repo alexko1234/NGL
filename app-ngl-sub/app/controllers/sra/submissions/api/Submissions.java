@@ -28,6 +28,7 @@ import models.sra.submit.common.instance.UserExperimentType;
 import models.sra.submit.util.SraException;
 import models.utils.InstanceConstants;
 import play.Logger;
+import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -56,7 +57,7 @@ public class Submissions extends DocumentController<Submission>{
 	final static Form<SubmissionsCreationForm> submissionsCreationForm = form(SubmissionsCreationForm.class);
 	// declaration d'une instance submissionSearchForm qui permet de recuperer la liste des soumissions => utilisee dans list()
 	final static Form<SubmissionsSearchForm> submissionsSearchForm = form(SubmissionsSearchForm.class);
-	final SubmissionWorkflows subWorkflows = SubmissionWorkflows.instance;
+	final SubmissionWorkflows subWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
 	final static Form<State> stateForm = form(State.class);
 
 

@@ -42,6 +42,7 @@ import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
 import play.Logger;
+import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.i18n.Lang;
 import play.libs.Json;
@@ -51,6 +52,7 @@ import validation.ContextValidation;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableForm;
 import views.components.datatable.DatatableResponse;
+import workflows.container.ContSupportWorkflows;
 import workflows.container.ContWorkflows;
 import workflows.container.ContainerWorkflows;
 import workflows.run.Workflows;
@@ -64,7 +66,7 @@ public class Containers extends CommonController {
 	final static List<String> defaultKeys =  Arrays.asList("code","fromTransformationTypeCodes","sampleCodes","contents","traceInformation","projectCodes", "processCodes", "valuation", "state", "support","concentration");
     // GA 31/07/2015 suppression des parametres "lenght"
 	final static Form<State> stateForm = form(State.class);
-	
+	final static ContWorkflows workflows = Spring.getBeanOfType(ContWorkflows.class);
 	@Permission(value={"reading"})
 	public static Result get(String code){
 		Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, code);
@@ -237,7 +239,7 @@ public class Containers extends CommonController {
 		state.date = new Date();
 		state.user = getCurrentUser();
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
-		ContWorkflows.instance.setState(ctxVal, container, state);
+		workflows.setState(ctxVal, container, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(findContainer(code)));
 		}else {
@@ -259,7 +261,7 @@ public class Containers extends CommonController {
 				state.date = new Date();
 				state.user = user;
 				ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
-				ContWorkflows.instance.setState(ctxVal, container, state);
+				workflows.setState(ctxVal, container, state);
 				if (!ctxVal.hasErrors()) {
 					return new DatatableBatchResponseElement(OK,  findContainer(container.code), element.index);
 				}else {

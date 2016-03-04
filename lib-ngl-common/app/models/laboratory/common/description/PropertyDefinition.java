@@ -29,6 +29,7 @@ public class PropertyDefinition extends Model<PropertyDefinition>{
 	public String description;
 
 	public Boolean required = Boolean.FALSE;
+	public String requiredState = null;
 	public Boolean editable=Boolean.TRUE;
 	public Boolean active = Boolean.TRUE;
 	public Boolean choiceInList = Boolean.FALSE;

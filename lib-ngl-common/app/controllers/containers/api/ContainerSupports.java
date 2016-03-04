@@ -23,6 +23,7 @@ import org.mongojack.DBUpdate;
 import org.mongojack.DBQuery.Query;
 
 import play.Logger;
+import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.i18n.Lang;
 import play.libs.Json;
@@ -35,6 +36,7 @@ import views.components.datatable.DatatableResponse;
 import workflows.container.ContSupportWorkflows;
 import workflows.container.ContWorkflows;
 import workflows.container.ContainerWorkflows;
+import workflows.experiment.ExpWorkflows;
 
 import com.mongodb.BasicDBObject;
 
@@ -50,6 +52,9 @@ public class ContainerSupports extends CommonController {
 	final static Form<ContainerSupportsUpdateForm> containerSupportUpdateForm = form(ContainerSupportsUpdateForm.class);
 	final static Form<ContainerSupportBatchElement> batchElementForm = form(ContainerSupportBatchElement.class);
 	final static Form<State> stateForm = form(State.class);
+	
+	final static ContSupportWorkflows workflows = Spring.getBeanOfType(ContSupportWorkflows.class);
+	
 	@Permission(value={"reading"})
 	public static Result get(String code){
 		ContainerSupport support = getSupport(code);
@@ -159,7 +164,7 @@ public class ContainerSupports extends CommonController {
 		state.date = new Date();
 		state.user = getCurrentUser();
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
-		ContSupportWorkflows.instance.setState(ctxVal, support, state);
+		workflows.setState(ctxVal, support, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getSupport(code)));
 		}else {
@@ -187,7 +192,7 @@ public class ContainerSupports extends CommonController {
 					state.date = new Date();
 					state.user = user;
 					ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
-					ContSupportWorkflows.instance.setState(ctxVal, support, state);
+					workflows.setState(ctxVal, support, state);
 					if (!ctxVal.hasErrors()) {
 						return new DatatableBatchResponseElement(OK,  getSupport(support.code), element.index);
 					}else {

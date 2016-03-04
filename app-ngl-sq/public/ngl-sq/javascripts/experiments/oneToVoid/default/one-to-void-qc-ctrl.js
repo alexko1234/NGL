@@ -101,6 +101,15 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 			 			"extraHeaders":{0:Messages("experiments.inputs")}	 						 			
 			 		},
 			 		{
+			 			"header":Messages("containers.table.concentration"),
+			 			"property": "inputContainer.concentration.value+' '+inputContainer.concentration.unit",
+			 			"order":false,
+			 			"hide":true,
+			 			"type":"text",
+			 			"position":10,
+			 			"extraHeaders":{0:Messages("experiments.inputs")}			 						 			
+			 		},
+			 		{
 			 			"header":Messages("containers.table.size"),
 			 			"property": "inputContainer.size.value",
 			 			"order":false,

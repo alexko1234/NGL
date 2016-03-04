@@ -12,6 +12,7 @@ import models.sra.submit.sra.instance.*;
 import models.sra.submit.util.SraCodeHelper;
 import models.utils.InstanceConstants;
 import play.Logger;
+import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -39,7 +40,7 @@ public class Configurations extends DocumentController<Configuration>{
 	final static Form<ConfigurationsSearchForm> configurationsSearchForm = form(ConfigurationsSearchForm.class);
 
 	final static Form<SubmissionsSearchForm> submissionsSearchForm = form(SubmissionsSearchForm.class);
-	final ConfigurationWorkflows configWorkflows = ConfigurationWorkflows.instance;
+	final ConfigurationWorkflows configWorkflows = Spring.getBeanOfType(ConfigurationWorkflows.class);
 
 
 	public Configurations() {

@@ -112,7 +112,8 @@ angular.module('atomicTransfereServices', [])
 					    processTypeCodes:container.processTypeCodes,
 					    processCodes:container.processCodes,
 						state : container.state,
-						valuation : container.valuation
+						valuation : {valid:'UNSET'}
+						//not valuation to have the default value
 					};
 					/*
 					 return {"state":container.state

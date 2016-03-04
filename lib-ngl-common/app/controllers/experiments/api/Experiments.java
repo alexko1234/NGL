@@ -25,6 +25,7 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
 import play.Logger;
+import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.BodyParser;
@@ -49,7 +50,7 @@ public class Experiments extends DocumentController<Experiment>{
 	final Form<Experiment> experimentForm = form(Experiment.class);
 	final Form<ExperimentSearchForm> experimentSearchForm = form(ExperimentSearchForm.class);
 	final List<String> defaultKeys =  Arrays.asList("categoryCode","code","inputContainerSupportCodes","instrument","outputContainerSupportCodes","projectCodes","protocolCode","reagents","sampleCodes","state","status","traceInformation","typeCode","atomicTransfertMethods.inputContainerUseds.contents");
-	final ExpWorkflows workflows = ExpWorkflows.instance;
+	final ExpWorkflows workflows = Spring.getBeanOfType(ExpWorkflows.class);
 	
 	public static final String calculationsRules ="calculations";
 	

@@ -13,6 +13,7 @@ import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+import org.springframework.stereotype.Service;
 
 import akka.actor.ActorRef;
 import akka.actor.Props;
@@ -28,9 +29,10 @@ import validation.container.instance.ContainerValidationHelper;
 import workflows.Workflows;
 import fr.cea.ig.MongoDBDAO;
 
+@Service
 public class ContSupportWorkflows extends Workflows<ContainerSupport> {
 
-	public static ContSupportWorkflows instance = new ContSupportWorkflows();
+	//public static ContSupportWorkflows instance = new ContSupportWorkflows();
 	
 	@Override
 	public void applyPreStateRules(ContextValidation validation,

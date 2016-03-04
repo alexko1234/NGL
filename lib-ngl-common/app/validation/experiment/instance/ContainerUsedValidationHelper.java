@@ -55,9 +55,9 @@ public class ContainerUsedValidationHelper extends CommonValidationHelper {
 			contextValidation.addKeyToRootKeyName("experimentProperties");
 			List<PropertyDefinition> propertyDefinitions=exType.getPropertyDefinitionByLevel(level);
 			if("N".equals(stateCode)){
-				ValidationHelper.validateProperties(contextValidation, properties, propertyDefinitions, false, false);				
+				ValidationHelper.validateProperties(contextValidation, properties, propertyDefinitions, true, false, null, null);				
 			}else{
-				ValidationHelper.validateProperties(contextValidation, properties, propertyDefinitions, false);	
+				ValidationHelper.validateProperties(contextValidation, properties, propertyDefinitions, true, true, stateCode, "IP");	
 			}
 			contextValidation.removeKeyFromRootKeyName("experimentProperties");
 		}
@@ -72,9 +72,9 @@ public class ContainerUsedValidationHelper extends CommonValidationHelper {
 			contextValidation.addKeyToRootKeyName("instrumentProperties");
 			List<PropertyDefinition> propertyDefinitions=instType.getPropertyDefinitionByLevel(level);
 			if("N".equals(stateCode)){
-				ValidationHelper.validateProperties(contextValidation, properties, propertyDefinitions, false, false);				
+				ValidationHelper.validateProperties(contextValidation, properties, propertyDefinitions, true, false, null, null);				
 			}else{
-				ValidationHelper.validateProperties(contextValidation, properties, propertyDefinitions, false);
+				ValidationHelper.validateProperties(contextValidation, properties, propertyDefinitions, true, true, stateCode, "IP");
 				
 			}
 			contextValidation.removeKeyFromRootKeyName("instrumentProperties");

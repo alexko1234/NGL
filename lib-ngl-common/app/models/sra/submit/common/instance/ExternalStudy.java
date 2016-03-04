@@ -3,6 +3,7 @@ package models.sra.submit.common.instance;
 
 import org.apache.commons.lang3.StringUtils;
 
+import play.api.modules.spring.Spring;
 import validation.ContextValidation;
 import validation.sra.SraValidationHelper;
 import workflows.sra.submission.SubmissionWorkflows;
@@ -13,7 +14,7 @@ import models.laboratory.common.instance.State;
 
 
 public class ExternalStudy extends AbstractStudy {
-	final SubmissionWorkflows subWorkflows = SubmissionWorkflows.instance;
+	final SubmissionWorkflows subWorkflows = Spring.getBeanOfType(SubmissionWorkflows.class);
 
 	public ExternalStudy() {
 		super();
