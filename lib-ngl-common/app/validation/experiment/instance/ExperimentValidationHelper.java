@@ -58,7 +58,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 		if(exType!=null){
 			String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
 			contextValidation.addKeyToRootKeyName("experimentProperties");
-			ValidationHelper.validateProperties(contextValidation, properties, exType.getPropertiesDefinitionDefaultLevel(), true, true, stateCode, "IP");
+			ValidationHelper.validateProperties(contextValidation, properties, exType.getPropertiesDefinitionDefaultLevel(), true, true, null, null);
 			contextValidation.removeKeyFromRootKeyName("experimentProperties");
 		}
 		
@@ -138,7 +138,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			if(instrumentUsedType!=null){
 				String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
 				contextValidation.addKeyToRootKeyName("instrumentProperties");
-				ValidationHelper.validateProperties(contextValidation, properties, instrumentUsedType.getPropertiesDefinitionDefaultLevel(), true, true, stateCode, "IP");
+				ValidationHelper.validateProperties(contextValidation, properties, instrumentUsedType.getPropertiesDefinitionDefaultLevel(), true, true, null, null);
 				contextValidation.removeKeyFromRootKeyName("instrumentProperties");
 			}
 		}
