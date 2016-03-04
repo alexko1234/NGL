@@ -10,7 +10,7 @@ import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
-import ncbi.services.TaxonomyServices;
+import services.ncbi.TaxonomyServices;
 import play.Logger;
 import play.mvc.Result;
 import services.instance.sample.UpdateSampleNCBITaxonCNS;

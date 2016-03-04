@@ -5,6 +5,7 @@ import javax.xml.xpath.XPathExpressionException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import services.ncbi.TaxonomyServices;
 import utils.AbstractTests;
 
 public class TaxonomyServicesTest extends AbstractTests{

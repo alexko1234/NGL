@@ -138,7 +138,7 @@ public class XmlServicesTest extends AbstractTestsSRA {
 		XmlServices.writeAllXml(submissionCode, resultDirectory);
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.Study.class, study.code);
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, models.sra.submit.sra.instance.Configuration.class, config.code);
-		SubmissionServices.cleanDataBase(submission.code);
+		SubmissionServices.cleanDataBase(submission.code,contextValidation);
 		System.out.println("\ndisplayErrors pour validationXmlServicesSuccess :");
 		contextValidation.displayErrors(Logger.of("SRA"));		
 		Assert.assertTrue(contextValidation.errors.size()==0); 

@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import com.mongodb.MongoException;
 
 import models.utils.dao.DAOException;
-import ncbi.services.TaxonomyServices;
+import services.ncbi.TaxonomyServices;
 import rules.services.RulesException;
 import scala.concurrent.duration.FiniteDuration;
 

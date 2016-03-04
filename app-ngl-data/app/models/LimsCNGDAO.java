@@ -34,15 +34,12 @@ import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import models.utils.instance.ContainerHelper;
 import models.utils.instance.ContainerSupportHelper;
-import ncbi.services.TaxonomyServices;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
-import com.typesafe.config.ConfigFactory;
 
 import play.Logger;
 import services.instance.experiment.ExperimentImport;

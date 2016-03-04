@@ -113,7 +113,7 @@ public class SubmissionTest extends AbstractTestsSRA {
 			System.out.println("contextValidation.errors pour submissionTest :" + submissionCode);
 			contextValidation.displayErrors(Logger.of("SRA"));
 			System.out.println("Appel depuis SubmissionTest de cleanDataBase");
-			SubmissionServices.cleanDataBase(submissionCode);
+			SubmissionServices.cleanDataBase(submissionCode,contextValidation);
 			MongoDBDAO.deleteByCode(InstanceConstants.SRA_STUDY_COLL_NAME, models.sra.submit.common.instance.Study.class, study.code);
 			MongoDBDAO.deleteByCode(InstanceConstants.SRA_CONFIGURATION_COLL_NAME, models.sra.submit.sra.instance.Configuration.class, config.code);
 		} catch (IOException e) {

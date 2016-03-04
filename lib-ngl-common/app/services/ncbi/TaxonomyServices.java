@@ -1,4 +1,4 @@
-package ncbi.services;
+package services.ncbi;
 
 import java.io.StringReader;
 import java.util.concurrent.TimeoutException;
