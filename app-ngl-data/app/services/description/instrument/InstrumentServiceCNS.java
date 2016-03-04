@@ -446,7 +446,6 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		instruments.add( createInstrument("HISEQ11", "HISEQ11", "H11C", false, "/env/ig/atelier/illumina/cng/HISEQ11/", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));		
 		instruments.add( createInstrument("FLUOR", "FLUOR", "H8", true, "/env/ig/atelier/illumina/cns/FLUOR", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		instruments.add( createInstrument("PLATINE", "PLATINE", "H7", true, "/env/ig/atelier/illumina/cns/PLATINE", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		instruments.add( createInstrument("EXTHISEQ", "EXTHISEQ", "H0", true, "/env/atelier", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return instruments;
 	}
 	
@@ -454,7 +453,6 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		instruments.add(createInstrument("TORNADE", "TORNADE", "H5", true, "/env/ig/atelier/illumina/cns/TORNADE", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
 		instruments.add(createInstrument("RAFALE", "RAFALE", "H9", true, "/env/ig/atelier/illumina/cns/RAFALE", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
-		instruments.add(createInstrument("EXTHISEQ", "EXTHISEQ", "H0", true, "/env/atelier", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return instruments;
 	}
 
