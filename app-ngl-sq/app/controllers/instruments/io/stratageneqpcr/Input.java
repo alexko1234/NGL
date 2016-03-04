@@ -34,10 +34,15 @@ public class Input extends AbstractInput {
 			Double concentration1 = getNumericValue(sheet.getRow(i).getCell(10));
 			Double concentration2 = getNumericValue(sheet.getRow(i).getCell(12));
 			
-			if(ValidationHelper.required(contextValidation, sampleBarcode, "nom échantillon : ligne ="+i)
-					&& ValidationHelper.required(contextValidation, concentration1, "Moy. concentration (nM) : ligne ="+i)
-					&& ValidationHelper.required(contextValidation, concentration2, "Moy. concentration (ng/µl) : ligne ="+i)){
-				results.put(sampleBarcode.replaceAll("_\\d$",""), new Data(concentration1, concentration2));
+			if(ValidationHelper.required(contextValidation, sampleBarcode, "nom échantillon : ligne = "+i)
+					&& ValidationHelper.required(contextValidation, concentration1, "Moy. concentration (nM) : ligne = "+i)
+					&& ValidationHelper.required(contextValidation, concentration2, "Moy. concentration (ng/µl) : ligne = "+i)){
+				String key = sampleBarcode.replaceAll("_\\d$","");
+				if(!results.containsKey(key)){
+					results.put(key, new Data(concentration1, concentration2));
+				}else{
+					contextValidation.addErrors("Erreurs fichier", "Résultats en double pour "+key+" : ligne = "+i);
+				}
 			}			
 		}
 		//validation
