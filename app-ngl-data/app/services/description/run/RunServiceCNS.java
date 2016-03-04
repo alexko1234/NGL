@@ -141,6 +141,9 @@ public class RunServiceCNS extends AbstractRunService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Types processus banque","libProcessTypeCodes",LevelService.getLevels(Level.CODE.Run), String.class, false,
 				getLibProcessTypeCodeValues(), "list"));
 		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Mail Agirs envoyé ?", "sendMailAgirs", LevelService.getLevels(Level.CODE.Run), Boolean.class, false, null, null, 
+				"single", null, false, null, null));
+		
 	    return propertyDefinitions;
 	}
 	

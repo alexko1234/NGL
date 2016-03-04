@@ -82,14 +82,14 @@ public class DescriptionFactory {
 
 	
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, String requiredState,
-			List<Value> values, String propertyValueType, int displayOrder, Boolean editable, String defaultValue, String displayFormat) {
+			List<Value> values, String propertyValueType, Integer displayOrder, Boolean editable, String defaultValue, String displayFormat) {
 		return newPropertiesDefinition(name, code, levels, type, required, requiredState, values, null, null, null, propertyValueType, displayOrder, editable, defaultValue, displayFormat);
 	}
 	
 	
 	public static PropertyDefinition newPropertiesDefinition(String name, String code, List<Level> levels, Class<?> type, Boolean required, String requiredState,
 			List<Value> values, MeasureCategory measureCategory, MeasureUnit displayMeasureUnit, MeasureUnit saveMeasureUnit,
-			String propertyValueType, int displayOrder, Boolean editable,String defaultValue, String displayFormat) {
+			String propertyValueType, Integer displayOrder, Boolean editable,String defaultValue, String displayFormat) {
 		PropertyDefinition pd = new PropertyDefinition();		
 		pd.name = name;
 		pd.code = code;
