@@ -21,6 +21,10 @@
 			@formGroup{
 				<div  class="form-control" bt-select ng-model="searchService.form.typeCodes" multiple="true" placeholder="@Messages("search.placeholder.types")" bt-options="type.code as type.name for type in searchService.lists.getTypes()"></div>			
 			}
+			
+			@formGroup{
+				<div  class="form-control" bt-select ng-model="searchService.form.categoryCodes" multiple="true" placeholder="@Messages("search.placeholder.categories")" bt-options="category.code as category.name for category in searchService.lists.getRunCategories()"></div>			
+			}
 	}		
 	@columnSearchForm{		
 			@formGroup{		

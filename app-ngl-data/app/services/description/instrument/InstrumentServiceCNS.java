@@ -412,8 +412,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		instruments.add(createInstrument("BISMUTH", "BISMUTH", "G3", false, "/env/ig/atelier/illumina_BISMUTH", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
 		instruments.add(createInstrument("HELIUM", "HELIUM", "G1", false, "/env/ig/atelier/illumina_HELIUM", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
 		instruments.add(createInstrument("AZOTE", "AZOTE", "G2", false, "/env/ig/atelier/illumina_AZOTE", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
-		instruments.add(createInstrument("EXTGAIIX", "EXTGAIIX", "G0", true, "/env/atelier", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
+		instruments.add( createInstrument("EXTGAIIX", "EXTGAIIX", "G0", true, "/env/atelier", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return instruments;
 	}
 
@@ -422,7 +421,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		instruments.add(createInstrument("MELISSE", "MELISSE", "M2", true, "/env/ig/atelier/illumina/cns/MELISSE", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
 		instruments.add(createInstrument("MIMOSA", "MIMOSA", "M1", true, "/env/ig/atelier/illumina/cns/MIMOSA", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
 		instruments.add(createInstrument("MISEQ1", "MISEQ1", "M1C", false, "/env/ig/atelier/illumina/cng/MISEQ1", DescriptionFactory.getInstitutes(Constants.CODE.CNS)) );
-		instruments.add(createInstrument("EXTMISEQ", "EXTMISEQ", "M0", true, "/env/atelier", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add( createInstrument("EXTMISEQ", "EXTMISEQ", "M0", true, "/env/atelier", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		return instruments;
 	}
 	

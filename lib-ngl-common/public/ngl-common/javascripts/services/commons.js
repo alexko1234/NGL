@@ -182,6 +182,9 @@ angular.module('commonsServices', []).
     				runs : function(params, key){
     					load(jsRoutes.controllers.runs.api.Runs.list().url,params,(key)?key:'runs');    				
     				},
+    				runCategories : function(params, key){
+    					load(jsRoutes.controllers.runs.api.RunCategories.list().url,params,(key)?key:'runCategories');
+    				},
     				reportConfigs : function(params, key){
     					load(jsRoutes.controllers.reporting.api.ReportingConfigurations.list().url,params,(key)?key:'reportConfigs');    				
     				},
@@ -238,6 +241,7 @@ angular.module('commonsServices', []).
     					this.experiments(params);
     					this.experimentTypes(params);
     					this.runs(params);
+    					this.runCategories(param);
     					this.protocols(params);
     					this.instruments(params);
     					this.sraStudies(params);
@@ -297,6 +301,7 @@ angular.module('commonsServices', []).
     				return results['states'];
     				},
     			getRuns : function(){return results['runs'];},
+    			getRunCategories : function(){return results['runCategories'];},
     			getInstrumentCategories : function(){return results['instrumentCategories'];},
     			getProtocols : function(){return results['protocols'];},
     			getTypes : function(params){
