@@ -64,46 +64,48 @@ boolean.value.TRUE = Oui
 boolean.value.FALSE = Non
 
 
-search.placeholder.projects = Sélect. des projets
-search.placeholder.samples = Sélect. des échantillons
-search.placeholder.project = Sélect. un projet
-search.placeholder.sample = Sélect. un échantillon
+search.placeholder.projects = Projets
+search.placeholder.samples = Echantillons
+search.placeholder.sample = Echantillon
 search.placeholder.fromDate = Run depuis le (jj/mm/aaaa)
 search.placeholder.toDate = Run jusqu''au (jj/mm/aaaa)
-search.placeholder.states = Sélect. des états
-search.placeholder.instruments = Sélect. des instruments
-search.placeholder.types = Sélect. des types
-search.placeholder.categories = Sélect. des catégories
-search.placeholder.type = Sélect. un type
-search.placeholder.properties = Sélect. des propriétés
-search.placeholder.runtypes = Sélect. des types de run
-search.placeholder.runs = Sélect. des runs
-search.placeholder.run = Sélect. un run
-search.placeholder.valid = Sélect. une évaluation
-search.placeholder.productionValid = Sélect. une éval QC
-search.placeholder.bioinformaticValid  = Sélect. une éval bioinfo.
+search.placeholder.states = Etats
+search.placeholder.instruments = Instruments
+search.placeholder.types = Types
+search.placeholder.type = Type
+search.placeholder.valid = Evaluation
+
+search.placeholder.run = Run
+search.placeHolder.run.states = Etats runs
+search.placeHolder.run.types = Types de run
+search.placeholder.run.categories = Catégories run
+search.placeholder.run.valid = Evaluation run
+search.placeholder.readset.states = Etats readset
+search.placeholder.readset.regexCode = Regex code readset
+search.placeholder.readset.types = Types readset (techno)
+
+search.placeholder.productionValid = Eval. QC
+search.placeholder.bioinformaticValid  = Eval. bioinfo
 search.placeholder.regexCode = Regex pour le code
-search.placeholder.lanes = Sélect. des lanes
-search.placeholder.reporting.configuration = Sélect. colonnes config.
-search.placeholder.productionResolutions = Sélect. des résol. QC.
-search.placeholder.bioinformaticResolutions = Sélect. des résol. bioinfo.
-search.placeholder.runResolutions = Sélect. des résol. de run
-search.placeholder.laneResolutions = Sélect. des résol. de lane
-search.placeholder.runLaneResolutions = Sélect. des résol. de run / lane
-search.placeholder.resolutions = Sélect. des résol.
+search.placeholder.lanes = Lanes
+search.placeholder.reporting.configuration = Colonnes config.
+search.placeholder.productionResolutions = Résolution QC.
+search.placeholder.bioinformaticResolutions = Résolution bioinfo
+search.placeholder.runLaneResolutions = Résolutions run / lane
+search.placeholder.resolutions = Résolutions
 search.placeholder.valuationRunUser = Run évalué par : 
 search.placeholder.valuationReadSetUser = ReadSet évalué par : 
-search.placeholder.property = Sélect. une propriété
+search.placeholder.property = Propriété
 search.placeholder.isSentCCRT = Envoyé CCRT ?
 search.placeholder.isSentCollaborator = Envoyé Collaborateur ?
 search.placeholder.sequencingProgramTypes = Type de lectures
 search.placeholder.analyseValuationUser = Analyse évaluée par : 
-search.placeholder.stats.configuration = Sélect. une configuration.
+search.placeholder.stats.configuration = Configuration
 
 search.placeholder.fromEndRGDate = Fin RG depuis le (jj/mm/aaaa)
 search.placeholder.toEndRGDate = Fin RG jusqu''au (jj/mm/aaaa)
 
-search.placeholder.userLogin = Sélect. un login utilisateur
+search.placeholder.userLogin = Login utilisateur
 
 button.search = Rechercher
 button.reset = Réinitialiser
