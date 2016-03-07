@@ -424,6 +424,7 @@ readsets.treatments.mapping.tabs.ref = Référence
 readsets.treatments.mapping.number = Number
 readsets.treatments.mapping.totalReadsPercent = % total reads
 readsets.treatments.mapping.sampleInput = Sample input
+readsets.treatments.mapping.chimericAlignedReads = Chimeric aligned reads
 readsets.treatments.mapping.nonChimericAlignedReads = Non-chimeric aligned reads
 readsets.treatments.mapping.nonChimericAlignedReadsPercent = % Non-chimeric aligned reads
 readsets.treatments.mapping.FRAlignedReads = FR (PE) aligned reads
