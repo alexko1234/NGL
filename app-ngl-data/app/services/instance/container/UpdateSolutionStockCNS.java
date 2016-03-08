@@ -22,7 +22,7 @@ import com.mongodb.MongoException;
 
 import fr.cea.ig.MongoDBDAO;
 
-public class UpdateSolutionStockCNS extends AbstractImportDataCNS {
+public class UpdateSolutionStockCNS extends UpdateContainerImportCNS {
 
 	public UpdateSolutionStockCNS(FiniteDuration durationFromStart,
 			FiniteDuration durationFromNextIteration) {
@@ -32,34 +32,9 @@ public class UpdateSolutionStockCNS extends AbstractImportDataCNS {
 
 	@Override
 	public void runImport() throws SQLException, DAOException, MongoException, RulesException {
-		updateSolutionStock("pl_SolutionStockToNGL @updated=1",contextError,"tube","solution-stock");
+		updateContainer("pl_SolutionStockToNGL @updated=1",contextError,"tube","solution-stock");
 
 	}
 
-	public static void updateSolutionStock(String sql,ContextValidation contextError,String containerCategoryCode,String experimentTypeCode) throws SQLException {
-		List<Container> containers=	limsServices.findContainersToCreate(sql,contextError, containerCategoryCode,null,experimentTypeCode);
-		List<Container> containerUpdated=new ArrayList<Container>();
-		for(Container containerUpdate:containers){
-			Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,containerUpdate.code);
-			if(container==null){
-				contextError.addErrors("container.code", ValidationConstants.ERROR_CODE_NOTEXISTS_MSG , containerUpdate.code);
-			}
-			else if(container.state.code!=containerUpdate.state.code){
-				//Update state container
-				ContextValidation contextValidation= new ContextValidation(Constants.NGL_DATA_USER);
-				if(containerUpdate.state.code.equals("IS")&& CollectionUtils.isNotEmpty(container.processCodes)){
-				//	contextValidation.addErrors("code", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, container.code);
-					Logger.warn("La solution stock "+container.code +" ne peut pas etre mise a l etat IS car elle a des processus");
-				}else {
-					ContainerWorkflows.setContainerState(container, containerUpdate.state, contextValidation);
-				}
-				
-				if(!contextValidation.hasErrors()){
-					containerUpdated.add(container);
-				} else { contextError.errors.putAll(contextValidation.errors);
-				}
-			}
-			limsServices.updateMaterielmanipLims(containerUpdated, contextError);
-		}
-	}
+
 }
