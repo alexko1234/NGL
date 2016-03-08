@@ -75,7 +75,7 @@ search.placeholder.types = Types
 search.placeholder.type = Type
 search.placeholder.valid = Evaluation
 
-search.placeholder.run = Run
+search.placeholder.run = Code run
 search.placeHolder.run.states = Etats runs
 search.placeHolder.run.types = Types de run
 search.placeholder.run.categories = Catégories run
