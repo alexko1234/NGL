@@ -26,6 +26,9 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.project.instance.Project;
+import models.laboratory.resolutions.instance.Resolution;
+import models.laboratory.resolutions.instance.ResolutionCategory;
+import models.laboratory.resolutions.instance.ResolutionConfiguration;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.InstrumentUsed;
 import models.laboratory.run.instance.Lane;
@@ -36,6 +39,7 @@ import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mongojack.DBQuery;
@@ -85,6 +89,14 @@ public class RunValidationTest extends AbstractTestsCNG {
 			MongoDBDAO.deleteByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, "SampleCode");
 		}
 
+		ResolutionConfiguration resolutionConfig = MongoDBDAO.findByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "conf-reso-run");
+		if(resolutionConfig!=null)
+			MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "conf-reso-run");
+
+		resolutionConfig = MongoDBDAO.findByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "conf-reso-readset");
+		if(resolutionConfig!=null)
+			MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "conf-reso-run-readset");
+
 		Logger.debug("Save container support");
 		ContainerSupport cs = new ContainerSupport();
 		cs.code = "containerName";
@@ -120,6 +132,41 @@ public class RunValidationTest extends AbstractTestsCNG {
 		s.traceInformation = new TraceInformation();
 
 		MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, s);
+
+		ResolutionConfiguration resoConfig = new ResolutionConfiguration();
+		resoConfig.code="conf-reso-run";
+		resoConfig.objectTypeCode="Run";
+		resoConfig.resolutions=new ArrayList<>();
+		resoConfig.typeCodes=new ArrayList<>();
+		resoConfig.typeCodes.add("RHS2000");
+		ResolutionCategory resoCategory = new ResolutionCategory();
+		resoCategory.name="Info";
+		Resolution reso1 = new Resolution();
+		reso1.code="reso1";
+		reso1.name="reso1";
+		reso1.displayOrder=1;
+		reso1.level="default";
+		reso1.category=resoCategory;
+		resoConfig.resolutions.add(reso1);
+		Resolution reso2 = new Resolution();
+		reso2.code="reso2";
+		reso2.name="reso2";
+		reso2.displayOrder=2;
+		reso2.level="default";
+		reso2.category=resoCategory;
+		resoConfig.resolutions.add(reso2);
+		MongoDBDAO.save(InstanceConstants.RESOLUTION_COLL_NAME,resoConfig);
+
+
+		resoConfig = new ResolutionConfiguration();
+		resoConfig.code="conf-reso-readset";
+		resoConfig.objectTypeCode="ReadSet";
+		resoConfig.resolutions=new ArrayList<>();
+		resoConfig.typeCodes=new ArrayList<>();
+		resoConfig.typeCodes.add("default-readset");
+		resoConfig.resolutions.add(reso1);
+		resoConfig.resolutions.add(reso2);
+		MongoDBDAO.save(InstanceConstants.RESOLUTION_COLL_NAME,resoConfig);
 	}
 
 
@@ -148,6 +195,14 @@ public class RunValidationTest extends AbstractTestsCNG {
 		if (sample!=null) {
 			MongoDBDAO.deleteByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, "SampleCode");
 		}
+
+		ResolutionConfiguration resolutionConfig = MongoDBDAO.findByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "conf-reso-run");
+		if(resolutionConfig!=null)
+			MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "conf-reso-run");
+
+		resolutionConfig = MongoDBDAO.findByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "conf-reso-readset");
+		if(resolutionConfig!=null)
+			MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "conf-reso-readset");
 	}
 
 
@@ -175,25 +230,51 @@ public class RunValidationTest extends AbstractTestsCNG {
 		ctxVal.setCreationMode();
 		run.validate(ctxVal); 
 
-		System.out.println("------------------------------------------------------");
+		Logger.debug("------------------------------------------------------");
+
 
 		for (Map.Entry<String, List<ValidationError>> entry : ctxVal.errors.entrySet()) {
-			System.out.println(entry.getKey() + "---------------------------------->" + entry.getValue().toString());
+			Logger.debug(entry.getKey() + "---------------------------------->" + entry.getValue().toString());
 		}
 
-		System.out.println("-------------------------------------------------------");
+		Logger.debug("-------------------------------------------------------");
+
+
+		//Check validation error
+		Assert.assertTrue(ctxVal.errors.containsKey("code"));
+		Assert.assertTrue(ctxVal.errors.containsKey("typeCode"));
+		Assert.assertTrue(ctxVal.errors.containsKey("categoryCode"));
+		Assert.assertTrue(ctxVal.errors.containsKey("state"));
+		Assert.assertTrue(ctxVal.errors.containsKey("valuation"));
+		Assert.assertTrue(ctxVal.errors.containsKey("traceInformation"));
+		Assert.assertTrue(ctxVal.errors.containsKey("containerSupportCode"));
+		Assert.assertTrue(ctxVal.errors.containsKey("instrumentUsed"));
+		Assert.assertTrue(ctxVal.errors.containsKey("lanes[0].readSetCodes[0]"));
 
 		ctxVal = new ContextValidation(Constants.TEST_USER); 
 		ctxVal.setCreationMode();
 		r.validate(ctxVal); 
 
 		for (Map.Entry<String, List<ValidationError>> entry : ctxVal.errors.entrySet()) {
-			System.out.println(entry.getKey() + "---------------------------------->" + entry.getValue().toString());
+			Logger.debug(entry.getKey() + "---------------------------------->" + entry.getValue().toString());
 		}
+		Assert.assertTrue(ctxVal.errors.containsKey("code"));
+		Assert.assertTrue(ctxVal.errors.containsKey("typeCode"));
+		Assert.assertTrue(ctxVal.errors.containsKey("projectCode"));
+		Assert.assertTrue(ctxVal.errors.containsKey("sampleCode"));
+		Assert.assertTrue(ctxVal.errors.containsKey("state"));
+		Assert.assertTrue(ctxVal.errors.containsKey("valuation"));
+		Assert.assertTrue(ctxVal.errors.containsKey("traceInformation"));
+		Assert.assertTrue(ctxVal.errors.containsKey("runCode"));
+		Assert.assertTrue(ctxVal.errors.containsKey("path"));
+		Assert.assertTrue(ctxVal.errors.containsKey("files[0].extension"));
+		Assert.assertTrue(ctxVal.errors.containsKey("files[0].fullname"));
+		Assert.assertTrue(ctxVal.errors.containsKey("files[0].typeCode"));
+		Assert.assertTrue(ctxVal.errors.containsKey("files[0].usable"));
 	}
 
 
-	//@Test
+	@Test
 	public void testCreateRunValidationOK() {
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code","YANN_TEST1FORREADSET0"));
 		if(runDelete!=null){
@@ -204,18 +285,13 @@ public class RunValidationTest extends AbstractTestsCNG {
 		ctxVal.setCreationMode();
 		run.validate(ctxVal);
 
-		Container c = MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code","containerName"));
-		if (c != null) {
-			assertThat(ctxVal.errors).hasSize(0);
-		}
-		else {
-			assertThat(ctxVal.errors).hasSize(1);	 
-		}
+		assertThat(ctxVal.errors).hasSize(0);
+
 	}
 
 
 
-	//@Test
+	@Test
 	public void testCreateRunWithProjectCodeValidationOK() {
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
 		if(runDelete!=null){
@@ -242,7 +318,7 @@ public class RunValidationTest extends AbstractTestsCNG {
 		assertThat(status(result)).isEqualTo(OK);
 
 		ReadSet readset = RunMockHelper.newReadSet("rdCode");
-		readset.runCode = getFullRunWithGoodProjectCode().code;
+		readset.runCode = run.code;
 
 		ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
 		ctxVal.setCreationMode();
@@ -258,27 +334,26 @@ public class RunValidationTest extends AbstractTestsCNG {
 
 		run.traceInformation.modifyUser = "test";
 		run.traceInformation.modifyDate = new Date();
+		
+		run.projectCodes.add("ProjectCode");
+		run.sampleCodes.add("SampleCode");
 
 		ContextValidation ctxVal3 = new ContextValidation(Constants.TEST_USER);
 		ctxVal3.setUpdateMode();
 
 		run.validate(ctxVal3);
 
-		Container c = MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code","containerName"));
-		if (c != null) {
-			assertThat(ctxVal3.errors).hasSize(0);
-		}
-		else {
-			assertThat(ctxVal3.errors).hasSize(1);	 
-		}
+
+		assertThat(ctxVal3.errors).hasSize(0);
+
 
 		// the fact that we have save the readset must have be saved the projectCode and the sampleCode in the run...
-		assertThat(run.projectCodes.equals("ProjectCode"));
-		assertThat(run.sampleCodes.equals("SampleCode"));
+		assertThat(run.projectCodes.contains("ProjectCode"));
+		assertThat(run.sampleCodes.contains("SampleCode"));
 	}
 
 
-	//@Test
+	@Test
 	public void testCreateRunWithProjectCodeValidationErr() {
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
 		if(runDelete!=null){
@@ -292,10 +367,14 @@ public class RunValidationTest extends AbstractTestsCNG {
 		assertThat(ctxVal.errors.size()).isGreaterThan(1);
 
 		assertThat(ctxVal.errors.toString().contains("projectCode[0]"));
+		
+		for (Map.Entry<String, List<ValidationError>> entry : ctxVal.errors.entrySet()) {
+			Logger.debug(entry.getKey() + "---------------------------------->" + entry.getValue().toString());
+		}
 	}
 
 
-	//@Test
+	@Test
 	public void testUpdateRunValidationOK() {
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
 		if(runDelete!=null){
@@ -323,7 +402,7 @@ public class RunValidationTest extends AbstractTestsCNG {
 	}
 
 
-	//@Test
+	@Test
 	public void testUpdateRunValidationError() {
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
 		if(runDelete!=null){
@@ -352,7 +431,7 @@ public class RunValidationTest extends AbstractTestsCNG {
 	}
 
 
-	//@Test
+	@Test
 	public void testValidationErrorBadRunType() {
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
 		if(runDelete!=null){
@@ -364,12 +443,18 @@ public class RunValidationTest extends AbstractTestsCNG {
 		ctxVal.setCreationMode();
 		run.validate(ctxVal);
 
-		assertThat(ctxVal.errors).hasSize(2);
+		for (Map.Entry<String, List<ValidationError>> entry : ctxVal.errors.entrySet()) {
+			Logger.debug(entry.getKey() + "---------------------------------->" + entry.getValue().toString());
+		}
+		
+		//3 errors for state (code, reso1,reso2
+		//1 error for type code
+		assertThat(ctxVal.errors).hasSize(4);
 		assertThat(ctxVal.errors.toString()).contains("typeCode");
 	}
 
 
-	//@Test
+	@Test
 	public void testRunWith1TreatmentValidationOK() {
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
 		if(runDelete!=null){
@@ -407,7 +492,7 @@ public class RunValidationTest extends AbstractTestsCNG {
 	}
 
 
-	//@Test
+	@Test
 	public void testError1TreatmentWithoutResult() {
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
 		if(runDelete!=null){
@@ -452,7 +537,7 @@ public class RunValidationTest extends AbstractTestsCNG {
 	}
 
 
-	//@Test
+	@Test
 	public void testError2IdenticalTreatments() {
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
 		if(runDelete!=null){
@@ -514,62 +599,7 @@ public class RunValidationTest extends AbstractTestsCNG {
 	}
 
 
-
-	//@Test
-	public void testErrorUpdateBadRunType() {
-		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
-		if(runDelete!=null){
-			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
-		}	   
-		Run run = getFullRun();
-		ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
-		ctxVal.setCreationMode();
-		run.validate(ctxVal);
-
-		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
-		assertThat(status(result)).isEqualTo(OK);
-
-		run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
-
-		run.containerSupportCode = "containerName";
-		run.traceInformation.modifyDate = new Date();
-		run.traceInformation.modifyUser = "dnoisett";
-		run.typeCode = "RHS3000";
-
-		ctxVal = new ContextValidation(Constants.TEST_USER);
-		ctxVal.setUpdateMode();
-		run.validate(ctxVal);
-
-		assertThat(ctxVal.errors).hasSize(2);
-		assertThat(ctxVal.errors.toString()).contains("typeCode");
-	}
-
-
-
-
-	//@Test
-	public void testErrorFieldsRequired() {
-		//control the required field exist
-		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
-		if(runDelete!=null){
-			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
-		}	   
-		Run run = getEmptyRun();
-		ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
-		ctxVal.setCreationMode();
-		run.validate(ctxVal);
-
-		assertThat(ctxVal.errors).hasSize(8);
-		assertThat(ctxVal.errors.toString()).contains("code"); //1
-		assertThat(ctxVal.errors.toString()).contains("state.code"); //1
-		assertThat(ctxVal.errors.toString()).contains("traceInformation"); //2
-		assertThat(ctxVal.errors.toString()).contains("typeCode"); //1
-		assertThat(ctxVal.errors.toString()).contains("containerSupportCode"); //1
-		assertThat(ctxVal.errors.toString()).contains("instrumentUsed"); //2
-	}
-
-
-	//@Test
+	@Test
 	public void testCreateLanesValidationOK() {
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
 		if(runDelete!=null){
@@ -589,7 +619,7 @@ public class RunValidationTest extends AbstractTestsCNG {
 		assertThat(ctxVal.errors).hasSize(0);
 	}
 
-	//@Test
+	@Test
 	public void testCreateLaneValidationOK(){
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
 		if(runDelete!=null){
@@ -607,7 +637,7 @@ public class RunValidationTest extends AbstractTestsCNG {
 		assertThat(ctxVal.errors).hasSize(0);
 	}
 
-	//@Test
+	@Test
 	public void testErrorLanesValidation() {
 		// run with 2 identical lanes
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
@@ -630,122 +660,8 @@ public class RunValidationTest extends AbstractTestsCNG {
 		assertThat(ctxVal.errors.toString()).contains(ValidationConstants.ERROR_NOTUNIQUE_MSG); 
 	}
 
-	//@Test
-	public void testUpdateLaneValidationOK() { 
-		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
-		if(runDelete!=null){
-			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
-		}
-		ReadSet readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code","ReadSetBasicWithRun"));
-		if(readSetDelete!=null){
-			MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
-		}
-		Sample sample = MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code","SampleCode"));
-		if (sample!= null) {
-			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,sample._id);
-		}
-		Project project = MongoDBDAO.findOne(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code","ProjectCode"));
-		if (project!= null) {
-			MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, Project.class, project._id);
-		}
-
-		sample = RunMockHelper.newSample("SampleCode");
-		project = RunMockHelper.newProject("ProjectCode");
-
-		MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, sample);
-		MongoDBDAO.save(InstanceConstants.PROJECT_COLL_NAME, project);
-
-		Run run = getFullRun();
-		run.dispatch = true; // For the archive test
-
-		Lane lane = RunMockHelper.newLane(1);
-		Lane lane2 = RunMockHelper.newLane(2);
-		List<Lane> lanes = new ArrayList<Lane>();
-
-		ReadSet readSet = RunMockHelper.newReadSet("ReadSetBasicWithRun");
-		readSet.runCode = run.code;
-		readSet.laneNumber = 1;
-		readSet.dispatch = false;
-
-		List<String> r = new ArrayList<String>();
-		lane.readSetCodes = r;
-		lane.valuation = RunMockHelper.getValuation(TBoolean.TRUE);
-		lanes.add(lane);
-		lanes.add(lane2);
-		run.lanes = lanes;
-
-		ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER); 
-		ctxVal.putObject("run", run);
-		ctxVal.setCreationMode();
-		LaneValidationHelper.validationLanes(run.lanes, ctxVal);
-		assertThat(ctxVal.errors).hasSize(0);
-
-		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
-		assertThat(status(result)).isEqualTo(OK);
-
-		if (lane.valuation.valid.equals(TBoolean.TRUE)) {
-			lane.valuation.valid = TBoolean.TRUE;
-		} else {
-			lane.valuation.valid = TBoolean.FALSE;
-		}
-
-		result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readSet)));
-		assertThat(status(result)).isEqualTo(OK);
-		//lane.state = getState("F-RG");
-		ctxVal = new ContextValidation(Constants.TEST_USER); 
-		ctxVal.putObject("run", run);
-		ctxVal.setUpdateMode();
-		LaneValidationHelper.validationLanes(run.lanes, ctxVal);
-		assertThat(ctxVal.errors).hasSize(0);
-	}
-
-
-
-	//@Test
-	public void testUpdateLaneValidationErrorBadLaneNumber() {
-
-		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
-		if(runDelete!=null){
-			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
-		}
-
-		Run run = getFullRun();
-		run.dispatch = true; // For the archive test
-		Lane lane = RunMockHelper.newLane(1);
-		Lane lane2 = RunMockHelper.newLane(2);
-		List<Lane> lanes = new ArrayList<Lane>();
-
-		lanes.add(lane);
-		lanes.add(lane2);
-		run.lanes = lanes;
-
-		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
-		assertThat(status(result)).isEqualTo(OK);
-
-		Lane lane3 = RunMockHelper.newLane(2);
-		lanes.add(lane3); // adding again a lane with number 2
-		run.lanes = lanes;
-
-		ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER); 
-		ctxVal.putObject("run", run);
-		ctxVal.setCreationMode();
-		lane3.validate(ctxVal);
-
-		assertThat(ctxVal.errors).hasSize(1);
-		assertThat(ctxVal.errors.toString()).contains(ValidationConstants.ERROR_NOTUNIQUE_MSG); 
-
-		lane3.number = 3;
-		ctxVal = new ContextValidation(Constants.TEST_USER); 
-		ctxVal.putObject("run", run);
-		ctxVal.setUpdateMode();
-		lane3.validate(ctxVal);
-
-		assertThat(ctxVal.errors).hasSize(1);
-		assertThat(ctxVal.errors.toString()).contains("number"); 
-	}	
-
-
-	//@Test
+	
+	@Test
 	public void testReadSetValidationOK(){		    	   
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
 		if(runDelete!=null){
@@ -816,7 +732,7 @@ public class RunValidationTest extends AbstractTestsCNG {
 	}
 
 
-	//@Test
+	@Test
 	public void testReadSetCodeValidationError(){
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
 		if(runDelete!=null){
@@ -890,7 +806,7 @@ public class RunValidationTest extends AbstractTestsCNG {
 	}
 
 
-	//@Test
+	@Test
 	public void testErrorReadSetWithLaneNumber20(){
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
 		if(runDelete!=null){
@@ -955,66 +871,8 @@ public class RunValidationTest extends AbstractTestsCNG {
 		assertThat(ctxVal.errors.toString()).contains("runCode");
 	}
 
-	//@Test
-	public void testErrorDuplicateReadSet() {	 
-		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
-		if (runDelete!=null) {
-			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
-		}	 
-		ReadSet readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code",getNewReadSet().code));
-		if (readSetDelete!=null) {
-			MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
-		}	
-		Sample sample = MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code","SampleCode"));
-		if (sample!= null) {
-			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,sample._id);
-		}
-		Project project = MongoDBDAO.findOne(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code","ProjectCode"));
-		if (project!= null) {
-			MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, Project.class, project._id);
-		}
 
-		sample = RunMockHelper.newSample("SampleCode");
-		project = RunMockHelper.newProject("ProjectCode");
-
-		MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, sample);
-		MongoDBDAO.save(InstanceConstants.PROJECT_COLL_NAME, project);
-
-		Run run = getFullRun();
-		ArrayList<Lane> l = new ArrayList<Lane>();
-		Lane lane = getLane();
-		//lane.state = getState("F");
-		ReadSet r = getNewReadSet();
-		r.runCode = run.code;
-		r.laneNumber = 1;
-		ArrayList<String> a = new ArrayList<String>();
-		//a.add(r.code);			 
-		lane.readSetCodes = a;
-		l.add(lane);
-		run.lanes = l;
-
-		ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
-		ctxVal.setCreationMode();
-		run.validate(ctxVal);
-		assertThat(ctxVal.errors).hasSize(0);
-
-		ctxVal.putObject("run", run);
-		ctxVal.setCreationMode();
-		run.lanes.get(0).validate(ctxVal);
-		assertThat(ctxVal.errors).hasSize(0);
-
-		// the run must be saved to validate one of his readset 
-		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
-		assertThat(status(result)).isEqualTo(OK);
-
-		ctxVal = new ContextValidation(Constants.TEST_USER);
-		ctxVal.setCreationMode();
-		r.validate(ctxVal);
-		assertThat(ctxVal.errors).hasSize(0);			 
-	}
-
-
-	//@Test
+	@Test
 	public void testFileValidationOK(){
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET21"));
 		if(runDelete!=null){
@@ -1024,20 +882,6 @@ public class RunValidationTest extends AbstractTestsCNG {
 		if(readsetDelete!=null){
 			MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readsetDelete._id);
 		}
-		Sample sample = MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code","SampleCode"));
-		if (sample!= null) {
-			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,sample._id);
-		}
-		Project project = MongoDBDAO.findOne(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code","ProjectCode"));
-		if (project!= null) {
-			MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, Project.class, project._id);
-		}
-
-		sample = RunMockHelper.newSample("SampleCode");
-		project = RunMockHelper.newProject("ProjectCode");
-
-		MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, sample);
-		MongoDBDAO.save(InstanceConstants.PROJECT_COLL_NAME, project);
 
 		Run run = RunMockHelper.newRun("YANN_TEST1FORREADSET21");
 		run.dispatch = true; // For the archive test
@@ -1069,7 +913,7 @@ public class RunValidationTest extends AbstractTestsCNG {
 	}
 
 
-	//@Test
+	@Test
 	public void testFileValidationError(){
 		// add two identical files to the same readset
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
@@ -1080,20 +924,7 @@ public class RunValidationTest extends AbstractTestsCNG {
 		if(readsetDelete!=null){
 			MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readsetDelete._id);
 		}
-		Sample sample = MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.is("code","SampleCode"));
-		if (sample!= null) {
-			MongoDBDAO.delete(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,sample._id);
-		}
-		Project project = MongoDBDAO.findOne(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code","ProjectCode"));
-		if (project!= null) {
-			MongoDBDAO.delete(InstanceConstants.PROJECT_COLL_NAME, Project.class, project._id);
-		}
-
-		sample = RunMockHelper.newSample("SampleCode");
-		project = RunMockHelper.newProject("ProjectCode");
-
-		MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, sample);
-		MongoDBDAO.save(InstanceConstants.PROJECT_COLL_NAME, project);
+		
 
 		Run run = getFullRun();
 		run.dispatch = true; // For the archive test
@@ -1135,30 +966,6 @@ public class RunValidationTest extends AbstractTestsCNG {
 		assertThat(ctxVal.errors).hasSize(1);
 		assertThat(ctxVal.errors.toString()).contains("files[1].fullname");
 	}
-
-
-	//@Test
-	public void validateValidationForRun() {
-		Run run = new Run();
-		run.code = "runForValidateValidation";
-		run.typeCode = "RHS2000";
-
-		Valuation v = new Valuation();
-		//v.criteriaCode = "criteria-low";
-		v.date = new Date();
-		v.resolutionCodes = null;
-		v.user = "dnoisett";
-
-		ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
-		ctxVal.putObject("typeCode", run.typeCode ); 
-		ctxVal.setCreationMode();
-
-		v.validate(ctxVal);
-
-		assertThat(ctxVal.errors).hasSize(0);
-	}
-
-
 
 	private Lane getLane() {	
 		Lane lane = new Lane();
@@ -1207,19 +1014,15 @@ public class RunValidationTest extends AbstractTestsCNG {
 
 	private ReadSet getEmptyReadSet() {
 		ReadSet readSet = new ReadSet();
-		readSet.code = "X";
+		readSet.code = "";
 		readSet.path = "";
-		readSet.projectCode = "ProjectCode"; 
-		readSet.sampleCode = "SampleCode";
-		readSet.state = getState("F-QC");
-		readSet.typeCode = "default-readset";
-		Valuation v = new Valuation();
-		readSet.bioinformaticValuation = v;
-		readSet.productionValuation = v;
-		TraceInformation ti = new TraceInformation();
-		ti.createUser = "dnoisett";
-		ti.creationDate = new Date(); 		
-		readSet.traceInformation = new TraceInformation(); 
+		readSet.projectCode = ""; 
+		readSet.sampleCode = "";
+		readSet.state = null;
+		readSet.typeCode = "";
+		readSet.bioinformaticValuation = null;
+		readSet.productionValuation = null;
+		readSet.traceInformation = null; 
 		return readSet;
 	}
 
@@ -1243,23 +1046,25 @@ public class RunValidationTest extends AbstractTestsCNG {
 		run.instrumentUsed.code = "HISEQ2";
 		run.instrumentUsed.typeCode = "HISEQ2000";
 		run.typeCode = "RHS2000";
-		List<String> lResos = new ArrayList<String>();
+		run.categoryCode="illumina";
+		Set<String> lResos = new HashSet<String>();
 		lResos.add("reso1");
 		lResos.add("reso2");
 		State state = new State();
 		run.state = state;
 		run.state.code = "F";
 		run.state.user = "tests";
-		run.state.date = new Date();			
+		run.state.date = new Date();
+		run.state.resolutionCodes=lResos;
 		Valuation v = new Valuation();
 		run.valuation = v;
 		run.traceInformation = new TraceInformation();
 		run.traceInformation.setTraceInformation("test");
-		Map<String, Treatment> lT = new HashMap<String, Treatment>();
-		Treatment ngsrg = new Treatment(); 
-		lT.put("ngsrg", ngsrg);
-		ngsrg.categoryCode = "ngsrg";
-		ngsrg.typeCode = "ngsrg-illumina";
+		//Map<String, Treatment> lT = new HashMap<String, Treatment>();
+		//Treatment ngsrg = new Treatment(); 
+		//lT.put("ngsrg", ngsrg);
+		//ngsrg.categoryCode = "ngsrg";
+		//ngsrg.typeCode = "ngsrg-illumina";
 		run.typeCode = "RHS2000";
 		run.valuation = new Valuation();
 		run.valuation.user = "test";
@@ -1267,48 +1072,6 @@ public class RunValidationTest extends AbstractTestsCNG {
 		run.valuation.date = new Date(); 
 		return run;
 	}
-
-
-	private Run getFullRunWithGoodProjectCode() {
-		Run run = new Run();
-		run.code = "YANN_TEST1FORREADSET0";
-		run.containerSupportCode = "containerName";
-		run.dispatch = true;
-		run.instrumentUsed = new InstrumentUsed();
-		run.instrumentUsed.code = "HISEQ2";
-		run.instrumentUsed.typeCode = "HISEQ2000";
-		run.typeCode = "RHS2000";
-		List<String> lResos = new ArrayList<String>();
-		lResos.add("reso1");
-		lResos.add("reso2");
-		State state = new State();
-		run.state = state;
-		run.state.code = "F";
-		run.state.user = "tests";
-		run.state.date = new Date();		
-		Valuation v = new Valuation();
-		run.valuation = v;
-		run.traceInformation = new TraceInformation();
-		run.traceInformation.setTraceInformation("test");
-		Map<String, Treatment> lT = new HashMap<String, Treatment>();
-		Treatment ngsrg = new Treatment(); 
-		lT.put("ngsrg", ngsrg);
-		ngsrg.categoryCode = "ngsrg";
-		ngsrg.typeCode = "ngsrg-illumina";
-		run.typeCode = "RHS2000";
-		run.valuation = new Valuation();
-		run.valuation.user = "test";
-		run.valuation.valid = TBoolean.TRUE;
-		run.valuation.date = new Date(); 
-		Set<String> t = new TreeSet<String>();
-		t.add("ProjectCode");
-		run.projectCodes = t;
-		t = new TreeSet<String>();
-		t.add("SampleCode");
-		run.sampleCodes = t;				
-		return run;
-	}
-
 
 	private Run getFullRunWithBadProjectCode() {
 		Run run = new Run();
@@ -1319,23 +1082,25 @@ public class RunValidationTest extends AbstractTestsCNG {
 		run.instrumentUsed.code = "HISEQ2";
 		run.instrumentUsed.typeCode = "HISEQ2000";
 		run.typeCode = "RHS2000";
-		List<String> lResos = new ArrayList<String>();
+		run.categoryCode="illumina";
+		Set<String> lResos = new HashSet<String>();
 		lResos.add("reso1");
 		lResos.add("reso2");
 		State state = new State();
 		run.state = state;
 		run.state.code = "F";
 		run.state.user = "tests";
-		run.state.date = new Date();		
+		run.state.date = new Date();	
+		run.state.resolutionCodes=lResos;
 		Valuation v = new Valuation();
 		run.valuation = v;
 		run.traceInformation = new TraceInformation();
 		run.traceInformation.setTraceInformation("test");
-		Map<String, Treatment> lT = new HashMap<String, Treatment>();
-		Treatment ngsrg = new Treatment(); 
-		lT.put("ngsrg", ngsrg);
-		ngsrg.categoryCode = "ngsrg";
-		ngsrg.typeCode = "ngsrg-illumina";
+		//Map<String, Treatment> lT = new HashMap<String, Treatment>();
+		//Treatment ngsrg = new Treatment(); 
+		//lT.put("ngsrg", ngsrg);
+		//ngsrg.categoryCode = "ngsrg";
+		//ngsrg.typeCode = "ngsrg-illumina";
 		run.typeCode = "RHS2000";
 		run.valuation = new Valuation();
 		run.valuation.user = "test";
@@ -1353,26 +1118,11 @@ public class RunValidationTest extends AbstractTestsCNG {
 		run.code = "";
 		run.containerSupportCode = "";
 		run.dispatch = null;
-		run.instrumentUsed = new InstrumentUsed();
-		run.instrumentUsed.code = "";
-		run.instrumentUsed.typeCode = "";
+		run.instrumentUsed = null;
 		run.typeCode = "";
-		List<String> lResos = new ArrayList<String>();
-		State state = new State();
-		run.state = state;
-		run.state.code = "";
-		run.state.user = "tests";
-		run.state.date = new Date();
-		Valuation v = new Valuation();
-		run.valuation = v;
-		run.traceInformation = new TraceInformation();
-		Map<String, Treatment> lT = new HashMap<String, Treatment>();
-		Treatment ngsrg = new Treatment(); 
-		lT.put("ngsrg", ngsrg);
-		ngsrg.categoryCode = "";
-		ngsrg.typeCode = "";
-		run.typeCode = "";
-		run.valuation = new Valuation();
+		run.valuation = null;
+		run.state = null;
+		run.traceInformation = null;
 		return run;
 	}
 }

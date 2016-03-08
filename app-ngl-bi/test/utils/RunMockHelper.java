@@ -149,14 +149,15 @@ public class RunMockHelper {
 		
 		
 		r.state = getState("F-QC");
-				
+		Set<String> lResos = new HashSet<String>();
+		lResos.add("reso1");
+		lResos.add("reso2");
+		r.state.resolutionCodes=lResos;
 		TraceInformation ti = new TraceInformation(); 
 		ti.setTraceInformation("dnoisett");
 		r.traceInformation = ti; 
 		
-		List<String> lResos = new ArrayList<String>();
-		lResos.add("reso1");
-		lResos.add("reso2");
+		
 		
 		r.typeCode = "default-readset"; 
 		
