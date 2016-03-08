@@ -107,7 +107,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "35,36,60"));
 		
 		//specific CNS
-		l.add(DescriptionFactory.newTreatmentType("Taxonomy","taxonomy", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "taxonomy,taxonomyKraken", 
+		l.add(DescriptionFactory.newTreatmentType("Taxonomy","taxonomy", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "taxonomy", 
 				getTaxonomyPropertyDefinitions(), 
 				getTreatmentTypeContexts("read1"), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS), "70,71"));
@@ -499,6 +499,8 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 	
 	public static List<PropertyDefinition> getTaxonomyPropertyDefinitions() throws DAOException{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Logiciel","software",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, false,
+				DescriptionFactory.newValues("Kraken"),"single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Sample input","sampleInput",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), Long.class, true, "single"));
 		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Organisme","organism",LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Read1), String.class, false, "single"));
