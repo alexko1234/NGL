@@ -72,6 +72,11 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 			//verifier que c'est une position definie et valide 
 			if (ValidationHelper.required(contextValidation, platePosition, "plate Position; line "+(i+1)) &&
 					InputHelper.isPlatePosition(contextValidation,platePosition, 96, (i+1))){
+				//verifier si la position n'est pas deja connue
+				if (results.containsKey(platePosition)) {
+					contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.position.duplicate", platePosition, (i+1));
+				}
+						
 				//verifier l'index 
 				Double indexNum = getNumericValue(sheet.getRow(i).getCell(1));
 				// attention une plaque peut etre partielle donc toutes les positions ne sont pas indexees
@@ -89,7 +94,7 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 		}
 		
 		//validation: verifier que tous les puits recoivent un index...
-		if(!contextValidation.hasErrors()){
+		if (!contextValidation.hasErrors()){
 			experiment.atomicTransfertMethods
 				.stream()
 				.map(atm -> atm.inputContainerUseds.get(0))
@@ -127,8 +132,9 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 		return experiment;
     }
 	
-	// A METTRE AILLEURS....
-	//extraire la partie finale?? ou utiliser container.line + container.column ?
+
+	//extraire la partie finale du code de l'inputContainer ( dans ce cas pourrait aller dans dans InputHelper???
+	//utiliser container.line + container.column serait plus propre ???
 	public String getCodePosition(String icuCode) {
 		return icuCode.substring(icuCode.indexOf("_")+1);
 	}

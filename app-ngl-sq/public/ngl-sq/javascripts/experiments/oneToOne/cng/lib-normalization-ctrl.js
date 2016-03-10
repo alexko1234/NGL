@@ -3,14 +3,8 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 // FDS 15/02/2016 -- JIRA NGL-894 : lib-normalization experiment
 // probleme comment traiter des tubes ou des plaques ???
 	
-	
-	
-	// actuellement le nom du header est en dur dans ATM (Inputs ou Outputs )
-	// donc utiliser ici message va introduire des erreurs... laisser aussi les valeurs en dur pour l'instant
-	var inputExtraHeaders="Inputs";
-	var outputExtraHeaders="Outputs";
-	//var inputExtraHeaders=Messages("containers.table.support.in.code");
-	//var outputExtraHeaders=Messages("containers.table.support.out.code");
+	var inputExtraHeaders=Messages("experiments.inputs");
+	var outputExtraHeaders=Messages("experiments.outputs");	
 	
 	var datatableConfig = {
 			name:"FDR_Plaque", //peut servir pour le nom de fichier si export demandé
@@ -25,97 +19,100 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":1,
-			        	 "extraHeaders":{0:"Inputs"}
+			        	 "extraHeaders":{0: inputExtraHeaders }
 			         },	
 			         */				
-			         {
+			         { // barcode plaque entree == input support Container code
 			        	 "header":Messages("containers.table.support.name"),
-			        	 "property":"inputContainerUsed.locationOnContainerSupport.code",
+			        	 "property":"inputContainer.support.code",
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":1,
-			        	 "extraHeaders":{0:inputExtraHeaders}
+			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },
-			         // Line ( si plaque )
-			         {
+			         { // Ligne
 			        	 "header":Messages("containers.table.support.line"),
-			        	 "property":"inputContainerUsed.locationOnContainerSupport.line",
+			        	 "property":"inputContainer.support.line",
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":2,
-			        	 "extraHeaders":{0:inputExtraHeaders}
+			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },
-			         // column ( si plaque )
-			         // astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel forcer a numerique.=> type:number,   property:  *1
-			         {
+			         { // colonne
 			        	 "header":Messages("containers.table.support.column"),
-			        	 "property":"inputContainerUsed.locationOnContainerSupport.column*1",
+				         // astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel forcer a numerique.=> type:number,   property:  *1
+			        	 "property":"inputContainer.support.column*1",
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":3,
-			        	 "extraHeaders":{0:inputExtraHeaders}
+			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },	
-			         // Project(s)             si rajoute Used ?? marche encore
-			         {
+			         { // Projet(s)
 			        	"header":Messages("containers.table.projectCodes"),
-			 			"property": "inputContainerUsed.projectCodes",
+			 			"property":"inputContainer.projectCodes",
 			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
 			 			"position":4,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:inputExtraHeaders}
+			        	 "extraHeaders":{0: inputExtraHeaders}
 				     },
-				     //Echantillon(s)    si rajoute Used ???? marche encore
-				     {
+				     { // Echantillon(s) 
 			        	"header":Messages("containers.table.sampleCodes"),
-			 			"property": "inputContainerUsed.sampleCodes",
+			 			"property": "inputContainer.sampleCodes",
 			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
 			 			"position":5,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	"extraHeaders":{0:inputExtraHeaders}
+			        	"extraHeaders":{0: inputExtraHeaders}
 				     },
-				     //Aliquot    essayer avec Used  ??? toujours pas
-				     {
+				     { //Aliquot ( ! n'existe pas pour les plaques de samples...)
 				        "header":Messages("containers.table.codeAliquot"),
-				 		"property": "inputContainerUsed.sampleAliquoteCodes", /// PBBBBBBBBBB
+				 		"property": "inputContainer.sampleAliquoteCodes", 
 				 		"order":true,
 				 		"hide":true,
 				 		"type":"text",
 				 		"position":6,
 				 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-				        "extraHeaders":{0:inputExtraHeaders}
+				        "extraHeaders":{0: inputExtraHeaders}
 					 },
-				     //Tag        Used ?????? toujours pas    avec value ???? non plus...
-					 {
+					 { //Tag
 					    "header":Messages("containers.table.tags"),
-					 	"property": "inputContainerUsed.tags.value", /// PBBBBBBBBBBBB
+			 			"property": "inputContainer.contents",
+			 			"filter": "getArray:'properties.tag.value'",
 					 	"order":true,
 					 	"hide":true,
 					 	"type":"text",
 					 	"position":6,
-					 	"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+					 	"render":"<div list-resize='cellValue | unique' list-resize-min-size='3'>",
 					    "extraHeaders":{0:inputExtraHeaders}
 					 },
-				     //Concentration  Used ?????? OUIIII
-					 {
+					 { //Concentration
 			        	 "header":Messages("containers.table.concentration") + " (ng/µL)", 
-			        	 "property":"inputContainerUsed.volume.value",
+			        	 "property":"inputContainer.concentration.value",  /// rien sans Used ????
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":13,
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
+			         { //Volume   a afficher ou pas ???
+			        	 "header":Messages("containers.table.volume") + " (µL)", 
+			        	 "property":"inputContainer.volume.value",  /// rien sans Used ????
+			        	 "order":true,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":14,
+			        	 "extraHeaders":{0:inputExtraHeaders}
+			         },
 			         
-			         // colonnes specifiques instrument viennent ici
 			         
-			         // Etat input Container
-			         {
+			         // colonnes specifiques instrument viennent ici.. Volume engagé
+			         
+			         { // Etat input Container
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"inputContainer.state.code",
 			        	 "order":true,
@@ -128,19 +125,27 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 			         
 			         //------ OUTPUT containers section ------
 
-		            /* ne pas aficher les containercodes ????? 
+		            /* ne pas aficher les containercodes sauf pour DEBUG 
 			         {
-			        	 "header":Messages("containers.table.code"),
+			        	 "header":"[["+Messages("containers.table.code")+"]]",
 			        	 "property":"outputContainerUsed.code",
 			        	 "order":true,
 						 "hide":true,
 						 "edit":false,
 			        	 "type":"text",
 			        	 "position":100,
-			        	 "extraHeaders":{0:"Outputs"}
+			        	 "extraHeaders":{0:"outputExtraHeaders"}
 			         },*/
-			         // Line
-			         {
+			         { // barcode plaque sortie == support Container used code... faut Used 
+			        	 "header":Messages("containers.table.support.name"),
+			        	 "property":"outputContainerUsed.locationOnContainerSupport.code", 
+			        	 "order":true,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":100,
+			        	 "extraHeaders":{0: outputExtraHeaders}
+			         },
+			         { // Line
 			        	 "header":Messages("containers.table.support.line"),
 			        	 "property":"outputContainerUsed.locationOnContainerSupport.line",
 			        	 "order":true,
@@ -149,20 +154,19 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 			        	 "position":110,
 			        	 "extraHeaders":{0:outputExtraHeaders}
 			         },
-			         // column
-			         {
+			         { // column
 			        	 "header":Messages("containers.table.support.column"),
-			        	 "property":"outputContainerUsed.locationOnContainerSupport.column",
+			        	 // astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel forcer a numerique.=> type:number,   property:  *1
+			        	 "property":"outputContainerUsed.locationOnContainerSupport.column*1",
 			        	 "order":true,
 						 "hide":true,
-			        	 "type":"text",
+			        	 "type":"number",
 			        	 "position":111,
 			        	 "extraHeaders":{0:outputExtraHeaders}
 			         },	
-			         // Concentration et volume mesurees sont des proprietes de l'experiment
-			         // Volume
-			         // Etat outpout container      !! containers.table.stateCode c'est pour le support
-			         {
+			         // Concentration => propriete de l'experiment
+			         // Volume mesuree =>  propriete de l'experiment
+			         { // Etat outpout container      !! containers.table.stateCode c'est pour le support
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"outputContainer.state.code | codes:'state'",
 			        	 "order":true,
@@ -181,7 +185,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 				active:false
 			},
 			order:{
-				mode:'local', //or 
+				mode:'local',
 				active:true,
 				by:'inputContainer.code'
 			},
@@ -197,7 +201,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 	        	showButton:false,
 	        	mode:'local',
 	        	callback:function(datatable){
-					copyPlateCodeAndStorageToDT(datatable);
+	        		copyContainerSupportCodeAndStorageCodeToDT(datatable);
 	        	}
 			},
 			hide:{
@@ -223,7 +227,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 				number:2,
 				dynamic:true,
 			}
-	};
+	}; // fin struct datatableConfig
 
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save");
@@ -232,40 +236,29 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
-	var copyPlateCodeAndStorageToDT = function(datatable){
+	var copyContainerSupportCodeAndStorageCodeToDT = function(datatable){
 
 		var dataMain = datatable.getData();
 		
-		/* pas necessaire de verifier le type outContainerSupportCategoryCode ???
-		var cscCode = $parse('experiment.instrument.outContainerSupportCategoryCode')($scope);
-		if(cscCode !== undefined){
-			wellsCount = Number(cscCode.split("-",2)[0]);
-		    console.log("TESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSST "+ wellsCount);
-			//alert ("wellsCount ="+wellsCount);
-			}
-		}
-		*/
-		
-		//-1- copy plate code to output code
-		var codePlate = $parse("instrumentProperties.outputContainerSupportCode.value")($scope.experiment);
-		console.log("setting outputContainerUsed code from: "+ codePlate);
-		if(null != codePlate && undefined != codePlate){
-			for(var i = 0; i < dataMain.length; i++){
-				var atm = dataMain[i].atomicTransfertMethod;
-				var containerCode = codePlate+"_"+atm.line + atm.column;
+		var outputContainerSupportCode = $scope.outputContainerSupport.code;
+		var outputContainerSupportStorageCode = $scope.outputContainerSupport.storageCode;
 
-				$parse('outputContainerUsed.code').assign(dataMain[i],containerCode);
-				$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[i],codePlate);
+		if ( null != outputContainerSupportCode && undefined != outputContainerSupportCode){
+			for(var i = 0; i < dataMain.length; i++){
+				
+				var atm = dataMain[i].atomicTransfertMethod;
+				var newContainerCode = outputContainerSupportCode+"_"+atm.line + atm.column;
+
+				$parse('outputContainerUsed.code').assign(dataMain[i],newContainerCode);
+				$parse('outputContainerUsed.locationOnContainerSupport.code').assign(dataMain[i],outputContainerSupportCode);
+				
+				if( null != outputContainerSupportStorageCode && undefined != outputContainerSupportStorageCode){
+				    $parse('outputContainerUsed.locationOnContainerSupport.storageCode').assign(dataMain[i],outputContainerSupportStorageCode);
+				}
 			}
-			
-			//-2- TODO copy storage to containerSupport...?????
-			/*
-			var storage = $parse("instrumentProperties.outputStorage.value")($scope.experiment);
-			alert ("TODO : setting containerSupport storage to : "+ storage);
-			*/	
-			
-			datatable.setData(dataMain);
 		}
+		
+	    datatable.setData(dataMain);
 	}
 	
 	$scope.$on('refresh', function(e) {
@@ -320,5 +313,17 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 	$scope.atmService = atmService;
+	
+	$scope.outputContainerSupport = { code : null , storageCode : null};	
+	
+	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) { 
+		 $scope.outputContainerSupport.code=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.code;
+	}
+	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) {
+		$scope.outputContainerSupport.storageCode=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.storageCode;
+	}
+	
+	console.log("previous code: "+ $scope.outputContainerSupport.code);
+	console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
 	
 }]);

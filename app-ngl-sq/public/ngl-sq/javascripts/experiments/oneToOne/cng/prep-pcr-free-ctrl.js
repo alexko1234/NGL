@@ -67,8 +67,9 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			 			"type":"text",
 			 			"position":12,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0: inputExtraHeaders}
+			        	"extraHeaders":{0: inputExtraHeaders}
 				     },
+				     // 09/03/2016 et pas l'aliquoteCode ??? .... (!n'existe pas pour les plaques de samples)
 					 { // Concentration
 			        	 "header":Messages("containers.table.concentration") + " (ng/µL)",
 			        	 "property":"inputContainer.concentration.value",
@@ -102,7 +103,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			         
 			         //------ OUTPUT containers section ------
 
-		            /* ne pas aficher les containercodes  sauf pour DEBUG.
+		            /* ne pas aficher les containercodes  sauf pour DEBUG
 			         {
 			        	 "header":Messages("containers.table.code")",
 			        	 "property":"outputContainer.code",
@@ -110,21 +111,20 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 						 "hide":true,
 						 "edit":false,
 			        	 "type":"text",
-			        	 "position":100,
+			        	 "position":99,
 			        	 "extraHeaders":{0: outputExtraHeaders}
 			         },*/
-			          { //  barcode plaque sortie == support Container code... faut Used sinon a l'etat nouveau on a rien...!!!
+			         { //  barcode plaque sortie == support Container used code... faut Used 
 			        	 "header":Messages("containers.table.support.name"),
 			        	 "property":"outputContainerUsed.locationOnContainerSupport.code", 
-			        	  //"property":"outputContainer.support.code",
+
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":100,
 			        	 "extraHeaders":{0: outputExtraHeaders}
 			         },  
-			         { //  Ligne... faut Used sinon a l'etat nouveau on a rien...!!!
+			         { //  Ligne... faut Used 
 			        	 "header":Messages("containers.table.support.line"),
-			        	  //"property":"outputContainer.support.line",
 			        	 "property":"outputContainerUsed.locationOnContainerSupport.line", 
 			        	 "order":true,
 						 "hide":true,
@@ -132,17 +132,18 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			        	 "position":110,
 			        	 "extraHeaders":{0: outputExtraHeaders}
 			         },     
-			         { // colonne... faut Used sinon a l'etat nouveau on a rien...!!!
+			         { // colonne... faut Used 
 			        	 "header":Messages("containers.table.support.column"),
-			        	 //"property":"outputContainer.support.column",
-			        	 "property":"outputContainerUsed.locationOnContainerSupport.column", 
+			        	 // astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel forcer a numerique.=> type:number,   property:  *1
+			        	 "property":"outputContainerUsed.locationOnContainerSupport.column*1", 
 			        	 "order":true,
 						 "hide":true,
-			        	 "type":"text",
-			        	 "position":111,
+			        	 "type":"number",
+			        	 "position":120,
 			        	 "extraHeaders":{0: outputExtraHeaders}
-			         },	  
-			         { // Volume
+			         },	
+			         /* essai le volume final a une valeur par defaut....
+			         { // Volume attribut de l'outputerContainer...pas Used
 			        	 "header":Messages("containers.table.volume")+ " (µL)",
 			        	 "property":"outputContainer.volume.value",
 			        	 "order":true,
@@ -152,8 +153,8 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			        	 "position":120,
 			        	 "extraHeaders":{0: outputExtraHeaders}
 			         },
-			         
-			         // Pas de concentration, elle sera mesuree plus tard...
+			         */
+			         // Pas de concentration ici , elle sera mesuree plus tard...
 			         
 			         { // Etat outpout container      
 			        	 "header":Messages("containers.table.state.code"),
@@ -335,14 +336,6 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 		});		
 	};
 	
-	// recuperation dans le premier outputContainer trouvé pour reaffichage
-	/*MARCHAIT SAUF EN CREATION D"EXPERIENCE
-		$scope.outputContainerSupport = {
-			                         code : $scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.code , 
-			                         storageCode: $scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.storageCode
-			                        };
-    */
-	
 	$scope.outputContainerSupport = { code : null , storageCode : null};	
 		
 	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) { 
@@ -357,15 +350,13 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 	
 	$scope.button = {
 		isShow:function(){
-			//return ($scope.isInProgressState() && !$scope.mainService.isEditMode())
-			// il faut aussi le bouton a l'etat New pour charger les Tags !!
-			return ( $scope.isNewState() || ($scope.isInProgressState() )  && !$scope.mainService.isEditMode() )
+			// l'import a l'etat 'A sauvegarder' genere une erreur...
+			return ($scope.isInProgressState() && !$scope.mainService.isEditMode())
 			},
 		isFileSet:function(){
 			return ($scope.file === undefined)?"disabled":"";
 		},
 		click:importData,		
 	};
-	
 	
 }]);

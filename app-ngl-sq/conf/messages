@@ -434,6 +434,7 @@ experiments.msg.import.sheet.missing = L''onglet ''{0}'' est manquant
 experiments.msg.import.header.missing = Le champ d''entête ''{0}'' est manquant ligne {1} / colonne {2}
 experiments.msg.import.position.unkwnown = La position ''{0}'' ne correspond pas à un format de plaque connu; ligne {1}
 experiments.msg.import.position.outofbonds = La position ''{0}'' ne correspond pas au format {1}-puits; ligne {2}
+experiments.msg.import.position.duplicate = La position ''{0}'' est dupliquée; ligne {1}
 experiments.msg.import.position.alreadyfound = La position ''{0}'' a déjà été trouvée; ligne {1}
 experiments.msg.import.tag.missing = Pas de Tag pour la position ''{0}''
 experiments.msg.import.tag.notexist = Le Tag ''{0}'' n''existe pas; ligne {1}

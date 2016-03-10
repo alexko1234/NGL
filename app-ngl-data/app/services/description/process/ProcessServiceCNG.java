@@ -37,8 +37,9 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Banque", "library"));// FDS ajout 27/01/2016: JIRA-NGL 894
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){	
-			l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Sequencage", "pre-sequencing"));
-			l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Banque", "pre-library"));
+			// 09/03/2016 N'existent pas au CNG
+			//l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Sequencage", "pre-sequencing"));
+			//l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Banque", "pre-library"));
 		}
 		
 		DAOHelpers.saveModels(ProcessCategory.class, l, errors);

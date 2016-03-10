@@ -1,8 +1,8 @@
 @()
 
 <div class="col-sm-12 col-lg-12" ng-controller="PrepPcrFreeCtrl">
-
-    <form class="form-inline margin-bottom-7"> <!--  le margin-bottom est écrasé qq part !!!-->
+  <div class="row margin-bottom-7">
+    <form class="form-inline">
          <div class="form-group col-lg-3">          
               <div ng-switch on="mainService.isEditMode()"> 
               <div ng-switch-when="false">   
@@ -26,7 +26,7 @@
               </div>
               <div ng-switch-when="true">
                   <label for="plateStorage" class="control-label">@Messages("experiments.outputContainerSupportStorageCode")</label>
-                  <input class="form-control-static input-sm" type="text" id="plateStorage"
+                  <input class="form-control input-sm" type="text" id="plateStorage"
 									                   title=@Messages("experiments.outputContainerSupportStorageCode") 
 			 						                   ng-model="outputContainerSupport.storageCode" />	
 			  </div>
@@ -48,8 +48,8 @@
                 </span> 
             </div>                         				  
         </div>
-   </form>		
-
+     </form>		
+  </div>
 
   <div class="row">
 	<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data"></div>						
