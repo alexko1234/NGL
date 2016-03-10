@@ -17,3 +17,4 @@ GET		/create-run-nanopore						controllers.migration.MigrationCreateRunNanopore.
 GET		/migration-sample-aliquote-codes			controllers.migration.MigrationPropSampleAliquoteCode.migration()
 GET		/migration-submission-state					controllers.migration.MigrationUpdateSubmissionState.migration()
 GET		/migration-fungi							controllers.migration.MigrationTaxonomyFungi.migration()
+GET		/migration-taxonomy-software				controllers.migration.MigrationUpdateSoftwareTaxonomy.migration()
