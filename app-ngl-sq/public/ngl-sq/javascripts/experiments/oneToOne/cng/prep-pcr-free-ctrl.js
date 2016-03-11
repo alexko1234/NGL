@@ -9,9 +9,9 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			name:"FDR_Plaque", // sert pour le nom de fichier si export demandé
 			//Guillaume le 04/03 => utiliser containerUsed seulement pour proprietes dynamiques...
 			columns:[
-			         //--------------------- INPUT containers section ------------------------------
+			         //--------------------- INPUT containers section -----------------------
 			         
-			         /* plus parlant pour l'utilisateur d'avoir Plate barcode | line | column */
+			         /* plus parlant pour l'utilisateur d'avoir Plate barcode | line | column
 					  {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"inputContainer.code",
@@ -20,8 +20,8 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			        	 "type":"text",
 			        	 "position":0,
 			        	 "extraHeaders":{0: inputExtraHeaders}
-			         },	
-			         		        
+			          },	
+			          */		        
 			          { // barcode plaque entree == input support Container code
 			        	 "header":Messages("containers.table.support.name"),
 			        	 "property":"inputContainer.support.code",
@@ -105,6 +105,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			         //--->  colonnes specifiques instrument s'inserent ici  (outputUsed ??)
 			         
 			         /* essai 10/03/2016 .. le volume final a une valeur par defaut..==> experimentService
+			          * mais dans ce cas le volume ne se retrouve pas 
 			         { // Volume attribut de l'outputerContainer...pas Used
 			        	 "header":Messages("containers.table.volume")+ " (µL)",
 			        	 "property":"outputContainer.volume.value",
@@ -177,6 +178,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			order:{
 				mode:'local',
 				active:true,
+				// FDS : ce tri donne 1,10,11,12,2.... comment avoir un tri 1,2....10,11,12,13 ??
 				by:'inputContainer.code'
 			},
 			remove:{
@@ -246,13 +248,16 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 				if( null != outputContainerSupportStorageCode && undefined != outputContainerSupportStorageCode){
 				    $parse('outputContainerUsed.locationOnContainerSupport.storageCode').assign(dataMain[i],outputContainerSupportStorageCode);
 				}
-				
-			
+					
+				// 11/03/2016 ajouter aussi la propriété sampleAliquoteCode
 				var icCode= dataMain[i].inputContainer.code;
 				// Merci Maud !!
-				console.log ("asigning inputContainerUsed code  "+ i + ": "+ icCode + " intooutputContainerUsed.experimentProperties.aliquoteCode.value");	
-				$parse("outputContainerUsed.experimentProperties.aliquoteCode.value").assign(dataMain[i], icCode);
+				//console.log ("assigning inputContainerUsed code  "+ i + ": "+ icCode + " into outputContainerUsed.experimentProperties.sampleAliquoteCode.value");	
+				$parse("outputContainerUsed.experimentProperties.sampleAliquoteCode.value").assign(dataMain[i], icCode);
 				
+				// 11/03/2016 paareil pour le volume...??
+				var ocVolume=$parse("outputContainerUsed.experimentProperties.volume.value")
+				$parse("outputContainerUsed.volume.value").assign(dataMain[i], ocVolume);
 			}
 		}
 		
@@ -357,9 +362,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 	
 	$scope.button = {
 		isShow:function(){
-			// l'import a l'etat 'A sauvegarder' genere une erreur...
-			// oui mais ...
-			//return ($scope.isInProgressState() && !$scope.mainService.isEditMode())
+			// !! l'import a l'etat 'A sauvegarder' genere une erreur...
 			return ( ( $scope.isInProgressState()|| $scope.isNewState() )&& !$scope.mainService.isEditMode())
 			},
 		isFileSet:function(){

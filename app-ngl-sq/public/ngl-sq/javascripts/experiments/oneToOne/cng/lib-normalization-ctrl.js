@@ -9,7 +9,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 	var datatableConfig = {
 			name:"FDR_Plaque", //peut servir pour le nom de fichier si export demandé
 			columns:[
-			         //-------- INPUT containers section -----------
+			         //--------------------- INPUT containers section -----------------------
 			         
 			         /* plus parlant pour l'utilisateur d'avoir Plate barcode | line | column
 					  {
@@ -109,8 +109,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 			        	 "position":14,
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
-			         
-			         
+			               
 			         // colonnes specifiques instrument viennent ici.. Volume engagé
 			         
 			         { // Etat input Container
@@ -124,7 +123,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
 			         
-			         //------ OUTPUT containers section ------
+			         //------------------------ OUTPUT containers section -------------------
 
 		            /* ne pas aficher les containercodes sauf pour DEBUG 
 			         {
@@ -188,6 +187,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 			order:{
 				mode:'local',
 				active:true,
+				// FDS : ce tri donne 1,10,11,12,2.... comment avoir un tri 1,2....10,11,12,13 ??
 				by:'inputContainer.code'
 			},
 			remove:{
@@ -282,7 +282,6 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 			dtConfig.edit.byDefault = false;
 			$scope.atmService.data.setConfig(dtConfig);
 		}
-		
 	});
 	
 	$scope.$on('activeEditMode', function(e) {
@@ -319,12 +318,10 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 	
 	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) { 
 		 $scope.outputContainerSupport.code=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.code;
+		 //console.log("previous code: "+ $scope.outputContainerSupport.code);
 	}
 	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) {
 		$scope.outputContainerSupport.storageCode=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.storageCode;
+		//console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
 	}
-	
-	console.log("previous code: "+ $scope.outputContainerSupport.code);
-	console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
-	
 }]);
