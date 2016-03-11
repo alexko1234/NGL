@@ -576,11 +576,16 @@ public class SubmissionServices {
 		}
 		
 		// mettre à jour le champs submission.studyCode si besoin, si study à soumettre, si study avec state=uservalidate
-			
+		
 		String user = contextValidation.getUser();
 		State state = new State("IW-SUB", user);
 		submissionWorkflows.setState(contextValidation, submission, state);
-		
+		if (! contextValidation.hasErrors()) {
+		// updater la soumission dans la base pour le repertoire de soumission :
+		MongoDBDAO.update(InstanceConstants.SRA_SUBMISSION_COLL_NAME,  Submission.class, 
+				DBQuery.is("code", submission.code),
+				DBUpdate.set("submissionDirectory", submission.submissionDirectory));
+		}
 		
 	}
 		
