@@ -69,9 +69,10 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	"extraHeaders":{0: inputExtraHeaders}
 				     },
-				     { //Aliquot ( ! n'existe pas pour les plaques de samples...)
+				     { //Aliquots
 				        "header":Messages("containers.table.codeAliquot"),
-				 		"property": "inputContainer.sampleAliquoteCodes", 
+				 		"property": "inputContainer.contents", 
+				 		"filter": "getArray:'properties.sampleAliquoteCode.value'",
 				 		"order":true,
 				 		"hide":true,
 				 		"type":"text",
@@ -79,7 +80,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 				 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 				        "extraHeaders":{0: inputExtraHeaders}
 					 },
-					 { //Tag
+					 { //Tags
 					    "header":Messages("containers.table.tags"),
 			 			"property": "inputContainer.contents",
 			 			"filter": "getArray:'properties.tag.value'",

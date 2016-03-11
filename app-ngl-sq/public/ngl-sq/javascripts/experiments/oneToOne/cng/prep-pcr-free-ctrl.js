@@ -9,19 +9,19 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			name:"FDR_Plaque", // sert pour le nom de fichier si export demandé
 			//Guillaume le 04/03 => utiliser containerUsed seulement pour proprietes dynamiques...
 			columns:[
-			         //-------- INPUT containers section -----------
+			         //--------------------- INPUT containers section ------------------------------
 			         
-			         /* plus parlant pour l'utilisateur d'avoir Plate barcode | line | column
+			         /* plus parlant pour l'utilisateur d'avoir Plate barcode | line | column */
 					  {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"inputContainer.code",
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"text",
-			        	 "position":1,
+			        	 "position":0,
 			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },	
-			         */		        
+			         		        
 			          { // barcode plaque entree == input support Container code
 			        	 "header":Messages("containers.table.support.name"),
 			        	 "property":"inputContainer.support.code",
@@ -69,7 +69,8 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	"extraHeaders":{0: inputExtraHeaders}
 				     },
-				     // 09/03/2016 et pas l'aliquoteCode ??? .... (!n'existe pas pour les plaques de samples)
+				     // 09/03/2016 et l'aliquoteCode ??? .... (!n'existe pas pour les plaques de samples)
+				     //                                        Mais a-t-on toujours des plaques de samples en input ???
 					 { // Concentration
 			        	 "header":Messages("containers.table.concentration") + " (ng/µL)",
 			        	 "property":"inputContainer.concentration.value",
@@ -88,61 +89,22 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			        	 "position":14,
 			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },
-			         
-			         //--->  colonnes specifiques instrument s'inserent ici      
-			         
 			         { // Etat input Container 
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"inputContainer.state.code | codes:'state'",  // |codes:'state' ==> permet de décoder le code en texte
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"text",
-			        	 "position":30,
+			        	 "position":15,
 			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },
+			         //--->  colonnes specifiques instrument s'inserent ici  (inputUsed ??)     
 			         
-			         //------ OUTPUT containers section ------
-
-		            /* ne pas aficher les containercodes  sauf pour DEBUG
-			         {
-			        	 "header":Messages("containers.table.code")",
-			        	 "property":"outputContainer.code",
-			        	 "order":true,
-						 "hide":true,
-						 "edit":false,
-			        	 "type":"text",
-			        	 "position":99,
-			        	 "extraHeaders":{0: outputExtraHeaders}
-			         },*/
-			         { //  barcode plaque sortie == support Container used code... faut Used 
-			        	 "header":Messages("containers.table.support.name"),
-			        	 "property":"outputContainerUsed.locationOnContainerSupport.code", 
-
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":100,
-			        	 "extraHeaders":{0: outputExtraHeaders}
-			         },  
-			         { //  Ligne... faut Used 
-			        	 "header":Messages("containers.table.support.line"),
-			        	 "property":"outputContainerUsed.locationOnContainerSupport.line", 
-			        	 "order":true,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":110,
-			        	 "extraHeaders":{0: outputExtraHeaders}
-			         },     
-			         { // colonne... faut Used 
-			        	 "header":Messages("containers.table.support.column"),
-			        	 // astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel forcer a numerique.=> type:number,   property:  *1
-			        	 "property":"outputContainerUsed.locationOnContainerSupport.column*1", 
-			        	 "order":true,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":120,
-			        	 "extraHeaders":{0: outputExtraHeaders}
-			         },	
-			         /* essai le volume final a une valeur par defaut....
+			         //------------------------- OUTPUT containers section --------------------------
+			         
+			         //--->  colonnes specifiques instrument s'inserent ici  (outputUsed ??)
+			         
+			         /* essai 10/03/2016 .. le volume final a une valeur par defaut..==> experimentService
 			         { // Volume attribut de l'outputerContainer...pas Used
 			        	 "header":Messages("containers.table.volume")+ " (µL)",
 			        	 "property":"outputContainer.volume.value",
@@ -154,8 +116,46 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			        	 "extraHeaders":{0: outputExtraHeaders}
 			         },
 			         */
-			         // Pas de concentration ici , elle sera mesuree plus tard...
+			         // Pas de concentration, elle sera mesuree plus tard...
 			         
+		            /* ne pas aficher les containercodes  sauf pour DEBUG
+			         {
+			        	 "header":"DEBUG code",
+			        	 "property":"outputContainer.code",
+			        	 "order":true,
+						 "hide":true,
+						 "edit":false,
+			        	 "type":"text",
+			        	 "position":99,
+			        	 "extraHeaders":{0: outputExtraHeaders}
+			         },*/
+			         { //  barcode plaque sortie == support Container used code... faut Used 
+			        	 "header":Messages("containers.table.support.name"),
+			        	 "property":"outputContainerUsed.locationOnContainerSupport.code", 
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":35,
+			        	 "extraHeaders":{0: outputExtraHeaders}
+			         },  
+			         { //  Ligne... faut Used 
+			        	 "header":Messages("containers.table.support.line"),
+			        	 "property":"outputContainerUsed.locationOnContainerSupport.line", 
+			        	 "order":true,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":36,
+			        	 "extraHeaders":{0: outputExtraHeaders}
+			         },     
+			         { // colonne... faut Used 
+			        	 "header":Messages("containers.table.support.column"),
+			        	 // astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel forcer a numerique.=> type:number,   property:  *1
+			        	 "property":"outputContainerUsed.locationOnContainerSupport.column*1", 
+			        	 "order":true,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":37,
+			        	 "extraHeaders":{0: outputExtraHeaders}
+			         },	
 			         { // Etat outpout container      
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"outputContainer.state.code | codes:'state'",
@@ -163,7 +163,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			        	 "position":160,
+			        	 "position":40,
 			        	 "extraHeaders":{0: outputExtraHeaders}
 			         }
 			         ],
@@ -246,6 +246,13 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 				if( null != outputContainerSupportStorageCode && undefined != outputContainerSupportStorageCode){
 				    $parse('outputContainerUsed.locationOnContainerSupport.storageCode').assign(dataMain[i],outputContainerSupportStorageCode);
 				}
+				
+			
+				var icCode= dataMain[i].inputContainer.code;
+				// Merci Maud !!
+				console.log ("asigning inputContainerUsed code  "+ i + ": "+ icCode + " intooutputContainerUsed.experimentProperties.aliquoteCode.value");	
+				$parse("outputContainerUsed.experimentProperties.aliquoteCode.value").assign(dataMain[i], icCode);
+				
 			}
 		}
 		
@@ -340,18 +347,20 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 		
 	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) { 
 		 $scope.outputContainerSupport.code=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.code;
+		//console.log("previous code: "+ $scope.outputContainerSupport.code);
 	}
 	if ( undefined !== $scope.experiment.atomicTransfertMethods[0]) {
 		$scope.outputContainerSupport.storageCode=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.storageCode;
+		//console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
 	}
 	
-	console.log("previous code: "+ $scope.outputContainerSupport.code);
-	console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
 	
 	$scope.button = {
 		isShow:function(){
 			// l'import a l'etat 'A sauvegarder' genere une erreur...
-			return ($scope.isInProgressState() && !$scope.mainService.isEditMode())
+			// oui mais ...
+			//return ($scope.isInProgressState() && !$scope.mainService.isEditMode())
+			return ( ( $scope.isInProgressState()|| $scope.isNewState() )&& !$scope.mainService.isEditMode())
 			},
 		isFileSet:function(){
 			return ($scope.file === undefined)?"disabled":"";
