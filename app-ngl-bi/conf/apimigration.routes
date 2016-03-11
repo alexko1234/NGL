@@ -18,3 +18,4 @@ GET		/migration-sample-aliquote-codes			controllers.migration.MigrationPropSampl
 GET		/migration-submission-state					controllers.migration.MigrationUpdateSubmissionState.migration()
 GET		/migration-fungi							controllers.migration.MigrationTaxonomyFungi.migration()
 GET		/migration-taxonomy-software				controllers.migration.MigrationUpdateSoftwareTaxonomy.migration()
+GET		/migration-mapping-software					controllers.migration.MigrationUpdateSoftwareMapping.migration()
