@@ -7,6 +7,8 @@ import services.instance.container.BanqueAmpliImportCNS;
 import services.instance.container.SizingImportCNS;
 import services.instance.container.SolutionStockImportCNS;
 import services.instance.container.TubeImportCNS;
+import services.instance.container.UpdateAmpliCNS;
+import services.instance.container.UpdateSizingCNS;
 import services.instance.container.UpdateSolutionStockCNS;
 import services.instance.container.UpdateTaraPropertiesCNS;
 import services.instance.parameter.IndexImportCNS;
@@ -45,6 +47,10 @@ public class ImportDataCNS{
 		
 		new BanqueAmpliImportCNS(Duration.create(5,TimeUnit.SECONDS),Duration.create(10,TimeUnit.MINUTES));
 		new SizingImportCNS(Duration.create(10,TimeUnit.SECONDS),Duration.create(10,TimeUnit.MINUTES));
+		
+		new UpdateSizingCNS(Duration.create(1,TimeUnit.MINUTES),Duration.create(5,TimeUnit.MINUTES));
+		new UpdateAmpliCNS(Duration.create(1,TimeUnit.MINUTES),Duration.create(5,TimeUnit.MINUTES));
+
 		
 	}
 

@@ -228,10 +228,50 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 
 			
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+			
+			l.add(newExperimentType("Ext to Banque","ext-to-library",null,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
+			l.add(newExperimentType("Ext to Norm, FC, Depot","ext-to-norm-fc-depot-illumina",null,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
+			l.add(newExperimentType("Ext to qPCR-norm, FC, Depot","ext-to-qPCR-norm-fc-depot-illumina",null,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
+			l.add(newExperimentType("Ampure Non Ampli","ampure-na",null,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()),
+					null, getInstrumentUsedTypes("hand"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
+			l.add(newExperimentType("Ampure Ampli","ampure-a",null,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null,
+					getInstrumentUsedTypes("hand"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+			
+			l.add(newExperimentType("Dosage fluorimétrique","fluo-quantification",null,450,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), null, 
+					getInstrumentUsedTypes("qubit"),"OneToVoid", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
+			
 			l.add(newExperimentType("Quantification qPCR","qpcr-quantification", null,850,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsQPCR(), 
 					getInstrumentUsedTypes("stratagene-qPCR"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
+			
+			l.add(newExperimentType("Migration sur puce (ampli)","chip-migration-post-pcr",null,650,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
+					getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchipGX"),"OneToVoid", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
+			l.add(newExperimentType("Migration sur puce (non ampli)","chip-migration-pre-pcr",null,250,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
+					getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchipGX"),"OneToVoid", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
 			//library
 			
@@ -255,6 +295,8 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
 					null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
+			
 
 		}
 		
@@ -302,31 +344,39 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		newExperimentTypeNode("irys-chip-preparation",getExperimentTypes("irys-chip-preparation").get(0),false,false,getExperimentTypeNodes("ext-to-bionano-chip-process","irys-nlrs-prep"),null,null).save();
 		newExperimentTypeNode("bionano-depot",getExperimentTypes("bionano-depot").get(0),false,false,getExperimentTypeNodes("ext-to-bionano-run","irys-chip-preparation"),null,null).save();
 		
-			/*
-			newExperimentTypeNode("ext-to-library", getExperimentTypes("ext-to-library").get(0), false, false, null, null, null).save();
 			
-			//REM : experimentTypes list confirmées par Julie
-			newExperimentTypeNode("fragmentation", getExperimentTypes("fragmentation").get(0), false, false, getExperimentTypeNodes("ext-to-library"), 
-					getExperimentTypes("ampure-na"), getExperimentTypes("fluo-quantification","chip-migration-pre-pcr")).save();
 			
-			newExperimentTypeNode("librairie-indexing", getExperimentTypes("librairie-indexing").get(0), false, false, getExperimentTypeNodes("fragmentation"), 
-					getExperimentTypes("ampure-na"), getExperimentTypes("fluo-quantification","chip-migration-pre-pcr")).save();
-			
-			newExperimentTypeNode("librairie-dualindexing", getExperimentTypes("librairie-dualindexing").get(0), false, false, getExperimentTypeNodes("fragmentation"), 
-					getExperimentTypes("ampure-na"), getExperimentTypes("fluo-quantification","chip-migration-pre-pcr")).save();			
-			
-			newExperimentTypeNode("amplification", getExperimentTypes("amplification").get(0), false, false, getExperimentTypeNodes("librairie-indexing"), 
-					getExperimentTypes("ampure-a"), getExperimentTypes("fluo-quantification","chip-migration-post-pcr","qPCR-quantification")).save();
-			
-			newExperimentTypeNode("sizing", getExperimentTypes("sizing").get(0), false, false, getExperimentTypeNodes("amplification"), 
-					null, null).save();
-			 */
-		//	newExperimentTypeNode("qPCR-quantification",getExperimentTypes("qPCR-quantification").get(0),false,false,getExperimentTypeNodes("amplification"),null,null).save();
+			 
+		
 
 		//	newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false,false,getExperimentTypeNodes("ext-to-qpcr","amplification"),
 			//		null,null).save();
 			
-			if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){}
+			if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+				
+				newExperimentTypeNode("ext-to-library", getExperimentTypes("ext-to-library").get(0), false, false, null, null, null).save();
+				newExperimentTypeNode("ext-to-qPCR-norm-fc-depot-illumina", getExperimentTypes("ext-to-qPCR-norm-fc-depot-illumina").get(0), false, false, null, null, null).save();
+				newExperimentTypeNode("ext-to-norm-fc-depot-illumina", getExperimentTypes("ext-to-norm-fc-depot-illumina").get(0), false, false, null, null, null).save();
+				
+				//REM : experimentTypes list confirmées par Julie
+				newExperimentTypeNode("fragmentation", getExperimentTypes("fragmentation").get(0), false, false, getExperimentTypeNodes("ext-to-library"), 
+						getExperimentTypes("ampure-na"),  getExperimentTypes("fluo-quantification","chip-migration-pre-pcr")).save();
+				
+				newExperimentTypeNode("librairie-indexing", getExperimentTypes("librairie-indexing").get(0), false, false, getExperimentTypeNodes("fragmentation"), 
+						getExperimentTypes("ampure-na"), getExperimentTypes("fluo-quantification","chip-migration-pre-pcr")).save();
+				
+			/*	newExperimentTypeNode("librairie-dualindexing", getExperimentTypes("librairie-dualindexing").get(0), false, false, getExperimentTypeNodes("fragmentation"), 
+						getExperimentTypes("ampure-na"), getExperimentTypes("fluo-quantification","chip-migration-pre-pcr")).save();*/			
+				
+				newExperimentTypeNode("amplification", getExperimentTypes("amplification").get(0), false, false, getExperimentTypeNodes("librairie-indexing"), 
+						getExperimentTypes("ampure-a"), getExperimentTypes("fluo-quantification","chip-migration-post-pcr","qPCR-quantification")).save();
+				
+				newExperimentTypeNode("sizing", getExperimentTypes("sizing").get(0), false, false, getExperimentTypeNodes("amplification"), 
+						null, null).save();
+				
+				newExperimentTypeNode("qPCR-quantification",getExperimentTypes("qPCR-quantification").get(0),false,false,getExperimentTypeNodes("amplification"),null,null).save();
+					
+			}
 		
 
 	}

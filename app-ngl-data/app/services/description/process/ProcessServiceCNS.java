@@ -47,15 +47,19 @@ public class ProcessServiceCNS extends AbstractProcessService {
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			//Bionano
-		/*
-			l.add(DescriptionFactory.newProcessType("Librairie PE sans sizing", "Lib-PE-NoSizing", ProcessCategory.find.findByCode("library"), getPropertyDefinitionsLib300600(), getExperimentTypes("fragmentation","librairie-indexing","amplification"), 
+		
+			l.add(DescriptionFactory.newProcessType("Librairie PE sans sizing", "Lib-PE-NoSizing", ProcessCategory.find.findByCode("library"), getPropertyDefinitionsLib300600(),
+					Arrays.asList(getPET("fragmentation",-1),getPET("librairie-indexing",0),getPET("amplification",1)), 
 					getExperimentTypes("fragmentation").get(0), getExperimentTypes("amplification").get(0), getExperimentTypes("ext-to-library").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		//	l.add(DescriptionFactory.newProcessType("qPCR et normalisation", "qPCR-normalisation", ProcessCategory.find.findByCode("pre-sequencing"), getPropertyDefinitionsQPCRQuantification(), getExperimentTypes("qPCR-quantification","solution-stock"), 
-			//		getExperimentTypes("qPCR-quantification").get(0), getExperimentTypes("solution-stock").get(0), getExperimentTypes("ext-to-qpcr").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
-			l.add(DescriptionFactory.newProcessType("Normalisation", "normalisation-process", ProcessCategory.find.findByCode("pre-sequencing"), getPropertyDefinitionsQPCRQuantification(), getExperimentTypes("solution-stock"), 
-					getExperimentTypes("solution-stock").get(0), getExperimentTypes("solution-stock").get(0), getExperimentTypes("ext-to-solution-stock").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-			*/
+			l.add(DescriptionFactory.newProcessType("qPCR-norm, FC, dépôt Illumina", "qPCR-norm-fc-depot-illumina", ProcessCategory.find.findByCode("sequencing"), getPropertyDefinitionsQPCRQuantification(),
+					Arrays.asList(getPET("ext-to-qPCR-norm-fc-depot-illumina",-1),getPET("sizing",-1),getPET("amplification",-1),getPET("qpcr-quantification",0),getPET("solution-stock",0),getPET("prepa-flowcell",1),getPET("prepa-fc-ordered",1),getPET("illumina-depot",2)), 
+					getExperimentTypes("qPCR-quantification").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-qPCR-norm-fc-depot-illumina").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
+			l.add(DescriptionFactory.newProcessType("Norm, FC, dépôt Illumina", "norm-fc-depot-illumina", ProcessCategory.find.findByCode("sequencing"), getPropertyDefinitionsQPCRQuantification(),
+					Arrays.asList(getPET("ext-to-norm-fc-depot-illumina",-1),getPET("sizing",-1),getPET("amplification",-1),getPET("solution-stock",0),getPET("prepa-flowcell",1),getPET("prepa-fc-ordered",1),getPET("illumina-depot",2)), 
+					getExperimentTypes("solution-stock").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-norm-fc-depot-illumina").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
 		}
 
 			//Bionano
