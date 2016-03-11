@@ -327,7 +327,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Read Length vs Read Quality","readLengthVsreadQuality", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Image.class, true, "img"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Read Length Distribution","readLengthDistribution", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Image.class, true, "img"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Read Quality Distribution","readQualityDistribution", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Image.class, true, "img"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Kmers Distribution","KmersDistribution", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Image.class, true, "img"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Kmers Distribution","KmersDistribution", LevelService.getLevels(Level.CODE.ReadSet,Level.CODE.Default), Image.class, false, "img"));
 		
         return propertyDefinitions;
 	}
