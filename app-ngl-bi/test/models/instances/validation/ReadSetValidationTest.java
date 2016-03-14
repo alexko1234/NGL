@@ -279,6 +279,207 @@ public class ReadSetValidationTest extends AbstractTestsCNG {
 	}
 
 	@Test
+	public void testCreateReadSetTypeCodeNotExist()
+	{
+		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
+		if(runDelete!=null){
+			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
+		}	  
+		ReadSet readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code","rdCode"));
+		if(readSetDelete!=null){
+			MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
+		}
+
+		Run run = getFullRun();
+		Lane lane1 = getLane();
+		ArrayList<Lane> al = new ArrayList<Lane>();
+		al.add(lane1);
+		run.lanes = al;
+
+		ContextValidation ctxVal2 = new ContextValidation(Constants.TEST_USER);
+		ctxVal2.setCreationMode();
+
+		run.validate(ctxVal2);			 
+		assertThat(ctxVal2.errors).hasSize(0);
+
+		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+		assertThat(status(result)).isEqualTo(OK);
+
+		ReadSet readset = RunMockHelper.newReadSet("rdCode");
+		readset.runCode = run.code;
+		readset.typeCode = "badCode";
+
+		ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
+		ctxVal.setCreationMode();
+
+		readset.validate(ctxVal);
+		assertThat(ctxVal.errors.size()>0);
+		assertThat(ctxVal.errors.toString()).contains("typeCode");
+	}
+	
+	@Test
+	public void testCreateReadSetWithBadProperties()
+	{
+		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
+		if(runDelete!=null){
+			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
+		}	  
+		ReadSet readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code","rdCode"));
+		if(readSetDelete!=null){
+			MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
+		}
+
+		Run run = getFullRun();
+		Lane lane1 = getLane();
+		ArrayList<Lane> al = new ArrayList<Lane>();
+		al.add(lane1);
+		run.lanes = al;
+
+		ContextValidation ctxVal2 = new ContextValidation(Constants.TEST_USER);
+		ctxVal2.setCreationMode();
+
+		run.validate(ctxVal2);			 
+		assertThat(ctxVal2.errors).hasSize(0);
+		
+
+		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+		assertThat(status(result)).isEqualTo(OK);
+
+		ReadSet readset = RunMockHelper.newReadSet("rdCode");
+		readset.runCode = run.code;
+		readset.properties.put("insertSizeGoalErrorKey", new PropertySingleValue("badValue"));
+		ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
+		ctxVal.setCreationMode();
+
+		readset.validate(ctxVal);
+		assertThat(ctxVal.errors).hasSize(1);
+		assertThat(ctxVal.errors.toString()).contains("properties.insertSizeGoalErrorKey");
+		
+	}
+	
+	@Test
+	public void testCreateReadSetValuationRequiredError()
+	{
+		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
+		if(runDelete!=null){
+			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
+		}	  
+		ReadSet readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code","rdCode"));
+		if(readSetDelete!=null){
+			MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
+		}
+
+		Run run = getFullRun();
+		Lane lane1 = getLane();
+		ArrayList<Lane> al = new ArrayList<Lane>();
+		al.add(lane1);
+		run.lanes = al;
+
+		ContextValidation ctxVal2 = new ContextValidation(Constants.TEST_USER);
+		ctxVal2.setCreationMode();
+
+		run.validate(ctxVal2);			 
+		assertThat(ctxVal2.errors).hasSize(0);
+		
+
+		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+		assertThat(status(result)).isEqualTo(OK);
+
+		ReadSet readset = RunMockHelper.newReadSet("rdCode");
+		readset.runCode = run.code;
+		readset.bioinformaticValuation=null;
+		readset.productionValuation = null;
+		ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
+		ctxVal.setCreationMode();
+
+		readset.validate(ctxVal);
+		assertThat(ctxVal.errors).hasSize(1);
+		assertThat(ctxVal.errors.toString()).contains("valuation");
+		
+	}
+	
+	@Test
+	public void testCreateReadSetLaneNumberErrorRequired()
+	{
+		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
+		if(runDelete!=null){
+			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
+		}	  
+		ReadSet readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code","rdCode"));
+		if(readSetDelete!=null){
+			MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
+		}
+
+		Run run = getFullRun();
+		Lane lane1 = getLane();
+		ArrayList<Lane> al = new ArrayList<Lane>();
+		al.add(lane1);
+		run.lanes = al;
+
+		ContextValidation ctxVal2 = new ContextValidation(Constants.TEST_USER);
+		ctxVal2.setCreationMode();
+
+		run.validate(ctxVal2);			 
+		assertThat(ctxVal2.errors).hasSize(0);
+		
+
+		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+		assertThat(status(result)).isEqualTo(OK);
+
+		ReadSet readset = RunMockHelper.newReadSet("rdCode");
+		readset.runCode = run.code;
+		readset.laneNumber=null;
+		ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
+		ctxVal.setCreationMode();
+
+		readset.validate(ctxVal);
+		
+		assertThat(ctxVal.errors).hasSize(1);
+		assertThat(ctxVal.errors.toString()).contains("laneNumber");
+	}
+	
+	@Test
+	public void testCreateReadSetProjectSampleNotExist()
+	{
+		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
+		if(runDelete!=null){
+			MongoDBDAO.delete(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runDelete._id);
+		}	  
+		ReadSet readSetDelete = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code","rdCode"));
+		if(readSetDelete!=null){
+			MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetDelete._id);
+		}
+
+		Run run = getFullRun();
+		Lane lane1 = getLane();
+		ArrayList<Lane> al = new ArrayList<Lane>();
+		al.add(lane1);
+		run.lanes = al;
+
+		ContextValidation ctxVal2 = new ContextValidation(Constants.TEST_USER);
+		ctxVal2.setCreationMode();
+
+		run.validate(ctxVal2);			 
+		assertThat(ctxVal2.errors).hasSize(0);
+		
+
+		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+		assertThat(status(result)).isEqualTo(OK);
+
+		ReadSet readset = RunMockHelper.newReadSet("rdCode");
+		readset.runCode = run.code;
+		readset.projectCode="badCodeProject";
+		readset.sampleCode="badSampleCode";
+		ContextValidation ctxVal = new ContextValidation(Constants.TEST_USER);
+		ctxVal.setCreationMode();
+
+		readset.validate(ctxVal);
+		
+		assertThat(ctxVal.errors).hasSize(2);
+		assertThat(ctxVal.errors.toString()).contains("projectCode");
+		assertThat(ctxVal.errors.toString()).contains("sampleCode");
+	}
+	@Test
 	public void testErrorReadSetWithLaneNumber20(){
 		Run runDelete = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code","YANN_TEST1FORREADSET0"));
 		if(runDelete!=null){

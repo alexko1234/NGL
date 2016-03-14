@@ -722,7 +722,6 @@ public class RunValidationTest extends AbstractTestsCNG {
 		assertThat(ctxVal.errors.toString()).contains("toto");
 	}
 
-
 	
 	private Lane getLane() {	
 		Lane lane = new Lane();
