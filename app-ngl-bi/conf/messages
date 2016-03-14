@@ -510,6 +510,7 @@ readsets.treatments.taxonomy.sampleInput = Nb Seq. (échantillonnage)
 readsets.treatments.taxonomy.beginNcbiUrl = http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?mode=Undef&name=
 readsets.treatments.taxonomy.phylogeneticTree = Arbre phylogénétique
 readsets.treatments.taxonomy.krona = Krona
+readsets.treatments.taxonomy.software = Logiciel
 
 readsets.treatments.trimming.read1 = Read 1
 readsets.treatments.trimming.read2 = Read 2
