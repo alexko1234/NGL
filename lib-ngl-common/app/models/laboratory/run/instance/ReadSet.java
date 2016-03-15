@@ -5,13 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import play.Logger;
-
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-
+import fr.cea.ig.DBObject;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
@@ -24,7 +18,6 @@ import validation.run.instance.FileValidationHelper;
 import validation.run.instance.ReadSetValidationHelper;
 import validation.run.instance.TreatmentValidationHelper;
 import validation.utils.ValidationHelper;
-import fr.cea.ig.DBObject;
 
 public class ReadSet extends DBObject implements IValidation{
 
@@ -107,6 +100,10 @@ public class ReadSet extends DBObject implements IValidation{
 		contextValidation.putObject("level", Level.CODE.ReadSet);
 		TreatmentValidationHelper.validationTreatments(this.treatments, contextValidation);
 		FileValidationHelper.validationFiles(this.files, contextValidation);
+		
+		if(contextValidation.getContextObjects().containsKey("external") && (Boolean)contextValidation.getContextObjects().get("external")){
+			ValidationHelper.required(contextValidation, sampleOnContainer, "sampleOnContainer");
+		}
 	}
 	
 }

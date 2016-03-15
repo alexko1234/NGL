@@ -6,6 +6,18 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBCursor;
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
+import org.mongojack.WriteResult;
+
+import com.mongodb.BasicDBObject;
+
+import akka.actor.ActorRef;
+import akka.actor.Props;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBResult;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
@@ -17,16 +29,10 @@ import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.SampleOnContainer;
+import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
-
-import org.apache.commons.lang3.StringUtils;
-import org.mongojack.DBCursor;
-import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
-import org.mongojack.WriteResult;
-
 import play.Logger;
 import play.Play;
 import play.libs.Akka;
@@ -35,13 +41,6 @@ import rules.services.RulesMessage;
 import validation.ContextValidation;
 import validation.run.instance.AnalysisValidationHelper;
 import validation.run.instance.RunValidationHelper;
-import akka.actor.ActorRef;
-import akka.actor.Props;
-
-import com.mongodb.BasicDBObject;
-
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBResult;
 
 public class Workflows {
 	
@@ -202,6 +201,20 @@ public class Workflows {
 			applyReadSetRules(contextValidation, readSet);
 			nextReadSetState(contextValidation, readSet);
 		}	
+	}
+	
+	public static void applyReadSetPreStateRules(ContextValidation validation, ReadSet readSet) {
+		
+		if("N".equals(readSet.state.code)){
+			//Create sample if doesn't exist (for external data)
+			Sample sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, readSet.sampleCode);
+			if(sample == null && readSet.sampleOnContainer!=null){
+				sample = InstanceHelpers.convertToSample(readSet);
+				sample.validate(validation);
+				MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, sample);
+			}
+		
+		}
 	}
 	
 	private static void applyReadSetRules(ContextValidation contextValidation, ReadSet readSet) {

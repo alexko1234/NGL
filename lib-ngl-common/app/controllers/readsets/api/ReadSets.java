@@ -62,23 +62,23 @@ public class ReadSets extends ReadSetsController{
 	//final static Form<ReadSetsSearchForm> searchForm = form(ReadSetsSearchForm.class);
 	final static Form<ReadSetValuation> valuationForm = form(ReadSetValuation.class);
 	final static Form<State> stateForm = form(State.class);
-	
+
 	final static Form<ReadSetBatchElement> batchElementForm = form(ReadSetBatchElement.class);
 	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
 	final static List<String> authorizedUpdateFields = Arrays.asList("code", "path");
 	final static List<String> defaultKeys =  Arrays.asList("code", "typeCode", "runCode", "runTypeCode", "laneNumber", "projectCode", "sampleCode", "runSequencingStartDate", "state", "productionValuation", "bioinformaticValuation", "properties");
-	
+
 	@Permission(value={"reading"})
 	public static Result list() {
 		//Form<ReadSetsSearchForm> filledForm = filledFormQueryString(searchForm, ReadSetsSearchForm.class);
 		//ReadSetsSearchForm form = filledForm.get();
-		
+
 		ReadSetsSearchForm form = filledFormQueryString(ReadSetsSearchForm.class);
 		//Logger.debug("form = "+form);
-		
+
 		Query q = getQuery(form);		
 		BasicDBObject keys = getKeys(updateForm(form));
-		
+
 		if(form.datatable){			
 			MongoDBResult<ReadSet> results = mongoDBFinder(InstanceConstants.READSET_ILLUMINA_COLL_NAME, form, ReadSet.class, q, keys);				
 			return ok(new MongoDBDatatableResponseChunks<ReadSet>(results)).as("application/json");			
@@ -101,7 +101,7 @@ public class ReadSets extends ReadSetsController{
 			return ok(new MongoDBResponseChunks<ReadSet>(results)).as("application/json");	
 		}
 	}
-	
+
 	private static List<ListObject> toListObjects(List<ReadSet> readSets){
 		List<ListObject> jo = new ArrayList<ListObject>();
 		for(ReadSet r: readSets){
@@ -109,7 +109,7 @@ public class ReadSets extends ReadSetsController{
 		}
 		return jo;
 	}
-	
+
 	private static DatatableForm updateForm(ReadSetsSearchForm form) {
 		if(form.includes.contains("default")){
 			form.includes.remove("default");
@@ -121,41 +121,41 @@ public class ReadSets extends ReadSetsController{
 	private static Query getQuery(ReadSetsSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;
-		
+
 		if (StringUtils.isNotBlank(form.typeCode)) { //all
 			queries.add(DBQuery.is("typeCode", form.typeCode));
 		}else if(CollectionUtils.isNotEmpty(form.typeCodes)){
 			queries.add(DBQuery.in("typeCode", form.typeCodes));
 		}
-		
+
 		if (StringUtils.isNotBlank(form.submissionStateCode)) { 
 			queries.add(DBQuery.is("submissionState.code", form.submissionStateCode));
 		}else if(CollectionUtils.isNotEmpty(form.submissionStateCodes)){
 			queries.add(DBQuery.in("submissionStateCode", form.submissionStateCodes));
 		}
-		
+
 		if (StringUtils.isNotBlank(form.runCode)) { //all
 			queries.add(DBQuery.is("runCode", form.runCode));
 		}else if(CollectionUtils.isNotEmpty(form.runCodes)){
 			queries.add(DBQuery.in("runCode", form.runCodes));
 		}
-		
+
 		if (null != form.laneNumber) { //all
 			queries.add(DBQuery.is("laneNumber", form.laneNumber));
 		}else if(CollectionUtils.isNotEmpty(form.laneNumbers)){
 			queries.add(DBQuery.in("laneNumber", form.laneNumbers));
 		}
-		
+
 		if (StringUtils.isNotBlank(form.stateCode)) { //all
 			queries.add(DBQuery.is("state.code", form.stateCode));
 		}else if (CollectionUtils.isNotEmpty(form.stateCodes)) { //all
 			queries.add(DBQuery.in("state.code", form.stateCodes));
 		}
-		
+
 		if (StringUtils.isNotBlank(form.productionValidCode)) { //all
 			queries.add(DBQuery.is("productionValuation.valid", TBoolean.valueOf(form.productionValidCode)));
 		}
-		
+
 		if (StringUtils.isNotBlank(form.bioinformaticValidCode)) { //all
 			queries.add(DBQuery.is("bioinformaticValuation.valid", TBoolean.valueOf(form.bioinformaticValidCode)));
 		}
@@ -165,25 +165,25 @@ public class ReadSets extends ReadSetsController{
 		}else if (StringUtils.isNotBlank(form.projectCode)) { //all
 			queries.add(DBQuery.is("projectCode", form.projectCode));
 		}
-		
+
 		if (CollectionUtils.isNotEmpty(form.sampleCodes)) { //all
 			queries.add(DBQuery.in("sampleCode", form.sampleCodes));
 		}else if (StringUtils.isNotBlank(form.sampleCode)) { //all
 			queries.add(DBQuery.is("sampleCode", form.sampleCode));
 		}
-		
+
 		if (CollectionUtils.isNotEmpty(form.runTypeCodes)) { //all
 			queries.add(DBQuery.in("runTypeCode", form.runTypeCodes));
 		}
-		
+
 		if(null != form.fromDate){
 			queries.add(DBQuery.greaterThanEquals("runSequencingStartDate", form.fromDate));
 		}
-		
+
 		if(null != form.toDate){
 			queries.add(DBQuery.lessThanEquals("runSequencingStartDate", form.toDate));
 		}
-		
+
 		if (StringUtils.isNotBlank(form.code)) { //all
 			queries.add(DBQuery.is("code", form.code));
 		}else if(CollectionUtils.isNotEmpty(form.codes)){
@@ -191,35 +191,35 @@ public class ReadSets extends ReadSetsController{
 		}else if (StringUtils.isNotBlank(form.regexCode)) { //all
 			queries.add(DBQuery.regex("code", Pattern.compile(form.regexCode)));
 		}
-		
+
 		if (StringUtils.isNotBlank(form.regexSampleCode)) { //all
 			queries.add(DBQuery.regex("sampleCode", Pattern.compile(form.regexSampleCode)));
 		}
-		
+
 		if (CollectionUtils.isNotEmpty(form.instrumentCodes)) { //all
 			queries.add(DBQuery.regex("runCode", Pattern.compile(findRegExpFromStringList(form.instrumentCodes))));
 		}
-		
+
 		if (CollectionUtils.isNotEmpty(form.productionResolutionCodes)) { //all
 			queries.add(DBQuery.in("productionValuation.resolutionCodes", form.productionResolutionCodes));
 		}
-		
+
 		if (CollectionUtils.isNotEmpty(form.bioinformaticResolutionCodes)) { //all
 			queries.add(DBQuery.in("bioinformaticValuation.resolutionCodes", form.bioinformaticResolutionCodes));
 		}
-		
+
 		if(null != form.productionValuationUser){
 			queries.add(DBQuery.is("productionValuation.user", form.productionValuationUser));
 		}
-		
+
 		if (CollectionUtils.isNotEmpty(form.sampleCategoryCodes)) { //all
 			queries.add(DBQuery.in("sampleOnContainer.sampleCategoryCode", form.sampleCategoryCodes));
 		}
-		
+
 		if (CollectionUtils.isNotEmpty(form.sampleTypeCodes)) { //all
 			queries.add(DBQuery.in("sampleOnContainer.sampleTypeCode", form.sampleTypeCodes));
 		}
-		
+
 		//TODO must be change to used a generic system (see below)
 		/*
 		if (StringUtils.isNotBlank(form.isSentCCRT)) {
@@ -238,32 +238,32 @@ public class ReadSets extends ReadSetsController{
 				queries.add(DBQuery.notEquals("properties.isSentCollaborator.value", !Boolean.valueOf(form.isSentCollaborator))); 
 			}
 		}
-		*/
+		 */
 		//END TODO
-		
+
 		queries.addAll(NGLControllerHelper.generateQueriesForProperties(form.properties, Level.CODE.ReadSet, "properties"));
 		queries.addAll(NGLControllerHelper.generateQueriesForProperties(form.sampleOnContainerProperties, Level.CODE.Content, "sampleOnContainer.properties"));
 		queries.addAll(NGLControllerHelper.generateQueriesForTreatmentProperties(form.treatmentProperties, Level.CODE.ReadSet, "treatments"));
-		
+
 		if (CollectionUtils.isNotEmpty(form.existingFields)) { //all
 			for(String field : form.existingFields){
 				queries.add(DBQuery.exists(field));
 			}		
 		}
-		
+
 		if (CollectionUtils.isNotEmpty(form.notExistingFields)) { //all
 			for(String field : form.notExistingFields){
 				queries.add(DBQuery.notExists(field));
 			}
 		}
-		
+
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}
-		
+
 		return query;
 	}
-	
+
 	@Permission(value={"reading"})
 	public static Result get(String readSetCode) {
 		DatatableForm form = filledFormQueryString(DatatableForm.class);
@@ -275,7 +275,7 @@ public class ReadSets extends ReadSetsController{
 			return notFound();
 		}		
 	}
-	
+
 	@Permission(value={"reading"})
 	public static Result head(String readSetCode) {
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSetCode)){			
@@ -284,17 +284,17 @@ public class ReadSets extends ReadSetsController{
 			return notFound();
 		}	
 	}
-	
+
 	@Permission(value={"writing"})
 	public static Result save(){
-		
+
 		Form<ReadSet> filledForm = getFilledForm(readSetForm, ReadSet.class);
 		ReadSet readSetInput = filledForm.get();
-		
+
 		if (null == readSetInput._id) { 
 			readSetInput.traceInformation = new TraceInformation();
 			readSetInput.traceInformation.setTraceInformation(getCurrentUser());
-			
+
 			if(null == readSetInput.state){
 				readSetInput.state = new State();
 			}
@@ -303,39 +303,51 @@ public class ReadSets extends ReadSetsController{
 			readSetInput.state.date = new Date();	
 			readSetInput.submissionState = new State("NONE", getCurrentUser());
 			readSetInput.submissionState.date = new Date();	
-			
+
 
 			//hack to simplify ngsrg => move to workflow but workflow not call here !!!
 			if(null != readSetInput.runCode && (null == readSetInput.runSequencingStartDate || null == readSetInput.runTypeCode)){
 				updateReadSet(readSetInput);
-				
+
 			}
-			
+
 		} else {
 			return badRequest("use PUT method to update the run");
 		}
-		
-		
+
+
+
+
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
 		ctxVal.setCreationMode();
+
+		ReadSetsSaveForm readSetsSaveForm = filledFormQueryString(ReadSetsSaveForm.class);
+		if(readSetsSaveForm.external!=null)
+			ctxVal.putObject("external", readSetsSaveForm.external);
+		else
+			ctxVal.putObject("external", false);
+
+		//Apply rules before validation
+		//Workflows.applyReadSetPreStateRules(ctxVal, readSetInput);
+
 		readSetInput.validate(ctxVal);	
-		
+
 		if (!ctxVal.hasErrors()) {
 			readSetInput = MongoDBDAO.save(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSetInput);
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.and(DBQuery.is("code", readSetInput.runCode), 
 							DBQuery.elemMatch("lanes", DBQuery.and(DBQuery.is("number", readSetInput.laneNumber), DBQuery.notIn("readSetCodes", readSetInput.code)))), 
 					DBUpdate.push("lanes.$.readSetCodes", readSetInput.code));	
-			
+
 			//To avoid "double" values
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.and(DBQuery.is("code", readSetInput.runCode), DBQuery.notIn("projectCodes", readSetInput.projectCode)), 
 					DBUpdate.push("projectCodes", readSetInput.projectCode));
-					
+
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 					DBQuery.and(DBQuery.is("code", readSetInput.runCode), DBQuery.notIn("sampleCodes", readSetInput.sampleCode)), 
 					DBUpdate.push("sampleCodes", readSetInput.sampleCode));
-			
+
 			return ok(Json.toJson(readSetInput));
 		} else {
 			return badRequest(filledForm.errorsAsJson());
@@ -351,21 +363,21 @@ public class ReadSets extends ReadSetsController{
 		readSetInput.runSequencingStartDate = run.sequencingStartDate;
 		readSetInput.runTypeCode = run.typeCode;
 	}
-	
-	
+
+
 	@Permission(value={"writing"})
 	public static Result update(String readSetCode){
 		ReadSet readSet =  getReadSet(readSetCode);
 		if(readSet == null) {
 			return badRequest("ReadSet with code "+readSetCode+" does not exist");
 		}
-		
+
 		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
 		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
-		
+
 		Form<ReadSet> filledForm = getFilledForm(readSetForm, ReadSet.class);
 		ReadSet readSetInput = filledForm.get();
-		
+
 		if(queryFieldsForm.fields == null){
 			if (readSetInput.code.equals(readSetCode)) {
 				if(null != readSetInput.traceInformation){
@@ -373,26 +385,26 @@ public class ReadSets extends ReadSetsController{
 				}else{
 					Logger.error("traceInformation is null !!");
 				}
-				
+
 				if(!readSet.state.code.equals(readSetInput.state.code)){
 					return badRequest("you cannot change the state code. Please used the state url ! ");
 				}
-				
+
 				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 				ctxVal.setUpdateMode();
 				readSetInput.validate(ctxVal);
-				
+
 				if (!ctxVal.hasErrors()) {
 					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, readSetInput);
-					
+
 					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 							DBQuery.and(DBQuery.is("code", readSetInput.runCode), DBQuery.notIn("projectCodes", readSetInput.projectCode)), 
 							DBUpdate.push("projectCodes", readSetInput.projectCode));
-							
+
 					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 							DBQuery.and(DBQuery.is("code", readSetInput.runCode), DBQuery.notIn("sampleCodes", readSetInput.sampleCode)), 
 							DBUpdate.push("sampleCodes", readSetInput.sampleCode));
-					
+
 					return ok(Json.toJson(readSetInput));
 				}else {
 					return badRequest(filledForm.errorsAsJson());			
@@ -405,22 +417,22 @@ public class ReadSets extends ReadSetsController{
 			ctxVal.setUpdateMode();
 			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
 			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
-			
+
 			if(queryFieldsForm.fields.contains("code")){
 				ctxVal.setCreationMode();
 				ReadSetValidationHelper.validateCode(readSetInput, InstanceConstants.READSET_ILLUMINA_COLL_NAME, ctxVal);
 			}
-			
+
 			if(!filledForm.hasErrors()){
 				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 						DBQuery.and(DBQuery.is("code", readSetCode)), 
 						getBuilder(readSetInput, queryFieldsForm.fields, ReadSet.class).set("traceInformation", getUpdateTraceInformation(readSet)));
-				
+
 				if(queryFieldsForm.fields.contains("code") && null != readSetInput.code){
 					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, 
 							DBQuery.and(DBQuery.is("code",readSet.runCode),DBQuery.is("lanes.number",readSet.laneNumber)), 
 							DBUpdate.pull("lanes.$.readSetCodes", readSetCode));
-					
+
 					MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, 
 							DBQuery.and(DBQuery.is("code", readSet.runCode), 
 									DBQuery.elemMatch("lanes", DBQuery.and(DBQuery.is("number", readSet.laneNumber), DBQuery.notIn("readSetCodes", readSet.code)))), 
@@ -433,7 +445,7 @@ public class ReadSets extends ReadSetsController{
 			}			
 		}
 	}
-	
+
 	@Permission(value={"writing"}) 
 	public static Result delete(String readSetCode) { 
 		ReadSet readSet = getReadSet(readSetCode);
@@ -445,8 +457,8 @@ public class ReadSets extends ReadSetsController{
 				DBUpdate.pull("lanes.$.readSetCodes", readSet.code));
 
 		MongoDBDAO.deleteByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, readSet.code);
-		
-		
+
+
 		if ((readSet.projectCode!= null) && (!MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
 				DBQuery.and(DBQuery.is("code",readSet.code), DBQuery.is("projectCode",readSet.projectCode))))) {
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, 
@@ -459,13 +471,13 @@ public class ReadSets extends ReadSetsController{
 					DBQuery.is("code",readSet.runCode), 
 					DBUpdate.pull("sampleCodes", readSet.sampleCode));
 		}
-		
+
 		//TODO delete analysis
-		
+
 		return ok();
 	}
-	
-	
+
+
 	@Permission(value={"writing"})
 	public static Result deleteByRunCode(String runCode) {
 		Run run  = MongoDBDAO.findByCode(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, runCode);
@@ -479,15 +491,15 @@ public class ReadSets extends ReadSetsController{
 						DBUpdate.unset("lanes.$.readSetCodes"));		
 			}
 		}
-		
-		
+
+
 		MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME, Run.class, DBQuery.is("code",runCode), DBUpdate.unset("projectCodes").unset("sampleCodes"));
-		
+
 		MongoDBDAO.delete(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("runCode", runCode)));
-		
+
 		return ok();
 	}
-	
+
 	@Permission(value={"writing"})
 	public static Result state(String code){
 		ReadSet readSet = getReadSet(code);
@@ -506,13 +518,13 @@ public class ReadSets extends ReadSetsController{
 			return badRequest(filledForm.errorsAsJson());
 		}
 	}
-	
+
 	@Permission(value={"writing"})
 	public static Result stateBatch(){
 		List<Form<ReadSetBatchElement>> filledForms =  getFilledFormList(batchElementForm, ReadSetBatchElement.class);
-		
+
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
-		
+
 		for(Form<ReadSetBatchElement> filledForm: filledForms){
 			ReadSetBatchElement element = filledForm.get();
 			ReadSet readSet = getReadSet(element.data.code);
@@ -530,11 +542,11 @@ public class ReadSets extends ReadSetsController{
 			}else {
 				response.add(new DatatableBatchResponseElement(BAD_REQUEST, element.index));
 			}
-			
+
 		}		
 		return ok(Json.toJson(response));
 	}
-	
+
 	@Permission(value={"writing"})
 	public static Result valuation(String code){
 		ReadSet readSet = getReadSet(code);
@@ -548,10 +560,10 @@ public class ReadSets extends ReadSetsController{
 		manageValidation(readSet, valuations.productionValuation, valuations.bioinformaticValuation, ctxVal);
 		if(!ctxVal.hasErrors()) {
 			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-						DBQuery.and(DBQuery.is("code", code)),
-						DBUpdate.set("productionValuation", valuations.productionValuation)
-						.set("bioinformaticValuation", valuations.bioinformaticValuation)
-						.set("traceInformation", getUpdateTraceInformation(readSet)));			
+					DBQuery.and(DBQuery.is("code", code)),
+					DBUpdate.set("productionValuation", valuations.productionValuation)
+					.set("bioinformaticValuation", valuations.bioinformaticValuation)
+					.set("traceInformation", getUpdateTraceInformation(readSet)));			
 			readSet = getReadSet(code);
 			Workflows.nextReadSetState(ctxVal, readSet);
 			return ok(Json.toJson(readSet));
@@ -563,9 +575,9 @@ public class ReadSets extends ReadSetsController{
 	@Permission(value={"writing"})
 	public static Result valuationBatch(){
 		List<Form<ReadSetBatchElement>> filledForms =  getFilledFormList(batchElementForm, ReadSetBatchElement.class);
-		
+
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
-		
+
 		for(Form<ReadSetBatchElement> filledForm: filledForms){
 			ReadSetBatchElement element = filledForm.get();
 			ReadSet readSet = getReadSet(element.data.code);
@@ -575,10 +587,10 @@ public class ReadSets extends ReadSetsController{
 				manageValidation(readSet, element.data.productionValuation, element.data.bioinformaticValuation, ctxVal);				
 				if (!ctxVal.hasErrors()) {
 					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-								DBQuery.and(DBQuery.is("code", readSet.code)),
-								DBUpdate.set("productionValuation", element.data.productionValuation)
-								.set("bioinformaticValuation", element.data.bioinformaticValuation)
-								.set("traceInformation", getUpdateTraceInformation(readSet)));							
+							DBQuery.and(DBQuery.is("code", readSet.code)),
+							DBUpdate.set("productionValuation", element.data.productionValuation)
+							.set("bioinformaticValuation", element.data.bioinformaticValuation)
+							.set("traceInformation", getUpdateTraceInformation(readSet)));							
 					readSet = getReadSet(readSet.code);
 					Workflows.nextReadSetState(ctxVal, readSet);
 					response.add(new DatatableBatchResponseElement(OK, readSet, element.index));
@@ -588,31 +600,31 @@ public class ReadSets extends ReadSetsController{
 			}else {
 				response.add(new DatatableBatchResponseElement(BAD_REQUEST, element.index));
 			}
-			
+
 		}		
 		return ok(Json.toJson(response));
 	}
-	
+
 	@Permission(value={"writing"})
 	public static Result properties(String code){
 		ReadSet readSet = getReadSet(code);
 		if(readSet == null){
 			return badRequest();
 		}
-				
+
 		Form<ReadSet> filledForm = getFilledForm(readSetForm, ReadSet.class);
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
-		
+
 		Map<String, PropertyValue> properties = filledForm.get().properties;
 		ctxVal.setUpdateMode();
 		ReadSetValidationHelper.validateReadSetType(readSet.typeCode, properties, ctxVal);
-		
+
 		if(!ctxVal.hasErrors()){
-		    MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-				DBQuery.and(DBQuery.is("code", code)),
-				DBUpdate.set("properties", properties)
-				.set("traceInformation", getUpdateTraceInformation(readSet)));								
-					
+			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+					DBQuery.and(DBQuery.is("code", code)),
+					DBUpdate.set("properties", properties)
+					.set("traceInformation", getUpdateTraceInformation(readSet)));								
+
 		}
 		if (!filledForm.hasErrors()) {
 			return ok(Json.toJson(getReadSet(code)));		
@@ -620,13 +632,13 @@ public class ReadSets extends ReadSetsController{
 			return badRequest(filledForm.errorsAsJson());			
 		}		
 	}
-	
+
 	@Permission(value={"writing"})
 	public static Result propertiesBatch(){
 		List<Form<ReadSetBatchElement>> filledForms =  getFilledFormList(batchElementForm, ReadSetBatchElement.class);
-		
+
 		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
-		
+
 		for(Form<ReadSetBatchElement> filledForm: filledForms){
 			ReadSetBatchElement element = filledForm.get();
 			ReadSet readSet = getReadSet(element.data.code);
@@ -635,25 +647,25 @@ public class ReadSets extends ReadSetsController{
 				Map<String, PropertyValue> properties = element.data.properties;
 				ctxVal.setUpdateMode();
 				ReadSetValidationHelper.validateReadSetType(readSet.typeCode, properties, ctxVal);
-				
+
 				if(!ctxVal.hasErrors()){
-				    MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-						DBQuery.and(DBQuery.is("code", readSet.code)),
-						DBUpdate.set("properties", element.data.properties)
-						.set("traceInformation", getUpdateTraceInformation(readSet)));								
-				    response.add(new DatatableBatchResponseElement(OK, getReadSet(readSet.code), element.index));
+					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
+							DBQuery.and(DBQuery.is("code", readSet.code)),
+							DBUpdate.set("properties", element.data.properties)
+							.set("traceInformation", getUpdateTraceInformation(readSet)));								
+					response.add(new DatatableBatchResponseElement(OK, getReadSet(readSet.code), element.index));
 				}else {
 					response.add(new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(), element.index));
 				}
 			}else {
 				response.add(new DatatableBatchResponseElement(BAD_REQUEST, element.index));
 			}
-			
+
 		}		
 		return ok(Json.toJson(response));
 	}
-	
-	
+
+
 	private static void manageValidation(ReadSet readSet, Valuation productionVal, Valuation bioinfoVal, ContextValidation ctxVal) {
 		if (productionVal.valid != readSet.productionValuation.valid) {
 			productionVal.date = new Date();
@@ -667,8 +679,8 @@ public class ReadSets extends ReadSetsController{
 		}
 	}
 
-	
-	
+
+
 	private static String findRegExpFromStringList(Set<String> searchList) {
 		String regex = ".*("; 
 		for (String itemList : searchList) {
@@ -688,8 +700,8 @@ public class ReadSets extends ReadSetsController{
 			rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),rulesCode, readSet),null);
 		}else
 			return badRequest();
-		
+
 		return ok();
 	}
-	
+
 }

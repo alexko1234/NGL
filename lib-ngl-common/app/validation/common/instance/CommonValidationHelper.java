@@ -16,6 +16,7 @@ import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.project.instance.Project;
 import models.laboratory.resolutions.instance.ResolutionConfiguration;
+import models.laboratory.run.instance.SampleOnContainer;
 import models.laboratory.sample.instance.Sample;
 import models.laboratory.valuation.instance.ValuationCriteria;
 import models.utils.InstanceConstants;
@@ -580,5 +581,7 @@ public class CommonValidationHelper {
 	public static void validateExperimenCode(String expCode, ContextValidation contextValidation) {
 		BusinessValidationHelper.validateExistInstanceCode(contextValidation, "experimentCode",expCode, Experiment.class, InstanceConstants.EXPERIMENT_COLL_NAME);
 	}
+	
+		
 
 }

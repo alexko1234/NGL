@@ -3,6 +3,7 @@ package models.utils;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -244,6 +245,22 @@ public class InstanceHelpers {
 		return sc;
 	}
 
+	public static Sample convertToSample(ReadSet readSet)
+	{
+		SampleOnContainer sampleOnContainer = readSet.sampleOnContainer;
+		Sample sample = new Sample();
+		sample.code=sampleOnContainer.sampleCode;
+		sample.name=sampleOnContainer.sampleCode;
+		sample.typeCode=sampleOnContainer.sampleTypeCode;
+		sample.categoryCode=sampleOnContainer.sampleCategoryCode;
+		sample.properties=sampleOnContainer.properties;
+		sample.referenceCollab=sampleOnContainer.referenceCollab;
+		sample.projectCodes = new HashSet<>();
+		sample.projectCodes.add(readSet.projectCode);
+		sample.importTypeCode="external";
+		InstanceHelpers.getUpdateTraceInformation(sample.traceInformation, "ngl-bi");
+		return sample;
+	}
 	private static Content getContent(Container container, ReadSet readSet) {
 		String tag = getTag(readSet);
 		for (Content sampleUsed : container.contents) {

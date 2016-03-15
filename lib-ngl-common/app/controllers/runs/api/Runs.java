@@ -262,8 +262,14 @@ public class Runs extends RunsController {
 			return badRequest("use PUT method to update the readset");
 		}
 
+		RunsSaveForm runSaveForm = filledFormQueryString(RunsSaveForm.class);
+		
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 
 		ctxVal.setCreationMode();
+		if(runSaveForm.external!=null)
+			ctxVal.putObject("external", runSaveForm.external);
+		else
+			ctxVal.putObject("external", false);
 		runInput.validate(ctxVal);
 
 		if (!ctxVal.hasErrors()) {

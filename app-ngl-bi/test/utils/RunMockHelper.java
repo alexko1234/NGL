@@ -18,6 +18,7 @@ import models.laboratory.run.instance.InstrumentUsed;
 import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
+import models.laboratory.run.instance.SampleOnContainer;
 import models.laboratory.run.instance.Treatment;
 import models.laboratory.sample.instance.Sample;
 import play.libs.Json;
@@ -121,6 +122,16 @@ public class RunMockHelper {
 		s.traceInformation = ti;
 		
 		return s;
+	}
+	
+	public static SampleOnContainer newSampleOnContainer(String sampleCode)
+	{
+		SampleOnContainer soc = new SampleOnContainer();
+		soc.sampleCode=sampleCode;
+		soc.sampleTypeCode="sampleType";
+		soc.sampleCategoryCode="sampleCategory";
+		soc.referenceCollab="refCollab";
+		return soc;
 	}
 	
 	
