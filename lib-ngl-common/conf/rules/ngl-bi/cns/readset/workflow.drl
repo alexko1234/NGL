@@ -7,10 +7,7 @@ rule "Find Fungi for taxonomy treatment"
 	salience 600
 	no-loop
 	when
-		(or 
-			$readset : (ReadSet ( $treatmentTaxo:treatments["taxonomyKraken"] && $treatmentTaxo != null ))
-			$readset : (ReadSet ( $treatmentTaxo:treatments["taxonomy"] && $treatmentTaxo != null )) 			
-		)						
+			$readset : (ReadSet ( $treatmentTaxo:treatments["taxonomy"] && $treatmentTaxo != null )) 									
 	then
 		Logger.debug("Find Fungi in taxonomy krona "+$readset.code);	
 			
@@ -21,8 +18,11 @@ rule "Find Fungi for taxonomy treatment"
 		Pattern p2 = Pattern.compile(".*<node name=\"Fungi\"\\s+magnitude=\"(\\d+)\">.*", Pattern.DOTALL);
 		Matcher m2 = p2.matcher(krona);
 		
-		if(m1.matches() || m2.matches()){
-			String value = (m1.matches())?m1.group(1):m2.group(1);
+		Pattern p3 = Pattern.compile(".*<node name=\"Fungi\">.*<count><val>(\\d+)</val></count>.*", Pattern.DOTALL);
+		Matcher m3 = p3.matcher(krona);
+		
+		if(m1.matches() || m2.matches() || m3.matches()){
+			String value = (m1.matches())?m1.group(1):((m2.matches())?m2.group(1):m3.group(1));
 			Double fungiPercentValue = (Double.valueOf(value) / 20000) * 100;
 			Logger.debug("Match Group Fungi = "+fungiPercentValue);
 			
