@@ -478,7 +478,7 @@ public class CompareLimsVsNGL extends CommonController {
 			
 			cvrs.removeKeyFromRootKeyName(rs.code+" ("+rs.state.code+")");
 			if(cvrs.hasErrors() && update && (rs.state.code.equals("A") || rs.state.code.equals("UA")) && limsAbandonDAO.isLseqco(rs)){
-				 Logger.info("update support : "+rs.code);
+				 Logger.info("update readset : "+rs.code);
 				 try{
 					 limsAbandonDAO.insertFiles(rs,true);
 				 }catch(Throwable t){
