@@ -355,24 +355,19 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	
 		//OuputContainer
 		// GA 08/02/2016 =>  ces proprietes de containerOut doivent etre propagees au content
-		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null
-				, null, null, null,"single",30));
-		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null
-				, null, null, null,"single",31));
+		// GA 14/03/2016 => il faut specifié l'état auquel les propriétés sont obligatoire: ici Finished (F)
+		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", null, 
+				"single", 30, true, null,null));	
+		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", null, 
+				"single", 31, true, null,null));		
 		
-		// 11/03/2016 sampleAliquoteCode required mais non editable....
-		propertyDefinitions.add(newPropertiesDefinition("Code Aliquot", "sampleAliquoteCode", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null
-				, null, null, null,"single",31, false));
-					
+		
 		// pas de niveau content car théoriques( J Guy..)
 		propertyDefinitions.add(newPropertiesDefinition("Taille insert (théorique)", "insertSize", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, true, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),"single",32,true,"350", null));
 		propertyDefinitions.add(newPropertiesDefinition("Taille librairie (théorique)", "librarySize", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, true, null	
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),"single",33, true,"470",null));
-		
-		propertyDefinitions.add(newPropertiesDefinition("Volume", "volume", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, true, null, "20"
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode("µL"), MeasureUnit.find.findByCode("µL"),"single",34));
-		
+	
 		return propertyDefinitions;
 	}
 	
@@ -382,18 +377,11 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
 		//InputContainer
-		// calculé automatiquement en fonction du volume final et concentration final demandés => required mais non modifiable
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode("µL"), "single",20, false));
+		// calculé automatiquement en fonction du volume final et concentration final demandés ou saisie libre, non obligatoire
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode("µL"),"single", 20, true, null,null));		
 		
 		//OuputContainer
-		// valeur par defaut de normalization=> 2 nM 
-		//=>  ces proprietes de containerOut doivent etre propagees au content ??  NON ce sont des propriété d'expérience...
-		propertyDefinitions.add(newPropertiesDefinition("Concentration finale", "concentration", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null, "2"
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode( "nM"), MeasureUnit.find.findByCode("nM"), "single",130));
-		// a saisir par l'utilisateur
-		propertyDefinitions.add(newPropertiesDefinition("Volume final", "volume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode("µL"), "single",140));
 		
 		return propertyDefinitions;
 	}

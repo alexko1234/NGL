@@ -335,7 +335,7 @@ public class LimsCNGDAO {
 			content.properties = new HashMap<String, PropertyValue>();
 			
 			//FDS 20/01/2016 ne pas ajouter ces proprietes pour sample-well, elle ne peuvent pas exister...
-			if (! specialContainerCategoryCode.equals("sample-well"))
+			if (! "sample-well".equals(specialContainerCategoryCode))
 			{
 				if (rs.getString("tag")!=null) { 
 					content.properties.put("tag", new PropertySingleValue(rs.getString("tag")));
@@ -360,6 +360,10 @@ public class LimsCNGDAO {
 				else {
 					Logger.warn("[commonContainerMapRow] content aliquote code : null !!!!!");
 					content.properties.put("sampleAliquoteCode", new PropertySingleValue("-1"));// specific value for making comparison, suppressed in demultiplexContainer
+				}
+			}else if ("sample-well".equals(specialContainerCategoryCode)){
+				if (rs.getString("aliquote_code")!=null) { 
+					content.properties.put("sampleAliquoteCode", new PropertySingleValue(rs.getString("aliquote_code")));
 				}
 			}
 			

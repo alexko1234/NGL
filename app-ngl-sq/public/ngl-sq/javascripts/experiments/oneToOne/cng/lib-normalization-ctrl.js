@@ -1,7 +1,6 @@
 angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'atmToSingleDatatable',
                                                      function($scope, $parse, atmToSingleDatatable){
-// FDS 15/02/2016 -- JIRA NGL-894 : lib-normalization experiment
-// probleme comment traiter des tubes ou des plaques ???
+// FDS 15/02/2016 -- JIRA NGL-894 : lib-normalization experiment (en plaques)
 	
 	var inputExtraHeaders=Messages("experiments.inputs");
 	var outputExtraHeaders=Messages("experiments.outputs");	
@@ -87,42 +86,42 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 					 	"order":true,
 					 	"hide":true,
 					 	"type":"text",
-					 	"position":6,
+					 	"position":7,
 					 	"render":"<div list-resize='cellValue | unique' list-resize-min-size='3'>",
 					    "extraHeaders":{0:inputExtraHeaders}
 					 },
 					 { //Concentration
 			        	 "header":Messages("containers.table.concentration") + " (ng/µL)", 
-			        	 "property":"inputContainer.concentration.value",  /// rien sans Used ????
+			        	 "property":"inputContainer.concentration.value",  
+			        	 // pour l'instant qpcr pas pres...mettre editable et ne valeur par defaut 5..
+			        	      "edit":true,
+			        	      "defaultValues": 5,
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":13,
+			        	 "position":8,
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
-			         { //Volume   a afficher ou pas ???
+			         { //Volume 
 			        	 "header":Messages("containers.table.volume") + " (µL)", 
-			        	 "property":"inputContainer.volume.value",  /// rien sans Used ????
+			        	 "property":"inputContainer.volume.value",
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":14,
+			        	 "position":9,
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
-			               
-			         // colonnes specifiques instrument viennent ici.. Volume engagé
-			         
 			         { // Etat input Container
 			        	 "header":Messages("containers.table.state.code"),
-			        	 "property":"inputContainer.state.code",
+			        	 "property":"inputContainer.state.code | codes:'state'",
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"text",
-						 "filter":"codes:'state'",
-			        	 "position":30,
+			        	 "position":10,
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
-			         
+			         // colonnes specifiques experience viennent ici.. Volume engagé
+			          
 			         //------------------------ OUTPUT containers section -------------------
 
 		            /* ne pas aficher les containercodes sauf pour DEBUG 
@@ -164,8 +163,30 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 			        	 "position":111,
 			        	 "extraHeaders":{0:outputExtraHeaders}
 			         },	
-			         // Concentration => propriete de l'experiment
-			         // Volume mesuree =>  propriete de l'experiment
+			         { // Concentration           EDITABLE???
+			        	 "header":Messages("containers.table.concentration") + " (nM)",
+			        	 //marche pas "property":"outputContainerUsed.concentration.value",
+			        	 "property":"outputContainer.concentration.value",
+			        	 "order":true,
+			        	 "defaultValues": 2,
+						 "edit":true,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":120,
+			        	 "extraHeaders":{0:outputExtraHeaders}
+			         },
+			         { // Volume                 EDITABLE???
+			        	 "header":Messages("containers.table.volume")+ " (µL)",
+			        	//marche pas "property":"outputContainerUsed.volume.value",
+			        	 "property":"outputContainer.volume.value",
+			        	 "order":true,
+						 "edit":true,
+						 "defaultValues": 15,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":130,
+			        	 "extraHeaders":{0:outputExtraHeaders}
+			         },
 			         { // Etat outpout container      !! containers.table.stateCode c'est pour le support
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"outputContainer.state.code | codes:'state'",

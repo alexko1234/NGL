@@ -104,21 +104,6 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			         
 			         //--->  colonnes specifiques instrument s'inserent ici  (outputUsed ??)
 			         
-			         /* essai 10/03/2016 .. le volume final a une valeur par defaut..==> experimentService
-			          * mais dans ce cas le volume ne se retrouve pas 
-			         { // Volume attribut de l'outputerContainer...pas Used
-			        	 "header":Messages("containers.table.volume")+ " (µL)",
-			        	 "property":"outputContainer.volume.value",
-			        	 "order":true,
-						 "edit":true,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":120,
-			        	 "extraHeaders":{0: outputExtraHeaders}
-			         },
-			         */
-			         // Pas de concentration, elle sera mesuree plus tard...
-			         
 		            /* ne pas aficher les containercodes  sauf pour DEBUG
 			         {
 			        	 "header":"DEBUG code",
@@ -130,6 +115,16 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			        	 "position":99,
 			        	 "extraHeaders":{0: outputExtraHeaders}
 			         },*/
+			         { // Volume avec valeur par defaut
+			        	 "header":Messages("containers.table.volume") + " (µL)",
+			        	 "property":"outputContainerUsed.volume.value",
+			        	 "hide":true,
+			        	 "edit":true,
+			        	 "type":"number",
+			        	 "defaultValues":20,
+			        	 "position":34,
+			        	 "extraHeaders":{0: outputExtraHeaders}
+			         },
 			         { //  barcode plaque sortie == support Container used code... faut Used 
 			        	 "header":Messages("containers.table.support.name"),
 			        	 "property":"outputContainerUsed.locationOnContainerSupport.code", 
@@ -248,16 +243,6 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 				if( null != outputContainerSupportStorageCode && undefined != outputContainerSupportStorageCode){
 				    $parse('outputContainerUsed.locationOnContainerSupport.storageCode').assign(dataMain[i],outputContainerSupportStorageCode);
 				}
-					
-				// 11/03/2016 ajouter aussi la propriété sampleAliquoteCode
-				var icCode= dataMain[i].inputContainer.code;
-				// Merci Maud !!
-				//console.log ("assigning inputContainerUsed code  "+ i + ": "+ icCode + " into outputContainerUsed.experimentProperties.sampleAliquoteCode.value");	
-				$parse("outputContainerUsed.experimentProperties.sampleAliquoteCode.value").assign(dataMain[i], icCode);
-				
-				// 11/03/2016 paareil pour le volume...??
-				var ocVolume=$parse("outputContainerUsed.experimentProperties.volume.value")
-				$parse("outputContainerUsed.volume.value").assign(dataMain[i], ocVolume);
 			}
 		}
 		
@@ -297,7 +282,6 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	//defined new atomictransfertMethod
-	// FDS ajout variables pour ligne et colonne ( doivent etre prises en compte dans atomicTransfereServices.js)
 	atmService.newAtomicTransfertMethod = function(l, c){
 		return {
 			class:"OneToOne",
@@ -310,8 +294,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 	
 	//defined default output unit
 	atmService.defaultOutputUnit = {
-			volume : "µL",
-			concentration : "nM"
+			volume : "µL"
 	}
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
@@ -331,7 +314,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			//only atm because we cannot override directly experiment on scope.parent
 			$scope.experiment.atomicTransfertMethods = data.atomicTransfertMethods;
 			$scope.file = undefined;
-			// reinitialiser le  select File...
+			// reinit select File...
 			angular.element('#importFile')[0].value = null;
 			$scope.$emit('refresh');
 			
@@ -343,7 +326,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			$scope.messages.setDetails(data);
 			$scope.messages.open();	
 			$scope.file = undefined;
-			// reinitialiser le  select File...
+			// reinit select File...
 			angular.element('#importFile')[0].value = null;
 		});		
 	};
@@ -362,8 +345,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 	
 	$scope.button = {
 		isShow:function(){
-			// !! l'import a l'etat 'A sauvegarder' genere une erreur...
-			return ( ( $scope.isInProgressState()|| $scope.isNewState() )&& !$scope.mainService.isEditMode())
+			return ( $scope.isInProgressState() && !$scope.mainService.isEditMode())
 			},
 		isFileSet:function(){
 			return ($scope.file === undefined)?"disabled":"";

@@ -1,0 +1,53 @@
+package rules
+
+// 14/03/2016 verification du volume de sortie des containers lib-normalization
+// NOTE: il faut passer par drools pour les verification sur les attributs
+rule "Volume not null in lib-normalization outputContainer"
+    @nglSQ( validations )
+	dialect "java"
+	salience 940
+	no-loop
+    when
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="lib-normalization")
+    	State($stateCode:code=="IP")
+		$atomicTransfert: OneToOneContainer($inputContainerUsed:inputContainerUseds.get(0), $outputContainerUsed: outputContainerUseds.get(0))
+	   	OutputContainerUsed($volume: volume) from $outputContainerUsed
+    	$contextValidation:ContextValidation()
+    	eval($volume == null || $volume.value == null || $volume.value == "")
+    then
+    	Logger.debug("Volume not null in lib-normalization outputContainer");   
+    	// voir fichier messages pour le libellé des erreurs
+   		$contextValidation.addErrors("lib-normalization","error.validationexp.outputvolumenotnull", $outputContainerUsed.code);
+end
+
+// calcul automatique du volume engagé
+// copie depuis....pool-tubes /calculation.drl...
+rule "InputVolume in lib-normalization inputContainer"
+    @nglSQ( calculations )
+	dialect "java"
+	salience 920
+	no-loop
+    when
+		$experiment:Experiment($typeCode:typeCode,$typeCode=="lib-normalization")
+		State($stateCode:code=="IP")
+		$atomicTransfert: OneToOneContainer($inputContainerUsed:inputContainerUseds.get(0), $outputContainerUsed: outputContainerUseds.get(0))	
+		InputContainerUsed($inputConcentration: concentration, $inputConcentration!=null) from $inputContainerUsed
+		OutputContainerUsed($outputVolume: volume,               $outputVolume!=null      ) from $outputContainerUsed
+		OutputContainerUsed($outputConcentration: concentration, $outputConcentration!=null) from $outputContainerUsed
+   then
+        Logger.debug("InputVolume calculation");
+        Logger.debug("outputVolume="+ Double.parseDouble($outputVolume.getValue().toString()) );  
+ 		Logger.debug("inputConcentration"+ Double.parseDouble($inputConcentration.getValue().toString()) );
+        Double inputVolume = roundValue( (Double.parseDouble($outputConcentration.getValue().toString()) *  Double.parseDouble($outputVolume.getValue().toString()) ) /  Double.parseDouble($inputConcentration.getValue().toString()) );
+        Logger.debug("inputVolume"+ inputVolume);
+        
+        PropertySingleValue propertySingle = new PropertySingleValue(inputVolume, "\u00B5L");
+        if($inputContainerUsed.experimentProperties==null){
+			$inputContainerUsed.experimentProperties = new HashMap<String, PropertyValue>();		
+		}else if($inputContainerUsed.experimentProperties.containsKey("inputVolume")){
+			$inputContainerUsed.experimentProperties.remove("inputVolume");
+		}	
+	    $inputContainerUsed.experimentProperties.put("inputVolume", propertySingle);
+		Logger.debug("inputVolume=",propertySingle.getValue());
+		update($experiment);
+end

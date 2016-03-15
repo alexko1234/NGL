@@ -47,8 +47,8 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		     =>surcharger un peu le parametre containerCategoryCode
 		       sample-well / library-well au lieu de simplement 'well'
 		*/	
-	    //loadContainers("sample-well",null,"is");// is=in stock
-	    //updateContainers("sample-well",null);
+	    loadContainers("sample-well",null,"is");// is=in stock
+	    updateContainers("sample-well",null);
 		
 		// -3- librairies en tube
 		

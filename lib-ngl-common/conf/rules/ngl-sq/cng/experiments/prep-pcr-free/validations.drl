@@ -1,0 +1,21 @@
+package rules
+
+// 14/03/2016 verification du volume de sortie des containers prep-pcr-free
+// NOTE: il faut passer par drools pour les verification sur les attributs
+rule "Volume not null in prep-pcr-free outputContainer"
+    @nglSQ( validations )
+	dialect "java"
+	salience 940
+	no-loop
+    when
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="prep-pcr-free")
+    	State($stateCode:code=="IP")
+		$atomicTransfert: OneToOneContainer($inputContainerUsed:inputContainerUseds.get(0), $outputContainerUsed: outputContainerUseds.get(0))
+	   	OutputContainerUsed($volume: volume) from $outputContainerUsed
+    	$contextValidation:ContextValidation()
+    	eval($volume == null || $volume.value == null || $volume.value == "")
+    then
+    	Logger.debug("Volume not null in prep-pcr-free outputContainer");   
+    	// voir fichier messages pour le libellé des erreurs
+   		$contextValidation.addErrors("prep-pcr-free","error.validationexp.outputvolumenotnull", $outputContainerUsed.code);
+end
