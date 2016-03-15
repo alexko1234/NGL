@@ -384,6 +384,8 @@ public class Containers extends CommonController {
 				if(CollectionUtils.isNotEmpty(containersSearch.fromTransformationTypeCodes) && containersSearch.fromTransformationTypeCodes.contains("none")){
 						queryElts.add(DBQuery.or(DBQuery.size("fromTransformationTypeCodes", 0),DBQuery.notExists("fromTransformationTypeCodes")
 						,DBQuery.in("fromTransformationTypeCodes", containersSearch.fromTransformationTypeCodes)));					
+				}else if(CollectionUtils.isNotEmpty(containersSearch.fromTransformationTypeCodes)){
+					queryElts.add(DBQuery.in("fromTransformationTypeCodes", containersSearch.fromTransformationTypeCodes));
 				}else if(!onlyEx){
 					queryElts.add(DBQuery.in("fromTransformationTypeCodes", listePrevious));
 				}else{

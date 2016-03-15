@@ -125,7 +125,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				getInstruments(
 						createInstrument("wolverine", "Wolverine", null, true, "/bureautique/atelier/SOLEXA/Solstock_TECAN/", DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
 						createInstrument("arrow", "Arrow", null, true, "/bureautique/atelier/SOLEXA/Solstock_TECAN/", DescriptionFactory.getInstitutes(Constants.CODE.CNS))),
-						/*getContainerSupportCategories(new String[]{"96-well-plate"})*/null,getContainerSupportCategories(new String[]{"tube"/*,"96-well-plate"*/}), 
+						getContainerSupportCategories(new String[]{"tube","96-well-plate"}),getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		//TODO : verify getContainerSupportCategories parameters
