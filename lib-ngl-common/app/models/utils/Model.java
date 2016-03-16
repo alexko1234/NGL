@@ -1,10 +1,8 @@
 package models.utils;
 
-
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 
 import models.utils.dao.AbstractDAO;
 import models.utils.dao.DAOException;
@@ -20,69 +18,71 @@ public class Model<T> {
 	public Long id;
 	public String code;
 	protected String classNameDAO;
-    
+
 	@JsonIgnore
 	public Model() {
 		super();
 	}
+
 	@JsonIgnore
 	public Model(String classNameDAO) {
-      this.classNameDAO = classNameDAO;
-    }
+		this.classNameDAO = classNameDAO;
+	}
+
 	@JsonIgnore
-    @SuppressWarnings("unchecked")
-	public void update() throws DAOException
-    {
-    	getInstance().update((T)this);
-    }
+	@SuppressWarnings("unchecked")
+	public void update() throws DAOException {
+		getInstance().update((T) this);
+	}
+
 	@JsonIgnore
-    @SuppressWarnings("unchecked")
-	public long save() throws DAOException
-    {
-    	return getInstance().save((T)this);
-    	
-    }
+	@SuppressWarnings("unchecked")
+	public long save() throws DAOException {
+		return getInstance().save((T) this);
+
+	}
+
 	@JsonIgnore
-    @SuppressWarnings("unchecked")
-	public void remove() throws DAOException
-    {
-    	getInstance().remove((T)this);
-    }
+	@SuppressWarnings("unchecked")
+	public void remove() throws DAOException {
+		getInstance().remove((T) this);
+	}
+
 	@JsonIgnore
-    @SuppressWarnings("unchecked")
-	public AbstractDAO<T> getInstance() throws DAOException
-    {
-    	try {
-			return (AbstractDAO<T>) Spring.getBeanOfType(Class.forName(classNameDAO));
+	@SuppressWarnings("unchecked")
+	public AbstractDAO<T> getInstance() throws DAOException {
+		try {
+			return (AbstractDAO<T>) Spring.getBeanOfType(Class
+					.forName(classNameDAO));
 		} catch (ClassNotFoundException e) {
-			Logger.error("Class error: "+e.getMessage(),e);;
+			Logger.error("Class error: " + e.getMessage(), e);
+			;
 			throw new DAOException(e);
-		}catch(Exception e){
-			Logger.error("DAO error: "+e.getMessage(),e);
+		} catch (Exception e) {
+			Logger.error("DAO error: " + e.getMessage(), e);
 			throw new DAOException(e);
 		}
-    }
-    
-    public static class Finder<T>
-    {
-		
+	}
+
+	public static class Finder<T> {
+
 		private String className;
 
 		@JsonIgnore
 		public Finder(String className) {
 			this.className = className;
 		}
-		
+
 		@JsonIgnore
 		public T findByCode(String code) throws DAOException {
 			return getInstance().findByCode(code);
 		}
-		
+
 		@JsonIgnore
 		public List<T> findByCodes(List<String> codes) throws DAOException {
 			return getInstance().findByCodes(codes);
 		}
-		
+
 		@JsonIgnore
 		public Boolean isCodeExist(String code) throws DAOException {
 			return getInstance().isCodeExist(code);
@@ -108,11 +108,11 @@ public class Model<T> {
 				throw new DAOException(e);
 			}
 		}
-		
+
 		public String getClassName() {
 			return className;
-		}		
-    }
+		}
+	}
 
 	@Override
 	public int hashCode() {
@@ -121,6 +121,7 @@ public class Model<T> {
 		result = prime * result + ((code == null) ? 0 : code.hashCode());
 		return result;
 	}
+
 	@JsonIgnore
 	@Override
 	public boolean equals(Object obj) {
@@ -139,5 +140,5 @@ public class Model<T> {
 			return false;
 		return true;
 	}
-   
+
 }

@@ -185,13 +185,14 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 	/**
 	 * Particular sql with two code must be implemented
 	 */
+	/*
 	public CommonInfoType findByCode(String code) throws DAOException {
 		String sql = sqlCommon+
 				"WHERE t.code = ? ";
 		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sql, new SqlParameter("code",Types.VARCHAR));
 		return commonInfoTypeMappingQuery.findObject(code);
 	}
-
+	 */
 	public List<CommonInfoType> findByObjectTypeCode(CODE objectTypeCode) {
 		String sql = sqlCommon+
 				" WHERE o.code=? order by t.name";		

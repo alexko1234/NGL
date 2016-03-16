@@ -30,16 +30,12 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
 import play.Logger;
-import play.api.modules.spring.Spring;
 import play.data.validation.ValidationError;
-import services.description.StateService;
 import validation.ContextValidation;
-import validation.common.instance.CommonValidationHelper;
 import static validation.utils.ValidationConstants.*;
 
 public class ValidationHelper {
 	
-	private static StateService stateService = Spring.getBeanOfType(StateService.class);
 	
 	public static void validateProperties(ContextValidation contextValidation, Map<String, PropertyValue> properties,List<PropertyDefinition> propertyDefinitions, Boolean validateNotDefined) {
 		validateProperties(contextValidation, properties, propertyDefinitions, validateNotDefined, true, null, null);
@@ -142,8 +138,8 @@ public class ValidationHelper {
 		if(null == currentStateCode || (null == defaultRequiredState && null == requiredState)){
 			return true;
 		}else{
-			State currentState = stateService.getStateDescription(currentStateCode);
-			State pdRequiredState = stateService.getStateDescription((requiredState == null)?defaultRequiredState:requiredState);
+			State currentState = State.find.findByCode(currentStateCode);
+			State pdRequiredState = State.find.findByCode((requiredState == null)?defaultRequiredState:requiredState);
 			return currentState.position >= pdRequiredState.position;
 		}						
 	}
@@ -370,7 +366,7 @@ public class ValidationHelper {
 			propertyValue.value = cleanValue(propertyValue.value);
 			Class<?> valueClass = getClass(propertyDefinition.valueType);
 			if(null != propertyValue.value && !valueClass.isInstance(propertyValue.value)){ //transform only if not the good type
-				Logger.debug("convertValue "+propertyDefinition.code);
+				//Logger.debug("convertValue "+propertyDefinition.code);
 				propertyValue.value = convertValue(valueClass, propertyValue.value.toString(), null);
 			}
 			if(propertyDefinition.saveMeasureValue!=null && propertyValue.unit == null){

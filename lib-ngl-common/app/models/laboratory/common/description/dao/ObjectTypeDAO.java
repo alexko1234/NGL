@@ -74,11 +74,13 @@ public class ObjectTypeDAO extends AbstractDAOMapping<ObjectType>{
 	/**
 	 * Particular sql with two code must be implemented
 	 */
+	/*
 	public ObjectType findByCode(String code) throws DAOException {
 		String sql = sqlCommon+
 				"WHERE t.code = ? ";
 		ObjectTypeMappingQuery objectTypeMappingQuery = new ObjectTypeMappingQuery(dataSource, sql, new SqlParameter("code",Types.VARCHAR));
 		return objectTypeMappingQuery.findObject(code);
 	}
+	*/
 
 }

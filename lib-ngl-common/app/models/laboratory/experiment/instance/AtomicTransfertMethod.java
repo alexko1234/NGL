@@ -2,6 +2,7 @@ package models.laboratory.experiment.instance;
 
 import java.util.List;
 
+import play.Logger;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.container.description.ContainerSupportCategory;
 import validation.ContextValidation;
@@ -39,9 +40,20 @@ public abstract class AtomicTransfertMethod implements IValidation {
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
+		long t0 = System.currentTimeMillis();
 		ValidationHelper.required(contextValidation, line, "line");
 		ValidationHelper.required(contextValidation, column, "column");
+		long t1 = System.currentTimeMillis();
 		AtomicTransfertMethodValidationHelper.validateInputContainers(contextValidation, inputContainerUseds);
+		long t2 = System.currentTimeMillis();
+		/*
+		Logger.debug("ATM validate \n "
+				+"1 = "+(t1-t0)+" ms\n"
+				+"2 = "+(t2-t1)+" ms\n"
+				+"3 = "+(t2-t0)+" ms\n"
+				
+				);
+				*/
 		
 	}
 

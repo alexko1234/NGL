@@ -50,7 +50,7 @@ public abstract class AbstractDAOCommonInfoType<T extends CommonInfoType> extend
 			return null;
 		}
 	}
-
+/*
 	public T findById(Long id) throws DAOException {
 		if(null == id){
 			throw new DAOException("id is mandatory");
@@ -69,7 +69,7 @@ public abstract class AbstractDAOCommonInfoType<T extends CommonInfoType> extend
 		String sql= sqlCommon+" where t.code = ?";
 		return initializeMapping(sql, new SqlParameter("code",Types.VARCHAR)).findObject(code);
 	}
-
+*/
 
 	public List<ListObject> findAllForList(){
 		String sql = "SELECT t.code, t.name "+sqlCommonFrom;

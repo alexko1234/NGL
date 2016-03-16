@@ -1,5 +1,6 @@
 package models.laboratory.experiment.instance;
 
+import play.Logger;
 import models.laboratory.container.description.ContainerSupportCategory;
 import validation.ContextValidation;
 import validation.experiment.instance.AtomicTransfertMethodValidationHelper;
@@ -42,10 +43,24 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 	
 	@Override
 	public void validate(ContextValidation contextValidation) {
+		long t0 = System.currentTimeMillis();
 		super.validate(contextValidation);
+		long t1 = System.currentTimeMillis();
 		AtomicTransfertMethodValidationHelper.validateOneInputContainer(inputContainerUseds, contextValidation);
+		long t2 = System.currentTimeMillis();
 		AtomicTransfertMethodValidationHelper.validateOneOutputContainer(outputContainerUseds, contextValidation);
+		long t3 = System.currentTimeMillis();
 		AtomicTransfertMethodValidationHelper.validateOutputContainers(contextValidation, outputContainerUseds);
+		long t4 = System.currentTimeMillis();
+		/*
+		Logger.debug("ATMOneTOOne validate \n "
+				+"1 = "+(t1-t0)+" ms\n"
+			//	+"2 = "+(t2-t1)+" ms\n"
+			//	+"3 = "+(t3-t2)+" ms\n"
+				+"4 = "+(t4-t3)+" ms\n"
+		//		+"5 = "+(t2-t0)+" ms\n"
+				);
+		*/
 	}
 
 }

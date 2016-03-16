@@ -52,9 +52,15 @@ public abstract class AbstractDAOMapping<T> extends AbstractDAO<T> {
 		if(null == code){
 			throw new DAOException("code is mandatory");
 		}
-		
-		String sql= sqlCommon+" where t.code = ?";
-		return initializeMapping(sql, new SqlParameter("code",Types.VARCHAR)).findObject(code);
+		T o = getObjectInCache(code);
+		if(null != o){
+			return o;
+		}else{
+			String sql= sqlCommon+" where t.code = ?";
+			o = initializeMapping(sql, new SqlParameter("code",Types.VARCHAR)).findObject(code);
+			setObjectInCache(o, code);
+			return o;
+		}
 	}
 
 	public List<T> findByCodes(List<String> codes) throws DAOException

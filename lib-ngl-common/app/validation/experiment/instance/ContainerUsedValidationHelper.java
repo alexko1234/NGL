@@ -33,6 +33,7 @@ import fr.cea.ig.MongoDBDAO;
 
 public class ContainerUsedValidationHelper extends CommonValidationHelper {
 
+		
 	public static void compareInputContainerWithContainer(InputContainerUsed inputContainer,
 			Container container, ContextValidation contextValidation) {
 		
@@ -67,7 +68,7 @@ public class ContainerUsedValidationHelper extends CommonValidationHelper {
 		InstrumentUsed instrument = getObjectFromContext(FIELD_INST_USED, InstrumentUsed.class, contextValidation);
 		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
 		
-		InstrumentUsedType instType=InstrumentUsedType.find.findByCode(instrument.typeCode);
+		InstrumentUsedType instType= InstrumentUsedType.find.findByCode(instrument.typeCode);
 		if(instType!=null){
 			contextValidation.addKeyToRootKeyName("instrumentProperties");
 			List<PropertyDefinition> propertyDefinitions=instType.getPropertyDefinitionByLevel(level);

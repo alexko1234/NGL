@@ -120,13 +120,21 @@ public abstract class AbstractDAODefault<T> extends AbstractDAO<T>{
 		if(null == code){
 			throw new DAOException("code is mandatory");
 		}
-		try {
-			String sql = getSqlCommon()+" WHERE t.code=?";
-			BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
-			return this.jdbcTemplate.queryForObject(sql, mapper, code);
-		} catch (DataAccessException e) {
-			Logger.warn(e.getMessage());
-			return null;
+		
+		T o = getObjectInCache(code);
+		if(null != o){
+			return o;
+		}else{
+			try {
+				String sql = getSqlCommon()+" WHERE t.code=?";
+				BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(entityClass);
+				o = this.jdbcTemplate.queryForObject(sql, mapper, code);
+				setObjectInCache(o, code);
+				return o;
+			} catch (DataAccessException e) {
+				Logger.warn(e.getMessage());
+				return null;
+			}
 		}
 	}
 	

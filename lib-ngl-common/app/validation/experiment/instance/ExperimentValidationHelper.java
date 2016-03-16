@@ -3,10 +3,12 @@ package validation.experiment.instance;
 import static validation.utils.ValidationHelper.required;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
@@ -28,6 +30,7 @@ import models.utils.InstanceConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 
+import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
@@ -107,10 +110,31 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 		}
 	}
 
-	public static void validateAtomicTransfertMethods(String expTypeCode, InstrumentUsed instrument, List <AtomicTransfertMethod> atomicTransfertMethods, ContextValidation contextValidation) {
+	public static void validateAtomicTransfertMethods(String expTypeCode, InstrumentUsed instrument, List<AtomicTransfertMethod> atomicTransfertMethods, ContextValidation contextValidation) {
+		
+		
+		
+		IntStream.range(0, atomicTransfertMethods.size()).parallel().forEach(i -> {
+			ContextValidation cv = new ContextValidation(contextValidation.getUser());
+			cv.putObject(FIELD_STATE_CODE, contextValidation.getObject(FIELD_STATE_CODE));
+			cv.putObject(FIELD_EXPERIMENT, contextValidation.getObject(FIELD_EXPERIMENT));
+			cv.putObject(FIELD_TYPE_CODE , expTypeCode);
+			cv.putObject(FIELD_INST_USED , instrument);
+			cv.setRootKeyName(cv.getRootKeyName());
+			String rootKeyName="atomictransfertmethod"+"["+i+"]";
+			cv.addKeyToRootKeyName(rootKeyName);
+			atomicTransfertMethods.get(i).validate(cv);
+			if(cv.hasErrors()){
+				contextValidation.addErrors(cv.errors);
+			}
+			cv.removeKeyFromRootKeyName(rootKeyName);
+		});
+		/*
+		//Code before stream
 		String rootKeyName;
 		contextValidation.putObject(FIELD_TYPE_CODE , expTypeCode);
 		contextValidation.putObject(FIELD_INST_USED , instrument);
+		
 		for(int i=0;i<atomicTransfertMethods.size();i++){
 			rootKeyName="atomictransfertmethod"+"["+i+"]";
 			if(atomicTransfertMethods.get(i)!=null){
@@ -122,10 +146,31 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			}
 			
 		}
+		*/
+		/*
+		atomicTransfertMethods.stream().forEach(atm -> {
+			
+			ContextValidation cv = new ContextValidation(contextValidation.getUser());
+			cv.putObject(FIELD_STATE_CODE, contextValidation.getObject(FIELD_STATE_CODE));
+			cv.putObject(FIELD_EXPERIMENT, contextValidation.getObject(FIELD_EXPERIMENT));
+			cv.putObject(FIELD_TYPE_CODE , expTypeCode);
+			cv.putObject(FIELD_INST_USED , instrument);
+			cv.setRootKeyName(cv.getRootKeyName());
+			cv.addKeyToRootKeyName("atomictransfertmethod");
+			atm.validate(cv);
+			if(cv.hasErrors()){
+				contextValidation.addErrors(cv.errors);
+			}
+			cv.removeKeyFromRootKeyName("atomictransfertmethod");
+			
+		});
 		
-		//TODO GA validate number of ATM against SupportContainerCategory nbLine and nbColumn
+		
 		contextValidation.removeObject(FIELD_TYPE_CODE);
 		contextValidation.removeObject(FIELD_INST_USED);
+		*/
+
+		//TODO GA validate number of ATM against SupportContainerCategory nbLine and nbColumn
 	}
 
 	public static void validateInstrumentUsed(InstrumentUsed instrumentUsed, Map<String,PropertyValue> properties, ContextValidation contextValidation) {

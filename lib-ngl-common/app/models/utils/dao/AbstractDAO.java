@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import models.laboratory.common.description.State;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
@@ -16,6 +18,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import play.Logger;
+import play.cache.Cache;
 
 /**
  * Common operations between Simple DAO et DAO Using mappingQuery
@@ -115,5 +118,25 @@ public abstract class AbstractDAO<T> {
 			params[i] =  new SqlParameter(paramName, type);
 		}
 		return params;
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected T getObjectInCache(String code){
+		if(null != code){
+			try {
+				String key = entityClass.toString()+"."+code;
+				return (T) Cache.get(key);				
+			} catch (DAOException e) {
+				throw new RuntimeException(e);
+			}
+		}else{
+			return null;
+		}		
+	}
+	
+	protected void setObjectInCache(T o, String code){
+		if(null != o && null != code){
+			Cache.set(entityClass.toString()+"."+code, o, 60 * 60);
+		}		
 	}
 }
