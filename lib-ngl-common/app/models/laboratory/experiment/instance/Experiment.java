@@ -149,7 +149,7 @@ public class Experiment extends DBObject implements IValidation {
 		contextValidation.removeObject(FIELD_EXPERIMENT);
 		
 		long t14 = System.currentTimeMillis();
-		
+		/*
 		Logger.debug("Experiment validate \n "
 				+"1 = "+(t1-t0)+" ms\n"
 				+"2 = "+(t2-t1)+" ms\n"
@@ -168,7 +168,7 @@ public class Experiment extends DBObject implements IValidation {
 				+"15 = "+(t14-t0)+" ms\n"
 				
 				);
-			
+		*/	
 				
 	}
 
