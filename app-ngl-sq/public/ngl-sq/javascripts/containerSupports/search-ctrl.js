@@ -14,11 +14,11 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 			mode:'local'
 		},
 		edit:{
-			active:Permissions.Check("writing")?true:false,
+			active:Permissions.check("writing")?true:false,
 			columnMode:true
 		},
 		save:{
-			active:Permissions.Check("writing")?true:false,
+			active:Permissions.check("writing")?true:false,
 			url:jsRoutes.controllers.containers.api.ContainerSupports.updateStateBatch().url,
 			batch:true,
 			mode:'remote',
@@ -69,12 +69,12 @@ angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$rou
 				by:'code'
 			},
 			edit:{
-				active:Permissions.Check("writing")?true:false,
+				active:Permissions.check("writing")?true:false,
 				columnMode:true
 			},
 			
 			save:{
-				active:Permissions.Check("writing")?true:false,
+				active:Permissions.check("writing")?true:false,
 				url:function(line){return jsRoutes.controllers.containers.api.ContainerSupports.updateStateCode(line.code).url;},
 				mode:'remote',
 				method:'put',

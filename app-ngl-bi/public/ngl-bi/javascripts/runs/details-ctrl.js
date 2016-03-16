@@ -11,13 +11,13 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			select:{active:false},
 			showTotalNumberRecords:false,
 			edit : {
-				active:Permissions.Check("writing")?true:false,
+				active:Permissions.check("writing")?true:false,
 				showButton : false,
 				withoutSelect : true,
 				columnMode : true
 			},
 			save : {
-				active:Permissions.Check("writing")?true:false,
+				active:Permissions.check("writing")?true:false,
 				showButton : false,
 				changeClass : false,
 				url:function(line){

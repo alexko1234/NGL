@@ -61,11 +61,11 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParam
 				url:jsRoutes.controllers.readsets.api.ReadSets.list()
 			},
 			edit:{
-				active:Permissions.Check("writing")?true:false,
+				active:Permissions.check("writing")?true:false,
 				columnMode:true		    	
 			},			
 			save:{
-				active:Permissions.Check("writing")?true:false,
+				active:Permissions.check("writing")?true:false,
 				url: jsRoutes.controllers.readsets.api.ReadSets.valuationBatch().url,				
 				batch:true,
 				method:'put',
@@ -118,11 +118,11 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 
 				url:jsRoutes.controllers.readsets.api.ReadSets.list()
 			},
 			edit : {
-				active:Permissions.Check("writing")?true:false,
+				active:Permissions.check("writing")?true:false,
 				columnMode:true		    	
 			},
 			save : {
-				active:Permissions.Check("writing")?true:false,
+				active:Permissions.check("writing")?true:false,
 				url: jsRoutes.controllers.readsets.api.ReadSets.stateBatch().url,				
 				batch:true,
 				method:'put',
@@ -173,11 +173,11 @@ angular.module('home').controller('SearchBatchCtrl', ['$scope', '$routeParams', 
 				active:true
 			},
 			edit : {
-				active:Permissions.Check("writing")?true:false,
+				active:Permissions.check("writing")?true:false,
 				columnMode:true		    	
 			},
 			save : {
-				active:Permissions.Check("writing")?true:false,
+				active:Permissions.check("writing")?true:false,
 				url: jsRoutes.controllers.readsets.api.ReadSets.propertiesBatch().url,				
 				batch:true,
 				method:'put',

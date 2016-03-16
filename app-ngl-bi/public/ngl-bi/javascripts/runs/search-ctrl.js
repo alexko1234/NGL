@@ -100,11 +100,11 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 
 				mode:'local'
 			},
 			edit : {
-				active:Permissions.Check("writing")?true:false,
+				active:Permissions.check("writing")?true:false,
 				columnMode:true		    	
 			},
 			save : {
-				active:Permissions.Check("writing")?true:false,
+				active:Permissions.check("writing")?true:false,
 				url: jsRoutes.controllers.runs.api.State.updateBatch().url,				
 				batch:true,
 				method:'put',
