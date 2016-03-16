@@ -133,7 +133,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			        	 "position":35,
 			        	 "extraHeaders":{0: outputExtraHeaders}
 			         },  
-			         { //  Ligne... faut Used 
+			         { //  Ligne 
 			        	 "header":Messages("containers.table.support.line"),
 			        	 "property":"outputContainerUsed.locationOnContainerSupport.line", 
 			        	 "order":true,
@@ -142,7 +142,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			        	 "position":36,
 			        	 "extraHeaders":{0: outputExtraHeaders}
 			         },     
-			         { // colonne... faut Used 
+			         { // colonne
 			        	 "header":Messages("containers.table.support.column"),
 			        	 // astuce GA: pour pouvoir trier les colonnes dans l'ordre naturel forcer a numerique.=> type:number,   property:  *1
 			        	 "property":"outputContainerUsed.locationOnContainerSupport.column*1", 

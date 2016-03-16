@@ -1,0 +1,47 @@
+package rules
+
+rule "Debug lib-normalization"
+	@nglSQ( calculations )
+	dialect "java"
+	salience 1000
+	no-loop
+    when
+		$experiment:Experiment($typeCode:typeCode,$typeCode=="lib-normalization")
+    eval(true)
+    then
+		Logger.debug("Rules annotation @nglSQ(calculations) lib-normalization");    
+end
+
+// calcul du volume engagé
+rule "InputVolume in lib-normalization inputContainer"
+    @nglSQ( calculations )
+	dialect "java"
+	salience 920
+	no-loop
+    when
+		$experiment:Experiment($typeCode:typeCode,$typeCode=="lib-normalization")
+		$atomicTransfert: OneToOneContainer($inputContainerUsed:inputContainerUseds.get(0), $outputContainerUsed: outputContainerUseds.get(0))	
+		InputContainerUsed($inputConcentration: concentration, $inputConcentration!=null ) from $inputContainerUsed
+		InputContainerUsed($inputVolume: volume, $inputVolume!=null ) from $inputContainerUsed
+		OutputContainerUsed($outputVolume: volume,   $outputVolume!=null  ) from $outputContainerUsed
+		OutputContainerUsed($outputConcentration: concentration, $outputConcentration!=null) from $outputContainerUsed
+   then
+        //Logger.debug("InputVolume calculation");
+        //Logger.debug("inputvolume="+ Double.parseDouble($inputVolume.getValue().toString()) );
+        //Logger.debug("inputConcentration="+ Double.parseDouble($inputConcentration.getValue().toString()) );
+        //Logger.debug("outputVolume="+ Double.parseDouble($outputVolume.getValue().toString()) );  
+ 		//Logger.debug("outputConcentration="+ Double.parseDouble($outputConcentration.getValue().toString()) );
+
+        Double iVolume = roundValue( (Double.parseDouble($outputConcentration.getValue().toString()) *  Double.parseDouble($outputVolume.getValue().toString()) ) /  Double.parseDouble($inputConcentration.getValue().toString()) );
+        Logger.debug("setting inputVolume="+ iVolume);   
+        PropertySingleValue propertySingle = new PropertySingleValue(iVolume, "\u00B5L");
+        
+        if($inputContainerUsed.experimentProperties==null){
+			$inputContainerUsed.experimentProperties = new HashMap<String, PropertyValue>();		
+		}else if($inputContainerUsed.experimentProperties.containsKey("inputVolume")){
+			$inputContainerUsed.experimentProperties.remove("inputVolume");
+		}	
+	    $inputContainerUsed.experimentProperties.put("inputVolume", propertySingle);
+		Logger.debug("inputVolume=",propertySingle.getValue());
+		update($experiment);
+end

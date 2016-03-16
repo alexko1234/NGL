@@ -93,9 +93,6 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 					 { //Concentration
 			        	 "header":Messages("containers.table.concentration") + " (ng/µL)", 
 			        	 "property":"inputContainer.concentration.value",  
-			        	 // pour l'instant qpcr pas pres...mettre editable et ne valeur par defaut 5..
-			        	      "edit":true,
-			        	      "defaultValues": 5,
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"number",
@@ -165,33 +162,27 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 			         },	
 			         { // Concentration           EDITABLE???
 			        	 "header":Messages("containers.table.concentration") + " (nM)",
-			        	 //marche pas "property":"outputContainerUsed.concentration.value",
-			        	 "property":"outputContainer.concentration.value",
-			        	 "order":true,
-			        	 "defaultValues": 2,
+			        	 "property":"outputContainerUsed.concentration.value",
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
+			        	 "defaultValues":2,
 			        	 "position":120,
 			        	 "extraHeaders":{0:outputExtraHeaders}
 			         },
-			         { // Volume                 EDITABLE???
+			         { // Volume  avec valeur par defaut              EDITABLE???
 			        	 "header":Messages("containers.table.volume")+ " (µL)",
-			        	//marche pas "property":"outputContainerUsed.volume.value",
-			        	 "property":"outputContainer.volume.value",
-			        	 "order":true,
+			        	 "property":"outputContainerUsed.volume.value",
 						 "edit":true,
-						 "defaultValues": 15,
 						 "hide":true,
 			        	 "type":"number",
+						 "defaultValues":15,
 			        	 "position":130,
 			        	 "extraHeaders":{0:outputExtraHeaders}
 			         },
 			         { // Etat outpout container      !! containers.table.stateCode c'est pour le support
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"outputContainer.state.code | codes:'state'",
-			        	 "order":true,
-						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":160,
