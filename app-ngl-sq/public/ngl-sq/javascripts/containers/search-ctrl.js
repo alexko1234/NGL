@@ -26,14 +26,13 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 		},
 		exportCSV:{
 			active:true
-		}
-		/*,
+		},
 		edit:{
-			active:true,
+			active:Permissions.Check("writing")?true:false,
 			columnMode:true
 		},
 		save:{
-			active:true,
+			active:Permissions.Check("writing")?true:false,
 			url:jsRoutes.controllers.containers.api.Containers.updateBatch().url,
 			batch:true,
 			method:'put',
@@ -44,7 +43,6 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 			}
 		
 		}
-		*/
 	};
 
 	
@@ -86,14 +84,14 @@ angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$rou
 				mode:'local'
 			},
 			edit:{
-				active:true,
+				active:Permissions.Check("writing")?true:false,
 				columnMode:true
 			},
 			pagination:{
 				mode:'local'
 			},
 			save:{
-				active:true,
+				active:Permissions.Check("writing")?true:false,
 				url:function(line){return jsRoutes.controllers.containers.api.Containers.updateStateCode(line.code).url;},
 				mode:'remote',
 				method:'put',

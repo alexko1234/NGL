@@ -17,14 +17,14 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 				active:true
 			},
 			edit:{
-				active:true,
+				active:Permissions.Check("writing")?true:false,
 				columnMode:true
 			},
 			group:{
 				active:true
 			},
 			save:{
-				active:true,
+				active:Permissions.Check("writing")?true:false,
 				url:function(line){return jsRoutes.controllers.processes.api.Processes.update(line.code).url;},
 				mode:'remote',
 				method:'put',
@@ -81,11 +81,11 @@ angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$rou
 				mode:'local'
 			},
 			edit:{
-				active:true,
+				active:Permissions.Check("writing")?true:false,
 				columnMode:true
 			},
 			save:{
-				active:true,
+				active:Permissions.Check("writing")?true:false,
 				url:function(line){return jsRoutes.controllers.processes.api.Processes.updateStateCode(line.code).url;},
 				mode:'remote',
 				method:'put',
@@ -152,7 +152,7 @@ angular.module('home').controller('SearchRemoveCtrl', ['$scope','$location','$ro
 				active:false
 			},
 			remove:{
-				active:true,
+				active:Permissions.Check("writing")?true:false,
 				mode:"remote",
 				url:function(line){
 					return jsRoutes.controllers.processes.api.Processes.delete(line.code).url;

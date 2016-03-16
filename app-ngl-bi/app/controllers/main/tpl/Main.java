@@ -6,6 +6,7 @@ import java.util.List;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
+import models.administration.authorisation.Permission;
 import models.laboratory.common.description.CodeLabel;
 import models.laboratory.common.description.dao.CodeLabelDAO;
 import models.laboratory.run.instance.ReadSet;
@@ -17,11 +18,13 @@ import models.laboratory.valuation.instance.ValuationCriteria;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 import jsmessages.JsMessages;
+import play.Logger;
 import play.Play;
 import play.api.modules.spring.Spring;
 import play.i18n.Lang;
 import play.mvc.Content;
 import play.mvc.Controller;
+import play.mvc.Http.Context;
 import play.mvc.Result;
 import views.html.home ;
 
@@ -43,8 +46,26 @@ public class Main extends CommonController {
    public static Result jsCodes() {
 	   return ok(generateCodeLabel()).as("application/javascript");
    }
+   
+   /*
+    * jsPermissions() method
+    */
+   public static Result jsPermissions(){
+	   Logger.debug("Calling of jsPermissions() (bi-version)");
+	   return ok(listPermissions()).as("application/javascript");
+   }
+   private static String listPermissions(){
+	   List<Permission> permissions = Permission.find.findByUserLogin(Context.current().session().get("NGL_FILTER_USER"));
+	   StringBuilder sb = new StringBuilder();
+	   sb.append("Permissions.Check=(function(param){var listPermissions=[");
+	   for(Permission p:permissions){
+		   sb.append("\"").append(p.code).append("\",");
+	   }
+	   sb.append("];return(listPermissions.includes(param));})");
+	   return sb.toString();
+   }
 
-	private static String generateCodeLabel() {
+   private static String generateCodeLabel() {
 		CodeLabelDAO dao = Spring.getBeanOfType(CodeLabelDAO.class);
 		List<CodeLabel> list = dao.findAll();
 		
@@ -68,9 +89,9 @@ public class Main extends CommonController {
 		
 		sb.append("};return function(k){if(typeof k == 'object'){for(var i=0;i<k.length&&!ms[k[i]];i++);var m=ms[k[i]]||k[0]}else{m=ms[k]||k}for(i=1;i<arguments.length;i++){m=m.replace('{'+(i-1)+'}',arguments[i])}return m}})();");
 		return sb.toString();
-	}
+   }
 
-	private static void patchTara(StringBuilder sb) {
+   private static void patchTara(StringBuilder sb) {
 		sb.append("\"taraFilterCode.0-0.2\":\"AACC\",");
 		sb.append("\"taraFilterCode.0-inf\":\"AAZZ\",");
 		sb.append("\"taraFilterCode.0.1-0.2\":\"BBCC\",");
@@ -129,6 +150,6 @@ public class Main extends CommonController {
 		sb.append("\"taraDepthCode.DiscreteDepth\":\"ZZZ\",");
 		sb.append("\"taraDepthCode.IntegratedDepth\":\"IZZ\",");
 		
-	}
+   }
 
 }

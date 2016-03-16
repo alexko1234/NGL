@@ -61,11 +61,11 @@ angular.module('home').controller('SearchValuationCtrl', ['$scope', '$routeParam
 				url:jsRoutes.controllers.analyses.api.Analyses.list()
 			},
 			edit : {
-				active:true,
+				active:Permissions.Check("writing")?true:false,
 				columnMode:true		    	
 			},			
 			save : {
-				active:true,
+				active:Permissions.Check("writing")?true:false,
 				url: jsRoutes.controllers.analyses.api.Analyses.valuationBatch().url,				
 				batch:true,
 				method:'put',
@@ -117,11 +117,11 @@ angular.module('home').controller('SearchStateCtrl', ['$scope', '$routeParams', 
 				url:jsRoutes.controllers.analyses.api.Analyses.list()
 			},
 			edit : {
-				active:true,
+				active:Permissions.Check("writing")?true:false,
 				columnMode:true		    	
 			},			
 			save : {
-				active:true,
+				active:Permissions.Check("writing")?true:false,
 				url: jsRoutes.controllers.analyses.api.Analyses.stateBatch().url,				
 				batch:true,
 				method:'put',

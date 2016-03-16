@@ -2,21 +2,20 @@ package controllers.main.tpl;
 
 import java.util.List;
 
-import org.mongojack.DBQuery;
-
+import controllers.CommonController;
+import models.administration.authorisation.Permission;
+import fr.cea.ig.MongoDBDAO;
+import jsmessages.JsMessages;
 import models.laboratory.common.description.CodeLabel;
 import models.laboratory.common.description.dao.CodeLabelDAO;
 import models.laboratory.protocol.instance.Protocol;
 import models.utils.InstanceConstants;
-import jsmessages.JsMessages;
+import play.Logger;
 import play.Routes;
 import play.api.modules.spring.Spring;
+import play.mvc.Http.Context;
 import play.mvc.Result;
 import views.html.home;
-import controllers.CommonController;
-import controllers.authorisation.Authenticate;
-import controllers.authorisation.Permission;
-import fr.cea.ig.MongoDBDAO;
 
 
 public class Main extends CommonController{
@@ -31,7 +30,26 @@ public class Main extends CommonController{
 	   return ok(generateCodeLabel()).as("application/javascript");
    }
 
-	private static String generateCodeLabel() {
+   /*
+   * jsPermissions() method
+   * These methods generate Permissions.js' Check Method
+   */
+   public static Result jsPermissions() {
+      Logger.debug("Calling of jsPermissions()");
+      return ok(listPermissions()).as("application/javascript");
+   }
+   private static String listPermissions() {
+      List<Permission> permissions = Permission.find.findByUserLogin(Context.current().session().get("NGL_FILTER_USER"));
+	  StringBuilder sb = new StringBuilder();
+	  sb.append("Permissions.Check=(function(param){var listPermissions=[");
+	  for(Permission p:permissions){
+		  sb.append("\"").append(p.code).append("\",");
+	  }
+	  sb.append("];return(listPermissions.includes(param));})");
+      return sb.toString();
+   }
+   
+   private static String generateCodeLabel() {
 		CodeLabelDAO dao = Spring.getBeanOfType(CodeLabelDAO.class);
 		List<CodeLabel> list = dao.findAll();
 		

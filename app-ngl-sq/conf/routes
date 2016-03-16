@@ -59,3 +59,4 @@ POST	   /createtemplate												controllers.dataload.SampleLoad.createTemplat
 GET     /assets/*file               									controllers.Assets.at(path="/public", file)
 GET     /messages.js                									controllers.main.tpl.Main.jsMessages()
 GET     /codes.js        	        									controllers.main.tpl.Main.jsCodes()
+GET		/permissions.js													controllers.main.tpl.Main.jsPermissions()
