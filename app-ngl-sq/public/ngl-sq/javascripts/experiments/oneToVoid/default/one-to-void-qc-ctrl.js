@@ -102,7 +102,8 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 			 		},
 			 		{
 			 			"header":Messages("containers.table.concentration"),
-			 			"property": "inputContainer.concentration.value+' '+inputContainer.concentration.unit",
+			 			"property": "inputContainer.concentration",
+			 			"render":"<span ng-bind='cellValue.value|number'/> <span ng-bind='cellValue.unit'/>",
 			 			"order":false,
 			 			"hide":true,
 			 			"type":"text",
@@ -173,7 +174,6 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 			edit:{
 				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
 				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
-				byDefault:($scope.isCreationMode()),
 				columnMode:true
 			},
 			messages:{
@@ -205,7 +205,6 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 			console.log("call event refresh on one-to-void");		
 			var dtConfig = $scope.atmService.data.getConfig();
 			dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
-			dtConfig.edit.byDefault = false;
 			dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 			$scope.atmService.data.setConfig(dtConfig);
 			$scope.atmService.refreshViewFromExperiment($scope.experiment);
@@ -214,12 +213,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 		
 		$scope.$on('cancel', function(e) {
 			console.log("call event cancel");
-			$scope.atmService.data.cancel();	
-			if($scope.isCreationMode()){
-				var dtConfig = $scope.atmService.data.getConfig();
-				dtConfig.edit.byDefault = false;
-				$scope.atmService.data.setConfig(dtConfig);
-			}
+			$scope.atmService.data.cancel();				
 		});
 		
 		$scope.$on('activeEditMode', function(e) {
