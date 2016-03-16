@@ -314,7 +314,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                             params: this.getParams(params),
                             datatable: this
                         }).success(function(data, status, headers, config) {
-                            config.datatable.setData(data.data, data.recordsNumber);
+                            config.datatable._setData(data.data, data.recordsNumber);
                             that.computeDisplayResultTimeOut.then(function() {
                                 that.setSpinner(false);
                             });
@@ -337,8 +337,21 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
              * Set all data used by search method or directly when local data
              */
             setData: function(data, recordsNumber) {
-            	this.setSpinner(true);
-                var configPagination = this.config.pagination;
+            	var that = this;
+				this.setSpinner(true);
+    			$timeout(function(){that._setData(data, recordsNumber)}).then(function(){
+    				that.computeDisplayResultTimeOut.then(function(){
+    					that.setSpinner(false);  		    			
+					});									    							
+    			});
+            },
+            
+            /**
+             * Set all data used by search method or directly when local data
+             */
+            _setData: function(data, recordsNumber) {
+            	
+            	var configPagination = this.config.pagination;
                 if (configPagination.active && !this.isRemoteMode(configPagination.mode)) {
                     this.config.pagination.pageNumber = 0;
                 }
@@ -352,11 +365,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                 this.computeDisplayResult();
                 this._getAllResult = function() {
                     return this.allResult;
-                };
-                var that = this;
-                this.computeDisplayResultTimeOut.then(function() {
-                	that.setSpinner(false);
-                });
+                };               
             },
             /**
              * Return all the data
@@ -1064,7 +1073,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                     }
                     var that = this;
                     this.computeDisplayResultTimeOut.then(function() {
-                        if (angular.isFunction(that.config.order.callback)) {
+                    	if (angular.isFunction(that.config.order.callback)) {
                             that.config.order.callback(this);
                         }
                     });

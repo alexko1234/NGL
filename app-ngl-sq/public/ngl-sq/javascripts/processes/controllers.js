@@ -1070,7 +1070,7 @@ var	datatableConfig = {
 	$scope.datatable = datatable(datatableConfig);	
 	$scope.basket = mainService.getBasket();
 	$scope.addNewProcessColumns();
-	$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);	
+	//$scope.datatable.setData($scope.basket.get(),$scope.basket.get().length);	
 	//$scope.datatable.selectAll(false);
 	if($scope.basket.length() != 0){
 		$scope.doneAndRecorded = false;

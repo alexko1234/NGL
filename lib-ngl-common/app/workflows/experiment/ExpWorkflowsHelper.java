@@ -50,6 +50,7 @@ import org.mongojack.DBUpdate.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import play.Logger;
 import play.Play;
 import play.libs.Akka;
 import rules.services.RulesActor6;
@@ -327,58 +328,98 @@ public class ExpWorkflowsHelper {
 	 */
 	public void createOutputContainerSupports(Experiment exp, ContextValidation validation) {
 		TraceInformation traceInformation = new TraceInformation(validation.getUser());
+		long t0 = System.currentTimeMillis();
+		validation.putObject(NEW_PROCESS_CODES, new HashSet<String>());
 		
+		/*
+		before parallelStream
 		Map<String, List<Container>> containersBySupportCode = exp.atomicTransfertMethods.stream()
 				.map(atm -> createOutputContainers(exp, atm, validation))
 				.flatMap(List::stream)
 				.collect(Collectors.groupingBy(c -> c.support.code));
+				
+		 */
 		
+		Map<String, List<Container>> containersBySupportCode = exp.atomicTransfertMethods
+				.parallelStream()
+				.map(atm -> createOutputContainers(exp, atm, validation))
+				.flatMap(List::stream)
+				.collect(Collectors.groupingBy(c -> c.support.code));
+		
+		long t1 = System.currentTimeMillis();
 		//soit 1 seul support pour tous les atm
 		//soit autant de support que d'atm
 		
 		//Map<ContainerSupport, List<Container>> containersBySupport = new HashMap<ContainerSupport, List<Container>>(0);
 		ContextValidation supportsValidation = new ContextValidation(validation.getUser());
 		supportsValidation.setCreationMode();
-		
+
 		containersBySupportCode.entrySet().forEach(entry -> {
 			List<Container> containers = entry.getValue();
 			ContainerSupport support = createContainerSupport(entry.getKey(), containers, validation);
 			//TODO GA extract only properties from exp and inst not from atm => must be improve
 			support.properties = getPropertiesForALevel(exp, CODE.ContainerSupport); 
-			
 			support.validate(supportsValidation);
+			
 			if(!supportsValidation.hasErrors()){
 				support.traceInformation = traceInformation;
 				MongoDBDAO.save(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, support);
-				containers.forEach(container -> {
-					container.validate(supportsValidation);
-					if(!supportsValidation.hasErrors()){
-						container.traceInformation = traceInformation;
-						MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, container);
-						MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
-								DBQuery.in("code", container.processCodes).notIn("outputContainerSupportCodes", container.support.code),
-								DBUpdate.push("outputContainerSupportCodes",container.support.code));
-					}
+				containers.parallelStream()
+					.forEach(container -> {
+						long t1_0 = System.currentTimeMillis();
+						ContextValidation containerValidation = new ContextValidation(validation.getUser());
+						containerValidation.setCreationMode();
+						container.validate(containerValidation);
+						long t1_1 = System.currentTimeMillis();
+						if(!containerValidation.hasErrors()){
+							container.traceInformation = traceInformation;
+							MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, container);
+							MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
+									DBQuery.in("code", container.processCodes).notIn("outputContainerSupportCodes", container.support.code),
+									DBUpdate.push("outputContainerSupportCodes",container.support.code));
+						}else{
+							supportsValidation.addErrors(containerValidation.errors);
+						}
+						long t1_2 = System.currentTimeMillis();
+						/*
+						Logger.debug("createOutputContainerSupports \n "
+								+"1-1 = "+(t1_1-t1_0)+" ms\n"
+								+"1-2 = "+(t1_2-t1_1)+" ms\n"
+								);
+						*/
 				});
-			}				
+			}	
+			
+			
 		});
-		
+		long t2 = System.currentTimeMillis();
 		//delete all supports and containers if only one error
 		if(supportsValidation.hasErrors()){
-			containersBySupportCode.entrySet().forEach(entry -> {
-				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,
-						DBQuery.in("outputContainerSupportCodes", entry.getKey()),
-						DBUpdate.pull("outputContainerSupportCodes",entry.getKey()));
-				MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code", entry.getKey()));
-				MongoDBDAO.delete(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", entry.getKey()));
-			});
+			containersBySupportCode.entrySet().parallelStream()
+				.forEach(entry -> {
+					MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,
+							DBQuery.in("outputContainerSupportCodes", entry.getKey()),
+							DBUpdate.pull("outputContainerSupportCodes",entry.getKey()));
+					MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code", entry.getKey()));
+					MongoDBDAO.delete(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", entry.getKey()));
+				});
 			Set<String> newProcessCodes = (Set<String>)validation.getObject(NEW_PROCESS_CODES);
 			if(null != newProcessCodes){
 				MongoDBDAO.delete(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code", newProcessCodes));
 			}
-			
+			validation.addErrors(supportsValidation.errors);
 		}			
-		validation.addErrors(supportsValidation.errors);
+		
+		long t3 = System.currentTimeMillis();
+		/*
+		Logger.debug("createOutputContainerSupports \n "
+				+"1 = "+(t1-t0)+" ms\n"
+				+"2 = "+(t2-t1)+" ms\n"
+				+"3 = "+(t3-t2)+" ms\n"
+				
+				
+			);
+			*/
 	}
 
 	public void deleteOutputContainerSupports(Experiment exp, ContextValidation validation) {
@@ -478,11 +519,12 @@ public class ExpWorkflowsHelper {
 			newContainers.add(c);
 		}
 		if(atm.outputContainerUseds != null && atm.outputContainerUseds.size() > 1){
-			Set<String> allNewInputProcessCodes = new HashSet<String>();
+			//Set<String> allNewInputProcessCodes = new HashSet<String>();
 			List<OutputContainerUsed> outputContainerUseds = atm.outputContainerUseds.subList(1, atm.outputContainerUseds.size());
 			outputContainerUseds.forEach((OutputContainerUsed ocu) ->{
 				Set<String> newInputProcessCodes = duplicateProcesses(inputProcessCodes);
-				allNewInputProcessCodes.addAll(newInputProcessCodes);
+				((Set<String>)validation.getObject(NEW_PROCESS_CODES)).addAll(newInputProcessCodes);
+				//allNewInputProcessCodes.addAll(newInputProcessCodes);
 				Container c = new Container();
 				c.code = ocu.code;
 				c.categoryCode = ocu.categoryCode;
@@ -503,7 +545,7 @@ public class ExpWorkflowsHelper {
 				c.treeOfLife=tree;
 				newContainers.add(c);
 			});
-			validation.putObject(NEW_PROCESS_CODES, allNewInputProcessCodes);
+			//validation.putObject(NEW_PROCESS_CODES, allNewInputProcessCodes);
 		}
 		
 		return newContainers;

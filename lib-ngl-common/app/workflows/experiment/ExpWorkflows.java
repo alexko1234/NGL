@@ -38,7 +38,7 @@ public class ExpWorkflows extends Workflows<Experiment>{
 		expWorkflowsHelper.updateComments(exp, validation);		
 	}
 
-	public void applyPreStateRules(ContextValidation validation, Experiment exp, State nextState) {
+	public void applyPreStateRules(ContextValidation validation, Experiment exp, State nextState) {		
 		exp.traceInformation = updateTraceInformation(exp.traceInformation, nextState); 			
 		expWorkflowsHelper.updateStatus(exp, validation);
 		if("N".equals(nextState.code)){
@@ -48,9 +48,23 @@ public class ExpWorkflows extends Workflows<Experiment>{
 			expWorkflowsHelper.updateATMs(exp, false);	
 			expWorkflowsHelper.updateOutputContainerCodes(exp);
 		}else if("F".equals(nextState.code)){
-			expWorkflowsHelper.updateATMs(exp, false);	
-			expWorkflowsHelper.updateOutputContainerCodes(exp);		
+			long t0 = System.currentTimeMillis();
+			expWorkflowsHelper.updateATMs(exp, false);
+			long t1 = System.currentTimeMillis();
+			expWorkflowsHelper.updateOutputContainerCodes(exp);
+			long t2 = System.currentTimeMillis();
 			expWorkflowsHelper.createOutputContainerSupports(exp, validation);
+			long t3 = System.currentTimeMillis();
+			/*
+			Logger.debug("applyPreStateRules \n "
+					+"1 = "+(t1-t0)+" ms\n"
+					+"2 = "+(t2-t1)+" ms\n"
+					+"3 = "+(t3-t2)+" ms\n"
+					
+					
+					);
+					
+			*/
 		}
 	}
 	
@@ -90,7 +104,6 @@ public class ExpWorkflows extends Workflows<Experiment>{
 	public void setState(ContextValidation contextValidation,
 			Experiment exp, State nextState) {
 		contextValidation.setUpdateMode();
-		
 		CommonValidationHelper.validateState(exp.typeCode, nextState, contextValidation);
 		if(!contextValidation.hasErrors() && !nextState.code.equals(exp.state.code)){
 			applyPreStateRules(contextValidation, exp, nextState);
@@ -101,18 +114,15 @@ public class ExpWorkflows extends Workflows<Experiment>{
 				if(goBack)Logger.debug(exp.code+" : back to the workflow. "+exp.state.code +" -> "+nextState.code);		
 				
 				exp.state = updateHistoricalNextState(exp.state, nextState);
-				
 				MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME,  Experiment.class, 
 						DBQuery.is("code", exp.code),
 						DBUpdate.set("state", exp.state).set("traceInformation", exp.traceInformation));
-				
 				applySuccessPostStateRules(contextValidation, exp);
-				nextState(contextValidation, exp);
+				nextState(contextValidation, exp);				
 			}else{
-				applyErrorPostStateRules(contextValidation, exp, nextState);
+				applyErrorPostStateRules(contextValidation, exp, nextState);				
 			}
-		}
-		
+		}		
 	}
 
 	@Override
