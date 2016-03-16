@@ -17,12 +17,14 @@ rule "Find Fungi for taxonomy treatment"
 												
 		Pattern p2 = Pattern.compile(".*<node name=\"Fungi\"\\s+magnitude=\"(\\d+)\">.*", Pattern.DOTALL);
 		Matcher m2 = p2.matcher(krona);
-		
-		Pattern p3 = Pattern.compile(".*<node name=\"Fungi\">.*<count><val>(\\d+)</val></count>.*", Pattern.DOTALL);
+
+		Pattern p3 = Pattern.compile(".*<node name=\"Fungi\">\\s+(<members><val>\\S+</val>\\s+</members>\\s+)?<count><val>(\\d+)</val></count>.*", Pattern.DOTALL);
 		Matcher m3 = p3.matcher(krona);
 		
+		
 		if(m1.matches() || m2.matches() || m3.matches()){
-			String value = (m1.matches())?m1.group(1):((m2.matches())?m2.group(1):m3.group(1));
+			String value = (m1.matches())?m1.group(1):((m2.matches())?m2.group(1):m3.group(2));
+			Logger.debug("Value "+value);
 			Double fungiPercentValue = (Double.valueOf(value) / 20000) * 100;
 			Logger.debug("Match Group Fungi = "+fungiPercentValue);
 			

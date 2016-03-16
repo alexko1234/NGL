@@ -21,13 +21,16 @@ import rules.services.RulesServices6;
 
 public class MigrationTaxonomyFungi extends CommonController{
 	
-	public static Result migration(){
+	public static Result migration(String code){
 		BasicDBObject keys = new BasicDBObject();
 		keys.put("code", 1);
 		keys.put("treatments.taxonomy", 1);
-		
-		MongoDBResult<ReadSet> rsl = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.exists("treatments.taxonomy"), keys);
-		
+		MongoDBResult<ReadSet> rsl = null;
+		if(!"all".equals(code)){
+			rsl = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", code).exists("treatments.taxonomy"), keys);
+		}else{
+			rsl = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.exists("treatments.taxonomy"), keys);
+		}
 		RulesServices6 rulesServices = RulesServices6.getInstance();
 		Logger.info("Treat "+rsl.size()+" readset");
 		DBCursor<ReadSet> cursor = rsl.cursor;
