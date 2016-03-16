@@ -34,6 +34,7 @@ import models.utils.dao.DAOException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
 
 import play.Logger;
 
@@ -173,7 +174,7 @@ public class ContainerHelper {
 	}
 
 
-	public static void createSupportFromContainers(List<Container> containers, Map<String, PropertyValue<String>> mapSupportsCodeSeq, ContextValidation contextValidation){
+	public static List<ContainerSupport> createSupportFromContainers(List<Container> containers, Map<String, PropertyValue<String>> mapSupportsCodeSeq, ContextValidation contextValidation){
 
 		HashMap<String,ContainerSupport> mapSupports = new HashMap<String,ContainerSupport>();
 
@@ -212,11 +213,12 @@ public class ContainerHelper {
 					if(null != newSupport.fromTransformationTypeCodes && null != oldSupport.fromTransformationTypeCodes){
 						oldSupport.fromTransformationTypeCodes.addAll(newSupport.fromTransformationTypeCodes);
 					}
+					
 				}
 			}
 		}
 
-		InstanceHelpers.save(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, new ArrayList<ContainerSupport>(mapSupports.values()), contextValidation, true);
+		return InstanceHelpers.save(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, new ArrayList<ContainerSupport>(mapSupports.values()), contextValidation, true);
 
 	}
 

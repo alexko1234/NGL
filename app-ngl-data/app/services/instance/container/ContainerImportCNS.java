@@ -31,6 +31,7 @@ import models.utils.instance.ContainerSupportHelper;
 import models.utils.instance.ProcessHelper;
 
 import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
 
 import play.Logger;
 import scala.concurrent.duration.FiniteDuration;
@@ -138,7 +139,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 			}
 		}
 		
-		ContainerHelper.createSupportFromContainers(containers,propertiesContainerSupports, contextError);
+		List<ContainerSupport> containerSupports=ContainerHelper.createSupportFromContainers(containers,propertiesContainerSupports, contextError);
 	
 		List<Container> newContainers=new ArrayList<Container>();
 		
@@ -152,6 +153,13 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 			}
 			contextError.removeKeyFromRootKeyName(rootKeyName);
 		}
+		
+		
+		//Update traceInformation.creationDate
+		for(ContainerSupport cs:containerSupports){
+			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("support.code", cs.code),DBUpdate.set("traceInformation.creationDate", cs.traceInformation.creationDate),true);
+		}
+
 		/*
 		if(experimentTypeCode.equals("solution-stock")){
 			//SQL TODO
