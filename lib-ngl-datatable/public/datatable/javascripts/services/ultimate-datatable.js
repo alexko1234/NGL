@@ -337,6 +337,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
              * Set all data used by search method or directly when local data
              */
             setData: function(data, recordsNumber) {
+/*
             	var that = this;
 				this.setSpinner(true);
     			$timeout(function(){that._setData(data, recordsNumber)}).then(function(){
@@ -344,6 +345,8 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
     					that.setSpinner(false);  		    			
 					});									    							
     			});
+*/
+		this._setData(data, recordsNumber)};
             },
             
             /**
