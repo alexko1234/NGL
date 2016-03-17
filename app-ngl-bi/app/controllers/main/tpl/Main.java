@@ -58,7 +58,7 @@ public class Main extends CommonController {
 	   StringBuilder sb = new StringBuilder();
 	   sb.append("Permissions.check=(function(param){var listPermissions=[");
 	   for(Permission p:permissions){
-		   sb.append("\"").append(p.code).append("\"");
+		   sb.append("\"").append(p.code).append("\",");
 	   }
 	   sb.append("];return(listPermissions.includes(param));})");
 	   return sb.toString();
