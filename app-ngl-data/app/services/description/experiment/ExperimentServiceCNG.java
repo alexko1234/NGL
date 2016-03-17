@@ -74,12 +74,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null, null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		//FDS 01/02/2016 ajout -- JIRA NGL-894 4: processus et experiments pour X5
-		l.add(newExperimentType("Ext Prep PCR free","ext-to-prep-pcr-free",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
-				null, null ,"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
 		/** ordered by display order **/
 		
 		l.add(newExperimentType("Aliquot","aliquoting",null, 1,
@@ -87,25 +81,21 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				getPropertyAliquoting(), getInstrumentUsedTypes("hand"),"OneToMany", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		//FDS 01/02/2016 ajout -- JIRA NGL-894: processus et experiments pour X5
-		l.add(newExperimentType("Prep PCR free","prep-pcr-free",null,100,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
-				getPropertyDefinitionsPrepPcrFree(), 
-				getInstrumentUsedTypes("covaris-e210-and-sciclone-ngsx","covaris-le220-and-sciclone-ngsx","covaris-e220-and-sciclone-ngsx"),"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
+		//FDS modif 02/02/2016 ne plus mettre type voidprocess, ajout intrumentType janus et ajout getProperty...
+		l.add(newExperimentType("Librairie normalisée","lib-normalization",null,900,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
+				getPropertyDefinitionsLibNormalization(),
+				getInstrumentUsedTypes("hand","janus"), "OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
+				
 		
 		l.add(newExperimentType("Dénaturation-dilution","denat-dil-lib",null,1000,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 				getPropertyDefinitionsDenatDilLibCNG(),
 				getInstrumentUsedTypes("hand"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-
-		//FDS modif 02/02/2016 ne plus mettre type voidprocess, ajout intrumentType janus et ajout getProperty...
-		l.add(newExperimentType("Librairie normalisée","lib-normalization",null,1100,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
-				getPropertyDefinitionsLibNormalization(),
-				getInstrumentUsedTypes("hand","janus"), "OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));				
+		
 		
 		l.add(newExperimentType("Préparation flowcell","prepa-flowcell",null,1200,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
@@ -129,7 +119,25 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-		
+			
+			//FDS 01/02/2016 ajout -- JIRA NGL-894 4: processus et experiments pour X5
+			l.add(newExperimentType("Ext to X5_WG PCR free","ext-to-x5-wg-pcr-free",null,-1,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
+					null, null ,"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+			
+			//FDS 01/02/2016 ajout -- JIRA NGL-894: processus et experiments pour X5
+			l.add(newExperimentType("Prep PCR free","prep-pcr-free",null,800,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+					getPropertyDefinitionsPrepPcrFree(), 
+					getInstrumentUsedTypes("covaris-e210-and-sciclone-ngsx","covaris-le220-and-sciclone-ngsx","covaris-e220-and-sciclone-ngsx"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+			
+			l.add(newExperimentType("Quantification qPCR","qpcr-quantification", null,850,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsQPCR(), 
+					getInstrumentUsedTypes("qpcr-lightcycler-480II"),"OneToVoid", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG))); 
+			
 			//quality control
 
 			//purif
@@ -195,23 +203,32 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				null, null, null, null
 				).save();
 		
-		//FDS  ajout 01/02/2016 -- JIRA NGL-894 : processus et experiments pour X5
-		newExperimentTypeNode("ext-to-prep-pcr-free",getExperimentTypes("ext-to-prep-pcr-free").get(0),
-				false,false,false,
-				null, null, null, null
-				).save();
+		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		
-		//FDS ajout 01/02/2016 -- JIRA NGL-894: processus et experiments pour X5
-		newExperimentTypeNode("prep-pcr-free",getExperimentTypes("prep-pcr-free").get(0),
-				false,false,false,
-				getExperimentTypeNodes("ext-to-prep-pcr-free"),null,null, null  
-				).save();
-		
-		//FDS modification 09/11/2016 -- JIRA NGL-894: processus et experiments pour X5; ajout "prep-pcr-free" dans les previous
-		newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), 
-				false, false, false, 
-				getExperimentTypeNodes("prep-pcr-free"), null, null, getExperimentTypes("aliquoting")
-				).save();
+			//FDS  ajout 01/02/2016 -- JIRA NGL-894 : processus et experiments pour X5
+			newExperimentTypeNode("ext-to-x5-wg-pcr-free",getExperimentTypes("ext-to-x5-wg-pcr-free").get(0),
+					false,false,false,
+					null, null, null, null
+					).save();
+			
+			//FDS ajout 01/02/2016 -- JIRA NGL-894: processus et experiments pour X5
+			newExperimentTypeNode("prep-pcr-free",getExperimentTypes("prep-pcr-free").get(0),
+					false,false,false,
+					getExperimentTypeNodes("ext-to-x5-wg-pcr-free"),null,getExperimentTypes("qpcr-quantification"), null  
+					).save();
+			
+			//FDS modification 09/11/2016 -- JIRA NGL-894: processus et experiments pour X5; ajout "prep-pcr-free" dans les previous
+			newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), 
+					false, false, false, 
+					getExperimentTypeNodes("prep-pcr-free"), null, null, getExperimentTypes("aliquoting")
+					).save();
+			
+			
+		}else{
+			
+			newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), 
+					false, false, false, null, null, null, getExperimentTypes("aliquoting")).save();
+		}
 		
 		newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),
 				false,false,false,
@@ -242,6 +259,17 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		}
 	}
 
+	
+	private List<PropertyDefinition> getPropertyDefinitionsQPCR() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode( "nM"), MeasureUnit.find.findByCode("nM"),
+				"single", 11, true, null, "2"));		
+		
+		return propertyDefinitions;
+	}
+	
 	private static List<PropertyDefinition> getPropertyAliquoting() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		

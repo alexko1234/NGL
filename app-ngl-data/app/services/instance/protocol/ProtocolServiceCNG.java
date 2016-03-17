@@ -69,6 +69,7 @@ public class ProtocolServiceCNG {
 		
 		// protocoles specifiques
 		lp.add(newProtocol("1a-sop-ill-pcrfree-080915","1A_SOP_ILL_PCRfree_080915", "?","1","production",InstanceFactory.setExperimentTypeCodes("prep-pcr-free")));
+		lp.add(newProtocol("3a-kapa-qPCR-240715","3A_KAPA_qPCR_240715", "?","1","production",InstanceFactory.setExperimentTypeCodes("qpcr-quantification")));
 		//lp.add(newProtocol("sop-1","SOP 1","","1","production", InstanceFactory.setExperimentTypeCodes("prepa-flowcell")));
 		//lp.add(newProtocol("sop-1","SOP 1","","1","production", InstanceFactory.setExperimentTypeCodes("denat-dil-lib")));
 		//lp.add(newProtocol("sop-1","SOP 1","","1","production", InstanceFactory.setExperimentTypeCodes("aliquoting")));

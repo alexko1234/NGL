@@ -80,15 +80,18 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				getExperimentTypes("ext-to-prepa-fc-ordered").get(0), //void experiment type
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		// FDS ajout 27/01/2016 -- JIRA NGL-894: nouveau processus pour X5
-		l.add(DescriptionFactory.newProcessType("X5_WG PCR free", "x5-wg-pcr-free", ProcessCategory.find.findByCode("library"),
-				getPropertyDefinitionsX5WgPcrFree(),
-				Arrays.asList(getPET("ext-to-prep-pcr-free",-1),getPET("prep-pcr-free",0),getPET("lib-normalization",1),getPET("illumina-depot",2) ), //ordered list of experiment type in process type
-				getExperimentTypes("prep-pcr-free").get(0),        //first experiment type
-				getExperimentTypes("illumina-depot").get(0),       //last experiment type
-				getExperimentTypes("ext-to-prep-pcr-free").get(0), //void experiment type
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		
+			// FDS ajout 27/01/2016 -- JIRA NGL-894: nouveau processus pour X5
+			l.add(DescriptionFactory.newProcessType("X5_WG PCR free", "x5-wg-pcr-free", ProcessCategory.find.findByCode("library"),
+					getPropertyDefinitionsX5WgPcrFree(),
+					Arrays.asList(getPET("ext-to-x5-wg-pcr-free",-1),getPET("prep-pcr-free",0),getPET("lib-normalization",1),getPET("illumina-depot",2) ), //ordered list of experiment type in process type
+					getExperimentTypes("prep-pcr-free").get(0),        //first experiment type
+					getExperimentTypes("illumina-depot").get(0),       //last experiment type
+					getExperimentTypes("ext-to-x5-wg-pcr-free").get(0), //void experiment type
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
+		}
 		DAOHelpers.saveModels(ProcessType.class, l, errors);
 	}
 	

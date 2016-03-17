@@ -161,7 +161,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 
 		
 		/** quality **/
-		l.add(newInstrumentUsedType("Roche Lightcycler qPCR system", "rocheLightCycler-qPCR", InstrumentCategory.find.findByCode("qPCR-system"), getQPCRProperties(), 
+		l.add(newInstrumentUsedType("qPCR (Lightcycler 480 II)", "qpcr-lightcycler-480II", InstrumentCategory.find.findByCode("qPCR-system"), null, 
 				getInstruments(
 						createInstrument("lightCycler1", "LightCycler1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("lightCycler2", "LightCycler2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))
@@ -169,6 +169,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
+			
 		l.add(newInstrumentUsedType("QuBit", "qubit", InstrumentCategory.find.findByCode("fluorometer"), getQuBitProperties(), 
 				getInstruments(
 						createInstrument("quBit1", "QuBit1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))
@@ -359,13 +360,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		return l;
 	}
 	
-	private static List<PropertyDefinition> getQPCRProperties() throws DAOException {
-		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		
-		l.add(newPropertiesDefinition("Nb. Echantillon", "sampleNumber", LevelService.getLevels(Level.CODE.Instrument), Integer.class, true, "single"));	
-		
-		return l;
-	}
+
 	
 	//FDS 29/01/2016 ajout SicloneNGSX -- JIRA NGL-894
 	private static List<PropertyDefinition> getSicloneNGSXProperties() throws DAOException {
