@@ -15,7 +15,7 @@
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":0,
-			        	 "extraHeaders":{0:Messages("experiments.intputs")}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },	
 			         {
 			        	 "header":Messages("containers.table.code"),
@@ -25,7 +25,7 @@
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":1,
-			        	 "extraHeaders":{0:Messages("experiments.intputs")}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
 			        	"header":Messages("containers.table.projectCodes"),
@@ -35,7 +35,7 @@
 			 			"type":"text",
 			 			"position":2,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.intputs")}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 				     },
 				     {
 			        	"header":Messages("containers.table.sampleCodes"),
@@ -45,7 +45,7 @@
 			 			"type":"text",
 			 			"position":3,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.intputs")}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 				     },
 				     {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
@@ -56,7 +56,7 @@
 			        	 "type":"text",
 			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
 			        	 "position":4,
-			        	 "extraHeaders":{0:Messages("experiments.intputs")}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },			         					 
 					 {
 			        	 "header":Messages("containers.table.nlrsConcentration"),
@@ -66,7 +66,7 @@
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":5,
-			        	 "extraHeaders":{0:Messages("experiments.intputs")}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
 			        	 "header":Messages("containers.table.concentration.unit"),
@@ -76,7 +76,7 @@
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":5.5,
-			        	 "extraHeaders":{0:Messages("experiments.intputs")}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
 			        	 "header":Messages("containers.table.state.code"),
@@ -87,7 +87,7 @@
 			        	 "type":"text",
 						 "filter":"codes:'state'",
 			        	 "position":7,
-			        	 "extraHeaders":{0:Messages("experiments.intputs")}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
 			        	 "header":Messages("containers.table.percentage"),
@@ -97,7 +97,7 @@
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":40,
-			        	 "extraHeaders":{0:Messages("experiments.intputs")}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
 			        	 "header":Messages("containers.table.code"),

@@ -12,7 +12,7 @@ angular.module('home').controller('TubesToMapCardCtrl',['$scope', '$parse', 'atm
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":0,
-			        	 "extraHeaders":{0:Messages("experiments.intputs")}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
 			        	 "header":Messages("containers.table.categoryCode"),
@@ -22,7 +22,7 @@ angular.module('home').controller('TubesToMapCardCtrl',['$scope', '$parse', 'atm
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":1,
-			        	 "extraHeaders":{0:Messages("experiments.intputs")}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 					 {
 			        	 "header":Messages("containers.table.code"),
@@ -32,7 +32,7 @@ angular.module('home').controller('TubesToMapCardCtrl',['$scope', '$parse', 'atm
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":2,
-			        	 "extraHeaders":{0:Messages("experiments.intputs")}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
 			        	"header":Messages("containers.table.projectCodes"),
@@ -42,7 +42,7 @@ angular.module('home').controller('TubesToMapCardCtrl',['$scope', '$parse', 'atm
 			 			"type":"text",
 			 			"position":3,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.intputs")}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 				     },
 				     {
 			        	"header":Messages("containers.table.sampleCodes"),
@@ -52,7 +52,7 @@ angular.module('home').controller('TubesToMapCardCtrl',['$scope', '$parse', 'atm
 			 			"type":"text",
 			 			"position":4,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.intputs")}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 				     },
 				     {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
@@ -64,7 +64,7 @@ angular.module('home').controller('TubesToMapCardCtrl',['$scope', '$parse', 'atm
 			        	 "mergeCells" : true,
 			 			 "render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
 			        	 "position":5,
-			        	 "extraHeaders":{0:Messages("experiments.intputs")}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 				     {
 			        	 "header":Messages("containers.table.state.code"),
@@ -75,7 +75,7 @@ angular.module('home').controller('TubesToMapCardCtrl',['$scope', '$parse', 'atm
 			        	 "type":"text",
 						 "filter":"codes:'state'",
 			        	 "position":7,
-			        	 "extraHeaders":{0:Messages("experiments.intputs")}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
 			        	 "header":Messages("containers.table.code"),

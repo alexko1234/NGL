@@ -384,11 +384,11 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		//OuputContainer
 		// GA 08/02/2016 =>  ces proprietes de containerOut doivent etre propagees au content
 		// GA 14/03/2016 => il faut specifié l'état auquel les propriétés sont obligatoire: ici Finished (F)
-		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", null, 
+		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagIllumina(), 
 				"single", 30, true, null,null));	
-		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", null, 
-				"single", 31, true, null,null));		
 		
+		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagCategories(), 
+				"single", 31, true, null,null));		
 		
 		// pas de niveau content car théoriques( J Guy..)
 		propertyDefinitions.add(newPropertiesDefinition("Taille insert (théorique)", "insertSize", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, true, null

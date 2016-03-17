@@ -598,7 +598,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 	}
 
 	private static List<Value> getTagNanopore() {
-		List<NanoporeIndex> indexes = MongoDBDAO.find(InstanceConstants.PARAMETER_COLL_NAME, NanoporeIndex.class, DBQuery.is("typeCode", "index-nanopore-sequencing")).toList();
+		List<NanoporeIndex> indexes = MongoDBDAO.find(InstanceConstants.PARAMETER_COLL_NAME, NanoporeIndex.class, DBQuery.is("typeCode", "index-nanopore-sequencing")).sort("name").toList();
 		List<Value> values = new ArrayList<Value>();
 		indexes.forEach(index -> {
 			values.add(DescriptionFactory.newValue(index.code, index.name));	
@@ -737,14 +737,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		return propertyDefinitions;
 	}
 
-	//GA 24/07/2015 ajout des TagCategories
-	private static List<Value> getTagCategories(){
-		List<Value> values = new ArrayList<Value>();
-		values.add(DescriptionFactory.newValue("SINGLE-INDEX", "SINGLE-INDEX"));
-		values.add(DescriptionFactory.newValue("DUAL-INDEX", "DUAL-INDEX"));
-		values.add(DescriptionFactory.newValue("MID", "MID"));
-		return values;	
-	}
+	
 
 	//TODO
 	// Propriete taille en output et non en input ?

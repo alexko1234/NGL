@@ -1,4 +1,4 @@
-angular.module('home').controller('OneToVoidQPCRQuantificationCNSCtrl',['$scope', '$parse','$http',
+angular.module('home').controller('OneToVoidQPCRQuantificationCNGCtrl',['$scope', '$parse','$http',
                                                              function($scope,$parse,$http) {
 	
 	
@@ -53,6 +53,19 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNSCtrl',['$scope'
 		click:importData,		
 	};
 	
+	var columns = $scope.atmService.data.getColumnsConfig();
+	columns.push({
+    	"header":"Code aliquot",
+		"property": "inputContainer.contents",
+		"filter": "getArray:'properties.sampleAliquoteCode.value'",
+		"order":false,
+		"hide":true,
+		"type":"text",
+		"position":7.5,
+		"render": "<div list-resize='cellValue | unique' list-resize-min-size='3'>",
+		"extraHeaders":{0:Messages("experiments.inputs")}
+	})
+	$scope.atmService.data.setColumnsConfig(columns);
 	
 	
 }]);

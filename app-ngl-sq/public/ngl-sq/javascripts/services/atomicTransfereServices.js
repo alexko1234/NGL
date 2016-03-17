@@ -78,7 +78,8 @@ angular.module('atomicTransfereServices', [])
     					column.possibleValues = propertyDefinition.possibleValues;
     				}
     				if(column.choiceInList){
-    					//column.listStyle = "bt-select";
+    					//column.listStyle = "bt-select"; not used bt-select because cannot convert to number when send to server and very slow with big list or lot of data
+    					
     					column.filter = "codes:'value."+propertyDefinition.code+"'";    					
     				}
     				if(extraHeaders!=undefined){

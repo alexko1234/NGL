@@ -195,9 +195,8 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 				active:true
 			},
 			edit:{
-				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
-				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
-				byDefault:($scope.isCreationMode()),
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
+				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
 				columnMode:true
 			},
 			messages:{
@@ -221,6 +220,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 		console.log("call event save");
 		$scope.atmService.data.save();
 		$scope.atmService.viewToExperimentOneToOne($scope.experiment);
+		$scope.updatePropertyUnit($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
@@ -252,8 +252,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh");		
 		var dtConfig = $scope.atmService.data.getConfig();
-		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
-		dtConfig.edit.byDefault = false;
+		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.setConfig(dtConfig);
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);

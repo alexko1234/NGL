@@ -463,15 +463,6 @@ public class ExperimentServiceTEST extends AbstractExperimentService {
 		return propertyDefinitions;
 	}
 
-	//GA 24/07/2015 ajout des TagCategories
-	private static List<Value> getTagCategories(){
-		List<Value> values = new ArrayList<Value>();
-		values.add(DescriptionFactory.newValue("SINGLE-INDEX", "SINGLE-INDEX"));
-		values.add(DescriptionFactory.newValue("DUAL-INDEX", "DUAL-INDEX"));
-		values.add(DescriptionFactory.newValue("MID", "MID"));
-		return values;	
-	}
-
 	//TODO
 	// Propriete taille en output et non en input ?
 	// Valider les keys
@@ -493,7 +484,6 @@ public class ExperimentServiceTEST extends AbstractExperimentService {
 		propertyDefinitions.add(newPropertiesDefinition("Date réelle de dépôt", "runStartDate", LevelService.getLevels(Level.CODE.Experiment), Date.class, true, "single"));
 		return propertyDefinitions;
 	}
-	
 	
 	private static List<PropertyDefinition> getPropertyDefinitionExtToOpgenDepot() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();

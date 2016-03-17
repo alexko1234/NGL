@@ -15,7 +15,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":0,
-			        	 "extraHeaders":{0:Messages("experiments.intputs")}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },	
 			         {
 			        	 "header":Messages("containers.table.code"),
@@ -25,7 +25,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":1,
-			        	 "extraHeaders":{0:Messages("experiments.intputs")}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
 			        	"header":Messages("containers.table.projectCodes"),
@@ -35,7 +35,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 			 			"type":"text",
 			 			"position":2,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.intputs")}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 				     },
 				     {
 			        	"header":Messages("containers.table.sampleCodes"),
@@ -45,7 +45,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 			 			"type":"text",
 			 			"position":3,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.intputs")}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 				     },
 				     {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
@@ -56,7 +56,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 			        	 "type":"text",
 			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
 			        	 "position":4,
-			        	 "extraHeaders":{0:Messages("experiments.intputs")}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         					 
 					 {
@@ -67,7 +67,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":5,
-			        	 "extraHeaders":{0:Messages("experiments.intputs")}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
 			        	 "header":Messages("containers.table.concentration.unit"),
@@ -77,7 +77,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 						 "hide":true,
 			        	 "type":"text",
 			        	 "position":5.5,
-			        	 "extraHeaders":{0:Messages("experiments.intputs")}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
 			        	 "header":Messages("containers.table.volume") + " (µL)",
@@ -87,7 +87,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":6,
-			        	 "extraHeaders":{0:Messages("experiments.intputs")}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
 			        	 "header":Messages("containers.table.state.code"),
@@ -98,7 +98,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 			        	 "type":"text",
 						 "filter":"codes:'state'",
 			        	 "position":7,
-			        	 "extraHeaders":{0:Messages("experiments.intputs")}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
 			        	 "header":Messages("containers.table.percentage"),
@@ -108,7 +108,7 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":40,
-			        	 "extraHeaders":{0:Messages("experiments.intputs")}
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
 			        	 "header":Messages("containers.table.concentration"),
