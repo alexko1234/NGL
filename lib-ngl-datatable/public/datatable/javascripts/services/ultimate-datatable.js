@@ -346,7 +346,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
 					});									    							
     			});
 */
-		this._setData(data, recordsNumber)};
+		this._setData(data, recordsNumber);
             },
             
             /**
