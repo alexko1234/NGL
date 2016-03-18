@@ -66,6 +66,7 @@ public class UpdateSampleCNS extends AbstractImportDataCNS{
 				}
 
 				SampleHelper.updateSampleProperties(sampleCode, properties,contextError);
+				SampleHelper.updateSampleReferenceCollab(sample,contextError);
 
 			}else {
 				contextError.errors.putAll(contextValidation.errors);

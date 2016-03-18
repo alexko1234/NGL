@@ -88,4 +88,24 @@ public class SampleHelper {
 
 	}
 
+	public static void updateSampleReferenceCollab(Sample sample, ContextValidation contextError) {
+			
+			MongoDBDAO.update(InstanceConstants.SAMPLE_COLL_NAME,Sample.class, 
+					DBQuery.is("code",sample.code),
+					DBUpdate.set("referenceCollab",sample.referenceCollab));
+			
+			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Run.class, 
+					 DBQuery.is("contents.sampleCode", sample.code),
+					DBUpdate.set("contents.$.referenceCollab",sample.referenceCollab),true);					
+			
+			MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,
+					DBQuery.is("sampleOnContainer.sampleCode", sample.code),
+					DBUpdate.set("sampleOnContainer.referenceCollab",sample.referenceCollab),true);
+
+			MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,
+					DBQuery.is("sampleOnInputContainer.sampleCode", sample.code),
+					DBUpdate.set("sampleOnInputContainer.referenceCollab",sample.referenceCollab),true);
+		
+	}
+
 }
