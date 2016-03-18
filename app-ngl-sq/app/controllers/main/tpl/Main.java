@@ -44,6 +44,7 @@ public class Main extends CommonController{
 	  for(Permission p:permissions){
 		  sb.append("\"").append(p.code).append("\",");
 	  }
+	  sb.deleteCharAt(sb.lastIndexOf(","));
 	  sb.append("];return(listPermissions.includes(param));})");
       return sb.toString();
    }
