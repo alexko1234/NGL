@@ -35,6 +35,9 @@ GET		/migration-vcc							controllers.migration.ValuationCriteriaCodes.migration
 GET		/migration-percentage-content			controllers.migration.AddPercentageContent.migration()
 GET		/migration-runstartdate-opgen-depot		controllers.migration.AddRunStartDateToOpgenDepot.migration()
 
+GET 	/migration-update-support-plaque		controllers.migration.cns.MigrationUpdateSupportPlaque.migration()
+GET		/migration-reference-collab				controllers.migration.cns.MigrationSampleReferenceCollab.migration()
+
 GET		/migration-tara							controllers.migration.cns.MigrationTara.migration()
 GET 	/deleteSample							controllers.migration.cns.MigrationTara.deleteSampleNotInLims()
 
