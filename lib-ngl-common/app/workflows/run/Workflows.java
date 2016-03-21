@@ -208,10 +208,10 @@ public class Workflows {
 		if("N".equals(readSet.state.code)){
 			//Create sample if doesn't exist (for external data)
 			Sample sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, readSet.sampleCode);
-			if(sample == null && readSet.sampleOnContainer!=null){
-				sample = InstanceHelpers.convertToSample(readSet);
-				sample.validate(validation);
-				MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, sample);
+			if(sample == null && readSet.sampleOnContainer!=null && validation.getObject("external")!=null && (Boolean)validation.getObject("external")){
+				Sample extSample = InstanceHelpers.getExternalSample(readSet);
+				validation.setCreationMode();
+				InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,extSample,validation,true);
 			}
 		
 		}

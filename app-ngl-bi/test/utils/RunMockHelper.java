@@ -128,8 +128,8 @@ public class RunMockHelper {
 	{
 		SampleOnContainer soc = new SampleOnContainer();
 		soc.sampleCode=sampleCode;
-		soc.sampleTypeCode="sampleType";
-		soc.sampleCategoryCode="sampleCategory";
+		soc.sampleTypeCode="gDNA";
+		soc.sampleCategoryCode="DNA";
 		soc.referenceCollab="refCollab";
 		return soc;
 	}

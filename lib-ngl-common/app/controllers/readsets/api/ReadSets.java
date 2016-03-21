@@ -319,8 +319,7 @@ public class ReadSets extends ReadSetsController{
 
 
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
-		ctxVal.setCreationMode();
-
+		
 		ReadSetsSaveForm readSetsSaveForm = filledFormQueryString(ReadSetsSaveForm.class);
 		if(readSetsSaveForm.external!=null)
 			ctxVal.putObject("external", readSetsSaveForm.external);
@@ -328,8 +327,10 @@ public class ReadSets extends ReadSetsController{
 			ctxVal.putObject("external", false);
 
 		//Apply rules before validation
-		//Workflows.applyReadSetPreStateRules(ctxVal, readSetInput);
-
+		Logger.debug("Apply pres state rules");
+		Workflows.applyReadSetPreStateRules(ctxVal, readSetInput);
+		
+		ctxVal.setCreationMode();
 		readSetInput.validate(ctxVal);	
 
 		if (!ctxVal.hasErrors()) {
