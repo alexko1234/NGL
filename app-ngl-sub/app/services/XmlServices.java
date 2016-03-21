@@ -86,15 +86,15 @@ public class XmlServices {
 			}
 			System.out.println("Ecriture du study " + studyCode);
 
-			chaine = chaine + "  <STUDY alias=\""+ studyCode + "\"";
+			chaine = chaine + "  <STUDY alias=\""+ studyCode + "\" ";
 			if (StringUtils.isNotBlank(study.accession)) {	
-				chaine = chaine + "accession=\"" + study.accession + "\"";
+				chaine = chaine + "accession=\"" + study.accession + "\" ";
 			}
 				
 			chaine = chaine + ">\n";
 			chaine = chaine + "    <DESCRIPTOR>\n";
 			chaine = chaine + "      <STUDY_TITLE>" + study.title + "</STUDY_TITLE>\n";
-			chaine = chaine + "      <STUDY_TYPE existing_study_type="+ study.existingStudyType +" />\n";
+			chaine = chaine + "      <STUDY_TYPE existing_study_type=\""+ study.existingStudyType +"\"/>\n";
 			chaine = chaine + "      <STUDY_ABSTRACT>" + study.studyAbstract + "</STUDY_ABSTRACT>\n";
 			chaine = chaine + "      <CENTER_PROJECT_NAME>" + study.centerProjectName+"</CENTER_PROJECT_NAME>\n"; 
 			//if (study.bioProjectId != 0) {
@@ -189,9 +189,9 @@ public class XmlServices {
 				if (experiment == null){
 					throw new SraException("experiment impossible à recuperer dans base :"+ experimentCode);
 				}
-				chaine = chaine + "  <EXPERIMENT alias=\""+ experimentCode + "\"";
+				chaine = chaine + "  <EXPERIMENT alias=\""+ experimentCode + "\" ";
 				if (StringUtils.isNotBlank(experiment.accession)) {
-					chaine = chaine + "accession=\"" + experiment.accession + "\"";	
+					chaine = chaine + "accession=\"" + experiment.accession + "\" ";	
 				}
 				chaine = chaine + ">\n";
 				// Les champs title et libraryName sont considerés comme obligatoires
@@ -202,11 +202,11 @@ public class XmlServices {
 				chaine = chaine + "          <SAMPLE_DESCRIPTOR  refname=\"" + experiment.sampleCode + "\"/>\n";
 				chaine = chaine + "          <LIBRARY_DESCRIPTOR>\n";
 				chaine = chaine + "            <LIBRARY_NAME>" + experiment.libraryName + "</LIBRARY_NAME>\n";
-				chaine = chaine + "            <LIBRARY_STRATEGY>"+ experiment.libraryStrategy + "</LIBRARY_STRATEGY>\n";
-				chaine = chaine + "            <LIBRARY_SOURCE>" + experiment.librarySource + "</LIBRARY_SOURCE>\n";
-				chaine = chaine + "            <LIBRARY_SELECTION>" + experiment.librarySelection + "</LIBRARY_SELECTION>\n";
+				chaine = chaine + "            <LIBRARY_STRATEGY>"+ VariableSRA.mapLibraryStrategy.get(experiment.libraryStrategy) + "</LIBRARY_STRATEGY>\n";
+				chaine = chaine + "            <LIBRARY_SOURCE>" + VariableSRA.mapLibrarySource.get(experiment.librarySource) + "</LIBRARY_SOURCE>\n";
+				chaine = chaine + "            <LIBRARY_SELECTION>" + VariableSRA.mapLibrarySelection.get(experiment.librarySelection) + "</LIBRARY_SELECTION>\n";
 				chaine = chaine + "            <LIBRARY_LAYOUT>\n";
-				chaine = chaine + "              <" + experiment.libraryLayout + "/>\n";
+				chaine = chaine + "              <" + experiment.libraryLayout + " NOMINAL_LENGTH=\"" + experiment.libraryLayoutNominalLength + "\" />\n";
 				chaine = chaine + "            </LIBRARY_LAYOUT>\n";
 				chaine = chaine + "            <LIBRARY_CONSTRUCTION_PROTOCOL>none provided</LIBRARY_CONSTRUCTION_PROTOCOL>\n";
 				chaine = chaine + "          </LIBRARY_DESCRIPTOR>\n";
@@ -262,7 +262,7 @@ public class XmlServices {
 				//output_buffer.write("//\n");
 				String runCode = run.code;
 				System.out.println("Ecriture du run " + runCode);
-				chaine = chaine + "  <Run alias=\""+ runCode + "\"";
+				chaine = chaine + "  <Run alias=\""+ runCode + "\" ";
 				if (StringUtils.isNotBlank(run.accession)) {
 					chaine = chaine + "accession=\"" + run.accession + "\" ";
 				}
@@ -304,9 +304,9 @@ public class XmlServices {
 		chaine = chaine + "<SUBMISSION_SET>\n";
 		
 		System.out.println("Ecriture du submission " + submission.code);
-		chaine = chaine + "  <SUBMISSION alias=\""+ submission.code + "\"";
+		chaine = chaine + "  <SUBMISSION alias=\""+ submission.code + "\" ";
 		if (StringUtils.isNotBlank(submission.accession)) {
-			chaine = chaine + "accession=\"" + submission.accession + "\"";
+			chaine = chaine + "accession=\"" + submission.accession + "\" ";
 		}
 		
 		chaine = chaine + ">\n";	

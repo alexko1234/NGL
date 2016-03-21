@@ -221,7 +221,8 @@ public class SubmissionServices {
 			String taxonId = laboratorySample.taxonCode;
 			String scientificName = laboratorySample.ncbiScientificName;
 			if (StringUtils.isBlank(scientificName)){
-				scientificName=updateLaboratorySampleForNcbiScientificName(taxonId, contextValidation);
+				//scientificName=updateLaboratorySampleForNcbiScientificName(taxonId, contextValidation);
+				throw new SraException("Pas de recuperation du nom scientifique pour le sample "+ laboratorySampleCode);
 			}
 			
 			// Creer les objets avec leurs alias ou code, les instancier completement et les sauver.
@@ -795,6 +796,15 @@ public class SubmissionServices {
 		}
 		String libProcessTypeCodeVal = (String) sampleOnContainerProperties.get("libProcessTypeCode").getValue();
 		String typeCode = readSet.typeCode;
+		if (readSet.typeCode.equalsIgnoreCase("rs_illumina")){
+			typeCode = "Illumina";
+		} else if (readSet.typeCode.equalsIgnoreCase("rs_nanopore")){
+			typeCode = "Nanopore";
+		} else if (readSet.typeCode.equalsIgnoreCase("default-readset")){
+			// rien condition à eliminer au plus tard, lors de la mise en prod.
+		} else {
+			throw new SraException("readset.typeCode inconnu " + typeCode);
+		}
 		experiment.title = scientificName + "_" + typeCode + "_" + libProcessTypeCodeVal;
 		experiment.libraryName = readSet.sampleCode + "_" +libProcessTypeCodeVal;			
 		InstrumentUsed instrumentUsed = laboratoryRun.instrumentUsed;
