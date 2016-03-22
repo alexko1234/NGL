@@ -9,8 +9,7 @@ import play.mvc.Result;
 import views.components.datatable.DatatableColumn;
 import views.components.datatable.DatatableConfig;
 import views.components.datatable.DatatableHelpers;
-import views.html.container.home;
-import views.html.container.search;
+import views.html.container.*;
 import controllers.CommonController;
 
 public class Containers extends CommonController {
@@ -23,12 +22,22 @@ public class Containers extends CommonController {
 		return ok(search.render());
 	}
 	
+	public static Result get(String code){
+		return ok(home.render("search"));
+	}
+	
+	public static Result details() {
+		return ok(details.render());
+	}
+	
 	public static Result javascriptRoutes() {
   	    response().setContentType("text/javascript");
   	    return ok(  	    		
   	      Routes.javascriptRouter("jsRoutes",
   	        // Routes
   	    		controllers.projects.api.routes.javascript.Projects.list(),
+  	    		controllers.containers.tpl.routes.javascript.Containers.get(),
+  	    		controllers.containers.api.routes.javascript.Containers.get(),
   	    		controllers.samples.api.routes.javascript.Samples.list(),
   	    		controllers.containers.api.routes.javascript.Containers.list(),
   	    		controllers.experiments.api.routes.javascript.ExperimentTypes.list(),

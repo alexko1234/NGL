@@ -69,6 +69,10 @@ containers.menu.search = Rechercher
 containers.tabs.search = Recherche Container
 containers.tabs.state = Changement d''Etat Container
 
+containers.tabs.general = Général
+containers.tabs.advanced = Avancé
+containers.tabs.treelife = Arbre de Vie
+
 #Containers table
 containers.table.code = Code Container
 containers.table.support.out.code = Container (Sortie)
@@ -116,7 +120,9 @@ containers.table.dispatch = Orientation
 containers.table.concentration.unit=Unité Concentration 
 containers.table.concentration.value=Concentration Container
 containers.table.libProcessType = Type processus Banque (code)	
+
 containers.table.size = Taille (pb)
+
 
 containers.table.iryschip.sampleCodes= Echantillon
 containers.table.irysprep.concentration=Concentration Moyenne
@@ -422,6 +428,7 @@ button.readsets.show = Voir Readsets
 button.readsets.valuation = Evaluer Readsets
 button.edit = Editer
 button.import.file = Import fichier
+button.printMode = Imprimer
 
 #select
 select.wrongStartColumnTagPlate= Colonne de début de la plaque d''index incorrecte

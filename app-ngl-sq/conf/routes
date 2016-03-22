@@ -22,7 +22,9 @@ GET		/tpl/supports/js-routes											controllers.containers.tpl.ContainerSuppo
 
 #containers tpl
 GET 	/containers/:homecode/home										controllers.containers.tpl.Containers.home(homecode:java.lang.String)
+GET		/containers/:code												controllers.containers.tpl.Containers.get(code: java.lang.String)
 GET		/tpl/containers/search											controllers.containers.tpl.Containers.search()
+GET		/tpl/containers/details											controllers.containers.tpl.Containers.details()
 GET		/tpl/containers/js-routes										controllers.containers.tpl.Containers.javascriptRoutes()
 
 #processes tpl

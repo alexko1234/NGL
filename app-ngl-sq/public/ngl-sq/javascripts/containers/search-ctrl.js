@@ -26,6 +26,27 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 		},
 		exportCSV:{
 			active:true
+		},
+		show:{
+			active:true,
+			add:function(line){
+				tabService.addTabs({label:line.code,href:jsRoutes.controllers.containers.tpl.Containers.get(line.code).url, remove:true});
+			}
+		},
+		edit:{
+			active:Permissions.check("writing")?true:false,
+			columnMode:true
+		},
+		save:{
+			active:Permissions.check("writing")?true:false,
+			url:jsRoutes.controllers.containers.api.Containers.updateBatch().url,
+			batch:true,
+			method:'put',
+			callback: function(reason, error){
+				
+				console.log("callback reason=" + reason);
+				console.log("callback error=" + error);
+			}
 		}
 	};
 
@@ -81,6 +102,12 @@ angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$rou
 				method:'put',
 				batch:true,
 				value:function(line){return {code:line.code,state:line.state};}
+			},
+			show:{
+				active:true,
+				add:function(line){
+					tabService.addTabs({label:line.code,href:jsRoutes.controllers.containers.tpl.Containers.get(line.code).url, remove:true});
+				}
 			},
 			hide:{
 				active:true

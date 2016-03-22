@@ -1,0 +1,85 @@
+@()
+
+@column()(value: Html) = {
+	<div class="col-md-4 col-lg-4 col-xs-4">
+		@value
+	</div>
+}
+
+<form class="form-horizontal">
+	<div class="row">
+	@column(){
+		@views.html.helper.columnLabelValue(Messages("containers.table.taraStation")){
+		}
+		@views.html.helper.columnLabelValue(Messages("containers.table.depth")){
+		}
+		@views.html.helper.columnLabelValue(Messages("containers.table.porosity")){
+		}
+		@views.html.helper.columnLabelValue(Messages("containers.table.iteration")){
+		}
+		@views.html.helper.columnLabelValue(Messages("containers.table.supportCode")){
+		}
+		@views.html.helper.columnLabelValue(Messages("containers.table.support.categoryCode")){
+		}
+		@views.html.helper.columnLabelValue(Messages("containers.table.support.line")){
+		}
+		@views.html.helper.columnLabelValue(Messages("containers.table.support.column")){
+		}
+		@views.html.helper.columnLabelValue(Messages("containers.table.code")){
+		}
+		@views.html.helper.columnLabelValue(Messages("containers.table.projectCodes")){
+		}
+		@views.html.helper.columnLabelValue(Messages("containers.table.sampleCodes.length")){
+		}
+		@views.html.helper.columnLabelValue(Messages("containers.table.sampleCodes")){
+		}
+	}
+	@column(){
+		@views.html.helper.columnLabelValue(Messages("containers.table.sampleTypes")){
+		}
+		@views.html.helper.columnLabelValue("Taille echantillon(bases)"){
+		}
+		@views.html.helper.columnLabelValue(Messages("containers.table.libProcessType")){
+		}
+		
+		@views.html.helper.columnLabelValue(Messages("containers.table.contents.length")){
+		}
+		@views.html.helper.columnLabelValue(Messages("containers.table.tags")){
+		}
+		@views.html.helper.columnLabelValue(Messages("containers.table.tagCategory")){
+		}
+		@views.html.helper.columnLabelValue(Messages("containers.table.fromTransformationTypeCodes")){
+		}
+		@views.html.helper.columnLabelValue(Messages("containers.table.concentration.value")){
+		}
+		@views.html.helper.columnLabelValue(Messages("containers.table.concentration.unit")){
+		}
+		@views.html.helper.columnLabelValue(Messages("containers.table.size")){
+		}
+	}
+	@column(){
+		@views.html.helper.columnLabelValue(Messages("containers.table.volume")){
+		}
+		@views.html.helper.columnLabelValue(Messages("containers.table.stateCode")){
+		}
+		@views.html.helper.columnLabelValue(Messages("containers.table.valid")){
+		}
+		@views.html.helper.columnLabelValue(Messages("containers.table.creationDate")){
+		}
+		@views.html.helper.columnLabelValue(Messages("containers.table.createUser")){
+		}
+		@views.html.helper.columnLabelValue(Messages("containers.table.storageCode")){
+		}
+		@views.html.helper.columnLabelValue(Messages("containers.table.processCode")){
+		}
+		@views.html.helper.columnLabelValue(Messages("")){
+		}
+		@views.html.helper.columnLabelValue(Messages("")){
+		}
+		@views.html.helper.columnLabelValue(Messages("")){
+		}
+		@views.html.helper.columnLabelValue(Messages("")){
+		}
+	}
+	</div>
+</form>
