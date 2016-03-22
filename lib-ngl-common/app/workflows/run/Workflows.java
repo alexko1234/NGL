@@ -18,6 +18,7 @@ import akka.actor.ActorRef;
 import akka.actor.Props;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import lims.services.ILimsRunServices;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
@@ -35,6 +36,7 @@ import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 import play.Logger;
 import play.Play;
+import play.api.modules.spring.Spring;
 import play.libs.Akka;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
@@ -208,10 +210,23 @@ public class Workflows {
 		if("N".equals(readSet.state.code)){
 			//Create sample if doesn't exist (for external data)
 			Sample sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, readSet.sampleCode);
-			if(sample == null && readSet.sampleOnContainer!=null && validation.getObject("external")!=null && (Boolean)validation.getObject("external")){
-				Sample extSample = InstanceHelpers.getExternalSample(readSet);
-				validation.setCreationMode();
-				InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,extSample,validation,true);
+			if(sample == null && validation.getObject("external")!=null && (Boolean)validation.getObject("external")){
+				ILimsRunServices  limsRunServices = Spring.getBeanOfType(ILimsRunServices.class);
+				Sample extSample = limsRunServices.findSampleToCreate(readSet.sampleCode);
+				if(extSample!=null){
+					validation.setCreationMode();
+					InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,extSample,validation,true);
+					//Create sampleOnContainer
+					SampleOnContainer sampleOnContainer = InstanceHelpers.getSampleOnContainer(readSet);
+					if(null != sampleOnContainer){
+						MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
+								DBQuery.is("code", readSet.code), DBUpdate.set("sampleOnContainer", sampleOnContainer));
+					}else{
+						Logger.error("sampleOnContainer null for "+readSet.code);
+					}
+				}else{
+					validation.addErrors("sampleCode","error.no.sample.lims",readSet.sampleCode);
+				}
 			}
 		
 		}

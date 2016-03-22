@@ -327,7 +327,6 @@ public class ReadSets extends ReadSetsController{
 			ctxVal.putObject("external", false);
 
 		//Apply rules before validation
-		Logger.debug("Apply pres state rules");
 		Workflows.applyReadSetPreStateRules(ctxVal, readSetInput);
 		
 		ctxVal.setCreationMode();

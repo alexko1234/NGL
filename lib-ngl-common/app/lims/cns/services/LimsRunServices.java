@@ -35,6 +35,7 @@ import models.laboratory.run.instance.Lane;
 //import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
+import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 
@@ -533,5 +534,10 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 		DepotSolexa ds=dao.insertFlowcellNGL(expPrepaflowcell.get(0),expDepotIllumina.get(0), run);
 		return ds;
 
+	}
+
+	@Override
+	public Sample findSampleToCreate(String sampleCode) {
+		return dao.getMateriel(sampleCode);
 	}
 }

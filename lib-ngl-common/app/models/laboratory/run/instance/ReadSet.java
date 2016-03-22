@@ -100,10 +100,6 @@ public class ReadSet extends DBObject implements IValidation{
 		contextValidation.putObject("level", Level.CODE.ReadSet);
 		TreatmentValidationHelper.validationTreatments(this.treatments, contextValidation);
 		FileValidationHelper.validationFiles(this.files, contextValidation);
-		
-		if(contextValidation.getContextObjects().containsKey("external") && (Boolean)contextValidation.getContextObjects().get("external")){
-			ValidationHelper.required(contextValidation, sampleOnContainer, "sampleOnContainer");
-		}
 	}
 	
 }

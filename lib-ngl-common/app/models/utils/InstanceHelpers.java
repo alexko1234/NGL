@@ -325,23 +325,5 @@ public class InstanceHelpers {
 		return r.containerSupportCode;
 	}
 	
-	public static Sample getExternalSample(ReadSet readSetInput)
-	{
-		Logger.debug("Create sample from external ReadSet");
-		SampleOnContainer sampleOnContainer = readSetInput.sampleOnContainer;
-		Sample sample = new Sample();
-		sample.code = sampleOnContainer.sampleCode;
-		sample.typeCode = sampleOnContainer.sampleTypeCode;
-		sample.categoryCode = sampleOnContainer.sampleCategoryCode;
-		sample.name = sample.code;
-		sample.referenceCollab = sampleOnContainer.referenceCollab;
-		sample.properties = sampleOnContainer.properties;
-		sample.traceInformation=new TraceInformation();
-   		sample.traceInformation.setTraceInformation("ngl-sq");
-		sample.importTypeCode="default-import";
-		sample.projectCodes=new HashSet<String>();
-		sample.projectCodes.add(readSetInput.projectCode);
-		return sample;
-	}
-
+	
 }

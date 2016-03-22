@@ -1,6 +1,7 @@
 package lims.services;
 
 
+import java.sql.SQLException;
 import java.util.List;
 
 import lims.models.experiment.ContainerSupport;
@@ -8,6 +9,9 @@ import lims.models.experiment.Experiment;
 import lims.models.instrument.Instrument;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
+import models.laboratory.sample.instance.Sample;
+import models.utils.dao.DAOException;
+import validation.ContextValidation;
 
 /**
  * Common interface to extract data from CNS or CNG Lims
@@ -36,5 +40,7 @@ public interface ILimsRunServices {
 	public void updateReadSetArchive(ReadSet readset);
 	
 	public void linkRunWithMaterielManip();
+	
+	public Sample findSampleToCreate(String sampleCode);
 	
 }

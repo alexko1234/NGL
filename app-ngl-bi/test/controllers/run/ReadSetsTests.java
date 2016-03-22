@@ -69,7 +69,10 @@ public class ReadSetsTests extends AbstractTestsCNS {
 
 		MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, sample);
 		MongoDBDAO.save(InstanceConstants.PROJECT_COLL_NAME, project);
-
+		
+		Project projectInit = MongoDBDAO.findByCode("ngl_project.Project_init", Project.class, "BFB");
+		MongoDBDAO.save(InstanceConstants.PROJECT_COLL_NAME, projectInit);
+		
 		ResolutionConfiguration resoConfig = new ResolutionConfiguration();
 		resoConfig.code="conf-reso-run";
 		resoConfig.objectTypeCode="Run";
@@ -122,12 +125,14 @@ public class ReadSetsTests extends AbstractTestsCNS {
 		//if(sample!=null)
 		MongoDBDAO.deleteByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, "SampleCode");
 		
-		MongoDBDAO.deleteByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, "newSample");
+		MongoDBDAO.deleteByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, "BFB_AABA");
 
 		//Project project = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, "ProjectCode");
 		//if (project!= null) {
 		MongoDBDAO.deleteByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, "ProjectCode");
 		//}
+		
+		MongoDBDAO.deleteByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, "BFB");
 		
 		ResolutionConfiguration resolutionConfig = MongoDBDAO.findByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "conf-reso-run");
 		if(resolutionConfig!=null)
@@ -175,7 +180,7 @@ public class ReadSetsTests extends AbstractTestsCNS {
 		}
 	}
 
-	//@Test
+	@Test
 	public void testReadSetsCreate() { 
 		// create a run with two readsets associated to this run
 		run.dispatch = true; // For the archive test
@@ -198,7 +203,7 @@ public class ReadSetsTests extends AbstractTestsCNS {
 	}
 
 
-	//@Test
+	@Test
 	public void testArchiveReadSet() {
 		run.dispatch = true; 
 
@@ -221,7 +226,7 @@ public class ReadSetsTests extends AbstractTestsCNS {
 	}
 
 
-	//@Test
+	@Test
 	public void testAchiveList(){
 		run.dispatch = true; 
 
@@ -249,7 +254,7 @@ public class ReadSetsTests extends AbstractTestsCNS {
 	}
 
 
-	//@Test
+	@Test
 	public void testDeleteReadsets(){
 		run.traceInformation = new TraceInformation();
 		run.dispatch = true; // For the archive test
@@ -280,7 +285,7 @@ public class ReadSetsTests extends AbstractTestsCNS {
 	}
 
 
-	//@Test 
+	@Test 
 	public void testRemoveReadset(){
 
 		run.state=null;
@@ -305,66 +310,57 @@ public class ReadSetsTests extends AbstractTestsCNS {
 		assertThat(readset).isNull(); 
 	}
 	
-	/*@Test
-	public void testCreateReadSetExternalData()
-	{
-		//ReadSet external with sampleOnContainer and sample not in database
-		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
-		Logger.debug(contentAsString(result));
-		assertThat(status(result)).isEqualTo(OK);
-
-		//Check sample doesnt exist
-		Sample sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, "newSample");
-		assertThat(sample==null);
-		readset.sampleCode="newSample";
-		SampleOnContainer sampleOnContainer = RunMockHelper.newSampleOnContainer("newSample");
-		readset.sampleOnContainer=sampleOnContainer;
-		readset.sampleOnContainer.sampleCategoryCode="DNA";
-		readset.sampleOnContainer.sampleTypeCode="gDNA";
-		result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readset)));
-		Logger.debug(contentAsString(result));
-		assertThat(status(result)).isEqualTo(OK);
-		
-		//Check sample exist
-		sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, "newSample");
-		assertThat(sample!=null);
-	}*/
 	
 	@Test
-	public void testSaveReadSetWithSampleOnContainerExternal()
+	public void testSaveReadSetExternal()
 	{
+		Sample sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, "BFB_AABA");
+		assertThat(sample==null);
+		
 		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 		Logger.debug(contentAsString(result));
 		assertThat(status(result)).isEqualTo(OK);
 
-		SampleOnContainer sampleOnContainer = RunMockHelper.newSampleOnContainer("newSample");
-		readset.sampleOnContainer=sampleOnContainer;
-		readset.sampleCode="newSample";
+		readset.sampleCode="BFB_AABA";
+		readset.projectCode="BFB";
+		readset.sampleOnContainer=null;
 		
 		result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest(play.test.Helpers.POST, "?external=true").withJsonBody(RunMockHelper.getJsonReadSet(readset)));
 		Logger.debug(contentAsString(result));
 		assertThat(status(result)).isEqualTo(OK);
 		
 		//Check sample created
-		Sample sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, "newSample");
+		sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, "BFB_AABA");
 		assertThat(sample!=null);
+		
+		//Check sampleOnContainer created
+		readset = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, "rdCode");
+		assertThat(readset.sampleOnContainer!=null);
 
 		
 	}
 	
-	//@Test
-	public void testSaveReadSetWithoutSampleOnContainerExternal()
+	@Test
+	public void testSaveReadSetExternalWithNoSampleLims()
 	{
 		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 		Logger.debug(contentAsString(result));
 		assertThat(status(result)).isEqualTo(OK);
 
-		readset.sampleOnContainer=null;
+		readset.sampleCode="testSample";
+		readset.projectCode="BFB";
 		
 		result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest(play.test.Helpers.POST, "?external=true").withJsonBody(RunMockHelper.getJsonReadSet(readset)));
 		Logger.debug(contentAsString(result));
 		assertThat(status(result)).isEqualTo(BAD_REQUEST);
-		assertThat(contentAsString(result).contains("sampleOnContainer"));
+		assertThat(contentAsString(result).contains("No sample testSample in LIMS"));
+		
+	}
+	
+	//TODO
+	public void testReadSetExternalStateFRG()
+	{
+		
 	}
 
 	/**

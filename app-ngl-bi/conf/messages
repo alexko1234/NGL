@@ -896,3 +896,6 @@ authorisation.users.page.tab.search = Recherche des utilisateurs
 ###############
 user.login = Login
 user.roles = Roles
+
+
+error.no.sample.lims=No sample {0} in LIMS

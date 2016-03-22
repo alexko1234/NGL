@@ -5,7 +5,10 @@ package lims.cns.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -22,8 +25,12 @@ import lims.models.runs.EtatTacheHD;
 import lims.models.runs.LimsFile;
 import lims.models.runs.ResponProjet;
 import lims.models.runs.TacheHD;
+import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.common.instance.Comment;
+import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TransientState;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.InputContainerUsed;
@@ -33,7 +40,10 @@ import models.laboratory.run.instance.Lane;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.run.instance.Treatment;
+import models.laboratory.sample.description.SampleType;
+import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
+import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -47,6 +57,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import play.Logger;
+import play.api.modules.spring.Spring;
 import fr.cea.ig.MongoDBDAO;
 
 
@@ -54,7 +65,8 @@ import fr.cea.ig.MongoDBDAO;
 public class LimsAbandonDAO {
         private JdbcTemplate jdbcTemplate;
         
-   
+        public static final String LIMS_CODE="limsCode";
+        
     @Autowired
     @Qualifier("lims")
     public void setDataSource(DataSource dataSource) {
@@ -570,5 +582,145 @@ public class LimsAbandonDAO {
 		
 	}
 	
+	public Sample getMateriel(String sampleCode)
+	{
+		List<Sample> results = this.jdbcTemplate.query("pl_MaterielToNGLUn @nom_materiel=?",new Object[]{sampleCode} 
+		,new RowMapper<Sample>() {
+
+			@SuppressWarnings("rawtypes")
+			public Sample mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+				Sample sample = new Sample();
+				InstanceHelpers.updateTraceInformation(sample.traceInformation, "ngl-bi");
+				String tadco = rs.getString("tadco");
+				String tprco = rs.getString("tprco");
+				sample.code=rs.getString("code");
+
+				Logger.debug("Code Materiel (adnco) :"+rs.getString(LIMS_CODE)+" , Type Materiel (tadco) :"+tadco +", Type Projet (tprco) :"+tprco);
+
+				String sampleTypeCode=getSampleTypeFromLims(tadco,tprco);
+
+				if(sampleTypeCode==null){
+					throw new RuntimeException("Empty typeCode "+tadco+" for sample "+sample.code);
+				}
+
+				SampleType sampleType=null;
+				try {
+					sampleType = SampleType.find.findByCode(sampleTypeCode);
+				} catch (DAOException e) {
+					Logger.error("",e);
+					return null;
+				}
+
+
+				if( sampleType==null ){
+					throw new RuntimeException("Code not exist "+sampleTypeCode+"for "+sample.code);
+				}
+
+				Logger.debug("Sample Type :"+sampleTypeCode);
+
+				sample.typeCode=sampleTypeCode;
+
+
+				sample.projectCodes=new HashSet<String>();
+				sample.projectCodes.add(rs.getString("project"));
+
+				sample.name=rs.getString("name");
+				sample.referenceCollab=rs.getString("referenceCollab");
+				sample.taxonCode=rs.getString("taxonCode");
+				sample.comments=new ArrayList<Comment>();
+				sample.comments.add(new Comment(rs.getString("comment"), "ngl-test"));
+				sample.categoryCode=sampleType.category.code;
+
+				sample.properties=new HashMap<String, PropertyValue>();
+				getPropertiesFromResultSet(rs,sampleType.propertiesDefinitions,sample.properties);
+
+				//Logger.debug("Properties sample "+sample.properties.containsKey("taxonSize"));
+
+				//TODO get properties for Tara sample???
+				
+				sample.importTypeCode="default-import";
+				return sample;
+			}
+
+
+		});        
+
+		if(results.size()==1)
+		{
+			//	Logger.debug("One sample");
+			return results.get(0);
+		}
+		else return null;
+	}
+	
+	private String getSampleTypeFromLims(String tadnco,String tprco) {
+
+		if (tadnco.equals("15"))
+			return "fosmid";
+		else if (tadnco.equals("8"))
+			return "plasmid";
+		else if (tadnco.equals("2"))
+			return "BAC";
+		else if (tadnco.equals("1") && !tprco.equals("11"))
+			return "gDNA";
+		else if (tadnco.equals("1") && tprco.equals("11"))
+			return "MeTa-DNA";
+		else if (tadnco.equals("16"))
+			return "gDNA";
+		else if (tadnco.equals("19") || tadnco.equals("6") || tadnco.equals("14"))
+			return "amplicon";
+		else if (tadnco.equals("12"))
+			return "cDNA";
+		else if (tadnco.equals("11"))
+			return "total-RNA";
+		else if (tadnco.equals("18"))
+			return "sRNA";
+		else if (tadnco.equals("10"))
+			return "mRNA";
+		else if (tadnco.equals("17"))
+			return "chIP";
+		else if (tadnco.equals("20"))
+			return "depletedRNA";
+		else if (tadnco.equals("21"))
+			return "aRNA";
+		else if (tadnco.equals("22"))
+			return "DNAplug";
+		else if (tadnco.equals("9") )
+			return "unknown";
+		//Logger.debug("Erreur mapping Type materiel ("+tadnco+")/Type projet ("+tprco+") et Sample Type");
+		return null;
+	}
+	
+	private void getPropertiesFromResultSet(ResultSet rs,
+			List<PropertyDefinition> propertiesDefinitions,
+			Map<String, PropertyValue> properties) throws SQLException {
+		
+		for(PropertyDefinition propertyDefinition :propertiesDefinitions)
+		{
+			String code=null;
+			String unite=null;
+			try{
+
+				code=rs.getString(propertyDefinition.code);
+				
+			//	Logger.debug("Property definition to retrieve "+propertyDefinition.code+ "value "+ code);
+				if(code!=null){
+					try{
+						unite=rs.getString(propertyDefinition.code+"Unit");
+						properties.put(propertyDefinition.code, new PropertySingleValue(code,unite));
+					}
+					catch(SQLException e){
+						properties.put(propertyDefinition.code, new PropertySingleValue(code));
+					}
+				}
+
+			}catch (SQLException e) {
+			//	Logger.info("Property "+propertyDefinition.code+" not exist in "+rs.getStatement().toString()+ " query");
+			}
+
+		}
+		
+	}
 }
 

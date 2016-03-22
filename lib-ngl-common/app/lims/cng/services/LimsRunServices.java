@@ -18,6 +18,7 @@ import lims.models.instrument.Instrument;
 import lims.services.ILimsRunServices;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
+import models.laboratory.sample.instance.Sample;
 import models.utils.InstanceConstants;
 
 import org.apache.commons.lang.time.DateUtils;
@@ -187,6 +188,12 @@ public class LimsRunServices implements ILimsRunServices {
 	@Override
 	public void linkRunWithMaterielManip() {
 		Logger.warn("Not Implemented");	
+	}
+
+	@Override
+	public Sample findSampleToCreate(String sampleCode) {
+		Logger.warn("Not Implemented");	
+		return null;
 	}
 	
 }

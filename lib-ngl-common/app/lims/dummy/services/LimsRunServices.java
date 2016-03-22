@@ -8,6 +8,7 @@ import lims.models.instrument.Instrument;
 import lims.services.ILimsRunServices;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
+import models.laboratory.sample.instance.Sample;
 
 public class LimsRunServices implements ILimsRunServices {
 
@@ -70,6 +71,12 @@ public class LimsRunServices implements ILimsRunServices {
 	public void linkRunWithMaterielManip() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public Sample findSampleToCreate(String sampleCode) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
