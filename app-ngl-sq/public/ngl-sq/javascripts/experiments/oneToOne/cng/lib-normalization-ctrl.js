@@ -68,7 +68,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	"extraHeaders":{0: inputExtraHeaders}
 				     },
-				     { //Aliquots
+				     { //sample Aliquots
 				        "header":Messages("containers.table.codeAliquot"),
 				 		"property": "inputContainer.contents", 
 				 		"filter": "getArray:'properties.sampleAliquoteCode.value'",

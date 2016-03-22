@@ -27,10 +27,15 @@ import play.Logger;
 
 public abstract class CovarisAndScicloneInput extends AbstractInput {
 	
+	// 18/03/2016 essai recevoir un argument supplementaire: PlateBarcode
+	// public Experiment importFile(Experiment experiment, PropertyFileValue pfv, String plateBarcode, ContextValidation contextValidation)
 	@Override
 	public Experiment importFile(Experiment experiment, PropertyFileValue pfv, ContextValidation contextValidation) throws Exception {
 		
 		InputStream is = new ByteArrayInputStream(pfv.value);
+		//DEBUG..
+		String plateBarcode="DEBUG-ABCDE";
+		Logger.info ("checking plate barcode="+plateBarcode);
 		
 		// plusieurs erreurs possibles...si le fichier n'est pas de l'Excel, ou n'est pas lisible...
 		Workbook wb = WorkbookFactory.create(is);
@@ -43,22 +48,37 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 		/* description de l'onglet a traiter:
 		 *  ligne de header en position 3 constituee de 3 champs: 
 		 *     colA=Sample Well, colB=Index Well, colC=Index Name
-		 *  96 lignes de donnees
+		 *  96 lignes de donnees (max)
 		 *     colA=position de plaque : A1-H12 si plaque 96
 		 *     colB= un nombre si le puit est indexé
 		 *     colC= un nom d'index si la colonne B n'est pas vide !!! c'est une formule
+		 *     Modifs 18/03/2016 en D1 label 'Plate barcode' et en D2 le barcode
 		 */
 		
-		//verifier qu'on trouve les 3 headers
-		if ( getStringValue(sheet.getRow(2).getCell(0))==null ){
-			contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.header.missing","3","A");
+		//-1- verifier que le fichier correspond a la plaque a traiter:
+		
+		if (( getStringValue(sheet.getRow(0).getCell(3))==null ) || !(getStringValue(sheet.getRow(0).getCell(3)).equals("Plate Barcodeeeeee"))){
+			contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.header.missing","Plate Barcode","1","D");
 		}
-		if ( getStringValue(sheet.getRow(2).getCell(1))==null ){
-			contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.header.missing","3","B");
+		//if ( !getStringValue(sheet.getRow(0).getCell(4)).equals(plateBarcode) ) {
+		//	contextValidation.addErrors("Erreurs fichier","Barcode '"+ getStringValue(sheet.getRow(0).getCell(4)) +"' ne correspond pas a celui qui est attendu" );
+		//}
+		//if ( getStringValue(sheet.getRow(0).getCell(4))==null ) {
+		//	contextValidation.addErrors("Erreurs fichier","DEBUG..barcode manquant");
+		//}		
+		
+		//-2- verifier qu'on trouve les 3 headers
+
+		if ((getStringValue(sheet.getRow(2).getCell(0))==null ) || !(getStringValue(sheet.getRow(2).getCell(0)).equals("Sample Well"))){
+			contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.header.missing","Sample Well","3","A");
 		}
-		if ( getStringValue(sheet.getRow(2).getCell(2))==null ){
-			contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.header.missing","3","C");
+		if ((getStringValue(sheet.getRow(2).getCell(1))==null ) || !(getStringValue(sheet.getRow(2).getCell(1)).equals("Index Well"))){
+			contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.header.missing","Index Well","3","B");
 		}
+		if (( getStringValue(sheet.getRow(2).getCell(2))==null ) || !(getStringValue(sheet.getRow(2).getCell(2)).equals("Index Name"))){
+			contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.header.missing","Index Name","3","C");
+		}
+
 		if (contextValidation.hasErrors()){
 			return experiment;
 		}

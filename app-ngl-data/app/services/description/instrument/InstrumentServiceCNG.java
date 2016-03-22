@@ -10,7 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.Level;
+import models.laboratory.common.description.MeasureCategory;
+import models.laboratory.common.description.MeasureUnit;
 import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.common.description.Value;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.instrument.description.Instrument;
 import models.laboratory.instrument.description.InstrumentCategory;
@@ -379,6 +382,9 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		l.addAll(getCovarisProperties());
 		l.addAll(getSicloneNGSXProperties());
 		
+		//18/03/2016 ajouter un "runNumber" a saisir ( optionnel) 
+		l.add(newPropertiesDefinition("Nom du Run","ngsRunCode", LevelService.getLevels(Level.CODE.Instrument),  String.class, false, null,
+				null, null,null,null, "single",null, true ,null, null));
 		return l;
 	}
 	

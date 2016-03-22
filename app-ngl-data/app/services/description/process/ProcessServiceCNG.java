@@ -34,7 +34,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		List<ProcessCategory> l = new ArrayList<ProcessCategory>();
 		
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Sequençage", "sequencing"));		
-		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Banque", "library"));// FDS ajout 27/01/2016: JIRA-NGL 894
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Librairie", "library"));
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){	
 			// 09/03/2016 N'existent pas au CNG
@@ -163,10 +163,21 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	private static List<PropertyDefinition> getPropertyDefinitionsX5WgPcrFree() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 	
-		//TODO ???
-		// propertyDefinitions.add(........);
-		//     dans la spec pour l'instant(29/01/2016) : PAS DE PRORIETE DE PROCESSUS"
+		// FDS 21/03/2016 ajout d'une propriete avec liste de choix
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Type processus librairie","libProcessTypeCode"
+						, LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, "F"
+						, getLibProcessTypeCodeValues(), "single" ,100, null, null, null));
 		
 		return propertyDefinitions;
+	}
+	
+	
+	private static List<Value> getLibProcessTypeCodeValues(){
+        List<Value> values = new ArrayList<Value>();
+         values.add(DescriptionFactory.newValue("DA","DNAseq"));
+         values.add(DescriptionFactory.newValue("DD","PCR-NANO-DNASeq"));
+         
+         return values;
 	}
 }

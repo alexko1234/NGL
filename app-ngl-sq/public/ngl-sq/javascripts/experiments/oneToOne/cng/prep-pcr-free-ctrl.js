@@ -8,7 +8,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 	var datatableConfig = {
 			name:"FDR_Plaque", // sert pour le nom de fichier si export demandé
 			//Guillaume le 04/03 => utiliser containerUsed seulement pour proprietes dynamiques...
-			columns:[
+			"columns":[
 			         //--------------------- INPUT containers section -----------------------
 			         
 			         /* plus parlant pour l'utilisateur d'avoir Plate barcode | line | column
@@ -69,15 +69,25 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	"extraHeaders":{0: inputExtraHeaders}
 				     },
-				     // 09/03/2016 et l'aliquoteCode ??? .... (!n'existe pas pour les plaques de samples)
-				     //                                        Mais a-t-on toujours des plaques de samples en input ???
+				   /*  { // sampleAliquoteCode 
+				        "header":Messages("containers.table.codeAliquot"),
+				 		"property": "inputContainer.contents", 
+				 		"filter": "getArray:'properties.sampleAliquoteCode.value'",
+				 		"order":true,
+				 		"hide":true,
+				 		"type":"text",
+				 		"position":13,
+				 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+				        "extraHeaders":{0: inputExtraHeaders}
+					 },
+					*/
 					 { // Concentration
 			        	 "header":Messages("containers.table.concentration") + " (ng/µL)",
 			        	 "property":"inputContainer.concentration.value",
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":13,
+			        	 "position":14,
 			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },  
 			         { // Volume
@@ -86,7 +96,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":14,
+			        	 "position":15,
 			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },
 			         { // Etat input Container 
@@ -95,7 +105,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"text",
-			        	 "position":15,
+			        	 "position":16,
 			        	 "extraHeaders":{0: inputExtraHeaders}
 			         },
 			         //--->  colonnes specifiques instrument s'inserent ici  (inputUsed ??)     
@@ -163,55 +173,55 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			        	 "extraHeaders":{0: outputExtraHeaders}
 			         }
 			         ],
-			compact:true,
-			pagination:{
-				active:false
+			"compact":true,
+			"pagination":{
+				"active":false
 			},		
-			search:{
-				active:false
+			"search":{
+				"active":false
 			},
-			order:{
-				mode:'local',
-				active:true,
+			"order":{
+				"mode":"local",
+				"active":true,
 				// FDS : ce tri donne 1,10,11,12,2.... comment avoir un tri 1,2....10,11,12,13 ??
-				by:'inputContainer.code'
+				"by":"inputContainer.code"
 			},
-			remove:{
-				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
-				showButton: ($scope.isEditModeAvailable() && $scope.isNewState()),
-				mode:'local'
+			"remove":{
+				"active": ($scope.isEditModeAvailable() && $scope.isNewState()),
+				"showButton": ($scope.isEditModeAvailable() && $scope.isNewState()),
+				"mode":"local"
 			},
-			save:{
-				active:true,
-	        	withoutEdit: true,
-	        	changeClass:false,
-	        	showButton:false,
-	        	mode:'local',
-	        	callback:function(datatable){
+			"save":{
+				"active":true,
+	        	"withoutEdit": true,
+	        	"changeClass":false,
+	        	"showButton":false,
+	        	"mode":"local",
+	        	"callback":function(datatable){
 	        		copyContainerSupportCodeAndStorageCodeToDT(datatable);
 	        	}
 			},
-			hide:{
-				active:true
+			"hide":{
+				"active":true
 			},
 			edit:{
 				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
 				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
 				columnMode:true
 			},
-			messages:{
-				active:false,
-				columnMode:true
+			"messages":{
+				"active":false,
+				"columnMode":true
 			},
-			exportCSV:{
-				active:true,
-				showButton:true,
-				delimiter:";",
-				start:false
+			"exportCSV":{
+				"active":true,
+				"showButton":true,
+				"delimiter":";",
+				"start":false
 			},
-			extraHeaders:{
-				number:2,
-				dynamic:true,
+			"extraHeaders":{
+				"number":2,
+				"dynamic":true,
 			}
 	}; // fin struct datatableConfig
 	
@@ -302,7 +312,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 	
 	var importData = function(){
 		$scope.messages.clear();
-		
+
 		$http.post(jsRoutes.controllers.instruments.io.IO.importFile($scope.experiment.code).url, $scope.file)
 		.success(function(data, status, headers, config) {
 			
