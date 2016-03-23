@@ -36,8 +36,11 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		l.add(newInstrumentCategory("Thermocycleur","thermocycler"));
 		l.add(newInstrumentCategory("Centrifugeuse","centrifuge"));
 		
-		// FDS ajout nouvelle category  29/01/2016 JIRA NGL-894 (couple d'instruments...)
+		// FDS 29/01/2016 JIRA NGL-894 (couple d'instruments...)
 		l.add(newInstrumentCategory("Covaris + Robot pipetage","covaris-and-liquid-handling-robot"));
+		
+		// FDS 22/03/2016 JIRA NGL-982
+		l.add(newInstrumentCategory("Robot pipetage + cBot","liquid-handling-robot-and-cBot"));
 		
 		l.add(newInstrumentCategory("Quantification par fluorométrie","fluorometer"));
 		l.add(newInstrumentCategory("Appareil de qPCR","qPCR-system"));
@@ -178,7 +181,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 						createInstrument("quBit1", "QuBit1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))
 						), 
 				getContainerSupportCategories(new String[]{"tube"}),null, 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG))); //ok
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		
 		/** FDS ajout liquid-handling-robot  **/
@@ -190,7 +193,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		
-		/** FDS ajout 29/01/2016 JIRA NGL-894 (couple d'instruments covaris+Sciclone ) **/
+		/** FDS ajout 29/01/2016 JIRA NGL-894 pseudo instruments covaris+Sciclone (plaque input/ plaque output) **/
 		l.add(newInstrumentUsedType("Covaris E210 + Sciclone NGSX", "covaris-e210-and-sciclone-ngsx", InstrumentCategory.find.findByCode("covaris-and-liquid-handling-robot"), getCovarisAndScicloneNGSProperties(), 
 				getInstruments(
 						createInstrument("covaris1-and-ngs1", "Covaris1 / NGS-1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
@@ -214,6 +217,15 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"96-well-plate" }), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
 		
+		/** FDS ajout 22/03/2016 JIRA NGL-982 pseudo instruments Janus+Cbot (plaque input/ plaque output) **/
+		l.add(newInstrumentUsedType("Janus / cBot", "janus-and-cBot", InstrumentCategory.find.findByCode("liquid-handling-robot-and-cBot"), getJanusAndCBotProperties(), 
+				getInstruments(
+						createInstrument("janus1-and-cBot1", "Janus1 / cBot1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("janus1-and-cBot2", "Janus1 / cBot2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("janus1-and-cBot3", "Janus1 / cBot3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("janus1-and-cBot4", "Janus1 / cBot4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
+				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"96-well-plate" }), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
@@ -332,7 +344,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getCovarisProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
-		// essai ajout default value...
 		l.add(newPropertiesDefinition("Programme Covaris", "programCovaris", LevelService.getLevels(Level.CODE.Instrument), String.class, true,
 				                       newValues("PCR FREE PROD NGS FINAL"), "PCR FREE PROD NGS FINAL", "single"));
 		return l;
@@ -382,9 +393,9 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		l.addAll(getCovarisProperties());
 		l.addAll(getSicloneNGSXProperties());
 		
-		//18/03/2016 ajouter un "runNumber" a saisir ( optionnel) 
+		//18/03/2016 ajouter un "nom de run" a saisir (optionnel) 
 		l.add(newPropertiesDefinition("Nom du Run","ngsRunCode", LevelService.getLevels(Level.CODE.Instrument),  String.class, false, null,
-				null, null,null,null, "single",null, true ,null, null));
+				null, null, null, null, "single", null, true ,null, null));
 		return l;
 	}
 	
@@ -392,12 +403,22 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getJanusProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
-		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, 
-                newValues("waiting-program"),  "single"));
+		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
+				 newValues("waiting-program"), null, null , null, "single", null, false ,null, null));
 		
 		return l;
 	}
 	
+	//FDS 22/03/2016 ajout Janus+cbot --JIRA NGL-982
+	 private static List<PropertyDefinition> getJanusAndCBotProperties() throws DAOException {
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		
+		// propertie Janus + properties cbot
+		l.addAll(getJanusProperties());
+		l.addAll(getCBotProperties());
+		
+		return l;
+	}
 	
 	/*** get lists methods ***/
 	private static List<Instrument> getInstrumentMiSeq() throws DAOException {

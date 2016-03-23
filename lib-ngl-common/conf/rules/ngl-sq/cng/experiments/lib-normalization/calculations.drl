@@ -12,7 +12,7 @@ rule "Debug lib-normalization"
 		Logger.debug("Rules annotation @nglSQ(calculations) lib-normalization");    
 end
 
-// calcul du volume engagé
+// calcul du volume engagé et du tampon
 rule "InputVolume in lib-normalization inputContainer"
     @nglSQ( calculations )
 	dialect "java"
@@ -43,5 +43,20 @@ rule "InputVolume in lib-normalization inputContainer"
 		}	
 	    $inputContainerUsed.experimentProperties.put("inputVolume", propertySingle);
 		Logger.debug("inputVolume=",propertySingle.getValue());
+			
+		// volume buffer= volume out - volume engagé
+		Logger.debug("volume tampon= volumeout - volume engagé");
+		Double bfVolume = roundValue( Double.parseDouble($outputVolume.getValue().toString()) - iVolume );
+        Logger.debug("setting bufferVolume="+ bfVolume);   
+        PropertySingleValue propertySingle = new PropertySingleValue(bfVolume, "\u00B5L");
+        
+        if($inputContainerUsed.experimentProperties==null){
+			$inputContainerUsed.experimentProperties = new HashMap<String, PropertyValue>();		
+		}else if($inputContainerUsed.experimentProperties.containsKey("bufferVolume")){
+			$inputContainerUsed.experimentProperties.remove("bufferVolume");
+		}	
+	    $inputContainerUsed.experimentProperties.put("bufferVolume", propertySingle);
+		Logger.debug("bufferVolume=",propertySingle.getValue());
+
 		update($experiment);
 end

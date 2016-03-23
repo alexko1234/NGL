@@ -27,15 +27,20 @@ import play.Logger;
 
 public abstract class CovarisAndScicloneInput extends AbstractInput {
 	
-	// 18/03/2016 essai recevoir un argument supplementaire: PlateBarcode
-	// public Experiment importFile(Experiment experiment, PropertyFileValue pfv, String plateBarcode, ContextValidation contextValidation)
 	@Override
 	public Experiment importFile(Experiment experiment, PropertyFileValue pfv, ContextValidation contextValidation) throws Exception {
 		
 		InputStream is = new ByteArrayInputStream(pfv.value);
+		
 		//DEBUG..
-		String plateBarcode="DEBUG-ABCDE";
-		Logger.info ("checking plate barcode="+plateBarcode);
+		//String plateBarcode="DEBUG-ABCDE";
+		// Logger.info ("checking plate barcode="+plateBarcode);
+		
+		// le barcode a checker doit etre dans experiment.ouputContainerSupportCodes......si l'experience a deja ete sauvegardee...	
+		///MARCHE String outputSupportContainerCode=experiment.atomicTransfertMethods.get(0).outputContainerUseds.get(0).locationOnContainerSupport.code;
+
+		String outputSupportContainerCode=experiment.outputContainerSupportCodes.iterator().next().toString();
+		Logger.info ("checking "+outputSupportContainerCode);
 		
 		// plusieurs erreurs possibles...si le fichier n'est pas de l'Excel, ou n'est pas lisible...
 		Workbook wb = WorkbookFactory.create(is);
@@ -52,31 +57,30 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 		 *     colA=position de plaque : A1-H12 si plaque 96
 		 *     colB= un nombre si le puit est indexé
 		 *     colC= un nom d'index si la colonne B n'est pas vide !!! c'est une formule
-		 *     Modifs 18/03/2016 en D1 label 'Plate barcode' et en D2 le barcode
+		 *     Modifs 18/03/2016 en D1 label 'Plate Barcode' et en D2 le barcode
 		 */
 		
-		//-1- verifier que le fichier correspond a la plaque a traiter:
+		//-1- verifier que le fichier correspond au barcode de la plaque a traiter:
 		
-		if (( getStringValue(sheet.getRow(0).getCell(3))==null ) || !(getStringValue(sheet.getRow(0).getCell(3)).equals("Plate Barcodeeeeee"))){
-			contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.header.missing","Plate Barcode","1","D");
+		if (( getStringValue(sheet.getRow(0).getCell(3))==null ) || !(getStringValue(sheet.getRow(0).getCell(3)).equals("Plate Barcode"))){
+			contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.header-label.missing","1","Plate Barcode");
 		}
-		//if ( !getStringValue(sheet.getRow(0).getCell(4)).equals(plateBarcode) ) {
-		//	contextValidation.addErrors("Erreurs fichier","Barcode '"+ getStringValue(sheet.getRow(0).getCell(4)) +"' ne correspond pas a celui qui est attendu" );
-		//}
-		//if ( getStringValue(sheet.getRow(0).getCell(4))==null ) {
-		//	contextValidation.addErrors("Erreurs fichier","DEBUG..barcode manquant");
-		//}		
+		if ( getStringValue(sheet.getRow(0).getCell(4))==null ) {
+			contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.value.missing","1","barcode de la plaque");
+		} else	if ( !getStringValue(sheet.getRow(0).getCell(4)).equals(outputSupportContainerCode) ) {	
+			contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.value.unexpected", "1","Plate Barcode",getStringValue(sheet.getRow(0).getCell(4)),outputSupportContainerCode);
+		}	
 		
 		//-2- verifier qu'on trouve les 3 headers
 
 		if ((getStringValue(sheet.getRow(2).getCell(0))==null ) || !(getStringValue(sheet.getRow(2).getCell(0)).equals("Sample Well"))){
-			contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.header.missing","Sample Well","3","A");
+			contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.header-label.missing","3","Sample Well");
 		}
 		if ((getStringValue(sheet.getRow(2).getCell(1))==null ) || !(getStringValue(sheet.getRow(2).getCell(1)).equals("Index Well"))){
-			contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.header.missing","Index Well","3","B");
+			contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.header-label.missing","3", "Index Well");
 		}
 		if (( getStringValue(sheet.getRow(2).getCell(2))==null ) || !(getStringValue(sheet.getRow(2).getCell(2)).equals("Index Name"))){
-			contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.header.missing","Index Name","3","C");
+			contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.header-label.missing","3", "Index Name","3");
 		}
 
 		if (contextValidation.hasErrors()){
@@ -94,7 +98,7 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 					InputHelper.isPlatePosition(contextValidation,platePosition, 96, (i+1))){
 				//verifier si la position n'est pas deja connue
 				if (results.containsKey(platePosition)) {
-					contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.position.duplicate", platePosition, (i+1));
+					contextValidation.addErrors("Erreurs fichier","experiments.msg.import.position.duplicate", (i+1), platePosition);
 				}
 						
 				//verifier l'index 
@@ -107,7 +111,7 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 					if ( idx != null) {
 						results.put(platePosition,idx );
 					} else {
-						contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.tag.notexist", indexName, (i+1));
+						contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.tag.notexist", (i+1), indexName);
 					}
 				}
 			}	

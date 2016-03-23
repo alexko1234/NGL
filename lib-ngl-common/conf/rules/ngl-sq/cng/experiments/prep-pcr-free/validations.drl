@@ -1,11 +1,26 @@
 package rules
 
+/*
+rule "Debug prep-pcr-free"
+	@nglSQ( validations )
+	dialect "java"
+	salience 1000
+	no-loop
+    when
+		$experiment:Experiment($typeCode:typeCode,$typeCode=="prep-pcr-free")
+    	eval(true)
+    then
+		Logger.debug("@nglSQ(validations) prep-pcr-free");    
+		$contextValidation.addErrors("inputContainerSupportCodes","error.validationexp.oneInputSupport", $typeCode);
+end
+*/
+
 // 14/03/2016 verification du volume de sortie des containers prep-pcr-free
 // NOTE: il faut passer par drools pour les verification sur les attributs
 rule "Volume not null in prep-pcr-free outputContainer"
     @nglSQ( validations )
 	dialect "java"
-	salience 940
+	salience 100
 	no-loop
     when
     	$experiment:Experiment($typeCode:typeCode,$typeCode=="prep-pcr-free")
@@ -16,6 +31,24 @@ rule "Volume not null in prep-pcr-free outputContainer"
     	eval($volume == null || $volume.value == null || $volume.value == "")
     then
     	Logger.debug("Volume not null in prep-pcr-free outputContainer");   
-    	// voir fichier messages pour le libellé des erreurs
+    	// voir fichier messages pour le libellé de l'erreur
    		$contextValidation.addErrors("prep-pcr-free","error.validationexp.outputvolumenotnull", $outputContainerUsed.code);
 end
+
+// test 23/03/2016 une seul containerSupport dans l'experience
+rule "only one inputssupport prep-pcr-free"
+	@nglSQ (validations )
+	dialect "java"
+	salience 400
+	no-loop
+    when
+   		 Experiment($typeCode:typeCode,$typeCode=="prep-pcr-free")
+   		 // necessaire ??? State($stateCode:code=="N")
+   		 Set(empty==false,size!=1) from collect(InputSupport())
+   		 $contextValidation:ContextValidation($errors : errors)
+    then 
+    	Logger.debug("only one input Support in prep-pcr-free"); 
+    	// voir fichier messages pour le libellé de l'erreur
+    	$contextValidation.addErrors("inputContainerSupportCodes","error.validationexp.oneInputSupport", $typeCode);
+end
+ 

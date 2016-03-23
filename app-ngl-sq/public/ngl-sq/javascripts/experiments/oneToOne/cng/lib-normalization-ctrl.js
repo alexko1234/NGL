@@ -117,7 +117,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 			        	 "position":10,
 			        	 "extraHeaders":{0:inputExtraHeaders}
 			         },
-			         // colonnes specifiques experience viennent ici.. Volume engagé
+			         // colonnes specifiques experience viennent ici.. Volume engagé, Volume tampon
 			          
 			         //------------------------ OUTPUT containers section -------------------
 

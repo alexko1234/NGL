@@ -163,7 +163,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	private static List<PropertyDefinition> getPropertyDefinitionsX5WgPcrFree() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 	
-		// FDS 21/03/2016 ajout d'une propriete avec liste de choix
+		// FDS 21/03/2016 ajout d'une propriete avec liste de choix, de niveu content pour quelle soit propagee
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type processus librairie","libProcessTypeCode"
 						, LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, "F"
@@ -175,8 +175,10 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	
 	private static List<Value> getLibProcessTypeCodeValues(){
         List<Value> values = new ArrayList<Value>();
-         values.add(DescriptionFactory.newValue("DA","DNAseq"));
-         values.add(DescriptionFactory.newValue("DD","PCR-NANO-DNASeq"));
+        
+        // dans RunServiceCNG le nom reprend le code...
+         values.add(DescriptionFactory.newValue("DA","DA - DNAseq"));
+         values.add(DescriptionFactory.newValue("DD","DD - PCR-NANO-DNASeq"));
          
          return values;
 	}
