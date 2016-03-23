@@ -19,28 +19,29 @@ rule "Set Lane index properties to ReadSet"
 			//Logger.debug("Load RUN "+run.code);
 			Treatment laneNGSRG = run.getLane($readset.laneNumber).treatments.get("ngsrg");
 			Treatment readSetNGSRG = $readset.treatments.get("ngsrg");
-			boolean isUpdate = false;
-			if(null != laneNGSRG.results.get("default").get("nbUsefulCycleReadIndex2")){
-				readSetNGSRG.results.get("default").put("nbUsefulCycleReadIndex2", laneNGSRG.results.get("default").get("nbUsefulCycleReadIndex2"));
+			if(laneNGSRG!=null && readSetNGSRG!=null){
+				boolean isUpdate = false;
+				if(null != laneNGSRG.results.get("default").get("nbUsefulCycleReadIndex2")){
+					readSetNGSRG.results.get("default").put("nbUsefulCycleReadIndex2", laneNGSRG.results.get("default").get("nbUsefulCycleReadIndex2"));
+					isUpdate = true;
+				}
+				if(null != laneNGSRG.results.get("default").get("nbUsefulCycleRead2")){
+					readSetNGSRG.results.get("default").put("nbUsefulCycleRead2", laneNGSRG.results.get("default").get("nbUsefulCycleRead2"));
+					isUpdate = true;
+				}
+				if(null != laneNGSRG.results.get("default").get("nbUsefulCycleRead1")){
+					readSetNGSRG.results.get("default").put("nbUsefulCycleRead1", laneNGSRG.results.get("default").get("nbUsefulCycleRead1"));
+					isUpdate = true;
+				}
+				if(null != laneNGSRG.results.get("default").get("nbUsefulCycleReadIndex1")){
+					readSetNGSRG.results.get("default").put("nbUsefulCycleReadIndex1", laneNGSRG.results.get("default").get("nbUsefulCycleReadIndex1"));
 				isUpdate = true;
+				}
+				
+				if(isUpdate){
+					MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", $readset.code),  DBUpdate.set("treatments.ngsrg", readSetNGSRG));
+				}
 			}
-			if(null != laneNGSRG.results.get("default").get("nbUsefulCycleRead2")){
-				readSetNGSRG.results.get("default").put("nbUsefulCycleRead2", laneNGSRG.results.get("default").get("nbUsefulCycleRead2"));
-				isUpdate = true;
-			}
-			if(null != laneNGSRG.results.get("default").get("nbUsefulCycleRead1")){
-				readSetNGSRG.results.get("default").put("nbUsefulCycleRead1", laneNGSRG.results.get("default").get("nbUsefulCycleRead1"));
-				isUpdate = true;
-			}
-			if(null != laneNGSRG.results.get("default").get("nbUsefulCycleReadIndex1")){
-				readSetNGSRG.results.get("default").put("nbUsefulCycleReadIndex1", laneNGSRG.results.get("default").get("nbUsefulCycleReadIndex1"));
-				isUpdate = true;
-			}
-			
-			if(isUpdate){
-				MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.is("code", $readset.code),  DBUpdate.set("treatments.ngsrg", readSetNGSRG));
-			}
-			
 		}else{
 			Logger.error("ReadSet Does not exist: "+$readset.runCode);
 		}
