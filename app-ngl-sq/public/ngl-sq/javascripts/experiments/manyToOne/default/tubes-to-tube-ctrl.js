@@ -1,4 +1,4 @@
-angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToDragNDrop',
+angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToDragNDrop2',
                                                                function($scope, $parse, atmToDragNDrop) {
 	
 	

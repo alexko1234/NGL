@@ -129,7 +129,6 @@
 			
 			<tbody ng-repeat="atm in atmService.data.atm | orderBy:'line' track by $index" ng-model="atm.inputContainerUseds" 
 				droppable drop-fn="atmService.data.drop" 
-				ng-class="getDroppableClass()"
 				ng-switch="getDisplayMode(atm, $index)">
 				
 				<tr ng-switch-when="empty">

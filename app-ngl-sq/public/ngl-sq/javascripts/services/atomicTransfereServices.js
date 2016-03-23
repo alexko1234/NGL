@@ -795,6 +795,317 @@ angular.module('atomicTransfereServices', [])
 	};
 	return constructor;
 
+}]).factory('atmToDragNDrop2', ['$http', '$parse', '$filter', '$q', 'commonAtomicTransfertMethod','mainService', 'atmToSingleDatatable', 
+                               function($http, $parse, $filter, $q, commonAtomicTransfertMethod, mainService, atmToSingleDatatable){	
+	
+	var constructor = function($scope, nbATM, datatableConfig){
+		var $commonATM = commonAtomicTransfertMethod($scope);
+		var $nbATM = nbATM;	
+		var $atmToSingleDatatable = atmToSingleDatatable($scope, datatableConfig);
+		$atmToSingleDatatable.isAddNew = false;
+		
+		var $utils = {
+				convertExperimentToDnD:function($service, experimentATMs){
+					var promises = [];
+					
+					var atms = experimentATMs;
+					
+					promises.push($commonATM.loadInputContainerFromAtomicTransfertMethods(atms));					
+					
+					var $that = this;
+	                $q.all(promises).then(function (result) {
+						var allData = [];
+						var inputContainers, outputContainers;
+						if(result[0].input){
+							inputContainers = result[0].input;							
+						}else if(result[1].input){
+							inputContainers = result[1].input;
+						}
+						
+						//$that.data.atm = angular.copy(atms);
+						$view.data.atm = $.extend(true,[], atms);
+						for(var i=0; i< $service.data.atm.length;i++){
+							var atm = $service.data.atm[i];
+							for(var j=0; j<	atm.inputContainerUseds.length ; j++){
+								var inputContainerCode = atm.inputContainerUseds[j].code;
+								var inputContainer = inputContainers[inputContainerCode];
+								atm.inputContainerUseds[j] = $commonATM.updateContainerUsedFromContainer(atm.inputContainerUseds[j], inputContainer);
+							}
+						}
+						
+						//add new atomic in datatable
+						$that.addNewAtomicTransfertMethodsInDnD($service);
+	                });
+				},
+				
+				//exact for ManyToOne not for other
+				addNewAtomicTransfertMethodsInDnD : function($service){
+					if(null != mainService.getBasket() && null != mainService.getBasket().get()){
+						$that = this;
+						$commonATM.loadInputContainerFromBasket(mainService.getBasket().get())
+							.then(function(containers) {								
+								var allContainers = [], allSupports = [], i = 0;
+								if($service.data.inputContainers !== undefined){
+									allContainers = $service.data.inputContainers;	
+									if($view.inputContainerSupportCategoryCode === '96-well-plate'){
+										allSupports = $service.data.inputContainerSupports;	
+									}
+								}
+								
+								angular.forEach(containers, function(container){
+									var inputContainerUsed = $commonATM.convertContainerToInputContainerUsed(container);
+									allContainers.push(inputContainerUsed);
+									if($service.inputContainerSupportCategoryCode === '96-well-plate' && !allSupports.includes(container.support.code)){
+										allSupports.push(container.support.code);	
+									}
+								});
+								$service.data.inputContainers = allContainers;	
+								$service.data.inputContainerSupports = allSupports;
+								
+						});
+					}
+					
+					for(var i = $service.data.atm.length; i < $nbATM; i++){
+						this.addNewAtomicTransfertMethod($service, i);						
+					}
+					
+				},
+				
+				addNewAtomicTransfertMethod : function($service, i){
+					var atm = $service.newAtomicTransfertMethod(i+1);
+					atm.outputContainerUseds.push($commonATM.newOutputContainerUsed($service.defaultOutputUnit, atm.line, atm.column));
+					$service.data.atm.push(atm);
+				}
+				
+				
+		};
+		
+		
+		var $view = {
+				$atmToSingleDatatable : $atmToSingleDatatable, //used in js parent
+				inputContainerSupports:[],
+				inputContainers:[],
+				inputContainersByLine:[],
+				atm : [], 
+				datatable : $atmToSingleDatatable.data,
+				atmViewOpen : [],
+				isAllATMViewOpen : true,
+				deleteInputContainer : function(inputContainer){
+					this.inputContainers.splice(this.inputContainers.indexOf(inputContainer), 1);
+				},
+				duplicateInputContainer : function(inputContainer, position){
+					this.inputContainers.splice(position+1, 0 , $.extend(true, {}, inputContainer));						
+				},
+				dropInAllInputContainer : function(atmIndex){
+					var percentage = {value:0};
+					
+					var inputContainerUseds = this.atm[atmIndex].inputContainerUseds.concat(this.inputContainers);
+					
+					angular.forEach(inputContainerUseds, function(container){
+						if(container.percentage !== undefined && container.percentage !== null){
+							this.value +=  parseFloat(container.percentage);
+						}			
+					}, percentage)
+					
+					
+					if(percentage.value != 100){
+						var percentageForOneContainer = Math.floor(100000/inputContainerUseds.length)/1000
+						
+						angular.forEach(inputContainerUseds, function(container){
+							container.percentage = percentageForOneContainer;
+						}, percentageForOneContainer)
+						
+					}
+					
+					this.inputContainers = [];
+					this.atm[atmIndex].inputContainerUseds = inputContainerUseds;
+					this.updateDatatable();
+				},
+				dropOutAllInputContainer : function(atmIndex){						
+					var inputContainers = this.inputContainers.concat(this.atm[atmIndex].inputContainerUseds);
+					this.inputContainers = inputContainers;
+					this.atm[atmIndex].inputContainerUseds = [];	
+					this.updateDatatable();
+				},
+				/**
+				 * Call by drop directive
+				 */
+				drop : function(e, data, ngModel, alreadyInTheModel, fromModel){
+					if(!alreadyInTheModel){
+						$scope.atmService.data.updateDatatable();		
+					}
+				},
+				
+				dropInSelectInputContainer : function(){
+					//1 extract selected input container
+					var selectedInputContainers = $filter('filter')(this.inputContainers,{_addToOutputContainer:true});
+					if(selectedInputContainers.length > 0){
+					
+						var percentage = {value:0};
+						
+						//2 new atm
+						var atmIndex = this.atm.length;
+						$utils.addNewAtomicTransfertMethod($service,atmIndex);
+						
+						//3 compute percentage
+						angular.forEach(selectedInputContainers, function(container){
+							container._addToOutputContainer = undefined;
+							if(container.percentage !== undefined && container.percentage !== null){
+								this.value +=  parseFloat(container.percentage);
+							}			
+						}, percentage)
+						
+						if(percentage.value != 100){
+							var percentageForOneContainer = Math.floor(100000/selectedInputContainers.length)/1000
+							
+							angular.forEach(selectedInputContainers, function(container){
+								container.percentage = percentageForOneContainer;
+							}, percentageForOneContainer)
+							
+						}
+						
+						//4 assign to atm
+						this.atm[atmIndex].inputContainerUseds = selectedInputContainers;
+						this.atmViewOpen[atmIndex] = true;
+						//5 update datatable
+						this.updateDatatable();
+						
+						//6 remove from inputContainers
+					}
+				},
+				
+				updateDatatable : function(){
+					$atmToSingleDatatable.convertExperimentATMToDatatable(this.atm);
+				},
+				updateFromDatatable : function(){
+					var experiment = {};
+					$atmToSingleDatatable.data.save();					
+					$atmToSingleDatatable.viewToExperimentManyToOne(experiment);
+					this.atm = experiment.atomicTransfertMethods;
+				},
+				
+				getInputContainers : function(supportCode, line, columns){
+					if(this.inputContainersByLine[supportCode+"_"+line]){
+						return this.inputContainersByLine[supportCode+"_"+line];
+					}else{
+						var finalResults = [];
+						var inputContainers = this.inputContainers;
+						columns.forEach(function(column){
+							var results = $filter('filter')(inputContainers, {locationOnContainerSupport:{code:supportCode, line:line+"", column:column+""}},true);
+							if(results.length > 1) throw "several containers for : "+supportCode+", "+line+", "+column;
+							this.push(results[0]);
+						}, finalResults)
+						this.inputContainersByLine[supportCode+"_"+line] = finalResults;
+						return finalResults;
+					}
+					
+				},
+				
+				isSelectInputContainers : function(){
+					var selectedInputContainers = $filter('filter')(this.inputContainers,{_addToOutputContainer:true});
+					return (selectedInputContainers.length > 0);
+				},				
+				
+				selectInputContainers : function(supportCode, line, column){
+					var results = $filter('filter')(this.inputContainers, {locationOnContainerSupport:{code:supportCode, 
+							line:(line)?line+"":undefined, column:(column)?column+"":undefined}},true);
+					
+					var b = results[0]._addToOutputContainer;
+					
+					results.forEach(function(container){
+						container._addToOutputContainer = !b;
+					})
+				},
+				
+				selectInputContainer : function(container, $event){
+					if(container !== undefined){
+						container._addToOutputContainer = !container._addToOutputContainer;
+					}						
+				},
+				
+				getInputContainerCellClass : function(container){
+					if(container !== undefined){
+						return (container && container._addToOutputContainer)?'info':'';
+					}
+				},
+				
+				hideAllATM : function(){
+					for (var i=0; i<this.atmViewOpen.length;i++){	
+						this.atmViewOpen[i] = false;
+					}	    
+					this.isAllATMViewOpen = false;	    
+				},
+
+				showAllATM : function(){
+					for (var i=0; i<this.atmViewOpen.length;i++){	
+						this.atmViewOpen[i] = true;
+					}	    
+					this.isAllATMViewOpen = true;
+				},
+				
+				toggleATM : function(rowIndex){
+					this.atmViewOpen[rowIndex] = !this.atmViewOpen[rowIndex];
+				},
+				
+				getATMViewMode : function(atm, rowIndex){					
+					if(atm.inputContainerUseds.length === 0){
+						return "empty";
+					}else if(atm.inputContainerUseds.length > 0 && this.atmViewOpen[rowIndex]){
+						return "open";
+					}else{
+						return "compact";
+					}		
+				}
+				
+			};
+		
+		var $service = {
+				$commonATM : $commonATM, //used in js parent
+				$atmToSingleDatatable:$atmToSingleDatatable,  //used in js parent
+				defaultOutputUnit:{volume:undefined, concentration:undefined, quantity:undefined},
+				inputContainerSupportCategoryCode:undefined,
+				outputContainerSupportCategoryCode:undefined,
+				data : $view,
+				
+				newAtomicTransfertMethod : function(line, column){
+					throw 'newAtomicTransfertMethod not defined in atmToDragNDrop client';
+				},
+				
+				
+				experimentToView:function(experiment, experimentType){
+					if(null === experiment || undefined === experiment){
+						throw 'experiment is required';
+					}
+					if(!$scope.isCreationMode()){
+						$utils.convertExperimentToDnD(this, experiment.atomicTransfertMethods);	
+						$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods);
+					}else{
+						$utils.addNewAtomicTransfertMethodsInDnD(this);
+					}	
+					$atmToSingleDatatable.addExperimentPropertiesToDatatable(experimentType.propertiesDefinitions);
+					
+				},
+				viewToExperiment :function(experiment){		
+					if(null === experiment || undefined === experiment){
+						throw 'experiment is required';
+					}
+					$atmToSingleDatatable.data.save();					
+					$atmToSingleDatatable.viewToExperimentManyToOne(experiment);
+					this.data.atm = experiment.atomicTransfertMethods;
+				},
+				refreshViewFromExperiment:function(experiment){
+					if(null === experiment || undefined === experiment){
+						throw 'experiment is required';
+					}
+					$utils.convertExperimentToDnD(this, experiment.atomicTransfertMethods);
+					$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.instrument);
+				}
+		}
+		
+		return $service;
+	};
+	return constructor;
+
 }]).factory('atmToGenerateMany', ['$http', '$parse', '$q', 'commonAtomicTransfertMethod','mainService', 'atmToSingleDatatable', 'datatable', 
                                function($http, $parse, $q, commonAtomicTransfertMethod, mainService, atmToSingleDatatable, datatable){
 

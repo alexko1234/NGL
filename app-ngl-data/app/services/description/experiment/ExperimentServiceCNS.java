@@ -296,6 +296,11 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
 			
+			//GA Experiment for plate transfert
+			l.add(newExperimentType("Plate Transfert","plate-transfert",null,1,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
+					getInstrumentUsedTypes("tecan-evo-100"),"ManyToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		}
 		
