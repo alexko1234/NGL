@@ -11,6 +11,7 @@ import models.laboratory.run.description.ReadSetType;
 import models.laboratory.run.instance.File;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
+import models.laboratory.run.instance.SampleOnContainer;
 import models.laboratory.run.instance.Treatment;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
@@ -76,7 +77,12 @@ public class ReadSetValidationHelper extends CommonValidationHelper {
 				DBQuery.and(DBQuery.is("code", runCode), DBQuery.is("lanes.number", laneNumber)));
 	}
 	
-		
+	public static void validateSampleOnContainer(SampleOnContainer sampleOnContainer, ContextValidation contextValidation)
+	{
+		if(ValidationHelper.required(contextValidation, sampleOnContainer, "sampleOnContainer")){
+			sampleOnContainer.validate(contextValidation);
+		}
+	}
 
 
 

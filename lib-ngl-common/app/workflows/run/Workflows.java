@@ -2,6 +2,7 @@ package workflows.run;
 
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -40,6 +41,7 @@ import play.api.modules.spring.Spring;
 import play.libs.Akka;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
+import rules.services.RulesServices6;
 import validation.ContextValidation;
 import validation.run.instance.AnalysisValidationHelper;
 import validation.run.instance.RunValidationHelper;
@@ -53,6 +55,7 @@ public class Workflows {
 	private static final String ruleFV="F_V_1";
 	private static final String ruleFVQC="F_VQC_1";
 	private static final String ruleAUA="A-UA_1";
+	private static final String ruleN = "N_1";
 		
 	
 	public static void setRunState(ContextValidation contextValidation, Run run, State nextState) {
@@ -211,22 +214,11 @@ public class Workflows {
 			//Create sample if doesn't exist (for external data)
 			Sample sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, readSet.sampleCode);
 			if(sample == null && validation.getObject("external")!=null && (Boolean)validation.getObject("external")){
-				ILimsRunServices  limsRunServices = Spring.getBeanOfType(ILimsRunServices.class);
-				Sample extSample = limsRunServices.findSampleToCreate(readSet.sampleCode);
-				if(extSample!=null){
-					validation.setCreationMode();
-					InstanceHelpers.save(InstanceConstants.SAMPLE_COLL_NAME,extSample,validation,true);
-					//Create sampleOnContainer
-					SampleOnContainer sampleOnContainer = InstanceHelpers.getSampleOnContainer(readSet);
-					if(null != sampleOnContainer){
-						MongoDBDAO.update(InstanceConstants.READSET_ILLUMINA_COLL_NAME,  ReadSet.class, 
-								DBQuery.is("code", readSet.code), DBUpdate.set("sampleOnContainer", sampleOnContainer));
-					}else{
-						Logger.error("sampleOnContainer null for "+readSet.code);
-					}
-				}else{
-					validation.addErrors("sampleCode","error.no.sample.lims",readSet.sampleCode);
-				}
+				//Call rules
+				ArrayList<Object> facts = new ArrayList<Object>();
+				facts.add(readSet);
+				facts.add(validation);
+				RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), ruleN, facts);				
 			}
 		
 		}

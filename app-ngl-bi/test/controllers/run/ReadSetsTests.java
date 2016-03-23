@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.mongojack.DBQuery;
 
 import fr.cea.ig.MongoDBDAO;
+import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
@@ -180,53 +181,52 @@ public class ReadSetsTests extends AbstractTestsCNS {
 		}
 	}
 
-	@Test
+	//@Test
 	public void testReadSetsCreate() { 
 		// create a run with two readsets associated to this run
 		run.dispatch = true; // For the archive test
 
 		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 		Logger.debug(contentAsString(result));
-		assertThat(status(result)).isEqualTo(OK);
+		Assert.assertEquals(OK, status(result));
 
 		result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readset)));
 		Logger.debug(contentAsString(result));
-		assertThat(status(result)).isEqualTo(OK);
+		Assert.assertEquals(OK, status(result));
 
 		result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readset2)));
 		Logger.debug(contentAsString(result));
-		assertThat(status(result)).isEqualTo(OK);
+		Assert.assertEquals(OK, status(result));
 
 		//query for control
 		List<ReadSet> lr = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.in("code","rdCode", "rdCode2")).toList();
-		assertThat(lr.size()).isEqualTo(2); 
+		Assert.assertEquals(2, lr.size());
 	}
 
 
-	@Test
+	//@Test
 	public void testArchiveReadSet() {
 		run.dispatch = true; 
 
 		Result result =callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
-		assertThat(status(result)).isEqualTo(OK);
+		Assert.assertEquals(OK, status(result));
 
 		result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readset)));
-		assertThat(status(result)).isEqualTo(OK);
+		Assert.assertEquals(OK, status(result));
 
 		result = callAction(controllers.archives.api.routes.ref.ReadSets.save(readset.code),fakeRequest().withJsonBody(RunMockHelper.getArchiveJson("codeTestArchive")));
-		assertThat(status(result)).isEqualTo(OK);
+		Assert.assertEquals(OK, status(result));
 
 		result = callAction(controllers.archives.api.routes.ref.ReadSets.save("ReadSetTESTNOTEXIT"),fakeRequest().withJsonBody(RunMockHelper.getArchiveJson("codeTestArchive")));
-		assertThat(status(result)).isEqualTo(NOT_FOUND);
-
+		Assert.assertEquals(NOT_FOUND, status(result));
 		//query for control
 		ReadSet r = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("code",readset.code));
-		assertThat(r).isNotNull();
-		assertThat(r.archiveId).isNotNull(); //means that this is a archive
+		Assert.assertNotNull(r);
+		Assert.assertNotNull(r.archiveId);//means that this is a archive
 	}
 
 
-	@Test
+	//@Test
 	public void testAchiveList(){
 		run.dispatch = true; 
 
@@ -254,38 +254,38 @@ public class ReadSetsTests extends AbstractTestsCNS {
 	}
 
 
-	@Test
+	//@Test
 	public void testDeleteReadsets(){
 		run.traceInformation = new TraceInformation();
 		run.dispatch = true; // For the archive test
 
 		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
-		assertThat(status(result)).isEqualTo(OK);
+		Assert.assertEquals(OK, status(result));
 
 		result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readset)));
-		assertThat(status(result)).isEqualTo(OK);
+		Assert.assertEquals(OK, status(result));
 
 		ArrayList<String> sCodes = new ArrayList<String>();
 		sCodes.add(readset.code);
 		lane.readSetCodes = sCodes; 
 		result = callAction(controllers.runs.api.routes.ref.Lanes.update(run.code, lane.number),fakeRequest().withJsonBody(RunMockHelper.getJsonLane(lane)));
-		assertThat(status(result)).isEqualTo(OK); 
+		Assert.assertEquals(OK, status(result));
 
 		result = callAction(controllers.readsets.api.routes.ref.ReadSets.deleteByRunCode(run.code),fakeRequest());
-		assertThat(status(result)).isEqualTo(OK);
+		Assert.assertEquals(OK, status(result));
 
 		//query for control
 		run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
-		assertThat(run.lanes.size()).isEqualTo(2); 
+		Assert.assertEquals(2, run.lanes.size());
 		boolean b = (run.lanes.get(0).readSetCodes == null) || (run.lanes.get(0).readSetCodes.size() == 0); 
-		assertThat(b).isEqualTo(true);
+		Assert.assertTrue(b);
 
 		//b = MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("runCode",run.code));
 		//assertThat(b).isEqualTo(false);  
 	}
 
 
-	@Test 
+	//@Test 
 	public void testRemoveReadset(){
 
 		run.state=null;
@@ -293,33 +293,80 @@ public class ReadSetsTests extends AbstractTestsCNS {
 
 		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 		Logger.info(contentAsString(result));
-		assertThat(status(result)).isEqualTo(OK);
+		Assert.assertEquals(OK, status(result));
 
 		result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonReadSet(readset)));
-		assertThat(status(result)).isEqualTo(OK);
+		Assert.assertEquals(OK, status(result));
 
 		result = callAction(controllers.readsets.api.routes.ref.ReadSets.delete(readset.code),fakeRequest());
-		assertThat(status(result)).isEqualTo(OK);	
+		Assert.assertEquals(OK, status(result));	
 
 		//query for control
 		run = MongoDBDAO.findOne(InstanceConstants.RUN_ILLUMINA_COLL_NAME,Run.class,DBQuery.is("code",run.code));
-		assertThat(run.lanes.size()).isEqualTo(2);
-		assertThat(run.lanes.get(0).readSetCodes).isEmpty(); 
+		Assert.assertEquals(2, run.lanes.size());
+		Assert.assertTrue((run.lanes.get(0).readSetCodes).isEmpty());
 
 		readset = MongoDBDAO.findOne(InstanceConstants.READSET_ILLUMINA_COLL_NAME,ReadSet.class,DBQuery.is("runCode",run.code));
-		assertThat(readset).isNull(); 
+		Assert.assertNull(readset);
 	}
 	
 	
-	@Test
+	//@Test
 	public void testSaveReadSetExternal()
 	{
 		Sample sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, "BFB_AABA");
-		assertThat(sample==null);
+		Assert.assertNull(sample);
 		
 		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 		Logger.debug(contentAsString(result));
-		assertThat(status(result)).isEqualTo(OK);
+		Assert.assertEquals(OK, status(result));
+
+		readset.sampleCode="BFB_AABA";
+		readset.projectCode="BFB";
+		readset.sampleOnContainer=RunMockHelper.newSampleOnContainer(readset.sampleCode);
+		
+		result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest(play.test.Helpers.POST, "?external=true").withJsonBody(RunMockHelper.getJsonReadSet(readset)));
+		Logger.debug(contentAsString(result));
+		Assert.assertEquals(OK, status(result));
+		
+		//Check sample created
+		sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, "BFB_AABA");
+		Assert.assertNotNull(sample);
+		
+		//Check sampleOnContainer created
+		readset = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, "rdCode");
+		Logger.debug("Sample on container "+readset.sampleOnContainer);
+		Assert.assertNotNull(readset.sampleOnContainer);
+		Assert.assertNotNull(readset.sampleOnContainer.referenceCollab);
+		Assert.assertNotNull(readset.sampleOnContainer.sampleCategoryCode);
+
+		
+	}
+	
+	//@Test
+	public void testSaveReadSetExternalWithNoSampleLims()
+	{
+		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+		Logger.debug(contentAsString(result));
+		Assert.assertEquals(OK, status(result));
+
+		readset.sampleCode="testSample";
+		readset.projectCode="BFB";
+		readset.sampleOnContainer=RunMockHelper.newSampleOnContainer(readset.sampleCode);
+		
+		result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest(play.test.Helpers.POST, "?external=true").withJsonBody(RunMockHelper.getJsonReadSet(readset)));
+		Logger.debug(contentAsString(result));
+		Assert.assertEquals(BAD_REQUEST, status(result));
+		Assert.assertTrue(contentAsString(result).contains("No sample testSample in LIMS"));
+		
+	}
+	
+	//@Test
+	public void testSaveReadSetExternalWithNoSampleOnContainer()
+	{
+		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+		Logger.debug(contentAsString(result));
+		Assert.assertEquals(OK, status(result));
 
 		readset.sampleCode="BFB_AABA";
 		readset.projectCode="BFB";
@@ -327,40 +374,56 @@ public class ReadSetsTests extends AbstractTestsCNS {
 		
 		result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest(play.test.Helpers.POST, "?external=true").withJsonBody(RunMockHelper.getJsonReadSet(readset)));
 		Logger.debug(contentAsString(result));
-		assertThat(status(result)).isEqualTo(OK);
-		
-		//Check sample created
-		sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, "BFB_AABA");
-		assertThat(sample!=null);
-		
-		//Check sampleOnContainer created
-		readset = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, "rdCode");
-		assertThat(readset.sampleOnContainer!=null);
-
+		Assert.assertEquals(BAD_REQUEST, status(result));
+		Assert.assertTrue(contentAsString(result).contains("No sampleOnContainer for sample BFB_AABA"));
 		
 	}
 	
-	@Test
-	public void testSaveReadSetExternalWithNoSampleLims()
+	//@Test
+	public void testSaveReadSetExternalWithIncompleteSampleOnContainer()
 	{
+		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
+		Logger.debug(contentAsString(result));
+		Assert.assertEquals(OK, status(result));
+
+		readset.sampleCode="BFB_AABA";
+		readset.projectCode="BFB";
+		readset.sampleOnContainer=RunMockHelper.newSampleOnContainer("BFB_AABA");
+		readset.sampleOnContainer.containerSupportCode=null;
+		
+		result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest(play.test.Helpers.POST, "?external=true").withJsonBody(RunMockHelper.getJsonReadSet(readset)));
+		Logger.debug(contentAsString(result));
+		Assert.assertEquals(BAD_REQUEST, status(result));
+	}
+	
+	@Test
+	public void testReadSetExternalStateFRG()
+	{
+	
+		Logger.debug("Save run");
 		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
 		Logger.debug(contentAsString(result));
 		assertThat(status(result)).isEqualTo(OK);
 
-		readset.sampleCode="testSample";
+		readset.sampleCode="BFB_AABA";
 		readset.projectCode="BFB";
+		readset.sampleOnContainer=RunMockHelper.newSampleOnContainer(readset.sampleCode);
 		
+		Logger.debug("Save readSet");
 		result = callAction(controllers.readsets.api.routes.ref.ReadSets.save(),fakeRequest(play.test.Helpers.POST, "?external=true").withJsonBody(RunMockHelper.getJsonReadSet(readset)));
 		Logger.debug(contentAsString(result));
-		assertThat(status(result)).isEqualTo(BAD_REQUEST);
-		assertThat(contentAsString(result).contains("No sample testSample in LIMS"));
+		assertThat(status(result)).isEqualTo(OK);
 		
-	}
-	
-	//TODO
-	public void testReadSetExternalStateFRG()
-	{
-		
+		Logger.debug("Find readSet");
+		readset = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readset.code);
+		Assert.assertNotNull(readset);
+		Logger.debug("Set state F-RG");
+		State state = new State();
+		state.code="F-RG";
+		//Set state to F-RG
+		result = callAction(controllers.readsets.api.routes.ref.ReadSets.state(readset.code),fakeRequest().withJsonBody(Json.toJson(state)));
+		Logger.debug(contentAsString(result));
+		assertThat(status(result)).isEqualTo(OK);
 	}
 
 	/**

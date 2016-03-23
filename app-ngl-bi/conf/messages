@@ -899,3 +899,4 @@ user.roles = Roles
 
 
 error.no.sample.lims=No sample {0} in LIMS
+error.no.sampleOnContainer= No sampleOnContainer for sample {0}

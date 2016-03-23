@@ -2,10 +2,14 @@ package utils;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
+import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
@@ -22,8 +26,6 @@ import models.laboratory.run.instance.SampleOnContainer;
 import models.laboratory.run.instance.Treatment;
 import models.laboratory.sample.instance.Sample;
 import play.libs.Json;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 public class RunMockHelper {
 	
@@ -128,9 +130,9 @@ public class RunMockHelper {
 	{
 		SampleOnContainer soc = new SampleOnContainer();
 		soc.sampleCode=sampleCode;
-		soc.sampleTypeCode="gDNA";
-		soc.sampleCategoryCode="DNA";
-		soc.referenceCollab="refCollab";
+		soc.containerSupportCode="support";
+		soc.properties=new HashMap<String, PropertyValue>();
+		soc.properties.put("libProcessTypeCode", new PropertySingleValue("W"));
 		return soc;
 	}
 	
