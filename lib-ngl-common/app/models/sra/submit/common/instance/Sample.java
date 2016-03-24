@@ -2,13 +2,10 @@ package models.sra.submit.common.instance;
 
 import java.util.Date;
 
-import models.laboratory.common.description.ObjectType;
-import models.laboratory.common.instance.State;
-import models.sra.submit.util.VariableSRA;
-import models.utils.InstanceConstants;
-
 import org.apache.commons.lang3.StringUtils;
 
+import models.laboratory.common.description.ObjectType;
+import models.utils.InstanceConstants;
 import play.Logger;
 import validation.ContextValidation;
 import validation.sra.SraValidationHelper;
@@ -30,7 +27,7 @@ public class Sample extends AbstractSample {
 	//public TraceInformation traceInformation = new TraceInformation(); champs mis dans AbstractSample
 
 	public Sample() {
-		super();
+		super(AbstractSample.sampleType);
 	}
 
 	

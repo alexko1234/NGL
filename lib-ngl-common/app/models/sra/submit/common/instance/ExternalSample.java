@@ -1,23 +1,16 @@
 package models.sra.submit.common.instance;
 
-import java.util.Date;
-
-import org.apache.commons.lang3.StringUtils;
-
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.TraceInformation;
 import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
-import validation.IValidation;
 import validation.sra.SraValidationHelper;
-import fr.cea.ig.DBObject;
 
 public class ExternalSample extends AbstractSample {
 	
 	public ExternalSample() {
-		super();	
+		super(AbstractSample.externalSampleType);	
 		state = new State("F-SUB", null); // Reference sur "models.laboratory.common.instance.state"
 	}
 

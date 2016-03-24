@@ -10,8 +10,11 @@ import static play.test.Helpers.status;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import models.laboratory.project.instance.Project;
+import models.sra.submit.common.instance.AbstractSample;
+import models.sra.submit.common.instance.ExternalSample;
 import models.sra.submit.common.instance.Sample;
 import models.utils.InstanceConstants;
 
@@ -23,6 +26,7 @@ import play.Logger;
 import play.libs.Json;
 import play.mvc.Result;
 import utils.AbstractTestController;
+import builder.data.ExternalSampleBuilder;
 import builder.data.ProjectBuilder;
 import builder.data.SampleBuilder;
 import builder.data.StateBuilder;
@@ -33,19 +37,27 @@ import fr.cea.ig.MongoDBDAO;
 public class SamplesTest extends AbstractTestController{
 
 	private static final String sampleCode="sample_1";
+	private static final String externalSampleCode="ext_sample_1";
 	private static final String projectCode="proj_1";
 
 	@BeforeClass
 	public static void initData()
 	{
-		Sample sample = new SampleBuilder()
+		AbstractSample sample = new SampleBuilder()
 		.withCode(sampleCode)
 		.withProjectCode(projectCode)
-		.withState(new StateBuilder().withCode("new").build())
+		.withState(new StateBuilder().withCode("new").withUser("test").build())
 		.withTraceInformation(new TraceInformationBuilder().withModifyUser("user").withModifyDate(new Date()).build())
 		.build();
 		MongoDBDAO.save(InstanceConstants.SRA_SAMPLE_COLL_NAME, sample);
 
+		AbstractSample externalSample = new ExternalSampleBuilder()
+				.withCode(externalSampleCode)
+				.withState(new StateBuilder().withCode("new").build())
+				.withTraceInformation(new TraceInformationBuilder().withModifyUser("user").withModifyDate(new Date()).build())
+				.build();
+		MongoDBDAO.save(InstanceConstants.SRA_SAMPLE_COLL_NAME, externalSample);
+		
 		Project project = new ProjectBuilder()
 		.withCode(projectCode)
 		.build();
@@ -56,6 +68,7 @@ public class SamplesTest extends AbstractTestController{
 	public static void deleteData()
 	{
 		MongoDBDAO.deleteByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, sampleCode);
+		MongoDBDAO.deleteByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, ExternalSample.class, externalSampleCode);
 		MongoDBDAO.deleteByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, projectCode);
 	}
 
@@ -69,20 +82,28 @@ public class SamplesTest extends AbstractTestController{
 		assertThat(status(result)).isEqualTo(OK);
 		assertThat(contentType(result)).isEqualTo("application/json");
 	}
-
+	
+	@Test
+	public void getSamples(){
+		List<AbstractSample> abstractSamples = MongoDBDAO.find(InstanceConstants.SRA_SAMPLE_COLL_NAME, AbstractSample.class).toList();
+		Logger.debug("Size "+abstractSamples.size());
+		Logger.debug(Json.toJson(abstractSamples).toString());
+		
+	}
 	@Test
 	public void shouldUpdateSample()
 	{
 		//Change state of sample
 		//Get sample
 		Sample sampleToUpdate = MongoDBDAO.findByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, sampleCode);
-		sampleToUpdate.state.code="inWaiting";
+		sampleToUpdate.state.code="IW-SUB";
+		
 		Result result = callAction(controllers.sra.samples.api.routes.ref.Samples.update(sampleCode),fakeRequest().withJsonBody(Json.toJson(sampleToUpdate)));
 		Logger.info(contentAsString(result));
 		assertThat(status(result)).isEqualTo(OK);
 		//Check in db submission status
 		Sample sampleUpdated = MongoDBDAO.findByCode(InstanceConstants.SRA_SAMPLE_COLL_NAME, Sample.class, sampleCode);
 		Logger.info("sample updated "+sampleUpdated.state.code);
-		assertThat(sampleUpdated.state.code).isEqualTo("inWaiting");
+		assertThat(sampleUpdated.state.code).isEqualTo("IW-SUB");
 	}
 }

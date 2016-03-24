@@ -73,7 +73,6 @@ public class Samples extends CommonController{
 		if(samplesSearch.datatable){
 			MongoDBResult<Sample> results = mongoDBFinder(InstanceConstants.SAMPLE_COLL_NAME, samplesSearch, Sample.class, query);
 			List<Sample> samples = results.toList();
-
 			return ok(Json.toJson(new DatatableResponse<Sample>(samples, results.count())));
 		}
 		else if(samplesSearch.list){
