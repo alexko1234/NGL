@@ -23,7 +23,7 @@ H:\birdsSpec.xsd">
 		<ExecutableSpecification commandSyntaxStrategyName="createXMLSyntax">
 			<!-- TODO call REST API NGL-SUB -->
 			<!-- curl option -A for userAgent -->
-			<Executable path="curl -A bot -X PUT http://appdev.genoscope.cns.fr:9005/sra/submissions/%code%/xml"/>
+			<Executable path="curl -f -A bot -X PUT http://appdev.genoscope.cns.fr:9005/sra/submissions/%code%/xml"/>
 		</ExecutableSpecification>
 		
 		<InputsSpecification>
