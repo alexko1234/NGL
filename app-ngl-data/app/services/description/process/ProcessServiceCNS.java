@@ -162,7 +162,7 @@ public class ProcessServiceCNS extends AbstractProcessService {
 	}
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsQPCRQuantification() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();				
+		List<PropertyDefinition> propertyDefinitions =getPropertyDefinitionsIlluminaDepotCNS();			
 		return propertyDefinitions;
 	}
 	
