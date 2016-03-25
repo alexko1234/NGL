@@ -14,6 +14,6 @@ public class SolutionStockImportCNS extends ContainerImportCNS {
 
 	@Override
 	public void runImport() throws SQLException, DAOException {
-			createContainers(contextError,"pl_SolutionStockToNGL ","tube","IW-P","solution-stock","pl_ContentFromContainer @matmanom=?");
+			createContainers(contextError,"pl_MaterielmanipToNGL @emnco=14 ","tube","IW-P","solution-stock","pl_ContentFromContainer @matmanom=?");
 	}
 }

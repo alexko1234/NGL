@@ -27,8 +27,8 @@ public class MigrationUpdateSupportPlaque extends CommonController{
 	
 
 	public static Result migration() {
-		updateSupportContainerBanqueAmpli();
-		//updateSupportContainerSolutionStock();
+		//updateSupportContainerBanqueAmpli();
+		updateSupportContainerSolutionStock();
 		return ok("Migration Support Container Finish");
 	}
 
@@ -83,7 +83,7 @@ public class MigrationUpdateSupportPlaque extends CommonController{
 	}
 	
 	
-/*	private static void updateSupportContainerSolutionStock() {
+	private static void updateSupportContainerSolutionStock() {
 		List<ContainerSupportLocation> containerSupportLocation=MongoDBDAO.find("tmp.updateSupportSolutionStock", ContainerSupportLocation.class).toList();
 		ContextValidation contextValidation=new ContextValidation("ngl");
 
@@ -93,31 +93,37 @@ public class MigrationUpdateSupportPlaque extends CommonController{
 			
 			List<Container> updateContainers=new ArrayList<Container>();
 			for(ContainerSupportLocation c:containerSupportLocation){
+				
+			// if(c.support.equals("STK_0B5D5FA1T")){
+				 Logger.debug(c.toString());
 				Container container=MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME,Container.class,c.container);
 				if(container==null){
 					logger.error("Le container "+c.container+" n'existe pas");
 				}
-				if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, container.support.code)){
-					MongoDBDAO.delete(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,container.support.code);
+				else {
+					if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, container.support.code)){
+						MongoDBDAO.deleteByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,container.support.code);
+					}
+					container.support.code=c.support;
+					container.support.line=c.line;
+					container.support.column=c.column;
+					container.support.categoryCode="96-well-plate";
+					container.categoryCode="well";
+					MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code", container.code),
+							DBUpdate.set("support",container.support).set("categoryCode", container.categoryCode)
+							);
+					
+					updateContainers.add(container);
 				}
-				container.support.code=c.support;
-				container.support.line=c.line;
-				container.support.column=c.column;
-				container.support.categoryCode="96-well-plate";
-				container.categoryCode="well";
-				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("code", container.code),
-						DBUpdate.set("support",container.support).set("categoryCode", container.categoryCode)
-						);
-				
-				updateContainers.add(container);
+			  //} 
 			}
-			Map<String,PropertyValue<String>> propertiesContainerSupports=new HashMap<String, PropertyValue<String>>();
-
-			ContainerHelper.createSupportFromContainers(updateContainers, propertiesContainerSupports, contextValidation);
 			
+			Map<String,PropertyValue<String>> propertiesContainerSupports=new HashMap<String, PropertyValue<String>>();
+			ContainerHelper.createSupportFromContainers(updateContainers, propertiesContainerSupports, contextValidation);
+		  	
 		}
 		
 		
 		
-	}*/
+	}
 }
