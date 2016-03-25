@@ -159,6 +159,9 @@ public class XmlServices {
 				if (StringUtils.isNotBlank(sample.commonName)) {
 					chaine = chaine + "      <COMMON_NAME>" + sample.commonName + "</COMMON_NAME>\n";
 				}
+				if (StringUtils.isNotBlank(sample.anonymizedName)) {
+					chaine = chaine + "      <ANONYMIZED_NAME>" + sample.anonymizedName + "</ANONYMIZED_NAME>\n";
+				}
 				chaine = chaine + "    </SAMPLE_NAME>\n";
 				if (StringUtils.isNotBlank(sample.description)) {
 					chaine = chaine + "      <DESCRIPTION>" + sample.description + "</DESCRIPTION>\n";
@@ -185,7 +188,7 @@ public class XmlServices {
 				// Recuperer objet experiment dans la base :
 				Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, models.sra.submit.sra.instance.Experiment.class, experimentCode);
 				//output_buffer.write("//\n");
-				System.out.println("Ecriture du experiment " + experimentCode);
+				System.out.println("Ecriture de experiment " + experimentCode);
 				if (experiment == null){
 					throw new SraException("experiment impossible à recuperer dans base :"+ experimentCode);
 				}

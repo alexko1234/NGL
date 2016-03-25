@@ -29,5 +29,12 @@ public class UserObjectFactory {
     public UserExperimentType createUserExperimentType() {
         return new UserExperimentType();
     }
-  
+    /**
+     * Create an instance of UserExperimentType
+     * 
+     */
+    
+    public UserSampleType createUserSampleType() {
+        return new UserSampleType();
+    } 
 }

@@ -6,6 +6,7 @@ import models.sra.submit.util.VariableSRA;
 import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.sra.SraValidationHelper;
+import play.Logger;
 
 public class ExternalSample extends AbstractSample {
 	
@@ -17,11 +18,13 @@ public class ExternalSample extends AbstractSample {
 
 	@Override
 	public void validate(ContextValidation contextValidation) {
+		System.out.println("ok dans ExternalSample.validate\n");
+		Logger.info("ok dans ExternalSample.validate\n");
 		contextValidation.addKeyToRootKeyName("externalSample");
 		SraValidationHelper.validateId(this, contextValidation);
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
 		SraValidationHelper.validateCode(this, InstanceConstants.SRA_SAMPLE_COLL_NAME, contextValidation);
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapExternalStatus, "state.code");
+		//SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapExternalStatus, "state.code");
 		SraValidationHelper.validateState(ObjectType.CODE.SRASubmission, this.state, contextValidation);
 
 		// Pour l'instant externalSample apparait uniquement dans sra d'ou verif du context.type inutile

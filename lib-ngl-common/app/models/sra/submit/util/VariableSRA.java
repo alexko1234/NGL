@@ -45,7 +45,7 @@ public interface VariableSRA {
 			put("strategy_internal_study", "strategy_internal_study"); 
 		}
 	};	
-	
+	/*
 	static final Map<String, String> mapStatus = new HashMap<String, String>() {
 		{  
 			put("new", "new"); 
@@ -62,7 +62,7 @@ public interface VariableSRA {
 			put("submitted", "submitted");
 			
 		}
-	}; 	
+	};*/ 	
 	
 	static final Map<String, String> mapExistingStudyType = new HashMap<String, String>() {
 		{

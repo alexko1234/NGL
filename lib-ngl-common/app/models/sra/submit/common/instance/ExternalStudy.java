@@ -45,7 +45,7 @@ public class ExternalStudy extends AbstractStudy {
 		SraValidationHelper.validateId(this, contextValidation);
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
 		SraValidationHelper.validateCode(this, InstanceConstants.SRA_STUDY_COLL_NAME, contextValidation);
-		SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapExternalStatus, "state.code");
+		//SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapExternalStatus, "state.code");
 		SraValidationHelper.validateState(ObjectType.CODE.SRASubmission, this.state, contextValidation);
 
 		contextValidation.removeKeyFromRootKeyName("externalStudy");

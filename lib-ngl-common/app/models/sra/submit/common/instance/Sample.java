@@ -19,6 +19,7 @@ public class Sample extends AbstractSample {
 	public String commonName;     
 	public String scientificName;  // required next soon 
 	public String title;           // required next soon 
+	public String anonymizedName;      // not required.
 	public String description;      
 	public String clone;           
 	//public String accession;       // numeros d'accession attribué par ebi champs mis dans AbstractSample
@@ -34,13 +35,13 @@ public class Sample extends AbstractSample {
 	@Override
 	public void validate(ContextValidation contextValidation) {
 		Logger.info("Validate sample");
+		Logger.info("ok dans Sample.validate\n");
 		contextValidation.addKeyToRootKeyName("sample");
 		SraValidationHelper.validateId(this, contextValidation);
 		
 		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
 		//SraValidationHelper.requiredAndConstraint(contextValidation, this.state.code , VariableSRA.mapStatus, "state.code");
 		SraValidationHelper.validateState(ObjectType.CODE.SRASubmission, this.state, contextValidation);
-		SraValidationHelper.validateTraceInformation(traceInformation, contextValidation);
 		
 		if (!StringUtils.isNotBlank((CharSequence) contextValidation.getContextObjects().get("type"))){
 			contextValidation.addErrors("sample non evaluable ", "sans type de contexte de validation");

@@ -14,6 +14,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
+//import com.gargoylesoftware.htmlunit.javascript.host.Console;
+
 import play.Logger;
 import play.data.Form;
 import play.libs.Json;
@@ -38,8 +40,9 @@ public class Samples extends DocumentController<AbstractSample>{
 	{
 		SamplesSearchForm form = filledFormQueryString(SamplesSearchForm.class);
 		Query query = getQuery(form);
-		MongoDBResult<AbstractSample> results = mongoDBFinder(form, query);							
-		List<AbstractSample> list = results.toList();
+		//MongoDBResult<AbstractSample> results = mongoDBFinder(form, query);							
+		//List<AbstractSample> list = results.toList();
+		List<AbstractSample> list = MongoDBDAO.find(InstanceConstants.SRA_SAMPLE_COLL_NAME, AbstractSample.class, query).toList();
 		return ok(Json.toJson(list));
 	}
 	
@@ -52,9 +55,8 @@ public class Samples extends DocumentController<AbstractSample>{
 			filledForm.reject("Sample " +  code, "not exist in database");  // si solution filledForm.reject
 			return badRequest(filledForm.errorsAsJson());
 		}
-
+		System.out.println(" ok je suis dans Samples.update\n");
 		AbstractSample sampleInput = filledForm.get();
-
 		if (code.equals(sampleInput.code)) {
 			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 			ctxVal.setUpdateMode();
@@ -62,10 +64,15 @@ public class Samples extends DocumentController<AbstractSample>{
 			sampleInput.traceInformation.setTraceInformation(getCurrentUser());
 			sampleInput.validate(ctxVal);	
 			if (!ctxVal.hasErrors()) {
+				Logger.debug(" ok je suis dans Samples.update et pas d'erreur\n");
 				Logger.info("Update sample "+sample.code);
 				MongoDBDAO.update(InstanceConstants.SRA_SAMPLE_COLL_NAME, sampleInput);
+				Logger.debug(Json.toJson(sampleInput).toString());
+			
 				return ok(Json.toJson(sampleInput));
 			}else {
+				System.out.println(" ok je suis dans Samples.update et erreurs \n");
+Logger.debug(Json.toJson(sampleInput).toString());
 				return badRequest(filledForm.errorsAsJson());
 			}
 		}else{
