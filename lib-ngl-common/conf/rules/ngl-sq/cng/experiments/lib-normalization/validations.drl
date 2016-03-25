@@ -11,11 +11,33 @@ rule "Volume not null in lib-normalization outputContainer"
     	$experiment:Experiment($typeCode:typeCode,$typeCode=="lib-normalization")
     	State($stateCode:code=="IP")
 		$atomicTransfert: OneToOneContainer($inputContainerUsed:inputContainerUseds.get(0), $outputContainerUsed: outputContainerUseds.get(0))
-	   	OutputContainerUsed($volume: volume) from $outputContainerUsed
+	   	OutputContainerUsed($outputVolume: volume) from $outputContainerUsed
     	$contextValidation:ContextValidation()
-    	eval($volume == null || $volume.value == null || $volume.value == "")
+    	// volume 0 est autorisé...
+    	eval($outputVolume == null || $outputVolume.value == null || $outputVolume.value == "")
     then
     	Logger.debug("Volume not null in lib-normalization outputContainer");   
-    	// voir fichier messages pour le libellé des erreurs
+    	// voir fichier ngl-common/conf/messages pour le libellé des erreurs
    		$contextValidation.addErrors("lib-normalization","error.validationexp.outputvolumenotnull", $outputContainerUsed.code);
+end
+
+//25/03/2016 verifier aussi la concentration de sortie !!!
+rule "Concentration not null in lib-normalization outputContainer"
+    @nglSQ( validations )
+	dialect "java"
+	salience 940
+	no-loop
+    when
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="lib-normalization")
+    	State($stateCode:code=="IP")
+		$atomicTransfert: OneToOneContainer($outputContainerUsed: outputContainerUseds.get(0))
+	   	OutputContainerUsed($outputConcentration: concentration) from $outputContainerUsed
+    	$contextValidation:ContextValidation()
+    	// concentration 0 est autorisé ??????
+    	eval($outputConcentration == null || $outputConcentration.value == null || $outputConcentration.value == "")
+    then
+    	Logger.debug("Concentration not null in lib-normalization outputContainer");   
+    	// voir fichier  ngl-common/conf/messages pour le libellé des erreurs
+    	//     25/03/2016  ajout error.validationexp.outputconcentrationnotnull
+   		$contextValidation.addErrors("lib-normalization","error.validationexp.outputconcentrationnotnull", $outputContainerUsed.code);
 end

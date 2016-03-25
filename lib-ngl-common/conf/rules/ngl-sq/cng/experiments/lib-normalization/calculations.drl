@@ -21,42 +21,61 @@ rule "InputVolume in lib-normalization inputContainer"
     when
 		$experiment:Experiment($typeCode:typeCode,$typeCode=="lib-normalization")
 		$atomicTransfert: OneToOneContainer($inputContainerUsed:inputContainerUseds.get(0), $outputContainerUsed: outputContainerUseds.get(0))	
-		InputContainerUsed($inputConcentration: concentration, $inputConcentration!=null ) from $inputContainerUsed
+		
+		// !! pb pas de concentration input tant qu'on a pas fait la Quantification!!! ....
+		//DEBUG InputContainerUsed($inputConcentration: concentration, $inputConcentration!=null ) from $inputContainerUsed
 		InputContainerUsed($inputVolume: volume, $inputVolume!=null ) from $inputContainerUsed
-		OutputContainerUsed($outputVolume: volume,   $outputVolume!=null  ) from $outputContainerUsed
-		OutputContainerUsed($outputConcentration: concentration, $outputConcentration!=null) from $outputContainerUsed
+		
+		OutputContainerUsed($outputVolume: volume, $outputVolume!=null ) from $outputContainerUsed
+		OutputContainerUsed($outputConcentration: concentration, $outputConcentration!=null ) from $outputContainerUsed
+		
+		// cas 0 OK et cas pas de valeur OK ( volontairement ou avec valeur non numerique)
+	    eval ( $outputVolume.value != null && convertPVToDouble($outputVolume) != 0 )
+        eval ( $outputConcentration.value != null && convertPVToDouble($outputConcentration) != 0 )
    then
-        //Logger.debug("InputVolume calculation");
-        //Logger.debug("inputvolume="+ Double.parseDouble($inputVolume.getValue().toString()) );
+   		// -1- calcul volume engagé
+        Logger.debug("-1- InputVolume calculation");
+       
         //Logger.debug("inputConcentration="+ Double.parseDouble($inputConcentration.getValue().toString()) );
-        //Logger.debug("outputVolume="+ Double.parseDouble($outputVolume.getValue().toString()) );  
- 		//Logger.debug("outputConcentration="+ Double.parseDouble($outputConcentration.getValue().toString()) );
-
-        Double iVolume = roundValue( (Double.parseDouble($outputConcentration.getValue().toString()) *  Double.parseDouble($outputVolume.getValue().toString()) ) /  Double.parseDouble($inputConcentration.getValue().toString()) );
-        Logger.debug("setting inputVolume="+ iVolume);   
-        PropertySingleValue propertySingle = new PropertySingleValue(iVolume, "\u00B5L");
+        Double iConc=4.5;// DEBUG simuler une concentration input
+        Logger.debug("inputConcentration="+iConc);
+          
+        // utiliser  convertPVToDouble !!
+        //DEBUG Double engVolume = roundValue(convertPVToDouble($outputConcentration)*convertPVToDouble($outputVolume)/convertPVToDouble($inputConcentration))
+        Double engVolume = roundValue(convertPVToDouble($outputConcentration)*convertPVToDouble($outputVolume)/iConc );
+        Logger.debug("inputVolume="+ engVolume );
         
-        if($inputContainerUsed.experimentProperties==null){
-			$inputContainerUsed.experimentProperties = new HashMap<String, PropertyValue>();		
-		}else if($inputContainerUsed.experimentProperties.containsKey("inputVolume")){
-			$inputContainerUsed.experimentProperties.remove("inputVolume");
-		}	
-	    $inputContainerUsed.experimentProperties.put("inputVolume", propertySingle);
-		Logger.debug("inputVolume=",propertySingle.getValue());
+        //verifier que le volume engagé est réalisable: vol engagé <= vol input
+        // NON ce n'est pas ici qu'il faut controler
+		///if ( engVolume <= Double.parseDouble($inputVolume.getValue().toString()) ){
+         
+           PropertySingleValue psvEngVolume = new PropertySingleValue(engVolume, "\u00B5L");
+        
+           if($inputContainerUsed.experimentProperties==null){
+			   $inputContainerUsed.experimentProperties = new HashMap<String, PropertyValue>();		
+		   }else if($inputContainerUsed.experimentProperties.containsKey("inputVolume")){
+			   $inputContainerUsed.experimentProperties.remove("inputVolume");
+		   }	
+	       $inputContainerUsed.experimentProperties.put("inputVolume", psvEngVolume);
+
+		   // -2- calcul volume de tampon : volume buffer= volume out - volume engagé
+			Logger.debug("-2- volume tampon= volumeout - volume engagé");
 			
-		// volume buffer= volume out - volume engagé
-		Logger.debug("volume tampon= volumeout - volume engagé");
-		Double bfVolume = roundValue( Double.parseDouble($outputVolume.getValue().toString()) - iVolume );
-        Logger.debug("setting bufferVolume="+ bfVolume);   
-        PropertySingleValue propertySingle = new PropertySingleValue(bfVolume, "\u00B5L");
+			Double bfVolume = roundValue(convertPVToDouble($outputVolume) - engVolume );
+		    Logger.debug("bufferVolume="+bfVolume);
+		    
+        	PropertySingleValue psvBufferVol = new PropertySingleValue(bfVolume, "\u00B5L");
         
-        if($inputContainerUsed.experimentProperties==null){
-			$inputContainerUsed.experimentProperties = new HashMap<String, PropertyValue>();		
-		}else if($inputContainerUsed.experimentProperties.containsKey("bufferVolume")){
-			$inputContainerUsed.experimentProperties.remove("bufferVolume");
-		}	
-	    $inputContainerUsed.experimentProperties.put("bufferVolume", propertySingle);
-		Logger.debug("bufferVolume=",propertySingle.getValue());
-
+        	if($inputContainerUsed.experimentProperties==null){
+				$inputContainerUsed.experimentProperties = new HashMap<String, PropertyValue>();		
+			}else if($inputContainerUsed.experimentProperties.containsKey("bufferVolume")){
+				$inputContainerUsed.experimentProperties.remove("bufferVolume");
+			}	
+	   		$inputContainerUsed.experimentProperties.put("bufferVolume", psvBufferVol);	
+	      
+		//} else { 
+		//	Logger.debug("PAS ASSEZ DE VOLUME DISPONIBLE!!"); 
+		//}
+		
 		update($experiment);
 end
