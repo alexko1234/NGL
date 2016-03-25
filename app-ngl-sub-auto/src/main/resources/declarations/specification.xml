@@ -55,7 +55,7 @@ H:\birdsSpec.xsd">
 	<Treatment name="createXML" useJobScheduler="false" checkIfNewTreatmentAlreadyPerformed="true">
 		<ExecutableSpecification commandSyntaxStrategyName="createXMLSyntax">
 			<!-- TODO call REST API NGL-SUB -->
-			<Executable path="curl -A bot -X PUT http://appprod.genoscope.cns.fr:9005/sra/submissions/%code%/xml"/>
+			<Executable path="curl f -A bot -X PUT http://appprod.genoscope.cns.fr:9005/sra/submissions/%code%/xml"/>
 		</ExecutableSpecification>
 		
 		<InputsSpecification>
@@ -73,7 +73,7 @@ H:\birdsSpec.xsd">
 	<!-- Treatment : call EBI services to send xml files -->
 	<Treatment name="sendXML" useJobScheduler="false" checkIfNewTreatmentAlreadyPerformed="true">
 		<ExecutableSpecification commandSyntaxStrategyName="sendXMLSyntax">
-			<Executable path="curl https://www.ebi.ac.uk/ena/submit/drop-box/submit/?auth=ERA%20era-drop-9%20N7mo%2B8F4aHH%2BrCjLTuMo59xwfFo%3D" />
+			<Executable path="curl -f https://www.ebi.ac.uk/ena/submit/drop-box/submit/?auth=ERA%20era-drop-9%20N7mo%2B8F4aHH%2BrCjLTuMo59xwfFo%3D" />
 		</ExecutableSpecification>
 		<ParametersSpecification>
 			<KeyValueElement key="-F" value="&quot;SUBMISSION=@%xmlSubmission%&quot;" parameterName="xmlSubmission"/>
