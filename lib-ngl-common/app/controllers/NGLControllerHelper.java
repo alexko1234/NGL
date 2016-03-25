@@ -44,7 +44,7 @@ public class NGLControllerHelper {
 				PropertyDefinition pd = PropertyDefinition.find.findUnique(key[0], level);
 				List<String> stringValues = properties.get(keyValue);
 				if(null != pd && CollectionUtils.isNotEmpty(stringValues)){					
-					Query subQueries = null;
+					Query subQueries = DBQuery.empty();
 					if(key.length == 1){
 						List<Object> values = ValidationHelper.convertStringToType(pd.valueType, stringValues);
 					
@@ -71,6 +71,12 @@ public class NGLControllerHelper {
 						}else if(key[1].equals("lt") && stringValues.size() == 1){
 							Object value = ValidationHelper.convertStringToType(pd.valueType, stringValues.get(0));
 							subQueries = DBQuery.lessThan(prefixPropertyPath+"."+key[0]+".value", value);							
+						}else if(key[1].equals("exists") && stringValues.size() == 1){
+							if("TRUE".equals(stringValues.get(0).toUpperCase())){
+								subQueries = DBQuery.exists(prefixPropertyPath+"."+key[0]+".value");
+							}else if("FALSE".equals(stringValues.get(0).toUpperCase())){
+								subQueries = DBQuery.notExists(prefixPropertyPath+"."+key[0]+".value");
+							}
 						}else{
 							throw new RuntimeException("key[1] not valid : "+key[1]);
 						}
