@@ -63,8 +63,12 @@ angular.module('commonsServices').directive('listResize',['$parse', function($pa
 						scope.isArray = true;//Use in the selection of the template
 						scope.nbItemMax = newValue.length;
 					}
-					scope.listValue = newValue;
-
+					if(newValue != undefined && newValue != null){
+						scope.listValue = newValue;
+					}else{
+						scope.listValue = [];
+					}
+					
 				}, true);
 
 				//This function collpase or deploy

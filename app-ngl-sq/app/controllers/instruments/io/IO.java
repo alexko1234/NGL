@@ -112,6 +112,7 @@ public class IO extends TPLCommonController {
 						return ok(Json.toJson(experiment));
 					}
 				}catch(Throwable e){
+					e.printStackTrace();
 					contextValidation.addErrors("Error :", e.getMessage()+"");
 				}
 			}

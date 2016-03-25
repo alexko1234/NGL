@@ -47,7 +47,7 @@
 				</thead>				
 				<tr ng-model="container" ng-repeat="container in atmService.data.inputContainers | orderBy:'code' track by $index" >
 					<td>
-						<button class="btn btn-default btn-xs"  ng-click="atmService.data.deleteInputContainer(container)" ng-disabled="!mainService.isEditModeAvailable() && !isNewState()"><i class="fa fa-trash-o"></i></button>
+						<button class="btn btn-default btn-xs"  ng-click="atmService.data.deleteInputContainer(container)" ng-disabled="!isEditModeAvailable() && !isNewState()"><i class="fa fa-trash-o"></i></button>
 					</td>
 					<td>
 						{{container.code}}
@@ -210,185 +210,38 @@
   <li><a href="" role="tab"  data-target="#roadmap" data-toggle="tab" ng-click="atmService.data.updateDatatable()">@Messages("experiments.calculation.sheet")</a></li>
 </ul>
 
-<div class="tab-content"  >
+<div class="tab-content">
 	<div class="tab-pane active" id="plate">
+		<div class="row"  ng-if="mainService.isEditMode()">
+		<div class="col-md-10 col-lg-10">
+			@partials.inputplates()
+		</div>
+		<div class="col-md-2 col-lg-2">
+		
+			<div class="page-header">
+			<button class="btn btn-default btn-lg btn-block" ng-click="atmService.data.dropInSelectInputContainer()" ng-disabled="!atmService.data.isSelectInputContainers()">
+			<i class="fa fa-sign-in fa-2x"></i>
+			</button>
+			
+			</div>
+		
+			<button ng-repeat="supportCode in atmService.data.inputContainerSupports" type="button" 
+				ng-class="atmService.data.getPlateBtnClass(supportCode)" 
+				ng-click="atmService.data.setCurrentSupportCode(supportCode)">
+				{{supportCode}}
+			</button>
+			
+		</div>		
+		</div>
+		
+		
+		
 		<div class="row">
-		<div class="col-md-7 col-lg-7">
-			<table class="table table-bordered table-condensed">
-				<thead>
-				     <tr>
-				         <th ng-click="atmService.data.selectInputContainers(atmService.data.inputContainerSupports[0])"></th>
-				         <th ng-repeat="i in [1,2,3,4,5,6,7,8,9,10,11,12]" ng-click="atmService.data.selectInputContainers(atmService.data.inputContainerSupports[0],undefined,i)">{{i}}</th>
-				     </tr>
-				</thead>
-				<tbody>
-				    <tr ng-repeat="line in ['A','B','C','D','E','F','G','H']">
-				        <td ng-click="atmService.data.selectInputContainers(atmService.data.inputContainerSupports[0],line)"><strong>{{line}}</strong></td>
-				        <td ng-repeat="container in atmService.data.getInputContainers(atmService.data.inputContainerSupports[0], line ,[1,2,3,4,5,6,7,8,9,10,11,12]) track by $index" 
-				        	ng-click="atmService.data.selectInputContainer(container, $event)"
-				        	ng-class="atmService.data.getInputContainerCellClass(container)">
-				        		<div list-resize="container.contents | collect:'projectCode+&quot; / &quot;+sampleCode+&quot; / &quot;+properties.tag.value'"></div>				        		        	    						    					
-				         </td>          
-				    </tr>
-				  
-				<tbody>				 
-			</table>	
-		</div>
-		<div class="col-md-1 col-lg-1" ng-if="mainService.isEditMode()">
-		<!-- Drop buttons -->
-		
-		<div>
-		<button class="btn btn-default btn-lg center-block" ng-click="atmService.data.dropInSelectInputContainer()" ng-disabled="!atmService.data.isSelectInputContainers()">
-		<i class="fa fa-sign-in fa-2x"></i>
-		</button>
+			<div class="col-md-10 col-lg-10 flowcellTable">
+			@partials.outputtubes()
+			</div>
 		</div>
 		
-		</div>
-		
-		
-		<div class="col-md-12 col-lg-4 flowcellTable table-responsive">
-			<table class="table" >
-			<thead>
-			<tr>
-			<th>
-			</th>
-			<th>
-				<button ng-click="atmService.data.hideAllATM()"  ng-if="atmService.data.isAllATMViewOpen" class="btn btn-default btn-xs"><i class="fa fa-eye-slash"></i></button>
-				<button ng-click="atmService.data.showAllATM()"  ng-if="!atmService.data.isAllATMViewOpen" class="btn btn-default btn-xs"><i class="fa fa-eye"></i></button>							
-			</th>
-			
-			<th ng-if="atmService.data.isAllATMViewOpen">
-				@Messages("containers.table.code")
-			</th>
-			<th ng-if="atmService.data.isAllATMViewOpen">
-				@Messages("containers.table.percentage")
-			</th>
-			<th ng-if="atmService.data.isAllATMViewOpen" class="sampleCodeAndTags">
-				@Messages("containers.table.sampleCodeAndTags")
-			</th>			
-			<th ng-if="atmService.data.isAllATMViewOpen">
-				@Messages("containers.table.sampleTypes")
-			</th>
-			<th ng-if="atmService.data.isAllATMViewOpen">
-				@Messages("containers.table.libProcessTypeCodes")
-			</th>
-			<th  ng-if="atmService.data.isAllATMViewOpen"
-				ng-repeat="property in outputContainerProperties track by $index">
-				{{property.name}}<span ng-if="property.displayMeasureValue"> ({{property.displayMeasureValue.value}})</span>
-			</th>
-			<th ng-if="!atmService.data.isAllATMViewOpen" colspan="{{5 + outputContainerProperties.length}}"></th>
-			</tr>
-			
-			</thead>
-			<tbody ng-if="atmService.data.isAllATMViewOpen && mainService.isEditMode()">
-			<tr>
-			<th colspan="7"></th>
-		
-			<th ng-repeat="property in outputContainerProperties track by $index">
-						<input class="form-control input-sm" type="text"  
-						ng-model="outputContainerValues[property.code]" 
-						ng-change="updateAllOutputContainerProperty(property)"	
-						udt-html-filter="number"							
-						/>									
-			</th>
-			</tr>
-			</tbody>
-			
-			<tbody ng-repeat="atm in atmService.data.atm | orderBy:'line' track by $index" ng-model="atm.inputContainerUseds" 
-				droppable drop-fn="atmService.data.drop" 
-				ng-switch="atmService.data.getATMViewMode(atm, $index)">
-				
-				<tr ng-switch-when="empty">
-					<td>			
-						<span class="label label-black" ng-bind="$index + 1"></span>
-					</td>
-					<td> 
-						<button class="btn btn-default btn-xs"  ng-click="atmService.data.toggleATM($index)" ng-switch="atmService.data.atmViewOpen[$index]">
-							<i ng-switch-when="true" class="fa fa-eye-slash"></i>
-							<i ng-switch-when="false" class="fa fa-eye"></i>
-						</button>			
-					</td>
-					<td colspan="{{5 + outputContainerProperties.length}}"></td>
-				</tr>
-				
-				<tr ng-switch-when="compact" >	
-					<td class="compactColumn">
-						<span class="label label-black" ng-bind="$index + 1"></span>
-					</td >
-					<td class="compactColumn"> 					
-						<button class="btn btn-default btn-xs"  ng-click="atmService.data.toggleATM($index)">
-							<!--  i class="fa fa-eye-slash"></i-->
-							<i class="fa fa-eye"></i>
-						</button>			
-					</td>	
-					<td colspan="{{5 + outputContainerProperties.length}}" >
-						<span ng-repeat="inputContainer in atm.inputContainerUseds | orderBy:'code' track by $index"  class="compactText"
-							ng-model="inputContainer" draggable drag="dragInProgress">
-							{{inputContainer.code}} / {{inputContainer.percentage}}% / PhiX:{{atm.outputContainerUseds[0].experimentProperties.phixPercent.value || "nr"}}%;<br/>
-						</span>
-					</td>
-				</tr>
-				
-				<tr ng-switch-when="open" ng-repeat="inputContainer in atm.inputContainerUseds | orderBy:'code' track by $index"  
-							ng-model="inputContainer" draggable drag="dragInProgress">	
-						<td rowspan="{{atm.inputContainerUseds.length}}" ng-if="$index === 0">
-							<span class="form-control-static label label-black" ng-bind="$parent.$parent.$index + 1"></span>
-						</td>
-						<td rowspan="{{atm.inputContainerUseds.length}}" ng-if="$index === 0">
-							<button class="btn btn-default btn-xs"  ng-click="atmService.data.toggleATM($parent.$parent.$index)">
-								<i class="fa fa-eye-slash"></i>
-								<!-- i class="fa fa-eye"></i-->
-							</button>			
-						</td>			
-						<td>							
-							{{inputContainer.code}}
-						</td>
-						<td>
-							<div ng-switch on="mainService.isEditMode()">						
-								<span ng-switch-when="false" ng-bind="inputContainer.percentage"></span>						 
-								<div ng-switch-when="true">
-									<input class="form-control input-sm" type="text" 
-										title='@Messages("containers.table.percentage")' 
-										ng-model="inputContainer.percentage"
-										ng-change="changeValueOnFlowcellDesign()" 
-										udt-html-filter="number"/>								
-								</div>
-							</div>
-						
-						</td>
-						<td>							
-							<div list-resize="sampleAndTag in getSampleAndTags(inputContainer)" list-resize-min-size='2' below vertical></div>
-						</td>
-						<td>
-							<div list-resize='inputContainer.contents | getArray:"sampleTypeCode"| unique | codes:"type"' list-resize-min-size='2' below vertical>
-						</td> 
-						<td>
-							<div list-resize='inputContainer.contents | getArray:"properties.libProcessTypeCode.value"| unique ' list-resize-min-size='2' below vertical>
-					
-						</td>	
-						<td ng-repeat="property in outputContainerProperties track by $index" 
-							ng-if="$parent.$index === 0"
-							rowspan="{{atm.inputContainerUseds.length}}">
-								 
-							<div ng-switch on="mainService.isEditMode()">						
-								<span ng-switch-when="false" ng-bind="atm.outputContainerUseds[0].experimentProperties[property.code].value"></span>						 
-								<div ng-switch-when="true">
-									<input class="form-control input-sm" type="text" 
-										 title="{{property.name}}"
-										 ng-model="atm.outputContainerUseds[0].experimentProperties[property.code].value"
-										 ng-change="changeValueOnFlowcellDesign(property)"
-										 udt-html-filter="number" />		
-							
-								</div>
-							</div>								 
-								 				
-						</td>											
-					</tr>					
-			</tbody>	
-			</table>
-		</div>
-		
-		</div>
 	</div>
 	<div class="tab-pane" id="roadmap">
 	<div class="row roadmap">

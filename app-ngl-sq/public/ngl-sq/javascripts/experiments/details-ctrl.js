@@ -83,6 +83,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			var form = {};
 			form.nextExperimentTypeCode = $scope.experimentType.code;
 			form.experimentCategoryCode = $scope.experimentType.category.code;
+			form.containerSupportCategory = $parse("instrument.inContainerSupportCategoryCode")($scope.experiment);
 			mainService.setForm(form);		
 		}
 		$scope.$broadcast('activeEditMode');

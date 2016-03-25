@@ -144,7 +144,14 @@ angular.module('atomicTransfereServices', [])
 				},
 				getContainerListPromise : function(containerCodes){
 					if(containerCodes.length > 0){
-						 return $http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{codes:containerCodes}, atomicObject:this});		
+						var nbElementByBatch = Math.ceil(containerCodes.length / 6); //6 because 6 request max in parrallel with firefox and chrome
+		                var queries = [];
+		                for (var i = 0; i < 6 && containerCodes.length > 0; i++) {
+		                    var subContainerCodes = containerCodes.splice(0, nbElementByBatch);
+		                    queries.push( $http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{codes:subContainerCodes}, atomicObject:this}) );
+		                }
+						
+						return $q.all(queries); 		
 					}else{
 						return $q(function(resolve, reject){
 							resolve({data:[]}); //empty array
@@ -161,11 +168,14 @@ angular.module('atomicTransfereServices', [])
 						}
 					}, containerInputCodes);
 						
-					return this.getContainerListPromise(containerInputCodes).then(function(result){
+					return this.getContainerListPromise(containerInputCodes).then(function(results){
 				 		var inputContainers = {};
-				 		angular.forEach(result.data, function(container) {
-							this[container.code] = container;
-							}, inputContainers);
+				 		angular.forEach(results, function(result){
+				 			angular.forEach(result.data, function(container) {
+								this[container.code] = container;
+								}, inputContainers);				 			
+				 		});
+				 		
 						return {"input":inputContainers};
 				 	});
 				},
@@ -183,11 +193,13 @@ angular.module('atomicTransfereServices', [])
 																			
 					}, containerOutpuCodes);
 															
-					return this.getContainerListPromise(containerOutpuCodes).then(function(result){
+					return this.getContainerListPromise(containerOutpuCodes).then(function(results){
 						var outputContainers = {};
-						angular.forEach(result.data, function(container) {
-							this[container.code] = container;
-							}, outputContainers);
+						angular.forEach(results, function(result){
+				 			angular.forEach(result.data, function(container) {
+								this[container.code] = container;
+								}, outputContainers);				 			
+				 		});
 				 		return {"output":outputContainers};
 				 	});
 				},
@@ -199,8 +211,14 @@ angular.module('atomicTransfereServices', [])
 								this.push(containerInput.code);
 							}							
 						}, containerInputCodes);
-						return this.getContainerListPromise(containerInputCodes).then(function(result){					 		
-							return result.data;
+						return this.getContainerListPromise(containerInputCodes).then(function(results){
+							var containers = [];
+							angular.forEach(results, function(result){
+					 			angular.forEach(result.data, function(container) {
+									this.push(container);
+									}, containers);				 			
+					 		});							
+							return containers;
 					 	});					
 				},
 				
@@ -814,7 +832,7 @@ angular.module('atomicTransfereServices', [])
 					
 					var $that = this;
 	                $q.all(promises).then(function (result) {
-						var allData = [];
+						var allData = [], allSupports = [];
 						var inputContainers, outputContainers;
 						if(result[0].input){
 							inputContainers = result[0].input;							
@@ -823,16 +841,17 @@ angular.module('atomicTransfereServices', [])
 						}
 						
 						//$that.data.atm = angular.copy(atms);
-						$view.data.atm = $.extend(true,[], atms);
+						$service.data.atm = $.extend(true,[], atms);
 						for(var i=0; i< $service.data.atm.length;i++){
 							var atm = $service.data.atm[i];
+							$service.data.atmViewOpen[i] = false;
 							for(var j=0; j<	atm.inputContainerUseds.length ; j++){
 								var inputContainerCode = atm.inputContainerUseds[j].code;
 								var inputContainer = inputContainers[inputContainerCode];
-								atm.inputContainerUseds[j] = $commonATM.updateContainerUsedFromContainer(atm.inputContainerUseds[j], inputContainer);
+								atm.inputContainerUseds[j] = $commonATM.updateContainerUsedFromContainer(atm.inputContainerUseds[j], inputContainer);								
 							}
 						}
-						
+						$service.data.inputContainerSupports = allSupports;							
 						//add new atomic in datatable
 						$that.addNewAtomicTransfertMethodsInDnD($service);
 	                });
@@ -861,7 +880,8 @@ angular.module('atomicTransfereServices', [])
 								});
 								$service.data.inputContainers = allContainers;	
 								$service.data.inputContainerSupports = allSupports;
-								
+								$service.data.inputContainersByLine = [];
+								$service.data.currentSupportCode = undefined;
 						});
 					}
 					
@@ -886,10 +906,11 @@ angular.module('atomicTransfereServices', [])
 				inputContainerSupports:[],
 				inputContainers:[],
 				inputContainersByLine:[],
+				currentSupportCode:undefined,
 				atm : [], 
 				datatable : $atmToSingleDatatable.data,
 				atmViewOpen : [],
-				isAllATMViewOpen : true,
+				isAllATMViewClose : undefined,
 				deleteInputContainer : function(inputContainer){
 					this.inputContainers.splice(this.inputContainers.indexOf(inputContainer), 1);
 				},
@@ -948,8 +969,7 @@ angular.module('atomicTransfereServices', [])
 						$utils.addNewAtomicTransfertMethod($service,atmIndex);
 						
 						//3 compute percentage
-						angular.forEach(selectedInputContainers, function(container){
-							container._addToOutputContainer = undefined;
+						angular.forEach(selectedInputContainers, function(container){							
 							if(container.percentage !== undefined && container.percentage !== null){
 								this.value +=  parseFloat(container.percentage);
 							}			
@@ -971,7 +991,25 @@ angular.module('atomicTransfereServices', [])
 						this.updateDatatable();
 						
 						//6 remove from inputContainers
+						var newinputContainers = []
+						for(var i = 0 ; i < this.inputContainers.length ; i++){
+							if(!this.inputContainers[i]._addToOutputContainer){
+								newinputContainers.push(this.inputContainers[i]);
+																
+							}else{
+								this.inputContainers[i]._addToOutputContainer = undefined;
+								this.inputContainersByLine[this.inputContainers[i].locationOnContainerSupport.code+"_"+this.inputContainers[i].locationOnContainerSupport.line] = undefined;
+							}
+						}
+						this.inputContainers = newinputContainers;
 					}
+				},
+				
+				deleteATM : function(rowIndex){
+					this.inputContainers = this.inputContainers.concat(this.atm[rowIndex].inputContainerUseds);
+					this.atm.splice(rowIndex,1);					
+					this.updateDatatable();
+					this.inputContainersByLine = [];					
 				},
 				
 				updateDatatable : function(){
@@ -987,7 +1025,7 @@ angular.module('atomicTransfereServices', [])
 				getInputContainers : function(supportCode, line, columns){
 					if(this.inputContainersByLine[supportCode+"_"+line]){
 						return this.inputContainersByLine[supportCode+"_"+line];
-					}else{
+					}else if(supportCode !== undefined){
 						var finalResults = [];
 						var inputContainers = this.inputContainers;
 						columns.forEach(function(column){
@@ -1001,26 +1039,80 @@ angular.module('atomicTransfereServices', [])
 					
 				},
 				
+				getCurrentSupportCode : function(){
+					if(!this.currentSupportCode){
+						this.currentSupportCode = this.inputContainerSupports[0];
+					}
+					return this.currentSupportCode;
+				},
+				
+				setCurrentSupportCode : function(code){
+					if(code){
+						this.currentSupportCode = code;
+					}					
+				},
+				
+				getPlateBtnClass : function(supportCode){
+					if(supportCode === this.currentSupportCode){
+						return "btn btn-info btn-lg btn-block";
+					}else{
+						return "btn btn-default btn-lg btn-block";
+					}
+					
+					
+				},
+				
 				isSelectInputContainers : function(){
 					var selectedInputContainers = $filter('filter')(this.inputContainers,{_addToOutputContainer:true});
 					return (selectedInputContainers.length > 0);
 				},				
 				
-				selectInputContainers : function(supportCode, line, column){
-					var results = $filter('filter')(this.inputContainers, {locationOnContainerSupport:{code:supportCode, 
-							line:(line)?line+"":undefined, column:(column)?column+"":undefined}},true);
-					
-					var b = results[0]._addToOutputContainer;
-					
-					results.forEach(function(container){
-						container._addToOutputContainer = !b;
-					})
+				selectInputContainers : function($event, supportCode, line, column){
+					if((this.startSelect && $event.type === 'mouseenter') || $event.type === 'mousedown'){
+						var results = $filter('filter')(this.inputContainers, {locationOnContainerSupport:{code:supportCode, 
+								line:(line)?line+"":undefined, column:(column)?column+"":undefined}},true);
+						
+						var b = results[0]._addToOutputContainer;
+						
+						results.forEach(function(container){
+							container._addToOutputContainer = !b;
+						})
+						if($event && $event.type !== 'mousedown'){
+							$event.preventDefault();
+							$event.stopPropagation();
+						}
+					}
 				},
 				
-				selectInputContainer : function(container, $event){
-					if(container !== undefined){
+				selectInputContainer : function($event, container){
+					if(container !== undefined && this.startSelect){
 						container._addToOutputContainer = !container._addToOutputContainer;
-					}						
+						
+						if($event){
+							$event.preventDefault();
+							$event.stopPropagation();
+						}
+					}	
+					
+				},
+				
+				startSelectInputContainer : function($event, container){
+					this.startSelect = true;
+					if(container){
+						this.selectInputContainer($event, container)
+					}
+					if($event){
+						$event.preventDefault();
+						$event.stopPropagation();
+					}
+				},
+				
+				stopSelectInputContainer : function($event){
+					this.startSelect = false;
+					if($event){
+						$event.preventDefault();
+						$event.stopPropagation();
+					}
 				},
 				
 				getInputContainerCellClass : function(container){
@@ -1033,18 +1125,25 @@ angular.module('atomicTransfereServices', [])
 					for (var i=0; i<this.atmViewOpen.length;i++){	
 						this.atmViewOpen[i] = false;
 					}	    
-					this.isAllATMViewOpen = false;	    
+					this.isAllATMViewClose = true;	    
 				},
 
 				showAllATM : function(){
 					for (var i=0; i<this.atmViewOpen.length;i++){	
 						this.atmViewOpen[i] = true;
 					}	    
-					this.isAllATMViewOpen = true;
+					this.isAllATMViewClose = false;
 				},
 				
 				toggleATM : function(rowIndex){
-					this.atmViewOpen[rowIndex] = !this.atmViewOpen[rowIndex];
+					this.atmViewOpen[rowIndex] = !this.atmViewOpen[rowIndex];	
+					
+					if($filter('filter')(this.atmViewOpen,false).length === this.atmViewOpen.length){
+						this.isAllATMViewClose = true;
+					}else{
+						this.isAllATMViewClose = false;
+					}
+					
 				},
 				
 				getATMViewMode : function(atm, rowIndex){					
@@ -1055,8 +1154,7 @@ angular.module('atomicTransfereServices', [])
 					}else{
 						return "compact";
 					}		
-				}
-				
+				}				
 			};
 		
 		var $service = {
@@ -1077,9 +1175,11 @@ angular.module('atomicTransfereServices', [])
 						throw 'experiment is required';
 					}
 					if(!$scope.isCreationMode()){
+						this.data.isAllATMViewClose = true;
 						$utils.convertExperimentToDnD(this, experiment.atomicTransfertMethods);	
 						$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods);
 					}else{
+						this.data.isAllATMViewClose = false;
 						$utils.addNewAtomicTransfertMethodsInDnD(this);
 					}	
 					$atmToSingleDatatable.addExperimentPropertiesToDatatable(experimentType.propertiesDefinitions);

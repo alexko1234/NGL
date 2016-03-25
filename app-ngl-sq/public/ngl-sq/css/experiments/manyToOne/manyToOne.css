@@ -10,15 +10,20 @@
 }
 
 .flowcellTable >table>tbody>tr>td {
-	font-size: 11px;	 	
+	font-size: 11px;
+	padding-right: 4px;
+	padding-left: 4px;	 	
 }
+
 
 .flowcellTable .compactColumn{
 	max-width: 5px; 	
 }
 
 .flowcellTable >table>thead>tr>th {
-	font-size: 11px;	 	
+	font-size: 11px;
+	padding-right: 4px;
+	padding-left: 4px;		 	
 }
 
 .flowcellTable >table>tbody+tbody {
@@ -26,7 +31,9 @@
 }
 
 .flowcellTable >table>tbody+tbody>tr>td {
-	font-size: 11px;	 	
+	font-size: 11px;
+	padding-right: 4px;
+	padding-left: 4px;		 	
 }
 
 .flowcellTable .label {

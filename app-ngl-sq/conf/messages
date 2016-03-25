@@ -87,6 +87,7 @@ containers.table.support.name = Support container
 containers.table.stateCode = Etat Support Container
 containers.table.creationDate = Création container
 containers.table.concentration = Concentration
+containers.table.concentration.shortlabel = Conc.
 containers.table.concentration.unit = Unité Concentration
 containers.table.volume = Volume
 containers.table.quantity = Quantité
@@ -292,8 +293,8 @@ experiments.modifyBy = Modifié par
 experiment.comments = Commentaires
 
 
-experiments.inputs = Container en entrée
-experiments.outputs = Container en sortie
+experiments.inputs = Container(s) en entrée(s)
+experiments.outputs = Container(s) en sortie(s)
 
 experiments.outputContainerSupportCode= Code support de sortie
 experiments.outputContainerSupportStorageCode= Stockage support de sortie

@@ -88,7 +88,7 @@
 
 		</div>
 		<!-- OutputContainers table -->
-		<div class="col-md-6 col-lg-6 flowcellTable">		
+		<div class="col-md-6 col-lg-6 flowcellTable ">		
 			<table class="table" >
 				<thead>
 					<tr>
@@ -170,7 +170,7 @@
 						
 							<td rowspan="{{atmService.data.atm[0].inputContainerUseds.length}}"
 								ng-if="$index === 0">
-								{{atmService.data.atm[0].outputContainerUseds[0].code}}
+								<p class="form-control-static"  ng-bind="atmService.data.atm[0].outputContainerUseds[0].code" />
 							</td>
 							<td rowspan="{{atmService.data.atm[0].inputContainerUseds.length}}"	ng-if="$index === 0">
 								<div ng-switch on="mainService.isEditMode()">						
