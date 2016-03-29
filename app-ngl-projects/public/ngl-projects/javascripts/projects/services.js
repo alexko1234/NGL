@@ -1,42 +1,62 @@
  "use strict";
  
  angular.module('ngl-projects.ProjectsServices', []).
-	factory('searchService', ['$http', 'mainService', 'lists', function($http, mainService, lists){
+	factory('projectsSearchService', ['$http', 'mainService', 'lists', 'datatable', function($http, mainService, lists, datatable){
 		
-		var searchService = {
-				getColumns:function(){
-					var columns = [
-								    {  	property:"code",
-								    	header: "projects.code",
-								    	type :"String",
-								    	order:true,
-								    	edit:false
-									},
-								    {  	property:"name",
-								    	header: "projects.name",
-								    	type :"String",
-								    	order:false,
-								    	edit:false
-									},
-									{	property:"typeCode",
-										header: "projects.typeCode",
-										type :"String",
-								    	order:false,
-								    	edit:false
-									},
-									{	property:"state.code",
-										filter:"codes:'state'",					
-										header: "projects.stateCode",
-										type :"String",
-										order:false,
-										edit:false,
-										choiceInList:false,
-								    	listStyle:'bt-select',
-								    	possibleValues:'listsTable.getStates()'	
-									}
-								];						
-					return columns;
-				},
+		var getDefaultColumns = function(){
+			var columns = [];
+			columns.push({  	property:"code",
+							   	header: "projects.code",
+							   	type :"String",
+							   	order:true,
+							   	edit:false
+			});
+			columns.push({  	property:"name",
+							   	header: "projects.name",
+							   	type :"String",
+							   	order:false,
+							   	edit:false
+			});
+			
+			columns.push({	property:"bioinformaticParameters.fgGroup",
+				header: "projects.bioinformaticParameters.fgGroup",
+				type :"String",
+				order:false,
+				edit:false,
+				choiceInList:false
+			});
+			
+			columns.push({	property:"state.code",
+								filter:"codes:'state'",					
+								header: "projects.stateCode",
+								type :"String",
+								order:false,
+								edit:false,
+								choiceInList:false,
+							   	listStyle:'bt-select',
+							   	possibleValues:'listsTable.getStates()'	
+			});
+			
+			
+												
+			return columns;
+		};
+				
+		var isInit = false;
+				
+		var initListService = function(){
+			if(!isInit){
+				searchService.lists.refresh.projects();
+				searchService.lists.refresh.states({objectTypeCode:"Project", display:true},'statetrue');				
+				searchService.lists.refresh.states({objectTypeCode:"Project"});							
+				searchService.lists.refresh.types({objectTypeCode:"Project"});
+				isInit=true;
+			}
+		};
+				
+		var searchService ={
+				getDefaultColumns:getDefaultColumns,
+				datatable:undefined,
 				isRouteParam:false,
 				lists : lists,
 				form : undefined,
@@ -62,7 +82,7 @@
 				
 				search : function(datatable){
 					mainService.setForm(this.form);
-					datatable.search(this.convertForm());
+					this.datatable.search(this.convertForm());
 				},
 				
 				reset : function(){
@@ -71,22 +91,41 @@
 				
 				states : function(){
 					return this.lists.get('statetrue');
+				},
+				
+				
+				init : function($routeParams, datatableConfig){
+					initListService();
+					
+					datatableConfig.messages = {
+							transformKey: function(key, args) {
+		                        return Messages(key, args);
+		                    }
+					};
+					
+					if(datatableConfig && angular.isUndefined(mainService.getDatatable())){
+						searchService.datatable = datatable(datatableConfig);
+						mainService.setDatatable(searchService.datatable);
+						searchService.datatable.setColumnsConfig(getDefaultColumns());		
+						this.datatable.search();
+					}else if(angular.isDefined(mainService.getDatatable())){
+						searchService.datatable = mainService.getDatatable();			
+					}	
+					
+					
+					if(angular.isDefined(mainService.getForm())){
+						searchService.form = mainService.getForm();
+					}else{
+						searchService.reset();						
+					}
+					
+					if(angular.isDefined($routeParams)){
+						this.setRouteParams($routeParams);
+					}
 				}
 		};
 		
-		return function() {
-			searchService.lists.refresh.projects();
-			searchService.lists.refresh.states({objectTypeCode:"Project", display:true},'statetrue');				
-			searchService.lists.refresh.states({objectTypeCode:"Project"});							
-			searchService.lists.refresh.types({objectTypeCode:"Project"});
-			
-			if(angular.isDefined(mainService.getForm())){
-				searchService.form = mainService.getForm();
-			}else{
-				searchService.reset();
-			}
-			return searchService;		
-		}
+		return searchService;
 	}
 ]);
  

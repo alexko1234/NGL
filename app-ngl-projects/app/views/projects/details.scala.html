@@ -158,6 +158,20 @@
 										<p class="form-control-static" ng-switch-when="false">{{project.bioinformaticParameters.mappingReference}}</p>
 										<input type="text" class="form-control" ng-switch-when="true" ng-model="project.bioinformaticParameters.mappingReference">										
 									</div>
+								}
+								
+								@views.html.helper.columnLabelValue(Messages("projects.bioinformaticParameters.fgGroup")){
+									<div ng-switch on="mainService.isEditMode()">
+										<p class="form-control-static" ng-switch-when="false">{{project.bioinformaticParameters.fgGroup}}</p>
+										<input type="text" class="form-control" ng-switch-when="true" ng-model="project.bioinformaticParameters.fgGroup">										
+									</div>
+								}
+								
+								@views.html.helper.columnLabelValue(Messages("projects.bioinformaticParameters.fgPriority")){
+									<div ng-switch on="mainService.isEditMode()">
+										<p class="form-control-static" ng-switch-when="false">{{project.bioinformaticParameters.fgPriority}}</p>
+										<input type="text" class="form-control" ng-switch-when="true" ng-model="project.bioinformaticParameters.fgPriority">										
+									</div>
 								}								
 							}
 						</div>

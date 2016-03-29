@@ -1,7 +1,7 @@
 "use strict";
 
-angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'datatable', 'mainService', 'tabService', 'searchService', 
-  function($scope, $routeParams, datatable, mainService, tabService, searchService) {
+angular.module('home').controller('SearchCtrl',['$scope', '$routeParams','datatable', 'mainService', 'tabService', 'projectsSearchService',
+                                                function($scope, $routeParams, datatable,mainService,tabService,projectsSearchService) {
 	
 	var datatableConfig = {
 			order :{by:'code', reverse:false},
@@ -13,11 +13,12 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 				add :function(line){
 					tabService.addTabs({label:line.code,href:jsRoutes.controllers.projects.tpl.Projects.get(line.code).url, remove:true});
 				}
-			}	
+			},
+			name:"Projects"
 	};
-	
+
 	$scope.search = function(){
-		$scope.searchService.search($scope.datatable);
+		$scope.searchService.search();
 	};
 	
 	$scope.reset = function(){
@@ -30,28 +31,13 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'data
 		tabService.activeTab(0); // desactive le lien !
 	}
 	
-	$scope.searchService = searchService();	
-	$scope.searchService.setRouteParams($routeParams);
+	$scope.searchService = projectsSearchService;	
+	$scope.searchService.init($routeParams, datatableConfig);
 	
-	
-	//to avoid to lost the previous search
-	if(angular.isUndefined(mainService.getDatatable())){
-		$scope.datatable = datatable($scope, datatableConfig);			
-		mainService.setDatatable($scope.datatable);
-		$scope.datatable.setColumnsConfig($scope.searchService.getColumns());
-	}else{
-		$scope.datatable = mainService.getDatatable();
+	if($scope.searchService.isRouteParam){
+		$scope.search();
 	}
-	$scope.search();
 
+	
 }]);
-
-
-
-
-
-
-
-
-
 

@@ -63,7 +63,9 @@ projects.umbrellaProjectCode = Projet maître
 projects.description = Description
 projects.bioinformaticParameters.regexBiologicalAnalysis = Expression régulière pour BA
 projects.bioinformaticParameters.mappingReference = Référence mapping
-  
+projects.bioinformaticParameters.fgGroup = Projet France Génomique
+projects.bioinformaticParameters.fgPriority = Priorité Transfert CCRT
+
 umbrellaProjects.code = Code
 umbrellaProjects.name = Nom
 projects.projectCodesSelected = Projets rattachés
