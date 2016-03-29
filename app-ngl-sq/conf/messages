@@ -423,3 +423,16 @@ experiments.msg.import.success = Import réussi, merci de vérifier puis de sauv
 
 io.error.instance.notexist = La classe ''{0}'' n''existe pas 
 io.error.resultat.notexist = ''{0}'' n''existe pas
+
+
+###############
+#
+# administration
+#
+###############
+admin.menu = Administration
+admin.supports.title = Supports
+admin.supports.menu.switchindex = Inversion d'index
+admin.supports.switch-index.tabs.search = Recherche des objets NGL
+authorisation.userroles.page = Gestion des roles utilisateurs
+authorisation.users.page.tab.search = Recherche des utilisateurs

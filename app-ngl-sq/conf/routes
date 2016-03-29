@@ -6,6 +6,7 @@
 ->	/	apinglprojects.Routes
 ->	/	apinglreagents.Routes
 ->	/	apinglsq.Routes
+->	/admin	ngladmin.Routes
 ->  /authentication authentication.Routes
 
 

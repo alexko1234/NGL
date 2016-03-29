@@ -78,6 +78,16 @@
 								</ul>
 							</li>
 						}
+						
+						
+						@if(PermissionHelper.checkPermission(Context.current().request().username(), "admin")){
+							<li class="dropdown @("active".when(nav.startsWith("admin")))">
+								<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="admin"><i class="fa fa-users"></i> @Messages("admin.menu")<b class="caret"></b></a>
+								<ul class="dropdown-menu" role="menu" aria-labelledby="users">
+									<li class="@("active".when(nav == "admin.supports.switch-index"))"><a href="@controllers.admin.supports.tpl.routes.Supports.home("switch-index")">@Messages("admin.supports.menu.switchindex")</a></li>
+								</ul>
+							</li>
+						} 
   												
 			</ul>
 
