@@ -285,8 +285,7 @@ public class ContainerWorkflows {
 				rulesContainers.add(container);
 			}
 
-			//TODO ? rules for Containers ????
-			//ContainerWorkflows.rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ContainerWorkflows.ruleWorkflowSQ, rulesContainers),null);
+			ContainerWorkflows.rulesActor.tell(new RulesMessage(Play.application().configuration().getString("rules.key"),ContainerWorkflows.ruleWorkflowSQ, rulesContainers),null);
 			
 			List<ContainerSupport> containerSupports=MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("code",supporContainerSet).notEquals("state.code",nextState)).toList();
 			for(ContainerSupport containerSupport:containerSupports){
