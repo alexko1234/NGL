@@ -9,10 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
-import org.mongojack.DBQuery;
-
-import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
@@ -24,9 +20,14 @@ import models.laboratory.instrument.description.Instrument;
 import models.laboratory.parameter.Index;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
+
+import org.apache.commons.lang3.StringUtils;
+import org.mongojack.DBQuery;
+
 import play.Logger;
 import play.Play;
 import scala.io.Codec;
+import fr.cea.ig.MongoDBDAO;
 
 public class OutputHelper {
 
@@ -218,5 +219,19 @@ public class OutputHelper {
 		}
 				
 		return tagModel;
+	}
+	
+	
+	public static int getNumberPositionInPlateByColumn(String line,String column){
+		int asciiValue=(int) line.toCharArray()[0];
+		int columnValue=Integer.parseInt(column);
+		
+		return (asciiValue-64)+(columnValue-1)*8;
+	}
+	
+	public static String getTag(InputContainerUsed container) {
+		return container.contents.stream().map((Content c) -> (String) c.properties.get("tag").value)
+				.collect(Collectors.toList()).get(0)
+				;
 	}
 }

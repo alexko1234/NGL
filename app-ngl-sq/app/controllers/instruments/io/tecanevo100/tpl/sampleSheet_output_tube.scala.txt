@@ -6,6 +6,6 @@
 Numero tube; nom banque (manip prec); vol adn a prelever; vol tampon; nom sol stock\u000D\u000A	
 @for(a <- experiment.atomicTransfertMethods){
 		@for(c <- a.inputContainerUseds){
-			@(a.line);@(c.code);@(OutputHelper.getInputContainerUsedExperimentProperty(c,"requiredVolume"));@(OutputHelper.getInputContainerUsedExperimentProperty(c,"bufferVolume"));@(OutputHelper.getOutputContainerUsedCode(a))\u000D\u000A	
+			@(experiment.atomicTransfertMethods.indexOf(a)+1);@(c.code);@(OutputHelper.getInputContainerUsedExperimentProperty(c,"requiredVolume"));@(OutputHelper.getInputContainerUsedExperimentProperty(c,"bufferVolume"));@(OutputHelper.getOutputContainerUsedCode(a))\u000D\u000A	
 		}	
 } 
