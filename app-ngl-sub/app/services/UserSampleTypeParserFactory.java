@@ -2,6 +2,7 @@ package services;
 
 import java.util.Map;
 import models.sra.submit.util.SraException;
+import models.sra.submit.common.instance.UserSampleType;
 
 
 public class UserSampleTypeParserFactory implements IUserObjectFactory{
@@ -24,9 +25,7 @@ public class UserSampleTypeParserFactory implements IUserObjectFactory{
 		if(line.get(UserSampleTypeParser.COMMON_NAME) != null) {
 			userSampleType.setCommonName(line.get(UserSampleTypeParser.COMMON_NAME));
 		}
-		if(line.get(UserSampleTypeParser.SCIENTIFIC_NAME) != null) {
-			userSampleType.setScientificName(line.get(UserSampleTypeParser.SCIENTIFIC_NAME));
-		}
+		
 		if(line.get(UserSampleTypeParser.ANONYMIZED_NAME) != null) {
 			userSampleType.setAnonymizedName(line.get(UserSampleTypeParser.ANONYMIZED_NAME));
 		}

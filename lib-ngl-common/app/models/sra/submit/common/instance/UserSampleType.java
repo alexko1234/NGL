@@ -1,13 +1,16 @@
-package services;
+package models.sra.submit.common.instance;
+
+import models.sra.submit.util.SraException;
+import models.sra.submit.util.VariableSRA;
 
 public class UserSampleType {
 	private String alias = null;
 	private String title = null;
-	private String description = null;
 	private String commonName = null;
-	private String scientificName= null;
-	private String anonymizedName=null;
-	
+	private String anonymizedName = null;
+	private String description = null;
+
+
 	public UserSampleType() {
 	}
 	
@@ -23,6 +26,7 @@ public class UserSampleType {
 		this.alias = alias;
 	}
 
+
 	public String getTitle() {
 		return title;
 	}
@@ -30,7 +34,7 @@ public class UserSampleType {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-
+	
 	public String getDescription() {
 		return description;
 	}
@@ -52,14 +56,6 @@ public class UserSampleType {
 
 	public void setAnonymizedName(String anonymizedName) {
 		this.anonymizedName = anonymizedName;
-	}
-
-	public String getScientificName() {
-		return scientificName;
-	}
-
-	public void setScientificName(String scientificName) {
-		this.scientificName = scientificName;
 	}
 
 }

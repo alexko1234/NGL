@@ -2,6 +2,7 @@ package services;
 
 import models.sra.submit.common.instance.UserCloneType;
 import models.sra.submit.common.instance.UserExperimentType;
+import models.sra.submit.common.instance.UserSampleType;
 
 public class UserObjectFactory {
 

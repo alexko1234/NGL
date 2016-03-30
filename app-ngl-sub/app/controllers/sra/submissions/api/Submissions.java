@@ -25,6 +25,7 @@ import models.laboratory.common.instance.State;
 import models.sra.submit.common.instance.Submission;
 import models.sra.submit.common.instance.UserCloneType;
 import models.sra.submit.common.instance.UserExperimentType;
+import models.sra.submit.common.instance.UserSampleType;
 import models.sra.submit.util.SraException;
 import models.utils.InstanceConstants;
 import play.Logger;
@@ -37,6 +38,7 @@ import services.SubmissionServices;
 import services.Tools;
 import services.UserCloneTypeParser;
 import services.UserExperimentTypeParser;
+import services.UserSampleTypeParser;
 import services.XmlServices;
 import validation.ContextValidation;
 import views.components.datatable.DatatableResponse;
@@ -45,6 +47,7 @@ import workflows.sra.submission.SubmissionWorkflows;
 public class Submissions extends DocumentController<Submission>{
 	private Map<String, UserCloneType> mapUserClones = new HashMap<String, UserCloneType>();
 	private Map<String, UserExperimentType> mapUserExperiments = new HashMap<String, UserExperimentType>();
+	private Map<String, UserSampleType> mapUserSamples = new HashMap<String, UserSampleType>();
 
 	public Submissions() {
 		super(InstanceConstants.SRA_SUBMISSION_COLL_NAME, Submission.class);
@@ -245,6 +248,9 @@ public class Submissions extends DocumentController<Submission>{
 			if (StringUtils.isBlank(submissionsCreationForm.base64UserFileExperiments)){
 				submissionsCreationForm.base64UserFileExperiments="";
 			}
+			if (StringUtils.isBlank(submissionsCreationForm.base64UserFileSamples)){
+				submissionsCreationForm.base64UserFileSamples="";
+			}
 			if (StringUtils.isBlank(submissionsCreationForm.base64UserFileClonesToAc)){
 				submissionsCreationForm.base64UserFileClonesToAc="";
 			}
@@ -261,6 +267,14 @@ public class Submissions extends DocumentController<Submission>{
 				System.out.println("       lib_name : '" + entry.getValue().getLibraryName()+  "'");
 				System.out.println("       lib_source : '" + entry.getValue().getLibrarySource()+  "'");
 			}
+			Logger.debug("Read base64UserFileSamples");
+			InputStream inputStreamUserFileSamples = Tools.decodeBase64(submissionsCreationForm.base64UserFileSamples);
+			UserSampleTypeParser userSamplesParser = new UserSampleTypeParser();
+			mapUserSamples = userSamplesParser.loadMap(inputStreamUserFileSamples);		
+			for (Iterator<Entry<String, UserSampleType>> iterator = mapUserSamples.entrySet().iterator(); iterator.hasNext();) {
+				Entry<String, UserSampleType> entry = iterator.next();
+				System.out.println("       title : '" + entry.getValue().getTitle()+  "'");
+			}			
 			Logger.debug("Read base64UserFileClonesToAc");
 			InputStream inputStreamUserFileClonesToAc = Tools.decodeBase64(submissionsCreationForm.base64UserFileClonesToAc);
 			UserCloneTypeParser userClonesParser = new UserCloneTypeParser();
@@ -280,7 +294,8 @@ public class Submissions extends DocumentController<Submission>{
 
 		
 			SubmissionServices submissionServices = new SubmissionServices();
-			submissionCode = submissionServices.initNewSubmission(readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, mapUserClones, mapUserExperiments, contextValidation);
+				
+			submissionCode = submissionServices.initNewSubmission(readSetCodes, submissionsCreationForm.studyCode, submissionsCreationForm.configurationCode, mapUserClones, mapUserExperiments, mapUserSamples, contextValidation);
 			if (contextValidation.hasErrors()){
 				contextValidation.displayErrors(Logger.of("SRA"));
 				return badRequest(filledForm.errorsAsJson());

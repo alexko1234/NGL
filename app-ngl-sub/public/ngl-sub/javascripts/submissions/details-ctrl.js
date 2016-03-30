@@ -60,6 +60,14 @@ angular.module('home').controller('DetailsCtrl',[ '$http', '$scope', '$routePara
 			        	  edit:true,            // false
 			        	  choiceInList:false  
 			        },
+			       	{property:"anonymizedName",
+			        	  header: "sample.anonymizedName",
+			        	  type :"text",	
+			        	  hide:true,
+			        	  order:false,
+			        	  edit:true,
+			        	  choiceInList:false
+			        },
 			        {property:"title",
 			        	  header: "sample.title",
 			        	  type :"text",	

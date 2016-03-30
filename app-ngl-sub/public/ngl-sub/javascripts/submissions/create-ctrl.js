@@ -45,6 +45,10 @@ angular.module('home').controller('CreateCtrl',[ '$http', '$scope', '$routeParam
 		if ($scope.createService.userFileExperiments !==null && $scope.createService.userFileExperiments !== undefined) {
 			$scope.createService.form.base64UserFileExperiments=$scope.createService.userFileExperiments.value;
 		} 		
+		$scope.createService.form.base64UserFileSamples=""; 
+		if ($scope.createService.userFileSamples !==null && $scope.createService.userFileSamples !== undefined) {
+			$scope.createService.form.base64UserFileSamples=$scope.createService.userFileSamples.value;
+		} 
 		mainService.setForm($scope.createService.form);
 		//$scope.createService.search();
 			$http.post(jsRoutes.controllers.sra.submissions.api.Submissions.save().url, mainService.getForm()).success(function(data) {

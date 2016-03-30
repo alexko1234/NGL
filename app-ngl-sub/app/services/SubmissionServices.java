@@ -31,6 +31,7 @@ import models.sra.submit.common.instance.Study;
 import models.sra.submit.common.instance.Submission;
 import models.sra.submit.common.instance.UserCloneType;
 import models.sra.submit.common.instance.UserExperimentType;
+import models.sra.submit.common.instance.UserSampleType;
 import models.sra.submit.sra.instance.Configuration;
 import models.sra.submit.sra.instance.Experiment;
 import models.sra.submit.sra.instance.RawData;
@@ -96,8 +97,8 @@ public class SubmissionServices {
 			throw new SraException("impossible de recuperer le scientificName au ncbi pour le taxonId '" + taxonCode + "' : \n" + e.getMessage());
 		}
 	}
-	
-	public String initNewSubmission(List<String> readSetCodes, String studyCode, String configCode, Map<String, UserCloneType>mapUserClones, Map<String, UserExperimentType> mapUserExperiments, ContextValidation contextValidation) throws SraException, IOException {
+	public String initNewSubmission(List<String> readSetCodes, String studyCode, String configCode, Map<String, UserCloneType>mapUserClones, Map<String, UserExperimentType> mapUserExperiments, Map< String, UserSampleType> mapUserSamples, ContextValidation contextValidation) throws SraException, IOException {
+		//public String initNewSubmission(List<String> readSetCodes, String studyCode, String configCode, Map<String, UserCloneType>mapUserClones, Map<String, UserExperimentType> mapUserExperiments, ContextValidation contextValidation) throws SraException, IOException {
 		// Cree en base un objet submission avec state.code=N, met dans la base la configuration avec state.code='U-SUB'
 		// met les readSet avec state.code = 'N', les experiments avec state.code='N', les samples à soumettre 
 		// avec state.code='N' sinon laisse les samples dans leurs state, et met le study à soumettre (study avec state.code='N') avec state.code=V-SUB 
@@ -281,6 +282,24 @@ public class SubmissionServices {
 				if (!("F-SUB").equalsIgnoreCase(sample.state.code) && !("N").equalsIgnoreCase(sample.state.code)) {
 					throw new SraException("Tentative d'utilisation dans la soumission du sample "+ sample.code +" en cours de soumission avec state.code==" + sample.state.code);
 				}
+				// surcharger le sample si besoin pour les champs autorises :
+				//----------------------------------------------------------
+				UserSampleType userSample = mapUserSamples.get(sample.code);
+				if (userSample != null) {				
+					if (StringUtils.isNotBlank(userSample.getAnonymizedName())){
+						sample.anonymizedName = userSample.getAnonymizedName();
+					}
+					if (StringUtils.isNotBlank(userSample.getTitle())){
+						sample.title = userSample.getTitle();
+					}
+					if (StringUtils.isNotBlank(userSample.getDescription())){
+						sample.description = userSample.getDescription();
+					}
+					if (StringUtils.isNotBlank(userSample.getCommonName())){
+						sample.commonName = userSample.getCommonName();
+					}	
+					// Le champs scientificName est rempli automatiquement et n'est pas surchargeable.
+				}
 				// Mise a jour de l'objet submission pour les samples references
 				if(!submission.refSampleCodes.contains(sample.code)){
 					submission.refSampleCodes.add(sample.code);
@@ -298,7 +317,9 @@ public class SubmissionServices {
 				
 				// mettre à jour l'experiment pour la reference sample :
 				experiment.sampleCode = sample.code;
-
+				
+				
+				
 			}
 			
 			if (config.strategyStudy.equalsIgnoreCase("strategy_external_study")){

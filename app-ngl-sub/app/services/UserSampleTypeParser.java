@@ -8,6 +8,7 @@ import java.util.Map;
 
 import models.sra.submit.util.SraException;
 
+import models.sra.submit.common.instance.UserSampleType;
 
 
 public class UserSampleTypeParser {
