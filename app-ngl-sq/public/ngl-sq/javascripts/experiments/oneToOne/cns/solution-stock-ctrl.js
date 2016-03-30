@@ -1,28 +1,9 @@
-angular.module('home').controller('SolutionStockCtrl',['$scope', 'atmToSingleDatatable',
-                                                       function($scope, atmToSingleDatatable) {
+angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToSingleDatatable',
+                                                       function($scope, $http,atmToSingleDatatable) {
 	var datatableConfig = {
 			name:"FDR_Tube",
 			columns:[			  
-					 {
-			        	 "header":Messages("containers.table.code"),
-			        	 "property":"inputContainer.code",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":1,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
-			         {
-			        	"header":Messages("containers.table.projectCodes"),
-			 			"property": "inputContainer.projectCodes",
-			 			"order":false,
-			 			"hide":true,
-			 			"type":"text",
-			 			"position":2,
-			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-				     },
+					
 				     {
 			        	"header":Messages("containers.table.sampleCodes"),
 			 			"property": "inputContainer.sampleCodes",
@@ -57,13 +38,23 @@ angular.module('home').controller('SolutionStockCtrl',['$scope', 'atmToSingleDat
 			         },
 								 
 					 {
-			        	 "header":Messages("containers.table.concentration") + " (nM)",
+			        	 "header":Messages("containers.table.concentration"),
 			        	 "property":"inputContainer.concentration.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"number",
 			        	 "position":5,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
+					 {
+			        	 "header":Messages("containers.table.concentration.unit"),
+			        	 "property":"inputContainer.concentration.unit",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":5.1,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
@@ -77,6 +68,15 @@ angular.module('home').controller('SolutionStockCtrl',['$scope', 'atmToSingleDat
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
+				 			"header":Messages("containers.table.size"),
+				 			"property": "inputContainer.size.value",
+				 			"order":false,
+				 			"hide":true,
+				 			"type":"text",
+				 			"position":6.5,
+				 			"extraHeaders":{0:Messages("experiments.inputs")}			 						 			
+				 	 },
+			         {
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"inputContainer.state.code",
 			        	 "order":true,
@@ -88,7 +88,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope', 'atmToSingleDat
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },		
 			         {
-			        	 "header":Messages("containers.table.concentration") + " (nM)",
+			        	 "header":Messages("containers.table.concentration"),
 			        	 "property":"outputContainerUsed.concentration.value",
 			        	 "order":true,
 						 "edit":true,
@@ -99,13 +99,25 @@ angular.module('home').controller('SolutionStockCtrl',['$scope', 'atmToSingleDat
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
+			        	 "header":Messages("containers.table.concentration.unit") ,
+			        	 "property":"outputContainerUsed.concentration.unit",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "defaultValues":"nM",
+			        	 "position":51,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         },
+			         {
 			        	 "header":Messages("containers.table.volume")+ " (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
+			        	 "editDirectives":' ng-change="test()" ',
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":51,
+			        	 "position":52,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
@@ -127,7 +139,17 @@ angular.module('home').controller('SolutionStockCtrl',['$scope', 'atmToSingleDat
 			        	 "type":"text",
 			        	 "position":500,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         }
+			         },
+			         {
+			        	 "header":Messages("containers.table.storageCode"),
+			        	 "property":"outputContainerUsed.locationOnContainerSupport.storageCode",
+			        	 "order":true,
+						 "edit":true,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":600,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+				     }
 			         ],
 			compact:true,
 			pagination:{
@@ -215,7 +237,56 @@ angular.module('home').controller('SolutionStockCtrl',['$scope', 'atmToSingleDat
 	});
 	
 	//Init		
-
+	$scope.test=function(){
+		
+			console.log("Test");
+	};
+	
+	if($scope.experiment.instrument.inContainerSupportCategoryCode!=="tube"){
+		datatableConfig.columns.push( {
+       	 "header":Messages("containers.table.supportCode"),
+       	 "property":"inputContainer.support.code",
+       	 "order":true,
+       	 "edit":false,
+		  "hide":true,
+       	 "type":"text",
+       	 "position":1,
+       	 "extraHeaders":{0:Messages("experiments.inputs")}
+        });
+		datatableConfig.columns.push( {
+	       	 "header":Messages("containers.table.support.line"),
+	       	 "property":"inputContainer.support.line",
+	       	 "order":true,
+	       	 "edit":false,
+			  "hide":true,
+	       	 "type":"text",
+	       	 "position":1.1,
+	       	 "extraHeaders":{0:Messages("experiments.inputs")}
+	        });
+		datatableConfig.columns.push( {
+	       	 "header":Messages("containers.table.support.column"),
+	       	 "property":"inputContainer.support.column*1",
+	       	 "order":true,
+	       	 "edit":false,
+			  "hide":true,
+	       	 "type":"text",
+	       	 "position":1.2,
+	       	 "extraHeaders":{0:Messages("experiments.inputs")}
+	        });
+	
+	}else {			
+			datatableConfig.columns.push( {
+					        	 "header":Messages("containers.table.code"),
+					        	 "property":"inputContainer.code",
+					        	 "order":true,
+								 "edit":false,
+								 "hide":true,
+					        	 "type":"text",
+					        	 "position":1,
+					        	 "extraHeaders":{0:Messages("experiments.inputs")}
+					         });
+	}	
+	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	//defined new atomictransfertMethod
 	atmService.newAtomicTransfertMethod = function(){
@@ -237,5 +308,37 @@ angular.module('home').controller('SolutionStockCtrl',['$scope', 'atmToSingleDat
 	
 	$scope.atmService = atmService;
 	
+	var generateSampleSheet = function(){
+		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
+		.success(function(data, status, headers, config) {
+			var header = headers("Content-disposition");
+			var filepath = header.split("filename=")[1];
+			
+			var filename = filepath.split("/");
+			filename = filename[filename.length-1];
+			if(data!=null){
+				$scope.messages.clazz="alert alert-success";
+				$scope.messages.text=Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath;
+				$scope.messages.showDetails = false;
+				$scope.messages.open();	
+				
+				var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
+				saveAs(blob, filename);
+			}
+		})
+		.error(function(data, status, headers, config) {
+			$scope.messages.clazz = "alert alert-danger";
+			$scope.messages.text = Messages('experiments.msg.generateSampleSheet.error');
+			$scope.messages.showDetails = false;
+			$scope.messages.open();				
+		});
+	};
+	
+	$scope.setAdditionnalButtons([{
+		isDisabled : false,// function(){return $scope.isCreationMode();} ,
+		isShow:function(){return true},
+		click:generateSampleSheet,
+		label:Messages("experiments.sampleSheet")
+	}]);
 	
 }]);
