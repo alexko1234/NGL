@@ -181,7 +181,7 @@ public class ReadSetsTests extends AbstractTestsCNS {
 		}
 	}
 
-	//@Test
+	@Test
 	public void testReadSetsCreate() { 
 		// create a run with two readsets associated to this run
 		run.dispatch = true; // For the archive test
@@ -204,7 +204,7 @@ public class ReadSetsTests extends AbstractTestsCNS {
 	}
 
 
-	//@Test
+	@Test
 	public void testArchiveReadSet() {
 		run.dispatch = true; 
 
@@ -226,7 +226,7 @@ public class ReadSetsTests extends AbstractTestsCNS {
 	}
 
 
-	//@Test
+	@Test
 	public void testAchiveList(){
 		run.dispatch = true; 
 
@@ -254,7 +254,7 @@ public class ReadSetsTests extends AbstractTestsCNS {
 	}
 
 
-	//@Test
+	@Test
 	public void testDeleteReadsets(){
 		run.traceInformation = new TraceInformation();
 		run.dispatch = true; // For the archive test
@@ -285,7 +285,7 @@ public class ReadSetsTests extends AbstractTestsCNS {
 	}
 
 
-	//@Test 
+	@Test 
 	public void testRemoveReadset(){
 
 		run.state=null;
@@ -311,7 +311,7 @@ public class ReadSetsTests extends AbstractTestsCNS {
 	}
 	
 	
-	//@Test
+	@Test
 	public void testSaveReadSetExternal()
 	{
 		Sample sample = MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, "BFB_AABA");
@@ -343,7 +343,7 @@ public class ReadSetsTests extends AbstractTestsCNS {
 		
 	}
 	
-	//@Test
+	@Test
 	public void testSaveReadSetExternalWithNoSampleLims()
 	{
 		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
@@ -361,7 +361,7 @@ public class ReadSetsTests extends AbstractTestsCNS {
 		
 	}
 	
-	//@Test
+	@Test
 	public void testSaveReadSetExternalWithNoSampleOnContainer()
 	{
 		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
@@ -379,7 +379,7 @@ public class ReadSetsTests extends AbstractTestsCNS {
 		
 	}
 	
-	//@Test
+	@Test
 	public void testSaveReadSetExternalWithIncompleteSampleOnContainer()
 	{
 		Result result = callAction(controllers.runs.api.routes.ref.Runs.save(),fakeRequest().withJsonBody(RunMockHelper.getJsonRun(run)));
@@ -453,4 +453,6 @@ public class ReadSetsTests extends AbstractTestsCNS {
 		Assert.assertEquals("expectedPath", readset.path);
 	}
 
+	
+	
 }

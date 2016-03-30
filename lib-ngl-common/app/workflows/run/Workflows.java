@@ -54,7 +54,10 @@ public class Workflows {
 	private static final String ruleIPS="IP_S_1";
 	private static final String ruleFV="F_V_1";
 	private static final String ruleFVQC="F_VQC_1";
+	private static final String ruleIWBA="IW_BA_1";
 	private static final String ruleAUA="A-UA_1";
+	private static final String ruleA="A_1";
+	private static final String ruleFTF="F_TF_1";
 	private static final String ruleN = "N_1";
 
 
@@ -340,6 +343,13 @@ public class Workflows {
 					nextStep.code = "UA";
 				}
 			}
+		}else if("IW-BA".equals(readSet.state.code)){
+			Project project = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, readSet.projectCode);
+			ArrayList<Object> facts = new ArrayList<Object>();
+			facts.add(nextStep);
+			facts.add(project);
+			facts.add(readSet);
+			RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), ruleIWBA, facts);
 		}else if("F-BA".equals(readSet.state.code)){
 			nextStep.code = "IW-VBA";
 		}else if("IW-VBA".equals(readSet.state.code)){
@@ -355,9 +365,23 @@ public class Workflows {
 		}else if("A".equals(readSet.state.code) || "UA".equals(readSet.state.code)){			
 			if(TBoolean.TRUE.equals(readSet.bioinformaticValuation.valid)){
 				nextStep.code = "A";
+				//Call rules for Transfert CCRT
+				//Get project to identify sent to CCRT
+				Project project = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, readSet.projectCode);
+				ArrayList<Object> facts = new ArrayList<Object>();
+				facts.add(nextStep);
+				facts.add(project);
+				facts.add(readSet);
+				RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), ruleA, facts);
 			}else { //FALSE or UNSET
 				nextStep.code = "UA";
 			}			
+		}else if("F-TF".equals(readSet.state.code)){
+			Project project = MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, readSet.projectCode);
+			ArrayList<Object> facts = new ArrayList<Object>();
+			facts.add(nextStep);
+			facts.add(project);
+			RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), ruleFTF, facts);
 		}
 		setReadSetState(contextValidation, readSet, nextStep);
 	}

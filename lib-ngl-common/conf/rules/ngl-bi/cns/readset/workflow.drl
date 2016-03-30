@@ -77,6 +77,17 @@ rule "Find Pattern Krona for taxonomy treatment"
 		
 		insert(readSetKrona);
 
+rule "Set state to In Waiting Transfert CCRT from Avalaible readSet"
+	@nglBI( A_1 )
+	dialect "java"
+	salience 600
+	no-loop
+	when
+		$nextState : State(code=="A")
+		$project : Project(bioinformaticParameters!=null, bioinformaticParameters.fgGroup!=null)
+		$readSet : ReadSet(location==null || (location!=null && location!="CCRT"))
+	then
+		$nextState.code="IW-TF";
 end
 
 rule "Find Fungi for taxonomy treatment"
@@ -201,4 +212,16 @@ rule "Calculate 2DPass.readsPercent for ngsrg-nanopore"
 						DBQuery.is("code", $readset.code),
 						DBUpdate.set("treatments.ngsrg.default.2DPass", propertyValueTwoD));
 		
+end
+
+rule "Set state to Avalaible from Finished Transfert CCRT"
+	@nglBI( F_TF_1 )
+	dialect "java"
+	salience 600
+	no-loop
+	when
+		$nextState : State(code=="F-TF")
+		$project : Project(bioinformaticParameters!=null, bioinformaticParameters.fgGroup!=null)
+	then
+		$nextState.code="A";
 end
