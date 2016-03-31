@@ -7,6 +7,9 @@ import fr.cea.ig.DBObject;
 
 public class NGLObject extends DBObject implements IValidation{
 	
+	
+		public enum Action {delete, replace};
+	
 		public String code;
 		public String typeCode;		
 		public String collectionName;
@@ -18,6 +21,8 @@ public class NGLObject extends DBObject implements IValidation{
 		public String currentValue;
 		public String newValue;
 		
+		public String action;
+		
 		@Override
 		public void validate(ContextValidation contextValidation) {
 			ValidationHelper.required(contextValidation, code, "code");
@@ -26,7 +31,11 @@ public class NGLObject extends DBObject implements IValidation{
 			ValidationHelper.required(contextValidation, projectCode, "projectCode");
 			ValidationHelper.required(contextValidation, sampleCode, "sampleCode");
 			ValidationHelper.required(contextValidation, currentValue, "currentValue");
-			ValidationHelper.required(contextValidation, newValue, "newValue");
+			
+			if(ValidationHelper.required(contextValidation, action, "action") 
+					&& Action.replace.toString().equals(action)){
+				ValidationHelper.required(contextValidation, newValue, "newValue");
+			};
 			
 		}
 		

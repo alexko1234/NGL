@@ -34,7 +34,7 @@ angular.module('home').controller('SwitchIndexSearchCtrl', ['$scope', '$filter',
 			        	 "position":3
 			         },
 			         {
-			        	 "header":"Projet",
+			        	 "header":"Project",
 			        	 "property":"projectCode",
 			        	"order":true,
 						 "edit":false,
@@ -42,48 +42,30 @@ angular.module('home').controller('SwitchIndexSearchCtrl', ['$scope', '$filter',
 			        	 "position":4
 			         },
 			         {
-			        	 "header":"Echantillon",
+			        	 "header":"Sample",
 			        	 "property":"sampleCode",
 			        	"order":true,
 						 "edit":false,
 						 "type":"text",
 			        	 "position":5
-			         },
+			         },			         
 			         {
-			        	 "header":"Type",
-			        	 "property":"typeCode",
-			        	 "filter":"codes:'type'",
+			        	 "header":"Proprerty",
+			        	 "property":"contentPropertyNameUpdated",
 			        	 "order":true,
 						 "edit":false,
 						 "type":"text",
 			        	 "position":6
 			         },
 			         {
-			        	 "header":"Propriété mise à jour",
-			        	 "property":"contentPropertyNameUpdated",
-			        	 "order":true,
-						 "edit":false,
-						 "type":"text",
-			        	 "position":7
-			         },
-			         {
-			        	 "header":"Valeur courante",
+			        	 "header":"Current value",
 			        	 "property":"currentValue",
 			        	 "order":true,
 						 "edit":false,
 						 "type":"text",
-			        	 "position":8
-			         },
-			         {
-			        	 "header":"Valeur nouvelle",
-			        	 "property":"newValue",
-			        	 "order":true,
-						 "edit":true,
-						 "choiceInList" : true, 
-						 "possibleValues":"searchService.lists.getTags()",
-						 "type":"text",
-			        	 "position":9
+			        	 "position":7
 			         }
+			         
 			        
 			         ],
 			compact:true,
@@ -103,7 +85,10 @@ angular.module('home').controller('SwitchIndexSearchCtrl', ['$scope', '$filter',
 			},
 			save:{
 				active:true,
-	        	mode:'remote'				
+	        	mode:'remote',
+	        	url: function(data){return jsRoutes.controllers.admin.supports.api.NGLObjects.update(data.code).url;},				
+				method:'put'
+	        		
 			},
 			edit:{
 				active: true,
@@ -116,7 +101,7 @@ angular.module('home').controller('SwitchIndexSearchCtrl', ['$scope', '$filter',
 			exportCSV:{
 				active:true
 			},			
-			showTotalNumberRecords:false
+			showTotalNumberRecords:true
 	};
 	
 	$scope.searchService = {
@@ -124,7 +109,8 @@ angular.module('home').controller('SwitchIndexSearchCtrl', ['$scope', '$filter',
 			form : {},
 			lists : lists,
 			
-			datatable : undefined,
+			datatableSQ : undefined,
+			datatableBI : undefined,
 			
 			resetSampleCodes : function(){
 				this.form.sampleCode = undefined;									
@@ -149,10 +135,25 @@ angular.module('home').controller('SwitchIndexSearchCtrl', ['$scope', '$filter',
 						
 			search : function(){
 				$scope.messages.clear();
+				$scope.searchService.datatableSQ.setData([]);
+		 		$scope.searchService.datatableBI.setData([]);
 				this.updateForm();
 				 $http.get(jsRoutes.controllers.admin.supports.api.NGLObjects.list().url,{params:this.form})
-				 	.success(function(result){
-				 		$scope.searchService.datatable.setData(result);
+				 	.success(function(results){
+				 		
+				 		var data = {sq:[], bi:[]};
+				 		
+				 		angular.forEach(results, function(result){
+				 			if(result.collectionName === 'ngl_bi.ReadSetIllumina'){
+				 				this.bi.push(result);
+				 			}else{
+				 				this.sq.push(result);
+				 			}
+				 		},data);
+				 		
+				 		
+				 		$scope.searchService.datatableSQ.setData(data.sq);
+				 		$scope.searchService.datatableBI.setData(data.bi);
 				 	}).error(function(data){
 				 		$scope.messages.setError("get");
 				 		$scope.messages.setDetails(data);
@@ -170,6 +171,42 @@ angular.module('home').controller('SwitchIndexSearchCtrl', ['$scope', '$filter',
 		tabService.activeTab(0);
 	}
 	$scope.messages = messages();
-	$scope.searchService.datatable =  datatable(datatableConfig);
+	
+	var dtConfigSQ = angular.copy(datatableConfig);
+	dtConfigSQ.columns.push({
+		   	 "header":"New value",
+			 "property":"newValue",
+			 "order":true,
+			 "edit":true,
+			 "editTemplate":'<input class="form-control" type="text" #ng-model typeahead="tag.code as tag.name for tag in searchService.lists.getTags() | filter:$viewValue | limitTo:20" typeahead-min-length="1" />',
+			 "type":"text",
+			 "position":8
+			},
+			{
+		   	 "header":"Action",
+			 "property":"action",
+			 "order":true,
+			 "edit":true,
+			 "choiceInList":true,
+			 "possibleValues":[{"code":"replace","name":"Replace"}],
+			 "type":"text",
+			 "position":9
+			}
+		);
+	$scope.searchService.datatableSQ =  datatable(dtConfigSQ);
+	
+	var dtConfigBI = angular.copy(datatableConfig);
+	dtConfigBI.columns.push({
+	   	 "header":"Action",
+		 "property":"action",
+		 "order":true,
+		 "edit":true,
+		 "choiceInList":true,
+		 "possibleValues":[{"code":"delete","name":"Delete"}],
+		 "type":"text",
+		 "position":8
+		}
+	);
+	$scope.searchService.datatableBI =  datatable(dtConfigBI);
 	
 }]);

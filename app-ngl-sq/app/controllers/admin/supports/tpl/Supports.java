@@ -36,7 +36,8 @@ public class Supports extends CommonController{
 	      		controllers.commons.api.routes.javascript.Parameters.list(),
 	      		controllers.admin.supports.tpl.routes.javascript.Supports.home(),
 	      		controllers.admin.supports.tpl.routes.javascript.Supports.search(),
-	      		controllers.admin.supports.api.routes.javascript.NGLObjects.list()
+	      		controllers.admin.supports.api.routes.javascript.NGLObjects.list(),
+	      		controllers.admin.supports.api.routes.javascript.NGLObjects.update()
   	      )	  	      
   	    );
   	}

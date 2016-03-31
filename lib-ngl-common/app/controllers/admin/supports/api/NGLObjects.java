@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
+import play.Logger;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
@@ -31,16 +32,27 @@ import com.mongodb.BasicDBObject;
 import controllers.APICommonController;
 import controllers.NGLControllerHelper;
 import controllers.QueryFieldsForm;
+import controllers.admin.supports.api.objects.AbstractUpdate;
+import controllers.admin.supports.api.objects.ContainerUpdate;
+import controllers.admin.supports.api.objects.ExperimentUpdate;
+import controllers.admin.supports.api.objects.ProcessUpdate;
+import controllers.admin.supports.api.objects.ReadSetUpdate;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 
 public class NGLObjects extends APICommonController<NGLObject>{
 
 	final static Form<NGLObjectsSearchForm> searchForm = form(NGLObjectsSearchForm.class);
+	private Map<String, AbstractUpdate> mappingCollectionUpdates;
 	
 	
 	public NGLObjects() {
-		super(NGLObject.class);		
+		super(NGLObject.class);
+		mappingCollectionUpdates = new HashMap<String, AbstractUpdate>();
+		mappingCollectionUpdates.put("ngl_sq.Container", new ContainerUpdate());
+		mappingCollectionUpdates.put("ngl_sq.Process", new ProcessUpdate());
+		mappingCollectionUpdates.put("ngl_sq.Experiment", new ExperimentUpdate());
+		mappingCollectionUpdates.put("ngl_bi.ReadSetIllumina", new ReadSetUpdate());
 	}
 
 	@Permission(value={"reading"})
@@ -63,22 +75,32 @@ public class NGLObjects extends APICommonController<NGLObject>{
 	}
 	
 	
-	public Result update(){
+	public Result update(String code){
 		Form<NGLObject> filledForm = getMainFilledForm();
 		NGLObject input = filledForm.get();
-		ContextValidation cv = new ContextValidation(getCurrentUser(), filledForm.errors());
-		input.validate(cv);
-		if(cv.hasErrors()){
-			return badRequest(filledForm.errorsAsJson());
-		}else{
-			return ok();
-		}
 		
+		if (input.code.equals(code)) {
+			ContextValidation cv = new ContextValidation(getCurrentUser(), filledForm.errors());
+			input.validate(cv);
+			if(cv.hasErrors()){
+				return badRequest(filledForm.errorsAsJson());
+			}else{
+				
+				mappingCollectionUpdates.get(input.collectionName).update(input, cv);
+				if(cv.hasErrors()){
+					return badRequest(filledForm.errorsAsJson());
+				}else{
+					return ok();
+				}
+			}
+		}else{
+			return badRequest("NGLObject code are not the same");
+		}		
 	}
 
 	private List<NGLObject> getNGLObjects(NGLObjectsSearchForm form, String collectionName) {
 		
-		Query q = getQuery(form, collectionName);
+		Query q =  mappingCollectionUpdates.get(collectionName).getQuery(form);
 		if(null != q){
 			List<NGLObject> r = MongoDBDAO.find(collectionName, NGLObject.class, q, getKeys()).toList();
 			r.forEach(o -> {
@@ -94,67 +116,7 @@ public class NGLObjects extends APICommonController<NGLObject>{
 		}
 		
 	}
-
-	private Query getQuery(NGLObjectsSearchForm form, String collectionName) {
-		Query query = null;
-		
-		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
-		switch (collectionName) {
-			case "ngl_sq.Container":
-				queryElts.add(getProjectCodeQuery(form, ""));
-				queryElts.add(getSampleCodeQuery(form, ""));
-				queryElts.addAll(getContentPropertiesQuery(form, ""));
-				query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
-				query = DBQuery.elemMatch("contents", query);
-				break;
-				
-			case "ngl_sq.Process":
-				queryElts.add(getProjectCodeQuery(form, "sampleOnInputContainer."));
-				queryElts.add(getSampleCodeQuery(form, "sampleOnInputContainer."));
-				queryElts.addAll(getContentPropertiesQuery(form, "sampleOnInputContainer."));
-				query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
-				break;
-				
-			case "ngl_bi.ReadSetIllumina":
-				queryElts.add(getProjectCodeQuery(form, "sampleOnContainer."));
-				queryElts.add(getSampleCodeQuery(form, "sampleOnContainer."));
-				queryElts.addAll(getContentPropertiesQuery(form, "sampleOnContainer."));
-				query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));	
-				break;
-				
-			case "ngl_sq.Experiment":
-				queryElts.add(getProjectCodeQuery(form, ""));
-				queryElts.add(getSampleCodeQuery(form, ""));
-				queryElts.addAll(getContentPropertiesQuery(form, ""));
-				query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
-				query = DBQuery.elemMatch("atomicTransfertMethods.outputContainerUseds.contents", query);	
-				break;
-		}		
-		
-		return query;
-	}
-
-	private List<Query> getContentPropertiesQuery(NGLObjectsSearchForm form, String prefix) {
-		return NGLControllerHelper.generateQueriesForProperties(form.contentProperties,Level.CODE.Content, prefix+"properties");
-	}
 	
-	
-	private Query getSampleCodeQuery(NGLObjectsSearchForm form, String prefix) {
-		if(StringUtils.isNotBlank(form.sampleCode)){
-			return DBQuery.in(prefix+"sampleCode", form.sampleCode);
-		}else{
-			return DBQuery.empty();
-		}
-	}
-
-	private Query getProjectCodeQuery(NGLObjectsSearchForm form, String prefix) {		
-		if(StringUtils.isNotBlank(form.projectCode)){
-			return DBQuery.in(prefix+"projectCode", form.projectCode);
-		}else{
-			return DBQuery.empty();
-		}
-	}
-
 	private BasicDBObject getKeys() {
 		BasicDBObject keys = new BasicDBObject();
 		keys.put("code",1);

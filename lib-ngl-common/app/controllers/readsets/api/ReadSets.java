@@ -448,13 +448,13 @@ public class ReadSets extends ReadSetsController{
 		
 		
 		if ((readSet.projectCode!= null) && (!MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-				DBQuery.and(DBQuery.is("code",readSet.code), DBQuery.is("projectCode",readSet.projectCode))))) {
+				DBQuery.and(DBQuery.is("runCode",readSet.runCode), DBQuery.is("projectCode",readSet.projectCode))))) {
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, 
 					DBQuery.is("code",readSet.runCode), 
 					DBUpdate.pull("projectCodes", readSet.projectCode));
 		}
 		if ((readSet.sampleCode!= null) && (!MongoDBDAO.checkObjectExist(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, 
-				DBQuery.and(DBQuery.is("code",readSet.code), DBQuery.is("sampleCode",readSet.sampleCode))))) {
+				DBQuery.and(DBQuery.is("runCode",readSet.runCode), DBQuery.is("sampleCode",readSet.sampleCode))))) {
 			MongoDBDAO.update(InstanceConstants.RUN_ILLUMINA_COLL_NAME,  Run.class, 
 					DBQuery.is("code",readSet.runCode), 
 					DBUpdate.pull("sampleCodes", readSet.sampleCode));
