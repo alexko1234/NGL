@@ -39,10 +39,11 @@ public class ProcessUpdate extends AbstractUpdate<Process>{
 		Process process = getObject(input.code);
 		if(NGLObject.Action.replace.equals(NGLObject.Action.valueOf(input.action))){
 			process.sampleOnInputContainer.properties.get(input.contentPropertyNameUpdated).value = input.newValue;
-			process.validate(cv);
+			
 		}else{
 			throw new RuntimeException(input.action+" not implemented");
 		}
+		process.validate(cv);
 		if(!cv.hasErrors()){
 			updateObject(process);
 		}

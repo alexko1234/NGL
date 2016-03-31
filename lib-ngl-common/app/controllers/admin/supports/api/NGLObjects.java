@@ -55,7 +55,7 @@ public class NGLObjects extends APICommonController<NGLObject>{
 		mappingCollectionUpdates.put("ngl_bi.ReadSetIllumina", new ReadSetUpdate());
 	}
 
-	@Permission(value={"reading"})
+	@Permission(value={"admin"})
 	public Result list() {
 		NGLObjectsSearchForm form = filledFormQueryString(NGLObjectsSearchForm.class);
 		
@@ -74,7 +74,7 @@ public class NGLObjects extends APICommonController<NGLObject>{
 		}
 	}
 	
-	
+	@Permission(value={"admin"})
 	public Result update(String code){
 		Form<NGLObject> filledForm = getMainFilledForm();
 		NGLObject input = filledForm.get();

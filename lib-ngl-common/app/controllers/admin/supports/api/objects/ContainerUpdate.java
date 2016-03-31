@@ -41,11 +41,11 @@ public class ContainerUpdate extends AbstractUpdate<Container>{
 		Container container = getObject(input.code);
 		if(NGLObject.Action.replace.equals(NGLObject.Action.valueOf(input.action))){
 			updateContent(container, input);
-			container.validate(cv);
+			
 		}else{
 			throw new RuntimeException(input.action+" not implemented");
 		}
-		
+		container.validate(cv);
 		if(!cv.hasErrors()){
 			updateObject(container);
 		}
