@@ -32,7 +32,8 @@ public class ExperimentUpdate extends AbstractUpdate<Experiment>{
 		queryElts.add(getSampleCodeQuery(form, ""));
 		queryElts.addAll(getContentPropertiesQuery(form, ""));
 		query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
-		query = DBQuery.elemMatch("atomicTransfertMethods.outputContainerUseds.contents", query);	
+		query = DBQuery.or(DBQuery.elemMatch("atomicTransfertMethods.outputContainerUseds.contents", query),
+				DBQuery.elemMatch("atomicTransfertMethods.inputContainerUseds.contents", query));	
 		
 		return query;
 	}
@@ -83,6 +84,7 @@ public class ExperimentUpdate extends AbstractUpdate<Experiment>{
 			NGLObject input) {
 		exp.atomicTransfertMethods
 			.stream()
+			.filter(atm -> atm.outputContainerUseds != null)
 			.map(atm -> atm.outputContainerUseds)
 			.flatMap(List::stream)
 			.map(ocu -> ocu.contents)
@@ -106,11 +108,12 @@ public class ExperimentUpdate extends AbstractUpdate<Experiment>{
 			NGLObject input) {
 		exp.atomicTransfertMethods
 			.stream()
+			.filter(atm -> atm.outputContainerUseds != null)			
 			.map(atm -> atm.outputContainerUseds)
 			.flatMap(List::stream)
 			.map(ocu -> ocu.experimentProperties.entrySet())
 			.flatMap(Set::stream)
-			.filter(entry -> entry.getKey().equals(input.contentPropertyNameUpdated) && entry.getValue().value.equals(input.currentValue))
+			.filter(entry -> (entry.getKey().equals(input.contentPropertyNameUpdated) && entry.getValue().value.equals(input.currentValue)))
 			.forEach(entry ->{
 				entry.getValue().value = input.newValue;
 			});
