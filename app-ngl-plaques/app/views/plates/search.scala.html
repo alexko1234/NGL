@@ -46,4 +46,31 @@
 		}
 	}
 }
-@searchForm(form)()()
+<div class="row" ng-init="init()"> 
+<div class="col-md-12 col-lg-12" datatable="datatable">
+
+	
+	<div udt-form>
+	<form class="well well-small">
+		<div class="row">
+		@form
+		@columnSearchForm{
+			@formGroup{
+			<div class="btn-toolbar">
+				<button type="submit" title='@Messages("button.search")' data-toggle="tooltip" ng-click="search()" class="btn btn-primary" >
+					<i class="fa fa-search"></i>
+				</button>
+				<button title='@Messages("button.reset")' data-toggle="tooltip" ng-click="reset()"  class="btn btn-default">
+					<i class="fa fa-undo"></i>
+				</button>
+											 	
+			</div>	
+			}	
+			
+		}
+		</div>
+	</form>	
+	</div>
+
+</div>
+</div>
