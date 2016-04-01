@@ -39,7 +39,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		// FDS 29/01/2016 JIRA NGL-894 (couple d'instruments...)
 		l.add(newInstrumentCategory("Covaris + Robot pipetage","covaris-and-liquid-handling-robot"));
 		
-		// FDS 22/03/2016 JIRA NGL-982
+		// FDS 22/03/2016 JIRA NGL-982 (couple d'instruments...)
 		l.add(newInstrumentCategory("Robot pipetage + cBot","liquid-handling-robot-and-cBot"));
 		
 		l.add(newInstrumentCategory("Quantification par fluorométrie","fluorometer"));
@@ -134,7 +134,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		// pas de properties ????
 		l.add(newInstrumentUsedType("LabChip GX", "labChipGX", InstrumentCategory.find.findByCode("chip-electrophoresis"), null, 
 				getInstruments(
-						createInstrument("labGX", "Lab_GX", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))  ) ,
+						createInstrument("labGX", "Lab_GX", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))) ,
 				getContainerSupportCategories(new String[]{"384-well-plate","96-well-plate"}),null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
@@ -145,8 +145,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 						createInstrument("thermo1", "Thermo1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)), 
 						createInstrument("thermo2", "Thermo2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)), 
 						createInstrument("thermo3", "Thermo3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("thermo4", "Thermo4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)) 
-						), 
+						createInstrument("thermo4", "Thermo4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
@@ -154,41 +153,38 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		/** covaris **/
 		l.add(newInstrumentUsedType("Covaris E210", "covaris-e210", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 
 				getInstruments(
-						createInstrument("cov1", "Cov1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)) 
-						) , 
+						createInstrument("cov1", "Cov1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));	
 		
 		l.add(newInstrumentUsedType("Covaris LE220", "covaris-le220", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 
 				getInstruments(
-						createInstrument("cov2", "Cov2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)) ) , 
+						createInstrument("cov2", "Cov2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG))); //ok	
 
 		
 		/** quality **/
-		l.add(newInstrumentUsedType("qPCR (Lightcycler 480 II)", "qpcr-lightcycler-480II", InstrumentCategory.find.findByCode("qPCR-system"), null, 
+		l.add(newInstrumentUsedType("qPCR (Lightcycler 480 II)", "qpcr-lightcycler-480II", InstrumentCategory.find.findByCode("qPCR-system"), getLightCyclerProperties(), 
 				getInstruments(
 						createInstrument("lightCycler1", "LightCycler1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
-						createInstrument("lightCycler2", "LightCycler2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))
-						),
+						createInstrument("lightCyclerYYY", "LightCyclerYYY", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
+						createInstrument("lightCycler2", "LightCycler2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"tube","96-well-plate"}), null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 			
 		l.add(newInstrumentUsedType("QuBit", "qubit", InstrumentCategory.find.findByCode("fluorometer"), getQuBitProperties(), 
 				getInstruments(
-						createInstrument("quBit1", "QuBit1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))
-						), 
+						createInstrument("quBit1", "QuBit1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))), 
 				getContainerSupportCategories(new String[]{"tube"}),null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		
-		/** FDS ajout liquid-handling-robot  **/
+		/** liquid-handling-robot  **/
 		l.add(newInstrumentUsedType("Janus", "janus", InstrumentCategory.find.findByCode("liquid-handling-robot"), getJanusProperties(), 
 				getInstruments(
-						createInstrument("janus", "Janus", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))
-						),
+						createInstrument("janus", "Janus", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
 				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"96-well-plate" }), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
@@ -419,6 +415,21 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		
 		return l;
 	}
+	 
+	//FDS 31/03/2016 ajout proprietes LightCyclers
+	private static List<PropertyDefinition> getLightCyclerProperties() throws DAOException {
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		
+		// secteur de la plaque 96 initiale utilisee: 0 ou 1
+		l.add(newPropertiesDefinition("Secteur Plaque 96","sector96", LevelService.getLevels(Level.CODE.Instrument),String.class, true, null,
+				newValues(new String[]{"1-48","49-96"}, new String[]{"0","1"}), null, null , null, "single", null, false ,null, null));
+		
+		//TEST!!!!!!!!!!!!!!!
+		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
+				 newValues("sector A","sector B"), null, null , null, "single", null, false ,null, null));
+		
+		return l;
+	}
 	
 	/*** get lists methods ***/
 	private static List<Instrument> getInstrumentMiSeq() throws DAOException {
@@ -477,5 +488,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		instruments.add( createInstrument("HISEQ11", "HISEQ11", null, true, "/env/ig/atelier/illumina/cng/HISEQ11/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		return instruments;
 	}
+	
+
 
 }

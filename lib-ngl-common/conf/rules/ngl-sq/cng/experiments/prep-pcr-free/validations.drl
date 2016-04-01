@@ -1,17 +1,17 @@
 package rules
 
 /*
-rule "Debug prep-pcr-free"
-	@nglSQ( validations )
+rule "DEBUG prep-pcr-free"
+    @nglSQ( validations )
 	dialect "java"
-	salience 1000
+	salience 100
 	no-loop
     when
-		$experiment:Experiment($typeCode:typeCode,$typeCode=="prep-pcr-free")
-    	eval(true)
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="prep-pcr-free")
+    	$contextValidation:ContextValidation()
+    	eval (true )
     then
-		Logger.debug("@nglSQ(validations) prep-pcr-free");    
-		$contextValidation.addErrors("inputContainerSupportCodes","error.validationexp.oneInputSupport", $typeCode);
+		$contextValidation.addErrors("prep-pcr-free","DEBUG error");
 end
 */
 
@@ -35,16 +35,38 @@ rule "Volume not null in prep-pcr-free outputContainer"
    		$contextValidation.addErrors("prep-pcr-free","error.validationexp.outputvolumenotnull", $outputContainerUsed.code);
 end
 
-// test 23/03/2016 une seul containerSupport dans l'experience
-rule "only one inputssupport prep-pcr-free"
+
+// 29/03/2016  il faut une decalaration initale  et une regle intermediaire  "only one inputsupport prep-pcr-free" !!!
+declare InputSupport
+	code : String
+	categoryCode : String
+end
+
+rule "init inputsupport prep-pcr-free"
+	@nglSQ( validations )
+	dialect "java"
+	salience 500
+	no-loop
+    when
+		Experiment($typeCode:typeCode, $typeCode=="prep-pcr-free", $atomics:atomicTransfertMethods, $atomics!=null)
+		AtomicTransfertMethod($inputContainerUseds:inputContainerUseds) from $atomics
+    	InputContainerUsed($support:locationOnContainerSupport.code, $categoryCode:locationOnContainerSupport.categoryCode) from $inputContainerUseds
+		not InputSupport($support==code)
+    then
+		Logger.debug("Support "+$support +" de category "+$categoryCode);
+		InputSupport inputSupport=new InputSupport($support,$categoryCode);
+		insert(inputSupport);
+end
+
+rule "only one inputsupport prep-pcr-free"
 	@nglSQ (validations )
 	dialect "java"
 	salience 400
 	no-loop
     when
-   		 Experiment($typeCode:typeCode,$typeCode=="prep-pcr-free")
+   		 Experiment($typeCode:typeCode, $typeCode=="prep-pcr-free")
    		 // necessaire ??? State($stateCode:code=="N")
-   		 Set(empty==false,size!=1) from collect(InputSupport())
+   		 Set(empty==false,size>1) from collect(InputSupport())
    		 $contextValidation:ContextValidation($errors : errors)
     then 
     	Logger.debug("only one input Support in prep-pcr-free"); 

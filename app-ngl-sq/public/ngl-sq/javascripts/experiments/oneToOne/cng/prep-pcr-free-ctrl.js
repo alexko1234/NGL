@@ -204,7 +204,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			"hide":{
 				"active":true
 			},
-			edit:{
+			"edit":{ // editable si mode=Finished ????
 				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
 				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
 				columnMode:true

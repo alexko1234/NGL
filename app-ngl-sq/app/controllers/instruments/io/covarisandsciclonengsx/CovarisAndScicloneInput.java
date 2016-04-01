@@ -142,7 +142,8 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 					
 					///PropertySingleValue tag = getPSV(ocu, "tag");
 					PropertySingleValue tagPsv = new PropertySingleValue();
-					tagPsv.value = results.get(icupos).name;
+					// !!! ce n'est pas le nom d l'index qu'il faut rammener mais son code !!!, le nom est ensuite correctement affiché par un transcodage...
+					tagPsv.value = results.get(icupos).code;
 					ocu.experimentProperties.put("tag", tagPsv);
 					
 					//PropertySingleValue tagCategory = getPSV(ocu, "tagCategory");

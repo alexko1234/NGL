@@ -32,6 +32,8 @@ rule "InputVolume in lib-normalization inputContainer"
 		// cas 0 OK et cas pas de valeur OK ( volontairement ou avec valeur non numerique)
 	    eval ( $outputVolume.value != null && convertPVToDouble($outputVolume) != 0 )
         eval ( $outputConcentration.value != null && convertPVToDouble($outputConcentration) != 0 )
+        
+        //ne pas calculer le volume engage si l'utisateur saisi qq chose.. TODO ???? Voir avec Julie
    then
    		// -1- calcul volume engagé
         Logger.debug("-1- InputVolume calculation");
@@ -46,7 +48,7 @@ rule "InputVolume in lib-normalization inputContainer"
         Logger.debug("inputVolume="+ engVolume );
         
         //verifier que le volume engagé est réalisable: vol engagé <= vol input
-        // NON ce n'est pas ici qu'il faut controler
+        // NON ce n'est pas ici qu'il faut controler dit Guillaume
 		///if ( engVolume <= Double.parseDouble($inputVolume.getValue().toString()) ){
          
            PropertySingleValue psvEngVolume = new PropertySingleValue(engVolume, "\u00B5L");

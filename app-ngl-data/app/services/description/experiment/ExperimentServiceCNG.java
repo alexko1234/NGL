@@ -103,11 +103,12 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				getInstrumentUsedTypes("cBot", "cBot-onboard"),"ManyToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		//FDS ajout 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered, attention pas cBot-onboard                                
+		//FDS ajout 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered, attention pas cBot-onboard
+		//FDS modif 29/03/2016 -- JIRA NGL-893: ajout instrument janus-and-cBot
 		l.add(newExperimentType("Prép. flowcell ordonnée","prepa-fc-ordered",null,1300,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), 
 				getPropertyDefinitionsPrepaflowcellOrderedCNG(),
-				getInstrumentUsedTypes("cBot"),"ManyToOne", 
+				getInstrumentUsedTypes("cBot","janus-and-cBot"),"ManyToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
 		//FDS 28/10/2015  ajout "HISEQ4000","HISEQX"
@@ -185,7 +186,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 
 	
 	public void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
-		//NOTE FDS: les nodes qui apparaissent en previous doivent etre crees avant...
+		//NOTE FDS: les nodes qui apparaissent en previous doivent etre crees avant sinon==>message : experimentTypeNode is mandatory
 
 		newExperimentTypeNode("ext-to-prepa-flowcell", getExperimentTypes("ext-to-prepa-flowcell").get(0), 
 				false, false, false, 
@@ -210,20 +211,19 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					false,false,false,
 					null, null, null, null
 					).save();
-			
+				
 			//FDS ajout 01/02/2016 -- JIRA NGL-894: processus et experiments pour X5
 			newExperimentTypeNode("prep-pcr-free",getExperimentTypes("prep-pcr-free").get(0),
 					false,false,false,
 					getExperimentTypeNodes("ext-to-x5-wg-pcr-free"),null,getExperimentTypes("qpcr-quantification"), null  
 					).save();
-			
+
 			//FDS modification 09/11/2016 -- JIRA NGL-894: processus et experiments pour X5; ajout "prep-pcr-free" dans les previous
 			newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), 
 					false, false, false, 
 					getExperimentTypeNodes("prep-pcr-free"), null, null, getExperimentTypes("aliquoting")
 					).save();
-			
-			
+
 		}else{
 			
 			newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), 
@@ -383,9 +383,10 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	
 		//OuputContainer
 		// GA 08/02/2016 =>  ces proprietes de containerOut doivent etre propagees au content
-		// GA 14/03/2016 => il faut specifié l'état auquel les propriétés sont obligatoire: ici Finished (F)
+		// GA 14/03/2016 => il faut specifier l'état auquel les propriétés sont obligatoires: ici Finished (F)
+
 		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagIllumina(), 
-				"single", 30, true, null,null));	
+				"single", 30, true, null,null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, "F", getTagCategories(), 
 				"single", 31, true, null,null));		

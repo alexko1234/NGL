@@ -439,6 +439,7 @@ experiments.msg.import.position.outofbonds = ligne {0}: La position ''{1}'' ne c
 experiments.msg.import.position.duplicate = ligne {0}: La position ''{1}'' est dupliquée; 
 experiments.msg.import.tag.missing = Pas de Tag pour la position ''{0}''
 experiments.msg.import.tag.notexist = ligne {0}: Le tag ''{1}'' n''existe pas
+experiments.msg.import.linefields.unexpected = ligne {0}: Nombre de champs incorrect
 
 io.error.instance.notexist = La classe ''{0}'' n''existe pas 
 io.error.resultat.notexist = ''{0}'' n''existe pas

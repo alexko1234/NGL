@@ -90,8 +90,8 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 					 	"render":"<div list-resize='cellValue | unique' list-resize-min-size='3'>",
 					    "extraHeaders":{0:inputExtraHeaders}
 					 },
-					 { //Concentration
-			        	 "header":Messages("containers.table.concentration") + " (ng/µL)", 
+					 { //Concentration !!! en entree on a nM et pas (ng/µL)
+			        	 "header":Messages("containers.table.concentration") + " (nM)", 
 			        	 "property":"inputContainer.concentration.value",  
 			        	 "order":true,
 						 "hide":true,
@@ -220,9 +220,9 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 			hide:{
 				active:true
 			},
-			edit:{
-				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
-				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+			edit:{ // editable si mode=Finished ??
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
+				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
 				byDefault:($scope.isCreationMode()),
 				columnMode:true
 			},

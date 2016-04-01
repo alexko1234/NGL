@@ -83,9 +83,12 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		
 			// FDS ajout 27/01/2016 -- JIRA NGL-894: nouveau processus pour X5
+			// FDS  29/03/2016 apres merge manquait a nouveau prepa-fc-ordered dans la liste des Experiment types!! 
+			// FDS TEST   ajouter qpcr-quantification ?????
+			
 			l.add(DescriptionFactory.newProcessType("X5_WG PCR free", "x5-wg-pcr-free", ProcessCategory.find.findByCode("library"),
 					getPropertyDefinitionsX5WgPcrFree(),
-					Arrays.asList(getPET("ext-to-x5-wg-pcr-free",-1),getPET("prep-pcr-free",0),getPET("lib-normalization",1),getPET("illumina-depot",2) ), //ordered list of experiment type in process type
+					Arrays.asList(getPET("ext-to-x5-wg-pcr-free",-1),getPET("prep-pcr-free",0),getPET("qpcr-quantification",0),getPET("lib-normalization",1), getPET("prepa-fc-ordered",2), getPET("illumina-depot",3) ), //ordered list of experiment type in process type
 					getExperimentTypes("prep-pcr-free").get(0),        //first experiment type
 					getExperimentTypes("illumina-depot").get(0),       //last experiment type
 					getExperimentTypes("ext-to-x5-wg-pcr-free").get(0), //void experiment type
