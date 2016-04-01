@@ -337,23 +337,15 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
              * Set all data used by search method or directly when local data
              */
             setData: function(data, recordsNumber) {
-/*
-            	var that = this;
-				this.setSpinner(true);
-    			$timeout(function(){that._setData(data, recordsNumber)}).then(function(){
-    				that.computeDisplayResultTimeOut.then(function(){
-    					that.setSpinner(false);  		    			
-					});									    							
-    			});
-*/
-		this._setData(data, recordsNumber);
+            	this.config.edit = angular.copy(this.configMaster.edit);
+                this.config.remove = angular.copy(this.configMaster.remove);
+                this.config.select = angular.copy(this.configMaster.select);
+                this.config.messages = angular.copy(this.configMaster.messages);
+                this.config.pagination.pageNumber = 0;
+                this._setData(data, recordsNumber);
             },
             
-            /**
-             * Set all data used by search method or directly when local data
-             */
             _setData: function(data, recordsNumber) {
-            	
             	var configPagination = this.config.pagination;
                 if (configPagination.active && !this.isRemoteMode(configPagination.mode)) {
                     this.config.pagination.pageNumber = 0;
@@ -2643,7 +2635,7 @@ directive("udtCell", function(){
 	    				var ngChange = '"';
 	    				var defaultValueDirective = "";
     			    	if(header){
-    			    		ngChange = '" ng-change="udtTable.updateColumn(col.property, col.id)"';
+    			    		ngChange = '" udt-change="udtTable.updateColumn(col.property, col.id)"';
 						}else if(filter){
 							ngChange = '" udt-change="udtTable.searchLocal(udtTable.searchTerms)"';
     			    	}else{
@@ -2657,8 +2649,9 @@ directive("udtCell", function(){
 								userDirectives = userDirectives();
 							}
 						}
-
-	    				if(col.type === "boolean"){
+						if(col.editTemplate){
+							editElement = col.editTemplate.replace("#ng-model", 'ng-model="'+this.getEditProperty(col, header, filter)+ngChange);														
+						}else if(col.type === "boolean"){
 	    					editElement = '<input class="form-control"' +defaultValueDirective+'type="checkbox" class="input-small" ng-model="'+this.getEditProperty(col, header, filter)+ngChange+'/>';	    					
 	    				}else if(col.type === "img"){
 	    					
@@ -2897,6 +2890,7 @@ directive("udtCell", function(){
     	});;angular.module('ultimateDataTableServices').
 directive('udtChange', ['$interval', function($interval) {
 	return {
+		/*
 		require: 'ngModel',
 		link: function(scope, element, attrs, ngModel) {
 			scope.oldValue = undefined;
@@ -2921,6 +2915,20 @@ directive('udtChange', ['$interval', function($interval) {
 				}
 			}, 10);
 		}
+	*/
+	  require: 'ngModel',
+	  link: function(scope, element, attr, ctrl) {
+		/*  
+	    ctrl.$viewChangeListeners.push(function() {
+	      scope.$eval(attr.udtChange);
+	    });
+	    */
+		  scope.$watch(attr.ngModel, function(newValue, oldValue){
+				if(newValue !== oldValue){
+					scope.$eval(attr.udtChange);
+				}
+			}); 
+	  }
 	};	    	
 }]);;angular.module('ultimateDataTableServices').
 directive('udtCompile', function($compile) {

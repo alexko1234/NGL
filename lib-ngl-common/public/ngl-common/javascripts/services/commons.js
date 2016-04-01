@@ -279,7 +279,13 @@ angular.module('commonsServices', []).
     			clear : function(key){results[key] = undefined;},
     			getResolutions : function(){return results['resolutions'];},
     			getValuationCriterias : function(){return results['valuationCriterias'];},
-    			getProjects : function(){return results['projects'];},
+    			getProjects : function(params,key){
+    				key = (key)?key:'projects';
+    				if(results[key] === undefined){
+    					refresh.projects(params, key);
+    				}
+    				return results[key];
+    			},
     			getContainerSupportCategories : function(){return results['containerSupportCategories'];},
     			getProcesses : function(){return results['processes'];},
     			getProcessCategories : function(){return results['processCategories'];},

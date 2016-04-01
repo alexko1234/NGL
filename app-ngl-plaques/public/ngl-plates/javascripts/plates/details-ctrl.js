@@ -74,39 +74,52 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 							header: Messages("plates.table.well.yx"),
 					    	type :"String",
 					    	edit:false,
-					    	hide:true
+					    	hide:true,
+					    	order:true
 						},
 						{  	property:"name",
 					    	header: Messages("plates.table.well.name"),
 					    	type :"String",
-					    	hide:true
+					    	hide:true,
+					    	order:true
 						},
 						{  	property:"code",
 					    	header: Messages("plates.table.well.code"),					    	
 					    	type :"String",
-					    	hide:true
+					    	hide:true,
+					    	order:true
 						},
 						{  	property:"typeName",
 					    	header: Messages("plates.table.typeName"),
 					    	type :"String",
-					    	hide:true
+					    	hide:true,
+					    	order:true
+						},
+						{  	property:"name.substring(0, name.indexOf('O',0))",
+					    	header: Messages("plates.table.materialName"),					    	
+					    	type :"String",
+					    	hide:true,
+					    	order:true
 						},
 						{  	property:"typeMaterial",
-					    	header: Messages("plates.table.typeMaterial"),
+					    	header: Messages("plates.table.materialType"),
 					    	type :"String",
-					    	hide:true
+					    	hide:true,
+					    	order:true
 						},
-						{  	property:"x",
+						{  	property:"x*1",
 					    	header: Messages("plates.table.well.x"),
 					    	type :"String",
 					    	edit:true,
-					    	hide:true
+					    	hide:true,
+					    	order:true
 						}, 
 						{  	property:"y",
 					    	header: Messages("plates.table.well.y"),
 					    	type :"String",
 					    	edit:true,
-					    	hide:true
+					    	hide:true,
+					    	order:true
 						}
 					]
 		};

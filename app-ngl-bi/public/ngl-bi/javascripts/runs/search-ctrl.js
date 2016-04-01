@@ -1,7 +1,7 @@
 "use strict";
 
-angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'mainService', 'tabService', 'runSearchService', 
-                                                 function($scope, $routeParams, mainService, tabService, runSearchService) {
+angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'mainService', 'tabService', 'runSearchService', 'valuationService', 
+                                                 function($scope, $routeParams, mainService, tabService, runSearchService, valuationService) {
 	var datatableConfig = {
 			order :{mode:'local', by:'sequencingStartDate', reverse:true},
 			search:{
@@ -39,7 +39,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$routeParams', 'main
 	
 	$scope.searchService = runSearchService;	
 	$scope.searchService.init($routeParams, datatableConfig)
-	
+	$scope.valuationService = valuationService();
 	
 	if($scope.searchService.isRouteParam){
 		$scope.search();

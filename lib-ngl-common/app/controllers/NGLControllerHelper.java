@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.PropertyDefinition;
@@ -17,6 +19,18 @@ import play.Logger;
 import validation.utils.ValidationHelper;
 
 public class NGLControllerHelper {
+	
+	public static Query generateQueriesForProperties(Map<String, List<String>> properties,
+			Level.CODE level, 
+			List<String> prefixPropertyPath) {
+		
+		List<Query> queryElts = prefixPropertyPath.stream()
+				.map(prefix -> generateQueriesForProperties(properties, level, prefix))
+				.flatMap(List::stream)
+				.collect(Collectors.toList());
+		
+		return DBQuery.or(queryElts.toArray(new DBQuery.Query[queryElts.size()]));
+	}
 	
 	public static List<Query> generateQueriesForProperties(Map<String, List<String>> properties,
 			Level.CODE level, 

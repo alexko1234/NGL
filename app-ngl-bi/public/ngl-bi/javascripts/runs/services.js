@@ -113,7 +113,7 @@
 							this.form.stateCodes = ["IW-V","IP-V"];
 						}		
 					}
-					this.form.excludes =  ["treatments","lanes"];				
+					this.form.excludes =  ["lanes"];				
 				},
 				convertForm : function(){
 					var _form = angular.copy(this.form);
