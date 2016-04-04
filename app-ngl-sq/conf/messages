@@ -69,9 +69,9 @@ containers.menu.search = Rechercher
 containers.tabs.search = Recherche Container
 containers.tabs.state = Changement d''Etat Container
 
+#Containers tabs
 containers.tabs.general = Général
-containers.tabs.advanced = Avancé
-containers.tabs.treelife = Arbre de Vie
+containers.tabs.treeoflife = Arbre de Vie
 
 #Containers table
 containers.table.code = Code Container
@@ -121,14 +121,17 @@ containers.table.concentration.unit=Unité Concentration
 containers.table.concentration.value=Concentration Container
 containers.table.libProcessType = Type processus Banque (code)	
 
-containers.table.size = Taille (pb)
-
+containers.table.treeOfLife = Arbre de vie
+containers.table.quantity = Quantité
+containers.table.concentration= Concentration
+containers.table.properties = Autres Propriétés
 
 containers.table.iryschip.sampleCodes= Echantillon
 containers.table.irysprep.concentration=Concentration Moyenne
 containers.table.nlrsConcentration= Concentration arrondie (ng/µl)
 containers.table.valuation.valid = Valide
 containers.table.valuationqc.valid = Valide ? (QC courant)
+
 
 containers.placeholder.fromDate = Container depuis le (jj/mm/aaaa)
 containers.placeholder.toDate = Container jusqu''au (jj/mm/aaaa)

@@ -2,23 +2,12 @@
 @import play.mvc.Http.Context
 @import controllers.authorisation.PermissionHelper
 
-<!-- ----------------------------------------------------------------------------- -->
-<!-- Modal to display image in full size -->
-	<div id="myImageModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		
-	</div>
-
-<!-- -------------------------------------------------------------------------------- -->
 
 <div class="row">
 	<div cmass="col-md-12 col-lg-12">
 		<div class="page-header">
 			<div class="btn-toolbar pull-right">
-				@if(PermissionHelper.checkPermission(Context.current().request().username(), "writing")){
-					<button class="btn btn-default" ng-if="isEditMode()" ng-click="save()" data-toggle="tooltip" title="@Messages("button.validate")"><i class="fa fa-save"></i> @Messages("button.validate")</button>
-					<button class="btn btn-default" ng-if="isEditMode()" ng-click="cancel()" data-toggle="tooltip" title="@Messages("button.cancel")"><i class="fa fa-undo"></i> @Messages("button.cancel")</button>
-					<button class="btn btn-default" ng-if="!isEditMode()" ng-click="activeEditMode()" data-toggle="tooltip" title="@Messages("button.edit")"><i class="fa fa-edit"></i> @Messages("button.edit")</button>
-				}
+					
 				<button class="btn btn-default" ng-click="activePrintMode(container.code)" title="@Messages("button.printMode")" data-toggle="tooltip"><i class="fa fa-print"></i> @Messages("button.printMode")</button>
 			</div>
 			@partials.details_header()
@@ -26,26 +15,19 @@
 	</div>
 </div>
 
-<div class="row">
-	<div class="col-md-12 col-lg-12" messages="messages"></div>
-</div>
-
 <div class="row margin-bottom-7">
 	<div class="col-md-12 col-lg-12">
 		<ul class="nav nav-tabs margin-bottom-5">
-			<li ng-class="getActiveTabClass('general')"><a href="#" data-target="#general" data-toggle="tab" ng-click="setActiveTab('general')">@Messages("containers.tabs.general")</a></li>
-			<li ng-class="getActiveTabClass('advanced')"><a href="#" data-target="#advanced" data-toggle="tab" ng-click="setActiveTab('advanced')">@Messages("containers.tabs.advanced")</a></li>
-			<li ng-class="getActiveTabClass('treelife')"><a href="#" data-target="#treelife" data-toggle="tab" ng-click="setActiveTab('treelife')">@Messages("containers.tabs.treelife")</a></li>
+			<li ng-class="getTabClass('general')"><a href="#" data-target="#general" data-toggle="tab" ng-click="setActiveTab('general')">@Messages("containers.tabs.general")</a></li>
+			<li ng-if="container.treeOfLife.paths.length >= 1" ng-class="getTabClass('treeoflife')"><a href="#" data-target="#treeoflife" data-toggle="tab" ng-click="setActiveTab('treeoflife')">@Messages("containers.tabs.treeoflife")</a></li>
 		</ul>
 		<div class="tab-content">
-			<div class="tab pane {{getActiveTabClass('general')}}" id="general">
+			<div class="tab-pane {{getTabClass('general')}}" id="general">
 				@partials.details_general()
-			</div>
-			<div class="tab pane {{getActiveTabClass('advanced')}}" id="advanced">
-				
-			</div>
-			<div class="tab pane {{getActiveTabClass('treelife')}}" id="treelife">
-				
+			</div>	
+			<div class="tab-pane {{getTabClass('treeoflife')}}" id="treeoflife">
+				@partials.details_treeoflife()	
+						
 			</div>
 		</div>
 	</div>

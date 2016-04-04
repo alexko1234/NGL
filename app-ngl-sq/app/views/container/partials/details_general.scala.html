@@ -1,4 +1,5 @@
 @()
+@import views.html.helper._
 
 @column()(value: Html) = {
 	<div class="col-md-4 col-lg-4 col-xs-4">
@@ -8,78 +9,132 @@
 
 <form class="form-horizontal">
 	<div class="row">
-	@column(){
-		@views.html.helper.columnLabelValue(Messages("containers.table.taraStation")){
-		}
-		@views.html.helper.columnLabelValue(Messages("containers.table.depth")){
-		}
-		@views.html.helper.columnLabelValue(Messages("containers.table.porosity")){
-		}
-		@views.html.helper.columnLabelValue(Messages("containers.table.iteration")){
-		}
-		@views.html.helper.columnLabelValue(Messages("containers.table.supportCode")){
-		}
-		@views.html.helper.columnLabelValue(Messages("containers.table.support.categoryCode")){
-		}
-		@views.html.helper.columnLabelValue(Messages("containers.table.support.line")){
-		}
-		@views.html.helper.columnLabelValue(Messages("containers.table.support.column")){
-		}
-		@views.html.helper.columnLabelValue(Messages("containers.table.code")){
-		}
-		@views.html.helper.columnLabelValue(Messages("containers.table.projectCodes")){
-		}
-		@views.html.helper.columnLabelValue(Messages("containers.table.sampleCodes.length")){
-		}
-		@views.html.helper.columnLabelValue(Messages("containers.table.sampleCodes")){
-		}
-	}
-	@column(){
-		@views.html.helper.columnLabelValue(Messages("containers.table.sampleTypes")){
-		}
-		@views.html.helper.columnLabelValue("Taille echantillon(bases)"){
-		}
-		@views.html.helper.columnLabelValue(Messages("containers.table.libProcessType")){
+		@column(){
+			@columnLabelValue(Messages("containers.table.code")){
+				<p class="form-control-static" ng-bind="container.code" />
+			}
+			@columnLabelValue(Messages("containers.table.valid")){
+				<p class="form-control-static" ng-bind="container.valuation.valid|codes:'valuation'" />				
+			}
+			@columnLabelValue(Messages("containers.table.support.categoryCode")){
+				<p class="form-control-static" ng-bind="container.support.categoryCode|codes:'container_support_cat'" />
+			}
+			
+			@columnLabelValue(Messages("containers.table.state.code")){
+				<p class="form-control-static" ng-bind="container.state.code|codes:'state'" />	
+			}
+			@columnLabelValue(Messages("containers.table.fromTransformationTypeCodes")){
+				<div class="col-md-6 col-lg-6">
+					<div class="form-control-static" list-resize="container.fromTransformationTypeCodes|unique|codes:'type'" list-resize-min-size='3' />
+				</div>
+			}
+			@columnLabelValue(Messages("containers.table.projectCodes")){
+				<div class="col-md-6 col-lg-6">
+					<div class="form-control-static" list-resize='container.projectCodes' list-resize-min-size='2' />
+				</div>
+			}
+			@columnLabelValue(Messages("containers.table.sampleCodes")){
+				<div class="col-md-6 col-lg-6">
+					<div class="form-control-static" list-resize='container.sampleCodes' list-resize-min-size='2' horizontal/>
+				</div>
+			}
 		}
 		
-		@views.html.helper.columnLabelValue(Messages("containers.table.contents.length")){
+		@column(){				
+			@columnLabelValue(Messages("containers.table.concentration")){
+				<p class="form-control-static">
+					<span ng-bind="container.concentration.value.toFixed(3)" />
+					 <span ng-if="container.concentration.value !== undefined && container.concentration.value !== null" ng-bind="container.concentration.unit" />
+				</p>
+			}
+			@columnLabelValue(Messages("containers.table.volume")){
+				<p class="form-control-static">
+					<span ng-bind="container.volume.value" />
+					 <span ng-if="container.volume.value !== undefined && container.volume.value !== null" ng-bind="container.volume.unit" />
+				</p>
+			}
+			@columnLabelValue(Messages("containers.table.quantity")){
+				<p class="form-control-static">
+					<span ng-bind="container.quantity.value" />
+					 <span ng-if="container.quantity.value !== undefined && container.quantity.value !== null" ng-bind="container.quantity.unit" />
+				</p>
+			}		
+			@columnLabelValue(Messages("containers.table.sampleCodes.length")){
+				<p class="form-control-static" ng-bind="container.sampleCodes.length" />
+			}	
+			@columnLabelValue(Messages("containers.table.contents.length")){
+				<p class="form-control-static" ng-bind="container.contents.length" />
+			}
+			
 		}
-		@views.html.helper.columnLabelValue(Messages("containers.table.tags")){
+		
+		@column(){	
+			
+			<div class="form-group">
+				<label class="col-md-6 col-lg-6 control-label">@Messages("containers.table.supportCode")</label>
+				<div class="col-md-6 col-lg-6 form-control-static">
+					<span class="col-md-4 col-lg-4" ng-bind="container.support.code" />
+					<label>/ @Messages("containers.table.support.line")</label> <span ng-bind="container.support.line" />
+					<label>/ @Messages("containers.table.support.column")</label> <span ng-bind="container.support.column" />
+				</div>
+			</div>
+			
+			@columnLabelValue(Messages("containers.table.storageCode")){
+				<p class="form-control-static" ng-bind="container.support.storageCode" />
+			}	
+			
+			@columnLabelValue(Messages("containers.table.creationDate")){
+				<p class="form-control-static" ng-bind="container.traceInformation.creationDate|date:'@Messages("date.format")'" />
+			}
+			@columnLabelValue(Messages("containers.table.createUser")){
+				<p class="form-control-static" ng-bind="container.traceInformation.createUser" />
+			}		
+
 		}
-		@views.html.helper.columnLabelValue(Messages("containers.table.tagCategory")){
-		}
-		@views.html.helper.columnLabelValue(Messages("containers.table.fromTransformationTypeCodes")){
-		}
-		@views.html.helper.columnLabelValue(Messages("containers.table.concentration.value")){
-		}
-		@views.html.helper.columnLabelValue(Messages("containers.table.concentration.unit")){
-		}
-		@views.html.helper.columnLabelValue(Messages("containers.table.size")){
-		}
-	}
-	@column(){
-		@views.html.helper.columnLabelValue(Messages("containers.table.volume")){
-		}
-		@views.html.helper.columnLabelValue(Messages("containers.table.stateCode")){
-		}
-		@views.html.helper.columnLabelValue(Messages("containers.table.valid")){
-		}
-		@views.html.helper.columnLabelValue(Messages("containers.table.creationDate")){
-		}
-		@views.html.helper.columnLabelValue(Messages("containers.table.createUser")){
-		}
-		@views.html.helper.columnLabelValue(Messages("containers.table.storageCode")){
-		}
-		@views.html.helper.columnLabelValue(Messages("containers.table.processCode")){
-		}
-		@views.html.helper.columnLabelValue(Messages("")){
-		}
-		@views.html.helper.columnLabelValue(Messages("")){
-		}
-		@views.html.helper.columnLabelValue(Messages("")){
-		}
-		@views.html.helper.columnLabelValue(Messages("")){
-		}
-	}
 	</div>
+	
+	<div class="row" ng-if='container.comments'>
+		<div class="col-md-12 col-lg-12">
+			<div ng-repeat="object in container.comments">
+			<div ng-repeat="(key, value) in object">
+				<label class="col-md-6 col-lg-6 control-label" ng-if="value.unit !== null">{{key}} ({{value.unit}})</label>
+				<label class="col-md-6 col-lg-6 control-label" ng-if="value.unit === null" ng-bind="key" />
+				<div class="col-md-6 col-lg-6"><p class="form-control-static" ng-bind="value[key].value" /></div>
+			</div>
+			</div>
+		</div>
+	</div>
+		
+
+	<div class="row">
+		<div class="col-md-12 col-lg-12">
+			<table class="table table-condensed table-striped table-hover table-bordered">
+				<thead>
+					<tr>
+						<th>@Messages("containers.table.sampleCodes")</th>
+						<th>@Messages("containers.table.projectCodes")</th>
+						<th>@Messages("containers.table.sampleTypes")</th>
+						<th>@Messages("containers.table.percentageInsidePool")</th>
+						<th>@Messages("containers.table.properties")</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="content in container.contents|orderBy:'sampleCode'">
+						<td>{{content.sampleCode}}</td>
+						<td>{{content.projectCode}}</td>
+						<td>{{content.sampleTypeCode}}</td>
+						<td>{{content.percentage}}</td>
+						<td>
+							<div ng-repeat="(key, value) in content.properties">
+								<label class="col-md-6 col-lg-6 control-label" ng-if="value.unit !== null">{{key|codes:'property_definition'}} ({{value.unit}})</label>
+								<label class="col-md-6 col-lg-6 control-label" ng-if="value.unit === null" ng-bind="key|codes:'property_definition'" />
+								<div class="col-md-6 col-lg-6"><p class="form-control-static" ng-bind="value.value" /></div>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>	
+	</div>
+
 </form>
