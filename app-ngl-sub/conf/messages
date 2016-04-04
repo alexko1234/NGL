@@ -103,6 +103,7 @@ sample.taxonId= * Taxon Id
 #EBI label
 sample.commonName=Common Name
 sample.scientificName= * Scientific Name
+sample.anonymisedName=Anonymized Name
 
 #EXPERIMENT
 experiment.code=Code

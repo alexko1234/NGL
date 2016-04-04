@@ -22,6 +22,7 @@ import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 import mail.MailServiceException;
 import models.laboratory.common.instance.State;
+import models.laboratory.run.instance.ReadSet;
 import models.sra.submit.common.instance.Submission;
 import models.sra.submit.common.instance.UserCloneType;
 import models.sra.submit.common.instance.UserExperimentType;
@@ -32,6 +33,7 @@ import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.Form;
 import play.libs.Json;
+import play.mvc.BodyParser;
 import play.mvc.Result;
 import services.FileAcServices;
 import services.SubmissionServices;
@@ -231,8 +233,13 @@ public class Submissions extends DocumentController<Submission>{
 
 
 	// methode appelée  depuis interface submissions.create-ctrl.js (submissions.create.scala.html)
+	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 15000 * 1024)
 	public Result save() throws SraException, IOException {
-
+	
+		if(request().body().isMaxSizeExceeded()){
+			return badRequest("Max size exceeded");
+		}
+		
 		Form<SubmissionsCreationForm> filledForm = getFilledForm(submissionsCreationForm, SubmissionsCreationForm.class);
 		Logger.debug("filledForm "+filledForm);
 		SubmissionsCreationForm submissionsCreationForm = filledForm.get();
@@ -259,14 +266,14 @@ public class Submissions extends DocumentController<Submission>{
 			InputStream inputStreamUserFileExperiments = Tools.decodeBase64(submissionsCreationForm.base64UserFileExperiments);
 			UserExperimentTypeParser userExperimentsParser = new UserExperimentTypeParser();
 			mapUserExperiments = userExperimentsParser.loadMap(inputStreamUserFileExperiments);		
-			for (Iterator<Entry<String, UserExperimentType>> iterator = mapUserExperiments.entrySet().iterator(); iterator.hasNext();) {
+			/*for (Iterator<Entry<String, UserExperimentType>> iterator = mapUserExperiments.entrySet().iterator(); iterator.hasNext();) {
 				Entry<String, UserExperimentType> entry = iterator.next();
 				System.out.println("  cle de exp = '" + entry.getKey() + "'");
 				System.out.println("       nominal_length : '" + entry.getValue().getNominalLength()+  "'");
 				System.out.println("       title : '" + entry.getValue().getTitle()+  "'");
 				System.out.println("       lib_name : '" + entry.getValue().getLibraryName()+  "'");
 				System.out.println("       lib_source : '" + entry.getValue().getLibrarySource()+  "'");
-			}
+			}*/
 			Logger.debug("Read base64UserFileSamples");
 			InputStream inputStreamUserFileSamples = Tools.decodeBase64(submissionsCreationForm.base64UserFileSamples);
 			UserSampleTypeParser userSamplesParser = new UserSampleTypeParser();
@@ -285,8 +292,8 @@ public class Submissions extends DocumentController<Submission>{
 			  System.out.println("cle du userClone = '" + entry.getKey() + "'");
 			  System.out.println("       study_ac : '" + entry.getValue().getStudyAc()+  "'");
 			  System.out.println("       sample_ac : '" + entry.getValue().getSampleAc()+  "'");
-			}*/
-		
+			}
+			*/
 			List<String> readSetCodes = submissionsCreationForm.readSetCodes;
 		
 			//String codeReadSet1 = "BCZ_BGOSW_2_H9M6KADXX.IND15"; 

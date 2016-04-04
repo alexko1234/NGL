@@ -20,7 +20,10 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
 import fr.cea.ig.MongoDBDAO;
+
 import org.apache.commons.lang3.StringUtils;
+
+import play.Logger;
 
 public class XmlServices {
 
@@ -29,16 +32,18 @@ public class XmlServices {
 	public static Submission writeAllXml(String submissionCode) throws IOException, SraException {
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
 		String resultDirectory = submission.submissionDirectory;
+		System.out.println("resultDirectory = " + resultDirectory);
 		return writeAllXml(submissionCode, resultDirectory);
 	}
 	
-	public static void writeAllXml(String submissionCode, String resultDirectory, Boolean release) throws IOException, SraException {
+/*	public static void writeAllXml(String submissionCode, String resultDirectory, Boolean release) throws IOException, SraException {
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
 		writeAllXml(submissionCode, resultDirectory);
 	}
-		
+	*/	
 	public static Submission writeAllXml(String submissionCode, String resultDirectory) throws IOException, SraException {
 		System.out.println("creation des fichiers xml pour l'ensemble de la soumission "+ submissionCode);
+		System.out.println("resultDirectory = " + resultDirectory);
 		// Recuperer l'objet submission:
 		Submission submission = MongoDBDAO.findByCode(InstanceConstants.SRA_SUBMISSION_COLL_NAME, models.sra.submit.common.instance.Submission.class, submissionCode);
 		if (StringUtils.isNotBlank(submission.studyCode)) {	
@@ -52,10 +57,16 @@ public class XmlServices {
 		if (submission.experimentCodes.size() != 0){
 			File experimentFile = new File(resultDirectory + File.separator + VariableSRA.xmlExperiments);
 			writeExperimentXml(submission, experimentFile); 
+		} else {
+			System.out.println("experimentCodes==0 ??????????");
+			Logger.debug("experimentCodes==0 ??????????");
 		}
 		if (submission.runCodes.size() != 0){
 			File runFile = new File(resultDirectory + File.separator + VariableSRA.xmlRuns);
 			writeRunXml(submission, runFile); 
+		} else {
+			System.out.println("runCodes==0 ??????????");
+			Logger.debug("runCodes==0 ??????????");
 		}
 		File submissionFile = new File(resultDirectory + File.separator + VariableSRA.xmlSubmission);
 		writeSubmissionXml(submission, submissionFile);
