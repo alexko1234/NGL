@@ -1,5 +1,5 @@
-angular.module('home').controller('PlateTransfertCtrl',['$scope', '$parse', 'atmToDragNDrop2',
-                                                               function($scope, $parse, atmToDragNDrop) {
+angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter','atmToDragNDrop2',
+                                                               function($scope, $parse, $filter, atmToDragNDrop) {
 	
 	
 
@@ -280,21 +280,11 @@ angular.module('home').controller('PlateTransfertCtrl',['$scope', '$parse', 'atm
 		console.log("call event activeEditMode");
 	});
 	
-	//*****
-	//CODE FROM FLOWCELL
-	//To display sample and tag in one cell
-	$scope.getSampleAndTags = function(container){
-		var sampleCodeAndTags = [];
-		angular.forEach(container.contents, function(content){
-			if(content.properties.tag != undefined && content.sampleCode != undefined){
-				sampleCodeAndTags.push(content.sampleCode+" / "+content.properties.tag.value);
-			}
-		});
-		return sampleCodeAndTags;
-	};
-
-	//END CODE FROM FLOWCELL
-	//*******
+	$scope.inputContainerProperties = $filter('filter')($scope.experimentType.propertiesDefinitions, 'ContainerIn');
+	$scope.outputContainerProperties = $filter('filter')($scope.experimentType.propertiesDefinitions, 'ContainerOut');
+	
+	
+	
 	
 	var atmService = atmToDragNDrop($scope, 0, datatableConfig);
 	

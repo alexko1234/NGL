@@ -3,11 +3,11 @@
 <table class="table" >
 <thead>
 		<tr ng-if="!atmService.data.isAllATMViewClose">
-			<th colspan="10">
+			<th colspan="{{10 + inputContainerProperties.length}}">
 				@Messages("experiments.inputs")
 			</th>
 			
-			<th colspan="2">
+			<th colspan="{{5 + outputContainerProperties.length}}">
 				@Messages("experiments.outputs")
 			</th>												
 		</tr>
@@ -42,11 +42,26 @@
 			<th>
 				@Messages("containers.table.percentageInsidePool")
 			</th>
+			<th ng-repeat="property in inputContainerProperties track by $index">
+				{{property.name}}<span ng-if="property.displayMeasureValue"> ({{property.displayMeasureValue.value}})</span>
+			</th>
 			<th>
 				@Messages("containers.table.code")
 			</th>
 			<th>
+				@Messages("containers.table.concentration")
+			</th>
+			<th>
+				@Messages("containers.table.concentration.unit")
+			</th>
+			<th>
 				@Messages("containers.table.volume") (µL)
+			</th>			
+			<th ng-repeat="property in outputContainerProperties track by $index">
+				{{property.name}}<span ng-if="property.displayMeasureValue"> ({{property.displayMeasureValue.value}})</span>
+			</th>
+			<th>
+				@Messages("containers.table.storageCode")
 			</th>		
 		</tr>
 		<tr ng-if="atmService.data.isAllATMViewClose" colspan="10">
@@ -60,7 +75,7 @@
 	<thead>
 
 
-<tbody ng-repeat="atm in atmService.data.atm | orderBy:'line' track by $index" ng-model="atm.inputContainerUseds" 				
+<tbody ng-repeat="atm in atmService.data.atm | orderBy:'line' track by $index" 	
 	ng-switch="atmService.data.getATMViewMode(atm, $index)">
 	
 	<tr ng-switch-when="empty">
@@ -94,8 +109,7 @@
 		</td>
 	</tr>
 	
-	<tr ng-switch-when="open" ng-repeat="inputContainerUsed in atm.inputContainerUseds | orderBy:'code' track by $index"  
-				ng-model="inputContainerUsed">	
+	<tr ng-switch-when="open" ng-repeat="inputContainerUsed in atm.inputContainerUseds | orderBy:'code' track by $index">	
 			<td rowspan="{{atm.inputContainerUseds.length}}" ng-if="$index === 0">
 				<span class="form-control-static label label-black" ng-bind="$parent.$parent.$index + 1"></span>
 			</td>
@@ -138,25 +152,77 @@
 						<div ng-switch-when="true">
 							<input class="form-control input-sm" 
 								type="text"
-								ng-model="inputContainerUsed.percentage" 
-								title='@Messages("containers.table.percentage")' 
-								ng-change="atmService.data.updateDatatable()"/>									
+								ng-model="inputContainerUsed.percentage"
+								ng-change="update(atm, inputContainerUsed, 'inputContainerUseds['+$index+'].percentage')" 
+								title='@Messages("containers.table.percentage")'
+								udt-html-filter="number" 
+								/>									
 						</div>
 					</div>
 				</td>
-			
-				<td rowspan="{{atmService.data.atm[0].inputContainerUseds.length}}"
-					ng-if="$index === 0">
-					<p class="form-control-static"  ng-bind="atmService.data.atm[0].outputContainerUseds[0].code" />
+				<td ng-repeat="property in inputContainerProperties track by $index">
+						<input class="form-control input-sm" type="text"  
+						ng-model="inputContainerUsed.experimentProperties[property.code].value" 
+						ng-change="update(atm, inputContainerUsed, 'inputContainerUseds['+$parent.$index+'].experimentProperties.'+property.code+'.value')"																		
+						udt-html-filter="number"
+						/>	
 				</td>
-				<td rowspan="{{atmService.data.atm[0].inputContainerUseds.length}}"	ng-if="$index === 0">
+				<td rowspan="{{atm.inputContainerUseds.length}}"
+					ng-if="$index === 0">
+					<p class="form-control-static"  ng-bind="atm.outputContainerUseds[0].code" />
+				</td>
+				<td rowspan="{{atm.inputContainerUseds.length}}" ng-if="$index === 0">
 					<div ng-switch on="mainService.isEditMode()">						
-						<p class="form-control-static" ng-switch-when="false" ng-bind="atmService.data.atm[0].outputContainerUseds[0].volume.value" />						 
+						<p class="form-control-static" ng-switch-when="false" ng-bind="atm.outputContainerUseds[0].concentration.value" />						 
+						<div ng-switch-when="true">
+							<input class="form-control input-sm" type="text" title="Messages("containers.table.concentration")"									
+							ng-model="atm.outputContainerUseds[0].concentration.value"
+							ng-change="update(atm, outputContainerUseds[0], 'outputContainerUseds[0].concentration.value')"
+				   			udt-html-filter="number"								   			
+			   				/>										
+						</div>
+					</div>						
+				</td>
+				<td rowspan="{{atm.inputContainerUseds.length}}" ng-if="$index === 0">
+					<div ng-switch on="mainService.isEditMode()">						
+						<p class="form-control-static" ng-switch-when="false" ng-bind="atm.outputContainerUseds[0].concentration.unit" />						 
+						<div ng-switch-when="true">
+							
+							<select class="form-control input-sm" ng-model="atm.outputContainerUseds[0].concentration.unit" 
+								ng-change="update(atm, outputContainerUseds[0], 'outputContainerUseds[0].concentration.unit')">
+							      <option value="nM">nM</option> 
+							      <option value="ng/µl">ng/µl</option>	
+							</select>
+															
+						</div>
+					</div>						
+				</td>
+				<td rowspan="{{atm.inputContainerUseds.length}}" ng-if="$index === 0">
+					<div ng-switch on="mainService.isEditMode()">						
+						<p class="form-control-static" ng-switch-when="false" ng-bind="atm.outputContainerUseds[0].volume.value" />						 
 						<div ng-switch-when="true">
 							<input class="form-control input-sm" type="text" title="Messages("containers.table.volume")"									
-							ng-model="atmService.data.atm[0].outputContainerUseds[0].volume.value"
-				   			ng-change="atmService.data.updateDatatable()"								   			
+							ng-model="atm.outputContainerUseds[0].volume.value"
+							ng-change="update(atm, outputContainerUseds[0], 'outputContainerUseds[0].volume.value')"
+				   			udt-html-filter="number"								   			
 			   				/>										
+						</div>
+					</div>						
+				</td>
+				<td  rowspan="{{atm.inputContainerUseds.length}}"  ng-if="$parent.$index === 0" 
+					ng-repeat="property in outputContainerProperties track by $index">
+						<input class="form-control input-sm" type="text"  
+						ng-model="atm.outputContainerUseds[0].experimentProperties[property.code].value"
+						ng-change="update(atm, outputContainerUseds[0], 'outputContainerUseds[0].experimentProperties.'+property.code+'.value')"
+						/>									
+				</td>
+				<td rowspan="{{atm.inputContainerUseds.length}}" ng-if="$index === 0">
+					<div ng-switch on="mainService.isEditMode()">						
+						<p class="form-control-static" ng-switch-when="false" ng-bind="atm.outputContainerUseds[0].locationOnContainerSupport.storageCode" />						 
+						<div ng-switch-when="true">
+							<input class="form-control input-sm" type="text" title="Messages("containers.table.storageCode")"									
+							ng-model="atm.outputContainerUseds[0].locationOnContainerSupport.storageCode"
+				   			/>										
 						</div>
 					</div>						
 				</td>												

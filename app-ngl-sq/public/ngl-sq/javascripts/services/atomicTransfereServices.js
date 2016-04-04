@@ -917,6 +917,7 @@ angular.module('atomicTransfereServices', [])
 				duplicateInputContainer : function(inputContainer, position){
 					this.inputContainers.splice(position+1, 0 , $.extend(true, {}, inputContainer));						
 				},
+				//deprecated ?
 				dropInAllInputContainer : function(atmIndex){
 					var percentage = {value:0};
 					
@@ -940,8 +941,15 @@ angular.module('atomicTransfereServices', [])
 					
 					this.inputContainers = [];
 					this.atm[atmIndex].inputContainerUseds = inputContainerUseds;
+					
+					if($service.updateOutputConcentration){
+						$service.updateOutputConcentration(this.atm[atmIndex]);
+					}
+					
+					
 					this.updateDatatable();
 				},
+				//deprecated ?
 				dropOutAllInputContainer : function(atmIndex){						
 					var inputContainers = this.inputContainers.concat(this.atm[atmIndex].inputContainerUseds);
 					this.inputContainers = inputContainers;
@@ -987,6 +995,10 @@ angular.module('atomicTransfereServices', [])
 						//4 assign to atm
 						this.atm[atmIndex].inputContainerUseds = selectedInputContainers;
 						this.atmViewOpen[atmIndex] = true;
+						
+						if($service.updateOutputConcentration){
+							$service.updateOutputConcentration(this.atm[atmIndex]);
+						}
 						//5 update datatable
 						this.updateDatatable();
 						

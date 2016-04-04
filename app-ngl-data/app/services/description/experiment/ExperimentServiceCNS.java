@@ -147,6 +147,13 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 				getInstrumentUsedTypes("hand","tecan-evo-100"),"ManyToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
+		l.add(newExperimentType("Pool plq => tubes","pool-plates-to-tubes",null,1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
+				getInstrumentUsedTypes("tecan-evo-100"),"ManyToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		
+		
 		l.add(newExperimentType("Aliquot","aliquoting",null,2,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()),
 				getPropertyAliquoting(), getInstrumentUsedTypes("hand"),"OneToMany", 
@@ -225,7 +232,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					getInstrumentUsedTypes("rocheLightCycler-qPCR","stratagene-qPCR"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 	
 		*/	
-
+		
 			
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			/*
@@ -297,10 +304,13 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 			
 			
 			//GA Experiment for plate transfert
+			/*
 			l.add(newExperimentType("Plate Transfert","plate-transfert",null,1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), null,
 					getInstrumentUsedTypes("tecan-evo-100"),"ManyToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			*/
+			
 
 		}
 		
@@ -324,10 +334,10 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 			newExperimentTypeNode("sizing", getExperimentTypes("sizing").get(0), false, false, false, null, null, null, null).save();
 			
 			newExperimentTypeNode("qpcr-quantification", getExperimentTypes("qpcr-quantification").get(0), false, false, false, getExperimentTypeNodes("ext-to-qpcr-norm-fc-depot-illumina","sizing","amplification"), null, null, null).save();
-			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,getExperimentTypeNodes("ext-to-norm-fc-depot-illumina","sizing","amplification"),null,null,getExperimentTypes("pool-tube")).save();
+			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,getExperimentTypeNodes("ext-to-norm-fc-depot-illumina","sizing","amplification"),null,null,getExperimentTypes("pool-plates-to-tubes", "pool-tube")).save();
 					
 		}else{
-			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,null,null,null,getExperimentTypes("pool-tube")).save();
+			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,null,null,null,getExperimentTypes("pool-tube", "pool-plates-to-tubes")).save();
 			
 		}
 		
@@ -800,6 +810,10 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null,
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",8, false));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Label de travail", "workName", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, false, null, null, 
+				"single", 30, true, null,null));
+		
 	/*	propertyDefinitions.add(newPropertiesDefinition("Volume tampon à rajouter", "bufferVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null,
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single",9, false)); */
 		//Outputcontainer
