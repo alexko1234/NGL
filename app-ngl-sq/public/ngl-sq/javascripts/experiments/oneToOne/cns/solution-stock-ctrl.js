@@ -112,7 +112,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 			         {
 			        	 "header":Messages("containers.table.volume")+ " (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
-			        	 "editDirectives":' ng-change="test()" ',
+			        	 "editDirectives":' ng-change="calculVolumes(value, col.id)" ',
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
@@ -236,12 +236,53 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 		$scope.atmService.data.setEdit();
 	});
 	
-	//Init		
-	$scope.test=function(){
+	
+	$scope.calculVolumeFromValue=function(value){
+		var experimentProperties={};
+
+		if(value.outputContainerUsed.volume!=null && value.outputContainerUsed.volume.value!=null && value.outputContainerUsed.concentration.value!=null){
+			if(value.inputContainerUsed.concentration.unit===value.outputContainerUsed.concentration.unit){
+				
+				console.log("Valeur before "+value.atomicTransfertMethod.inputContainerUseds[0].experimentProperties.requiredVolume.value);
+				var requiredVolume=parseFloat(parseFloat(value.outputContainerUsed.concentration.value)*parseFloat(value.outputContainerUsed.volume.value)/parseFloat(value.inputContainerUsed.concentration.value)).toFixed(1);
+								experimentProperties["requiredVolume"]={"_type":"single","value":requiredVolume,"unit":value.outputContainerUsed.concentration.unit};
+				experimentProperties["bufferVolume"]={"_type":"single","value":parseFloat(value.outputContainerUsed.volume.value-requiredVolume).toFixed(1),
+						 "unit":value.outputContainerUsed.volume.unit};
+				value.inputContainerUsed.experimentProperties=experimentProperties;
+				
+			}else if(value.outputContainerUsed.concentration.unit="nM") {
+				var requiredVolume=parseFloat(parseFloat(value.outputContainerUsed.concentration.value)*parseFloat(value.outputContainerUsed.volume.value)/(parseFloat(value.inputContainerUsed.concentration.value)*660*value.inputContainerUsed.size.value*1000000)).toFixed(1);
+				console.log("Calcul requiredVolume "+requiredVolume);
+				experimentProperties["requiredVolume"]={"_type":"single","value":requiredVolume,"unit":value.outputContainerUsed.concentration.unit};
+				experimentProperties["bufferVolume"]={"_type":"single","value":parseFloat(value.outputContainerUsed.volume.value-requiredVolume).toFixed(1),
+						 "unit":value.outputContainerUsed.volume.unit};
+				value.inputContainerUsed.experimentProperties=experimentProperties;
+			}
+	    }
+	}
 		
-			console.log("Test");
+	$scope.calculVolumes=function(value, columnId){
+		
+		if(value!=null & value !=undefined){
+			$scope.calculVolumeFromValue(value.data);
+	   }
+	   else {
+		   
+		  var config=$scope.udtTable.config;		   	
+		   /* Pour chaque ligne du datatable, lance le calcul   */
+		   var allData=$scope.atmService.data.getData();
+		   
+		   allData.forEach(function(data){
+			   data.outputContainerUsed.volume.value=config.edit.columns[columnId].value;
+			   $scope.calculVolumeFromValue(data);
+			});
+			$scope.atmService.data.setData(allData,allData.length);
+
+	   }
+	
 	};
 	
+	//Init	
 	if($scope.experiment.instrument.inContainerSupportCategoryCode!=="tube"){
 		datatableConfig.columns.push( {
        	 "header":Messages("containers.table.supportCode"),

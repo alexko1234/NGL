@@ -64,6 +64,7 @@ angular.module('atomicTransfereServices', [])
 				},
 				convertPropertyToDatatableColumn : function(propertyDefinition, propertyNamePrefix, propertyNameSuffix,extraHeaders){
     				var column = {};
+    				column.watch=true;
     				column.header = propertyDefinition.name + this.getDisplayUnitFromProperty(propertyDefinition);
     				column.property = propertyNamePrefix+propertyDefinition.code+propertyNameSuffix;
     				column.edit = propertyDefinition.editable;

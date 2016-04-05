@@ -2842,8 +2842,8 @@ directive("udtCell", function(){
                                 +'{{cellValue.fullname}}'
                                 +'</a>';
 	    					} else{
-	    						return '<span udt-highlight="cellValue" keywords="udtTable.searchTerms.$" active="udtTable.config.filter.highlight"></span>';
-								//return '<span ng-bind="cellValue"></span>'
+	    						//return '<span udt-highlight="cellValue" keywords="udtTable.searchTerms.$" active="udtTable.config.filter.highlight"></span>';
+								return '<span ng-bind="cellValue"></span>'
 	    					}
 	    				}
 	    			};
@@ -2861,6 +2861,14 @@ directive("udtCell", function(){
 			    			return currentScope.$eval(column.property, value.data);
 			    		}else{
 			    			if(!value.line.group && (column.url === undefined || column.url === null)){
+			    				if(column.watch === true){
+                                    scope.$watch("value.data."+column.property, function(newValue, oldValue) {
+                                        if ( newValue !== oldValue ) {
+                                            scope.cellValue = getDisplayFunction(column, false);
+                                         }
+                                    });
+                                }
+
 			    				return currentScope.$eval(column.property+currentScope.udtTableFunctions.getFilter(column)+currentScope.udtTableFunctions.getFormatter(column), value.data);
 			    			}else if(value.line.group){
 			    				var v = currentScope.$eval("group."+column.id, value.data);
@@ -2885,13 +2893,14 @@ directive("udtCell", function(){
 	    			}else{
 	    				scope.cellValue = getDisplayFunction(scope.col, false);
 	    			}
+	    			
+	    			
+	    			
   		    	}
     		};
     	});;angular.module('ultimateDataTableServices').
 directive('udtChange', ['$interval', function($interval) {
 	return {
-		/*
-		require: 'ngModel',
 		link: function(scope, element, attrs, ngModel) {
 			scope.oldValue = undefined;
 			scope.needRefresh = false;
