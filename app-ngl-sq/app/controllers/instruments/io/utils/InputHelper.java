@@ -5,9 +5,7 @@ import java.io.File;
 import org.mongojack.DBQuery;
 
 import validation.ContextValidation;
-
 import fr.cea.ig.MongoDBDAO;
-
 import models.laboratory.parameter.Index;
 import models.utils.InstanceConstants;
 
@@ -54,6 +52,23 @@ public class InputHelper {
 	public static Index getIndexByName(String name, String typeCode){
 		Index index  = MongoDBDAO.findOne(InstanceConstants.PARAMETER_COLL_NAME, Index.class, DBQuery.is("typeCode", typeCode).and(DBQuery.is("name", name)));
 		return index;
+	}
+
+	
+	//05/04/2016 ajoute "0" dans les positions ex A1=> A01
+	public static String add02pos(String pos){
+		String row=pos.substring(0,1);
+		String col=pos.substring(1);
+		if (col.length() == 1){ 
+			return row+"0"+col ;
+		}else{
+			return pos;
+		}
+	}
+	
+	//utiliser container.line + container.column serait plus propre ???
+	public static String getCodePosition(String containerCode) {
+		return containerCode.substring(containerCode.indexOf("_")+1);
 	}
 
 }

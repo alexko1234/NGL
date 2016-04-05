@@ -18,21 +18,12 @@ import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
-
-/* ce n'est pas un fichier excel....
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-*/
-
-
-
 import models.laboratory.parameter.Index;
 import play.Logger;
 import validation.ContextValidation;
 import validation.utils.ValidationHelper;
 import controllers.instruments.io.utils.AbstractInput;
+import controllers.instruments.io.utils.InputHelper;
 
 public class Input extends AbstractInput {
 	
@@ -113,12 +104,11 @@ public class Input extends AbstractInput {
 			
 				String pos384=cols[2];
 				// verifier que c'est une position 384 valide ???
-				if  ( !isValidPlatePosition (pos384, 384, contextValidation) ){
-					contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.illegal384Position",(n+1), pos384);
+				if ( !InputHelper.isPlatePosition(contextValidation, pos384 , 384, n)){
+					continue;
 				} else {
 				  // !!! il faut une position sur 3 caracteres pour pouvoir par la suite trier dans l'ordre reel !!!
-				  String pos0384=add02pos(pos384);
-				  Logger.info ("ligne "+n+ ": "+pos384+" => "+pos0384);
+				  String pos0384=InputHelper.add02pos(pos384);
 				
 				  int col384 = Integer.parseInt(pos384.substring(1));
 				  // ignorer les lignes correspondant aux temoins (colonnes 22,23,24)
@@ -174,7 +164,7 @@ public class Input extends AbstractInput {
 				
 				Logger.info ("FIN DE BLOCK...pos384="+key+" > pos96="+ pos96+"| MOY CONC="+moyConc_nM);
 				results.put(pos96,moyConc_nM );
-				Logger.info (pos96 + " belong to sector "+sector+" ?? "+ belongToSector96(pos96, sector, contextValidation));
+				Logger.info (pos96 + " belong to sector "+sector+" ?? "+ belongToSector96(contextValidation, pos96, sector));
 
 				//reinitialiser le tableau 
 				listConc= new double[nbRep];
@@ -183,7 +173,7 @@ public class Input extends AbstractInput {
 			}
 		}
 
-		// Verifier que tous les puits du secteur concerné par l'import ont tous une concentration, la mettre a jour
+		// Verifier que tous les puits du secteur concerné par l'import ont tous une concentration
 		//  ( verification minimale pour eviter une erreur de choix du fichier initial...)
 		if (!contextValidation.hasErrors()) {
 			final int sector_arg = sector;
@@ -191,15 +181,11 @@ public class Input extends AbstractInput {
 				.stream()
 				.map(atm -> atm.inputContainerUseds.get(0))
 				.forEach(icu -> {
-					if ( belongToSector96(getCodePosition(icu.code), sector_arg,  contextValidation)) {
-						String icupos=getCodePosition(icu.code);
+					String icupos=InputHelper.getCodePosition(icu.code);
+					if ( belongToSector96(contextValidation, icupos, sector_arg)) {
 						if (!results.containsKey(icupos) ){
 							contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.concentration.missing",icupos);
 						} 
-						//else {
-						//	Logger.info ("set concentration="+results.get(icupos)+" for icu "+ icu.code);
-						//	icu.concentration.value=results.get(icupos);
-						//}
 					}
 				});
 		}
@@ -211,16 +197,13 @@ public class Input extends AbstractInput {
 				.stream()
 				.map(atm -> atm.inputContainerUseds.get(0))
 				.forEach(icu -> {
-					if ( belongToSector96(getCodePosition(icu.code), sector_arg,  contextValidation)) {
-						String icupos=getCodePosition(icu.code);
+					String icupos=InputHelper.getCodePosition(icu.code);
+					if ( belongToSector96(contextValidation, icupos, sector_arg)) {
 						Logger.info ("set concentration="+results.get(icupos)+" for icu "+ icu.code);
-						//icu.concentration.value=results.get(icupos);
 						
 						PropertySingleValue concentration = getPSV(icu, "concentration1");
 						concentration.value = results.get(icupos);
-						concentration.unit = "nM";
-						
-						
+						concentration.unit = "nM";	
 					}
 				});
 		}
@@ -330,71 +313,20 @@ public class Input extends AbstractInput {
 	    return sum / m.length;
 	}
 	
-	public Boolean belongToSector96(String pos96, int sector, ContextValidation contextValidation) {
-		// verifier si valide ??
-		if ( !isValidPlatePosition(pos96, 96, contextValidation) ){
+	//specifique...ne pas mettre dans Inputhelper
+	public static Boolean belongToSector96( ContextValidation contextValidation, String pos96, int sector) {
+		// verifier si valide ??  on n'a pas de numero de ligne pour le message...
+		if ( ! InputHelper.isPlatePosition(contextValidation, pos96, 96, 0)){
 			return false;
 		}
 		
-		// les secteurs sont ici uniquement defini par les colonnes		
+		// les secteurs sont uniquement defini par les colonnes		
 		int col96 = Integer.parseInt(pos96.substring(1));
 		
 		if ( col96 > 0 && col96 < 7  && sector == 0 ){ return true;}
-		if ( col96 > 8 && col96 < 13  && sector == 1 ){ return true;}
+		if ( col96 > 6 && col96 < 13  && sector == 1 ){ return true;}
 		
 		return false;
 	}
-	
-	//----------------------------------------------------------------====> Helper
-	private String add02pos(String pos){
-		String row=pos.substring(0,1);
-		String col=pos.substring(1);
-		if (col.length() == 1){ 
-			return row+"0"+col ;
-		}else{
-			return pos;
-		}
-	}
-	
-	//extraire la partie finale du code de l'inputContainer ( dans ce cas pourrait aller dans dans InputHelper???
-	//utiliser container.line + container.column serait plus propre ???
-	public String getCodePosition(String icuCode) {
-		return icuCode.substring(icuCode.indexOf("_")+1);
-	}
-	
-	public Boolean isValidPlatePosition (String pos, int format, ContextValidation contextValidation ) {	
-		int asciiRow=(int)pos.charAt(0);              // code ASCII du premier caractere de la position
-		int col = Integer.parseInt(pos.substring(1)); // colonne de la position
-		
-		if ( format == 96 ) {
-			//ascii A=65, ascii H=72
-			if ( asciiRow < 65 || asciiRow > 72 ) { 
-				contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.illegalRowPosition",pos, format); 
-				return false;
-			}
-	
-			if (col < 1 || col > 12 ) {
-				contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.illegalColumnPosition",pos, format); 
-				return false;
-			} 
-		} else if ( format == 384 ) {
-				//ascii A=65, ascii Q=81
-				if ( asciiRow < 65 || asciiRow > 81 ) { 
-					contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.illegalRowPosition",pos, format); 
-					return false;
-				}
-		
-				if (col < 1 || col > 24 ) {
-					contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.illegalColumnPosition",pos, format); 
-					return false;	
-				}
-		} else {
-			// not supported plate format...
-			return false;
-		}
-		
-		return true;
-	}	
-		
 
 }
