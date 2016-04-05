@@ -212,7 +212,7 @@
 
 <div class="tab-content">
 	<div class="tab-pane active" id="plate">
-		<div class="row"  ng-if="mainService.isEditMode()">
+		<div class="row"  ng-if="mainService.isEditMode() && isStateNew()">
 		<div class="col-md-10 col-lg-10">
 			@inputplates()
 		</div>

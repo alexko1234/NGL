@@ -850,6 +850,7 @@ angular.module('atomicTransfereServices', [])
 								var inputContainer = inputContainers[inputContainerCode];
 								atm.inputContainerUseds[j] = $commonATM.updateContainerUsedFromContainer(atm.inputContainerUseds[j], inputContainer);								
 							}
+							$service.data.atmViewOpen[i] = false;
 						}
 						$service.data.inputContainerSupports = allSupports;							
 						//add new atomic in datatable
@@ -910,7 +911,7 @@ angular.module('atomicTransfereServices', [])
 				atm : [], 
 				datatable : $atmToSingleDatatable.data,
 				atmViewOpen : [],
-				isAllATMViewClose : undefined,
+				isAllATMViewClose : false,
 				deleteInputContainer : function(inputContainer){
 					this.inputContainers.splice(this.inputContainers.indexOf(inputContainer), 1);
 				},

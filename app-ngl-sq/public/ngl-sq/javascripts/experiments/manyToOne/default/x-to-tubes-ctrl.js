@@ -6,6 +6,16 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 	var datatableConfig = {
 			name:"FDR_Tube",
 			columns:[   
+					{
+						 "header":Messages("containers.table.support.number"),
+						 "property":"atomicIndex+1",
+						 "order":true,
+						 "edit":false,
+						 "hide":true,
+						 "type":"text",
+						 "position":0,
+						 "extraHeaders":{0:Messages("experiments.inputs")}
+					},
 					 {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"inputContainer.code",
@@ -105,8 +115,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
-						 "mergeCells" : true,
-			        	 "type":"number",
+						 "type":"number",
 			        	 "position":50,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
@@ -116,8 +125,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
-						 "mergeCells" : true,
-			        	 "type":"text",
+						 "type":"text",
 			        	"position":50.5,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
@@ -127,8 +135,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
-						 "mergeCells" : true,
-			        	 "type":"number",
+						 "type":"number",
 			        	 "position":51,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
@@ -138,8 +145,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
-						 "mergeCells" : true,
-			        	 "type":"text",
+						 "type":"text",
 			        	 "position":400,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
@@ -149,8 +155,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
-						 "mergeCells" : true,
-			        	 "type":"text",
+						 "type":"text",
 			        	 "position":500,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         }
@@ -165,7 +170,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			order:{
 				mode:'local', //or 
 				active:true,
-				by:'inputContainer.code'
+				by:'outputContainer.code'
 			},
 			remove:{
 				active:false,

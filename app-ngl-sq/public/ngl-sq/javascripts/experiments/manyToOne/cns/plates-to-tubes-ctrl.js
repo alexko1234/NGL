@@ -40,6 +40,10 @@ angular.module('home').controller('PlatesToTubesCtrl',['$scope', '$parse',
 				propertyName === 'outputContainerUseds[0].volume.value'){
 			console.log("compute all input volume");
 			
+			angular.forEach(atm.inputContainerUseds, function(inputContainerUsed){
+				computeInputVolume(inputContainerUsed, atm);
+			});
+			
 		}else if(propertyName.match(/inputContainerUseds\[\d\].percentage/) != null){
 			console.log("compute one input volume");
 			computeInputVolume(containerUsed, atm);
@@ -54,10 +58,27 @@ angular.module('home').controller('PlatesToTubesCtrl',['$scope', '$parse',
 			inputVolume = {value : undefined, unit : 'µl'};
 		}
 		//we compute only if empty
-		if(null === inputVolume.value || undefined === inputVolume.value){
-			var inputPercentage = $parse("percentage")(inputContainerUsed);
-		}
 		
+		var compute = {
+			inputPercentage : $parse("percentage")(inputContainerUsed),
+			inputConc : $parse("concentration")(inputContainerUsed),
+			outputConc : $parse("outputContainerUseds[0].concentration")(atm),
+			outputVol : $parse("outputContainerUseds[0].volume")(atm)
+		
+		};
+		if($parse("(outputConc.unit ===  inputConc.unit)")(compute)){
+			var result = $parse("(inputPercentage * outputConc.value *  outputVol.value) / inputConc.value")(compute);
+			console.log("result = "+result);
+			if(angular.isNumber(result) && !isNaN(result)){
+				inputVolume.value = result;				
+			}else{
+				inputVolume.value = undefined;
+			}	
+			getter.assign(inputContainerUsed, inputVolume);
+		}else{
+			inputVolume.value = undefined;
+			getter.assign(inputContainerUsed, inputVolume);
+		}
 		
 	}
 	

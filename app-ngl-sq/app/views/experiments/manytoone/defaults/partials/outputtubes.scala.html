@@ -161,11 +161,17 @@
 					</div>
 				</td>
 				<td ng-repeat="property in inputContainerProperties track by $index">
-						<input class="form-control input-sm" type="text"  
-						ng-model="inputContainerUsed.experimentProperties[property.code].value" 
-						ng-change="update(atm, inputContainerUsed, 'inputContainerUseds['+$parent.$index+'].experimentProperties.'+property.code+'.value')"																		
-						udt-html-filter="number"
-						/>	
+					<div ng-switch on="mainService.isEditMode()">						
+						<p class="form-control-static" ng-switch-when="false" ng-bind="inputContainerUsed.experimentProperties[property.code].value" />						 
+						<div ng-switch-when="true">
+				
+							<input class="form-control input-sm" type="text"  
+							ng-model="inputContainerUsed.experimentProperties[property.code].value" 
+							ng-change="update(atm, inputContainerUsed, 'inputContainerUseds['+$parent.$index+'].experimentProperties.'+property.code+'.value')"																		
+							udt-html-filter="number"
+							/>
+						</div>
+					</div>	
 				</td>
 				<td rowspan="{{atm.inputContainerUseds.length}}"
 					ng-if="$index === 0">
@@ -211,10 +217,15 @@
 				</td>
 				<td  rowspan="{{atm.inputContainerUseds.length}}"  ng-if="$parent.$index === 0" 
 					ng-repeat="property in outputContainerProperties track by $index">
+					<div ng-switch on="mainService.isEditMode()">						
+						<p class="form-control-static" ng-switch-when="false" ng-bind="atm.outputContainerUseds[0].experimentProperties[property.code].value" />						 
+						<div ng-switch-when="true">
 						<input class="form-control input-sm" type="text"  
 						ng-model="atm.outputContainerUseds[0].experimentProperties[property.code].value"
 						ng-change="update(atm, outputContainerUseds[0], 'outputContainerUseds[0].experimentProperties.'+property.code+'.value')"
-						/>									
+						/>
+						</div>
+						</div>									
 				</td>
 				<td rowspan="{{atm.inputContainerUseds.length}}" ng-if="$index === 0">
 					<div ng-switch on="mainService.isEditMode()">						
