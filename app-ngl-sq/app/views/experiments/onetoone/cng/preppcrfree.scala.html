@@ -34,12 +34,13 @@
 	     </div>
 	     <!-- test ajout  ng-show="button.isShow() -->
          <div class="form-group col-lg-6"  ng-show="button.isShow()">
-             <label for="importFile" class="col-md-3 col-lg-3 control-label">@Messages("experiments.instrumentFile")</label>
-             <div class="input-group" >
+             <label for="importFile" class="control-label">@Messages("experiments.instrumentFile")</label>
+             <div class="input-group" style="width:50%" 		>
                 <input class="form-control input-sm" type="file" 
                 									 base64-file="file"
-                									 id="importFile" 		  
-                									 ng-model="InstrumentFile" />
+                									 id="importFile"
+                									   
+                									 />
                 <span class="input-group-btn">									 
                      <button class="btn btn-primary" ng-click="button.click()" 
                                                      ng-disabled="button.isFileSet()" 
@@ -50,6 +51,7 @@
         </div>
      </form>		
   </div>
+
 
   <div class="row">
 	<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data"></div>						
