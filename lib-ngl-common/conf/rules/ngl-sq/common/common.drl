@@ -59,7 +59,7 @@ rule "init inputsupport"
 	salience 1000
 	no-loop
     when
-	Experiment($typeCode:typeCode,$typeCode=="illumina-depot" || $typeCode=="bionano-depot",$atomics:atomicTransfertMethods,$atomics!=null)
+	Experiment($typeCode:typeCode,$typeCode=="illumina-depot" || $typeCode=="bionano-depot" || $typeCode=="prep-pcr-free",$atomics:atomicTransfertMethods,$atomics!=null)
 	AtomicTransfertMethod($inputContainerUseds:inputContainerUseds) from $atomics
     InputContainerUsed($support:locationOnContainerSupport.code,$categoryCode:locationOnContainerSupport.categoryCode) from $inputContainerUseds
 	not InputSupport($support==code)
@@ -93,7 +93,7 @@ rule "only one inputssupport"
 	salience 400
 	no-loop
     when
-    Experiment($typeCode:typeCode,$typeCode=="illumina-depot" || $typeCode=="bionano-depot")
+    Experiment($typeCode:typeCode,$typeCode=="illumina-depot" || $typeCode=="bionano-depot" || $typeCode=="prep-pcr-free")
     Set(empty==false,size!=1) from collect(InputSupport())
     $contextValidation:ContextValidation($errors : errors)
     then 

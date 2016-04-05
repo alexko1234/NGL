@@ -75,12 +75,12 @@ angular.module('atomicTransfereServices', [])
     				column.position=propertyDefinition.displayOrder;
     				column.defaultValues = propertyDefinition.defaultValue;
     				column.format = propertyDefinition.displayFormat;
-    				if(propertyDefinition.possibleValues!=undefined){
-    					column.possibleValues = propertyDefinition.possibleValues;
-    				}
+    				
     				if(column.choiceInList){
-    					//column.listStyle = "bt-select"; not used bt-select because cannot convert to number when send to server and very slow with big list or lot of data
-    					
+    					if(propertyDefinition.possibleValues.length > 100){
+    						column.editTemplate='<input class="form-control" type="text" #ng-model typeahead="v.code as v.name for v in col.possibleValues | filter:$viewValue | limitTo:20" typeahead-min-length="1" />';        					
+    					}
+    					column.possibleValues = propertyDefinition.possibleValues; 
     					column.filter = "codes:'value."+propertyDefinition.code+"'";    					
     				}
     				if(extraHeaders!=undefined){

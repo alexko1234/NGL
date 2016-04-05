@@ -1,26 +1,18 @@
 package rules
 
-/*
-rule "DEBUG prep-pcr-free"
-    @nglSQ( validations )
-	dialect "java"
-	salience 100
-	no-loop
-    when
-    	$experiment:Experiment($typeCode:typeCode,$typeCode=="prep-pcr-free")
-    	$contextValidation:ContextValidation()
-    	eval (true )
-    then
-		$contextValidation.addErrors("prep-pcr-free","DEBUG error");
+declare TagInfos
+	tag : PropertySingleValue
+	tagCategory : PropertySingleValue
+	index : IlluminaIndex
+	containerCode : String
 end
-*/
 
 // 14/03/2016 verification du volume de sortie des containers prep-pcr-free
 // NOTE: il faut passer par drools pour les verification sur les attributs
 rule "Volume not null in prep-pcr-free outputContainer"
     @nglSQ( validations )
 	dialect "java"
-	salience 100
+	salience 1000
 	no-loop
     when
     	$experiment:Experiment($typeCode:typeCode,$typeCode=="prep-pcr-free")
@@ -35,42 +27,37 @@ rule "Volume not null in prep-pcr-free outputContainer"
    		$contextValidation.addErrors("prep-pcr-free","error.validationexp.outputvolumenotnull", $outputContainerUsed.code);
 end
 
-/////////////////////// DEJA DANS common.drl !!!!!!!!!!!!!!!!!!!
-/*
-declare InputSupport
-	code : String
-	categoryCode : String
-end
 
-rule "init inputsupport prep-pcr-free"
-	@nglSQ( validations )
+rule "init tag and tagCategory match"
+    @nglSQ( validations )
 	dialect "java"
-	salience 500
+	salience 1000
 	no-loop
     when
-		Experiment($typeCode:typeCode, $typeCode=="prep-pcr-free", $atomics:atomicTransfertMethods, $atomics!=null)
-		AtomicTransfertMethod($inputContainerUseds:inputContainerUseds) from $atomics
-    	InputContainerUsed($support:locationOnContainerSupport.code, $categoryCode:locationOnContainerSupport.categoryCode) from $inputContainerUseds
-		not InputSupport($support==code)
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="prep-pcr-free")
+    	State($stateCode:code=="F")
+		$atomicTransfert: OneToOneContainer($outputContainerUsed: outputContainerUseds.get(0))
+	   	OutputContainerUsed($experimentProperties: experimentProperties) from $outputContainerUsed 
+	   	eval($experimentProperties.get("tag") != null && $experimentProperties.get("tagCategory") != null )   	
     then
-		Logger.debug("Support "+$support +" de category "+$categoryCode);
-		InputSupport inputSupport=new InputSupport($support,$categoryCode);
-		insert(inputSupport);
+    	PropertySingleValue tag = (PropertySingleValue)$experimentProperties.get("tag");
+    	PropertySingleValue tagCategory = (PropertySingleValue)$experimentProperties.get("tagCategory");
+    	IlluminaIndex index = MongoDBDAO.findOne(InstanceConstants.PARAMETER_COLL_NAME, IlluminaIndex.class, DBQuery.is("typeCode", "index-illumina-sequencing").is("code",tag.value));
+    	//Logger.debug("!!!"+tag.value+" "+tagCategory.value+" "+index.categoryCode+" !!!");
+    	TagInfos tagInfos=new TagInfos(tag,tagCategory, index, $outputContainerUsed.code);
+		insert(tagInfos);
 end
 
-rule "only one inputsupport prep-pcr-free"
-	@nglSQ (validations )
+rule "tag and tagCategory match"
+    @nglSQ( validations )
 	dialect "java"
-	salience 400
+	salience 900
 	no-loop
     when
-   		 Experiment($typeCode:typeCode, $typeCode=="prep-pcr-free")
-   		 // necessaire ??? State($stateCode:code=="N")
-   		 Set(empty==false,size>1) from collect(InputSupport())
-   		 $contextValidation:ContextValidation($errors : errors)
-    then 
-    	Logger.debug("only one input Support in prep-pcr-free"); 
-    	// voir fichier messages pour le libellé de l'erreur
-    	$contextValidation.addErrors("inputContainerSupportCodes","error.validationexp.oneInputSupport", $typeCode);
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="prep-pcr-free")
+    	$tagInfos:TagInfos()
+    	$contextValidation:ContextValidation() 
+    	eval($tagInfos.getTagCategory().value != $tagInfos.getIndex().categoryCode)   	
+    then
+    	$contextValidation.addErrors("prep-pcr-free","error.validationexp.tagcategory.notvalid", $tagInfos.getTag().value, $tagInfos.getContainerCode());
 end
-*/

@@ -207,6 +207,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 			"edit":{ // editable si mode=Finished ????
 				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
 				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F')),
+				byDefault:($scope.isCreationMode()),
 				columnMode:true
 			},
 			"messages":{
@@ -263,6 +264,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 		console.log("call event refresh");		
 		var dtConfig = $scope.atmService.data.getConfig();
 		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('F'));
+		dtConfig.edit.byDefault = false;
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.setConfig(dtConfig);
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
