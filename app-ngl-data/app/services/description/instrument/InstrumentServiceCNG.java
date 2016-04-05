@@ -425,8 +425,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				newValues(new String[]{"1-48","49-96"}, new String[]{"0","1"}), null, null , null, "single", null, false ,null, null));
 		
 		//TEST!!!!!!!!!!!!!!!
-		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
-				 newValues("sector A","sector B"), null, null , null, "single", null, false ,null, null));
+		//l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
+		//		 newValues("sector A","sector B"), null, null , null, "single", null, false ,null, null));
 		
 		return l;
 	}

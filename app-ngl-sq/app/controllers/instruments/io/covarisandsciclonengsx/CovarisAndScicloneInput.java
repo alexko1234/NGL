@@ -32,12 +32,7 @@ public abstract class CovarisAndScicloneInput extends AbstractInput {
 		
 		InputStream is = new ByteArrayInputStream(pfv.value);
 		
-		//DEBUG..
-		//String plateBarcode="DEBUG-ABCDE";
-		// Logger.info ("checking plate barcode="+plateBarcode);
-		
 		// le barcode a checker doit etre dans experiment.ouputContainerSupportCodes......si l'experience a deja ete sauvegardee...	
-		///MARCHE String outputSupportContainerCode=experiment.atomicTransfertMethods.get(0).outputContainerUseds.get(0).locationOnContainerSupport.code;
 
 		String outputSupportContainerCode=experiment.outputContainerSupportCodes.iterator().next().toString();
 		Logger.info ("checking "+outputSupportContainerCode);

@@ -35,8 +35,8 @@ rule "Volume not null in prep-pcr-free outputContainer"
    		$contextValidation.addErrors("prep-pcr-free","error.validationexp.outputvolumenotnull", $outputContainerUsed.code);
 end
 
-
-// 29/03/2016  il faut une decalaration initale  et une regle intermediaire  "only one inputsupport prep-pcr-free" !!!
+/////////////////////// DEJA DANS common.drl !!!!!!!!!!!!!!!!!!!
+/*
 declare InputSupport
 	code : String
 	categoryCode : String
@@ -73,4 +73,4 @@ rule "only one inputsupport prep-pcr-free"
     	// voir fichier messages pour le libellé de l'erreur
     	$contextValidation.addErrors("inputContainerSupportCodes","error.validationexp.oneInputSupport", $typeCode);
 end
- 
+*/

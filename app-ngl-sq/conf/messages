@@ -437,7 +437,8 @@ experiments.msg.import.value.unexpected= ligne {0}: La valeur de ''{1}'': ''{2}'
 experiments.msg.import.position.unkwnown = ligne {0}: La position ''{1}'' ne correspond pas à un format de plaque connu
 experiments.msg.import.position.outofbonds = ligne {0}: La position ''{1}'' ne correspond pas au format {2}-puits
 experiments.msg.import.position.duplicate = ligne {0}: La position ''{1}'' est dupliquée; 
-experiments.msg.import.tag.missing = Pas de Tag pour la position ''{0}''
+experiments.msg.import.tag.missing = Pas de tag pour la position ''{0}''
+experiments.msg.import.concentration.missing = Pas de concentration pour la position ''{0}''
 experiments.msg.import.tag.notexist = ligne {0}: Le tag ''{1}'' n''existe pas
 experiments.msg.import.linefields.unexpected = ligne {0}: Nombre de champs incorrect
 
