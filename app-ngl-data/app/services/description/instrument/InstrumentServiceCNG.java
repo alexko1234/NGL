@@ -421,12 +421,9 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
 		// secteur de la plaque 96 initiale utilisee: 0 ou 1
+		// a modifier en "program" du NG si on pass a un instrument hybride NGS-lightcycler ????
 		l.add(newPropertiesDefinition("Secteur Plaque 96","sector96", LevelService.getLevels(Level.CODE.Instrument),String.class, true, null,
-				newValues(new String[]{"1-48","49-96"}, new String[]{"0","1"}), null, null , null, "single", null, false ,null, null));
-		
-		//TEST!!!!!!!!!!!!!!!
-		//l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
-		//		 newValues("sector A","sector B"), null, null , null, "single", null, false ,null, null));
+				newValues("1-48","49-96"), null, null , null, "single", null, false ,"1-48", null));
 		
 		return l;
 	}

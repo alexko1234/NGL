@@ -58,13 +58,13 @@ public class Input extends AbstractInput {
 			}
 			Logger.info( "sector="+sector);
 		}else {
-			contextValidation.addErrors("Erreur","Instrument propertie 'program' non supporté");
+			contextValidation.addErrors("Erreur","valeur de 'sector96' non supportée");
 			return experiment;
 		}
 		
 		// question pour Julie: actuellement la taille des fragments est de 350...peut changer ???
 		// => nouvelle propriété de l'instrument??? ou HARCODED???
-		int size=350;
+		int correctionFactorLibrarySize=350;
 		
 		//tableau des facteurs de dilution et leur repetition sur la plaque 384
 		double[] fDilution={5000,5000,5000,   50000,50000,50000};
@@ -140,16 +140,18 @@ public class Input extends AbstractInput {
 		int nbblock=0;
 		int rep=0;;
 		double[] listConc= new double[nbRep];
-		double rocheFactor= (double)( 452 / size); //calculé une seule fois
+		double rocheFactor= (double)( 452 / correctionFactorLibrarySize); //calculé une seule fois
 		
 		for (String key : pos0384) { 
 			// transformer la concentration du fichier (pM) en nM [ formule donné par Roche ]
-			// conc_nM= conc_pM * ( fact_dilution/1000 ) * ( 452/size ) 
-			double concentration_nM =  data.get(key) * (double)( fDilution[rep] / 1000 ) * rocheFactor;
+			// conc_nM= conc_pM * ( fact_dilution/1000 ) * ( 452 / correctionFactorLibrarySize ) 
+			    // 05/04 reporter la correction  plus loin, qd on a la valeur de correctionFactorLibrarySize.....
+			    // double concentration_nM =  data.get(key) * (double)( fDilution[rep] / 1000 ) * rocheFactor;
+			double concentration_nM =  data.get(key) * (double)( fDilution[rep] / 1000 );
 			
-			// stocker concentration2 pour faire moyenne plus tard...
+			// stocker concentration pour faire moyenne plus tard...
 			listConc[rep]=concentration_nM;
-			Logger.info ("pos384="+key+" CONC (pM)="+  data.get(key) +" CONC (nM) ="+concentration_nM );
+			//Logger.info ("pos384="+key+" CONC (pM)="+  data.get(key) +" CONC (nM) ="+concentration_nM );
 			
 			nbblock++;
 			rep++;
@@ -162,7 +164,7 @@ public class Input extends AbstractInput {
 				// remapper en 96
 				String pos96=remapPosition (key, sector, contextValidation );
 				
-				Logger.info ("FIN DE BLOCK...pos384="+key+" > pos96="+ pos96+"| MOY CONC="+moyConc_nM);
+				 //Logger.info ("FIN DE BLOCK...pos384="+key+" > pos96="+ pos96+"| MOY CONC="+moyConc_nM);
 				results.put(pos96,moyConc_nM );
 				Logger.info (pos96 + " belong to sector "+sector+" ?? "+ belongToSector96(contextValidation, pos96, sector));
 
@@ -199,11 +201,22 @@ public class Input extends AbstractInput {
 				.forEach(icu -> {
 					String icupos=InputHelper.getCodePosition(icu.code);
 					if ( belongToSector96(contextValidation, icupos, sector_arg)) {
-						Logger.info ("set concentration="+results.get(icupos)+" for icu "+ icu.code);
+						Logger.info ("set concentration for icu "+ icu.code);
 						
 						PropertySingleValue concentration = getPSV(icu, "concentration1");
-						concentration.value = results.get(icupos);
-						concentration.unit = "nM";	
+						// effectuer la correction en utilisant ce que l'utilisateur a defini
+						PropertySingleValue cFLSize = getPSV(icu, "correctionFactorLibrarySize");
+						if (cFLSize.value != null) {
+							// effectuer la correction
+							//Logger.info ("cFLSize.value="+cFLSize.value);
+							double corFactor = 452.0d / ((double) (Integer) cFLSize.value);
+							concentration.value = results.get(icupos) * corFactor;
+							concentration.unit = "nM";
+							Logger.info (".... corFactor="+ corFactor+"; concentration="+ results.get(icupos) * corFactor);
+						} else {
+							concentration.value = null;
+							concentration.unit = "nM";
+						}
 					}
 				});
 		}
