@@ -2901,7 +2901,7 @@ directive("udtCell", function(){
     	});;angular.module('ultimateDataTableServices').
 directive('udtChange', ['$interval', function($interval) {
 	return {
-		link: function(scope, element, attrs, ngModel) {
+		/*link: function(scope, element, attrs, ngModel) {
 			scope.oldValue = undefined;
 			scope.needRefresh = false;
 			scope.runFunction = function(){
