@@ -112,7 +112,9 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 			         {
 			        	 "header":Messages("containers.table.volume")+ " (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
-			        	 "editDirectives":' ng-change="calculVolumes(value, col.id)" ',
+			        	 //utilisation de la directive utd-change car elle capture les modifications du header puis déclenche la function calculVolume 
+			        	 // Si ng-change seul l'evenement utilisateur est capturé, la valeur de la cellule est modifiée mais le calcul non executé
+			        	 "editDirectives":' udt-change="calculVolumes(value, col.id)" ',
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
@@ -238,25 +240,27 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 	
 	
 	$scope.calculVolumeFromValue=function(value){
-		var experimentProperties={};
 
 		if(value.outputContainerUsed.volume!=null && value.outputContainerUsed.volume.value!=null && value.outputContainerUsed.concentration.value!=null){
-			if(value.inputContainerUsed.concentration.unit===value.outputContainerUsed.concentration.unit){
+			if(value.inputContainerUsed.concentration.unit===value.outputContainerUsed.concentration.unit){				
+				var requiredVolume=value.outputContainerUsed.concentration.value*value.outputContainerUsed.volume.value/value.inputContainerUsed.concentration.value;
 				
-				console.log("Valeur before "+value.atomicTransfertMethod.inputContainerUseds[0].experimentProperties.requiredVolume.value);
-				var requiredVolume=parseFloat(parseFloat(value.outputContainerUsed.concentration.value)*parseFloat(value.outputContainerUsed.volume.value)/parseFloat(value.inputContainerUsed.concentration.value)).toFixed(1);
-								experimentProperties["requiredVolume"]={"_type":"single","value":requiredVolume,"unit":value.outputContainerUsed.concentration.unit};
-				experimentProperties["bufferVolume"]={"_type":"single","value":parseFloat(value.outputContainerUsed.volume.value-requiredVolume).toFixed(1),
+				if(value.inputContainerUsed.experimentProperties===undefined || value.inputContainerUsed.experimentProperties!==null){
+					value.inputContainerUsed.experimentProperties={};
+				}
+				value.inputContainerUsed.experimentProperties["requiredVolume"]={"_type":"single","value":requiredVolume,"unit":value.outputContainerUsed.concentration.unit};
+				value.inputContainerUsed.experimentProperties["bufferVolume"]={"_type":"single","value":value.outputContainerUsed.volume.value-requiredVolume,
 						 "unit":value.outputContainerUsed.volume.unit};
-				value.inputContainerUsed.experimentProperties=experimentProperties;
 				
 			}else if(value.outputContainerUsed.concentration.unit="nM") {
-				var requiredVolume=parseFloat(parseFloat(value.outputContainerUsed.concentration.value)*parseFloat(value.outputContainerUsed.volume.value)/(parseFloat(value.inputContainerUsed.concentration.value)*660*value.inputContainerUsed.size.value*1000000)).toFixed(1);
-				console.log("Calcul requiredVolume "+requiredVolume);
-				experimentProperties["requiredVolume"]={"_type":"single","value":requiredVolume,"unit":value.outputContainerUsed.concentration.unit};
-				experimentProperties["bufferVolume"]={"_type":"single","value":parseFloat(value.outputContainerUsed.volume.value-requiredVolume).toFixed(1),
+				var requiredVolume=value.outputContainerUsed.concentration.value*value.outputContainerUsed.volume.value/(value.inputContainerUsed.concentration.value*660*value.inputContainerUsed.size.value*1000000);
+				
+				if(value.inputContainerUsed.experimentProperties===undefined || value.inputContainerUsed.experimentProperties!==null){
+					value.inputContainerUsed.experimentProperties={};
+				}				
+				value.inputContainerUsed.experimentProperties["requiredVolume"]={"_type":"single","value":requiredVolume,"unit":value.outputContainerUsed.concentration.unit};
+				value.inputContainerUsed.experimentProperties["bufferVolume"]={"_type":"single","value":value.outputContainerUsed.volume.value-requiredVolume,
 						 "unit":value.outputContainerUsed.volume.unit};
-				value.inputContainerUsed.experimentProperties=experimentProperties;
 			}
 	    }
 	}
@@ -266,19 +270,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 		if(value!=null & value !=undefined){
 			$scope.calculVolumeFromValue(value.data);
 	   }
-	   else {
-		   
-		  var config=$scope.udtTable.config;		   	
-		   /* Pour chaque ligne du datatable, lance le calcul   */
-		   var allData=$scope.atmService.data.getData();
-		   
-		   allData.forEach(function(data){
-			   data.outputContainerUsed.volume.value=config.edit.columns[columnId].value;
-			   $scope.calculVolumeFromValue(data);
-			});
-			$scope.atmService.data.setData(allData,allData.length);
-
-	   }
+	
 	
 	};
 	
