@@ -2,7 +2,6 @@ package controllers.instruments.io;
 
 import static play.data.Form.form;
 
-import java.io.File;
 import java.lang.reflect.Constructor;
 
 import models.laboratory.common.instance.property.PropertyFileValue;
@@ -21,6 +20,7 @@ import validation.utils.ValidationHelper;
 import controllers.TPLCommonController;
 import controllers.instruments.io.utils.AbstractInput;
 import controllers.instruments.io.utils.AbstractOutput;
+import controllers.instruments.io.utils.File;
 import fr.cea.ig.MongoDBDAO;
 
 public class IO extends TPLCommonController {
@@ -85,8 +85,8 @@ public class IO extends TPLCommonController {
 				File file = output.generateFile(experiment, contextValidation);
 				if (!contextValidation.hasErrors() && null != file) {									
 					response().setContentType("application/x-download");  
-					response().setHeader("Content-disposition","attachment; filename="+file.getAbsolutePath());
-					return ok(file);
+					response().setHeader("Content-disposition","attachment; filename="+file.filename);
+					return ok(file.content);
 				}
 			}catch(Throwable e){
 				contextValidation.addErrors("Error :", e.getMessage());

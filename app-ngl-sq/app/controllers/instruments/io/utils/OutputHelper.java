@@ -1,7 +1,7 @@
 package controllers.instruments.io.utils;
 
 
-import java.io.File;
+
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -41,21 +41,21 @@ public class OutputHelper {
 		}
 		if(instrument != null){
 			if(Play.application().configuration().getString("ngl.path.instrument") != null){
-				return Play.application().configuration().getString("ngl.path.instrument")+File.separator;
+				return Play.application().configuration().getString("ngl.path.instrument")+java.io.File.separator;
 			}else{
-				return instrument.path+File.separator+"SampleSheet"+File.separator;
+				return instrument.path+java.io.File.separator+"SampleSheet"+java.io.File.separator;
 			}
 		}
 		return null;
 	}
 	
-	public static void writeFile(File file, String content){
+	public static void writeFile(File file) {
 		Writer writer = null;
 		try {
 			
-			FileOutputStream fos = new FileOutputStream(file);
+			FileOutputStream fos = new FileOutputStream(file.filename);
 			writer = new OutputStreamWriter(fos, Codec.UTF8().name());			
-			writer.write(content);
+			writer.write(file.content);
 			writer.append("\r\n");
 			writer.close();
 			fos.close();
@@ -64,6 +64,7 @@ public class OutputHelper {
 			Logger.error("Problem to create sample sheet",e);
 			Logger.error("DAO error: "+e.getMessage(),e);
 		}
+		
 	}
 	
 	public static String format(String content){
@@ -233,5 +234,12 @@ public class OutputHelper {
 		return container.contents.stream().map((Content c) -> (String) c.properties.get("tag").value)
 				.collect(Collectors.toList()).get(0)
 				;
+	}
+
+	public static boolean sortBylocationSupportOneToOne(AtomicTransfertMethod atm1, AtomicTransfertMethod atm2){
+		InputContainerUsed icu1 = atm1.inputContainerUseds.get(0);
+		InputContainerUsed icu2 = atm2.inputContainerUseds.get(0);
+		
+		return getNumberPositionInPlateByColumn(icu1.locationOnContainerSupport.line, icu1.locationOnContainerSupport.column) < getNumberPositionInPlateByColumn(icu2.locationOnContainerSupport.line, icu2.locationOnContainerSupport.column);
 	}
 }

@@ -1,6 +1,5 @@
 package controllers.instruments.io.utils;
 
-import java.io.File;
 
 import models.laboratory.experiment.instance.Experiment;
 import validation.ContextValidation;

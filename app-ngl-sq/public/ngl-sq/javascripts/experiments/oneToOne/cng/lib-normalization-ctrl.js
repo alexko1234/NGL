@@ -1,5 +1,5 @@
-angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'atmToSingleDatatable',
-                                                     function($scope, $parse, atmToSingleDatatable){
+angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$http', 'atmToSingleDatatable',
+                                                     function($scope, $parse, $http, atmToSingleDatatable){
 // FDS 15/02/2016 -- JIRA NGL-894 : lib-normalization experiment (en plaques)
 	
 	var inputExtraHeaders=Messages("experiments.inputs");
@@ -336,4 +336,37 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', 'a
 		$scope.outputContainerSupport.storageCode=$scope.experiment.atomicTransfertMethods[0].outputContainerUseds[0].locationOnContainerSupport.storageCode;
 		//console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
 	}
+	
+	var generateSampleSheet = function(){
+		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
+		.success(function(data, status, headers, config) {
+			var header = headers("Content-disposition");
+			var filepath = header.split("filename=")[1];
+			var filename = filepath.split("/");
+			filename = filename[filename.length-1];
+			if(data!=null){
+				$scope.messages.clazz="alert alert-success";
+				$scope.messages.text=Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath;
+				$scope.messages.showDetails = false;
+				$scope.messages.open();	
+				
+				var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
+				saveAs(blob, filename);
+			}
+		})
+		.error(function(data, status, headers, config) {
+			$scope.messages.clazz = "alert alert-danger";
+			$scope.messages.text = Messages('experiments.msg.generateSampleSheet.error');
+			$scope.messages.showDetails = false;
+			$scope.messages.open();				
+		});
+	};
+	
+	$scope.setAdditionnalButtons([{
+		isDisabled : function(){return $scope.isCreationMode();},
+		isShow:function(){return true},
+		click:generateSampleSheet,
+		label:Messages("experiments.sampleSheet")
+	}]);
+	
 }]);
