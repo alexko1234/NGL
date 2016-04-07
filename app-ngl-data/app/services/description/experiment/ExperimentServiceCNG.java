@@ -135,17 +135,20 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			l.add(newExperimentType("Quantification qPCR","qpcr-quantification", null,850,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsQPCR(), 
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
+					getPropertyDefinitionsQPCR(), 
 					getInstrumentUsedTypes("qpcr-lightcycler-480II"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG))); 
 			
-			//quality control
-
-			//purif
-
-			//transformation
+			// FDS 07/04/2016 --JIRA NGL-894: processus et experiments pour X5
+			l.add(newExperimentType("profil LABCHIP_GX","labchip-migration-profile", null, 900,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
+					getPropertyDefinitionsChipMigration(), 
+					getInstrumentUsedTypes("labChipGX"),"OneToVoid", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-		
+			
+			
 			/*
 			l.add(newExperimentType("Migration sur puce","chip-migration",
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
@@ -218,10 +221,11 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getExperimentTypeNodes("ext-to-x5-wg-pcr-free"),null,getExperimentTypes("qpcr-quantification"), null  
 					).save();
 
-			//FDS modification 09/11/2016 -- JIRA NGL-894: processus et experiments pour X5; ajout "prep-pcr-free" dans les previous
+			//FDS modification ...../2016 -- JIRA NGL-894: processus et experiments pour X5; ajout "prep-pcr-free" dans les previous
+			//                 07/04/2016 -- JIRA NGL-894: processus et experiments pour X5; ajout "automated-electrophoresis-system" dans qc
 			newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), 
 					false, false, false, 
-					getExperimentTypeNodes("prep-pcr-free"), null, null, getExperimentTypes("aliquoting")
+					getExperimentTypeNodes("prep-pcr-free"), null, getExperimentTypes("automated-electrophoresis-system"), getExperimentTypes("aliquoting")
 					).save();
 
 		}else{
@@ -262,7 +266,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	
 	private List<PropertyDefinition> getPropertyDefinitionsQPCR() {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		// pas editable puisque calculée!!
+		// laisser editable au cas ou la valeur calculée ne convient pas...
 		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode( "nM"), MeasureUnit.find.findByCode("nM"),
 				"single", 11, true, null, "2"));	
@@ -340,6 +344,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		return propertyDefinitions;
 	}
 	
+	/* FDS 07/04/2016 VIEUX CODE............
 	//TODO
 	// Propriete taille en output et non en input ?
 	// Valider les keys
@@ -359,6 +364,25 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		return propertyDefinitions;
 	}
+	*/
+	public static List<PropertyDefinition> getPropertyDefinitionsChipMigration() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+
+		//InputContainer
+		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("ng/µL"), MeasureUnit.find.findByCode("ng/µL"),
+				"single", 11, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Taille", "size1", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode( "pb"), MeasureUnit.find.findByCode("pb"),
+				"single", 12, true, null, null));
+		
+        /* VOIR GUILLAUME....
+		propertyDefinitions.add(newPropertiesDefinition("Profil de migration", "migrationProfile", LevelService.getLevels(Level.CODE.ContainerOut),String.class, true, "single"));
+        */		
+		
+		return propertyDefinitions;
+	}
+	
 	
 	private static List<PropertyDefinition> getPropertyDefinitionsIlluminaDepot() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();

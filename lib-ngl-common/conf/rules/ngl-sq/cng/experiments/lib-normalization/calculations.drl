@@ -23,7 +23,7 @@ rule "InputVolume in lib-normalization inputContainer"
 		$atomicTransfert: OneToOneContainer($inputContainerUsed:inputContainerUseds.get(0), $outputContainerUsed: outputContainerUseds.get(0))	
 		
 		// !! pb pas de concentration input tant qu'on a pas fait la Quantification!!! ....
-		//DEBUG InputContainerUsed($inputConcentration: concentration, $inputConcentration!=null ) from $inputContainerUsed
+		InputContainerUsed($inputConcentration: concentration, $inputConcentration!=null ) from $inputContainerUsed
 		InputContainerUsed($inputVolume: volume, $inputVolume!=null ) from $inputContainerUsed
 		
 		OutputContainerUsed($outputVolume: volume, $outputVolume!=null ) from $outputContainerUsed
@@ -33,18 +33,14 @@ rule "InputVolume in lib-normalization inputContainer"
 	    eval ( $outputVolume.value != null && convertPVToDouble($outputVolume) != 0 )
         eval ( $outputConcentration.value != null && convertPVToDouble($outputConcentration) != 0 )
         
-        //ne pas calculer le volume engage si l'utisateur saisi qq chose.. TODO ???? Voir avec Julie
+        //ne pas calculer le volume engagé si l'utisateur saisi qq chose... TODO ???? Voir avec Julie
    then
    		// -1- calcul volume engagé
-        Logger.debug("-1- InputVolume calculation");
-       
-        //Logger.debug("inputConcentration="+ Double.parseDouble($inputConcentration.getValue().toString()) );
-        Double iConc=4.5;// DEBUG simuler une concentration input
-        Logger.debug("inputConcentration="+iConc);
-          
+        Logger.debug("-1- InputVolume calculation");  
+        Logger.debug("inputConcentration="+ Double.parseDouble($inputConcentration.getValue().toString()) );
+
         // utiliser  convertPVToDouble !!
-        //DEBUG Double engVolume = roundValue(convertPVToDouble($outputConcentration)*convertPVToDouble($outputVolume)/convertPVToDouble($inputConcentration))
-        Double engVolume = roundValue(convertPVToDouble($outputConcentration)*convertPVToDouble($outputVolume)/iConc );
+        Double engVolume = roundValue(convertPVToDouble($outputConcentration)*convertPVToDouble($outputVolume)/convertPVToDouble($inputConcentration));
         Logger.debug("inputVolume="+ engVolume );
         
         //verifier que le volume engagé est réalisable: vol engagé <= vol input
