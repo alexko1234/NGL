@@ -26,22 +26,6 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 		},
 		exportCSV:{
 			active:true
-		},
-		edit:{
-			active:Permissions.check("writing")?true:false,
-			columnMode:true
-		},
-		save:{
-			active:Permissions.check("writing")?true:false,
-			url:jsRoutes.controllers.containers.api.Containers.updateBatch().url,
-			batch:true,
-			method:'put',
-			callback: function(reason, error){
-				
-				console.log("callback reason=" + reason);
-				console.log("callback error=" + error);
-			}
-		
 		}
 	};
 
@@ -92,14 +76,11 @@ angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$rou
 			},
 			save:{
 				active:Permissions.check("writing")?true:false,
-				url:function(line){return jsRoutes.controllers.containers.api.Containers.updateStateCode(line.code).url;},
+				url:function(line){return jsRoutes.controllers.containers.api.Containers.updateStateBatch().url;},
 				mode:'remote',
 				method:'put',
-				value:function(container){
-					var updateForm = {};
-					updateForm.stateCode = container.state.code;
-					return updateForm;
-				}
+				batch:true,
+				value:function(line){return {code:line.code,state:line.state};}
 			},
 			hide:{
 				active:true

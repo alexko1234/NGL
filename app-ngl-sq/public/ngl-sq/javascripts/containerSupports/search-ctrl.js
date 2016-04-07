@@ -72,18 +72,14 @@ angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$rou
 				active:Permissions.check("writing")?true:false,
 				columnMode:true
 			},
-			
 			save:{
 				active:Permissions.check("writing")?true:false,
-				url:function(line){return jsRoutes.controllers.containers.api.ContainerSupports.updateStateCode(line.code).url;},
+				url:function(line){return jsRoutes.controllers.containers.api.ContainerSupports.updateStateBatch().url;},
 				mode:'remote',
 				method:'put',
-				value:function(containerSupport){
-					var updateForm = {};
-					updateForm.stateCode = containerSupport.state.code;
-					return updateForm;
-				}
-			}
+				batch:true,
+				value:function(line){return {code:line.code,state:line.state};}
+			},
 	};
 
 	$scope.reset = function(){

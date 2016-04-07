@@ -1,38 +1,41 @@
 package workflows.container;
 
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
+import static validation.common.instance.CommonValidationHelper.*;
 
-import java.util.Date;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
-import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import akka.actor.ActorRef;
-import akka.actor.Props;
 import play.Logger;
 import play.Play;
 import play.libs.Akka;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
-import validation.common.instance.CommonValidationHelper;
 import validation.container.instance.ContainerSupportValidationHelper;
-import validation.container.instance.ContainerValidationHelper;
 import workflows.Workflows;
+import akka.actor.ActorRef;
+import akka.actor.Props;
+
+import com.mongodb.BasicDBObject;
+
 import fr.cea.ig.MongoDBDAO;
 
 @Service
 public class ContSupportWorkflows extends Workflows<ContainerSupport> {
 
-	//public static ContSupportWorkflows instance = new ContSupportWorkflows();
+	@Autowired
+	ContWorkflows containerWorkflows;
 	
 	@Override
 	public void applyPreStateRules(ContextValidation validation,
@@ -68,7 +71,19 @@ public class ContSupportWorkflows extends Workflows<ContainerSupport> {
 						DBQuery.is("code",containerSupport.code), DBUpdate.unset("fromTransformationTypeCodes"));
 			}	
 		}
+		if(Boolean.TRUE.equals(validation.getObject(FIELD_UPDATE_CONTAINER_STATE)) && 
+				("IW-P".equals(containerSupport.state.code) || "IS".equals(containerSupport.state.code) || "UA".equals(containerSupport.state.code))){
+			State nextState = cloneState(containerSupport.state, validation.getUser());
+			MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code", containerSupport.code))
+				.cursor.forEach(c -> {				
+					containerWorkflows.setState(validation, c, nextState);
+				});
+		}
 		callWorkflowRules(validation,containerSupport);		
+		
+		if(validation.hasErrors()){
+			Logger.error("Problem on ContSupportWorkflow.applySuccessPostStateRules : "+validation.errors.toString());
+		}
 	}
 	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 
@@ -80,13 +95,16 @@ public class ContSupportWorkflows extends Workflows<ContainerSupport> {
 	public void applyErrorPostStateRules(ContextValidation validation,
 			ContainerSupport container, State nextState) {
 		// TODO Auto-generated method stub
-		
+		if(validation.hasErrors()){
+			Logger.error("Problem on ContSupportWorkflow.applyErrorPostStateRules : "+validation.errors.toString());
+		}
 	}
 
 	@Override
 	public void setState(ContextValidation contextValidation, ContainerSupport containerSupport,
 			State nextState) {
 		ContextValidation currentCtxValidation = new ContextValidation(contextValidation.getUser());
+		currentCtxValidation.setContextObjects(contextValidation.getContextObjects());
 		currentCtxValidation.setUpdateMode();
 		
 		ContainerSupportValidationHelper.validateNextState(containerSupport, nextState, currentCtxValidation);
@@ -119,6 +137,43 @@ public class ContSupportWorkflows extends Workflows<ContainerSupport> {
 		
 	}
 
+	
+	public void setStateFromContainers(ContextValidation contextValidation, ContainerSupport containerSupport){
+		State nextStep = getNextStateFromContainerStates(contextValidation.getUser(), ContainerSupportValidationHelper.getContainerStates(containerSupport));
+		setState(contextValidation, containerSupport, nextStep);
+	}
+
+	public State getNextStateFromContainerStates(String username, Set<String> containerStates) {
+		State nextStep = null;
+		if(containerStates.contains("IW-D")){
+			nextStep = getNewState("IW-D", username);			
+		}else if(containerStates.contains("IU")){
+			nextStep = getNewState("IU", username);			
+		}else if(containerStates.contains("IW-E")){
+			nextStep = getNewState("IW-E", username);			
+		}else if(containerStates.contains("A-TM") && !containerStates.contains("A-QC") && !containerStates.contains("A-P") && !containerStates.contains("A-TF")){
+			nextStep = getNewState("A-TM", username);			
+		}else if(containerStates.contains("A-QC") && !containerStates.contains("A-TM") && !containerStates.contains("A-P") && !containerStates.contains("A-TF")){
+			nextStep = getNewState("A-QC", username);			
+		}else if(containerStates.contains("A-P") && !containerStates.contains("A-TM") && !containerStates.contains("A-QC") && !containerStates.contains("A-TF")){
+			nextStep = getNewState("A-P", username);			
+		}else if(containerStates.contains("A-TF") && !containerStates.contains("A-TM") && !containerStates.contains("A-QC") && !containerStates.contains("A-P")){
+			nextStep = getNewState("A-TF", username);			
+		}else if(containerStates.contains("A-TF") || containerStates.contains("A-TM") || containerStates.contains("A-QC") || containerStates.contains("A-P")){
+			nextStep = getNewState("A", username);			
+		}else if(containerStates.contains("IW-P")){
+			nextStep = getNewState("IW-P", username);			
+		}else if(containerStates.contains("IS")){
+			nextStep = getNewState("IS", username);			
+		}else if(containerStates.contains("UA")){
+			nextStep = getNewState("UA", username);			
+		}else{
+			throw new RuntimeException("setStateFromContainer : states "+containerStates+" not managed");
+		}
+		return nextStep;
+	}
+	
+	
 	@Override
 	public void nextState(ContextValidation contextValidation, ContainerSupport object) {
 		// TODO Auto-generated method stub

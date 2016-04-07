@@ -204,13 +204,6 @@ angular.module('commonsServices', []).
     				//GA 24/07/2015 un peu spécial pour tags car fait partie de la collection parameters...
     					load(jsRoutes.controllers.commons.api.Parameters.list().url,params,(key)?key:'tags');
     				},
-    				tagCategories : function(params, key){
-    					if(angular.isUndefined(params)){
-    	    				params = {};
-    	    			}
-    					params.objectTypeCode='tagCategory';
-    					load(jsRoutes.controllers.containers.api.Contents.list().url,params,(key)?key:'tagCategories');
-    				},
     				sampleTypes : function(params, key){
     					if(angular.isUndefined(params)){
     	    				params = {};

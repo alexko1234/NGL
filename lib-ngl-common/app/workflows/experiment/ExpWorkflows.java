@@ -15,6 +15,7 @@ import play.Logger;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import workflows.Workflows;
+import workflows.container.ContWorkflows;
 import fr.cea.ig.MongoDBDAO;
 @Service
 public class ExpWorkflows extends Workflows<Experiment>{
@@ -23,12 +24,16 @@ public class ExpWorkflows extends Workflows<Experiment>{
 	@Autowired
 	ExpWorkflowsHelper expWorkflowsHelper;
 	
+	@Autowired
+	ContWorkflows contWorkflows;
+	
+	
 	@Override
 	public void applyCurrentStateRules(ContextValidation validation, Experiment exp) {
 		if("N".equals(exp.state.code)){
 			expWorkflowsHelper.updateXCodes(exp);
 			if(validation.isUpdateMode()){
-				expWorkflowsHelper.updateRemoveContainersFromExperiment(exp, validation, getNewState(getContainerStateFromExperimentCategory(exp.categoryCode), validation.getUser())); 
+				expWorkflowsHelper.updateRemoveContainersFromExperiment(exp, validation, getNewState(contWorkflows.getContainerStateFromExperimentCategory(exp.categoryCode), validation.getUser())); 
 				expWorkflowsHelper.updateAddContainersToExperiment(exp, validation, getNewState("IW-E", validation.getUser()));				
 			}			 						
 		}else if("IP".equals(exp.state.code)){
@@ -72,14 +77,14 @@ public class ExpWorkflows extends Workflows<Experiment>{
 		expWorkflowsHelper.linkExperimentWithProcesses(exp, validation);
 		if("N".equals(exp.state.code)){
 			expWorkflowsHelper.updateStateOfInputContainers(exp, getNewState("IW-E", validation.getUser()), validation);
-			expWorkflowsHelper.updateStateOfInputContainerSupports(exp, getNewState("IW-E", validation.getUser()), validation);					
+			expWorkflowsHelper.updateStateOfInputContainerSupports(exp, validation);					
 		} else if("IP".equals(exp.state.code)){		
 			expWorkflowsHelper.updateStateOfInputContainers(exp, getNewState("IU", validation.getUser()), validation);
-			expWorkflowsHelper.updateStateOfInputContainerSupports(exp, getNewState("IU", validation.getUser()), validation);
+			expWorkflowsHelper.updateStateOfInputContainerSupports(exp, validation);
 			expWorkflowsHelper.updateStateOfProcesses(exp,  getNewState("IP", validation.getUser()), validation);			
 		}else if("F".equals(exp.state.code)){
 			expWorkflowsHelper.updateStateOfInputContainers(exp, getNewState("IW-D", validation.getUser()), validation);
-			expWorkflowsHelper.updateStateOfInputContainerSupports(exp, getNewState("IW-D", validation.getUser()), validation);				
+			expWorkflowsHelper.updateStateOfInputContainerSupports(exp, validation);				
 			expWorkflowsHelper.updateStateOfProcesses(exp, getNewState("IP", validation.getUser()), validation);
 			
 			if(ExperimentCategory.CODE.qualitycontrol.toString().equals(exp.categoryCode)){
@@ -87,6 +92,10 @@ public class ExpWorkflows extends Workflows<Experiment>{
 			}
 		}
 		expWorkflowsHelper.callWorkflowRules(validation, exp);
+		
+		if(validation.hasErrors()){
+			Logger.error("Problem on ExpWorkflow.applySuccessPostStateRules : "+validation.errors.toString());
+		}
 	}
 	
 	public void applyErrorPostStateRules(ContextValidation validation, Experiment exp, State nextState){
@@ -96,6 +105,10 @@ public class ExpWorkflows extends Workflows<Experiment>{
 			
 		}else if("F".equals(nextState.code)){
 			expWorkflowsHelper.deleteOutputContainerSupports(exp, validation);
+		}
+		
+		if(validation.hasErrors()){
+			Logger.error("Problem on ExpWorkflow.applyErrorPostStateRules : "+validation.errors.toString());
 		}
 	}
 	
@@ -130,22 +143,5 @@ public class ExpWorkflows extends Workflows<Experiment>{
 		//in case of experiment nothing to do !	
 	}
 
-	/**
-	 * Return the available container state for a experiment category code
-	 * @param categoryCode
-	 * @return
-	 */
-	private static String getContainerStateFromExperimentCategory(String categoryCode) {
-		String nextContainerState=null;
-		if(categoryCode.equals(ExperimentCategory.CODE.transformation.name())){
-			nextContainerState="A-TM";
-		}else if(categoryCode.equals(ExperimentCategory.CODE.transfert.name())){
-			nextContainerState="A-TF";
-		}else if(categoryCode.equals(ExperimentCategory.CODE.qualitycontrol.name())){
-			nextContainerState="A-QC";
-		}else if(categoryCode.equals(ExperimentCategory.CODE.purification.name())){
-			nextContainerState="A-PF";
-		}
-		return nextContainerState;
-	}
+	
 }

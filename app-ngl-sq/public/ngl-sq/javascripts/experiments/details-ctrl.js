@@ -1136,7 +1136,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			return codes;
 		};
 		
-		var containers = [], supports = [], processes = [];
+		var containers = [], processes = [];
 		
 		//update input container and support, //update container container and support, // update process
 		var containerPromises = [];
@@ -1153,35 +1153,35 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 					if(data[i].dispatch === 0){
 						if($scope.isProcessResolutionsMustBeSet({data:data[i]})){
 							containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IW-P"));
-							supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "IW-P"));
+							//supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "IW-P"));
 							
 							processPromises = processPromises.concat(getProcessStateRequests(i, codes.processCodes,"F", data[i].processResolutions));
 						}else{
 							containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "A-TM"));
-							supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "A-TM"));
+							//supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "A-TM"));
 						}
 						
 					}else if(data[i].dispatch === 1){
 						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "A-TF"));
-						supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "A-TF"));
+						//supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "A-TF"));
 						
 					}else if(data[i].dispatch === 2){
 						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "A-QC"));
-						supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode],  "A-QC"));
+						//supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode],  "A-QC"));
 						
 					}else if(data[i].dispatch === 3){
 						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode],  "A-PF"));
-						supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "A-PF"));
+						//supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "A-PF"));
 						
 					}else if(data[i].dispatch === 4){
 						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IS"));
-						supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "IS"));
+						//supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "IS"));
 						processPromises = processPromises.concat(getProcessStateRequests(i, codes.processCodes,"F", data[i].processResolutions));
 					}
 				}else{
 				
 					containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IS"));
-					supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "IS"));
+					//supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "IS"));
 					if(data[i].dispatch === 0){
 						if($scope.isProcessResolutionsMustBeSet({data:data[i]})){
 							processPromises = processPromises.concat(getProcessStateRequests(i, codes.processCodes,"F", data[i].processResolutions));
@@ -1194,11 +1194,11 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			}else if(data[i].status === 'FALSE'){
 				if(data[i].dispatch === 5){
 					containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], getInputStateForRetry()));
-					supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], getInputStateForRetry()));
+					//supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], getInputStateForRetry()));
 					
 				}else if(data[i].dispatch === 6){		
 					containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IS"));
-					supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "IS"));
+					//supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "IS"));
 					
 					processPromises = processPromises.concat(getProcessStateRequests(i, codes.processCodes,"F", data[i].processResolutions));
 				}
@@ -1231,7 +1231,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			return codes;
 		};
 		
-		var containers = [], supports = [], processes = [];
+		var containers = [], processes = [];
 		
 		//update input container and support, //update container container and support, // update process
 		var containerPromises = [];
@@ -1245,7 +1245,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			
 			if(data[i].status === 'TRUE'){
 				containerPromises = containerPromises.concat(getContainerStateRequests(i, codes.inputContainerCodes, "IS"));
-				supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, codes.inputSupportCodes, "IS"));
+				//supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, codes.inputSupportCodes, "IS"));
 				var outputStateCode = null;
 				if(data[i].dispatch === 0){
 					if($scope.isProcessResolutionsMustBeSet({data:data[i]})){
@@ -1267,7 +1267,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				
 				if(null !== outputStateCode){
 					containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.outputContainerCode], outputStateCode));
-					supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.outputSupportCode], outputStateCode));
+					//supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.outputSupportCode], outputStateCode));
 				}else{
 					console.log("ERROR no outputStateCode");
 				}
@@ -1275,17 +1275,17 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			}else if(data[i].status === 'FALSE'){
 				if(data[i].dispatch === 5){
 					containerPromises = containerPromises.concat(getContainerStateRequests(i, codes.inputContainerCodes, getInputStateForRetry()));
-					supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, codes.inputSupportCodes, getInputStateForRetry()));
+					//supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, codes.inputSupportCodes, getInputStateForRetry()));
 					
 					containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.outputContainerCode], "UA"));
-					supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.outputSupportCode], "UA"));
+					//supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.outputSupportCode], "UA"));
 					
 				}else if(data[i].dispatch === 6){		
 					containerPromises = containerPromises.concat(getContainerStateRequests(i, codes.inputContainerCodes, "IS"));
-					supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, codes.inputSupportCodes, "IS"));
+					//supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, codes.inputSupportCodes, "IS"));
 					
 					containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.outputContainerCode], "UA"));
-					supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.outputSupportCode], "UA"));
+					//supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.outputSupportCode], "UA"));
 					
 					processPromises = processPromises.concat(getProcessStateRequests(i, codes.processCodes,"F", data[i].processResolutions));
 				}
@@ -1297,8 +1297,8 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	};
 	
 	var saveData = function(supports, containers, processes){
-		$http.put(jsRoutes.controllers.containers.api.ContainerSupports.updateStateBatch().url,supports)
-			.then(function(data, status,headers,config){
+		//$http.put(jsRoutes.controllers.containers.api.ContainerSupports.updateStateBatch().url,supports)
+		//	.then(function(data, status,headers,config){
 				$http.put(jsRoutes.controllers.containers.api.Containers.updateStateBatch().url,containers)
 					.then(function(data, status,headers,config){
 						
@@ -1315,9 +1315,9 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				},function(data, status,headers,config){
 					console.log("ERROR to update state for containers");
 				});
-			},function(data, status,headers,config){
-				console.log("ERROR to update state for supports");
-			});		
+			//},function(data, status,headers,config){
+			//	console.log("ERROR to update state for supports");
+			//});		
 	};
 	
 	var dispatchValues;

@@ -1,5 +1,7 @@
 package validation.container.instance;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -64,10 +66,60 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 		if(!contextValidation.hasErrors() && !nextState.code.equals(container.state.code)){
 			String nextStateCode = nextState.code;
 			String currentStateCode = container.state.code;
+			
+			String context = (String) contextValidation.getObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT);
+			
+			switch (context) {
+			case "workflow":
+				
+				if("IW-P".equals(currentStateCode) && !nextStateCode.startsWith("A")){
+					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
+				}else if(currentStateCode.startsWith("A") && !"IW-E".equals(nextStateCode)){
+					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
+				}else if("IW-E".equals(currentStateCode) && !"IU".equals(nextStateCode)){
+					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
+				}else if("IU".equals(currentStateCode) && !"IW-D".equals(nextStateCode)){
+					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
+				}
+				
+				break;
+			case "controllers":
+				
+				if("IW-P".equals(currentStateCode) && 
+						!nextStateCode.equals("UA") && !nextStateCode.equals("IS")){
+					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
+				}else if(currentStateCode.startsWith("A") && 
+						!nextStateCode.startsWith("A")){
+					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
+				}else if("IW-D".equals(currentStateCode) && 
+						!nextStateCode.equals("UA") && !nextStateCode.equals("IS") && !nextStateCode.startsWith("A")){
+					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
+				}else if("IS".equals(currentStateCode) && 
+						!nextStateCode.equals("UA") && !nextStateCode.equals("IW-P")){
+					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
+				}else if("UA".equals(currentStateCode) && 
+						!nextStateCode.equals("IW-P") && !nextStateCode.equals("IS")){
+					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
+				}else if("N".equals(currentStateCode) && 
+						!nextStateCode.equals("UA") && !nextStateCode.equals("IW-P") && !nextStateCode.startsWith("A")){
+					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
+				}else if("IW-E".equals(currentStateCode) || "IU".equals(currentStateCode)){
+					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
+				}
+				
+				break;
+
+			default:
+				throw new RuntimeException("FIELD_STATE_CONTAINER_CONTEXT : "+context+" not manage !!!");
+				
+			}
+			
+			/* old validation lol
 			if(("IS".equals(currentStateCode) || "UA".equals(currentStateCode)) && 
 					(!nextStateCode.equals("IW-P") && !nextStateCode.equals("UA") && !nextStateCode.equals("IS")) ){
 				contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
 			}
+			*/
 		}
 				
 	}

@@ -14,12 +14,10 @@ import models.laboratory.container.instance.ContainerSupport;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
-import models.utils.instance.StateHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
-import org.mongojack.DBUpdate;
 import org.mongojack.DBQuery.Query;
 
 import play.Logger;
@@ -30,13 +28,10 @@ import play.libs.Json;
 import play.mvc.Http;
 import play.mvc.Result;
 import validation.ContextValidation;
-import validation.container.instance.ContainerValidationHelper;
+import validation.common.instance.CommonValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableResponse;
 import workflows.container.ContSupportWorkflows;
-import workflows.container.ContWorkflows;
-import workflows.container.ContainerWorkflows;
-import workflows.experiment.ExpWorkflows;
 
 import com.mongodb.BasicDBObject;
 
@@ -111,48 +106,7 @@ public class ContainerSupports extends CommonController {
 	}
 
 	
-	@Permission(value={"writing"})
-	@Deprecated
-	public static Result updateStateCode(String code){
-		Form<ContainerSupportsUpdateForm> containerSupportUpdateFilledForm = getFilledForm(containerSupportUpdateForm, ContainerSupportsUpdateForm.class);
-		ContextValidation contextValidation = new ContextValidation(getCurrentUser(),containerSupportUpdateFilledForm.errors());
-		if(!containerSupportUpdateFilledForm.hasErrors()){
-			ContainerSupportsUpdateForm containerSupportUpdateForm = containerSupportUpdateFilledForm.get();
-			State state = new State();
-			state.code = containerSupportUpdateForm.stateCode;
-			state.user = getCurrentUser();
-			
-			List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("support.code",code)).toList();
-			for(Container container:containers){
-				String lastStateCode = container.state.code;
-				container.state = StateHelper.updateHistoricalNextState(container.state, state);
-				container.traceInformation = StateHelper.updateTraceInformation(container.traceInformation, state);
-				// Validate state for Container
-				contextValidation.addKeyToRootKeyName("container");
-				ContainerValidationHelper.validateStateCode(container, contextValidation);
-				contextValidation.removeKeyFromRootKeyName("container");
-			}
-			
-			if(!contextValidation.hasErrors()){
-				
-				ContainerWorkflows.setContainerSupportState(code, state, contextValidation);
-				if(!contextValidation.hasErrors()){
-					for(Container container :containers) {
-						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class
-								,DBQuery.is("code", container.code)
-								,DBUpdate.set("state", container.state)
-										.set("traceInformation", container.traceInformation));
-					}
-				}
-			}
 
-			if(!contextValidation.hasErrors()){
-				return ok();
-			}
-		}
-		return badRequest(containerSupportUpdateFilledForm.errorsAsJson());
-		}
-	
 	@Permission(value={"writing"})	
 	public static Result updateState(String code){
 		ContainerSupport support = getSupport(code);
@@ -164,6 +118,8 @@ public class ContainerSupports extends CommonController {
 		state.date = new Date();
 		state.user = getCurrentUser();
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
+		ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_STATE, Boolean.TRUE);
 		workflows.setState(ctxVal, support, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(getSupport(code)));
@@ -192,6 +148,8 @@ public class ContainerSupports extends CommonController {
 					state.date = new Date();
 					state.user = user;
 					ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+					ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
+					ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_STATE, Boolean.TRUE);
 					workflows.setState(ctxVal, support, state);
 					if (!ctxVal.hasErrors()) {
 						return new DatatableBatchResponseElement(OK,  getSupport(support.code), element.index);

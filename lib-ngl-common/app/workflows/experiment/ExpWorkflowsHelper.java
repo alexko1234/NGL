@@ -56,6 +56,7 @@ import play.libs.Akka;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
 import validation.ContextValidation;
+import validation.common.instance.CommonValidationHelper;
 import workflows.container.ContSupportWorkflows;
 import workflows.container.ContWorkflows;
 import workflows.process.ProcWorkflows;
@@ -139,13 +140,17 @@ public class ExpWorkflowsHelper {
 
 	
 	public void updateStateOfInputContainers(Experiment exp, State nextState, ContextValidation ctxVal) {
+		ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "workflow");
 		MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("code", exp.inputContainerCodes))
-			.cursor.forEach(c -> containerWorkflows.setState(ctxVal, c, nextState));						
+			.cursor.forEach(c -> containerWorkflows.setState(ctxVal, c, nextState));		
+		ctxVal.removeObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT);
 	}
 	
-	public void updateStateOfInputContainerSupports(Experiment exp, State nextState, ContextValidation ctxVal) {
+	public void updateStateOfInputContainerSupports(Experiment exp, ContextValidation ctxVal) {
+		ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "workflow");
 		MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("code", exp.inputContainerSupportCodes))
-			.cursor.forEach(c -> containerSupportWorkflows.setState(ctxVal, c, nextState));				
+			.cursor.forEach(c -> containerSupportWorkflows.setStateFromContainers(ctxVal, c));
+		ctxVal.removeObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT);
 	}
 	
 	public void updateStateOfProcesses(Experiment exp, State nextState, ContextValidation ctxVal) {
@@ -167,7 +172,7 @@ public class ExpWorkflowsHelper {
 		if(newContainerCodes.size() > 0){
 			Set<String> newContainerSupportCodes = new TreeSet<String>();
 			Set<String> newProcessCodes = new TreeSet<String>();
-			
+			ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "workflow");
 			MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("code", newContainerCodes))
 					.cursor.forEach(c -> {				
 				newContainerSupportCodes.add(c.support.code);
@@ -177,12 +182,14 @@ public class ExpWorkflowsHelper {
 			
 			MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("code", newContainerSupportCodes))
 				.cursor.forEach(c -> {				
-					containerSupportWorkflows.setState(ctxVal, c, nextState);
+					containerSupportWorkflows.setStateFromContainers(ctxVal, c);
 			});
 			
 			MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
 					DBQuery.in("code", newProcessCodes).notEquals("state.code", "F"), 
 					DBUpdate.set("currentExperimentTypeCode", expFromDB.typeCode).push("experimentCodes", expFromDB.code));			
+		
+			ctxVal.removeObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT);
 		}
 	}
 	
@@ -193,23 +200,24 @@ public class ExpWorkflowsHelper {
 		if(removeContainerCodes.size() > 0){
 			Set<String> removeContainerSupportCodes = new TreeSet<String>();
 			Set<String> removeProcessCodes = new TreeSet<String>();
-			
+			ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "workflow");
 			MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.in("code", removeContainerCodes)).cursor
 					.forEach(c -> {
 						removeContainerSupportCodes.add(c.support.code);
 						removeProcessCodes.addAll(c.processCodes);
 						containerWorkflows.setState(ctxVal, c, nextState);
 					});
+			
 			MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.in("code", removeContainerSupportCodes)).cursor
 					.forEach(c -> {
 						containerSupportWorkflows
-								.setState(ctxVal, c, nextState);
+								.setStateFromContainers(ctxVal, c);
 					});
 			
 			MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
 					DBQuery.in("code", removeProcessCodes).notEquals("state.code", "F"), 
 					DBUpdate.unset("currentExperimentTypeCode").pull("experimentCodes", expFromDB.code));
-			
+			ctxVal.removeObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT);
 		}
 	}
 

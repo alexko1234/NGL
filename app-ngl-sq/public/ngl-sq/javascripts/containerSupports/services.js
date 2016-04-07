@@ -81,6 +81,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 				"type":"text",
 				"edit":true,
 				"choiceInList": true,
+				"listStyle":"bt-select",
 				"possibleValues":"searchService.lists.getStates()", 
 				"filter":"codes:'state'"
 			});

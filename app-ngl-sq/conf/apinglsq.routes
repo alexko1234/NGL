@@ -10,10 +10,6 @@ HEAD	/api/supports/:code												controllers.containers.api.ContainerSupports
 PUT		/api/supports/batch/state										controllers.containers.api.ContainerSupports.updateStateBatch()
 PUT		/api/supports/:code/state										controllers.containers.api.ContainerSupports.updateState(code:java.lang.String)
 
-#TODO GA replace by new version
-PUT		/api-old/supports/:code/state									controllers.containers.api.ContainerSupports.updateStateCode(code:java.lang.String)
-
-
 #containers api
 GET		/api/containers													controllers.containers.api.Containers.list()
 #TODO a revoir plutot /api/containers/supports/categories
@@ -22,12 +18,6 @@ GET		/api/containers/:code											controllers.containers.api.Containers.get(c
 
 PUT		/api/containers/batch/state										controllers.containers.api.Containers.updateStateBatch()
 PUT		/api/containers/:code/state										controllers.containers.api.Containers.updateState(code:java.lang.String)
-
-#TODO GA replace by new version
-PUT		/api-old/containers/batch											controllers.containers.api.Containers.updateBatch()
-PUT		/api-old/containers/state-batch										controllers.containers.api.Containers.updateStateBatchOld()
-PUT		/api-old/containers/:code											controllers.containers.api.Containers.update(code:java.lang.String)
-PUT		/api-old/containers/:code/state										controllers.containers.api.Containers.updateStateCode(code:java.lang.String)
 
 GET		/api/container-categories										controllers.containers.api.ContainerCategories.list()
 
@@ -72,10 +62,6 @@ GET		/api/experiment-types/:code										controllers.experiments.api.Experiment
 GET		/api/experiment-types/:code/default-first						controllers.experiments.api.ExperimentTypes.getDefaultFirstExperiments(code:java.lang.String)
 GET		/api/experiment-type-nodes										controllers.experiments.api.ExperimentTypeNodes.list()
 GET		/api/experiment-type-nodes/:code								controllers.experiments.api.ExperimentTypeNodes.get(code:java.lang.String)
-
-#contents 
-#TODO GA must be remove
-GET		/api/contents													controllers.containers.api.Contents.list()
 
 
 #protocols api

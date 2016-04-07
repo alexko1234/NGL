@@ -1,6 +1,6 @@
 package workflows.container;
 
-import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
+import static validation.common.instance.CommonValidationHelper.*;
 
 import java.util.Collections;
 import java.util.Date;
@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import akka.actor.ActorRef;
@@ -23,6 +24,8 @@ import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.Valuation;
 import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.instance.Experiment;
 import models.utils.InstanceConstants;
@@ -33,7 +36,8 @@ import workflows.Workflows;
 @Service
 public class ContWorkflows extends Workflows<Container> {
 
-	//public static ContWorkflows instance = new ContWorkflows();
+	@Autowired
+	ContSupportWorkflows contSupportWorkflows;
 	
 	@Override
 	public void applyPreStateRules(ContextValidation validation,
@@ -75,7 +79,16 @@ public class ContWorkflows extends Workflows<Container> {
 																.unset("processTypeCodes"));
 			}		
 		}
-		callWorkflowRules(validation,container);		
+		
+		if(Boolean.TRUE.equals(validation.getObject(FIELD_UPDATE_CONTAINER_SUPPORT_STATE))){
+			ContainerSupport containerSupport = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,container.support.code);
+			contSupportWorkflows.setStateFromContainers(validation, containerSupport);
+		}
+		callWorkflowRules(validation,container);
+		
+		if(validation.hasErrors()){
+			Logger.error("Problem on ContWorkflow.applySuccessPostStateRules : "+validation.errors.toString());
+		}
 	}
 	private static ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 
@@ -87,7 +100,9 @@ public class ContWorkflows extends Workflows<Container> {
 	public void applyErrorPostStateRules(ContextValidation validation,
 			Container container, State nextState) {
 		// TODO Auto-generated method stub
-		
+		if(validation.hasErrors()){
+			Logger.error("Problem on ContWorkflow.applyErrorPostStateRules : "+validation.errors.toString());
+		}
 	}
 
 	@Override
@@ -95,6 +110,7 @@ public class ContWorkflows extends Workflows<Container> {
 			State nextState) {
 		
 		ContextValidation currentCtxValidation = new ContextValidation(contextValidation.getUser());
+		currentCtxValidation.setContextObjects(contextValidation.getContextObjects());
 		currentCtxValidation.setUpdateMode();
 		
 		ContainerValidationHelper.validateNextState(container, nextState, currentCtxValidation);
@@ -131,4 +147,22 @@ public class ContWorkflows extends Workflows<Container> {
 		
 	}
 
+	/**
+	 * Return the available container state for a experiment category code
+	 * @param categoryCode
+	 * @return
+	 */
+	public String getContainerStateFromExperimentCategory(String categoryCode) {
+		String nextContainerState=null;
+		if(categoryCode.equals(ExperimentCategory.CODE.transformation.name())){
+			nextContainerState="A-TM";
+		}else if(categoryCode.equals(ExperimentCategory.CODE.transfert.name())){
+			nextContainerState="A-TF";
+		}else if(categoryCode.equals(ExperimentCategory.CODE.qualitycontrol.name())){
+			nextContainerState="A-QC";
+		}else if(categoryCode.equals(ExperimentCategory.CODE.purification.name())){
+			nextContainerState="A-PF";
+		}
+		return nextContainerState;
+	}
 }

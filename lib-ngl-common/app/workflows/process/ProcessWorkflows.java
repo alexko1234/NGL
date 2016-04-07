@@ -20,8 +20,11 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
 import play.Logger;
+import play.api.modules.spring.Spring;
 import validation.ContextValidation;
+import validation.common.instance.CommonValidationHelper;
 import validation.processes.instance.ProcessValidationHelper;
+import workflows.container.ContWorkflows;
 import workflows.container.ContainerWorkflows;
 import fr.cea.ig.MongoDBDAO;
 
@@ -61,9 +64,10 @@ public class ProcessWorkflows {
 
 		State nextState = new State();
 		Set<String> processList=new HashSet<String>();
-
-		nextState.code=ContainerWorkflows.getAvailableContainerStateFromExperimentCategory(experimentCategoryCode);
-
+		
+		nextState.code=Spring.getBeanOfType(ContWorkflows.class).getContainerStateFromExperimentCategory(experimentCategoryCode);
+		nextState.user = contextValidation.getUser();
+		 
 		Set<String> inputContainers=new HashSet<String>();
 		for (Process process : processes) {
 			inputContainers.add(process.inputContainerCode);
@@ -75,7 +79,13 @@ public class ProcessWorkflows {
 			ProcessHelper.updateContainer(container,processTypeCode, processList,contextValidation);
 			ProcessHelper.updateContainerSupportFromContainer(container,contextValidation);
 		}
-		ContainerWorkflows.setContainerState(containers, nextState.code, contextValidation);
+		
+		contextValidation.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "workflow");
+		contextValidation.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE, Boolean.TRUE);
+		containers.forEach(c -> Spring.getBeanOfType(ContWorkflows.class).setState(contextValidation, c, nextState));
+		contextValidation.removeObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT);
+		contextValidation.removeObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE);
+		
 	}
 
 

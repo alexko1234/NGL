@@ -32,7 +32,6 @@ public class ContainerSupports extends CommonController{
   	    		controllers.containers.api.routes.javascript.ContainerSupports.get(),
   	    		controllers.containers.api.routes.javascript.ContainerSupportCategories.list(),
   	    		controllers.containers.api.routes.javascript.ContainerSupports.updateStateBatch(),
-  	    		controllers.containers.api.routes.javascript.ContainerSupports.updateStateCode(),
   	    		controllers.projects.api.routes.javascript.Projects.list(),
   	    		controllers.samples.api.routes.javascript.Samples.list(),
   	    		controllers.containers.api.routes.javascript.Containers.list(),
@@ -41,7 +40,6 @@ public class ContainerSupports extends CommonController{
   	    		controllers.processes.api.routes.javascript.ProcessTypes.list(),
   	    		controllers.processes.api.routes.javascript.ProcessCategories.list(),
   	    		controllers.containers.api.routes.javascript.ContainerCategories.list(),
-  	    		controllers.containers.api.routes.javascript.Containers.updateBatch(),
   	    		controllers.commons.api.routes.javascript.Users.list()
   	      )	  	      
   	    );

@@ -13,11 +13,14 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
 import play.Logger;
+import play.api.modules.spring.Spring;
 import fr.cea.ig.MongoDBDAO;
 import scala.concurrent.duration.FiniteDuration;
 import services.instance.AbstractImportDataCNS;
 import validation.ContextValidation;
+import validation.common.instance.CommonValidationHelper;
 import validation.utils.ValidationConstants;
+import workflows.container.ContWorkflows;
 import workflows.container.ContainerWorkflows;
 
 public abstract class UpdateContainerImportCNS extends AbstractImportDataCNS {
@@ -44,7 +47,13 @@ public abstract class UpdateContainerImportCNS extends AbstractImportDataCNS {
 				//	contextValidation.addErrors("code", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, container.code);
 					Logger.warn("Le container "+container.code +" ne peut pas etre mise a l etat IS car elle a des processus");
 				}else {
-					ContainerWorkflows.setContainerState(container, containerUpdate.state, contextValidation);
+					//ContainerWorkflows.setContainerState(container, containerUpdate.state, contextValidation);
+					contextValidation.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
+					contextValidation.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE, Boolean.TRUE);
+					Spring.getBeanOfType(ContWorkflows.class).setState(contextValidation, container, containerUpdate.state);
+					contextValidation.removeObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT);
+					contextValidation.removeObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE);
+					
 				}
 				
 				if(!contextValidation.hasErrors()){

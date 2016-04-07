@@ -6,12 +6,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import models.laboratory.common.description.Level;
+import models.laboratory.common.instance.State;
+import models.laboratory.container.description.ContainerSupportCategory;
+import models.laboratory.container.instance.Container;
+import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.processes.description.ProcessType;
+import models.laboratory.processes.instance.Process;
+import models.utils.InstanceConstants;
+import models.utils.ListObject;
+import models.utils.dao.DAOException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -20,27 +30,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
 
-import com.mongodb.BasicDBObject;
-
-import controllers.CommonController;
-import controllers.NGLControllerHelper;
-import controllers.authorisation.Permission;
-import controllers.readsets.api.ReadSetBatchElement;
-import fr.cea.ig.MongoDBDAO;
-import fr.cea.ig.MongoDBDatatableResponseChunks;
-import fr.cea.ig.MongoDBResponseChunks;
-import fr.cea.ig.MongoDBResult;
-import models.laboratory.common.description.Level;
-import models.laboratory.common.instance.State;
-import models.laboratory.container.description.ContainerSupportCategory;
-import models.laboratory.container.instance.Container;
-import models.laboratory.experiment.description.ExperimentType;
-import models.laboratory.processes.description.ProcessType;
-import models.laboratory.processes.instance.Process;
-import models.laboratory.run.instance.ReadSet;
-import models.utils.InstanceConstants;
-import models.utils.ListObject;
-import models.utils.dao.DAOException;
 import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.Form;
@@ -49,13 +38,20 @@ import play.libs.Json;
 import play.mvc.Http;
 import play.mvc.Result;
 import validation.ContextValidation;
+import validation.common.instance.CommonValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableForm;
-import views.components.datatable.DatatableResponse;
-import workflows.container.ContSupportWorkflows;
 import workflows.container.ContWorkflows;
-import workflows.container.ContainerWorkflows;
-import workflows.run.Workflows;
+
+import com.mongodb.BasicDBObject;
+
+import controllers.CommonController;
+import controllers.NGLControllerHelper;
+import controllers.authorisation.Permission;
+import fr.cea.ig.MongoDBDAO;
+import fr.cea.ig.MongoDBDatatableResponseChunks;
+import fr.cea.ig.MongoDBResponseChunks;
+import fr.cea.ig.MongoDBResult;
 
 public class Containers extends CommonController {
 
@@ -86,58 +82,11 @@ public class Containers extends CommonController {
 		}	
 	}
 	
-	@Permission(value={"writing"})
-	@Deprecated
-	public static Result updateBatch(){
-		List<Form<ContainerBatchElement>> filledForms =  getFilledFormList(batchElementForm, ContainerBatchElement.class);
-
-		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(filledForms.size());
-
-		for(Form<ContainerBatchElement> filledForm: filledForms){
-			ContainerBatchElement element = filledForm.get();
-			Container container = null;
-			if(null!=element.data){
-				container = findContainer(element.data.code);
-			}
-			if(null != container){
-				State state = element.data.state;
-				state.date = new Date();
-				state.user = getCurrentUser();
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
-				ContainerWorkflows.setContainerState(container, state, ctxVal);
-				if (!ctxVal.hasErrors()) {
-					response.add(new DatatableBatchResponseElement(OK,  findContainer(element.data.code), element.index));
-				}else {
-					response.add(new DatatableBatchResponseElement(BAD_REQUEST, filledForm.errorsAsJson(), element.index));
-				}
-			}else {
-				response.add(new DatatableBatchResponseElement(NOT_FOUND, element.index));
-			}
-
-		}		
-		return ok(Json.toJson(response));
-	}
-
 	private static Container findContainer(String containerCode){
 		return  MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code",containerCode));
 	}
 
-	@Permission(value={"writing"})
-	public static Result update(String containerCode){
-		if(MongoDBDAO.checkObjectExist(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", containerCode))){
-			Form<Container> containerFilledForm = getFilledForm(containersForm,Container.class);
-
-			if(!containerFilledForm.hasErrors()){
-				Container container = containerFilledForm.get();
-				if(container.code.equals(containerCode)){
-					MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, container);
-					return ok(Json.toJson(container));
-				}
-			}
-		}
-		return badRequest();
-	}
-
+	
 	@Permission(value={"reading"})
 	public static Result list() throws DAOException{
 		//Form<ContainersSearchForm> containerFilledForm = filledFormQueryString(containerForm,ContainersSearchForm.class);
@@ -175,60 +124,6 @@ public class Containers extends CommonController {
 	}
 
 	@Permission(value={"writing"})
-	@Deprecated
-	public static Result updateStateCode(String code){
-		Form<ContainersUpdateForm> containerUpdateFilledForm = getFilledForm(containersUpdateForm, ContainersUpdateForm.class);
-		ContextValidation contextValidation = new ContextValidation(getCurrentUser(),containerUpdateFilledForm.errors());
-		if(!containerUpdateFilledForm.hasErrors()){
-			ContainersUpdateForm containersUpdateForm = containerUpdateFilledForm.get();
-			State state = new State();
-			state.code = containersUpdateForm.stateCode;
-			state.user = getCurrentUser();
-			ContainerWorkflows.setContainerState(findContainer(code), state, contextValidation);
-			if(!contextValidation.hasErrors()){
-				return ok();
-			}
-		}
-		return badRequest(containerUpdateFilledForm.errorsAsJson());
-	}
-
-	@Permission(value={"writing"})
-	@Deprecated
-	public static Result updateStateBatchOld(){
-		Form<ContainersUpdateForm> containerUpdateFilledForm = getFilledForm(containersUpdateForm, ContainersUpdateForm.class);
-		ContextValidation contextValidation = new ContextValidation(getCurrentUser(),containerUpdateFilledForm.errors());
-		ContainersSearchForm containersSearch = filledFormQueryString(ContainersSearchForm.class);
-		
-		ContainersUpdateForm containersUpdateForm = containerUpdateFilledForm.get();
-		List<DatatableBatchResponseElement> response = new ArrayList<DatatableBatchResponseElement>(containersSearch.codes.size());
-
-		if(!containerUpdateFilledForm.hasErrors()){
-			Integer indexElement=0;
-			State state = new State();
-			state.code = containersUpdateForm.stateCode;
-			state.user = getCurrentUser();
-			for(String containerCode:containersSearch.codes){
-				indexElement++;
-				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), containerUpdateFilledForm.errors());
-				Container container=findContainer(containerCode);
-				if(container!=null){
-					ContainerWorkflows.setContainerState(container, state, contextValidation);
-					if (!ctxVal.hasErrors()) {
-						response.add(new DatatableBatchResponseElement(OK,  container, indexElement));
-					}else {
-						response.add(new DatatableBatchResponseElement(BAD_REQUEST, containerUpdateFilledForm.errorsAsJson(), indexElement));
-					}
-				}else {
-					response.add(new DatatableBatchResponseElement(NOT_FOUND, indexElement));
-				}
-
-
-			}
-		}
-		return ok(Json.toJson(response));
-	}
-
-	@Permission(value={"writing"})
 	public static Result updateState(String code){
 		Container container = findContainer(code);
 		if(container == null){
@@ -239,6 +134,8 @@ public class Containers extends CommonController {
 		state.date = new Date();
 		state.user = getCurrentUser();
 		ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors());
+		ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
+		ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE, Boolean.TRUE);		
 		workflows.setState(ctxVal, container, state);
 		if (!ctxVal.hasErrors()) {
 			return ok(Json.toJson(findContainer(code)));
@@ -261,6 +158,8 @@ public class Containers extends CommonController {
 				state.date = new Date();
 				state.user = user;
 				ContextValidation ctxVal = new ContextValidation(user, filledForm.errors());
+				ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "controllers");
+				ctxVal.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE, Boolean.TRUE);
 				workflows.setState(ctxVal, container, state);
 				if (!ctxVal.hasErrors()) {
 					return new DatatableBatchResponseElement(OK,  findContainer(container.code), element.index);

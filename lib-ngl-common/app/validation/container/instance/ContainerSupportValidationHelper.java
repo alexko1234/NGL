@@ -1,5 +1,8 @@
 package validation.container.instance;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import models.laboratory.common.description.ObjectType;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.description.ContainerSupportCategory;
@@ -11,6 +14,8 @@ import models.utils.InstanceConstants;
 
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
+
+import com.mongodb.BasicDBObject;
 
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
@@ -49,12 +54,72 @@ public class ContainerSupportValidationHelper extends CommonValidationHelper{
 		if(!contextValidation.hasErrors()){
 			String nextStateCode = nextState.code;
 			String currentStateCode = container.state.code;
+			
+			String context = (String) contextValidation.getObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT);
+			
+			switch (context) {
+			case "workflow":
+				
+				if("IW-P".equals(currentStateCode) && !nextStateCode.startsWith("A")){
+					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
+				}else if(currentStateCode.startsWith("A") && !"IW-E".equals(nextStateCode)){
+					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
+				}else if("IW-E".equals(currentStateCode) && !"IU".equals(nextStateCode)){
+					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
+				}else if("IU".equals(currentStateCode) && !"IW-D".equals(nextStateCode)){
+					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
+				}
+				
+				break;
+			case "controllers":
+				
+				if("IW-P".equals(currentStateCode) && 
+						!nextStateCode.equals("UA") && !nextStateCode.equals("IS")){
+					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
+				}else if(currentStateCode.startsWith("A") && 
+						(!nextStateCode.startsWith("A") || !getContainerStates(container).contains(nextStateCode))){
+					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
+				}else if("IW-D".equals(currentStateCode) && 
+						!nextStateCode.equals("UA") && !nextStateCode.equals("IS") && !nextStateCode.startsWith("A")){
+					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
+				}else if("IS".equals(currentStateCode)&& 
+						!nextStateCode.equals("UA") && !nextStateCode.equals("IW-P")){
+					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
+				}else if("UA".equals(currentStateCode)&& 
+						!nextStateCode.equals("IW-P") && !nextStateCode.equals("IS")){
+					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
+				}else if("N".equals(currentStateCode) && 
+						!nextStateCode.equals("UA") && !nextStateCode.equals("IW-P") && !nextStateCode.startsWith("A")){
+					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
+				}else if("IW-E".equals(currentStateCode) || "IU".equals(currentStateCode)){
+					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
+				}
+				
+				break;
+
+			default:
+				throw new RuntimeException("FIELD_STATE_CONTAINER_CONTEXT : "+context+" not manage !!!");
+				
+			}
+			
+			/*
 			if(("IS".equals(currentStateCode) || "UA".equals(currentStateCode)) && !nextStateCode.equals("IW-P")){
 				contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
 			}
+			*/
 		}
 				
 	}
 	
-
+	public static Set<String> getContainerStates(ContainerSupport containerSupport){
+		BasicDBObject keys = new BasicDBObject();
+		keys.put("code", 1);
+		keys.put("state", 1);
+		
+		return MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.in("support.code", containerSupport.code), keys).toList()
+				.stream()
+				.map(c -> c.state.code)
+				.collect(Collectors.toSet());
+	}
+	
 }

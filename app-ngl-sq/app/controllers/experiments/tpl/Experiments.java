@@ -199,8 +199,7 @@ public class Experiments extends CommonController{
 				controllers.experiments.api.routes.javascript.ExperimentCategories.list(),
 				controllers.projects.api.routes.javascript.Projects.list(),
   	    		controllers.samples.api.routes.javascript.Samples.list(),
-  	    		controllers.commons.api.routes.javascript.Users.list(),
-  	    		controllers.containers.api.routes.javascript.Contents.list(),
+  	    		controllers.commons.api.routes.javascript.Users.list(),  	    
 	      		controllers.commons.api.routes.javascript.Parameters.list()
 	      		
   	      )	  	      

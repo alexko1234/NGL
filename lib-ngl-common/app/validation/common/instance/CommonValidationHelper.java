@@ -45,6 +45,10 @@ public class CommonValidationHelper {
 	public static final String FIELD_EXPERIMENT = "experiment";
 	public static final String FIELD_INST_USED = "instrumentUsed";
 	public static final String FIELD_OBJECT_TYPE_CODE = "objectTypeCode";
+	public static final String FIELD_STATE_CONTAINER_CONTEXT = "stateContainerContext";
+	public static final String FIELD_UPDATE_CONTAINER_SUPPORT_STATE = "updateContainerSupportState";
+	public static final String FIELD_UPDATE_CONTAINER_STATE = "updateContainerState";
+	
 	/**
 	 * Validate if code is unique in MongoDB collection
 	 * Unique code is validate if key "_id" not in map contextObjects or if value of key "_id" is null else no code validation

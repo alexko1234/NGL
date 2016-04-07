@@ -2635,6 +2635,7 @@ directive("udtCell", function(){
 	    				var ngChange = '"';
 	    				var defaultValueDirective = "";
     			    	if(header){
+    			    		//we need used udt-change when we used typehead directive
     			    		ngChange = '" udt-change="udtTable.updateColumn(col.property, col.id)"';
 						}else if(filter){
 							ngChange = '" udt-change="udtTable.searchLocal(udtTable.searchTerms)"';

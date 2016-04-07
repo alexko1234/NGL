@@ -59,9 +59,9 @@ public class StateService {
 		l.add(newState("Contrôle qualité en attente", "IW-QC", true, 400, StateCategory.find.findByCode("IW"), getObjectTypes( ObjectType.CODE.ReadSet.name()), true, "QC"));	
 		l.add(newState("Contrôle qualité en cours", "IP-QC", true, 450, StateCategory.find.findByCode("IP"), getObjectTypes( ObjectType.CODE.ReadSet.name()), true, "QC"));
 		l.add(newState("Contrôle qualité terminé", "F-QC", true, 500, StateCategory.find.findByCode("F"), getObjectTypes( ObjectType.CODE.ReadSet.name()), false, "QC"));
-		l.add(newState("Evaluation en attente", "IW-V", true, 800, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.Run.name(), ObjectType.CODE.Analysis.name()), true, "V"));
-		l.add(newState("Evaluation en cours", "IP-V", true, 825, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.Run.name()),  true, "V"));
-		l.add(newState("Evaluation terminée", "F-V", true, 849, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Container.name(), ObjectType.CODE.Run.name(), ObjectType.CODE.Analysis.name()), true, "V"));		
+		l.add(newState("Evaluation en attente", "IW-V", true, 800, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.Run.name(), ObjectType.CODE.Analysis.name()), true, "V"));
+		l.add(newState("Evaluation en cours", "IP-V", true, 825, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Run.name()),  true, "V"));
+		l.add(newState("Evaluation terminée", "F-V", true, 849, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Run.name(), ObjectType.CODE.Analysis.name()), true, "V"));		
 
 		l.add(newState("Nouveau", "N", true, 0, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Project.name(), ObjectType.CODE.Experiment.name(), ObjectType.CODE.Process.name(), ObjectType.CODE.Run.name(), ObjectType.CODE.ReadSet.name(), ObjectType.CODE.Sample.name(), ObjectType.CODE.Instrument.name(), ObjectType.CODE.Reagent.name(), ObjectType.CODE.Import.name(), ObjectType.CODE.Treatment.name(),ObjectType.CODE.Container.name(),ObjectType.CODE.Analysis.name(),ObjectType.CODE.SRASubmission.name(),ObjectType.CODE.SRAConfiguration.name()), true, "N"));		
 		l.add(newState("En cours", "IP", true, 500, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Project.name(), ObjectType.CODE.Experiment.name(), ObjectType.CODE.Process.name(), ObjectType.CODE.Sample.name(), ObjectType.CODE.Instrument.name(), ObjectType.CODE.Reagent.name(), ObjectType.CODE.Import.name(), ObjectType.CODE.Treatment.name()), true, null));
@@ -70,10 +70,10 @@ public class StateService {
 		l.add(newState("En cours d'utilisation", "IU", true, 250, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Container.name()), true, null));
 		l.add(newState("Dispatch en attente", "IW-D", true, 300, StateCategory.find.findByCode("IW"), getObjectTypes(ObjectType.CODE.Container.name()), true, null));
 		l.add(newState("En stock", "IS", true, 1000, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Container.name()), true, null));
-		l.add(newState("Disponible transformation", "A-TM", true, 1000, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Container.name()), true, null));
-		l.add(newState("Disponible controle qualité", "A-QC", true, 1000, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Container.name()), true, null));
-		l.add(newState("Disponible purif", "A-PF", true, 1000, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Container.name()), true, null));
-		l.add(newState("Disponible transfert", "A-TF", true, 1000, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Container.name()), true, null));
+		l.add(newState("Disponible transformation", "A-TM", true, 900, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Container.name()), true, null));
+		l.add(newState("Disponible controle qualité", "A-QC", true, 901, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Container.name()), true, null));
+		l.add(newState("Disponible purif", "A-PF", true, 902, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Container.name()), true, null));
+		l.add(newState("Disponible transfert", "A-TF", true, 903, StateCategory.find.findByCode("N"), getObjectTypes(ObjectType.CODE.Container.name()), true, null));
 		
 		l.add(newState("Séquençage en cours", "IP-S", true, 150, StateCategory.find.findByCode("IP"), getObjectTypes(ObjectType.CODE.Run.name()), true, "S"));		
 		l.add(newState("Séquençage terminé", "F-S", true, 195, StateCategory.find.findByCode("F"), getObjectTypes(ObjectType.CODE.Run.name()), false, "S"));	

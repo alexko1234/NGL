@@ -79,72 +79,10 @@ public class ContainerControllerTests extends AbstractTests{
 		assertThat(status(Containers.head("Not found"))).isEqualTo(play.mvc.Http.Status.NOT_FOUND);			
 	}
 	
-	@Test
-	public void validateUpdateBatch() {				
-		Container c1 = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,"C2EV3ACXX_1");				
-		Container c2 = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,"C2EV3ACXX_2");			
-		Container c3 = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,"C2EV3ACXX_3");		
-		List<ContainerBatchElement> ld = ContainerTestHelper.getFakeListContainerBatchElements(c1,c2,c3);		
-		Result result = callAction(controllers.containers.api.routes.ref.Containers.updateBatch(), fakeRequest().withJsonBody(Json.toJson((ld))));
-		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
-	}
+
+
+
 	
-	@Test
-	public void validateUpdateBatchBadRequestWithNull() throws JsonProcessingException {
-		
-		Container c1 = null;			
-		Container c2 = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,"C2EV3ACXX_2");	
-		c2.state.code="A";
-		c2.processCodes=null;
-		Container c3 = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,"C2EV3ACXX_3");
-		c3.state.code="N";
-		List<ContainerBatchElement> lc = ContainerTestHelper.getFakeListContainerBatchElements(c1,c2,c3);	
-		Result result = callAction(controllers.containers.api.routes.ref.Containers.updateBatch(), fakeRequest().withJsonBody(Json.toJson(lc)));		
-		List<DatatableBatchResponseElementForTest<Container>> ld = ContainerBatchElementHelper.getElementListObjectMapper(result);
-		DatatableBatchResponseElementForTest<Container> db1 = ld.get(0);
-		DatatableBatchResponseElementForTest<Container> db2 = ld.get(1);
-		DatatableBatchResponseElementForTest<Container> db3 = ld.get(2);
-		Logger.debug("");
-		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
-		assertThat(db1.status).isEqualTo(play.mvc.Http.Status.NOT_FOUND);
-		assertThat(db2.status).isEqualTo(play.mvc.Http.Status.BAD_REQUEST);
-		assertThat(db3.status).isEqualTo(play.mvc.Http.Status.OK);
-			
-	}
-	
-	@Test
-	public void validateUpdateBatchBadRequestWithErrors() {
-		
-		//TODO: validation d'un status de container null pour BAD REQUEST
-		//Container c1 = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,"C2EV3ACXX_5");
-		//c1.state.code = null;	
-		Container c1 = null;
-		Container c2 = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,"C2EV3ACXX_6");
-		c2.code = "Error";
-		Container c3 = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,"C2EV3ACXX_7");		
-		List<ContainerBatchElement> lc = ContainerTestHelper.getFakeListContainerBatchElements(c1,c2,c3);	
-		Result result = callAction(controllers.containers.api.routes.ref.Containers.updateBatch(), fakeRequest().withJsonBody(Json.toJson(lc)));		
-		List<DatatableBatchResponseElementForTest<Container>> ld = ContainerBatchElementHelper.getElementListObjectMapper(result);
-		DatatableBatchResponseElementForTest<Container> db1 = ld.get(0);
-		DatatableBatchResponseElementForTest<Container> db2 = ld.get(1);
-		DatatableBatchResponseElementForTest<Container> db3 = ld.get(2);
-		Logger.debug("");
-		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
-		//assertThat(db1.status).isEqualTo(play.mvc.Http.Status.BAD_REQUEST);
-		assertThat(db1.status).isEqualTo(play.mvc.Http.Status.NOT_FOUND);
-		assertThat(db2.status).isEqualTo(play.mvc.Http.Status.NOT_FOUND);
-		assertThat(db3.status).isEqualTo(play.mvc.Http.Status.OK);		
-	}	
-	
-	@Test
-	public void validateUpdate() {		
-		String code = "C2EV3ACXX_8";
-		Container c1 = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,code);		
-		c1.comments.add(new Comment("TEST UNITAIRE validateUpdate ", "ngl-test"));		
-		Result result = callAction(controllers.containers.api.routes.ref.Containers.update(code),fakeRequest().withJsonBody(Json.toJson(c1)));
-		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
-		
-	}
 	
 	@SuppressWarnings("deprecation")
 	@Test
@@ -462,45 +400,5 @@ public class ContainerControllerTests extends AbstractTests{
 		assertThat(lc).isNullOrEmpty();		
 	}
 	
-		
-	@Test
-	public void validateUpdateStateCode() {
-		ContainersUpdateForm cuf = ContainerTestHelper.getFakeContainersUpdateForm();
-		Container container = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.and(DBQuery.is("state.code", "IS"),DBQuery.notExists("processTypeCodes"),DBQuery.notExists("processCodes"))).toList().get(0);
-		cuf.stateCode = "IW-P";
-		Result result = callAction(controllers.containers.api.routes.ref.Containers.updateStateCode(container.code), fakeRequest().withJsonBody((Json.toJson(cuf))));		
-		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
-		
-		cuf.stateCode = "IS";
-		result = callAction(controllers.containers.api.routes.ref.Containers.updateStateCode(container.code), fakeRequest().withJsonBody((Json.toJson(cuf))));		
-		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
-				
-		container = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.and(DBQuery.is("state.code", "IS"),DBQuery.exists("processTypeCodes"),DBQuery.exists("processCodes"),DBQuery.regex("code", Pattern.compile("^BEG")))).toList().get(0);
-		cuf.stateCode = "A";
-		result = callAction(controllers.containers.api.routes.ref.Containers.updateStateCode(container.code), fakeRequest().withJsonBody((Json.toJson(cuf))));		
-		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
-		
-		container = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.and(DBQuery.is("state.code", "A"),DBQuery.exists("processTypeCodes"),DBQuery.exists("processCodes"),DBQuery.regex("code", Pattern.compile("^BEG")))).toList().get(0);
-		cuf.stateCode = "IS";
-		result = callAction(controllers.containers.api.routes.ref.Containers.updateStateCode(container.code), fakeRequest().withJsonBody((Json.toJson(cuf))));		
-		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.OK);
-		
-	}
 	
-	@Test
-	public void validateBadUpdateStateCode() {
-		ContainersUpdateForm cuf = ContainerTestHelper.getFakeContainersUpdateForm();
-		Container container = (MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.and(DBQuery.is("state.code", "IS"),DBQuery.notExists("processTypeCodes"),DBQuery.notExists("processCodes")))).toList().get(0);
-		cuf.stateCode = "A";
-		Result result = callAction(controllers.containers.api.routes.ref.Containers.updateStateCode(container.code), fakeRequest().withJsonBody((Json.toJson(cuf))));		
-		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.BAD_REQUEST);
-		
-		container = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.and(DBQuery.is("state.code", "IS"),DBQuery.exists("processTypeCodes"),DBQuery.exists("processCodes"),DBQuery.regex("code", Pattern.compile("^BEG")))).toList().get(0);
-		cuf.stateCode = "IW-P";
-		result = callAction(controllers.containers.api.routes.ref.Containers.updateStateCode(container.code), fakeRequest().withJsonBody((Json.toJson(cuf))));		
-		assertThat(status(result)).isEqualTo(play.mvc.Http.Status.BAD_REQUEST);
-		
-	}
-	
-
 }
