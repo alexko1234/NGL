@@ -100,7 +100,9 @@ angular.module('home').controller('BionanoDepotCtrl',['$scope', '$parse','atmToS
 			save:{
 				active:true,
 	        	changeClass:false,
-				mode:'local',
+	        	showButton:false,
+	        	withoutEdit: true,
+				mode:'local'
 			},
 			hide:{
 				active:true

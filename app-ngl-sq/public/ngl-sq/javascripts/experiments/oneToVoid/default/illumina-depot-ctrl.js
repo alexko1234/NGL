@@ -96,6 +96,8 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 			save:{
 				active:true,
 	        	changeClass:false,
+	        	showButton:false,
+	        	withoutEdit: true,
 				mode:'local',
 			},
 			hide:{

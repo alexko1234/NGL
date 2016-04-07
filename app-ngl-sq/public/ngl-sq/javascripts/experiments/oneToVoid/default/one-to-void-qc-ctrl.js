@@ -166,6 +166,8 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 			save:{
 				active:true,
 	        	changeClass:false,
+	        	showButton:false,
+	        	withoutEdit: true,
 				mode:'local'
 			},
 			hide:{

@@ -208,7 +208,13 @@ public class Processes extends CommonController{
 		valdateCommonProcessAttribut(p, contextValidation);
 		
 		containers.parallelStream().forEach(container -> {
-			processes.addAll(saveAllContentsProcesses(p, container, contextValidation ));
+			ContextValidation newContextValidation = new ContextValidation(contextValidation.getUser());
+			newContextValidation.setCreationMode();
+			newContextValidation.putObject("workflow", true);
+			processes.addAll(saveAllContentsProcesses(p, container, newContextValidation));
+			if(newContextValidation.hasErrors()){
+				contextValidation.addErrors(newContextValidation.errors);
+			}
 		});
 		
 		return processes;	

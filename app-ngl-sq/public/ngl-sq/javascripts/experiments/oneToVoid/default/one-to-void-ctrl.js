@@ -98,6 +98,8 @@ angular.module('home').controller('OneToVoidCtrl',['$scope', '$parse','atmToSing
 			save:{
 				active:true,
 	        	changeClass:false,
+	        	showButton:false,
+	        	withoutEdit: true,
 				mode:'local',
 			},
 			hide:{

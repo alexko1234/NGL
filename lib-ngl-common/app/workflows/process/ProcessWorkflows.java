@@ -82,10 +82,7 @@ public class ProcessWorkflows {
 		
 		contextValidation.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "workflow");
 		contextValidation.putObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE, Boolean.TRUE);
-		containers.forEach(c -> Spring.getBeanOfType(ContWorkflows.class).setState(contextValidation, c, nextState));
-		contextValidation.removeObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT);
-		contextValidation.removeObject(CommonValidationHelper.FIELD_UPDATE_CONTAINER_SUPPORT_STATE);
-		
+		containers.forEach(c -> Spring.getBeanOfType(ContWorkflows.class).setState(contextValidation, c, nextState));		
 	}
 
 
