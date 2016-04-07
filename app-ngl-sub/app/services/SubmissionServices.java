@@ -834,9 +834,9 @@ public class SubmissionServices {
 		}
 		String libProcessTypeCodeVal = (String) sampleOnContainerProperties.get("libProcessTypeCode").getValue();
 		String typeCode = readSet.typeCode;
-		if (readSet.typeCode.equalsIgnoreCase("rs_illumina")){
+		if (readSet.typeCode.equalsIgnoreCase("rsillumina")){
 			typeCode = "Illumina";
-		} else if (readSet.typeCode.equalsIgnoreCase("rs_nanopore")){
+		} else if (readSet.typeCode.equalsIgnoreCase("rsnanopore")){
 			typeCode = "Nanopore";
 		} else if (readSet.typeCode.equalsIgnoreCase("default-readset")){
 			// rien condition à eliminer au plus tard, lors de la mise en prod.
