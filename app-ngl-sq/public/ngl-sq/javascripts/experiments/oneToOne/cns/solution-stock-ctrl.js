@@ -347,7 +347,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 			var header = headers("Content-disposition");
 			var filepath = header.split("filename=")[1];
 			
-			var filename = filepath.split("/");
+			var filename = filepath.split(/\/|\\/);
 			filename = filename[filename.length-1];
 			if(data!=null){
 				$scope.messages.clazz="alert alert-success";
