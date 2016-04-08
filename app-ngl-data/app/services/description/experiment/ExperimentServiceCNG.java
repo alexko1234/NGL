@@ -222,10 +222,10 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					).save();
 
 			//FDS modification ...../2016 -- JIRA NGL-894: processus et experiments pour X5; ajout "prep-pcr-free" dans les previous
-			//                 07/04/2016 -- JIRA NGL-894: processus et experiments pour X5; ajout "automated-electrophoresis-system" dans qc
+			//                 07/04/2016 -- JIRA NGL-894: processus et experiments pour X5; ajout "labchip-migration-profile" dans qc
 			newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), 
 					false, false, false, 
-					getExperimentTypeNodes("prep-pcr-free"), null, getExperimentTypes("automated-electrophoresis-system"), getExperimentTypes("aliquoting")
+					getExperimentTypeNodes("prep-pcr-free"), null, getExperimentTypes("labchip-migration-profile"), getExperimentTypes("aliquoting")
 					).save();
 
 		}else{
@@ -372,7 +372,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("ng/µL"), MeasureUnit.find.findByCode("ng/µL"),
 				"single", 11, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Taille", "size1", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Taille", "size1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode( "pb"), MeasureUnit.find.findByCode("pb"),
 				"single", 12, true, null, null));
 		

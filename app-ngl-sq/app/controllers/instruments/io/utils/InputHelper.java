@@ -8,6 +8,8 @@ import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
 import models.laboratory.parameter.Index;
 import models.utils.InstanceConstants;
+import java.util.List;
+import java.util.ArrayList;
 
 public class InputHelper {
 	
@@ -71,4 +73,53 @@ public class InputHelper {
 		return containerCode.substring(containerCode.indexOf("_")+1);
 	}
 
+	// Author: Nicolas Wiart
+	// retourne un tableau a partir d'une ligne au format CSV
+	public static String[] parseCSVLine(String s) {
+	  int start = 0;
+	  int end = 0;
+	  int len = s.length();
+	  boolean inquotes = false;
+	  List<String> fields = new ArrayList<String>();
+
+	  for (int i = 0; i < len; i++) {
+	    if (s.charAt(i) == '\"') {
+	      if (inquotes) {
+	         end = i;
+	         fields.add(s.substring(start, end));
+	         start = i + 1;
+	         while (start < len) {
+	             if (s.charAt(start) == '\n') {
+	                 start = len;
+	                 break;
+	             }
+	             if (s.charAt(start) == ',') {
+	                start++;
+	                break;
+	             }
+	             if (s.charAt(start) != ' ') {
+	                throw new RuntimeException("unexpected chars " + s.charAt(start) + " after closing quote.");
+	             }
+	             start++;
+	         }
+	         i = start - 1;
+	      } else {
+	         // check for non-space between start et i exclus... TODO
+	         start = end = i + 1;
+	      }
+	      inquotes = !inquotes;
+	    } else if (s.charAt(i) == ',' && !inquotes) {
+	      end = i;
+	      fields.add(s.substring(start, end));
+	      start = i + 1;
+	    }
+	  }
+
+	  if (inquotes) throw new RuntimeException("Missing closing quote.");
+	  if (start < len) fields.add(s.substring(start, len));
+
+	  // convertir la List en tableau
+	  return fields.toArray(new String[fields.size()]);
+	}
+	
 }

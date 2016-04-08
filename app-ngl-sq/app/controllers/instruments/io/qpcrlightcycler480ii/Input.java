@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.SortedSet;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 import models.laboratory.common.instance.PropertyValue;
@@ -45,7 +43,6 @@ public class Input extends AbstractInput {
 	@Override
 	public Experiment importFile(Experiment experiment,PropertyFileValue pfv, ContextValidation contextValidation) throws Exception {	
 		
-		// NOM DE LA PROPRIETE A CHANGER...
 		int sector=0;
 		if (experiment.instrumentProperties.containsKey("sector96")){
 			PropertySingleValue psv = (PropertySingleValue) experiment.instrumentProperties.get("sector96");
@@ -62,9 +59,10 @@ public class Input extends AbstractInput {
 			return experiment;
 		}
 		
-		// question pour Julie: actuellement la taille des fragments est de 350...peut changer ???
-		// => nouvelle propriété de l'instrument??? ou HARCODED???
-		int correctionFactorLibrarySize=350;
+		/* 07/04 question pour Julie: ne vaut-il pas mieux avoir un facteur constant pour tout le fichier 
+		 * plutot q'une valeur par ligne ???
+		 * int correctionFactorLibrarySize= un parametre choisi par l'utilisateur....
+		 */
 		
 		//tableau des facteurs de dilution et leur repetition sur la plaque 384
 		double[] fDilution={5000,5000,5000,   50000,50000,50000};
@@ -114,7 +112,7 @@ public class Input extends AbstractInput {
 				  // ignorer les lignes correspondant aux temoins (colonnes 22,23,24)
 				  if (col384 > 20 ){ continue; }
 			 
-				  // en cas d'erreur de lecture de concentration concentration manquante => forcer a 0 pour les calculs utltérieurs
+				  // en cas d'erreur de lecture de concentration concentration manquante => forcer a 0 pour les calculs ultérieurs
 				  double concentration=0;
 				  if ( ! cols[5].equals("") ){ concentration=Double.parseDouble(cols[5]); }
 				  //Logger.info ("ligne "+n+"concentration="+concentration);
@@ -134,18 +132,18 @@ public class Input extends AbstractInput {
 		Map<String,Double> results = new HashMap<String,Double>(0);
 		
 		/* traiter dans l'ordre des positions; 
-		 * 6 lignes successives (1block) doivent correspondre au meme echantillon avec 3 repetions de 2 dilutions
+		 * 6 lignes successives (1 block) doivent correspondre au meme echantillon avec 3 repetions de 2 dilutions
 		 */
 		SortedSet<String> pos0384 = new TreeSet<String>(data.keySet());
 		int nbblock=0;
 		int rep=0;;
 		double[] listConc= new double[nbRep];
-		double rocheFactor= (double)( 452 / correctionFactorLibrarySize); //calculé une seule fois
+		// 07/04 Voir commentaire plus haut...double rocheFactor= (double)( 452 / correctionFactorLibrarySize); //calculé une seule fois
 		
 		for (String key : pos0384) { 
 			// transformer la concentration du fichier (pM) en nM [ formule donné par Roche ]
 			// conc_nM= conc_pM * ( fact_dilution/1000 ) * ( 452 / correctionFactorLibrarySize ) 
-			    // 05/04 reporter la correction  plus loin, qd on a la valeur de correctionFactorLibrarySize.....
+			    // 07/04 reporter la correction  plus loin, qd on a la valeur de correctionFactorLibrarySize.....
 			    // double concentration_nM =  data.get(key) * (double)( fDilution[rep] / 1000 ) * rocheFactor;
 			double concentration_nM =  data.get(key) * (double)( fDilution[rep] / 1000 );
 			
@@ -184,6 +182,8 @@ public class Input extends AbstractInput {
 				.map(atm -> atm.inputContainerUseds.get(0))
 				.forEach(icu -> {
 					String icupos=InputHelper.getCodePosition(icu.code);
+					// 07/04 faut-il garder ce test d'appartenance au secteur si par la suite on ne fait entrer dans l'experience
+					// que des containers choisis et pas tous comme actuellement ?
 					if ( belongToSector96(contextValidation, icupos, sector_arg)) {
 						if (!results.containsKey(icupos) ){
 							contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.concentration.missing",icupos);
@@ -200,6 +200,7 @@ public class Input extends AbstractInput {
 				.map(atm -> atm.inputContainerUseds.get(0))
 				.forEach(icu -> {
 					String icupos=InputHelper.getCodePosition(icu.code);
+					// idem commentaire ci-dessus
 					if ( belongToSector96(contextValidation, icupos, sector_arg)) {
 						Logger.info ("set concentration for icu "+ icu.code);
 						
@@ -212,7 +213,7 @@ public class Input extends AbstractInput {
 							double corFactor = 452.0d / ((double) (Integer) cFLSize.value);
 							concentration.value = results.get(icupos) * corFactor;
 							concentration.unit = "nM";
-							Logger.info (".... corFactor="+ corFactor+"; concentration="+ results.get(icupos) * corFactor);
+							//Logger.info (".... corFactor="+ corFactor+"; concentration="+ results.get(icupos) * corFactor);
 						} else {
 							concentration.value = null;
 							concentration.unit = "nM";
@@ -326,7 +327,7 @@ public class Input extends AbstractInput {
 	    return sum / m.length;
 	}
 	
-	//specifique...ne pas mettre dans Inputhelper
+	//specifique...ne pas mettre dans InputHelper
 	public static Boolean belongToSector96( ContextValidation contextValidation, String pos96, int sector) {
 		// verifier si valide ??  on n'a pas de numero de ligne pour le message...
 		if ( ! InputHelper.isPlatePosition(contextValidation, pos96, 96, 0)){
@@ -341,5 +342,4 @@ public class Input extends AbstractInput {
 		
 		return false;
 	}
-
 }
