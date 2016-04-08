@@ -265,7 +265,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		// pas editable puisque calculée!!
 		propertyDefinitions.add(newPropertiesDefinition("Concentration", "concentration1", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode( "nM"), MeasureUnit.find.findByCode("nM"),
-				"single", 11, false, null, "2"));	
+				"single", 11, true, null, "2"));	
 		
 		propertyDefinitions.add(newPropertiesDefinition("Taille librairie", "correctionFactorLibrarySize", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, true, "F", null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode( "pb"), MeasureUnit.find.findByCode("pb"),
