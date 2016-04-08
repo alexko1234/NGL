@@ -1,4 +1,4 @@
-angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$filter', 'atmToDragNDrop2',
+angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$filter', 'atmToDragNDrop',
                                                                function($scope, $parse, $filter, atmToDragNDrop) {
 	
 	
@@ -333,9 +333,9 @@ angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$f
 	
 	$scope.getDisplayMode = function(atm, rowIndex){
 		
-		if(atm.inputContainerUseds.length === 0){
+		if(atm && atm.inputContainerUseds && atm.inputContainerUseds.length === 0){
 			return "empty";
-		}else if(atm.inputContainerUseds.length > 0 && $scope.rows[rowIndex]){
+		}else if(atm && atm.inputContainerUseds && atm.inputContainerUseds.length > 0 && $scope.rows[rowIndex]){
 			return "open";
 		}else{
 			return "compact";

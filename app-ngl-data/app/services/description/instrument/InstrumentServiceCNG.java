@@ -220,7 +220,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 						createInstrument("janus1-and-cBot2", "Janus1 / cBot2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("janus1-and-cBot3", "Janus1 / cBot3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)),
 						createInstrument("janus1-and-cBot4", "Janus1 / cBot4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG))),
-				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"96-well-plate" }), 
+				getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"flowcell-8"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);

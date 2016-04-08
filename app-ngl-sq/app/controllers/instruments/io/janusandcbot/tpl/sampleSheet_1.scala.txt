@@ -1,0 +1,8 @@
+@(experiment:models.laboratory.experiment.instance.Experiment)
+
+@import controllers.instruments.io.utils._;
+
+Sample order,Sample Plate Well #,Sample Plate Name\u000D\u000A
+@for(atm <- experiment.atomicTransfertMethods.sortWith(_.line < _.line)){
+	@(atm.line),@(OutputHelper.getNumberPositionInPlateByColumn(atm.inputContainerUseds.get(0).locationOnContainerSupport.line,atm.inputContainerUseds.get(0).locationOnContainerSupport.column)),@(atm.inputContainerUseds.get(0).locationOnContainerSupport.code)\u000D\u000A
+}
