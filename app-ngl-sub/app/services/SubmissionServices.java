@@ -566,8 +566,10 @@ public class SubmissionServices {
 			String st_my_date = dateFormat.format(courantDate);
 			if (StringUtils.isBlank((submission.projectCode))){
 				throw new SraException("Dans activateSubmission: impossible de determiner le repertoire de soumission avec submission.projectCode à nul");
-			} 
+			}
+			
 			submission.submissionDirectory = VariableSRA.submissionRootDirectory + File.separator + submission.projectCode + File.separator + st_my_date;
+			submission.submissionTmpDirectory = VariableSRA.submissionRootDirectory + File.separator + submission.projectCode + File.separator + "tmp_" + st_my_date;
 			File dataRep = new File(submission.submissionDirectory);
 			System.out.println("Creation du repertoire de soumission et liens vers donnees brutes : " + submission.submissionDirectory);
 			Logger.of("SRA").info("Creation du repertoire de soumission" + submission.submissionDirectory);
@@ -580,7 +582,7 @@ public class SubmissionServices {
 			}
 			for (String experimentCode: submission.experimentCodes) {
 				Experiment expElt =  MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, experimentCode);
-			
+				
 				System.out.println("exp = "+ expElt.code);
 				for (RawData rawData :expElt.run.listRawData){
 					if (StringUtils.isBlank(rawData.location)) {
@@ -588,15 +590,22 @@ public class SubmissionServices {
 					}
 					if ("CNS".equalsIgnoreCase(rawData.location)) {
 						System.out.println("run = "+ expElt.run.code);
-						File fileCible = new File(rawData.directory + File.separator + rawData.relatifName);
-						File fileLien = new File(submission.submissionDirectory + File.separator + rawData.relatifName);
+						File fileCible;
+						File fileLien;
+						if (rawData.gzipForSubmission) {
+							fileCible = new File(rawData.directory + File.separator + rawData.relatifName + ".gz");	
+							fileLien = new File(submission.submissionDirectory + File.separator + rawData.relatifName + ".gz");
+						} else {
+							fileCible = new File(rawData.directory + File.separator + rawData.relatifName);
+							fileLien = new File(submission.submissionDirectory + File.separator + rawData.relatifName);
+						}
 						if(fileLien.exists()){
 							fileLien.delete();
 						}
-						if (!fileCible.exists()){
+						/*if (!fileCible.exists()){
 							System.out.println("Le fichier cible n'existe pas  : " + fileCible);
 							throw new SraException("Le fichier cible n'existe pas  : " + fileCible);
-						}
+						}*/
 						System.out.println("fileCible = " + fileCible);
 						System.out.println("fileLien = " + fileLien);
 
@@ -1099,8 +1108,9 @@ public class SubmissionServices {
 			// conditions qui doivent etre suffisantes puisque verification préalable que le readSet
 			// est bien valide pour la bioinformatique.
 			if (runInstanceFile.usable 
-					&& ! runInstanceExtentionFileName.equalsIgnoreCase("fna") && ! runInstanceExtentionFileName.equalsIgnoreCase("qual")
-					&& ! runInstanceExtentionFileName.equalsIgnoreCase("fna.gz") && ! runInstanceExtentionFileName.equalsIgnoreCase("qual.gz")) {
+					//&& ! runInstanceExtentionFileName.equalsIgnoreCase("fna") && ! runInstanceExtentionFileName.equalsIgnoreCase("qual")
+					//&& ! runInstanceExtentionFileName.equalsIgnoreCase("fna.gz") && ! runInstanceExtentionFileName.equalsIgnoreCase("qual.gz")) {
+					&&  runInstanceExtentionFileName.equalsIgnoreCase("fastq.gz") || runInstanceExtentionFileName.equalsIgnoreCase("fastq")) {
 					RawData rawData = new RawData();
 					System.out.println("fichier " + runInstanceFile.fullname);
 					rawData.extention = runInstanceFile.extension;
@@ -1112,6 +1122,14 @@ public class SubmissionServices {
 					if (runInstanceFile.properties != null && runInstanceFile.properties.containsKey("md5")) {
 						System.out.println("Recuperation du md5 pour" + rawData.relatifName + rawData.extention);
 						rawData.md5 = (String) runInstanceFile.properties.get("md5").value;
+					}
+					// Si donnée à compresser pour soumission, mettre boolean à true (et calculer submittedMd5 apres compression) 
+					// si donnée à soumettre sans compression gzipForSubmission =  false et submittedMd5 == md5
+					if (rawData.extention.equalsIgnoreCase("fastq")) {
+						rawData.gzipForSubmission = true;
+					} else {
+						rawData.gzipForSubmission = false;
+						rawData.submittedMd5 = rawData.md5;
 					}
 					Set<String> listKeys = runInstanceFile.properties.keySet();
 					
