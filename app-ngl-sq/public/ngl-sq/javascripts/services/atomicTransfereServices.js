@@ -70,6 +70,8 @@ angular.module('atomicTransfereServices', [])
     				column.edit = propertyDefinition.editable;
     				column.hide =  true;
     				column.order = true;
+    				column.tdClass="currentScope.valuationService.valuationCriteriaClass(data, data.valuation.criteriaCode, col.property)"
+    				
     				column.type = this.getPropertyColumnType(propertyDefinition.valueType);
     				column.choiceInList = propertyDefinition.choiceInList;
     				column.position=propertyDefinition.displayOrder;
@@ -361,7 +363,7 @@ angular.module('atomicTransfereServices', [])
 				
 				customExperimentToView : undefined, //used to cutom the view with one atm
 				
-				convertExperimentATMToDatatable : function(experimentATMs){
+				convertExperimentATMToDatatable : function(experimentATMs, valuation){
 					var promises = [];
 					
 					var atms = experimentATMs;
@@ -407,6 +409,7 @@ angular.module('atomicTransfereServices', [])
 							              
 							              allData[l] = {atomicIndex:atomicIndex};
 							              allData[l].atomicTransfertMethod = atm;
+							              allData[l].valuation = valuation;
 							              allData[l].inputContainer = inputContainer;							              
 							              
 							              //allData[l].inputContainerUsed = angular.copy(atm.inputContainerUseds[j]);
@@ -499,7 +502,7 @@ angular.module('atomicTransfereServices', [])
 					}
 					
 					if(!$scope.isCreationMode()){
-						this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods);													
+						this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.valuation);													
 					}else{
 						this.addNewAtomicTransfertMethodsInDatatable();
 					}
@@ -512,7 +515,7 @@ angular.module('atomicTransfereServices', [])
 					if(null === experiment || undefined === experiment){
 						throw 'experiment is required';
 					}
-					this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.instrument);				
+					this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods);				
 				},
 				viewToExperimentOneToVoid :function(experimentIn){
 					this.viewToExperimentOneToOne(experimentIn);
@@ -805,7 +808,7 @@ angular.module('atomicTransfereServices', [])
 						throw 'experiment is required';
 					}
 					this.convertExperimentToDnD(experiment.atomicTransfertMethods);
-					this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.instrument);
+					this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods);
 				}
 		}
 		
@@ -1327,7 +1330,7 @@ angular.module('atomicTransfereServices', [])
 						throw 'experiment is required';
 					}					
 					this.convertExperimentToData(experiment.atomicTransfertMethods);
-					this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.instrument);
+					this.$atmToSingleDatatable.convertExperimentATMToDatatable(experiment.atomicTransfertMethods);
 				}
 		}
 		

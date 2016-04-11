@@ -3237,7 +3237,8 @@ directive('udtTable', function(){
 	    					return col.tdClass(data);
 	    				} else if(angular.isString(col.tdClass)){
 	    					//we try to evaluation the string against the scope
-	    					return currentScope.$eval(col.tdClass) || col.tdClass;
+	    					//Maud add eval(col.tdClass) for highliht in Solution stock Experiment
+	    					return eval(col.tdClass) || currentScope.$eval(col.tdClass) || col.tdClass;
 	    				}else{
 	    					return '';
 	    				}

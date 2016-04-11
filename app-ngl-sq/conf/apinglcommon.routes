@@ -35,3 +35,10 @@ GET		/api/instrument-categories  					controllers.instruments.api.InstrumentCate
 GET		/api/instruments								controllers.instruments.api.Instruments.list()
 GET 	/api/instrument-types/:code 					controllers.instruments.api.InstrumentUsedTypes.get(code:java.lang.String)
 GET		/api/instrument-types  							controllers.instruments.api.InstrumentUsedTypes.list()
+
+#valuation configuration
+GET    	/api/valuation/criterias    	        		controllers.valuation.api.ValuationCriterias.list()
+GET	   	/api/valuation/criterias/:code					controllers.valuation.api.ValuationCriterias.get(code)
+POST 	/api/valuation/criterias						controllers.valuation.api.ValuationCriterias.save()
+PUT    	/api/valuation/criterias/:code					controllers.valuation.api.ValuationCriterias.update(code)
+DELETE	/api/valuation/criterias/:code					controllers.valuation.api.ValuationCriterias.delete(code: java.lang.String)

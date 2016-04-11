@@ -1,5 +1,5 @@
-angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToSingleDatatable',
-                                                       function($scope, $http,atmToSingleDatatable) {
+angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToSingleDatatable','valuationService',
+                                                       function($scope, $http,atmToSingleDatatable,valuationService) {
 	var datatableConfig = {
 			name:"FDR_Tube",
 			columns:[			  
@@ -239,6 +239,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 	});
 	
 	
+	
 	$scope.calculVolumeFromValue=function(value){
 
 		if(value.outputContainerUsed.volume!=null && value.outputContainerUsed.volume.value!=null && value.outputContainerUsed.concentration.value!=null){
@@ -318,8 +319,11 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 					        	 "position":1,
 					        	 "extraHeaders":{0:Messages("experiments.inputs")}
 					         });
-	}	
-	
+	}
+	$scope.valuationCriteriasParam={typeCode:$scope.experiment.typeCode,objectTypeCode:"Experiment"};
+	$scope.lists.refresh.valuationCriterias($scope.valuationCriteriasParam);
+
+	$scope.valuationService = valuationService();
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	//defined new atomictransfertMethod
 	atmService.newAtomicTransfertMethod = function(){
@@ -337,10 +341,19 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 			volume : "µL",
 			concentration : "nM"
 	}
+	
+	if($scope.experiment.valuation===undefined){
+		$scope.experiment.valuation={};
+		 $http.get(jsRoutes.controllers.valuation.api.ValuationCriterias.list().url,{params:$scope.valuationCriteriasParam})
+		 	.success(function(results){
+				$scope.experiment.valuation.criteriaCode=results[0].code;
+		 });
+	}
+	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 	$scope.atmService = atmService;
-	
+
 	var generateSampleSheet = function(){
 		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
 		.success(function(data, status, headers, config) {

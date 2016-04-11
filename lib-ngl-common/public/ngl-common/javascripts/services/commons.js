@@ -271,7 +271,13 @@ angular.module('commonsServices', []).
     			get : function(key){return results[key];},
     			clear : function(key){results[key] = undefined;},
     			getResolutions : function(){return results['resolutions'];},
-    			getValuationCriterias : function(){return results['valuationCriterias'];},
+    			getValuationCriterias :function(params,key){
+    				key = (key)?key:'valuationCriterias';
+    				if(results[key] === undefined){
+    					refresh.valuationCriterias(params, key);
+    				}
+    				return results[key];
+    			},
     			getProjects : function(params,key){
     				key = (key)?key:'projects';
     				if(results[key] === undefined){
@@ -331,7 +337,9 @@ angular.module('commonsServices', []).
     				return results[key];
     			},
     			getInstruments : function(){return results['instruments'];},		   
-    			getValuations : function(){return results['valuations'];},
+    			getValuations : function(params,key){
+    				return results['valuations'];
+    			},
     			getValues : function(params, key){
     				if(results[key] === undefined){
     					refresh.values(params, key);
