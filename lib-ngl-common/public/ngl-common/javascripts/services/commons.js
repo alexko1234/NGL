@@ -593,99 +593,153 @@ angular.module('commonsServices', []).
         			 base64File: "="
         	        },
         		 link: function (scope, elem, attrs, ngModel) {
-	        		  var reader = new FileReader();
-	        		  var file;
+        			 var nbFiles = 0, counter = 0, files;
 	        		  if(scope.base64File != undefined && scope.base64File.value == ""){
 	        			  scope.base64File = undefined;
 	        		  }
 	        		  
-	        		  reader.onload = function (e) {
-	        			  scope.$apply(function () {
-	        				  if(e.target.result!= undefined && e.target.result != ""){
-		        				  scope.base64File = {};
-		        				  scope.base64File.fullname = file.name;
-		        				  
-		        				  //Get the extension
-		        				  console.log("File type "+file.type);
-		        				  var matchExtension = file.type.match(/^application\/(.*)/);
-		        				  var matchExtensionText = file.type.match(/^text\/(.*)/);
-		        				  if(matchExtension && matchExtension.length > 1){
-			        				  scope.base64File.extension = matchExtension[1];
-		        				  }else if(matchExtensionText && matchExtensionText.length > 1){
-		        					  scope.base64File.extension = matchExtensionText[1];
-		        				  }
-		        				  if(scope.base64File.extension != undefined){
-			        				  scope.base64File._type = "file";
-			        				  
-			        				  //Get the base64 without the extension feature
-			        				  var matchBase64 = e.target.result.match(/^.*,(.*)/);
-			        				  scope.base64File.value = matchBase64[1];
-			        				
-		        				  }else{
-		        					 alert("This is not an file...");
-		        					 scope.base64File = undefined;
-		        				  }
-	        				  }else{
-	        					  scope.base64File = undefined;
+	        		  var onload = onload = function (e) {
+	        			 if(e.target.result!= undefined && e.target.result != ""){
+        					 
+        					  var base64File = {};
+	        				  base64File.fullname = e.target.file.name;
+	        				  
+	        				  //Get the extension
+	        				  //console.log("File type "+e.target.file.type);
+	        				  var matchExtension = e.target.file.type.match(/^application\/(.*)/);
+	        				  var matchExtensionText = e.target.file.type.match(/^text\/(.*)/);
+	        				  if(matchExtension && matchExtension.length > 1){
+		        				  base64File.extension = matchExtension[1];
+	        				  }else if(matchExtensionText && matchExtensionText.length > 1){
+	        					  base64File.extension = matchExtensionText[1];
 	        				  }
-	        			  });
+	        				  if(base64File.extension != undefined){
+		        				  base64File._type = "file";
+		        				  
+		        				  //Get the base64 without the extension feature
+		        				  var matchBase64 = e.target.result.match(/^.*,(.*)/);
+		        				  base64File.value = matchBase64[1];
+		        				  files.push(base64File);
+	        				  }else{
+	        					 alert("This is not an authorized file : "+base64File.fullname);		        					 
+	        				  }
+	        				  counter++;
+        				  }
+	        			 
 	        		  }
-	
-				      elem.on('change', function() {
-				    	  	file = elem[0].files[0];
-				    	  	reader.readAsDataURL(elem[0].files[0]);
+	        		  var onloadend = function(e){
+	        			  if(nbFiles === counter){
+	        				  if(attrs.multiple){
+	        					  scope.$apply(function(scope){scope.base64File = files;});
+	        				  }else{
+	        					  scope.$apply(function(scope){scope.base64File = files[0];});
+	        				  }
+	        				  
+	        			  }
+	        		  };
+	        		  
+	        		  elem.on('change', function() {
+				    	  nbFiles = 0, counter = 0;
+				    	  files = [];
+				    	  if(attrs.multiple){
+				    		  scope.base64File = [];
+				    		  nbFiles = elem[0].files.length
+				    		  angular.forEach(elem[0].files, function(inputFile){
+				    			  var reader = new FileReader();
+				    			  reader.file = inputFile;
+				    			  reader.onload = onload;	
+				    			  reader.onloadend = onloadend;
+				    			  reader.readAsDataURL(inputFile);				    			  		        						    			  
+				    		  });
+				    	  }else{
+				    		  scope.base64File = undefined;
+				    		  var reader = new FileReader();
+				    		  nbFiles = elem[0].files.length
+				    		  reader.file = elem[0].files[0];
+				    		  reader.onload = onload;
+				    		  reader.onloadend = onloadend;
+			    			  reader.readAsDataURL(elem[0].files[0]);				    			  		    	 
+				    	  }				    	  
 				      });
+				      
+				      
         		 }
         		};
-        		}]).directive('base64Img', [function () {
+        }]).directive('base64Img', [function () {
         	return {
         		 restrict: 'A',
         		 scope: {
         			 base64Img: "="
         	        },
         		 link: function (scope, elem, attrs, ngModel) {
-	        		  var reader = new FileReader();
-	        		  var file;
-	        		  if(scope.base64Img != undefined && scope.base64Img.value == ""){
+	        		  var nbFiles = 0, counter = 0, files;
+        			  if(scope.base64Img != undefined && scope.base64Img.value == ""){
 	        			  scope.base64Img = undefined;
 	        		  }
 	        		  
-	        		  reader.onload = function (e) {
-	        			  scope.$apply(function () {
-	        				  if(e.target.result!= undefined && e.target.result != ""){
-		        				  scope.base64Img = {};
-		        				  scope.base64Img._type = "img";
-		        				  scope.base64Img.fullname = file.name;
+	        		  var onload =  function (e) {
+		        		if(e.target.result!= undefined && e.target.result != ""){
+	        				  var base64Img = {};
+	        				  base64Img._type = "img";
+	        				  base64Img.fullname = e.target.file.name;
+	        				  //console.log("base64Img.fullname "+base64Img.fullname);
+	        				  //Get the extension
+	        				  var matchExtension = e.target.file.type.match(/^image\/(.*)/);
+		        			  if(matchExtension && matchExtension.length > 1){
+		        				  base64Img.extension = matchExtension[1];
 		        				  
-		        				  //Get the extension
-		        				  var matchExtension = file.type.match(/^image\/(.*)/);
-			        				  if(matchExtension && matchExtension.length > 1){
-			        				  scope.base64Img.extension = matchExtension[1];
-			        				  
-			        				  //Get the base64 without the extension feature
-			        				  var matchBase64 = e.target.result.match(/^.*,(.*)/);
-			        				  scope.base64Img.value = matchBase64[1];
-			        				  //Load image from the base64 to get the width and height
-			        				  var img = new Image();
-			        				  img.src =  e.target.result;
-		
-			        				  img.onload = function(){
-			        					  scope.base64Img.width = img.width;
-			        					  scope.base64Img.height = img.height;
-			        				  };
-		        				  }else{
-		        					 alert("This is not an image...");
-		        					 scope.base64Img = undefined;
-		        				  }
-	        				  }else{
-	        					  scope.base64Img = undefined;
-	        				  }
-	        			  });
-	        		  }
+		        				  //Get the base64 without the extension feature
+		        				  var matchBase64 = e.target.result.match(/^.*,(.*)/);
+		        				  base64Img.value = matchBase64[1];
+		        				  //Load image from the base64 to get the width and height
+		        				  var img = new Image();
+		        				  img.src =  e.target.result;
 	
+		        				  img.onload = function(){
+		        					  base64Img.width = img.width;
+		        					  base64Img.height = img.height;
+		        				  };		        				  
+		        				  files.push(base64Img);		        				  
+	        				  }else{
+	        					 alert("This is not an image..."+base64Img.fullname);	        					
+	        				  }
+		        			  counter++;
+        				  }
+	        		  };
+	        		  
+	        		  var onloadend = function(e){
+	        			  if(nbFiles === counter){
+	        				  if(attrs.multiple){
+	        					  scope.$apply(function(scope){scope.base64Img = files;});
+	        				  }else{
+	        					  scope.$apply(function(scope){scope.base64Img = files[0];});
+	        				  }
+	        				  
+	        			  }
+	        		  };
+	        		  
 				      elem.on('change', function() {
-				    	  	file = elem[0].files[0];
-				    	  	reader.readAsDataURL(elem[0].files[0]);
+				    	  nbFiles = 0, counter = 0;
+				    	  files = [];
+				    	  if(attrs.multiple){
+				    		  scope.base64Img = [];
+				    		  nbFiles = elem[0].files.length
+				    		  angular.forEach(elem[0].files, function(inputFile){
+				    			  var reader = new FileReader();
+				    			  reader.file = inputFile;
+				    			  reader.onload = onload;	
+				    			  reader.onloadend = onloadend;
+				    			  reader.readAsDataURL(inputFile);				    			  		        						    			  
+				    		  });
+				    	  }else{
+				    		  scope.base64Img = undefined;
+				    		  var reader = new FileReader();
+				    		  nbFiles = elem[0].files.length
+				    		  reader.file = elem[0].files[0];
+				    		  reader.onload = onload;
+				    		  reader.onloadend = onloadend;
+			    			  reader.readAsDataURL(elem[0].files[0]);				    			  		    	 
+				    	  }				    	  
 				      });
         		 }
         		};
