@@ -57,7 +57,8 @@ rule "tag and tagCategory match"
     	$experiment:Experiment($typeCode:typeCode,$typeCode=="prep-pcr-free")
     	$tagInfos:TagInfos()
     	$contextValidation:ContextValidation() 
-    	eval($tagInfos.getTagCategory().value != $tagInfos.getIndex().categoryCode)   	
+    	eval(!$tagInfos.getTagCategory().value.equals($tagInfos.getIndex().categoryCode))   	
     then
+    	//Logger.debug("!!!"+$tagInfos.getTagCategory().value +"!="+ $tagInfos.getIndex().categoryCode+"!!!");
     	$contextValidation.addErrors("prep-pcr-free","error.validationexp.tagcategory.notvalid", $tagInfos.getTag().value, $tagInfos.getContainerCode());
 end

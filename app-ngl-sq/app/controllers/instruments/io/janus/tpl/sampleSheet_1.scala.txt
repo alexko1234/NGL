@@ -4,5 +4,5 @@
 
 Library Barcode,Position,Conc,Library position (colonnes),Sample Plate Name,Assay Plate Name\u000D\u000A
 @for(atm <- experiment.atomicTransfertMethods.sortWith(OutputHelper.sortBylocationSupportOneToOne)){
-	@(atm.inputContainerUseds.get(0).code),@(atm.inputContainerUseds.get(0).locationOnContainerSupport.line)@(atm.inputContainerUseds.get(0).locationOnContainerSupport.column),@(OutputHelper.getNumberPositionInPlateByColumn(atm.inputContainerUseds.get(0).locationOnContainerSupport.line,atm.inputContainerUseds.get(0).locationOnContainerSupport.column)),@(atm.outputContainerUseds.get(0).concentration.value),source1,Normalized\u000D\u000A
+	@(atm.inputContainerUseds.get(0).code),@(atm.inputContainerUseds.get(0).locationOnContainerSupport.line)@(atm.inputContainerUseds.get(0).locationOnContainerSupport.column),@(atm.inputContainerUseds.get(0).concentration.value),@(OutputHelper.getNumberPositionInPlateByColumn(atm.inputContainerUseds.get(0).locationOnContainerSupport.line,atm.inputContainerUseds.get(0).locationOnContainerSupport.column)),source1,Normalized\u000D\u000A
 }
