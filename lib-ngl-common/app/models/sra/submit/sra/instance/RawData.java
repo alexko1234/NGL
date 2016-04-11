@@ -10,7 +10,9 @@ public class RawData  implements IValidation {
 	public String extention;              // extention .fastq, .fastq.gz, .sff
 	public String md5;
 	public String location;
-
+	public Boolean gzipForSubmission = false;
+	public String submittedMd5;
+	
 	// todo : verifier avec fred pourquoi il n'y a pas de md5 pour certaines données.
 	@Override
 	public void validate(ContextValidation contextValidation) {
@@ -31,7 +33,6 @@ public class RawData  implements IValidation {
 		ValidationHelper.required(contextValidation, this.extention , "extention");
 		//ValidationHelper.required(contextValidation, this.md5 , "md5");
 		ValidationHelper.required(contextValidation, this.location , "location");
-
 		if (ValidationHelper.required(contextValidation, this.relatifName,"relatifName")) {
 			contextValidation.removeKeyFromRootKeyName("rawData pour " + this.relatifName + " : ");
 		} else {

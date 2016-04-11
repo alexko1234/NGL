@@ -41,6 +41,7 @@ public class Submission extends DBObject implements IValidation {
 	public List<String> runCodes = new ArrayList<String>(); // liste des codes des runs à soumettre à l'ebi
 	public String configCode = null;
 	public String submissionDirectory = null;
+	public String submissionTmpDirectory = null;
 	public Boolean release = false;
 	public String xmlStudys = null;  // nom relatif du fichier xml des studys rempli uniquement si le fichier existe.
 	public String xmlSamples = null;
