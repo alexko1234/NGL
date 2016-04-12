@@ -279,6 +279,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 		var dtConfig = $scope.atmService.data.getConfig();
 		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
 		dtConfig.edit.byDefault = false;
+		dtConfig.edit.start = false;
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.setConfig(dtConfig);
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
@@ -364,7 +365,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 	
 	$scope.setAdditionnalButtons([{
 		isDisabled : function(){return $scope.isCreationMode();},
-		isShow:function(){return true},
+		isShow:function(){return ($scope.experiment.instrument.typeCode === 'janus')},
 		click:generateSampleSheet,
 		label:Messages("experiments.sampleSheet")
 	}]);
