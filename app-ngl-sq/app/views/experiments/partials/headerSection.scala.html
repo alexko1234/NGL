@@ -17,7 +17,7 @@
 							</li>
 						</ul>
 					</div>
-					<button ng-if="getNbAvailableAdditionnalButtons() === 1" ng-repeat="button in getAdditionnalButtons() track by $index" class="btn btn-default" ng-show="button.isShow()"  ng-click="button.click()" ng-bind="button.label"></button>
+					<button ng-if="getNbAvailableAdditionnalButtons() === 1" ng-repeat="button in getAdditionnalButtons() track by $index" class="btn btn-default" ng-show="button.isShow()"  ng-click="button.click()" ng-disabled="button.isDisabled()" ng-bind="button.label"></button>
 				 	
 				
 								
