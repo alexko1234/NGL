@@ -2,7 +2,7 @@
 
 @import controllers.instruments.io.utils._;
 
-Library Barcode,Position,Conc,Library position (colonnes),Sample Plate Name,Assay Plate Name\u000D\u000A
-@for(atm <- experiment.atomicTransfertMethods.sortWith(OutputHelper.sortBylocationSupportOneToOne)){
-	@(atm.inputContainerUseds.get(0).code),@(atm.inputContainerUseds.get(0).locationOnContainerSupport.line)@(atm.inputContainerUseds.get(0).locationOnContainerSupport.column),@(atm.inputContainerUseds.get(0).concentration.value),@(OutputHelper.getNumberPositionInPlateByColumn(atm.inputContainerUseds.get(0).locationOnContainerSupport.line,atm.inputContainerUseds.get(0).locationOnContainerSupport.column)),source1,Normalized\u000D\u000A
+Nr,SampleID,Volume librairie,Volume RSB,Source Plate,Source position,Source Well,Destination Plate,Destination position\u000D\u000A
+@for((atm, index) <- experiment.atomicTransfertMethods.sortWith(OutputHelper.sortBylocationSupportOneToOne).zipWithIndex){
+	@(index+1),@(atm.inputContainerUseds.get(0).code),@(OutputHelper.getExperimentProperty(atm.inputContainerUseds.get(0), "inputVolume")),@(OutputHelper.getExperimentProperty(atm.inputContainerUseds.get(0), "bufferVolume")),Source,@(OutputHelper.getNumberPositionInPlateByColumn(atm.inputContainerUseds.get(0).locationOnContainerSupport.line,atm.inputContainerUseds.get(0).locationOnContainerSupport.column)),@(atm.inputContainerUseds.get(0).locationOnContainerSupport.line)@(atm.inputContainerUseds.get(0).locationOnContainerSupport.column),Normalized,@(OutputHelper.getNumberPositionInPlateByColumn(atm.outputContainerUseds.get(0).locationOnContainerSupport.line,atm.outputContainerUseds.get(0).locationOnContainerSupport.column))\u000D\u000A
 }

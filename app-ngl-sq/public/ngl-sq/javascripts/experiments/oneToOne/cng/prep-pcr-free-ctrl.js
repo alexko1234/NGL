@@ -184,7 +184,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 				"mode":"local",
 				"active":true,
 				// FDS : ce tri donne 1,10,11,12,2.... comment avoir un tri 1,2....10,11,12,13 ??
-				"by":"inputContainer.code"
+				"by":"inputContainer.support.column*1"
 			},
 			"remove":{
 				"active": ($scope.isEditModeAvailable() && $scope.isNewState()),
