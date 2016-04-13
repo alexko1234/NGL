@@ -473,6 +473,7 @@ angular.module('atomicTransfereServices', [])
 								
 								angular.forEach(containers, function(container){
 									var line = {};
+									line.valuation=$that.status;
 									if(type === "ManyToOne"){
 										line.atomicTransfertMethod = atomicTransfertMethod;
 										line.atomicIndex=0;
@@ -500,9 +501,9 @@ angular.module('atomicTransfereServices', [])
 					if(null === experiment || undefined === experiment){
 						throw 'experiment is required';
 					}
-					
+					this.status=experiment.status;
 					if(!$scope.isCreationMode()){
-						this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.valuation);													
+						this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods, experiment.status);													
 					}else{
 						this.addNewAtomicTransfertMethodsInDatatable();
 					}
@@ -515,7 +516,7 @@ angular.module('atomicTransfereServices', [])
 					if(null === experiment || undefined === experiment){
 						throw 'experiment is required';
 					}
-					this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods);				
+					this.convertExperimentATMToDatatable(experiment.atomicTransfertMethods,experiment.status);				
 				},
 				viewToExperimentOneToVoid :function(experimentIn){
 					this.viewToExperimentOneToOne(experimentIn);
