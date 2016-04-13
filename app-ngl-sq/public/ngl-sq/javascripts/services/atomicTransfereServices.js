@@ -92,6 +92,11 @@ angular.module('atomicTransfereServices', [])
     					column.convertValue = {"active":true, "displayMeasureValue":propertyDefinition.displayMeasureValue.value, 
     							"saveMeasureValue":propertyDefinition.saveMeasureValue.value};
     				}
+    				
+    				if(column.type === 'img'){
+    					column.watch = true;
+    				}
+    				
     				return column;
     			},
 				//Common for all but try to replace slowly

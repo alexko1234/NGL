@@ -704,18 +704,23 @@ angular.module('commonsServices', []).
 		        				  img.src =  e.target.result;
 	
 		        				  img.onload = function(){
+		        					  counter++;
 		        					  base64Img.width = img.width;
 		        					  base64Img.height = img.height;
+		        					  files.push(base64Img);
+		        					  onloadend();
+		        					  
 		        				  };		        				  
-		        				  files.push(base64Img);		        				  
+		        				  		        				  
 	        				  }else{
+	        					 counter++;
 	        					 alert("This is not an image..."+base64Img.fullname);	        					
 	        				  }
-		        			  counter++;
+		        			  
         				  }
 	        		  };
 	        		  
-	        		  var onloadend = function(e){
+	        		  var onloadend = function(){
 	        			  if(nbFiles === counter){
 	        				  if(attrs.multiple){
 	        					  scope.$apply(function(scope){scope.base64Img = files;});
@@ -736,7 +741,7 @@ angular.module('commonsServices', []).
 				    			  var reader = new FileReader();
 				    			  reader.file = inputFile;
 				    			  reader.onload = onload;	
-				    			  reader.onloadend = onloadend;
+				    			  //reader.onloadend = onloadend;
 				    			  reader.readAsDataURL(inputFile);				    			  		        						    			  
 				    		  });
 				    	  }else{
@@ -745,7 +750,7 @@ angular.module('commonsServices', []).
 				    		  nbFiles = elem[0].files.length
 				    		  reader.file = elem[0].files[0];
 				    		  reader.onload = onload;
-				    		  reader.onloadend = onloadend;
+				    		  //reader.onloadend = onloadend;
 			    			  reader.readAsDataURL(elem[0].files[0]);				    			  		    	 
 				    	  }				    	  
 				      });

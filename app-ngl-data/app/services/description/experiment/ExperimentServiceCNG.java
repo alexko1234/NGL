@@ -4,6 +4,7 @@ import static services.description.DescriptionFactory.newExperimentType;
 import static services.description.DescriptionFactory.newExperimentTypeNode;
 import static services.description.DescriptionFactory.newPropertiesDefinition;
 
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -376,9 +377,8 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode( "pb"), MeasureUnit.find.findByCode("pb"),
 				"single", 12, true, null, null));
 		
-        /* VOIR GUILLAUME....
-		propertyDefinitions.add(newPropertiesDefinition("Profil de migration", "migrationProfile", LevelService.getLevels(Level.CODE.ContainerOut),String.class, true, "single"));
-        */		
+		propertyDefinitions.add(newPropertiesDefinition("Profil de migration", "migrationProfile", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, false, null, null, 				
+				"img", 13, false, null, null));
 		
 		return propertyDefinitions;
 	}
