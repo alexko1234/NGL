@@ -392,6 +392,10 @@ angular.module('atomicTransfereServices', [])
 							outputContainers = result[0].output;
 						}
 						
+						if(atms[0].inputContainerUseds[0].categoryCode === 'well'){
+							atms = $filter('orderBy')(atms, ['column*1', 'line']);
+						}
+						
 						var l=0, atomicIndex=0;
 						for(var i=0; i< atms.length;i++){
 							
@@ -401,7 +405,7 @@ angular.module('atomicTransfereServices', [])
 							//var atm = angular.copy(atms[i]);
 							var atm = $.extend(true,{}, atms[i]);
 							
-							atm.inputContainerUseds = $filter('orderBy')(atm.inputContainerUseds, 'code');
+							atm.inputContainerUseds = $filter('orderBy')(atm.inputContainerUseds, 'code'); //only interesting for oneToMany
 							
 							for(var j=0; j<atm.inputContainerUseds.length ; j++){
 								
@@ -444,6 +448,7 @@ angular.module('atomicTransfereServices', [])
 							}
 							atomicIndex++;
 						}
+						
 						$that.data.setData(allData, allData.length);
 						//add new atomic in datatable
 						$that.addNewAtomicTransfertMethodsInDatatable();							
@@ -495,6 +500,10 @@ angular.module('atomicTransfereServices', [])
 									}
 									allData.push(line);
 								});
+								
+								if(allData[0].inputContainer.categoryCode === 'well'){
+									allData = $filter('orderBy')(allData, ['atomicTransfertMethod.column*1', 'atomicTransfertMethod.line']);
+								}
 								$that.data.setData(allData, allData.length);											
 						});
 					}					
@@ -779,7 +788,7 @@ angular.module('atomicTransfereServices', [])
 					}
 					
 					for(var i = this.data.atm.length; i < $nbATM; i++){
-						var atm = this.newAtomicTransfertMethod(i+1);
+						var atm = this.newAtomicTransfertMethod(i+1); //TODO GA Not work for plate to plate
 						atm.outputContainerUseds.push($commonATM.newOutputContainerUsed(this.defaultOutputUnit, atm.line, atm.column));
 						this.data.atm.push(atm);
 					}

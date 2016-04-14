@@ -1017,7 +1017,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                             this.allGroupResult = $filter('orderBy')(this.allGroupResult, orderBy);
                         }
                     } else if (angular.isDefined(this.config.order.by)) {
-
+                    	
                         if (angular.isDefined(this.config.order.by)) {
                             var orderProperty = this.config.order.by.property;
                             orderProperty += (this.config.order.by.filter) ? '|' + this.config.order.by.filter : '';
