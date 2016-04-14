@@ -265,6 +265,7 @@ experiments.noCode = A SAUVEGARDER
 experiments.addqc = Ajouter QC
 experiments.addpurif = Ajouter purification
 experiments.state = Etat
+experiments.criteria = Critères
 experiments.intrument = Instrument
 experiments.status = Statut
 experiments.intrumentUsedType = Type d''instrument

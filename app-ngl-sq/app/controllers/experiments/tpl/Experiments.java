@@ -12,7 +12,11 @@ import play.Routes;
 import play.data.Form;
 import play.mvc.Result;
 import play.twirl.api.Html;
-import views.html.experiments.*;
+import views.html.experiments.details;
+import views.html.experiments.home;
+import views.html.experiments.listContainers;
+import views.html.experiments.search;
+import views.html.experiments.searchContainers;
 import controllers.CommonController;
 
 public class Experiments extends CommonController{

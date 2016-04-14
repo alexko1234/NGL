@@ -362,13 +362,6 @@ angular.module('commonsServices', []).
     					refresh.tags(params, key);
     				}
     				return results[key];
-    			},
-    			getTagCategories: function(params,key){
-    				key = (key)?key:'tagCategories';
-    				if(results[key] === undefined){
-    					refresh.tagCategories(params, key);
-    				}
-    				return results[key];
     			}
     		};
     		

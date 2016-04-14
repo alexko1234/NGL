@@ -3243,7 +3243,11 @@ directive('udtTable', function(){
 	    				if(angular.isFunction(col.tdClass)){
 	    					return col.tdClass(data);
 	    				} else if(angular.isString(col.tdClass)){
+<<<<<<< HEAD
+	    					return currentScope.$eval(col.tdClass) || col.tdClass;
+=======
 	    					return currentScope.$eval(col.tdClass) ||  col.tdClass;
+>>>>>>> Add criteria in experiment interface
 	    				}else{
 	    					return '';
 	    				}
