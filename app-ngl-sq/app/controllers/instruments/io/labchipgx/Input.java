@@ -73,9 +73,7 @@ public class Input extends AbstractInput {
 				  // Attention en CSV les decimaux sont sous forme xxxx,yy si le fichier vient d'un machine avec LOCALE=FR...
 				  //Logger.info ("conc="+fields[1]+" size="+fields[2]);
 				  double concentration=Double.parseDouble(fields[1].replace(",","."));
-				  double size=Double.parseDouble(fields[2].replace(",","."));
-				  Logger.info ("conc="+concentration+" size="+size);
-				  LabChipData data=new LabChipData (concentration, size );
+				  LabChipData data=new LabChipData(concentration);
 				
 				  dataMap.put(pos384, data);
 				}
@@ -114,15 +112,11 @@ public class Input extends AbstractInput {
 					String icupos=InputHelper.getCodePosition(icu.code);
 					// ajouter un "0" pour pouvoir comparer...
 				    String icupos0=InputHelper.add02pos(icupos);
-					Logger.info ("set data for icu "+ icu.code);
 						
 					PropertySingleValue concentration1 = getPSV(icu, "concentration1");
-					PropertySingleValue size1 = getPSV(icu, "size1");
 					concentration1.value = dataMap.get(icupos0).concentration;
-					concentration1.unit = "ng/XXXL";
-					
-					size1.value = dataMap.get(icupos0).size;
-					size1.unit = "pb";
+					concentration1.unit = "ng/µl";
+										
 				});
 		}
 		
@@ -132,11 +126,10 @@ public class Input extends AbstractInput {
 	//TEST
 	public class LabChipData {
 		private double concentration;
-		private double size;
 		
-		public LabChipData ( double conc, double sz) {
+		public LabChipData ( double conc) {
 			concentration=conc;
-			size=sz;
+			
 		}
 	}
 
