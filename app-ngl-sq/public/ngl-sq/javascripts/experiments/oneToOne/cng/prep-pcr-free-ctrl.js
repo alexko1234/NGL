@@ -1,5 +1,5 @@
-angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToSingleDatatable','$http',
-                                                     function($scope, $parse, atmToSingleDatatable, $http){
+angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filter', 'atmToSingleDatatable','$http',
+                                                     function($scope, $parse, $filter, atmToSingleDatatable, $http){
 // FDS 04/02/2016 -- JIRA NGL-894 : prep pcr free experiment
 
 	var inputExtraHeaders=Messages("experiments.inputs");
@@ -354,7 +354,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 		//console.log("previous storageCode: "+ $scope.outputContainerSupport.storageCode);
 	}
 	
-	
+	// importer un fichier definissant quels index sont déposés dans quels containers
 	$scope.button = {
 		isShow:function(){
 			return ( $scope.isInProgressState() && !$scope.mainService.isEditMode())
@@ -364,5 +364,88 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse', 'atmToS
 		},
 		click:importData,		
 	};
+	
+	// Autre mode possible : utiliser une plaque d'index prédéfinis, l'utilisateur a juste a indiquer a partir de quelle colonne
+	// de cette plaque le robot doit prelever les index
+	$scope.columns = [ {name:'---', position:-1 },
+	                   {name:'1', position:0}, {name:'2', position:8}, {name:'3', position:16}, {name:'4',  position:24}, {name:'5',  position:32}, {name:'6',  position:40},
+	                   {name:'7', position:48},{name:'8', position:56},{name:'9', position:64}, {name:'10', position:72}, {name:'11', position:80}, {name:'12', position:88},
+	                 ];
+	$scope.tagPlateColumn = $scope.columns[0]; // defaut du select
+	
+	 //actuellement 1 seule definie
+	$scope.plates = [ {name:"DAP TruSeq DNA HT", tagCategory:"DUAL-INDEX"} ];
+	$scope.tagPlate = $scope.plates[0]; // defaut du select
+	
+	// pour l'instant une seule plaque => faire un simple tableau
+	// l'indice dans le tbleau correspond a l'ordre "colonne d'abord" dans la plaque
+	var tagPlateCode=[];
+	tagPlateCode.push("D701-D501", "D701-D502", "D701-D503", "D701-D504", "D701-D505", "D701-D506", "D701-D507", "D701-D508");
+	tagPlateCode.push("D702-D501", "D702-D502", "D702-D503", "D702-D504", "D702-D505", "D702-D506", "D702-D507", "D702-D508");
+	tagPlateCode.push("D703-D501", "D703-D502", "D703-D503", "D703-D504", "D703-D505", "D703-D506", "D703-D507", "D703-D508");
+	tagPlateCode.push("D704-D501", "D704-D502", "D704-D503", "D704-D504", "D704-D505", "D704-D506", "D704-D507", "D704-D508"); 
+	tagPlateCode.push("D705-D501", "D705-D502", "D705-D503", "D705-D504", "D705-D505", "D705-D506", "D705-D507", "D705-D508"); 
+	tagPlateCode.push("D706-D501", "D706-D502", "D706-D503", "D706-D504", "D706-D505", "D706-D506", "D706-D507", "D706-D508"); 
+	tagPlateCode.push("D707-D501", "D707-D502", "D707-D503", "D707-D504", "D707-D505", "D707-D506", "D707-D507", "D707-D508"); 
+	tagPlateCode.push("D708-D501", "D708-D502", "D708-D503", "D708-D504", "D708-D505", "D708-D506", "D708-D507", "D708-D508"); 
+	tagPlateCode.push("D709-D501", "D709-D502", "D709-D503", "D709-D504", "D709-D505", "D709-D506", "D709-D507", "D709-D508"); 
+	tagPlateCode.push("D710-D501", "D710-D502", "D710-D503", "D710-D504", "D710-D505", "D710-D506", "D710-D507", "D710-D508"); 
+	tagPlateCode.push("D711-D501", "D711-D502", "D711-D503", "D711-D504", "D711-D505", "D711-D506", "D711-D507", "D711-D508"); 
+	tagPlateCode.push("D712-D501", "D712-D502", "D712-D503", "D712-D504", "D712-D505", "D712-D506", "D712-D507", "D712-D508"); 
+	
+	var setTags = function(){
+		$scope.messages.clear();
+		//console.log("selected column=" +$scope.tagPlateColumn.name);
+		
+        var dataMain = atmService.data.getData();
+        // trier dans l'ordre "colonne d'abord"
+        var dataMain = $filter('orderBy')(dataMain, ['atomicTransfertMethod.column*1','atomicTransfertMethod.line']);
+        
+       //attention certains choix de colonne sont incorrrects !!!
+		if  ($scope.tagPlateColumn.position + dataMain.length > 96 ) {			
+			$scope.messages.clazz="alert alert-danger";
+			//$scope.messages.text=Messages('select.WrongStartColumnTagPlate'+ " "+$scope.tagPlateColumn.position +"+"+dataMain.length+"="+ ($scope.tagPlateColumn.position + dataMain.length));
+			$scope.messages.text=Messages('select.wrongStartColumnTagPlate');
+			$scope.messages.showDetails = false;
+			$scope.messages.open();	
+			return;
+		}
+       
+	    for(var i = 0; i < dataMain.length; i++){
+			var udtData = dataMain[i];
+			var ocu=udtData.outputContainerUsed;
+			//console.log("outputContainerUsed.code"+udtData.outputContainerUsed.code);
+			
+			if ($scope.tagPlateColumn.position != -1 ){
+				//calculer la position sur la plaque:   pos= (col -1)*8 + line      (line est le code ascii - 65)
+				var libPos= (udtData.atomicTransfertMethod.column  -1 )*8 + ( udtData.atomicTransfertMethod.line.charCodeAt(0) -65);
+				var indexPos= libPos + $scope.tagPlateColumn.position;
+				//console.log("=> setting index "+indexPos+ ": "+ tagPlateCode[indexPos] );
+				
+				//ajouter dans experimentProperties les PSV tagCategory et tag
+				var ocu=udtData.outputContainerUsed;
+				if(ocu.experimentProperties===undefined || ocu.experimentProperties===null){
+					ocu.experimentProperties={};
+				}				
+				ocu.experimentProperties["tag"]={"_type":"single","value":tagPlateCode[indexPos]};
+				ocu.experimentProperties["tagCategory"]={"_type":"single","value":$scope.tagPlate.tagCategory};
+
+			} else {
+				//l'utilisateur n'a rien selectionné => suprimer les PSV tagCategory et tagCode 
+				
+				ocu.experimentProperties["tag"]= undefined;
+				ocu.experimentProperties["tagCategory"]=undefined;
+			}
+		}	
+	    atmService.data.setData(dataMain);
+	};
+	
+	$scope.selectCol = {
+		isShow:function(){
+			return ( $scope.isInProgressState() && !$scope.mainService.isEditMode())
+			},	
+		select:setTags,
+	};
+	
 	
 }]);

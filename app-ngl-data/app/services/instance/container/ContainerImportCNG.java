@@ -46,8 +46,9 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		   si on reprend la methode loadContainers comment alors distinger les plaques de sample des plaques de libraries ??
 		     =>surcharger un peu le parametre containerCategoryCode
 		       sample-well / library-well au lieu de simplement 'well'
+		   12/04/2016: importer a l'etat "iw-p" au lieu de "is"
 		*/	
-	    loadContainers("sample-well",null,"is");// is=in stock
+	    loadContainers("sample-well",null,"iw-p"); //iw-p=in waiting processus
 	    updateContainers("sample-well",null);
 		
 		// -3- librairies en tube

@@ -82,10 +82,8 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		
-			// FDS ajout 27/01/2016 -- JIRA NGL-894: nouveau processus pour X5
-			// FDS  29/03/2016 apres merge manquait a nouveau prepa-fc-ordered dans la liste des Experiment types!! 
-			// FDS TEST   ajouter qpcr-quantification ?????
-			
+			// FDS ajout 27/01/2016 -- JIRA NGL-894: nouveau processus pour X5	
+			// ????? pourquoi qpcr-quantification est-elle listee ??
 			l.add(DescriptionFactory.newProcessType("X5_WG PCR free", "x5-wg-pcr-free", ProcessCategory.find.findByCode("library"),
 					getPropertyDefinitionsX5WgPcrFree(),
 					Arrays.asList(getPET("ext-to-x5-wg-pcr-free",-1),getPET("prep-pcr-free",0),getPET("qpcr-quantification",0),getPET("lib-normalization",1), getPET("prepa-fc-ordered",2), getPET("illumina-depot",3) ), //ordered list of experiment type in process type
@@ -93,7 +91,18 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 					getExperimentTypes("illumina-depot").get(0),       //last experiment type
 					getExperimentTypes("ext-to-x5-wg-pcr-free").get(0), //void experiment type
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
+			
+			// FDS ajout  12/04/2016 JIRA NGL-894/981 nouveau processus court demarrant a lib-normalization, pas de proprietes
+			//  et le void ????
+			l.add(DescriptionFactory.newProcessType("X5_norm,FC ord, dépôt", "norm-fc-ordered-depot", ProcessCategory.find.findByCode("library"),
+					null,
+					Arrays.asList(getPET("prep-pcr-free",-1),getPET("lib-normalization",0), getPET("prepa-fc-ordered",1), getPET("illumina-depot",2) ), //ordered list of experiment type in process type
+					getExperimentTypes("lib-normalization").get(0),        //first experiment type
+					getExperimentTypes("illumina-depot").get(0),       //last experiment type
+					getExperimentTypes("ext-to-x5-wg-pcr-free").get(0), //void experiment type
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+			
+			
 		}
 		DAOHelpers.saveModels(ProcessType.class, l, errors);
 	}
@@ -174,7 +183,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 		
 		return propertyDefinitions;
 	}
-	
+
 	
 	private static List<Value> getLibProcessTypeCodeValues(){
         List<Value> values = new ArrayList<Value>();

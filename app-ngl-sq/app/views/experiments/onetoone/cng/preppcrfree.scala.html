@@ -1,9 +1,12 @@
 @()
-
+<!--12/04/2016 : 2 cas * Hiseq2000/2004 => import fichier
+	                   * X5 => selection 1 colonne de départ pour plaque DAP
+-->
 <div class="col-sm-12 col-lg-12" ng-controller="PrepPcrFreeCtrl">
-  <div class="row margin-bottom-7">
-    <form class="form-inline">
-         <div class="form-group col-lg-3">          
+  <form class="form-group" role="form">
+  	  <!-- premiere ligne -->
+      <div class="row margin-bottom-3">
+         <div class="form-group col-lg-6">          
               <div ng-switch on="mainService.isEditMode()"> 
               <div ng-switch-when="false">   
                    <label for="plateCode" class="control-label">@Messages("experiments.outputContainerSupportCode")</label>
@@ -17,8 +20,8 @@
 			  </div>
 			  </div>   
 	     </div>
-	     
-         <div class="form-group col-lg-3">
+	 
+         <div class="form-group col-lg-6">
               <div ng-switch on="mainService.isEditMode()"> 
               <div ng-switch-when="false">   
                    <label for="plateStorage" class="control-label">@Messages("experiments.outputContainerSupportStorageCode")</label>
@@ -32,14 +35,15 @@
 			  </div>
 			  </div>   
 	     </div>
-	     <!-- test ajout  ng-show="button.isShow() NON SINON MARCHE PLUS-->
+	  </div>
+	  <!-- 2eme ligne -->
+	  <div class="row margin-bottom-3">
          <div class="form-group col-lg-6"  ng-show="button.isShow()">
              <label for="importFile" class="control-label">@Messages("experiments.instrumentFile")</label>
              <div class="input-group" style="width:50%">
                 <input class="form-control input-sm" type="file" 
                 									 base64-file="file"
-                									 id="importFile"
-                									   
+                									 id="importFile"  
                 									 />
                 <span class="input-group-btn">									 
                      <button class="btn btn-primary" ng-click="button.click()" 
@@ -48,10 +52,19 @@
                      </button>     
                 </span> 
             </div>                         				  
-        </div>
-     </form>		
-  </div>
-
+          </div>
+          <!-- TODO ?? select pour choisir la plaque d'index; pour l'instant une seule possible -->
+          <div class="form-group col-lg-6"  ng-show="selectCol.isShow()">
+             <label class="control-label">@Messages("experiments.startColumnTagPlate")</label>
+             <select ng-model="tagPlateColumn" ng-options="column.name for column in columns"  
+             								   ng-change="selectCol.select(tagPlateCol)" selectpicker btn-primary">                                      
+             </select>  
+             <select ng-model="tagPlate" ng-options="plate.name for plate in plates"  
+             							                                             " selectpicker btn-primary">                                      
+             </select>                        				  
+           </div> 
+    </div>
+  </form>	
 
   <div class="row">
 	<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data"></div>						
