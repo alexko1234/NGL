@@ -1,5 +1,5 @@
-angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToSingleDatatable','valuationService',
-                                                       function($scope, $http,atmToSingleDatatable,valuationService) {
+angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToSingleDatatable',
+                                                       function($scope, $http,atmToSingleDatatable) {
 	var datatableConfig = {
 			name:"FDR_Tube",
 			columns:[			  
@@ -335,8 +335,6 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 			concentration : "nM"
 	}
 	
-
-	$scope.valuationService = valuationService();
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	$scope.atmService = atmService;
 	
