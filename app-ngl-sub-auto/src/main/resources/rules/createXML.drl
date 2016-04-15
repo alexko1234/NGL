@@ -29,6 +29,7 @@ dialect 'java'
 			newRp.setProperty("code",groupJobResource.getProperty("code"));
 			newRp.setProperty("gzipForSubmission","false");
 			newRp.setProperty("submissionTmpDirectory",groupJobResource.getProperty("submissionTmpDirectory"));
+			newRp.setProperty("experimentCodes",groupJobResource.getProperty("experimentCodes").replaceAll("\"",""));
 			newRp.setProperty("idGroupJob",""+$groupJob.getId());
 			resourceProperties.add(newRp);
 		}else{

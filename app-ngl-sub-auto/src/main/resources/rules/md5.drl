@@ -33,4 +33,11 @@ rule "POST DONE EXECUTION of md5 : Update MD5 of RawData"
 		BufferedReader read = new BufferedReader(new FileReader(new File($job.getProperty(Job.STDOUT))));
 		String md5 = read.readLine().split(" ")[0];
 		//Update md5 in NGLSUB for RawData
+		//Raw Data from DB
+		JobResource jobResource = $job.getUniqueJobResource("inputRawDataMd5");
+		JSONDevice jsonDevice = new JSONDevice();
+		String JSONRawData = jsonDevice.httpGet(ProjectProperties.getProperty("server")+"/api/sra/experiments/"+jobResource.getProperty("experimentCode")+"/rawDatas/"+jobResource.getProperty("fileName"),"bot");
+		String JSONRawDataModify = jsonDevice.modifyJSON(JSONRawData, "submittedMd5", md5);
+		String jsonResult = jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/api/sra/experiments/"+jobResource.getProperty("experimentCode")+"/rawDatas",JSONRawDataModify, "bot");
+		log.debug("Result "+jsonResult);
 end

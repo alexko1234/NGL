@@ -34,7 +34,7 @@ rule "select resources from nglsub for workflow zip md5"
 			newRp.setProperty("code",groupJobResource.getProperty("code"));
 			newRp.setProperty("gzipForSubmission","true");
 			newRp.setProperty("submissionTmpDirectory",groupJobResource.getProperty("submissionTmpDirectory"));
-			newRP.setProperty("experimentCodes",groupJobResource.getProperty("experimentCodes").replaceAll("\"",""));
+			newRp.setProperty("experimentCodes",groupJobResource.getProperty("experimentCodes").replaceAll("\"",""));
 			newRp.setProperty("idGroupJob",""+$groupJob.getId());
 			resourceProperties.add(newRp);
 		}
@@ -58,4 +58,30 @@ rule "add resources submission to internal referential internalRefZip for first 
 	    log.debug("transfertResource for WF_ZipMd5Process");
 	  	$j.groupTransferInputResourcesToInternalReferential("inputZipMd5", "internalRefZip",$j.getId());
 	  	
+end
+
+
+rule "add submissionZip resources in internalRefSubmission to fire createXML and transferRawData"
+	@BirdsRule( addResources ) 
+	dialect 'java'
+	salience 200
+	when
+		$flag : Flag ( done == false ) 
+		$output : OutputSpecificationElement(treatmentSpecification.name == "WF_ZipMd5Process")
+	  	$referential : ResourcesReferential ( name == "internalRefSubmission" )
+		$resourceSet : ResourceSet( ioSpecificationElement == $output )
+		$job : Job(treatmentSpecification!=null, treatmentSpecification.name == "WF_ZipMd5Process")
+	then
+		Logger log = Logger.getLogger("ngl.sub.rules");
+		log.debug("Add resources rules for create XML and transfertRawData from file "+$job.getProperty(Job.STDOUT));
+		JobResource jobResource = $job.getUniqueJobResource("inputZipMd5");
+		JobResource outputResource = $resourceSet.createJobResource($output.getResourceType(),$referential.getName());
+		ResourceProperties resourceProperties = outputResource.getResourceProperties();
+	  	resourceProperties.setProperty("code",jobResource.getProperty("code"));
+	  	resourceProperties.setProperty("gzipForSubmission",jobResource.getProperty("gzipForSubmission"));
+	  	resourceProperties.setProperty("submissionTmpDirectory",jobResource.getProperty("submissionTmpDirectory"));
+	  	resourceProperties.setProperty("experimentCodes",jobResource.getProperty("experimentCodes"));
+		$flag.setDone(true);
+		modify($flag){};
+		modify($resourceSet){};
 end

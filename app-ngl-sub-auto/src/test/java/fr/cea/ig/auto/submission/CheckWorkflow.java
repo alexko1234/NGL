@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import fr.genoscope.lis.devsi.birds.api.device.JSONDevice;
 import fr.genoscope.lis.devsi.birds.api.entity.Job;
+import fr.genoscope.lis.devsi.birds.api.entity.JobResource;
 import fr.genoscope.lis.devsi.birds.api.entity.ResourceProperties;
 import fr.genoscope.lis.devsi.birds.api.exception.BirdsException;
 import fr.genoscope.lis.devsi.birds.api.exception.FatalException;
@@ -160,6 +161,8 @@ public class CheckWorkflow extends GenericTest{
 		Assert.assertEquals("codeSub2", rpZipMd5.get("code"));
 		Assert.assertEquals("true", rpZipMd5.get("gzipForSubmission"));
 		Assert.assertTrue(rpZipMd5.containsKey("idGroupJob"));
+		Assert.assertTrue(rpZipMd5.getProperty("experimentCodes").contains("codeExp3"));
+		Assert.assertTrue(rpZipMd5.getProperty("experimentCodes").contains("codeExp4"));
 		em.endTransaction();
 
 
@@ -235,32 +238,138 @@ public class CheckWorkflow extends GenericTest{
 			BufferedReader read = new BufferedReader(new FileReader(new File(jobMd5.getProperty(Job.STDOUT))));
 			String md5 = read.readLine().split(" ")[0];
 			log.debug("MD5 = "+md5);
-			
 			read.close();
+			
+			//TODO check update md5 in NGL 
+			JobResource jobResource = jobMd5.getUniqueJobResource("inputRawDataMd5");
+			ResourceProperties rp = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/"+jobResource.getProperty("experimentCode")+"/rawDatas/"+jobResource.getProperty("fileName"),"bot").iterator().next();
+			Assert.assertEquals(md5, rp.get("submittedMd5"));
 		}
 		
+		em.endTransaction();
+		
+		log.debug("FIFTH ROUND");
+		executeBirdsCycle("SRA", "WF_Submission");
+		em = PersistenceServiceFactory.getInstance().createEntityManagerHelper();
+		em.beginTransaction();
+		//Check group with files zipped workflow is exited because sendXML is exited
+		groupJobSub1 = CoreJobServiceFactory.getInstance().getJob(idSub1, em.getEm());
+		for(Job subJob1 : groupJobSub1.getSubJobs()){
+			if(subJob1.getTreatmentSpecification().getName().equals("sendXML"))
+				Assert.assertEquals(Job.ERROR_STATUS, subJob1.getExecutionState());
+			else
+				Assert.assertEquals(Job.DONE_STATUS, subJob1.getExecutionState());
+			log.debug("Job "+subJob1.getUnixCommand()+"="+subJob1.getExecutionState());
+		}
+		//Assert.assertEquals(Job.DONE_STATUS, groupJobSub1.getExecutionState());
+
+		//Check second submission with data non zipped
+		groupJobSub2 = CoreJobServiceFactory.getInstance().getJob(idSub2, em.getEm());
+		groupJobZipMd5 = groupJobSub2.getSubJobs("WF_ZipMd5Process").iterator().next();
+		Assert.assertEquals(Job.DONE_STATUS, groupJobZipMd5.getExecutionState());
+		
+		for(Job subJob : groupJobSub2.getSubJobs()){
+			log.debug("Job "+subJob);
+		}
+		
+		em.endTransaction();
+		
+		log.debug("SIXTH ROUND");
+		executeBirdsCycle("SRA", "WF_Submission");
+		em = PersistenceServiceFactory.getInstance().createEntityManagerHelper();
+		em.beginTransaction();
+		//Check group with files zipped workflow is exited because sendXML is exited
+		groupJobSub1 = CoreJobServiceFactory.getInstance().getJob(idSub1, em.getEm());
+		for(Job subJob1 : groupJobSub1.getSubJobs()){
+			if(subJob1.getTreatmentSpecification().getName().equals("sendXML"))
+				Assert.assertEquals(Job.ERROR_STATUS, subJob1.getExecutionState());
+			else
+				Assert.assertEquals(Job.DONE_STATUS, subJob1.getExecutionState());
+			log.debug("Job "+subJob1.getUnixCommand()+"="+subJob1.getExecutionState());
+		}
+		//Assert.assertEquals(Job.DONE_STATUS, groupJobSub1.getExecutionState());
+
+		//Check second submission with data non zipped
+		groupJobSub2 = CoreJobServiceFactory.getInstance().getJob(idSub2, em.getEm());
+		groupJobZipMd5 = groupJobSub2.getSubJobs("WF_ZipMd5Process").iterator().next();
+		Assert.assertEquals(Job.DONE_STATUS, groupJobZipMd5.getExecutionState());
+		jobCreateXML = groupJobSub2.getSubJobs("createXML").iterator().next();
+		Assert.assertNotNull(jobCreateXML);
+		Assert.assertEquals(Job.DONE_STATUS, jobCreateXML.getExecutionState());
+		jobTransfertRawData = groupJobSub2.getSubJobs("transfertRawData").iterator().next();
+		Assert.assertNotNull(jobTransfertRawData);
+		Assert.assertEquals(Job.DONE_STATUS, jobTransfertRawData.getExecutionState());
+		
+		em.endTransaction();
+		
+		log.debug("SEVENTH ROUND");
+		executeBirdsCycle("SRA", "WF_Submission");
+		em = PersistenceServiceFactory.getInstance().createEntityManagerHelper();
+		em.beginTransaction();
+		//Check group with files zipped workflow is exited because sendXML is exited
+		groupJobSub1 = CoreJobServiceFactory.getInstance().getJob(idSub1, em.getEm());
+		for(Job subJob1 : groupJobSub1.getSubJobs()){
+			if(subJob1.getTreatmentSpecification().getName().equals("sendXML"))
+				Assert.assertEquals(Job.ERROR_STATUS, subJob1.getExecutionState());
+			else
+				Assert.assertEquals(Job.DONE_STATUS, subJob1.getExecutionState());
+			log.debug("Job "+subJob1.getUnixCommand()+"="+subJob1.getExecutionState());
+		}
+		//Assert.assertEquals(Job.DONE_STATUS, groupJobSub1.getExecutionState());
+
+		//Check second submission with data non zipped
+		groupJobSub2 = CoreJobServiceFactory.getInstance().getJob(idSub2, em.getEm());
+		groupJobZipMd5 = groupJobSub2.getSubJobs("WF_ZipMd5Process").iterator().next();
+		Assert.assertEquals(Job.DONE_STATUS, groupJobZipMd5.getExecutionState());
+		jobSendXML = groupJobSub2.getSubJobs("sendXML").iterator().next();
+		Assert.assertNotNull(jobSendXML);
+		Assert.assertEquals(Job.ERROR_STATUS, jobSendXML.getExecutionState());
+		
+		em.endTransaction();
+		
+		log.debug("EIGHTH ROUND");
+		executeBirdsCycle("SRA", "WF_Submission");
+		em = PersistenceServiceFactory.getInstance().createEntityManagerHelper();
+		em.beginTransaction();
+		//Check group with files zipped workflow is exited because sendXML is exited
+		groupJobSub1 = CoreJobServiceFactory.getInstance().getJob(idSub1, em.getEm());
+		Assert.assertEquals(3, groupJobSub1.getSubJobs().size());
+		log.debug("Status group sub1 "+groupJobSub1.getExecutionState());
+		//Assert.assertEquals(Job.DONE_STATUS, groupJobSub1.getExecutionState());
+
+		//Check second submission with data non zipped
+		groupJobSub2 = CoreJobServiceFactory.getInstance().getJob(idSub2, em.getEm());
+		Assert.assertEquals(4, groupJobSub2.getSubJobs().size());
+		groupJobZipMd5 = groupJobSub2.getUniqueSubJob("WF_ZipMd5Process");
+		Assert.assertEquals(4, groupJobZipMd5.getSubJobs().size());
+		log.debug("status group sub 2 "+groupJobSub2.getExecutionState());
 		em.endTransaction();
 		//Get Submission from database
 
 		//TODO change to FE-SUB
-		/*Set<ResourceProperties> setRPSub = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/submissions?stateCode=FE-SUB","bot");
+		Set<ResourceProperties> setRPSub = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/submissions?stateCode=FE-SUB","bot");
 		log.debug("Set RPub "+setRPSub);
-		Assert.assertTrue(setRPSub.size()==1);
-		ResourceProperties RPSub = setRPSub.iterator().next();
-		//TODO No accession
-		Assert.assertTrue(RPSub.get("state.code").equals("FE-SUB"));
-		//Assert.assertNotNull(RPSub.get("accession"));
-		//Update state submission from IN_PROGRESS to IN_WAITING at the end of test
-	  	//Get submission
-		String newState = "{\"code\":\"IW-SUB\"}";
-		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/state", newState, "bot");
-		 */
-
+		Assert.assertTrue(setRPSub.size()==2);
+		for(ResourceProperties rp : setRPSub){
+			Assert.assertTrue(rp.get("state.code").equals("FE-SUB"));String newState = "{\"code\":\"IW-SUB\"}";
+			jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+rp.get("code")+"/state", newState, "bot");
+		}
+		
 		//TODO remove gz files and md5 property
-
+		Assert.assertTrue(new File("/env/cns/home/ejacoby/NGL-SUB-Test/tmpSubDir/file5.fastq.gz").delete());
+		Assert.assertTrue(new File("/env/cns/home/ejacoby/NGL-SUB-Test/tmpSubDir/file7.fastq.gz").delete());
+		
+		String JSONRawData = jsonDevice.httpGet(ProjectProperties.getProperty("server")+"/api/sra/experiments/codeExp3/rawDatas/file5.fastq","bot");
+		String JSONRawDataModify = jsonDevice.modifyJSON(JSONRawData, "submittedMd5", "");
+		String jsonResult = jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/api/sra/experiments/codeExp3/rawDatas",JSONRawDataModify, "bot");
+		log.debug("JSON result "+jsonResult);
+		JSONRawData = jsonDevice.httpGet(ProjectProperties.getProperty("server")+"/api/sra/experiments/codeExp4/rawDatas/file7.fastq","bot");
+		JSONRawDataModify = jsonDevice.modifyJSON(JSONRawData, "submittedMd5", "");
+		jsonResult = jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/api/sra/experiments/codeExp4/rawDatas",JSONRawDataModify, "bot");
+		log.debug("JSON result "+jsonResult);
 	}
 	
-	@Test
+	//@Test
 	public void testListExperiment() throws JSONDeviceException, FatalException
 	{
 		JSONDevice device = new JSONDevice();

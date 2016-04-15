@@ -22,10 +22,10 @@ dialect 'java'
         
         JobResource groupJobResource = $groupJob.getUniqueJobResource("inputZipMd5");
         
-        String[] tabExperimentCodes = groupJobResouce.getProperty("experimentCodes").split(",");
+        String[] tabExperimentCodes = groupJobResource.getProperty("experimentCodes").split(",");
         for(int i=0; i<tabExperimentCodes.length; i++){
         
-			Set<ResourceProperties> rpsRawData = $referentialDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/"+tabExperimentCodes[i]+"/rawDatas","bot");
+			Set<ResourceProperties> rpsRawData = $referentialDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/rawDatas?experimentCode="+tabExperimentCodes[i],"bot");
 			Set<ResourceProperties> rpsRawDataFilter = SRAFilesUtil.filterByGzipForSubmission(rpsRawData);
 		
 			for(ResourceProperties rpRawDataFilter : rpsRawDataFilter)
