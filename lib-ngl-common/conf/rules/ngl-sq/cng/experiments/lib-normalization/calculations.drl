@@ -44,11 +44,11 @@ rule "InputVolume in lib-normalization inputContainer"
         Double bfVolume=0.0;
         Logger.debug("inputVolume="+ engVolume );
         
-        // 13/04/2016 si volume a engager  >  volume disponible alors volume a engager=volume disponible, buffer =0
+        // 15/04/2016 si volume a engager  >  volume disponible alors volume a engager=15, buffer =0
 		if ( engVolume <= Double.parseDouble($inputVolume.getValue().toString()) ){	
 			Logger.debug("Warning: pas assez de volume disponible: engVolume="+ engVolume );
 		    //engVolume=Double.parseDouble($inputVolume.getValue().toString());   
-		    engVolume=convertPVToDouble($inputVolume);
+		    engVolume=15.0;
 	    } else {
 		   // -2- calcul volume de tampon : volume buffer= volume out - volume engagé
 			Logger.debug("-2- volume tampon= volumeout - volume engagé");

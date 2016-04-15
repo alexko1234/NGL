@@ -369,7 +369,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				                       newValues("HS", "BR"), "single"));		
 		return l;
 	}
-	
 
 	
 	//FDS 29/01/2016 ajout SicloneNGSX -- JIRA NGL-894
@@ -389,8 +388,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		l.addAll(getCovarisProperties());
 		l.addAll(getSicloneNGSXProperties());
 		
-		//18/03/2016 ajouter un "nom de run" a saisir (optionnel) 
-		l.add(newPropertiesDefinition("Nom du Run","ngsRunCode", LevelService.getLevels(Level.CODE.Instrument),  String.class, false, null,
+		//15/04/2016"ngsRunCode" devient generique: => robotRunCode
+		l.add(newPropertiesDefinition("Nom du Run","robotRunCode", LevelService.getLevels(Level.CODE.Instrument),  String.class, false, null,
 				null, null, null, null, "single", null, true ,null, null));
 		return l;
 	}

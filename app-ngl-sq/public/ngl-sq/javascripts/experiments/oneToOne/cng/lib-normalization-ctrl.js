@@ -166,7 +166,7 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 						 "edit":true,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "defaultValues":2,
+			        	 "defaultValues":4,
 			        	 "position":120,
 			        	 "extraHeaders":{0:outputExtraHeaders}
 			         },

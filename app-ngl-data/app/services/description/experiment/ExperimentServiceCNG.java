@@ -128,6 +128,12 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null, null ,"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
+			//FDS 15/04/2016 ajout -- JIRA NGL-894 processus court pour X5
+			l.add(newExperimentType("Ext to X5_norm,FC ord, dépôt","ext-to-norm-fc-ordered-depot",null,-1,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
+					null, null ,"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+			
 			//FDS 01/02/2016 ajout -- JIRA NGL-894: processus et experiments pour X5
 			l.add(newExperimentType("Prep PCR free","prep-pcr-free",null,800,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
@@ -141,7 +147,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getInstrumentUsedTypes("qpcr-lightcycler-480II"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG))); 
 			
-			// FDS 07/04/2016 --JIRA NGL-894: processus et experiments pour X5
+			// FDS 07/04/2016 ajout --JIRA NGL-894: processus et experiments pour X5
 			l.add(newExperimentType("profil LABCHIP_GX","labchip-migration-profile", null, 900,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
 					getPropertyDefinitionsChipMigration(), 
@@ -153,7 +159,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getPropertyDefinitionsQCMiseq(), 
 					getInstrumentUsedTypes("MISEQ"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-			
 			
 			
 			/*
@@ -216,11 +221,17 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 		
-			//FDS  ajout 01/02/2016 -- JIRA NGL-894 : processus et experiments pour X5
+			//FDS ajout 01/02/2016 -- JIRA NGL-894 : processus et experiments pour X5
 			newExperimentTypeNode("ext-to-x5-wg-pcr-free",getExperimentTypes("ext-to-x5-wg-pcr-free").get(0),
 					false,false,false,
 					null, null, null, null
 					).save();
+			
+			//FDS ajout 15/04/2016 -- JIRA NGL-894 : processus court pour X5
+			newExperimentTypeNode("ext-to-norm-fc-ordered-depot",getExperimentTypes("ext-to-norm-fc-ordered-depot").get(0),
+					false,false,false,
+					null, null, null, null
+					).save();			
 				
 			//FDS ajout 01/02/2016 -- JIRA NGL-894: processus et experiments pour X5
 			//GA        07/04/2016 -- JIRA NGL-894: processus et experiments pour X5; ajout "labchip-migration-profile" dans qc
@@ -229,10 +240,11 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getExperimentTypeNodes("ext-to-x5-wg-pcr-free"),null,getExperimentTypes("qpcr-quantification","labchip-migration-profile","miseq-qc"), null  
 					).save();
 
-			//FDS modification ...../2016 -- JIRA NGL-894: processus et experiments pour X5; ajout "prep-pcr-free" dans les previous
+			//FDS ...../2016 -- JIRA NGL-894: processus et experiments pour X5
+			//FDS 15/04/2016 -- JIRA NGL-894: processus court pour X5: ajout "ext-to-norm-fc-ordered-depot" dans les previous
 			newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), 
 					false, false, false, 
-					getExperimentTypeNodes("prep-pcr-free"), null, null, getExperimentTypes("aliquoting")
+					getExperimentTypeNodes("ext-to-norm-fc-ordered-depot", "prep-pcr-free"), null, null, getExperimentTypes("aliquoting")
 					).save();
 
 		}else{
