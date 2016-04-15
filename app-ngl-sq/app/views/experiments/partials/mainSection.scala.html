@@ -39,9 +39,9 @@
 							</div>
 						</div>						
 					}
-					
-					@columnLabelValue(Messages("experiments.criteria")){
-			    		<div ng-switch on="mainService.isEditMode() || isFinishEditMode()" ng-if="lists.get('valuationCriterias').length!==0">
+					@attrs = {ng-if="lists.get('valuationCriterias').length!==0"}
+					@columnLabelValue(Messages("experiments.criteria"), attrs){
+			    		<div ng-switch on="mainService.isEditMode() || isFinishEditMode()">
 							<p ng-switch-when="false" class="form-control-static" ng-bind="experiment.status.criteriaCode"/>
 							<div ng-switch-when="true">
 								<div bt-select class="form-control" ng-model="experiment.status.criteriaCode" bt-options="criteria.code as criteria.name for criteria in lists.get('valuationCriterias')" auto-select></div>
