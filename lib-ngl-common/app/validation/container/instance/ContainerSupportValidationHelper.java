@@ -62,7 +62,7 @@ public class ContainerSupportValidationHelper extends CommonValidationHelper{
 				
 				if("IW-P".equals(currentStateCode) && !nextStateCode.startsWith("A")){
 					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
-				}else if(currentStateCode.startsWith("A") && !"IW-E".equals(nextStateCode)){
+				}else if(currentStateCode.startsWith("A") && !"IW-E".equals(nextStateCode) && !"IU".equals(nextStateCode) && !"IW-D".equals(nextStateCode) ){
 					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
 				}else if("IW-E".equals(currentStateCode) && !"IU".equals(nextStateCode) && !"IW-D".equals(nextStateCode) && !nextStateCode.startsWith("A")){
 					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
@@ -77,15 +77,12 @@ public class ContainerSupportValidationHelper extends CommonValidationHelper{
 						!nextStateCode.equals("UA") && !nextStateCode.equals("IS")){
 					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
 				}else if(currentStateCode.startsWith("A") && 
-						(!nextStateCode.startsWith("A") || !getContainerStates(container).contains(nextStateCode))){
+						(!nextStateCode.startsWith("A") || (!"A".equals(nextStateCode) && !getContainerStates(container).contains(nextStateCode)))){
 					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
-				}else if("IW-D".equals(currentStateCode) && 
-						!nextStateCode.equals("UA") && !nextStateCode.equals("IS") && !nextStateCode.startsWith("A")){
-					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
-				}else if("IS".equals(currentStateCode)&& 
+				}else if("IS".equals(currentStateCode) && 
 						!nextStateCode.equals("UA") && !nextStateCode.equals("IW-P")){
 					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
-				}else if("UA".equals(currentStateCode)&& 
+				}else if("UA".equals(currentStateCode) && 
 						!nextStateCode.equals("IW-P") && !nextStateCode.equals("IS")){
 					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
 				}else if("N".equals(currentStateCode) && 
@@ -94,7 +91,7 @@ public class ContainerSupportValidationHelper extends CommonValidationHelper{
 				}else if("IW-E".equals(currentStateCode) || "IU".equals(currentStateCode)){
 					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
 				}
-				
+				//!!! No need rules for state IW-D because when we manage a plate the support state is depending of container states
 				break;
 
 			default:

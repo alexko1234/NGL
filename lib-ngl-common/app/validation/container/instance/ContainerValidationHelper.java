@@ -74,7 +74,7 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 				
 				if("IW-P".equals(currentStateCode) && !nextStateCode.startsWith("A")){
 					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
-				}else if(currentStateCode.startsWith("A") && !"IW-E".equals(nextStateCode)){
+				}else if(currentStateCode.startsWith("A") && !"IW-E".equals(nextStateCode)  && !"IU".equals(nextStateCode) && !"IW-D".equals(nextStateCode)){
 					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
 				}else if("IW-E".equals(currentStateCode) && !"IU".equals(nextStateCode) && !"IW-D".equals(nextStateCode) && !nextStateCode.startsWith("A")){
 					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );

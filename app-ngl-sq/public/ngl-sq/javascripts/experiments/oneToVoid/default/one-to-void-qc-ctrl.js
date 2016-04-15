@@ -156,8 +156,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 			},
 			order:{
 				mode:'local', //or 
-				active:true,
-				by:'ContainerInputCode'
+				active:true
 			},
 			remove:{
 				active: ($scope.isEditModeAvailable() && $scope.isNewState()),

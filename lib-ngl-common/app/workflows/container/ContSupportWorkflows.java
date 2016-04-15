@@ -1,10 +1,9 @@
 package workflows.container;
 
 import static validation.common.instance.CommonValidationHelper.FIELD_STATE_CODE;
-import static validation.common.instance.CommonValidationHelper.*;
+import static validation.common.instance.CommonValidationHelper.FIELD_UPDATE_CONTAINER_STATE;
 
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
@@ -26,9 +25,6 @@ import validation.container.instance.ContainerSupportValidationHelper;
 import workflows.Workflows;
 import akka.actor.ActorRef;
 import akka.actor.Props;
-
-import com.mongodb.BasicDBObject;
-
 import fr.cea.ig.MongoDBDAO;
 
 @Service
@@ -145,6 +141,7 @@ public class ContSupportWorkflows extends Workflows<ContainerSupport> {
 
 	public State getNextStateFromContainerStates(String username, Set<String> containerStates) {
 		State nextStep = null;
+		Logger.debug("States = "+containerStates);
 		if(containerStates.contains("IW-D")){
 			nextStep = getNewState("IW-D", username);			
 		}else if(containerStates.contains("IU")){
@@ -155,11 +152,11 @@ public class ContSupportWorkflows extends Workflows<ContainerSupport> {
 			nextStep = getNewState("A-TM", username);			
 		}else if(containerStates.contains("A-QC") && !containerStates.contains("A-TM") && !containerStates.contains("A-P") && !containerStates.contains("A-TF")){
 			nextStep = getNewState("A-QC", username);			
-		}else if(containerStates.contains("A-P") && !containerStates.contains("A-TM") && !containerStates.contains("A-QC") && !containerStates.contains("A-TF")){
-			nextStep = getNewState("A-P", username);			
-		}else if(containerStates.contains("A-TF") && !containerStates.contains("A-TM") && !containerStates.contains("A-QC") && !containerStates.contains("A-P")){
+		}else if(containerStates.contains("A-PF") && !containerStates.contains("A-TM") && !containerStates.contains("A-QC") && !containerStates.contains("A-TF")){
+			nextStep = getNewState("A-PF", username);			
+		}else if(containerStates.contains("A-TF") && !containerStates.contains("A-TM") && !containerStates.contains("A-QC") && !containerStates.contains("A-PF")){
 			nextStep = getNewState("A-TF", username);			
-		}else if(containerStates.contains("A-TF") || containerStates.contains("A-TM") || containerStates.contains("A-QC") || containerStates.contains("A-P")){
+		}else if(containerStates.contains("A-TF") || containerStates.contains("A-TM") || containerStates.contains("A-QC") || containerStates.contains("A-PF")){
 			nextStep = getNewState("A", username);			
 		}else if(containerStates.contains("IW-P")){
 			nextStep = getNewState("IW-P", username);			
@@ -170,6 +167,7 @@ public class ContSupportWorkflows extends Workflows<ContainerSupport> {
 		}else{
 			throw new RuntimeException("setStateFromContainer : states "+containerStates+" not managed");
 		}
+		Logger.debug("nextStep = "+nextStep.code);
 		return nextStep;
 	}
 	
