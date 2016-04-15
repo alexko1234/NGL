@@ -12,6 +12,18 @@ public class RawDataBuilder {
 		return this;
 	}
 	
+	public RawDataBuilder withDirectory(String directory)
+	{
+		rawData.directory=directory;
+		return this;
+	}
+	
+	public RawDataBuilder withGzipForSubmission(boolean gzipForSubmission)
+	{
+		rawData.gzipForSubmission=gzipForSubmission;
+		return this;
+	}
+	
 	public RawData build()
 	{
 		return rawData;

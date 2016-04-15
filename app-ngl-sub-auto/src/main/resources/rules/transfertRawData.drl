@@ -3,6 +3,44 @@ package birds
 
 import fr.cea.ig.auto.submission.SRAFilesUtil;
 
+rule "get input submissionZip resources from NGL and internal referential for transfertRawData"
+@BirdsRule ( selectionRule )
+dialect 'java'
+ salience 200
+ //no-loop
+	when
+		$input : InputSpecificationElement(name=="inputTransfertSubZip", treatmentSpecification.name=="transfertRawData", project.name == "SRA")
+		$resourcesReferential : InternalReferential(name=="internalRefSubmission")
+		$referentialDevice : InternalReferentialDevice ()
+		$rps : ResourcePropertiesSet(initialized==false, inputSpecificationElement==$input, resourcesReferential==$resourcesReferential)
+		$groupJob : Job( treatmentSpecification.specificationGroup == true)
+	then
+        Logger log = Logger.getLogger("ngl.sub.rules");
+        log.debug("group internal referential device resources query from referential " + $resourcesReferential.getName());
+        $rps.initialize();
+        log.debug("Get data first from NGLSUB");
+        Set<ResourceProperties> resourceProperties = new HashSet<ResourceProperties>();
+        
+        JobResource groupJobResource = $groupJob.getUniqueJobResource("subData");
+        
+        JSONDevice jsonDevice = new JSONDevice();
+		Set<ResourceProperties> rpsRawData = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/rawDatas?submissionCode="+groupJobResource.getProperty("code"),"bot");
+		boolean gzipForSubmission = SRAFilesUtil.checkGzipForSubmission(rpsRawData);
+		if(!gzipForSubmission){
+			ResourceProperties newRp = new ResourceProperties();
+			newRp.setProperty("code",groupJobResource.getProperty("code"));
+			newRp.setProperty("gzipForSubmission","false");
+			newRp.setProperty("submissionTmpDirectory",groupJobResource.getProperty("submissionTmpDirectory"));
+			newRp.setProperty("idGroupJob",""+$groupJob.getId());
+			resourceProperties.add(newRp);
+		}else{
+        	resourceProperties = $referentialDevice.getGroupResourcesWithType($rps.getResourceType().getName(), $resourcesReferential, $groupJob);
+		}
+		$rps.setResourcePropertiesSet(resourceProperties);
+		modify($rps) {};
+end
+
+
 #règle mise à jour la valeur du parametre fileList selon resource en entrée et creation fichier WGS
 rule "update localDirectoryPath parameter"
 	@BirdsRule(fsRule)

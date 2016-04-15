@@ -1,0 +1,87 @@
+#created on: Jul 7, 2014
+package birds
+
+rule "get input inputRawDataZip resources from NGL referential for zip"
+@BirdsRule ( selectionRule )
+dialect 'java'
+ salience 200
+ //no-loop
+	when
+		$input : InputSpecificationElement(name=="inputRawDataZip", treatmentSpecification.name!=null, treatmentSpecification.name=="ZipFile", project.name == "SRA")
+		$resourcesReferential : ResourcesReferential(name=="nglSubRef_zip")
+		$referentialDevice : JSONDevice () from $resourcesReferential.referentialDevice
+		$rps : ResourcePropertiesSet(initialized==false, inputSpecificationElement==$input, resourcesReferential==$resourcesReferential)
+		$groupJob : Job( treatmentSpecification.specificationGroup == true)
+	then
+        Logger log = Logger.getLogger("ngl.sub.rules");
+        //log.debug("group internal referential device resources query from referential " + $resourcesReferential.getName());
+        log.debug("get resource for zip");
+        $rps.initialize();
+        
+       	Set<ResourceProperties> resourceProperties = new HashSet<ResourceProperties>();
+        
+        JobResource groupJobResource = $groupJob.getUniqueJobResource("inputZipMd5");
+        
+        String[] tabExperimentCodes = groupJobResouce.getProperty("experimentCodes").split(",");
+        for(int i=0; i<tabExperimentCodes.length; i++){
+        
+			Set<ResourceProperties> rpsRawData = $referentialDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/"+tabExperimentCodes[i]+"/rawDatas","bot");
+			Set<ResourceProperties> rpsRawDataFilter = SRAFilesUtil.filterByGzipForSubmission(rpsRawData);
+		
+			for(ResourceProperties rpRawDataFilter : rpsRawDataFilter)
+			{
+				ResourceProperties newRp = new ResourceProperties();
+				newRp.setProperty("fileName",rpRawDataFilter.getProperty("relatifName"));
+				newRp.setProperty("directory",rpRawDataFilter.getProperty("directory"));
+				newRp.setProperty("submissionTmpDirectory",groupJobResource.getProperty("submissionTmpDirectory"));
+				newRp.setProperty("experimentCode",tabExperimentCodes[i]);
+				newRp.setProperty("idGroupJob",""+$groupJob.getId());
+				resourceProperties.add(newRp);
+			}
+		}
+		$rps.setResourcePropertiesSet(resourceProperties);
+		modify($rps) {};
+end
+
+
+rule "Set parameter for command line Zip"
+	@BirdsRule(fsRule)
+	dialect 'java'
+	salience 300
+	no-loop
+		when
+			$treatSpec : TreatmentSpecification(name=="ZipFile", project.name=="SRA")
+			$job : Job(treatmentSpecification.name!=null, treatmentSpecification.name == "ZipFile")
+		then
+			Logger log = Logger.getLogger("ngl.sub.rules");
+			log.debug("Set parameter for zip command");
+			//Get input resource
+			JobResource jobResource = $job.getUniqueJobResource("inputRawDataZip");
+			$job.setParameterValue("fileToZip", jobResource.getProperty("directory")+File.separator+jobResource.getProperty("fileName"));
+			$job.setParameterValue("endArg", ">"+jobResource.getProperty("submissionTmpDirectory")+File.separator+jobResource.getProperty("fileName")+".gz");
+end
+
+rule "add resources in internalRefMd5 to fire md5"
+	@BirdsRule( addResources ) 
+	dialect 'java'
+	salience 200
+	when
+		$flag : Flag ( done == false ) 
+		$output : OutputSpecificationElement(treatmentSpecification.name == "ZipFile")
+	  	$referential : ResourcesReferential ( name == "internalRefMd5" )
+		$resourceSet : ResourceSet( ioSpecificationElement == $output )
+		$job : Job(treatmentSpecification!=null, treatmentSpecification.name == "ZipFile")
+	then
+		Logger log = Logger.getLogger("ngl.sub.rules");
+		log.debug("Add resources rules for sendXML from file "+$job.getProperty(Job.STDOUT));
+		JobResource jobResource = $job.getUniqueJobResource("inputRawDataZip");
+		JobResource outputResource = $resourceSet.createJobResource($output.getResourceType(),$referential.getName());
+		ResourceProperties resourceProperties = outputResource.getResourceProperties();
+	  	resourceProperties.setProperty("fileName",jobResource.getProperty("fileName"));
+	  	resourceProperties.setProperty("directory",jobResource.getProperty("directory"));
+	  	resourceProperties.setProperty("experimentCode",jobResource.getProperty("experimentCode"));
+	  	resourceProperties.setProperty("submissionTmpDirectory",jobResource.getProperty("submissionTmpDirectory"));
+		$flag.setDone(true);
+		modify($flag){};
+		modify($resourceSet){};
+end

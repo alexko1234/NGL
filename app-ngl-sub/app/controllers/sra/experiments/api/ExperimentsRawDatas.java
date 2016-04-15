@@ -45,6 +45,25 @@ public class ExperimentsRawDatas extends DocumentController<Experiment> {
 		return ok(Json.toJson(allRawDatas));
 	}
 	
+	public Result list(String code)
+	{
+		List<RawData> allRawDatas = new ArrayList<RawData>();
+		Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, code);
+		if(experiment!=null)
+			allRawDatas.addAll(experiment.run.listRawData);
+		return ok(Json.toJson(allRawDatas));
+	}
+	
+	public Result get(String code, String relatifName)
+	{
+		Experiment experiment = MongoDBDAO.findByCode(InstanceConstants.SRA_EXPERIMENT_COLL_NAME, Experiment.class, code);
+		for(RawData rawData : experiment.run.listRawData){
+			if(rawData.relatifName.equals(relatifName))
+				return ok(Json.toJson(rawData));
+		}
+		return badRequest("No rawData for experiment "+code+" file "+relatifName);
+	}
+	
 	private Query getQuery(ExperimentsSearchForm form) {
 		List<Query> queries = new ArrayList<Query>();
 		Query query = null;

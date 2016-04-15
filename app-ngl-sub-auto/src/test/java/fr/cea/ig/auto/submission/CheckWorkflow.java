@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -15,6 +17,7 @@ import fr.genoscope.lis.devsi.birds.api.entity.Job;
 import fr.genoscope.lis.devsi.birds.api.entity.ResourceProperties;
 import fr.genoscope.lis.devsi.birds.api.exception.BirdsException;
 import fr.genoscope.lis.devsi.birds.api.exception.FatalException;
+import fr.genoscope.lis.devsi.birds.api.exception.JSONDeviceException;
 import fr.genoscope.lis.devsi.birds.api.exception.PersistenceException;
 import fr.genoscope.lis.devsi.birds.api.persistence.EntityManagerHelper;
 import fr.genoscope.lis.devsi.birds.api.persistence.PersistenceServiceFactory;
@@ -63,6 +66,8 @@ public class CheckWorkflow extends GenericTest{
 		//TODO voir si existe url de test au NCBI
 		replaceExecutable("sendXML", "SRA", scriptEcho);
 
+		//replaceExecutable("ZipFile", "SRA", scriptEcho);
+
 		log.debug("FIRST ROUND");
 		executeBirdsCycle("SRA", "WF_Submission");
 
@@ -70,16 +75,26 @@ public class CheckWorkflow extends GenericTest{
 		EntityManagerHelper em = PersistenceServiceFactory.getInstance().createEntityManagerHelper();
 		em.beginTransaction();
 		Set<Job> jobs = CoreJobServiceFactory.getInstance().getAllJobs(em.getEm());
-		Assert.assertEquals(jobs.size(), 1);
-		Job groupJob = jobs.iterator().next();
-		ResourceProperties rp = groupJob.getUniqueJobResource("subData").getResourceProperties();
-		String codeSubmission = rp.get("code");
-		Assert.assertNotNull(codeSubmission);
-		Assert.assertEquals(rp.get("state.code"),"IW-SUB");
-		Assert.assertNotNull(rp.get("submissionDirectory"));
-		Assert.assertNotNull(rp.get("submissionDate"));
-		for(String key : rp.keysSet()){
-			log.debug("key:"+key+"="+rp.get(key));
+		Assert.assertEquals(jobs.size(), 2);
+		//2 workflow sub1 (donnees zipée) sub2 (donnees non zipées)
+		long idSub1=0;
+		long idSub2=0;
+		for(Job groupJob : jobs){
+			log.debug("GroupJob "+groupJob);
+			ResourceProperties rp = groupJob.getUniqueJobResource("subData").getResourceProperties();
+			log.debug("code submission "+rp.getProperty("code"));
+			if(rp.getProperty("code").equals("codeSub1"))
+				idSub1=groupJob.getId();
+			else
+				idSub2=groupJob.getId();
+			String codeSubmission = rp.get("code");
+			Assert.assertNotNull(codeSubmission);
+			Assert.assertEquals(rp.get("state.code"),"IW-SUB");
+			Assert.assertNotNull(rp.get("submissionDirectory"));
+			Assert.assertNotNull(rp.get("submissionDate"));
+			for(String key : rp.keysSet()){
+				log.debug("key:"+key+"="+rp.get(key));
+			}
 		}
 		em.endTransaction();
 
@@ -91,12 +106,15 @@ public class CheckWorkflow extends GenericTest{
 		Set<ResourceProperties> setRP = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/submissions?stateCode=IW-SUB","bot");
 		Assert.assertEquals(setRP.size(),0);
 
-
+		//Check first submission sub1 with data zipped
 		//Check CreateXML
 		//Check transfertRawData
 		em = PersistenceServiceFactory.getInstance().createEntityManagerHelper();
 		em.beginTransaction();
-		Job jobCreateXML = CoreJobServiceFactory.getInstance().getJobBySpecification("createXML", em.getEm()).iterator().next();
+		Job groupJobSub1 = CoreJobServiceFactory.getInstance().getJob(idSub1, em.getEm());
+		log.debug("Group job sub 1"+groupJobSub1);
+		Job jobCreateXML = groupJobSub1.getSubJobs("createXML").iterator().next();
+		//Job jobCreateXML = CoreJobServiceFactory.getInstance().getJobBySpecification("createXML", em.getEm()).iterator().next();
 		Assert.assertNotNull(jobCreateXML);
 		//Check output ressources
 		ResourceProperties rpOut = jobCreateXML.getOutputUniqueJobResource("outputSubXML").getResourceProperties();
@@ -109,8 +127,9 @@ public class CheckWorkflow extends GenericTest{
 		Assert.assertEquals(rpOut.get("xmlSubmission"), "submission.xml");
 		Assert.assertNotNull(rpOut.get("xmlStudys"));
 		Assert.assertEquals(rpOut.get("xmlStudys"),"null");
-		
-		Job jobTransfertRawData = CoreJobServiceFactory.getInstance().getJobBySpecification("transfertRawData",em.getEm()).iterator().next();
+
+		Job jobTransfertRawData = groupJobSub1.getSubJobs("transfertRawData").iterator().next();
+		//Job jobTransfertRawData = CoreJobServiceFactory.getInstance().getJobBySpecification("transfertRawData",em.getEm()).iterator().next();
 		Assert.assertNotNull(jobTransfertRawData);
 		log.debug("Command aspera "+jobTransfertRawData.getUnixCommand());
 		Assert.assertTrue(jobTransfertRawData.getUnixCommand().contains("-i ~/.ssh/ebi.sra -T -k 2 -l 300M"));
@@ -133,15 +152,26 @@ public class CheckWorkflow extends GenericTest{
 		ResourceProperties rpOutRawData = jobTransfertRawData.getOutputUniqueJobResource("outputRawData").getResourceProperties();
 		Assert.assertNotNull(rpOutRawData.get("fileList"));
 
+		//Check workflow for submission with data unzipped
+		Job groupJobSub2 = CoreJobServiceFactory.getInstance().getJob(idSub2, em.getEm());
+		Job groupJobZipMd5 = groupJobSub2.getSubJobs("WF_ZipMd5Process").iterator().next();
+		Assert.assertNotNull(groupJobZipMd5);
+		ResourceProperties rpZipMd5 = groupJobZipMd5.getUniqueJobResource("inputZipMd5").getResourceProperties();
+		Assert.assertEquals("codeSub2", rpZipMd5.get("code"));
+		Assert.assertEquals("true", rpZipMd5.get("gzipForSubmission"));
+		Assert.assertTrue(rpZipMd5.containsKey("idGroupJob"));
 		em.endTransaction();
 
 
 		log.debug("THIRD ROUND");
 		executeBirdsCycle("SRA", "WF_Submission");
+		//Check firs submission with data zipped
 		//Check send XML
 		em = PersistenceServiceFactory.getInstance().createEntityManagerHelper();
 		em.beginTransaction();
-		Job jobSendXML = CoreJobServiceFactory.getInstance().getJobBySpecification("sendXML",em.getEm()).iterator().next();
+		groupJobSub1 = CoreJobServiceFactory.getInstance().getJob(idSub1, em.getEm());
+		Job jobSendXML = groupJobSub1.getSubJobs("sendXML").iterator().next();
+		//Job jobSendXML = CoreJobServiceFactory.getInstance().getJobBySpecification("sendXML",em.getEm()).iterator().next();
 		log.debug("job send XML "+jobSendXML);
 		Assert.assertNotNull(jobSendXML);
 
@@ -157,12 +187,63 @@ public class CheckWorkflow extends GenericTest{
 		//Check input
 		Assert.assertEquals(jobSendXML.getInputValue("subToSend").getInputJobResourceValues().size(),1);
 		Assert.assertEquals(jobSendXML.getInputValue("rawDataSend").getInputJobResourceValues().size(),1);
+
+		//Check second submission with data non zipped
+		groupJobSub2 = CoreJobServiceFactory.getInstance().getJob(idSub2, em.getEm());
+		groupJobZipMd5 = groupJobSub2.getSubJobs("WF_ZipMd5Process").iterator().next();
+		Set<Job> jobsZip = groupJobZipMd5.getSubJobs("ZipFile");
+		Assert.assertEquals(2, jobsZip.size());
+		for(Job jobZip : jobsZip){
+			log.debug("Job zip "+jobZip);
+			log.debug("Job unix command "+jobZip.getUnixCommand());
+			log.debug("Job execution state "+jobZip.getExecutionState());
+			Assert.assertTrue(jobZip.getUnixCommand().startsWith("gzip -c /env/cns/home/ejacoby/NGL-SUB-Test/dataDir/"+jobZip.getUniqueJobResource("inputRawDataZip").getProperty("fileName")));
+			Assert.assertTrue(jobZip.getUnixCommand().endsWith(">/env/cns/home/ejacoby/NGL-SUB-Test/tmpSubDir/"+jobZip.getUniqueJobResource("inputRawDataZip").getProperty("fileName")+".gz"));
+			Assert.assertEquals(Job.DONE_STATUS, jobZip.getExecutionState());
+		}
 		em.endTransaction();
 
-		//Get Submission from database
+
+		log.debug("FOURTH ROUND");
+		executeBirdsCycle("SRA", "WF_Submission");
+		em = PersistenceServiceFactory.getInstance().createEntityManagerHelper();
+		em.beginTransaction();
+		//Check group with files zipped workflow is exited because sendXML is exited
+		groupJobSub1 = CoreJobServiceFactory.getInstance().getJob(idSub1, em.getEm());
+		for(Job subJob1 : groupJobSub1.getSubJobs()){
+			if(subJob1.getTreatmentSpecification().getName().equals("sendXML"))
+				Assert.assertEquals(Job.ERROR_STATUS, subJob1.getExecutionState());
+			else
+				Assert.assertEquals(Job.DONE_STATUS, subJob1.getExecutionState());
+			log.debug("Job "+subJob1.getUnixCommand()+"="+subJob1.getExecutionState());
+		}
+		//Assert.assertEquals(Job.DONE_STATUS, groupJobSub1.getExecutionState());
+
+		//Check second submission with data non zipped
+		groupJobSub2 = CoreJobServiceFactory.getInstance().getJob(idSub2, em.getEm());
+		groupJobZipMd5 = groupJobSub2.getSubJobs("WF_ZipMd5Process").iterator().next();
+		Set<Job> jobsMd5 = groupJobZipMd5.getSubJobs("Md5File");
+		Assert.assertEquals(2, jobsMd5.size());
+		for(Job jobMd5 : jobsMd5){
+			log.debug("Job zip "+jobMd5);
+			log.debug("Job unix command "+jobMd5.getUnixCommand());
+			log.debug("Job execution state "+jobMd5.getExecutionState());
+			Assert.assertTrue(jobMd5.getUnixCommand().startsWith("md5sum /env/cns/home/ejacoby/NGL-SUB-Test/tmpSubDir/"+jobMd5.getUniqueJobResource("inputRawDataMd5").getProperty("fileName")+".gz"));
+			Assert.assertEquals(Job.DONE_STATUS, jobMd5.getExecutionState());
+			
+			log.debug("Job stdout "+jobMd5.getProperty(Job.STDOUT));
+			BufferedReader read = new BufferedReader(new FileReader(new File(jobMd5.getProperty(Job.STDOUT))));
+			String md5 = read.readLine().split(" ")[0];
+			log.debug("MD5 = "+md5);
+			
+			read.close();
+		}
 		
+		em.endTransaction();
+		//Get Submission from database
+
 		//TODO change to FE-SUB
-		Set<ResourceProperties> setRPSub = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/submissions?stateCode=FE-SUB","bot");
+		/*Set<ResourceProperties> setRPSub = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/submissions?stateCode=FE-SUB","bot");
 		log.debug("Set RPub "+setRPSub);
 		Assert.assertTrue(setRPSub.size()==1);
 		ResourceProperties RPSub = setRPSub.iterator().next();
@@ -173,9 +254,30 @@ public class CheckWorkflow extends GenericTest{
 	  	//Get submission
 		String newState = "{\"code\":\"IW-SUB\"}";
 		jsonDevice.httpPut(ProjectProperties.getProperty("server")+"/sra/submissions/"+codeSubmission+"/state", newState, "bot");
-	  	
+		 */
+
+		//TODO remove gz files and md5 property
 
 	}
-
 	
+	@Test
+	public void testListExperiment() throws JSONDeviceException, FatalException
+	{
+		JSONDevice device = new JSONDevice();
+		Map<String,String> keyArrays = new HashMap<String, String>();
+		keyArrays.put("listRawData", "relatifName");
+		Set<ResourceProperties> setResourceProperties = device.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/submissions/codeSub1",null,null,"bot");
+		//String JSON = device.httpGet(ProjectProperties.getProperty("server")+"/api/sra/submissions/codeSub1","bot");
+		//log.debug("JSON "+JSON);
+		//Set<ResourceProperties> setRP = device.parseJSONFromString(JSON,keyArrays);
+		for(ResourceProperties rp : setResourceProperties){
+			log.debug("RESOURCE ");
+			for(String key : rp.keysSet()){
+				log.debug(key+"="+rp.get(key));
+			}
+		}
+		
+	}
+
+
 }

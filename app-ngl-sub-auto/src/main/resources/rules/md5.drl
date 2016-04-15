@@ -1,0 +1,36 @@
+#created on: Jul 7, 2014
+package birds
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.File;
+
+rule "Set parameter for command line md5"
+	@BirdsRule(fsRule)
+	dialect 'java'
+	salience 300
+	no-loop
+		when
+			$treatSpec : TreatmentSpecification(name=="Md5File", project.name=="SRA")
+			$job : Job(treatmentSpecification.name!=null, treatmentSpecification.name == "Md5File")
+		then
+			Logger log = Logger.getLogger("ngl.sub.rules");
+			log.debug("Set parameter for md5 command");
+			//Get input resource
+			JobResource jobResource = $job.getUniqueJobResource("inputRawDataMd5");
+			$job.setParameterValue("fileZipped", jobResource.getProperty("submissionTmpDirectory")+File.separator+jobResource.getProperty("fileName")+".gz");
+end
+
+rule "POST DONE EXECUTION of md5 : Update MD5 of RawData"
+	@BirdsRule( ExecutionService )
+	dialect 'java'
+	salience 200
+	when
+		$executionService : ExecutionService( status == ExecutionService.POST_JOB_EXECUTION_STATUS)
+		$job : Job( treatmentSpecification!=null, treatmentSpecification.name == "Md5File", treatmentSpecification.project.name == "SRA", executionState == Job.DONE_STATUS )
+	then
+		Logger log = Logger.getLogger("ngl.sub.rules");
+		//Get md5 from Job.STDOUT
+		BufferedReader read = new BufferedReader(new FileReader(new File($job.getProperty(Job.STDOUT))));
+		String md5 = read.readLine().split(" ")[0];
+		//Update md5 in NGLSUB for RawData
+end

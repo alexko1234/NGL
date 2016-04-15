@@ -34,13 +34,15 @@
 		<resource type="DRF" source="classpath:rules/wf_submission.rf" />
 		<resource type="DRL" source="classpath:rules/wf_submission.drl" />
 		
+		<resource type="DRF" source="classpath:rules/wf_zip_md5.rf" />
+		<resource type="DRL" source="classpath:rules/wf_zip_md5.drl" />
 		
-		<resource source='classpath:rules/transfertRawData.drl'
-			type='DRL' />
-		<resource source='classpath:rules/createXML.drl'
-			type='DRL' />
-		<resource source='classpath:rules/sendXML.drl'
-			type='DRL' />
+		<resource source='classpath:rules/transfertRawData.drl' type='DRL' />
+		<resource source='classpath:rules/createXML.drl' type='DRL' />
+		<resource source='classpath:rules/sendXML.drl' type='DRL' />
+			
+		<resource source='classpath:rules/zip.drl' type='DRL' />
+		<resource source='classpath:rules/md5.drl' type='DRL' />
 		
 		<!--  resource source='classpath:example/ResourceSplitting.drl' type='DRL' / -->
 		

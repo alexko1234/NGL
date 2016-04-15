@@ -23,12 +23,15 @@
 
     <logger name="fr.genoscope.lis.devsi.birds" level="INFO" />
     <logger name="fr.genoscope.lis.devsi.birds.impl.service.TreatmentServiceImpl" level="INFO" />
-
+	<logger name="fr.genoscope.lis.devsi.birds.api.client.JobUnixWrapper" level="DEBUG"/>
 	<logger name="org.hibernate" level="ERROR" />
 	<logger name="org.hibernate.tool" level="ERROR" />
 	<logger name="org.apache.http" level="ERROR" />
+	<logger name="org.apache" level="ERROR" />
+	<logger name="org.springframework" level="ERROR" />
 	<logger name="ngl.sub.rules" level="DEBUG" />
 	<logger name="fr.cea.ig.auto.submission" level="DEBUG" />
+	
 	<root level="DEBUG">
 		<appender-ref ref="STDOUT" />
 	</root>
