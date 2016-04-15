@@ -16,6 +16,7 @@ import models.utils.ListObject;
 import models.utils.dao.DAOException;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBQuery.Query;
@@ -187,7 +188,14 @@ public class ContainerSupports extends CommonController {
 		}
 
 		if(CollectionUtils.isNotEmpty(supportsSearch.fromTransformationTypeCodes)){
-			queryElts.add(DBQuery.in("fromTransformationTypeCodes", supportsSearch.fromTransformationTypeCodes));
+			if(supportsSearch.fromTransformationTypeCodes.contains("none")){
+				queryElts.add(DBQuery.or(DBQuery.size("fromTransformationTypeCodes", 0),DBQuery.notExists("fromTransformationTypeCodes")
+				,DBQuery.in("fromTransformationTypeCodes", supportsSearch.fromTransformationTypeCodes)));
+			}
+			else {
+				queryElts.add(DBQuery.in("fromTransformationTypeCodes", supportsSearch.fromTransformationTypeCodes));
+	
+			}			
 		}		
 
 		//These fields are not in the ContainerSupport collection then we use the Container collection

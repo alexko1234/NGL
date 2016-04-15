@@ -116,67 +116,6 @@ angular.module('biCommonsServices', []).
     			getTreatment : getTreatment,
     			getTreatments : getTreatments
     		};
-    	}]).factory('valuationService',['$parse', '$filter', 'lists', function($parse, $filter, lists){
-    		var criterias = undefined;
-    		var valuationCriteriaClass = function(value, criteriaCode, expressionToParse){
-    			//init criterias
-    			if((!criterias || !criterias[criteriaCode]) && lists.getValuationCriterias() && lists.getValuationCriterias().length > 0 ){
-    				var values = lists.getValuationCriterias();
-    				criterias = {};
-    				for(var i = 0 ; i < values.length; i++){
-    					criterias[values[i].code] = values[i]; 
-    				}
-    			}
-    			
-    			if (angular.isDefined(criterias) && criteriaCode && criterias[criteriaCode]) {
-    				var criteria = criterias[criteriaCode];
-    				var property;
-    				for(var i = 0; i < criteria.properties.length; i++){
-    					if(criteria.properties[i].name === expressionToParse){
-    						property = criteria.properties[i];
-    						break;
-    					}
-    				}
-    				if(property){
-    					for(var i = 0; i  < property.expressions.length; i++){
-    						var expression = property.expressions[i];
-	    					if($parse(expression.rule)({context:value, pValue : $parse(expressionToParse)(value)})){
-	    						return expression.result;
-	    					}
-    					}
-    				}
-    			}
-    			return undefined;			
-    		};
-    		return function() {
-    			criterias = undefined;
-    			return {valuationCriteriaClass : valuationCriteriaClass};
-    		};
-    	}]).directive('treatments', function() {
-    		return {
-    			restrict: 'A',
-    			scope: {
-    				treatments: '=treatments'
-    				},
-    			template: '<ul class="nav nav-tabs">'+
-    				      '<li ng-repeat="treament in treatments.getTreatments()" ng-class="treament.clazz">'+
-    					  '<a href="#" ng-click="treatments.activeTreatment(treament)" >{{treament.code}}</a></li>'+		   
-    					  '</ul>'+
-    					  '<div class="tab-content">'+
-    					  '<div class="tab-pane active" ng-include="treatments.getTreatment().url"/>'
-    			};
-    	}).directive('ngBindSrc', ['$parse',function($parse){ //used to include krona
-    		return {
-    			restrict: 'A',
-    			link: function(scope, element, attr) {
-    				var parsed = $parse(attr.ngBindSrc);
-    				function getStringValue() { return (parsed(scope) || '').toString(); }
-    				
-    				scope.$watch(getStringValue, function ngBindHtmlWatchAction(value) {
-    					element.attr("src", parsed(scope) || '');
-    				    });
-    			}
-    		}
     	}]).directive('reportingConfigTreatments', function($parse){
     		return {
     			restrict: 'A',

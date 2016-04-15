@@ -2,12 +2,7 @@ package controllers.experiments.tpl;
 
 import static play.data.Form.form;
 
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import  java.lang.reflect.Method;
+import java.lang.reflect.Method;
 
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.instance.Experiment;
@@ -15,15 +10,13 @@ import models.utils.DescriptionHelper;
 import play.Logger;
 import play.Routes;
 import play.data.Form;
-import play.i18n.Messages;
-import play.libs.Json;
 import play.mvc.Result;
-import play.twirl.api.BaseScalaTemplate;
 import play.twirl.api.Html;
-import play.twirl.api.Template0;
-import views.components.datatable.DatatableColumn;
-import views.components.datatable.DatatableHelpers;
-import views.html.experiments.*;
+import views.html.experiments.details;
+import views.html.experiments.home;
+import views.html.experiments.listContainers;
+import views.html.experiments.search;
+import views.html.experiments.searchContainers;
 import controllers.CommonController;
 
 public class Experiments extends CommonController{
@@ -200,8 +193,9 @@ public class Experiments extends CommonController{
 				controllers.projects.api.routes.javascript.Projects.list(),
   	    		controllers.samples.api.routes.javascript.Samples.list(),
   	    		controllers.commons.api.routes.javascript.Users.list(),  	    
-	      		controllers.commons.api.routes.javascript.Parameters.list()
-	      		
+	      		controllers.commons.api.routes.javascript.Parameters.list(),
+  	    		controllers.valuation.api.routes.javascript.ValuationCriterias.get(),
+  	    		controllers.valuation.api.routes.javascript.ValuationCriterias.list()
   	      )	  	      
   	    );
   	}

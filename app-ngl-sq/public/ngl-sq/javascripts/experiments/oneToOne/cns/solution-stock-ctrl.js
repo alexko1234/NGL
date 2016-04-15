@@ -238,7 +238,6 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 		$scope.atmService.data.setEdit();
 	});
 	
-	
 	$scope.calculVolumeFromValue=function(value){
 
 		if(value.outputContainerUsed.volume!=null && value.outputContainerUsed.volume.value!=null && value.outputContainerUsed.concentration.value!=null){
@@ -266,12 +265,9 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 	}
 		
 	$scope.calculVolumes=function(value, columnId){
-		
 		if(value!=null & value !=undefined){
 			$scope.calculVolumeFromValue(value.data);
 	   }
-	
-	
 	};
 	
 	//Init	
@@ -318,7 +314,8 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 					        	 "position":1,
 					        	 "extraHeaders":{0:Messages("experiments.inputs")}
 					         });
-	}	
+	}
+	
 	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	//defined new atomictransfertMethod
@@ -337,10 +334,11 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 			volume : "µL",
 			concentration : "nM"
 	}
-	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
+	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	$scope.atmService = atmService;
 	
+
 	var generateSampleSheet = function(){
 		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
 		.success(function(data, status, headers, config) {
@@ -366,12 +364,13 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 			$scope.messages.open();				
 		});
 	};
-	
+
 	$scope.setAdditionnalButtons([{
-		isDisabled : false,// function(){return $scope.isCreationMode();} ,
+		isDisabled : function(){return false;},// function(){return $scope.isCreationMode();} ,
 		isShow:function(){return true},
 		click:generateSampleSheet,
 		label:Messages("experiments.sampleSheet")
 	}]);
+	
 	
 }]);

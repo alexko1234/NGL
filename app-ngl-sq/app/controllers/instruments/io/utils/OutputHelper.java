@@ -13,6 +13,7 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
+import models.laboratory.experiment.instance.AbstractContainerUsed;
 import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
@@ -179,6 +180,13 @@ public class OutputHelper {
 	
 	public static String getInputContainerUsedExperimentProperty(InputContainerUsed container, String propertyName){		
 		return container.experimentProperties.get(propertyName).value.toString().replace(".",",") ;
+	}
+	
+	public static Object getExperimentProperty(AbstractContainerUsed container, String propertyName){
+		if(container.experimentProperties.containsKey(propertyName)){
+			return container.experimentProperties.get(propertyName).value;
+		}
+		return null;
 	}
 	
 	public static TagModel getTagModel(List<Container> containers) {

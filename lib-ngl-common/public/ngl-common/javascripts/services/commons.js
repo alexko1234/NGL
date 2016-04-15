@@ -271,7 +271,13 @@ angular.module('commonsServices', []).
     			get : function(key){return results[key];},
     			clear : function(key){results[key] = undefined;},
     			getResolutions : function(){return results['resolutions'];},
-    			getValuationCriterias : function(){return results['valuationCriterias'];},
+    			getValuationCriterias :function(params,key){
+    				key = (key)?key:'valuationCriterias';
+    				if(results[key] === undefined){
+    					refresh.valuationCriterias(params, key);
+    				}
+    				return results[key];
+    			},
     			getProjects : function(params,key){
     				key = (key)?key:'projects';
     				if(results[key] === undefined){
@@ -331,7 +337,9 @@ angular.module('commonsServices', []).
     				return results[key];
     			},
     			getInstruments : function(){return results['instruments'];},		   
-    			getValuations : function(){return results['valuations'];},
+    			getValuations : function(params,key){
+    				return results['valuations'];
+    			},
     			getValues : function(params, key){
     				if(results[key] === undefined){
     					refresh.values(params, key);
@@ -352,13 +360,6 @@ angular.module('commonsServices', []).
     				key = (key)?key:'tags';
     				if(results[key] === undefined){
     					refresh.tags(params, key);
-    				}
-    				return results[key];
-    			},
-    			getTagCategories: function(params,key){
-    				key = (key)?key:'tagCategories';
-    				if(results[key] === undefined){
-    					refresh.tagCategories(params, key);
     				}
     				return results[key];
     			}
@@ -696,18 +697,23 @@ angular.module('commonsServices', []).
 		        				  img.src =  e.target.result;
 	
 		        				  img.onload = function(){
+		        					  counter++;
 		        					  base64Img.width = img.width;
 		        					  base64Img.height = img.height;
+		        					  files.push(base64Img);
+		        					  onloadend();
+		        					  
 		        				  };		        				  
-		        				  files.push(base64Img);		        				  
+		        				  		        				  
 	        				  }else{
+	        					 counter++;
 	        					 alert("This is not an image..."+base64Img.fullname);	        					
 	        				  }
-		        			  counter++;
+		        			  
         				  }
 	        		  };
 	        		  
-	        		  var onloadend = function(e){
+	        		  var onloadend = function(){
 	        			  if(nbFiles === counter){
 	        				  if(attrs.multiple){
 	        					  scope.$apply(function(scope){scope.base64Img = files;});
@@ -728,7 +734,7 @@ angular.module('commonsServices', []).
 				    			  var reader = new FileReader();
 				    			  reader.file = inputFile;
 				    			  reader.onload = onload;	
-				    			  reader.onloadend = onloadend;
+				    			  //reader.onloadend = onloadend;
 				    			  reader.readAsDataURL(inputFile);				    			  		        						    			  
 				    		  });
 				    	  }else{
@@ -737,7 +743,7 @@ angular.module('commonsServices', []).
 				    		  nbFiles = elem[0].files.length
 				    		  reader.file = elem[0].files[0];
 				    		  reader.onload = onload;
-				    		  reader.onloadend = onloadend;
+				    		  //reader.onloadend = onloadend;
 			    			  reader.readAsDataURL(elem[0].files[0]);				    			  		    	 
 				    	  }				    	  
 				      });

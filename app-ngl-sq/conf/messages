@@ -116,7 +116,7 @@ containers.table.dispatch = Orientation
 containers.table.concentration.unit=Unité Concentration 
 containers.table.concentration.value=Concentration Container
 containers.table.libProcessType = Type processus Banque (code)	
-containers.table.size = Taille (bp)
+containers.table.size = Taille (pb)
 
 containers.table.iryschip.sampleCodes= Echantillon
 containers.table.irysprep.concentration=Concentration Moyenne
@@ -265,6 +265,7 @@ experiments.noCode = A SAUVEGARDER
 experiments.addqc = Ajouter QC
 experiments.addpurif = Ajouter purification
 experiments.state = Etat
+experiments.criteria = Critères
 experiments.intrument = Instrument
 experiments.status = Statut
 experiments.intrumentUsedType = Type d''instrument

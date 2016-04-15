@@ -71,7 +71,17 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			"order":true,
 			"type":"text"
 		});
-		
+		columns.push({
+			"header":Messages("containers.table.storageCode"),
+			"property":"storageCode",
+			"order":true,
+			"hide":true,
+			"type":"text",
+			"edit":false,
+			"position":9.5,
+			"groupMethod":"unique"
+				
+		});
 		if(mainService.getHomePage() === 'state'){
 			columns.push({
 				"header":Messages("containerSupports.table.state.code"),

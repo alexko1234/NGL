@@ -1,7 +1,7 @@
 angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$http','$parse','$q','$position','$routeParams','$location','$filter',
-                                                 'mainService','tabService','lists','datatable', 'messages',
+                                                 'mainService','tabService','lists','datatable', 'messages','valuationService',
                                                   function($scope,$sce,$window, $http,$parse,$q,$position,$routeParams,$location,$filter,
-                                                		  mainService,tabService,lists,datatable, messages) {
+                                                		  mainService,tabService,lists,datatable, messages,valuationService) {
 	
 	console.log("call DetailsCtrl");
 	
@@ -408,7 +408,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.lists.clear("states");
 		$scope.lists.clear("experimentTypeCodes");
 		$scope.lists.clear("experimentCategories");
-
+		$scope.lists.refresh.valuationCriterias({typeCode:$scope.experiment.typeCode,objectTypeCode:"Experiment"});
 		$scope.lists.refresh.experimentTypes({categoryCode:$scope.experimentType.category.code},$scope.experimentType.category.code);
 		$scope.lists.refresh.instrumentUsedTypes({"experimentTypeCode":$scope.experimentType.code});
 		$scope.lists.refresh.protocols({"experimentTypeCode":$scope.experimentType.code});
@@ -427,6 +427,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.messages = messages();
 		$scope.lists = lists;
 		$scope.mainService = mainService;
+		$scope.valuationService= valuationService();
 		
 		if(angular.isUndefined($scope.getHomePage())){
 			mainService.setHomePage('search');

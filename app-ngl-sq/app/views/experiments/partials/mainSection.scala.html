@@ -38,6 +38,15 @@
 								<div bt-select class="form-control" ng-model="experiment.status.valid" bt-options="valid.code as valid.name for valid in lists.get('status')"></div>
 							</div>
 						</div>						
+					}
+					@attrs = {ng-if="lists.get('valuationCriterias').length!==0"}
+					@columnLabelValue(Messages("experiments.criteria"), attrs){
+			    		<div ng-switch on="mainService.isEditMode() || isFinishEditMode()">
+							<p ng-switch-when="false" class="form-control-static" ng-bind="experiment.status.criteriaCode"/>
+							<div ng-switch-when="true">
+								<div bt-select class="form-control" ng-model="experiment.status.criteriaCode" bt-options="criteria.code as criteria.name for criteria in lists.get('valuationCriterias')" auto-select></div>
+							</div>
+						</div>						
 					}	
 					
 			    	@columnLabelValue(Messages("experiments.resolutions")){

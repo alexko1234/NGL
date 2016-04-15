@@ -151,11 +151,11 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 		
 		var atmService = atmToSingleDatatable($scope, datatableConfig, true);
 		//defined new atomictransfertMethod
-		atmService.newAtomicTransfertMethod = function(){
+		atmService.newAtomicTransfertMethod = function(line, column){
 			return {
 				class:"OneToVoid",
-				line:"1", 
-				column:"1", 				
+				line:line, 
+				column:column, 				
 				inputContainerUseds:new Array(0)
 			};
 		};
