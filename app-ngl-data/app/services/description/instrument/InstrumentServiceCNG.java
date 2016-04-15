@@ -95,7 +95,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	
 		l.add(newInstrumentUsedType("MISEQ", "MISEQ", InstrumentCategory.find.findByCode("illumina-sequencer"), getMiseqProperties(), 
 				getInstrumentMiSeq(),
-				getContainerSupportCategories(new String[]{"flowcell-1"}), null, 
+				getContainerSupportCategories(new String[]{"96-well-plate", "flowcell-1"}), null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
 		l.add(newInstrumentUsedType("HISEQ2000", "HISEQ2000", InstrumentCategory.find.findByCode("illumina-sequencer"), getHiseq2000Properties(), 

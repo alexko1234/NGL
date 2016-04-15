@@ -148,6 +148,12 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					getInstrumentUsedTypes("labChipGX"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
+			l.add(newExperimentType("QC Miseq","miseq-qc", null, 900,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
+					getPropertyDefinitionsQCMiseq(), 
+					getInstrumentUsedTypes("MISEQ"),"OneToVoid", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+			
 			
 			
 			/*
@@ -219,7 +225,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			//FDS ajout 01/02/2016 -- JIRA NGL-894: processus et experiments pour X5
 			newExperimentTypeNode("prep-pcr-free",getExperimentTypes("prep-pcr-free").get(0),
 					false,false,false,
-					getExperimentTypeNodes("ext-to-x5-wg-pcr-free"),null,getExperimentTypes("qpcr-quantification","labchip-migration-profile"), null  
+					getExperimentTypeNodes("ext-to-x5-wg-pcr-free"),null,getExperimentTypes("qpcr-quantification","labchip-migration-profile","miseq-qc"), null  
 					).save();
 
 			//FDS modification ...../2016 -- JIRA NGL-894: processus et experiments pour X5; ajout "prep-pcr-free" dans les previous
@@ -365,7 +371,18 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		return propertyDefinitions;
 	}
+	
+	
 	*/
+	
+	public static List<PropertyDefinition> getPropertyDefinitionsQCMiseq() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+
+		
+		return propertyDefinitions;
+	}
+	
+	
 	public static List<PropertyDefinition> getPropertyDefinitionsChipMigration() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 
