@@ -853,8 +853,8 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			});
 		}
 	};
-}]).controller('DispatchCtrl',['$scope', '$http','$q','$parse','lists','mainService','datatable','commonAtomicTransfertMethod', 
-                               function($scope,$http,$q,$parse,lists,mainService,datatable, commonAtomicTransfertMethod) {
+}]).controller('DispatchCtrl',['$scope', '$http','$q','$parse','$filter','lists','mainService','datatable','commonAtomicTransfertMethod', 
+                               function($scope,$http,$q,$parse,$filter,lists,mainService,datatable, commonAtomicTransfertMethod) {
 	console.log("Dispatch Ctrl");
 	
 	getColumns = function(){
@@ -969,6 +969,21 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		    "editDirectives":"ng-if='isProcessResolutionsMustBeSet(value)'",
 		    "position":10
 		});		
+		
+		
+		if($scope.experiment.categoryCode === 'qualitycontrol'){
+			columns.push({
+				 "header":Messages("containers.table.valuationqc.valid"),
+	        	 "property":"container.valuation.valid",
+	        	 "filter":"codes:'valuation'",
+	        	 "order":true,
+				 "edit":false,
+				 "hide":false,
+	        	 "type":"text",
+	        	 "position":7.5				
+			});	
+		}
+		
 		return columns;
 	};
 	
@@ -984,7 +999,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			order:{
 				mode:'local', //or 
 				active:true,
-				by:'code'
+				//by:'code'
 			},
 			remove:{
 				active:false,
@@ -1409,8 +1424,15 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 								initDisplayValues(containers[key].fromTransformationTypeCodes);
 							}
 						}
+						
+						if(outputContainers[0] && outputContainers[0].categoryCode === 'well'){
+							outputContainers = $filter("orderBy")(outputContainers,['container.support.column*1', 'container.support.line']);							
+						}else{
+							outputContainers = $filter("orderBy")(outputContainers,'container.code');
+						}
+						
 						datatableConfig.columns = getColumns(),
-						$scope.containersDT = datatable(datatableConfig);
+						$scope.containersDT = datatable(datatableConfig);						
 						$scope.containersDT.setData(outputContainers);
 						
 						$http.get(jsRoutes.controllers.processes.api.ProcessTypes.list().url,{params:{codes:processTypeCodes}})
@@ -1449,6 +1471,13 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 								}
 							}
 						}
+						
+						if(inputContainers[0] && inputContainers[0].categoryCode === 'well'){
+							inputContainers = $filter("orderBy")(inputContainers,['container.support.column*1', 'container.support.line']);							
+						}else{
+							inputContainers = $filter("orderBy")(inputContainers,'container.code');
+						}
+						
 						datatableConfig.columns = getColumns(),						
 						$scope.containersDT = datatable(datatableConfig);
 						$scope.containersDT.setData(inputContainers);
