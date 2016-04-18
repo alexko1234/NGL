@@ -45,7 +45,7 @@ rule "InputVolume in lib-normalization inputContainer"
         Logger.debug("inputVolume="+ engVolume );
         
         // 15/04/2016 si volume a engager  >  volume disponible alors volume a engager=15, buffer =0
-		if ( engVolume <= Double.parseDouble($inputVolume.getValue().toString()) ){	
+		if ( convertPVToDouble($inputConcentration) <= convertPVToDouble($outputConcentration)){	
 			Logger.debug("Warning: pas assez de volume disponible: engVolume="+ engVolume );
 		    //engVolume=Double.parseDouble($inputVolume.getValue().toString());   
 		    engVolume=15.0;
