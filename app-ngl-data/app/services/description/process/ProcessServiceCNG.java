@@ -92,7 +92,7 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			// FDS ajout  12/04/2016 JIRA NGL-894/981 processus court demarrant a lib-normalization, pas de proprietes
-			l.add(DescriptionFactory.newProcessType("X5_norm,FC ord, dépôt", "norm-fc-ordered-depot", ProcessCategory.find.findByCode("library"),
+			l.add(DescriptionFactory.newProcessType("X5_norm,FC ord, dépôt", "norm-fc-ordered-depot", ProcessCategory.find.findByCode("sequencing"),
 					null,
 					Arrays.asList(getPET("ext-to-norm-fc-ordered-depot",-1),getPET("prep-pcr-free",-1), getPET("lib-normalization",0), getPET("prepa-fc-ordered",1), getPET("illumina-depot",2) ), //ordered list of experiment type in process type
 					getExperimentTypes("lib-normalization").get(0),        //first experiment type

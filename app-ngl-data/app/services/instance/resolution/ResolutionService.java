@@ -59,6 +59,7 @@ public class ResolutionService {
 			// FDS 15/01: no Analysis Resolutions ???
 			createIlluminaPrepFCDepotResolutionCNG(ctx);
 			createPrepPcrFreeResolutionCNG(ctx);
+			createQCMiseqResolutionCNG(ctx);
 			createExperimentResolution(ctx);
 			createProcessResolution(ctx);
 		}
@@ -85,6 +86,7 @@ public class ResolutionService {
 
 	
 
+	
 	// FDS 20/01 retour aux 2 methodes initiales, mais correction pour CNG: ajout    resoCategories.put("Default",...
 	public static HashMap<String, ResolutionCategory> createResolutionCategoriesCNG(){	
 		HashMap<String, ResolutionCategory> resoCategories = new HashMap<String, ResolutionCategory>();
@@ -697,6 +699,28 @@ public class ResolutionService {
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);	
 	}
+	
+	private static void createQCMiseqResolutionCNG(ContextValidation ctx) {
+		List<Resolution> l = new ArrayList<Resolution>();
+		
+		l.addAll(getDefaultResolutionCNS());
+		
+
+		l.add(InstanceFactory.newResolution("run Miseq invalide : résultats non importés", "invalid-miseq-run", resolutionCategories.get("Default"), (short) 4));
+		
+		ResolutionConfiguration r = new ResolutionConfiguration();
+		r.code = "expMiseqQCReso";
+		r.resolutions = l;
+		r.objectTypeCode = "Experiment";
+		ArrayList<String> al = new ArrayList<String>();
+		al.add("miseq-qc"); /// mettre quoi ici ?????
+		r.typeCodes = al;
+		
+		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
+		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);	
+		
+	}
+
 	
 	public static void createProcessResolution(ContextValidation ctx) {
 		List<Resolution> l = new ArrayList<Resolution>();

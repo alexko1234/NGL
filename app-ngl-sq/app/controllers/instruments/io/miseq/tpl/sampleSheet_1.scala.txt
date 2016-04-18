@@ -23,7 +23,7 @@ Chemistry,Default\u000D\u000A
 Sample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,Sample_Project,Description\u000D\u000A
 @for(c <- containers){
 	@for(co <- c.contents){
-		@(c.support.line)_@(co.sampleCode)_@(OutputHelper.getContentProperty(co,"libProcessTypeCode"))_@(OutputHelper.getContentProperty(co,"tag")),@(c.support.code),,,@OutputHelper.getSupplierName(OutputHelper.getIndex("index-illumina-sequencing",OutputHelper.getContentProperty(co,"tag")),"illumina"),@OutputHelper.getSequence(OutputHelper.getIndex("index-illumina-sequencing",OutputHelper.getContentProperty(co,"tag"))),,@(OutputHelper.getContentProperty(co,"tag"))_@(co.percentage)\u000D\u000A
+		@(c.support.line)_@(co.sampleCode)_@(OutputHelper.getContentProperty(co,"libProcessTypeCode"))_@(OutputHelper.getContentProperty(co,"tag")),@(c.code),,,@OutputHelper.getSupplierName(OutputHelper.getIndex("index-illumina-sequencing",OutputHelper.getContentProperty(co,"tag")),"illumina"),@OutputHelper.getSequence(OutputHelper.getIndex("index-illumina-sequencing",OutputHelper.getContentProperty(co,"tag"))),,@(OutputHelper.getContentProperty(co,"tag"))_@(co.percentage)\u000D\u000A
 	}
 } 
 

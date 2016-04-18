@@ -389,8 +389,16 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	
 	public static List<PropertyDefinition> getPropertyDefinitionsQCMiseq() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-
+		propertyDefinitions.add(newPropertiesDefinition("Densité de clusters", "clusterDensity", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("c/mm²"), MeasureUnit.find.findByCode("c/mm²"),
+				"single", 11, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Taille d'insert", "measuredInsertSize", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
+				"single", 12, true, null, null));
 		
+			
+			
+
 		return propertyDefinitions;
 	}
 	

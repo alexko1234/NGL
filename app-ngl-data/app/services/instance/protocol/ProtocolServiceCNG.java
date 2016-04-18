@@ -64,7 +64,7 @@ public class ProtocolServiceCNG {
 		
 		// protocoles communs a plusieurs Experiment Types
 		lp.add(newProtocol("sop-1","SOP 1","?","1","production", InstanceFactory.setExperimentTypeCodes("illumina-depot","denat-dil-lib","aliquoting")));
-		lp.add(newProtocol("sop-en-attente","SOP en attente","?","1","production", InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered","lib-normalization")));
+		lp.add(newProtocol("sop-en-attente","SOP en attente","?","1","production", InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered","lib-normalization","miseq-qc")));
 		
 		//lp.add(newProtocol("1a-sop-ill-pcrfree-080915","1A_SOP_ILL_PCRfree_080915", "?","1","production",InstanceFactory.setExperimentTypeCodes("prep-pcr-free","labchip-migration-profile" )));
 		lp.add(newProtocol("1a-sop-ill-pcrfree","1A_SOP_ILL_PCRfree_270116", "?","1","production",InstanceFactory.setExperimentTypeCodes("prep-pcr-free","labchip-migration-profile" )));
