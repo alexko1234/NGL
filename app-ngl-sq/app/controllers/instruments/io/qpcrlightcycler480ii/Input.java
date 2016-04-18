@@ -363,7 +363,7 @@ public class Input extends AbstractInput {
 			InputContainerUsed icu, PropertyDefinition correctionFactorLibrarySizeDefault) {
 		
 		PropertySingleValue cFLSize =  getPSV(icu, "correctionFactorLibrarySize");
-		if (cFLSize.value != null){ //get defaultValue
+		if (cFLSize.value == null){ //get defaultValue
 			cFLSize.value = Integer.valueOf(correctionFactorLibrarySizeDefault.defaultValue);
 		}
 		return cFLSize;
