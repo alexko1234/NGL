@@ -87,7 +87,8 @@ public class Input extends AbstractInput {
 			return experiment;
 		}
 		
-		// Verifier que tous les puits de l'experience ont des données dans le fichier
+		// Verifier que tous les puits de l'experience ont des données dans le fichier => GA 18/04/2016 vu avec Julie pas utile
+		/* 
 		if (!contextValidation.hasErrors()) {
 			experiment.atomicTransfertMethods
 				.stream()
@@ -102,7 +103,7 @@ public class Input extends AbstractInput {
 					} 
 				});
 		}
-		
+		*/
 		// ne positionner les valeurs que s'il n'y a pas d'erreur a la verification precedente...
 		if (!contextValidation.hasErrors()) {
 			experiment.atomicTransfertMethods
