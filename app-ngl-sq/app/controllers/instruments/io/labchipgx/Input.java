@@ -115,8 +115,10 @@ public class Input extends AbstractInput {
 				    String icupos0=InputHelper.add02pos(icupos);
 						
 					PropertySingleValue concentration1 = getPSV(icu, "concentration1");
-					concentration1.value = dataMap.get(icupos0).concentration;
-					concentration1.unit = "ng/µl";
+					if(dataMap.containsKey(icupos0)){
+						concentration1.value = dataMap.get(icupos0).concentration;
+						concentration1.unit = "ng/µl";
+					}
 										
 				});
 		}
