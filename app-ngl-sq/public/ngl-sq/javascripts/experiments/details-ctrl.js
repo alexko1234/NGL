@@ -251,6 +251,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	
 	$scope.activeFinishEditMode = function(){		
 		finishEditMode=true;
+		$scope.$broadcast('activeFinishEditMode');
 	};
 	
 	
@@ -772,6 +773,25 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.experiment.reagents = $scope.datatableReagent.getData();
 		$scope.$emit('reagentsSaved', callbackFunction);
 	});
+	
+	$scope.$on('cancel', function(e) {
+		console.log("call event cancel");
+		$scope.datatableReagent.cancel();						
+	});
+	
+	$scope.$on('activeEditMode', function(e) {
+		console.log("call event activeEditMode");
+		$scope.datatableReagent.selectAll(true);
+		$scope.datatableReagent.setEdit();
+	});
+	
+	$scope.$on('activeFinishEditMode', function(e) {
+		console.log("call event activeEditMode");
+		$scope.datatableReagent.selectAll(true);
+		$scope.datatableReagent.setEdit();
+	});
+	
+	
 	
 }]).controller('CommentsCtrl',['$scope','$sce', '$http','lists','$parse','$filter','datatable', 
                                function($scope,$sce,$http,lists,$parse,$filter,datatable) {
