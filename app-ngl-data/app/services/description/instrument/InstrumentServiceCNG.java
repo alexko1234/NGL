@@ -376,7 +376,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		// essai ajout default value...	
 		l.add(newPropertiesDefinition("Programme Siclone NGSX", "programSicloneNGSX", LevelService.getLevels(Level.CODE.Instrument), String.class, true, 
-				                       newValues("TruSeq PcrFree lib prep"), "TruSeq PcrFree lib prep", "single"));
+				                       newValues("TruSeq PcrFree lib prep", "TruSeq PcrFree lib prep DAP plate"), null, "single"));
 		return l;
 	}
 	
