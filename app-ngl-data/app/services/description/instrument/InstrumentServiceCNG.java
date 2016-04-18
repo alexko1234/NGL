@@ -422,7 +422,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		// secteur de la plaque 96 initiale utilisee: 0 ou 1
 		// a modifier en "program" du NG si on pass a un instrument hybride NGS-lightcycler ????
 		l.add(newPropertiesDefinition("Secteur Plaque 96","sector96", LevelService.getLevels(Level.CODE.Instrument),String.class, true, null,
-				newValues("1-48","49-96"), null, null , null, "single", null, false ,"1-48", null));
+				newValues("1-48","49-96"), null, null , null, "single", null, false ,null, null));
 		
 		return l;
 	}
