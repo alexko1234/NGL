@@ -3,37 +3,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 	 var datatableConfig = {
 			name:"FDR_Void",
 			columns:[
-			         {
-			        	 "header":Messages("containers.table.supportCode"),
-			        	 "property":"inputContainer.support.code",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":1,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
-			         {
-			        	 "header":Messages("containers.table.categoryCode"),
-			        	 "property":"inputContainer.support.categoryCode",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":2,
-			 			 "filter":"codes:'container_support_cat'",
-			 			"extraHeaders":{0:Messages("experiments.inputs")}
-			         },
-					 {
-			        	 "header":Messages("containers.table.code"),
-			        	 "property":"inputContainer.code",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":3,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
+			         
 			         {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
 			        	 "property":"inputContainer.fromTransformationTypeCodes",
@@ -100,26 +70,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 			 			"render":"<div list-resize='cellValue | getArray:\"properties.libProcessTypeCode.value\" | unique' list-resize-min-size='3'>",
 			 			"extraHeaders":{0:Messages("experiments.inputs")}	 						 			
 			 		},
-			 		{
-			 			"header":Messages("containers.table.concentration"),
-			 			"property": "inputContainer.concentration",
-			 			"render":"<span ng-bind='cellValue.value|number'/> <span ng-bind='cellValue.unit'/>",
-			 			"order":false,
-			 			"hide":true,
-			 			"type":"text",
-			 			"position":10,
-			 			"extraHeaders":{0:Messages("experiments.inputs")}			 						 			
-			 		},
-			 		{
-			 			"header":Messages("containers.table.size"),
-			 			"property": "inputContainer.size.value",
-			 			"order":false,
-			 			"hide":true,
-			 			"type":"text",
-			 			"position":10,
-			 			"extraHeaders":{0:Messages("experiments.inputs")}			 						 			
-			 		},
-			         
+			 		
 					 {
 			        	 "header":Messages("containers.table.stateCode"),
 			        	 "property":"inputContainer.state.code",
@@ -222,6 +173,74 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 			$scope.atmService.data.selectAll(true);
 			$scope.atmService.data.setEdit();
 		});
+		
+		
+		var inputContainerSupportCategoryCode = $scope.experiment.instrument.inContainerSupportCategoryCode;
+		if(inputContainerSupportCategoryCode.indexOf('well') > -1){
+			datatableConfig.columns.push({
+	        	 "header":Messages("containers.table.supportCode"),
+	        	 "property":"inputContainer.support.code",
+	        	 "order":true,
+				 "edit":false,
+				 "hide":true,
+	        	 "type":"text",
+	        	 "position":1,
+	        	 "extraHeaders":{0:Messages("experiments.inputs")}
+	         });
+			datatableConfig.columns.push( {
+		       	 "header":Messages("containers.table.support.line"),
+		       	 "property":"inputContainer.support.line",
+		       	 "order":true,
+		       	 "edit":false,
+				  "hide":true,
+		       	 "type":"text",
+		       	 "position":1.1,
+		       	 "extraHeaders":{0:Messages("experiments.inputs")}
+		        });
+			datatableConfig.columns.push( {
+		       	 "header":Messages("containers.table.support.column"),
+		       	 "property":"inputContainer.support.column*1",
+		       	 "order":true,
+		       	 "edit":false,
+				 "hide":true,
+		       	 "type":"text",
+		       	 "position":1.2,
+		       	 "extraHeaders":{0:Messages("experiments.inputs")}
+		        });
+		}else{
+			datatableConfig.columns.push({
+	        	 "header":Messages("containers.table.supportCode"),
+	        	 "property":"inputContainer.support.code",
+	        	 "order":true,
+				 "edit":false,
+				 "hide":true,
+	        	 "type":"text",
+	        	 "position":1,
+	        	 "extraHeaders":{0:Messages("experiments.inputs")}
+	         });
+			datatableConfig.columns.push({
+	        	 "header":Messages("containers.table.categoryCode"),
+	        	 "property":"inputContainer.support.categoryCode",
+	        	 "order":true,
+				 "edit":false,
+				 "hide":true,
+	        	 "type":"text",
+	        	 "position":2,
+	 			 "filter":"codes:'container_support_cat'",
+	 			"extraHeaders":{0:Messages("experiments.inputs")}
+	         });
+			datatableConfig.columns.push({
+	        	 "header":Messages("containers.table.code"),
+	        	 "property":"inputContainer.code",
+	        	 "order":true,
+				 "edit":false,
+				 "hide":true,
+	        	 "type":"text",
+	        	 "position":3,
+	        	 "extraHeaders":{0:Messages("experiments.inputs")}
+	         });			
+		}
+		
 		
 		var atmService = atmToSingleDatatable($scope, datatableConfig, true);
 		//defined new atomictransfertMethod

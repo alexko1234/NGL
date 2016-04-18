@@ -53,6 +53,26 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNSCtrl',['$scope'
 		click:importData,		
 	};
 	
-	
+	var columns = $scope.atmService.data.getColumnsConfig();
+	columns.push({
+		"header":Messages("containers.table.concentration"),
+		"property": "inputContainer.concentration",
+		"render":"<span ng-bind='cellValue.value|number'/> <span ng-bind='cellValue.unit'/>",
+		"order":false,
+		"hide":true,
+		"type":"text",
+		"position":10,
+		"extraHeaders":{0:Messages("experiments.inputs")}			 						 			
+	});
+	columns.push({
+		"header":Messages("containers.table.size"),
+		"property": "inputContainer.size.value",
+		"order":false,
+		"hide":true,
+		"type":"text",
+		"position":10,
+		"extraHeaders":{0:Messages("experiments.inputs")}			 						 			
+	});
+	$scope.atmService.data.setColumnsConfig(columns);
 	
 }]);
