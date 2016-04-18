@@ -1,4 +1,4 @@
-@(name:java.lang.String)
+@(name:java.lang.String, updateFunctionName:java.lang.String)
 <label  class="col-md-6 col-lg-6 control-label" ng-bind="propertyDef.displayMeasureValue ? propertyDef.name+' ('+propertyDef.displayMeasureValue.value+')' : propertyDef.name"></label>													
 						
 						<div ng-switch-when="java.util.Date" class="col-md-6 col-lg-6">
@@ -48,7 +48,8 @@
 								<p ng-switch-when="false" class="form-control-static" ng-bind="experiment.@{name}[propertyDef.code].value" />
 								<input 	ng-switch-when="true" class="form-control" type="text" title='{{propertyDef.name}}'  class="input-small"
 										ng-model="experiment.@{name}[propertyDef.code].value"									
-										default-value="propertyDef.defaultValue"/>
+										default-value="propertyDef.defaultValue"
+										ng-change="@{updateFunctionName}(propertyDef.code)")/>
 							
 							</div>
 								<div ng-switch-when="true" bt-select class="form-control" 
@@ -56,6 +57,7 @@
 									default-value="propertyDef.defaultValue" 									 
 			    					bt-options="opt.code as opt.name for opt in propertyDef.possibleValues" 
 			    					auto-select
-			    					ng-edit="mainService.isEditMode()">
+			    					ng-edit="mainService.isEditMode()"
+			    					ng-change="@{updateFunctionName}(propertyDef.code)">
 			    				</div>				    				
 						</div>

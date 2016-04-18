@@ -58,7 +58,7 @@
 					
 					<div class="form-group" ng-repeat="propertyDef in experimentType.propertiesDefinitions | filter:'Experiment' | orderBy : 'displayOrder'"
 			   		ng-switch on="propertyDef.valueType">
-						@dynamicPropertyDefinition("experimentProperties")						
+						@dynamicPropertyDefinition("experimentProperties", "updateExperimentProperty")						
 				</div>	
 													
 			    </form>
@@ -126,7 +126,7 @@
 			    
 			   <div class="form-group" ng-repeat="propertyDef in instrumentType.propertiesDefinitions | filter:'Instrument' | orderBy : 'displayOrder'"
 			   		ng-switch on="propertyDef.valueType">
-						@dynamicPropertyDefinition("instrumentProperties")						
+						@dynamicPropertyDefinition("instrumentProperties", "updateInstrumentProperty")						
 				</div>	
 																												    
 			    </form>

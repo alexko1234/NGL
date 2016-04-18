@@ -5,6 +5,13 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	
 	console.log("call DetailsCtrl");
 	
+	$scope.updateInstrumentProperty = function(pName){
+		$scope.$broadcast('updateInstrumentProperty', pName);
+	}
+	$scope.updateExperimentProperty = function(pName){
+		$scope.$broadcast('updateExperimentProperty', pName);
+	}
+	
 	$scope.isCreationMode=function(){
 		return creationMode;
 	};

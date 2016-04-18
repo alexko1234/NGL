@@ -2,6 +2,33 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNGCtrl',['$scope'
                                                              function($scope,$parse,$http) {
 	
 	
+	
+	
+	$scope.$on('updateInstrumentProperty', function(e, pName) {
+		console.log("call event updateInstrumentProperty "+pName);
+		
+		if($scope.isCreationMode() && pName === 'sector96'){
+			console.log("update sector96 "+$scope.experiment.instrumentProperties[pName].value);
+			var sector96 = $scope.experiment.instrumentProperties[pName].value
+			var data = $scope.atmService.data.getData();
+			
+			if(data){
+				var newData = [];
+				angular.forEach(data, function(value){
+					if(value.inputContainer.support.column*1 <= 6 && sector96 === '1-48'){
+						this.push(value);
+					}else if(value.inputContainer.support.column*1 > 6 && sector96 === '49-96'){
+						this.push(value);
+					}
+					
+				}, newData);
+				$scope.atmService.data.setData(newData);
+			}
+			
+		}
+		
+	});
+	
 	$scope.$parent.copyPropertiesToInputContainer = function(experiment){
 		
 		experiment.atomicTransfertMethods.forEach(function(atm){

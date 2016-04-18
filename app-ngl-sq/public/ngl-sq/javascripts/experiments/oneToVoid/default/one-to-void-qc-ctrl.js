@@ -112,6 +112,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 			remove:{
 				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
 				showButton: ($scope.isEditModeAvailable() && $scope.isNewState()),
+				mode:'local'
 			},
 			save:{
 				active:true,
