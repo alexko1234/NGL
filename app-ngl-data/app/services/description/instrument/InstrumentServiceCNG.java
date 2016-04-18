@@ -399,8 +399,8 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
-				 newValues("waiting-program"), null, null , null, "single", null, false ,null, null));
-		
+				 newValues("programme 1_normalisation"), null, null , null, "single", null, false ,null, null));
+		//"program-normalisation","programme 1_normalisation"
 		return l;
 	}
 	
