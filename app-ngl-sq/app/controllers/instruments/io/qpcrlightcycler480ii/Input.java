@@ -11,9 +11,12 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
+import models.laboratory.experiment.description.ExperimentType;
+import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.parameter.Index;
@@ -24,6 +27,10 @@ import controllers.instruments.io.utils.AbstractInput;
 import controllers.instruments.io.utils.InputHelper;
 
 public class Input extends AbstractInput {
+	
+	
+	
+	
 	
    /* Description du fichier a traiter: TXT TAB délimité généré par LightCycler
 	*
@@ -40,10 +47,18 @@ public class Input extends AbstractInput {
 	*   Ignorer les lignes dont la colonne est > 20, ce sont des controles ( voir aussi remapPosition() )
 	*/
 	
+	
+	
+	
 	@Override
 	public Experiment importFile(Experiment experiment,PropertyFileValue pfv, ContextValidation contextValidation) throws Exception {	
 		
 		int sector=0;
+		
+		ExperimentType experimentType = ExperimentType.find.findByCode(experiment.typeCode);
+		PropertyDefinition correctionFactorLibrarySizeDefault = experimentType.getMapPropertyDefinition().get("correctionFactorLibrarySize"); 
+		
+		
 		if (experiment.instrumentProperties.containsKey("sector96")){
 			PropertySingleValue psv = (PropertySingleValue) experiment.instrumentProperties.get("sector96");
 			Logger.info( "sector96="+ psv.value.toString() );
@@ -206,7 +221,8 @@ public class Input extends AbstractInput {
 						
 						PropertySingleValue concentration = getPSV(icu, "concentration1");
 						// effectuer la correction en utilisant ce que l'utilisateur a defini
-						PropertySingleValue cFLSize = getPSV(icu, "correctionFactorLibrarySize");
+						PropertySingleValue cFLSize = getCorrectionFactorLibraySize(icu, correctionFactorLibrarySizeDefault);
+						
 						if (cFLSize.value != null) {
 							// effectuer la correction
 							//Logger.info ("cFLSize.value="+cFLSize.value);
@@ -225,6 +241,7 @@ public class Input extends AbstractInput {
 		
 		return experiment;
 	}
+	
 	
 	/* description de la tranformation effectué sur le robot:
 	 * 
@@ -267,7 +284,6 @@ public class Input extends AbstractInput {
   	 *    
   	 *    NOTE: pour l'instant au labo ne sont realisées que des demi plaques ( < 48 samples..)=> sector 0 uniqut
 	 */
-	
 	public String remapPosition(String pos384, int sector, ContextValidation contextValidation) {
 		int asciiRow96=0;
 		int col96=0;
@@ -342,4 +358,15 @@ public class Input extends AbstractInput {
 		
 		return false;
 	}
+	
+	private PropertySingleValue getCorrectionFactorLibraySize(
+			InputContainerUsed icu, PropertyDefinition correctionFactorLibrarySizeDefault) {
+		
+		PropertySingleValue cFLSize =  getPSV(icu, "correctionFactorLibrarySize");
+		if (cFLSize.value != null){ //get defaultValue
+			cFLSize.value = Integer.valueOf(correctionFactorLibrarySizeDefault.defaultValue);
+		}
+		return cFLSize;
+	}
+
 }
