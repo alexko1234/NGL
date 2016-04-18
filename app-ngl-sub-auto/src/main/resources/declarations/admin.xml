@@ -25,6 +25,20 @@
 	<ResourceType name="rawData">
 		<RequiredProperty propertyName="fileList"/>
 	</ResourceType>
+	
+	<ResourceType name="submissionZip">
+		<RequiredProperty propertyName="code" keyProperty="true"/>
+		<RequiredProperty propertyName="gzipForSubmission"/>
+		<RequiredProperty propertyName="submissionTmpDirectory"/>
+		<RequiredProperty propertyName="experimentCodes"/>
+	</ResourceType>
+	
+	<ResourceType name="rawDataZip">
+		<RequiredProperty propertyName="fileName" keyProperty="true"/>
+		<RequiredProperty propertyName="directory" keyProperty="true"/>
+		<RequiredProperty propertyName="submissionTmpDirectory" keyProperty="true"/>
+		<RequiredProperty propertyName="experimentCode"/>
+	</ResourceType>
 
 	<!-- Referential -->
 
@@ -32,13 +46,32 @@
 		<ResourceType name="submission" />
 	</Referential>
 	
+	<Referential name="nglSubRef_processZip" device="jsonDevice">
+		<ResourceType name="submissionZip" />
+		<ResourceType name="rawDataZip" />
+	</Referential>
+	
+	<Referential name="nglSubRef_zip" device="jsonDevice">
+		<ResourceType name="rawDataZip" />
+	</Referential>
+	
 	<Referential name="internalRefSubmission" device="birdsDevice" readOnly="false">
 		<ResourceType name="submission" />
+		<ResourceType name="submissionZip" />
 	</Referential>
 	
 	<Referential name="internalRefSubmissionXML" device="birdsDevice" readOnly="false">
 		<ResourceType name="submissionXML" />
 		<ResourceType name="rawData" />
+	</Referential>
+	
+	<Referential name="internalRefZip" device="birdsDevice" readOnly="false">
+		<ResourceType name="submissionZip" />
+		<ResourceType name="rawDataZip" />
+	</Referential>
+	
+	<Referential name="internalRefMd5" device="birdsDevice" readOnly="false">
+		<ResourceType name="rawDataZip" />
 	</Referential>
 	
 	

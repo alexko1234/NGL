@@ -6,7 +6,6 @@ import java.util.Date;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.sra.submit.common.instance.Submission;
-import models.sra.submit.sra.instance.Configuration;
 
 public class SubmissionBuilder {
 
@@ -35,6 +34,12 @@ public class SubmissionBuilder {
 		return this;
 	}
 	
+	public SubmissionBuilder withSubmissionTmpDirectory(String submissionTmpDirectory)
+	{
+		submission.submissionTmpDirectory=submissionTmpDirectory;
+		return this;
+	}
+		
 	public SubmissionBuilder withSubmissionDate(Date submissionDate)
 	{
 		submission.submissionDate=submissionDate;

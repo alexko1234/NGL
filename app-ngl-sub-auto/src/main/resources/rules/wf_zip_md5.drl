@@ -1,0 +1,87 @@
+#created on: Jul 15, 2014
+package birds
+
+import  fr.genoscope.lis.devsi.birds.impl.factory.ResourcesReferentialServiceFactory;
+import fr.cea.ig.auto.submission.SubmissionServicesFactory;
+import fr.genoscope.lis.devsi.birds.impl.properties.ProjectProperties;
+import fr.cea.ig.auto.submission.SRAFilesUtil;
+
+#Select resource for workflow submission
+rule "select resources from nglsub for workflow zip md5"
+	@BirdsRule ( selectionRule )
+	salience 200
+	dialect 'java'
+	no-loop
+	when
+		$input : InputSpecificationElement(name=="inputZipMd5", treatmentSpecification.name=="WF_ZipMd5Process", project.name == "SRA")
+		$resourcesReferential : ResourcesReferential(name=="nglSubRef_processZip") 
+		$device : JSONDevice() from $resourcesReferential.referentialDevice
+		$rps : ResourcePropertiesSet(initialized==false, inputSpecificationElement==$input, resourcesReferential==$resourcesReferential)
+		$groupJob : Job( treatmentSpecification.specificationGroup == true)
+	then
+		Logger log = Logger.getLogger("ngl.sub.rules");
+		$rps.initialize();
+		
+		JobResource groupJobResource = $groupJob.getUniqueJobResource("subData");
+		Set<ResourceProperties> resourceProperties = new HashSet<ResourceProperties>();
+		
+		JSONDevice jsonDevice = new JSONDevice();
+		
+		Set<ResourceProperties> rpsRawData = jsonDevice.httpGetJSON(ProjectProperties.getProperty("server")+"/api/sra/experiments/rawDatas?submissionCode="+groupJobResource.getProperty("code"),"bot");
+		boolean gzipForSubmission = SRAFilesUtil.checkGzipForSubmission(rpsRawData);
+		if(gzipForSubmission){
+			ResourceProperties newRp = new ResourceProperties();
+			newRp.setProperty("code",groupJobResource.getProperty("code"));
+			newRp.setProperty("gzipForSubmission","true");
+			newRp.setProperty("submissionTmpDirectory",groupJobResource.getProperty("submissionTmpDirectory"));
+			newRp.setProperty("experimentCodes",groupJobResource.getProperty("experimentCodes").replaceAll("\"",""));
+			newRp.setProperty("idGroupJob",""+$groupJob.getId());
+			resourceProperties.add(newRp);
+		}
+		log.debug("size resources "+resourceProperties.size());
+		$rps.setResourcePropertiesSet(resourceProperties);
+		modify($rps){};
+end
+
+
+#Transfert ressources to internal referential
+rule "add resources submission to internal referential internalRefZip for first step of zip md5 workflow"
+    @BirdsRule( ExecutionService )
+    salience 150
+	dialect 'java'
+	no-loop 
+	when
+	    $executionService : ExecutionService( status == ExecutionService.JOB_PROCESSING_STATUS, caught==false )
+	    $j : Job( treatmentSpecification.name!=null, treatmentSpecification.name =="WF_ZipMd5Process" , treatmentSpecification.specificationGroup == true )
+	then
+	    Logger log = Logger.getLogger("ngl.sub.rules");
+	    log.debug("transfertResource for WF_ZipMd5Process");
+	  	$j.groupTransferInputResourcesToInternalReferential("inputZipMd5", "internalRefZip",$j.getId());
+	  	
+end
+
+
+rule "add submissionZip resources in internalRefSubmission to fire createXML and transferRawData"
+	@BirdsRule( addResources ) 
+	dialect 'java'
+	salience 200
+	when
+		$flag : Flag ( done == false ) 
+		$output : OutputSpecificationElement(treatmentSpecification.name == "WF_ZipMd5Process")
+	  	$referential : ResourcesReferential ( name == "internalRefSubmission" )
+		$resourceSet : ResourceSet( ioSpecificationElement == $output )
+		$job : Job(treatmentSpecification!=null, treatmentSpecification.name == "WF_ZipMd5Process")
+	then
+		Logger log = Logger.getLogger("ngl.sub.rules");
+		log.debug("Add resources rules for create XML and transfertRawData from file "+$job.getProperty(Job.STDOUT));
+		JobResource jobResource = $job.getUniqueJobResource("inputZipMd5");
+		JobResource outputResource = $resourceSet.createJobResource($output.getResourceType(),$referential.getName());
+		ResourceProperties resourceProperties = outputResource.getResourceProperties();
+	  	resourceProperties.setProperty("code",jobResource.getProperty("code"));
+	  	resourceProperties.setProperty("gzipForSubmission",jobResource.getProperty("gzipForSubmission"));
+	  	resourceProperties.setProperty("submissionTmpDirectory",jobResource.getProperty("submissionTmpDirectory"));
+	  	resourceProperties.setProperty("experimentCodes",jobResource.getProperty("experimentCodes"));
+		$flag.setDone(true);
+		modify($flag){};
+		modify($resourceSet){};
+end

@@ -34,10 +34,10 @@ rule "add resources submission to internal referential internalRefSubmission for
 	no-loop 
 	when
 	    $executionService : ExecutionService( status == ExecutionService.JOB_PROCESSING_STATUS, caught==false )
-	    $j : Job( treatmentSpecification.name =="WF_Submission" , treatmentSpecification.specificationGroup == true )
+	    $j : Job( treatmentSpecification.name!=null, treatmentSpecification.name =="WF_Submission" , treatmentSpecification.specificationGroup == true )
 	then
 	    Logger log = Logger.getLogger("ngl.sub.rules");
-	    log.debug("get internal referential to add resources : internalRefSubmission");
+	    log.debug("transfert resource for WF_Submission");
 	  	$j.groupTransferInputResourcesToInternalReferential("subData", "internalRefSubmission",$j.getId());
 	  	//Get submission code
 	  	String codeSubmission = $j.getUniqueJobResource("subData").getProperty("code");

@@ -51,6 +51,24 @@ public class SRAFilesUtil {
 		out.close();
 	}
 	
+	public static boolean checkGzipForSubmission(Set<ResourceProperties> rpsRawData)
+	{
+		for(ResourceProperties rawData: rpsRawData){
+			if(rawData.getProperty("gzipForSubmission").equals("true"))
+				return true;
+		}
+		return false;
+	}
+	
+	public static Set<ResourceProperties> filterByGzipForSubmission(Set<ResourceProperties> rpsRawData)
+	{
+		Set<ResourceProperties> rpsRawDataFilter = new HashSet<ResourceProperties>();
+		for(ResourceProperties rp : rpsRawData){
+			if(rp.getProperty("gzipForSubmission").equals("true"))
+				rpsRawDataFilter.add(rp);
+		}
+		return rpsRawDataFilter;
+	}
 	
 	public static void main(String[] args)
 	{
