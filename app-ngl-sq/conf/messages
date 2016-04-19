@@ -126,6 +126,11 @@ containers.table.quantity = Quantité
 containers.table.concentration= Concentration
 containers.table.properties = Autres Propriétés
 
+containers.treeTabs.code = Code
+containers.treeTabs.creationDate = Créé le
+containers.treeTabs.modificationDate = Dernière mod°
+containers.treeTabs.fromTransformationTypeCodes = Exp Type Codes
+
 containers.table.iryschip.sampleCodes= Echantillon
 containers.table.irysprep.concentration=Concentration Moyenne
 containers.table.nlrsConcentration= Concentration arrondie (ng/µl)

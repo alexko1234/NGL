@@ -72,7 +72,7 @@ public class Containers extends CommonController {
 
 		return notFound();
 	}
-
+	
 	@Permission(value={"reading"})
 	public static Result head(String code) {
 		if(MongoDBDAO.checkObjectExistByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, code)){			
@@ -218,6 +218,10 @@ public class Containers extends CommonController {
 			queryElts.add(DBQuery.is("code", containersSearch.code));
 		}else if(StringUtils.isNotBlank(containersSearch.codeRegex)){
 			queryElts.add(DBQuery.regex("code", Pattern.compile(containersSearch.codeRegex)));
+		}
+		
+		if(StringUtils.isNotBlank(containersSearch.treeOfLifePathRegex)){
+			queryElts.add(DBQuery.regex("treeOfLife.paths", Pattern.compile(containersSearch.treeOfLifePathRegex)));
 		}
 		
 		if(BooleanUtils.isTrue(containersSearch.isPool)){

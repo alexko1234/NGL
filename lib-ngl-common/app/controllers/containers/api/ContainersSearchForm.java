@@ -12,6 +12,7 @@ public class ContainersSearchForm extends ListForm{
 	
 	public String code; 
 	public String codeRegex;
+	public String treeOfLifePathRegex;
 	public Set<String> codes;
 	public String projectCode;
 	public Set<String> projectCodes;

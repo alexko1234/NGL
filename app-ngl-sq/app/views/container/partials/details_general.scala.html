@@ -68,14 +68,17 @@
 			
 		}
 		
-		@column(){	
+		@column(){			
+			@columnLabelValue(Messages("containers.table.supportCode")){
+				<p class="form-control-static" ng-bind="container.support.code" />
+			}
 			
 			<div class="form-group">
-				<label class="col-md-6 col-lg-6 control-label">@Messages("containers.table.supportCode")</label>
+				<div class="col-md-6 col-lg-6 control-label">
+					<label>@Messages("containers.table.support.line")</label> <span ng-bind="container.support.line" />
+				</div>
 				<div class="col-md-6 col-lg-6 form-control-static">
-					<span class="col-md-4 col-lg-4" ng-bind="container.support.code" />
-					<label>/ @Messages("containers.table.support.line")</label> <span ng-bind="container.support.line" />
-					<label>/ @Messages("containers.table.support.column")</label> <span ng-bind="container.support.column" />
+					<label>@Messages("containers.table.support.column")</label> <span ng-bind="container.support.column" />
 				</div>
 			</div>
 			
@@ -93,18 +96,18 @@
 		}
 	</div>
 	
-	<div class="row" ng-if='container.comments'>
-		<div class="col-md-12 col-lg-12">
-			<div ng-repeat="object in container.comments">
-			<div ng-repeat="(key, value) in object">
-				<label class="col-md-6 col-lg-6 control-label" ng-if="value.unit !== null">{{key}} ({{value.unit}})</label>
-				<label class="col-md-6 col-lg-6 control-label" ng-if="value.unit === null" ng-bind="key" />
-				<div class="col-md-6 col-lg-6"><p class="form-control-static" ng-bind="value[key].value" /></div>
+			@***
+			<div class="row" ng-if='container.comments'>
+				<div class="col-md-12 col-lg-12">
+					<div ng-repeat="object in container.comments">
+					<div ng-repeat="(key, value) in object">				
+						<label class="col-md-6 col-lg-6 control-label" ng-bind="key" />
+						<div class="col-md-6 col-lg-6"><p class="form-control-static" ng-bind="value" /></div>
+					</div>
+					</div>
+				</div>
 			</div>
-			</div>
-		</div>
-	</div>
-		
+			***@	
 
 	<div class="row">
 		<div class="col-md-12 col-lg-12">
