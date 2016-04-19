@@ -413,19 +413,11 @@ public class Processes extends CommonController{
 			contextValidation.addErrors("process", ValidationConstants.ERROR_BADSTATE_MSG, container.code);
 		}else if(CollectionUtils.isNotEmpty(process.experimentCodes)){
 			contextValidation.addErrors("process", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, process.experimentCodes);
-		}else if(container.state.code.startsWith("A")){
+		}else if(!"IS".equals(container.state.code) && !"UA".equals(container.state.code)){
 			contextValidation.addErrors("container", ValidationConstants.ERROR_BADSTATE_MSG, container.code);
 		}
 
-		ExperimentType experimentType=ExperimentType.find.findByCode(container.fromTransformationTypeCodes.iterator().next());
-		
 		if(!contextValidation.hasErrors()){
-			
-			Builder updateContainer= DBUpdate.pull("processCodes", process.code);
-			if(experimentType.category.name.equals(ExperimentCategory.CODE.voidprocess.name())){
-				updateContainer.unset("fromTransformationTypeCodes");
-			}
-			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code",container.code),updateContainer);
 			MongoDBDAO.deleteByCode(InstanceConstants.PROCESS_COLL_NAME,Process.class,  process.code);
 			return ok();
 		}else {
