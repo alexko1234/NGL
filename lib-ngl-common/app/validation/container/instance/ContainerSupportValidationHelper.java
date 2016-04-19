@@ -77,7 +77,7 @@ public class ContainerSupportValidationHelper extends CommonValidationHelper{
 						!nextStateCode.equals("UA") && !nextStateCode.equals("IS")){
 					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
 				}else if(currentStateCode.startsWith("A") && 
-						(!nextStateCode.startsWith("A") || (!"A".equals(nextStateCode) && !getContainerStates(container).contains(nextStateCode)))){
+						(!nextStateCode.startsWith("A") && !nextStateCode.equals("UA") && !nextStateCode.equals("IS") || (!"A".equals(nextStateCode) && !getContainerStates(container).contains(nextStateCode)))){
 					contextValidation.addErrors("code",ValidationConstants.ERROR_BADSTATE_MSG, nextStateCode );
 				}else if("IS".equals(currentStateCode) && 
 						!nextStateCode.equals("UA") && !nextStateCode.equals("IW-P")){
