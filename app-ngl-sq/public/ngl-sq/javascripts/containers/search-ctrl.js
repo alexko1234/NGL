@@ -39,7 +39,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 		},
 		save:{
 			active:Permissions.check("writing")?true:false,
-			url:jsRoutes.controllers.containers.api.Containers.updateBatch().url,
+			//url:jsRoutes.controllers.containers.api.Containers.updateBatch().url,
 			batch:true,
 			method:'put',
 			callback: function(reason, error){
