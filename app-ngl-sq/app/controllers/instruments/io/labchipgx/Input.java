@@ -22,9 +22,9 @@ import controllers.instruments.io.utils.InputHelper;
 
 public class Input extends AbstractInput {
 	
-   /* Description du fichier a traiter: TXT CSV généré parlabchipGX
-	*Well Label,Region[200-2000] Conc. (ng/ul),Region[200-2000] Size at Maximum [BP],User Comment
-	*A01,3.7401558465,551.4705882353,	
+   /* Description du fichier a traiter: TXT CSV généré parlabchipGX (NGL-979:25/04/2016 ne plus gerer la taille)
+	*Well Label,Region[200-2000] Conc. (ng/ul)
+	*A01,3.7401558465
 	*A02...
 	*   attention les valeurs [200-2000]  sont variables ne pas les prendre en compte pour la verification
 	*   d'un entete correct
@@ -33,7 +33,7 @@ public class Input extends AbstractInput {
 	@Override
 	public Experiment importFile(Experiment experiment,PropertyFileValue pfv, ContextValidation contextValidation) throws Exception {	
 			
-		// hashMap  pour stocker les concentrations et taille  du fichier
+		// hashMap  pour stocker les concentrations du fichier (NGL-979:25/04/2016 ne plus gerer la taille)
 		Map<String,LabChipData> dataMap = new HashMap<String,LabChipData>(0);
 		
 		InputStream is = new ByteArrayInputStream(pfv.value);
@@ -53,9 +53,9 @@ public class Input extends AbstractInput {
 			}
 			// commencer le traitement en sautant la 1ere ligne d'entete
 			if (n > 0 ) {
-				// description d'une ligne de donnees:
+				// description d'une ligne de donnees: (NGL-979:25/04/2016 ne plus gerer la taille)
 				//A01,3.7401558465,551.4705882353,comment ( comments est optionnel)
-				if ( fields.length  < 3 || fields.length > 4 ) {
+				if ( fields.length  != 2 ) {
 					contextValidation.addErrors("Erreurs fichier", "experiments.msg.import.linefields.unexpected",n );
 					n++;
 					continue;
@@ -126,7 +126,7 @@ public class Input extends AbstractInput {
 		return experiment;
 	}
 	
-	//TEST
+	/*NGL-979:25/04/2016: ne plus stocker la taille */
 	public class LabChipData {
 		private double concentration;
 		

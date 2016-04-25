@@ -32,24 +32,30 @@ rule "InputVolume in lib-normalization inputContainer"
 		// cas 0 OK et cas pas de valeur OK ( volontairement ou avec valeur non numerique)
 	    eval ( $outputVolume.value != null && convertPVToDouble($outputVolume) != 0 )
         eval ( $outputConcentration.value != null && convertPVToDouble($outputConcentration) != 0 )
+        // NGL-981:25/04/2016 attention si inputConcentration=0 --> division par 0
+        eval ( $inputConcentration.value != null && convertPVToDouble($inputConcentration) != 0 )
         
-        //ne pas calculer le volume engagé si l'utisateur saisi qq chose... TODO ???? Voir avec Julie
+        //ne pas calculer le volume engagé si l'utilisateur saisi qq chose... TODO ???? Voir avec Julie
    then
-   		// -1- calcul volume engagé
-        Logger.debug("-1- InputVolume calculation");  
-        Logger.debug("inputConcentration="+ Double.parseDouble($inputConcentration.getValue().toString()) );
-
-        // utiliser  convertPVToDouble !!
-        Double engVolume = roundValue(convertPVToDouble($outputConcentration)*convertPVToDouble($outputVolume)/convertPVToDouble($inputConcentration));
-        Double bfVolume=0.0;
-        Logger.debug("inputVolume="+ engVolume );
-        
-        // 15/04/2016 si volume a engager  >  volume disponible alors volume a engager=15, buffer =0
+   		Double engVolume = 0.0;
+   		Double bfVolume = 0.0;
+   		Double inputConcentration = 0.0;
+   		
+        // 15/04/2016 si concentration IN < concentration OUT : inutile d'essayer de faire des calculs--> vol engagé=15, buffer =0
+        // 25/04/2016 ET concentration OUT= concentration IN
 		if ( convertPVToDouble($inputConcentration) <= convertPVToDouble($outputConcentration)){	
-			Logger.debug("Warning: pas assez de volume disponible: engVolume="+ engVolume );
-		    //engVolume=Double.parseDouble($inputVolume.getValue().toString());   
+			inputConcentration = Double.parseDouble($inputConcentration.getValue().toString());
+			Logger.debug("Warning: concentration initiale "+ inputConcentration +" plus faible que la concentration de normalisation");
 		    engVolume=15.0;
 	    } else {
+	    
+	    	// -1- calcul volume engagé
+        	Logger.debug("-1- InputVolume calculation");  
+        	Logger.debug("inputConcentration="+ Double.parseDouble($inputConcentration.getValue().toString()) );
+
+       		engVolume = roundValue(convertPVToDouble($outputConcentration)*convertPVToDouble($outputVolume)/convertPVToDouble($inputConcentration));
+        	Logger.debug("inputVolume="+ engVolume );
+        
 		   // -2- calcul volume de tampon : volume buffer= volume out - volume engagé
 			Logger.debug("-2- volume tampon= volumeout - volume engagé");
 			
@@ -73,6 +79,13 @@ rule "InputVolume in lib-normalization inputContainer"
 			   $inputContainerUsed.experimentProperties.remove("inputVolume");
 		}	
 	    $inputContainerUsed.experimentProperties.put("inputVolume", psvEngVolume);
+	    
+	    // 25/04/2016 si concentration IN < concentration OUT :  remplacer la concentration OUT par concentration IN
+		if ( convertPVToDouble($inputConcentration) <= convertPVToDouble($outputConcentration)){
+			Logger.debug("sett output concentration to input concentration :"+inputConcentration );
+			// code from cns/pool-tube/calculation.drl
+	 	    $outputContainerUsed.concentration= $atomicTransfert.inputContainerUseds.get(0).getConcentration();
+		}	    
 	    
 		update($experiment);
 end
