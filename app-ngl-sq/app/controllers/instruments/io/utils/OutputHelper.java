@@ -136,6 +136,10 @@ public class OutputHelper {
 		}
 	}
 	
+	public static String getSequence(Index index, TagModel tagModel,int nbTagDisplay){
+		return getSequence(index,tagModel).split("-",2)[nbTagDisplay-1];		
+	}
+	
 	public static String getContentProperty(Content content, String propertyName){
 		if(content.properties.get(propertyName) != null){
 			return (String) content.properties.get(propertyName).value;
