@@ -1,0 +1,37 @@
+@()
+@import play.mvc.Http.Context
+
+
+<div class="row">
+	<div class="col-xs-12 col-md-12 col-lg-12">
+		<div class="page-header">@partials.details_header()</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-xs-12 col-md-12 col-lg-12">
+		@partials.details_general()
+	</div>
+</div>
+
+<div class="row margin-bottom-5 hidden-print">
+	<div class="col-xs-12 col-md-12 col-lg-12" ng-if="support.categoryCode !== 'tube'">
+		@partials.details_menu()
+	</div>
+</div>
+
+<div class="row" ng-if="support.categoryCode !== 'tube'">
+	<div class="col-xs-12 col-md-12 col-lg-12">
+		<div class="tab-content">
+		
+			<div class="tab-pane {{getTabClass('table')}}" id="table">	
+				<div class="datatable" ultimate-datatable="detailsSearchService.datatable" />
+			</div>
+			
+			<div class="tab-pane {{getTabClass(target)}}" id="{{target}}">@partials.details_supportCategory()</div>
+			
+		</div>	
+	</div>
+</div>
+
+

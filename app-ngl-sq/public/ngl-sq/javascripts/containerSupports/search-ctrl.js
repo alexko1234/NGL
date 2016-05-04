@@ -28,6 +28,12 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 				console.log("callback reason=" + reason);
 				console.log("callback error=" + error);
 			}
+		},
+		show:{
+			active:true,
+			add:function(line){
+				tabService.addTabs({label:line.code,href:jsRoutes.controllers.containers.tpl.ContainerSupports.get(line.code).url, remove:true});
+			}
 		}
 	};
 
@@ -80,6 +86,12 @@ angular.module('home').controller('SearchStateCtrl', ['$scope','$location','$rou
 				batch:true,
 				value:function(line){return {code:line.code,state:line.state};}
 			},
+			show:{
+				active:true,
+				add:function(line){
+					tabService.addTabs({label:line.code,href:jsRoutes.controllers.containers.tpl.ContainerSupports.get(line.code).url, remove:true});
+				}
+			}
 	};
 
 	$scope.reset = function(){

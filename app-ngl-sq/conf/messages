@@ -18,15 +18,17 @@ containerSupports.menu.search = Rechercher
 containerSupports.menu.state = Changement d''Etat
 containerSupports.menu.scanner = Code-Barre
 
+#containerSupports tabs
+containerSupports.tabs.general = Général
 containerSupports.tabs.search = Recherche Supports
 containerSupports.tabs.state = Changement d'Etat Supports
 containerSupports.tabs.scanner = Recherche par Code Barre
 containerSupports.scanner.title = Code-Barre de Support
 
+
 #containerSupports table
-containerSupports.table.code= Supports
+containerSupports.table.code = Supports
 containerSupports.table.projectCodes = Projet(s)
-containerSupports.table.sampleCodes = Echantillon(s)
 containerSupports.table.volume = Volume
 containerSupports.table.categoryCode = Catégorie Support
 containerSupports.table.state.code = Etat Support
@@ -36,6 +38,9 @@ containerSupports.table.sampleCodes = Echantillon(s)
 containerSupports.table.valid = Support valide ?
 containerSupports.table.creationDate = Création Support
 containerSupports.table.createUser = Support créé par
+containerSupports.table.modifyUser = Modifié par
+containerSupports.table.storageCode = Stockage
+containerSupports.table.yx = Position
 
 
 containerSupports.scanner.categoryCode = Catégorie 
@@ -55,6 +60,12 @@ containerSupports.select.categoryCode =  Catégorie Support
 containerSupports.placeholder.fromDate = Support depuis le (jj/mm/aaaa)
 containerSupports.placeholder.toDate = Support jusqu''au (jj/mm/aaaa)
 containerSupports.placeholder.user = Support créé par
+
+containerSupports.button.table = Vue Tableau
+containerSupports.button.plate = Vue Plaque
+containerSupports.button.flowcell = Vue Flowcell
+containerSupports.button.mapcard = Vue Mapcard
+containerSupports.button.iryschip = Vue Iryschip
 
 
 active.true = Actif
@@ -142,6 +153,7 @@ containers.resultsqc.type = Type QC
 containers.resultsqc.results = Résultats
 containers.resultsqc.valuation = Validation container
 containers.resultsqc.date = Date
+
 
 containers.treeTabs.code = Code
 containers.treeTabs.creationDate = Créé le

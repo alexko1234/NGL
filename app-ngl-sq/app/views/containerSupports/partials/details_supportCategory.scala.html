@@ -1,0 +1,19 @@
+@()
+
+<table class="table table-bordered table-striped table-condensed">
+	<thead>
+		<tr>
+			<th></th>
+			<th ng-if="nbCol" ng-repeat="i in nbCol">{{i}}</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-if="nbLine" ng-repeat="y in nbLine" class="total">
+			<td><strong>{{y}}</strong></td>
+			<td class="plates" ng-repeat="x in nbCol" class="browser">
+				<div ng-class="getClass(x, y)" ng-bind="displayCellAll(x, y)" />
+				<div class="visible-print-block" ng-bind="displayCellAll(x, y)" />
+			</td>
+		</tr>
+	</tbody>
+</table>

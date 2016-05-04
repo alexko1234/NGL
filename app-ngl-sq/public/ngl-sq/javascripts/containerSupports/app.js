@@ -11,7 +11,12 @@ angular.module('home', ['commonsServices','ngRoute','ultimateDataTableServices',
 		templateUrl : '/tpl/supports/search',
 		controller : 'SearchStateCtrl'
 	});
-		
+	
+	$routeProvider.when('/supports/:code', {
+		templateUrl : '/tpl/supports/details',
+		controller : 'DetailsCtrl'
+	});
+	
 	$routeProvider.otherwise({redirectTo: '/supports/search/home'});
 
 	// configure html5 to get links working with bookmarked

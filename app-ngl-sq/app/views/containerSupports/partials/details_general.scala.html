@@ -1,0 +1,50 @@
+@()
+@import views.html.helper._
+
+@column()(value: Html) = {
+	<div class="col-md-4 col-lg-4 col-xs-4">
+		@value
+	</div>
+}
+
+<form class="form-horizontal">
+	<div class="row">
+		@column(){
+			@columnLabelValue(Messages("containerSupports.table.createUser")){
+				<p class="form-control-static">{{support.traceInformation.createUser}}
+				 ({{support.traceInformation.creationDate|date:'@Messages("date.format")'}})</p>
+			}
+			@columnLabelValue(Messages("containerSupports.table.modifyUser")){
+				<p class="form-control-static" ng-if="support.traceInformation.modifyUser">{{support.traceInformation.modifyUser}}
+				 ({{support.traceInformation.modifyDate|date:'@Messages("date.format")'}})</p>
+			}
+			@columnLabelValue(Messages("containerSupports.table.storageCode")){
+				<p class="form-control-static" ng-bind="support.storageCode" />
+			}
+			<div ng-if="support.categoryCode === 'tube'">
+				@columnLabelValue(Messages("containerSupports.table.fromTransformationTypeCodes")){
+					<div class="col-md-6 col-lg-6">
+						<div class="form-control-static" list-resize="support.fromTransformationTypeCodes|unique|codes:'type'" list-resize-min-size='3' />
+					</div>
+				}
+			</div>
+		}
+		<div ng-if="support.categoryCode === 'tube'">
+			@column(){
+				@columnLabelValue(Messages("containerSupports.table.projectCodes")){
+					<div class="col-md-6 col-lg-6">
+						<div class="form-control-static" list-resize='support.projectCodes' list-resize-min-size='2' />
+					</div>
+				}
+				@columnLabelValue(Messages("containerSupports.table.sampleCodes.length")){
+					<p class="form-control-static" ng-bind="support.sampleCodes.length" />
+				}
+				@columnLabelValue(Messages("containerSupports.table.sampleCodes")){
+					<div class="col-md-6 col-lg-6">
+						<div class="form-control-static" list-resize='support.sampleCodes' list-resize-min-size='2' horizontal/>
+					</div>
+				}
+			}
+		</div>
+	</div>
+</form>

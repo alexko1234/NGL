@@ -20,6 +20,14 @@ public class ContainerSupports extends CommonController{
 		return ok(search.render());
 	}
 	
+	public static Result get(String code){
+		return ok(home.render("search"));
+	}
+	
+	public static Result details() {
+		return ok(details.render());
+	}
+	
 	
 	public static Result javascriptRoutes() {
   	    response().setContentType("text/javascript");
@@ -29,6 +37,7 @@ public class ContainerSupports extends CommonController{
   	    		controllers.containers.tpl.routes.javascript.ContainerSupports.search(),
   	    		controllers.containers.tpl.routes.javascript.ContainerSupports.home(),
   	    		controllers.containers.api.routes.javascript.ContainerSupports.list(),
+  	    		controllers.containers.tpl.routes.javascript.ContainerSupports.get(),
   	    		controllers.containers.api.routes.javascript.ContainerSupports.get(),
   	    		controllers.containers.api.routes.javascript.ContainerSupportCategories.list(),
   	    		controllers.containers.api.routes.javascript.ContainerSupports.updateStateBatch(),
