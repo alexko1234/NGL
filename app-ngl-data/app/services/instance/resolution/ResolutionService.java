@@ -257,6 +257,8 @@ public class ResolutionService {
 		al.add("RHS2000");
 		al.add("RHS2500");
 		al.add("RHS2500R");
+		al.add("RHS4000");
+		al.add("RHSX");
 		r.typeCodes = al;
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, "runReso");
@@ -402,6 +404,7 @@ public class ResolutionService {
 		
 		al.add("RMINION");
 		al.add("RMKI");
+		al.add("RHS4000");
 		
 		r.typeCodes = al;
 		
