@@ -4,8 +4,8 @@
 @import java.lang._
 
 Numero tube; nom banque (manip prec); vol adn a prelever; vol tampon; nom sol stock\u000D\u000A	
-@for(a <- experiment.atomicTransfertMethods){
+@for((a,index) <- experiment.atomicTransfertMethods.toList.sortWith(_.inputContainerUseds.get(0).code<_.inputContainerUseds.get(0).code).zipWithIndex){
 		@for(c <- a.inputContainerUseds){
-			@(experiment.atomicTransfertMethods.indexOf(a)+1);@(c.code);@(OutputHelper.getInputContainerUsedExperimentProperty(c,"requiredVolume"));@(OutputHelper.getInputContainerUsedExperimentProperty(c,"bufferVolume"));@(OutputHelper.getOutputContainerUsedCode(a))\u000D\u000A	
+			@(index+1);@(c.code);@(OutputHelper.getInputContainerUsedExperimentProperty(c,"requiredVolume"));@(OutputHelper.getInputContainerUsedExperimentProperty(c,"bufferVolume"));@(OutputHelper.getOutputContainerUsedCode(a))\u000D\u000A	
 		}	
 } 

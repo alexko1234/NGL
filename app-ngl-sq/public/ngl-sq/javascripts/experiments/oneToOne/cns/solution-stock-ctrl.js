@@ -90,6 +90,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 			         {
 			        	 "header":Messages("containers.table.concentration"),
 			        	 "property":"outputContainerUsed.concentration.value",
+			        	 "editDirectives":' udt-change="calculVolumes(value, col.id)" ',
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
@@ -238,6 +239,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 		$scope.atmService.data.setEdit();
 	});
 	
+	
 	$scope.calculVolumeFromValue=function(value){
 
 		if(value.outputContainerUsed.volume!=null && value.outputContainerUsed.volume.value!=null && value.outputContainerUsed.concentration.value!=null){
@@ -251,8 +253,8 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 				value.inputContainerUsed.experimentProperties["bufferVolume"]={"_type":"single","value":value.outputContainerUsed.volume.value-requiredVolume,
 						 "unit":value.outputContainerUsed.volume.unit};
 				
-			}else if(value.outputContainerUsed.concentration.unit="nM") {
-				var requiredVolume=value.outputContainerUsed.concentration.value*value.outputContainerUsed.volume.value/(value.inputContainerUsed.concentration.value*660*value.inputContainerUsed.size.value*1000000);
+			}else if(value.inputContainerUsed.concentration.unit==="ng/ul") {
+				var requiredVolume=value.outputContainerUsed.concentration.value*value.outputContainerUsed.volume.value/(value.inputContainerUsed.concentration.value*1000000/(660*value.inputContainerUsed.size.value));
 				
 				if(value.inputContainerUsed.experimentProperties===undefined || value.inputContainerUsed.experimentProperties!==null){
 					value.inputContainerUsed.experimentProperties={};
@@ -319,11 +321,11 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 	
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
 	//defined new atomictransfertMethod
-	atmService.newAtomicTransfertMethod = function(){
+	atmService.newAtomicTransfertMethod =  function(line, column){
 		return {
 			class:"OneToOne",
-			line:"1", 
-			column:"1", 				
+			line:line, 
+			column:column, 				
 			inputContainerUseds:new Array(0), 
 			outputContainerUseds:new Array(0)
 		};
@@ -366,8 +368,8 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 	};
 
 	$scope.setAdditionnalButtons([{
-		isDisabled : function(){return false;},// function(){return $scope.isCreationMode();} ,
-		isShow:function(){return true},
+		isDisabled : function(){return $scope.isNewState();} ,
+		isShow:function(){return !$scope.isNewState();},
 		click:generateSampleSheet,
 		label:Messages("experiments.sampleSheet")
 	}]);

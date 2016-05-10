@@ -5,6 +5,7 @@ package controllers.instruments.io.utils;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -186,6 +187,14 @@ public class OutputHelper {
 		return container.experimentProperties.get(propertyName).value.toString().replace(".",",") ;
 	}
 	
+	public static String getInputContainerUsedExperimentProperty(InputContainerUsed container, String propertyName,int scale){
+		Logger.debug(" valeur "+propertyName +" : "+container.experimentProperties.get(propertyName).value);
+		if(!container.experimentProperties.get(propertyName).value.equals("")){
+			return new BigDecimal(container.experimentProperties.get(propertyName).value.toString()).setScale(scale, BigDecimal.ROUND_UP).toString().replace(".",",") ;
+		}
+		return "";
+	}
+	
 	public static Object getExperimentProperty(AbstractContainerUsed container, String propertyName){
 		if(container.experimentProperties.containsKey(propertyName)){
 			return container.experimentProperties.get(propertyName).value;
@@ -254,4 +263,5 @@ public class OutputHelper {
 		
 		return getNumberPositionInPlateByColumn(icu1.locationOnContainerSupport.line, icu1.locationOnContainerSupport.column) < getNumberPositionInPlateByColumn(icu2.locationOnContainerSupport.line, icu2.locationOnContainerSupport.column);
 	}
+
 }
