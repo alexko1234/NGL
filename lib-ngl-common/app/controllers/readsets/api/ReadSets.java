@@ -212,6 +212,10 @@ public class ReadSets extends ReadSetsController{
 			queries.add(DBQuery.is("productionValuation.user", form.productionValuationUser));
 		}
 
+		if(null != form.productionValuationCriteriaCode){
+			queries.add(DBQuery.is("productionValuation.criteriaCode", form.productionValuationCriteriaCode));
+		}
+		
 		if (CollectionUtils.isNotEmpty(form.sampleCategoryCodes)) { //all
 			queries.add(DBQuery.in("sampleOnContainer.sampleCategoryCode", form.sampleCategoryCodes));
 		}
