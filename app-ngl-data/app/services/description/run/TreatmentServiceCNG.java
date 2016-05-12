@@ -418,6 +418,12 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("+/-","intensityCycle1Std",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1,Level.CODE.Read2), Integer.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Intensity cycle 20","intensityCycle20Perc",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Double.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("+/-","intensityCycle20PercStd",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Double.class, false, "single"));
+		
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Rendement total (Gb)","yieldTotal",LevelService.getLevels(Level.CODE.Run), Double.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Rendement total non indexé (Gb)","nonIndexedYieldTotal",LevelService.getLevels(Level.CODE.Run), Double.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Q30 total","Q30PercTotal",LevelService.getLevels(Level.CODE.Run), Double.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Q30 total non indexé","nonIndexedQ30PercTotal",LevelService.getLevels(Level.CODE.Run), Double.class, false, "single"));
+		
 		return propertyDefinitions;
 	}
 	
