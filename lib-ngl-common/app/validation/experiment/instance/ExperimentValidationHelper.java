@@ -63,9 +63,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			contextValidation.addKeyToRootKeyName("experimentProperties");
 			ValidationHelper.validateProperties(contextValidation, properties, exType.getPropertiesDefinitionDefaultLevel(), true, true, null, null);
 			contextValidation.removeKeyFromRootKeyName("experimentProperties");
-		}
-		
-		
+		}		
 	}
 
 	public static void validateState(String typeCode, State state, ContextValidation contextValidation) {

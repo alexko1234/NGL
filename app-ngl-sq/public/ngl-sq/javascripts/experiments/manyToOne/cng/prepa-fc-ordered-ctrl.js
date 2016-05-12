@@ -23,7 +23,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 					 "edit":false,
 					 "hide":true,
 		        	 "type":"text",
-		        	 "position":1,
+		        	 "position":1.2,
 		        	 "extraHeaders":{0:"lib normalisée"}
 		         },	
 		         {
@@ -114,15 +114,20 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 	
 	atmToSingleDatatable.data.setColumnsConfig(columns);
 	
-	atmToSingleDatatable.convertOutputPropertiesToDatatableColumn = function(property){
-		return   this.$commonATM.convertSinglePropertyToDatatableColumn(property,"outputContainerUsed.experimentProperties.",{"0":"prep FC"});
+	atmToSingleDatatable.convertOutputPropertiesToDatatableColumn = function(property, pName){
+		return   this.$commonATM.convertSinglePropertyToDatatableColumn(property,"outputContainerUsed."+pName+".",{"0":"prep FC"});
 		
 	};
-	atmToSingleDatatable.convertInputPropertiesToDatatableColumn = function(property){
-		return   this.$commonATM.convertSinglePropertyToDatatableColumn(property,"inputContainerUsed.experimentProperties.",{"0":"Dénaturation - neutralisation"});
+	atmToSingleDatatable.convertInputPropertiesToDatatableColumn = function(property, pName){
+		return   this.$commonATM.convertSinglePropertyToDatatableColumn(property,"inputContainerUsed."+pName+".",{"0":"Dénaturation - neutralisation"});
 	};
 	
 	atmToSingleDatatable.addExperimentPropertiesToDatatable($scope.experimentType.propertiesDefinitions);
+	
+	$scope.$watch("instrumentType", function(newValue, OldValue){
+		if(newValue)
+			atmToSingleDatatable.addInstrumentPropertiesToDatatable(newValue.propertiesDefinitions);
+	})
 	
 	
 	var generateSampleSheet = function(){

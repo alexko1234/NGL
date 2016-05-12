@@ -202,6 +202,13 @@ public class OutputHelper {
 		return null;
 	}
 	
+	public static Object getInstrumentProperty(AbstractContainerUsed container, String propertyName){
+		if(container.instrumentProperties.containsKey(propertyName)){
+			return container.instrumentProperties.get(propertyName).value;
+		}
+		return null;
+	}
+	
 	public static TagModel getTagModel(List<Container> containers) {
 		List<PropertyValue> tags = containers.stream().map((Container container) -> container.contents)
 			.flatMap(List::stream)
