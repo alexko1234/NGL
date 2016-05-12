@@ -5,6 +5,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import models.laboratory.common.description.State;
+import models.utils.Model;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -138,5 +139,13 @@ public abstract class AbstractDAO<T> {
 		if(null != o && null != code){
 			Cache.set(entityClass.toString()+"."+code, o, 60 * 60);
 		}		
+	}
+	
+	public void cleanCache(){
+		List<T> l = this.findAll();
+		l.forEach(o -> {
+			Cache.remove(entityClass.toString()+"."+((Model)o).code);
+		});
+		
 	}
 }

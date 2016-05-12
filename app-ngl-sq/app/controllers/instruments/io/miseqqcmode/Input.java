@@ -1,4 +1,4 @@
-package controllers.instruments.io.miseq;
+package controllers.instruments.io.miseqqcmode;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

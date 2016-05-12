@@ -157,7 +157,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		l.add(newExperimentType("QC Miseq","miseq-qc", null, 900,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
 				getPropertyDefinitionsQCMiseq(), 
-				getInstrumentUsedTypes("MISEQ"),"OneToVoid", 
+				getInstrumentUsedTypes("MISEQ-QC-MODE"),"OneToVoid", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
 			
@@ -242,7 +242,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		//FDS 15/04/2016 -- JIRA NGL-894: processus court pour X5: ajout "ext-to-norm-fc-ordered-depot" dans les previous
 		newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), 
 				false, false, false, 
-				getExperimentTypeNodes("ext-to-norm-fc-ordered-depot", "prep-pcr-free"), null, null, getExperimentTypes("aliquoting")
+				getExperimentTypeNodes("ext-to-norm-fc-ordered-depot", "prep-pcr-free"), null, getExperimentTypes("miseq-qc"), getExperimentTypes("aliquoting")
 				).save();
 		
 		newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),

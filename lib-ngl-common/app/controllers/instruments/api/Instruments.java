@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import models.laboratory.instrument.description.Instrument;
+import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
@@ -76,6 +77,7 @@ public class Instruments extends CommonController{
 		
 		if (code.equals(instrumentInput.code)) {
 				instrumentInput.update();
+				InstrumentUsedType.find.cleanCache();
 				return ok(Json.toJson(instrumentInput));
 			
 		}else{

@@ -64,7 +64,7 @@ public class ProtocolServiceCNG {
 		
 		// protocoles communs a plusieurs Experiment Types
 		lp.add(newProtocol("sop-1","SOP 1","?","1","production", InstanceFactory.setExperimentTypeCodes("illumina-depot","denat-dil-lib","aliquoting")));
-		lp.add(newProtocol("sop-en-attente","SOP en attente","?","1","production", InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered","lib-normalization","miseq-qc")));
+		lp.add(newProtocol("sop-en-attente","SOP en attente","?","1","production", InstanceFactory.setExperimentTypeCodes("prepa-fc-ordered","lib-normalization")));
 		
 		//lp.add(newProtocol("1a-sop-ill-pcrfree-080915","1A_SOP_ILL_PCRfree_080915", "?","1","production",InstanceFactory.setExperimentTypeCodes("prep-pcr-free","labchip-migration-profile" )));
 		lp.add(newProtocol("1a-sop-ill-pcrfree","1A_SOP_ILL_PCRfree_270116", "?","1","production",InstanceFactory.setExperimentTypeCodes("prep-pcr-free","labchip-migration-profile" )));
@@ -75,6 +75,9 @@ public class ProtocolServiceCNG {
 		lp.add(newProtocol("PrepFC_CBot_ptr_sox139_1","PrepFC_CBot_ptr_sox139_1","","1","production", InstanceFactory.setExperimentTypeCodes("prepa-flowcell")));
 		//lp.add(newProtocol("sop-1","SOP 1","","1","production", InstanceFactory.setExperimentTypeCodes("denat-dil-lib")));
 		//lp.add(newProtocol("sop-1","SOP 1","","1","production", InstanceFactory.setExperimentTypeCodes("aliquoting")));
+		
+		
+		lp.add(newProtocol("7-sop-miseq","7_SOP_Miseq","?","1","production", InstanceFactory.setExperimentTypeCodes("miseq-qc")));
 		
 		for(Protocol protocole:lp){
 			InstanceHelpers.save(InstanceConstants.PROTOCOL_COLL_NAME, protocole,ctx);

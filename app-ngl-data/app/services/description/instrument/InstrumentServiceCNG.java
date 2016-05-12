@@ -50,6 +50,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		l.add(newInstrumentCategory("CBot","cbot"));
 		
 		l.add(newInstrumentCategory("Séquenceur Illumina","illumina-sequencer"));
+		l.add(newInstrumentCategory("QC Séquenceur Illumina","qc-illumina-sequencer"));
 		l.add(newInstrumentCategory("Cartographie Optique Opgen","opt-map-opgen"));
 		l.add(newInstrumentCategory("Nanopore","nanopore"));
 		l.add(newInstrumentCategory("Extérieur","extseq"));
@@ -95,8 +96,14 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	
 		l.add(newInstrumentUsedType("MISEQ", "MISEQ", InstrumentCategory.find.findByCode("illumina-sequencer"), getMiseqProperties(), 
 				getInstrumentMiSeq(),
-				getContainerSupportCategories(new String[]{"96-well-plate", "flowcell-1"}), null, 
+				getContainerSupportCategories(new String[]{"flowcell-1"}), null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
+		l.add(newInstrumentUsedType("QC MISEQ", "MISEQ-QC-MODE", InstrumentCategory.find.findByCode("qc-illumina-sequencer"), getMiseqQCProperties(), 
+				getInstrumentMiSeqQC(),
+				getContainerSupportCategories(new String[]{"96-well-plate","tube"}), null, 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
 		
 		l.add(newInstrumentUsedType("HISEQ2000", "HISEQ2000", InstrumentCategory.find.findByCode("illumina-sequencer"), getHiseq2000Properties(), 
 				getInstrumentHiseq2000(),
@@ -286,6 +293,20 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
         return propertyDefinitions;
 	}
 	
+	private static List<PropertyDefinition> getMiseqQCProperties() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		propertyDefinitions.add(newPropertiesDefinition("Nom cassette Miseq", "miseqReagentCassette",LevelService.getLevels(Level.CODE.Instrument),String.class,true,"single",100));
+        propertyDefinitions.add(newPropertiesDefinition("Type lectures", "sequencingProgramType", LevelService.getLevels(Level.CODE.Instrument),String.class, true,DescriptionFactory.newValues("SR","PE"), "single",200));
+        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read1", "nbCyclesRead1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",300));
+        //propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index1", "nbCyclesReadIndex1", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",400));
+        propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read2", "nbCyclesRead2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",600));
+        //propertyDefinitions.add(newPropertiesDefinition("Nb cycles Read Index2", "nbCyclesReadIndex2", LevelService.getLevels(Level.CODE.Instrument),Integer.class, true, "single",500));
+       
+        propertyDefinitions.add(newPropertiesDefinition("Genome folder", "genomeFolder", LevelService.getLevels(Level.CODE.Instrument),String.class,true, null, null, "single", 700, true, "Homo_sapiens\\UCSC\\hg19\\Sequence\\WholeGenomeFasta", null));
+        return propertyDefinitions;
+	}
+	
 	private static List<PropertyDefinition> getNextseq500Properties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
@@ -430,8 +451,16 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	/*** get lists methods ***/
 	private static List<Instrument> getInstrumentMiSeq() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("MISEQ1", "MISEQ1", null, false, "/env/ig/atelier/illumina/cng/MISEQ1/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
+		instruments.add(createInstrument("MISEQ1", "MISEQ1", null, true, "/env/ig/atelier/illumina/cng/MISEQ1/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
 		instruments.add(createInstrument("MISEQ2", "MISEQ2", null, false, "/env/ig/atelier/illumina/cng/MISEQ2/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
+		return instruments;
+	}
+	
+	/*** get lists methods ***/
+	private static List<Instrument> getInstrumentMiSeqQC() throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("MISEQ1-QC", "MISEQ1 QC", null, false, "/env/ig/atelier/illumina/cng/MISEQ1/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
+		instruments.add(createInstrument("MISEQ2-QC", "MISEQ2 QC", null, true, "/env/ig/atelier/illumina/cng/MISEQ2/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
 		return instruments;
 	}
 	

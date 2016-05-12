@@ -46,5 +46,9 @@ public class InstrumentUsedType extends CommonInfoType{
 		public List<InstrumentUsedType> findByExperimentTypeCode(String instrumentUsedTypeCode) throws DAOException{
 			return ((InstrumentUsedTypeDAO)getInstance()).findByExperimentTypeCode(instrumentUsedTypeCode);
 		}
+		
+		public void cleanCache() throws DAOException{
+			 ((InstrumentUsedTypeDAO)getInstance()).cleanCache();
+		}
 	}
 }
