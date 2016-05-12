@@ -420,7 +420,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
-				 newValues("programme 1_normalisation"), null, null , null, "single", null, false ,null, null));
+				 newValues("programme 1_normalisation"), "single", null, false ,null, null));
 		//"program-normalisation","programme 1_normalisation"
 		return l;
 	}
@@ -430,7 +430,13 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
 		// propertie Janus + properties cbot
-		l.addAll(getJanusProperties());
+		//l.addAll(getJanusProperties());
+		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
+				 newValues("Clusterstripprepworklist"), "single", null, false ,null, null));
+		
+		l.add(newPropertiesDefinition("Source", "source", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, "N",
+				 newValues("1","2","3","4"), "single", 1, true ,null, null));
+		
 		l.addAll(getCBotProperties());
 		
 		return l;
