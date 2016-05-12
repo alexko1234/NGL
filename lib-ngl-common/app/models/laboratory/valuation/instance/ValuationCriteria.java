@@ -19,6 +19,8 @@ public class ValuationCriteria extends DBObject implements IValidation{
 	
 	public List<Property> properties;
 	
+	public Boolean active = Boolean.TRUE;
+	
 	public TraceInformation traceInformation;
 	
 	@Override

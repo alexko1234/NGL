@@ -70,6 +70,10 @@ public class ValuationCriterias extends CommonController {
 			queries.add(DBQuery.in("typeCodes", form.typeCode));
 		}
 		
+		//Filter by active property
+		queries.add(DBQuery.is("active", Boolean.TRUE));
+		
+		
 		if(queries.size() > 0){
 			query = DBQuery.and(queries.toArray(new Query[queries.size()]));
 		}
