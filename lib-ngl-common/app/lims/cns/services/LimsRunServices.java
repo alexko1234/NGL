@@ -417,7 +417,7 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 					dao.deleteRun(run.code);
 					dao.deleteFlowcellNGL(run.containerSupportCode);					
 				} catch(Throwable t){
-					logger.error("Delete RUN : "+run.code+" : "+t.getMessage(),t);
+					throw new RuntimeException("Delete RUN : "+run.code+" : "+t.getMessage(),t);
 				}
 			}
 			
@@ -464,8 +464,12 @@ Conta mat ori + duplicat>30 + rep bases	46	TAXO-contaMatOri ; Qlte-duplicat ; Ql
 				dao.insertRun(run, ds);
 				dao.insertLanes(run.lanes, ds);
 				for(Map.Entry<String, ReadSet> entry : mapReadSets.entrySet()){
+					try{
 					dao.insertReadSet(entry.getValue(), mapBanques.get(entry.getKey()));
 					dao.insertFiles(entry.getValue(), false);
+					}catch(NullPointerException e){
+						Logger.error("No readSet "+entry.getValue());
+					}
 				}
 				
 				dao.dispatchRun(run);

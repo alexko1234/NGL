@@ -243,12 +243,16 @@ public class LimsAbandonDAO {
 
     public void insertLanes(List<Lane> lanes, DepotSolexa ds){
     	for(Lane lane : lanes){
+    		try{
     		LaneSolexa ls = convertLaneToLaneSolexa(lane, ds);
     		Logger.info("insertLanes : "+ls);
     		this.jdbcTemplate.update("pc_Lanemetrics @lanenum=?, @matmaco=?, @lmnbseq=?, @lmnbclustfiltr=?, @lmperseqfiltr=?, @lmnbclust=?, "
     				+ "@lmperclustfiltr=?, @lmnbbase=?, @lmnbcycle=?, @pistnbcycle=?, @lmphasing=?, @lmprephasing=?",
     				ls.lanenum, ls.matmaco, ls.lmnbseq, ls.lmnbclustfiltr, ls.lmperseqfiltr, ls.lmnbclust,
     				ls.lmperclustfiltr,ls.lmnbbase,ls.lmnbcycle,ls.pistnbcycle,ls.lmphasing,ls.lmprephasing);
+    		}catch(NullPointerException e){
+    			Logger.error("No lane "+lane.number);
+    		}
     	}
     }
     
@@ -336,7 +340,7 @@ public class LimsAbandonDAO {
 			@lbscorequal numeric(5,2) 
 		 */
 		Logger.info("insertReadSet : "+rs.code);
-		
+
 		Long lseqnbseqval = (Long) getNGSRGProperty(rs.treatments.get("ngsrg"),"nbCluster");
 		Long lseqnbbase = (Long) getNGSRGProperty(rs.treatments.get("ngsrg"),"nbBases");
 		Double lbscoreQ30 = (Double) getNGSRGProperty(rs.treatments.get("ngsrg"),"Q30");
