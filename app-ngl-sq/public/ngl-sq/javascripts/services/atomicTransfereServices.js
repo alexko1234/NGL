@@ -339,12 +339,13 @@ angular.module('atomicTransfereServices', [])
 						columns.push(newColumn);
 					}
 				},				
-				convertOutputPropertiesToDatatableColumn : function(property){
-					return  $commonATM.convertTypePropertyToDatatableColumn(property,"outputContainerUsed.experimentProperties.",{"0":Messages("experiments.outputs")});
+				convertOutputPropertiesToDatatableColumn : function(property, pName){
+					return  $commonATM.convertTypePropertyToDatatableColumn(property,"outputContainerUsed."+pName+".",{"0":Messages("experiments.outputs")});
 				},
-				convertInputPropertiesToDatatableColumn : function(property){
-					return  $commonATM.convertTypePropertyToDatatableColumn(property,"inputContainerUsed.experimentProperties.",{"0":Messages("experiments.inputs")});
-				},				
+				convertInputPropertiesToDatatableColumn : function(property, pName){
+					return  $commonATM.convertTypePropertyToDatatableColumn(property,"inputContainerUsed."+pName+".",{"0":Messages("experiments.inputs")});
+				},	
+				
 				addExperimentPropertiesToDatatable : function(experimentProperties){
 					var expProperties = experimentProperties;
 					var newColums = []; 
@@ -353,13 +354,34 @@ angular.module('atomicTransfereServices', [])
 						if(!$that.$outputIsVoid){
 							var outNewColumn = $filter('filter')(expProperties, 'ContainerOut');
 							angular.forEach(outNewColumn, function(property){
-								$that.addColumnToDatatable(this, $that.convertOutputPropertiesToDatatableColumn(property));														
+								$that.addColumnToDatatable(this, $that.convertOutputPropertiesToDatatableColumn(property, "experimentProperties"));														
 							}, newColums);
 						}
 						
 						var inNewColumn = $filter('filter')(expProperties, 'ContainerIn')
 						angular.forEach(inNewColumn, function(property){
-							$that.addColumnToDatatable(this, $that.convertInputPropertiesToDatatableColumn(property));														
+							$that.addColumnToDatatable(this, $that.convertInputPropertiesToDatatableColumn(property, "experimentProperties"));														
+						}, newColums);
+												
+					}
+					this.data.setColumnsConfig(this.data.getColumnsConfig().concat(newColums))
+				},
+				
+				addInstrumentPropertiesToDatatable : function(instrumentProperties){
+					var instProperties = instrumentProperties;
+					var newColums = []; 
+					var $that = this;
+					if(instProperties != undefined && instProperties != null){
+						if(!$that.$outputIsVoid){
+							var outNewColumn = $filter('filter')(instProperties, 'ContainerOut');
+							angular.forEach(outNewColumn, function(property){
+								$that.addColumnToDatatable(this, $that.convertOutputPropertiesToDatatableColumn(property, "instrumentProperties"));														
+							}, newColums);
+						}
+						
+						var inNewColumn = $filter('filter')(instProperties, 'ContainerIn')
+						angular.forEach(inNewColumn, function(property){
+							$that.addColumnToDatatable(this, $that.convertInputPropertiesToDatatableColumn(property, "instrumentProperties"));														
 						}, newColums);
 												
 					}
@@ -509,7 +531,7 @@ angular.module('atomicTransfereServices', [])
 					}					
 				},
 				
-				experimentToView:function(experiment, experimentType, showExpProperties){
+				experimentToView:function(experiment, experimentType){
 					if(null === experiment || undefined === experiment){
 						throw 'experiment is required';
 					}
@@ -518,9 +540,7 @@ angular.module('atomicTransfereServices', [])
 					}else{
 						this.addNewAtomicTransfertMethodsInDatatable();
 					}
-					if(showExpProperties || showExpProperties === undefined){
-						this.addExperimentPropertiesToDatatable(experimentType.propertiesDefinitions);
-					}
+					this.addExperimentPropertiesToDatatable(experimentType.propertiesDefinitions);					
 				},
 				
 				refreshViewFromExperiment : function(experiment){
