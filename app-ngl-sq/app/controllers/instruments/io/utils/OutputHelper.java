@@ -96,7 +96,7 @@ public class OutputHelper {
 		return index;
 	}
 	
-	public static String getSequence(Index index, TagModel tagModel){
+	public static String getSequence(Index index, TagModel tagModel, String instrumentTypeCode){
 		if("NONE".equals(tagModel.tagType)){
 			return null;
 		}else if("SINGLE-INDEX".equals(tagModel.tagType)){
@@ -106,14 +106,20 @@ public class OutputHelper {
 				return getIndex(index.sequence, tagModel.maxTag1Size);
 			}
 		}else if("DUAL-INDEX".equals(tagModel.tagType)){
+			String sequence = null;
 			if(null == index || "MID".equals(index.categoryCode)){
-				return StringUtils.repeat("N", tagModel.maxTag1Size)+"-"+StringUtils.repeat("N", tagModel.maxTag2Size);
+				sequence = StringUtils.repeat("N", tagModel.maxTag1Size)+"-"+StringUtils.repeat("N", tagModel.maxTag2Size);
 			}else if("SINGLE-INDEX".equals(index.categoryCode)){
-				return getIndex(index.sequence, tagModel.maxTag1Size)+"-"+getIndex(null, tagModel.maxTag2Size);
+				sequence = getIndex(index.sequence, tagModel.maxTag1Size)+"-"+getIndex(null, tagModel.maxTag2Size);
 			}else {
 				String[] sequences = index.sequence.split("-",2);
-				return getIndex(sequences[0], tagModel.maxTag1Size)+"-"+getIndex(sequences[1], tagModel.maxTag2Size);
+				sequence = getIndex(sequences[0], tagModel.maxTag1Size)+"-"+getIndex(sequences[1], tagModel.maxTag2Size);
 			}
+			if("HISEQX".equals(instrumentTypeCode)){
+				sequence = sequence.split("-")[0];
+			}
+			
+			return sequence;
 		}else{
 			throw new RuntimeException("Index not manage "+tagModel.tagType);
 		}
@@ -135,10 +141,6 @@ public class OutputHelper {
 		}else{
 			return null;
 		}
-	}
-	
-	public static String getSequence(Index index, TagModel tagModel,int nbTagDisplay){
-		return getSequence(index,tagModel).split("-",2)[nbTagDisplay-1];		
 	}
 	
 	public static String getContentProperty(Content content, String propertyName){
