@@ -592,9 +592,11 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 
 
 	$scope.searchReagents = function(){
-		$http.get(jsRoutes.controllers.reagents.api.Reagents.list().url, {params:{"barCode":$scope.searchBarCode, "boxBarCode":$scope.searchBarCode}})
+		console.log ("je fais un search de reagent");
+		//$http.get(jsRoutes.controllers.reagents.api.Reagents.list().url, {params:{"barCode":$scope.searchBarCode, "boxBarCode":$scope.searchBarCode}})
+		$http.get(jsRoutes.controllers.reagents.api.KitCatalogs.list().url, {params:{"providerID":$scope.searchBarCode, "boxBarCode":$scope.searchBarCode}})
 		.success(function(data, status,headers,config){
-			console.log(data);
+			console.log("bon if" + data);
 			var datatableData = $scope.datatableReagent.getData();
 			for(var i=0;i<data.length;i++){
 				var closureData = data[i];
@@ -619,6 +621,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.reagentCodeErrorClass = ""
 		$scope.reagentCodeError = "";
 		if($scope.searchBarCode !== undefined && $scope.searchBarCode !== ""){
+			console.log("mauvais if");
 			$http.get(jsRoutes.controllers.reagents.api.Reagents.list().url, {params:{"barCode":$scope.searchBarCode, "boxBarCode":$scope.searchBarCode}})
 			.success(function(data, status,headers,config){
 				console.log(data);

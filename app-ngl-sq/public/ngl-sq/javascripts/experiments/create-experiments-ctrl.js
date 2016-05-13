@@ -168,7 +168,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 
 
 	$scope.searchReagents = function(){
-		$http.get(jsRoutes.controllers.reagents.api.Reagents.list().url, {params:{"providerID":$scope.searchBarCode, "boxBarCode":$scope.searchBarCode}})
+		$http.get(jsRoutes.controllers.reagents.api.Reagents.list().url, {params:{"providerID":$scope.searchBarCode, "boxBarCode":$scope.searchBarCode, "isActive":true}})
 		.success(function(data, status,headers,config){
 			console.log(data);
 			var datatableData = $scope.datatableReagent.getData();
@@ -195,7 +195,7 @@ angular.module('home').controller('CreateNewCtrl',['$scope','$sce', '$window','$
 		$scope.reagentCodeErrorClass = ""
 		$scope.reagentCodeError = "";
 		if($scope.searchBarCode !== undefined && $scope.searchBarCode !== ""){
-			$http.get(jsRoutes.controllers.reagents.api.Reagents.list().url, {params:{"providerID":$scope.searchBarCode, "boxBarCode":$scope.searchBarCode}})
+			$http.get(jsRoutes.controllers.reagents.api.Reagents.list().url, {params:{"providerID":$scope.searchBarCode, "boxBarCode":$scope.searchBarCode, "isActive":true}})
 			.success(function(data, status,headers,config){
 				console.log(data);
 				var datatableData = $scope.datatableReagent.getData();
