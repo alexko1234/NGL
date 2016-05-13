@@ -1,121 +1,58 @@
 @()
 @import views.html.helper._
 
-@tabLabelValue(config: String)(msg: String)(data: Html) = {
-	<label class="col-md-6 col-lg-6 control-label" ng-if="@data">@msg</label>
-	<div class="col-md-6 col-lg-6" ng-if="@data">
-		@if(config == "date"){
-			<p class="form-control-static" ng-bind="@data|date:'@Messages("date.format")'" />
-		} 
-		@if(config == "xpTypeCodes") {
-			<div class="form-control-static" list-resize="@data|unique|codes:'type'" list-resize-min-size='3' />
-		} 
-		@if(config == "none") {
-			<p class="form-control-static" ng-bind="@data" />
-		}	
-	</div>
-}
-@panelParent(title: xml.Elem)(value: Html) = {
-	<div class="col-md-4 col-lg-4 col-xs-4">
-		<div class="panel panel-default">
-			<div class="panel-heading">@title</div>
-			<div class="panel-body">@value</div>
-		</div>
-	</div>
-}
-@alert(config: String)(codeContainer: xml.Elem)(value: Html) = {
-	<div class="col-md-2 col-lg-2 col-xs-2">	
+@alert(config: String)(codeContainer: xml.Elem)() = {
+	<div class="col-xs-1 col-md-1 col-lg-1">
 		<div class="alert alert-@config" role="alert">
-			@codeContainer</br>
-			
-				@value
-			
+			@codeContainer
 		</div>
 	</div>
 }
-<form class="form-horizontal">
-	<div class="row">
-			
-				@***
-				<div ng-repeat="parent in container.treeOfLife.from.containers track by $id(parent)">
-					@panelParent(<h5 ng-bind="parent.code" />){
-						<div ng-repeat="(key,value) in parent">
-							<label class="col-md-6 col-lg-6 control-label" ng-bind="key" ng-if="value" />
-							<div class="col-md-6 col-lg-6" ng-if="value"><p class="form-control-static" ng-bind="value" /></div>
-						</div>
-					}
-				</div>
-				
-				<expander class="expander" expander-title="title">
-	           		{{text}}
-	       		</expander>			
-				
-			
-				<div ng-repeat="array in listContainersParents track by $id(array)">
-					<div ng-repeat="parent in array track by $id(parent)">
-						@alert(<strong ng-bind="parent" />){
-							@tabLabelValue("xpTypeCodes")(Messages("containers.treeTabs.fromTransformationTypeCodes")){
-								parent.fromTransformationTypeCodes
-							}
-							@tabLabelValue("date")(Messages("containers.treeTabs.creationDate")){
-								parent.traceInformation.creationDate
-							}
-							@tabLabelValue("date")(Messages("containers.treeTabs.modificationDate")){
-								parent.traceInformation.modifyDate
-							}
-						}
-					</div>
-				</div>
-				
-				<div ng-if="treeElems" ng-repeat="elem in treeElems track by elem.container.code">
-					<div ng-if="elem.container.code === container.code">
-						@alert("danger")(<strong ng-bind="elem.container.code" />){
-							@columnLabelValue(Messages("containers.treeTabs.code")){
-								<p class="form-control-static" ng-bind="elem.container.code" />
-							}
-						}
-					</div>
-					<div ng-repeat="child in elem.linksChildren track by $id(child)">
-						<div ng-if="elem.container.code === child">
-						@alert("info")(<strong ng-bind="elem.container.code" />){
-							@columnLabelValue(Messages("containers.treeTabs.code")){
-								<p class="form-control-static" ng-bind="elem.container.code" />
-							}
-						}
-						</div>
-					</div>
+
+
+
+<div class="row">
+
+	
+		<div ng-repeat="path in pathsParentsCurrent">
+		<div class="col-md-12 col-lg-12">
+		
+			<div ng-if="path[0].childNodes.includes(firstNode)">
+				<div ng-repeat="node in path | orderBy:'indexFromCurrent'">
+							
 					
+						@alert("success")(<strong ng-bind="node.container.code" />)
+					
+						
 				</div>
-				
-				
-				***@
-				<div ng-repeat="path in parentsInPaths track by $id(path)">
-					<div ng-repeat="parent in path track by $id(parent)">
-						@alert("success")(<strong ng-bind="parent.code" />){
-							@columnLabelValue(Messages("containers.treeTabs.code")){
-								<p class="form-control-static" ng-bind="parent.code" />
-							}
-						}
+			</div>
+			
+		</div>	
+		</div>
+	
+	
+		<div class="col-md-12 col-lg-12">
+						
+				@alert("danger")(<strong ng-bind="firstNode.container.code" />)	
+			
+		</div>
+	
+	
+		<div ng-repeat="path in pathsChildrenCurrent">
+		<div class="col-md-12 col-lg-12">	
+			
+			<div ng-if="path[0].parentNodes.includes(firstNode)">
+				<div ng-repeat="node in path | orderBy: '-indexFromCurrent'">
+					
+					<div ng-if="">
+						@alert("info")(<strong ng-bind="node.container.code" />)	
 					</div>
+										
 				</div>
-				
-				@alert("danger")(<strong ng-bind="container.code" />){
-					@columnLabelValue(Messages("containers.treeTabs.code")){
-						<p class="form-control-static" ng-bind="container.code" />
-					}
-				}
-				
-				<div ng-if="children" ng-repeat="child in children track by $id(child)">
-					@alert("info")(<strong ng-bind="child.code" />){
-						@columnLabelValue(Messages("containers.treeTabs.code")){
-							<p class="form-control-static" ng-bind="child.code" />
-						}
-					}
-				</div>
-				
-				
-				
-				
-				
-	</div>
-</form>
+			</div>
+			
+		</div>	
+		</div>
+
+	
+</div>

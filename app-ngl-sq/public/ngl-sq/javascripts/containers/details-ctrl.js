@@ -21,14 +21,14 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		$http.get(jsRoutes.controllers.containers.api.Containers.get($routeParams.code).url).then(function(response) {
 			
 			$scope.container = response.data;
-			
+			console.info($scope.container);
 			// Verification...
-			/*
+			
 			if($scope.container){
 				initTreeOfLife($scope.container);		
 			}else{
 				console.info("Aucun container sous le code: " + $routeParams.code);
-			}*/
+			}
 
 			if(tabService.getTabs().length == 0){			
 				tabService.addTabs({label:Messages('containers.tabs.search'),href:jsRoutes.controllers.containers.tpl.Containers.home("search").url,remove:true});
@@ -46,7 +46,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	}
 	init();
 	
-	/*
+	
 	var initTreeOfLife = function(currentContainer){
 		//extract parent container codes
 		var codes = {parentContainerCodes : []};
@@ -68,13 +68,14 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			};
 			
 			containerNodes[$scope.container.code] = newNode($scope.container);
-				
+
+
 			angular.forEach(results, function(result){
 				angular.forEach(result.data, function(container){
 					this[container.code] = newNode(container);
 				}, this)
 			}, containerNodes)
-			
+
 			
 			var updateParentNodes = function(currentContainerNode, containerNodes){
 				//only if parents
@@ -95,8 +96,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 							
 						}, currentContainerNode)
 					}
-				}
-				
+				}			
 			};
 						
 			for(var key in containerNodes){
@@ -134,36 +134,66 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			
 			
 			//find the first nodes
+			var pathParent=[];
+			var findFirstNode = function(currentContainer){
+				angular.forEach(containerNodes, function(containerNode){
+					// run on roots parents
+					angular.forEach(currentContainer.parentNodes, function(parentNode){		
+						if(parentNode === containerNode){
+							pathParent.push(containerNode);
+							if(pathParent[pathParent.length-1].parentNodes.length > 0){
+								findFirstNode(containerNode);
+							}else{
+								this[pathParent[0].container.code] = pathParent;
+								pathParent = [];
+							}
+						}
+					}, $scope.pathsParentsCurrent);
+				});	
+			};
+			
+			var pathChildren=[];
+			var findLastNode = function(currentContainer){
+				angular.forEach(containerNodes, function(containerNode){
+					// run through roots children
+					angular.forEach(currentContainer.childNodes, function(childNode){
+						if(childNode === containerNode){
+							pathChildren.push(containerNode);
+							if(pathChildren[pathChildren.length-1].childNodes.length > 0){
+								findLastNode(containerNode)
+							}else{
+								this[pathChildren[0].container.code] = pathChildren;
+								pathChildren = [];
+							}
+						}
+					}, $scope.pathsChildrenCurrent);
+				});
+			}
+			
+			
+			// Initialisation of $scope.pathsFromCurrent
+			$scope.pathsParentsCurrent = {};
+			$scope.pathsChildrenCurrent = {};
+			findFirstNode(currentContainerNode);
+			findLastNode(currentContainerNode);
+			
+			
+			// Add the currentContainer to the map
+			$scope.firstNode = currentContainerNode;
+			
+			
+			console.log(containerNodes);
+			console.log($scope.pathsParentsCurrent);
+			console.log($scope.pathsChildrenCurrent);
+			console.log($scope.firstNode);
+			//console.log(paths);
 			
 			console.log("3");
 			
-			
-			
-		
-			var currentNode = newNode($scope.container);
-			updateNode(currentNode, containers);
-
-		});
-		
-		
-		 
-		
-
-		//load parent containers
-		$http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {codes:codes.parentContainerCodes}}).then(function(response) {
-			var parentContainers = response.data;
-			
-			//load children containers
-			$http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {treeOfLifePathRegex:currentContainer.code}}).then(function(response) {
-				var 
-			}
-			
-			console.log("2");
 		});
 		
 		console.log("1");
-	
-	}	*/
-	
+		
+	}	
 	
 }]);
