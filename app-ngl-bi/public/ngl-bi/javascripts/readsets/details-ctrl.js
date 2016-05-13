@@ -170,7 +170,7 @@
 			}
 			
 			$scope.lists.refresh.resolutions({typeCode:$scope.readset.typeCode});
-			$scope.lists.refresh.valuationCriterias({typeCode:$scope.readset.typeCode, objectTypeCode:"ReadSet"});
+			$scope.lists.refresh.valuationCriterias({typeCode:$scope.readset.typeCode, objectTypeCode:"ReadSet", orderBy:'name'});
 			$scope.lists.refresh.states({objectTypeCode:"ReadSet"});
 			
 			if(angular.isDefined($scope.readset.treatments)){				

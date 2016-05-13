@@ -38,15 +38,15 @@ public class Main extends CommonController{
       return ok(listPermissions()).as("application/javascript");
    }
    private static String listPermissions() {
-      List<Permission> permissions = Permission.find.findByUserLogin(Context.current().session().get("NGL_FILTER_USER"));
-	  StringBuilder sb = new StringBuilder();
-	  sb.append("Permissions.check=(function(param){var listPermissions=[");
-	  for(Permission p:permissions){
-		  sb.append("\"").append(p.code).append("\",");
-	  }
-	  sb.deleteCharAt(sb.lastIndexOf(","));
-	  sb.append("];return(listPermissions.includes(param));})");
-      return sb.toString();
+	   List<Permission> permissions = Permission.find.findByUserLogin(Context.current().session().get("NGL_FILTER_USER"));
+	   StringBuilder sb = new StringBuilder();
+	   sb.append("Permissions={}; Permissions.check=(function(param){var listPermissions=[");
+	   for(Permission p:permissions){
+		   sb.append("\"").append(p.code).append("\",");
+	   }
+	   sb.deleteCharAt(sb.lastIndexOf(","));
+	   sb.append("];return(listPermissions.indexOf(param) != -1);})");
+	   return sb.toString();
    }
    
    private static String generateCodeLabel() {

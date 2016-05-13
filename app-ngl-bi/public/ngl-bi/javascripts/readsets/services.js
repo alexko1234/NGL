@@ -228,7 +228,7 @@
 				lists.refresh.projects();
 				lists.refresh.states({objectTypeCode:"ReadSet", display:true},'statetrue');
 				lists.refresh.states({objectTypeCode:"ReadSet"});			
-				lists.refresh.valuationCriterias({objectTypeCode:"ReadSet"});
+				lists.refresh.valuationCriterias({objectTypeCode:"ReadSet", orderBy:'name'});
 				lists.refresh.types({objectTypeCode:"Run"},"runTypes");
 				lists.refresh.types({objectTypeCode:"ReadSet"},"readSetTypes");
 				lists.refresh.runs();
