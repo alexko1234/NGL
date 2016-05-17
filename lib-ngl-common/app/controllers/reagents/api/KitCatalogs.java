@@ -141,6 +141,7 @@ public class KitCatalogs extends DocumentController<KitCatalog>{
 		} 
 		
 		if(CollectionUtils.isNotEmpty(kitCatalogSearch.codes)) {
+			Logger.debug("Codes: "+kitCatalogSearch.codes);
 			queryElts.add(DBQuery.in("code",kitCatalogSearch.codes));
 		}
 		
