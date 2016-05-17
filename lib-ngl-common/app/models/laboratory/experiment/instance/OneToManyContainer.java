@@ -47,7 +47,7 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 			outputContainerUseds.forEach((OutputContainerUsed ocu) -> {
 				if(null == ocu.locationOnContainerSupport.code){
 					ocu.locationOnContainerSupport.code = supportCode;
-					ocu.code = supportCode+"_"+ocu.locationOnContainerSupport.line+"_"+ocu.locationOnContainerSupport.column;
+					ocu.code = supportCode+"_"+ocu.locationOnContainerSupport.line+ocu.locationOnContainerSupport.column;
 				}
 			}
 		);

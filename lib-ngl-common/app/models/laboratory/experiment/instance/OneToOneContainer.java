@@ -24,17 +24,16 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 			);
 		}else if(outputCsc.nbLine.compareTo(Integer.valueOf(1)) > 0 && outputCsc.nbColumn.compareTo(Integer.valueOf(1)) == 0){
 			outputContainerUseds.forEach((OutputContainerUsed ocu) -> {
-				if(null == ocu.locationOnContainerSupport.code){
+				if (null == ocu.locationOnContainerSupport.code) {
 					ocu.locationOnContainerSupport.code = supportCode;
-					ocu.code = supportCode+"_"+ocu.locationOnContainerSupport.line;
+					ocu.code = supportCode + "_"+ ocu.locationOnContainerSupport.line;
 				}
-			}
-		);
+			});
 		}else if(outputCsc.nbLine.compareTo(Integer.valueOf(1)) > 0 && outputCsc.nbColumn.compareTo(Integer.valueOf(1)) > 0){
 			outputContainerUseds.forEach((OutputContainerUsed ocu) -> {
 				if(null == ocu.locationOnContainerSupport.code){
 					ocu.locationOnContainerSupport.code = supportCode;
-					ocu.code = supportCode+"_"+ocu.locationOnContainerSupport.line+"_"+ocu.locationOnContainerSupport.column;
+					ocu.code = supportCode+"_"+ocu.locationOnContainerSupport.line+ocu.locationOnContainerSupport.column;
 				}
 			}
 		);

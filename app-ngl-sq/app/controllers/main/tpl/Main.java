@@ -9,6 +9,7 @@ import jsmessages.JsMessages;
 import models.laboratory.common.description.CodeLabel;
 import models.laboratory.common.description.dao.CodeLabelDAO;
 import models.laboratory.protocol.instance.Protocol;
+import models.laboratory.valuation.instance.ValuationCriteria;
 import models.utils.InstanceConstants;
 import play.Logger;
 import play.Routes;
@@ -66,6 +67,13 @@ public class Main extends CommonController{
 		sb.append("\"status.TRUE\":\"OK\",");
 		sb.append("\"status.FALSE\":\"KO\",");
 		sb.append("\"status.UNSET\":\"---\",");
+		
+		
+		List<ValuationCriteria> criterias = MongoDBDAO.find(InstanceConstants.VALUATION_CRITERIA_COLL_NAME, ValuationCriteria.class).toList();
+		for(ValuationCriteria vc:  criterias){
+			sb.append("\"").append("valuation_criteria").append(".").append(vc.code)
+			.append("\":\"").append(vc.name).append("\",");
+		}
 		
 		List<Protocol> protocols = MongoDBDAO.find(InstanceConstants.PROTOCOL_COLL_NAME,Protocol.class).toList();
 		for(Protocol protocol:protocols){
