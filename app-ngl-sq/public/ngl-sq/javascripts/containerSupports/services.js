@@ -156,7 +156,6 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			datatable:undefined,
 			isRouteParam:false,
 			lists : lists,
-			form:undefined, 
 			selectedAddColumns:[],
 			setRouteParams:function($routeParams){
 				var count = 0;
@@ -255,13 +254,8 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 					this.datatable = datatable(datatableConfig);
 					mainService.setDatatable(this.datatable);
 					this.datatable.setColumnsConfig(getColumns());
-				}else if(angular.isDefined(mainService.getDatatable()) && angular.isDefined(mainService.getDatatable().getConfig().search.url)){
-					if(mainService.getDatatable().getConfig().search.url.includes("supports"))
+				}else if(angular.isDefined(mainService.getDatatable())){
 						this.datatable = mainService.getDatatable();
-				}else{	// to release udt 
-					this.datatable = datatable(datatableConfig);
-					mainService.setDatatable(this.datatable);
-					this.datatable.setColumnsConfig(getColumns());
 				}
 				
 				if(angular.isDefined(mainService.getForm())){
@@ -277,150 +271,4 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 	};
 
 	return searchService;				
-}]);
-
-"use strict";
-angular.module('ngl-sq.containerSupportsServices').
-factory('containerSupportsDetailsSearchService', ['mainService','lists','datatable', function(mainService,lists,datatable){
-	var getColumnsDefault = function(){
-		var columns = [
-		               	{
-		               		"header":Messages("containerSupports.table.yx"),
-		               		"property":"support.line+support.column*1",
-		               		"type":"text",
-		               		"order":true,
-		               		"hide":true,
-		               		"position":1,
-		               		"edit":false
-		               	},
-						{
-							"header":Messages("containers.table.code"),
-							"property":"code",
-							"order":true,
-							"hide":true,
-							"position":2,
-							"type":"text",
-							"render":"<div list-resize='cellValue | stringToArray | unique' ' list-resize-min-size='2'>",
-							"groupMethod":"collect"							
-						},
-						{
-							"header":Messages("containers.table.fromTransformationTypeCodes"),
-							"property":"fromTransformationTypeCodes",
-					  	  	"position":3,
-					  	  	"hide":true,
-					  	  	"order":false,
-					  	  	"type":"text",
-					  	  	"render":"<div list-resize='cellValue | unique' list-resize-min-size='3'>",
-					  	  	"filter":"unique | codes:\"type\"",
-					  	  	"groupMethod":"collect"	
-						},
-						{
-							"header":Messages("containerSupports.table.projectCodes"),
-							"property":"projectCodes",
-							"position":4,
-							"render":"<div list-resize='value.data.projectCodes | unique' list-resize-min-size='3'>",
-							"order":true,
-							"type":"text",
-							"hide":true,
-						},
-						{
-							"header":Messages("containerSupports.table.sampleCodes"),
-							"property":"sampleCodes",
-							"position":5,
-							"order":false,
-							"hide":true,
-							"type":"text",
-							"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",			
-						},
-						{
-							"header":Messages("containers.table.support.line"),
-							"property":"support.line",
-							"order":true,
-							"hide":true,
-							"position":6,
-							"type":"text"
-						},
-						{
-							"header":Messages("containers.table.support.column"),
-							"property":"support.column*1",
-							"order":true,
-							"hide":true,
-							"position":7,
-							"type":"number"							
-						}
-					 ];
-		return columns;
-	};
-	
-	var isInit = false;	
-	var initListService = function(){
-		if(!isInit){
-			lists.refresh.containerSupportCategories();
-			lists.refresh.experimentTypes({categoryCodes:["transformation"], withoutOneToVoid:false});
-		}
-	};
-	
-	var detailsSearchService = {
-			getColumns:getColumnsDefault,
-			getDefaultColumns:getColumnsDefault,
-			datatable:undefined,
-			form:undefined,
-			isRouteParam:false,
-			lists : lists,
-			
-			setRouteParams:function($routeParams){
-				var count = 0;
-				for(var p in $routeParams){
-					count++;
-					break;
-				}
-				if(count > 0){
-					this.isRouteParam = true;
-					this.form.supportCodeRegex = $routeParams.code;
-				}
-			},
-			convertForm : function(){
-				var _form = angular.copy(this.form);
-				if(_form.fromDate)_form.fromDate = moment(_form.fromDate, Messages("date.format").toUpperCase()).valueOf();
-				if(_form.toDate)_form.toDate = moment(_form.toDate, Messages("date.format").toUpperCase()).valueOf();		
-				return _form
-
-			},
-			resetForm : function(){
-				this.form = {};									
-			},
-			search : function(){			
-				this.datatable.search(this.convertForm());
-			},
-			
-			/**
-			 * initialise the service
-			 */
-			init : function($routeParams, datatableConfig){
-				initListService();
-				
-				datatableConfig.messages = {
-						transformKey: function(key, args) {
-	                        return Messages(key, args);
-	                    }
-				};
-
-				this.datatable = datatable(datatableConfig);
-				mainService.setDatatable(this.datatable);
-				this.datatable.setColumnsConfig(getColumnsDefault());		
-
-				if(angular.isDefined(mainService.getForm())){
-					this.form = mainService.getForm();
-				}else{
-					this.resetForm();						
-				}
-
-				if(angular.isDefined($routeParams)){
-					this.resetForm();
-					this.setRouteParams($routeParams);
-				}
-			}			
-	};
-	
-	return detailsSearchService;
 }]);

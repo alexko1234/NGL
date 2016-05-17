@@ -1,7 +1,7 @@
 "use strict";
 
-angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routeParams', 'datatable', 'mainService', 'tabService', 'containerSupportsDetailsSearchService',
-                                                  function($scope,$http,$routeParams,datatable,mainService,tabService,containerSupportsDetailsSearchService){
+angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', 'datatable', 'mainService', 'tabService',
+                                                  function($scope,$http,$q,$routeParams,datatable,mainService,tabService){
 
 	
 	/*
@@ -15,18 +15,11 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 	$scope.setActiveTab = function(value){
 		mainService.put('containerSupportActiveTab', value);
 	};
-	
 	/*
-	 * search() Method
-	 */
-	$scope.search = function(){
-		$scope.detailsSearchService.search();
-	};
-	/*
-	 * Get Bootstrap classes for colors
+	 * Get Bootstrap class for colors
 	 */
 	$scope.getClass = function(x, y){
-		var wells = mainService.getDatatable().displayResult;
+		var wells = $scope.datatable.displayResult;
 		if(angular.isDefined(wells)){
 	        for (var i = 0; i <wells.length; i++) {
 		         if (wells[i].data.support.column === (x+'') && wells[i].data.support.line===(y+'')) {
@@ -35,8 +28,6 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		        		 return "alert alert-danger hidden-print";
 		        	 }else if(well.data.valuation.valid === "TRUE"){
 		        		 return "alert alert-success hidden-print";
-		        	 }else if(well.data.valuation.valid === "UNSET"){
-		        		 return "alert alert-warning hidden-print";
 		        	 }
 		         }
 	        }
@@ -47,8 +38,8 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 	 * Display Method for all views 
 	 */
 	$scope.displayCellAll =function(x, y){
-		if(angular.isDefined(mainService.getDatatable().displayResult)){	
-			var wells = mainService.getDatatable().displayResult;
+		var wells = $scope.datatable.displayResult;
+		if(angular.isDefined(wells)){	
 			if(angular.isDefined(wells)){
 		        for (var i = 0; i <wells.length; i++) {
 	        		if (wells[i].data.support.column === (x+'') && wells[i].data.support.line===(y+'')) {
@@ -59,7 +50,6 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 	        return "------";
 		}
      }
-	
 	/*
 	 * Set Coordinates $scope.nbCol & $scope.nbLine
 	 */
@@ -99,7 +89,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 				}
 			}else if(categoryCode.includes('mapcard')){
 				$scope.target = 'mapcard';
-				setColXLine(1,2);
+				setColXLine(1,1);
 			}else if(categoryCode.includes('plate')){
 				$scope.target = 'plate';
 				if(categoryCode.includes('96')){
@@ -118,7 +108,6 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 			$scope.dynamicMessage = Messages("containerSupports.button."+$scope.target); // Build msg for the button
 			//$scope.setActiveTab('table'); 
 			$scope.setActiveTab($scope.target);
-			$scope.search();	// search call
 		}
 	};
 	
@@ -130,7 +119,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 				active:false
 			},
 			search:{
-				url:jsRoutes.controllers.containers.api.Containers.list().url
+				active:false
 			},
 			order:{
 				active:true,
@@ -155,33 +144,108 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 						return "success";
 					}else if(value.valuation.valid === "FALSE"){
 						return "danger";
-					}else if(value.valuation.valid === "UNSET"){
-						return "warning";
 					}
 				}
-			}
+			},
+			columns: [
+						{
+							"header":Messages("containerSupports.table.yx"),
+							"property":"support.line+support.column*1",
+							"type":"text",
+							"order":true,
+							"hide":true,
+							"position":1,
+							"edit":false
+						},
+						{
+							"header":Messages("containers.table.code"),
+							"property":"code",
+							"order":true,
+							"hide":true,
+							"position":2,
+							"type":"text",
+							"render":"<div list-resize='cellValue | stringToArray | unique' ' list-resize-min-size='2'>",
+							"groupMethod":"collect"							
+						},
+						{
+							"header":Messages("containers.table.fromTransformationTypeCodes"),
+							"property":"fromTransformationTypeCodes",
+						  	"position":3,
+						  	"hide":true,
+						  	"order":false,
+						  	"type":"text",
+						  	"render":"<div list-resize='cellValue | unique' list-resize-min-size='3'>",
+						  	"filter":"unique | codes:\"type\"",
+						  	"groupMethod":"collect"	
+						},
+						{
+							"header":Messages("containerSupports.table.projectCodes"),
+							"property":"projectCodes",
+							"position":4,
+							"render":"<div list-resize='value.data.projectCodes | unique' list-resize-min-size='3'>",
+							"order":true,
+							"type":"text",
+							"hide":true,
+						},
+						{
+							"header":Messages("containerSupports.table.sampleCodes"),
+							"property":"sampleCodes",
+							"position":5,
+							"order":false,
+							"hide":true,
+							"type":"text",
+							"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",			
+						},
+						{
+							"header":Messages("containers.table.support.line"),
+							"property":"support.line",
+							"order":true,
+							"hide":true,
+							"position":6,
+							"type":"text"
+						},
+						{
+							"header":Messages("containers.table.support.column"),
+							"property":"support.column*1",
+							"order":true,
+							"hide":true,
+							"position":7,
+							"type":"number"							
+						}
+			          ]
 	};
 	
 	/*
 	 * init()
 	 */
 	var init = function(){
+		
+		$scope.datatable = datatable(datatableConfig);
+		
+		var promise = [];
+		promise.push($http.get(jsRoutes.controllers.containers.api.ContainerSupports.get($routeParams.code).url));
+		promise.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params: {supportCodeRegex:$routeParams.code}}));
+		
+		
+		$q.all(promise).then(function(results){
 			
-		$http.get(jsRoutes.controllers.containers.api.ContainerSupports.get($routeParams.code).url).then(function(response){
-			$scope.support = response.data;
-			//console.info($scope.support);	
-			filterCategorySupport();	// Display configuration function
-		});			
-
+			$scope.support = results[0].data;
+			$scope.containers = results[1].data;
+			$scope.datatable.setData($scope.containers, $scope.containers.length);
+			
+			filterCategorySupport();
+			
+			//console.log($scope.support);
+			//console.log($scope.containers);
+			
+		});
+		
 		if(tabService.getTabs().length == 0){
 			tabService.addTabs({label:Messages('containerSupports.tabs.search'),href:jsRoutes.controllers.containers.tpl.ContainerSupports.home("search").url,remove:true});
 			tabService.addTabs({label:$routeParams.code,href:jsRoutes.controllers.containers.tpl.ContainerSupports.home($routeParams.code).url,remove:true});
 			tabService.activeTab($scope.getTabs(1));
 		}
 
-		// Call the Specifical Service
-		$scope.detailsSearchService = containerSupportsDetailsSearchService;
-		$scope.detailsSearchService.init($routeParams, datatableConfig);
 
 	};
 
