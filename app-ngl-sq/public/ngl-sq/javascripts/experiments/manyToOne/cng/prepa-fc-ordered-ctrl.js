@@ -23,7 +23,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 					 "edit":false,
 					 "hide":true,
 		        	 "type":"text",
-		        	 "position":1.2,
+		        	 "position":1,
 		        	 "extraHeaders":{0:"lib normalisée"}
 		         },	
 		         {
@@ -33,7 +33,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		 			"order":false,
 		 			"hide":true,
 		 			"type":"text",
-		 			"position":1.5,
+		 			"position":3,
 		 			"render": "<div list-resize='cellValue | unique' list-resize-min-size='3'>",
 		        	 "extraHeaders":{0:"lib normalisée"}
 			     },
@@ -44,7 +44,7 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		 			"order":false,
 		 			"hide":true,
 		 			"type":"text",
-		 			"position":2,
+		 			"position":4,
 		 			"render":"<div list-resize='cellValue | unique' list-resize-min-size='3'>",
 		        	 "extraHeaders":{0:"lib normalisée"}
 		         },				         
@@ -112,6 +112,24 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		         }
 		         ];
 	
+	
+	if($scope.experiment.instrument.inContainerSupportCategoryCode!=="tube"){
+		columns.push(
+			 {
+	        	 "header":Messages("containers.table.well"),
+	        	 "property":"inputContainer.support.line+inputContainer.support.column",
+	        	 "order":true,
+				 "edit":false,
+				 "hide":true,
+	        	 "type":"text",
+	        	 "position":1.1,
+	        	 "extraHeaders":{0:"lib normalisée"}
+	         }
+		);
+	}
+	
+	
+	
 	atmToSingleDatatable.data.setColumnsConfig(columns);
 	
 	atmToSingleDatatable.convertOutputPropertiesToDatatableColumn = function(property, pName){
@@ -119,7 +137,12 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		
 	};
 	atmToSingleDatatable.convertInputPropertiesToDatatableColumn = function(property, pName){
-		return   this.$commonATM.convertSinglePropertyToDatatableColumn(property,"inputContainerUsed."+pName+".",{"0":"Dénaturation - neutralisation"});
+		if(property.code === "source"){
+			return   this.$commonATM.convertSinglePropertyToDatatableColumn(property,"inputContainerUsed."+pName+".",{"0":"lib normalisée"});
+		}else{
+			return   this.$commonATM.convertSinglePropertyToDatatableColumn(property,"inputContainerUsed."+pName+".",{"0":"Dénaturation - neutralisation"});
+		}
+		
 	};
 	
 	atmToSingleDatatable.addExperimentPropertiesToDatatable($scope.experimentType.propertiesDefinitions);
