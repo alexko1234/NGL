@@ -1,14 +1,13 @@
 package services.description.instrument;
 
-import static services.description.DescriptionFactory.newInstrumentCategory;
-import static services.description.DescriptionFactory.newInstrumentUsedType;
-import static services.description.DescriptionFactory.newPropertiesDefinition;
-import static services.description.DescriptionFactory.newValues;
+import static services.description.DescriptionFactory.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import akka.util.Collections;
 import models.laboratory.common.description.Level;
 import models.laboratory.common.description.MeasureCategory;
 import models.laboratory.common.description.MeasureUnit;
@@ -99,7 +98,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"flowcell-1"}), null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		l.add(newInstrumentUsedType("QC MISEQ", "MISEQ-QC-MODE", InstrumentCategory.find.findByCode("qc-illumina-sequencer"), getMiseqQCProperties(), 
+		l.add(newInstrumentUsedType("MISEQ QC", "MISEQ-QC-MODE", InstrumentCategory.find.findByCode("qc-illumina-sequencer"), getMiseqQCProperties(), 
 				getInstrumentMiSeqQC(),
 				getContainerSupportCategories(new String[]{"96-well-plate","tube"}), null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
@@ -435,7 +434,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 				 newValues("Clusterstripprepworklist"), "single", null, false ,null, null));
 		
 		l.add(newPropertiesDefinition("Source", "source", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, "N",
-				 newValues("1","2","3","4"), "single", 1, true ,null, null));
+				 Arrays.asList(newValue("1", "Source 1"), newValue("2", "Source 2"), newValue("3", "Source 3"),newValue("4", "Source 4")), "single", 2, true ,null, null));
 		
 		l.addAll(getCBotProperties());
 		

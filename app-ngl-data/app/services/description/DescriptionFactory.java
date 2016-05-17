@@ -552,23 +552,6 @@ public class DescriptionFactory {
 		return value;
 	}
 	
-	/**
-	 * 
-	 * @param values
-	 * @return
-	 */
-	public static List<Value> newValues(String[] codes, String[] names) {
-		List<Value> l = new ArrayList<Value>(codes.length);
-		for(String c : codes){
-			Value value = new Value();
-			value.value = c;
-			value.code = c;
-			value.name = c;
-			value.defaultValue = false;
-			l.add(value);
-		}
-		return l;
-	}
 	
 	/**
 	 * 

@@ -1,0 +1,111 @@
+//Rules for validation
+package rules
+
+declare SourceInfo
+	value : String
+	supportCodes : Set 	
+end
+
+declare SourceSupportInfo
+	supportCode : String
+	sources : Set 	
+end
+
+rule "Init SourceInfo for janus+cbot"
+    @nglSQ( validations )
+	dialect "java"
+	salience 1000
+	no-loop
+    when
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-fc-ordered", instrument.typeCode == "janus-and-cBot")    	
+    then
+    	Logger.debug("Init SourceInfo for janus+cbot");
+    	SourceInfo sourceInfo1 = new SourceInfo("1",new TreeSet());
+	    insert(sourceInfo1);
+	    SourceInfo sourceInfo2 = new SourceInfo("2",new TreeSet());
+	    insert(sourceInfo2);
+	    SourceInfo sourceInfo3 = new SourceInfo("3",new TreeSet());
+	    insert(sourceInfo3);
+	    SourceInfo sourceInfo4 = new SourceInfo("4",new TreeSet());
+	    insert(sourceInfo4);
+end
+
+rule "Init SourceSupportInfo for janus+cbot"
+    @nglSQ( validations )
+	dialect "java"
+	salience 1000
+	no-loop
+    when
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-fc-ordered", instrument.typeCode == "janus-and-cBot") 
+    	$atomicTransfert: ManyToOneContainer($inputContainers : inputContainerUseds, $inputContainers.size()!=0)
+    	$container: InputContainerUsed($source:instrumentProperties.source.value) from $inputContainers
+    	not SourceSupportInfo($container.locationOnContainerSupport.code==supportCode)   	
+    then
+    	Logger.debug("Init SourceSupportInfo for janus+cbot");
+    	SourceSupportInfo sourceSupportInfo = new SourceSupportInfo($container.locationOnContainerSupport.code,new TreeSet());
+    	insert(sourceSupportInfo);
+end
+
+
+
+rule "add supportcode for source"
+    @nglSQ( validations )
+	dialect "java"
+	salience 900
+	no-loop
+    when
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-fc-ordered", instrument.typeCode == "janus-and-cBot")
+    	$atomicTransfert: ManyToOneContainer($inputContainers : inputContainerUseds, $inputContainers.size()!=0)
+    	$container: InputContainerUsed($source:instrumentProperties.source.value) from $inputContainers
+    	$sourceInfo : SourceInfo($source==value)
+    then
+    	//Logger.debug("find sourceInfo for "+$source+" "+$sourceInfo.getSupportCodes().size());
+    	$sourceInfo.getSupportCodes().add($container.locationOnContainerSupport.code);
+    	modify($sourceInfo){};
+end
+
+rule "add source for supportcode"
+    @nglSQ( validations )
+	dialect "java"
+	salience 900
+	no-loop
+    when
+    	$experiment:Experiment($typeCode:typeCode,$typeCode=="prepa-fc-ordered", instrument.typeCode == "janus-and-cBot")
+    	$atomicTransfert: ManyToOneContainer($inputContainers : inputContainerUseds, $inputContainers.size()!=0)
+    	$container: InputContainerUsed($source:instrumentProperties.source.value) from $inputContainers
+    	$sourceSupportInfo : SourceSupportInfo($container.locationOnContainerSupport.code==supportCode)
+    then
+    	Logger.debug("find sourceSupportInfo for "+$container.locationOnContainerSupport.code+" "+$sourceSupportInfo.getSources().size());
+    	$sourceSupportInfo.getSources().add($source);
+    	modify($sourceSupportInfo){};
+end
+
+
+rule "check nb support for one source"
+    @nglSQ( validations )
+	dialect "java"
+	salience 700
+	no-loop
+    when
+    	$sourceInfo : SourceInfo($source:value, supportCodes.size() > 1 )
+    	$contextValidation:ContextValidation()    		
+    then
+    	$contextValidation.addErrors("source",	"plusieurs supports "+$sourceInfo.getSupportCodes()+" ont la meme source : "+$source);
+    	    	
+    	
+end
+
+
+rule "check nb source for one support"
+    @nglSQ( validations )
+	dialect "java"
+	salience 700
+	no-loop
+    when
+    	$sourceSupportInfo : SourceSupportInfo($supportCode : supportCode, sources.size() > 1)
+    	$contextValidation:ContextValidation()    		
+    then
+    	$contextValidation.addErrors("source",	"plusieurs sources "+$sourceSupportInfo.getSources()+" pour un meme support : "+$supportCode);
+    	    	
+    	
+end
