@@ -89,7 +89,7 @@ angular.module('home').controller('BionanoDepotCtrl',['$scope', '$parse','atmToS
 			order:{
 				mode:'local', //or 
 				active:true,
-				by:'ContainerInputCode'
+				by:'inputContainer.code'
 			},
 			remove:{
 				active: ( $scope.isNewState()),

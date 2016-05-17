@@ -88,7 +88,7 @@ angular.module('home').controller('IlluminaDepotCtrl',['$scope', '$parse','$http
 			order:{
 				mode:'local', //or 
 				active:true,
-				by:'ContainerInputCode'
+				by:'inputContainer.code'
 			},
 			remove:{
 				active:false,
