@@ -21,6 +21,7 @@
 		<ul class="nav nav-tabs margin-bottom-5">
 			<li ng-class="getTabClass('general')"><a href="#" data-target="#general" data-toggle="tab" ng-click="setActiveTab('general')">@Messages("containers.tabs.general")</a></li>
 			<li ng-if="container.treeOfLife || (parentsInPaths.length>=1 || children.length>=1)" ng-class="getTabClass('treeoflife')"><a href="#" data-target="#treeoflife" data-toggle="tab" ng-click="setActiveTab('treeoflife')">@Messages("containers.tabs.treeoflife")</a></li>
+			<li ng-class="getTabClass('workflow')">
 		</ul>
 		<div class="tab-content">
 			<div class="tab-pane {{getTabClass('general')}}" id="general">
@@ -29,6 +30,9 @@
 			<div class="tab-pane {{getTabClass('treeoflife')}}" id="treeoflife">
 				@partials.details_treeoflife()
 			</div>
+			<div class="tab-pane {{getTabClass('workflow')}}" id="workflow">
+			
+			</div> 
 		</div>
 	</div>
 </div>

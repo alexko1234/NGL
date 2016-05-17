@@ -48,13 +48,15 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	
 	
 	var initTreeOfLife = function(currentContainer){
-		//extract parent container codes
-		var codes = {parentContainerCodes : []};
-		angular.forEach(currentContainer.treeOfLife.paths, function(path){
-			path = path.substring(1);
-			this.parentContainerCodes = this.parentContainerCodes.concat(path.split(","));
-		}, codes);
-			
+		if(!angular.isUndefined(currentContainer.treeOfLife.paths)){
+			//extract parent container codes
+			var codes = {parentContainerCodes : []};
+			angular.forEach(currentContainer.treeOfLife.paths, function(path){
+				path = path.substring(1);
+				this.parentContainerCodes = this.parentContainerCodes.concat(path.split(","));
+			}, codes);
+		}
+
 		
 		var promises = [];
 		promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {codes:codes.parentContainerCodes}}));
