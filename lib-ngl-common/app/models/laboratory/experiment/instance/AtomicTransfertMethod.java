@@ -1,6 +1,7 @@
 package models.laboratory.experiment.instance;
 
 import java.util.List;
+import java.util.UUID;
 
 import play.Logger;
 import models.laboratory.common.instance.Comment;
@@ -10,6 +11,7 @@ import validation.IValidation;
 import validation.experiment.instance.AtomicTransfertMethodValidationHelper;
 import validation.utils.ValidationHelper;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
@@ -25,6 +27,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 })
 public abstract class AtomicTransfertMethod implements IValidation {
 
+	@JsonIgnore
+	public UUID id = UUID.randomUUID(); //generate a unique id for each ATM
+	
 	public List<InputContainerUsed> inputContainerUseds;
 	public List<OutputContainerUsed> outputContainerUseds;
 	public String line;

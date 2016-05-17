@@ -3,18 +3,18 @@
 package rules
 
 
-rule "Miseq-qc Init object LaneInfo in WM"
+rule "Miseq-qc Init object ATMInfo in WM"
 	@nglSQ( validations )
 	dialect "java"
 	salience 700
 	no-loop
     when
     Experiment($typeCode : typeCode, $typeCode=="miseq-qc")
-    not LaneInfo("1"==position)
+    not ATMInfo("1"==position)
     then
     
-    LaneInfo laneInfo = new LaneInfo("1",new ArrayList());
-    insert(laneInfo);
+    ATMInfo ATMInfo = new ATMInfo("1",new ArrayList());
+    insert(ATMInfo);
     
 	end
 
@@ -28,7 +28,7 @@ rule "Miseq-qc Init objects ContentInfo in WM"
     $atomicTransfert: OneToVoidContainer($inputContainers : inputContainerUseds, $inputContainers.size()!=0)
 	$container : InputContainerUsed( $contents : contents,$contents!=null) from $inputContainers
 	$content : Content() from $contents	 
-	$laneInfo : LaneInfo("1"==position)
+	$ATMInfo : ATMInfo("1"==position)
     then
    
     String tag="VIDE";
@@ -60,7 +60,7 @@ rule "Miseq-qc Init objects ContentInfo in WM"
 
 	ContentInfo contentInfo= new ContentInfo("1",$container.code,tag,tagCategory,$content.sampleCode, tagRealSize, sequence, libProcessTypeCode,fromCode);
 	Logger.debug("Content Info Position : "+$atomicTransfert.line+ ", Sample Code :"+$content.sampleCode + ", Container Code :"+$container.code+", Tag :"+tag +", tagCategory :"+tagCategory+", size :"+tagRealSize+", sequence :"+sequence + ",libProcessTypeCode :"+libProcessTypeCode+", fromExperimentTypeCode :"+fromCode);
-    $laneInfo.getContentInfos().add(contentInfo);
+    $ATMInfo.getContentInfos().add(contentInfo);
 	insert(contentInfo);
 	
     end	
