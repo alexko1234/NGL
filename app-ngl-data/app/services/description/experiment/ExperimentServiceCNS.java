@@ -128,7 +128,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		
 		l.add(newExperimentType("Fragmentation-réparation","nanopore-fragmentation",null,2100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
-				getPropertyFragmentationNanopore(), getInstrumentUsedTypes("eppendorf-mini-spin-plus"),"OneToOne", 
+				getPropertyFragmentationNanopore(), getInstrumentUsedTypes("eppendorf-mini-spin-plus","hand"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 
