@@ -1,4 +1,5 @@
 @()
+@import views.html.helper._
 
 <table class="table table-bordered table-striped table-condensed">
 	<thead>
@@ -11,7 +12,26 @@
 		<tr ng-if="nbLine" ng-repeat="y in nbLine" class="total">
 			<td><strong>{{y}}</strong></td>
 			<td class="plates" ng-repeat="x in nbCol" class="browser">
-				<div ng-class="getClass(x, y)" ng-bind="displayCellAll(x, y)" />
+				<div ng-class="getClass(x, y)">
+					<div ng-if="data">
+						@columnLabelValue(Messages("containers.table.projectCodes")){
+							<div class="form-control-static" list-resize="data.projectCodes" list-resize-min-size='3' horizontal />
+						}
+						@columnLabelValue(Messages("containers.table.sampleCodes")){
+							<div class="form-control-static" list-resize="data.sampleCodes" list-resize-min-size='3' horizontal />
+						}
+						@columnLabelValue(Messages("containers.table.fromTransformationTypeCodes")){
+							<div class="form-control-static" list-resize="data.fromTransformationTypeCodes|unique|codes:'type'" list-resize-min-size='3' horizontal />				
+						}
+						<div ng-repeat="content in data.contents">
+							<div ng-repeat="(key, value) in content.properties">
+								<label class="col-md-6 col-lg-6 control-label" ng-if="value.unit !== null">{{key|codes:'property_definition'}} ({{value.unit}})</label>
+								<label class="col-md-6 col-lg-6 control-label" ng-if="value.unit === null" ng-bind="key|codes:'property_definition'" />
+								<div class="col-md-6 col-lg-6"><p class="form-control-static" ng-bind="value.value" /></div>
+							</div>
+						</div>
+					</div>
+				</div>
 				<div class="visible-print-block" ng-bind="displayCellAll(x, y)" />
 			</td>
 		</tr>

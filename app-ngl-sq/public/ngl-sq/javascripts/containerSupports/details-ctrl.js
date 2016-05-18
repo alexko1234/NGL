@@ -15,6 +15,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	$scope.setActiveTab = function(value){
 		mainService.put('containerSupportActiveTab', value);
 	};
+
 	/*
 	 * Get Bootstrap class for colors
 	 */
@@ -24,6 +25,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	        for (var i = 0; i <wells.length; i++) {
 		         if (wells[i].data.support.column === (x+'') && wells[i].data.support.line===(y+'')) {
 		        	 var well = wells[i];
+		        	 $scope.displayCellAll(x, y);
 		        	 if(well.data.valuation.valid === "FALSE"){
 		        		 return "alert alert-danger hidden-print";
 		        	 }else if(well.data.valuation.valid === "TRUE"){
@@ -43,7 +45,9 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			if(angular.isDefined(wells)){
 		        for (var i = 0; i <wells.length; i++) {
 	        		if (wells[i].data.support.column === (x+'') && wells[i].data.support.line===(y+'')) {
-			        	return wells[i].data.code.replace(/_/g,' ');
+	        			var well = wells[i];
+			        	$scope.data = well.data;
+	        			return $scope.data;
 			        }
 		        }
 			}
@@ -149,20 +153,28 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			},
 			columns: [
 						{
-							"header":Messages("containerSupports.table.yx"),
-							"property":"support.line+support.column*1",
-							"type":"text",
+							"header":Messages("containers.table.support.line"),
+							"property":"support.line",
 							"order":true,
 							"hide":true,
 							"position":1,
-							"edit":false
+							"type":"text"
 						},
+						{
+							"header":Messages("containers.table.support.column"),
+							"property":"support.column*1",
+							"order":true,
+							"hide":true,
+							"position":1.1,
+							"type":"number"							
+						},
+
 						{
 							"header":Messages("containers.table.code"),
 							"property":"code",
 							"order":true,
 							"hide":true,
-							"position":2,
+							"position":3,
 							"type":"text",
 							"render":"<div list-resize='cellValue | stringToArray | unique' ' list-resize-min-size='2'>",
 							"groupMethod":"collect"							
@@ -170,18 +182,18 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 						{
 							"header":Messages("containers.table.fromTransformationTypeCodes"),
 							"property":"fromTransformationTypeCodes",
-						  	"position":3,
+						  	"position":4,
 						  	"hide":true,
 						  	"order":false,
 						  	"type":"text",
 						  	"render":"<div list-resize='cellValue | unique' list-resize-min-size='3'>",
 						  	"filter":"unique | codes:\"type\"",
 						  	"groupMethod":"collect"	
-						},
+						},					
 						{
 							"header":Messages("containerSupports.table.projectCodes"),
 							"property":"projectCodes",
-							"position":4,
+							"position":5,
 							"render":"<div list-resize='value.data.projectCodes | unique' list-resize-min-size='3'>",
 							"order":true,
 							"type":"text",
@@ -190,28 +202,164 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 						{
 							"header":Messages("containerSupports.table.sampleCodes"),
 							"property":"sampleCodes",
-							"position":5,
+							"position":5.1,
 							"order":false,
 							"hide":true,
 							"type":"text",
-							"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",			
+							"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
+							"groupMethod":"collect"
 						},
+
 						{
-							"header":Messages("containers.table.support.line"),
-							"property":"support.line",
+							"header":Messages("containers.table.sampleCodes.length"),
+							"property":"sampleCodes.length",
 							"order":true,
 							"hide":true,
-							"position":6,
-							"type":"text"
+							"position":5.2,
+							"type":"number",
+							"groupMethod":"sum"
 						},
+
+						//SampleTypes
 						{
-							"header":Messages("containers.table.support.column"),
-							"property":"support.column*1",
+							"header":Messages("containers.table.sampleTypes"),
+							"property":"contents",
+							"order":false,
+							"hide":false,
+							"position":5.3,
+							"type":"text",
+							"filter":"getArray:'sampleTypeCode' | unique | codes:\"type\"",
+							"groupMethod":"collect"
+						},
+						//LibProcessType
+						{
+							"header":Messages("containers.table.libProcessType"),
+							"property":"contents",
+							"order":false,
+							"hide":false,
+							"position":5.4,
+							"type":"text",
+							"filter":"getArray:'properties.libProcessTypeCode.value'",
+							"groupMethod":"collect"
+						},
+						
+						
+						{
+							"header":Messages("containers.table.contents.length"),
+							"property":"contents.length",
 							"order":true,
 							"hide":true,
-							"position":7,
-							"type":"number"							
+							"position":8,
+							"type":"number",
+							"groupMethod":"sum"
+						},
+						{
+							"header":Messages("containers.table.tags"),
+							"property": "contents",
+							"order":false,
+							"hide":true,
+							"type":"text",
+							"position":9,
+							"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+							"filter":"getArray:'properties.tag.value' | unique",
+							"groupMethod":"collect"
+						},
+
+						{
+							"header":Messages("containers.table.concentration.value"),
+							"property":"concentration.value",
+							"order":true,
+							"hide":true,
+							"position":10,
+							"format":3,
+							"type":"number",
+							"groupMethod":"unique"
+						},
+						{
+							"header":Messages("containers.table.concentration.unit"),
+							"property":"concentration.unit",
+							"order":true,
+							"hide":true,
+							"position":10.1,
+							"type":"text",
+							"groupMethod":"unique"
+						},
+						{
+							"header":Messages("containers.table.state.code"),
+							"property":"state.code",
+							"order":true,
+							"hide":true,
+							"type":"text",
+							"edit":true,
+							"position":10.2,
+							"choiceInList": true,
+							"listStyle":"bt-select",
+							"possibleValues":"searchService.lists.getStates()", 
+							"filter":"codes:'state'",
+							"groupMethod":"unique"	
+						},
+						{
+							"header":Messages("containers.table.valid"),
+							"property":"valuation.valid",
+							"order":true,
+							"type":"text",
+							"edit":false,
+							"hide":true,
+							"position":10.3,
+							"choiceInList": true,
+							"listStyle":"bt-select",
+							"possibleValues":"searchService.lists.getValuations()", 
+							"filter":"codes:'valuation'"
+						},
+						{
+							"header":Messages("containers.table.creationDate"),
+							"property":"traceInformation.creationDate",
+							"order":true,
+							"hide":true,
+							"position":12,			
+							"type":"date",
+							"groupMethod":"unique"
+						},
+						{
+							"header":Messages("containers.table.createUser"),
+							"property":"traceInformation.createUser",
+							"order":true,
+							"hide":true,
+							"position":12.1,
+							"type":"text",
+							"groupMethod":"unique"
+						},
+						{
+							"header":Messages("containers.table.storageCode"),
+							"property":"support.storageCode",
+							"order":true,
+							"hide":true,
+							"type":"text",
+							"edit":false,
+							"position":13,
+							"groupMethod":"unique"
+						},
+						{
+							"header":Messages("containers.table.processCodes"),
+							"property":"processCodes",
+							"order":false,
+							"hide":true,
+							"type":"text",
+							"position":14,
+							"render":"<div list-resize='cellValue' list-resize-min-size='3' vertical>",
+							"groupMethod":"collect"
+						},
+						
+						{
+							"header":Messages("containerSupports.table.yx"),
+							"property":"support.line+support.column*1",
+							"type":"text",
+							"order":true,
+							"hide":true,
+							"position":15,
+							"edit":false
 						}
+
 			          ]
 	};
 	
@@ -235,8 +383,8 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			
 			filterCategorySupport();
 			
-			//console.log($scope.support);
-			//console.log($scope.containers);
+			console.log($scope.support);
+			console.log($scope.containers);
 			
 		});
 		
