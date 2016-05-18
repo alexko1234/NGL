@@ -37,7 +37,7 @@ rule "Init object ATMInfo in WM"
 	no-loop
     when
     Experiment($typeCode : typeCode, $typeCode!="opgen-depot")
-    $atomicTransfert: ManyToOneContainer($position : id.toString())
+    $atomicTransfert: ManyToOneContainer($position : index.toString())
     not ATMInfo($position==position)
     then
     
@@ -55,7 +55,7 @@ rule "Init objects ContentInfo in WM"
 	salience 600
 	no-loop
     when
-    $atomicTransfert: ManyToOneContainer($position:line,$inputContainers : inputContainerUseds, $inputContainers.size()!=0)
+    $atomicTransfert: ManyToOneContainer($position:index.toString(),$inputContainers : inputContainerUseds, $inputContainers.size()!=0)
 	$container : InputContainerUsed( $contents : contents,$contents!=null) from $inputContainers
 	$content : Content() from $contents	 
 	$ATMInfo : ATMInfo($position==position)
@@ -88,8 +88,8 @@ rule "Init objects ContentInfo in WM"
 		fromCode=$container.fromTransformationTypeCodes.iterator().next();
 	
 
-	ContentInfo contentInfo= new ContentInfo($atomicTransfert.line,$container.code,tag,tagCategory,$content.sampleCode, tagRealSize, sequence, libProcessTypeCode,fromCode);
-	Logger.debug("Content Info Position : "+$atomicTransfert.line+ ", Sample Code :"+$content.sampleCode + ", Container Code :"+$container.code+", Tag :"+tag +", tagCategory :"+tagCategory+", size :"+tagRealSize+", sequence :"+sequence + ",libProcessTypeCode :"+libProcessTypeCode+", fromExperimentTypeCode :"+fromCode);
+	ContentInfo contentInfo= new ContentInfo($atomicTransfert.index.toString(),$container.code,tag,tagCategory,$content.sampleCode, tagRealSize, sequence, libProcessTypeCode,fromCode);
+	Logger.debug("Content Info Position : "+$atomicTransfert.index.toString()+ ", Sample Code :"+$content.sampleCode + ", Container Code :"+$container.code+", Tag :"+tag +", tagCategory :"+tagCategory+", size :"+tagRealSize+", sequence :"+sequence + ",libProcessTypeCode :"+libProcessTypeCode+", fromExperimentTypeCode :"+fromCode);
     $ATMInfo.getContentInfos().add(contentInfo);
 	insert(contentInfo);
 	
@@ -103,7 +103,7 @@ rule "Container duplicate in Lane"
 	no-loop
     when
     	  ATMInfo($position:position)
-    	  ManyToOneContainer($position==line,$inputContainers : inputContainerUseds)
+    	  ManyToOneContainer($position==index.toString(),$inputContainers : inputContainerUseds)
     	  $containerCodes : Set(empty==false, size >= 1) from accumulate( InputContainerUsed($containerCode:code) from $inputContainers,
 	                         init( HashSet result = new HashSet(); HashSet containers=new HashSet(); ),
                               action( if(!containers.contains($containerCode)){ containers.add($containerCode); } 
@@ -129,9 +129,9 @@ rule "Sum % percentage per piste = 100 % "
     eval(!($total>=99.9 && $total<=100) )
     $contextValidation:ContextValidation()
    	 then
-   		Logger.debug("Regles de validation des pourcentages solexa "+ $total +' '+$atomics.line);   		
+   		Logger.debug("Regles de validation des pourcentages solexa "+ $total +' '+$atomics.index.toString());   		
    		
-   		$contextValidation.addErrors("Position["+$atomics.line+"]",	"error.validationexp.percentperoutputcontainerdefault", $total);
+   		$contextValidation.addErrors("Position["+$atomics.index.toString()+"]",	"error.validationexp.percentperoutputcontainerdefault", $total);
    	end
    	
 rule "For Tag vide same sample"
