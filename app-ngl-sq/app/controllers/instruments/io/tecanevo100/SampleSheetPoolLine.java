@@ -11,7 +11,7 @@ public class SampleSheetPoolLine {
 	public Double inputSupportContainerVolume;
 	
 	public String outputSupportCode;
-	public Integer outputSupportPosition;
+	public String outputSupportPosition;
 	public String outputSupportDestination = "Dest";
 	
 }

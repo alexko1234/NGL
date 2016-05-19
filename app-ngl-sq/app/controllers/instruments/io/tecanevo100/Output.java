@@ -11,10 +11,16 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.IntStream;
 
+
+
 import org.assertj.core.internal.Numbers;
+
+
 
 import play.Logger;
 import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.InputContainerUsed;
+import models.laboratory.experiment.instance.OutputContainerUsed;
 import validation.ContextValidation;
 import controllers.instruments.io.tecanevo100.tpl.txt.*;
 import controllers.instruments.io.utils.AbstractOutput;
@@ -53,8 +59,35 @@ public class Output extends AbstractOutput {
 		
 		List<SampleSheetPoolLine> lines = new ArrayList<SampleSheetPoolLine>();
 		
+		experiment.atomicTransfertMethods.forEach(atm -> {
+			
+			OutputContainerUsed output = atm.outputContainerUseds.get(0);
+			
+			atm.inputContainerUseds.forEach(input -> {
+				lines.add(getSampleSheetPoolLine(input, output, sourceMapping, destPositionMapping));
+			});
+			
+		});
 		
-		return null;
+		return lines;
+	}
+
+	private SampleSheetPoolLine getSampleSheetPoolLine(
+			InputContainerUsed input, OutputContainerUsed output,
+			Map<String, String> sourceMapping,
+			Map<String, String> destPositionMapping) {
+		SampleSheetPoolLine sspl = new SampleSheetPoolLine();
+		sspl.inputSupportCode = input.locationOnContainerSupport.code;
+		sspl.inputSupportContainerCode = input.code;
+		sspl.inputSupportContainerColumn = input.locationOnContainerSupport.column;
+		sspl.inputSupportContainerLine = input.locationOnContainerSupport.line;
+		sspl.inputSupportContainerPosition = OutputHelper.getNumberPositionInPlateByColumn(input.locationOnContainerSupport.line, input.locationOnContainerSupport.column);
+		sspl.inputSupportContainerVolume = (Double)input.experimentProperties.get("inputVolume").value; 
+		sspl.inputSupportSource =  sourceMapping.get(input.locationOnContainerSupport.code);
+			
+		sspl.outputSupportCode = output.locationOnContainerSupport.code;
+		sspl.outputSupportPosition = destPositionMapping.get(output.locationOnContainerSupport.code);
+		return sspl;
 	}
 
 	private Map<String, String> getSourceMapping(Experiment experiment) {
