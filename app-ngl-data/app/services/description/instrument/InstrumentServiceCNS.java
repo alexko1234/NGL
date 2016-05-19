@@ -121,7 +121,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"96-well-plate"}),null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-		l.add(newInstrumentUsedType("TECAN evo 100", "tecan-evo-100", InstrumentCategory.find.findByCode("liquid-handling-robot"), null, 
+		l.add(newInstrumentUsedType("TECAN evo 100", "tecan-evo-100", InstrumentCategory.find.findByCode("liquid-handling-robot"), getTecanProperties(), 
 				getInstruments(
 						createInstrument("wolverine", "Wolverine", null, true, "/bureautique/atelier/SOLEXA/Solstock_TECAN/", DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
 						createInstrument("arrow", "Arrow", null, true, "/bureautique/atelier/SOLEXA/Solstock_TECAN/", DescriptionFactory.getInstitutes(Constants.CODE.CNS))),
@@ -385,6 +385,37 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getThermocyclerProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("15","18"), "single"));		
+		return l;
+	}
+	
+	private static List<PropertyDefinition> getTecanProperties() throws DAOException {
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null, newValues("Pooling_plaque_col1a6_BC",
+				"Pooling_plaque_WL_9plaques_BC",
+				"Pooling_tubes_5_pour_1pool_BC", 
+				"Pooling_tubes_24_pour_1pool_BC",
+				"Pooling_plaque_col1a6",
+				"Pooling_plaque_col7a12",
+				"Pooling_plaque_entiere_1tube",
+				"Pooling_plaque_entiere_2tubes",
+				"Pooling_plaque_WL",
+				"Pooling_plaque_WL_9plaques",
+				"Pooling_tubes_5_pour_1pool",
+				"Pooling_tubes_10_pour_1pool", 
+				"Pooling_tubes_12_pour_1pool", 
+				"Pooling_tubes_16max_pour_xpoolde2",
+				"Pooling_tubes_16max_pour_xpoolde5",
+				"Pooling_tubes_24_pour_1pool",
+				"Pooling_tubes_30_pour_3poolde10",
+				"Pooling_tubes_32_pour_1pool",
+				"Pooling_tubes_48_pour_1pool",
+				"Pooling_tubes_48tubes_plaque",
+				"Pooling_tubes_90max_pour_xpoolde10",
+				"Pooling_tubes_96_pour_1pool"), 
+				"single", 10, true, null,null));
+		
+		
+
 		return l;
 	}
 	
