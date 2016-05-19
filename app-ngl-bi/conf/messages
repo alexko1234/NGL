@@ -576,6 +576,7 @@ readsets.treatments.gender.mq0 = MQ0
 readsets.treatments.gender.mq159 = MQ1-59
 readsets.treatments.gender.mq60 = MQ60
 readsets.treatments.gender.gender = Gender
+readsets.treatments.gender = Gender
 
 readsets.treatments.images.margin=25
 
