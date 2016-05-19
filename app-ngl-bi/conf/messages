@@ -569,6 +569,14 @@ readsets.treatments.mapping = Mapping
 readsets.treatments.taxonomy = Taxonomy 
 readsets.treatments.exome = Exome 
 
+readsets.treatments.gender.properlyPaired = Properly Paired
+readsets.treatments.gender.notProperlyPaired = Not Properly Paired
+readsets.treatments.gender.unaligned = Unaligned
+readsets.treatments.gender.mq0 = MQ0
+readsets.treatments.gender.mq159 = MQ1-59
+readsets.treatments.gender.mq60 = MQ60
+readsets.treatments.gender.gender = Gender
+
 readsets.treatments.images.margin=25
 
 readsets.files.fullname = Nom du fichier
