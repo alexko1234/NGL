@@ -235,7 +235,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		//GA        07/04/2016 -- JIRA NGL-894: processus et experiments pour X5; ajout "labchip-migration-profile" dans qc
 		newExperimentTypeNode("prep-pcr-free",getExperimentTypes("prep-pcr-free").get(0),
 				false,false,false,
-				getExperimentTypeNodes("ext-to-x5-wg-pcr-free"),null,getExperimentTypes("qpcr-quantification","labchip-migration-profile","miseq-qc"), null  
+				getExperimentTypeNodes("ext-to-x5-wg-pcr-free"),null,getExperimentTypes("qpcr-quantification","labchip-migration-profile","miseq-qc"), getExperimentTypes("aliquoting")  
 				).save();
 
 		//FDS ...../2016 -- JIRA NGL-894: processus et experiments pour X5

@@ -39,7 +39,7 @@
 	  <!-- 2eme ligne -->
 	  <div class="row margin-bottom-3">
          <div class="form-group col-lg-6"  ng-show="button.isShow()">
-             <label for="importFile" class="control-label">@Messages("experiments.instrumentFile")</label>
+             <label for="importFile" class="control-label">Fichier Workbook</label>
              <div class="input-group" style="width:50%">
                 <input class="form-control input-sm" type="file" 
                 									 base64-file="file"
@@ -59,8 +59,7 @@
              <select ng-model="tagPlateColumn" ng-options="column.name for column in columns"  
              								   ng-change="selectCol.select(tagPlateCol)" selectpicker btn-primary">                                      
              </select>  
-             <select ng-model="tagPlate" ng-options="plate.name for plate in plates"  
-             							                                             " selectpicker btn-primary">                                      
+             <select ng-model="tagPlate" ng-options="plate.name for plate in plates" selectpicker btn-primary">                                      
              </select>                        				  
            </div> 
     </div>
