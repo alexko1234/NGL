@@ -34,12 +34,14 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 			}
 		},
 		edit:{
-			active:Permissions.check("writing")?true:false,
+			//active:Permissions.check("writing")?true:false,
+			active:false,
 			columnMode:true
 		},
 		save:{
-			active:Permissions.check("writing")?true:false,
+			//active:Permissions.check("writing")?true:false,
 			//url:jsRoutes.controllers.containers.api.Containers.updateBatch().url,
+			active:false,
 			batch:true,
 			method:'put',
 			callback: function(reason, error){

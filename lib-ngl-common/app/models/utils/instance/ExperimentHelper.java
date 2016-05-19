@@ -3,6 +3,7 @@ package models.utils.instance;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.ManyToOneContainer;
@@ -30,14 +31,8 @@ public class ExperimentHelper extends InstanceHelpers {
 		ArrayList<Object> facts = new ArrayList<Object>();
 		facts.add(exp);
 		for(int i=0;i<exp.atomicTransfertMethods.size();i++){
-			if(ManyToOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
-				ManyToOneContainer atomic = (ManyToOneContainer) exp.atomicTransfertMethods.get(i);
-				facts.add(atomic);
-			}
-			if(OneToOneContainer.class.isInstance(exp.atomicTransfertMethods.get(i))){
-				OneToOneContainer atomic = (OneToOneContainer) exp.atomicTransfertMethods.get(i);
-				facts.add(atomic);
-			}
+			AtomicTransfertMethod atomic = exp.atomicTransfertMethods.get(i);
+			facts.add(atomic);
 		}
 		
 		List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), rulesName, facts);

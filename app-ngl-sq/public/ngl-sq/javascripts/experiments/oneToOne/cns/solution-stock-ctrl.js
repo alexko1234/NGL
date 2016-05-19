@@ -90,7 +90,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 			         {
 			        	 "header":Messages("containers.table.concentration"),
 			        	 "property":"outputContainerUsed.concentration.value",
-			        	 "editDirectives":' udt-change="calculVolumes(value, col.id)" ',
+			        	 "editDirectives":' udt-change="calculVolumes(value)" ',
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
@@ -115,7 +115,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 			        	 "property":"outputContainerUsed.volume.value",
 			        	 //utilisation de la directive utd-change car elle capture les modifications du header puis déclenche la function calculVolume 
 			        	 // Si ng-change seul l'evenement utilisateur est capturé, la valeur de la cellule est modifiée mais le calcul non executé
-			        	 "editDirectives":' udt-change="calculVolumes(value, col.id)" ',
+			        	 "editDirectives":' udt-change="calculVolumes(value)" ',
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
@@ -240,35 +240,42 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 	});
 	
 	
-	$scope.calculVolumeFromValue=function(value){
+	var calculVolumeFromValue=function(value){
 
 		if(value.outputContainerUsed.volume!=null && value.outputContainerUsed.volume.value!=null && value.outputContainerUsed.concentration.value!=null){
 			if(value.inputContainerUsed.concentration.unit===value.outputContainerUsed.concentration.unit){				
 				var requiredVolume=value.outputContainerUsed.concentration.value*value.outputContainerUsed.volume.value/value.inputContainerUsed.concentration.value;
+				requiredVolume = Math.round(requiredVolume*10)/10
+				
+				var bufferVolume = value.outputContainerUsed.volume.value-requiredVolume;
+				bufferVolume = Math.round(bufferVolume*10)/10
 				
 				if(value.inputContainerUsed.experimentProperties===undefined || value.inputContainerUsed.experimentProperties!==null){
 					value.inputContainerUsed.experimentProperties={};
 				}
 				value.inputContainerUsed.experimentProperties["requiredVolume"]={"_type":"single","value":requiredVolume,"unit":value.outputContainerUsed.concentration.unit};
-				value.inputContainerUsed.experimentProperties["bufferVolume"]={"_type":"single","value":value.outputContainerUsed.volume.value-requiredVolume,
-						 "unit":value.outputContainerUsed.volume.unit};
+				value.inputContainerUsed.experimentProperties["bufferVolume"]={"_type":"single","value":bufferVolume,"unit":value.outputContainerUsed.volume.unit};
 				
 			}else if(value.inputContainerUsed.concentration.unit==="ng/ul") {
 				var requiredVolume=value.outputContainerUsed.concentration.value*value.outputContainerUsed.volume.value/(value.inputContainerUsed.concentration.value*1000000/(660*value.inputContainerUsed.size.value));
+				requiredVolume = Math.round(requiredVolume*10)/10
+				
+				var bufferVolume = value.outputContainerUsed.volume.value-requiredVolume;
+				bufferVolume = Math.round(bufferVolume*10)/10
 				
 				if(value.inputContainerUsed.experimentProperties===undefined || value.inputContainerUsed.experimentProperties!==null){
 					value.inputContainerUsed.experimentProperties={};
 				}				
 				value.inputContainerUsed.experimentProperties["requiredVolume"]={"_type":"single","value":requiredVolume,"unit":value.outputContainerUsed.concentration.unit};
-				value.inputContainerUsed.experimentProperties["bufferVolume"]={"_type":"single","value":value.outputContainerUsed.volume.value-requiredVolume,
+				value.inputContainerUsed.experimentProperties["bufferVolume"]={"_type":"single","value":bufferVolume,
 						 "unit":value.outputContainerUsed.volume.unit};
 			}
 	    }
 	}
 		
-	$scope.calculVolumes=function(value, columnId){
+	$scope.calculVolumes=function(value){
 		if(value!=null & value !=undefined){
-			$scope.calculVolumeFromValue(value.data);
+			calculVolumeFromValue(value.data);
 	   }
 	};
 	

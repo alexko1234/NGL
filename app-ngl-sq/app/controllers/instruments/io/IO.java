@@ -89,6 +89,7 @@ public class IO extends TPLCommonController {
 					return ok(file.content);
 				}
 			}catch(Throwable e){
+				Logger.error("IO Error :", e);
 				contextValidation.addErrors("Error :", e.getMessage());
 			}
 		}		

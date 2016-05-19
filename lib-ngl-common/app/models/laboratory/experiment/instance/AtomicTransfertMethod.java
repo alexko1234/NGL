@@ -2,7 +2,6 @@ package models.laboratory.experiment.instance;
 
 import java.util.List;
 
-import play.Logger;
 import models.laboratory.common.instance.Comment;
 import models.laboratory.container.description.ContainerSupportCategory;
 import validation.ContextValidation;
@@ -10,6 +9,7 @@ import validation.IValidation;
 import validation.experiment.instance.AtomicTransfertMethodValidationHelper;
 import validation.utils.ValidationHelper;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
@@ -25,10 +25,14 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 })
 public abstract class AtomicTransfertMethod implements IValidation {
 
+
+	@JsonIgnore
+	public Integer index; //use in rules validation to have the position+1 in the list of ATM.
+	
 	public List<InputContainerUsed> inputContainerUseds;
 	public List<OutputContainerUsed> outputContainerUseds;
-	public String line;
-	public String column;
+	public String line; //is equal to outputSupportContainerLine
+	public String column; //is equal to outputSupportContainerColumn
 	public Comment comment;
 	
 	public AtomicTransfertMethod() {

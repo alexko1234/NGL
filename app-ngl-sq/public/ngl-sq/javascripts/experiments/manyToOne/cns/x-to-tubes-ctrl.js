@@ -1,5 +1,5 @@
-angular.module('home').controller('PlatesToTubesCtrl',['$scope', '$parse',
-                                                               function($scope, $parse) {
+angular.module('home').controller('PlatesToTubesCtrl',['$scope', '$http','$parse',
+                                                               function($scope, $http,$parse) {
 	$scope.atmService.updateOutputConcentration = function(atm){
 		
 		if(atm){
@@ -67,7 +67,7 @@ angular.module('home').controller('PlatesToTubesCtrl',['$scope', '$parse',
 		
 		};
 		if($parse("(outputConc.unit ===  inputConc.unit)")(compute)){
-			var result = $parse("(inputPercentage * outputConc.value *  outputVol.value) / inputConc.value")(compute);
+			var result = $parse("(inputPercentage * outputConc.value *  outputVol.value) / (inputConc.value * 100)")(compute);
 			console.log("result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
 				inputVolume.value = result;				
@@ -82,5 +82,37 @@ angular.module('home').controller('PlatesToTubesCtrl',['$scope', '$parse',
 		
 	}
 	
+	var generateSampleSheet = function(){
+		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
+		.success(function(data, status, headers, config) {
+			var header = headers("Content-disposition");
+			var filepath = header.split("filename=")[1];
+			
+			var filename = filepath.split(/\/|\\/);
+			filename = filename[filename.length-1];
+			if(data!=null){
+				$scope.messages.clazz="alert alert-success";
+				$scope.messages.text=Messages('experiments.msg.generateSampleSheet.success')+" : "+filepath;
+				$scope.messages.showDetails = false;
+				$scope.messages.open();	
+				
+				var blob = new Blob([data], {type: "text/plain;charset=utf-8"});    					
+				saveAs(blob, filename);
+			}
+		})
+		.error(function(data, status, headers, config) {
+			$scope.messages.clazz = "alert alert-danger";
+			$scope.messages.text = Messages('experiments.msg.generateSampleSheet.error');
+			$scope.messages.showDetails = false;
+			$scope.messages.open();				
+		});
+	};
+
+	$scope.setAdditionnalButtons([{
+		isDisabled : function(){return $scope.isNewState();} ,
+		isShow:function(){return !$scope.isNewState();},
+		click:generateSampleSheet,
+		label:Messages("experiments.sampleSheet")
+	}]);
 	
 }]);

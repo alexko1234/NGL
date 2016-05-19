@@ -879,13 +879,14 @@ angular.module('atomicTransfereServices', [])
 						$service.data.atm = $.extend(true,[], atms);
 						for(var i=0; i< $service.data.atm.length;i++){
 							var atm = $service.data.atm[i];
-							$service.data.atmViewOpen[i] = false;
 							for(var j=0; j<	atm.inputContainerUseds.length ; j++){
 								var inputContainerCode = atm.inputContainerUseds[j].code;
 								var inputContainer = inputContainers[inputContainerCode];
 								atm.inputContainerUseds[j] = $commonATM.updateContainerUsedFromContainer(atm.inputContainerUseds[j], inputContainer);								
 							}
-							$service.data.atmViewOpen[i] = false;
+							if(!$service.data.atmViewOpen[i]){
+								$service.data.atmViewOpen[i] = false;
+							}
 						}
 						$service.data.inputContainerSupports = allSupports;							
 						//add new atomic in datatable
@@ -1233,13 +1234,19 @@ angular.module('atomicTransfereServices', [])
 					$atmToSingleDatatable.addExperimentPropertiesToDatatable(experimentType.propertiesDefinitions);
 					
 				},
-				viewToExperiment :function(experiment){		
+				viewToExperiment :function(experiment, saveUDTBefore){		
 					if(null === experiment || undefined === experiment){
 						throw 'experiment is required';
 					}
-					$atmToSingleDatatable.data.save();					
-					$atmToSingleDatatable.viewToExperimentManyToOne(experiment);
-					this.data.atm = experiment.atomicTransfertMethods;
+					if(saveUDTBefore){
+						$atmToSingleDatatable.data.save();
+						$atmToSingleDatatable.viewToExperimentManyToOne(experiment);
+						this.data.atm = experiment.atomicTransfertMethods;
+					}else{
+						experiment.atomicTransfertMethods = this.data.atm;
+					}
+					
+					
 				},
 				refreshViewFromExperiment:function(experiment){
 					if(null === experiment || undefined === experiment){

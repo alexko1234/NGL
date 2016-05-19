@@ -191,7 +191,13 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 	public static void validateRules(Experiment exp,ContextValidation contextValidation){
 		ArrayList<Object> validationfacts = new ArrayList<Object>();
 		validationfacts.add(exp);
-		exp.atomicTransfertMethods.forEach((AtomicTransfertMethod atm) -> validationfacts.add(atm));
+		//exp.atomicTransfertMethods.forEach((AtomicTransfertMethod atm) -> validationfacts.add(atm));
+		
+		for(int i=0;i<exp.atomicTransfertMethods.size();i++){
+			AtomicTransfertMethod atomic = exp.atomicTransfertMethods.get(i);
+			atomic.index = i+1; //used to have the position in the list
+			validationfacts.add(atomic);
+		}
 		
 		State s = new State();
 		s.code = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);

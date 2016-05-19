@@ -89,7 +89,7 @@ angular.module('home').controller('OneToVoidCtrl',['$scope', '$parse','atmToSing
 			order:{
 				mode:'local', //or 
 				active:true,
-				by:'ContainerInputCode'
+				by:'inputContainer.code'
 			},
 			remove:{
 				active: ($scope.isEditModeAvailable() && $scope.isNewState()),
