@@ -116,24 +116,8 @@ rule "Container duplicate in Lane"
     	//Logger.debug("Erreur containers "+$containerDuplicate);
  		$contextValidation.addErrors("Position["+$position+"]",	"error.validationexp.duplicateinputcontainers",$containerDuplicate, $position);
     end
-   	
-rule "Sum % percentage per piste = 100 % "
-	@nglSQ( validations )
-	dialect "java"
-	salience 580
-	no-loop
-    when
-    $atomics:ManyToOneContainer($inputContainers : inputContainerUseds)   
-    $total : Double() from accumulate(InputContainerUsed( $n:percentage, percentage!=null) from $inputContainers, sum( $n ) )
-    $container: InputContainerUsed($cat : categoryCode) from $inputContainers
-    eval(!($total>=99.9 && $total<=100) )
-    $contextValidation:ContextValidation()
-   	 then
-   		Logger.debug("Regles de validation des pourcentages solexa "+ $total +' '+$atomics.index.toString());   		
-   		
-   		$contextValidation.addErrors("Position["+$atomics.index.toString()+"]",	"error.validationexp.percentperoutputcontainerdefault", $total);
-   	end
-   	
+
+
 rule "For Tag vide same sample"
 	@nglSQ (validations )
 	dialect "java"
