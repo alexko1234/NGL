@@ -142,6 +142,11 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 				getSampleControlTreatmentPropertyDefinitions(), 
 				getTreatmentTypeContexts("pairs"), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "160"));
+		
+		l.add(DescriptionFactory.newTreatmentType("Gender", "gender", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "Gender", 
+				getGenderTreatmentPropertyDefinitions(), 
+				getTreatmentTypeContexts("pairs"), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "170"));
 		DAOHelpers.saveModels(TreatmentType.class, l, errors);
 	}
 	
@@ -327,6 +332,19 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Sample input","sampleInput", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Sample sexe","sampleSexe", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), String.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Samples comparison","samplesComparison", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+		return propertyDefinitions;
+	}
+	
+	private static List<PropertyDefinition> getGenderTreatmentPropertyDefinitions(){
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Gender","gender", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Integer.class, true, DescriptionFactory.newValues("0", "1", "2"), "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Unaligned","unaligned", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("MQ0-PP","mq0PP", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("MQ1:59-PP","mq159PP", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("MQ60-PP","mq60PP", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("MQ0-NPP","mq0NPP", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("MQ1:59-NPP","mq159NPP", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("MQ60-NPP","mq60NPP", LevelService.getLevels(Level.CODE.ReadSet, Level.CODE.Pairs), Double.class, true, "single"));
 		return propertyDefinitions;
 	}
 	
