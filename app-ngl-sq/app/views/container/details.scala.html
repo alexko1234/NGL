@@ -21,18 +21,74 @@
 		<ul class="nav nav-tabs margin-bottom-5">
 			<li ng-class="getTabClass('general')"><a href="#" data-target="#general" data-toggle="tab" ng-click="setActiveTab('general')">@Messages("containers.tabs.general")</a></li>
 			@***
-			<li ng-if="container.treeOfLife || (parentsInPaths.length>=1 || children.length>=1)" ng-class="getTabClass('treeoflife')"><a href="#" data-target="#treeoflife" data-toggle="tab" ng-click="setActiveTab('treeoflife')">@Messages("containers.tabs.treeoflife")</a></li>
+			<li ng-class="getTabClass('treeoflife')"><a href="#" data-target="#treeoflife" data-toggle="tab" ng-click="setActiveTab('treeoflife')">@Messages("containers.tabs.treeoflife")</a></li>
 			***@
+			<li ng-class="getTabClass('workflow')"><a href="#" data-target="#workflow" data-toggle="tab" ng-click="setActiveTab('workflow')">@Messages("containers.tabs.workflow")</a></li>
+			<li ng-if="container.qualityControlResults !== null" ng-class="getTabClass('resultsqc')"><a href="#" data-target="#resultsqc" data-toggle="tab" ng-click="setActiveTab('resultsqc')">@Messages("containers.tabs.resultsqc")</a></li>
 		</ul>
 		<div class="tab-content">
 			<div class="tab-pane {{getTabClass('general')}}" id="general">
 				@partials.details_general()
 			</div>
-			@***
 			<div class="tab-pane {{getTabClass('treeoflife')}}" id="treeoflife">
 				@partials.details_treeoflife()
 			</div>
-			***@
+			<div class="tab-pane {{getTabClass('workflow')}}" id="workflow">
+				<div class="row">
+					<div class="col-md-4 col-lg-4">
+						<table class="table table-condensed table-hover table-bordered">
+						<thead>
+							<tr>
+								<th>@Messages("containers.workflow.state")</th>
+								<th>@Messages("containers.workflow.date")</th>
+								<th>@Messages("containers.workflow.who")</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="state in container.state.historical|orderBy:'date'">
+								<td ng-bind="state.code|codes:'state'" />
+								<td ng-bind="state.date|date:'@Messages("datetime.format")'" />
+								<td ng-bind="state.user" />
+							</tr>
+						</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane {{getTabClass('resultsqc')}}" id="results">
+				<div class="row">
+					<div class="col-md-4 col-lg-4">
+						<table class="table table-condensed table-hover table-bordered table-striped">
+							<thead>
+								<tr>
+									<th>@Messages("containers.resultsqc.type")</th>
+									<th>@Messages("containers.resultsqc.results")</th>
+									<th>@Messages("containers.resultsqc.valuation")</th>
+									<th>@Messages("containers.resultsqc.date")</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="qc in container.qualityControlResults">
+									<td ng-bind="qc.typeCode" />
+									<td>
+										<div ng-repeat="(key, value) in qc.properties">
+											<span class="col-md-6 col-lg-6 control-label" ng-if="value._type !== 'img'" ng-bind="key|codes:'property_definition'" />
+											<div class="col-md-6 col-lg-6">
+												<p class="form-control-static" ng-if="value._type !== 'img'">
+													<span ng-bind="value.value" />
+													<span ng-if="value.unit !== null" ng-bind="value.unit" />
+												</p>
+											</div>
+										</div>
+									</td>
+									<td ng-bind="qc.valutation" />
+									<td ng-bind="qc.date|date:'@Messages("date.format")'" />
+								</tr>							
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

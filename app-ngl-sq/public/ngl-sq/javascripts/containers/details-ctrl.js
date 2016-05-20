@@ -21,9 +21,10 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		$http.get(jsRoutes.controllers.containers.api.Containers.get($routeParams.code).url).then(function(response) {
 			
 			$scope.container = response.data;
+			console.info($scope.container);
 			
-			// Verification...
 			/*
+			// TreeOfLife
 			if($scope.container){
 				initTreeOfLife($scope.container);		
 			}else{
@@ -46,18 +47,23 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	}
 	init();
 	
-	/*
+	/* => TODO
 	var initTreeOfLife = function(currentContainer){
 		//extract parent container codes
-		var codes = {parentContainerCodes : []};
-		angular.forEach(currentContainer.treeOfLife.paths, function(path){
-			path = path.substring(1);
-			this.parentContainerCodes = this.parentContainerCodes.concat(path.split(","));
-		}, codes);
-			
-		
+		var codes = {parentContainerCodes : []};	
+		if(!angular.isUndefined(currentContainer.treeOfLife) && (currentContainer.treeOfLife !== null)){
+			angular.forEach(currentContainer.treeOfLife.paths, function(path){
+				path = path.substring(1);
+				this.parentContainerCodes = this.parentContainerCodes.concat(path.split(","));
+			}, codes);
+		}else{
+			console.warn("No \"treeOfLife.paths\" !");
+		}
+
 		var promises = [];
-		promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {codes:codes.parentContainerCodes}}));
+		if(codes.parentContainerCodes.length > 0) // Case no paths
+			promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {codes:codes.parentContainerCodes}}));
+		
 		promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {treeOfLifePathRegex:currentContainer.code}}));
 		
 		
@@ -68,13 +74,14 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			};
 			
 			containerNodes[$scope.container.code] = newNode($scope.container);
-				
+
+
 			angular.forEach(results, function(result){
 				angular.forEach(result.data, function(container){
 					this[container.code] = newNode(container);
 				}, this)
 			}, containerNodes)
-			
+
 			
 			var updateParentNodes = function(currentContainerNode, containerNodes){
 				//only if parents
@@ -95,8 +102,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 							
 						}, currentContainerNode)
 					}
-				}
-				
+				}			
 			};
 						
 			for(var key in containerNodes){
@@ -135,35 +141,67 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			
 			//find the first nodes
 			
-			console.log("3");
+			var pathParent=[];
+			var findFirstNode = function(currentContainer){
+				angular.forEach(currentContainer.parentNodes, function(parentNode){
+					
+					// run on roots parents	
+					angular.forEach(containerNodes, function(containerNode){
+						if(parentNode === containerNode){
+							pathParent.push(containerNode);
+							if(pathParent[pathParent.length-1].parentNodes.length > 0){
+								findFirstNode(containerNode);
+							}else{
+								this[pathParent[0].container.code+" -> "+pathParent[pathParent.length-1].container.code] = pathParent;
+								pathParent = [];
+							}
+						}
+					}, this);
+				}, $scope.pathsParentsCurrent);
+			};
 			
 			
-			
-		
-			var currentNode = newNode($scope.container);
-			updateNode(currentNode, containers);
-
-		});
-		
-		
-		 
-		
-
-		//load parent containers
-		$http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {codes:codes.parentContainerCodes}}).then(function(response) {
-			var parentContainers = response.data;
-			
-			//load children containers
-			$http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {treeOfLifePathRegex:currentContainer.code}}).then(function(response) {
-				var 
+			var pathChildren=[];
+			var findLastNode = function(currentContainer){
+				angular.forEach(currentContainer.childNodes, function(childNode){
+					// run through roots children		
+					angular.forEach(containerNodes, function(containerNode){	
+						if(childNode === containerNode){
+							pathChildren.push(containerNode);
+							if(pathChildren[pathChildren.length-1].childNodes.length > 0){
+								findLastNode(containerNode)
+							}else{
+								this[pathChildren[0].container.code+" -> "+pathChildren[pathChildren.length-1].container.code] = pathChildren;
+								pathChildren = [];
+							}
+						}
+					}, this);
+				}, $scope.pathsChildrenCurrent);
 			}
 			
-			console.log("2");
+			
+			// Initialisation of $scope.pathsFromCurrent
+			$scope.pathsParentsCurrent = {};
+			$scope.pathsChildrenCurrent = {};
+			findFirstNode(currentContainerNode);
+			findLastNode(currentContainerNode);
+			
+			
+			// Add the currentContainer to the map
+			$scope.firstNode = currentContainerNode;
+			
+			
+			console.log(containerNodes);
+			console.log($scope.pathsParentsCurrent);
+			console.log($scope.pathsChildrenCurrent);
+			//console.log($scope.firstNode);
+			
+			console.log("3");
+			
 		});
 		
 		console.log("1");
-	
-	}	*/
-	
+
+	}*/
 	
 }]);
