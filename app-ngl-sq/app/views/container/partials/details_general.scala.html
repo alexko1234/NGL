@@ -13,33 +13,29 @@
 			@columnLabelValue(Messages("containers.table.code")){
 				<p class="form-control-static" ng-bind="container.code" />
 			}
-			@columnLabelValue(Messages("containers.table.valid")){
-				<p class="form-control-static" ng-bind="container.valuation.valid|codes:'valuation'" />				
+			@columnLabelValue(Messages("containers.table.fromTransformationTypeCodes")){
+				<div class="form-control-static" list-resize="container.fromTransformationTypeCodes|unique|codes:'type'" list-resize-min-size='3' />
+
 			}
 			@columnLabelValue(Messages("containers.table.support.categoryCode")){
 				<p class="form-control-static" ng-bind="container.support.categoryCode|codes:'container_support_cat'" />
 			}
-			
-			@columnLabelValue(Messages("containers.table.state.code")){
-				<p class="form-control-static" ng-bind="container.state.code|codes:'state'" />	
-			}
-			@columnLabelValue(Messages("containers.table.fromTransformationTypeCodes")){
-				<div class="col-md-6 col-lg-6">
-					<div class="form-control-static" list-resize="container.fromTransformationTypeCodes|unique|codes:'type'" list-resize-min-size='3' />
-				</div>
+			@columnLabelValue(Messages("containers.table.supportCode")){
+				<p class="form-control-static" ng-bind="container.support.code" />
 			}
 			@columnLabelValue(Messages("containers.table.projectCodes")){
-				<div class="col-md-6 col-lg-6">
-					<div class="form-control-static" list-resize='container.projectCodes' list-resize-min-size='2' />
-				</div>
+				<div class="form-control-static" list-resize='container.projectCodes' list-resize-min-size='3' horizontal />
 			}
 			@columnLabelValue(Messages("containers.table.sampleCodes")){
-				<div class="col-md-6 col-lg-6">
-					<div class="form-control-static" list-resize='container.sampleCodes' list-resize-min-size='2' horizontal/>
+				<div class="form-control-static" list-resize='container.sampleCodes' list-resize-min-size='3' horizontal/>
+			}
+			@columnLabelValue(Messages("containers.table.comments")){
+				<div class="form-control-static" ng-repeat="comment in container.comments">
+					<span ng-if="comment.comment" ng-bind="comment.comment" />
 				</div>
 			}
 		}
-		
+			
 		@column(){				
 			@columnLabelValue(Messages("containers.table.concentration")){
 				<p class="form-control-static">
@@ -58,75 +54,57 @@
 					<span ng-bind="container.quantity.value" />
 					 <span ng-if="container.quantity.value !== undefined && container.quantity.value !== null" ng-bind="container.quantity.unit" />
 				</p>
-			}		
-			@columnLabelValue(Messages("containers.table.sampleCodes.length")){
-				<p class="form-control-static" ng-bind="container.sampleCodes.length" />
-			}	
-			@columnLabelValue(Messages("containers.table.contents.length")){
-				<p class="form-control-static" ng-bind="container.contents.length" />
 			}
-			
+			@columnLabelValue(Messages("containers.table.size")){
+				<p class="form-control-static">
+					<span ng-bind="container.size.value" />
+					<span ng-if="container.size.value !== undefined && container.size.value !== null" ng-bind="container.size.unit" />
+				</p>
+			}
 		}
 		
-		@column(){			
-			@columnLabelValue(Messages("containers.table.supportCode")){
-				<p class="form-control-static" ng-bind="container.support.code" />
-			}
-			
-			<div class="form-group">
-				<div class="col-md-6 col-lg-6 control-label">
-					<label>@Messages("containers.table.support.line")</label> <span ng-bind="container.support.line" />
-				</div>
-				<div class="col-md-6 col-lg-6 form-control-static">
-					<label>@Messages("containers.table.support.column")</label> <span ng-bind="container.support.column" />
-				</div>
-			</div>
-			
-			@columnLabelValue(Messages("containers.table.storageCode")){
-				<p class="form-control-static" ng-bind="container.support.storageCode" />
+		@column(){
+			@columnLabelValue(Messages("containers.table.valid")){
+				<p class="form-control-static" ng-bind="container.valuation.valid|codes:'valuation'" />				
 			}	
-			
 			@columnLabelValue(Messages("containers.table.creationDate")){
 				<p class="form-control-static" ng-bind="container.traceInformation.creationDate|date:'@Messages("date.format")'" />
 			}
 			@columnLabelValue(Messages("containers.table.createUser")){
 				<p class="form-control-static" ng-bind="container.traceInformation.createUser" />
 			}		
-
+			@columnLabelValue(Messages("containers.table.storageCode")){
+				<p class="form-control-static" ng-bind="container.support.storageCode" />
+			}	
+			@columnLabelValue(Messages("containers.table.processCodes")){
+				<div class="form-control-static" list-resize="container.processCodes" list-resize-min-size='2' horizontal />
+			}
 		}
 	</div>
-	
-			@***
-			<div class="row" ng-if='container.comments'>
-				<div class="col-md-12 col-lg-12">
-					<div ng-repeat="object in container.comments">
-					<div ng-repeat="(key, value) in object">				
-						<label class="col-md-6 col-lg-6 control-label" ng-bind="key" />
-						<div class="col-md-6 col-lg-6"><p class="form-control-static" ng-bind="value" /></div>
-					</div>
-					</div>
-				</div>
-			</div>
-			***@	
 
 	<div class="row">
 		<div class="col-md-12 col-lg-12">
 			<table class="table table-condensed table-striped table-hover table-bordered">
+				<caption>
+					<strong>@Messages("containers.table.contents") ( <span ng-bind="container.contents.length" /> )</strong>
+				</caption>
 				<thead>
 					<tr>
-						<th>@Messages("containers.table.sampleCodes")</th>
-						<th>@Messages("containers.table.projectCodes")</th>
+						<th>@Messages("containers.table.percents")</th>
+						<th>@Messages("containers.table.projectCode")</th>
+						<th>@Messages("containers.table.sampleCode")</th>
+						<th>@Messages("containers.table.referenceCollab")</th>
 						<th>@Messages("containers.table.sampleTypes")</th>
-						<th>@Messages("containers.table.percentageInsidePool")</th>
 						<th>@Messages("containers.table.properties")</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr ng-repeat="content in container.contents|orderBy:'sampleCode'">
-						<td>{{content.sampleCode}}</td>
-						<td>{{content.projectCode}}</td>
-						<td>{{content.sampleTypeCode}}</td>
-						<td>{{content.percentage}}</td>
+						<td ng-bind="content.percentage" />
+						<td ng-bind="content.projectCode" />
+						<td ng-bind="content.sampleCode" />
+						<td ng-bind="content.referenceCollab" />
+						<td ng-bind="content.sampleTypeCode|codes:'type'" />
 						<td>
 							<div ng-repeat="(key, value) in content.properties">
 								<label class="col-md-6 col-lg-6 control-label" ng-if="value.unit !== null">{{key|codes:'property_definition'}} ({{value.unit}})</label>

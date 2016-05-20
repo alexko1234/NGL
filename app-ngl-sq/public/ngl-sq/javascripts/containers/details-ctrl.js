@@ -22,13 +22,14 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			
 			$scope.container = response.data;
 			console.info($scope.container);
-			// Verification...
 			
+			/*
+			// TreeOfLife
 			if($scope.container){
 				initTreeOfLife($scope.container);		
 			}else{
 				console.info("Aucun container sous le code: " + $routeParams.code);
-			}
+			}*/
 
 			if(tabService.getTabs().length == 0){			
 				tabService.addTabs({label:Messages('containers.tabs.search'),href:jsRoutes.controllers.containers.tpl.Containers.home("search").url,remove:true});
@@ -46,20 +47,23 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	}
 	init();
 	
-	
+	/* => TODO
 	var initTreeOfLife = function(currentContainer){
-		if(!angular.isUndefined(currentContainer.treeOfLife.paths)){
-			//extract parent container codes
-			var codes = {parentContainerCodes : []};
+		//extract parent container codes
+		var codes = {parentContainerCodes : []};	
+		if(!angular.isUndefined(currentContainer.treeOfLife) && (currentContainer.treeOfLife !== null)){
 			angular.forEach(currentContainer.treeOfLife.paths, function(path){
 				path = path.substring(1);
 				this.parentContainerCodes = this.parentContainerCodes.concat(path.split(","));
 			}, codes);
+		}else{
+			console.warn("No \"treeOfLife.paths\" !");
 		}
 
-		
 		var promises = [];
-		promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {codes:codes.parentContainerCodes}}));
+		if(codes.parentContainerCodes.length > 0) // Case no paths
+			promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {codes:codes.parentContainerCodes}}));
+		
 		promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {treeOfLifePathRegex:currentContainer.code}}));
 		
 		
@@ -136,40 +140,43 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			
 			
 			//find the first nodes
+			
 			var pathParent=[];
 			var findFirstNode = function(currentContainer){
-				angular.forEach(containerNodes, function(containerNode){
-					// run on roots parents
-					angular.forEach(currentContainer.parentNodes, function(parentNode){		
+				angular.forEach(currentContainer.parentNodes, function(parentNode){
+					
+					// run on roots parents	
+					angular.forEach(containerNodes, function(containerNode){
 						if(parentNode === containerNode){
 							pathParent.push(containerNode);
 							if(pathParent[pathParent.length-1].parentNodes.length > 0){
 								findFirstNode(containerNode);
 							}else{
-								this[pathParent[0].container.code] = pathParent;
+								this[pathParent[0].container.code+" -> "+pathParent[pathParent.length-1].container.code] = pathParent;
 								pathParent = [];
 							}
 						}
-					}, $scope.pathsParentsCurrent);
-				});	
+					}, this);
+				}, $scope.pathsParentsCurrent);
 			};
+			
 			
 			var pathChildren=[];
 			var findLastNode = function(currentContainer){
-				angular.forEach(containerNodes, function(containerNode){
-					// run through roots children
-					angular.forEach(currentContainer.childNodes, function(childNode){
+				angular.forEach(currentContainer.childNodes, function(childNode){
+					// run through roots children		
+					angular.forEach(containerNodes, function(containerNode){	
 						if(childNode === containerNode){
 							pathChildren.push(containerNode);
 							if(pathChildren[pathChildren.length-1].childNodes.length > 0){
 								findLastNode(containerNode)
 							}else{
-								this[pathChildren[0].container.code] = pathChildren;
+								this[pathChildren[0].container.code+" -> "+pathChildren[pathChildren.length-1].container.code] = pathChildren;
 								pathChildren = [];
 							}
 						}
-					}, $scope.pathsChildrenCurrent);
-				});
+					}, this);
+				}, $scope.pathsChildrenCurrent);
 			}
 			
 			
@@ -187,15 +194,14 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			console.log(containerNodes);
 			console.log($scope.pathsParentsCurrent);
 			console.log($scope.pathsChildrenCurrent);
-			console.log($scope.firstNode);
-			//console.log(paths);
+			//console.log($scope.firstNode);
 			
 			console.log("3");
 			
 		});
 		
 		console.log("1");
-		
-	}	
+
+	}*/
 	
 }]);

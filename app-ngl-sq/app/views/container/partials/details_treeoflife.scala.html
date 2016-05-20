@@ -13,17 +13,14 @@
 
 <div class="row">
 
-	
-		<div ng-repeat="path in pathsParentsCurrent">
 		<div class="col-md-12 col-lg-12">
+		<div ng-repeat="path in pathsParentsCurrent">
 		
 			<div ng-if="path[0].childNodes.includes(firstNode)">
 				<div ng-repeat="node in path | orderBy:'indexFromCurrent'">
-							
-					
+
 						@alert("success")(<strong ng-bind="node.container.code" />)
-					
-						
+
 				</div>
 			</div>
 			
@@ -32,27 +29,46 @@
 	
 	
 		<div class="col-md-12 col-lg-12">
+				@alert("danger")(<strong ng-bind="firstNode.container.code" />)
+				<div ng-if="firstNode.childNodes.length>0">
+					=>
+					<div ng-repeat="childNode in firstNode.childNodes">
 						
-				@alert("danger")(<strong ng-bind="firstNode.container.code" />)	
-			
+						<div class="col-md-12 col-lg-12" ng-repeat="path in pathsChildrenCurrent">
+							<div ng-if="path[0] === childNode">
+							<div ng-repeat="node in path">
+								
+									@alert("info")(<strong ng-bind="node.container.code" />)=>
+								
+							</div>
+							<div ng-repeat="childChild in node.childNodes">
+								<div ng-if="childChild === path[0]">
+								<div ng-repeat="other in path">
+									@alert("info")(<strong ng-bind="other.container.code" />)=>
+								</div>
+								</div>
+							</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
 		</div>
 	
-	
-		<div ng-repeat="path in pathsChildrenCurrent">
-		<div class="col-md-12 col-lg-12">	
-			
-			<div ng-if="path[0].parentNodes.includes(firstNode)">
-				<div ng-repeat="node in path | orderBy: '-indexFromCurrent'">
-					
-					<div ng-if="">
-						@alert("info")(<strong ng-bind="node.container.code" />)	
-					</div>
-										
+		@***
+		<div class="col-md-12 col-lg-12">
+		<div ng-repeat="path in pathsChildrenCurrent">	
+			<div ng-repeat="node in path">
+				<div ng-if="path[0].parentNodes.includes(firstNode)">
+					@alert("info")(<strong ng-bind="node.container.code" />)
 				</div>
+			
 			</div>
+		
+				
 			
 		</div>	
 		</div>
-
+		***@
 	
 </div>

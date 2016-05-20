@@ -72,6 +72,8 @@ containers.tabs.state = Changement d''Etat Container
 #Containers tabs
 containers.tabs.general = Général
 containers.tabs.treeoflife = Arbre de Vie
+containers.tabs.workflow = Infos workflow
+containers.tabs.resultsqc = Résultats QC
 
 #Containers table
 containers.table.code = Code Container
@@ -126,6 +128,20 @@ containers.table.treeOfLife = Arbre de vie
 containers.table.quantity = Quantité
 containers.table.concentration= Concentration
 containers.table.properties = Autres Propriétés
+containers.table.size = Taille
+containers.table.comments = Commentaires
+containers.table.contents = Contents
+containers.table.percents = Pourcentage
+containers.table.referenceCollab = Réf. collab
+
+containers.workflow.state = Etat
+containers.workflow.date = Date
+containers.workflow.who = Par
+
+containers.resultsqc.type = Type QC
+containers.resultsqc.results = Résultats
+containers.resultsqc.valuation = Validation container
+containers.resultsqc.date = Date
 
 containers.treeTabs.code = Code
 containers.treeTabs.creationDate = Créé le
