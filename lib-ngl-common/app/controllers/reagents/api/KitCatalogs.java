@@ -108,7 +108,7 @@ public class KitCatalogs extends DocumentController<KitCatalog>{
 			keys = getKeys(kitCatalogSearch);
 			keys.put("code", 1);
 			keys.put("name", 1);
-			keys.put("category", 1);			
+			keys.put("category", 1);
 			
 			if(null == kitCatalogSearch.orderBy)kitCatalogSearch.orderBy = "code";
 			if(null == kitCatalogSearch.orderSense)kitCatalogSearch.orderSense = 0;				

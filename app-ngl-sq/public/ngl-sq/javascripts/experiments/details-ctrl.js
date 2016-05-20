@@ -422,7 +422,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.lists.refresh.protocols({"experimentTypeCode":$scope.experimentType.code});
 		$scope.lists.refresh.resolutions({"typeCode":$scope.experimentType.code});
 		$scope.lists.refresh.states({"objectTypeCode":"Experiment"});
-		$scope.lists.refresh.kitCatalogs({"experimentTypeCodes":$scope.experiment.typeCode});
+		$scope.lists.refresh.kitCatalogs({"experimentTypeCodes":$scope.experiment.typeCode, "isActive":true});
 		$scope.lists.refresh.experimentCategories();
 	};
 	
@@ -662,7 +662,10 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		var kitCatalogCode = $parse("data.kitCatalogCode")(value);
 		
 		if(null !== kitCatalogCode && undefined !== kitCatalogCode){
+			console.log("kitCatalogCode: "+kitCatalogCode);
 			return lists.getBoxCatalogs({"kitCatalogCode":kitCatalogCode},"boxCatalogs-"+kitCatalogCode);
+		} else {
+			console.log("pas de kitCatalogCode");
 		}				
 	}
 	
