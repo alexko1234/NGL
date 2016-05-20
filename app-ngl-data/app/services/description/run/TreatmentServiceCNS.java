@@ -47,7 +47,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		List<TreatmentType> l = new ArrayList<TreatmentType>();
 		// common CNS - CNG
 		l.add(DescriptionFactory.newTreatmentType("SAV","sav", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.sequencing.name()), "sav", 
-				getSAVPropertyDefinitions(), 
+				getSAVPropertyDefinitionsV2(), 
 				Arrays.asList(getTreatmentTypeContext("read1", Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE)), 
 				DescriptionFactory.getInstitutes( Constants.CODE.CNS), "10"));
 		l.add(DescriptionFactory.newTreatmentType("NGS-RG","ngsrg-illumina", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ngsrg.name()), "ngsrg", 
@@ -369,7 +369,7 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		return propertyDefinitions;
 	}
 
-	private static List<PropertyDefinition> getSAVPropertyDefinitions_V2() throws DAOException {
+	private static List<PropertyDefinition> getSAVPropertyDefinitionsV2() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Density","clusterDensity",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Long.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("+/-","clusterDensityStd",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Long.class, true, "single"));

@@ -47,7 +47,7 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 		List<TreatmentType> l = new ArrayList<TreatmentType>();
 		// common CNS - CNG
 		l.add(DescriptionFactory.newTreatmentType("SAV","sav", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.sequencing.name()), "sav", 
-				getSAVPropertyDefinitions(), 
+				getSAVPropertyDefinitionsV2(), 
 				Arrays.asList(getTreatmentTypeContext("read1", Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE)), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "10"));
 		
