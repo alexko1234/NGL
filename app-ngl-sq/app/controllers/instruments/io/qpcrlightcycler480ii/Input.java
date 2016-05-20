@@ -29,9 +29,6 @@ import controllers.instruments.io.utils.InputHelper;
 public class Input extends AbstractInput {
 	
 	
-	
-	
-	
    /* Description du fichier a traiter: TXT TAB délimité généré par LightCycler
 	*
 	*Experiment: 150929_KAPA-Lib-Quant_PCRFREE_P17  Selected Filter: SYBR Green I / HRM Dye (465-510)
@@ -46,8 +43,6 @@ public class Input extends AbstractInput {
 	*   Pour les puits en erreur, il n'y a rien dans les colonnes "Cp" et "Concentration"
 	*   Ignorer les lignes dont la colonne est > 20, ce sont des controles ( voir aussi remapPosition() )
 	*/
-	
-	
 	
 	
 	@Override
@@ -127,11 +122,18 @@ public class Input extends AbstractInput {
 				  // ignorer les lignes correspondant aux temoins (colonnes 22,23,24)
 				  if (col384 > 20 ){ continue; }
 			 
-				  // en cas d'erreur de lecture de concentration concentration manquante => forcer a 0 pour les calculs ultérieurs
-				  double concentration=0;
-				  if ( ! cols[5].equals("") ){ concentration=Double.parseDouble(cols[5]); }
-				  //Logger.info ("ligne "+n+"concentration="+concentration);
-				  data.put(pos0384, concentration);
+				  /* Amelioration 17/05/2016: N'inclure un puit dans le calcul de moyenne que si
+				     la colonne include est égale a 'True' ET la colonne color=255
+				      =>forcer a 0 ici
+				  */	  
+				  double concentration;
+				  if ( cols[0].equals("True") && cols[1].equals("255") ){ 
+					  concentration=Double.parseDouble(cols[5]);   
+					  data.put(pos0384, concentration);
+				  }
+				  else { 
+					  data.put(pos0384, 0d);
+				  }
 				}
 		  }
 		  ++n;
@@ -164,22 +166,21 @@ public class Input extends AbstractInput {
 			
 			// stocker concentration pour faire moyenne plus tard...
 			listConc[rep]=concentration_nM;
-			//Logger.info ("pos384="+key+" CONC (pM)="+  data.get(key) +" CONC (nM) ="+concentration_nM );
+			//Logger.info ("pos0384="+key+" CONC (pM)="+  data.get(key) );
 			
 			nbblock++;
 			rep++;
 			if ((nbblock % nbRep ) == 0 ) {	
 				//nbblock est multiple de 6 => fin d'un block de lignes
-				
-				//calcul de la moyenne des 6 concentrations
-				double moyConc_nM= mean(listConc) ;
+				//17/05/2016 calcul de la moyenne des 6 concentrations en ne tenant pas compte des concentrations a 0
+				double moyConc_nM= meanNo0(listConc) ;
 
 				// remapper en 96
 				String pos96=remapPosition (key, sector, contextValidation );
-				
-				 //Logger.info ("FIN DE BLOCK...pos384="+key+" > pos96="+ pos96+"| MOY CONC="+moyConc_nM);
 				results.put(pos96,moyConc_nM );
-				Logger.info (pos96 + " belong to sector "+sector+" ?? "+ belongToSector96(contextValidation, pos96, sector));
+				
+				//Logger.info ("FIN DE BLOCK...pos384="+key+" > pos96="+ pos96+"| MOY CONC="+moyConc_nM);
+				//Logger.info (pos96 + " belong to sector "+sector+" ?? "+ belongToSector96(contextValidation, pos96, sector));
 
 				//reinitialiser le tableau 
 				listConc= new double[nbRep];
@@ -217,9 +218,10 @@ public class Input extends AbstractInput {
 					String icupos=InputHelper.getCodePosition(icu.code);
 					// idem commentaire ci-dessus
 					if ( belongToSector96(contextValidation, icupos, sector_arg)) {
-						Logger.info ("set concentration for icu "+ icu.code);
-						
+							
 						PropertySingleValue concentration = getPSV(icu, "concentration1");
+						Logger.debug ("set concentration for icu "+ icu.code+" ="+ concentration);
+						
 						// effectuer la correction en utilisant ce que l'utilisateur a defini
 						PropertySingleValue cFLSize = getCorrectionFactorLibraySize(icu, correctionFactorLibrarySizeDefault);
 						
@@ -229,7 +231,7 @@ public class Input extends AbstractInput {
 							double corFactor = 452.0d / ((double) (Integer) cFLSize.value);
 							concentration.value = results.get(icupos) * corFactor;
 							concentration.unit = "nM";
-							//Logger.info (".... corFactor="+ corFactor+"; concentration="+ results.get(icupos) * corFactor);
+							//Logger.info ("corFactor="+ corFactor+"; concentration="+ results.get(icupos) * corFactor);
 						} else {
 							concentration.value = null;
 							concentration.unit = "nM";
@@ -334,13 +336,25 @@ public class Input extends AbstractInput {
 		return pos96;		
 	}
 	
-	//Calcul de moyenne; source: https://openclassrooms.com
+	/*Calcul de moyenne; source: https://openclassrooms.com
 	public static double mean(double[] m) {
 	    double sum = 0;
 	    for (int i = 0; i < m.length; i++) {
 	        sum += m[i];
 	    }
 	    return sum / m.length;
+	}*/
+	// modification 17/05/2016: ne pas compter les 0 dans la moyenne
+	public static double meanNo0(double[] m) {
+	
+		 double sum = 0;
+		 int nb=0;
+		 for (int i = 0; i < m.length; i++) {
+		 if ( m[i] > 0 ){ sum += m[i];  nb++; }
+		 }
+		 
+		 //attention cas ou m[] est vide => /0 !!
+		 if (nb > 0 ) { return sum / nb ;} else { return 0; }
 	}
 	
 	//specifique...ne pas mettre dans InputHelper
@@ -353,8 +367,8 @@ public class Input extends AbstractInput {
 		// les secteurs sont uniquement defini par les colonnes		
 		int col96 = Integer.parseInt(pos96.substring(1));
 		
-		if ( col96 > 0 && col96 < 7  && sector == 0 ){ return true;}
-		if ( col96 > 6 && col96 < 13  && sector == 1 ){ return true;}
+		if ( col96 > 0 && col96 < 7   && sector == 0 ){ return true; }
+		if ( col96 > 6 && col96 < 13  && sector == 1 ){ return true; }
 		
 		return false;
 	}
