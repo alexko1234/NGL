@@ -463,6 +463,7 @@ public class ResolutionService {
 	
 		// Info
 		l.add(InstanceFactory.newResolution("test Dev","Info-testDev", resolutionCategories.get("Info"),(short) 1));
+		l.add(InstanceFactory.newResolution("nouveaux critères d'évaluation","Info-nvoCritereEval", resolutionCategories.get("Info"),(short) 2));
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "readSetReso";
