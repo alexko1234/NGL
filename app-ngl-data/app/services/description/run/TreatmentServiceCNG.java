@@ -46,10 +46,21 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 	public  void saveTreatmentType(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<TreatmentType> l = new ArrayList<TreatmentType>();
 		// common CNS - CNG
-		l.add(DescriptionFactory.newTreatmentType("SAV","sav", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.sequencing.name()), "sav", 
-				getSAVPropertyDefinitionsV2(), 
-				Arrays.asList(getTreatmentTypeContext("read1", Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE)), 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG), "10"));
+		
+		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+			l.add(DescriptionFactory.newTreatmentType("SAV","sav", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.sequencing.name()), "sav", 
+					getSAVPropertyDefinitionsV2(), 
+					Arrays.asList(getTreatmentTypeContext("read1", Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE)), 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG), "10"));
+			
+		}else{
+			l.add(DescriptionFactory.newTreatmentType("SAV","sav", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.sequencing.name()), "sav", 
+					getSAVPropertyDefinitions(), 
+					Arrays.asList(getTreatmentTypeContext("read1", Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE)), 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG), "10"));
+			
+		}
+		
 		
 		l.add(DescriptionFactory.newTreatmentType("NGSRG","ngsrg-illumina", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.ngsrg.name()), "ngsrg", 
 				getNGSRGPropertyDefinitions(), 
