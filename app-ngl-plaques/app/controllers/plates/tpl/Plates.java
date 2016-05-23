@@ -25,6 +25,10 @@ public class Plates extends CommonController {
 			return ok(views.html.plates.searchManips.render());
 		}
 		
+		public static Result fromFile() {
+			return ok(views.html.plates.fromFile.render());
+		}
+		
 		public static Result search(){
 			return ok(views.html.plates.search.render());
 		}
@@ -46,6 +50,7 @@ public class Plates extends CommonController {
 	  	    		controllers.plates.api.routes.javascript.Plates.get(),
 	  	    		controllers.plates.api.routes.javascript.Plates.save(),
 	  	    		controllers.plates.api.routes.javascript.Plates.remove(),
+	  	    		controllers.plates.io.routes.javascript.Plates.importFile(),
 	  	    		controllers.manips.api.routes.javascript.Manips.list(),
 	  	    		controllers.combo.api.routes.javascript.Lists.projects(),
 	  	    		controllers.combo.api.routes.javascript.Lists.etmateriels(),

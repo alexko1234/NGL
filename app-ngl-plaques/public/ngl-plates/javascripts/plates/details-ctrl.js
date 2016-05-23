@@ -1,6 +1,7 @@
 "use strict";
 
-angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routeParams','datatable', 'basket', 'lists', '$window', function($scope, $http, $routeParams, datatable, basket, lists, $window) {
+angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routeParams','datatable', 'basket', 'lists', '$window', 
+                                                  function($scope, $http, $routeParams, datatable, basket, lists, $window) {
 	
 	var datatableConfig = {
 			pagination:{

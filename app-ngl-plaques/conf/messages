@@ -4,6 +4,7 @@ index.title = Welcome to NGL Plaques
 #Menu
 plates.menu = Plaques
 plates.menu.new=Création
+plates.menu.new_from_file=Création depuis un fichier
 plates.menu.search=Recherche
 
 #Menu
@@ -18,9 +19,11 @@ manips.table.name  = Nom Manip
 #Plaques
 plates.title.search=Recherche de Plaques
 plates.title.new=Création d''une Plaque
+plates.title.new-from-file=Création d''une Plaque
 
 plates.tabs.search = Recherche
 plates.tabs.searchmanips = Recherche Manips
+plates.tabs.searchfile = Choix fichier d''une plaque
 plates.tabs.new = Nouvelle
 
 plates.button.compute = Calcul coordonnées
@@ -60,6 +63,10 @@ search.placeholder.number = Nombre de codes barres à générer
 plates.msg.save.sucess = Sauvegarde réussie
 plates.msg.save.error = Sauvegarde echouée
 plates.msg.details = [détails]
+
+plates.msg.import.error = Import fichier echouée
+plates.msg.import.success = Import fichier réussie
+
 
 plates.msg.delete.error = Suppression echouée
 plates.msg.delete.sucess = Suppression réussie

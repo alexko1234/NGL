@@ -58,7 +58,7 @@ public class LimsManipDAO {
     
     public void createPlate(Plate plate, String user){
     	Logger.info("pc_PlaqueSolexa @plaqueId="+plate.code+", @emnco="+plate.typeCode);
-    	this.jdbcTemplate.update("pc_PlaqueSolexa @plaqueId=?, @emnco=?, @valqc=?, @valrun=?, @plaquecom=?, @perlog=?", new Object[]{plate.code, plate.typeCode, getValValue(plate.validQC), getValValue(plate.validRun), plate.comment, user});
+    	this.jdbcTemplate.update("pc_PlaqueSolexa @plaqueId=?, @emnco=?, @valqc=?, @valrun=?, @plaquecom=?, @perlog=?", new Object[]{plate.code, plate.typeCode, getValValue(plate.validQC), getValValue(plate.validRun), plate.comment, "galbini"});
     	this.jdbcTemplate.update("ps_MaterielmanipPlaque @plaqueId=?", new Object[]{plate.code});
     	for(Well well: plate.wells){
     		Logger.info("pm_MaterielmanipPlaque @matmaco="+well.code+", @plaqueId="+plate.code+", @plaqueX="+well.x+", @plaqueY="+well.y+"");
@@ -190,6 +190,24 @@ public class LimsManipDAO {
 		}
 	}
 
+	public Well getWell(String nomManip){
+		Well well = this.jdbcTemplate.queryForObject("pl_MaterielmanipUnNomToPlate @matmanom=?", new Object[]{nomManip}, new RowMapper<Well>() {
+	        public Well mapRow(ResultSet rs, int rowNum) throws SQLException {
+		    Well well = new Well();
+		    well.name = rs.getString("matmanom");
+		    well.code = rs.getInt("matmaco");
+		    well.x = rs.getString("plaqueX");
+		    well.y = rs.getString("plaqueY");
+		    well.typeCode = rs.getInt("emnco");
+		    well.typeName = rs.getString("emnnom");
+		    well.valid = getTBoolean(rs.getInt("val"));
+		    well.typeMaterial = rs.getString("tadnom");
+		    return well;
+	        }
+	    });
+		return well;
+	}
+	
 	public User getUser(Integer id) {
 		Logger.info("pl_PerintUn @perco="+id);
 		List<User> users = this.jdbcTemplate.query("pl_PerintUn @perco=?", new Object[]{id}, new RowMapper<User>() {

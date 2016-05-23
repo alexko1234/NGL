@@ -12,6 +12,11 @@ angular.module('home', ['ngRoute','datatableServices','basketServices','commonsS
 		controller : 'SearchManipsCtrl'
 	});
 	
+	$routeProvider.when('/plates/new-from-file/home', {
+		templateUrl : '/tpl/plates/from-file',
+		controller : 'FromFileCtrl'
+	});
+	
 	$routeProvider.when('/plates/:code', {
 		templateUrl : '/tpl/plates/details',
 		controller : 'DetailsCtrl'

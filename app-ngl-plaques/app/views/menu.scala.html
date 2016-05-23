@@ -15,6 +15,7 @@
 					<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" id="runs">@Messages("plates.menu")<b class="caret"></b></a>
 					<ul class="dropdown-menu" role="menu" aria-labelledby="plates">
 						<li class="@("active".when(nav == "plates.new"))"><a href="@controllers.plates.tpl.routes.Plates.home("new")">@Messages("plates.menu.new")</a></li>
+						<li class="@("active".when(nav == "plates.new-from-file"))"><a href="@controllers.plates.tpl.routes.Plates.home("new-from-file")">@Messages("plates.menu.new_from_file")</a></li>						
 						<li class="@("active".when(nav == "plates.search"))"><a href="@controllers.plates.tpl.routes.Plates.home("search")">@Messages("plates.menu.search")</a></li>																																				
 					</ul>
 				</li>
