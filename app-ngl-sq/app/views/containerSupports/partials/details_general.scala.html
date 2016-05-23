@@ -9,7 +9,7 @@
 @columnForProjectsOrSamples(msg: String)(length: xml.Elem)(data: Html) = {
 	<label class="col-md-6 col-lg-6 control-label" ng-if="@data">@msg (@length)</label>
 	<div class="col-md-6 col-lg-6" ng-if="@data">
-		<div class="form-control-static" list-resize="@data" list-resize-min-size='3' vertical />
+		<div class="form-control-static" list-resize="@data" list-resize-min-size='3' horizontal />
 	</div>
 }
 
@@ -21,12 +21,10 @@
 				<p class="form-control-static" ng-bind="support.code" />
 			}
 			@columnLabelValue(Messages("containerSupports.table.categoryCode")){
-				<p class="form-control-static" ng-bind="support.categoryCode" />
+				<p class="form-control-static" ng-bind="support.categoryCode|codes:'container_support_cat'" />
 			}
 			@columnLabelValue(Messages("containerSupports.table.fromTransformationTypeCodes")){
-				<div class="col-md-6 col-lg-6">
 					<div class="form-control-static" list-resize="support.fromTransformationTypeCodes|unique|codes:'type'" list-resize-min-size='3' vertical />
-				</div>
 			}
 		}
 

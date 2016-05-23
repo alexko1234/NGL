@@ -110,8 +110,8 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		}
 		if(!angular.isUndefined($scope.target)){
 			$scope.dynamicMessage = Messages("containerSupports.button."+$scope.target); // Build msg for the button
-			//$scope.setActiveTab('table'); 
-			$scope.setActiveTab($scope.target);
+			$scope.setActiveTab('table'); 
+			// $scope.setActiveTab($scope.target);
 		}
 	};
 	
@@ -239,7 +239,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 							"hide":false,
 							"position":5.4,
 							"type":"text",
-							"filter":"getArray:'properties.libProcessTypeCode.value'",
+							"filter":"getArray:'properties.libProcessTypeCode.value' | unique",
 							"groupMethod":"collect"
 						},
 						
@@ -383,8 +383,8 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			
 			filterCategorySupport();
 			
-			console.log($scope.support);
-			console.log($scope.containers);
+			//console.log($scope.support);
+			//console.log($scope.containers);
 			
 		});
 		
