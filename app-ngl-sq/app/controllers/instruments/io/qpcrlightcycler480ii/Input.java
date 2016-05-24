@@ -220,7 +220,7 @@ public class Input extends AbstractInput {
 					if ( belongToSector96(contextValidation, icupos, sector_arg)) {
 							
 						PropertySingleValue concentration = getPSV(icu, "concentration1");
-						Logger.debug ("set concentration for icu "+ icu.code+" ="+ concentration);
+						//Logger.debug ("set concentration for icu "+ icu.code+" ="+ concentration);
 						
 						// effectuer la correction en utilisant ce que l'utilisateur a defini
 						PropertySingleValue cFLSize = getCorrectionFactorLibraySize(icu, correctionFactorLibrarySizeDefault);
