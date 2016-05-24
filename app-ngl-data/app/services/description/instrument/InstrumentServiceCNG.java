@@ -433,6 +433,9 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
 				 newValues("Clusterstripprepworklist"), "single", null, false ,null, null));
 		
+		l.add(newPropertiesDefinition("Strip #", "stripDestination", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
+				newValues("1","2","3","4"), "single", null, true ,null, null));
+				
 		l.add(newPropertiesDefinition("Source", "source", LevelService.getLevels(Level.CODE.ContainerIn), String.class, true, "N",
 				 Arrays.asList(newValue("1", "Source 1"), newValue("2", "Source 2"), newValue("3", "Source 3"),newValue("4", "Source 4")), "single", 2, true ,null, null));
 		

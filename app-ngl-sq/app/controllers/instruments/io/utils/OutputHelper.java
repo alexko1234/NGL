@@ -174,6 +174,8 @@ public class OutputHelper {
 		return "N";
 	}
 	
+	
+	
 	public static String getContainerProperty(Container container, String propertyName){
 		if(container.properties.get(propertyName) != null && Boolean.class.isInstance(container.properties.get(propertyName).value)){
 			if((Boolean) container.properties.get(propertyName).value){
@@ -207,6 +209,13 @@ public class OutputHelper {
 	public static Object getInstrumentProperty(AbstractContainerUsed container, String propertyName){
 		if(container.instrumentProperties.containsKey(propertyName)){
 			return container.instrumentProperties.get(propertyName).value;
+		}
+		return null;
+	}
+	
+	public static Object getInstrumentProperty(Experiment experiment,String propertyName){
+		if(experiment.instrumentProperties.get(propertyName) != null){
+			return experiment.instrumentProperties.get(propertyName).value;
 		}
 		return null;
 	}
