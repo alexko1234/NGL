@@ -12,6 +12,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			"order":true,
 			"type":"text"
 		});
+		
 		columns.push({
 			"header":Messages("containerSupports.table.categoryCode"),
 			"property":"categoryCode",
@@ -41,6 +42,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			"hide":true,
 			"type":"text"
 		});
+		
 		columns.push({
 			"header":Messages("containerSupports.table.sampleCodes"),
 			"property":"sampleCodes",
@@ -49,6 +51,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			"type":"text",
 			"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
 		});
+		
 		columns.push({
 			"header":Messages("containerSupports.table.projectCodes"),
 			"property":"projectCodes",
@@ -56,7 +59,8 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			"render":"<div list-resize='value.data.projectCodes | unique' list-resize-min-size='3'>",
 			"order":false,
 			"type":"text"
-		});		
+		});
+		
 		columns.push({
 			"header":Messages("containerSupports.table.creationDate"),
 			"property":"traceInformation.creationDate",
@@ -64,6 +68,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			"order":true,
 			"type":"date"
 		});
+		
 		columns.push({
 			"header":Messages("containers.table.createUser"),
 			"property":"traceInformation.createUser",
@@ -71,65 +76,44 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			"order":true,
 			"type":"text"
 		});
+		
+		// 23/05/2016 FDS: NGL-825: suppression affichage status de validite pour les containerSupports
+		//                          factorisation state.code; storageCode editable
+		var isStateCodeEditable;
+		var isStorageCodeEditable;
+		
+		if(mainService.getHomePage() === 'state'){
+			isStateCodeEditable= true;
+			isStorageCodeEditable= false;
+		} else { 
+			isStateCodeEditable= false;
+			isStorageCodeEditable= true;
+		}
+		
 		columns.push({
 			"header":Messages("containers.table.storageCode"),
 			"property":"storageCode",
 			"order":true,
 			"hide":true,
 			"type":"text",
-			"edit":false,
+			"edit":isStorageCodeEditable,
 			"position":9.5,
 			"groupMethod":"unique"
 				
 		});
-		if(mainService.getHomePage() === 'state'){
-			columns.push({
+
+		columns.push({
 				"header":Messages("containerSupports.table.state.code"),
 				"property":"state.code",
 				"position":3,
 				"order":true,
 				"type":"text",
-				"edit":true,
+				"edit":isStateCodeEditable,
 				"choiceInList": true,
 				"listStyle":"bt-select",
 				"possibleValues":"searchService.lists.getStates()", 
 				"filter":"codes:'state'"
-			});
-			columns.push({
-				"header":Messages("containerSupports.table.valid"),
-				"property":"valuation.valid",
-				"position":7,
-				"order":true,
-				"type":"text",
-				"edit":false,
-				"choiceInList": true,
-				"possibleValues":"searchService.lists.getValuations()", 
-				"filter":"codes:'valuation'",
-			});
-		}else{
-			columns.push({
-				"header":Messages("containerSupports.table.state.code"),
-				"property":"state.code",
-				"position":3,
-				"order":true,
-				"type":"text",
-				"edit":false,
-				"choiceInList": true,
-				"possibleValues":"searchService.lists.getStates()", 
-				"filter":"codes:'state'"
-			});
-			columns.push({
-				"header":Messages("containerSupports.table.valid"),
-				"property":"valuation.valid",
-				"position":7,
-				"order":true,
-				"type":"text",
-				"edit":true,
-				"choiceInList": true,
-				"possibleValues":"searchService.lists.getValuations()", 
-				"filter":"codes:'valuation'",
-			});
-		}
+		});
 		
 		return columns;
 	};

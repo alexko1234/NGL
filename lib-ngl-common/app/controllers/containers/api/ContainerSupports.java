@@ -241,9 +241,18 @@ public class ContainerSupports extends CommonController {
 			}
 		}
 
-
+		/*23/05/2016  NGL-825 FDS : this criteria is meaningless for supports with multiple containers ( plates..)
 		if(CollectionUtils.isNotEmpty(supportsSearch.valuations)){
 			queryElts.add(DBQuery.or(DBQuery.in("valuation.valid", supportsSearch.valuations)));
+		}
+		*/
+		
+		/* 23/05/2016 NGL-825 FDS : add search by storageCode */
+
+		if(StringUtils.isNotBlank(supportsSearch.storageCode)){
+			queryElts.add(DBQuery.in("storageCode", supportsSearch.storageCode));
+		}else if(StringUtils.isNotBlank(supportsSearch.storageCodeRegex)){
+			queryElts.add(DBQuery.regex("storageCode", Pattern.compile(supportsSearch.storageCodeRegex)));
 		}
 
 		if(StringUtils.isNotBlank(supportsSearch.stateCode)){

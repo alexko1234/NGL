@@ -42,7 +42,6 @@ containerSupports.table.modifyUser = Modifié par
 containerSupports.table.storageCode = Stockage
 containerSupports.table.yx = Position
 
-
 containerSupports.scanner.categoryCode = Catégorie
 containerSupports.scanner.sampleCodes = Echantillon(s) 
 containerSupports.scanner.projectCodes = Projet(s) 
@@ -167,7 +166,6 @@ containers.table.nlrsConcentration= Concentration arrondie (ng/µl)
 containers.table.valuation.valid = Valide
 containers.table.valuationqc.valid = Valide ? (QC courant)
 
-
 containers.placeholder.fromDate = Container depuis le (jj/mm/aaaa)
 containers.placeholder.toDate = Container jusqu''au (jj/mm/aaaa)
 containers.placeholder.user = Container créé par
@@ -212,6 +210,7 @@ search.placeholder.user = Créé par
 search.placeholder.containerSupport = Regex pour code support
 search.placeholder.experiment = Regex pour expérience
 search.placeholder.process = Regex pour processus
+search.placeholder.storage= Regex pour stockage
 search.placeholder.barCodes = Scan du code barre
 search.placeholder.pools = Pools
 search.tab.addfilters = Filtres supplémentaires
