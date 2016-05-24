@@ -27,65 +27,74 @@
 			</div>
 		</div>
 		
-		<div class="row" ng-if="searchService.response.data">
+		<div class="row" ng-if="searchService.response.support">
 			<div class="col-xs-12">
-				<form class="form-horizontal">			
-					<legend>
-						<h5 ng-bind="searchService.response.data.code"></h5>
+				<form class="form-horizontal">
+				
+					<legend ng-switch on="searchService.response.support.valuation.valid">	
+						<h4>
+							<label class="control-label" ng-switch-when="FALSE" class="text-danger" ng-bind="searchService.response.support.code"></label>
+							<label class="control-label" ng-switch-when="TRUE" class="text-success" ng-bind="searchService.response.support.code"></label>
+							<label class="control-label" ng-switch-default class="mute" ng-bind="searchService.response.support.code"></label>
+							<small ng-bind="searchService.response.support.state.code|codes:'state'"></small>
+						</h4>
 					</legend>
-					<div class="form-group">
-						<label class="col-xs-5 control-label">@Messages("containerSupports.scanner.fromTransformationTypeCodes")</label>
-						<div class="col-xs-7">
-							<div list-resize='{{searchService.response.data.fromTransformationTypeCodes}} | unique' list-resize-min-size='3'></div>
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-xs-5 control-label">@Messages("containerSupports.scanner.creationDate")</label>
-						<div class="col-xs-7">
-							<p ng-bind="searchService.response.data.traceInformation.creationDate|date:'@Messages("date.format")'"/>
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-xs-5 control-label">@Messages("containerSupports.scanner.createUser")</label>
-						<div class="col-xs-7">
-							<p ng-bind="searchService.response.data.traceInformation.createUser"/>
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-xs-5 control-label">@Messages("containerSupports.scanner.projectCodes")</label>
-						<div class="col-xs-7">
-							<div list-resize='{{searchService.response.data.projectCodes}}' list-resize-min-size='3' vertical></div>
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-xs-5 control-label">@Messages("containerSupports.scanner.sampleCodes.length")</label>
-						<div class="col-xs-7">
-							<p ng-bind="searchService.response.data.sampleCodes.length"/>
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-xs-5 control-label">@Messages("containerSupports.scanner.sampleCodes")</label>
-						<div class="col-xs-7">
-							<div list-resize='{{searchService.response.data.sampleCodes}}' list-resize-min-size='3' vertical></div>
-						</div>
-					</div>
+					
 					<div class="form-group">
 						<label class="col-xs-5 control-label">@Messages("containerSupports.scanner.categoryCode")</label>
 						<div class="col-xs-7">
-							<p ng-bind="searchService.response.data.categoryCode|codes:'container_support_cat'"/>
+							<p ng-bind="searchService.response.support.categoryCode|codes:'container_support_cat'"></p>
 						</div>
 					</div>
+					
 					<div class="form-group">
-						<label class="col-xs-5 control-label">@Messages("containerSupports.scanner.state.code")</label>
+						<label class="col-xs-5 control-label">@Messages("containerSupports.scanner.fromTransformationTypeCodes")</label>
 						<div class="col-xs-7">
-							<p ng-bind="searchService.response.data.state.code|codes:'state'"/>
+							<div list-resize="searchService.response.support.fromTransformationTypeCodes|unique|codes:'type'" list-resize-min-size='1' vertical></div>
 						</div>
 					</div>
-							
+					
 					<div class="form-group">
-						<label class="col-xs-5 control-label">@Messages("containerSupports.scanner.valid")</label>
+						<label class="col-xs-5 control-label">@Messages("containerSupports.scanner.creationDate")</label>
 						<div class="col-xs-7">
-							<p ng-bind="searchService.response.data.valuation.valid|codes:'valuation'"/>
+							<p ng-bind="searchService.response.support.traceInformation.creationDate|date:'@Messages("date.format")'"></p>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-xs-5 control-label">@Messages("containerSupports.scanner.projectCodes")</label>
+						<div class="col-xs-7">
+							<div list-resize="searchService.response.support.projectCodes" list-resize-min-size='2' horizontal></div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-xs-5 control-label">@Messages("containerSupports.scanner.sampleCodes")</label>
+						<div class="col-xs-7">
+							<div list-resize='searchService.response.support.sampleCodes' list-resize-min-size='2' horizontal></div>
+						</div>
+					</div>
+					
+					<div ng-if="searchService.response.containers">
+						<div class="form-group">
+							<label class="col-xs-5 control-label">@Messages("containerSupports.scanner.contents.length")</label>
+							<div class="col-xs-7">
+								<p ng-bind="searchService.response.containers[0].contents.length"></p>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-xs-5 control-label">@Messages("containerSupports.scanner.tags")</label>
+							<div class="col-xs-7">
+								<div list-resize="searchService.response.containers[0].contents|getArray:'properties.tag.value'" list-resize-min-size='2' horizontal></div>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-xs-5 control-label">@Messages("containerSupports.scanner.libProcessType")</label>
+							<div class="col-xs-7">
+								<p list-resize="searchService.response.containers[0].contents|getArray:'properties.libProcessTypeCode.value'|unique"></p>
+							</div>
 						</div>
 					</div>
 					
@@ -93,25 +102,20 @@
 			</div>
 		</div>
 		
-		<div class="row" ng-if="(searchService.response) && (searchService.response.status !== 200)">
-			<div class="col-xs-12">
-				<form class="form-horizontal form-control">			
-					<div class="form-group  form-group-sm">
-						<label class="col-xs-2 control-label" ng-bind="searchService.response.status"></label>
-						<div class="col-xs-4">
-							<p ng-bind="searchService.response.statusText"/>
-						</div>
-						<div class="col-xs-6" ng-show="(searchService.response.status === 404)">
-							<p>@Messages("msg.notFound")</p>
-						</div>
-						<div class="col-xs-6" ng-show="(searchService.response.status === 500)">
-							<p>@Messages("msg.internalError")</p>
-						</div>					
-					</div>
-				</form>
-			</div>
-		</div>
-	
+		@***
+		Codes Genoscope
+		
+		PCR_20140603_144001  	27017 plaque 96
+		15OB2TI7V				27017 tube
+		15OB2TI72
+		BQB_msETR_r1
+		BQB_msETV_r1
+		30651LB					27017 mapcard
+		22789LB					 
+		C88JPACXX				27017 flowcell
+
+		***@	
+			
 	</div>
 </div>
 }

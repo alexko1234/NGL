@@ -43,16 +43,17 @@ containerSupports.table.storageCode = Stockage
 containerSupports.table.yx = Position
 
 
-containerSupports.scanner.categoryCode = Catégorie 
-containerSupports.scanner.state.code = Etat 
-containerSupports.scanner.sampleCodes.length = Nb. Echant
+containerSupports.scanner.categoryCode = Catégorie
 containerSupports.scanner.sampleCodes = Echantillon(s) 
 containerSupports.scanner.projectCodes = Projet(s) 
-containerSupports.scanner.valid = Valide
 containerSupports.scanner.creationDate = Créé le
 containerSupports.scanner.createUser = Créé par 
 containerSupports.scanner.code = Support
-containerSupports.scanner.fromTransformationTypeCodes = Issu Type d''exp
+containerSupports.scanner.fromTransformationTypeCodes = Type d''exp
+containerSupports.scanner.tags = Tag(s)
+containerSupports.scanner.libProcessType = Type Banque
+containerSupports.scanner.contents.length = Nb Contents
+
 
 containerSupports.select.state =  Etats Support
 containerSupports.select.categoryCode =  Catégorie Support
