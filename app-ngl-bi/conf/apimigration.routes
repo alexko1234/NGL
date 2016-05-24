@@ -19,3 +19,4 @@ GET		/migration-submission-state					controllers.migration.MigrationUpdateSubmis
 GET		/migration-fungi							controllers.migration.MigrationTaxonomyFungi.migration(code: java.lang.String ?= "all")
 GET		/migration-taxonomy-software				controllers.migration.MigrationUpdateSoftwareTaxonomy.migration()
 GET		/migration-mapping-software					controllers.migration.MigrationUpdateSoftwareMapping.migration()
+GET		/migration-readSet-tara-invalid				controllers.migration.MigrationUpdateReadSetTaraInvalid.migration()
