@@ -16,13 +16,13 @@
 	</div>
 </div>
 
+
+
 <div class="row margin-bottom-7">
 	<div class="col-md-12 col-lg-12">
 		<ul class="nav nav-tabs margin-bottom-5">
 			<li ng-class="getTabClass('general')"><a href="#" data-target="#general" data-toggle="tab" ng-click="setActiveTab('general')">@Messages("containers.tabs.general")</a></li>
-			@***
-			<li ng-class="getTabClass('treeoflife')"><a href="#" data-target="#treeoflife" data-toggle="tab" ng-click="setActiveTab('treeoflife')">@Messages("containers.tabs.treeoflife")</a></li>
-			***@
+			<li ng-class="getTabClass('treeoflife')"><a href="#" data-target="#treeoflife" data-toggle="tab" ng-click="initGraph()">@Messages("containers.tabs.treeoflife")</a></li>
 			<li ng-class="getTabClass('workflow')"><a href="#" data-target="#workflow" data-toggle="tab" ng-click="setActiveTab('workflow')">@Messages("containers.tabs.workflow")</a></li>
 			<li ng-if="container.qualityControlResults !== null" ng-class="getTabClass('resultsqc')"><a href="#" data-target="#resultsqc" data-toggle="tab" ng-click="setActiveTab('resultsqc')">@Messages("containers.tabs.resultsqc")</a></li>
 		</ul>
