@@ -9,21 +9,18 @@ factory('barCodeSearchService', ['$http','$q', function($http,$q){
 			search : function() { 
 				this.response = {};
             	var that = this;
-            	var promise = [];
+            	var promise = [];        	
             	if(!angular.isUndefined(this.form)){
-            		
-                	promise.push($http.get(jsRoutes.controllers.containers.api.ContainerSupports.get(this.form.code).url));
-                	promise.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params:{supportCodeRegex:this.form.code}}));
-	            	
-                	$q.all(promise).then(function(results) {
-	            		that.response.support = results[0].data;
-	            		if(that.response.support.categoryCode.indexOf('tube')>=0 || that.response.support.categoryCode.indexOf('mapcard')>=0){
-	            			that.response.containers = results[1].data;
-	            		}
-	            		//=> TODO
-	            		that.form = undefined;
-	            		angular.element("#scan").focus();
-	            	});
+            		$http.get(jsRoutes.controllers.containers.api.ContainerSupports.get(this.form.code).url).then(function(result){
+            			that.response.support = result.data;
+            			if(that.response.support.categoryCode.indexOf('tube')>=0 || that.response.support.categoryCode.indexOf('mapcard')>=0){
+            				$http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params:{supportCodeRegex:that.response.support.code}}).then(function(result){
+            					that.response.containers = result.data;
+            				});
+            			}
+            		});
+        			that.form = undefined;
+            		angular.element("#scan").focus();
             	}else{
             		this.form = undefined;
             		angular.element("#scan").focus();
