@@ -67,13 +67,14 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 						          .selector('node')
 						            .css({
 						              'shape': 'data(faveShape)',
-						              'width': '30',
+						              'width': '75',
 						              'label': 'data(label)',
 						              'text-valign': 'center',
-						              'text-outline-width': 2,
-						              'text-outline-color': 'data(faveColor)',
+						              //'text-outline-width': 2,
+						              //'text-outline-color': 'data(faveColor)',
 						              'background-color': 'data(faveColor)',
-						              'color': '#fff'
+						              'color': '#fff',
+						              'font-size':11,  
 						            })
 						          .selector(':selected')
 						            .css({
@@ -150,7 +151,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			currentContainer.faveColor = faveColor;
 			currentContainer.faveShape="ellipse";
 			if(currentContainer.contents.length > 1){
-				currentContainer.faveShape="star";
+				currentContainer.faveShape="octagon";
 			}
 			
 			graphElements.push({"data":currentContainer,"group":"nodes"});
