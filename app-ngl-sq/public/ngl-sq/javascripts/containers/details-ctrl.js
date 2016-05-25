@@ -1,7 +1,7 @@
 "use strict";
 
-angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', 'mainService', 'tabService', 'lists', 'messages', 
-                                          function($scope,$http,$q,$routeParams,mainService,tabService,lists,messages){
+angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', '$filter','$window', 'mainService', 'tabService', 'lists', 'messages', 
+                                          function($scope,$http,$q,$routeParams,$filter,$window,mainService,tabService,lists,messages){
 	
 	$scope.getTabClass = function(value){
 		if(value === mainService.get('containerActiveTab')){
@@ -21,34 +21,33 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		$http.get(jsRoutes.controllers.containers.api.Containers.get($routeParams.code).url).then(function(response) {
 			$scope.container = response.data;
 			
-			// TreeOfLife
-			if($scope.container){
-				initTreeOfLife($scope.container);	
-				
-			}else{
-				console.info("Aucun container sous le code: " + $routeParams.code);
-			}
-
 			if(tabService.getTabs().length == 0){			
 				tabService.addTabs({label:Messages('containers.tabs.search'),href:jsRoutes.controllers.containers.tpl.Containers.home("search").url,remove:true});
-				tabService.addTabs({label:$scope.container.code,href:jsRoutes.controllers.containers.tpl.Containers.home($scope.container.code).url,remove:true});
+				tabService.addTabs({label:$scope.container.code,href:jsRoutes.controllers.containers.tpl.Containers.get($scope.container.code).url,remove:true});
 				tabService.activeTab($scope.getTabs(1));
 			}
 			
 			$scope.lists.refresh.containerSupportCategories();
 			$scope.lists.refresh.experimentTypes({categoryCodes:["transformation"], withoutOneToVoid:false});
 					
-			if(undefined == mainService.get('containerActiveTab')){
+			if(undefined === mainService.get('containerActiveTab')){
 				mainService.put('containerActiveTab', 'general');
+			}else if('treeoflife' ===  mainService.get('containerActiveTab')){
+				$scope.initGraph();
 			}
 		});
 	}
 	init();
 	
-	
+	var containerNodes = undefined;
 	$scope.initGraph = function(){
 		$scope.setActiveTab('treeoflife');
-		
+		if(!containerNodes){
+			initTreeOfLife($scope.container);
+		}
+	}
+	
+	var initCytoscape = function(graphElements){
 		var asynchGraph = function() {
 			 return $q(function(resolve, reject) {
 				 setTimeout(function() {
@@ -59,18 +58,21 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 					          autounselectify: true,
 					          
 					          layout: {
-					            name: 'cose'
+					            name: 'breadthfirst',
+					            directed:true,
+					            padding:5,
+					            spacingFactor:0.5,					           
 					          },
 					          style: cytoscape.stylesheet()
 						          .selector('node')
 						            .css({
-						              'shape': 'ellipse',
+						              'shape': 'data(faveShape)',
 						              'width': '30',
-						              'content': 'data(code)',
+						              'label': 'data(label)',
 						              'text-valign': 'center',
 						              'text-outline-width': 2,
-						              'text-outline-color': '#6FB1FC',
-						              'background-color': '#6FB1FC',
+						              'text-outline-color': 'data(faveColor)',
+						              'background-color': 'data(faveColor)',
 						              'color': '#fff'
 						            })
 						          .selector(':selected')
@@ -82,11 +84,15 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 						            .css({
 						              'opacity': 0.666,
 						              'width': '3',
+						              'label': 'data(label)',
+						              'color': '#000',
+						              'font-size':11,
+						              'font-weight': 'bold',
 						              'target-arrow-shape': 'triangle',
 						              'source-arrow-shape': 'circle',
-						              'line-color': '#6FB1FC',
-						              'source-arrow-color': '#6FB1FC',
-						              'target-arrow-color': '#6FB1FC'
+						              'line-color': 'data(faveColor)',
+						              'source-arrow-color': 'data(faveColor)',
+						              'target-arrow-color': 'data(faveColor)'
 						            })
 						            /*
 						          .selector('edge.questionable')
@@ -99,26 +105,56 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 						            .css({
 						              'opacity': 0.25,
 						              'text-opacity': 0
-						            }),
+						            })
+						            ,
+						           
 					        
 					          elements : graphElements
 					      
 					        });
+				 	cy.on('click', 'node', function(evt){
+				 		var data = this.data(); 
+				 		$scope.$apply(function(scope){
+				 			 tabService.addTabs({label:data.code,href:jsRoutes.controllers.containers.tpl.Containers.get(data.code).url, remove:true});						 		
+				 		 });
+				 	});
+				 	cy.on('click', 'edge', function(evt){
+				 		var data = this.data(); 
+				 		$scope.$apply(function(scope){
+				 			$window.open(jsRoutes.controllers.experiments.tpl.Experiments.get(data.fromExperimentCode).url, 'experiments');
+				 		});
+				 	});
 				});	
 			 }, 1);
 		};
 		asynchGraph();
-		
 	}
 	
-	var graphElements = [];
 	
 	var computeGraphElements = function(containerNodes){
 		//nodes
+		var graphElements = [];
+		containerNodes = $filter('orderBy')(containerNodes,'indexFromCurrent');
 		for(var key in containerNodes){
+			var currentNode = containerNodes[key];
 			var currentContainer = containerNodes[key].container;
 			currentContainer.id = currentContainer.code;
-			graphElements.push({"data":currentContainer,"group":"nodes","faveShape":"ellipse"})							
+			currentContainer.label = currentContainer.code;
+			var faveColor = '#6FB1FC';
+			if(currentNode.indexFromCurrent < 0){
+				faveColor = '#F5A45D'
+			}else if(currentNode.indexFromCurrent > 0){
+				faveColor = '#86B342';
+			}
+			
+			currentContainer.faveColor = faveColor;
+			currentContainer.faveShape="ellipse";
+			if(currentContainer.contents.length > 1){
+				currentContainer.faveShape="star";
+			}
+			
+			graphElements.push({"data":currentContainer,"group":"nodes"});
+			
 		}
 		
 		//edges
@@ -129,20 +165,37 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			var currentContainer = containerNodes[key].container;
 			angular.forEach(currentNode.childNodes, function(childNode){
 				var childContainer = childNode.container;
+				var currentContainer = this.container;
 				var edge = {
-						"id":this.code+"-"+childContainer.code,
-						"source":this.code,
+						"id":currentContainer.code+"-"+childContainer.code,
+						"source":currentContainer.code,
 						"target":childContainer.code
+						
 				}
+				
+				if(childContainer.treeOfLife && childContainer.treeOfLife.from){
+					edge.label=$filter('codes')(childContainer.treeOfLife.from.experimentTypeCode,'type');
+					edge.fromExperimentCode = childContainer.treeOfLife.from.experimentCode;
+				}
+				
+				var faveColor = '#6FB1FC';
+				if(this.indexFromCurrent < 0){
+					faveColor = '#F5A45D'
+				}else if(this.indexFromCurrent > 0){
+					faveColor = '#86B342';
+				}
+				edge.faveColor=faveColor;
 				graphElements.push({"data":edge,"group":"edges"})	
-			},currentContainer)
+			},currentNode)
 			
 		}
+		
+		return graphElements;
 	};
 	
 	
 	
-	/* => TODO*/
+	
 	var initTreeOfLife = function(currentContainer){
 		//extract parent container codes
 		var codes = {parentContainerCodes : []};	
@@ -151,19 +204,17 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 				path = path.substring(1);
 				this.parentContainerCodes = this.parentContainerCodes.concat(path.split(","));
 			}, codes);
-		}else{
-			console.warn("No \"treeOfLife.paths\" !");
 		}
 
 		var promises = [];
-		if(codes.parentContainerCodes.length > 0) // Case no paths
+		if(codes.parentContainerCodes.length > 0){ // Case no paths
 			promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {codes:codes.parentContainerCodes}}));
-		
+		}
 		promises.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params : {treeOfLifePathRegex:currentContainer.code}}));
 		
 		
 		$q.all(promises).then(function(results){
-			var containerNodes = {};
+			containerNodes = {};
 			var newNode = function(container){
 				return  {container:container, parentNodes:[], childNodes:[],indexFromCurrent:undefined};
 			};
@@ -192,7 +243,8 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 								this.parentNodes.push(parentContainerNode);
 								updateParentNodes(parentContainerNode, containerNodes);								
 							}else{
-								throw 'error not found node for '+parentContainer.code;
+								//when display a branch of a pool
+								//throw 'error not found node for '+parentContainer.code;
 							}
 							
 						}, currentContainerNode)
@@ -233,8 +285,9 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			updateIndexForParents(currentContainerNode.parentNodes, currentContainerNode.indexFromCurrent);
 			updateIndexForChildren(currentContainerNode.childNodes, currentContainerNode.indexFromCurrent);
 			
-			computeGraphElements(containerNodes);
 			
+			var graphElements =  computeGraphElements(containerNodes);
+			initCytoscape(graphElements);
 		});
 		
 		
