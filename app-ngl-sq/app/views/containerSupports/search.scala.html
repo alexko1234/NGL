@@ -16,18 +16,17 @@
 		@formGroup{
 			<div class="form-control" bt-select ng-model="searchService.form.sampleCodes" multiple="true" textarea="true" filter="true" placeholder='@Messages("search.placeholder.samples")' bt-options="sample.code as sample.code for sample in searchService.lists.getSamples()" ng-focus="searchService.refreshSamples()"></div>			
 		}
-		<!--  23/05/2016 NGL-825 FDS : remplacer recherche sur valuation.code par recherche Regex sur storage....
+		@***  23/05/2016 NGL-825 FDS : remplacer recherche sur valuation.code par recherche Regex sur storage....
 		@formGroup{
 			<div class="form-control" bt-select ng-model="searchService.form.valuations" multiple="true" placeholder="@Messages("containerSupports.table.valid")" 
 				bt-options="valuation.code as valuation.name for valuation in searchService.lists.getValuations()">
 			</div>
 		}
-		-->	
-		@formGroup{        
-			<input class="form-control" type="text" ng-model="searchService.form.storageCodeRegex"  placeholder='@Messages("search.placeholder.storage")' title='@Messages("search.placeholder.storage")'>			
-            <!--  pour l'instant desactiver la liste et ne laisser que le champ input...
-			<bt-input  class="form-control"  input-ng-model="searchService.form.storageCodeRegex" textarea-ng-model="searchService.form.storageCodes" placeholder='@Messages("search.placeholder.storage")' ></bt-input>			
-			-->			
+		***@
+		
+		@formGroup{  
+		    @*** utiliser l'input classique et pas le bt-input car pas besoin de la textarea de saisie ici ***@      
+			<input class="form-control" type="text" ng-model="searchService.form.storageCodeRegex"  placeholder='@Messages("search.placeholder.storage")' title='@Messages("search.placeholder.storage")'>				
 		}	
 	}
 	@columnSearchForm{
@@ -36,7 +35,7 @@
 			</div>			
 		}
 		@formGroup{
-			@***
+			@***    commentaire...
 			<input class="form-control" type="text" ng-model="searchService.form.codeRegex"  placeholder='@Messages("search.placeholder.containerSupport")' title='@Messages("search.placeholder.containerSupport")'>			
 			***@
 			<bt-input  class="form-control"  input-ng-model="searchService.form.codeRegex" textarea-ng-model="searchService.form.codes" placeholder='@Messages("search.placeholder.containerSupport")' ></bt-input>			
@@ -58,8 +57,7 @@
 	}
 	@columnSearchForm{
 		@formGroup{
-			<input class="form-control" type="text" ng-model="searchService.form.toDate" placeholder='@Messages("containerSupports.placeholder.toDate")' title='@Messages("containerSupports.placeholder.toDate")'>
-					
+			<input class="form-control" type="text" ng-model="searchService.form.toDate" placeholder='@Messages("containerSupports.placeholder.toDate")' title='@Messages("containerSupports.placeholder.toDate")'>				
 		}
 		@formGroup{
 			<input class="form-control" type="text" ng-model="searchService.form.createUser" typeahead="user.name as user.name for user in searchService.lists.getUsers() | filter:$viewValue | limitTo:20" placeholder='@Messages("containerSupports.table.createUser")' title='@Messages("containerSupports.placeholder.user")'>	

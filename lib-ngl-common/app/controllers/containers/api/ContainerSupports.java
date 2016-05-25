@@ -1,5 +1,6 @@
 package controllers.containers.api;
 
+
 import static play.data.Form.form;
 
 import java.util.ArrayList;
@@ -41,11 +42,13 @@ import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
 
-
 public class ContainerSupports extends CommonController {
 
 	final static Form<ContainerSupportsSearchForm> supportForm = form(ContainerSupportsSearchForm.class);
 	final static Form<ContainerSupportsUpdateForm> containerSupportUpdateForm = form(ContainerSupportsUpdateForm.class);
+	   /* manque une form pour update globale.. ????.*/
+	   final static Form<ContainerSupport> containerSupportForm = form(ContainerSupport.class);
+	
 	final static Form<ContainerSupportBatchElement> batchElementForm = form(ContainerSupportBatchElement.class);
 	final static Form<State> stateForm = form(State.class);
 	
@@ -165,6 +168,40 @@ public class ContainerSupports extends CommonController {
 		
 		return ok(Json.toJson(response));
 	}
+	
+    public static Result update(String code){
+		
+		ContainerSupport support = getSupport(code);
+		//vérifier que le code support a été trouvé dans la base
+		if(support == null) {
+			return badRequest("Container support with code "+code+" does not exist");
+		}
+	
+		Form<ContainerSupport> filledForm = getFilledForm(containerSupportForm, ContainerSupport.class);
+		ContainerSupport objectInput = filledForm.get();
+
+		// vérifier qu'on a bien récupéré ce qu'on a demandé....
+		if (support.code.equals(code)) {
+			//Logger.info ("find in form.."+ code+ " OK");
+			
+			if(null != objectInput.traceInformation){
+				Logger.info("traceInformation found; current user ="+ getCurrentUser());
+				objectInput.traceInformation.setTraceInformation(getCurrentUser());
+			}else{
+				Logger.error("traceInformation is null for Container support "+code);	
+			}
+			
+			// essai harcodé....
+			objectInput.storageCode="toto";
+			
+			MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, objectInput);
+			return ok(Json.toJson(objectInput));			
+			
+		}else{
+			return badRequest("container code are not the same");
+		}
+	}
+	
 	/**
 	 * Construct the support query
 	 * @param supportsSearch
@@ -248,7 +285,6 @@ public class ContainerSupports extends CommonController {
 		*/
 		
 		/* 23/05/2016 NGL-825 FDS : add search by storageCode */
-
 		if(StringUtils.isNotBlank(supportsSearch.storageCode)){
 			queryElts.add(DBQuery.in("storageCode", supportsSearch.storageCode));
 		}else if(StringUtils.isNotBlank(supportsSearch.storageCodeRegex)){
@@ -282,8 +318,6 @@ public class ContainerSupports extends CommonController {
 		if(null != supportsSearch.toDate){
 			queryElts.add(DBQuery.lessThanEquals("traceInformation.creationDate", supportsSearch.toDate));
 		}
-
-		
 		
 		if(StringUtils.isNotBlank(supportsSearch.createUser)){   
 			queryElts.add(DBQuery.is("traceInformation.createUser", supportsSearch.createUser));

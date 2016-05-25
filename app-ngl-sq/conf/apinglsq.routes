@@ -6,6 +6,7 @@ GET		/api/samples/:code												controllers.samples.api.Samples.get(code: jav
 #supports api	
 GET		/api/supports													controllers.containers.api.ContainerSupports.list()
 GET		/api/supports/:code												controllers.containers.api.ContainerSupports.get(code:java.lang.String)
+PUT     /api/supports/:code                                             controllers.containers.api.ContainerSupports.update(code:java.lang.String)
 HEAD	/api/supports/:code												controllers.containers.api.ContainerSupports.head(code:java.lang.String)
 PUT		/api/supports/batch/state										controllers.containers.api.ContainerSupports.updateStateBatch()
 PUT		/api/supports/:code/state										controllers.containers.api.ContainerSupports.updateState(code:java.lang.String)
