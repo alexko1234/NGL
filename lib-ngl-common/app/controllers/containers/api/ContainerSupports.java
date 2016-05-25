@@ -4,6 +4,7 @@ package controllers.containers.api;
 import static play.data.Form.form;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -12,6 +13,8 @@ import java.util.stream.Collectors;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.run.instance.ReadSet;
+import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
@@ -20,6 +23,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
 import org.mongojack.DBQuery.Query;
 
 import play.Logger;
@@ -31,6 +35,7 @@ import play.mvc.Http;
 import play.mvc.Result;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
+import validation.run.instance.ReadSetValidationHelper;
 import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableResponse;
 import workflows.container.ContSupportWorkflows;
@@ -38,6 +43,7 @@ import workflows.container.ContSupportWorkflows;
 import com.mongodb.BasicDBObject;
 
 import controllers.CommonController;
+import controllers.QueryFieldsForm;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
@@ -47,7 +53,9 @@ public class ContainerSupports extends CommonController {
 	final static Form<ContainerSupportsSearchForm> supportForm = form(ContainerSupportsSearchForm.class);
 	final static Form<ContainerSupportsUpdateForm> containerSupportUpdateForm = form(ContainerSupportsUpdateForm.class);
 	   /* manque une form pour update globale.. ????.*/
-	   final static Form<ContainerSupport> containerSupportForm = form(ContainerSupport.class);
+	final static Form<ContainerSupport> containerSupportForm = form(ContainerSupport.class);
+	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
+	final static List<String> authorizedUpdateFields = Arrays.asList("storageCode");
 	
 	final static Form<ContainerSupportBatchElement> batchElementForm = form(ContainerSupportBatchElement.class);
 	final static Form<State> stateForm = form(State.class);
@@ -177,28 +185,54 @@ public class ContainerSupports extends CommonController {
 			return badRequest("Container support with code "+code+" does not exist");
 		}
 	
+		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
+		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
+		
+		
 		Form<ContainerSupport> filledForm = getFilledForm(containerSupportForm, ContainerSupport.class);
 		ContainerSupport objectInput = filledForm.get();
-
-		// vérifier qu'on a bien récupéré ce qu'on a demandé....
-		if (support.code.equals(code)) {
-			//Logger.info ("find in form.."+ code+ " OK");
-			
-			if(null != objectInput.traceInformation){
-				Logger.info("traceInformation found; current user ="+ getCurrentUser());
-				objectInput.traceInformation.setTraceInformation(getCurrentUser());
+		if(queryFieldsForm.fields == null){
+			// vérifier qu'on a bien récupéré ce qu'on a demandé....
+			if (support.code.equals(code)) {
+				//Logger.info ("find in form.."+ code+ " OK");
+				
+				if(null != objectInput.traceInformation){
+					objectInput.traceInformation.setTraceInformation(getCurrentUser());
+				}else{
+					Logger.error("traceInformation is null for Container support "+code);	
+				}
+				
+				// essai harcodé....
+				objectInput.storageCode="toto";
+				
+				MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, objectInput);
+				return ok(Json.toJson(objectInput));			
+				
 			}else{
-				Logger.error("traceInformation is null for Container support "+code);	
+				return badRequest("container code are not the same");
 			}
-			
-			// essai harcodé....
-			objectInput.storageCode="toto";
-			
-			MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, objectInput);
-			return ok(Json.toJson(objectInput));			
-			
-		}else{
-			return badRequest("container code are not the same");
+		}else{ //update only some authorized properties
+			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+			ctxVal.setUpdateMode();
+			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
+			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
+
+			if(!filledForm.hasErrors()){
+				if(null != objectInput.traceInformation){
+					objectInput.traceInformation.setTraceInformation(getCurrentUser());
+				}else{
+					Logger.error("traceInformation is null for Container support "+code);	
+				}
+				MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, 
+						DBQuery.and(DBQuery.is("code", code)), 
+						getBuilder(objectInput, queryFieldsForm.fields, ContainerSupport.class).set("traceInformation", objectInput.traceInformation));
+
+				//TODO cascading update 
+				
+				return ok(Json.toJson(getSupport(code)));
+			}else{
+				return badRequest(filledForm.errorsAsJson());
+			}			
 		}
 	}
 	
