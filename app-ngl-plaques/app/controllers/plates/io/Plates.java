@@ -74,30 +74,36 @@ public class Plates extends TPLCommonController {
 			return null;
 		}
 		List<Well> wells = new ArrayList<Well>(0);
-		for(int i = 1; i <= sheet.getLastRowNum(); i++){
+		for(int i = 1; i <= 97; i++){
+			
+			if(sheet.getRow(i) != null && sheet.getRow(i).getCell(0) != null){
+			
 			String nomManip = getStringValue(sheet.getRow(i).getCell(0));
-			String line = getStringValue(sheet.getRow(i).getCell(1));
-			String column = getStringValue(sheet.getRow(i).getCell(2));
-			if(null == column) column = getNumericValue(sheet.getRow(i).getCell(2)).intValue()+"";
 			
-			if(ValidationHelper.required(contextValidation, nomManip, "nom manip : ligne = "+i)
-					&& ValidationHelper.required(contextValidation, line, "Ligne : ligne = "+i)
-					&& ValidationHelper.required(contextValidation, column, "Colonne : ligne = "+i)
-					&& isPlatePosition(contextValidation, line+column, 96, i)){
+			//if(nomManip != null){
+			
+				String line = getStringValue(sheet.getRow(i).getCell(1));
+				String column = getStringValue(sheet.getRow(i).getCell(2));
+				if(null == column) column = getNumericValue(sheet.getRow(i).getCell(2)).intValue()+"";
 				
-				LimsManipDAO  limsManipDAO = Spring.getBeanOfType(LimsManipDAO.class);
-				Well well = limsManipDAO.getWell(nomManip);
-				if(ValidationHelper.required(contextValidation, well, "manip non trouvé : ligne = "+i)
-						&& isSameEmnco(contextValidation, well, emnco, i)
-						&& isNotInsideAPlate(contextValidation, well, i)){
-					well.x = column;
-					well.y = line;
-					wells.add(well);
+				if(ValidationHelper.required(contextValidation, nomManip, "nom manip : ligne = "+i)
+						&& ValidationHelper.required(contextValidation, line, "Ligne : ligne = "+i)
+						&& ValidationHelper.required(contextValidation, column, "Colonne : ligne = "+i)
+						&& isPlatePosition(contextValidation, line+column, 96, i)){
+					
+					LimsManipDAO  limsManipDAO = Spring.getBeanOfType(LimsManipDAO.class);
+					Well well = limsManipDAO.getWell(nomManip);
+					if(ValidationHelper.required(contextValidation, well, "manip non trouvé : ligne = "+i)
+							&& isSameEmnco(contextValidation, well, emnco, i)
+							&& isNotInsideAPlate(contextValidation, well, i)){
+						well.x = column;
+						well.y = line;
+						wells.add(well);
+					}					
 				}
-							
-				
+			}else{
+				Logger.debug("Line "+i+" empty, manip name empty !! so ignored");
 			}
-			
 			//verifier que c'est une position definie et valide 
 			
 		}
