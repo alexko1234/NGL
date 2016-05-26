@@ -40,6 +40,7 @@ import views.components.datatable.DatatableBatchResponseElement;
 import views.components.datatable.DatatableResponse;
 import workflows.container.ContSupportWorkflows;
 
+import com.fasterxml.jackson.databind.deser.impl.ExternalTypeHandler.Builder;
 import com.mongodb.BasicDBObject;
 
 import controllers.CommonController;
@@ -177,6 +178,8 @@ public class ContainerSupports extends CommonController {
 		return ok(Json.toJson(response));
 	}
 	
+	// 26/05/2015 fds ++++GA NGL-825; storageCode must be updatable
+	@Permission(value={"writing"})
     public static Result update(String code){
 		
 		ContainerSupport dbSupport = getSupport(code);
@@ -194,8 +197,8 @@ public class ContainerSupports extends CommonController {
 		ContainerSupport formSupport = filledForm.get();
 
 		if(queryFieldsForm.fields == null){
-			// il n'a pas de query string==> mise a jour de tout l'object
-			// garder ce mode pour des actions hors mode "application", pour du support ...
+			// il n'a pas de query string==> mettre a jour tout l'object
+			//     garder ce mode pour des actions en mode non graphique, pour du support...
 			
 			if (dbSupport.code.equals(code)) {
 				// on a bien récupéré ce qu'on a demandé....
@@ -213,65 +216,35 @@ public class ContainerSupports extends CommonController {
 				return badRequest("container code are not the same");
 			}
 		}else{ 
+			// il y a une query string ==> mettre a jour les champs dont le nom est dans la query string:   ?fields=XXXX&fields=YYY
 			if (dbSupport.code.equals(code)) {
 				// on a bien récupéré ce qu'on a demandé....
 				
-				// ne mettre a jour que les champs  dont le nom est dans la query string:   ?fields=XXXX
 				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
 				ctxVal.setUpdateMode();
 				
-				validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);		
-				validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm); // verifier les champs de la query string font partie des champs modifiables
+				validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);	
+				// verifier si les champs de la query string font partie des champs modifiables
+				validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm); 
 				
 				if(!filledForm.hasErrors()){
-					if(null != formSupport.traceInformation){
-						formSupport.traceInformation.setTraceInformation(getCurrentUser());
+					if(null != dbSupport.traceInformation){
+						dbSupport.traceInformation.setTraceInformation(getCurrentUser());
 					}else{
 						Logger.error("traceInformation is null for Container support "+code);	
 					}
 					
-					//-1-- mise a jour DES champs de l'objet (getBuilder construit la requete MongoDB adequate) et de traceInformation
+					//-1- mise a jour DES champs de l'objet (getBuilder construit la requete MongoDB adequate) et de traceInformation
 					MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, 
 							DBQuery.and(DBQuery.is("code", code)), 
-							getBuilder(formSupport, queryFieldsForm.fields, ContainerSupport.class).set("traceInformation", formSupport.traceInformation));
+							getBuilder(formSupport, queryFieldsForm.fields, ContainerSupport.class).set("traceInformation", dbSupport.traceInformation));
 	
 					//-2- cas particulier pour storageCode => il est aussi present dans tous les containers du support 
-					//    si on le trouve dans la query string mettre a jour les containers avec la valeur  formSupport.storageCode
-					for(String field: queryFieldsForm.fields){
-						if ( field.equals("storageCode")){
-							Logger.info("TODO...update containers ="+ field + "=>"+ formSupport.storageCode);
-							
-							//-a- lister les containers contenus dans le support
-							MongoDBResult<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("support.code",code));
-							
-							List<ListObject> los = new ArrayList<ListObject>();
-							
-							//liste de 1 champ...
-							// essai avec et sans suffixe...
-							//List<String> fieldList = java.util.Collections.singletonList("support.storageCode");
-							List<String> storageField = java.util.Collections.singletonList("support.storageCode");
-							
-							List<Container> containers = results.toList();
-							for(Container c: containers){
-								
-								c.traceInformation.setTraceInformation(getCurrentUser());
-								
-								los.add(new ListObject(c.code, c.code));
-								Logger.info("found container "+ c.code+" category="+ c.categoryCode+" with storage="+ c.support.storageCode );
-								
-								//-b- mettre a jour le support.storageCode des containers	
-								MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
-										DBQuery.and(DBQuery.is("code", c.code)), 
-										//getBuilder(formSupport.storageCode, storageField, Container.class,"support").set("traceInformation", c.traceInformation));
-										set("support.storageCode", formSupport.storageCode ).set("traceInformation", c.traceInformation));
-							}
-
-							return ok(Json.toJson(los));
-							
-							
-			
-							
-						}
+					//    si on le trouve dans la query string mettre a jour les containers avec la valeur  formSupport.storageCode	
+					if(queryFieldsForm.fields.contains("storageCode")){
+						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, ContainerSupport.class, 
+								DBQuery.and(DBQuery.is("support.code", code)), 
+								DBUpdate.set("support.storageCode", formSupport.storageCode).set("traceInformation", dbSupport.traceInformation));		
 					}
 					
 					return ok(Json.toJson(getSupport(code)));
@@ -366,7 +339,7 @@ public class ContainerSupports extends CommonController {
 		}
 		*/
 		
-		/* 23/05/2016 NGL-825 FDS : add search by storageCode */
+		/* 23/05/2016 FDS NGL-825: add search by storageCode */
 		if(StringUtils.isNotBlank(supportsSearch.storageCode)){
 			queryElts.add(DBQuery.in("storageCode", supportsSearch.storageCode));
 		}else if(StringUtils.isNotBlank(supportsSearch.storageCodeRegex)){

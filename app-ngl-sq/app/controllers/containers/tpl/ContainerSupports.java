@@ -39,6 +39,7 @@ public class ContainerSupports extends CommonController{
   	    		controllers.containers.api.routes.javascript.ContainerSupports.list(),
   	    		controllers.containers.tpl.routes.javascript.ContainerSupports.get(),
   	    		controllers.containers.api.routes.javascript.ContainerSupports.get(),
+  	    		controllers.containers.api.routes.javascript.ContainerSupports.update(),        // 26/05/2016 NLG-825
   	    		controllers.containers.api.routes.javascript.ContainerSupportCategories.list(),
   	    		controllers.containers.api.routes.javascript.ContainerSupports.updateStateBatch(),
   	    		controllers.projects.api.routes.javascript.Projects.list(),

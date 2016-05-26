@@ -19,15 +19,9 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 		},
 		save:{
 			active:Permissions.check("writing")?true:false,
-			url:jsRoutes.controllers.containers.api.ContainerSupports.updateStateBatch().url,
-			batch:true,
+			url:function(line){return jsRoutes.controllers.containers.api.ContainerSupports.update(line.code).url+"?fields=storageCode";},
 			mode:'remote',
 			method:'put',
-			callback: function(reason, error){
-				
-				console.log("callback reason=" + reason);
-				console.log("callback error=" + error);
-			}
 		},
 		show:{
 			active:true,
