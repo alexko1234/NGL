@@ -52,10 +52,10 @@ public class ContainerSupports extends CommonController {
 
 	final static Form<ContainerSupportsSearchForm> supportForm = form(ContainerSupportsSearchForm.class);
 	final static Form<ContainerSupportsUpdateForm> containerSupportUpdateForm = form(ContainerSupportsUpdateForm.class);
-	   /* manque une form pour update globale.. ????.*/
+
 	final static Form<ContainerSupport> containerSupportForm = form(ContainerSupport.class);
-	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class);
-	final static List<String> authorizedUpdateFields = Arrays.asList("storageCode");
+	final static Form<QueryFieldsForm> updateForm = form(QueryFieldsForm.class); //dans cas "update" il peut y avoir une query string
+	final static List<String> authorizedUpdateFields = Arrays.asList("storageCode"); //liste des champs qui peuvent etre mis a jour
 	
 	final static Form<ContainerSupportBatchElement> batchElementForm = form(ContainerSupportBatchElement.class);
 	final static Form<State> stateForm = form(State.class);
@@ -179,60 +179,108 @@ public class ContainerSupports extends CommonController {
 	
     public static Result update(String code){
 		
-		ContainerSupport support = getSupport(code);
+		ContainerSupport dbSupport = getSupport(code);
 		//vérifier que le code support a été trouvé dans la base
-		if(support == null) {
+		if(dbSupport == null) {
 			return badRequest("Container support with code "+code+" does not exist");
 		}
 	
-		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);
+		//recuperer les eventuels parametres de la query string de l'url
+		Form<QueryFieldsForm> filledQueryFieldsForm = filledFormQueryString(updateForm, QueryFieldsForm.class);	
 		QueryFieldsForm queryFieldsForm = filledQueryFieldsForm.get();
 		
-		
+		//recuperer le corps de la requete HTTP
 		Form<ContainerSupport> filledForm = getFilledForm(containerSupportForm, ContainerSupport.class);
-		ContainerSupport objectInput = filledForm.get();
+		ContainerSupport formSupport = filledForm.get();
+
 		if(queryFieldsForm.fields == null){
-			// vérifier qu'on a bien récupéré ce qu'on a demandé....
-			if (support.code.equals(code)) {
-				//Logger.info ("find in form.."+ code+ " OK");
+			// il n'a pas de query string==> mise a jour de tout l'object
+			// garder ce mode pour des actions hors mode "application", pour du support ...
+			
+			if (dbSupport.code.equals(code)) {
+				// on a bien récupéré ce qu'on a demandé....
 				
-				if(null != objectInput.traceInformation){
-					objectInput.traceInformation.setTraceInformation(getCurrentUser());
+				if(null != formSupport.traceInformation){
+					formSupport.traceInformation.setTraceInformation(getCurrentUser());
 				}else{
 					Logger.error("traceInformation is null for Container support "+code);	
 				}
-				
-				// essai harcodé....
-				objectInput.storageCode="toto";
-				
-				MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, objectInput);
-				return ok(Json.toJson(objectInput));			
+				//mise a jour de TOUT l'objet
+				MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, formSupport);
+				return ok(Json.toJson(formSupport));			
 				
 			}else{
 				return badRequest("container code are not the same");
 			}
-		}else{ //update only some authorized properties
-			ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
-			ctxVal.setUpdateMode();
-			validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);
-			validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm);
-
-			if(!filledForm.hasErrors()){
-				if(null != objectInput.traceInformation){
-					objectInput.traceInformation.setTraceInformation(getCurrentUser());
-				}else{
-					Logger.error("traceInformation is null for Container support "+code);	
-				}
-				MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, 
-						DBQuery.and(DBQuery.is("code", code)), 
-						getBuilder(objectInput, queryFieldsForm.fields, ContainerSupport.class).set("traceInformation", objectInput.traceInformation));
-
-				//TODO cascading update 
+		}else{ 
+			if (dbSupport.code.equals(code)) {
+				// on a bien récupéré ce qu'on a demandé....
 				
-				return ok(Json.toJson(getSupport(code)));
+				// ne mettre a jour que les champs  dont le nom est dans la query string:   ?fields=XXXX
+				ContextValidation ctxVal = new ContextValidation(getCurrentUser(), filledForm.errors()); 	
+				ctxVal.setUpdateMode();
+				
+				validateAuthorizedUpdateFields(ctxVal, queryFieldsForm.fields, authorizedUpdateFields);		
+				validateIfFieldsArePresentInForm(ctxVal, queryFieldsForm.fields, filledForm); // verifier les champs de la query string font partie des champs modifiables
+				
+				if(!filledForm.hasErrors()){
+					if(null != formSupport.traceInformation){
+						formSupport.traceInformation.setTraceInformation(getCurrentUser());
+					}else{
+						Logger.error("traceInformation is null for Container support "+code);	
+					}
+					
+					//-1-- mise a jour DES champs de l'objet (getBuilder construit la requete MongoDB adequate) et de traceInformation
+					MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, 
+							DBQuery.and(DBQuery.is("code", code)), 
+							getBuilder(formSupport, queryFieldsForm.fields, ContainerSupport.class).set("traceInformation", formSupport.traceInformation));
+	
+					//-2- cas particulier pour storageCode => il est aussi present dans tous les containers du support 
+					//    si on le trouve dans la query string mettre a jour les containers avec la valeur  formSupport.storageCode
+					for(String field: queryFieldsForm.fields){
+						if ( field.equals("storageCode")){
+							Logger.info("TODO...update containers ="+ field + "=>"+ formSupport.storageCode);
+							
+							//-a- lister les containers contenus dans le support
+							MongoDBResult<Container> results = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("support.code",code));
+							
+							List<ListObject> los = new ArrayList<ListObject>();
+							
+							//liste de 1 champ...
+							// essai avec et sans suffixe...
+							//List<String> fieldList = java.util.Collections.singletonList("support.storageCode");
+							List<String> storageField = java.util.Collections.singletonList("support.storageCode");
+							
+							List<Container> containers = results.toList();
+							for(Container c: containers){
+								
+								c.traceInformation.setTraceInformation(getCurrentUser());
+								
+								los.add(new ListObject(c.code, c.code));
+								Logger.info("found container "+ c.code+" category="+ c.categoryCode+" with storage="+ c.support.storageCode );
+								
+								//-b- mettre a jour le support.storageCode des containers	
+								MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, Container.class, 
+										DBQuery.and(DBQuery.is("code", c.code)), 
+										//getBuilder(formSupport.storageCode, storageField, Container.class,"support").set("traceInformation", c.traceInformation));
+										set("support.storageCode", formSupport.storageCode ).set("traceInformation", c.traceInformation));
+							}
+
+							return ok(Json.toJson(los));
+							
+							
+			
+							
+						}
+					}
+					
+					return ok(Json.toJson(getSupport(code)));
+				}else{
+					return badRequest(filledForm.errorsAsJson());
+				}		
 			}else{
-				return badRequest(filledForm.errorsAsJson());
-			}			
+				return badRequest("container code are not the same");
+			}
 		}
 	}
 	
