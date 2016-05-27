@@ -58,7 +58,10 @@ public class MigrationUpdateReadSetTaraInvalid extends CommonController {
 							.set("bioinformaticValuation.resolutionCodes", resolutionCodes)
 							.set("bioinformaticValuation.comment", "valide suite aux nouveaux critères validation TARA appliqués aux dépôts des banques à 25%: "+
 																	"bact et/ou fungi>5%,dupl paired en raw>20% ou manque info sur dupl paired en raw "+
-																	"+ pb repartition en bases non invalidant"));	
+																	"+ pb repartition en bases non invalidant")
+							.set("productionValuation.comment", "valide suite aux nouveaux critères validation TARA appliqués aux dépôts des banques à 25%: "+
+									"bact et/ou fungi>5%,dupl paired en raw>20% ou manque info sur dupl paired en raw "+
+									"+ pb repartition en bases non invalidant"));	
 			readSet = MongoDBDAO.findByCode(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, readSet.code);
 			ContextValidation ctxVal = new ContextValidation(getCurrentUser());
 			ctxVal.setUpdateMode();
