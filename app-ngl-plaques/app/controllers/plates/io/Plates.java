@@ -131,7 +131,7 @@ public class Plates extends TPLCommonController {
 
 	private boolean isSameEmnco(ContextValidation contextValidation, Well well, Integer emnco, int i) {
 		if(!well.typeCode.equals(emnco)){
-			contextValidation.addErrors("Erreurs fichier", "Etape manip et étape choisi différente : ligne = "+i);
+			contextValidation.addErrors("Erreurs fichier", "Etape manip et étape choisie différente : ligne = "+i);
 			return false;
 		}else{
 			return true;

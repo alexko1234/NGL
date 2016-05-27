@@ -79,7 +79,7 @@
 							</thead>
 							<tbody>
 								<tr ng-repeat="qc in container.qualityControlResults">
-									<td ng-bind="qc.typeCode" />
+									<td ng-bind="qc.typeCode|codes:'type'" />
 									<td>
 										<div ng-repeat="(key, value) in qc.properties" ng-switch on="value._type === 'img'">
 											<div ng-switch-when="true">
@@ -100,7 +100,7 @@
 											</div>
 										</div>
 									</td>
-									<td ng-bind="qc.valutation" />
+									<td ng-bind="qc.valuation.valid|codes:'valuation'" />
 									<td ng-bind="qc.date|date:'@Messages("date.format")'" />
 								</tr>							
 							</tbody>
