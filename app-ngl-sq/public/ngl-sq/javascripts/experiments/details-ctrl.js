@@ -597,7 +597,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			         },
 			         remove:{
 			        	 mode:'local',
-			        	 active:true,
+			        	 active:Permissions.check("writing")?true:false,
 			        	 withEdit:true,
 			        	 callback:function(datatable){
 			        		 var reagents = datatable.allResult;
@@ -608,14 +608,14 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			        	 active:false
 			         },
 			         edit:{
-			        	 active:true,
+			        	 active:Permissions.check("writing")?true:false,
 			        	 columnMode:false,
 			        	 showButton : false,
 			        	 withoutSelect:true,
 			        	 byDefault : false
 			         },
 			         save:{
-			        	 active:true,
+			        	 active:Permissions.check("writing")?true:false,
 			        	 showButton:false,
 			        	 withoutEdit:true,
 			        	 mode:'local'
@@ -630,7 +630,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			        	 delimiter:";"
 			         },
 			         add:{
-			        	 active:true
+			        	 active:Permissions.check("writing")?true:false,
 			         }
 			         /*
 						 * otherButtons:{ active:true, template:'<button
@@ -1035,7 +1035,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				active:false,
 			},
 			save:{
-				active:true,
+				active:Permissions.check("writing")?true:false,
 	        	withoutEdit: true,
 	        	showButton:false,
 	        	mode:'local',
@@ -1066,7 +1066,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	        		
 			},
 			edit:{
-				active: true,
+				active:Permissions.check("writing")?true:false,
 				columnMode:true,
 				byDefault: true,
 				showButton:false
