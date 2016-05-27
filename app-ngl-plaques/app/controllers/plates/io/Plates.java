@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -74,6 +76,7 @@ public class Plates extends TPLCommonController {
 			return null;
 		}
 		List<Well> wells = new ArrayList<Well>(0);
+		Set<String> wellPosition = new TreeSet<String>();
 		for(int i = 1; i <= 97; i++){
 			
 			if(sheet.getRow(i) != null && sheet.getRow(i).getCell(0) != null){
@@ -89,7 +92,7 @@ public class Plates extends TPLCommonController {
 				if(ValidationHelper.required(contextValidation, nomManip, "nom manip : ligne = "+i)
 						&& ValidationHelper.required(contextValidation, line, "Ligne : ligne = "+i)
 						&& ValidationHelper.required(contextValidation, column, "Colonne : ligne = "+i)
-						&& isPlatePosition(contextValidation, line+column, 96, i)){
+						&& isPlatePosition(contextValidation, line+column, 96, i, wellPosition)){
 					
 					LimsManipDAO  limsManipDAO = Spring.getBeanOfType(LimsManipDAO.class);
 					Well well = limsManipDAO.getWell(nomManip);
@@ -111,6 +114,9 @@ public class Plates extends TPLCommonController {
 		return wells;
 	}
 	
+	
+
+
 	private boolean isNotInsideAPlate(ContextValidation contextValidation,
 			Well well, int i) {
 		if(well.x != null && well.y != null){
@@ -157,7 +163,7 @@ public class Plates extends TPLCommonController {
 		
 	}
 	
-	public static boolean isPlatePosition(ContextValidation contextValidation, String position, int plFormat, int lineNum){
+	public static boolean isPlatePosition(ContextValidation contextValidation, String position, int plFormat, int lineNum, Set<String> wellPosition){
 
 		if ((position.length() < 2) || (position.length() > 3 )) {
 			contextValidation.addErrors("Erreurs fichier", "Position puit inconnu : "+position+". Ligne"+lineNum);
@@ -169,6 +175,13 @@ public class Plates extends TPLCommonController {
 		//Logger.info("DEBUG...row:"+ row + " -column:"+ column );
 		
 		int col = Integer.parseInt(column); // et si la string ne correspond pas a un nombre ???
+		
+		if(wellPosition.contains(position)){
+			contextValidation.addErrors("Erreurs fichier", "Position puit en double : "+position+". Ligne"+lineNum);			
+		}else{
+			wellPosition.add(position);
+		}
+		
 		
 		if (plFormat==96){
 			if (row.matches("[A-H]") && (col>=1 && col<=12)){
