@@ -11,7 +11,25 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	$scope.setActiveTab = function(value){
 		mainService.put('containerActiveTab', value)
 	};
+	/* move to a directive */
+	$scope.setImage = function(imageData, imageName, imageFullSizeWidth, imageFullSizeHeight) {
+		$scope.modalImage = imageData;
 
+		$scope.modalTitle = imageName;
+
+		var margin = 25;		
+		var zoom = Math.min((document.body.clientWidth - margin) / imageFullSizeWidth, 1);
+
+		$scope.modalWidth = imageFullSizeWidth * zoom;
+		$scope.modalHeight = imageFullSizeHeight * zoom; // in order to
+															// conserve image
+															// ratio
+		$scope.modalLeft = (document.body.clientWidth - $scope.modalWidth)/2;
+
+		$scope.modalTop = (window.innerHeight - $scope.modalHeight)/2;
+
+		$scope.modalTop = $scope.modalTop - 50; // height of header and footer
+	};
 	
 	var init = function(){
 		$scope.messages = messages();
@@ -20,7 +38,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			
 		$http.get(jsRoutes.controllers.containers.api.Containers.get($routeParams.code).url).then(function(response) {
 			$scope.container = response.data;
-			
+			console.log($scope.container);
 			if(tabService.getTabs().length == 0){			
 				tabService.addTabs({label:Messages('containers.tabs.search'),href:jsRoutes.controllers.containers.tpl.Containers.home("search").url,remove:true});
 				tabService.addTabs({label:$scope.container.code,href:jsRoutes.controllers.containers.tpl.Containers.get($scope.container.code).url,remove:true});
@@ -193,7 +211,6 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		
 		return graphElements;
 	};
-	
 	
 	
 	
