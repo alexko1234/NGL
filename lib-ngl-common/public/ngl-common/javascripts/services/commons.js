@@ -461,19 +461,27 @@ angular.module('commonsServices', []).
     			require: 'ngModel',
     			link: function(scope, element, attrs, ngModel) {
     				var valOption = undefined;
-					if(attrs.ngOptions){	
+					var multiple = false;
+    				if(attrs.ngOptions){	
 						valOption = attrs.ngOptions;
 					}else if(attrs.btOptions){
 						valOption = attrs.btOptions;
 					}
 					
+    				if(attrs.multiple === true || attrs.multiple === "true"){
+    					multiple = true;
+    				}
+    				
 					if(valOption != undefined){
 						var match = valOption.match(OPTIONS_REGEXP);
 						var model = $parse(match[7]);
 						scope.$watch(model, function(value){
 							if(value){
 				                if(value.length === 1 && (ngModel.$modelValue == undefined || ngModel.$modelValue == "")){
-									ngModel.$setViewValue(value[0].code);
+									
+				                	var value = (multiple)?[value[0].code]:value[0].code;
+				                	
+				                	ngModel.$setViewValue(value);
 									ngModel.$render();
 								}
 							}
