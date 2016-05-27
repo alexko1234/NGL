@@ -77,6 +77,7 @@ public class Plates extends TPLCommonController {
 		}
 		List<Well> wells = new ArrayList<Well>(0);
 		Set<String> wellPosition = new TreeSet<String>();
+		Set<String> nomManips = new TreeSet<String>();
 		for(int i = 1; i <= 97; i++){
 			
 			if(sheet.getRow(i) != null && sheet.getRow(i).getCell(0) != null){
@@ -92,7 +93,8 @@ public class Plates extends TPLCommonController {
 				if(ValidationHelper.required(contextValidation, nomManip, "nom manip : ligne = "+i)
 						&& ValidationHelper.required(contextValidation, line, "Ligne : ligne = "+i)
 						&& ValidationHelper.required(contextValidation, column, "Colonne : ligne = "+i)
-						&& isPlatePosition(contextValidation, line+column, 96, i, wellPosition)){
+						&& isPlatePosition(contextValidation, line+column, 96, i, wellPosition)
+						&& isNotAlreadyPresent(contextValidation,nomManip, nomManips,i)){
 					
 					LimsManipDAO  limsManipDAO = Spring.getBeanOfType(LimsManipDAO.class);
 					Well well = limsManipDAO.getWell(nomManip);
@@ -115,6 +117,17 @@ public class Plates extends TPLCommonController {
 	}
 	
 	
+
+
+	private boolean isNotAlreadyPresent(ContextValidation contextValidation, String nomManip, Set<String> nomManips, int lineNum) {
+		if(nomManips.contains(nomManip)){
+			contextValidation.addErrors("Erreurs fichier", "Nom manip en double : "+nomManip+". Ligne"+lineNum);
+			return false;
+		}else{
+			nomManips.add(nomManip);
+			return true;
+		}
+	}
 
 
 	private boolean isNotInsideAPlate(ContextValidation contextValidation,
