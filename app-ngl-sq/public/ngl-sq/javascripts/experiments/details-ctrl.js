@@ -1455,7 +1455,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 							}
 						}
 						
-						if(outputContainers[0] && outputContainers[0].categoryCode === 'well'){
+						if(outputContainers[0] && outputContainers[0].container.categoryCode === 'well'){
 							outputContainers = $filter("orderBy")(outputContainers,['container.support.column*1', 'container.support.line']);							
 						}else{
 							outputContainers = $filter("orderBy")(outputContainers,'container.code');
@@ -1502,7 +1502,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 							}
 						}
 						
-						if(inputContainers[0] && inputContainers[0].categoryCode === 'well'){
+						if(inputContainers[0] && inputContainers[0].container.categoryCode === 'well'){
 							inputContainers = $filter("orderBy")(inputContainers,['container.support.column*1', 'container.support.line']);							
 						}else{
 							inputContainers = $filter("orderBy")(inputContainers,'container.code');
