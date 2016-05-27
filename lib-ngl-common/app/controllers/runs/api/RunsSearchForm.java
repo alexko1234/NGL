@@ -37,6 +37,7 @@ public class RunsSearchForm extends ListForm {
     
     
     public String valuationUser;
+    public String valuationCriteriaCode;
     
     public Boolean keep;
     

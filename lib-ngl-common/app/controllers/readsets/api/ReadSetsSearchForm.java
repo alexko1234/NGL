@@ -58,6 +58,7 @@ public class ReadSetsSearchForm extends ListForm{
     public Set<String> bioinformaticResolutionCodes;
     
     public String productionValuationUser;
+    public String productionValuationCriteriaCode;
     
     public Set<String> existingFields, notExistingFields;
     
