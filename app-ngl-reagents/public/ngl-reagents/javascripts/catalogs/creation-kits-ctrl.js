@@ -115,7 +115,7 @@
 				}
 	 };
 	 $scope.message = {};
-	 $scope.kit = {"category":"Kit", "active":true};
+	 $scope.kit = {"category":"Kit"};
 	 $scope.boxes = [];
 	 $scope.datatables = [];
 	 $scope.datatableSaved = 0;
@@ -291,9 +291,13 @@
 			for(var i=0;i<$scope.boxes.length;i++){
 				$scope.boxes[i].kitCatalogCode = $scope.kit.code;
 				if($scope.boxes[i].code === undefined || $scope.boxes[i].code === ""){
+					if ($scope.boxes[i].active === undefined) {
+						$scope.boxes[i].active = false;
+					}
 					promises.push($scope.saveBox(i,$scope.boxes[i]));
+					console.log("box info : "+ $scope.boxes[i].name + " - " + $scope.boxes[i].active);
 				}else{
-					promises.push($scope.updateBox(i,$scope.boxes[i]));
+					promises.push($scope.updateBox(i,$scope.boxes[i]));					
 				}
 			}
 		}else{

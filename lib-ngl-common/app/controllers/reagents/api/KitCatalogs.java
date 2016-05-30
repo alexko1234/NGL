@@ -104,7 +104,7 @@ public class KitCatalogs extends DocumentController<KitCatalog>{
 			return ok(Json.toJson(new DatatableResponse<KitCatalog>(kitCatalogs, results.count())));
 			
 			
-		}else if (kitCatalogSearch.list){
+	/*	}else if (kitCatalogSearch.list){
 			keys = getKeys(kitCatalogSearch);
 			keys.put("code", 1);
 			keys.put("name", 1);
@@ -120,12 +120,13 @@ public class KitCatalogs extends DocumentController<KitCatalog>{
 					los.add(new ListObject(p.code, p.name));								
 			}
 			
-			return Results.ok(Json.toJson(los));
+			return Results.ok(Json.toJson(los)); */ 
 		}else{
 			if(null == kitCatalogSearch.orderBy)kitCatalogSearch.orderBy = "code";
 			if(null == kitCatalogSearch.orderSense)kitCatalogSearch.orderSense = 0;
 			
 			MongoDBResult<KitCatalog> results = mongoDBFinder(kitCatalogSearch, query);
+			Logger.debug("appel 1 fois");
 			List<KitCatalog> kitCatalogs = results.toList();
 			
 			return ok(Json.toJson(kitCatalogs));

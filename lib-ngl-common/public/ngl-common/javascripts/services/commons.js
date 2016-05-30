@@ -90,7 +90,8 @@ angular.module('commonsServices', []).
     				                 {code:"FALSE", name:Messages("status.FALSE")},
     				                 {code:"UNSET", name:Messages("status.UNSET")}],    				
 	    				                 
-    				booleans : [{code:"true", name:Messages("boolean.TRUE")}, {code:"false", name:Messages("boolean.FALSE")}]
+    				booleans : [{code:"true", name:Messages("boolean.TRUE")}, 
+    				            {code:"false", name:Messages("boolean.FALSE")}]
     			};    		
     		
     		var refresh = {
