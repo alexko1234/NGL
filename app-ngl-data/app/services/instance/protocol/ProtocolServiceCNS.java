@@ -76,7 +76,6 @@ public class ProtocolServiceCNS {
 		lp.add(newProtocol("R9-2D","R9-2D","path7","1","production", InstanceFactory.setExperimentTypeCodes("nanopore-library","nanopore-depot")));
 				
 		lp.add(newProtocol("prt_wait","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("aliquoting")));
-		lp.add(newProtocol("ptr_pool_tube_v1","PTR_POOL_TUBE_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("pool-tube","pool-x-to-tubes")));
 		
 		
 		lp.add(newProtocol("irys-prep-nlrs-300-900","Irys Prep Labelling NLRS (300/900)","path7","1","production", InstanceFactory.setExperimentTypeCodes("irys-nlrs-prep","irys-chip-preparation")));
@@ -93,6 +92,11 @@ public class ProtocolServiceCNS {
 				
 				lp.add(newProtocol("proto_qc_v1","Proto_QC_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("qpcr-quantification")));
 				lp.add(newProtocol("amplif_ptr_sox144_1","Amplif_ptr_sox144_1","path3","1","production", InstanceFactory.setExperimentTypeCodes("solution-stock")));
+				lp.add(newProtocol("ptr_pool_tube_v1","PTR_POOL_TUBE_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("pool-tube","pool-x-to-tubes")));
+				
+			}else{
+				lp.add(newProtocol("ptr_pool_tube_v1","PTR_POOL_TUBE_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("pool-tube")));
+				
 			}
 		
 		for(Protocol protocole:lp){
