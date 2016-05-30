@@ -458,6 +458,10 @@ public class ExpWorkflowsHelper {
 		support.projectCodes = containers.stream().map(c -> c.projectCodes).flatMap(Set::stream).collect(Collectors.toSet());
 		support.sampleCodes = containers.stream().map(c -> c.sampleCodes).flatMap(Set::stream).collect(Collectors.toSet());
 		support.fromTransformationTypeCodes = containers.stream().map(c -> c.fromTransformationTypeCodes).flatMap(Set::stream).collect(Collectors.toSet());
+		
+		support.nbContainers = containers.size();
+		support.nbContents = containers.stream().mapToInt(c -> c.contents.size()).sum();
+		
 		validation.removeKeyFromRootKeyName("creation.outputSupport."+code);
 		return support;
 	}

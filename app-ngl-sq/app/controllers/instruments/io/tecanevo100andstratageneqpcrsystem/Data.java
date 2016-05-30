@@ -1,4 +1,4 @@
-package controllers.instruments.io.stratageneqpcr;
+package controllers.instruments.io.tecanevo100andstratageneqpcrsystem;
 
 public class Data {
 	public Double concentration1;

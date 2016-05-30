@@ -275,7 +275,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 			
 			l.add(newExperimentType("Quantification qPCR","qpcr-quantification", null,850,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsQPCR(), 
-					getInstrumentUsedTypes("stratagene-qPCR"),"OneToVoid", 
+					getInstrumentUsedTypes("tecan-evo-100-and-stratagene-qPCR-system"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
 			/*
 			l.add(newExperimentType("Migration sur puce (ampli)","chip-migration-post-pcr",null,650,

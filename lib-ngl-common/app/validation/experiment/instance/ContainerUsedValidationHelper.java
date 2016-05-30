@@ -153,7 +153,7 @@ public class ContainerUsedValidationHelper extends CommonValidationHelper {
 	private static void validateContainerNotUsedInOtherExperiment(ContextValidation contextValidation, String containerCode) {
 		Experiment exp = getObjectFromContext(FIELD_EXPERIMENT, Experiment.class, contextValidation);
 		if(MongoDBDAO.checkObjectExist(EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.notEquals("code", exp.code).in("outputContainerCodes", containerCode))){
-			contextValidation.addErrors("atomicTransfertMethods.outputContainerUseds.code", "error.validationexp.container.alreadyused",containerCode);
+			contextValidation.addErrors("code", "error.validationexp.container.alreadyused",containerCode);
 		}
 		
 	}

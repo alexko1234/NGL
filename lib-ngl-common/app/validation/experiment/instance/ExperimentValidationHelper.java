@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -127,6 +128,9 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			}
 			cv.removeKeyFromRootKeyName(rootKeyName);
 		});
+		
+		validateUniqOutputContainerCodeInsideExperiment(atomicTransfertMethods, contextValidation);
+		
 		/*
 		//Code before stream
 		String rootKeyName;
@@ -171,6 +175,40 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 		//TODO GA validate number of ATM against SupportContainerCategory nbLine and nbColumn
 	}
 
+	
+	private static void validateUniqOutputContainerCodeInsideExperiment(List<AtomicTransfertMethod> atomicTransfertMethods, ContextValidation contextValidation){
+		Set<String> outputContainerCodes = new TreeSet<String>();
+		
+		IntStream.range(0, atomicTransfertMethods.size()).forEach(i -> {
+			ContextValidation cv = new ContextValidation(contextValidation.getUser());
+			cv.setRootKeyName(cv.getRootKeyName());
+			String rootKeyName="atomictransfertmethod"+"["+i+"]";
+			cv.addKeyToRootKeyName(rootKeyName);
+			
+			AtomicTransfertMethod atm = atomicTransfertMethods.get(i);
+			List<OutputContainerUsed> outputContainerUseds = atm.outputContainerUseds;
+			
+			for(int j = 0 ; j < outputContainerUseds.size(); j++){
+				String rootKeyName2 ="outputContainerUseds"+"["+j+"]";
+				cv.addKeyToRootKeyName(rootKeyName2);
+				String containerCode = atm.outputContainerUseds.get(j).code;
+				if(null != containerCode){
+					if(outputContainerCodes.contains(containerCode)){
+						contextValidation.addErrors("code", "error.validationexp.container.alreadyused",containerCode);
+					}else{
+						outputContainerCodes.add(containerCode);
+					}
+				}
+				cv.removeKeyFromRootKeyName(rootKeyName2);
+			}
+			
+			if(cv.hasErrors()){
+				contextValidation.addErrors(cv.errors);
+			}
+			cv.removeKeyFromRootKeyName(rootKeyName);
+		});
+	}
+	
 	public static void validateInstrumentUsed(InstrumentUsed instrumentUsed, Map<String,PropertyValue> properties, ContextValidation contextValidation) {
 		if(ValidationHelper.required(contextValidation, instrumentUsed, "instrumentUsed")){
 			contextValidation.addKeyToRootKeyName("instrumentUsed");

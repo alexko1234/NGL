@@ -1,4 +1,4 @@
-package controllers.instruments.io.stratageneqpcr;
+package controllers.instruments.io.tecanevo100andstratageneqpcrsystem;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
