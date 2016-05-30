@@ -50,13 +50,13 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 			l.add(DescriptionFactory.newTreatmentType("SAV","sav", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.sequencing.name()), "sav", 
 					getSAVPropertyDefinitionsV2(), 
 					Arrays.asList(getTreatmentTypeContext("read1", Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE)), 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG), "10"));
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS), "10"));
 			
 		}else{
 			l.add(DescriptionFactory.newTreatmentType("SAV","sav", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.sequencing.name()), "sav", 
 					getSAVPropertyDefinitions(), 
 					Arrays.asList(getTreatmentTypeContext("read1", Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE)), 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNG), "10"));
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS), "10"));
 			
 		}
 		
