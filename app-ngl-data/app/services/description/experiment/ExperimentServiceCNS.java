@@ -142,10 +142,6 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 				getInstrumentUsedTypes("minion","mk1"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 
-		l.add(newExperimentType("Pool Tube","pool-tube",null,1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
-				getInstrumentUsedTypes("hand","tecan-evo-100"),"ManyToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		
 		l.add(newExperimentType("Aliquot","aliquoting",null,2,
@@ -226,9 +222,20 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					getInstrumentUsedTypes("rocheLightCycler-qPCR","stratagene-qPCR"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 	
 		*/	
-		
+		if(ConfigFactory.load().getString("ngl.env").equals("PROD")){
 			
-		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+			l.add(newExperimentType("Pool Tube","pool-tube",null,1,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
+					getInstrumentUsedTypes("hand"),"ManyToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
+		}else if(!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+			
+			l.add(newExperimentType("Pool Tube","pool-tube",null,1,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
+					getInstrumentUsedTypes("hand","tecan-evo-100"),"ManyToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
 			
 			l.add(newExperimentType("Pool x => tubes","pool-x-to-tubes",null,1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
