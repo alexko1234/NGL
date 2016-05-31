@@ -9,7 +9,7 @@
 @columnForProjectsOrSamples(msg: String)(length: xml.Elem)(data: Html) = {
 	<label class="col-md-6 col-lg-6 control-label" ng-if="@data">@msg (@length)</label>
 	<div class="col-md-6 col-lg-6" ng-if="@data">
-		<div class="form-control-static" list-resize="@data" list-resize-min-size='3' horizontal />
+		<p class="form-control-static" list-resize="@data" list-resize-min-size='2' wertical />
 	</div>
 }
 

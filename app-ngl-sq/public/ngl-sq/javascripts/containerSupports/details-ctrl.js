@@ -15,7 +15,29 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	$scope.setActiveTab = function(value){
 		mainService.put('containerSupportActiveTab', value);
 	};
+	/*
+	 * hide/showRowAll()
+	 */
+	$scope.hideRowAll = function(){
+	
+		$scope.isAllOpen = false;
+	}
+	$scope.showRowAll = function(){
 
+		$scope.isAllOpen = true;
+	}
+	
+	//To display sample and tag in one cell
+	$scope.getSampleAndTags = function(container){
+		var sampleCodeAndTags = [];
+		angular.forEach(container.contents, function(content){
+			if(content.properties.tag != undefined && content.sampleCode != undefined){
+				sampleCodeAndTags.push(content.sampleCode+" / "+content.properties.tag.value);
+			}
+		});
+		return sampleCodeAndTags;
+	};
+	
 	/*
 	 * Get Bootstrap class for colors
 	 */
@@ -51,6 +73,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			        }
 		        }
 			}
+			$scope.data = undefined;
 	        return "------";
 		}
      }
@@ -383,8 +406,8 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			
 			filterCategorySupport();
 			
-			//console.log($scope.support);
-			//console.log($scope.containers);
+			console.log($scope.support);
+			console.log($scope.containers);
 			
 		});
 		
