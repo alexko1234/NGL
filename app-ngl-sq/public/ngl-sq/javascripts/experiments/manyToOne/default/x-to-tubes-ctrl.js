@@ -8,7 +8,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			columns:[   
 					{
 						 "header":Messages("containers.table.support.number"),
-						 "property":"atomicIndex+1",
+						 "property":"atomicTransfertMethod.viewIndex",
 						 "order":true,
 						 "edit":false,
 						 "hide":true,

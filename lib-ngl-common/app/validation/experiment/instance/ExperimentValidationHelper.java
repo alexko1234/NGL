@@ -120,7 +120,9 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			cv.putObject(FIELD_TYPE_CODE , expTypeCode);
 			cv.putObject(FIELD_INST_USED , instrument);
 			cv.setRootKeyName(cv.getRootKeyName());
-			String rootKeyName="atomictransfertmethod"+"["+i+"]";
+			Integer index = i;
+			if(null != atomicTransfertMethods.get(i).viewIndex) index = atomicTransfertMethods.get(i).viewIndex;
+			String rootKeyName="atomictransfertmethod"+"["+index+"]";
 			cv.addKeyToRootKeyName(rootKeyName);
 			atomicTransfertMethods.get(i).validate(cv);
 			if(cv.hasErrors()){
@@ -233,7 +235,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 		
 		for(int i=0;i<exp.atomicTransfertMethods.size();i++){
 			AtomicTransfertMethod atomic = exp.atomicTransfertMethods.get(i);
-			atomic.index = i+1; //used to have the position in the list
+			if(atomic.viewIndex == null)atomic.viewIndex = i+1; //used to have the position in the list
 			validationfacts.add(atomic);
 		}
 		

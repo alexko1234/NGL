@@ -26,8 +26,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 public abstract class AtomicTransfertMethod implements IValidation {
 
 
-	@JsonIgnore
-	public Integer index; //use in rules validation to have the position+1 in the list of ATM.
+	public Integer viewIndex; //use in rules validation to have the position+1 in the list of ATM.
 	
 	public List<InputContainerUsed> inputContainerUseds;
 	public List<OutputContainerUsed> outputContainerUseds;

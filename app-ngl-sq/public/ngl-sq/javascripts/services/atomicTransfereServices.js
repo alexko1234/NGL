@@ -810,6 +810,7 @@ angular.module('atomicTransfereServices', [])
 					for(var i = this.data.atm.length; i < $nbATM; i++){
 						var atm = this.newAtomicTransfertMethod(i+1); //TODO GA Not work for plate to plate
 						atm.outputContainerUseds.push($commonATM.newOutputContainerUsed(this.defaultOutputUnit, atm.line, atm.column));
+						atm.viewIndex=i+1;
 						this.data.atm.push(atm);
 					}
 					
@@ -931,6 +932,7 @@ angular.module('atomicTransfereServices', [])
 				addNewAtomicTransfertMethod : function($service, i){
 					var atm = $service.newAtomicTransfertMethod(i+1);
 					atm.outputContainerUseds.push($commonATM.newOutputContainerUsed($service.defaultOutputUnit, atm.line, atm.column));
+					atm.viewIndex=$service.data.atm.length+1;
 					$service.data.atm.push(atm);
 				}
 				

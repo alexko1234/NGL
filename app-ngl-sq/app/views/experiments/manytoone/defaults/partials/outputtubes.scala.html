@@ -75,12 +75,12 @@
 	<thead>
 
 
-<tbody ng-repeat="atm in atmService.data.atm track by $index" 	
+<tbody ng-repeat="atm in atmService.data.atm | orderBy:'viewIndex' track by $index" 	
 	ng-switch="atmService.data.getATMViewMode(atm, $index)">
 	
 	<tr ng-switch-when="empty">
 		<td>			
-			<span class="label label-black" ng-bind="$index + 1"></span>
+			<span class="label label-black" ng-bind="atm.viewIndex"></span>
 		</td>
 		<td> 
 			<button class="btn btn-default btn-xs"  ng-click="atmService.data.toggleATM($index)" ng-switch="atmService.data.atmViewOpen[$index]">
@@ -93,7 +93,7 @@
 	
 	<tr ng-switch-when="compact" >	
 		<td  class="compactColumn">
-			<span class="label label-black" ng-bind="$index + 1"></span>
+			<span class="label label-black" ng-bind="atm.viewIndex"></span>
 		</td >
 		<td class="compactColumn"> 					
 			<button class="btn btn-default btn-xs"  ng-click="atmService.data.toggleATM($index)">
@@ -111,7 +111,7 @@
 	
 	<tr ng-switch-when="open" ng-repeat="inputContainerUsed in atm.inputContainerUseds | orderBy:'code' track by $index">	
 			<td rowspan="{{atm.inputContainerUseds.length}}" ng-if="$index === 0">
-				<span class="form-control-static label label-black" ng-bind="$parent.$parent.$index + 1"></span>
+				<span class="form-control-static label label-black" ng-bind="atm.viewIndex"></span>
 			</td>
 			<td rowspan="{{atm.inputContainerUseds.length}}" ng-if="$index === 0">
 				<!-- ng-if add a new child scope so we need to use $parent.$parent.$index -->
