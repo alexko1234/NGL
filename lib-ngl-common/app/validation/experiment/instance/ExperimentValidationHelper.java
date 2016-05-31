@@ -189,21 +189,21 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			
 			AtomicTransfertMethod atm = atomicTransfertMethods.get(i);
 			List<OutputContainerUsed> outputContainerUseds = atm.outputContainerUseds;
-			
-			for(int j = 0 ; j < outputContainerUseds.size(); j++){
-				String rootKeyName2 ="outputContainerUseds"+"["+j+"]";
-				cv.addKeyToRootKeyName(rootKeyName2);
-				String containerCode = atm.outputContainerUseds.get(j).code;
-				if(null != containerCode){
-					if(outputContainerCodes.contains(containerCode)){
-						contextValidation.addErrors("code", "error.validationexp.container.alreadyused",containerCode);
-					}else{
-						outputContainerCodes.add(containerCode);
+			if(null != outputContainerUseds){
+				for(int j = 0 ; j < outputContainerUseds.size(); j++){
+					String rootKeyName2 ="outputContainerUseds"+"["+j+"]";
+					cv.addKeyToRootKeyName(rootKeyName2);
+					String containerCode = atm.outputContainerUseds.get(j).code;
+					if(null != containerCode){
+						if(outputContainerCodes.contains(containerCode)){
+							contextValidation.addErrors("code", "error.validationexp.container.alreadyused",containerCode);
+						}else{
+							outputContainerCodes.add(containerCode);
+						}
 					}
+					cv.removeKeyFromRootKeyName(rootKeyName2);
 				}
-				cv.removeKeyFromRootKeyName(rootKeyName2);
-			}
-			
+				}
 			if(cv.hasErrors()){
 				contextValidation.addErrors(cv.errors);
 			}
