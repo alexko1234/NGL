@@ -347,6 +347,7 @@ experiments.instrumentFile = Fichier de l''instrument
 experiments.startColumnTagPlate = Colonne de début de la plaque d''index
 
 experiments.calculation.sheet = Feuille de calcul
+experiments.src_dest.sheet = Source / Destination
 experiments.flowcell.design = Composition flowcell
 experiments.iryschip.design = Composition Irys Chip
 experiments.tube.design = Composition Tube

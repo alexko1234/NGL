@@ -57,7 +57,28 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			        	 "position":4,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
-			         					 
+			         {
+				 			"header":Messages("containers.table.libProcessType"),
+				 			"property": "inputContainer.contents",
+				 			"order":false,
+				 			"hide":true,
+				 			"type":"text",
+				 			"position":4.1,
+				 			"render":"<div list-resize='cellValue | getArray:\"properties.libProcessTypeCode.value\" | unique' list-resize-min-size='3'>",
+				 			"extraHeaders":{0:Messages("experiments.inputs")}	 						 			
+				 		},
+			         
+			         {
+				        	"header":Messages("containers.table.tags"),
+				 			"property": "inputContainer.contents",
+				 			"filter": "getArray:'properties.tag.value'",
+				 			"order":true,
+				 			"hide":true,
+				 			"type":"text",
+				 			"position":4.2,
+				 			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='3'>",
+				        	 "extraHeaders":{0:Messages("experiments.inputs")}
+				     },					 
 					 {
 			        	 "header":Messages("containers.table.concentration"),
 			        	 "property":"inputContainer.concentration.value",
@@ -220,6 +241,26 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 		
 		}
 	};
+	
+	$scope.getOutputContainerSupports = function(){
+		var outputContainerSupports = [];
+		if($scope.experiment.atomicTransfertMethods){
+			$scope.experiment.atomicTransfertMethods.forEach(function(atm){
+				this.push(atm.outputContainerUseds[0]);
+				
+			}, outputContainerSupports);
+		}
+		return outputContainerSupports;
+	}
+	
+	$scope.getInputContainerSupports = function(){
+		var inputContainerSupports = [];
+		if($scope.experiment.atomicTransfertMethods){
+			inputContainerSupports = $scope.experiment.inputContainerSupportCodes;
+		}
+		return inputContainerSupports;
+	}
+	
 	
 	$scope.isEditMode = function(){
 		return ($scope.$parent.isEditMode() && $scope.isNewState());

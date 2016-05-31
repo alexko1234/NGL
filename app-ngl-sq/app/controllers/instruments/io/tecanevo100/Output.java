@@ -82,7 +82,7 @@ public class Output extends AbstractOutput {
 		sspl.inputSupportContainerColumn = input.locationOnContainerSupport.column;
 		sspl.inputSupportContainerLine = input.locationOnContainerSupport.line;
 		sspl.inputSupportContainerPosition = OutputHelper.getNumberPositionInPlateByColumn(input.locationOnContainerSupport.line, input.locationOnContainerSupport.column);
-		sspl.inputSupportContainerVolume = (Double)input.experimentProperties.get("inputVolume").value; 
+		sspl.inputSupportContainerVolume = input.experimentProperties.get("inputVolume").value.toString().replace(".", ","); 
 		sspl.inputSupportSource =  sourceMapping.get(input.locationOnContainerSupport.code);
 			
 		sspl.outputSupportCode = output.locationOnContainerSupport.code;

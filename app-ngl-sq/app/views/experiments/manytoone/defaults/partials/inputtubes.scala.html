@@ -16,6 +16,12 @@
 						@Messages("containers.table.code")
 					</th>
 					<th>
+						@Messages("containers.table.projectCodes")
+					</th>
+					<th>
+						@Messages("containers.table.sampleCodes")
+					</th>
+					<th>
 						@Messages("containers.table.fromTransformationTypeCodes")
 					</th>
 					<th>
@@ -43,9 +49,17 @@
 						{{container.code}}
 					</td>
 					<td>
+						<div list-resize='container.projectCodes' list-resize-min-size='3'>
+						
+					</td>
+					<td>
+						<div list-resize='container.sampleCodes' list-resize-min-size='3'>
+						
+					</td>
+					<td>
 						<div list-resize='container.fromTransformationTypeCodes | unique | codes:"type"' list-resize-min-size='3'>
 						
-					</td>					
+					</td>											
 					<td>
 						<div list-resize='container.contents | getArray:"properties.tag.value"| unique' list-resize-min-size='5' below vertical>																
 					</td>

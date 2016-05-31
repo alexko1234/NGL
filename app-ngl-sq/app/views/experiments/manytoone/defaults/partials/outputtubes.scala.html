@@ -75,7 +75,7 @@
 	<thead>
 
 
-<tbody ng-repeat="atm in atmService.data.atm | orderBy:'line' track by $index" 	
+<tbody ng-repeat="atm in atmService.data.atm track by $index" 	
 	ng-switch="atmService.data.getATMViewMode(atm, $index)">
 	
 	<tr ng-switch-when="empty">
@@ -148,7 +148,7 @@
 				</td> 														
 				<td>
 					<div ng-switch on="mainService.isEditMode()">						
-						<p class="form-control-static" ng-switch-when="false" ng-bind="inputContainerUsed.percentage" />						 
+						<p class="form-control-static" ng-switch-when="false" ng-bind="inputContainerUsed.percentage | number" />						 
 						<div ng-switch-when="true">
 							<input class="form-control input-sm" 
 								type="text"
@@ -162,7 +162,7 @@
 				</td>
 				<td ng-repeat="property in inputContainerProperties track by $index">
 					<div ng-switch on="mainService.isEditMode()">						
-						<p class="form-control-static" ng-switch-when="false" ng-bind="inputContainerUsed.experimentProperties[property.code].value" />						 
+						<p class="form-control-static" ng-switch-when="false" ng-bind="inputContainerUsed.experimentProperties[property.code].value | number" />						 
 						<div ng-switch-when="true">
 				
 							<input class="form-control input-sm" type="text"  

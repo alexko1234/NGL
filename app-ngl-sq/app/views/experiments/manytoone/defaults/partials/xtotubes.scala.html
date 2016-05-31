@@ -4,7 +4,7 @@
 <div ng-switch-when="tube">
 <ul class="nav nav-tabs margin-bottom-5" role="tablist">
   <li class="active"><a href="" role="tab" data-target="#tube" data-toggle="tab">@Messages("experiments.tube.design")</a></li>
-  <li><a href="" role="tab"  data-target="#roadmap" data-toggle="tab" ng-click="atmService.data.updateDatatable()">@Messages("experiments.calculation.sheet")</a></li>
+  <li><a href="" role="tab"  data-target="#roadmap" data-toggle="tab" ng-click="atmService.data.updateDatatable()">@Messages("experiments.calculation.sheet")</a></li>  
 </ul>
 
 <div class="tab-content"  >
@@ -33,11 +33,7 @@
 			<div class="col-md-10 col-lg-10 flowcellTable">
 			@outputtubes()
 			</div>
-		</div>
-
-		
-	
-		
+		</div>		
 	</div>
 	</div>
 	</div>		
@@ -55,6 +51,7 @@
 <ul class="nav nav-tabs margin-bottom-5" role="tablist">
   <li class="active"><a href="" role="tab" data-target="#plate" data-toggle="tab">@Messages("experiments.tube.design")</a></li>
   <li><a href="" role="tab"  data-target="#roadmap" data-toggle="tab" ng-click="atmService.data.updateDatatable()">@Messages("experiments.calculation.sheet")</a></li>
+  <li><a href="" role="tab"  data-target="#src_dest" data-toggle="tab">@Messages("experiments.src_dest.sheet")</a></li>
 </ul>
 
 <div class="tab-content">
@@ -93,6 +90,61 @@
 	<div class="tab-pane" id="roadmap">
 	<div class="row roadmap">
 		<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data.datatable"></div>
+	</div>
+	</div>
+	
+	<div class="tab-pane" id="src_dest">
+	<div class="row roadmap">
+	<div class="col-md-4 col-lg-4">
+		<table class="table ">
+			<thead>
+				<tr>
+					<th>
+						Code support entrée	
+					</th>
+					<th>
+						Source
+					</th>											
+				</tr>
+				</thead>				
+				<tr ng-model="container" ng-repeat="container in getInputContainerSupports() | orderBy track by $index" >
+					<td>
+						{{container}}
+					</td>
+					<td>
+						{{$index+1}}
+					</td>									
+				</tr>				
+			</table>
+		</div>
+	<div class="col-md-4 col-lg-4">
+		<table class="table ">
+			<thead>
+				<tr>
+					<th>
+						Code support sortie	
+					</th>
+					<th>
+						Destination
+					</th>
+					<th>
+						Label Travail
+					</th>											
+				</tr>
+				</thead>				
+				<tr ng-model="container" ng-repeat="container in getOutputContainerSupports() | orderBy:'locationOnContainerSupport.code' track by $index" >
+					<td>
+						{{container.locationOnContainerSupport.code}}
+					</td>
+					<td>
+						{{$index+1}}
+					</td>
+					<td>
+						{{container.experimentProperties.workName.value}}
+					</td>									
+				</tr>				
+			</table>
+		</div>	
 	</div>
 	</div>
 </div>

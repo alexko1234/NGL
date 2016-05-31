@@ -70,7 +70,7 @@ angular.module('home').controller('PlatesToTubesCtrl',['$scope', '$http','$parse
 			var result = $parse("(inputPercentage * outputConc.value *  outputVol.value) / (inputConc.value * 100)")(compute);
 			console.log("result = "+result);
 			if(angular.isNumber(result) && !isNaN(result)){
-				inputVolume.value = result;				
+				inputVolume.value = Math.round(result*10)/10;				
 			}else{
 				inputVolume.value = undefined;
 			}	
@@ -108,11 +108,19 @@ angular.module('home').controller('PlatesToTubesCtrl',['$scope', '$http','$parse
 		});
 	};
 
-	$scope.setAdditionnalButtons([{
-		isDisabled : function(){return $scope.isNewState();} ,
-		isShow:function(){return !$scope.isNewState();},
-		click:generateSampleSheet,
-		label:Messages("experiments.sampleSheet")
-	}]);
+	if($scope.atmService.inputContainerSupportCategoryCode !== "tube"){
+		$scope.setAdditionnalButtons([{
+			isDisabled : function(){return $scope.isNewState();} ,
+			isShow:function(){return !$scope.isNewState();},
+			click:generateSampleSheet,
+			label:Messages("experiments.sampleSheet")
+		}]);
+	}
+	
+	//Only tube is authorized
+	$scope.$watch("experiment.instrument.outContainerSupportCategoryCode", function(){
+		$scope.experiment.instrument.outContainerSupportCategoryCode = "tube";
+	});
+	
 	
 }]);

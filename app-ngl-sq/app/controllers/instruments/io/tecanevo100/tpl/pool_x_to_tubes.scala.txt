@@ -3,7 +3,11 @@
 @import controllers.instruments.io.utils._;
 @import java.lang._
 
+@sortBy(line: controllers.instruments.io.tecanevo100.SampleSheetPoolLine, line2: controllers.instruments.io.tecanevo100.SampleSheetPoolLine) = {
+   return (line.inputSupportSource < line2.inputSupportSource && line.inputSupportContainerPosition < line2.inputSupportContainerPosition)
+}
+
 Ligne;Colonne;Source;Code Plaque;Position;Volume a prelever;Portoir destination;Code tube;Position;Puits source\u000D\u000A
-@for((line) <- lines.sortWith(_.inputSupportCode<_.inputSupportCode).sortWith(_.inputSupportContainerPosition<_.inputSupportContainerPosition)){
+@for((line) <- lines.sorted){
 	@line.inputSupportContainerLine;@line.inputSupportContainerColumn;@line.inputSupportSource;@line.inputSupportCode;@line.inputSupportContainerPosition;@line.inputSupportContainerVolume;@line.outputSupportDestination;@line.outputSupportCode;@line.outputSupportPosition;@line.inputSupportContainerCode\u000D\u000A	
 }
