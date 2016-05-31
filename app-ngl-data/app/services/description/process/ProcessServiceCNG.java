@@ -101,6 +101,25 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+			
+			// FDS ajout 31/05/2016 JIRA NGL-1025 processus pour RNASeq
+			// processus long:  type "library"............en cours
+			l.add(DescriptionFactory.newProcessType("RNA-SEQ", "rna-seq", ProcessCategory.find.findByCode("library"),
+					getPropertyDefinitionsRNAseq(),
+					Arrays.asList(getPET("ext-to-rna-seq",-1),getPET("prep-rna",0),getPET("pcr+purif",1),getPET("normalization+pooling",2), getPET("prepa-fc-ordered",3), getPET("illumina-depot",4) ), //ordered list of experiment type in process type
+					getExperimentTypes("prep-rna").get(0),         //first experiment type
+					getExperimentTypes("illumina-depot").get(0),   //last experiment type
+					getExperimentTypes("ext-to-rna-court").get(0), //void experiment type
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+			
+			// processus court: type "normalization"
+			l.add(DescriptionFactory.newProcessType("RNA norm+pooling, FC ord, dépot", "norm-pool-fc-ordered-depot", ProcessCategory.find.findByCode("normalization"),
+					null,
+					Arrays.asList(getPET("ext-to-norm-pool-fc-ordered-depot",-1),getPET("prep-rna",0),getPET("pcr-purif",1),getPET("normalization-pooling",2), getPET("prepa-fc-ordered",3), getPET("illumina-depot",4) ), //ordered list of experiment type in process type
+					getExperimentTypes("normalization-pooling").get(0),             //first experiment type
+					getExperimentTypes("illumina-depot").get(0),                    //last experiment type
+					getExperimentTypes("ext-to-norm-pool-fc-ordered-depot").get(0), //void experiment type
+					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
 		}
 			
@@ -172,25 +191,38 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	}
 
 	//FDS ajout 28/01/2016 -- JIRA NGL-894: nouveau processus pour X5
+	//FDS 31/05/2016 renommer getLibProcessTypeCodeValues pour les distinguer de celles des processus RNA
 	private static List<PropertyDefinition> getPropertyDefinitionsX5WgPcrFree() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 	
-		// FDS 21/03/2016 ajout d'une propriete avec liste de choix, de niveu content pour quelle soit propagee
+		// FDS 21/03/2016 ajout d'une propriete avec liste de choix, de niveau content pour quelle soit propagee
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type processus librairie","libProcessTypeCode"
 						, LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, "F"
-						, getLibProcessTypeCodeValues(), "single" ,100, null, null, null));
+						, getDNALibProcessTypeCodeValues(), "single" ,100, null, null, null));
 		
 		return propertyDefinitions;
 	}
 
-	
-	private static List<Value> getLibProcessTypeCodeValues(){
+	//FDS 31/05/2016 renommer getLibProcessTypeCodeValues pour les distinguer de celles des processus RNA
+	private static List<Value> getDNALibProcessTypeCodeValues(){
         List<Value> values = new ArrayList<Value>();
         
         // dans RunServiceCNG le nom reprend le code...
          values.add(DescriptionFactory.newValue("DA","DA - DNAseq"));
          values.add(DescriptionFactory.newValue("DD","DD - PCR-NANO-DNASeq"));
+         
+         return values;
+	}
+	
+	//FDS ajout 31/05/2016 pour NGL-1025: processus RNASeq
+	private static List<Value> getRNALibProcessTypeCodeValues(){
+        List<Value> values = new ArrayList<Value>();
+        
+        // dans RunServiceCNG le nom reprend le code...
+         values.add(DescriptionFactory.newValue("RD","RD - ssmRNASeq"));       //single stranded messenger RNA sequencing
+         values.add(DescriptionFactory.newValue("RE","RE - sstRNASeq"));       //single stranded total RNA sequencing
+         values.add(DescriptionFactory.newValue("RF","RF - sstRNASeqGlobin")); //single stranded total RNA from blood sequencing
          
          return values;
 	}

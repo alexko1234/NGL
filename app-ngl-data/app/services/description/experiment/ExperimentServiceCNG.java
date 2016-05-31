@@ -119,8 +119,6 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500","HISEQ4000","HISEQX"), "OneToVoid", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
-		
-	
 			
 		//FDS 01/02/2016 ajout -- JIRA NGL-894 4: processus et experiments pour X5
 		l.add(newExperimentType("Ext to X5_WG PCR free","ext-to-x5-wg-pcr-free",null,-1,
@@ -192,7 +190,28 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 
 			
 			/**********************************************************************************/
-			if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){	
+			if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+				
+				//FDS 31/05/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq
+				l.add(newExperimentType("Ext to RNASeq","ext-to-rna-seq",null,-1,
+						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
+						null, null ,"OneToOne", 
+						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+				
+				//FDS 31/05/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq
+				l.add(newExperimentType("Ext to RNA norm+pool,FC ord, dépôt","ext-to-norm-pool-fc-ordered-depot",null,-1,
+						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
+						null, null ,"OneToOne", 
+						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+				
+				//FDS 01/02/2016 ajout -- JIRA NGL-894: processus et experiments pour X5 : rma-prep
+				l.add(newExperimentType("Prep RNA","rna-prep",null,800,
+						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+						getPropertyDefinitionsRNAPrep(), 
+						getInstrumentUsedTypes("????????"),"OneToOne", 
+						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+				
+				
 			}
 
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
@@ -270,7 +289,31 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			
-			// GA : 03/08/2015 new temporary declaration	
+			//FDS ajout 31/05/2016 -- JIRA NGL-1025 : 4 nouveau nodes
+			newExperimentTypeNode("norm+pool",getExperimentTypes("norm+pool").get(0),
+					false,false,false,
+					getExperimentTypeNodes("ext-to-norm-pool-fc-ordered-depot","????amplifiee-purifiee"),null,null, null
+					).save();
+			
+			//FDS ajout 31/05/2016 -- JIRA NGL-1025
+			newExperimentTypeNode("rna-prep",getExperimentTypes("rna-prep").get(0),
+					false,false,false,
+					getExperimentTypeNodes("ext-to-rna-seq","????amplifiee-purifiee"),null,null, null
+					).save();
+			
+			//FDS ajout 31/05/2016 -- JIRA NGL-1025
+			newExperimentTypeNode("pcr-purif",getExperimentTypes("pcr-purif").get(0),
+					false,false,false,
+					getExperimentTypeNodes("rna-seq"),null,null, null
+					).save();
+			
+			//FDS ajout 31/05/2016 -- JIRA NGL-1025
+			newExperimentTypeNode("norm-pool",getExperimentTypes("norm-pool").get(0),
+					false,false,false,
+					getExperimentTypeNodes("pcr-purif"),null,null, null
+					).save();
+			
+			
 		}
 	}
 
