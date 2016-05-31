@@ -102,7 +102,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="content in container.contents|orderBy:'percentage'">
+					<tr ng-repeat="content in container.contents|orderBy:'-percentage'">
 						<td ng-bind="content.percentage" />
 						<td ng-bind="content.projectCode" />
 						<td ng-bind="content.sampleCode" />
