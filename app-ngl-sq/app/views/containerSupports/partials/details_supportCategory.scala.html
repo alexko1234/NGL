@@ -5,7 +5,7 @@
 	<small>
 		<label class="col-md-12 col-lg-12 control-label" ng-if="@data">@msg</label>
 		<div class="col-md-12 col-lg-12" ng-if="@data">
-			<p list-resize="@data" list-resize-min-size='2' wertical />
+			<p list-resize="@data" list-resize-min-size='2' vertical />
 		</div>
 	</small>
 }
@@ -18,16 +18,26 @@
 	</small>
 }
 @contentsDisplay()(data: Html) = {
+	<small>
+		<label class="col-md-12 col-lg-12  control-label">@Messages("containers.table.sampleTypes")</label>
+		<div class="col-md-12 col-lg-12">
+			<p list-resize='@data|getArray:"sampleTypeCode"|codes:"type"|unique' list-resie-min-size='2' vertical />
+		</div>
+	</small>
 	<div ng-repeat="content in @data">
+		@platesLanesSingle(Messages("containers.table.percents")){
+			content.percentage
+		}
 		<div ng-repeat="(key,value) in content.properties">
 			<small>
 				<label class="col-md-12 col-lg-12 control-label" ng-if="value.unit !== null">{{key|codes:'property_definition'}} ({{value.unit}})</label>
 				<label class="col-md-12 col-lg-12 control-label" ng-if="value.unit === null" ng-bind="key|codes:'property_definition'" />
-				<div class="col-md-12 col-lg-12"><p class="form-control-static" ng-bind="value.value" /></div>
+				<div class="col-md-12 col-lg-12"><p ng-bind="value.value" /></div>
 			</small>
 		</div>
 	</div>
 }
+
 @infosDansUneDiv()(data: Html) = {
 	<div>
 		<div class="col-md-12 col-lg-12" list-resize='@data' list-resize-min-size='1' vertical></div>
@@ -54,12 +64,14 @@
 						@platesLanesLists(Messages("containers.table.projectCodes")){
 							data.projectCodes
 						}
+						
 						<small>
 							<label class="col-md-12 col-lg-12 control-label">@Messages("containers.table.sampleCodeAndTags")</label>
 							<div class="col-md-12 col-lg-12">
-								<div ng-bind="getSampleAndTags(data) | unique"/>
+								<div list-resize="sampleAndTag in getSampleAndTags(data)" list-resize-min-size='2' below vertical></div>
 							</div>
 						</small>
+						
 						@contentsDisplay(){
 							data.contents
 						}	
