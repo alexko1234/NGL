@@ -14,7 +14,7 @@ Workflow,LibraryQC\u000D\u000A
 Application,Library QC\u000D\u000A
 Assay,\u000D\u000A
 Description,\u000D\u000A
-Chemistry,Default\u000D\u000A
+Chemistry,Amplicon\u000D\u000A
 [Reads]\u000D\u000A
 @experiment.instrumentProperties.get("nbCyclesRead1").value\u000D\u000A
 @experiment.instrumentProperties.get("nbCyclesRead2").value\u000D\u000A
