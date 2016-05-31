@@ -32,7 +32,7 @@ public class AtomicTransfertMethodValidationHelper extends CommonValidationHelpe
 	
 	public static void validateInputContainers(ContextValidation contextValidation,	List<InputContainerUsed> inputContainerUseds) {
 		if(ValidationHelper.required(contextValidation, inputContainerUseds, "inputContainerUseds")){
-			int i = 0;
+			int i = 1;
 			double percentage = 0.0;
 			for(InputContainerUsed icu: inputContainerUseds){
 				contextValidation.addKeyToRootKeyName("inputContainerUseds["+i+"]");
@@ -50,7 +50,7 @@ public class AtomicTransfertMethodValidationHelper extends CommonValidationHelpe
 	public static void validateOutputContainers(ContextValidation contextValidation, List<OutputContainerUsed> outputContainerUseds) {
 		String stateCode = getObjectFromContext(FIELD_STATE_CODE, String.class, contextValidation);
 		if("N".equals(stateCode) && null != outputContainerUseds){
-			int i = 0;
+			int i = 1;
 			for(OutputContainerUsed icu: outputContainerUseds){
 				contextValidation.addKeyToRootKeyName("outputContainerUseds["+i+"]");
 				icu.validate(contextValidation);
@@ -58,7 +58,7 @@ public class AtomicTransfertMethodValidationHelper extends CommonValidationHelpe
 			}
 		}else if(!"N".equals(stateCode)){
 			if(ValidationHelper.required(contextValidation, outputContainerUseds, "outputContainerUseds")){
-				int i = 0;
+				int i = 1;
 				for(OutputContainerUsed icu: outputContainerUseds){
 					contextValidation.addKeyToRootKeyName("outputContainerUseds["+i+"]");
 					icu.validate(contextValidation);
