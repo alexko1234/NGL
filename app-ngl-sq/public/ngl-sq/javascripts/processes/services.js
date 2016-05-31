@@ -43,7 +43,15 @@ angular.module('ngl-sq.processesServices', []).factory('processesSearchService',
 
 	var getDefaultColumns = function() {
 		var columns = [];
-
+		columns.push({
+			"header" : Messages("processes.table.inputContainerSupportCode"),
+			"property" : "inputContainerSupportCode",
+			"order" : true,
+			"hide" : false,
+			"group" : true,
+			"position" : 0.5,
+			"type" : "text"
+		});
 		columns.push({
 			"header" : Messages("processes.table.inputContainerCode"),
 			"property" : "inputContainerCode",

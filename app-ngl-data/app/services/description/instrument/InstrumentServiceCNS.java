@@ -404,7 +404,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	
 	private static List<PropertyDefinition> getTecanProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null, newValues("Pooling_plaque_col1a6_BC",
+		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null, newValues("Pooling_plaque_col1a6_BC",
 				"Pooling_plaque_WL_9plaques_BC",
 				"Pooling_tubes_5_pour_1pool_BC", 
 				"Pooling_tubes_24_pour_1pool_BC",

@@ -27,7 +27,7 @@ public class ValueDAO extends AbstractDAODefault<Value>{
 
 	public List<Value> findByPropertyDefinition(long idPropertyDefinition)
 	{
-		String sql = "SELECT id, value, code, name, default_value FROM value WHERE fk_property_definition=?";
+		String sql = "SELECT id, value, code, name, default_value FROM value WHERE fk_property_definition=? order by name";
 		BeanPropertyRowMapper<Value> mapper = new BeanPropertyRowMapper<Value>(Value.class);
 		return this.jdbcTemplate.query(sql, mapper, idPropertyDefinition);
 	}
