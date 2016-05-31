@@ -169,33 +169,49 @@
 							<label class="col-md-2 col-lg-2 control-label">@Messages("boxes.catalogRefCode") :</label>
 							<div ng-switch on="editMode">
 								<p class="form-control-static col-md-1 col-lg-1" ng-switch-when="false">{{box.catalogRefCode}}</p>
-							<div ng-switch-when="true">
-							<div class="col-md-3 col-lg-3" ng-class="getClass('boxes['+$index+'].providerRefName')">
-								<input type="text" class="form-control" ng-model="box.catalogRefCode" ng-readonly="!editMode" ng-disabled="!editMode">
-								<span class="help-block">
-		                            {{mainService.getError("boxes["+$index+"].catalogRefCode")}}
-		                        </span>
+								<div ng-switch-when="true">
+									<div class="col-md-3 col-lg-3" ng-class="getClass('boxes['+$index+'].providerRefName')">
+										<input type="text" class="form-control" ng-model="box.catalogRefCode" ng-readonly="!editMode" ng-disabled="!editMode">
+										<span class="help-block">
+		                            		{{mainService.getError("boxes["+$index+"].catalogRefCode")}}
+		                        		</span>
+									</div>
+								</div>
 							</div>
+							<label class="col-md-2 col-lg-2 control-label">@Messages("boxes.possibleUseNumber") :</label>
+							<div ng-switch on="editMode">
+								<p class="form-control-static col-md-1 col-lg-1" ng-switch-when="false">{{box.possibleUseNumber}}</p>
+								<div ng-switch-when="true">
+									<div class="col-md-1 col-lg-1" ng-class="getClass('boxes['+$index+'].possibleUseNumber')">
+										<input type="text" class="form-control" ng-model="box.possibleUseNumber" ng-readonly="!editMode" ng-disabled="!editMode">
+										<span class="help-block">
+                            				{{mainService.getError("boxes["+$index+"].possibleUseNumber")}}
+                        				</span>
+									</div>
+								</div>
+							</div>					
 						</div>
 					</div>
-					<label class="col-md-2 col-lg-2 control-label">@Messages("boxes.possibleUseNumber") :</label>
-					<div ng-switch on="editMode">
-							<p class="form-control-static col-md-1 col-lg-1" ng-switch-when="false">{{box.possibleUseNumber}}</p>
-					<div ng-switch-when="true">
-					<div class="col-md-1 col-lg-1" ng-class="getClass('boxes['+$index+'].possibleUseNumber')">
-						<input type="text" class="form-control" ng-model="box.possibleUseNumber" ng-readonly="!editMode" ng-disabled="!editMode">
-						<span class="help-block">
-                            {{mainService.getError("boxes["+$index+"].possibleUseNumber")}}
-                        </span>
+					
+					
+					<div class="row">
+						<div class="form-group">
+							<label class="col-md-2 col-lg-2 control-label">@Messages("boxes.code.label")&nbsp;:</label>
+							<div ng-switch on="editMode">
+								<p class="form-control-static cold-md-1 col-lg-1" ng-switch-when="false">{{box.code}}</p>
+								<p class="form-control-static cold-md-3 col-lg-3" ng-switch-when="true">{{box.code}}</p>
+							</div>
+							
+							
+							<label class="col-md-2 col-lg-2 control-label">@Messages("boxes.active")&nbsp;:</label>
+								<p class="form-control-static col-md-1 col-lg-1">
+									<input type="checkbox" ng-model="box.active" ng-readonly="!editMode" ng-disabled="!editMode" style="margin-top:2px;">
+									<span class="help-block">
+                            			{{mainService.getError("boxes["+$index+"].active")}}
+                        			</span>
+								</p>						
+						</div>
 					</div>
-					</div>
-					</div>					
-				</div>
-				</div>
-				<div class="row">
-					<label class="col-md-2 col-lg-2 control-label">@Messages("boxes.code.label")&nbsp;:</label>
-					<div class="form-control-static cold-md-1 col-lg-1">{{box.code}}</div>
-				</div>
 				</div>
 			</form>
 			<br><br>

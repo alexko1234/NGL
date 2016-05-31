@@ -142,16 +142,6 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 				getInstrumentUsedTypes("minion","mk1"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 
-		l.add(newExperimentType("Pool Tube","pool-tube",null,1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
-				getInstrumentUsedTypes("hand","tecan-evo-100"),"ManyToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
-		l.add(newExperimentType("Pool x => tubes","pool-x-to-tubes",null,1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
-				getInstrumentUsedTypes("tecan-evo-100"),"ManyToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
 		
 		
 		l.add(newExperimentType("Aliquot","aliquoting",null,2,
@@ -232,9 +222,27 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					getInstrumentUsedTypes("rocheLightCycler-qPCR","stratagene-qPCR"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 	
 		*/	
-		
+		if(ConfigFactory.load().getString("ngl.env").equals("PROD")){
 			
-		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+			l.add(newExperimentType("Pool Tube","pool-tube",null,1,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
+					getInstrumentUsedTypes("hand"),"ManyToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
+		}else if(!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+			
+			l.add(newExperimentType("Pool Tube","pool-tube",null,1,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
+					getInstrumentUsedTypes("hand","tecan-evo-100"),"ManyToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
+			
+			l.add(newExperimentType("Pool","pool",null,1,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
+					getInstrumentUsedTypes("tecan-evo-100", "hand"),"ManyToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
+			
 			/*
 			l.add(newExperimentType("Ext to Banque","ext-to-library",null,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
@@ -267,7 +275,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 			
 			l.add(newExperimentType("Quantification qPCR","qpcr-quantification", null,850,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsQPCR(), 
-					getInstrumentUsedTypes("stratagene-qPCR"),"OneToVoid", 
+					getInstrumentUsedTypes("tecan-evo-100-and-stratagene-qPCR-system"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
 			/*
 			l.add(newExperimentType("Migration sur puce (ampli)","chip-migration-post-pcr",null,650,
@@ -334,10 +342,10 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 			newExperimentTypeNode("sizing", getExperimentTypes("sizing").get(0), false, false, false, null, null, null, null).save();
 			
 			newExperimentTypeNode("qpcr-quantification", getExperimentTypes("qpcr-quantification").get(0), false, false, false, getExperimentTypeNodes("ext-to-qpcr-norm-fc-depot-illumina","sizing","amplification"), null, null, null).save();
-			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,getExperimentTypeNodes("ext-to-qpcr-norm-fc-depot-illumina","ext-to-norm-fc-depot-illumina","sizing","amplification"),null,null,getExperimentTypes("pool-x-to-tubes", "pool-tube")).save();
+			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,getExperimentTypeNodes("ext-to-qpcr-norm-fc-depot-illumina","ext-to-norm-fc-depot-illumina","sizing","amplification"),null,null,getExperimentTypes("pool", "pool-tube")).save();
 					
 		}else{
-			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,null,null,null,getExperimentTypes("pool-tube", "pool-x-to-tubes")).save();
+			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,null,null,null,getExperimentTypes("pool-tube")).save();
 			
 		}
 		

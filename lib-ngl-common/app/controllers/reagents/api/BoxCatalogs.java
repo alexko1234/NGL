@@ -92,19 +92,16 @@ public class BoxCatalogs extends DocumentController<BoxCatalog>{
 		Logger.debug("query : "+query);
 
 		if(boxCatalogSearch.datatable){
-			Logger.debug("C'est une datatable");
 			MongoDBResult<BoxCatalog> results =  mongoDBFinder(boxCatalogSearch, query);
 			List<BoxCatalog> boxCatalogs = results.toList();
 			
 			return ok(Json.toJson(new DatatableResponse<BoxCatalog>(boxCatalogs, results.count())));
 		}else if (boxCatalogSearch.list){
-			Logger.debug("c'est une liste");
 			keys = new BasicDBObject();
 			keys.put("code", 1);
 			keys.put("name", 1);
 			keys.put("category", 1);
 			keys.put("kitCatalogCode",1);
-			Logger.debug("key: " + keys);
 			
 			if(null == boxCatalogSearch.orderBy)boxCatalogSearch.orderBy = "code";
 			if(null == boxCatalogSearch.orderSense)boxCatalogSearch.orderSense = 0;				
@@ -143,6 +140,11 @@ public class BoxCatalogs extends DocumentController<BoxCatalog>{
 		
 		if(StringUtils.isNotEmpty(boxCatalogSearch.catalogRefCode)){
 			queryElts.add(DBQuery.is("catalogRefCode", boxCatalogSearch.catalogRefCode));
+		}
+		
+		if (null != boxCatalogSearch.isActive) {
+			queryElts.add(DBQuery.is("active", boxCatalogSearch.isActive));
+			Logger.debug("box active: " + boxCatalogSearch.catalogRefCode + " - " + boxCatalogSearch.isActive);
 		}
 		
 		if(queryElts.size() > 0){

@@ -61,6 +61,7 @@ boxes.catalogRefCode = Ref. catalogue (fournisseur)
 boxes.comment = Commentaire
 boxes.toExpirationDate = Date péremption jusqu''au
 boxes.code.label = Code
+boxes.active = En cours d''utilisation
 
 catalogRefCode = REF. catalogue
 lotNumber = Lot

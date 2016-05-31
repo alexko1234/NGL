@@ -196,6 +196,9 @@ public class ContainerHelper {
 				newSupport.projectCodes = new  HashSet<String>(container.projectCodes);
 				newSupport.sampleCodes = new  HashSet<String>(container.sampleCodes);
 				newSupport.state=container.state;
+				
+				
+				
 				//FDS 14/10/2015 ajout storage code
 				newSupport.storageCode=container.support.storageCode;
 				
@@ -204,12 +207,16 @@ public class ContainerHelper {
 				}
 				
 				if (!mapSupports.containsKey(newSupport.code)) {
+					newSupport.nbContainers = 1;
+					newSupport.nbContents = container.contents.size();
 					mapSupports.put(newSupport.code, newSupport);
 				}
 				else {
 					ContainerSupport oldSupport = (ContainerSupport) mapSupports.get(newSupport.code);
 					oldSupport.projectCodes.addAll(newSupport.projectCodes); 
 					oldSupport.sampleCodes.addAll(newSupport.sampleCodes);
+					oldSupport.nbContainers++;
+					oldSupport.nbContents = oldSupport.nbContents + newSupport.nbContents;
 					if(null != newSupport.fromTransformationTypeCodes && null != oldSupport.fromTransformationTypeCodes){
 						oldSupport.fromTransformationTypeCodes.addAll(newSupport.fromTransformationTypeCodes);
 					}

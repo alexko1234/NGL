@@ -54,6 +54,9 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentCategory("Appareil de sizing","sizing-system"));
 				
 		l.add(newInstrumentCategory("Cartographie optique BioNano", "opt-map-bionano"));
+		
+		l.add(newInstrumentCategory("Robot pipetage + Appareil de qPCR", "liquid-handling-robot-and-qPCR-system"));
+		
 		DAOHelpers.saveModels(InstrumentCategory.class, l, errors);
 		
 	}
@@ -128,6 +131,17 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 						getContainerSupportCategories(new String[]{"tube","96-well-plate"}),getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
+		l.add(newInstrumentUsedType("TECAN Evo 100 / qPCR Stratagene", "tecan-evo-100-and-stratagene-qPCR-system", InstrumentCategory.find.findByCode("liquid-handling-robot-and-qPCR-system"),
+				getTecanStrategeneProperties(), 
+				getInstruments(
+						createInstrument("wolverine-stratagene1", "Arrow / Stratagene 1", null, true, "/bureautique/atelier/SOLEXA/Solstock_TECAN/", DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
+						createInstrument("wolverine-stratagene2", "Arrow / Stratagene 2", null, true, "/bureautique/atelier/SOLEXA/Solstock_TECAN/", DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
+						createInstrument("arrow-stratagene1", "Wolwerine / Stratagene 1", null, true, "/bureautique/atelier/SOLEXA/Solstock_TECAN/", DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
+						createInstrument("arrow-stratagene2", "Wolwerine / Stratagene 2", null, true, "/bureautique/atelier/SOLEXA/Solstock_TECAN/", DescriptionFactory.getInstitutes(Constants.CODE.CNS))),						
+						getContainerSupportCategories(new String[]{"tube","96-well-plate"}),getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+		
 		//TODO : verify getContainerSupportCategories parameters
 		l.add(newInstrumentUsedType("Blue pippin", "blue-pippin", InstrumentCategory.find.findByCode("sizing-system"), null, 
 				getInstruments(
@@ -390,7 +404,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	
 	private static List<PropertyDefinition> getTecanProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null, newValues("Pooling_plaque_col1a6_BC",
+		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null, newValues("Pooling_plaque_col1a6_BC",
 				"Pooling_plaque_WL_9plaques_BC",
 				"Pooling_tubes_5_pour_1pool_BC", 
 				"Pooling_tubes_24_pour_1pool_BC",
@@ -411,11 +425,25 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				"Pooling_tubes_48_pour_1pool",
 				"Pooling_tubes_48tubes_plaque",
 				"Pooling_tubes_90max_pour_xpoolde10",
-				"Pooling_tubes_96_pour_1pool"), 
+				"Pooling_tubes_96_pour_1pool", 
+				"Normalisation_48tubes",
+				"Normalisation_Plaque_plaque"),
 				"single", 10, true, null,null));
 		
 		
 
+		return l;
+	}
+	
+	private static List<PropertyDefinition> getTecanStrategeneProperties() throws DAOException {
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null, newValues("QPCR_Solexa",
+				"QPCR_Solexa_distrib_ADN_main",
+				"QPCR_Solexa_distrib_plq_qPCR",
+				"QPCR_Solexa_plaque_4titude",
+				"QPCR_Solexa_plaque_BioRad"), 
+				"single", 10, true, null,null));
+		
 		return l;
 	}
 	

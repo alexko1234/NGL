@@ -422,7 +422,8 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.lists.refresh.protocols({"experimentTypeCode":$scope.experimentType.code});
 		$scope.lists.refresh.resolutions({"typeCode":$scope.experimentType.code});
 		$scope.lists.refresh.states({"objectTypeCode":"Experiment"});
-		$scope.lists.refresh.kitCatalogs({"experimentTypeCodes":$scope.experiment.typeCode, "isActive":true});
+		//$scope.lists.refresh.kitCatalogs({"experimentTypeCodes":$scope.experiment.typeCode, "isActive":true});
+		$scope.lists.refresh.kitCatalogs({"experimentTypeCodes":$scope.experiment.typeCode});
 		$scope.lists.refresh.experimentCategories();
 	};
 	
@@ -532,7 +533,8 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			        	 "type":"text",
 			        	 "listStyle":"bt-select-filter",
 			        	 "choiceInList":true,
-			        	 "possibleValues": 'lists.getKitCatalogs()',
+			        	 //"possibleValues": 'lists.getKitCatalogs() | filter: filterIsActive : form-control',
+			        	 "possibleValues": "filterIsActive()",
 			        	 "render":'<div bt-select ng-model="value.data.kitCatalogCode" bt-options="v.code as v.name for v in lists.getKitCatalogs()" ng-edit="false"></div>',
 			        	 "edit":true
 			         },
@@ -597,7 +599,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			         },
 			         remove:{
 			        	 mode:'local',
-			        	 active:true,
+			        	 active:Permissions.check("writing")?true:false,
 			        	 withEdit:true,
 			        	 callback:function(datatable){
 			        		 var reagents = datatable.allResult;
@@ -608,14 +610,14 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			        	 active:false
 			         },
 			         edit:{
-			        	 active:true,
+			        	 active:Permissions.check("writing")?true:false,
 			        	 columnMode:false,
 			        	 showButton : false,
 			        	 withoutSelect:true,
 			        	 byDefault : false
 			         },
 			         save:{
-			        	 active:true,
+			        	 active:Permissions.check("writing")?true:false,
 			        	 showButton:false,
 			        	 withoutEdit:true,
 			        	 mode:'local'
@@ -630,7 +632,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			        	 delimiter:";"
 			         },
 			         add:{
-			        	 active:true
+			        	 active:Permissions.check("writing")?true:false,
 			         }
 			         /*
 						 * otherButtons:{ active:true, template:'<button
@@ -639,7 +641,23 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 						 * title="'+Messages("experiments.addNewReagentLine")+'">'+Messages("experiments.addNewReagentLine")+'</button>' }
 						 */
 	};
-
+	
+	$scope.filterIsActive = function() {
+		var liste = lists.getKitCatalogs();
+		var long = liste.length+1;
+		console.log("longueur de la liste : " + long);
+		var listActive = [] 
+		for (i=0; i< liste.length+1; i++) {
+			if (liste[i] != undefined) {
+				if(liste[i]["active"] === false) {
+					console.log(i+") "+ liste[i]["name"] + " - " + liste[i]["active"]);
+					//liste.push(liste[i]);
+				}
+			}
+		}
+		return listActive;
+	}
+	
 	$scope.scan = function(e, property, propertyName){
 		// console.log(property);
 		// console.log(e);
@@ -663,7 +681,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		
 		if(null !== kitCatalogCode && undefined !== kitCatalogCode){
 			console.log("kitCatalogCode: "+kitCatalogCode);
-			return lists.getBoxCatalogs({"kitCatalogCode":kitCatalogCode},"boxCatalogs-"+kitCatalogCode);
+			return lists.getBoxCatalogs({"kitCatalogCode":kitCatalogCode, "isActive":true},"boxCatalogs-"+kitCatalogCode);
 		} else {
 			console.log("pas de kitCatalogCode");
 		}				
@@ -1035,7 +1053,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 				active:false,
 			},
 			save:{
-				active:true,
+				active:Permissions.check("writing")?true:false,
 	        	withoutEdit: true,
 	        	showButton:false,
 	        	mode:'local',
@@ -1066,7 +1084,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	        		
 			},
 			edit:{
-				active: true,
+				active:Permissions.check("writing")?true:false,
 				columnMode:true,
 				byDefault: true,
 				showButton:false
@@ -1455,7 +1473,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 							}
 						}
 						
-						if(outputContainers[0] && outputContainers[0].categoryCode === 'well'){
+						if(outputContainers[0] && outputContainers[0].container.categoryCode === 'well'){
 							outputContainers = $filter("orderBy")(outputContainers,['container.support.column*1', 'container.support.line']);							
 						}else{
 							outputContainers = $filter("orderBy")(outputContainers,'container.code');
@@ -1502,7 +1520,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 							}
 						}
 						
-						if(inputContainers[0] && inputContainers[0].categoryCode === 'well'){
+						if(inputContainers[0] && inputContainers[0].container.categoryCode === 'well'){
 							inputContainers = $filter("orderBy")(inputContainers,['container.support.column*1', 'container.support.line']);							
 						}else{
 							inputContainers = $filter("orderBy")(inputContainers,'container.code');

@@ -192,7 +192,6 @@ public class Runs extends RunsController {
 			queries.add(DBQuery.is("valuation.criteriaCode", form.valuationCriteriaCode));
 		}
 		
-		
 		queries.addAll(NGLControllerHelper.generateQueriesForProperties(form.properties, Level.CODE.Run, "properties"));
 		queries.addAll(NGLControllerHelper.generateQueriesForTreatmentProperties(form.treatmentProperties, Level.CODE.Run, "treatments"));
 		queries.addAll(NGLControllerHelper.generateQueriesForTreatmentProperties(form.treatmentLanesProperties, Level.CODE.Lane, "lanes.treatments"));

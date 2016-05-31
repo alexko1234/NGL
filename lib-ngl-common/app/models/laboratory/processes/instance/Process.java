@@ -43,7 +43,8 @@ public class Process extends DBObject implements IValidation{
 	public String sampleCode;
 
 	public String currentExperimentTypeCode;
-	public String inputContainerCode; 
+	public String inputContainerCode;
+	public String inputContainerSupportCode;
 
 	public Set<String> outputContainerSupportCodes;
 	//public Set<String> outputContainerCodes; //TODO GA need management
@@ -62,6 +63,7 @@ public class Process extends DBObject implements IValidation{
 		ProcessValidationHelper.validateState(typeCode,state, contextValidation);
 		ProcessValidationHelper.validateTraceInformation(traceInformation, contextValidation);
 		ProcessValidationHelper.validateContainerCode(inputContainerCode, contextValidation, "inputContainerCode");
+		ProcessValidationHelper.validateContainerSupportCode(inputContainerSupportCode, contextValidation, "inputContainerSupportCode");
 		ProcessValidationHelper.validateProjectCode(projectCode, contextValidation);
 		ProcessValidationHelper.validateSampleCode(sampleCode, projectCode, contextValidation);
 		ProcessValidationHelper.validateCurrentExperimentTypeCode(currentExperimentTypeCode,contextValidation);		

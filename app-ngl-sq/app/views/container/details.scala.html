@@ -2,6 +2,7 @@
 @import play.mvc.Http.Context
 @import controllers.authorisation.PermissionHelper
 
+@partials.imageModal()
 
 <div class="row">
 	<div cmass="col-md-12 col-lg-12">
@@ -24,7 +25,10 @@
 			<li ng-class="getTabClass('general')"><a href="#" data-target="#general" data-toggle="tab" ng-click="setActiveTab('general')">@Messages("containers.tabs.general")</a></li>
 			<li ng-class="getTabClass('treeoflife')"><a href="#" data-target="#treeoflife" data-toggle="tab" ng-click="initGraph()">@Messages("containers.tabs.treeoflife")</a></li>
 			<li ng-class="getTabClass('workflow')"><a href="#" data-target="#workflow" data-toggle="tab" ng-click="setActiveTab('workflow')">@Messages("containers.tabs.workflow")</a></li>
-			<li ng-if="container.qualityControlResults !== null" ng-class="getTabClass('resultsqc')"><a href="#" data-target="#resultsqc" data-toggle="tab" ng-click="setActiveTab('resultsqc')">@Messages("containers.tabs.resultsqc")</a></li>
+			
+			<li ng-if="container.qualityControlResults !== null && container.qualityControlResults !== undefined" 
+				ng-class="getTabClass('resultsqc')"><a href="#" data-target="#resultsqc" data-toggle="tab" 
+					ng-click="setActiveTab('resultsqc')">@Messages("containers.tabs.resultsqc")</a></li>
 		</ul>
 		<div class="tab-content">
 			<div class="tab-pane {{getTabClass('general')}}" id="general">
@@ -45,20 +49,26 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="state in container.state.historical|orderBy:'date'">
+							<tr ng-if="container.state.historical !== null" ng-repeat="state in container.state.historical|orderBy:'date'">
 								<td ng-bind="state.code|codes:'state'" />
 								<td ng-bind="state.date|date:'@Messages("datetime.format")'" />
 								<td ng-bind="state.user" />
+							</tr>
+							<tr ng-if="container.state.historical === null">
+								<td ng-bind="container.state.code|codes:'state'" />
+								<td ng-bind="container.state.date|date:'@Messages("datetime.format")'" />
+								<td ng-bind="container.state.user" />
 							</tr>
 						</tbody>
 						</table>
 					</div>
 				</div>
 			</div>
-			<div class="tab-pane {{getTabClass('resultsqc')}}" id="results">
+			<div class="tab-pane {{getTabClass('resultsqc')}}" id="results" 
+				ng-if="container.qualityControlResults !== null && container.qualityControlResults !== undefined">
 				<div class="row">
 					<div class="col-md-4 col-lg-4">
-						<table class="table table-condensed table-hover table-bordered table-striped">
+						<table class="table table-condensed table-hover table-bordered table-striped datatable">
 							<thead>
 								<tr>
 									<th>@Messages("containers.resultsqc.type")</th>
@@ -69,19 +79,28 @@
 							</thead>
 							<tbody>
 								<tr ng-repeat="qc in container.qualityControlResults">
-									<td ng-bind="qc.typeCode" />
+									<td ng-bind="qc.typeCode|codes:'type'" />
 									<td>
-										<div ng-repeat="(key, value) in qc.properties">
-											<span class="col-md-6 col-lg-6 control-label" ng-if="value._type !== 'img'" ng-bind="key|codes:'property_definition'" />
-											<div class="col-md-6 col-lg-6">
-												<p class="form-control-static" ng-if="value._type !== 'img'">
-													<span ng-bind="value.value" />
-													<span ng-if="value.unit !== null" ng-bind="value.unit" />
-												</p>
+										<div ng-repeat="(key, value) in qc.properties" ng-switch on="value._type === 'img'">
+											<div ng-switch-when="true">
+												 <div ng-click="setImage(value.value,value.fullname,value.width,value.height)"  
+	        								 			ng-show="value !== undefined" > 
+												<div data-target="#modalImage" role="button" data-toggle="modal" >
+													<a href="#">
+													<img ng-src="data:image/{{value.extension}};base64,{{value.value}}" width="{{value.width*0.15}}" height="{{value.height*0.15}}"/>
+													</a>
+												</div>
+												</div>
+											</div>
+											<div ng-switch-when="false" >
+												<label class="col-md-6 col-lg-6 control-label" ng-bind="value.value|number:2" />
+												<div class="col-md-6 col-lg-6">
+													<p ng-if="value.unit !== null" ng-bind="value.unit" />
+												</div>
 											</div>
 										</div>
 									</td>
-									<td ng-bind="qc.valutation" />
+									<td ng-bind="qc.valuation.valid|codes:'valuation'" />
 									<td ng-bind="qc.date|date:'@Messages("date.format")'" />
 								</tr>							
 							</tbody>

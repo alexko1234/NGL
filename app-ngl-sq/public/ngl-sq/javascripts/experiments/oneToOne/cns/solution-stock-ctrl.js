@@ -241,7 +241,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 	
 	
 	var calculVolumeFromValue=function(value){
-
+		console.log("call calculVolumeFromValue");
 		if(value.outputContainerUsed.volume!=null && value.outputContainerUsed.volume.value!=null && value.outputContainerUsed.concentration.value!=null){
 			if(value.inputContainerUsed.concentration.unit===value.outputContainerUsed.concentration.unit){				
 				var requiredVolume=value.outputContainerUsed.concentration.value*value.outputContainerUsed.volume.value/value.inputContainerUsed.concentration.value;

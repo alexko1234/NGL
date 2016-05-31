@@ -2907,7 +2907,7 @@ directive("udtCell", function(){
   		    	}
     		};
     	});;angular.module('ultimateDataTableServices').
-directive('udtChange', ['$interval', function($interval) {
+directive('udtChange', ['$timeout', function($timeout) {
 	return {
 		/*link: function(scope, element, attrs, ngModel) {
 			scope.oldValue = undefined;
@@ -2940,9 +2940,9 @@ directive('udtChange', ['$interval', function($interval) {
 	      scope.$eval(attr.udtChange);
 	    });
 	    */
-		  scope.$watch(attr.ngModel, function(newValue, oldValue){
+		   scope.$watch(attr.ngModel, function(newValue, oldValue){
 				if(newValue !== oldValue){
-					scope.$eval(attr.udtChange);
+					scope.$evalAsync(attr.udtChange);						
 				}
 			}); 
 	  }

@@ -9,6 +9,7 @@ import java.util.Set;
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 
+import org.drools.core.base.DroolsQuery;
 import org.mongojack.DBQuery;
 import com.mongodb.MongoException;
 import fr.cea.ig.MongoDBDAO;
@@ -49,6 +50,7 @@ public class ReportingCNS extends AbstractReporting {
 		    
 		    //Get data 
 		    int nbQueries = 5;
+		    Logger.debug("Call fives query");
 		    Integer[] nbResults = new Integer[nbQueries];  
 		    ArrayList<ArrayList<String>> listResults = new ArrayList<ArrayList<String>>();
 		    ArrayList<String> results = new ArrayList<String>();
@@ -86,23 +88,23 @@ public class ReportingCNS extends AbstractReporting {
 		List<ReadSet> readSets = null;
 		switch(queryId) {
 			case 1:
-				readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("state.code", "IP-QC"), 
+				readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("state.code", "IP-QC"), DBQuery.is("typeCode", "rsillumina"),  
 						DBQuery.notExists("treatments.readQualityRaw"))).toList();
 				break;
 			case 2:
-				readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("state.code", "IW-VQC"), 
+				readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("state.code", "IW-VQC"), DBQuery.is("typeCode", "rsillumina"), 
 						DBQuery.notExists("treatments.readQualityRaw"))).toList();
 				break;
 			case 3:
-				readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("state.code", "IW-VQC"), 
+				readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("state.code", "IW-VQC"), DBQuery.is("typeCode", "rsillumina"), 
 						DBQuery.notExists("treatments.readQualityClean"))).toList();
 				break;
 			case 4:
-				readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and( DBQuery.is("state.code", "IW-VQC"), 
+				readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and( DBQuery.is("state.code", "IW-VQC"), DBQuery.is("typeCode", "rsillumina"), 
 						DBQuery.notExists("treatments.sortingRibo"), DBQuery.in("sampleOnContainer.sampleTypeCode", Arrays.asList("depletedRNA","mRNA","total-RNA","sRNA","cDNA")) )).toList();
 				break;
 			case 5:
-				readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("state.code", "IW-VQC"), 
+				readSets = MongoDBDAO.find(InstanceConstants.READSET_ILLUMINA_COLL_NAME, ReadSet.class, DBQuery.and(DBQuery.is("state.code", "IW-VQC"), DBQuery.is("typeCode", "rsillumina"), 
 						DBQuery.notExists("treatments.taxonomy"))).toList();
 				break;
 		}
@@ -115,6 +117,11 @@ public class ReportingCNS extends AbstractReporting {
 				buffer.append(",").append(readSet.sampleOnContainer.sampleTypeCode);
 			}
 			lines.add(buffer.toString());
+			
+		}
+		Logger.debug("Result ");
+		for(String line : lines){
+			Logger.debug("Line "+line);
 		}
 		return lines;
 	}

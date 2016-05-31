@@ -40,7 +40,7 @@ public class Output extends AbstractOutput {
 			} else if("96-well-plate".equals(experiment.instrument.outContainerSupportCategoryCode)){
 				content = OutputHelper.format(solution_stock_output_96_well_plate.render(experiment).body());
 			}
-		}else if("pool-x-to-tubes".equals(experiment.typeCode)){
+		}else if("pool".equals(experiment.typeCode)){
 			content = OutputHelper.format(pool_x_to_tubes.render(getSampleSheetPoolLines(experiment)).body());
 		}else{
 			throw new RuntimeException("Not Managed : "+experiment.typeCode);

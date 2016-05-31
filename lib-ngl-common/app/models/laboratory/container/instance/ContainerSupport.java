@@ -17,6 +17,7 @@ import validation.ContextValidation;
 import validation.IValidation;
 import validation.container.instance.ContainerSupportValidationHelper;
 import validation.container.instance.ContainerValidationHelper;
+import validation.utils.ValidationHelper;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -32,6 +33,9 @@ public class ContainerSupport extends DBObject implements IValidation{
 	public Set<String> sampleCodes;
 	public Set<String> fromTransformationTypeCodes; //TODO GA useful ???
 	public Map<String, PropertyValue> properties;
+	
+	public Integer nbContainers;
+	public Integer nbContents;
 	
 	
 	
@@ -58,6 +62,10 @@ public class ContainerSupport extends DBObject implements IValidation{
 		ContainerSupportValidationHelper.validateProjectCodes(projectCodes, contextValidation);
 		ContainerSupportValidationHelper.validateSampleCodes(sampleCodes, contextValidation);
 		ContainerSupportValidationHelper.validateExperimentTypeCodes(fromTransformationTypeCodes, contextValidation);
+		
+		ValidationHelper.required(contextValidation, nbContainers, "nbContainers");
+		ValidationHelper.required(contextValidation, nbContents, "nbContents");
+		
 		//TODO Validate properties
 	}
 }

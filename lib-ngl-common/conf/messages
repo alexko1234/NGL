@@ -87,6 +87,8 @@ authentification.dropdown_list.signout=Se déconnecter
 boolean.true = Oui
 boolean.false = Non
 boolean.unset = ---
+boolean.TRUE = Oui
+boolean.FALSE = Non
 
 valuation.TRUE = Oui
 valuation.FALSE = Non

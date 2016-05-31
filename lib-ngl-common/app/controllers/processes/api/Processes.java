@@ -121,6 +121,7 @@ public class Processes extends CommonController{
 					Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, process.inputContainerCode);
 					Process p = filledForm.get();
 					p.inputContainerCode = container.code;
+					p.inputContainerSupportCode = container.support.code;
 					valdateCommonProcessAttribut(p, contextValidation);
 					processes.addAll(saveAllContentsProcesses(p, container, contextValidation ));
 				}				
@@ -232,6 +233,7 @@ public class Processes extends CommonController{
 			newProcess.categoryCode = process.categoryCode;
 			newProcess.comments = process.comments;
 			newProcess.inputContainerCode = container.code;
+			newProcess.inputContainerSupportCode = container.support.code;
 			newProcess.currentExperimentTypeCode = newProcess.currentExperimentTypeCode;
 			newProcess.experimentCodes = process.experimentCodes;
 			newProcess.outputContainerSupportCodes = process.outputContainerSupportCodes;
