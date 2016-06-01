@@ -9,7 +9,7 @@ public class Well {
 	
 	public String name;
 	
-	public String x;
+	public Integer x;
 	
 	public String y;
 	

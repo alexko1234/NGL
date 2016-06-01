@@ -62,7 +62,7 @@ public class LimsManipDAO {
     	this.jdbcTemplate.update("ps_MaterielmanipPlaque @plaqueId=?", new Object[]{plate.code});
     	for(Well well: plate.wells){
     		Logger.info("pm_MaterielmanipPlaque @matmaco="+well.code+", @plaqueId="+plate.code+", @plaqueX="+well.x+", @plaqueY="+well.y+"");
-    		this.jdbcTemplate.update("pm_MaterielmanipPlaque @matmaco=?, @plaqueId=?, @plaqueX=?, @plaqueY=?", well.code, plate.code, well.x, well.y);
+    		this.jdbcTemplate.update("pm_MaterielmanipPlaque @matmaco=?, @plaqueId=?, @plaqueX=?, @plaqueY=?", well.code, plate.code, well.x.toString(), well.y);
     	}
     }
 
@@ -72,7 +72,7 @@ public class LimsManipDAO {
     	this.jdbcTemplate.update("ps_MaterielmanipPlaque @plaqueId=?", new Object[]{plate.code});
     	for(Well well: plate.wells){
     		Logger.info("pm_MaterielmanipPlaque @matmaco="+well.code+", @plaqueId="+plate.code+", @plaqueX="+well.x+", @plaqueY="+well.y+"");
-    		this.jdbcTemplate.update("pm_MaterielmanipPlaque @matmaco=?, @plaqueId=?, @plaqueX=?, @plaqueY=?", well.code, plate.code, well.x, well.y);
+    		this.jdbcTemplate.update("pm_MaterielmanipPlaque @matmaco=?, @plaqueId=?, @plaqueX=?, @plaqueY=?", well.code, plate.code, well.x.toString(), well.y);
     	}
     }
 
@@ -173,7 +173,7 @@ public class LimsManipDAO {
 			    Well well = new Well();
 			    well.name = rs.getString("matmanom");
 			    well.code = rs.getInt("matmaco");
-			    well.x = rs.getString("plaqueX");
+			    well.x = Integer.valueOf(rs.getString("plaqueX"));
 			    well.y = rs.getString("plaqueY");
 			    well.typeCode = rs.getInt("emnco");
 			    well.typeName = rs.getString("emnnom");
@@ -196,7 +196,7 @@ public class LimsManipDAO {
 		    Well well = new Well();
 		    well.name = rs.getString("matmanom");
 		    well.code = rs.getInt("matmaco");
-		    well.x = rs.getString("plaqueX");
+		    well.x = Integer.valueOf(rs.getString("plaqueX"));
 		    well.y = rs.getString("plaqueY");
 		    well.typeCode = rs.getInt("emnco");
 		    well.typeName = rs.getString("emnnom");

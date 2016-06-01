@@ -7,6 +7,11 @@ angular.module('home').controller('SearchManipsCtrl', ['$scope', '$http','datata
 			search:{
 				url:jsRoutes.controllers.manips.api.Manips.list()
 			},
+			filter:{
+				active:true,
+				columnMode:true,
+				showButton:true
+			},
 			pagination:{
 				active:true,
 				mode:'local'
@@ -24,6 +29,7 @@ angular.module('home').controller('SearchManipsCtrl', ['$scope', '$http','datata
 						{	property:"matmanom",
 							header: Messages("manips.table.name"),
 							type :"String",
+							showFilter:true,
 					    	order:true
 						}
 					]

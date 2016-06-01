@@ -101,7 +101,7 @@ public class Plates extends TPLCommonController {
 					if(ValidationHelper.required(contextValidation, well, "manip non trouvé : ligne = "+i)
 							&& isSameEmnco(contextValidation, well, emnco, i)
 							&& isNotInsideAPlate(contextValidation, well, i)){
-						well.x = column;
+						well.x = Integer.valueOf(column);
 						well.y = line;
 						wells.add(well);
 					}					

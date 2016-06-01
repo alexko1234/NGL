@@ -108,9 +108,9 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 					    	hide:true,
 					    	order:true
 						},
-						{  	property:"x*1",
+						{  	property:"x",
 					    	header: Messages("plates.table.well.x"),
-					    	type :"String",
+					    	type :"number",
 					    	edit:true,
 					    	hide:true,
 					    	order:true
