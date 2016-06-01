@@ -8,7 +8,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			columns:[   
 					{
 						 "header":Messages("containers.table.support.number"),
-						 "property":"atomicTransfertMethod.viewIndex",
+						 "property":"'ATM ' + atomicTransfertMethod.viewIndex",
 						 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -191,7 +191,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			order:{
 				mode:'local', //or 
 				active:true,
-				by:'outputContainer.code'
+				by:"'ATM ' + atomicTransfertMethod.viewIndex"
 			},
 			remove:{
 				active:false,
