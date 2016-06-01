@@ -177,7 +177,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 	}
 
 	public List<ExperimentType> findByCategoryCode(String categoryCode){
-		String sql = "SELECT t.code AS code, t.name AS name , t.display_order AS displayOrder  "+
+		String sql = "SELECT t.code AS code, t.name AS name , t.display_order AS displayOrder, t.active as active  "+
 				 sqlCommonFrom+
 				" JOIN experiment_category as ec  ON c.fk_experiment_category=ec.id "
 				+"where ec.code=? "
@@ -187,7 +187,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 	}
 	
 	public List<ExperimentType> findByCategoryCodes(List<String> categoryCodes){
-		String sql = "SELECT t.code AS code, t.name AS name , t.display_order AS displayOrder  "+
+		String sql = "SELECT t.code AS code, t.name AS name , t.display_order AS displayOrder, t.active as active  "+
 				 sqlCommonFrom+
 				" JOIN experiment_category as ec  ON c.fk_experiment_category=ec.id "
 				+"where ec.code in (:list) "
@@ -197,7 +197,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 	}
 	
 	public List<ExperimentType> findByCategoryCodesWithoutOneToVoid(List<String> categoryCodes){
-		String sql = "SELECT t.code AS code, t.name AS name, t.display_order AS displayOrder  "
+		String sql = "SELECT t.code AS code, t.name AS name, t.display_order AS displayOrder, t.active as active  "
 					+sqlCommonFrom
 					+" JOIN experiment_category as ec  ON c.fk_experiment_category=ec.id "
 					+"where ec.code in (:list) and c.atomic_transfert_method!='OneToVoid' "
@@ -207,7 +207,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 	}
 	
 	public List<ExperimentType> findByCategoryCodeAndProcessTypeCode(String categoryCode, String processTypeCode){
-		String sql = "SELECT t.code AS code, t.name AS name "+
+		String sql = "SELECT t.code AS code, t.name AS name, t.active as active "+
 				 sqlCommonFrom+
 				" JOIN experiment_category as ec  ON c.fk_experiment_category=ec.id inner join process_experiment_type as p ON p.fk_experiment_type=c.id, process_type as pt " +
 				"inner join common_info_type as cp on pt.fk_common_info_type=cp.id"
@@ -217,7 +217,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 	}
 	
 	public List<ExperimentType> findByCategoryCodeWithoutOneToVoid(String categoryCode){
-		String sql = "SELECT t.code AS code, t.name AS name, t.display_order AS displayOrder  "
+		String sql = "SELECT t.code AS code, t.name AS name, t.display_order AS displayOrder, t.active as active  "
 					+sqlCommonFrom
 					+" JOIN experiment_category as ec  ON c.fk_experiment_category=ec.id "
 					+"where ec.code=? and c.atomic_transfert_method!='OneToVoid' "

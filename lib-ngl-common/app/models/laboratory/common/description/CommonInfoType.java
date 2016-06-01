@@ -40,6 +40,8 @@ public class CommonInfoType extends Model<CommonInfoType>{
 	public ObjectType objectType;
 	
 	public List<Institute> institutes = new ArrayList<Institute>();
+
+	public Boolean active = Boolean.TRUE;
 	
 	public static CommonInfoTypeFinder find = new CommonInfoTypeFinder();	
 	
@@ -74,6 +76,7 @@ public class CommonInfoType extends Model<CommonInfoType>{
 		this.institutes=commonInfoType.institutes;
 		//position on display
 		this.displayOrder=commonInfoType.displayOrder;
+		this.active=commonInfoType.active;
 	}
 
 	/**

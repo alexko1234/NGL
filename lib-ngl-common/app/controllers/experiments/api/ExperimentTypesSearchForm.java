@@ -14,4 +14,7 @@ public class ExperimentTypesSearchForm extends ListForm{
 	public String processTypeCode;
 	
 	public Boolean withoutOneToVoid;
+	
+	
+	public Boolean isActive;
 }

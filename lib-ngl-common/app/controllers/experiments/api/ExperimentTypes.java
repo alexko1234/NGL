@@ -69,7 +69,13 @@ public class ExperimentTypes extends CommonController{
 			}else if(experimentTypesSearch.list){
 				List<ListObject> lop = new ArrayList<ListObject>();
 				for(ExperimentType et:experimentTypes){
-					lop.add(new ListObject(et.code, et.name));
+					if(null == experimentTypesSearch.isActive){
+						lop.add(new ListObject(et.code, et.name));
+					}else if(experimentTypesSearch.isActive.equals(et.active)){
+						lop.add(new ListObject(et.code, et.name));
+					}
+					
+					
 				}				
 				return Results.ok(Json.toJson(lop));
 			}else{

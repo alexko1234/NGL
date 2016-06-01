@@ -233,7 +233,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 			
 			l.add(newExperimentType("Pool Tube","pool-tube",null,1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
-					getInstrumentUsedTypes("hand","tecan-evo-100"),"ManyToOne", 
+					getInstrumentUsedTypes("hand","tecan-evo-100"),"ManyToOne", false,
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
 			
