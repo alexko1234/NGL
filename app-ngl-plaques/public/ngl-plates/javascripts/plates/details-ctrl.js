@@ -323,7 +323,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 			for(var j = 0; j < nbLine.length; j++){
 				if(x < wells.length){
 					wells[x].data.y = nbLine[j]+'';
-					wells[x].data.x = i+1+'';					
+					wells[x].data.x = i+1;					
 				}
 				x++;
 			}
@@ -334,7 +334,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		var wells = $scope.datatable.displayResult;
 		if(!angular.isUndefined(wells)){
 	        for (var i = 0; i <wells.length; i++) {
-		         if (wells[i].data.x === (x+'') && wells[i].data.y===(y+'')) {
+		         if (wells[i].data.x === (x) && wells[i].data.y===(y+'')) {
 		        	 return wells[i].data.name.replace(/_/g,' ');
 		         }
 	        }
@@ -346,7 +346,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$routePara
 		var wells = $scope.datatable.displayResult;
 		if(!angular.isUndefined(wells)){
 	        for (var i = 0; i <wells.length; i++) {
-		         if (wells[i].data.x === (x+'') && wells[i].data.y===(y+'')) {
+		         if (wells[i].data.x === (x) && wells[i].data.y===(y+'')) {
 		        	 var well = wells[i];
 		        	 if(well.data.valid === "FALSE"){
 		        		 return "alert alert-danger hidden-print";
