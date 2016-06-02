@@ -240,6 +240,11 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentUsedType("Mk1", "mk1", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeSequencerProperties(),getInstrumentMKI() 
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
+		l.add(newInstrumentUsedType("Mk1B", "mk1b", InstrumentCategory.find.findByCode("nanopore-sequencer"), getNanoporeSequencerProperties(),getInstrumentMKIB() 
+				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-1"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		
+		
 		l.add(newInstrumentUsedType("IRYS", "IRYS", InstrumentCategory.find.findByCode("opt-map-bionano"), getIrysDepotProperties(),getInstrumentIRYS() 
 				,getContainerSupportCategories(new String[]{"irys-chip-2"}), null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
@@ -542,6 +547,14 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		instruments.add(createInstrument("MN15940", "MK15940", null, true, "/env/ig/atelier/nanopore/cns/MN15940", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		instruments.add(createInstrument("MN16288", "MK16288", null, true, "/env/ig/atelier/nanopore/cns/MN16288", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		return instruments;
+	}
+	
+	private List<Instrument> getInstrumentMKIB() throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("MK16823", "MK16823", null, true, "/env/ig/atelier/nanopore/cns/MK16823", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("MK17490", "MK17490", null, true, "/env/ig/atelier/nanopore/cns/MK17490", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
 		return instruments;
 	}
 	

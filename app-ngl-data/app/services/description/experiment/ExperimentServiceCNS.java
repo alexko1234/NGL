@@ -139,7 +139,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		
 		l.add(newExperimentType("Depot Nanopore","nanopore-depot",null,2300,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDepotNanopore(),
-				getInstrumentUsedTypes("minion","mk1"),"OneToOne", 
+				getInstrumentUsedTypes("minion","mk1", "mk1b"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS) ));
 
 		
