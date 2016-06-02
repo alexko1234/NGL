@@ -2,40 +2,39 @@
 @import views.html.helper._
 
 @platesLanesLists(msg: String)(data: Html) = {
-	<small>
-		<label class="col-md-12 col-lg-12 control-label" ng-if="@data">@msg</label>
-		<div class="col-md-12 col-lg-12" ng-if="@data">
-			<p list-resize="@data" list-resize-min-size='2' vertical />
-		</div>
-	</small>
+	<label class="col-md-12 col-lg-12 control-label" ng-if="@data">@msg</label>
+	<div class="col-md-12 col-lg-12" ng-if="@data">
+		<p list-resize="@data" list-resize-min-size='2' vertical />
+	</div>
 }
 @platesLanesSingle(msg: String)(data: Html) = {
-	<small>
-		<label class="col-md-12 col-lg-12 control-label" ng-if='@data'>@msg</label>
-		<div class="col-md-12 col-lg-12" ng-if='@data'>
-			<p ng-bind='@data' />
-		</div>
-	</small>
+	<label class="col-md-12 col-lg-12 control-label" ng-if='@data'>@msg</label>
+	<div class="col-md-12 col-lg-12" ng-if='@data'>
+		<p ng-bind='@data' />
+	</div>
+
 }
 @contentsDisplay()(data: Html) = {
-	<small>
-		<label class="col-md-12 col-lg-12  control-label">@Messages("containers.table.sampleTypes")</label>
-		<div class="col-md-12 col-lg-12">
-			<p list-resize='@data|getArray:"sampleTypeCode"|codes:"type"|unique' list-resie-min-size='2' vertical />
-		</div>
-	</small>
-	<div ng-repeat="content in @data">
+	<label class="col-md-12 col-lg-12  control-label">@Messages("containers.table.sampleTypes")</label>
+	<div class="col-md-12 col-lg-12">
+		<p list-resize='@data|getArray:"sampleTypeCode"|codes:"type"|unique' list-resie-min-size='2' vertical />
+	</div>
+
+	<label class="col-md-12 col-lg-12 control-label">
+		@Messages("containers.table.contents") ( <span ng-bind='data.contents.length' /> )
+	</label>
+	
+	<div class="col-md-{{data.contents.length}} col-lg-{{data.contents.length}}" ng-repeat="content in @data">
 		@platesLanesSingle(Messages("containers.table.percents")){
 			content.percentage
 		}
-		<div ng-repeat="(key,value) in content.properties">
-			<small>
-				<label class="col-md-12 col-lg-12 control-label" ng-if="value.unit !== null">{{key|codes:'property_definition'}} ({{value.unit}})</label>
-				<label class="col-md-12 col-lg-12 control-label" ng-if="value.unit === null" ng-bind="key|codes:'property_definition'" />
-				<div class="col-md-12 col-lg-12"><p ng-bind="value.value" /></div>
-			</small>
+		<div ng-repeat="(key,value) in content.properties|orderBy:'tag.value'">
+			<label class="col-md-6 col-lg-6 control-label" ng-if="value.unit !== null">{{key|codes:'property_definition'}} ({{value.unit}})</label>
+			<label class="col-md-6 col-lg-6 control-label" ng-if="value.unit === null" ng-bind="key|codes:'property_definition'" />
+			<div class="col-md-6 col-lg-6"><p class="form-control-static" ng-bind="value.value" /></div>
 		</div>
 	</div>
+
 }
 
 @infosDansUneDiv()(data: Html) = {
@@ -55,30 +54,34 @@
 		<tr ng-if="nbLine" ng-repeat="y in nbLine" class="total">
 			<td><strong>{{y}}</strong></td>
 			<td class="plates" ng-repeat="x in nbCol" class="browser">
-			
-				<div ng-class="getClass(x, y)">
-					<div ng-if="data">
-						@platesLanesSingle(Messages("containers.table.code")){
-							data.code
-						}
-						@platesLanesLists(Messages("containers.table.projectCodes")){
-							data.projectCodes
-						}
-						
+				<div class="col-md-12 col-lg-12">
+					<div ng-class="getClass(x, y)">
+						<div ng-if="data">
 						<small>
+						<div class="col-md-3 col-lg-3">
+							@platesLanesSingle(Messages("containers.table.code")){
+								data.code
+							}
+							@platesLanesLists(Messages("containers.table.projectCodes")){
+								data.projectCodes
+							}
+							
 							<label class="col-md-12 col-lg-12 control-label">@Messages("containers.table.sampleCodeAndTags")</label>
 							<div class="col-md-12 col-lg-12">
 								<div list-resize="sampleAndTag in getSampleAndTags(data)" list-resize-min-size='2' below vertical></div>
 							</div>
+						</div>
+						<div class="col-md-9 col-lg-9">
+							@contentsDisplay(){
+								data.contents
+							}
+						</div>
 						</small>
-						
-						@contentsDisplay(){
-							data.contents
-						}	
+						</div>
 					</div>
+					
+					<div class="visible-print-block" ng-bind="displayCellAll(x, y)" />
 				</div>
-
-				<div class="visible-print-block" ng-bind="displayCellAll(x, y)" />
 			</td>
 		</tr>
 	</tbody>
