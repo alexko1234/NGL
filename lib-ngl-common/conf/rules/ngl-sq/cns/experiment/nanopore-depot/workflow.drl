@@ -68,6 +68,21 @@ rule "Update type Run RMKI"
 		update($run);
 end
 
+
+rule "Update type Run RMKIB"
+	@nglSQ( workflow )
+	dialect "java"
+	salience 900
+	no-loop
+	when 
+	$run:Run(typeCode==null,$instrumentTypeCode:instrumentUsed.typeCode,$instrumentTypeCode=="mk1b")
+	then
+		Logger.debug("typeCode RMKIB");
+		$run.typeCode="RMKIB";	
+		$run.categoryCode="nanopore";
+		update($run);
+end
+
 rule "Save Run Nanopore"
 	@nglSQ( workflow )
 	dialect "java"
