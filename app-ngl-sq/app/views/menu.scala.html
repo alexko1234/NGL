@@ -19,9 +19,8 @@
 									<li class="@("active".when(nav == "containerSupports.state"))"><a href="@controllers.containers.tpl.routes.ContainerSupports.home("state")">@Messages("containerSupports.menu.state")</a></li>																				
 								}
 								
-								@if(PermissionHelper.checkPermission(Context.current().request().username(), "writing")){
-									<li class="@("active".when(nav == "containerSupports.scanner"))"><a href="@controllers.containers.tpl.routes.ContainerSupports.homeScanner()">@Messages("containerSupports.menu.scanner")</a></li>
-								}
+								<li class="@("active".when(nav == "containerSupports.scanner"))"><a href="@controllers.containers.tpl.routes.ContainerSupports.homeScanner()">@Messages("containerSupports.menu.scanner")</a></li>
+
 								
 							</ul>
   						</li>
