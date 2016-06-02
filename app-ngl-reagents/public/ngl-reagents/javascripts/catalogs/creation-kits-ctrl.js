@@ -438,7 +438,7 @@
 	 }
 	 $q.all(promises).then(function (res) {
 		 $scope.loadBoxes()
-		 $scope.lists.refresh.experimentTypes();
+		 $scope.lists.refresh.experimentTypes({categoryCodes:['transformation','transfert','qualitycontrol']});
 		 if(angular.isUndefined($scope.getHomePage())){
 				$scope.mainService.setHomePage('new');
 				tabService.addTabs({label:Messages('kitCatalogs.tabs.create'),href:jsRoutes.controllers.reagents.tpl.KitCatalogs.home("new").url,remove:false});

@@ -422,7 +422,6 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.lists.refresh.protocols({"experimentTypeCode":$scope.experimentType.code});
 		$scope.lists.refresh.resolutions({"typeCode":$scope.experimentType.code});
 		$scope.lists.refresh.states({"objectTypeCode":"Experiment"});
-		//$scope.lists.refresh.kitCatalogs({"experimentTypeCodes":$scope.experiment.typeCode, "isActive":true});
 		$scope.lists.refresh.kitCatalogs({"experimentTypeCodes":$scope.experiment.typeCode});
 		$scope.lists.refresh.experimentCategories();
 	};
@@ -533,8 +532,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			        	 "type":"text",
 			        	 "listStyle":"bt-select-filter",
 			        	 "choiceInList":true,
-			        	 //"possibleValues": 'lists.getKitCatalogs() | filter: filterIsActive : form-control',
-			        	 "possibleValues": "filterIsActive()",
+			        	 "possibleValues": "kitCatalogIsActive()",
 			        	 "render":'<div bt-select ng-model="value.data.kitCatalogCode" bt-options="v.code as v.name for v in lists.getKitCatalogs()" ng-edit="false"></div>',
 			        	 "edit":true
 			         },
@@ -642,20 +640,14 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 						 */
 	};
 	
-	$scope.filterIsActive = function() {
+	var listKitCatalogsActive = undefined;
+	
+	$scope.kitCatalogIsActive = function() {
 		var liste = lists.getKitCatalogs();
-		var long = liste.length+1;
-		console.log("longueur de la liste : " + long);
-		var listActive = [] 
-		for (i=0; i< liste.length+1; i++) {
-			if (liste[i] != undefined) {
-				if(liste[i]["active"] === false) {
-					console.log(i+") "+ liste[i]["name"] + " - " + liste[i]["active"]);
-					//liste.push(liste[i]);
-				}
-			}
+		if (listKitCatalogsActive == undefined && liste!=undefined) {
+			listKitCatalogsActive = $filter('filter')(liste, {active:true})
 		}
-		return listActive;
+		return listKitCatalogsActive;
 	}
 	
 	$scope.scan = function(e, property, propertyName){
