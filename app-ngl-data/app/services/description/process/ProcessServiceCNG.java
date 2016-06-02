@@ -216,10 +216,22 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	}
 	
 	//FDS ajout 31/05/2016 pour NGL-1025: processus RNASeq
+	private static List<PropertyDefinition> getPropertyDefinitionsRNAseq() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+	
+		propertyDefinitions.add(
+				DescriptionFactory.newPropertiesDefinition("Type processus librairie","libProcessTypeCode"
+						, LevelService.getLevels(Level.CODE.Process,Level.CODE.Content), String.class, true, "F"
+						, getRNALibProcessTypeCodeValues(), "single" ,100, null, null, null));
+		
+		return propertyDefinitions;
+	}
+	
 	private static List<Value> getRNALibProcessTypeCodeValues(){
         List<Value> values = new ArrayList<Value>();
         
         // dans RunServiceCNG le nom reprend le code...
+        /// ????? question a Julie==>  et les autres codes  RA, RB, RC ???????
          values.add(DescriptionFactory.newValue("RD","RD - ssmRNASeq"));       //single stranded messenger RNA sequencing
          values.add(DescriptionFactory.newValue("RE","RE - sstRNASeq"));       //single stranded total RNA sequencing
          values.add(DescriptionFactory.newValue("RF","RF - sstRNASeqGlobin")); //single stranded total RNA from blood sequencing

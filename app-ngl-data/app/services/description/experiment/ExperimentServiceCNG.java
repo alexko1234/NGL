@@ -192,19 +192,17 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			/**********************************************************************************/
 			if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 				
-				//FDS 31/05/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq
+				//FDS 31/05/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq :3 nouveaux exp type
 				l.add(newExperimentType("Ext to RNASeq","ext-to-rna-seq",null,-1,
 						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 						null, null ,"OneToOne", 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
-				//FDS 31/05/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq
 				l.add(newExperimentType("Ext to RNA norm+pool,FC ord, dépôt","ext-to-norm-pool-fc-ordered-depot",null,-1,
 						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 						null, null ,"OneToOne", 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
-				//FDS 01/02/2016 ajout -- JIRA NGL-894: processus et experiments pour X5 : rma-prep
 				l.add(newExperimentType("Prep RNA","rna-prep",null,800,
 						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 						getPropertyDefinitionsRNAPrep(), 
@@ -289,31 +287,21 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			
-			//FDS ajout 31/05/2016 -- JIRA NGL-1025 : 4 nouveau nodes
-			newExperimentTypeNode("norm+pool",getExperimentTypes("norm+pool").get(0),
+			//FDS ajout 31/05/2016 -- JIRA NGL-1025 : 3 nouveau nodes
+			newExperimentTypeNode("normalisation-and-pooling",getExperimentTypes("normalisation-and-pooling").get(0),
 					false,false,false,
-					getExperimentTypeNodes("ext-to-norm-pool-fc-ordered-depot","????amplifiee-purifiee"),null,null, null
+					getExperimentTypeNodes("ext-to-norm-pool-fc-ordered-depot","pcr-purif"),null,null, null
 					).save();
 			
-			//FDS ajout 31/05/2016 -- JIRA NGL-1025
 			newExperimentTypeNode("rna-prep",getExperimentTypes("rna-prep").get(0),
 					false,false,false,
 					getExperimentTypeNodes("ext-to-rna-seq","????amplifiee-purifiee"),null,null, null
 					).save();
 			
-			//FDS ajout 31/05/2016 -- JIRA NGL-1025
 			newExperimentTypeNode("pcr-purif",getExperimentTypes("pcr-purif").get(0),
 					false,false,false,
 					getExperimentTypeNodes("rna-seq"),null,null, null
 					).save();
-			
-			//FDS ajout 31/05/2016 -- JIRA NGL-1025
-			newExperimentTypeNode("norm-pool",getExperimentTypes("norm-pool").get(0),
-					false,false,false,
-					getExperimentTypeNodes("pcr-purif"),null,null, null
-					).save();
-			
-			
 		}
 	}
 
