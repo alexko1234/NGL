@@ -126,7 +126,6 @@ public class KitCatalogs extends DocumentController<KitCatalog>{
 			if(null == kitCatalogSearch.orderSense)kitCatalogSearch.orderSense = 0;
 			
 			MongoDBResult<KitCatalog> results = mongoDBFinder(kitCatalogSearch, query);
-			Logger.debug("appel 1 fois");
 			List<KitCatalog> kitCatalogs = results.toList();
 			
 			return ok(Json.toJson(kitCatalogs));

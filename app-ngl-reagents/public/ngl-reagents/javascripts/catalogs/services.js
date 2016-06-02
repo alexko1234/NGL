@@ -49,7 +49,8 @@
 		
 		var initListService = function(){
 			if(!isInit){
-				lists.refresh.experimentTypes({withoutOneToVoid:true});
+				//lists.refresh.experimentTypes({withoutOneToVoid:true});
+				lists.refresh.experimentTypes({categoryCodes:["transfert","transformation","qualitycontrol"]});
 				lists.state = [{'name': 'oui',
 								'code' : true},
 								{'name': 'non',
