@@ -406,6 +406,7 @@ public class ResolutionService {
 		
 		al.add("RMINION");
 		al.add("RMKI");
+		al.add("RMKIB");
 		al.add("RHS4000");
 		
 		r.typeCodes = al;
