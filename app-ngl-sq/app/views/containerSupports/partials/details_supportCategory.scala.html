@@ -1,48 +1,6 @@
 @()
 @import views.html.helper._
 
-@platesLanesLists(msg: String)(data: Html) = {
-	<label class="col-md-12 col-lg-12 control-label" ng-if="@data">@msg</label>
-	<div class="col-md-12 col-lg-12" ng-if="@data">
-		<p list-resize="@data" list-resize-min-size='2' vertical />
-	</div>
-}
-@platesLanesSingle(msg: String)(data: Html) = {
-	<label class="col-md-12 col-lg-12 control-label" ng-if='@data'>@msg</label>
-	<div class="col-md-12 col-lg-12" ng-if='@data'>
-		<p ng-bind='@data' />
-	</div>
-
-}
-@contentsDisplay()(data: Html) = {
-	<label class="col-md-12 col-lg-12  control-label">@Messages("containers.table.sampleTypes")</label>
-	<div class="col-md-12 col-lg-12">
-		<p list-resize='@data|getArray:"sampleTypeCode"|codes:"type"|unique' list-resie-min-size='2' vertical />
-	</div>
-
-	<label class="col-md-12 col-lg-12 control-label">
-		@Messages("containers.table.contents") ( <span ng-bind='data.contents.length' /> )
-	</label>
-	
-	<div class="col-md-{{data.contents.length}} col-lg-{{data.contents.length}}" ng-repeat="content in @data">
-		@platesLanesSingle(Messages("containers.table.percents")){
-			content.percentage
-		}
-		<div ng-repeat="(key,value) in content.properties|orderBy:'tag.value'">
-			<label class="col-md-6 col-lg-6 control-label" ng-if="value.unit !== null">{{key|codes:'property_definition'}} ({{value.unit}})</label>
-			<label class="col-md-6 col-lg-6 control-label" ng-if="value.unit === null" ng-bind="key|codes:'property_definition'" />
-			<div class="col-md-6 col-lg-6"><p class="form-control-static" ng-bind="value.value" /></div>
-		</div>
-	</div>
-
-}
-
-@infosDansUneDiv()(data: Html) = {
-	<div>
-		<div class="col-md-12 col-lg-12" list-resize='@data' list-resize-min-size='1' vertical></div>
-	</div>
-}
-
 <table class="table table-bordered table-striped table-condensed">
 	<thead>
 		<tr>
@@ -54,34 +12,21 @@
 		<tr ng-if="nbLine" ng-repeat="y in nbLine" class="total">
 			<td><strong>{{y}}</strong></td>
 			<td class="plates" ng-repeat="x in nbCol" class="browser">
-				<div class="col-md-12 col-lg-12">
-					<div ng-class="getClass(x, y)">
-						<div ng-if="data">
-						<small>
-						<div class="col-md-3 col-lg-3">
-							@platesLanesSingle(Messages("containers.table.code")){
-								data.code
-							}
-							@platesLanesLists(Messages("containers.table.projectCodes")){
-								data.projectCodes
-							}
-							
-							<label class="col-md-12 col-lg-12 control-label">@Messages("containers.table.sampleCodeAndTags")</label>
-							<div class="col-md-12 col-lg-12">
-								<div list-resize="sampleAndTag in getSampleAndTags(data)" list-resize-min-size='2' below vertical></div>
-							</div>
-						</div>
-						<div class="col-md-9 col-lg-9">
-							@contentsDisplay(){
-								data.contents
-							}
-						</div>
-						</small>
-						</div>
-					</div>
+			
+				<div ng-class="getClass(x, y)">
+					<div ng-if="data">
+					<small>
 					
-					<div class="visible-print-block" ng-bind="displayCellAll(x, y)" />
+						<div class="col-md-6 col-lg-6" list-resize="data.projectCodes" list-resize-min-size='1' vertical/>
+						<div class="col-md-6 col-lg-6" list-resize="data.sampleCodes" list-resize-min-size='1' vertical/>
+						<div class="col-md-6 col-lg-6" list-resize='data.fromTransformationTypeCodes|unique|codes:"type"' list-resize-min-size='1' vertical/>
+						<div class="col-md-6 col-lg-6" list-resize='data.contents|getArray:"properties.tag.value"|unique' list-resize-min-size='1' vertical/> 
+
+					</small>
+					</div>
 				</div>
+
+				<div class="visible-print-block" ng-bind="displayCellAll(x, y)" />
 			</td>
 		</tr>
 	</tbody>
