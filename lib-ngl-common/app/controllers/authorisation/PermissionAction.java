@@ -31,6 +31,8 @@ public class PermissionAction extends Action<Permission> {
 			username = "ngsrg";
 		}else if(userAgent.contains("Honeywell")){
 			username = "scanner";
+		}else{
+			Logger.warn("User agent other "+userAgent);
 		}
 		
 		for(String checkPermission:configuration.value()){
