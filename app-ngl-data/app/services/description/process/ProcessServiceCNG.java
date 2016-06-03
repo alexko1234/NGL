@@ -102,23 +102,23 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			
-			// FDS ajout 31/05/2016 JIRA NGL-1025 processus pour RNASeq
-			// processus long:  type "library"............en cours
-			l.add(DescriptionFactory.newProcessType("RNA-SEQ", "rna-seq", ProcessCategory.find.findByCode("library"),
+			// FDS ajout 31/05/2016 JIRA NGL-1025 2 processus pour RNASeq
+			// processus long type "library"
+			l.add(DescriptionFactory.newProcessType("RNA Sequencing", "rna-sequencing", ProcessCategory.find.findByCode("library"),
 					getPropertyDefinitionsRNAseq(),
-					Arrays.asList(getPET("ext-to-rna-seq",-1),getPET("prep-rna",0),getPET("pcr+purif",1),getPET("normalization+pooling",2), getPET("prepa-fc-ordered",3), getPET("illumina-depot",4) ), //ordered list of experiment type in process type
+					Arrays.asList(getPET("ext-to-rna-sequencing",-1),getPET("prep-rna",0),getPET("pcr-purif",1),getPET("normalization-and-pooling",2), getPET("prepa-fc-ordered",3), getPET("illumina-depot",4) ), //ordered list of experiment type in process type
 					getExperimentTypes("prep-rna").get(0),         //first experiment type
 					getExperimentTypes("illumina-depot").get(0),   //last experiment type
 					getExperimentTypes("ext-to-rna-court").get(0), //void experiment type
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 			
-			// processus court: type "normalization"
-			l.add(DescriptionFactory.newProcessType("RNA norm+pooling, FC ord, dépot", "norm-pool-fc-ordered-depot", ProcessCategory.find.findByCode("normalization"),
+			// processus court type "normalization"    pas de proprietes ????????????????????
+			l.add(DescriptionFactory.newProcessType("RNA norm+pooling, FC ord, dépot", "norm-and-pool-fc-ord-depot", ProcessCategory.find.findByCode("normalization"),
 					null,
-					Arrays.asList(getPET("ext-to-norm-pool-fc-ordered-depot",-1),getPET("prep-rna",0),getPET("pcr-purif",1),getPET("normalization-pooling",2), getPET("prepa-fc-ordered",3), getPET("illumina-depot",4) ), //ordered list of experiment type in process type
-					getExperimentTypes("normalization-pooling").get(0),             //first experiment type
-					getExperimentTypes("illumina-depot").get(0),                    //last experiment type
-					getExperimentTypes("ext-to-norm-pool-fc-ordered-depot").get(0), //void experiment type
+					Arrays.asList(getPET("ext-to-norm-and-pool-fc-ord-depot",-1),getPET("normalization-and-pooling",0), getPET("prepa-fc-ordered",1), getPET("illumina-depot",2) ), //ordered list of experiment type in process type
+					getExperimentTypes("normalization-pooling").get(0),                 //first experiment type
+					getExperimentTypes("illumina-depot").get(0),                        //last experiment type
+					getExperimentTypes("ext-to-norm-and-pool-fc-ordered-depot").get(0), //void experiment type
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
 		}

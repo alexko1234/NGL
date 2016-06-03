@@ -192,24 +192,34 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			/**********************************************************************************/
 			if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 				
-				//FDS 31/05/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq :3 nouveaux exp type
+				//FDS 31/05/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq :5 nouveaux exp type
 				l.add(newExperimentType("Ext to RNASeq","ext-to-rna-seq",null,-1,
 						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 						null, null ,"OneToOne", 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
-				l.add(newExperimentType("Ext to RNA norm+pool,FC ord, dépôt","ext-to-norm-pool-fc-ordered-depot",null,-1,
+				l.add(newExperimentType("Ext to RNA norm+pool,FC ord, dépôt","ext-to-norm-and-pool-fc-ord-depot",null,-1,
 						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 						null, null ,"OneToOne", 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
-				l.add(newExperimentType("Prep RNA","rna-prep",null,800,
+				l.add(newExperimentType("Prep RNA","rna-prep",null,1100,
 						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
-						getPropertyDefinitionsRNAPrep(), 
-						getInstrumentUsedTypes("????????"),"OneToOne", 
+						null, 
+						getInstrumentUsedTypes("janus"),"OneToOne", 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
+				l.add(newExperimentType("PCR+purification","pcr-purif",null,1150,
+						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+						null, 
+						getInstrumentUsedTypes("janus"),"OneToOne", 
+						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
+				l.add(newExperimentType("Normalisation+Pooling","normalization-and-pooling",null,1170,
+						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
+						getPropertyDefinitionsNormalizationAndPooling(), 
+						getInstrumentUsedTypes("janus"),"ManyToOne", 
+						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
 			}
 
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
@@ -245,62 +255,84 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		//FDS ajout 15/04/2016 -- JIRA NGL-894 : processus court pour X5
 		newExperimentTypeNode("ext-to-norm-fc-ordered-depot",getExperimentTypes("ext-to-norm-fc-ordered-depot").get(0),
 				false,false,false,
-				null, null, null, null
+				null, 
+				null, null, null
 				).save();			
 			
 		//FDS ajout 01/02/2016 -- JIRA NGL-894: processus et experiments pour X5
 		//GA        07/04/2016 -- JIRA NGL-894: processus et experiments pour X5; ajout "labchip-migration-profile" dans qc
 		newExperimentTypeNode("prep-pcr-free",getExperimentTypes("prep-pcr-free").get(0),
 				false,false,false,
-				getExperimentTypeNodes("ext-to-x5-wg-pcr-free"),null,getExperimentTypes("qpcr-quantification","labchip-migration-profile","miseq-qc"), getExperimentTypes("aliquoting")  
+				getExperimentTypeNodes("ext-to-x5-wg-pcr-free"),
+				null,getExperimentTypes("qpcr-quantification","labchip-migration-profile","miseq-qc"), getExperimentTypes("aliquoting")  
 				).save();
 
 		//FDS ...../2016 -- JIRA NGL-894: processus et experiments pour X5
 		//FDS 15/04/2016 -- JIRA NGL-894: processus court pour X5: ajout "ext-to-norm-fc-ordered-depot" dans les previous
 		newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), 
 				false, false, false, 
-				getExperimentTypeNodes("ext-to-norm-fc-ordered-depot", "prep-pcr-free"), null, getExperimentTypes("miseq-qc"), getExperimentTypes("aliquoting")
+				getExperimentTypeNodes("ext-to-norm-fc-ordered-depot", "prep-pcr-free"), 
+				null, getExperimentTypes("miseq-qc"), getExperimentTypes("aliquoting")
 				).save();
 		
 		newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),
 				false,false,false,
-				getExperimentTypeNodes("ext-to-denat-dil-lib", "lib-normalization"),null,null, getExperimentTypes("aliquoting")
+				getExperimentTypeNodes("ext-to-denat-dil-lib", "lib-normalization"),
+				null,null, getExperimentTypes("aliquoting")
 				).save();
 		
 		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),
 				false,false,false,
-				getExperimentTypeNodes("ext-to-prepa-flowcell","denat-dil-lib"),null,null, null
+				getExperimentTypeNodes("ext-to-prepa-flowcell","denat-dil-lib"),
+				null,null,null
 				).save();
 		
 		//FDS ajout 04/11/2015 -- JIRA NGL-838 
 		newExperimentTypeNode("prepa-fc-ordered",getExperimentTypes("prepa-fc-ordered").get(0),
 				false,false,false,
-				getExperimentTypeNodes("ext-to-prepa-fc-ordered","lib-normalization"),null,null, null
+				getExperimentTypeNodes("ext-to-prepa-fc-ordered","lib-normalization"),
+				null,null,null
 				).save();
 
 		//FDS modif 04/11/2015 -- JIRA NGL-838: ajout prepa-fc-ordered dans les previous 
 		newExperimentTypeNode("illumina-depot",getExperimentTypes("illumina-depot").get(0),
 				false,false,false,
-				getExperimentTypeNodes("prepa-flowcell","prepa-fc-ordered"),null,null, null
+				getExperimentTypeNodes("prepa-flowcell","prepa-fc-ordered"),
+				null,null,null
 				).save();
 		
 					
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			
-			//FDS ajout 31/05/2016 -- JIRA NGL-1025 : 3 nouveau nodes
+			//FDS ajout 31/05/2016 -- JIRA NGL-1025 : 5 nouveau nodes
+			newExperimentTypeNode("ext-to-norm-and-pool-fc-ordered-depot",getExperimentTypes("ext-to-norm-and-pool-fc-ordered-depot").get(0),
+					false,false,false,
+					null,
+					null,null,null
+					).save();	
+			
+			newExperimentTypeNode("ext-to-rna-seq",getExperimentTypes("ext-to-rna-seq").get(0),
+					false,false,false,
+					null,
+					null,null,null
+					).save();	
+			
 			newExperimentTypeNode("normalisation-and-pooling",getExperimentTypes("normalisation-and-pooling").get(0),
 					false,false,false,
-					getExperimentTypeNodes("ext-to-norm-pool-fc-ordered-depot","pcr-purif"),null,null, null
+					getExperimentTypeNodes("ext-to-norm-and-pool-fc-ordered-depot","pcr-purif"),
+					null,null,null
 					).save();
 			
 			newExperimentTypeNode("rna-prep",getExperimentTypes("rna-prep").get(0),
 					false,false,false,
-					getExperimentTypeNodes("ext-to-rna-seq","????amplifiee-purifiee"),null,null, null
+					getExperimentTypeNodes("ext-to-rna-seq"),
+					null,null, null
 					).save();
-			
+
 			newExperimentTypeNode("pcr-purif",getExperimentTypes("pcr-purif").get(0),
-					false,false,false,
-					getExperimentTypeNodes("rna-seq"),null,null, null
+					true,false,false,
+					getExperimentTypeNodes("rna-seq"),
+					getExperimentTypes("labchip-migration-profile"), null, null
 					).save();
 		}
 	}
@@ -502,4 +534,22 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		return propertyDefinitions;
 	}
+	
+	// FDS ajout 02/06/2016 -- JIRA NGL-1028: experiment normalization-and-pooling
+	private List<PropertyDefinition> getPropertyDefinitionsNormalizationAndPooling() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		//InputContainer
+		// calculé automatiquement en fonction du volume final et concentration final demandés ou saisie libre, non obligatoire VERIFIER
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode("µL"),"single", 20, true, null,null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume tampon Tris", "bufferVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null
+				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode("µL"),"single", 20, true, null,null));		
+		
+		//OuputContainer
+		
+		return propertyDefinitions;
+	}
+	
 }
