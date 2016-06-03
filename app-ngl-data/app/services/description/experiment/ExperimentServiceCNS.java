@@ -144,7 +144,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 
 		
 		
-		l.add(newExperimentType("Aliquot","aliquoting",null,2,
+		l.add(newExperimentType("Aliquot","aliquoting",null,10100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()),
 				getPropertyAliquoting(), getInstrumentUsedTypes("hand"),"OneToMany", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
@@ -224,20 +224,20 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		*/	
 		if(ConfigFactory.load().getString("ngl.env").equals("PROD")){
 			
-			l.add(newExperimentType("Pool Tube","pool-tube",null,1,
+			l.add(newExperimentType("Pool Tube","pool-tube",null,10200,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
 					getInstrumentUsedTypes("hand"),"ManyToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
 		}else if(!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			
-			l.add(newExperimentType("Pool Tube","pool-tube",null,1,
+			l.add(newExperimentType("Pool Tube","pool-tube",null,10200,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
 					getInstrumentUsedTypes("hand","tecan-evo-100"),"ManyToOne", false,
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
 			
-			l.add(newExperimentType("Pool","pool",null,1,
+				l.add(newExperimentType("Pool générique","pool",null,10300,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
 					getInstrumentUsedTypes("tecan-evo-100", "hand"),"ManyToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
@@ -248,11 +248,11 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			*/
-			l.add(newExperimentType("Ext to Norm, FC, Depot","ext-to-norm-fc-depot-illumina",null,
+			l.add(newExperimentType("Ext to Norm, FC, Depot","ext-to-norm-fc-depot-illumina",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
-			l.add(newExperimentType("Ext to qPCR-norm, FC, Depot","ext-to-qpcr-norm-fc-depot-illumina",null,
+			l.add(newExperimentType("Ext to qPCR-norm, FC, Depot","ext-to-qpcr-norm-fc-depot-illumina",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			/*
@@ -273,7 +273,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			*/
 			
-			l.add(newExperimentType("Quantification qPCR","qpcr-quantification", null,850,
+			l.add(newExperimentType("Quantification qPCR","qpcr-quantification", null,20100,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsQPCR(), 
 					getInstrumentUsedTypes("tecan-evo-100-and-stratagene-qPCR-system"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
@@ -305,7 +305,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					getInstrumentUsedTypes("hand","thermocycler"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
-			l.add(newExperimentType("Sizing sur gel","sizing",null,800,
+			l.add(newExperimentType("Sizing sur gel","sizing",null,900,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
 					null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
