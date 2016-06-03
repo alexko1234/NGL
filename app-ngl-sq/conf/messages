@@ -28,6 +28,7 @@ containerSupports.scanner.title = Code-Barre de Support
 
 #containerSupports table
 containerSupports.table.code = Supports
+containerSupports.table.codeSupport = Code Support
 containerSupports.table.projectCodes = Projet(s)
 containerSupports.table.volume = Volume
 containerSupports.table.categoryCode = Catégorie Support
