@@ -5,17 +5,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 
 	var datatableConfig = {
 			name:"FDR_Tube",
-			columns:[   
-					{
-						 "header":Messages("containers.table.support.number"),
-						 "property":"'ATM ' + atomicTransfertMethod.viewIndex",
-						 "order":true,
-						 "edit":false,
-						 "hide":true,
-						 "type":"text",
-						 "position":0,
-						 "extraHeaders":{0:Messages("experiments.inputs")}
-					},
+			columns:[   					
 					 {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"inputContainer.code",
@@ -25,14 +15,35 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			        	 "type":"text",
 			        	 "position":1,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },		         
+			         },	{
+			        	 "header":Messages("containers.table.supportCategoryCode"),
+			        	 "property":"inputContainer.support.categoryCode",
+			        	 "filter":"codes:'container_support_cat'",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":2,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },	
+			         {
+			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
+			        	 "property":"inputContainer.fromTransformationTypeCodes",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
+			        	 "position":3,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
 			         {
 			        	"header":Messages("containers.table.projectCodes"),
 			 			"property": "inputContainer.projectCodes",
 			 			"order":false,
 			 			"hide":true,
 			 			"type":"text",
-			 			"position":2,
+			 			"position":4,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 				     },
@@ -42,28 +53,18 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			 			"order":false,
 			 			"hide":true,
 			 			"type":"text",
-			 			"position":3,
+			 			"position":5,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 				     },
-				     {
-			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
-			        	 "property":"inputContainer.fromTransformationTypeCodes",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
-			        	 "position":4,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
+				    
 			         {
 				 			"header":Messages("containers.table.libProcessType"),
 				 			"property": "inputContainer.contents",
 				 			"order":false,
 				 			"hide":true,
 				 			"type":"text",
-				 			"position":4.1,
+				 			"position":6,
 				 			"render":"<div list-resize='cellValue | getArray:\"properties.libProcessTypeCode.value\" | unique' list-resize-min-size='3'>",
 				 			"extraHeaders":{0:Messages("experiments.inputs")}	 						 			
 				 		},
@@ -75,10 +76,20 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 				 			"order":true,
 				 			"hide":true,
 				 			"type":"text",
-				 			"position":4.2,
+				 			"position":7,
 				 			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='3'>",
 				        	 "extraHeaders":{0:Messages("experiments.inputs")}
-				     },					 
+				     },		
+				     {
+			        	 "header":Messages("containers.table.volume") + " (µL)",
+			        	 "property":"inputContainer.volume.value",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"number",
+			        	 "position":8,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
 					 {
 			        	 "header":Messages("containers.table.concentration"),
 			        	 "property":"inputContainer.concentration.value",
@@ -86,7 +97,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":5,
+			        	 "position":9,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
@@ -96,19 +107,10 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			        	 "position":5.5,
+			        	 "position":10,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
-			         {
-			        	 "header":Messages("containers.table.volume") + " (µL)",
-			        	 "property":"inputContainer.volume.value",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"number",
-			        	 "position":6,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
+			        
 			         {
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"inputContainer.state.code",
@@ -117,7 +119,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 						 "hide":true,
 			        	 "type":"text",
 						 "filter":"codes:'state'",
-			        	 "position":7,
+			        	 "position":11,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
@@ -127,7 +129,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"number",
-			        	 "position":10,
+			        	 "position":12,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
@@ -191,7 +193,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			order:{
 				mode:'local', //or 
 				active:true,
-				by:"'ATM ' + atomicTransfertMethod.viewIndex"
+				by:"inputContainer.code"
 			},
 			remove:{
 				active:false,

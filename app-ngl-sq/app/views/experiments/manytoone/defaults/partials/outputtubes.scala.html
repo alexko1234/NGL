@@ -3,7 +3,7 @@
 <table class="table" >
 <thead>
 		<tr ng-if="!atmService.data.isAllATMViewClose">
-			<th colspan="{{10 + inputContainerProperties.length}}">
+			<th colspan="{{11 + inputContainerProperties.length}}">
 				@Messages("experiments.inputs")
 			</th>
 			
@@ -20,6 +20,9 @@
 			</th>
 			<th>
 				@Messages("containers.table.code")
+			</th>
+			<th>
+				@Messages("containers.table.supportCategoryCode")
 			</th>
 			<th>
 				@Messages("containers.table.fromTransformationTypeCodes")
@@ -64,7 +67,7 @@
 				@Messages("containers.table.storageCode")
 			</th>		
 		</tr>
-		<tr ng-if="atmService.data.isAllATMViewClose" colspan="10">
+		<tr ng-if="atmService.data.isAllATMViewClose" colspan="11">
 			<th>
 			</th>
 			<th>
@@ -88,7 +91,7 @@
 				<i ng-switch-when="false" class="fa fa-eye"></i>
 			</button>			
 		</td>
-		<td colspan="10"></td>
+		<td colspan="11"></td>
 	</tr>
 	
 	<tr ng-switch-when="compact" >	
@@ -101,7 +104,7 @@
 				<i class="fa fa-eye"></i>
 			</button>			
 		</td>	
-		<td colspan="10" >
+		<td colspan="11" >
 			<span ng-repeat="inputContainerUsed in atm.inputContainerUseds | orderBy:'code' track by $index"  class="compactText"
 				ng-model="inputContainerUsed" draggable drag="dragInProgress">
 				{{inputContainerUsed.code}} / {{inputContainerUsed.percentage}}%;<br/>
@@ -127,6 +130,9 @@
 			
 				<td>
 					{{inputContainerUsed.code}}
+				</td>
+				<td>
+					{{inputContainerUsed.locationOnContainerSupport.categoryCode | codes:'container_support_cat'}}
 				</td>
 				<td>
 					<div list-resize='inputContainerUsed.fromTransformationTypeCodes | unique | codes:"type"' list-resize-min-size='5' below vertical>
