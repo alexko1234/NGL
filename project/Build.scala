@@ -91,7 +91,7 @@ object ApplicationBuild extends Build {
    	    "org.drools" % "knowledge-api" % "6.1.0.Final",
    	    "org.kie" % "kie-api" % "6.1.0.Final",
    	    "org.kie" % "kie-internal" % "6.1.0.Final",
-		"fr.cea.ig.modules" %% "authentication" % "1.2-SNAPSHOT",
+		"fr.cea.ig.modules" %% "authentication" % "1.3-SNAPSHOT",
 		"fr.cea.ig" %% "mongodbplugin" % "1.4.1-SNAPSHOT",
 		 "org.mongojack" % "mongojack" % "2.5.0-IG"
    	)

@@ -29,6 +29,10 @@ public class PermissionAction extends Action<Permission> {
 		String userAgent = context.request().getHeader("User-Agent");
 		if(userAgent != null && userAgent.equals("bot")){
 			username = "ngsrg";
+		}else if(userAgent.contains("Honeywell")){
+			username = "scanner";
+		}else{
+			Logger.warn("User agent other "+userAgent);
 		}
 		
 		for(String checkPermission:configuration.value()){

@@ -17,7 +17,7 @@ rule "Set parameter for command line md5"
 			log.debug("Set parameter for md5 command");
 			//Get input resource
 			JobResource jobResource = $job.getUniqueJobResource("inputRawDataMd5");
-			$job.setParameterValue("fileZipped", jobResource.getProperty("submissionTmpDirectory")+File.separator+jobResource.getProperty("fileName")+".gz");
+			$job.setParameterValue("fileZipped", jobResource.getProperty("submissionDirectory")+File.separator+jobResource.getProperty("fileName")+".gz");
 end
 
 rule "POST DONE EXECUTION of md5 : Update MD5 of RawData"
