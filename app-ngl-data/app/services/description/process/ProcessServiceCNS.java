@@ -127,10 +127,10 @@ public class ProcessServiceCNS extends AbstractProcessService {
 						, LevelService.getLevels(Level.CODE.Process),String.class, true, getSequencingType(), "single",100));
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Type de lectures", "readType"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("SR","PE"), "single",200));		
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, getReadType(), "single",200));		
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("Longueur de lecture", "readLength"
-						, LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("50","100","150","250","300","500","600"), "single",300));
+						, LevelService.getLevels(Level.CODE.Process),String.class, true, getReadLenght(), "single",300));
 		
 		propertyDefinitions.add(
 				DescriptionFactory.newPropertiesDefinition("% à déposer prévisionnel", "estimatedPercentPerLane"
@@ -144,13 +144,35 @@ public class ProcessServiceCNS extends AbstractProcessService {
 		values.add(DescriptionFactory.newValue("Hiseq 2500 Rapide", "Hiseq 2500 Rapide"));
 		values.add(DescriptionFactory.newValue("Miseq", "Miseq"));
 		values.add(DescriptionFactory.newValue("Hiseq 4000", "Hiseq 4000"));
+		values.add(DescriptionFactory.newValue("undefined","Non déterminé"));
 		return values;	
 	}
 	
 
+	private static List<Value> getReadType(){
+			List<Value> values = new ArrayList<Value>();
+			values.add(DescriptionFactory.newValue("SR", "SR"));
+			values.add(DescriptionFactory.newValue("PE", "PE"));
+			values.add(DescriptionFactory.newValue("undefined","Non déterminé"));
+			return values;
+	}
+		
+	private static List<Value> getReadLenght(){
+		List<Value> values = new ArrayList<Value>();
+		values.add(DescriptionFactory.newValue("50","50"));
+		values.add(DescriptionFactory.newValue("100","100"));
+		values.add(DescriptionFactory.newValue("150","150"));
+		values.add(DescriptionFactory.newValue("250","250"));
+		values.add(DescriptionFactory.newValue("300","300"));
+		values.add(DescriptionFactory.newValue("500","500"));
+		values.add(DescriptionFactory.newValue("600","600"));
+		values.add(DescriptionFactory.newValue("undefined","Non déterminé"));
+		return values;
+	}
 
 	public static List<PropertyDefinition> getPropertyDefinitionsLib300600() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+
 		
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Robot à utiliser","autoVsManuel", LevelService.getLevels(Level.CODE.Process),String.class, true, DescriptionFactory.newValues("MAN","ROBOT"), "single",100));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Quantité à engager", "inputQuantity", LevelService.getLevels(Level.CODE.Process),Double.class, true, DescriptionFactory.newValues("250","500"), "single",200));
