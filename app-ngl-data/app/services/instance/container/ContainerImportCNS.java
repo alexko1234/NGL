@@ -276,9 +276,12 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 			
 		}
 		
-		container.concentration=new PropertySingleValue(Math.round(rs.getFloat("measuredConcentration")*100.0)/100.0, mesuredConcentrationUnit);
-		container.volume=new PropertySingleValue(Math.round(rs.getFloat("measuredVolume")*100.0)/100.0, "µl");
-		container.quantity=new PropertySingleValue(Math.round(rs.getFloat("measuredQuantity")*100.0)/100.0, "ng");
+		if(rs.getString("measuredConcentration")!=null){
+			container.concentration=new PropertySingleValue(Math.round(rs.getFloat("measuredConcentration")*100.0)/100.0, mesuredConcentrationUnit);}
+		if(rs.getString("measuredVolume")!=null){
+			container.volume=new PropertySingleValue(Math.round(rs.getFloat("measuredVolume")*100.0)/100.0, "µl");}
+		if(rs.getString("measuredQuantity")!=null){
+			container.quantity=new PropertySingleValue(Math.round(rs.getFloat("measuredQuantity")*100.0)/100.0, "ng");}
 		
 		try{
 			if(rs.getString("measuredSize")!=null){
