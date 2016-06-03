@@ -38,8 +38,8 @@ H:\birdsSpec.xsd">
 	<Treatment name="ZipFile" useJobScheduler="true" checkIfNewTreatmentAlreadyPerformed="true">
 	
 		<ExecutableSpecification commandSyntaxStrategyName="default">
-			<Executable path="gzip" user="william" host="etna15.genoscope.cns.fr"/>
-			<Lsf job="gzip" queue="big" />
+			<Executable path="gzip" user="cnsnglapps" host="etna0.genoscope.cns.fr"/>
+			<Slurm job="gzip" part="normal" />
 		</ExecutableSpecification>
 		
 		<ParametersSpecification>
@@ -66,8 +66,8 @@ H:\birdsSpec.xsd">
 	<Treatment name="Md5File" useJobScheduler="true" checkIfNewTreatmentAlreadyPerformed="true">
 	
 		<ExecutableSpecification commandSyntaxStrategyName="default">
-			<Executable path="md5sum" user="william" host="etna15.genoscope.cns.fr"/>
-			<Lsf job="md5sum" queue="big" />
+			<Executable path="md5sum" user="cnsnglapps" host="etna0.genoscope.cns.fr"/>
+			<Slurm job="md5sum" part="normal" />
 		</ExecutableSpecification>
 		
 		<ParametersSpecification>

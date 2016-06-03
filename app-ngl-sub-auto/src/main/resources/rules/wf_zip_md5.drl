@@ -33,7 +33,7 @@ rule "select resources from nglsub for workflow zip md5"
 			ResourceProperties newRp = new ResourceProperties();
 			newRp.setProperty("code",groupJobResource.getProperty("code"));
 			newRp.setProperty("gzipForSubmission","true");
-			newRp.setProperty("submissionTmpDirectory",groupJobResource.getProperty("submissionTmpDirectory"));
+			newRp.setProperty("submissionDirectory",groupJobResource.getProperty("submissionDirectory"));
 			newRp.setProperty("experimentCodes",groupJobResource.getProperty("experimentCodes").replaceAll("\"",""));
 			newRp.setProperty("idGroupJob",""+$groupJob.getId());
 			resourceProperties.add(newRp);
@@ -79,7 +79,7 @@ rule "add submissionZip resources in internalRefSubmission to fire createXML and
 		ResourceProperties resourceProperties = outputResource.getResourceProperties();
 	  	resourceProperties.setProperty("code",jobResource.getProperty("code"));
 	  	resourceProperties.setProperty("gzipForSubmission",jobResource.getProperty("gzipForSubmission"));
-	  	resourceProperties.setProperty("submissionTmpDirectory",jobResource.getProperty("submissionTmpDirectory"));
+	  	resourceProperties.setProperty("submissionDirectory",jobResource.getProperty("submissionDirectory"));
 	  	resourceProperties.setProperty("experimentCodes",jobResource.getProperty("experimentCodes"));
 		$flag.setDone(true);
 		modify($flag){};

@@ -388,11 +388,5 @@ public class CheckWorkflow extends GenericTest{
 		
 	}
 	
-	@Test
-	public void reset()
-	{
-		
-	}
-
 
 }
