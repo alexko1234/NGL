@@ -229,7 +229,18 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					getInstrumentUsedTypes("hand"),"ManyToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
-		}else if(!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+		}else if(ConfigFactory.load().getString("ngl.env").equals("UAT") ){
+			l.add(newExperimentType("Pool Tube","pool-tube",null,10200,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
+					getInstrumentUsedTypes("hand","tecan-evo-100"),"ManyToOne", false,
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
+			
+				l.add(newExperimentType("Pool générique","pool",null,10300,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
+					getInstrumentUsedTypes("tecan-evo-100", "hand"),"ManyToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		}else if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 			
 			l.add(newExperimentType("Pool Tube","pool-tube",null,10200,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
@@ -335,7 +346,13 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		newExperimentTypeNode("opgen-depot",getExperimentTypes("opgen-depot").get(0),false,false, false,getExperimentTypeNodes("ext-to-opgen-run"),null,null,null).save();
 		
 		
-		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+		if(ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,null,null,null,getExperimentTypes("pool-tube")).save();
+			
+		}else if(ConfigFactory.load().getString("ngl.env").equals("UAT")){
+			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,null,null,null,getExperimentTypes("pool")).save();
+			
+		}else if(ConfigFactory.load().getString("ngl.env").equals("DEV")){
 			newExperimentTypeNode("ext-to-norm-fc-depot-illumina", getExperimentTypes("ext-to-norm-fc-depot-illumina").get(0), false, false, false, null, null, null, null).save();
 			newExperimentTypeNode("ext-to-qpcr-norm-fc-depot-illumina", getExperimentTypes("ext-to-qpcr-norm-fc-depot-illumina").get(0), false, false, false, null, null, null, null).save();
 			newExperimentTypeNode("amplification", getExperimentTypes("amplification").get(0), false, false, false, null, null, null, null).save();
@@ -343,13 +360,8 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 			
 			newExperimentTypeNode("qpcr-quantification", getExperimentTypes("qpcr-quantification").get(0), false, false, false, getExperimentTypeNodes("ext-to-qpcr-norm-fc-depot-illumina","sizing","amplification"), null, null, null).save();
 			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,getExperimentTypeNodes("ext-to-qpcr-norm-fc-depot-illumina","ext-to-norm-fc-depot-illumina","sizing","amplification"),null,null,getExperimentTypes("pool", "pool-tube")).save();
-					
-		}else{
-			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,null,null,null,getExperimentTypes("pool-tube")).save();
 			
 		}
-		
-		
 		
 		newExperimentTypeNode("ext-to-illumina-run", getExperimentTypes("ext-to-illumina-run").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),false, false,false,getExperimentTypeNodes("ext-to-illumina-run","solution-stock"),null,null,null).save();
@@ -361,10 +373,11 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		newExperimentTypeNode("ext-to-nanopore-process-library", getExperimentTypes("ext-to-nanopore-process-library").get(0), false, false, false, null, null, null, null).save();
 		newExperimentTypeNode("ext-to-nanopore-process-library-no-frg", getExperimentTypes("ext-to-nanopore-process-library-no-frg").get(0), false, false, false, null, null, null, null).save();
 		
-		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-			newExperimentTypeNode("nanopore-fragmentation",getExperimentTypes("nanopore-fragmentation").get(0),false, false,false,getExperimentTypeNodes("ext-to-nanopore-process-library"),null,getExperimentTypes("qpcr-quantification"),getExperimentTypes("aliquoting")).save();
-		}else{
+		if(ConfigFactory.load().getString("ngl.env").equals("PROD") || ConfigFactory.load().getString("ngl.env").equals("UAT") ){
 			newExperimentTypeNode("nanopore-fragmentation",getExperimentTypes("nanopore-fragmentation").get(0),false, false,false,getExperimentTypeNodes("ext-to-nanopore-process-library"),null,null,getExperimentTypes("aliquoting")).save();
+			
+		}else if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
+			newExperimentTypeNode("nanopore-fragmentation",getExperimentTypes("nanopore-fragmentation").get(0),false, false,false,getExperimentTypeNodes("ext-to-nanopore-process-library"),null,getExperimentTypes("qpcr-quantification"),getExperimentTypes("aliquoting")).save();
 		}
 		newExperimentTypeNode("nanopore-library",getExperimentTypes("nanopore-library").get(0),false, false,false,getExperimentTypeNodes("ext-to-nanopore-process-library-no-frg","nanopore-fragmentation"),null,null,getExperimentTypes("pool-tube")).save();
 		newExperimentTypeNode("nanopore-depot",getExperimentTypes("nanopore-depot").get(0),false, false,false,getExperimentTypeNodes("nanopore-library","ext-to-nanopore-run"),null,null,null).save();
