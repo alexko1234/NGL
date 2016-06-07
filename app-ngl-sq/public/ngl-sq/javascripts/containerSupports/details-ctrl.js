@@ -18,6 +18,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 	
 	/*
 	 * Get Bootstrap class for colors
+	 * + Display Method for all views
 	 */
 	$scope.getClass = function(x, y){
 		var wells = $scope.datatable.displayResult;
@@ -25,36 +26,19 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 	        for (var i = 0; i <wells.length; i++) {
 		         if (wells[i].data.support.column === (x+'') && wells[i].data.support.line===(y+'')) {
 		        	 var well = wells[i];
-		        	 $scope.displayCellAll(x, y);
-		        	 if(well.data.valuation.valid === "FALSE"){
+		        	 $scope.data = well.data;
+		        	 if($scope.data.valuation.valid === "FALSE"){
 		        		 return "alert alert-danger hidden-print";
-		        	 }else if(well.data.valuation.valid === "TRUE"){
+		        	 }else if($scope.data.valuation.valid === "TRUE"){
 		        		 return "alert alert-success hidden-print";
+		        	 }else{
+		        		 return "hidden-print";
 		        	 }
 		         }
 	        }
-		}
-        return "hidden-print";
-     }
-	
-	/*
-	 * Display Method for all views 
-	 */
-	$scope.displayCellAll =function(x, y){
-		var wells = $scope.datatable.displayResult;
-		if(angular.isDefined(wells)){	
-			if(angular.isDefined(wells)){
-		        for (var i = 0; i <wells.length; i++) {
-	        		if (wells[i].data.support.column === (x+'') && wells[i].data.support.line===(y+'')) {
-	        			var well = wells[i];
-			        	$scope.data = well.data;
-	        			return $scope.data;
-			        }
-		        }
-			}
-			$scope.data = undefined;
-	        return "------";
-		}
+		} 
+		$scope.data = undefined;
+		return "hidden-print";
      }
 	/*
 	 * Set Coordinates $scope.nbCol & $scope.nbLine
@@ -112,8 +96,8 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 		}
 		if(!angular.isUndefined($scope.target)){
 			$scope.dynamicMessage = Messages("containerSupports.button."+$scope.target); // Build msg for the button
-			$scope.setActiveTab('table'); 
-			// $scope.setActiveTab($scope.target);
+			//$scope.setActiveTab('table'); 
+			$scope.setActiveTab($scope.target);
 		}
 	};
 	
@@ -144,6 +128,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 				showButton:false,
 				delimiter:','
 			},
+			/*
 			lines:{
 				trClass: function(value){
 					if(value.valuation.valid === "TRUE"){
@@ -152,7 +137,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 						return "danger";
 					}
 				}
-			},
+			},*/
 			columns: [
 						{
 							"header":Messages("containers.table.support.line"),
