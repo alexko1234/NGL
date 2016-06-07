@@ -45,7 +45,7 @@ public class ProcessServiceCNS extends AbstractProcessService {
 	public void saveProcessTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ProcessType> l = new ArrayList<ProcessType>();
 		
-		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+		if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 			/*
 			l.add(DescriptionFactory.newProcessType("Librairie PE sans sizing", "Lib-PE-NoSizing", ProcessCategory.find.findByCode("library"), getPropertyDefinitionsLib300600(),
 					Arrays.asList(getPET("fragmentation",-1),getPET("librairie-indexing",0),getPET("amplification",1)), 

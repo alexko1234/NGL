@@ -33,7 +33,7 @@ dialect 'java'
 				ResourceProperties newRp = new ResourceProperties();
 				newRp.setProperty("fileName",rpRawDataFilter.getProperty("relatifName"));
 				newRp.setProperty("directory",rpRawDataFilter.getProperty("directory"));
-				newRp.setProperty("submissionTmpDirectory",groupJobResource.getProperty("submissionTmpDirectory"));
+				newRp.setProperty("submissionDirectory",groupJobResource.getProperty("submissionDirectory"));
 				newRp.setProperty("experimentCode",tabExperimentCodes[i]);
 				newRp.setProperty("idGroupJob",""+$groupJob.getId());
 				resourceProperties.add(newRp);
@@ -58,7 +58,7 @@ rule "Set parameter for command line Zip"
 			//Get input resource
 			JobResource jobResource = $job.getUniqueJobResource("inputRawDataZip");
 			$job.setParameterValue("fileToZip", jobResource.getProperty("directory")+File.separator+jobResource.getProperty("fileName"));
-			$job.setParameterValue("endArg", ">"+jobResource.getProperty("submissionTmpDirectory")+File.separator+jobResource.getProperty("fileName")+".gz");
+			$job.setParameterValue("endArg", ">"+jobResource.getProperty("submissionDirectory")+File.separator+jobResource.getProperty("fileName")+".gz");
 end
 
 rule "add resources in internalRefMd5 to fire md5"
@@ -80,7 +80,7 @@ rule "add resources in internalRefMd5 to fire md5"
 	  	resourceProperties.setProperty("fileName",jobResource.getProperty("fileName"));
 	  	resourceProperties.setProperty("directory",jobResource.getProperty("directory"));
 	  	resourceProperties.setProperty("experimentCode",jobResource.getProperty("experimentCode"));
-	  	resourceProperties.setProperty("submissionTmpDirectory",jobResource.getProperty("submissionTmpDirectory"));
+	  	resourceProperties.setProperty("submissionDirectory",jobResource.getProperty("submissionDirectory"));
 		$flag.setDone(true);
 		modify($flag){};
 		modify($resourceSet){};

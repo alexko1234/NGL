@@ -1060,7 +1060,11 @@ angular.module('atomicTransfereServices', [])
 					this.inputContainers = this.inputContainers.concat(this.atm[rowIndex].inputContainerUseds);
 					this.atm.splice(rowIndex,1);					
 					this.updateDatatable();
-					this.inputContainersByLine = [];					
+					this.inputContainersByLine = [];
+					
+					this.atm.forEach(function(atm, index){
+						atm.viewIndex = index+1;
+					});
 				},
 				
 				updateDatatable : function(){

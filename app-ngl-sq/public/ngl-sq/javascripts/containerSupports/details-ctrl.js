@@ -1,7 +1,7 @@
 "use strict";
 
-angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$routeParams', 'datatable', 'mainService', 'tabService',
-                                                  function($scope,$http,$q,$routeParams,datatable,mainService,tabService){
+angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$filter', '$routeParams', 'datatable', 'mainService', 'tabService',
+                                                  function($scope,$http,$q,$filter,$routeParams,datatable,mainService,tabService){
 
 	
 	/*
@@ -15,7 +15,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 	$scope.setActiveTab = function(value){
 		mainService.put('containerSupportActiveTab', value);
 	};
-
+	
 	/*
 	 * Get Bootstrap class for colors
 	 */
@@ -36,6 +36,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 		}
         return "hidden-print";
      }
+	
 	/*
 	 * Display Method for all views 
 	 */
@@ -51,6 +52,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			        }
 		        }
 			}
+			$scope.data = undefined;
 	        return "------";
 		}
      }
@@ -310,54 +312,6 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 							"listStyle":"bt-select",
 							"possibleValues":"searchService.lists.getValuations()", 
 							"filter":"codes:'valuation'"
-						},
-						{
-							"header":Messages("containers.table.creationDate"),
-							"property":"traceInformation.creationDate",
-							"order":true,
-							"hide":true,
-							"position":12,			
-							"type":"date",
-							"groupMethod":"unique"
-						},
-						{
-							"header":Messages("containers.table.createUser"),
-							"property":"traceInformation.createUser",
-							"order":true,
-							"hide":true,
-							"position":12.1,
-							"type":"text",
-							"groupMethod":"unique"
-						},
-						{
-							"header":Messages("containers.table.storageCode"),
-							"property":"support.storageCode",
-							"order":true,
-							"hide":true,
-							"type":"text",
-							"edit":false,
-							"position":13,
-							"groupMethod":"unique"
-						},
-						{
-							"header":Messages("containers.table.processCodes"),
-							"property":"processCodes",
-							"order":false,
-							"hide":true,
-							"type":"text",
-							"position":14,
-							"render":"<div list-resize='cellValue' list-resize-min-size='3' vertical>",
-							"groupMethod":"collect"
-						},
-						
-						{
-							"header":Messages("containerSupports.table.yx"),
-							"property":"support.line+support.column*1",
-							"type":"text",
-							"order":true,
-							"hide":true,
-							"position":15,
-							"edit":false
 						}
 
 			          ]
@@ -379,13 +333,9 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			
 			$scope.support = results[0].data;
 			$scope.containers = results[1].data;
-			$scope.datatable.setData($scope.containers, $scope.containers.length);
+			$scope.datatable.setData($filter('orderBy')($scope.containers, ["support.column*1","support.line"]), $scope.containers.length);
 			
 			filterCategorySupport();
-			
-			//console.log($scope.support);
-			//console.log($scope.containers);
-			
 		});
 		
 		if(tabService.getTabs().length == 0){

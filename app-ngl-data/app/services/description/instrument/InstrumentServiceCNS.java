@@ -409,30 +409,31 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	
 	private static List<PropertyDefinition> getTecanProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null, newValues("Pooling_plaque_col1a6_BC",
-				"Pooling_plaque_WL_9plaques_BC",
-				"Pooling_tubes_5_pour_1pool_BC", 
-				"Pooling_tubes_24_pour_1pool_BC",
+		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null, newValues( 
+				"Normalisation_48tubes",
+				"Normalisation_Plaque_plaque",
 				"Pooling_plaque_col1a6",
+				"Pooling_plaque_col1a6_BC",
 				"Pooling_plaque_col7a12",
 				"Pooling_plaque_entiere_1tube",
 				"Pooling_plaque_entiere_2tubes",
 				"Pooling_plaque_WL",
 				"Pooling_plaque_WL_9plaques",
-				"Pooling_tubes_5_pour_1pool",
+				"Pooling_plaque_WL_9plaques_BC",
 				"Pooling_tubes_10_pour_1pool", 
 				"Pooling_tubes_12_pour_1pool", 
 				"Pooling_tubes_16max_pour_xpoolde2",
 				"Pooling_tubes_16max_pour_xpoolde5",
 				"Pooling_tubes_24_pour_1pool",
+				"Pooling_tubes_24_pour_1pool_BC",
 				"Pooling_tubes_30_pour_3poolde10",
 				"Pooling_tubes_32_pour_1pool",
 				"Pooling_tubes_48_pour_1pool",
 				"Pooling_tubes_48tubes_plaque",
+				"Pooling_tubes_5_pour_1pool",
+				"Pooling_tubes_5_pour_1pool_BC", 
 				"Pooling_tubes_90max_pour_xpoolde10",
-				"Pooling_tubes_96_pour_1pool", 
-				"Normalisation_48tubes",
-				"Normalisation_Plaque_plaque"),
+				"Pooling_tubes_96_pour_1pool"),
 				"single", 10, true, null,null));
 		
 		

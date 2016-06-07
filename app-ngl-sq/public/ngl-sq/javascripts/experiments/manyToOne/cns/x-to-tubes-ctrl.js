@@ -49,6 +49,7 @@ angular.module('home').controller('PlatesToTubesCtrl',['$scope', '$http','$parse
 			computeInputVolume(containerUsed, atm);
 		}
 		
+		computeBufferVolume(atm);
 	}
 	
 	var computeInputVolume = function(inputContainerUsed, atm){
@@ -79,7 +80,38 @@ angular.module('home').controller('PlatesToTubesCtrl',['$scope', '$http','$parse
 			inputVolume.value = undefined;
 			getter.assign(inputContainerUsed, inputVolume);
 		}
+		return inputVolume.value;
 		
+	}
+	
+	var computeBufferVolume = function(atm){
+		
+		var inputVolumeTotal = 0;
+		var getterInputVolume = $parse("experimentProperties.inputVolume");
+		
+		atm.inputContainerUseds.forEach(function(icu){
+			var inputVolume = getterInputVolume(icu);
+			if(null === inputVolume  || undefined === inputVolume || undefined === inputVolume.value ||  null === inputVolume.value){
+				inputVolumeTotal = undefined;
+			}else if(inputVolumeTotal !== undefined){
+				inputVolumeTotal += inputVolume.value;
+			}						
+		})
+		
+		var outputVolume  = $parse("outputContainerUseds[0].volume")(atm);
+		
+		if(outputVolume && outputVolume.value && inputVolumeTotal){
+			var bufferVolume = {value : undefined, unit : 'µl'};
+			var result = outputVolume.value - inputVolumeTotal;
+			
+			if(angular.isNumber(result) && !isNaN(result)){
+				bufferVolume.value = Math.round(result*10)/10;				
+			}else{
+				bufferVolume.value = undefined;
+			}	
+			
+			$parse("outputContainerUseds[0].experimentProperties.bufferVolume").assign(atm, bufferVolume);
+		}
 	}
 	
 	var generateSampleSheet = function(){
