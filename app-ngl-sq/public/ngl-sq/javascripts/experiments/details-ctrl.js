@@ -650,6 +650,8 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		return listKitCatalogsActive;
 	}
 	
+	
+	
 	$scope.scan = function(e, property, propertyName){
 		// console.log(property);
 		// console.log(e);
@@ -673,7 +675,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		
 		if(null !== kitCatalogCode && undefined !== kitCatalogCode){
 			console.log("kitCatalogCode: "+kitCatalogCode);
-			return lists.getBoxCatalogs({"kitCatalogCode":kitCatalogCode, "isActive":true},"boxCatalogs-"+kitCatalogCode);
+			return lists.getBoxCatalogs({"kitCatalogCode":kitCatalogCode},"boxCatalogs-"+kitCatalogCode);
 		} else {
 			console.log("pas de kitCatalogCode");
 		}				
