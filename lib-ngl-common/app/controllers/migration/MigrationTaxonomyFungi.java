@@ -2,6 +2,7 @@ package controllers.migration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.mongojack.DBCursor;
 import org.mongojack.DBQuery;
@@ -11,6 +12,7 @@ import com.mongodb.BasicDBObject;
 import controllers.CommonController;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
+import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.run.instance.ReadSet;
 import models.utils.InstanceConstants;
 import play.Logger;
@@ -36,6 +38,15 @@ public class MigrationTaxonomyFungi extends CommonController{
 		DBCursor<ReadSet> cursor = rsl.cursor;
 		while(cursor.hasNext()){
 			ReadSet rs = cursor.next();
+			String krona = new String(((PropertyFileValue)rs.treatments.get("taxonomy").results.get("read1").get("krona")).value);
+			Pattern p1 = Pattern.compile(".*<node name=\"all\">\\s+<magnitude><val>(\\d+)</val></magnitude>.*", Pattern.DOTALL);
+			Pattern p2 = Pattern.compile(".*<node name=\"all\"\\s+magnitude=\"(\\d+)\">.*", Pattern.DOTALL);
+			Pattern p3 = Pattern.compile(".*<node name=\"Root\">\\s+(<members><val>\\S+</val>\\s+</members>\\s+)?<count><val>(\\d+)</val></count>.*", Pattern.DOTALL);
+			Pattern p4 = Pattern.compile(".*<node name=\"Root\">\\s+(<members>\\s+<vals>(<val>\\S+</val>)*</vals>\\s+</members>\\s+)?<count><val>(\\d+)</val></count>.*", Pattern.DOTALL);
+			if(!p1.matcher(krona).matches() && !p2.matcher(krona).matches() && !p3.matcher(krona).matches() && !p4.matcher(krona).matches()){
+				Logger.debug("no version krona"+rs.code);
+			}
+			
 			List<Object> facts = new ArrayList<Object>();
 			facts.add(rs);				
 			rulesServices.callRules(Play.application().configuration().getString("rules.key"), "F_QC_1", facts);
