@@ -103,7 +103,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 						createInstrument("cBot Platine B", "cBot-Platine-B", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
 						createInstrument("cBot Mimosa", "cBot-Mimosa", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
 						createInstrument("cBot Melisse", "cBot-Melisse", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))), 
-				getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-2","flowcell-1"}), 
+				getContainerSupportCategories(new String[]{"96-well-plate", "tube"}), getContainerSupportCategories(new String[]{"flowcell-2","flowcell-1"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		
@@ -211,7 +211,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 						createInstrument("cBot2", "cBot2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
 						createInstrument("cBot3", "cBot3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
 						createInstrument("cBot4", "cBot4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))), 
-				getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"flowcell-8","flowcell-2"}), 
+				getContainerSupportCategories(new String[]{"96-well-plate", "tube"}), getContainerSupportCategories(new String[]{"flowcell-8","flowcell-2"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(newInstrumentUsedType("Covaris E210", "covaris-e210", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 

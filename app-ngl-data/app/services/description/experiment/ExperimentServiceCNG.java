@@ -83,7 +83,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		
 		/** ordered by display order **/
 		
-		l.add(newExperimentType("Aliquot","aliquoting",null, 1,
+		l.add(newExperimentType("Aliquot","aliquoting",null, 10100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()),
 				getPropertyAliquoting(), 
 				getInstrumentUsedTypes("hand"),
@@ -153,7 +153,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		l.add(newExperimentType("Quantification qPCR","qpcr-quantification", null,850,
+		l.add(newExperimentType("Quantification qPCR","qpcr-quantification", null,20200,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
 				getPropertyDefinitionsQPCR(), 
 				getInstrumentUsedTypes("qpcr-lightcycler-480II"),
@@ -161,14 +161,14 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG))); 
 		
 		// FDS 07/04/2016 ajout --JIRA NGL-894: processus et experiments pour X5
-		l.add(newExperimentType("profil LABCHIP_GX","labchip-migration-profile", null, 900,
+		l.add(newExperimentType("profil LABCHIP_GX","labchip-migration-profile", null, 20100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
 				getPropertyDefinitionsChipMigration(), 
 				getInstrumentUsedTypes("labChipGX"),
 				"OneToVoid", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		l.add(newExperimentType("QC Miseq","miseq-qc", null, 900,
+		l.add(newExperimentType("QC Miseq","miseq-qc", null, 20300,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
 				getPropertyDefinitionsQCMiseq(), 
 				getInstrumentUsedTypes("MISEQ-QC-MODE"),
