@@ -216,7 +216,7 @@ public class ContainerHelper {
 					oldSupport.projectCodes.addAll(newSupport.projectCodes); 
 					oldSupport.sampleCodes.addAll(newSupport.sampleCodes);
 					oldSupport.nbContainers++;
-					oldSupport.nbContents = oldSupport.nbContents + newSupport.nbContents;
+					oldSupport.nbContents = oldSupport.nbContents + container.contents.size();
 					if(null != newSupport.fromTransformationTypeCodes && null != oldSupport.fromTransformationTypeCodes){
 						oldSupport.fromTransformationTypeCodes.addAll(newSupport.fromTransformationTypeCodes);
 					}
