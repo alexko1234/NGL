@@ -222,14 +222,14 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					getInstrumentUsedTypes("rocheLightCycler-qPCR","stratagene-qPCR"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 	
 		*/	
-		if(ConfigFactory.load().getString("ngl.env").equals("PROD")){
+		if(ConfigFactory.load().getString("ngl.env").equals("PROD-BEFORE")){
 			
 			l.add(newExperimentType("Pool Tube","pool-tube",null,10200,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
 					getInstrumentUsedTypes("hand"),"ManyToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
-		}else if(ConfigFactory.load().getString("ngl.env").equals("UAT") ){
+		}else if(ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			l.add(newExperimentType("Pool Tube","pool-tube",null,10200,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
 					getInstrumentUsedTypes("hand","tecan-evo-100"),"ManyToOne", false,
@@ -346,10 +346,10 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		newExperimentTypeNode("opgen-depot",getExperimentTypes("opgen-depot").get(0),false,false, false,getExperimentTypeNodes("ext-to-opgen-run"),null,null,null).save();
 		
 		
-		if(ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+		if(ConfigFactory.load().getString("ngl.env").equals("PROD-BEFORE") ){
 			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,null,null,null,getExperimentTypes("pool-tube")).save();
 			
-		}else if(ConfigFactory.load().getString("ngl.env").equals("UAT")){
+		}else if(ConfigFactory.load().getString("ngl.env").equals("PROD")){
 			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,null,null,null,getExperimentTypes("pool")).save();
 			
 		}else if(ConfigFactory.load().getString("ngl.env").equals("DEV")){
