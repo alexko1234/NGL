@@ -69,7 +69,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		l.add(newInstrumentUsedType("Main", "hand", InstrumentCategory.find.findByCode("hand"), null, 
 				getInstruments(
 						createInstrument("hand", "Main", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNG)) ),
-				getContainerSupportCategories(new String[]{"tube","96-well-plate"}),getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
+				getContainerSupportCategories(new String[]{"tube","96-well-plate"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 
 		

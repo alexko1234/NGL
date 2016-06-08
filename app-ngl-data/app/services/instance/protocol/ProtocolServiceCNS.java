@@ -87,10 +87,10 @@ public class ProtocolServiceCNS {
 		//lp.add(newProtocol("amplif_ptr_sox144_1","Amplif_ptr_sox144_1","path3","1","production", InstanceFactory.setExperimentTypeCodes("amplification", "solution-stock")));
 		//lp.add(newProtocol("proto_qc_v1","Proto_QC_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("chip-migration-post-pcr", "chip-migration-pre-pcr", "fluo-quantification", "qpcr-quantification")));
 		
-		if(ConfigFactory.load().getString("ngl.env").equals("PROD") ){
+		if(ConfigFactory.load().getString("ngl.env").equals("PROD-BEFORE") ){
 			lp.add(newProtocol("ptr_pool_tube_v1","PTR_POOL_TUBE_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("pool-tube")));
 			
-		}else if(ConfigFactory.load().getString("ngl.env").equals("UAT") ){
+		}else if(ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			lp.add(newProtocol("ptr_pool_tube_v1","PTR_POOL_TUBE_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("pool-tube","pool")));			
 		}else if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){			
 			lp.add(newProtocol("proto_qc_v1","Proto_QC_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("qpcr-quantification")));

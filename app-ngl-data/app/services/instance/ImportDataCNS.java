@@ -44,13 +44,14 @@ public class ImportDataCNS{
 		
 		//Update NCBI scientificName and lineage for Sample
 		new UpdateSampleNCBITaxonCNS(Duration.create(5,TimeUnit.MINUTES),Duration.create(1,TimeUnit.HOURS));
-		
+	
+		/*	
 		new BanqueAmpliImportCNS(Duration.create(5,TimeUnit.SECONDS),Duration.create(10,TimeUnit.MINUTES));
 		new SizingImportCNS(Duration.create(10,TimeUnit.SECONDS),Duration.create(10,TimeUnit.MINUTES));
 		
 		new UpdateSizingCNS(Duration.create(1,TimeUnit.MINUTES),Duration.create(5,TimeUnit.MINUTES));
 		new UpdateAmpliCNS(Duration.create(1,TimeUnit.MINUTES),Duration.create(5,TimeUnit.MINUTES));
-
+		*/
 		
 	}
 

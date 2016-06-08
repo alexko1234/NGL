@@ -13,11 +13,11 @@ object ApplicationBuild extends Build {
    val appName = "ngl"
    val appVersion = "1.0-SNAPSHOT"
      
-   val sqVersion = "1.23.0-SNAPSHOT"  
-   val biVersion = "1.31.0-SNAPSHOT"
+   val sqVersion = "1.24.0-SNAPSHOT"  
+   val biVersion = "1.32.0-SNAPSHOT"
 
    val projectsVersion = "1.0-SNAPSHOT"  
-   val reagentsVersion = "1.1-SNAPSHOT" 
+   val reagentsVersion = "1.2-SNAPSHOT" 
    val subVersion = "1.0-SNAPSHOT"  
      
    val libDatatableVersion = "1.2-SNAPSHOT"
@@ -291,7 +291,7 @@ object ApplicationBuild extends Build {
       publishArtifact in makePom := false,
       publishTo := Some(nexusigpublish)
     ).aggregate(
-     	nglcommon,nglframeworkweb,ngldatatable,nglsq,nglbi,nglassets,nglplates,ngldata,nglsub
+     	nglcommon,nglframeworkweb,ngldatatable,nglsq,nglbi,nglassets,nglplates,ngldata,nglsub,nglreagents,nglprojects
     )
 
 }

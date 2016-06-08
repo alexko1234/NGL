@@ -17,10 +17,10 @@ public class SampleSheetPoolLine implements Comparable<SampleSheetPoolLine>{
 	@Override
 	public int compareTo(SampleSheetPoolLine o) {
 		
-		if(this.inputSupportContainerCode.compareTo(o.inputSupportContainerCode) == 0){
+		if(this.inputSupportCode.compareTo(o.inputSupportCode) == 0){
 			return this.inputSupportContainerPosition.compareTo(o.inputSupportContainerPosition);
 		}else{
-			return this.inputSupportContainerCode.compareTo(o.inputSupportContainerCode);
+			return this.inputSupportCode.compareTo(o.inputSupportCode);
 		}		
 	}
 	
