@@ -50,7 +50,7 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			l.add(DescriptionFactory.newTreatmentType("SAV","sav", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.sequencing.name()), "sav", 
 					getSAVPropertyDefinitionsV2(), 
-					Arrays.asList(getTreatmentTypeContext("read1", Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE)), 
+					Arrays.asList(getTreatmentTypeContext("read1", Boolean.FALSE), getTreatmentTypeContext("read2", Boolean.FALSE), getTreatmentTypeContext("default", Boolean.TRUE)), 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG), "10"));
 			
 		}else{
@@ -447,12 +447,12 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("+/-","intensityCycle1Std",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1,Level.CODE.Read2), Integer.class, true, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Intensity cycle 20","intensityCycle20Perc",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Double.class, false, "single"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("+/-","intensityCycle20PercStd",LevelService.getLevels(Level.CODE.Lane, Level.CODE.Read1, Level.CODE.Read2), Double.class, false, "single"));
-		
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Rendement total (Gb)","yieldTotal",LevelService.getLevels(Level.CODE.Run), Double.class, false, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Rendement total non indexé (Gb)","nonIndexedYieldTotal",LevelService.getLevels(Level.CODE.Run), Double.class, false, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Q30 total","Q30PercTotal",LevelService.getLevels(Level.CODE.Run), Double.class, false, "single"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Q30 total non indexé","nonIndexedQ30PercTotal",LevelService.getLevels(Level.CODE.Run), Double.class, false, "single"));
-		
+
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Rendement total (Gb)","yieldTotal",LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Rendement total non indexé (Gb)","nonIndexedYieldTotal",LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Q30 total","Q30PercTotal",LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, false, "single"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("% Q30 total non indexé","nonIndexedQ30PercTotal",LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Double.class, false, "single"));
+
 		return propertyDefinitions;
 	}
 	
