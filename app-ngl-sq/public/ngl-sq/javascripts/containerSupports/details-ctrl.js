@@ -15,31 +15,29 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 	$scope.setActiveTab = function(value){
 		mainService.put('containerSupportActiveTab', value);
 	};
-	
+
 	/*
-	 * Get Bootstrap class for colors
-	 * + Display Method for all views
+	 * Get Bootstrap + Display Method for all views
 	 */
 	$scope.getClass = function(x, y){
-		var wells = $scope.datatable.displayResult;
-		if(angular.isDefined(wells)){
-	        for (var i = 0; i <wells.length; i++) {
-		         if (wells[i].data.support.column === (x+'') && wells[i].data.support.line===(y+'')) {
-		        	 var well = wells[i];
-		        	 $scope.data = well.data;
+		if(angular.isDefined($scope.containers)){
+			for(var i=0; i<$scope.containers.length; i++){
+				if($scope.containers[i].support.column === (x+'') && $scope.containers[i].support.line===(y+'')){
+		        	 $scope.data = $scope.containers[i];
 		        	 if($scope.data.valuation.valid === "FALSE"){
 		        		 return "alert alert-danger hidden-print";
 		        	 }else if($scope.data.valuation.valid === "TRUE"){
 		        		 return "alert alert-success hidden-print";
 		        	 }else{
-		        		 return "hidden-print";
-		        	 }
-		         }
-	        }
-		} 
+		        		 return "alert alert-default hidden-print";
+		        	 }					
+				}
+			}
+		}
 		$scope.data = undefined;
 		return "hidden-print";
      }
+
 	/*
 	 * Set Coordinates $scope.nbCol & $scope.nbLine
 	 */
@@ -59,6 +57,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 			}
 		}
 	};
+
 	/*
 	 * Method filterCategorySupport() config the display... 
 	 *  //	=> TODO
@@ -96,8 +95,8 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 		}
 		if(!angular.isUndefined($scope.target)){
 			$scope.dynamicMessage = Messages("containerSupports.button."+$scope.target); // Build msg for the button
-			//$scope.setActiveTab('table'); 
-			$scope.setActiveTab($scope.target);
+			$scope.setActiveTab('table'); 
+			//$scope.setActiveTab($scope.target);
 		}
 	};
 	
@@ -308,17 +307,17 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 	var init = function(){
 		
 		$scope.datatable = datatable(datatableConfig);
-		
+
 		var promise = [];
 		promise.push($http.get(jsRoutes.controllers.containers.api.ContainerSupports.get($routeParams.code).url));
 		promise.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params: {supportCodeRegex:$routeParams.code}}));
-		
 		
 		$q.all(promise).then(function(results){
 			
 			$scope.support = results[0].data;
 			$scope.containers = results[1].data;
 			$scope.datatable.setData($filter('orderBy')($scope.containers, ["support.column*1","support.line"]), $scope.containers.length);
+			
 			
 			filterCategorySupport();
 		});
@@ -328,8 +327,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 			tabService.addTabs({label:$routeParams.code,href:jsRoutes.controllers.containers.tpl.ContainerSupports.home($routeParams.code).url,remove:true});
 			tabService.activeTab($scope.getTabs(1));
 		}
-
-
+		
 	};
 
 	init();

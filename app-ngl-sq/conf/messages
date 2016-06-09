@@ -145,6 +145,7 @@ containers.table.comments = Commentaires
 containers.table.contents = Contents
 containers.table.percents = Pourcentage
 containers.table.referenceCollab = Réf. collab
+containers.supportView.results = Résultat(s)
 
 containers.workflow.state = Etat
 containers.workflow.date = Date
