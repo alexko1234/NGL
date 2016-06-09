@@ -50,7 +50,7 @@ public class TreatmentServiceCNG extends AbstractTreatmentService {
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 			l.add(DescriptionFactory.newTreatmentType("SAV","sav", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.sequencing.name()), "sav", 
 					getSAVPropertyDefinitionsV2(), 
-					Arrays.asList(getTreatmentTypeContext("read1", Boolean.FALSE), getTreatmentTypeContext("read2", Boolean.FALSE), getTreatmentTypeContext("default", Boolean.TRUE)), 
+					Arrays.asList(getTreatmentTypeContext("read1", Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE), getTreatmentTypeContext("default", Boolean.FALSE)), 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNG), "10"));
 			
 		}else{
