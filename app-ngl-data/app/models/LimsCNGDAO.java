@@ -1311,7 +1311,7 @@ public class LimsCNGDAO {
 	
 	/*************************************************************************************************************************************************
 	 * FDS 18/01/2016 UPDATE sample plates import/update dates 
-	 *    Pour les plaques de samples, il est impossible de passer par la mise a jour de la table t_sampe
+	 *    Pour les plaques de samples, il est impossible de passer par la mise a jour de la table t_sample
 	 *    qui est deja mise a jour lors des sample au sens NGL..
 	 *    on ne peut donc que passer par la mise a jour de la table t_group...
 	 * @param containers
@@ -1345,6 +1345,58 @@ public class LimsCNGDAO {
 		catch(Exception e) {
 			Logger.debug(e.getMessage());
 		}
+		
+		contextError.removeKeyFromRootKeyName(key);
+	}
+	
+	/*************************************************************************************************************************************************
+	 * FDS 08/06/2016 UPDATE library plates import/update dates 
+	 * @param containers
+	 * @param contextError
+	 * @param mode
+	 * @throws DAOException
+	 */
+	public void updateLimsTubePlates(List<Container> containers, ContextValidation contextError, String mode) throws DAOException {
+		String key, column;
+		if (mode.equals("creation")) {
+			key = "update_ImportDate";
+			column = "nglimport_date";
+		}
+		else {
+			key = "update_UpdateDate";
+			column = "ngl_update_date";			
+		}
+		
+		contextError.addKeyToRootKeyName(key);
+		
+		//-1-mise a jour de la plaque ( table t_group avec type=4)
+		String sql = "UPDATE t_group SET " + column + " = ? WHERE name = ? and type=4";
+		List<Object[]> parameters = new ArrayList<Object[]>();
+		
+		// ceci va updater une plaque autant de fois qu'elle a de puits ==> A ameliorer !!!!!!
+		for (Container container : containers) {
+	        parameters.add(new Object[] {new Date(), container.support.code}); 
+		}
+		try {
+			this.jdbcTemplate.batchUpdate(sql, parameters);
+		}
+		catch(Exception e) {
+			Logger.debug(e.getMessage());
+		}
+		
+		//-2- mise a jour du puits ( table t_tube )
+		sql = "UPDATE t_tube SET " + column + " = ? WHERE id = ?";
+		parameters = new ArrayList<Object[]>();
+		for (Container container : containers) {
+			      parameters.add(new Object[] {new Date(), container.properties.get("limsCode").value}); 
+		}
+		try {
+			this.jdbcTemplate.batchUpdate(sql, parameters);
+		}
+		catch(Exception e) {
+			Logger.debug(e.getMessage());
+		}	
+			
 		contextError.removeKeyFromRootKeyName(key);
 	}
 	

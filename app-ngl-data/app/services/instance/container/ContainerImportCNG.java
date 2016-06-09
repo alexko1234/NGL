@@ -63,15 +63,14 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 	    loadContainers("tube","denat-dil-lib","iw-p"); //iw-p=in waiting processus
 	    updateContainers("tube","denat-dil-lib"); // pas de specificite de status pour la mise a jour
 		
-		// -4- librairies en plaques-96  10nM et XnM 	   TODO plus tard ????  
-	    
-		/*      
-		loadContainers("library-well","lib-normalization","iw-p");
+		// -4- librairies en plaques-96  10nM et XnM 	  
+		//-4.1    lib-normalization= solexa[ lib10nM + libXnM >= 1nM ]	 ?????????????????????????? EN COURS
+		loadContainers("library-well","lib-normalization","is"); // a quel statut les importer ?? iw-p ou is ???
 		updateContainers("library-well","lib-normalization");
 		
-		loadContainers("library-well","denat-dil-lib","iw-p");
+		//-4.2 - denat-dil-lib = solexa[ libXnM < 1nM  ]    ?????????????????????????? EN COURS
+		loadContainers("library-well","denat-dil-lib","is"); // a quel statut les importer ?? iw-p ou is ???
 		updateContainers("library-well","denat-dil-lib");
-		*/
 		
 		// -5- lanes/flowcells
 	    /* 14/01/2016 desactivé puisque la creation des flowcells est faite dans NGL-SQ
@@ -163,12 +162,10 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		else if (containerCategoryCode.equals("sample-well")) {
 			limsServices.updateLimsSamplePlates(ctrs, contextError, "creation");
 		}
-		/* PAS ENCORE EN PROD
-		else if (containerCategoryCode.equals("library-well")) {.
+		else if (containerCategoryCode.equals("library-well")) {
 			limsServices.updateLimsTubePlates(ctrs, contextError, "creation");
 		}
-		*/
-		 
+		
 		Logger.debug("End loading containers of type " + containerCategoryCode+ " from experiment type: "+ experimentTypeCode);		
 	}
 	
@@ -215,11 +212,9 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		else if (containerCategoryCode.equals("sample-well")) {
 			limsServices.updateLimsSamplePlates(ctrs, contextError, "update");
 		}
-		/* PAS ENCORE EN PROD
 		else if (containerCategoryCode.equals("library-well")) {
 			limsServices.updateLimsTubePlates(ctrs, contextError, "update");
 		}
-		*/
 		
 		Logger.debug("End updating containers of type: " + containerCategoryCode+ " from experiment type: "+ experimentTypeCode);	
 	}
