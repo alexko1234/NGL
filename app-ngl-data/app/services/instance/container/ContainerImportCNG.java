@@ -51,6 +51,7 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 	    loadContainers("sample-well",null,"iw-p"); //iw-p=in waiting processus
 	    updateContainers("sample-well",null);
 		
+	    
 		// -3- librairies en tube
 		
 		//-3.1- lib-normalization= solexa[ lib10nM + libXnM >= 1nM ]	
@@ -63,6 +64,7 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 	    loadContainers("tube","denat-dil-lib","iw-p"); //iw-p=in waiting processus
 	    updateContainers("tube","denat-dil-lib"); // pas de specificite de status pour la mise a jour
 		
+	    
 		// -4- librairies en plaques-96  10nM et XnM 	  
 		//-4.1    lib-normalization= solexa[ lib10nM + libXnM >= 1nM ]	 ?????????????????????????? EN COURS
 		loadContainers("library-well","lib-normalization","is"); // a quel statut les importer ?? iw-p ou is ???

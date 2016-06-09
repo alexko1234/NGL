@@ -62,9 +62,9 @@ public class ContainerHelper {
 		ImportType importType =BusinessValidationHelper.validateExistDescriptionCode(null, sample.importTypeCode, "importTypeCode", ImportType.find,true);
 
 		if(importType !=null){
-
 			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(importType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,finalContent.properties);
 		}
+		
 		if(sampleType !=null){
 			InstanceHelpers.copyPropertyValueFromPropertiesDefinition(sampleType.getPropertyDefinitionByLevel(Level.CODE.Content), sample.properties,finalContent.properties);
 		}
@@ -168,6 +168,7 @@ public class ContainerHelper {
 		return new SimpleDateFormat("yyyyMMdd_HHmmss");
 	}
 
+	// generation d'un code de container pour les cas ou aucun n'est fourni: <CODE>-<date><RANDOMNUM>
 	public static String generateContainerCode(String categoryCode){
 		Random randomGenerator = new Random();
 		return (categoryCode+"-"+getSimpleDateFormat().format(new Date())+randomGenerator.nextInt(100)).toUpperCase();
@@ -184,7 +185,6 @@ public class ContainerHelper {
 			if (container.support != null) {
 				ContainerSupport newSupport = null;
 				
-				// 21/01/2016 TEST  ne creer qu'une seule fois le containerSupport...PAS REUSSI retour au code ...
 				Logger.debug(" createSupportFromContainers; creating support "+ container.support.code );
 				
 				// mapSupportsCodeSeq n'existe que pour les flowcell...
@@ -196,11 +196,7 @@ public class ContainerHelper {
 				newSupport.projectCodes = new  HashSet<String>(container.projectCodes);
 				newSupport.sampleCodes = new  HashSet<String>(container.sampleCodes);
 				newSupport.state=container.state;
-				
-				
-				
-				//FDS 14/10/2015 ajout storage code
-				newSupport.storageCode=container.support.storageCode;
+				newSupport.storageCode=container.support.storageCode; //FDS ajout 14/10/2015
 				
 				if(null != container.fromTransformationTypeCodes){
 					newSupport.fromTransformationTypeCodes = new  HashSet<String>(container.fromTransformationTypeCodes);
@@ -220,13 +216,11 @@ public class ContainerHelper {
 					if(null != newSupport.fromTransformationTypeCodes && null != oldSupport.fromTransformationTypeCodes){
 						oldSupport.fromTransformationTypeCodes.addAll(newSupport.fromTransformationTypeCodes);
 					}
-					
 				}
 			}
 		}
 
 		return InstanceHelpers.save(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, new ArrayList<ContainerSupport>(mapSupports.values()), contextValidation, true);
-
 	}
 
 	public static void updateSupportFromUpdatedContainers(List<Container> updatedContainers, Map<String, PropertyValue<String>> mapSupportsCodeSeq, ContextValidation contextValidation){
@@ -238,18 +232,17 @@ public class ContainerHelper {
 				
 				ContainerSupport newSupport = null;
 				
-				//FDS note 22/06/2015: mapSupportsCodeSeq n'est defini que pour les container de type lane!!
+				//FDS note 22/06/2015: mapSupportsCodeSeq n'est defini que pour les containers de type lane!!
 				//21/01/2016  NW utilisation d'un operateur ternaire
 				newSupport = ContainerSupportHelper.createContainerSupport(container.support.code,
 																			(mapSupportsCodeSeq != null ? mapSupportsCodeSeq.get(container.support.code) : null),
 																			container.support.categoryCode, "ngl");
 					
 				newSupport.projectCodes = new  HashSet<String>(container.projectCodes);
-				newSupport.sampleCodes = new  HashSet<String>(container.sampleCodes);	
-				// FDS TEST ajout 22/01/2016
-				newSupport.fromTransformationTypeCodes = new  HashSet<String>(container.fromTransformationTypeCodes);		
+				newSupport.sampleCodes = new  HashSet<String>(container.sampleCodes);		
+				newSupport.fromTransformationTypeCodes = new  HashSet<String>(container.fromTransformationTypeCodes); // FDS ajout 22/01/2016	
 				
-				//FDS 14/10/2015 ajout storage code 
+				//FDS ajout 14/10/2015
 				if ( container.support.storageCode != null ){
 					newSupport.storageCode=container.support.storageCode;
 				}
@@ -265,7 +258,7 @@ public class ContainerHelper {
 					oldSupport.sampleCodes.addAll(newSupport.sampleCodes); 
 					//Logger.debug("[updateSupportFromUpdatedContainers] adding sampleCodes "+ newSupport.sampleCodes + " to containerSupport " + oldSupport.code);
 					
-					//FDS TEST ajout 22/01/2016 
+					//FDS ajout 22/01/2016 
 					// et si null ??
 					oldSupport.fromTransformationTypeCodes.addAll(newSupport.fromTransformationTypeCodes); 
 					Logger.debug("[updateSupportFromUpdatedContainers] adding fromTransformationTypeCodes "+ newSupport.fromTransformationTypeCodes + " to containerSupport " + oldSupport.code);
@@ -273,7 +266,7 @@ public class ContainerHelper {
 			}
 		}
 
-        // boucler sur les containers suports modifiés plus haut..
+        // boucler sur les containers supports modifiés plus haut..
 		for (Map.Entry<String,ContainerSupport> support : mapSupports.entrySet()) {
 			
 			//Logger.debug("[updateSupportFromUpdatedContainers] get from mongo ContainerSupport: "+ support.getKey() );
@@ -285,9 +278,8 @@ public class ContainerHelper {
 			updatedCs.traceInformation = InstanceHelpers.getUpdateTraceInformation(dbCs.traceInformation, "ngl-data");
 
 			// FDS 22/01/2016 Pourquoi ce test ??? pourquoi tout containerSupport modifié n'est pas automatiquement supprimé ???
-			//     NOTE: projectCodes et sampleCodes sont des listes ils faut faire les tests d'inclusions dans les 2 sens !
+			//     NOTE: projectCodes et sampleCodes sont des listes: il faut faire les tests d'inclusions dans les 2 sens !
 			// GA 02/11/2015 prise en compte de la modification du storageCode ( !!peut etre null )
-			// FDS ajout test 
 			if (   !dbCs.projectCodes.containsAll(updatedCs.projectCodes)
 				|| !updatedCs.projectCodes.containsAll(dbCs.projectCodes) 
 				|| !dbCs.sampleCodes.containsAll(updatedCs.sampleCodes) 
