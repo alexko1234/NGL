@@ -63,7 +63,7 @@ public abstract class UpdateContainerImportCNS extends AbstractImportDataCNS {
 			}
 			
 			if(container.valuation==null || container.valuation.valid!=containerUpdate.valuation.valid){
-				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,Container.class, DBQuery.is("code", container.code),DBUpdate.set("valuation.valid", containerUpdate.valuation.valid.toString()));
+				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,Container.class, DBQuery.is("code", container.code),DBUpdate.set("valuation.valid", containerUpdate.valuation.valid));
 			}
 			
 			limsServices.updateMaterielmanipLims(containerUpdated, contextError);
