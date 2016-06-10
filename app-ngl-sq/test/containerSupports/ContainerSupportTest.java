@@ -199,7 +199,7 @@ public class ContainerSupportTest extends AbstractTests {
 		ssf.nextExperimentTypeCode="badNextExperimentTypeCode";
 		ssf.stateCode="";
 		ssf.processTypeCode="";
-		ssf.valuations=null;
+		//ssf.valuations=null;
 		Boolean exceptionError = false;
 		result = null;
 		
