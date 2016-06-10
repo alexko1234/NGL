@@ -196,7 +196,11 @@ public class LimsManipDAO {
 		    Well well = new Well();
 		    well.name = rs.getString("matmanom");
 		    well.code = rs.getInt("matmaco");
-		    well.x = Integer.valueOf(rs.getString("plaqueX"));
+		    
+		    String plaqueX = rs.getString("plaqueX"); 
+		    if(null != plaqueX && !"null".equals(plaqueX)){
+		    	well.x = Integer.valueOf(plaqueX);
+		    }
 		    well.y = rs.getString("plaqueY");
 		    well.typeCode = rs.getInt("emnco");
 		    well.typeName = rs.getString("emnnom");
