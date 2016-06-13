@@ -132,14 +132,23 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		ContainerImportCNS.saveSampleFromContainer(contextError,containers,sqlContent);
 		
 		Map<String,PropertyValue<String>> propertiesContainerSupports=new HashMap<String, PropertyValue<String>>();
+		Set<String> supportContainers=new HashSet<String>();
 		for(Container container : containers){
 			if(!propertiesContainerSupports.containsKey(container.support.code) && container.properties.get("sequencingProgramType")!=null){
 				propertiesContainerSupports.put(container.support.code, container.properties.get("sequencingProgramType"));
 				container.properties.remove("sequencingProgramType");
 			}
+			
+			supportContainers.add(container.support.code);
+			
 		}
+
+		//List of other containers also in NGL associed to support to create 
+		List<Container> containersSupportContainers=MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("support.code", supportContainers)).toList();
+		Logger.debug("Nb container  support"+containersSupportContainers.size());
+		containersSupportContainers.addAll(containers);
 		
-		List<ContainerSupport> containerSupports=ContainerHelper.createSupportFromContainers(containers,propertiesContainerSupports, contextError);
+		List<ContainerSupport> containerSupports=ContainerHelper.createSupportFromContainers(containersSupportContainers,propertiesContainerSupports, contextError);
 	
 		List<Container> newContainers=new ArrayList<Container>();
 		
@@ -197,7 +206,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 			List<Container> containers) {
 		for(Container container : containers){
 			//delete de tout les containers associés au support du container, alors les lanes supprimées dans le Lims seront supprimés dans NGL
-			MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code", container.support.code));
+			MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("code", container.code));
 			MongoDBDAO.deleteByCode(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, container.support.code);
 		}
 	}
