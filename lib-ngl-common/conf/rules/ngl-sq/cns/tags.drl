@@ -58,6 +58,7 @@ rule "Generate TagInfo from Experiment"
 						support = new ContainerSupport();
 						support.code = cu.locationOnContainerSupport.code;
 						support.categoryCode = cu.locationOnContainerSupport.categoryCode;
+						support.properties=new HashMap<String, PropertyValue>();
 						supports.put(cu.locationOnContainerSupport.code, support);
 					}else{
 						support = supports.get(cu.locationOnContainerSupport.code);
@@ -82,6 +83,7 @@ rule "Generate TagInfo from Experiment"
 						support.properties.put("tags", new PropertyListValue(new ArrayList<String>(l)));
 					}
 				}
+				
 			}				
 		}
 		retract($experiment);
