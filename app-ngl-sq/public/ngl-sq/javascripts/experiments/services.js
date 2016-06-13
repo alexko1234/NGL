@@ -120,7 +120,69 @@
 							"type":"text"
 						}
 						];
-			
+			if(mainService.getHomePage() === 'reagents'){
+				columns.push({
+		        	 "header":Messages("reagents.table.kitname"),
+		        	 "property":"reagents",
+		        	 "order":true,
+		        	 "type":"text",
+		        	 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+		        	 "filter":"getArray:'kitCatalogCode' | unique",
+		        	 "groupMethod":"collect"
+		        });
+				
+				columns.push({
+		        	 "header":Messages("reagents.table.boxname"),
+		        	 "property":"reagents",
+		        	 "order":false,
+		        	 "type":"text",
+		        	 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+		        	 "filter":"getArray:'boxCatalogCode' | unique",
+		        	 "groupMethod":"collect"
+				});
+				
+				columns.push({
+		        	 "header":Messages("reagents.table.boxcode"),
+		        	 "property":"reagents",
+		        	 "order":true,
+		        	 "type":"text",
+		        	 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+		        	 "filter":"getArray:'boxCode' | unique",	
+		        	 "groupMethod":"collect"					
+				});
+				
+				columns.push({
+		        	 "header":Messages("reagents.table.reagentname"),
+		        	 "property":"reagents",
+		        	 "order":false,
+		        	 "type":"text",
+		        	 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+		        	 "filter":"getArray:'reagentCatalogCode' | unique",  	 
+		        	 "groupMethod":"collect"					
+				});
+				
+				columns.push({
+		        	 "header":Messages("reagents.table.reagentcode"),
+		        	 "property":"reagents",
+		        	 "order":true,
+		        	 "type":"text",
+		        	 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+		        	 "filter":"getArray:'code' | unique",				    
+		        	 "groupMethod":"collect"				
+				});
+				
+				columns.push({
+		        	 "header":Messages("reagents.table.description"),
+		        	 "property":"reagents",
+		        	 "order":true,
+		        	 "type":"text",
+		        	 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+		        	 "filter":"getArray:'description' | unique",		
+		        	 "groupMethod":"collect"				
+				});
+			}
+		         
+
 			return columns;
 		};
 		

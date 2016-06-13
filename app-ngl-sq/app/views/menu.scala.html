@@ -54,6 +54,7 @@
 								@if(PermissionHelper.checkPermission(Context.current().request().username(), "writing")){
 									<li class="@("active".when(nav ==  "experiments.new"))"><a href="@controllers.experiments.tpl.routes.Experiments.home("new")">@Messages("experiments.menu.creation")</a></li>
 								}
+								<li class="@("active".when(nav == "experiments.reagents"))"><a href="@controllers.experiments.tpl.routes.Experiments.home("reagents")">@Messages("experiments.menu.reagents")</a></li>
 							</ul>
   						</li>
   						
