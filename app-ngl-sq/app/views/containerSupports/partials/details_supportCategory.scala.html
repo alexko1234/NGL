@@ -22,14 +22,13 @@
 					<div ng-if="data">
 					<small>
 					
-						<div list-resize='data.projectCodes' list-resize-min-size='1' vertical/>
-						<div list-resize='data.sampleCodes' list-resize-min-size='1' vertical/>
-						<div list-resize='data.fromTransformationTypeCodes|unique|codes:"type"' list-resize-min-size='1' vertical/>
-						<div list-resize='data.contents|getArray:"properties.tag.value"|unique' list-resize-min-size='1' vertical/> 				
+						<div list-resize='data.projectCodes' list-resize-min-size='3' horizontal/>
+						<div list-resize='data.sampleCodes' list-resize-min-size='3' horizontal/>
+						<div list-resize='data.fromTransformationTypeCodes|unique|codes:"type"' list-resize-min-size='3' horizontal/>
+						<div list-resize='data.contents|getArray:"properties.tag.value"|unique' list-resize-min-size='3' horizontal/> 				
 					
 					</small>
 					</div>
-					<div ng-if="!data"/>
 				</div>
 
 			</td>

@@ -306,16 +306,15 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 	 */
 	var init = function(){
 		
-		$scope.datatable = datatable(datatableConfig);
-
 		var promise = [];
 		promise.push($http.get(jsRoutes.controllers.containers.api.ContainerSupports.get($routeParams.code).url));
-		promise.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params: {supportCodeRegex:$routeParams.code}}));
+		promise.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params: {supportCode:$routeParams.code}}));
 		
 		$q.all(promise).then(function(results){
 			
 			$scope.support = results[0].data;
 			$scope.containers = results[1].data;
+			$scope.datatable = datatable(datatableConfig);
 			$scope.datatable.setData($filter('orderBy')($scope.containers, ["support.column*1","support.line"]), $scope.containers.length);
 			
 			
