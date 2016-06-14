@@ -71,12 +71,12 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 		l.add(DescriptionFactory.newTreatmentType("Read Quality","read-quality", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "readQualityRaw,readQualityClean,readQualityTrim", 
 				getReadQualityPropertyDefinitions(), 
 				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE)), 
-				DescriptionFactory.getInstitutes( Constants.CODE.CNS), "30,83"));
+				DescriptionFactory.getInstitutes( Constants.CODE.CNS), "30,83,84"));
 
 		l.add(DescriptionFactory.newTreatmentType("Duplicates","duplicates", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "duplicatesRaw,duplicatesClean,duplicatesTrim", 
 				getDuplicatesPropertyDefinitions(), 
 				Arrays.asList(getTreatmentTypeContext("read1",Boolean.TRUE), getTreatmentTypeContext("read2", Boolean.FALSE), getTreatmentTypeContext("pairs", Boolean.FALSE)), 
-				DescriptionFactory.getInstitutes( Constants.CODE.CNS), "32,86"));
+				DescriptionFactory.getInstitutes( Constants.CODE.CNS), "32,86,87"));
 
 		l.add(DescriptionFactory.newTreatmentType("Mapping","mapping", TreatmentCategory.find.findByCode(TreatmentCategory.CODE.quality.name()), "mapping", 
 				getMappingPropertyDefinitions(), 
