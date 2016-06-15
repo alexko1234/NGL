@@ -95,7 +95,10 @@ public class SampleServiceCNS extends AbstractSampleService {
 		
 		//use only in  NGL-BI. Please not used in sample import !!!!!!!!!!!!!!!
 		l.add(newSampleType("Non défini", "not-defined", SampleCategory.find.findByCode("unknown"),null, getInstitutes(Constants.CODE.CNS)));
-		
+
+		l.add(newSampleType("ADN", "DNA", SampleCategory.find.findByCode("DNA"),null, getInstitutes(Constants.CODE.CNS)));
+		l.add(newSampleType("ARN", "RNA", SampleCategory.find.findByCode("RNA"),null, getInstitutes(Constants.CODE.CNS)));
+
 		DAOHelpers.saveModels(SampleType.class, l, errors);
 	}
 	

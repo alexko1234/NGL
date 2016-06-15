@@ -3,13 +3,14 @@ package models.laboratory.experiment.description;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import models.laboratory.common.description.CommonInfoType;
 import models.laboratory.common.description.PropertyDefinition;
 import models.laboratory.experiment.description.dao.ExperimentTypeDAO;
 import models.laboratory.instrument.description.InstrumentUsedType;
+import models.laboratory.sample.description.SampleType;
 import models.utils.dao.DAOException;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Parent class categories not represented by a table in the database
@@ -26,6 +27,10 @@ public class ExperimentType extends CommonInfoType{
 	public String atomicTransfertMethod;
 	
 	public String shortCode;
+	
+	public Boolean newSample=Boolean.FALSE;
+	
+	public  List<SampleType> sampleTypes=new ArrayList<SampleType>();
 	
 	public ExperimentType() {
 		super(ExperimentTypeDAO.class.getName());		

@@ -316,6 +316,14 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			*/
 			
+			l.add(newExperimentType("Ext to Extraction ADN / ARN (plancton)","ext-to-dna-rna-extraction-process",null,-1,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+			l.add(newExperimentType("Extraction ADN / ARN ","dna-rna-extraction",null,1000,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
+					null,"OneToMany", getSampleTypes("DNA","RNA"),true,
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		}
 		
@@ -344,7 +352,10 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 			
 			newExperimentTypeNode("qpcr-quantification", getExperimentTypes("qpcr-quantification").get(0), false, false, false, getExperimentTypeNodes("ext-to-qpcr-norm-fc-depot-illumina","sizing","amplification"), null, null, null).save();
 			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,getExperimentTypeNodes("ext-to-qpcr-norm-fc-depot-illumina","ext-to-norm-fc-depot-illumina","sizing","amplification"),null,null,getExperimentTypes("pool", "pool-tube")).save();
-			
+
+			newExperimentTypeNode("ext-to-dna-rna-extraction-process", getExperimentTypes("ext-to-dna-rna-extraction-process").get(0), false, false, false, null, null, null, null).save();
+			newExperimentTypeNode("dna-rna-extraction",getExperimentTypes("dna-rna-extraction").get(0),false, false,false,getExperimentTypeNodes("ext-to-dna-rna-extraction-process"),null,null,getExperimentTypes("pool", "pool-tube")).save();
+
 		}
 		
 		newExperimentTypeNode("ext-to-illumina-run", getExperimentTypes("ext-to-illumina-run").get(0), false, false, false, null, null, null, null).save();

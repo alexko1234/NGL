@@ -11,6 +11,7 @@ import java.util.Map;
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.instrument.description.InstrumentUsedType;
+import models.laboratory.sample.description.SampleType;
 import models.utils.dao.AbstractDAOCommonInfoType;
 import models.utils.dao.DAOException;
 
@@ -28,7 +29,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 
 	public ExperimentTypeDAO() {
 		super("experiment_type", ExperimentType.class,ExperimentTypeMappingQuery.class,
-				"SELECT distinct c.id, c.fk_experiment_category, c.fk_common_info_type, c.atomic_transfert_method, c.short_code ",
+				"SELECT distinct c.id, c.fk_experiment_category, c.fk_common_info_type, c.atomic_transfert_method, c.short_code, c.new_sample ",
 				"FROM experiment_type as c "+ sqlCommonInfoType, false);
 	}
 	@Override
@@ -54,14 +55,36 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		parameters.put("fk_experiment_category", experimentType.category.id);
 		parameters.put("atomic_transfert_method", experimentType.atomicTransfertMethod);
 		parameters.put("short_code", experimentType.shortCode);
+		parameters.put("new_sample", experimentType.newSample);
 		jdbcInsert.execute(parameters);
 
 		//Add list instruments
 		insertInstrumentUsedTypes(experimentType.instrumentUsedTypes, experimentType.id, false);
-
+		insertSampleTypes(experimentType.sampleTypes,experimentType.id,false);
 		return experimentType.id;
 	}
 
+	private void insertSampleTypes(List<SampleType> sampleTypes, Long id, boolean deleteBefore) {
+		if(deleteBefore){
+			removeSampleTypes(id);
+		}
+		if(sampleTypes!=null && sampleTypes.size()>0){
+			String sql = "INSERT INTO experiment_type_sample_type (fk_experiment_type, fk_sample_type) VALUES(?,?)";
+			for(SampleType sampleType:sampleTypes){
+				if(sampleType == null || sampleType.id == null ){
+					throw new DAOException("sampleType is mandatory");
+				}
+				jdbcTemplate.update(sql, id,sampleType.id);
+			}
+		}	
+		
+	}
+	
+	private void removeSampleTypes(Long id) {
+		String sql = "DELETE FROM experiment_type_sample_type WHERE fk_experiment_type=?";
+		jdbcTemplate.update(sql, id);
+		
+	}
 	private void insertInstrumentUsedTypes(
 			List<InstrumentUsedType> instrumentUsedTypes, Long id, boolean deleteBefore) throws DAOException {
 		if(deleteBefore){
@@ -92,12 +115,14 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 		ExperimentType expTypeDB = findById(experimentType.id);
 		//Add list instruments
 		insertInstrumentUsedTypes(experimentType.instrumentUsedTypes, experimentType.id, true);
+		insertSampleTypes(experimentType.sampleTypes, experimentType.id, true);
 	}
 
 	@Override
 	public void remove(ExperimentType experimentType) throws DAOException {
 		//Remove instrument type common_info_type_instrument_type
 		removeInstrumentUsedTypes(experimentType.id);
+		removeSampleTypes(experimentType.id);
 		//Remove experiment
 		super.remove(experimentType);
 		//Remove commonInfoType

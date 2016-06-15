@@ -38,6 +38,7 @@ public class ProcessServiceCNS extends AbstractProcessService {
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Banque", "library"));
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Sequençage", "sequencing"));		
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Optical mapping", "mapping"));
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Preparation echantillon", "sample-prep"));
 		DAOHelpers.saveModels(ProcessCategory.class, l, errors);
 
 	}
@@ -59,6 +60,9 @@ public class ProcessServiceCNS extends AbstractProcessService {
 					Arrays.asList(getPET("ext-to-norm-fc-depot-illumina",-1),getPET("sizing",-1),getPET("amplification",-1),getPET("solution-stock",0),getPET("prepa-flowcell",1),getPET("prepa-fc-ordered",1),getPET("illumina-depot",2)), 
 					getExperimentTypes("solution-stock").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-norm-fc-depot-illumina").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
+			l.add(DescriptionFactory.newProcessType("Extraction ADN / ARN (plancton)", "dna-rna-extraction-process", ProcessCategory.find.findByCode("sample-prep"), getPropertyDefinitionsQPCRQuantification(),
+					Arrays.asList(getPET("ext-to-dna-rna-extraction-process",-1),getPET("dna-rna-extraction",-1)), 
+					getExperimentTypes("dna-rna-extraction").get(0), getExperimentTypes("dna-rna-extraction").get(0), getExperimentTypes("ext-to-dna-rna-extraction-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		}
 
 			//Bionano

@@ -57,6 +57,9 @@ public class SampleTypeDAO extends AbstractDAOCommonInfoType<SampleType>{
 
 	@Override
 	public void remove(SampleType sampleType) throws DAOException {
+		//remove from abstractExperiment experiment_type_sample_type
+		String sqlExp = "DELETE FROM experiment_type_sample_type WHERE fk_sample_type=?";
+		jdbcTemplate.update(sqlExp, sampleType.id);
 		//Remove sampleType
 		super.remove(sampleType);
 		//Remove commonInfotype

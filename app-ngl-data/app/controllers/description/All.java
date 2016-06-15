@@ -37,11 +37,11 @@ public class All extends CommonController {
 			LevelService.main(errors);
 			MeasureService.main(errors);
 			ContainerService.main(errors);
-			InstrumentService.main(errors);			
+			InstrumentService.main(errors);
+			SampleService.main(errors);
 			ExperimentService.main(errors);
 			ProcessService.main(errors);
 			ProjectService.main(errors);
-			SampleService.main(errors);
 			RunService.main(errors);
 			ImportService.main(errors);
 			TreatmentService.main(errors);

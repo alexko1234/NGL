@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.mongojack.DBQuery;
-
-import fr.cea.ig.MongoDBDAO;
 import models.laboratory.common.description.Value;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
@@ -15,11 +12,16 @@ import models.laboratory.parameter.index.IlluminaIndex;
 import models.laboratory.parameter.index.NanoporeIndex;
 import models.laboratory.processes.description.ExperimentTypeNode;
 import models.laboratory.processes.description.ProcessType;
+import models.laboratory.sample.description.SampleType;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;
+
+import org.mongojack.DBQuery;
+
 import play.data.validation.ValidationError;
 import services.description.DescriptionFactory;
+import fr.cea.ig.MongoDBDAO;
 
 public abstract class AbstractExperimentService {
 
@@ -41,6 +43,10 @@ public abstract class AbstractExperimentService {
 			return DAOHelpers.getModelByCodes(InstrumentUsedType.class,InstrumentUsedType.find, codes);
 		}
 	
+		protected static List<SampleType> getSampleTypes(String...codes) throws DAOException {
+			return DAOHelpers.getModelByCodes(SampleType.class,SampleType.find, codes);
+		}
+		
 		protected static List<ExperimentType> getExperimentTypes(String...codes) throws DAOException {
 			return DAOHelpers.getModelByCodes(ExperimentType.class,ExperimentType.find, codes);
 		}

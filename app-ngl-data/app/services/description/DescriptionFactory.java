@@ -785,7 +785,7 @@ public class DescriptionFactory {
 	 * @return
 	 * @throws DAOException
 	 */
-	public static ExperimentType newExperimentType(String name, String code, String shortCode, Integer displayOrder, ExperimentCategory category, List<PropertyDefinition> propertiesDefinitions, List<InstrumentUsedType> instrumentUsedTypes,String atomicTransfertMethod, Boolean active, List<Institute> institutes) throws DAOException {
+	public static ExperimentType newExperimentType(String name, String code, String shortCode, Integer displayOrder, ExperimentCategory category, List<PropertyDefinition> propertiesDefinitions, List<InstrumentUsedType> instrumentUsedTypes,String atomicTransfertMethod, List<SampleType> sampleTypes, Boolean active, List<Institute> institutes) throws DAOException {
 		ExperimentType et = new ExperimentType();
 		et.code =code.toLowerCase();
 		if(null != shortCode)et.shortCode = shortCode.toUpperCase();
@@ -801,7 +801,12 @@ public class DescriptionFactory {
 		et.atomicTransfertMethod=atomicTransfertMethod;		
 		et.institutes = institutes;
 		et.active = active;
+		et.sampleTypes=sampleTypes;
 		return et;
+	}
+	
+	public static ExperimentType newExperimentType(String name, String code, String shortCode, Integer displayOrder, ExperimentCategory category, List<PropertyDefinition> propertiesDefinitions, List<InstrumentUsedType> instrumentUsedTypes,String atomicTransfertMethod, Boolean active, List<Institute> institutes) throws DAOException {
+		return newExperimentType(name, code,  shortCode,  displayOrder,  category,  propertiesDefinitions,  instrumentUsedTypes, atomicTransfertMethod, null, active,institutes);	
 	}
 	
 	public static ExperimentType newExperimentType(String name, String code, String shortCode, Integer displayOrder, ExperimentCategory category, List<PropertyDefinition> propertiesDefinitions, List<InstrumentUsedType> instrumentUsedTypes,String atomicTransfertMethod, List<Institute> institutes) throws DAOException {
