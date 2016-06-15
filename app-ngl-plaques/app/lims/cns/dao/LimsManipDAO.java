@@ -191,7 +191,8 @@ public class LimsManipDAO {
 	}
 
 	public Well getWell(String nomManip){
-		Well well = this.jdbcTemplate.queryForObject("pl_MaterielmanipUnNomToPlate @matmanom=?", new Object[]{nomManip}, new RowMapper<Well>() {
+		//Logger.debug("Nom = "+nomManip);
+		List<Well> wells = this.jdbcTemplate.query("pl_MaterielmanipUnNomToPlate @matmanom=?", new Object[]{nomManip}, new RowMapper<Well>() {
 	        public Well mapRow(ResultSet rs, int rowNum) throws SQLException {
 		    Well well = new Well();
 		    well.name = rs.getString("matmanom");
@@ -209,7 +210,12 @@ public class LimsManipDAO {
 		    return well;
 	        }
 	    });
-		return well;
+		if(wells.size() == 1){
+			return wells.get(0);
+		}else{
+			return null;
+		}
+		
 	}
 	
 	public User getUser(Integer id) {
