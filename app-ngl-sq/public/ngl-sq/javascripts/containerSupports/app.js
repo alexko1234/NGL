@@ -13,8 +13,8 @@ angular.module('home', ['commonsServices','ngRoute','ultimateDataTableServices',
 	});
 	
 	$routeProvider.when('/supports/new/home', {
-		templateUrl : jsRoutes.controllers.containers.tpl.ContainerSupports.newSupport().url,
-		controller : 'NewCtrl'
+		templateUrl : jsRoutes.controllers.containers.tpl.ContainerSupports.newFromFile().url,
+		controller : 'NewFromFileCtrl'
 	});
 	
 	$routeProvider.when('/supports/:code', {

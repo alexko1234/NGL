@@ -16,7 +16,7 @@ containerSupports.scanner.title = Code-Barre de Support
 containerSupports.new.modal.title.creation = Nouveaux supports
 
 containerSupports.menu = Supports
-containerSupports.menu.creation = Création
+containerSupports.menu.new_from_file = Création depuis un fichier
 containerSupports.menu.search = Rechercher
 containerSupports.menu.state = Changement d''Etat
 containerSupports.menu.scanner = Code-Barre
@@ -26,10 +26,7 @@ containerSupports.tabs.general = Général
 containerSupports.tabs.search = Recherche Supports
 containerSupports.tabs.state = Changement d'Etat Supports
 containerSupports.tabs.scanner = Recherche par Code Barre
-containerSupports.tabs.new = Nouveau Support
-
-
-containerSupports.new.modal.question.newsample = Faut il créer de nouveaux échantillons ? :
+containerSupports.tabs.new = Création Supports
 
 #containerSupports table
 containerSupports.table.code = Supports

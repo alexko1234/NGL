@@ -1,7 +1,7 @@
 "use strict";
 
-angular.module('home').controller('NewCtrl', ['$scope', 'lists', 'mainService', 'tabService','datatable',
-                                                  function($scope,lists,mainService,tabService,datatable){
+angular.module('home').controller('NewFromFileCtrl', ['$scope', 'lists', 'mainService', 'tabService','datatable', 'messages',
+                                                  function($scope,lists,mainService,tabService,datatable, messages){
 
 	
 	/*
@@ -167,23 +167,14 @@ angular.module('home').controller('NewCtrl', ['$scope', 'lists', 'mainService', 
 		lists.refresh.types({objectTypeCode:'Sample'} ,true, 'sampleTypes');
 		lists.refresh.types({objectTypeCode:'Import'} ,true, 'importTypes');
 		lists.refresh.containerSupportCategories();
-		angular.element('#newSupportModal').modal('show');
 		
 		$scope.lists = lists;
 		
-		
-		$scope.$watch("newSample", function(newValue, oldValue){
-			
-			if(newValue === true){
-				$scope.datatable = datatable(datatableConfig);
-				$scope.datatable.setData([]);
-			}else if(newValue === false){
-				$scope.datatable = datatable(datatableConfig);
-				$scope.datatable.setData([]);
-			}
-			
-		})
-		
+		if(angular.isUndefined($scope.getHomePage())){
+			mainService.setHomePage('new');
+			tabService.addTabs({label:Messages('containerSupports.tabs.new'),href:jsRoutes.controllers.containers.tpl.ContainerSupports.home("new").url,remove:true});
+			tabService.activeTab(0);
+		}
 	};
 
 	init();

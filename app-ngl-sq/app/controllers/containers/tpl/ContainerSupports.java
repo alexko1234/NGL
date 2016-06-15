@@ -20,8 +20,8 @@ public class ContainerSupports extends CommonController{
 		return ok(search.render());
 	}
 	
-	public static Result newSupport(){
-		return ok(newSupport.render());
+	public static Result newFromFile(){
+		return ok(newFromFile.render());
 	}
 	
 	public static Result get(String code){
@@ -41,7 +41,7 @@ public class ContainerSupports extends CommonController{
   	    		controllers.containers.tpl.routes.javascript.ContainerSupports.search(),
   	    		controllers.containers.tpl.routes.javascript.ContainerSupports.home(),
   	    		controllers.containers.tpl.routes.javascript.ContainerSupports.homeScanner(),
-  	    		controllers.containers.tpl.routes.javascript.ContainerSupports.newSupport(),
+  	    		controllers.containers.tpl.routes.javascript.ContainerSupports.newFromFile(),
   	    		controllers.containers.tpl.routes.javascript.ContainerSupports.details(),
   	    		controllers.containers.api.routes.javascript.ContainerSupports.list(),
   	    		controllers.containers.tpl.routes.javascript.ContainerSupports.get(),

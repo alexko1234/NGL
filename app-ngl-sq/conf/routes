@@ -19,7 +19,7 @@ GET 	/supports/:homecode/home										controllers.containers.tpl.ContainerSuppo
 GET		/supports/:code													controllers.containers.tpl.ContainerSupports.get(code: java.lang.String)
 GET		/tpl/supports/search											controllers.containers.tpl.ContainerSupports.search()
 GET		/tpl/supports/details											controllers.containers.tpl.ContainerSupports.details()
-GET		/tpl/supports/new												controllers.containers.tpl.ContainerSupports.newSupport()
+GET		/tpl/supports/new-from-file										controllers.containers.tpl.ContainerSupports.newFromFile()
 
 GET		/tpl/supports/js-routes											controllers.containers.tpl.ContainerSupports.javascriptRoutes()
 
