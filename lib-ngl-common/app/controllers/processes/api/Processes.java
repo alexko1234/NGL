@@ -419,7 +419,7 @@ public class Processes extends CommonController{
 		}else if(CollectionUtils.isNotEmpty(process.experimentCodes)){
 			contextValidation.addErrors("process", ValidationConstants.ERROR_VALUENOTAUTHORIZED_MSG, process.experimentCodes);
 		}else if(!"IS".equals(container.state.code) && !"UA".equals(container.state.code)){
-			contextValidation.addErrors("container", ValidationConstants.ERROR_BADSTATE_MSG, container.code);
+			contextValidation.addErrors("container", ValidationConstants.ERROR_BADSTATE_MSG, container.state.code);
 		}
 
 		if(!contextValidation.hasErrors()){
