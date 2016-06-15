@@ -12,6 +12,9 @@ home.a.comment=En savoir plus...
 
 #containerSupports
 containerSupports.title = Supports
+containerSupports.scanner.title = Code-Barre de Support
+containerSupports.new.modal.title.creation = Nouveaux supports
+
 containerSupports.menu = Supports
 containerSupports.menu.creation = Création
 containerSupports.menu.search = Rechercher
@@ -23,8 +26,10 @@ containerSupports.tabs.general = Général
 containerSupports.tabs.search = Recherche Supports
 containerSupports.tabs.state = Changement d'Etat Supports
 containerSupports.tabs.scanner = Recherche par Code Barre
-containerSupports.scanner.title = Code-Barre de Support
+containerSupports.tabs.new = Nouveau Support
 
+
+containerSupports.new.modal.question.newsample = Faut il créer de nouveaux échantillons ? :
 
 #containerSupports table
 containerSupports.table.code = Supports
@@ -42,6 +47,8 @@ containerSupports.table.createUser = Support créé par
 containerSupports.table.modifyUser = Modifié par
 containerSupports.table.storageCode = Stockage
 containerSupports.table.yx = Position
+containerSupports.table.support = Support
+
 
 containerSupports.scanner.categoryCode = Catégorie
 containerSupports.scanner.sampleCodes = Echantillon(s) 
@@ -498,6 +505,16 @@ experiments.msg.import.linefields.unexpected = ligne {0}: Nombre de champs incor
 
 io.error.instance.notexist = La classe ''{0}'' n''existe pas 
 io.error.resultat.notexist = ''{0}'' n''existe pas
+
+
+##sample
+
+samples.table.projectCode = Projet
+samples.table.code = Code
+samples.table.name = Name
+samples.table.typeCode = Type
+samples.table.importTypeCode = Import type
+samples.table.sample = Echantillon
 
 
 ###############

@@ -932,10 +932,17 @@ angular.module('commonsServices', []).
 	      		    		var filter = {};
 	      		    		//Angularjs 1.3.11 change, we don't want the filter to match an undefined
 	      		    		//filterValue, so we don't assign it
+	      		    		/*
 	      		    		if(filterValue){
-	      		    			var getter = $parse(optionsConfig.viewMapper.replace(optionsConfig.itemName+'.',''));
+	      		    			var getter = $parse(optionsConfig.viewMapper.replace(new RegExp(optionsConfig.itemName+'.','g'),''));
 	      		    			getter.assign(filter, filterValue);
 	      		    		}
+	      		    		*/
+	      		    		if(filterValue){
+	      		    			filter = filterValue;
+	      		    		}
+	      		    		
+	      		    		
 	      		    		//Then here the filter will be empty if the filterValue is undefined
 	      		    		return $filter('limitTo')($filter('filter')(items, filter), 20);
 	      		    	 }else{
@@ -971,12 +978,12 @@ angular.module('commonsServices', []).
       		      
       		      scope.itemLabel = function(item){	      		    	
       		    	// return item[optionsConfig.viewMapper.replace(optionsConfig.itemName+'.','')];  
-      		    	return $parse(optionsConfig.viewMapper.replace(optionsConfig.itemName+'.',''))(item);
+      		    	return $parse(optionsConfig.viewMapper.replace(new RegExp(optionsConfig.itemName+'.','g'),''))(item);
       		      };
       		      
       		      scope.itemValue = function(item){
       		    	 //return item[optionsConfig.modelMapper.replace(optionsConfig.itemName+'.','')];
-      		    	  return $parse(optionsConfig.modelMapper.replace(optionsConfig.itemName+'.',''))(item);
+      		    	  return $parse(optionsConfig.modelMapper.replace(new RegExp(optionsConfig.itemName+'.','g'),''))(item);
       		      };
       		      
       		      scope.$watch(ngModelValue, function(newValue, oldValue){

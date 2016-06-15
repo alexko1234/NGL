@@ -8,6 +8,9 @@ import java.util.Map.Entry;
 
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.container.instance.Container;
+import models.laboratory.experiment.instance.AtomicTransfertMethod;
+import models.laboratory.experiment.instance.Experiment;
+import models.laboratory.experiment.instance.ManyToOneContainer;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.laboratory.sample.instance.Sample;
@@ -18,6 +21,8 @@ import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
 
 import play.Logger;
+import play.Play;
+import rules.services.RulesServices6;
 import validation.ContextValidation;
 import validation.utils.ValidationConstants;
 import fr.cea.ig.MongoDBDAO;
@@ -106,6 +111,14 @@ public class SampleHelper {
 					DBQuery.is("sampleOnInputContainer.sampleCode", sample.code),
 					DBUpdate.set("sampleOnInputContainer.referenceCollab",sample.referenceCollab),true);
 		
+	}
+	
+	
+	public static void executeRules(Sample sample,String rulesName){
+		ArrayList<Object> facts = new ArrayList<Object>();
+		facts.add(sample);
+		
+		List<Object> factsAfterRules = RulesServices6.getInstance().callRulesWithGettingFacts(Play.application().configuration().getString("rules.key"), rulesName, facts);				
 	}
 
 }

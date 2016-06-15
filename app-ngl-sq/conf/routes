@@ -14,11 +14,13 @@
 GET     /                           									controllers.main.tpl.Main.home()
 
 #containerSupports tpl
-GET 	/supports/scanner/home												controllers.containers.tpl.ContainerSupports.homeScanner()
+GET 	/supports/scanner/home											controllers.containers.tpl.ContainerSupports.homeScanner()
 GET 	/supports/:homecode/home										controllers.containers.tpl.ContainerSupports.home(homecode:java.lang.String)
 GET		/supports/:code													controllers.containers.tpl.ContainerSupports.get(code: java.lang.String)
 GET		/tpl/supports/search											controllers.containers.tpl.ContainerSupports.search()
 GET		/tpl/supports/details											controllers.containers.tpl.ContainerSupports.details()
+GET		/tpl/supports/new												controllers.containers.tpl.ContainerSupports.newSupport()
+
 GET		/tpl/supports/js-routes											controllers.containers.tpl.ContainerSupports.javascriptRoutes()
 
 #containers tpl

@@ -400,7 +400,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                     var newData = this.config.add.init(this);
                     var line = {
                         "edit": true,
-                        "selected": true,
+                        "selected": false,
                         "trClass": undefined,
                         "group": false,
                         "new": true
@@ -418,6 +418,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                         });
                     }
                     this.config.edit.all = true;
+                    this.config.edit.start = true;
                 }
             },
             /**
@@ -1723,12 +1724,18 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
             },
 
             isShowToolbarButtons: function() {
-                return (this.isShowCRUDButtons() || this.isShowHideButtons() || (this.config.show.active && this.config.show.showButton) || this.isShowExportCSVButton() || this.isShowOtherButtons());
+                return (this.isShowCRUDButtons() || this.isShowHideButtons() || this.isShowAddButtons() || this.isShowShowButtons() || this.isShowExportCSVButton() || this.isShowOtherButtons());
             },
             isShowCRUDButtons: function() {
                 return ((this.config.edit.active && this.config.edit.showButton) || (this.config.save.active && this.config.save.showButton) || (this.config.remove.active && this.config.remove.showButton));
             },
-            isShowHideButtons: function() {
+            isShowAddButtons: function() {
+                return (this.config.add.active && this.config.add.showButton);
+            },
+            isShowShowButtons: function() {
+                return  (this.config.show.active && this.config.show.showButton);
+            },
+             isShowHideButtons: function() {
                 return (this.config.hide.active && this.config.hide.showButton && this.getHideColumns().length > 0);
             },
             isShowOtherButtons: function() {

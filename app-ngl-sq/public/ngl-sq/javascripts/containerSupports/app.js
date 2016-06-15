@@ -3,17 +3,22 @@
 angular.module('home', ['commonsServices','ngRoute','ultimateDataTableServices','ui.bootstrap','ngl-sq.containerSupportsServices'], function($routeProvider, $locationProvider) {
 
 	$routeProvider.when('/supports/search/home', {
-		templateUrl : '/tpl/supports/search',
+		templateUrl : jsRoutes.controllers.containers.tpl.ContainerSupports.search().url,
 		controller : 'SearchCtrl'
 	});
 	
 	$routeProvider.when('/supports/state/home', {
-		templateUrl : '/tpl/supports/search',
+		templateUrl : jsRoutes.controllers.containers.tpl.ContainerSupports.search().url,
 		controller : 'SearchStateCtrl'
 	});
 	
+	$routeProvider.when('/supports/new/home', {
+		templateUrl : jsRoutes.controllers.containers.tpl.ContainerSupports.newSupport().url,
+		controller : 'NewCtrl'
+	});
+	
 	$routeProvider.when('/supports/:code', {
-		templateUrl : '/tpl/supports/details',
+		templateUrl : jsRoutes.controllers.containers.tpl.ContainerSupports.details().url,
 		controller : 'DetailsCtrl'
 	});
 	

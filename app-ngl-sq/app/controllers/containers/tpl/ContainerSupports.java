@@ -20,6 +20,10 @@ public class ContainerSupports extends CommonController{
 		return ok(search.render());
 	}
 	
+	public static Result newSupport(){
+		return ok(newSupport.render());
+	}
+	
 	public static Result get(String code){
 		return ok(home.render("search"));
 	}
@@ -36,6 +40,9 @@ public class ContainerSupports extends CommonController{
   	        // Routes
   	    		controllers.containers.tpl.routes.javascript.ContainerSupports.search(),
   	    		controllers.containers.tpl.routes.javascript.ContainerSupports.home(),
+  	    		controllers.containers.tpl.routes.javascript.ContainerSupports.homeScanner(),
+  	    		controllers.containers.tpl.routes.javascript.ContainerSupports.newSupport(),
+  	    		controllers.containers.tpl.routes.javascript.ContainerSupports.details(),
   	    		controllers.containers.api.routes.javascript.ContainerSupports.list(),
   	    		controllers.containers.tpl.routes.javascript.ContainerSupports.get(),
   	    		controllers.containers.api.routes.javascript.ContainerSupports.get(),
@@ -44,13 +51,15 @@ public class ContainerSupports extends CommonController{
   	    		controllers.containers.api.routes.javascript.ContainerSupports.updateStateBatch(),
   	    		controllers.projects.api.routes.javascript.Projects.list(),
   	    		controllers.samples.api.routes.javascript.Samples.list(),
+  	    		controllers.samples.api.routes.javascript.Samples.save(),
   	    		controllers.containers.api.routes.javascript.Containers.list(),
   	    		controllers.experiments.api.routes.javascript.ExperimentTypes.list(),  	    		
   	    		controllers.commons.api.routes.javascript.States.list(),
   	    		controllers.processes.api.routes.javascript.ProcessTypes.list(),
   	    		controllers.processes.api.routes.javascript.ProcessCategories.list(),
   	    		controllers.containers.api.routes.javascript.ContainerCategories.list(),
-  	    		controllers.commons.api.routes.javascript.Users.list()
+  	    		controllers.commons.api.routes.javascript.Users.list(),
+  	    		controllers.commons.api.routes.javascript.CommonInfoTypes.list()
   	      )	  	      
   	    );
   	}

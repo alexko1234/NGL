@@ -16,12 +16,12 @@
 							<ul class="dropdown-menu" role="menu" aria-labelledby="process">
 								<li class="@("active".when(nav == "containerSupports.search"))"><a href="@controllers.containers.tpl.routes.ContainerSupports.home("search")">@Messages("containerSupports.menu.search")</a></li>
 								@if(PermissionHelper.checkPermission(Context.current().request().username(), "writing")){
-									<li class="@("active".when(nav == "containerSupports.state"))"><a href="@controllers.containers.tpl.routes.ContainerSupports.home("state")">@Messages("containerSupports.menu.state")</a></li>																				
+									<li class="@("active".when(nav == "containerSupports.state"))"><a href="@controllers.containers.tpl.routes.ContainerSupports.home("state")">@Messages("containerSupports.menu.state")</a></li>
+									<li class="@("active".when(nav == "containerSupports.new"))"><a href="@controllers.containers.tpl.routes.ContainerSupports.home("new")">@Messages("containerSupports.menu.creation")</a></li>																				
 								}
-								
+								@if(PermissionHelper.checkPermission(Context.current().request().username(), "admin")){
 								<li class="@("active".when(nav == "containerSupports.scanner"))"><a href="@controllers.containers.tpl.routes.ContainerSupports.homeScanner()">@Messages("containerSupports.menu.scanner")</a></li>
-
-								
+								}
 							</ul>
   						</li>
     	

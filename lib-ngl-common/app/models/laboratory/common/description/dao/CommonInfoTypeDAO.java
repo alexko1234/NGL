@@ -196,7 +196,7 @@ public class CommonInfoTypeDAO extends AbstractDAOMapping<CommonInfoType>{
 	 */
 	public List<CommonInfoType> findByObjectTypeCode(CODE objectTypeCode) {
 		String sql = sqlCommon+
-				" WHERE o.code=? order by t.name";		
+				" WHERE o.code=? order by  t.display_order, t.name";		
 		CommonInfoTypeMappingQuery commonInfoTypeMappingQuery = new CommonInfoTypeMappingQuery(dataSource, sql, new SqlParameter("code",Types.VARCHAR));
 		return commonInfoTypeMappingQuery.execute(objectTypeCode.name());
 	}
