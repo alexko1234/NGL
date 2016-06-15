@@ -458,7 +458,7 @@ angular.module('home').controller('SearchContainerCtrl', ['$scope', 'datatable',
 
 			}
 			if(supportCodes.length > 0){
-				$http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{"supportCodes":supportCodes}})
+				$http.get(jsRoutes.controllers.containers.api.Containers.list().url,{params:{"supportCodes":supportCodes,"stateCode":"IW-P"}})
 				.success(function(data, status, headers, config) {
 					if(data!=null){
 						angular.forEach(data, function(container){
@@ -652,10 +652,10 @@ var	datatableConfig = {
 			         otherButtons :{
 			        	 active:true,
 			        	 template:'<button ng-if="doneAndRecorded==false" class="btn" ng-click="save()"><i class="fa fa-save"></i></button>'
-			        	 /*+' <button ng-if="doneAndRecorded==false" ng-click="swithView()" ng-disabled="loadView"  class="btn btn-info" ng-switch="supportView">'+Messages("baskets.switchView")+
+			        	 +' <button ng-if="doneAndRecorded==false" ng-click="swithView()" ng-disabled="loadView"  class="btn btn-info" ng-switch="supportView">'+Messages("baskets.switchView")+
 			        	 ' '+'<b ng-switch-when="true" class="switchLabel">'+
 			        	 Messages("baskets.switchView.containers")+'</b>'+
-			        	 '<b ng-switch-when="false" class="switchLabel">'+Messages("baskets.switchView.supports")+'</b></button></button>'*/
+			        	 '<b ng-switch-when="false" class="switchLabel">'+Messages("baskets.switchView.supports")+'</b></button></button>'
 			         }
 	};
 
@@ -793,6 +793,34 @@ var	datatableConfig = {
 		$scope.datatable.config.columns[0].header = Messages("containers.table.code");
 	};
 
+	$scope.swithToSupportView = function(){
+
+		if($scope.basket.length() == 0){
+			$scope.datatable.setData($scope.processes);
+		}else{
+			var processes =  mainService.getBasket().basket;
+			$scope.processesSupports = [];
+			angular.forEach(processes,function(process){
+				var alreadyExist = false;
+				angular.forEach($scope.processesSupports,function(processesSupport){
+					if(processesSupport.support.code == process.support.code){
+						alreadyExist = true;
+					}
+				});
+				if(!alreadyExist){
+					$scope.processesSupports.push(process);
+				}
+			});
+			$scope.datatable.setData($scope.processesSupports,$scope.processesSupports.length);
+		}
+
+
+		console.log($scope.datatable.config);
+		if($scope.datatable.config.columns.length>0)
+			$scope.datatable.config.columns[0].header = Messages("containers.table.supportCode");
+	};
+	
+	
 	$scope.save = function (){
 		$scope.message.details = {};
 		$scope.message.isDetails = false;
@@ -803,6 +831,7 @@ var	datatableConfig = {
 		var processes = [];
 		$scope.promises = [];
 		if(!$scope.supportView){
+			/* Old code two complexe
 			url =  jsRoutes.controllers.processes.api.Processes.saveBatch().url;
 			$scope.datatable.config.spinner.start = true;
 			for(var i=0;i<data.length;i++){
@@ -837,6 +866,24 @@ var	datatableConfig = {
 			var nbElementByBatch = Math.ceil(processes.length / 6); //6 because 6 request max in parrallel with firefox and chrome
 			for(var i = 0; i  < 6 && processes.length > 0 ; i++){
 				$scope.promises.push($scope.getSaveRemoteRequest(url, processes.splice(0, nbElementByBatch),$scope.form.nextProcessTypeCode)); 								
+			}
+			*/
+			$scope.datatable.config.spinner.start = true;
+			var i=0;
+			for(i=0;i<data.length;i++){
+				url =  jsRoutes.controllers.processes.api.Processes.save().url;
+				var processData = data[i];
+				var process = {
+						projectCode: processData.projectCodes[0],
+						typeCode:$scope.form.nextProcessTypeCode,
+						categoryCode:$scope.form.processCategory,
+						comments:data[i].comments,
+						properties:processData.properties
+				};
+				
+				if($scope.lineClasses[i] != "success"){
+					$scope.promises.push($scope.saveContainer(url,i,process,data[i].code));
+				}
 			}
 			
 		}else{
@@ -946,32 +993,30 @@ var	datatableConfig = {
 		});
 	};
 	
-	$scope.swithToSupportView = function(){
-
-		if($scope.basket.length() == 0){
-			$scope.datatable.setData($scope.processes);
-		}else{
-			var processes =  mainService.getBasket().basket;
-			$scope.processesSupports = [];
-			angular.forEach(processes,function(process){
-				var alreadyExist = false;
-				angular.forEach($scope.processesSupports,function(processesSupport){
-					if(processesSupport.support.code == process.support.code){
-						alreadyExist = true;
-					}
-				});
-				if(!alreadyExist){
-					$scope.processesSupports.push(process);
+	$scope.saveContainer = function(url, index, process, containerCode){
+		return $http.post(url,process, {params:{"fromContainerInputCode": containerCode}})
+		.success(function(data, status, headers, config) {
+			if(data!=null){
+				$scope.lineClasses[index] = "success";
+				$scope.processes = $scope.processes.concat(data);
+				$scope.datatable.config.remove.active = false;
+				var displayResult = $scope.datatable.displayResult;
+				for(var j=0;j<displayResult.length;j++){
+					$scope.datatable.displayResult[j].line.trClass = $scope.lineClasses[j];
 				}
-			});
-			$scope.datatable.setData($scope.processesSupports,$scope.processesSupports.length);
-		}
-
-
-		console.log($scope.datatable.config);
-		if($scope.datatable.config.columns.length>0)
-			$scope.datatable.config.columns[0].header = Messages("containers.table.supportCode");
+			}
+		}).error(function(data, status, headers, config) {
+			$scope.lineClasses[index] = "danger";
+			$scope.message.details = data;
+			$scope.message.isDetails = true;
+			var displayResult = $scope.datatable.displayResult;
+			for(var j=0;j<displayResult.length;j++){
+				$scope.datatable.displayResult[j].line.trClass = $scope.lineClasses[j];
+			}
+		});
 	};
+	
+	
 
 	$scope.getPropertyColumnType = function(type){
 		if(type === "java.lang.String"){

@@ -118,7 +118,7 @@ public class Processes extends CommonController{
 			}else if(StringUtils.isNotBlank(queryFieldsForm.fromContainerInputCode) && StringUtils.isBlank(queryFieldsForm.fromSupportContainerCode)) {							
 
 				if(!contextValidation.hasErrors()){
-					Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, process.inputContainerCode);
+					Container container = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class, queryFieldsForm.fromContainerInputCode);
 					Process p = filledForm.get();
 					p.inputContainerCode = container.code;
 					p.inputContainerSupportCode = container.support.code;
@@ -138,6 +138,26 @@ public class Processes extends CommonController{
 		}
 	}
 
+	private static List<Process> saveFromSupport(String supportCode, Process p, ContextValidation contextValidation){			
+		List<Process> processes = new ArrayList<Process>();
+		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("support.code", supportCode).is("state.code","IW-P")).toList();
+		
+		valdateCommonProcessAttribut(p, contextValidation);
+		
+		containers.parallelStream().forEach(container -> {
+			ContextValidation newContextValidation = new ContextValidation(contextValidation.getUser());
+			newContextValidation.setCreationMode();
+			newContextValidation.putObject("workflow", true);
+			processes.addAll(saveAllContentsProcesses(p, container, newContextValidation));
+			if(newContextValidation.hasErrors()){
+				contextValidation.addErrors(newContextValidation.errors);
+			}
+		});
+		
+		return processes;	
+	}
+	
+	
 	private static void valdateCommonProcessAttribut(Process process, ContextValidation contextValidation) {
 		ProcessValidationHelper.validateProcessType(process.typeCode,process.properties,contextValidation);
 		ProcessValidationHelper.validateProcessCategory(process.categoryCode,contextValidation);
@@ -202,24 +222,7 @@ public class Processes extends CommonController{
 		return badRequest(Json.toJson(response));
 	}
 
-	private static List<Process> saveFromSupport(String supportCode, Process p, ContextValidation contextValidation){			
-		List<Process> processes = new ArrayList<Process>();
-		List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.is("support.code", supportCode)).toList();
-		
-		valdateCommonProcessAttribut(p, contextValidation);
-		
-		containers.parallelStream().forEach(container -> {
-			ContextValidation newContextValidation = new ContextValidation(contextValidation.getUser());
-			newContextValidation.setCreationMode();
-			newContextValidation.putObject("workflow", true);
-			processes.addAll(saveAllContentsProcesses(p, container, newContextValidation));
-			if(newContextValidation.hasErrors()){
-				contextValidation.addErrors(newContextValidation.errors);
-			}
-		});
-		
-		return processes;	
-	}
+	
 
 
 	private static List<Process> saveAllContentsProcesses(Process process, Container container, ContextValidation contextValidation){	
