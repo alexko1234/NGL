@@ -249,6 +249,8 @@ public class ContainerHelper {
 				
 				if (!mapSupports.containsKey(newSupport.code)) {
 					mapSupports.put(newSupport.code, newSupport);
+					newSupport.nbContainers = 1;
+					newSupport.nbContents = container.contents.size();
 				}
 				else {
 					ContainerSupport oldSupport = (ContainerSupport) mapSupports.get(newSupport.code);
@@ -257,11 +259,13 @@ public class ContainerHelper {
 					
 					oldSupport.sampleCodes.addAll(newSupport.sampleCodes); 
 					//Logger.debug("[updateSupportFromUpdatedContainers] adding sampleCodes "+ newSupport.sampleCodes + " to containerSupport " + oldSupport.code);
-					
-					//FDS ajout 22/01/2016 
+
 					// et si null ??
 					oldSupport.fromTransformationTypeCodes.addAll(newSupport.fromTransformationTypeCodes); 
-					Logger.debug("[updateSupportFromUpdatedContainers] adding fromTransformationTypeCodes "+ newSupport.fromTransformationTypeCodes + " to containerSupport " + oldSupport.code);
+					//Logger.debug("[updateSupportFromUpdatedContainers] adding fromTransformationTypeCodes "+ newSupport.fromTransformationTypeCodes + " to containerSupport " + oldSupport.code);
+					
+					oldSupport.nbContainers++;
+					oldSupport.nbContents = oldSupport.nbContents + container.contents.size();
 				}
 			}
 		}
