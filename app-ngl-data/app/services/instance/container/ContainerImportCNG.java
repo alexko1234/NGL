@@ -33,54 +33,51 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 	@Override
 	public void runImport() throws SQLException, DAOException {	
 		
-		// -1-  !!! les samples ne sont pas au sens NGL des containers bien qu'ils soient importés ici !!!
-		//      ils sont necessaires avant tout import de containers...
-	    loadSamples();	 	
-	    updateSamples();
+		// NOTE FDS 16/06/2016 la mise a jour de sample ou container apres leur utilisation dans des experiences est dangereuse:
+		// le projetCode, le aliquot_code sont recopiés partout et donc plus a jour !!!
+		// Les mises a jour doivent passer par des outils de migration ponctuels plutot que par l'import automatique...
+		// l'update des support a multiples container n'est pas correctement géré  
+		//     => commenter les methodes updateXXX
+		
+		// -1-  !!! les samples ne sont pas au sens NGL des containers mais sont nécessaires avant tout import de containers...
+	    loadSamples();
+	    //updateSamples();
 		
 		// FDS: loadContainers: le 2 eme param "experiment-type-code" est l'experience d'ou est sensé venir le container 
-		//                      le 3 eme param "importState" est le status du container a importer
-		
-		// -2- FDS 14-01-2016 NGL-909 ajouter l'import des plaques de samples SOLEXA 
+		//                      le 3 eme param "importState" est le status NGL du container a importer
+		//      updateContainers  "importState"necessaire
+	    
+		// -2- FDS 14-01-2016 NGL-909 : import des plaques de samples
 		/* Ce sont les containers !!!
 		   si on reprend la methode loadContainers comment alors distinger les plaques de sample des plaques de libraries ??
-		     =>surcharger un peu le parametre containerCategoryCode
-		       sample-well / library-well au lieu de simplement 'well'
-		   12/04/2016: importer a l'etat "iw-p" au lieu de "is"
+		     =>surcharger un peu le parametre containerCategoryCode:  sample-well / library-well au lieu de simplement 'well'
+		   12/04/2016 importer a iw-p= in waiting processus
 		*/	
-	    loadContainers("sample-well",null,"iw-p"); //iw-p=in waiting processus
-	    updateContainers("sample-well",null);
+	    loadContainers("sample-well",null,"iw-p"); 
+	    //updateContainers("sample-well",null);
 	    
 		// -3- librairies en tube
-		
-		//-3.1- lib-normalization= solexa[ lib10nM + libXnM >= 1nM ]	
 	    
+		// -3.1- lib-normalization
 	    loadContainers("tube","lib-normalization","is"); // is=in stock
 	    loadContainers("tube","lib-normalization","iw-p"); //iw-p=in waiting processus
-	    updateContainers("tube","lib-normalization"); // pas de specificite de status pour la mise a jour
+	    //updateContainers("tube","lib-normalization"); // pas de specificite de status pour la mise a jour
 		
-		//-3.2- denat-dil-lib = solexa[ libXnM < 1nM  ]
-	    
+		// -3.2- denat-dil-lib
 	    loadContainers("tube","denat-dil-lib","is"); //is=in stock
 	    loadContainers("tube","denat-dil-lib","iw-p"); //iw-p=in waiting processus
-	    updateContainers("tube","denat-dil-lib"); // pas de specificite de status pour la mise a jour
-		
+	    //updateContainers("tube","denat-dil-lib"); // pas de specificite de status pour la mise a jour
 	    
-		// -4- 15/05/2016 NGL-1044 : importer librairies en plaques-96 : lib-normalization et denat-dil-lib
+		// -4- FDS 15/05/2016 NGL-1044 : import librairies en plaques-96 : lib-normalization et denat-dil-lib
 	    
-		//-4.1- lib-normalization = solexa[ lib10nM + libXnM >= 1nM ] ( !! attention probleme connu avec les puits WATER )
-	    
-		loadContainers("library-well","lib-normalization","iw-p"); // importer a l'etat iw-p 
-		
-		//pas testé la mise de plaques...
+		// -4.1- lib-normalization ; importer a l'etat iw-p
+	    //       !! attention probleme connu avec les puits WATER qui sont consideres comme des denat-dil-lib
+		loadContainers("library-well","lib-normalization","iw-p"); 
 		//updateContainers("library-well","lib-normalization");
 		
-		//-4.2- denat-dil-lib = solexa[ libXnM < 0.06 nM  ]
-		
-		loadContainers("library-well","denat-dil-lib","iw-p"); // importer a l'etat iw-p 
-		
-		//pas testé la mise de plaques...
-		//updateContainers("library-well","denat-dil-lib");	
+		//-4.2- denat-dil-lib ; importer a l'etat iw-p .
+		loadContainers("library-well","denat-dil-lib","iw-p");
+		// updateContainers("library-well","denat-dil-lib");	
 		
 	    /* 14/01/2016 desactivé puisque la creation des flowcells est faite dans NGL-SQ
 		// -5- lanes/flowcell
@@ -137,7 +134,6 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 	}
 	
 	// 22/10/2015 ajout parametre importState pour la reprise
-	
 	public void loadContainers(String containerCategoryCode, String experimentTypeCode, String importState) throws SQLException, DAOException {
 		Logger.debug("Start loading containers of type:" + containerCategoryCode + " from experiment type: "+ experimentTypeCode);		
 		
@@ -179,7 +175,8 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		Logger.debug("End loading containers of type " + containerCategoryCode+ " from experiment type: "+ experimentTypeCode);		
 	}
 	
-	
+	// FDS 16/06/2016 attention les mises a jours peuvent poser probleme.... utiliser avec précaution...
+	// voir updateSupportFromUpdatedContainers
 	public void updateContainers(String containerCategoryCode, String experimentTypeCode) throws SQLException, DAOException {
 		Logger.debug("Start updating containers of type: " + containerCategoryCode+ " from experiment type: "+ experimentTypeCode);		
 		

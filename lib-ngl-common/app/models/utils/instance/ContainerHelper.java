@@ -226,6 +226,7 @@ public class ContainerHelper {
 	public static void updateSupportFromUpdatedContainers(List<Container> updatedContainers, Map<String, PropertyValue<String>> mapSupportsCodeSeq, ContextValidation contextValidation){
 
 		HashMap<String,ContainerSupport> mapSupports = new HashMap<String,ContainerSupport>();
+		//NOTE FDS 16/06/2016 les cas de supression de containers dans un support ne sont pas gerees par ce code...
 
 		for (Container container : updatedContainers) {
 			if (container.support != null) {
@@ -249,10 +250,13 @@ public class ContainerHelper {
 				
 				if (!mapSupports.containsKey(newSupport.code)) {
 					mapSupports.put(newSupport.code, newSupport);
+					// TEST 16/06/2016
 					newSupport.nbContainers = 1;
 					newSupport.nbContents = container.contents.size();
 				}
 				else {
+					// NOTE FDS 16/06/216 comment gerer le remplacement d'une ancienne valeur par une nouvelle ??
+					
 					ContainerSupport oldSupport = (ContainerSupport) mapSupports.get(newSupport.code);
 					oldSupport.projectCodes.addAll(newSupport.projectCodes); 
 					//Logger.debug("[updateSupportFromUpdatedContainers] adding projectCodes " +  newSupport.projectCodes + " to containerSupport " + oldSupport.code);
@@ -264,6 +268,7 @@ public class ContainerHelper {
 					oldSupport.fromTransformationTypeCodes.addAll(newSupport.fromTransformationTypeCodes); 
 					//Logger.debug("[updateSupportFromUpdatedContainers] adding fromTransformationTypeCodes "+ newSupport.fromTransformationTypeCodes + " to containerSupport " + oldSupport.code);
 					
+					//NOTE FDS 16/06/2016  avec ce code nbContainers et nbContents prennnet les valeurs de nbre de container modifiés...
 					oldSupport.nbContainers++;
 					oldSupport.nbContents = oldSupport.nbContents + container.contents.size();
 				}
