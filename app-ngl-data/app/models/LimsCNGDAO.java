@@ -180,17 +180,7 @@ public class LimsCNGDAO {
 			}
 			
 			sample.properties=new HashMap<String, PropertyValue>();
-			sample.properties.put("limsCode", new PropertySingleValue(rs.getInt("lims_code")));
-	
-			/*GA+FDS 20/01/2016 depuis la separation des bases de description CNG/CNS  ce n'est plus necessaire...
-			  suppression de ces proprietes dans SampleServiceCNG
-			  
-			if (sample.typeCode.equals("gDNA")) {	
-				sample.properties.put("isAdapters", new PropertySingleValue(false)); 
-				sample.properties.put("isFragmented", new PropertySingleValue(false)); 
-				sample.properties.put("taxonSize", new PropertySingleValue(0)); 		   
-			}
-			*/			
+			sample.properties.put("limsCode", new PropertySingleValue(rs.getInt("lims_code")));		
 			
 			return sample;
 	}
@@ -253,8 +243,9 @@ public class LimsCNGDAO {
 				 BigDecimal d2 = d.setScale(2, BigDecimal.ROUND_HALF_UP); 
 				 concentration = d2.doubleValue();
 			}
-					
-			if ( containerCategoryCode.equals("tube")){
+			
+			/* test 15/06/2016 ajouter concentration pour library-well */
+			if ( containerCategoryCode.equals("tube") || containerCategoryCode.equals("library-well") ){
 				container.concentration = new PropertySingleValue(concentration, "nM");
 			}
 			else if ( containerCategoryCode.equals("sample-well")){
@@ -269,15 +260,11 @@ public class LimsCNGDAO {
 				}
 				container.volume = new PropertySingleValue(volume,"µl");
 			}
-			/* PAS ENCORE EN PROD
-			else if ( containerCategoryCode.equals("library-well")){
-						container.concentration = new PropertySingleValue(concentration, "???");
-			}
-			*/
 		}
 		
 		// 14/10/2016 containerCategoryCode est surchargé on a sample-well, library-well dans certains cas
-		if (( containerCategoryCode.equals("sample-well"))||( containerCategoryCode.equals("library-well"))){
+		// remettre la valeur initiale
+		if ( containerCategoryCode.equals("sample-well") || containerCategoryCode.equals("library-well") ){
 			Logger.debug("[commonContainerMapRow] ContainerCategorycode :"+containerCategoryCode);			
 			container.categoryCode="well";
 			containerCategoryCode="well";
@@ -834,18 +821,16 @@ public class LimsCNGDAO {
 		else*/
 		if (containerCategoryCode.equals("tube")) {
 			
-			//13/03/2015 le order by est TRES IMPORTANT: demultiplexContainer en depend !! 
-			sqlOrder=" order by container_code, project desc, sample_code, tag, exp_short_name";
-			
 			if (experimentTypeCode.equals("lib-normalization")) {		
-					sqlView = "v_libnorm_tube_new_tongl"; 
+					sqlView = "v_libnorm_tube_tongl_new";   /* 15/06/2016 renommage des vues */
 			}
 			else if (experimentTypeCode.equals("denat-dil-lib")) {
-					sqlView = "v_libdenatdil_tube_new_tongl";
+					sqlView = "v_libdenatdil_tube_tongl_new";  /* 15/06/2016 renommage des vues */
 			}
 			else {
 					//autres experimentTypeCode a venir ??
-					sqlView = "TODO ??";
+					sqlView = " UNSUPPORTED";
+					Logger.error("findContainerToCreate: unsupported experimentTypeCode: "+experimentTypeCode);
 			}
 			
 			if (importState == null ) {
@@ -858,28 +843,31 @@ public class LimsCNGDAO {
 				sqlClause=" and ngl_status='ready' ";
 			}
 			else {
-				sqlClause="NOT SUPPORTED";
+				sqlClause=" UNSUPPORTED";
+				Logger.error("findContainerToCreate: unsupported importState : "+importState);
 			}
+			
+			//13/03/2015 le order by est TRES IMPORTANT: demultiplexContainer en depend !! 
+			sqlOrder=" order by container_code, project desc, sample_code, tag, exp_short_name";
+			
 		}
 		else if (containerCategoryCode.equals("sample-well")) {
 			sqlView = "v_sample_plate_new_tongl";
 			sqlOrder=" order by container_code, project desc, sample_code";
 		}
-	    /*	PAS ENCORE EN PROD
+	    /*	test 14/06/2016 */
 		else if (containerCategoryCode.equals("library-well")) {
 		
-			//13/03/2015 le order by est TRES IMPORTANT: demultiplexContainer en depend !! 
-			sqlOrder=" order by container_code, project desc, sample_code, tag, exp_short_name";
-			
 			if (experimentTypeCode.equals("lib-normalization")) {		
-					sqlView = "v_libnorm_plate_new_tongl"; 
+					sqlView = "v_libnorm_plate_tongl_new"; 
 			}
 			else if (experimentTypeCode.equals("denat-dil-lib")) {
-					sqlView = "v_libdenatdil_plate_new_tongl";
+					sqlView = "v_libdenatdil_plate_tongl_new";
 			}
 			else {
 					//autres experimentTypeCode a venir ??
-					sqlView = "TODO ??";
+					sqlView = " UNSUPPORTED";
+					Logger.error("findContainerToCreate: unsupported experimentTypeCode: "+experimentTypeCode);
 			}
 			
 			if (importState == null ) {
@@ -892,9 +880,13 @@ public class LimsCNGDAO {
 				sqlClause=" and ngl_status='ready' ";
 			}
 			else {
-				sqlClause="NOT SUPPORTED";
+				sqlClause=" UNSUPPORTED";
+				Logger.error("findContainerToCreate: unsupported importState : "+importState);
 			}	
-		} */
+			
+			//13/03/2015 le order by est TRES IMPORTANT: demultiplexContainer en depend !! 
+			sqlOrder=" order by container_code, project desc, sample_code, tag, exp_short_name";
+		}
 		
 		// fusion des 2 appels a jdbcTemplate.query
 		List<Container> results = null;
@@ -946,38 +938,44 @@ public class LimsCNGDAO {
 		}
 		else */
 		if (containerCategoryCode.equals("tube")) {
+			
 			if (experimentTypeCode.equals("lib-normalization")) {
-				sqlView = "v_libnorm_tube_tongl_reprise";
+				sqlView = "v_libnorm_tube_tongl_all"; /* 15/06/2016 renommage des vues tube */
 			}
 			else if (experimentTypeCode.equals("denat-dil-lib")) {
-				sqlView = "v_libdenatdil_tube_tongl_reprise";
+				sqlView = "v_libdenatdil_tube_tongl_all"; /* 15/06/2016 renommage des vues tube */
 			}
 			else {
 				//autres experimentTypeCode a venir ??
-				sqlView = "TODO??";
+				sqlView = " UNSUPPORTED";
 			}
+			Logger.error("findAllContainer: unsupported experimentTypeCode: "+experimentTypeCode);
+			
 			sqlOrder=" order by container_code, project desc, sample_code, tag, exp_short_name";
 		}
 		else if (containerCategoryCode.equals("sample-well")) {
-				sqlView = "v_sample_plate_tongl_reprise"; // TODO ???
+				sqlView = "v_sample_plate_tongl_reprise";
 				sqlOrder = " order by container_code, project desc, sample_code";
 				
 		}
-		/* PAS ENCORE EN PROD
+		/* test 15/06/2016 */
 		else if (containerCategoryCode.equals("library-well")) {
+			
 			if (experimentTypeCode.equals("lib-normalization")) {
-				sqlView = "v_libnorm_plate_tongl_reprise";
+				sqlView = "v_libnorm_plate_tongl_all";
 			}
 			else if (experimentTypeCode.equals("denat-dil-lib")) {
-				sqlView = "v_libdenatdil_plate_tongl_reprise";
+				sqlView = "v_libdenatdil_plate_tongl_all";
 			}
 			else {
 				//autres experimentTypeCode a venir ??
-				sqlView = "TODO??";
-				sqlOrder = "??"
+				sqlView = " UNSUPPORTED";
+				Logger.error("findAllContainer: unsupported experimentTypeCode: "+experimentTypeCode);
 			}
+			// a verifier !!!!!!
+			sqlOrder=" order by container_code, project desc, sample_code, tag, exp_short_name";
 		}
-		*/
+		
 		
 		List<Container> results = this.jdbcTemplate.query("select * from " + sqlView + sqlOrder , new Object[]{} 
 		,new RowMapper<Container>() {
@@ -1033,38 +1031,40 @@ public class LimsCNGDAO {
 		else */
 		if (containerCategoryCode.equals("tube")) {
 			if (experimentTypeCode.equals("lib-normalization")) {
-				sqlView = "v_libnorm_tube_updated_tongl";
+				sqlView = "v_libnorm_tube_tongl_updated"; /* 15/06/2016 renommage des vues tube */
 			}
 			else if (experimentTypeCode.equals("denat-dil-lib")) {
-				sqlView = "v_libdenatdil_tube_updated_tongl";
+				sqlView = "v_libdenatdil_tube_tongl_updated"; /* 15/06/2016 renommage des vues tube */
 			}
 			else {
 				//autres experimentTypeCode a venir ??
-				sqlView = "TODO ??";
+				sqlView = " UNSUPPORTED";
+				Logger.error("findContainerToModify: unsupported experimentTypeCode: "+experimentTypeCode);
 			}
 			sqlOrder = " order by container_code, project desc, sample_code, tag, exp_short_name";
 		}
 		else if (containerCategoryCode.equals("sample-well")) {
 			sqlView ="v_sample_plate_updated_tongl";
-			
-			// pas de tag ni exp_short_name
 			sqlOrder = " order by container_code, project desc, sample_code";
 		}
-		/* PAS ENCORE EN PROD
+		/* test 15/06/2016*/
 		else if (containerCategoryCode.equals("library-well")) {
+			
 			if (experimentTypeCode.equals("lib-normalization")) {
-				sqlView = "v_libnorm_plate_updated_tongl";
+				sqlView = "v_libnorm_plate_tongl_updated";
 			}
 			else if (experimentTypeCode.equals("denat-dil-lib")) {
-				sqlView = "v_libdenatdil_plate_updated_tongl";
+				sqlView = "v_libdenatdil_plate_tongl_updated";
 			}
 			else {
 				//autres experimentTypeCode a venir ??
-				sqlView = "TODO ??";
+				sqlView = " UNSUPPORTED";
+				Logger.error("findContainerToModify: unsupported experimentTypeCode: "+experimentTypeCode);
 			}
-			sqlOrder="????"
+			// a verifier
+			sqlOrder = " order by container_code, project desc, sample_code, tag, exp_short_name";
 		}
-		*/
+	
 	
 		List<Container> results = null;	
 		

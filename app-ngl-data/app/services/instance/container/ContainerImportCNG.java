@@ -50,33 +50,41 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		*/	
 	    loadContainers("sample-well",null,"iw-p"); //iw-p=in waiting processus
 	    updateContainers("sample-well",null);
-		
 	    
 		// -3- librairies en tube
 		
 		//-3.1- lib-normalization= solexa[ lib10nM + libXnM >= 1nM ]	
+	    
 	    loadContainers("tube","lib-normalization","is"); // is=in stock
 	    loadContainers("tube","lib-normalization","iw-p"); //iw-p=in waiting processus
 	    updateContainers("tube","lib-normalization"); // pas de specificite de status pour la mise a jour
 		
 		//-3.2- denat-dil-lib = solexa[ libXnM < 1nM  ]
+	    
 	    loadContainers("tube","denat-dil-lib","is"); //is=in stock
 	    loadContainers("tube","denat-dil-lib","iw-p"); //iw-p=in waiting processus
 	    updateContainers("tube","denat-dil-lib"); // pas de specificite de status pour la mise a jour
 		
 	    
-		// -4- librairies en plaques-96  10nM et XnM 	  
-		//-4.1    lib-normalization= solexa[ lib10nM + libXnM >= 1nM ]	 ?????????????????????????? EN COURS
-		loadContainers("library-well","lib-normalization","is"); // a quel statut les importer ?? iw-p ou is ???
-		updateContainers("library-well","lib-normalization");
+		// -4- 15/05/2016 NGL-1044 : importer librairies en plaques-96 : lib-normalization et denat-dil-lib
+	    
+		//-4.1- lib-normalization = solexa[ lib10nM + libXnM >= 1nM ] ( !! attention probleme connu avec les puits WATER )
+	    
+		loadContainers("library-well","lib-normalization","iw-p"); // importer a l'etat iw-p 
 		
-		//-4.2 - denat-dil-lib = solexa[ libXnM < 1nM  ]    ?????????????????????????? EN COURS
-		loadContainers("library-well","denat-dil-lib","is"); // a quel statut les importer ?? iw-p ou is ???
-		updateContainers("library-well","denat-dil-lib");
+		//pas testé la mise de plaques...
+		//updateContainers("library-well","lib-normalization");
 		
-		// -5- lanes/flowcells
+		//-4.2- denat-dil-lib = solexa[ libXnM < 0.06 nM  ]
+		
+		loadContainers("library-well","denat-dil-lib","iw-p"); // importer a l'etat iw-p 
+		
+		//pas testé la mise de plaques...
+		//updateContainers("library-well","denat-dil-lib");	
+		
 	    /* 14/01/2016 desactivé puisque la creation des flowcells est faite dans NGL-SQ
-		
+		// -5- lanes/flowcell
+		 * 
 		loadContainers("lane","prepa-flowcell",null);
 		updateContainers("lane","prepa-flowcell");
 		*/
@@ -123,7 +131,7 @@ public class ContainerImportCNG extends AbstractImportDataCNG{
 		
 		//-3- mise a jour dans la base source Postgresql ce qui a été traité
 		//Logger.debug("3/3 updating source database...");
-		limsServices.updateLimsSamples(samps, contextError, "update");	
+		limsServices.updateLimsSamples(samps, contextError, "update");
 		
 		Logger.debug("End updating samples");
 	}
