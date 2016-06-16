@@ -592,6 +592,14 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 					    	"extraHeaders":{"0":Messages("runs.lane.sav.read1")}
 						},
 						{  	"property":function(value){
+							return $filter('number')(value.treatments.sav.read1.densityPF.value,2) +' +/- '+$filter('number')(value.treatments.sav.read1.densityPFStd.value,2);						
+							},
+					    	"header": Messages("runs.lane.sav.densityPF"),
+					    	"type":"text",
+					    	"order":false,
+					    	"extraHeaders":{"0":Messages("runs.lane.sav.read1")}
+						},
+						{  	"property":function(value){
 								return $filter('number')(value.treatments.sav.read1.clusterPFPerc.value,2) +' +/- '+$filter('number')(value.treatments.sav.read1.clusterPFPercStd.value,2);						
 							},
 					    	"header": Messages("runs.lane.sav.clusterPF"),
@@ -615,18 +623,6 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 					    	"order":false,
 					    	"extraHeaders":{"0":Messages("runs.lane.sav.read1")},
 					    	"tdClass": "valuationService.valuationCriteriaClass({lanes:value.data}, run.valuation.criteriaCode, 'lanes.' + col.property)"
-						},
-						{  "property":"treatments.sav.read1.reads.value",
-					    	"header": Messages("runs.lane.sav.reads"),
-					    	"type":"number",
-					    	"order":false,
-					    	"extraHeaders":{"0":Messages("runs.lane.sav.read1")}
-						},
-						{  	"property":"treatments.sav.read1.readsPF.value",
-					    	"header": Messages("runs.lane.sav.readsPF"),
-					    	"type":"number",
-					    	"order":false,
-					    	"extraHeaders":{"0":Messages("runs.lane.sav.read1")}
 						},
 						{  	"property":"treatments.sav.read1.greaterQ30Perc.value",
 					    	"header": Messages("runs.lane.sav.greaterQ30Perc"),
@@ -658,47 +654,11 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 					    	"order":false,
 					    	"extraHeaders":{"0":Messages("runs.lane.sav.read1")},
 					    	"tdClass": "valuationService.valuationCriteriaClass({lanes:value.data}, run.valuation.criteriaCode, 'lanes.treatments.sav.read1.errorRatePerc.value')"
-						},	
-						{  	"property":function(value){
-							return $filter('number')(value.treatments.sav.read1.errorRatePercCycle35.value,2) +' +/- '+$filter('number')(value.treatments.sav.read1.errorRatePercCycle35Std.value,2);						
-							},
-					    	"header": Messages("runs.lane.sav.errorRatePercCycle35"),
-					    	"type":"text",
-					    	"order":false,
-					    	"extraHeaders":{"0":Messages("runs.lane.sav.read1")}
-						},											
-						{  	"property":function(value){
-							return $filter('number')(value.treatments.sav.read1.errorRatePercCycle75.value,2) +' +/- '+$filter('number')(value.treatments.sav.read1.errorRatePercCycle75Std.value,2);						
-							},
-					    	"header": Messages("runs.lane.sav.errorRatePercCycle75"),
-					    	"type":"text",
-					    	"order":false,
-					    	"extraHeaders":{"0":Messages("runs.lane.sav.read1")}
-						},											
-						{  	"property":function(value){
-							return $filter('number')(value.treatments.sav.read1.errorRatePercCycle100.value,2) +' +/- '+$filter('number')(value.treatments.sav.read1.errorRatePercCycle100Std.value,2);						
-							},
-					    	"header": Messages("runs.lane.sav.errorRatePercCycle100"),
-					    	"type":"text",
-					    	"order":false,
-					    	"extraHeaders":{"0":Messages("runs.lane.sav.read1")}
 						},											
 						{  	"property":function(value){
 							return $filter('number')(value.treatments.sav.read1.intensityCycle1.value,2) +' +/- '+$filter('number')(value.treatments.sav.read1.intensityCycle1Std.value,2);						
 							},
 					    	"header": Messages("runs.lane.sav.intensityCycle1"),
-					    	"type":"text",
-					    	"order":false,
-					    	"extraHeaders":{"0":Messages("runs.lane.sav.read1")}
-						},											
-						{  	"property":function(value){
-								if(value.treatments.sav.read1.intensityCycle20Perc !== undefined){
-									return $filter('number')(value.treatments.sav.read1.intensityCycle20Perc.value,2) +' +/- '+$filter('number')(value.treatments.sav.read1.intensityCycle20PercStd.value,2);
-								}else{
-									return null;
-								}
-							},
-					    	"header": Messages("runs.lane.sav.intensityCycle20Perc"),
 					    	"type":"text",
 					    	"order":false,
 					    	"extraHeaders":{"0":Messages("runs.lane.sav.read1")}
@@ -757,6 +717,14 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			    	"order":false,
 			    	"extraHeaders":{"0":Messages("runs.lane.sav.read2")}
 				},
+				{  	"property":function(value){
+					return $filter('number')(value.treatments.sav.read2.densityPF.value,2) +' +/- '+$filter('number')(value.treatments.sav.read2.densityPFStd.value,2);						
+					},
+			    	"header": Messages("runs.lane.sav.densityPF"),
+			    	"type":"text",
+			    	"order":false,
+			    	"extraHeaders":{"0":Messages("runs.lane.sav.read2")}
+				},
 				{  	
 					"property":function(value){
 						return $filter('number')(value.treatments.sav.read2.clusterPFPerc.value,2) +' +/- '+$filter('number')(value.treatments.sav.read2.clusterPFPercStd.value,2);						
@@ -782,18 +750,6 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			    	"order":false,
 			    	"extraHeaders":{"0":Messages("runs.lane.sav.read2")},
 			    	"tdClass": "valuationService.valuationCriteriaClass({lanes:value.data}, run.valuation.criteriaCode, 'lanes.' + col.property)"
-				},
-				{  	"property":"treatments.sav.read2.reads.value",
-			    	"header": Messages("runs.lane.sav.reads"),
-			    	"type":"number",
-			    	"order":false,
-			    	"extraHeaders":{"0":Messages("runs.lane.sav.read2")}
-				},
-				{  	"property":"treatments.sav.read2.readsPF.value",
-			    	"header": Messages("runs.lane.sav.readsPF"),
-			    	"type":"number",
-			    	"order":false,
-			    	"extraHeaders":{"0":Messages("runs.lane.sav.read2")}
 				},
 				{  	"property":"treatments.sav.read2.greaterQ30Perc.value",
 			    	"header": Messages("runs.lane.sav.greaterQ30Perc"),
@@ -825,30 +781,6 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			    	"order":false,
 			    	"extraHeaders":{"0":Messages("runs.lane.sav.read2")},
 			    	"tdClass" : "valuationService.valuationCriteriaClass({lanes:value.data}, run.valuation.criteriaCode, 'lanes.treatments.sav.read2.errorRatePerc.value')"
-				},	
-				{  	"property":function(value){
-					return $filter('number')(value.treatments.sav.read2.errorRatePercCycle35.value,2) +' +/- '+$filter('number')(value.treatments.sav.read2.errorRatePercCycle35Std.value,2);						
-					},
-			    	"header": Messages("runs.lane.sav.errorRatePercCycle35"),
-			    	"type" :"text",
-			    	"order":false,
-			    	"extraHeaders":{"0":Messages("runs.lane.sav.read2")}
-				},											
-				{  	"property":function(value){
-					return $filter('number')(value.treatments.sav.read2.errorRatePercCycle75.value,2) +' +/- '+$filter('number')(value.treatments.sav.read2.errorRatePercCycle75Std.value,2);						
-					},
-			    	"header": Messages("runs.lane.sav.errorRatePercCycle75"),
-			    	"type" :"text",
-			    	"order":false,
-			    	"extraHeaders":{"0":Messages("runs.lane.sav.read2")}
-				},											
-				{  	"property":function(value){
-					return $filter('number')(value.treatments.sav.read2.errorRatePercCycle100.value,2) +' +/- '+$filter('number')(value.treatments.sav.read2.errorRatePercCycle100Std.value,2);						
-					},
-			    	"header": Messages("runs.lane.sav.errorRatePercCycle100"),
-			    	"type":"text",
-			    	"order":false,
-			    	"extraHeaders":{"0":Messages("runs.lane.sav.read2")}
 				},											
 				{  	"property":function(value){
 						if(value.treatments.sav.read2.intensityCycle1 !== undefined){
@@ -861,17 +793,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$rou
 			    	"type":"text",
 			    	"order":false,
 			    	"extraHeaders":{"0":Messages("runs.lane.sav.read2")}
-				},											
-				{  	"property":function(value){
-					if(value.treatments.sav.read2.intensityCycle20Perc){
-						return $filter('number')(value.treatments.sav.read2.intensityCycle20Perc.value,2) +' +/- '+$filter('number')(value.treatments.sav.read2.intensityCycle20PercStd.value,2);
-					}
-				},
-			    	"header": Messages("runs.lane.sav.intensityCycle20Perc"),
-			    	"type":"text",
-			    	"order":false,
-			    	"extraHeaders":{"0":Messages("runs.lane.sav.read2")}
-				},											
+				},										
 				{  	"property":"treatments.sav.read2.alert",
 					"render": function(value){
 						return getAlertButton(value,'read2');
