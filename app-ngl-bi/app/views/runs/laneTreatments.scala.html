@@ -1,18 +1,43 @@
-@(code: String)
-
-@if(code == "ngsrg-illumina") {
-  <div ng-controller="LanesNGSRGIlluminaCtrl" ng-init="init()">
-  	<div ultimate-datatable="lanesNGSRG"></div>
-  </div>
-} 
+@(code: String) @if(code == "ngsrg-illumina") {
+<div ng-controller="LanesNGSRGIlluminaCtrl" ng-init="init()">
+	<div ultimate-datatable="lanesNGSRG"></div>
+</div>
+} @if(code == "sav") {
 
 
-@if(code == "sav")  {
 <div ng-controller="LanesSAVCtrl" ng-init="init()">
-
-  <div ultimate-datatable="lanesSAVR1" style="overflow-x:auto"></div>
-  <div ultimate-datatable="lanesSAVR2" style="overflow-x:auto"></div>
-  </div>
+	<div class="row">
+		<div class="col-md-6 col-lg-7">
+			<table class="table table-condensed table-hover table-bordered">
+				<thead>
+					<tr>
+						<th colspan="4" class="text-center">@Messages("run.title")</th>
+					</tr>
+					<tr>
+						<th>@Messages("run.treatments.sav.default.yieldTotal")</th>
+						<th>@Messages("run.treatments.sav.default.nonIndexedYieldTotal")</th>
+						<th>@Messages("run.treatments.sav.default.Q30PercTotal")</th>
+						<th>@Messages("run.treatments.sav.default.nonIndexedQ30PercTotal")</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>{{run.treatments.sav.default.yieldTotal.value | number:2}}</td>
+						<td>{{run.treatments.sav.default.nonIndexedYieldTotal.value | number:2}}</td>
+						<td>{{run.treatments.sav.default.Q30PercTotal.value | number:2}}</td>
+						<td>{{run.treatments.sav.default.nonIndexedQ30PercTotal.value | number:2}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div ultimate-datatable="lanesSAVR1" style="overflow-x: auto"></div>
+	<div ultimate-datatable="lanesSAVR2" style="overflow-x: auto"></div>
+</div>
 }
 
-	
+@column()(value: Html) = {
+	<div class="col-md-3 col-lg-3">
+		@value
+	</div>
+}

@@ -133,6 +133,7 @@ runs.menu.valuation = Evaluation
 runs.page.tab.validate = Runs à Evaluer
 runs.page.tab.search = Recherche de Runs
 runs.page.tab.state = Changement d''état de Runs
+run.title = Run
 
 
 runs.code = Code
@@ -220,6 +221,7 @@ runs.ngsrg_nanopore.minknowVersion = Version MinKnow
 runs.lane.sav.read1 = Read 1
 runs.lane.sav.read2 = Read 2
 runs.lane.sav.clusterDensity = Density (K/mm2)
+runs.lane.sav.densityPF = % Density PF
 runs.lane.sav.clusterPF = % Cluster PF
 runs.lane.sav.clusterPFSd = % Cluster PF SD
 runs.lane.sav.phasing = % Phasing
@@ -261,6 +263,10 @@ runs.treatments.minknow-metrichor.metrichor2DReadsYield = Total 2D yield (bases)
 runs.treatments.minknow-metrichor.metrichorMax2DRead = Longest 2D read (bases)
 runs.treatments.minknow-metrichor.metrichorMax2DQualityScore = Peak 2D quality score
 
+run.treatments.sav.default.yieldTotal=Rendement total (Gb)
+run.treatments.sav.default.nonIndexedYieldTotal=Rendement total non indexé (Gb)
+run.treatments.sav.default.Q30PercTotal=% Q30 total
+run.treatments.sav.default.nonIndexedQ30PercTotal=% Q30 total non indexé
 
 #search
 sequencingProgramType.value.PE = Pair End
