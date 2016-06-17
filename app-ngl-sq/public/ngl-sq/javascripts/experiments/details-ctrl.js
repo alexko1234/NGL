@@ -543,7 +543,9 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 			        	 "type":"text",
 			        	 "listStyle":"bt-select-filter",
 			        	 "choiceInList":true,
-			        	 "possibleValues": 'getBoxCatalogs(value)',
+			        	 "possibleValues": 'getBoxCatalogs(value,true)',
+			        	 //"possibleValues": 'getBoxCatalogs(value)|filter:\'true\'',
+			        	 //"possibleValues": 'boxCatalogIsActive(value)',
 			        	 "render":'<div bt-select ng-model="value.data.boxCatalogCode" bt-options="v.code as v.name for v in getBoxCatalogs(value)" ng-edit="false"></div>',			        	 
 			        	 "edit":true
 			         },			         
@@ -641,6 +643,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 	};
 	
 	var listKitCatalogsActive = undefined;
+	var listBoxCatalogsActive = undefined;
 	
 	$scope.kitCatalogIsActive = function() {
 		var liste = lists.getKitCatalogs();
@@ -650,7 +653,21 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		return listKitCatalogsActive;
 	}
 	
-	
+	$scope.boxCatalogIsActive = function(value) {
+		var kitCatalogCode = $parse("data.kitCatalogCode")(value);
+		var boxList = undefined;
+		console.log("boxCatalogIsActive");
+		if(null !== kitCatalogCode && undefined !== kitCatalogCode && boxList == undefined){
+			//return lists.getBoxCatalogs({"kitCatalogCode":kitCatalogCode, "isActive": true},"boxCatalogs-"+kitCatalogCode);
+			
+			boxList = lists.getBoxCatalogs({"kitCatalogCode":kitCatalogCode},"boxCatalogs-"+kitCatalogCode);
+			return $filter('filter')(boxList, {active: true});
+			//listBoxCatalogsActive = boxList;
+			//listBoxCatalogsActive = $filter('filter')(lists.getBoxCatalogs({"kitCatalogCode":kitCatalogCode},"boxCatalogs-"+kitCatalogCode), {active: true});
+		}
+		
+		//return listBoxCatalogsActive;
+	}
 	
 	$scope.scan = function(e, property, propertyName){
 		// console.log(property);
@@ -669,13 +686,26 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		}
 	};
 
-	$scope.getBoxCatalogs = function(value){
-		
+	$scope.getBoxCatalogs = function(value, isActive){
+		console.log("getBoxCatalogs");
 		var kitCatalogCode = $parse("data.kitCatalogCode")(value);
 		
-		if(null !== kitCatalogCode && undefined !== kitCatalogCode){
-			console.log("kitCatalogCode: "+kitCatalogCode);
-			return lists.getBoxCatalogs({"kitCatalogCode":kitCatalogCode},"boxCatalogs-"+kitCatalogCode);
+		if(null !== kitCatalogCode && undefined !== kitCatalogCode){			
+			var key = "boxCatalogs-"+kitCatalogCode+((isActive)?"+-true":"-all");
+			
+			var result = lists.get(key);
+			if(!result){
+				if(!isActive){
+					result = lists.refresh.boxCatalogs({"kitCatalogCode":kitCatalogCode},key);
+				}else{
+					result = lists.refresh.boxCatalogs({"kitCatalogCode":kitCatalogCode,"isActive":isActive},key);
+				}
+				
+			}	
+			return result;
+			
+			
+			
 		} else {
 			console.log("pas de kitCatalogCode");
 		}				

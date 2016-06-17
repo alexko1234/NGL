@@ -96,7 +96,7 @@ public class BoxCatalogs extends DocumentController<BoxCatalog>{
 			List<BoxCatalog> boxCatalogs = results.toList();
 			
 			return ok(Json.toJson(new DatatableResponse<BoxCatalog>(boxCatalogs, results.count())));
-		}else if (boxCatalogSearch.list){
+		/*}else if (boxCatalogSearch.list){
 			keys = new BasicDBObject();
 			keys.put("code", 1);
 			keys.put("name", 1);
@@ -113,7 +113,7 @@ public class BoxCatalogs extends DocumentController<BoxCatalog>{
 					los.add(new ListObject(p.code, p.name));	// Pour une recherche avec le code du kitCatalogCode...							
 			}
 			
-			return Results.ok(Json.toJson(los));
+			return Results.ok(Json.toJson(los));*/
 		}else{
 			if(null == boxCatalogSearch.orderBy)boxCatalogSearch.orderBy = "code";
 			if(null == boxCatalogSearch.orderSense)boxCatalogSearch.orderSense = 0;
