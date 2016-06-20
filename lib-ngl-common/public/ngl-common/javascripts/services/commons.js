@@ -189,6 +189,9 @@ angular.module('commonsServices', []).
     				reportConfigs : function(params, key){
     					load(jsRoutes.controllers.reporting.api.ReportingConfigurations.list().url,params,(key)?key:'reportConfigs');    				
     				},
+    				receptionConfigs : function(params, key){
+    					load(jsRoutes.controllers.receptions.api.ReceptionConfigurations.list().url,params,(key)?key:'receptionConfigs');    				
+    				},
     				filterConfigs : function(params, key){
     					load(jsRoutes.controllers.reporting.api.FilteringConfigurations.list().url,params,(key)?key:'filterConfigs');    				
     				},

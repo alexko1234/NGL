@@ -18,6 +18,7 @@ import play.mvc.Result;
 import validation.ContextValidation;
 import validation.utils.ValidationHelper;
 import controllers.TPLCommonController;
+import controllers.authorisation.Permission;
 import controllers.instruments.io.utils.AbstractInput;
 import controllers.instruments.io.utils.AbstractOutput;
 import controllers.instruments.io.utils.File;
@@ -25,7 +26,7 @@ import fr.cea.ig.MongoDBDAO;
 
 public class IO extends TPLCommonController {
 	
-	final static Form<PropertyFileValue> fileForm = form(PropertyFileValue.class);
+	final Form<PropertyFileValue> fileForm = form(PropertyFileValue.class);
 	
 	private Experiment getExperiment(String code){
 		return MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, code);
@@ -97,6 +98,7 @@ public class IO extends TPLCommonController {
 	}
 	
 	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 5000 * 1024)
+	@Permission(value={"writing"})
 	public Result importFile(String experimentCode){
 		Experiment experiment = getExperiment(experimentCode);
 		if(null == experiment)return badRequest("experiment not exist");

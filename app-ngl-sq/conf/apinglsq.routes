@@ -70,3 +70,5 @@ GET		/api/protocols													controllers.protocols.api.Protocols.list()
 
 
 GET		/api/printing/tags												@controllers.printing.api.Tags.list()
+
+

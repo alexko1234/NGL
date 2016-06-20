@@ -39,8 +39,7 @@ import fr.cea.ig.MongoDBResult;
 public class Samples extends DocumentController<Sample>{
 	
 	final Form<Sample> sampleForm = form(Sample.class);
-	final Form<SamplesSearchForm> sampleSearchForm = form(SamplesSearchForm.class);
-
+	
 	public Samples() {
 		super(InstanceConstants.SAMPLE_COLL_NAME, Sample.class);	
 	}
