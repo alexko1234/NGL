@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
 import models.laboratory.common.description.Level;
@@ -635,21 +636,19 @@ public class ExpWorkflowsHelper {
 				
 		
 		if(null != atm && experimentPropertyDefinitionCodes.size() > 0){
-			//TODO GA bug when several the same properties in input when map create in collectors
 			propertiesForALevel.putAll(atm.inputContainerUseds.stream()
 					.filter((InputContainerUsed icu) -> icu.experimentProperties != null)
 					.map((InputContainerUsed icu) -> icu.experimentProperties.entrySet())
 					.flatMap(Set::stream)
 					.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()))					
-					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
+					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));
 			if(null != atm.outputContainerUseds){
-				//TODO GA bug when several the same properties in output when map create in collectors
 				propertiesForALevel.putAll(atm.outputContainerUseds.stream()
 						.filter((OutputContainerUsed ocu) -> ocu.experimentProperties != null)
 						.map((OutputContainerUsed ocu) -> ocu.experimentProperties.entrySet())
 						.flatMap(Set::stream)
 						.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()))
-						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
+						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));
 			}			
 		}
 		
@@ -669,14 +668,14 @@ public class ExpWorkflowsHelper {
 					.map((InputContainerUsed icu) -> icu.instrumentProperties.entrySet())
 					.flatMap(Set::stream)
 					.filter(entry -> instrumentPropertyDefinitionCodes.contains(entry.getKey()))
-					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
+					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));
 			if(null != atm.outputContainerUseds){
 				propertiesForALevel.putAll(atm.outputContainerUseds.stream()
 						.filter((OutputContainerUsed ocu) -> ocu.instrumentProperties != null)
 						.map((OutputContainerUsed ocu) -> ocu.instrumentProperties.entrySet())
 						.flatMap(Set::stream)
 						.filter(entry -> instrumentPropertyDefinitionCodes.contains(entry.getKey()))
-						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
+						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));
 			}					
 		}
 		/* Do not extract property from process because the risk to have the same property on several process is very big
@@ -692,12 +691,20 @@ public class ExpWorkflowsHelper {
 						.map((InputContainerUsed icu) -> getProcessesProperties(icu))
 						.flatMap(List::stream)
 						.filter(entry -> processesPropertyDefinitionCodes.contains(entry.getKey()))
-						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));				
+						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));				
 			}
 		}
 		
 		return propertiesForALevel;
 	}
+	
+	private PropertyValue PropertiesMerger(PropertyValue u, PropertyValue v) {
+		if(u.value.equals(v.value)){
+			return u;
+		}else{
+			throw new IllegalStateException(String.format("Duplicate key %s with different values", u)); 
+		}
+    }
 	
 	private List<String> getProcessesPropertyDefinitionCodes(InputContainerUsed icu, Level.CODE level) {		
 		return icu.processTypeCodes.stream()
