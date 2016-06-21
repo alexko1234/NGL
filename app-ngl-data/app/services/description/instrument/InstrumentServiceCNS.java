@@ -553,8 +553,8 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	
 	private List<Instrument> getInstrumentMKIB() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("MK16823", "MK16823", null, true, "/env/ig/atelier/nanopore/cns/MK16823", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		instruments.add(createInstrument("MK17490", "MK17490", null, true, "/env/ig/atelier/nanopore/cns/MK17490", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("MN16823", "MK16823", null, true, "/env/ig/atelier/nanopore/cns/MN16823", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("MN17490", "MK17490", null, true, "/env/ig/atelier/nanopore/cns/MN17490", DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		return instruments;
 	}
