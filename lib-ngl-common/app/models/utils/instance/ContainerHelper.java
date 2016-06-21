@@ -164,17 +164,6 @@ public class ContainerHelper {
 	}
 
 
-	private static SimpleDateFormat getSimpleDateFormat(){
-		return new SimpleDateFormat("yyyyMMdd_HHmmss");
-	}
-
-	// generation d'un code de container pour les cas ou aucun n'est fourni: <CODE>-<date><RANDOMNUM>
-	public static String generateContainerCode(String categoryCode){
-		Random randomGenerator = new Random();
-		return (categoryCode+"-"+getSimpleDateFormat().format(new Date())+randomGenerator.nextInt(100)).toUpperCase();
-	}
-
-
 	public static List<ContainerSupport> createSupportFromContainers(List<Container> containers, Map<String, PropertyValue<String>> mapSupportsCodeSeq, ContextValidation contextValidation){
 
 		HashMap<String,ContainerSupport> mapSupports = new HashMap<String,ContainerSupport>();

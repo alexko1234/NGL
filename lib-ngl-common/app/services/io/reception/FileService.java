@@ -5,12 +5,22 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import play.Logger;
-import fr.cea.ig.DBObject;
 import models.laboratory.common.instance.property.PropertyFileValue;
+import models.laboratory.container.instance.Container;
+import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.reception.instance.AbstractFieldConfiguration;
+import models.laboratory.reception.instance.ExcelFieldConfiguration;
+import models.laboratory.reception.instance.ObjectFieldConfiguration;
+import models.laboratory.reception.instance.PropertiesFieldConfiguration;
+import models.laboratory.reception.instance.PropertyValueFieldConfiguration;
 import models.laboratory.reception.instance.ReceptionConfiguration;
+import models.laboratory.reception.instance.ReceptionConfiguration.Action;
+import models.laboratory.sample.instance.Sample;
+import services.io.reception.mapping.ContainerMapping;
 import services.io.reception.mapping.SampleMapping;
+import services.io.reception.mapping.SupportMapping;
 import validation.ContextValidation;
+import fr.cea.ig.DBObject;
 
 public abstract class FileService {
 	
@@ -24,6 +34,10 @@ public abstract class FileService {
 	
 	private Map<String, Map<String, DBObject>> objects = new HashMap<String,Map<String, DBObject>>();
 	
+	public Map<String, Map<String, DBObject>> getObjects() {
+		return objects;
+	}
+
 	protected FileService(ReceptionConfiguration configuration,
 			PropertyFileValue fileValue, ContextValidation contextValidation) {
 		this.configuration = configuration;
@@ -41,20 +55,156 @@ public abstract class FileService {
 		
 		if("sample".equals(objectType)){
 			return new SampleMapping(objects, configuration.configs.get(objectType), configuration.action, contextValidation);
-		}else{
+		}else if("support".equals(objectType)){
+			return new SupportMapping(objects, configuration.configs.get(objectType), configuration.action, contextValidation);
+		}else if("container".equals(objectType)){
+			return new ContainerMapping(objects, configuration.configs.get(objectType), configuration.action, contextValidation);
+		}
+		else{
 			contextValidation.addErrors("Error", "Mapping : "+objectType);
 			throw new UnsupportedOperationException("Mapping : "+objectType);
 		}
 	}
 	 
+	/**
+	 * analyse one line of the file
+	 * @param rowMap
+	 */
 	protected void treatLine(Map<Integer, String> rowMap) {
 		
 		Set<String> objectTypes = configuration.configs.keySet();
 		
 		objectTypes.stream().forEach(s -> {
-			mappings.get(s).convertToDBObject(rowMap);			
+			try {
+				DBObject dbObject = mappings.get(s).convertToDBObject(rowMap);
+				if (null != dbObject.code)
+					objects.get(s).put(dbObject.code, dbObject);
+				
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 		});
 	}
+	
+	/**
+	 * Consolidate the object obtain after file parsing
+	 */
+	protected void consolidateObjects() {
+		//First consolidate container
+		if(configuration.configs.containsKey("container")){
+			Map<String, DBObject> containers = objects.get("container");
+			containers.values().forEach(c -> {
+				((ContainerMapping)mappings.get("container")).consolidate((Container)c);
+				
+			});
+		}
+		//Second consolodate support
+		if(configuration.configs.containsKey("support")){
+			Map<String, DBObject> supports = objects.get("support");
+			supports.values().forEach(c -> {
+				((SupportMapping)mappings.get("support")).consolidate((ContainerSupport)c);
+				
+			});
+		}
+		
+		//normally not necessary to consolidate sample
+		
+	}
+	protected void saveObjects() {
+		//First sampe if needed
+		
+		if(Action.save.equals(configuration.action)){
+			contextValidation.setCreationMode();
+		}else{
+			contextValidation.setUpdateMode();
+		}
+		
+		if(!contextValidation.hasErrors() && configuration.configs.containsKey("sample")){
+			contextValidation.addKeyToRootKeyName("samples");
+			Map<String, DBObject> samples = objects.get("sample");
+			samples.values().forEach(o -> {
+				Sample sample = (Sample)o;
+				contextValidation.addKeyToRootKeyName(sample.code);
+				sample.validate(contextValidation);
+				contextValidation.removeKeyFromRootKeyName(sample.code);
+			});
+			contextValidation.removeKeyFromRootKeyName("samples");
+			
+		}
+		
+		//Second support if needed
+		if(!contextValidation.hasErrors() && configuration.configs.containsKey("support")){
+			contextValidation.addKeyToRootKeyName("supports");
+			Map<String, DBObject> supports = objects.get("support");
+			supports.values().forEach(o -> {
+				ContainerSupport support = (ContainerSupport)o;
+				contextValidation.addKeyToRootKeyName(support.code);
+				support.validate(contextValidation);
+				contextValidation.removeKeyFromRootKeyName(support.code);
+			});
+			contextValidation.removeKeyFromRootKeyName("supports");			
+		}
+		
+		//Third container if needed
+		if(!contextValidation.hasErrors() && configuration.configs.containsKey("container")){
+			contextValidation.addKeyToRootKeyName("containers");
+			Map<String, DBObject> supports = objects.get("container");
+			supports.values().forEach(o -> {
+				Container container = (Container)o;
+				contextValidation.addKeyToRootKeyName(container.code);
+				container.validate(contextValidation);
+				contextValidation.removeKeyFromRootKeyName(container.code);
+			});
+			contextValidation.removeKeyFromRootKeyName("containers");			
+		}		
+	}
+/**
+	 * Update HeaderLabel in ExcelFieldConfiguration to have a good error message
+	 */
+	protected void updateHeaderConfiguration() {
+		Set<String> objectTypes = configuration.configs.keySet();
+		objectTypes.stream().forEach(s -> {
+			Map<String, ? extends AbstractFieldConfiguration> fieldConfigurations = configuration.configs.get(s);
+			Set<String> propertyNames = configuration.configs.get(s).keySet();
+			propertyNames.stream().forEach(pName ->{
+				updateAbstractFieldConfigurationHeader(fieldConfigurations.get(pName));
+			});
+		});
+	}
+
+	private void updateAbstractFieldConfigurationHeader(AbstractFieldConfiguration afc) {
+		if(ExcelFieldConfiguration.class.isAssignableFrom(afc.getClass())){
+			updateExcelConfigurationHeader(afc);
+		}else if(PropertiesFieldConfiguration.class.isAssignableFrom(afc.getClass())){
+			PropertiesFieldConfiguration pfc = (PropertiesFieldConfiguration)afc;
+			Set<String> propertyNames = pfc.configs.keySet();
+			propertyNames.stream().forEach(_pName ->{
+				updateAbstractFieldConfigurationHeader(pfc.configs.get(_pName));
+			});
+		}else if(PropertyValueFieldConfiguration.class.isAssignableFrom(afc.getClass())){
+			PropertyValueFieldConfiguration pvfc = (PropertyValueFieldConfiguration)afc;
+			updateAbstractFieldConfigurationHeader(pvfc.value);
+			if(null != pvfc.unit)
+				updateAbstractFieldConfigurationHeader(pvfc.unit);
+		}else if(ObjectFieldConfiguration.class.isAssignableFrom(afc.getClass())){
+			@SuppressWarnings("rawtypes")
+			ObjectFieldConfiguration ofc = (ObjectFieldConfiguration)afc;
+			Set<String> propertyNames = ofc.configs.keySet();
+			propertyNames.stream().forEach(_pName ->{
+				updateAbstractFieldConfigurationHeader((AbstractFieldConfiguration) ofc.configs.get(_pName));
+			});
+		}
+	}
+
+	private void updateExcelConfigurationHeader(AbstractFieldConfiguration afc) {
+		ExcelFieldConfiguration efc = (ExcelFieldConfiguration)afc;
+		if(this.headerByIndex.containsKey(efc.cellPosition)){
+			efc.headerValue = this.headerByIndex.get(efc.cellPosition);
+		}else{
+			contextValidation.addErrors("Headers","not found header for cell position "+efc.cellPosition);
+		}
+	}
+	
 	
 	public abstract void analyse();
 	

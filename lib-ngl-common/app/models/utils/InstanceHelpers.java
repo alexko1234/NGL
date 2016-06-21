@@ -112,27 +112,20 @@ public class InstanceHelpers {
 
 	public static void copyPropertyValueFromPropertiesDefinition(List<PropertyDefinition> propertyDefinitions,
 			Map<String, PropertyValue> propertiesInput, Map<String, PropertyValue> propertiesOutPut) {
-
+		
+		if (propertiesOutPut == null) {
+			propertiesOutPut = new HashMap<String, PropertyValue>();
+		}
+		
 		for (PropertyDefinition propertyDefinition : propertyDefinitions) {
-
 			PropertyValue propertyValue = propertiesInput.get(propertyDefinition.code);
-
 			if (propertyValue != null) {
-
-				if (propertiesOutPut == null) {
-					propertiesOutPut = new HashMap<String, PropertyValue>();
-				}
 				propertiesOutPut.put(propertyDefinition.code, propertyValue);
 			}
 		}
 
 	}
-
-	public static void copyPropertyValueFromLevel(Map<String, PropertyDefinition> propertyDefinitions,
-			Level.CODE level, Map<String, PropertyValue> propertyValues, Map<String, PropertyValue> properties) {
-
-	}
-
+	
 	public static DBObject save(String collectionName, IValidation obj, ContextValidation contextError,
 			Boolean keepRootKeyName) {
 		ContextValidation localContextError = new ContextValidation(contextError.getUser());

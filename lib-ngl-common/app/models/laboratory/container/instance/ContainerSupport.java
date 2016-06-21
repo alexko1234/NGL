@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import models.laboratory.common.instance.Comment;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
@@ -16,7 +17,6 @@ import models.utils.InstanceConstants;
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.container.instance.ContainerSupportValidationHelper;
-import validation.container.instance.ContainerValidationHelper;
 import validation.utils.ValidationHelper;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -27,7 +27,7 @@ public class ContainerSupport extends DBObject implements IValidation{
 	public String categoryCode;
 	public State state;
 	public String storageCode;
-	public Valuation valuation;
+	public Valuation valuation; //TODO GA Must be disappear ???
 	public TraceInformation traceInformation;
 	public Set<String> projectCodes;
 	public Set<String> sampleCodes;
@@ -37,7 +37,9 @@ public class ContainerSupport extends DBObject implements IValidation{
 	public Integer nbContainers;
 	public Integer nbContents;
 	
+	public List<Comment> comments;
 	
+	public List<StorageHistory> storages;
 	
 	public ContainerSupport() {
 		projectCodes= new HashSet<>();

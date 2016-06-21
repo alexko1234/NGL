@@ -35,9 +35,9 @@ public class ExcelFileService extends FileService {
 			//compute header label and column position
 			Sheet sheet = getSheet(0);
 			this.headerByIndex = convertRow(sheet.getRow(0));
-			
+			updateHeaderConfiguration();
 			if(null == headerByIndex){
-				contextValidation.addErrors("header", "not found");
+				contextValidation.addErrors("Headers", "not found");
 			}else{
 				Iterator<Row> iti = sheet.rowIterator();
 				iti.next();
@@ -51,12 +51,17 @@ public class ExcelFileService extends FileService {
 					}
 					contextValidation.removeKeyFromRootKeyName("line "+row.getRowNum());
 				}
+				if(!contextValidation.hasErrors()){
+					consolidateObjects();
+					saveObjects();
+				}				
 			}
 		}catch(Throwable e){
 			Logger.error("Error import file "+e.getMessage(),e);
 			contextValidation.addErrors("Exception contact your administrator", e.getMessage());
 		}
 	}
+
 	
 
 	/**

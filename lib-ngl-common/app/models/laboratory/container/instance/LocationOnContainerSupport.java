@@ -1,16 +1,11 @@
 package models.laboratory.container.instance;
 
 
-import models.laboratory.container.description.ContainerSupportCategory;
-import models.laboratory.storage.instance.Storage;
-import models.utils.HelperObjects;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import  com.fasterxml.jackson.annotation.JsonProperty;
-
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.container.instance.ContainerSupportValidationHelper;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 

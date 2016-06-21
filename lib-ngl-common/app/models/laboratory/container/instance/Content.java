@@ -5,17 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import models.laboratory.common.instance.PropertyValue;
-import models.laboratory.sample.description.SampleCategory;
-import models.laboratory.sample.description.SampleType;
-import models.laboratory.sample.instance.Sample;
-import models.utils.HelperObjects;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import validation.ContextValidation;
 import validation.IValidation;
 import validation.container.instance.ContentValidationHelper;
-import validation.sample.instance.SampleValidationHelper;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Content implements IValidation{
 
