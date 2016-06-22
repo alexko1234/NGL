@@ -269,7 +269,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 	};
 	
 	$scope.$on('save', function(e, callbackFunction) {	
-		console.log("call event save on tubes-to-tube");		
+		console.log("call event save on x-to-tubes");		
 		$scope.atmService.viewToExperiment($scope.experiment, false);
 		$scope.updateConcentration($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
@@ -313,7 +313,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 	};
 	
 	$scope.$on('refresh', function(e) {
-		console.log("call event refresh on tubes-to-tube");		
+		console.log("call event refresh on x-to-tubes");		
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);
 		$scope.$emit('viewRefeshed');
 	});
@@ -338,6 +338,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 	
 	atmService.inputContainerSupportCategoryCode = $scope.experiment.instrument.inContainerSupportCategoryCode;
 	atmService.outputContainerSupportCategoryCode = $scope.experiment.instrument.outContainerSupportCategoryCode;
+	
 	
 	//defined new atomictransfertMethod
 	atmService.newAtomicTransfertMethod = function(){

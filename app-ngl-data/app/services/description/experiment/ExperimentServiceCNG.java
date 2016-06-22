@@ -57,7 +57,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	public void saveExperimentTypes(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ExperimentType> l = new ArrayList<ExperimentType>();
 		
-		/** ext , display order -1 **/
+		/** voidprocess , display order -1 **/
 		
 		l.add(newExperimentType("Ext to prepa flowcell","ext-to-prepa-flowcell",null,-1,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), 
@@ -81,14 +81,33 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		/** ordered by display order **/
+		//FDS 01/02/2016 ajout -- JIRA NGL-894 processus pour X5
+		l.add(newExperimentType("Ext to X5_WG PCR free","ext-to-x5-wg-pcr-free",null,-1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
+				null, 
+				null ,
+				"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
-		l.add(newExperimentType("Aliquot","aliquoting",null, 10100,
+		//FDS 15/04/2016 ajout -- JIRA NGL-894 processus court pour X5
+		l.add(newExperimentType("Ext to X5_norm,FC ord, dépôt","ext-to-norm-fc-ordered-depot",null,-1,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
+				null, 
+				null ,
+				"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
+		/** transfert, ordered by display order **/
+		//FDS essai: le display order est distinct entre transfert et transformation puisque ce sont 2 select differents
+		//           repartir d'un petit chiffre...(100 au lieu de 10100)????
+		l.add(newExperimentType("Aliquot","aliquoting",null, 100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()),
 				getPropertyAliquoting(), 
 				getInstrumentUsedTypes("hand"),
 				"OneToMany", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+		
+		/** transformation, ordered by display order **/
 		
 		//FDS modif 02/02/2016 ne plus mettre type voidprocess, ajout intrumentType janus et ajout getProperty...
 		l.add(newExperimentType("Librairie normalisée","lib-normalization",null,900,
@@ -126,26 +145,9 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				getPropertyDefinitionsIlluminaDepot(),
 				getInstrumentUsedTypes("MISEQ","HISEQ2000","HISEQ2500","NEXTSEQ500","HISEQ4000","HISEQX"), 
 				"OneToVoid", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-				
-			
-		//FDS 01/02/2016 ajout -- JIRA NGL-894 4: processus et experiments pour X5
-		l.add(newExperimentType("Ext to X5_WG PCR free","ext-to-x5-wg-pcr-free",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
-				null, 
-				null ,
-				"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));			
 		
-		//FDS 15/04/2016 ajout -- JIRA NGL-894 processus court pour X5
-		l.add(newExperimentType("Ext to X5_norm,FC ord, dépôt","ext-to-norm-fc-ordered-depot",null,-1,
-				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
-				null, 
-				null ,
-				"OneToOne", 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
-		
-		//FDS 01/02/2016 ajout -- JIRA NGL-894: processus et experiments pour X5
+		//FDS 01/02/2016 ajout -- JIRA NGL-894: experiments pour X5
 		l.add(newExperimentType("Prep PCR free","prep-pcr-free",null,800,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 				getPropertyDefinitionsPrepPcrFree(), 
@@ -153,6 +155,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		
+		//FDS 01/02/2016 ajout -- JIRA NGL-894: experiments pour X5
 		l.add(newExperimentType("Quantification qPCR","qpcr-quantification", null,20200,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
 				getPropertyDefinitionsQPCR(), 
@@ -160,7 +163,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				"OneToVoid", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNG))); 
 		
-		// FDS 07/04/2016 ajout --JIRA NGL-894: processus et experiments pour X5
+		// FDS 07/04/2016 ajout --JIRA NGL-894: experiments pour X5
 		l.add(newExperimentType("profil LABCHIP_GX","labchip-migration-profile", null, 20100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), 
 				getPropertyDefinitionsChipMigration(), 
@@ -209,7 +212,10 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 			/**********************************************************************************/
 			if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){
 				
+				// pourquoi j'ai ce code NGL-1025  dans cette branche ?????
+				
 				//FDS 31/05/2016 ajout -- JIRA NGL-1025: processus et experiments pour RNASeq :5 nouveaux exp type
+				// voidprocess
 				l.add(newExperimentType("Ext to RNASeq","ext-to-rna-sequencing",null,-1,
 						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()),
 						null, 
@@ -224,6 +230,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 						"OneToOne", 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 				
+				//transformation
 				l.add(newExperimentType("Prep RNA","rna-prep",null,1100,
 						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 						null, 
@@ -244,6 +251,13 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 						getInstrumentUsedTypes("janus"),
 						"ManyToOne", 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
+				
+				// FDS 17/06/2016 NGL-1029: experience de transfert "pool : 4 plaques vers tubes ou plaques" (NOTE: pas de Node pour experience type transfert )
+				l.add(newExperimentType("Pool générique","pool",null,200,
+						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPool(),
+						getInstrumentUsedTypes("janus", "hand"),"ManyToOne", 
+						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
+				
 			}
 
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
@@ -295,20 +309,22 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 
 		//FDS ...../2016 -- JIRA NGL-894: processus et experiments pour X5
 		//FDS 15/04/2016 -- JIRA NGL-894: processus court pour X5: ajout "ext-to-norm-fc-ordered-depot" dans les previous
+		//FDS 20/06/2016 -- JIRA NGL-1029: ajout transfert pool
 		newExperimentTypeNode("lib-normalization",getExperimentTypes("lib-normalization").get(0), 
 				false, false, false, 
 				getExperimentTypeNodes("ext-to-norm-fc-ordered-depot", "prep-pcr-free"), 
 				null, 
 				getExperimentTypes("miseq-qc"),
-				getExperimentTypes("aliquoting")
+				getExperimentTypes("aliquoting","pool")
 				).save();
 		
+		//FDS 20/06/2016 -- JIRA NGL-1029: ajout transfert pool
 		newExperimentTypeNode("denat-dil-lib",getExperimentTypes("denat-dil-lib").get(0),
 				false,false,false,
 				getExperimentTypeNodes("ext-to-denat-dil-lib", "lib-normalization"),
 				null,
 				null, 
-				getExperimentTypes("aliquoting")
+				getExperimentTypes("aliquoting","pool")
 				).save();
 		
 		newExperimentTypeNode("prepa-flowcell",getExperimentTypes("prepa-flowcell").get(0),
@@ -380,6 +396,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 					null,
 					null
 					).save();
+			
 		}
 	}
 
@@ -464,42 +481,17 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 		return propertyDefinitions;
 	}
 	
-	/* FDS 07/04/2016 VIEUX CODE............
-	//TODO
-	// Propriete taille en output et non en input ?
-	// Valider les keys
-	public static List<PropertyDefinition> getPropertyDefinitionsChipMigration() throws DAOException {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		// A supprimer une fois le type de support category sera géré
-		
-		//InputContainer
-		propertyDefinitions.add(newPropertiesDefinition("Position","position", LevelService.getLevels(Level.CODE.ContainerIn),Integer.class, true, "single"));
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, "single"));
-		
-		//Outputcontainer
-		propertyDefinitions.add(newPropertiesDefinition("Taille", "size", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, true
-				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("kb"), MeasureUnit.find.findByCode("kb"), "single"));
-		// Voir avec Guillaume comment gérer les fichiers
-		propertyDefinitions.add(newPropertiesDefinition("Profil DNA HS", "fileResult", LevelService.getLevels(Level.CODE.ContainerOut),String.class, true, "single"));
-		
-		return propertyDefinitions;
-	}
-	
-	
-	*/
-	
 	public static List<PropertyDefinition> getPropertyDefinitionsQCMiseq() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		//InputContainer
 		propertyDefinitions.add(newPropertiesDefinition("Densité de clusters", "clusterDensity", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_CONCENTRATION), MeasureUnit.find.findByCode("c/mm²"), MeasureUnit.find.findByCode("c/mm²"),
 				"single", 11, true, null, null));
 		propertyDefinitions.add(newPropertiesDefinition("Taille d'insert", "measuredInsertSize", LevelService.getLevels(Level.CODE.ContainerIn), Integer.class, false, null, null, 
 				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
 				"single", 12, true, null, null));
-		
-			
-			
-
+	
 		return propertyDefinitions;
 	}
 	
@@ -564,7 +556,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 	}
 	
 	
-	// FDS ajout 05/02/2016 -- JIRA NGL-894: experiment librairie normalization fait partie du process X5
+	// FDS ajout 05/02/2016 -- JIRA NGL-894: experiment librairie normalization pour le process X5
 	private List<PropertyDefinition> getPropertyDefinitionsLibNormalization() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		
@@ -594,6 +586,22 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode("µL"),"single", 20, true, null,null));		
 		
 		//OuputContainer
+		
+		return propertyDefinitions;
+	}
+	
+	// FDS ajout17/06/2016 -- JIRA NGL-1029: experiment pool en plaque
+	private static List<PropertyDefinition> getPropertyDefinitionPool() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		//InputContainer
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 20, true, null,null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume tampon", "bufferVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, false, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 25, true, null,null));
+		
+		//OuputContainer	
 		
 		return propertyDefinitions;
 	}

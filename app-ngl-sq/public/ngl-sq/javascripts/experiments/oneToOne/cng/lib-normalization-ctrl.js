@@ -1,6 +1,7 @@
+// FDS 15/02/2016 -- JIRA NGL-894 : lib-normalization experiment (en plaques)
 angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$http', 'atmToSingleDatatable',
                                                      function($scope, $parse, $http, atmToSingleDatatable){
-// FDS 15/02/2016 -- JIRA NGL-894 : lib-normalization experiment (en plaques)
+
 	
 	var inputExtraHeaders=Messages("experiments.inputs");
 	var outputExtraHeaders=Messages("experiments.outputs");	

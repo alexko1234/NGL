@@ -157,6 +157,7 @@ containers.table.comments = Commentaires
 containers.table.contents = Contents
 containers.table.percents = Pourcentage
 containers.table.referenceCollab = Réf. collab
+
 containers.supportView.results = Résultat(s)
 
 containers.workflow.state = Etat
@@ -369,6 +370,7 @@ experiments.src_dest.sheet = Source / Destination
 experiments.flowcell.design = Composition flowcell
 experiments.iryschip.design = Composition Irys Chip
 experiments.tube.design = Composition Tube
+experiments.96-wells-plate.design = Composition Plaque 96
 experiments.tubes.design = Tubes Paramétrage
 experiments.tubes.display = Tubes Composition
 experiments.flowcell.roadMap = Feuille de route

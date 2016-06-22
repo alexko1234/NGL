@@ -24,6 +24,7 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 	}
 	
 	@Override
+	//GA 22/06/2016 gestion des cas ou le locationOnContainerSupport.code n'est pas null
 	public void updateOutputCodeIfNeeded(ContainerSupportCategory outputCsc, String supportCode) {
 		//case tube :one support for each output
 		if(outputCsc.nbLine.compareTo(Integer.valueOf(1)) == 0 && outputCsc.nbColumn.compareTo(Integer.valueOf(1)) == 0){
@@ -32,6 +33,8 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 						String newSupportCode = CodeHelper.getInstance().generateContainerSupportCode();
 						ocu.locationOnContainerSupport.code = newSupportCode;
 						ocu.code = newSupportCode;
+					}else if(null == ocu.code && null != ocu.locationOnContainerSupport.code ){
+						ocu.code = ocu.locationOnContainerSupport.code;
 					}
 				}
 			);
@@ -40,6 +43,8 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 				if(null == ocu.locationOnContainerSupport.code){
 					ocu.locationOnContainerSupport.code = supportCode;
 					ocu.code = supportCode+"_"+ocu.locationOnContainerSupport.line;
+				}else if(null == ocu.code && null != ocu.locationOnContainerSupport.code && null != ocu.locationOnContainerSupport.line){
+					ocu.code = supportCode+"_"+ocu.locationOnContainerSupport.line;
 				}
 			}
 		);
@@ -47,6 +52,8 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 			outputContainerUseds.forEach((OutputContainerUsed ocu) -> {
 				if(null == ocu.locationOnContainerSupport.code){
 					ocu.locationOnContainerSupport.code = supportCode;
+					ocu.code = supportCode+"_"+ocu.locationOnContainerSupport.line+ocu.locationOnContainerSupport.column;
+				}else if(null == ocu.code && null != ocu.locationOnContainerSupport.code && null != ocu.locationOnContainerSupport.line && null != ocu.locationOnContainerSupport.column){
 					ocu.code = supportCode+"_"+ocu.locationOnContainerSupport.line+ocu.locationOnContainerSupport.column;
 				}
 			}

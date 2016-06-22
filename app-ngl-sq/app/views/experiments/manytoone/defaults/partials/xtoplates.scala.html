@@ -1,9 +1,10 @@
 @()
+<!--- FDS 22/06/2016 cree car trop de differences avec xtotubes.scala.html ?? -->
 
 <div class="col-md-12 col-lg-12" ng-switch="atmService.inputContainerSupportCategoryCode">
 <div ng-switch-when="tube">
 	<ul class="nav nav-tabs margin-bottom-5" role="tablist">
-	  <li class="active"><a href="" role="tab" data-target="#tube" data-toggle="tab">@Messages("experiments.tube.design")</a></li>
+	  <li class="active"><a href="" role="tab" data-target="#tube" data-toggle="tab">@Messages("experiments.96-wells-plate.design")</a></li>
 	  <li><a href="" role="tab"  data-target="#roadmap" data-toggle="tab" ng-click="atmService.data.updateDatatable()">@Messages("experiments.calculation.sheet")</a></li>  
 	</ul>
 	
@@ -31,7 +32,7 @@
 			<!-- OutputContainers table -->
 			<div class="row">
 				<div class="col-md-10 col-lg-10 flowcellTable">
-				@outputtubes()
+				@outputplates()
 				</div>
 			</div>		
 		</div>
@@ -47,7 +48,7 @@
 	</div>
 <div ng-switch-when="96-well-plate">
 <ul class="nav nav-tabs margin-bottom-5" role="tablist">
-  <li class="active"><a href="" role="tab" data-target="#plate" data-toggle="tab">@Messages("experiments.tube.design")</a></li>
+  <li class="active"><a href="" role="tab" data-target="#plate" data-toggle="tab">@Messages("experiments.96-wells-plate.design")</a></li>
   <li><a href="" role="tab"  data-target="#roadmap" data-toggle="tab" ng-click="atmService.data.updateDatatable()">@Messages("experiments.calculation.sheet")</a></li>
   <li><a href="" role="tab"  data-target="#src_dest" data-toggle="tab">@Messages("experiments.src_dest.sheet")</a></li>
 </ul>
@@ -65,7 +66,8 @@
 			<i class="fa fa-sign-in fa-2x"></i>
 			</button>
 			
-			</div>	
+			</div>
+			<!--   TEST FDS ajout num suport et type:OK==>   {{atmService.inputContainerSupportCategoryCode}} # {{$index +1}} :  {{supportCode}}  -->		
 			<button ng-repeat="supportCode in atmService.data.inputContainerSupports" type="button" 
 				ng-class="atmService.data.getPlateBtnClass(supportCode)" 
 				ng-click="atmService.data.setCurrentSupportCode(supportCode)">
@@ -76,7 +78,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-10 col-lg-10 flowcellTable">
-			@outputtubes()
+			@outputplates()
 			</div>
 		</div>
 	</div>
@@ -85,6 +87,7 @@
 		<div class="col-md-12 col-lg-12" ultimate-datatable="atmService.data.datatable"></div>
 	</div>
 	</div>
+	
 	
 	<div class="tab-pane" id="src_dest">
 	<div class="row roadmap">
@@ -121,7 +124,7 @@
 						Destination
 					</th>
 					<th>
-						Label Travail
+						Label Travail( CNS?? )
 					</th>											
 				</tr>
 				</thead>				
