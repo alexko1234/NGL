@@ -12,6 +12,8 @@ import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.description.dao.InstrumentUsedTypeDAO;
+import models.laboratory.sample.description.SampleType;
+import models.laboratory.sample.description.dao.SampleTypeDAO;
 import models.utils.dao.DAOException;
 
 import org.springframework.jdbc.core.SqlParameter;
@@ -57,6 +59,12 @@ public class ExperimentTypeMappingQuery extends MappingSqlQuery<ExperimentType>{
 		InstrumentUsedTypeDAO instrumentUsedTypeDAO = Spring.getBeanOfType(InstrumentUsedTypeDAO.class);
 		List<InstrumentUsedType> instrumentUsedTypes = instrumentUsedTypeDAO.findByExperimentId(idCommonInfoType);
 		experimentType.instrumentUsedTypes=instrumentUsedTypes;
+		
+		//Get list sample type by common info type
+		SampleTypeDAO sampleTypeDAO = Spring.getBeanOfType(SampleTypeDAO.class);
+		List<SampleType> sampleTypes = sampleTypeDAO.findByExperimentId(idCommonInfoType);
+		experimentType.sampleTypes=sampleTypes;
+				
 		//Get Experiment category
 		ExperimentCategoryDAO experimentCategoryDAO = Spring.getBeanOfType(ExperimentCategoryDAO.class);
 		ExperimentCategory experimentCategory=null;

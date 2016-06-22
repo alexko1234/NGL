@@ -29,7 +29,7 @@ public class ExperimentTypeDAO extends AbstractDAOCommonInfoType<ExperimentType>
 
 	public ExperimentTypeDAO() {
 		super("experiment_type", ExperimentType.class,ExperimentTypeMappingQuery.class,
-				"SELECT distinct c.id, c.fk_experiment_category, c.fk_common_info_type, c.atomic_transfert_method, c.short_code, c.new_sample ",
+				"SELECT distinct c.id, c.fk_experiment_category, c.fk_common_info_type, c.atomic_transfert_method, c.short_code, c.new_sample as newSample ",
 				"FROM experiment_type as c "+ sqlCommonInfoType, false);
 	}
 	@Override

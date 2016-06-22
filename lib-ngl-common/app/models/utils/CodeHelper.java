@@ -2,17 +2,18 @@ package models.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.mongojack.DBQuery;
+import org.mongojack.DBUpdate;
 
 import models.laboratory.common.instance.Comment;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.instance.Process;
-
-import org.apache.commons.lang3.StringUtils;
-
+import models.laboratory.project.instance.Project;
 import play.Logger;
+import fr.cea.ig.MongoDBDAO;
 
 //Singleton
 public class CodeHelper {
@@ -115,4 +116,59 @@ public class CodeHelper {
 		return (com.createUser + getSimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + Math
 				.random()).toUpperCase();
 	}
+	
+	public synchronized String generateSampleCode(String projectCode){
+		Project project =MongoDBDAO.findByCode(InstanceConstants.PROJECT_COLL_NAME, Project.class, projectCode);
+		String newCode=nextCode(project.lastSampleCode);			
+		MongoDBDAO.update(InstanceConstants.PROJECT_COLL_NAME, Project.class, DBQuery.is("code", project.code),DBUpdate.set("lastSampleCode",newCode));
+		return projectCode+"_"+newCode;
+	}
+	
+	
+	private static String nextCode(String oldCode){
+		String newCode=null;
+		String beginCode=null;
+		char lastLetter='Z';
+
+		if(oldCode==null){
+			newCode="A";
+		}else {
+			
+			int nbCharacter=oldCode.length();
+			int lastCharacter=nbCharacter;
+
+			//Recupère la position à partir de laquelle il faut changer de lettre
+			while (lastCharacter!=0 && oldCode.substring(lastCharacter-1, lastCharacter).equals(Character.toString(lastLetter))) {
+				lastCharacter--;
+			}
+			
+			if( lastCharacter>1 || (lastCharacter==1 && !oldCode.substring(lastCharacter-1, lastCharacter).equals(String.valueOf(lastLetter))))
+			{
+				beginCode=oldCode.substring(0, lastCharacter-1); // debut du code sample a conserver
+				newCode=beginCode+Character.toString((char) (oldCode.charAt(lastCharacter-1)+1)); // Concatenation debut code sample + lettre suivante
+			}
+			else {
+				newCode="AA";
+				lastCharacter=1;
+			}
+			
+			while (lastCharacter<nbCharacter){
+				newCode=newCode+'A';
+				lastCharacter++;
+			}
+		}
+		
+		return newCode;
+	}
+	
+	 public static void main (String[] args){
+		 System.out.println("New code A : "+CodeHelper.nextCode(null));
+		 System.out.println("New code B : "+CodeHelper.nextCode("A"));
+		 System.out.println("New code AA : "+CodeHelper.nextCode("Z"));
+		 System.out.println("New code BA : "+CodeHelper.nextCode("AZ"));
+		 System.out.println("New code AAAA : "+CodeHelper.nextCode("ZZZ"));
+		 System.out.println("New code AABA : "+CodeHelper.nextCode("AAAZ"));
+		 System.out.println("New code ACAA : "+CodeHelper.nextCode("ABZZ"));
+	 }
+	
 }

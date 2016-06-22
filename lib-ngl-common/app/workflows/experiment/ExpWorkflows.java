@@ -52,11 +52,13 @@ public class ExpWorkflows extends Workflows<Experiment>{
 			expWorkflowsHelper.updateXCodes(exp); 	
 		} else if("IP".equals(nextState.code)){
 			expWorkflowsHelper.updateATMs(exp, false);	
+			expWorkflowsHelper.updateContentsNewSamples(exp,validation);
 			expWorkflowsHelper.updateOutputContainerCodes(exp);
 		}else if("F".equals(nextState.code)){
 			long t0 = System.currentTimeMillis();
 			expWorkflowsHelper.updateATMs(exp, false);
 			long t1 = System.currentTimeMillis();
+			expWorkflowsHelper.updateContentsNewSamples(exp,validation);
 			expWorkflowsHelper.updateOutputContainerCodes(exp);
 			long t2 = System.currentTimeMillis();
 			expWorkflowsHelper.createOutputContainerSupports(exp, validation);

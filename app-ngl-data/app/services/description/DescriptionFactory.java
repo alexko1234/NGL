@@ -801,7 +801,10 @@ public class DescriptionFactory {
 		et.atomicTransfertMethod=atomicTransfertMethod;		
 		et.institutes = institutes;
 		et.active = active;
-		et.sampleTypes=sampleTypes;
+		if(sampleTypes!=null && sampleTypes.size()!=0){
+			et.newSample=true;
+			et.sampleTypes=sampleTypes;
+		}
 		return et;
 	}
 	

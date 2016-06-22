@@ -42,6 +42,7 @@ public class Project extends DBObject implements IValidation{
 	public Map<String, PropertyValue> properties;
 	public String umbrellaProjectCode;
 	public BioinformaticParameters bioinformaticParameters;
+	public String lastSampleCode;
 	
 
 	@Override

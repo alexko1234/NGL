@@ -56,6 +56,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentCategory("Cartographie optique BioNano", "opt-map-bionano"));
 		
 		l.add(newInstrumentCategory("Robot pipetage + Appareil de qPCR", "liquid-handling-robot-and-qPCR-system"));
+		l.add(newInstrumentCategory("Système de broyage", "sample-prep-system"));
 		
 		DAOHelpers.saveModels(InstrumentCategory.class, l, errors);
 		
@@ -251,6 +252,9 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentUsedType("Main", "irys-hand", InstrumentCategory.find.findByCode("hand"), getIrysChipProperties(),getInstrumentHand() 
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"irys-chip-2"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
+		l.add(newInstrumentUsedType("Cryobroyeur", "cryobroyeur", InstrumentCategory.find.findByCode("sample-prep-system"), null,getInstrumentCryobroyeur() 
+				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
 
@@ -260,6 +264,14 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		return instruments;
 	}
 
+	private List<Instrument> getInstrumentCryobroyeur() throws DAOException {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("6770 FREEZER/MILL 1","freezer-mill-1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("6870 LARGE FREEZER/MILL 1","large-freezer-mill-1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+		return instruments;
+	}
+	
 	private List<PropertyDefinition> getIrysChipProperties() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
         propertyDefinitions.add(newPropertiesDefinition("Code Irys CHIP", "containerSupportCode", LevelService.getLevels(Level.CODE.Instrument),String.class, true, "single",100));

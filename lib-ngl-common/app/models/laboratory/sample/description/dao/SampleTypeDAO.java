@@ -1,9 +1,12 @@
 package models.laboratory.sample.description.dao;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import models.laboratory.common.description.dao.CommonInfoTypeDAO;
+import models.laboratory.instrument.description.InstrumentUsedType;
+import models.laboratory.instrument.description.dao.InstrumentUsedTypeMappingQuery;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.utils.DescriptionHelper;
@@ -11,6 +14,8 @@ import models.utils.dao.AbstractDAOCommonInfoType;
 import models.utils.dao.AbstractDAOMapping;
 import models.utils.dao.DAOException;
 
+import org.springframework.asm.Type;
+import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.stereotype.Repository;
 
 import play.api.modules.spring.Spring;
@@ -65,5 +70,13 @@ public class SampleTypeDAO extends AbstractDAOCommonInfoType<SampleType>{
 		//Remove commonInfotype
 		CommonInfoTypeDAO commonInfoTypeDAO = Spring.getBeanOfType(CommonInfoTypeDAO.class);
 		commonInfoTypeDAO.remove(sampleType);
+	}
+	
+	public List<SampleType> findByExperimentId(long id) {
+		String sql=sqlCommon+
+				"JOIN experiment_type_sample_type as cit ON fk_sample_type=c.id " +
+				"WHERE cit.fk_experiment_type = ?";
+		SampleTypeMappingQuery sampleTypeMappingQuery = new SampleTypeMappingQuery(dataSource, sql,new SqlParameter("id", Type.LONG));
+		return sampleTypeMappingQuery.execute(id);
 	}
 }

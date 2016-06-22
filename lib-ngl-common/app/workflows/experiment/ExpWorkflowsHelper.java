@@ -36,6 +36,8 @@ import models.laboratory.experiment.instance.OutputContainerUsed;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
+import models.laboratory.sample.description.SampleType;
+import models.laboratory.sample.instance.Sample;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.instance.ContainerHelper;
@@ -44,15 +46,9 @@ import models.utils.instance.ExperimentHelper;
 import org.apache.commons.collections.CollectionUtils;
 import org.mongojack.DBQuery;
 import org.mongojack.DBUpdate;
-
-
-
-
-import org.mongojack.DBUpdate.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import play.Logger;
 import play.Play;
 import play.libs.Akka;
 import rules.services.RulesActor6;
@@ -68,7 +64,7 @@ import fr.cea.ig.MongoDBDAO;
 
 @Service
 public class ExpWorkflowsHelper {
-	
+
 	private final String NEW_PROCESS_CODES = "NEW_PROCESS_CODES";
 	@Autowired
 	private ContWorkflows containerWorkflows;
@@ -76,7 +72,7 @@ public class ExpWorkflowsHelper {
 	private ContSupportWorkflows containerSupportWorkflows;
 	@Autowired
 	private ProcWorkflows processWorkflows;
-	
+
 	public void updateXCodes(Experiment exp) {
 		Set<String> sampleCodes = new HashSet<String>();
 		Set<String> projectCodes  = new HashSet<String>();
@@ -85,19 +81,19 @@ public class ExpWorkflowsHelper {
 		Set<String> inputProcessCodes  = new HashSet<String>();
 		Set<String> inputFromTransformationTypeCodes = new HashSet<String>();
 		Set<String> inputProcessTypeCodes = new HashSet<String>();
-			
+
 		exp.atomicTransfertMethods.stream().map(atm -> atm.inputContainerUseds)
-			.flatMap(List::stream)
-			.forEach(inputContainer -> {
-				inputContainerCodes.add(inputContainer.code);
-				projectCodes.addAll(inputContainer.projectCodes);
-				sampleCodes.addAll(inputContainer.sampleCodes);
-				inputContainerSupportCodes.add(inputContainer.locationOnContainerSupport.code);
-				inputProcessCodes.addAll(inputContainer.processCodes);
-				inputFromTransformationTypeCodes.addAll(inputContainer.fromTransformationTypeCodes);
-				inputProcessTypeCodes.addAll(inputContainer.processTypeCodes);
-			});
-		
+		.flatMap(List::stream)
+		.forEach(inputContainer -> {
+			inputContainerCodes.add(inputContainer.code);
+			projectCodes.addAll(inputContainer.projectCodes);
+			sampleCodes.addAll(inputContainer.sampleCodes);
+			inputContainerSupportCodes.add(inputContainer.locationOnContainerSupport.code);
+			inputProcessCodes.addAll(inputContainer.processCodes);
+			inputFromTransformationTypeCodes.addAll(inputContainer.fromTransformationTypeCodes);
+			inputProcessTypeCodes.addAll(inputContainer.processTypeCodes);
+		});
+
 		exp.projectCodes = projectCodes;		
 		exp.sampleCodes = sampleCodes;
 		exp.inputContainerSupportCodes = inputContainerSupportCodes;		
@@ -107,115 +103,115 @@ public class ExpWorkflowsHelper {
 		exp.inputFromTransformationTypeCodes = inputFromTransformationTypeCodes;
 		MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", exp.code)
 				,DBUpdate.set("projectCodes", exp.projectCodes)
-					.set("sampleCodes", exp.sampleCodes)
-					.set("inputContainerSupportCodes", exp.inputContainerSupportCodes)
-					.set("inputContainerCodes", exp.inputContainerCodes)
-					.set("inputProcessCodes", exp.inputProcessCodes)
-					.set("inputProcessTypeCodes", exp.inputProcessTypeCodes)
-					.set("inputFromTransformationTypeCodes", exp.inputFromTransformationTypeCodes)
-						);
+				.set("sampleCodes", exp.sampleCodes)
+				.set("inputContainerSupportCodes", exp.inputContainerSupportCodes)
+				.set("inputContainerCodes", exp.inputContainerCodes)
+				.set("inputProcessCodes", exp.inputProcessCodes)
+				.set("inputProcessTypeCodes", exp.inputProcessTypeCodes)
+				.set("inputFromTransformationTypeCodes", exp.inputFromTransformationTypeCodes)
+				);
 	}
 
 
 	public void updateOutputContainerCodes(Experiment exp) {
 		Set<String> outputContainerSupportCodes = new HashSet<String>();
 		Set<String> outputContainerCodes = new HashSet<String>();
-		
+
 		exp.atomicTransfertMethods.stream()
-			.filter(atm -> (atm.outputContainerUseds != null))
-			.map(atm -> atm.outputContainerUseds)
-			.flatMap(List::stream)
-			.forEach(outputContainer ->{
-				outputContainerCodes.add(outputContainer.code);
-				outputContainerSupportCodes.add(outputContainer.locationOnContainerSupport.code);
-				
-			});
+		.filter(atm -> (atm.outputContainerUseds != null))
+		.map(atm -> atm.outputContainerUseds)
+		.flatMap(List::stream)
+		.forEach(outputContainer ->{
+			outputContainerCodes.add(outputContainer.code);
+			outputContainerSupportCodes.add(outputContainer.locationOnContainerSupport.code);
+
+		});
 		if(CollectionUtils.isNotEmpty(outputContainerCodes)){
 			exp.outputContainerCodes = outputContainerCodes;
 			exp.outputContainerSupportCodes = outputContainerSupportCodes;
-			
+
 			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", exp.code)
 					,DBUpdate.set("outputContainerSupportCodes", exp.outputContainerSupportCodes)
-							.set("outputContainerCodes", exp.outputContainerCodes));
+					.set("outputContainerCodes", exp.outputContainerCodes));
 		}
 	}
 
-	
+
 	public void updateStateOfInputContainers(Experiment exp, State nextState, ContextValidation ctxVal) {
 		ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "workflow");
 		MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("code", exp.inputContainerCodes))
-			.cursor.forEach(c -> containerWorkflows.setState(ctxVal, c, nextState));		
+		.cursor.forEach(c -> containerWorkflows.setState(ctxVal, c, nextState));		
 		ctxVal.removeObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT);
 	}
-	
+
 	public void updateStateOfInputContainerSupports(Experiment exp, ContextValidation ctxVal) {
 		ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "workflow");
 		MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("code", exp.inputContainerSupportCodes))
-			.cursor.forEach(c -> containerSupportWorkflows.setStateFromContainers(ctxVal, c));
+		.cursor.forEach(c -> containerSupportWorkflows.setStateFromContainers(ctxVal, c));
 		ctxVal.removeObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT);
 	}
-	
+
 	public void updateStateOfProcesses(Experiment exp, State nextState, ContextValidation ctxVal) {
 		MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class,DBQuery.in("code", exp.inputProcessCodes))
-			.cursor.forEach(c -> processWorkflows.setState(ctxVal, c, nextState));				
+		.cursor.forEach(c -> processWorkflows.setState(ctxVal, c, nextState));				
 	}
 
 	public void linkExperimentWithProcesses(Experiment exp, ContextValidation validation) {
 		MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME,Process.class,
 				DBQuery.in("code", exp.inputProcessCodes).notEquals("state.code", "F").notIn("experimentCodes", exp.code), 
 				DBUpdate.set("currentExperimentTypeCode", exp.typeCode).push("experimentCodes", exp.code),true);
-		
+
 	}
-	
+
 	public void updateAddContainersToExperiment(Experiment expFromUser, ContextValidation ctxVal, State nextState) {
 		Experiment expFromDB = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, expFromUser.code);
-		
+
 		List<String> newContainerCodes = getNewContainerCodes(expFromDB, expFromUser);
 		if(newContainerCodes.size() > 0){
 			Set<String> newContainerSupportCodes = new TreeSet<String>();
 			Set<String> newProcessCodes = new TreeSet<String>();
 			ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "workflow");
 			MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class,DBQuery.in("code", newContainerCodes))
-					.cursor.forEach(c -> {				
+			.cursor.forEach(c -> {				
 				newContainerSupportCodes.add(c.support.code);
 				newProcessCodes.addAll(c.processCodes);
 				containerWorkflows.setState(ctxVal, c, nextState);
 			});
-			
+
 			MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class,DBQuery.in("code", newContainerSupportCodes))
-				.cursor.forEach(c -> {				
-					containerSupportWorkflows.setStateFromContainers(ctxVal, c);
+			.cursor.forEach(c -> {				
+				containerSupportWorkflows.setStateFromContainers(ctxVal, c);
 			});
-			
+
 			MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
 					DBQuery.in("code", newProcessCodes).notEquals("state.code", "F"), 
 					DBUpdate.set("currentExperimentTypeCode", expFromDB.typeCode).push("experimentCodes", expFromDB.code));			
-		
+
 			ctxVal.removeObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT);
 		}
 	}
-	
+
 	public void updateRemoveContainersFromExperiment(Experiment expFromUser,	ContextValidation ctxVal, State nextState) {
 		Experiment expFromDB = MongoDBDAO.findByCode(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, expFromUser.code);
-		
+
 		List<String> removeContainerCodes = getRemoveContainerCodes(expFromDB, expFromUser);
 		if(removeContainerCodes.size() > 0){
 			Set<String> removeContainerSupportCodes = new TreeSet<String>();
 			Set<String> removeProcessCodes = new TreeSet<String>();
 			ctxVal.putObject(CommonValidationHelper.FIELD_STATE_CONTAINER_CONTEXT, "workflow");
 			MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.in("code", removeContainerCodes)).cursor
-					.forEach(c -> {
-						removeContainerSupportCodes.add(c.support.code);
-						removeProcessCodes.addAll(c.processCodes);
-						containerWorkflows.setState(ctxVal, c, nextState);
-					});
-			
+			.forEach(c -> {
+				removeContainerSupportCodes.add(c.support.code);
+				removeProcessCodes.addAll(c.processCodes);
+				containerWorkflows.setState(ctxVal, c, nextState);
+			});
+
 			MongoDBDAO.find(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.in("code", removeContainerSupportCodes)).cursor
-					.forEach(c -> {
-						containerSupportWorkflows
-								.setStateFromContainers(ctxVal, c);
-					});
-			
+			.forEach(c -> {
+				containerSupportWorkflows
+				.setStateFromContainers(ctxVal, c);
+			});
+
 			MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
 					DBQuery.in("code", removeProcessCodes).notEquals("state.code", "F"), 
 					DBUpdate.unset("currentExperimentTypeCode").pull("experimentCodes", expFromDB.code));
@@ -226,7 +222,7 @@ public class ExpWorkflowsHelper {
 	private List<String> getNewContainerCodes(Experiment expFromDB, Experiment expFromUser) {
 		List<String> containerCodesFromDB = ExperimentHelper.getAllInputContainers(expFromDB).stream().map((InputContainerUsed c) -> c.code).collect(Collectors.toList());
 		List<String> containerCodesFromUser = ExperimentHelper.getAllInputContainers(expFromUser).stream().map((InputContainerUsed c) -> c.code).collect(Collectors.toList());
-		
+
 		List<String> newContainersCodes = new ArrayList<String>();
 		for(String codeFromDB:containerCodesFromUser){
 			if(!containerCodesFromDB.contains(codeFromDB)){
@@ -237,23 +233,23 @@ public class ExpWorkflowsHelper {
 	}
 
 
-	
-		
+
+
 
 	private List<String> getRemoveContainerCodes(Experiment expFromDB, Experiment expFromUser) {
 		List<String> containerCodesFromDB = ExperimentHelper.getAllInputContainers(expFromDB).stream().map((InputContainerUsed c) -> c.code).collect(Collectors.toList());
 		List<String> containerCodesFromUser = ExperimentHelper.getAllInputContainers(expFromUser).stream().map((InputContainerUsed c) -> c.code).collect(Collectors.toList());
-		
+
 		List<String> removeContainersCodes = new ArrayList<String>();
 		for(String codeFromDB:containerCodesFromDB){
 			if(!containerCodesFromUser.contains(codeFromDB)){
 				removeContainersCodes.add(codeFromDB);
 			}
 		}
-		
+
 		return removeContainersCodes;
 	}
-	
+
 	/**
 	 * Update OutputContainerUsed :
 	 * 		- generate ContainerSupportCode and ContainerCode if needed
@@ -267,14 +263,14 @@ public class ExpWorkflowsHelper {
 	 */
 	public void updateATMs(Experiment exp, boolean justContainerCode) {
 		ContainerSupportCategory outputCsc = ContainerSupportCategory.find.findByCode(exp.instrument.outContainerSupportCategoryCode);
-		
+
 		if(outputCsc.nbLine.equals(Integer.valueOf(1)) && outputCsc.nbColumn.equals(Integer.valueOf(1))){
 			exp.atomicTransfertMethods.forEach((AtomicTransfertMethod atm) -> updateOutputContainerUsed(exp, atm, outputCsc, CodeHelper.getInstance().generateContainerSupportCode(), justContainerCode));
 		}else if(!outputCsc.nbLine.equals(Integer.valueOf(1))){
 			String supportCode = CodeHelper.getInstance().generateContainerSupportCode();
 			exp.atomicTransfertMethods.forEach((AtomicTransfertMethod atm) -> updateOutputContainerUsed(exp, atm, outputCsc, supportCode, justContainerCode));
 		}	
-		
+
 		MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", exp.code), DBUpdate.set("atomicTransfertMethods", exp.atomicTransfertMethods));
 	}
 
@@ -284,7 +280,7 @@ public class ExpWorkflowsHelper {
 			atm.updateOutputCodeIfNeeded(outputCsc, supportCode);
 			if(!justContainerCode){
 				List<Content> contents = getContents(exp, atm);
-							
+
 				atm.outputContainerUseds.forEach((OutputContainerUsed ocu) ->{
 					ocu.contents = contents;
 					if(ocu.volume != null && ocu.volume.value == null)ocu.volume=null;
@@ -305,7 +301,7 @@ public class ExpWorkflowsHelper {
 		}
 		return _fromExperimentTypeCodes;
 	}
-	
+
 	private Set<String> getFromExperimentCodes(Experiment exp, AtomicTransfertMethod atm) {
 		Set<String> _fromExperimentCodes = new HashSet<String>(0);
 		if(ExperimentCategory.CODE.transformation.equals(ExperimentCategory.CODE.valueOf(exp.categoryCode))){
@@ -340,26 +336,26 @@ public class ExpWorkflowsHelper {
 		TraceInformation traceInformation = new TraceInformation(validation.getUser());
 		long t0 = System.currentTimeMillis();
 		validation.putObject(NEW_PROCESS_CODES, new HashSet<String>());
-		
+
 		/*
 		before parallelStream
 		Map<String, List<Container>> containersBySupportCode = exp.atomicTransfertMethods.stream()
 				.map(atm -> createOutputContainers(exp, atm, validation))
 				.flatMap(List::stream)
 				.collect(Collectors.groupingBy(c -> c.support.code));
-				
+
 		 */
-		
+
 		Map<String, List<Container>> containersBySupportCode = exp.atomicTransfertMethods
 				.parallelStream()
 				.map(atm -> createOutputContainers(exp, atm, validation))
 				.flatMap(List::stream)
 				.collect(Collectors.groupingBy(c -> c.support.code));
-		
+
 		long t1 = System.currentTimeMillis();
 		//soit 1 seul support pour tous les atm
 		//soit autant de support que d'atm
-		
+
 		//Map<ContainerSupport, List<Container>> containersBySupport = new HashMap<ContainerSupport, List<Container>>(0);
 		ContextValidation supportsValidation = new ContextValidation(validation.getUser());
 		supportsValidation.setCreationMode();
@@ -370,66 +366,66 @@ public class ExpWorkflowsHelper {
 			//TODO GA extract only properties from exp and inst not from atm => must be improve
 			support.properties = getPropertiesForALevel(exp, CODE.ContainerSupport); 
 			support.validate(supportsValidation);
-			
+
 			if(!supportsValidation.hasErrors()){
 				support.traceInformation = traceInformation;
 				MongoDBDAO.save(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, support);
 				containers.parallelStream()
-					.forEach(container -> {
-						long t1_0 = System.currentTimeMillis();
-						ContextValidation containerValidation = new ContextValidation(validation.getUser());
-						containerValidation.setCreationMode();
-						container.validate(containerValidation);
-						long t1_1 = System.currentTimeMillis();
-						if(!containerValidation.hasErrors()){
-							container.traceInformation = traceInformation;
-							MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, container);
-							MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
-									DBQuery.in("code", container.processCodes).notIn("outputContainerSupportCodes", container.support.code),
-									DBUpdate.push("outputContainerSupportCodes",container.support.code));
-						}else{
-							supportsValidation.addErrors(containerValidation.errors);
-						}
-						long t1_2 = System.currentTimeMillis();
-						/*
+				.forEach(container -> {
+					long t1_0 = System.currentTimeMillis();
+					ContextValidation containerValidation = new ContextValidation(validation.getUser());
+					containerValidation.setCreationMode();
+					container.validate(containerValidation);
+					long t1_1 = System.currentTimeMillis();
+					if(!containerValidation.hasErrors()){
+						container.traceInformation = traceInformation;
+						MongoDBDAO.save(InstanceConstants.CONTAINER_COLL_NAME, container);
+						MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class, 
+								DBQuery.in("code", container.processCodes).notIn("outputContainerSupportCodes", container.support.code),
+								DBUpdate.push("outputContainerSupportCodes",container.support.code));
+					}else{
+						supportsValidation.addErrors(containerValidation.errors);
+					}
+					long t1_2 = System.currentTimeMillis();
+					/*
 						Logger.debug("createOutputContainerSupports \n "
 								+"1-1 = "+(t1_1-t1_0)+" ms\n"
 								+"1-2 = "+(t1_2-t1_1)+" ms\n"
 								);
-						*/
+					 */
 				});
 			}	
-			
-			
+
+
 		});
 		long t2 = System.currentTimeMillis();
 		//delete all supports and containers if only one error
 		if(supportsValidation.hasErrors()){
 			containersBySupportCode.entrySet().parallelStream()
-				.forEach(entry -> {
-					MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,
-							DBQuery.in("outputContainerSupportCodes", entry.getKey()),
-							DBUpdate.pull("outputContainerSupportCodes",entry.getKey()));
-					MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code", entry.getKey()));
-					MongoDBDAO.delete(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", entry.getKey()));
-				});
+			.forEach(entry -> {
+				MongoDBDAO.update(InstanceConstants.PROCESS_COLL_NAME, Process.class,
+						DBQuery.in("outputContainerSupportCodes", entry.getKey()),
+						DBUpdate.pull("outputContainerSupportCodes",entry.getKey()));
+				MongoDBDAO.delete(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.is("support.code", entry.getKey()));
+				MongoDBDAO.delete(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, DBQuery.is("code", entry.getKey()));
+			});
 			Set<String> newProcessCodes = (Set<String>)validation.getObject(NEW_PROCESS_CODES);
 			if(null != newProcessCodes){
 				MongoDBDAO.delete(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code", newProcessCodes));
 			}
 			validation.addErrors(supportsValidation.errors);
 		}			
-		
+
 		long t3 = System.currentTimeMillis();
 		/*
 		Logger.debug("createOutputContainerSupports \n "
 				+"1 = "+(t1-t0)+" ms\n"
 				+"2 = "+(t2-t1)+" ms\n"
 				+"3 = "+(t3-t2)+" ms\n"
-				
-				
+
+
 			);
-			*/
+		 */
 	}
 
 	public void deleteOutputContainerSupports(Experiment exp, ContextValidation validation) {
@@ -448,7 +444,7 @@ public class ExpWorkflowsHelper {
 		}
 	}
 
-	
+
 	private ContainerSupport createContainerSupport(String code, List<Container> containers, ContextValidation validation) {
 		validation.addKeyToRootKeyName("creation.outputSupport."+code);
 		ContainerSupport support = new ContainerSupport();
@@ -461,10 +457,10 @@ public class ExpWorkflowsHelper {
 		support.projectCodes = containers.stream().map(c -> c.projectCodes).flatMap(Set::stream).collect(Collectors.toSet());
 		support.sampleCodes = containers.stream().map(c -> c.sampleCodes).flatMap(Set::stream).collect(Collectors.toSet());
 		support.fromTransformationTypeCodes = containers.stream().map(c -> c.fromTransformationTypeCodes).flatMap(Set::stream).collect(Collectors.toSet());
-		
+
 		support.nbContainers = containers.size();
 		support.nbContents = containers.stream().mapToInt(c -> c.contents.size()).sum();
-		
+
 		validation.removeKeyFromRootKeyName("creation.outputSupport."+code);
 		return support;
 	}
@@ -514,20 +510,20 @@ public class ExpWorkflowsHelper {
 		Set<String> fromTransformationCodes = getFromExperimentCodes(exp, atm);
 		Map<String, PropertyValue> containerProperties = getPropertiesForALevel(exp, atm, CODE.Container);
 		TreeOfLifeNode tree = getTreeOfLifeNode(exp, atm);
-		
+
 		Set<String> projectCodes =new HashSet<String>();
 		Set<String> sampleCodes =new HashSet<String>();
 		Set<String> processTypeCodes =new HashSet<String>();
 		Set<String> inputProcessCodes =new HashSet<String>();
-		
+
 		atm.inputContainerUseds.forEach(icu -> {
 			projectCodes.addAll(icu.projectCodes);
 			sampleCodes.addAll(icu.sampleCodes);
 			processTypeCodes.addAll(icu.processTypeCodes);
 			inputProcessCodes.addAll(icu.processCodes);
 		});
-		
-		
+
+
 		State state = new State("N", validation.getUser());
 		TraceInformation traceInformation = new TraceInformation(validation.getUser());
 		List<Container> newContainers = new ArrayList<Container>();
@@ -582,7 +578,7 @@ public class ExpWorkflowsHelper {
 			});
 			//validation.putObject(NEW_PROCESS_CODES, allNewInputProcessCodes);
 		}
-		
+
 		return newContainers;
 	}
 
@@ -601,7 +597,7 @@ public class ExpWorkflowsHelper {
 
 	private TreeOfLifeNode getTreeOfLifeNode(Experiment exp,	AtomicTransfertMethod atm) {
 		TreeOfLifeNode treeNode = new TreeOfLifeNode();
-		
+
 		treeNode.from = new From();
 		treeNode.from.experimentCode = exp.code;
 		treeNode.from.experimentTypeCode = exp.typeCode;
@@ -614,10 +610,10 @@ public class ExpWorkflowsHelper {
 			pc.processCodes = icu.processCodes;
 			pc.processTypeCodes = icu.processTypeCodes;
 			return pc;
-			}).collect(Collectors.toList());
-		
+		}).collect(Collectors.toList());
+
 		treeNode.paths = new ArrayList<String>();
-		
+
 		atm.inputContainerUseds.forEach(icu -> {
 			Container c = MongoDBDAO.findOne(InstanceConstants.CONTAINER_COLL_NAME, Container.class, DBQuery.in("code", icu.code));
 			if(null != c.treeOfLife && null != c.treeOfLife.paths){
@@ -626,28 +622,28 @@ public class ExpWorkflowsHelper {
 				treeNode.paths.add(","+icu.code);
 			}
 		});
-		
+
 		return treeNode;
 	}
 
 
 	private Set<String> getPropertyDefinitionCodesByLevel(List<PropertyDefinition> propertyDefs, Level.CODE level){
-		
+
 		Level l = new Level(level);
-		
+
 		return propertyDefs.stream().filter(pd -> pd.levels.contains(l)).map(pd -> pd.code).collect(Collectors.toSet());
 	}
-	
+
 	private Map<String, PropertyValue> getPropertiesForALevel(Experiment exp, CODE code) {
 		return getPropertiesForALevel(exp, null, code);
 	}
-	
+
 	private Map<String, PropertyValue> getPropertiesForALevel(Experiment exp, AtomicTransfertMethod atm, Level.CODE level) {
 		Map<String, PropertyValue> propertiesForALevel = new HashMap<String, PropertyValue>();
-		
+
 		ExperimentType expType = ExperimentType.find.findByCode(exp.typeCode);
 		Set<String> experimentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevel(expType.propertiesDefinitions, level);
-		
+
 		//extract experiment content properties
 		if(null != exp.experimentProperties && experimentPropertyDefinitionCodes.size() > 0){
 			propertiesForALevel.putAll(exp.experimentProperties.entrySet()
@@ -655,8 +651,8 @@ public class ExpWorkflowsHelper {
 					.filter(entry -> experimentPropertyDefinitionCodes.contains(entry.getKey()))
 					.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())));
 		}
-				
-		
+
+
 		if(null != atm && experimentPropertyDefinitionCodes.size() > 0){
 			propertiesForALevel.putAll(atm.inputContainerUseds.stream()
 					.filter((InputContainerUsed icu) -> icu.experimentProperties != null)
@@ -673,11 +669,11 @@ public class ExpWorkflowsHelper {
 						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));
 			}			
 		}
-		
+
 		//extract instrument content properties
 		InstrumentUsedType insType = InstrumentUsedType.find.findByCode(exp.instrument.typeCode);
 		Set<String> instrumentPropertyDefinitionCodes = getPropertyDefinitionCodesByLevel(insType.propertiesDefinitions, level);
-		
+
 		if(null != exp.instrumentProperties && instrumentPropertyDefinitionCodes.size() > 0){
 			propertiesForALevel.putAll(exp.instrumentProperties.entrySet()
 					.stream()
@@ -716,10 +712,10 @@ public class ExpWorkflowsHelper {
 						.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue(), (u,v) -> PropertiesMerger(u, v))));				
 			}
 		}
-		
+
 		return propertiesForALevel;
 	}
-	
+
 	private PropertyValue PropertiesMerger(PropertyValue u, PropertyValue v) {
 		if(u.value.equals(v.value)){
 			return u;
@@ -745,14 +741,14 @@ public class ExpWorkflowsHelper {
 		List<Process> processes=MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code", icu.processCodes).is("inputContainerCode", icu.code)).toList();
 		if(null != processes && processes.size() > 0){
 			return processes.stream()
-				.filter(p -> p.properties != null)
-				.map((Process p) -> p.properties.entrySet())
-				.flatMap(Set::stream)
-				.collect(Collectors.toList());
+					.filter(p -> p.properties != null)
+					.map((Process p) -> p.properties.entrySet())
+					.flatMap(Set::stream)
+					.collect(Collectors.toList());
 		}else{
 			return new ArrayList<Map.Entry<String, PropertyValue>>();
 		}
-		
+
 	}
 
 
@@ -765,7 +761,7 @@ public class ExpWorkflowsHelper {
 				}else if(comment.creationDate == null){
 					comment.creationDate = new Date();
 				}
-				
+
 				if(comment.code == null){
 					comment.code = CodeHelper.getInstance().generateExperimentCommentCode(comment);	
 				}
@@ -779,7 +775,7 @@ public class ExpWorkflowsHelper {
 			exp.status.date = new Date();
 			exp.status.user = validation.getUser();
 		}
-		
+
 	}
 	private ActorRef rulesActor = Akka.system().actorOf(Props.create(RulesActor6.class));
 
@@ -795,36 +791,102 @@ public class ExpWorkflowsHelper {
 	 */
 	public void updateInputContainers(Experiment exp, ContextValidation validation) {
 		exp.atomicTransfertMethods
+		.parallelStream()
+		.map(atm -> atm.inputContainerUseds)
+		.flatMap(List::stream)
+		.forEach(icu ->{
+			Container c = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,icu.code);
+
+			if(null != icu.concentration)c.concentration = icu.concentration;
+			if(null != icu.quantity)c.quantity = icu.quantity;
+			if(null != icu.volume)c.volume = icu.volume;
+			if(null != icu.size)c.size = icu.size;
+			if(null != icu.valuation){
+				c.valuation = icu.valuation;
+				c.valuation.user = validation.getUser();
+				c.valuation.date = new Date();
+			}
+
+			c.traceInformation.modifyDate = new Date();
+			c.traceInformation.modifyUser = validation.getUser();
+
+			if(null == c.qualityControlResults)c.qualityControlResults = new ArrayList<QualityControlResult>(0);
+
+			c.qualityControlResults.add(new QualityControlResult(exp.code, exp.typeCode, c.qualityControlResults.size(), icu.experimentProperties, c.valuation));
+
+			MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,c);
+
+		});
+
+	}
+
+	//If experimentType have flag newSample at true  
+	public void updateContentsNewSamples(Experiment exp, ContextValidation validation) {
+		ExperimentType experimentType=ExperimentType.find.findByCode(exp.typeCode);
+
+		if(experimentType.newSample || experimentType.code.equals("dna-rna-extraction")){	
+
+			//TODO delete sample create
+
+			exp.atomicTransfertMethods
 			.parallelStream()
-			.map(atm -> atm.inputContainerUseds)
-			.flatMap(List::stream)
-			.forEach(icu ->{
-				Container c = MongoDBDAO.findByCode(InstanceConstants.CONTAINER_COLL_NAME, Container.class,icu.code);
-				
-				if(null != icu.concentration)c.concentration = icu.concentration;
-				if(null != icu.quantity)c.quantity = icu.quantity;
-				if(null != icu.volume)c.volume = icu.volume;
-				if(null != icu.size)c.size = icu.size;
-				if(null != icu.valuation){
-					c.valuation = icu.valuation;
-					c.valuation.user = validation.getUser();
-					c.valuation.date = new Date();
+			.map(atm -> createSamples(atm, validation))
+			.forEach(samples -> {
+				if(samples!=null && samples.size()>0){
+					//To validate and don't save if exists
+					MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, samples);
 				}
-				
-				c.traceInformation.modifyDate = new Date();
-				c.traceInformation.modifyUser = validation.getUser();
-				
-				if(null == c.qualityControlResults)c.qualityControlResults = new ArrayList<QualityControlResult>(0);
-				
-				c.qualityControlResults.add(new QualityControlResult(exp.code, exp.typeCode, c.qualityControlResults.size(), icu.experimentProperties, c.valuation));
-				
-				MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME,c);
-								
 			});
-		
+
+		}
+
 	}
 
 
-	
+	private List<Sample> createSamples(AtomicTransfertMethod  atm, ContextValidation validation) {
+		List<Sample> samples=new ArrayList<Sample>();
 
+		List<Sample> samplesIn = atm.inputContainerUseds.stream().map(icu -> {
+			Sample s=MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, icu.contents.get(0).sampleCode);
+			return s;
+		}).collect(Collectors.toList());
+
+		atm.outputContainerUseds.forEach(oc->{
+			oc.contents.forEach(c->{
+				
+				String sampleTypeCode=null;
+				String projectCode=null;
+				if(oc.experimentProperties.containsKey("sampleTypeCode") && oc.experimentProperties.containsKey("projectCode")){
+				 sampleTypeCode=oc.experimentProperties.get("sampleTypeCode").value.toString();
+				 projectCode=oc.experimentProperties.get("projectCode").value.toString();
+				}
+				if( !c.sampleTypeCode.equals(sampleTypeCode)){	
+					c.sampleTypeCode=sampleTypeCode;
+					c.projectCode=projectCode;
+					c.sampleCategoryCode=SampleType.find.findByCode(c.sampleTypeCode).category.code;
+					c.sampleCode=CodeHelper.getInstance().generateSampleCode(c.projectCode);	
+
+					Sample sample = new Sample();
+					sample.code=c.sampleCode;
+					sample.categoryCode=c.sampleCategoryCode;
+					sample.typeCode=c.sampleTypeCode;
+					sample.projectCodes=new HashSet<String>();
+					sample.projectCodes.add(c.projectCode);
+
+					sample.taxonCode=samplesIn.get(0).taxonCode;
+					sample.properties=samplesIn.get(0).properties;
+					sample.importTypeCode=samplesIn.get(0).importTypeCode;
+					sample.ncbiLineage=samplesIn.get(0).ncbiLineage;
+					sample.ncbiScientificName=samplesIn.get(0).ncbiScientificName;
+					sample.referenceCollab=samplesIn.get(0).referenceCollab;
+					samples.add(sample);
+				}
+			}
+					);
+
+		});
+		return samples;
+	}
 }
+
+

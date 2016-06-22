@@ -321,8 +321,8 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 			l.add(newExperimentType("Extraction ADN / ARN ","dna-rna-extraction",null,1000,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
-					null,"OneToMany", getSampleTypes("DNA","RNA"),true,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsExtractionADNARN(),
+					getInstrumentUsedTypes("cryobroyeur"),"OneToMany", getSampleTypes("DNA","RNA"),true,
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		}
@@ -330,6 +330,9 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
 
 	}
+
+	
+
 
 	public void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
 
@@ -845,4 +848,20 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		return propertyDefinitions;
 	}	
 
+	private List<PropertyDefinition> getPropertyDefinitionsExtractionADNARN() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		//InputContainer
+		
+		propertyDefinitions.add(newPropertiesDefinition("Sample Type", "sampleTypeCode", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, false, "N", null, 
+				"single", 15, false, null,null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Projet", "projectCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, "IP", 
+				null, null ,null ,null ,"single", 20, true, null,null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Code sample", "sampleCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, false, null, 
+				null, null, null, null,"single", 25, false, null,null));
+		
+
+		return propertyDefinitions;
+	}
 }
