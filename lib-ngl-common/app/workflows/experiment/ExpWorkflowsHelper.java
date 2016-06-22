@@ -23,6 +23,7 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.container.instance.Content;
 import models.laboratory.container.instance.QualityControlResult;
+import models.laboratory.container.instance.StorageHistory;
 import models.laboratory.container.instance.tree.From;
 import models.laboratory.container.instance.tree.ParentContainers;
 import models.laboratory.container.instance.tree.TreeOfLifeNode;
@@ -456,6 +457,7 @@ public class ExpWorkflowsHelper {
 		support.traceInformation  = new TraceInformation(validation.getUser());
 		support.categoryCode = getSupportCategoryCode(containers, validation);
 		support.storageCode = getSupportStorageCode(containers, validation);
+		support.storages = getStorages(support, validation);
 		support.projectCodes = containers.stream().map(c -> c.projectCodes).flatMap(Set::stream).collect(Collectors.toSet());
 		support.sampleCodes = containers.stream().map(c -> c.sampleCodes).flatMap(Set::stream).collect(Collectors.toSet());
 		support.fromTransformationTypeCodes = containers.stream().map(c -> c.fromTransformationTypeCodes).flatMap(Set::stream).collect(Collectors.toSet());
@@ -467,6 +469,26 @@ public class ExpWorkflowsHelper {
 		return support;
 	}
 
+	private static List<StorageHistory> getStorages(ContainerSupport support, ContextValidation validation) {
+		List<StorageHistory> storages = null;
+		if(null != support.storageCode){
+			storages = new ArrayList<StorageHistory>();
+			StorageHistory sh = getStorageHistory(support.storageCode, storages.size(),validation.getUser());
+			storages.add(sh);
+			
+		}
+		return storages;
+		
+	}
+
+	private static StorageHistory getStorageHistory(String storageCode, Integer index, String user) {
+		StorageHistory sh = new StorageHistory();
+		sh.code = storageCode;
+		sh.date = new Date();
+		sh.user = user;
+		sh.index = index;
+		return sh;
+	}
 
 	private String getSupportCategoryCode(List<Container> containers, ContextValidation validation) {
 		Set<String> categoryCodes = containers.stream().map(c -> c.support.categoryCode).collect(Collectors.toSet());

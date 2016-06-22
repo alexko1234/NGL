@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
+import models.laboratory.container.instance.StorageHistory;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;
 import models.utils.InstanceConstants;
@@ -244,7 +245,8 @@ public class ContainerSupports extends CommonController {
 					if(queryFieldsForm.fields.contains("storageCode")){
 						MongoDBDAO.update(InstanceConstants.CONTAINER_COLL_NAME, ContainerSupport.class, 
 								DBQuery.and(DBQuery.is("support.code", code)), 
-								DBUpdate.set("support.storageCode", formSupport.storageCode).set("traceInformation", dbSupport.traceInformation));		
+								DBUpdate.set("support.storageCode", formSupport.storageCode).set("traceInformation", dbSupport.traceInformation));
+						updateStorages(dbSupport, formSupport);
 					}
 					
 					return ok(Json.toJson(getSupport(code)));
@@ -255,6 +257,32 @@ public class ContainerSupports extends CommonController {
 				return badRequest("container code are not the same");
 			}
 		}
+	}
+
+	private static void updateStorages(ContainerSupport dbSupport,
+			ContainerSupport formSupport) {
+		if(dbSupport.storages == null){
+			dbSupport.storages = new ArrayList<StorageHistory>();
+			if(null != dbSupport.storageCode){
+				StorageHistory sh = getStorageHistory(dbSupport.storageCode, dbSupport.storages.size());
+				dbSupport.storages.add(sh);
+			}
+		}
+		StorageHistory sh = getStorageHistory(formSupport.storageCode, dbSupport.storages.size());
+		dbSupport.storages.add(sh);
+		
+		MongoDBDAO.update(InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, 
+				DBQuery.and(DBQuery.is("code", dbSupport.code)), 
+				DBUpdate.set("storages", dbSupport.storages));
+	}
+
+	private static StorageHistory getStorageHistory(String storageCode, Integer index) {
+		StorageHistory sh = new StorageHistory();
+		sh.code = storageCode;
+		sh.date = new Date();
+		sh.user = getCurrentUser();
+		sh.index = index;
+		return sh;
 	}
 	
 	/**
