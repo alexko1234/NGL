@@ -19,8 +19,6 @@ GET 	/supports/:homecode/home										controllers.containers.tpl.ContainerSuppo
 GET		/supports/:code													controllers.containers.tpl.ContainerSupports.get(code: java.lang.String)
 GET		/tpl/supports/search											controllers.containers.tpl.ContainerSupports.search()
 GET		/tpl/supports/details											controllers.containers.tpl.ContainerSupports.details()
-GET		/tpl/supports/new-from-file										controllers.containers.tpl.ContainerSupports.newFromFile()
-
 GET		/tpl/supports/js-routes											controllers.containers.tpl.ContainerSupports.javascriptRoutes()
 
 #containers tpl
@@ -28,6 +26,7 @@ GET 	/containers/:homecode/home										controllers.containers.tpl.Containers.h
 GET		/containers/:code												controllers.containers.tpl.Containers.get(code: java.lang.String)
 GET		/tpl/containers/search											controllers.containers.tpl.Containers.search()
 GET		/tpl/containers/details											controllers.containers.tpl.Containers.details()
+GET		/tpl/containers/new-from-file									controllers.containers.tpl.Containers.newFromFile()
 GET		/tpl/containers/js-routes										controllers.containers.tpl.Containers.javascriptRoutes()
 
 #processes tpl
@@ -54,12 +53,6 @@ GET		/tpl/experiments/js-routes																controllers.experiments.tpl.Exper
 GET 	/printing/:homecode/home										controllers.printing.tpl.Printing.home(homecode:java.lang.String)
 GET		/tpl/printing/js-routes											controllers.printing.tpl.Printing.javascriptRoutes()
 GET		/tpl/printing/tags/display										controllers.printing.tpl.Tags.display()
-
-
-# load data
-GET	   	   /loaddata/:homecode/home										controllers.dataload.SampleLoad.home(homecode:java.lang.String)
-POST   	   /loaddata													controllers.dataload.SampleLoad.uploadDataFromCSVFile()
-POST	   /createtemplate												controllers.dataload.SampleLoad.createTemplateFile()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               									controllers.Assets.at(path="/public", file)

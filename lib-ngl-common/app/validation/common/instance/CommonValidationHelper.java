@@ -45,6 +45,7 @@ public class CommonValidationHelper {
 	public static final String FIELD_EXPERIMENT = "experiment";
 	public static final String FIELD_INST_USED = "instrumentUsed";
 	public static final String FIELD_OBJECT_TYPE_CODE = "objectTypeCode";
+	public static final String FIELD_IMPORT_TYPE_CODE = "importTypeCode";
 	public static final String FIELD_STATE_CONTAINER_CONTEXT = "stateContainerContext";
 	public static final String FIELD_UPDATE_CONTAINER_SUPPORT_STATE = "updateContainerSupportState";
 	public static final String FIELD_UPDATE_CONTAINER_STATE = "updateContainerState";

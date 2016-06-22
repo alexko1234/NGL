@@ -3,6 +3,7 @@ package models.laboratory.reception.instance;
 import java.lang.reflect.Field;
 import java.util.Map;
 
+import models.laboratory.reception.instance.ReceptionConfiguration.Action;
 import validation.ContextValidation;
 
 
@@ -15,7 +16,7 @@ public class DefaultFieldConfiguration extends AbstractFieldConfiguration {
 
 	@Override
 	public void populateField(Field field, Object dbObject,
-			Map<Integer, String> rowMap, ContextValidation contextValidation) throws Exception {
+			Map<Integer, String> rowMap, ContextValidation contextValidation, Action action) throws Exception {
 		populateField(field, dbObject, value);		
 	}
 	

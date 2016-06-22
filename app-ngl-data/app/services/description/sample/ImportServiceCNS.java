@@ -44,7 +44,7 @@ public class ImportServiceCNS extends AbstractImportService {
 		l.add(newImportType("Banque", "library", ImportCategory.find.findByCode("sample-import"), getLibraryPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		l.add(newImportType("Tara", "tara-default", ImportCategory.find.findByCode("sample-import"), getTaraPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		l.add(newImportType("Banque tara", "tara-library", ImportCategory.find.findByCode("sample-import"), getLibraryTaraPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
-		l.add(newImportType("Reception Tara Pacific", "reception-tara-pacific", ImportCategory.find.findByCode("sample-import"), getTaraBarCodePropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
+		l.add(newImportType("Reception Tara Pacific", "reception-tara-pacific", ImportCategory.find.findByCode("sample-import"), getTaraReceptionPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
 		
 		DAOHelpers.saveModels(ImportType.class, l, errors);
 		
@@ -52,7 +52,7 @@ public class ImportServiceCNS extends AbstractImportService {
 
 	private static List<PropertyDefinition> getCommonPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
-		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Date de réception", "receptionDate", LevelService.getLevels(Level.CODE.Container), Date.class, true, null, null, "single", 1, true, null, null));
 		return propertyDefinitions;
 	}
 	
@@ -87,10 +87,11 @@ public class ImportServiceCNS extends AbstractImportService {
 		return propertyDefinitions;
 	}
 	
-	private static List<PropertyDefinition> getTaraBarCodePropertyDefinitions() throws DAOException {
+	private static List<PropertyDefinition> getTaraReceptionPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.addAll(getCommonPropertyDefinitions());
-		propertyDefinitions.add(newPropertiesDefinition("Code Barre TARA", "taraBarCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, "single"));
+		propertyDefinitions.add(newPropertiesDefinition("Code Barre TARA", "taraBarCode", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null, null, "single", 1, true, null, null));
+		
 		return propertyDefinitions;
 	}
 	

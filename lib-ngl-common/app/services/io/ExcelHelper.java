@@ -1,5 +1,6 @@
 package services.io;
 
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
 
@@ -33,8 +34,12 @@ public class ExcelHelper {
 		if ( null != cell && ( Cell.CELL_TYPE_STRING == cell.getCellType())){
 			return cell.getStringCellValue();
 		}else if(null != cell &&  (Cell.CELL_TYPE_NUMERIC == cell.getCellType())){
-			DataFormatter df = new DataFormatter();
-			return df.formatCellValue(cell);
+			if (HSSFDateUtil.isCellDateFormatted(cell)){
+				return cell.getDateCellValue().getTime()+"";
+			}else{
+				DataFormatter df = new DataFormatter();
+				return df.formatCellValue(cell);
+			}			
 		}else if(null != cell &&  (Cell.CELL_TYPE_BLANK == cell.getCellType())){
 			return cell.getStringCellValue();
 		}else if(null != cell &&  (Cell.CELL_TYPE_BOOLEAN == cell.getCellType())){

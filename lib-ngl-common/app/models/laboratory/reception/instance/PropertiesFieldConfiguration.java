@@ -6,8 +6,11 @@ import java.util.Map;
 import java.util.Set;
 
 
+
 import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.reception.instance.ReceptionConfiguration.Action;
 import validation.ContextValidation;
+
 
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -36,8 +39,9 @@ public class PropertiesFieldConfiguration extends AbstractFieldConfiguration {
 
 	@Override
 	public void populateField(Field field, Object dbObject,
-			Map<Integer, String> rowMap, ContextValidation contextValidation) throws Exception {
+			Map<Integer, String> rowMap, ContextValidation contextValidation, Action action) throws Exception {
 		
+		//we create or update all the properties
 		Map<String,PropertyValue> properties = new HashMap<String, PropertyValue>();
 		Set<String> propertyNames = configs.keySet();
 		//TODO GA 20/06/2016 : Only create PropertySingleValue, can be add type in config with a PropertyFieldConfiguration Object but not priority		
@@ -46,9 +50,9 @@ public class PropertiesFieldConfiguration extends AbstractFieldConfiguration {
 				PropertyValueFieldConfiguration propertyFieldConfig = configs.get(pName);
 				PropertyValue psv = (PropertyValue)Class.forName(propertyFieldConfig.className).newInstance();
 				if(null != propertyFieldConfig.value)
-					propertyFieldConfig.value.populateField(psv.getClass().getField("value"), psv, rowMap, contextValidation);
+					propertyFieldConfig.value.populateField(psv.getClass().getField("value"), psv, rowMap, contextValidation, action);
 				if(null != propertyFieldConfig.unit)
-					propertyFieldConfig.unit.populateField(psv.getClass().getField("unit"), psv, rowMap, contextValidation);
+					propertyFieldConfig.unit.populateField(psv.getClass().getField("unit"), psv, rowMap, contextValidation, action);
 				properties.put(pName, psv);				
 			} catch (Exception e) {
 				throw new RuntimeException(e);

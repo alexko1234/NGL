@@ -46,11 +46,12 @@ public class Content implements IValidation{
 	public void validate(ContextValidation contextValidation) {
 
 		ContentValidationHelper.validateSampleCode(sampleCode, contextValidation);
+		ContentValidationHelper.validateProjectCode(projectCode, contextValidation);
+		ContentValidationHelper.validateSampleCodeWithProjectCode(projectCode, sampleCode, contextValidation);
 		ContentValidationHelper.validateSampleCategoryCode(sampleCategoryCode,contextValidation);
 		ContentValidationHelper.validateSampleTypeCode(sampleTypeCode,contextValidation);
 		ContentValidationHelper.validatePercentageContent(percentage, contextValidation);
-		ContentValidationHelper.validateProjectCode(projectCode, contextValidation);
-		//TODO Validate all properties with used the level Content
+		ContentValidationHelper.validateProperties(sampleTypeCode, properties, contextValidation);
 	}
 
 }

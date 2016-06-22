@@ -2,9 +2,11 @@ package controllers.containers.tpl;
 
 import play.Routes;
 import play.mvc.Result;
-import views.html.containerSupports.*;
+import views.html.containerSupports.details;
+import views.html.containerSupports.home;
+import views.html.containerSupports.homeScanner;
+import views.html.containerSupports.search;
 import controllers.CommonController;
-import controllers.containers.tpl.routes.javascript;
 
 public class ContainerSupports extends CommonController{
 	
@@ -20,9 +22,7 @@ public class ContainerSupports extends CommonController{
 		return ok(search.render());
 	}
 	
-	public static Result newFromFile(){
-		return ok(newFromFile.render());
-	}
+	
 	
 	public static Result get(String code){
 		return ok(home.render("search"));
@@ -41,7 +41,6 @@ public class ContainerSupports extends CommonController{
   	    		controllers.containers.tpl.routes.javascript.ContainerSupports.search(),
   	    		controllers.containers.tpl.routes.javascript.ContainerSupports.home(),
   	    		controllers.containers.tpl.routes.javascript.ContainerSupports.homeScanner(),
-  	    		controllers.containers.tpl.routes.javascript.ContainerSupports.newFromFile(),
   	    		controllers.containers.tpl.routes.javascript.ContainerSupports.details(),
   	    		controllers.containers.api.routes.javascript.ContainerSupports.list(),
   	    		controllers.containers.tpl.routes.javascript.ContainerSupports.get(),
@@ -59,9 +58,7 @@ public class ContainerSupports extends CommonController{
   	    		controllers.processes.api.routes.javascript.ProcessCategories.list(),
   	    		controllers.containers.api.routes.javascript.ContainerCategories.list(),
   	    		controllers.commons.api.routes.javascript.Users.list(),
-  	    		controllers.commons.api.routes.javascript.CommonInfoTypes.list(),
-  	    		controllers.receptions.api.routes.javascript.ReceptionConfigurations.list(),
-  	    		controllers.receptions.io.routes.javascript.Receptions.importFile()
+  	    		controllers.commons.api.routes.javascript.CommonInfoTypes.list()
   	      )	  	      
   	    );
   	}

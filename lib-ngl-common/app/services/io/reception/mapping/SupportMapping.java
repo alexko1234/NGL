@@ -24,7 +24,7 @@ import fr.cea.ig.DBObject;
 public class SupportMapping extends Mapping<ContainerSupport> {
 
 	public SupportMapping(Map<String, Map<String, DBObject>> objects, Map<String, ? extends AbstractFieldConfiguration> configuration, Action action, ContextValidation contextValidation) {
-		super(objects, configuration, action, InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, contextValidation);
+		super(objects, configuration, action, InstanceConstants.CONTAINER_SUPPORT_COLL_NAME, ContainerSupport.class, Mapping.Keys.support, contextValidation);
 	}
 
 	
@@ -62,10 +62,20 @@ public class SupportMapping extends Mapping<ContainerSupport> {
 		support.nbContents = containers.stream().mapToInt(c -> c.contents.size()).sum();
 		support.projectCodes = containers.stream().map(c -> c.projectCodes).flatMap(Set::stream).collect(Collectors.toSet());
 		support.sampleCodes = containers.stream().map(c -> c.sampleCodes).flatMap(Set::stream).collect(Collectors.toSet());
-		
+		if(null == support.categoryCode){
+			support.categoryCode = getSupportCategoryCode(containers);
+		}
 	}
 
-
+	private String getSupportCategoryCode(List<Container> containers) {
+		Set<String> categoryCodes = containers.stream().map(c -> c.support.categoryCode).collect(Collectors.toSet());
+		if(categoryCodes.size() == 1)
+			return categoryCodes.iterator().next();
+		else{
+			contextValidation.addErrors("categoryCode","different for several containers");
+			return null;
+		}
+	}
 	private List<Container> getContainersForASupport(ContainerSupport containerSupport) {
 		Map<String, DBObject> allContainers = objects.get("container");
 		

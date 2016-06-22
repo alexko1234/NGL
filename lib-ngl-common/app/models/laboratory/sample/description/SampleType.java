@@ -21,5 +21,9 @@ public class SampleType extends CommonInfoType{
 	public List<PropertyDefinition> getPropertiesDefinitionDefaultLevel(){
 		return getPropertyDefinitionByLevel(Level.CODE.Sample);
 	}
+	
+	public List<PropertyDefinition> getPropertiesDefinitionContentLevel(){
+		return getPropertyDefinitionByLevel(Level.CODE.Content);
+	}
 
 }

@@ -47,9 +47,8 @@ public class Container extends DBObject implements IValidation {
 	//duplication for input in exp : code, categoryCode, contents, mesured*, //contents just for tag and tagCategory 
 	//duplication for output in exp :code, categoryCode, contents, mesured*, //contents just for tag and tagCategory
 	
-	@JsonIgnore
-	public final static String HEADER="Container.code;Container.categoryCode;Container.comments;LocationOnContainerSupport.categorycode;LocationOnContainerSupport.x;LocationOnContainerSupport.y;LocationOnContainerSupport.barecode";
-
+	
+	public String importTypeCode;
 	//ContainerCategory Ref
 	public String categoryCode;
 
@@ -119,6 +118,11 @@ public class Container extends DBObject implements IValidation {
 		validateProjectCodes(projectCodes, contextValidation);
 		validateSampleCodes(sampleCodes, contextValidation);
 		validateExperimentTypeCodes(fromTransformationTypeCodes, contextValidation);
+		validateImportType(importTypeCode, properties ,contextValidation);
+		
+		if(importTypeCode != null){
+			contextValidation.putObject(FIELD_IMPORT_TYPE_CODE , importTypeCode);			
+		}
 		validateContents(contents,contextValidation);
 		validateContainerSupport(support,contextValidation);//bug here Yann
 		validateInputProcessCodes(processCodes,contextValidation);

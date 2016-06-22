@@ -48,7 +48,7 @@ angular.module('home').controller('NewFromFileCtrl', ['$scope', '$http','lists',
 		$scope.messages = messages();
 		if(angular.isUndefined($scope.getHomePage())){
 			mainService.setHomePage('new');
-			tabService.addTabs({label:Messages('containerSupports.tabs.new'),href:jsRoutes.controllers.containers.tpl.ContainerSupports.home("new").url,remove:true});
+			tabService.addTabs({label:Messages('containerSupports.tabs.new'),href:jsRoutes.controllers.containers.tpl.Containers.home("new").url,remove:true});
 			tabService.activeTab(0);
 		}
 	};

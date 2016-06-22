@@ -10,6 +10,7 @@ import views.components.datatable.DatatableColumn;
 import views.components.datatable.DatatableConfig;
 import views.components.datatable.DatatableHelpers;
 import views.html.container.*;
+
 import controllers.CommonController;
 
 public class Containers extends CommonController {
@@ -20,6 +21,10 @@ public class Containers extends CommonController {
 	
 	public static Result search(){
 		return ok(search.render());
+	}
+	
+	public static Result newFromFile(){
+		return ok(newFromFile.render());
 	}
 	
 	public static Result get(String code){
@@ -37,6 +42,7 @@ public class Containers extends CommonController {
   	        // Routes
   	    		controllers.projects.api.routes.javascript.Projects.list(),
   	    		controllers.containers.tpl.routes.javascript.Containers.get(),
+  	    		controllers.containers.tpl.routes.javascript.Containers.newFromFile(),
   	    		controllers.containers.api.routes.javascript.Containers.get(),
   	    		controllers.samples.api.routes.javascript.Samples.list(),
   	    		controllers.containers.api.routes.javascript.Containers.list(),
@@ -60,7 +66,9 @@ public class Containers extends CommonController {
 	      		controllers.commons.api.routes.javascript.CommonInfoTypes.list(),
 	      		controllers.commons.api.routes.javascript.Values.list(),
 	      		controllers.commons.api.routes.javascript.Parameters.list(),
-	      		controllers.experiments.tpl.routes.javascript.Experiments.get()
+	      		controllers.experiments.tpl.routes.javascript.Experiments.get(),
+  	    		controllers.receptions.api.routes.javascript.ReceptionConfigurations.list(),
+  	    		controllers.receptions.io.routes.javascript.Receptions.importFile()
   	      )	  	      
   	    );
   	}

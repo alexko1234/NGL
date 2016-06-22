@@ -27,14 +27,18 @@ public class SampleValidationHelper extends CommonValidationHelper {
 			ContextValidation contextValidation) {
 			
 			List<PropertyDefinition> proDefinitions=new ArrayList<PropertyDefinition>();
-
-			SampleType sampleType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", SampleType.find,true);
-			ImportType importType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, importTypeCode,"importTypeCode", ImportType.find,true);
 			
-			if(sampleType!=null && importType!=null){
-				proDefinitions.addAll(sampleType.getPropertiesDefinitionDefaultLevel());
-				proDefinitions.addAll(importType.getPropertiesDefinitionSampleLevel());
-
+			SampleType sampleType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, typeCode, "typeCode", SampleType.find,true);
+			if(sampleType!=null ){
+				proDefinitions.addAll(sampleType.getPropertiesDefinitionDefaultLevel());				
+			}
+			
+			ImportType importType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, importTypeCode,"importTypeCode", ImportType.find,true);
+			if(importType!=null){
+				proDefinitions.addAll(importType.getPropertiesDefinitionSampleLevel());			
+			}
+			
+			if(proDefinitions.size() > 0){
 				ValidationHelper.validateProperties(contextValidation,properties, proDefinitions);
 			}
 	}

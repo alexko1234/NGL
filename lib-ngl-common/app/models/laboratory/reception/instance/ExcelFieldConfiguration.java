@@ -5,6 +5,7 @@ import static validation.utils.ValidationConstants.ERROR_REQUIRED_MSG;
 import java.lang.reflect.Field;
 import java.util.Map;
 
+import models.laboratory.reception.instance.ReceptionConfiguration.Action;
 import validation.ContextValidation;
 
 
@@ -19,7 +20,7 @@ public class ExcelFieldConfiguration extends AbstractFieldConfiguration {
 
 	@Override
 	public void populateField(Field field, Object dbObject,
-			Map<Integer, String> rowMap, ContextValidation contextValidation) throws Exception {
+			Map<Integer, String> rowMap, ContextValidation contextValidation, Action action) throws Exception {
 		
 		if(rowMap.containsKey(cellPosition)){
 			String value = rowMap.get(cellPosition);			

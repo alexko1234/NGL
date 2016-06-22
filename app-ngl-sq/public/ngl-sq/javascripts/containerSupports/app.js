@@ -12,10 +12,7 @@ angular.module('home', ['commonsServices','ngRoute','ultimateDataTableServices',
 		controller : 'SearchStateCtrl'
 	});
 	
-	$routeProvider.when('/supports/new/home', {
-		templateUrl : jsRoutes.controllers.containers.tpl.ContainerSupports.newFromFile().url,
-		controller : 'NewFromFileCtrl'
-	});
+	
 	
 	$routeProvider.when('/supports/:code', {
 		templateUrl : jsRoutes.controllers.containers.tpl.ContainerSupports.details().url,

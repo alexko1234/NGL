@@ -33,7 +33,7 @@ public class ContainerSupportValidationHelper extends CommonValidationHelper{
 					DBQuery.is("support.code",containerSupport.code));
 			if (MongoDBDAO.getCollection(InstanceConstants.CONTAINER_COLL_NAME,Container.class).getCount(query)!=0 ) {
 				//TODO revoir le message d'erreur
-				contextValidation.addErrors("supportCode.line.column", ValidationConstants.ERROR_NOTUNIQUE_MSG, containerSupport.code,containerSupport.line,containerSupport.column);		
+				contextValidation.addErrors("supportCode.line.column", ValidationConstants.ERROR_NOTUNIQUE_MSG, containerSupport.code+"_"+containerSupport.line+"_"+containerSupport.column,"supportCode/line/column");		
 			}
 		}
 	}

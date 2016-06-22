@@ -2,9 +2,19 @@ package validation.container.instance;
 
 import static validation.utils.ValidationHelper.required;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.mongojack.DBQuery;
+
+import fr.cea.ig.MongoDBDAO;
+import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.common.instance.PropertyValue;
+import models.laboratory.run.instance.Run;
+import models.laboratory.sample.description.ImportType;
 import models.laboratory.sample.description.SampleCategory;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
@@ -13,6 +23,7 @@ import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationConstants;
+import validation.utils.ValidationHelper;
 
 public class ContentValidationHelper extends CommonValidationHelper {
 
@@ -43,5 +54,38 @@ public class ContentValidationHelper extends CommonValidationHelper {
 		}
 	}
 
+	public static void validateSampleCodeWithProjectCode(String projectCode,
+			String sampleCode, ContextValidation contextValidation) {
+		if(!checkSampleWithProject(projectCode, sampleCode)){
+			contextValidation.addErrors("sample", ValidationConstants.ERROR_NOTEXISTS_MSG, sampleCode);
+		}
+	}
 
+	private static boolean checkSampleWithProject(String projectCode,
+			String sampleCode) {
+		return MongoDBDAO.checkObjectExist(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, 
+						DBQuery.is("code", sampleCode).in("projectCodes", projectCode));
+	}
+
+	public static void validateProperties(String sampleTypeCode, Map<String, PropertyValue> properties,	ContextValidation contextValidation) {
+		List<PropertyDefinition> proDefinitions=new ArrayList<PropertyDefinition>();
+		
+		String importTypeCode = (String) contextValidation.getObject(FIELD_IMPORT_TYPE_CODE);
+		if(null != importTypeCode){
+			ImportType importType = BusinessValidationHelper.validateExistDescriptionCode(contextValidation, importTypeCode,"importTypeCode", ImportType.find,true);
+			if(null != importType){
+				proDefinitions.addAll(importType.getPropertiesDefinitionContentLevel());
+			}
+		}
+		
+		SampleType sampleType=BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, sampleTypeCode, "sampleTypeCode", SampleType.find,true);
+		if(sampleType!=null ){
+			proDefinitions.addAll(sampleType.getPropertiesDefinitionContentLevel());				
+		}
+		
+		if(proDefinitions.size() > 0){
+			ValidationHelper.validateProperties(contextValidation,properties, proDefinitions);
+		}
+		
+	}
 }

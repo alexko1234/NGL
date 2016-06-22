@@ -1,10 +1,14 @@
 package services.io.reception;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+
+import play.Logger;
 import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
@@ -21,6 +25,7 @@ import services.io.reception.mapping.SampleMapping;
 import services.io.reception.mapping.SupportMapping;
 import validation.ContextValidation;
 import fr.cea.ig.DBObject;
+import fr.cea.ig.MongoDBDAO;
 
 public abstract class FileService {
 	
@@ -53,9 +58,9 @@ public abstract class FileService {
 
 	private Mapping<? extends DBObject> mappingFactory(String objectType) {
 		
-		if("sample".equals(objectType)){
+		if(Mapping.Keys.sample.toString().equals(objectType)){
 			return new SampleMapping(objects, configuration.configs.get(objectType), configuration.action, contextValidation);
-		}else if("support".equals(objectType)){
+		}else if(Mapping.Keys.support.toString().equals(objectType)){
 			return new SupportMapping(objects, configuration.configs.get(objectType), configuration.action, contextValidation);
 		}else if("container".equals(objectType)){
 			return new ContainerMapping(objects, configuration.configs.get(objectType), configuration.action, contextValidation);
@@ -77,9 +82,11 @@ public abstract class FileService {
 		objectTypes.stream().forEach(s -> {
 			try {
 				DBObject dbObject = mappings.get(s).convertToDBObject(rowMap);
-				if (null != dbObject.code)
+				if (null != dbObject.code && !objects.get(s).containsKey(dbObject.code)){
 					objects.get(s).put(dbObject.code, dbObject);
-				
+				}else{
+					Logger.warn(s+" already load from another line");
+				}
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
@@ -91,18 +98,18 @@ public abstract class FileService {
 	 */
 	protected void consolidateObjects() {
 		//First consolidate container
-		if(configuration.configs.containsKey("container")){
-			Map<String, DBObject> containers = objects.get("container");
+		if(configuration.configs.containsKey(Mapping.Keys.container.toString())){
+			Map<String, DBObject> containers = objects.get(Mapping.Keys.container.toString());
 			containers.values().forEach(c -> {
-				((ContainerMapping)mappings.get("container")).consolidate((Container)c);
+				((ContainerMapping)mappings.get(Mapping.Keys.container.toString())).consolidate((Container)c);
 				
 			});
 		}
 		//Second consolodate support
-		if(configuration.configs.containsKey("support")){
-			Map<String, DBObject> supports = objects.get("support");
+		if(configuration.configs.containsKey(Mapping.Keys.support.toString())){
+			Map<String, DBObject> supports = objects.get(Mapping.Keys.support.toString());
 			supports.values().forEach(c -> {
-				((SupportMapping)mappings.get("support")).consolidate((ContainerSupport)c);
+				((SupportMapping)mappings.get(Mapping.Keys.support.toString())).consolidate((ContainerSupport)c);
 				
 			});
 		}
@@ -110,55 +117,65 @@ public abstract class FileService {
 		//normally not necessary to consolidate sample
 		
 	}
+	/**
+	 * Save or update objects in mongodb
+	 */
 	protected void saveObjects() {
 		//First sampe if needed
-		
 		if(Action.save.equals(configuration.action)){
 			contextValidation.setCreationMode();
 		}else{
 			contextValidation.setUpdateMode();
 		}
-		
-		if(!contextValidation.hasErrors() && configuration.configs.containsKey("sample")){
-			contextValidation.addKeyToRootKeyName("samples");
-			Map<String, DBObject> samples = objects.get("sample");
-			samples.values().forEach(o -> {
-				Sample sample = (Sample)o;
-				contextValidation.addKeyToRootKeyName(sample.code);
-				sample.validate(contextValidation);
-				contextValidation.removeKeyFromRootKeyName(sample.code);
-			});
-			contextValidation.removeKeyFromRootKeyName("samples");
-			
+		if(saveObjectsForKey(Mapping.Keys.sample.toString())){
+			if(saveObjectsForKey(Mapping.Keys.support.toString())){
+				saveObjectsForKey(Mapping.Keys.container.toString());		
+				rollbackObjectIFNeeded(Mapping.Keys.sample.toString(),Mapping.Keys.support.toString());
+			}else{
+				rollbackObjectIFNeeded(Mapping.Keys.sample.toString()); //??? Good idea ???
+			}			
 		}
 		
-		//Second support if needed
-		if(!contextValidation.hasErrors() && configuration.configs.containsKey("support")){
-			contextValidation.addKeyToRootKeyName("supports");
-			Map<String, DBObject> supports = objects.get("support");
-			supports.values().forEach(o -> {
-				ContainerSupport support = (ContainerSupport)o;
-				contextValidation.addKeyToRootKeyName(support.code);
-				support.validate(contextValidation);
-				contextValidation.removeKeyFromRootKeyName(support.code);
-			});
-			contextValidation.removeKeyFromRootKeyName("supports");			
-		}
-		
-		//Third container if needed
-		if(!contextValidation.hasErrors() && configuration.configs.containsKey("container")){
-			contextValidation.addKeyToRootKeyName("containers");
-			Map<String, DBObject> supports = objects.get("container");
-			supports.values().forEach(o -> {
-				Container container = (Container)o;
-				contextValidation.addKeyToRootKeyName(container.code);
-				container.validate(contextValidation);
-				contextValidation.removeKeyFromRootKeyName(container.code);
-			});
-			contextValidation.removeKeyFromRootKeyName("containers");			
-		}		
 	}
-/**
+
+	private void rollbackObjectIFNeeded(String...keys) {
+		Arrays.asList(keys).forEach(key ->{
+			if(contextValidation.hasErrors() && configuration.configs.containsKey(key)){
+				Map<String, DBObject> dbobjects = objects.get(key);
+				Mapping<? extends DBObject> mapping = mappings.get(key);
+				dbobjects.values().forEach(o -> {
+					mapping.rollbackInMongoDB(o);				
+				});
+			}
+		});
+		
+	}
+
+	/**
+	 * Save objects only it not error
+	 * @param key
+	 */
+	private boolean saveObjectsForKey(String key) {
+		if(!contextValidation.hasErrors() && configuration.configs.containsKey(key)){
+			Map<String, DBObject> dbobjects = objects.get(key);
+			Mapping<? extends DBObject> mapping = mappings.get(key);
+			
+			contextValidation.addKeyToRootKeyName(key);
+			dbobjects.values().forEach(o -> {
+				mapping.validate(o);				
+			});
+			contextValidation.removeKeyFromRootKeyName(key);
+			
+			if(!contextValidation.hasErrors()){
+				dbobjects.values().forEach(c -> {
+					mapping.synchronizeMongoDB(c);					
+				});
+			}
+		}
+		return !contextValidation.hasErrors();
+	}
+	
+	/**
 	 * Update HeaderLabel in ExcelFieldConfiguration to have a good error message
 	 */
 	protected void updateHeaderConfiguration() {

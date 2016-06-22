@@ -12,6 +12,7 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.container.description.ContainerCategory;
+import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.reception.instance.AbstractFieldConfiguration;
@@ -29,7 +30,7 @@ import validation.ContextValidation;
 public class ContainerMapping extends Mapping<Container> {
 
 	public ContainerMapping(Map<String, Map<String, DBObject>> objects, Map<String, ? extends AbstractFieldConfiguration> configuration, Action action, ContextValidation contextValidation) {
-		super(objects, configuration, action, InstanceConstants.CONTAINER_COLL_NAME, Container.class, contextValidation);
+		super(objects, configuration, action, InstanceConstants.CONTAINER_COLL_NAME, Container.class, Mapping.Keys.container, contextValidation);
 	}
 
 	protected void update(Container container) {
@@ -47,16 +48,13 @@ public class ContainerMapping extends Mapping<Container> {
 
 	@Override
 	public void consolidate(Container c) {
-		ContainerSupport support = getContainerSupport(c.support.code);
-		if(c.categoryCode == null){
-			c.categoryCode = ContainerCategory.find.findByContainerSupportCategoryCode(support.code).code;
+		if(c.categoryCode == null && c.support.categoryCode != null){
+			c.categoryCode = ContainerCategory.find.findByContainerSupportCategoryCode(c.support.categoryCode).code;
 		}
 		
 		c.projectCodes = new TreeSet<String>();
 		c.sampleCodes = new TreeSet<String>();
 		
-		c.support.categoryCode = support.categoryCode;
-		c.support.storageCode = support.storageCode;
 		double percentage = (new BigDecimal(100.00/c.contents.size()).setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue());
 		c.contents.forEach(content -> {
 			Sample sample = getSample(content.sampleCode);

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import models.laboratory.reception.instance.ReceptionConfiguration.Action;
 import validation.ContextValidation;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -42,12 +43,12 @@ public class ObjectFieldConfiguration<T> extends AbstractFieldConfiguration {
 	 * @param rowMap
 	 * @param contextValidation
 	 */
-	protected void populateSubFields(Object object, Map<Integer, String> rowMap, ContextValidation contextValidation) {
+	protected void populateSubFields(Object object, Map<Integer, String> rowMap, ContextValidation contextValidation, Action action) {
 		Set<String> propertyNames = configs.keySet();
 		propertyNames.forEach(pName -> {
 			try {
 				AbstractFieldConfiguration afc = configs.get(pName);
-				afc.populateField(object.getClass().getField(pName), object, rowMap, contextValidation);								
+				afc.populateField(object.getClass().getField(pName), object, rowMap, contextValidation, action);								
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}			
@@ -56,11 +57,13 @@ public class ObjectFieldConfiguration<T> extends AbstractFieldConfiguration {
 
 	@Override
 	public void populateField(Field field, Object dbObject,
-			Map<Integer, String> rowMap, ContextValidation contextValidation)
+			Map<Integer, String> rowMap, ContextValidation contextValidation, Action action)
 			throws Exception {
 		
-		Object object = field.getType().newInstance();
-		populateSubFields(object, rowMap, contextValidation);
+		Object object = field.get(dbObject);
+		if(null == object)object = field.getType().newInstance();
+		
+		populateSubFields(object, rowMap, contextValidation, action);
 		populateField(field, dbObject, object);	
 	}
 

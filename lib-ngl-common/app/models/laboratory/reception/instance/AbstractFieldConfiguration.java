@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import models.laboratory.reception.instance.ReceptionConfiguration.Action;
 import validation.ContextValidation;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -48,10 +49,11 @@ public abstract class AbstractFieldConfiguration {
 	 * @param dbObject
 	 * @param rowMap
 	 * @param contextValidation
+	 * @param action TODO
 	 * @throws Exception
 	 */
 	public abstract void populateField(Field field, Object dbObject,
-			Map<Integer, String> rowMap, ContextValidation contextValidation) throws Exception;
+			Map<Integer, String> rowMap, ContextValidation contextValidation, Action action) throws Exception;
 	
 	
 	/**

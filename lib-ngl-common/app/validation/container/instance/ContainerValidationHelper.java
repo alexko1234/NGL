@@ -1,12 +1,16 @@
 package validation.container.instance;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import models.laboratory.common.description.ObjectType;
+import models.laboratory.common.description.PropertyDefinition;
+import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.container.description.ContainerCategory;
 import models.laboratory.container.instance.Container;
@@ -15,6 +19,7 @@ import models.laboratory.container.instance.LocationOnContainerSupport;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
+import models.laboratory.sample.description.ImportType;
 import models.utils.InstanceConstants;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -171,6 +176,22 @@ public class ContainerValidationHelper extends CommonValidationHelper{
 			contextValidation.addErrors("processCodes", "error.validation.container.inputProcesses.notnull");
 		}		
 	}
+	
+	public static void validateImportType(String importTypeCode, Map<String, PropertyValue> properties,
+			ContextValidation contextValidation){
+		
+		ImportType importType = BusinessValidationHelper.validateExistDescriptionCode(contextValidation, importTypeCode,"importTypeCode", ImportType.find,true);
+		if(null != importType){
+			List<PropertyDefinition> proDefinitions=new ArrayList<PropertyDefinition>();
+			proDefinitions.addAll(importType.getPropertiesDefinitionContainerLevel());
+			
+			if(proDefinitions.size() > 0){
+				ValidationHelper.validateProperties(contextValidation,properties, proDefinitions);
+			}
+		}
+		
+	};
+	
 	@Deprecated
 	public static void validateProcessTypeCode(String processTypeCode,
 			ContextValidation contextValidation) {

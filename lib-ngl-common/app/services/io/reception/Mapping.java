@@ -6,6 +6,7 @@ import java.util.TreeMap;
 
 import play.Logger;
 import validation.ContextValidation;
+import validation.IValidation;
 import models.laboratory.container.instance.ContainerSupport;
 import models.laboratory.reception.instance.AbstractFieldConfiguration;
 import models.laboratory.reception.instance.ReceptionConfiguration.Action;
@@ -23,6 +24,8 @@ import fr.cea.ig.MongoDBDAO;
  */
 public abstract class Mapping<T extends DBObject> {
 
+	public enum Keys {sample,support,container};
+	
 	protected Map<String, Map<String, DBObject>> objects;
 	protected Map<String, ? extends AbstractFieldConfiguration> configuration;
 	protected Action action;
@@ -30,8 +33,10 @@ public abstract class Mapping<T extends DBObject> {
 	protected String collectionName;
 	protected Class<T> type;
 	
+	private Keys key;
+	
 	protected Mapping(Map<String, Map<String, DBObject>> objects, Map<String, ? extends AbstractFieldConfiguration> configuration, Action action,
-			String collectionName, Class<T> type, ContextValidation contextValidation) {
+			String collectionName, Class<T> type, Keys key, ContextValidation contextValidation) {
 		super();
 		this.objects = objects;
 		this.configuration = configuration;
@@ -39,6 +44,7 @@ public abstract class Mapping<T extends DBObject> {
 		this.contextValidation = contextValidation;
 		this.collectionName =collectionName;
 		this.type = type;
+		this.key = key;
 	}
 	
 	/**
@@ -50,7 +56,17 @@ public abstract class Mapping<T extends DBObject> {
 		T object = type.newInstance();
 		if(Action.update.equals(action)){
 			object = get(object, rowMap);
-		}		
+		}else if(Action.save.equals(action)){
+			T objectInDB = get(object, rowMap);
+			if(null != objectInDB){
+				contextValidation.addErrors("Error", "error.objectexist", type.getSimpleName(), objectInDB.code);
+			}else{
+				T objectInObjects = (T)objects.get(key.toString()).get(object.code);
+				if(null != objectInObjects){
+					object = objectInObjects;
+				}
+			}
+		}
 		Field[] fields = type.getFields();
 		for(Field field : fields){
 			populateField(field, object, rowMap);			
@@ -69,13 +85,36 @@ public abstract class Mapping<T extends DBObject> {
 	 * Add missing property from otehr objectType
 	 * @param c
 	 */
-	public abstract void consolidate(T c);
+	public abstract void consolidate(T object);
+	
+	
+	public void synchronizeMongoDB(DBObject c){
+		if(Action.save.equals(action)){
+			MongoDBDAO.save(collectionName, c);
+		}else if(Action.update.equals(action)){
+			MongoDBDAO.update(collectionName, c);
+		}		
+	}
+	
+	public void rollbackInMongoDB(DBObject c){
+		if(Action.save.equals(action)){ //Delete sample and support if already exist !!!!
+			MongoDBDAO.deleteByCode(collectionName, c.getClass(), c.code);
+		}else if(Action.update.equals(action)){
+			//replace by old version of the object
+		}		
+	}
+	
+	public void validate(DBObject c){
+		contextValidation.addKeyToRootKeyName(c.code);
+		((IValidation)c).validate(contextValidation);
+		contextValidation.removeKeyFromRootKeyName(c.code);	
+	}
 	
 	protected void populateField(Field field, DBObject dbObject, Map<Integer, String> rowMap) {
 		if(configuration.containsKey(field.getName())){
 			AbstractFieldConfiguration fieldConfiguration = configuration.get(field.getName());
 			try {
-				fieldConfiguration.populateField(field, dbObject, rowMap, contextValidation);
+				fieldConfiguration.populateField(field, dbObject, rowMap, contextValidation, action);
 			} catch (Exception e) {
 				Logger.error("Error", e.getMessage(), e);
 				contextValidation.addErrors("Error", e.getMessage());
@@ -87,11 +126,11 @@ public abstract class Mapping<T extends DBObject> {
 	protected T get(T object, Map<Integer, String> rowMap) {
 		try {
 			AbstractFieldConfiguration codeConfig = configuration.get("code");
-			codeConfig.populateField(object.getClass().getField("code"), object, rowMap, contextValidation);
+			codeConfig.populateField(object.getClass().getField("code"), object, rowMap, contextValidation, action);
 			if(null != object.code){
 				object = MongoDBDAO.findByCode(collectionName, type, object.code);						
 			}else{
-				contextValidation.addErrors("Error", "not found "+type.getName()+" code !!!");
+				contextValidation.addErrors("Error", "not found "+type.getSimpleName()+" code !!!");
 			}
 		} catch (Exception e) {
 			Logger.error("Error", e.getMessage(), e);
@@ -107,7 +146,7 @@ public abstract class Mapping<T extends DBObject> {
 			ContainerSupport cs = (ContainerSupport)objects.get("support").get(code);
 			return cs;
 		}else{
-			throw new RuntimeException("Support must be load form Excel file, check configuration");
+			throw new RuntimeException("Support must be load from Excel file, check configuration");
 		}
 	}
 	

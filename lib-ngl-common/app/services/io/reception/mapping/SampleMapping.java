@@ -20,7 +20,7 @@ public class SampleMapping extends Mapping<Sample> {
 	 * @param contextValidation
 	 */
 	public SampleMapping(Map<String, Map<String, DBObject>> objects, Map<String, ? extends AbstractFieldConfiguration> configuration, Action action, ContextValidation contextValidation) {
-		super(objects, configuration, action, InstanceConstants.SAMPLE_COLL_NAME, Sample.class, contextValidation);
+		super(objects, configuration, action, InstanceConstants.SAMPLE_COLL_NAME, Sample.class, Mapping.Keys.sample, contextValidation);
 	}
 	
 	
