@@ -68,6 +68,9 @@ GET		/api/experiment-type-nodes										controllers.experiments.api.ExperimentT
 GET		/api/experiment-type-nodes/:code								controllers.experiments.api.ExperimentTypeNodes.get(code:java.lang.String)
 
 
+#reagents api
+GET		/api/reagents													@controllers.experiments.api.ExperimentReagents.list()
+
 #protocols api
 GET		/api/protocols													controllers.protocols.api.Protocols.list()
 
