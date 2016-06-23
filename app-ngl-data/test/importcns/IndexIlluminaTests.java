@@ -4,7 +4,7 @@ import java.sql.SQLException;
 
 import models.Constants;
 import models.LimsCNSDAO;
-import models.laboratory.parameter.Index;
+import models.laboratory.parameter.index.Index;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 

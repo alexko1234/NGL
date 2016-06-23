@@ -214,7 +214,7 @@ rule "Generate tag from TagDetails"
 		
 		sb.append($tagDetails.getProjectCode());
 		sb.append("_").append($tagDetails.getSampleCode());
-		
+		/*
 		if(null != $tagDetails.getLibProcessTypeCode()){
 			sb.append("_").append($tagDetails.getLibProcessTypeCode());
 		}
@@ -224,7 +224,7 @@ rule "Generate tag from TagDetails"
 		}
 		
 		sb.append("_").append($tagDetails.getBarcode());
-		
+		*/
 		Tag tag = new Tag();
 		tag.barcode = $tagDetails.getBarcode();
 		tag.label = sb.toString(); 

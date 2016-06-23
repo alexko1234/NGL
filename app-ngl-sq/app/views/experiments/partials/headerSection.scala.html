@@ -19,8 +19,10 @@
 					</div>
 					<button ng-if="getNbAvailableAdditionnalButtons() === 1" ng-repeat="button in getAdditionnalButtons() track by $index" class="btn btn-default" ng-show="button.isShow()"  ng-click="button.click()" ng-disabled="button.isDisabled()" ng-bind="button.label"></button>
 				 	
-				
-								
+				 	
+				 	@if(play.Play.application().configuration().getBoolean("ngl.printing.cb")){
+					<button class="btn btn-default" ng-click="openPrintTagsPage()" ng-if="isInProgressState() || isFinishState()" title="@Messages("button.tag.printing")"><i class="fa fa-tags" ></i></button>
+					}
 				
 					<button class="btn btn-default" ng-if="isDispactchModalAvailable()" ng-click="initDispatchModal()"><i class="fa fa-arrows-alt"></i></button>
 					

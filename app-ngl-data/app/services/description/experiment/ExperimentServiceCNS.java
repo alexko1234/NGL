@@ -21,7 +21,7 @@ import models.laboratory.common.description.Value;
 import models.laboratory.experiment.description.ExperimentCategory;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.experiment.description.ProtocolCategory;
-import models.laboratory.parameter.NanoporeIndex;
+import models.laboratory.parameter.index.NanoporeIndex;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 import models.utils.dao.DAOHelpers;

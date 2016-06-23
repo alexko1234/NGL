@@ -19,7 +19,7 @@ import models.laboratory.experiment.instance.AtomicTransfertMethod;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.instrument.description.Instrument;
-import models.laboratory.parameter.Index;
+import models.laboratory.parameter.index.Index;
 import models.utils.InstanceConstants;
 import models.utils.dao.DAOException;
 

@@ -1,7 +1,8 @@
-package models.laboratory.parameter;
+package models.laboratory.parameter.index;
 
 import java.util.Map;
 
+import models.laboratory.parameter.Parameter;
 import validation.ContextValidation;
 import validation.utils.ValidationHelper;
 

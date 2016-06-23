@@ -15,10 +15,11 @@ import models.laboratory.common.instance.TraceInformation;
 import models.utils.InstanceConstants;
 import fr.cea.ig.DBObject;
 
-@JsonTypeInfo(use=Id.NAME, include=As.EXISTING_PROPERTY, property="typeCode", defaultImpl=models.laboratory.parameter.Index.class)
+@JsonTypeInfo(use=Id.NAME, include=As.EXISTING_PROPERTY, property="typeCode", defaultImpl=models.laboratory.parameter.index.Index.class)
 @JsonSubTypes({
-	@JsonSubTypes.Type(value =  models.laboratory.parameter.IlluminaIndex.class, name = "index-illumina-sequencing"),
-	@JsonSubTypes.Type(value =  models.laboratory.parameter.NanoporeIndex.class, name = "index-nanopore-sequencing"),
+	@JsonSubTypes.Type(value =  models.laboratory.parameter.index.IlluminaIndex.class, name = "index-illumina-sequencing"),
+	@JsonSubTypes.Type(value =  models.laboratory.parameter.index.NanoporeIndex.class, name = "index-nanopore-sequencing"),
+	@JsonSubTypes.Type(value =  models.laboratory.parameter.printer.BBP11.class, name = "BBP11"),
 })
 public abstract class Parameter extends DBObject  implements IValidation{
 	
@@ -27,7 +28,7 @@ public abstract class Parameter extends DBObject  implements IValidation{
 	public String categoryCode;
 	public String name;
 	
-	public Parameter(String typeCode) {
+	protected Parameter(String typeCode) {
 		super();
 		this.typeCode = typeCode;
 	}

@@ -1,4 +1,4 @@
-package models.laboratory.parameter;
+package models.laboratory.parameter.index;
 
 public class NanoporeIndex extends Index {
 	

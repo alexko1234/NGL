@@ -54,13 +54,20 @@ angular.module('commonsServices', []).
 						},
 						setSuccess : function(type){
 							this.clazz=this.config.successClass;
-							this.text=this.transformKey(this.config.successKey[type]);
+							if(this.config.errorKey[type]){
+								this.text=this.transformKey(this.config.successKey[type]);
+							}else{
+								this.text=type;
+							}	
 							this.open();
 						},
 						setError : function(type){
 							this.clazz=this.config.errorClass;
-							this.text=this.transformKey(this.config.errorKey[type]);
-							
+							if(this.config.errorKey[type]){
+								this.text=this.transformKey(this.config.errorKey[type]);
+							}else{
+								this.text=type;
+							}							
 							this.open();
 						},
 						open : function(){

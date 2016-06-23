@@ -134,7 +134,7 @@ public class Experiments extends CommonController{
   	    		controllers.experiments.tpl.routes.javascript.Experiments.home(),  	    		
   	    		controllers.experiments.tpl.routes.javascript.Experiments.details(),
   	    		controllers.experiments.tpl.routes.javascript.Experiments.get(),
-  	    		
+  	    		controllers.printing.tpl.routes.javascript.Printing.home(),
   	    		
   	    		controllers.instruments.api.routes.javascript.InstrumentUsedTypes.get(),
 	      		controllers.experiments.api.routes.javascript.Experiments.list(),

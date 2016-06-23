@@ -13,7 +13,7 @@ import models.laboratory.common.instance.property.PropertyFileValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
-import models.laboratory.parameter.Index;
+import models.laboratory.parameter.index.Index;
 import play.Logger;
 import validation.ContextValidation;
 import validation.utils.ValidationHelper;

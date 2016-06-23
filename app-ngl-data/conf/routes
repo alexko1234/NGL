@@ -25,6 +25,7 @@ GET		/api/description/treatments				controllers.description.runs.Treatments.save
 
 GET		/api/instance/resolutions				controllers.instance.resolution.Resolutions.save()
 GET		/api/instance/protocols					controllers.instance.protocol.Protocols.save()
+GET		/api/instance/parameters/printers		controllers.instance.parameters.Printers.save()
 
 GET 	/api/import/updateTara					controllers.instance.ImportDatas.updateTara()
 

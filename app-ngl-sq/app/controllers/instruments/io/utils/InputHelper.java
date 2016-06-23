@@ -6,8 +6,9 @@ import org.mongojack.DBQuery;
 
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
-import models.laboratory.parameter.Index;
+import models.laboratory.parameter.index.Index;
 import models.utils.InstanceConstants;
+
 import java.util.List;
 import java.util.ArrayList;
 

@@ -7,9 +7,9 @@ import java.util.List;
 
 import models.LimsCNSDAO;
 import models.laboratory.common.instance.TraceInformation;
-import models.laboratory.parameter.Index;
-import models.laboratory.parameter.NanoporeIndex;
 import models.laboratory.parameter.Parameter;
+import models.laboratory.parameter.index.Index;
+import models.laboratory.parameter.index.NanoporeIndex;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;

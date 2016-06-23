@@ -3,11 +3,14 @@ package services.instance;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.laboratory.parameter.printer.BBP11;
+import models.laboratory.parameter.printer.BarcodePosition;
 import models.laboratory.protocol.instance.Protocol;
 import models.laboratory.resolutions.instance.Resolution;
 import models.laboratory.resolutions.instance.ResolutionCategory;
 
 public class InstanceFactory {
+	
 	
 	/**
 	 * 
@@ -30,6 +33,36 @@ public class InstanceFactory {
 		return p;
 	}
 	
+	
+	public static BBP11 newBBP11(String name, String location, String ipAdress, Integer port, String defaultSpeed, String defaultDensity, String defaultBarcodePositionId, boolean inverseList, List<BarcodePosition> barcodePositions){
+		BBP11 bbp11 = new BBP11();
+		bbp11.code = name;
+		bbp11.name = name;
+		bbp11.categoryCode = "printer";
+		bbp11.model = "BBP11";
+		bbp11.location = location;
+		bbp11.ipAdress = ipAdress;
+		bbp11.port = port;	
+		bbp11.defaultSpeed = defaultSpeed;
+		bbp11.defaultDensity = defaultDensity;
+		bbp11.defaultBarcodePositionId = defaultBarcodePositionId;	
+		bbp11.inverseList = inverseList ;
+		bbp11.barcodePositions = barcodePositions;
+		return bbp11;
+	}
+	
+	public static BarcodePosition newBarcodePosition(String id, String barcodePositionName, Integer labelWidth, String labelCommand, String barcodeCommand, boolean barcodeBottom, boolean is2d) {
+		BarcodePosition barcodePosition = new BarcodePosition();
+		barcodePosition.id = id;
+		barcodePosition.barcodePositionName = barcodePositionName;
+		barcodePosition.labelWidth = labelWidth;
+		barcodePosition.labelCommand = labelCommand;
+		barcodePosition.barcodeCommand = barcodeCommand;
+		barcodePosition.barcodeBottom = barcodeBottom;
+		barcodePosition.is2d = is2d;
+		return barcodePosition;
+	}
+
 	
 	public static List<String> setExperimentTypeCodes(String...exp){
 		List<String> lp = new ArrayList<String>();

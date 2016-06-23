@@ -1,4 +1,5 @@
-package models.laboratory.parameter;
+package models.laboratory.parameter.index;
+
 
 public class IlluminaIndex extends Index {
 	

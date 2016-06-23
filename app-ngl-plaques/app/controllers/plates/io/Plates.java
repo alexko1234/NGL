@@ -20,7 +20,7 @@ import lims.cns.dao.LimsManipDAO;
 import lims.models.Plate;
 import lims.models.Well;
 import models.laboratory.common.instance.property.PropertyFileValue;
-import models.laboratory.parameter.Index;
+import models.laboratory.parameter.index.Index;
 import play.Logger;
 import play.api.modules.spring.Spring;
 import play.data.Form;

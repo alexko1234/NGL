@@ -52,6 +52,10 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 		$scope.modalTop = $scope.modalTop - 50; // height of header and footer
 	};
 	
+	$scope.openPrintTagsPage = function(){
+		$window.open(jsRoutes.controllers.printing.tpl.Printing.home("tags").url+"?experimentCode="+$scope.experiment.code, 'tags');
+	};
+	
 	$scope.isDispactchModalAvailable = function(){
 		return $scope.isFinishState();
 	};

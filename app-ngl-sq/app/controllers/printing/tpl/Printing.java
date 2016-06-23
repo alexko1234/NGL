@@ -18,6 +18,9 @@ public class Printing extends Controller {
   	      Routes.javascriptRouter("jsRoutes",
   	        // Routes
   	    		controllers.printing.api.routes.javascript.Tags.list(),
+  	    		controllers.printing.api.routes.javascript.Tags.print(),
+  	    		controllers.commons.api.routes.javascript.Parameters.list(),
+  	    		controllers.printing.tpl.routes.javascript.Printing.home(),
   	    		controllers.printing.tpl.routes.javascript.Tags.display()
   	    		
   	      )	  	      

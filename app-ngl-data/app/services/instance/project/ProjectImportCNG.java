@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import fr.cea.ig.MongoDBDAO;
-import models.laboratory.parameter.Index;
+import models.laboratory.parameter.index.Index;
 import models.laboratory.project.instance.Project;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;

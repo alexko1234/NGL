@@ -16,7 +16,7 @@ import models.laboratory.common.instance.TraceInformation;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.Content;
-import models.laboratory.parameter.Index;
+import models.laboratory.parameter.index.Index;
 import models.laboratory.processes.instance.SampleOnInputContainer;
 import models.laboratory.run.instance.ReadSet;
 import models.laboratory.run.instance.Run;

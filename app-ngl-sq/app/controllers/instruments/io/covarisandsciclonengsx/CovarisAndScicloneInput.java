@@ -17,7 +17,7 @@ import models.laboratory.container.instance.Container;
 import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.experiment.instance.OutputContainerUsed;
-import models.laboratory.parameter.Index;
+import models.laboratory.parameter.index.Index;
 import validation.ContextValidation;
 import validation.utils.ValidationHelper;
 import controllers.instruments.io.utils.AbstractInput;

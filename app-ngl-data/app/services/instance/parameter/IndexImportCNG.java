@@ -4,9 +4,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 import play.Logger;
-
 import models.LimsCNGDAO;
-import models.laboratory.parameter.Index;
+import models.laboratory.parameter.index.Index;
 import models.utils.InstanceConstants;
 import models.utils.InstanceHelpers;
 import models.utils.dao.DAOException;

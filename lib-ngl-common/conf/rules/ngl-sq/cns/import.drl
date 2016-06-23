@@ -32,7 +32,7 @@ import org.mongojack.DBCursor;
 import java.util.Date;
 import lims.services.ILimsServices;
 import play.api.modules.spring.Spring;
-import models.laboratory.parameter.Index;
+import models.laboratory.parameter.index.*;
 import java.util.regex.Pattern;
 import models.laboratory.experiment.description.ExperimentType;
 import models.laboratory.run.instance.Run;

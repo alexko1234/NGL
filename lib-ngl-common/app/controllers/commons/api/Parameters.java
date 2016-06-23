@@ -5,8 +5,8 @@ import static play.data.Form.form;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.laboratory.parameter.Index;
 import models.laboratory.parameter.Parameter;
+import models.laboratory.parameter.index.Index;
 import models.utils.InstanceConstants;
 import models.utils.ListObject;
 import models.utils.dao.DAOException;
