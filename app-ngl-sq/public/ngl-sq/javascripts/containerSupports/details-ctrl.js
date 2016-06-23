@@ -15,6 +15,17 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 	$scope.setActiveTab = function(value){
 		mainService.put('containerSupportActiveTab', value);
 	};
+	
+	//To display sample and tag in one cell
+	$scope.getSampleAndTags = function(container){
+		var sampleCodeAndTags = [];
+		angular.forEach(container.contents, function(content){
+			if(content.properties.tag != undefined && content.sampleCode != undefined){
+				sampleCodeAndTags.push(content.sampleCode+" / "+content.properties.tag.value);
+			}
+		});
+		return sampleCodeAndTags;
+	};
 
 	/*
 	 * Get Bootstrap + Display Method for all views
@@ -23,7 +34,7 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 		if(angular.isDefined($scope.containers)){
 			for(var i=0; i<$scope.containers.length; i++){
 				if($scope.containers[i].support.column === (x+'') && $scope.containers[i].support.line===(y+'')){
-		        	 $scope.data = $scope.containers[i];
+		        	 $scope.data = $scope.containers[i];		        	 
 		        	 if($scope.data.valuation.valid === "FALSE"){
 		        		 return "alert alert-danger hidden-print";
 		        	 }else if($scope.data.valuation.valid === "TRUE"){
@@ -86,16 +97,14 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 				}else if(categoryCode.includes('384')){
 					setColXLine(24,16);
 				}
-			}else if(categoryCode.includes('tube')){
-				$scope.target = undefined;
 			}else{
-				$scope.target = 'table';
-				//console.warn("Default Case !!! \n....or Maybe a Tube");
+				$scope.target = undefined;
+				$scope.setActiveTab('table'); 
 			}
 		}
 		if(!angular.isUndefined($scope.target)){
 			$scope.dynamicMessage = Messages("containerSupports.button."+$scope.target); // Build msg for the button
-			$scope.setActiveTab('table'); 
+			$scope.setActiveTab('table');
 			//$scope.setActiveTab($scope.target);
 		}
 	};

@@ -73,6 +73,7 @@ containerSupports.button.mapcard = Vue Mapcard
 containerSupports.button.iryschip = Vue Iryschip
 
 
+
 active.true = Actif
 active.false = Inactif
 
