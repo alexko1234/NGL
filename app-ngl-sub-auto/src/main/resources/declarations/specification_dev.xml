@@ -39,7 +39,7 @@ H:\birdsSpec.xsd">
 	
 		<ExecutableSpecification commandSyntaxStrategyName="default">
 			<Executable path="gzip" user="cnsnglapps" host="etna0.genoscope.cns.fr"/>
-			<Slurm job="gzip" part="normal" />
+			<Slurm job="gzip" part="normal" account="soumissions"/>
 		</ExecutableSpecification>
 		
 		<ParametersSpecification>
@@ -67,7 +67,7 @@ H:\birdsSpec.xsd">
 	
 		<ExecutableSpecification commandSyntaxStrategyName="default">
 			<Executable path="md5sum" user="cnsnglapps" host="etna0.genoscope.cns.fr"/>
-			<Slurm job="md5sum" part="normal" />
+			<Slurm job="md5sum" part="normal" account="soumissions"/>
 		</ExecutableSpecification>
 		
 		<ParametersSpecification>
