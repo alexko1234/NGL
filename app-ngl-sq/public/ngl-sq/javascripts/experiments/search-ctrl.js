@@ -87,6 +87,7 @@ angular.module('home').controller('SearchReagentsCtrl', ['$scope', '$http', '$q'
 			search:{
 				active:true,
 				url:jsRoutes.controllers.experiments.api.Experiments.list()
+				//url:jsRoutes.controllers.experiments.api.ExperimentReagents.list()
 			},
 			order:{
 				active:true,

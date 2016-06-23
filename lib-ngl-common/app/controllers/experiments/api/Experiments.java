@@ -113,7 +113,7 @@ public class Experiments extends DocumentController<Experiment>{
 	 * @param experimentSearch
 	 * @return the query
 	 */
-	private DBQuery.Query getQuery(ExperimentSearchForm experimentSearch) {
+	protected DBQuery.Query getQuery(ExperimentSearchForm experimentSearch) {
 		List<DBQuery.Query> queryElts = new ArrayList<DBQuery.Query>();
 		Query query=null;
 
