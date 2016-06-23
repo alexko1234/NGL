@@ -1,6 +1,6 @@
 "use strict"
-angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','$filter','mainService','tabService','containerSupportsSearchService','$routeParams', 
-                                                 function($scope, datatable, lists,$filter,mainService,tabService,containerSupportsSearchService,$routeParams) {
+angular.module('home').controller('SearchCtrl', ['$scope', '$window', 'datatable','lists','$filter','mainService','tabService','containerSupportsSearchService','$routeParams', 
+                                                 function($scope, $window, datatable, lists,$filter,mainService,tabService,containerSupportsSearchService,$routeParams) {
 	$scope.datatableConfig = {
 		search:{
 			url:jsRoutes.controllers.containers.api.ContainerSupports.list()
@@ -28,6 +28,10 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 			add:function(line){
 				tabService.addTabs({label:line.code,href:jsRoutes.controllers.containers.tpl.ContainerSupports.get(line.code).url, remove:true});
 			}
+		},
+		otherButtons :{
+			active:true,
+			template:'<button class="btn btn-default" ng-click="openPrintTagsPage(searchService.datatable.getSelection(true))"  ng-disabled="!searchService.datatable.isSelect()" title="'+Messages("button.tag.printing")+'"><i class="fa fa-tags" ></i></button>'					
 		}
 	};
 
@@ -39,6 +43,14 @@ angular.module('home').controller('SearchCtrl', ['$scope', 'datatable','lists','
 		$scope.searchService.resetForm();		
 	};
 	
+	$scope.openPrintTagsPage = function(supports){
+		var params = {value : ""};
+		supports.forEach(function(value){
+			this.value = this.value + "containerSupportCodes="+value.code+"&";
+		},params)
+		params.value = params.value.slice(0, params.value.length-1);
+		$window.open(jsRoutes.controllers.printing.tpl.Printing.home("tags").url+"?"+params.value, 'tags');
+	};
 	//init
 	$scope.datatable = datatable($scope.datatableConfig);		
 	if(angular.isUndefined($scope.getHomePage())){

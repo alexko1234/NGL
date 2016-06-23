@@ -92,7 +92,7 @@ angular.module('home').controller('TagsCtrl', ['$scope', '$http', '$routeParams'
 	
 	$scope.messages = messages();
 	var datatable = datatable(datatableConfig);
-	if(angular.isDefined($routeParams.experimentCode) || angular.isDefined($routeParams.containerCodes)){
+	if(angular.isDefined($routeParams.experimentCode) || angular.isDefined($routeParams.containerSupportCodes)){
 		$http.get(jsRoutes.controllers.printing.api.Tags.list().url,{params:$routeParams, datatable:datatable})
 		.success(function(data, status, headers, config) {
 					

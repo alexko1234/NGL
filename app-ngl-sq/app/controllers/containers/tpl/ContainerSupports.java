@@ -40,6 +40,7 @@ public class ContainerSupports extends CommonController{
   	        // Routes
   	    		controllers.containers.tpl.routes.javascript.ContainerSupports.search(),
   	    		controllers.containers.tpl.routes.javascript.ContainerSupports.home(),
+  	    		controllers.printing.tpl.routes.javascript.Printing.home(),
   	    		controllers.containers.tpl.routes.javascript.ContainerSupports.homeScanner(),
   	    		controllers.containers.tpl.routes.javascript.ContainerSupports.details(),
   	    		controllers.containers.api.routes.javascript.ContainerSupports.list(),

@@ -110,6 +110,7 @@ rule "Generate TagInfo from ContainerSupport"
 		tagSupport.projectCodes= $support.projectCodes;
 		tagSupport.sampleCodes= $support.sampleCodes;
 		
+		/*
 		Set<String> libProcessTypeCodes = new TreeSet<String>();
 		Set<String> tags = new TreeSet<String>();
 		
@@ -131,7 +132,7 @@ rule "Generate TagInfo from ContainerSupport"
 		}
 		tagSupport.properties.put("libProcessTypeCodes", new PropertyListValue(new ArrayList<String>(libProcessTypeCodes)));	
 		tagSupport.properties.put("tags", new PropertyListValue(new ArrayList<String>(tags)));	
-		
+		*/
 		retract($support);
 		if($support.fromTransformationTypeCodes.size() == 1){
 			TagInfo tagInfo = new TagInfo($support.fromTransformationTypeCodes.iterator().next(), tagSupport);
@@ -151,7 +152,7 @@ rule "Generate TagDetails from TagInfo"
     when
 		$tagInfo:TagInfo()    
     then
-		Logger.debug("Generate tag details");
+		Logger.debug("Generate tag details "+$tagInfo.getSupport().code);
 		ContainerSupport support = $tagInfo.getSupport();
 		
 		String projectCode = "MP";
@@ -166,7 +167,7 @@ rule "Generate TagDetails from TagInfo"
 		if(support.sampleCodes.size() == 1){
 			sampleCode = support.sampleCodes.iterator().next().replace(projectCode+"_","");
 		}
-	
+		/*
 		if(((List)support.properties.get("libProcessTypeCodes").value).size() == 1){
 			libProcessTypeCode = (String)((List)support.properties.get("libProcessTypeCodes").value).get(0);
 		}else if(((List)support.properties.get("libProcessTypeCodes").value).size() == 0){
@@ -178,7 +179,7 @@ rule "Generate TagDetails from TagInfo"
 		}else if(((List)support.properties.get("tags").value).size() == 0){
 			tagCode = null;
 		}
-		
+		*/
 		if(null !=  $tagInfo.getExperimentTypeCode()){
 			ExperimentType experimentType = ExperimentType.find.findByCode( $tagInfo.getExperimentTypeCode());
 			TagDetails tagDetails = new TagDetails(support.code, experimentType.shortCode, projectCode, sampleCode, libProcessTypeCode, tagCode);
