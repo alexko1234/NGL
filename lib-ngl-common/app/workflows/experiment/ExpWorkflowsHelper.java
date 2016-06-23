@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
 import models.laboratory.common.description.Level;
@@ -18,6 +17,7 @@ import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.State;
 import models.laboratory.common.instance.TBoolean;
 import models.laboratory.common.instance.TraceInformation;
+import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.description.ContainerSupportCategory;
 import models.laboratory.container.instance.Container;
 import models.laboratory.container.instance.ContainerSupport;
@@ -49,10 +49,12 @@ import org.mongojack.DBUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import play.Logger;
 import play.Play;
 import play.libs.Akka;
 import rules.services.RulesActor6;
 import rules.services.RulesMessage;
+import scala.collection.mutable.FlatHashTable.Contents;
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
 import workflows.container.ContSupportWorkflows;
@@ -821,23 +823,26 @@ public class ExpWorkflowsHelper {
 	}
 
 	//If experimentType have flag newSample at true  
-	public void updateContentsNewSamples(Experiment exp, ContextValidation validation) {
+	public void updateContentsWithNewSamples(Experiment exp, ContextValidation validation) {
 		ExperimentType experimentType=ExperimentType.find.findByCode(exp.typeCode);
 
-		if(experimentType.newSample || experimentType.code.equals("dna-rna-extraction")){	
-
-			//TODO delete sample create
+		if(experimentType.newSample){	
 
 			exp.atomicTransfertMethods
 			.parallelStream()
 			.map(atm -> createSamples(atm, validation))
 			.forEach(samples -> {
 				if(samples!=null && samples.size()>0){
-					//To validate and don't save if exists
-					MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME, samples);
+					samples.forEach(s-> {
+						if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,s.code)){
+						//	s.validate(validation);
+							MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME,s);
+						}
+					});
 				}
 			});
-
+			
+			MongoDBDAO.update(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class, DBQuery.is("code", exp.code), DBUpdate.set("atomicTransfertMethods", exp.atomicTransfertMethods));
 		}
 
 	}
@@ -845,48 +850,80 @@ public class ExpWorkflowsHelper {
 
 	private List<Sample> createSamples(AtomicTransfertMethod  atm, ContextValidation validation) {
 		List<Sample> samples=new ArrayList<Sample>();
-
-		List<Sample> samplesIn = atm.inputContainerUseds.stream().map(icu -> {
-			Sample s=MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, icu.contents.get(0).sampleCode);
-			return s;
-		}).collect(Collectors.toList());
+		Sample sampleIn=MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, atm.inputContainerUseds.get(0).contents.get(0).sampleCode);
 
 		atm.outputContainerUseds.forEach(oc->{
+
+			List<Content> newContents = new ArrayList<Content>();
+
 			oc.contents.forEach(c->{
 				
-				String sampleTypeCode=null;
-				String projectCode=null;
 				if(oc.experimentProperties.containsKey("sampleTypeCode") && oc.experimentProperties.containsKey("projectCode")){
-				 sampleTypeCode=oc.experimentProperties.get("sampleTypeCode").value.toString();
-				 projectCode=oc.experimentProperties.get("projectCode").value.toString();
-				}
-				if( !c.sampleTypeCode.equals(sampleTypeCode)){	
-					c.sampleTypeCode=sampleTypeCode;
-					c.projectCode=projectCode;
-					c.sampleCategoryCode=SampleType.find.findByCode(c.sampleTypeCode).category.code;
-					c.sampleCode=CodeHelper.getInstance().generateSampleCode(c.projectCode);	
-
-					Sample sample = new Sample();
-					sample.code=c.sampleCode;
-					sample.categoryCode=c.sampleCategoryCode;
-					sample.typeCode=c.sampleTypeCode;
-					sample.projectCodes=new HashSet<String>();
-					sample.projectCodes.add(c.projectCode);
-
-					sample.taxonCode=samplesIn.get(0).taxonCode;
-					sample.properties=samplesIn.get(0).properties;
-					sample.importTypeCode=samplesIn.get(0).importTypeCode;
-					sample.ncbiLineage=samplesIn.get(0).ncbiLineage;
-					sample.ncbiScientificName=samplesIn.get(0).ncbiScientificName;
-					sample.referenceCollab=samplesIn.get(0).referenceCollab;
+					
+					String sampleTypeCode=oc.experimentProperties.get("sampleTypeCode").value.toString();
+					String sampleTypeCategory=SampleType.find.findByCode(sampleTypeCode).category.code;
+					String projectCode=oc.experimentProperties.get("projectCode").value.toString();
+					
+					String sampleCode=null;
+					 if(oc.experimentProperties.containsKey("sampleCode")){
+						 sampleCode=oc.experimentProperties.get("sampleCode").value.toString();
+					 }else{
+						 //generate sample code if not exist in experiment properties
+						 sampleCode=CodeHelper.getInstance().generateSampleCode(projectCode);
+						 oc.experimentProperties.put("sampleCode", new PropertySingleValue(sampleCode));
+					 }
+					//Creation sample
+					Sample sample = cloneSampleWithSampleTypeDifferent(sampleIn, sampleCode, projectCode,sampleTypeCode,sampleTypeCategory);
+					
+					//Duplicate content avec sample
+					newContents.add(cloneContentWithNewSample(sample,c));
 					samples.add(sample);
 				}
-			}
-					);
-
+				
+			}			
+		);
+			//Add new contents
+			oc.contents=new ArrayList<Content>(newContents);	
 		});
 		return samples;
 	}
+
+
+	private Content cloneContentWithNewSample(Sample sample,Content c) {
+		Content content=new Content();
+		
+		content.sampleCode=sample.code;
+		content.sampleCategoryCode=sample.categoryCode;
+		content.sampleTypeCode=sample.typeCode;
+		content.projectCode=sample.projectCodes.iterator().next();
+		
+		content.percentage=c.percentage;
+		content.properties=c.properties;
+		content.referenceCollab=c.referenceCollab;
+		
+		return content;
+	}
+
+
+	private Sample cloneSampleWithSampleTypeDifferent(Sample sampleIn, String sampleCode, String projectCode,
+			String sampleTypeCode,String sampleCategoryCode) {
+		Sample sample = new Sample();
+		sample.code=sampleCode;
+		sample.categoryCode=sampleCategoryCode;
+		sample.typeCode=sampleTypeCode;
+		sample.projectCodes=new HashSet<String>();
+		sample.projectCodes.add(projectCode);
+
+		sample.taxonCode=sampleIn.taxonCode;
+		sample.properties=sampleIn.properties;
+		sample.importTypeCode=sampleIn.importTypeCode;
+		sample.ncbiLineage=sampleIn.ncbiLineage;
+		sample.ncbiScientificName=sampleIn.ncbiScientificName;
+		sample.referenceCollab=sampleIn.referenceCollab;
+		return sample;
+	}
+
+
 }
 
 

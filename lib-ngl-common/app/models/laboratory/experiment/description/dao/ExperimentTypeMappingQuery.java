@@ -43,6 +43,7 @@ public class ExperimentTypeMappingQuery extends MappingSqlQuery<ExperimentType>{
 		experimentType.id = rs.getLong("id");
 		experimentType.atomicTransfertMethod=rs.getString("atomic_transfert_method");
 		experimentType.shortCode = rs.getString("short_code");
+		experimentType.newSample = rs.getBoolean("new_sample");
 		long idExperimentCategory = rs.getLong("fk_experiment_category");
 		long idCommonInfoType = rs.getLong("fk_common_info_type");
 		//Get commonInfoType

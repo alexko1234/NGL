@@ -852,7 +852,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		//InputContainer
 		
-		propertyDefinitions.add(newPropertiesDefinition("Sample Type", "sampleTypeCode", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Container), String.class, false, "N", null, 
+		propertyDefinitions.add(newPropertiesDefinition("Sample Type", "sampleTypeCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, false, "N", null, 
 				"single", 15, false, null,null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Projet", "projectCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, "IP", 
