@@ -1,5 +1,5 @@
-angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'atmToGenerateMany',
-                                                               function($scope, $parse, atmToGenerateMany) {
+angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'atmToGenerateMany','lists','mainService',
+                                                               function($scope, $parse, atmToGenerateMany,lists,mainService) {
 	
 		
 	var datatableConfigTubeParam = {
@@ -421,6 +421,7 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 		$scope.atmService.data.datatableConfig.setEdit();
 	});
 	
+	
 	var atmService = atmToGenerateMany($scope, datatableConfigTubeParam, datatableConfigTubeConfig);
 	//var atmService = atmToSingleDatatable($scope, datatableConfigTubeConfig);
 	//defined new atomictransfertMethod
@@ -440,8 +441,50 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 			quantity:"ng"
 	}
 	
-	$scope.generateATM=function(experiment,experimentType){
-		$scope.atmService.data.datatableParam.save();
+	atmService.$atmToSingleDatatable.convertOutputPropertiesToDatatableColumn = function(property, pName){
+		var column = atmService.$commonATM.convertTypePropertyToDatatableColumn(property,"outputContainerUsed."+pName+".",{"0":Messages("experiments.outputs")});
+		if(property.code=="projectCode"){
+			column.editTemplate='<div class="form-control" bt-select #ng-model filter="true" placeholder="'+Messages("search.placeholder.projects")+'" bt-options="project.code as project.code for project in lists.getProjects()" ></div>';
+		}
+		return column;
+	};
+		
+	atmService.addNewAtomicTransfertMethodsInData = function(){
+		if(null != mainService.getBasket() && null != mainService.getBasket().get()){
+			$that = this;
+			atmService.$commonATM.loadInputContainerFromBasket(mainService.getBasket().get())
+				.then(function(containers) {								
+					var allData = [];
+					
+					angular.forEach(containers, function(container){									
+						allData.push({inputContainer:container, outputNumber:undefined});
+					});
+					
+					for(var i = 0; i < allData.length; i++){
+						var data = allData[i];
+						var atm = atmService.newAtomicTransfertMethod();
+						atm.inputContainerUseds.push(atmService.$commonATM.convertContainerToInputContainerUsed(data.inputContainer));
+						
+						for(var j = 0; j < $scope.experimentType.sampleTypes.length ; j++){
+							var newOutputContainer=atmService.$commonATM.newOutputContainerUsed(atmService.defaultOutputUnit,atm.line,atm.column);
+							atm.outputContainerUseds.push(newOutputContainer);
+							
+							var value = $scope.experimentType.sampleTypes[j].code;
+							var setter = $parse("outputContainerUseds["+j+"].experimentProperties.sampleTypeCode.value").assign;
+							setter(atm, value); 
+												
+						}
+						atmService.data.atm.push(atm);
+					}
+					atmService.data.updateDatatable();
+			});
+		}		
+	};
+	
+	
+	/*
+	$scope.generateATM=function(experimentType){
+		//$scope.atmService.data.datatableParam.save();
 		var allData = $scope.atmService.data.datatableParam.getData();
 		
 		for(var i = 0; i < allData.length; i++){
@@ -462,8 +505,9 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 		}
 		$scope.atmService.data.updateDatatable();					
 	}
+	*/
+	atmService.experimentToView($scope.experiment, $scope.experimentType);					
+    $scope.atmService = atmService;
 	
-	atmService.experimentToView($scope.experiment, $scope.experimentType);
-	
-	$scope.atmService = atmService;
+
 }]);

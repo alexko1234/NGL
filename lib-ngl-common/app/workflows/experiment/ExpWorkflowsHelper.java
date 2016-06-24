@@ -513,15 +513,10 @@ public class ExpWorkflowsHelper {
 		Map<String, PropertyValue> containerProperties = getPropertiesForALevel(exp, atm, CODE.Container);
 		TreeOfLifeNode tree = getTreeOfLifeNode(exp, atm);
 
-		/*Set<String> projectCodes =new HashSet<String>();
-		Set<String> sampleCodes =new HashSet<String>();*/
 		Set<String> processTypeCodes =new HashSet<String>();
 		Set<String> inputProcessCodes =new HashSet<String>();
 
 		atm.inputContainerUseds.forEach(icu -> {
-			/*no goog for outputcontainers with new sample 
-			  projectCodes.addAll(icu.projectCodes);
-			sampleCodes.addAll(icu.sampleCodes);*/
 			processTypeCodes.addAll(icu.processTypeCodes);
 			inputProcessCodes.addAll(icu.processCodes);
 		});
@@ -552,6 +547,8 @@ public class ExpWorkflowsHelper {
 			c.treeOfLife=tree;
 			newContainers.add(c);
 		}
+		
+		//if oneToMany you need to create new processes for each new additional container
 		if(atm.outputContainerUseds != null && atm.outputContainerUseds.size() > 1){
 			//Set<String> allNewInputProcessCodes = new HashSet<String>();
 			List<OutputContainerUsed> outputContainerUseds = atm.outputContainerUseds.subList(1, atm.outputContainerUseds.size());
@@ -586,20 +583,12 @@ public class ExpWorkflowsHelper {
 	}
 
 	private Set<String> getSamplesFromContents(List<Content> contents) {
-		Set<String> sampleCodes =new HashSet<String>();
-		contents.forEach(c->{
-			sampleCodes.add(c.sampleCode);
-		});
-		return sampleCodes;
+		return contents.stream().map(c-> c.sampleCode).collect(Collectors.toSet());
 	}
 
 
 	private Set<String> getProjectsFromContents(List<Content> contents) {
-		Set<String> projectCodes =new HashSet<String>();
-		contents.forEach(c->{
-			projectCodes.add(c.projectCode);
-		});
-		return projectCodes;
+		return contents.stream().map(c -> c.projectCode).collect(Collectors.toSet());
 	}
 
 
