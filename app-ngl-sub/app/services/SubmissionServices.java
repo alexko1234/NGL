@@ -588,24 +588,15 @@ public class SubmissionServices {
 					if (StringUtils.isBlank(rawData.location)) {
 						throw new SraException(" Dans activateSubmission" + rawData.relatifName + " avec location non renseignée");				
 					}
-					if ("CNS".equalsIgnoreCase(rawData.location)) {
+					// On ne cree les liens dans repertoire de soumission vers rep des projets que si la 
+					// donnée est au CNS et si elle n'est pas à zipper
+					if ("CNS".equalsIgnoreCase(rawData.location) && ! rawData.gzipForSubmission) {
 						System.out.println("run = "+ expElt.run.code);
-						File fileCible;
-						File fileLien;
-						if (rawData.gzipForSubmission) {
-							fileCible = new File(rawData.directory + File.separator + rawData.relatifName + ".gz");	
-							fileLien = new File(submission.submissionDirectory + File.separator + rawData.relatifName + ".gz");
-						} else {
-							fileCible = new File(rawData.directory + File.separator + rawData.relatifName);
-							fileLien = new File(submission.submissionDirectory + File.separator + rawData.relatifName);
-						}
+						File fileCible = new File(rawData.directory + File.separator + rawData.relatifName);
+						File fileLien = new File(submission.submissionDirectory + File.separator + rawData.relatifName);
 						if(fileLien.exists()){
 							fileLien.delete();
 						}
-						/*if (!fileCible.exists()){
-							System.out.println("Le fichier cible n'existe pas  : " + fileCible);
-							throw new SraException("Le fichier cible n'existe pas  : " + fileCible);
-						}*/
 						System.out.println("fileCible = " + fileCible);
 						System.out.println("fileLien = " + fileLien);
 
