@@ -99,7 +99,8 @@ public class ContainerTests extends AbstractTests {
 	}
 
 
-	@Test 
+	/*
+	@Test 	
 	public void importSolutionStockTest() throws SQLException, DAOException{
 
 		ContextValidation contextValidation=new ContextValidation(Constants.NGL_DATA_USER);
@@ -160,8 +161,10 @@ public class ContainerTests extends AbstractTests {
 
 
 	}
+*/
 
-
+	
+	/*
 	@Test 
 	public void importBanqueAmpliTest() throws SQLException, DAOException{
 
@@ -224,7 +227,7 @@ public class ContainerTests extends AbstractTests {
 
 	}
 
-	
+	*/
 	//@Test
 	public void updateSampleTest() throws SQLException, DAOException{
 
