@@ -11,7 +11,7 @@
 		}
 		@columnSearchForm{
 			@formGroup{
-				<div bt-select placeholder="@Messages("search.placeholder.printing.barcode.position")" class="form-control" ng-model="form.barcodePositionId" bt-options="position.id as position.barcodePositionName for position in selectedPrinter.barcodePositions" >
+				<div bt-select placeholder="@Messages("search.placeholder.printing.barcode.position")" class="form-control" ng-model="form.barcodePositionId" auto-select bt-options="position.id as position.barcodePositionName for position in selectedPrinter.barcodePositions" >
 				</div>				
 			}
 			

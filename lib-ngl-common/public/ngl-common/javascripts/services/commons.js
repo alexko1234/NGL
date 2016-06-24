@@ -485,12 +485,13 @@ angular.module('commonsServices', []).
     				
 					if(valOption != undefined){
 						var match = valOption.match(OPTIONS_REGEXP);
+						var getModelValue = $parse(match[1].replace(match[4]+'.',''));
 						var model = $parse(match[7]);
 						scope.$watch(model, function(value){
 							if(value){
 				                if(value.length === 1 && (ngModel.$modelValue == undefined || ngModel.$modelValue == "")){
 									
-				                	var value = (multiple)?[value[0].code]:value[0].code;
+				                	var value = (multiple)?[getModelValue(value[0])]:getModelValue(value[0]);
 				                	
 				                	ngModel.$setViewValue(value);
 									ngModel.$render();

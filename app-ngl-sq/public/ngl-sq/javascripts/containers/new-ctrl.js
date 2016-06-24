@@ -12,7 +12,7 @@ angular.module('home').controller('NewFromFileCtrl', ['$scope', '$http','lists',
 			$http.post(jsRoutes.controllers.receptions.io.Receptions.importFile($scope.form.receptionConfigurationCode).url, $scope.form.file)
 			.success(function(data, status, headers, config) {
 				$scope.messages.clazz="alert alert-success";
-				$scope.messages.text=Messages('experiments.msg.import.success');
+				$scope.messages.text=Messages('experiments.msg.reception.success');
 				$scope.messages.showDetails = false;
 				$scope.messages.open();	
 				$scope.file = undefined;
@@ -22,7 +22,7 @@ angular.module('home').controller('NewFromFileCtrl', ['$scope', '$http','lists',
 			})
 			.error(function(data, status, headers, config) {
 				$scope.messages.clazz = "alert alert-danger";
-				$scope.messages.text = Messages('experiments.msg.import.error');
+				$scope.messages.text = Messages('experiments.msg.reception.error');
 				$scope.messages.setDetails(data);
 				$scope.messages.open();	
 				$scope.file = undefined;

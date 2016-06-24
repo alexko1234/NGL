@@ -76,6 +76,7 @@ angular.module('home').controller('TagsCtrl', ['$scope', '$http', '$routeParams'
 		}else{
 			$scope.selectedPrinter = undefined;
 		}
+		$scope.form.barcodePositionId = undefined;
 	}
 	
 	if(angular.isUndefined($scope.getHomePage())){

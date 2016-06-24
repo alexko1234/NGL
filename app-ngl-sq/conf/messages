@@ -506,6 +506,10 @@ experiments.msg.import.concentration.missing = Pas de concentration pour la posi
 experiments.msg.import.tag.notexist = ligne {0}: Le tag ''{1}'' n''existe pas
 experiments.msg.import.linefields.unexpected = ligne {0}: Nombre de champs incorrect
 
+experiments.msg.reception.success =  Traitement du fichier réussi.
+experiments.msg.reception.error =  Problème lors du traitement du fichier :
+
+
 io.error.instance.notexist = La classe ''{0}'' n''existe pas 
 io.error.resultat.notexist = ''{0}'' n''existe pas
 

@@ -89,7 +89,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		*/
 		
-		l.add(newExperimentType("Solution stock","solution-stock",null,1000,
+		l.add(newExperimentType("Solution stock","solution-stock","STK",1000,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionSolutionStock(),
 				getInstrumentUsedTypes("hand","tecan-evo-100"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
@@ -126,13 +126,13 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null,  null,"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(newExperimentType("Fragmentation-réparation","nanopore-fragmentation",null,2100,
+		l.add(newExperimentType("Fragmentation-réparation","nanopore-fragmentation","FRG",2100,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 				getPropertyFragmentationNanopore(), getInstrumentUsedTypes("eppendorf-mini-spin-plus","hand"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 
-		l.add(newExperimentType("Librairie ONT","nanopore-library",null,2200,
+		l.add(newExperimentType("Librairie ONT","nanopore-library","LIB",2200,
 				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()),
 				getPropertyLibrairieNanopore(), getInstrumentUsedTypes("hand"),"OneToOne", 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
@@ -222,36 +222,22 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					getInstrumentUsedTypes("rocheLightCycler-qPCR","stratagene-qPCR"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 	
 		*/	
-		if(ConfigFactory.load().getString("ngl.env").equals("PROD-BEFORE")){
+		
+		l.add(newExperimentType("Pool Tube","pool-tube",null,10200,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
+				getInstrumentUsedTypes("hand","tecan-evo-100"),"ManyToOne", false,
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		
+			l.add(newExperimentType("Pool générique","pool",null,10300,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
+				getInstrumentUsedTypes("tecan-evo-100", "hand"),"ManyToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
-			l.add(newExperimentType("Pool Tube","pool-tube",null,10200,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
-					getInstrumentUsedTypes("hand"),"ManyToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		if(ConfigFactory.load().getString("ngl.env").equals("UAT") ){
 			
-		}else if(ConfigFactory.load().getString("ngl.env").equals("PROD") ){
-			l.add(newExperimentType("Pool Tube","pool-tube",null,10200,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
-					getInstrumentUsedTypes("hand","tecan-evo-100"),"ManyToOne", false,
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-			
-			
-				l.add(newExperimentType("Pool générique","pool",null,10300,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
-					getInstrumentUsedTypes("tecan-evo-100", "hand"),"ManyToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		}else if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
 			
-			l.add(newExperimentType("Pool Tube","pool-tube",null,10200,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
-					getInstrumentUsedTypes("hand","tecan-evo-100"),"ManyToOne", false,
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-			
-			
-				l.add(newExperimentType("Pool générique","pool",null,10300,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
-					getInstrumentUsedTypes("tecan-evo-100", "hand"),"ManyToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
 			
 			/*
@@ -311,12 +297,12 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			*/
 
-			l.add(newExperimentType("Amplification","amplification",null,800,
+			l.add(newExperimentType("Amplification","amplification","PCR",800,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
 					getInstrumentUsedTypes("hand","thermocycler"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
-			l.add(newExperimentType("Sizing sur gel","sizing",null,900,
+			l.add(newExperimentType("Sizing sur gel","sizing","GEL",900,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
 					null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
@@ -346,11 +332,9 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		newExperimentTypeNode("opgen-depot",getExperimentTypes("opgen-depot").get(0),false,false, false,getExperimentTypeNodes("ext-to-opgen-run"),null,null,null).save();
 		
 		
-		if(ConfigFactory.load().getString("ngl.env").equals("PROD-BEFORE") ){
-			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,null,null,null,getExperimentTypes("pool-tube")).save();
-			
-		}else if(ConfigFactory.load().getString("ngl.env").equals("PROD")){
+		if(ConfigFactory.load().getString("ngl.env").equals("PROD") || ConfigFactory.load().getString("ngl.env").equals("UAT")){
 			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,null,null,null,getExperimentTypes("pool")).save();
+			
 			
 		}else if(ConfigFactory.load().getString("ngl.env").equals("DEV")){
 			newExperimentTypeNode("ext-to-norm-fc-depot-illumina", getExperimentTypes("ext-to-norm-fc-depot-illumina").get(0), false, false, false, null, null, null, null).save();
