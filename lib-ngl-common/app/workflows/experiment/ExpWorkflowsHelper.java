@@ -513,24 +513,25 @@ public class ExpWorkflowsHelper {
 		Map<String, PropertyValue> containerProperties = getPropertiesForALevel(exp, atm, CODE.Container);
 		TreeOfLifeNode tree = getTreeOfLifeNode(exp, atm);
 
-		Set<String> projectCodes =new HashSet<String>();
-		Set<String> sampleCodes =new HashSet<String>();
+		/*Set<String> projectCodes =new HashSet<String>();
+		Set<String> sampleCodes =new HashSet<String>();*/
 		Set<String> processTypeCodes =new HashSet<String>();
 		Set<String> inputProcessCodes =new HashSet<String>();
 
 		atm.inputContainerUseds.forEach(icu -> {
-			projectCodes.addAll(icu.projectCodes);
-			sampleCodes.addAll(icu.sampleCodes);
+			/*no goog for outputcontainers with new sample 
+			  projectCodes.addAll(icu.projectCodes);
+			sampleCodes.addAll(icu.sampleCodes);*/
 			processTypeCodes.addAll(icu.processTypeCodes);
 			inputProcessCodes.addAll(icu.processCodes);
 		});
-
 
 		State state = new State("N", validation.getUser());
 		TraceInformation traceInformation = new TraceInformation(validation.getUser());
 		List<Container> newContainers = new ArrayList<Container>();
 		if(atm.outputContainerUseds != null && atm.outputContainerUseds.size() != 0){
 			OutputContainerUsed ocu = atm.outputContainerUseds.get(0);
+			
 			Container c = new Container();
 			c.code = ocu.code;
 			c.categoryCode = ocu.categoryCode;
@@ -540,8 +541,8 @@ public class ExpWorkflowsHelper {
 			c.concentration = ocu.concentration;
 			c.quantity = ocu.quantity;
 			c.volume = ocu.volume;
-			c.projectCodes = projectCodes;
-			c.sampleCodes = sampleCodes;
+			c.projectCodes = getProjectsFromContents(c.contents);
+			c.sampleCodes = getSamplesFromContents(c.contents);
 			c.fromTransformationTypeCodes = fromTransformationTypeCodes;
 			c.fromTransformationCodes = fromTransformationCodes;			
 			c.processTypeCodes = processTypeCodes;
@@ -567,8 +568,8 @@ public class ExpWorkflowsHelper {
 				c.concentration = ocu.concentration;
 				c.quantity = ocu.quantity;
 				c.volume = ocu.volume;
-				c.projectCodes = projectCodes;
-				c.sampleCodes = sampleCodes;
+				c.projectCodes = getProjectsFromContents(c.contents);
+				c.sampleCodes = getSamplesFromContents(c.contents);
 				c.fromTransformationTypeCodes = fromTransformationTypeCodes;
 				c.fromTransformationCodes = fromTransformationCodes;
 				c.processTypeCodes = processTypeCodes;
@@ -583,6 +584,24 @@ public class ExpWorkflowsHelper {
 
 		return newContainers;
 	}
+
+	private Set<String> getSamplesFromContents(List<Content> contents) {
+		Set<String> sampleCodes =new HashSet<String>();
+		contents.forEach(c->{
+			sampleCodes.add(c.sampleCode);
+		});
+		return sampleCodes;
+	}
+
+
+	private Set<String> getProjectsFromContents(List<Content> contents) {
+		Set<String> projectCodes =new HashSet<String>();
+		contents.forEach(c->{
+			projectCodes.add(c.projectCode);
+		});
+		return projectCodes;
+	}
+
 
 	private Set<String> duplicateProcesses(Set<String> inputProcessCodes) {
 		List<Process> processes = MongoDBDAO.find(InstanceConstants.PROCESS_COLL_NAME, Process.class, DBQuery.in("code", inputProcessCodes)).toList();
