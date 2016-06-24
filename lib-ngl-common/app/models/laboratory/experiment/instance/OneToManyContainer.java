@@ -23,8 +23,8 @@ public class OneToManyContainer extends AtomicTransfertMethod {
 		super();
 	}
 	
-	@Override
 	//GA 22/06/2016 gestion des cas ou le locationOnContainerSupport.code n'est pas null
+	@Override
 	public void updateOutputCodeIfNeeded(ContainerSupportCategory outputCsc, String supportCode) {
 		//case tube :one support for each output
 		if(outputCsc.nbLine.compareTo(Integer.valueOf(1)) == 0 && outputCsc.nbColumn.compareTo(Integer.valueOf(1)) == 0){

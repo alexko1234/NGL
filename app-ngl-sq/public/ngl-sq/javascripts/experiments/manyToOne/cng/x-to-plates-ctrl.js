@@ -1,6 +1,9 @@
-// FDS 21/06/2016 dupliqué depuis manyToOne.experiments.cns.x-to-tubes
+// FDS 21/06/2016 dupliqué depuis manyToOne.experiments.cns.x-to-tubes avec modifs
 angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
-                                                               function($scope, $http,$parse) {
+                                                               function($scope, $http, $parse) {
+
+	// pas appellée !!!!! c'est scope.atmService.updateConcentration du controler parent qui est appelle !!!
+	/****
 	$scope.atmService.updateOutputConcentration = function(atm){
 		
 		if(atm){
@@ -33,9 +36,11 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		}
 
 	};
+	****/
 	
 	$scope.update = function(atm, containerUsed, propertyName){
 		console.log("update "+propertyName);
+		
 		if(propertyName === 'outputContainerUseds[0].concentration.value' ||
 				propertyName === 'outputContainerUseds[0].concentration.unit' ||
 				propertyName === 'outputContainerUseds[0].volume.value'){
@@ -48,8 +53,20 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		}else if(propertyName.match(/inputContainerUseds\[\d\].percentage/) != null){
 			console.log("compute one input volume");
 			computeInputVolume(containerUsed, atm);
+		} 
+		// TESTS FDS
+		else if(propertyName === 'outputContainerUseds[0].locationOnContainerSupport.code' ){
+			var code =$parse("outputContainerUseds[0].locationOnContainerSupport.code")(atm)
+			console.log("support.Code="+code);
+		}else if(propertyName === 'outputContainerUseds[0].locationOnContainerSupport.line' ){
+			var line =$parse("outputContainerUseds[0].locationOnContainerSupport.line")(atm)
+			console.log("support.line="+line);
+		}else if(propertyName === 'outputContainerUseds[0].locationOnContainerSupport.column' ){
+			var column =$parse("outputContainerUseds[0].locationOnContainerSupport.column")(atm)
+			console.log("support.column="+column);
 		}
 		
+		console.log("compute buffer volume");
 		computeBufferVolume(atm);
 	}
 	
@@ -59,8 +76,8 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		if(null === inputVolume  || undefined === inputVolume){
 			inputVolume = {value : undefined, unit : 'µl'};
 		}
-		//we compute only if empty
 		
+		//compute only if empty
 		var compute = {
 			inputPercentage : $parse("percentage")(inputContainerUsed),
 			inputConc : $parse("concentration")(inputContainerUsed),
@@ -141,8 +158,8 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		});
 	};
 
-	// A NOUVEAU CA PARLE DE tube ICI !!!!
-	//generer une feuille de route !!!
+
+	//TODO...generer une feuille de route differente pour les plaques...  !!!
 	//if($scope.atmService.inputContainerSupportCategoryCode !== "tube"){
 	if($scope.atmService.inputContainerSupportCategoryCode !== "96-well-plate"){
 		$scope.setAdditionnalButtons([{
@@ -153,18 +170,57 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		}]);
 	}
 	
-	//Only tube is authorized
-	///   CA C"EST AU CNS CAR C"EST DU POOL EN TUBE
-	//    SI ON FAIT DU POOL EN PLAQUE IL FAUDRAIT PEUT ETRE CHANGER LE NOM DU FICHIER ????????
-	//    DANS L"IDEAL: GERER LES 2 MODES EN SORTIE
-	//$scope.$watch("experiment.instrument.outContainerSupportCategoryCode", function(){
-	//	$scope.experiment.instrument.outContainerSupportCategoryCode = "tube";
-	//});	
+	//Only 96-well-plate is authorized
 	$scope.$watch("experiment.instrument.outContainerSupportCategoryCode", function(){
 			$scope.experiment.instrument.outContainerSupportCategoryCode = "96-well-plate";
 		});
 	
-	//NOTE si necessaire on peut surgarger ici des methodes du parent XToTubesCtrl
+	//NOTE si necessaire on peut surcharger des methodes du controler parent XToTubesCtrl
+	
+	/* il faut prefixer par le scope*/
+	$scope.atmService.newAtomicTransfertMethod = function(){
+		return {
+			class:"ManyToOne",
+			line:null,
+			column:null, 				
+			inputContainerUseds:new Array(0), 
+			outputContainerUseds:new Array(0)
+		};		
+	};
+	
+	//FDS 23/06/2016 surcharger le save pour ajouter  updateAtmLineColumn OUIIIII
+	$scope.$on('save', function(e, callbackFunction) {	
+		console.log("call event save on x-to-plates");	
 		
+		$scope.atmService.viewToExperiment($scope.experiment, false);
+		$scope.updatePropertyUnit($scope.experiment); // ajout demandé par GA....
+		$scope.updateConcentration($scope.experiment);
+		$scope.updateAtm($scope.experiment);  // necessaire pour la mise a jour de line et column...
+		$scope.$emit('childSaved', callbackFunction);
+	});
+	
+	// POUR SELECT
+	$scope.columns = [1,2,3,4,5,6,7,8,9,10,11,12]; 
+	$scope.lines=['A','B','C','D','E','F','G','H'];  
+	//// $scope.lines=[{label:'A'},{label:'B'},{label:'C'},{label:'D'},{label:'E'},{label:'F'},{label:'G'},{label:'H'}];  
+	
+	$scope.updateAtm = function(experiment){
+		console.log("updateAtm.");	
+		
+		for(var j = 0 ; j < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; j++){
+			
+			var atm = experiment.atomicTransfertMethods[j];
+			// mise a jour line/column a partir des valeur donnéées par l'utilisateur 
+			
+			atm.line = atm.outputContainerUseds[0].locationOnContainerSupport.line;
+			atm.column = atm.outputContainerUseds[0].locationOnContainerSupport.column
+			
+			//TEST 
+			//atm.outputContainerUseds[0].code=???????????????
+			// TODO  recupere le champ generique de sortie du barcode de la plaque...
+			//atm.code=
+		}
+	}
+   
 	
 }]);

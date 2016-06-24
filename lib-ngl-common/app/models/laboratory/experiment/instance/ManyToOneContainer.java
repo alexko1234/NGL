@@ -11,6 +11,7 @@ public class ManyToOneContainer extends AtomicTransfertMethod{
 		super();
 	}
 
+	//GA 22/06/2016 gestion des cas ou le locationOnContainerSupport.code n'est pas null
 	@Override
 	public void updateOutputCodeIfNeeded(ContainerSupportCategory outputCsc, String supportCode) {
 		//case tube :one support for each atm
@@ -19,6 +20,8 @@ public class ManyToOneContainer extends AtomicTransfertMethod{
 					if(null == ocu.locationOnContainerSupport.code){
 						ocu.locationOnContainerSupport.code = supportCode;
 						ocu.code = supportCode;
+					}else if(null == ocu.code && null != ocu.locationOnContainerSupport.code ){
+						ocu.code = ocu.locationOnContainerSupport.code;
 					}
 				}
 			);
@@ -27,6 +30,8 @@ public class ManyToOneContainer extends AtomicTransfertMethod{
 				if(null == ocu.locationOnContainerSupport.code){
 					ocu.locationOnContainerSupport.code = supportCode;
 					ocu.code = supportCode+"_"+ocu.locationOnContainerSupport.line;
+				}else if(null == ocu.code && null != ocu.locationOnContainerSupport.code && null != ocu.locationOnContainerSupport.line){
+					ocu.code = supportCode+"_"+ocu.locationOnContainerSupport.line;
 				}
 			}
 		);
@@ -34,6 +39,8 @@ public class ManyToOneContainer extends AtomicTransfertMethod{
 			outputContainerUseds.forEach((OutputContainerUsed ocu) -> {
 				if(null == ocu.locationOnContainerSupport.code){
 					ocu.locationOnContainerSupport.code = supportCode;
+					ocu.code = supportCode+"_"+ocu.locationOnContainerSupport.line+ocu.locationOnContainerSupport.column;
+				}else if(null == ocu.code && null != ocu.locationOnContainerSupport.code && null != ocu.locationOnContainerSupport.line && null != ocu.locationOnContainerSupport.column){
 					ocu.code = supportCode+"_"+ocu.locationOnContainerSupport.line+ocu.locationOnContainerSupport.column;
 				}
 			}

@@ -3,7 +3,7 @@
 <table class="table" >
 <thead>
 		<tr ng-if="!atmService.data.isAllATMViewClose">
-			<th colspan="{{13 + inputContainerProperties.length}}"> <!-- FDS passer de 11 a 13 -->
+			<th colspan="{{13 + inputContainerProperties.length}}"> <!-- FDS passer de 11 a 13 ( ajout container upprt + ligne + colonne) EN COURS -->
 				@Messages("experiments.inputs")
 			</th>
 			
@@ -51,11 +51,11 @@
 			<th><!-- FDS :  support Code !!!  -->
 				@Messages("containers.table.supportCode")
 			</th>			
-			<th><!--  FDS : ajout line -->
-				@Messages("containers.table.support.line")
+			<th><!--  FDS : ajout line   !!! problem graphique si un select est utilisé-->
+				@Messages("containers.table.support.line")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.
 			</th>
-			<th><!--  FDS : ajout column -->
-				@Messages("containers.table.support.column")
+			<th><!--  FDS : ajout column !!! problem graphique si un select est utilisé-->
+				@Messages("containers.table.support.column")&nbsp;&nbsp;.
 			</th>
 			<th>
 				@Messages("containers.table.concentration")
@@ -73,7 +73,7 @@
 				@Messages("containers.table.storageCode")
 			</th>		
 		</tr>
-		<tr ng-if="atmService.data.isAllATMViewClose" colspan="13"><!-- passer de 11 a 13 -->
+		<tr ng-if="atmService.data.isAllATMViewClose" colspan="13"><!-- passer de 11 a 13 ou 12 ?? EN COURS-->
 			<th>
 			</th>
 			<th>
@@ -110,7 +110,7 @@
 				<i class="fa fa-eye"></i>
 			</button>			
 		</td>	
-		<td colspan="13" > <!-- FDS passer de 11 a 13 ?? -->
+		<td colspan="13" > <!-- FDS passer de 11 a 13 ou 12 ?? EN COURS -->
 			<span ng-repeat="inputContainerUsed in atm.inputContainerUseds | orderBy:'code' track by $index"  class="compactText"
 				ng-model="inputContainerUsed" draggable drag="dragInProgress">
 				{{inputContainerUsed.code}} / {{inputContainerUsed.percentage}}%;<br/>
@@ -185,9 +185,8 @@
 						</div>
 					</div>	
 				</td>
+				<!------- POUR L"INSTANT REPETER LA SAISIE DU SUPPORT CONTAINER CODE.---------->
 				<td rowspan="{{atm.inputContainerUseds.length}}" ng-if="$index === 0">
-					<!--  OLD <p class="form-control-static"  ng-bind="atm.outputContainerUseds[0].code" /> -->
-					<!-------EN COURS ---------->
 					<div ng-switch on="mainService.isEditMode()">						
 						<p class="form-control-static" ng-switch-when="false" ng-bind="atm.outputContainerUseds[0].locationOnContainerSupport.code" />						 
 						<div ng-switch-when="true">
@@ -198,29 +197,31 @@
 						</div>
 					</div>		
 				</td>
-
-				<!-------EN COURS ---------->
 				<td rowspan="{{atm.inputContainerUseds.length}}" ng-if="$index === 0">
 					<div ng-switch on="mainService.isEditMode()">						
 						<p class="form-control-static" ng-switch-when="false" ng-bind="atm.outputContainerUseds[0].locationOnContainerSupport.line" />					 
-						<div ng-switch-when="true">			
-							<input class="form-control input-sm" type="text" title='@Messages("containers.table.support.line")'							
-							ng-model="atm.outputContainerUseds[0].locationOnContainerSupport.line"
-							ng-change="update(atm, outputContainerUseds[0], 'outputContainerUseds[0].locationOnContainerSupport.line')"								   			
-			   				/>													
+						<div ng-switch-when="true">	
+			   				<select class="form-control input-sm" 							
+								ng-model="atm.outputContainerUseds[0].locationOnContainerSupport.line"
+								ng-change="update(atm, outputContainerUseds[0], 'outputContainerUseds[0].locationOnContainerSupport.line')"	
+								ng-options="line for line in lines"	> 	
+								<option value=""></option>					     	 							     	 
+							</select>														
 						</div>
 					</div>						
 				</td>
-				<!-------EN COURS ---------->
 				<td rowspan="{{atm.inputContainerUseds.length}}" ng-if="$index === 0">
 					<div ng-switch on="mainService.isEditMode()">						
 						<p class="form-control-static" ng-switch-when="false" ng-bind="atm.outputContainerUseds[0].locationOnContainerSupport.column" />						 
 						<div ng-switch-when="true">
-							<input class="form-control input-sm" type="text" title='@Messages("containers.table.support.column")'								
-							ng-model="atm.outputContainerUseds[0].locationOnContainerSupport.column"
-							ng-change="update(atm, outputContainerUseds[0], 'outputContainerUseds[0].locationOnContainerSupport.column')"
-				   			udt-html-filter="number"								   			
-			   				/>										
+						
+							<select class="form-control input-sm" 								
+								ng-model="atm.outputContainerUseds[0].locationOnContainerSupport.column"
+								ng-change="update(atm, outputContainerUseds[0], 'outputContainerUseds[0].locationOnContainerSupport.column')"
+				   			    ng-options="col for col in columns">	
+				   			    <option value=""></option>	 							     	 							     	 
+							</select>							   			
+			   													
 						</div>
 					</div>						
 				</td>
