@@ -13,6 +13,8 @@ import models.utils.InstanceHelpers;
 
 import org.mongojack.DBQuery;
 
+import com.typesafe.config.ConfigFactory;
+
 import play.Logger;
 import validation.ContextValidation;
 import fr.cea.ig.MongoDBDAO;
@@ -36,13 +38,15 @@ public class PrinterCNS {
 	
 	public static void savePrinters(ContextValidation ctx){		
 		List<BBP11> lp = new ArrayList<BBP11>();
-		
-		lp.add(newBBP11("BBPTESTCB", "finishing / tube ","bbp7.tx.local",9100,"2","15","1",true, 
+		if(ConfigFactory.load().getString("ngl.env").equals("UAT") 
+				|| ConfigFactory.load().getString("ngl.env").equals("DEV")){
+			
+		lp.add(newBBP11("BBPTESTCB", "pour test","bbp7.tx.local",9100,"2","15","1",true, 
 				Arrays.asList(
 						newBarcodePosition("1","CB 2D TUBE",298,"A100,30,0,2,1,1,N","b20,30,A,d4",true, true),
 						newBarcodePosition("2","CB 1D TUBE",298,"A25,10,0,3,1,1,N","B25,55,0,1B,2,2,30,B",true, false)
 						)));
-		
+		}
 		lp.add(newBBP11("BBP1", "prod / tube","bbp1.tx.local",9100,"2","15","1",true, 
 				Arrays.asList(
 						newBarcodePosition("1","CB 2D TUBE",298,"A100,30,0,2,1,1,N","b20,30,A,d4",true, true)
