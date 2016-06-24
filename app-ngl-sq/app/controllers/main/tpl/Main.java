@@ -11,9 +11,12 @@ import models.laboratory.common.description.dao.CodeLabelDAO;
 import models.laboratory.protocol.instance.Protocol;
 import models.laboratory.valuation.instance.ValuationCriteria;
 import models.utils.InstanceConstants;
+import play.Application;
 import play.Logger;
+import play.Play;
 import play.Routes;
 import play.api.modules.spring.Spring;
+import play.libs.Json;
 import play.mvc.Http.Context;
 import play.mvc.Result;
 import views.html.home;
@@ -100,4 +103,11 @@ public class Main extends CommonController{
        return ok(messages.generate("Messages")).as("application/javascript");
    }
 
+   
+   public static Result jsPrintTag(){
+	   
+	   Boolean isPrintTag = Play.application().configuration().getBoolean("ngl.printing.cb", Boolean.FALSE);
+	   String js = "PrintTag={}; PrintTag.isActive =(function(){return "+isPrintTag.booleanValue()+";});";
+	   return ok(js).as("application/javascript");
+   }
 }

@@ -122,7 +122,7 @@ public class ExperimentValidationHelper  extends CommonValidationHelper {
 			cv.setRootKeyName(cv.getRootKeyName());
 			Integer index = i;
 			if(null != atomicTransfertMethods.get(i).viewIndex) index = atomicTransfertMethods.get(i).viewIndex;
-			String rootKeyName="atomictransfertmethod"+"["+index+"]";
+			String rootKeyName="atomictransfertmethods"+"["+index+"]";
 			cv.addKeyToRootKeyName(rootKeyName);
 			atomicTransfertMethods.get(i).validate(cv);
 			if(cv.hasErrors()){

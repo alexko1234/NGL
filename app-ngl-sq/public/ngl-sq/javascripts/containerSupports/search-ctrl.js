@@ -30,7 +30,7 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$window', 'datatable
 			}
 		},
 		otherButtons :{
-			active:true,
+			active:PrintTag.isActive(),
 			template:'<button class="btn btn-default" ng-click="openPrintTagsPage(searchService.datatable.getSelection(true))"  ng-disabled="!searchService.datatable.isSelect()" title="'+Messages("button.tag.printing")+'"><i class="fa fa-tags" ></i></button>'					
 		}
 	};
