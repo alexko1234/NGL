@@ -7,25 +7,4 @@
 		<button ng-if="target !== 'tube'" class="btn btn-default" data-target="#{{target}}" data-toggle="tab" data-toggle="tooltip" title={{dynamicMessage}} ng-bind="dynamicMessage"/>
 	</div>
 	
-	<div class="btn-group">
-		<button data-toggle="dropdown" class="btn btn-default dropdown-toggle" data-toggle="tooltip" title="@Messages("datatable.button.hide")">
-			<i class="fa fa-eye-slash" />
-		    <span class="caret" />
-		</button>
-		<ul class="dropdown-menu">
-			<li ng-repeat="column in datatable.getHideColumns()">
-				<a href="#" ng-click="datatable.setHideColumn(column)" ng-switch on="datatable.isHide(column.id)">
-					<i class="fa fa-eye" ng-switch-when="true"/><i class="fa fa-eye-slash" ng-switch-when="false"/>
-					<span ng-bind="column.header"/>
-				</a>
-			</li>
-		</ul>
-	</div>
-	
-	<div class="btn-group">
-		<button class="btn btn-default" ng-click="datatable.exportCSV('all')" title="]@Messages("datatable.button.exportCSV")">
-			<i class="fa fa-file-text-o"/>
-		</button>
-	</div>
-	
 </div>

@@ -113,6 +113,12 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 	 * Configuration of the datatable
 	 */
 	var datatableConfig = {
+			select:{
+				active:false
+			},
+			cancel:{
+				active:false
+			},
 			pagination:{
 				active:false
 			},
@@ -123,17 +129,14 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 				active:true,
 				mode:'local'
 			},
-			cancel:{
-				showButton:false
-			},
 			hide:{
 				active:true,
-				showButton:false,
+				showButton:true,
 				showButtonColumn:true
 			},
 			exportCSV:{
 				active:true,
-				showButton:false,
+				showButton:true,
 				delimiter:','
 			},
 			/*
