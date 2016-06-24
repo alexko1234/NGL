@@ -31,7 +31,7 @@ public class ManyToOneContainer extends AtomicTransfertMethod{
 					ocu.locationOnContainerSupport.code = supportCode;
 					ocu.code = supportCode+"_"+ocu.locationOnContainerSupport.line;
 				}else if(null == ocu.code && null != ocu.locationOnContainerSupport.code && null != ocu.locationOnContainerSupport.line){
-					ocu.code = supportCode+"_"+ocu.locationOnContainerSupport.line;
+					ocu.code = ocu.locationOnContainerSupport.code+"_"+ocu.locationOnContainerSupport.line;
 				}
 			}
 		);
@@ -41,7 +41,7 @@ public class ManyToOneContainer extends AtomicTransfertMethod{
 					ocu.locationOnContainerSupport.code = supportCode;
 					ocu.code = supportCode+"_"+ocu.locationOnContainerSupport.line+ocu.locationOnContainerSupport.column;
 				}else if(null == ocu.code && null != ocu.locationOnContainerSupport.code && null != ocu.locationOnContainerSupport.line && null != ocu.locationOnContainerSupport.column){
-					ocu.code = supportCode+"_"+ocu.locationOnContainerSupport.line+ocu.locationOnContainerSupport.column;
+					ocu.code = ocu.locationOnContainerSupport.code+"_"+ocu.locationOnContainerSupport.line+ocu.locationOnContainerSupport.column;
 				}
 			}
 		);

@@ -177,7 +177,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 	
 	//NOTE si necessaire on peut surcharger des methodes du controler parent XToTubesCtrl
 	
-	/* il faut prefixer par le scope*/
+	//FDS 23/06/2016 surcharger surcharger newAtomicTransfertMethod pour mettre line et column a null
 	$scope.atmService.newAtomicTransfertMethod = function(){
 		return {
 			class:"ManyToOne",
@@ -188,21 +188,20 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		};		
 	};
 	
-	//FDS 23/06/2016 surcharger le save pour ajouter  updateAtmLineColumn OUIIIII
+	//FDS 23/06/2016 surcharger le save 
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save on x-to-plates");	
 		
 		$scope.atmService.viewToExperiment($scope.experiment, false);
 		$scope.updatePropertyUnit($scope.experiment); // ajout demandé par GA....
 		$scope.updateConcentration($scope.experiment);
-		$scope.updateAtm($scope.experiment);  // necessaire pour la mise a jour de line et column...
+		$scope.updateAtm($scope.experiment); 
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
-	// POUR SELECT
+	// pour selects
 	$scope.columns = [1,2,3,4,5,6,7,8,9,10,11,12]; 
 	$scope.lines=['A','B','C','D','E','F','G','H'];  
-	//// $scope.lines=[{label:'A'},{label:'B'},{label:'C'},{label:'D'},{label:'E'},{label:'F'},{label:'G'},{label:'H'}];  
 	
 	$scope.updateAtm = function(experiment){
 		console.log("updateAtm.");	
@@ -214,11 +213,13 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 			
 			atm.line = atm.outputContainerUseds[0].locationOnContainerSupport.line;
 			atm.column = atm.outputContainerUseds[0].locationOnContainerSupport.column
+			//TODO reecrire avec $parse et assign...
 			
-			//TEST 
-			//atm.outputContainerUseds[0].code=???????????????
-			// TODO  recupere le champ generique de sortie du barcode de la plaque...
-			//atm.code=
+			
+			//TODO  recuperer un champ generique de la plaque de sortie
+			// au lieu de demander N fois la saisie pou chaque container...
+			// atm.code =.............
+
 		}
 	}
    

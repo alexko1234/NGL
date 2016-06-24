@@ -19,6 +19,8 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 					if(null == ocu.locationOnContainerSupport.code){
 						ocu.locationOnContainerSupport.code = supportCode;
 						ocu.code = supportCode;
+					}else if(null == ocu.code && null != ocu.locationOnContainerSupport.code ){
+						ocu.code = ocu.locationOnContainerSupport.code;
 					}
 				}
 			);
@@ -27,6 +29,8 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 				if (null == ocu.locationOnContainerSupport.code) {
 					ocu.locationOnContainerSupport.code = supportCode;
 					ocu.code = supportCode + "_"+ ocu.locationOnContainerSupport.line;
+				}else if(null == ocu.code && null != ocu.locationOnContainerSupport.code && null != ocu.locationOnContainerSupport.line){
+					ocu.code = ocu.locationOnContainerSupport.code+"_"+ocu.locationOnContainerSupport.line;
 				}
 			});
 		}else if(outputCsc.nbLine.compareTo(Integer.valueOf(1)) > 0 && outputCsc.nbColumn.compareTo(Integer.valueOf(1)) > 0){
@@ -34,6 +38,8 @@ public class OneToOneContainer extends AtomicTransfertMethod{
 				if(null == ocu.locationOnContainerSupport.code){
 					ocu.locationOnContainerSupport.code = supportCode;
 					ocu.code = supportCode+"_"+ocu.locationOnContainerSupport.line+ocu.locationOnContainerSupport.column;
+				}else if(null == ocu.code && null != ocu.locationOnContainerSupport.code && null != ocu.locationOnContainerSupport.line && null != ocu.locationOnContainerSupport.column){
+					ocu.code = ocu.locationOnContainerSupport.code+"_"+ocu.locationOnContainerSupport.line+ocu.locationOnContainerSupport.column;
 				}
 			}
 		);
