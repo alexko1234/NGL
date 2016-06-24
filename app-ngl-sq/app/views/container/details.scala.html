@@ -38,75 +38,11 @@
 				@partials.details_treeoflife()
 			</div>
 			<div class="tab-pane {{getTabClass('workflow')}}" id="workflow">
-				<div class="row">
-					<div class="col-md-4 col-lg-4">
-						<table class="table table-condensed table-hover table-bordered">
-						<thead>
-							<tr>
-								<th>@Messages("containers.workflow.state")</th>
-								<th>@Messages("containers.workflow.date")</th>
-								<th>@Messages("containers.workflow.who")</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr ng-if="container.state.historical !== null" ng-repeat="state in container.state.historical|orderBy:'date'">
-								<td ng-bind="state.code|codes:'state'" />
-								<td ng-bind="state.date|date:'@Messages("datetime.format")'" />
-								<td ng-bind="state.user" />
-							</tr>
-							<tr ng-if="container.state.historical === null">
-								<td ng-bind="container.state.code|codes:'state'" />
-								<td ng-bind="container.state.date|date:'@Messages("datetime.format")'" />
-								<td ng-bind="container.state.user" />
-							</tr>
-						</tbody>
-						</table>
-					</div>
-				</div>
+				@partials.details_workflow()
 			</div>
 			<div class="tab-pane {{getTabClass('resultsqc')}}" id="results" 
 				ng-if="container.qualityControlResults !== null && container.qualityControlResults !== undefined">
-				<div class="row">
-					<div class="col-md-4 col-lg-4">
-						<table class="table table-condensed table-hover table-bordered table-striped datatable">
-							<thead>
-								<tr>
-									<th>@Messages("containers.resultsqc.type")</th>
-									<th>@Messages("containers.resultsqc.results")</th>
-									<th>@Messages("containers.resultsqc.valuation")</th>
-									<th>@Messages("containers.resultsqc.date")</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr ng-repeat="qc in container.qualityControlResults">
-									<td ng-bind="qc.typeCode|codes:'type'" />
-									<td>
-										<div ng-repeat="(key, value) in qc.properties" ng-switch on="value._type === 'img'">
-											<div ng-switch-when="true">
-												 <div ng-click="setImage(value.value,value.fullname,value.width,value.height)"  
-	        								 			ng-show="value !== undefined" > 
-												<div data-target="#modalImage" role="button" data-toggle="modal" >
-													<a href="#">
-													<img ng-src="data:image/{{value.extension}};base64,{{value.value}}" width="{{value.width*0.15}}" height="{{value.height*0.15}}"/>
-													</a>
-												</div>
-												</div>
-											</div>
-											<div ng-switch-when="false" >
-												<label class="col-md-6 col-lg-6 control-label" ng-bind="value.value|number:2" />
-												<div class="col-md-6 col-lg-6">
-													<p ng-if="value.unit !== null" ng-bind="value.unit" />
-												</div>
-											</div>
-										</div>
-									</td>
-									<td ng-bind="qc.valuation.valid|codes:'valuation'" />
-									<td ng-bind="qc.date|date:'@Messages("date.format")'" />
-								</tr>							
-							</tbody>
-						</table>
-					</div>
-				</div>
+				@partials.details_qc()
 			</div>
 		</div>
 	</div>

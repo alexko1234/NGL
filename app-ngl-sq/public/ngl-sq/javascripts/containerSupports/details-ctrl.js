@@ -16,12 +16,21 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 		mainService.put('containerSupportActiveTab', value);
 	};
 	
+	$scope.getViewClass = function(value){
+		if(value === mainService.get('containerSupportActiveView')){
+			return 'active';
+		}
+	}
+	$scope.setActiveView = function(value){
+		mainService.put('containerSupportActiveView', value);
+	};
+	
 	//To display sample and tag in one cell
-	$scope.getSampleAndTags = function(container){
+	$scope.getContentInfos = function(container){
 		var sampleCodeAndTags = [];
 		angular.forEach(container.contents, function(content){
 			if(content.properties.tag != undefined && content.sampleCode != undefined){
-				sampleCodeAndTags.push(content.sampleCode+" / "+content.properties.tag.value);
+				sampleCodeAndTags.push(content.projectCode+" / "+content.sampleCode+" / "+content.properties.tag.value);
 			}
 		});
 		return sampleCodeAndTags;
@@ -98,15 +107,17 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 					setColXLine(24,16);
 				}
 			}else{
-				$scope.target = undefined;
-				$scope.setActiveTab('table'); 
+				$scope.target = undefined;				
 			}
 		}
 		if(!angular.isUndefined($scope.target)){
-			$scope.dynamicMessage = Messages("containerSupports.button."+$scope.target); // Build msg for the button
-			$scope.setActiveTab('table');
-			//$scope.setActiveTab($scope.target);
+			$scope.dynamicMessage = Messages("containerSupports.button."+$scope.target); // Build msg for the button			
 		}
+		
+		if(undefined === mainService.get('containerSupportActiveView')){
+			mainService.put('containerSupportActiveView', 'udt');
+		}
+		
 	};
 	
 	/*
@@ -323,22 +334,23 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 		promise.push($http.get(jsRoutes.controllers.containers.api.Containers.list().url, {params: {supportCode:$routeParams.code}}));
 		
 		$q.all(promise).then(function(results){
+			if(tabService.getTabs().length == 0){
+				tabService.addTabs({label:Messages('containerSupports.tabs.search'),href:jsRoutes.controllers.containers.tpl.ContainerSupports.home("search").url,remove:true});
+				tabService.addTabs({label:$routeParams.code,href:jsRoutes.controllers.containers.tpl.ContainerSupports.home($routeParams.code).url,remove:true});
+				tabService.activeTab($scope.getTabs(1));
+			}
 			
 			$scope.support = results[0].data;
 			$scope.containers = results[1].data;
 			$scope.datatable = datatable(datatableConfig);
 			$scope.datatable.setData($filter('orderBy')($scope.containers, ["support.column*1","support.line"]), $scope.containers.length);
 			
+			if(undefined === mainService.get('containerSupportActiveTab')){
+				mainService.put('containerSupportActiveTab', 'general');
+			}
 			
 			filterCategorySupport();
-		});
-		
-		if(tabService.getTabs().length == 0){
-			tabService.addTabs({label:Messages('containerSupports.tabs.search'),href:jsRoutes.controllers.containers.tpl.ContainerSupports.home("search").url,remove:true});
-			tabService.addTabs({label:$routeParams.code,href:jsRoutes.controllers.containers.tpl.ContainerSupports.home($routeParams.code).url,remove:true});
-			tabService.activeTab($scope.getTabs(1));
-		}
-		
+		});		
 	};
 
 	init();

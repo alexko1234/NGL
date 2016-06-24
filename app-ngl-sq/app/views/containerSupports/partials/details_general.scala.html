@@ -53,3 +53,19 @@
 
 	</div>
 </form>
+
+
+<ul class="nav nav-pills margin-bottom-7">
+	<li ng-class="getViewClass('udt')"><a href="#" href="#" data-target="#udt" data-toggle="tab"  ng-click="setActiveView('udt')">@Messages("containerSupports.button.table")</a></li>
+	<li ng-class="getViewClass('other')" ng-if="target !== 'tube'"><a href="#" href="#" data-target="#other" data-toggle="tab"  ng-click="setActiveView('other')" ng-bind="dynamicMessage"></a></li>		   		
+</ul>
+
+<div class="tab-content">
+		<div class="tab-pane {{getViewClass('udt')}}" id="udt">
+			<div class="datatable" ultimate-datatable="datatable"></div>
+		</div>
+		<div class="tab-pane {{getViewClass('other')}}" id="other">
+			@details_supportCategory()
+		</div>
+		
+</div>

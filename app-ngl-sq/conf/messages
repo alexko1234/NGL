@@ -23,6 +23,8 @@ containerSupports.menu.scanner = Code-Barre
 
 #containerSupports tabs
 containerSupports.tabs.general = Général
+containerSupports.tabs.storages = Historique de stockages
+containerSupports.tabs.workflow = Infos workflow
 containerSupports.tabs.search = Recherche Supports
 containerSupports.tabs.state = Changement d'Etat Supports
 containerSupports.tabs.scanner = Recherche par Code Barre
@@ -45,6 +47,7 @@ containerSupports.table.modifyUser = Modifié par
 containerSupports.table.storageCode = Stockage
 containerSupports.table.yx = Position
 containerSupports.table.support = Support
+
 
 
 containerSupports.scanner.categoryCode = Catégorie
@@ -72,7 +75,9 @@ containerSupports.button.flowcell = Vue Flowcell
 containerSupports.button.mapcard = Vue Mapcard
 containerSupports.button.iryschip = Vue Iryschip
 
-
+containerSupports.storage.code = Localisation
+containerSupports.storage.date = Fait le
+containerSupports.storage.who = Fait par
 
 active.true = Actif
 active.false = Inactif
