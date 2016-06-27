@@ -3,7 +3,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
                                                                function($scope, $http, $parse) {
 
 	// pas appellée !!!!! c'est scope.atmService.updateConcentration du controler parent qui est appelle !!!
-	/****
+	//GA 27/06/2016 : SI c'est appele, celui du parent est faux, je l'ai enlevé
 	$scope.atmService.updateOutputConcentration = function(atm){
 		
 		if(atm){
@@ -36,7 +36,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		}
 
 	};
-	****/
+	
 	
 	$scope.update = function(atm, containerUsed, propertyName){
 		console.log("update "+propertyName);
@@ -54,16 +54,12 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 			console.log("compute one input volume");
 			computeInputVolume(containerUsed, atm);
 		} 
-		// TESTS FDS
-		else if(propertyName === 'outputContainerUseds[0].locationOnContainerSupport.code' ){
-			var code =$parse("outputContainerUseds[0].locationOnContainerSupport.code")(atm)
-			console.log("support.Code="+code);
-		}else if(propertyName === 'outputContainerUseds[0].locationOnContainerSupport.line' ){
-			var line =$parse("outputContainerUseds[0].locationOnContainerSupport.line")(atm)
-			console.log("support.line="+line);
+		else if(propertyName === 'outputContainerUseds[0].locationOnContainerSupport.line' ){
+			atm.line =$parse("outputContainerUseds[0].locationOnContainerSupport.line")(atm)
+			console.log("support.line="+atm.line);
 		}else if(propertyName === 'outputContainerUseds[0].locationOnContainerSupport.column' ){
-			var column =$parse("outputContainerUseds[0].locationOnContainerSupport.column")(atm)
-			console.log("support.column="+column);
+			atm.column =$parse("outputContainerUseds[0].locationOnContainerSupport.column")(atm)
+			console.log("support.column="+atm.column);
 		}
 		
 		console.log("compute buffer volume");
@@ -188,40 +184,10 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		};		
 	};
 	
-	//FDS 23/06/2016 surcharger le save 
-	$scope.$on('save', function(e, callbackFunction) {	
-		console.log("call event save on x-to-plates");	
-		
-		$scope.atmService.viewToExperiment($scope.experiment, false);
-		$scope.updatePropertyUnit($scope.experiment); // ajout demandé par GA....
-		$scope.updateConcentration($scope.experiment);
-		$scope.updateAtm($scope.experiment); 
-		$scope.$emit('childSaved', callbackFunction);
-	});
+	
 	
 	// pour selects
 	$scope.columns = [1,2,3,4,5,6,7,8,9,10,11,12]; 
 	$scope.lines=['A','B','C','D','E','F','G','H'];  
-	
-	$scope.updateAtm = function(experiment){
-		console.log("updateAtm.");	
-		
-		for(var j = 0 ; j < experiment.atomicTransfertMethods.length && experiment.atomicTransfertMethods != null; j++){
-			
-			var atm = experiment.atomicTransfertMethods[j];
-			// mise a jour line/column a partir des valeur donnéées par l'utilisateur 
-			
-			atm.line = atm.outputContainerUseds[0].locationOnContainerSupport.line;
-			atm.column = atm.outputContainerUseds[0].locationOnContainerSupport.column
-			//TODO reecrire avec $parse et assign...
-			
-			
-			//TODO  recuperer un champ generique de la plaque de sortie
-			// au lieu de demander N fois la saisie pou chaque container...
-			// atm.code =.............
-
-		}
-	}
-   
 	
 }]);

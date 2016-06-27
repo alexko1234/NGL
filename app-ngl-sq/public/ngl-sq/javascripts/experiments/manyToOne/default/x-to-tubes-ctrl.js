@@ -271,46 +271,9 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save on x-to-tubes");		
 		$scope.atmService.viewToExperiment($scope.experiment, false);
-		$scope.updateConcentration($scope.experiment);
+		$scope.updatePropertyUnit($scope.experiment); 
 		$scope.$emit('childSaved', callbackFunction);
 	});
-	
-	/**
-	 * Update concentration of output if all input are same value and unit
-	 */
-	$scope.updateConcentration = function(experiment){
-		
-		if(experiment.atomicTransfertMethods && experiment.atomicTransfertMethods[0]){
-		// ne pas faire l'update si déjà renseigné
-			var concentration = undefined;
-			var unit = undefined;
-			var isSame = true;
-			for(var i=0;i<experiment.atomicTransfertMethods[0].inputContainerUseds.length;i++){
-				if(experiment.atomicTransfertMethods[0].inputContainerUseds[i].concentration !== null 
-						&& experiment.atomicTransfertMethods[0].inputContainerUseds[i].concentration !== undefined){
-					if(concentration === undefined && unit === undefined){
-						concentration = experiment.atomicTransfertMethods[0].inputContainerUseds[i].concentration.value;
-						unit = experiment.atomicTransfertMethods[0].inputContainerUseds[i].concentration.unit;
-					}else{
-						if(concentration !== experiment.atomicTransfertMethods[0].inputContainerUseds[i].concentration.value 
-								|| unit !== experiment.atomicTransfertMethods[0].inputContainerUseds[i].concentration.unit){
-							isSame = false;
-							break;
-						}
-					}
-				}
-			}
-			if(isSame 
-					&& (experiment.atomicTransfertMethods[0].outputContainerUseds[0].concentration === null
-							|| experiment.atomicTransfertMethods[0].outputContainerUseds[0].concentration.value === null
-						|| experiment.atomicTransfertMethods[0].outputContainerUseds[0].concentration === undefined
-						|| experiment.atomicTransfertMethods[0].outputContainerUseds[0].concentration.value === undefined)){
-				experiment.atomicTransfertMethods[0].outputContainerUseds[0].concentration = $scope.experiment.atomicTransfertMethods[0].inputContainerUseds[0].concentration;
-				
-			}
-		}
-
-	};
 	
 	$scope.$on('refresh', function(e) {
 		console.log("call event refresh on x-to-tubes");		
@@ -330,8 +293,6 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 	
 	$scope.inputContainerProperties = $filter('filter')($scope.experimentType.propertiesDefinitions, 'ContainerIn');
 	$scope.outputContainerProperties = $filter('filter')($scope.experimentType.propertiesDefinitions, 'ContainerOut');
-	
-	
 	
 	
 	var atmService = atmToDragNDrop($scope, 0, datatableConfig);
