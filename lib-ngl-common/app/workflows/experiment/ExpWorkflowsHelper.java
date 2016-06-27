@@ -38,6 +38,7 @@ import models.laboratory.processes.description.ProcessType;
 import models.laboratory.processes.instance.Process;
 import models.laboratory.sample.description.SampleType;
 import models.laboratory.sample.instance.Sample;
+import models.laboratory.sample.instance.tree.SampleLife;
 import models.utils.CodeHelper;
 import models.utils.InstanceConstants;
 import models.utils.instance.ContainerHelper;
@@ -636,6 +637,35 @@ public class ExpWorkflowsHelper {
 		return treeNode;
 	}
 
+	private SampleLife getLifeSample(Experiment exp,	AtomicTransfertMethod atm) {
+		SampleLife lifeSample = new SampleLife();
+
+		InputContainerUsed icu=atm.inputContainerUseds.get(0);
+		String parentSample=icu.contents.get(0).sampleCode;
+
+		lifeSample.from = new models.laboratory.sample.instance.tree.From();
+		lifeSample.from.experimentCode = exp.code;
+		lifeSample.from.experimentTypeCode = exp.typeCode;
+		lifeSample.from.containerCode=icu.code;
+		lifeSample.from.supportCode=icu.locationOnContainerSupport.code;
+		lifeSample.from.fromTransformationCodes=icu.fromTransformationCodes;
+		lifeSample.from.fromTransformationTypeCodes=icu.fromTransformationTypeCodes;
+		lifeSample.from.processCodes=icu.processCodes;
+		lifeSample.from.processTypeCodes=icu.processTypeCodes;
+		lifeSample.from.sampleCode=parentSample;
+		lifeSample.from.sampleTypeCode=icu.contents.get(0).sampleTypeCode;
+		
+		Sample s = MongoDBDAO.findOne(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, DBQuery.in("code", parentSample));
+		
+		if(null != s.life && null != s.life.path){
+			lifeSample.path=s.life.path+","+parentSample;
+		}else{
+			lifeSample.path=","+parentSample;
+		}
+
+		return lifeSample;
+	}
+
 
 	private Set<String> getPropertyDefinitionCodesByLevel(List<PropertyDefinition> propertyDefs, Level.CODE level){
 
@@ -838,7 +868,7 @@ public class ExpWorkflowsHelper {
 
 			exp.atomicTransfertMethods
 			.parallelStream()
-			.map(atm -> createSamples(atm, validation))
+			.map(atm -> createSamples(exp,atm,validation))
 			.forEach(samples -> {
 				if(samples!=null && samples.size()>0){
 					samples.forEach(s-> {
@@ -856,7 +886,7 @@ public class ExpWorkflowsHelper {
 	}
 
 
-	private List<Sample> createSamples(AtomicTransfertMethod  atm, ContextValidation validation) {
+	private List<Sample> createSamples(Experiment exp,AtomicTransfertMethod  atm, ContextValidation validation) {
 		List<Sample> samples=new ArrayList<Sample>();
 		Sample sampleIn=MongoDBDAO.findByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class, atm.inputContainerUseds.get(0).contents.get(0).sampleCode);
 
@@ -882,7 +912,8 @@ public class ExpWorkflowsHelper {
 					 }
 					//Creation sample
 					Sample sample = cloneSampleWithSampleTypeDifferent(sampleIn, sampleCode, projectCode,sampleTypeCode,sampleTypeCategory);
-					
+					sample.life=getLifeSample(exp, atm);
+
 					//Duplicate content avec sample
 					newContents.add(cloneContentWithNewSample(sample,c));
 					samples.add(sample);
