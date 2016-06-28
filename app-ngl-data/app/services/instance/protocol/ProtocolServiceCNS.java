@@ -98,7 +98,7 @@ public class ProtocolServiceCNS {
 			lp.add(newProtocol("fast_prep_grinding","Broyage Fast Prep","path2","1","production",InstanceFactory.setExperimentTypeCodes("grinding")));
 			lp.add(newProtocol("dnase-treatment","Traitement à la Dnase","path2","1","production",InstanceFactory.setExperimentTypeCodes("dnase-treatment")));
 			lp.add(newProtocol("fluo-quantification","Dosage fluorométrique","path2","1","production",InstanceFactory.setExperimentTypeCodes("fluo-quantification")));
-			lp.add(newProtocol("prt_wait_2","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("chip-migration")));
+			lp.add(newProtocol("prt_wait_2","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("chip-migration","gel-migration","control-pcr-and-gel")));
 
 		}
 		

@@ -50,6 +50,7 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 			}, _profilsMap);
 		
 		}
+		angular.element('#importFile')[0].value = null;
 		
 	})
 	$scope.$watch("instrumentType", function(newValue, OldValue){
@@ -58,5 +59,9 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 	})
 	
 	
-	
+	$scope.button = {
+		isShow:function(){
+			return ($scope.isInProgressState() && !$scope.mainService.isEditMode())
+			}	
+	};
 }]);

@@ -74,6 +74,7 @@ public class ResolutionService {
 			createIryPreparationNLRSResolutionCNS(ctx);
 			createDepotBionanoResolutionCNS(ctx);
 			createSamplePrepResolutionCNS(ctx);
+			createGelMigrationResolutionCNS(ctx);
 			// FDS 15/01: No illumina Depot Resolutions ???
 			createExperimentResolution(ctx); 
 			createProcessResolution(ctx);
@@ -89,6 +90,7 @@ public class ResolutionService {
 
 	
 	
+
 	// FDS 20/01 retour aux 2 methodes initiales, mais correction pour CNG: ajout    resoCategories.put("Default",...
 	public static HashMap<String, ResolutionCategory> createResolutionCategoriesCNG(){	
 		HashMap<String, ResolutionCategory> resoCategories = new HashMap<String, ResolutionCategory>();
@@ -709,20 +711,29 @@ public class ResolutionService {
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
 		
-		l=new ArrayList<Resolution>();
-		l.add(InstanceFactory.newResolution("Colonne élution bouchée", "colonne-elution-bouchee", resolutionCategories.get("Default"), (short) 4));
+	}
+	private static void createGelMigrationResolutionCNS(ContextValidation ctx) {
+		List<Resolution> l = new ArrayList<Resolution>();
 		
-		r = new ResolutionConfiguration();
-		r.code = "expExtractionDNARNAReso";
+		l.addAll(getDefaultResolutionCNS());	
+		l.add(InstanceFactory.newResolution("Tâche de faible poids moléculaire", "tache-faible-poids-moleculaire", resolutionCategories.get("Default"), (short) 4));
+		l.add(InstanceFactory.newResolution("Contamination ARN", "contamination-RNA", resolutionCategories.get("Default"), (short) 5));
+		l.add(InstanceFactory.newResolution("ADN dégradé", "ADN-degrade", resolutionCategories.get("Default"), (short) 6));
+		l.add(InstanceFactory.newResolution("MétaGénome", "metagenome", resolutionCategories.get("Default"), (short) 7));
+		l.add(InstanceFactory.newResolution("Présence de plasmide(s)", "presence-de-plasmides", resolutionCategories.get("Default"), (short) 8));
+		l.add(InstanceFactory.newResolution("Profil inhabituel", "profil-inhabituel", resolutionCategories.get("Default"), (short) 9));
+		
+		
+		ResolutionConfiguration r = new ResolutionConfiguration();
+		r.code = "expGelMigrationReso";
 		r.resolutions = l;
 		r.objectTypeCode = "Experiment";
-		ArrayList<String> expTypes = new ArrayList<String>();
-		expTypes.add("dna-rna-extraction");
-		r.typeCodes = expTypes;
+		ArrayList<String> al = new ArrayList<String>();
+		al.add("gel-migration");
+		r.typeCodes = al;
 		
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
-		
 	}
 
 	
