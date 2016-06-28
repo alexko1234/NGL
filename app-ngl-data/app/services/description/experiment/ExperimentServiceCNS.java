@@ -334,6 +334,11 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					getInstrumentUsedTypes("cryobroyeur"),"OneToMany", getSampleTypes("DNA","RNA"),true,
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
+			
+			l.add(newExperimentType("Traitement DNAse","dnase-treatment",null,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null,
+					getInstrumentUsedTypes("hand"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		}
 		
@@ -368,7 +373,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 			newExperimentTypeNode("ext-to-grinding-and-dna-rna-extraction", getExperimentTypes("ext-to-grinding-and-dna-rna-extraction").get(0), false, false, false, null, null, null, null).save();
 			newExperimentTypeNode("grinding",getExperimentTypes("grinding").get(0),false, false,false,getExperimentTypeNodes("ext-to-grinding-and-dna-rna-extraction"),null,null,getExperimentTypes("pool", "pool-tube")).save();
 			newExperimentTypeNode("ext-to-dna-rna-extraction-process", getExperimentTypes("ext-to-dna-rna-extraction-process").get(0), false, false, false, null, null, null, null).save();
-			newExperimentTypeNode("dna-rna-extraction",getExperimentTypes("dna-rna-extraction").get(0),false, false,false,getExperimentTypeNodes("ext-to-dna-rna-extraction-process","grinding"),null,null,getExperimentTypes("pool", "pool-tube")).save();
+			newExperimentTypeNode("dna-rna-extraction",getExperimentTypes("dna-rna-extraction").get(0),false, false,false,getExperimentTypeNodes("ext-to-dna-rna-extraction-process","grinding"),getExperimentTypes("dnase-treatment"),null,getExperimentTypes("pool", "pool-tube")).save();
 			
 		}
 		
