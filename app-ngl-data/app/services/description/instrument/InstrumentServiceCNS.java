@@ -190,12 +190,6 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"flowcell-8"}), null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(newInstrumentUsedType("Agilent 2100 bioanalyzer", "agilent-2100-bioanalyzer", InstrumentCategory.find.findByCode("chip-electrophoresis"), getChipElectrophoresisProperties(), 
-				getInstruments(
-						createInstrument("bioAnalyzer1", "BioAnalyzer1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS )), 
-						createInstrument("bioAnalyzer2", "BioAnalyzer2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)) ), 
-				getContainerSupportCategories(new String[]{"tube"}),null, 
-				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(newInstrumentUsedType("Thermocycleur", "thermocycler", InstrumentCategory.find.findByCode("thermocycler"), getThermocyclerProperties(), 
 				getInstruments(
@@ -218,17 +212,23 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentUsedType("Covaris E210", "covaris-e210", InstrumentCategory.find.findByCode("covaris"), getCovarisProperties(), 
 				getInstruments(
 						createInstrument("covaris3", "Covaris3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)), 
-						createInstrument("covaris4", "Covaris4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))						) , 
+						createInstrument("covaris4", "Covaris4", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))) , 
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		
-		l.add(newInstrumentUsedType("LabChip GX", "labChipGX", InstrumentCategory.find.findByCode("chip-electrophoresis"), null, 
+		l.add(newInstrumentUsedType("LabChip_GX", "labchip-gx", InstrumentCategory.find.findByCode("chip-electrophoresis"), null, 
 				getInstruments(
-						createInstrument("labChip1", "LabChip1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)) ) ,
-				getContainerSupportCategories(new String[]{"384-well-plate","96-well-plate"}),null, 
+						createInstrument("labChip_GX1", "LabChip_GX1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))) ,
+				getContainerSupportCategories(new String[]{"96-well-plate"}),null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-				
+		
+		l.add(newInstrumentUsedType("Agilent 2100 bioanalyzer", "agilent-2100-bioanalyzer", InstrumentCategory.find.findByCode("chip-electrophoresis"), getBioanalyzerProperties(), 
+				getInstruments(
+						createInstrument("bioanalyzer1", "Bioanalyzer 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
+						createInstrument("bioanalyzer2", "Bioanalyzer 2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
+						createInstrument("bioanalyzer3", "Bioanalyzer 3", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))),
+				getContainerSupportCategories(new String[]{"tube"}),null, 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(newInstrumentUsedType("Eppendorf MiniSpin plus", "eppendorf-mini-spin-plus", InstrumentCategory.find.findByCode("centrifuge"), getNanoporeMiniSpinProperties(),  getInstrumentEppendorfMiniSpinPlus()
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
@@ -489,9 +489,17 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		return l;
 	}
 	
-	private static List<PropertyDefinition> getChipElectrophoresisProperties() throws DAOException {
+	private static List<PropertyDefinition> getBioanalyzerProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Type puce", "chipType", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("DNA HS", "DNA 12000", "RNA"), "single"));		
+		
+		l.add(newPropertiesDefinition("Type puce", "chipType", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null, newValues("DNA HS", "DNA 12000", "RNA"), 
+				"single", 10, true, null,null));
+		
+		l.add(newPropertiesDefinition("Position sur puce", "chipPosition", LevelService.getLevels(Level.CODE.ContainerIn), String.class, false, null, 
+				newValues("1", "2", "3", "4", "5", "6","7","8","9","10","11"), 
+				"single", 10, true, null,null));
+		
+		
 		return l;
 	}
 	

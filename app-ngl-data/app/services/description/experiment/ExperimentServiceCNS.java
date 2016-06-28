@@ -335,6 +335,11 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
 			
+			l.add(newExperimentType("Migration sur puce","chip-migration", null,20200,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
+					getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchip-gx"),"OneToVoid", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
+			
 			l.add(newExperimentType("Traitement DNAse","dnase-treatment",null,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null,
 					getInstrumentUsedTypes("hand"),"OneToOne", 
@@ -381,7 +386,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 			newExperimentTypeNode("ext-to-grinding-and-dna-rna-extraction", getExperimentTypes("ext-to-grinding-and-dna-rna-extraction").get(0), false, false, false, null, null, null, null).save();
 			newExperimentTypeNode("grinding",getExperimentTypes("grinding").get(0),false, false,false,getExperimentTypeNodes("ext-to-grinding-and-dna-rna-extraction"),null,null,getExperimentTypes("pool", "pool-tube")).save();
 			newExperimentTypeNode("ext-to-dna-rna-extraction-process", getExperimentTypes("ext-to-dna-rna-extraction-process").get(0), false, false, false, null, null, null, null).save();
-			newExperimentTypeNode("dna-rna-extraction",getExperimentTypes("dna-rna-extraction").get(0),false, false,false,getExperimentTypeNodes("ext-to-dna-rna-extraction-process","grinding"),getExperimentTypes("dnase-treatment"),getExperimentTypes("fluo-quantification"),getExperimentTypes("pool", "pool-tube")).save();
+			newExperimentTypeNode("dna-rna-extraction",getExperimentTypes("dna-rna-extraction").get(0),false, false,false,getExperimentTypeNodes("ext-to-dna-rna-extraction-process","grinding"),getExperimentTypes("dnase-treatment"),getExperimentTypes("fluo-quantification","chip-migration"),getExperimentTypes("pool", "pool-tube")).save();
 			
 		}
 		
@@ -797,17 +802,22 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 
 	
 
-	//TODO
-	// Propriete taille en output et non en input ?
-	// Valider les keys
 	public static List<PropertyDefinition> getPropertyDefinitionsChipMigration() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		// A supprimer une fois le type de support category sera géré
-		propertyDefinitions.add(newPropertiesDefinition("Position","position", LevelService.getLevels(Level.CODE.ContainerIn),Integer.class, true, "single"));
-		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, true, "single"));		
-		propertyDefinitions.add(newPropertiesDefinition("Taille", "size", LevelService.getLevels(Level.CODE.ContainerOut),Integer.class, true,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("kb"), MeasureUnit.find.findByCode("kb"), "single"));
-		// Voir avec Guillaume comment gérer les fichiers
-		propertyDefinitions.add(newPropertiesDefinition("Profil DNA HS", "fileResult", LevelService.getLevels(Level.CODE.ContainerOut),String.class, true, "single"));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, false, null, null, 
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME), MeasureUnit.find.findByCode( "µL"), MeasureUnit.find.findByCode("µL"),
+				"single", 10, true, null, "0"));		
+		
+		
+		propertyDefinitions.add(newPropertiesDefinition("Taille", "measuredSize", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, "F", null, 
+				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"),
+				"single", 12, true, null, null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Profil de migration", "migrationProfile", LevelService.getLevels(Level.CODE.ContainerIn), Image.class, true, "F", null, 				
+				"img", 13, true, null, null));
+		
 		return propertyDefinitions;
 	}
 	
