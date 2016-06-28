@@ -19,6 +19,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			"filter":"codes:'container_support_cat'",
 			"position":2,
 			"order":true,
+			"hide":true,
 			"type":"text"
 		});
 		
@@ -48,6 +49,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			"property":"sampleCodes",
 			"position":5,
 			"order":false,
+			"hide":true,
 			"type":"text",
 			"render":"<div list-resize='value.data.sampleCodes | unique' list-resize-min-size='3'>",
 		});
@@ -58,6 +60,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			"position":6,
 			"render":"<div list-resize='value.data.projectCodes | unique' list-resize-min-size='3'>",
 			"order":false,
+			"hide":true,
 			"type":"text"
 		});
 		
@@ -66,6 +69,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			"property":"traceInformation.creationDate",
 			"position":8,
 			"order":true,
+			"hide":true,
 			"type":"date"
 		});
 		
@@ -74,6 +78,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 			"property":"traceInformation.createUser",
 			"position":9,
 			"order":true,
+			"hide":true,
 			"type":"text"
 		});
 		
@@ -107,6 +112,7 @@ factory('containerSupportsSearchService', ['$http', 'mainService', 'lists', 'dat
 				"property":"state.code",
 				"position":3,
 				"order":true,
+				"hide":true,
 				"type":"text",
 				"edit":isStateCodeEditable,
 				"choiceInList": true,

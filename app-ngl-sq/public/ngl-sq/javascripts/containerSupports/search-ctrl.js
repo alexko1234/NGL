@@ -23,6 +23,12 @@ angular.module('home').controller('SearchCtrl', ['$scope', '$window', 'datatable
 			mode:'remote',
 			method:'put',
 		},
+		exportCSV:{
+			active:true
+		},
+		hide:{
+			active:true
+		},
 		show:{
 			active:true,
 			add:function(line){
