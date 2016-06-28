@@ -84,7 +84,7 @@ public class ContentValidationHelper extends CommonValidationHelper {
 		}
 		
 		if(proDefinitions.size() > 0){
-			ValidationHelper.validateProperties(contextValidation,properties, proDefinitions);
+			ValidationHelper.validateProperties(contextValidation,properties, proDefinitions,false);
 		}
 		
 	}

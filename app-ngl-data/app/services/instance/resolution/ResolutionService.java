@@ -73,6 +73,7 @@ public class ResolutionService {
 			createIlluminaPrepFCDepotResolutionCNS(ctx);
 			createIryPreparationNLRSResolutionCNS(ctx);
 			createDepotBionanoResolutionCNS(ctx);
+			createSamplePrepResolutionCNS(ctx);
 			// FDS 15/01: No illumina Depot Resolutions ???
 			createExperimentResolution(ctx); 
 			createProcessResolution(ctx);
@@ -86,6 +87,7 @@ public class ResolutionService {
 
 	
 
+	
 	
 	// FDS 20/01 retour aux 2 methodes initiales, mais correction pour CNG: ajout    resoCategories.put("Default",...
 	public static HashMap<String, ResolutionCategory> createResolutionCategoriesCNG(){	
@@ -686,6 +688,41 @@ public class ResolutionService {
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);	
 	}
+	
+	
+	private static void createSamplePrepResolutionCNS(ContextValidation ctx) {
+		List<Resolution> l = new ArrayList<Resolution>();
+		
+		l.addAll(getDefaultResolutionCNS());	
+		
+		ResolutionConfiguration r = new ResolutionConfiguration();
+		r.code = "expExtractionDNARNAReso";
+		r.resolutions = l;
+		r.objectTypeCode = "Experiment";
+		ArrayList<String> al = new ArrayList<String>();
+		al.add("dna-rna-extraction");
+		r.typeCodes = al;
+		
+		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
+		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
+		
+		l=new ArrayList<Resolution>();
+		l.add(InstanceFactory.newResolution("Colonne élution bouchée", "colonne-elution-bouchee", resolutionCategories.get("Default"), (short) 4));
+		
+		r = new ResolutionConfiguration();
+		r.code = "expExtractionDNARNAReso";
+		r.resolutions = l;
+		r.objectTypeCode = "Experiment";
+		ArrayList<String> expTypes = new ArrayList<String>();
+		expTypes.add("dna-rna-extraction");
+		r.typeCodes = expTypes;
+		
+		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
+		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
+		
+	}
+
+	
 	// FDS 05/02/2016 -- JIRA NGL-894 experience ey processus X5
 	private static void createPrepPcrFreeResolutionCNG(ContextValidation ctx) {
 		List<Resolution> l = new ArrayList<Resolution>();

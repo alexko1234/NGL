@@ -15,6 +15,7 @@ import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.common.instance.PropertyValue;
 import models.laboratory.common.instance.property.PropertySingleValue;
 import models.laboratory.container.instance.Content;
+import models.laboratory.sample.instance.Sample;
 import java.util.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;

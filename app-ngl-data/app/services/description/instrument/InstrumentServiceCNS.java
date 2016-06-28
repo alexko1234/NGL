@@ -252,10 +252,27 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentUsedType("Main", "irys-hand", InstrumentCategory.find.findByCode("hand"), getIrysChipProperties(),getInstrumentHand() 
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"irys-chip-2"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(newInstrumentUsedType("Cryobroyeur", "cryobroyeur", InstrumentCategory.find.findByCode("sample-prep-system"), null,getInstrumentCryobroyeur() 
+		l.add(newInstrumentUsedType("Cryobroyeur", "cryobroyeur", InstrumentCategory.find.findByCode("sample-prep-system"),  getCryobroyeurProperties(),getInstrumentCryobroyeur() 
 				,getContainerSupportCategories(new String[]{"tube"}), getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		
+
+		l.add(newInstrumentUsedType("Fast Prep", "fast-prep", InstrumentCategory.find.findByCode("sample-prep-system"),  getFastPrepProperties(),getInstrumentFastPrep() 
+				,getContainerSupportCategories(new String[]{"tube","bottle","bag"}), getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
+	}
+
+
+	private List<Instrument> getInstrumentFastPrep() {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("fast-prep-1","Fast Prep 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		return instruments;
+	}
+
+	private List<PropertyDefinition> getFastPrepProperties() {
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null, newValues("Programme corail"), 
+				"single", 10, true, null,null));
+		return l;
 	}
 
 	private List<Instrument> getInstrumentHand() throws DAOException {
@@ -266,10 +283,17 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 
 	private List<Instrument> getInstrumentCryobroyeur() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
-		instruments.add(createInstrument("6770 FREEZER/MILL 1","freezer-mill-1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-		instruments.add(createInstrument("6870 LARGE FREEZER/MILL 1","large-freezer-mill-1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("freezer-mill-1","6770 FREEZER/MILL 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("large-freezer-mill-1","6870 LARGE FREEZER/MILL 1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		return instruments;
+	}
+
+	private List<PropertyDefinition> getCryobroyeurProperties() {
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null, newValues("Programme 1"), 
+				"single", 10, true, null,null));
+		return l;
 	}
 	
 	private List<PropertyDefinition> getIrysChipProperties() throws DAOException {

@@ -316,22 +316,31 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			*/
 			
+			l.add(newExperimentType("Ext to Extraction ADN / ARN (corail)","ext-to-grinding-and-dna-rna-extraction",null,-1,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
+			l.add(newExperimentType("Broyage ","grinding","GRD",650,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
+					getInstrumentUsedTypes("fast-prep","hand"),"OneToMany", null,true,
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
 			l.add(newExperimentType("Ext to Extraction ADN / ARN (plancton)","ext-to-dna-rna-extraction-process",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-			l.add(newExperimentType("Extraction ADN / ARN ","dna-rna-extraction",null,1000,
+			l.add(newExperimentType("Extraction ADN / ARN ","dna-rna-extraction","EXT",700,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsExtractionADNARN(),
 					getInstrumentUsedTypes("cryobroyeur"),"OneToMany", getSampleTypes("DNA","RNA"),true,
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
+			
+		
 		}
 		
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
 
 	}
 
-	
 
 
 	public void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
@@ -356,9 +365,11 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 			newExperimentTypeNode("qpcr-quantification", getExperimentTypes("qpcr-quantification").get(0), false, false, false, getExperimentTypeNodes("ext-to-qpcr-norm-fc-depot-illumina","sizing","amplification"), null, null, null).save();
 			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,getExperimentTypeNodes("ext-to-qpcr-norm-fc-depot-illumina","ext-to-norm-fc-depot-illumina","sizing","amplification"),null,null,getExperimentTypes("pool", "pool-tube")).save();
 
+			newExperimentTypeNode("ext-to-grinding-and-dna-rna-extraction", getExperimentTypes("ext-to-grinding-and-dna-rna-extraction").get(0), false, false, false, null, null, null, null).save();
+			newExperimentTypeNode("grinding",getExperimentTypes("grinding").get(0),false, false,false,getExperimentTypeNodes("ext-to-grinding-and-dna-rna-extraction"),null,null,getExperimentTypes("pool", "pool-tube")).save();
 			newExperimentTypeNode("ext-to-dna-rna-extraction-process", getExperimentTypes("ext-to-dna-rna-extraction-process").get(0), false, false, false, null, null, null, null).save();
-			newExperimentTypeNode("dna-rna-extraction",getExperimentTypes("dna-rna-extraction").get(0),false, false,false,getExperimentTypeNodes("ext-to-dna-rna-extraction-process"),null,null,getExperimentTypes("pool", "pool-tube")).save();
-
+			newExperimentTypeNode("dna-rna-extraction",getExperimentTypes("dna-rna-extraction").get(0),false, false,false,getExperimentTypeNodes("ext-to-dna-rna-extraction-process","grinding"),null,null,getExperimentTypes("pool", "pool-tube")).save();
+			
 		}
 		
 		newExperimentTypeNode("ext-to-illumina-run", getExperimentTypes("ext-to-illumina-run").get(0), false, false, false, null, null, null, null).save();
@@ -858,10 +869,12 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		propertyDefinitions.add(newPropertiesDefinition("Projet", "projectCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, "IP", 
 				null, null ,null ,null ,"single", 20, true, null,null));
 		
-		propertyDefinitions.add(newPropertiesDefinition("Code sample", "sampleCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, false, null, 
+		propertyDefinitions.add(newPropertiesDefinition("Echantillon", "sampleCode", LevelService.getLevels(Level.CODE.ContainerOut), String.class, false, null, 
 				null, null, null, null,"single", 25, false, null,null));
 		
-
 		return propertyDefinitions;
 	}
+	
+	
+
 }

@@ -98,6 +98,8 @@ public class ProtocolServiceCNS {
 			lp.add(newProtocol("ptr_pool_tube_v1","PTR_POOL_TUBE_v1","path7","1","production", InstanceFactory.setExperimentTypeCodes("pool-tube","pool")));
 			lp.add(newProtocol("extracction_zr_duet","Extraction ZR Duet","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-rna-extraction")));
 			lp.add(newProtocol("cryobroyage","Cryobroyage","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-rna-extraction")));
+			lp.add(newProtocol("fast_prep_grinding","Broyage Fast Prep","path2","1","production",InstanceFactory.setExperimentTypeCodes("grinding")));
+
 		}
 		
 		for(Protocol protocole:lp){
