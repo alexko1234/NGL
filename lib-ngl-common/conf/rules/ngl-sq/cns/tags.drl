@@ -31,65 +31,105 @@ rule "Generate TagInfo from Experiment"
 			List<InputContainerUsed> cuinputs = atm.inputContainerUseds;
 			Set<String> sampleCodes = new TreeSet<String>();
 			Set<String> projectCodes = new TreeSet<String>();
+			Set<String> fromTransformationTypeCodes = new TreeSet<String>();
 			Set<String> libProcessTypeCodes = new TreeSet<String>();
 			Set<String> tags = new TreeSet<String>();
 			//extract content info
 			for(InputContainerUsed cu:cuinputs){
+				fromTransformationTypeCodes.addAll(cu.fromTransformationTypeCodes);
 				if(null != cu.contents){
 					for(Content content : cu.contents){
 						projectCodes.add(content.projectCode);
 						sampleCodes.add(content.sampleCode);
+						
+						/*
 						if(content.properties.containsKey("libProcessTypeCode")){
 							libProcessTypeCodes.add((String)content.properties.get("libProcessTypeCode").value);
 						}
 						if(content.properties.containsKey("tag")){
 							tags.add((String)content.properties.get("tag").value);
 						}
+						*/
 					}
 				}
 			}
-							
-			List<OutputContainerUsed> cuoutputs = atm.outputContainerUseds;
-			//generate support
-			for(OutputContainerUsed cu:cuoutputs){
-				ContainerSupport support = null;
-				if(null != cu.locationOnContainerSupport){
-					if(!supports.containsKey(cu.locationOnContainerSupport.code)){
-						support = new ContainerSupport();
-						support.code = cu.locationOnContainerSupport.code;
-						support.categoryCode = cu.locationOnContainerSupport.categoryCode;
-						support.properties=new HashMap<String, PropertyValue>();
-						supports.put(cu.locationOnContainerSupport.code, support);
-					}else{
-						support = supports.get(cu.locationOnContainerSupport.code);
+			
+			if(!OneToVoidContainer.class.isAssignableFrom(atm.getClass())){				
+				List<OutputContainerUsed> cuoutputs = atm.outputContainerUseds;
+				//generate support
+				for(OutputContainerUsed cu:cuoutputs){
+					ContainerSupport support = null;
+					if(null != cu.locationOnContainerSupport){
+						if(!supports.containsKey(cu.locationOnContainerSupport.code)){
+							support = new ContainerSupport();
+							support.code = cu.locationOnContainerSupport.code;
+							support.categoryCode = cu.locationOnContainerSupport.categoryCode;
+							support.properties=new HashMap<String, PropertyValue>();
+							supports.put(cu.locationOnContainerSupport.code, support);
+						}else{
+							support = supports.get(cu.locationOnContainerSupport.code);
+						}
+						//add content info to each support
+						support.projectCodes.addAll(projectCodes);
+						support.sampleCodes.addAll(sampleCodes);
+						support.fromTransformationTypeCodes.addAll(fromTransformationTypeCodes);
+						/*
+						if(!support.properties.containsKey("libProcessTypeCodes")){
+							support.properties.put("libProcessTypeCodes", new PropertyListValue(new ArrayList<String>(libProcessTypeCodes)));						
+						}else{
+							TreeSet<String> l = new TreeSet<String>((List<String>) ((PropertyListValue)support.properties.get("libProcessTypeCodes")).value);
+							l.addAll(libProcessTypeCodes);
+							support.properties.put("libProcessTypeCodes", new PropertyListValue(new ArrayList<String>(l)));
+						}
+						
+						if(!support.properties.containsKey("tags")){
+							support.properties.put("tags", new PropertyListValue(new ArrayList<String>(tags)));						
+						}else{
+							TreeSet<String> l = new TreeSet<String>((List<String>) ((PropertyListValue)support.properties.get("tags")).value);
+							l.addAll(tags);
+							support.properties.put("tags", new PropertyListValue(new ArrayList<String>(l)));
+						}
+						*/
 					}
-					//add content info to each support
-					support.projectCodes.addAll(projectCodes);
-					support.sampleCodes.addAll(sampleCodes);
 					
-					if(!support.properties.containsKey("libProcessTypeCodes")){
-						support.properties.put("libProcessTypeCodes", new PropertyListValue(new ArrayList<String>(libProcessTypeCodes)));						
-					}else{
-						TreeSet<String> l = new TreeSet<String>((List<String>) ((PropertyListValue)support.properties.get("libProcessTypeCodes")).value);
-						l.addAll(libProcessTypeCodes);
-						support.properties.put("libProcessTypeCodes", new PropertyListValue(new ArrayList<String>(l)));
-					}
-					
-					if(!support.properties.containsKey("tags")){
-						support.properties.put("tags", new PropertyListValue(new ArrayList<String>(tags)));						
-					}else{
-						TreeSet<String> l = new TreeSet<String>((List<String>) ((PropertyListValue)support.properties.get("tags")).value);
-						l.addAll(tags);
-						support.properties.put("tags", new PropertyListValue(new ArrayList<String>(l)));
-					}
 				}
-				
+			}else{
+				List<InputContainerUsed> cuInputs = atm.inputContainerUseds;
+				for(InputContainerUsed cu : cuInputs){
+					ContainerSupport support = null;
+					if(null != cu.locationOnContainerSupport){
+						if(!supports.containsKey(cu.locationOnContainerSupport.code)){
+							support = new ContainerSupport();
+							support.code = cu.locationOnContainerSupport.code;
+							support.categoryCode = cu.locationOnContainerSupport.categoryCode;
+							support.properties=new HashMap<String, PropertyValue>();
+							supports.put(cu.locationOnContainerSupport.code, support);
+						}else{
+							support = supports.get(cu.locationOnContainerSupport.code);
+						}
+						//add content info to each support
+						support.projectCodes.addAll(projectCodes);
+						support.sampleCodes.addAll(sampleCodes);
+						support.fromTransformationTypeCodes.addAll(fromTransformationTypeCodes);					
+					}
+					
+				}
 			}				
 		}
 		retract($experiment);
 		for(ContainerSupport support : supports.values()){
-			TagInfo tagInfo = new TagInfo($typeCode, support);
-			insert(tagInfo);
+			if("transformation".equals($experiment.categoryCode)){
+				TagInfo tagInfo = new TagInfo($typeCode, support);
+				insert(tagInfo);
+			}else{
+				if(support.fromTransformationTypeCodes.size() == 1){
+					TagInfo tagInfo = new TagInfo(support.fromTransformationTypeCodes.iterator().next(), support);
+					insert(tagInfo);
+				}else{
+					TagInfo tagInfo = new TagInfo(null, support);
+					insert(tagInfo);
+				}
+			}
 		}		
 		    
 end
