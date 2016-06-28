@@ -694,7 +694,10 @@ public class ResolutionService {
 		List<Resolution> l = new ArrayList<Resolution>();
 		
 		l.addAll(getDefaultResolutionCNS());	
-		
+		l.add(InstanceFactory.newResolution("Tube casse ds cryobroyeur", "tube-casse-cryobroyeur", resolutionCategories.get("Default"), (short) 4));
+		l.add(InstanceFactory.newResolution("Tube vide", "tube-vide", resolutionCategories.get("Default"), (short) 5));
+		l.add(InstanceFactory.newResolution("Colonne élution bouchée", "colonne-elution-bouchee", resolutionCategories.get("Default"), (short) 6));
+
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "expExtractionDNARNAReso";
 		r.resolutions = l;

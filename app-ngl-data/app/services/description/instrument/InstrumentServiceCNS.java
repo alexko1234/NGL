@@ -86,7 +86,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentUsedType("Fluoroskan", "fluoroskan", InstrumentCategory.find.findByCode("fluorometer"),null, 
 				getInstruments(
 						createInstrument("Fluoroskan1", "Fluoroskan1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))), 
-				getContainerSupportCategories(new String[]{"tube"}),null, 
+				getContainerSupportCategories(new String[]{"tube","96-well-plate"}),null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); //ok
 		
 		

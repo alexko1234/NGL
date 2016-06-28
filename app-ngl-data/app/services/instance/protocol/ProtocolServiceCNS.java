@@ -100,6 +100,7 @@ public class ProtocolServiceCNS {
 			lp.add(newProtocol("cryobroyage","Cryobroyage","path2","1","production",InstanceFactory.setExperimentTypeCodes("dna-rna-extraction")));
 			lp.add(newProtocol("fast_prep_grinding","Broyage Fast Prep","path2","1","production",InstanceFactory.setExperimentTypeCodes("grinding")));
 			lp.add(newProtocol("dnase-treatment","Traitement à la Dnase","path2","1","production",InstanceFactory.setExperimentTypeCodes("dnase-treatment")));
+			lp.add(newProtocol("fluo-quantification","Dosage fluorométrique","path2","1","production",InstanceFactory.setExperimentTypeCodes("fluo-quantification")));
 
 		}
 		
