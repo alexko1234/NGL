@@ -216,47 +216,14 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 			        	 "position":10,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
-			       /*  {
-			        	 "header":Messages("containers.table.quantity")+" (ng)",
-			        	 "property":"outputContainerUsed.quantity.value",
+			         {
+			        	 "header":Messages("containers.table.storageCode"),
+			        	 "property":"outputContainerUsed.locationOnContainerSupport.storageCode",
 			        	 "order":true,
 						 "edit":true,
 						 "hide":true,
-						 "type":"number",
-			        	 "position":52,
-			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         },
-			         {
-			        	 "header":Messages("containers.table.sampleTypes"),
-			        	 "property":"outputContainerUsed.contents[0].sampleTypeCode",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-						 "type":"text",
-			        	 "position":200,
-			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         },
-			         {
-						"header": Messages("containers.table.projectCodes"),
-						"property":"outputContainerUsed.contents[0].projectCode",
-						"filter":"codes:'valuation'",
-						"type":"text",
-						"edit":true,
-						"order":false,
-						"choiceInList":true,
-						"position":300,
-						"listStyle":'bt-select',
-						"possibleValues":'lists.getProjects()',
-						"extraHeaders":{0:Messages("experiments.outputs")}
-				     },*/
-				     {
-			        	 "header":Messages("containers.table.sampleCodes"),
-			        	 "property":"outputContainerUsed.contents[0].sampleCode",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-						 "type":"text",
-			        	 "position":350,
+			        	 "type":"text",
+			        	 "position":40,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {
@@ -482,30 +449,7 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 	};
 	
 	
-	/*
-	$scope.generateATM=function(experimentType){
-		//$scope.atmService.data.datatableParam.save();
-		var allData = $scope.atmService.data.datatableParam.getData();
-		
-		for(var i = 0; i < allData.length; i++){
-			var data = allData[i];
-			var atm = $scope.atmService.newAtomicTransfertMethod();
-			atm.inputContainerUseds.push($scope.atmService.$commonATM.convertContainerToInputContainerUsed(data.inputContainer));
-			
-			for(var j = 0; j < experimentType.sampleTypes.length ; j++){
-				var newOutputContainer=$scope.atmService.$commonATM.newOutputContainerUsed($scope.atmService.defaultOutputUnit,atm.line,atm.column);
-				atm.outputContainerUseds.push(newOutputContainer);
-				
-				var value = experimentType.sampleTypes[j].code;
-				var setter = $parse("outputContainerUseds["+j+"].experimentProperties.sampleTypeCode.value").assign;
-				setter(atm, value); 
-									
-			}
-			$scope.atmService.data.atm.push(atm);
-		}
-		$scope.atmService.data.updateDatatable();					
-	}
-	*/
+	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);					
     $scope.atmService = atmService;
 	

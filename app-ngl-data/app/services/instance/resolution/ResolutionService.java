@@ -711,6 +711,22 @@ public class ResolutionService {
 		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
 		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
 		
+		
+		l = new ArrayList<Resolution>();
+
+		l.addAll(getDefaultResolutionCNS());	
+
+		r = new ResolutionConfiguration();
+		r.code = "expBroyageReso";
+		r.resolutions = l;
+		r.objectTypeCode = "Experiment";
+		al = new ArrayList<String>();
+		al.add("grinding");
+		r.typeCodes = al;
+		
+		MongoDBDAO.deleteByCode(InstanceConstants.RESOLUTION_COLL_NAME, ResolutionConfiguration.class, r.code);
+		InstanceHelpers.save(InstanceConstants.RESOLUTION_COLL_NAME, r,ctx, false);
+		
 	}
 	private static void createGelMigrationResolutionCNS(ContextValidation ctx) {
 		List<Resolution> l = new ArrayList<Resolution>();
