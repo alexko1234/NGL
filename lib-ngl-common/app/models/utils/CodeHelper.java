@@ -131,7 +131,7 @@ public class CodeHelper {
 		char lastLetter='Z';
 
 		if(oldCode==null){
-			newCode="A";
+			newCode="AAAA";
 		}else {
 			
 			int nbCharacter=oldCode.length();
