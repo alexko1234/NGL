@@ -28,6 +28,8 @@ public class ContainerSupportsSearchForm extends ListForm {
 	public List<String> users;
 	public String storageCodeRegex;     //  23/05/2016 FDS ajout
 	public String storageCode;          //  23/05/2016 FDS ajout
+	
+	@Deprecated
 	public Map<String, List<String>> properties = new HashMap<String, List<String>>();
 	
 	@Override

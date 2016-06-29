@@ -12,7 +12,7 @@
 			<tbody>
 				<tr ng-repeat="storage in support.storages | orderBy:'index'">
 					<td ng-bind="storage.code" />
-					<td ng-bind="storage.date|date:'@Messages("date.format")'" />
+					<td ng-bind="storage.date|date:'@Messages("datetime.format")'" />
 					<td ng-bind="storage.user" />					
 				</tr>							
 			</tbody>

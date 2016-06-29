@@ -319,8 +319,10 @@ public class ContainerSupports extends CommonController {
 		}		
 
 		//These fields are not in the ContainerSupport collection then we use the Container collection
+		
+		//TODO GA allways used ?????
 		if(StringUtils.isNotBlank(supportsSearch.nextExperimentTypeCode) || StringUtils.isNotBlank(supportsSearch.processTypeCode)){
-
+			Logger.error("Allready used nextExperimentTypeCode in search container support. Please find where in java code");
 
 			/*Don't need anymore 09/01/2015
 			//If the categoryCode is null or empty, we use the ContainerSupportCategory data table to enhance the query
@@ -340,7 +342,7 @@ public class ContainerSupports extends CommonController {
 			ContainersSearchForm cs = new ContainersSearchForm();
 			cs.nextExperimentTypeCode = supportsSearch.nextExperimentTypeCode;
 			cs.processTypeCode = supportsSearch.processTypeCode;		
-			cs.properties = supportsSearch.properties;	
+			cs.processProperties = supportsSearch.properties;	
 			BasicDBObject keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
 			keys.put("support", 1);

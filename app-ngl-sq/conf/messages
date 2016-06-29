@@ -16,7 +16,6 @@ containerSupports.scanner.title = Code-Barre de Support
 containerSupports.new.modal.title.creation = Nouveaux supports
 
 containerSupports.menu = Supports
-containerSupports.menu.new_from_file = Création depuis un fichier
 containerSupports.menu.search = Rechercher
 containerSupports.menu.state = Changement d''Etat
 containerSupports.menu.scanner = Code-Barre
@@ -28,7 +27,7 @@ containerSupports.tabs.workflow = Infos workflow
 containerSupports.tabs.search = Recherche Supports
 containerSupports.tabs.state = Changement d'Etat Supports
 containerSupports.tabs.scanner = Recherche par Code Barre
-containerSupports.tabs.new = Création Supports
+
 
 #containerSupports table
 containerSupports.table.code = Supports
@@ -88,6 +87,8 @@ containers.menu = Containers
 containers.menu.creation = Création
 containers.menu.state = Changement d''Etat
 containers.menu.search = Rechercher
+containers.menu.new_from_file = Création / mise à jour depuis fichier
+
 containers.tabs.search = Recherche Container
 containers.tabs.state = Changement d''Etat Container
 
@@ -96,6 +97,7 @@ containers.tabs.general = Général
 containers.tabs.treeoflife = Arbre de Vie
 containers.tabs.workflow = Infos workflow
 containers.tabs.resultsqc = Résultats QC
+containers.tabs.new = Création / mise à jour depuis fichier
 
 #Containers table
 containers.table.code = Code Container

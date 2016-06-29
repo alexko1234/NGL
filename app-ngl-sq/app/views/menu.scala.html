@@ -30,7 +30,7 @@
 								<li class="@("active".when(nav == "containers.search"))"><a href="@controllers.containers.tpl.routes.Containers.home("search")">@Messages("containers.menu.search")</a></li>
 								@if(PermissionHelper.checkPermission(Context.current().request().username(), "writing")){
 									<li class="@("active".when(nav == "containers.state"))"><a href="@controllers.containers.tpl.routes.Containers.home("state")">@Messages("containers.menu.state")</a></li>																				
-									<li class="@("active".when(nav == "containerSupports.new"))"><a href="@controllers.containers.tpl.routes.Containers.home("new")">@Messages("containerSupports.menu.new_from_file")</a></li>																												
+									<li class="@("active".when(nav == "container.new"))"><a href="@controllers.containers.tpl.routes.Containers.home("new")">@Messages("containers.menu.new_from_file")</a></li>																												
 								}
 							</ul>
   						</li>

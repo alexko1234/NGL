@@ -29,6 +29,7 @@ public class ContainersSearchForm extends ListForm{
 	public String supportCode;
 	public Set<String> supportCodes;
 	public String supportCodeRegex;
+	public String supportStorageCodeRegex;
 	public boolean isPool=false;
 	public String containerSupportCategory;
 	public Set<String> containerSupportCategories;
@@ -42,7 +43,6 @@ public class ContainersSearchForm extends ListForm{
 	public List<String> createUsers;
 	public boolean isEmptyFromExperimentTypeCodes=false;
 	
-	@Deprecated
 	public Map<String, List<String>> properties = new HashMap<String, List<String>>();
 	
 	public Map<String, List<String>> processProperties = new HashMap<String, List<String>>();

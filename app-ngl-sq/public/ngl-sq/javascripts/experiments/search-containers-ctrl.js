@@ -485,6 +485,11 @@ angular.module('home').controller('SearchContainersCtrl', ['$scope','$routeParam
     	 
     	 if(angular.isDefined($scope.searchService.form.processTypeCode) && $scope.searchService.lists.get("process-"+$scope.searchService.form.processTypeCode) && $scope.searchService.lists.get("process-"+$scope.searchService.form.processTypeCode).length === 1){ 
     		 allFilters = angular.copy($scope.searchService.lists.get("process-"+$scope.searchService.form.processTypeCode)[0].filters);
+    		 
+    		 allFilters.forEach(function(filter){
+    			 filter.html = filter.html.replace('searchService.form["properties','searchService.form["processProperties');
+    		 })
+    		 
     		 $scope.searchService.isProcessFiltered = true;
     	 }else{
     		 $scope.searchService.isProcessFiltered = false;

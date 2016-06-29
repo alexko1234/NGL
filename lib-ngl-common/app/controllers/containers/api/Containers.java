@@ -185,11 +185,6 @@ public class Containers extends CommonController {
 		Query query = DBQuery.empty();
 
 		
-		if(containersSearch.properties.size() > 0){	
-			Logger.warn("used old properties for processProperties");
-			containersSearch.processProperties.putAll(containersSearch.properties);
-		}
-		
 		if(containersSearch.processProperties.size() > 0){	
 			List<String> processCodes = new ArrayList<String>();
 			List<DBQuery.Query> listProcessQuery = NGLControllerHelper.generateQueriesForProperties(containersSearch.processProperties, Level.CODE.Process, "properties");
@@ -252,6 +247,10 @@ public class Containers extends CommonController {
 			queryElts.add(DBQuery.regex("support.code", Pattern.compile(containersSearch.supportCodeRegex)));
 		}
 
+		if(StringUtils.isNotBlank(containersSearch.supportStorageCodeRegex)){
+			queryElts.add(DBQuery.regex("support.storageCode", Pattern.compile(containersSearch.supportStorageCodeRegex)));
+		}
+		
 		if(CollectionUtils.isNotEmpty(containersSearch.containerSupportCategories)){
 			queryElts.add(DBQuery.in("support.categoryCode", containersSearch.containerSupportCategories));
 		}else if(StringUtils.isNotBlank(containersSearch.containerSupportCategory)){
@@ -403,6 +402,7 @@ public class Containers extends CommonController {
 		}
 		
 		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(containersSearch.contentsProperties,Level.CODE.Content, "contents.properties"));
+		queryElts.addAll(NGLControllerHelper.generateQueriesForProperties(containersSearch.properties,Level.CODE.Container, "properties"));
 
 		if(queryElts.size() > 0){
 			query = DBQuery.and(queryElts.toArray(new DBQuery.Query[queryElts.size()]));

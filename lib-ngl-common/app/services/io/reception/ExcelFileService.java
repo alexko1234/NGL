@@ -44,12 +44,12 @@ public class ExcelFileService extends FileService {
 				while(iti.hasNext()){
 					Row row = iti.next();
 					Map<Integer, String> rowMap = convertRow(row);
-					contextValidation.addKeyToRootKeyName("line "+row.getRowNum()+1);
+					contextValidation.addKeyToRootKeyName("line "+(row.getRowNum()+1));
 					if(null != rowMap){
 						//Logger.debug(row.getRowNum()+" : rowMap "+rowMap);
 						treatLine(rowMap);
 					}
-					contextValidation.removeKeyFromRootKeyName("line "+row.getRowNum()+1);
+					contextValidation.removeKeyFromRootKeyName("line "+(row.getRowNum()+1));
 				}
 				if(!contextValidation.hasErrors()){
 					consolidateObjects();
@@ -76,9 +76,10 @@ public class ExcelFileService extends FileService {
 		while(iti.hasNext()){
 			Cell cell = iti.next();
 			int columnIndex = cell.getColumnIndex();
-			String value = ExcelHelper.convertToStringValue(cell).trim();
+			String value = ExcelHelper.convertToStringValue(cell);
 			
 			if(StringUtils.isNotBlank(value)){
+				value = value.trim();
 				isBlankLine = false;
 				rowMap.put(columnIndex, value);
 			}
