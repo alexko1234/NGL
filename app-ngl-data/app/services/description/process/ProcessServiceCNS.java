@@ -35,7 +35,7 @@ public class ProcessServiceCNS extends AbstractProcessService {
 			//l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Pre-Banque", "pre-library"));
 
 		}
-		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Preparation echantillon", "sample-prep"));
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Préparation échantillon", "sample-prep"));
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Banque", "library"));
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Sequençage", "sequencing"));		
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Optical mapping", "mapping"));
