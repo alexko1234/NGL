@@ -863,6 +863,7 @@ public class ExpWorkflowsHelper {
 	//If experimentType have flag newSample at true  
 	public void updateContentsWithNewSamples(Experiment exp, ContextValidation validation) {
 		ExperimentType experimentType=ExperimentType.find.findByCode(exp.typeCode);
+		TraceInformation traceInformation = new TraceInformation(validation.getUser());
 
 		if(experimentType.newSample){	
 
@@ -873,8 +874,12 @@ public class ExpWorkflowsHelper {
 				if(samples!=null && samples.size()>0){
 					samples.forEach(s-> {
 						if(!MongoDBDAO.checkObjectExistByCode(InstanceConstants.SAMPLE_COLL_NAME, Sample.class,s.code)){
-						//	s.validate(validation);
+							ContextValidation sampleValidation = new ContextValidation(validation.getUser());
+							sampleValidation.setCreationMode();
+							s.traceInformation=traceInformation;
+							s.validate(sampleValidation);
 							MongoDBDAO.save(InstanceConstants.SAMPLE_COLL_NAME,s);
+							validation.addErrors(sampleValidation.errors);
 						}
 					});
 				}
