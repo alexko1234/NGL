@@ -1,0 +1,14 @@
+@(experiment: models.laboratory.experiment.instance.Experiment)
+
+@import controllers.instruments.io.utils._;
+@***
+FDS 28/06/2016 copie depuis solution_stock_output_96_well_plate...a modidifer completement des qu'on a les specs....
+***@
+
+
+N° puits; nom plaque source; vol adn a prelever; vol tampon; nom plaque destination; nom sol stock; Tag; Nom manip; info taille 
+@for((a,index) <- experiment.atomicTransfertMethods.sortWith(_.line<_.line).sortWith(_.column.toInt<_.column.toInt).zipWithIndex){
+		@for(c <- a.inputContainerUseds){
+			@(OutputHelper.getNumberPositionInPlateByColumn(c.locationOnContainerSupport.line,c.locationOnContainerSupport.column));@(c.locationOnContainerSupport.code);@(OutputHelper.getInputContainerUsedExperimentProperty(c,"requiredVolume",1));@(OutputHelper.getInputContainerUsedExperimentProperty(c,"bufferVolume",1));@(a.outputContainerUseds.get(0).locationOnContainerSupport.code);@(OutputHelper.getOutputContainerUsedCode(a));@(OutputHelper.getTag(c));@(a.inputContainerUseds.get(0).code);@(c.size.value);\u000D\u000A	
+		}	
+} 

@@ -2,8 +2,25 @@
 angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
                                                                function($scope, $http, $parse) {
 
-	// pas appellée !!!!! c'est scope.atmService.updateConcentration du controler parent qui est appelle !!!
-	//GA 27/06/2016 : SI c'est appele, celui du parent est faux, je l'ai enlevé
+	// FDS 29/06/2016 calcul de la ligne en fonction de position 96 numerotée en mode colonne ( 1=A1=1, 2=B1... 9=A2...) [ thx NW ]
+	// reutilisable ailleurs ??
+	$scope.setLineFromPosition96C = function(pos){	
+		line= String.fromCharCode (((pos -1) % 8 ) + 65 );
+		//console.log("set line to "+ line +"("+pos+")" );
+		return line;
+	};
+	
+	//  FDS 29/06/2016  calcul de la colonne en fonction de position 96 numerotée en mode colonne ( 1=A1=1, 2=B1... 9=A2...) [ thx NW ]
+	//  reutilisable ailleurs ??
+	$scope.setColFromPosition96C = function(pos){	
+		c=Math.floor((pos -1) / 8) +1 ;
+		column= c.toString();
+		//console.log("set col to "+column+"("+pos+")" );
+		return column;
+	};
+	
+	
+	//GA 27/06/2016 : SI c'est appele, celui du parent était faux, je l'ai enlevé
 	$scope.atmService.updateOutputConcentration = function(atm){
 		
 		if(atm){
@@ -33,11 +50,32 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 						|| atm.outputContainerUseds[0].concentration.value === undefined)){
 				atm.outputContainerUseds[0].concentration = angular.copy(atm.inputContainerUseds[0].concentration);				
 			}
+			
+			
+			// FDS  29/06/2016 positionnement automatique de ligne et colonne
+			// DEVRAIT PAS ETRE DANS UPDATE CONCENTRATION ???....a voir avec GA atomicTransfereservice ???
+			//    !! marche seulement si on specife completement la fonction appellee    =setColFromPosition(atm)  marche pas
+			atm.outputContainerUseds[0].locationOnContainerSupport.column=$scope.setColFromPosition96C(atm.viewIndex);
+			atm.column=atm.outputContainerUseds[0].locationOnContainerSupport.column;
+			
+			atm.outputContainerUseds[0].locationOnContainerSupport.line=$scope.setLineFromPosition96C(atm.viewIndex);
+			atm.line=atm.outputContainerUseds[0].locationOnContainerSupport.line;
+			
+			//TEST recuperer le dernier supportCode
+			atm.outputContainerUseds[0].locationOnContainerSupport.code=$scope.lastSupportCode;	// a ecrire avec $parse ???
+			//pas de atm... ???
+			console.log("get last SupportCode ??? "+$scope.lastSupportCode);
+			
+			//TEST recuperer le dernier storageCode
+			atm.outputContainerUseds[0].locationOnContainerSupport.storageCode=$scope.lastStorageCode;	// a ecrire avec $parse ???
+			//pas de atm... ???
+			console.log("get last StorageCode ??? "+$scope.lastStorageCode);
+			
 		}
-
 	};
 	
-	
+
+		
 	$scope.update = function(atm, containerUsed, propertyName){
 		console.log("update "+propertyName);
 		
@@ -57,9 +95,22 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		else if(propertyName === 'outputContainerUseds[0].locationOnContainerSupport.line' ){
 			atm.line =$parse("outputContainerUseds[0].locationOnContainerSupport.line")(atm)
 			console.log("support.line="+atm.line);
-		}else if(propertyName === 'outputContainerUseds[0].locationOnContainerSupport.column' ){
+		}
+		else if(propertyName === 'outputContainerUseds[0].locationOnContainerSupport.column' ){
 			atm.column =$parse("outputContainerUseds[0].locationOnContainerSupport.column")(atm)
 			console.log("support.column="+atm.column);
+		}
+		//TEST PABO
+		else if(propertyName === 'outputContainerUseds[0].locationOnContainerSupport.code' ){
+			//stocker dans un coin la valeur saisie ???
+			$scope.lastSupportCode=$parse("outputContainerUseds[0].locationOnContainerSupport.code")(atm)
+			console.log("lastSupportCode="+$scope.lastSupportCode);
+		}
+		//TEST PABO
+		else if(propertyName === 'outputContainerUseds[0].locationOnContainerSupport.storageCode' ){
+			//stocker dans un coin la valeur saisie ???
+			$scope.lastStorageCode=$parse("outputContainerUseds[0].locationOnContainerSupport.storageCode")(atm)
+			console.log("lastStorageCode="+$scope.lastStorageCode);
 		}
 		
 		console.log("compute buffer volume");
@@ -84,6 +135,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		if($parse("(outputConc.unit ===  inputConc.unit)")(compute)){
 			var result = $parse("(inputPercentage * outputConc.value *  outputVol.value) / (inputConc.value * 100)")(compute);
 			console.log("result = "+result);
+			
 			if(angular.isNumber(result) && !isNaN(result)){
 				inputVolume.value = Math.round(result*10)/10;				
 			}else{
@@ -129,6 +181,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 	}
 	
 	var generateSampleSheet = function(){
+		console.log ("generateSampleSheet");
 		$http.post(jsRoutes.controllers.instruments.io.IO.generateFile($scope.experiment.code).url,{})
 		.success(function(data, status, headers, config) {
 			var header = headers("Content-disposition");
@@ -155,9 +208,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 	};
 
 
-	//TODO...generer une feuille de route differente pour les plaques...  !!!
-	//if($scope.atmService.inputContainerSupportCategoryCode !== "tube"){
-	if($scope.atmService.inputContainerSupportCategoryCode !== "96-well-plate"){
+	if($scope.atmService.inputContainerSupportCategoryCode !== "tube"){
 		$scope.setAdditionnalButtons([{
 			isDisabled : function(){return $scope.isNewState();} ,
 			isShow:function(){return !$scope.isNewState();},
@@ -171,9 +222,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 			$scope.experiment.instrument.outContainerSupportCategoryCode = "96-well-plate";
 		});
 	
-	//NOTE si necessaire on peut surcharger des methodes du controler parent XToTubesCtrl
-	
-	//FDS 23/06/2016 surcharger surcharger newAtomicTransfertMethod pour mettre line et column a null
+	//FDS 23/06/2016 surcharger newAtomicTransfertMethod pour mettre line et column a null
 	$scope.atmService.newAtomicTransfertMethod = function(){
 		return {
 			class:"ManyToOne",
@@ -184,10 +233,12 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		};		
 	};
 	
-	
-	
 	// pour selects
-	$scope.columns = [1,2,3,4,5,6,7,8,9,10,11,12]; 
+	$scope.columns = ['1','2','3','4','5','6','7','8','9','10','11','12']; 
 	$scope.lines=['A','B','C','D','E','F','G','H'];  
+	
+	//TEST
+    $scope.lastSupportCode=null;
+    $scope.lastStorageCode=null;
 	
 }]);

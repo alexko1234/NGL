@@ -261,7 +261,8 @@ public class OutputHelper {
 		return tagModel;
 	}
 	
-	
+	// Cet algorithme est utile pour les robots qui numerotent les plaques 96 en colonne 
+	// A1=1, B1=2...A2=9
 	public static int getNumberPositionInPlateByColumn(String line,String column){
 		int asciiValue=(int) line.toCharArray()[0];
 		int columnValue=Integer.parseInt(column);
@@ -269,10 +270,19 @@ public class OutputHelper {
 		return (asciiValue-64)+(columnValue-1)*8;
 	}
 	
+	// Cet algorithme est utile pour les robots qui numerotent les plaques 96 en colonne 
+	// 1=A1, 2=B1...9=A2
+	// FDS a tester !!
+	public static String getLineColumnInPlateBycolumn(int position){
+		String line  = Integer.toString((position -1) % 8) +'A';
+		String column= Integer.toString((position -1) / 8);
+		
+		return line+column;
+	}
+	
 	public static String getTag(InputContainerUsed container) {
 		return container.contents.stream().map((Content c) -> (String) c.properties.get("tag").value)
-				.collect(Collectors.toList()).get(0)
-				;
+				.collect(Collectors.toList()).get(0);
 	}
 
 	public static boolean sortBylocationSupportOneToOne(AtomicTransfertMethod atm1, AtomicTransfertMethod atm2){
