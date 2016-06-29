@@ -44,12 +44,12 @@ public class ExcelFileService extends FileService {
 				while(iti.hasNext()){
 					Row row = iti.next();
 					Map<Integer, String> rowMap = convertRow(row);
-					contextValidation.addKeyToRootKeyName("line "+row.getRowNum());
+					contextValidation.addKeyToRootKeyName("line "+row.getRowNum()+1);
 					if(null != rowMap){
 						//Logger.debug(row.getRowNum()+" : rowMap "+rowMap);
 						treatLine(rowMap);
 					}
-					contextValidation.removeKeyFromRootKeyName("line "+row.getRowNum());
+					contextValidation.removeKeyFromRootKeyName("line "+row.getRowNum()+1);
 				}
 				if(!contextValidation.hasErrors()){
 					consolidateObjects();
