@@ -161,16 +161,7 @@ angular.module('home').controller('GrindingCtrl',['$scope', '$parse', 'atmToGene
 			        	 "position":51,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
-			         {
-			        	 "header":Messages("containers.table.storageCode"),
-			        	 "property":"outputContainerUsed.locationOnContainerSupport.storageCode",
-			        	 "order":true,
-						 "edit":true,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":52,
-			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         },
+
 			         {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"outputContainerUsed.code",
@@ -190,8 +181,17 @@ angular.module('home').controller('GrindingCtrl',['$scope', '$parse', 'atmToGene
 						"type":"text",
 			        	 "position":500,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         },
+			         {
+			        	 "header":Messages("containers.table.storageCode"),
+			        	 "property":"outputContainerUsed.locationOnContainerSupport.storageCode",
+			        	 "order":true,
+						 "edit":true,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":600,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         }
-			         
 			         ],
 			compact:true,
 			pagination:{

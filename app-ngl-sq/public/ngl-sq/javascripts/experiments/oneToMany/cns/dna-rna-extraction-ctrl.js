@@ -215,16 +215,7 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 			        	 "position":10,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
-			         {
-			        	 "header":Messages("containers.table.storageCode"),
-			        	 "property":"outputContainerUsed.locationOnContainerSupport.storageCode",
-			        	 "order":true,
-						 "edit":true,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":40,
-			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         },
+			         
 			         {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"outputContainerUsed.code",
@@ -244,8 +235,17 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 						"type":"text",
 			        	 "position":500,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
+			         },
+			         {
+			        	 "header":Messages("containers.table.storageCode"),
+			        	 "property":"outputContainerUsed.locationOnContainerSupport.storageCode",
+			        	 "order":true,
+						 "edit":true,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":600,
+			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         }
-			         
 			         ],
 			compact:true,
 			pagination:{
@@ -412,6 +412,8 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 		var column = atmService.$commonATM.convertTypePropertyToDatatableColumn(property,"outputContainerUsed."+pName+".",{"0":Messages("experiments.outputs")});
 		if(property.code=="projectCode"){
 			column.editTemplate='<div class="form-control" bt-select #ng-model filter="true" placeholder="'+Messages("search.placeholder.projects")+'" bt-options="project.code as project.code+\' (\'+project.name+\')\' for project in lists.getProjects()" ></div>';
+		}else if(property.code=="sampleTypeCode"){
+			column.filter="getArray:'sampleTypeCode' | unique | codes:\"type\"";
 		}
 		return column;
 	};
