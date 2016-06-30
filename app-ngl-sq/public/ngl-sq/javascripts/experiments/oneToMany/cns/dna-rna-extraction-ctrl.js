@@ -412,6 +412,8 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 		var column = atmService.$commonATM.convertTypePropertyToDatatableColumn(property,"outputContainerUsed."+pName+".",{"0":Messages("experiments.outputs")});
 		if(property.code=="projectCode"){
 			column.editTemplate='<div class="form-control" bt-select #ng-model filter="true" placeholder="'+Messages("search.placeholder.projects")+'" bt-options="project.code as project.code+\' (\'+project.name+\')\' for project in lists.getProjects()" ></div>';
+		}else if(property.code=="sampleTypeCode"){
+			column.filter="getArray:'sampleTypeCode' | unique | codes:\"type\"";
 		}
 		return column;
 	};
