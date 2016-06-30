@@ -295,6 +295,8 @@ public class Processes extends CommonController{
 				Process savedProcess = MongoDBDAO.save(InstanceConstants.PROCESS_COLL_NAME, p);
 				if(savedProcess != null){
 					savedProcesses.add(savedProcess);
+				}else{
+					Logger.error("Process null !!!");
 				}
 			}
 			List<Process> processes2 = ProcessHelper.applyRules(savedProcesses, contextValidation, "processCreation");
