@@ -114,7 +114,6 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', '$parse', 'atmToG
 				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
 				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
 				byDefault:($scope.isCreationMode()),
-				withoutSelect:true,
 				columnMode:true
 			},	
 			cancel : {
@@ -278,8 +277,8 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', '$parse', 'atmToG
 			},			
 			edit:{
 				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),	
+				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
 				byDefault:($scope.isCreationMode()),
-				withoutSelect:true,
 				columnMode:true
 			},
 			messages:{
@@ -352,11 +351,13 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', '$parse', 'atmToG
 		var dtConfig = $scope.atmService.data.datatableParam.getConfig();
 		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
+		dtConfig.edit.byDefault = false;
 		$scope.atmService.data.datatableParam.setConfig(dtConfig);
 		
 		dtConfig = $scope.atmService.data.datatableConfig.getConfig();
 		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
+		dtConfig.edit.byDefault = false;
 		$scope.atmService.data.datatableConfig.setConfig(dtConfig);
 		
 		$scope.atmService.refreshViewFromExperiment($scope.experiment);

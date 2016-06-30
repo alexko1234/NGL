@@ -1264,7 +1264,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
              * Save the selected table line
              */
             save: function() {
-                if (this.config.save.active) {
+                if (this.config.save.active && this.displayResult) {
                     this.config.save.number = 0;
                     this.config.save.error = 0;
                     this.config.save.start = true;
@@ -1625,7 +1625,7 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
              * value = true or false
              */
             selectAll: function(value) {
-                if (this.config.select.active) {
+                if (this.config.select.active && this.displayResult) {
                     this.config.select.isSelectAll = value;
                     for (var i = 0; i < this.displayResult.length; i++) {
                         if (value) {

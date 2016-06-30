@@ -114,9 +114,8 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
 				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
 				byDefault:($scope.isCreationMode()),
-				withoutSelect:true,
 				columnMode:true
-			},	
+			},
 			cancel : {
 				active:true
 			},
@@ -277,11 +276,12 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 				active:true 
 			},			
 			edit:{
-				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),	
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
 				byDefault:($scope.isCreationMode()),
-				withoutSelect:true,
 				columnMode:true
 			},
+			
 			messages:{
 				active:false,
 				columnMode:true
@@ -340,8 +340,6 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 	$scope.$on('save', function(e, callbackFunction) {	
 		console.log("call event save on tube-to-tubes");
 		$scope.atmService.viewToExperiment($scope.experiment);
-		//$scope.updateInputVolume($scope.experiment);
-		//$scope.updateConcentration($scope.experiment);
 		$scope.$emit('childSaved', callbackFunction);
 	});
 	
@@ -351,11 +349,13 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 		
 		var dtConfig = $scope.atmService.data.datatableParam.getConfig();
 		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isNewState());
+		dtConfig.edit.byDefault = false;
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.datatableParam.setConfig(dtConfig);
 		
 		dtConfig = $scope.atmService.data.datatableConfig.getConfig();
 		dtConfig.edit.active = ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP'));
+		dtConfig.edit.byDefault = false;
 		dtConfig.remove.active = ($scope.isEditModeAvailable() && $scope.isNewState());
 		$scope.atmService.data.datatableConfig.setConfig(dtConfig);
 		
