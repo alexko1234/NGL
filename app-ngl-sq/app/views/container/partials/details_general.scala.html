@@ -62,6 +62,19 @@
 					<span ng-if="container.size.value !== undefined && container.size.value !== null" ng-bind="container.size.unit" />
 				</p>
 			}
+			
+			<div class="row">
+				<div class="col-md-12 col-lg-12">
+					<div ng-repeat="(key, value) in container.properties">
+						<label class="col-md-6 col-lg-6 control-label" ng-if="value.unit !== null">{{key|codes:'property_definition'}} ({{value.unit}})</label>
+						<label class="col-md-6 col-lg-6 control-label" ng-if="value.unit === null" ng-bind="key|codes:'property_definition'" />	
+						<div class="col-md-6 col-lg-6">
+							<p class="form-control-static" ng-if="key.includes('Date') || key.includes('date')" ng-bind="value.value|date:'@Messages("date.format")'"/>
+							<p class="form-control-static" ng-if="!(key.includes('Date') || key.includes('date'))" ng-bind="value.value"/>	
+						</div>
+					</div>
+				</div>
+			</div>
 		}
 		
 		@column(){
