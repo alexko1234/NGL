@@ -184,7 +184,7 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 			        	 "position":6,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
-			         {
+			         /*{
 			        	 "header":Messages("containers.table.quantity") + " (ng)",
 			        	 "property":"inputContainer.quantity.value",
 			        	 "order":true,
@@ -193,7 +193,7 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 			        	 "type":"number",
 			        	 "position":7,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
+			         },*/
 			         {
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"inputContainer.state.code",

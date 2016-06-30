@@ -120,7 +120,7 @@ angular.module('home').controller('GrindingCtrl',['$scope', '$parse', 'atmToGene
 			        	 "position":4,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
-			         {
+			        /* {
 			        	 "header":Messages("containers.table.volume") + " (µL)",
 			        	 "property":"inputContainer.volume.value",
 			        	 "order":true,
@@ -139,7 +139,7 @@ angular.module('home').controller('GrindingCtrl',['$scope', '$parse', 'atmToGene
 			        	 "type":"number",
 			        	 "position":7,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
+			         },*/
 			         {
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"inputContainer.state.code",
@@ -223,9 +223,9 @@ angular.module('home').controller('GrindingCtrl',['$scope', '$parse', 'atmToGene
 				active:true 
 			},			
 			edit:{
-				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),	
+				active: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
+				showButton: ($scope.isEditModeAvailable() && $scope.isWorkflowModeAvailable('IP')),
 				byDefault:($scope.isCreationMode()),
-				withoutSelect:true,
 				columnMode:true
 			},
 			messages:{

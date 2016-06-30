@@ -260,7 +260,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 
 			l.add(newExperimentType("Extraction ADN / ARN ","dna-rna-extraction","EXT",700,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsExtractionADNARN(),
-					getInstrumentUsedTypes("cryobroyeur"),"OneToMany", getSampleTypes("DNA","RNA"),true,
+					getInstrumentUsedTypes("cryobroyeur","hand"),"OneToMany", getSampleTypes("DNA","RNA"),true,
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
 			//qc
