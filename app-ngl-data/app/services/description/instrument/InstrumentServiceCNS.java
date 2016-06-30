@@ -83,7 +83,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(newInstrumentUsedType("Fluoroskan", "fluoroskan", InstrumentCategory.find.findByCode("fluorometer"),null, 
+		l.add(newInstrumentUsedType("Fluoroskan", "fluoroskan", InstrumentCategory.find.findByCode("fluorometer"),getQuBitFluoroskanProperties(), 
 				getInstruments(
 						createInstrument("Fluoroskan1", "Fluoroskan1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS))), 
 				getContainerSupportCategories(new String[]{"tube","96-well-plate"}),null, 
@@ -156,7 +156,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
-		l.add(newInstrumentUsedType("QuBit", "qubit", InstrumentCategory.find.findByCode("fluorometer"), getQuBitProperties(), 
+		l.add(newInstrumentUsedType("QuBit", "qubit", InstrumentCategory.find.findByCode("fluorometer"), getQuBitFluoroskanProperties(), 
 				getInstruments(
 						createInstrument("quBit1", "QuBit1", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
 						createInstrument("QuBit2", "QuBit2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
@@ -503,9 +503,10 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		return l;
 	}
 	
-	private static List<PropertyDefinition> getQuBitProperties() throws DAOException {
+	private static List<PropertyDefinition> getQuBitFluoroskanProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Kit", "kit", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("HS", "BR"), "single"));		
+		l.add(newPropertiesDefinition("Gamme", "gamme", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null,  newValues("BR","HS","BR et HS"), 
+				"single", 10, true, null,null));
 		return l;
 	}
 		
