@@ -696,9 +696,9 @@ public class ResolutionService {
 		List<Resolution> l = new ArrayList<Resolution>();
 		
 		l.addAll(getDefaultResolutionCNS());	
-		l.add(InstanceFactory.newResolution("Tube cassé ds cryobroyeur", "tube-casse-cryobroyeur", resolutionCategories.get("Default"), (short) 4));
-		l.add(InstanceFactory.newResolution("Tube vide", "tube-vide", resolutionCategories.get("Default"), (short) 5));
-		l.add(InstanceFactory.newResolution("Colonne élution bouchée", "colonne-elution-bouchee", resolutionCategories.get("Default"), (short) 6));
+		l.add(InstanceFactory.newResolution("Tube cassé dans cryobroyeur", "broken-tube-in-freezer-mill", resolutionCategories.get("Default"), (short) 4));
+		l.add(InstanceFactory.newResolution("Tube vide", "empty-tube", resolutionCategories.get("Default"), (short) 5));
+		l.add(InstanceFactory.newResolution("Colonne élution bouchée", "elution-column-blocked", resolutionCategories.get("Default"), (short) 6));
 
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "expExtractionDNARNAReso";
@@ -732,13 +732,12 @@ public class ResolutionService {
 		List<Resolution> l = new ArrayList<Resolution>();
 		
 		l.addAll(getDefaultResolutionCNS());	
-		l.add(InstanceFactory.newResolution("Tâche de faible poids moléculaire", "tache-faible-poids-moleculaire", resolutionCategories.get("Default"), (short) 4));
-		l.add(InstanceFactory.newResolution("Contamination ARN", "contamination-RNA", resolutionCategories.get("Default"), (short) 5));
-		l.add(InstanceFactory.newResolution("ADN dégradé", "ADN-degrade", resolutionCategories.get("Default"), (short) 6));
+		l.add(InstanceFactory.newResolution("Tâche de faible poids moléculaire", "low-molecular-weight-spot", resolutionCategories.get("Default"), (short) 4));
+		l.add(InstanceFactory.newResolution("Contamination ARN", "rna-contamination", resolutionCategories.get("Default"), (short) 5));
+		l.add(InstanceFactory.newResolution("ADN dégradé", "degraded-dna", resolutionCategories.get("Default"), (short) 6));
 		l.add(InstanceFactory.newResolution("MétaGénome", "metagenome", resolutionCategories.get("Default"), (short) 7));
-		l.add(InstanceFactory.newResolution("Présence de plasmide(s)", "presence-de-plasmides", resolutionCategories.get("Default"), (short) 8));
-		l.add(InstanceFactory.newResolution("Profil inhabituel", "profil-inhabituel", resolutionCategories.get("Default"), (short) 9));
-		
+		l.add(InstanceFactory.newResolution("Présence de plasmide(s)", "plasmid-presence", resolutionCategories.get("Default"), (short) 8));
+		l.add(InstanceFactory.newResolution("Profil inhabituel", "unusual-profile", resolutionCategories.get("Default"), (short) 9));
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "expGelMigrationReso";
@@ -759,8 +758,8 @@ public class ResolutionService {
 		
 		l.addAll(getDefaultResolutionCNS());
 		
-		l.add(InstanceFactory.newResolution("échec échantillons par puits", "echec-echPuit", resolutionCategories.get("Default"), (short) 4));
-		l.add(InstanceFactory.newResolution("contamination", "contamination", resolutionCategories.get("Default"), (short) 5));
+		l.add(InstanceFactory.newResolution("Echec échantillons par puits", "echec-echPuit", resolutionCategories.get("Default"), (short) 4));
+		l.add(InstanceFactory.newResolution("Contamination", "contamination", resolutionCategories.get("Default"), (short) 5));
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "expPrepPcrFreeReso";
