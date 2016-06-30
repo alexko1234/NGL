@@ -123,12 +123,11 @@
 			if(mainService.getHomePage() === 'reagents'){
 				columns.push({
 		        	 "header":Messages("reagents.table.kitname"),
-		        	 "property":"reagents",
+		        	 "property":"reagentkitCatalogCode",
 		        	 "order":true,
 		        	 "type":"text",
 		        	 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-		        	 "filter":"getArray:'kitCatalogCode' | unique",
-		        	 "groupMethod":"collect"
+
 		        });
 				
 				columns.push({

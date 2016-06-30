@@ -2,21 +2,28 @@ package controllers.experiments.api;
 
 import static play.data.Form.form;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mongojack.Aggregation;
+import org.mongojack.Aggregation.Expression;
+import org.mongojack.Aggregation.Match;
+import org.mongojack.Aggregation.Pipeline;
+import org.mongojack.DBProjection.ProjectionBuilder;
 import org.mongojack.AggregationResult;
+import org.mongojack.DBProjection;
 import org.mongojack.DBQuery;
+import org.mongojack.internal.query.QueryCondition;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
-import controllers.DocumentController;
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
 import fr.cea.ig.MongoDBResult;
@@ -30,7 +37,6 @@ import play.data.Form;
 import play.libs.Json;
 import play.mvc.Result;
 import play.mvc.Results;
-import views.components.datatable.DatatableForm;
 import views.components.datatable.DatatableResponse;
 import workflows.experiment.ExpWorkflows;
 
@@ -45,7 +51,7 @@ public class ExperimentReagents extends Experiments{
 	final ExpWorkflows workflows = Spring.getBeanOfType(ExpWorkflows.class);
 	
 	final List<String> typeCodesList = Arrays.asList("prepa-flowcell","prepa-fc-ordered","illumina-depot");
-	final String date = new SimpleDateFormat("dd/MM/yyyy").format(new Date("01/01/2016"));
+	final Date date = new Date("01/01/2016");
 	
 	public static final String calculationsRules ="calculations";
 	
@@ -55,17 +61,16 @@ public class ExperimentReagents extends Experiments{
 	
 	@Permission(value={"reading"})
 	public Result list(){
-		//Form<ExperimentSearchForm> experimentFilledForm = filledFormQueryString(experimentSearchForm,ExperimentSearchForm.class);
-		//ExperimentSearchForm experimentsSearch = experimentFilledForm.get();
+		
 		ExperimentSearchForm experimentsSearch = filledFormQueryString(ExperimentSearchForm.class);
 		BasicDBObject keys = getKeys(updateForm(experimentsSearch));
-		DBQuery.Query query = super.getQuery(experimentsSearch);
+		DBQuery.Query query = getQuery(experimentsSearch);
+		Pipeline<Expression<?>> pipeline = aggregation(query);
 
 		if(experimentsSearch.datatable){
-			List<Experiment> results = aggregation();
-			
-			List<Experiment> experiments = results;
-			return ok(Json.toJson(new DatatableResponse<Experiment>(experiments, results.size())));
+			AggregationResult<Experiment> ar = MongoDBDAO.getCollection(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class).aggregate(pipeline, Experiment.class);
+			Logger.debug("AggregationResults: " + ar.results().size());
+			return ok(Json.toJson(new DatatableResponse<Experiment>(ar.results(), ar.results().size())));
 		}else if (experimentsSearch.list){
 			keys = new BasicDBObject();
 			keys.put("_id", 0);//Don't need the _id field
@@ -88,51 +93,43 @@ public class ExperimentReagents extends Experiments{
 			return ok(Json.toJson(experiments));
 		}
 	}
-
-	private DatatableForm updateForm(ExperimentSearchForm form) {
-		if(form.includes.contains("default")){
-			form.includes.remove("default");
-			form.includes.addAll(defaultKeys);
-		}
-		return form;
-	}
 	
-	private List<Experiment> aggregation(){
+	/**
+	 * Construct the Aggregation
+	 * @param query
+	 * @return pipeline
+	 */
+	private Pipeline<Expression<?>> aggregation(DBQuery.Query query){
 		
-		DBObject matchStages = new BasicDBObject("typeCode", new BasicDBObject("$in", typeCodesList));
-		matchStages.put("traceInformation.creationDate", new BasicDBObject("$gt", date));
-		matchStages.put("reagents.0", new BasicDBObject("$exists", 1));
+		ProjectionBuilder pb = DBProjection.include("code");
+		pb.put("reagents", new String[]{"$reagents"});
 		
-		DBObject projectFields = new BasicDBObject("typeCode", 1);
-		projectFields.put("_id", 0);
-		projectFields.put("code", 1);
-		projectFields.put("creationDate", "$traceInformation.creationDate");
-		projectFields.put("reagentKitCatalogCode","$reagents.kitCatalogCode");
-		projectFields.put("reagentBoxCatalogCode","$reagents.boxCatalogCode");
-		projectFields.put("reagentBoxCode","$reagents.boxCode");
-		projectFields.put("reagentReagentCatalogCode","$reagents.reagentCatalogCode");	
-		projectFields.put("reagentReagentCode","$reagents.code");	
-		projectFields.put("reagentDescription","$reagents.description");
-			
-		DBObject sortFields = new BasicDBObject("typeCode", 1);
-		sortFields.put("creationDate", 1);
-		
-		DBObject match = new BasicDBObject("$match", matchStages);
-		DBObject unwind = new BasicDBObject("$unwind","$reagents");
-		DBObject project = new BasicDBObject("$project", projectFields);
-		DBObject sort = new BasicDBObject("$sort", sortFields);
-
-		List<DBObject> pipeline = new LinkedList<DBObject>();
-		pipeline.add(match);
-		pipeline.add(unwind);
-		pipeline.add(project);
-		pipeline.add(sort);
-		
-		//AggregationResult<Reagent> result = MongoDBDAO.getCollection(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class).aggregate((Aggregation<Reagent>) pipeline);
-		List<Experiment> output = (List<Experiment>) MongoDBDAO.getCollection(InstanceConstants.EXPERIMENT_COLL_NAME, Experiment.class).aggregate((Aggregation<Experiment>) pipeline);
-		Logger.debug("This is my Output: " + output);
+		//pb.put("atomicTransfertMethods", 1);
+		pb.put("categoryCode", 1);
+		pb.put("comments", 1);
+		pb.put("experimentProperties", 1);
+		pb.put("inputContainerCodes", 1);
+		pb.put("inputContainerSupportCodes", 1);
+		pb.put("inputFromTransformationTypeCodes", 1);
+		pb.put("inputProcessCodes", 1);
+		pb.put("inputProcessTypeCodes", 1);
+		pb.put("instrument", 1);		
+		pb.put("instrumentProperties", 1);
+		pb.put("outputContainerCodes", 1);
+		pb.put("outputContainerSupportCodes", 1);
+		pb.put("projectCodes", 1);
+		pb.put("protocolCode", 1);
+		pb.put("sampleCodes", 1);	
+		pb.put("state", 1);
+		pb.put("status", 1);
+		pb.put("traceInformation", 1);
+		pb.put("typeCode", 1);
 	
-		return output;
 		
+		Pipeline<Expression<?>> pipeline = Aggregation.match(query)
+				.unwind("reagents")
+				.project(pb);
+		
+		return pipeline;
 	}
 }

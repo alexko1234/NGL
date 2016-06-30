@@ -100,7 +100,7 @@ public class Experiments extends DocumentController<Experiment>{
 		}
 	}
 
-	private DatatableForm updateForm(ExperimentSearchForm form) {
+	protected DatatableForm updateForm(ExperimentSearchForm form) {
 		if(form.includes.contains("default")){
 			form.includes.remove("default");
 			form.includes.addAll(defaultKeys);
@@ -150,20 +150,6 @@ public class Experiments extends DocumentController<Experiment>{
 			queryElts.add(DBQuery.in("sampleCodes", experimentSearch.sampleCodes));
 		}
 
-		
-
-		if(MapUtils.isNotEmpty(experimentSearch.atomicTransfertMethodsInputContainerUsedsContentsProperties)){
-			List<DBQuery.Query> listContainerQuery = NGLControllerHelper.generateQueriesForProperties(experimentSearch.atomicTransfertMethodsInputContainerUsedsContentsProperties, Level.CODE.Content, "contents.properties");
-			
-			Query containerQuery = DBQuery.and(listContainerQuery.toArray(new DBQuery.Query[queryElts.size()]));
-			BasicDBObject keys = new BasicDBObject();
-			keys.append("code", 1);
-			List<Container> containers = MongoDBDAO.find(InstanceConstants.CONTAINER_COLL_NAME, Container.class, containerQuery,keys).toList();
-			
-			Set<String> containerCodes = new TreeSet<String>();
-			for(Container p : containers){
-				containerCodes.add(p.code);
-			}
 			
 			List<DBQuery.Query> qs = new ArrayList<DBQuery.Query>();
 
