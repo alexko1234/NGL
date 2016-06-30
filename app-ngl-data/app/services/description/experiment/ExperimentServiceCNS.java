@@ -258,7 +258,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
-			l.add(newExperimentType("Extraction ADN / ARN ","dna-rna-extraction","EXT",700,
+			l.add(newExperimentType("Extraction ADN / ARN ","dna-rna-extraction","AN",700,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsExtractionADNARN(),
 					getInstrumentUsedTypes("cryobroyeur","hand"),"OneToMany", getSampleTypes("DNA","RNA"),true,
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
