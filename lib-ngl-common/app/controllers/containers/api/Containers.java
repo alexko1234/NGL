@@ -274,7 +274,10 @@ public class Containers extends CommonController {
 					
 			ProcessType processType = ProcessType.find.findByCode(containersSearch.nextProcessTypeCode);
 			if(processType != null){
-				List<ExperimentType> experimentTypes = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(processType.firstExperimentType.code);
+				//List<ExperimentType> experimentTypes = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCode(processType.firstExperimentType.code);
+				
+				List<ExperimentType> experimentTypes = ExperimentType.find.findPreviousExperimentTypeForAnExperimentTypeCodeAndProcessTypeCode(processType.firstExperimentType.code, processType.code);
+				
 				boolean onlyEx = true;
 				for(ExperimentType e:experimentTypes){
 					Logger.info(e.code);
