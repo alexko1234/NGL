@@ -3212,9 +3212,10 @@ directive("udtHtmlFilter", function($filter, udtI18n) {
 					    		   }
 					    	   }else if(attrs.udtHtmlFilter === "date" && null != convertedData && undefined != convertedData 
 					    			   && angular.isString(convertedData)){
-					    		   if(moment){
+					    		   if(moment && convertedData !== ""){
 					    			   convertedData = moment(data, messagesService.Messages("date.format").toUpperCase()).valueOf();
 					    		   }else{
+					    			   convertedData = undefined;
 					    			   console.log("mission moment library to convert string to date");
 					    		   }
 					    	   }
