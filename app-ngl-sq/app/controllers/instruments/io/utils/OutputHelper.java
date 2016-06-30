@@ -187,12 +187,13 @@ public class OutputHelper {
 		return (String) container.properties.get(propertyName).value;
 	}
 	
-	public static String getInputContainerUsedExperimentProperty(InputContainerUsed container, String propertyName){		
+	public static String getInputContainerUsedExperimentProperty(InputContainerUsed container, String propertyName){	
+		Logger.debug("(1) valeur "+propertyName +" : "+container.experimentProperties.get(propertyName).value);
 		return container.experimentProperties.get(propertyName).value.toString().replace(".",",") ;
 	}
 	
-	public static String getInputContainerUsedExperimentProperty(InputContainerUsed container, String propertyName,int scale){
-		Logger.debug(" valeur "+propertyName +" : "+container.experimentProperties.get(propertyName).value);
+	public static String getInputContainerUsedExperimentProperty(InputContainerUsed container, String propertyName, int scale){
+		Logger.debug("(2) valeur "+propertyName +" : "+container.experimentProperties.get(propertyName).value);
 		if(!container.experimentProperties.get(propertyName).value.equals("")){
 			return new BigDecimal(container.experimentProperties.get(propertyName).value.toString()).setScale(scale, BigDecimal.ROUND_UP).toString().replace(".",",") ;
 		}

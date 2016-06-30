@@ -1,14 +1,24 @@
 @(experiment: models.laboratory.experiment.instance.Experiment)
 
 @import controllers.instruments.io.utils._;
-@***
-FDS 28/06/2016 copie depuis solution_stock_output_96_well_plate...a modidifer completement des qu'on a les specs....
-***@
 
+@***** FDS: declaration de variables avec le mot cle 'var' et toutes sur une seule ligne *****@
+@import java.lang.String; var source_code=""; var dest_code=""; var samp_vol=""; var buff_vol="";
+@import java.math.BigInteger; var source_pos=0; var dest_pos=0;
 
-N° puits; nom plaque source; vol adn a prelever; vol tampon; nom plaque destination; nom sol stock; Tag; Nom manip; info taille 
+Plaque source;N° puit;Vol éch à prélever;Vol tampon;Plaque destination;N° puit
 @for((a,index) <- experiment.atomicTransfertMethods.sortWith(_.line<_.line).sortWith(_.column.toInt<_.column.toInt).zipWithIndex){
 		@for(c <- a.inputContainerUseds){
-			@(OutputHelper.getNumberPositionInPlateByColumn(c.locationOnContainerSupport.line,c.locationOnContainerSupport.column));@(c.locationOnContainerSupport.code);@(OutputHelper.getInputContainerUsedExperimentProperty(c,"requiredVolume",1));@(OutputHelper.getInputContainerUsedExperimentProperty(c,"bufferVolume",1));@(a.outputContainerUseds.get(0).locationOnContainerSupport.code);@(OutputHelper.getOutputContainerUsedCode(a));@(OutputHelper.getTag(c));@(a.inputContainerUseds.get(0).code);@(c.size.value);\u000D\u000A	
+			
+			 @{source_code=c.locationOnContainerSupport.code }	
+			 @{source_pos=OutputHelper.getNumberPositionInPlateByColumn(c.locationOnContainerSupport.line, c.locationOnContainerSupport.column)}
+			 @{dest_code=a.outputContainerUseds.get(0).locationOnContainerSupport.code }
+			 @{dest_pos=OutputHelper.getNumberPositionInPlateByColumn(a.outputContainerUseds.get(0).locationOnContainerSupport.line, a.outputContainerUseds.get(0).locationOnContainerSupport.column)}
+			
+			 @*** OutputHelper.getInputContainerUsedExperimentProperty(c,"inputVolume")}  converti les "." en "," ne pas utiliser pour du CSV basique... ***@
+			 @{samp_vol=c.experimentProperties.get("inputVolume").value.toString() }
+			 @{buff_vol=a.outputContainerUseds.get(0).experimentProperties.get("bufferVolume").value.toString() }
+			 
+			 @(source_code);@(source_pos);@(samp_vol);@(buff_vol);@(dest_code);@(dest_pos)\u000D\u000A
 		}	
 } 

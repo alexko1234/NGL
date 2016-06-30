@@ -2,7 +2,7 @@
 angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
                                                                function($scope, $http, $parse) {
 
-	// FDS 29/06/2016 calcul de la ligne en fonction de position 96 numerotée en mode colonne ( 1=A1=1, 2=B1... 9=A2...) [ thx NW ]
+	// FDS 29/06/2016 calcul de la ligne en fonction de position 96 numerotée en mode colonne ( 1=A1, 2=B1... 9=A2...) [ thx NW ]
 	// reutilisable ailleurs ??
 	$scope.setLineFromPosition96C = function(pos){	
 		line= String.fromCharCode (((pos -1) % 8 ) + 65 );
@@ -10,7 +10,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 		return line;
 	};
 	
-	//  FDS 29/06/2016  calcul de la colonne en fonction de position 96 numerotée en mode colonne ( 1=A1=1, 2=B1... 9=A2...) [ thx NW ]
+	//  FDS 29/06/2016  calcul de la colonne en fonction de position 96 numerotée en mode colonne ( 1=A1, 2=B1... 9=A2...) [ thx NW ]
 	//  reutilisable ailleurs ??
 	$scope.setColFromPosition96C = function(pos){	
 		c=Math.floor((pos -1) / 8) +1 ;
@@ -53,23 +53,23 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 			
 			
 			// FDS  29/06/2016 positionnement automatique de ligne et colonne
-			// DEVRAIT PAS ETRE DANS UPDATE CONCENTRATION ???....a voir avec GA atomicTransfereservice ???
-			//    !! marche seulement si on specife completement la fonction appellee    =setColFromPosition(atm)  marche pas
+			// DEVRAIT PAS ETRE DANS UPDATE CONCENTRATION ???....a voir avec GA  ( atomicTransfereservice ??? )
+			//    !! marche seulement si on specife completement la fonction appellee    =setColFromPosition( )  marche pas
 			atm.outputContainerUseds[0].locationOnContainerSupport.column=$scope.setColFromPosition96C(atm.viewIndex);
 			atm.column=atm.outputContainerUseds[0].locationOnContainerSupport.column;
 			
 			atm.outputContainerUseds[0].locationOnContainerSupport.line=$scope.setLineFromPosition96C(atm.viewIndex);
 			atm.line=atm.outputContainerUseds[0].locationOnContainerSupport.line;
 			
-			//TEST recuperer le dernier supportCode
+			// récupérer le dernier supportCode entré par l'utilisateur
 			atm.outputContainerUseds[0].locationOnContainerSupport.code=$scope.lastSupportCode;	// a ecrire avec $parse ???
-			//pas de atm... ???
-			console.log("get last SupportCode ??? "+$scope.lastSupportCode);
+			//pas de atm.xx= ???
+			console.log("get last SupportCode:"+$scope.lastSupportCode);
 			
-			//TEST recuperer le dernier storageCode
+			// récupérer le dernier storageCode entré par l'utilisateur
 			atm.outputContainerUseds[0].locationOnContainerSupport.storageCode=$scope.lastStorageCode;	// a ecrire avec $parse ???
-			//pas de atm... ???
-			console.log("get last StorageCode ??? "+$scope.lastStorageCode);
+			//pas de atm.xx= ???
+			console.log("get last StorageCode: "+$scope.lastStorageCode);
 			
 		}
 	};
@@ -100,15 +100,13 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 			atm.column =$parse("outputContainerUseds[0].locationOnContainerSupport.column")(atm)
 			console.log("support.column="+atm.column);
 		}
-		//TEST PABO
 		else if(propertyName === 'outputContainerUseds[0].locationOnContainerSupport.code' ){
-			//stocker dans un coin la valeur saisie ???
+			//stocker dans une variable tampon la valeur saisie
 			$scope.lastSupportCode=$parse("outputContainerUseds[0].locationOnContainerSupport.code")(atm)
 			console.log("lastSupportCode="+$scope.lastSupportCode);
 		}
-		//TEST PABO
 		else if(propertyName === 'outputContainerUseds[0].locationOnContainerSupport.storageCode' ){
-			//stocker dans un coin la valeur saisie ???
+			//stocker dans une variable tampon la valeur saisie
 			$scope.lastStorageCode=$parse("outputContainerUseds[0].locationOnContainerSupport.storageCode")(atm)
 			console.log("lastStorageCode="+$scope.lastStorageCode);
 		}
@@ -237,7 +235,7 @@ angular.module('home').controller('XToPlatesCtrl',['$scope', '$http','$parse',
 	$scope.columns = ['1','2','3','4','5','6','7','8','9','10','11','12']; 
 	$scope.lines=['A','B','C','D','E','F','G','H'];  
 	
-	//TEST
+	//variables tampon
     $scope.lastSupportCode=null;
     $scope.lastStorageCode=null;
 	
