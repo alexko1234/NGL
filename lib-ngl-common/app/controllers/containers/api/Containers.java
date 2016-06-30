@@ -269,6 +269,7 @@ public class Containers extends CommonController {
 
 
 		List<String> listePrevious = new ArrayList<String>();
+		//used in processes creation
 		if(StringUtils.isNotBlank(containersSearch.nextProcessTypeCode)){					
 					
 			ProcessType processType = ProcessType.find.findByCode(containersSearch.nextProcessTypeCode);
@@ -299,7 +300,7 @@ public class Containers extends CommonController {
 				Logger.error("NGL-SQ bad nextProcessTypeCode: "+containersSearch.nextProcessTypeCode);
 				return null;
 			}
-			
+		//used in experiment creation	
 		}else if(StringUtils.isNotBlank(containersSearch.nextExperimentTypeCode)){
 			
 			//TODO GA Prendre la précédente dans chacun des processus et pas celle de l'expérience
