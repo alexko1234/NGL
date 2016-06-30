@@ -1101,7 +1101,7 @@ public class SubmissionServices {
 			if (runInstanceFile.usable 
 					//&& ! runInstanceExtentionFileName.equalsIgnoreCase("fna") && ! runInstanceExtentionFileName.equalsIgnoreCase("qual")
 					//&& ! runInstanceExtentionFileName.equalsIgnoreCase("fna.gz") && ! runInstanceExtentionFileName.equalsIgnoreCase("qual.gz")) {
-					&&  runInstanceExtentionFileName.equalsIgnoreCase("fastq.gz") || runInstanceExtentionFileName.equalsIgnoreCase("fastq")) {
+					&&  (runInstanceExtentionFileName.equalsIgnoreCase("fastq.gz") || runInstanceExtentionFileName.equalsIgnoreCase("fastq"))) {
 					RawData rawData = new RawData();
 					System.out.println("fichier " + runInstanceFile.fullname);
 					rawData.extention = runInstanceFile.extension;
