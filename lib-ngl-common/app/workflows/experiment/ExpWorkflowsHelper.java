@@ -868,7 +868,7 @@ public class ExpWorkflowsHelper {
 		if(experimentType.newSample){	
 
 			exp.atomicTransfertMethods
-			.parallelStream()
+			.stream()
 			.map(atm -> createSamples(exp,atm,validation))
 			.forEach(samples -> {
 				if(samples!=null && samples.size()>0){
