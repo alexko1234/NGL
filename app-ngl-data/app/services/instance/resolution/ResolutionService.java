@@ -171,87 +171,87 @@ public class ResolutionService {
 		// PbM
 		ResolutionCategory PbMrC= resolutionCategories.get("PbM");		
 				
-		l.add(InstanceFactory.newResolution("indéterminé","PbM-indetermine", PbMrC, (short) 1));	
-		l.add(InstanceFactory.newResolution("chiller","PbM-chiller", PbMrC, (short) 2));
-		l.add(InstanceFactory.newResolution("pelletier","PbM-pelletier", PbMrC, (short) 3));
-		l.add(InstanceFactory.newResolution("fluidique","PbM-fluidiq", PbMrC, (short) 4));
-		l.add(InstanceFactory.newResolution("laser","PbM-laser", PbMrC, (short) 5));
-		l.add(InstanceFactory.newResolution("camera","PbM-camera", PbMrC, (short) 6));
-		l.add(InstanceFactory.newResolution("focus","PbM-focus", PbMrC, (short) 7));
-		l.add(InstanceFactory.newResolution("pb de vide","PbM-pbVide", PbMrC, (short) 8));
+		l.add(InstanceFactory.newResolution("Indéterminé","PbM-indetermine", PbMrC, (short) 1));	
+		l.add(InstanceFactory.newResolution("Chiller","PbM-chiller", PbMrC, (short) 2));
+		l.add(InstanceFactory.newResolution("Pelletier","PbM-pelletier", PbMrC, (short) 3));
+		l.add(InstanceFactory.newResolution("Fluidique","PbM-fluidiq", PbMrC, (short) 4));
+		l.add(InstanceFactory.newResolution("Laser","PbM-laser", PbMrC, (short) 5));
+		l.add(InstanceFactory.newResolution("Camera","PbM-camera", PbMrC, (short) 6));
+		l.add(InstanceFactory.newResolution("Focus","PbM-focus", PbMrC, (short) 7));
+		l.add(InstanceFactory.newResolution("Pb de vide","PbM-pbVide", PbMrC, (short) 8));
 		l.add(InstanceFactory.newResolution("PE module","PbM-PEmodule", PbMrC, (short) 9));
-		l.add(InstanceFactory.newResolution("zone de dépôt","PbM-zoneDepot", PbMrC, (short) 10));				
+		l.add(InstanceFactory.newResolution("Zone de dépôt","PbM-zoneDepot", PbMrC, (short) 10));				
 		l.add(InstanceFactory.newResolution("cBot","PbM-cBot", PbMrC, (short) 11));		
 		
 		// SAV
 		ResolutionCategory SAVrC= resolutionCategories.get("SAV");	
 		
-		l.add(InstanceFactory.newResolution("intensité","SAV-intensite", SAVrC, (short) 1));
-		l.add(InstanceFactory.newResolution("intensité faible A","SAV-intFbleA", SAVrC, (short) 2));
-		l.add(InstanceFactory.newResolution("intensité faible T","SAV-intFbleT", SAVrC, (short) 3));
-		l.add(InstanceFactory.newResolution("intensité faible C","SAV-intFbleC", SAVrC, (short) 4));
-		l.add(InstanceFactory.newResolution("intensité faible G","SAV-intFbleG", SAVrC, (short) 5));
-		l.add(InstanceFactory.newResolution("densité clusters trop élevée","SAV-densiteElevee", SAVrC, (short) 6));
-		l.add(InstanceFactory.newResolution("densité clusters trop faible","SAV-densiteFaible", SAVrC, (short) 7));
-		l.add(InstanceFactory.newResolution("densité clusters nulle","SAV-densiteNulle", SAVrC, (short) 8));
+		l.add(InstanceFactory.newResolution("Intensité","SAV-intensite", SAVrC, (short) 1));
+		l.add(InstanceFactory.newResolution("Intensité faible A","SAV-intFbleA", SAVrC, (short) 2));
+		l.add(InstanceFactory.newResolution("Intensité faible T","SAV-intFbleT", SAVrC, (short) 3));
+		l.add(InstanceFactory.newResolution("Intensité faible C","SAV-intFbleC", SAVrC, (short) 4));
+		l.add(InstanceFactory.newResolution("Intensité faible G","SAV-intFbleG", SAVrC, (short) 5));
+		l.add(InstanceFactory.newResolution("Densité clusters trop élevée","SAV-densiteElevee", SAVrC, (short) 6));
+		l.add(InstanceFactory.newResolution("Densité clusters trop faible","SAV-densiteFaible", SAVrC, (short) 7));
+		l.add(InstanceFactory.newResolution("Densité clusters nulle","SAV-densiteNulle", SAVrC, (short) 8));
 		l.add(InstanceFactory.newResolution("%PF","SAV-PF", SAVrC, (short) 9));
-		l.add(InstanceFactory.newResolution("phasing","SAV-phasing", SAVrC, (short) 10));
-		l.add(InstanceFactory.newResolution("prephasing","SAV-prephasing", SAVrC, (short) 11));
-		l.add(InstanceFactory.newResolution("error rate","SAV-errorRate", SAVrC, (short) 12));
-		l.add(InstanceFactory.newResolution("focus","SAV-focus", SAVrC, (short) 13));
+		l.add(InstanceFactory.newResolution("Phasing","SAV-phasing", SAVrC, (short) 10));
+		l.add(InstanceFactory.newResolution("Prephasing","SAV-prephasing", SAVrC, (short) 11));
+		l.add(InstanceFactory.newResolution("Error rate","SAV-errorRate", SAVrC, (short) 12));
+		l.add(InstanceFactory.newResolution("Focus","SAV-focus", SAVrC, (short) 13));
 		l.add(InstanceFactory.newResolution("Q30","SAV-Q30", SAVrC, (short) 14));
 		l.add(InstanceFactory.newResolution("% bases déséquilibré","SAV-perctBasesDeseq", SAVrC, (short) 15));
-		l.add(InstanceFactory.newResolution("index non représenté","SAV-indexNonPresent", SAVrC, (short) 16));
-		l.add(InstanceFactory.newResolution("index sous-représenté","SAV-indexFblePerc", SAVrC, (short) 17));
-		l.add(InstanceFactory.newResolution("indexing / demultiplexage","SAV-IndDemultiplex", SAVrC, (short) 18));
+		l.add(InstanceFactory.newResolution("Index non représenté","SAV-indexNonPresent", SAVrC, (short) 16));
+		l.add(InstanceFactory.newResolution("Index sous-représenté","SAV-indexFblePerc", SAVrC, (short) 17));
+		l.add(InstanceFactory.newResolution("Indexing / demultiplexage","SAV-IndDemultiplex", SAVrC, (short) 18));
 		
 		//PbR
 		ResolutionCategory PbRrC= resolutionCategories.get("PbR");
 			
-		l.add(InstanceFactory.newResolution("indéterminé","PbR-indetermine", PbRrC, (short) 1));
-		l.add(InstanceFactory.newResolution("flowcell","PbR-FC", PbRrC, (short) 2));
+		l.add(InstanceFactory.newResolution("Indéterminé","PbR-indetermine", PbRrC, (short) 1));
+		l.add(InstanceFactory.newResolution("Flowcell","PbR-FC", PbRrC, (short) 2));
 		l.add(InstanceFactory.newResolution("cBot","PbR-cBot", PbRrC, (short) 3));
-		l.add(InstanceFactory.newResolution("séquencage","PbR-sequencage", PbRrC, (short) 4));
-		l.add(InstanceFactory.newResolution("indexing","PbR-indexing", PbRrC, (short) 5));
+		l.add(InstanceFactory.newResolution("Séquencage","PbR-sequencage", PbRrC, (short) 4));
+		l.add(InstanceFactory.newResolution("Indexing","PbR-indexing", PbRrC, (short) 5));
 		l.add(InstanceFactory.newResolution("PE module","PbR-PEmodule", PbRrC, (short) 6));
-		l.add(InstanceFactory.newResolution("rehyb primer R1","PbR-rehybR1", PbRrC, (short) 7));
-		l.add(InstanceFactory.newResolution("rehyb primer R2","PbR-rehybR2", PbRrC, (short) 8));
-		l.add(InstanceFactory.newResolution("erreur réactifs","PbR-erreurReac", PbRrC, (short) 9));
-		l.add(InstanceFactory.newResolution("rajout réactifs","PbR-ajoutReac", PbRrC, (short) 10));
+		l.add(InstanceFactory.newResolution("Rehyb primer R1","PbR-rehybR1", PbRrC, (short) 7));
+		l.add(InstanceFactory.newResolution("Rehyb primer R2","PbR-rehybR2", PbRrC, (short) 8));
+		l.add(InstanceFactory.newResolution("Erreur réactifs","PbR-erreurReac", PbRrC, (short) 9));
+		l.add(InstanceFactory.newResolution("Rajout réactifs","PbR-ajoutReac", PbRrC, (short) 10));
 		
 		//LIB
 		ResolutionCategory LIBRc= resolutionCategories.get("LIB");
 		
-		l.add(InstanceFactory.newResolution("construction librairie","LIB-construction", LIBRc, (short) 1));
-		l.add(InstanceFactory.newResolution("cause profil : librairie","LIB-profilIntLib", LIBRc, (short) 2));
-		l.add(InstanceFactory.newResolution("cause profil : exp type","LIB-profilIntExpType", LIBRc, (short) 3));
-		l.add(InstanceFactory.newResolution("pb dilution","LIB-pbDilution", LIBRc, (short) 4));
-		l.add(InstanceFactory.newResolution("pb dilution spike-In","LIB-pbDilSpikeIn", LIBRc, (short) 5));
+		l.add(InstanceFactory.newResolution("Construction librairie","LIB-construction", LIBRc, (short) 1));
+		l.add(InstanceFactory.newResolution("Cause profil : librairie","LIB-profilIntLib", LIBRc, (short) 2));
+		l.add(InstanceFactory.newResolution("Cause profil : exp type","LIB-profilIntExpType", LIBRc, (short) 3));
+		l.add(InstanceFactory.newResolution("Pb dilution","LIB-pbDilution", LIBRc, (short) 4));
+		l.add(InstanceFactory.newResolution("Pb dilution spike-In","LIB-pbDilSpikeIn", LIBRc, (short) 5));
 		
 		//PbI
 		ResolutionCategory PbIrC= resolutionCategories.get("PbI");		
 		
-		l.add(InstanceFactory.newResolution("indéterminé","PbI-indetermine", PbIrC, (short) 1));
+		l.add(InstanceFactory.newResolution("Indéterminé","PbI-indetermine", PbIrC, (short) 1));
 		l.add(InstanceFactory.newResolution("PC","PbI-PC", PbIrC, (short) 2));
-		l.add(InstanceFactory.newResolution("écran","PbI-ecran", PbIrC, (short) 3));
-		l.add(InstanceFactory.newResolution("espace disq insuf","PbI-espDisqInsuf", PbIrC, (short) 4));
-		l.add(InstanceFactory.newResolution("logiciel","PbI-logiciel", PbIrC, (short) 5));
-		l.add(InstanceFactory.newResolution("reboot PC","PbI-rebootPC", PbIrC, (short) 6));
-		l.add(InstanceFactory.newResolution("retard robocopy","PbI-robocopy", PbIrC, (short) 7));
-		l.add(InstanceFactory.newResolution("erreur paramétrage run","PbI-parametrageRun", PbIrC, (short) 8));
+		l.add(InstanceFactory.newResolution("Ecran","PbI-ecran", PbIrC, (short) 3));
+		l.add(InstanceFactory.newResolution("Espace disq insuf","PbI-espDisqInsuf", PbIrC, (short) 4));
+		l.add(InstanceFactory.newResolution("Logiciel","PbI-logiciel", PbIrC, (short) 5));
+		l.add(InstanceFactory.newResolution("Reboot PC","PbI-rebootPC", PbIrC, (short) 6));
+		l.add(InstanceFactory.newResolution("Retard robocopy","PbI-robocopy", PbIrC, (short) 7));
+		l.add(InstanceFactory.newResolution("Erreur paramétrage run","PbI-parametrageRun", PbIrC, (short) 8));
 		
 		//RUN-Info
 		ResolutionCategory RUNInforC= resolutionCategories.get("RUN-Info");
 			
-		l.add(InstanceFactory.newResolution("run de validation","Info-runValidation", RUNInforC, (short) 1));
-		l.add(InstanceFactory.newResolution("remboursement","Info-remboursement", RUNInforC, (short) 2));
+		l.add(InstanceFactory.newResolution("Run de validation","Info-runValidation", RUNInforC, (short) 1));
+		l.add(InstanceFactory.newResolution("Remboursement","Info-remboursement", RUNInforC, (short) 2));
 
 		//QC
 		ResolutionCategory QCRc= resolutionCategories.get("QC");
 		
-		l.add(InstanceFactory.newResolution("intensité B.M.S","QC-intBMS", QCRc, (short) 1));
-		l.add(InstanceFactory.newResolution("tiles out","QC-tilesOut", QCRc, (short) 2));
-		l.add(InstanceFactory.newResolution("saut de chimie","QC-sautChimie", QCRc, (short) 3));
+		l.add(InstanceFactory.newResolution("Intensité B.M.S","QC-intBMS", QCRc, (short) 1));
+		l.add(InstanceFactory.newResolution("Tiles out","QC-tilesOut", QCRc, (short) 2));
+		l.add(InstanceFactory.newResolution("Saut de chimie","QC-sautChimie", QCRc, (short) 3));
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "runReso";
@@ -279,20 +279,20 @@ public class ResolutionService {
 		// FDS 16/01 rendre moins verbeux avec variables XXrC
 
 		// Run
-		l.add(InstanceFactory.newResolution("lane abandonnée","Run-abandonLane", resolutionCategories.get("Run"), (short) 1));
+		l.add(InstanceFactory.newResolution("Lane abandonnée","Run-abandonLane", resolutionCategories.get("Run"), (short) 1));
 		
 		//Qte
-		l.add(InstanceFactory.newResolution("nb seq brutes faible","Qte-seqRawInsuf", resolutionCategories.get("Qte"),(short) 1));
-		l.add(InstanceFactory.newResolution("couverture en X hors spec.","Qte-couverture", resolutionCategories.get("Qte"),(short) 2));
+		l.add(InstanceFactory.newResolution("Nb seq brutes faible","Qte-seqRawInsuf", resolutionCategories.get("Qte"),(short) 1));
+		l.add(InstanceFactory.newResolution("Couverture en X hors spec.","Qte-couverture", resolutionCategories.get("Qte"),(short) 2));
 	
 		//IND
-		l.add(InstanceFactory.newResolution("index incorrect","IND-indexIncorrect", resolutionCategories.get("IND"),(short) 1));
+		l.add(InstanceFactory.newResolution("Index incorrect","IND-indexIncorrect", resolutionCategories.get("IND"),(short) 1));
 				
 		//Qlte
 		ResolutionCategory QlterC= resolutionCategories.get("Qlte");
 			
 		l.add(InstanceFactory.newResolution("Q30 hors spec.","Qlte-Q30HorsSpec", QlterC,(short) 1));
-		l.add(InstanceFactory.newResolution("répartition bases","Qlte-repartitionBases", QlterC, (short) 2));
+		l.add(InstanceFactory.newResolution("Répartition bases","Qlte-repartitionBases", QlterC, (short) 2));
 		l.add(InstanceFactory.newResolution("% adaptateurs détectés","Qlte-adapterPercent", QlterC,(short) 3));
 		l.add(InstanceFactory.newResolution("% duplicat élevé","Qlte-duplicatElevee", QlterC,(short) 4));	
 		l.add(InstanceFactory.newResolution("% NT 30X","Qlte-30XntPercent", QlterC,(short)5));
@@ -302,14 +302,14 @@ public class ResolutionService {
 		l.add(InstanceFactory.newResolution("% mapping faible","MAP-PercMappingFble", resolutionCategories.get("MAP"),(short) 1));
 		
 		// Sample
-		l.add(InstanceFactory.newResolution("sexe incorrect","Sample-sexeIncorrect", resolutionCategories.get("Sample"),(short) 1));
+		l.add(InstanceFactory.newResolution("Sexe incorrect","Sample-sexeIncorrect", resolutionCategories.get("Sample"),(short) 1));
 		
 		// Info
 		ResolutionCategory InforC= resolutionCategories.get("Info");
 				
-		l.add(InstanceFactory.newResolution("test Dev","Info-testDev", InforC,(short) 1));
-		l.add(InstanceFactory.newResolution("test Prod","Info-testProd", InforC,(short) 2));
-		l.add(InstanceFactory.newResolution("redo effectué","Info-redoDone", InforC,(short) 3));
+		l.add(InstanceFactory.newResolution("Test Dev","Info-testDev", InforC,(short) 1));
+		l.add(InstanceFactory.newResolution("Test Prod","Info-testProd", InforC,(short) 2));
+		l.add(InstanceFactory.newResolution("Redo effectué","Info-redoDone", InforC,(short) 3));
 		
 		// LIMS
 		l.add(InstanceFactory.newResolution("erreur Experimental Type","LIMS-erreurExpType", resolutionCategories.get("LIMS"),(short) 1));
@@ -336,65 +336,65 @@ public class ResolutionService {
 		// PbM
 		ResolutionCategory PbMrC= resolutionCategories.get("PbM");
 
-		l.add(InstanceFactory.newResolution("indéterminé","PbM-indetermine", PbMrC,  (short) 1));
-		l.add(InstanceFactory.newResolution("chiller","PbM-chiller", PbMrC, (short) 2));
-		l.add(InstanceFactory.newResolution("pelletier","PbM-pelletier", PbMrC, (short) 3));
-		l.add(InstanceFactory.newResolution("fluidique","PbM-fluidiq", PbMrC, (short) 4));
-		l.add(InstanceFactory.newResolution("laser","PbM-laser", PbMrC, (short) 5));
-		l.add(InstanceFactory.newResolution("camera","PbM-camera", PbMrC, (short) 6));
-		l.add(InstanceFactory.newResolution("focus","PbM-focus", PbMrC, (short) 7));    
-		l.add(InstanceFactory.newResolution("pb de vide","PbM-pbVide", PbMrC, (short) 8));
+		l.add(InstanceFactory.newResolution("Indéterminé","PbM-indetermine", PbMrC,  (short) 1));
+		l.add(InstanceFactory.newResolution("Chiller","PbM-chiller", PbMrC, (short) 2));
+		l.add(InstanceFactory.newResolution("Pelletier","PbM-pelletier", PbMrC, (short) 3));
+		l.add(InstanceFactory.newResolution("Fluidique","PbM-fluidiq", PbMrC, (short) 4));
+		l.add(InstanceFactory.newResolution("Laser","PbM-laser", PbMrC, (short) 5));
+		l.add(InstanceFactory.newResolution("Camera","PbM-camera", PbMrC, (short) 6));
+		l.add(InstanceFactory.newResolution("Focus","PbM-focus", PbMrC, (short) 7));    
+		l.add(InstanceFactory.newResolution("Pb de vide","PbM-pbVide", PbMrC, (short) 8));
 		l.add(InstanceFactory.newResolution("PE module","PbM-PEmodule", PbMrC, (short) 9));
 		l.add(InstanceFactory.newResolution("cBot","PbM-cBot", PbMrC, (short) 10));		
 			
 		// PbR
 		ResolutionCategory PbRrC= resolutionCategories.get("PbR");
 			
-		l.add(InstanceFactory.newResolution("indéterminé","PbR-indetermine", PbRrC, (short) 1));
-		l.add(InstanceFactory.newResolution("flowcell","PbR-FC", PbRrC, (short) 2));
+		l.add(InstanceFactory.newResolution("Indéterminé","PbR-indetermine", PbRrC, (short) 1));
+		l.add(InstanceFactory.newResolution("Flowcell","PbR-FC", PbRrC, (short) 2));
 		l.add(InstanceFactory.newResolution("cBot","PbR-cBot", PbRrC, (short) 3));
-		l.add(InstanceFactory.newResolution("séquencage","PbR-sequencage", PbRrC, (short) 4));
-		l.add(InstanceFactory.newResolution("indexing","PbR-indexing", PbRrC, (short) 5));
+		l.add(InstanceFactory.newResolution("Séquencage","PbR-sequencage", PbRrC, (short) 4));
+		l.add(InstanceFactory.newResolution("Indexing","PbR-indexing", PbRrC, (short) 5));
 		l.add(InstanceFactory.newResolution("PE module","PbR-PEmodule", PbRrC, (short) 6));
-		l.add(InstanceFactory.newResolution("rehyb primer R1","PbR-rehybR1", PbRrC, (short) 7));
-		l.add(InstanceFactory.newResolution("rehyb indexing","PbR-rehybIndexing", PbRrC, (short) 8));
-		l.add(InstanceFactory.newResolution("rehyb primer R2","PbR-rehybR2", PbRrC, (short) 9));
-		l.add(InstanceFactory.newResolution("erreur réactifs","PbR-erreurReac", PbRrC, (short) 10));
-		l.add(InstanceFactory.newResolution("rajout réactifs","PbR-ajoutReac", PbRrC, (short) 11));
+		l.add(InstanceFactory.newResolution("Rehyb primer R1","PbR-rehybR1", PbRrC, (short) 7));
+		l.add(InstanceFactory.newResolution("Rehyb indexing","PbR-rehybIndexing", PbRrC, (short) 8));
+		l.add(InstanceFactory.newResolution("Rehyb primer R2","PbR-rehybR2", PbRrC, (short) 9));
+		l.add(InstanceFactory.newResolution("Erreur réactifs","PbR-erreurReac", PbRrC, (short) 10));
+		l.add(InstanceFactory.newResolution("Rajout réactifs","PbR-ajoutReac", PbRrC, (short) 11));
 
 		// SAV
 		ResolutionCategory SAVrC= resolutionCategories.get("SAV");
 		
-		l.add(InstanceFactory.newResolution("intensité","SAV-intensite", SAVrC, (short) 1));
-		l.add(InstanceFactory.newResolution("densité clusters trop élevée","SAV-densiteElevee", SAVrC, (short) 2));
-		l.add(InstanceFactory.newResolution("densité clusters trop faible","SAV-densiteFaible", SAVrC, (short) 3));
-		l.add(InstanceFactory.newResolution("densité clusters nulle","SAV-densiteNulle", SAVrC, (short) 4));
+		l.add(InstanceFactory.newResolution("Intensité","SAV-intensite", SAVrC, (short) 1));
+		l.add(InstanceFactory.newResolution("Densité clusters trop élevée","SAV-densiteElevee", SAVrC, (short) 2));
+		l.add(InstanceFactory.newResolution("Densité clusters trop faible","SAV-densiteFaible", SAVrC, (short) 3));
+		l.add(InstanceFactory.newResolution("Densité clusters nulle","SAV-densiteNulle", SAVrC, (short) 4));
 		l.add(InstanceFactory.newResolution("%PF","SAV-PF", SAVrC, (short) 5));
-		l.add(InstanceFactory.newResolution("phasing","SAV-phasing", SAVrC, (short) 6));
-		l.add(InstanceFactory.newResolution("prephasing","SAV-prephasing", SAVrC, (short) 7));
-		l.add(InstanceFactory.newResolution("error rate","SAV-errorRate", SAVrC, (short) 8));
+		l.add(InstanceFactory.newResolution("Phasing","SAV-phasing", SAVrC, (short) 6));
+		l.add(InstanceFactory.newResolution("Prephasing","SAV-prephasing", SAVrC, (short) 7));
+		l.add(InstanceFactory.newResolution("Error rate","SAV-errorRate", SAVrC, (short) 8));
 		l.add(InstanceFactory.newResolution("Q30","SAV-Q30", SAVrC, (short) 9));
-		l.add(InstanceFactory.newResolution("indexing / demultiplexage","SAV-IndDemultiplex", SAVrC, (short) 10));
+		l.add(InstanceFactory.newResolution("Indexing / demultiplexage","SAV-IndDemultiplex", SAVrC, (short) 10));
 		
 		// PbI
 		ResolutionCategory PbIrC= resolutionCategories.get("PbI");
 		
-		l.add(InstanceFactory.newResolution("indéterminé","PbI-indetermine", PbIrC, (short) 1));
+		l.add(InstanceFactory.newResolution("Indéterminé","PbI-indetermine", PbIrC, (short) 1));
 		l.add(InstanceFactory.newResolution("PC","PbI-PC", PbIrC, (short) 2));
-		l.add(InstanceFactory.newResolution("écran","PbI-ecran", PbIrC, (short) 3));
-		l.add(InstanceFactory.newResolution("espace disq insuf","PbI-espDisqInsuf", PbIrC, (short) 4));
-		l.add(InstanceFactory.newResolution("logiciel","PbI-logiciel", PbIrC, (short) 5));
-		l.add(InstanceFactory.newResolution("reboot PC","PbI-rebootPC", PbIrC, (short) 6));
-		l.add(InstanceFactory.newResolution("erreur paramétrage run","PbI-parametrageRun", PbIrC, (short) 7));
+		l.add(InstanceFactory.newResolution("Ecran","PbI-ecran", PbIrC, (short) 3));
+		l.add(InstanceFactory.newResolution("Espace disq insuf","PbI-espDisqInsuf", PbIrC, (short) 4));
+		l.add(InstanceFactory.newResolution("Logiciel","PbI-logiciel", PbIrC, (short) 5));
+		l.add(InstanceFactory.newResolution("Reboot PC","PbI-rebootPC", PbIrC, (short) 6));
+		l.add(InstanceFactory.newResolution("Erreur paramétrage run","PbI-parametrageRun", PbIrC, (short) 7));
 		
 		// Info
 		ResolutionCategory InforC= resolutionCategories.get("Info");
 				
-		l.add(InstanceFactory.newResolution("run de validation","Info-runValidation", InforC, (short) 1));
-		l.add(InstanceFactory.newResolution("arrêt séquenceur","Info-arretSeq", InforC, (short) 2));
-		l.add(InstanceFactory.newResolution("arrêt logiciel","Info_arretLogiciel", InforC, (short) 3));
-		l.add(InstanceFactory.newResolution("remboursement","Info-remboursement", InforC, (short) 4));
-		l.add(InstanceFactory.newResolution("flowcell redéposée","Info-FCredeposee", InforC, (short) 5));		
+		l.add(InstanceFactory.newResolution("Run de validation","Info-runValidation", InforC, (short) 1));
+		l.add(InstanceFactory.newResolution("Arrêt séquenceur","Info-arretSeq", InforC, (short) 2));
+		l.add(InstanceFactory.newResolution("Arrêt logiciel","Info_arretLogiciel", InforC, (short) 3));
+		l.add(InstanceFactory.newResolution("Remboursement","Info-remboursement", InforC, (short) 4));
+		l.add(InstanceFactory.newResolution("Flowcell redéposée","Info-FCredeposee", InforC, (short) 5));		
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "runReso";
@@ -426,41 +426,41 @@ public class ResolutionService {
 		// FDS 16/01 rendre moins verbeux avec variables XXrC
 		
 		// Run
-		l.add(InstanceFactory.newResolution("lane abandonnée","Run-abandonLane", resolutionCategories.get("Run"), (short) 1));
+		l.add(InstanceFactory.newResolution("Lane abandonnée","Run-abandonLane", resolutionCategories.get("Run"), (short) 1));
 		
 		// LIB
-		l.add(InstanceFactory.newResolution("pb protocole banque","LIB-pbProtocole", resolutionCategories.get("LIB"),(short) 1));
-		l.add(InstanceFactory.newResolution("erreur dépôt banque","LIB-erreurDepot", resolutionCategories.get("LIB"),(short) 2));
+		l.add(InstanceFactory.newResolution("Pb protocole banque","LIB-pbProtocole", resolutionCategories.get("LIB"),(short) 1));
+		l.add(InstanceFactory.newResolution("Erreur dépôt banque","LIB-erreurDepot", resolutionCategories.get("LIB"),(short) 2));
 		
 		// Qte
-		l.add(InstanceFactory.newResolution("seq valides insuf","Qte-seqValInsuf", resolutionCategories.get("Qte"),(short) 1));
-		l.add(InstanceFactory.newResolution("seq utiles insuf","Qte-seqUtileInsuf", resolutionCategories.get("Qte"),(short) 2));
+		l.add(InstanceFactory.newResolution("Seq valides insuf","Qte-seqValInsuf", resolutionCategories.get("Qte"),(short) 1));
+		l.add(InstanceFactory.newResolution("Seq utiles insuf","Qte-seqUtileInsuf", resolutionCategories.get("Qte"),(short) 2));
 		
 		// IND
-		l.add(InstanceFactory.newResolution("pb demultiplexage","IND-pbDemultiplex", resolutionCategories.get("IND"),(short) 1));
-		l.add(InstanceFactory.newResolution("pb manip","IND-pbManip", resolutionCategories.get("IND"),(short) 2));
+		l.add(InstanceFactory.newResolution("Pb demultiplexage","IND-pbDemultiplex", resolutionCategories.get("IND"),(short) 1));
+		l.add(InstanceFactory.newResolution("Pb manip","IND-pbManip", resolutionCategories.get("IND"),(short) 2));
 
 		// Qlte
 		ResolutionCategory QlterC= resolutionCategories.get("Qlte");
 	
 		l.add(InstanceFactory.newResolution("Q30","Qlte-Q30", QlterC,(short) 1));				
-		l.add(InstanceFactory.newResolution("répartition bases","Qlte-repartitionBases", QlterC, (short) 2));				
-		l.add(InstanceFactory.newResolution("adaptateurs/Kmers","Qlte-adapterKmer", QlterC,(short) 3));		
-		l.add(InstanceFactory.newResolution("duplicat pairs > 20","Qlte-duplicatPairs", QlterC,(short) 4));
-		l.add(InstanceFactory.newResolution("duplicat > 30","Qlte-duplicat", QlterC,(short) 5));
+		l.add(InstanceFactory.newResolution("Répartition bases","Qlte-repartitionBases", QlterC, (short) 2));				
+		l.add(InstanceFactory.newResolution("Adaptateurs/Kmers","Qlte-adapterKmer", QlterC,(short) 3));		
+		l.add(InstanceFactory.newResolution("Duplicat pairs > 20","Qlte-duplicatPairs", QlterC,(short) 4));
+		l.add(InstanceFactory.newResolution("Duplicat > 30","Qlte-duplicat", QlterC,(short) 5));
 		
 		// TAXO
 		ResolutionCategory TAXOrC= resolutionCategories.get("TAXO");
 			
-		l.add(InstanceFactory.newResolution("conta indéterminée","TAXO-contaIndeterm", TAXOrC,(short) 1));
-		l.add(InstanceFactory.newResolution("conta manip","TAXO-contaManip", TAXOrC,(short) 2));
-		l.add(InstanceFactory.newResolution("conta mat ori","TAXO-contaMatOri", TAXOrC,(short) 3));
-		l.add(InstanceFactory.newResolution("non conforme","TAXO-nonConforme", TAXOrC,(short) 4));
-		l.add(InstanceFactory.newResolution("mitochondrie","TAXO-mitochondrie", TAXOrC,(short) 5));
-		l.add(InstanceFactory.newResolution("chloroplast","TAXO-chloroplast", TAXOrC,(short) 6));
-		l.add(InstanceFactory.newResolution("virus","TAXO-virus", TAXOrC,(short) 7));
-		l.add(InstanceFactory.newResolution("bactérie","TAXO-bacteria", TAXOrC,(short) 8)); 
-		l.add(InstanceFactory.newResolution("fungi","TAXO-fungi", TAXOrC,(short) 9));
+		l.add(InstanceFactory.newResolution("Conta indéterminée","TAXO-contaIndeterm", TAXOrC,(short) 1));
+		l.add(InstanceFactory.newResolution("Conta manip","TAXO-contaManip", TAXOrC,(short) 2));
+		l.add(InstanceFactory.newResolution("Conta mat ori","TAXO-contaMatOri", TAXOrC,(short) 3));
+		l.add(InstanceFactory.newResolution("Non conforme","TAXO-nonConforme", TAXOrC,(short) 4));
+		l.add(InstanceFactory.newResolution("Mitochondrie","TAXO-mitochondrie", TAXOrC,(short) 5));
+		l.add(InstanceFactory.newResolution("Chloroplast","TAXO-chloroplast", TAXOrC,(short) 6));
+		l.add(InstanceFactory.newResolution("Virus","TAXO-virus", TAXOrC,(short) 7));
+		l.add(InstanceFactory.newResolution("Bactérie","TAXO-bacteria", TAXOrC,(short) 8)); 
+		l.add(InstanceFactory.newResolution("Fungi","TAXO-fungi", TAXOrC,(short) 9));
 		l.add(InstanceFactory.newResolution("OK post clean rRNA","TAXO-postCleanrRNA", TAXOrC,(short) 10));
 				
 		// RIBO
@@ -468,16 +468,16 @@ public class ResolutionService {
 		
 		// MAP
 		l.add(InstanceFactory.newResolution("% MP","MAP-PercentMP", resolutionCategories.get("MAP"),(short) 1));
-		l.add(InstanceFactory.newResolution("taille moyenne MP","MAP-tailleMP", resolutionCategories.get("MAP"),(short) 2));
+		l.add(InstanceFactory.newResolution("Taille moyenne MP","MAP-tailleMP", resolutionCategories.get("MAP"),(short) 2));
 		
 		// MERG
 		l.add(InstanceFactory.newResolution("% lec mergées","MERG-PercLecMerg", resolutionCategories.get("MERG"),(short) 1));
-		l.add(InstanceFactory.newResolution("médiane lect mergées","MERG-MedLecMerg", resolutionCategories.get("MERG"),(short) 2));
-		l.add(InstanceFactory.newResolution("distribution lect mergées","MERG-Distribution", resolutionCategories.get("MERG"),(short) 3));
+		l.add(InstanceFactory.newResolution("Médiane lect mergées","MERG-MedLecMerg", resolutionCategories.get("MERG"),(short) 2));
+		l.add(InstanceFactory.newResolution("Distribution lect mergées","MERG-Distribution", resolutionCategories.get("MERG"),(short) 3));
 	
 		// Info
-		l.add(InstanceFactory.newResolution("test Dev","Info-testDev", resolutionCategories.get("Info"),(short) 1));
-		l.add(InstanceFactory.newResolution("nouveaux critères d'évaluation","Info-nvoCritereEval", resolutionCategories.get("Info"),(short) 2));
+		l.add(InstanceFactory.newResolution("Test Dev","Info-testDev", resolutionCategories.get("Info"),(short) 1));
+		l.add(InstanceFactory.newResolution("Nouveaux critères d'évaluation","Info-nvoCritereEval", resolutionCategories.get("Info"),(short) 2));
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "readSetReso";
@@ -508,10 +508,10 @@ public class ResolutionService {
 		ResolutionCategory CTGrC= resolutionCategories.get("CTG");
 		
 		l.add(InstanceFactory.newResolution("N50","CTG-N50", CTGrC,(short) 1));
-		l.add(InstanceFactory.newResolution("cumul","CTG-cumul", CTGrC,(short)2));
-		l.add(InstanceFactory.newResolution("nb contigs","CTG-nbCtgs", CTGrC,(short)3));
-		l.add(InstanceFactory.newResolution("max size","CTG-maxSize", CTGrC,(short)4));
-		l.add(InstanceFactory.newResolution("assembled reads","CTG-assReads", CTGrC,(short)5));
+		l.add(InstanceFactory.newResolution("Cumul","CTG-cumul", CTGrC,(short)2));
+		l.add(InstanceFactory.newResolution("Nb contigs","CTG-nbCtgs", CTGrC,(short)3));
+		l.add(InstanceFactory.newResolution("Max size","CTG-maxSize", CTGrC,(short)4));
+		l.add(InstanceFactory.newResolution("Assembled reads","CTG-assReads", CTGrC,(short)5));
 		
 		// SIZE
 		l.add(InstanceFactory.newResolution("% lost bases","SIZE-lostBasesPerc", resolutionCategories.get("SIZE"),(short)1));
@@ -520,20 +520,20 @@ public class ResolutionService {
 		ResolutionCategory SCAFFrC= resolutionCategories.get("SCAFF");
 				
 		l.add(InstanceFactory.newResolution("N50","SCAFF-N50", SCAFFrC,(short) 1));
-		l.add(InstanceFactory.newResolution("cumul","SCAFF-cumul", SCAFFrC,(short) 2));
-		l.add(InstanceFactory.newResolution("nb scaff","SCAFF-nbScaff", SCAFFrC,(short) 3));
-		l.add(InstanceFactory.newResolution("max size","SCAFF-maxSize", SCAFFrC,(short) 4));
-		l.add(InstanceFactory.newResolution("median insert size","SCAFF-medInsertSize", SCAFFrC,(short) 5));
+		l.add(InstanceFactory.newResolution("Cumul","SCAFF-cumul", SCAFFrC,(short) 2));
+		l.add(InstanceFactory.newResolution("Nb scaff","SCAFF-nbScaff", SCAFFrC,(short) 3));
+		l.add(InstanceFactory.newResolution("Max size","SCAFF-maxSize", SCAFFrC,(short) 4));
+		l.add(InstanceFactory.newResolution("Median insert size","SCAFF-medInsertSize", SCAFFrC,(short) 5));
 		l.add(InstanceFactory.newResolution("% satisfied pairs","SCAFF-satisfPairsPerc", SCAFFrC,(short) 6));
 		l.add(InstanceFactory.newResolution("% N","SCAFF-Npercent", SCAFFrC,(short) 7));
 		
 		// GAP
 		ResolutionCategory GAPrC= resolutionCategories.get("GAP");
 			
-		l.add(InstanceFactory.newResolution("gap sum","GAP-sum",GAPrC,(short) 1));
-		l.add(InstanceFactory.newResolution("gap count","GAP-count",GAPrC,(short) 2));
-		l.add(InstanceFactory.newResolution("corrected gap sum","GAP-correctedSum",GAPrC,(short) 3));
-		l.add(InstanceFactory.newResolution("corrected gap count","GAP-correctedCount",GAPrC,(short) 4));
+		l.add(InstanceFactory.newResolution("Gap sum","GAP-sum",GAPrC,(short) 1));
+		l.add(InstanceFactory.newResolution("Gap count","GAP-count",GAPrC,(short) 2));
+		l.add(InstanceFactory.newResolution("Corrected gap sum","GAP-correctedSum",GAPrC,(short) 3));
+		l.add(InstanceFactory.newResolution("Corrected gap count","GAP-correctedCount",GAPrC,(short) 4));
 		l.add(InstanceFactory.newResolution("% N","GAP-Npercent",GAPrC,(short) 5));
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
@@ -584,9 +584,9 @@ public class ResolutionService {
 		
 		l.addAll(getDefaultResolutionCNS());
 		
-		l.add(InstanceFactory.newResolution("nombre molécules insuffisant pour assemblage correct", "echec-nbMoleculesInsuf", resolutionCategories.get("Default"), (short) 4));
-		l.add(InstanceFactory.newResolution("surface cassée", "echec-surface", resolutionCategories.get("Default"), (short) 5));	
-		l.add(InstanceFactory.newResolution("problème digestion", "echec-digestion", resolutionCategories.get("Default"), (short) 6));	
+		l.add(InstanceFactory.newResolution("Nombre molécules insuffisant pour assemblage correct", "echec-nbMoleculesInsuf", resolutionCategories.get("Default"), (short) 4));
+		l.add(InstanceFactory.newResolution("Surface cassée", "echec-surface", resolutionCategories.get("Default"), (short) 5));	
+		l.add(InstanceFactory.newResolution("Problème digestion", "echec-digestion", resolutionCategories.get("Default"), (short) 6));	
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "expODReso";
@@ -606,7 +606,7 @@ public class ResolutionService {
 		
 		l.addAll(getDefaultResolutionCNS());
 		
-		l.add(InstanceFactory.newResolution("réhybridation FC", "rehyb-FC", resolutionCategories.get("Default"), (short) 4));
+		l.add(InstanceFactory.newResolution("Réhybridation FC", "rehyb-FC", resolutionCategories.get("Default"), (short) 4));
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "expIPDReso";
@@ -629,7 +629,7 @@ public class ResolutionService {
 		
 		l.addAll(getDefaultResolutionCNS());
 		
-		l.add(InstanceFactory.newResolution("réhybridation FC", "rehyb-FC", resolutionCategories.get("Default"), (short) 4));
+		l.add(InstanceFactory.newResolution("Réhybridation FC", "rehyb-FC", resolutionCategories.get("Default"), (short) 4));
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "expIPDReso";
@@ -651,10 +651,10 @@ public class ResolutionService {
 		
 		l.addAll(getDefaultResolutionCNS());
 		
-		l.add(InstanceFactory.newResolution("marquage incorrect", "echec-labeling", resolutionCategories.get("Default"), (short) 4));
-		l.add(InstanceFactory.newResolution("hors gamme", "out-of-range", resolutionCategories.get("Default"), (short) 5));
-		l.add(InstanceFactory.newResolution("conc. < 5 : over-staining risk", "over-staining-risk", resolutionCategories.get("Default"), (short) 6));
-		l.add(InstanceFactory.newResolution("conc. > 9 : over-loading risk", "over-loading-risk", resolutionCategories.get("Default"), (short) 7));
+		l.add(InstanceFactory.newResolution("Marquage incorrect", "echec-labeling", resolutionCategories.get("Default"), (short) 4));
+		l.add(InstanceFactory.newResolution("Hors gamme", "out-of-range", resolutionCategories.get("Default"), (short) 5));
+		l.add(InstanceFactory.newResolution("Conc. < 5 : over-staining risk", "over-staining-risk", resolutionCategories.get("Default"), (short) 6));
+		l.add(InstanceFactory.newResolution("Conc. > 9 : over-loading risk", "over-loading-risk", resolutionCategories.get("Default"), (short) 7));
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "expIrysPrepNLRSReso";
@@ -673,10 +673,10 @@ public class ResolutionService {
 		
 		l.addAll(getDefaultResolutionCNS());
 		
-		l.add(InstanceFactory.newResolution("nb cycles insuffisant", "echec-nbCycleInsuf", resolutionCategories.get("Default"), (short) 4));
-		l.add(InstanceFactory.newResolution("problème passage des molécules région pillar", "echec-pillarRegion", resolutionCategories.get("Default"), (short) 5));
-		l.add(InstanceFactory.newResolution("labelling incorrect", "echec-labeling", resolutionCategories.get("Default"), (short) 6));
-		l.add(InstanceFactory.newResolution("utilisation du NanoAnalyzer", "nanoAnalyzer", resolutionCategories.get("Default"), (short) 7));
+		l.add(InstanceFactory.newResolution("Nb cycles insuffisant", "echec-nbCycleInsuf", resolutionCategories.get("Default"), (short) 4));
+		l.add(InstanceFactory.newResolution("Problème passage des molécules région pillar", "echec-pillarRegion", resolutionCategories.get("Default"), (short) 5));
+		l.add(InstanceFactory.newResolution("Labelling incorrect", "echec-labeling", resolutionCategories.get("Default"), (short) 6));
+		l.add(InstanceFactory.newResolution("Utilisation du NanoAnalyzer", "nanoAnalyzer", resolutionCategories.get("Default"), (short) 7));
 		
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
@@ -779,7 +779,7 @@ public class ResolutionService {
 		l.addAll(getDefaultResolutionCNS());
 		
 
-		l.add(InstanceFactory.newResolution("run Miseq invalide : résultats non importés", "invalid-miseq-run", resolutionCategories.get("Default"), (short) 4));
+		l.add(InstanceFactory.newResolution("Run Miseq invalide : résultats non importés", "invalid-miseq-run", resolutionCategories.get("Default"), (short) 4));
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "expMiseqQCReso";
@@ -798,8 +798,8 @@ public class ResolutionService {
 	public static void createProcessResolution(ContextValidation ctx) {
 		List<Resolution> l = new ArrayList<Resolution>();
 
-		l.add(InstanceFactory.newResolution("déroulement correct","correct", resolutionCategories.get("Default"), (short) 1));
-		l.add(InstanceFactory.newResolution("processus partiel","processus-partiel", resolutionCategories.get("Default"), (short) 2));
+		l.add(InstanceFactory.newResolution("Déroulement correct","correct", resolutionCategories.get("Default"), (short) 1));
+		l.add(InstanceFactory.newResolution("Processus partiel","processus-partiel", resolutionCategories.get("Default"), (short) 2));
 		
 		ResolutionConfiguration r = new ResolutionConfiguration();
 		r.code = "processReso";
@@ -826,9 +826,9 @@ public class ResolutionService {
 	public static List<Resolution> getDefaultResolutionCNS(){
 		List<Resolution> l = new ArrayList<Resolution>();
 		
-		l.add(InstanceFactory.newResolution("déroulement correct",	"correct", resolutionCategories.get("Default"), (short) 1));
-		l.add(InstanceFactory.newResolution("problème signalé en commentaire", "pb-commentaire", resolutionCategories.get("Default"), (short) 2));
-		l.add(InstanceFactory.newResolution("échec expérience", "echec-experience", resolutionCategories.get("Default"), (short) 3));	
+		l.add(InstanceFactory.newResolution("Déroulement correct",	"correct", resolutionCategories.get("Default"), (short) 1));
+		l.add(InstanceFactory.newResolution("Problème signalé en commentaire", "pb-commentaire", resolutionCategories.get("Default"), (short) 2));
+		l.add(InstanceFactory.newResolution("Echec expérience", "echec-experience", resolutionCategories.get("Default"), (short) 3));	
 
 		return l;
 	}
