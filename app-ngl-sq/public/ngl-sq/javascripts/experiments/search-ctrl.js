@@ -84,9 +84,9 @@ angular.module('home').controller('SearchCtrl', ['$scope','$location','$routePar
 angular.module('home').controller('SearchReagentsCtrl', ['$scope', '$http', '$q', '$routeParams', 'datatable', 'experimentsSearchService', 'mainService', 'tabService', 
                                                          function($scope,$http,$q,$routeParams,datatable,experimentsSearchService,mainService,tabService){
 	$scope.datatableConfig = {
+			name:"experimentReagents",
 			search:{
 				active:true,
-				//url:jsRoutes.controllers.experiments.api.Experiments.list()
 				url:jsRoutes.controllers.experiments.api.ExperimentReagents.list()
 			},
 			order:{
@@ -119,7 +119,6 @@ angular.module('home').controller('SearchReagentsCtrl', ['$scope', '$http', '$q'
 	
 	$scope.search = function(){
 		$scope.searchService.search();
-		console.log($scope.searchService.datatable.displayResult);
 	};
 	$scope.reset = function(){
 		$scope.searchService.resetForm();
@@ -140,9 +139,7 @@ angular.module('home').controller('SearchReagentsCtrl', ['$scope', '$http', '$q'
 		$scope.form = mainService.getForm();		
 	}
 	
-	
 	$scope.searchService = experimentsSearchService;
 	$scope.searchService.init($routeParams, $scope.datatableConfig);
 
-	
 }]);

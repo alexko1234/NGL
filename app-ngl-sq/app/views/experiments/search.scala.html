@@ -80,8 +80,8 @@
 	<div udt-form>
 		<ul class="nav nav-tabs margin-bottom-5">
 	   	<li class="active"><a href="#" data-target="#filters" data-toggle="tab">@Messages("search.tab.filters")</a></li>
-	   	<li ng-if="searchService.getAddFiltersToForm().length > 0"><a href="#" data-target="#addfilters" data-toggle="tab">@Messages("search.tab.addfilters")</a></li>
-	   	<li ng-if="searchService.getAddColumnsToForm().length > 0"><a href="#" data-target="#addcolumns" data-toggle="tab">@Messages("search.tab.addcolumns")</a></li>       
+	   	<li ng-if="!(searchService.datatable.config.name==='experimentReagents') && searchService.getAddFiltersToForm().length > 0"><a href="#" data-target="#addfilters" data-toggle="tab">@Messages("search.tab.addfilters")</a></li>
+	   	<li ng-if="!(searchService.datatable.config.name==='experimentReagents') && searchService.getAddColumnsToForm().length > 0"><a href="#" data-target="#addcolumns" data-toggle="tab">@Messages("search.tab.addcolumns")</a></li>       
 	   	</ul>
 			
 		<div class="tab-content">
@@ -106,7 +106,7 @@
 		</form>	
 	</div>
 	
-	<div class="tab-pane" id="addfilters">
+	<div ng-if="!(searchService.datatable.config.name==='experimentReagents')"  class="tab-pane" id="addfilters">
 	<form class="well well-small">
 			<div class="row">
 				<div class="col-md-2 col-lg-2" ng-repeat="filters in searchService.getAddFiltersToForm()">
@@ -133,7 +133,7 @@
 		</form>	
 	</div>
 	
-	<div class="tab-pane" id="addcolumns">
+	<div ng-if="!(searchService.datatable.config.name==='experimentReagents')" class="tab-pane" id="addcolumns">
 	<form class="well well-small">
 			<div class="row">
 			<div class="col-md-2 col-lg-2" ng-repeat="columns in searchService.getAddColumnsToForm()">

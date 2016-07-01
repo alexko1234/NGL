@@ -6,23 +6,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Pattern;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.time.DateUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.mongojack.Aggregation;
 import org.mongojack.Aggregation.Expression;
-import org.mongojack.Aggregation.Match;
 import org.mongojack.Aggregation.Pipeline;
-import org.mongojack.DBProjection.ProjectionBuilder;
 import org.mongojack.AggregationResult;
 import org.mongojack.DBProjection;
+import org.mongojack.DBProjection.ProjectionBuilder;
 import org.mongojack.DBQuery;
-import org.mongojack.internal.query.QueryCondition;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 
 import controllers.authorisation.Permission;
 import fr.cea.ig.MongoDBDAO;
@@ -40,7 +33,11 @@ import play.mvc.Results;
 import views.components.datatable.DatatableResponse;
 import workflows.experiment.ExpWorkflows;
 
-
+/**
+ * 
+ * @author michieli
+ *
+ */
 public class ExperimentReagents extends Experiments{
 	
 	final static Form<State> stateForm = form(State.class);
@@ -100,32 +97,28 @@ public class ExperimentReagents extends Experiments{
 	 * @return pipeline
 	 */
 	private Pipeline<Expression<?>> aggregation(DBQuery.Query query){
+
+		List<DBQuery.Query> stages = new ArrayList<DBQuery.Query>();
+		stages.add(DBQuery.exists("reagents.0")); // Only reagents	
 		
 		ProjectionBuilder pb = DBProjection.include("code");
 		pb.put("reagents", new String[]{"$reagents"});
-		
-		//pb.put("atomicTransfertMethods", 1);
-		pb.put("categoryCode", 1);
-		pb.put("comments", 1);
-		pb.put("experimentProperties", 1);
-		pb.put("inputContainerCodes", 1);
-		pb.put("inputContainerSupportCodes", 1);
-		pb.put("inputFromTransformationTypeCodes", 1);
-		pb.put("inputProcessCodes", 1);
-		pb.put("inputProcessTypeCodes", 1);
-		pb.put("instrument", 1);		
-		pb.put("instrumentProperties", 1);
-		pb.put("outputContainerCodes", 1);
-		pb.put("outputContainerSupportCodes", 1);
-		pb.put("projectCodes", 1);
-		pb.put("protocolCode", 1);
-		pb.put("sampleCodes", 1);	
-		pb.put("state", 1);
-		pb.put("status", 1);
-		pb.put("traceInformation", 1);
 		pb.put("typeCode", 1);
-	
+		pb.put("instrument", 1);
+		pb.put("projectCodes", 1);
+		pb.put("sampleCodes", 1);
+		pb.put("traceInformation", 1);
 		
+		// to preserve from NullPointerException
+		if(query == null){
+			Logger.debug("Empty search: \"Since "+date+"\"" );
+			stages.add(DBQuery.greaterThanEquals("traceInformation.creationDate", date));
+			query = DBQuery.and(stages.toArray(new DBQuery.Query[stages.size()]));
+		}else{
+			query.and(stages.toArray(new DBQuery.Query[stages.size()]));
+		}
+	
+		// Aggregate
 		Pipeline<Expression<?>> pipeline = Aggregation.match(query)
 				.unwind("reagents")
 				.project(pb);
