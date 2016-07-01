@@ -2,6 +2,7 @@ package controllers.experiments.api;
 
 import static play.data.Form.form;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -36,7 +37,12 @@ import workflows.experiment.ExpWorkflows;
 /**
  * 
  * @author michieli
- *
+ * 
+ * Ne pourra pas être déployé tant que la base Mongo uat n'est pas upgradé comme celle de dev
+ * 
+ * [error] play - Cannot invoke the action, eventually got an error: com.mongodb.MongoCommandException: Command failed with 
+ * error 15992: 'exception: disallowed field type Array in object expression (at 'reagents')' on server mongouat.genoscope.cns.fr:27018. 
+ * The full response is { "errmsg" : "exception: disallowed field type Array in object expression (at 'reagents')", "code" : 15992, "ok" : 0.0 }
  */
 public class ExperimentReagents extends Experiments{
 	
@@ -49,6 +55,7 @@ public class ExperimentReagents extends Experiments{
 	
 	final List<String> typeCodesList = Arrays.asList("prepa-flowcell","prepa-fc-ordered","illumina-depot");
 	final Date date = new Date("01/01/2016");
+	final SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 	
 	public static final String calculationsRules ="calculations";
 	
@@ -103,22 +110,20 @@ public class ExperimentReagents extends Experiments{
 		
 		ProjectionBuilder pb = DBProjection.include("code");
 		pb.put("reagents", new String[]{"$reagents"});
+
 		pb.put("typeCode", 1);
 		pb.put("instrument", 1);
 		pb.put("projectCodes", 1);
 		pb.put("sampleCodes", 1);
 		pb.put("traceInformation", 1);
+			
+		pb.put("protocolCode", 1);
+		pb.put("inputContainerSupportCodes", 1);
+		pb.put("outputContainerSupportCodes", 1);
 		
-		// to preserve from NullPointerException
-		if(query == null){
-			Logger.debug("Empty search: \"Since "+date+"\"" );
-			stages.add(DBQuery.greaterThanEquals("traceInformation.creationDate", date));
-			query = DBQuery.and(stages.toArray(new DBQuery.Query[stages.size()]));
-		}else{
-			query.and(stages.toArray(new DBQuery.Query[stages.size()]));
-		}
+		query.and(stages.toArray(new DBQuery.Query[stages.size()]));
 	
-		// Aggregate
+		// Aggregate // Not working on server mongouat.genoscope.cns.fr
 		Pipeline<Expression<?>> pipeline = Aggregation.match(query)
 				.unwind("reagents")
 				.project(pb);
