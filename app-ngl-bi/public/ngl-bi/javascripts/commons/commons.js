@@ -116,6 +116,31 @@ angular.module('biCommonsServices', []).
     			getTreatment : getTreatment,
     			getTreatments : getTreatments
     		};
+    	}]).directive('treatments', function() {
+    		return {
+    			restrict: 'A',
+    			scope: {
+    				treatments: '=treatments'
+    				},
+    			template: '<ul class="nav nav-tabs">'+
+    				      '<li ng-repeat="treament in treatments.getTreatments()" ng-class="treament.clazz">'+
+    					  '<a href="#" ng-click="treatments.activeTreatment(treament)" >{{treament.code}}</a></li>'+		   
+    					  '</ul>'+
+    					  '<div class="tab-content">'+
+    					  '<div class="tab-pane active" ng-include="treatments.getTreatment().url"/>'
+    			};
+    	}).directive('ngBindSrc', ['$parse',function($parse){ //used to include krona
+    		return {
+    			restrict: 'A',
+    			link: function(scope, element, attr) {
+    				var parsed = $parse(attr.ngBindSrc);
+    				function getStringValue() { return (parsed(scope) || '').toString(); }
+    				
+    				scope.$watch(getStringValue, function ngBindHtmlWatchAction(value) {
+    					element.attr("src", parsed(scope) || '');
+    				    });
+    			}
+    		}
     	}]).directive('reportingConfigTreatments', function($parse){
     		return {
     			restrict: 'A',
