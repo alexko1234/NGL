@@ -249,7 +249,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
-			l.add(newExperimentType("Broyage ","grinding","",650,
+			l.add(newExperimentType("Broyage ","grinding",null,650,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
 					getInstrumentUsedTypes("fast-prep"),"OneToMany", null,true,
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
