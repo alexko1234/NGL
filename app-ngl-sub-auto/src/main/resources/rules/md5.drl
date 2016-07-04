@@ -3,6 +3,9 @@ package birds
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 
 rule "Set parameter for command line md5"
 	@BirdsRule(fsRule)
@@ -32,9 +35,15 @@ rule "POST DONE EXECUTION of md5 : Update MD5 of RawData"
 		//Get md5 from Job.STDOUT
 		BufferedReader read = new BufferedReader(new FileReader(new File($job.getProperty(Job.STDOUT))));
 		String md5 = read.readLine().split(" ")[0];
+		read.close();
+		//Write in md5 file
+		JobResource jobResource = $job.getUniqueJobResource("inputRawDataMd5");
+		String md5FileName = jobResource.getProperty("submissionDirectory")+File.separator+"md5.txt";
+		PrintWriter out = new PrintWriter(new FileWriter(new File(md5FileName),true));
+		out.println(md5+" "+jobResource.getProperty("fileName"));
+		out.close();
 		//Update md5 in NGLSUB for RawData
 		//Raw Data from DB
-		JobResource jobResource = $job.getUniqueJobResource("inputRawDataMd5");
 		JSONDevice jsonDevice = new JSONDevice();
 		String JSONRawData = jsonDevice.httpGet(ProjectProperties.getProperty("server")+"/api/sra/experiments/"+jobResource.getProperty("experimentCode")+"/rawDatas/"+jobResource.getProperty("fileName"),"bot");
 		String JSONRawDataModify = jsonDevice.modifyJSON(JSONRawData, "submittedMd5", md5);

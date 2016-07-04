@@ -1,9 +1,12 @@
 package fr.cea.ig.auto.submission;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -247,7 +250,6 @@ public class CheckWorkflow extends GenericTest{
 		}
 		
 		em.endTransaction();
-		
 		log.debug("FIFTH ROUND");
 		executeBirdsCycle("SRA", "WF_Submission");
 		em = PersistenceServiceFactory.getInstance().createEntityManagerHelper();
