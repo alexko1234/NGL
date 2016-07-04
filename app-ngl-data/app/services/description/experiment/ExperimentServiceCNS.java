@@ -244,7 +244,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
-		
+			// sample prep
 			l.add(newExperimentType("Ext to Extraction ADN / ARN (corail)","ext-to-grinding-and-dna-rna-extraction",null,-1,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
@@ -262,6 +262,17 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsExtractionADNARN(),
 					getInstrumentUsedTypes("cryobroyeur","hand"),"OneToMany", getSampleTypes("DNA","RNA"),true,
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
+			//Metatranscriptomique
+			l.add(newExperimentType("Ext to metaT 2","ext_to_process_metaT_2",null,-1,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+			l.add(newExperimentType("Bq RNA Illumina indexée","rna-illumina-indexed-library","LIB",800,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsRNAIlluminaIndexedLibrary(),
+					getInstrumentUsedTypes("biomek-fx-and-cDNA-thermocycler","hand"),"OneToOne", null,true,
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
 			
 			//qc
 			
@@ -298,6 +309,8 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					getInstrumentUsedTypes("hand"),"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
+			
+			
 		
 		}
 		
@@ -305,7 +318,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 
 	}
 
-	
+
 
 	public void saveExperimentTypeNodes(Map<String, List<ValidationError>> errors) throws DAOException {
 
@@ -335,6 +348,10 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 			newExperimentTypeNode("ext-to-dna-rna-extraction-process", getExperimentTypes("ext-to-dna-rna-extraction-process").get(0), false, false, false, null, null, null, null).save();
 			newExperimentTypeNode("dna-rna-extraction",getExperimentTypes("dna-rna-extraction").get(0),false, false,false,getExperimentTypeNodes("ext-to-dna-rna-extraction-process","grinding"),getExperimentTypes("dnase-treatment"),getExperimentTypes("fluo-quantification","chip-migration","gel-migration","control-pcr-and-gel"),getExperimentTypes("aliquoting")).save();
 			
+			//Metatranscriptome
+			newExperimentTypeNode("ext_to_process_metaT_2", getExperimentTypes("ext_to_process_metaT_2").get(0), false, false, false, null, null, null, null).save();
+			newExperimentTypeNode("rna-illumina-indexed-library",getExperimentTypes("rna-illumina-indexed-library").get(0),false, false,false,getExperimentTypeNodes("ext_to_process_metaT_2"),null,null,null).save();
+
 		}
 		
 		newExperimentTypeNode("ext-to-illumina-run", getExperimentTypes("ext-to-illumina-run").get(0), false, false, false, null, null, null, null).save();
@@ -870,4 +887,35 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 	}
 
 
+	private List<PropertyDefinition> getPropertyDefinitionsRNAIlluminaIndexedLibrary() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		
+		propertyDefinitions.add(newPropertiesDefinition("Quantité engagée","inputQuantity", LevelService.getLevels(Level.CODE.ContainerIn),Double.class, false, null,
+				null,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_QUANTITY),MeasureUnit.find.findByCode( "ng"),MeasureUnit.find.findByCode( "ng"),"single",12, true,null,null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 13, true, null,null));
+
+		propertyDefinitions.add(newPropertiesDefinition("Tag", "tag", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, 
+				null, null,null,null,"single", 13, true, null,null));
+
+		propertyDefinitions.add(newPropertiesDefinition("Catégorie de Tag", "tagCategory", LevelService.getLevels(Level.CODE.ContainerOut,Level.CODE.Content), String.class, true, null, 
+				null, null,null,null,"single", 13, true, null,null));
+
+		propertyDefinitions.add(newPropertiesDefinition("Volume", "volume", LevelService.getLevels(Level.CODE.ContainerOut), String.class, true, null, 
+				null, null, null, null,"single", 15, true, null,null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Orientation du brin séquencé read 1", "strandOrientation", LevelService.getLevels(Level.CODE.Experiment,Level.CODE.Content), String.class, true, null, 
+				getStrandOrientation(), null, null, null,"single", 1, true, null,null));
+
+		return propertyDefinitions;
+	}
+	
+	private static List<Value> getStrandOrientation(){
+		List<Value> values = new ArrayList<Value>();
+		values.add(DescriptionFactory.newValue("forward", "forward"));		
+		values.add(DescriptionFactory.newValue("reverse", "reverse"));		
+		values.add(DescriptionFactory.newValue("unstranded", "unstranded"));		
+		return values;	
+	}
 }

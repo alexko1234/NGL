@@ -67,6 +67,10 @@ public class ProcessServiceCNS extends AbstractProcessService {
 			l.add(DescriptionFactory.newProcessType("Extraction ADN / ARN (corail)", "grinding-and-dna-rna-extraction", ProcessCategory.find.findByCode("sample-prep"), null,
 					Arrays.asList(getPET("ext-to-grinding-and-dna-rna-extraction",-1),getPET("grinding",0),getPET("dna-rna-extraction",1)), 
 					getExperimentTypes("grinding").get(0), getExperimentTypes("dna-rna-extraction").get(0), getExperimentTypes("ext-to-grinding-and-dna-rna-extraction").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
+			l.add(DescriptionFactory.newProcessType("MetaTranscriptomique (2)", "meta_transcriptomic_2", ProcessCategory.find.findByCode("library"), null,
+					Arrays.asList(getPET("ext_to_process_metaT_2",-1),getPET("rna-illumina-indexed-library",0)), 
+					getExperimentTypes("rna-illumina-indexed-library").get(0), getExperimentTypes("rna-illumina-indexed-library").get(0), getExperimentTypes("ext_to_process_metaT_2").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		}
 
 			//Bionano
