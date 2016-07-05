@@ -45,28 +45,26 @@ angular.module('home').controller('DnaseTreatmentCtrl',['$scope', '$parse', 'atm
 			        	 "position":4,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
-			         {
-			        	"header":Messages("containers.table.tags"),
-			 			"property": "inputContainer.contents",
-			 			"filter": "getArray:'properties.tag.value'",
-			 			"order":true,
-			 			"hide":true,
-			 			"type":"text",
-			 			"position":4,
-			 			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
-								 
 					 {
-			        	 "header":Messages("containers.table.concentration") + " (nM)",
-			        	 "property":"inputContainer.concentration.value",
+			        	 "header":Messages("containers.table.concentration"),
+			        	 "property":"inputContainer.concentration.value+'  '+inputContainer.concentration.unit",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
-			        	 "type":"number",
+			        	 "type":"text",
 			        	 "position":5,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
+			       /*  {
+			        	 "header":Messages("containers.table.concentration.unit"),
+			        	 "property": "inputContainer.concentration.unit",
+			        	 "order":true,
+						 "edit":false,
+						 "hide":true,
+			        	 "type":"text",
+			        	 "position":5.5,
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },*/
 			         {
 			        	 "header":function(){return Messages("containers.table.volume") + " (µL)"},
 			        	 "property":"inputContainer.volume.value",
