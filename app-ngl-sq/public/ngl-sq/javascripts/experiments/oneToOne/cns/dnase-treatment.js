@@ -47,7 +47,8 @@ angular.module('home').controller('DnaseTreatmentCtrl',['$scope', '$parse', 'atm
 			         },
 					 {
 			        	 "header":Messages("containers.table.concentration"),
-			        	 "property":"inputContainer.concentration.value+'  '+inputContainer.concentration.unit",
+			        	 "property":"inputContainer.concentration",
+			        	 "render":"<span ng-bind='cellValue.value|number'/> <span ng-bind='cellValue.unit'/>",	
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
