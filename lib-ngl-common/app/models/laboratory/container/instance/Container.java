@@ -95,7 +95,7 @@ public class Container extends DBObject implements IValidation {
 		traceInformation=new TraceInformation();
 		projectCodes = new HashSet<String>();
 		sampleCodes = new HashSet<String>();
-		comments = new ArrayList<>();
+		//comments = new ArrayList<>();
 		//qualityControlResults = new HashSet<>();
 		fromTransformationTypeCodes = new HashSet<>();
 		valuation = new Valuation();	
