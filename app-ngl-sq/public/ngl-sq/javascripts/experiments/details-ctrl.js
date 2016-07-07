@@ -1249,7 +1249,7 @@ angular.module('home').controller('DetailsCtrl',['$scope','$sce', '$window','$ht
 						//supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "A-PF"));
 						
 					}else if(data[i].dispatch === 4){
-						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IW-P"));
+						containerPromises = containerPromises.concat(getContainerStateRequests(i, [codes.inputContainerCode], "IS"));
 						//supportPromises = supportPromises.concat(getContainerSupportStateRequests(i, [codes.inputSupportCode], "IS"));
 						processPromises = processPromises.concat(getProcessStateRequests(i, codes.processCodes,"F", data[i].processResolutions));
 					}

@@ -57,7 +57,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		
 		l.add(newInstrumentCategory("Robot pipetage + Appareil de qPCR", "liquid-handling-robot-and-qPCR-system"));
 		l.add(newInstrumentCategory("Système de broyage", "sample-prep-system"));
-		
+		l.add(newInstrumentCategory("Robot pipetage + Thermocycleur", "liquid-handling-robot-and-thermocycler"));
 		DAOHelpers.saveModels(InstrumentCategory.class, l, errors);
 		
 	}
@@ -258,9 +258,29 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		l.add(newInstrumentUsedType("Fast Prep", "fast-prep", InstrumentCategory.find.findByCode("sample-prep-system"),  getFastPrepProperties(),getInstrumentFastPrep() 
 				,getContainerSupportCategories(new String[]{"tube","bottle","bag"}), getContainerSupportCategories(new String[]{"tube"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
+		l.add(newInstrumentUsedType("Biomek FX + Thermocycleur_cDNA", "biomek-fx-and-cDNA-thermocycler", InstrumentCategory.find.findByCode("liquid-handling-robot-and-thermocycler"),  getBiomekProperties(),getInstrumentBiomek() 
+				,getContainerSupportCategories(new String[]{"96-well-plate"}), getContainerSupportCategories(new String[]{"96-well-plate"}), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
 		DAOHelpers.saveModels(InstrumentUsedType.class, l, errors);
 	}
 
+
+	private List<PropertyDefinition> getBiomekProperties() {
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		l.add(newPropertiesDefinition("Nb cycles", "nbCycles", LevelService.getLevels(Level.CODE.Instrument), Integer.class, true, null, null, 
+				"single", 10, true, null,null));
+		return l;
+	}
+
+	private List<Instrument> getInstrumentBiomek() {
+		List<Instrument> instruments=new ArrayList<Instrument>();
+		instruments.add(createInstrument("walle-and-thermo-a05a","WALL E / Thermo_A05A", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("walle-and-thermo-b02","WALL E / Thermo_B02", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("r2d2-and-thermo-a05a","R2D2 / Thermo_A05A", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		instruments.add(createInstrument("r2d2-and-thermo-b02","R2D2 /  Thermo_B02", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		return instruments;
+	}
 
 	private List<Instrument> getInstrumentFastPrep() {
 		List<Instrument> instruments=new ArrayList<Instrument>();

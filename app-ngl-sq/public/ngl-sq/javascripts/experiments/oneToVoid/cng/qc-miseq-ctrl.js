@@ -66,7 +66,7 @@ angular.module('home').controller('OneToVoidQCMiseqCNGCtrl',['$scope', '$parse',
 		"render": "<div list-resize='cellValue | unique' list-resize-min-size='3'>",
 		"extraHeaders":{0:Messages("experiments.inputs")}
 	});
-	columns.push({
+	/*columns.push({
 		"header":Messages("containers.table.concentration"),
 		"property": "inputContainer.concentration",
 		"render":"<span ng-bind='cellValue.value|number'/> <span ng-bind='cellValue.unit'/>",
@@ -75,7 +75,7 @@ angular.module('home').controller('OneToVoidQCMiseqCNGCtrl',['$scope', '$parse',
 		"type":"text",
 		"position":10,
 		"extraHeaders":{0:Messages("experiments.inputs")}			 						 			
-	});
+	});*/
 	$scope.atmService.data.setColumnsConfig(columns);
 	
 	

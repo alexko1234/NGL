@@ -1,4 +1,4 @@
-angular.module('home').controller('DnaseTreatmentCtrl',['$scope', '$parse', 'atmToSingleDatatable',
+angular.module('home').controller('RnaIlluminaIndexedLibraryCtrl',['$scope', '$parse', 'atmToSingleDatatable',
                                                     function($scope, $parse, atmToSingleDatatable){
                                                     
 	var datatableConfig = {
@@ -45,27 +45,28 @@ angular.module('home').controller('DnaseTreatmentCtrl',['$scope', '$parse', 'atm
 			        	 "position":4,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
+			         {
+			        	"header":Messages("containers.table.tags"),
+			 			"property": "inputContainer.contents",
+			 			"filter": "getArray:'properties.tag.value'",
+			 			"order":true,
+			 			"hide":true,
+			 			"type":"text",
+			 			"position":4,
+			 			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='3'>",
+			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			         },
+								 
 					 {
-			        	 "header":Messages("containers.table.concentration"),
-			        	 "property":"inputContainer.concentration",
-			        	 "render":"<span ng-bind='cellValue.value|number'/> <span ng-bind='cellValue.unit'/>",	
+			        	 "header":Messages("containers.table.concentration") + " (nM)",
+			        	 "property":"inputContainer.concentration.value",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
-			        	 "type":"text",
+			        	 "type":"number",
 			        	 "position":5,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
-			       /*  {
-			        	 "header":Messages("containers.table.concentration.unit"),
-			        	 "property": "inputContainer.concentration.unit",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":5.5,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },*/
 			         {
 			        	 "header":function(){return Messages("containers.table.volume") + " (µL)"},
 			        	 "property":"inputContainer.volume.value",
@@ -87,7 +88,7 @@ angular.module('home').controller('DnaseTreatmentCtrl',['$scope', '$parse', 'atm
 			        	 "position":7,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },		
-			         /*{
+			         {
 			        	 "header":Messages("containers.table.concentration") + " (nM)",
 			        	 "property":"outputContainerUsed.concentration.value",
 			        	 "order":true,
@@ -96,7 +97,7 @@ angular.module('home').controller('DnaseTreatmentCtrl',['$scope', '$parse', 'atm
 			        	 "type":"number",
 			        	 "position":50,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         },*/
+			         },
 			         {
 			        	 "header":Messages("containers.table.volume")+ " (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
@@ -126,17 +127,7 @@ angular.module('home').controller('DnaseTreatmentCtrl',['$scope', '$parse', 'atm
 			        	 "type":"text",
 			        	 "position":500,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         },
-			         {
-			        	 "header":Messages("containers.table.storageCode"),
-			        	 "property":"outputContainerUsed.locationOnContainerSupport.storageCode",
-			        	 "order":true,
-						 "edit":true,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":600,
-			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         }
+			         }			        
 			         ],
 			compact:true,
 			pagination:{
@@ -222,6 +213,9 @@ angular.module('home').controller('DnaseTreatmentCtrl',['$scope', '$parse', 'atm
 		$scope.atmService.data.setEdit();
 	});
 	
+	
+	
+	
 	//Init		
 
 	var atmService = atmToSingleDatatable($scope, datatableConfig);
@@ -236,11 +230,22 @@ angular.module('home').controller('DnaseTreatmentCtrl',['$scope', '$parse', 'atm
 		};
 	};
 	
+
 	//defined default output unit
 	atmService.defaultOutputUnit = {
 			volume : "µL",
 			concentration : "nM"
 	}
+	
+	
+	atmService.convertOutputPropertiesToDatatableColumn = function(property, pName){
+		var column = atmService.$commonATM.convertTypePropertyToDatatableColumn(property,"outputContainerUsed."+pName+".",{"0":Messages("experiments.outputs")});
+		if(property.code==="tag"){
+			column.editTemplate='<div class="form-control" bt-select #ng-model filter="true" placeholder="'+Messages("search.placeholder.tags")+'" bt-options="project.code as tag.code+\' (\'+tag.name+\')\' for tag in lists.getTags()" ></div>';
+		}
+		return column;
+	};
+	
 	atmService.experimentToView($scope.experiment, $scope.experimentType);
 	
 	$scope.atmService = atmService;
