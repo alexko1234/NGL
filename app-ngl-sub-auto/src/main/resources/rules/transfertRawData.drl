@@ -35,7 +35,12 @@ dialect 'java'
 			newRp.setProperty("idGroupJob",""+$groupJob.getId());
 			resourceProperties.add(newRp);
 		}else{
-        	resourceProperties = $referentialDevice.getGroupResourcesWithType($rps.getResourceType().getName(), $resourcesReferential, $groupJob);
+			Set<ResourceProperties> rpZips = $referentialDevice.getResourcesWithType($rps.getResourceType().getName(), $resourcesReferential);
+        	//Check submissionCode
+        	for(ResourceProperties rpZip : rpZips){
+        		if(rpZip.getProperty("code").equals(groupJobResource.getProperty("code")))
+        			resourceProperties.add(rpZip);
+        	}
 		}
 		$rps.setResourcePropertiesSet(resourceProperties);
 		modify($rps) {};

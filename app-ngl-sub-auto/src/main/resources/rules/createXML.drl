@@ -30,10 +30,15 @@ dialect 'java'
 			newRp.setProperty("gzipForSubmission","false");
 			newRp.setProperty("submissionDirectory",groupJobResource.getProperty("submissionDirectory"));
 			newRp.setProperty("experimentCodes",groupJobResource.getProperty("experimentCodes").replaceAll("\"",""));
-			newRp.setProperty("idGroupJob",""+$groupJob.getId());
 			resourceProperties.add(newRp);
 		}else{
-        	resourceProperties = $referentialDevice.getGroupResourcesWithType($rps.getResourceType().getName(), $resourcesReferential, $groupJob);
+        	Set<ResourceProperties> rpZips = $referentialDevice.getResourcesWithType($rps.getResourceType().getName(), $resourcesReferential);
+        	//Check submissionCode
+        	for(ResourceProperties rpZip : rpZips){
+        		if(rpZip.getProperty("code").equals(groupJobResource.getProperty("code")))
+        			resourceProperties.add(rpZip);
+        	}
+        	
 		}
 		$rps.setResourcePropertiesSet(resourceProperties);
 		modify($rps) {};
