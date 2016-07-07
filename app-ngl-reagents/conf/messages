@@ -66,6 +66,7 @@ boxes.active = En cours d''utilisation
 catalogRefCode = REF. catalogue
 lotNumber = Lot
 providerID = ID Fournisseur
+numberOfCopy = Nombre de copie
 
 kitCatalogs.tabs.create = Création d'un kit dans le catalogue
 kitCatalogs.tabs.search = Rechercher un kit dans le catalogue
