@@ -23,6 +23,13 @@
 						 "type":"text",
 						 "edit":true
 					},
+					 {
+			        	 "header":Messages("reagents.table.lotNumber"),
+			        	 "property":"lotNumber",
+			        	 "order":true,
+			        	 "type":"text",
+			        	 "edit":true
+			         },
 					{
 			        	 "header":Messages("reagents.table.providerID"),
 			        	 "property":"providerID",
@@ -30,13 +37,7 @@
 			        	 "type":"text",
 			        	 "edit":true
 			         },
-			         {
-			        	 "header":Messages("reagents.table.lotNumber"),
-			        	 "property":"lotNumber",
-			        	 "order":true,
-			        	 "type":"text",
-			        	 "edit":true
-			         },
+			        
 			         {
 			        	 "header":Messages("reagents.table.receptionDate"),
 			        	 "property":"receptionDate",

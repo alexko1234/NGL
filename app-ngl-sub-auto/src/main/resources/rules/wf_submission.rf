@@ -24,9 +24,6 @@
     </actionNode>
     <split id="8" name="Gateway" x="418" y="133" width="49" height="49" type="1" />
     <join id="9" name="Gateway" x="460" y="354" width="49" height="49" type="1" />
-    <actionNode id="10" name="WF_ZipMd5Process" x="36" y="266" width="157" height="48" >
-        <action type="expression" dialect="java" >Birds.generateJobs("WF_ZipMd5Process", "SRA", (org.drools.spi.ProcessContext)kcontext);</action>
-    </actionNode>
   </nodes>
 
   <connections>
@@ -37,8 +34,6 @@
     <connection from="1" to="8" />
     <connection from="5" to="9" />
     <connection from="3" to="9" />
-    <connection from="10" to="9" />
-    <connection from="8" to="10" />
   </connections>
 
 </process>
