@@ -80,7 +80,7 @@ public class Plates extends TPLCommonController {
 		Set<String> nomManips = new TreeSet<String>();
 		for(int i = 1; i <= 97; i++){
 			
-			if(sheet.getRow(i) != null && sheet.getRow(i).getCell(0) != null){
+			if(sheet.getRow(i) != null && sheet.getRow(i).getCell(0) != null && sheet.getRow(i).getCell(0).getCellType()!=Cell.CELL_TYPE_BLANK){
 			
 			String nomManip = getStringValue(sheet.getRow(i).getCell(0));
 			
