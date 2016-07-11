@@ -157,7 +157,7 @@ angular.module('home').controller('SearchRemoveCtrl', ['$scope','$location','$ro
 				url:function(line){
 					return jsRoutes.controllers.processes.api.Processes.delete(line.code).url;
 					}
-			}
+			},
 			otherButtons :{
 	        	 active:true,
 	        	 template:'<button class="btn" ng-disabled="!datatable.isSelect()" ng-click="addToBasket(datatable.getSelection(true))" data-toggle="tooltip" title="'+Messages("button.addbasket")+'">'
