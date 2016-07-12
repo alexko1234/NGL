@@ -23,11 +23,13 @@ import models.laboratory.experiment.instance.Experiment;
 import models.laboratory.experiment.instance.InputContainerUsed;
 import models.laboratory.instrument.description.InstrumentUsedType;
 import models.laboratory.instrument.instance.InstrumentUsed;
+import models.laboratory.sample.description.ImportType;
 
 import org.mongojack.DBQuery;
 
 import validation.ContextValidation;
 import validation.common.instance.CommonValidationHelper;
+import validation.utils.BusinessValidationHelper;
 import validation.utils.ValidationHelper;
 import fr.cea.ig.MongoDBDAO;
 
@@ -196,14 +198,18 @@ public class ContainerUsedValidationHelper extends CommonValidationHelper {
 	
 	
 	public static void validateInputContainerCategoryCode(String categoryCode, ContextValidation contextValidation) {
-		InstrumentUsed instrument = getObjectFromContext(FIELD_INST_USED, InstrumentUsed.class, contextValidation);
+		/* many input category support in experiment => validation creates errors */ 
+		
+		/*InstrumentUsed instrument = getObjectFromContext(FIELD_INST_USED, InstrumentUsed.class, contextValidation);
 		if(ValidationHelper.required(contextValidation, categoryCode, "categoryCode") && null != instrument.inContainerSupportCategoryCode){
 			ContainerCategory outputContainerCategory = ContainerCategory.find.findByContainerSupportCategoryCode(instrument.inContainerSupportCategoryCode);
 			if(!categoryCode.equals(outputContainerCategory.code)){
 				contextValidation.addErrors("categoryCode", ERROR_VALUENOTAUTHORIZED_MSG, categoryCode);
 			}
-		}
+		}*/
 		
+		BusinessValidationHelper.validateRequiredDescriptionCode(contextValidation, categoryCode,"inputContainerCategory", ContainerCategory.find,true);
+
 	}
 	
 	public static void validateOutputContainerCategoryCode(String categoryCode, ContextValidation contextValidation) {
