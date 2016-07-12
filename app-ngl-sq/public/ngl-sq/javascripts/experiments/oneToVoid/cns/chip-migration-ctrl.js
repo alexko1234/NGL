@@ -59,6 +59,65 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 	})
 	
 	
+	var columns = $scope.atmService.data.getColumnsConfig();
+	columns.push({
+			"header" : Messages("containers.table.concentration"),
+			"property": "inputContainer.concentration",
+			"render":"<span ng-bind='cellValue.value|number'/> <span ng-bind='cellValue.unit'/>",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 8,
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
+			}
+		});
+
+	columns.push({
+			"header" : Messages("containers.table.volume") + " (µL)",
+			"property" : "inputContainer.volume.value",
+			"order" : true,
+			"edit" : false,
+			"hide" : true,
+			"type" : "number",
+			"position" : 9,
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
+			}
+		});
+		
+		
+	columns.push({
+			"header" : Messages("containers.table.libProcessType"),
+			"property" : "inputContainer.contents",
+			"order" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 9.1,
+			"render" : "<div list-resize='cellValue | getArray:\"properties.libProcessTypeCode.value\" | unique' list-resize-min-size='3'>",
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
+			}
+		});
+	
+	columns.push({
+			"header" : Messages("containers.table.tags"),
+			"property" : "inputContainer.contents",
+			"order" : false,
+			"hide" : true,
+			"type" : "text",
+			"position" : 9.2,
+			"render" : "<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' list-resize-min-size='3'>",
+			"extraHeaders" : {
+				0 : Messages("experiments.inputs")
+			}
+
+		}); 
+	
+	$scope.atmService.data.setColumnsConfig(columns);
+
+	
 	$scope.button = {
 		isShow:function(){
 			return ($scope.isInProgressState() && !$scope.mainService.isEditMode())

@@ -54,6 +54,33 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNSCtrl',['$scope'
 	};
 	
 	var columns = $scope.atmService.data.getColumnsConfig();
+	
+	columns.push({
+		"header" : Messages("containers.table.libProcessType"),
+		"property" : "inputContainer.contents",
+		"order" : false,
+		"hide" : true,
+		"type" : "text",
+		"position" : 8,
+		"render" : "<div list-resize='cellValue | getArray:\"properties.libProcessTypeCode.value\" | unique' list-resize-min-size='3'>",
+		"extraHeaders" : {
+			0 : Messages("experiments.inputs")
+		}
+	});
+	columns.push({
+		"header" : Messages("containers.table.tags"),
+		"property" : "inputContainer.contents",
+		"order" : false,
+		"hide" : true,
+		"type" : "text",
+		"position" : 9,
+		"render" : "<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' list-resize-min-size='3'>",
+		"extraHeaders" : {
+			0 : Messages("experiments.inputs")
+		}
+
+	});
+	
 	columns.push({
 		"header":Messages("containers.table.concentration"),
 		"property": "inputContainer.concentration",
@@ -65,12 +92,12 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNSCtrl',['$scope'
 		"extraHeaders":{0:Messages("experiments.inputs")}			 						 			
 	});
 	columns.push({
-		"header":Messages("containers.table.size"),
+		"header":Messages("containers.table.size")+ " (pb)",
 		"property": "inputContainer.size.value",
 		"order":false,
 		"hide":true,
 		"type":"text",
-		"position":10,
+		"position":11,
 		"extraHeaders":{0:Messages("experiments.inputs")}			 						 			
 	});
 	$scope.atmService.data.setColumnsConfig(columns);
