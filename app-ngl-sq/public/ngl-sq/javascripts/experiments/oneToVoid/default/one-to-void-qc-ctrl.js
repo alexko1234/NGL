@@ -61,7 +61,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 		});
 
 				
-		columns.push({
+	/*	columns.push({
 			"header" : Messages("containers.table.concentration"),
 			"property": "inputContainer.concentration",
 			"render":"<span ng-bind='cellValue.value|number'/> <span ng-bind='cellValue.unit'/>",
@@ -113,7 +113,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 				0 : Messages("experiments.inputs")
 			}
 
-		});
+		}); */
 		columns.push({
 			"header" : Messages("containers.table.stateCode"),
 			"property" : "inputContainer.state.code",

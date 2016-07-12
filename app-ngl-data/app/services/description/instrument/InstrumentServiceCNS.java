@@ -197,7 +197,7 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 						createInstrument("thermoS2", "ThermoS2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)), 
 						createInstrument("thermoS3", "ThermoS3",  null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)) 
 						), 
-				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"tube"}), 
+				getContainerSupportCategories(new String[]{"tube","96-well-plate"}),getContainerSupportCategories(new String[]{"tube","96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 		
 		l.add(newInstrumentUsedType("cBot", "cBot", InstrumentCategory.find.findByCode("cbot"), getCBotProperties(), 
@@ -459,7 +459,9 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 	
 	private static List<PropertyDefinition> getThermocyclerProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
-		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("15","18"), "single"));		
+		/*l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("15","18"), "single"));*/
+		l.add(newPropertiesDefinition("Nb cycles", "nbCycle", LevelService.getLevels(Level.CODE.Instrument), Integer.class, true, null, null, 
+				"single", 10, true, null,null));
 		return l;
 	}
 	
