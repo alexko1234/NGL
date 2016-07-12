@@ -122,7 +122,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 			"hide" : true,
 			"type" : "text",
 			"filter" : "codes:'state'",
-			"position" : 12,
+			"position" : 10.5,
 			"extraHeaders" : {
 				0 : Messages("experiments.inputs")
 			}
@@ -181,7 +181,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 				}
 			});
 		} else {
-			columns.push({
+			/*columns.push({
 				"header" : Messages("containers.table.supportCode"),
 				"property" : "inputContainer.support.code",
 				"order" : true,
@@ -205,7 +205,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 				"extraHeaders" : {
 					0 : Messages("experiments.inputs")
 				}
-			});
+			});*/
 			columns.push({
 				"header" : Messages("containers.table.code"),
 				"property" : "inputContainer.code",

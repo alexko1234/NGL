@@ -97,7 +97,7 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNSCtrl',['$scope'
 		"order":false,
 		"hide":true,
 		"type":"text",
-		"position":11,
+		"position":10.1,
 		"extraHeaders":{0:Messages("experiments.inputs")}			 						 			
 	});
 	$scope.atmService.data.setColumnsConfig(columns);

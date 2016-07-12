@@ -29,19 +29,6 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 	
 	
 	var columns = $scope.atmService.data.getColumnsConfig();
-	columns.push({
-		"header" : Messages("containers.table.concentration"),
-		"property": "inputContainer.concentration",
-		"render":"<span ng-bind='cellValue.value|number'/> <span ng-bind='cellValue.unit'/>",
-		"order" : true,
-		"edit" : false,
-		"hide" : true,
-		"type" : "text",
-		"position" : 8,
-		"extraHeaders" : {
-			0 : Messages("experiments.inputs")
-		}
-	});
 
 	columns.push({
 		"header" : Messages("containers.table.volume") + " (µL)",
@@ -56,6 +43,7 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 		}
 	});
 	
+	/*
 	columns.push({
 		"header" : Messages("containers.table.libProcessType"),
 		"property" : "inputContainer.contents",
@@ -81,7 +69,7 @@ angular.module('home').controller('OneToVoidFluoQuantificationCNSCtrl',['$scope'
 			0 : Messages("experiments.inputs")
 		}
 
-	}); 
+	}); */
 	
 	$scope.atmService.data.setColumnsConfig(columns);
 	

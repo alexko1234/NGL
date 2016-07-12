@@ -1,6 +1,7 @@
 angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$parse','$http',
                                                              function($scope,$parse,$http) {
 	
+	
 	$scope.$parent.copyPropertiesToInputContainer = function(experiment){
 		
 		
@@ -13,7 +14,11 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 				if(measuredSize){
 					inputContainerUsed.size = measuredSize;
 				}
-				
+			
+				var volume1 = $parse("experimentProperties.volume1")(inputContainerUsed);
+				if(volume1){
+					inputContainerUsed.volume = volume1;
+				}
 				
 			}
 			
@@ -88,7 +93,7 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 		});
 		
 		
-	columns.push({
+/*	columns.push({
 			"header" : Messages("containers.table.libProcessType"),
 			"property" : "inputContainer.contents",
 			"order" : false,
@@ -114,7 +119,7 @@ angular.module('home').controller('OneToVoidChipMigrationCNSCtrl',['$scope', '$p
 			}
 
 		}); 
-	
+	*/
 	$scope.atmService.data.setColumnsConfig(columns);
 
 	

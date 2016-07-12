@@ -1,5 +1,6 @@
-angular.module('home').controller('OneToVoidGelMigrationCNSCtrl',['$scope', '$parse','$http',
+angular.module('home').controller('OneToVoidPCRGelMigrationCNSCtrl',['$scope', '$parse','$http',
                                                              function($scope,$parse,$http) {
+	
 	
 	$scope.$parent.copyPropertiesToInputContainer = function(experiment){
 		
@@ -57,7 +58,7 @@ angular.module('home').controller('OneToVoidGelMigrationCNSCtrl',['$scope', '$pa
 		"edit" : false,
 		"hide" : true,
 		"type" : "text",
-		"position" : 9,
+		"position" : 8,
 		"extraHeaders" : {
 			0 : Messages("experiments.inputs")
 		}
@@ -70,21 +71,21 @@ angular.module('home').controller('OneToVoidGelMigrationCNSCtrl',['$scope', '$pa
 		"edit" : false,
 		"hide" : true,
 		"type" : "number",
-		"position" : 10,
+		"position" : 9,
 		"extraHeaders" : {
 			0 : Messages("experiments.inputs")
 		}
 	});
 	
-/*	columns.push({
+   columns.push({
 		"header":Messages("containers.table.size")+ " (pb)",
 		"property": "inputContainer.size.value",
 		"order":false,
 		"hide":true,
 		"type":"text",
-		"position":11,
+		"position":10,
 		"extraHeaders":{0:Messages("experiments.inputs")}			 						 			
-	});*/
+	});
 	
 	$scope.atmService.data.setColumnsConfig(columns);
 
