@@ -772,9 +772,9 @@ public class TreatmentServiceCNS extends AbstractTreatmentService {
 
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version MinKNOW","minKnowVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, false, "single","0.51.3.55"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version Metrichor","metrichorVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, false, "single","1.107"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version Metrichor","metrichorVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, false, "single","2.40.17"));
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Nom workflow","metrichorWorkflowName", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, false, "single","2D Basecalling RNN for NSK007"));
-		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version workflow","metrichorWorkflowVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, false, "single","1.69"));
+		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Version workflow","metrichorWorkflowVersion", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), String.class, false, "single","1.107"));
 
 		propertyDefinitions.add(DescriptionFactory.newPropertiesDefinition("Metrichor run ID","metrichorRunID", LevelService.getLevels(Level.CODE.Run, Level.CODE.Default), Long.class, false, "single"));
 
