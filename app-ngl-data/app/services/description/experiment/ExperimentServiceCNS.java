@@ -187,7 +187,60 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 			ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPoolTube(),
 			getInstrumentUsedTypes("tecan-evo-100", "hand"),"ManyToOne", 
 			DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		
+		// sample prep
+		l.add(newExperimentType("Ext to Extraction ADN / ARN (corail)","ext-to-grinding-and-dna-rna-extraction",null,-1,
+							ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+							DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+					
+		l.add(newExperimentType("Broyage ","grinding",null,650,
+							ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
+							getInstrumentUsedTypes("fast-prep"),"OneToMany", null,true,
+							DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+					
+		l.add(newExperimentType("Ext to Extraction ADN / ARN (plancton)","ext-to-dna-rna-extraction-process",null,-1,
+							ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
+							DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+
+		l.add(newExperimentType("Extraction ADN / ARN ","dna-rna-extraction","AN",700,
+							ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsExtractionADNARN(),
+							getInstrumentUsedTypes("cryobroyeur","hand"),"OneToMany", getSampleTypes("DNA","RNA"),true,
+							DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
+		//qc
+		
+		l.add(newExperimentType("Dosage fluorométrique","fluo-quantification", null,20100,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsDosageFluorometrique(), 
+				getInstrumentUsedTypes("qubit","fluoroskan"),"OneToVoid", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
+		
+		l.add(newExperimentType("Migration sur gel","gel-migration", null,20200,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsGelMigration(), 
+				getInstrumentUsedTypes("hand"),"OneToVoid", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
+		
+		l.add(newExperimentType("Migration sur puce","chip-migration", null,20300,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
+				getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchip-gx"),"OneToVoid", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
+		
+		l.add(newExperimentType("PCR + gel","control-pcr-and-gel", null,20400,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsPCRGel(), 
+				getInstrumentUsedTypes("thermocycler"),"OneToVoid", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
+	
+		l.add(newExperimentType("Quantification qPCR","qpcr-quantification", null,20500,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsQPCR(), 
+				getInstrumentUsedTypes("tecan-evo-100-and-stratagene-qPCR-system"),"OneToVoid", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
 			
+		//purif
+		l.add(newExperimentType("Traitement DNAse","dnase-treatment",null,
+				ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null,
+				getInstrumentUsedTypes("hand"),"OneToOne", 
+				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+		
 		if(ConfigFactory.load().getString("ngl.env").equals("UAT") ){
 			
 		}else if(ConfigFactory.load().getString("ngl.env").equals("DEV") ){
@@ -244,24 +297,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					null,"OneToOne", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
-			// sample prep
-			l.add(newExperimentType("Ext to Extraction ADN / ARN (corail)","ext-to-grinding-and-dna-rna-extraction",null,-1,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
-			l.add(newExperimentType("Broyage ","grinding",null,650,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), null,
-					getInstrumentUsedTypes("fast-prep"),"OneToMany", null,true,
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-			
-			l.add(newExperimentType("Ext to Extraction ADN / ARN (plancton)","ext-to-dna-rna-extraction-process",null,-1,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.voidprocess.name()), null, null,"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-
-			l.add(newExperimentType("Extraction ADN / ARN ","dna-rna-extraction","AN",700,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transformation.name()), getPropertyDefinitionsExtractionADNARN(),
-					getInstrumentUsedTypes("cryobroyeur","hand"),"OneToMany", getSampleTypes("DNA","RNA"),true,
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
 			//Metatranscriptomique
 			l.add(newExperimentType("Ext to metaT 2","ext_to_process_metaT_2",null,-1,
@@ -274,42 +310,6 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
 			
-			//qc
-		
-			l.add(newExperimentType("Dosage fluorométrique","fluo-quantification", null,20100,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsDosageFluorometrique(), 
-					getInstrumentUsedTypes("qubit","fluoroskan"),"OneToVoid", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
-			
-			l.add(newExperimentType("Migration sur gel","gel-migration", null,20200,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsGelMigration(), 
-					getInstrumentUsedTypes("hand"),"OneToVoid", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
-			
-			l.add(newExperimentType("Migration sur puce","chip-migration", null,20300,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
-					getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchip-gx"),"OneToVoid", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
-			
-			l.add(newExperimentType("PCR + gel","control-pcr-and-gel", null,20400,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsPCRGel(), 
-					getInstrumentUsedTypes("thermocycler"),"OneToVoid", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
-		
-			l.add(newExperimentType("Quantification qPCR","qpcr-quantification", null,20500,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsQPCR(), 
-					getInstrumentUsedTypes("tecan-evo-100-and-stratagene-qPCR-system"),"OneToVoid", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
-			
-			//purif
-			l.add(newExperimentType("Traitement DNAse","dnase-treatment",null,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.purification.name()), null,
-					getInstrumentUsedTypes("hand"),"OneToOne", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-			
-			
-			
-		
 		}
 		
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
@@ -327,6 +327,7 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		newExperimentTypeNode("opgen-depot",getExperimentTypes("opgen-depot").get(0),false,false, false,getExperimentTypeNodes("ext-to-opgen-run"),null,null,null).save();
 		
 		
+		
 		if(ConfigFactory.load().getString("ngl.env").equals("PROD") || ConfigFactory.load().getString("ngl.env").equals("UAT")){
 			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,null,null,null,getExperimentTypes("pool")).save();
 			
@@ -339,12 +340,6 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 			
 			newExperimentTypeNode("qpcr-quantification", getExperimentTypes("qpcr-quantification").get(0), false, false, false, getExperimentTypeNodes("ext-to-qpcr-norm-fc-depot-illumina","sizing","amplification"), null, null, null).save();
 			newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false, false,false,getExperimentTypeNodes("ext-to-qpcr-norm-fc-depot-illumina","ext-to-norm-fc-depot-illumina","sizing","amplification"),null,null,getExperimentTypes("pool", "pool-tube")).save();
-
-			//Sample Preparation 
-			newExperimentTypeNode("ext-to-grinding-and-dna-rna-extraction", getExperimentTypes("ext-to-grinding-and-dna-rna-extraction").get(0), false, false, false, null, null, null, null).save();
-			newExperimentTypeNode("grinding",getExperimentTypes("grinding").get(0),false, false,false,getExperimentTypeNodes("ext-to-grinding-and-dna-rna-extraction"),null,null,null).save();
-			newExperimentTypeNode("ext-to-dna-rna-extraction-process", getExperimentTypes("ext-to-dna-rna-extraction-process").get(0), false, false, false, null, null, null, null).save();
-			newExperimentTypeNode("dna-rna-extraction",getExperimentTypes("dna-rna-extraction").get(0),false, false,false,getExperimentTypeNodes("ext-to-dna-rna-extraction-process","grinding"),getExperimentTypes("dnase-treatment"),getExperimentTypes("fluo-quantification","chip-migration","gel-migration","control-pcr-and-gel"),getExperimentTypes("aliquoting")).save();
 			
 			//Metatranscriptome
 			newExperimentTypeNode("ext_to_process_metaT_2", getExperimentTypes("ext_to_process_metaT_2").get(0), false, false, false, null, null, null, null).save();
@@ -380,7 +375,12 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		newExperimentTypeNode("irys-chip-preparation",getExperimentTypes("irys-chip-preparation").get(0),false,false,getExperimentTypeNodes("ext-to-bionano-chip-process","irys-nlrs-prep"),null,null).save();
 		newExperimentTypeNode("bionano-depot",getExperimentTypes("bionano-depot").get(0),false,false,getExperimentTypeNodes("ext-to-bionano-run","irys-chip-preparation"),null,null).save();
 					
-
+		//Sample Preparation 
+		newExperimentTypeNode("ext-to-grinding-and-dna-rna-extraction", getExperimentTypes("ext-to-grinding-and-dna-rna-extraction").get(0), false, false, false, null, null, null, null).save();
+		newExperimentTypeNode("grinding",getExperimentTypes("grinding").get(0),false, false,false,getExperimentTypeNodes("ext-to-grinding-and-dna-rna-extraction"),null,null,null).save();
+		newExperimentTypeNode("ext-to-dna-rna-extraction-process", getExperimentTypes("ext-to-dna-rna-extraction-process").get(0), false, false, false, null, null, null, null).save();
+		newExperimentTypeNode("dna-rna-extraction",getExperimentTypes("dna-rna-extraction").get(0),false, false,false,getExperimentTypeNodes("ext-to-dna-rna-extraction-process","grinding"),getExperimentTypes("dnase-treatment"),getExperimentTypes("fluo-quantification","chip-migration","gel-migration","control-pcr-and-gel"),getExperimentTypes("aliquoting")).save();
+		
 		//	newExperimentTypeNode("solution-stock",getExperimentTypes("solution-stock").get(0),false,false,getExperimentTypeNodes("ext-to-qpcr","amplification"),
 			//		null,null).save();
 			/*
