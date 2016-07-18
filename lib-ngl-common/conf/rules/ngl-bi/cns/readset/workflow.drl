@@ -76,6 +76,7 @@ rule "Find Pattern Krona for taxonomy treatment"
 		}
 		
 		insert(readSetKrona);
+end
 
 rule "Set state to In Waiting Transfert CCRT from Avalaible readSet"
 	@nglBI( A_1 )
