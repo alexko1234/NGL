@@ -275,33 +275,31 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 			
 			
 			//qc
-			
-			l.add(newExperimentType("Quantification qPCR","qpcr-quantification", null,20100,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsQPCR(), 
-					getInstrumentUsedTypes("tecan-evo-100-and-stratagene-qPCR-system"),"OneToVoid", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
-			
-			l.add(newExperimentType("Migration sur puce","chip-migration", null,20200,
-					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
-					getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchip-gx"),"OneToVoid", 
-					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
-			
-			
-			l.add(newExperimentType("Dosage fluorométrique","fluo-quantification", null,20300,
+		
+			l.add(newExperimentType("Dosage fluorométrique","fluo-quantification", null,20100,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsDosageFluorometrique(), 
 					getInstrumentUsedTypes("qubit","fluoroskan"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
 			
-			l.add(newExperimentType("Migration sur gel","gel-migration", null,20400,
+			l.add(newExperimentType("Migration sur gel","gel-migration", null,20200,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsGelMigration(), 
 					getInstrumentUsedTypes("hand"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
 			
-			l.add(newExperimentType("PCR + gel","control-pcr-and-gel", null,20500,
+			l.add(newExperimentType("Migration sur puce","chip-migration", null,20300,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsChipMigration(), 
+					getInstrumentUsedTypes("agilent-2100-bioanalyzer", "labchip-gx"),"OneToVoid", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
+			
+			l.add(newExperimentType("PCR + gel","control-pcr-and-gel", null,20400,
 					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsPCRGel(), 
 					getInstrumentUsedTypes("thermocycler"),"OneToVoid", 
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
-			
+		
+			l.add(newExperimentType("Quantification qPCR","qpcr-quantification", null,20500,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.qualitycontrol.name()), getPropertyDefinitionsQPCR(), 
+					getInstrumentUsedTypes("tecan-evo-100-and-stratagene-qPCR-system"),"OneToVoid", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS))); 
 			
 			//purif
 			l.add(newExperimentType("Traitement DNAse","dnase-treatment",null,
@@ -906,10 +904,10 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 14, true, null,null));
 		
 		propertyDefinitions.add(newPropertiesDefinition("Amorces", "amplificationPrimers", LevelService.getLevels(Level.CODE.Experiment), String.class, true, null, 
-				DescriptionFactory.newValues("Furhmann"), null, null, null,"single", 1, true, null,null));
+				null, null, null, null,"single", 1, true, null,null));
 
 		propertyDefinitions.add(newPropertiesDefinition("Région ciblée","targetedRegion", LevelService.getLevels(Level.CODE.Experiment), String.class, true, null, 
-				DescriptionFactory.newValues("V4", "V6–V8", "V7–V8"), null, null, null,"single", 2, true, null,null));
+				null, null, null, null,"single", 2, true, null,null));
 
 		return propertyDefinitions;
 	}

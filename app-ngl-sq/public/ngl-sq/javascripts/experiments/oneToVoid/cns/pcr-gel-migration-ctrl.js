@@ -50,7 +50,7 @@ angular.module('home').controller('OneToVoidPCRGelMigrationCNSCtrl',['$scope', '
 
 	});
 	
-	columns.push({
+	/*columns.push({
 		"header" : Messages("containers.table.concentration"),
 		"property": "inputContainer.concentration",
 		"render":"<span ng-bind='cellValue.value|number'/> <span ng-bind='cellValue.unit'/>",
@@ -63,7 +63,7 @@ angular.module('home').controller('OneToVoidPCRGelMigrationCNSCtrl',['$scope', '
 			0 : Messages("experiments.inputs")
 		}
 	});
-
+*/
 	columns.push({
 		"header" : Messages("containers.table.volume") + " (µL)",
 		"property" : "inputContainer.volume.value",
@@ -76,7 +76,7 @@ angular.module('home').controller('OneToVoidPCRGelMigrationCNSCtrl',['$scope', '
 			0 : Messages("experiments.inputs")
 		}
 	});
-	
+	/*
    columns.push({
 		"header":Messages("containers.table.size")+ " (pb)",
 		"property": "inputContainer.size.value",
@@ -86,7 +86,7 @@ angular.module('home').controller('OneToVoidPCRGelMigrationCNSCtrl',['$scope', '
 		"position":10,
 		"extraHeaders":{0:Messages("experiments.inputs")}			 						 			
 	});
-	
+	*/
 	$scope.atmService.data.setColumnsConfig(columns);
 
 	
