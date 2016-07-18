@@ -53,7 +53,8 @@ angular.module('home').controller('OneToVoidPCRGelMigrationCNSCtrl',['$scope', '
 	/*columns.push({
 		"header" : Messages("containers.table.concentration"),
 		"property": "inputContainer.concentration",
-		"render":"<span ng-bind='cellValue.value|number'/> <span ng-bind='cellValue.unit'/>",
+		"property": "(inputContainer.concentration.value|number).concat(' '+inputContainer.concentration.unit)",
+		//"render":"<span ng-bind='cellValue.value|number'/> <span ng-bind='cellValue.unit'/>",
 		"order" : true,
 		"edit" : false,
 		"hide" : true,
