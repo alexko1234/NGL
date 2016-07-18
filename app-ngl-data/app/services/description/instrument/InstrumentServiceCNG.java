@@ -408,7 +408,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		l.addAll(getCovarisProperties());
 		l.addAll(getSicloneNGSXProperties());
 		
-		//15/04/2016"ngsRunCode" devient generique: => robotRunCode
 		l.add(newPropertiesDefinition("Nom du Run","robotRunCode", LevelService.getLevels(Level.CODE.Instrument),  String.class, false, null,
 				null, null, null, null, "single", null, true ,null, null));
 		return l;
@@ -428,8 +427,7 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	 private static List<PropertyDefinition> getJanusAndCBotProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
-		// propertie Janus + properties cbot
-		//l.addAll(getJanusProperties());
+
 		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, null,
 				 newValues("Clusterstripprepworklist"), "single", null, false ,null, null));
 		
@@ -448,8 +446,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 	private static List<PropertyDefinition> getLightCyclerProperties() throws DAOException {
 		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
 		
-		// secteur de la plaque 96 initiale utilisee: 0 ou 1
-		// a modifier en "program" du NG si on pass a un instrument hybride NGS-lightcycler ????
 		l.add(newPropertiesDefinition("Secteur Plaque 96","sector96", LevelService.getLevels(Level.CODE.Instrument),String.class, true, null,
 				newValues("1-48","49-96"), null, null , null, "single", null, false ,null, null));
 		
@@ -466,7 +462,6 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		return instruments;
 	}
 	
-	/*** get lists methods ***/
 	private static List<Instrument> getInstrumentMiSeqQC() throws DAOException {
 		List<Instrument> instruments=new ArrayList<Instrument>();
 		instruments.add(createInstrument("MISEQ1-QC", "MISEQ1 QC", null, false, "/env/ig/atelier/illumina/cng/MISEQ1/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)) );
@@ -527,7 +522,5 @@ public class InstrumentServiceCNG extends AbstractInstrumentService{
 		instruments.add( createInstrument("HISEQ11", "HISEQ11", "H3", true, "/env/ig/atelier/illumina/cng/HISEQ11/", DescriptionFactory.getInstitutes(Constants.CODE.CNG)));
 		return instruments;
 	}
-	
-
 
 }
