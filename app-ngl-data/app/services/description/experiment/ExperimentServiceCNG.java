@@ -253,7 +253,7 @@ public class ExperimentServiceCNG extends AbstractExperimentService{
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));		
 				
 				// FDS 17/06/2016 NGL-1029: experience de transfert "pool : 4 plaques vers tubes ou plaques" (NOTE: pas de Node pour experience type transfert )
-				l.add(newExperimentType("Pool générique","pool",null,200,
+				l.add(newExperimentType("Pool de plaques","pool",null,200,
 						ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionPool(),
 						getInstrumentUsedTypes("janus", "hand"),"ManyToOne", 
 						DescriptionFactory.getInstitutes(Constants.CODE.CNG)));

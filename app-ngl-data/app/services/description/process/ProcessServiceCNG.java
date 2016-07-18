@@ -33,9 +33,10 @@ public class ProcessServiceCNG  extends AbstractProcessService{
 	public void saveProcessCategories(Map<String, List<ValidationError>> errors) throws DAOException {
 		List<ProcessCategory> l = new ArrayList<ProcessCategory>();
 		
-		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Sequençage", "sequencing"));		
+		//Attention l'ordre de déclaration sera l'ordre de présentation dans les menus
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Prep. Librairie", "library"));
 		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Normalisation", "normalization"));
+		l.add(DescriptionFactory.newSimpleCategory(ProcessCategory.class, "Sequençage", "sequencing"));		
 		
 		if(	!ConfigFactory.load().getString("ngl.env").equals("PROD") ){	
 			// 09/03/2016 N'existent pas au CNG
