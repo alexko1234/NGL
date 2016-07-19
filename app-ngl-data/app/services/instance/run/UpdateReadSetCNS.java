@@ -65,7 +65,7 @@ public class UpdateReadSetCNS extends AbstractImportDataCNS{
 			if(null != newReadset && null != readset.sampleOnContainer){
 				updateReadSet(contextError, newReadset, readset.sampleOnContainer.sampleCategoryCode);
 			}else if(null == newReadset){
-				if("A".equals(readset.state.code)){
+				if("A".equals(readset.state.code) && !readset.typeCode.equals("rsnanopore")){
 					contextError.addErrors("readset", "not found in db lims");
 				}
 			}
