@@ -67,11 +67,16 @@ public abstract class Mapping<T extends DBObject> {
 				}
 			}
 		}
-		Field[] fields = type.getFields();
-		for(Field field : fields){
-			populateField(field, object, rowMap);			
+		
+		if(null != object){
+			Field[] fields = type.getFields();
+			for(Field field : fields){
+				populateField(field, object, rowMap);			
+			}
+			update(object);
+			
 		}
-		update(object);
+		
 		return object;
 	}
 	
@@ -128,7 +133,11 @@ public abstract class Mapping<T extends DBObject> {
 			AbstractFieldConfiguration codeConfig = configuration.get("code");
 			codeConfig.populateField(object.getClass().getField("code"), object, rowMap, contextValidation, action);
 			if(null != object.code){
-				object = MongoDBDAO.findByCode(collectionName, type, object.code);						
+				String code = object.code;
+				object = MongoDBDAO.findByCode(collectionName, type, object.code);	
+				if(null == object){
+					contextValidation.addErrors("Error", "not found "+type.getSimpleName()+" for code "+code);
+				}
 			}else{
 				contextValidation.addErrors("Error", "not found "+type.getSimpleName()+" code !!!");
 			}

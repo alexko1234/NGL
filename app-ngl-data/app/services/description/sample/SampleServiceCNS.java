@@ -44,6 +44,8 @@ public class SampleServiceCNS extends AbstractSampleService {
 		//FDS 16/16/2015 necessaire pour l'import des tubes...
 		l.add(newSampleCategory("Control","control"));
 		
+		l.add(newSampleCategory("Prélèvements environnementaux","environmental-samples"));
+		
 		DAOHelpers.saveModels(SampleCategory.class, l, errors);
 	}
 	
@@ -99,9 +101,21 @@ public class SampleServiceCNS extends AbstractSampleService {
 		l.add(newSampleType("ADN", "DNA", SampleCategory.find.findByCode("DNA"),null, getInstitutes(Constants.CODE.CNS)));
 		l.add(newSampleType("ARN", "RNA", SampleCategory.find.findByCode("RNA"),null, getInstitutes(Constants.CODE.CNS)));
 
+		l.add(newSampleType("Plancton", "plankton", SampleCategory.find.findByCode("environmental-samples"),getEnvironmentalPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
+		l.add(newSampleType("Aérosol", "aerosol", SampleCategory.find.findByCode("environmental-samples"),getEnvironmentalPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
+		l.add(newSampleType("Vesiclome", "vesiclome", SampleCategory.find.findByCode("environmental-samples"),getEnvironmentalPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
+		l.add(newSampleType("Corail", "coral", SampleCategory.find.findByCode("environmental-samples"),getEnvironmentalPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
+		l.add(newSampleType("Poisson", "fish", SampleCategory.find.findByCode("environmental-samples"),getEnvironmentalPropertyDefinitions(), getInstitutes(Constants.CODE.CNS)));
+		
 		DAOHelpers.saveModels(SampleType.class, l, errors);
 	}
 	
+	private List<PropertyDefinition> getEnvironmentalPropertyDefinitions() {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		propertyDefinitions.add(newPropertiesDefinition("META", "meta", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Boolean.class, true, null, null, "single", 1, true, null, null));
+		return propertyDefinitions;
+	}
+
 	private static List<PropertyDefinition> getSampleCommonPropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.add(newPropertiesDefinition("Taille associée au taxon", "taxonSize", LevelService.getLevels(Level.CODE.Content,Level.CODE.Sample),Double.class, true,MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb"), "single"));
