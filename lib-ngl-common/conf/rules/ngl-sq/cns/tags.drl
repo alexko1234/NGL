@@ -8,6 +8,7 @@ end
 
 declare TagDetails
 	barcode : String
+	categoryCode : String
 	experimentTrigramCode : String
 	projectCode : String
 	sampleCode : String
@@ -222,10 +223,10 @@ rule "Generate TagDetails from TagInfo"
 		*/
 		if(null !=  $tagInfo.getExperimentTypeCode()){
 			ExperimentType experimentType = ExperimentType.find.findByCode( $tagInfo.getExperimentTypeCode());
-			TagDetails tagDetails = new TagDetails(support.code, experimentType.shortCode, projectCode, sampleCode, libProcessTypeCode, tagCode);
+			TagDetails tagDetails = new TagDetails(support.code, support.categoryCode, experimentType.shortCode, projectCode, sampleCode, libProcessTypeCode, tagCode);
 			insert(tagDetails);
 		}else{
-			TagDetails tagDetails = new TagDetails(support.code, null, projectCode, sampleCode, libProcessTypeCode, tagCode);
+			TagDetails tagDetails = new TagDetails(support.code, support.categoryCode, null, projectCode, sampleCode, libProcessTypeCode, tagCode);
 			insert(tagDetails);
 		}
 		
@@ -252,20 +253,25 @@ rule "Generate tag from TagDetails"
 			sb.append("_");
 			
 		}
-		
-		sb.append($tagDetails.getProjectCode());
-		sb.append("_").append($tagDetails.getSampleCode());
-		/*
-		if(null != $tagDetails.getLibProcessTypeCode()){
-			sb.append("_").append($tagDetails.getLibProcessTypeCode());
+		if(!$tagDetails.getCategoryCode().contains("well-plate")){
+			sb.append($tagDetails.getProjectCode());
+			sb.append("_").append($tagDetails.getSampleCode());
+			/*
+			if(null != $tagDetails.getLibProcessTypeCode()){
+				sb.append("_").append($tagDetails.getLibProcessTypeCode());
+			}
+			
+			if(null != $tagDetails.getTagCode()){
+				sb.append("_").append($tagDetails.getTagCode());
+			}
+			
+			sb.append("_").append($tagDetails.getBarcode());
+			*/
+		}else{
+			sb.append($tagDetails.getProjectCode());
+			sb.append("_").append($tagDetails.getBarcode());
 		}
 		
-		if(null != $tagDetails.getTagCode()){
-			sb.append("_").append($tagDetails.getTagCode());
-		}
-		
-		sb.append("_").append($tagDetails.getBarcode());
-		*/
 		Tag tag = new Tag();
 		tag.barcode = $tagDetails.getBarcode();
 		tag.label = sb.toString(); 
