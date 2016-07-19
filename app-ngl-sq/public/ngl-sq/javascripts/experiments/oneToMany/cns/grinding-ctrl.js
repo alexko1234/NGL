@@ -1,9 +1,9 @@
 angular.module('home').controller('GrindingCtrl',['$scope', '$parse', 'atmToGenerateMany',
                                                                function($scope, $parse, atmToGenerateMany) {
-	
 		
 	var datatableConfigTubeParam = {
-			name:"Tube_Param",
+			// NGL-1055: name explicite pour fichier CSV exporté... Pas utilisé ?? voir plus bas
+			name:"Grinding",
 			columns:[   
 					 {
 			        	 "header":Messages("containers.table.code"),
@@ -71,8 +71,10 @@ angular.module('home').controller('GrindingCtrl',['$scope', '$parse', 'atmToGene
 			}
 
 	};	
+	
 	var datatableConfigTubeConfig =  {
-			name:"Tube_Param",
+			// NGL-1055: name explicite pour fichier CSV exporté
+			name:"Grinding",
 			columns:[   
 					 {
 			        	 "header":Messages("containers.table.code"),
@@ -107,15 +109,17 @@ angular.module('home').controller('GrindingCtrl',['$scope', '$parse', 'atmToGene
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 				     },
+				     // NGL-1055: codes:'type' dans filter et pas dans render ???
 				     {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
 			        	 "property":"inputContainer.fromTransformationTypeCodes",
+			        	 "filter" : "unique | codes:'type'",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
 			        	 "mergeCells" : true,
-			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
+			 			 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "position":4,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
@@ -149,8 +153,7 @@ angular.module('home').controller('GrindingCtrl',['$scope', '$parse', 'atmToGene
 			        	 "filter":"codes:'state'",
 			        	 "position":7,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },			        
-			        
+			         },			        	        
 			         {
 			        	 "header":Messages("containers.table.volume")+" (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
@@ -161,7 +164,6 @@ angular.module('home').controller('GrindingCtrl',['$scope', '$parse', 'atmToGene
 			        	 "position":51,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
-
 			         {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"outputContainerUsed.code",

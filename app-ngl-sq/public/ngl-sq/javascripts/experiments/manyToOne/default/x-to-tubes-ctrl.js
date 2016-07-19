@@ -1,10 +1,9 @@
 angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter','atmToDragNDrop2',
                                                                function($scope, $parse, $filter, atmToDragNDrop) {
 	
-	
-
 	var datatableConfig = {
-			name:"FDR_Tube",
+			// NGL-1055: name explicite pour fichier CSV exporté
+			name:"XToTubes",
 			columns:[   					
 					 {
 			        	 "header":Messages("containers.table.code"),
@@ -57,28 +56,30 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 				     },
-				    
+				     //FDS NGL-1055: mettre le getArray|unique dans filter et pas dans render
 			         {
-				 			"header":Messages("containers.table.libProcessType"),
-				 			"property": "inputContainer.contents",
-				 			"order":false,
-				 			"hide":true,
-				 			"type":"text",
-				 			"position":6,
-				 			"render":"<div list-resize='cellValue | getArray:\"properties.libProcessTypeCode.value\" | unique' list-resize-min-size='3'>",
-				 			"extraHeaders":{0:Messages("experiments.inputs")}	 						 			
-				 		},
-			         
-			         {
-				        	"header":Messages("containers.table.tags"),
-				 			"property": "inputContainer.contents",
-				 			"filter": "getArray:'properties.tag.value'",
-				 			"order":true,
-				 			"hide":true,
-				 			"type":"text",
-				 			"position":7,
-				 			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='3'>",
-				        	 "extraHeaders":{0:Messages("experiments.inputs")}
+				 		"header":Messages("containers.table.libProcessType"),
+				 		"property": "inputContainer.contents",
+				 		"filter": "getArray:'properties.libProcessTypeCode.value'| unique",
+				 		"order":false,
+				 		"hide":true,
+				 		"type":"text",
+				 		"position":6,
+				 		//"render":"<div list-resize='cellValue | getArray:\"properties.libProcessTypeCode.value\" | unique' list-resize-min-size='3'>",
+				 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+				 		"extraHeaders": {0:Messages("experiments.inputs")}	 						 			
+				 	},
+				 	//FDS NGL-1055: mettre le getArray|unique dans filter et pas dans render
+			        {
+				        "header":Messages("containers.table.tags"),
+				 		"property": "inputContainer.contents",
+				 		"filter": "getArray:'properties.tag.value'| unique",
+				 		"order":true,
+				 		"hide":true,
+				 		"type":"text",
+				 		"position":7,
+				 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+				         "extraHeaders":{0:Messages("experiments.inputs")}
 				     },		
 				     {
 			        	 "header":Messages("containers.table.volume") + " (µL)",
@@ -109,8 +110,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			        	 "type":"text",
 			        	 "position":10,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },
-			        
+			         },	        
 			         {
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"inputContainer.state.code",

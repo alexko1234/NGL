@@ -1,7 +1,9 @@
 angular.module('home').controller('BionanoDepotCtrl',['$scope', '$parse','atmToSingleDatatable',
                                                              function($scope,$parse, atmToSingleDatatable) {
+	
 	 var datatableConfig = {
-			name:"FDR_Void",
+			// NGL-1055: name specifique pour fichier CSV exporté
+			name:"BionanoDepot",
 			columns:[
 			         {
 			        	 "header":Messages("containers.table.supportCode"),

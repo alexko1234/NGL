@@ -1,7 +1,8 @@
 angular.module('home').controller('NanoporeFragmentationCtrl',['$scope', 'atmToSingleDatatable',
                                                                function($scope, atmToSingleDatatable) {
 	var datatableConfig = {
-			name:"FDR_Tube",
+			// NGL-1055: name explicite pour fichier CSV exporté
+			name:"NanoporeFragmentation",
 			columns:[
 			  		 {
 			        	 "header":Messages("containers.table.code"),

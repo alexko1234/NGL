@@ -1,10 +1,9 @@
 angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToDragNDrop2',
                                                                function($scope, $parse, atmToDragNDrop) {
 	
-	
-
 	var datatableConfig = {
-			name:"FDR_Tube",
+			// NGL-1055: name explicite pour fichier CSV exporté
+			name:"TubesToTube",
 			columns:[   
 					 {
 			        	 "header":Messages("containers.table.code"),

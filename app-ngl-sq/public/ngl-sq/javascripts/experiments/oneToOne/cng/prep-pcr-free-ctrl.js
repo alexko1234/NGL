@@ -1,12 +1,14 @@
+// FDS 04/02/2016 -- JIRA NGL-894 : prep pcr free experiment
 angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filter', 'atmToSingleDatatable','$http',
                                                      function($scope, $parse, $filter, atmToSingleDatatable, $http){
-// FDS 04/02/2016 -- JIRA NGL-894 : prep pcr free experiment
 
+	
 	var inputExtraHeaders=Messages("experiments.inputs");
 	var outputExtraHeaders=Messages("experiments.outputs");	
 	
+	// NGL-1055: name specifique pour fichier CSV exporté
 	var datatableConfig = {
-			name:"FDR_Plaque", // sert pour le nom de fichier si export demandé
+			name:"PrepPcrFree",
 			//Guillaume le 04/03 => utiliser containerUsed seulement pour proprietes dynamiques...
 			"columns":[
 			         //--------------------- INPUT containers section -----------------------

@@ -1,9 +1,9 @@
 angular.module('home').controller('CNGTubeToTubesCtrl',['$scope','$parse',  'atmToGenerateMany',
                                                                function($scope, $parse, atmToGenerateMany) {
-	
 		
 	var datatableConfigTubeParam = {
-			name:"Tube_Param",
+			// NGL-1055: name explicite pour fichier CSV exporté
+			name:"TubeToTubes",
 			columns:[   
 					 {
 			        	 "header":Messages("containers.table.code"),

@@ -1,10 +1,10 @@
-	angular.module('home').controller('TubesToIrysChipCtrl',['$scope', '$parse', '$filter', 'atmToDragNDrop',
+angular.module('home').controller('TubesToIrysChipCtrl',['$scope', '$parse', '$filter', 'atmToDragNDrop',
                                                              function($scope, $parse, $filter, atmToDragNDrop) {
-	
 	
 	$scope.isRoadMapAvailable = true;
 	var datatableConfig = {
-			name:"FDR_Tube",
+			// NGL-1055: name explicite pour fichier CSV exporté
+			name:"TubesToIrysChip",
 			columns:[  
 
 					 {

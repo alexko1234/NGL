@@ -2,12 +2,12 @@
 angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$http', 'atmToSingleDatatable',
                                                      function($scope, $parse, $http, atmToSingleDatatable){
 
-	
 	var inputExtraHeaders=Messages("experiments.inputs");
 	var outputExtraHeaders=Messages("experiments.outputs");	
 	
+	// NGL-1055: name specifique pour fichier CSV exporté
 	var datatableConfig = {
-			name:"FDR_Plaque", //peut servir pour le nom de fichier si export demandé
+			name:"LibNormalization",
 			columns:[
 			         //--------------------- INPUT containers section -----------------------
 			         

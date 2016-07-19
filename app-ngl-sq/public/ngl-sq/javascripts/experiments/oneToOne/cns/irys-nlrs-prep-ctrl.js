@@ -1,8 +1,10 @@
 angular.module('home').controller('IrysNlrsPrepCtrl',['$scope', '$parse', 'atmToSingleDatatable',
                                                     function($scope, $parse, atmToSingleDatatable){
-                                                    
+    
+	
 	var datatableConfig = {
-			name:"FDR_Tube",
+			// NGL-1055: name explicite pour fichier CSV exporté
+			name:"IrysNlrsPrep",
 			columns:[			  
 					 {
 			        	 "header":Messages("containers.table.code"),

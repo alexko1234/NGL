@@ -1,18 +1,10 @@
 angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToSingleDatatable',
                                                      function($scope, $parse, atmToSingleDatatable){
-	/*
-	 1) Code Container
-2) Etat container
-3) Projet(s)
-4) Echantillon(s)
-5) Code aliquot
-6) Tag
-7) Concentration (nM) 
-	 
-	 */
+
 	// JIRA-781 rendre editable quand experience est en cours=> supprimer:  && !$scope.Inprogress 
+	// NGL-1055: name specifique pour fichier CSV exporté
 	var datatableConfig = {
-			name:"FDR_Tube",
+			name:"DenatDilLib",
 			columns:[
 			 
 					 {

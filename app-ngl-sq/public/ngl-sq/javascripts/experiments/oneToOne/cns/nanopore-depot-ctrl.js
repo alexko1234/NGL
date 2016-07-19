@@ -1,7 +1,8 @@
 angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmToSingleDatatable', 'datatable',
                                                                function($scope, $parse,  atmToSingleDatatable, datatable) {
 	var datatableConfig = {
-			name:"FDR_Tube",
+			// NGL-1055: name explicite pour fichier CSV exporté
+			name:"NanoporeDepot",
 			columns:[
 			  		 {
 			        	 "header":Messages("containers.table.code"),
@@ -31,7 +32,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 			 			"type":"text",
 			 			"position":3,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			 			"extraHeaders":{0:Messages("experiments.inputs")}
 				     },
 				     {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
@@ -40,20 +41,21 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
+			 			 "render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
 			        	 "position":4,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
-			         
+			         // FDS NGL-1055: mettre le getArray|unique dans filter et pas dans render
 			         {
 			 			"header":Messages("containers.table.tags"),
 			 			"property": "inputContainer.contents",
+			 			"filter" : "getArray:'properties.tag.value' | unique",
 			 			"order":false,
 			 			"edit":false,
 			 			"hide":true,
 			 			"type":"text",
 			 			"position":4.5,
-			 			"render":"<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' ' list-resize-min-size='3'>",
+			 			"render":"<div list-resize='cellValue' 'list-resize-min-size='3'>",
 			 			"extraHeaders":{0:Messages("experiments.inputs")}			 			
 			 		},
 			         					 
@@ -88,7 +90,6 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 			        	 "position":7,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },	
-			        
 			         {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"outputContainerUsed.code",

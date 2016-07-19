@@ -2,7 +2,8 @@ angular.module('home').controller('TubesToMapCardCtrl',['$scope', '$parse', 'atm
                                                                function($scope, $parse, atmToSingleDatatable) {
 	
 	var datatableConfig = {
-			name:"FDR_Mapcard",
+			// NGL-1055: name explicite pour fichier CSV exporté
+			name:"TubesToMapCard",
 			columns:[
 			         {
 			        	 "header":Messages("containers.table.supportCode"),

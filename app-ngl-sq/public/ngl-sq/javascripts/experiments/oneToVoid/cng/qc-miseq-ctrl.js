@@ -1,6 +1,10 @@
 angular.module('home').controller('OneToVoidQCMiseqCNGCtrl',['$scope', '$parse','$http',
                                                              function($scope,$parse,$http) {
 	
+	// FDS NGL-1055: surcharger la variable "name" definie dans le controleur parent ( one-to-void-qc-ctrl.js) => nom de fichier CSV exporté 
+	var config = $scope.atmService.data.getConfig();
+	config.name = 'QCMiseq';
+	$scope.atmService.data.setConfig(config );
 	
 	$scope.$parent.copyPropertiesToInputContainer = function(experiment){
 		/*
@@ -56,18 +60,17 @@ angular.module('home').controller('OneToVoidQCMiseqCNGCtrl',['$scope', '$parse',
 	
 	var columns = $scope.atmService.data.getColumnsConfig();
 	columns.push({
-    	"header":"Code aliquot",
-		"property": "inputContainer.contents",
-		"filter": "getArray:'properties.sampleAliquoteCode.value'",
-		"order":false,
-		"hide":true,
-		"type":"text",
-		"position":7.5,
-		"render": "<div list-resize='cellValue | unique' list-resize-min-size='3'>",
-		"extraHeaders":{0:Messages("experiments.inputs")}
+    	"header" :Messages("containers.table.codeAliquot"),
+		"property" : "inputContainer.contents",
+		"filter" : "getArray:'properties.sampleAliquoteCode.value'| unique",
+		"order" :false,
+		"hide" :true,
+		"type" :"text",
+		"position" :7.5,
+		"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
+		"extraHeaders" :{0:Messages("experiments.inputs")}
 	});
 
-	
 	columns.push({
 		"header" : Messages("containers.table.concentration"),
 		"property": "(inputContainer.concentration.value|number).concat(' '+inputContainer.concentration.unit)",
@@ -77,35 +80,33 @@ angular.module('home').controller('OneToVoidQCMiseqCNGCtrl',['$scope', '$parse',
 		"hide" : true,
 		"type" : "text",
 		"position" : 10,
-		"extraHeaders" : {
-			0 : Messages("experiments.inputs")
-		}
+		"extraHeaders" : {0 : Messages("experiments.inputs")}
 	});	
 	
+	// FDS NGL-1055: mettre le getArray|unique dans filter et pas dans render
 	columns.push({
-		"header" : Messages("containers.table.libProcessType"),
+		"header" : Messages("containers.table.libProcessTypeCode"),
 		"property" : "inputContainer.contents",
+		"filter" : " getArray:'properties.libProcessTypeCode.value'| unique", 
 		"order" : false,
 		"hide" : true,
 		"type" : "text",
 		"position" : 8,
-		"render" : "<div list-resize='cellValue | getArray:\"properties.libProcessTypeCode.value\" | unique' list-resize-min-size='3'>",
-		"extraHeaders" : {
-			0 : Messages("experiments.inputs")
-		}
+		"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
+		"extraHeaders" : {0 : Messages("experiments.inputs")}
 	});
+	
+	// FDS NGL-1055: mettre le getArray|unique dans filter et pas dans render
 	columns.push({
 		"header" : Messages("containers.table.tags"),
 		"property" : "inputContainer.contents",
+		"filter" : "getArray:'properties.tag.value'| unique",
 		"order" : false,
 		"hide" : true,
 		"type" : "text",
 		"position" : 9,
-		"render" : "<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' list-resize-min-size='3'>",
-		"extraHeaders" : {
-			0 : Messages("experiments.inputs")
-		}
-
+		"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
+		"extraHeaders" : {0 : Messages("experiments.inputs")}
 	});
 	$scope.atmService.data.setColumnsConfig(columns);
 	

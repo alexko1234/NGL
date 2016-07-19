@@ -1,7 +1,9 @@
 angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToSingleDatatable',
                                                        function($scope, $http,atmToSingleDatatable) {
+	
 	var datatableConfig = {
-			name:"FDR_Tube",
+			// NGL-1055: name explicite pour fichier CSV exporté
+			name:"SolutionStock",
 			columns:[			  
 					
 				     {
@@ -33,7 +35,7 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 			 			"hide":true,
 			 			"type":"text",
 			 			"position":4,
-			 			"render":"<div list-resize='cellValue | unique' ' list-resize-min-size='3'>",
+			 			"render":"<div list-resize='cellValue | unique'  list-resize-min-size='3'>",
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 								 

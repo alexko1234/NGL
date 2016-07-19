@@ -1,9 +1,9 @@
 angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'atmToGenerateMany','lists','mainService',
                                                                function($scope, $parse, atmToGenerateMany,lists,mainService) {
-	
 		
 	var datatableConfigTubeParam = {
-			name:"Tube_Param",
+			// NGL-1055: name explicite pour fichier CSV exporté... Pas utilisé ?? voir plus bas
+			name:"DnaRnaExtraction",
 			columns:[   
 					 {
 			        	 "header":Messages("containers.table.code"),
@@ -125,8 +125,10 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 			}
 
 	};	
+	
 	var datatableConfigTubeConfig =  {
-			name:"Tube_Param",
+			// NGL-1055: name explicite pour fichier CSV exporté
+			name:"DnaRnaExtraction",
 			columns:[   
 					 {
 			        	 "header":Messages("containers.table.code"),

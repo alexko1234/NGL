@@ -1,10 +1,10 @@
 angular.module('home').controller('TubesToFlowcellCtrl',['$scope', '$parse', '$filter', 'atmToDragNDrop',
                                                                function($scope, $parse, $filter, atmToDragNDrop) {
 	
-	
 	$scope.isRoadMapAvailable = true;
 	var datatableConfig = {
-			name:"FDR_Tube",
+			// NGL-1055: name explicite pour fichier CSV exporté
+			name:"TubesToFlowcell",
 			columns:[  
  
 					 {

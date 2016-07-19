@@ -1,7 +1,10 @@
 angular.module('home').controller('OneToVoidQPCRQuantificationCNGCtrl',['$scope', '$parse','$http',
                                                              function($scope,$parse,$http) {
 	
-	
+	// NGL-1055 : surcharger la variable "name" definie dans le controleur parent ( one-to-void-qc-ctrl.js) => nom de fichier CSV exporté 
+	var config = $scope.atmService.data.getConfig();
+	config.name = 'QPCRQuantification';
+	$scope.atmService.data.setConfig(config );	
 	
 	
 	$scope.$on('updateInstrumentProperty', function(e, pName) {
@@ -93,32 +96,31 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNGCtrl',['$scope'
 		"extraHeaders":{0:Messages("experiments.inputs")}
 	})
 	
-	
-		columns.push({
-			"header" : Messages("containers.table.libProcessType"),
-			"property" : "inputContainer.contents",
-			"order" : false,
-			"hide" : true,
-			"type" : "text",
-			"position" : 9,
-			"render" : "<div list-resize='cellValue | getArray:\"properties.libProcessTypeCode.value\" | unique' list-resize-min-size='3'>",
-			"extraHeaders" : {
-				0 : Messages("experiments.inputs")
-			}
-		});
-		columns.push({
-			"header" : Messages("containers.table.tags"),
-			"property" : "inputContainer.contents",
-			"order" : false,
-			"hide" : true,
-			"type" : "text",
-			"position" : 10,
-			"render" : "<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' list-resize-min-size='3'>",
-			"extraHeaders" : {
-				0 : Messages("experiments.inputs")
-			}
-
-		});
+	//FDS NGL-1055: mettre le getArray|unique dans filter et pas dans render
+	columns.push({
+		"header" : Messages("containers.table.libProcessTypeCode"),
+		"property" : "inputContainer.contents",
+		"filter": "getArray:'properties.libProcessTypeCode.value' | unique",
+		"order" : false,
+		"hide" : true,
+		"type" : "text",
+		"position" : 9,
+		"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
+		"extraHeaders" : {0 : Messages("experiments.inputs")}
+	});
+		
+	//FDS NGL-1055: mettre le getArray|unique dans filter et pas dans render
+	columns.push({
+		"header" : Messages("containers.table.tags"),
+		"property" : "inputContainer.contents",
+		"filter" : "getArray:'properties.tag.value' | unique",
+		"order" : false,
+		"hide" : true,
+		"type" : "text",
+		"position" : 10,
+		"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
+		"extraHeaders" : {0 : Messages("experiments.inputs")}
+	});
 	$scope.atmService.data.setColumnsConfig(columns);
 	
 	

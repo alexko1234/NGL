@@ -1,6 +1,10 @@
 angular.module('home').controller('OneToVoidPCRGelMigrationCNSCtrl',['$scope', '$parse','$http',
                                                              function($scope,$parse,$http) {
 	
+	// NGL-1055: surcharger la variable "name" definie dans le controleur parent ( one-to-void-qc-ctrl.js) => nom de fichier CSV exporté 
+	var config = $scope.atmService.data.getConfig();
+	config.name = 'PCRGelMigration';
+	$scope.atmService.data.setConfig(config );
 	
 	$scope.$parent.copyPropertiesToInputContainer = function(experiment){
 		
@@ -36,14 +40,16 @@ angular.module('home').controller('OneToVoidPCRGelMigrationCNSCtrl',['$scope', '
 	
 	var columns = $scope.atmService.data.getColumnsConfig();
 	
+	// FDS NGL-1055: mettre le getArray|unique dans filter et pas dans render
 	columns.push({
 		"header" : Messages("containers.table.sampleTypes"),
 		"property" : "inputContainer.contents",
+		"filter" : "getArray:'sampleTypeCode' | unique"
 		"order" : false,
 		"hide" : true,
 		"type" : "text",
 		"position" : 7,
-		"render" : "<div list-resize='cellValue | getArray:\"sampleTypeCode\" | unique' list-resize-min-size='3'>",
+		"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
 		"extraHeaders" : {
 			0 : Messages("experiments.inputs")
 		}
