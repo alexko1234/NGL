@@ -183,6 +183,10 @@ public class ReadSets extends ReadSetsController{
 		if(null != form.toDate){
 			queries.add(DBQuery.lessThanEquals("runSequencingStartDate", form.toDate));
 		}
+		
+		if(StringUtils.isNotBlank(form.location)){
+			queries.add(DBQuery.is("location", form.location));
+		}
 
 		if (StringUtils.isNotBlank(form.code)) { //all
 			queries.add(DBQuery.is("code", form.code));

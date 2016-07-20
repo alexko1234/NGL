@@ -225,5 +225,6 @@ rule "Set state to Avalaible from Finished Transfert CCRT"
 		$nextState : State(code=="F-TF")
 		$project : Project(bioinformaticParameters!=null, bioinformaticParameters.fgGroup!=null)
 	then
+		Logger.debug("State F-TF to A");
 		$nextState.code="A";
 end
