@@ -108,6 +108,9 @@ public class ProtocolServiceCNS {
 			lp.add(newProtocol("truseq_stranded_poly_A","TruSeq Stranded poly A","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library")));
 			lp.add(newProtocol("truseq_stranded_proc","TruSeq Stranded Proc","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library")));
 			lp.add(newProtocol("smarter_stranded","Smarter Stranded","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library")));
+			
+			lp.add(newProtocol("Tag18S_V9","Tag18S V9","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
+			lp.add(newProtocol("Tag16S_V4V5_Fuhrmann","Tag16S V4V5 Fuhrmann","path2","1","production",InstanceFactory.setExperimentTypeCodes("tag-pcr")));
 
 			lp.add(newProtocol("prt_wait_3","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("normalisation")));
 			

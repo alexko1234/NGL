@@ -334,6 +334,10 @@ angular.module('atomicTransfereServices', [])
 					datatable.setColumnsConfig(columns);
 				},
 				*/
+				/* function to override in controler, used in addNewAtomicTransfertMethodsInDatatable function  */
+				updateAtm : function(atm){
+					
+				},
 				addColumnToDatatable:function(columns, newColumn){
 					if(null !== newColumn && undefined !== newColumn){
 						columns.push(newColumn);
@@ -519,6 +523,7 @@ angular.module('atomicTransfereServices', [])
 										line.outputContainerUsed = $commonATM.newOutputContainerUsed($that.defaultOutputUnit,line.atomicTransfertMethod.line,
 												line.atomicTransfertMethod.column,line.inputContainer);
 										line.outputContainer = undefined;
+										$that.updateAtm(line);
 									}
 									allData.push(line);
 								});

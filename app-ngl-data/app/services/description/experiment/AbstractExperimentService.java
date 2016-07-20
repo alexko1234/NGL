@@ -39,19 +39,19 @@ public abstract class AbstractExperimentService {
 			saveExperimentTypeNodes(errors);
 		}
 	
-		protected static List<InstrumentUsedType> getInstrumentUsedTypes(String...codes) throws DAOException {
+		public static List<InstrumentUsedType> getInstrumentUsedTypes(String...codes) throws DAOException {
 			return DAOHelpers.getModelByCodes(InstrumentUsedType.class,InstrumentUsedType.find, codes);
 		}
 	
-		protected static List<SampleType> getSampleTypes(String...codes) throws DAOException {
+		public static List<SampleType> getSampleTypes(String...codes) throws DAOException {
 			return DAOHelpers.getModelByCodes(SampleType.class,SampleType.find, codes);
 		}
 		
-		protected static List<ExperimentType> getExperimentTypes(String...codes) throws DAOException {
+		public static List<ExperimentType> getExperimentTypes(String...codes) throws DAOException {
 			return DAOHelpers.getModelByCodes(ExperimentType.class,ExperimentType.find, codes);
 		}
 	
-		protected static List<ExperimentTypeNode> getExperimentTypeNodes(String...codes) throws DAOException {
+		public static List<ExperimentTypeNode> getExperimentTypeNodes(String...codes) throws DAOException {
 			return DAOHelpers.getModelByCodes(ExperimentTypeNode.class,ExperimentTypeNode.find, codes);
 		}
 	
