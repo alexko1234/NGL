@@ -45,7 +45,7 @@ public class ExcelHelper {
 		}else if(null != cell &&  (Cell.CELL_TYPE_BOOLEAN == cell.getCellType())){
 			return String.valueOf(cell.getBooleanCellValue());
 		}else if(null != cell &&  (Cell.CELL_TYPE_FORMULA == cell.getCellType())){
-			cell.setCellType(Cell.CELL_TYPE_STRING);
+			cell.setCellType(Cell.CELL_TYPE_STRING); //transform all result of formula un string to don't have problem with numerci or string
 			return cell.getStringCellValue();
 		}else{
 			return null;
