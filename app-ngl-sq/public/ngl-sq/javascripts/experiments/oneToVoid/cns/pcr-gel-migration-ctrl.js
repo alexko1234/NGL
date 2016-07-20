@@ -44,7 +44,7 @@ angular.module('home').controller('OneToVoidPCRGelMigrationCNSCtrl',['$scope', '
 	columns.push({
 		"header" : Messages("containers.table.sampleTypes"),
 		"property" : "inputContainer.contents",
-		"filter" : "getArray:'sampleTypeCode' | unique"
+		"filter" : "getArray:'sampleTypeCode' | unique",
 		"order" : false,
 		"hide" : true,
 		"type" : "text",
