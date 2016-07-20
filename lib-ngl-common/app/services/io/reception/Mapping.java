@@ -55,9 +55,9 @@ public abstract class Mapping<T extends DBObject> {
 	public T convertToDBObject(Map<Integer, String> rowMap) throws Exception{
 		T object = type.newInstance();
 		if(Action.update.equals(action)){
-			object = get(object, rowMap);
+			object = get(object, rowMap, true);
 		}else if(Action.save.equals(action)){
-			T objectInDB = get(object, rowMap);
+			T objectInDB = get(object, rowMap, false);
 			if(null != objectInDB){
 				contextValidation.addErrors("Error", "error.objectexist", type.getSimpleName(), objectInDB.code);
 			}else{
@@ -128,14 +128,14 @@ public abstract class Mapping<T extends DBObject> {
 		}			
 	}
 	
-	protected T get(T object, Map<Integer, String> rowMap) {
+	protected T get(T object, Map<Integer, String> rowMap, boolean errorIsNotFound) {
 		try {
 			AbstractFieldConfiguration codeConfig = configuration.get("code");
 			codeConfig.populateField(object.getClass().getField("code"), object, rowMap, contextValidation, action);
 			if(null != object.code){
 				String code = object.code;
 				object = MongoDBDAO.findByCode(collectionName, type, object.code);	
-				if(null == object){
+				if(errorIsNotFound && null == object){
 					contextValidation.addErrors("Error", "not found "+type.getSimpleName()+" for code "+code);
 				}
 			}else{
