@@ -45,6 +45,7 @@ public class ExcelHelper {
 		}else if(null != cell &&  (Cell.CELL_TYPE_BOOLEAN == cell.getCellType())){
 			return String.valueOf(cell.getBooleanCellValue());
 		}else if(null != cell &&  (Cell.CELL_TYPE_FORMULA == cell.getCellType())){
+			cell.setCellType(Cell.CELL_TYPE_STRING);
 			return cell.getStringCellValue();
 		}else{
 			return null;
