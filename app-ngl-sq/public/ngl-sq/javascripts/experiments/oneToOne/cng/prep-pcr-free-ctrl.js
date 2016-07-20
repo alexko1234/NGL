@@ -6,9 +6,9 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 	var inputExtraHeaders=Messages("experiments.inputs");
 	var outputExtraHeaders=Messages("experiments.outputs");	
 	
-	// NGL-1055: name specifique pour fichier CSV exporté
+	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
 	var datatableConfig = {
-			name:"PrepPcrFree",
+			name: $scope.experiment.typeCode.toUpperCase(),
 			//Guillaume le 04/03 => utiliser containerUsed seulement pour proprietes dynamiques...
 			"columns":[
 			         //--------------------- INPUT containers section -----------------------
@@ -103,7 +103,7 @@ angular.module('home').controller('PrepPcrFreeCtrl',['$scope', '$parse',  '$filt
 			         },
 			         { // Etat input Container 
 			        	 "header":Messages("containers.table.state.code"),
-			        	 "property":"inputContainer.state.code | codes:'state'",  // |codes:'state' ==> permet de décoder le code en texte
+			        	 "property":"inputContainer.state.code | codes:'state'",
 			        	 "order":true,
 						 "hide":true,
 			        	 "type":"text",

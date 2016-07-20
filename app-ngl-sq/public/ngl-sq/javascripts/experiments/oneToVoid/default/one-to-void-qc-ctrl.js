@@ -2,24 +2,22 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
                                                              function($scope,$parse, atmToSingleDatatable) {
 	 
 	
-
+	// NGL-1055: mettre les getArray et codes'' dans filter et pas dans render
 	var getDefaultDatatableColumn = function() {
 		var columns = [];
-
+		
 		columns.push({
 			"header" : Messages("containers.table.fromTransformationTypeCodes"),
 			"property" : "inputContainer.fromTransformationTypeCodes",
+			"filter": "unique | codes:'type'",
 			"order" : true,
 			"edit" : false,
 			"hide" : true,
 			"type" : "text",
-			"render" : "<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
+			"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
 			"position" : 4,
-			"extraHeaders" : {
-				0 : Messages("experiments.inputs")
-			}
+			"extraHeaders" : {0 : Messages("experiments.inputs")}
 		});
-
 		columns.push({
 			"header" : Messages("containers.table.valuation.valid"),
 			"property" : "inputContainer.valuation.valid",
@@ -29,9 +27,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 			"hide" : false,
 			"type" : "text",
 			"position" : 5,
-			"extraHeaders" : {
-				0 : Messages("experiments.inputs")
-			}
+			"extraHeaders" : {0 : Messages("experiments.inputs")}
 		});
 		columns.push({
 			"header" : Messages("containers.table.projectCodes"),
@@ -42,9 +38,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 			"type" : "text",
 			"position" : 6,
 			"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
-			"extraHeaders" : {
-				0 : Messages("experiments.inputs")
-			}
+			"extraHeaders" : {0 : Messages("experiments.inputs")}
 		});
 		columns.push({
 			"header" : Messages("containers.table.sampleCodes"),
@@ -55,9 +49,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 			"type" : "text",
 			"position" : 7,
 			"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
-			"extraHeaders" : {
-				0 : Messages("experiments.inputs")
-			}
+			"extraHeaders" : {0 : Messages("experiments.inputs")}
 		});
 
 				
@@ -123,9 +115,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 			"type" : "text",
 			"filter" : "codes:'state'",
 			"position" : 10.5,
-			"extraHeaders" : {
-				0 : Messages("experiments.inputs")
-			}
+			"extraHeaders" : {0 : Messages("experiments.inputs")}
 		});
 		columns.push({
 			"header" : Messages("containers.table.valuationqc.valid"),
@@ -139,9 +129,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 			"listStyle" : 'bt-select',
 			"possibleValues" : 'lists.getValuations()',
 			"position" : 20,
-			"extraHeaders" : {
-				0 : Messages("experiments.inputs")
-			}
+			"extraHeaders" : {0 : Messages("experiments.inputs")}
 		});
 		if ($scope.experiment.instrument.inContainerSupportCategoryCode.indexOf('well') > -1) {
 			columns.push({
@@ -152,9 +140,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 				"hide" : true,
 				"type" : "text",
 				"position" : 1,
-				"extraHeaders" : {
-					0 : Messages("experiments.inputs")
-				}
+				"extraHeaders" : {0 : Messages("experiments.inputs")}
 			});
 			columns.push({
 				"header" : Messages("containers.table.support.line"),
@@ -164,9 +150,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 				"hide" : true,
 				"type" : "text",
 				"position" : 1.1,
-				"extraHeaders" : {
-					0 : Messages("experiments.inputs")
-				}
+				"extraHeaders" : {0 : Messages("experiments.inputs")}
 			});
 			columns.push({
 				"header" : Messages("containers.table.support.column"),
@@ -176,9 +160,7 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 				"hide" : true,
 				"type" : "text",
 				"position" : 1.2,
-				"extraHeaders" : {
-					0 : Messages("experiments.inputs")
-				}
+				"extraHeaders" : {0 : Messages("experiments.inputs")}
 			});
 		} else {
 			/*columns.push({
@@ -214,18 +196,16 @@ angular.module('home').controller('OneToVoidQCCtrl',['$scope', '$parse','atmToSi
 				"hide" : true,
 				"type" : "text",
 				"position" : 3,
-				"extraHeaders" : {
-					0 : Messages("experiments.inputs")
-				}
+				"extraHeaders" : {0 : Messages("experiments.inputs")}
 			});
 
 		}
 		return columns;
 	}
 	
-	
-	var datatableConfig = {
-			name:"FDR_Void",
+	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
+	var datatableConfig = {		
+			name: $scope.experiment.typeCode.toUpperCase(),
 			compact:true,
 			pagination:{
 				active:false

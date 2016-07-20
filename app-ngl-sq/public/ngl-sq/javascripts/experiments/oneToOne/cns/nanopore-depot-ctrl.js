@@ -1,8 +1,10 @@
 angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmToSingleDatatable', 'datatable',
                                                                function($scope, $parse,  atmToSingleDatatable, datatable) {
+	
+	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
+	// NGL-1055: mettre getArray et codes:'' dans filter et pas dans render
 	var datatableConfig = {
-			// NGL-1055: name explicite pour fichier CSV exporté
-			name:"NanoporeDepot",
+			name: $scope.experiment.typeCode.toUpperCase(),
 			columns:[
 			  		 {
 			        	 "header":Messages("containers.table.code"),
@@ -37,15 +39,15 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 				     {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
 			        	 "property":"inputContainer.fromTransformationTypeCodes",
+			        	 "filter":"unique | codes:'type'",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			 			 "render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
+			 			 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "position":4,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
-			         // FDS NGL-1055: mettre le getArray|unique dans filter et pas dans render
 			         {
 			 			"header":Messages("containers.table.tags"),
 			 			"property": "inputContainer.contents",
@@ -166,6 +168,7 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 	
 	
 	var datatableConfigLoadingReport = {
+			//ici laisser ce nom ??
 			name:"NanoportLoadingReport",
 			columns:[],
 			compact:true,
@@ -214,8 +217,9 @@ angular.module('home').controller('NanoporeDepotCtrl',['$scope', '$parse', 'atmT
 			showTotalNumberRecords:false
 	};
 	
-	
+
 	var datatableConfigQcFlowcell = {
+			// ici laiser ce nom ??
 			name:"NanoportQcFlowcell",
 			columns:[],
 			compact:true,

@@ -3,7 +3,7 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNSCtrl',['$scope'
 	
 	// NGL-1055: surcharger la variable "name" definie dans le controleur parent ( one-to-void-qc-ctrl.js) => nom de fichier CSV exporté 
 	var config = $scope.atmService.data.getConfig();
-	config.name = 'QPCRQuantification';
+	config.name = $scope.experiment.typeCode.toUpperCase();
 	$scope.atmService.data.setConfig(config );
 	
 	$scope.$parent.copyPropertiesToInputContainer = function(experiment){
@@ -59,7 +59,7 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNSCtrl',['$scope'
 	
 	var columns = $scope.atmService.data.getColumnsConfig();
 	
-	//FDS NGL-1055: mettre le getArray|unique dans filter et pas dans render
+	//FDS NGL-1055: mettre getArray et codes'' dans filter et pas dans render
 	columns.push({
 		"header" : Messages("containers.table.libProcessType"),
 		"property" : "inputContainer.contents",
@@ -73,7 +73,6 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNSCtrl',['$scope'
 			0 : Messages("experiments.inputs")
 		}
 	});
-	//FDS NGL-1055: mettre le getArray|unique dans filter et pas dans render
 	columns.push({
 		"header" : Messages("containers.table.tags"),
 		"property" : "inputContainer.contents",
@@ -88,7 +87,6 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNSCtrl',['$scope'
 		}
 
 	});
-	
 	columns.push({
 		"header":Messages("containers.table.concentration"),
 		"property": "(inputContainer.concentration.value|number).concat(' '+inputContainer.concentration.unit)",

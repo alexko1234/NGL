@@ -1,12 +1,13 @@
 angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'atmToGenerateMany','lists','mainService',
                                                                function($scope, $parse, atmToGenerateMany,lists,mainService) {
-		
+	
+	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
 	var datatableConfigTubeParam = {
-			// NGL-1055: name explicite pour fichier CSV exporté... Pas utilisé ?? voir plus bas
-			name:"DnaRnaExtraction",
-			columns:[   
-					 {
-			        	 "header":Messages("containers.table.code"),
+		// peut etre exporté CSV ??
+         name: $scope.experiment.typeCode+'_PARAM'.toUpperCase(),
+         columns:[   
+         		 {
+                 	 "header":Messages("containers.table.code"),
 			        	 "property":"inputContainer.code",
 			        	 "order":true,
 						 "edit":false,
@@ -126,9 +127,10 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 
 	};	
 	
+	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
+	// NGL-1055: mettre getArray et codes '' dans filter et pas dans render
 	var datatableConfigTubeConfig =  {
-			// NGL-1055: name explicite pour fichier CSV exporté
-			name:"DnaRnaExtraction",
+			name: $scope.experiment.typeCode.toUpperCase(),
 			columns:[   
 					 {
 			        	 "header":Messages("containers.table.code"),
@@ -144,13 +146,13 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 			         {
 			        	"header":Messages("containers.table.projectCodes"),
 			 			"property": "inputContainer.projectCodes",
-			 			"order":false,
+			 			"order": false,
 			 			"hide":true,
 			 			"type":"text",
-			 			 "mergeCells" : true,
+			 			"mergeCells" : true,
 			 			"position":2,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			 			"extraHeaders":{0:Messages("experiments.inputs")}
 				     },
 				     {
 			        	"header":Messages("containers.table.sampleCodes"),
@@ -158,20 +160,21 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 			 			"order":false,
 			 			"hide":true,
 			 			"type":"text",
-			 			 "mergeCells" : true,
+			 			"mergeCells" : true,
 			 			"position":3,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			        	"extraHeaders":{0:Messages("experiments.inputs")}
 				     },
 				     {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
 			        	 "property":"inputContainer.fromTransformationTypeCodes",
+			        	 "filter" : "unique | codes:'type'",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
 			        	 "mergeCells" : true,
-			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
+			 			 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "position":4,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
@@ -234,7 +237,7 @@ angular.module('home').controller('DnaRnaExtractionCtrl',['$scope', '$parse', 'a
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
-						"type":"text",
+						 "type":"text",
 			        	 "position":500,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },

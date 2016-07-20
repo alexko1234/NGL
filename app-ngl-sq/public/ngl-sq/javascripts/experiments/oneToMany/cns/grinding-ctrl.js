@@ -1,9 +1,10 @@
 angular.module('home').controller('GrindingCtrl',['$scope', '$parse', 'atmToGenerateMany',
                                                                function($scope, $parse, atmToGenerateMany) {
-		
+	
+	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience	
 	var datatableConfigTubeParam = {
-			// NGL-1055: name explicite pour fichier CSV exporté... Pas utilisé ?? voir plus bas
-			name:"Grinding",
+			// peut etre exporté CSV ??
+			name: $scope.experiment.typeCode+'_PARAM'.toUpperCase(),
 			columns:[   
 					 {
 			        	 "header":Messages("containers.table.code"),
@@ -72,9 +73,10 @@ angular.module('home').controller('GrindingCtrl',['$scope', '$parse', 'atmToGene
 
 	};	
 	
-	var datatableConfigTubeConfig =  {
-			// NGL-1055: name explicite pour fichier CSV exporté
-			name:"Grinding",
+	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
+	// NGL-1055: mettre getArray et codes:'' dans filter et pas dans render
+	var datatableConfigTubeConfig =  {	
+			name: $scope.experiment.typeCode.toUpperCase(),
 			columns:[   
 					 {
 			        	 "header":Messages("containers.table.code"),
@@ -93,10 +95,10 @@ angular.module('home').controller('GrindingCtrl',['$scope', '$parse', 'atmToGene
 			 			"order":false,
 			 			"hide":true,
 			 			"type":"text",
-			 			 "mergeCells" : true,
+			 			"mergeCells" : true,
 			 			"position":2,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			        	"extraHeaders":{0:Messages("experiments.inputs")}
 				     },
 				     {
 			        	"header":Messages("containers.table.sampleCodes"),
@@ -104,12 +106,12 @@ angular.module('home').controller('GrindingCtrl',['$scope', '$parse', 'atmToGene
 			 			"order":false,
 			 			"hide":true,
 			 			"type":"text",
-			 			 "mergeCells" : true,
+			 			"mergeCells" : true,
 			 			"position":3,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			        	"extraHeaders":{0:Messages("experiments.inputs")}
 				     },
-				     // NGL-1055: codes:'type' dans filter et pas dans render ???
+
 				     {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
 			        	 "property":"inputContainer.fromTransformationTypeCodes",

@@ -1,9 +1,10 @@
 angular.module('home').controller('RnaIlluminaIndexedLibraryCtrl',['$scope', '$parse', 'atmToSingleDatatable',
                                                     function($scope, $parse, atmToSingleDatatable){
-                                                    
+	
+	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
+	// NGL-1055: mettre getArray et codes:'' dans filter et pas dans render                                                  
 	var datatableConfig = {
-			// NGL-1055: name explicite pour fichier CSV exporté
-			name:"RnaIlluminaIndexedLibrary",
+			name: $scope.experiment.typeCode.toUpperCase(),
 			columns:[			  
 					 {
 			        	 "header":Messages("containers.table.code"),
@@ -35,11 +36,10 @@ angular.module('home').controller('RnaIlluminaIndexedLibraryCtrl',['$scope', '$p
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			            "extraHeaders":{0:Messages("experiments.inputs")}
 				     },
-				     // NGL-1055: codes:'type' dans filter et pas dans render
 				     {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
 			        	 "property":"inputContainer.fromTransformationTypeCodes",
-			        	 "filter": "unique | codes:'type'",
+			        	 "filter": "unique| codes:'type'",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,

@@ -1,9 +1,10 @@
 angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToDragNDrop2',
                                                                function($scope, $parse, atmToDragNDrop) {
 	
-	var datatableConfig = {
-			// NGL-1055: name explicite pour fichier CSV exporté
-			name:"TubesToTube",
+	// NGL-1055: mettre getArray et codes:'' dans filter et pas dans render
+	// NGL-1055: name explicite pour fichier CSV exporté
+	var datatableConfig = {	
+			name: $scope.experiment.typeCode.toUpperCase(),
 			columns:[   
 					 {
 			        	 "header":Messages("containers.table.code"),
@@ -23,7 +24,7 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 			 			"type":"text",
 			 			"position":2,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			        	"extraHeaders":{0:Messages("experiments.inputs")}
 				     },
 				     {
 			        	"header":Messages("containers.table.sampleCodes"),
@@ -33,16 +34,17 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 			 			"type":"text",
 			 			"position":3,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			        	"extraHeaders":{0:Messages("experiments.inputs")}
 				     },
 				     {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
 			        	 "property":"inputContainer.fromTransformationTypeCodes",
+			        	 "filter":"unique | codes:'type'",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
+			 			 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "position":4,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
@@ -117,7 +119,7 @@ angular.module('home').controller('TubesToTubeCtrl',['$scope', '$parse', 'atmToD
 						 "hide":true,
 						 "mergeCells" : true,
 			        	 "type":"text",
-			        	"position":50.5,
+			        	 "position":50.5,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {

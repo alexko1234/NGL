@@ -5,9 +5,9 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 	var inputExtraHeaders=Messages("experiments.inputs");
 	var outputExtraHeaders=Messages("experiments.outputs");	
 	
-	// NGL-1055: name specifique pour fichier CSV exporté
+	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
 	var datatableConfig = {
-			name:"LibNormalization",
+			name: $scope.experiment.typeCode.toUpperCase(),
 			columns:[
 			         //--------------------- INPUT containers section -----------------------
 			         
@@ -83,12 +83,12 @@ angular.module('home').controller('LibNormalizationCtrl',['$scope', '$parse', '$
 					 { //Tags
 					    "header":Messages("containers.table.tags"),
 			 			"property": "inputContainer.contents",
-			 			"filter": "getArray:'properties.tag.value'",
+			 			"filter": "getArray:'properties.tag.value'| unique",
 					 	"order":true,
 					 	"hide":true,
 					 	"type":"text",
 					 	"position":7,
-					 	"render":"<div list-resize='cellValue | unique' list-resize-min-size='3'>",
+					 	"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 					    "extraHeaders":{0:inputExtraHeaders}
 					 },
 					 { //Concentration !!! en entree on a nM et pas (ng/µL)

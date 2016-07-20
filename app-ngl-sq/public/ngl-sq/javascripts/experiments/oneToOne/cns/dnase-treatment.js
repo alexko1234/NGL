@@ -1,9 +1,10 @@
 angular.module('home').controller('DnaseTreatmentCtrl',['$scope', '$parse', 'atmToSingleDatatable',
                                                     function($scope, $parse, atmToSingleDatatable){
-    
+	
+	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
+	// NGL-1055: mettre getArray et codes:'' dans filter et pas dans render
 	var datatableConfig = {
-			// NGL-1055: name explicite pour fichier CSV exporté
-			name:"DnaseTreatment",
+			name: $scope.experiment.typeCode.toUpperCase(),
 			columns:[			  
 					 {
 			        	 "header":Messages("containers.table.code"),
@@ -23,7 +24,7 @@ angular.module('home').controller('DnaseTreatmentCtrl',['$scope', '$parse', 'atm
 			 			"type":"text",
 			 			"position":2,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			        	"extraHeaders":{0:Messages("experiments.inputs")}
 				     },
 				     {
 			        	"header":Messages("containers.table.sampleCodes"),
@@ -33,23 +34,25 @@ angular.module('home').controller('DnaseTreatmentCtrl',['$scope', '$parse', 'atm
 			 			"type":"text",
 			 			"position":3,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			        	"extraHeaders":{0:Messages("experiments.inputs")}
 				     },
 				     {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
 			        	 "property":"inputContainer.fromTransformationTypeCodes",
+			        	 "filter":"unique | codes:'type'",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
+			 			 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "position":4,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 					 {
 			        	 "header":Messages("containers.table.concentration"),
 			        	 "property":"inputContainer.concentration",
-			        	 "render":"<span ng-bind='cellValue.value|number'/> <span ng-bind='cellValue.unit'/>",	
+			        	 "property": "(inputContainer.concentration.value|number).concat(' '+inputContainer.concentration.unit)",
+			     		 //"render":"<span ng-bind='cellValue.value|number'/> <span ng-bind='cellValue.unit'/>",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
@@ -57,16 +60,6 @@ angular.module('home').controller('DnaseTreatmentCtrl',['$scope', '$parse', 'atm
 			        	 "position":5,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
-			       /*  {
-			        	 "header":Messages("containers.table.concentration.unit"),
-			        	 "property": "inputContainer.concentration.unit",
-			        	 "order":true,
-						 "edit":false,
-						 "hide":true,
-			        	 "type":"text",
-			        	 "position":5.5,
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
-			         },*/
 			         {
 			        	 "header":function(){return Messages("containers.table.volume") + " (µL)"},
 			        	 "property":"inputContainer.volume.value",

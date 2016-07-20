@@ -1,8 +1,6 @@
 angular.module('home').controller('CNSTubesToFlowcellCtrl',['$scope', '$parse', 'atmToDragNDrop',
                                                                function($scope, $parse, atmToDragNDrop) {
 	
-	
-
 	var atmToSingleDatatable = $scope.atmService.$atmToSingleDatatable;
 	
 	var columns = [  
@@ -29,13 +27,13 @@ angular.module('home').controller('CNSTubesToFlowcellCtrl',['$scope', '$parse', 
 		         {
 		        	"header":Messages("containers.table.tags"),
 		 			"property": "inputContainer.contents",
-		 			"filter": "getArray:'properties.tag.value'",
+		 			"filter": "getArray:'properties.tag.value'| unique",
 		 			"order":false,
 		 			"hide":true,
 		 			"type":"text",
 		 			"position":2,
-		 			"render":"<div list-resize='cellValue | unique' list-resize-min-size='3'>",
-		        	 "extraHeaders":{0:"solution stock"}
+		 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+		        	"extraHeaders":{0:"solution stock"}
 		         },				         
 				 {
 		        	 "header":Messages("containers.table.concentration") + " (nM)",

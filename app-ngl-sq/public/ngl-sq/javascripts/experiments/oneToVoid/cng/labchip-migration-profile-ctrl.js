@@ -3,7 +3,7 @@ angular.module('home').controller('OneToVoidLabChipMigrationProfileCNGCtrl',['$s
 
 	// NGL-1055: surcharger la variable "name" definie dans le controleur parent ( one-to-void-qc-ctrl.js) => nom de fichier CSV exporté 
 	var config = $scope.atmService.data.getConfig();
-	config.name = 'LabChipMigration';
+	config.name = $scope.experiment.typeCode.toUpperCase();
 	$scope.atmService.data.setConfig(config );
 
 	$scope.$parent.copyPropertiesToInputContainer = function(experiment){
@@ -64,19 +64,19 @@ angular.module('home').controller('OneToVoidLabChipMigrationProfileCNGCtrl',['$s
 		click:importData,		
 	};
 	
+	// FDS NGL-1055: mettre le getArray|unique dans filter et pas dans render
 	var columns = $scope.atmService.data.getColumnsConfig();
 	columns.push({
     	"header": Messages("containers.table.codeAliquot"),
 		"property": "inputContainer.contents",
-		"filter": "getArray:'properties.sampleAliquoteCode.value'",
+		"filter": "getArray:'properties.sampleAliquoteCode.value'| unique",
 		"order":false,
 		"hide":true,
 		"type":"text",
 		"position":7.5,
-		"render": "<div list-resize='cellValue | unique' list-resize-min-size='3'>",
+		"render": "<div list-resize='cellValue' list-resize-min-size='3'>",
 		"extraHeaders": {0 : Messages("experiments.inputs")}
-	})
-	// FDS NGL-1055: mettre le getArray|unique dans filter et pas dans render
+	});
 	columns.push({
 		"header" : Messages("containers.table.libProcessTypeCode"),
 		"property" : "inputContainer.contents",
@@ -88,8 +88,6 @@ angular.module('home').controller('OneToVoidLabChipMigrationProfileCNGCtrl',['$s
 		"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
 		"extraHeaders" : {0 : Messages("experiments.inputs")}
 	});
-	
-	// FDS NGL-1055: mettre le getArray|unique dans filter et pas dans render
 	columns.push({
 		"header" : Messages("containers.table.tags"),
 		"property" : "inputContainer.contents",
@@ -98,7 +96,6 @@ angular.module('home').controller('OneToVoidLabChipMigrationProfileCNGCtrl',['$s
 		"hide" : true,
 		"type" : "text",
 		"position" : 10,
-		//"render" : "<div list-resize='cellValue | getArray:\"properties.tag.value\" | unique' list-resize-min-size='3'>",
 		"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
 		"extraHeaders" : {0 : Messages("experiments.inputs")}
 	});

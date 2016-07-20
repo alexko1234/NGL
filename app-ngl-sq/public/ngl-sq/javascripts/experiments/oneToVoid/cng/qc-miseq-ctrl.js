@@ -1,9 +1,9 @@
 angular.module('home').controller('OneToVoidQCMiseqCNGCtrl',['$scope', '$parse','$http',
                                                              function($scope,$parse,$http) {
 	
-	// FDS NGL-1055: surcharger la variable "name" definie dans le controleur parent ( one-to-void-qc-ctrl.js) => nom de fichier CSV exporté 
+	// NGL-1055: surcharger la variable "name" definie dans le controleur parent ( one-to-void-qc-ctrl.js) => nom de fichier CSV exporté 
 	var config = $scope.atmService.data.getConfig();
-	config.name = 'QCMiseq';
+	config.name = $scope.experiment.typeCode.toUpperCase();
 	$scope.atmService.data.setConfig(config );
 	
 	$scope.$parent.copyPropertiesToInputContainer = function(experiment){
@@ -58,6 +58,7 @@ angular.module('home').controller('OneToVoidQCMiseqCNGCtrl',['$scope', '$parse',
 		click:importData,		
 	};
 	
+	// NGL-1055: mettre les getArray et codes'' dans filter et pas dans render
 	var columns = $scope.atmService.data.getColumnsConfig();
 	columns.push({
     	"header" :Messages("containers.table.codeAliquot"),
@@ -70,7 +71,6 @@ angular.module('home').controller('OneToVoidQCMiseqCNGCtrl',['$scope', '$parse',
 		"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
 		"extraHeaders" :{0:Messages("experiments.inputs")}
 	});
-
 	columns.push({
 		"header" : Messages("containers.table.concentration"),
 		"property": "(inputContainer.concentration.value|number).concat(' '+inputContainer.concentration.unit)",
@@ -82,8 +82,6 @@ angular.module('home').controller('OneToVoidQCMiseqCNGCtrl',['$scope', '$parse',
 		"position" : 10,
 		"extraHeaders" : {0 : Messages("experiments.inputs")}
 	});	
-	
-	// FDS NGL-1055: mettre le getArray|unique dans filter et pas dans render
 	columns.push({
 		"header" : Messages("containers.table.libProcessTypeCode"),
 		"property" : "inputContainer.contents",
@@ -95,8 +93,6 @@ angular.module('home').controller('OneToVoidQCMiseqCNGCtrl',['$scope', '$parse',
 		"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
 		"extraHeaders" : {0 : Messages("experiments.inputs")}
 	});
-	
-	// FDS NGL-1055: mettre le getArray|unique dans filter et pas dans render
 	columns.push({
 		"header" : Messages("containers.table.tags"),
 		"property" : "inputContainer.contents",

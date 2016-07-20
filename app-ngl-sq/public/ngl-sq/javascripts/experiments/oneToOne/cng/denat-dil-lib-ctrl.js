@@ -2,11 +2,11 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
                                                      function($scope, $parse, atmToSingleDatatable){
 
 	// JIRA-781 rendre editable quand experience est en cours=> supprimer:  && !$scope.Inprogress 
-	// NGL-1055: name specifique pour fichier CSV exporté
+	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
+	// NGL-1055: mettre getArray et codes:'' dans filter et pas dans render
 	var datatableConfig = {
-			name:"DenatDilLib",
+			name: $scope.experiment.typeCode.toUpperCase(),
 			columns:[
-			 
 					 {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"inputContainer.code",
@@ -25,7 +25,7 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			 			"type":"text",
 			 			"position":2,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			        	"extraHeaders":{0:Messages("experiments.inputs")}
 				     },
 				     {
 			        	"header":Messages("containers.table.sampleCodes"),
@@ -35,30 +35,30 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			 			"type":"text",
 			 			"position":3,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			        	"extraHeaders":{0:Messages("experiments.inputs")}
 				     },
 				     
 				     {
 			        	"header":"Code aliquot",
 			 			"property": "inputContainer.contents",
-			 			"filter": "getArray:'properties.sampleAliquoteCode.value'",
+			 			"filter": "getArray:'properties.sampleAliquoteCode.value'| unique",
 			 			"order":false,
 			 			"hide":true,
 			 			"type":"text",
 			 			"position":4,
-			 			"render": "<div list-resize='cellValue | unique' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			 			"render": "<div list-resize='cellValue' list-resize-min-size='3'>",
+			        	"extraHeaders":{0:Messages("experiments.inputs")}
 				     },
 			         {
 			        	"header":Messages("containers.table.tags"),
 			 			"property": "inputContainer.contents",
-			 			"filter": "getArray:'properties.tag.value'",
+			 			"filter": "getArray:'properties.tag.value'| unique",
 			 			"order":false,
 			 			"hide":true,
 			 			"type":"text",
 			 			"position":5,
-			 			"render":"<div list-resize='cellValue |  unique' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
+			        	"extraHeaders":{0:Messages("experiments.inputs")}
 			         },				 
 					 {
 			        	 "header":Messages("containers.table.concentration") + " (nM)",
@@ -73,11 +73,11 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			         {
 			        	 "header":Messages("containers.table.state.code"),
 			        	 "property":"inputContainer.state.code",
+						 "filter":"codes:'state'",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-						 "filter":"codes:'state'",
 			        	 "position":7,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
@@ -123,7 +123,6 @@ angular.module('home').controller('DenatDilLibCtrl',['$scope', '$parse', 'atmToS
 			        	 "position":52,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
-			         
 			         {
 			        	 "header":Messages("containers.table.code"),
 			        	 "property":"outputContainerUsed.code",

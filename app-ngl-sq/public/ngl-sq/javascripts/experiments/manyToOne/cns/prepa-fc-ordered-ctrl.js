@@ -2,8 +2,6 @@ angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$par
                                                                function($scope, $parse, atmToDragNDrop) {
 	
 
-	
-
 	var atmToSingleDatatable = $scope.atmService.$atmToSingleDatatable;
 	
 	var columns = [  
@@ -30,12 +28,12 @@ angular.module('home').controller('CNSPrepaFlowcellOrderedCtrl',['$scope', '$par
 		         {
 		        	"header":Messages("containers.table.tags"),
 		 			"property": "inputContainer.contents",
-		 			"filter": "getArray:'properties.tag.value'",
+		 			"filter": "getArray:'properties.tag.value'| unique",
 		 			"order":false,
 		 			"hide":true,
 		 			"type":"text",
 		 			"position":2,
-		 			"render":"<div list-resize='cellValue | unique' list-resize-min-size='3'>",
+		 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 		        	 "extraHeaders":{0:"Solution Stock"}
 		         },				         
 				 {

@@ -1,9 +1,10 @@
 angular.module('home').controller('TubeToTubesCtrl',['$scope', '$parse', 'atmToGenerateMany',
                                                                function($scope, $parse, atmToGenerateMany) {
 	
-		
+	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience	
 	var datatableConfigTubeParam = {
-			name:"Tube_Param",
+			//peut etre exporté CSV ??
+			name: $scope.experiment.typeCode+'_PARAM'.toUpperCase(),
 			columns:[   
 					 {
 			        	 "header":Messages("containers.table.code"),
@@ -125,8 +126,11 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', '$parse', 'atmToG
 			}
 
 	};	
+	
+	// NGL-1055: mettre getArray et codes:'' dans filter et pas dans render
+	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
 	var datatableConfigTubeConfig =  {
-			name:"Tube_Param",
+			name: $scope.experiment.typeCode.toUpperCase(),
 			columns:[   
 					 {
 			        	 "header":Messages("containers.table.code"),
@@ -145,10 +149,10 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', '$parse', 'atmToG
 			 			"order":false,
 			 			"hide":true,
 			 			"type":"text",
-			 			 "mergeCells" : true,
+			 			"mergeCells" : true,
 			 			"position":2,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			            "extraHeaders":{0:Messages("experiments.inputs")}
 				     },
 				     {
 			        	"header":Messages("containers.table.sampleCodes"),
@@ -156,20 +160,21 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', '$parse', 'atmToG
 			 			"order":false,
 			 			"hide":true,
 			 			"type":"text",
-			 			 "mergeCells" : true,
+			 			"mergeCells" : true,
 			 			"position":3,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			        	"extraHeaders":{0:Messages("experiments.inputs")}
 				     },
 				     {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
 			        	 "property":"inputContainer.fromTransformationTypeCodes",
+			        	 "filter":"unique | codes:'type'",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
 			        	 "mergeCells" : true,
-			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
+			 			 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "position":4,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
@@ -204,7 +209,6 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', '$parse', 'atmToG
 			        	 "position":7,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },			        
-			        
 			         {
 			        	 "header":Messages("containers.table.volume")+" (µL)",
 			        	 "property":"outputContainerUsed.volume.value",
@@ -241,11 +245,10 @@ angular.module('home').controller('TubeToTubesCtrl',['$scope', '$parse', 'atmToG
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
-						"type":"text",
+						 "type":"text",
 			        	 "position":500,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
-			         }
-			         
+			         }    
 			         ],
 			compact:true,
 			pagination:{

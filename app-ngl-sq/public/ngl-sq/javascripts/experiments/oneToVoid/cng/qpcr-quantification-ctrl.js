@@ -3,7 +3,7 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNGCtrl',['$scope'
 	
 	// NGL-1055 : surcharger la variable "name" definie dans le controleur parent ( one-to-void-qc-ctrl.js) => nom de fichier CSV exporté 
 	var config = $scope.atmService.data.getConfig();
-	config.name = 'QPCRQuantification';
+	config.name = $scope.experiment.typeCode.toUpperCase();
 	$scope.atmService.data.setConfig(config );	
 	
 	
@@ -83,20 +83,20 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNGCtrl',['$scope'
 		click:importData,		
 	};
 	
+	// NGL-1055: mettre les getArray et codes'' dans filter et pas dans render
 	var columns = $scope.atmService.data.getColumnsConfig();
+
 	columns.push({
     	"header":"Code aliquot",
 		"property": "inputContainer.contents",
-		"filter": "getArray:'properties.sampleAliquoteCode.value'",
+		"filter": "getArray:'properties.sampleAliquoteCode.value'| unique",
 		"order":false,
 		"hide":true,
 		"type":"text",
 		"position":7.5,
-		"render": "<div list-resize='cellValue | unique' list-resize-min-size='3'>",
+		"render": "<div list-resize='cellValue' list-resize-min-size='3'>",
 		"extraHeaders":{0:Messages("experiments.inputs")}
 	})
-	
-	//FDS NGL-1055: mettre le getArray|unique dans filter et pas dans render
 	columns.push({
 		"header" : Messages("containers.table.libProcessTypeCode"),
 		"property" : "inputContainer.contents",
@@ -107,9 +107,7 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNGCtrl',['$scope'
 		"position" : 9,
 		"render" : "<div list-resize='cellValue' list-resize-min-size='3'>",
 		"extraHeaders" : {0 : Messages("experiments.inputs")}
-	});
-		
-	//FDS NGL-1055: mettre le getArray|unique dans filter et pas dans render
+	});	
 	columns.push({
 		"header" : Messages("containers.table.tags"),
 		"property" : "inputContainer.contents",
@@ -122,6 +120,5 @@ angular.module('home').controller('OneToVoidQPCRQuantificationCNGCtrl',['$scope'
 		"extraHeaders" : {0 : Messages("experiments.inputs")}
 	});
 	$scope.atmService.data.setColumnsConfig(columns);
-	
 	
 }]);

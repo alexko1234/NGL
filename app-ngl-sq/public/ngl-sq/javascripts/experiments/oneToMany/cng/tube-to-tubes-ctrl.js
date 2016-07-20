@@ -1,9 +1,10 @@
 angular.module('home').controller('CNGTubeToTubesCtrl',['$scope','$parse',  'atmToGenerateMany',
                                                                function($scope, $parse, atmToGenerateMany) {
-		
+	
+	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience	
 	var datatableConfigTubeParam = {
-			// NGL-1055: name explicite pour fichier CSV exporté
-			name:"TubeToTubes",
+			// peut etre exporté CSV ??
+			name: $scope.experiment.typeCode+'_PARAM'.toUpperCase(),
 			columns:[   
 					 {
 			        	 "header":Messages("containers.table.code"),
@@ -72,8 +73,11 @@ angular.module('home').controller('CNGTubeToTubesCtrl',['$scope','$parse',  'atm
 			}
 
 	};	
-	var datatableConfigTubeConfig =  {
-			name:"Tube_Param",
+	
+	// NGL-1055: mettre getArray et codes:'' dans filter et pas dans render
+	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
+	var datatableConfigTubeConfig =  {		
+			name: $scope.experiment.typeCode.toUpperCase(),
 			columns:[   
 					 {
 			        	 "header":Messages("containers.table.code"),
@@ -92,10 +96,10 @@ angular.module('home').controller('CNGTubeToTubesCtrl',['$scope','$parse',  'atm
 			 			"order":false,
 			 			"hide":true,
 			 			"type":"text",
-			 			 "mergeCells" : true,
+			 			"mergeCells" : true,
 			 			"position":2,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			        	"extraHeaders":{0:Messages("experiments.inputs")}
 				     },
 				     {
 			        	"header":Messages("containers.table.sampleCodes"),
@@ -103,31 +107,32 @@ angular.module('home').controller('CNGTubeToTubesCtrl',['$scope','$parse',  'atm
 			 			"order":false,
 			 			"hide":true,
 			 			"type":"text",
-			 			 "mergeCells" : true,
+			 			"mergeCells" : true,
 			 			"position":3,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			        	"extraHeaders":{0:Messages("experiments.inputs")}
 				     },
 				     {
 			        	"header":"Code aliquot",
 			 			"property": "inputContainer.contents",
-			 			"filter": "getArray:'properties.sampleAliquoteCode.value'",
+			 			"filter": "getArray:'properties.sampleAliquoteCode.value'| unique",
 			 			"order":false,
 			 			"hide":true,
 			 			"type":"text",
 			 			"position":3.5,
-			 			"render": "<div list-resize='cellValue | unique' list-resize-min-size='3'>",
+			 			"render": "<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 				     },
 				     {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
 			        	 "property":"inputContainer.fromTransformationTypeCodes",
+			        	 "filter":"unique | codes:'type'",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
 			        	 "mergeCells" : true,
-			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
+			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "position":4,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },

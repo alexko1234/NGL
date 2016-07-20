@@ -1,9 +1,10 @@
 angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter','atmToDragNDrop2',
                                                                function($scope, $parse, $filter, atmToDragNDrop) {
 	
-	var datatableConfig = {
-			// NGL-1055: name explicite pour fichier CSV exporté
-			name:"XToTubes",
+	// NGL-1055: name explicite pour fichier CSV exporté
+	// NGL-1055: mettre getArray et codes:'' dans filter et pas dans render
+	var datatableConfig = {		
+			name: $scope.experiment.typeCode.toUpperCase(),
 			columns:[   					
 					 {
 			        	 "header":Messages("containers.table.code"),
@@ -28,11 +29,12 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			         {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
 			        	 "property":"inputContainer.fromTransformationTypeCodes",
+			        	 "filter":"unique | codes:'type'",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
+			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "position":3,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
@@ -56,7 +58,6 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 				     },
-				     //FDS NGL-1055: mettre le getArray|unique dans filter et pas dans render
 			         {
 				 		"header":Messages("containers.table.libProcessType"),
 				 		"property": "inputContainer.contents",
@@ -65,11 +66,9 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 				 		"hide":true,
 				 		"type":"text",
 				 		"position":6,
-				 		//"render":"<div list-resize='cellValue | getArray:\"properties.libProcessTypeCode.value\" | unique' list-resize-min-size='3'>",
 				 		"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 				 		"extraHeaders": {0:Messages("experiments.inputs")}	 						 			
 				 	},
-				 	//FDS NGL-1055: mettre le getArray|unique dans filter et pas dans render
 			        {
 				        "header":Messages("containers.table.tags"),
 				 		"property": "inputContainer.contents",
@@ -149,7 +148,7 @@ angular.module('home').controller('XToTubesCtrl',['$scope', '$parse', '$filter',
 						 "edit":false,
 						 "hide":true,
 						 "type":"text",
-			        	"position":50.5,
+			        	 "position":50.5,
 			        	 "extraHeaders":{0:Messages("experiments.outputs")}
 			         },
 			         {

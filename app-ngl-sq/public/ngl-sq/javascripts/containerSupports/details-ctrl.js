@@ -3,7 +3,7 @@
 angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$filter', '$routeParams', 'datatable', 'mainService', 'tabService',
                                                   function($scope,$http,$q,$filter,$routeParams,datatable,mainService,tabService){
 
-	
+
 	/*
 	 * ActiveTab System
 	 */
@@ -160,6 +160,8 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 					}
 				}
 			},*/
+			
+
 			columns: [
 						{
 							"header":Messages("containers.table.support.line"),
@@ -177,15 +179,16 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 							"position":1.1,
 							"type":"number"							
 						},
-
+						// NGL-1055: mettre stringToArray dans filter et pas dans render	
 						{
 							"header":Messages("containers.table.code"),
 							"property":"code",
+							"filter":"stringToArray | unique",
 							"order":true,
 							"hide":true,
 							"position":3,
 							"type":"text",
-							"render":"<div list-resize='cellValue | stringToArray | unique' ' list-resize-min-size='2'>",
+							"render":"<div list-resize='cellValue' list-resize-min-size='2'>",
 							"groupMethod":"collect"							
 						},
 						{
@@ -251,8 +254,6 @@ angular.module('home').controller('DetailsCtrl', ['$scope', '$http', '$q', '$fil
 							"filter":"getArray:'properties.libProcessTypeCode.value' | unique",
 							"groupMethod":"collect"
 						},
-						
-						
 						{
 							"header":Messages("containers.table.contents.length"),
 							"property":"contents.length",

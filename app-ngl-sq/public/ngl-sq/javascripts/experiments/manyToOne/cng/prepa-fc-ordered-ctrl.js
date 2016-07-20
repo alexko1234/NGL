@@ -29,23 +29,23 @@ angular.module('home').controller('CNGPrepaFlowcellOrderedCtrl',['$scope', '$par
 		         {
 		        	"header":"Code aliquot",
 		 			"property": "inputContainer.contents",
-		 			"filter": "getArray:'properties.sampleAliquoteCode.value'",
+		 			"filter": "getArray:'properties.sampleAliquoteCode.value'| unique",
 		 			"order":false,
 		 			"hide":true,
 		 			"type":"text",
 		 			"position":3,
-		 			"render": "<div list-resize='cellValue | unique' list-resize-min-size='3'>",
+		 			"render": "<div list-resize='cellValue' list-resize-min-size='3'>",
 		        	 "extraHeaders":{0:"lib normalisée"}
 			     },
 		         {
 		        	"header":Messages("containers.table.tags"),
 		 			"property": "inputContainer.contents",
-		 			"filter": "getArray:'properties.tag.value'",
+		 			"filter": "getArray:'properties.tag.value'| unique",
 		 			"order":false,
 		 			"hide":true,
 		 			"type":"text",
 		 			"position":4,
-		 			"render":"<div list-resize='cellValue | unique' list-resize-min-size='3'>",
+		 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 		        	 "extraHeaders":{0:"lib normalisée"}
 		         },				         
 				 {

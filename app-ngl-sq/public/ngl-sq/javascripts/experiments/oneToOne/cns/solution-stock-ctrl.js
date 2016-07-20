@@ -1,11 +1,11 @@
 angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToSingleDatatable',
                                                        function($scope, $http,atmToSingleDatatable) {
 	
+	// NGL-1055: name explicite pour fichier CSV exporté: typeCode experience
+	// NGL-1055: mettre getArray et codes '' dans filter et pas dans render
 	var datatableConfig = {
-			// NGL-1055: name explicite pour fichier CSV exporté
-			name:"SolutionStock",
-			columns:[			  
-					
+			name: $scope.experiment.typeCode.toUpperCase(),
+			columns:[			  			
 				     {
 			        	"header":Messages("containers.table.sampleCodes"),
 			 			"property": "inputContainer.sampleCodes",
@@ -14,28 +14,29 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 			 			"type":"text",
 			 			"position":3,
 			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
-			        	 "extraHeaders":{0:Messages("experiments.inputs")}
+			        	"extraHeaders":{0:Messages("experiments.inputs")}
 				     },
 				     {
 			        	 "header":Messages("containers.table.fromTransformationTypeCodes"),
 			        	 "property":"inputContainer.fromTransformationTypeCodes",
+			        	 "filter":"unique| codes:'type'",
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
 			        	 "type":"text",
-			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
+			 			 "render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "position":4,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
 			        	"header":Messages("containers.table.tags"),
 			 			"property": "inputContainer.contents",
-			 			"filter": "getArray:'properties.tag.value'",
+			 			"filter": "getArray:'properties.tag.value'| unique",
 			 			"order":true,
 			 			"hide":true,
 			 			"type":"text",
 			 			"position":4,
-			 			"render":"<div list-resize='cellValue | unique'  list-resize-min-size='3'>",
+			 			"render":"<div list-resize='cellValue'  list-resize-min-size='3'>",
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 								 
@@ -70,13 +71,13 @@ angular.module('home').controller('SolutionStockCtrl',['$scope' ,'$http','atmToS
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
 			         {
-				 			"header":Messages("containers.table.size"),
-				 			"property": "inputContainer.size.value",
-				 			"order":false,
-				 			"hide":true,
-				 			"type":"text",
-				 			"position":6.5,
-				 			"extraHeaders":{0:Messages("experiments.inputs")}			 						 			
+				 		 "header":Messages("containers.table.size"),
+				 		 "property": "inputContainer.size.value",
+				 		 "order":false,
+				 		 "hide":true,
+				 		 "type":"text",
+				 		 "position":6.5,
+				 		 "extraHeaders":{0:Messages("experiments.inputs")}			 						 			
 				 	 },
 			         {
 			        	 "header":Messages("containers.table.state.code"),
