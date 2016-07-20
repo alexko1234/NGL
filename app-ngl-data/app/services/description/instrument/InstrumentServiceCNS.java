@@ -118,11 +118,12 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 				getContainerSupportCategories(new String[]{"flowcell-2","flowcell-1","flowcell-8"}),null, 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));*/
 		
-		l.add(newInstrumentUsedType("Biomek FX", "biomekFX", InstrumentCategory.find.findByCode("liquid-handling-robot"), null, 
+		l.add(newInstrumentUsedType("Biomek FX", "biomek-fx", InstrumentCategory.find.findByCode("liquid-handling-robot"), getBiomekFXProperties(), 
 				getInstruments(
 						createInstrument("walle", "WALLE", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)), 
-						createInstrument("r2d2", "R2D2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)) ) ,
-				getContainerSupportCategories(new String[]{"96-well-plate"}),null, 
+						createInstrument("r2d2", "R2D2", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)),
+						createInstrument("nono", "NONO", null, true, null, DescriptionFactory.getInstitutes(Constants.CODE.CNS)) ) ,
+				getContainerSupportCategories(new String[]{"tube"}),getContainerSupportCategories(new String[]{"96-well-plate"}), 
 				DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 
 		l.add(newInstrumentUsedType("TECAN evo 100", "tecan-evo-100", InstrumentCategory.find.findByCode("liquid-handling-robot"), getTecanProperties(), 
@@ -462,6 +463,17 @@ public class InstrumentServiceCNS extends AbstractInstrumentService{
 		/*l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, true, newValues("15","18"), "single"));*/
 		l.add(newPropertiesDefinition("Nb cycles", "nbCycle", LevelService.getLevels(Level.CODE.Instrument), Integer.class, true, null, null, 
 				"single", 10, true, null,null));
+		return l;
+	}
+	
+	private static List<PropertyDefinition> getBiomekFXProperties() throws DAOException {
+		List<PropertyDefinition> l = new ArrayList<PropertyDefinition>();
+		l.add(newPropertiesDefinition("Programme", "program", LevelService.getLevels(Level.CODE.Instrument), String.class, false, null, newValues( 
+				"Programme_1_a_definir"),
+				"single", 10, true, null,null));
+		
+		
+
 		return l;
 	}
 	

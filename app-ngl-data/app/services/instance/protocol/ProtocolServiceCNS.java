@@ -109,6 +109,9 @@ public class ProtocolServiceCNS {
 			lp.add(newProtocol("truseq_stranded_proc","TruSeq Stranded Proc","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library")));
 			lp.add(newProtocol("smarter_stranded","Smarter Stranded","path2","1","production",InstanceFactory.setExperimentTypeCodes("rna-illumina-indexed-library")));
 
+			lp.add(newProtocol("prt_wait_3","Proto_en_attente","path1","1","production", InstanceFactory.setExperimentTypeCodes("normalisation")));
+			
+			
 		}
 		
 		for(Protocol protocole:lp){

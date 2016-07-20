@@ -310,6 +310,12 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
 			
+			
+			l.add(newExperimentType("Normalisation","normalisation",null,10400,
+					ExperimentCategory.find.findByCode(ExperimentCategory.CODE.transfert.name()), getPropertyDefinitionNormalisation(),
+					getInstrumentUsedTypes("biomek-fx"),"OneToOne", 
+					DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
+			
 		}
 		
 		DAOHelpers.saveModels(ExperimentType.class, l, errors);
@@ -822,6 +828,21 @@ public class ExperimentServiceCNS extends AbstractExperimentService {
 		propertyDefinitions.add(newPropertiesDefinition("Volume final", "finalVolume", LevelService.getLevels(Level.CODE.ContainerOut), Double.class, true, null
 				, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"), "single",8,true)); */
 		return propertyDefinitions; 
+	}
+	
+	
+	private static List<PropertyDefinition> getPropertyDefinitionNormalisation() throws DAOException {
+		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
+		//InputContainer
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume engagé", "inputVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 20, true, null,null));
+		
+		propertyDefinitions.add(newPropertiesDefinition("Volume tampon", "bufferVolume", LevelService.getLevels(Level.CODE.ContainerIn), Double.class, true, null, 
+				null, MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_VOLUME),MeasureUnit.find.findByCode( "µL"),MeasureUnit.find.findByCode( "µL"),"single", 21, true, null,null));
+		
+	
+		return propertyDefinitions;
 	}
 	
 	private static List<PropertyDefinition> getPropertyDefinitionPoolTube() throws DAOException {
