@@ -101,9 +101,20 @@ public class ImportServiceCNS extends AbstractImportService {
 	private static List<PropertyDefinition> getTaraUpdatePropertyDefinitions() throws DAOException {
 		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();
 		propertyDefinitions.addAll(getCommonPropertyDefinitions());
-		propertyDefinitions.add(newPropertiesDefinition("Station TARA", "taraStation", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), String.class, true, null, 
-				newValues("OA-004","OA-005","OA-009","OA-010","OA-018","OA-023"), "single", 1, true, null, null));
+		propertyDefinitions.add(newPropertiesDefinition("Station TARA", "taraStation", LevelService.getLevels(Level.CODE.Sample,Level.CODE.Content), Integer.class, true, null, 
+				getTaraPacificStationValues(), "single", 1, true, null, null));
 		return propertyDefinitions;
+	}
+	
+	private static List<Value> getTaraPacificStationValues(){
+		List<Value> values = new ArrayList<Value>();
+		values.add(DescriptionFactory.newValue("20004", "OA-004"));
+		values.add(DescriptionFactory.newValue("20005", "OA-005"));
+		values.add(DescriptionFactory.newValue("20009", "OA-009"));
+		values.add(DescriptionFactory.newValue("20010", "OA-010"));
+		values.add(DescriptionFactory.newValue("20018", "OA-018"));
+		values.add(DescriptionFactory.newValue("20023", "OA-023"));
+		return values;	
 	}
 	
 	

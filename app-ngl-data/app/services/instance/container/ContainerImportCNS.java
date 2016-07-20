@@ -261,7 +261,7 @@ public abstract class ContainerImportCNS extends AbstractImportDataCNS {
 		container.properties.put("limsCode",new PropertySingleValue(rs.getInt("limsCode")));
 		if(rs.getString("sequencingProgramType")!=null)
 			container.properties.put("sequencingProgramType", new PropertySingleValue(rs.getString("sequencingProgramType")));
-		
+		//TODO GA pass by getDate but need migration on all the tube and plate importing from dblims
 		if(rs.getString("receptionDate")!=null){
 			container.properties.put("receptionDate",new PropertySingleValue(rs.getString("receptionDate")));
 		}
