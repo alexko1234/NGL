@@ -2206,8 +2206,10 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                                 var header = column.header;
                                 if (angular.isFunction(header)) {
                                     header = header();
+                                }else{
+                                	header = that.config.messages.transformKey(header);
                                 }
-
+                                
                                 if (that.isGroupActive()) {
                                     if (column.groupMethod === "sum") {
                                         header = header + this.messages.Messages('datatable.export.sum');
@@ -2256,6 +2258,17 @@ factory('datatable', ['$http', '$filter', '$parse', '$window', '$q', 'udtI18n', 
                                                 colValue = this.messages.Messages('datatable.export.no');
                                             }
                                         }
+                                        
+                                        if((column.type === "string" || column.type === "text") && colValue){
+                                        	if(Array.isArray(colValue) && colValue.length === 1 
+                                        			&& colValue[0].search(new RegExp("\r|\n|"+delimiter)) !== -1){
+                                        		colValue = '"'+colValue[0]+'"';
+                                        	}else if(!Array.isArray(colValue) 
+                                        			&& colValue.search(new RegExp("\r|\n|"+delimiter)) !== -1){
+                                        		colValue = '"'+colValue+'"';
+                                        	}                                        	
+                                        }
+                                        
                                         lineValue = lineValue + ((colValue !== null) && (colValue) ? colValue : "") + delimiter;
                                     } else if (result.line.group) {
 

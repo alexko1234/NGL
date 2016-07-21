@@ -380,7 +380,9 @@ factory('containersSearchService', ['$http', 'mainService', 'lists', 'datatable'
 					$http.get(jsRoutes.controllers.reporting.api.ReportingConfigurations.get(this.reportingConfigurationCode).url,{searchService:this, datatable:this.datatable})
 							.success(function(data, status, headers, config) {
 								config.searchService.reportingConfiguration = data;
-								//config.searchService.search();
+								if(config.searchService.lists.get('reportConfigs').length > 1){
+									config.searchService.search();
+								}
 								config.datatable.setColumnsConfig(data.columns);																								
 					});
 				}else{
