@@ -93,10 +93,9 @@ angular.module('atomicTransfereServices', [])
     							"saveMeasureValue":propertyDefinition.saveMeasureValue.value};
     				}
     				
-    				if(column.type === 'img'){
-    					column.watch = true;
+    				if(propertyDefinition.editable){
+    					column.editDirectives=' udt-change="updatePropertyFromUDT(value,col)" ';       				
     				}
-    				
     				return column;
     			},
 				//Common for all but try to replace slowly
@@ -288,13 +287,14 @@ angular.module('atomicTransfereServices', [])
 				getSupportContainerCategoryCode :function(){
 					return mainService.get("experiment").instrument.outContainerSupportCategoryCode;
 				},				
+				/**
+				 * We take the same unit as inputContainer when create the output container
+				 */
 				getUnit: function(object, defaultValue){
 					var unit = $parse("unit")(object);
-					if(undefined === unit || null === unit || unit !== defaultValue)unit = defaultValue
+					if(undefined === unit || null === unit || (undefined === defaultValue && null === defaultValue && unit !== defaultValue))unit = defaultValue
 					return unit;
-				},
-				
-
+				}
 		};
 		return common;
 	};
