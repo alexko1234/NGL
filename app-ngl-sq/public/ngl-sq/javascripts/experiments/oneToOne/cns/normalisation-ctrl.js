@@ -1,7 +1,7 @@
 angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse', 'atmToSingleDatatable',
                                                        function($scope, $http,$parse,atmToSingleDatatable) {
 	var datatableConfig = {
-			name:"FDR_Tube",
+			name:$scope.experiment.typeCode.toUpperCase(),
 			columns:[			  
 					
 				     {
@@ -20,8 +20,9 @@ angular.module('home').controller('NormalisationCtrl',['$scope' ,'$http','$parse
 			        	 "order":true,
 						 "edit":false,
 						 "hide":true,
+						 "filter":"unique | codes:'type'",
 			        	 "type":"text",
-			 			"render":"<div list-resize='cellValue | unique | codes:\"type\"' list-resize-min-size='3'>",
+			 			"render":"<div list-resize='cellValue' list-resize-min-size='3'>",
 			        	 "position":4,
 			        	 "extraHeaders":{0:Messages("experiments.inputs")}
 			         },
