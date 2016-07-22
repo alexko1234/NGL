@@ -24,6 +24,8 @@ import services.description.Constants;
 import services.description.DescriptionFactory;
 import services.description.common.LevelService;
 import services.description.common.MeasureService;
+import services.description.declaration.cns.MetaBarCoding;
+import services.description.declaration.cns.MetaTProcess;
 
 import com.typesafe.config.ConfigFactory;
 
@@ -55,28 +57,19 @@ public class ProcessServiceCNS extends AbstractProcessService {
 					getExperimentTypes("fragmentation").get(0), getExperimentTypes("amplification").get(0), getExperimentTypes("ext-to-library").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			*/
 			l.add(DescriptionFactory.newProcessType("qPCR-norm, FC, dépôt Illumina", "qpcr-norm-fc-depot-illumina", ProcessCategory.find.findByCode("sequencing"), getPropertyDefinitionsQPCRQuantification(),
-					Arrays.asList(getPET("ext-to-qpcr-norm-fc-depot-illumina",-1),getPET("sizing",-1),getPET("amplification",-1),getPET("qpcr-quantification",0),getPET("solution-stock",0),getPET("prepa-flowcell",1),getPET("prepa-fc-ordered",1),getPET("illumina-depot",2)), 
+					Arrays.asList(getPET("ext-to-qpcr-norm-fc-depot-illumina",-1),getPET("sizing",-1),getPET("pcr-amplification-and-purification",-1),getPET("qpcr-quantification",0),getPET("solution-stock",0),getPET("prepa-flowcell",1),getPET("prepa-fc-ordered",1),getPET("illumina-depot",2)), 
 					getExperimentTypes("qpcr-quantification").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-qpcr-norm-fc-depot-illumina").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
 			
 			l.add(DescriptionFactory.newProcessType("Norm, FC, dépôt Illumina", "norm-fc-depot-illumina", ProcessCategory.find.findByCode("sequencing"), getPropertyDefinitionsQPCRQuantification(),
-					Arrays.asList(getPET("ext-to-norm-fc-depot-illumina",-1),getPET("sizing",-1),getPET("amplification",-1),getPET("solution-stock",0),getPET("prepa-flowcell",1),getPET("prepa-fc-ordered",1),getPET("illumina-depot",2)), 
+					Arrays.asList(getPET("ext-to-norm-fc-depot-illumina",-1),getPET("sizing",-1),getPET("pcr-amplification-and-purification",-1),getPET("solution-stock",0),getPET("prepa-flowcell",1),getPET("prepa-fc-ordered",1),getPET("illumina-depot",2)), 
 					getExperimentTypes("solution-stock").get(0), getExperimentTypes("illumina-depot").get(0), getExperimentTypes("ext-to-norm-fc-depot-illumina").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-			
-			l.add(DescriptionFactory.newProcessType("MetaT bq RNA", "rna-lib-transcriptomic-process", ProcessCategory.find.findByCode("library"), null,
-					Arrays.asList(getPET("ext-to-rna-lib-transcriptomic-process",-1),getPET("rna-illumina-indexed-library",0)), 
-					getExperimentTypes("rna-illumina-indexed-library").get(0), getExperimentTypes("rna-illumina-indexed-library").get(0), getExperimentTypes("ext-to-rna-lib-transcriptomic-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-			
-			l.add(DescriptionFactory.newProcessType("MetaBarcoding avec sizing", "tag-pcr-and-dna-library-with-sizing", ProcessCategory.find.findByCode("library"), getPropertyMetaBarCodingSizing(),
-					Arrays.asList(getPET("ext-to-tag-pcr-and-dna-library-with-sizing",-1),getPET("tag-pcr",0)), 
-					getExperimentTypes("tag-pcr").get(0), getExperimentTypes("tag-pcr").get(0), getExperimentTypes("ext-to-tag-pcr-and-dna-library-with-sizing").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-			
-			l.add(DescriptionFactory.newProcessType("MetaBarcoding (sans sizing)", "tag-pcr-and-dna-library", ProcessCategory.find.findByCode("library"), null,
-					Arrays.asList(getPET("ext-to-tag-pcr-and-dna-library",-1),getPET("tag-pcr",0)), 
-					getExperimentTypes("tag-pcr").get(0), getExperimentTypes("tag-pcr").get(0), getExperimentTypes("ext-to-tag-pcr-and-dna-library").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
-			
+
 		}
 
-			//Bionano
+		l.addAll(new MetaBarCoding().getProcessType());
+		l.addAll(new MetaTProcess().getProcessType());
+		
+		//Bionano
 		l.add(DescriptionFactory.newProcessType("NLRS, Irys chip, dépôt", "bionano-nlrs-process", ProcessCategory.find.findByCode("mapping"), getPropertyDefinitionsBionano(), 
 				Arrays.asList(getPET("ext-to-bionano-nlrs-process",-1),getPET("irys-nlrs-prep",0),getPET("irys-chip-preparation",1),getPET("bionano-depot",2)), 
 				getExperimentTypes("irys-nlrs-prep").get(0), getExperimentTypes("bionano-depot").get(0), getExperimentTypes("ext-to-bionano-nlrs-process").get(0), DescriptionFactory.getInstitutes(Constants.CODE.CNS)));
@@ -237,34 +230,6 @@ public class ProcessServiceCNS extends AbstractProcessService {
         List<Value> values = new ArrayList<Value>();
          values.add(DescriptionFactory.newValue("ONT","ONT - Nanopore"));
          return values;
-	}
-
-	
-	private List<PropertyDefinition> getPropertyMetaBarCodingSizing() {
-		List<PropertyDefinition> propertyDefinitions = new ArrayList<PropertyDefinition>();		
-		propertyDefinitions.add(newPropertiesDefinition("Type processus Banque", "libProcessTypeCode", LevelService.getLevels(Level.CODE.Process), String.class, true, null, null, 
-				null,null,null,"single", 13, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Primers", "amplificationPrimers", LevelService.getLevels(Level.CODE.Process), String.class, true, null, null, 
-				null,null,null,"single", 14, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Région ciblée", "targetedRegion", LevelService.getLevels(Level.CODE.Process), String.class, true, null, null, 
-				null,null,null,"single", 15, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Taille amplicon attendue", "expectedAmpliconSize", LevelService.getLevels(Level.CODE.Process), String.class, true, null, null, 
-				null,null,null,"single", 16, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 1", "sizingGoal", LevelService.getLevels(Level.CODE.Process), String.class, true, null, null, 
-				null,null,null,"single", 17, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Objectif sizing 2", "sizingGoal2", LevelService.getLevels(Level.CODE.Process), String.class, false, null, null, 
-				null,null,null,"single", 18, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Type séquençage", "sequencingType", LevelService.getLevels(Level.CODE.Process), String.class, true, null, null, 
-				null,null,null,"single", 19, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Type de lectures", "readType", LevelService.getLevels(Level.CODE.Process), String.class, true, null, null, 
-				null,null,null,"single", 20, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("Longueur de lectures", "readLength", LevelService.getLevels(Level.CODE.Process), Double.class, true, null, null, 
-				MeasureCategory.find.findByCode(MeasureService.MEASURE_CAT_CODE_SIZE), MeasureUnit.find.findByCode("pb"), MeasureUnit.find.findByCode("pb")
-				,"single", 21, true, null, null));
-		propertyDefinitions.add(newPropertiesDefinition("% à déposer prévisionnel", "estimatedPercentPerLane", LevelService.getLevels(Level.CODE.Process), Double.class, true, null, null, 
-				null,null,null,"single", 22, true, null, null));
-		
-		return propertyDefinitions;
 	}
 
 	
