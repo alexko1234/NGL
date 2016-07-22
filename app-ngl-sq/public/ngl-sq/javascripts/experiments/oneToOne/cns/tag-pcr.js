@@ -2,7 +2,7 @@ angular.module('home').controller('TagPCRCtrl',['$scope', '$parse', 'atmToSingle
                                                     function($scope, $parse, atmToSingleDatatable,lists,mainService){
                                                     
 	var datatableConfig = {
-					name:"Tube_Param",
+					name: $scope.experiment.typeCode.toUpperCase(),
 					columns:[   
 							 {
 					        	 "header":Messages("containers.table.code"),

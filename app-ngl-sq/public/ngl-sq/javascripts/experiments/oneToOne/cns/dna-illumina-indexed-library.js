@@ -2,7 +2,7 @@ angular.module('home').controller('DnaIlluminaIndexedLibraryCtrl',['$scope', '$p
                                                     function($scope, $parse, atmToSingleDatatable){
                                                     
 	var datatableConfig = {
-			name:"FDR_Tube",
+			name: $scope.experiment.typeCode.toUpperCase(),
 			columns:[			  
 					 {
 			        	 "header":Messages("containers.table.code"),
